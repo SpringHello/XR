@@ -7,11 +7,8 @@
         </a>
         <div class="operate">
           <ul>
-            <li>首页</li>
-            <li>产品</li>
-            <li>价格</li>
-            <li>文档</li>
-            <li>关于我们</li>
+            <li v-for="(item,index) in titleItem" :key="index" @mouseover="MO">{{item}}</li>
+            <div class="line" :style="lineStyle"></div>
           </ul>
         </div>
         <div class="login-form">
@@ -25,7 +22,31 @@
 
 <script>
   export default {
-    name: 'app'
+    name: 'app',
+    data () {
+      return {
+        titleItem: ['首页', '产品', '价格', '文档', '关于我们'],
+        lineStyle: {
+          width: '0px',
+          left: '0px'
+        }
+      }
+    },
+    created () {},
+    methods: {
+      MO (event) {
+        console.log(event)
+        console.log(event.target.offsetLeft)
+        console.log(event.target.offsetTop)
+        console.log(event.target.clientHeight)
+      }
+    },
+    computed: {
+      lineStyle () {
+
+      }
+    }
+
   }
 </script>
 
@@ -37,7 +58,7 @@
       position: relative;
       &::before {
         content: '';
-        height:70px;
+        height: 70px;
         width: 100%;
         //height: 0px;
         display: block;
@@ -67,12 +88,13 @@
           }
         }
         .operate {
-          width:920px;
+          width: 920px;
           text-align: center;
-          ul{
+          ul {
             display: inline-block;
-            margin:0px auto;
+            margin: 0px auto;
             font-size: 0px;
+            position: relative;
             li {
               line-height: 70px;
               padding: 0px 30px;
@@ -80,6 +102,13 @@
               color: #ffffff;
               font-size: 16px;
               cursor: pointer;
+            }
+            .line {
+              height: 2px;
+              background-color: rgb(0, 193, 222);
+              position: absolute;
+              bottom: 0px;
+              transition: .5s;
             }
           }
         }
