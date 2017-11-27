@@ -35,7 +35,7 @@
 
 <script>
 export default {
-  name: 'app'
+  name: 'back'
 }
 </script>
 

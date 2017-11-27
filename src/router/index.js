@@ -18,7 +18,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'app',
+      name: App.name,
       component: App,
       children: [
         {path: '/', name: 'home', component: Home}
@@ -26,7 +26,7 @@ export default new Router({
     },
     {
       path: '/',
-      name: 'back',
+      name: Back.name,
       component: Back,
       children: [
         {path: '/overview', name: 'overview', component: Overview}
