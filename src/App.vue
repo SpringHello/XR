@@ -46,7 +46,6 @@
   // import menuDropdown from './myView/menu-dropdown'
   import debounce from 'throttle-debounce/debounce'
   export default {
-
     name: 'app',
     data () {
       return {
@@ -245,7 +244,7 @@
           }
         }
         .operate {
-          width: 920px;
+          width: 888px;
           text-align: center;
           ul {
             display: inline-block;

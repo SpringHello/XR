@@ -3,6 +3,11 @@
  */
 import Vue from 'vue'
 import Vuex from 'vuex'
+import {Promise} from 'es6-promise-polyfill'
+
+if (!window.Promise) {
+  window.Promise = Promise
+}
 
 Vue.use(Vuex)
 
