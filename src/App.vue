@@ -6,24 +6,34 @@
           <div></div>
         </a>
         <div class="operate">
-          <ul>
-            <li v-for="(item,index) in titleItem" :key="index" @mouseenter="ME(index,$event)">{{item.title}}</li>
+          <ul @mouseleave="UML">
+            <li v-for="(item,index) in titleItem" :key="index" @mouseenter="ME(index,$event)">
+              <menuDropdown>
+                <router-link :to="item.path">{{item.title}}</router-link>
+                <div slot="list" class="content-dropdown">
+                  <div class="content" ref="content" style="height:0px;">
+                    <div v-if="item.content" class="column">
+                      <div v-for="(prod,index) in item.content">
+                        <h2>{{prod.prod}}</h2>
+                        <div v-for="(i,index) in prod.prodItem" style="line-height: normal">
+                          <a href="i.href">{{i.title}}</a>
+                          <p>{{i.desc}}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </menuDropdown>
+            </li>
             <div class="line" :style="lineStyle"></div>
           </ul>
         </div>
         <div class="login-form">
-        </div>
-      </div>
-      <div class="content-dropdown" @mouseleave="UML">
-        <div class="content" v-for="(item,index) in titleItem" :key="index" ref="content">
-          <div v-if="item.content" class="column">
-            <div v-for="(prod,index) in item.content">
-              <h2>{{prod.prod}}</h2>
-              <div v-for="(i,index) in prod.prodItem">
-                <a href="i.href">{{i.title}}</a>
-                <p>{{i.desc}}</p>
-              </div>
-            </div>
+          <div class="register">
+            <router-link to="/register">注册</router-link>
+          </div>
+          <div class="login">
+            <router-link to="/login">登录</router-link>
           </div>
         </div>
       </div>
@@ -33,66 +43,128 @@
 </template>
 
 <script>
-  // import debounce from 'throttle-debounce/debounce'
+  // import menuDropdown from './myView/menu-dropdown'
+  import debounce from 'throttle-debounce/debounce'
   export default {
+
     name: 'app',
     data () {
       return {
         titleItem: [
-          {title: '首页'},
+          {
+            title: '首页',
+            path: '/home'
+            /* content: [
+             {
+             prod: '云计算',
+             prodItem: [
+             {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
+             {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
+             {title: 'ECS快照', desc: '稳定可靠、安全保障'},
+             {title: '裸金属服务器', desc: '专属物理服务器'},
+             {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
+             ]
+             },
+             {
+             prod: '运网络',
+             prodItem: [
+             {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
+             {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
+             {title: 'ECS快照', desc: '稳定可靠、安全保障'},
+             {title: '裸金属服务器', desc: '专属物理服务器'},
+             {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
+             ]
+             },
+             {
+             prod: '云计算',
+             prodItem: [
+             {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
+             {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
+             {title: 'ECS快照', desc: '稳定可靠、安全保障'},
+             {title: '裸金属服务器', desc: '专属物理服务器'},
+             {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
+             ]
+             },
+             {
+             prod: '云计算',
+             prodItem: [
+             {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
+             {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
+             {title: 'ECS快照', desc: '稳定可靠、安全保障'},
+             {title: '裸金属服务器', desc: '专属物理服务器'},
+             {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
+             ]
+             },
+             {
+             prod: '云计算',
+             prodItem: [
+             {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
+             {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
+             {title: 'ECS快照', desc: '稳定可靠、安全保障'},
+             {title: '裸金属服务器', desc: '专属物理服务器'},
+             {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
+             ]
+             }
+             ] */
+          },
           {
             title: '产品',
+            path: '/product',
             content: [
               {
-                prod: '云计算', prodItem: [
-                {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
-                {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
-                {title: 'ECS快照', desc: '稳定可靠、安全保障'},
-                {title: '裸金属服务器', desc: '专属物理服务器'},
-                {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
-              ]
+                prod: '云计算',
+                prodItem: [
+                  {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
+                  {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
+                  {title: 'ECS快照', desc: '稳定可靠、安全保障'},
+                  {title: '裸金属服务器', desc: '专属物理服务器'},
+                  {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
+                ]
               },
               {
-                prod: '运网络', prodItem: [
-                {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
-                {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
-                {title: 'ECS快照', desc: '稳定可靠、安全保障'},
-                {title: '裸金属服务器', desc: '专属物理服务器'},
-                {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
-              ]
+                prod: '云网络',
+                prodItem: [
+                  {title: '弹虚拟私有云VPC', desc: '网络隔离、分配子网'},
+                  {title: '弹性IP', desc: '绑定与解绑IP、扩容'},
+                  {title: '负载均衡', desc: '源算法、轮询、最小连接数'},
+                  {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持'},
+                  {title: '虚拟专网VPN', desc: '跨VPC链接'},
+                  {title: 'CDN', desc: '节点丰富、安全易用'}
+                ]
               },
               {
-                prod: '云计算', prodItem: [
-                {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
-                {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
-                {title: 'ECS快照', desc: '稳定可靠、安全保障'},
-                {title: '裸金属服务器', desc: '专属物理服务器'},
-                {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
-              ]
+                prod: '云存储',
+                prodItem: [
+                  {title: '云硬盘', desc: '性能型、超高性能型、存储型'},
+                  {title: '云硬盘快照', desc: '高可用保障、敏捷易用'},
+                  {title: '云硬盘备份', desc: '高可用保障、敏捷易用'},
+                  {title: '云硬盘热增容', desc: '高可用保障、敏捷易用'}
+                ]
               },
               {
-                prod: '云计算', prodItem: [
-                {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
-                {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
-                {title: 'ECS快照', desc: '稳定可靠、安全保障'},
-                {title: '裸金属服务器', desc: '专属物理服务器'},
-                {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
-              ]
+                prod: '云安全',
+                prodItem: [
+                  {title: '防火墙', desc: '自定义规则、协议、端口'},
+                  {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量'}
+                ]
               },
               {
-                prod: '云计算', prodItem: [
-                {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
-                {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
-                {title: 'ECS快照', desc: '稳定可靠、安全保障'},
-                {title: '裸金属服务器', desc: '专属物理服务器'},
-                {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
-              ]
+                prod: '云运维',
+                prodItem: [
+                  {title: '云监控', desc: '自定义监控项、多告警推送方式'},
+                  {title: '访问控制', desc: '权限管理、精准控制'}
+                ]
               }
             ]
           },
-          {title: '价格'},
-          {title: '文档'},
-          {title: '关于我们'}
+          {
+            title: '文档',
+            path: '/product'
+          },
+          {
+            title: '关于我们',
+            path: '/product'
+          }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
         lineStyle: {
@@ -106,28 +178,27 @@
     },
     methods: {
       /* li mouseenter事件 重新设置line样式 */
-      ME (index, event) {
+      ME: debounce(200, function (index, event) {
         this.currentItem === -1 ? this.lineStyle.transition = 'width .3s' : this.lineStyle.transition = 'all .3s'
         this.lineStyle.left = `${event.target.offsetLeft}px`
         this.lineStyle.width = `${event.target.clientWidth}px`
         this.currentItem = index
-      },
+      }),
       /* ul mouseleave事件 设置line宽度为0 动画样式width */
-      UML () {
+      UML: debounce(200, function () {
         this.currentItem = -1
         this.lineStyle.width = '0px'
-      }
+      })
     },
     computed: {},
     watch: {
+      /* 观察currentItem变化 设置content高度 */
       currentItem () {
         var content = this.$refs.content
         for (var i in content) {
           if (i == this.currentItem) {
-            // content[i].style.display = 'block'
             content[i].style.height = `${content[i].firstChild.clientHeight}px`
           } else {
-            // content[i].style.display = 'none'
             content[i].style.height = '0px'
           }
         }
@@ -180,14 +251,57 @@
             display: inline-block;
             margin: 0px auto;
             font-size: 0px;
-            position: relative;
+            // position: relative;
             li {
               line-height: 70px;
-              padding: 0px 30px;
               display: inline-block;
               color: #ffffff;
               font-size: 16px;
-              cursor: pointer;
+              .content-dropdown {
+                position: absolute;
+                top: 100%;
+                width: 100%;
+                opacity: 0.96;
+                background: #333333;
+                color: #ffffff;
+                .content {
+                  width: 1200px;
+                  margin: 0px auto;
+                  transition: height .3s;
+                  overflow: hidden;
+                  .column {
+                    display: flex;
+                    padding: 26px 0px;
+                    justify-content: space-between;
+                    text-align: left;
+
+                    > div {
+                      width: 15%;
+                    }
+                    h2 {
+                      font-size: 18px;
+                      color: #FFFFFF;
+                      line-height: 32px;
+                      font-weight: normal;
+                      border-bottom: 1px solid #E0E0E0;
+                      padding-bottom: 10px;
+                    }
+                    a {
+                      margin-top: 10px;
+                      display: inline-block;
+                      font-size: 14px;
+                      color: #FFFFFF;
+                      line-height: 25px;
+                    }
+                    p {
+                      font-size: 12px;
+                      color: #999999;
+                      line-height: 21px;
+                    }
+                  }
+                }
+
+              }
             }
             .line {
               height: 3px;
@@ -197,50 +311,29 @@
             }
           }
         }
-      }
-      .content-dropdown {
-        position: absolute;
-        top: 100%;
-        width: 100%;
-        opacity: 0.96;
-        background: #333333;
-        color: #ffffff;
-
-        .content {
-          width: 1200px;
-          margin: 0px auto;
-          height: 0px;
-          transition: height .3s;
-          overflow: hidden;
-          .column{
-            display: flex;
-            padding:26px 0px;
-            justify-content: space-between;
-            > div{
-              width:20%;
-            }
-            h2{
-              font-size: 18px;
-              color: #FFFFFF;
-              line-height: 32px;
-              font-weight: normal;
-              border-bottom: 1px solid #E0E0E0;
-            }
+        .login-form{
+          width:172px;
+          display: flex;
+          a{
+            line-height: 70px;
+            padding:5px 22px;
+            font-size: 18px;
+            color: #333333;
+            border-radius: 5px;
+          }
+          .register{
             a{
-              margin-top: 10px;
-              display: inline-block;
-              font-size: 14px;
-              color: #FFFFFF;
-              line-height: 25px;
+              background-color: #ffffff;
+              margin-right: 5px;
             }
-            p{
-              font-size: 12px;
-              color: #999999;
-              line-height: 21px;
+          }
+          .login{
+            a{
+              color:#ffffff;
+              border: 1px solid #ffffff;
             }
           }
         }
-
       }
     }
   }

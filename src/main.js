@@ -9,6 +9,8 @@ import iview from 'iview'
 import 'iview/dist/styles/iview.css'
 import '@/assets/css/reset.css'
 
+import menuDropdown from '@/myView/menu-dropdown'
+
 Vue.config.productionTip = false
 
 // axios挂载到Vue原型
@@ -16,6 +18,8 @@ Vue.prototype.$http = axios
 
 // 使用iview库
 Vue.use(iview)
+
+Vue.use(menuDropdown)
 
 /* eslint-disable no-new */
 new Vue({
