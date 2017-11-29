@@ -8,22 +8,28 @@
         <div class="operate">
           <ul @mouseleave="UML">
             <li v-for="(item,index) in titleItem" :key="index" @mouseenter="ME(index,$event)">
-              <menuDropdown>
-                <router-link :to="item.path">{{item.title}}</router-link>
-                <div slot="list" class="content-dropdown">
-                  <div class="content" ref="content" style="height:0px;">
-                    <div v-if="item.content" class="column">
-                      <div v-for="(prod,index) in item.content">
-                        <h2>{{prod.prod}}</h2>
-                        <div v-for="(i,index) in prod.prodItem" style="line-height: normal">
-                          <a href="i.href">{{i.title}}</a>
-                          <p>{{i.desc}}</p>
+
+              <div class="menu-dropdown">
+                <div class="menu-dropdown-rel">
+                  <router-link :to="item.path">{{item.title}}</router-link>
+
+                </div>
+                <div class="menu-dropdown-list">
+                  <div class="content-dropdown">
+                    <div class="content" ref="content" style="height:0px;">
+                      <div v-if="item.content" class="column">
+                        <div v-for="(prod,index) in item.content">
+                          <h2>{{prod.prod}}</h2>
+                          <div v-for="(i,index) in prod.prodItem" style="line-height: normal">
+                            <a href="i.href">{{i.title}}</a>
+                            <p>{{i.desc}}</p>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </menuDropdown>
+              </div>
             </li>
             <div class="line" :style="lineStyle"></div>
           </ul>
@@ -44,7 +50,8 @@
 
 <script>
   // import menuDropdown from './myView/menu-dropdown'
-  import debounce from 'throttle-debounce/debounce'
+  // import debounce from 'throttle-debounce/debounce'
+  import debounce from './util/debounce'
   export default {
     name: 'app',
     data () {
@@ -52,7 +59,7 @@
         titleItem: [
           {
             title: '首页',
-            path: '/home'
+            path: '/home',
             /* content: [
              {
              prod: '云计算',
@@ -256,51 +263,70 @@
               display: inline-block;
               color: #ffffff;
               font-size: 16px;
-              .content-dropdown {
-                position: absolute;
-                top: 100%;
-                width: 100%;
-                opacity: 0.96;
-                background: #333333;
-                color: #ffffff;
-                .content {
-                  width: 1200px;
-                  margin: 0px auto;
-                  transition: height .3s;
-                  overflow: hidden;
-                  .column {
-                    display: flex;
-                    padding: 26px 0px;
-                    justify-content: space-between;
-                    text-align: left;
-
-                    > div {
-                      width: 15%;
-                    }
-                    h2 {
-                      font-size: 18px;
-                      color: #FFFFFF;
-                      line-height: 32px;
-                      font-weight: normal;
-                      border-bottom: 1px solid #E0E0E0;
-                      padding-bottom: 10px;
-                    }
-                    a {
-                      margin-top: 10px;
-                      display: inline-block;
-                      font-size: 14px;
-                      color: #FFFFFF;
-                      line-height: 25px;
-                    }
-                    p {
-                      font-size: 12px;
-                      color: #999999;
-                      line-height: 21px;
-                    }
+              .menu-dropdown {
+                .menu-dropdown-rel {
+                  a {
+                    color: #ffffff;
+                    cursor: pointer;
+                    padding: 0px 30px;
+                    display: block;
                   }
                 }
+                .menu-dropdown-list {
+                  position: absolute;
+                  width: 100%;
+                  opacity: 0.96;
+                  background: #333333;
+                  top: 100%;
+                  left: 0;
+                  .content-dropdown {
+                    position: absolute;
+                    top: 100%;
+                    width: 100%;
+                    opacity: 0.96;
+                    background: #333333;
+                    color: #ffffff;
+                    .content {
+                      width: 1200px;
+                      margin: 0px auto;
+                      transition: height .3s;
+                      overflow: hidden;
+                      .column {
+                        display: flex;
+                        padding: 26px 0px;
+                        justify-content: space-between;
+                        text-align: left;
 
+                        > div {
+                          width: 15%;
+                        }
+                        h2 {
+                          font-size: 18px;
+                          color: #FFFFFF;
+                          line-height: 32px;
+                          font-weight: normal;
+                          border-bottom: 1px solid #E0E0E0;
+                          padding-bottom: 10px;
+                        }
+                        a {
+                          margin-top: 10px;
+                          display: inline-block;
+                          font-size: 14px;
+                          color: #FFFFFF;
+                          line-height: 25px;
+                        }
+                        p {
+                          font-size: 12px;
+                          color: #999999;
+                          line-height: 21px;
+                        }
+                      }
+                    }
+
+                  }
+                }
               }
+
             }
             .line {
               height: 3px;
@@ -310,25 +336,25 @@
             }
           }
         }
-        .login-form{
-          width:172px;
+        .login-form {
+          width: 172px;
           display: flex;
-          a{
+          a {
             line-height: 70px;
-            padding:5px 22px;
+            padding: 5px 22px;
             font-size: 18px;
             color: #333333;
             border-radius: 5px;
           }
-          .register{
-            a{
+          .register {
+            a {
               background-color: #ffffff;
               margin-right: 5px;
             }
           }
-          .login{
-            a{
-              color:#ffffff;
+          .login {
+            a {
+              color: #ffffff;
               border: 1px solid #ffffff;
             }
           }

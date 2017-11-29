@@ -9,7 +9,6 @@ import axios from 'axios'
 import iview from 'iview'
 import 'iview/dist/styles/iview.css'
 import '@/assets/css/reset.css'
-import menuDropdown from '@/myView/menu-dropdown'
 
 Vue.config.productionTip = false
 
@@ -20,7 +19,6 @@ Vue.prototype.$http = axios
 Vue.use(iview)
 
 // 使用自己编写的组件
-Vue.use(menuDropdown)
 
 /* eslint-disable no-new */
 new Vue({

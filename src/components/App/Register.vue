@@ -19,7 +19,8 @@
           <div class="body">
             <form>
               <div>
-                <span v-if="vailForm.loginname.message.length>0" class="warning">{{vailForm.loginname.message[0]}}</span>
+                <span v-if="vailForm.loginname.message.length>0"
+                      class="warning">{{vailForm.loginname.message[0]}}</span>
                 <span v-else>{{vailForm.loginname.info}}</span>
                 <input type="text" autocomplete="off" v-model="form.loginname" :placeholder="form.loginnamePlaceholder"
                        @blur="vail('loginname')" @focus="focus('loginname')" @input="isCorrect('loginname')">
@@ -353,7 +354,7 @@
     },
   }
   export default{
-    data(){
+    data () {
       return {
         form: {
           loginname: '',
@@ -385,21 +386,21 @@
         countdown: 60
       }
     },
-    created(){
+    created () {
 
     },
     methods: {
-      vail(field){
-        var text = this.form[field];
+      vail (field) {
+        var text = this.form[field]
         if (text == '') {
           this.vailForm[field].info = ''
           this.form[field + 'Placeholder'] = messageMap[field].placeholder
           return
         }
 
-        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
+        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true
         if (!isLegal) {
-          this.vailForm.loginname.message.unshift(messageMap[field].errorMessage);
+          this.vailForm.loginname.message.unshift(messageMap[field].errorMessage)
           this.vailForm.loginname.info = ''
         } else {
           this.vailForm.loginname.message = this.vailForm.loginname.message.filter(item => {
@@ -408,43 +409,18 @@
           if (this.vailForm.loginname.message.length == 0) {
             this.vailForm.loginname.info = messageMap.loginname.placeholder
           }
-          /*this.$http.get('user/isRegister.do?username=' + this.form.loginname).then(response => {
-           if (response.status == 200 && response.data.status == 1) {
-           this.vailForm[field].message = messageMap[field].placeholder;
-           this.vailForm[field].warning = false;
-           } else {
-           this.vailForm[field].message = messageMap[field].warnMessage;
-           this.vailForm[field].warning = true;
-           }
-           })*/
         }
       },
-      focus(field){
-        var text = this.form[field];
+      focus (field) {
+        var text = this.form[field]
         this.form[field + 'Placeholder'] = ''
         if (text == '') {
           this.vailForm[field].info = messageMap[field].placeholder
           return
         }
-        //var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
-
-        /*if (!isLegal) {
-         this.vailForm[field].info = messageMap[field].errorMessage;
-         } else {
-         this.$http.get('user/isRegister.do?username=' + this.form.loginname).then(response => {
-         if (response.status == 200 && response.data.status == 1) {
-         this.vailForm[field].message = messageMap[field].placeholder;
-         this.vailForm[field].warning = false;
-         } else {
-         this.vailForm[field].message = messageMap[field].warnMessage;
-         this.vailForm[field].warning = true;
-         }
-         })
-         }*/
       },
-      isCorrect(field){
+      isCorrect (field) {
         if (field == 'vailCode') {
-          //this.vailForm.vailCode.message = messageMap.vailCode.placeholder
           this.vailForm.vailCode.warning = false
         } else if (field == 'loginname') {
           if (regExp.emailVail(this.form[field])) {
@@ -463,10 +439,10 @@
           }
         }
       },
-      toggle(){
-        this.agree = !this.agree;
+      toggle () {
+        this.agree = !this.agree
       },
-      submit(){
+      submit () {
         this.$http.get('user/register.do?username=' + this.form.loginname + '&password=' + this.form.password + '&code=' + this.form.vailCode).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             console.log(response);
@@ -483,12 +459,12 @@
           }
         })
       },
-      sendCode(){
+      sendCode () {
         if (!regExp.emailVail(this.form.loginname)) {
           this.$Message.info('请输入正确的邮箱/手机号')
           return
         }
-        if(regExp.phoneVail(this.form.loginname)){
+        if (regExp.phoneVail(this.form.loginname)) {
           this.isemail = '0'
         }
         this.codePlaceholder = '60s'
@@ -515,17 +491,17 @@
           }
         })
       },
-      showRules(){
+      showRules () {
         this.loginShow = false;
         this.rulesShow = true;
       },
-      allowRules(){
+      allowRules () {
         this.loginShow = true;
         this.rulesShow = false;
       }
     },
     computed: {
-      disabled(){
+      disabled () {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.agree && this.vailForm.loginname.message.length == 0)
       }
     }
@@ -534,20 +510,20 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   .login-wrapper {
-    width:100%;
+    width: 100%;
     background: #F4F4F4;
-    .header{
-      width:100%;
-      height:70px;
+    .header {
+      width: 100%;
+      height: 70px;
       background-color: #333;
-      .container{
-        width:1200px;
-        height:100%;
-        margin:0px auto;
+      .container {
+        width: 1200px;
+        height: 100%;
+        margin: 0px auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        .logo{
+        .logo {
           width: 130px;
           height: 36px;
           background-color: white;
@@ -556,25 +532,25 @@
           background-size: 110% 260%;
           background-position-y: -29px;
         }
-        .home{
+        .home {
           font-size: 18px;
-          height:70px;
-          padding:0px 10px;
+          height: 70px;
+          padding: 0px 10px;
           vertical-align: center;
           cursor: pointer;
-          a{
+          a {
             line-height: 70px;
-            color:#fff
+            color: #fff
           }
         }
       }
     }
     .wrapper {
       width: 100%;
-      padding:120px 0px;
-      .wrapper-form{
-        width:1200px;
-        margin:0px auto;
+      padding: 120px 0px;
+      .wrapper-form {
+        width: 1200px;
+        margin: 0px auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -600,7 +576,7 @@
         font-family: PingFangSC-Regular;
         font-size: 26px;
         color: #5F5F5F;
-        margin-top:5px;
+        margin-top: 5px;
         letter-spacing: 0.9px;
         & > span {
           font-family: PingFangSC-Regular;
@@ -777,17 +753,17 @@
         }
       }
     }
-    .foot-bar{
-      position:fixed;
-      height:60px;
-      width:100%;
-      bottom:0px;
-      border-top:1px solid #3333;
+    .foot-bar {
+      position: fixed;
+      height: 60px;
+      width: 100%;
+      bottom: 0px;
+      border-top: 1px solid #3333;
       background: #F4F4F4;
       font-size: 14px;
       line-height: 60px;
-      span,a{
-        margin-right:40px;
+      span, a {
+        margin-right: 40px;
       }
     }
   }

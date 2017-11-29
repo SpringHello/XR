@@ -17,4 +17,4 @@ function initMsg() {
   })
 }
 
-export {initRecycle,initMsg}
+export {initRecycle, initMsg}
