@@ -4,11 +4,15 @@
 
 function invokeResolver(resolver, promise) {
   function resolvePromise(value) {
-    resolve(promise, value)
+    setTimeout(function () {
+      resolve(promise, value)
+    }, 0)
   }
 
   function rejectPromise(value) {
-    reject(promise, value)
+    setTimeout(function () {
+      reject(promise, value)
+    }, 0)
   }
 
   resolver(resolvePromise, rejectPromise)
@@ -16,10 +20,12 @@ function invokeResolver(resolver, promise) {
 
 function resolve(promise, value) {
   promise.status = 'full'
+  promise.stack[0].resolve(value)
 }
 
 function reject(promise, value) {
   promise.status = 'reject'
+  promise.stack[0].reject(value)
 }
 function Promise(resolver) {
   if (typeof resolver !== 'function') {
@@ -28,5 +34,19 @@ function Promise(resolver) {
   if (!this instanceof Promise) {
     throw new Error('Promise must use new operator')
   }
+  this.stack = []
+  this.status = 'pending'
+
   invokeResolver(resolver, this)
+  return this
 }
+
+Promise.prototype.then = function (resolve, reject) {
+  this.stack.push({
+    resolve,
+    reject
+  })
+}
+
+exports.Promise = Promise
+

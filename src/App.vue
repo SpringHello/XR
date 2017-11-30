@@ -12,7 +12,6 @@
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
                   <router-link :to="item.path">{{item.title}}</router-link>
-
                 </div>
                 <div class="menu-dropdown-list">
                   <div class="content-dropdown">
