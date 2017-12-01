@@ -1,9 +1,13 @@
 *, *::before, *::after {
   box-sizing: border-box;
+
+}
+
+* {
   font-family: MicrosoftYaHei;
 }
 
-html{
+html {
   overflow: scroll;
 }
 

@@ -25,7 +25,8 @@
               </div>
               <div>
                 <span :class="{warning:vailForm.password.warning}">{{vailForm.password.message}}</span>
-                <input type="password" autocomplete="off" v-model="form.password" :placeholder="form.passwordPlaceholder"
+                <input type="password" autocomplete="off" v-model="form.password"
+                       :placeholder="form.passwordPlaceholder"
                        @blur="vail('password')" @focus="focus('password')" @input="isCorrect('password')"
                        v-on:keyup.enter="submit">
               </div>
@@ -340,11 +341,11 @@
       errorMessage: '请输入正确的邮箱/手机号'
     },
     password: {
-      placeholder: '密码',
+      placeholder: '密码'
     },
     vailCode: {
-      placeholder: '请输入验证码',
-    },
+      placeholder: '请输入验证码'
+    }
   }
   export default{
     data(){
@@ -355,7 +356,7 @@
           vailCode: '',
           loginnamePlaceholder: '登录邮箱/手机号',
           passwordPlaceholder: '密码',
-          vailCodePlaceholder: '请输入验证码',
+          vailCodePlaceholder: '请输入验证码'
         },
         vailForm: {
           loginname: {
@@ -369,31 +370,32 @@
           vailCode: {
             message: '',
             warning: false
-          },
+          }
         },
         agree: true,
         imgSrc: `user/getKaptchaImage.do?t=${new Date().getTime()}`,
         loginShow: true,
-        rulesShow: false,
+        rulesShow: false
       }
     },
-    created(){},
+    created(){
+    },
     methods: {
       vail(field){
-        var text = this.form[field];
+        var text = this.form[field]
         if (text == '') {
           this.vailForm[field].message = ''
           this.form[`${field}Placeholder`] = messageMap[field].placeholder
-          this.vailForm[field].warning = false;
+          this.vailForm[field].warning = false
           return
         }
 
-        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
+        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true
         if (!isLegal && field == 'loginname') {
-          this.vailForm[field].message = messageMap[field].errorMessage;
+          this.vailForm[field].message = messageMap[field].errorMessage
           this.vailForm[field].warning = true
         } else {
-          this.vailForm[field].message = messageMap[field].placeholder;
+          this.vailForm[field].message = messageMap[field].placeholder
           this.vailForm[field].warning = false
         }
       },
@@ -406,25 +408,24 @@
           this.vailForm.loginname.message = messageMap.loginname.placeholder
           this.vailForm.loginname.warning = false
         }
-        var text = this.form[field];
+        var text = this.form[field]
         this.form[`${field}Placeholder`] = ''
         if (text == '') {
           this.vailForm[field].message = messageMap[field].placeholder
           return
         }
-        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
+        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true
 
         if (!isLegal && field == 'loginname') {
-          this.vailForm[field].message = messageMap[field].errorMessage;
+          this.vailForm[field].message = messageMap[field].errorMessage
           this.vailForm[field].warning = true
         } else {
-          this.vailForm[field].message = messageMap[field].placeholder;
+          this.vailForm[field].message = messageMap[field].placeholder
           this.vailForm[field].warning = false
         }
       },
       isCorrect(field){
         if (field == 'vailCode') {
-          //this.vailForm.vailCode.message = messageMap.vailCode.placeholder
           this.vailForm.vailCode.warning = false
         } else if (field == 'loginname') {
           if (regExp.emailVail(this.form[field])) {
@@ -437,40 +438,33 @@
             this.vailForm.loginname.warning = false
           }
         }
-
       },
       toggle(){
-        this.agree = !this.agree;
+        this.agree = !this.agree
       },
       submit(){
-        /*if (!regExp.passwordVail(this.form.password)) {
-         this.vailForm.loginname.message = '密码不符合要求'
-         this.vailForm.loginname.warning = true
-         return
-         }*/
         this.$noInterceptorsHttp.get(`user/login.do?username=${this.form.loginname}&password=${this.form.password}&vailCode=${this.form.vailCode}`).then((response) => {
-            if (response.status == 200 && response.statusText == 'OK') {
-              if (response.data.status == 1) {
-                this.$router.push({path: 'overview'})
-              } else {
-                this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-                this.vailForm.loginname.message = response.data.message
-                this.vailForm.loginname.warning = true
-              }
+          if (response.status == 200 && response.statusText == 'OK') {
+            if (response.data.status == 1) {
+              this.$router.push({path: 'overview'})
+            } else {
+              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+              this.vailForm.loginname.message = response.data.message
+              this.vailForm.loginname.warning = true
             }
           }
-        );
+        })
       },
       showRules(){
-        this.loginShow = false;
-        this.rulesShow = true;
+        this.loginShow = false
+        this.rulesShow = true
       },
       allowRules(){
-        this.loginShow = true;
-        this.rulesShow = false;
+        this.loginShow = true
+        this.rulesShow = false
       },
       toRegister(){
-        this.$router.push('register');
+        this.$router.push('register')
       }
     },
     computed: {
@@ -483,19 +477,19 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   .login-wrapper {
-    width:100%;
-    .header{
-      width:100%;
-      height:70px;
+    width: 100%;
+    .header {
+      width: 100%;
+      height: 70px;
       background-color: #333;
-      .container{
-        width:1200px;
-        height:100%;
-        margin:0px auto;
+      .container {
+        width: 1200px;
+        height: 100%;
+        margin: 0px auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        .logo{
+        .logo {
           width: 130px;
           height: 36px;
           background-color: white;
@@ -504,25 +498,25 @@
           background-size: 110% 260%;
           background-position-y: -29px;
         }
-        .home{
+        .home {
           font-size: 18px;
-          height:70px;
-          padding:0px 10px;
+          height: 70px;
+          padding: 0px 10px;
           vertical-align: center;
           cursor: pointer;
-          a{
+          a {
             line-height: 70px;
-            color:#fff
+            color: #fff
           }
         }
       }
     }
     .wrapper {
       width: 100%;
-      padding:120px 0px;
-      .wrapper-form{
-        width:1200px;
-        margin:0px auto;
+      padding: 120px 0px;
+      .wrapper-form {
+        width: 1200px;
+        margin: 0px auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -548,7 +542,7 @@
         font-family: PingFangSC-Regular;
         font-size: 26px;
         color: #5F5F5F;
-        margin-top:5px;
+        margin-top: 5px;
         letter-spacing: 0.9px;
         & > span {
           font-family: PingFangSC-Regular;
@@ -707,17 +701,17 @@
         }
       }
     }
-    .foot-bar{
-      position:fixed;
-      height:60px;
-      width:100%;
-      bottom:0px;
-      border-top:1px solid #3333;
+    .foot-bar {
+      position: fixed;
+      height: 60px;
+      width: 100%;
+      bottom: 0px;
+      border-top: 1px solid #3333;
       background: #F4F4F4;
       font-size: 14px;
       line-height: 60px;
-      span,a{
-        margin-right:40px;
+      span, a {
+        margin-right: 40px;
       }
     }
   }

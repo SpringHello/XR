@@ -6,8 +6,7 @@ export default function (delay, cb) {
   /* timeoutID */
   var timeoutID
 
-  function wrapper() {
-
+  function wrapper(){
     var arg = arguments
     var content = this
     if (timeoutID) {

@@ -347,14 +347,14 @@
       errorMessage: '请输入正确的邮箱/手机号'
     },
     password: {
-      placeholder: '请输入新密码',
+      placeholder: '请输入新密码'
     },
     confirmPassword: {
       placeholder: '请确认新密码'
     },
     vailCode: {
-      placeholder: '请输入验证码',
-    },
+      placeholder: '请输入验证码'
+    }
   }
   export default{
     data(){
@@ -367,7 +367,7 @@
           loginnamePlaceholder: '登录邮箱/手机号',
           passwordPlaceholder: '请输入新密码',
           confirmPasswordPlaceholder: '请确认新密码',
-          vailCodePlaceholder: '请输入验证码',
+          vailCodePlaceholder: '请输入验证码'
         },
         vailForm: {
           loginname: {
@@ -385,7 +385,7 @@
           vailCode: {
             message: '',
             warning: false
-          },
+          }
         },
         agree: true,
         imgSrc: 'user/getKaptchaImage.do',
@@ -401,21 +401,21 @@
     },
     methods: {
       vail(field){
-        var text = this.form[field];
+        var text = this.form[field]
         if (text == '') {
           this.vailForm[field].message = ''
           this.form[`${field}Placeholder`] = messageMap[field].placeholder
-          this.vailForm[field].warning = false;
+          this.vailForm[field].warning = false
           return
         }
 
-        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
+        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true
 
         if (!isLegal) {
-          this.vailForm[field].message = messageMap[field].errorMessage;
+          this.vailForm[field].message = messageMap[field].errorMessage
           this.vailForm[field].warning = true
         } else {
-          this.vailForm[field].message = messageMap[field].placeholder;
+          this.vailForm[field].message = messageMap[field].placeholder
           this.vailForm[field].warning = false
         }
       },
@@ -429,7 +429,7 @@
           this.vailForm.loginname.warning = false
         }
 
-        var text = this.form[field];
+        var text = this.form[field]
         this.form[`${field}Placeholder`] = ''
         console.log(text)
         if (text == '') {
@@ -437,19 +437,18 @@
           this.vailForm[field].message = messageMap[field].placeholder
           return
         }
-        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
+        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true
 
         if (!isLegal) {
-          this.vailForm[field].message = messageMap[field].errorMessage;
+          this.vailForm[field].message = messageMap[field].errorMessage
           this.vailForm[field].warning = true
         } else {
-          this.vailForm[field].message = messageMap[field].placeholder;
+          this.vailForm[field].message = messageMap[field].placeholder
           this.vailForm[field].warning = false
         }
       },
       isCorrect(field){
         if (field == 'vailCode') {
-          //this.vailForm.vailCode.message = messageMap.vailCode.placeholder
           this.vailForm.vailCode.warning = false
         } else {
           if (regExp.emailVail(this.form[field])) {
@@ -457,7 +456,6 @@
             this.vailForm.loginname.warning = false
           }
         }
-
       },
       sendCode(){
         if (!regExp.emailVail(this.form.loginname)) {
@@ -482,17 +480,17 @@
             this.$Message.success({
               content: '验证码发送成功',
               duration: 5
-            });
+            })
           } else {
             this.$Message.error({
               content: '验证码发送失败',
               duration: 5
-            });
+            })
           }
         })
       },
       toggle(){
-        this.agree = !this.agree;
+        this.agree = !this.agree
       },
       submit(){
         if (this.form.password != this.form.confirmPassword) {
@@ -515,21 +513,18 @@
               this.vailForm.loginname.warning = true
             }
           }
-        }).catch((error) => {
-          this.vailForm.loginname.message = '服务器异常'
-          this.vailForm.loginname.warning = true
-        });
+        })
       },
       showRules(){
-        this.loginShow = false;
-        this.rulesShow = true;
+        this.loginShow = false
+        this.rulesShow = true
       },
       allowRules(){
-        this.loginShow = true;
-        this.rulesShow = false;
+        this.loginShow = true
+        this.rulesShow = false
       },
       toRegister(){
-        this.$router.push('register');
+        this.$router.push('register')
       }
     },
     computed: {

@@ -1,34 +1,14 @@
 <template>
   <div id="app">
     <header>
-      <div class="wrapper">
+      <div class="topbar-nav">
         <a class="logo">
           <div></div>
         </a>
         <div class="operate">
           <ul @mouseleave="UML">
             <li v-for="(item,index) in titleItem" :key="index" @mouseenter="ME(index,$event)">
-
-              <div class="menu-dropdown">
-                <div class="menu-dropdown-rel">
-                  <router-link :to="item.path">{{item.title}}</router-link>
-                </div>
-                <div class="menu-dropdown-list">
-                  <div class="content-dropdown">
-                    <div class="content" ref="content" style="height:0px;">
-                      <div v-if="item.content" class="column">
-                        <div v-for="(prod,index) in item.content">
-                          <h2>{{prod.prod}}</h2>
-                          <div v-for="(i,index) in prod.prodItem" style="line-height: normal">
-                            <a href="i.href">{{i.title}}</a>
-                            <p>{{i.desc}}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <router-link :to="item.path">{{item.title}}</router-link>
             </li>
             <div class="line" :style="lineStyle"></div>
           </ul>
@@ -39,6 +19,15 @@
           </div>
           <div class="login">
             <router-link to="/login">登录</router-link>
+          </div>
+        </div>
+      </div>
+      <div class="topbar-dropdown" ref="dropdown">
+        <div class="topbar-dropdown-inner">
+          <div class="topbar-dropdown-container" v-for="(title,tIndex) in titleItem" :key="tIndex">
+            <div class="topbar-dropdown-container-item" v-if="title.content" v-for="(contentItem,cIndex) in title.content" :key="cIndex">
+              <div></div>
+            </div>
           </div>
         </div>
       </div>
@@ -58,59 +47,7 @@
         titleItem: [
           {
             title: '首页',
-            path: '/home',
-            /* content: [
-             {
-             prod: '云计算',
-             prodItem: [
-             {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
-             {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
-             {title: 'ECS快照', desc: '稳定可靠、安全保障'},
-             {title: '裸金属服务器', desc: '专属物理服务器'},
-             {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
-             ]
-             },
-             {
-             prod: '运网络',
-             prodItem: [
-             {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
-             {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
-             {title: 'ECS快照', desc: '稳定可靠、安全保障'},
-             {title: '裸金属服务器', desc: '专属物理服务器'},
-             {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
-             ]
-             },
-             {
-             prod: '云计算',
-             prodItem: [
-             {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
-             {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
-             {title: 'ECS快照', desc: '稳定可靠、安全保障'},
-             {title: '裸金属服务器', desc: '专属物理服务器'},
-             {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
-             ]
-             },
-             {
-             prod: '云计算',
-             prodItem: [
-             {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
-             {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
-             {title: 'ECS快照', desc: '稳定可靠、安全保障'},
-             {title: '裸金属服务器', desc: '专属物理服务器'},
-             {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
-             ]
-             },
-             {
-             prod: '云计算',
-             prodItem: [
-             {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
-             {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
-             {title: 'ECS快照', desc: '稳定可靠、安全保障'},
-             {title: '裸金属服务器', desc: '专属物理服务器'},
-             {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
-             ]
-             }
-             ] */
+            path: '/home'
           },
           {
             title: '产品',
@@ -234,7 +171,7 @@
           height: 70px;
         }
       }
-      .wrapper {
+      .topbar-nav {
         width: 1200px;
         height: 70px;
         margin: 0px auto;
@@ -262,70 +199,12 @@
               display: inline-block;
               color: #ffffff;
               font-size: 16px;
-              .menu-dropdown {
-                .menu-dropdown-rel {
-                  a {
-                    color: #ffffff;
-                    cursor: pointer;
-                    padding: 0px 30px;
-                    display: block;
-                  }
-                }
-                .menu-dropdown-list {
-                  position: absolute;
-                  width: 100%;
-                  opacity: 0.96;
-                  background: #333333;
-                  top: 100%;
-                  left: 0;
-                  .content-dropdown {
-                    position: absolute;
-                    top: 100%;
-                    width: 100%;
-                    opacity: 0.96;
-                    background: #333333;
-                    color: #ffffff;
-                    .content {
-                      width: 1200px;
-                      margin: 0px auto;
-                      transition: height .3s;
-                      overflow: hidden;
-                      .column {
-                        display: flex;
-                        padding: 26px 0px;
-                        justify-content: space-between;
-                        text-align: left;
-
-                        > div {
-                          width: 15%;
-                        }
-                        h2 {
-                          font-size: 18px;
-                          color: #FFFFFF;
-                          line-height: 32px;
-                          font-weight: normal;
-                          border-bottom: 1px solid #E0E0E0;
-                          padding-bottom: 10px;
-                        }
-                        a {
-                          margin-top: 10px;
-                          display: inline-block;
-                          font-size: 14px;
-                          color: #FFFFFF;
-                          line-height: 25px;
-                        }
-                        p {
-                          font-size: 12px;
-                          color: #999999;
-                          line-height: 21px;
-                        }
-                      }
-                    }
-
-                  }
-                }
+              a {
+                color: #ffffff;
+                cursor: pointer;
+                padding: 0px 30px;
+                display: block;
               }
-
             }
             .line {
               height: 3px;
@@ -355,6 +234,19 @@
             a {
               color: #ffffff;
               border: 1px solid #ffffff;
+            }
+          }
+        }
+      }
+      .topbar-dropdown{
+        .topbar-dropdown-inner{
+          background-color: #333;
+          opacity: .8;
+          .topbar-dropdown-container{
+            width:1200px;
+            margin:0px auto;
+            .topbar-dropdown-container-item{
+              display: flex;
             }
           }
         }

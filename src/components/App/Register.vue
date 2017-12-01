@@ -346,12 +346,12 @@
     },
     password: {
       placeholder: '请输入至少8位包含字母与数字的密码',
-      errorMessage: '您设定的密码强度不足',
+      errorMessage: '您设定的密码强度不足'
     },
     vailCode: {
       placeholder: '请输入您收到的验证码',
-      errorMessage: '验证码错误',
-    },
+      errorMessage: '验证码错误'
+    }
   }
   export default{
     data () {
@@ -363,7 +363,7 @@
           showPassword: false,
           loginnamePlaceholder: '登录邮箱/手机号',
           passwordPlaceholder: '请输入至少8位包含字母与数字的密码',
-          vailCodePlaceholder: '请输入您收到的验证码',
+          vailCodePlaceholder: '请输入您收到的验证码'
         },
         vailForm: {
           loginname: {
@@ -395,7 +395,6 @@
         if (text == '') {
           this.vailForm[field].info = ''
           this.form[field + 'Placeholder'] = messageMap[field].placeholder
-          return
         }
 
         var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true
@@ -416,7 +415,6 @@
         this.form[field + 'Placeholder'] = ''
         if (text == '') {
           this.vailForm[field].info = messageMap[field].placeholder
-          return
         }
       },
       isCorrect (field) {
@@ -434,8 +432,9 @@
             this.vailForm.loginname.message = this.vailForm.loginname.message.filter(item => {
               return item != messageMap.password.errorMessage
             })
-            if (this.form.loginname != '')
+            if (this.form.loginname != ''){
               this.vailForm.loginname.info = messageMap.loginname.placeholder
+            }
           }
         }
       },
@@ -445,17 +444,17 @@
       submit () {
         this.$http.get('user/register.do?username=' + this.form.loginname + '&password=' + this.form.password + '&code=' + this.form.vailCode).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            console.log(response);
+            console.log(response)
             this.$Message.success({
               content: '注册成功',
               duration: 3
-            });
-            this.$router.push('login');
+            })
+            this.$router.push('login')
           } else {
             this.$Message.error({
               content: response.data.message,
               duration: 3
-            });
+            })
           }
         })
       },
@@ -482,22 +481,22 @@
             this.$Message.success({
               content: '验证码发送成功',
               duration: 5
-            });
+            })
           } else {
             this.$Message.error({
               content: '验证码发送失败',
               duration: 5
-            });
+            })
           }
         })
       },
       showRules () {
-        this.loginShow = false;
-        this.rulesShow = true;
+        this.loginShow = false
+        this.rulesShow = true
       },
       allowRules () {
-        this.loginShow = true;
-        this.rulesShow = false;
+        this.loginShow = true
+        this.rulesShow = false
       }
     },
     computed: {
