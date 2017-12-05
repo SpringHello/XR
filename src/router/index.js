@@ -4,13 +4,16 @@ import Router from 'vue-router'
 // 主路由
 import App from '@/App'
 import Back from '@/Back'
+import LR from '@/LR'
 
 // 前台页面子路由
 import Home from '@/components/App/Home'
 import Price from '@/components/App/Price'
-import Login from '@/components/App/Login'
-import Register from '@/components/App/Register'
-import Reset from '@/components/App/Reset'
+
+// 登录注册页面
+import Login from '@/components/LR/Login'
+import Register from '@/components/LR/Register'
+import Reset from '@/components/LR/Reset'
 
 // 后台页面子路由
 import Overview from '@/components/Back/Overview'
@@ -26,10 +29,7 @@ export default new Router({
       component: App,
       children: [
         {path: '/home', name: 'home', component: Home},
-        {path: '/price', name: 'price', component: Price},
-        {path: '/login', name: 'login', component: Login},
-        {path: '/register', name: 'register', component: Register},
-        {path: '/reset', name: 'reset', component: Reset}
+        {path: '/price', name: 'price', component: Price}
       ]
     },
     {
@@ -38,6 +38,16 @@ export default new Router({
       component: Back,
       children: [
         {path: '/overview', name: 'overview', component: Overview}
+      ]
+    },
+    {
+      path: '/',
+      name: LR.name,
+      component: LR,
+      children: [
+        {path: '/login', name: 'login', component: Login},
+        {path: '/register', name: 'register', component: Register},
+        {path: '/reset', name: 'reset', component: Reset}
       ]
     }
   ]

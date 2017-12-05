@@ -48,9 +48,7 @@
 </template>
 
 <script>
-  // import menuDropdown from './myView/menu-dropdown'
-  // import debounce from 'throttle-debounce/debounce'
-  import debounce from './util/debounce'
+  import debounce from 'throttle-debounce/debounce'
   export default {
     name: 'app',
     data () {
@@ -58,59 +56,7 @@
         titleItem: [
           {
             title: '首页',
-            path: '/home',
-            /* content: [
-             {
-             prod: '云计算',
-             prodItem: [
-             {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
-             {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
-             {title: 'ECS快照', desc: '稳定可靠、安全保障'},
-             {title: '裸金属服务器', desc: '专属物理服务器'},
-             {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
-             ]
-             },
-             {
-             prod: '运网络',
-             prodItem: [
-             {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
-             {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
-             {title: 'ECS快照', desc: '稳定可靠、安全保障'},
-             {title: '裸金属服务器', desc: '专属物理服务器'},
-             {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
-             ]
-             },
-             {
-             prod: '云计算',
-             prodItem: [
-             {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
-             {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
-             {title: 'ECS快照', desc: '稳定可靠、安全保障'},
-             {title: '裸金属服务器', desc: '专属物理服务器'},
-             {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
-             ]
-             },
-             {
-             prod: '云计算',
-             prodItem: [
-             {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
-             {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
-             {title: 'ECS快照', desc: '稳定可靠、安全保障'},
-             {title: '裸金属服务器', desc: '专属物理服务器'},
-             {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
-             ]
-             },
-             {
-             prod: '云计算',
-             prodItem: [
-             {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
-             {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
-             {title: 'ECS快照', desc: '稳定可靠、安全保障'},
-             {title: '裸金属服务器', desc: '专属物理服务器'},
-             {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
-             ]
-             }
-             ] */
+            path: '/home'
           },
           {
             title: '产品',

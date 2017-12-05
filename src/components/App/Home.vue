@@ -5,63 +5,14 @@
 </template>
 
 <script type="text/ecmascript-6">
-  /* export default{
+  export default{
     data () {
-      return {
-        kfURL: '',
-        isLogin: false,
-        userInfo: {avatar: 'http://bpic.588ku.com/element_origin_min_pic/01/48/83/015744416ce1ee9.jpg'}
-      }
+      return {}
     },
     created () {
-      this.$http.get('user/getKfAdd.do').then(response => {
-        this.kfURL = response.data.result
-      })
-      this.$noInterceptorsHttp.get(`user/GetUserInfo.do?_t=${new Date().getTime()}`).then(response => {
-        if (response.status === 200 && response.data.status === 1) {
-          this.isLogin = true
-          this.userInfo = response.data.result
-          this.$store.commit('setUserInfo', response.data.result)
-        }
-      })
-      this.$http.get('information/zone.do').then(response => {
-        if (response.status === 200 && response.data.status === 1) {
-          this.$store.commit('setZoneOptions', response.data.result)
-          localStorage.setItem('zoneOptions', JSON.stringify(response.data.result))
-        }
-      })
     },
-    methods: {
-      push (path) {
-        if (path === 'exit') {
-          this.$http.get('user/logout.do').then(response => {
-            if (response.status === 200) {
-              this.isLogin = false
-              this.$router.push('/login')
-            }
-          })
-        } else {
-          this.$router.push(path)
-        }
-        document.body.scrollTop = 0
-      },
-      experience () {
-        if (this.isLogin) {
-          this.$router.push('/vps')
-          window.scrollTo(0, 0)
-        } else {
-          this.$router.push('/login')
-        }
-      },
-      toChange (name) {
-        this.$router.push(name)
-        window.scrollTo(0, 0)
-      },
-      toNew () {
-        window.open('http://www.miitbeian.gov.cn/')
-      }
-    }
-  } */
+    methods: {}
+  }
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>

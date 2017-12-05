@@ -1,71 +1,53 @@
 <template>
   <div class="login-wrapper">
-    <header class="header">
-      <div class="container">
-        <div class="logo"></div>
-        <div class="home">
-          <router-link to="home">首页</router-link>
-        </div>
-      </div>
-    </header>
-    <div class="wrapper">
+    <div class="wrapper" v-show="loginShow">
       <div class="wrapper-form">
         <div class="banner">
         </div>
         <div class="login-form">
           <div class="head">
-            <span>登录</span>
+            <span>注册</span>
           </div>
           <div class="body">
             <form>
               <div>
-                <span :class="{warning:vailForm.loginname.warning}">{{vailForm.loginname.message}}</span>
+                <span v-if="vailForm.loginname.message.length>0"
+                      class="warning">{{vailForm.loginname.message[0]}}</span>
+                <span v-else>{{vailForm.loginname.info}}</span>
                 <input type="text" autocomplete="off" v-model="form.loginname" :placeholder="form.loginnamePlaceholder"
                        @blur="vail('loginname')" @focus="focus('loginname')" @input="isCorrect('loginname')">
               </div>
-              <div>
-                <span :class="{warning:vailForm.password.warning}">{{vailForm.password.message}}</span>
-                <input type="password" autocomplete="off" v-model="form.password" :placeholder="form.passwordPlaceholder"
-                       @blur="vail('password')" @focus="focus('password')" @input="isCorrect('password')"
-                       v-on:keyup.enter="submit">
+              <div style="position:relative">
+                <span>{{vailForm.password.info}}</span>
+                <input v-show="form.showPassword==false" type="password" autocomplete="off" v-model="form.password"
+                       :placeholder="form.passwordPlaceholder" @blur="vail('password')" @focus="focus('password')"
+                       @input="isCorrect('password')">
+                <input v-show="form.showPassword==true" type="text" autocomplete="off" v-model="form.password"
+                       :placeholder="form.passwordPlaceholder" @blur="vail('password')" @focus="focus('password')"
+                       @input="isCorrect('password')">
+                <label :class="{close:form.showPassword}" @click="form.showPassword=!form.showPassword"></label>
               </div>
               <div style="position:relative">
-                <span>{{vailForm.vailCode.message}}</span>
-                <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
-                       :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
-                       @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-                <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                <span>{{vailForm.vailCode.info}}</span>
+                <input type="text" v-model="form.vailCode" name="vailCode" :placeholder="form.vailCodePlaceholder"
+                       @blur="vail('vailCode')" @focus="focus('vailCode')" @input="isCorrect('vailCode')">
+                <button class="sendCode" :class="{codeDisabled:codePlaceholder!='发送验证码'}" @click.prevent="sendCode"
+                        :disabled="codePlaceholder!='发送验证码'">{{codePlaceholder}}
+                </button>
               </div>
             </form>
           </div>
           <div class="foot">
-            <button :class="{disabled:disabled}" :disabled="disabled==true" @click="submit">登录</button>
+            <button :class="{disabled:disabled}" :disabled="disabled==true" @click="submit">注册</button>
+            <div style="margin-bottom: 10px;">
+              <span class="checkBox" :class="{agree:agree}" @click="toggle"></span>&nbsp;<span>我已阅读并同意</span><span
+              style="color:#0EB4FA;cursor:pointer;" @click="showRules">《睿云用户使用协议》</span>
+            </div>
             <div>
-              <!--span class="checkBox" :class="{agree:agree}" @click="toggle"></span>&nbsp;<span>我已阅读并同意</span><span
-              style="color:#0EB4FA;cursor:pointer;" @click="showRules">《睿云用户使用协议》</span-->
-              <router-link to="register" style="color:#0EB4FA;cursor:pointer;float:left;font-size: 14px">
-                立即注册
-              </router-link>
-              <router-link to="reset" style="color:#0EB4FA;cursor:pointer;float:right;font-size:14px">
-                忘记密码
-              </router-link>
+              <router-link to="/login"><span style="color:#0EB4FA">已有帐号点击登录</span></router-link>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="foot-bar">
-      <div style="width:1200px;height:100%;margin:0px auto;">
-        <span>copyright © 2014-2017</span>
-        <span>北京允睿讯通科技有限公司</span>
-        <span @click="toNew" style=" cursor:pointer;">京ICP备15035854号</span>
-        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922"
-           style=" cursor:pointer;float:none">
-          <img src="../../assets/img/beian.png" style="vertical-align: middle">京公网安备11010802024922号
-        </a>
-        <a>
-          <router-link to="/about">关于我们</router-link>
-        </a>
       </div>
     </div>
     <div class="rules" v-show="rulesShow">
@@ -336,146 +318,159 @@
   import regExp from '../../util/regExp'
   var messageMap = {
     loginname: {
-      placeholder: '登录邮箱/手机号',
-      errorMessage: '请输入正确的邮箱/手机号'
+      placeholder: '登录 邮箱/手机号',
+      errorMessage: '请输入正确的邮箱/手机号',
+      warnMessage: '该 邮箱/手机号 已注册'
     },
     password: {
-      placeholder: '密码',
+      placeholder: '请输入至少8位包含字母与数字的密码',
+      errorMessage: '您设定的密码强度不足'
     },
     vailCode: {
-      placeholder: '请输入验证码',
-    },
+      placeholder: '请输入您收到的验证码',
+      errorMessage: '验证码错误'
+    }
   }
   export default{
-    data(){
+    data () {
       return {
         form: {
           loginname: '',
           password: '',
           vailCode: '',
+          showPassword: false,
           loginnamePlaceholder: '登录邮箱/手机号',
-          passwordPlaceholder: '密码',
-          vailCodePlaceholder: '请输入验证码',
+          passwordPlaceholder: '请输入至少8位包含字母与数字的密码',
+          vailCodePlaceholder: '请输入您收到的验证码'
         },
         vailForm: {
           loginname: {
-            message: '',
-            warning: false
+            message: [],
+            info: ''
           },
           password: {
-            message: '',
-            warning: false
+            info: ''
           },
           vailCode: {
-            message: '',
-            warning: false
-          },
+            info: ''
+          }
         },
         agree: true,
-        imgSrc: `user/getKaptchaImage.do?t=${new Date().getTime()}`,
+        isemail: '1',
+        type: '0',
         loginShow: true,
         rulesShow: false,
+        codePlaceholder: '发送验证码',
+        countdown: 60
       }
     },
-    created(){},
+    created () {
+
+    },
     methods: {
-      vail(field){
-        var text = this.form[field];
+      vail (field) {
+        var text = this.form[field]
         if (text == '') {
-          this.vailForm[field].message = ''
-          this.form[`${field}Placeholder`] = messageMap[field].placeholder
-          this.vailForm[field].warning = false;
+          this.vailForm[field].info = ''
+          this.form[field + 'Placeholder'] = messageMap[field].placeholder
           return
         }
 
-        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
-        if (!isLegal && field == 'loginname') {
-          this.vailForm[field].message = messageMap[field].errorMessage;
-          this.vailForm[field].warning = true
+        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true
+        if (!isLegal) {
+          this.vailForm.loginname.message.unshift(messageMap[field].errorMessage)
+          this.vailForm.loginname.info = ''
         } else {
-          this.vailForm[field].message = messageMap[field].placeholder;
-          this.vailForm[field].warning = false
+          this.vailForm.loginname.message = this.vailForm.loginname.message.filter(item => {
+            return item != messageMap[field].errorMessage
+          })
+          if (this.vailForm.loginname.message.length == 0) {
+            this.vailForm.loginname.info = messageMap.loginname.placeholder
+          }
         }
       },
-      focus(field){
-        if (field == 'vailCode' && this.vailForm.loginname.message == '验证码错误') {
-          this.vailForm.loginname.message = messageMap.loginname.placeholder
-          this.vailForm.loginname.warning = false
-        }
-        if ((field == 'loginname' || field == 'password') && this.vailForm.loginname.message == '用户名或密码错误') {
-          this.vailForm.loginname.message = messageMap.loginname.placeholder
-          this.vailForm.loginname.warning = false
-        }
-        var text = this.form[field];
-        this.form[`${field}Placeholder`] = ''
+      focus (field) {
+        var text = this.form[field]
+        this.form[field + 'Placeholder'] = ''
         if (text == '') {
-          this.vailForm[field].message = messageMap[field].placeholder
-          return
-        }
-        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
-
-        if (!isLegal && field == 'loginname') {
-          this.vailForm[field].message = messageMap[field].errorMessage;
-          this.vailForm[field].warning = true
-        } else {
-          this.vailForm[field].message = messageMap[field].placeholder;
-          this.vailForm[field].warning = false
+          this.vailForm[field].info = messageMap[field].placeholder
         }
       },
-      isCorrect(field){
+      isCorrect (field) {
         if (field == 'vailCode') {
-          //this.vailForm.vailCode.message = messageMap.vailCode.placeholder
           this.vailForm.vailCode.warning = false
         } else if (field == 'loginname') {
           if (regExp.emailVail(this.form[field])) {
-            this.vailForm.loginname.message = messageMap.loginname.placeholder
-            this.vailForm.loginname.warning = false
+            this.vailForm.loginname.message = this.vailForm.loginname.message.filter(item => {
+              return item != messageMap.loginname.errorMessage
+            })
+            this.vailForm.loginname.info = messageMap.loginname.placeholder
           }
         } else {
           if (regExp.passwordVail(this.form[field])) {
-            this.vailForm.loginname.message = messageMap.loginname.placeholder
-            this.vailForm.loginname.warning = false
-          }
-        }
-
-      },
-      toggle(){
-        this.agree = !this.agree;
-      },
-      submit(){
-        /*if (!regExp.passwordVail(this.form.password)) {
-         this.vailForm.loginname.message = '密码不符合要求'
-         this.vailForm.loginname.warning = true
-         return
-         }*/
-        this.$noInterceptorsHttp.get(`user/login.do?username=${this.form.loginname}&password=${this.form.password}&vailCode=${this.form.vailCode}`).then((response) => {
-            if (response.status == 200 && response.statusText == 'OK') {
-              if (response.data.status == 1) {
-                this.$router.push({path: 'overview'})
-              } else {
-                this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-                this.vailForm.loginname.message = response.data.message
-                this.vailForm.loginname.warning = true
-              }
+            this.vailForm.loginname.message = this.vailForm.loginname.message.filter(item => {
+              return item != messageMap.password.errorMessage
+            })
+            if (this.form.loginname != '') {
+              this.vailForm.loginname.info = messageMap.loginname.placeholder
             }
           }
-        );
+        }
       },
-      showRules(){
-        this.loginShow = false;
-        this.rulesShow = true;
+      toggle () {
+        this.agree = !this.agree
       },
-      allowRules(){
-        this.loginShow = true;
-        this.rulesShow = false;
+      submit () {
+        this.$http.get('user/register.do?username=' + this.form.loginname + '&password=' + this.form.password + '&code=' + this.form.vailCode).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            console.log(response)
+            this.$Message.success({
+              content: '注册成功',
+              duration: 3
+            })
+            this.$router.push('login')
+          }
+        })
       },
-      toRegister(){
-        this.$router.push('register');
+      sendCode () {
+        if (!regExp.emailVail(this.form.loginname)) {
+          this.$Message.info('请输入正确的邮箱/手机号')
+          return
+        }
+        if (regExp.phoneVail(this.form.loginname)) {
+          this.isemail = '0'
+        }
+        this.codePlaceholder = '60s'
+        var inter = setInterval(() => {
+          this.countdown--
+          this.codePlaceholder = this.countdown + 's'
+          if (this.countdown == 0) {
+            clearInterval(inter)
+            this.countdown = 60
+            this.codePlaceholder = '发送验证码'
+          }
+        }, 1000)
+        this.$http.get('user/code.do?aim=' + this.form.loginname + '&type=' + this.type + '&isemail=' + this.isemail).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success({
+              content: '验证码发送成功',
+              duration: 5
+            })
+          }
+        })
+      },
+      showRules () {
+        this.loginShow = false
+        this.rulesShow = true
+      },
+      allowRules () {
+        this.loginShow = true
+        this.rulesShow = false
       }
     },
     computed: {
-      disabled(){
-        return !(this.form.loginname && this.form.password && this.form.vailCode && this.agree && this.vailForm.loginname.warning == false)
+      disabled () {
+        return !(this.form.loginname && this.form.password && this.form.vailCode && this.agree && this.vailForm.loginname.message.length == 0)
       }
     }
   }
@@ -483,19 +478,19 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   .login-wrapper {
-    width:100%;
-    .header{
-      width:100%;
-      height:70px;
+    width: 100%;
+    .header {
+      width: 100%;
+      height: 70px;
       background-color: #333;
-      .container{
-        width:1200px;
-        height:100%;
-        margin:0px auto;
+      .container {
+        width: 1200px;
+        height: 100%;
+        margin: 0px auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        .logo{
+        .logo {
           width: 130px;
           height: 36px;
           background-color: white;
@@ -504,25 +499,25 @@
           background-size: 110% 260%;
           background-position-y: -29px;
         }
-        .home{
+        .home {
           font-size: 18px;
-          height:70px;
-          padding:0px 10px;
+          height: 70px;
+          padding: 0px 10px;
           vertical-align: center;
           cursor: pointer;
-          a{
+          a {
             line-height: 70px;
-            color:#fff
+            color: #fff
           }
         }
       }
     }
     .wrapper {
       width: 100%;
-      padding:120px 0px;
-      .wrapper-form{
-        width:1200px;
-        margin:0px auto;
+      padding: 120px 0px;
+      .wrapper-form {
+        width: 1200px;
+        margin: 0px auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -548,7 +543,7 @@
         font-family: PingFangSC-Regular;
         font-size: 26px;
         color: #5F5F5F;
-        margin-top:5px;
+        margin-top: 5px;
         letter-spacing: 0.9px;
         & > span {
           font-family: PingFangSC-Regular;
@@ -558,7 +553,7 @@
         }
       }
       .body {
-        padding-bottom: 60px;
+        padding-bottom: 35px;
         form {
           margin-top: 5px;
         }
@@ -630,6 +625,24 @@
           letter-spacing: 0.71px;
           outline: none;
         }
+        .sendCode {
+          width: 80px;
+          height: 30px;
+          position: absolute;
+          text-align: center;
+          line-height: 27px;
+          display: block;
+          bottom: 12px;
+          right: 43px;
+          cursor: pointer;
+          background: #4990E2;
+          border: 1px solid rgba(15, 179, 250, 0.00);
+          font-family: PingFangSC-Regular;
+          font-size: 11px;
+          color: #FFFFFF;
+          letter-spacing: 0.71px;
+          outline: none;
+        }
       }
       .foot {
         button {
@@ -689,15 +702,16 @@
       }
     }
     .rules {
-      position: absolute;
-      top: 9%;
-      height: 875px;
+      //position: absolute;
+      //top: 9%;
+      margin:45px auto 0px;
+      height: 750px;
       width: 750px;
       background: white;
-      left: 30%;
+      //left: 30%;
       overflow-y: scroll;
       .rulesContent {
-        margin: 20px 75px;
+        margin: 20px 75px 75px 60px;
         & > p {
           font-family: Microsoft Yahei, 微软雅黑;
           font-size: 14px;
@@ -707,17 +721,17 @@
         }
       }
     }
-    .foot-bar{
-      position:fixed;
-      height:60px;
-      width:100%;
-      bottom:0px;
-      border-top:1px solid #3333;
+    .foot-bar {
+      position: fixed;
+      height: 60px;
+      width: 100%;
+      bottom: 0px;
+      border-top: 1px solid #3333;
       background: #F4F4F4;
       font-size: 14px;
       line-height: 60px;
-      span,a{
-        margin-right:40px;
+      span, a {
+        margin-right: 40px;
       }
     }
   }
