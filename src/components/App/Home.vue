@@ -5,6 +5,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+<<<<<<< HEAD
   export default{
     data () {
       return {}
@@ -13,6 +14,8 @@
     },
     methods: {}
   }
+=======
+>>>>>>> 26061dc98d8870c8e1d6b77c280dbf4cfbe2d21f
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>

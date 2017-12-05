@@ -373,7 +373,6 @@
         if (text == '') {
           this.vailForm[field].info = ''
           this.form[field + 'Placeholder'] = messageMap[field].placeholder
-          return
         }
 
         var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true

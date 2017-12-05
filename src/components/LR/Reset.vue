@@ -37,7 +37,6 @@
                        :placeholder="form.confirmPasswordPlaceholder"
                        @blur="vail('confirmPassword')" @focus="focus('confirmPassword')">
               </div>
-
             </form>
           </div>
           <div class="foot">
