@@ -19,10 +19,6 @@ rm(path.join(config.build.assetsRoot, config.build.assetsSubDirectory), err => {
   webpack(webpackConfig, function (err, stats) {
     spinner.stop()
     if (err) throw err
-    var keys = Object.keys(stats)
-    for (var i = 0, length = keys.length; i < length; i++) {
-      console.log(stats[keys[i]])
-    }
     process.stdout.write(stats.toString({
         colors: true,
         modules: false,
