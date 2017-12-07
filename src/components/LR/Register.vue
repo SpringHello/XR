@@ -523,7 +523,7 @@
       }
     }
     .banner {
-      background: url(../../assets/img/loginbanner.jpg) no-repeat center;
+      background: url(../../assets/img/login/login-banner.jpg) no-repeat center;
       height: 493px;
       width: 730px;
     }

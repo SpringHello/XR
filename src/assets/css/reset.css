@@ -4,7 +4,8 @@
 }
 
 * {
-  font-family: MicrosoftYaHei;
+  font-family: "pingfang sc medium", MicrosoftYaHei;
+  line-height: 100%;
 }
 
 html {
@@ -14,5 +15,9 @@ html {
 
 body {
   height: 100%;
+}
+
+ul {
+  font-size: 0px;
 }
 

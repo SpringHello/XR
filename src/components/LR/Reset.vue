@@ -4,7 +4,7 @@
       <div class="wrapper-form">
         <div class="banner">
         </div>
-        <div class="login-form" v-show="loginShow">
+        <div class="login-form">
           <div class="head">
             <span>重置密码</span>
           </div>
@@ -27,7 +27,8 @@
 
               <div>
                 <span>{{vailForm.password.message}}</span>
-                <input type="password" autocomplete="off" v-model="form.password" :placeholder="form.passwordPlaceholder"
+                <input type="password" autocomplete="off" v-model="form.password"
+                       :placeholder="form.passwordPlaceholder"
                        @blur="vail('password')" @focus="focus('password')">
               </div>
 
@@ -102,9 +103,6 @@
             warning: false
           }
         },
-        agree: true,
-        imgSrc: 'user/getKaptchaImage.do',
-        loginShow: true,
         isemail: '1',
         type: '1',
         codePlaceholder: '发送验证码',
@@ -192,24 +190,22 @@
         this.$http.get('user/code.do?aim=' + this.form.loginname + '&type=' + this.type + '&isemail=' + this.isemail).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success({
-              content: '验证码发送成功',
+              content: response.data.message,
               duration: 5
             })
           } else {
             this.$Message.error({
-              content: '验证码发送失败',
+              content: response.data.message,
               duration: 5
             })
           }
         })
       },
-      toggle(){
-        this.agree = !this.agree
-      },
       submit(){
         if (this.form.password != this.form.confirmPassword) {
           this.vailForm.loginname.message = '新密码与确认密码不一致'
           this.vailForm.loginname.warning = true
+          return
         }
         this.$http.get('user/findPassword.do', {
           params: {
@@ -228,17 +224,11 @@
             }
           }
         })
-      },
-      allowRules(){
-        this.loginShow = true
-      },
-      toRegister(){
-        this.$router.push('register')
       }
     },
     computed: {
       disabled(){
-        return !(this.form.loginname && this.form.password && this.form.vailCode && this.agree && this.vailForm.loginname.warning == false)
+        return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
       }
     }
   }
@@ -246,19 +236,19 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   .login-wrapper {
-    width:100%;
-    .header{
-      width:100%;
-      height:70px;
+    width: 100%;
+    .header {
+      width: 100%;
+      height: 70px;
       background-color: #333;
-      .container{
-        width:1200px;
-        height:100%;
-        margin:0px auto;
+      .container {
+        width: 1200px;
+        height: 100%;
+        margin: 0px auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        .logo{
+        .logo {
           width: 130px;
           height: 36px;
           background-color: white;
@@ -267,32 +257,32 @@
           background-size: 110% 260%;
           background-position-y: -29px;
         }
-        .home{
+        .home {
           font-size: 18px;
-          height:70px;
-          padding:0px 10px;
+          height: 70px;
+          padding: 0px 10px;
           vertical-align: center;
           cursor: pointer;
-          a{
+          a {
             line-height: 70px;
-            color:#fff
+            color: #fff
           }
         }
       }
     }
     .wrapper {
       width: 100%;
-      padding:120px 0px;
-      .wrapper-form{
-        width:1200px;
-        margin:0px auto;
+      padding: 120px 0px;
+      .wrapper-form {
+        width: 1200px;
+        margin: 0px auto;
         display: flex;
         justify-content: space-between;
         align-items: center;
       }
     }
     .banner {
-      background: url(../../assets/img/loginbanner.jpg) no-repeat center;
+      background: url(../../assets/img/login/login-banner.jpg) no-repeat center;
       height: 493px;
       width: 730px;
     }
@@ -311,7 +301,7 @@
         font-family: PingFangSC-Regular;
         font-size: 26px;
         color: #5F5F5F;
-        margin-top:5px;
+        margin-top: 5px;
         letter-spacing: 0.9px;
         & > span {
           font-family: PingFangSC-Regular;
@@ -488,17 +478,17 @@
         }
       }
     }
-    .foot-bar{
-      position:fixed;
-      height:60px;
-      width:100%;
-      bottom:0px;
-      border-top:1px solid #3333;
+    .foot-bar {
+      position: fixed;
+      height: 60px;
+      width: 100%;
+      bottom: 0px;
+      border-top: 1px solid #3333;
       background: #F4F4F4;
       font-size: 14px;
       line-height: 60px;
-      span,a{
-        margin-right:40px;
+      span, a {
+        margin-right: 40px;
       }
     }
   }

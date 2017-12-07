@@ -10,6 +10,10 @@ import iview from 'iview'
 import 'iview/dist/styles/iview.css'
 import '@/assets/css/reset.css'
 
+// 引入轮播组件
+import carousel from './myView/carousel'
+import carouselItem from './myView/carouselItem'
+
 Vue.config.productionTip = false
 
 // axios挂载到Vue原型
@@ -17,6 +21,9 @@ Vue.prototype.$http = axios
 
 // 使用iview库
 Vue.use(iview)
+// 使用轮播组件
+Vue.use(carousel)
+Vue.use(carouselItem)
 
 // 使用自己编写的组件
 

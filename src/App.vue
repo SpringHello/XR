@@ -8,10 +8,9 @@
         <div class="operate">
           <ul @mouseleave="UML">
             <li v-for="(item,index) in titleItem" :key="index" @mouseenter="ME(index,$event)">
-
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <router-link :to="item.path">{{item.title}}</router-link>
+                  <router-link :to="item.path"><span>{{item.title}}</span></router-link>
                 </div>
                 <div class="menu-dropdown-list">
                   <div class="content-dropdown">
@@ -32,14 +31,6 @@
             </li>
             <div class="line" :style="lineStyle"></div>
           </ul>
-        </div>
-        <div class="login-form">
-          <div class="register">
-            <router-link to="/register">注册</router-link>
-          </div>
-          <div class="login">
-            <router-link to="/login">登录</router-link>
-          </div>
         </div>
       </div>
     </header>
@@ -115,6 +106,14 @@
           {
             title: '关于我们',
             path: '/product'
+          },
+          {
+            title: '注册',
+            path: '/register'
+          },
+          {
+            title: '登录',
+            path: '/login'
           }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
@@ -185,6 +184,7 @@
         height: 70px;
         margin: 0px auto;
         display: flex;
+        justify-content: space-between;
         .logo {
           width: 140px;
           height: 70px;
@@ -196,25 +196,36 @@
           }
         }
         .operate {
-          width: 888px;
-          text-align: center;
           ul {
             display: inline-block;
             margin: 0px auto;
             font-size: 0px;
-            // position: relative;
             li {
               line-height: 70px;
               display: inline-block;
-              color: #ffffff;
-              font-size: 16px;
+              font-size: 14px;
+              &:nth-child(4) {
+                span {
+                  border-right: 1px solid #939393;
+                  display: inline-block;
+                  line-height: 14px;
+                  padding-right:40px;
+                }
+              }
               .menu-dropdown {
                 .menu-dropdown-rel {
                   a {
-                    color: #ffffff;
+                    color: #939393;
+                    transition: all .3s;
                     cursor: pointer;
-                    padding: 0px 30px;
                     display: block;
+                    line-height: 70px;
+                    span {
+                      padding: 0px 30px;
+                    }
+                    &:hover {
+                      color: #ffffff;
+                    }
                   }
                 }
                 .menu-dropdown-list {
@@ -224,6 +235,7 @@
                   background: #333333;
                   top: 100%;
                   left: 0;
+                  z-index:100;
                   .content-dropdown {
                     position: absolute;
                     top: 100%;
@@ -274,33 +286,10 @@
 
             }
             .line {
-              height: 3px;
-              background-color: rgb(0, 193, 222);
+              height: 2px;
+              background-color: #377dff;
               position: absolute;
               bottom: 0px;
-            }
-          }
-        }
-        .login-form {
-          width: 172px;
-          display: flex;
-          a {
-            line-height: 70px;
-            padding: 5px 22px;
-            font-size: 18px;
-            color: #333333;
-            border-radius: 5px;
-          }
-          .register {
-            a {
-              background-color: #ffffff;
-              margin-right: 5px;
-            }
-          }
-          .login {
-            a {
-              color: #ffffff;
-              border: 1px solid #ffffff;
             }
           }
         }

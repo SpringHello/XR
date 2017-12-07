@@ -28,6 +28,7 @@ export default new Router({
       name: App.name,
       component: App,
       children: [
+        {path: '/', name: 'home', component: Home},
         {path: '/home', name: 'home', component: Home},
         {path: '/price', name: 'price', component: Price}
       ]

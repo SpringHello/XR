@@ -49,15 +49,20 @@
 </template>
 
 <script type="text/ecmascript-6">
+  /* 登录名/密码 正则校验 */
   import regExp from '../../util/regExp'
-  var messageMap = {
+
+  const messageMap = {
+    /* 登录名input tips */
     loginname: {
       placeholder: '登录邮箱/手机号',
       errorMessage: '请输入正确的邮箱/手机号'
     },
+    /* 登录密码input tips */
     password: {
       placeholder: '密码'
     },
+    /* 验证码input tips */
     vailCode: {
       placeholder: '请输入验证码'
     }
@@ -65,6 +70,8 @@
   export default{
     data(){
       return {
+
+        /* 登录表单(包含placeHolder) */
         form: {
           loginname: '',
           password: '',
@@ -73,6 +80,8 @@
           passwordPlaceholder: '密码',
           vailCodePlaceholder: '请输入验证码'
         },
+
+        /* 验证表单 message表示信息 warning表示信息属于info 还是 warning */
         vailForm: {
           loginname: {
             message: '',
@@ -87,9 +96,9 @@
             warning: false
           }
         },
-        agree: true,
-        imgSrc: `user/getKaptchaImage.do?t=${new Date().getTime()}`,
-        loginShow: true
+
+        /* 验证码地址(加上时间戳，防止缓存) */
+        imgSrc: `user/getKaptchaImage.do?t=${new Date().getTime()}`
       }
     },
     created(){
@@ -140,21 +149,21 @@
       },
       isCorrect(field){
         if (field == 'vailCode') {
+          // 验证码重新输入直接取消警告
           this.vailForm.vailCode.warning = false
         } else if (field == 'loginname') {
+          // 登录名验证是否符合规则，符合规则取消警告
           if (regExp.emailVail(this.form[field])) {
             this.vailForm.loginname.message = messageMap.loginname.placeholder
             this.vailForm.loginname.warning = false
           }
         } else {
+          // 密码验证是否符合规则，符合规则取消警告
           if (regExp.passwordVail(this.form[field])) {
             this.vailForm.loginname.message = messageMap.loginname.placeholder
             this.vailForm.loginname.warning = false
           }
         }
-      },
-      toggle(){
-        this.agree = !this.agree
       },
       submit(){
         /* if (!regExp.passwordVail(this.form.password)) {
@@ -173,12 +182,6 @@
             }
           }
         })
-      },
-      allowRules(){
-        this.loginShow = true
-      },
-      toRegister () {
-        this.$router.push('register')
       }
     },
     computed: {
@@ -237,7 +240,7 @@
       }
     }
     .banner {
-      background: url(../../assets/img/loginbanner.jpg) no-repeat center;
+      background: url(../../assets/img/login/login-banner.jpg) no-repeat center;
       height: 493px;
       width: 730px;
     }
@@ -364,24 +367,6 @@
           display: inline-block;
           border: 1px solid #ccc;
           cursor: pointer;
-        }
-        .agree {
-          background-color: #2d8cf0;
-          border-color: #2d8cf0;
-          position: relative;
-          &::after {
-            content: "";
-            display: table;
-            width: 4px;
-            height: 8px;
-            position: absolute;
-            top: 0px;
-            left: 3px;
-            border: 2px solid #fff;
-            border-top: 0;
-            border-left: 0;
-            transform: rotate(45deg) scale(1);
-          }
         }
         div {
           width: 80%;
