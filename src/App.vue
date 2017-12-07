@@ -209,7 +209,7 @@
                   border-right: 1px solid #939393;
                   display: inline-block;
                   line-height: 14px;
-                  padding-right:40px;
+                  padding-right: 40px;
                 }
               }
               .menu-dropdown {
@@ -235,7 +235,7 @@
                   background: #333333;
                   top: 100%;
                   left: 0;
-                  z-index:100;
+                  z-index: 100;
                   .content-dropdown {
                     position: absolute;
                     top: 100%;
@@ -262,7 +262,7 @@
                           color: #FFFFFF;
                           line-height: 32px;
                           font-weight: normal;
-                          border-bottom: 1px solid #E0E0E0;
+                          border-bottom: 1px solid rgba(255, 255, 255, 0.35);
                           padding-bottom: 10px;
                         }
                         a {

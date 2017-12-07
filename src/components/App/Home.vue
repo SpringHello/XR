@@ -50,6 +50,39 @@
         </div>
       </div>
     </div>
+    <!-- 云产品展示区域 -->
+    <div class="cloud-content">
+      <div class="container">
+        <p>新睿云为您快速搭建属于自己的私有云环境(VPC)，并提供100%的网络间隔离，确保安全，包括：私有网络、路由器、公网IP和负载均衡器</p>
+        <div class="content-carousel">
+          <div v-for="(item,index) in cloudContainer">
+            <div style="height:340px;position: relative" v-show="item.select" @mouseenter="item.ME=true"
+                 @mouseleave="item.ME=false">
+              <div :class="{flexCarousel:item.prodItem.length>5,textCenter:item.prodItem.length<6}" :ref="item.title">
+                <div v-for="(content,index) in item.prodItem" class="item"
+                     :class="{lastItem:index==item.prodItem.length-1}">
+                  <div class="header">
+                    <h2>{{content.title}}</h2>
+                  </div>
+                </div>
+              </div>
+              <transition name="carousel-arrow-left">
+                <div v-if="item.prodItem.length>5" v-show="item.ME" class="arrow-left arrow"
+                     @click="scroll('left',item.title)">
+                  <i class="arrow-left-icon"></i>
+                </div>
+              </transition>
+              <transition name="carousel-arrow-right">
+                <div v-if="item.prodItem.length>5" v-show="item.ME" class="arrow-right arrow"
+                     @click="scroll('right',item.title),item.title">
+                  <i class="arrow-right-icon"></i>
+                </div>
+              </transition>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- 满足严苛要求的卓越品质 -->
     <div class="feature-container">
       <div class="container">
@@ -87,31 +120,65 @@
             title: '云计算',
             img: require('../../assets/img/home/cloud-1-1.png'),
             clickImg: require('../../assets/img/home/cloud-1-2.png'),
-            select: true
+            prodItem: [
+              {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
+              {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
+              {title: 'ECS快照', desc: '稳定可靠、安全保障'},
+              {title: '裸金属服务器', desc: '专属物理服务器'},
+              {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
+            ],
+            select: true,
+            ME: false
           },
           {
             title: '云网络',
             img: require('../../assets/img/home/cloud-2-1.png'),
             clickImg: require('../../assets/img/home/cloud-2-2.png'),
-            select: false
+            prodItem: [
+              {title: '弹虚拟私有云VPC', desc: '网络隔离、分配子网'},
+              {title: '弹性IP', desc: '绑定与解绑IP、扩容'},
+              {title: '负载均衡', desc: '源算法、轮询、最小连接数'},
+              {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持'},
+              {title: '虚拟专网VPN', desc: '跨VPC链接'},
+              {title: 'CDN', desc: '节点丰富、安全易用'}
+            ],
+            select: false,
+            ME: false
           },
           {
             title: '云存储',
             img: require('../../assets/img/home/cloud-3-1.png'),
             clickImg: require('../../assets/img/home/cloud-3-2.png'),
-            select: false
+            prodItem: [
+              {title: '云硬盘', desc: '性能型、超高性能型、存储型'},
+              {title: '云硬盘快照', desc: '高可用保障、敏捷易用'},
+              {title: '云硬盘备份', desc: '高可用保障、敏捷易用'},
+              {title: '云硬盘热增容', desc: '高可用保障、敏捷易用'}
+            ],
+            select: false,
+            ME: false
           },
           {
             title: '云安全',
             img: require('../../assets/img/home/cloud-4-1.png'),
             clickImg: require('../../assets/img/home/cloud-4-2.png'),
-            select: false
+            prodItem: [
+              {title: '防火墙', desc: '自定义规则、协议、端口'},
+              {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量'}
+            ],
+            select: false,
+            ME: false
           },
           {
             title: '云运维',
             img: require('../../assets/img/home/cloud-5-1.png'),
             clickImg: require('../../assets/img/home/cloud-5-2.png'),
-            select: false
+            prodItem: [
+              {title: '云监控', desc: '自定义监控项、多告警推送方式'},
+              {title: '访问控制', desc: '权限管理、精准控制'}
+            ],
+            select: false,
+            ME: false
           }
         ],
         featureContainer: [
@@ -163,6 +230,7 @@
     created () {
     },
     methods: {
+      // 切换云产品
       changeProduct(item, event){
         this.$refs.line.style.left = `${event.currentTarget.offsetLeft}px`
         this.cloudContainer.forEach(product => {
@@ -172,6 +240,26 @@
             product.select = false
           }
         })
+      },
+      /* 产品详情滚动浏览
+       direction指明方向left or right
+       title指示vue $refs当前目标
+       */
+      scroll(direction, title){
+        var clientWidth = this.$refs[title][0].clientWidth
+        var offsetLeft = this.$refs[title][0].offsetLeft
+        if (direction === 'right') {
+          offsetLeft += 243
+          if (offsetLeft > 0) {
+            offsetLeft = 0
+          }
+        } else {
+          offsetLeft -= 243
+          if (offsetLeft + clientWidth < 1200) {
+            offsetLeft = 1200 - clientWidth
+          }
+        }
+        this.$refs[title][0].style.left = `${offsetLeft}px`
       }
     }
   }
@@ -271,7 +359,7 @@
           }
         }
         .cloud-display {
-          height: 173px;
+          height: 194px;
           display: flex;
           position: relative;
           > div {
@@ -280,9 +368,9 @@
             cursor: pointer;
             > img {
               position: absolute;
-              top: 50%;
+              top: 72px;
               left: 50%;
-              transform: translate(-50%, -50%);
+              transform: translateX(-50%);
               width: 62px;
               height: 62px;
             }
@@ -307,6 +395,108 @@
             height: 1px;
             background-color: #377dff;
             transition: all .2s;
+          }
+        }
+      }
+    }
+    > .cloud-content {
+      width: 100%;
+      height: 600px;
+      background-color: #f9f9f9;
+      .container {
+        width: 1200px;
+        margin: 0px auto;
+        p {
+          font-size: 14px;
+          color: #999999;
+          text-align: center;
+          padding: 76px 0px 80px;
+        }
+        .content-carousel {
+          margin-bottom: 70px;
+          overflow-x: hidden;
+          .arrow {
+            width: 36px;
+            height: 36px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            border-radius: 50% 50%;
+            z-index: 4;
+            border: none;
+            cursor: pointer;
+            background-color: rgba(31, 45, 61, .11);
+            transition: .5s;
+            &:hover {
+              background-color: #384c6e;
+            }
+          }
+          .arrow-left {
+            left: 30px;
+            .arrow-left-icon {
+              display: block;
+              width: 15px;
+              height: 15px;
+              border-right: 4px solid white;
+              border-bottom: 4px solid white;
+              transform: rotate(135deg) translate(-1px, -16px);
+            }
+          }
+          .arrow-right {
+            right: 30px;
+            .arrow-right-icon {
+              display: block;
+              width: 15px;
+              height: 15px;
+              border-right: 4px solid white;
+              border-bottom: 4px solid white;
+              transform: rotate(-45deg) translate(-2px, 13px);
+            }
+          }
+          .carousel-arrow-left-enter-active, .carousel-arrow-left-leave-active, .carousel-arrow-right-enter-active, .carousel-arrow-right-leave-active {
+            transition: all .5s ease;
+          }
+          .carousel-arrow-left-enter, .carousel-arrow-left-leave-active {
+            opacity: 0;
+            transform: translate(-16px, -50%);
+          }
+          .carousel-arrow-right-enter, .carousel-arrow-right-leave-active {
+            opacity: 0;
+            transform: translate(16px, -50%);
+          }
+          .flexCarousel {
+            width: max-content;
+            display: flex;
+            position: absolute;
+            transition: all .5s;
+          }
+          .textCenter {
+            text-align: center;
+            div:last-child {
+              margin-right: 0px;
+            }
+          }
+          .item {
+            display: inline-block;
+            width: 228px;
+            margin-right: 15px;
+            height: 340px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            .header {
+              height: 52px;
+              border-bottom: 1px solid #999999;
+              h2 {
+                padding: 18px 0px;
+                text-align: center;
+                font-size: 16px;
+                color: #999999;
+                font-weight: normal;
+              }
+            }
+          }
+          .lastItem {
+            margin-right: 0px;
           }
         }
       }
