@@ -8,46 +8,49 @@
         <div class="operate">
           <ul>
             <li>
-              <router-link to="/overview">总览</router-link>
+              <router-link to="/overview"><span>总览</span></router-link>
             </li>
             <li>
-              <router-link to="/workorder">工单</router-link>
+              <router-link to="/workorder"><span>工单</span></router-link>
             </li>
             <li>
-              <router-link to="/renew">一键续费</router-link>
+              <router-link to="/renew"><span>一键续费</span></router-link>
             </li>
           </ul>
           <ul class="right">
             <li>
-              <router-link to="/overview">创建主机</router-link>
+              <router-link to="/overview"><span>创建主机</span></router-link>
             </li>
             <li>
-              <router-link to="/workorder">帮助文档</router-link>
+              <router-link to="/workorder"><span>帮助文档</span></router-link>
             </li>
             <li>
-              <router-link to="/renew">充值</router-link>
+              <router-link to="/renew"><span>充值</span></router-link>
             </li>
-            <li @mouseleave="ML">
-              <router-link to="">谭承卫</router-link>
-              <div class="select-dropdown">
-                <ul>
-                  <li>
+            <li>
+              <Dropdown>
+                <a href="javascript:void(0)">
+                  北京允睿讯通科技有限公司
+                  <Icon type="arrow-down-b"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem>
                     <router-link to="">用户中心</router-link>
-                  </li>
-                  <li>
+                  </DropdownItem>
+                  <DropdownItem>
                     <router-link to="">费用中心</router-link>
-                  </li>
-                  <li>
+                  </DropdownItem>
+                  <DropdownItem>
                     <router-link to="">消息中心</router-link>
-                  </li>
-                  <li>
+                  </DropdownItem>
+                  <DropdownItem>
                     <router-link to="">操作日志</router-link>
-                  </li>
-                  <li>
+                  </DropdownItem>
+                  <DropdownItem divided>
                     <router-link to="">退出</router-link>
-                  </li>
-                </ul>
-              </div>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </li>
           </ul>
         </div>
@@ -55,37 +58,28 @@
     </header>
     <div class="sec-header">
       <div class="wrapper">
-        <div class="operate">
+        <div class="operate" ref="operate">
           <ul @mouseleave="ML">
-            <li v-for="(item,index) in main" :key="index" @mouseenter="ME(item.type)">
+            <li v-for="(item,index) in main" :key="index" @mouseenter="ME($event,item.type)" :ref="item.type">
               <a>{{item.mainName}}</a>
             </li>
+            <div class="line" :style="lineStyle"></div>
           </ul>
         </div>
       </div>
     </div>
-    <div class="thr-header" @mouseenter="handME" ref="container">
-      <div>
-        <div class="wrapper" :class="thrClass" ref="network">
-          <div class="operate">
-            <ul @click="setSelect('network')">
-              <li>虚拟私有云</li>
-              <li>公网IP</li>
-              <li>负载均衡</li>
-              <li>虚拟专网</li>
-            </ul>
-          </div>
+    <div class="thr-header" @mouseenter="handME" @mouseleave="handML" :class="thrShow">
+      <div class="wrapper">
+        <div class="operate">
+          <ul v-for="(parentItem,pIndex) in main" :key="pIndex" v-if="parentItem.subItem"
+              :ref="`${parentItem.type}-sub`"
+              :class="{show:parentItem.type==hoverItem}" :style="menuStyle(parentItem.type)">
+            <li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex" @click="push(subItem.type)">
+              <a>{{subItem.subName}}</a>
+            </li>
+          </ul>
         </div>
-        <div class="wrapper" :class="thrClass" ref="backup">
-          <div class="operate">
-            <ul @click="setSelect('network')">
-              <li>虚拟私有云</li>
-              <li>公网IP</li>
-              <li>负载均衡</li>
-              <li>虚拟专网</li>
-            </ul>
-          </div>
-        </div>
+        <div style="clear:right"></div>
       </div>
     </div>
     <router-view/>
@@ -99,50 +93,105 @@
     data(){
       return {
         main: [
-          {mainName: '云主机'},
-          {mainName: '镜像'},
-          {mainName: '备份', type: 'backup'},
-          {mainName: '网络', type: 'network'},
-          {mainName: '安全'},
-          {mainName: '回收站'}
+          {
+            mainName: '云服务器',
+            type: 'server',
+            subItem: [{subName: '主机', type: 'host'}, {subName: '镜像', type: 'mirror'}, {subName: '快照', type: 'snapshot'}]
+          },
+          {
+            mainName: '存储',
+            type: 'storage',
+            subItem: [
+              {subName: '云硬盘', type: 'host'},
+              {subName: '硬盘备份', type: 'mirror'},
+              {subName: '硬盘快照', type: 'snapshot'}
+            ]
+          },
+          {
+            mainName: '网络',
+            type: 'network',
+            subItem: [
+              {subName: '虚拟私有云VPC', type: 'host'},
+              {subName: '负载均衡', type: 'mirror'},
+              {subName: '公网IP', type: 'snapshot'},
+              {subName: '虚拟专网VPN', type: 'snapshot'}
+            ]
+          },
+          {
+            mainName: '安全',
+            type: 'security',
+            subItem: [
+              {subName: '防火墙', type: 'host'}
+            ]
+          },
+          {
+            mainName: '回收站',
+            type: 'recycle'
+          }
         ],
         // hover选中的item
         hoverItem: '',
-        showHover: false,
-        // click选中的item
-        selectItem: ''
+        // 是否进入三级menu栏
+        enterHover: false,
+        // 锁定三级目录
+        static: false,
+        lineStyle: {
+          left: '0px',
+          width: '0px'
+        }
       }
     },
     methods: {
-      ME: debounce(200, function (type) {
-        for (var item in this.main) {
-          var iType = this.main[item].type
-          if (iType && iType == type) {
-            this.$refs[type].style.display = 'block'
-          } else if (iType) {
-            this.$refs[iType].style.display = 'none'
-          }
-        }
-        this.$refs.container.style.height = this.$refs.container.firstChild.clientHeight + 'px'
-        this.$refs.container.style.display = 'block'
-        // this.$refs.dropdown.style.display = 'block'
+      ME: debounce(200, function (event, type) {
+        this.currentItem === -1 ? this.lineStyle.transition = 'width .3s' : this.lineStyle.transition = 'all .3s'
+        this.lineStyle.left = `${event.target.offsetLeft}px`
+        this.lineStyle.width = `${event.target.clientWidth}px`
+        this.hoverItem = type
       }),
       ML: debounce(200, function () {
-        this.hoverItem = ''
-        // this.$refs.dropdown.style.display = 'block'
+        if (!this.enterHover && !this.static) {
+          // 没有进入三级栏才能关闭三级栏
+          this.hoverItem = ''
+        }
       }),
+      // 进入三级栏
       handME(){
-        this.showHover = true
+        this.enterHover = true
       },
-      setSelect(select){
-        this.selectItem = select
+      // 退出三级栏
+      handML: debounce(200, function () {
+        this.enterHover = false
+        if (!this.static) {
+          this.hoverItem = ''
+        }
+      }),
+      push(type){
+        this.static = true
+        this.$router.push(type)
+      },
+      menuStyle(type){
+        if (this.$refs[type]) {
+          var clientWidth = this.$refs[`${type}-sub`][0].clientWidth
+          var cw = this.$refs[type][0].clientWidth
+          var c = (clientWidth - cw) / 2
+          var liOffset = this.$refs[type][0].offsetLeft
+          var offset = this.$refs.operate.offsetLeft
+          return {
+            left: `${liOffset + offset - c}px`
+          }
+        } else if (this.$refs[`${type}-sub`]) {
+          console.log({left: `${this.$refs[`${type}-sub`][0].offsetLeft}px`})
+          return {left: `${this.$refs[`${type}-sub`][0].offsetLeft}px`}
+        }
+        return {}
       }
     },
     computed: {
-      thrClass(){
+      // show代表是否显示three menu,static代表是否固定three menu
+      thrShow(){
         return {
-          show: this.hoverItem || this.selectItem,
-          static: this.selectItem
+          show: this.hoverItem != '',
+          static: this.static
         }
       }
     }
@@ -158,7 +207,6 @@
       background-color: #3f3f3f;
       .wrapper {
         width: 1200px;
-        height: 100%;
         margin: 0px auto;
         .logo {
           width: 140px;
@@ -179,7 +227,6 @@
             margin: 0px auto;
             font-size: 0px;
             height: 100%;
-            // position: relative;
             &.right {
               float: right;
               > li {
@@ -209,7 +256,6 @@
                     }
                   }
                 }
-
               }
             }
             > li {
@@ -218,11 +264,22 @@
               display: inline-block;
               color: #ffffff;
               font-size: 16px;
+              .ivu-dropdown {
+                margin-left: 0px;
+                padding-left: 12px;
+              }
               > a {
                 height: 100%;
                 display: inline-block;
                 padding: 0px 12px;
                 color: #c5c5c5;
+                line-height: 56px;
+              }
+              .ivu-dropdown-rel {
+                a {
+                  line-height: 56px;
+                  display: inline-block;
+                }
               }
             }
             .line {
@@ -245,6 +302,7 @@
         .operate {
           float: right;
           ul {
+            position: relative;
             li {
               display: inline-block;
               font-size: 14px;
@@ -259,26 +317,46 @@
                 color: #2A99F2;
               }
             }
+            .line {
+              height: 2px;
+              background-color: #377dff;
+              position: absolute;
+              width: 0px;
+              bottom: 0px;
+              transition: all .3s;
+            }
           }
+
         }
       }
     }
     .thr-header {
       border-top: 1px solid #ccc;
-      .static {
-
+      overflow-y: hidden;
+      transition: all .3s;
+      height: 0px;
+      position: absolute;
+      width: 100%;
+      background-color: #ffffff;
+      &.show {
+        border-bottom: 1px solid #ccc;
+        height: 45px;
       }
-      .show {
+      &.static {
+        position: static;
         height: 45px;
       }
       .wrapper {
         width: 1200px;
         margin: 0px auto;
-        display: none;
         clear: both;
         .operate {
-          float: right;
+          // position: relative;
           ul {
+            height: 0px;
+            overflow-y: hidden;
+            transition: all .5s;
+            position: absolute;
             li {
               display: inline-block;
               font-size: 14px;
@@ -286,9 +364,9 @@
               line-height: 45px;
               padding: 0px 20px;
               cursor: pointer;
-              &:last-of-type {
-                padding-right: 0px;
-              }
+            }
+            &.show {
+              height: 45px;
             }
           }
         }

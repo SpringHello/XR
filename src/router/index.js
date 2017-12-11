@@ -17,6 +17,7 @@ import Reset from '@/components/LR/Reset'
 
 // 后台页面子路由
 import Overview from '@/components/Back/Overview'
+import Host from '@/components/Back/Host'
 
 Vue.use(Router)
 
@@ -38,7 +39,8 @@ export default new Router({
       name: Back.name,
       component: Back,
       children: [
-        {path: '/overview', name: 'overview', component: Overview}
+        {path: '/overview', name: 'overview', component: Overview},
+        {path: '/host', name: 'host', component: Host}
       ]
     },
     {
