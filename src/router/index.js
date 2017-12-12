@@ -12,6 +12,10 @@ import LR from '@/LR'
 const Price = () => import('@/components/App/Price')
 const Home = () => import('@/components/App/Home')
 
+const PDisk = () => import('@/components/App/Price/Disk')
+const PElasticIP = () => import('@/components/App/Price/ElasticIP')
+const PHost = () => import('@/components/App/Price/Host')
+
 // 登录注册页面
 // import Login from '@/components/LR/Login'
 // import Register from '@/components/LR/Register'
@@ -38,7 +42,17 @@ export default new Router({
       children: [
         {path: '/', name: 'home', component: Home},
         {path: '/home', name: 'home', component: Home},
-        {path: '/price', name: 'price', component: Price}
+        {
+          path: '/price',
+          name: 'price',
+          component: Price,
+          children: [
+            {path: '/', name: 'disk', component: PDisk},
+            {path: 'disk', name: 'disk', component: PDisk},
+            {path: 'elasticIP', name: 'elasticIP', component: PElasticIP},
+            {path: 'host', name: 'Host', component: PHost}
+          ]
+        }
       ]
     },
     {

@@ -8,6 +8,7 @@ import store from './vuex'
 import axios from 'axios'
 import iview from 'iview'
 import 'iview/dist/styles/iview.css'
+import '@/assets/css/iviewOverRide.css'
 import '@/assets/css/reset.css'
 
 // 引入轮播组件

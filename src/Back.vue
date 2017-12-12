@@ -61,7 +61,8 @@
         <div></div>
         <div class="operate" ref="operate">
           <ul @mouseleave="ML">
-            <li v-for="(item,index) in main" :key="index" @mouseenter="ME($event,item.type)" :ref="item.type">
+            <li v-for="(item,index) in main" :key="index" @mouseenter="ME($event,item.type)" :ref="item.type"
+                :class="{hover:item.type==hoverItem}">
               <a>{{item.mainName}}</a>
             </li>
             <div class="line" :style="lineStyle" ref="line"></div>
@@ -76,7 +77,7 @@
               :ref="`${parentItem.type}-sub`"
               :class="{show:parentItem.type==hoverItem}" :style="menuStyle(parentItem.type)">
             <li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"
-                @click="push(parentItem.type,subItem.type)">
+                @click="push(parentItem.type,subItem.type)" :class="{hover:subItem.type==sType}">
               <a>{{subItem.subName}}</a>
             </li>
           </ul>
@@ -133,8 +134,10 @@
         ],
         // hover选中的item
         hoverItem: '',
-        // 点击选中的item
+        // 点击选中的二级item
         selectItem: '',
+        // 点击选中的三级item
+        sType: '',
         // 当前路由名
         pathName: '',
         // 是否进入三级menu栏
@@ -181,6 +184,7 @@
       push(pType, sType){
         this.static = true
         this.selectItem = pType
+        this.sType = sType
         this.$router.push(sType)
       },
 
@@ -340,15 +344,20 @@
             li {
               display: inline-block;
               font-size: 14px;
-              color: #333333;
               line-height: 45px;
               padding: 0px 20px;
               cursor: pointer;
               &:last-child {
                 padding-right: 0px;
               }
-              &:hover {
-                color: #2A99F2;
+              &.hover {
+                a {
+                  color: #2A99F2;
+                }
+              }
+
+              a {
+                color: #333333;
               }
             }
             .line {
@@ -398,6 +407,19 @@
               line-height: 45px;
               padding: 0px 20px;
               cursor: pointer;
+              a {
+                color: #333333;
+              }
+              &:hover {
+                a {
+                  color: #2A99F2;
+                }
+              }
+              &.hover {
+                a {
+                  color: #2A99F2;
+                }
+              }
             }
             &.show {
               height: 45px;

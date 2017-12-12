@@ -13,11 +13,19 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    count: 0
+    count: 0,
+    budgetList: [],
+    productType: ''
   },
   mutations: {
     increment (state) {
       state.count++
+    },
+    setBudgetList (state, data) {
+      state.budgetList.push(data)
+    },
+    setProductType (state, str) {
+      state.productType = str
     }
   }
 })

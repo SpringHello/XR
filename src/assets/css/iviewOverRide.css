@@ -1,0 +1,29 @@
+.login-modal .ivu-modal-footer {
+  border-top: none;
+}
+
+.login-modal .ivu-modal-header {
+  border-bottom: none;
+}
+
+.mySelect .ivu-select-selection {
+  background: #F7F7F7;
+  border: 0;
+  box-shadow: none;
+}
+
+.mySelect .ivu-select-selection .ivu-select-selected-value {
+  padding-left: 30px;
+  font-family: MicrosoftYaHei;
+  font-size: 24px;
+  color: #333333;
+  padding-right: 0;
+  line-height: 35px;
+}
+
+.mySelect .ivu-select-arrow {
+  right: 86px;
+  color: #2A99F2;
+  font-size: 24px;
+}
+
