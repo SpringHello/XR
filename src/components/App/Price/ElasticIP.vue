@@ -216,18 +216,23 @@
       }
     },
     created () {
-      this.$store.commit('setProductType', 'ip')
     },
     methods: {
       addBudgetList () {
         this.buyButton = false
         this.addButton = true
+        var list = []
+        if (sessionStorage.getItem('budget')) {
+          list = JSON.parse(sessionStorage.getItem('budget'))
+        }
         var params = {
           budgetType: 'ip',
           timeType: this.timeType,
           time: this.time + ''
         }
-        this.$store.commit('setBudgetList', params)
+        list.push(params)
+        sessionStorage.setItem('budget', JSON.stringify(list))
+        this.$parent.updateList()
       },
       /* 立即购买 */
       buyImmediately () {

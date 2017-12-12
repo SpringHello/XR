@@ -1,48 +1,50 @@
 <template>
-    <div class="content">
-      <!--区域选择-->
-      <div class="region">
-        <h3 style="margin-top: 0">区域选择</h3>
-        <div class="config-button">
-          <button v-for="item in zoneList" :class="{select:item.zoneid==zone}" @click="zone=item.zoneid">
-            {{item.zonename}}
-          </button>
-        </div>
-        <p>不同区域的资源内网互不相通；请选择与您相近的区域，可降低网络时延、提高您客户的访问速度。</p>
+  <div class="content">
+    <!--区域选择-->
+    <div class="region">
+      <h3 style="margin-top: 0">区域选择</h3>
+      <div class="config-button">
+        <button v-for="item in zoneList" :class="{select:item.zoneid==zone}" @click="zone=item.zoneid">
+          {{item.zonename}}
+        </button>
       </div>
-      <!--计费方式选择-->
-      <div class="billing">
-        <h3>计费方式选择</h3>
-        <div class="config-button">
-          <button :class="{select:timeType=='month'||timeType=='year'}" @click="timeType='month'" style="margin-right: 8px">包年包月<i>惠</i>
-          </button>
-          <button :class="{select:timeType=='current'}" @click="timeType='current'">实时计费</button>
-        </div>
-        <div v-if="timeType=='month'||timeType=='year'" class="time" style="margin-bottom:20px">
-          <label :class="{select:time==1&&timeType!='year'}" @click="time=1;timeType='month'">1月</label>
-          <label v-for="item in timeList" :class="{select:time==item&&timeType!='year'}"
-                 @click="time=item;timeType='month'">{{item}}</label>
-          <label
-            :class="{select:time==1&&timeType=='year'}"
-            @click="time=1;timeType='year'"
-            style="border-left:none;border-radius: 0px">1年<i>惠</i></label>
-          <label
-            :class="{select:time==2&&timeType=='year'}"
-            @click="time=2;timeType='year'"
-            style="border-left:none;border-radius: 0px">2年<i>惠</i></label>
-          <label
-            :class="{select:time==3&&timeType=='year'}"
-            @click="time=3;timeType='year'"
-            style="border-left:none;border-top-left-radius: 0px;border-bottom-left-radius: 0px">3年<i>惠</i></label>
-        </div>
-        <p>满10月送两月，满一年打8折，满两年打7.5折，满3年5折</p>
-          <span>磁盘名称</span>
-          <Input  placeholder="如不填写，系统自动生成" style="width: 360px;margin-left: 20px"></Input>
-          <p style="padding-left: 86px;">当购买数量大于1台之时，磁盘命名规则为磁盘名称加随机数字。</p>
+      <p>不同区域的资源内网互不相通；请选择与您相近的区域，可降低网络时延、提高您客户的访问速度。</p>
+    </div>
+    <!--计费方式选择-->
+    <div class="billing">
+      <h3>计费方式选择</h3>
+      <div class="config-button">
+        <button :class="{select:timeType=='month'||timeType=='year'}" @click="timeType='month'"
+                style="margin-right: 8px">包年包月<i>惠</i>
+        </button>
+        <button :class="{select:timeType=='current'}" @click="timeType='current'">实时计费</button>
       </div>
-      <div class="disk">
-        <div v-for="(item,index) in diskList" class="diskItem">
-        <h3>云硬盘<span style="font-size:14px;color: #2A99F2;font-weight: normal;float: right;cursor: pointer" @click="delDisk(index)">删除</span></h3>
+      <div v-if="timeType=='month'||timeType=='year'" class="time" style="margin-bottom:20px">
+        <label :class="{select:time==1&&timeType!='year'}" @click="time=1;timeType='month'">1月</label>
+        <label v-for="item in timeList" :class="{select:time==item&&timeType!='year'}"
+               @click="time=item;timeType='month'">{{item}}</label>
+        <label
+          :class="{select:time==1&&timeType=='year'}"
+          @click="time=1;timeType='year'"
+          style="border-left:none;border-radius: 0px">1年<i>惠</i></label>
+        <label
+          :class="{select:time==2&&timeType=='year'}"
+          @click="time=2;timeType='year'"
+          style="border-left:none;border-radius: 0px">2年<i>惠</i></label>
+        <label
+          :class="{select:time==3&&timeType=='year'}"
+          @click="time=3;timeType='year'"
+          style="border-left:none;border-top-left-radius: 0px;border-bottom-left-radius: 0px">3年<i>惠</i></label>
+      </div>
+      <p>满10月送两月，满一年打8折，满两年打7.5折，满3年5折</p>
+      <span>磁盘名称</span>
+      <Input placeholder="如不填写，系统自动生成" style="width: 360px;margin-left: 20px"></Input>
+      <p style="padding-left: 86px;">当购买数量大于1台之时，磁盘命名规则为磁盘名称加随机数字。</p>
+    </div>
+    <div class="disk">
+      <div v-for="(item,index) in diskList" class="diskItem">
+        <h3>云硬盘<span style="font-size:14px;color: #2A99F2;font-weight: normal;float: right;cursor: pointer"
+                     @click="delDisk(index)">删除</span></h3>
         <div class="config-button">
           <span>类型</span>
           <Poptip trigger="hover" content="全SSD架构，超高IOPS，适用于核心数据库与对I/O要求较高的业务。" placement="top-start">
@@ -57,84 +59,90 @@
         </div>
         <div>
           <span>容量</span>
-      <!--  <i-slider
-            v-model="diskSize"
-            unit="GB"
-            :min=20
-            :max=500
-            :step=10
-            :points="[100,250]"
-            style="margin-right:30px;vertical-align: middle;width:66%">
-          </i-slider>-->
-          <InputNumber :max="500" :min="20" v-model="item.diskSize" size="large" :step=10></InputNumber>GB
-        </div>
-        </div>
-        <div style="display: flex;padding-left: 87px;">
-          <p v-if="diskLimit!=0" style="cursor: pointer;color: #2A99F2" @click="addDisk">添加数据盘</p><p v-if="diskLimit==0">添加数据盘</p><span class="s1">您还可以添加<span class="s1" style="color:#F85E1D;margin-left: 0">{{ diskLimit}}块</span>数据盘</span>
-        </div>
-        <div>
-          <span>价格</span>
-          <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;">{{ diskPrice}}元/月</span>
-        </div>
-        <div>
-          <span style="margin-right: 20px">自动续费</span>
-          <i-switch v-model="autoRenewal" style="margin-right: 0;margin-bottom: 5px;">
-            <span slot="open">开</span>
-            <span slot="close">关</span>
-          </i-switch>
-          <p style="display: inline;margin-left: 10px">开启后，资源到期会自动续费，请确保账户内有足够的余额。</p>
+          <!--  <i-slider
+                v-model="diskSize"
+                unit="GB"
+                :min=20
+                :max=500
+                :step=10
+                :points="[100,250]"
+                style="margin-right:30px;vertical-align: middle;width:66%">
+              </i-slider>-->
+          <InputNumber :max="500" :min="20" v-model="item.diskSize" size="large" :step=10></InputNumber>
+          GB
         </div>
       </div>
-      <!--计价详情-->
-      <div class="settleAccounts">
-        <span>查看计价详情</span>
-        <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">305元</span></p>
-        <p style="margin-top: 10px">已省：<span style="color:#F85E1D;">35元</span></p>
+      <div style="display: flex;padding-left: 87px;">
+        <p v-if="diskLimit!=0" style="cursor: pointer;color: #2A99F2" @click="addDisk">添加数据盘</p>
+        <p v-if="diskLimit==0">添加数据盘</p><span class="s1">您还可以添加<span class="s1" style="color:#F85E1D;margin-left: 0">{{ diskLimit}}块</span>数据盘</span>
       </div>
-      <!--购买按钮-->
-      <div class="buy-button">
-        <button @click="addBudgetList"  :class="{select:addButton,disabled:diskDisabled}" :disabled="diskDisabled">加入预算清单</button>
-        <button style="margin-right: 0" :class="{select:buyButton,disabled:diskDisabled}" @click="buyImmediately" :disabled="diskDisabled">立即购买</button>
+      <div>
+        <span>价格</span>
+        <span
+          style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;">{{ diskPrice}}元/月</span>
       </div>
-      <Modal v-model="showModal.login" width="450" class="login-modal" scrollable>
-        <p slot="header" style="color:#5F5F5F;text-align:center;height: 30px;padding-top: 5px;">
-          <span style="font-family: PingFangSC-Regular;font-size: 26px;">登录</span>
-        </p>
-        <div class="modalBody">
-          <form>
-            <div>
-              <span :class="{warning:vailForm.loginname.warning}">{{vailForm.loginname.message}}</span>
-              <input type="text" autocomplete="off" v-model="form.loginname" :placeholder="form.loginnamePlaceholder"
-                     @blur="vail('loginname')" @focus="focus('loginname')" @input="isCorrect('loginname')">
-            </div>
-            <div>
-              <span :class="{warning:vailForm.password.warning}">{{vailForm.password.message}}</span>
-              <input type="password" autocomplete="off" v-model="form.password" :placeholder="form.passwordPlaceholder"
-                     @blur="vail('password')" @focus="focus('password')" @input="isCorrect('password')"
-                     v-on:keyup.enter="submit">
-            </div>
-            <div style="position:relative">
-              <span>{{vailForm.vailCode.message}}</span>
-              <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
-                     :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
-                     @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-              <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
-            </div>
-          </form>
-        </div>
-        <div slot="footer" class="modalFooter">
-          <button :class="{disabled:disabled}" :disabled="disabled==true" @click="submit">登录</button>
-          <div>
-            <router-link to="register" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:left;font-size: 14px">
-              立即注册
-            </router-link>
-            <router-link to="reset" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:right;font-size:14px">
-              忘记密码
-            </router-link>
-          </div>
-        </div>
-      </Modal>
+      <div>
+        <span style="margin-right: 20px">自动续费</span>
+        <i-switch v-model="autoRenewal" style="margin-right: 0;margin-bottom: 5px;">
+          <span slot="open">开</span>
+          <span slot="close">关</span>
+        </i-switch>
+        <p style="display: inline;margin-left: 10px">开启后，资源到期会自动续费，请确保账户内有足够的余额。</p>
+      </div>
     </div>
+    <!--计价详情-->
+    <div class="settleAccounts">
+      <span>查看计价详情</span>
+      <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">305元</span></p>
+      <p style="margin-top: 10px">已省：<span style="color:#F85E1D;">35元</span></p>
+    </div>
+    <!--购买按钮-->
+    <div class="buy-button">
+      <button @click="addBudgetList" :class="{select:addButton,disabled:diskDisabled}" :disabled="diskDisabled">加入预算清单
+      </button>
+      <button style="margin-right: 0" :class="{select:buyButton,disabled:diskDisabled}" @click="buyImmediately"
+              :disabled="diskDisabled">立即购买
+      </button>
+    </div>
+    <Modal v-model="showModal.login" width="450" class="login-modal" scrollable>
+      <p slot="header" style="color:#5F5F5F;text-align:center;height: 30px;padding-top: 5px;">
+        <span style="font-family: PingFangSC-Regular;font-size: 26px;">登录</span>
+      </p>
+      <div class="modalBody">
+        <form>
+          <div>
+            <span :class="{warning:vailForm.loginname.warning}">{{vailForm.loginname.message}}</span>
+            <input type="text" autocomplete="off" v-model="form.loginname" :placeholder="form.loginnamePlaceholder"
+                   @blur="vail('loginname')" @focus="focus('loginname')" @input="isCorrect('loginname')">
+          </div>
+          <div>
+            <span :class="{warning:vailForm.password.warning}">{{vailForm.password.message}}</span>
+            <input type="password" autocomplete="off" v-model="form.password" :placeholder="form.passwordPlaceholder"
+                   @blur="vail('password')" @focus="focus('password')" @input="isCorrect('password')"
+                   v-on:keyup.enter="submit">
+          </div>
+          <div style="position:relative">
+            <span>{{vailForm.vailCode.message}}</span>
+            <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
+                   :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
+                   @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
+            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+          </div>
+        </form>
+      </div>
+      <div slot="footer" class="modalFooter">
+        <button :class="{disabled:disabled}" :disabled="disabled==true" @click="submit">登录</button>
+        <div>
+          <router-link to="register" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:left;font-size: 14px">
+            立即注册
+          </router-link>
+          <router-link to="reset" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:right;font-size:14px">
+            忘记密码
+          </router-link>
+        </div>
+      </div>
+    </Modal>
+  </div>
 </template>
 
 <script type="text/ecmascript-6">
@@ -203,18 +211,23 @@
       }
     },
     created () {
-      this.$store.commit('setProductType', 'disk')
     },
     methods: {
       addBudgetList () {
         this.buyButton = false
         this.addButton = true
+        var list = []
+        if (sessionStorage.getItem('budget')) {
+          list = JSON.parse(sessionStorage.getItem('budget'))
+        }
         var params = {
           budgetType: 'disk',
           timeType: this.timeType,
           time: this.time + ''
         }
-        this.$store.commit('setBudgetList', params)
+        list.push(params)
+        sessionStorage.setItem('budget', JSON.stringify(list))
+        this.$parent.updateList()
       },
       /* 立即购买 */
       buyImmediately () {
@@ -406,7 +419,7 @@
         color: #999999;
         line-height: 25px;
       }
-      span{
+      span {
         font-family: MicrosoftYaHei;
         font-size: 16px;
         color: #333333;
@@ -416,7 +429,7 @@
     .disk {
       border-bottom: 1px solid #E9E9E9;
       padding-bottom: 20px;
-      .diskItem{
+      .diskItem {
         & > div {
           margin-top: 20px;
           & > span {
@@ -441,18 +454,18 @@
               margin-left: 20px;
             }
           }
-      }
+        }
       }
       & > div {
         margin-top: 20px;
-        & > span{
+        & > span {
           font-family: MicrosoftYaHei;
           font-size: 16px;
           color: #333333;
           line-height: 29px;
           margin-right: 52px;
         }
-        p{
+        p {
           font-family: MicrosoftYaHei;
           font-size: 14px;
           color: #999999;
@@ -536,6 +549,7 @@
       }
     }
   }
+
   .modalBody {
     height: 55%;
     form {
@@ -610,6 +624,7 @@
       outline: none;
     }
   }
+
   .modalFooter {
     padding-top: 10px;
     height: 32%;

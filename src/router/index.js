@@ -12,9 +12,9 @@ import LR from '@/LR'
 const Price = () => import('@/components/App/Price')
 const Home = () => import('@/components/App/Home')
 
-const PDisk = () => import('@/components/App/Price/Disk')
-const PElasticIP = () => import('@/components/App/Price/ElasticIP')
-const PHost = () => import('@/components/App/Price/Host')
+const hostPrice = () => import('@/components/App/Price/Host')
+const diskPrice = () => import('@/components/App/Price/Disk')
+const elasticIPPrice = () => import('@/components/App/Price/ElasticIP')
 
 // 登录注册页面
 // import Login from '@/components/LR/Login'
@@ -29,6 +29,9 @@ const Reset = () => import('@/components/LR/Reset')
 // import Host from '@/components/Back/Host'
 const Overview = () => import('@/components/Back/Overview')
 const Host = () => import('@/components/Back/Host')
+
+// 404
+const notFindPage = () => import('@/components/404')
 
 Vue.use(Router)
 
@@ -47,11 +50,16 @@ export default new Router({
           name: 'price',
           component: Price,
           children: [
-            {path: '/', name: 'disk', component: PDisk},
-            {path: 'disk', name: 'disk', component: PDisk},
-            {path: 'elasticIP', name: 'elasticIP', component: PElasticIP},
-            {path: 'host', name: 'Host', component: PHost}
-          ]
+            {
+              path: '', name: 'hostPrice', component: hostPrice
+            },
+            {
+              path: '/hostPrice', name: 'hostPrice', component: hostPrice
+            }, {
+              path: '/diskPrice', name: 'diskPrice', component: diskPrice
+            }, {
+              path: '/elasticIPPrice', name: 'elasticIPPrice', component: elasticIPPrice
+            }]
         }
       ]
     },
@@ -73,6 +81,7 @@ export default new Router({
         {path: '/register', name: 'register', component: Register},
         {path: '/reset', name: 'reset', component: Reset}
       ]
-    }
+    },
+    {path: '/*', name: '404', component: notFindPage}
   ]
 })

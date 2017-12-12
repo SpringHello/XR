@@ -1,11 +1,9 @@
 <template>
   <div>
     <div class="title">
-      <div class="titleText" :class="{select:pitchOn=='quick'}"
-           @click=" [pitchOn='quick',addButton=false,buyButton=false] "><span>快速配置</span>
+      <div class="titleText" :class="{select:pitchOn=='quick'}" @click=" [pitchOn='quick',addButton=false,buyButton=false] "><span>快速配置</span>
       </div>
-      <div class="titleText" :class="{select:pitchOn=='custom'}"
-           @click="[pitchOn='custom',addButton=false,buyButton=false]"><span>自定义配置</span>
+      <div class="titleText" :class="{select:pitchOn=='custom'}" @click="[pitchOn='custom',addButton=false,buyButton=false]"><span>自定义配置</span>
       </div>
     </div>
     <div class="content">
@@ -23,8 +21,7 @@
       <div class="billing">
         <h3>计费方式选择</h3>
         <div class="config-button">
-          <button :class="{select:timeType=='month'||timeType=='year'}" @click="timeType='month'"
-                  style="margin-right: 8px">包年包月<i>惠</i>
+          <button :class="{select:timeType=='month'||timeType=='year'}" @click="timeType='month'" style="margin-right: 8px">包年包月<i>惠</i>
           </button>
           <button :class="{select:timeType=='current'}" @click="timeType='current';time=1">实时计费</button>
         </div>
@@ -127,10 +124,8 @@
               <Option v-for="item in networkCardList" :value="item.value" :key="item.value">{{ item.label }}
               </Option>
             </Select>
-            <span v-show="networkCard==1"
-                  style="border: 1px solid #E9E9E9;font-size: 14px;padding: 4px 25px 8px 25px;margin-left: 10px;color: #666666;">自动分配IP地址</span>
-            <span style="font-size: 14px;color: #2A99F2;cursor: pointer;float: right"
-                  @click="delNetWorkCard(index)">删除</span>
+            <span v-show="networkCard==1" style="border: 1px solid #E9E9E9;font-size: 14px;padding: 4px 25px 8px 25px;margin-left: 10px;color: #666666;">自动分配IP地址</span>
+            <span style="font-size: 14px;color: #2A99F2;cursor: pointer;float: right" @click="delNetWorkCard(index)">删除</span>
           </div>
           <div style="display: flex">
             <p style="cursor: pointer;color: #2A99F2" @click="addNetWorkCard" v-if="netWorkCardLimit!=0">添加网卡</p>
@@ -160,11 +155,10 @@
           </div>
         </div>
         <!--硬盘-->
-        <div class="disk">
+        <div class="disk" >
           <h3 v-if="diskList.length==0">云硬盘</h3>
           <div v-for="(item,index) in diskList" class="diskItem">
-            <h3>云硬盘<span style="font-size:14px;color: #2A99F2;font-weight: normal;float: right;cursor: pointer"
-                         @click="delDisk(index)">删除</span></h3>
+            <h3>云硬盘<span style="font-size:14px;color: #2A99F2;font-weight: normal;float: right;cursor: pointer" @click="delDisk(index)">删除</span></h3>
             <div class="config-button">
               <span>类型</span>
               <Poptip trigger="hover" content="全SSD架构，超高IOPS，适用于核心数据库与对I/O要求较高的业务。" placement="top-start">
@@ -192,9 +186,7 @@
             </div>
           </div>
           <div :class="{addDisk:diskList.length!=0}" style="display: flex">
-            <p v-if="diskLimit!=0" style="cursor: pointer;color: #2A99F2" @click="addDisk">添加数据盘</p>
-            <p v-if="diskLimit==0">添加数据盘</p><span class="s1">您还可以添加<span class="s1"
-                                                                         style="color:#F85E1D;margin-left: 0">{{ diskLimit}}块</span>数据盘</span>
+            <p v-if="diskLimit!=0" style="cursor: pointer;color: #2A99F2" @click="addDisk">添加数据盘</p><p v-if="diskLimit==0">添加数据盘</p><span class="s1">您还可以添加<span class="s1" style="color:#F85E1D;margin-left: 0">{{ diskLimit}}块</span>数据盘</span>
           </div>
           <div v-if="diskList.length!=0">
             <span style="margin-right: 68px">价格</span>
@@ -285,24 +277,18 @@
       <!--计价详情-->
       <div class="settleAccounts" v-if="pitchOn=='quick'">
         <span>查看计价详情</span>
-        <p style="float: right; color: #333333;">总计费用：<span
-          style="color:#F85E1D;font-size: 24px ">{{ quickTotalCost }}元</span></p>
+        <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">{{ quickTotalCost }}元</span></p>
         <p style="margin-top: 10px">已省：<span style="color:#F85E1D;">35元</span></p>
       </div>
       <div class="settleAccounts" v-else>
         <span>查看计价详情</span>
-        <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">{{ customTotalCost }}元</span>
-        </p>
+        <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">{{ customTotalCost }}元</span></p>
         <p style="margin-top: 10px">已省：<span style="color:#F85E1D;">35元</span></p>
       </div>
       <!--购买按钮-->
       <div class="buy-button">
-        <button @click="addBudgetList" :class="{select:addButton,disabled:hostDisabled}" :disabled="hostDisabled">
-          加入预算清单
-        </button>
-        <button style="margin-right: 0" :class="{select:buyButton,disabled:hostDisabled}" @click="buyImmediately"
-                :disabled="hostDisabled">立即购买
-        </button>
+        <button @click="addBudgetList" :class="{select:addButton,disabled:hostDisabled}" :disabled="hostDisabled">加入预算清单</button>
+        <button style="margin-right: 0" :class="{select:buyButton,disabled:hostDisabled}" @click="buyImmediately" :disabled="hostDisabled">立即购买</button>
       </div>
     </div>
     <Modal v-model="showModal.login" width="450" class="login-modal" scrollable>
@@ -509,7 +495,6 @@
       }
     },
     created () {
-      this.$store.commit('setProductType', 'host')
     },
     methods: {
       changeCPU (item) {
@@ -524,12 +509,18 @@
       addBudgetList () {
         this.buyButton = false
         this.addButton = true
+        var list = []
+        if (sessionStorage.getItem('budget')) {
+          list = JSON.parse(sessionStorage.getItem('budget'))
+        }
         var params = {
           budgetType: this.pitchOn === 'quick' ? 'quickHost' : 'customHost',
           timeType: this.timeType,
           time: this.time + ''
         }
-        this.$store.commit('setBudgetList', params)
+        list.push(params)
+        sessionStorage.setItem('budget', JSON.stringify(list))
+        this.$parent.updateList()
       },
       /* 立即购买 */
       buyImmediately () {
@@ -634,7 +625,7 @@
         }
       },
       addNetWorkCard () {
-        var parms = {value: 1}
+        var parms = { value: 1 }
         this.netWorkCards.push(parms)
         if (this.netWorkCardLimit > 0) {
           this.netWorkCardLimit--
@@ -688,7 +679,6 @@
       }
     }
   }
-
   .content {
     background: #FFFFFF;
     padding: 40px 40px 40px 40px;
@@ -802,7 +792,7 @@
             line-height: 25px;
           }
         }
-        .s2 {
+        .s2{
           font-family: MicrosoftYaHei;
           font-size: 14px;
           color: #333333;
@@ -873,7 +863,7 @@
     .disk {
       border-bottom: 1px solid #E9E9E9;
       padding-bottom: 20px;
-      .diskItem {
+      .diskItem{
         & > div {
           margin-top: 20px;
           & > span {
@@ -885,19 +875,19 @@
           }
         }
       }
-      .addDisk {
+      .addDisk{
         padding-left: 102px;
       }
       & > div {
         margin-top: 20px;
-        & > span {
+        & > span{
           font-family: MicrosoftYaHei;
           font-size: 16px;
           color: #333333;
           line-height: 29px;
           margin-right: 52px;
         }
-        p {
+        p{
           font-family: MicrosoftYaHei;
           font-size: 14px;
           color: #999999;
@@ -960,7 +950,7 @@
         cursor: pointer;
         margin-right: 10px;
         border-radius: 10px;
-        &.disabled {
+        &.disabled{
           cursor: not-allowed;
         }
         &.select {
@@ -970,7 +960,6 @@
       }
     }
   }
-
   .modalBody {
     height: 55%;
     form {
@@ -1045,7 +1034,6 @@
       outline: none;
     }
   }
-
   .modalFooter {
     padding-top: 10px;
     height: 32%;

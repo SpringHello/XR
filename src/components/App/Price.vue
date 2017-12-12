@@ -51,8 +51,12 @@
           <div class="bulkOrderPrice" :class="{fixed:fixedState}" ref="suspension">
             <p class="p1">总价<span>{{ totalCost }}元</span>已省56元</p>
             <div class="buy-button">
-              <button style="margin-right: 0" :class="{select:buyButton,disabled:detailedDisabled}" @click="buyImmediately" :disabled="detailedDisabled">立即购买</button>
-              <button :class="{select:exportButton,disabled:detailedDisabled}" :disabled="detailedDisabled" @click="exportDetailed">导出预算清单</button>
+              <button style="margin-right: 0" :class="{select:buyButton,disabled:detailedDisabled}"
+                      @click="buyImmediately" :disabled="detailedDisabled">立即购买
+              </button>
+              <button :class="{select:exportButton,disabled:detailedDisabled}" :disabled="detailedDisabled"
+                      @click="exportDetailed">导出预算清单
+              </button>
             </div>
             <p class="p2">如有需要请<span>联系客服</span>，或者致电：010-82527988</p>
             <p class="p2" style="color: #999999;margin-top: 10px;">关闭该页面后系统不会保存清单内容，如您需要请及时导出清单。</p>
@@ -127,9 +131,10 @@
   }
   export default{
     data () {
+      var detailedList = JSON.parse(sessionStorage.getItem('budget'))
       return {
         quantity: 1,
-        detailedList: null,
+        detailedList,
         form: {
           loginname: '',
           password: '',
@@ -159,13 +164,13 @@
         product: '',
         productList: [{
           label: '云主机',
-          value: 'host'
+          value: 'hostPrice'
         }, {
           label: '云硬盘',
-          value: 'disk'
+          value: 'diskPrice'
         }, {
           label: '公网IP',
-          value: 'ip'
+          value: 'elasticIPPrice'
         }],
         buyButton: false,
         exportButton: false,
@@ -174,6 +179,11 @@
       }
     },
     created () {
+      if (this.$router.history.current.path == '/price') {
+        this.product = 'hostPrice'
+      } else {
+        this.product = this.$router.history.current.path.substring(1)
+      }
     },
     mounted () {
       window.addEventListener('scroll', this.handleScroll)
@@ -193,6 +203,8 @@
       /* 删除一条购买清单 */
       delDetailed (index) {
         this.detailedList.splice(index, 1)
+        sessionStorage.setItem('budget', JSON.stringify(this.detailedList))
+        this.handleScroll()
       },
       handleScroll () {
         /* 总价框悬浮 */
@@ -211,13 +223,13 @@
         } else {
           // console.log(windowTop + scrollTops)
           // console.log(scrollHeight)
-          if (windowTop + scrollTops - 17 == scrollHeight) {
+          if (windowTop + scrollTops == scrollHeight) {
             this.fixedState = false
-           // window.removeEventListener('scroll', this.handleScroll)
+            // window.removeEventListener('scroll', this.handleScroll)
           }
-      /* if (windowTop + scrollTops == 1060) {
-            this.fixedState = false
-          } */
+          /* if (windowTop + scrollTops == 1060) {
+           this.fixedState = false
+           } */
         }
       },
       /* 登录表单验证提交等 */
@@ -303,13 +315,13 @@
       },
       changeProduct (value) {
         switch (value) {
-          case 'host':
+          case 'hostPrice':
             this.$router.push('hostPrice')
             break
-          case 'disk':
+          case 'diskPrice':
             this.$router.push('diskPrice')
             break
-          case 'ip':
+          case 'elasticIPPrice':
             this.$router.push('elasticIPPrice')
             break
         }
@@ -319,14 +331,9 @@
         this.buyButton = true
         this.exportButton = false
         this.showModal.login = true
-        console.log(this.$refs.detailed[0].innerText)
-        var data = []
-        data.push(this.$refs.detailed[0].innerText)
-        console.log(data)
       },
       /* 导出预算清单 */
       exportDetailed (data) {
-        console.log(data)
         this.buyButton = false
         this.exportButton = true
         if (this.$refs.detailed.length != 0) {
@@ -341,17 +348,13 @@
         // save
         const wbout = XLSX.write(wb, {type: 'binary', bookType: 'xlsx'})
         XLSX_SAVE.saveAs(new Blob([s2ab(wbout)], {type: 'application/octet-stream'}), 'detailedList.xlsx')
+      },
+      updateList () {
+        this.detailedList = JSON.parse(sessionStorage.getItem('budget'))
+        this.handleScroll()
       }
     },
     computed: {
-      /* 获取购买清单 */
-      getDetailedList () {
-        return this.$store.state.budgetList
-      },
-      /* 获取产品类型 */
-      getProductType () {
-        return this.$store.state.productType
-      },
       disabled () {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
       },
@@ -360,15 +363,6 @@
       }
     },
     watch: {
-      /* 监听购买清单变化，渲染到页面 */
-      getDetailedList (val) {
-        this.detailedList = val
-        this.handleScroll()
-      },
-      /* 监听产品类型 */
-      getProductType (val) {
-        this.product = val
-      }
     }
   }
 </script>
@@ -508,8 +502,8 @@
             background: #FFFFFF;
             box-shadow: 0 2px 14px 0;
             margin-top: 20px;
-            &.fixed{
-              position:fixed;
+            &.fixed {
+              position: fixed;
               bottom: 0;
             }
             .p1 {
@@ -551,7 +545,7 @@
                 cursor: pointer;
                 margin-top: 10px;
                 border-radius: 10px;
-                &.disabled{
+                &.disabled {
                   cursor: not-allowed;
                 }
                 &.select {
