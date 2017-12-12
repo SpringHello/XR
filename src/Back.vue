@@ -58,12 +58,13 @@
     </header>
     <div class="sec-header">
       <div class="wrapper">
+        <div></div>
         <div class="operate" ref="operate">
           <ul @mouseleave="ML">
             <li v-for="(item,index) in main" :key="index" @mouseenter="ME($event,item.type)" :ref="item.type">
               <a>{{item.mainName}}</a>
             </li>
-            <div class="line" :style="lineStyle"></div>
+            <div class="line" :style="lineStyle" ref="line"></div>
           </ul>
         </div>
       </div>
@@ -74,7 +75,8 @@
           <ul v-for="(parentItem,pIndex) in main" :key="pIndex" v-if="parentItem.subItem"
               :ref="`${parentItem.type}-sub`"
               :class="{show:parentItem.type==hoverItem}" :style="menuStyle(parentItem.type)">
-            <li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex" @click="push(subItem.type)">
+            <li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"
+                @click="push(parentItem.type,subItem.type)">
               <a>{{subItem.subName}}</a>
             </li>
           </ul>
@@ -131,47 +133,60 @@
         ],
         // hover选中的item
         hoverItem: '',
+        // 点击选中的item
+        selectItem: '',
+        // 当前路由名
+        pathName: '',
         // 是否进入三级menu栏
         enterHover: false,
         // 锁定三级目录
-        static: false,
-        lineStyle: {
-          left: '0px',
-          width: '0px'
-        }
+        static: false
       }
     },
+    created(){
+      // 设置当前路由名，用于记录
+      this.pathName = this.$router.history.current.name
+    },
     methods: {
+      // 进入二级栏
       ME: debounce(200, function (event, type) {
-        this.currentItem === -1 ? this.lineStyle.transition = 'width .3s' : this.lineStyle.transition = 'all .3s'
-        this.lineStyle.left = `${event.target.offsetLeft}px`
-        this.lineStyle.width = `${event.target.clientWidth}px`
         this.hoverItem = type
       }),
+
+      // 退出二级栏
       ML: debounce(200, function () {
-        if (!this.enterHover && !this.static) {
-          // 没有进入三级栏才能关闭三级栏
-          this.hoverItem = ''
+        if (!this.enterHover) {
+          // 没有进入三级目录才能重置
+          this.hoverItem = this.selectItem
         }
       }),
+
       // 进入三级栏
       handME(){
         this.enterHover = true
       },
+
       // 退出三级栏
       handML: debounce(200, function () {
         this.enterHover = false
-        if (!this.static) {
-          this.hoverItem = ''
+        if (this.selectItem) {
+          // 三级页面被选中，回退到选中的三级页面
+          this.hoverItem = this.selectItem
+          return
         }
+        this.hoverItem = ''
       }),
-      push(type){
+
+      // 进入三级路由，记录二级路由入口
+      push(pType, sType){
         this.static = true
-        this.$router.push(type)
+        this.selectItem = pType
+        this.$router.push(sType)
       },
+
       menuStyle(type){
         if (this.$refs[type]) {
-          var clientWidth = this.$refs[`${type}-sub`][0].clientWidth
+          var clientWidth = this.$refs[`${type}-sub`][0].clientWidth || this.$refs[`${type}-sub`][0].getBoundingClientRect().width
           var cw = this.$refs[type][0].clientWidth
           var c = (clientWidth - cw) / 2
           var liOffset = this.$refs[type][0].offsetLeft
@@ -179,11 +194,7 @@
           return {
             left: `${liOffset + offset - c}px`
           }
-        } else if (this.$refs[`${type}-sub`]) {
-          console.log({left: `${this.$refs[`${type}-sub`][0].offsetLeft}px`})
-          return {left: `${this.$refs[`${type}-sub`][0].offsetLeft}px`}
         }
-        return {}
       }
     },
     computed: {
@@ -192,6 +203,28 @@
         return {
           show: this.hoverItem != '',
           static: this.static
+        }
+      },
+
+      // 计算选中条样式
+      lineStyle(){
+        if (this.hoverItem) {
+          var style = {
+            left: `${this.$refs[this.hoverItem][0].offsetLeft}px`,
+            width: `${this.$refs[this.hoverItem][0].clientWidth}px`
+          }
+          if (!this.$refs.line.clientWidth) {
+            style.transition = 'width .3s'
+          } else {
+            style.transition = 'all .3s'
+          }
+          return style
+        }
+        if (this.$refs.line) {
+          return {
+            left: `${this.$refs.line.offsetLeft}px`,
+            transition: 'width .3s'
+          }
         }
       }
     }
@@ -299,8 +332,9 @@
         width: 1200px;
         height: 100%;
         margin: 0px auto;
+        display: flex;
+        justify-content: space-between;
         .operate {
-          float: right;
           ul {
             position: relative;
             li {
