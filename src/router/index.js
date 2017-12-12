@@ -7,17 +7,24 @@ import Back from '@/Back'
 import LR from '@/LR'
 
 // 前台页面子路由
-import Home from '@/components/App/Home'
-import Price from '@/components/App/Price'
+// import Home from '@/components/App/Home'
+// import Price from '@/components/App/Price'
+const Price = () => import('@/components/App/Price')
+const Home = () => import('@/components/App/Home')
 
 // 登录注册页面
-import Login from '@/components/LR/Login'
-import Register from '@/components/LR/Register'
-import Reset from '@/components/LR/Reset'
+// import Login from '@/components/LR/Login'
+// import Register from '@/components/LR/Register'
+// import Reset from '@/components/LR/Reset'
+const Login = () => import('@/components/LR/Login')
+const Register = () => import('@/components/LR/Register')
+const Reset = () => import('@/components/LR/Reset')
 
 // 后台页面子路由
-import Overview from '@/components/Back/Overview'
-import Host from '@/components/Back/Host'
+// import Overview from '@/components/Back/Overview'
+// import Host from '@/components/Back/Host'
+const Overview = () => import('@/components/Back/Overview')
+const Host = () => import('@/components/Back/Host')
 
 Vue.use(Router)
 
