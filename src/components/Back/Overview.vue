@@ -29,7 +29,58 @@
           </div>
           <button class="middle">立即充值</button>
         </div>
-        <div style="width:346px;"></div>
+        <div style="width:346px;">
+          <p class="middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">待处理事项</p>
+          <div class="pending" style="display: flex;justify-content: space-between">
+            <div>
+              <p class="mini">待处理工单</p>
+              <span class="large">0项</span>
+            </div>
+            <div>
+              <p class="mini">待处理工单</p>
+              <span class="large">0项</span>
+            </div>
+            <div>
+              <p class="mini">待处理工单</p>
+              <span class="large">0项</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="body">
+        <div id="left">
+          <p class="middle">资源</p>
+          <div class="wrapper">
+            <div class="item">
+              <p class="middle"><img src="../../assets/img/overview/item-1.png">云计算</p>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
+            </div>
+            <div class="item">
+              <p class="middle"><img src="../../assets/img/overview/item-2.png">云网络</p>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
+            </div>
+            <div class="item">
+              <p class="middle"><img src="../../assets/img/overview/item-3.png">云安全</p>
+            </div>
+            <div class="item">
+              <p class="middle"><img src="../../assets/img/overview/item-4.png">云存储</p>
+            </div>
+            <div class="item">
+              <p class="middle"><img src="../../assets/img/overview/item-5.png">云运维</p>
+            </div>
+          </div>
+        </div>
+        <div id="right"></div>
       </div>
     </div>
   </div>
@@ -58,6 +109,10 @@
 
   #overview {
     background-color: #f5f5f5;
+    /*
+      less 处理css计算属性calc有bug
+      申明变量diff，可正常使用
+    */
     @diff: 101px;
     min-height: calc(~'100% - @{diff}');
     #wrapper {
@@ -112,6 +167,45 @@
           .large {
             margin-top: 11px;
           }
+        }
+        .pending {
+          .mini {
+            padding: 11px 0px;
+          }
+        }
+      }
+      #body {
+        margin-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        #left {
+          padding: 20px;
+          width: 834px;
+          background-color: #ffffff;
+          > p {
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e9e9e9;
+          }
+          .wrapper {
+            .item {
+              margin-top: 30px;
+              width: 45%;
+              img {
+                vertical-align: middle;
+                margin-right: 10px;
+                padding-bottom:4px;
+              }
+              p{
+                font-weight: bold;
+              }
+            }
+          }
+        }
+        #right {
+          padding: 20px;
+          width: 346px;
+          height: 100px;
+          background-color: #ffffff;
         }
       }
     }
