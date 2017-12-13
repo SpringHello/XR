@@ -87,7 +87,43 @@
             </div>
           </div>
         </div>
-        <div id="right"></div>
+        <div id="right">
+          <div class="warn">
+            <p class="middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">告警</p>
+            <div style="display: flex;justify-content: space-between">
+              <div>
+                <p class="mini">云主机异常</p>
+                <span class="large">0项</span>
+              </div>
+              <div>
+                <p class="mini">云存储异常</p>
+                <span class="large">0项</span>
+              </div>
+              <div>
+                <p class="mini">云网络异常</p>
+                <span class="large">0项</span>
+              </div>
+            </div>
+          </div>
+          <div class="notice">
+            <p class="middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">公告</p>
+            <div>
+              <div>
+                <p class="mini">新睿云技术内测正式开启。<span>2017年11月30日</span></p>
+              </div>
+              <div>
+                <p class="mini">弹性IP源NAT功能上线测试。<span>2017年11月30日</span></p>
+              </div>
+              <div>
+                <p class="mini">VPC系统更新。<span>2017年11月30日</span></p>
+              </div>
+              <a href="javascript:;">查看更多</a>
+            </div>
+          </div>
+          <div class="ad">
+            <img src="../../assets/img/overview/ad_banner.png"/>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -214,10 +250,39 @@
           }
         }
         #right {
-          padding: 20px;
-          width: 346px;
-          height: 100px;
-          background-color: #ffffff;
+          >div:nth-child(1),>div:nth-child(2){
+            margin-bottom:20px;
+            padding: 20px;
+            width: 346px;
+            background-color: #ffffff;
+            .mini {
+              padding: 11px 0px;
+            }
+          }
+          .warn{
+              height: 132px;
+            }
+          .notice{
+              height: 195px;
+              .mini{
+                font-size: 14px;
+                span{
+                      float: right;
+                  }
+              }
+              a{
+                margin-top: 12px;
+                display: block;
+                color:  #2A99F2;
+                font-size: 14px;
+              }
+          }
+          .ad_banner{
+            
+          }
+          
+            
+         
         }
       }
     }
