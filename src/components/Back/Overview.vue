@@ -53,30 +53,37 @@
           <div class="wrapper">
             <div class="item">
               <p class="middle"><img src="../../assets/img/overview/item-1.png">云计算</p>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
             </div>
             <div class="item">
               <p class="middle"><img src="../../assets/img/overview/item-2.png">云网络</p>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"> </div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
             </div>
             <div class="item">
               <p class="middle"><img src="../../assets/img/overview/item-3.png">云安全</p>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
             </div>
             <div class="item">
               <p class="middle"><img src="../../assets/img/overview/item-4.png">云存储</p>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
             </div>
             <div class="item">
               <p class="middle"><img src="../../assets/img/overview/item-5.png">云运维</p>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
             </div>
           </div>
         </div>
@@ -190,12 +197,17 @@
             .item {
               margin-top: 30px;
               width: 45%;
+              display: inline-block;
+              float: left;
+              &:nth-child(2n) {
+                float: right;
+              }
               img {
                 vertical-align: middle;
                 margin-right: 10px;
-                padding-bottom:4px;
+                padding-bottom: 4px;
               }
-              p{
+              p {
                 font-weight: bold;
               }
             }
