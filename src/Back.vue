@@ -8,24 +8,24 @@
         <div class="operate">
           <ul>
             <li>
-              <router-link to="/overview"><span>总览</span></router-link>
+              <router-link to="/overview" :class="{active:path=='overview'}"><span>总览</span></router-link>
             </li>
             <li>
-              <router-link to="/workorder"><span>工单</span></router-link>
+              <router-link to="/workorder" :class="{active:path=='workorder'}"><span>工单</span></router-link>
             </li>
             <li>
-              <router-link to="/renew"><span>一键续费</span></router-link>
+              <router-link to="/renew" :class="{active:path=='renew'}"><span>一键续费</span></router-link>
             </li>
           </ul>
           <ul class="right">
             <li>
-              <router-link to="/overview"><span>创建主机</span></router-link>
+              <router-link to="/new" :class="{active:path=='new'}"><span>创建主机</span></router-link>
             </li>
             <li>
-              <router-link to="/workorder"><span>帮助文档</span></router-link>
+              <router-link to="/document" :class="{active:path=='document'}"><span>帮助文档</span></router-link>
             </li>
             <li>
-              <router-link to="/renew"><span>充值</span></router-link>
+              <router-link to="/recharge" :class="{active:path=='recharge'}"><span>充值</span></router-link>
             </li>
             <li>
               <Dropdown>
@@ -95,6 +95,14 @@
     name: 'back',
     data(){
       return {
+        // hover选中的item
+        hoverItem: '',
+        // 点击选中的二级item
+        selectItem: '',
+        // 点击选中的三级item
+        sType: '',
+        // 当前路径
+        path: '',
         main: [
           {
             mainName: '云服务器',
@@ -105,26 +113,26 @@
             mainName: '存储',
             type: 'storage',
             subItem: [
-              {subName: '云硬盘', type: 'host'},
-              {subName: '硬盘备份', type: 'mirror'},
-              {subName: '硬盘快照', type: 'snapshot'}
+              {subName: '云硬盘', type: 'disk'},
+              {subName: '硬盘备份', type: 'backup'},
+              {subName: '硬盘快照', type: 'diskSnapshot'}
             ]
           },
           {
             mainName: '网络',
             type: 'network',
             subItem: [
-              {subName: '虚拟私有云VPC', type: 'host'},
-              {subName: '负载均衡', type: 'mirror'},
-              {subName: '公网IP', type: 'snapshot'},
-              {subName: '虚拟专网VPN', type: 'snapshot'}
+              {subName: '虚拟私有云VPC', type: 'vpc'},
+              {subName: '负载均衡', type: 'balance'},
+              {subName: '公网IP', type: 'ip'},
+              {subName: '虚拟专网VPN', type: 'vpn'}
             ]
           },
           {
             mainName: '安全',
             type: 'security',
             subItem: [
-              {subName: '防火墙', type: 'host'}
+              {subName: '防火墙', type: 'firewall'}
             ]
           },
           {
@@ -132,14 +140,6 @@
             type: 'recycle'
           }
         ],
-        // hover选中的item
-        hoverItem: '',
-        // 点击选中的二级item
-        selectItem: '',
-        // 点击选中的三级item
-        sType: '',
-        // 当前路由名
-        pathName: '',
         // 是否进入三级menu栏
         enterHover: false,
         // 锁定三级目录
@@ -147,8 +147,21 @@
       }
     },
     created(){
-      // 设置当前路由名，用于记录
-      this.pathName = this.$router.history.current.name
+    },
+    // mounted时期根据路径修改选中的menu
+    mounted(){
+      this.path = this.$router.history.current.path.substring(1)
+      for (var item of this.main) {
+        if (item.subItem) {
+          for (var sItem of item.subItem) {
+            if (sItem.type == this.path) {
+              this.hoverItem = this.selectItem = item.type
+              this.sType = sItem.type
+              this.static = true
+            }
+          }
+        }
+      }
     },
     methods: {
       // 进入二级栏
@@ -212,7 +225,7 @@
 
       // 计算选中条样式
       lineStyle(){
-        if (this.hoverItem) {
+        if (this.$refs[this.hoverItem]) {
           var style = {
             left: `${this.$refs[this.hoverItem][0].offsetLeft}px`,
             width: `${this.$refs[this.hoverItem][0].clientWidth}px`
@@ -231,12 +244,32 @@
           }
         }
       }
+    },
+    watch: {
+      '$route'(to, from){
+        // 对路由变化作出响应...
+        this.hoverItem = this.selectItem = this.sType = ''
+        this.static = false
+        this.path = to.path.substring(1)
+        for (var item of this.main) {
+          if (item.subItem) {
+            for (var sItem of item.subItem) {
+              if (sItem.type == this.path) {
+                this.hoverItem = this.selectItem = item.type
+                this.sType = sItem.type
+                this.static = true
+              }
+            }
+          }
+        }
+      }
     }
   }
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
   #app {
+    height:100%;
     header {
       width: 100%;
       height: 56px;
@@ -311,6 +344,9 @@
                 padding: 0px 12px;
                 color: #c5c5c5;
                 line-height: 56px;
+                &.active {
+                  color: #2A99F2;
+                }
               }
               .ivu-dropdown-rel {
                 a {
