@@ -71,7 +71,7 @@
             <div class="item">
               <p class="middle"><img src="../../assets/img/overview/item-3.png">云安全</p>
               <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
+              <div style="height:40px;background-color: #2A99F2;margin:20px 0px 0px"></div>
             </div>
             <div class="item">
               <p class="middle"><img src="../../assets/img/overview/item-4.png">云存储</p>

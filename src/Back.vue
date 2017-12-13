@@ -122,8 +122,8 @@
             mainName: '网络',
             type: 'network',
             subItem: [
-              {subName: '虚拟私有云VPC', type: 'vpc'},
-              {subName: '负载均衡', type: 'balance'},
+              {subName: '虚拟私有云VPC', type: 'vpc', thrItem: [{thrName: '子网管理'}, {thrName: '网络拓扑'}, {thrName: 'NAT网关'}]},
+              {subName: '负载均衡', type: 'balance', thrItem: [{thrName: '子网管理'}, {thrName: '网络拓扑'}, {thrName: 'NAT网关'}]},
               {subName: '公网IP', type: 'ip'},
               {subName: '虚拟专网VPN', type: 'vpn'}
             ]
@@ -269,7 +269,7 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   #app {
-    height:100%;
+    height: 100%;
     header {
       width: 100%;
       height: 56px;
@@ -375,7 +375,7 @@
         display: flex;
         justify-content: space-between;
         .operate {
-          ul {
+          > ul {
             position: relative;
             li {
               display: inline-block;
@@ -431,12 +431,12 @@
         clear: both;
         .operate {
           // position: relative;
-          ul {
+          > ul {
             height: 0px;
             overflow-y: hidden;
             transition: all .5s;
             position: absolute;
-            li {
+            > li {
               display: inline-block;
               font-size: 14px;
               color: #333333;
