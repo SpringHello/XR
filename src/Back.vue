@@ -11,7 +11,7 @@
               <router-link to="/overview" :class="{active:path=='overview'}"><span>总览</span></router-link>
             </li>
             <li>
-              <router-link to="/workorder" :class="{active:path=='workorder'}"><span>工单</span></router-link>
+              <router-link to="/work" :class="{active:path=='work'}"><span>工单</span></router-link>
             </li>
             <li>
               <router-link to="/renew" :class="{active:path=='renew'}"><span>一键续费</span></router-link>

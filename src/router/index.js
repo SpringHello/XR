@@ -28,6 +28,9 @@ const Reset = () => import('@/components/LR/Reset')
 // import Overview from '@/components/Back/Overview'
 // import Host from '@/components/Back/Host'
 const Overview = () => import('@/components/Back/Overview')
+const Work = () => import('@/components/Back/Work')
+const Renew = () => import('@/components/Back/Renew')
+const New = () => import('@/components/Back/New')
 const Host = () => import('@/components/Back/Host')
 
 // 404
@@ -69,6 +72,9 @@ export default new Router({
       component: Back,
       children: [
         {path: '/overview', name: 'overview', component: Overview},
+        {path: '/work', name: 'work', component: Work},
+        {path: '/renew', name: 'work', component: Renew},
+        {path: '/new', name: 'work', component: New},
         {path: '/host', name: 'host', component: Host}
       ]
     },
