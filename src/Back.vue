@@ -71,14 +71,25 @@
       </div>
     </div>
     <div class="thr-header" @mouseenter="handME" @mouseleave="handML" :class="thrShow">
-      <div class="wrapper">
-        <div class="operate">
-          <ul v-for="(parentItem,pIndex) in main" :key="pIndex" v-if="parentItem.subItem"
-              :ref="`${parentItem.type}-sub`"
-              :class="{show:parentItem.type==hoverItem}" :style="menuStyle(parentItem.type)">
+      <div class="wrapper" :class="wrapper">
+        <div class="operate" v-for="(parentItem,pIndex) in main" :key="pIndex" v-if="parentItem.subItem"
+             :style="menuStyle(parentItem.type)">
+          <ul :ref="`${parentItem.type}-sub`" :class="{show:parentItem.type==hoverItem}">
             <li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"
                 @click="push(parentItem.type,subItem.type)" :class="{hover:subItem.type==sType}">
-              <a>{{subItem.subName}}</a>
+              <Dropdown v-if="subItem.thrItem">
+                <a href="javascript:void(0)">
+                  {{subItem.subName}}
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem v-for="(thrItem,index) in subItem.thrItem" :key="index">
+                    <router-link to="">{{thrItem.thrName}}</router-link>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+              <a v-else>
+                {{subItem.subName}}
+              </a>
             </li>
           </ul>
         </div>
@@ -148,8 +159,9 @@
     },
     created(){
     },
-    // mounted时期根据路径修改选中的menu
+
     mounted(){
+      // mounted时期根据路径修改选中的menu
       this.path = this.$router.history.current.path.substring(1)
       for (var item of this.main) {
         if (item.subItem) {
@@ -222,7 +234,6 @@
           static: this.static
         }
       },
-
       // 计算选中条样式
       lineStyle(){
         if (this.$refs[this.hoverItem]) {
@@ -243,6 +254,9 @@
             transition: 'width .3s'
           }
         }
+      },
+      wrapper(){
+
       }
     },
     watch: {
@@ -414,7 +428,7 @@
       overflow-y: hidden;
       transition: all .3s;
       height: 0px;
-      position: absolute;
+      // position: absolute;
       width: 100%;
       background-color: #ffffff;
       &.show {
@@ -422,20 +436,19 @@
         height: 45px;
       }
       &.static {
-        position: static;
+        // position: static;
         height: 45px;
       }
       .wrapper {
-        width: 1200px;
-        margin: 0px auto;
-        clear: both;
+        // position: relative;
+        text-align: center;
         .operate {
-          // position: relative;
+          position: absolute;
           > ul {
             height: 0px;
             overflow-y: hidden;
             transition: all .5s;
-            position: absolute;
+            // position: absolute;
             > li {
               display: inline-block;
               font-size: 14px;
