@@ -142,7 +142,7 @@
             mainName: '网络',
             type: 'network',
             subItem: [
-              {subName: '虚拟私有云VPC', type: 'vpc', thrItem: [{thrName: '子网管理'}, {thrName: '网络拓扑'}, {thrName: 'NAT网关'}]},
+              {subName: '虚拟私有云VPC', type: 'vpc'},
               {subName: '负载均衡', type: 'balance', thrItem: [{thrName: '子网管理'}, {thrName: '网络拓扑'}, {thrName: 'NAT网关'}]},
               {subName: '公网IP', type: 'ip'},
               {subName: '虚拟专网VPN', type: 'vpn'}
