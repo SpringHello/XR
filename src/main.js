@@ -10,6 +10,7 @@ import iview from 'iview'
 import 'iview/dist/styles/iview.css'
 import '@/assets/css/iviewOverRide.css'
 import '@/assets/css/reset.css'
+import '@/assets/css/universal.less'
 
 // 引入轮播组件
 import carousel from './myView/carousel'
