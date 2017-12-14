@@ -89,33 +89,20 @@
         </div>
         <div id="right">
           <div class="warn">
-            <p class="middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">告警</p>
+            <p class="middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;" :class="{allnum:allWarn}">
+              告警</p>
             <div style="display: flex;justify-content: space-between">
-              <div>
-                <p class="mini">云主机异常</p>
-                <span class="large">0项</span>
-              </div>
-              <div>
-                <p class="mini">云存储异常</p>
-                <span class="large">0项</span>
-              </div>
-              <div>
-                <p class="mini">云网络异常</p>
-                <span class="large">0项</span>
+              <div v-for="(item,index) in warndata" :key="index">
+                <p class="mini">{{item.warningName}}</p>
+                <span class="large" :class="{warning:item.num}">{{item.num}}项</span>
               </div>
             </div>
           </div>
           <div class="notice">
             <p class="middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">公告</p>
             <div>
-              <div>
-                <p class="mini">新睿云技术内测正式开启。<span>2017年11月30日</span></p>
-              </div>
-              <div>
-                <p class="mini">弹性IP源NAT功能上线测试。<span>2017年11月30日</span></p>
-              </div>
-              <div>
-                <p class="mini">VPC系统更新。<span>2017年11月30日</span></p>
+              <div v-for="(item,index) in noticedata" :key="index">
+                <p class="mini">{{item.message}}<span>{{item.date}}</span></p>
               </div>
               <a href="javascript:;">查看更多</a>
             </div>
@@ -130,10 +117,31 @@
 </template>
 
 <script type="text/ecmascript-6">
-  export default{
+  export default {
     name: 'overview',
-    data(){
-      return {}
+    data() {
+      return {
+        warndata: [
+          {warningName: '云主机', num: 0},
+          {warningName: '云主机', num: 1},
+          {warningName: '云主机', num: 1}
+        ],
+        noticedata: [
+          {message: '新睿云技术内测正式开启。', date: '2017年5月11日'},
+          {message: '新睿云技术内测正式开启。', date: '2017年5月11日'},
+          {message: '新睿云技术内测正式开启。', date: '2017年5月11日'}
+        ]
+      }
+    },
+
+    computed: {
+      allWarn() {
+        var total = 0
+        for (var item of this.warndata) {
+          total += item.num
+        }
+        return total
+      }
     }
   }
 </script>
@@ -153,11 +161,11 @@
   #overview {
     background-color: #f5f5f5;
     /*
-      less 处理css计算属性calc有bug
-      申明变量diff，可正常使用
-    */
+        less 处理css计算属性calc有bug
+        申明变量diff，可正常使用
+      */
     @diff: 101px;
-    min-height: calc(~'100% - @{diff}');
+    min-height: calc(~"100% - @{diff}");
     #wrapper {
       width: 1200px;
       margin: 0px auto;
@@ -199,7 +207,7 @@
             width: 100%;
             border: none;
             outline: none;
-            background: #2A99F2;
+            background: #2a99f2;
             color: #ffffff;
           }
         }
@@ -250,34 +258,52 @@
           }
         }
         #right {
-          >div:nth-child(1),>div:nth-child(2){
-            margin-bottom:20px;
-            padding: 20px;
+          > div {
+            margin-bottom: 20px;
             width: 346px;
             background-color: #ffffff;
+          }
+          .warn {
+            height: 132px;
+
+            p {
+              padding: 20px;
+              padding-bottom: 0;
+
+            }
+            .allnum {
+              background: #EE4545;
+              color: #ffffff;
+            }
+            > div {
+              padding: 0 20px;
+              .mini {
+                padding: 11px 0px;
+              }
+              .warning {
+                color: #EE4545;
+              }
+            }
+
+          }
+          .notice {
+            padding: 20px;
+            height: 195px;
             .mini {
               padding: 11px 0px;
+              font-size: 14px;
+              span {
+                float: right;
+              }
+            }
+            a {
+              margin-top: 12px;
+              display: block;
+              color: #2a99f2;
+              font-size: 14px;
             }
           }
-          .warn{
-              height: 132px;
-            }
-          .notice{
-              height: 195px;
-              .mini{
-                font-size: 14px;
-                span{
-                      float: right;
-                  }
-              }
-              a{
-                margin-top: 12px;
-                display: block;
-                color:  #2A99F2;
-                font-size: 14px;
-              }
-          }
-          .ad_banner{
+          .ad_banner {
           }
         }
       }
