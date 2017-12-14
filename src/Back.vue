@@ -8,24 +8,24 @@
         <div class="operate">
           <ul>
             <li>
-              <router-link to="/overview" :class="{active:path=='overview'}"><span>总览</span></router-link>
+              <router-link to="/overview" :class="{active:pageInfo.path=='overview'}"><span>总览</span></router-link>
             </li>
             <li>
-              <router-link to="/work" :class="{active:path=='work'}"><span>工单</span></router-link>
+              <router-link to="/work" :class="{active:pageInfo.path=='work'}"><span>工单</span></router-link>
             </li>
             <li>
-              <router-link to="/renew" :class="{active:path=='renew'}"><span>一键续费</span></router-link>
+              <router-link to="/renew" :class="{active:pageInfo.path=='renew'}"><span>一键续费</span></router-link>
             </li>
           </ul>
           <ul class="right">
             <li>
-              <router-link to="/new" :class="{active:path=='new'}"><span>创建主机</span></router-link>
+              <router-link to="/new" :class="{active:pageInfo.path=='new'}"><span>创建主机</span></router-link>
             </li>
             <li>
-              <router-link to="/document" :class="{active:path=='document'}"><span>帮助文档</span></router-link>
+              <router-link to="/document" :class="{active:pageInfo.path=='document'}"><span>帮助文档</span></router-link>
             </li>
             <li>
-              <router-link to="/recharge" :class="{active:path=='recharge'}"><span>充值</span></router-link>
+              <router-link to="/recharge" :class="{active:pageInfo.path=='recharge'}"><span>充值</span></router-link>
             </li>
             <li>
               <Dropdown>
@@ -62,7 +62,7 @@
         <div class="operate" ref="operate">
           <ul @mouseleave="ML">
             <li v-for="(item,index) in main" :key="index" @mouseenter="ME($event,item.type)" :ref="item.type"
-                :class="{hover:item.type==hoverItem}">
+                :class="{hover:item.type==pageInfo.hoverItem}">
               <a>{{item.mainName}}</a>
             </li>
             <div class="line" :style="lineStyle" ref="line"></div>
@@ -71,12 +71,12 @@
       </div>
     </div>
     <div class="thr-header" @mouseenter="handME" @mouseleave="handML" :class="thrShow">
-      <div class="wrapper" :class="wrapper">
+      <div class="wrapper">
         <div class="operate" v-for="(parentItem,pIndex) in main" :key="pIndex" v-if="parentItem.subItem"
              :style="menuStyle(parentItem.type)">
-          <ul :ref="`${parentItem.type}-sub`" :class="{show:parentItem.type==hoverItem}">
+          <ul :ref="`${parentItem.type}-sub`" :class="{show:parentItem.type==pageInfo.hoverItem}">
             <li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"
-                @click="push(parentItem.type,subItem.type)" :class="{hover:subItem.type==sType}">
+                @click="push(parentItem.type,subItem.type)" :class="{hover:subItem.type==pageInfo.sType}">
               <Dropdown v-if="subItem.thrItem">
                 <a href="javascript:void(0)">
                   {{subItem.subName}}
@@ -106,14 +106,23 @@
     name: 'back',
     data(){
       return {
-        // hover选中的item
-        hoverItem: '',
-        // 点击选中的二级item
-        selectItem: '',
-        // 点击选中的三级item
-        sType: '',
-        // 当前路径
-        path: '',
+        // pageInfo用于存储当前页面信息
+        pageInfo: {
+          // hover选中的item
+          hoverItem: '',
+          // 点击选中的二级item
+          selectItem: '',
+          // 点击选中的三级item
+          sType: '',
+          // 当前路径
+          path: '',
+          // 是否进入二级menu栏
+          enter2Hover: false,
+          // 是否进入三级menu栏
+          enter3Hover: false,
+          // 锁定三级目录
+          static: false
+        },
         main: [
           {
             mainName: '云服务器',
@@ -150,11 +159,7 @@
             mainName: '回收站',
             type: 'recycle'
           }
-        ],
-        // 是否进入三级menu栏
-        enterHover: false,
-        // 锁定三级目录
-        static: false
+        ]
       }
     },
     created(){
@@ -162,14 +167,14 @@
 
     mounted(){
       // mounted时期根据路径修改选中的menu
-      this.path = this.$router.history.current.path.substring(1)
+      this.pageInfo.path = this.$router.history.current.path.substring(1)
       for (var item of this.main) {
         if (item.subItem) {
           for (var sItem of item.subItem) {
-            if (sItem.type == this.path) {
-              this.hoverItem = this.selectItem = item.type
-              this.sType = sItem.type
-              this.static = true
+            if (sItem.type == this.pageInfo.path) {
+              this.pageInfo.hoverItem = this.pageInfo.selectItem = item.type
+              this.pageInfo.sType = sItem.type
+              this.pageInfo.static = true
             }
           }
         }
@@ -178,38 +183,42 @@
     methods: {
       // 进入二级栏
       ME: debounce(200, function (event, type) {
-        this.hoverItem = type
+        this.pageInfo.enter2Hover = true
+        this.pageInfo.hoverItem = type
       }),
 
       // 退出二级栏
       ML: debounce(200, function () {
-        if (!this.enterHover) {
+        if (!this.pageInfo.enter3Hover) {
           // 没有进入三级目录才能重置
-          this.hoverItem = this.selectItem
+          this.pageInfo.hoverItem = this.pageInfo.selectItem
         }
+        this.pageInfo.enter2Hover = false
       }),
 
       // 进入三级栏
       handME(){
-        this.enterHover = true
+        this.pageInfo.enter3Hover = true
       },
 
       // 退出三级栏
-      handML: debounce(200, function () {
-        this.enterHover = false
-        if (this.selectItem) {
+      handML: debounce(300, function () {
+        this.pageInfo.enter3Hover = false
+        if (this.pageInfo.selectItem && !this.pageInfo.enter2Hover) {
           // 三级页面被选中，回退到选中的三级页面
-          this.hoverItem = this.selectItem
+          this.pageInfo.hoverItem = this.pageInfo.selectItem
           return
         }
-        this.hoverItem = ''
+        if (!this.pageInfo.enter2Hover) {
+          this.pageInfo.hoverItem = ''
+        }
       }),
 
       // 进入三级路由，记录二级路由入口
       push(pType, sType){
-        this.static = true
-        this.selectItem = pType
-        this.sType = sType
+        this.pageInfo.static = true
+        this.pageInfo.selectItem = pType
+        this.pageInfo.sType = sType
         this.$router.push(sType)
       },
 
@@ -230,16 +239,16 @@
       // show代表是否显示three menu,static代表是否固定three menu
       thrShow(){
         return {
-          show: this.hoverItem != '',
-          static: this.static
+          show: this.pageInfo.hoverItem != '',
+          static: this.pageInfo.static
         }
       },
       // 计算选中条样式
       lineStyle(){
-        if (this.$refs[this.hoverItem]) {
+        if (this.$refs[this.pageInfo.hoverItem]) {
           var style = {
-            left: `${this.$refs[this.hoverItem][0].offsetLeft}px`,
-            width: `${this.$refs[this.hoverItem][0].clientWidth}px`
+            left: `${this.$refs[this.pageInfo.hoverItem][0].offsetLeft}px`,
+            width: `${this.$refs[this.pageInfo.hoverItem][0].clientWidth}px`
           }
           if (!this.$refs.line.clientWidth) {
             style.transition = 'width .3s'
@@ -254,24 +263,21 @@
             transition: 'width .3s'
           }
         }
-      },
-      wrapper(){
-
       }
     },
     watch: {
       '$route'(to, from){
         // 对路由变化作出响应...
-        this.hoverItem = this.selectItem = this.sType = ''
-        this.static = false
-        this.path = to.path.substring(1)
+        this.pageInfo.hoverItem = this.pageInfo.selectItem = this.sType = ''
+        this.pageInfo.static = false
+        this.pageInfo.path = to.path.substring(1)
         for (var item of this.main) {
           if (item.subItem) {
             for (var sItem of item.subItem) {
-              if (sItem.type == this.path) {
-                this.hoverItem = this.selectItem = item.type
-                this.sType = sItem.type
-                this.static = true
+              if (sItem.type == this.pageInfo.path) {
+                this.pageInfo.hoverItem = this.pageInfo.selectItem = item.type
+                this.pageInfo.sType = sItem.type
+                this.pageInfo.static = true
               }
             }
           }
