@@ -89,33 +89,19 @@
         </div>
         <div id="right">
           <div class="warn">
-            <p class="middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">告警</p>
+            <p class="middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;" :class="{allnum:allWarn}">告警</p>
             <div style="display: flex;justify-content: space-between">
-              <div>
-                <p class="mini">云主机异常</p>
-                <span class="large">0项</span>
-              </div>
-              <div>
-                <p class="mini">云存储异常</p>
-                <span class="large">0项</span>
-              </div>
-              <div>
-                <p class="mini">云网络异常</p>
-                <span class="large">0项</span>
-              </div>
+              <div v-for="(item,index) in warndata" :key="index">
+                <p class="mini">{{item.warningName}}</p>
+                <span class="large" :class="{warning:item.num}">{{item.num}}项</span>
+              </div>          
             </div>
           </div>
           <div class="notice">
             <p class="middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">公告</p>
-            <div>
-              <div>
-                <p class="mini">新睿云技术内测正式开启。<span>2017年11月30日</span></p>
-              </div>
-              <div>
-                <p class="mini">弹性IP源NAT功能上线测试。<span>2017年11月30日</span></p>
-              </div>
-              <div>
-                <p class="mini">VPC系统更新。<span>2017年11月30日</span></p>
+            <div >
+              <div v-for="(item,index) in noticedata" :key="index">
+                <p class="mini">{{item.message}}<span>{{item.date}}</span></p>
               </div>
               <a href="javascript:;">查看更多</a>
             </div>
@@ -130,161 +116,195 @@
 </template>
 
 <script type="text/ecmascript-6">
-  export default{
-    name: 'overview',
-    data(){
-      return {}
+export default {
+  name: 'overview',
+  data() {
+    return {
+      warndata: [
+        {warningName: '云主机', num: 0 }, 
+        {warningName: '云主机', num: 1 }, 
+        {warningName: '云主机', num: 1 }
+      ],
+      noticedata: [
+        { message: '新睿云技术内测正式开启。', date: '2017年5月11日' },
+        { message: '新睿云技术内测正式开启。', date: '2017年5月11日' },
+        { message: '新睿云技术内测正式开启。', date: '2017年5月11日' }
+      ]
+    }
+  },
+
+  computed:{
+    allWarn(){
+      var total = 0
+      for(var item of this.warndata){
+        total += item.num
+      }
+      return total
     }
   }
+}
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-  /* 企业认证class icon */
-  .company-icon {
-    width: 28px;
-    height: 28px;
-    display: inline-block;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-image: url(../../assets/img/overview/company-icon.png);
-  }
+/* 企业认证class icon */
+.company-icon {
+  width: 28px;
+  height: 28px;
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-image: url(../../assets/img/overview/company-icon.png);
+}
 
-  #overview {
-    background-color: #f5f5f5;
-    /*
+#overview {
+  background-color: #f5f5f5;
+  /*
       less 处理css计算属性calc有bug
       申明变量diff，可正常使用
     */
-    @diff: 101px;
-    min-height: calc(~'100% - @{diff}');
-    #wrapper {
-      width: 1200px;
-      margin: 0px auto;
+  @diff: 101px;
+  min-height: calc(~"100% - @{diff}");
+  #wrapper {
+    width: 1200px;
+    margin: 0px auto;
 
-      /* 最小号字体 */
-      .mini {
-        font-size: 12px;
-        color: #666666;
-      }
+    /* 最小号字体 */
+    .mini {
+      font-size: 12px;
+      color: #666666;
+    }
 
-      /* 中号字体 */
-      .middle {
-        font-size: 14px;
-        color: #333333;
-      }
+    /* 中号字体 */
+    .middle {
+      font-size: 14px;
+      color: #333333;
+    }
 
-      /* 大号字体 */
-      .large {
-        font-size: 24px;
-        color: #333333;
-      }
+    /* 大号字体 */
+    .large {
+      font-size: 24px;
+      color: #333333;
+    }
 
-      #title {
-        font-size: 12px;
-        color: rgba(17, 17, 17, 0.43);
-        line-height: 22px;
-        display: inline-block;
-        margin: 10px 0px;
+    #title {
+      font-size: 12px;
+      color: rgba(17, 17, 17, 0.43);
+      line-height: 22px;
+      display: inline-block;
+      margin: 10px 0px;
+    }
+    #head-info {
+      display: flex;
+      justify-content: space-between;
+      > div {
+        padding: 20px;
+        height: 132px;
+        background-color: #ffffff;
+        button {
+          height: 45px;
+          width: 100%;
+          border: none;
+          outline: none;
+          background: #2a99f2;
+          color: #ffffff;
+        }
       }
-      #head-info {
+      .wrapper {
         display: flex;
         justify-content: space-between;
-        > div {
-          padding: 20px;
-          height: 132px;
-          background-color: #ffffff;
-          button {
-            height: 45px;
-            width: 100%;
-            border: none;
-            outline: none;
-            background: #2A99F2;
-            color: #ffffff;
-          }
+        padding: 20px 20px 20px;
+        .large {
+          margin-top: 11px;
+        }
+      }
+      .pending {
+        .mini {
+          padding: 11px 0px;
+        }
+      }
+    }
+    #body {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      #left {
+        padding: 20px;
+        width: 834px;
+        background-color: #ffffff;
+        > p {
+          padding-bottom: 10px;
+          border-bottom: 1px solid #e9e9e9;
         }
         .wrapper {
-          display: flex;
-          justify-content: space-between;
-          padding: 20px 20px 20px;
-          .large {
-            margin-top: 11px;
+          .item {
+            margin-top: 30px;
+            width: 45%;
+            display: inline-block;
+            float: left;
+            &:nth-child(2n) {
+              float: right;
+            }
+            img {
+              vertical-align: middle;
+              margin-right: 10px;
+              padding-bottom: 4px;
+            }
+            p {
+              font-weight: bold;
+            }
           }
         }
-        .pending {
+      }
+      #right {
+        > div:nth-child(1),
+        > div:nth-child(2) {
+          margin-bottom: 20px;
+          
+          width: 346px;
+          background-color: #ffffff;
           .mini {
             padding: 11px 0px;
           }
         }
-      }
-      #body {
-        margin-top: 20px;
-        display: flex;
-        justify-content: space-between;
-        #left {
-          padding: 20px;
-          width: 834px;
-          background-color: #ffffff;
-          > p {
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e9e9e9;
+        .warn {
+          .allnum{
+            background:#EE4545;
+            color: #ffffff;
           }
-          .wrapper {
-            .item {
-              margin-top: 30px;
-              width: 45%;
-              display: inline-block;
-              float: left;
-              &:nth-child(2n) {
-                float: right;
-              }
-              img {
-                vertical-align: middle;
-                margin-right: 10px;
-                padding-bottom: 4px;
-              }
-              p {
-                font-weight: bold;
-              }
-            }
+          p{
+            padding:20px;
+            padding-bottom: 0;
+          }
+          >div{
+            padding:0 20px;
+          }
+          height: 132px;
+          .warning{
+            color:#EE4545;
           }
         }
-        #right {
-          >div:nth-child(1),>div:nth-child(2){
-            margin-bottom:20px;
-            padding: 20px;
-            width: 346px;
-            background-color: #ffffff;
-            .mini {
-              padding: 11px 0px;
-            }
-          }
-          .warn{
-              height: 132px;
-            }
-          .notice{
-              height: 195px;
-              .mini{
-                font-size: 14px;
-                span{
-                      float: right;
-                  }
-              }
-              a{
-                margin-top: 12px;
-                display: block;
-                color:  #2A99F2;
-                font-size: 14px;
-              }
-          }
-          .ad_banner{
-            
-          }
+        .notice {
+          padding: 20px;
+          height: 195px;
           
-            
-         
+          .mini {
+            font-size: 14px;
+            span {
+              float: right;
+            }
+          }
+          a {
+            margin-top: 12px;
+            display: block;
+            color: #2a99f2;
+            font-size: 14px;
+          }
+        }
+        .ad_banner {
         }
       }
     }
   }
+}
 </style>
