@@ -32,6 +32,7 @@ const Work = () => import('@/components/Back/Work')
 const Renew = () => import('@/components/Back/Renew')
 const New = () => import('@/components/Back/New')
 const Host = () => import('@/components/Back/Host')
+const Vpc = () => import('@/components/Back/Vpc')
 
 // 404
 const notFindPage = () => import('@/components/404')
@@ -75,7 +76,8 @@ export default new Router({
         {path: '/work', name: 'work', component: Work},
         {path: '/renew', name: 'work', component: Renew},
         {path: '/new', name: 'work', component: New},
-        {path: '/host', name: 'host', component: Host}
+        {path: '/host', name: 'host', component: Host},
+        {path: '/vpc', name: 'vpc', component: Vpc}
       ]
     },
     {
