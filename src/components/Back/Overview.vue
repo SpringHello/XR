@@ -89,7 +89,8 @@
         </div>
         <div id="right">
           <div class="warn">
-            <p class="universal-middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;" :class="{allnum:allWarn}">
+            <p class="universal-middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;"
+               :class="{allnum:allWarn}">
               告警</p>
             <div style="display: flex;justify-content: space-between">
               <div v-for="(item,index) in warndata" :key="index">
@@ -265,7 +266,6 @@
                 color: #EE4545;
               }
             }
-
           }
           .notice {
             padding: 20px;
