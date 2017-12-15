@@ -31,17 +31,30 @@ const store = new Vuex.Store({
     }
   },
   actions: {
+    /* 获取用户信息 */
     getAuthInfo({commit}){
       if (localStorage.getItem('authToken')) {
         axios.get('user/GetUserInfo.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            console.log(response.data.authInfo, response.data.result)
             commit('setAuthInfo', {
               authInfo: response.data.authInfo,
               userInfo: response.data.result
             })
           } else {
             localStorage.removeItem('authToken')
+          }
+        })
+      }
+    },
+    /* 获取地区信息 */
+    getZoneList({commit}){
+      // 如果sessionStorage还没有缓存
+      if (!sessionStorage.getItem('zoneList')) {
+        axios.get('information/zone.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            sessionStorage.setItem('zoneList', JSON.stringify(response.data.result))
+          } else {
+            throw new Error('information/zone.do接口异常')
           }
         })
       }

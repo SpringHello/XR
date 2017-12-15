@@ -118,6 +118,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+  // import axios from 'axios'
+  import test from '../../promise'
   export default {
     name: 'overview',
     data() {
@@ -135,7 +137,11 @@
       }
     },
     created(){
-
+      var p1 = test.getUserInfo()
+      var p2 = test.getZoneList()
+      Promise.all([p1, p2]).then(values => {
+        console.log(values)
+      })
     },
     computed: {
       allWarn() {

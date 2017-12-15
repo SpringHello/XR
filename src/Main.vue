@@ -10,7 +10,7 @@
       return {}
     },
     created(){
-      this.$store.dispatch('getAuthInfo')
+      // this.$store.dispatch('getZoneList')
     }
   }
 </script>

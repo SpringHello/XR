@@ -163,12 +163,12 @@
       }
     },
     created(){
-
+      // this.$store.dispatch('getAuthInfo')
     },
 
     mounted(){
       // mounted时期根据路径修改选中的menu
-      this.pageInfo.path = this.$router.history.current.path.substring(1)
+      this.pageInfo.path = this.$router.history.current.name
       for (var item of this.main) {
         if (item.subItem) {
           for (var sItem of item.subItem) {
@@ -267,7 +267,6 @@
       },
       // 用户名显示处理
       userName(){
-        console.log(this.$store.state.userInfo)
         if (this.$store.state.userInfo) {
           return this.$store.state.userInfo.realname
         }
@@ -279,7 +278,7 @@
         // 对路由变化作出响应...
         this.pageInfo.hoverItem = this.pageInfo.selectItem = this.sType = ''
         this.pageInfo.static = false
-        this.pageInfo.path = to.path.substring(1)
+        this.pageInfo.path = to.name
         for (var item of this.main) {
           if (item.subItem) {
             for (var sItem of item.subItem) {
