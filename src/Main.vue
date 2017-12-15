@@ -10,16 +10,7 @@
       return {}
     },
     created(){
-      this.$http.get('user/GetUserInfo.do').then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.$store.commit('setUserInfo', response.data.authInfo, response.data.result)
-        }
-      })
-      this.$http.get('information/zone.do').then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.$store.commit('setZoneList', response.data.result)
-        }
-      })
+      this.$store.dispatch('getAuthInfo')
     }
   }
 </script>

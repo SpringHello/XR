@@ -8,29 +8,29 @@
         <div class="operate">
           <ul>
             <li>
-              <router-link to="/overview" :class="{active:pageInfo.path=='overview'}"><span>总览</span></router-link>
+              <router-link to="overview" :class="{active:pageInfo.path=='overview'}"><span>总览</span></router-link>
             </li>
             <li>
-              <router-link to="/work" :class="{active:pageInfo.path=='work'}"><span>工单</span></router-link>
+              <router-link to="work" :class="{active:pageInfo.path=='work'}"><span>工单</span></router-link>
             </li>
             <li>
-              <router-link to="/renew" :class="{active:pageInfo.path=='renew'}"><span>一键续费</span></router-link>
+              <router-link to="renew" :class="{active:pageInfo.path=='renew'}"><span>一键续费</span></router-link>
             </li>
           </ul>
           <ul class="right">
             <li>
-              <router-link to="/new" :class="{active:pageInfo.path=='new'}"><span>创建主机</span></router-link>
+              <router-link to="new" :class="{active:pageInfo.path=='new'}"><span>创建主机</span></router-link>
             </li>
             <li>
-              <router-link to="/document" :class="{active:pageInfo.path=='document'}"><span>帮助文档</span></router-link>
+              <router-link to="document" :class="{active:pageInfo.path=='document'}"><span>帮助文档</span></router-link>
             </li>
             <li>
-              <router-link to="/recharge" :class="{active:pageInfo.path=='recharge'}"><span>充值</span></router-link>
+              <router-link to="recharge" :class="{active:pageInfo.path=='recharge'}"><span>充值</span></router-link>
             </li>
             <li>
               <Dropdown>
                 <a href="javascript:void(0)">
-                  北京允睿讯通科技有限公司
+                  {{userName}}
                   <Icon type="arrow-down-b"></Icon>
                 </a>
                 <DropdownMenu slot="list">
@@ -163,6 +163,7 @@
       }
     },
     created(){
+
     },
 
     mounted(){
@@ -263,6 +264,14 @@
             transition: 'width .3s'
           }
         }
+      },
+      // 用户名显示处理
+      userName(){
+        console.log(this.$store.state.userInfo)
+        if (this.$store.state.userInfo) {
+          return this.$store.state.userInfo.realname
+        }
+        return ''
       }
     },
     watch: {

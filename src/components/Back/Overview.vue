@@ -93,7 +93,7 @@
                :class="{allnum:allWarn}">
               告警</p>
             <div style="display: flex;justify-content: space-between">
-              <div v-for="(item,index) in warndata" :key="index">
+              <div v-for="(item,index) in warnData" :key="index">
                 <p class="universal-mini">{{item.warningName}}</p>
                 <span class="universal-large" :class="{warning:item.num}">{{item.num}}项</span>
               </div>
@@ -102,7 +102,7 @@
           <div class="notice">
             <p class="universal-middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">公告</p>
             <div>
-              <div v-for="(item,index) in noticedata" :key="index">
+              <div v-for="(item,index) in noticeData" :key="index">
                 <p class="universal-mini">{{item.message}}<span>{{item.date}}</span></p>
               </div>
               <a href="javascript:;">查看更多</a>
@@ -122,23 +122,25 @@
     name: 'overview',
     data() {
       return {
-        warndata: [
+        warnData: [
           {warningName: '云主机', num: 0},
           {warningName: '云主机', num: 1},
           {warningName: '云主机', num: 1}
         ],
-        noticedata: [
+        noticeData: [
           {message: '新睿云技术内测正式开启。', date: '2017年5月11日'},
           {message: '新睿云技术内测正式开启。', date: '2017年5月11日'},
           {message: '新睿云技术内测正式开启。', date: '2017年5月11日'}
         ]
       }
     },
+    created(){
 
+    },
     computed: {
       allWarn() {
         var total = 0
-        for (var item of this.warndata) {
+        for (var item of this.warnData) {
           total += item.num
         }
         return total

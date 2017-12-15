@@ -40,7 +40,7 @@ const notFindPage = () => import('@/components/404')
 
 Vue.use(Router)
 
-export default new Router({
+var router = new Router({
   mode: 'history',
   routes: [
     {
@@ -59,11 +59,11 @@ export default new Router({
               path: '', name: 'hostPrice', component: hostPrice
             },
             {
-              path: '/hostPrice', name: 'hostPrice', component: hostPrice
+              path: 'hostPrice', name: 'hostPrice', component: hostPrice
             }, {
-              path: '/diskPrice', name: 'diskPrice', component: diskPrice
+              path: 'diskPrice', name: 'diskPrice', component: diskPrice
             }, {
-              path: '/elasticIPPrice', name: 'elasticIPPrice', component: elasticIPPrice
+              path: 'elasticIPPrice', name: 'elasticIPPrice', component: elasticIPPrice
             }]
         }
       ]
@@ -72,6 +72,8 @@ export default new Router({
       path: '/ruicloud',
       name: Back.name,
       component: Back,
+      // 后台页面必须登录
+      meta: {requiresAuth: true},
       children: [
         {path: 'overview', name: 'overview', component: Overview},
         {path: 'work', name: 'work', component: Work},
@@ -95,3 +97,20 @@ export default new Router({
     {path: '/*', name: '404', component: notFindPage}
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(route => { return route.meta.requiresAuth })){
+    if (!localStorage.getItem('authToken')) {
+      next({
+        path: '/ruicloud/login'
+        // query: { redirect: to.fullPath }//把要跳转的地址作为参数传到下一步
+      })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+})
+
+export default router

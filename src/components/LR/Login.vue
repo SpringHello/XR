@@ -171,9 +171,10 @@
          this.vailForm.loginname.warning = true
          return
          } */
-        this.$noInterceptorsHttp.get(`user/login.do?username=${this.form.loginname}&password=${this.form.password}&vailCode=${this.form.vailCode}`).then((response) => {
+        this.$http.get(`user/login.do?username=${this.form.loginname}&password=${this.form.password}&vailCode=${this.form.vailCode}`).then((response) => {
           if (response.status == 200 && response.statusText == 'OK') {
             if (response.data.status == 1) {
+              localStorage.setItem('authToken', response.data.message)
               this.$router.push({path: 'overview'})
             } else {
               this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
