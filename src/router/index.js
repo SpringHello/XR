@@ -44,14 +44,14 @@ export default new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '/ruicloud',
       name: App.name,
       component: App,
       children: [
-        {path: '/', name: 'home', component: Home},
-        {path: '/home', name: 'home', component: Home},
+        {path: '', name: 'home', component: Home},
+        {path: 'home', name: 'home', component: Home},
         {
-          path: '/price',
+          path: 'price',
           name: 'price',
           component: Price,
           children: [
@@ -69,27 +69,27 @@ export default new Router({
       ]
     },
     {
-      path: '/',
+      path: '/ruicloud',
       name: Back.name,
       component: Back,
       children: [
-        {path: '/overview', name: 'overview', component: Overview},
-        {path: '/work', name: 'work', component: Work},
-        {path: '/renew', name: 'work', component: Renew},
-        {path: '/new', name: 'work', component: New},
-        {path: '/host', name: 'host', component: Host},
-        {path: '/vpc', name: 'vpc', component: Vpc},
-        {path: '/ip', name: 'ip', component: Ip}
+        {path: 'overview', name: 'overview', component: Overview},
+        {path: 'work', name: 'work', component: Work},
+        {path: 'renew', name: 'work', component: Renew},
+        {path: 'new', name: 'work', component: New},
+        {path: 'host', name: 'host', component: Host},
+        {path: 'vpc', name: 'vpc', component: Vpc},
+        {path: 'ip', name: 'ip', component: Ip}
       ]
     },
     {
-      path: '/',
+      path: '/ruicloud',
       name: LR.name,
       component: LR,
       children: [
-        {path: '/login', name: 'login', component: Login},
-        {path: '/register', name: 'register', component: Register},
-        {path: '/reset', name: 'reset', component: Reset}
+        {path: 'login', name: 'login', component: Login},
+        {path: 'register', name: 'register', component: Register},
+        {path: 'reset', name: 'reset', component: Reset}
       ]
     },
     {path: '/*', name: '404', component: notFindPage}

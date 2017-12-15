@@ -13,19 +13,20 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    count: 0,
-    budgetList: [],
-    productType: ''
+    // 用户认证信息
+    authInfo: null,
+    // 用户个人信息
+    userInfo: null,
+    // 区域信息
+    zoneList: null
   },
   mutations: {
-    increment (state) {
-      state.count++
+    setAuthInfo (state, authInfo, userInfo) {
+      state.authInfo = authInfo
+      state.userInfo = userInfo
     },
-    setBudgetList (state, data) {
-      state.budgetList.push(data)
-    },
-    setProductType (state, str) {
-      state.productType = str
+    setZoneList (state, zoneList) {
+      state.zoneList = zoneList
     }
   }
 })
