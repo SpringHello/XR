@@ -209,10 +209,10 @@
         justify-content: space-between;
         > div {
           padding: 20px;
-          height: 132px;
+          // height: 132px;
           background-color: #ffffff;
           button {
-            height: 45px;
+            height: 42px;
             width: 100%;
             border: none;
             outline: none;
@@ -223,9 +223,9 @@
         .wrapper {
           display: flex;
           justify-content: space-between;
-          padding: 20px 20px 20px;
+          padding: 19px 20px;
           .universal-large {
-            margin-top: 11px;
+            margin-top: 10px;
           }
         }
         .pending {
