@@ -21,6 +21,7 @@ const store = new Vuex.Store({
     zoneList: null
   },
   getters: {},
+
   mutations: {
     setAuthInfo (state, {authInfo, userInfo}) {
       state.authInfo = authInfo

@@ -101,6 +101,7 @@
 </template>
 
 <script>
+  import $store from './vuex'
   import axios from 'axios'
   import debounce from 'throttle-debounce/debounce'
   export default {
@@ -165,16 +166,14 @@
     },
     beforeRouteEnter(to, from, next){
       // 获取所有后台需要的基本信息
-
       // 获取用户信息
       var userInfo = axios.get('user/GetUserInfo.do')
       // 获取zone信息
       var zoneList = axios.get('information/zone.do')
       Promise.all([userInfo, zoneList]).then(values => {
-        next(vm => {
-          console.log(values)
-          vm.setData(values)
-        })
+        $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+        $store.commit('setZoneList', values[1].data.result)
+        next()
       })
     },
     created(){
@@ -195,13 +194,6 @@
       }
     },
     methods: {
-      setData(values){
-        console.log('setData')
-
-        this.$store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
-        this.$store.commit('setZoneList', values[1].data.result)
-        console.log(this.$store.state)
-      },
       // 进入二级栏
       ME: debounce(200, function (event, type) {
         this.pageInfo.enter2Hover = true
@@ -287,8 +279,8 @@
       },
       // 用户名显示处理
       userName(){
-        if (sessionStorage.getItem('userInfo')) {
-          return JSON.parse(sessionStorage.getItem('userInfo')).realname
+        if ($store.state.userInfo) {
+          return $store.state.userInfo.realname
         }
         return ''
       }

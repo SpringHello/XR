@@ -109,9 +109,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import store from '../../vuex'
+  import $store from '../../vuex'
   import axios from 'axios'
-  import globalAPI from '../../promise'
   export default {
     name: 'overview',
     data() {
@@ -126,14 +125,10 @@
       }
     },
     beforeRouteEnter(to, from, next){
-      console.log('进入overview页面')
-      console.log(store)
-      var zoneList = globalAPI.getZoneList()
+      var zoneId = $store.state.zoneList[0].zoneid
       // 获取总览页账户信息
-      Promise.all([zoneList]).then(values => {
-        axios.get(`user/userAccountInfo.do?zoneId=${values[0][0].zoneid}`).then(response => {
-          next(vm => vm.setData(response))
-        })
+      axios.get(`user/userAccountInfo.do?zoneId=${zoneId}`).then(response => {
+        next(vm => vm.setData(response))
       })
     },
     created(){
@@ -158,8 +153,8 @@
         }
       },
       userInfo(){
-        if (sessionStorage.getItem('userInfo')) {
-          return JSON.parse(sessionStorage.getItem('userInfo'))
+        if ($store.state.userInfo) {
+          return $store.state.userInfo
         }
         return {}
       }
