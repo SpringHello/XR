@@ -19,7 +19,9 @@ import carouselItem from './myView/carouselItem'
 Vue.config.productionTip = false
 
 // axios挂载到Vue原型
-Vue.prototype.$http = axios
+Vue.prototype.$http = axios.create({
+  baseURL: 'http://ruicloud/'
+})
 
 // 使用iview库
 Vue.use(iview)
