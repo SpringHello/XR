@@ -101,7 +101,7 @@
 </template>
 
 <script>
-  import globalAPI from './promise'
+  import axios from 'axios'
   import debounce from 'throttle-debounce/debounce'
   export default {
     name: 'back',
@@ -163,13 +163,22 @@
         ]
       }
     },
-    created(){
-      // 确保获取用户信息接口被调用
-      globalAPI.getUserInfo().then(({userInfo, authInfo}) => {
+    beforeRouteEnter(to, from, next){
+      // 获取所有后台需要的基本信息
 
+      // 获取用户信息
+      var userInfo = axios.get('user/GetUserInfo.do')
+      // 获取zone信息
+      var zoneList = axios.get('information/zone.do')
+      Promise.all([userInfo, zoneList]).then(values => {
+        next(vm => {
+          console.log(values)
+          vm.setData(values)
+        })
       })
     },
-
+    created(){
+    },
     mounted(){
       // mounted时期根据路径修改选中的menu
       this.pageInfo.path = this.$router.history.current.name
@@ -186,6 +195,13 @@
       }
     },
     methods: {
+      setData(values){
+        console.log('setData')
+
+        this.$store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+        this.$store.commit('setZoneList', values[1].data.result)
+        console.log(this.$store.state)
+      },
       // 进入二级栏
       ME: debounce(200, function (event, type) {
         this.pageInfo.enter2Hover = true

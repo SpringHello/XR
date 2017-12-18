@@ -247,8 +247,7 @@
         pageSize: 4,
 
         loadingMessage: '',
-        loading: false,
-
+        loading: false
       }
     },
     created(){
@@ -265,33 +264,33 @@
       if (this.$route.query.logData) {
         this.formItem.type = '产品故障'
         switch (this.$route.query.logData.operatetarget) {
-          case'主机':
+          case '主机':
             this.formItem.product = '19'
-            break;
-          case'快照':
+            break
+          case '快照':
             this.formItem.product = '20'
-            break;
-          case'子网':
+            break
+          case '子网':
             this.formItem.product = '29'
-            break;
-          case'VPC':
+            break
+          case 'VPC':
             this.formItem.product = '29'
-            break;
-          case'公网':
+            break
+          case '公网':
             this.formItem.product = '29'
-            break;
-          case'镜像':
+            break
+          case '镜像':
             this.formItem.product = '27'
-            break;
-          case'负载均衡':
+            break
+          case '负载均衡':
             this.formItem.product = '28'
-            break;
-          case'防火墙':
+            break
+          case '防火墙':
             this.formItem.product = '30'
-            break;
-          case'硬盘':
+            break
+          case '硬盘':
             this.formItem.product = '31'
-            break;
+            break
         }
         this.formItem.description = this.$route.query.logData.operatedes + '失败'
       }
@@ -321,7 +320,7 @@
         this.$http.get(url)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.closingOrder.splice(index, 1);
+              this.closingOrder.splice(index, 1)
               this.$Message.success(response.data.msg)
             }
           })
@@ -357,7 +356,7 @@
           .then(response => {
             this.loading = false
             if (response.status == 200 && response.data.status == 1) {
-              this.getOrders('operating');
+              this.getOrders('operating')
               this.formItem.title = ''
               this.formItem.type = ''
               this.formItem.description = ''
@@ -378,11 +377,10 @@
               })
             }
           })
-
       },
       reply(){
         if (this.editorValue.trim() == '') {
-          this.$Message.warning("请输入回复内容!")
+          this.$Message.warning('请输入回复内容! ')
           return
         }
         var url = `order/reply.do?orderid=${this.orderDetail[2][0].id}&editorValue=${this.editorValue}`
@@ -395,7 +393,7 @@
           })
       },
       getOrders(type){
-        var url = `order/getOrders.do?type=${type}&currentPage=${this[type + 'CurrPage']}&pageSize=${this.pageSize}`;
+        var url = `order/getOrders.do?type=${type}&currentPage=${this[type + 'CurrPage']}&pageSize=${this.pageSize}`
         this.$http.get(url)
           .then(response => {
             if (response.status == 200) {
@@ -403,12 +401,8 @@
               this[type + 'Total'] = response.data.count
               response.data.result.forEach(item => {
                 item.puddate = Number.parseInt(item.puddate)
-                //item.remainingTime = nowTime - item.puddate
-                item.timeago = timeago().format(item.puddate, 'zh_CN');
+                item.timeago = timeago().format(item.puddate, 'zh_CN')
                 item.puddate = new Date(item.puddate).format('yyyy年MM月dd日 hh:mm:ss')
-                /*item.remainingDay = Math.floor(item.remainingTime/mSecInDay)
-                 item.remainingHour = Math.floor((item.remainingTime%mSecInDay)/mSecInHour)
-                 item.remainingMinute = Math.floor((item.remainingTime%mSecInHour)/mSecInMinute)*/
                 this[type + 'Order'].push(item)
               })
             }
@@ -416,11 +410,11 @@
       },
       changeOperatingPage(page){
         this.operatingCurrPage = page
-        this.getOrders("operating")
+        this.getOrders('operating')
       },
       changeClosingPage(page){
         this.closingCurrPage = page
-        this.getOrders("closing")
+        this.getOrders('closing')
       }
     },
     computed: {

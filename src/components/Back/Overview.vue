@@ -22,17 +22,9 @@
         </div>
         <div style="width:468px;padding:0px">
           <div class="wrapper">
-            <div>
-              <span class="universal-mini">可用余额</span>
-              <p class="universal-large">224元</p>
-            </div>
-            <div>
-              <span class="universal-mini">本月累计消费</span>
-              <p class="universal-large">55.23元</p>
-            </div>
-            <div>
-              <span class="universal-mini">消费预估</span>
-              <p class="universal-large">365天</p>
+            <div v-for="(item,index) in accountInfo" :key="index">
+              <span class="universal-mini">{{item.itemName}}</span>
+              <p class="universal-large">{{item.value}}元</p>
             </div>
           </div>
           <button class="universal-middle">立即充值</button>
@@ -40,17 +32,9 @@
         <div style="width:346px;">
           <p class="universal-middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">待处理事项</p>
           <div class="pending" style="display: flex;justify-content: space-between">
-            <div>
-              <p class="universal-mini">待处理工单</p>
-              <span class="universal-large">0项</span>
-            </div>
-            <div>
-              <p class="universal-mini">待处理工单</p>
-              <span class="universal-large">0项</span>
-            </div>
-            <div>
-              <p class="universal-mini">待处理工单</p>
-              <span class="universal-large">0项</span>
+            <div v-for="(item,index) in pending" :key="index">
+              <p class="universal-mini">{{item.itemName}}</p>
+              <span class="universal-large">{{item.value}}项</span>
             </div>
           </div>
         </div>
@@ -97,13 +81,12 @@
         </div>
         <div id="right">
           <div class="warn">
-            <p class="universal-middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;"
-               :class="{allnum:allWarn}">
+            <p class="universal-middle" :class="warning" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">
               告警</p>
             <div style="display: flex;justify-content: space-between">
               <div v-for="(item,index) in warnData" :key="index">
-                <p class="universal-mini">{{item.warningName}}</p>
-                <span class="universal-large" :class="{warning:item.num}">{{item.num}}项</span>
+                <p class="universal-mini">{{item.itemName}}</p>
+                <span class="universal-large" :class="{warning:item.value!=0}">{{item.value}}项</span>
               </div>
             </div>
           </div>
@@ -126,42 +109,53 @@
 </template>
 
 <script type="text/ecmascript-6">
-  // import axios from 'axios'
+  import store from '../../vuex'
+  import axios from 'axios'
   import globalAPI from '../../promise'
   export default {
     name: 'overview',
     data() {
       return {
-        warnData: [
-          {warningName: '云主机', num: 0},
-          {warningName: '云主机', num: 1},
-          {warningName: '云主机', num: 1}
-        ],
-        noticeData: [
-          {message: '新睿云技术内测正式开启。', date: '2017年5月11日'},
-          {message: '新睿云技术内测正式开启。', date: '2017年5月11日'},
-          {message: '新睿云技术内测正式开启。', date: '2017年5月11日'}
-        ]
+        // 账户信息
+        accountInfo: [],
+        // 待处理事项
+        pending: [],
+        // 告警
+        warnData: [],
+        noticeData: []
       }
     },
-    created(){
+    beforeRouteEnter(to, from, next){
+      console.log('进入overview页面')
+      console.log(store)
       var zoneList = globalAPI.getZoneList()
       // 获取总览页账户信息
       Promise.all([zoneList]).then(values => {
-        this.$http.get(`user/userAccountInfo.do?zoneId=${values[0][0].zoneid}`).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            console.log(response.data.result)
-          }
+        axios.get(`user/userAccountInfo.do?zoneId=${values[0][0].zoneid}`).then(response => {
+          next(vm => vm.setData(response))
         })
       })
     },
-    computed: {
-      allWarn() {
-        var total = 0
-        for (var item of this.warnData) {
-          total += item.num
+    created(){
+
+    },
+    methods: {
+      setData(response){
+        if (response.status == 200 && response.data.status == 1) {
+          this.accountInfo = response.data.result[0].items
+          this.pending = response.data.result[1].items
+          this.warnData = response.data.result[2].items
         }
-        return total
+      }
+    },
+    computed: {
+      // 当有告警时返回{allnum:true}
+      warning(){
+        return {
+          allnum: !this.warnData.every(item => {
+            return item.value == 0
+          })
+        }
       },
       userInfo(){
         if (sessionStorage.getItem('userInfo')) {
@@ -170,14 +164,15 @@
         return {}
       }
     }
+
   }
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
   /* 个人认证class icon */
   .personal-icon {
-    width: 28px;
-    height: 28px;
+    width: 67px;
+    height: 18px;
     display: inline-block;
     position: absolute;
     top: 50%;
@@ -187,8 +182,8 @@
 
   /* 企业认证class icon */
   .company-icon {
-    width: 28px;
-    height: 28px;
+    width: 67px;
+    height: 18px;
     display: inline-block;
     position: absolute;
     top: 50%;
@@ -284,11 +279,8 @@
           }
           .warn {
             height: 132px;
-
             p {
-              padding: 20px;
-              padding-bottom: 0;
-
+              padding: 20px 20px 0px;
             }
             .allnum {
               background: #EE4545;
