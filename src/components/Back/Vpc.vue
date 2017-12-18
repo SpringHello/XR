@@ -56,7 +56,6 @@
         netdata: [
           {name: '默认私有网络VPC', netpart: '192.168.0.0/16', vpc: 1, exchange: 1, flexible: 2, firework: 3},
           {name: '默认私有网络VPC', netpart: '192.168.0.0/16', vpc: 1, exchange: 1, flexible: 2, firework: 3}
-
         ]
       }
     }

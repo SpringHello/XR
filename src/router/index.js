@@ -33,24 +33,25 @@ const Renew = () => import('@/components/Back/Renew')
 const New = () => import('@/components/Back/New')
 const Host = () => import('@/components/Back/Host')
 const Vpc = () => import('@/components/Back/Vpc')
+const Ip = () => import('@/components/Back/Ip')
 
 // 404
 const notFindPage = () => import('@/components/404')
 
 Vue.use(Router)
 
-export default new Router({
+var router = new Router({
   mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '/ruicloud',
       name: App.name,
       component: App,
       children: [
-        {path: '/', name: 'home', component: Home},
-        {path: '/home', name: 'home', component: Home},
+        {path: '', name: 'home', component: Home},
+        {path: 'home', name: 'home', component: Home},
         {
-          path: '/price',
+          path: 'price',
           name: 'price',
           component: Price,
           children: [
@@ -58,38 +59,58 @@ export default new Router({
               path: '', name: 'hostPrice', component: hostPrice
             },
             {
-              path: '/hostPrice', name: 'hostPrice', component: hostPrice
+              path: 'hostPrice', name: 'hostPrice', component: hostPrice
             }, {
-              path: '/diskPrice', name: 'diskPrice', component: diskPrice
+              path: 'diskPrice', name: 'diskPrice', component: diskPrice
             }, {
-              path: '/elasticIPPrice', name: 'elasticIPPrice', component: elasticIPPrice
+              path: 'elasticIPPrice', name: 'elasticIPPrice', component: elasticIPPrice
             }]
         }
       ]
     },
     {
-      path: '/',
+      path: '/ruicloud',
       name: Back.name,
       component: Back,
+      // 后台页面必须登录
+      meta: {requiresAuth: true},
       children: [
-        {path: '/overview', name: 'overview', component: Overview},
-        {path: '/work', name: 'work', component: Work},
-        {path: '/renew', name: 'work', component: Renew},
-        {path: '/new', name: 'work', component: New},
-        {path: '/host', name: 'host', component: Host},
-        {path: '/vpc', name: 'vpc', component: Vpc}
+        {path: 'overview', name: 'overview', component: Overview},
+        {path: 'work', name: 'work', component: Work},
+        {path: 'renew', name: 'work', component: Renew},
+        {path: 'new', name: 'work', component: New},
+        {path: 'host', name: 'host', component: Host},
+        {path: 'vpc', name: 'vpc', component: Vpc},
+        {path: 'ip', name: 'ip', component: Ip}
       ]
     },
     {
-      path: '/',
+      path: '/ruicloud',
       name: LR.name,
       component: LR,
       children: [
-        {path: '/login', name: 'login', component: Login},
-        {path: '/register', name: 'register', component: Register},
-        {path: '/reset', name: 'reset', component: Reset}
+        {path: 'login', name: 'login', component: Login},
+        {path: 'register', name: 'register', component: Register},
+        {path: 'reset', name: 'reset', component: Reset}
       ]
     },
     {path: '/*', name: '404', component: notFindPage}
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(route => { return route.meta.requiresAuth })){
+    if (!localStorage.getItem('authToken')) {
+      next({
+        path: '/ruicloud/login'
+        // query: { redirect: to.fullPath }//把要跳转的地址作为参数传到下一步
+      })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+})
+
+export default router

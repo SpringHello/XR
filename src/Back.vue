@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="back">
     <header>
       <div class="wrapper">
         <router-link to="/home" class="logo">
@@ -8,29 +8,29 @@
         <div class="operate">
           <ul>
             <li>
-              <router-link to="/overview" :class="{active:pageInfo.path=='overview'}"><span>总览</span></router-link>
+              <router-link to="overview" :class="{active:pageInfo.path=='overview'}"><span>总览</span></router-link>
             </li>
             <li>
-              <router-link to="/work" :class="{active:pageInfo.path=='work'}"><span>工单</span></router-link>
+              <router-link to="work" :class="{active:pageInfo.path=='work'}"><span>工单</span></router-link>
             </li>
             <li>
-              <router-link to="/renew" :class="{active:pageInfo.path=='renew'}"><span>一键续费</span></router-link>
+              <router-link to="renew" :class="{active:pageInfo.path=='renew'}"><span>一键续费</span></router-link>
             </li>
           </ul>
           <ul class="right">
             <li>
-              <router-link to="/new" :class="{active:pageInfo.path=='new'}"><span>创建主机</span></router-link>
+              <router-link to="new" :class="{active:pageInfo.path=='new'}"><span>创建主机</span></router-link>
             </li>
             <li>
-              <router-link to="/document" :class="{active:pageInfo.path=='document'}"><span>帮助文档</span></router-link>
+              <router-link to="document" :class="{active:pageInfo.path=='document'}"><span>帮助文档</span></router-link>
             </li>
             <li>
-              <router-link to="/recharge" :class="{active:pageInfo.path=='recharge'}"><span>充值</span></router-link>
+              <router-link to="recharge" :class="{active:pageInfo.path=='recharge'}"><span>充值</span></router-link>
             </li>
             <li>
               <Dropdown>
                 <a href="javascript:void(0)">
-                  北京允睿讯通科技有限公司
+                  {{userName}}
                   <Icon type="arrow-down-b"></Icon>
                 </a>
                 <DropdownMenu slot="list">
@@ -144,7 +144,7 @@
             subItem: [
               {subName: '虚拟私有云VPC', type: 'vpc'},
               {subName: '负载均衡', type: 'balance', thrItem: [{thrName: '子网管理'}, {thrName: '网络拓扑'}, {thrName: 'NAT网关'}]},
-              {subName: '公网IP', type: 'ip'},
+              {subName: '公网IP', type: 'ip', thrItem: [{thrName: '端口映射'}]},
               {subName: '虚拟专网VPN', type: 'vpn'}
             ]
           },
@@ -163,11 +163,12 @@
       }
     },
     created(){
+      // this.$store.dispatch('getAuthInfo')
     },
 
     mounted(){
       // mounted时期根据路径修改选中的menu
-      this.pageInfo.path = this.$router.history.current.path.substring(1)
+      this.pageInfo.path = this.$router.history.current.name
       for (var item of this.main) {
         if (item.subItem) {
           for (var sItem of item.subItem) {
@@ -263,6 +264,13 @@
             transition: 'width .3s'
           }
         }
+      },
+      // 用户名显示处理
+      userName(){
+        if (this.$store.state.userInfo) {
+          return this.$store.state.userInfo.realname
+        }
+        return ''
       }
     },
     watch: {
@@ -270,7 +278,7 @@
         // 对路由变化作出响应...
         this.pageInfo.hoverItem = this.pageInfo.selectItem = this.sType = ''
         this.pageInfo.static = false
-        this.pageInfo.path = to.path.substring(1)
+        this.pageInfo.path = to.name
         for (var item of this.main) {
           if (item.subItem) {
             for (var sItem of item.subItem) {
@@ -288,7 +296,7 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-  #app {
+  #back {
     height: 100%;
     header {
       width: 100%;

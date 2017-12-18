@@ -47,11 +47,11 @@
         titleItem: [
           {
             title: '首页',
-            path: '/home'
+            path: 'home'
           },
           {
             title: '产品',
-            path: '/product',
+            path: 'product',
             content: [
               {
                 prod: '云计算',
@@ -101,19 +101,19 @@
           },
           {
             title: '文档',
-            path: '/product'
+            path: 'product'
           },
           {
             title: '关于我们',
-            path: '/product'
+            path: 'product'
           },
           {
             title: '注册',
-            path: '/register'
+            path: 'register'
           },
           {
             title: '登录',
-            path: '/login'
+            path: 'login'
           }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
