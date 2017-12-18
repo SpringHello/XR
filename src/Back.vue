@@ -101,6 +101,7 @@
 </template>
 
 <script>
+  import globalAPI from './promise'
   import debounce from 'throttle-debounce/debounce'
   export default {
     name: 'back',
@@ -163,7 +164,10 @@
       }
     },
     created(){
-      // this.$store.dispatch('getAuthInfo')
+      // 确保获取用户信息接口被调用
+      globalAPI.getUserInfo().then(({userInfo, authInfo}) => {
+
+      })
     },
 
     mounted(){
@@ -267,8 +271,8 @@
       },
       // 用户名显示处理
       userName(){
-        if (this.$store.state.userInfo) {
-          return this.$store.state.userInfo.realname
+        if (sessionStorage.getItem('userInfo')) {
+          return JSON.parse(sessionStorage.getItem('userInfo')).realname
         }
         return ''
       }

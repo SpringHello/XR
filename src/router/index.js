@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+// import globalAPI from '../promise'
 
 // 主路由
 import App from '@/App'
@@ -73,7 +74,7 @@ var router = new Router({
       name: Back.name,
       component: Back,
       // 后台页面必须登录
-      meta: {requiresAuth: true},
+      // meta: {requiresAuth: true},
       children: [
         {path: 'overview', name: 'overview', component: Overview},
         {path: 'work', name: 'work', component: Work},

@@ -5,11 +5,19 @@
       <div id="head-info">
         <div style="width:346px">
           <span class="universal-mini" style="font-size: 14px">欢迎您：</span>
-          <p style="font-size: 18px;color: #333333;margin-top: 15px;position: relative">北京允睿讯通科技有限公司<i
+          <p style="font-size: 18px;color: #333333;margin-top: 15px;position: relative">{{userInfo.realname}}<i
             class="company-icon" style="margin-left: 10px;"></i></p>
           <div style="display: flex;margin-top:25px">
-            <span style="margin-right:20px;"><img src="../../assets/img/overview/email.png" style="margin-right:10px">402379445@126.com</span>
-            <span><img src="../../assets/img/overview/phone.png" style="margin-right:10px">13657897636</span>
+            <span style="margin-right:20px;width:50%">
+              <img src="../../assets/img/overview/email.png" style="margin-right:10px;vertical-align: middle">
+              <span v-if="userInfo.email" style="vertical-align: middle">{{userInfo.email}}</span>
+              <router-link v-else style="vertical-align: middle;" to="">点击绑定</router-link>
+            </span>
+            <span>
+              <img src="../../assets/img/overview/phone.png" style="margin-right:10px;vertical-align: middle">
+              <span v-if="userInfo.phone" style="vertical-align: middle">{{userInfo.phone}}</span>
+              <router-link v-else style="vertical-align: middle" to="">点击绑定</router-link>
+            </span>
           </div>
         </div>
         <div style="width:468px;padding:0px">
@@ -119,7 +127,7 @@
 
 <script type="text/ecmascript-6">
   // import axios from 'axios'
-  import test from '../../promise'
+  import globalAPI from '../../promise'
   export default {
     name: 'overview',
     data() {
@@ -137,10 +145,14 @@
       }
     },
     created(){
-      var p1 = test.getUserInfo()
-      var p2 = test.getZoneList()
-      Promise.all([p1, p2]).then(values => {
-        console.log(values)
+      var zoneList = globalAPI.getZoneList()
+      // 获取总览页账户信息
+      Promise.all([zoneList]).then(values => {
+        this.$http.get(`user/userAccountInfo.do?zoneId=${values[0][0].zoneid}`).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            console.log(response.data.result)
+          }
+        })
       })
     },
     computed: {
@@ -150,12 +162,29 @@
           total += item.num
         }
         return total
+      },
+      userInfo(){
+        if (sessionStorage.getItem('userInfo')) {
+          return JSON.parse(sessionStorage.getItem('userInfo'))
+        }
+        return {}
       }
     }
   }
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  /* 个人认证class icon */
+  .personal-icon {
+    width: 28px;
+    height: 28px;
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-image: url(../../assets/img/overview/authenticate-icon-1.png);
+  }
+
   /* 企业认证class icon */
   .company-icon {
     width: 28px;
@@ -164,7 +193,7 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-image: url(../../assets/img/overview/company-icon.png);
+    background-image: url(../../assets/img/overview/authenticate-icon-2.png);
   }
 
   #overview {
