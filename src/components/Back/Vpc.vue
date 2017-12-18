@@ -37,8 +37,10 @@
               </div>
             </div>
             <div class="card-bottom">
+              <router-link :to="register" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:left;font-size: 14px">冷</router-link>
               <Button type="primary" class="btn-bgwhite">重启</Button>
-              <Button type="primary">管理</Button>
+              <Button type="primary">管理111</Button>
+              <Button type="primary" class="btn-bgwhite">特使</Button>
             </div>
           </div>
         </div>
@@ -119,11 +121,16 @@
         .card-wrap {
           display: flex;
           justify-content: space-between;
+          .card:hover{
+            border: 1px solid #2A99F2;
+            box-shadow: 0 2px 8px 0 rgba(42,153,242,0.35);
+          }
           .card {
             width: 570px;
             height: 313px;
             padding: 20px;
-            box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.20);;
+            border: 1px solid #ffffff;
+            box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.20);
             .content {
               border-bottom: 1px solid #E9E9E9;
               .item-wrap{
