@@ -14,26 +14,32 @@
     <div class="billing">
       <h3>计费方式选择</h3>
       <div class="config-button">
-        <button :class="{select:timeType=='month'||timeType=='year'}" @click="type='month'" style="margin-right: 8px">包年包月<i>惠</i>
+        <button :class="{select:timeType=='month'||timeType=='year'}" @click="timeType='month'" style="margin-right: 8px">包年包月<i>惠</i>
         </button>
-        <button :class="{select:type=='current'}" @click="type='current'">实时计费</button>
+        <button :class="{select:timeType=='current'}" @click="timeType='current'">实时计费</button>
       </div>
       <div v-if="timeType=='month'||timeType=='year'" class="time" style="margin-bottom:20px">
         <label :class="{select:time==1&&timeType!='year'}" @click="time=1;timeType='month'">1月</label>
         <label v-for="item in timeList" :class="{select:time==item&&timeType!='year'}"
                @click="time=item;timeType='month'">{{item}}</label>
-        <label
-          :class="{select:time==1&&timeType=='year'}"
-          @click="time=1;timeType='year'"
-          style="border-left:none;border-radius: 0px">1年<i>惠</i></label>
-        <label
-          :class="{select:time==2&&timeType=='year'}"
-          @click="time=2;timeType='year'"
-          style="border-left:none;border-radius: 0px">2年<i>惠</i></label>
-        <label
-          :class="{select:time==3&&timeType=='year'}"
-          @click="time=3;timeType='year'"
-          style="border-left:none;border-top-left-radius: 0px;border-bottom-left-radius: 0px">3年<i>惠</i></label>
+        <Tooltip :content="`买满1年，立享3折。`" placement="top">
+          <label
+            :class="{select:time==1&&timeType=='year'}"
+            @click="time=1;timeType='year'"
+            style="border-left:none;border-radius: 0px">1年<i>惠</i></label>
+        </Tooltip>
+        <Tooltip :content="`买满2年，立享2折。`" placement="top">
+          <label
+            :class="{select:time==2&&timeType=='year'}"
+            @click="time=2;timeType='year'"
+            style="border-left:none;border-radius: 0px">2年<i>惠</i></label>
+        </Tooltip>
+        <Tooltip :content="`买满3年，立享3折。`" placement="top">
+          <label
+            :class="{select:time==3&&timeType=='year'}"
+            @click="time=3;timeType='year'"
+            style="border-left:none;border-top-left-radius: 0px;border-bottom-left-radius: 0px">3年<i>惠</i></label>
+        </Tooltip>
       </div>
       <p>满10月送两月，满一年打8折，满两年打7.5折，满3年5折</p>
     </div>
@@ -41,7 +47,7 @@
       <h3>网络与带宽</h3>
       <div>
         <span>虚拟私有云</span>
-        <Select style="width:180px;margin-left: 20px">
+        <Select v-model="net" style="width:180px;margin-left: 20px">
           <Option v-for="item in netList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
         <p>如需使用其他虚拟私有云（VPC），请选择已有虚拟私有云（VPC），也可以自行到<span>控制台新建</span>。</p>
@@ -87,7 +93,7 @@
     <!--计价详情-->
     <div class="settleAccounts">
       <span>查看计价详情</span>
-      <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">305元</span></p>
+      <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">{{ ipPrice}}元</span></p>
       <p style="margin-top: 10px">已省：<span style="color:#F85E1D;">35元</span></p>
     </div>
     <!--购买按钮-->
@@ -174,6 +180,7 @@
           label: '默认网络',
           value: '1'
         }],
+        net: '1',
         networkCardList: [
           {
             label: '主网卡',
@@ -182,7 +189,7 @@
         ],
         networkCard: '',
         netWorkCards: [],
-        publicIP: 100,
+        publicIP: 10,
         form: {
           loginname: '',
           password: '',
@@ -228,7 +235,10 @@
         var params = {
           budgetType: 'ip',
           timeType: this.timeType,
-          time: this.time + ''
+          time: this.time + '',
+          buyPublicIP: this.buyPublicIP,
+          publicIP: this.publicIP + '',
+          cost: this.ipPrice
         }
         list.push(params)
         sessionStorage.setItem('budget', JSON.stringify(list))

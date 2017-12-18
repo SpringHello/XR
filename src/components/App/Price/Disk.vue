@@ -23,24 +23,31 @@
         <label :class="{select:time==1&&timeType!='year'}" @click="time=1;timeType='month'">1月</label>
         <label v-for="item in timeList" :class="{select:time==item&&timeType!='year'}"
                @click="time=item;timeType='month'">{{item}}</label>
-        <label
-          :class="{select:time==1&&timeType=='year'}"
-          @click="time=1;timeType='year'"
-          style="border-left:none;border-radius: 0px">1年<i>惠</i></label>
-        <label
-          :class="{select:time==2&&timeType=='year'}"
-          @click="time=2;timeType='year'"
-          style="border-left:none;border-radius: 0px">2年<i>惠</i></label>
-        <label
-          :class="{select:time==3&&timeType=='year'}"
-          @click="time=3;timeType='year'"
-          style="border-left:none;border-top-left-radius: 0px;border-bottom-left-radius: 0px">3年<i>惠</i></label>
+        <Tooltip :content="`买满1年，立享3折。`" placement="top">
+          <label
+            :class="{select:time==1&&timeType=='year'}"
+            @click="time=1;timeType='year'"
+            style="border-left:none;border-radius: 0px">1年<i>惠</i></label>
+        </Tooltip>
+        <Tooltip :content="`买满2年，立享2折。`" placement="top">
+          <label
+            :class="{select:time==2&&timeType=='year'}"
+            @click="time=2;timeType='year'"
+            style="border-left:none;border-radius: 0px">2年<i>惠</i></label>
+        </Tooltip>
+        <Tooltip :content="`买满3年，立享3折。`" placement="top">
+          <label
+            :class="{select:time==3&&timeType=='year'}"
+            @click="time=3;timeType='year'"
+            style="border-left:none;border-top-left-radius: 0px;border-bottom-left-radius: 0px">3年<i>惠</i></label>
+        </Tooltip>
       </div>
       <p>满10月送两月，满一年打8折，满两年打7.5折，满3年5折</p>
       <span>磁盘名称</span>
       <Input placeholder="如不填写，系统自动生成" style="width: 360px;margin-left: 20px"></Input>
       <p style="padding-left: 86px;">当购买数量大于1台之时，磁盘命名规则为磁盘名称加随机数字。</p>
     </div>
+    <!--磁盘列表-->
     <div class="disk">
       <div v-for="(item,index) in diskList" class="diskItem">
         <h3>云硬盘<span style="font-size:14px;color: #2A99F2;font-weight: normal;float: right;cursor: pointer"
@@ -74,7 +81,7 @@
       </div>
       <div style="display: flex;padding-left: 87px;">
         <p v-if="diskLimit!=0" style="cursor: pointer;color: #2A99F2" @click="addDisk">添加数据盘</p>
-        <p v-if="diskLimit==0">添加数据盘</p><span class="s1">您还可以添加<span class="s1" style="color:#F85E1D;margin-left: 0">{{ diskLimit}}块</span>数据盘</span>
+        <p v-if="diskLimit==0">添加数据盘</p><span class="s1" v-if="userInfo!=null">您还可以添加<span class="s1" style="color:#F85E1D;margin-left: 0">{{ diskLimit}}块</span>数据盘</span>
       </div>
       <div>
         <span>价格</span>
@@ -93,7 +100,7 @@
     <!--计价详情-->
     <div class="settleAccounts">
       <span>查看计价详情</span>
-      <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">305元</span></p>
+      <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">{{ diskPrice}}元</span></p>
       <p style="margin-top: 10px">已省：<span style="color:#F85E1D;">35元</span></p>
     </div>
     <!--购买按钮-->
@@ -104,6 +111,7 @@
               :disabled="diskDisabled">立即购买
       </button>
     </div>
+    <!--登录弹框-->
     <Modal v-model="showModal.login" width="450" class="login-modal" scrollable>
       <p slot="header" style="color:#5F5F5F;text-align:center;height: 30px;padding-top: 5px;">
         <span style="font-family: PingFangSC-Regular;font-size: 26px;">登录</span>
@@ -126,7 +134,7 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc" @click="imgSrc=`../user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </div>
         </form>
       </div>
@@ -146,6 +154,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import test from '../../../promise'
   import regExp from '../../../util/regExp'
   var messageMap = {
     loginname: {
@@ -162,22 +171,14 @@
   export default{
     data () {
       return {
-        zoneList: [
-          {
-            zonename: '北方一区',
-            zoneid: '1'
-          }, {
-            zonename: '华中一区',
-            zoneid: '2'
-          }
-        ],
-        zone: '1',
+        zoneList: [],
+        zone: '',
         type: '',
         timeType: 'month',
         timeList: ['2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月'],
         time: 1,
         autoRenewal: true,
-        diskPrice: 5,
+        diskPrice: 1,
         diskList: [],
         form: {
           loginname: '',
@@ -201,18 +202,28 @@
             warning: false
           }
         },
-        imgSrc: '',
+        imgSrc: `../user/getKaptchaImage.do?t=${new Date().getTime()}`,
         showModal: {
           login: false
         },
-        diskLimit: 4,
+        diskLimit: 1,
         buyButton: false,
-        addButton: false
+        addButton: false,
+        userInfo: null
       }
     },
     created () {
+      var p1 = test.getZoneList()
+      var p2 = test.getUserInfo()
+      Promise.all([p1, p2]).then(values => {
+        this.zoneList = values[0]
+        this.zone = values[0][0].zoneid
+        this.userInfo = values[1]
+        this.getDiskLimit()
+      })
     },
     methods: {
+      /* 添加到购物清单 */
       addBudgetList () {
         this.buyButton = false
         this.addButton = true
@@ -223,7 +234,9 @@
         var params = {
           budgetType: 'disk',
           timeType: this.timeType,
-          time: this.time + ''
+          time: this.time + '',
+          diskList: this.diskList,
+          cost: this.diskPrice
         }
         list.push(params)
         sessionStorage.setItem('budget', JSON.stringify(list))
@@ -235,6 +248,7 @@
         this.addButton = false
         this.showModal.login = true
       },
+      /* 登录框校检等相关 */
       vail (field) {
         var text = this.form[field]
         if (text == '') {
@@ -315,22 +329,38 @@
           this.vailForm.loginname.warning = true
         })
       },
+      /* 删除磁盘 */
       delDisk (index) {
         this.diskList.splice(index, 1)
         if (this.diskLimit < 4) {
           this.diskLimit++
         }
       },
+      /* 添加磁盘 */
       addDisk () {
-        var params = {
-          diskType: 'ssd',
-          diskSize: 20
+        if (this.userInfo == null) {
+          this.showModal.login = true
+        } else {
+          var params = {
+            diskType: 'ssd',
+            diskSize: 20
+          }
+          this.diskList.push(params)
+          if (this.diskLimit > 0) {
+            this.diskLimit--
+          }
         }
-        this.diskList.push(params)
-        if (this.diskLimit > 0) {
-          this.diskLimit--
-        }
+      },
+      /* 获取当前用户还能购买的磁盘数量 */
+      getDiskLimit () {
+        var url = '../user/userSourceManager.do?zoneId=' + this.zone
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.diskLimit = response.data.result[3].items[0].total - response.data.result[3].items[0].used
+          }
+        })
       }
+      /* 查询磁盘价格 */
     },
     computed: {
       disabled () {
@@ -340,7 +370,9 @@
         return (this.diskPrice == 0)
       }
     },
-    watch: {}
+    watch: {
+
+    }
   }
 </script>
 
