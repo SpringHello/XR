@@ -43,39 +43,11 @@
         <div id="left">
           <p class="universal-middle">资源</p>
           <div class="wrapper">
-            <div class="item">
-              <p class="universal-middle"><img src="../../assets/img/overview/item-1.png">云计算</p>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
-            </div>
-            <div class="item">
-              <p class="universal-middle"><img src="../../assets/img/overview/item-2.png">云网络</p>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
-            </div>
-            <div class="item">
-              <p class="universal-middle"><img src="../../assets/img/overview/item-3.png">云安全</p>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px 0px"></div>
-            </div>
-            <div class="item">
-              <p class="universal-middle"><img src="../../assets/img/overview/item-4.png">云存储</p>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
-            </div>
-            <div class="item">
-              <p class="universal-middle"><img src="../../assets/img/overview/item-5.png">云运维</p>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
-              <div style="height:40px;background-color: #2A99F2;margin:20px 0px"></div>
+            <div class="item" v-for="(item,index) in source">
+              <p class="universal-middle"><img :src="sourceIcon[index]">{{item.name}}</p>
+              <div class="source-item" v-for="(subItem,sIndex) in item.items">
+                <span>{{subItem.itemName}}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -94,12 +66,12 @@
             <p class="universal-middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">公告</p>
             <div>
               <div v-for="(item,index) in noticeData" :key="index">
-                <p class="universal-mini">{{item.message}}<span>{{item.date}}</span></p>
+                <p class="universal-mini">{{item.title}}<span>{{item.createtime}}</span></p>
               </div>
               <a href="javascript:;">查看更多</a>
             </div>
           </div>
-          <div class="ad">
+          <div class="ad" v-for="(ad,index) in ads">
             <img src="../../assets/img/overview/ad_banner.png"/>
           </div>
         </div>
@@ -121,25 +93,53 @@
         pending: [],
         // 告警
         warnData: [],
-        noticeData: []
+        // 公告
+        noticeData: [],
+        // 广告
+        ads: [],
+        // 资源使用情况
+        source: [],
+        // 资源icon
+        sourceIcon: [
+          require('../../assets/img/overview/item-1.png'),
+          require('../../assets/img/overview/item-2.png'),
+          require('../../assets/img/overview/item-3.png'),
+          require('../../assets/img/overview/item-4.png'),
+          require('../../assets/img/overview/item-5.png')
+        ]
       }
     },
     beforeRouteEnter(to, from, next){
       var zoneId = $store.state.zoneList[0].zoneid
       // 获取总览页账户信息
-      axios.get(`user/userAccountInfo.do?zoneId=${zoneId}`).then(response => {
-        next(vm => vm.setData(response))
+      var accountInfo = axios.get(`user/userAccountInfo.do?zoneId=${zoneId}`)
+      var adver = axios.get('user/getAdvertisement.do')
+      var source = axios.get(`user/userSourceManager.do?zoneId=${zoneId}`)
+      Promise.all([accountInfo, adver, source]).then(values => {
+        next(vm => {
+          vm.setData(values)
+        })
       })
     },
     created(){
 
     },
     methods: {
-      setData(response){
+      setData(values){
+        var response = values[0]
         if (response.status == 200 && response.data.status == 1) {
           this.accountInfo = response.data.result[0].items
           this.pending = response.data.result[1].items
           this.warnData = response.data.result[2].items
+        }
+        response = values[1]
+        if (response.status == 200 && response.data.status == 1) {
+          this.noticeData = response.data.result.announcement
+          this.ads = response.data.result.advertisement
+        }
+        response = values[2]
+        if (response.status == 200 && response.data.status == 1) {
+          this.source = response.data.result
         }
       }
     },
@@ -212,7 +212,7 @@
           // height: 132px;
           background-color: #ffffff;
           button {
-            height: 42px;
+            height: 44px;
             width: 100%;
             border: none;
             outline: none;
@@ -223,7 +223,7 @@
         .wrapper {
           display: flex;
           justify-content: space-between;
-          padding: 19px 20px;
+          padding: 20px 20px;
           .universal-large {
             margin-top: 10px;
           }
@@ -254,6 +254,11 @@
               float: left;
               &:nth-child(2n) {
                 float: right;
+              }
+              .source-item {
+                height: 40px;
+                background-color: #f5f5f5;
+                margin: 20px 0px
               }
               img {
                 vertical-align: middle;

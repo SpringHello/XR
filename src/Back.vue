@@ -174,6 +174,9 @@
         $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
         $store.commit('setZoneList', values[1].data.result)
         next()
+      }, value => {
+        console.log(value)
+        next()
       })
     },
     created(){
