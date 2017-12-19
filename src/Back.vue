@@ -16,6 +16,19 @@
             <li>
               <router-link to="renew" :class="{active:pageInfo.path=='renew'}"><span>一键续费</span></router-link>
             </li>
+            <li>
+              <Dropdown>
+                <a href="javascript:void(0)">
+                  {{zoneList[0].zonename}}
+                  <Icon type="arrow-down-b"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem v-for="(zone,index) in zoneList" :key="index">
+                    <router-link to="">{{zone.zonename}}</router-link>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </li>
           </ul>
           <ul class="right">
             <li>
@@ -30,7 +43,7 @@
             <li>
               <Dropdown>
                 <a href="javascript:void(0)">
-                  {{userName}}
+                  {{userInfo.realname}}
                   <Icon type="arrow-down-b"></Icon>
                 </a>
                 <DropdownMenu slot="list">
@@ -102,6 +115,7 @@
 
 <script>
   import $store from './vuex'
+  import {mapState} from 'vuex'
   import axios from 'axios'
   import debounce from 'throttle-debounce/debounce'
   export default {
@@ -251,7 +265,7 @@
         }
       }
     },
-    computed: {
+    computed: mapState({
       // show代表是否显示three menu,static代表是否固定three menu
       thrShow(){
         return {
@@ -280,14 +294,9 @@
           }
         }
       },
-      // 用户名显示处理
-      userName(){
-        if ($store.state.userInfo) {
-          return $store.state.userInfo.realname
-        }
-        return ''
-      }
-    },
+      userInfo: state => state.userInfo,
+      zoneList: state => state.zoneList
+    }),
     watch: {
       '$route'(to, from){
         // 对路由变化作出响应...
@@ -395,6 +404,7 @@
                 a {
                   line-height: 56px;
                   display: inline-block;
+                  color: #c5c5c5;
                 }
               }
             }

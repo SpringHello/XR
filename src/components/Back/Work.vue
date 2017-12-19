@@ -1,9 +1,9 @@
 <template>
   <div class="background">
-    <Spin fix v-show="loading">
+    <!-- Spin fix v-show="loading">
       <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
       <div>{{loadingMessage}}</div>
-    </Spin>
+    </Spin -->
     <div class="wrapper">
       <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 工单</span>
       <div class="content">
@@ -396,7 +396,7 @@
         var url = `order/getOrders.do?type=${type}&currentPage=${this[type + 'CurrPage']}&pageSize=${this.pageSize}`
         this.$http.get(url)
           .then(response => {
-            if (response.status == 200) {
+            if (response.status == 200 && response.data.status == 1) {
               this[type + 'Order'] = []
               this[type + 'Total'] = response.data.count
               response.data.result.forEach(item => {
@@ -430,10 +430,15 @@
   .background {
     background-color: #f5f5f5;
     width: 100%;
+    /*
+        less 处理css计算属性calc有bug
+        申明变量diff，可正常使用
+      */
+    @diff: 101px;
+    min-height: calc(~"100% - @{diff}");
     .wrapper {
       width: 1200px;
       margin: 0px auto;
-      margin-bottom: 25px;
       & > span {
         font-family: Microsoft Yahei, 微软雅黑;
         font-size: 12px;

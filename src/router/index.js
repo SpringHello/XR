@@ -78,8 +78,8 @@ var router = new Router({
       children: [
         {path: 'overview', name: 'overview', component: Overview},
         {path: 'work', name: 'work', component: Work},
-        {path: 'renew', name: 'work', component: Renew},
-        {path: 'new', name: 'work', component: New},
+        {path: 'renew', name: 'renew', component: Renew},
+        {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
         {path: 'vpc', name: 'vpc', component: Vpc},
         {path: 'ip', name: 'ip', component: Ip}
