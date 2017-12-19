@@ -39,6 +39,7 @@
 </template>
 
 <script>
+  import $store from './vuex'
   import debounce from 'throttle-debounce/debounce'
   export default {
     name: 'app',
@@ -123,6 +124,21 @@
           transition: 'width .3s'
         } // line的width和left属性
       }
+    },
+    beforeRouteEnter(to, from, next){
+      // 获取所有后台需要的基本信息
+      // 获取用户信息
+      var userInfo = axios.get('user/GetUserInfo.do')
+      // 获取zone信息
+      var zoneList = axios.get('information/zone.do')
+      Promise.all([userInfo, zoneList]).then(values => {
+        $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+        $store.commit('setZoneList', values[1].data.result)
+        next()
+      }, value => {
+        console.log(value)
+        next()
+      })
     },
     created () {
     },
