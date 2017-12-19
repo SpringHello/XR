@@ -41,7 +41,6 @@
 <script>
   import axios from 'axios'
   import $store from './vuex'
-  import axios from 'axios'
   import debounce from 'throttle-debounce/debounce'
   export default {
     name: 'app',
