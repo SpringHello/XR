@@ -297,6 +297,7 @@
         <button style="margin-right: 0" :class="{select:buyButton,disabled:hostDisabled}" @click="buyImmediately" :disabled="hostDisabled">立即购买</button>
       </div>
     </div>
+    <!--登录弹框-->
     <Modal v-model="showModal.login" width="450" class="login-modal" scrollable>
       <p slot="header" style="color:#5F5F5F;text-align:center;height: 30px;padding-top: 5px;">
         <span style="font-family: PingFangSC-Regular;font-size: 26px;">登录</span>
@@ -537,6 +538,7 @@
     created () {
     },
     methods: {
+       /* 核心数切换 */
       changeCPU (item) {
         if (this.memorySize < item) {
           this.memorySize = item
@@ -592,6 +594,7 @@
         this.addButton = false
         this.showModal.login = true
       },
+      /* 登录框校检等 */
       vail (field) {
         var text = this.form[field]
         if (text == '') {
@@ -672,12 +675,14 @@
           this.vailForm.loginname.warning = true
         })
       },
+      /* 删除磁盘 */
       delDisk (index) {
         this.diskList.splice(index, 1)
         if (this.diskLimit < 4) {
           this.diskLimit++
         }
       },
+      /* 添加磁盘 */
       addDisk () {
         var params = {
           diskType: 'ssd',
@@ -688,6 +693,7 @@
           this.diskLimit--
         }
       },
+      /* 添加网卡 */
       addNetWorkCard () {
         var parms = { value: 1 }
         this.netWorkCards.push(parms)
@@ -695,6 +701,7 @@
           this.netWorkCardLimit--
         }
       },
+      /* 删除网卡 */
       delNetWorkCard (index) {
         this.netWorkCards.splice(index, 1)
         if (this.netWorkCardLimit < 4) {
@@ -703,9 +710,11 @@
       }
     },
     computed: {
+      /* 校检登录信息完整 */
       disabled () {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.agree && this.vailForm.loginname.warning == false)
       },
+      /* 快速自定义主机切换后按钮class变化 */
       hostDisabled () {
         if (this.pitchOn == 'custom') {
           return (this.customTotalCost == 0)
