@@ -20,7 +20,8 @@ const store = new Vuex.Store({
     // 区域信息
     zoneList: null
   },
-  getters: {},
+  getters: {
+  },
 
   mutations: {
     setAuthInfo (state, {authInfo, userInfo}) {

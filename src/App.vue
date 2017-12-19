@@ -39,6 +39,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   import $store from './vuex'
   import axios from 'axios'
   import debounce from 'throttle-debounce/debounce'
@@ -135,6 +136,9 @@
       Promise.all([userInfo, zoneList]).then(values => {
         if (values[0].data.status == 1) {
           $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+          localStorage.setItem('authToken', 'true')
+        } else {
+          localStorage.removeItem('authToken', 'false')
         }
         $store.commit('setZoneList', values[1].data.result)
         next()
