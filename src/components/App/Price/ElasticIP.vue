@@ -43,6 +43,7 @@
       </div>
       <p>满10月送两月，满一年打8折，满两年打7.5折，满3年5折</p>
     </div>
+    <!--网络与带宽选择-->
     <div class="networkAndBandwidth">
       <h3>网络与带宽</h3>
       <div>
@@ -101,6 +102,7 @@
       <button @click="addBudgetList":class="{select:addButton,disabled:cardDisabled}" :disabled="cardDisabled">加入预算清单</button>
       <button style="margin-right: 0":class="{select:buyButton,disabled:cardDisabled}" @click="buyImmediately" :disabled="cardDisabled">立即购买</button>
     </div>
+    <!--登录弹框-->
     <Modal v-model="showModal.login" width="450" class="login-modal" scrollable>
       <p slot="header" style="color:#5F5F5F;text-align:center;height: 30px;padding-top: 5px;">
         <span style="font-family: PingFangSC-Regular;font-size: 26px;">登录</span>
@@ -159,6 +161,7 @@
   export default{
     data () {
       return {
+        // 区域列表
         zoneList: [
           {
             zonename: '北方一区',
@@ -168,19 +171,25 @@
             zoneid: '2'
           }
         ],
+        // 区域
         zone: '1',
-        type: '',
+        // 购买时间选择
         timeType: 'month',
         timeList: ['2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月'],
         time: 1,
+        // 是否自动续费
         autoRenewal: true,
+        // 是否购买公网ip
         buyPublicIP: true,
+        // ip价格
         ipPrice: 32,
+        // 网络选择
         netList: [{
           label: '默认网络',
           value: '1'
         }],
         net: '1',
+        // 网卡选择
         networkCardList: [
           {
             label: '主网卡',
@@ -189,7 +198,9 @@
         ],
         networkCard: '',
         netWorkCards: [],
+        // 公网ip大小
         publicIP: 10,
+        // 登录弹框相关
         form: {
           loginname: '',
           password: '',
@@ -212,12 +223,16 @@
             warning: false
           }
         },
+        // 验证码
         imgSrc: '',
         showModal: {
           login: false
         },
+        // 网卡限制数量
         netWorkCardLimit: 4,
+        // 总花费
         totalCost: 1,
+        // 控制按钮class
         buyButton: false,
         addButton: false
       }
@@ -225,6 +240,7 @@
     created () {
     },
     methods: {
+       /* 加入购物清单 */
       addBudgetList () {
         this.buyButton = false
         this.addButton = true
@@ -250,6 +266,7 @@
         this.addButton = false
         this.showModal.login = true
       },
+      /* 登录弹框的校检等 */
       vail (field) {
         var text = this.form[field]
         if (text == '') {
@@ -330,6 +347,7 @@
           this.vailForm.loginname.warning = true
         })
       },
+      /* 添加网卡 */
       addNetWorkCard () {
         var parms = { value: 1 }
         this.netWorkCards.push(parms)
@@ -337,6 +355,7 @@
           this.netWorkCardLimit--
         }
       },
+      /* 删除网卡 */
       delNetWorkCard (index) {
         this.netWorkCards.splice(index, 1)
         if (this.netWorkCardLimit < 4) {
@@ -345,9 +364,11 @@
       }
     },
     computed: {
+      /* 校检登录信息完整 */
       disabled () {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.agree && this.vailForm.loginname.warning == false)
       },
+      /* 校检是否选择商品 */
       cardDisabled () {
         return (this.totalCost == 0)
       }

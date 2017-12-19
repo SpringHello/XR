@@ -115,6 +115,7 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
+  // 导出功能依赖包
   import XLSX from 'xlsx'
   import XLSX_SAVE from 'file-saver'
   import regExp from '../../util/regExp'
@@ -143,8 +144,11 @@
     data () {
       var detailedList = JSON.parse(sessionStorage.getItem('budget'))
       return {
+        // 单个订单数量
         quantity: 1,
+        // 购买清单
         detailedList,
+        // 登录弹框相关
         form: {
           loginname: '',
           password: '',
@@ -167,10 +171,12 @@
             warning: false
           }
         },
+        // 验证码
         imgSrc: '',
         showModal: {
           login: false
         },
+        // 产品类型（主机 ip 磁盘）
         product: '',
         productList: [{
           label: '云主机',
@@ -182,9 +188,13 @@
           label: '公网IP',
           value: 'elasticIPPrice'
         }],
+        // 控制购买按钮class
         buyButton: false,
+        // 控制导出按钮class
         exportButton: false,
+        // 总花费
         totalCost: 1,
+        // 控制div底部固定
         fixedState: false
       }
     },
@@ -216,6 +226,7 @@
         sessionStorage.setItem('budget', JSON.stringify(this.detailedList))
         this.handleScroll()
       },
+      /* 鼠标滚动事件 */
       handleScroll () {
         /* 总价框悬浮 */
         // 获取屏幕高度
