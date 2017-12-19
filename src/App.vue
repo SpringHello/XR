@@ -132,7 +132,9 @@
       // 获取zone信息
       var zoneList = axios.get('information/zone.do')
       Promise.all([userInfo, zoneList]).then(values => {
-        $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+        if (values[0].data.status == 1) {
+          $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+        }
         $store.commit('setZoneList', values[1].data.result)
         next()
       }, value => {
