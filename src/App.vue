@@ -133,16 +133,15 @@
       // 获取zone信息
       var zoneList = axios.get('information/zone.do')
       Promise.all([userInfo, zoneList]).then(values => {
-        if (values[0].data.status == 1) {
+        if (values[0].data.status == 1 && values[0].status == 200) {
           $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
           localStorage.setItem('authToken', 'true')
         } else {
-          localStorage.removeItem('authToken', 'false')
+          localStorage.removeItem('authToken')
         }
         $store.commit('setZoneList', values[1].data.result)
         next()
       }, value => {
-        console.log(value)
         next()
       })
     },

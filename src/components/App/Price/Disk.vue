@@ -367,9 +367,11 @@
       /* 获取当前用户还能购买的磁盘数量 */
       getDiskLimit () {
         var url = '../user/userSourceManager.do?zoneId=' + this.zone
+        console.log(url)
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskLimit = response.data.result[3].items[0].total - response.data.result[3].items[0].used
+            console.log(this.diskLimit)
           }
         })
       },
