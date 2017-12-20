@@ -27,3 +27,6 @@
   font-size: 24px;
 }
 
+.vpc-manage .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
+  margin-right: 0;
+}

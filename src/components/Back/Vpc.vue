@@ -24,11 +24,13 @@
                 </div>
               </div>
               <div class="item-wrap">
-                <div class="item"><p>路由器（VPC）：<span>1</span></p></div>
+                <div class="item"><p>路由器（VPC）：<span>{{item.vpc}}</span></p></div>
+                <span class="dotted-across"></span>
               </div>
               <div class="item-wrap">
-                <div class="item"><p>交换机：（子网）<span>{{item.networkCount}}</span></p></div>
-                <div class="item item4"><p>弹性云主机：<span>{{item.computerCount}}</span></p></div>
+                <div class="item"><p>交换机：（子网）<span>{{item.exchange}}</span></p></div>
+                <span class="dotted-vertical"></span>
+                <div class="item item4"><p>弹性云主机：<span>{{item.flexible}}</span></p></div>
               </div>
               <div class="item-wrap">
                 <div class="item"><p>防火墙：<span>{{item.aclCount}}</span></p></div>
@@ -36,7 +38,7 @@
             </div>
             <div class="card-bottom">
               <Button type="primary" class="btn-bgwhite">重启</Button>
-              <Button type="primary">管理</Button>
+              <Button type="primary" @click="manage">管理</Button>
             </div>
           </div>
         </div>
@@ -68,6 +70,11 @@
         if (response.status == 200 && response.data.status == 1) {
           this.netData = response.data.result
         }
+      }
+    },
+    methods: {
+      manage: function () {
+        this.$router.push('/ruicloud/vpcManage')
       }
     }
   }
@@ -130,20 +137,43 @@
         .card-wrap {
           display: flex;
           justify-content: space-between;
+          .card:hover {
+            border: 1px solid #2A99F2;
+            box-shadow: 0 2px 8px 0 rgba(42, 153, 242, 0.35);
+          }
           .card {
             width: 570px;
             height: 313px;
             padding: 20px;
-            box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.20);;
+            border: 1px solid #ffffff;
+            box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.20);
             .content {
               border-bottom: 1px solid #E9E9E9;
+              .item-wrap {
+                margin-bottom: 20px;
+              }
+              .item-wrap:nth-child(2) {
+                margin-bottom: 0px;
+                width: 265px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                .dotted-across {
+                  height: 20px;
+                  border-right: dotted #979797 1px;
+                }
+              }
               .item-wrap:nth-child(3) {
                 display: flex;
                 justify-content: space-between;
+                align-items: center;
+                .dotted-vertical {
+                  width: 40px;
+                  border-top: dotted #979797 1px;
+                }
               }
               .item {
                 width: 265px;
-                margin-bottom: 20px;
                 padding: 10px 20px;
                 border: 1px solid #E9E9E9;
                 font-size: 14px;
@@ -178,10 +208,8 @@
                 color: #2A99F2;
               }
             }
-
           }
         }
-
       }
     }
   }

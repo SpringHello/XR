@@ -34,6 +34,7 @@ const Renew = () => import('@/components/Back/Renew')
 const New = () => import('@/components/Back/New')
 const Host = () => import('@/components/Back/Host')
 const Vpc = () => import('@/components/Back/Vpc')
+const VpcManage = () => import('@/components/Back/VpcManage')
 const Ip = () => import('@/components/Back/Ip')
 
 // 404
@@ -82,6 +83,7 @@ var router = new Router({
         {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
         {path: 'vpc', name: 'vpc', component: Vpc},
+        {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
         {path: 'ip', name: 'ip', component: Ip}
       ]
     },
@@ -100,7 +102,9 @@ var router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(route => { return route.meta.requiresAuth })){
+  if (to.matched.some(route => {
+    return route.meta.requiresAuth
+  })) {
     if (!localStorage.getItem('authToken')) {
       next({
         path: '/ruicloud/login'
