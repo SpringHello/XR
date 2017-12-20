@@ -102,9 +102,7 @@ var router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(route => {
-    return route.meta.requiresAuth
-  })) {
+  if (to.matched.some(route => { return route.meta.requiresAuth })) {
     if (!localStorage.getItem('authToken')) {
       next({
         path: '/ruicloud/login'

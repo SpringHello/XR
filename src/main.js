@@ -64,7 +64,7 @@ var vm = new Vue({
 
 vm.$mount('#app')
 /* axios ajax拦截 */
-var resolve = function (response) {
+/* var resolve = function (response) {
   // 检查是否登录
   if (response.status == 200 && response.data.status == 3) {
     // 未登录
@@ -72,6 +72,6 @@ var resolve = function (response) {
     this.$router.push({path: '/ruicloud/login'})
   }
   return response
-}.bind(vm)
+}.bind(vm) */
 
-axios.interceptors.response.use(resolve)
+// axios.interceptors.response.use(resolve)

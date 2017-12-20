@@ -70,9 +70,7 @@
         if (response.status == 200 && response.data.status == 1) {
           this.netData = response.data.result
         }
-      }
-    },
-    methods: {
+      },
       manage: function () {
         this.$router.push('/ruicloud/vpcManage')
       }
