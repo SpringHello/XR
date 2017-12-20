@@ -74,7 +74,7 @@ var router = new Router({
       name: Back.name,
       component: Back,
       // 后台页面必须登录
-      meta: {requiresAuth: false},
+      // meta: {requiresAuth: true},
       children: [
         {path: 'overview', name: 'overview', component: Overview},
         {path: 'work', name: 'work', component: Work},
