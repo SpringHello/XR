@@ -27,6 +27,8 @@ module.exports = {
     'eqeqeq': 0,
 
     'space-before-function-paren': 0,
-    'space-before-blocks': 0
+    'space-before-blocks': 0,
+    // 关闭不可扩展js内置对象
+    'no-extend-native': 0
   }
 }

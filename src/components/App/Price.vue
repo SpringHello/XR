@@ -32,14 +32,24 @@
                     v-if="item.timeType=='year'">包年、{{item.time}}年</span><span
                     v-if="item.timeType=='current'">实时计费</span>
                   </li>
-                  <li>镜像<span>Windows</span></li>
-                  <li>配置<span>2核4G、1m带宽、50系统盘</span></li>
-                  <li>硬盘<span>100G超高性能型</span></li>
-                  <li>网络<span>默认VPC、默认子网</span></li>
+                  <li v-if="item.mirror=='UHub'">镜像<span>{{ item.mirrorType }}</span></li>
+                  <li style="padding-left: 0;" v-if="item.mirror=='imageApplication'">镜像应用<span v-if="item.mirrorType=='1'">WordPress博客系统（Centos）</span><span v-if="item.mirrorType=='2'">LAMP集成环境（Centos）</span><span v-if="item.mirrorType=='3'">RedMine（Centos）</span></li>
+                  <li v-if="item.budgetType=='quickHost'">配置<span v-if="item.config=='1'">1核1G、1m带宽、50G系统盘</span>
+                    <span v-if="item.config=='2'">2核4G、1m带宽、50G系统盘</span>
+                    <span v-if="item.config=='3'">4核4G、2m带宽、50G系统盘</span>
+                    <span v-if="item.config=='4'">4核8G、2m带宽、50G系统盘</span>
+                    <span v-if="item.config=='5'">1核1G、50G系统盘</span>
+                    <span v-if="item.config=='6'">2核4G、50G系统盘</span>
+                    <span v-if="item.config=='7'">4核4G、50G系统盘</span>
+                    <span v-if="item.config=='8'">4核8G、50G系统盘</span></li>
+                  <li v-if="item.budgetType=='customHost'">配置<span>{{ item.cpuNum }}核 {{ item.memorySize }}G、<span style="margin-left: 0" v-if="item.buyPublicIP">{{ item.publicIP }}m带宽、</span>50G系统盘</span></li>
+                  <li v-for="(disk,index) in item.diskList">硬盘<span v-if="disk.diskType=='ssd'">{{ disk.diskSize}}G超高性能型</span><span v-if="disk.diskType=='sas'">{{ disk.diskSize}}G性能型</span><span v-if="disk.diskType=='sata'">{{ disk.diskSize}}G存储型</span></li>
+                  <li v-if="item.budgetType!='disk'">网络<span>默认VPC、默认子网</span></li>
+                  <li v-if="item.budgetType=='ip'&&item.buyPublicIP">带宽<span>{{ item.publicIP }}MB</span></li>
                 </ul>
               </div>
               <div class="footer">
-                <p>价格<span>105元</span></p>
+                <p>价格<span>{{ item.cost}} 元</span></p>
                 <div class="quantity">
                   <p @click="reduce">-</p>
                   <p style="width: 50px;cursor: auto">{{ quantity }}</p>
@@ -105,6 +115,7 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
+  // 导出功能依赖包
   import XLSX from 'xlsx'
   import XLSX_SAVE from 'file-saver'
   import regExp from '../../util/regExp'
@@ -133,8 +144,11 @@
     data () {
       var detailedList = JSON.parse(sessionStorage.getItem('budget'))
       return {
+        // 单个订单数量
         quantity: 1,
+        // 购买清单
         detailedList,
+        // 登录弹框相关
         form: {
           loginname: '',
           password: '',
@@ -157,10 +171,12 @@
             warning: false
           }
         },
+        // 验证码
         imgSrc: '',
         showModal: {
           login: false
         },
+        // 产品类型（主机 ip 磁盘）
         product: '',
         productList: [{
           label: '云主机',
@@ -172,17 +188,21 @@
           label: '公网IP',
           value: 'elasticIPPrice'
         }],
+        // 控制购买按钮class
         buyButton: false,
+        // 控制导出按钮class
         exportButton: false,
+        // 总花费
         totalCost: 1,
+        // 控制div底部固定
         fixedState: false
       }
     },
     created () {
-      if (this.$router.history.current.path == '/price') {
+      if (this.$router.history.current.path == '/ruicloud/price' || this.$router.history.current.path == '/ruicloud/price/') {
         this.product = 'hostPrice'
       } else {
-        this.product = this.$router.history.current.path.substring(1)
+        this.product = this.$router.history.current.path.substring(16)
       }
     },
     mounted () {
@@ -206,6 +226,7 @@
         sessionStorage.setItem('budget', JSON.stringify(this.detailedList))
         this.handleScroll()
       },
+      /* 鼠标滚动事件 */
       handleScroll () {
         /* 总价框悬浮 */
         // 获取屏幕高度
@@ -316,13 +337,13 @@
       changeProduct (value) {
         switch (value) {
           case 'hostPrice':
-            this.$router.push('hostPrice')
+            this.$router.push('/ruicloud/price/hostPrice')
             break
           case 'diskPrice':
-            this.$router.push('diskPrice')
+            this.$router.push('/ruicloud/price/diskPrice')
             break
           case 'elasticIPPrice':
-            this.$router.push('elasticIPPrice')
+            this.$router.push('/ruicloud/price/elasticIPPrice')
             break
         }
       },
@@ -336,9 +357,10 @@
       exportDetailed (data) {
         this.buyButton = false
         this.exportButton = true
-        if (this.$refs.detailed.length != 0) {
-          for (var i = 1; i < this.$refs.detailed.length; i++) {
-            data.push(this.$refs.detailed[i].innerText)
+        data = []
+        if (this.detailedList.length != 0) {
+          for (var i = 0; i < this.detailedList.length; i++) {
+            data[i] = JSON.stringify(this.$refs.detailed[i].innerText)
           }
         }
         // covert json to sheet
@@ -400,11 +422,11 @@
         display: flex;
         margin-top: 20px;
         .left {
-          box-shadow: 0 2px 14px 0;
+          box-shadow: 0 2px 14px 0 rgba(193,193,193,0.30);
           width: 800px;
         }
         .right {
-          box-shadow: 0 2px 14px 0;
+          box-shadow: 0 2px 14px 0 rgba(193,193,193,0.30);
           width: 380px;
           margin-left: 20px;
           display: flex;
@@ -414,7 +436,7 @@
             width: 380px;
             padding: 20px 40px 25px 40px;
             background: #FFFFFF;
-            box-shadow: 0 2px 14px 0;
+            box-shadow: 0 2px 14px 0 rgba(193,193,193,0.30);
             h1 {
               font-family: MicrosoftYaHei;
               font-size: 24px;
@@ -500,7 +522,7 @@
             width: 380px;
             padding: 30px 40px 40px 40px;
             background: #FFFFFF;
-            box-shadow: 0 2px 14px 0;
+            box-shadow: 0 2px 14px 0 rgba(193,193,193,0.30);
             margin-top: 20px;
             &.fixed {
               position: fixed;

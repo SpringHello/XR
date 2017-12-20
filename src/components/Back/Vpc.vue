@@ -15,12 +15,12 @@
           <Button type="primary">删除VPC</Button>
         </div>
         <div class="card-wrap">
-          <div class="card" v-for="(item,index) in netdata" :key="index">
+          <div class="card" v-for="(item,index) in netData" :key="index">
             <div class="content">
               <div class="item-wrap">
                 <div class="item item1">
-                  <p>名称：<span>{{item.name}}</span></p>
-                  <p>网段：<span>{{item.netpart}}</span></p>
+                  <p>名称：<span>{{item.vpcname}}</span></p>
+                  <p>网段：<span>{{item.cidr}}</span></p>
                 </div>
               </div>
               <div class="item-wrap">
@@ -33,7 +33,7 @@
                 <div class="item item4"><p>弹性云主机：<span>{{item.flexible}}</span></p></div>
               </div>
               <div class="item-wrap">
-                <div class="item"><p>防火墙：<span>{{item.firework}}</span></p></div>
+                <div class="item"><p>防火墙：<span>{{item.aclCount}}</span></p></div>
               </div>
             </div>
             <div class="card-bottom">
@@ -49,14 +49,28 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from 'axios'
+  import $store from '../../vuex'
   export default {
     name: 'vpc',
     data() {
       return {
-        netdata: [
-          {name: '默认私有网络VPC', netpart: '192.168.0.0/16', vpc: 1, exchange: 1, flexible: 2, firework: 3},
-          {name: '默认私有网络VPC', netpart: '192.168.0.0/16', vpc: 1, exchange: 1, flexible: 2, firework: 3}
-        ]
+        netData: []
+      }
+    },
+    beforeRouteEnter(to, from, next){
+      var zoneId = $store.state.zoneList[0].zoneid
+      axios.get(`network/listVpc.do?zoneId=${zoneId}`).then(response => {
+        next(vm => {
+          vm.setData(response)
+        })
+      })
+    },
+    methods: {
+      setData(response){
+        if (response.status == 200 && response.data.status == 1) {
+          this.netData = response.data.result
+        }
       }
     }
   }
@@ -69,7 +83,7 @@
         less 处理css计算属性calc有bug
         申明变量diff，可正常使用
       */
-    @diff: 101px;
+    @diff: 146px;
     min-height: calc(~"100% - @{diff}");
     #wrapper {
       width: 1200px;

@@ -16,6 +16,19 @@
             <li>
               <router-link to="renew" :class="{active:pageInfo.path=='renew'}"><span>一键续费</span></router-link>
             </li>
+            <li>
+              <Dropdown>
+                <a href="javascript:void(0)">
+                  {{zoneList[0].zonename}}
+                  <Icon type="arrow-down-b"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem v-for="(zone,index) in zoneList" :key="index">
+                    <router-link to="">{{zone.zonename}}</router-link>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </li>
           </ul>
           <ul class="right">
             <li>
@@ -30,7 +43,7 @@
             <li>
               <Dropdown>
                 <a href="javascript:void(0)">
-                  {{userName}}
+                  {{userInfo.realname}}
                   <Icon type="arrow-down-b"></Icon>
                 </a>
                 <DropdownMenu slot="list">
@@ -101,6 +114,9 @@
 </template>
 
 <script>
+  import $store from './vuex'
+  import {mapState} from 'vuex'
+  import axios from 'axios'
   import debounce from 'throttle-debounce/debounce'
   export default {
     name: 'back',
@@ -162,10 +178,23 @@
         ]
       }
     },
-    created(){
-      // this.$store.dispatch('getAuthInfo')
+    beforeRouteEnter(to, from, next){
+      // 获取所有后台需要的基本信息
+      // 获取用户信息
+      var userInfo = axios.get('user/GetUserInfo.do')
+      // 获取zone信息
+      var zoneList = axios.get('information/zone.do')
+      Promise.all([userInfo, zoneList]).then(values => {
+        $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+        $store.commit('setZoneList', values[1].data.result)
+        next()
+      }, value => {
+        console.log(value)
+        next()
+      })
     },
-
+    created(){
+    },
     mounted(){
       // mounted时期根据路径修改选中的menu
       this.pageInfo.path = this.$router.history.current.name
@@ -236,7 +265,7 @@
         }
       }
     },
-    computed: {
+    computed: mapState({
       // show代表是否显示three menu,static代表是否固定three menu
       thrShow(){
         return {
@@ -265,14 +294,9 @@
           }
         }
       },
-      // 用户名显示处理
-      userName(){
-        if (this.$store.state.userInfo) {
-          return this.$store.state.userInfo.realname
-        }
-        return ''
-      }
-    },
+      userInfo: state => state.userInfo,
+      zoneList: state => state.zoneList
+    }),
     watch: {
       '$route'(to, from){
         // 对路由变化作出响应...
@@ -380,6 +404,7 @@
                 a {
                   line-height: 56px;
                   display: inline-block;
+                  color: #c5c5c5;
                 }
               }
             }
