@@ -38,7 +38,7 @@
             </div>
             <div class="card-bottom">
               <Button type="primary" class="btn-bgwhite">重启</Button>
-              <Button type="primary">管理</Button>
+              <Button type="primary" @click="manage">管理</Button>
             </div>
           </div>
         </div>
@@ -71,6 +71,11 @@
         if (response.status == 200 && response.data.status == 1) {
           this.netData = response.data.result
         }
+      }
+    },
+    methods: {
+      manage: function () {
+        this.$router.push('/ruicloud/vpcManage')
       }
     }
   }
@@ -133,34 +138,39 @@
         .card-wrap {
           display: flex;
           justify-content: space-between;
+          .card:hover {
+            border: 1px solid #2A99F2;
+            box-shadow: 0 2px 8px 0 rgba(42, 153, 242, 0.35);
+          }
           .card {
             width: 570px;
             height: 313px;
             padding: 20px;
-            box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.20);;
+            border: 1px solid #ffffff;
+            box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.20);
             .content {
               border-bottom: 1px solid #E9E9E9;
-              .item-wrap{
+              .item-wrap {
                 margin-bottom: 20px;
               }
               .item-wrap:nth-child(2) {
-                margin-bottom:0px;
+                margin-bottom: 0px;
                 width: 265px;
                 display: flex;
-                flex-wrap:wrap;
-                justify-content: center;   
-                .dotted-across{
+                flex-wrap: wrap;
+                justify-content: center;
+                .dotted-across {
                   height: 20px;
-                  border-right:dotted #979797 1px; 
+                  border-right: dotted #979797 1px;
                 }
               }
               .item-wrap:nth-child(3) {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                .dotted-vertical{
+                .dotted-vertical {
                   width: 40px;
-                  border-top:dotted #979797 1px; 
+                  border-top: dotted #979797 1px;
                 }
               }
               .item {
