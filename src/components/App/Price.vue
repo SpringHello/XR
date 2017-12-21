@@ -119,6 +119,7 @@
   import XLSX from 'xlsx'
   import XLSX_SAVE from 'file-saver'
   import regExp from '../../util/regExp'
+  import $store from '../../vuex'
   // xlsx 文件输出操作方法
   function s2ab (s) {
     const buf = new ArrayBuffer(s.length)
@@ -193,7 +194,9 @@
         // 控制导出按钮class
         exportButton: false,
         // 控制div底部固定
-        fixedState: false
+        fixedState: false,
+        // 用户信息
+        userInfo: null
       }
     },
     created () {
@@ -201,6 +204,9 @@
         this.product = 'hostPrice'
       } else {
         this.product = this.$router.history.current.path.substring(16)
+      }
+      if ($store.state.userInfo) {
+        this.userInfo = $store.state.userInfo
       }
     },
     mounted () {
@@ -388,20 +394,24 @@
       /* 计算总价 */
       totalCost () {
         var cost = 0
-        if (this.detailedList.length != 0) {
+        if (this.detailedList) {
           this.detailedList.forEach(item => {
             cost += item.cost
           })
+        } else {
+            cost = 0
         }
         return Math.round(cost * 100) / 100
       },
       /* 计算总优惠 */
       totalCoupon () {
         var coupon = 0
-        if (this.detailedList.length != 0) {
+        if (this.detailedList) {
           this.detailedList.forEach(item => {
             coupon += item.coupon
           })
+        } else {
+            coupon = 0
         }
         return Math.round(coupon * 100) / 100
       }

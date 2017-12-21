@@ -651,7 +651,7 @@
           this.addButton = false
           this.showModal.login = true
         } else {
-          alert('购买完成')
+          alert('购买')
         }
       },
       /* 登录框校检等 */
