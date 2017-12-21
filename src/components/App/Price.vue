@@ -44,22 +44,22 @@
                     <span v-if="item.config=='8'">4核8G、50G系统盘</span></li>
                   <li v-if="item.budgetType=='customHost'">配置<span>{{ item.cpuNum }}核 {{ item.memorySize }}G、<span style="margin-left: 0" v-if="item.buyPublicIP">{{ item.publicIP }}m带宽、</span>50G系统盘</span></li>
                   <li v-for="(disk,index) in item.diskList">硬盘<span v-if="disk.diskType=='ssd'">{{ disk.diskSize}}G超高性能型</span><span v-if="disk.diskType=='sas'">{{ disk.diskSize}}G性能型</span><span v-if="disk.diskType=='sata'">{{ disk.diskSize}}G存储型</span></li>
-                  <li v-if="item.budgetType!='disk'">网络<span>默认VPC、默认子网</span></li>
-                  <li v-if="item.budgetType=='ip'&&item.buyPublicIP">带宽<span>{{ item.publicIP }}MB</span></li>
+                  <li v-if="item.budgetType!='disk'">网络<span v-if="item.net=='no'">默认VPC、默认子网</span></li>
+                  <li v-if="item.budgetType=='ip'">带宽<span>{{ item.publicIP }}MB</span></li>
                 </ul>
               </div>
               <div class="footer">
                 <p>价格<span>{{ item.cost}} 元</span></p>
-                <div class="quantity">
+                <!--<div class="quantity">
                   <p @click="reduce">-</p>
                   <p style="width: 50px;cursor: auto">{{ quantity }}</p>
                   <p style="border-right:0" @click="quantity+=1">+</p>
-                </div>
+                </div>-->
               </div>
             </div>
           </div>
           <div class="bulkOrderPrice" :class="{fixed:fixedState}" ref="suspension">
-            <p class="p1">总价<span>{{ totalCost }}元</span>已省56元</p>
+            <p class="p1">总价<span>{{ totalCost }}元</span>已省{{ totalCoupon }}元</p>
             <div class="buy-button">
               <button style="margin-right: 0" :class="{select:buyButton,disabled:detailedDisabled}"
                       @click="buyImmediately" :disabled="detailedDisabled">立即购买
@@ -96,7 +96,7 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc" @click="imgSrc=`http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </div>
         </form>
       </div>
@@ -172,7 +172,7 @@
           }
         },
         // 验证码
-        imgSrc: '',
+        imgSrc: `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`,
         showModal: {
           login: false
         },
@@ -192,8 +192,6 @@
         buyButton: false,
         // 控制导出按钮class
         exportButton: false,
-        // 总花费
-        totalCost: 1,
         // 控制div底部固定
         fixedState: false
       }
@@ -349,9 +347,13 @@
       },
       /* 立即购买 */
       buyImmediately () {
-        this.buyButton = true
-        this.exportButton = false
-        this.showModal.login = true
+        if (this.userInfo == null) {
+          this.buyButton = true
+          this.exportButton = false
+          this.showModal.login = true
+        } else {
+          alert('购买完成')
+        }
       },
       /* 导出预算清单 */
       exportDetailed (data) {
@@ -382,6 +384,26 @@
       },
       detailedDisabled () {
         return (this.totalCost == 0)
+      },
+      /* 计算总价 */
+      totalCost () {
+        var cost = 0
+        if (this.detailedList.length != 0) {
+          this.detailedList.forEach(item => {
+            cost += item.cost
+          })
+        }
+        return Math.round(cost * 100) / 100
+      },
+      /* 计算总优惠 */
+      totalCoupon () {
+        var coupon = 0
+        if (this.detailedList.length != 0) {
+          this.detailedList.forEach(item => {
+            coupon += item.coupon
+          })
+        }
+        return Math.round(coupon * 100) / 100
       }
     },
     watch: {

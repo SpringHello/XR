@@ -3,7 +3,7 @@
     <div id="pole" ref="pole">
       <span v-for="(point,index) in processPosition" :style="pointPosition(point)" class="points-style"
             :class="{active:processPosition.slice(0,index+1).reduce(function(sum, v) {return sum + v;}, 0)<=value-min}"><label
-        class="points">{{showPoints[index]}}M</label></span>
+        class="points">{{showPoints[index+filterStep]+unit}}</label></span>
       <slider
         :value="value"
         @refresh="refresh"
@@ -17,7 +17,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import slider from './button.vue';
+  import slider from './button.vue'
   export default{
     name: 'i-slider',
     props: {
@@ -49,10 +49,8 @@
       }
     },
     data(){
-      var showPoints = Array.prototype.slice.call(this.points)
-      showPoints.push(this.max)
       return {
-        showPoints,
+        showPoints: this.points,
         filterStep: 0
       }
     },
@@ -62,13 +60,13 @@
     methods: {
       pointPosition(point){
         let position = point / (this.max - this.min) * 100 + '%'
-        return {width: position};
+        return {width: position}
       },
       refresh(){
-        this.$emit('change');
+        this.$emit('change')
       },
       setValue(value){
-        this.$emit('input', value);
+        this.$emit('input', value)
       }
     },
     computed: {
@@ -76,20 +74,19 @@
         return this.$refs.pole.clientWidth
       },
       processPosition(){
-        var points = this.points.slice()
-        points.push(this.max);
-        var length = points.length
-        points = points.filter(item => {
-          return item > this.min
-        })
-        this.filterStep = length - points.length
-        return points.map((value, index, arr) => {
-          if (index)
-            return value = value - arr[index - 1]
-          return value - this.min;
-        })
-      },
-
+        this.points.push(this.max)
+        var length = this.points.length
+        this.points = this.points.filter(item => {
+            return item > this.min
+          })
+        this.filterStep = length - this.points.length
+        return this.points.map((value, index, arr) => {
+            if (index) {
+              value = value - arr[index - 1]
+            }
+            return value - this.min
+          })
+      }
     }
   }
 </script>
