@@ -15,6 +15,8 @@ import '@/assets/css/universal.less'
 // 引入轮播组件
 import carousel from './myView/carousel'
 import carouselItem from './myView/carouselItem'
+// 引入滑块组件
+import slider from './myView/slider'
 
 Vue.config.productionTip = false
 
@@ -26,6 +28,8 @@ Vue.use(iview)
 // 使用轮播组件
 Vue.use(carousel)
 Vue.use(carouselItem)
+// 使用滑块组件
+Vue.use(slider)
 
 // 日期圆形对象拓展
 Date.prototype.format = function (fmt) {

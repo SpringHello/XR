@@ -33,6 +33,7 @@ const Work = () => import('@/components/Back/Work')
 const Renew = () => import('@/components/Back/Renew')
 const New = () => import('@/components/Back/New')
 const Host = () => import('@/components/Back/Host')
+const Disk = () => import('@/components/Back/Disk')
 const Vpc = () => import('@/components/Back/Vpc')
 const VpcManage = () => import('@/components/Back/VpcManage')
 const Ip = () => import('@/components/Back/Ip')
@@ -80,6 +81,7 @@ var router = new Router({
         {path: 'overview', name: 'overview', component: Overview},
         {path: 'work', name: 'work', component: Work},
         {path: 'renew', name: 'renew', component: Renew},
+        {path: 'disk', name: 'disk', component: Disk},
         {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
         {path: 'vpc', name: 'vpc', component: Vpc},

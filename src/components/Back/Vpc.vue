@@ -9,8 +9,8 @@
         </div>
         <Alert>虚拟私有云，通过逻辑方式进行网络隔离，提供安全、隔离的网络环境。VPC为您提供与传统网络无差别的虚拟网络，同时还可以为您提供弹性IP、安全组、VPN等高级网络服务。</Alert>
         <div class="button-group">
-          <Button type="primary">新建VPC</Button>
-          <Button type="primary">添加私有网关</Button>
+          <Button type="primary" @click="modalList.newVpc = true">新建VPC</Button>
+          <Button type="primary" @click="modalList.addGateway = true">添加私有网关</Button>
           <Button type="primary">修改VPC</Button>
           <Button type="primary">删除VPC</Button>
         </div>
@@ -24,13 +24,13 @@
                 </div>
               </div>
               <div class="item-wrap">
-                <div class="item"><p>路由器（VPC）：<span>{{item.vpc}}</span></p></div>
+                <div class="item"><p>路由器（VPC）：<span>{{item.aclCount}}</span></p></div>
                 <span class="dotted-across"></span>
               </div>
               <div class="item-wrap">
-                <div class="item"><p>交换机：（子网）<span>{{item.exchange}}</span></p></div>
+                <div class="item"><p>交换机：（子网）<span>{{item.networkCount}}</span></p></div>
                 <span class="dotted-vertical"></span>
-                <div class="item item4"><p>弹性云主机：<span>{{item.flexible}}</span></p></div>
+                <div class="item item4"><p>弹性云主机：<span>{{item.computerCount}}</span></p></div>
               </div>
               <div class="item-wrap">
                 <div class="item"><p>防火墙：<span>{{item.aclCount}}</span></p></div>
@@ -44,17 +44,172 @@
         </div>
       </div>
     </div>
+
+    <!-- 新建vpc modal -->
+    <Modal v-model="modalList.newVpc" width="550" :scrollable="true">
+      <p slot="header">
+        <span class="universal-modal-title">新建VPC</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="newForm" :rules="ruleValidate" ref="formValidate">
+          <FormItem label="vpc名称" prop="vpcName">
+            <Input v-model="newForm.vpcName"></Input>
+          </FormItem>
+          <FormItem label="地址范围" prop="vpc">
+            <Select v-model="newForm.vpc" placeholder="请选择">
+              <Option v-for="item in newForm.VPCOptions" :key="item" :value="item">{{item}}</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="vpc描述" prop="desc">
+            <Input v-model="newForm.desc"></Input>
+          </FormItem>
+          <FormItem label="">
+          </FormItem>
+          <FormItem label="购买方式" prop="timeType">
+            <Select v-model="newForm.timeType" @on-change="newForm.timeValue=''">
+              <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
+                      :key="item.value">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="购买时长" prop="timeValue" v-if="newForm.timeType!='current'">
+            <Select v-model="newForm.timeValue" @on-change="log">
+              <Option v-for="item in customTimeOptions[newForm.timeType]" :value="item.value" :key="item.value">
+                {{item.label}}
+              </Option>
+            </Select>
+          </FormItem>
+        </Form>
+        <div>
+          <span>是否需要绑定公网IP <Checkbox v-model="newForm.IPReq">&nbsp;</Checkbox></span>
+          <i-slider v-if="newForm.IPReq" v-model="newForm.IPSize" :min=1 :max=100 unit="M" :points="[20,50]"
+                    style="width:80%;vertical-align: middle;margin-right:18px;"></i-slider>
+        </div>
+      </div>
+      <div slot="footer">
+        <Button type="primary" @click="handleSubmit">完成配置</Button>
+      </div>
+    </Modal>
+
+    <!-- 添加私有网关 modal -->
+    <Modal v-model="modalList.addGateway" width="550" :scrollable="true">
+      <p slot="header">
+        <span class="universal-modal-title">添加私有网关</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="newForm" :rules="ruleValidate" ref="formValidate">
+          <FormItem label="物理网络" prop="vpcName">
+            <Input v-model="newForm.vpcName"></Input>
+          </FormItem>
+          <FormItem label="地址范围" prop="vpc">
+            <Select v-model="newForm.vpc" placeholder="请选择">
+              <Option v-for="item in newForm.VPCOptions" :key="item" :value="item">{{item}}</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="VLAN/VNI" prop="desc">
+            <Input v-model="newForm.desc"></Input>
+          </FormItem>
+          <FormItem label="IP地址" prop="timeType">
+            <Select v-model="newForm.timeType" @on-change="newForm.timeValue=''">
+              <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
+                      :key="item.value">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="网关" prop="timeValue" v-if="newForm.timeType!='current'">
+            <Select v-model="newForm.timeValue" @on-change="log">
+              <Option v-for="item in customTimeOptions[newForm.timeType]" :value="item.value" :key="item.value">
+                {{item.label}}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="网络掩码" prop="timeType">
+            <Select v-model="newForm.timeType" @on-change="newForm.timeValue=''">
+              <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
+                      :key="item.value">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="防火墙" prop="timeValue" v-if="newForm.timeType!='current'">
+            <Select v-model="newForm.timeValue" @on-change="log">
+              <Option v-for="item in customTimeOptions[newForm.timeType]" :value="item.value" :key="item.value">
+                {{item.label}}
+              </Option>
+            </Select>
+          </FormItem>
+        </Form>
+        <div>
+          <span>是否需要开启源NAT <Checkbox v-model="newForm.IPReq">&nbsp;</Checkbox></span>
+          <i-slider v-if="newForm.IPReq" v-model="newForm.IPSize" :min=1 :max=100 unit="M" :points="[20,50]"
+                    style="width:80%;vertical-align: middle;margin-right:18px;"></i-slider>
+        </div>
+      </div>
+      <div slot="footer">
+        <Button type="primary" @click="handleSubmit">完成配置</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import {customTimeOptions} from '../../options'
   import axios from 'axios'
   import $store from '../../vuex'
   export default {
     name: 'vpc',
     data() {
       return {
-        netData: []
+        // vpc列表数据
+        netData: [],
+        // 控制模态框是否关闭
+        modalList: {
+          newVpc: false,
+          addGateway: false,
+        },
+        // 新建vpc表单数据
+        newForm: {
+          vpcName: '',
+          vpc: '',
+          desc: '',
+          VPCOptions: ['192.168.0.0/16', '172.16.0.0/16', '172.17.0.0/16', '172.18.0.0/16', '172.19.0.0/16', '172.20.0.0/16', '172.21.0.0/16', '172.22.0.0/16', '172.23.0.0/16', '172.24.0.0/16', '172.25.0.0/16'],
+          timeType: '',
+          timeValue: '',
+          // 是否需要公网IP
+          IPReq: false,
+          // 公网IP最低1M
+          IPSize: 1,
+          points: [20, 50]
+        },
+        // 添加网关表单数据
+        addGatewayForm: {
+          vpcName: '',
+          vpc: '',
+          desc: '',
+          VPCOptions: ['192.168.0.0/16', '172.16.0.0/16', '172.17.0.0/16', '172.18.0.0/16', '172.19.0.0/16', '172.20.0.0/16', '172.21.0.0/16', '172.22.0.0/16', '172.23.0.0/16', '172.24.0.0/16', '172.25.0.0/16'],
+          timeType: '',
+          timeValue: '',
+          // 是否需要公网IP
+          IPReq: false,
+          // 公网IP最低1M
+          IPSize: 1,
+          points: [20, 50]
+        },
+
+        ruleValidate: {
+          vpcName: [
+            {required: true, message: '请输入vpc名称', trigger: 'blur'}
+          ],
+          vpc: [
+            {required: true, message: '请选择vpc地址范围', trigger: 'change'}
+          ],
+          timeType: [
+            {required: true, message: '请选择购买方式', trigger: 'change'}
+          ],
+          timeValue: [
+            {required: true, message: '请选择购买时长', trigger: 'change'}
+          ]
+        },
+        customTimeOptions
       }
     },
     beforeRouteEnter(to, from, next){
@@ -64,6 +219,7 @@
           vm.setData(response)
         })
       })
+      next()
     },
     methods: {
       setData(response){
@@ -73,6 +229,19 @@
       },
       manage: function () {
         this.$router.push('/ruicloud/vpcManage')
+      },
+      // 提交新建vpc表单
+      handleSubmit () {
+        this.$refs.formValidate.validate((valid) => {
+          if (valid) {
+            // 表单验证通过
+          } else {
+            // 表单验证失败
+          }
+        })
+      },
+      log(){
+        console.log(this.newForm)
       }
     }
   }
