@@ -37,7 +37,7 @@
             <div class="table-wrap" v-for="(item,index) in subnetdata" :key="index">
               <ul>
                 <li>
-                  <div class="clock-show icon" @click="toggle(item)" :class="{rotate:item.isShow}"></div>
+                  <div class="clock-show icon" @click="toggle(item)" :class="{rotateup:item.isShow,rotatedown:!item.isShow}"></div>
                   {{item.name}}
                 </li>
                 <li>网络地址：{{item.network}}</li>
@@ -305,10 +305,17 @@
               font-size: 12px;
               color: #333333;
               line-height: 18px;
-              .rotate {
+              .rotateup {
                 transform: rotate(180deg);
                 -ms-transform: rotate(180deg);
                 -webkit-transform: rotate(180deg);
+                transition: all 0.2s;
+              }
+              .rotatedown {
+                transform: rotate(360deg);
+                -ms-transform: rotate(360deg);
+                -webkit-transform: rotate(360deg);
+                transition: all 0.2s;
               }
               li:nth-child(1) {
                 display: flex;
