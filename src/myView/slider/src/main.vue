@@ -50,6 +50,7 @@
       }
     },
     data(){
+      console.log('create')
       // 去除一些明显不可能的断点
       var innerPoints = this.points.filter(item => {
         return item > this.min && item < this.max
