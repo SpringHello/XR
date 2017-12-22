@@ -13,7 +13,37 @@
           <Button type="primary" @click="modalList.addGateway = true">添加私有网关</Button>
           <Button type="primary">修改VPC</Button>
           <Button type="primary">删除VPC</Button>
+          <Button @click="modalList.rederror = true">红色叉叉</Button>
+          <Button @click="modalList.yellowdeltte = true">黄色感叹号</Button>
         </div>
+        <!-- 错误弹窗 -->
+        <Modal v-model="modalList.rederror" :scrollable="true" :closable="false" :width="280">
+          <p class="modal-content-s">
+            <Icon type="close-circled" class="orange f24 mr10"></Icon>
+            弹出错误原因，并提示用户解决办法
+          </p>
+          <p slot="footer" class="modal-footer-s">
+            <Button class="f16" @click="modalList.rederror = false">取消</Button>
+            <Button class="f16" type="primary" @on-ok="ok">联系客服</Button>
+          </p>
+        </Modal>
+        <!-- 删除网卡弹窗 -->
+        <Modal v-model="modalList.yellowdeltte" :scrollable="true" :closable="false" :width="390">
+          <div class="modal-content-s">
+            <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+            <div>
+              <strong>删除</strong>
+              <p class="lh24">若要删除主网卡，需在主机其他网卡中选择一个从网卡作为新的主网卡。请选择：</p>
+              <Select v-model="model1" style="width:296px;" class="mt10" placeholder="请选择网卡">
+                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+            </div>
+          </div>
+          <p slot="footer" class="modal-footer-s">
+            <Button class="f16" @click="modalList.yellowdeltte = false">取消</Button>
+            <Button class="f16" type="primary" @on-ok="ok">确定</Button>
+          </p>
+        </Modal>
         <div class="card-wrap">
           <div class="card" v-for="(item,index) in netData" :key="index">
             <div class="content">
@@ -47,7 +77,7 @@
 
     <!-- 新建vpc modal -->
     <Modal v-model="modalList.newVpc" width="550" :scrollable="true">
-      <p slot="header">
+      <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">新建VPC</span>
       </p>
       <div class="universal-modal-content-flex">
@@ -86,14 +116,13 @@
                     style="width:80%;vertical-align: middle;margin-right:18px;"></i-slider>
         </div>
       </div>
-      <div slot="footer">
+      <div slot="footer" class="modal-footer-border">
         <Button type="primary" @click="handleSubmit">完成配置</Button>
       </div>
     </Modal>
-
     <!-- 添加私有网关 modal -->
     <Modal v-model="modalList.addGateway" width="550" :scrollable="true">
-      <p slot="header">
+      <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">添加私有网关</span>
       </p>
       <div class="universal-modal-content-flex">
@@ -144,7 +173,7 @@
                     style="width:80%;vertical-align: middle;margin-right:18px;"></i-slider>
         </div>
       </div>
-      <div slot="footer">
+      <div slot="footer" class="modal-footer-border">
         <Button type="primary" @click="handleSubmit">完成配置</Button>
       </div>
     </Modal>
@@ -155,16 +184,20 @@
   import {customTimeOptions} from '../../options'
   import axios from 'axios'
   import $store from '../../vuex'
+
   export default {
     name: 'vpc',
     data() {
       return {
+        model1: '',
         // vpc列表数据
         netData: [],
         // 控制模态框是否关闭
         modalList: {
           newVpc: false,
           addGateway: false,
+          rederror: false,
+          yellowdeltte: false
         },
         // 新建vpc表单数据
         newForm: {
@@ -212,7 +245,7 @@
         customTimeOptions
       }
     },
-    beforeRouteEnter(to, from, next){
+    beforeRouteEnter(to, from, next) {
       var zoneId = $store.state.zoneList[0].zoneid
       axios.get(`network/listVpc.do?zoneId=${zoneId}`).then(response => {
         next(vm => {
@@ -222,7 +255,7 @@
       next()
     },
     methods: {
-      setData(response){
+      setData(response) {
         if (response.status == 200 && response.data.status == 1) {
           this.netData = response.data.result
         }
@@ -231,7 +264,7 @@
         this.$router.push('/ruicloud/vpcManage')
       },
       // 提交新建vpc表单
-      handleSubmit () {
+      handleSubmit() {
         this.$refs.formValidate.validate((valid) => {
           if (valid) {
             // 表单验证通过
@@ -240,7 +273,7 @@
           }
         })
       },
-      log(){
+      log() {
         console.log(this.newForm)
       }
     }
