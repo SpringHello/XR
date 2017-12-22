@@ -164,7 +164,7 @@
         // 控制模态框是否关闭
         modalList: {
           newVpc: false,
-          addGateway: false,
+          addGateway: false
         },
         // 新建vpc表单数据
         newForm: {

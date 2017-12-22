@@ -82,8 +82,9 @@
         })
         this.filterStep = length - points.length
         return points.map((value, index, arr) => {
-          if (index)
-            return value = value - arr[index - 1]
+          if (index) {
+            return value - arr[index - 1]
+          }
           return value - this.min
         })
       }
