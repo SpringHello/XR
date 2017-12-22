@@ -2,8 +2,9 @@
   <div style="display: inline-block;vertical-align: bottom;width:100%">
     <div id="pole" ref="pole">
       <span v-for="(point,index) in processPosition" :style="pointPosition(point)" class="points-style"
-            :class="{active:processPosition.slice(0,index+1).reduce(function(sum, v) {return sum + v;}, 0)<=value-min}"><label
-        class="points">{{showPoints[index]+unit}}</label></span>
+            :class="{active:pointActive(index)}">
+        <label class="points">{{innerPoints[index]+unit}}</label>
+      </span>
       <slider
         :value="value"
         @refresh="refresh"
@@ -49,23 +50,38 @@
       }
     },
     data(){
-      this.points.push(this.max)
+      // 去除一些明显不可能的断点
+      var innerPoints = this.points.filter(item => {
+        return item > this.min && item < this.max
+      })
+      // 最大值必须加上断点
+      innerPoints.push(this.max)
+      // 每个断点距离前一个断点的距离
+      var processPosition = innerPoints.map((value, index, arr) => {
+        if (index) {
+          return value - arr[index - 1]
+        }
+        return value - this.min
+      })
       return {
-        showPoints: this.points,
-        filterStep: 0
+        innerPoints,
+        processPosition
       }
     },
-    components: {
-      'slider': slider
-    },
     methods: {
+      // 断点占据百分比的位置，注意：point是该断点离上一个断点的位置
       pointPosition(point){
         let position = point / (this.max - this.min) * 100 + '%'
         return {width: position}
       },
+      pointActive(index){
+        return this.value > this.innerPoints[index]
+      },
+      // 触发change事件
       refresh(){
         this.$emit('change')
       },
+      // 双向绑定触发事件
       setValue(value){
         this.$emit('input', value)
       }
@@ -73,22 +89,10 @@
     computed: {
       $sliderSize(){
         return this.$refs.pole.clientWidth
-      },
-      processPosition(){
-        var points = this.points.slice()
-        points.push(this.max)
-        var length = points.length
-        points = points.filter(item => {
-          return item > this.min
-        })
-        this.filterStep = length - points.length
-        return points.map((value, index, arr) => {
-          if (index) {
-            return value - arr[index - 1]
-          }
-          return value - this.min
-        })
       }
+    },
+    components: {
+      'slider': slider
     }
   }
 </script>
@@ -98,6 +102,7 @@
     height: 16px;
     position: relative;
     font-size: 0px;
+    user-select: none;
   }
 
   .active {
