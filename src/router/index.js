@@ -30,6 +30,7 @@ const Reset = () => import('@/components/LR/Reset')
 // import Host from '@/components/Back/Host'
 const Overview = () => import('@/components/Back/Overview')
 const Work = () => import('@/components/Back/Work')
+const Balance = () => import('@/components/Back/Balance')
 const Renew = () => import('@/components/Back/Renew')
 const New = () => import('@/components/Back/New')
 const Host = () => import('@/components/Back/Host')
@@ -81,6 +82,7 @@ var router = new Router({
         {path: 'overview', name: 'overview', component: Overview},
         {path: 'work', name: 'work', component: Work},
         {path: 'renew', name: 'renew', component: Renew},
+        {path: 'balance', name: 'balance', component: Balance},
         {path: 'disk', name: 'disk', component: Disk},
         {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},

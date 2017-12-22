@@ -33,7 +33,9 @@
                     v-if="item.timeType=='current'">实时计费</span>
                   </li>
                   <li v-if="item.mirror=='UHub'">镜像<span>{{ item.mirrorType }}</span></li>
-                  <li style="padding-left: 0;" v-if="item.mirror=='imageApplication'">镜像应用<span v-if="item.mirrorType=='1'">WordPress博客系统（Centos）</span><span v-if="item.mirrorType=='2'">LAMP集成环境（Centos）</span><span v-if="item.mirrorType=='3'">RedMine（Centos）</span></li>
+                  <li style="padding-left: 0;" v-if="item.mirror=='imageApplication'">镜像应用<span
+                    v-if="item.mirrorType=='1'">WordPress博客系统（Centos）</span><span v-if="item.mirrorType=='2'">LAMP集成环境（Centos）</span><span
+                    v-if="item.mirrorType=='3'">RedMine（Centos）</span></li>
                   <li v-if="item.budgetType=='quickHost'">配置<span v-if="item.config=='1'">1核1G、1m带宽、50G系统盘</span>
                     <span v-if="item.config=='2'">2核4G、1m带宽、50G系统盘</span>
                     <span v-if="item.config=='3'">4核4G、2m带宽、50G系统盘</span>
@@ -42,8 +44,11 @@
                     <span v-if="item.config=='6'">2核4G、50G系统盘</span>
                     <span v-if="item.config=='7'">4核4G、50G系统盘</span>
                     <span v-if="item.config=='8'">4核8G、50G系统盘</span></li>
-                  <li v-if="item.budgetType=='customHost'">配置<span>{{ item.cpuNum }}核 {{ item.memorySize }}G、<span style="margin-left: 0" v-if="item.buyPublicIP">{{ item.publicIP }}m带宽、</span>50G系统盘</span></li>
-                  <li v-for="(disk,index) in item.diskList">硬盘<span v-if="disk.diskType=='ssd'">{{ disk.diskSize}}G超高性能型</span><span v-if="disk.diskType=='sas'">{{ disk.diskSize}}G性能型</span><span v-if="disk.diskType=='sata'">{{ disk.diskSize}}G存储型</span></li>
+                  <li v-if="item.budgetType=='customHost'">配置<span>{{ item.cpuNum }}核 {{ item.memorySize }}G、<span
+                    style="margin-left: 0" v-if="item.buyPublicIP">{{ item.publicIP }}m带宽、</span>50G系统盘</span></li>
+                  <li v-for="(disk,index) in item.diskList">硬盘<span
+                    v-if="disk.diskType=='ssd'">{{ disk.diskSize}}G超高性能型</span><span v-if="disk.diskType=='sas'">{{ disk.diskSize}}G性能型</span><span
+                    v-if="disk.diskType=='sata'">{{ disk.diskSize}}G存储型</span></li>
                   <li v-if="item.budgetType!='disk'">网络<span v-if="item.net=='no'">默认VPC、默认子网</span></li>
                   <li v-if="item.budgetType=='ip'">带宽<span>{{ item.publicIP }}MB</span></li>
                 </ul>
@@ -96,7 +101,8 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc"
+                 @click="imgSrc=`http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </div>
         </form>
       </div>
@@ -121,7 +127,7 @@
   import regExp from '../../util/regExp'
   import $store from '../../vuex'
   // xlsx 文件输出操作方法
-  function s2ab (s) {
+  function s2ab(s) {
     const buf = new ArrayBuffer(s.length)
     const view = new Uint8Array(buf)
     for (let i = 0; i !== s.length; ++i) {
@@ -400,7 +406,7 @@
             cost += item.cost
           })
         } else {
-            cost = 0
+          cost = 0
         }
         return Math.round(cost * 100) / 100
       },
@@ -412,13 +418,12 @@
             coupon += item.coupon
           })
         } else {
-            coupon = 0
+          coupon = 0
         }
         return Math.round(coupon * 100) / 100
       }
     },
-    watch: {
-    }
+    watch: {}
   }
 </script>
 
@@ -455,11 +460,11 @@
         display: flex;
         margin-top: 20px;
         .left {
-          box-shadow: 0 2px 14px 0 rgba(193,193,193,0.30);
+          box-shadow: 0 2px 14px 0 rgba(193, 193, 193, 0.30);
           width: 800px;
         }
         .right {
-          box-shadow: 0 2px 14px 0 rgba(193,193,193,0.30);
+          box-shadow: 0 2px 14px 0 rgba(193, 193, 193, 0.30);
           width: 380px;
           margin-left: 20px;
           display: flex;
@@ -469,7 +474,7 @@
             width: 380px;
             padding: 20px 40px 25px 40px;
             background: #FFFFFF;
-            box-shadow: 0 2px 14px 0 rgba(193,193,193,0.30);
+            box-shadow: 0 2px 14px 0 rgba(193, 193, 193, 0.30);
             h1 {
               font-family: MicrosoftYaHei;
               font-size: 24px;
@@ -555,7 +560,7 @@
             width: 380px;
             padding: 30px 40px 40px 40px;
             background: #FFFFFF;
-            box-shadow: 0 2px 14px 0 rgba(193,193,193,0.30);
+            box-shadow: 0 2px 14px 0 rgba(193, 193, 193, 0.30);
             margin-top: 20px;
             &.fixed {
               position: fixed;
