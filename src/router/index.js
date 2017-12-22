@@ -11,6 +11,8 @@ import LR from '@/LR'
 // import Price from '@/components/App/Price'
 const Price = () => import('@/components/App/Price')
 const Home = () => import('@/components/App/Home')
+const Balance = () => import('@/components/App/Balance')
+const modal = () => import('@/components/App/modal')
 
 const hostPrice = () => import('@/components/App/Price/Host')
 const diskPrice = () => import('@/components/App/Price/Disk')
@@ -50,21 +52,34 @@ var router = new Router({
       children: [
         {path: '', name: 'home', component: Home},
         {path: 'home', name: 'home', component: Home},
+        {path: 'balance', name: 'balance', component: Balance},
+        {path: 'modal', name: 'modal', component: modal},
         {
           path: 'price',
           name: 'price',
           component: Price,
           children: [
             {
-              path: '', name: 'hostPrice', component: hostPrice
+              path: '',
+              name: 'hostPrice',
+              component: hostPrice
             },
             {
-              path: 'hostPrice', name: 'hostPrice', component: hostPrice
-            }, {
-              path: 'diskPrice', name: 'diskPrice', component: diskPrice
-            }, {
-              path: 'elasticIPPrice', name: 'elasticIPPrice', component: elasticIPPrice
-            }]
+              path: 'hostPrice',
+              name: 'hostPrice',
+              component: hostPrice
+            },
+            {
+              path: 'diskPrice',
+              name: 'diskPrice',
+              component: diskPrice
+            },
+            {
+              path: 'elasticIPPrice',
+              name: 'elasticIPPrice',
+              component: elasticIPPrice
+            }
+          ]
         }
       ]
     },
@@ -73,7 +88,7 @@ var router = new Router({
       name: Back.name,
       component: Back,
       // 后台页面必须登录
-      meta: {requiresAuth: true},
+      // meta: {requiresAuth: true},
       children: [
         {path: 'overview', name: 'overview', component: Overview},
         {path: 'work', name: 'work', component: Work},

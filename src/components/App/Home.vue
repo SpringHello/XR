@@ -120,8 +120,7 @@
       <div class="container">
         <p>图形化控制台，清晰友好的使用体验</p>
         <span>可以通过简单清晰的操作，实现创建资源，配置网络，远程访问，系统监控等功能。摆脱流程，专注创造。</span>
-        <div class="console-img">
-          <img src="../../assets/img/home/console.png">
+        <div class="console-img"><img src="../../assets/img/home/console.png">
           <div class="message">
             <h2>简单直接的图形化管理界面</h2>
             <p>我们专注于让开发者释放创造力。在睿云控制台中，采用了很多卡片式的资源管理界面。通过更为直观的图形化表现方式。使多种复杂操作能够得到一键式完成，将开发者从不必要的流程中释放出来。</p>
@@ -476,7 +475,7 @@
         height: 110px;
         display: flex;
         justify-content: space-between;
-        .container-item {
+        .container-item{
           width: 20%;
           padding: 24px 22px;
           display: flex;
