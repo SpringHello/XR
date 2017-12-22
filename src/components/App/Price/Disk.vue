@@ -267,7 +267,6 @@
           this.showModal.login = true
           this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
         } else {
-          alert('购买完成')
         }
       },
       /* 登录框校检等相关 */
@@ -362,6 +361,7 @@
       addDisk () {
         if (this.userInfo == null) {
           this.showModal.login = true
+          this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
         } else {
           var params = {
             diskType: 'ssd',
@@ -479,7 +479,7 @@
         margin-top: 10px;
         margin-bottom: 20px;
         font-family: MicrosoftYaHei;
-        font-size: 14px;
+        font-size: 12px;
         color: #999999;
         line-height: 25px;
       }
@@ -502,7 +502,7 @@
           cursor: pointer;
           position: relative;
           &.select {
-            background-image: linear-gradient(-225deg, #0DB4FA 0%, #388BEE 100%);
+            background: #2A99F2;
             color: white;
             border-color: #0DB4FA;
           }
@@ -534,13 +534,13 @@
         margin-top: 10px;
         margin-bottom: 20px;
         font-family: MicrosoftYaHei;
-        font-size: 14px;
+        font-size: 12px;
         color: #999999;
         line-height: 25px;
       }
       span {
         font-family: MicrosoftYaHei;
-        font-size: 16px;
+        font-size: 14px;
         color: #333333;
         line-height: 29px;
       }
@@ -554,14 +554,14 @@
           margin-top: 20px;
           & > span {
             font-family: MicrosoftYaHei;
-            font-size: 16px;
+            font-size: 14px;
             color: #333333;
             line-height: 29px;
             margin-right: 52px;
           }
           p {
             font-family: MicrosoftYaHei;
-            font-size: 14px;
+            font-size: 12px;
             color: #999999;;
             line-height: 25px;
             margin-top: 20px;
@@ -580,20 +580,20 @@
         margin-top: 20px;
         & > span {
           font-family: MicrosoftYaHei;
-          font-size: 16px;
+          font-size: 14px;
           color: #333333;
           line-height: 29px;
           margin-right: 52px;
         }
         p {
           font-family: MicrosoftYaHei;
-          font-size: 14px;
+          font-size: 12px;
           color: #999999;
           line-height: 25px;
         }
         .s1 {
           font-family: MicrosoftYaHei;
-          font-size: 14px;
+          font-size: 12px;
           color: #333333;
           line-height: 25px;
           margin-left: 20px;
@@ -652,7 +652,7 @@
         cursor: pointer;
         margin-right: 10px;
         &.select {
-          background-image: linear-gradient(-90deg, #4183EB 0%, #07BDFE 100%);
+          background: #2A99F2;
           color: white;
         }
         i {
