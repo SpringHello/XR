@@ -17,7 +17,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import slider from './button.vue';
+  import slider from './button.vue'
   export default{
     name: 'i-slider',
     props: {
@@ -62,13 +62,13 @@
     methods: {
       pointPosition(point){
         let position = point / (this.max - this.min) * 100 + '%'
-        return {width: position};
+        return {width: position}
       },
       refresh(){
-        this.$emit('change');
+        this.$emit('change')
       },
       setValue(value){
-        this.$emit('input', value);
+        this.$emit('input', value)
       }
     },
     computed: {
@@ -77,7 +77,7 @@
       },
       processPosition(){
         var points = this.points.slice()
-        points.push(this.max);
+        points.push(this.max)
         var length = points.length
         points = points.filter(item => {
           return item > this.min
@@ -86,10 +86,9 @@
         return points.map((value, index, arr) => {
           if (index)
             return value = value - arr[index - 1]
-          return value - this.min;
+          return value - this.min
         })
-      },
-
+      }
     }
   }
 </script>
