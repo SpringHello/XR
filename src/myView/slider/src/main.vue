@@ -74,18 +74,18 @@
         return this.$refs.pole.clientWidth
       },
       processPosition(){
-        this.points.push(this.max)
-        var length = this.points.length
-        this.points = this.points.filter(item => {
-            return item > this.min
-          })
-        this.filterStep = length - this.points.length
-        return this.points.map((value, index, arr) => {
-            if (index) {
-              value = value - arr[index - 1]
-            }
-            return value - this.min
-          })
+        var points = this.points.slice()
+        points.push(this.max)
+        var length = points.length
+        points = points.filter(item => {
+          return item > this.min
+        })
+        this.filterStep = length - points.length
+        return points.map((value, index, arr) => {
+          if (index)
+            return value = value - arr[index - 1]
+          return value - this.min
+        })
       }
     }
   }
