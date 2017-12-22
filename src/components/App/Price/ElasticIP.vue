@@ -237,7 +237,7 @@
           }
         },
         // 验证码
-        imgSrc: `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`,
+        imgSrc: '',
         showModal: {
           login: false
         },
@@ -293,6 +293,7 @@
           this.buyButton = true
           this.addButton = false
           this.showModal.login = true
+          this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
         } else {
           alert('购买完成')
         }
@@ -357,7 +358,7 @@
         }
       },
       submit () {
-        this.$http.get('user/login.do', {
+        this.$http.get('http://localhost:8082/ruicloud/user/login.do', {
           params: {
             username: this.form.loginname,
             password: this.form.password,
