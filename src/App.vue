@@ -39,6 +39,8 @@
 </template>
 
 <script>
+  import axios from 'axios'
+  import $store from './vuex'
   import debounce from 'throttle-debounce/debounce'
   export default {
     name: 'app',
@@ -47,11 +49,11 @@
         titleItem: [
           {
             title: '首页',
-            path: 'home'
+            path: '/ruicloud/home'
           },
           {
             title: '产品',
-            path: 'product',
+            path: '/ruicloud/product',
             content: [
               {
                 prod: '云计算',
@@ -101,19 +103,19 @@
           },
           {
             title: '文档',
-            path: 'product'
+            path: '/ruicloud/product'
           },
           {
             title: '关于我们',
-            path: 'product'
+            path: '/ruicloud/product'
           },
           {
             title: '注册',
-            path: 'register'
+            path: '/ruicloud/register'
           },
           {
             title: '登录',
-            path: 'login'
+            path: '/ruicloud/login'
           }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
@@ -123,6 +125,25 @@
           transition: 'width .3s'
         } // line的width和left属性
       }
+    },
+    beforeRouteEnter(to, from, next){
+      // 获取所有后台需要的基本信息
+      // 获取用户信息
+      var userInfo = axios.get('http://localhost:8082/ruicloud/user/GetUserInfo.do')
+      // 获取zone信息
+      var zoneList = axios.get('http://localhost:8082/ruicloud/information/zone.do')
+      Promise.all([userInfo, zoneList]).then(values => {
+        if (values[0].data.status == 1 && values[0].status == 200) {
+          $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+          localStorage.setItem('authToken', 'true')
+        } else {
+          localStorage.removeItem('authToken')
+        }
+        $store.commit('setZoneList', values[1].data.result)
+        next()
+      }, value => {
+        next()
+      })
     },
     created () {
     },

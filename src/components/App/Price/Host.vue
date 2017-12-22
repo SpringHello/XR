@@ -1,11 +1,9 @@
 <template>
   <div>
     <div class="title">
-      <div class="titleText" :class="{select:pitchOn=='quick'}"
-           @click=" [pitchOn='quick',addButton=false,buyButton=false] "><span>快速配置</span>
+      <div class="titleText" :class="{select:pitchOn=='quick'}" @click="configChange('quick')"><span>快速配置</span>
       </div>
-      <div class="titleText" :class="{select:pitchOn=='custom'}"
-           @click="[pitchOn='custom',addButton=false,buyButton=false]"><span>自定义配置</span>
+      <div class="titleText" :class="{select:pitchOn=='custom'}" @click="configChange('custom')"><span>自定义配置</span>
       </div>
     </div>
     <div class="content">
@@ -23,27 +21,32 @@
       <div class="billing">
         <h3>计费方式选择</h3>
         <div class="config-button">
-          <button :class="{select:timeType=='month'||timeType=='year'}" @click="timeType='month'"
-                  style="margin-right: 8px">包年包月<i>惠</i>
+          <button :class="{select:timeType=='month'||timeType=='year'}" @click="timeType='month'" style="margin-right: 8px">包年包月<i>惠</i>
           </button>
           <button :class="{select:timeType=='current'}" @click="timeType='current';time=1">实时计费</button>
         </div>
         <div v-if="timeType=='month'||timeType=='year'" class="time" style="margin-bottom:20px">
           <label :class="{select:time==1&&timeType!='year'}" @click="time=1;timeType='month'">1月</label>
           <label v-for="item in timeList" :class="{select:time==item&&timeType!='year'}"
-                 @click="time=item;timeType='month'">{{item}}</label>
-          <label
-            :class="{select:time==1&&timeType=='year'}"
-            @click="time=1;timeType='year'"
-            style="border-left:none;border-radius: 0px">1年<i>惠</i></label>
-          <label
-            :class="{select:time==2&&timeType=='year'}"
-            @click="time=2;timeType='year'"
-            style="border-left:none;border-radius: 0px">2年<i>惠</i></label>
-          <label
-            :class="{select:time==3&&timeType=='year'}"
-            @click="time=3;timeType='year'"
-            style="border-left:none;border-top-left-radius: 0px;border-bottom-left-radius: 0px">3年<i>惠</i></label>
+                 @click="time=item;timeType='month'">{{item}}月</label>
+          <Tooltip :content="`买满1年，立享3折。`" placement="top">
+            <label
+              :class="{select:time==1&&timeType=='year'}"
+              @click="time=1;timeType='year'"
+              style="border-left:none;border-radius: 0px">1年<i>惠</i></label>
+          </Tooltip>
+          <Tooltip :content="`买满2年，立享2折。`" placement="top">
+            <label
+              :class="{select:time==2&&timeType=='year'}"
+              @click="time=2;timeType='year'"
+              style="border-left:none;border-radius: 0px">2年<i>惠</i></label>
+          </Tooltip>
+          <Tooltip :content="`买满3年，立享3折。`" placement="top">
+            <label
+              :class="{select:time==3&&timeType=='year'}"
+              @click="time=3;timeType='year'"
+              style="border-left:none;border-top-left-radius: 0px;border-bottom-left-radius: 0px">3年<i>惠</i></label>
+          </Tooltip>
         </div>
         <p>满10月送两月，满一年打8折，满两年打7.5折，满3年5折</p>
       </div>
@@ -54,25 +57,25 @@
           <div class="config-button">
             <span>类型</span>
             <Poptip trigger="hover" content="经典1：2与1：4配比，实现计算、网络与资源的良好平衡，高性价比" placement="top-start">
-              <button :class="{select:hostType=='1'}" @click="hostType='1'">标准型</button>
+              <button :class="{select:hostType=='sata'}" @click="hostType='sata'">标准型</button>
             </Poptip>
-            <button :class="{select:hostType=='2'}" @click="hostType='2'">内存优化型</button>
-            <button :class="{select:hostType=='3'}" @click="hostType='3'">高I/O型</button>
+            <button :class="{select:hostType=='sas'}" @click="hostType='sas'">内存优化型</button>
+            <button :class="{select:hostType=='ssd'}" @click="hostType='ssd'">高I/O型</button>
           </div>
           <div class="config-button">
             <span>镜像</span>
-            <button :class="{select:mirror=='1'}" @click="mirror='1'">镜像+应用</button>
-            <button :class="{select:mirror=='2'}" @click="mirror='2'">公共镜像</button>
-            <button :class="{select:mirror=='3'}" @click="mirror='3'">自定义镜像</button>
+            <button :class="{select:mirror=='imageApplication'}" @click="mirror='imageApplication',mirrorType='1'">镜像+应用</button>
+            <button :class="{select:mirror=='UHub'}" @click="mirror='UHub',mirrorType='Windows'">公共镜像</button>
+            <button :class="{select:mirror=='customImage',disabled:userInfo==null}" @click="mirror='customImage',mirrorType=''" :disabled="userInfo==null">自定义镜像</button>
           </div>
-          <div class="config-button" style="margin-left: 103px;" v-if="mirror=='2'">
-            <button :class="{select:mirrorType=='1'}" @click="mirrorType='1'">Windows</button>
-            <button :class="{select:mirrorType=='2'}" @click="mirrorType='2'">Centos</button>
-            <button :class="{select:mirrorType=='3'}" @click="mirrorType='3'">Ubuntu</button>
+          <div class="config-button" style="margin-left: 103px;" v-if="mirror=='UHub'">
+            <button :class="{select:mirrorType=='Windows'}" @click="mirrorType='Windows'">Windows</button>
+            <button :class="{select:mirrorType=='Centos'}" @click="mirrorType='Centos'">Centos</button>
+            <button :class="{select:mirrorType=='Ubuntu'}" @click="mirrorType='Ubuntu'">Ubuntu</button>
           </div>
-          <div class="configMirror-button" v-if="mirror=='1'">
-            <button v-for="item in quickMirrorConfigList" :class="{select:item.value==quickMirrorConfig}"
-                    @click="quickMirrorConfig=item.value">
+          <div class="configMirror-button" v-if="mirror=='imageApplication'">
+            <button v-for="item in mirrorConfigList" :class="{select:item.value==mirrorType}"
+                    @click="mirrorType=item.value">
               <div
                 style="background: #D8D8D8;height:40px;width:40px;border: 1px solid #979797;margin-left: 10px"></div>
               <div style="display: flex;flex-direction:column;text-align: left;margin-left: 10px;">
@@ -84,13 +87,13 @@
           <div class="config-button">
             <span style="margin-right: 52px">系统盘</span>
             <Poptip trigger="hover" content="全SSD架构，超高IOPS，适用于核心数据库与对I/O要求较高的业务。" placement="top-start">
-              <button :class="{select:systemDisk=='1'}" @click="systemDisk='1'">超高IO型</button>
+              <button :class="{select:hostType=='ssd'}" @click="hostType='ssd'">超高IO型</button>
             </Poptip>
             <Poptip trigger="hover" content="适用于顺序读写，如日志流水，流媒体等场景，高性价比。" placement="top-start">
-              <button :class="{select:systemDisk=='2'}" @click="systemDisk='2'">高IO型</button>
+              <button :class="{select:hostType=='sas'}" @click="hostType='sas'">性能型</button>
             </Poptip>
             <Poptip trigger="hover" content="超大存储容量，超高性价比。" placement="top-start">
-              <button :class="{select:systemDisk=='3'}" @click="systemDisk='3'">普通型</button>
+              <button :class="{select:hostType=='sata'}" @click="hostType='sata'">普通型</button>
             </Poptip>
           </div>
           <div class="config-button">
@@ -108,7 +111,8 @@
           </div>
           <div style="margin-top: 20px">
             <span>价格</span>
-            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;">{{ hostPrice}}元/月</span>
+            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;" v-if="timeType=='current'">{{ customHostCost}}元/小时</span>
+            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;" v-else>{{ customHostCost}}元</span>
           </div>
         </div>
         <!--网络与带宽-->
@@ -116,27 +120,40 @@
           <h3>网络与带宽</h3>
           <div>
             <span>虚拟私有云</span>
-            <Select style="width:180px;margin-left: 20px">
-              <Option v-for="item in netList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            <Select @on-change="reset" v-model="private" style="width:250px;margin-left: 20px">
+              <Option v-for="item in privateList" :value="`${item.ipsegmentid}#${item.ipsegment}`"
+                      :key="item.ipsegmentid">  {{item.name}} 范围{{item.ipsegment }}</Option>
             </Select>
+            <span  v-show="specifyInfo=='指定IP'" style="border: 1px solid #E9E9E9;font-size: 12px;padding: 4px 25px 8px 25px;margin-left: 10px;color: #666666;">自动分配IP地址</span>
+            <Poptip v-if='private!=""' placement="top" width="250" v-model="visible"
+                    style="vertical-align: middle;display: inline-block">
+              <span v-show="specifyInfo!='指定IP'" style="margin-left: 10px">指定IP:</span>
+              <span style="margin-left:15px;color:#2A99F2;cursor:pointer;user-select: none">{{specifyInfo}}</span>
+              <div class="api" slot="content">
+                <p style="margin-bottom: 15px;margin-left: 0;color: #333333">请输入您的要绑定的IP</p>
+                <div>
+                  <span style="vertical-align: middle">{{private.split('#')[1].substr(0,private.split('#')[1].lastIndexOf('.'))}}.</span>
+                  <Input-number :max="255" :min="1" size="small" v-model="specifyIP"></Input-number>
+                  <button @click="specifyClick" style="padding:0px 12px;background-color: #2A99F2;cursor: pointer;color: #ffffff;">确定</button>
+                </div>
+              </div>
+            </Poptip>
             <p>如需使用其他虚拟私有云（VPC），请选择已有虚拟私有云（VPC），也可以自行到<span>控制台新建</span>。</p>
           </div>
-          <div v-for="(item,index) in netWorkCards">
-            <span>网卡</span>
-            <Select v-model="networkCard" style="width:180px;margin-left: 68px">
-              <Option v-for="item in networkCardList" :value="item.value" :key="item.value">{{ item.label }}
-              </Option>
-            </Select>
-            <span v-show="networkCard==1"
-                  style="border: 1px solid #E9E9E9;font-size: 14px;padding: 4px 25px 8px 25px;margin-left: 10px;color: #666666;">自动分配IP地址</span>
-            <span style="font-size: 14px;color: #2A99F2;cursor: pointer;float: right"
-                  @click="delNetWorkCard(index)">删除</span>
-          </div>
-          <div style="display: flex">
-            <p style="cursor: pointer;color: #2A99F2" @click="addNetWorkCard" v-if="netWorkCardLimit!=0">添加网卡</p>
-            <p style="color: #666666" v-else>添加网卡</p>
-            <span class="s2">您还可以添加<span style="color:#F85E1D ">{{netWorkCardLimit}}</span>张网卡</span>
-          </div>
+          <!--  <div v-for="(item,index) in netWorkCards">
+              <span>网卡</span>
+              <Select v-model="networkCard" style="width:180px;margin-left: 68px">
+                <Option v-for="item in networkCardList" :value="item.value" :key="item.value">{{ item.label }}
+                </Option>
+              </Select>
+              <span v-show="networkCard==1" style="border: 1px solid #E9E9E9;font-size: 14px;padding: 4px 25px 8px 25px;margin-left: 10px;color: #666666;">自动分配IP地址</span>
+              <span style="font-size: 14px;color: #2A99F2;cursor: pointer;float: right" @click="delNetWorkCard(index)">删除</span>
+            </div>
+            <div style="display: flex">
+              <p style="cursor: pointer;color: #2A99F2" @click="addNetWorkCard" v-if="netWorkCardLimit!=0">添加网卡</p>
+              <p style="color: #666666" v-else>添加网卡</p>
+              <span class="s2">您还可以添加<span style="color:#F85E1D ">{{netWorkCardLimit}}</span>张网卡</span>
+            </div>-->
           <div>
             <span>公网IP</span>
             <Checkbox v-model="buyPublicIP" size="large" style="margin-left: 53px;font-size: 16px">购买公网IP
@@ -144,8 +161,8 @@
           </div>
           <div v-if="buyPublicIP==true">
             <span>带宽</span>
-            <!-- <i-slider v-model="publicIP" :min=0 :max=100 unit="MB" :points="[10,60]"
-                        style="margin-right:30px;vertical-align: middle;width:66%;margin-left: 68px;"></i-slider>-->
+            <i-slider v-model="publicIP" :min=0 :max=100 unit="MB" :points="[10,60]"
+                      style="margin-right:30px;vertical-align: middle;width:66%;margin-left: 68px;"></i-slider>
             <InputNumber :max="100" :min="0" v-model="publicIP" size="large"></InputNumber>
           </div>
           <div v-if="pitchOn=='custom'">
@@ -156,49 +173,49 @@
           </div>
           <div>
             <span style="margin-right: 68px">价格</span>
-            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;">{{ hostPrice}}元/月</span>
+            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;" v-if="timeType=='current'">{{ ipPrice}}元/小时</span>
+            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;" v-else>{{ ipPrice}}元</span>
           </div>
         </div>
         <!--硬盘-->
-        <div class="disk">
+        <div class="disk" >
           <h3 v-if="diskList.length==0">云硬盘</h3>
           <div v-for="(item,index) in diskList" class="diskItem">
-            <h3>云硬盘<span style="font-size:14px;color: #2A99F2;font-weight: normal;float: right;cursor: pointer"
-                         @click="delDisk(index)">删除</span></h3>
+            <h3>云硬盘<span style="font-size:14px;color: #2A99F2;font-weight: normal;float: right;cursor: pointer" @click="delDisk(index)">删除</span></h3>
             <div class="config-button">
               <span>类型</span>
               <Poptip trigger="hover" content="全SSD架构，超高IOPS，适用于核心数据库与对I/O要求较高的业务。" placement="top-start">
-                <button :class="{select:item.diskType=='ssd'}" @click="item.diskType='ssd'">超高性能型</button>
+                <button :class="{select:item.diskType=='ssd'}" @click="changeDiskType(index,'ssd')">超高性能型</button>
               </Poptip>
               <Poptip trigger="hover" content="适用于顺序读写，如日志流水，流媒体等场景，高性价比。" placement="top-start">
-                <button :class="{select:item.diskType=='sas'}" @click="item.diskType='sas'">性能型</button>
+                <button :class="{select:item.diskType=='sas'}" @click="changeDiskType(index,'sas')">性能型</button>
               </Poptip>
               <Poptip trigger="hover" content="超大存储容量，超高性价比。" placement="top-start">
-                <button :class="{select:item.diskType=='sata'}" @click="item.diskType='sata'">存储型</button>
+                <button :class="{select:item.diskType=='sata'}" @click="changeDiskType(index,'sata')">存储型</button>
               </Poptip>
             </div>
             <div>
               <span>容量</span>
-              <!--  <i-slider
-                    v-model="diskSize"
-                    unit="GB"
-                    :min=20
-                    :max=500
-                    :step=10
-                    :points="[100,250]"
-                    style="margin-right:30px;vertical-align: middle;width:66%">
-                  </i-slider>-->
-              <InputNumber :max="500" :min="20" v-model="item.diskSize" size="large" :step=10></InputNumber>
+              <i-slider
+                v-model="item.diskSize"
+                unit="GB"
+                :min=20
+                :max=500
+                :step=10
+                :points="[100,250]"
+                @change="changeDiskSize(index,item.diskSize)"
+                style="margin-right:30px;vertical-align: middle;width:66%">
+              </i-slider>
+              <InputNumber :max="500" :min="20" v-model="item.diskSize" size="large" :step=10 @on-blur="changeDiskSize(index,item.diskSize)" @on-focus="changeDiskSize(index,item.diskSize)"></InputNumber>
             </div>
           </div>
           <div :class="{addDisk:diskList.length!=0}" style="display: flex">
-            <p v-if="diskLimit!=0" style="cursor: pointer;color: #2A99F2" @click="addDisk">添加数据盘</p>
-            <p v-if="diskLimit==0">添加数据盘</p><span class="s1">您还可以添加<span class="s1"
-                                                                         style="color:#F85E1D;margin-left: 0">{{ diskLimit}}块</span>数据盘</span>
+            <p v-if="diskLimit!=0" style="cursor: pointer;color: #2A99F2" @click="addDisk">添加数据盘</p><p v-if="diskLimit==0">添加数据盘</p><span class="s1" v-show="userInfo!=null">您还可以添加<span class="s1" style="color:#F85E1D;margin-left: 0">{{ diskLimit}}块</span>数据盘</span>
           </div>
           <div v-if="diskList.length!=0">
             <span style="margin-right: 68px">价格</span>
-            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;">{{ hostPrice}}元/月</span>
+            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;" v-if="timeType=='current'">{{ customDiskPrice}}元/小时</span>
+            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"v-else>{{ customDiskPrice}}元</span>
           </div>
         </div>
       </div>
@@ -207,31 +224,31 @@
         <h3>主机规格选择</h3>
         <div class="config-button">
           <span>镜像</span>
-          <button :class="{select:mirror=='1'}" @click="mirror='1'">镜像+应用</button>
-          <button :class="{select:mirror=='2'}" @click="mirror='2'">公共镜像</button>
-          <button :class="{select:mirror=='3'}" @click="mirror='3'">自定义镜像</button>
+          <button :class="{select:mirror=='imageApplication'}" @click="mirror='imageApplication',mirrorType='1'">镜像+应用</button>
+          <button :class="{select:mirror=='UHub'}" @click="mirror='UHub',mirrorType='Windows'">公共镜像</button>
+          <button :class="{select:mirror=='customImage',disabled:userInfo==null}" @click="mirror='customImage',mirrorType=''" :disabled="userInfo==null">自定义镜像</button>
         </div>
-        <div class="config-button" style="margin-left: 103px;" v-if="mirror=='2'">
-          <button :class="{select:mirrorType=='1'}" @click="mirrorType='1'">Windows</button>
-          <button :class="{select:mirrorType=='2'}" @click="mirrorType='2'">Centos</button>
-          <button :class="{select:mirrorType=='3'}" @click="mirrorType='3'">Ubuntu</button>
+        <div class="config-button" style="margin-left: 103px;" v-if="mirror=='UHub'">
+          <button :class="{select:mirrorType=='Windows'}" @click="mirrorType='Windows'">Windows</button>
+          <button :class="{select:mirrorType=='Centos'}" @click="mirrorType='Centos'">Centos</button>
+          <button :class="{select:mirrorType=='Ubuntu'}" @click="mirrorType='Ubuntu'">Ubuntu</button>
         </div>
-        <div class="configMirror-button" v-if="mirror=='1'">
-          <button v-for="item in quickMirrorConfigList" :class="{select:item.value==quickMirrorConfig}"
-                  @click="quickMirrorConfig=item.value">
+        <div class="configMirror-button" v-if="mirror=='imageApplication'">
+          <button v-for="item in mirrorConfigList" :class="{select:item.value==mirrorType}"
+                  @click="mirrorType=item.value">
             <div
               style="background: #D8D8D8;height:40px;width:40px;border: 1px solid #979797;margin-left: 10px"></div>
             <div style="display: flex;flex-direction:column;text-align: left;margin-left: 10px;">
               <p>{{ item.title}}</p>
-              <p style="color: #999999;">{{ item.discript}}</p>
+              <p style="color: #999999;margin-top: 10px;">{{ item.discript}}</p>
             </div>
           </button>
         </div>
         <div>
           <span style="margin-right: 53px;">公网IP</span>
-          <Checkbox v-model="buyQuickPublicIP" size="large" style="font-size: 16px">购买公网IP</Checkbox>
+          <Checkbox v-model="buyPublicIP" size="large" style="font-size: 16px">购买公网IP</Checkbox>
         </div>
-        <div class="config-button" style="display: -webkit-box;" v-if="buyQuickPublicIP">
+        <div class="config-button" style="display: -webkit-box;" v-if="buyPublicIP">
           <span>配置</span>
           <div>
             <button style="width: 360px;margin-bottom:10px;" v-for="item in quickConfigList"
@@ -244,7 +261,7 @@
           <span>配置</span>
           <div>
             <button style="width: 360px;margin-bottom:10px;" v-for="item in quickNoNetConfigList"
-                    :class="{select:item.value==quickNoNetConfig}" @click="quickNoNetConfig=item.value">
+                    :class="{select:item.value==quickConfig}" @click="quickConfig=item.value">
               {{item.discript}}
             </button>
           </div>
@@ -255,21 +272,21 @@
         <h3>登录设置</h3>
         <div class="config-button">
           <span>主机信息</span>
-          <button :class="{select:hostIfo=='5'}" @click="hostIfo='5'">默认设置</button>
-          <button :class="{select:hostIfo=='6'}" @click="hostIfo='6'">自定义设置</button>
+          <button :class="{select:hostIfo=='defaultSetting'}" @click="hostIfo='defaultSetting'">默认设置</button>
+          <button :class="{select:hostIfo=='customSetup'}" @click="hostIfo='customSetup'">自定义设置</button>
         </div>
-        <div v-if="hostIfo==6">
+        <div v-if="hostIfo=='customSetup'">
           <span>主机名称</span>
           <Input v-model="hostName" placeholder="如不填写，系统自动生成" style="width: 360px"></Input>
           <p>当购买数量大于1台之时，主机命名规则为主机名称加随机数字。</p>
         </div>
-        <div v-if="hostIfo==6">
+        <div v-if="hostIfo=='customSetup'">
           <span>登录密码</span>
           <Input v-model="hostPassword" placeholder="请输入主机登录密码" style="width: 360px"></Input>
         </div>
-        <div v-if="hostIfo==5">
+        <div v-if="hostIfo=='defaultSetting'">
           <span>安全组</span>
-          <Select style="width:216px;margin-left: 16px">
+          <Select  v-model="safetyGroup" style="width:216px;margin-left: 16px">
             <Option v-for="item in safeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
@@ -285,26 +302,21 @@
       <!--计价详情-->
       <div class="settleAccounts" v-if="pitchOn=='quick'">
         <span>查看计价详情</span>
-        <p style="float: right; color: #333333;">总计费用：<span
-          style="color:#F85E1D;font-size: 24px ">{{ quickTotalCost }}元</span></p>
-        <p style="margin-top: 10px">已省：<span style="color:#F85E1D;">35元</span></p>
+        <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">{{ quickTotalCost }}元</span></p>
+        <p style="margin-top: 10px">已省：<span style="color:#F85E1D;">{{ quickTotalCoupon }}元</span></p>
       </div>
       <div class="settleAccounts" v-else>
         <span>查看计价详情</span>
-        <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">{{ customTotalCost }}元</span>
-        </p>
-        <p style="margin-top: 10px">已省：<span style="color:#F85E1D;">35元</span></p>
+        <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">{{ customTotalCost }}元</span></p>
+        <p style="margin-top: 10px">已省：<span style="color:#F85E1D;">{{ customTotalCoupon }}元</span></p>
       </div>
       <!--购买按钮-->
       <div class="buy-button">
-        <button @click="addBudgetList" :class="{select:addButton,disabled:hostDisabled}" :disabled="hostDisabled">
-          加入预算清单
-        </button>
-        <button style="margin-right: 0" :class="{select:buyButton,disabled:hostDisabled}" @click="buyImmediately"
-                :disabled="hostDisabled">立即购买
-        </button>
+        <button @click="addBudgetList" :class="{select:addButton,disabled:hostDisabled}" :disabled="hostDisabled">加入预算清单</button>
+        <button style="margin-right: 0" :class="{select:buyButton,disabled:hostDisabled}" @click="buyImmediately" :disabled="hostDisabled">立即购买</button>
       </div>
     </div>
+    <!--登录弹框-->
     <Modal v-model="showModal.login" width="450" class="login-modal" scrollable>
       <p slot="header" style="color:#5F5F5F;text-align:center;height: 30px;padding-top: 5px;">
         <span style="font-family: PingFangSC-Regular;font-size: 26px;">登录</span>
@@ -327,7 +339,7 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc" @click="imgSrc=`http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </div>
         </form>
       </div>
@@ -347,7 +359,9 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import $store from '../../../vuex'
   import regExp from '../../../util/regExp'
+  var debounce = require('throttle-debounce/debounce')
   var messageMap = {
     loginname: {
       placeholder: '登录邮箱/手机号',
@@ -363,6 +377,7 @@
   export default{
     data () {
       return {
+        // 产品类型
         productList: [
           {
             label: '云主机',
@@ -375,40 +390,53 @@
             value: 'elasticIP'
           }
         ],
-        zoneList: [
-          {
-            zonename: '北方一区',
-            zoneid: '1'
-          }, {
-            zonename: '华中一区',
-            zoneid: '2'
-          }
-        ],
+        // 地区
+        zoneList: [],
+        // 地区id
         zone: '1',
-        configChange: false,
+        // 主机类型：快速配置+自定义配置
         pitchOn: 'quick',
-        type: '',
+        // 购买日期类型
         timeType: 'month',
-        timeList: ['2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月'],
+        timeList: [2, 3, 4, 5, 6, 7, 8, 9, 10],
+        // 日期值
         time: 1,
-        hostType: '',
-        mirror: '',
-        mirrorType: '',
-        systemDisk: '',
-        hostIfo: '',
+        // 主机型号：标准 高性能。。。
+        hostType: 'sata',
+        // 镜像类型
+        mirror: 'UHub',
+        // 镜像准确版本
+        mirrorType: 'Windows',
+        // 主机信息
+        hostIfo: 'defaultSetting',
+        // 核心数
         cpuNum: 1,
         cpuList: [1, 2, 4, 8, 16],
+        // 内存
         memorySize: 1,
         memoryList: [1, 2, 4, 8, 16, 32],
-        hostPrice: 998,
-        netList: [{
-          label: '默认网络',
-          value: '1'
+        // 自定义主机规格价值
+        customHostCost: 0,
+        // 自定义主机规格优惠
+        customHostCoupon: 0,
+        // 自定义磁盘价格
+        customDiskPrice: 0,
+        // 自定义磁盘优惠
+        customDiskCoupon: 0,
+        // 私网
+        privateList: [{
+          'ipsegmentid': 'no',
+          'name': '默认私网',
+          'ipsegment': '192.168.0.1/24'
         }],
+        private: 'no#192.168.0.1/24',
+        // 安全组
         safeList: [{
           label: '默认安全组',
           value: '1'
         }],
+        safetyGroup: '1',
+        // 网卡
         networkCardList: [
           {
             label: '主网卡',
@@ -416,47 +444,52 @@
           }
         ],
         networkCard: '',
+        // 自定义主机是否购买公网ip
         buyPublicIP: true,
-        buyQuickPublicIP: true,
         publicIP: 1,
+        // 主机名
         hostName: '',
+        // 主机密码
         hostPassword: '',
+        // 是否自动续费
         autoRenewal: true,
+        // 某个订单数量
         quantity: 1,
+        // 快速主机配置表（有公网）
         quickConfigList: [
           {
             discript: '1核1G、1m带宽、50G系统盘(性能型）',
             value: '1'
           }, {
-            discript: '2核4G、1m带宽、50G系统盘（性能型号）',
+            discript: '2核4G、1m带宽、50G系统盘（性能型）',
             value: '2'
           }, {
-            discript: '4核4G、2m带宽、50G系统盘（超高性能型号）',
+            discript: '4核4G、2m带宽、50G系统盘（超高性能型）',
             value: '3'
           }, {
-            discript: '4核8G、2m带宽、50G系统盘（超高性能型号）',
+            discript: '4核8G、2m带宽、50G系统盘（超高性能型）',
             value: '4'
           }
         ],
         quickConfig: '1',
+        // 快速主机配置表（无公网）
         quickNoNetConfigList: [
           {
             discript: '1核1G、50G系统盘(性能型）',
-            value: '1'
+            value: '5'
           }, {
-            discript: '2核4G、50G系统盘（性能型号）',
-            value: '2'
+            discript: '2核4G、50G系统盘（性能型）',
+            value: '6'
           }, {
-            discript: '4核4G、50G系统盘（超高性能型号）',
-            value: '3'
+            discript: '4核4G、50G系统盘（超高性能型）',
+            value: '7'
           }, {
-            discript: '4核8G、50G系统盘（超高性能型号）',
-            value: '4'
+            discript: '4核8G、50G系统盘（超高性能型）',
+            value: '8'
           }
         ],
-        quickNoNetConfig: '1',
-        publicType: '1',
-        quickMirrorConfigList: [
+        // 镜像+应用表
+        mirrorConfigList: [
           {
             discript: '一键部署WordPress和LAMP，海量免费主题和插件。 ',
             title: 'WordPress开源博客系统（Centos）',
@@ -471,8 +504,9 @@
             value: '3'
           }
         ],
-        quickMirrorConfig: '1',
+        // 自定义主机磁盘表
         diskList: [],
+        // 登录表
         form: {
           loginname: '',
           password: '',
@@ -481,6 +515,7 @@
           passwordPlaceholder: '密码',
           vailCodePlaceholder: '请输入验证码'
         },
+        // 校检表
         vailForm: {
           loginname: {
             message: '',
@@ -495,22 +530,67 @@
             warning: false
           }
         },
-        imgSrc: '',
+        // 验证码路径
+        imgSrc: `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`,
         showModal: {
           login: false
         },
-        diskLimit: 4,
-        customTotalCost: 998,
-        quickTotalCost: 699,
+        // 磁盘限制数
+        diskLimit: 1,
+        // 快速主机价格
+        quickHostCost: 0,
+        // 快速主机优惠
+        quickHostCoupon: 0,
+        // ip价格
+        ipPrice: 0,
+        // ip优惠
+        ipCoupon: 0,
+        // 判断按钮选中class
         buyButton: false,
         addButton: false,
+        // 网卡限制数量
         netWorkCardLimit: 4,
-        netWorkCards: []
+        netWorkCards: [],
+        specifyIP: 1,
+        specifyInfo: '指定IP',
+        specify: false,
+        visible: false,
+        // 用户信息
+        userInfo: null
       }
     },
     created () {
+      this.zoneList = $store.state.zoneList
+      this.zone = $store.state.zoneList[0].zoneid
+      if ($store.state.userInfo) {
+        this.userInfo = $store.state.userInfo
+      }
+      this.queryQuickHost()
     },
     methods: {
+      /* 切换到自定义 */
+      configChange (val) {
+        this.pitchOn = val
+        this.addButton = false
+        this.buyButton = false
+        this.buyPublicIP = true
+        this.getDiskLimit()
+        if (val == 'custom') {
+          var params = {
+            cpunum: this.cpuNum + '',
+            memory: this.memorySize + '',
+            disk: 50 + '',
+            zoneId: this.zone,
+            value: this.timeType + '',
+            timevalue: this.time + '',
+            disk_type: this.hostType
+          }
+          this.publicIP = 1
+          this.queryHost(params)
+          this.queryIpPrice()
+        }
+      },
+      /* 核心数切换 */
       changeCPU (item) {
         if (this.memorySize < item) {
           this.memorySize = item
@@ -520,6 +600,7 @@
         }
         this.cpuNum = item
       },
+      /* 加入预算清单 */
       addBudgetList () {
         this.buyButton = false
         this.addButton = true
@@ -527,21 +608,53 @@
         if (sessionStorage.getItem('budget')) {
           list = JSON.parse(sessionStorage.getItem('budget'))
         }
-        var params = {
-          budgetType: this.pitchOn === 'quick' ? 'quickHost' : 'customHost',
-          timeType: this.timeType,
-          time: this.time + ''
+        if (this.pitchOn === 'quick') {
+          var params = {
+            budgetType: 'quickHost',
+            timeType: this.timeType,
+            time: this.time + '',
+            net: 'no',
+            mirror: this.mirror === 'imageApplication' ? 'imageApplication' : this.mirror === 'UHub' ? 'UHub' : 'customImage',
+            mirrorType: this.mirrorType,
+            config: this.quickConfig,
+            cost: this.quickTotalCost,
+            coupon: this.quickTotalCoupon
+          }
+          list.push(params)
+          sessionStorage.setItem('budget', JSON.stringify(list))
+          this.$parent.updateList()
+        } else {
+          var param = {
+            budgetType: 'customHost',
+            timeType: this.timeType,
+            time: this.time + '',
+            net: this.private.substring(0, 2),
+            mirror: this.mirror === 'imageApplication' ? 'imageApplication' : this.mirror === 'UHub' ? 'UHub' : 'customImage',
+            mirrorType: this.mirrorType,
+            cpuNum: this.cpuNum + '',
+            memorySize: this.memorySize + '',
+            buyPublicIP: this.buyPublicIP,
+            publicIP: this.publicIP + '',
+            diskList: this.diskList,
+            cost: this.customTotalCost,
+            coupon: this.customTotalCoupon
+          }
+          list.push(param)
+          sessionStorage.setItem('budget', JSON.stringify(list))
+          this.$parent.updateList()
         }
-        list.push(params)
-        sessionStorage.setItem('budget', JSON.stringify(list))
-        this.$parent.updateList()
       },
       /* 立即购买 */
       buyImmediately () {
-        this.buyButton = true
-        this.addButton = false
-        this.showModal.login = true
+        if (this.userInfo == null) {
+          this.buyButton = true
+          this.addButton = false
+          this.showModal.login = true
+        } else {
+          alert('购买')
+        }
       },
+      /* 登录框校检等 */
       vail (field) {
         var text = this.form[field]
         if (text == '') {
@@ -622,49 +735,408 @@
           this.vailForm.loginname.warning = true
         })
       },
+      /* 删除磁盘 */
       delDisk (index) {
         this.diskList.splice(index, 1)
-        if (this.diskLimit < 4) {
+        if (this.diskLimit < 6) {
           this.diskLimit++
         }
       },
+      /* 添加磁盘 */
       addDisk () {
-        var params = {
-          diskType: 'ssd',
-          diskSize: 20
-        }
-        this.diskList.push(params)
-        if (this.diskLimit > 0) {
-          this.diskLimit--
+        if (this.userInfo == null) {
+          this.showModal.login = true
+        } else {
+          var params = {
+            diskType: 'ssd',
+            diskSize: 20
+          }
+          this.diskList.push(params)
+          if (this.diskLimit > 0) {
+            this.diskLimit--
+          }
         }
       },
+      /* 添加网卡 */
       addNetWorkCard () {
-        var parms = {value: 1}
+        var parms = { value: 1 }
         this.netWorkCards.push(parms)
         if (this.netWorkCardLimit > 0) {
           this.netWorkCardLimit--
         }
       },
+      /* 删除网卡 */
       delNetWorkCard (index) {
         this.netWorkCards.splice(index, 1)
         if (this.netWorkCardLimit < 4) {
           this.netWorkCardLimit++
         }
-      }
+      },
+      /* 重选私网 */
+      reset () {
+        this.specify = false
+        this.specifyIP = 1
+        this.specifyInfo = '指定IP'
+      },
+      /* 修改指定IP */
+      specifyClick () {
+        this.specify = true
+        this.visible = false
+        this.specifyInfo = this.private.split('#')[1].substr(0, this.private.split('#')[1].lastIndexOf('.')) + '.' + this.specifyIP
+      },
+      /* 获取当前用户还能购买的磁盘数量 */
+      getDiskLimit () {
+        var url = 'http://localhost:8082/ruicloud/user/userSourceManager.do?zoneId=' + this.zone
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.diskLimit = response.data.result[3].items[0].total - response.data.result[3].items[0].used
+          }
+        })
+      },
+      /* 改变磁盘类型，查询价格（由于vue监听数组只监听几种变异方法，所以需要用splice()） */
+      changeDiskType (index, value) {
+        this.diskList[index].diskType = value
+        var params = {
+          diskType: value,
+          diskSize: this.diskList[index].diskSize
+        }
+        // 第一种：Vue.set(this.diskList, index, value)
+        this.diskList.splice(index, 1, params)
+      },
+      /* 改变磁盘容量，查询价格 */
+      changeDiskSize (index, value) {
+        var params = {
+          diskType: this.diskList[index].diskType,
+          diskSize: value
+        }
+        this.diskList.splice(index, 1, params)
+      },
+      /* 查询磁盘价格 */
+      queryDiskPrice: debounce(500, function () {
+        var diskSize = ''
+        var diskType = ''
+        //  拼接磁盘列表的磁盘类型+磁盘容量
+        this.diskList.forEach(item => {
+          diskType += item.diskType + ','
+          diskSize += item.diskSize + ','
+        })
+        this.$http.post('http://localhost:8082/ruicloud/device/QueryBillingPrice.do', {
+          cpunum: 0 + '',
+          memory: 0 + '',
+          disk: diskSize.substring(0, diskSize.length - 1),
+          zoneId: this.zone,
+          value: this.timeType + '',
+          timevalue: this.time + '',
+          disk_type: diskType.substring(0, diskType.length - 1)
+        }).then(response => {
+          if (response.status == 200 && response.statusText == 'OK') {
+            this.customDiskPrice = response.data.cost
+            if (response.data.coupon) {
+              this.customDiskCoupon = response.data.coupon
+            } else {
+              this.customDiskCoupon = 0
+            }
+          }
+        })
+      }),
+      /* 查询公网IP价格 */
+      queryIpPrice: debounce(500, function () {
+        this.$http.post('http://localhost:8082/ruicloud/device/queryIpPrice.do', {
+          brand: this.publicIP + '',
+          zoneId: this.zone,
+          value: this.timeType + '',
+          timeValue: this.time + ''
+        }).then(response => {
+          if (response.status == 200 && response.statusText == 'OK') {
+            this.ipPrice = response.data.cost
+            if (response.data.coupon) {
+              this.ipCoupon = response.data.coupon
+            } else {
+              this.ipCoupon = 0
+            }
+          }
+        })
+      }),
+      /* 查询快速配置主机价格 */
+      queryQuickHost: debounce(500, function () {
+        var zoneId = this.zone
+        var value = this.timeType + ''
+        var timevalue = this.time + ''
+        var params = null
+        switch (this.quickConfig) {
+          case '1':
+            params = {
+              cpunum: 1 + '',
+              memory: 1 + '',
+              disk: 50 + '',
+              zoneId: zoneId,
+              value: value + '',
+              timevalue: timevalue + '',
+              disk_type: 'sas'
+            }
+            this.publicIP = 1
+            this.queryHost(params)
+            this.queryIpPrice()
+            break
+          case '2':
+            params = {
+              cpunum: 2 + '',
+              memory: 4 + '',
+              disk: 50 + '',
+              zoneId: zoneId,
+              value: value + '',
+              timevalue: timevalue + '',
+              disk_type: 'sas'
+            }
+            this.publicIP = 1
+            this.queryHost(params)
+            this.queryIpPrice()
+            break
+          case '3':
+            params = {
+              cpunum: 4 + '',
+              memory: 4 + '',
+              disk: 50 + '',
+              zoneId: zoneId,
+              value: value + '',
+              timevalue: timevalue + '',
+              disk_type: 'ssd'
+            }
+            this.publicIP = 2
+            this.queryHost(params)
+            this.queryIpPrice()
+            break
+          case '4':
+            params = {
+              cpunum: 4 + '',
+              memory: 8 + '',
+              disk: 50 + '',
+              zoneId: zoneId,
+              value: value + '',
+              timevalue: timevalue + '',
+              disk_type: 'ssd'
+            }
+            this.publicIP = 2
+            this.queryHost(params)
+            this.queryIpPrice()
+            break
+          case '5':
+            params = {
+              cpunum: 1 + '',
+              memory: 1 + '',
+              disk: 50 + '',
+              zoneId: zoneId,
+              value: value + '',
+              timevalue: timevalue + '',
+              disk_type: 'sas'
+            }
+            this.queryHost(params)
+            break
+          case '6':
+            params = {
+              cpunum: 2 + '',
+              memory: 4 + '',
+              disk: 50 + '',
+              zoneId: zoneId,
+              value: value + '',
+              timevalue: timevalue + '',
+              disk_type: 'sas'
+            }
+            this.queryHost(params)
+            break
+          case '7':
+            params = {
+              cpunum: 4 + '',
+              memory: 4 + '',
+              disk: 50 + '',
+              zoneId: zoneId,
+              value: value + '',
+              timevalue: timevalue + '',
+              disk_type: 'ssd'
+            }
+            this.queryHost(params)
+            break
+          case '8':
+            params = {
+              cpunum: 4 + '',
+              memory: 8 + '',
+              disk: 50 + '',
+              zoneId: zoneId,
+              value: value + '',
+              timevalue: timevalue + '',
+              disk_type: 'ssd'
+            }
+            this.queryHost(params)
+            break
+        }
+      }),
+      /* 查询主机价格 */
+      queryHost: debounce(500, function (params) {
+        this.$http.post('http://localhost:8082/ruicloud/device/QueryBillingPrice.do', params).then(response => {
+          if (response.status == 200 && response.statusText == 'OK') {
+            if (this.pitchOn == 'quick') {
+              this.quickHostCost = response.data.cost
+              if (response.data.coupon) {
+                this.quickHostCoupon = response.data.coupon
+              } else {
+                this.quickHostCoupon = 0
+              }
+            } else {
+              this.customHostCost = response.data.cost
+              if (response.data.coupon) {
+                this.customHostCoupon = response.data.coupon
+              } else {
+                this.customHostCoupon = 0
+              }
+            }
+          }
+        })
+      })
     },
     computed: {
+      /* 校检登录信息完整 */
       disabled () {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.agree && this.vailForm.loginname.warning == false)
       },
+      /* 快速自定义主机切换后按钮class变化 */
       hostDisabled () {
         if (this.pitchOn == 'custom') {
           return (this.customTotalCost == 0)
         } else {
           return (this.quickTotalCost == 0)
         }
+      },
+      /* 快速主机总价格 */
+      quickTotalCost () {
+        return Math.round((this.quickHostCost * 100 + this.ipPrice * 100)) / 100
+      },
+      /* 快速主机总优惠 */
+      quickTotalCoupon () {
+        return Math.round((this.quickHostCoupon * 100 + this.ipCoupon * 100)) / 100
+      },
+      /* 自定义主机总价格 */
+      customTotalCost () {
+        return Math.round((this.customHostCost * 100 + this.ipPrice * 100 + this.customDiskPrice * 100)) / 100
+      },
+      /* 自定义主机总优惠价格 */
+      customTotalCoupon () {
+        return Math.round((this.customHostCoupon * 100 + this.ipCoupon * 100 + this.customDiskCoupon * 100)) / 100
       }
     },
-    watch: {}
+    watch: {
+      /* 监听是否购买公网ip,重新配置 */
+      buyPublicIP () {
+        if (this.pitchOn == 'quick') {
+          if (this.buyPublicIP) {
+            this.quickConfig = '1'
+          } else {
+            this.quickConfig = '5'
+            this.ipPrice = 0
+            this.ipCoupon = 0
+          }
+        } else {
+          if (this.buyPublicIP) {
+            this.queryIpPrice()
+          } else {
+            this.ipPrice = 0
+            this.ipCoupon = 0
+          }
+        }
+      },
+      /* 监听配置变化 查询快速配置主机价格 */
+      quickConfig () {
+        this.queryQuickHost()
+      },
+      /* 监听购买时间类型变化 查询价格 */
+      timeType () {
+        if (this.pitchOn == 'quick') {
+          this.queryQuickHost()
+        } else {
+          var params = {
+            cpunum: this.cpuNum + '',
+            memory: this.memorySize + '',
+            disk: 50 + '',
+            zoneId: this.zone,
+            value: this.timeType + '',
+            timevalue: this.time + '',
+            disk_type: this.hostType
+          }
+          this.queryHost(params)
+          if (this.buyPublicIP) {
+            this.queryIpPrice()
+          }
+          this.queryDiskPrice()
+        }
+      },
+      /* 监听购买时间长短变化 查询价格 */
+      time () {
+        if (this.pitchOn == 'quick') {
+          this.queryQuickHost()
+        } else {
+          var params = {
+            cpunum: this.cpuNum + '',
+            memory: this.memorySize + '',
+            disk: 50 + '',
+            zoneId: this.zone,
+            value: this.timeType + '',
+            timevalue: this.time + '',
+            disk_type: this.hostType
+          }
+          this.queryHost(params)
+          if (this.buyPublicIP) {
+            this.queryIpPrice()
+          }
+          this.queryDiskPrice()
+        }
+      },
+      /* 监听磁盘列表变化，查询价格 */
+      diskList () {
+        this.queryDiskPrice()
+      },
+      /* 监听带宽，查询价格 */
+      publicIP () {
+        this.queryIpPrice()
+      },
+      /* 监听系统盘类型，查询价格 */
+      hostType () {
+        var params = {
+          cpunum: this.cpuNum + '',
+          memory: this.memorySize + '',
+          disk: 50 + '',
+          zoneId: this.zone,
+          value: this.timeType + '',
+          timevalue: this.time + '',
+          disk_type: this.hostType
+        }
+        this.queryHost(params)
+      },
+      /* 监听cpu核心数，查询价格 */
+      cpuNum () {
+        var params = {
+          cpunum: this.cpuNum + '',
+          memory: this.memorySize + '',
+          disk: 50 + '',
+          zoneId: this.zone,
+          value: this.timeType + '',
+          timevalue: this.time + '',
+          disk_type: this.hostType
+        }
+        this.queryHost(params)
+      },
+      /* 监听内存，查询价格 */
+      memorySize () {
+        var params = {
+          cpunum: this.cpuNum + '',
+          memory: this.memorySize + '',
+          disk: 50 + '',
+          zoneId: this.zone,
+          value: this.timeType + '',
+          timevalue: this.time + '',
+          disk_type: this.hostType
+        }
+        this.queryHost(params)
+      }
+    }
   }
 </script>
 
@@ -693,7 +1165,6 @@
       }
     }
   }
-
   .content {
     background: #FFFFFF;
     padding: 40px 40px 40px 40px;
@@ -807,7 +1278,7 @@
             line-height: 25px;
           }
         }
-        .s2 {
+        .s2{
           font-family: MicrosoftYaHei;
           font-size: 14px;
           color: #333333;
@@ -832,6 +1303,9 @@
         &.select {
           background-image: linear-gradient(-90deg, #4183EB 0%, #07BDFE 100%);
           color: white;
+        }
+        &.disabled{
+          cursor: not-allowed;
         }
         i {
           font-style: normal;
@@ -878,7 +1352,7 @@
     .disk {
       border-bottom: 1px solid #E9E9E9;
       padding-bottom: 20px;
-      .diskItem {
+      .diskItem{
         & > div {
           margin-top: 20px;
           & > span {
@@ -890,19 +1364,19 @@
           }
         }
       }
-      .addDisk {
+      .addDisk{
         padding-left: 102px;
       }
       & > div {
         margin-top: 20px;
-        & > span {
+        & > span{
           font-family: MicrosoftYaHei;
           font-size: 16px;
           color: #333333;
           line-height: 29px;
           margin-right: 52px;
         }
-        p {
+        p{
           font-family: MicrosoftYaHei;
           font-size: 14px;
           color: #999999;
@@ -965,7 +1439,7 @@
         cursor: pointer;
         margin-right: 10px;
         border-radius: 10px;
-        &.disabled {
+        &.disabled{
           cursor: not-allowed;
         }
         &.select {
@@ -975,7 +1449,6 @@
       }
     }
   }
-
   .modalBody {
     height: 55%;
     form {
@@ -1050,13 +1523,12 @@
       outline: none;
     }
   }
-
   .modalFooter {
     padding-top: 10px;
     height: 32%;
     button {
       width: 80%;
-      margin: 0px auto 15px;
+      margin: 0px auto;
       display: block;
       height: 45px;
       background-color: #4990E2;
@@ -1066,6 +1538,7 @@
       color: #FFFFFF;
       letter-spacing: 0.83px;
       cursor: pointer;
+      margin-bottom: 15px;
       &.disabled {
         cursor: not-allowed;
       }

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+// import globalAPI from '../promise'
 
 // 主路由
 import App from '@/App'
@@ -34,7 +35,9 @@ const Work = () => import('@/components/Back/Work')
 const Renew = () => import('@/components/Back/Renew')
 const New = () => import('@/components/Back/New')
 const Host = () => import('@/components/Back/Host')
+const Disk = () => import('@/components/Back/Disk')
 const Vpc = () => import('@/components/Back/Vpc')
+const VpcManage = () => import('@/components/Back/VpcManage')
 const Ip = () => import('@/components/Back/Ip')
 
 // 404
@@ -92,10 +95,12 @@ var router = new Router({
       children: [
         {path: 'overview', name: 'overview', component: Overview},
         {path: 'work', name: 'work', component: Work},
-        {path: 'renew', name: 'work', component: Renew},
-        {path: 'new', name: 'work', component: New},
+        {path: 'renew', name: 'renew', component: Renew},
+        {path: 'disk', name: 'disk', component: Disk},
+        {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
         {path: 'vpc', name: 'vpc', component: Vpc},
+        {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
         {path: 'ip', name: 'ip', component: Ip}
       ]
     },
@@ -114,7 +119,7 @@ var router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(route => { return route.meta.requiresAuth })){
+  if (to.matched.some(route => { return route.meta.requiresAuth })) {
     if (!localStorage.getItem('authToken')) {
       next({
         path: '/ruicloud/login'
