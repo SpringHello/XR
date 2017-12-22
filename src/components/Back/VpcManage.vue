@@ -51,7 +51,9 @@
             </div>
           </TabPane>
           <TabPane label="网络拓扑">网络拓扑</TabPane>
-          <TabPane label="私有网关">私有网关</TabPane>
+          <TabPane label="私有网关">
+            <Table :columns="columns2" :data="virtualnet"></Table>
+          </TabPane>
         </Tabs>
       </div>
     </div>
@@ -97,6 +99,10 @@
           {id: 'TradeCode21', name: '主机1', status: 1, address: '192.168.0.0/16'},
           {id: 'TradeCode212', name: '主机12', status: 3, address: '192.168.0.0/16'}
         ],
+        virtualnet: [
+          {ip: '192.168.3.244', netport: '192.168.3.244', netvirtual: '25.255.255.235', vlan: 45 , nat: '开启', address: '192.168.0.0/16'},
+          {ip: '192.168.3.244', netport: '192.168.3.244', netvirtual: '25.255.255.235', vlan: 3345 , nat: '关闭', address: '192.168.0.0/16'}
+        ],
         columns1: [
           {
             title: '主机Id',
@@ -135,6 +141,56 @@
                     }
                   }
                 }, '离开网络')
+              ])
+            }
+          }
+        ],
+        columns2: [
+          {
+            title: 'IP地址',
+            key: 'ip'
+          },
+          {
+            title: '网关',
+            key: 'netport'
+          },
+          {
+            title: '网络虚码',
+            key: 'netvirtual'
+          },
+          {
+            title: 'VLAN\VNI',
+            key: 'vlan'
+          },
+          {
+            title: '源NAT',
+            key: 'nat'
+          },
+          {
+            title: '？？',
+            key: 'address'
+          },
+          {
+            title: '操作',
+            key: 'action',
+            width: 110,
+            align: 'left',
+            render: (h, params) => {
+              return h('div', [
+                h('span', {
+                  props: {
+                    type: 'primary',
+                    size: 'small'
+                  },
+                  style: {
+                    color: '#2A99F2'
+                  },
+                  on: {
+                    click: () => {
+                      this.show(params.index)
+                    }
+                  }
+                }, '添加路由')
               ])
             }
           }
