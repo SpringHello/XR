@@ -21,7 +21,7 @@
       <div v-if="timeType=='month'||timeType=='year'" class="time" style="margin-bottom:20px">
         <label :class="{select:time==1&&timeType!='year'}" @click="time=1;timeType='month'">1月</label>
         <label v-for="item in timeList" :class="{select:time==item&&timeType!='year'}"
-               @click="time=item;timeType='month'">{{item}}</label>
+               @click="time=item;timeType='month'">{{item}}月</label>
         <Tooltip :content="`买满1年，立享3折。`" placement="top">
           <label
             :class="{select:time==1&&timeType=='year'}"
@@ -48,12 +48,27 @@
       <h3>网络与带宽</h3>
       <div>
         <span>虚拟私有云</span>
-        <Select v-model="net" style="width:180px;margin-left: 20px">
-          <Option v-for="item in netList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        <Select @on-change="reset" v-model="private" style="width:250px;margin-left: 20px">
+          <Option v-for="item in privateList" :value="`${item.ipsegmentid}#${item.ipsegment}`"
+                  :key="item.ipsegmentid">  {{item.name}} 范围{{item.ipsegment }}</Option>
         </Select>
+        <span  v-show="specifyInfo=='指定IP'" style="border: 1px solid #E9E9E9;font-size: 12px;padding: 4px 25px 8px 25px;margin-left: 10px;color: #666666;">自动分配IP地址</span>
+        <Poptip v-if='private!=""' placement="top" width="250" v-model="visible"
+                style="vertical-align: middle;display: inline-block">
+          <span v-show="specifyInfo!='指定IP'" style="margin-left: 10px">指定IP:</span>
+          <span style="margin-left:15px;color:#2A99F2;cursor:pointer;user-select: none">{{specifyInfo}}</span>
+          <div class="api" slot="content">
+            <p style="margin-bottom: 15px;margin-left: 0;color: #333333">请输入您的要绑定的IP</p>
+            <div>
+              <span style="vertical-align: middle">{{private.split('#')[1].substr(0,private.split('#')[1].lastIndexOf('.'))}}.</span>
+              <Input-number :max="255" :min="1" size="small" v-model="specifyIP"></Input-number>
+              <button @click="specifyClick" style="padding:0px 12px;background-color: #2A99F2;cursor: pointer;color: #ffffff;">确定</button>
+            </div>
+          </div>
+        </Poptip>
         <p>如需使用其他虚拟私有云（VPC），请选择已有虚拟私有云（VPC），也可以自行到<span>控制台新建</span>。</p>
       </div>
-      <div v-for="(item,index) in netWorkCards">
+      <!--<div v-for="(item,index) in netWorkCards">
         <span>网卡</span>
         <Select v-model="networkCard" style="width:180px;margin-left: 68px">
           <Option v-for="item in networkCardList" :value="item.value" :key="item.value">{{ item.label }}
@@ -65,22 +80,25 @@
       <div style="display: flex">
         <p style="cursor: pointer;color: #2A99F2" @click="addNetWorkCard" v-if="netWorkCardLimit!=0">添加网卡</p>
         <p style="color: #666666" v-else>添加网卡</p>
-        <span class="s1">您还可以添加<span style="color:#F85E1D ">{{netWorkCardLimit}}</span>张网卡</span>
-      </div>
+        <span class="s1" v-show="userInfo!=null">您还可以添加<span style="color:#F85E1D ">{{netWorkCardLimit}}</span>张网卡</span>
+      </div>-->
       <div>
         <span>公网IP</span>
-        <Checkbox v-model="buyPublicIP" size="large" style="margin-left: 53px;font-size: 18px">购买公网IP
+        <Checkbox v-model="buyPublicIP" size="large" style="margin-left: 53px;font-size: 16px">购买公网IP
         </Checkbox>
       </div>
       <div v-if="buyPublicIP==true">
         <span>带宽</span>
-        <!--<i-slider v-model="publicIP" :min=0 :max=100 unit="MB" :points="[10,60]"
-                  style="margin-right:30px;vertical-align: middle;width:66%;margin-left: 68px;"></i-slider>-->
-        <InputNumber :max="100" :min="0" v-model="publicIP" size="large"></InputNumber>
+        <i-slider v-model="publicIP" :min=1 :max=100 unit="MB" :points="[10,60]"
+                  style="margin-right:30px;vertical-align: middle;width:66%;margin-left: 68px;"></i-slider>
+        <InputNumber :max="100" :min="1" v-model="publicIP" size="large"></InputNumber>
       </div>
       <div>
         <span style="margin-right: 68px">价格</span>
-        <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;">{{ ipPrice}}元/月</span>
+        <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"
+              v-if="timeType=='current'">{{ ipPrice}}元/小时</span>
+        <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"
+              v-else>{{ ipPrice}}元</span>
       </div>
       <div>
         <span style="margin-right: 36px">自动续费</span>
@@ -95,7 +113,7 @@
     <div class="settleAccounts">
       <span>查看计价详情</span>
       <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">{{ ipPrice}}元</span></p>
-      <p style="margin-top: 10px">已省：<span style="color:#F85E1D;">35元</span></p>
+      <p style="margin-top: 10px">已省：<span style="color:#F85E1D;">{{ coupon}}元</span></p>
     </div>
     <!--购买按钮-->
     <div class="buy-button">
@@ -125,7 +143,7 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc" @click="imgSrc=`http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </div>
         </form>
       </div>
@@ -145,7 +163,9 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import $store from '../../../vuex'
   import regExp from '../../../util/regExp'
+  var debounce = require('throttle-debounce/debounce')
   var messageMap = {
     loginname: {
       placeholder: '登录邮箱/手机号',
@@ -162,33 +182,26 @@
     data () {
       return {
         // 区域列表
-        zoneList: [
-          {
-            zonename: '北方一区',
-            zoneid: '1'
-          }, {
-            zonename: '华中一区',
-            zoneid: '2'
-          }
-        ],
+        zoneList: [],
         // 区域
         zone: '1',
         // 购买时间选择
         timeType: 'month',
-        timeList: ['2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月'],
+        timeList: [2, 3, 4, 5, 6, 7, 8, 9, 10],
         time: 1,
         // 是否自动续费
         autoRenewal: true,
         // 是否购买公网ip
         buyPublicIP: true,
         // ip价格
-        ipPrice: 32,
+        ipPrice: 0,
         // 网络选择
-        netList: [{
-          label: '默认网络',
-          value: '1'
+        privateList: [{
+          'ipsegmentid': 'no',
+          'name': '默认私网',
+          'ipsegment': '192.168.0.1/24'
         }],
-        net: '1',
+        private: 'no#192.168.0.1/24',
         // 网卡选择
         networkCardList: [
           {
@@ -198,8 +211,8 @@
         ],
         networkCard: '',
         netWorkCards: [],
-        // 公网ip大小
-        publicIP: 10,
+        // 公网ip带宽
+        publicIP: 1,
         // 登录弹框相关
         form: {
           loginname: '',
@@ -229,18 +242,31 @@
           login: false
         },
         // 网卡限制数量
-        netWorkCardLimit: 4,
-        // 总花费
-        totalCost: 1,
+        netWorkCardLimit: 1,
+        // 已优惠价格
+        coupon: 0,
+        // 用户信息
+        userInfo: null,
         // 控制按钮class
         buyButton: false,
-        addButton: false
+        addButton: false,
+        specifyIP: 1,
+        specifyInfo: '指定IP',
+        specify: false,
+        visible: false
       }
     },
     created () {
+      this.zoneList = $store.state.zoneList
+      this.zone = $store.state.zoneList[0].zoneid
+      if ($store.state.userInfo) {
+        this.userInfo = $store.state.userInfo
+        this.getPrivateList()
+      }
+      this.queryIpPrice()
     },
     methods: {
-       /* 加入购物清单 */
+      /* 加入购物清单 */
       addBudgetList () {
         this.buyButton = false
         this.addButton = true
@@ -252,9 +278,10 @@
           budgetType: 'ip',
           timeType: this.timeType,
           time: this.time + '',
-          buyPublicIP: this.buyPublicIP,
+          net: this.private.substring(0, 2),
           publicIP: this.publicIP + '',
-          cost: this.ipPrice
+          cost: this.ipPrice,
+          coupon: this.coupon
         }
         list.push(params)
         sessionStorage.setItem('budget', JSON.stringify(list))
@@ -262,9 +289,14 @@
       },
       /* 立即购买 */
       buyImmediately () {
-        this.buyButton = true
-        this.addButton = false
-        this.showModal.login = true
+        if (this.userInfo == null) {
+          this.buyButton = true
+          this.addButton = false
+          this.showModal.login = true
+          this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
+        } else {
+          alert('购买完成')
+        }
       },
       /* 登录弹框的校检等 */
       vail (field) {
@@ -326,7 +358,7 @@
         }
       },
       submit () {
-        this.$http.get('user/login.do', {
+        this.$http.get('http://localhost:8082/ruicloud/user/login.do', {
           params: {
             username: this.form.loginname,
             password: this.form.password,
@@ -337,7 +369,7 @@
             if (response.data.status == 1) {
               this.$router.go(0)
             } else {
-              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+              this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
               this.vailForm.loginname.message = response.data.message
               this.vailForm.loginname.warning = true
             }
@@ -349,10 +381,14 @@
       },
       /* 添加网卡 */
       addNetWorkCard () {
-        var parms = { value: 1 }
-        this.netWorkCards.push(parms)
-        if (this.netWorkCardLimit > 0) {
-          this.netWorkCardLimit--
+        if (this.userInfo == null) {
+          this.showModal.login = true
+        } else {
+          var parmas = { value: 1 }
+          this.netWorkCards.push(parmas)
+          if (this.netWorkCardLimit > 0) {
+            this.netWorkCardLimit--
+          }
         }
       },
       /* 删除网卡 */
@@ -361,7 +397,50 @@
         if (this.netWorkCardLimit < 4) {
           this.netWorkCardLimit++
         }
-      }
+      },
+      /* 获取私网列表 */
+      getPrivateList () {
+        this.$http.get(`http://localhost:8082/ruicloud/network/listNetDefault.do?zoneId=${this.zone}`)
+          .then((response) => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.privateList = [{
+                'ipsegmentid': 'no',
+                'name': '默认私网',
+                'ipsegment': '192.168.0.1/24'
+              }].concat(response.data.result)
+            }
+          })
+      },
+      /* 重选私网 */
+      reset () {
+        this.specify = false
+        this.specifyIP = 1
+        this.specifyInfo = '指定IP'
+      },
+      /* 修改指定IP */
+      specifyClick () {
+        this.specify = true
+        this.visible = false
+        this.specifyInfo = this.private.split('#')[1].substr(0, this.private.split('#')[1].lastIndexOf('.')) + '.' + this.specifyIP
+      },
+      /* 查询公网IP价格 */
+      queryIpPrice: debounce(500, function () {
+        this.$http.post('http://localhost:8082/ruicloud/device/queryIpPrice.do', {
+          brand: this.publicIP + '',
+          zoneId: this.zone,
+          value: this.timeType + '',
+          timeValue: this.time + ''
+        }).then(response => {
+          if (response.status == 200 && response.statusText == 'OK') {
+            this.ipPrice = response.data.cost
+            if (response.data.coupon) {
+              this.coupon = response.data.coupon
+            } else {
+              this.coupon = 0
+            }
+          }
+        })
+      })
     },
     computed: {
       /* 校检登录信息完整 */
@@ -370,10 +449,40 @@
       },
       /* 校检是否选择商品 */
       cardDisabled () {
-        return (this.totalCost == 0)
+        return (this.ipPrice == 0)
       }
     },
-    watch: {}
+    watch: {
+      /* 监听地区变化，查询私网 */
+      zone () {
+        this.getPrivateList()
+      },
+      /* 监听是否购买公网IP,查询价格 */
+      buyPublicIP () {
+        if (this.buyPublicIP) {
+          this.queryIpPrice()
+        } else {
+          this.ipPrice = 0
+          this.coupon = 0
+        }
+      },
+      /* 监听带宽，查询价格 */
+      publicIP () {
+        this.queryIpPrice()
+      },
+      /* 监听计费方式变化，查询价格 */
+      timeType () {
+        if (this.buyPublicIP) {
+          this.queryIpPrice()
+        }
+      },
+      /* 监听购买时间变化，查询价格 */
+      time () {
+        if (this.buyPublicIP) {
+          this.queryIpPrice()
+        }
+      }
+    }
   }
 </script>
 

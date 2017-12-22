@@ -22,7 +22,7 @@
       <div v-if="timeType=='month'||timeType=='year'" class="time" style="margin-bottom:20px">
         <label :class="{select:time==1&&timeType!='year'}" @click="time=1;timeType='month'">1月</label>
         <label v-for="item in timeList" :class="{select:time==item&&timeType!='year'}"
-               @click="time=item;timeType='month'">{{item}}</label>
+               @click="time=item;timeType='month'">{{item}}月</label>
         <Tooltip :content="`买满1年，立享3折。`" placement="top">
           <label
             :class="{select:time==1&&timeType=='year'}"
@@ -55,27 +55,28 @@
         <div class="config-button">
           <span>类型</span>
           <Poptip trigger="hover" content="全SSD架构，超高IOPS，适用于核心数据库与对I/O要求较高的业务。" placement="top-start">
-            <button :class="{select:item.diskType=='ssd'}" @click="changeDiskList(index,'ssd')">超高性能型</button>
+            <button :class="{select:item.diskType=='ssd'}" @click="changeDiskType(index,'ssd')">超高性能型</button>
           </Poptip>
           <Poptip trigger="hover" content="适用于顺序读写，如日志流水，流媒体等场景，高性价比。" placement="top-start">
-            <button :class="{select:item.diskType=='sas'}" @click="changeDiskList(index,'sas')">性能型</button>
+            <button :class="{select:item.diskType=='sas'}" @click="changeDiskType(index,'sas')">性能型</button>
           </Poptip>
           <Poptip trigger="hover" content="超大存储容量，超高性价比。" placement="top-start">
-            <button :class="{select:item.diskType=='sata'}" @click="changeDiskList(index,'sata')">存储型</button>
+            <button :class="{select:item.diskType=='sata'}" @click="changeDiskType(index,'sata')">存储型</button>
           </Poptip>
         </div>
         <div>
           <span>容量</span>
-          <!--  <i-slider
-                v-model="diskSize"
-                unit="GB"
-                :min=20
-                :max=500
-                :step=10
-                :points="[100,250]"
-                style="margin-right:30px;vertical-align: middle;width:66%">
-              </i-slider>-->
-          <InputNumber :max="500" :min="20" v-model="item.diskSize" size="large" :step=10></InputNumber>
+          <i-slider
+            v-model="item.diskSize"
+            unit="GB"
+            :min=20
+            :max=500
+            :step=10
+            :points="[100,250]"
+            @change="changeDiskSize(index,item.diskSize)"
+            style="margin-right:30px;vertical-align: middle;width:66%">
+          </i-slider>
+          <InputNumber :max="500" :min="20" v-model="item.diskSize" size="large" :step=10 @on-blur="changeDiskSize(index,item.diskSize)" @on-focus="changeDiskSize(index,item.diskSize)"></InputNumber>
           GB
         </div>
       </div>
@@ -85,9 +86,10 @@
       </div>
       <div>
         <span>价格</span>
-        <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;" v-if="timeType='month'">{{ diskPrice}}元/月</span>
-        <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;" v-if="timeType='year'">{{ diskPrice}}元/年</span>
-        <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;" v-if="timeType='current'">{{ diskPrice}}元/小时</span>
+        <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"
+              v-if="timeType=='current'">{{ diskPrice}}元/小时</span>
+        <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"
+              v-else>{{ diskPrice}}元</span>
       </div>
       <div>
         <span style="margin-right: 20px">自动续费</span>
@@ -101,7 +103,8 @@
     <!--计价详情-->
     <div class="settleAccounts">
       <span>查看计价详情</span>
-      <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">{{ diskPrice}}元</span></p>
+      <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">{{ diskPrice}}元</span>
+      </p>
       <p style="margin-top: 10px">已省：<span style="color:#F85E1D;">{{ coupon}}元</span></p>
     </div>
     <!--购买按钮-->
@@ -135,7 +138,7 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`../user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc" @click="imgSrc=`http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </div>
         </form>
       </div>
@@ -180,7 +183,7 @@
         // 包年？包月
         timeType: 'month',
         // 购买时间
-        timeList: ['2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月'],
+        timeList: [2, 3, 4, 5, 6, 7, 8, 9, 10],
         time: 1,
         // 是否自动续费
         autoRenewal: true,
@@ -212,7 +215,7 @@
           }
         },
         // 验证码
-        imgSrc: `../user/getKaptchaImage.do?t=${new Date().getTime()}`,
+        imgSrc: '',
         showModal: {
           login: false
         },
@@ -249,7 +252,8 @@
           timeType: this.timeType,
           time: this.time + '',
           diskList: this.diskList,
-          cost: this.diskPrice
+          cost: this.diskPrice,
+          coupon: this.coupon
         }
         list.push(params)
         sessionStorage.setItem('budget', JSON.stringify(list))
@@ -257,9 +261,14 @@
       },
       /* 立即购买 */
       buyImmediately () {
-        this.buyButton = true
-        this.addButton = false
-        this.showModal.login = true
+        if (this.userInfo == null) {
+          this.buyButton = true
+          this.addButton = false
+          this.showModal.login = true
+          this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
+        } else {
+          alert('购买完成')
+        }
       },
       /* 登录框校检等相关 */
       vail (field) {
@@ -321,7 +330,7 @@
         }
       },
       submit () {
-        this.$http.get('user/login.do', {
+        this.$http.get('http://localhost:8082/ruicloud/user/login.do', {
           params: {
             username: this.form.loginname,
             password: this.form.password,
@@ -332,7 +341,7 @@
             if (response.data.status == 1) {
               this.$router.go(0)
             } else {
-              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+              this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
               this.vailForm.loginname.message = response.data.message
               this.vailForm.loginname.warning = true
             }
@@ -366,8 +375,7 @@
       },
       /* 获取当前用户还能购买的磁盘数量 */
       getDiskLimit () {
-        var url = '../user/userSourceManager.do?zoneId=' + this.zone
-        console.log(url)
+        var url = 'http://localhost:8082/ruicloud/user/userSourceManager.do?zoneId=' + this.zone
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskLimit = response.data.result[3].items[0].total - response.data.result[3].items[0].used
@@ -375,14 +383,22 @@
           }
         })
       },
-      /* 改变磁盘列表内容，查询价格（由于vue监听数组只监听几种变异方法，所以需要用splice()） */
-      changeDiskList (index, value) {
+      /* 改变磁盘类型，查询价格（由于vue监听数组只监听几种变异方法，所以需要用splice()） */
+      changeDiskType (index, value) {
         this.diskList[index].diskType = value
         var params = {
           diskType: value,
           diskSize: this.diskList[index].diskSize
         }
         // 第一种：Vue.set(this.diskList, index, value)
+        this.diskList.splice(index, 1, params)
+      },
+      /* 改变磁盘容量，查询价格 */
+      changeDiskSize (index, value) {
+        var params = {
+          diskType: this.diskList[index].diskType,
+          diskSize: value
+        }
         this.diskList.splice(index, 1, params)
       },
       /* 查询磁盘价格 */
@@ -394,7 +410,7 @@
           diskType += item.diskType + ','
           diskSize += item.diskSize + ','
         })
-        this.$http.post('../device/QueryBillingPrice.do', {
+        this.$http.post('http://localhost:8082/ruicloud/device/QueryBillingPrice.do', {
           cpunum: 0 + '',
           memory: 0 + '',
           disk: diskSize.substring(0, diskSize.length - 1),
@@ -427,9 +443,7 @@
     watch: {
       /* 监听磁盘列表变化，查询价格 */
       diskList () {
-        if (this.diskList.length != 0) {
-          this.queryDiskPrice()
-        }
+        this.queryDiskPrice()
       },
       /* 监听计费方式变化，查询价格 */
       timeType () {
@@ -658,7 +672,8 @@
       }
     }
   }
-   /* 登录框 */
+
+  /* 登录框 */
   .modalBody {
     height: 55%;
     form {
@@ -733,6 +748,7 @@
       outline: none;
     }
   }
+
   .modalFooter {
     padding-top: 10px;
     height: 32%;

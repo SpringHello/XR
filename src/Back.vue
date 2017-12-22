@@ -116,7 +116,7 @@
 <script>
   import $store from './vuex'
   import {mapState} from 'vuex'
-  import axios from 'axios'
+  // import axios from 'axios'
   import debounce from 'throttle-debounce/debounce'
   export default {
     name: 'back',
@@ -181,9 +181,9 @@
     beforeRouteEnter(to, from, next){
       // 获取所有后台需要的基本信息
       // 获取用户信息
-      //var userInfo = axios.get('user/GetUserInfo.do')
+      // var userInfo = axios.get('user/GetUserInfo.do')
       // 获取zone信息
-      //var zoneList = axios.get('information/zone.do')
+      // var zoneList = axios.get('information/zone.do')
 
       $store.commit('setZoneList', [
         {
@@ -235,7 +235,7 @@
         }
       })
       next()
-      /*Promise.all([userInfo, zoneList]).then(values => {
+      /* Promise.all([userInfo, zoneList]).then(values => {
        $store.commit('setZoneList', values[1].data.result)
        if (values[0].status == 200 && values[0].data.status == 1) {
        $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
@@ -249,7 +249,7 @@
        next(vm => {
        vm.$router.push({path: '/ruicloud/login'})
        })
-       })*/
+       }) */
     },
     created(){
     },

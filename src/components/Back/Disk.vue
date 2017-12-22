@@ -458,7 +458,7 @@
       },
       checkSelect(){
         if (this.diskSelection == null) {
-          this.$Message.info("请选择需要操作的硬盘")
+          this.$Message.info('请选择需要操作的硬盘')
           return false
         }
         return true
