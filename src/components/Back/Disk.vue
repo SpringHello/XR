@@ -38,35 +38,34 @@
         <span class="universal-modal-title">新建硬盘</span>
       </p>
       <div class="universal-modal-content-flex">
-        <Form :model="diskForm">
-          <Form-item label="硬盘名称">
+        <Form :model="diskForm" :rules="newRuleValidate" ref="newDisk">
+          <Form-item label="硬盘名称" prop="diskName">
             <Input v-model="diskForm.diskName" placeholder="小于20位数字或字母"></Input>
           </Form-item>
-          <Form-item label="类型">
-            <Select v-model="diskForm.diskType" placeholder="请选择" @on-change="changeDiskType">
+          <Form-item label="类型" prop="diskType">
+            <Select v-model="diskForm.diskType" placeholder="请选择">
               <Option v-for="item in diskTypeList" :key="item.value" :value="item.value">{{ item.label }}
               </Option>
             </Select>
           </Form-item>
-          <Form-item label="购买方式">
-            <Select v-model="diskForm.diskWay" placeholder="请选择" @on-change="changeDiskTimeType">
+          <Form-item label="购买方式" prop="timeType">
+            <Select v-model="diskForm.timeType" placeholder="请选择" @on-change="diskForm.timeValue=''">
               <Option v-for="item in customTimeOptions.renewalType" :key="item.value" :value="item.value">
                 {{item.label}}
               </Option>
             </Select>
           </Form-item>
-          <Form-item label="购买时长" v-if="diskForm.diskWay!='current'">
-            <Select v-model="diskForm.diskTime" placeholder="请选择"
-                    @on-change="changeDiskTimeValue">
-              <Option v-for="item in customTimeOptions[diskForm.diskWay]" :value="item.value"
+          <Form-item label="购买时长" v-if="diskForm.timeType!='current'" prop="timeValue">
+            <Select v-model="diskForm.timeValue" placeholder="请选择">
+              <Option v-for="item in customTimeOptions[diskForm.timeType]" :value="item.value"
                       :label="item.label" :key="item.value">
                 {{item.label }}
               </Option>
             </Select>
           </Form-item>
-          <Form-item label="容量" style="width:100%">
+          <Form-item label="容量" style="width:100%;user-select: none">
             <i-slider
-              v-model="diskForm.capacity"
+              v-model="diskForm.diskSize"
               unit="G"
               :min=20
               :max=1000
@@ -74,26 +73,26 @@
               :points="[250,500]"
               style="width:300px;vertical-align: middle;">
             </i-slider>
-            <InputNumber :max="1000" :min="20" v-model="diskForm.capacity" :step=10 :editable="false"
-                         style="font-size: 16px;height: 30px;width: 80px;margin-left: 20px"></InputNumber>
+            <InputNumber :max="1000" :min="20" v-model="diskForm.diskSize" :step=10 :editable="false"
+                         style="margin-left: 20px"></InputNumber>
             <span style="margin-left: 10px">GB</span>
           </Form-item>
         </Form>
         <div style="float: right">
-          <span style="font-family: MicrosoftYaHei;font-size: 14px;">资费：</span><span
-          style="font-family: MicrosoftYaHei;font-size: 24px;color: #2A99F2;"> ￥{{ expenses }}</span>
-          <span v-if="diskForm.diskWay=='current'">/小时</span>
+          <span class="universal-middle">资费：</span>
+          <span class="universal-price"> ￥{{ expenses }}</span>
+          <span v-if="diskForm.timeType=='current'">/小时</span>
           <p v-if="coupon>0">已优惠：<span>（￥{{ coupon }}）</span></p>
         </div>
         <div style="clear: both"></div>
       </div>
       <div slot="footer">
         <Button type="ghost" @click="showModal.newDisk = false">取消</Button>
-        <Button type="primary" @click="newDisk_ok">确定
+        <Button type="primary" @click="_checkNewForm">确定
         </Button>
       </div>
     </Modal>
-    <Modal v-model="showModal.diskUnload" width="590" :scrollable="true">
+    <!-- Modal v-model="showModal.diskUnload" width="590" :scrollable="true">
       <div slot="header"
            style="color:#666666;font-family: MicrosoftYaHei;font-size: 16px;color: #666666;line-height: 24px;">
         卸载硬盘
@@ -196,7 +195,7 @@
                 @click="mountDisk_ok">确认挂载
         </Button>
       </div>
-    </Modal>
+    </Modal -->
   </div>
 </template>
 
@@ -206,6 +205,7 @@
   export default{
     data(){
       return {
+        // 磁盘列包含信息
         diskColumns: [
           {
             type: 'radio',
@@ -237,15 +237,15 @@
             title: '状态',
             key: 'status',
             render: (h, params) => {
-              const row = params.row;
-              const text = row.status === 0 ? '欠费' : (row.status === 1 && row.mounton == '' && row.mountonname == '') ? '可挂载' : (row.status === 1 && row.mounton != '' && row.mountonname != '') ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '异常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '卸载中' : row.status === 5 ? '挂载中' : '';
+              const row = params.row
+              const text = row.status === 0 ? '欠费' : (row.status === 1 && row.mounton == '' && row.mountonname == '') ? '可挂载' : (row.status === 1 && row.mounton != '' && row.mountonname != '') ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '异常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '卸载中' : row.status === 5 ? '挂载中' : ''
               if (row.status == 2 || row.status == 3 || row.status == 4 || row.status == 5) {
                 return h('div', {}, [h('Spin', {
                   style: {
                     display: "inline-block",
                     marginRight: "10px",
                   }
-                }), h('span', {}, text)]);
+                }), h('span', {}, text)])
               } else {
                 return h('span', text)
               }
@@ -277,24 +277,46 @@
             key: 'createtime'
           }
         ],
+        // 磁盘数据
         diskData: [],
+        // 控制模态框是否显示
         showModal: {
-          newDisk: false,
-          diskUnload: false,
-          modificationDisk: false,
-          dilatationDisk: false,
-          deleteDisk: false,
-          mountDisk: false,
+          // 新增磁盘模态框
+          newDisk: false
+          /*
+           diskUnload: false,
+           modificationDisk: false,
+           dilatationDisk: false,
+           deleteDisk: false,
+           mountDisk: false,
+           */
         },
+        // 新增磁盘表单
         diskForm: {
           diskName: '',
-          diskAreaList: [],
           diskType: '',
-          diskWay: '',
-          capacity: 20,
-          diskTime: '',
+          timeType: '',
+          timeValue: '',
+          diskSize: 20
         },
+        // 新增磁盘表单的验证规则
+        newRuleValidate: {
+          diskName: [
+            {required: true, message: '请输入vpc名称', trigger: 'blur'}
+          ],
+          diskType: [
+            {required: true, message: '请选择磁盘类型', trigger: 'change'}
+          ],
+          timeType: [
+            {required: true, message: '请选择购买方式', trigger: 'change'}
+          ],
+          timeValue: [
+            {required: true, message: '请选择购买时长', trigger: 'change'}
+          ]
+        },
+        // 时间配置对象
         customTimeOptions,
+        // 磁盘类型数组
         diskTypeList,
         expenses: 0,
         diskSelection: null,
@@ -305,13 +327,22 @@
         diskSizeExpenses: 0,
         coupon: 0,
         mountHost: '',
-        mountHostList: [],
+        mountHostList: []
       }
     },
     created(){
-      this.listDisk();
+      this.listDisk()
     },
     methods: {
+      // 验证新建磁盘的表单
+      _checkNewForm(){
+        this.$refs.newDisk.validate((valid) => {
+          if (valid) {
+            // 表单验证通过，调用创建磁盘方法
+            this.newDisk_ok()
+          }
+        })
+      },
       listDisk(){
         this.$http.get('Disk/listDisk.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -319,19 +350,19 @@
               if (item.status != 1)
                 item._disabled = true
             })
-            this.diskData = response.data.result;
+            this.diskData = response.data.result
             this.diskSelection = null
           }
         })
       },
       newDisk(){
-        this.showModal.newDisk = true;
+        this.showModal.newDisk = true
         this.diskForm.diskAreaList = this.$store.state.zoneOptions
       },
       mount(){
         if (this.checkSelect() == true) {
           if (this.diskSelection.mounton == '' && this.diskSelection.mountonname == '' && this.diskSelection.status == 1) {
-            this.showModal.mountDisk = true;
+            this.showModal.mountDisk = true
             this.$http.get('Disk/listAttachComputer.do?diskid=' + this.diskSelection.diskid).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.mountHostList = response.data.result
@@ -340,24 +371,25 @@
           } else {
             this.$Modal.error({
               content: '所选硬盘不能挂载主机',
-            });
+            })
           }
         }
       },
       unload(){
         if (this.checkSelect() == true) {
           if (this.diskSelection.mounton != '' && this.diskSelection.mountonname != '' && this.diskSelection.status == 1) {
-            this.showModal.diskUnload = true;
-            this.diskname = this.diskSelection.diskname;
-            this.hostname = this.diskSelection.mountonname;
+            this.showModal.diskUnload = true
+            this.diskname = this.diskSelection.diskname
+            this.hostname = this.diskSelection.mountonname
           } else {
             this.$Modal.error({
               content: '所选硬盘没有挂载主机，无法卸载',
-            });
+            })
           }
         }
       },
-      queryDiskprice: debounce(500, function () {
+      // 新建磁盘价格查询
+      queryDiskPrice: debounce(500, function () {
         this.$http.post('device/QueryBillingPrice.do', {
           cpunum: 0 + '',
           memory: 0 + '',
@@ -368,16 +400,17 @@
           disk_type: this.diskForm.diskType + '',
         }).then(response => {
           if (response.status == 200 && response.statusText == 'OK') {
-            console.log(response);
-            this.expenses = response.data.cost;
+            console.log(response)
+            this.expenses = response.data.cost
             if (response.data.coupon) {
-              this.coupon = response.data.coupon;
+              this.coupon = response.data.coupon
             } else {
-              this.coupon = 0;
+              this.coupon = 0
             }
           }
         })
       }),
+      // 磁盘扩容价格查询
       queryDiskCost: debounce(500, function () {
         this.$http.get('Disk/UpDiskConfigCost.do?diskid=' + this.diskSelection.diskid + '&disksize=' + this.capacitys).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -386,35 +419,17 @@
         })
       }),
       newDisk_ok(){
-        this.$http.get('Disk/createVolume.do?zoneid=' + this.diskForm.diskArea + '&size=' + this.diskForm.capacity + '&name=' + this.diskForm.diskName + '&diskofferingid=' + this.diskForm.diskType + '&value=' + this.diskForm.diskWay + '&timevalue=' + this.diskForm.diskTime).then(response => {
+        // 默认zoneList第一个元素为当前选中区域，以后会修改
+        var url = `Disk/createVolume.do?zoneid=${this.$store.state.zoneList[0].zoneid}&size=${this.diskForm.diskSize}&name=${this.diskForm.diskName}&diskofferingid=${this.diskForm.diskType}&value=${this.diskForm.timeType}&timevalue=${this.diskForm.timeValue}`
+        this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$store.commit("setSelect", "order")
-            this.$router.push("order")
+            // this.$store.commit("setSelect", "order")
+            this.$router.push('order')
           }
         })
       },
-      changeDiskTimeType(){
-        if (this.diskForm.diskWay == 'current') {
-          this.diskForm.diskTime = 1
-          if (this.diskForm.diskType != '') {
-            this.queryDiskprice()
-          }
-        } else {
-          this.diskForm.diskTime = ''
-        }
-      },
-      changeDiskTimeValue(){
-        if (this.diskForm.diskType != '') {
-          this.queryDiskprice()
-        }
-      },
-      changeDiskType(){
-        if (this.diskForm.diskWay != '' && this.diskForm.diskTime != '') {
-          this.queryDiskprice()
-        }
-      },
       selectDisk(currentRow){
-        this.diskSelection = currentRow;
+        this.diskSelection = currentRow
       },
       /*      backupsDisk(){
        if (this.checkSelect() == true) {
@@ -422,15 +437,15 @@
        },*/
       dilatationDisk(){
         if (this.checkSelect() == true) {
-          this.capacitys = this.diskSelection.disksize;
+          this.capacitys = this.diskSelection.disksize
           this.capacitysMin = this.capacitys
-          this.showModal.dilatationDisk = true;
+          this.showModal.dilatationDisk = true
         }
       },
       modificationDisk(){
         if (this.checkSelect() == true) {
-          this.showModal.modificationDisk = true;
-          this.diskname = this.diskSelection.diskname;
+          this.showModal.modificationDisk = true
+          this.diskname = this.diskSelection.diskname
         }
       },
       deleteDisk(){
@@ -441,14 +456,14 @@
               okText: '卸载硬盘',
               cancelText: '取消',
               onOk: () => {
-                this.unload();
+                this.unload()
               },
               onCancel: () => {
               }
-            });
+            })
           } else if (this.diskSelection.caseType != 1 && this.diskSelection.caseType != 2) {
-            this.showModal.deleteDisk = true;
-            this.diskname = this.diskSelection.diskname;
+            this.showModal.deleteDisk = true
+            this.diskname = this.diskSelection.diskname
           } else {
             this.$Modal.info({
               content: '包年包月资费资源无法删除'
@@ -490,12 +505,12 @@
             item.status = 4
         })
         this.$http.get('Disk/detachVolume.do?diskid=' + this.diskSelection.id + '&virtualmachineid=' + this.diskSelection.mounton).then(response => {
-          this.listDisk();
+          this.listDisk()
           if (response.status == 200 && response.statusText == 'OK') {
             this.$Message.success({
               content: response.data.message,
               duration: 5
-            });
+            })
           }
         })
       },
@@ -505,9 +520,9 @@
             this.$Message.success({
               content: response.data.message,
               duration: 5
-            });
-            this.showModal.modificationDisk = false;
-            this.listDisk();
+            })
+            this.showModal.modificationDisk = false
+            this.listDisk()
           }
         })
       },
@@ -522,8 +537,8 @@
             this.$Message.success({
               content: response.data.message,
               duration: 5
-            });
-            this.listDisk();
+            })
+            this.listDisk()
           }
         })
       },
@@ -534,39 +549,45 @@
             item.status = 5
         })
         this.$http.get('Disk/attachVolume.do?diskid=' + this.diskSelection.id + '&virtualmachineid=' + this.mountHost).then(response => {
-          this.listDisk();
+          this.listDisk()
           if (response.status == 200 && response.statusText == 'OK') {
             this.$Message.info({
               content: response.data.message,
               duration: 5
-            });
+            })
           }
         })
       },
       adjustDisk_ok(){
         this.$http.get('Disk/UpDiskConfig.do?diskid=' + this.diskSelection.diskid + '&disksize=' + this.capacitys).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$store.commit("setSelect", "order")
-            this.$router.push("order")
+            // this.$store.commit("setSelect", "order")
+            this.$router.push('order')
           }
         })
-      },
-    },
-    computed: {
-      auth(){
-        return this.$store.state.personalAuth == 0 || this.$store.state.enterpriseAuth == 0
-      },
-    },
-    watch: {
-      'diskForm.capacity'(value, oldValue){
-        if (this.diskForm.diskType != '' && this.diskForm.diskWay != '' && this.diskForm.diskTime != '' && this.diskForm.diskArea) {
-          this.queryDiskprice()
-        }
-      },
-      capacitys(){
-        this.queryDiskCost();
       }
     },
+    computed: {
+      // 该计算属性用于解决观测对象时currentValue与oldValue指向同一对象的问题，没有其他用处
+      copyDiskForm(){
+        var obj = {}
+        for (var i in this.diskForm) {
+          obj[i] = this.diskForm[i]
+        }
+        return obj
+      }
+    },
+    watch: {
+      // 观测计算属性变化，如果不是名称的变化则必须重新计算价格
+      'copyDiskForm': {
+        handler: function (val, oldVal) {
+          if (val.diskName === oldVal.diskName) {
+            this.queryDiskPrice()
+          }
+        },
+        deep: true
+      }
+    }
   }
 </script>
 
