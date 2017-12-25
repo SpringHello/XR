@@ -391,16 +391,15 @@
       // 新建磁盘价格查询
       queryDiskPrice: debounce(500, function () {
         this.$http.post('device/QueryBillingPrice.do', {
-          cpunum: 0 + '',
+          cpuNum: 0 + '',
           memory: 0 + '',
-          disk: this.diskForm.capacity + '',
-          zoneId: this.diskForm.diskArea,
-          value: this.diskForm.diskWay + '',
-          timevalue: this.diskForm.diskTime + '',
-          disk_type: this.diskForm.diskType + '',
+          diskSize: this.diskForm.diskSize + '',
+          zoneId: this.$store.state.zoneList[0].zoneid,
+          timeType: this.diskForm.timeType + '',
+          timeValue: this.diskForm.timeValue + '',
+          diskType: this.diskForm.diskType + '',
         }).then(response => {
-          if (response.status == 200 && response.statusText == 'OK') {
-            console.log(response)
+          if (response.status == 200 && response.data.status == 1) {
             this.expenses = response.data.cost
             if (response.data.coupon) {
               this.coupon = response.data.coupon
@@ -420,7 +419,7 @@
       }),
       newDisk_ok(){
         // 默认zoneList第一个元素为当前选中区域，以后会修改
-        var url = `Disk/createVolume.do?zoneid=${this.$store.state.zoneList[0].zoneid}&size=${this.diskForm.diskSize}&name=${this.diskForm.diskName}&diskofferingid=${this.diskForm.diskType}&value=${this.diskForm.timeType}&timevalue=${this.diskForm.timeValue}`
+        var url = `Disk/createVolume.do?zoneId=${this.$store.state.zoneList[0].zoneid}&diskSize=${this.diskForm.diskSize}&diskName=${this.diskForm.diskName}&diskOfferingId=${this.diskForm.diskType}&timeType=${this.diskForm.timeType}&timeValue=${this.diskForm.timeValue}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             // this.$store.commit("setSelect", "order")
@@ -581,8 +580,12 @@
       // 观测计算属性变化，如果不是名称的变化则必须重新计算价格
       'copyDiskForm': {
         handler: function (val, oldVal) {
-          if (val.diskName === oldVal.diskName) {
-            this.queryDiskPrice()
+          if (val.timeType == 'current' || (val.timeType && val.timeValue) && val.diskType) {
+            if (val.diskName === oldVal.diskName) {
+              this.expenses = '正在计算'
+              this.coupon = 0
+              this.queryDiskPrice()
+            }
           }
         },
         deep: true

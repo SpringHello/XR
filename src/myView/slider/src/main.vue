@@ -76,7 +76,7 @@
         return {width: position}
       },
       pointActive(index){
-        return this.value > this.innerPoints[index]
+        return this.value >= this.innerPoints[index]
       },
       // 触发change事件
       refresh(){
