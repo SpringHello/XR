@@ -16,28 +16,29 @@
           </div>
           <div class="detail-info">
             <ul>
-              <li>ID:{{detailinfo.id}}</li>
-              <li>区域：{{detailinfo.regin}}</li>
-              <li>备注：{{detailinfo.remarks}}</li>
+              <li>ID:{{data.vpcid}}</li>
+              <li>区域：{{data.zonename}}</li>
+              <li>备注：{{data.vpcdescript}}</li>
             </ul>
             <ul>
-              <li>地址范围:{{detailinfo.addressRange}}</li>
-              <li>状态：{{detailinfo.status ? "正常" : "不正常"}}</li>
+              <li>地址范围:{{data.cidr}}</li>
+              <li>状态：{{data.status ? "正常" : "不正常"}}</li>
             </ul>
             <ul>
-              <li>计费模式:{{detailinfo.chargingPattern}}</li>
-              <li>到期时间：{{detailinfo.endtime}}</li>
-              <li>创建时间：{{detailinfo.creattime}}</li>
+              <li>计费模式: 空</li>
+              <li>到期时间：{{data.endtime}}</li>
+              <li>创建时间：{{data.creattime}}</li>
             </ul>
           </div>
         </div>
         <Tabs type="card" :animated="false" class="subnet-content">
           <TabPane label="子网">
             <Button type="primary" class="btn-add">添加子网</Button>
-            <div class="table-wrap" v-for="(item,index) in subnetdata" :key="index">
+            <div class="table-wrap" v-for="(item,index) in data.ipsList" :key="index">
               <ul>
                 <li>
-                  <div class="clock-show icon" @click="toggle(item)" :class="{rotateup:item.isShow,rotatedown:!item.isShow}"></div>
+                  <div class="clock-show icon" @click="toggle(item)"
+                       :class="{rotateup:item._show,rotatedown:!item._show}"></div>
                   {{item.name}}
                 </li>
                 <li>网络地址：{{item.network}}</li>
@@ -47,7 +48,7 @@
                 <li>负载均衡：<span class="blue">{{item.loadbalance}}</span></li>
                 <li><span class="blue">添加主机</span><span class="vertical-line">|</span><span class="blue">更多</span></li>
               </ul>
-              <Table :columns="columns1" :data="hostdata" v-show="item.isShow" class="table"></Table>
+              <Table :columns="vmColumns" :data="item.vmList" v-show="item._show" class="table"></Table>
             </div>
           </TabPane>
           <TabPane label="网络拓扑">网络拓扑</TabPane>
@@ -59,45 +60,24 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from 'axios'
   export default {
     name: 'vpc',
+    beforeRouteEnter(to, from, next){
+      var vpcId = sessionStorage.getItem('vpcId')
+      axios.get(`information/getVpcTopo.do?vpcId=${vpcId}`).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          next(vm => {
+            vm.setData(response)
+          })
+        } else {
+          next()
+        }
+      })
+    },
     data() {
       return {
-        detailinfo: {
-          id: '默认私有网络VPC',
-          regin: '北方一区',
-          remarks: '备注相关信息',
-          addressRange: '192.168.0.0/16',
-          status: 0,
-          chargingPattern: 1,
-          endtime: '2017-11-20 08：50：08,',
-          creattime: '2017-11-20 08：50：08'
-        },
-        subnetdata: [
-          {
-            name: '子网网络名称',
-            network: '192.168.0.0/16',
-            netport: '192.168.0.0',
-            status: 1,
-            firewall: '防火墙名称',
-            loadbalance: 'lb123',
-            isShow: false
-          },
-          {
-            name: '子网网络名称',
-            network: '192.168.0.0/16',
-            netport: '192.168.0.0',
-            status: 1,
-            firewall: '防火墙名称',
-            loadbalance: 'lb123',
-            isShow: false
-          }
-        ],
-        hostdata: [
-          {id: 'TradeCode21', name: '主机1', status: 1, address: '192.168.0.0/16'},
-          {id: 'TradeCode212', name: '主机12', status: 3, address: '192.168.0.0/16'}
-        ],
-        columns1: [
+        vmColumns: [
           {
             title: '主机Id',
             key: 'id'
@@ -138,12 +118,20 @@
               ])
             }
           }
-        ]
+        ],
+        data: {}
       }
     },
     methods: {
+      setData(response){
+        response.data.result.ipsList.forEach(item => {
+          item._show = false
+        })
+        this.data = response.data.result
+        console.log(this.data)
+      },
       toggle: function (item) {
-        item.isShow = !item.isShow
+        item._show = !item._show
       }
     }
   }

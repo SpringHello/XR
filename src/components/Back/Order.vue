@@ -102,7 +102,7 @@
           {
             type: 'selection',
             width: 80,
-            align: 'center',
+            align: 'center'
           },
           {
             title: '资源',
