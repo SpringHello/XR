@@ -428,7 +428,7 @@
         this.$http.post('http://localhost:8082/ruicloud/device/queryIpPrice.do', {
           brand: this.publicIP + '',
           zoneId: this.zone,
-          value: this.timeType + '',
+          timeType: this.timeType + '',
           timeValue: this.time + ''
         }).then(response => {
           if (response.status == 200 && response.statusText == 'OK') {
