@@ -411,13 +411,13 @@
           diskSize += item.diskSize + ','
         })
         this.$http.post('http://localhost:8082/ruicloud/device/QueryBillingPrice.do', {
-          cpunum: 0 + '',
+          cpuNum: 0 + '',
           memory: 0 + '',
-          disk: diskSize.substring(0, diskSize.length - 1),
+          diskSize: diskSize.substring(0, diskSize.length - 1),
           zoneId: this.zone,
-          value: this.timeType + '',
-          timevalue: this.time + '',
-          disk_type: diskType.substring(0, diskType.length - 1)
+          timeType: this.timeType + '',
+          timeValue: this.time + '',
+          diskType: diskType.substring(0, diskType.length - 1)
         }).then(response => {
           if (response.status == 200 && response.statusText == 'OK') {
             this.diskPrice = response.data.cost

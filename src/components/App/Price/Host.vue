@@ -830,13 +830,13 @@
           diskSize += item.diskSize + ','
         })
         this.$http.post('http://localhost:8082/ruicloud/device/QueryBillingPrice.do', {
-          cpunum: 0 + '',
+          cpuNum: 0 + '',
           memory: 0 + '',
-          disk: diskSize.substring(0, diskSize.length - 1),
+          diskSize: diskSize.substring(0, diskSize.length - 1),
           zoneId: this.zone,
-          value: this.timeType + '',
-          timevalue: this.time + '',
-          disk_type: diskType.substring(0, diskType.length - 1)
+          timeType: this.timeType + '',
+          timeValue: this.time + '',
+          diskType: diskType.substring(0, diskType.length - 1)
         }).then(response => {
           if (response.status == 200 && response.statusText == 'OK') {
             this.customDiskPrice = response.data.cost
@@ -853,7 +853,7 @@
         this.$http.post('http://localhost:8082/ruicloud/device/queryIpPrice.do', {
           brand: this.publicIP + '',
           zoneId: this.zone,
-          value: this.timeType + '',
+          timeType: this.timeType + '',
           timeValue: this.time + ''
         }).then(response => {
           if (response.status == 200 && response.statusText == 'OK') {
@@ -875,13 +875,13 @@
         switch (this.quickConfig) {
           case '1':
             params = {
-              cpunum: 1 + '',
+              cpuNum: 1 + '',
               memory: 1 + '',
-              disk: 50 + '',
+              diskSize: 50 + '',
               zoneId: zoneId,
-              value: value + '',
-              timevalue: timevalue + '',
-              disk_type: 'sas'
+              timeType: value + '',
+              timeValue: timevalue + '',
+              diskType: 'sas'
             }
             this.publicIP = 1
             this.queryHost(params)
@@ -889,13 +889,13 @@
             break
           case '2':
             params = {
-              cpunum: 2 + '',
+              cpuNum: 2 + '',
               memory: 4 + '',
-              disk: 50 + '',
+              diskSize: 50 + '',
               zoneId: zoneId,
-              value: value + '',
-              timevalue: timevalue + '',
-              disk_type: 'sas'
+              timeType: value + '',
+              timeValue: timevalue + '',
+              diskType: 'sas'
             }
             this.publicIP = 1
             this.queryHost(params)
@@ -903,13 +903,13 @@
             break
           case '3':
             params = {
-              cpunum: 4 + '',
+              cpuNum: 4 + '',
               memory: 4 + '',
-              disk: 50 + '',
+              diskSize: 50 + '',
               zoneId: zoneId,
-              value: value + '',
-              timevalue: timevalue + '',
-              disk_type: 'ssd'
+              timeType: value + '',
+              timeValue: timevalue + '',
+              diskType: 'ssd'
             }
             this.publicIP = 2
             this.queryHost(params)
@@ -917,13 +917,13 @@
             break
           case '4':
             params = {
-              cpunum: 4 + '',
+              cpuNum: 4 + '',
               memory: 8 + '',
-              disk: 50 + '',
+              diskSize: 50 + '',
               zoneId: zoneId,
-              value: value + '',
-              timevalue: timevalue + '',
-              disk_type: 'ssd'
+              timeType: value + '',
+              timeValue: timevalue + '',
+              diskType: 'ssd'
             }
             this.publicIP = 2
             this.queryHost(params)
@@ -931,49 +931,49 @@
             break
           case '5':
             params = {
-              cpunum: 1 + '',
+              cpuNum: 1 + '',
               memory: 1 + '',
-              disk: 50 + '',
+              diskSize: 50 + '',
               zoneId: zoneId,
-              value: value + '',
-              timevalue: timevalue + '',
-              disk_type: 'sas'
+              timeType: value + '',
+              timeValue: timevalue + '',
+              diskType: 'sas'
             }
             this.queryHost(params)
             break
           case '6':
             params = {
-              cpunum: 2 + '',
+              cpuNum: 2 + '',
               memory: 4 + '',
-              disk: 50 + '',
+              diskSize: 50 + '',
               zoneId: zoneId,
-              value: value + '',
-              timevalue: timevalue + '',
-              disk_type: 'sas'
+              timeType: value + '',
+              timeValue: timevalue + '',
+              diskType: 'sas'
             }
             this.queryHost(params)
             break
           case '7':
             params = {
-              cpunum: 4 + '',
+              cpuNum: 4 + '',
               memory: 4 + '',
-              disk: 50 + '',
+              diskSize: 50 + '',
               zoneId: zoneId,
-              value: value + '',
-              timevalue: timevalue + '',
-              disk_type: 'ssd'
+              timeType: value + '',
+              timeValue: timevalue + '',
+              diskType: 'ssd'
             }
             this.queryHost(params)
             break
           case '8':
             params = {
-              cpunum: 4 + '',
+              cpuNum: 4 + '',
               memory: 8 + '',
-              disk: 50 + '',
+              diskSize: 50 + '',
               zoneId: zoneId,
-              value: value + '',
-              timevalue: timevalue + '',
-              disk_type: 'ssd'
+              timeType: value + '',
+              timeValue: timevalue + '',
+              diskType: 'ssd'
             }
             this.queryHost(params)
             break
