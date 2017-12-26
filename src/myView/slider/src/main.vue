@@ -50,28 +50,12 @@
       }
     },
     data(){
-      console.log('create')
-      // 去除一些明显不可能的断点
-      var innerPoints = this.points.filter(item => {
-        return item > this.min && item < this.max
-      })
-      // 最大值必须加上断点
-      innerPoints.push(this.max)
-      // 每个断点距离前一个断点的距离
-      var processPosition = innerPoints.map((value, index, arr) => {
-        if (index) {
-          return value - arr[index - 1]
-        }
-        return value - this.min
-      })
-      return {
-        innerPoints,
-        processPosition
-      }
+      return {}
     },
     methods: {
       // 断点占据百分比的位置，注意：point是该断点离上一个断点的位置
       pointPosition(point){
+        // console.log(point)
         let position = point / (this.max - this.min) * 100 + '%'
         return {width: position}
       },
@@ -90,6 +74,24 @@
     computed: {
       $sliderSize(){
         return this.$refs.pole.clientWidth
+      },
+      innerPoints(){
+        // 去除一些明显不可能的断点
+        var innerPoints = this.points.filter(item => {
+          return item > this.min && item < this.max
+        })
+        // 最大值必须加上断点
+        innerPoints.push(this.max)
+        return innerPoints
+      },
+      processPosition(){
+        // 每个断点距离前一个断点的距离
+        return this.innerPoints.map((value, index, arr) => {
+          if (index) {
+            return value - arr[index - 1]
+          }
+          return value - this.min
+        })
       }
     },
     components: {
@@ -111,7 +113,7 @@
   }
 
   .points-style {
-    background: #EFEFEF;;
+    background: #f5f5f5;;
     height: 100%;
     text-align: right;
     font-size: 16px;
@@ -136,7 +138,7 @@
   .points {
     position: absolute;
     z-index: 100;
-    right: 5px;
+    right: 8px;
 
     font-size: 10px;
   }
