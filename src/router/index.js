@@ -39,6 +39,7 @@ const Disk = () => import('@/components/Back/Disk')
 const Vpc = () => import('@/components/Back/Vpc')
 const VpcManage = () => import('@/components/Back/VpcManage')
 const Ip = () => import('@/components/Back/Ip')
+const Order = () => import('@/components/Back/Order')
 
 // 404
 const notFindPage = () => import('@/components/404')
@@ -101,7 +102,8 @@ var router = new Router({
         {path: 'host', name: 'host', component: Host},
         {path: 'vpc', name: 'vpc', component: Vpc},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
-        {path: 'ip', name: 'ip', component: Ip}
+        {path: 'ip', name: 'ip', component: Ip},
+        {path: 'order', name: 'order', component: Order}
       ]
     },
     {

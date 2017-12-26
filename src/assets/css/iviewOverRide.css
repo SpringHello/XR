@@ -27,15 +27,6 @@
   font-size: 24px;
 }
 
-.vpc-manage .ivu-tabs.ivu-tabs-card > .ivu-tabs-bar .ivu-tabs-tab {
-  margin-right: 0;
-}
-
-.ivu-modal-header, .ivu-modal-footer {
-  margin: 0px 14px;
-  padding: 14px 0px;
-}
-
 /* 每行两列form表单样式 */
 .universal-modal-content-flex form {
   display: flex;
@@ -55,4 +46,81 @@
 .universal-modal-content {
 
 }
+
+/* 重置modal中header,body,footer的padding */
+.ivu-modal-header {
+  padding: 20px 20px 0;
+}
+
+.ivu-modal-body {
+  padding: 20px;
+}
+
+.ivu-modal-footer {
+  padding: 0 20px 20px;
+}
+
+/* 小的提示框样式*/
+.modal-content-s {
+  display: flex;
+  padding: 10px 10px 0;
+  font-size: 14px;
+  line-height: 24px;
+  color: #666666;
+}
+
+.modal-footer-s {
+  font-size: 16px;
+  padding: 0 10px 10px;
+}
+
+/* 去掉modal头部底部border */
+.ivu-modal-footer, .ivu-modal-header {
+  border: none;
+}
+
+/* 增加modal头部底部的border */
+.modal-header-border {
+  padding-bottom: 40px;
+  border-bottom: solid 1px #D8D8D8;
+}
+
+.modal-footer-border {
+  padding-top: 20px;
+  border-top: solid 1px #D8D8D8;
+}
+
+/* 公共样式库 */
+.f24 {
+  font-size: 24px;
+}
+
+.f16 {
+  font-size: 16px;
+}
+
+.mr10 {
+  margin-right: 10px;
+}
+
+.orange {
+  color: #F56A00
+}
+
+.yellow {
+  color: #FFBF00;
+}
+
+.mt10 {
+  margin-top: 10px;
+}
+
+.lh24 {
+  line-height: 24px;
+}
+
+.ivu-form-item-label {
+  display: inline-block;
+}
+
 

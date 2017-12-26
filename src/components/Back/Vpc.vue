@@ -13,9 +13,12 @@
           <Button type="primary" @click="modalList.addGateway = true">添加私有网关</Button>
           <Button type="primary">修改VPC</Button>
           <Button type="primary">删除VPC</Button>
+          <Button @click="modalList.rederror = true">红色叉叉</Button>
+          <Button @click="modalList.yellowdeltte = true">黄色感叹号</Button>
         </div>
         <div class="card-wrap">
-          <div class="card" v-for="(item,index) in netData" :key="index">
+          <div class="card" v-for="(item,index) in netData" :key="index" :class="{active:item._select}"
+               @click="radio(item)">
             <div class="content">
               <div class="item-wrap">
                 <div class="item item1">
@@ -38,7 +41,7 @@
             </div>
             <div class="card-bottom">
               <Button type="primary" class="btn-bgwhite">重启</Button>
-              <Button type="primary" @click="manage">管理</Button>
+              <Button type="primary" @click="manage(item)">管理</Button>
             </div>
           </div>
         </div>
@@ -47,11 +50,11 @@
 
     <!-- 新建vpc modal -->
     <Modal v-model="modalList.newVpc" width="550" :scrollable="true">
-      <p slot="header">
+      <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">新建VPC</span>
       </p>
       <div class="universal-modal-content-flex">
-        <Form :model="newForm" :rules="ruleValidate" ref="formValidate">
+        <Form :model="newForm" :rules="newRuleValidate" ref="newFormValidate">
           <FormItem label="vpc名称" prop="vpcName">
             <Input v-model="newForm.vpcName"></Input>
           </FormItem>
@@ -82,71 +85,92 @@
         </Form>
         <div>
           <span>是否需要绑定公网IP <Checkbox v-model="newForm.IPReq">&nbsp;</Checkbox></span>
-          <i-slider v-if="newForm.IPReq" v-model="newForm.IPSize" :min=1 :max=100 unit="M" :points="[20,50]"
-                    style="width:80%;vertical-align: middle;margin-right:18px;"></i-slider>
+          <div v-if="newForm.IPReq" style="margin-top: 10px;">
+            <i-slider v-model="newForm.IPSize" :min=1 :max=100 unit="M" :points="[20,50]"
+                      style="width:300px;vertical-align: middle;"></i-slider>
+            <InputNumber :max="100" :min="1" v-model="newForm.IPSize" :editable="false"
+                         style="margin-left: 20px"></InputNumber>
+            <span style="margin-left: 10px">M</span>
+          </div>
         </div>
       </div>
-      <div slot="footer">
-        <Button type="primary" @click="handleSubmit">完成配置</Button>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="handleNewSubmit">完成配置</Button>
       </div>
     </Modal>
-
     <!-- 添加私有网关 modal -->
     <Modal v-model="modalList.addGateway" width="550" :scrollable="true">
-      <p slot="header">
+      <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">添加私有网关</span>
       </p>
       <div class="universal-modal-content-flex">
-        <Form :model="newForm" :rules="ruleValidate" ref="formValidate">
-          <FormItem label="物理网络" prop="vpcName">
-            <Input v-model="newForm.vpcName"></Input>
+        <Form :model="addGatewayForm" :rules="gatewayRuleValidate" ref="gatewayFormValidate">
+          <FormItem label="物理网络" prop="network">
+            <Input v-model="addGatewayForm.network"></Input>
           </FormItem>
-          <FormItem label="地址范围" prop="vpc">
-            <Select v-model="newForm.vpc" placeholder="请选择">
-              <Option v-for="item in newForm.VPCOptions" :key="item" :value="item">{{item}}</Option>
-            </Select>
+          <FormItem label="VLAN/VNI" prop="VNI">
+            <Input v-model="addGatewayForm.VNI"></Input>
           </FormItem>
-          <FormItem label="VLAN/VNI" prop="desc">
-            <Input v-model="newForm.desc"></Input>
+          <FormItem label="IP地址" prop="IP">
+            <Input v-model="addGatewayForm.IP"></Input>
           </FormItem>
-          <FormItem label="IP地址" prop="timeType">
-            <Select v-model="newForm.timeType" @on-change="newForm.timeValue=''">
-              <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
-                      :key="item.value">{{ item.label }}
-              </Option>
-            </Select>
+          <FormItem label="网关" prop="gateway">
+            <Input v-model="addGatewayForm.gateway"></Input>
           </FormItem>
-          <FormItem label="网关" prop="timeValue" v-if="newForm.timeType!='current'">
-            <Select v-model="newForm.timeValue" @on-change="log">
-              <Option v-for="item in customTimeOptions[newForm.timeType]" :value="item.value" :key="item.value">
-                {{item.label}}
-              </Option>
-            </Select>
+          <FormItem label="网络掩码" prop="mask">
+            <Input v-model="addGatewayForm.mask"></Input>
           </FormItem>
-          <FormItem label="网络掩码" prop="timeType">
-            <Select v-model="newForm.timeType" @on-change="newForm.timeValue=''">
-              <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
-                      :key="item.value">{{ item.label }}
-              </Option>
-            </Select>
-          </FormItem>
-          <FormItem label="防火墙" prop="timeValue" v-if="newForm.timeType!='current'">
-            <Select v-model="newForm.timeValue" @on-change="log">
-              <Option v-for="item in customTimeOptions[newForm.timeType]" :value="item.value" :key="item.value">
+          <FormItem label="防火墙" prop="firewall">
+            <Select v-model="addGatewayForm.firewall">
+              <Option v-for="item in firewallList" :value="item.value" :key="item.value">
                 {{item.label}}
               </Option>
             </Select>
           </FormItem>
         </Form>
         <div>
-          <span>是否需要开启源NAT <Checkbox v-model="newForm.IPReq">&nbsp;</Checkbox></span>
-          <i-slider v-if="newForm.IPReq" v-model="newForm.IPSize" :min=1 :max=100 unit="M" :points="[20,50]"
-                    style="width:80%;vertical-align: middle;margin-right:18px;"></i-slider>
+          <span>是否需要开启源NAT <Checkbox v-model="addGatewayForm.NAT">&nbsp;</Checkbox></span>
+          <div v-if="addGatewayForm.NAT" style="margin-top: 10px;">
+            <i-slider v-model="addGatewayForm.NATSize" :min=1 :max=100 unit="M" :points="[20,50]"
+                      style="width:300px;vertical-align: middle;"></i-slider>
+            <InputNumber :max="100" :min="1" v-model="addGatewayForm.NATSize" :editable="false"
+                         style="margin-left: 20px"></InputNumber>
+            <span style="margin-left: 10px">M</span>
+          </div>
         </div>
       </div>
-      <div slot="footer">
+      <div slot="footer" class="modal-footer-border">
         <Button type="primary" @click="handleSubmit">完成配置</Button>
       </div>
+    </Modal>
+
+    <!-- 错误弹窗 -->
+    <Modal v-model="modalList.rederror" :scrollable="true" :closable="false" :width="280">
+      <p class="modal-content-s">
+        <Icon type="close-circled" class="orange f24 mr10"></Icon>
+        弹出错误原因，并提示用户解决办法
+      </p>
+      <p slot="footer" class="modal-footer-s">
+        <Button class="f16" @click="modalList.rederror = false">取消</Button>
+        <Button class="f16" type="primary" @on-ok="ok">联系客服</Button>
+      </p>
+    </Modal>
+    <!-- 删除网卡弹窗 -->
+    <Modal v-model="modalList.yellowdeltte" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>删除</strong>
+          <p class="lh24">若要删除主网卡，需在主机其他网卡中选择一个从网卡作为新的主网卡。请选择：</p>
+          <Select v-model="model1" style="width:296px;" class="mt10" placeholder="请选择网卡">
+            <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button class="f16" @click="modalList.yellowdeltte = false">取消</Button>
+        <Button class="f16" type="primary" @on-ok="ok">确定</Button>
+      </p>
     </Modal>
   </div>
 </template>
@@ -155,16 +179,20 @@
   import {customTimeOptions} from '../../options'
   import axios from 'axios'
   import $store from '../../vuex'
+
   export default {
     name: 'vpc',
     data() {
       return {
+        model1: '',
         // vpc列表数据
         netData: [],
         // 控制模态框是否关闭
         modalList: {
           newVpc: false,
-          addGateway: false
+          addGateway: false,
+          rederror: false,
+          yellowdeltte: false
         },
         // 新建vpc表单数据
         newForm: {
@@ -182,20 +210,25 @@
         },
         // 添加网关表单数据
         addGatewayForm: {
-          vpcName: '',
-          vpc: '',
-          desc: '',
-          VPCOptions: ['192.168.0.0/16', '172.16.0.0/16', '172.17.0.0/16', '172.18.0.0/16', '172.19.0.0/16', '172.20.0.0/16', '172.21.0.0/16', '172.22.0.0/16', '172.23.0.0/16', '172.24.0.0/16', '172.25.0.0/16'],
-          timeType: '',
-          timeValue: '',
-          // 是否需要公网IP
-          IPReq: false,
-          // 公网IP最低1M
-          IPSize: 1,
-          points: [20, 50]
+          // 物理网络
+          network: '',
+          // WLAN/VNI
+          VNI: '',
+          // ip地址
+          IP: '',
+          // 网关
+          gateway: '',
+          // 网络掩码
+          mask: '',
+          // 防火墙
+          firewall: '',
+          // 是否开启源NAT
+          NAT: false,
+          // 源NATSize
+          NATSize: 1
         },
-
-        ruleValidate: {
+        // 新建vpc验证规则
+        newRuleValidate: {
           vpcName: [
             {required: true, message: '请输入vpc名称', trigger: 'blur'}
           ],
@@ -209,38 +242,72 @@
             {required: true, message: '请选择购买时长', trigger: 'change'}
           ]
         },
+        gatewayRuleValidate: {
+          network: [
+            {required: true, message: '请输入network名称', trigger: 'blur'}
+          ],
+          VNI: [
+            {required: true, message: '请选择vpc地址范围', trigger: 'change'}
+          ],
+          IP: [
+            {required: true, message: '请选择购买方式', trigger: 'change'}
+          ],
+          gateway: [
+            {required: true, message: '请选择购买时长', trigger: 'change'}
+          ],
+          mask: [
+            {required: true, message: '请输入vpc名称', trigger: 'blur'}
+          ],
+          firewall: [
+            {required: true, message: '请选择vpc地址范围', trigger: 'change'}
+          ]
+        },
         customTimeOptions
       }
     },
-    beforeRouteEnter(to, from, next){
+    beforeRouteEnter(to, from, next) {
       var zoneId = $store.state.zoneList[0].zoneid
       axios.get(`network/listVpc.do?zoneId=${zoneId}`).then(response => {
-        next(vm => {
-          vm.setData(response)
-        })
+        if (response.status == 200) {
+          next(vm => {
+            vm.setData(response)
+          })
+        } else {
+          next()
+        }
       })
-      next()
     },
     methods: {
-      setData(response){
+      setData(response) {
         if (response.status == 200 && response.data.status == 1) {
+          response.data.result.forEach(item => {
+            item._select = false
+          })
           this.netData = response.data.result
         }
       },
-      manage: function () {
+      radio(item){
+        this.netData.forEach(item => {
+          item._select = false
+        })
+        item._select = true
+      },
+      manage: function (item) {
+        sessionStorage.setItem('vpcId', item.vpcid)
         this.$router.push('/ruicloud/vpcManage')
       },
       // 提交新建vpc表单
-      handleSubmit () {
-        this.$refs.formValidate.validate((valid) => {
+      handleNewSubmit() {
+        this.$refs.newFormValidate.validate((valid) => {
           if (valid) {
             // 表单验证通过
+
           } else {
             // 表单验证失败
           }
         })
       },
-      log(){
+      log() {
         console.log(this.newForm)
       }
     }
@@ -304,6 +371,10 @@
         .card-wrap {
           display: flex;
           justify-content: space-between;
+          .active {
+            border: 1px solid #2A99F2;
+            box-shadow: 0 2px 8px 0 rgba(42, 153, 242, 0.35);
+          }
           .card:hover {
             border: 1px solid #2A99F2;
             box-shadow: 0 2px 8px 0 rgba(42, 153, 242, 0.35);

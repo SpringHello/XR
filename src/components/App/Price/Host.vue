@@ -77,23 +77,25 @@
             <button v-for="item in mirrorConfigList" :class="{select:item.value==mirrorType}"
                     @click="mirrorType=item.value">
               <div
-                style="background: #D8D8D8;height:40px;width:40px;border: 1px solid #979797;margin-left: 10px"></div>
+                style="height:40px;width:40px;margin-left: 10px">
+                <img :src="item.src">
+              </div>
               <div style="display: flex;flex-direction:column;text-align: left;margin-left: 10px;">
                 <p>{{ item.title}}</p>
-                <p style="color: #999999;">{{ item.discript}}</p>
+                <p style="color: #999999;margin-top: 10px">{{ item.discript}}</p>
               </div>
             </button>
           </div>
           <div class="config-button">
             <span style="margin-right: 52px">系统盘</span>
-            <Poptip trigger="hover" content="全SSD架构，超高IOPS，适用于核心数据库与对I/O要求较高的业务。" placement="top-start">
-              <button :class="{select:hostType=='ssd'}" @click="hostType='ssd'">超高IO型</button>
+            <Poptip trigger="hover" content="超大存储容量，超高性价比。" placement="top-start">
+              <button :class="{select:hostType=='sata'}" @click="hostType='sata'">普通型</button>
             </Poptip>
             <Poptip trigger="hover" content="适用于顺序读写，如日志流水，流媒体等场景，高性价比。" placement="top-start">
               <button :class="{select:hostType=='sas'}" @click="hostType='sas'">性能型</button>
             </Poptip>
-            <Poptip trigger="hover" content="超大存储容量，超高性价比。" placement="top-start">
-              <button :class="{select:hostType=='sata'}" @click="hostType='sata'">普通型</button>
+            <Poptip trigger="hover" content="全SSD架构，超高IOPS，适用于核心数据库与对I/O要求较高的业务。" placement="top-start">
+              <button :class="{select:hostType=='ssd'}" @click="hostType='ssd'">超高IO型</button>
             </Poptip>
           </div>
           <div class="config-button">
@@ -104,7 +106,7 @@
           </div>
           <div class="config-button">
             <span>内存</span>
-            <button style="margin-right: 14px" v-for="item in memoryList" v-show="item>=cpuNum&&item<=cpuNum*4"
+            <button style="margin-right: 14px" v-for="item in memoryList" v-show="item>=cpuNum&&item<=cpuNum*8"
                     :class="{select:item==memorySize}"
                     @click="memorySize=item">{{item}}G
             </button>
@@ -156,7 +158,7 @@
             </div>-->
           <div>
             <span>公网IP</span>
-            <Checkbox v-model="buyPublicIP" size="large" style="margin-left: 53px;font-size: 16px">购买公网IP
+            <Checkbox v-model="buyPublicIP" size="large" style="margin-left: 53px;font-size: 14px">购买公网IP
             </Checkbox>
           </div>
           <div v-if="buyPublicIP==true">
@@ -169,7 +171,7 @@
             <span>防火墙</span>
             <span
               style="border: 1px solid #E9E9E9;font-size: 14px;padding: 5px 25px;margin-left: 53px;color: #666666;">默认配置</span>
-            <p>默认防火墙仅打开22、3389端口，您可以在创建之后再控制台自定义防火墙规则。<span>如何修改</span></p>
+            <p>默认防火墙仅打开22、3389、80、443端口，您可以在创建之后再控制台自定义防火墙规则。<span>如何修改</span></p>
           </div>
           <div>
             <span style="margin-right: 68px">价格</span>
@@ -237,7 +239,7 @@
           <button v-for="item in mirrorConfigList" :class="{select:item.value==mirrorType}"
                   @click="mirrorType=item.value">
             <div
-              style="background: #D8D8D8;height:40px;width:40px;border: 1px solid #979797;margin-left: 10px"></div>
+              style="height:40px;width:40px;margin-left: 10px"><img :src="item.src"></div>
             <div style="display: flex;flex-direction:column;text-align: left;margin-left: 10px;">
               <p>{{ item.title}}</p>
               <p style="color: #999999;margin-top: 10px;">{{ item.discript}}</p>
@@ -246,7 +248,7 @@
         </div>
         <div>
           <span style="margin-right: 53px;">公网IP</span>
-          <Checkbox v-model="buyPublicIP" size="large" style="font-size: 16px">购买公网IP</Checkbox>
+          <Checkbox v-model="buyPublicIP" size="large" style="font-size: 14px">购买公网IP</Checkbox>
         </div>
         <div class="config-button" style="display: -webkit-box;" v-if="buyPublicIP">
           <span>配置</span>
@@ -491,14 +493,17 @@
         // 镜像+应用表
         mirrorConfigList: [
           {
+            src: 'http://localhost:8082/ruicloud/resource/img/wp.png',
             discript: '一键部署WordPress和LAMP，海量免费主题和插件。 ',
             title: 'WordPress开源博客系统（Centos）',
             value: '1'
           }, {
+            src: 'http://localhost:8082/ruicloud/resource/img/lamp.png',
             title: 'LAMP集成环境（Centos）, ',
             discript: '一键部署Linux、Apache 、PHP 、MySQL 、phpMyAdmin',
             value: '2'
           }, {
+            src: 'http://localhost:8082/ruicloud/resource/img/rm.png',
             title: 'RedMine（Centos）',
             discript: ' Redmine与Git/SVN一键集成，方便开发和项目管理。',
             value: '3'
@@ -623,6 +628,7 @@
           list.push(params)
           sessionStorage.setItem('budget', JSON.stringify(list))
           this.$parent.updateList()
+          this.addButton = false
         } else {
           var param = {
             budgetType: 'customHost',
@@ -642,6 +648,7 @@
           list.push(param)
           sessionStorage.setItem('budget', JSON.stringify(list))
           this.$parent.updateList()
+          this.addButton = false
         }
       },
       /* 立即购买 */
@@ -747,6 +754,7 @@
       addDisk () {
         if (this.userInfo == null) {
           this.showModal.login = true
+          this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
         } else {
           var params = {
             diskType: 'ssd',
@@ -822,13 +830,13 @@
           diskSize += item.diskSize + ','
         })
         this.$http.post('http://localhost:8082/ruicloud/device/QueryBillingPrice.do', {
-          cpunum: 0 + '',
+          cpuNum: 0 + '',
           memory: 0 + '',
-          disk: diskSize.substring(0, diskSize.length - 1),
+          diskSize: diskSize.substring(0, diskSize.length - 1),
           zoneId: this.zone,
-          value: this.timeType + '',
-          timevalue: this.time + '',
-          disk_type: diskType.substring(0, diskType.length - 1)
+          timeType: this.timeType + '',
+          timeValue: this.time + '',
+          diskType: diskType.substring(0, diskType.length - 1)
         }).then(response => {
           if (response.status == 200 && response.statusText == 'OK') {
             this.customDiskPrice = response.data.cost
@@ -845,7 +853,7 @@
         this.$http.post('http://localhost:8082/ruicloud/device/queryIpPrice.do', {
           brand: this.publicIP + '',
           zoneId: this.zone,
-          value: this.timeType + '',
+          timeType: this.timeType + '',
           timeValue: this.time + ''
         }).then(response => {
           if (response.status == 200 && response.statusText == 'OK') {
@@ -867,13 +875,13 @@
         switch (this.quickConfig) {
           case '1':
             params = {
-              cpunum: 1 + '',
+              cpuNum: 1 + '',
               memory: 1 + '',
-              disk: 50 + '',
+              diskSize: 50 + '',
               zoneId: zoneId,
-              value: value + '',
-              timevalue: timevalue + '',
-              disk_type: 'sas'
+              timeType: value + '',
+              timeValue: timevalue + '',
+              diskType: 'sas'
             }
             this.publicIP = 1
             this.queryHost(params)
@@ -881,13 +889,13 @@
             break
           case '2':
             params = {
-              cpunum: 2 + '',
+              cpuNum: 2 + '',
               memory: 4 + '',
-              disk: 50 + '',
+              diskSize: 50 + '',
               zoneId: zoneId,
-              value: value + '',
-              timevalue: timevalue + '',
-              disk_type: 'sas'
+              timeType: value + '',
+              timeValue: timevalue + '',
+              diskType: 'sas'
             }
             this.publicIP = 1
             this.queryHost(params)
@@ -895,13 +903,13 @@
             break
           case '3':
             params = {
-              cpunum: 4 + '',
+              cpuNum: 4 + '',
               memory: 4 + '',
-              disk: 50 + '',
+              diskSize: 50 + '',
               zoneId: zoneId,
-              value: value + '',
-              timevalue: timevalue + '',
-              disk_type: 'ssd'
+              timeType: value + '',
+              timeValue: timevalue + '',
+              diskType: 'ssd'
             }
             this.publicIP = 2
             this.queryHost(params)
@@ -909,13 +917,13 @@
             break
           case '4':
             params = {
-              cpunum: 4 + '',
+              cpuNum: 4 + '',
               memory: 8 + '',
-              disk: 50 + '',
+              diskSize: 50 + '',
               zoneId: zoneId,
-              value: value + '',
-              timevalue: timevalue + '',
-              disk_type: 'ssd'
+              timeType: value + '',
+              timeValue: timevalue + '',
+              diskType: 'ssd'
             }
             this.publicIP = 2
             this.queryHost(params)
@@ -923,49 +931,49 @@
             break
           case '5':
             params = {
-              cpunum: 1 + '',
+              cpuNum: 1 + '',
               memory: 1 + '',
-              disk: 50 + '',
+              diskSize: 50 + '',
               zoneId: zoneId,
-              value: value + '',
-              timevalue: timevalue + '',
-              disk_type: 'sas'
+              timeType: value + '',
+              timeValue: timevalue + '',
+              diskType: 'sas'
             }
             this.queryHost(params)
             break
           case '6':
             params = {
-              cpunum: 2 + '',
+              cpuNum: 2 + '',
               memory: 4 + '',
-              disk: 50 + '',
+              diskSize: 50 + '',
               zoneId: zoneId,
-              value: value + '',
-              timevalue: timevalue + '',
-              disk_type: 'sas'
+              timeType: value + '',
+              timeValue: timevalue + '',
+              diskType: 'sas'
             }
             this.queryHost(params)
             break
           case '7':
             params = {
-              cpunum: 4 + '',
+              cpuNum: 4 + '',
               memory: 4 + '',
-              disk: 50 + '',
+              diskSize: 50 + '',
               zoneId: zoneId,
-              value: value + '',
-              timevalue: timevalue + '',
-              disk_type: 'ssd'
+              timeType: value + '',
+              timeValue: timevalue + '',
+              diskType: 'ssd'
             }
             this.queryHost(params)
             break
           case '8':
             params = {
-              cpunum: 4 + '',
+              cpuNum: 4 + '',
               memory: 8 + '',
-              disk: 50 + '',
+              diskSize: 50 + '',
               zoneId: zoneId,
-              value: value + '',
-              timevalue: timevalue + '',
-              disk_type: 'ssd'
+              timeType: value + '',
+              timeValue: timevalue + '',
+              diskType: 'ssd'
             }
             this.queryHost(params)
             break
@@ -1182,7 +1190,7 @@
         margin-top: 10px;
         margin-bottom: 20px;
         font-family: MicrosoftYaHei;
-        font-size: 14px;
+        font-size: 12px;
         color: #999999;
         line-height: 25px;
       }
@@ -1204,7 +1212,7 @@
           cursor: pointer;
           position: relative;
           &.select {
-            background-image: linear-gradient(-225deg, #0DB4FA 0%, #388BEE 100%);
+            background: #2A99F2;
             color: white;
             border-color: #0DB4FA;
           }
@@ -1236,7 +1244,7 @@
         margin-top: 10px;
         margin-bottom: 20px;
         font-family: MicrosoftYaHei;
-        font-size: 14px;
+        font-size: 12px;
         color: #999999;
         line-height: 25px;
       }
@@ -1249,7 +1257,7 @@
       }
       span {
         font-family: MicrosoftYaHei;
-        font-size: 16px;
+        font-size: 14px;
         color: #333333;
         line-height: 29px;
         margin-right: 68px;
@@ -1262,26 +1270,26 @@
         margin-top: 20px;
         & > span {
           font-family: MicrosoftYaHei;
-          font-size: 16px;
+          font-size: 14px;
           color: #333333;
           line-height: 29px;
         }
         p {
           font-family: MicrosoftYaHei;
-          font-size: 14px;
+          font-size: 12px;
           color: #999999;
           line-height: 25px;
           margin-top: 10px;
           margin-left: 104px;
           span {
             color: #2A99F2;
-            font-size: 14px;
+            font-size: 12px;
             line-height: 25px;
           }
         }
         .s2{
           font-family: MicrosoftYaHei;
-          font-size: 14px;
+          font-size: 12px;
           color: #333333;
           line-height: 25px;
           margin-top: 10px;
@@ -1302,7 +1310,7 @@
         cursor: pointer;
         margin-right: 10px;
         &.select {
-          background-image: linear-gradient(-90deg, #4183EB 0%, #07BDFE 100%);
+          background: #2A99F2;
           color: white;
         }
         &.disabled{
@@ -1340,7 +1348,7 @@
         margin-bottom: 10px;
         margin-left: 102px;
         &.select {
-          background-image: linear-gradient(-90deg, #4183EB 0%, #07BDFE 100%);
+          background: #2A99F2;
           color: white;
         }
         p {
@@ -1358,7 +1366,7 @@
           margin-top: 20px;
           & > span {
             font-family: MicrosoftYaHei;
-            font-size: 16px;
+            font-size: 14px;
             color: #333333;
             line-height: 29px;
             margin-right: 68px;
@@ -1372,20 +1380,20 @@
         margin-top: 20px;
         & > span{
           font-family: MicrosoftYaHei;
-          font-size: 16px;
+          font-size: 14px;
           color: #333333;
           line-height: 29px;
           margin-right: 52px;
         }
         p{
           font-family: MicrosoftYaHei;
-          font-size: 14px;
+          font-size: 12px;
           color: #999999;
           line-height: 25px;
         }
         .s1 {
           font-family: MicrosoftYaHei;
-          font-size: 14px;
+          font-size: 12px;
           color: #333333;
           line-height: 25px;
           margin-left: 20px;
@@ -1399,14 +1407,14 @@
         margin-top: 20px;
         & > span {
           font-family: MicrosoftYaHei;
-          font-size: 16px;
+          font-size: 14px;
           color: #333333;
           line-height: 29px;
           margin-right: 35px;
         }
         p {
           font-family: MicrosoftYaHei;
-          font-size: 14px;
+          font-size: 12px;
           color: #999999;
           line-height: 25px;
           margin-left: 102px;
