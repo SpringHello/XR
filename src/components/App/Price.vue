@@ -201,11 +201,16 @@
         exportButton: false,
         // 控制div底部固定
         fixedState: false,
+        // 地区信息
+        zone: '',
+        // 磁盘列表
+        diskList: [],
         // 用户信息
         userInfo: null
       }
     },
     created () {
+      this.zone = $store.state.zoneList[0].zoneid
       if (this.$router.history.current.path == '/ruicloud/price' || this.$router.history.current.path == '/ruicloud/price/') {
         this.product = 'hostPrice'
       } else {
@@ -365,7 +370,33 @@
           this.showModal.login = true
           this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
         } else {
-          alert('购买完成')
+          this.detailedList.forEach(item => {
+            switch (item.budgetType) {
+              case 'quickHost':
+                break
+              case 'customHost':
+                break
+              case 'ip':
+                var params = {
+                  timeType: item.timeType,
+                  time: item.time + '',
+                  publicIP: item.publicIP + '',
+                  autoRenewal: item.autoRenewal,
+                  vpcId: item.vpcId
+                }
+                this.createIpOrder(params)
+                break
+              case 'disk':
+                this.diskList = item.diskList
+                var diskParams = {
+                  timeType: item.timeType,
+                  time: item.time + '',
+                  diskName: item.diskName
+                }
+                this.createDiskOrder(diskParams)
+                break
+            }
+          })
         }
       },
       /* 导出预算清单 */
@@ -375,7 +406,10 @@
         data = []
         if (this.detailedList.length != 0) {
           for (var i = 0; i < this.detailedList.length; i++) {
-            data[i] = JSON.stringify(this.$refs.detailed[i].innerText)
+            data[i] = new Array(2)
+            data[i][0] = '订单' + '：'
+            data[i][1] = this.$refs.detailed[i].innerText.replace(/[\r\n'删除']/g, ' ')
+            console.log(data[i][1])
           }
         }
         // covert json to sheet
@@ -386,9 +420,81 @@
         const wbout = XLSX.write(wb, {type: 'binary', bookType: 'xlsx'})
         XLSX_SAVE.saveAs(new Blob([s2ab(wbout)], {type: 'application/octet-stream'}), 'detailedList.xlsx')
       },
-      updateList () {
-        this.detailedList = JSON.parse(sessionStorage.getItem('budget'))
-        this.handleScroll()
+      /* 创建快速配置主机订单 */
+      createQuickHostOrder (params) {
+        if (params.hostPassword != '') {
+          if (!this.passwordRegExp.test(params.hostPassword)) {
+            return
+          }
+        }
+        var url = `information/deployVirtualMachine.do?zoneid=${this.zone}&name=${params.hostName}&password=${params.hostPassword}&templateid=${this.osId}&size=${params.diskSize}&cpunum=${params.cpuNum}&memory=${params.memory}&bandwidth=${params.publicIP}&value=${params.timeType}&timevalue=${params.timeValue}&count=1&isautorenew=${params.renewal}&disktype=${params.diskType}&networkid=no`
+        this.$http.get(url).then(response => {
+          this.loading = false
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push('order')
+          } else {
+            this.infoMessage = response.data.message
+            this.modal4 = true
+          }
+        })
+      },
+      /* 创建自定义配置主机订单 */
+      createCustomHostOrder (params) {
+        if (this.hostPassword != '') {
+          if (!this.passwordRegExp.test(this.hostPassword)) {
+            return
+          }
+        }
+        var renewal = this.autoRenewal ? 1 : 0
+        var bandwidth = this.publicIP
+        var diskSize = this.diskList.map(item => {
+          return item.diskSize
+        }).join(',')
+        var diskType = this.diskList.map(item => {
+          return item.diskType
+        }).join(',')
+        var url = `information/deployVirtualMachine.do?zoneid=${this.zone}&name=${this.hostName}&password=${this.hostPassword}&templateid=${this.osId}&size=${diskSize}&cpunum=${this.cpuNum}&memory=${this.memory}&value=${this.timeType}&timevalue=${this.time}&count=0&isautorenew=${renewal}&disktype=${diskType}&networkid=${this.private.split('#')[0]}`
+        if (this.buyPublicIP == false) {
+          bandwidth = 0
+        }
+        url = url + '&bandwidth=' + bandwidth
+        if (this.specifyInfo != '指定IP') {
+          url += '&ipaddress=' + this.specifyInfo
+        }
+        this.$http.get(url)
+          .then(response => {
+            this.loading = false
+            if (response.status == 200 && response.data.status == 1) {
+              this.$router.push('order')
+            } else {
+              this.infoMessage = response.data.message
+              this.modal4 = true
+            }
+          })
+      },
+      /* 创建公网ip订单 */
+      createIpOrder (params) {
+        let url = `http://localhost:8082/ruicloud/network/associateIpAddress.do?brand=${params.publicIP}&value=${params.timeType}&timevalue=${params.time}&zoneid=${this.zone}&isautorenew=${params.autoRenewal}&vpcid=${params.vpcId}`
+        this.$http.get(url).then(response => {
+          this.loading = false
+          if (response.status == 200 && response.data.status == 1) {
+          }
+        })
+      },
+      /* 创建磁盘订单 */
+      createDiskOrder (params) {
+        var count = 0
+        this.diskList.forEach(item => {
+          this.$http.get('http://localhost:8082/ruicloud/Disk/createVolume.do?zoneId=' + this.zone + '&diskSize=' + item.diskSize + '&diskName=' + item.diskName + '&diskOfferingId=' + item.diskType + '&timeType=' + params.timeType + '&timeValue=' + params.time).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              count++
+            }
+          })
+        })
+        if (count == this.diskList.length) {
+        } else {
+          this.$Message.error('创建磁盘订单错误')
+        }
       }
     },
     computed: {
