@@ -210,7 +210,7 @@
           {
             type: 'radio',
             width: 60,
-            align: 'center',
+            align: 'center'
           },
           {
             title: '硬盘名称',
@@ -237,15 +237,15 @@
             title: '状态',
             key: 'status',
             render: (h, params) => {
-              const row = params.row;
-              const text = row.status === 0 ? '欠费' : (row.status === 1 && row.mounton == '' && row.mountonname == '') ? '可挂载' : (row.status === 1 && row.mounton != '' && row.mountonname != '') ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '异常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '卸载中' : row.status === 5 ? '挂载中' : '';
+              const row = params.row
+              const text = row.status === 0 ? '欠费' : (row.status === 1 && row.mounton == '' && row.mountonname == '') ? '可挂载' : (row.status === 1 && row.mounton != '' && row.mountonname != '') ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '异常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '卸载中' : row.status === 5 ? '挂载中' : ''
               if (row.status == 2 || row.status == 3 || row.status == 4 || row.status == 5) {
                 return h('div', {}, [h('Spin', {
                   style: {
-                    display: "inline-block",
-                    marginRight: "10px",
+                    display: 'inline-block',
+                    marginRight: '10px'
                   }
-                }), h('span', {}, text)]);
+                }), h('span', {}, text)])
               } else {
                 return h('span', text)
               }
@@ -264,7 +264,7 @@
             align: 'center',
             key: 'cpCase',
             render: (h, params) => {
-              if (typeof(params.row.cpCase) != "undefined") {
+              if (typeof (params.row.cpCase) != 'undefined') {
                 return h('span', params.row.caseType == 1 ? params.row.cpCase + '元/年' : params.row.caseType == 2 ? params.row.cpCase + '元/月' : params.row.cpCase + '元/小时')
               } else {
                 return h('span', '--')
@@ -284,7 +284,7 @@
           modificationDisk: false,
           dilatationDisk: false,
           deleteDisk: false,
-          mountDisk: false,
+          mountDisk: false
         },
         diskForm: {
           diskName: '',
@@ -292,7 +292,7 @@
           diskType: '',
           diskWay: '',
           capacity: 20,
-          diskTime: '',
+          diskTime: ''
         },
         customTimeOptions,
         diskTypeList,
@@ -305,11 +305,11 @@
         diskSizeExpenses: 0,
         coupon: 0,
         mountHost: '',
-        mountHostList: [],
+        mountHostList: []
       }
     },
     created(){
-      this.listDisk();
+      this.listDisk()
     },
     methods: {
       listDisk(){
@@ -319,19 +319,19 @@
               if (item.status != 1)
                 item._disabled = true
             })
-            this.diskData = response.data.result;
+            this.diskData = response.data.result
             this.diskSelection = null
           }
         })
       },
       newDisk(){
-        this.showModal.newDisk = true;
+        this.showModal.newDisk = true
         this.diskForm.diskAreaList = this.$store.state.zoneOptions
       },
       mount(){
         if (this.checkSelect() == true) {
           if (this.diskSelection.mounton == '' && this.diskSelection.mountonname == '' && this.diskSelection.status == 1) {
-            this.showModal.mountDisk = true;
+            this.showModal.mountDisk = true
             this.$http.get('Disk/listAttachComputer.do?diskid=' + this.diskSelection.diskid).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.mountHostList = response.data.result
@@ -339,21 +339,21 @@
             })
           } else {
             this.$Modal.error({
-              content: '所选硬盘不能挂载主机',
-            });
+              content: '所选硬盘不能挂载主机'
+            })
           }
         }
       },
       unload(){
         if (this.checkSelect() == true) {
           if (this.diskSelection.mounton != '' && this.diskSelection.mountonname != '' && this.diskSelection.status == 1) {
-            this.showModal.diskUnload = true;
-            this.diskname = this.diskSelection.diskname;
-            this.hostname = this.diskSelection.mountonname;
+            this.showModal.diskUnload = true
+            this.diskname = this.diskSelection.diskname
+            this.hostname = this.diskSelection.mountonname
           } else {
             this.$Modal.error({
-              content: '所选硬盘没有挂载主机，无法卸载',
-            });
+              content: '所选硬盘没有挂载主机，无法卸载'
+            })
           }
         }
       },
@@ -365,15 +365,15 @@
           zoneId: this.diskForm.diskArea,
           value: this.diskForm.diskWay + '',
           timevalue: this.diskForm.diskTime + '',
-          disk_type: this.diskForm.diskType + '',
+          disk_type: this.diskForm.diskType + ''
         }).then(response => {
           if (response.status == 200 && response.statusText == 'OK') {
-            console.log(response);
-            this.expenses = response.data.cost;
+            console.log(response)
+            this.expenses = response.data.cost
             if (response.data.coupon) {
-              this.coupon = response.data.coupon;
+              this.coupon = response.data.coupon
             } else {
-              this.coupon = 0;
+              this.coupon = 0
             }
           }
         })
@@ -388,8 +388,8 @@
       newDisk_ok(){
         this.$http.get('Disk/createVolume.do?zoneid=' + this.diskForm.diskArea + '&size=' + this.diskForm.capacity + '&name=' + this.diskForm.diskName + '&diskofferingid=' + this.diskForm.diskType + '&value=' + this.diskForm.diskWay + '&timevalue=' + this.diskForm.diskTime).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$store.commit("setSelect", "order")
-            this.$router.push("order")
+            this.$store.commit('setSelect', 'order')
+            this.$router.push('order')
           }
         })
       },
@@ -414,7 +414,7 @@
         }
       },
       selectDisk(currentRow){
-        this.diskSelection = currentRow;
+        this.diskSelection = currentRow
       },
       /*      backupsDisk(){
        if (this.checkSelect() == true) {
@@ -422,15 +422,15 @@
        },*/
       dilatationDisk(){
         if (this.checkSelect() == true) {
-          this.capacitys = this.diskSelection.disksize;
+          this.capacitys = this.diskSelection.disksize
           this.capacitysMin = this.capacitys
-          this.showModal.dilatationDisk = true;
+          this.showModal.dilatationDisk = true
         }
       },
       modificationDisk(){
         if (this.checkSelect() == true) {
-          this.showModal.modificationDisk = true;
-          this.diskname = this.diskSelection.diskname;
+          this.showModal.modificationDisk = true
+          this.diskname = this.diskSelection.diskname
         }
       },
       deleteDisk(){
@@ -441,14 +441,14 @@
               okText: '卸载硬盘',
               cancelText: '取消',
               onOk: () => {
-                this.unload();
+                this.unload()
               },
               onCancel: () => {
               }
-            });
+            })
           } else if (this.diskSelection.caseType != 1 && this.diskSelection.caseType != 2) {
-            this.showModal.deleteDisk = true;
-            this.diskname = this.diskSelection.diskname;
+            this.showModal.deleteDisk = true
+            this.diskname = this.diskSelection.diskname
           } else {
             this.$Modal.info({
               content: '包年包月资费资源无法删除'
@@ -490,12 +490,12 @@
             item.status = 4
         })
         this.$http.get('Disk/detachVolume.do?diskid=' + this.diskSelection.id + '&virtualmachineid=' + this.diskSelection.mounton).then(response => {
-          this.listDisk();
+          this.listDisk()
           if (response.status == 200 && response.statusText == 'OK') {
             this.$Message.success({
               content: response.data.message,
               duration: 5
-            });
+            })
           }
         })
       },
@@ -505,9 +505,9 @@
             this.$Message.success({
               content: response.data.message,
               duration: 5
-            });
-            this.showModal.modificationDisk = false;
-            this.listDisk();
+            })
+            this.showModal.modificationDisk = false
+            this.listDisk()
           }
         })
       },
@@ -522,8 +522,8 @@
             this.$Message.success({
               content: response.data.message,
               duration: 5
-            });
-            this.listDisk();
+            })
+            this.listDisk()
           }
         })
       },
@@ -534,28 +534,28 @@
             item.status = 5
         })
         this.$http.get('Disk/attachVolume.do?diskid=' + this.diskSelection.id + '&virtualmachineid=' + this.mountHost).then(response => {
-          this.listDisk();
+          this.listDisk()
           if (response.status == 200 && response.statusText == 'OK') {
             this.$Message.info({
               content: response.data.message,
               duration: 5
-            });
+            })
           }
         })
       },
       adjustDisk_ok(){
         this.$http.get('Disk/UpDiskConfig.do?diskid=' + this.diskSelection.diskid + '&disksize=' + this.capacitys).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$store.commit("setSelect", "order")
-            this.$router.push("order")
+            this.$store.commit('setSelect', 'order')
+            this.$router.push('order')
           }
         })
-      },
+      }
     },
     computed: {
       auth(){
         return this.$store.state.personalAuth == 0 || this.$store.state.enterpriseAuth == 0
-      },
+      }
     },
     watch: {
       'diskForm.capacity'(value, oldValue){
@@ -564,9 +564,9 @@
         }
       },
       capacitys(){
-        this.queryDiskCost();
+        this.queryDiskCost()
       }
-    },
+    }
   }
 </script>
 

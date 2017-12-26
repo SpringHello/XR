@@ -12,7 +12,6 @@ import LR from '@/LR'
 // import Price from '@/components/App/Price'
 const Price = () => import('@/components/App/Price')
 const Home = () => import('@/components/App/Home')
-const Balance = () => import('@/components/App/Balance')
 const modal = () => import('@/components/App/modal')
 
 const hostPrice = () => import('@/components/App/Price/Host')
@@ -56,7 +55,6 @@ var router = new Router({
       children: [
         {path: '', name: 'home', component: Home},
         {path: 'home', name: 'home', component: Home},
-        {path: 'balance', name: 'balance', component: Balance},
         {path: 'modal', name: 'modal', component: modal},
         {
           path: 'price',
