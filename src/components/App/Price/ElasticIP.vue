@@ -48,7 +48,7 @@
       <h3>网络与带宽</h3>
       <div>
         <span>虚拟私有云</span>
-        <Select @on-change="reset" v-model="private" style="width:250px;margin-left: 20px">
+        <!--<Select @on-change="reset" v-model="private" style="width:250px;margin-left: 20px">
           <Option v-for="item in privateList" :value="`${item.ipsegmentid}#${item.ipsegment}`"
                   :key="item.ipsegmentid">  {{item.name}} 范围{{item.ipsegment }}</Option>
         </Select>
@@ -65,7 +65,11 @@
               <button @click="specifyClick" style="padding:0px 12px;background-color: #2A99F2;cursor: pointer;color: #ffffff;">确定</button>
             </div>
           </div>
-        </Poptip>
+        </Poptip>-->
+        <Select v-model="vpcID" style="width:250px;margin-left: 20px">
+          <Option v-for="item in vpcTableData" :value="item.vpcid"
+                  :key="item.vpcid">{{item.vpcname}}</Option>
+        </Select>
         <p>如需使用其他虚拟私有云（VPC），请选择已有虚拟私有云（VPC），也可以自行到<span>控制台新建</span>。</p>
       </div>
       <!--<div v-for="(item,index) in netWorkCards">
@@ -84,7 +88,7 @@
       </div>-->
       <div>
         <span>公网IP</span>
-        <Checkbox v-model="buyPublicIP" size="large" style="margin-left: 53px;font-size: 16px">购买公网IP
+        <Checkbox v-model="buyPublicIP" size="large" style="margin-left: 53px;font-size: 14px">购买公网IP
         </Checkbox>
       </div>
       <div v-if="buyPublicIP==true">
@@ -193,8 +197,12 @@
         autoRenewal: true,
         // 是否购买公网ip
         buyPublicIP: true,
+        // vpcId
+        vpcID: '',
         // ip价格
         ipPrice: 0,
+        vpcTableData: [],
+        // [{"id":117,"companyname":"11@qq.com","companyid":"148714318211","vpcname":"默认vpc148714318211","vpcdescript":"默认vpc","vpcofferingid":"b1c634b1-b87b-4ea0-afba-6eed002b67ab","cidr":"192.168.0.0/16","vpcid":"ce40a5f3-7a2e-4ff5-ad7e-0ed270fe8435","isdefault":1,"caseType":1,"createtime":"2017-07-14 17:50:39","endtime":"2018-07-14 17:50:39","status":1,"zoneid":"7b899cb6-b128-4328-a820-2f765d7d74ad","zonename":"北京1区"},{"id":118,"companyname":"11@qq.com","companyid":"148714318211","vpcname":"测试中文vpc","vpcdescript":"测试","vpcofferingid":"b1c634b1-b87b-4ea0-afba-6eed002b67ab","cidr":"192.168.0.0/16","vpcid":"95377e0c-72f8-495d-a108-864ae9fcdd25","isdefault":0,"cpCase":0.02,"caseType":3,"createtime":"2017-07-25 14:00:48","endtime":"2017-07-25 15:00:48","status":1,"zoneid":"7b899cb6-b128-4328-a820-2f765d7d74ad","zonename":"北京1区"}],
         // 网络选择
         privateList: [{
           'ipsegmentid': 'no',
@@ -261,9 +269,9 @@
       this.zone = $store.state.zoneList[0].zoneid
       if ($store.state.userInfo) {
         this.userInfo = $store.state.userInfo
-        this.getPrivateList()
       }
       this.queryIpPrice()
+      this.queryVPCData()
     },
     methods: {
       /* 加入购物清单 */
@@ -280,8 +288,10 @@
           time: this.time + '',
           net: this.private.substring(0, 2),
           publicIP: this.publicIP + '',
+          autoRenewal: this.autoRenewal ? '1' : '0',
           cost: this.ipPrice,
-          coupon: this.coupon
+          coupon: this.coupon,
+          vpcId: this.vpcId
         }
         list.push(params)
         sessionStorage.setItem('budget', JSON.stringify(list))
@@ -295,8 +305,19 @@
           this.showModal.login = true
           this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
         } else {
-          alert('购买完成')
+          this.createIpOrder()
         }
+      },
+      /* 创建公网ip订单 */
+      createIpOrder () {
+        var autoRenewal = this.autoRenewal ? 1 : 0
+        let url = `http://localhost:8082/ruicloud/network/associateIpAddress.do?brand=${this.publicIP}&value=${this.timeType}&timevalue=${this.time}&zoneid=${this.zone}&isautorenew=${autoRenewal}&vpcid=${this.vpcId}`
+        this.$http.get(url).then(response => {
+          this.loading = false
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push({path: 'order'})
+          }
+        })
       },
       /* 登录弹框的校检等 */
       vail (field) {
@@ -423,12 +444,21 @@
         this.visible = false
         this.specifyInfo = this.private.split('#')[1].substr(0, this.private.split('#')[1].lastIndexOf('.')) + '.' + this.specifyIP
       },
+      /* 查询vpc数据 */
+      queryVPCData(){
+        var url = `http://localhost:8082/ruicloud/network/listVpc.do?zoneId=${this.zone}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.vpcTableData = response.data.result
+          }
+        })
+      },
       /* 查询公网IP价格 */
       queryIpPrice: debounce(500, function () {
         this.$http.post('http://localhost:8082/ruicloud/device/queryIpPrice.do', {
           brand: this.publicIP + '',
           zoneId: this.zone,
-          value: this.timeType + '',
+          timeType: this.timeType + '',
           timeValue: this.time + ''
         }).then(response => {
           if (response.status == 200 && response.statusText == 'OK') {
@@ -449,13 +479,13 @@
       },
       /* 校检是否选择商品 */
       cardDisabled () {
-        return (this.ipPrice == 0)
+        return (this.ipPrice == 0 || this.vpcID == '')
       }
     },
     watch: {
       /* 监听地区变化，查询私网 */
       zone () {
-        this.getPrivateList()
+        this.queryVPCData()
       },
       /* 监听是否购买公网IP,查询价格 */
       buyPublicIP () {
@@ -503,7 +533,7 @@
         margin-top: 10px;
         margin-bottom: 20px;
         font-family: MicrosoftYaHei;
-        font-size: 14px;
+        font-size: 12px;
         color: #999999;
         line-height: 25px;
       }
@@ -525,7 +555,7 @@
           cursor: pointer;
           position: relative;
           &.select {
-            background-image: linear-gradient(-225deg, #0DB4FA 0%, #388BEE 100%);
+            background: #2A99F2;
             color: white;
             border-color: #0DB4FA;
           }
@@ -557,13 +587,13 @@
         margin-top: 10px;
         margin-bottom: 20px;
         font-family: MicrosoftYaHei;
-        font-size: 14px;
+        font-size: 12px;
         color: #999999;
         line-height: 25px;
       }
       span{
         font-family: MicrosoftYaHei;
-        font-size: 16px;
+        font-size: 14px;
         color: #333333;
         line-height: 29px;
       }
@@ -575,26 +605,26 @@
         margin-top: 20px;
         & > span {
           font-family: MicrosoftYaHei;
-          font-size: 16px;
+          font-size: 14px;
           color: #333333;
           line-height: 29px;
         }
         p {
           font-family: MicrosoftYaHei;
-          font-size: 14px;
+          font-size: 12px;
           color: #999999;
           line-height: 25px;
           margin-top: 10px;
-          margin-left: 104px;
+          margin-left: 95px;
           span {
             color: #2A99F2;
-            font-size: 14px;
+            font-size: 12px;
             line-height: 25px;
           }
         }
         .s1{
           font-family: MicrosoftYaHei;
-          font-size: 14px;
+          font-size: 12px;
           color: #333333;
           line-height: 25px;
           margin-top: 10px;
@@ -651,7 +681,7 @@
         cursor: pointer;
         margin-right: 10px;
         &.select {
-          background-image: linear-gradient(-90deg, #4183EB 0%, #07BDFE 100%);
+          background: #2A99F2;
           color: white;
         }
         i {

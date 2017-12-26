@@ -2,8 +2,9 @@
   <div style="display: inline-block;vertical-align: bottom;width:100%">
     <div id="pole" ref="pole">
       <span v-for="(point,index) in processPosition" :style="pointPosition(point)" class="points-style"
-            :class="{active:processPosition.slice(0,index+1).reduce(function(sum, v) {return sum + v;}, 0)<=value-min}"><label
-        class="points">{{showPoints[index]+unit}}</label></span>
+            :class="{active:pointActive(index)}">
+        <label class="points">{{innerPoints[index]+unit}}</label>
+      </span>
       <slider
         :value="value"
         @refresh="refresh"
@@ -49,23 +50,23 @@
       }
     },
     data(){
-      this.points.push(this.max)
-      return {
-        showPoints: this.points,
-        filterStep: 0
-      }
-    },
-    components: {
-      'slider': slider
+      return {}
     },
     methods: {
+      // 断点占据百分比的位置，注意：point是该断点离上一个断点的位置
       pointPosition(point){
+        // console.log(point)
         let position = point / (this.max - this.min) * 100 + '%'
         return {width: position}
       },
+      pointActive(index){
+        return this.value >= this.innerPoints[index]
+      },
+      // 触发change事件
       refresh(){
         this.$emit('change')
       },
+      // 双向绑定触发事件
       setValue(value){
         this.$emit('input', value)
       }
@@ -74,21 +75,27 @@
       $sliderSize(){
         return this.$refs.pole.clientWidth
       },
-      processPosition(){
-        var points = this.points.slice()
-        points.push(this.max)
-        var length = points.length
-        points = points.filter(item => {
-          return item > this.min
+      innerPoints(){
+        // 去除一些明显不可能的断点
+        var innerPoints = this.points.filter(item => {
+          return item > this.min && item < this.max
         })
-        this.filterStep = length - points.length
-        return points.map((value, index, arr) => {
+        // 最大值必须加上断点
+        innerPoints.push(this.max)
+        return innerPoints
+      },
+      processPosition(){
+        // 每个断点距离前一个断点的距离
+        return this.innerPoints.map((value, index, arr) => {
           if (index) {
             return value - arr[index - 1]
           }
           return value - this.min
         })
       }
+    },
+    components: {
+      'slider': slider
     }
   }
 </script>
@@ -98,6 +105,7 @@
     height: 16px;
     position: relative;
     font-size: 0px;
+    user-select: none;
   }
 
   .active {
@@ -105,7 +113,7 @@
   }
 
   .points-style {
-    background: #EFEFEF;;
+    background: #f5f5f5;;
     height: 100%;
     text-align: right;
     font-size: 16px;
@@ -130,7 +138,7 @@
   .points {
     position: absolute;
     z-index: 100;
-    right: 5px;
+    right: 8px;
 
     font-size: 10px;
   }

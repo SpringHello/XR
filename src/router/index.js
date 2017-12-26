@@ -12,6 +12,7 @@ import LR from '@/LR'
 // import Price from '@/components/App/Price'
 const Price = () => import('@/components/App/Price')
 const Home = () => import('@/components/App/Home')
+const modal = () => import('@/components/App/modal')
 
 const hostPrice = () => import('@/components/App/Price/Host')
 const diskPrice = () => import('@/components/App/Price/Disk')
@@ -38,6 +39,7 @@ const Disk = () => import('@/components/Back/Disk')
 const Vpc = () => import('@/components/Back/Vpc')
 const VpcManage = () => import('@/components/Back/VpcManage')
 const Ip = () => import('@/components/Back/Ip')
+const Order = () => import('@/components/Back/Order')
 
 // 404
 const notFindPage = () => import('@/components/404')
@@ -54,21 +56,33 @@ var router = new Router({
       children: [
         {path: '', name: 'home', component: Home},
         {path: 'home', name: 'home', component: Home},
+        {path: 'modal', name: 'modal', component: modal},
         {
           path: 'price',
           name: 'price',
           component: Price,
           children: [
             {
-              path: '', name: 'hostPrice', component: hostPrice
+              path: '',
+              name: 'hostPrice',
+              component: hostPrice
             },
             {
-              path: 'hostPrice', name: 'hostPrice', component: hostPrice
-            }, {
-              path: 'diskPrice', name: 'diskPrice', component: diskPrice
-            }, {
-              path: 'elasticIPPrice', name: 'elasticIPPrice', component: elasticIPPrice
-            }]
+              path: 'hostPrice',
+              name: 'hostPrice',
+              component: hostPrice
+            },
+            {
+              path: 'diskPrice',
+              name: 'diskPrice',
+              component: diskPrice
+            },
+            {
+              path: 'elasticIPPrice',
+              name: 'elasticIPPrice',
+              component: elasticIPPrice
+            }
+          ]
         }
       ]
     },
@@ -88,7 +102,8 @@ var router = new Router({
         {path: 'host', name: 'host', component: Host},
         {path: 'vpc', name: 'vpc', component: Vpc},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
-        {path: 'ip', name: 'ip', component: Ip}
+        {path: 'ip', name: 'ip', component: Ip},
+        {path: 'order', name: 'order', component: Order}
       ]
     },
     {
