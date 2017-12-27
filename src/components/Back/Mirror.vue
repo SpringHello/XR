@@ -1,28 +1,18 @@
 <template>
   <div id="background">
-    <Spin fix v-show="loading">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-      <div>{{loadingMessage}}</div>
-    </Spin>
     <div id="wrapper">
-      <span>云服务器 / 镜像</span>
+      <span>安全 / 防火墙</span>
       <div id="content">
         <div id="header">
-          <span id="title">镜像</span>
+          <span id="title">防火墙</span>
         </div>
         <Alert>
-          为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。
+          防火墙描述
         </Alert>
         <Tabs type="card" :animated="false" style="min-height: 400px">
           <TabPane label="系统镜像">
             <div class="operator-bar">
               <Button type="primary" @click="createHostBySystem">以镜像创建主机</Button>
-              <!--镜像系统过滤器-->
-              <!-- div class="filter">
-                <Select v-model="filterKey" @on-change="filter" style="width:200px">
-                  <Option v-for="item in filterList" :value="item" :key="item">{{ item }}</Option>
-                </Select>
-              </div -->
             </div>
             <Table :columns="systemColumns" :data="systemData" class="table" @radio-change="selectChange"></Table>
           </TabPane>
@@ -32,43 +22,41 @@
               <Button type="primary" @click="createHost">生成主机</Button>
               <Button type="primary" @click="deleteSelection">删除</Button>
             </div>
-            <Table :columns="ownColumns" :data="ownData" @radio-change="selectionsChange"
-                   :type="selection"></Table>
-
-            <Modal
-              scrollable=false
-              v-model="showModal.createMirror"
-              title="创建镜像"
-              @on-ok="ok">
-              <Form :model="formItem" :label-width="80">
-                <FormItem label="主机">
-                  <Select v-model="formItem.vmInfo" style="width:200px">
-                    <Option v-for="item in hostName" :value="`${item.rootdiskid}#${item.zoneid}`"
-                            :key="item.computerid">
-                      {{item.computername}}
-                    </Option>
-                  </Select>
-                </FormItem>
-                <FormItem label="镜像名">
-                  <Input v-model="formItem.mirrorName" placeholder="请输入" style="width: 300px"></Input>
-                </FormItem>
-                <FormItem label="镜像描述">
-                  <Input v-model="formItem.mirrorDescription" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
-                         placeholder="请输入..."></Input>
-                </FormItem>
-              </Form>
-              <div slot="footer">
-                <Button type="ghost" @click="cancel">取消</Button>
-                <Button type="primary"
-                        :disabled="formItem.vmInfo==''||formItem.mirrorName==''||formItem.mirrorDescription==''"
-                        @click="ok">确定
-                </Button>
-              </div>
-            </Modal>
+            <Table :columns="ownColumns" :data="ownData" @radio-change="selectionsChange" :type="selection"></Table>
           </TabPane>
         </Tabs>
       </div>
     </div>
+    <Modal
+      scrollable=false
+      v-model="showModal.createMirror"
+      title="创建镜像"
+      @on-ok="ok">
+      <Form :model="formItem" :label-width="80">
+        <FormItem label="主机">
+          <Select v-model="formItem.vmInfo" style="width:200px">
+            <Option v-for="item in hostName" :value="`${item.rootdiskid}#${item.zoneid}`"
+                    :key="item.computerid">
+              {{item.computername}}
+            </Option>
+          </Select>
+        </FormItem>
+        <FormItem label="镜像名">
+          <Input v-model="formItem.mirrorName" placeholder="请输入" style="width: 300px"></Input>
+        </FormItem>
+        <FormItem label="镜像描述">
+          <Input v-model="formItem.mirrorDescription" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
+                 placeholder="请输入..."></Input>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button type="ghost" @click="cancel">取消</Button>
+        <Button type="primary"
+                :disabled="formItem.vmInfo==''||formItem.mirrorName==''||formItem.mirrorDescription==''"
+                @click="ok">确定
+        </Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -317,33 +305,10 @@
       inter(){
         this.intervalInstance = setInterval(() => {
             var zoneOptions = JSON.parse(localStorage.getItem("zoneOptions"))
-            var zoneid = zoneOptions[0].zoneid
-            /*var url = `information/listTemplates.do?user=0&zoneid=${zoneid}`
-             this.$http.get(url).then(response => {
-             if (response.status == 200 && response.data.status == 1) {
-             var originData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
-             if (this.select) {
-             for (var j = 0; j < systemData.length; j++) {
-             if (this.select.templateid == systemData[j].templateid) {
-             systemData[j]._checked = true
-             break;
-             }
-             }
-             }
-             systemData.forEach(item => {
-             if (item.status == 2)
-             item._disabled = true
-             })
-             this.systemData = systemData
-             this.originData = this.systemData
-             }
-             })*/
-
             var url1 = `information/listTemplates.do?user=1&zoneid=${zoneid}`
             this.$http.get(url1).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 var ownData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
-
                 ownData.forEach(item => {
                   if (this.selections) {
                     if (this.selections.templateid == item.templateid)
@@ -404,23 +369,23 @@
           onOk: () => {
             var url = `Snapshot/deleteTemplate.do?templateid=${this.selections.id}`
             this.ownData.forEach(item => {
-              if (item.id == this.selections.id)
-                item.status = 3 //删除中
+              if (item.id == this.selections.id) {
+                item.status = 3 // 删除中
+              }
             })
             this.$http.get(url).then(response => {
-                if (response.status == 200 && response.data.status == 1) {
-                  var zoneid = this.$store.state.zoneOptions[0].zoneid
-                  var url1 = `information/listTemplates.do?user=1&zoneid=${zoneid}`
-                  this.$http.get(url1).then(response => {
-                    if (response.status == 200 && response.data.status == 1) {
-                      this.ownData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
-                    }
-                  })
-                }
+              if (response.status == 200 && response.data.status == 1) {
+                var zoneid = this.$store.state.zoneOptions[0].zoneid
+                var url1 = `information/listTemplates.do?user=1&zoneid=${zoneid}`
+                this.$http.get(url1).then(response => {
+                  if (response.status == 200 && response.data.status == 1) {
+                    this.ownData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
+                  }
+                })
               }
-            )
-          },
-        });
+            })
+          }
+        })
       },
       ok () {
         this.showModal.createMirror = false
@@ -436,7 +401,7 @@
         this.formItem.mirrorName = ''
         this.formItem.mirrorDescription = ''
         this.showModal.createMirror = false
-      },
+      }
     },
     computed: {
       auth() {
@@ -452,4 +417,5 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+
 </style>

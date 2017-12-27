@@ -1,140 +1,115 @@
 <template>
-  <div class="background">
-    <div class="content">
-      <div>
-        <span class="title">防火墙</span>
+  <div id="background">
+    <div id="wrapper">
+      <span>安全 / 防火墙</span>
+      <div id="content">
+        <div id="header">
+          <span id="title">防火墙</span>
+        </div>
+        <Alert>
+          防火墙描述
+        </Alert>
+        <div class="operator-bar">
+          <Button type="primary" @click="showModal.newFirewall = true">新建</Button>
+          <!--Button type="primary">加入负载均衡</Button-->
+          <Button type="primary" @click="listNetwork">应用防火墙规则至</Button>
+          <Dropdown style="margin-left: 20px;vertical-align: middle;" @on-click="handleEvent">
+            <Button type="primary">
+              更多操作
+              <Icon type="arrow-down-b"></Icon>
+            </Button>
+            <Dropdown-menu slot="list">
+              <Poptip
+                confirm
+                width="200"
+                placement="right"
+                title="您确认删除该防火墙？"
+                @on-ok="del">
+                <li class="del">删除</li>
+              </Poptip>
+              <Dropdown-item name="modify">修改</Dropdown-item>
+            </Dropdown-menu>
+          </Dropdown>
+        </div>
+        <div>
+          <Table border :columns="columns" :data="tableData" :border="false"
+                 @on-current-change="setSelect" @radio-change="selectChange"></Table>
+          <Page :total="pageInfo.total" :current="pageInfo.page" :page-size=10 style="float:right;margin-top:15px"
+                @on-change="next"></Page>
+        </div>
       </div>
-      <div class="operator-bar">
-        <Button type="primary" @click="showModal.newFirewall = true">新建</Button>
-        <!--Button type="primary">加入负载均衡</Button-->
-        <Button type="primary" @click="listNetwork">应用防火墙规则至</Button>
-        <Dropdown style="margin-left: 20px;vertical-align: middle;" @on-click="handleEvent">
-          <Button type="primary">
-            更多操作
-            <Icon type="arrow-down-b"></Icon>
-          </Button>
-          <Dropdown-menu slot="list">
-            <Poptip
-              confirm
-              width="200"
-              placement="right"
-              title="您确认删除该防火墙？"
-              @on-ok="del">
-              <li class="del">删除</li>
-            </Poptip>
-            <Dropdown-item name="modify">修改</Dropdown-item>
-          </Dropdown-menu>
-        </Dropdown>
+    </div>
+
+    <Modal v-model="showModal.newFirewall" width="620" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        新建防火墙
       </div>
-      <div>
-        <Table border :columns="columns" :data="tableData" :border="false"
-               @on-current-change="setSelect" @radio-change="selectChange"></Table>
-        <Page :total="pageInfo.total" :current="pageInfo.page" :page-size=10 style="float:right;margin-top:15px"
-              @on-change="next"></Page>
+      <div style="width:60%">
+        <Form v-model="newForm" :label-width="70" onsubmit="return false">
+          <Form-item label="名称">
+            <Input v-model="newForm.firewallName" placeholder="请输入防火墙名称"
+                   @on-enter="createFirewall"></Input>
+          </Form-item>
+          <Form-item label="所属VPC">
+            <Select v-model="newForm.vpc" placeholder="请选择">
+              <Option v-for="item in vpcArray" :key="item.vpcid" :value="item.vpcid">{{item.vpcname}}
+              </Option>
+            </Select>
+          </Form-item>
+        </Form>
       </div>
-    </div>
-  </div>
+      <p style="padding:20px;background-color: #F7F7F7;font-size: 14px;color: rgba(0,0,0,0.43);font-weight: 600">
+        为保障安全，新建防火墙在未进行创建规则时默认为上行规则可全部使用，下行规则全部禁用。
+        如需创建其他规则请进入管理页面进行操作。</p>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.newFirewall = false">取消</Button>
+        <Button type="primary" :disabled="newForm.firewallName==''||newForm.vpc==''" @click="createFirewall">确定
+        </Button>
+      </div>
+    </Modal>
 
-  <Modal v-model="showModal.newFirewall" width="620" :scrollable="true">
-    <div slot="header"
-         style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-      新建防火墙
-    </div>
-    <div style="width:60%">
-      <Form v-model="newForm" :label-width="70" onsubmit="return false">
-        <Form-item label="名称">
-          <Input v-model="newForm.firewallName" placeholder="请输入防火墙名称"
-                 @on-enter="createFirewall"></Input>
-        </Form-item>
-        <Form-item label="所属VPC">
-          <Select v-model="newForm.vpc" placeholder="请选择">
-            <Option v-for="item in vpcArray" :key="item.vpcid" :value="item.vpcid">{{item.vpcname}}
-            </Option>
-          </Select>
-        </Form-item>
-      </Form>
-    </div>
-    <p style="padding:20px;background-color: #F7F7F7;font-size: 14px;color: rgba(0,0,0,0.43);font-weight: 600">
-      为保障安全，新建防火墙在未进行创建规则时默认为上行规则可全部使用，下行规则全部禁用。
-      如需创建其他规则请进入管理页面进行操作。</p>
-    <div slot="footer">
-      <Button type="ghost" @click="showModal.newFirewall = false">取消</Button>
-      <Button type="primary" :disabled="newForm.firewallName==''||newForm.vpc==''" @click="createFirewall">确定
-      </Button>
-    </div>
-  </Modal>
+    <Modal v-model="showModal.apply" width="590" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        应用防火墙规则至
+      </div>
+      <div style="width:60%">
+        <Form :model="applyForm" :label-width="80">
+          <Form-item label="私有网络">
+            <Select v-model="applyForm.network" placeholder="请选择">
+              <Option v-for="item in applyForm.networkList" :key="item" :value="item.ipsegmentid">
+                {{item.name}}
+              </Option>
+            </Select>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.apply = false;applyForm.network='';applyForm.networkList=[]">取消</Button>
+        <Button type="primary" :disabled="applyForm.network==''" @click="apply">确定
+        </Button>
+      </div>
+    </Modal>
 
-
-  <Modal v-model="showModal.apply" width="590" :scrollable="true">
-    <div slot="header"
-         style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-      应用防火墙规则至
-    </div>
-    <div style="width:60%">
-      <Form :model="applyForm" :label-width="80">
-        <Form-item label="私有网络">
-          <Select v-model="applyForm.network" placeholder="请选择">
-            <Option v-for="item in applyForm.networkList" :key="item" :value="item.ipsegmentid">
-              {{item.name}}
-            </Option>
-          </Select>
-        </Form-item>
-      </Form>
-    </div>
-    <div slot="footer">
-      <Button type="ghost" @click="showModal.apply = false;applyForm.network='';applyForm.networkList=[]">取消</Button>
-      <Button type="primary" :disabled="applyForm.network==''" @click="apply">确定
-      </Button>
-    </div>
-  </Modal>
-
-
-  <Modal v-model="showModal.modify" width="590" :scrollable="true">
-    <div slot="header"
-         style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-      修改防火墙
-    </div>
-    <div style="width:60%">
-      <Form :model="modifyForm" :label-width="80">
-        <Form-item label="防火墙名称">
-          <Input v-model="modifyForm.name" placeholder="请重置防火墙名称"></Input>
-        </Form-item>
-      </Form>
-    </div>
-    <div slot="footer">
-      <Button type="ghost" @click="showModal.modify = false;modifyForm.name=''">取消</Button>
-      <Button type="primary" :disabled="modifyForm.name==''" @click="modify">确定
-      </Button>
-    </div>
-  </Modal>
-
-  <!--Modal
-    v-model="showModal.renewal"
-    title="续费选择"
-    width="590"
-    @on-ok="ok" scrollable="true">
-    <div style="height:100px;width:90%;margin:0px auto">
-      <span style="font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;vertical-align:middle">
-      付费类型 :
-      </span>
-      <Select v-model="renewalType" style="width:140px">
-        <Option v-for="item in timeOptions.renewalType" :value="item.value" :key="item">{{ item.label }}</Option>
-      </Select>
-      <span style="margin-left:30px;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;vertical-align:middle">
-      付费时长 :
-    </span>
-      <Select v-model="renewalTime" style="width:140px">
-        <Option v-for="item in timeOptions.renewalTime" :value="item.value" :key="item">{{ item.label }}</Option>
-      </Select>
-    </div>
-    <div style="width:90%;margin:0px auto;font-family: MicrosoftYaHei-Bold;font-size: 16px;color: #666666;">
-      应付费:{{cost}}
-    </div>
-    <div slot="footer" style="display: flex;width:177px;margin-left:350px;">
-      <div class="button cancel" @click="modal=false">取消</div>
-      <div class="button ok" @click="ok">确认续费</div>
-    </div>
-  </Modal-->
+    <Modal v-model="showModal.modify" width="590" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        修改防火墙
+      </div>
+      <div style="width:60%">
+        <Form :model="modifyForm" :label-width="80">
+          <Form-item label="防火墙名称">
+            <Input v-model="modifyForm.name" placeholder="请重置防火墙名称"></Input>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.modify = false;modifyForm.name=''">取消</Button>
+        <Button type="primary" :disabled="modifyForm.name==''" @click="modify">确定
+        </Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
