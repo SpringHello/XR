@@ -52,7 +52,9 @@
             </div>
           </TabPane>
           <TabPane label="网络拓扑">网络拓扑</TabPane>
-          <TabPane label="私有网关">私有网关</TabPane>
+          <TabPane label="私有网关">
+            <Table :columns="columns2" :data="virtualnet"></Table>
+          </TabPane>
         </Tabs>
       </div>
     </div>

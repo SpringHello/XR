@@ -44,7 +44,7 @@
       </div>
       <p>满10月送两月，满一年打8折，满两年打7.5折，满3年5折</p>
       <span>磁盘名称</span>
-      <Input placeholder="如不填写，系统自动生成" style="width: 360px;margin-left: 20px"></Input>
+      <Input v-model="diskName" placeholder="如不填写，系统自动生成" style="width: 360px;margin-left: 20px"></Input>
       <p style="padding-left: 86px;">当购买数量大于1台之时，磁盘命名规则为磁盘名称加随机数字。</p>
     </div>
     <!--磁盘列表-->
@@ -189,6 +189,8 @@
         autoRenewal: true,
         // 磁盘价格
         diskPrice: 0,
+        // 磁盘名称
+        diskName: '',
         // 磁盘列表
         diskList: [],
         // 登录弹框
@@ -252,6 +254,7 @@
           timeType: this.timeType,
           time: this.time + '',
           diskList: this.diskList,
+          diskName: this.diskName,
           cost: this.diskPrice,
           coupon: this.coupon
         }
@@ -267,6 +270,23 @@
           this.showModal.login = true
           this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
         } else {
+          this.createDiskOrder()
+        }
+      },
+      /* 创建磁盘订单 */
+      createDiskOrder () {
+        var count = 0
+        this.diskList.forEach(item => {
+          this.$http.get('http://localhost:8082/ruicloud/Disk/createVolume.do?zoneId=' + this.zone + '&diskSize=' + item.diskSize + '&diskName=' + this.diskName + '&diskOfferingId=' + item.diskType + '&timeType=' + this.timeType + '&timeValue=' + this.time).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              count++
+            }
+          })
+        })
+        if (count == this.diskList.length) {
+          // this.$router.push('order')
+        } else {
+          this.$Message.error('创建磁盘订单错误')
         }
       },
       /* 登录框校检等相关 */

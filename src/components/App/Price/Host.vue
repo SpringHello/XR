@@ -357,6 +357,19 @@
         </div>
       </div>
     </Modal>
+<!--    <Modal
+      class="my-model"
+      :class="{notOk:this.$store.state.authInfo.authtype==1&&this.$store.state.authInfo.checkstatus==0}"
+      v-model="modal4"
+      title="配额不足"
+      :ok-text="this.$store.state.authInfo.authtype==1&&this.$store.state.authInfo.checkstatus==0?确定:企业认证"
+      cancel-text="取消"
+      @on-ok="toEnterprise">
+      <p style="line-height:24px;font-size:14px;padding: 0 20px;">
+        <Icon type="information-circled"
+              style="color:#f90; font-size:24px;margin-right:10px;vertical-align:middle"></Icon>
+        {{this.infoMessage}}<a href="#/workorder">点击提交工单</a></p>
+    </Modal>-->
   </div>
 </template>
 
@@ -448,6 +461,7 @@
         networkCard: '',
         // 自定义主机是否购买公网ip
         buyPublicIP: true,
+        // 公网IP带宽
         publicIP: 1,
         // 主机名
         hostName: '',
@@ -543,7 +557,7 @@
         // 磁盘限制数
         diskLimit: 1,
         // 快速主机价格
-        quickHostCost: 0,
+        quickHostCost: 1,
         // 快速主机优惠
         quickHostCoupon: 0,
         // ip价格
@@ -561,7 +575,9 @@
         specify: false,
         visible: false,
         // 用户信息
-        userInfo: null
+        userInfo: null,
+        modal4: false,
+        infoMessage: ''
       }
     },
     created () {
@@ -582,13 +598,13 @@
         this.getDiskLimit()
         if (val == 'custom') {
           var params = {
-            cpunum: this.cpuNum + '',
+            cpuNum: this.cpuNum + '',
             memory: this.memorySize + '',
-            disk: 50 + '',
+            diskSize: 50 + '',
             zoneId: this.zone,
-            value: this.timeType + '',
-            timevalue: this.time + '',
-            disk_type: this.hostType
+            timeType: this.timeType + '',
+            timeValue: this.time + '',
+            diskType: this.hostType
           }
           this.publicIP = 1
           this.queryHost(params)
@@ -659,8 +675,172 @@
           this.showModal.login = true
           this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
         } else {
-          alert('购买')
+          if (this.pitchOn == 'quick') {
+            var zoneId = this.zone
+            var value = this.timeType + ''
+            var timevalue = this.time + ''
+            var params = null
+            switch (this.quickConfig) {
+              case '1':
+                params = {
+                  cpuNum: 1 + '',
+                  memory: 1 + '',
+                  diskSize: 50 + '',
+                  zoneId: zoneId,
+                  timeType: value + '',
+                  timeValue: timevalue + '',
+                  diskType: 'sas'
+                }
+                this.publicIP = 1
+                this.createQuickHostOrder(params)
+                break
+              case '2':
+                params = {
+                  cpuNum: 2 + '',
+                  memory: 4 + '',
+                  diskSize: 50 + '',
+                  zoneId: zoneId,
+                  timeType: value + '',
+                  timeValue: timevalue + '',
+                  diskType: 'sas'
+                }
+                this.publicIP = 1
+                this.createQuickHostOrder(params)
+                break
+              case '3':
+                params = {
+                  cpuNum: 4 + '',
+                  memory: 4 + '',
+                  diskSize: 50 + '',
+                  zoneId: zoneId,
+                  timeType: value + '',
+                  timeValue: timevalue + '',
+                  diskType: 'ssd'
+                }
+                this.publicIP = 2
+                this.createQuickHostOrder(params)
+                break
+              case '4':
+                params = {
+                  cpuNum: 4 + '',
+                  memory: 8 + '',
+                  diskSize: 50 + '',
+                  zoneId: zoneId,
+                  timeType: value + '',
+                  timeValue: timevalue + '',
+                  diskType: 'ssd'
+                }
+                this.publicIP = 2
+                this.createQuickHostOrder(params)
+                break
+              case '5':
+                params = {
+                  cpuNum: 1 + '',
+                  memory: 1 + '',
+                  diskSize: 50 + '',
+                  zoneId: zoneId,
+                  timeType: value + '',
+                  timeValue: timevalue + '',
+                  diskType: 'sas'
+                }
+                this.publicIP = 0
+                this.createQuickHostOrder(params)
+                break
+              case '6':
+                params = {
+                  cpuNum: 2 + '',
+                  memory: 4 + '',
+                  diskSize: 50 + '',
+                  zoneId: zoneId,
+                  timeType: value + '',
+                  timeValue: timevalue + '',
+                  diskType: 'sas'
+                }
+                this.publicIP = 0
+                this.createQuickHostOrder(params)
+                break
+              case '7':
+                params = {
+                  cpuNum: 4 + '',
+                  memory: 4 + '',
+                  diskSize: 50 + '',
+                  zoneId: zoneId,
+                  timeType: value + '',
+                  timeValue: timevalue + '',
+                  diskType: 'ssd'
+                }
+                this.publicIP = 0
+                this.createQuickHostOrder(params)
+                break
+              case '8':
+                params = {
+                  cpuNum: 4 + '',
+                  memory: 8 + '',
+                  diskSize: 50 + '',
+                  zoneId: zoneId,
+                  timeType: value + '',
+                  timeValue: timevalue + '',
+                  diskType: 'ssd'
+                }
+                this.publicIP = 0
+                this.createQuickHostOrder(params)
+                break
+            }
+          }
         }
+      },
+      /* 创建快速配置主机订单 */
+      createQuickHostOrder (params) {
+        if (this.hostPassword != '') {
+          if (!this.passwordRegExp.test(this.hostPassword)) {
+            return
+          }
+        }
+        var renewal = this.autoRenewal ? 1 : 0
+        var url = `information/deployVirtualMachine.do?zoneid=${params.zoneId}&name=${this.hostName}&password=${this.hostPassword}&templateid=${this.osId}&size=${params.diskSize}&cpunum=${params.cpuNum}&memory=${params.memory}&bandwidth=${this.publicIP}&value=${params.timeType}&timevalue=${params.timeValue}&count=${this.form.number}&isautorenew=${renewal}&disktype=${params.diskType}&networkid=no`
+        this.$http.get(url).then(response => {
+          this.loading = false
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push('order')
+          } else {
+            this.infoMessage = response.data.message
+            this.modal4 = true
+          }
+        })
+      },
+      /* 创建自定义配置主机订单 */
+      createCustomHostOrder () {
+        if (this.hostPassword != '') {
+          if (!this.passwordRegExp.test(this.hostPassword)) {
+            return
+          }
+        }
+        var renewal = this.autoRenewal ? 1 : 0
+        var bandwidth = this.publicIP
+        var diskSize = this.diskList.map(item => {
+          return item.diskSize
+        }).join(',')
+        var diskType = this.diskList.map(item => {
+          return item.diskType
+        }).join(',')
+        var url = `information/deployVirtualMachine.do?zoneid=${this.zone}&name=${this.hostName}&password=${this.hostPassword}&templateid=${this.osId}&size=${diskSize}&cpunum=${this.cpuNum}&memory=${this.memory}&value=${this.timeType}&timevalue=${this.time}&count=0&isautorenew=${renewal}&disktype=${diskType}&networkid=${this.private.split('#')[0]}`
+        if (this.buyPublicIP == false) {
+          bandwidth = 0
+        }
+        url = url + '&bandwidth=' + bandwidth
+        if (this.specifyInfo != '指定IP') {
+          url += '&ipaddress=' + this.specifyInfo
+        }
+        this.$http.get(url)
+          .then(response => {
+            this.loading = false
+            if (response.status == 200 && response.data.status == 1) {
+              this.$router.push('order')
+            } else {
+              this.infoMessage = response.data.message
+              this.modal4 = true
+            }
+          })
       },
       /* 登录框校检等 */
       vail (field) {
@@ -1062,13 +1242,13 @@
           this.queryQuickHost()
         } else {
           var params = {
-            cpunum: this.cpuNum + '',
+            cpuNum: this.cpuNum + '',
             memory: this.memorySize + '',
-            disk: 50 + '',
+            diskSize: 50 + '',
             zoneId: this.zone,
-            value: this.timeType + '',
-            timevalue: this.time + '',
-            disk_type: this.hostType
+            timeType: this.timeType + '',
+            timeValue: this.time + '',
+            diskType: this.hostType
           }
           this.queryHost(params)
           if (this.buyPublicIP) {
@@ -1083,13 +1263,13 @@
           this.queryQuickHost()
         } else {
           var params = {
-            cpunum: this.cpuNum + '',
+            cpuNum: this.cpuNum + '',
             memory: this.memorySize + '',
-            disk: 50 + '',
+            diskSize: 50 + '',
             zoneId: this.zone,
-            value: this.timeType + '',
-            timevalue: this.time + '',
-            disk_type: this.hostType
+            timeType: this.timeType + '',
+            timeValue: this.time + '',
+            diskType: this.hostType
           }
           this.queryHost(params)
           if (this.buyPublicIP) {
@@ -1109,39 +1289,39 @@
       /* 监听系统盘类型，查询价格 */
       hostType () {
         var params = {
-          cpunum: this.cpuNum + '',
+          cpuNum: this.cpuNum + '',
           memory: this.memorySize + '',
-          disk: 50 + '',
+          diskSize: 50 + '',
           zoneId: this.zone,
-          value: this.timeType + '',
-          timevalue: this.time + '',
-          disk_type: this.hostType
+          timeType: this.timeType + '',
+          timeValue: this.time + '',
+          diskType: this.hostType
         }
         this.queryHost(params)
       },
       /* 监听cpu核心数，查询价格 */
       cpuNum () {
         var params = {
-          cpunum: this.cpuNum + '',
+          cpuNum: this.cpuNum + '',
           memory: this.memorySize + '',
-          disk: 50 + '',
+          diskSize: 50 + '',
           zoneId: this.zone,
-          value: this.timeType + '',
-          timevalue: this.time + '',
-          disk_type: this.hostType
+          timeType: this.timeType + '',
+          timeValue: this.time + '',
+          diskType: this.hostType
         }
         this.queryHost(params)
       },
       /* 监听内存，查询价格 */
       memorySize () {
         var params = {
-          cpunum: this.cpuNum + '',
+          cpuNum: this.cpuNum + '',
           memory: this.memorySize + '',
-          disk: 50 + '',
+          diskSize: 50 + '',
           zoneId: this.zone,
-          value: this.timeType + '',
-          timevalue: this.time + '',
-          disk_type: this.hostType
+          timeType: this.timeType + '',
+          timeValue: this.time + '',
+          diskType: this.hostType
         }
         this.queryHost(params)
       }
