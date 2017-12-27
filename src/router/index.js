@@ -30,10 +30,14 @@ const Reset = () => import('@/components/LR/Reset')
 // import Host from '@/components/Back/Host'
 const Overview = () => import('@/components/Back/Overview')
 const Work = () => import('@/components/Back/Work')
+const Recharge = () => import('@/components/Back/Recharge.vue')
 const Balance = () => import('@/components/Back/Balance')
 const Renew = () => import('@/components/Back/Renew')
 const New = () => import('@/components/Back/New')
 const Host = () => import('@/components/Back/Host')
+const Mirror = () => import('@/components/Back/Mirror')
+const Snapshot = () => import('@/components/Back/Snapshot')
+const Firewall = () => import('@/components/Back/Firewall')
 const Disk = () => import('@/components/Back/Disk')
 const Vpc = () => import('@/components/Back/Vpc')
 const VpcManage = () => import('@/components/Back/VpcManage')
@@ -83,10 +87,14 @@ var router = new Router({
         {path: 'overview', name: 'overview', component: Overview},
         {path: 'work', name: 'work', component: Work},
         {path: 'renew', name: 'renew', component: Renew},
+        {path: 'recharge', name: 'recharge', component: Recharge},
         {path: 'balance', name: 'balance', component: Balance},
         {path: 'disk', name: 'disk', component: Disk},
+        {path: 'snapshot', name: 'snapshot', component: Snapshot},
+        {path: 'firewall', name: 'firewall', component: Firewall},
         {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
+        {path: 'mirror', name: 'mirror', component: Mirror},
         {path: 'vpc', name: 'vpc', component: Vpc},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
         {path: 'ip', name: 'ip', component: Ip},

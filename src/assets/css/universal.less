@@ -19,13 +19,12 @@
 }
 
 /* 价格字体 */
-.universal-price{
+.universal-price {
   font-size: 24px;
   color: #2A99F2;
 }
 
 /* 每个vue页面 title字体样式 */
-
 .universal-title {
   font-size: 24px;
   color: #111111;
@@ -59,6 +58,57 @@
   .thr-header {
     .ivu-select-dropdown {
       margin-top: 0px;
+    }
+  }
+}
+
+/* 每个页面头部 */
+#background {
+  background-color: #f5f5f5;
+  width: 100%;
+  @diff: 146px;
+  min-height: calc(~"100% - @{diff}");
+  #wrapper {
+    width: 1200px;
+    margin: 0px auto;
+    & > span {
+      font-family: PingFangSC-Regular;
+      font-size: 12px;
+      color: rgba(17, 17, 17, 0.43);
+      line-height: 22px;
+      padding: 11px 0px;
+      display: block;
+    }
+    #content {
+      background-color: white;
+      padding: 20px;
+      min-height: 700px;
+      #header {
+        padding-bottom: 20px;
+        border-bottom: 1px solid #E9E9E9;
+        #title {
+          font-size: 24px;
+          color: rgba(17, 17, 17, 0.75);
+        }
+      }
+      .ivu-alert-info {
+        margin: 20px 0px;
+        border: solid 1px #2A99F2;
+        border-radius: 4px;
+      }
+      .operator-bar {
+        font-size: 0px;
+        margin: 20px 0px;
+        button {
+          margin-left: 10px;
+          &:first-of-type {
+            margin-left: 0px;
+          }
+        }
+        .ivu-dropdown {
+          margin-left: 10px;
+        }
+      }
     }
   }
 }

@@ -1,18 +1,16 @@
 <template>
-  <div id="ip">
+  <div id="background">
     <div id="wrapper">
-      <span id="title">公网IP</span>
+      <span>网络 / 公网IP</span>
       <div id="content">
         <div id="header">
-          <span class="universal-title">公网IP</span>
-          <Button type="primary" style="float:right">刷新</Button>
-          <div style="clear: right"></div>
+          <span id="title">公网IP</span>
         </div>
-        <div class="universal-alert" style="margin-top: 8px;">
-          <p>弹性公网 IP是专为动态云计算设计的静态 IP 地址，在 新睿云 系统中弹性公网IP地址与您的账户而非特定的资源关联。随时可以解绑、再分配到其他资源。</p>
-        </div>
-        <Tabs type="card" style="margin-top: 20px;" :animated="false">
+        <Alert>
+          为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。
+        </Alert>
 
+        <Tabs type="card" style="margin-top: 20px;" :animated="false">
           <TabPane label="公网IP">
             <div class="operate">
               <Button type="primary">添加公网IP</Button>
@@ -140,7 +138,7 @@
             margin-right: 8px;
           }
         }
-        .table-content{
+        .table-content {
           margin-top: 10px;
         }
       }

@@ -1,19 +1,19 @@
 <template>
-  <div class="background">
-    <div class="wrapper">
+  <div id="background">
+    <div id="wrapper">
       <span>首页 / 硬盘</span>
-      <div class="content">
-        <div style="padding-bottom: 20px;border-bottom: 1px solid #E9E9E9;">
-          <span class="title">硬盘</span>
+      <div id="content">
+        <div id="header">
+          <span id="title">硬盘</span>
         </div>
-        <Alert style="margin-top: 20px; border: solid 1px #2A99F2;border-radius: 4px;">
+        <Alert>
           为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。
         </Alert>
         <div class="operator-bar">
           <Button type="primary" @click="newDisk">新增</Button>
-          <Button type="primary" @click="mount" style="margin-left: 10px;">挂载</Button>
-          <Button type="primary" @click="unload" style="margin-left: 10px;">卸载</Button>
-          <Dropdown style="margin-left: 10px;vertical-align: middle;" @on-click="hideEvent">
+          <Button type="primary" @click="mount">挂载</Button>
+          <Button type="primary" @click="unload">卸载</Button>
+          <Dropdown @on-click="hideEvent">
             <Button type="primary">
               更多操作
               <Icon type="arrow-down-b"></Icon>
@@ -671,38 +671,5 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-  .background {
-    background-color: #f5f5f5;
-    width: 100%;
-    @diff: 146px;
-    min-height: calc(~"100% - @{diff}");
-    .wrapper {
-      width: 1200px;
-      margin: 0px auto;
-      margin-bottom: 25px;
-      & > span {
-        font-family: PingFangSC-Regular;
-        font-size: 12px;
-        color: rgba(17, 17, 17, 0.43);
-        line-height: 22px;
-        padding: 11px 0px;
-        display: block;
-      }
-      .content {
-        background-color: white;
-        padding: 20px;
-        min-height: 700px;
-        .title {
-          font-family: MicrosoftYaHei;
-          font-family: 微软雅黑;
-          font-size: 24px;
-          color: rgba(17, 17, 17, 0.75);
-        }
-        .operator-bar {
-          font-size: 0px;
-          margin-top: 20px;
-        }
-      }
-    }
-  }
+
 </style>

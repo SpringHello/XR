@@ -1,20 +1,19 @@
 <template>
-  <div id="vpc">
+  <div id="background">
     <div id="wrapper">
-      <span id="title">总览</span>
-      <div id="body">
-        <div class="head-info">
-          <h1>虚拟私有云VPC</h1>
-          <Button type="primary">刷新</Button>
+      <span>首页 / 硬盘</span>
+      <div id="content">
+        <div id="header">
+          <span id="title">硬盘</span>
         </div>
-        <Alert>虚拟私有云，通过逻辑方式进行网络隔离，提供安全、隔离的网络环境。VPC为您提供与传统网络无差别的虚拟网络，同时还可以为您提供弹性IP、安全组、VPN等高级网络服务。</Alert>
-        <div class="button-group">
+        <Alert>
+          为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。
+        </Alert>
+        <div class="operator-bar">
           <Button type="primary" @click="modalList.newVpc = true">新建VPC</Button>
           <Button type="primary" @click="modalList.addGateway = true">添加私有网关</Button>
           <Button type="primary">修改VPC</Button>
           <Button type="primary">删除VPC</Button>
-          <Button @click="modalList.rederror = true">红色叉叉</Button>
-          <Button @click="modalList.yellowdeltte = true">黄色感叹号</Button>
         </div>
         <div class="card-wrap">
           <div class="card" v-for="(item,index) in netData" :key="index" :class="{active:item._select}"
@@ -144,34 +143,6 @@
       </div>
     </Modal>
 
-    <!-- 错误弹窗 -->
-    <Modal v-model="modalList.rederror" :scrollable="true" :closable="false" :width="280">
-      <p class="modal-content-s">
-        <Icon type="close-circled" class="orange f24 mr10"></Icon>
-        弹出错误原因，并提示用户解决办法
-      </p>
-      <p slot="footer" class="modal-footer-s">
-        <Button class="f16" @click="modalList.rederror = false">取消</Button>
-        <Button class="f16" type="primary" @on-ok="ok">联系客服</Button>
-      </p>
-    </Modal>
-    <!-- 删除网卡弹窗 -->
-    <Modal v-model="modalList.yellowdeltte" :scrollable="true" :closable="false" :width="390">
-      <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
-        <div>
-          <strong>删除</strong>
-          <p class="lh24">若要删除主网卡，需在主机其他网卡中选择一个从网卡作为新的主网卡。请选择：</p>
-          <Select v-model="model1" style="width:296px;" class="mt10" placeholder="请选择网卡">
-            <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
-        </div>
-      </div>
-      <p slot="footer" class="modal-footer-s">
-        <Button class="f16" @click="modalList.yellowdeltte = false">取消</Button>
-        <Button class="f16" type="primary" @on-ok="ok">确定</Button>
-      </p>
-    </Modal>
   </div>
 </template>
 
@@ -191,8 +162,6 @@
         modalList: {
           newVpc: false,
           addGateway: false,
-          rederror: false,
-          yellowdeltte: false
         },
         // 新建vpc表单数据
         newForm: {
@@ -315,138 +284,82 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-  #vpc {
-    background-color: #f5f5f5;
-    /*
-        less 处理css计算属性calc有bug
-        申明变量diff，可正常使用
-      */
-    @diff: 146px;
-    min-height: calc(~"100% - @{diff}");
-    #wrapper {
-      width: 1200px;
-      margin: 0px auto;
-      #title {
-        font-size: 12px;
-        color: rgba(17, 17, 17, 0.43);
-        line-height: 22px;
-        display: inline-block;
-        margin: 10px 0px;
-      }
-      button {
-        padding: 5px 15px;
-      }
-      #body {
-        padding: 20px;
-        background: #FFFFFF;
-        .head-info {
-          padding-bottom: 10px;
-          margin-bottom: 8px;
-          border-bottom: 1px solid #E9E9E9;
+  .card-wrap {
+    display: flex;
+    justify-content: space-between;
+    .active {
+      border: 1px solid #2A99F2;
+      box-shadow: 0 2px 8px 0 rgba(42, 153, 242, 0.35);
+    }
+    .card:hover {
+      border: 1px solid #2A99F2;
+      box-shadow: 0 2px 8px 0 rgba(42, 153, 242, 0.35);
+    }
+    .card {
+      width: 570px;
+      height: 313px;
+      padding: 20px;
+      border: 1px solid #ffffff;
+      box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.20);
+      .content {
+        border-bottom: 1px solid #E9E9E9;
+        .item-wrap {
+          margin-bottom: 20px;
+        }
+        .item-wrap:nth-child(2) {
+          margin-bottom: 0px;
+          width: 265px;
           display: flex;
-          justify-content: space-between;
-          h1 {
-            font-weight: normal;
-            color: #111111;
-          }
-          button {
-            font-size: 14px;
+          flex-wrap: wrap;
+          justify-content: center;
+          .dotted-across {
+            height: 20px;
+            border-right: dotted #979797 1px;
           }
         }
-        .ivu-alert-info {
-          margin: 0;
-          padding: 7px 10px;
-          background: rgba(42, 153, 242, 0.10);
-          border: 1px solid #2A99F2;
-          border-radius: 4px;
+        .item-wrap:nth-child(3) {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          .dotted-vertical {
+            width: 40px;
+            border-top: dotted #979797 1px;
+          }
+        }
+        .item {
+          width: 265px;
+          padding: 10px 20px;
+          border: 1px solid #E9E9E9;
           font-size: 14px;
-          color: #666666;
-        }
-        .button-group {
-          margin: 20px 0;
-          button {
-            margin-right: 10px;
+          p {
+            span {
+              color: #2A99F2;
+              float: right;
+            }
           }
         }
-        .card-wrap {
-          display: flex;
+        .item1 {
+          width: 530px;
+          display: inline-flex;
           justify-content: space-between;
-          .active {
-            border: 1px solid #2A99F2;
-            box-shadow: 0 2px 8px 0 rgba(42, 153, 242, 0.35);
+          p:nth-child(2) {
+            color: #2A99F2;
           }
-          .card:hover {
-            border: 1px solid #2A99F2;
-            box-shadow: 0 2px 8px 0 rgba(42, 153, 242, 0.35);
-          }
-          .card {
-            width: 570px;
-            height: 313px;
-            padding: 20px;
-            border: 1px solid #ffffff;
-            box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.20);
-            .content {
-              border-bottom: 1px solid #E9E9E9;
-              .item-wrap {
-                margin-bottom: 20px;
-              }
-              .item-wrap:nth-child(2) {
-                margin-bottom: 0px;
-                width: 265px;
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                .dotted-across {
-                  height: 20px;
-                  border-right: dotted #979797 1px;
-                }
-              }
-              .item-wrap:nth-child(3) {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                .dotted-vertical {
-                  width: 40px;
-                  border-top: dotted #979797 1px;
-                }
-              }
-              .item {
-                width: 265px;
-                padding: 10px 20px;
-                border: 1px solid #E9E9E9;
-                font-size: 14px;
-                p {
-                  span {
-                    color: #2A99F2;
-                    float: right;
-                  }
-                }
-              }
-              .item1 {
-                width: 530px;
-                display: inline-flex;
-                justify-content: space-between;
-                p:nth-child(2) {
-                  color: #2A99F2;
-                }
-              }
-              .item4 {
-                width: 225px;
-              }
-            }
-            .card-bottom {
-              margin-top: 20px;
-              display: flex;
-              justify-content: flex-end;
-              button {
-                margin-left: 10px;
-              }
-              .btn-bgwhite {
-                background: #ffffff;
-                color: #2A99F2;
-              }
-            }
-          }
+        }
+        .item4 {
+          width: 225px;
+        }
+      }
+      .card-bottom {
+        margin-top: 20px;
+        display: flex;
+        justify-content: flex-end;
+        button {
+          margin-left: 10px;
+        }
+        .btn-bgwhite {
+          background: #ffffff;
+          color: #2A99F2;
         }
       }
     }

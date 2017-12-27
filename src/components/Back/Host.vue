@@ -1,16 +1,1222 @@
 <template>
-  <div>我是主机页面</div>
+  <div id="background">
+    <div id="wrapper">
+      <span>云服务器 / 主机</span>
+      <div id="content">
+        <div id="header">
+          <span id="title">主机</span>
+        </div>
+        <Alert>
+          为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。
+        </Alert>
+        <div class="operator-bar">
+          <Button type="primary" @click="startUp">一键启动</Button>
+          <Button type="primary" @click="bindIP" :disabled="status!='开启'&&status!='关机'">绑定IP</Button>
+          <Dropdown @on-click="hideEvent">
+            <Button type="primary">
+              更多操作
+              <Icon type="arrow-down-b"></Icon>
+            </Button>
+            <Dropdown-menu slot="list">
+              <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
+              <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
+              <Dropdown-item name="backup" v-if="status!='开启'&&status!='关机'" :disabled=true>
+                <Tooltip content="异常、欠费状态，备份不可用" placement="top">
+                  主机备份
+                </Tooltip>
+              </Dropdown-item>
+              <Dropdown-item name="backup" v-else>主机备份</Dropdown-item>
+              <Dropdown-item name="mirror" v-if="status!='关机'" :disabled=true>
+                <Tooltip content="制作镜像前您必须关闭主机" placement="top">
+                  制作镜像
+                </Tooltip>
+              </Dropdown-item>
+              <Dropdown-item name="mirror" v-else>制作镜像</Dropdown-item>
+              <Dropdown-item name="upgrade" v-if="status!='关机'" :disabled=true>
+                <Tooltip content="升级主机前您必须关闭主机" placement="top">
+                  升级
+                </Tooltip>
+              </Dropdown-item>
+              <Dropdown-item name="upgrade" v-else>
+                升级
+              </Dropdown-item>
+              <Poptip
+                confirm
+                width="200"
+                placement="right"
+                title="您确认重启主机吗？"
+                @on-ok="reboot"
+                @on-cancel="cancel">
+                <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>重启</li>
+              </Poptip>
+              <Poptip
+                confirm
+                width="200"
+                placement="right"
+                title="您确认删除这台主机吗？"
+                @on-ok="del"
+                @on-cancel="cancel"
+                style="display: block">
+                <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>删除</li>
+              </Poptip>
+              <Poptip
+                confirm
+                width="200"
+                placement="right"
+                title="您确认解绑主机IP吗？"
+                @on-ok="unbind"
+                @on-cancel="cancel"
+                style="display: block">
+                <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>解绑公网IP</li>
+              </Poptip>
+            </Dropdown-menu>
+          </Dropdown>
+        </div>
+        <div>
+          <Tabs type="card" :animated="false" v-model="status" @on-click="">
+            <Tab-pane :label="`开启(${openHost.length+waitHost.length})`" name="开启">
+              <div class="flex-wrapper">
+
+                <!-- 创建中主机列表 -->
+                <div v-for="(item,index) in waitHost" :key="item" :class="{select:item.select}"
+                     style="margin-bottom: 20px;height:228px;">
+                  <Card style="width:375px;">
+                    <div style="text-align:center">
+                      <div class="head">
+                        <div class="info">
+                          <h1 v-if="item.computername">{{item.computername}}</h1>
+                          <h1 v-else>创建中</h1>
+                        </div>
+                        <span style="margin-top:10px;margin-bottom:20px;color:#989898">{{item.serviceoffername}}&nbsp;|&nbsp;{{item.zonename}}</span>
+                        <span>镜像系统:{{item.templatename}}</span>
+                        <span>到期时间/有效期:{{item.endtime}}</span>
+                        <span>公网地址:{{item.publicip}}</span>
+                        <span>内网地址:{{item.privateip}}</span>
+                        <span>创建中</span>
+                      </div>
+                      <div class="foot">
+                        <span>{{item.createtime}}</span>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+
+
+                <div v-for="(item,index) in openHost" v-if="item.status==1" :key="item" :class="{select:item.select}"
+                     @click="toggle(item)"
+                     style="margin-bottom: 20px;height:228px;">
+                  <Card style="width:375px;height:228px;">
+                    <div style="text-align:center">
+                      <div class="head">
+                        <div class="info">
+                          <h1>{{item.computername}} | {{item.instancename}}</h1>
+                          <i v-if="auth" class="normal" @click="stop(item)">
+                            <i class="ico">|</i>
+                          </i>
+                          <i v-else class="normal">
+                            <i class="ico">|</i>
+                          </i>
+                        </div>
+                        <span style="margin-top:10px;margin-bottom:20px;color:#989898">{{item.serviceoffername}}&nbsp;|&nbsp;{{item.zonename}}</span>
+                        <span>镜像系统:{{item.templatename}}</span>
+                        <span>到期时间/有效期:{{item.endtime}}</span>
+                        <span v-if="!auth">公网地址:*******</span>
+                        <span v-else>公网地址:{{item.publicip}}</span>
+                        <span>内网地址:{{item.privateip}}</span>
+                        <span v-if="item.restart==1">重启中</span>
+                        <span v-else>运行中</span>
+                      </div>
+                      <div class="foot">
+                        <span>{{item.createtime}}</span>
+                        <button @click.stop="manage(item,'normal')" :disabled="!auth" style="margin-left:55px;">管理
+                        </button>
+                        <button v-if="!auth" :disabled="!auth">连接主机</button>
+                        <a v-else :href="item.connecturl" target="_blank"
+                           style="line-height: 30px;border: 1px solid;border-radius: 4px;width: 76px;">连接主机</a>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+
+                <!-- 关机中中主机列表 -->
+                <div v-for="(item,index) in openHost" v-if="item.status==2" :key="item" :class="{select:item.select}"
+                     style="margin-bottom: 20px;height:228px;">
+                  <Card style="width:375px;height:228px;">
+                    <div style="text-align:center">
+                      <div class="head">
+                        <div class="info">
+                          <h1>{{item.computername}} | {{item.instancename}}</h1>
+                        </div>
+                        <span style="margin-top:10px;margin-bottom:20px;color:#989898">{{item.serviceoffername}}&nbsp;|&nbsp;{{item.zonename}}</span>
+                        <span>镜像系统:{{item.templatename}}</span>
+                        <span>到期时间/有效期:{{item.endtime}}</span>
+                        <span>公网地址:{{item.publicip}}</span>
+                        <span>内网地址:{{item.privateip}}</span>
+                        <span>关机中</span>
+                        <my-loading v-model="item.progress"></my-loading>
+                      </div>
+                      <div class="foot">
+                        <span>{{item.createtime}}</span>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+
+                <div @click="createHost">
+                  <Card style="width:375px;height:228px;">
+                    <div
+                      style="height: 224px;pxcursor:pointer"
+                      @click="gotoNew">
+                      <i class="add"></i>
+                      <i class="add" style="transform: translate(-50%,-50%) rotate(90deg);"></i>
+
+                    </div>
+                  </Card>
+                </div>
+              </div>
+            </Tab-pane>
+            <Tab-pane :label="`异常(${errorHost.length})`" name="异常">
+              <div class="flex-wrapper">
+                <div v-for="(item,index) in errorHost" :key="item" :class="{select:item.select}" @click="toggle(item)"
+                     style="margin-bottom: 20px;height:228px;">
+                  <Card style="width:375px;height:228px;">
+                    <div style="text-align:center">
+                      <div class="head">
+                        <div class="info">
+                          <h1>{{item.computername}} | {{item.instancename}}</h1>
+                        </div>
+                        <span style="margin-top:10px;margin-bottom:20px;color:#989898">{{item.serviceoffername}}&nbsp;|&nbsp;{{item.zonename}}</span>
+                        <span>镜像系统:{{item.templatename}}</span>
+                        <span>到期时间/有效期:{{item.endtime}}</span>
+                        <span>公网地址:{{item.publicip}}</span>
+                        <span>内网地址:{{item.privateip}}</span>
+                        <span style="color:#f24747;top:112px">异常</span>
+                      </div>
+                      <div class="foot" style="background-color: #F24747">
+                        <span style="color:white">{{item.createtime}}</span>
+                        <button @click="recoverHost(item.id)"
+                                style="margin-left: 55px;color: rgb(242, 71, 71);background-color: white;border-color: white;">
+                          恢复
+                        </button>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+                <div v-if="errorHost.length==0" class="logo">
+                  <span>您的云主机很健康，请继续保持哦</span>
+                </div>
+              </div>
+            </Tab-pane>
+            <Tab-pane :label="`欠费(${arrearsHost.length})`" name="欠费">
+              <div class="flex-wrapper">
+                <div v-for="(item,index) in arrearsHost" :key="item" :class="{select:item.select}" @click="toggle(item)"
+                     style="margin-bottom: 20px;height:228px;">
+                  <Card style="width:375px;height:228px;">
+                    <div style="text-align:center">
+                      <div class="head">
+                        <div class="info">
+                          <h1>{{item.computername}} | {{item.instancename}}</h1>
+                        </div>
+                        <span style="margin-top:10px;margin-bottom:20px;color:#989898">{{item.serviceoffername}}&nbsp;|&nbsp;{{item.zonename}}</span>
+                        <span>镜像系统:{{item.templatename}}</span>
+                        <span>到期时间/有效期:{{item.endtime}}</span>
+                        <span>公网地址:{{item.publicip}}</span>
+                        <span>内网地址:{{item.privateip}}</span>
+                        <span style="color:#FFC439">欠费</span>
+                      </div>
+                      <div class="foot" style="background-color: #ffc439">
+                        <span style="color:white">{{item.createtime}}</span>
+                        <button @click="renewHost(item.id)"
+                                style="margin-left: 55px;color: #ffc439;background-color: white;border-color: white;">续费
+                        </button>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+                <div v-if="arrearsHost.length==0" class="logo">
+                  <span style="left:60px">暂无欠费云主机</span>
+                </div>
+              </div>
+            </Tab-pane>
+            <Tab-pane :label="`关机(${closeHost.length})`" name="关机">
+              <div class="flex-wrapper">
+                <div v-for="(item,index) in closeHost" v-if="item.status==1" :key="item" :class="{select:item.select}"
+                     @click="toggle(item)"
+                     style="margin-bottom: 20px;height:228px;">
+                  <Card style="width:375px;height:228px;">
+                    <div style="text-align:center">
+                      <div class="head">
+                        <div class="info">
+                          <h1>{{item.computername}} | {{item.instancename}}</h1>
+                          <i v-if="auth" class="normal" @click="start(item)">
+                            <i class="ico">|</i>
+                          </i>
+                          <i v-else class="normal">
+                            <i class="ico">|</i>
+                          </i>
+                        </div>
+                        <span style="margin-top:10px;margin-bottom:20px;color:#989898">{{item.serviceoffername}}&nbsp;|&nbsp;{{item.zonename}}</span>
+                        <span>镜像系统:{{item.templatename}}</span>
+                        <span>到期时间/有效期:{{item.endtime}}</span>
+                        <span>公网地址:{{item.publicip}}</span>
+                        <span>内网地址:{{item.privateip}}</span>
+                        <span>关机</span>
+                      </div>
+                      <div class="foot" style="background-color: #D9D9D9">
+                        <span style="color: rgba(17,17,17,0.65);">{{item.createtime}}</span>
+                        <button @click.stop="manage(item,'close')" style="margin-left: 55px;background-color: white"
+                                :disabled="!auth">管理
+                        </button>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+
+                <!-- 开机中中主机列表 -->
+                <div v-for="(item,index) in closeHost" v-if="item.status==2" :key="item" :class="{select:item.select}"
+                     style="margin-bottom: 20px;height:228px;">
+                  <Card style="width:375px;height:228px;">
+                    <div style="text-align:center">
+                      <div class="head">
+                        <div class="info">
+                          <h1>{{item.computername}} | {{item.instancename}}</h1>
+                        </div>
+                        <span style="margin-top:10px;margin-bottom:20px;color:#989898">{{item.serviceoffername}}&nbsp;|&nbsp;{{item.zonename}}</span>
+                        <span>镜像系统:{{item.templatename}}</span>
+                        <span>到期时间/有效期:{{item.endtime}}</span>
+                        <span>公网地址:{{item.publicip}}</span>
+                        <span>内网地址:{{item.privateip}}</span>
+                        <span>开机中</span>
+                        <my-loading v-model="item.progress"></my-loading>
+                      </div>
+                      <div class="foot">
+                        <span>{{item.createtime}}</span>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+
+                <div v-if="closeHost.length==0" class="logo">
+                  <span style="left:60px">暂无关机云主机</span>
+                </div>
+              </div>
+            </Tab-pane>
+          </Tabs>
+        </div>
+      </div>
+    </div>
+
+
+    <Modal v-model="showModal.backup" width="590" scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        主机备份
+      </div>
+      <div style="width:60%">
+        <Form :model="backupForm" :label-width="80">
+          <Form-item label="备份名">
+            <Input v-model="backupForm.backupName" placeholder="请输入备份名"></Input>
+          </Form-item>
+          <Form-item label="详细描述">
+            <Input v-model="backupForm.description" type="textarea" :autosize="{minRows: 3,maxRows: 5}"
+                   placeholder="请输入..."></Input>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.backup = false">取消</Button>
+        <Button type="primary" :disabled="backupForm.backupName==''||backupForm.description==''" @click="backup">确定
+        </Button>
+      </div>
+    </Modal>
+
+    <Modal v-model="showModal.rename" width="590" scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        主机重命名
+      </div>
+      <div style="width:60%">
+        <Form :model="renameForm" :label-width="80">
+          <Form-item label="主机名">
+            <Input v-model="renameForm.hostName" placeholder="请输入新主机名" maxlength="15"></Input>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.rename = false">取消</Button>
+        <Button type="primary" :disabled="renameForm.hostName==''" @click="rename">确定
+        </Button>
+      </div>
+    </Modal>
+
+
+    <Modal v-model="showModal.mirror" width="590" scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        生成镜像
+      </div>
+      <div style="width:60%">
+        <Form :model="mirrorForm" :label-width="80">
+          <Form-item label="镜像名">
+            <Input v-model="mirrorForm.mirrorName" placeholder="请输入备份名"></Input>
+          </Form-item>
+          <Form-item label="镜像描述">
+            <Input v-model="mirrorForm.description" type="textarea" :autosize="{minRows: 3,maxRows: 5}"
+                   placeholder="请输入..."></Input>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.mirror = false">取消</Button>
+        <Button type="primary" :disabled="mirrorForm.mirrorName==''||mirrorForm.description==''" @click="mirror">确定
+        </Button>
+      </div>
+    </Modal>
+
+
+    <Modal v-model="showModal.bindIP" width="590" scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        绑定静态IP
+      </div>
+      <div style="width:60%">
+        <Form :model="bindForm" :label-width="80">
+          <Form-item label="公网IP">
+            <Select v-model="bindForm.publicIP" placeholder="请选择">
+              <Option v-for="item in publicIPList" :key="item" :value="`${item.publicipid}#${item.publicip}`">
+                {{item.publicip}}
+              </Option>
+            </Select>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.bindIP = false">取消</Button>
+        <Button type="primary" :disabled="bindForm.publicIP==''" @click="bind">确定
+        </Button>
+      </div>
+    </Modal>
+
+    <Modal
+      v-model="showModal.renewal"
+      title="续费选择"
+      width="590"
+      @on-ok="ok" scrollable="true">
+      <div style="height:100px;width:90%;margin:0px auto">
+        <span style="font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;vertical-align:middle">
+        付费类型 :
+        </span>
+        <Select v-model="renewalType" style="width:140px">
+          <Option v-for="item in timeOptions.renewalType" :value="item.value" :key="item">{{ item.label }}</Option>
+        </Select>
+        <span
+          style="margin-left:30px;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;vertical-align:middle">
+        付费时长 :
+      </span>
+        <Select v-model="renewalTime" style="width:140px">
+          <Option v-for="item in timeOptions.renewalTime" :value="item.value" :key="item">{{ item.label }}</Option>
+        </Select>
+      </div>
+      <div style="width:90%;margin:0px auto;font-family: Microsoft Yahei,微软雅黑-Bold;font-size: 16px;color: #666666;">
+        应付费:{{cost}}
+      </div>
+      <div slot="footer" style="display: flex;width:177px;margin-left:350px;">
+        <div class="button cancel" @click="modal=false">取消</div>
+        <div class="button ok" @click="ok">确认续费</div>
+      </div>
+    </Modal>
+
+    <Modal v-model="showModal.Renew" width="590" scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        续费主机<br>（温馨提示：当前资源已欠费，如需激活需要1小时费用）
+      </div>
+      <div style="width:69%">
+        <Form :model="RenewForm" :label-width="80" label-position="left">
+          <Form-item label="所需资费">
+            <span style="font-size: 25px;color: #2b85e4;">￥{{RenewForm.cost}}</span>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.Renew = false">取消</Button>
+        <Button type="primary" @click="renewOk">确定
+        </Button>
+      </div>
+    </Modal>
+
+    <Modal v-model="showModal.selectAuthType" width="590" :scrollable="true" :styles="{top:'172px'}">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        选择认证方式
+      </div>
+      <div style="display: flex">
+        <div class="selectAuthType" style="border-right: 1px solid #D9D9D9">
+          <h2>个人用户</h2>
+          <p><i></i>可以使用睿云所有资源</p>
+          <p><i></i>个人级别的资源建立额度</p>
+          <p><i></i>最长一个月的免费试用时间</p>
+        </div>
+        <div class="selectAuthType">
+          <h2>企业用户</h2>
+          <p><i></i>可以使用睿云所有资源</p>
+          <p><i></i>企业级无限量的资源建立额度</p>
+          <p><i></i>最长一个月的免费试用时间</p>
+          <p><i></i>专业免费的点对点咨询服务</p>
+        </div>
+      </div>
+      <div style="display: flex;margin-top:20px">
+        <div style="width:50%;text-align: center">
+          <Button type="primary" @click="push('person')">立即认证</Button>
+        </div>
+        <div style="width:50%;text-align: center">
+          <Button type="primary" @click="push('company')">立即认证</Button>
+        </div>
+      </div>
+      <div slot="footer">
+        <p>提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：028-23242423</p>
+      </div>
+    </Modal>
+
+  </div>
 </template>
 
 <script type="text/ecmascript-6">
   export default{
-    name: 'host',
     data(){
-      return {}
+      var status = '开启'
+      if (sessionStorage.getItem('type')) {
+        switch (sessionStorage.getItem('type')) {
+          case 'open':
+            break;
+          case 'close':
+            status = '关机'
+            break;
+          case 'arrears':
+            status = '欠费'
+            break;
+          case 'error':
+            status = '异常'
+            break;
+        }
+        sessionStorage.removeItem('type')
+      }
+      return {
+        openHost: [],
+        closeHost: [],
+        arrearsHost: [],
+        errorHost: [],
+        waitHost: [],
+        currentHost: [],
+        status,
+        showModal: {
+          backup: false,
+          mirror: false,
+          bindIP: false,
+          renewal: false,
+          rename: false,
+          Renew: false,
+          selectAuthType: false
+        },
+        renameForm: {
+          hostName: ''
+        },
+        backupForm: {
+          backupName: '',
+          description: ''
+        },
+        mirrorForm: {
+          mirrorName: '',
+          description: ''
+        },
+        bindForm: {
+          publicIP: ''
+        },
+        publicIPList: [],
+        renewalType: '',
+        renewalTime: '',
+        timeOptions: {
+          renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
+          renewalTime: [],
+          year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}],
+          month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '6月', value: 6}],
+        },
+        loadingMessage: '',
+        loading: false,
+        intervalInstance: null,
+        RenewForm: {
+          cost: '0',
+          id: '',
+        }
+      }
+    },
+    created(){
+      this.$http.get('user/GetUserInfo.do').then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.userInfo = response.data.result
+          this.authInfo = response.data.authInfo || {}
+          if (this.userInfo.companyauth == 1 && this.userInfo.personalauth == 1 && this.authInfo.checkstatus == undefined) {
+            this.showModal.selectAuthType = true
+          }
+        }
+      })
+      this.getData();
+    },
+    methods: {
+      recoverHost(id){
+        this.$Modal.confirm({
+          title: '',
+          content: '<p>确定要恢复当前主机吗？</p>',
+          onOk: () => {
+            this.$Message.info('主机正在恢复，请稍后')
+            this.$http.get('information/recoverVM.do?id=' + id).then(response => {
+              if (response.status == 200) {
+                this.$Message.info(response.data.message)
+                this.getData()
+              } else {
+                this.$Message.error("服务器出错")
+                this.getData()
+              }
+            })
+          }
+        })
+      },
+      renewHost(id){
+        this.showModal.Renew = true;
+        this.RenewForm.id = id;
+        this.$http.get('information/getResCost.do?id=' + id + '&type=' + 'computer').then(response => {
+            if (response.status == 200) {
+              this.RenewForm.cost = response.data.cost
+            }
+          }
+        )
+      },
+      renewOk(){
+        this.showModal.Renew = false;
+        this.$http.get('information/vmRenew.do?id=' + this.RenewForm.id).then(response => {
+            this.getData()
+            if (response.status == 200) {
+              this.$Message.success("主机续费成功")
+            }
+          }
+        )
+      },
+      getData(){
+        var url = `information/listVirtualMachines.do`;
+        this.$http.get(url)
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              if (response.data.result.open) {
+                response.data.result.open.list.forEach(item => {
+                  item.select = false;
+                  item.progress = 0;
+                })
+                this.openHost = response.data.result.open.list
+              }
+              if (response.data.result.close) {
+                response.data.result.close.list.forEach(item => {
+                  item.select = false;
+                  item.progress = 0;
+                })
+                this.closeHost = response.data.result.close.list
+              }
+              if (response.data.result.arrears) {
+                response.data.result.arrears.list.forEach(item => {
+                  item.select = false;
+                })
+                this.arrearsHost = response.data.result.arrears.list
+              }
+              if (response.data.result.error) {
+                response.data.result.error.list.forEach(item => {
+                  item.select = false;
+                })
+                this.errorHost = response.data.result.error.list
+              }
+              if (response.data.result.wait) {
+                response.data.result.wait.list.forEach(item => {
+                  item.select = false;
+                })
+                this.waitHost = response.data.result.wait.list
+              }
+              if (this.intervalInstance == null) {
+                this.interval()
+              }
+            }
+          })
+      },
+      interval(){
+        this.intervalInstance = setInterval(() => {
+          var url = `information/listVirtualMachines.do`;
+          this.$http.get(url)
+            .then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                if (response.data.result.open) {
+                  let selectHost = this.openHost.map(item => {
+                    return item.select == true ? item.computerid : ''
+                  })
+                  response.data.result.open.list.forEach(item => {
+                    if (selectHost.includes(item.computerid))
+                      item.select = true
+                    else
+                      item.select = false;
+                  })
+                  response.data.result.open.list.forEach(item => {
+                    this.openHost.forEach(i => {
+                      if (item.computerid == i.computerid)
+                        item.progress = i.progress || 0
+                    })
+                  })
+                  this.openHost = response.data.result.open.list
+                } else {
+                  this.openHost = []
+                }
+                if (response.data.result.close) {
+                  let selectHost = this.closeHost.map(item => {
+                    return item.select == true ? item.computerid : ''
+                  })
+                  response.data.result.close.list.forEach(item => {
+                    if (selectHost.includes(item.computerid))
+                      item.select = true
+                    else
+                      item.select = false;
+                  })
+                  response.data.result.close.list.forEach(item => {
+                    this.closeHost.forEach(i => {
+                      if (item.computerid == i.computerid)
+                        item.progress = i.progress || 0
+                    })
+                  })
+                  this.closeHost = response.data.result.close.list
+                } else {
+                  this.closeHost = []
+                }
+                if (response.data.result.arrears) {
+                  let selectHost = this.arrearsHost.map(item => {
+                    return item.select == true ? item.computerid : ''
+                  })
+                  response.data.result.arrears.list.forEach(item => {
+                    if (selectHost.includes(item.computerid))
+                      item.select = true
+                    else
+                      item.select = false;
+                  })
+                  this.arrearsHost = response.data.result.arrears.list
+                } else {
+                  this.arrearsHost = []
+                }
+                if (response.data.result.error) {
+                  let selectHost = this.errorHost.map(item => {
+                    return item.select == true ? item.computerid : ''
+                  })
+                  response.data.result.error.list.forEach(item => {
+                    if (selectHost.includes(item.computerid))
+                      item.select = true
+                    else
+                      item.select = false;
+                  })
+                  this.errorHost = response.data.result.error.list
+                } else {
+                  this.errorHost = []
+                }
+                if (!response.data.result.wait) {
+                  this.waitHost = []
+                }
+              }
+            })
+        }, 1000 * 5)
+      },
+      toggle(item){
+        if (!this.auth) {
+          return
+        }
+        if (!item.select) {
+          item.select = true;
+        } else {
+          item.select = false;
+        }
+      },
+      createHost(){
+
+      },
+      manage(item, status){
+        this.$router.push({
+          path: 'manage',
+          query: {
+            computername: item.computername,
+            zoneid: item.zoneid,
+            vmid: item.computerid,
+            instancename: item.instancename
+          }
+        })
+      },
+      startUp(){
+        switch (this.status) {
+          case '开启':
+            this.$Message.warning("请选择未开启的主机!")
+            break;
+          case '异常':
+            this.$Message.warning("异常主机无法启动!")
+            break;
+          case '欠费':
+            this.$Message.warning("主机欠费请续费!")
+            break;
+          case '关机':
+            if (this.closeHost.every(item => {
+                  return item.select == false;
+                }
+              )) {
+              this.$Message.warning("请选择主机")
+              return
+            }
+            var num = 0
+            this.closeHost.forEach(item => {
+              if (item.select == true) {
+                num++
+              }
+            })
+            this.loadingMessage = '正在启动主机'
+            this.loading = true
+            this.closeHost.forEach(item => {
+              if (item.select == true) {
+                this.$http.post('information/startVirtualMachine.do', {
+                  virtualMachineid: item.computerid
+                }).then(response => {
+                  num--
+                  if (num == 0) {
+                    this.loading = false
+                  }
+                  if (response.status == 200 && response.data.status == 1) {
+                    this.openHost.push(this.closeHost.splice(this.closeHost.indexOf(item), 1)[0])
+                  }
+                })
+              }
+            })
+            break
+        }
+      },
+      stop(item){
+        this.loadingMessage = '正在停止主机'
+        this.loading = true
+        item.select = false
+        item.status = 2
+        this.$http.post('information/stopVirtualMachine.do', {
+          virtualMachineid: item.computerid,
+          forced: 'true'
+        }).then(response => {
+          this.loading = false
+          if (response.status == 200 && response.data.status == 1) {
+            item.status = 2
+            this.$Message.info(response.data.message)
+          } else {
+            item.status = 1
+          }
+        })
+      },
+      start(item){
+        this.loadingMessage = '正在启动主机'
+        this.loading = true
+        item.select = false
+        item.status = 2
+        this.$http.post('information/startVirtualMachine.do', {
+          virtualMachineid: item.computerid
+        }).then(response => {
+          this.loading = false
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.info(response.data.message)
+          } else {
+            item.status = 1
+          }
+        })
+      },
+      bindIP(){
+        if (this.checkSelect()) {
+          if (this.currentHost[0].publicip) {
+            this.$Message.warning("啊哦!已绑定主机无法再次绑定!")
+          } else {
+            this.loadingMessage = '正在绑定IP'
+            this.loading = true
+            this.bindForm.publicIP = ''
+            this.showModal.bindIP = true
+            this.$http.get(`network/listLoadBalancePublicIp.do?zoneid=${this.currentHost[0].zoneid}`)
+              .then(response => {
+                this.loading = false
+                if (response.status == 200 && response.data.status == 1) {
+                  this.publicIPList = response.data.result
+                }
+              })
+          }
+        }
+      },
+      bind(){
+        this.showModal.bindIP = false
+        this.loadingMessage = '正在绑定公网IP'
+        this.loading = true
+        var arr = this.bindForm.publicIP.split("#")
+        var url = `network/enableStaticNat.do?ipId=${arr[0]}&vmid=${this.currentHost[0].computerid}`
+        this.$http.get(url)
+          .then(response => {
+            this.loading = false
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.success(response.data.message)
+              this.getData()
+            } else {
+              this.$Message.warning(response.data.message)
+            }
+          })
+      },
+      unbind(){
+        if (this.checkSelect()) {
+          var url = `network/disableStaticNat.do?ipId=${this.currentHost[0].belongnetworkid.split('#')[0]}&computerId=${this.currentHost[0].computerid}`
+          this.loadingMessage = '正在解绑公网IP'
+          this.loading = true
+          this.$http.get(url).then(response => {
+            this.loading = false
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.success(response.data.message)
+              this.currentHost[0].belongnetworkid = ''
+              this.currentHost[0].publicip = ''
+            }
+          })
+        }
+      },
+      gotoNew(){
+        this.$store.commit("setSelect", "new")
+        this.$router.push("new")
+      },
+      hideEvent(name){
+        switch (name) {
+          case 'rename':
+            if (this.checkSelect()) {
+              this.renameForm.hostName = ''
+              this.showModal.rename = true
+            }
+            break
+          case 'backup':
+            if (this.status != '开启' && this.status != '关机')
+              return
+            if (this.checkSelect()) {
+              this.backupForm.backupName = ''
+              this.backupForm.description = ''
+              this.showModal.backup = true
+            }
+            break
+          case 'mirror':
+            if (this.status != '关机')
+              return
+            if (this.checkSelect()) {
+              this.mirrorForm.mirrorName = ''
+              this.mirrorForm.description = ''
+              this.showModal.mirror = true;
+            }
+            break
+          case 'upgrade':
+            if (this.status != '关机')
+              return
+            if (this.checkSelect()) {
+              localStorage.setItem('serviceoffername', this.currentHost[0].serviceoffername)
+              localStorage.setItem('disksize', this.currentHost[0].disksize)
+              localStorage.setItem('virtualMachineid', this.currentHost[0].computerid)
+              localStorage.setItem('zoneid', this.currentHost[0].zoneid)
+              this.$router.push({
+                name: 'upgrade',
+              });
+            }
+            break;
+          case 'reboot':
+            if (this.checkSelect()) {
+
+            }
+            this.reboot()
+            break
+          case 'renewal':
+            this.renewal()
+            break
+        }
+      },
+      checkSelect(){
+        switch (this.status) {
+          case '开启':
+            this.currentHost = this.openHost.filter(item => {
+              return item.select == true
+            })
+            break
+          case '关机':
+            this.currentHost = this.closeHost.filter(item => {
+              return item.select == true
+            })
+            break
+          case '异常':
+            this.currentHost = this.errorHost.filter(item => {
+              return item.select == true
+            })
+            break
+          case '欠费':
+            this.currentHost = this.arrearsHost.filter(item => {
+              return item.select == true
+            })
+            break
+        }
+        if (this.currentHost.length != 1) {
+          this.$Message.warning("请选择1个主机")
+          return false
+        }
+        return true
+      },
+      backup(){
+        this.showModal.backup = false
+        this.loadingMessage = '正在备份主机'
+        this.loading = true
+        var url = `Snapshot/createVMSnapshot.do?virtualmachineid=${this.currentHost[0].computerid}&name=${this.backupForm.backupName}&description=${this.backupForm.description}&zoneid=${this.currentHost[0].zoneid}`
+        this.$http.get(url).then(response => {
+          this.loading = false
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+          }
+        })
+      },
+      rename(){
+        this.showModal.rename = false
+        this.loadingMessage = '正在修改主机名'
+        this.loading = true
+        this.$http.post('information/changeVmName.do', {
+          vmId: this.currentHost[0].computerid,
+          name: this.renameForm.hostName
+        }).then(response => {
+          this.loading = false
+          if (response.status == 200 && response.data.status == 1) {
+            this.currentHost[0].computername = response.data.message
+            this.$Message.success('主机名修改成功')
+          }
+        })
+      },
+      mirror(){
+        this.showModal.mirror = false
+        this.loadingMessage = '正在创建主机镜像'
+        this.loading = true
+        var url = `Snapshot/createTemplate.do?rootdiskid=${this.currentHost[0].rootdiskid}&name=${this.mirrorForm.mirrorName}&discript=${this.mirrorForm.description}&zoneid=${this.currentHost[0].zoneid}`
+        this.$http.get(url).then(response => {
+          this.loading = false
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success({
+              content: '请求成功，镜像正在创建中，您可以到<span style="color: #0db4fa;cursor: pointer;"@click="toMirror">镜像列表</span>查看该镜像。',
+              duration: 5
+            })
+          }
+        })
+      },
+      toMirror(){
+        this.$store.commit("setSelect", "mirror")
+        this.$router.push('mirror')
+      },
+      del(){
+        if (this.checkSelect()) {
+          if (this.currentHost[0].caseType != 3) {
+            this.$Message.warning("只能删除实时计费主机")
+            return
+          }
+          this.loadingMessage = '正在删除主机'
+          this.loading = true
+          this.$http.get("information/deleteVM.do?virtualMachineid=" + this.currentHost[0].id)
+            .then(response => {
+              this.loading = false
+              if (response.status == 200 && response.data.status == 1) {
+                initRecycle.bind(this)()
+                this.getData()
+              }
+            })
+        }
+      },
+      upgrade(){
+
+      },
+      reboot(){
+        if (this.checkSelect()) {
+          this.loadingMessage = '正在重启主机'
+          this.loading = true
+          this.$http.get("information/rebootVirtualMachine.do?vmid=" + this.currentHost[0].computerid)
+            .then(response => {
+              this.loading = false
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+              } else {
+                this.$Message.error(response.data.message)
+              }
+            })
+        }
+      },
+      renewal(){
+        this.show
+      },
+      ok(){
+
+      },
+      cancel(){
+
+      },
+      push(type){
+        sessionStorage.setItem('authType', type)
+        this.$router.push('/usercenter')
+      }
+    },
+    computed: {
+      auth(){
+        return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
+      }
+    },
+    watch: {
+      renewalType(type){
+        this.renewalTime = ""
+        this.timeOptions.renewalTime = this.timeOptions[type]
+      },
+      renewalTime(time){
+        if (time == "") {
+          this.cost = '--'
+        } else {
+          let url = `information/getYjPrice.do?duration=${this.renewalTime}&type=${this.renewalType}&ipIdArr=${this.requestParam.ipArray.toString()}&hostIdArr=${this.requestParam.hostArray.toString()}`
+          this.$http.get(url)
+            .then((response) => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.cost = response.data.result
+              } else {
+                this.$Message.error('对方不想说话，并且向你抛出了一个异常')
+              }
+            })
+            .catch((error) => {
+              this.$Message.error('服务器错误');
+            })
+        }
+      }
+    },
+    beforeRouteLeave (to, from, next) {
+      // 导航离开该组件的对应路由时调用
+      clearInterval(this.intervalInstance)// 可以访问组件实例 `this`
+      next()
     }
   }
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-
+  .flex-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: flex-start;
+    min-height: 300px;
+    &:after {
+      content: '';
+      width: 373px;
+    }
+    .head {
+      font-size: 0px;
+      padding: 23px 19px 0px 19px;
+      position: relative;
+      h1 {
+        font-size: 18px;
+        color: #646464;
+        line-height: 18px;
+        text-align: left;
+      }
+      span {
+        color: #646464;
+        font-size: 12px;
+        display: block;
+        text-align: left;
+        margin-bottom: 10px;
+        &:last-of-type {
+          position: absolute;
+          top: 123px;
+          right: 38px;
+          font-size: 30px;
+          color: rgba(0, 0, 0, 0.10);
+        }
+      }
+      i {
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        position: absolute;
+        top: 22px;
+        right: 43px;
+        cursor: pointer;
+      }
+      .normal {
+        border: 1px solid #1381f5;
+        border-radius: 50%;
+      }
+      .ico {
+        width: 18px;
+        height: 6px;
+        position: absolute;
+        top: -2%;
+        left: 50%;
+        z-index: 100;
+        font-size: 5px;
+        color: #1381f5;
+        background-color: white;
+        transform: translate(-50%, -50%);
+      }
+    }
+    .foot {
+      padding: 11px 19px 12px 19px;
+      display: flex;
+      margin: 0px auto;
+      justify-content: space-between;
+      span {
+        display: block;
+        line-height: 32px;
+        font-size: 12px;
+        color: #999999;
+      }
+      button {
+        float: right;
+        border: 1px solid #2A99F2;
+        border-radius: 4.46px;
+        line-height: 18px;
+        font-size: 12px;
+        color: #2A99F2;
+        cursor: pointer;
+        user-select: none;
+        padding: 5px 15px;
+        background-color: white;
+        outline: none;
+      }
+    }
+    .select {
+      .ivu-card {
+        background: #FFFFFF;
+        border: 1px solid #2A99F2;
+        box-shadow: 0 2px 16px 0 rgba(93, 177, 245, 0.50);
+        border-radius: 4px;
+      }
+    }
+    .logo {
+      width: 218px;
+      height: 80px;
+      background: url("../../assets/img/public/no-info-logo.png") no-repeat center;
+      position: absolute;
+      top: 160px;
+      left: 50%;
+      transform: translateX(-50%);
+      & > span {
+        position: absolute;
+        top: 33px;
+        left: 8px;
+        font-size: 14px;
+        color: #666666;
+        letter-spacing: 0;
+        user-select: none;
+        cursor: default;
+      }
+    }
+    .add {
+      background: url('../../assets/img/host/cross.png') center no-repeat;
+      display: block;
+      height: 25px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 125px;
+      transform: translate(-50%, -50%);
+    }
+  }
 </style>

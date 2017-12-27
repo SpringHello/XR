@@ -123,4 +123,8 @@
   display: inline-block;
 }
 
+.flex-wrapper .ivu-card-body {
+  padding: 0px;
+}
+
 
