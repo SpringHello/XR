@@ -62,6 +62,7 @@ var router = new Router({
         {path: '', name: 'home', component: Home},
         {path: 'home', name: 'home', component: Home},
         {path: 'modal', name: 'modal', component: modal},
+        {path: 'aboutus', name: 'aboutus', component: Aboutus},
         {
           path: 'price',
           name: 'price',
@@ -113,7 +114,7 @@ var router = new Router({
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
         {path: 'ip', name: 'ip', component: Ip},
         {path: 'order', name: 'order', component: Order},
-        {path: 'aboutus', name: 'aboutus', component: Aboutus}
+        // {path: 'aboutus', name: 'aboutus', component: Aboutus}
       ]
     },
     {
