@@ -30,7 +30,7 @@
         contentList: [
           {
             img: require('../../assets/img/document/alculation.png'),
-            title: '计算',
+            title: '云计算',
             list: [
               {title: '弹性云主机', desc: ['产品描述', '操作说明']},
               {title: '镜像', desc: ['产品描述', '操作说明', '购买指南']}
@@ -39,7 +39,16 @@
           },
           {
             img: require('../../assets/img/document/netWork.png'),
-            title: '网络',
+            title: '云网络',
+            list: [
+              {title: 'VPC', desc: ['产品描述', '操作说明']},
+              {title: '负载均衡 ', desc: ['产品描述', '操作说明']}
+            ],
+            active: false
+          },
+          {
+            img: require('../../assets/img/document/netWork.png'),
+            title: '云存储',
             list: [
               {title: 'VPC', desc: ['产品描述', '操作说明']},
               {title: '负载均衡 ', desc: ['产品描述', '操作说明']}
@@ -48,7 +57,7 @@
           },
           {
             img: require('../../assets/img/document/security.png'),
-            title: '安全',
+            title: '云安全',
             list: [
               {title: '虚拟防火墙', desc: ['产品描述', '操作说明']},
               {title: 'VPN隧道', desc: ['产品描述', '操作说明']},
@@ -58,14 +67,11 @@
           },
           {
             img: require('../../assets/img/document/Account.png'),
-            title: '账户与财务',
+            title: '云运维',
             list: [
-              {title: '个人/企业认证'},
-              {title: '产品定价'},
-              {title: '计费说明'},
-              {title: '代金卷'},
-              {title: '充值'},
-              {title: '发票申请'}
+              {title: '虚拟防火墙', desc: ['产品描述', '操作说明']},
+              {title: 'VPN隧道', desc: ['产品描述', '操作说明']},
+              {title: 'ddos防护', desc: ['产品描述', '操作说明']}
             ],
             active: false
           }
@@ -97,7 +103,7 @@
       justify-content: space-between;
 
       > li {
-        width: 276px;
+        width: 220px;
         height: 450px;
         border: 1px solid #377DFF;
         border-radius: 4px;
