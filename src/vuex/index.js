@@ -18,10 +18,11 @@ const store = new Vuex.Store({
     // 用户个人信息
     userInfo: null,
     // 区域信息
-    zoneList: null
+    zoneList: null,
+    // 当前区域
+    zone: null
   },
-  getters: {
-  },
+  getters: {},
 
   mutations: {
     setAuthInfo (state, {authInfo, userInfo}) {
@@ -30,6 +31,15 @@ const store = new Vuex.Store({
     },
     setZoneList (state, zoneList) {
       state.zoneList = zoneList
+      // 设置当前默认区域
+      for (var zone of zoneList) {
+        if (zone.isdefault == 1) {
+          state.zone = zone
+        }
+      }
+    },
+    setZone(state, zone){
+      state.zone = zone
     }
   },
   actions: {

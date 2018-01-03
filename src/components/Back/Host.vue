@@ -19,7 +19,11 @@
             </Button>
             <Dropdown-menu slot="list">
               <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
-              <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
+              <Dropdown-item name="rename" v-else>
+                <Tooltip content="异常、欠费状态，主机不可重命名" placement="top">
+                  主机备份
+                </Tooltip>
+              </Dropdown-item>
               <Dropdown-item name="backup" v-if="status!='开启'&&status!='关机'" :disabled=true>
                 <Tooltip content="异常、欠费状态，备份不可用" placement="top">
                   主机备份
@@ -482,6 +486,9 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import merge from 'merge'
+  import {mapState} from 'vuex'
+  import $store from '../../vuex'
   export default{
     data(){
       var status = '开启'
@@ -551,16 +558,11 @@
       }
     },
     created(){
-      this.$http.get('user/GetUserInfo.do').then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.userInfo = response.data.result
-          this.authInfo = response.data.authInfo || {}
-          if (this.userInfo.companyauth == 1 && this.userInfo.personalauth == 1 && this.authInfo.checkstatus == undefined) {
-            this.showModal.selectAuthType = true
-          }
-        }
-      })
-      this.getData();
+      this.getData()
+      // 定时发送ajax 刷新页面
+      this.intervalInstance = setInterval(() => {
+        this.getData()
+      }, 5 * 1000)
     },
     methods: {
       recoverHost(id){
@@ -601,129 +603,23 @@
           }
         )
       },
+      // 获取数据的主要接口
       getData(){
-        var url = `information/listVirtualMachines.do`;
-        this.$http.get(url)
-          .then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              if (response.data.result.open) {
-                response.data.result.open.list.forEach(item => {
-                  item.select = false;
-                  item.progress = 0;
-                })
-                this.openHost = response.data.result.open.list
+        var url = 'information/listVirtualMachines.do'
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            // 遍历各种主机类型，开启、关闭、欠费、错误、创建中
+            for (var type in response.data.result) {
+              var list = []
+              var target = response.data.result[type]
+              for (var index in target.list) {
+                var host = merge(this[`${type}Host`][index] || {}, target.list[index], {_select: this[`${type}Host`][index] ? this[`${type}Host`][index]._select : false})
+                list.push(host)
               }
-              if (response.data.result.close) {
-                response.data.result.close.list.forEach(item => {
-                  item.select = false;
-                  item.progress = 0;
-                })
-                this.closeHost = response.data.result.close.list
-              }
-              if (response.data.result.arrears) {
-                response.data.result.arrears.list.forEach(item => {
-                  item.select = false;
-                })
-                this.arrearsHost = response.data.result.arrears.list
-              }
-              if (response.data.result.error) {
-                response.data.result.error.list.forEach(item => {
-                  item.select = false;
-                })
-                this.errorHost = response.data.result.error.list
-              }
-              if (response.data.result.wait) {
-                response.data.result.wait.list.forEach(item => {
-                  item.select = false;
-                })
-                this.waitHost = response.data.result.wait.list
-              }
-              if (this.intervalInstance == null) {
-                this.interval()
-              }
+              this[`${type}Host`] = list
             }
-          })
-      },
-      interval(){
-        this.intervalInstance = setInterval(() => {
-          var url = `information/listVirtualMachines.do`;
-          this.$http.get(url)
-            .then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                if (response.data.result.open) {
-                  let selectHost = this.openHost.map(item => {
-                    return item.select == true ? item.computerid : ''
-                  })
-                  response.data.result.open.list.forEach(item => {
-                    if (selectHost.includes(item.computerid))
-                      item.select = true
-                    else
-                      item.select = false;
-                  })
-                  response.data.result.open.list.forEach(item => {
-                    this.openHost.forEach(i => {
-                      if (item.computerid == i.computerid)
-                        item.progress = i.progress || 0
-                    })
-                  })
-                  this.openHost = response.data.result.open.list
-                } else {
-                  this.openHost = []
-                }
-                if (response.data.result.close) {
-                  let selectHost = this.closeHost.map(item => {
-                    return item.select == true ? item.computerid : ''
-                  })
-                  response.data.result.close.list.forEach(item => {
-                    if (selectHost.includes(item.computerid))
-                      item.select = true
-                    else
-                      item.select = false;
-                  })
-                  response.data.result.close.list.forEach(item => {
-                    this.closeHost.forEach(i => {
-                      if (item.computerid == i.computerid)
-                        item.progress = i.progress || 0
-                    })
-                  })
-                  this.closeHost = response.data.result.close.list
-                } else {
-                  this.closeHost = []
-                }
-                if (response.data.result.arrears) {
-                  let selectHost = this.arrearsHost.map(item => {
-                    return item.select == true ? item.computerid : ''
-                  })
-                  response.data.result.arrears.list.forEach(item => {
-                    if (selectHost.includes(item.computerid))
-                      item.select = true
-                    else
-                      item.select = false;
-                  })
-                  this.arrearsHost = response.data.result.arrears.list
-                } else {
-                  this.arrearsHost = []
-                }
-                if (response.data.result.error) {
-                  let selectHost = this.errorHost.map(item => {
-                    return item.select == true ? item.computerid : ''
-                  })
-                  response.data.result.error.list.forEach(item => {
-                    if (selectHost.includes(item.computerid))
-                      item.select = true
-                    else
-                      item.select = false;
-                  })
-                  this.errorHost = response.data.result.error.list
-                } else {
-                  this.errorHost = []
-                }
-                if (!response.data.result.wait) {
-                  this.waitHost = []
-                }
-              }
-            })
-        }, 1000 * 5)
+          }
+        })
       },
       toggle(item){
         if (!this.auth) {
@@ -1058,11 +954,6 @@
         this.$router.push('/usercenter')
       }
     },
-    computed: {
-      auth(){
-        return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
-      }
-    },
     watch: {
       renewalType(type){
         this.renewalTime = ""
@@ -1085,6 +976,12 @@
               this.$Message.error('服务器错误');
             })
         }
+      },
+      '$store.state.zone': {
+        handler: function () {
+          this.getData()
+        },
+        deep: true
       }
     },
     beforeRouteLeave (to, from, next) {

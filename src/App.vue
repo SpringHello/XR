@@ -19,7 +19,7 @@
                         <div v-for="(prod,index) in item.content">
                           <h2>{{prod.prod}}</h2>
                           <div v-for="(i,index) in prod.prodItem" style="line-height: normal">
-                            <a href="i.href">{{i.title}}</a>
+                            <router-link :to="i.path" target="_blank">{{i.title}}</router-link>
                             <p>{{i.desc}}</p>
                           </div>
                         </div>
@@ -29,6 +29,40 @@
                 </div>
               </div>
             </li>
+            <!-- 尚未登录 -->
+            <ul v-if="!userInfo">
+              <li @mouseenter="ME(4,$event)">
+                <div class="menu-dropdown">
+                  <div class="menu-dropdown-rel">
+                    <router-link to="register"><span>注册</span></router-link>
+                  </div>
+                </div>
+              </li>
+              <li @mouseenter="ME(5,$event)">
+                <div class="menu-dropdown">
+                  <div class="menu-dropdown-rel">
+                    <router-link to="login"><span>登录</span></router-link>
+                  </div>
+                </div>
+              </li>
+            </ul>
+            <!-- 已登录 -->
+            <ul v-else>
+              <li @mouseenter="ME(4,$event)">
+                <div class="menu-dropdown">
+                  <div class="menu-dropdown-rel">
+                    <router-link to="overview"><span>控制台</span></router-link>
+                  </div>
+                </div>
+              </li>
+              <li @mouseenter="ME(5,$event)">
+                <div class="menu-dropdown">
+                  <div class="menu-dropdown-rel">
+                    <router-link to="usercenter"><span>{{userInfo.realname}}</span></router-link>
+                  </div>
+                </div>
+              </li>
+            </ul>
             <div class="line" :style="lineStyle"></div>
           </ul>
         </div>
@@ -41,6 +75,7 @@
 <script>
   import axios from 'axios'
   import $store from './vuex'
+  import {mapState} from 'vuex'
   import debounce from 'throttle-debounce/debounce'
   export default {
     name: 'app',
@@ -49,73 +84,63 @@
         titleItem: [
           {
             title: '首页',
-            path: '/ruicloud/home'
+            path: 'home'
           },
           {
             title: '产品',
-            path: '/ruicloud/product',
+            path: '',
             content: [
               {
                 prod: '云计算',
                 prodItem: [
-                  {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型'},
-                  {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像'},
-                  {title: 'ECS快照', desc: '稳定可靠、安全保障'},
-                  {title: '裸金属服务器', desc: '专属物理服务器'},
-                  {title: '弹性伸缩', desc: '高可用、可视化、低成本'}
+                  {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型', path: 'ecs'},
+                  {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: 'ecs'},
+                  {title: 'ECS快照', desc: '稳定可靠、安全保障', path: 'ecs'},
+                  {title: '裸金属服务器（敬请期待）', desc: '专属物理服务器', path: 'ecs'},
+                  {title: '弹性伸缩（敬请期待）', desc: '高可用、可视化、低成本', path: 'ecs'}
                 ]
               },
               {
                 prod: '云网络',
                 prodItem: [
-                  {title: '弹虚拟私有云VPC', desc: '网络隔离、分配子网'},
-                  {title: '弹性IP', desc: '绑定与解绑IP、扩容'},
-                  {title: '负载均衡', desc: '源算法、轮询、最小连接数'},
-                  {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持'},
-                  {title: '虚拟专网VPN', desc: '跨VPC链接'},
-                  {title: 'CDN', desc: '节点丰富、安全易用'}
+                  {title: '弹虚拟私有云VPC', desc: '网络隔离、分配子网', path: 'ecs'},
+                  {title: '弹性IP', desc: '绑定与解绑IP、扩容', path: 'ecs'},
+                  {title: '负载均衡', desc: '源算法、轮询、最小连接数', path: 'ecs'},
+                  {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: 'ecs'},
+                  {title: '虚拟专网VPN', desc: '跨VPC链接', path: 'ecs'},
+                  {title: 'CDN（敬请期待）', desc: '节点丰富、安全易用', path: 'ecs'}
                 ]
               },
               {
                 prod: '云存储',
                 prodItem: [
-                  {title: '云硬盘', desc: '性能型、超高性能型、存储型'},
-                  {title: '云硬盘快照', desc: '高可用保障、敏捷易用'},
-                  {title: '云硬盘备份', desc: '高可用保障、敏捷易用'},
-                  {title: '云硬盘热增容', desc: '高可用保障、敏捷易用'}
+                  {title: '云硬盘', desc: '性能型、超高性能型、存储型', path: 'ecs'},
+                  {title: '云硬盘备份', desc: '高可用保障、敏捷易用', path: 'ecs'}
                 ]
               },
               {
                 prod: '云安全',
                 prodItem: [
-                  {title: '防火墙', desc: '自定义规则、协议、端口'},
-                  {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量'}
+                  {title: '防火墙', desc: '自定义规则、协议、端口', path: 'ecs'},
+                  {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: 'ecs'}
                 ]
               },
               {
                 prod: '云运维',
                 prodItem: [
-                  {title: '云监控', desc: '自定义监控项、多告警推送方式'},
-                  {title: '访问控制', desc: '权限管理、精准控制'}
+                  {title: '云监控', desc: '自定义监控项、多告警推送方式', path: 'ecs'},
+                  {title: '访问控制（敬请期待）', desc: '权限管理、精准控制', path: 'ecs'}
                 ]
               }
             ]
           },
           {
             title: '文档',
-            path: '/ruicloud/product'
+            path: 'document'
           },
           {
             title: '关于我们',
-            path: '/ruicloud/product'
-          },
-          {
-            title: '注册',
-            path: '/ruicloud/register'
-          },
-          {
-            title: '登录',
-            path: '/ruicloud/login'
+            path: 'product'
           }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
@@ -161,7 +186,9 @@
         this.lineStyle.width = '0px'
       })
     },
-    computed: {},
+    computed: mapState({
+      userInfo: state => state.userInfo,
+    }),
     watch: {
       /* 观察currentItem变化 设置content高度 */
       currentItem () {
@@ -188,7 +215,6 @@
         content: '';
         height: 70px;
         width: 100%;
-        //height: 0px;
         display: block;
         position: absolute;
         background-color: #333333;

@@ -21,7 +21,21 @@ import slider from './myView/slider'
 Vue.config.productionTip = false
 
 // axios挂载到Vue原型
-Vue.prototype.$http = axios
+Vue.prototype.$http = axios.create({
+  params: {}
+})
+/* axios ajax请求拦截 需要zoneid的接口都使用this.$http的形式调用 */
+function requestIntercept(config) {
+  if (config.method == 'get') {
+    config.params = {
+      zoneId: store.state.zone.zoneid,
+      ...config.params
+    }
+  }
+  return config
+}
+// axios 请求拦截
+Vue.prototype.$http.interceptors.request.use(requestIntercept)
 
 // 使用iview库
 Vue.use(iview)
@@ -67,15 +81,15 @@ var vm = new Vue({
 })
 
 vm.$mount('#app')
-/* axios ajax拦截 */
+
 /* var resolve = function (response) {
-  // 检查是否登录
-  if (response.status == 200 && response.data.status == 3) {
-    // 未登录
-    localStorage.removeItem('authToken')
-    this.$router.push({path: '/ruicloud/login'})
-  }
-  return response
-}.bind(vm) */
+ // 检查是否登录
+ if (response.status == 200 && response.data.status == 3) {
+ // 未登录
+ localStorage.removeItem('authToken')
+ this.$router.push({path: '/ruicloud/login'})
+ }
+ return response
+ }.bind(vm) */
 
 // axios.interceptors.response.use(resolve)

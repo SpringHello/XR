@@ -10,9 +10,9 @@ import LR from '@/LR'
 // 前台页面子路由
 // import Home from '@/components/App/Home'
 // import Price from '@/components/App/Price'
-const Price = () => import('@/components/App/Price')
 const Home = () => import('@/components/App/Home')
-const modal = () => import('@/components/App/modal')
+const Price = () => import('@/components/App/Price')
+const Ecs = () => import('@/components/App/product/ECS')
 
 const hostPrice = () => import('@/components/App/Price/Host')
 const diskPrice = () => import('@/components/App/Price/Disk')
@@ -60,7 +60,7 @@ var router = new Router({
       children: [
         {path: '', name: 'home', component: Home},
         {path: 'home', name: 'home', component: Home},
-        {path: 'modal', name: 'modal', component: modal},
+        {path: 'ecs', name: 'ecs', component: Ecs},
         {
           path: 'price',
           name: 'price',

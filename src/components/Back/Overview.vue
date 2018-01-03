@@ -118,7 +118,7 @@
       }
     },
     beforeRouteEnter(to, from, next){
-      var zoneId = $store.state.zoneList[0].zoneid
+      var zoneId = $store.state.zone.zoneid
       // 获取总览页账户信息
       var accountInfo = axios.get(`user/userAccountInfo.do?zoneId=${zoneId}`)
       var adver = axios.get('user/getAdvertisement.do')
@@ -133,6 +133,7 @@
 
     },
     methods: {
+      // 设置数据
       setData(values){
         var response = values[0]
         if (response.status == 200 && response.data.status == 1) {
@@ -149,6 +150,17 @@
         if (response.status == 200 && response.data.status == 1) {
           this.source = response.data.result
         }
+      },
+      // 区域变更，刷新数据
+      refresh(){
+        var zoneId = $store.state.zone.zoneid
+        // 获取总览页账户信息
+        var accountInfo = axios.get(`user/userAccountInfo.do?zoneId=${zoneId}`)
+        var adver = axios.get('user/getAdvertisement.do')
+        var source = axios.get(`user/userSourceManager.do?zoneId=${zoneId}`)
+        Promise.all([accountInfo, adver, source]).then(values => {
+          this.setData(values)
+        })
       }
     },
     computed: {
@@ -186,6 +198,14 @@
           // 企业认证中
           'company-authing': this.authInfo.authtype == 1 && this.authInfo.checkstatus == 2
         }
+      }
+    },
+    watch: {
+      '$store.state.zone': {
+        handler: function () {
+          this.refresh()
+        },
+        deep: true
       }
     }
   }

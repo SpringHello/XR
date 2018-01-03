@@ -51,7 +51,7 @@
 <script type="text/ecmascript-6">
   /* 登录名/密码 正则校验 */
   import regExp from '../../util/regExp'
-
+  import axios from 'axios'
   const messageMap = {
     /* 登录名input tips */
     loginname: {
@@ -171,18 +171,18 @@
          this.vailForm.loginname.warning = true
          return
          } */
-        this.$http.get(`user/login.do?username=${this.form.loginname}&password=${this.form.password}&vailCode=${this.form.vailCode}`).then((response) => {
+        axios.get(`user/login.do?username=${this.form.loginname}&password=${this.form.password}&vailCode=${this.form.vailCode}`).then((response) => {
           if (response.status == 200 && response.statusText == 'OK') {
-            if (response.data.status == 1) {
-              localStorage.setItem('authToken', response.data.message)
-              this.$router.push({path: 'overview'})
-            } else {
-              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-              this.vailForm.loginname.message = response.data.message
-              this.vailForm.loginname.warning = true
-            }
+          if (response.data.status == 1) {
+            localStorage.setItem('authToken', response.data.message)
+            this.$router.push({path: 'overview'})
+          } else {
+            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+            this.vailForm.loginname.message = response.data.message
+            this.vailForm.loginname.warning = true
           }
-        })
+        }
+      })
       }
     },
     computed: {
