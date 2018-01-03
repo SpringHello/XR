@@ -181,7 +181,12 @@
 <style rel="stylesheet/less" lang="less" scoped>
   @m-color: #377DFF;
   @gray: #999999;
-
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
   .title {
     font-size: 28px;
     color: #333333;
