@@ -24,8 +24,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import history from '.././Back/historyDevelop.vue'
-  import enterprise from '.././Back/enterpriseIntro.vue'
+  import history from '.././App/HistoryDevelop.vue'
+  import enterprise from '.././App/EnterpriseIntro.vue'
 
   export default {
     data() {
