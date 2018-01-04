@@ -19,6 +19,7 @@
       </div>
     </div>
    
+   <!-- 企业介绍 -->
     <div class="content" v-show="num==0">
       <div>
         <h1 class="title">致力于“企业数字化转型”和“运营商用户数据红利挖掘”</h1>
@@ -93,8 +94,8 @@
 
     </div>
 
-
-    <div class="history-develop" v-show="num==1">
+  <!-- 发展历程 -->
+    <div class="history-develop content" v-show="num==1">
       <div class="top">
         <p class="title">发展历程</p>
         <span></span>
@@ -159,7 +160,6 @@
   export default {
     data() {
       return {
-        // currentView: 'enterprise',
         num: 0,
         tabsinfo: [
           {
@@ -353,9 +353,7 @@
     methods: {
       tab(index) {
         this.num = index
-      },
-
-
+      }
     },
     components: {
      
@@ -588,7 +586,6 @@
       img {
         padding: 35px 0;
         display: block;
-        margin: 0 auto;
       }
       span {
         display: block;
@@ -627,12 +624,7 @@
 
 // 发展历程样式
    .history-develop {
-    align-items: center;
-    font-weight: 100;
-    > div {
-      margin: 0 auto;
-    }
-    .top {
+       .top {
       margin-bottom: 40px;
       width: 420px;
       height: 210px;
@@ -645,7 +637,7 @@
   .main {
     overflow: hidden;
     position: relative;
-    width: 888px;
+    width: 900px;
     color: @m-color;
     padding-bottom: 60px;
     .vertical-axis {
@@ -654,14 +646,14 @@
       background: @m-color;
       position: absolute;
       top: 0;
-      left: 434px;
+      left: 448px;
       z-index: -1;
     }
     .item {
 
       display: flex;
       flex-direction: row-reverse;
-      width: 520px;
+      width:524px;
     }
     .card-wrap {
       text-align: right;
@@ -714,7 +706,6 @@
       img {
         padding: 30px 0;
         display: block;
-        margin: 0 auto;
       }
       span {
 
@@ -726,7 +717,6 @@
   }
 
   .company {
-    margin: 0 auto;
     > div:hover span {
       color: @m-color;
     }
@@ -734,7 +724,6 @@
   }
 
   .industry {
-    margin: 0 auto;
     width: 1000px;
 
     span {
