@@ -18,8 +18,8 @@
         </div>
       </div>
     </div>
-   
-   <!-- 企业介绍 -->
+
+    <!-- 企业介绍 -->
     <div class="content" v-show="num==0">
       <div>
         <h1 class="title">致力于“企业数字化转型”和“运营商用户数据红利挖掘”</h1>
@@ -54,7 +54,7 @@
         <p class="desc w500"><span>紧随市场需求 数据驱动业务</span><span>IB 业务集成总线</span><span>BPM工作流引擎</span></p>
         <div class="business">
           <div v-for="(item,index) in business" :key="index" @mouseenter="item.me=true" @mouseleave="item.me=false"
-              :class="{hover:item.me}">
+               :class="{hover:item.me}">
             <p>{{item.title}}</p>
             <div class="imgbox" v-show="!item.me">
               <img :src="item.img"/>
@@ -94,38 +94,42 @@
 
     </div>
 
-  <!-- 发展历程 -->
+    <!-- 发展历程 -->
     <div class="history-develop content" v-show="num==1">
       <div class="top">
         <p class="title">发展历程</p>
         <span></span>
       </div>
       <div class="main">
-        <div v-for="(item,index) in historydata" :key="index" class="item" :class="{itemright:index%2!=0}">
+        <div class="wrap-box" v-for="(item,index) in historydata" :key="index">
+          <div class="item" :class="{itemright:index%2!=0}">
+            <p class="year">
+              20
+              <img src="..\..\assets\img\aboutus\yearspot.png"/>
+              {{item.year}}
+            </p>
 
-          <p class="year">
-            20
-            <img src="..\..\assets\img\aboutus\yearspot.png"/>
-            {{item.year}}
-          </p>
-          <div>
-            <img src="..\..\assets\img\aboutus\horizontal-axis.png"/>
-          </div>
-
-          <div class="card-wrap">
-            <span class="month" v-if="item.month">{{item.month}}</span>
-            <div class="card">
-              <p v-for="(text,index) in item.text" :key="index">
-                {{text}}</p>
+            <div class="box-bottom">
+              <div class="card-wrap">
+                <span class="month" v-if="item.month">{{item.month}}</span>
+                <div class="card">
+                  <p v-for="(text,index) in item.text" :key="index">
+                    {{text}}</p>
+                </div>
+              </div>
+              <div>
+                <img src="..\..\assets\img\aboutus\horizontal-axis.png"/>
+              </div>
             </div>
           </div>
         </div>
         <div class="vertical-axis"></div>
         <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
-        <div class="circle"></div>
+        <div class="circle circle2"></div>
+        <div class="circle circle3"></div>
+        <div class="circle circle4"></div>
       </div>
+
 
       <div>
         <h1 class="title">企业荣誉</h1>
@@ -155,7 +159,7 @@
 </template>
 
 <script type="text/ecmascript-6">
- 
+
 
   export default {
     data() {
@@ -263,7 +267,7 @@
             desc: '倾情顾客、合作共享',
           }
         ],
-         historydata: [
+        historydata: [
           {
             year: '17',
             month: '03',
@@ -355,16 +359,14 @@
         this.num = index
       }
     },
-    components: {
-     
-    }
+    components: {}
   }
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
   @m-color: #377DFF;
   @gray: #999999;
-   .title {
+  .title {
     font-size: 28px;
     color: #333333;
     font-weight: 100;
@@ -382,6 +384,7 @@
     padding: 28px 0;
 
   }
+
   .aboutus {
     font-weight: 100;
   }
@@ -451,7 +454,6 @@
     align-items: center;
     text-align: center;
   }
- 
 
   .flex-c {
     display: flex;
@@ -620,11 +622,9 @@
 
   }
 
-
-
-// 发展历程样式
-   .history-develop {
-       .top {
+  // 发展历程样式
+  .history-develop {
+    .top {
       margin-bottom: 40px;
       width: 420px;
       height: 210px;
@@ -635,35 +635,78 @@
   }
 
   .main {
-    overflow: hidden;
     position: relative;
-    width: 900px;
-    color: @m-color;
     padding-bottom: 60px;
+    overflow: hidden;
+    .circle {
+      width: 100px;
+      height: 100px;
+      background: #eff3f9;
+      position: absolute;
+      top: 300px;
+      left: 170px;
+      z-index: -1;
+      border-radius: 50%;
+    }
+
+    .circle2 {
+      width: 200px;
+      height: 200px;
+      top: 420px;
+      left: 640px;
+
+    }
+    .circle3 {
+      width: 60px;
+      height: 60px;
+      top: 1000px;
+      left: 400px;
+
+    }
+    .circle4 {
+      width: 100px;
+      height: 100px;
+      top: 1500px;
+      left: 600px;
+
+    }
     .vertical-axis {
       width: 6px;
-      height: 2000px;
+      height: 3000px;
       background: @m-color;
       position: absolute;
       top: 0;
-      left: 448px;
+      left: 500px;
       z-index: -1;
     }
-    .item {
+  }
 
+  .wrap-box {
+    overflow: hidden;
+    width: 1000px;
+    color: @m-color;
+    .item {
+      width: 500px;
       display: flex;
-      flex-direction: row-reverse;
-      width:524px;
+      flex-direction: column;
+      align-items: flex-end;
+      //  background: #ffe777;
+    }
+    .box-bottom {
+      display: flex;
+      margin-right: -5px;
     }
     .card-wrap {
       text-align: right;
       margin-right: 10px;
+      // width: 240px;
       .month {
         display: block;
         font-size: 28px;
         margin-bottom: 10px;
       }
       .card {
+        // display: inline-block;
         background: @m-color;
         padding: 16px;
         color: #ffffff;
@@ -679,18 +722,31 @@
       font-size: 42px;
       width: 150px;
       height: 60px;
-      font-weight: lighter;
       font-weight: 100;
-    }
-    .itemright {
-      float: right;
-      flex-direction: row;
-      .card-wrap {
-        text-align: left;
-        margin-left: 10px;
-        margin-right: 0;
-      }
+      margin-right: -75px;
 
+    }
+    // item偶数样式
+    .itemright {
+      .year {
+        margin-left: -75px;
+      }
+      align-items: flex-start;
+      .box-bottom {
+        margin-left: 1px;
+        flex-direction: row-reverse;
+        .card-wrap {
+          margin-left: 10px;
+          .month {
+            text-align: left;
+          }
+        }
+        img {
+          transform: rotate(180deg);
+        }
+      }
+      float: right;
+      // background: green;
     }
   }
 
@@ -738,5 +794,5 @@
       color: @m-color;
     }
   }
-  
+
 </style>
