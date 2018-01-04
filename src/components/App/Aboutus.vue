@@ -97,7 +97,7 @@
     <!-- 发展历程 -->
     <div class="history-develop content" v-show="num==1">
       <div class="top">
-        <p class="title">发展历程</p>
+        <div class="title">发展历程</div>
         <span></span>
       </div>
       <div class="main">
@@ -683,10 +683,9 @@
     }
     .lastspot{
       position: absolute;
-      bottom: 0;
+      bottom: -8px;
       left: 490px;
       z-index: -1;
-      background: #ffffff;
     }
   }
 
@@ -795,7 +794,7 @@
     span {
       display: inline-block;
       padding: 30px 65px;
-      border: solid 1px #ffffff;
+      border: solid 1px transparent;
     }
     span:hover {
       border: solid 1px #A7C6FF;

@@ -62,7 +62,7 @@ var router = new Router({
         {path: '', name: 'home', component: Home},
         {path: 'home', name: 'home', component: Home},
         {path: 'ecs', name: 'ecs', component: Ecs},
-        {path: 'modal', name: 'modal', component: modal},
+        // {path: 'modal', name: 'modal', component: modal},
         {path: 'aboutus', name: 'aboutus', component: Aboutus},
         {
           path: 'price',

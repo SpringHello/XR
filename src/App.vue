@@ -140,7 +140,7 @@
           },
           {
             title: '关于我们',
-            path: 'product'
+            path: 'aboutus'
           }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
