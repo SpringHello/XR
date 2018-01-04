@@ -224,12 +224,12 @@
           {
             title: '2个核心',
             img: require('../../assets/img/aboutus/corevalue-2.png'),
-            desc: '通过IB集成总线整合已有/待建的业务与能力系统，以BPM工作流引擎进行顶层流程设计，最终通过PortalONE或开放API/SDK进行业务交付呈现'
+            desc: 'IB业务集成总线：借鉴阿里Dubbo技术进行业务集成总线设计，安全、稳定、弹性、开放。BPM工作流引擎：借鉴Oracle BPM技术进行工作流引擎设计，高效、易用'
           },
           {
             title: '6大模块',
             img: require('../../assets/img/aboutus/corevalue-3.png'),
-            desc: '通过IB集成总线整合已有/待建的业务与能力系统，以BPM工作流引擎进行顶层流程设计，最终通过PortalONE或开放API/SDK进行业务交付呈现'
+            desc: 'MDSP业务管理与计费模块、RMS资源管理组件、PortalONE统一呈现组件、ADS广告管理组件、CP/SP增值服务组件、辅助决策组件'
           }
         ],
         develop: [
@@ -589,6 +589,7 @@
       img {
         padding: 35px 0;
         display: block;
+        margin: 0 auto;
       }
       span {
         display: block;
@@ -772,6 +773,7 @@
       img {
         padding: 30px 0;
         display: block;
+        margin: 0 auto;
       }
       span {
 
