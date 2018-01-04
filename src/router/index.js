@@ -44,7 +44,7 @@ const Vpc = () => import('@/components/Back/Vpc')
 const VpcManage = () => import('@/components/Back/VpcManage')
 const Ip = () => import('@/components/Back/Ip')
 const Order = () => import('@/components/Back/Order')
-const Aboutus = () => import('@/components/Back/Aboutus')
+const Aboutus = () => import('@/components/App/Aboutus')
 
 // 404
 const notFindPage = () => import('@/components/404')
