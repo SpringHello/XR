@@ -104,9 +104,9 @@
         <div class="wrap-box" v-for="(item,index) in historydata" :key="index">
           <div class="item" :class="{itemright:index%2!=0}">
             <p class="year">
-              20
-              <img src="..\..\assets\img\aboutus\yearspot.png"/>
-              {{item.year}}
+              <span>20</span>
+              <span><img src="..\..\assets\img\aboutus\yearspot.png"/></span>
+              <span>{{item.year}}</span>
             </p>
 
             <div class="box-bottom">
@@ -128,6 +128,7 @@
         <div class="circle circle2"></div>
         <div class="circle circle3"></div>
         <div class="circle circle4"></div>
+        <div class="lastspot"><img  src="..\..\assets\img\aboutus\yearspot.png"/></div>
       </div>
 
 
@@ -659,25 +660,32 @@
     .circle3 {
       width: 60px;
       height: 60px;
-      top: 1000px;
-      left: 400px;
+      top: 1200px;
+      left: 240px;
 
     }
     .circle4 {
       width: 100px;
       height: 100px;
-      top: 1500px;
+      top: 1600px;
       left: 600px;
 
     }
     .vertical-axis {
-      width: 6px;
+      width: 8px;
       height: 3000px;
       background: @m-color;
       position: absolute;
-      top: 0;
-      left: 500px;
+      top: 20px;
+      left: 496px;
       z-index: -1;
+    }
+    .lastspot{
+      position: absolute;
+      bottom: 0;
+      left: 490px;
+      z-index: -1;
+      background: #ffffff;
     }
   }
 
@@ -690,23 +698,20 @@
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      //  background: #ffe777;
     }
     .box-bottom {
       display: flex;
-      margin-right: -5px;
+      margin-right: -2px;
     }
     .card-wrap {
       text-align: right;
       margin-right: 10px;
-      // width: 240px;
       .month {
         display: block;
         font-size: 28px;
         margin-bottom: 10px;
       }
       .card {
-        // display: inline-block;
         background: @m-color;
         padding: 16px;
         color: #ffffff;
@@ -721,9 +726,14 @@
     .year {
       font-size: 42px;
       width: 150px;
-      height: 60px;
+      height: 70px;
       font-weight: 100;
-      margin-right: -75px;
+      margin-right:-75px; 
+      display: flex;
+      span{
+        display: inline-block;
+        width: 50px;
+      }
 
     }
     // item偶数样式
@@ -733,7 +743,7 @@
       }
       align-items: flex-start;
       .box-bottom {
-        margin-left: 1px;
+        margin-left: -2px;
         flex-direction: row-reverse;
         .card-wrap {
           margin-left: 10px;
@@ -778,10 +788,8 @@
     }
     margin-bottom: 80px;
   }
-
   .industry {
     width: 1000px;
-
     span {
       display: inline-block;
       padding: 30px 65px;
