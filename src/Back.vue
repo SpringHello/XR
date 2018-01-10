@@ -404,7 +404,7 @@
           div {
             width: 100%;
             height: 100%;
-            background: url(./assets/img/logo.gif) no-repeat 50%;
+            background: url(./assets/img/app/logo.gif) no-repeat 50%;
             background-size: cover;
           }
         }

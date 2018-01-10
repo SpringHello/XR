@@ -11,7 +11,9 @@
               <p>{{item.title}}</p></div>
             <ul v-for="(item,index) in item.list">
               <p class="title">{{item.title}}</p>
-              <li v-for="(subItem,subIndex) in item.desc">{{subItem}}</li>
+              <li v-for="(subItem,subIndex) in item.desc">
+                <router-link :to="subItem.url">{{subItem.subTitle}}</router-link>
+              </li>
               <hr style="margin:20px 0;color:#999;width:50px;">
             </ul>
           </li>
@@ -32,8 +34,16 @@
             img: require('../../assets/img/document/alculation.png'),
             title: '云计算',
             list: [
-              {title: '弹性云主机', desc: ['产品描述', '操作说明']},
-              {title: '镜像', desc: ['产品描述', '操作说明', '购买指南']}
+              {
+                title: '弹性云服务器（ECS）',
+                desc: [{subTitle: '产品描述', url: 'computed/1-1'}, {subTitle: '操作说明', url: 'computed/4-1'}]
+              },
+              {
+                title: '镜像服务',
+                /*第一版暂无操作说明*/
+                desc: [{subTitle: '产品描述', url: 'computed/7-1'}, /*{subTitle: '操作说明', url: 'documentInfo/3'}*/]
+              },
+              {title: 'ECS快照', desc: [{subTitle: '产品描述', url: 'home'}, {subTitle: '操作说明', url: 'home'}]}
             ],
             active: false
           },
@@ -41,17 +51,23 @@
             img: require('../../assets/img/document/netWork.png'),
             title: '云网络',
             list: [
-              {title: 'VPC', desc: ['产品描述', '操作说明']},
-              {title: '负载均衡 ', desc: ['产品描述', '操作说明']}
+              {
+                title: '虚拟私有云VPC',
+                desc: [{subTitle: '产品描述', url: 'networks/4-1'}, {subTitle: '操作说明', url: 'networks/6-1'}]
+              },
+              {title: '弹性IP ', desc: [{subTitle: '产品描述', url: 'home'}, {subTitle: '操作说明', url: 'home'}]},
+              {title: '负载均衡', desc: [{subTitle: '产品描述', url: 'networks/1-1'}, {subTitle: '操作说明', url: 'networks/2-1'}]},
+              {title: 'NAT网关', desc: [{subTitle: '产品描述', url: 'home'}, {subTitle: '操作说明', url: 'home'}]},
+              {title: '虚拟专用VPN', desc: [{subTitle: '产品描述', url: 'home'}, {subTitle: '操作说明', url: 'home'}]}
             ],
             active: false
           },
           {
-            img: require('../../assets/img/document/netWork.png'),
+            img: require('../../assets/img/document/security.png'),
             title: '云存储',
             list: [
-              {title: 'VPC', desc: ['产品描述', '操作说明']},
-              {title: '负载均衡 ', desc: ['产品描述', '操作说明']}
+              {title: '云硬盘', desc: [{subTitle: '产品描述', url: 'home'}, {subTitle: '操作说明', url: 'home'}]},
+              {title: '云硬盘备份', desc: [{subTitle: '产品描述', url: 'home'}, {subTitle: '操作说明', url: 'home'}]}
             ],
             active: false
           },
@@ -59,19 +75,16 @@
             img: require('../../assets/img/document/security.png'),
             title: '云安全',
             list: [
-              {title: '虚拟防火墙', desc: ['产品描述', '操作说明']},
-              {title: 'VPN隧道', desc: ['产品描述', '操作说明']},
-              {title: 'ddos防护', desc: ['产品描述', '操作说明']}
+              {title: '防火墙', desc: [{subTitle: '产品描述', url: 'home'}, {subTitle: '操作说明', url: 'home'}]},
+              {title: 'DDOS高防IP', desc: [{subTitle: '产品描述', url: 'home'}, {subTitle: '操作说明', url: 'home'}]}
             ],
             active: false
           },
           {
-            img: require('../../assets/img/document/Account.png'),
+            img: require('../../assets/img/document/security.png'),
             title: '云运维',
             list: [
-              {title: '虚拟防火墙', desc: ['产品描述', '操作说明']},
-              {title: 'VPN隧道', desc: ['产品描述', '操作说明']},
-              {title: 'ddos防护', desc: ['产品描述', '操作说明']}
+              {title: '云监控', desc: [{subTitle: '产品描述', url: 'home'}, {subTitle: '操作说明', url: 'home'}]}
             ],
             active: false
           }
@@ -104,7 +117,7 @@
 
       > li {
         width: 220px;
-        height: 450px;
+        height: 590px;
         border: 1px solid #377DFF;
         border-radius: 4px;
         &.active {
@@ -149,6 +162,9 @@
             font-size: 12px;
             color: #999;
             margin-bottom: 10px;
+            a {
+              color: #999;
+            }
           }
         }
       }

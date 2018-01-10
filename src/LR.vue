@@ -18,7 +18,7 @@
         <span style=" cursor:pointer;">京ICP备15035854号</span>
         <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922"
            style="cursor:pointer;float:none">
-          <img src="./assets/img/beian.png" style="vertical-align: middle">京公网安备11010802024922号
+          <img src="./assets/img/app/record.png" style="vertical-align: middle">京公网安备11010802024922号
         </a>
         <a>
           <router-link to="/about">关于我们</router-link>
@@ -76,7 +76,7 @@
           div {
             width: 100%;
             height: 100%;
-            background: url(./assets/img/logo.gif) no-repeat 50%;
+            background: url(./assets/img/app/logo.gif) no-repeat 50%;
             background-size: cover;
           }
         }

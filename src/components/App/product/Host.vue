@@ -1,0 +1,244 @@
+<template>
+  <div class="product">
+    <!-- logo -->
+    <div class="logo">
+      <div class="logo-wrapper">
+        <img :src="logo.img">
+        <div class="info">
+          <span class="title">{{logo.title}}</span>
+          <span class="desc">{{logo.desc}}</span>
+          <div>
+            <router-link :to="logo.linkRouter">立即体验</router-link>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 功能描述 -->
+    <div class="features">
+      <div class="features-wrapper">
+        <p class="subTitle">功能描述</p>
+        <div class="features-flex">
+          <div v-for="(feature,index) in features" class="flex-item">
+            <div>
+              <img :src="feature.img">
+              <div>
+                <span class="title">{{feature.title}}</span>
+                <span class="desc">{{feature.desc}}</span>
+              </div>
+            </div>
+            <div class="hover">
+              <p>{{feature.desc}}</p>
+            </div>
+          </div>
+          <div style="width:382px;height:0px;"></div>
+        </div>
+      </div>
+
+    </div>
+    <!-- 使用场景 -->
+    <div class="stage">
+      <div class="wrapper">
+        <p class="subTitle">使用场景</p>
+        <div class="flex">
+          <div class="right">
+            <div v-for="(stage,index) in stageInfo.stages" :key="index">
+              <div style="border:dashed #fff 1px; padding:64px 75px"><img :src="stage.img"></div>
+              <div style="display:flex;flex-direction:column;margin-left:20px;">
+                <div style="padding:20px;">
+                  <span>企业应用</span>
+                  <p v-for="(p,i) in stage.desc" :key="i" style="font-size:14px;">
+                    {{p}}
+                  </p>
+                </div>
+                <div style="padding:20px;">
+                  <span>优势</span>
+                  <div v-for="(p,i) in stage.secdesc" :key="i">
+                    <p style="font-size:14px;">{{p.title}}</p>
+                    <p style="font-size:12px;">{{p.desc}}</p>
+                  </div>
+                </div>
+                <div style="padding:20px;padding-bottom:0;" >
+                  <span>配合使用</span>
+                  <div class="flex">
+
+                    <div style="background:#ffffff;padding:10px 20px;margin-right:20px;" v-for="(item,i) in stage.bottomimg" :key="i">
+                      <img :src="item.img">
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 产品优势 -->
+    <div class="advantage">
+      <div class="wrapper">
+        <p class="subTitle">产品优势</p>
+        <div class="advantage-flex">
+          <div v-for="(advantage,index) in advantages" class="flex-item">
+            <img :src="advantage.img">
+            <div>
+              <span class="title">{{advantage.title}}</span>
+              <span class="desc">{{advantage.desc}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 相关推荐 -->
+    <div class="recommendation">
+      <div class="wrapper">
+        <p class="subTitle">相关推荐</p>
+        <div class="recommendation-flex">
+          <div v-for="(recommendation,index) in recommendations" class="flex-item">
+            <img :src="recommendation.img">
+            <div>
+              <span class="title">{{recommendation.title}}</span>
+              <span class="desc">{{recommendation.desc}}</span>
+            </div>
+            <router-link :to="recommendation.path" target="_blank">详情</router-link>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script type="text/ecmascript-6">
+  import $store from '@/vuex'
+  export default{
+    data(){
+      return {
+        logo: {
+          img: require('../../../assets/img/product/ESC-mirror.png'),
+          title: '镜像服务',
+          desc: '可以灵活便捷的使用公共镜像或私有镜像创建云服务器，具备完善的镜像管理能力。',
+          linkRouter: $store.state.userInfo ? 'mirror' : 'login'
+        },
+        features: [
+          {
+            img: require('../../../assets/img/product/mirror-1.png'),
+            title: '公共镜像',
+            desc: '新睿云平台提供的常见的标准操作系统镜像，所有用户可见。包含操作系统以及预装的公共应用。请根据您的实际情况自助配置应用环境或相关软件。'
+          },
+          {
+            img: require('../../../assets/img/product/mirror-2.png'),
+            title: '私有镜像',
+            desc: '用户基于ECS实例或者外部镜像文件创建的个人镜像，仅用户自己可见。包含操作系统、预装的公共应用以及用户的私有应用。选择私有镜像创建云主机，可以节省您重复配置云主机的时间。'
+          },
+          {
+            img: require('../../../assets/img/product/mirror-2.png'),
+            title: '共享镜像',
+            desc: '包含操作系统、预装的公共应用以及用户的私有应用。共享镜像是某一个租户的私有镜像，只对拥有者及被共享者可见。用户可以选择共享镜像创建云主机。'
+          },
+          {
+            img: require('../../../assets/img/product/mirror-3.png'),
+            title: '镜像市场',
+            desc: '提供预装操作系统、应用环境和各类软件的优质第三方镜像。无需配置，可一键部署，满足建站、应用开发、可视化管理等个性化需求。'
+          },
+          {
+            img: require('../../../assets/img/product/mirror-4.png'),
+            title: '镜像管理',
+            desc: '镜像的备份、删除，私有镜像的上传／下载／删除／共享，同时用户可以灵活使用公有镜像或者私有镜像创建ECS实例。'
+          }
+        ],
+        advantages: [
+          {
+            img: require('../../../assets/img/product/speedy.png'),
+            title: '便捷',
+            desc: '用户可通过弹性云服务器或者云服务器系统盘备份制作私有镜像，也可通过镜像批量开通云服务器。'
+          },
+          {
+            img: require('../../../assets/img/product/safety.png'),
+            title: '安全',
+            desc: '使用多份冗余存储私用镜像,持久性长。'
+          },
+          {
+            img: require('../../../assets/img/product/flexible.png'),
+            title: '灵活',
+            desc: '用户可以通过控制台或开放API，完成对镜像的自定义管理，帮助用户轻松搞定镜像管理。'
+          },
+          {
+            img: require('../../../assets/img/product/unify.png'),
+            title: '统一',
+            desc: '通过自定义镜象，实现应用系统统一部署与升级，提高维护效率。保证应用环境的一致性， 简化升级维护。'
+          },
+          {
+            img: require('../../../assets/img/product/abundant.png'),
+            title: '丰富',
+            desc: '种类繁多的镜像，免安装快速部署操作系统与软件。'
+          }
+        ],
+        stageInfo: {
+          stages: [
+            {
+              img: require('../../../assets/img/product/mirror-topology.png'),
+              desc: ['创建虚拟机：以已经完成安装和配置的系统为模板，创建新的应用服务器，如批量部署。',
+                      '迁移虚拟机：跨可用区域或跨VPC还原或迁移虚拟机，使用镜像克隆。',
+                      '虚拟机备份：备份短期内不会更改的系统，如已经完成发布或更新的应用系统。'],
+              secdesc: [
+                {title:'便捷导入',desc:'私有镜像支持导入，业务灵活迁移'},
+                {title:'统一部署',desc:'快速批量部署业务'},
+                {title:'高持久性',desc:'设计规格为99.999999999%持久性，镜像数据不丢失'}
+              ],
+              bottomimg:[
+                {
+                  img: require('../../../assets/img/product/mirror-storage-1.png')
+                },
+                {
+                  img: require('../../../assets/img/product/mirror-storage-2.png')
+                }
+              ]
+
+
+
+            }
+
+          ],
+
+        },
+        recommendations: [
+          {
+            img: require('../../../assets/img/product/cloudServer.png'),
+            title: '云服务器',
+            desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
+            path:'Pecs'
+          },
+          {
+            img: require('../../../assets/img/product/vpc.png'),
+            title: '虚拟私有云VPC',
+            desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
+            path:'Pvpc'
+          }
+        ]
+      }
+    },
+    methods: {
+      showAll(){
+
+      },
+      hidden(){
+
+      },
+      onClick (index) {
+        switch (index) {
+          case 0:
+            if (this.$store.state.userInfo == null) {
+              this.$router.push('login')
+              return
+            } else {
+              this.$router.push('overview')
+            }
+        }
+      }
+    }
+  }
+</script>
+<style lang="less" rel="stylesheet/less" scoped>
+
+
+</style>

@@ -488,7 +488,7 @@
 <script type="text/ecmascript-6">
   import merge from 'merge'
   import {mapState} from 'vuex'
-  import $store from '../../vuex'
+  import $store from '@/vuex'
   export default{
     data(){
       var status = '开启'

@@ -60,14 +60,6 @@
       }
     },
     created(){
-      this.setActiveItem = throttle(500, true, (index) => {
-        if (index < 0) {
-          index += this.total
-        } else if (index > this.total - 1) {
-          index -= this.total
-        }
-        this.activeIndex = index
-      })
     },
     mounted(){
       this.items = this.updateItem()
@@ -80,6 +72,15 @@
       }
     },
     methods: {
+      setActiveItem: throttle(100, function (index) {
+        if (index < 0) {
+          index += this.total
+        } else if (index > this.total - 1) {
+          index -= this.total
+        }
+        this.activeIndex = index
+        this.$emit('on-change', this.activeIndex)
+      }),
       updateItem(){
         return this.$children.filter(item => {
           return item.$options.name == 'my-carousel-item'

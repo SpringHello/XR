@@ -125,7 +125,7 @@
   import XLSX from 'xlsx'
   import XLSX_SAVE from 'file-saver'
   import regExp from '../../util/regExp'
-  import $store from '../../vuex'
+  import $store from '@/vuex'
   // xlsx 文件输出操作方法
   function s2ab(s) {
     const buf = new ArrayBuffer(s.length)

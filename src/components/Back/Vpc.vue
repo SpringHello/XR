@@ -149,7 +149,7 @@
 <script type="text/ecmascript-6">
   import {customTimeOptions} from '../../options'
   import axios from 'axios'
-  import $store from '../../vuex'
+  import $store from '@/vuex'
 
   export default {
     name: 'vpc',

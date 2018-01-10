@@ -89,7 +89,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import $store from '../../vuex'
+  import $store from '@/vuex'
   import axios from 'axios'
   export default {
     name: 'overview',

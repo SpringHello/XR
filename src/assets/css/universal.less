@@ -17,31 +17,37 @@
   font-size: 24px;
   color: #333333;
 }
+
 // 主标题
-.m-title-g{
+.m-title-g {
   font-size: 24px;
   color: #333333;
 }
+
 // 标题
-.title-g{
+.title-g {
   font-size: 22px;
   color: #333333;
 }
+
 // 小标题
-.s-title-g{
+.s-title-g {
   font-size: 16px;
   color: #666666;
-  }
+}
+
 // 正文
-.text-g{
+.text-g {
   font-size: 14px;
   color: #666666;
 }
+
 // 辅助文字
-.sub-text-g{
+.sub-text-g {
   font-size: 12px;
   color: #999999;
 }
+
 /* 价格字体 */
 .universal-price {
   font-size: 24px;
@@ -71,19 +77,24 @@
     color: #666666;
   }
 }
-.opacity{
+
+.opacity {
   opacity: 0.8;
 }
-.margin{
+
+.margin {
   margin: 20px;
 }
-.margin-top{
+
+.margin-top {
   margin-top: 10px;
 }
-.model{
+
+.model {
   display: flex;
   justify-content: space-between;
 }
+
 /* 修改默认iview下拉框样式 */
 #back {
   header {
@@ -149,4 +160,312 @@
   }
 }
 
+/* 产品页样式 */
+.product {
+  .logo {
+    background-image: linear-gradient(-85deg, #9CE3F3 3%, #FFFFFF 100%);
+    height: 542px;
+    right: 20%;
+    user-select: none;
+    .logo-wrapper {
+      width: 1200px;
+      margin: 0px auto;
+      position: relative;
+      > img {
+        position: absolute;
+        left: 470px;
+        top: 30px;
+      }
+      .info {
+        position: absolute;
+        left: 0px;
+        top: 120px;
+        width: 480px;
+        span {
+          display: block;
+          margin-bottom: 40px;
+        }
+        .title {
+          font-size: 28px;
+          color: #333333;
+        }
+        .desc {
+          font-size: 14px;
+          color: #999999;
+          line-height: 24px;
+        }
+        a {
+          border: none;
+          outline: none;
+          padding: 14px 41px;
+          background-color: #ffe777;
+          font-size: 14px;
+          color: #377dff;
+          margin-right: 20px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  .features {
+    padding: 60px 0px;
+    background-color: #ffffff;
+    .features-wrapper {
+      width: 1200px;
+      margin: 0px auto;
+      .head {
+        font-size: 28px;
+        color: #333333;
+        margin-bottom: 40px;
+      }
+      .features-flex {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        position: relative;
+        .flex-item {
+          width: 382px;
+          height: 140px;
+          border-radius: 5px;
+          background-color: #73a4ff;
+          display: flex;
+          margin-bottom: 12px;
+          position: relative;
+          > div {
+            width: 382px;
+            padding: 40px 16px;
+            span {
+              display: block;
+            }
+            img {
+              margin: 10px 16px 10px 0px;
+              display: inline-block;
+              vertical-align: middle;
+            }
+            div {
+              padding: 7px 0px 7px 16px;
+              display: inline-block;
+              width: 250px;
+              height: 60px;
+              border-left: 1px solid #ffffff;
+              vertical-align: middle;
+              .title {
+                font-size: 16px;
+                color: #ffffff;
+                margin-bottom: 13px;
+              }
+              .desc {
+                font-size: 12px;
+                color: #ffffff;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+              }
+            }
+          }
+          .hover {
+            border-radius: 5px;
+            padding: 0px;
+            position: absolute;
+            background-color: #5c95fd;
+            color: #ffffff;
+            height: 0px;
+            line-height: 20px;
+            overflow: hidden;
+            transition: all .3s;
+            bottom: 0px;
+            opacity: 0;
+            left: 0px;
+            p {
+              width: 300px;
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            }
+          }
+          &:hover {
+            .hover {
+              opacity: 1;
+              height: 140px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .stage {
+    padding: 60px 0px;
+    background-color: #f9f9f9;
+    .wrapper {
+      width: 1200px;
+      margin: 0px auto;
+      .flex {
+        display: flex;
+        .left {
+          background-color: #bed3fa;
+          width: 100px;
+          display: flex;
+          flex-direction: column;
+          > div {
+            cursor: pointer;
+            padding: 30px;
+            font-size: 16px;
+            color: #5d95fd;
+            line-height: 20px;
+            text-align: center;
+            position: relative;
+            flex: auto;
+            &.active {
+              background-color: #5d95fd;
+              color: #FFFFFF;
+            }
+            > div {
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+              width: 40px
+            }
+            img {
+              vertical-align: middle;
+            }
+          }
+        }
+        .right {
+          width: 1100px;
+          background-color: #5d95fd;
+          > div {
+            display: flex;
+            padding: 30px;
+            font-size: 16px;
+            color: #FFFFFF;
+            line-height: 20px;
+            span {
+              display: block;
+              margin-bottom: 20px;
+              font-size: 16px;
+            }
+            p {
+              line-height: 28px;
+            }
+          }
+        }
+      }
+    }
+  }
 
+  .advantage {
+    padding: 60px 0px;
+    background-color: #ffffff;
+    .wrapper {
+      width: 1200px;
+      margin: 0px auto;
+      .advantage-flex {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        .flex-item {
+          width: 600px;
+          height: 100px;
+          border-radius: 5px;
+          padding: 20px 0px;
+          display: flex;
+          margin-bottom: 12px;
+          span {
+            display: block;
+          }
+          img {
+            margin: 10px 16px 10px 0px;
+            display: inline-block;
+          }
+          div {
+            padding: 11px 0px;
+            display: inline-block;
+            width: 400px;
+            height: 60px;
+            border-left: 1px solid #ffffff;
+            .title {
+              font-size: 16px;
+              margin-bottom: 10px;
+            }
+            .desc {
+              font-size: 12px;
+              line-height: 19px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .recommendation {
+    padding: 60px 0px;
+    background-color: #f9f9f9;
+    .wrapper {
+      width: 1200px;
+      margin: 0px auto;
+      .recommendation-flex {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        .flex-item {
+          width: 579px;
+          height: 135px;
+          border-radius: 5px;
+          padding: 27px 21px;
+          display: flex;
+          margin-bottom: 12px;
+          background-color: #ffffff;
+          align-items: center;
+          span {
+            display: block;
+          }
+          img {
+            margin: 10px 16px 10px 0px;
+            display: inline-block;
+          }
+          div {
+            display: inline-block;
+            width: 365px;
+            height: 60px;
+            border-left: 1px solid #ffffff;
+            .title {
+              font-size: 18px;
+              color: #333333;
+              margin-bottom: 8px;
+            }
+            .desc {
+              font-size: 14px;
+              color: #666666;
+              line-height: 25px;
+              padding-right: 20px;
+            }
+          }
+          a {
+            display: table;
+            padding: 10px 25px;
+            background-color: rgb(255, 231, 119);
+          }
+        }
+      }
+    }
+  }
+
+  .subTitle {
+    font-size: 28px;
+    color: #333333;
+    margin-bottom: 20px;
+  }
+}
+
+/* 立即购买样式 */
+.buy {
+  outline: none;
+  border: none;
+  display: block;
+  padding: 13px 60px;
+  background-color: #ffe777;
+  font-size: 14px;
+  color: #377dff;
+  width: max-content;
+}

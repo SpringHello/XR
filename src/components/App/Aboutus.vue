@@ -4,7 +4,7 @@
     <div class="banner">
       <div class="text">
         <p>高性能主机明智之选</p>
-        <span>免费试用</span>
+        <router-link to="vps">免费试用</router-link>
       </div>
 
     </div>
@@ -33,10 +33,10 @@
       </div>
 
 
-      <div>
-        <h1 class="title">公司业务范畴</h1>
-        <p class="desc flex-c">专注于广电网络聚集于广电业务解决方案与系统集成11年</p>
-      </div>
+      <!-- <div>
+         <h1 class="title">公司业务范畴</h1>
+         <p class="desc flex-c">专注于广电网络聚集于广电业务解决方案与系统集成11年</p>
+       </div>-->
 
       <div>
         <h1 class="title">业务版图</h1>
@@ -49,7 +49,7 @@
         </div>
       </div>
 
-      <div>
+      <!--<div>
         <h1 class="title">助理运营商全面实现敏捷业务生产</h1>
         <p class="desc w500"><span>紧随市场需求 数据驱动业务</span><span>IB 业务集成总线</span><span>BPM工作流引擎</span></p>
         <div class="business">
@@ -78,7 +78,7 @@
             <span>{{item.desc}}</span>
           </div>
         </div>
-      </div>
+      </div>-->
 
 
       <div>
@@ -97,7 +97,7 @@
     <!-- 发展历程 -->
     <div class="history-develop content" v-show="num==1">
       <div class="top">
-        <p class="title">发展历程</p>
+        <div class="title">发展历程</div>
         <span></span>
       </div>
       <div class="main">
@@ -128,7 +128,7 @@
         <div class="circle circle2"></div>
         <div class="circle circle3"></div>
         <div class="circle circle4"></div>
-        <div class="lastspot"><img  src="..\..\assets\img\aboutus\yearspot.png"/></div>
+        <div class="lastspot"><img src="..\..\assets\img\aboutus\yearspot.png"/></div>
       </div>
 
 
@@ -160,8 +160,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-
-
   export default {
     data() {
       return {
@@ -413,7 +411,7 @@
         color: #333333;
 
       }
-      span {
+      a {
         padding: 14px 40px;
         background: #ffe777;
         color: @m-color;
@@ -681,12 +679,11 @@
       left: 496px;
       z-index: -1;
     }
-    .lastspot{
+    .lastspot {
       position: absolute;
-      bottom: 0;
+      bottom: -7px;
       left: 490px;
       z-index: -1;
-      background: #ffffff;
     }
   }
 
@@ -729,9 +726,9 @@
       width: 150px;
       height: 70px;
       font-weight: 100;
-      margin-right:-75px; 
+      margin-right: -75px;
       display: flex;
-      span{
+      span {
         display: inline-block;
         width: 50px;
       }
@@ -790,12 +787,13 @@
     }
     margin-bottom: 80px;
   }
+
   .industry {
     width: 1000px;
     span {
       display: inline-block;
       padding: 30px 65px;
-      border: solid 1px #ffffff;
+      border: solid 1px transparent;
     }
     span:hover {
       border: solid 1px #A7C6FF;

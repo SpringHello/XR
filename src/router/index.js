@@ -13,10 +13,25 @@ import LR from '@/LR'
 const Home = () => import('@/components/App/Home')
 const Price = () => import('@/components/App/Price')
 const Ecs = () => import('@/components/App/product/ECS')
-
+const Document = () => import('@/components/App/Document')
 const hostPrice = () => import('@/components/App/Price/Host')
 const diskPrice = () => import('@/components/App/Price/Disk')
 const elasticIPPrice = () => import('@/components/App/Price/ElasticIP')
+
+/* 产品页面路由 */
+const Pecs = () => import('@/components/App/product/ECS.vue')
+const Phost = () => import('@/components/App/product/Host.vue')
+const Pecss = () => import('@/components/App/product/EcsSnapshot.vue')
+const Pvpc = () => import('@/components/App/product/VPC.vue')
+const Peip = () => import('@/components/App/product/ElasticIP.vue')
+const Pbalance = () => import('@/components/App/product/Balance.vue')
+const Pvirvpn = () => import('@/components/App/product/VirtualVPN.vue')
+const Pnat = () => import('@/components/App/product/NATgateway.vue')
+const Pdisk = () => import('@/components/App/product/CloudDisk.vue')
+const Pbackupdisk = () => import('@/components/App/product/CloudDiskBackup.vue')
+const Pfirewall = () => import('@/components/App/product/Firewall.vue')
+const Pddos = () => import('@/components/App/product/DDOShighIP.vue')
+const Pmonitor = () => import('@/components/App/product/CloudMonitoring.vue')
 
 // 登录注册页面
 // import Login from '@/components/LR/Login'
@@ -62,8 +77,8 @@ var router = new Router({
         {path: '', name: 'home', component: Home},
         {path: 'home', name: 'home', component: Home},
         {path: 'ecs', name: 'ecs', component: Ecs},
-        {path: 'modal', name: 'modal', component: modal},
-        {path: 'aboutus', name: 'aboutus', component: Aboutus},
+        {path: 'about', name: 'about', component: Aboutus},
+        {path: 'document', name: 'document', component: Document},
         {
           path: 'price',
           name: 'price',
@@ -90,7 +105,20 @@ var router = new Router({
               component: elasticIPPrice
             }
           ]
-        }
+        },
+        {path: 'Pecs', component: Pecs},
+        {path: 'Phost', component: Phost},
+        {path: 'Pecss', component: Pecss},
+        {path: 'Pvpc', component: Pvpc},
+        {path: 'Peip', component: Peip},
+        {path: 'Pbalance', component: Pbalance},
+        {path: 'Pnat', component: Pnat},
+        {path: 'Pvirvpn', component: Pvirvpn},
+        {path: 'Pdisk', component: Pdisk},
+        {path: 'Pbackupdisk', component: Pbackupdisk},
+        {path: 'Pfirewall', component: Pfirewall},
+        {path: 'Pddos', component: Pddos},
+        {path: 'Pmonitor', component: Pmonitor},
       ]
     },
     {

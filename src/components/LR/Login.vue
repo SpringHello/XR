@@ -212,7 +212,7 @@
           height: 36px;
           // background-color: #ffffff;
           margin: auto 0px;
-          background: url(../../assets/img/logo.gif) no-repeat center;
+          background: url(../../assets/img/app/logo.gif) no-repeat center;
           background-size: 110% 260%;
           background-position-y: -29px;
         }
