@@ -179,7 +179,7 @@
       <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
         <span class="phone"></span>
       </Poptip>
-      <BackTop :bottom="61" :right="50" :duration="0" :height="1600">
+      <BackTop :bottom="65" :right="50" :duration="0" :height="1600">
         <Icon type="chevron-up" class="backtop"></Icon>
       </BackTop>
     </div>
