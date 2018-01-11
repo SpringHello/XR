@@ -4,20 +4,26 @@
     <div class="document">
       <div class="dotitle">帮助文档</div>
       <div class="content">
-        <ul>
-          <li v-for="(item,index) in contentList" :class="{active:item.active}" @mouseenter="ME(item)"
-              @mouseleave="ML(item)">
-            <div><img :src=item.img alt="">
-              <p>{{item.title}}</p></div>
+        <div v-for="(item,index) in contentList" :class="{active:item.active}" @mouseenter="ME(item)"
+             @mouseleave="ML(item)">
+          <div class="header">
+            <img :src=item.img>
+            <p>{{item.title}}</p>
+          </div>
+          <div class="body">
             <ul v-for="(item,index) in item.list">
-              <p class="title">{{item.title}}</p>
-              <li v-for="(subItem,subIndex) in item.desc">
-                <router-link :to="subItem.url">{{subItem.subTitle}}</router-link>
-              </li>
-              <hr style="margin:20px 0;color:#999;width:50px;">
+              <div v-if="item.desc">
+                <p class="title">{{item.title}}</p>
+                <li v-for="(subItem,subIndex) in item.desc">
+                  <router-link :to="subItem.url" :class="{notAllow:subItem.url === ''}">{{subItem.subTitle}}</router-link>
+                </li>
+              </div>
+              <div v-else class="other">
+                <router-link :to="item.url">{{item.title}}</router-link>
+              </div>
             </ul>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -31,7 +37,7 @@
         // 帮助文档
         contentList: [
           {
-            img: require('../../assets/img/document/alculation.png'),
+            img: require('../../assets/img/document/stockpile.png'),
             title: '云计算',
             list: [
               {
@@ -43,48 +49,63 @@
                 /*第一版暂无操作说明*/
                 desc: [{subTitle: '产品描述', url: 'computed/7-1'}, /*{subTitle: '操作说明', url: 'documentInfo/3'}*/]
               },
-              {title: 'ECS快照', desc: [{subTitle: '产品描述', url: 'home'}, {subTitle: '操作说明', url: 'home'}]}
+              {title: 'ECS快照', desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]}
             ],
             active: false
           },
           {
-            img: require('../../assets/img/document/netWork.png'),
+            img: require('../../assets/img/document/ops.png'),
             title: '云网络',
             list: [
               {
                 title: '虚拟私有云VPC',
                 desc: [{subTitle: '产品描述', url: 'networks/4-1'}, {subTitle: '操作说明', url: 'networks/6-1'}]
               },
-              {title: '弹性IP ', desc: [{subTitle: '产品描述', url: 'home'}, {subTitle: '操作说明', url: 'home'}]},
+              {title: '弹性IP ', desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]},
               {title: '负载均衡', desc: [{subTitle: '产品描述', url: 'networks/1-1'}, {subTitle: '操作说明', url: 'networks/2-1'}]},
-              {title: 'NAT网关', desc: [{subTitle: '产品描述', url: 'home'}, {subTitle: '操作说明', url: 'home'}]},
-              {title: '虚拟专用VPN', desc: [{subTitle: '产品描述', url: 'home'}, {subTitle: '操作说明', url: 'home'}]}
+              {title: 'NAT网关(即将上线)', desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]},
+              {title: '虚拟专用VPN(即将上线)', desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]}
             ],
             active: false
           },
           {
-            img: require('../../assets/img/document/security.png'),
+            img: require('../../assets/img/document/calculate.png'),
             title: '云存储',
             list: [
-              {title: '云硬盘', desc: [{subTitle: '产品描述', url: 'home'}, {subTitle: '操作说明', url: 'home'}]},
-              {title: '云硬盘备份', desc: [{subTitle: '产品描述', url: 'home'}, {subTitle: '操作说明', url: 'home'}]}
+              {title: '云硬盘', desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]},
+              {title: '云硬盘备份', desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]}
             ],
             active: false
           },
           {
-            img: require('../../assets/img/document/security.png'),
+            img: require('../../assets/img/document/network.png'),
             title: '云安全',
             list: [
-              {title: '防火墙', desc: [{subTitle: '产品描述', url: 'home'}, {subTitle: '操作说明', url: 'home'}]},
-              {title: 'DDOS高防IP', desc: [{subTitle: '产品描述', url: 'home'}, {subTitle: '操作说明', url: 'home'}]}
+              {title: '防火墙', desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]},
+              {title: 'DDOS高防IP(即将上线)', desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]}
             ],
             active: false
           },
           {
-            img: require('../../assets/img/document/security.png'),
+            img: require('../../assets/img/document/safe.png'),
             title: '云运维',
             list: [
-              {title: '云监控', desc: [{subTitle: '产品描述', url: 'home'}, {subTitle: '操作说明', url: 'home'}]}
+              {title: '云监控', desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]}
+            ],
+            active: false
+          },
+          {
+            img: require('../../assets/img/document/user.png'),
+            title: '账户与财务',
+            list: [
+              {title: '登录/注册', url: 'uaf/3-1'},
+              {title: '账户安全', url:'uaf/3-1'},
+              {title: '个人/企业认证', url: 'uaf/3-1'},
+              {title: '产品定价', url: 'uaf/4-1'},
+              {title: '计费说明', url: 'uaf/5-1'},
+              {title: '代金券', url: 'uaf/6-1'},
+              {title: '充值', url: 'uaf/7-1'},
+              {title: '发票申请', url: 'uaf/8-1'}
             ],
             active: false
           }
@@ -111,59 +132,92 @@
       margin-bottom: 40px;
       font-size: 26px;
     }
-    .content > ul {
+    .content {
       display: flex;
       justify-content: space-between;
-
-      > li {
-        width: 220px;
-        height: 590px;
+      flex-wrap: wrap;
+      > div {
+        width: 373px;
+        height: 470px;
         border: 1px solid #377DFF;
         border-radius: 4px;
+        margin-bottom: 39px;
+        &:nth-of-type(2) {
+          > .body {
+            ul {
+              width: 36%;
+            }
+          }
+        }
         &.active {
           box-shadow: 0px 0px 10px #333333;
           transition: all .3s;
         }
-        ul {
-          li {
-            cursor: pointer;
-            &:hover {
-              color: #377DFF;
-            }
-          }
-        }
-        > div {
+        > .header {
           height: 80px;
           background-color: #377Dff;
           border-radius: 4px 4px 0 0;
           padding: 20px;
           display: flex;
           justify-content: flex-start;
+          img{
+            height: 26px;
+            width: 30px;
+            position: relative;
+            top: 8px;
+          }
           p {
-            font-size: 16px;
+            font-size: 24px;
             color: #FFF;
             line-height: 40px;
             margin-left: 10px;
           }
         }
-        ul {
-          margin: 0px 20px;
-          .title {
-            font-size: 16px;
-            color: #333;
-            margin: 20px 0px 10px;
-          }
-          &:last-of-type {
-            hr {
-              display: none;
+        > .body {
+          display: flex;
+          flex-direction: column;
+          flex-wrap: wrap;
+          justify-content: flex-start;
+          height: 370px;
+          ul {
+            margin: 0px 20px;
+            .title {
+              font-size: 16px;
+              color: #333;
+              margin: 20px 0px 10px;
+            }
+            li {
+              cursor: pointer;
+              &:hover {
+                color: #377DFF;
+              }
+              font-size: 12px;
+              color: #999;
+              margin-bottom: 5px;
+              a {
+                color: #999;
+                &.notAllow{
+                  cursor: auto;
+                  &:hover {
+                    color: #999;
+                  }
+                }
+                &:hover {
+                  color: #377DFF;
+                }
+              }
             }
           }
-          li {
-            font-size: 12px;
-            color: #999;
-            margin-bottom: 10px;
-            a {
-              color: #999;
+          > ul {
+            .other {
+              margin: 15px 0px 5px;
+              font-size: 16px;
+              a {
+                color: #333333;
+                &:hover {
+                  color: #377DFF;
+                }
+              }
             }
           }
         }
