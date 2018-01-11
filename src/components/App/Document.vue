@@ -15,7 +15,8 @@
               <div v-if="item.desc">
                 <p class="title">{{item.title}}</p>
                 <li v-for="(subItem,subIndex) in item.desc">
-                  <router-link :to="subItem.url" :class="{notAllow:subItem.url === ''}">{{subItem.subTitle}}</router-link>
+                  <router-link :to="subItem.url" :class="{notAllow:subItem.url === ''}">{{subItem.subTitle}}
+                  </router-link>
                 </li>
               </div>
               <div v-else class="other">
@@ -99,7 +100,7 @@
             title: '账户与财务',
             list: [
               {title: '登录/注册', url: 'uaf/3-1'},
-              {title: '账户安全', url:'uaf/3-1'},
+              {title: '账户安全', url: 'uaf/3-1'},
               {title: '个人/企业认证', url: 'uaf/3-1'},
               {title: '产品定价', url: 'uaf/4-1'},
               {title: '计费说明', url: 'uaf/5-1'},
@@ -145,7 +146,7 @@
         &:nth-of-type(2) {
           > .body {
             ul {
-              width: 36%;
+              width: 41%;
             }
           }
         }
@@ -160,7 +161,7 @@
           padding: 20px;
           display: flex;
           justify-content: flex-start;
-          img{
+          img {
             height: 26px;
             width: 30px;
             position: relative;
@@ -180,7 +181,7 @@
           justify-content: flex-start;
           height: 370px;
           ul {
-            margin: 0px 20px;
+            margin-left: 20px;
             .title {
               font-size: 16px;
               color: #333;
@@ -196,7 +197,7 @@
               margin-bottom: 5px;
               a {
                 color: #999;
-                &.notAllow{
+                &.notAllow {
                   cursor: auto;
                   &:hover {
                     color: #999;

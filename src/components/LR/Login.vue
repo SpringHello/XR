@@ -27,12 +27,13 @@
                 <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                        :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                        @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-                <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                <img :src="imgSrc" @click="imgSrc=`http://localhost:8082/user/getKaptchaImage.do?t=${new Date().getTime()}`">
               </div>
             </form>
           </div>
           <div class="foot">
-            <button :class="{disabled:disabled}" :disabled="disabled==true" @click="submit">登录</button>
+            <!--:disabled="disabled==true"-->
+            <button :class="{disabled:disabled}"  @click="submit">登录</button>
             <div>
               <router-link to="register" style="color:#0EB4FA;cursor:pointer;float:left;font-size: 14px">
                 立即注册
@@ -171,7 +172,7 @@
          this.vailForm.loginname.warning = true
          return
          } */
-        axios.get(`user/login.do?username=${this.form.loginname}&password=${this.form.password}&vailCode=${this.form.vailCode}`).then((response) => {
+        axios.get(`/user/login.do?username=${this.form.loginname}&password=${this.form.password}&vailCode=${this.form.vailCode}`).then((response) => {
           if (response.status == 200 && response.statusText == 'OK') {
           if (response.data.status == 1) {
             localStorage.setItem('authToken', response.data.message)

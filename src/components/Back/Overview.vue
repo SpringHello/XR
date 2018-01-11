@@ -125,8 +125,12 @@
       var source = axios.get(`user/userSourceManager.do?zoneId=${zoneId}`)
       Promise.all([accountInfo, adver, source]).then(values => {
         next(vm => {
+        vm.setData(values)
+    })
+    },values => {
+        next(vm => {
           vm.setData(values)
-        })
+      })
       })
     },
     created(){

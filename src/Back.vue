@@ -181,75 +181,76 @@
     beforeRouteEnter(to, from, next){
       // 获取所有后台需要的基本信息
       // 获取用户信息
-      var userInfo = axios.get('user/GetUserInfo.do')
-      // 获取zone信息
-      var zoneList = axios.get('information/zone.do')
+      /* var userInfo = axios.get('user/GetUserInfo.do')
+       // 获取zone信息
+       var zoneList = axios.get('information/zone.do')*/
 
-      /* $store.commit('setZoneList', [
-       {
-       'id': 2,
-       'zoneid': '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c',
-       'zonename': '华中一区',
-       'serverip': '42.56.89.235',
-       'serverport': '8090',
-       'apikey': '2I4bnKhMisNJrP7YMRTcW1CGoirzjv6n5IE-gqGDze-zDCvQ4P8RCZevfiV-VdG7bpE0dpeVHOCvqHLg0XnO9w',
-       'secretkey': 'HeDCL_nCnqIRn4aw-ZyYGFROVqjR3ISEgxs5F4Oyq8WtiRF-Ad6vSHHNNNpxbJ6UCqEPu4O4Tp1TzKolJNs8RQ',
-       'zabbixurl': 'http://172.16.16.16/zabbix/api_jsonrpc.php',
-       'zabbixusername': 'Admin',
-       'zabbuxpassword': 'zabbix',
-       'zabbixauth': 'd7b599de1d31cf217b8893cbc8651d36',
-       'zabbixjsonrpc': '2.0',
-       'aclAllowid': '54951735-d324-11e7-9dc3-005056ad531d',
-       'aclDenyid': '5494e69c-d324-11e7-9dc3-005056ad531d',
-       'cpu': 493,
-       'memory': 470,
-       'sasdisk': 9090,
-       'ssddisk': 3349,
-       'satadisk': 8420,
-       'publicip': 18
-       }
-       ])
-       $store.commit('setAuthInfo', {
-       authInfo: {
-       'id': 131,
-       'code': '7a0ecc0a7e73432d8692f835f907c6fb',
-       'version': 0,
-       'companyid': '150899693435',
-       'authtype': 0,
-       'name': '谭承卫',
-       'personalnumber': '500101199205115110',
-       'phone': '18183036414',
-       'createtime': '2017-10-26 14:07:15',
-       'checkstatus': 0,
-       'scale': 0
-       },
-       userInfo: {
-       'realname': '谭承卫',
-       'isdirector': 0,
-       'phone': '18183036414',
-       'personalauth': 0,
-       'companyauth': 1,
-       'emailauth': 1,
-       'defaultzoneid': '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c',
-       'defaultzonename': '华中一区'
-       }
-       })
-       next() */
-      Promise.all([userInfo, zoneList]).then(values => {
-        $store.commit('setZoneList', values[1].data.result)
-        if (values[0].status == 200 && values[0].data.status == 1) {
-          $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
-        } else {
-          next(vm => {
-            vm.$router.push({path: '/ruicloud/login'})
-          })
+      $store.commit('setZoneList', [
+        {
+          'id': 2,
+          'zoneid': '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c',
+          'zonename': '华中一区',
+          'serverip': '42.56.89.235',
+          'serverport': '8090',
+          'apikey': '2I4bnKhMisNJrP7YMRTcW1CGoirzjv6n5IE-gqGDze-zDCvQ4P8RCZevfiV-VdG7bpE0dpeVHOCvqHLg0XnO9w',
+          'secretkey': 'HeDCL_nCnqIRn4aw-ZyYGFROVqjR3ISEgxs5F4Oyq8WtiRF-Ad6vSHHNNNpxbJ6UCqEPu4O4Tp1TzKolJNs8RQ',
+          'zabbixurl': 'http://172.16.16.16/zabbix/api_jsonrpc.php',
+          'zabbixusername': 'Admin',
+          'zabbuxpassword': 'zabbix',
+          'zabbixauth': 'd7b599de1d31cf217b8893cbc8651d36',
+          'zabbixjsonrpc': '2.0',
+          'aclAllowid': '54951735-d324-11e7-9dc3-005056ad531d',
+          'aclDenyid': '5494e69c-d324-11e7-9dc3-005056ad531d',
+          'cpu': 493,
+          'isdefault': 1,
+          'memory': 470,
+          'sasdisk': 9090,
+          'ssddisk': 3349,
+          'satadisk': 8420,
+          'publicip': 18
         }
-        next()
-      }, () => {
-        next(vm => {
-          vm.$router.push({path: '/ruicloud/login'})
-        })
+      ])
+      $store.commit('setAuthInfo', {
+        authInfo: {
+          'id': 131,
+          'code': '7a0ecc0a7e73432d8692f835f907c6fb',
+          'version': 0,
+          'companyid': '150899693435',
+          'authtype': 0,
+          'name': '谭承卫',
+          'personalnumber': '500101199205115110',
+          'phone': '18183036414',
+          'createtime': '2017-10-26 14:07:15',
+          'checkstatus': 0,
+          'scale': 0
+        },
+        userInfo: {
+          'realname': '谭承卫',
+          'isdirector': 0,
+          'phone': '18183036414',
+          'personalauth': 0,
+          'companyauth': 1,
+          'emailauth': 1,
+          'defaultzoneid': '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c',
+          'defaultzonename': '华中一区'
+        }
       })
+      next()
+      /*Promise.all([userInfo, zoneList]).then(values => {
+       $store.commit('setZoneList', values[1].data.result)
+       if (values[0].status == 200 && values[0].data.status == 1) {
+       $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+       } else {
+       next(vm => {
+       vm.$router.push({path: '/ruicloud/login'})
+       })
+       }
+       next()
+       }, () => {
+       next(vm => {
+       vm.$router.push({path: '/ruicloud/login'})
+       })
+       })*/
     },
     created(){
     },
