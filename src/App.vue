@@ -7,7 +7,7 @@
           <div></div>
         </a>
         <div class="operate">
-          <ul @mouseleave="UML">
+          <ul @mouseleave="ME(-1)">
             <li v-for="(item,index) in titleItem" :key="index" @mouseenter="ME(index,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
@@ -36,14 +36,14 @@
               <li @mouseenter="ME(4,$event)">
                 <div class="menu-dropdown">
                   <div class="menu-dropdown-rel">
-                    <router-link to="/register"><span>注册</span></router-link>
+                    <router-link to="/ruicloud/register"><span>注册</span></router-link>
                   </div>
                 </div>
               </li>
               <li @mouseenter="ME(5,$event)">
                 <div class="menu-dropdown">
                   <div class="menu-dropdown-rel">
-                    <router-link to="/login"><span>登录</span></router-link>
+                    <router-link to="/ruicloud/login"><span>登录</span></router-link>
                   </div>
                 </div>
               </li>
@@ -104,6 +104,22 @@
                 </li>
               </ul>
             </div>
+            <div><p>联系我们</p>
+              <ul>
+                <li>
+                  <a href="" class="router-link-exact-active router-link-active">企业电话：010-82527988</a>
+                </li>
+                <li>
+                  <a href="" class="router-link-exact-active router-link-active">企业邮箱：service@unionstech.cn </a>
+                </li>
+                <li>
+                  <a href="" class="router-link-exact-active router-link-active">企业地址：北京市海淀区东升大厦AB座611、612</a>
+                </li>
+                <li>
+                  <img src="./assets/img/app/QR-code.jpg" style="width:100px;height:100px;">
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="footer-bottom">
@@ -111,8 +127,8 @@
             <p>{{item.time}}</p>
             <li style="cursor: auto">{{item.title}}</li>
             <li @click="toAQ('1')">{{item.preparation}}</li>
-            <li @click="toAQ('2')"><img src="./assets/img/app/record.png" style="vertical-align: middle;margin-right: 5px">{{item.desc
-              }}
+            <li @click="toAQ('2')">
+              <img src="./assets/img/app/record.png" style="vertical-align: middle;margin-right: 5px">{{item.desc}}
             </li>
             <li @click="toAQ('3')">{{item.msg}}</li>
           </ul>
@@ -201,7 +217,7 @@
               {
                 prod: '云网络',
                 prodItem: [
-                  {title: '弹虚拟私有云VPC', desc: '网络隔离、分配子网', path: 'Pvpc'},
+                  {title: '虚拟私有云VPC', desc: '网络隔离、分配子网', path: 'Pvpc'},
                   {title: '弹性IP', desc: '绑定与解绑IP、扩容', path: 'Peip'},
                   {title: '负载均衡', desc: '源算法、轮询、最小连接数', path: 'Pbalance'},
                   {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: 'Pnat'},
@@ -257,9 +273,9 @@
             Headline: '产品',
             desc: [
               {subTitle: '云计算', url: ''},
-              {subTitle: '弹性云服务器（ECS）', url: '/ruicloud/Pecs'},
-              {subTitle: '镜像服务', url: '/ruicloud/Phost'},
-              {subTitle: 'ESC快照', url: '/ruicloud/Pecss'},
+              {subTitle: '弹性云服务器（ECS）', url: '/Pecs'},
+              {subTitle: '镜像服务', url: '/Phost'},
+              {subTitle: 'ESC快照', url: '/Pecss'},
               {subTitle: '裸金属服务器（敬请期待）', url: ''},
               {subTitle: '弹性伸缩（敬请期待）', url: ''}
             ]
@@ -269,11 +285,11 @@
             Headline: '产品',
             desc: [
               {subTitle: '云网络', url: ''},
-              {subTitle: '虚拟私有云VPC', url: '/ruicloud/Pvpc'},
-              {subTitle: '弹性IP', url: '/ruicloud/Peip'},
-              {subTitle: '负载均衡', url: '/ruicloud/Pbalance'},
-              {subTitle: 'NAT网关', url: '/ruicloud/Pnat'},
-              {subTitle: '虚拟专网VPN', url: '/ruicloud/Pvirvpn'},
+              {subTitle: '虚拟私有云VPC', url: '/Pvpc'},
+              {subTitle: '弹性IP', url: '/Peip'},
+              {subTitle: '负载均衡', url: '/Pbalance'},
+              {subTitle: 'NAT网关', url: '/Pnat'},
+              {subTitle: '虚拟专网VPN', url: '/Pvirvpn'},
               {subTitle: 'CDN（敬请期待）', url: ''}
             ]
           },
@@ -282,41 +298,33 @@
             Headline: '产品',
             desc: [
               {subTitle: '云储存', url: ''},
-              {subTitle: '云硬盘', url: '/ruicloud/Pdisk'},
-              {subTitle: '云硬盘备份', url: '/ruicloud/Pbackupdisk'}
+              {subTitle: '云硬盘', url: '/Pdisk'},
+              {subTitle: '云硬盘备份', url: '/Pbackupdisk'}
             ]
           },
           {
             Headline: '产品',
             desc: [
               {subTitle: '云安全', url: ''},
-              {subTitle: '防火墙', url: '/ruicloud/Pfirewall'},
-              {subTitle: 'DDOS高防IP', url: '/ruicloud/Pddos'}
+              {subTitle: '防火墙', url: '/Pfirewall'},
+              {subTitle: 'DDOS高防IP', url: '/Pddos'}
             ]
           },
           {
             Headline: '产品',
             desc: [
               {subTitle: '云维护', url: ''},
-              {subTitle: '云监控', url: '/ruicloud/Pmonitor'},
+              {subTitle: '云监控', url: '/Pmonitor'},
               {subTitle: '访问监控（敬请期待）', url: ''}
             ]
           },
           {
             Headline: '文档',
             desc: [
-              {subTitle: '计算', url: '/ruicloud/computed/7-1'},
-              {subTitle: '网络', url: '/ruicloud/networks/4-1'},
+              {subTitle: '计算', url: '/computed/7-1'},
+              {subTitle: '网络', url: '/networks/4-1'},
               {subTitle: '安全', url: ''},
-              {subTitle: '财务与账户', url: '/ruicloud/uaf'}
-            ]
-          },
-          {
-            Headline: '联系我们',
-            desc: [
-              {subTitle: '企业电话：010-82527988', url: ''},
-              {subTitle: '企业邮箱：service@unionstech.cn ', url: ''},
-              {subTitle: '企业地址：北京市海淀区东升大厦AB座611、612', url: ''}
+              {subTitle: '财务与账户', url: '/uaf'}
             ]
           }
         ], // 页尾列表详情
@@ -372,15 +380,15 @@
     methods: {
       /* li mouseenter事件 重新设置line样式 */
       ME: debounce(200, function (index, event) {
-        this.currentItem === -1 ? this.lineStyle.transition = 'width .3s' : this.lineStyle.transition = 'all .3s'
-        this.lineStyle.left = `${event.target.offsetLeft}px`
-        this.lineStyle.width = `${event.target.clientWidth}px`
-        this.currentItem = index
-      }),
-      /* ul mouseleave事件 设置line宽度为0 动画样式width */
-      UML: debounce(200, function () {
-        this.currentItem = -1
-        this.lineStyle.width = '0px'
+        if (index == -1) {
+          this.currentItem = -1
+          this.lineStyle.width = '0px'
+        } else {
+          this.currentItem === -1 ? this.lineStyle.transition = 'width .3s' : this.lineStyle.transition = 'all .3s'
+          this.lineStyle.left = `${event.target.offsetLeft}px`
+          this.lineStyle.width = `${event.target.clientWidth}px`
+          this.currentItem = index
+        }
       }),
       QME(){
         this.$refs.qq.style.width = "116px"
@@ -538,6 +546,9 @@
                           font-size: 14px;
                           color: #FFFFFF;
                           line-height: 25px;
+                          &:hover {
+                            color: #377dff;
+                          }
                         }
                         p {
                           font-size: 12px;
@@ -698,7 +709,7 @@
             > p {
               margin-right: 20px;
               line-height: normal;
-              font-size:12px;
+              font-size: 12px;
             }
             li {
               font-size: 12px;

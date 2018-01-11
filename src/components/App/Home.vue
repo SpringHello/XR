@@ -98,7 +98,7 @@
     <!-- 云产品展示区域 -->
     <div class="cloud-content">
       <div class="container">
-        <p>新睿云为您快速搭建属于自己的私有云环境(VPC)，并提供100%的网络间隔离，确保安全，包括：私有网络、路由器、公网IP和负载均衡器</p>
+        <p v-for="(item,index) in cloudContainer" :key="index" v-if="item.select">{{item.desc}}</p>
         <div class="content-carousel">
           <div v-for="(item,index) in cloudContainer">
             <transition name="fade">
@@ -189,8 +189,8 @@
                 <p style="font-size: 14px;color:#999999;line-height: 20px;width:500px;border-right: 1px solid #d8d8d8;
     padding-right: 40px;">
                   {{area.desc}}</p>
-                <router-link v-if="$store.state.userInfo" to="/new">立即购买</router-link>
-                <router-link v-else to="/login" class="buy" style="padding:13px 30px">立即购买</router-link>
+                <router-link v-if="$store.state.userInfo" to="/ruicloud/new">立即购买</router-link>
+                <router-link v-else to="/ruicloud/login" class="buy" style="padding:13px 30px">立即购买</router-link>
               </div>
             </my-carousel-item>
           </my-carousel>
@@ -285,6 +285,7 @@
                 ME: false
               }
             ],
+            desc: '新睿云为您提供高性能，高可用，高性价比的计算资源，包括弹性云服务器、镜像与ECS快照等产品。',
             select: true,
             ME: false
           },
@@ -294,7 +295,7 @@
             clickImg: require('../../assets/img/home/cloud-2-2.png'),
             prodItem: [
               {
-                title: '弹虚拟私有云VPC',
+                title: '虚拟私有云VPC',
                 desc: '网络隔离、分配子网',
                 img: require('../../assets/img/home/net-vpc-1-1.png'),
                 hoverImg: require('../../assets/img/home/net-vpc-1-2.png'),
@@ -349,6 +350,7 @@
                 ME: false
               }
             ],
+            desc: '新睿云为您快速搭建属于自己的私有云环境(VPC)，并提供100%的网络间隔离，确保安全，包括：私有网络、路由器、公网IP和负载均衡器',
             select: false,
             ME: false
           },
@@ -380,6 +382,7 @@
                 ME: false
               }
             ],
+            desc: '稳定可靠、低延迟、可扩展的持久性块存储设备能力，包括云硬盘、备份等产品。',
             select: false,
             ME: false
           },
@@ -411,6 +414,7 @@
                 ME: false
               }
             ],
+            desc: '虚拟防火墙与DDOS防护时刻保证您的数据与服务安全，持久稳定，操作简单。',
             select: false,
             ME: false
           },
@@ -431,6 +435,7 @@
                 ME: true
               }
             ],
+            desc: '24小时不间断监控，可视化数据看板，异常自动报警，使您随时掌握业务情况。',
             select: false,
             ME: false
           }
