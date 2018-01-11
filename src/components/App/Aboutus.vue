@@ -489,7 +489,6 @@
   // tab切换卡样式
   .tabs {
     display: flex;
-    align-items: center;
     background: @m-color;
     color: #ffffff;
     font-size: 18px;
@@ -500,13 +499,20 @@
       width: 50%;
       height: 60px;
       line-height: 60px;
-      img {
-        vertical-align: middle;
-        margin-right: 16px;
+      div{
+        display: inline;
+        img {
+          vertical-align: middle;
+          margin-right: 16px;
+        }
       }
     }
+    .wrap:nth-child(1){
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+    }
     .wrap:nth-child(1) div {
-      float: right;
       padding-right: 90px;
     }
     .wrap:nth-child(2) div {
