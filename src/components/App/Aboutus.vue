@@ -20,146 +20,181 @@
     </div>
 
     <!-- 企业介绍 -->
-    <div class="content" v-show="num==0">
-      <div>
-        <h1 class="title">致力于“企业数字化转型”和“运营商用户数据红利挖掘”</h1>
-        <p class="desc"><span>中关村高新技术企业</span><span>ISO9001华为云管理网络 ISV</span><span>华为全产品线金牌合作伙伴</span></p>
-        <div class="develop">
-          <div v-for="(item,index) in develop" :key="index">
-            <p>{{item.num}}</p>
-            <span>{{item.desc}}</span>
+    <div class="enterprise-info" v-show="num==0">
+
+      <section>
+        <div class="section-wrap">
+          <div class="head-info">
+            <h1 class="title">致力于“企业数字化转型”和“运营商用户数据红利挖掘”</h1>
+            <p class="desc"><span>中关村高新技术企业</span><span>ISO9001华为云管理网络 ISV</span><span>华为全产品线金牌合作伙伴</span></p>
+          </div>
+          <div class="section-content develop">
+            <div v-for="(item,index) in develop" :key="index">
+              <p>{{item.num}}</p>
+              <span>{{item.desc}}</span>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
-
-      <!-- <div>
-         <h1 class="title">公司业务范畴</h1>
-         <p class="desc flex-c">专注于广电网络聚集于广电业务解决方案与系统集成11年</p>
-       </div>-->
-
-      <div>
-        <h1 class="title">业务版图</h1>
-        <p class="desc"><span>覆盖中国大陆13个省</span><span>全国设立4个大区</span><span>全国覆盖北京、天津、重庆3个直辖市</span></p>
-        <div class="map-box">
-          <img src="..\..\assets\img\aboutus\multi-circle.png"/>
-          <img src="..\..\assets\img\aboutus\multi-circle.png"/>
-          <img src="..\..\assets\img\aboutus\multi-circle.png"/>
-          <img src="..\..\assets\img\aboutus\multi-circle.png"/>
+      <!-- <section>
+        <div class="section-wrap">
+          <div class="head-info">
+            <h1 class="title">公司业务范畴</h1>
+            <p class="desc-single">专注于广电网络聚集于广电业务解决方案与系统集成11年</p>
+          </div>
         </div>
-      </div>
+      </section> -->
 
-      <!--<div>
-        <h1 class="title">助理运营商全面实现敏捷业务生产</h1>
-        <p class="desc w500"><span>紧随市场需求 数据驱动业务</span><span>IB 业务集成总线</span><span>BPM工作流引擎</span></p>
-        <div class="business">
-          <div v-for="(item,index) in business" :key="index" @mouseenter="item.me=true" @mouseleave="item.me=false"
-               :class="{hover:item.me}">
-            <p>{{item.title}}</p>
-            <div class="imgbox" v-show="!item.me">
+      <section>
+        <div class="section-wrap">
+          <div class="head-info">
+            <h1 class="title">业务版图</h1>
+            <p class="desc"><span>覆盖中国大陆13个省</span><span>全国设立4个大区</span><span>全国覆盖北京、天津、重庆3个直辖市</span></p>
+          </div>
+          <div class="section-content map-box">
+            <img src="..\..\assets\img\aboutus\multi-circle.png"/>
+            <img src="..\..\assets\img\aboutus\multi-circle.png"/>
+            <img src="..\..\assets\img\aboutus\multi-circle.png"/>
+            <img src="..\..\assets\img\aboutus\multi-circle.png"/>
+          </div>
+        </div>
+      </section>
+
+      <!-- <section>
+        <div class="section-wrap">
+          <div class="head-info">
+            <h1 class="title">助理运营商全面实现敏捷业务生产</h1>
+            <p class="desc" style="width:500px"><span>紧随市场需求 数据驱动业务</span><span>IB 业务集成总线</span><span>BPM工作流引擎</span></p>
+          </div>
+          <div class="section-content business">
+            <div v-for="(item,index) in business" :key="index" @mouseenter="item.me=true" @mouseleave="item.me=false"
+                :class="{hover:item.me}">
+              <p>{{item.title}}</p>
+              <div class="imgbox" v-show="!item.me">
+                <img :src="item.img"/>
+              </div>
+              <div class="imgbox" v-show="item.me">
+                <img :src="item.hoverImg">
+              </div>
+              <span>{{item.desc}}</span>
+            </div>
+          </div>
+        </div>
+      </section> -->
+
+      <!-- <section>
+        <div class="section-wrap">
+          <div class="head-info">
+            <h1 class="title">敏捷业务生产工厂的核心价值</h1>
+          </div>
+          <div class="section-content corevalue">
+            <div v-for="(item,index) in corevalue" :key="index">
+              <p>{{item.title}}</p>
               <img :src="item.img"/>
+              <span>{{item.desc}}</span>
             </div>
-            <div class="imgbox" v-show="item.me">
-              <img :src="item.hoverImg">
+          </div>
+        </div>
+      </section> -->
+
+      <section>
+        <div class="section-wrap">
+          <div class="head-info">
+            <h1 class="title">企业文化</h1>
+          </div>
+          <div class="section-content culture">
+            <div v-for="(item,index) in culture" :key="index">
+              <p>{{item.title}}</p>
+              <span>{{item.desc}}</span>
             </div>
-            <span>{{item.desc}}</span>
           </div>
         </div>
-      </div>
-
-
-      <div>
-        <h1 class="title">敏捷业务生产工厂的核心价值</h1>
-        <div class="corevalue">
-          <div v-for="(item,index) in corevalue" :key="index">
-
-            <p>{{item.title}}</p>
-            <img :src="item.img"/>
-            <span>{{item.desc}}</span>
-          </div>
-        </div>
-      </div>-->
-
-
-      <div>
-        <h1 class="title">企业文化</h1>
-        <div class="culture">
-          <div v-for="(item,index) in culture" :key="index">
-
-            <p>{{item.title}}</p>
-            <span>{{item.desc}}</span>
-          </div>
-        </div>
-      </div>
+      </section>
 
     </div>
 
     <!-- 发展历程 -->
-    <div class="history-develop content" v-show="num==1">
-      <div class="top">
-        <div class="title">发展历程</div>
-        <span></span>
-      </div>
-      <div class="main">
-        <div class="wrap-box" v-for="(item,index) in historydata" :key="index">
-          <div class="item" :class="{itemright:index%2!=0}">
-            <p class="year">
-              <span>20</span>
-              <span><img src="..\..\assets\img\aboutus\yearspot.png"/></span>
-              <span>{{item.year}}</span>
-            </p>
+    <div class="history-develop" v-show="num==1">
 
-            <div class="box-bottom">
-              <div class="card-wrap">
-                <span class="month" v-if="item.month">{{item.month}}</span>
-                <div class="card">
-                  <p v-for="(text,index) in item.text" :key="index">
-                    {{text}}</p>
+      <section>
+        <div class="section-wrap" style="padding-top: 0">
+          <div class="top head-info">
+            <h1 class="title">发展历程</h1>
+            <p class="desc-single">Development History</p>
+          </div>
+          <div class="section-content tree" style="width:1000px;margin:auto">
+            <div class="wrap-box" v-for="(item,index) in historydata" :key="index">
+              <div class="item" :class="{itemright:index%2!=0}">
+                <p class="year">
+                  <span>20</span>
+                  <span><img src="..\..\assets\img\aboutus\yearspot.png"/></span>
+                  <span>{{item.year}}</span>
+                </p>
+
+                <div class="box-bottom">
+                  <div class="card-wrap">
+                    <span class="month" v-if="item.month">{{item.month}}</span>
+                    <div class="card">
+                      <p v-for="(text,index) in item.text" :key="index">
+                        {{text}}</p>
+                    </div>
+                  </div>
+                  <div>
+                    <img src="..\..\assets\img\aboutus\horizontal-axis.png"/>
+                  </div>
                 </div>
               </div>
-              <div>
-                <img src="..\..\assets\img\aboutus\horizontal-axis.png"/>
-              </div>
+            </div>
+            <div class="vertical-axis"></div>
+            <div class="circle"></div>
+            <div class="circle circle2"></div>
+            <div class="circle circle3"></div>
+            <div class="circle circle4"></div>
+            <div class="lastspot"><img src="..\..\assets\img\aboutus\yearspot.png"/></div>
+          </div>
+        </div>
+      </section>
+
+
+      <section>
+        <div class="section-wrap">
+          <div class="head-info">
+            <h1 class="title">企业荣誉</h1>
+            <p class="desc-single">Company Honor</p>
+          </div>
+          <div class="section-content section company">
+            <div v-for="(item,index) in company" :key="index">
+              <img :src="item.img"/>
+              <span>{{item.desc}}</span>
             </div>
           </div>
         </div>
-        <div class="vertical-axis"></div>
-        <div class="circle"></div>
-        <div class="circle circle2"></div>
-        <div class="circle circle3"></div>
-        <div class="circle circle4"></div>
-        <div class="lastspot"><img src="..\..\assets\img\aboutus\yearspot.png"/></div>
-      </div>
+      </section>
 
-
-      <div>
-        <h1 class="title">企业荣誉</h1>
-        <p class="desc flex-c">Company Honor</p>
-        <div class="section company">
-          <div v-for="(item,index) in company" :key="index">
-            <img :src="item.img"/>
-            <span>{{item.desc}}</span>
+      <section>
+        <div class="section-wrap">
+          <div class="head-info">
+            <h1 class="title">行业荣誉</h1>
+            <p class="desc-single">Industry Honor</p>
+          </div>
+          <div class="section-content industry ">
+            <div v-for="(item,index) in industry" :key="index">
+              <span v-for="(content,index) in item.rowdata" :key="index" :class="{mr0:index==2}">{{content}}</span>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div>
-        <h1 class="title">行业荣誉</h1>
-        <p class="desc flex-c">Industry Honor</p>
-        <div class="section industry">
-          <div>
 
-            <span v-for="(item,index) in industry" :key="index">{{item}}</span>
-          </div>
-        </div>
-      </div>
     </div>
-
 
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+
+
   export default {
     data() {
       return {
@@ -346,9 +381,12 @@
             desc: '华为云管理网络ISV'
           }
         ],
-        industry: ['媒体资源管理系统软件著作权', '内容生产制作系统软件著作权', 'AAA认证计费系统软件著作权', '无线业务运营平台软件著作权', '敏捷业务交付平台软件著作权',
-          '业务运营支撑平台软件著作权', '网管监测系统软件著作权', '业务集成总线软件著作权', '云代码生成系统软件著作权', '统一业务发布系统软件著作权', '云管理网络中间件软件著作权',
-          '允睿开放云平台软件著作权']
+        industry: [
+          {rowdata: ['媒体资源管理系统软件著作权', '内容生产制作系统软件著作权', 'AAA认证计费系统软件著作权']},
+          {rowdata: ['无线业务运营平台软件著作权', '敏捷业务交付平台软件著作权', '业务运营支撑平台软件著作权']},
+          {rowdata: ['网管监测系统软件著作权', '业务集成总线软件著作权', '云代码生成系统软件著作权']},
+          {rowdata: ['统一业务发布系统软件著作权', '云管理网络中间件软件著作权', '允睿开放云平台软件著作权']}
+        ]
       }
     },
     created() {
@@ -363,13 +401,23 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  // 全局样式
   @m-color: #377DFF;
   @gray: #999999;
+  .section-wrap {
+    padding: 60px 0;
+    width: 1200px;
+    margin: 0 auto;
+    .section-content {
+      display: flex;
+      justify-content: center;
+    }
+  }
+
   .title {
     font-size: 28px;
     color: #333333;
-    font-weight: 100;
-    padding-top: 56px;
+    font-weight: normal;
     text-align: center;
   }
 
@@ -381,13 +429,29 @@
     font-size: 14px;
     color: #999999;
     padding: 28px 0;
-
   }
 
-  .aboutus {
-    font-weight: 100;
+  .desc-single {
+    margin: 0 auto;
+    font-size: 14px;
+    color: #999999;
+    padding: 28px 0;
   }
 
+  section {
+    width: 100%;
+    z-index: -5;
+  }
+
+  section:nth-of-type(odd) {
+    background: #f9f9f9;
+  }
+
+  section:nth-of-type(even) {
+    background: #fff;
+  }
+
+  // banner样式
   .banner {
     height: 560px;
     position: relative;
@@ -404,7 +468,9 @@
       left: 50%;
     }
     .text {
-      margin: 160px 0 0 374px;
+      width: 1200px;
+      margin: 0 auto;
+      padding-top: 160px;
       p {
         margin-bottom: 80px;
         font-size: 28px;
@@ -420,6 +486,7 @@
     }
   }
 
+  // tab切换卡样式
   .tabs {
     display: flex;
     align-items: center;
@@ -447,359 +514,365 @@
     }
   }
 
-  .content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  // 企业介绍样式
+  .enterprise-info {
     text-align: center;
-  }
 
-  .flex-c {
-    display: flex;
-    justify-content: center;
-  }
-
-  .w500 {
-    width: 500px;
-  }
-
-  .develop {
-    padding: 28px 0;
-    display: flex;
-    div:last-child {
-      margin-right: 0;
-    }
-    div {
-      height: 110px;
-      width: 110px;
-      border-radius: 50%;
-      border: 1px solid @gray;
-      margin-right: 65px;
-      p {
-        padding: 30px 0 8px 0;
-        color: @m-color;
-        font-size: 28px;
+    .develop {
+      margin-top: 30px;
+      padding: 20px 0;
+      div:last-child {
+        margin-right: 0;
       }
-      span {
-        display: inline-block;
-        width: 90%;
-        color: @gray;
-        font-size: 14px;
+      div:nth-child(2) {
+        span {
+          width: 60%;
+        }
       }
-    }
-  }
-
-  .map-box {
-    margin-bottom: 60px;
-    position: relative;
-    width: 807px;
-    height: 633px;
-    background: url(../../assets/img/aboutus/map.png) no-repeat;
-    img:nth-child(1) {
-      position: absolute;
-      top: 150px;
-      left: 660px;
-    }
-    img:nth-child(2) {
-      position: absolute;
-      top: 220px;
-      left: 540px;
-    }
-    img:nth-child(3) {
-      position: absolute;
-      top: 400px;
-      left: 560px;
-    }
-    img:nth-child(4) {
-      position: absolute;
-      top: 420px;
-      left: 410px;
-    }
-  }
-
-  .business {
-    display: flex;
-    align-items: center;
-    height: 260px;
-    .hover {
-      height: 246px;
-      background: #377DFF;
-      color: #fff;
-      box-shadow: 0px 0px 24px rgba(55, 125, 255, 0.5);
-      .imgbox {
-        margin: 25px auto;
-        background: rgba(255, 255, 255, .1)
-      }
-      span {
-        font-weight: bold;
-        font-size: 14px;
-        width: 60px;
-      }
-    }
-    > div:first-child {
-      margin-left: 0;
-    }
-    > div {
-      width: 228px;
-      height: 232px;
-      margin-left: 7px;
-      color: @gray;
-      border-radius: 4px;
-      box-shadow: 0px 0px 24px rgba(153, 153, 153, 0.3);
-      p {
-        padding-top: 22px;
-        font-size: 16px;
-      }
-      img {
-        margin-top: 10px;
-      }
-      .imgbox {
-        margin: 20px auto;
-        margin-top: 15px;
-        background: #ffffff;
+      div {
+        height: 110px;
+        width: 110px;
         border-radius: 50%;
-        height: 100px;
-        width: 100px;
-      }
-      span {
-        display: inline-block;
-        width: 50px;
-      }
-    }
-
-  }
-
-  .corevalue {
-    margin: 0px 0 60px 0;
-    display: flex;
-    div:last-child {
-      margin-right: 0;
-    }
-    div {
-      width: 228px;
-
-      margin-right: 132px;
-      color: @gray;
-      p {
-        padding-top: 22px;
-        font-size: 16px;
-      }
-      img {
-        padding: 35px 0;
-        display: block;
-        margin: 0 auto;
-      }
-      span {
-        display: block;
-        text-align: left;
-        font-size: 14px;
-        line-height: 24px;
+        border: 1px solid @gray;
+        margin-right: 65px;
         letter-spacing: 1px;
+        p {
+          padding: 30px 0 8px 0;
+          color: @m-color;
+          font-size: 28px;
+        }
+        span {
+          display: inline-block;
+          width: 90%;
+          color: @gray;
+          font-size: 14px;
+        }
       }
     }
 
-  }
-
-  .culture {
-    display: flex;
-    div:last-child {
-      margin-right: 0;
-    }
-    div {
-      margin-right: 170px;
-      color: @gray;
-      p {
-        padding-top: 36px;
-        font-size: 16px;
-        color: #333333;
+    .map-box {
+      margin: 0 auto;
+      margin-top: 30px;
+      position: relative;
+      width: 807px;
+      height: 633px;
+      background: url(../../assets/img/aboutus/map.png) no-repeat;
+      img:nth-child(1) {
+        position: absolute;
+        top: 150px;
+        left: 660px;
       }
-      span {
-        display: block;
-        font-size: 14px;
-        padding: 20px 0;
+      img:nth-child(2) {
+        position: absolute;
+        top: 220px;
+        left: 540px;
+      }
+      img:nth-child(3) {
+        position: absolute;
+        top: 400px;
+        left: 560px;
+      }
+      img:nth-child(4) {
+        position: absolute;
+        top: 420px;
+        left: 410px;
       }
     }
 
+    .business {
+      margin-top: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 260px;
+      .hover {
+        height: 246px;
+        background: #377DFF;
+        color: #fff;
+        box-shadow: 0px 0px 24px rgba(55, 125, 255, 0.5);
+        .imgbox {
+          margin: 25px auto;
+          background: rgba(255, 255, 255, .1)
+        }
+        span {
+          font-weight: bold;
+          font-size: 14px;
+          width: 60px;
+        }
+      }
+      > div:first-child {
+        margin-left: 0;
+      }
+      > div {
+        width: 228px;
+        height: 232px;
+        margin-left: 7px;
+        color: @gray;
+        border-radius: 4px;
+        box-shadow: 0px 0px 24px rgba(153, 153, 153, 0.3);
+        p {
+          padding-top: 22px;
+          font-size: 16px;
+        }
+        img {
+          margin-top: 10px;
+        }
+        .imgbox {
+          margin: 20px auto;
+          margin-top: 15px;
+          background: #ffffff;
+          border-radius: 50%;
+          height: 100px;
+          width: 100px;
+        }
+        span {
+          display: inline-block;
+          width: 50px;
+        }
+      }
+
+    }
+
+    .corevalue {
+      margin: 0px 0 60px 0;
+
+      div:last-child {
+        margin-right: 0;
+      }
+      div {
+        width: 228px;
+        margin-right: 132px;
+        color: @gray;
+        p {
+          padding-top: 22px;
+          font-size: 16px;
+        }
+        img {
+          padding: 35px 0;
+          display: block;
+          margin: 0 auto;
+        }
+        span {
+          display: block;
+          text-align: left;
+          font-size: 14px;
+          line-height: 24px;
+          letter-spacing: 1px;
+        }
+      }
+
+    }
+
+    .culture {
+      div:last-child {
+        margin-right: 0;
+      }
+      div {
+        margin-right: 170px;
+        color: @gray;
+        p {
+          padding-top: 36px;
+          font-size: 16px;
+          color: #333333;
+        }
+        span {
+          display: block;
+          font-size: 14px;
+          padding: 20px 0;
+        }
+      }
+
+    }
   }
 
   // 发展历程样式
   .history-develop {
+    text-align: center;
     .top {
+      margin: 0 auto;
       margin-bottom: 40px;
       width: 420px;
       height: 210px;
-      padding-top: 60px;
+      padding-top: 40px;
       background-image: url(../../assets/img/aboutus/half-circle.png)
-
-    }
-  }
-
-  .main {
-    position: relative;
-    padding-bottom: 60px;
-    overflow: hidden;
-    .circle {
-      width: 100px;
-      height: 100px;
-      background: #eff3f9;
-      position: absolute;
-      top: 300px;
-      left: 170px;
-      z-index: -1;
-      border-radius: 50%;
     }
 
-    .circle2 {
-      width: 200px;
-      height: 200px;
-      top: 420px;
-      left: 640px;
-
-    }
-    .circle3 {
-      width: 60px;
-      height: 60px;
-      top: 1200px;
-      left: 240px;
-
-    }
-    .circle4 {
-      width: 100px;
-      height: 100px;
-      top: 1600px;
-      left: 600px;
-
-    }
-    .vertical-axis {
-      width: 8px;
-      height: 3000px;
-      background: @m-color;
-      position: absolute;
-      top: 20px;
-      left: 496px;
-      z-index: -1;
-    }
-    .lastspot {
-      position: absolute;
-      bottom: -7px;
-      left: 490px;
-      z-index: -1;
-    }
-  }
-
-  .wrap-box {
-    overflow: hidden;
-    width: 1000px;
-    color: @m-color;
-    .item {
-      width: 500px;
+    .tree {
+      position: relative;
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
-    }
-    .box-bottom {
-      display: flex;
-      margin-right: -2px;
-    }
-    .card-wrap {
-      text-align: right;
-      margin-right: 10px;
-      .month {
-        display: block;
-        font-size: 28px;
-        margin-bottom: 10px;
-      }
-      .card {
-        background: @m-color;
-        padding: 16px;
-        color: #ffffff;
-        border-radius: 4px;
-        font-size: 14px;
-        line-height: 24px;
-        p {
-          line-height: 24px;
-        }
-      }
-    }
-    .year {
-      font-size: 42px;
-      width: 150px;
-      height: 70px;
-      font-weight: 100;
-      margin-right: -75px;
-      display: flex;
-      span {
-        display: inline-block;
-        width: 50px;
+      padding-bottom: 60px;
+      overflow: hidden;
+      .circle {
+        width: 100px;
+        height: 100px;
+        background: #eff3f9;
+        position: absolute;
+        top: 300px;
+        left: 170px;
+        z-index: 5;
+        border-radius: 50%;
       }
 
-    }
-    // item偶数样式
-    .itemright {
-      .year {
-        margin-left: -75px;
+      .circle2 {
+        width: 200px;
+        height: 200px;
+        top: 420px;
+        left: 640px;
+
       }
-      align-items: flex-start;
+      .circle3 {
+        width: 60px;
+        height: 60px;
+        top: 1200px;
+        left: 240px;
+
+      }
+      .circle4 {
+        width: 100px;
+        height: 100px;
+        top: 1600px;
+        left: 600px;
+
+      }
+      .vertical-axis {
+        width: 8px;
+        height: 3000px;
+        background: @m-color;
+        position: absolute;
+        top: 20px;
+        left: 496px;
+        z-index: 5;
+      }
+      .lastspot {
+        position: absolute;
+        bottom: -6px;
+        left: 490px;
+        z-index: 10;
+      }
+    }
+
+    .wrap-box {
+      overflow: hidden;
+      color: @m-color;
+      .item {
+        width: 500px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
       .box-bottom {
-        margin-left: -2px;
-        flex-direction: row-reverse;
-        .card-wrap {
-          margin-left: 10px;
-          .month {
-            text-align: left;
+        display: flex;
+        margin-right: -2px;
+        z-index: 10;
+      }
+      .card-wrap {
+        text-align: right;
+        margin-right: 10px;
+        .month {
+          display: block;
+          font-size: 28px;
+          margin-bottom: 10px;
+        }
+        .card {
+          background: @m-color;
+          padding: 16px;
+          color: #ffffff;
+          border-radius: 4px;
+          font-size: 14px;
+          line-height: 24px;
+          p {
+            line-height: 24px;
           }
         }
+      }
+      .year {
+        // position: relative;
+        z-index: 10;
+        font-size: 42px;
+        width: 150px;
+        height: 70px;
+        font-weight: 100;
+        margin-right: -75px;
+        display: flex;
+        span {
+          display: inline-block;
+          width: 50px;
+        }
+
+      }
+      // item偶数样式
+      .itemright {
+        .year {
+          margin-left: -75px;
+        }
+        align-items: flex-start;
+        .box-bottom {
+          margin-left: -2px;
+          flex-direction: row-reverse;
+          .card-wrap {
+            margin-left: 10px;
+            .month {
+              text-align: left;
+            }
+          }
+          img {
+            transform: rotate(180deg);
+          }
+        }
+        float: right;
+        // background: green;
+      }
+    }
+
+    .company {
+      > div:hover span {
+        color: @m-color;
+      }
+      div {
+        color: @gray;
+        margin-right: 80px;
         img {
-          transform: rotate(180deg);
+          padding: 30px 0;
+          display: block;
+          margin: 0 auto;
+        }
+        span {
+          font-size: 14px;
+          line-height: 24px;
+          letter-spacing: 1px;
         }
       }
-      float: right;
-      // background: green;
-    }
-  }
-
-  .section {
-    text-align: center;
-    width: 800px;
-    display: flex;
-    justify-content: space-between;
-
-    div {
-
-      color: @gray;
-      img {
-        padding: 30px 0;
-        display: block;
-        margin: 0 auto;
+      div:last-child {
+        margin-right: 0;
       }
+    }
+
+    .industry {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
       span {
-
+        display: inline-block;
+        width: 328px;
+        height: 80px;
+        line-height: 80px;
+        border: solid 1px transparent;
+        background: #fff;
+        margin-bottom: 12px;
+        margin-right: 12px;
+        border-radius: 4px;
         font-size: 14px;
-        line-height: 24px;
-        letter-spacing: 1px;
+        color: #999999;
       }
-    }
-  }
-
-  .company {
-    > div:hover span {
-      color: @m-color;
-    }
-    margin-bottom: 80px;
-  }
-
-  .industry {
-    width: 1000px;
-    span {
-      display: inline-block;
-      padding: 30px 65px;
-      border: solid 1px transparent;
-    }
-    span:hover {
-      border: solid 1px #A7C6FF;
-      border-radius: 4px;
-      box-shadow: 0px 0px 24px rgba(153, 153, 153, 0.2);
-      color: @m-color;
+      .mr0 {
+        margin-right: 0;
+      }
+      span:hover {
+        border: solid 1px #A7C6FF;
+        box-shadow: 0px 0px 24px rgba(153, 153, 153, 0.2);
+        color: @m-color;
+      }
     }
   }
 
