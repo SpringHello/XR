@@ -138,7 +138,7 @@
       flex-wrap: wrap;
       > div {
         width: 373px;
-        height: 470px;
+        height: 450px;
         border: 1px solid #377DFF;
         border-radius: 4px;
         margin-bottom: 39px;
@@ -193,7 +193,7 @@
               }
               font-size: 12px;
               color: #999;
-              margin-bottom: 5px;
+              margin-bottom: 10px;
               a {
                 color: #999;
                 &.notAllow{
@@ -210,7 +210,7 @@
           }
           > ul {
             .other {
-              margin: 15px 0px 5px;
+              margin: 15px 0px 10px;
               font-size: 16px;
               a {
                 color: #333333;
