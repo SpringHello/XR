@@ -1,3 +1,4 @@
+/* eslint-disable */
 import echarts from 'echarts'
 var allData = {
   "moveLines": [

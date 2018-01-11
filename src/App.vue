@@ -96,29 +96,31 @@
       <div id="foot-footer">
         <div class="footer-top">
           <div class="description">
-            <div v-for="(item,index) in description">
-              <p>{{item.Headline}}</p>
-              <ul>
-                <li v-for="(subItem,subIndex) in item.desc">
-                  <router-link :to="subItem.url" target="_blank">{{subItem.subTitle}}</router-link>
-                </li>
-              </ul>
+            <div class="product">
+              <p>产品</p>
+              <div v-for="(item,index) in description">
+                <ul>
+                  <span>{{item.title}}</span>
+                  <li v-for="(subItem,subIndex) in item.desc">
+                    <router-link v-if="subItem.url!=''" :to="subItem.url" target="_blank">{{subItem.subTitle}}
+                    </router-link>
+                    <router-link v-else :to="subItem.url">{{subItem.subTitle}}</router-link>
+                  </li>
+                </ul>
+              </div>
             </div>
-            <div><p>联系我们</p>
-              <ul>
-                <li>
-                  <a href="" class="router-link-exact-active router-link-active">企业电话：010-82527988</a>
-                </li>
-                <li>
-                  <a href="" class="router-link-exact-active router-link-active">企业邮箱：service@unionstech.cn </a>
-                </li>
-                <li>
-                  <a href="" class="router-link-exact-active router-link-active">企业地址：北京市海淀区东升大厦AB座611、612</a>
-                </li>
-                <li>
-                  <img src="./assets/img/app/QR-code.jpg" style="width:100px;height:100px;">
-                </li>
-              </ul>
+            <div class="document">
+              <p>文档</p>
+              <router-link v-for="(d,index) in document" :key="index" :to="d.url" target="_blank">
+                {{d.title}}
+              </router-link>
+            </div>
+            <div class="contact">
+              <span>联系我们</span>
+              <span>企业电话：010-82527988</span>
+              <span>企业邮箱：service@unionstech.cn</span>
+              <span>企业地址：北京市海淀区东升大厦AB座611、612</span>
+              <img src="./assets/img/app/QR-code.jpg" style="width:100px;height:100px;">
             </div>
           </div>
         </div>
@@ -127,8 +129,9 @@
             <p>{{item.time}}</p>
             <li style="cursor: auto">{{item.title}}</li>
             <li @click="toAQ('1')">{{item.preparation}}</li>
-            <li @click="toAQ('2')">
-              <img src="./assets/img/app/record.png" style="vertical-align: middle;margin-right: 5px">{{item.desc}}
+            <li @click="toAQ('2')"><img src="./assets/img/app/record.png"
+                                        style="vertical-align: middle;margin-right: 5px">{{item.desc
+              }}
             </li>
             <li @click="toAQ('3')">{{item.msg}}</li>
           </ul>
@@ -179,7 +182,7 @@
       <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
         <span class="phone"></span>
       </Poptip>
-      <BackTop :bottom="61" :right="50" :duration="0" :height="1600">
+      <BackTop :bottom="65" :right="50" :duration="0" :height="1600">
         <Icon type="chevron-up" class="backtop"></Icon>
       </BackTop>
     </div>
@@ -207,9 +210,9 @@
               {
                 prod: '云计算',
                 prodItem: [
-                  {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型', path: 'Pecs'},
-                  {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: 'Phost'},
-                  {title: 'ECS快照', desc: '稳定可靠、安全保障', path: 'Pecss'},
+                  {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型', path: '/ruicloud/Pecs'},
+                  {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/ruicloud/Phost'},
+                  {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ruicloud/Pecss'},
                   {title: '裸金属服务器（敬请期待）', desc: '专属物理服务器', path: ''},
                   {title: '弹性伸缩（敬请期待）', desc: '高可用、可视化、低成本', path: ''}
                 ]
@@ -217,32 +220,32 @@
               {
                 prod: '云网络',
                 prodItem: [
-                  {title: '虚拟私有云VPC', desc: '网络隔离、分配子网', path: 'Pvpc'},
-                  {title: '弹性IP', desc: '绑定与解绑IP、扩容', path: 'Peip'},
-                  {title: '负载均衡', desc: '源算法、轮询、最小连接数', path: 'Pbalance'},
-                  {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: 'Pnat'},
-                  {title: '虚拟专网VPN', desc: '跨VPC链接', path: 'Pvirvpn'},
+                  {title: '虚拟私有云VPC', desc: '网络隔离、分配子网', path: '/ruicloud/Pvpc'},
+                  {title: '弹性IP', desc: '绑定与解绑IP、扩容', path: '/ruicloud/Peip'},
+                  {title: '负载均衡', desc: '源算法、轮询、最小连接数', path: '/ruicloud/Pbalance'},
+                  {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: '/ruicloud/Pnat'},
+                  {title: '虚拟专网VPN', desc: '跨VPC链接', path: '/ruicloud/Pvirvpn'},
                   {title: 'CDN（敬请期待）', desc: '节点丰富、安全易用', path: ''}
                 ]
               },
               {
                 prod: '云存储',
                 prodItem: [
-                  {title: '云硬盘', desc: '性能型、超高性能型、存储型', path: 'Pdisk'},
-                  {title: '云硬盘备份', desc: '高可用保障、敏捷易用', path: 'Pbackupdisk'}
+                  {title: '云硬盘', desc: '性能型、超高性能型、存储型', path: '/ruicloud/Pdisk'},
+                  {title: '云硬盘备份', desc: '高可用保障、敏捷易用', path: '/ruicloud/Pbackupdisk'}
                 ]
               },
               {
                 prod: '云安全',
                 prodItem: [
-                  {title: '防火墙', desc: '自定义规则、协议、端口', path: 'Pfirewall'},
-                  {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: 'Pddos'}
+                  {title: '防火墙', desc: '自定义规则、协议、端口', path: '/ruicloud/Pfirewall'},
+                  {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ruicloud/Pddos'}
                 ]
               },
               {
                 prod: '云运维',
                 prodItem: [
-                  {title: '云监控', desc: '自定义监控项、多告警推送方式', path: 'Pmonitor'},
+                  {title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/ruicloud/Pmonitor'},
                   {title: '访问控制（敬请期待）', desc: '权限管理、精准控制', path: ''}
                 ]
               }
@@ -270,64 +273,54 @@
         ],
         description: [
           {
-            Headline: '产品',
+            title: '云计算',
             desc: [
-              {subTitle: '云计算', url: ''},
-              {subTitle: '弹性云服务器（ECS）', url: '/Pecs'},
-              {subTitle: '镜像服务', url: '/Phost'},
-              {subTitle: 'ESC快照', url: '/Pecss'},
+              {subTitle: '弹性云服务器（ECS）', url: '/ruicloud/Pecs'},
+              {subTitle: '镜像服务', url: '/ruicloud/Phost'},
+              {subTitle: 'ESC快照', url: '/ruicloud/Pecss'},
               {subTitle: '裸金属服务器（敬请期待）', url: ''},
               {subTitle: '弹性伸缩（敬请期待）', url: ''}
             ]
           },
-
           {
-            Headline: '产品',
+            title: '云网络',
             desc: [
-              {subTitle: '云网络', url: ''},
-              {subTitle: '虚拟私有云VPC', url: '/Pvpc'},
-              {subTitle: '弹性IP', url: '/Peip'},
-              {subTitle: '负载均衡', url: '/Pbalance'},
-              {subTitle: 'NAT网关', url: '/Pnat'},
-              {subTitle: '虚拟专网VPN', url: '/Pvirvpn'},
+              {subTitle: '虚拟私有云VPC', url: '/ruicloud/Pvpc'},
+              {subTitle: '弹性IP', url: '/ruicloud/Peip'},
+              {subTitle: '负载均衡', url: '/ruicloud/Pbalance'},
+              {subTitle: 'NAT网关', url: '/ruicloud/Pnat'},
+              {subTitle: '虚拟专网VPN', url: '/ruicloud/Pvirvpn'},
               {subTitle: 'CDN（敬请期待）', url: ''}
             ]
           },
-
           {
-            Headline: '产品',
+            title: '云储存',
             desc: [
-              {subTitle: '云储存', url: ''},
-              {subTitle: '云硬盘', url: '/Pdisk'},
-              {subTitle: '云硬盘备份', url: '/Pbackupdisk'}
+              {subTitle: '云硬盘', url: '/ruicloud/Pdisk'},
+              {subTitle: '云硬盘备份', url: '/ruicloud/Pbackupdisk'}
             ]
           },
           {
-            Headline: '产品',
+            title: '云安全',
             desc: [
-              {subTitle: '云安全', url: ''},
-              {subTitle: '防火墙', url: '/Pfirewall'},
-              {subTitle: 'DDOS高防IP', url: '/Pddos'}
+              {subTitle: '防火墙', url: '/ruicloud/Pfirewall'},
+              {subTitle: 'DDOS高防IP', url: '/ruicloud/Pddos'}
             ]
           },
           {
-            Headline: '产品',
+            title: '云维护',
             desc: [
-              {subTitle: '云维护', url: ''},
-              {subTitle: '云监控', url: '/Pmonitor'},
+              {subTitle: '云监控', url: '/ruicloud/Pmonitor'},
               {subTitle: '访问监控（敬请期待）', url: ''}
-            ]
-          },
-          {
-            Headline: '文档',
-            desc: [
-              {subTitle: '计算', url: '/computed/7-1'},
-              {subTitle: '网络', url: '/networks/4-1'},
-              {subTitle: '安全', url: ''},
-              {subTitle: '财务与账户', url: '/uaf'}
             ]
           }
         ], // 页尾列表详情
+        document: [
+          {title: '计算', url: '/ruicloud/computed/1-1'},
+          {title: '网络', url: '/ruicloud/networks/1-1'},
+          {title: '安全', url: ''},
+          {title: '财务与账户', url: '/ruicloud/uaf/3-1'}
+        ],
         Preparation: [
           {
             time: '@2014-2017',
@@ -352,8 +345,7 @@
           if (values[0].data.status == 1 && values[0].status == 200) {
             $store.commit('setAuthInfo2', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
             localStorage.setItem('authToken', 'true')
-          }
-          else {
+          } else {
             localStorage.removeItem('authToken')
             $store.state.authInfo = null
             // 用户个人信息
@@ -628,71 +620,66 @@
           padding-top: 46px;
           .description {
             width: 1200px;
-            margin: 0 auto;
+            margin: 0px auto;
             display: flex;
-            justify-content: flex-start;
-            div {
-              &:nth-last-of-type(1) {
-                margin-left: 86px;
-                ul {
-                  li {
-                    a {
-                      font-size: 14px;
-                      color: #FFF;
-                    }
-                  }
-                }
-              }
-              &:nth-last-of-type(2) {
-                margin-left: 125px;
-                ul {
-                  li {
-                    a {
-                      font-size: 14px;
-                      color: #FFF;
-                    }
-                  }
-                }
-              }
-              &:nth-last-of-type(3) {
-                p {
-                  opacity: 0;
-                }
-              }
-              &:nth-last-of-type(4) {
-                p {
-                  opacity: 0;
-                }
-              }
-              &:nth-last-of-type(5) {
-                p {
-                  opacity: 0;
-                }
-              }
-              &:nth-last-of-type(6) {
-                p {
-                  opacity: 0;
-                }
-              }
-              margin-right: 15px;
-              p {
+            .product {
+              width: 55%;
+              > p {
+                color: #ffffff;
                 font-size: 14px;
-                color: #FFF;
                 margin-bottom: 30px;
               }
-            }
-            ul {
-              li {
-                line-height: 100%;
-                font-size: 12px;
-                margin-top: 15px;
-                a {
-                  color: #999999;
-                }
-                &:first-of-type {
-                  a {
-                    color: #FFFFFF;
+              > div {
+                margin-right: 15px;
+                display: inline-block;
+                height: 149px;
+                vertical-align: bottom;
+                ul {
+                  span {
+                    color: #ffffff;
+                    margin-bottom: 15px;
+                    display: table;
+                    font-size: 12px;
                   }
+                  li {
+                    font-size: 12px;
+                    margin-bottom: 15px;
+                    line-height: 100%;
+                    a {
+                      color: #999999;
+                      &:hover {
+                        color: #377dff
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            .document {
+              width: 15%;
+              > p {
+                color: #ffffff;
+                font-size: 14px;
+                margin-bottom: 30px;
+              }
+              > a {
+                color: #ffffff;
+                display: table;
+                margin-bottom: 15px;
+                &:hover {
+                  color: #377dff
+                }
+              }
+            }
+            .contact {
+              width: 30%;
+              > span {
+                color: #ffffff;
+                display: table;
+                font-size: 14px;
+                margin-bottom: 15px;
+                &:first-of-type {
+                  margin-bottom: 30px;
                 }
               }
             }
@@ -708,10 +695,11 @@
             justify-content: flex-start;
             > p {
               margin-right: 20px;
-              line-height: normal;
+              line-height: 20px;
               font-size: 12px;
             }
             li {
+              line-height: 20px;
               font-size: 12px;
               color: #FFF;
               margin-right: 70px;

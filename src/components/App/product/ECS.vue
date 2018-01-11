@@ -130,7 +130,7 @@
     data(){
       return {
         logo: {
-          img: require('../../../assets/img/product/ESC-mirror.png'),
+          img: require('../../../assets/img/product/ECS-host.png'),
           title: '云主机',
           desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。在使用云主机时，大家不需要承担高昂的初始接入硬件架构成本，也不需要承担持续的硬件维护和管理成本。相比传统服务器而言，云主机管理起来更加简单高效。大家可以根据业务的实际需要，随时配置或修改对应的计算资源类型和规模。',
           linkRouter: $store.state.userInfo ? 'new' : 'login'
