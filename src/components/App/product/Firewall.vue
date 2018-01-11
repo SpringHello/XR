@@ -1,12 +1,12 @@
 <template>
   <div class="product">
     <!-- logo -->
-    <div class="logo" style="background-image: linear-gradient(225deg,#5f97ff,#4b8aff 62%,#377dff);">
+    <div class="logo">
       <div class="logo-wrapper">
         <img :src="logo.img">
         <div class="info">
-          <span class="title" style="font-size: 48px;color: #fff;">{{logo.title}}</span>
-          <span class="desc" style="color: #fff;">{{logo.desc}}</span>
+          <span class="title">{{logo.title}}</span>
+          <span class="desc">{{logo.desc}}</span>
           <router-link :to="logo.linkRouter">立即购买</router-link>
         </div>
       </div>
