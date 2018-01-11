@@ -121,23 +121,23 @@
         },
         features: [
           {
-            img: require('../../../assets/img/product/kuaizhao.png'),
+            img: require('../../../assets/img/product/vpc-1.png'),
             title: '网络隔离',
             desc: '租户间100%隔离利用VxLAN协议使得VPC之间严格的逻辑隔离。'
           },
           {
-            img: require('../../../assets/img/product/kuaizhao.png'),
+            img: require('../../../assets/img/product/vpc-2.png'),
             title: '自定义网络',
             desc: '子网，IP地址段，DHCP等子服务，自由选择组合定义。'
           },
-          {img: require('../../../assets/img/product/kuaizhao.png'), title: '访问控制', desc: 'ACL防火墙设置，自定义开放端口与访问协议。'},
+          {img: require('../../../assets/img/product/vpc-3.png'), title: '访问控制', desc: 'ACL防火墙设置，自定义开放端口与访问协议。'},
           {
-            img: require('../../../assets/img/product/kuaizhao.png'),
+            img: require('../../../assets/img/product/vpc-4.png'),
             title: '公网接入',
             desc: '绑定公网IP到相同地域下VPC类型的云产品实例上，可实现与公网互访。'
           },
           {
-            img: require('../../../assets/img/product/kuaizhao.png'),
+            img: require('../../../assets/img/product/vpc-5.png'),
             title: 'VPN网关',
             desc: '通过VPN方式，与客户的多个IDC环境构建VPN隧道，实现混合云。'
           }
