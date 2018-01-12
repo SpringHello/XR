@@ -111,7 +111,7 @@
         features: [
           {img: require('../../../assets/img/product/snapshoot-1.png'), title: '自动快照', desc: '新睿云自动为用户创建的快照。用户需要首先创建自动快照策略，然后再把自动快照策略应用到磁盘上，新睿云就会在用户设置的时间，自动为该磁盘创建快照。'},
           {img: require('../../../assets/img/product/snapshoot-2.png'), title: '手动快照', desc: '由用户手动创建。您可以根据需要，手动为磁盘创建快照，作为数据备份。'},
-          {img: require('../../../assets/img/product/snapshoot-3.png'), title: '磁盘克隆恢复', desc: '用户可以通过克隆的云硬盘创建和原始硬盘一样的数据盘。'},
+          {img: require('../../../assets/img/product/snapshoot-3.png'), title: '磁盘克隆恢复', desc: '用户可以通过克隆的云硬盘创建和原始硬盘一样的数据盘。'}
         ],
         advantages: [
           {
@@ -135,7 +135,7 @@
             desc: '快照单独存储于新睿云提供的对象存储中，不占用用户的磁盘空间。'
           }
         ],
-         stageInfo: {
+        stageInfo: {
           stages: [
             {
               title: '定期数据备份',
@@ -149,8 +149,7 @@
               activeIcon: require('../../../assets/img/product/escshot-storage-2-2.png'),
               icon: require('../../../assets/img/product/escshot-storage-2-1.png'),
               // img: require('../../../assets/img/product/balance-stage-2-icon-background.png'),
-              desc: ['a) 系统更新、应用发布等系统临时变更，为防止操作错误，在执行变更前手工创建快照对系统进行备',
-              ' b) 系统盘扩容;','c) 磁盘数据迁移，通过对磁盘执行快照，将磁盘作为另一块磁盘的基础数据.']
+              desc: ['a) 系统更新、应用发布等系统临时变更，为防止操作错误，在执行变更前手工创建快照对系统进行备', ' b) 系统盘扩容;', 'c) 磁盘数据迁移，通过对磁盘执行快照，将磁盘作为另一块磁盘的基础数据。']
             }
           ],
           selectIndex: 0
@@ -160,25 +159,24 @@
             img: require('../../../assets/img/product/cloudServer.png'),
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
-            path:'Pecs'
+            path: 'Pecs'
           },
           {
             img: require('../../../assets/img/product/vpc.png'),
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
-            path:'Pvpc'
+            path: 'Pvpc'
           }
         ]
       }
     },
-    methods:{
+    methods: {
       onClick (index) {
         switch (index) {
           case 0:
             if (this.$store.state.userInfo == null) {
               this.$router.push('login')
-              return
-            } else{
+            } else {
               this.$router.push('overview')
             }
         }

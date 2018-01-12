@@ -152,7 +152,7 @@
         stageInfo: {
           stages: [
             {
-              //title: '',
+              // title: '',
               // activeIcon: require(' '),
               // icon: require(' '),
               img: require('../../../assets/img/product/firewall-stage-background.png'),

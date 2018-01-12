@@ -23,11 +23,11 @@ Vue.prototype.$error = error
 Vue.config.productionTip = false
 axios.defaults.baseURL = 'http://192.168.3.244:8082/ruicloud'
 axios.defaults.withCredentials = true
-/*axios.interceptors.request.use(function (config) {
+/* axios.interceptors.request.use(function (config) {
  config.headers.Cookie = 'JSESSIONID=22203C271B80F4A41C35D23B09B6BC83'
  console.log(config)
  return config
- })*/
+ }) */
 // axios挂载到Vue原型
 Vue.prototype.$http = axios.create({
   params: {}

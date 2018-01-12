@@ -128,7 +128,7 @@
               icon: require('../../../assets/img/product/balance-stage-2-icon-white.png'),
               img: require('../../../assets/img/product/bal-stage-2-icon-background.png'),
               desc: ['基大型网站常有上百个业务子模块，通过设置不同的转发规则/转发组，分析HTTP头部信息，有效分离业务模块，实现基于内容的路由转发。此外，用户通过自定义转发路径代替二级域名，有效减少 DNS 轮询次数，收敛 IP，提升用户访问速度，保证服务的高效运行']
-            },
+            }
           ],
           selectIndex: 0
         },
@@ -154,37 +154,36 @@
             img: require('../../../assets/img/product/cloudServer.png'),
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
-            path:'Pecs'
+            path: 'Pecs'
           },
           {
             img: require('../../../assets/img/product/vpc.png'),
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
-            path:'Pvpc'
+            path: 'Pvpc'
           },
           {
             img: require('../../../assets/img/product/ECS-recommendation-4.png'),
             title: '负载均衡',
             desc: '负载均衡处理器可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器...',
-            path:'Pbalance'
+            path: 'Pbalance'
           },
           {
             img: require('../../../assets/img/product/vpn.png'),
             title: '虚拟专网VPN',
             desc: '虚拟专用网络VPN，用于搭建用户本地数据中心与新睿云VPC之间便捷、灵活…',
-            path:'Pvirvpn'
+            path: 'Pvirvpn'
           }
         ]
       }
     },
-    methods:{
+    methods: {
       onClick (index) {
         switch (index) {
           case 0:
             if (this.$store.state.userInfo == null) {
               this.$router.push('login')
-              return
-            } else{
+            } else {
               this.$router.push('overview')
             }
         }

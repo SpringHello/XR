@@ -518,8 +518,8 @@
     },
     mounted(){
       echarts.registerMap('china', china)
-      this.myChart = echarts.init(document.getElementById('echarts'));
-      this.myChart.setOption(polar);
+      this.myChart = echarts.init(document.getElementById('echarts'))
+      this.myChart.setOption(polar)
     },
     created () {
 
@@ -571,7 +571,6 @@
       },
       featureEnter(content){
         content.select = true
-
       },
       featureLeave(content){
         content.select = false
@@ -579,7 +578,7 @@
       push(path){
         this.$router.push(path)
       },
-      /* 切换地区*/
+      /* 切换地区 */
       carChange(activeIndex){
         var conf = {
           geo: {
@@ -596,10 +595,10 @@
         }
         this.myChart.setOption(conf)
       },
-      /* 切换banner*/
+      /* 切换banner */
       change(activeIndex){
         this.activeBanner = activeIndex + 1
-      },
+      }
     }
   }
 </script>

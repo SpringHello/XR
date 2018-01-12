@@ -15,15 +15,15 @@
         </div>
         <div class="operator-bar">
           <!--Button type="primary">恢复</Button>
-          <!--Button type="primary">加入负载均衡</Button-->
-          <!--Button type="primary">删除</Button-->
+          &lt;!&ndash;Button type="primary">加入负载均衡</Button&ndash;&gt;
+          &lt;!&ndash;Button type="primary">删除</Button&ndash;&gt;
         </div>
         <div style="margin-top:10px">
           <Tabs type="card" :animated="false" v-model="status">
             <Tab-pane label="主机" name="主机">
               <Table :columns="backupsColumns" :data="hostTable"></Table>
             </Tab-pane>
-            <!--Tab-pane :disabled="true" label="硬盘" name="硬盘">
+            &lt;!&ndash;Tab-pane :disabled="true" label="硬盘" name="硬盘">
               <Table :columns="diskColumns" :data="diskTable"></Table>
             </Tab-pane-->
           </Tabs>

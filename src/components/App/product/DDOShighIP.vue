@@ -168,8 +168,7 @@
               icon: require('../../../assets/img/product/ddos-stage-3-icon-white.png'),
               img: require('../../../assets/img/product/ddos-stage-3-background.png'),
               desc: ['读写密集型应用场景，部署各类数据库，MongoDB、Oracle、SQL Server、MySQL 和PostgreSQL。建议选用超高IO云硬盘，满足低延迟、高读写速率需求。']
-            },
-
+            }
           ],
           pImg: [
             {img: require('../../../assets/img/product/backup-stage-f1.png'), isc: '云主机'},
@@ -182,25 +181,25 @@
             img: require('../../../assets/img/product/yunfuwuqi.png'),
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
-            path:'Pecs'
+            path: 'Pecs'
           },
           {
             img: require('../../../assets/img/product/ECS-recommendation-3.png'),
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
-            path:'Pvpc'
+            path: 'Pvpc'
           },
           {
             img: require('../../../assets/img/product/ECS-recommendation-1.png'),
             title: '负载均衡',
             desc: '负载均衡处理器可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器...',
-            path:'Pbalance'
+            path: 'Pbalance'
           },
           {
             img: require('../../../assets/img/product/ECS-recommendation-4.png'),
             title: 'NAT网关',
             desc: '添加端口转发规则，允许来自公网或其他VPC对您的私有网络服务进行访问。',
-            path:'Pnat'
+            path: 'Pnat'
           }
         ]
       }
