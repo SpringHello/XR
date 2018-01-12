@@ -147,7 +147,7 @@
               icon: require('../../../assets/img/product/disk-stage-3-icon-white.png'),
               img: require('../../../assets/img/product/disk-stage-3-icon-background.png'),
               desc: ['为游戏用户提供高稳定性、高业务带宽、低时延的DDoS防护能力，保障游戏业务流畅稳定。']
-            },
+            }
           ],
           pImg: [
             {img: require('../../../assets/img/product/yunzhuji.png'), isc: '云主机'},
@@ -182,18 +182,20 @@
             rtitle: '超高性能型号',
             reList: [
               {
-                title: '机型介绍', desc: [
+                title: '机型介绍',
+                desc: [
                 {des: '全SSD架构，超高IOPS，适用于核心数据库与对I/O要求较高的业务。', url: ''}
-              ]
+                ]
               },
               {
-                title: '性能参数', desc: [
+                title: '性能参数',
+                desc: [
                 {des: '单盘最大IOPS：XXXX', url: ''},
                 {des: '单盘最大吞吐量：xxxxx', url: ''},
                 {des: '读写时延：1ms', url: ''},
                 {des: '单盘最大容量：xxxx', url: ''},
                 {des: '数据持久性：99.999%', url: ''}
-              ]
+                ]
               }
             ],
             pan: '99',
@@ -204,9 +206,10 @@
             rtitle: '超高性能型号',
             reList: [
               {
-                title: '机型介绍', desc: [
+                title: '机型介绍',
+                desc: [
                 {des: '适用于顺序读写，如日志流水，流媒体等场景，高性价比。', url: ''}
-              ]
+                ]
               },
               {
                 title: '性能参数',
@@ -226,9 +229,10 @@
             rtitle: '高性能型',
             reList: [
               {
-                title: '机型介绍', desc: [
+                title: '机型介绍',
+                desc: [
                 {des: '超大存储容量，超高性价比 。', url: ''}
-              ]
+                ]
               },
               {
                 title: '性能参数',
@@ -238,7 +242,7 @@
                   {des: '读写时延：1ms', url: ''},
                   {des: '单盘最大容量：xxxx', url: ''},
                   {des: '数据持久性：99.999%', url: ''}
-                ],
+                ]
               }
             ],
             pan: '99',

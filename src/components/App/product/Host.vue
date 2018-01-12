@@ -177,15 +177,13 @@
           stages: [
             {
               img: require('../../../assets/img/product/mirror-topology.png'),
-              desc: ['创建虚拟机：以已经完成安装和配置的系统为模板，创建新的应用服务器，如批量部署。',
-                      '迁移虚拟机：跨可用区域或跨VPC还原或迁移虚拟机，使用镜像克隆。',
-                      '虚拟机备份：备份短期内不会更改的系统，如已经完成发布或更新的应用系统。'],
+              desc: ['创建虚拟机：以已经完成安装和配置的系统为模板，创建新的应用服务器，如批量部署。', '迁移虚拟机：跨可用区域或跨VPC还原或迁移虚拟机，使用镜像克隆。', '虚拟机备份：备份短期内不会更改的系统，如已经完成发布或更新的应用系统。'],
               secdesc: [
-                {title:'便捷导入',desc:'私有镜像支持导入，业务灵活迁移'},
-                {title:'统一部署',desc:'快速批量部署业务'},
-                {title:'高持久性',desc:'设计规格为99.999999999%持久性，镜像数据不丢失'}
+                {title: '便捷导入', desc: '私有镜像支持导入，业务灵活迁移'},
+                {title: '统一部署', desc: '快速批量部署业务'},
+                {title: '高持久性', desc: '设计规格为99.999999999%持久性，镜像数据不丢失'}
               ],
-              bottomimg:[
+              bottomimg: [
                 {
                   img: require('../../../assets/img/product/mirror-storage-1.png')
                 },
@@ -193,43 +191,31 @@
                   img: require('../../../assets/img/product/mirror-storage-2.png')
                 }
               ]
-
-
-
             }
-
-          ],
-
+          ]
         },
         recommendations: [
           {
             img: require('../../../assets/img/product/cloudServer.png'),
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
-            path:'Pecs'
+            path: 'Pecs'
           },
           {
             img: require('../../../assets/img/product/vpc.png'),
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
-            path:'Pvpc'
+            path: 'Pvpc'
           }
         ]
       }
     },
     methods: {
-      showAll(){
-
-      },
-      hidden(){
-
-      },
       onClick (index) {
         switch (index) {
           case 0:
             if (this.$store.state.userInfo == null) {
               this.$router.push('login')
-              return
             } else {
               this.$router.push('overview')
             }

@@ -47,8 +47,8 @@
               },
               {
                 title: '镜像服务',
-                /*第一版暂无操作说明*/
-                desc: [{subTitle: '产品描述', url: 'computed/7-1'}, /*{subTitle: '操作说明', url: 'documentInfo/3'}*/]
+                /* 第一版暂无操作说明 */
+                desc: [{subTitle: '产品描述', url: 'computed/7-1'}] /* {subTitle: '操作说明', url: 'documentInfo/3'} */
               },
               {title: 'ECS快照', desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]}
             ],
