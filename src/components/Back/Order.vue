@@ -108,11 +108,14 @@
             title: '资源',
             align: 'left',
             render: (h, params) => {
-              var type = ""
+              var type = ''
               var arr = []
-              switch (params.row["订单类型"]) {
-                case "host":
-                  type = "云主机"
+              switch (params.row['订单类型']) {
+                case 'host':
+                  type = '云主机'
+                  break
+                case 'vpc':
+                  type = "vpc"
                   break
                 case "disk":
                   type = "云磁盘"

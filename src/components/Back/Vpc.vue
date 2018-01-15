@@ -9,41 +9,82 @@
         <Alert>
           为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。
         </Alert>
-        <div class="operator-bar">
-          <Button type="primary" @click="openNewVpcModal">新建VPC</Button>
-          <Button type="primary" @click="modalList.addGateway = true">添加VPC互通网关</Button>
-          <Button type="primary">修改VPC</Button>
-          <Button type="primary">删除VPC</Button>
-        </div>
-        <div class="card-wrap">
-          <div class="card" v-for="(item,index) in netData" :key="index" :class="{active:item._select}"
-               @click="radio(item)">
-            <div class="content">
-              <div class="item-wrap">
-                <div class="item item1">
-                  <p>名称：<span>{{item.vpcname}}</span></p>
-                  <p>网段：<span>{{item.cidr}}</span></p>
+        <Tabs type="card">
+          <TabPane label="虚拟私有云VPC">
+            <div class="operator-bar">
+              <Button type="primary" @click="openNewVpcModal">新建VPC</Button>
+              <Button type="primary" @click="modalList.addGateway = true">添加VPC互通网关</Button>
+              <Button type="primary">修改VPC</Button>
+              <Button type="primary">删除VPC</Button>
+            </div>
+            <div class="card-wrap">
+              <div class="card" v-for="(item,index) in netData" :key="index" :class="{active:item._select}"
+                   @click="radio(item)">
+                <div class="content">
+                  <div class="item-wrap">
+                    <div class="item item1">
+                      <p>名称：<span>{{item.vpcname}}</span></p>
+                      <p>网段：<span>{{item.cidr}}</span></p>
+                    </div>
+                  </div>
+                  <div class="item-wrap">
+                    <div class="item"><p>路由器（VPC）：<span>{{item.aclCount}}</span></p></div>
+                    <span class="dotted-across"></span>
+                  </div>
+                  <div class="item-wrap">
+                    <div class="item"><p>交换机：（子网）<span>{{item.networkCount}}</span></p></div>
+                    <span class="dotted-vertical"></span>
+                    <div class="item item4"><p>弹性云主机：<span>{{item.computerCount}}</span></p></div>
+                  </div>
+                  <div class="item-wrap">
+                    <div class="item"><p>防火墙：<span>{{item.aclCount}}</span></p></div>
+                  </div>
+                </div>
+                <div class="card-bottom">
+                  <Button type="primary" class="btn-bgwhite">重启</Button>
+                  <Button type="primary" @click="manage(item)">管理</Button>
                 </div>
               </div>
-              <div class="item-wrap">
-                <div class="item"><p>路由器（VPC）：<span>{{item.aclCount}}</span></p></div>
-                <span class="dotted-across"></span>
-              </div>
-              <div class="item-wrap">
-                <div class="item"><p>交换机：（子网）<span>{{item.networkCount}}</span></p></div>
-                <span class="dotted-vertical"></span>
-                <div class="item item4"><p>弹性云主机：<span>{{item.computerCount}}</span></p></div>
-              </div>
-              <div class="item-wrap">
-                <div class="item"><p>防火墙：<span>{{item.aclCount}}</span></p></div>
+            </div>
+          </TabPane>
+          <TabPane label="NAT网关">
+            <div class="operator-bar">
+              <Button type="primary" @click="openNewVpcModal">新建VPC</Button>
+              <Button type="primary" @click="modalList.addGateway = true">添加VPC互通网关</Button>
+              <Button type="primary">修改VPC</Button>
+              <Button type="primary">删除VPC</Button>
+            </div>
+            <div class="card-wrap">
+              <div class="card" v-for="(item,index) in netData" :key="index" :class="{active:item._select}"
+                   @click="radio(item)">
+                <div class="content">
+                  <div class="item-wrap">
+                    <div class="item item1">
+                      <p>名称：<span>{{item.vpcname}}</span></p>
+                      <p>网段：<span>{{item.cidr}}</span></p>
+                    </div>
+                  </div>
+                  <div class="item-wrap">
+                    <div class="item"><p>路由器（VPC）：<span>{{item.aclCount}}</span></p></div>
+                    <span class="dotted-across"></span>
+                  </div>
+                  <div class="item-wrap">
+                    <div class="item"><p>交换机：（子网）<span>{{item.networkCount}}</span></p></div>
+                    <span class="dotted-vertical"></span>
+                    <div class="item item4"><p>弹性云主机：<span>{{item.computerCount}}</span></p></div>
+                  </div>
+                  <div class="item-wrap">
+                    <div class="item"><p>防火墙：<span>{{item.aclCount}}</span></p></div>
+                  </div>
+                </div>
+                <div class="card-bottom">
+                  <Button type="primary" class="btn-bgwhite">重启</Button>
+                  <Button type="primary" @click="manage(item)">管理</Button>
+                </div>
               </div>
             </div>
-            <div class="card-bottom">
-              <Button type="primary" class="btn-bgwhite">重启</Button>
-              <Button type="primary" @click="manage(item)">管理</Button>
-            </div>
-          </div>
-        </div>
+          </TabPane>
+        </Tabs>
       </div>
     </div>
 
@@ -55,15 +96,19 @@
       <div class="universal-modal-content-flex">
         <Form :model="newForm" :rules="newRuleValidate" ref="newFormValidate">
           <FormItem label="vpc名称" prop="vpcName">
-            <Input v-model="newForm.vpcName"></Input>
+            <Input v-model="newForm.vpcName" placeholder="请输入vpc名称"></Input>
           </FormItem>
           <FormItem label="地址范围" prop="vpc">
             <Select v-model="newForm.vpc" placeholder="请选择">
               <Option v-for="item in newForm.VPCOptions" :key="item" :value="item">{{item}}</Option>
             </Select>
           </FormItem>
+          <FormItem label="vpc描述" prop="desc">
+            <Input v-model="newForm.desc" placeholder="请输入vpc描述"></Input>
+          </FormItem>
+          <FormItem></FormItem>
           <FormItem label="购买方式" prop="timeType">
-            <Select v-model="newForm.timeType" @on-change="newForm.timeValue=''">
+            <Select v-model="newForm.timeType" @on-change="queryVpcPrice">
               <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
                       :key="item.value">{{ item.label }}
               </Option>
@@ -76,9 +121,7 @@
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="vpc描述" prop="desc">
-            <Input v-model="newForm.desc"></Input>
-          </FormItem>
+          <p style="font-size: 12px;color: rgba(153,153,153,0.65);">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
         </Form>
         <!--创建vpc时暂时不绑定公网IP-->
         <!--<div>
@@ -93,6 +136,8 @@
         </div>-->
       </div>
       <div slot="footer" class="modal-footer-border">
+        <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
+        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">99元</span>
         <Button type="primary" @click="handleNewVpcSubmit">完成配置</Button>
       </div>
     </Modal>
@@ -133,7 +178,7 @@
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="源IP">
+          <!--<FormItem label="源IP" prop="originIP">
             <span>{{addGatewayForm.originPreIP[0]}}.{{addGatewayForm.originPreIP[1]}}.</span>
             <InputNumber :max="255" :min="0" v-model="addGatewayForm.originIP" size="small"
                          style="width:55px;"></InputNumber>
@@ -141,7 +186,7 @@
             <InputNumber :max="255" :min="0" v-model="addGatewayForm.originIP2" size="small"
                          style="width:55px;"></InputNumber>
           </FormItem>
-          <FormItem label="目标IP">
+          <FormItem label="目标IP" prop="originIP">
             <span>{{addGatewayForm.targetPreIP[0]}}.{{addGatewayForm.targetPreIP[1]}}.</span>
             <InputNumber :max="255" :min="0" v-model="addGatewayForm.targetIP" size="small"
                          style="width:55px;"></InputNumber>
@@ -170,7 +215,7 @@
 
             <InputNumber :max="255" :min="0" v-model="addGatewayForm.targetMask[2]" size="small"
                          style="width:55px;"></InputNumber>
-          </FormItem>
+          </FormItem>-->
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -188,6 +233,13 @@
   export default {
     name: 'vpc',
     data() {
+      // 验证vpc互通网关，源IP与目标IP不能相同
+      const validateIP = (rule, value, callback) => {
+        if (this.addGatewayForm.originIP == this.addGatewayForm.targetIP && this.addGatewayForm.originIP2 == this.addGatewayForm.targetIP2) {
+          callback(new Error('源IP与目标IP不能相同'))
+        }
+        callback();
+      };
       return {
         model1: '',
         // vpc列表数据
@@ -255,10 +307,7 @@
             {required: true, message: '请选择目标VPC', trigger: 'change'}
           ],
           originIP: [
-            {required: true, message: '请输入源VPC IP地址', trigger: 'blur'}
-          ],
-          targetIP: [
-            {required: true, message: '请输入目标VPC IP地址', trigger: 'blur'}
+            {validator: validateIP, trigger: 'change'}
           ],
           originFirewall: [
             {required: true, message: '请选择源VPC防火墙', trigger: 'change'}
@@ -289,6 +338,13 @@
       })
     },
     methods: {
+      getVpcData(){
+        axios.get(`network/listVpc.do?zoneId=${zoneId}`).then(response => {
+          if (response.status == 200) {
+            this.setData(response)
+          }
+        })
+      },
       setData(response) {
         if (response.status == 200 && response.data.status == 1) {
           response.data.result.forEach(item => {
@@ -307,10 +363,26 @@
         sessionStorage.setItem('vpcId', item.vpcid)
         this.$router.push('/ruicloud/vpcManage')
       },
+      // 打开新建vpc modal框
       openNewVpcModal(){
         this.modalList.newVpc = true
-        var url = 'network/listAclList.do?'
-        axios.get()
+        /* var url = 'network/listAclList.do?'
+         axios.get() */
+      },
+      // 新建vpc价格查询
+      queryVpcPrice(){
+        // 重置购买时间
+        this.newForm.timeValue = ''
+        if (this.newForm.timeType == 'current' || this.newForm.timeValue != '') {
+          axios.post('device/queryVpcPrice.do', {
+            type: this.newForm.timeType,
+            timelong: this.newForm.timeValue,
+            zoneId: $store.state.zone.zoneid,
+            isBindPublicIp: 0
+          }).then(response => {
+            console.log(response)
+          })
+        }
       },
       // 提交新建vpc表单
       handleNewVpcSubmit() {
@@ -320,7 +392,10 @@
             var url = `network/createVPC.do?vpcName=${this.newForm.vpcName}&displayText=${this.newForm.desc}&zoneId=${$store.state.zone.zoneid}&count=1&cidr=${this.newForm.vpc}&timeType=${this.newForm.timeType}&timeValue=${this.newForm.timeValue || 1}&isAutorenew=0&isSourceNat=0&bandWith=${this.newForm.IPReq ? 0 : 0}`
             axios.get(url).then(response => {
               this.modalList.newVpc = false
-              if (response.status == 200 && response.data.status == 2) {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$router.push('order')
+                // this.$error('error', response.data.message)
+              } else {
                 this.$error('error', response.data.message)
               }
             })
@@ -331,10 +406,17 @@
       },
       // 提交新建网关表单
       handleNewGateSubmit(){
+        /*:vpcIdStart 源vpc  vpcIdEnd  目标vpc
+         aclIdStart 源防火墙  aclIdEnd 目标防火墙
+         ipAddressStrat  源ip   ipAddressEnd 目标ip
+         netmaskStart 源子网  netmaskEnd  目标子网*/
         this.$refs.gatewayFormValidate.validate((valid) => {
           if (valid) {
             // 表单验证通过
-            var url = `network/createVPC.do?vpcName=${this.newForm.vpcName}&displayText=${this.newForm.desc}&zoneId=${$store.state.zone.zoneid}&count=1&cidr=${this.newForm.vpc}&timeType=${this.newForm.timeType}&timeValue=${this.newForm.timeValue || 1}&isAutorenew=0&isSourceNat=0&bandWith=${this.newForm.IPReq ? 0 : 0}`
+            /*var originIP = `${this.addGatewayForm.originPreIP.join('.')}.${this.addGatewayForm.originIP}.${this.addGatewayForm.originIP2}`
+             var targetIP = `${this.addGatewayForm.targetPreIP.join('.')}.${this.addGatewayForm.targetIP}.${this.addGatewayForm.targetIP2}`
+             &ipAddressStart=${originIP}&ipAddressEnd=${targetIP}&netMaskStart=255.${this.addGatewayForm.originMask.join('.')}&netMaskEnd=255.${this.addGatewayForm.targetMask.join('.')}*/
+            var url = `network/addPrivateGateway.do?vpcIdStart=${this.addGatewayForm.originVPC}&vpcIdEnd=${this.addGatewayForm.targetVPC}&zoneId=${$store.state.zone.zoneid}&aclIdStart=${this.addGatewayForm.originFirewall}&aclIdEnd=${this.addGatewayForm.targetFirewall}`
             axios.get(url).then(response => {
               this.modalList.newVpc = false
               if (response.status == 200 && response.data.status == 2) {
@@ -386,19 +468,22 @@
   .card-wrap {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
     .card:hover {
       border: 1px solid #2A99F2;
-      box-shadow: 0 2px 8px 0 rgba(42, 153, 242, 0.35);
+      box-shadow: 0 0 2px 0 rgba(42, 153, 242, 0.35);
+
     }
     .card {
       width: 570px;
       height: 313px;
       padding: 20px;
       border: 1px solid #ffffff;
-      box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.20);
+      margin: 0px 2px 20px;
+      box-shadow: 0px 0px 2px 0 rgba(0, 0, 0, 0.20);
       &.active {
         border: 1px solid #2A99F2;
-        box-shadow: 0 2px 8px 0 rgba(42, 153, 242, 0.35);
+        box-shadow: 0 0 2px 0 rgba(42, 153, 242, 0.35);
       }
       .content {
         border-bottom: 1px solid #E9E9E9;
