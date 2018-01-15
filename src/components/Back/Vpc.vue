@@ -238,8 +238,8 @@
         if (this.addGatewayForm.originIP == this.addGatewayForm.targetIP && this.addGatewayForm.originIP2 == this.addGatewayForm.targetIP2) {
           callback(new Error('源IP与目标IP不能相同'))
         }
-        callback();
-      };
+        callback()
+      }
       return {
         model1: '',
         // vpc列表数据
@@ -339,7 +339,7 @@
     },
     methods: {
       getVpcData(){
-        axios.get(`network/listVpc.do?zoneId=${zoneId}`).then(response => {
+        axios.get(`network/listVpc.do?zoneId=${$store.state.zone.zoneid}`).then(response => {
           if (response.status == 200) {
             this.setData(response)
           }
@@ -406,16 +406,16 @@
       },
       // 提交新建网关表单
       handleNewGateSubmit(){
-        /*:vpcIdStart 源vpc  vpcIdEnd  目标vpc
+        /* :vpcIdStart 源vpc  vpcIdEnd  目标vpc
          aclIdStart 源防火墙  aclIdEnd 目标防火墙
          ipAddressStrat  源ip   ipAddressEnd 目标ip
-         netmaskStart 源子网  netmaskEnd  目标子网*/
+         netmaskStart 源子网  netmaskEnd  目标子网 */
         this.$refs.gatewayFormValidate.validate((valid) => {
           if (valid) {
             // 表单验证通过
-            /*var originIP = `${this.addGatewayForm.originPreIP.join('.')}.${this.addGatewayForm.originIP}.${this.addGatewayForm.originIP2}`
+            /* var originIP = `${this.addGatewayForm.originPreIP.join('.')}.${this.addGatewayForm.originIP}.${this.addGatewayForm.originIP2}`
              var targetIP = `${this.addGatewayForm.targetPreIP.join('.')}.${this.addGatewayForm.targetIP}.${this.addGatewayForm.targetIP2}`
-             &ipAddressStart=${originIP}&ipAddressEnd=${targetIP}&netMaskStart=255.${this.addGatewayForm.originMask.join('.')}&netMaskEnd=255.${this.addGatewayForm.targetMask.join('.')}*/
+             &ipAddressStart=${originIP}&ipAddressEnd=${targetIP}&netMaskStart=255.${this.addGatewayForm.originMask.join('.')}&netMaskEnd=255.${this.addGatewayForm.targetMask.join('.')} */
             var url = `network/addPrivateGateway.do?vpcIdStart=${this.addGatewayForm.originVPC}&vpcIdEnd=${this.addGatewayForm.targetVPC}&zoneId=${$store.state.zone.zoneid}&aclIdStart=${this.addGatewayForm.originFirewall}&aclIdEnd=${this.addGatewayForm.targetFirewall}`
             axios.get(url).then(response => {
               this.modalList.newVpc = false

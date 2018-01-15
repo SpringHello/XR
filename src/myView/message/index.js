@@ -14,4 +14,3 @@ function notice(type, content) {
 }
 
 export default notice
-
