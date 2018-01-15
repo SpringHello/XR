@@ -65,15 +65,15 @@
             align: 'center',
             key: 'status',
             render: (h, params) => {
-              const row = params.row;
-              const text = row.status === 1 ? '正常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '恢复中' : '异常';
+              const row = params.row
+              const text = row.status === 1 ? '正常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '恢复中' : '异常'
               if (row.status != 1) {
                 return h('div', {}, [h('Spin', {
                   style: {
-                    display: "inline-block",
-                    marginRight: "10px",
+                    display: 'inline-block',
+                    marginRight: '10px'
                   }
-                }), h('span', {}, text)]);
+                }), h('span', {}, text)])
               } else {
                 return h('span', text)
               }
@@ -126,16 +126,16 @@
                     }
                   }
                 }, '删除')
-              ]);
-            },
+              ])
+            }
           }
         ],
         diskTable: [],
-        diskColumns: [],
+        diskColumns: []
       }
     },
     created(){
-      var url = `Snapshot/listVMSnapshotAll.do`;
+      var url = `Snapshot/listVMSnapshotAll.do`
       this.$http.get(url)
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -143,13 +143,13 @@
               item.progress = 0
             })
             this.hostTable = response.data.result
-            this.inter();
+            this.inter()
           }
         })
     },
     methods: {
       inter(){
-        var url = 'Snapshot/listVMSnapshotAll.do';
+        var url = 'Snapshot/listVMSnapshotAll.do'
         this.intervalInstance = setInterval(() => {
           this.$http.get(url).then(response => {
             if (response.status == 200 && response.data.status == 1) {
@@ -157,7 +157,7 @@
                 item.progress = 0
                 this.hostTable.forEach(i => {
                   if (item.snapshotid == i.snapshotid) {
-                    item.progress = i.progress;
+                    item.progress = i.progress
                     item.status = i.status != 1 ? i.status : item.status
                   }
                 })
@@ -170,24 +170,24 @@
       recover(item){
         item.status = 4
         item.progress = 0
-        this.$http.get("Snapshot/revertToVMSnapshot.do?vmsnapshotid=" + item.snapshotid)
+        this.$http.get('Snapshot/revertToVMSnapshot.do?vmsnapshotid=' + item.snapshotid)
           .then(response => {
             item.status = 1
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.success(response.data.message)
             } else {
-              /*this.$Modal.warning({
-               title: "",
-               content: `<p style='font-size: 16px;color: rgba(17,17,17,0.75);line-height: 21px;'>提示:</p><span style="font-size: 14px;color: rgba(17,17,17,0.65);line-height: 21px;">${response.data.message}</span>`
-               });*/
-              this.$Message.error(response.data.message)
+              // this.$Modal.warning({
+              //  title: "",
+              //  content: `<p style='font-size: 16px;color: rgba(17,17,17,0.75);line-height: 21px;'>提示:</p><span style="font-size: 14px;color: rgba(17,17,17,0.65);line-height: 21px;">${response.data.message}</span>`
+              //  });
+              // this.$Message.error(response.data.message)
             }
           })
       },
       del(item){
         item.status = 3
         var snapshotid = item.id
-        this.$http.get("Snapshot/deleteVMSnapshot.do?vmsnapshotid=" + item.id)
+        this.$http.get('Snapshot/deleteVMSnapshot.do?vmsnapshotid=' + item.id)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.success(response.data.message)
@@ -198,7 +198,7 @@
               this.$Message.error(response.data.message)
             }
           })
-      },
+      }
     },
     computed: {
       auth(){
