@@ -233,7 +233,6 @@
           case 0:
             if (this.$store.state.userInfo == null) {
               this.$router.push('login')
-              return
             } else {
               this.$router.push('overview')
             }

@@ -15,15 +15,15 @@
         </div>
         <div class="operator-bar">
           <!--Button type="primary">恢复</Button>
-          <!--Button type="primary">加入负载均衡</Button-->
-          <!--Button type="primary">删除</Button-->
+          &lt;!&ndash;Button type="primary">加入负载均衡</Button&ndash;&gt;
+          &lt;!&ndash;Button type="primary">删除</Button&ndash;&gt;
         </div>
         <div style="margin-top:10px">
           <Tabs type="card" :animated="false" v-model="status">
             <Tab-pane label="主机" name="主机">
               <Table :columns="backupsColumns" :data="hostTable"></Table>
             </Tab-pane>
-            <!--Tab-pane :disabled="true" label="硬盘" name="硬盘">
+            &lt;!&ndash;Tab-pane :disabled="true" label="硬盘" name="硬盘">
               <Table :columns="diskColumns" :data="diskTable"></Table>
             </Tab-pane-->
           </Tabs>
@@ -136,16 +136,15 @@
     },
     created(){
       var url = `Snapshot/listVMSnapshotAll.do`
-      this.$http.get(url)
-        .then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            response.data.result.forEach(item => {
-              item.progress = 0
-            })
-            this.hostTable = response.data.result
-            this.inter()
-          }
-        })
+      this.$http.get(url).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          response.data.result.forEach(item => {
+            item.progress = 0
+          })
+          this.hostTable = response.data.result
+          this.inter()
+        }
+      })
     },
     methods: {
       inter(){
@@ -176,28 +175,23 @@
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.success(response.data.message)
             } else {
-              // this.$Modal.warning({
-              //  title: "",
-              //  content: `<p style='font-size: 16px;color: rgba(17,17,17,0.75);line-height: 21px;'>提示:</p><span style="font-size: 14px;color: rgba(17,17,17,0.65);line-height: 21px;">${response.data.message}</span>`
-              //  });
-              // this.$Message.error(response.data.message)
+              this.$Message.error(response.data.message)
             }
           })
       },
       del(item){
         item.status = 3
         var snapshotid = item.id
-        this.$http.get('Snapshot/deleteVMSnapshot.do?vmsnapshotid=' + item.id)
-          .then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.$Message.success(response.data.message)
-              this.hostTable = this.hostTable.filter(item => {
-                return item.id != snapshotid
-              })
-            } else {
-              this.$Message.error(response.data.message)
-            }
-          })
+        this.$http.get('Snapshot/deleteVMSnapshot.do?vmsnapshotid=' + item.id).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+            this.hostTable = this.hostTable.filter(item => {
+              return item.id != snapshotid
+            })
+          } else {
+            this.$Message.error(response.data.message)
+          }
+        })
       }
     },
     computed: {

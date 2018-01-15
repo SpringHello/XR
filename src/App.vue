@@ -329,7 +329,7 @@
             desc: '京公网安备11010802024922号',
             msg: '关于我们'
           }
-        ], //footer-bottom
+        ], // footer-bottom
         kfURL: '',  // 客服url地址
         QQInfo: []  // QQ客服在线情况
       }
@@ -342,24 +342,23 @@
       // 获取zone信息
       var zoneList = axios.get('information/zone.do')
       Promise.all([userInfo, zoneList]).then(values => {
-          if (values[0].data.status == 1 && values[0].status == 200) {
-            $store.commit('setAuthInfo2', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
-            localStorage.setItem('authToken', 'true')
-          } else {
-            localStorage.removeItem('authToken')
-            $store.state.authInfo = null
-            // 用户个人信息
-            $store.state.userInfo = null
-          }
-          $store.commit('setZoneList', values[1].data.result)
-          next()
-        },
-        value => {
-          next()
+        if (values[0].data.status == 1 && values[0].status == 200) {
+          $store.commit('setAuthInfo2', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+          localStorage.setItem('authToken', 'true')
+        } else {
+          localStorage.removeItem('authToken')
+          $store.state.authInfo = null
+          // 用户个人信息
+          $store.state.userInfo = null
         }
-      )
+        $store.commit('setZoneList', values[1].data.result)
+        next()
+      },
+      value => {
+        next()
+      }
+    )
     },
-
     created () {
       this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result
@@ -383,10 +382,10 @@
         }
       }),
       QME(){
-        this.$refs.qq.style.width = "116px"
+        this.$refs.qq.style.width = '116px'
       },
       QML(){
-        this.$refs.qq.style.width = "0px"
+        this.$refs.qq.style.width = '0px'
       },
       /* 点击底部京备号等 */
       toAQ (val) {
@@ -406,7 +405,7 @@
       }
     },
     computed: mapState({
-      userInfo: state => state.userInfo,
+      userInfo: state => state.userInfo
     }),
     watch: {
       /* 观察currentItem变化 设置content高度 */

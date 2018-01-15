@@ -118,7 +118,7 @@ var router = new Router({
         {path: 'Pbackupdisk', component: Pbackupdisk},
         {path: 'Pfirewall', component: Pfirewall},
         {path: 'Pddos', component: Pddos},
-        {path: 'Pmonitor', component: Pmonitor},
+        {path: 'Pmonitor', component: Pmonitor}
       ]
     },
     {
@@ -142,7 +142,7 @@ var router = new Router({
         {path: 'vpc', name: 'vpc', component: Vpc},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
         {path: 'ip', name: 'ip', component: Ip},
-        {path: 'order', name: 'order', component: Order},
+        {path: 'order', name: 'order', component: Order}
         // {path: 'aboutus', name: 'aboutus', component: Aboutus}
       ]
     },

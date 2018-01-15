@@ -108,28 +108,31 @@
             title: '资源',
             align: 'left',
             render: (h, params) => {
-              var type = ""
+              var type = ''
               var arr = []
-              switch (params.row["订单类型"]) {
-                case "host":
-                  type = "云主机"
+              switch (params.row['订单类型']) {
+                case 'host':
+                  type = '云主机'
                   break
-                case "disk":
-                  type = "云磁盘"
+                case 'vpc':
+                  type = 'vpc'
                   break
-                case "publicIp":
-                  type = "网络"
+                case 'disk':
+                  type = '云磁盘'
                   break
-                case "continue":
-                  type = "续费"
+                case 'publicIp':
+                  type = '网络'
                   break
-                case "upconfig":
-                  type = "升级"
+                case 'continue':
+                  type = '续费'
+                  break
+                case 'upconfig':
+                  type = '升级'
                   break
               }
-              for (var index in params.row["资源"]) {
-                for (var key in params.row["资源"][index])
-                  arr.push(h('p', `${key}:${params.row["资源"][index][key]}`))
+              for (var index in params.row['资源']) {
+                for (var key in params.row['资源'][index])
+                  arr.push(h('p', `${key}:${params.row['资源'][index][key]}`))
               }
               return h('div', [
                 h('Collapse', {
@@ -144,7 +147,7 @@
                   [type, h('div', {
                     slot: 'content'
                   }, arr)])]),
-              ]);
+              ])
             }
           },
           {
@@ -187,11 +190,11 @@
         coupon: 0,
         operatorid: '',
         actualPayment: false,
-        payLoading: false,
+        payLoading: false
       }
     },
     created(){
-      this.changePage(1);
+      this.changePage(1)
     },
     methods: {
       selectChange(item, index){
@@ -207,37 +210,37 @@
         }
       },
       changeSelection(item){
-        this.selection = item;
-        var totalCost = 0;
+        this.selection = item
+        var totalCost = 0
         item.forEach(item => {
-          totalCost += Number.parseFloat(item['原价'])*100
+          totalCost += Number.parseFloat(item['原价']) * 100
         })
-        this.totalCost = totalCost/100;
-        this.coupon = this.totalCost;
-        this.cardSelection = null;
-        this.activeIndex = null;
-        this.actualPayment = false;
+        this.totalCost = totalCost / 100
+        this.coupon = this.totalCost
+        this.cardSelection = null
+        this.activeIndex = null
+        this.actualPayment = false
       },
       changePage(currentPage){
-        this.totalCost = 0;
-        this.page = currentPage;
+        this.totalCost = 0
+        this.page = currentPage
         this.$http.get(`information/searchOrder.do?page=${this.page}&pageSize=${this.pageSize}`)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.total = response.data.result.totle;
+              this.total = response.data.result.totle
               this.tableData = response.data.result.data.map(item => {
-                var data = JSON.parse(item.display);
-                data.orderId = item.ordernumber;
-                return data;
+                var data = JSON.parse(item.display)
+                data.orderId = item.ordernumber
+                return data
               })
               if (this.tableData[0]) {
-                this.tableData[0]._checked = true;
-                this.selection = [];
-                this.selection.push(this.tableData[0]);
+                this.tableData[0]._checked = true
+                this.selection = []
+                this.selection.push(this.tableData[0])
                 this.selection.forEach(item => {
                   this.totalCost += Number.parseFloat(item['原价'])
                 })
-                this.coupon = this.totalCost;
+                this.coupon = this.totalCost
               }
             }
           })
@@ -249,7 +252,7 @@
             content: '<p>确定要支付选中的订单吗？</p>',
             scrollable: true,
             onOk: () => {
-              this.payLoading = true;
+              this.payLoading = true
               var orderId =
                 this.selection.reduce((prev, curr) => {
                   return prev + ',' + curr.orderId
@@ -257,8 +260,8 @@
               orderId = orderId.slice(1, orderId.length)
               this.$http.get(`information/payOrder.do?order=${orderId}&ticket=${this.operatorid}`)
                 .then(response => {
-                  this.payLoading = false;
-                  this.$store.commit("setSelect", "payResult")
+                  this.payLoading = false
+                  this.$store.commit('setSelect', 'payResult')
                   if (response.status == 200 && response.data.status == 1) {
                     sessionStorage.setItem('payResult', 'success')
                     this.$router.push('payResult')
@@ -272,7 +275,7 @@
                   }
                 })
             }
-          });
+          })
         } else {
           this.$Modal.error({
             content: '请选择需要支付的订单',
@@ -281,61 +284,61 @@
         }
       },
       cancelOrder(){
-        this.$store.commit("setSelect", "new")
-        this.$router.push("new")
+        this.$store.commit('setSelect', 'new')
+        this.$router.push('new')
       },
       clipCoupons(){
         if (this.selection.length != 0) {
-          this.showModal.clipCoupons = true;
-          this.$http.get('ticket/getUserTicket.do?pageSize=' + this.cardPageSize + '&page=' + this.card_currentPage + '&ticketType=' + this.cardType + '&isuse=0&totalCost='+this.totalCost).then(response => {
+          this.showModal.clipCoupons = true
+          this.$http.get('ticket/getUserTicket.do?pageSize=' + this.cardPageSize + '&page=' + this.card_currentPage + '&ticketType=' + this.cardType + '&isuse=0&totalCost=' + this.totalCost).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.cardVolumeTabledata = response.data.result.data;
+              this.cardVolumeTabledata = response.data.result.data
               for (var a = 0; a < this.cardVolumeTabledata.length; a++) {
                 if (this.cardSelection && this.cardSelection.operatorid == this.cardVolumeTabledata[a].operatorid) {
-                  this.activeIndex = a;
+                  this.activeIndex = a
                 }
               }
               /*this.cardVolumeTabledata.forEach(item => {
                item.select = false
                })*/
-              this.cardTotal = response.data.result.total;
+              this.cardTotal = response.data.result.total
             }
           })
         } else {
           this.$Modal.error({
             content: '请选择需支付的订单',
             duration: 5
-          });
+          })
         }
       },
       cardCurrentChange(card_currentPage){
-        this.card_currentPage = card_currentPage;
-        this.cardSelection = null;
-        this.activeIndex = null;
-        this.coupon = this.totalCost;
-        this.operatorid = '';
-        this.cardVolumeTabledata = [];
-        this.clipCoupons();
+        this.card_currentPage = card_currentPage
+        this.cardSelection = null
+        this.activeIndex = null
+        this.coupon = this.totalCost
+        this.operatorid = ''
+        this.cardVolumeTabledata = []
+        this.clipCoupons()
       },
       clipCoupons_ok(){
         if (this.activeIndex == null && this.cardSelection == null) {
-          this.showModal.clipCoupons = false;
-          this.coupon = this.totalCost;
-          this.actualPayment = false;
+          this.showModal.clipCoupons = false
+          this.coupon = this.totalCost
+          this.actualPayment = false
         } else if (this.activeIndex != null && this.cardSelection != null) {
-          this.operatorid = this.cardSelection.operatorid;
-          this.showModal.clipCoupons = false;
-          if(this.cardSelection.tickettype==0){
-            this.coupon = this.totalCost - this.cardSelection.money;
-          }else{
-            this.coupon = this.totalCost * this.cardSelection.money;
-            this.coupon =Math.round(this.coupon*100)/100
+          this.operatorid = this.cardSelection.operatorid
+          this.showModal.clipCoupons = false
+          if (this.cardSelection.tickettype == 0) {
+            this.coupon = this.totalCost - this.cardSelection.money
+          } else {
+            this.coupon = this.totalCost * this.cardSelection.money
+            this.coupon = Math.round(this.coupon * 100) / 100
           }
-          this.actualPayment = true;
+          this.actualPayment = true
         } else {
-          this.showModal.clipCoupons = false;
+          this.showModal.clipCoupons = false
         }
-      },
+      }
     }
   }
 </script>

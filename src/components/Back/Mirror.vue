@@ -61,6 +61,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+  // import axios from 'axios'
+  import $store from '@/vuex'
   export default {
     data() {
       return {
@@ -69,7 +71,7 @@
         },
         filterKey: '全部',
         filterList: ['全部', 'centos', 'debian', 'ubuntu', 'window'],
-        selections: null, // 改为单选
+        selections: null,  // 改为单选
         select: null,
         systemColumns: [
           {
@@ -138,7 +140,6 @@
               }
             }
           },
-
           {
             title: '镜像大小',
             key: 'ostypename',
@@ -256,34 +257,32 @@
       }
     },
     created() {
-      var zoneOptions = JSON.parse(localStorage.getItem('zoneOptions'))
-      var zoneid = zoneOptions[0].zoneid
-      var url = `information/listTemplates.do?user=0&zoneid=${zoneid}`
+      // 查询系统镜像
+      var url = `information/listTemplates.do?user=0&zoneid=${$store.state.zone.zoneid}`
       this.$http.get(url).then(response => {
         if (response.status == 200 && response.data.status == 1) {
           this.systemData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
           this.originData = this.systemData
           this.systemData.forEach(item => {
-            if (item.status == 2){
+            if (item.status == 2) {
               item._disabled = true
             }
           })
         }
       })
-
-      // var zoneid = this.$store.state.zoneOptions[0].zoneid
-      var url1 = `information/listTemplates.do?user=1&zoneid=${zoneid}`
+      // 查询自有镜像
+      var url1 = `information/listTemplates.do?user=1&zoneid=${$store.state.zone.zoneid}`
       this.$http.get(url1).then(response => {
         if (response.status == 200 && response.data.status == 1) {
           this.ownData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
           this.ownData.forEach(item => {
-            if (item.status == 2){
+            if (item.status == 2) {
               item._disabled = true
             }
           })
         }
       })
-
+      // 查询已关闭主机
       var url2 = 'information/getCloseListVirtualMachines.do'
       this.$http.get(url2).then(response => {
         if (response.status == 200 && response.data.status == 1) {
@@ -298,24 +297,22 @@
           this.systemData = this.originData.filter((item) => {
             return item.ostypename.toLowerCase().includes(value)
           })
-        }
-        else {
+        } else {
           this.systemData = this.originData
         }
       },
       inter() {
         this.intervalInstance = setInterval(() => {
-          // var zoneOptions = JSON.parse(localStorage.getItem('zoneOptions'))
-          var url1 = `information/listTemplates.do?user=1&zoneid=${zoneid}`
+          var url1 = `information/listTemplates.do?user=1&zoneid=${$store.state.zone.zoneid}`
           this.$http.get(url1).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               var ownData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
               ownData.forEach(item => {
                 if (this.selections) {
-                  if (this.selections.templateid == item.templateid){
+                  if (this.selections.templateid == item.templateid) {
                     item._checked = true
                   }
-                  if (item.status == 2){
+                  if (item.status == 2) {
                     item._disabled = true
                   }
                 }
@@ -323,9 +320,7 @@
               this.ownData = ownData
             }
           })
-        },
-          1000 * 10
-        )
+        }, 1000 * 10)
       },
       selectionsChange(selections) {
         this.selections = selections

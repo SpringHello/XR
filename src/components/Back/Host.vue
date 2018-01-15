@@ -489,11 +489,10 @@
 
 <script type="text/ecmascript-6">
   import merge from 'merge'
-  // import {mapState} from 'vuex'
-  import $store from '@/vuex'
-
-  export default {
-    data() {
+  /* import {mapState} from 'vuex'
+   import $store from '@/vuex' */
+  export default{
+    data(){
       var status = '开启'
       if (sessionStorage.getItem('type')) {
         switch (sessionStorage.getItem('type')) {
@@ -613,8 +612,7 @@
           if (response.status == 200) {
             this.$Message.success('主机续费成功')
           }
-        }
-        )
+        })
       },
       // 获取数据的主要接口
       getData() {
@@ -671,9 +669,8 @@
             break
           case '关机':
             if (this.closeHost.every(item => {
-              return item.select == false
-            }
-              )) {
+                return item.select == false
+              })) {
               this.$Message.warning('请选择主机')
               return
             }
@@ -801,7 +798,7 @@
             }
             break
           case 'backup':
-            if (this.status != '开启' && this.status != '关机'){
+            if (this.status != '开启' && this.status != '关机') {
               return
             }
             if (this.checkSelect()) {
@@ -811,7 +808,7 @@
             }
             break
           case 'mirror':
-            if (this.status != '关机'){
+            if (this.status != '关机') {
               return
             }
             if (this.checkSelect()) {
@@ -821,7 +818,7 @@
             }
             break
           case 'upgrade':
-            if (this.status != '关机'){
+            if (this.status != '关机') {
               return
             }
             if (this.checkSelect()) {
@@ -956,8 +953,7 @@
             })
         }
       },
-      renewal() {
-        this.show
+      renewal(){
       },
       ok() {
 
@@ -987,9 +983,6 @@
               } else {
                 this.$Message.error('对方不想说话，并且向你抛出了一个异常')
               }
-            })
-            .catch((error) => {
-              this.$Message.error('服务器错误')
             })
         }
       },
