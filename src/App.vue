@@ -342,22 +342,22 @@
       // 获取zone信息
       var zoneList = axios.get('information/zone.do')
       Promise.all([userInfo, zoneList]).then(values => {
-        if (values[0].data.status == 1 && values[0].status == 200) {
-          $store.commit('setAuthInfo2', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
-          localStorage.setItem('authToken', 'true')
-        } else {
-          localStorage.removeItem('authToken')
-          $store.state.authInfo = null
-          // 用户个人信息
-          $store.state.userInfo = null
+          if (values[0].data.status == 1 && values[0].status == 200) {
+            $store.commit('setAuthInfo2', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+            localStorage.setItem('authToken', 'true')
+          } else {
+            localStorage.removeItem('authToken')
+            $store.state.authInfo = null
+            // 用户个人信息
+            $store.state.userInfo = null
+          }
+          $store.commit('setZoneList', values[1].data.result)
+          next()
+        },
+        value => {
+          next()
         }
-        $store.commit('setZoneList', values[1].data.result)
-        next()
-      },
-      value => {
-        next()
-      }
-    )
+      )
     },
     created () {
       this.$http.get('user/getKfAdd.do').then(response => {
@@ -591,6 +591,7 @@
           font-size: 14px;
           color: #377dff;
           width: max-content;
+          line-height: 100%;
         }
       }
       #foot-support {
