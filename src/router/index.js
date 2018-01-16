@@ -55,6 +55,8 @@ const Mirror = () => import('@/components/Back/Mirror')
 const Snapshot = () => import('@/components/Back/Snapshot')
 const Firewall = () => import('@/components/Back/Firewall')
 const Disk = () => import('@/components/Back/Disk')
+const DiskBackup = () => import('@/components/Back/DiskBackup')
+const DiskParticulars = () => import('@/components/Back/DiskParticulars')
 const Vpc = () => import('@/components/Back/Vpc')
 const VpcManage = () => import('@/components/Back/VpcManage')
 const Ip = () => import('@/components/Back/Ip')
@@ -134,6 +136,8 @@ var router = new Router({
         {path: 'recharge', name: 'recharge', component: Recharge},
         {path: 'balance', name: 'balance', component: Balance},
         {path: 'disk', name: 'disk', component: Disk},
+        {path: 'diskBackup', name: 'diskBackup', component: DiskBackup},
+        {path: 'diskParticulars', name: 'diskParticulars', component: DiskParticulars},
         {path: 'snapshot', name: 'snapshot', component: Snapshot},
         {path: 'firewall', name: 'firewall', component: Firewall},
         {path: 'new', name: 'new', component: New},
