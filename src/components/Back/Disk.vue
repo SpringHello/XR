@@ -185,7 +185,7 @@
     <Modal v-model="showModal.error" :scrollable="true" :closable="false" :width="350">
       <p class="modal-content-s">
         <Icon type="close-circled" class="orange f24 mr10"></Icon>
-        {{errorMessage}}
+        错误弹出框错误弹出框错误弹出框错误弹出框
       </p>
       <p slot="footer" class="modal-footer-s">
         <Button type="primary" @click="showModal.error = false">确定</Button>
@@ -442,7 +442,7 @@
           // 创建磁盘备份模态框
           createDiskBackup: false,
           // 错误提示框
-          error: false
+          error: true
           /*
 
            mountDisk: false,

@@ -42,9 +42,9 @@
                   {{item.name}}
                 </li>
                 <li>网络地址：{{item.network}}</li>
-                <li>网关地址：{{item.netport}}</li>
+                <li>网关地址：{{item.ipsegment}}</li>
                 <li>状态：{{item.status}}</li>
-                <li>防火墙：<span class="blue">{{item.firewall}}</span></li>
+                <li>防火墙：<span class="blue">{{item.acllistname}}</span></li>
                 <li>负载均衡：<span class="blue">{{item.loadbalance}}</span></li>
                 <li><span class="blue">添加主机</span><span class="vertical-line">|</span><span class="blue">更多</span></li>
               </ul>
@@ -52,7 +52,7 @@
             </div>
           </TabPane>
           <TabPane label="网络拓扑">网络拓扑</TabPane>
-          <TabPane label="私有网关">
+          <TabPane label="VPC互通网关">
             <Table :columns="columns2" :data="virtualnet"></Table>
           </TabPane>
         </Tabs>
