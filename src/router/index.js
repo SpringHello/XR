@@ -17,6 +17,9 @@ const Document = () => import('@/components/App/Document')
 const hostPrice = () => import('@/components/App/Price/Host')
 const diskPrice = () => import('@/components/App/Price/Disk')
 const elasticIPPrice = () => import('@/components/App/Price/ElasticIP')
+const Aboutus = () => import('@/components/App/Aboutus')
+const Usercenter = () => import('@/components/App/Usercenter')
+const Manage = () => import('@/components/App/Manage')
 
 /* 产品页面路由 */
 const Pecs = () => import('@/components/App/product/ECS.vue')
@@ -55,11 +58,15 @@ const Mirror = () => import('@/components/Back/Mirror')
 const Snapshot = () => import('@/components/Back/Snapshot')
 const Firewall = () => import('@/components/Back/Firewall')
 const Disk = () => import('@/components/Back/Disk')
+const DiskBackup = () => import('@/components/Back/DiskBackup')
+const DiskParticulars = () => import('@/components/Back/DiskParticulars')
 const Vpc = () => import('@/components/Back/Vpc')
 const VpcManage = () => import('@/components/Back/VpcManage')
 const Ip = () => import('@/components/Back/Ip')
 const Order = () => import('@/components/Back/Order')
-const Aboutus = () => import('@/components/App/Aboutus')
+const PayResult = () => import('@/components/Back/PayResult')
+const Expenses = () => import('@/components/Back/Expenses')
+
 
 // 404
 const notFindPage = () => import('@/components/404')
@@ -78,6 +85,8 @@ var router = new Router({
         {path: 'home', name: 'home', component: Home},
         {path: 'ecs', name: 'ecs', component: Ecs},
         {path: 'about', name: 'about', component: Aboutus},
+        {path: 'usercenter', name: 'usercenter', component: Usercenter},
+        {path: 'manage', name: 'manage', component: Manage},
         {path: 'document', name: 'document', component: Document},
         {
           path: 'price',
@@ -134,6 +143,8 @@ var router = new Router({
         {path: 'recharge', name: 'recharge', component: Recharge},
         {path: 'balance', name: 'balance', component: Balance},
         {path: 'disk', name: 'disk', component: Disk},
+        {path: 'diskBackup', name: 'diskBackup', component: DiskBackup},
+        {path: 'diskParticulars', name: 'diskParticulars', component: DiskParticulars},
         {path: 'snapshot', name: 'snapshot', component: Snapshot},
         {path: 'firewall', name: 'firewall', component: Firewall},
         {path: 'new', name: 'new', component: New},
@@ -142,8 +153,9 @@ var router = new Router({
         {path: 'vpc', name: 'vpc', component: Vpc},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
         {path: 'ip', name: 'ip', component: Ip},
-        {path: 'order', name: 'order', component: Order}
-        // {path: 'aboutus', name: 'aboutus', component: Aboutus}
+        {path: 'order', name: 'order', component: Order},
+        {path: 'payResult', name: 'payResult', component: PayResult},
+        {path: 'expenses', name: 'expenses', component: Expenses}
       ]
     },
     {

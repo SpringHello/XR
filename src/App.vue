@@ -53,14 +53,14 @@
               <li @mouseenter="ME(4,$event)">
                 <div class="menu-dropdown">
                   <div class="menu-dropdown-rel">
-                    <router-link to="/overview"><span>控制台</span></router-link>
+                    <router-link to="/ruicloud/overview"><span>控制台</span></router-link>
                   </div>
                 </div>
               </li>
               <li @mouseenter="ME(5,$event)">
                 <div class="menu-dropdown">
                   <div class="menu-dropdown-rel">
-                    <router-link to="/usercenter"><span>{{userInfo.realname}}</span></router-link>
+                    <router-link to="ruicloud/usercenter"><span>{{userInfo.realname}}</span></router-link>
                   </div>
                 </div>
               </li>
@@ -342,18 +342,18 @@
       // 获取zone信息
       var zoneList = axios.get('information/zone.do')
       Promise.all([userInfo, zoneList]).then(values => {
-          if (values[0].data.status == 1 && values[0].status == 200) {
-            $store.commit('setAuthInfo2', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
-            localStorage.setItem('authToken', 'true')
-          } else {
-            localStorage.removeItem('authToken')
-            $store.state.authInfo = null
-            // 用户个人信息
-            $store.state.userInfo = null
-          }
-          $store.commit('setZoneList', values[1].data.result)
-          next()
-        },
+        if (values[0].data.status == 1 && values[0].status == 200) {
+          $store.commit('setAuthInfo2', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+          localStorage.setItem('authToken', 'true')
+        } else {
+          localStorage.removeItem('authToken')
+          $store.state.authInfo = null
+          // 用户个人信息
+          $store.state.userInfo = null
+        }
+        $store.commit('setZoneList', values[1].data.result)
+        next()
+      },
         value => {
           next()
         }

@@ -82,7 +82,6 @@
           <Tabs type="card" :animated="false" v-model="status" @on-click="">
             <Tab-pane :label="`开启(${openHost.length+waitHost.length})`" name="开启">
               <div class="flex-wrapper">
-
                 <!-- 创建中主机列表 -->
                 <div v-for="(item,index) in waitHost" :key="item" :class="{select:item.select}"
                      style="margin-bottom: 20px;height:228px;">
@@ -130,11 +129,11 @@
                         <span v-else>公网地址:{{item.publicip}}</span>
                         <span>内网地址:{{item.privateip}}</span>
                         <span v-if="item.restart==1">重启中</span>
-                        <span v-else>运行中</span>
+                        <span v-else>运行中111111</span>
                       </div>
                       <div class="foot">
                         <span>{{item.createtime}}</span>
-                        <button @click.stop="manage(item,'normal')" :disabled="!auth" style="margin-left:55px;">管理
+                        <button @click.stop="manage(item,'normal')" style="margin-left:55px;">管理22
                         </button>
                         <button v-if="!auth" :disabled="!auth">连接主机</button>
                         <a v-else :href="item.connecturl" target="_blank"
@@ -491,8 +490,8 @@
   import merge from 'merge'
   /* import {mapState} from 'vuex'
    import $store from '@/vuex' */
-  export default{
-    data(){
+  export default {
+    data() {
       var status = '开启'
       if (sessionStorage.getItem('type')) {
         switch (sessionStorage.getItem('type')) {
@@ -599,10 +598,10 @@
         this.showModal.Renew = true
         this.RenewForm.id = id
         this.$http.get('information/getResCost.do?id=' + id + '&type=' + 'computer').then(response => {
-          if (response.status == 200) {
-            this.RenewForm.cost = response.data.cost
+            if (response.status == 200) {
+              this.RenewForm.cost = response.data.cost
+            }
           }
-        }
         )
       },
       renewOk() {
@@ -953,7 +952,7 @@
             })
         }
       },
-      renewal(){
+      renewal() {
       },
       ok() {
 

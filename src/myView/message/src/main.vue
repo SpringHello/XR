@@ -34,7 +34,7 @@
       }
     },
     components: {
-      Notice,
+      Notice
     }
   }
 </script>

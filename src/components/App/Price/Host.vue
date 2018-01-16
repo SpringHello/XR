@@ -250,12 +250,15 @@
                   @click="mirror='customImage',mirrorType=''" :disabled="userInfo==null">自定义镜像
           </button>
         </div>
-        <div class="config-button" style="margin-left: 103px;" v-if="mirror=='UHub'">
-          <button :class="{select:mirrorType=='Windows'}" @click="mirrorType='Windows'">Windows</button>
-          <button :class="{select:mirrorType=='Centos'}" @click="mirrorType='Centos'">Centos</button>
-          <button :class="{select:mirrorType=='Ubuntu'}" @click="mirrorType='Ubuntu'">Ubuntu</button>
-          <!-- <button :class="{select:mirrorType=='debian'}" @click="mirrorType='debian'">debian</button> -->
+        <div class="config-button public-image" style="margin-left: 103px;">
+          <div v-for="(item,index) in system" :key="index" class="button-col">
+            <button v-for="(content,index) in item" :key="index" @click="publicImage(content)"
+                    :class="{select:mirrorbtn}">{{content.templatedescript}}
+            </button>
+            <!-- {{content.me}} -->
+          </div>
         </div>
+
         <div class="configMirror-button" v-if="mirror=='imageApplication'">
           <button v-for="item in mirrorConfigList" :class="{select:item.value==mirrorType}"
                   @click="mirrorType=item.value">
@@ -421,7 +424,8 @@
     data () {
       return {
         // 产品类型
-        osId1: '',
+        osId: '',
+        system: '',
         productList: [
           {
             label: '云主机',
@@ -616,11 +620,16 @@
         this.userInfo = $store.state.userInfo
       }
       this.queryQuickHost()
+      //获取公共镜像
       var url11 = `information/listTemplates.do?user=0&zoneid=${this.zone} `
       this.$http.get(url11).then(response => {
         var system = response.data.result
         this.osId = system.window[0].systemtemplateid
+        this.system = system
       })
+    },
+    mounted(){
+
     },
     methods: {
       /* 切换到自定义 */
@@ -702,6 +711,10 @@
         }
       },
       /* 立即购买 */
+      publicImage(item){
+        this.osId = item.systemtemplateid;
+        console.log(this.osId)
+      },
       buyImmediately () {
         if (this.userInfo == null) {
           this.buyButton = true
@@ -831,7 +844,7 @@
           }
         }
         var renewal = this.autoRenewal ? 1 : 0
-        var url = `information/deployVirtualMachine.do?name=${this.hostName}&password=${this.hostPassword}&templateId=${this.osId}&size=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&bandWidth=${this.publicIP}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=1&isAutoRenew=${renewal}&disktype=${params.diskType}&networkId=no`
+        var url = `information/deployVirtualMachine.do?name=${this.hostName}&password=${this.hostPassword}&templateId=${this.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&bandWidth=${this.publicIP}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=1&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=no`
         this.$http.get(url).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
@@ -1547,6 +1560,14 @@
         }
       }
     }
+    .public-image {
+      .button-col {
+        button {
+          width: 200px;
+          margin-bottom: 10px;
+        }
+      }
+    }
     .configMirror-button {
       margin-top: 20px;
       button {
@@ -1807,4 +1828,10 @@
       letter-spacing: 0.83px;
     }
   }
+
+  // #syetem{
+  //   height: 100px;
+  //   width: 100%;
+  //   background: red;
+  // }
 </style>
