@@ -182,7 +182,7 @@
                     display: "inline-block",
                     marginRight: "10px",
                   }
-                }), h('span', {}, params.status)]);
+                }), h('span', {}, params.status)])
               }
               return h('div', [
                 h('span', {
@@ -291,7 +291,7 @@
       },
       apply(){
         this.showModal.apply = false
-        this.applyLoading = true;
+        this.applyLoading = true
         var url = `network/replaceNetworkACLList.do?aclListId=${this.select.acllistid}&networkId=${this.applyForm.network}`
         this.$http.get(url).then(response => {
           this.showModal.apply = false
@@ -307,7 +307,7 @@
           this.showModal.modify = false
           this.modifyForm.name = ''
           if (response.status == 200 && response.data.status == 1) {
-            this.init();
+            this.init()
             this.$Message.success(response.data.message)
           }
         })
@@ -317,13 +317,13 @@
           this.$Message.info('请选中一条防火墙')
           return
         }
-        this.deleteLoading = true;
+        this.deleteLoading = true
         var url = `network/delAclList.do?aclListId=${this.select.id}`
         this.$http.get(url).then(response => {
-          this.deleteLoading = false;
+          this.deleteLoading = false
           if (response.status == 200 && response.data.status == 1) {
             this.init()
-            this.deleteLoading = false;
+            this.deleteLoading = false
             this.$Message.success(response.data.message)
           }
         })

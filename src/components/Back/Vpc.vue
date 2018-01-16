@@ -1,15 +1,15 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span>首页 / 硬盘</span>
+      <span>首页 / 网络私有云VPC</span>
       <div id="content">
         <div id="header">
-          <span id="title">硬盘</span>
+          <span id="title">网络私有云VPC</span>
         </div>
         <Alert>
           为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。
         </Alert>
-        <Tabs type="card">
+        <Tabs type="card" :animated="false">
           <TabPane label="虚拟私有云VPC">
             <div class="operator-bar">
               <Button type="primary" @click="openNewVpcModal">新建VPC</Button>
@@ -51,9 +51,10 @@
           </TabPane>
           <TabPane label="NAT网关">
             <div class="operator-bar">
-              <Button type="primary" @click="openNewVpcModal">添加NAT网关</Button>
-              <Button type="primary" @click="modalList.addGateway = true">删除NAT网关</Button>
+              <Button type="primary" @click="openAddNatModal">添加NAT网关</Button>
+              <Button type="primary" @click="openDeleteNatModal">删除NAT网关</Button>
             </div>
+            <Table :columns="natColumns" :data="natData"></Table>
           </TabPane>
         </Tabs>
       </div>
@@ -77,16 +78,15 @@
           <FormItem label="vpc描述" prop="desc">
             <Input v-model="newForm.desc" placeholder="请输入vpc描述"></Input>
           </FormItem>
-          <FormItem></FormItem>
           <FormItem label="购买方式" prop="timeType">
-            <Select v-model="newForm.timeType" @on-change="queryVpcPrice">
+            <Select v-model="newForm.timeType">
               <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
                       :key="item.value">{{ item.label }}
               </Option>
             </Select>
           </FormItem>
           <FormItem label="购买时长" prop="timeValue" v-if="newForm.timeType!='current'">
-            <Select v-model="newForm.timeValue" @on-change="log">
+            <Select v-model="newForm.timeValue">
               <Option v-for="item in customTimeOptions[newForm.timeType]" :value="item.value" :key="item.value">
                 {{item.label}}
               </Option>
@@ -108,7 +108,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
-        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">99元</span>
+        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">{{newForm.cost}}元</span>
         <Button type="primary" @click="handleNewVpcSubmit">完成配置</Button>
       </div>
     </Modal>
@@ -195,56 +195,64 @@
     </Modal>
 
     <!-- 添加NAT 网关 -->
-    <Modal v-model="modalList.newVpc" width="550" :scrollable="true">
+    <Modal v-model="modalList.addNat" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">添加NAT网关</span>
       </p>
       <div class="universal-modal-content-flex">
-        <Form :model="newForm" :rules="newRuleValidate" ref="newFormValidate">
-          <FormItem label="网关名称" prop="vpcName">
-            <Input v-model="newForm.vpcName" placeholder="请输入vpc名称"></Input>
+        <Form :model="addNatForm" :rules="addNatRuleValidate" ref="addNatFormValidate">
+          <FormItem label="网关名称" prop="natName">
+            <Input v-model="addNatForm.natName" placeholder="请输入vpc名称"></Input>
           </FormItem>
-          <FormItem label="VPC" prop="vpc">
-            <Select v-model="newForm.vpc" placeholder="请选择">
-              <Option v-for="item in newForm.VPCOptions" :key="item" :value="item">{{item}}</Option>
+          <FormItem label="VPC ID" prop="vpc">
+            <Select v-model="addNatForm.vpc" placeholder="请选择">
+              <Option v-for="item in netData" :key="item" :value="item.vpcid">{{item.vpcname}}</Option>
             </Select>
           </FormItem>
-          <FormItem label="vpc描述" prop="desc">
-            <Input v-model="newForm.desc" placeholder="请输入vpc描述"></Input>
+          <FormItem label="选择弹性IP" prop="publicIp">
+            <Select v-model="addNatForm.publicIp">
+              <Option v-for="item in addNatForm.publicIpOptions" :value="item.publicipid" :key="item.publicipid">
+                {{item.publicip}}
+              </Option>
+            </Select>
           </FormItem>
-          <FormItem></FormItem>
-          <FormItem label="购买方式" prop="timeType">
-            <Select v-model="newForm.timeType" @on-change="queryVpcPrice">
+          <FormItem label="选择计费模式" prop="timeType">
+            <Select v-model="addNatForm.timeType">
               <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
                       :key="item.value">{{ item.label }}
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="购买时长" prop="timeValue" v-if="newForm.timeType!='current'">
-            <Select v-model="newForm.timeValue" @on-change="log">
-              <Option v-for="item in customTimeOptions[newForm.timeType]" :value="item.value" :key="item.value">
+          <FormItem label="购买时长" prop="timeValue" v-if="addNatForm.timeType!='current'">
+            <Select v-model="addNatForm.timeValue">
+              <Option v-for="item in customTimeOptions[addNatForm.timeType]" :value="item.value" :key="item.value">
                 {{item.label}}
               </Option>
             </Select>
           </FormItem>
-          <p style="font-size: 12px;color: rgba(153,153,153,0.65);">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
-        </Form>
-        <!--创建vpc时暂时不绑定公网IP-->
-        <!--<div>
-          <span>是否需要绑定公网IP <Checkbox v-model="newForm.IPReq">&nbsp;</Checkbox></span>
-          <div v-if="newForm.IPReq" style="margin-top: 10px;">
-            <i-slider v-model="newForm.IPSize" :min=1 :max=100 unit="M" :points="[20,50]"
+          <FormItem label="新建弹性IP带宽" v-if="addNatForm.publicIp=='新建弹性IP'" style="width:90%">
+            <i-slider v-model="addNatForm.IPSize" :min=1 :max=100 unit="M" :points="[20,50]"
                       style="width:300px;vertical-align: middle;"></i-slider>
-            <InputNumber :max="100" :min="1" v-model="newForm.IPSize" :editable="false"
+            <InputNumber :max="100" :min="1" v-model="addNatForm.IPSize" :editable="false"
                          style="margin-left: 20px"></InputNumber>
             <span style="margin-left: 10px">M</span>
-          </div>
-        </div>-->
+          </FormItem>
+          <p style="font-size: 12px;color: rgba(153,153,153,0.65);">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
+        </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
         <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
         <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">99元</span>
-        <Button type="primary" @click="handleNewVpcSubmit">完成配置</Button>
+        <Button type="primary" @click="handleAddNatSubmit">完成配置</Button>
+      </div>
+    </Modal>
+    <!-- 删除NAT 网关 -->
+    <Modal v-model="modalList.deleteNat" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">删除NAT网关</span>
+      </p>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="handleAddNatSubmit">完成配置</Button>
       </div>
     </Modal>
   </div>
@@ -266,13 +274,70 @@
         callback()
       }
       return {
-        model1: '',
         // vpc列表数据
         netData: [],
+        // nat列表数据
+        natColumns: [
+          {
+            type: 'radio',
+            width: 60,
+            align: 'center',
+          },
+          {
+            title: '网关名称',
+            align: 'center',
+            key: 'natname'
+          },
+          {
+            title: '状态',
+            align: 'center',
+            key: 'status',
+            render: (h, params) => {
+              var status = params.row.status == 1 ? '正常' : '异常'
+              return h('span', {}, status)
+            }
+          },
+          {
+            title: '所属网络',
+            align: 'center',
+            key: 'vpcname',
+            render: (h, params) => {
+              return h('span', {
+                style: {
+                  color: '#2A99F2',
+                  cursor: 'pointer'
+                },
+                on: {
+                  click: this.gotoVpc(params.row.id)
+                },
+              }, params.row.vpcname)
+            }
+          },
+          {
+            title: '绑定弹性IP',
+            align: 'center',
+            key: 'diskname'
+          },
+          {
+            title: '创建时间',
+            align: 'center',
+            key: 'createtime'
+          },
+          {
+            title: '管理',
+            align: 'center',
+            key: 'disksize',
+          }
+        ],
+        natData: [],
         // 控制模态框是否关闭
         modalList: {
           newVpc: false,
-          addGateway: false
+          addGateway: false,
+          // 添加nat网关
+          addNat: false,
+          // 删除nat网关
+          deleteNat: false
         },
         // 新建vpc表单数据
         newForm: {
@@ -282,11 +347,8 @@
           VPCOptions: ['192.168.0.0/16', '172.16.0.0/16', '172.17.0.0/16', '172.18.0.0/16', '172.19.0.0/16', '172.20.0.0/16', '172.21.0.0/16', '172.22.0.0/16', '172.23.0.0/16', '172.24.0.0/16', '172.25.0.0/16'],
           timeType: '',
           timeValue: '',
-          // 是否需要公网IP
-          IPReq: false,
-          // 公网IP最低1M
-          IPSize: 1,
-          points: [20, 50]
+          // 花费
+          cost: 0
         },
         // 添加网关表单数据
         addGatewayForm: {
@@ -309,6 +371,16 @@
           originMask: [0, 0, 0],
           targetMask: [0, 0, 0]
         },
+        // 添加nat网关表单
+        addNatForm: {
+          natName: '',
+          vpc: '',
+          publicIpOptions: [],
+          publicIp: '',
+          timeType: '',
+          timeValue: '',
+          IPSize: 1
+        },
         // 新建vpc验证规则
         newRuleValidate: {
           vpcName: [
@@ -324,6 +396,7 @@
             {required: true, message: '请选择购买时长', trigger: 'change'}
           ]
         },
+        // 添加网关验证规则
         gatewayRuleValidate: {
           originVPC: [
             {required: true, message: '请选择源VPC', trigger: 'change'}
@@ -347,6 +420,24 @@
             {required: true, message: '请选择防火墙', trigger: 'change'}
           ]
         },
+        // 添加nat网关验证规则
+        addNatRuleValidate: {
+          natName: [
+            {required: true, message: '请输入nat网关名称', trigger: 'blur'}
+          ],
+          vpc: [
+            {required: true, message: '请选择VPC', trigger: 'change'}
+          ],
+          publicIp: [
+            {required: true, message: '请选择弹性IP', trigger: 'change'}
+          ],
+          timeType: [
+            {required: true, message: '请选择购买方式', trigger: 'change'}
+          ],
+          timeValue: [
+            {required: true, message: '请选择购买时长', trigger: 'change'}
+          ]
+        },
         // ajax刷新instance，beforeRouteLeave钩子函数中调用clearInterval
         intervalInstance: null,
         customTimeOptions
@@ -354,18 +445,20 @@
     },
     beforeRouteEnter(to, from, next) {
       var zoneId = $store.state.zoneList[0].zoneid
-      axios.get(`network/listVpc.do?zoneId=${zoneId}`).then(response => {
-        if (response.status == 200) {
-          next(vm => {
-            vm.setData(response)
-          })
-        } else {
-          next()
-        }
+      // 获取vpc数据
+      var vpcResponse = axios.get(`network/listVpc.do?zoneId=${zoneId}`)
+      // 获取NAT网关数据
+      var NATResponse = axios.get(`network/listNatGateway.do?zoneId=${zoneId}`)
+
+      Promise.all([vpcResponse, NATResponse]).then((ResponseValue) => {
+        next(vm => {
+          vm.setData(ResponseValue[0])
+          vm.setNatData(ResponseValue[1])
+        })
       })
     },
     created(){
-      this.intervalInstance = setInterval(this.getVpcData, 5000)
+      this.intervalInstance = setInterval(this.getVpcData, 10000)
     },
     methods: {
       getVpcData(){
@@ -389,6 +482,20 @@
           this.netData = response.data.result
         }
       },
+      // 设置查询NAT数据的值，保留原NAT选中状态
+      setNatData(response){
+        if (response.status == 200 && response.data.status == 1) {
+          response.data.result.forEach(item => {
+            item._select = false
+            this.natData.forEach(i => {
+              if (i.id == item.id) {
+                item._select = i._select
+              }
+            })
+          })
+          this.natData = response.data.result
+        }
+      },
       radio(item){
         this.netData.forEach(item => {
           item._select = false
@@ -405,18 +512,39 @@
         /* var url = 'network/listAclList.do?'
          axios.get() */
       },
+      // 打开添加nat网关modal
+      openAddNatModal(){
+        this.modalList.addNat = true
+        /*
+         useType : 0 代表未使用
+         status : 1 代表状态正常
+         */
+        var url = `network/listPublicIp.do?useType=0&status=1&zoneId=${$store.state.zone.zoneid}`
+        axios.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            response.data.result.push({publicipid: '新建弹性IP', publicip: '新建弹性IP'})
+            this.addNatForm.publicIpOptions = response.data.result
+          }
+        })
+      },
+      // 打开删除nat网关modal
+      openDeleteNatModal(){
+        if (this._checkSelect()) {
+          // 单选检测通过
+        }
+      },
       // 新建vpc价格查询
       queryVpcPrice(){
-        // 重置购买时间
-        this.newForm.timeValue = ''
         if (this.newForm.timeType == 'current' || this.newForm.timeValue != '') {
           axios.post('device/queryVpcPrice.do', {
             type: this.newForm.timeType,
-            timelong: this.newForm.timeValue,
+            timelong: this.newForm.timeType == 'current' ? '1' : this.newForm.timeValue + '',
             zoneId: $store.state.zone.zoneid,
-            isBindPublicIp: 0
+            isBindPublicIp: '0'
           }).then(response => {
-            console.log(response)
+            if (response.status == 200 && response.data.status == 1) {
+              this.newForm.cost = response.data.cost
+            }
           })
         }
       },
@@ -457,12 +585,46 @@
           }
         })
       },
-      log() {
-        console.log(this.newForm)
+      // 提交新建nat网关表单
+      handleAddNatSubmit(){
+        this.$refs.addNatFormValidate.validate((valid) => {
+          if (valid) {
+            // 表单验证通过
+            var url = `network/createNatGateway.do?isAutorenew=0&natName=${this.addNatForm.natName}&vpcId=${this.addNatForm.vpc}&zoneId=${$store.state.zone.zoneid}&timeType=${this.addNatForm.timeType}&timeValue=${this.addNatForm.timeValue || 1}`
+            if (this.addNatForm.publicIp == '新建弹性IP') {
+              url += `&bandWith=${this.addNatForm.IPSize}`
+            } else {
+              url += `&publicIpId=${this.addNatForm.publicIp}`
+            }
+            axios.get(url).then(response => {
+              this.modalList.addNat = false
+              if (response.status == 200 && response.data.status == 1) {
+                this.$router.push('order')
+              }
+              if (response.status == 200 && response.data.status == 2) {
+                this.$error('error', response.data.message)
+              }
+            })
+          } else {
+            // 表单验证失败
+          }
+        })
+      },
+      gotoVpc(){
+
       }
     },
     computed: {},
     watch: {
+      // 检测到购买方式发生变化，重新查询价格
+      'newForm.timeValue'(){
+        this.queryVpcPrice()
+      },
+      // 检测到购买方式发生变化，重新查询价格
+      'newForm.timeType'(){
+        this.newForm.timeValue = ''
+        this.queryVpcPrice()
+      },
       // 查询当前源vpc下所有防火墙
       'addGatewayForm.originVPC'(){
         var originPreArray = []
@@ -470,7 +632,7 @@
           if (item.vpcid == this.addGatewayForm.originVPC) {
             originPreArray = item.cidr.split('.')
             this.addGatewayForm.originPreIP = [originPreArray[0], originPreArray[1]]
-            var url = `network/listAclList.do?zoneId=${$store.state.zone.zoneid}&vpcid=${item.vpcid}`
+            var url = `network/listAclList.do?zoneId=${$store.state.zone.zoneid}&vpcId=${item.vpcid}`
             axios.get(url).then(response => {
               this.addGatewayForm.originFirewallList = response.data.result
             })
@@ -484,7 +646,7 @@
           if (item.vpcid == this.addGatewayForm.targetVPC) {
             targetPreArray = item.cidr.split('.')
             this.addGatewayForm.targetPreIP = [targetPreArray[0], targetPreArray[1]]
-            var url = `network/listAclList.do?zoneId=${$store.state.zone.zoneid}&vpcid=${item.vpcid}`
+            var url = `network/listAclList.do?zoneId=${$store.state.zone.zoneid}&vpcId=${item.vpcid}`
             axios.get(url).then(response => {
               this.addGatewayForm.targetFirewallList = response.data.result
             })
