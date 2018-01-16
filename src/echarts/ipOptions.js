@@ -1,7 +1,7 @@
-var echarts = require('echarts/lib/echarts');
-export default{
-  tooltip:{
-    show:true,
+var echarts = require('echarts/lib/echarts')
+export default {
+  tooltip: {
+    show: true,
     trigger: 'axis'
   },
   toolbox: {
@@ -15,7 +15,7 @@ export default{
   xAxis: {
     type: 'category',
     name: '',
-    boundaryGap:false,
+    boundaryGap: false,
     splitLine: {show: false},
     data: []
   },
@@ -23,28 +23,28 @@ export default{
     left: '0%',
     right: '2%',
     bottom: '0%',
-    top:'5%',
+    top: '5%',
     containLabel: true
   },
   yAxis: {
-    //type: 'log',
+    // type: 'log',
     name: '',
     axisLabel: {
       formatter: '{value} kb/s'
-    },
+    }
   },
   series: [
     {
       type: 'line',
-      name:'弹性IP弹性流量流出(kb/s)',
-      lineStyle:{
-        normal:{
-          color: '#2A99F2',
+      name: '弹性IP弹性流量流出(kb/s)',
+      lineStyle: {
+        normal: {
+          color: '#2A99F2'
         }
       },
-      itemStyle:{
-        normal:{
-          color: '#2A99F2',
+      itemStyle: {
+        normal: {
+          color: '#2A99F2'
         }
       },
       areaStyle: {
@@ -62,15 +62,15 @@ export default{
     },
     {
       type: 'line',
-      name:'弹性IP弹性流量流入(kb/s)',
-      lineStyle:{
-        normal:{
-          color: '#3DBD7D',
+      name: '弹性IP弹性流量流入(kb/s)',
+      lineStyle: {
+        normal: {
+          color: '#3DBD7D'
         }
       },
-      itemStyle:{
-        normal:{
-          color: '#3DBD7D',
+      itemStyle: {
+        normal: {
+          color: '#3DBD7D'
         }
       },
       areaStyle: {
@@ -87,4 +87,4 @@ export default{
       data: []
     }
   ]
-};
+}

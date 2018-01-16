@@ -1,5 +1,5 @@
-var echarts = require('echarts/lib/echarts');
-export default{
+var echarts = require('echarts/lib/echarts')
+export default {
   tooltip: {
     show: true,
     trigger: 'axis'
@@ -28,13 +28,13 @@ export default{
   yAxis: {
     name: '',
     axisLabel: {
-      formatter : '{value}%'
-      /*  formatter: function (value, index) {
-       var texts = value * 100 + '----'
-       return texts
-       }*/
+      formatter: '{value}%'
+      // formatter: function (value, index) {
+      //  var texts = value * 100 + '----'
+      //  return texts
+      //  }
     },
-    max:100,
+    max: 100
   },
   series: [
     {
@@ -42,12 +42,12 @@ export default{
       name: '使用率(%)',
       lineStyle: {
         normal: {
-          color: '#2A99F2',
+          color: '#2A99F2'
         }
       },
       itemStyle: {
         normal: {
-          color: '#2A99F2',
+          color: '#2A99F2'
         }
       },
       areaStyle: {
@@ -64,4 +64,4 @@ export default{
       data: []
     }
   ]
-};
+}

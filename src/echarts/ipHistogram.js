@@ -1,7 +1,7 @@
 /**
  * Created by yunrui001 on 2017-09-11.
  */
-export default{
+export default {
   color: ['#3dbd7d', '#2a99f2'],
   tooltip: {
     trigger: 'axis',

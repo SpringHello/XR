@@ -53,14 +53,14 @@
               <li @mouseenter="ME(4,$event)">
                 <div class="menu-dropdown">
                   <div class="menu-dropdown-rel">
-                    <router-link to="/overview"><span>控制台</span></router-link>
+                    <router-link to="/ruicloud/overview"><span>控制台</span></router-link>
                   </div>
                 </div>
               </li>
               <li @mouseenter="ME(5,$event)">
                 <div class="menu-dropdown">
                   <div class="menu-dropdown-rel">
-                    <router-link to="/usercenter"><span>{{userInfo.realname}}</span></router-link>
+                    <router-link to="ruicloud/usercenter"><span>{{userInfo.realname}}</span></router-link>
                   </div>
                 </div>
               </li>

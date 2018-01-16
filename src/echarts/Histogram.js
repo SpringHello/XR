@@ -1,7 +1,7 @@
 /**
  * Created by yunrui001 on 2017-09-11.
  */
-export default{
+export default {
   color: ['#3398DB'],
   toolbox: {
     // y: 'bottom',
@@ -37,7 +37,7 @@ export default{
       axisLabel: {
         formatter: '{value}%'
       },
-      max:100,
+      max: 100,
     }
   ],
   series: [
