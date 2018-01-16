@@ -354,10 +354,10 @@
         $store.commit('setZoneList', values[1].data.result)
         next()
       },
-      value => {
-        next()
-      }
-    )
+        value => {
+          next()
+        }
+      )
     },
     created () {
       this.$http.get('user/getKfAdd.do').then(response => {
@@ -591,6 +591,7 @@
           font-size: 14px;
           color: #377dff;
           width: max-content;
+          line-height: 100%;
         }
       }
       #foot-support {

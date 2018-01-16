@@ -23,7 +23,9 @@
                 <div class="content">
                   <div class="item-wrap">
                     <div class="item item1">
-                      <p>名称：<span>{{item.vpcname}}</span></p>
+                      <p>名称：<span style="float:unset">{{item.status==2?'创建中':item.vpcname}}</span>
+                        <Spin size="small" v-if="item.status==2" style="display: inline-block"></Spin>
+                      </p>
                       <p>网段：<span>{{item.cidr}}</span></p>
                     </div>
                   </div>
@@ -49,39 +51,8 @@
           </TabPane>
           <TabPane label="NAT网关">
             <div class="operator-bar">
-              <Button type="primary" @click="openNewVpcModal">新建VPC</Button>
-              <Button type="primary" @click="modalList.addGateway = true">添加VPC互通网关</Button>
-              <Button type="primary">修改VPC</Button>
-              <Button type="primary">删除VPC</Button>
-            </div>
-            <div class="card-wrap">
-              <div class="card" v-for="(item,index) in netData" :key="index" :class="{active:item._select}"
-                   @click="radio(item)">
-                <div class="content">
-                  <div class="item-wrap">
-                    <div class="item item1">
-                      <p>名称：<span>{{item.vpcname}}</span></p>
-                      <p>网段：<span>{{item.cidr}}</span></p>
-                    </div>
-                  </div>
-                  <div class="item-wrap">
-                    <div class="item"><p>路由器（VPC）：<span>{{item.aclCount}}</span></p></div>
-                    <span class="dotted-across"></span>
-                  </div>
-                  <div class="item-wrap">
-                    <div class="item"><p>交换机：（子网）<span>{{item.networkCount}}</span></p></div>
-                    <span class="dotted-vertical"></span>
-                    <div class="item item4"><p>弹性云主机：<span>{{item.computerCount}}</span></p></div>
-                  </div>
-                  <div class="item-wrap">
-                    <div class="item"><p>防火墙：<span>{{item.aclCount}}</span></p></div>
-                  </div>
-                </div>
-                <div class="card-bottom">
-                  <Button type="primary" class="btn-bgwhite">重启</Button>
-                  <Button type="primary" @click="manage(item)">管理</Button>
-                </div>
-              </div>
+              <Button type="primary" @click="openNewVpcModal">添加NAT网关</Button>
+              <Button type="primary" @click="modalList.addGateway = true">删除NAT网关</Button>
             </div>
           </TabPane>
         </Tabs>
@@ -222,6 +193,60 @@
         <Button type="primary" @click="handleNewGateSubmit">完成配置</Button>
       </div>
     </Modal>
+
+    <!-- 添加NAT 网关 -->
+    <Modal v-model="modalList.newVpc" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">添加NAT网关</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="newForm" :rules="newRuleValidate" ref="newFormValidate">
+          <FormItem label="网关名称" prop="vpcName">
+            <Input v-model="newForm.vpcName" placeholder="请输入vpc名称"></Input>
+          </FormItem>
+          <FormItem label="VPC" prop="vpc">
+            <Select v-model="newForm.vpc" placeholder="请选择">
+              <Option v-for="item in newForm.VPCOptions" :key="item" :value="item">{{item}}</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="vpc描述" prop="desc">
+            <Input v-model="newForm.desc" placeholder="请输入vpc描述"></Input>
+          </FormItem>
+          <FormItem></FormItem>
+          <FormItem label="购买方式" prop="timeType">
+            <Select v-model="newForm.timeType" @on-change="queryVpcPrice">
+              <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
+                      :key="item.value">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="购买时长" prop="timeValue" v-if="newForm.timeType!='current'">
+            <Select v-model="newForm.timeValue" @on-change="log">
+              <Option v-for="item in customTimeOptions[newForm.timeType]" :value="item.value" :key="item.value">
+                {{item.label}}
+              </Option>
+            </Select>
+          </FormItem>
+          <p style="font-size: 12px;color: rgba(153,153,153,0.65);">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
+        </Form>
+        <!--创建vpc时暂时不绑定公网IP-->
+        <!--<div>
+          <span>是否需要绑定公网IP <Checkbox v-model="newForm.IPReq">&nbsp;</Checkbox></span>
+          <div v-if="newForm.IPReq" style="margin-top: 10px;">
+            <i-slider v-model="newForm.IPSize" :min=1 :max=100 unit="M" :points="[20,50]"
+                      style="width:300px;vertical-align: middle;"></i-slider>
+            <InputNumber :max="100" :min="1" v-model="newForm.IPSize" :editable="false"
+                         style="margin-left: 20px"></InputNumber>
+            <span style="margin-left: 10px">M</span>
+          </div>
+        </div>-->
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
+        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">99元</span>
+        <Button type="primary" @click="handleNewVpcSubmit">完成配置</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -322,6 +347,8 @@
             {required: true, message: '请选择防火墙', trigger: 'change'}
           ]
         },
+        // ajax刷新instance，beforeRouteLeave钩子函数中调用clearInterval
+        intervalInstance: null,
         customTimeOptions
       }
     },
@@ -337,6 +364,9 @@
         }
       })
     },
+    created(){
+      this.intervalInstance = setInterval(this.getVpcData, 5000)
+    },
     methods: {
       getVpcData(){
         axios.get(`network/listVpc.do?zoneId=${$store.state.zone.zoneid}`).then(response => {
@@ -345,10 +375,16 @@
           }
         })
       },
+      // 设置查询vpc数据的值，保留原vpc选中状态
       setData(response) {
         if (response.status == 200 && response.data.status == 1) {
           response.data.result.forEach(item => {
             item._select = false
+            this.netData.forEach(i => {
+              if (i.vpcid == item.vpcid) {
+                item._select = i._select
+              }
+            })
           })
           this.netData = response.data.result
         }
@@ -406,16 +442,9 @@
       },
       // 提交新建网关表单
       handleNewGateSubmit(){
-        /* :vpcIdStart 源vpc  vpcIdEnd  目标vpc
-         aclIdStart 源防火墙  aclIdEnd 目标防火墙
-         ipAddressStrat  源ip   ipAddressEnd 目标ip
-         netmaskStart 源子网  netmaskEnd  目标子网 */
         this.$refs.gatewayFormValidate.validate((valid) => {
           if (valid) {
             // 表单验证通过
-            /* var originIP = `${this.addGatewayForm.originPreIP.join('.')}.${this.addGatewayForm.originIP}.${this.addGatewayForm.originIP2}`
-             var targetIP = `${this.addGatewayForm.targetPreIP.join('.')}.${this.addGatewayForm.targetIP}.${this.addGatewayForm.targetIP2}`
-             &ipAddressStart=${originIP}&ipAddressEnd=${targetIP}&netMaskStart=255.${this.addGatewayForm.originMask.join('.')}&netMaskEnd=255.${this.addGatewayForm.targetMask.join('.')} */
             var url = `network/addPrivateGateway.do?vpcIdStart=${this.addGatewayForm.originVPC}&vpcIdEnd=${this.addGatewayForm.targetVPC}&zoneId=${$store.state.zone.zoneid}&aclIdStart=${this.addGatewayForm.originFirewall}&aclIdEnd=${this.addGatewayForm.targetFirewall}`
             axios.get(url).then(response => {
               this.modalList.newVpc = false
@@ -434,6 +463,7 @@
     },
     computed: {},
     watch: {
+      // 查询当前源vpc下所有防火墙
       'addGatewayForm.originVPC'(){
         var originPreArray = []
         this.netData.forEach(item => {
@@ -447,6 +477,7 @@
           }
         })
       },
+      // 查询当前目标vpc下所有防火墙
       'addGatewayForm.targetVPC'(){
         var targetPreArray = []
         this.netData.forEach(item => {
@@ -460,6 +491,10 @@
           }
         })
       }
+    },
+    beforeRouteLeave(to, from, next){
+      clearInterval(this.intervalInstance)
+      next()
     }
   }
 </script>
