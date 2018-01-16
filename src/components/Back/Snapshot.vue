@@ -71,7 +71,7 @@
                 return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block',
-                    marginRight: '10px',
+                    marginRight: '10px'
                   }
                 }), h('span', {}, text)])
               } else {

@@ -4,13 +4,15 @@
       <span>云服务器 / 主机</span>
       <div id="content">
         <div id="header">
-          <span id="title">主机</span>
+          <!-- <img  src='..\..\assets\img\host\cloudhost-icon.png'/> -->
+          <span id="title">云主机</span>
         </div>
         <Alert>
           为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。
         </Alert>
         <div class="operator-bar">
           <Button type="primary" @click="startUp">一键启动</Button>
+          <Button type="primary" @click="">加入负载均衡</Button>
           <Button type="primary" @click="bindIP" :disabled="status!='开启'&&status!='关机'">绑定IP</Button>
           <Dropdown @on-click="hideEvent">
             <Button type="primary">
@@ -509,11 +511,21 @@
         sessionStorage.removeItem('type')
       }
       return {
-        openHost: [],
+        openHost: [
+          // {
+          //   computername: "用户名称", instancename: '唯一名称', templatename: '12143', serviceoffername: '12432', zonename: '12'
+          //   , endtime: '345345', publicip: '1', privateip: '3', restart: '1', createtime: '13:00', connecturl: ''
+          // }
+        ],
         closeHost: [],
         arrearsHost: [],
         errorHost: [],
-        waitHost: [],
+        waitHost: [
+          // {
+          //   templatename: "用户名称", instancename: '唯一名称', templatename: '12143'
+          //   , endtime: '345', publicip: '1', privateip: '3', restart: '1', createtime: '13:00', connecturl: ''
+          // }
+        ],
         currentHost: [],
         status,
         showModal: {
@@ -557,7 +569,7 @@
         }
       }
     },
-    created(){
+    created() {
       this.getData()
       // 定时发送ajax 刷新页面
       this.intervalInstance = setInterval(() => {
@@ -565,7 +577,7 @@
       }, 5 * 1000)
     },
     methods: {
-      recoverHost(id){
+      recoverHost(id) {
         this.$Modal.confirm({
           title: '',
           content: '<p>确定要恢复当前主机吗？</p>',
@@ -583,16 +595,17 @@
           }
         })
       },
-      renewHost(id){
+      renewHost(id) {
         this.showModal.Renew = true
         this.RenewForm.id = id
         this.$http.get('information/getResCost.do?id=' + id + '&type=' + 'computer').then(response => {
           if (response.status == 200) {
             this.RenewForm.cost = response.data.cost
           }
-        })
+        }
+        )
       },
-      renewOk(){
+      renewOk() {
         this.showModal.Renew = false
         this.$http.get('information/vmRenew.do?id=' + this.RenewForm.id).then(response => {
           this.getData()
@@ -602,7 +615,7 @@
         })
       },
       // 获取数据的主要接口
-      getData(){
+      getData() {
         var url = 'information/listVirtualMachines.do'
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -619,7 +632,7 @@
           }
         })
       },
-      toggle(item){
+      toggle(item) {
         if (!this.auth) {
           return
         }
@@ -629,10 +642,10 @@
           item.select = false
         }
       },
-      createHost(){
+      createHost() {
 
       },
-      manage(item, status){
+      manage(item, status) {
         this.$router.push({
           path: 'manage',
           query: {
@@ -643,7 +656,7 @@
           }
         })
       },
-      startUp(){
+      startUp() {
         switch (this.status) {
           case '开启':
             this.$Message.warning('请选择未开启的主机!')
@@ -687,7 +700,7 @@
             break
         }
       },
-      stop(item){
+      stop(item) {
         this.loadingMessage = '正在停止主机'
         this.loading = true
         item.select = false
@@ -705,7 +718,7 @@
           }
         })
       },
-      start(item){
+      start(item) {
         this.loadingMessage = '正在启动主机'
         this.loading = true
         item.select = false
@@ -721,7 +734,7 @@
           }
         })
       },
-      bindIP(){
+      bindIP() {
         if (this.checkSelect()) {
           if (this.currentHost[0].publicip) {
             this.$Message.warning('啊哦!已绑定主机无法再次绑定!')
@@ -740,7 +753,7 @@
           }
         }
       },
-      bind(){
+      bind() {
         this.showModal.bindIP = false
         this.loadingMessage = '正在绑定公网IP'
         this.loading = true
@@ -757,7 +770,7 @@
             }
           })
       },
-      unbind(){
+      unbind() {
         if (this.checkSelect()) {
           var url = `network/disableStaticNat.do?ipId=${this.currentHost[0].belongnetworkid.split('#')[0]}&computerId=${this.currentHost[0].computerid}`
           this.loadingMessage = '正在解绑公网IP'
@@ -772,11 +785,11 @@
           })
         }
       },
-      gotoNew(){
+      gotoNew() {
         this.$store.commit('setSelect', 'new')
-        this.$router.push('new')
+        this.$router.push('price')
       },
-      hideEvent(name){
+      hideEvent(name) {
         switch (name) {
           case 'rename':
             if (this.checkSelect()) {
@@ -829,7 +842,7 @@
             break
         }
       },
-      checkSelect(){
+      checkSelect() {
         switch (this.status) {
           case '开启':
             this.currentHost = this.openHost.filter(item => {
@@ -858,7 +871,7 @@
         }
         return true
       },
-      backup(){
+      backup() {
         this.showModal.backup = false
         this.loadingMessage = '正在备份主机'
         this.loading = true
@@ -870,7 +883,7 @@
           }
         })
       },
-      rename(){
+      rename() {
         this.showModal.rename = false
         this.loadingMessage = '正在修改主机名'
         this.loading = true
@@ -885,7 +898,7 @@
           }
         })
       },
-      mirror(){
+      mirror() {
         this.showModal.mirror = false
         this.loadingMessage = '正在创建主机镜像'
         this.loading = true
@@ -900,11 +913,11 @@
           }
         })
       },
-      toMirror(){
+      toMirror() {
         this.$store.commit('setSelect', 'mirror')
         this.$router.push('mirror')
       },
-      del(){
+      del() {
         if (this.checkSelect()) {
           if (this.currentHost[0].caseType != 3) {
             this.$Message.warning('只能删除实时计费主机')
@@ -922,10 +935,10 @@
             })
         }
       },
-      upgrade(){
+      upgrade() {
 
       },
-      reboot(){
+      reboot() {
         if (this.checkSelect()) {
           this.loadingMessage = '正在重启主机'
           this.loading = true
@@ -942,23 +955,23 @@
       },
       renewal(){
       },
-      ok(){
+      ok() {
 
       },
-      cancel(){
+      cancel() {
 
       },
-      push(type){
+      push(type) {
         sessionStorage.setItem('authType', type)
         this.$router.push('/usercenter')
       }
     },
     watch: {
-      renewalType(type){
+      renewalType(type) {
         this.renewalTime = ''
         this.timeOptions.renewalTime = this.timeOptions[type]
       },
-      renewalTime(time){
+      renewalTime(time) {
         if (time == '') {
           this.cost = '--'
         } else {
@@ -980,7 +993,7 @@
         deep: true
       }
     },
-    beforeRouteLeave (to, from, next) {
+    beforeRouteLeave(to, from, next) {
       // 导航离开该组件的对应路由时调用
       clearInterval(this.intervalInstance)// 可以访问组件实例 `this`
       next()

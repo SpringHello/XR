@@ -29,33 +29,33 @@
     </div>
     <Modal
       scrollable=false
-      v-model="showModal.createMirror"
-      title="创建镜像"
-      @on-ok="ok">
-      <Form :model="formItem" :label-width="80">
-        <FormItem label="主机">
-          <Select v-model="formItem.vmInfo" style="width:200px">
-            <Option v-for="item in hostName" :value="`${item.rootdiskid}#${item.zoneid}`"
-                    :key="item.computerid">
-              {{item.computername}}
-            </Option>
-          </Select>
-        </FormItem>
-        <FormItem label="镜像名">
-          <Input v-model="formItem.mirrorName" placeholder="请输入" style="width: 300px"></Input>
-        </FormItem>
-        <FormItem label="镜像描述">
-          <Input v-model="formItem.mirrorDescription" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
-                 placeholder="请输入..."></Input>
-        </FormItem>
-      </Form>
-      <div slot="footer">
-        <Button type="ghost" @click="cancel">取消</Button>
-        <Button type="primary"
-                :disabled="formItem.vmInfo==''||formItem.mirrorName==''||formItem.mirrorDescription==''"
-                @click="ok">确定
-        </Button>
-      </div>
+    v-model="showModal.createMirror"
+    title="创建镜像"
+    @on-ok="ok">
+    <Form :model="formItem" :label-width="80">
+      <FormItem label="主机">
+        <Select v-model="formItem.vmInfo" style="width:200px">
+          <Option v-for="item in hostName" :value="`${item.rootdiskid}#${item.zoneid}`"
+                  :key="item.computerid">
+            {{item.computername}}
+          </Option>
+        </Select>
+      </FormItem>
+      <FormItem label="镜像名">
+        <Input v-model="formItem.mirrorName" placeholder="请输入" style="width: 300px"></Input>
+      </FormItem>
+      <FormItem label="镜像描述">
+        <Input v-model="formItem.mirrorDescription" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
+               placeholder="请输入..."></Input>
+      </FormItem>
+    </Form>
+    <div slot="footer">
+      <Button type="ghost" @click="cancel">取消</Button>
+      <Button type="primary"
+              :disabled="formItem.vmInfo==''||formItem.mirrorName==''||formItem.mirrorDescription==''"
+              @click="ok">确定
+      </Button>
+    </div>
     </Modal>
   </div>
 </template>
@@ -84,7 +84,12 @@
             align: 'center',
             width: 240,
             render: (h, params) => {
-              return h('Tooltip', {props: {content: params.row.templatename, placement: 'top'}},
+              return h('Tooltip', {
+                props: {
+                  content: params.row.templatename,
+                  placement: 'top'
+                }
+              },
                 params.row.templatename
               )
             }
@@ -95,7 +100,12 @@
             width: 240,
             ellipsis: true,
             render: (h, params) => {
-              return h('Tooltip', {props: {content: params.row.templatedescript, placement: 'top'}},
+              return h('Tooltip', {
+                props: {
+                  content: params.row.templatedescript,
+                  placement: 'top'
+                }
+              },
                 params.row.templatedescript
               )
             }
@@ -105,7 +115,12 @@
             align: 'center',
             width: 240,
             render: (h, params) => {
-              return h('Tooltip', {props: {content: params.row.ostypename, placement: 'top'}},
+              return h('Tooltip', {
+                props: {
+                  content: params.row.ostypename,
+                  placement: 'top'
+                }
+              },
                 params.row.ostypename
               )
             }
@@ -154,7 +169,12 @@
             align: 'center',
             width: 240,
             render: (h, params) => {
-              return h('Tooltip', {props: {content: params.row.templatename, placement: 'top'}},
+              return h('Tooltip', {
+                props: {
+                  content: params.row.templatename,
+                  placement: 'top'
+                }
+              },
                 params.row.templatename
               )
             }
@@ -165,7 +185,12 @@
             width: 240,
             ellipsis: true,
             render: (h, params) => {
-              return h('Tooltip', {props: {content: params.row.templatedescript, placement: 'top'}},
+              return h('Tooltip', {
+                props: {
+                  content: params.row.templatedescript,
+                  placement: 'top'
+                }
+              },
                 params.row.templatedescript
               )
             }
@@ -178,7 +203,12 @@
               if (params.row.status == 2) {
                 return '创建中'
               }
-              return h('Tooltip', {props: {content: params.row.ostypename, placement: 'top'}},
+              return h('Tooltip', {
+                props: {
+                  content: params.row.ostypename,
+                  placement: 'top'
+                }
+              },
                 params.row.ostypename
               )
             }
@@ -262,7 +292,7 @@
       this.inter()
     },
     methods: {
-      filter(value){
+      filter(value) {
         if (value != '全部') {
           this.systemData = this.originData.filter((item) => {
             return item.ostypename.toLowerCase().includes(value)
@@ -271,7 +301,7 @@
           this.systemData = this.originData
         }
       },
-      inter(){
+      inter() {
         this.intervalInstance = setInterval(() => {
           var url1 = `information/listTemplates.do?user=1&zoneid=${$store.state.zone.zoneid}`
           this.$http.get(url1).then(response => {
@@ -295,11 +325,11 @@
       selectionsChange(selections) {
         this.selections = selections
       },
-      selectChange(select){
+      selectChange(select) {
         console.log(select)
         this.select = select
       },
-      createHost(){
+      createHost() {
         if (this.selections == null) {
           this.$Message.warning('请选择一个镜像')
           return
@@ -312,7 +342,7 @@
         this.$store.commit('setSelect', 'new')
         this.$router.push({path: 'new'})
       },
-      createHostBySystem(){
+      createHostBySystem() {
         if (this.select == null) {
           this.$Message.warning('请选择一个镜像')
           return
@@ -326,7 +356,7 @@
         this.$store.commit('setSelect', 'new')
         this.$router.push({path: 'new'})
       },
-      deleteSelection(){
+      deleteSelection() {
         if (this.selections == null) {
           this.$Message.warning('请选择一个镜像')
           return
@@ -355,7 +385,7 @@
           }
         })
       },
-      ok () {
+      ok() {
         this.showModal.createMirror = false
         var url = `Snapshot/createTemplate.do?rootdiskid=${this.formItem.vmInfo.split('#')[0]}&name=${this.formItem.mirrorName}&discript=${this.formItem.mirrorDescription}&zoneid=${this.formItem.vmInfo.split('#')[1]}`
         this.$http.get(url).then(response => {
@@ -364,7 +394,7 @@
           }
         })
       },
-      cancel () {
+      cancel() {
         this.formItem.vmInfo = ''
         this.formItem.mirrorName = ''
         this.formItem.mirrorDescription = ''
