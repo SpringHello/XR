@@ -1,13 +1,13 @@
 <template>
   <div class="background">
     <Spin fix v-show="loading">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <Icon type="load-c" size=18   class="demo-spin-icon-load"></Icon>
       <div>{{loadingMessage}}</div>
     </Spin>
     <div class="wrapper">
       <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 备份</span>
       <Alert type="warning" show-icon style="margin-bottom:0px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
-        <router-link to="/usercenter">立即认证</router-link>
+        <router-link to="/ruicloud/usercenter">立即认证</router-link>
       </Alert>
       <div class="content">
         <div>
@@ -35,8 +35,8 @@
 </template>
 
 <script type="text/ecmascript-6">
-  export default{
-    data(){
+  export default {
+    data() {
       return {
         status: '主机',
         hostTable: [],
@@ -134,7 +134,7 @@
         diskColumns: []
       }
     },
-    created(){
+    created() {
       var url = `Snapshot/listVMSnapshotAll.do`
       this.$http.get(url).then(response => {
         if (response.status == 200 && response.data.status == 1) {
@@ -147,7 +147,7 @@
       })
     },
     methods: {
-      inter(){
+      inter() {
         var url = 'Snapshot/listVMSnapshotAll.do'
         this.intervalInstance = setInterval(() => {
           this.$http.get(url).then(response => {
@@ -166,7 +166,7 @@
           })
         }, 1000 * 5)
       },
-      recover(item){
+      recover(item) {
         item.status = 4
         item.progress = 0
         this.$http.get('Snapshot/revertToVMSnapshot.do?vmsnapshotid=' + item.snapshotid)
@@ -179,7 +179,7 @@
             }
           })
       },
-      del(item){
+      del(item) {
         item.status = 3
         var snapshotid = item.id
         this.$http.get('Snapshot/deleteVMSnapshot.do?vmsnapshotid=' + item.id).then(response => {
@@ -195,11 +195,11 @@
       }
     },
     computed: {
-      auth(){
+      auth() {
         return this.$store.state.personalAuth == 0 || this.$store.state.enterpriseAuth == 0
       }
     },
-    beforeRouteLeave (to, from, next) {
+    beforeRouteLeave(to, from, next) {
       // 导航离开该组件的对应路由时调用
       clearInterval(this.intervalInstance)// 可以访问组件实例 `this`
       next()

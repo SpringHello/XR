@@ -3,7 +3,7 @@ var phoneRegExp = /^(13|14|15|17|18|)[0-9]{9}$/
 var passwordLengthRegExp = /^\w{8,}$/
 var passwordRegExp = /(?:\d[a-zA-Z])|(?:[a-zA-Z]\d)/
 // var passwordRegExp = /ddd/;
-export default{
+export default {
   emailVail: (email) => {
     return emailRegExp.test(email) || phoneRegExp.test(email)
   },

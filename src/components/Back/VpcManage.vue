@@ -33,7 +33,7 @@
         </div>
         <Tabs type="card" :animated="false" class="subnet-content">
           <TabPane label="子网">
-            <Button type="primary" class="btn-add">添加子网</Button>
+            <Button type="primary" class="btn-add" @click="openAddNetwork">添加子网</Button>
             <div class="table-wrap" v-for="(item,index) in data.ipsList" :key="index">
               <ul>
                 <li>
@@ -53,11 +53,61 @@
           </TabPane>
           <TabPane label="网络拓扑">网络拓扑</TabPane>
           <TabPane label="VPC互通网关">
-            <Table :columns="columns2" :data="virtualnet"></Table>
+            <!--<Table :columns="columns2" :data="virtualnet"></Table>-->
           </TabPane>
         </Tabs>
       </div>
     </div>
+
+    <!-- 添加子网 modal -->
+    <Modal v-model="showModal.addNetwork" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">添加私有网络</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="newNetworkForm" :rules="newNetworkRuleValidate" ref="newNetworkValidate">
+          <FormItem label="子网名称" prop="networkName">
+            <Input v-model="newNetworkForm.networkName" placeholder="请输入vpc名称"></Input>
+          </FormItem>
+          <FormItem label="子网描述" prop="networkDesc">
+            <Input v-model="newNetworkForm.networkDesc" placeholder="请输入vpc名称"></Input>
+          </FormItem>
+          <FormItem label="应用防火墙" prop="firewall">
+            <Select v-model="newNetworkForm.firewall" placeholder="请选择">
+              <Option v-for="(item,index) in newNetworkForm.firewallOptions" :key="item.acllistid"
+                      :value="item.acllistid">
+                {{item.acllistname}}
+              </Option>
+            </Select>
+          </FormItem>
+          <Form-item label="网关">
+            <span v-if="data.cidr">{{data.cidr.split('.')[0]}}.{{data.cidr.split('.')[1]}}.</span>
+            <InputNumber :max="255" :min="0" v-model="newNetworkForm.gateway" size="small"
+                         style="width:55px;"></InputNumber>
+            .1
+          </Form-item>
+          <p style="font-size: 12px;color: rgba(153,153,153,0.65);">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button>取消</Button>
+        <Button type="primary" @click="handleNewNetworkSubmit">完成配置</Button>
+      </div>
+    </Modal>
+    <!--主机离开子网modal-->
+    <Modal v-model="showModal.leaveNetwork" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>离开网络</strong>
+          <p class="lh24">是否将确认将主机离开该网络</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.leaveNetwork = false">取消</Button>
+        <Button type="primary" @click="leaveNetwork_ok">确认离开</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -79,22 +129,50 @@
     },
     data() {
       return {
+        showModal: {
+          addNetwork: false,
+          leaveNetwork: false
+        },
+        newNetworkForm: {
+          networkName: '',
+          networkDesc: '',
+          firewall: '',
+          firewallOptions: [],
+          gateway: 0
+        },
+        // 新建子网验证规则
+        newNetworkRuleValidate: {
+          networkName: [
+            {required: true, message: '请输入子网名称', trigger: 'blur'}
+          ],
+          networkDesc: [
+            {required: true, message: '请输入子网描述', trigger: 'blur'}
+          ],
+          firewall: [
+            {required: true, message: '请选择应用防火墙', trigger: 'change'}
+          ]
+        },
+        leaveForm: {
+          networkid: '',
+          vmId: ''
+        },
         vmColumns: [
           {
-            title: '主机Id',
-            key: 'id'
-          },
-          {
             title: '名称',
-            key: 'name'
+            key: 'computername'
           },
           {
             title: '状态',
-            key: 'status'
+            key: 'status',
+            render: (h, params) => {
+              var status = params.row.computerstate == 1 ? '开启' : '关机'
+              return h('span', {}, status)
+            }
           },
           {
             title: 'Ip地址',
-            key: 'address'
+            align: 'center',
+            key: 'privateip'
           },
           {
             title: '操作',
@@ -104,16 +182,13 @@
             render: (h, params) => {
               return h('div', [
                 h('span', {
-                  props: {
-                    type: 'primary',
-                    size: 'small'
-                  },
                   style: {
-                    color: '#2A99F2'
+                    color: '#2A99F2',
+                    cursor: 'pointer'
                   },
                   on: {
                     click: () => {
-                      this.show(params.index)
+                      this.leaveNetwork(params.row.networkid, params.row.computerid)
                     }
                   }
                 }, '离开网络')
@@ -130,7 +205,49 @@
           item._show = false
         })
         this.data = response.data.result
-        console.log(this.data)
+      },
+      // 弹出添加子网modal
+      openAddNetwork(){
+        this.showModal.addNetwork = true
+        axios.get(`network/listAclList.do?vpcid=${this.data.vpcid}`).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.newNetworkForm.firewallOptions = response.data.result
+          }
+        })
+        axios.get(`network/listNetworkServiceOffer.do?zoneId=${this.$store.state.zone.zoneid}`).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.newNetworkForm.firewallOptions = response.data.result
+          }
+        })
+      },
+      // 提交添加子网
+      handleNewNetworkSubmit(){
+        this.$refs.newNetworkValidate.validate((valid) => {
+          if (valid) {
+            var url = `network/createNetwork.do?name=${this.newNetworkForm.networkName}&displayText=${this.newNetworkForm.networkDesc}&aclListId=${this.newNetworkForm.firewall}&gateway=`
+            axios.get(url).then(response => {
+
+            })
+          }
+        })
+      },
+      // 弹出离开网络modal
+      leaveNetwork(networkid, computerid){
+        this.leaveForm.vmId = computerid
+        this.leaveForm.networkid = networkid
+        this.showModal.leaveNetwork = true
+      },
+      // 发送离开网络ajax
+      leaveNetwork_ok(){
+        var url = `network/removeVMToNetwork.do?networkid=${this.leaveForm.networkid}&vmid=${this.leaveForm.vmId}`
+        this.showModal.leaveNetwork = false
+        axios.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+
+          } else if (response.status == 200 && response.data.status == 2) {
+            this.$error('error', response.data.message)
+          }
+        })
       },
       toggle: function (item) {
         item._show = !item._show

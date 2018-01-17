@@ -29,6 +29,15 @@ module.exports = {
     'space-before-function-paren': 0,
     'space-before-blocks': 0,
     // 关闭不可扩展js内置对象
-    'no-extend-native': 0
+    'no-extend-native': 0,
+    'indent': 0,
+    'spaced-comment': 0,
+    'comma-dangle': 0,
+    'curly': 0,
+    'quotes': 0,
+    'no-mixed-operators': 0,
+    'no-multiple-empty-lines': 0,
+    'space-unary-ops': 0,
+    'camelcase': 0
   }
 }

@@ -21,7 +21,8 @@
       <div class="billing">
         <h3>计费方式选择</h3>
         <div class="config-button">
-          <button :class="{select:timeType=='month'||timeType=='year'}" @click="timeType='month'" style="margin-right: 8px">包年包月<i>惠</i>
+          <button :class="{select:timeType=='month'||timeType=='year'}" @click="timeType='month'"
+                  style="margin-right: 8px">包年包月<i>惠</i>
           </button>
           <button :class="{select:timeType=='current'}" @click="timeType='current';time=1">实时计费</button>
         </div>
@@ -64,9 +65,13 @@
           </div>
           <div class="config-button">
             <span>镜像</span>
-            <button :class="{select:mirror=='imageApplication'}" @click="mirror='imageApplication',mirrorType='1'">镜像+应用</button>
+            <button :class="{select:mirror=='imageApplication'}" @click="mirror='imageApplication',mirrorType='1'">
+              镜像+应用
+            </button>
             <button :class="{select:mirror=='UHub'}" @click="mirror='UHub',mirrorType='Windows'">公共镜像</button>
-            <button :class="{select:mirror=='customImage',disabled:userInfo==null}" @click="mirror='customImage',mirrorType=''" :disabled="userInfo==null">自定义镜像</button>
+            <button :class="{select:mirror=='customImage',disabled:userInfo==null}"
+                    @click="mirror='customImage',mirrorType=''" :disabled="userInfo==null">自定义镜像
+            </button>
           </div>
           <div class="config-button" style="margin-left: 103px;" v-if="mirror=='UHub'">
             <button :class="{select:mirrorType=='Windows'}" @click="mirrorType='Windows'">Windows</button>
@@ -113,7 +118,8 @@
           </div>
           <div style="margin-top: 20px">
             <span>价格</span>
-            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;" v-if="timeType=='current'">{{ customHostCost}}元/小时</span>
+            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"
+                  v-if="timeType=='current'">{{ customHostCost}}元/小时</span>
             <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;" v-else>{{ customHostCost}}元</span>
           </div>
         </div>
@@ -124,9 +130,11 @@
             <span>虚拟私有云</span>
             <Select @on-change="reset" v-model="private" style="width:250px;margin-left: 20px">
               <Option v-for="item in privateList" :value="`${item.ipsegmentid}#${item.ipsegment}`"
-                      :key="item.ipsegmentid">  {{item.name}} 范围{{item.ipsegment }}</Option>
+                      :key="item.ipsegmentid"> {{item.name}} 范围{{item.ipsegment }}
+              </Option>
             </Select>
-            <span  v-show="specifyInfo=='指定IP'" style="border: 1px solid #E9E9E9;font-size: 12px;padding: 4px 25px 8px 25px;margin-left: 10px;color: #666666;">自动分配IP地址</span>
+            <span v-show="specifyInfo=='指定IP'"
+                  style="border: 1px solid #E9E9E9;font-size: 12px;padding: 4px 25px 8px 25px;margin-left: 10px;color: #666666;">自动分配IP地址</span>
             <Poptip v-if='private!=""' placement="top" width="250" v-model="visible"
                     style="vertical-align: middle;display: inline-block">
               <span v-show="specifyInfo!='指定IP'" style="margin-left: 10px">指定IP:</span>
@@ -136,7 +144,9 @@
                 <div>
                   <span style="vertical-align: middle">{{private.split('#')[1].substr(0,private.split('#')[1].lastIndexOf('.'))}}.</span>
                   <Input-number :max="255" :min="1" size="small" v-model="specifyIP"></Input-number>
-                  <button @click="specifyClick" style="padding:0px 12px;background-color: #2A99F2;cursor: pointer;color: #ffffff;">确定</button>
+                  <button @click="specifyClick"
+                          style="padding:0px 12px;background-color: #2A99F2;cursor: pointer;color: #ffffff;">确定
+                  </button>
                 </div>
               </div>
             </Poptip>
@@ -175,15 +185,17 @@
           </div>
           <div>
             <span style="margin-right: 68px">价格</span>
-            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;" v-if="timeType=='current'">{{ ipPrice}}元/小时</span>
+            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"
+                  v-if="timeType=='current'">{{ ipPrice}}元/小时</span>
             <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;" v-else>{{ ipPrice}}元</span>
           </div>
         </div>
         <!--硬盘-->
-        <div class="disk" >
+        <div class="disk">
           <h3 v-if="diskList.length==0">云硬盘</h3>
           <div v-for="(item,index) in diskList" class="diskItem">
-            <h3>云硬盘<span style="font-size:14px;color: #2A99F2;font-weight: normal;float: right;cursor: pointer" @click="delDisk(index)">删除</span></h3>
+            <h3>云硬盘<span style="font-size:14px;color: #2A99F2;font-weight: normal;float: right;cursor: pointer"
+                         @click="delDisk(index)">删除</span></h3>
             <div class="config-button">
               <span>类型</span>
               <Poptip trigger="hover" content="全SSD架构，超高IOPS，适用于核心数据库与对I/O要求较高的业务。" placement="top-start">
@@ -208,16 +220,21 @@
                 @change="changeDiskSize(index,item.diskSize)"
                 style="margin-right:30px;vertical-align: middle;width:66%">
               </i-slider>
-              <InputNumber :max="500" :min="20" v-model="item.diskSize" size="large" :step=10 @on-blur="changeDiskSize(index,item.diskSize)" @on-focus="changeDiskSize(index,item.diskSize)"></InputNumber>
+              <InputNumber :max="500" :min="20" v-model="item.diskSize" size="large" :step=10
+                           @on-blur="changeDiskSize(index,item.diskSize)"
+                           @on-focus="changeDiskSize(index,item.diskSize)"></InputNumber>
             </div>
           </div>
           <div :class="{addDisk:diskList.length!=0}" style="display: flex">
-            <p v-if="diskLimit!=0" style="cursor: pointer;color: #2A99F2" @click="addDisk">添加数据盘</p><p v-if="diskLimit==0">添加数据盘</p><span class="s1" v-show="userInfo!=null">您还可以添加<span class="s1" style="color:#F85E1D;margin-left: 0">{{ diskLimit}}块</span>数据盘</span>
+            <p v-if="diskLimit!=0" style="cursor: pointer;color: #2A99F2" @click="addDisk">添加数据盘</p>
+            <p v-if="diskLimit==0">添加数据盘</p><span class="s1" v-show="userInfo!=null">您还可以添加<span class="s1"
+                                                                                                 style="color:#F85E1D;margin-left: 0">{{ diskLimit}}块</span>数据盘</span>
           </div>
           <div v-if="diskList.length!=0">
             <span style="margin-right: 68px">价格</span>
-            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;" v-if="timeType=='current'">{{ customDiskPrice}}元/小时</span>
-            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"v-else>{{ customDiskPrice}}元</span>
+            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"
+                  v-if="timeType=='current'">{{ customDiskPrice}}元/小时</span>
+            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;" v-else>{{ customDiskPrice}}元</span>
           </div>
         </div>
       </div>
@@ -226,16 +243,22 @@
         <h3>主机规格选择</h3>
         <div class="config-button">
           <span>镜像</span>
-          <button :class="{select:mirror=='imageApplication'}" @click="mirror='imageApplication',mirrorType='1'">镜像+应用</button>
+          <button :class="{select:mirror=='imageApplication'}" @click="mirror='imageApplication',mirrorType='1'">镜像+应用
+          </button>
           <button :class="{select:mirror=='UHub'}" @click="mirror='UHub',mirrorType='Windows'">公共镜像</button>
-          <button :class="{select:mirror=='customImage',disabled:userInfo==null}" @click="mirror='customImage',mirrorType=''" :disabled="userInfo==null">自定义镜像</button>
+          <button :class="{select:mirror=='customImage',disabled:userInfo==null}"
+                  @click="mirror='customImage',mirrorType=''" :disabled="userInfo==null">自定义镜像
+          </button>
         </div>
-        <div class="config-button" style="margin-left: 103px;" v-if="mirror=='UHub'">
-          <button :class="{select:mirrorType=='Windows'}" @click="mirrorType='Windows'">Windows</button>
-          <button :class="{select:mirrorType=='Centos'}" @click="mirrorType='Centos'">Centos</button>
-          <button :class="{select:mirrorType=='Ubuntu'}" @click="mirrorType='Ubuntu'">Ubuntu</button>
-          <!-- <button :class="{select:mirrorType=='debian'}" @click="mirrorType='debian'">debian</button> -->
+        <div class="config-button public-image" style="margin-left: 103px;">
+          <div v-for="(item,index) in system" :key="index" class="button-col">
+            <button v-for="(content,index) in item" :key="index" @click="publicImage(content)"
+                    :class="{select:mirrorbtn}">{{content.templatedescript}}
+            </button>
+            <!-- {{content.me}} -->
+          </div>
         </div>
+
         <div class="configMirror-button" v-if="mirror=='imageApplication'">
           <button v-for="item in mirrorConfigList" :class="{select:item.value==mirrorType}"
                   @click="mirrorType=item.value">
@@ -289,7 +312,7 @@
         </div>
         <div v-if="hostIfo=='defaultSetting'">
           <span>安全组</span>
-          <Select  v-model="safetyGroup" style="width:216px;margin-left: 16px">
+          <Select v-model="safetyGroup" style="width:216px;margin-left: 16px">
             <Option v-for="item in safeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
           </Select>
         </div>
@@ -305,18 +328,24 @@
       <!--计价详情-->
       <div class="settleAccounts" v-if="pitchOn=='quick'">
         <span>查看计价详情</span>
-        <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">{{ quickTotalCost }}元</span></p>
+        <p style="float: right; color: #333333;">总计费用：<span
+          style="color:#F85E1D;font-size: 24px ">{{ quickTotalCost }}元</span></p>
         <p style="margin-top: 10px">已省：<span style="color:#F85E1D;">{{ quickTotalCoupon }}元</span></p>
       </div>
       <div class="settleAccounts" v-else>
         <span>查看计价详情</span>
-        <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">{{ customTotalCost }}元</span></p>
+        <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">{{ customTotalCost }}元</span>
+        </p>
         <p style="margin-top: 10px">已省：<span style="color:#F85E1D;">{{ customTotalCoupon }}元</span></p>
       </div>
       <!--购买按钮-->
       <div class="buy-button">
-        <button @click="addBudgetList" :class="{select:addButton,disabled:hostDisabled}" :disabled="hostDisabled">加入预算清单</button>
-        <button style="margin-right: 0" :class="{select:buyButton,disabled:hostDisabled}" @click="buyImmediately" :disabled="hostDisabled">立即购买</button>
+        <button @click="addBudgetList" :class="{select:addButton,disabled:hostDisabled}" :disabled="hostDisabled">
+          加入预算清单
+        </button>
+        <button style="margin-right: 0" :class="{select:buyButton,disabled:hostDisabled}" @click="buyImmediately"
+                :disabled="hostDisabled">立即购买
+        </button>
       </div>
     </div>
     <!--登录弹框-->
@@ -342,7 +371,8 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc"
+                 @click="imgSrc=`http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </div>
         </form>
       </div>
@@ -358,19 +388,19 @@
         </div>
       </div>
     </Modal>
-<!--    <Modal
-      class="my-model"
-      :class="{notOk:this.$store.state.authInfo.authtype==1&&this.$store.state.authInfo.checkstatus==0}"
-      v-model="modal4"
-      title="配额不足"
-      :ok-text="this.$store.state.authInfo.authtype==1&&this.$store.state.authInfo.checkstatus==0?确定:企业认证"
-      cancel-text="取消"
-      @on-ok="toEnterprise">
-      <p style="line-height:24px;font-size:14px;padding: 0 20px;">
-        <Icon type="information-circled"
-              style="color:#f90; font-size:24px;margin-right:10px;vertical-align:middle"></Icon>
-        {{this.infoMessage}}<a href="#/workorder">点击提交工单</a></p>
-    </Modal>-->
+    <!--    <Modal
+          class="my-model"
+          :class="{notOk:this.$store.state.authInfo.authtype==1&&this.$store.state.authInfo.checkstatus==0}"
+          v-model="modal4"
+          title="配额不足"
+          :ok-text="this.$store.state.authInfo.authtype==1&&this.$store.state.authInfo.checkstatus==0?确定:企业认证"
+          cancel-text="取消"
+          @on-ok="toEnterprise">
+          <p style="line-height:24px;font-size:14px;padding: 0 20px;">
+            <Icon type="information-circled"
+                  style="color:#f90; font-size:24px;margin-right:10px;vertical-align:middle"></Icon>
+            {{this.infoMessage}}<a href="#/workorder">点击提交工单</a></p>
+        </Modal>-->
   </div>
 </template>
 
@@ -394,7 +424,8 @@
     data () {
       return {
         // 产品类型
-        osId1:'',
+        osId: '',
+        system: '',
         productList: [
           {
             label: '云主机',
@@ -589,11 +620,16 @@
         this.userInfo = $store.state.userInfo
       }
       this.queryQuickHost()
+      //获取公共镜像
       var url11 = `information/listTemplates.do?user=0&zoneid=${this.zone} `
-        this.$http.get(url11).then(response => {
-          var system=response.data.result
-          this.osId=system.window[0].systemtemplateid
-        })
+      this.$http.get(url11).then(response => {
+        var system = response.data.result
+        this.osId = system.window[0].systemtemplateid
+        this.system = system
+      })
+    },
+    mounted(){
+
     },
     methods: {
       /* 切换到自定义 */
@@ -675,6 +711,10 @@
         }
       },
       /* 立即购买 */
+      publicImage(item){
+        this.osId = item.systemtemplateid;
+        console.log(this.osId)
+      },
       buyImmediately () {
         if (this.userInfo == null) {
           this.buyButton = true
@@ -804,7 +844,7 @@
           }
         }
         var renewal = this.autoRenewal ? 1 : 0
-        var url = `information/deployVirtualMachine.do?name=${this.hostName}&password=${this.hostPassword}&templateId=${this.osId}&size=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&bandWidth=${this.publicIP}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=1&isAutoRenew=${renewal}&disktype=${params.diskType}&networkId=no`
+        var url = `information/deployVirtualMachine.do?name=${this.hostName}&password=${this.hostPassword}&templateId=${this.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&bandWidth=${this.publicIP}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=1&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=no`
         this.$http.get(url).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
@@ -955,7 +995,7 @@
       },
       /* 添加网卡 */
       addNetWorkCard () {
-        var parms = { value: 1 }
+        var parms = {value: 1}
         this.netWorkCards.push(parms)
         if (this.netWorkCardLimit > 0) {
           this.netWorkCardLimit--
@@ -1361,6 +1401,7 @@
       }
     }
   }
+
   .content {
     background: #FFFFFF;
     padding: 40px 40px 40px 40px;
@@ -1474,7 +1515,7 @@
             line-height: 25px;
           }
         }
-        .s2{
+        .s2 {
           font-family: MicrosoftYaHei;
           font-size: 12px;
           color: #333333;
@@ -1500,7 +1541,7 @@
           background: #2A99F2;
           color: white;
         }
-        &.disabled{
+        &.disabled {
           cursor: not-allowed;
         }
         i {
@@ -1516,6 +1557,14 @@
           font-size: 12px;
           bottom: 7px;
           left: 10px;
+        }
+      }
+    }
+    .public-image {
+      .button-col {
+        button {
+          width: 200px;
+          margin-bottom: 10px;
         }
       }
     }
@@ -1548,7 +1597,7 @@
     .disk {
       border-bottom: 1px solid #E9E9E9;
       padding-bottom: 20px;
-      .diskItem{
+      .diskItem {
         & > div {
           margin-top: 20px;
           & > span {
@@ -1560,19 +1609,19 @@
           }
         }
       }
-      .addDisk{
+      .addDisk {
         padding-left: 102px;
       }
       & > div {
         margin-top: 20px;
-        & > span{
+        & > span {
           font-family: MicrosoftYaHei;
           font-size: 14px;
           color: #333333;
           line-height: 29px;
           margin-right: 52px;
         }
-        p{
+        p {
           font-family: MicrosoftYaHei;
           font-size: 12px;
           color: #999999;
@@ -1635,7 +1684,7 @@
         cursor: pointer;
         margin-right: 10px;
         border-radius: 10px;
-        &.disabled{
+        &.disabled {
           cursor: not-allowed;
         }
         &.select {
@@ -1645,6 +1694,7 @@
       }
     }
   }
+
   .modalBody {
     height: 55%;
     form {
@@ -1719,6 +1769,7 @@
       outline: none;
     }
   }
+
   .modalFooter {
     padding-top: 10px;
     height: 32%;
@@ -1777,4 +1828,10 @@
       letter-spacing: 0.83px;
     }
   }
+
+  // #syetem{
+  //   height: 100px;
+  //   width: 100%;
+  //   background: red;
+  // }
 </style>
