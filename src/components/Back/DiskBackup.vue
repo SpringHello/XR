@@ -9,7 +9,7 @@
           <button id="refresh_button">刷新</button>
         </div>
         <Alert>
-          云硬盘备份能对磁盘（系统盘或数据盘）某个时刻的数据进行备份和回滚，云硬盘备份为全量快照，提升了云硬盘的安全性，同时增强了云硬盘备份的易用性。
+          云硬盘备份能对磁盘（系统盘或数据盘）某个时刻的数据进行备份和回滚，云硬盘备份为全量备份，提升了云硬盘的安全性，同时增强了云硬盘备份的易用性。
         </Alert>
         <Tabs type="card" :animated="false">
           <!-- 云硬盘备份列表页面 -->
@@ -73,7 +73,7 @@
           <span v-if="diskForm.timeType=='current'">/小时</span>
           <p v-if="coupon>0">已优惠：<span>（￥{{ coupon }}）</span></p>
         </div>
-        <Button type="ghost" @click="showModal.newDisk = false">取消</Button>
+        <Button type="ghost" @click="showModal.backupsToDisk = false">取消</Button>
         <Button type="primary" @click="_checkNewForm">确定新建</Button>
       </div>
     </Modal>
@@ -119,7 +119,7 @@
             </Select>
           </Form-item>
           <div>
-            <p style="font-family: MicrosoftYaHei;font-size: 12px;color: #999999;line-height: 15px">提示：云硬盘数据服务为每块磁盘提供<span style="color: #2A99F2;">8</span>个快照额度，当某块磁盘的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点。您当前总共可设置3个备份策略。</p>
+            <p style="font-family: MicrosoftYaHei;font-size: 12px;color: #999999;line-height: 15px">提示：云硬盘数据服务为每块磁盘提供<span style="color: #2A99F2;">8</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。您当前总共可设置3个备份策略。</p>
           </div>
         </Form>
         <div style="clear: both"></div>
@@ -145,7 +145,7 @@
             align: 'center'
           },
           {
-            title: '快照名称',
+            title: '备份名称',
             align: 'center',
             width: 180,
             render: (h, params) => {
@@ -173,7 +173,7 @@
             width: 130
           },
           {
-            title: '快照间隔',
+            title: '备份间隔',
             align: 'center',
             width: 130
           },
@@ -260,27 +260,4 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-  .quantity {
-    width: 110px;
-    display: flex;
-    p {
-      width: 28px;
-      height: 28px;
-      display: flex;
-      justify-content: center;
-      font-size: 14px;
-      align-items: center;
-      cursor: pointer;
-      border: 1px solid #D9D9D9;
-      border-radius: 4px;
-      i {
-        display: inline-block;
-        width: 9px;
-        height: 9px;
-        border-right: 1px solid #999999;
-        border-bottom: 1px solid #999999;
-        transform: translateX(3px) rotate(498deg);
-      }
-    }
-  }
 </style>

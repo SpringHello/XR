@@ -185,7 +185,7 @@
     <Modal v-model="showModal.error" :scrollable="true" :closable="false" :width="350">
       <p class="modal-content-s">
         <Icon type="close-circled" class="orange f24 mr10"></Icon>
-        错误弹出框错误弹出框错误弹出框错误弹出框
+        {{ errorMessage}}
       </p>
       <p slot="footer" class="modal-footer-s">
         <Button type="primary" @click="showModal.error = false">确定</Button>
@@ -250,7 +250,7 @@
           备份名称：</p>
         <Input v-model="diskBackupName" placeholder="请输入..." style="width: 240px;margin-bottom: 20px"></Input>
         <p style="font-family: MicrosoftYaHei;font-size: 12px;line-height:20px;color: #999999;">提示：云硬盘数据服务为每块磁盘提供<span
-          style="color:#2A99F2">8</span>个快照额度，当某块磁盘的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点。</p>
+          style="color:#2A99F2">8</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。</p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.createDiskBackup = false">取消</Button>
@@ -279,25 +279,34 @@
           {
             title: '硬盘名称',
             align: 'center',
-            width: 140,
+            width: 180,
             render: (h, params) => {
-              return h('span', {
-                style: {
-                  color: '#2A99F2',
-                  cursor: 'pointer'
-                },
-                on: {
-                  click: () => {
-                    this.$router.push('DiskParticulars')
+              if (params.row.status === 1) {
+                return h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      this.$router.push({
+                        path: 'DiskParticulars',
+                        query: {
+                          data: params.row
+                        }
+                      })
+                    }
                   }
-                }
-              }, params.row.diskname)
+                }, params.row.diskname)
+              } else {
+                return h('span', {}, params.row.diskname)
+              }
             }
           },
           {
             title: '硬盘类型',
             align: 'center',
-            width: 140,
+            width: 130,
             key: 'diskoffer',
             render: (h, params) => {
               return h('span', params.row.diskoffer == 'ssd' ? '超高性能型' : params.row.diskoffer == 'sas' ? '性能型' : '存储型')
@@ -306,7 +315,7 @@
           {
             title: '容量',
             align: 'center',
-            width: 140,
+            width: 120,
             key: 'disksize',
             render: (h, params) => {
               return h('span', params.row.disksize + 'GB')
@@ -315,7 +324,7 @@
           {
             title: '状态',
             key: 'status',
-            width: 140,
+            width: 180,
             render: (h, params) => {
               const row = params.row
               const text = row.status === 0 ? '欠费' : (row.status === 1 && row.mounton == '' && row.mountonname == '') ? '可挂载' : (row.status === 1 && row.mounton != '' && row.mountonname != '') ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '异常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '卸载中' : row.status === 5 ? '挂载中' : ''
@@ -334,7 +343,7 @@
           {
             title: '计费类型',
             align: 'center',
-            width: 140,
+            width: 130,
             key: 'caseType',
             render: (h, params) => {
               return h('span', params.row.caseType == 1 ? '包年' : params.row.caseType == 2 ? '包月' : '实时计费')
@@ -442,7 +451,7 @@
           // 创建磁盘备份模态框
           createDiskBackup: false,
           // 错误提示框
-          error: true
+          error: false
           /*
 
            mountDisk: false,
@@ -819,27 +828,4 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-  .quantity {
-    width: 110px;
-    display: flex;
-    p {
-      width: 28px;
-      height: 28px;
-      display: flex;
-      justify-content: center;
-      font-size: 14px;
-      align-items: center;
-      cursor: pointer;
-      border: 1px solid #D9D9D9;
-      border-radius: 4px;
-      i {
-        display: inline-block;
-        width: 9px;
-        height: 9px;
-        border-right: 1px solid #999999;
-        border-bottom: 1px solid #999999;
-        transform: translateX(3px) rotate(498deg);
-      }
-    }
-  }
 </style>
