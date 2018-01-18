@@ -635,7 +635,6 @@
                 }
               })
           }
-
         })
 
       var url = `alarm/getVmAlarmByHour.do?vmname=${this.$route.query.instancename}&type=core`
@@ -719,7 +718,6 @@
           console.log(polar)
           this.ipPolar = polar
         }
-
       },
       queryData(type) {
         if (type == 'cpu') {
