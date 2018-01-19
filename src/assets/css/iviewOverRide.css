@@ -98,7 +98,10 @@
   padding-top: 20px;
   border-top: solid 1px #D8D8D8;
 }
-
+/* 时间选择器和reset冲突 */
+.ivu-time-picker-cells-list ul{
+  font-size: 12px;
+}
 /* 公共样式库 */
 .btn-cancel{
   background: transparent;

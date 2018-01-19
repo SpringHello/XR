@@ -38,15 +38,15 @@
         <div class="diskManage" v-if="monitor">
           <div class="utilization">
             <span>磁盘利用率</span>
-            <Progress :percent="diskUtilization" status="active"
+            <Progress :percent="diskUtilization"
                       style="width: 50%;line-height: 12px;margin-left: 10px"></Progress>
-            <span style="color: #2A99F2">扩容</span>
+            <span style="color: #2A99F2;cursor: pointer" @click="dilatationDisk">扩容</span>
           </div>
         </div>
         <!-- 磁盘备份管理 -->
         <div class="backupsManage" v-if="!monitor">
           <div class="operator-bar" style="margin: 0">
-            <Button type="primary" @click="createBackupStrategy">创建备份策略</Button>
+            <Button type="primary" @click="createDiskBackup">创建备份</Button>
             <Button type="primary">删除备份</Button>
           </div>
           <div style="margin-top:10px">
@@ -106,58 +106,70 @@
         <Button type="primary" @click="_checkNewForm">确定新建</Button>
       </div>
     </Modal>
-    <!-- 创建硬盘备份策略模态框 -->
-    <Modal v-model="showModal.backupsStrategy" width="550" :scrollable="true">
+    <!-- 创建磁盘备份模态框 -->
+    <Modal v-model="showModal.createDiskBackup" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">创建备份策略</span>
+        <span class="universal-modal-title">创建磁盘备份</span>
       </p>
       <div class="universal-modal-content-flex">
-        <Form :model="diskForm" :rules="newRuleValidate" ref="newDisk">
-          <Form-item label="自动备份策略名称" prop="diskName">
-            <Input v-model="diskForm.diskName" placeholder="请输入。。。"></Input>
-          </Form-item>
-          <Form-item label="自动备份保留个数" prop="timeType">
-            <Select v-model="diskForm.timeType" placeholder="请选择" @on-change="diskForm.timeValue=''">
-              <Option v-for="item in customTimeOptions.renewalType" :key="item.value" :value="item.value">
-                {{item.label}}
-              </Option>
-            </Select>
-          </Form-item>
-          <Form-item label="自动备份间隔" v-if="diskForm.timeType!='current'" prop="timeValue">
-            <Select v-model="diskForm.timeValue" placeholder="请选择">
-              <Option v-for="item in customTimeOptions[diskForm.timeType]" :value="item.value"
+        <Form :model="createBackupsForm" :rules="createBackupsRuleValidate" ref="createBackups">
+          <Form-item label="需要备份的磁盘" prop="disk">
+            <Select v-model="createBackupsForm.disk" placeholder="请选择">
+              <Option v-for="item in createBackupsForm.diskList" :value="item.value"
                       :label="item.label" :key="item.value">
                 {{item.label }}
               </Option>
             </Select>
           </Form-item>
-          <Form-item label="自动备份时间" v-if="diskForm.timeType!='current'" prop="timeValue">
-            <Select v-model="diskForm.timeValue" placeholder="请选择">
-              <Option v-for="item in customTimeOptions[diskForm.timeType]" :value="item.value"
-                      :label="item.label" :key="item.value">
-                {{item.label }}
-              </Option>
-            </Select>
+          <Form-item label="备份名称" prop="backupsName">
+            <Input v-model="createBackupsForm.backupsName" placeholder="请输入。。。"></Input>
           </Form-item>
-          <Form-item label="备份策略应用主机" v-if="diskForm.timeType!='current'" prop="timeValue">
-            <Select v-model="diskForm.timeValue" placeholder="请选择">
-              <Option v-for="item in customTimeOptions[diskForm.timeType]" :value="item.value"
-                      :label="item.label" :key="item.value">
-                {{item.label }}
-              </Option>
-            </Select>
-          </Form-item>
-          <div>
-            <p style="font-family: MicrosoftYaHei;font-size: 12px;color: #999999;line-height: 15px">
-              提示：云硬盘数据服务为每块磁盘提供<span style="color: #2A99F2;">8</span>个快照额度，当某块磁盘的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点。您当前总共可设置3个备份策略。
-            </p>
-          </div>
+          <p style="font-family: MicrosoftYaHei;font-size: 12px;line-height:20px;color: #999999;">
+            提示：云硬盘数据服务为每块磁盘提供<span
+            style="color:#2A99F2">8</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。</p>
         </Form>
-        <div style="clear: both"></div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="ghost" @click="showModal.newDisk = false">取消</Button>
-        <Button type="primary" @click="_checkNewForm">确定创建</Button>
+        <Button type="ghost" @click="showModal.createDiskBackup = false">取消</Button>
+        <Button type="primary"
+                @click="_checkCreateBackupsForm">确认创建
+        </Button>
+      </div>
+    </Modal>
+    <!-- 扩展磁盘模态框 -->
+    <Modal v-model="showModal.dilatationDisk" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">调整容量</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="dilatationForm">
+          <Form-item label="扩展后容量" style="width:100%;user-select: none">
+            <i-slider
+              v-model="dilatationForm.diskSize"
+              unit="G"
+              :min="dilatationForm.minDiskSize"
+              :max=1000
+              :step=10
+              :points="[250,500]"
+              style="width:300px;vertical-align: middle;">
+            </i-slider>
+            <InputNumber :max="1000" :min="dilatationForm.minDiskSize" v-model="dilatationForm.diskSize" :step=10
+                         :editable="false"
+                         style="margin-left: 20px"></InputNumber>
+            <span style="margin-left: 10px">GB</span>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <div style="float: left">
+          <span class="universal-middle">资费：</span>
+          <span class="universal-price"> ￥{{ diskSizeExpenses }}</span>
+          <span v-if="diskForm.timeType=='current'">/小时</span>
+        </div>
+        <Button type="ghost" @click="showModal.dilatationDisk = false">取消</Button>
+        <Button type="primary" :disabled="dilatationForm.minDiskSize==dilatationForm.diskSize"
+                @click="adjustDisk_ok">确认调整
+        </Button>
       </div>
     </Modal>
   </div>
@@ -165,6 +177,8 @@
 
 <script type="text/ecmascript-6">
   import {customTimeOptions} from '../../options'
+  import debounce from 'throttle-debounce/debounce'
+  import axios from 'axios'
   export default{
     data(){
       return {
@@ -260,8 +274,10 @@
         showModal: {
           // 以备份创建磁盘
           backupsToDisk: false,
-          // 创建磁盘备份策略
-          backupsStrategy: false
+          // 创建磁盘备份
+          createDiskBackup: false,
+          // 扩容磁盘
+          dilatationDisk: false
         },
         // 以备份创建磁盘表单
         diskForm: {
@@ -274,6 +290,7 @@
         },
         // 时间配置对象
         customTimeOptions,
+        // 新建磁盘表单验证
         newRuleValidate: {
           diskName: [
             {required: true, message: '请输入磁盘名称', trigger: 'blur'}
@@ -290,7 +307,42 @@
         // 新建磁盘优惠费用
         coupon: 0,
         // 购买磁盘数量
-        quantity: 1
+        quantity: 1,
+        // 新建备份表单
+        createBackupsForm: {
+          disk: '',
+          diskList: [
+            {
+              label: '云硬盘1',
+              value: '1'
+            }, {
+              label: '云硬盘2',
+              value: '2'
+            }, {
+              label: '云硬盘3',
+              value: '3'
+            }
+          ],
+          backupsName: ''
+        },
+        // 新建备份表单验证
+        createBackupsRuleValidate: {
+          disk: [
+            {required: true, message: '请选择需要备份的磁盘', trigger: 'change'}
+          ],
+          backupsName: [
+            {required: true, message: '请输入备份名称', trigger: 'blur'}
+          ]
+        },
+        // 磁盘扩容表单
+        dilatationForm: {
+          // 扩容后的磁盘大小
+          diskSize: 0,
+          // 扩容前的磁盘大小
+          minDiskSize: 0
+        },
+        // 磁盘扩容价格
+        diskSizeExpenses: ''
       }
     },
     created(){
@@ -305,6 +357,14 @@
           }
         })
       },
+      /* 验证新建备份 */
+      _checkCreateBackupsForm () {
+        this.$refs.createBackups.validate((valid) => {
+          if (valid) {
+            // 表单验证通过，调用创建备份方法
+          }
+        })
+      },
       /* 购买数量操作 */
       reduce () {
         this.quantity -= 1
@@ -316,13 +376,36 @@
             break
         }
       },
-      /* 创建备份策略 */
-      createBackupStrategy () {
-        this.showModal.backupsStrategy = true
-      },
       /* 以备份创建新磁盘 */
       createBackupsToDisk () {
         this.showModal.backupsToDisk = true
+      },
+      /* 创建磁盘备份 */
+      createDiskBackup () {
+        this.showModal.createDiskBackup = true
+      },
+      // 打开扩容模态框
+      dilatationDisk(){
+        this.dilatationForm.diskSize = this.diskInfo.disksize
+        this.dilatationForm.minDiskSize = this.dilatationForm.diskSize
+        this.showModal.dilatationDisk = true
+      },
+      // 磁盘扩容价格查询
+      queryDiskCost: debounce(500, function () {
+        axios.get(`Disk/UpDiskConfigCost.do?diskId=${this.diskInfo.id}&diskSize=${this.dilatationForm.diskSize}&zoneId=${this.diskInfo.zoneid}`).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.diskSizeExpenses = response.data.result
+          }
+        })
+      }),
+      /* 确认扩容磁盘 */
+      adjustDisk_ok(){
+        this.$http.get('Disk/UpDiskConfig.do?diskid=' + this.diskInfo.diskid + '&disksize=' + this.dilatationForm.diskSize).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            // this.$store.commit('setSelect', 'order')
+            this.$router.push('order')
+          }
+        })
       }
     },
     computed: {
@@ -346,6 +429,13 @@
       // 是否自动续费
       isautorenew () {
         return this.diskInfo.isautorenew === 1 ? '开' : '关'
+      }
+    },
+    watch: {
+      // 磁盘扩容价格计算
+      'dilatationForm.diskSize'(){
+        this.diskSizeExpenses = '正在计算'
+        this.queryDiskCost()
       }
     }
   }
