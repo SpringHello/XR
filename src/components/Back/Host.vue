@@ -129,11 +129,11 @@
                         <span v-else>公网地址:{{item.publicip}}</span>
                         <span>内网地址:{{item.privateip}}</span>
                         <span v-if="item.restart==1">重启中</span>
-                        <span v-else>运行中111111</span>
+                        <span v-else>运行中</span>
                       </div>
                       <div class="foot">
                         <span>{{item.createtime}}</span>
-                        <button @click.stop="manage(item,'normal')" style="margin-left:55px;">管理22
+                        <button @click.stop="manage(item,'normal')" style="margin-left:55px;">管理
                         </button>
                         <button v-if="!auth" :disabled="!auth">连接主机</button>
                         <a v-else :href="item.connecturl" target="_blank"

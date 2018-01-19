@@ -599,24 +599,24 @@
 
       const validaRegisteredPhone = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('联系电话不能为空'));
+          return callback(new Error('联系电话不能为空'))
         }
         if (!(/^1(3|4|5|7|8)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
-          callback(new Error('请输入正确的电话号码'));
+          callback(new Error('请输入正确的电话号码'))
         } else {
           callback()
         }
-      };
+      }
       const validaRegisteredEmail = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('联系邮箱不能为空'));
+          return callback(new Error('联系邮箱不能为空'))
         }
         if (!(/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(value))) {
-          callback(new Error('请输入正确的邮箱'));
+          callback(new Error('请输入正确的邮箱'))
         } else {
           callback()
         }
-      };
+      }
       return {
         uploadingWidth: 0,
         showUploading: false,
@@ -758,7 +758,7 @@
                       }
                     },
                   }, ''),
-                ]);
+                ])
               } else {
                 return h('div', [
                   h('Checkbox', {
@@ -771,7 +771,7 @@
                       }
                     },
                   }, ''),
-                ]);
+                ])
               }
             }
           },
@@ -791,7 +791,7 @@
                       }
                     },
                   }, ''),
-                ]);
+                ])
               } else {
                 return h('div', [
                   h('Checkbox', {
@@ -804,7 +804,7 @@
                       }
                     },
                   }, ''),
-                ]);
+                ])
               }
             }
           },
@@ -824,7 +824,7 @@
                       }
                     },
                   }, ''),
-                ]);
+                ])
               } else {
                 return h('div', [
                   h('Checkbox', {
@@ -837,7 +837,7 @@
                       }
                     },
                   }, ''),
-                ]);
+                ])
               }
             }
           }
@@ -928,14 +928,14 @@
                           }, 1000)
                         }
                       },
-                    }, this.recertify),]),
+                    }, this.recertify)]),
                   ]),
 
-                ]);
+                ])
               } else {
                 return h('div', [
                   h('span', {}, params.row.telphone)]
-                );
+                )
               }
             }
           },
@@ -1008,14 +1008,14 @@
                           }, 1000)
                         }
                       },
-                    }, this.recertifyEmail),]),
+                    }, this.recertifyEmail)]),
                   ]),
 
-                ]);
+                ])
               } else {
                 return h('div', [
                   h('span', {}, params.row.email)]
-                );
+                )
               }
             }
           },
@@ -1056,7 +1056,7 @@
                     marginLeft: '20px',
                   }
                 }, '删除')])
-              ]);
+              ])
             }
           },
         ],
@@ -1124,20 +1124,20 @@
         })
       },
       authByPhone() {
-        this.showModal.modifyPhone = false;
+        this.showModal.modifyPhone = false
         this.newPhoneForm.oldPhoneCode = ''
-        this.showModal.authByPhone = true;
+        this.showModal.authByPhone = true
       },
       authByEmail() {
-        this.showModal.modifyPhone = false;
+        this.showModal.modifyPhone = false
         this.newPhoneForm.oldPhoneCode = ''
-        this.showModal.authByEmail = true;
+        this.showModal.authByEmail = true
       },
       handleFormatError(file) {
-        this.$Message.warning('文件格式不正确');
+        this.$Message.warning('文件格式不正确')
       },
       getVerCode(type) {
-        var timeOut = 60;
+        var timeOut = 60
         this[`${type}VerCodeText`] = '60s'
         var isemail = type == 'email' ? 1 : 0
         var aim = type == 'email' ? this.userInfo.loginname : this.userInfo.phone
@@ -1183,7 +1183,7 @@
       },
       getNewPhoneVerCode(type) {
         //60秒倒计时
-        var timeOut = 60;
+        var timeOut = 60
         this[`${type}VerCode`] = '60s'
         var interval = setInterval(function () {
           timeOut--
@@ -1208,10 +1208,10 @@
         })
       },
       confirmPhone() {
-        var url = `user/updatePhone.do?code=${this.newPhoneForm.verCode}&phone=${this.newPhoneForm.newPhone}`;
+        var url = `user/updatePhone.do?code=${this.newPhoneForm.verCode}&phone=${this.newPhoneForm.newPhone}`
         this.$http.get(url).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message);
+            this.$Message.success(response.data.message)
             this.init()
           }
           this.showModal.authNewPhone = false
@@ -1219,10 +1219,10 @@
       },
       confirmEmail() {
         this.showModal.authNewEmail = false
-        var url = `user/updateUserInfo.do?code=${this.newPhoneForm.verCode}&list=${this.newPhoneForm.newPhone}`;
+        var url = `user/updateUserInfo.do?code=${this.newPhoneForm.verCode}&list=${this.newPhoneForm.newPhone}`
         this.$http.get(url).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message);
+            this.$Message.success(response.data.message)
             this.init()
           }
           this.showModal.authNewPhone = false
@@ -1300,7 +1300,7 @@
       enterpriseAttest() {
         this.$refs.companyForm.validate(function (bool) {
           if (!bool) {
-            //this.$Message.info('参数校验失败');
+            //this.$Message.info('参数校验失败')
             if (this.companyForm.businessList == '') {
               this.companyForm.cardType == '营业执照'
             } else if (this.companyForm.taxList == '') {
@@ -1339,7 +1339,7 @@
         this.showModal.showImg = true
       },
       addLinkman() {
-        this.showModal.addLinkman = true;
+        this.showModal.addLinkman = true
         if (this.userInfo.companyauth != 0) {
         } else {
           this.linkManNumber = 5 - this.linkManData.length
@@ -1348,8 +1348,8 @@
       addLinkmanOk(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
-            this.showModal.addLinkman = false;
-            var url = `user/addcontacts.do?username=${this.addLinkmanForm.name}&phone=${this.addLinkmanForm.phone}&email=${this.addLinkmanForm.email}`;
+            this.showModal.addLinkman = false
+            var url = `user/addcontacts.do?username=${this.addLinkmanForm.name}&phone=${this.addLinkmanForm.phone}&email=${this.addLinkmanForm.email}`
             this.$http.get(url).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
@@ -1359,7 +1359,7 @@
               }
             })
           } else {
-            this.$Message.error('信息填写不完整');
+            this.$Message.error('信息填写不完整')
           }
         })
       },
@@ -1504,7 +1504,7 @@
     top: -24px;
     height: 2px;
     background-color: #0db4fa;
-    transition: .4s;
+    transition: .4s
   }
 
   .background {
@@ -1520,7 +1520,7 @@
         color: rgba(17, 17, 17, 0.43);
         line-height: 22px;
         padding: 11px 0px;
-        display: block;
+        display: block
       }
       .content {
         background-color: white;
@@ -1529,14 +1529,14 @@
           font-family: MicrosoftYaHei-Bold;
           font-size: 24px;
           color: rgba(17, 17, 17, 0.75);
-          font-weight: bold;
+          font-weight: bold
         }
         .title {
           font-family: Microsoft Yahei, 微软雅黑;
           font-size: 22px;
           color: rgba(17, 17, 17, 0.75);
           letter-spacing: 1.31px;
-          font-weight: normal;
+          font-weight: normal
         }
 
         h2 {
@@ -1544,7 +1544,7 @@
           font-size: 22px;
           color: rgba(17, 17, 17, 0.75);
           letter-spacing: 1.31px;
-          font-weight: normal;
+          font-weight: normal
         }
 
         .imgbox {
@@ -1553,7 +1553,7 @@
           letter-spacing: 0.83px;
           overflow: hidden;
           img {
-            vertical-align: top;
+            vertical-align: top
           }
           ul {
             display: inline-block;
@@ -1564,7 +1564,7 @@
               font-family: Microsoft Yahei, 微软雅黑;
               font-size: 14px;
               color: rgba(17, 17, 17, 0.65);
-              letter-spacing: 0.83px;
+              letter-spacing: 0.83px
             }
           }
         }
@@ -1575,7 +1575,7 @@
           .avatar {
             height: 80px;
             width: 80px;
-            background: url('../../assets/img/usercenter/usermsg_img1.png') no-repeat;
+            background: url('../../assets/img/usercenter/usermsg_img1.png') no-repeat
           }
           .info {
 
@@ -1599,14 +1599,14 @@
               height: 14px;
               background: url('../../assets/img/usercenter/info-icon.png');
               margin-right: 15px;
-              vertical-align: bottom;
+              vertical-align: bottom
             }
             &.info::before {
-              background-position: right;
+              background-position: right
             }
             span {
               font-size: 16px;
-              color: rgba(17, 17, 17, 0.65);
+              color: rgba(17, 17, 17, 0.65)
             }
           }
           span {
@@ -1623,7 +1623,7 @@
             font-family: MicrosoftYaHei;
             font-size: 16px;
             color: rgba(17, 17, 17, 0.75);
-            letter-spacing: 0.95px;
+            letter-spacing: 0.95px
           }
         }
       }
@@ -1635,7 +1635,7 @@
       font-size: 16px;
       color: rgba(17, 17, 17, 0.65);
       line-height: 23.42px;
-      margin: 12px 0px;
+      margin: 12px 0px
     }
   }
 
@@ -1645,7 +1645,7 @@
       color: rgba(17, 17, 17, 0.65);
       display: block;
       margin-bottom: 20px;
-      letter-spacing: 0.83px;
+      letter-spacing: 0.83px
     }
   }
 
@@ -1664,7 +1664,7 @@
   }
 
   .ivu-input-large {
-    height: 36px;
+    height: 36px
   }
 
   .modal-wrapper {
@@ -1678,7 +1678,7 @@
       float: left;
       line-height: 34px;
       font-size: 14px;
-      color: rgba(17, 17, 17, 0.43);
+      color: rgba(17, 17, 17, 0.43)
     }
   }
 
@@ -1688,7 +1688,7 @@
       text-align: center;
       font-size: 16px;
       color: rgba(17, 17, 17, 0.75);
-      margin-bottom: 20px;
+      margin-bottom: 20px
     }
     p {
       position: relative;
@@ -1705,7 +1705,7 @@
         left: 62px;
         border-left: 1px solid #3DBD7D;
         border-bottom: 1px solid #3DBD7D;
-        display: inline-block;
+        display: inline-block
       }
       &::before {
         margin-right: 7px;
@@ -1715,7 +1715,7 @@
         border: 1px solid #3DBD7D;
         border-radius: 50%;
         display: inline-block;
-        vertical-align: middle;
+        vertical-align: middle
       }
     }
   }
@@ -1725,12 +1725,12 @@
       font-size: 12px;
       color: rgba(17, 17, 17, 0.43);
       line-height: 18px;
-      text-align: left;
+      text-align: left
     }
     border-top: none
   }
 
   .codeDisabled {
-    cursor: not-allowed;
+    cursor: not-allowed
   }
 </style>

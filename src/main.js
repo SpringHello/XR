@@ -12,6 +12,13 @@ import '@/assets/css/iviewOverRide.css'
 import '@/assets/css/reset.css'
 import '@/assets/css/universal.less'
 
+// import ECharts from 'vue-echarts/components/ECharts.vue'
+import ECharts from 'vue-echarts/components/ECharts'
+// import ECharts modules manually to reduce bundle size
+import 'echarts/lib/chart/bar'
+import 'echarts/lib/chart/line'
+import 'echarts/lib/component/tooltip'
+
 // 引入轮播组件
 import carousel from './myView/carousel'
 import carouselItem from './myView/carouselItem'
@@ -19,6 +26,7 @@ import carouselItem from './myView/carouselItem'
 import slider from './myView/slider'
 // 引入错误提示框组件
 import error from './myView/message'
+
 Vue.prototype.$error = error
 Vue.config.productionTip = false
 
@@ -34,6 +42,7 @@ axios.defaults.withCredentials = true
 Vue.prototype.$http = axios.create({
   params: {}
 })
+
 /* axios ajax请求拦截 需要zoneid的接口都使用this.$http的形式调用 */
 function requestIntercept(config) {
   if (config.method == 'get') {
@@ -44,6 +53,7 @@ function requestIntercept(config) {
   }
   return config
 }
+
 // axios 请求拦截
 Vue.prototype.$http.interceptors.request.use(requestIntercept)
 
@@ -54,6 +64,7 @@ Vue.use(carousel)
 Vue.use(carouselItem)
 // 使用滑块组件
 Vue.use(slider)
+Vue.component('chart', ECharts)
 
 // 日期圆形对象拓展
 Date.prototype.format = function (fmt) {
