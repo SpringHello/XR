@@ -14,19 +14,6 @@
         <div class="operator-bar">
           <Button type="primary" @click="newDisk">创建云硬盘</Button>
           <Button type="primary" @click="deleteDisk">删除云硬盘</Button>
-          <!--          <Button type="primary" @click="unload">卸载</Button>
-                    <Dropdown @on-click="hideEvent">
-                      <Button type="primary">
-                        更多操作
-                        <Icon type="arrow-down-b"></Icon>
-                      </Button>
-                      <Dropdown-menu slot="list">
-                        &lt;!&ndash;<Dropdown-item name="backupsDisk">备份</Dropdown-item>&ndash;&gt;
-                        <Dropdown-item name="dilatationDisk">扩容</Dropdown-item>
-                        <Dropdown-item name="modificationDisk">修改</Dropdown-item>
-                        <Dropdown-item name="deleteDisk">删除</Dropdown-item>
-                      </Dropdown-menu>
-                    </Dropdown>-->
         </div>
         <div style="margin-top:20px">
           <Table :columns="diskColumns" :data="diskData" @radio-change="selectDisk"></Table>
@@ -47,8 +34,8 @@
           <Form-item label="购买数量" style="width: 65%">
             <div class="quantity">
               <p @click="reduce"><i></i></p>
-              <p style="width: 38px;cursor: auto;color:#2A99F2;margin:0 10px ">{{ quantity }}</p>
-              <p @click="quantity+=1"><i style="transform: translateX(-2px) rotate(311deg)"></i></p>
+              <p style="width: 38px;cursor: auto;color:#2A99F2;margin:0 10px ">{{ diskForm.quantity }}</p>
+              <p @click="diskForm.quantity+=1"><i style="transform: translateX(-2px) rotate(311deg)"></i></p>
             </div>
           </Form-item>
           <Form-item label="区域" prop="diskArea">
@@ -115,7 +102,9 @@
         <Form :model="diskMountForm" :rules="mountRuleValidate" ref="mountDisk">
           <Form-item label="可挂载主机列表" prop="mountHost">
             <Select v-model="diskMountForm.mountHost" placeholder="请选择">
-              <Option v-for="item in mountHostList" :key="item.value" :value="item.value">{{ item.label }}</Option>
+              <Option v-for="item in mountHostList" :key="item.computerid" :value="item.computerid">{{ item.computername
+                }}
+              </Option>
             </Select>
           </Form-item>
         </Form>
@@ -266,6 +255,7 @@
 <script type="text/ecmascript-6">
   import {customTimeOptions, diskTypeList} from '../../options'
   import debounce from 'throttle-debounce/debounce'
+  import axios from 'axios'
   export default{
     data(){
       return {
@@ -327,7 +317,7 @@
             width: 180,
             render: (h, params) => {
               const row = params.row
-              const text = row.status === 0 ? '欠费' : (row.status === 1 && row.mounton == '' && row.mountonname == '') ? '可挂载' : (row.status === 1 && row.mounton != '' && row.mountonname != '') ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '异常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '卸载中' : row.status === 5 ? '挂载中' : ''
+              const text = row.status === 0 ? '欠费' : (row.status === 1 && !row.mounton && !row.mountonname) ? '可挂载' : (row.status === 1 && row.mounton && row.mountonname) ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '异常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '卸载中' : row.status === 5 ? '挂载中' : ''
               if (row.status == 2 || row.status == 3 || row.status == 4 || row.status == 5) {
                 return h('div', {}, [h('Spin', {
                   style: {
@@ -464,7 +454,9 @@
           diskArea: '',
           timeType: '',
           timeValue: '',
-          diskSize: 20
+          diskSize: 20,
+          // 购买磁盘数量
+          quantity: 1,
         },
         // 挂载磁盘表单（只含有一个字段）
         diskMountForm: {
@@ -517,7 +509,7 @@
         diskSelection: null,
         // 操作对象
         operand: null,
-        // 被卸载的磁盘名称
+        // 修改的磁盘名称
         diskName: '',
         // 需要备份的磁盘名称
         backupForDiskName: '',
@@ -527,10 +519,7 @@
         diskBackupName: '',
         // 可挂载主机列表
         mountHostList: [],
-        // 购买磁盘数量
-        quantity: 1,
-        diskSizeExpenses: 0,
-        mountHost: ''
+        diskSizeExpenses: 0
       }
     },
     created(){
@@ -575,10 +564,10 @@
       },
       // 挂载磁盘到主机
       mount(data){
-        if (data.mounton == '' && data.mountonname == '' && data.status == 1) {
+        if (!data.mounton && !data.mountonname && data.status == 1) {
           this.operand = data
           this.showModal.mountDisk = true
-          this.$http.get('Disk/listAttachComputer.do?diskid=' + data.diskid).then(response => {
+          axios.get('Disk/listAttachComputer.do?diskId=' + data.diskid).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.mountHostList = response.data.result
             }
@@ -623,7 +612,7 @@
       }),
       // 磁盘扩容价格查询
       queryDiskCost: debounce(500, function () {
-        this.$http.get(`Disk/UpDiskConfigCost.do?diskId=${this.operand.id}&diskSize=${this.dilatationForm.diskSize}`).then(response => {
+        axios.get(`Disk/UpDiskConfigCost.do?diskId=${this.operand.id}&diskSize=${this.dilatationForm.diskSize}&zoneId=${this.operand.zoneid}`).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskSizeExpenses = response.data.result
           }
@@ -632,10 +621,9 @@
       // 确认创建磁盘
       newDisk_ok(){
         // 默认zoneList第一个元素为当前选中区域，以后会修改
-        var url = `Disk/createVolume.do?zoneId=${this.$store.state.zoneList[0].zoneid}&diskSize=${this.diskForm.diskSize}&diskName=${this.diskForm.diskName}&diskOfferingId=${this.diskForm.diskType}&timeType=${this.diskForm.timeType}&timeValue=${this.diskForm.timeValue || 1}`
-        this.$http.get(url).then(response => {
+        var url = `Disk/createVolume.do?zoneId=${this.diskForm.diskArea}&diskSize=${this.diskForm.diskSize}&diskName=${this.diskForm.diskName}&diskOfferingId=${this.diskForm.diskType}&timeType=${this.diskForm.timeType}&timeValue=${this.diskForm.timeValue || 1}&isAutorenew=0&count=1`
+        axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            // this.$store.commit('setSelect', 'order')
             this.$router.push('order')
           }
         })
@@ -644,7 +632,7 @@
       selectDisk(currentRow){
         this.diskSelection = currentRow
       },
-      // 检测是否选中 打开扩容模态框
+      // 打开扩容模态框
       dilatationDisk(data){
         this.operand = data
         this.dilatationForm.diskSize = this.operand.disksize
@@ -660,7 +648,10 @@
       // 删除跳转到卸载模态框
       beforeDelete(){
         this.showModal.beforeDelete = false
-        this.unload()
+        this.operand = this.diskSelection
+        this.diskName = this.operand.diskname
+        this.hostName = this.operand.mountonname
+        this.showModal.diskUnload = true
       },
       // 删除磁盘
       deleteDisk(){
@@ -705,7 +696,7 @@
             item.status = 4
           }
         })
-        this.$http.get(`Disk/detachVolume.do?zoneId=${this.$store.state.zoneList[0].zoneid}&diskId=${this.operand.id}&VMId=${this.operand.mounton}`).then(response => {
+        axios.get(`Disk/detachVolume.do?zoneId=${this.operand.zoneid}&diskId=${this.operand.id}&VMId=${this.operand.mounton}`).then(response => {
           this.listDisk()
           if (response.status == 200 && response.statusText == 'OK') {
             this.$Message.success({
@@ -717,7 +708,7 @@
       },
       /* 确认修改磁盘名称 */
       modificationDisk_ok(){
-        this.$http.get('Disk/updateDisk.do?diskid=' + this.operand.diskid + '&name=' + this.diskname).then(response => {
+        this.$http.get('Disk/updateDisk.do?diskId=' + this.operand.diskid + '&name=' + this.diskName).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success({
               content: response.data.message,
@@ -736,7 +727,7 @@
             item.status = 3
           }
         })
-        this.$http.get('Disk/delDisk.do?diskid=' + this.diskSelection.id).then(response => {
+        this.$http.get('Disk/delDisk.do?diskId=' + this.diskSelection.id).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success({
               content: response.data.message,
@@ -754,7 +745,7 @@
             item.status = 5
           }
         })
-        this.$http.get('Disk/attachVolume.do?diskid=' + this.operand.id + '&virtualmachineid=' + this.mountHost).then(response => {
+        this.$http.get('Disk/attachVolume.do?diskId=' + this.operand.id + '&VMId=' + this.diskMountForm.mountHost).then(response => {
           this.listDisk()
           if (response.status == 200 && response.statusText == 'OK') {
             this.$Message.info({
@@ -766,7 +757,7 @@
       },
       /* 确认扩容磁盘 */
       adjustDisk_ok(){
-        this.$http.get('Disk/UpDiskConfig.do?diskid=' + this.operand.diskid + '&disksize=' + this.dilatationForm.diskSize).then(response => {
+        this.$http.get('Disk/UpDiskConfig.do?diskId=' + this.operand.diskid + '&diskSize=' + this.dilatationForm.diskSize).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             // this.$store.commit('setSelect', 'order')
             this.$router.push('order')
@@ -783,10 +774,10 @@
       },
       /* 购买数量操作 */
       reduce () {
-        this.quantity -= 1
-        switch (this.quantity) {
+        this.diskForm.quantity -= 1
+        switch (this.diskForm.quantity) {
           case 0:
-            this.quantity = 1
+            this.diskForm.quantity = 1
             break
           default:
             break

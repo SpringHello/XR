@@ -150,8 +150,8 @@
             type: 'storage',
             subItem: [
               {subName: '云硬盘', type: 'disk'},
-              {subName: '云硬盘备份', type: 'diskBackup'},
-              {subName: '硬盘快照', type: 'diskSnapshot'}
+              {subName: '云硬盘备份', type: 'diskBackup'}
+              /* {subName: '硬盘快照', type: 'diskSnapshot'} */
             ]
           },
           {
