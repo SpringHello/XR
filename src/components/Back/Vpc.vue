@@ -13,7 +13,7 @@
           <TabPane label="虚拟私有云VPC">
             <div class="operator-bar">
               <Button type="primary" @click="openNewVpcModal">新建VPC</Button>
-              <Button type="primary" @click="modalList.addGateway = true">添加VPC互通网关</Button>
+              <Button type="primary" @click="showModal.addGateway = true">添加VPC互通网关</Button>
               <Button type="primary">修改VPC</Button>
               <Button type="primary">删除VPC</Button>
             </div>
@@ -54,14 +54,14 @@
               <Button type="primary" @click="openAddNatModal">添加NAT网关</Button>
               <Button type="primary" @click="openDeleteNatModal">删除NAT网关</Button>
             </div>
-            <Table :columns="natColumns" :data="natData"></Table>
+            <Table :columns="natColumns" :data="natData" @radio-change="selectNAT"></Table>
           </TabPane>
         </Tabs>
       </div>
     </div>
 
     <!-- 新建vpc modal -->
-    <Modal v-model="modalList.newVpc" width="550" :scrollable="true">
+    <Modal v-model="showModal.newVpc" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">新建VPC</span>
       </p>
@@ -113,7 +113,7 @@
       </div>
     </Modal>
     <!-- 添加VPC互通网关 modal -->
-    <Modal v-model="modalList.addGateway" width="550" :scrollable="true">
+    <Modal v-model="showModal.addGateway" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">添加VPC互通网关</span>
       </p>
@@ -195,7 +195,7 @@
     </Modal>
 
     <!-- 添加NAT 网关 -->
-    <Modal v-model="modalList.addNat" width="550" :scrollable="true">
+    <Modal v-model="showModal.addNat" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">添加NAT网关</span>
       </p>
@@ -206,7 +206,7 @@
           </FormItem>
           <FormItem label="VPC ID" prop="vpc">
             <Select v-model="addNatForm.vpc" placeholder="请选择">
-              <Option v-for="item in netData" :key="item" :value="item.vpcid">{{item.vpcname}}</Option>
+              <Option v-for="item in netData" :key="item.vpcid" :value="item.vpcid">{{item.vpcname}}</Option>
             </Select>
           </FormItem>
           <FormItem label="选择弹性IP" prop="publicIp">
@@ -247,12 +247,34 @@
       </div>
     </Modal>
     <!-- 删除NAT 网关 -->
-    <Modal v-model="modalList.deleteNat" width="550" :scrollable="true">
+    <Modal v-model="showModal.deleteNat" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">删除NAT网关</span>
       </p>
       <div slot="footer" class="modal-footer-border">
         <Button type="primary" @click="handleAddNatSubmit">完成配置</Button>
+      </div>
+    </Modal>
+
+    <!-- 绑定弹性IP -->
+    <Modal v-model="showModal.bindIP" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">绑定弹性IP</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="addNatForm" :rules="addNatRuleValidate" ref="addNatFormValidate">
+          <FormItem label="选择弹性IP" prop="publicIp">
+            <Select v-model="addNatForm.publicIp">
+              <Option v-for="item in addNatForm.publicIpOptions" :value="item.publicipid" :key="item.publicipid">
+                {{item.publicip}}
+              </Option>
+            </Select>
+          </FormItem>
+          <p style="font-size: 12px;color: rgba(153,153,153,0.65);">当前NAT网关可绑定弹性IP剩余额度5（点击提升配额）</p>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="handleAddNatSubmit">确认绑定</Button>
       </div>
     </Modal>
   </div>
@@ -314,9 +336,25 @@
             }
           },
           {
-            title: '绑定弹性IP',
+            title: '源IP',
             align: 'center',
-            key: 'diskname'
+            key: 'sourcenatip'
+          },
+          {
+            title: '目标IP',
+            align: 'center',
+            render: (h, object) => {
+              var prottransipArray = object.row.prottransip.split(',')
+              var renderArray = []
+              for (var ip of prottransipArray) {
+                renderArray.push(h('san', {
+                  style: {
+                    display: 'block'
+                  }
+                }, ip))
+              }
+              return h('div', {}, renderArray)
+            }
           },
           {
             title: '创建时间',
@@ -326,18 +364,47 @@
           {
             title: '管理',
             align: 'center',
-            key: 'disksize',
+            width: 170,
+            render: (h, object) => {
+              var operator = [h('span', {
+                style: {
+                  color: '#2A99F2',
+                  cursor: 'pointer',
+                  marginRight: '10px'
+                },
+                on: {
+                  click: () => {
+                    this.showModal.bindIP = true
+                  }
+                }
+              }, '绑定弹性IP')]
+              if (object.row.sourcenatip && object.row.prottransip) {
+                operator.push(h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  }
+                }, '解绑弹性IP'))
+              }
+              return h('div', operator)
+            }
           }
         ],
         natData: [],
+        // 当前选中的NAT网关
+        select: null,
         // 控制模态框是否关闭
-        modalList: {
+        showModal: {
           newVpc: false,
           addGateway: false,
           // 添加nat网关
           addNat: false,
           // 删除nat网关
-          deleteNat: false
+          deleteNat: false,
+          // 绑定弹性IP模态框
+          bindIP: false,
+          // 解绑弹性IP模态框
+          unbindIP: false
         },
         // 新建vpc表单数据
         newForm: {
@@ -461,6 +528,10 @@
       this.intervalInstance = setInterval(this.getVpcData, 10000)
     },
     methods: {
+      // 选中当前项
+      selectNAT(current){
+        this.select = current
+      },
       getVpcData(){
         axios.get(`network/listVpc.do?zoneId=${$store.state.zone.zoneid}`).then(response => {
           if (response.status == 200) {
@@ -508,13 +579,13 @@
       },
       // 打开新建vpc modal框
       openNewVpcModal(){
-        this.modalList.newVpc = true
+        this.showModal.newVpc = true
         /* var url = 'network/listAclList.do?'
          axios.get() */
       },
       // 打开添加nat网关modal
       openAddNatModal(){
-        this.modalList.addNat = true
+        this.showModal.addNat = true
         /*
          useType : 0 代表未使用
          status : 1 代表状态正常
@@ -529,8 +600,31 @@
       },
       // 打开删除nat网关modal
       openDeleteNatModal(){
-        if (this._checkSelect()) {
+        if (this.select != null) {
           // 单选检测通过
+          this.$Modal.confirm({
+            render: (h) => {
+              return h('p', {
+                class: 'modal-content-s'
+              }, [h('i', {
+                class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
+                style: {
+                  color: '#f90'
+                }
+              }), '确认删除该NAT?'])
+            },
+            title: '删除NAT',
+            scrollable: true,
+            okText: '确定删除',
+            cancelText: '取消',
+            'onOk': () => {
+              var url = `network/delNatGateway.do?natGatewayId=${this.select.id}`
+              axios.get(url).then(response => {
+                console.log(response)
+              })
+            }
+          })
+
         }
       },
       // 新建vpc价格查询
@@ -555,7 +649,7 @@
             // 表单验证通过
             var url = `network/createVPC.do?vpcName=${this.newForm.vpcName}&displayText=${this.newForm.desc}&zoneId=${$store.state.zone.zoneid}&count=1&cidr=${this.newForm.vpc}&timeType=${this.newForm.timeType}&timeValue=${this.newForm.timeValue || 1}&isAutorenew=0&isSourceNat=0&bandWith=${this.newForm.IPReq ? 0 : 0}`
             axios.get(url).then(response => {
-              this.modalList.newVpc = false
+              this.showModal.newVpc = false
               if (response.status == 200 && response.data.status == 1) {
                 this.$router.push('order')
                 // this.$error('error', response.data.message)
@@ -575,7 +669,7 @@
             // 表单验证通过
             var url = `network/addPrivateGateway.do?vpcIdStart=${this.addGatewayForm.originVPC}&vpcIdEnd=${this.addGatewayForm.targetVPC}&zoneId=${$store.state.zone.zoneid}&aclIdStart=${this.addGatewayForm.originFirewall}&aclIdEnd=${this.addGatewayForm.targetFirewall}`
             axios.get(url).then(response => {
-              this.modalList.newVpc = false
+              this.showModal.newVpc = false
               if (response.status == 200 && response.data.status == 2) {
                 this.$error('error', response.data.message)
               }
@@ -597,7 +691,7 @@
               url += `&publicIpId=${this.addNatForm.publicIp}`
             }
             axios.get(url).then(response => {
-              this.modalList.addNat = false
+              this.showModal.addNat = false
               if (response.status == 200 && response.data.status == 1) {
                 this.$router.push('order')
               }

@@ -312,7 +312,7 @@
           }
         }
         callback()
-      };
+      }
       const validateType = (rule, value, callback) => {
         this.$refs.formInvoiceDate.validateField('invoiceAmount')
       }
