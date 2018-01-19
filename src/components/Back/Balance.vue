@@ -18,7 +18,7 @@
         <!--负载均衡表-->
         <Table highlight-row stripe :columns="columns" :data="data"></Table>
         <!--模态框-->
-        <Modal v-model="creatbalancemodal.showBalanceName" scrollable="true" width="550" :closable="false">
+        <Modal v-model="creatbalancemodal.showBalanceName" :scrollable="true" width="550" :closable="false">
           <p slot="header" style="font-size: 16px;color: rgba(17,17,17,0.75);line-height: 23.42px;"><b>创建负载均衡</b></p>
           <Steps :current="creatbalancemodal.current" size="small" style="margin:15px;">
             <Step title="创建负载均衡" style="opacity:0.7"></Step>
@@ -41,7 +41,8 @@
                 </RadioGroup>
               </FormItem>
               <!--当为公网时-->
-              <FormItem label="公网IP" prop="select" v-show="creatbalancemodal.formInline.radio == 'public'">
+              <FormItem label="公网IP" prop="select" v-if="creatbalancemodal.formInline.radio == 'public'"
+                        style="width:240px;">
                 <Select v-model="creatbalancemodal.formInline.select">
                   <Option value="txt1">192.168.31.24</Option>
                   <Option value="txt2">192.168.33.45</Option>
@@ -51,14 +52,15 @@
               </FormItem>
 
               <!--当为私网时-->
-              <FormItem label="所属子网" prop="subnet" v-show="creatbalancemodal.formInline.radio == 'private'">
+              <FormItem label="所属子网" prop="subnet" v-if="creatbalancemodal.formInline.radio == 'private'"
+                        style="width:240px;">
                 <Select v-model="creatbalancemodal.formInline.subnet">
                   <Option value="txt1">192.168.33.45</Option>
                   <Option value="txt2">192.168.44.5</Option>
                   <Option value="txt3">192.144.33.89</Option>
                 </Select>
               </FormItem>
-              <FormItem label="内网IP" prop="intranetIp" v-show="creatbalancemodal.formInline.radio == 'private'">
+              <FormItem label="内网IP" prop="intranetIp" v-if="creatbalancemodal.formInline.radio == 'private'">
                 <RadioGroup v-model="creatbalancemodal.formInline.intranetIp">
                   <Radio label="auto">自动分配</Radio>
                   <Radio label="specify">指定IP</Radio>
@@ -66,13 +68,13 @@
               </FormItem>
               <!--当为指定IP时-->
               <FormItem prop="num"
-                        v-show="creatbalancemodal.formInline.radio == 'private'&& creatbalancemodal.formInline.intranetIp == 'specify'">
+                        v-if="creatbalancemodal.formInline.radio == 'private'&& creatbalancemodal.formInline.intranetIp == 'specify'">
                 192.168.2.<Input type="text" v-model="creatbalancemodal.formInline.num"
                                  style="width:100px;margin-left: 5px;">
                 </Input>
               </FormItem>
               <p style="font-size: 12px;color: #999999;"
-                 v-show="creatbalancemodal.formInline.radio == 'private'&& creatbalancemodal.formInline.intranetIp == 'specify'">
+                 v-if="creatbalancemodal.formInline.radio == 'private'&& creatbalancemodal.formInline.intranetIp == 'specify'">
                 网络范围：192.168.2-254</p>
             </Form>
           </div>
@@ -100,7 +102,7 @@
                 <Input type="text" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入0-65535之间任意数字">
                 </Input>
               </FormItem>
-              <p v-show="creatbalancemodal.current == 1" style="font-size: 12px;color: #666666;line-height: 16px;">
+              <p v-if="creatbalancemodal.current == 1" style="font-size: 12px;color: #666666;line-height: 16px;">
                 提示：当您完成负载均衡创建之后，您可以在负载均衡管理页面修改转发规则与健康检查规则，并管理您的后端服务器。同时您也可以在该页面选择开启或者关闭会保持功能。什么是 <span
                 style="color: #377DFF;">会话保持？</span>
               </p>
@@ -265,9 +267,6 @@
 
 
       },
-      /*nextStep () {
-       this.creatbalancemodal.current = 1
-       },*/
       nextStep () {
         this.$refs.form1.validate((valid) => {
           if (valid) {
