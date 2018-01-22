@@ -238,7 +238,7 @@
                 &lt;!&ndash; 网卡暂无接口 >
                 <Table :columns="columns" :data="tableData"></Table>
               </div>
-            </Tab-pane-->
+            </Tab-pane&ndash;&gt;
           </Tabs>
         </div>
       </div>
@@ -297,7 +297,7 @@
         </div>
       </Modal>
     </div>
-    <!-- 回滚弹窗 -->
+    &lt;!&ndash; 回滚弹窗 -->
     <Modal v-model="showModal.rollback" :scrollable="true" :closable="false" :width="390">
       <div class="modal-content-s">
         <Icon type="android-alert" class="yellow f24 mr10"></Icon>

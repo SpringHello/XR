@@ -622,7 +622,7 @@
       newDisk_ok(){
         // 默认zoneList第一个元素为当前选中区域，以后会修改
         var url = `Disk/createVolume.do?zoneId=${this.diskForm.diskArea}&diskSize=${this.diskForm.diskSize}&diskName=${this.diskForm.diskName}&diskOfferingId=${this.diskForm.diskType}&timeType=${this.diskForm.timeType}&timeValue=${this.diskForm.timeValue || 1}&isAutorenew=0&count=1`
-        axios.get(url).then(response => {
+        this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           }

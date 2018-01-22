@@ -11,9 +11,9 @@
         <Alert>
           云硬盘备份能对磁盘（系统盘或数据盘）某个时刻的数据进行备份和回滚，云硬盘备份为全量备份，提升了云硬盘的安全性，同时增强了云硬盘备份的易用性。
         </Alert>
-        <Tabs type="card" :animated="false">
+        <Tabs type="card" :animated="false" v-model="tabPane">
           <!-- 云硬盘备份列表页面 -->
-          <TabPane label="云硬盘备份">
+          <TabPane label="云硬盘备份" name="diskBackups">
             <div class="operator-bar">
               <Button type="primary" @click="createDiskBackup">创建备份</Button>
               <Button type="primary">删除备份</Button>
@@ -22,7 +22,7 @@
               <Table :columns="diskBackupsColumns" :data="diskBackupsData"></Table>
             </div>
           </TabPane>
-          <TabPane label="云硬盘备份策略">
+          <TabPane label="云硬盘备份策略" name="diskBackupsStrategy">
             <div class="operator-bar">
               <Button type="primary" @click="createBackupStrategy">创建备份策略</Button>
               <Button type="primary">删除备份策略</Button>
@@ -168,9 +168,12 @@
 
 <script type="text/ecmascript-6">
   import {customTimeOptions} from '../../options'
+  // import axios from 'axios'
   export default{
     data(){
       return {
+        // 标签页选择
+        tabPane: 'diskBackups',
         // 磁盘备份表头
         diskBackupsColumns: [
           {
@@ -254,38 +257,76 @@
           {
             title: '备份策略名称',
             align: 'center',
-            width: 180
+            key: 'strategyname',
+            width: 140
           }, {
             title: '状态',
             align: 'center',
-            width: 100
+            width: 100,
+            render: (h, params) => {
+              if (params.row.status === 1) {
+                return h('span', {}, '可用')
+              } else {
+                return h('span', {
+                  style: {
+                    color: '#EE4545'
+                  }
+                }, '异常')
+              }
+            }
           }, {
             title: '自动备份保留个数',
             align: 'center',
-            width: 140
+            width: 140,
+            render: (h, params) => {
+              return h('span', {}, params.row.keepcount + '个')
+            }
           }, {
             title: '自动备份间隔',
             align: 'center',
-            width: 120
+            width: 120,
+            render: (h, params) => {
+              const text = params.row.keepupinterval === 'day' ? '每天' : params.row.keepupinterval === 'month' ? '每月' : ' 每周'
+              return h('span', {}, text)
+            }
           }, {
             title: '自动备份时间',
             align: 'center',
+            key: 'autobackuptime',
             width: 140
           }, {
             title: '创建时间',
             align: 'center',
-            width: 140
+            key: 'createtime',
+            width: 180
           }, {
             title: '应用磁盘',
             align: 'center',
-            width: 140
+            width: 140,
+            render: (h, params) => {
+              const text = params.row.resourcename === '' ? '----' : params.row.resourcename
+              return h('span', {}, text)
+            }
           }, {
             title: '操作',
-            align: 'center'
+            align: 'center',
+            render: (h, params) => {
+              return h('span', {
+                style: {
+                  color: '#2A99F2 ',
+                  cursor: 'pointer'
+                },
+                on: {
+                  click: () => {
+                    alert('aa')
+                  }
+                }
+              }, '添加/删除磁盘')
+            }
           },
         ],
         // 备份策略数据
-        diskBackupsStrategyData: [{}],
+        diskBackupsStrategyData: [],
         // 模态框
         showModal: {
           // 以备份创建磁盘
@@ -346,7 +387,7 @@
           dayTimeData: [
             {
               label: '00:00',
-              value: '0'
+              value: '00:00'
             }, {
               label: '01:00',
               value: '01'
@@ -421,12 +462,12 @@
           // 选择一周时的时间点
           weekTimeData: [
             {
-              value: 'monday',
+              value: '1',
               label: '周一',
               children: [
                 {
                   label: '00:00',
-                  value: '0'
+                  value: '00:00'
                 }, {
                   label: '01:00',
                   value: '01'
@@ -982,7 +1023,7 @@
               children: [
                 {
                   label: '00:00',
-                  value: '0'
+                  value: '00:00'
                 }, {
                   label: '01:00',
                   value: '01'
@@ -1531,7 +1572,7 @@
             }
           ],
           // 备份时间值
-          timeValue: ['0'],
+          timeValue: ['00:00'],
           // 策略应用磁盘
           strategyForDisk: [],
           // 策略应用磁盘列表
@@ -1605,6 +1646,7 @@
         this.$refs.newBackups.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用创建备份策略方法
+            this.createDiskBackupStrategy_ok()
           }
         })
       },
@@ -1627,9 +1669,31 @@
             break
         }
       },
-      /* 创建备份策略 */
+      /* 创建备份策略 弹出模态框 */
       createBackupStrategy () {
         this.showModal.backupsStrategy = true
+      },
+      /* 确认创建 */
+      createDiskBackupStrategy_ok () {
+        var url = `Disk/createDiskBackUpStrategy.do?strategyName=${this.backupsForm.backupsName}&keepCount=${this.backupsForm.keepNumber}&keepInterval=${this.backupsForm.timeType}&autoBackUpTime=${this.backupsForm.timeValue}&diskIds=${this.backupsForm.strategyForDisk}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.showModal.backupsStrategy = false
+            this.tabPane = 'diskBackupsStrategy'
+            this.listDiskBackUpStrategy()
+          }
+        })
+      },
+      /* 列出磁盘备份策略 */
+      listDiskBackUpStrategy () {
+        var url = `Disk/listDiskBackUpStrategy.do`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.diskBackupsStrategyData = response.data.result
+          } else {
+            this.$error('error', response.data.message)
+          }
+        })
       },
       /* 以备份创建新磁盘 */
       createBackupsToDisk () {
@@ -1643,15 +1707,22 @@
       changeType (value) {
         switch (value) {
           case 'day':
-            this.backupsForm.timeValue = ['0']
+            this.backupsForm.timeValue = ['00:00']
             break
           case 'week':
-            this.backupsForm.timeValue = ['monday', '0']
+            this.backupsForm.timeValue = ['1', '00:00']
             break
           case 'month':
-            this.backupsForm.timeValue = ['1', '0']
+            this.backupsForm.timeValue = ['1', '00:00']
             break
         }
+      }
+    },
+    watch: {
+      /* 如果标签切换到备份策略，调用列出策略方法 */
+      tabPane () {
+        if (this.tabPane === 'diskBackupsStrategy')
+          this.listDiskBackUpStrategy()
       }
     }
   }
