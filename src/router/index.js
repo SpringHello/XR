@@ -61,11 +61,12 @@ const DiskBackup = () => import('@/components/Back/DiskBackup')
 const DiskParticulars = () => import('@/components/Back/DiskParticulars')
 const Vpc = () => import('@/components/Back/Vpc')
 const VpcManage = () => import('@/components/Back/VpcManage')
+const Vpn = () => import('@/components/Back/Vpn')
 const Ip = () => import('@/components/Back/Ip')
 const Order = () => import('@/components/Back/Order')
 const PayResult = () => import('@/components/Back/PayResult')
 const Expenses = () => import('@/components/Back/Expenses')
-const Usercenter = () => import('@/components/Back/Usercenter')
+const UserCenter = () => import('@/components/Back/UserCenter')
 const Manage = () => import('@/components/Back/Manage')
 
 
@@ -150,12 +151,13 @@ var router = new Router({
         {path: 'host', name: 'host', component: Host},
         {path: 'mirror', name: 'mirror', component: Mirror},
         {path: 'vpc', name: 'vpc', component: Vpc},
+        {path: 'vpn', name: 'vpn', component: Vpn},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
         {path: 'ip', name: 'ip', component: Ip},
         {path: 'order', name: 'order', component: Order},
         {path: 'payResult', name: 'payResult', component: PayResult},
         {path: 'expenses', name: 'expenses', component: Expenses},
-        {path: 'usercenter', name: 'usercenter', component: Usercenter},
+        {path: 'userCenter', name: 'userCenter', component: UserCenter},
         {path: 'manage', name: 'manage', component: Manage}
       ]
     },

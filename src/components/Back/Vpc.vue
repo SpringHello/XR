@@ -353,7 +353,6 @@
                   },
                   nativeOn: {
                     click: () => {
-                      console.log('click')
                       this.$Modal.confirm({
                         render: (h) => {
                           return h('p', {
@@ -370,9 +369,15 @@
                         okText: '确定解绑',
                         cancelText: '取消',
                         'onOk': () => {
-                          var url = `network/delNatGateway.do?natGatewayId=${this.select.id}`
-                          axios.get(url).then(response => {
-                            console.log(response)
+                          var url = 'network/unboundElasticIP.do'
+                          this.$http.get(url, {
+                            params: {
+                              natGatewayId: object.row.id
+                            }
+                          }).then(response => {
+                            if (response.status == 200 && response.data.status == 1) {
+                              delete object.row.sourcenatip
+                            }
                           })
                         }
                       })
@@ -598,7 +603,7 @@
       }
     },
     beforeRouteEnter(to, from, next) {
-      var zoneId = $store.state.zoneList[0].zoneid
+      var zoneId = $store.state.zone.zoneid
       // 获取vpc数据
       var vpcResponse = axios.get(`network/listVpc.do?zoneId=${zoneId}`)
       // 获取NAT网关数据
@@ -707,9 +712,22 @@
             'onOk': () => {
               var url = `network/delNatGateway.do?natGatewayId=${this.select.id}`
               axios.get(url).then(response => {
-                console.log(response)
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$http.get('network/listNatGateway.do').then(response => {
+                    this.setNatData(response)
+                    this.select = null
+                  })
+                } else {
+                  this.$message.error({
+                    content: response.data.message
+                  })
+                }
               })
             }
+          })
+        } else {
+          this.$message.error({
+            content: '请先选择一个网关'
           })
         }
       },
@@ -740,7 +758,7 @@
                 this.$router.push('order')
                 // this.$error('error', response.data.message)
               } else {
-                this.$error('error', response.data.message)
+                this.$message.error({content: response.data.message})
               }
             })
           } else {
@@ -809,13 +827,16 @@
       handlebindIPSubmit(){
         this.$refs.bindIPFormValidate.validate(validate => {
           if (validate) {
+            this.showModal.bindIP = false
             this.$http.get('network/bindingElasticIP.do', {
               params: {
                 publicIpId: this.bindIPForm.IP,
                 natGatewayId: this.bindIPForm.natGatewayId
               }
             }).then(response => {
-
+              if (response.status == 200 && response.data.status == 2) {
+                this.$error('error', response.data.message)
+              }
             })
           }
         })
