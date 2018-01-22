@@ -73,10 +73,12 @@
                     @click="mirror='customImage',mirrorType=''" :disabled="userInfo==null">自定义镜像
             </button>
           </div>
-          <div class="config-button" style="margin-left: 103px;" v-if="mirror=='UHub'">
-            <button :class="{select:mirrorType=='Windows'}" @click="mirrorType='Windows'">Windows</button>
-            <button :class="{select:mirrorType=='Centos'}" @click="mirrorType='Centos'">Centos</button>
-            <button :class="{select:mirrorType=='Ubuntu'}" @click="mirrorType='Ubuntu'">Ubuntu</button>
+          <div class="config-button public-image" style="margin-left: 103px;" v-if="mirror=='UHub'">
+            <div v-for="(item,index) in system" :key="index" class="button-col">
+              <button v-for="(content,index) in item" :key="index" @click="publicImage(content)"
+                      :class="{select:pImagename==content.templatedescript}">{{content.templatedescript}}
+              </button>
+            </div>
           </div>
           <div class="configMirror-button" v-if="mirror=='imageApplication'">
             <button v-for="item in mirrorConfigList" :class="{select:item.value==mirrorType}"
@@ -120,7 +122,8 @@
             <span>价格</span>
             <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"
                   v-if="timeType=='current'">{{ customHostCost}}元/小时</span>
-            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;" v-else>{{ customHostCost}}元</span>
+            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"
+                  v-else>{{ customHostCost}}元</span>
           </div>
         </div>
         <!--网络与带宽-->
@@ -142,7 +145,8 @@
               <div class="api" slot="content">
                 <p style="margin-bottom: 15px;margin-left: 0;color: #333333">请输入您的要绑定的IP</p>
                 <div>
-                  <span style="vertical-align: middle">{{private.split('#')[1].substr(0,private.split('#')[1].lastIndexOf('.'))}}.</span>
+                  <span
+                    style="vertical-align: middle">{{private.split('#')[1].substr(0, private.split('#')[1].lastIndexOf('.'))}}.</span>
                   <Input-number :max="255" :min="1" size="small" v-model="specifyIP"></Input-number>
                   <button @click="specifyClick"
                           style="padding:0px 12px;background-color: #2A99F2;cursor: pointer;color: #ffffff;">确定
@@ -187,7 +191,8 @@
             <span style="margin-right: 68px">价格</span>
             <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"
                   v-if="timeType=='current'">{{ ipPrice}}元/小时</span>
-            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;" v-else>{{ ipPrice}}元</span>
+            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"
+                  v-else>{{ ipPrice}}元</span>
           </div>
         </div>
         <!--硬盘-->
@@ -234,7 +239,8 @@
             <span style="margin-right: 68px">价格</span>
             <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"
                   v-if="timeType=='current'">{{ customDiskPrice}}元/小时</span>
-            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;" v-else>{{ customDiskPrice}}元</span>
+            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"
+                  v-else>{{ customDiskPrice}}元</span>
           </div>
         </div>
       </div>
@@ -250,15 +256,13 @@
                   @click="mirror='customImage',mirrorType=''" :disabled="userInfo==null">自定义镜像
           </button>
         </div>
-        <div class="config-button public-image" style="margin-left: 103px;">
+        <div class="config-button public-image" style="margin-left: 103px;" v-if="mirror=='UHub'">
           <div v-for="(item,index) in system" :key="index" class="button-col">
             <button v-for="(content,index) in item" :key="index" @click="publicImage(content)"
-                    :class="{select:mirrorbtn}">{{content.templatedescript}}
+                    :class="{select:pImagename==content.templatedescript}">{{content.templatedescript}}
             </button>
-            <!-- {{content.me}} -->
           </div>
         </div>
-
         <div class="configMirror-button" v-if="mirror=='imageApplication'">
           <button v-for="item in mirrorConfigList" :class="{select:item.value==mirrorType}"
                   @click="mirrorType=item.value">
@@ -334,7 +338,8 @@
       </div>
       <div class="settleAccounts" v-else>
         <span>查看计价详情</span>
-        <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">{{ customTotalCost }}元</span>
+        <p style="float: right; color: #333333;">总计费用：<span style="color:#F85E1D;font-size: 24px ">{{ customTotalCost
+          }}元</span>
         </p>
         <p style="margin-top: 10px">已省：<span style="color:#F85E1D;">{{ customTotalCoupon }}元</span></p>
       </div>
@@ -407,6 +412,7 @@
 <script type="text/ecmascript-6">
   import $store from '../../../vuex'
   import regExp from '../../../util/regExp'
+
   var debounce = require('throttle-debounce/debounce')
   var messageMap = {
     loginname: {
@@ -420,10 +426,11 @@
       placeholder: '请输入验证码'
     }
   }
-  export default{
-    data () {
+  export default {
+    data() {
       return {
         // 产品类型
+        pImagename: 'windows-2008-64',
         osId: '',
         system: '',
         productList: [
@@ -613,7 +620,7 @@
         infoMessage: ''
       }
     },
-    created () {
+    created() {
       this.zoneList = $store.state.zoneList
       this.zone = $store.state.zoneList[0].zoneid
       if ($store.state.userInfo) {
@@ -628,12 +635,12 @@
         this.system = system
       })
     },
-    mounted(){
+    mounted() {
 
     },
     methods: {
       /* 切换到自定义 */
-      configChange (val) {
+      configChange(val) {
         this.pitchOn = val
         this.addButton = false
         this.buyButton = false
@@ -655,7 +662,7 @@
         }
       },
       /* 核心数切换 */
-      changeCPU (item) {
+      changeCPU(item) {
         if (this.memorySize < item) {
           this.memorySize = item
         }
@@ -665,7 +672,7 @@
         this.cpuNum = item
       },
       /* 加入预算清单 */
-      addBudgetList () {
+      addBudgetList() {
         this.buyButton = false
         this.addButton = true
         var list = []
@@ -711,11 +718,13 @@
         }
       },
       /* 立即购买 */
-      publicImage(item){
-        this.osId = item.systemtemplateid;
+      publicImage(item) {
+        this.osId = item.systemtemplateid
+        this.pImagename = item.templatedescript
         console.log(this.osId)
+        console.log(this.pImagename)
       },
-      buyImmediately () {
+      buyImmediately() {
         if (this.userInfo == null) {
           this.buyButton = true
           this.addButton = false
@@ -837,7 +846,7 @@
         }
       },
       /* 创建快速配置主机订单 */
-      createQuickHostOrder (params) {
+      createQuickHostOrder(params) {
         if (this.hostPassword != '') {
           if (!this.passwordRegExp.test(this.hostPassword)) {
             return
@@ -856,7 +865,7 @@
         })
       },
       /* 创建自定义配置主机订单 */
-      createCustomHostOrder () {
+      createCustomHostOrder() {
         if (this.hostPassword != '') {
           if (!this.passwordRegExp.test(this.hostPassword)) {
             return
@@ -890,7 +899,7 @@
           })
       },
       /* 登录框校检等 */
-      vail (field) {
+      vail(field) {
         var text = this.form[field]
         if (text == '') {
           this.vailForm[field].message = ''
@@ -907,7 +916,7 @@
           this.vailForm[field].warning = false
         }
       },
-      isCorrect (field) {
+      isCorrect(field) {
         if (field == 'vailCode') {
           // this.vailForm.vailCode.message = messageMap.vailCode.placeholder
           this.vailForm.vailCode.warning = false
@@ -923,7 +932,7 @@
           }
         }
       },
-      focus (field) {
+      focus(field) {
         if (field == 'vailCode' && this.vailForm.loginname.message == '验证码错误') {
           this.vailForm.loginname.message = messageMap.loginname.placeholder
           this.vailForm.loginname.warning = false
@@ -948,7 +957,7 @@
           this.vailForm[field].warning = false
         }
       },
-      submit () {
+      submit() {
         this.$http.get('http://localhost:8082/ruicloud/user/login.do', {
           params: {
             username: this.form.loginname,
@@ -971,14 +980,14 @@
         })
       },
       /* 删除磁盘 */
-      delDisk (index) {
+      delDisk(index) {
         this.diskList.splice(index, 1)
         if (this.diskLimit < 6) {
           this.diskLimit++
         }
       },
       /* 添加磁盘 */
-      addDisk () {
+      addDisk() {
         if (this.userInfo == null) {
           this.showModal.login = true
           this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
@@ -994,7 +1003,7 @@
         }
       },
       /* 添加网卡 */
-      addNetWorkCard () {
+      addNetWorkCard() {
         var parms = {value: 1}
         this.netWorkCards.push(parms)
         if (this.netWorkCardLimit > 0) {
@@ -1002,26 +1011,26 @@
         }
       },
       /* 删除网卡 */
-      delNetWorkCard (index) {
+      delNetWorkCard(index) {
         this.netWorkCards.splice(index, 1)
         if (this.netWorkCardLimit < 4) {
           this.netWorkCardLimit++
         }
       },
       /* 重选私网 */
-      reset () {
+      reset() {
         this.specify = false
         this.specifyIP = 1
         this.specifyInfo = '指定IP'
       },
       /* 修改指定IP */
-      specifyClick () {
+      specifyClick() {
         this.specify = true
         this.visible = false
         this.specifyInfo = this.private.split('#')[1].substr(0, this.private.split('#')[1].lastIndexOf('.')) + '.' + this.specifyIP
       },
       /* 获取当前用户还能购买的磁盘数量 */
-      getDiskLimit () {
+      getDiskLimit() {
         var url = 'http://localhost:8082/ruicloud/user/userSourceManager.do?zoneId=' + this.zone
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -1030,7 +1039,7 @@
         })
       },
       /* 改变磁盘类型，查询价格（由于vue监听数组只监听几种变异方法，所以需要用splice()） */
-      changeDiskType (index, value) {
+      changeDiskType(index, value) {
         this.diskList[index].diskType = value
         var params = {
           diskType: value,
@@ -1040,7 +1049,7 @@
         this.diskList.splice(index, 1, params)
       },
       /* 改变磁盘容量，查询价格 */
-      changeDiskSize (index, value) {
+      changeDiskSize(index, value) {
         var params = {
           diskType: this.diskList[index].diskType,
           diskSize: value
@@ -1231,11 +1240,11 @@
     },
     computed: {
       /* 校检登录信息完整 */
-      disabled () {
+      disabled() {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.agree && this.vailForm.loginname.warning == false)
       },
       /* 快速自定义主机切换后按钮class变化 */
-      hostDisabled () {
+      hostDisabled() {
         if (this.pitchOn == 'custom') {
           return (this.customTotalCost == 0)
         } else {
@@ -1243,25 +1252,25 @@
         }
       },
       /* 快速主机总价格 */
-      quickTotalCost () {
+      quickTotalCost() {
         return Math.round((this.quickHostCost * 100 + this.ipPrice * 100)) / 100
       },
       /* 快速主机总优惠 */
-      quickTotalCoupon () {
+      quickTotalCoupon() {
         return Math.round((this.quickHostCoupon * 100 + this.ipCoupon * 100)) / 100
       },
       /* 自定义主机总价格 */
-      customTotalCost () {
+      customTotalCost() {
         return Math.round((this.customHostCost * 100 + this.ipPrice * 100 + this.customDiskPrice * 100)) / 100
       },
       /* 自定义主机总优惠价格 */
-      customTotalCoupon () {
+      customTotalCoupon() {
         return Math.round((this.customHostCoupon * 100 + this.ipCoupon * 100 + this.customDiskCoupon * 100)) / 100
       }
     },
     watch: {
       /* 监听是否购买公网ip,重新配置 */
-      buyPublicIP () {
+      buyPublicIP() {
         if (this.pitchOn == 'quick') {
           if (this.buyPublicIP) {
             this.quickConfig = '1'
@@ -1280,11 +1289,11 @@
         }
       },
       /* 监听配置变化 查询快速配置主机价格 */
-      quickConfig () {
+      quickConfig() {
         this.queryQuickHost()
       },
       /* 监听购买时间类型变化 查询价格 */
-      timeType () {
+      timeType() {
         if (this.pitchOn == 'quick') {
           this.queryQuickHost()
         } else {
@@ -1305,7 +1314,7 @@
         }
       },
       /* 监听购买时间长短变化 查询价格 */
-      time () {
+      time() {
         if (this.pitchOn == 'quick') {
           this.queryQuickHost()
         } else {
@@ -1326,15 +1335,15 @@
         }
       },
       /* 监听磁盘列表变化，查询价格 */
-      diskList () {
+      diskList() {
         this.queryDiskPrice()
       },
       /* 监听带宽，查询价格 */
-      publicIP () {
+      publicIP() {
         this.queryIpPrice()
       },
       /* 监听系统盘类型，查询价格 */
-      hostType () {
+      hostType() {
         var params = {
           cpuNum: this.cpuNum + '',
           memory: this.memorySize + '',
@@ -1347,7 +1356,7 @@
         this.queryHost(params)
       },
       /* 监听cpu核心数，查询价格 */
-      cpuNum () {
+      cpuNum() {
         var params = {
           cpuNum: this.cpuNum + '',
           memory: this.memorySize + '',
@@ -1360,7 +1369,7 @@
         this.queryHost(params)
       },
       /* 监听内存，查询价格 */
-      memorySize () {
+      memorySize() {
         var params = {
           cpuNum: this.cpuNum + '',
           memory: this.memorySize + '',

@@ -158,7 +158,8 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   import axios from 'axios'
-  var nameError = '', getwayError = '';
+  var nameError = ''
+  var getwayError = ''
   const validateName = (rule, value, callback) => {
     if (nameError) {
       callback(new Error(nameError))

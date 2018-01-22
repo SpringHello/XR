@@ -18,8 +18,7 @@ const hostPrice = () => import('@/components/App/Price/Host')
 const diskPrice = () => import('@/components/App/Price/Disk')
 const elasticIPPrice = () => import('@/components/App/Price/ElasticIP')
 const Aboutus = () => import('@/components/App/Aboutus')
-const Usercenter = () => import('@/components/App/Usercenter')
-const Manage = () => import('@/components/App/Manage')
+
 
 /* 产品页面路由 */
 const Pecs = () => import('@/components/App/product/ECS.vue')
@@ -66,6 +65,8 @@ const Ip = () => import('@/components/Back/Ip')
 const Order = () => import('@/components/Back/Order')
 const PayResult = () => import('@/components/Back/PayResult')
 const Expenses = () => import('@/components/Back/Expenses')
+const Usercenter = () => import('@/components/Back/Usercenter')
+const Manage = () => import('@/components/Back/Manage')
 
 
 // 404
@@ -85,8 +86,6 @@ var router = new Router({
         {path: 'home', name: 'home', component: Home},
         {path: 'ecs', name: 'ecs', component: Ecs},
         {path: 'about', name: 'about', component: Aboutus},
-        {path: 'usercenter', name: 'usercenter', component: Usercenter},
-        {path: 'manage', name: 'manage', component: Manage},
         {path: 'document', name: 'document', component: Document},
         {
           path: 'price',
@@ -155,7 +154,9 @@ var router = new Router({
         {path: 'ip', name: 'ip', component: Ip},
         {path: 'order', name: 'order', component: Order},
         {path: 'payResult', name: 'payResult', component: PayResult},
-        {path: 'expenses', name: 'expenses', component: Expenses}
+        {path: 'expenses', name: 'expenses', component: Expenses},
+        {path: 'usercenter', name: 'usercenter', component: Usercenter},
+        {path: 'manage', name: 'manage', component: Manage}
       ]
     },
     {

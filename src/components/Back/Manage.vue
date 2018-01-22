@@ -1,21 +1,24 @@
 <template>
   <div class="background">
     <div class="wrapper">
-      <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / <router-link to="host"
-                                                                                                             style="color:rgba(17, 17, 17, 0.43);">云主机</router-link> / 管理</span>
+      <span>
+        <router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> /
+        <router-link to="host" style="color:rgba(17, 17, 17, 0.43);">云主机</router-link> / 管理
+      </span>
       <div class="content">
         <div class="info">
 
           <header>
             <Icon type="chevron-down"></Icon>
             <span>{{this.$route.query.computername}}</span>
-            <!--div>
+            <div>
+              <Button class="btn">返回</Button>
               <Button class="btn">连接主机</Button>
-              <Poptip confirm title="您确认关闭主机吗？">
+              <!-- <Poptip confirm title="您确认关闭主机吗？">
                 <Icon type="power" style="padding-left: 10px;padding-top:2px;font-size: 25px;"></Icon>
-              </Poptip>
+              </Poptip> -->
 
-            </div-->
+            </div>
 
           </header>
           <div class="pan" v-if="computerInfo!=null" style="width:28%">
@@ -140,7 +143,16 @@
                 </div>
               </div>
             </Tab-pane>
-            <Tab-pane label="修改主机">
+            <TabPane label="快照管理" name="name2">
+              <div class="body">
+                <Button type="primary" @click="delSnapshot" style="margin-bottom:10px">删除快照</Button>
+                <Table ref="selection" :columns="snapshotCol" :data="snapshotData"
+                       @select="changeSelect(selection)"></Table>
+                <!-- <Button @click="handleSelectAll1(true)">Set all selected</Button>
+        <Button @click="handleSelectAll1(false)">Cancel all selected</Button> -->
+              </div>
+            </TabPane>
+            <Tab-pane label="修改密码">
               <div class="body">
                 <label>重置密码</label>
                 <Form ref="reset" :model="resetPasswordForm" label-position="left" :label-width="100"
@@ -223,7 +235,7 @@
                     <button>查询</button>
                   </div>
                 </div>
-                <!-- 网卡暂无接口 >
+                &lt;!&ndash; 网卡暂无接口 >
                 <Table :columns="columns" :data="tableData"></Table>
               </div>
             </Tab-pane-->
@@ -285,6 +297,22 @@
         </div>
       </Modal>
     </div>
+    <!-- 回滚弹窗 -->
+    <Modal v-model="showModal.rollback" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>主机回滚</strong>
+          <p class="lh24">是否确定回滚主机</p>
+          <p class="lh24">提示：您正使用<span class="bluetext">快照名称</span>回滚<span class="bluetext">主机名称</span>至<span
+            class="bluetext">时间点</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的主机内的数据将丢失。</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.rollback=false">取消</Button>
+        <Button type="primary" @click="rollback">确定</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -317,6 +345,7 @@
         }
       }
       return {
+        cursnapshot: null,
         CPUTime: '',
         diskTime: '',
         memoryTime: '',
@@ -328,7 +357,83 @@
         diskPolar: JSON.parse(defaultOptionstr),
         memoryPolar: JSON.parse(defaultOptionstr),
         ipPolar: ipOptions,
-
+        snapshotCol: [
+          {
+            type: 'selection',
+            width: 60,
+            align: 'center'
+          },
+          {
+            title: '快照名称',
+            key: 'name'
+          },
+          {
+            title: '状态',
+            key: 'status'
+          },
+          {
+            title: '快照策略',
+            key: 'stratege'
+          },
+          {
+            title: '间隔类型',
+            key: 'type'
+          },
+          {
+            title: '创建于',
+            key: 'createTime'
+          },
+          {
+            title: '剩余保留时长',
+            key: 'remainTime'
+          },
+          {
+            title: '操作',
+            key: 'action',
+            render: (h, params) => {
+              return h('span', {
+                style: {
+                  color: '#2A99F2',
+                  cursor: 'point'
+                },
+                on: {
+                  click: () => {
+                    console.log(params.index)
+                    this.showModal.rollback = true
+                    console.log(params.row)
+                    this.cursnapshot = params.row
+                  }
+                }
+              }, '回滚')
+            }
+          }
+        ],
+        snapshotData: [
+          {
+            name: 'TradeCode21',
+            status: 1,
+            stratege: '手动备份',
+            type: '手动',
+            createTime: '2016-10-03',
+            remainTime: '永久'
+          },
+          {
+            name: 'TradeCode211112',
+            status: 1,
+            stratege: '手动备份',
+            type: '手动11',
+            createTime: '2016-10-03',
+            remainTime: '永久'
+          },
+          {
+            name: 'TradeCode211213',
+            status: 1,
+            stratege: '手动备份',
+            type: '手动12',
+            createTime: '2016-10-03',
+            remainTime: '永久'
+          }
+        ],
         cpu: {
           type: '今天',
           showType: '折线'
@@ -449,7 +554,8 @@
         searchDate: [],
         reloadButton: '确认重装',
         showModal: {
-          setMonitoringForm: false
+          setMonitoringForm: false,
+          rollback: false,
         },
         setList: [
           {
@@ -517,7 +623,7 @@
       }
     },
     created() {
-      var computerInfoURL = `information/listVMByComputerName.do?computerName=${this.$route.query.computername}&zoneId=${this.$route.query.zoneid}`
+      var computerInfoURL = `information/listVMByComputerName.do?computerName=${this.$route.query.computername}`
       this.$http.get(computerInfoURL)
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -529,7 +635,6 @@
                 }
               })
           }
-
         })
 
       var url = `alarm/getVmAlarmByHour.do?vmname=${this.$route.query.instancename}&type=core`
@@ -568,6 +673,19 @@
       this.IPTime = this.getCurrentDate()
     },
     methods: {
+      changeSelect(selection) {
+        alert(selection)
+      },
+      handleSelectAll1(status) {
+        // this.$refs.selection.select(status);
+      },
+      delSnapshot() {
+
+      },
+      rollback() {
+        console.log(this.cursnapshot.name)
+        this.showModal.rollback = false
+      },
       getCurrentDate() {
         return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
       },
@@ -600,7 +718,6 @@
           console.log(polar)
           this.ipPolar = polar
         }
-
       },
       queryData(type) {
         if (type == 'cpu') {
@@ -809,7 +926,8 @@
             color: #666666;
             font-size: 12px;
             line-height: 12px;
-            box-shadow: 1px 1px 1px #666666;
+            // box-shadow: 1px 1px 1px #666666;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.35);
             .bluetext {
               color: rgb(42, 153, 242);
             }

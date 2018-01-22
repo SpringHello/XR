@@ -256,16 +256,16 @@
       </div>
     </Modal>
 
-    <!-- 绑定弹性IP -->
+    <!-- 绑定源弹性IP -->
     <Modal v-model="showModal.bindIP" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">绑定弹性IP</span>
+        <span class="universal-modal-title">绑定源弹性IP</span>
       </p>
       <div class="universal-modal-content-flex">
-        <Form :model="addNatForm" :rules="addNatRuleValidate" ref="addNatFormValidate">
-          <FormItem label="选择弹性IP" prop="publicIp">
-            <Select v-model="addNatForm.publicIp">
-              <Option v-for="item in addNatForm.publicIpOptions" :value="item.publicipid" :key="item.publicipid">
+        <Form :model="bindIPForm" :rules="bindIPRuleValidate" ref="bindIPFormValidate">
+          <FormItem label="选择源弹性IP" prop="IP">
+            <Select v-model="bindIPForm.IP">
+              <Option v-for="item in bindIPForm.IPOptions" :value="item.publicipid" :key="item.publicipid">
                 {{item.publicip}}
               </Option>
             </Select>
@@ -274,7 +274,7 @@
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="handleAddNatSubmit">确认绑定</Button>
+        <Button type="primary" @click="handlebindIPSubmit">确认绑定</Button>
       </div>
     </Modal>
   </div>
@@ -338,56 +338,130 @@
           {
             title: '源IP',
             align: 'center',
-            key: 'sourcenatip'
+            render: (h, object) => {
+              if (object.row.sourcenatip) {
+                return h('div', [h('span', {
+                  style: {
+                    marginRight: '10px'
+                  }
+                }, object.row.sourcenatip), h('Icon', {
+                  attrs: {
+                    type: 'close'
+                  },
+                  style: {
+                    cursor: 'pointer'
+                  },
+                  nativeOn: {
+                    click: () => {
+                      console.log('click')
+                      this.$Modal.confirm({
+                        render: (h) => {
+                          return h('p', {
+                            class: 'modal-content-s'
+                          }, [h('i', {
+                            class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
+                            style: {
+                              color: '#f90'
+                            }
+                          }), '确认解绑该弹性IP?'])
+                        },
+                        title: '解绑弹性IP',
+                        scrollable: true,
+                        okText: '确定解绑',
+                        cancelText: '取消',
+                        'onOk': () => {
+                          var url = `network/delNatGateway.do?natGatewayId=${this.select.id}`
+                          axios.get(url).then(response => {
+                            console.log(response)
+                          })
+                        }
+                      })
+                    }
+                  }
+                }, '')])
+              } else {
+                return h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer',
+                  },
+                  on: {
+                    click: () => {
+                      // 绑定sourceNat
+                      this.bindIP(object.row)
+                    }
+                  }
+                }, '绑定弹性IP')
+              }
+            }
           },
           {
             title: '目标IP',
             align: 'center',
             render: (h, object) => {
-              var prottransipArray = object.row.prottransip.split(',')
               var renderArray = []
-              for (var ip of prottransipArray) {
-                renderArray.push(h('san', {
-                  style: {
-                    display: 'block'
-                  }
-                }, ip))
+              if (object.row.prottransip) {
+                var prottransipArray = object.row.prottransip.split(',')
+                for (var item of prottransipArray) {
+                  renderArray.push(h('div', [h('span', {
+                    style: {
+                      marginRight: '10px'
+                    }
+                  }, item), h('Icon', {
+                    attrs: {
+                      type: 'close'
+                    },
+                    style: {
+                      cursor: 'pointer'
+                    },
+                    nativeOn: {
+                      click: () => {
+                        console.log('click')
+                        this.$Modal.confirm({
+                          render: (h) => {
+                            return h('p', {
+                              class: 'modal-content-s'
+                            }, [h('i', {
+                              class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
+                              style: {
+                                color: '#f90'
+                              }
+                            }), '确认解绑该弹性IP?'])
+                          },
+                          title: '解绑弹性IP',
+                          scrollable: true,
+                          okText: '确定解绑',
+                          cancelText: '取消',
+                          'onOk': () => {
+                            var url = `network/delNatGateway.do?natGatewayId=${this.select.id}`
+                            axios.get(url).then(response => {
+                              console.log(response)
+                            })
+                          }
+                        })
+                      }
+                    }
+                  }, '')]))
+                }
               }
-              return h('div', {}, renderArray)
-            }
-          },
-          {
-            title: '创建时间',
-            align: 'center',
-            key: 'createtime'
-          },
-          {
-            title: '管理',
-            align: 'center',
-            width: 170,
-            render: (h, object) => {
-              var operator = [h('span', {
+              renderArray.push(h('div', {
                 style: {
                   color: '#2A99F2',
                   cursor: 'pointer',
-                  marginRight: '10px'
                 },
                 on: {
                   click: () => {
                     this.showModal.bindIP = true
                   }
                 }
-              }, '绑定弹性IP')]
-              if (object.row.sourcenatip && object.row.prottransip) {
-                operator.push(h('span', {
-                  style: {
-                    color: '#2A99F2',
-                    cursor: 'pointer'
-                  }
-                }, '解绑弹性IP'))
-              }
-              return h('div', operator)
+              }, '绑定弹性IP'))
+              return h('div', renderArray)
             }
+          },
+          {
+            title: '创建时间',
+            align: 'center',
+            key: 'createtime'
           }
         ],
         natData: [],
@@ -448,6 +522,13 @@
           timeValue: '',
           IPSize: 1
         },
+        // nat绑定源IP表单
+        bindIPForm: {
+          // nat网关id(数据库id，当Modal打开时设置)
+          natGatewayId: '',
+          IP: '',
+          IPOptions: []
+        },
         // 新建vpc验证规则
         newRuleValidate: {
           vpcName: [
@@ -504,6 +585,12 @@
           timeValue: [
             {required: true, message: '请选择购买时长', trigger: 'change'}
           ]
+        },
+        // nat绑定源IP验证规则
+        bindIPRuleValidate: {
+          IP: [
+            {required: true, message: '请选择一个弹性IP', trigger: 'change'}
+          ],
         },
         // ajax刷新instance，beforeRouteLeave钩子函数中调用clearInterval
         intervalInstance: null,
@@ -624,7 +711,6 @@
               })
             }
           })
-
         }
       },
       // 新建vpc价格查询
@@ -701,6 +787,36 @@
             })
           } else {
             // 表单验证失败
+          }
+        })
+      },
+      // nat网关绑定源IP，获取所有可用的弹性IP
+      bindIP(row){
+        // 获取可以挂载的所有弹性IP
+        this.$http.get('network/listPublicIp.do', {
+          params: {
+            useType: '0',
+            vpcId: row.vpcid,
+            status: '1'
+          }
+        }).then(response => {
+          this.bindIPForm.IPOptions = response.data.result
+        })
+        this.bindIPForm.natGatewayId = row.id
+        this.showModal.bindIP = true
+      },
+      // nat网关绑定源IP提交ajax
+      handlebindIPSubmit(){
+        this.$refs.bindIPFormValidate.validate(validate => {
+          if (validate) {
+            this.$http.get('network/bindingElasticIP.do', {
+              params: {
+                publicIpId: this.bindIPForm.IP,
+                natGatewayId: this.bindIPForm.natGatewayId
+              }
+            }).then(response => {
+
+            })
           }
         })
       },

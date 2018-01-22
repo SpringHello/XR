@@ -30,15 +30,14 @@ export default {
     axisTick: {
       alignWithLabel: true
     }
-  }
-  ,
+  },
   yAxis: [
     {
       type: 'value',
       name: '',
       axisLabel: {
         formatter: '{value} kb/s'
-      },
+      }
     }
   ],
   series: [
@@ -53,4 +52,4 @@ export default {
       data: []
     }
   ]
-};
+}

@@ -3,11 +3,11 @@
     <div class="background">
       <div class="wrapper">
         <Spin fix v-show="payLoading">
-          <Icon type="load-c" size=80     class="demo-spin-icon-load"></Icon>
+          <Icon type="load-c" size=80       class="demo-spin-icon-load"></Icon>
           <span style="display: block;font-size:14px;color:black;font-family: Microsoft Yahei,微软雅黑;">正在支付，请稍后...</span>
         </Spin>
         <Spin fix v-show="">
-          <Icon type="load-c" size=80     class="demo-spin-icon-load"></Icon>
+          <Icon type="load-c" size=80       class="demo-spin-icon-load"></Icon>
           <span style="display: block;font-size:14px;color:black;font-family: Microsoft Yahei,微软雅黑;">正在查询，请稍后...</span>
         </Spin>
         <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 费用中心</span>
@@ -298,17 +298,17 @@
     data() {
       const validateInvoice = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('开票金额不能为空'));
+          return callback(new Error('开票金额不能为空'))
         }
         if (!Number.isInteger(value)) {
-          callback(new Error('请输入正确的金额数'));
+          callback(new Error('请输入正确的金额数'))
         } else if (this.formInvoiceDate.InvoiceType == 0) {
           if (value < 1000 || value > this.invoice) {
-            callback(new Error('开票金额不能少于1000或者多于实际可开金额'));
+            callback(new Error('开票金额不能少于1000或者多于实际可开金额'))
           }
         } else if (this.formInvoiceDate.InvoiceType == 1) {
           if (value < 10000 || value > this.invoice) {
-            callback(new Error('开票金额不能少于10000或者多于实际可开金额'));
+            callback(new Error('开票金额不能少于10000或者多于实际可开金额'))
           }
         }
         callback()
@@ -318,86 +318,86 @@
       }
       const validateTitle = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('发票抬头不能为空'));
+          return callback(new Error('发票抬头不能为空'))
         } else {
-          callback();
+          callback()
         }
-      };
+      }
       const validateRecipients = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('收件人姓名不能为空'));
+          return callback(new Error('收件人姓名不能为空'))
         } else {
-          callback();
+          callback()
         }
-      };
+      }
       const validateAddress = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('收件人地址不能为空'));
+          return callback(new Error('收件人地址不能为空'))
         }
         if ((/^[0-9a-zA-Z]+$/.test(value))) {
-          callback(new Error('请输入正确的收件地址'));
+          callback(new Error('请输入正确的收件地址'))
         } else {
-          callback();
+          callback()
         }
-      };
+      }
       const validatePhone = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('联系电话不能为空'));
+          return callback(new Error('联系电话不能为空'))
         }
         if (!(/^1(3|4|5|7|8)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
-          callback(new Error('请输入正确的电话号码'));
+          callback(new Error('请输入正确的电话号码'))
         } else {
-          callback();
+          callback()
         }
-      };
+      }
       const validateCompanyName = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('单位名称不能为空'));
+          return callback(new Error('单位名称不能为空'))
         } else {
-          callback();
+          callback()
         }
-      };
+      }
       const validaTetaxpayerID = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('纳税人识别码不能为空'));
+          return callback(new Error('纳税人识别码不能为空'))
         } else {
-          callback();
+          callback()
         }
-      };
+      }
       const validaRegisteredAddress = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('注册地址不能为空'));
+          return callback(new Error('注册地址不能为空'))
         } else {
-          callback();
+          callback()
         }
-      };
+      }
       const validaRegisteredPhone = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('注册电话不能为空'));
+          return callback(new Error('注册电话不能为空'))
         }
         if (!(/^1(3|4|5|7|8)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
-          callback(new Error('请输入正确的电话号码'));
+          callback(new Error('请输入正确的电话号码'))
         } else {
-          callback();
+          callback()
         }
-      };
+      }
       const validaDepositBank = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('开户银行不能为空'));
+          return callback(new Error('开户银行不能为空'))
         } else {
-          callback();
+          callback()
         }
-      };
+      }
       const validaBankAccount = (rule, value, callback) => {
         if (!value) {
-          return callback(new Error('银行账户不能为空'));
+          return callback(new Error('银行账户不能为空'))
         }
-        if (!(/^[1-9]\d{7,27}$/.test(value.replace(/\s/g, "")))) {
-          callback(new Error('请输入正确的银行账户'));
+        if (!(/^[1-9]\d{7,27}$/.test(value.replace(/\s/g, '')))) {
+          callback(new Error('请输入正确的银行账户'))
         } else {
-          callback();
+          callback()
         }
-      };
+      }
       return {
         searchLoading: false,
         payLoading: false,
@@ -406,7 +406,7 @@
             title: '类型',
             key: 'operator',
             align: 'center',
-            width: 120,
+            width: 120
           },
           {
             title: '面值/折扣',
@@ -414,7 +414,7 @@
             render: (h, params) => {
               return h('span', params.row.operator == '优惠券' ? `${params.row.money}元` : `${params.row.money}折`)
             },
-            width: 110,
+            width: 110
           },
           {
             title: '适用产品',
@@ -438,19 +438,19 @@
             title: '生效时间',
             key: 'starttime',
             align: 'center',
-            width: 175,
+            width: 175
           },
           {
             title: '失效时间',
             key: 'endtime',
             align: 'center',
-            width: 175,
+            width: 175
           },
           {
             title: '描述',
             key: 'ticketdescript',
             align: 'center',
-            ellipsis: true,
+            ellipsis: true
           },
           {
             title: '备注',
@@ -460,7 +460,7 @@
             render: (h, params) => {
               return h('span', params.row.remark == null ? '--' : params.row.remark)
             }
-          },
+          }
         ],
         cardVolumeTabledata: [],
         billColumns: [
@@ -470,15 +470,15 @@
             align: 'center',
             width: 150,
             render: (h, params) => {
-              const row = params.row;
-              const color = row.status === 0 ? 'green' : row.status === 1 ? 'red' : row.status === 2 ? 'yellow' : 'blue';
-              const text = row.status === 0 ? '已签收' : row.status === 1 ? '已驳回' : row.status === 2 ? '审核中' : '物流中';
+              const row = params.row
+              const color = row.status === 0 ? 'green' : row.status === 1 ? 'red' : row.status === 2 ? 'yellow' : 'blue'
+              const text = row.status === 0 ? '已签收' : row.status === 1 ? '已驳回' : row.status === 2 ? '审核中' : '物流中'
               return h('Tag', {
                 props: {
                   type: 'dot',
                   color: color
                 }
-              }, text);
+              }, text)
             }
           },
           {
@@ -494,19 +494,19 @@
             title: '发票抬头',
             key: 'title',
             align: 'center',
-            width: 220,
+            width: 220
           },
           {
             title: '发票申请时间',
             key: 'createtime',
             align: 'center',
-            width: 200,
+            width: 200
           },
           {
             title: '发票金额',
             key: 'amount',
             align: 'center',
-            width: 140,
+            width: 140
           },
           {
             title: '物流信息',
@@ -514,21 +514,21 @@
             align: 'center',
             width: 110,
             render: (h, params) => {
-              const row = params.row;
-              const text = row.status === 0 ? '查看' : row.status === 3 ? '查看' : '';
+              const row = params.row
+              const text = row.status === 0 ? '查看' : row.status === 3 ? '查看' : ''
               return h('div', [
                 h('span', {
                   style: {
                     cursor: 'pointer',
-                    color: ' #2A99F2',
+                    color: ' #2A99F2'
                   },
                   on: {
                     click: () => {
-                      this.showlogistics(params.index);
+                      this.showlogistics(params.index)
                     }
                   }
-                }, text),
-              ]);
+                }, text)
+              ])
             }
           },
           {
@@ -541,17 +541,17 @@
                 h('span', {
                   style: {
                     cursor: 'pointer',
-                    color: ' #2A99F2',
+                    color: ' #2A99F2'
                   },
                   on: {
                     click: () => {
                       this.showInvoice(params.index)
                     }
                   }
-                }, '详情'),
-              ]);
+                }, '详情')
+              ])
             }
-          },
+          }
         ],
         billTabledata: [],
         name: 'accountSummary',
@@ -571,24 +571,24 @@
         dateRange: ['', ''],
         order_dateRange: ['', ''],
         columns: [
-          /*{
-           title: '交易详情',
-           key: 'descs',
-           align: 'center',
-           width: 355,
-           ellipsis: true,
-           },*/
+          // {
+          //  title: '交易详情',
+          //  key: 'descs',
+          //  align: 'center',
+          //  width: 355,
+          //  ellipsis: true,
+          //  },
           {
             title: '交易详情',
             align: 'center',
             width: 355,
             render: (h, params) => {
               return h('Tooltip', {
-                  props: {
-                    content: params.row.descs,
-                    placement: 'top'
-                  }
-                },
+                props: {
+                  content: params.row.descs,
+                  placement: 'top'
+                }
+              },
                 params.row.descs
               )
             }
@@ -602,7 +602,7 @@
               return h('div', [
                 h('span', '￥'),
                 h('strong', params.row.amount)
-              ]);
+              ])
             }
           },
 
@@ -612,21 +612,21 @@
             align: 'center',
             width: 150,
             render: (h, params) => {
-              return h('span', params.row.type == '1' ? '扣费' : '充值');
+              return h('span', params.row.type == '1' ? '扣费' : '充值')
             }
           },
           {
             title: '交易时间',
             key: 'createtime',
             align: 'center',
-            width: 240,
+            width: 240
           },
           {
             title: '流水编号',
             key: 'trno',
             align: 'center',
-            width: 260,
-          },
+            width: 260
+          }
         ],
         tabledata: [],
         typeList: [
@@ -641,7 +641,7 @@
           {
             value: '0',
             label: '充值'
-          },
+          }
         ],
         orderList: [
           {
@@ -669,11 +669,11 @@
             width: 250,
             render: (h, params) => {
               return h('Tooltip', {
-                  props: {
-                    content: params.row.display,
-                    placement: 'top'
-                  }
-                },
+                props: {
+                  content: params.row.display,
+                  placement: 'top'
+                }
+              },
                 params.row.display
               )
             }
@@ -687,7 +687,7 @@
               return h('div', [
                 h('span', '￥'),
                 h('strong', params.row.cost)
-              ]);
+              ])
             }
           },
           {
@@ -702,7 +702,7 @@
             width: 180,
             key: 'orderendtime',
             render: (h, params) => {
-              return h('span', params.row.orderendtime == null ? '--' : params.row.orderendtime);
+              return h('span', params.row.orderendtime == null ? '--' : params.row.orderendtime)
             }
           },
           {
@@ -711,7 +711,7 @@
             width: 100,
             key: 'paymentstatus',
             render: (h, params) => {
-              return h('span', params.row.paymentstatus == '1' ? '已支付' : '未支付');
+              return h('span', params.row.paymentstatus == '1' ? '已支付' : '未支付')
             }
           },
           {
@@ -730,15 +730,15 @@
                 h('span', {
                   style: {
                     cursor: 'pointer',
-                    color: ' #2A99F2',
+                    color: ' #2A99F2'
                   },
                   on: {
                     click: () => {
                       this.show(params.index)
                     }
                   }
-                }, '详情'),
-              ]);
+                }, '详情')
+              ])
             }
           }
         ],
@@ -749,28 +749,28 @@
             {
               text: '最近一周',
               value() {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-                return [start, end];
+                const end = new Date()
+                const start = new Date()
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+                return [start, end]
               }
             },
             {
               text: '最近一个月',
               value() {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-                return [start, end];
+                const end = new Date()
+                const start = new Date()
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+                return [start, end]
               }
             },
             {
               text: '最近三个月',
               value() {
-                const end = new Date();
-                const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-                return [start, end];
+                const end = new Date()
+                const start = new Date()
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+                return [start, end]
               }
             }
           ]
@@ -789,7 +789,7 @@
           {
             value: '0',
             label: '优惠券'
-          },
+          }
         ],
         cardStateList: [
           {
@@ -803,7 +803,7 @@
           {
             value: '0',
             label: '未使用'
-          },
+          }
         ],
         cardState: '',
         cardType: '',
@@ -817,7 +817,7 @@
           recipients: '',
           consigneeAddress: '',
           phone: '',
-          invoiceTitle: '',
+          invoiceTitle: ''
         },
         ruleValidate: {
           invoiceAmount: [
@@ -855,9 +855,9 @@
           ],
           bankAccount: [
             {required: true, validator: validaBankAccount, trigger: 'blur'}
-          ],
+          ]
         },
-        invoiceInformationShow: false,//增值税认证
+        invoiceInformationShow: false, // 增值税认证
         applyChange: true,
         formAppreciationDate: {
           companyName: '',
@@ -865,25 +865,25 @@
           registeredAddress: '',
           registeredPhone: '',
           depositBank: '',
-          bankAccount: '',
+          bankAccount: ''
         },
         appreciation: false,
-        authenticationShow: false,//增值税信息
-        certificateStatus: true,//点击认证
-        underReview: false,//审核中
-        failureAudit: false,//审核失败
-        aptitudeStatus: '',//增票资质状态
-        companyname: '',//单位
-        identicode: '',//纳税人识别码
-        phone: '',//注册电话
-        bankname: '',//开户银行
-        banknum: '',//银行账号
+        authenticationShow: false, // 增值税信息
+        certificateStatus: true, // 点击认证
+        underReview: false, // 审核中
+        failureAudit: false, // 审核失败
+        aptitudeStatus: '', // 增票资质状态
+        companyname: '', // 单位
+        identicode: '', // 纳税人识别码
+        phone: '', // 注册电话
+        bankname: '', // 开户银行
+        banknum: '', // 银行账号
         bank_account: '',
         totalCost: 0,
         actualDelivery: 0,
         cardSelection: null,
         showModal: {
-          clipCoupons: false,
+          clipCoupons: false
         },
         /* cardVolumeColumn:[
          {
@@ -917,19 +917,19 @@
          return h('span', params.row.remark == null ? '--' : params.row.remark)
          }
          },
-         ],*/
+         ], */
         cardVolumeTableData: [],
         card_type: '',
         operatorid: '',
         card_pageSize: 5,
         costSeen: false,
-        activeIndex: null,
+        activeIndex: null
       }
     },
     created() {
-      this.getBalance();
-      this.showMoneyByMonth();
-      this.search();
+      this.getBalance()
+      this.showMoneyByMonth()
+      this.search()
     },
     methods: {
       selectChange(item, index) {
@@ -945,70 +945,70 @@
         }
       },
       init() {
-        this.orderNumber = [];
-        this.totalCost = 0;
-        this.actualDelivery = 0;
-        this.cardSelection = null;
-        this.costSeen = false;
-        this.activeIndex = null;
+        this.orderNumber = []
+        this.totalCost = 0
+        this.actualDelivery = 0
+        this.cardSelection = null
+        this.costSeen = false
+        this.activeIndex = null
       },
       changecard() {
         switch (this.name) {
-          case'orderManage':
-            this.searchOrderByType();
-            this.init();
-            break;
-          case'accountSummary':
-            this.getBalance();
-            this.showMoneyByMonth();
-            this.search();
-            break;
-          case'myCard':
-            this.searchCard();
-            break;
-          case'applyInvoice':
-            //this.formInvoiceDate.invoiceAmount=this.invoice;
-            this.getInvoiceList();
-            this.invoiceLimit();
-            break;
+          case 'orderManage':
+            this.searchOrderByType()
+            this.init()
+            break
+          case 'accountSummary':
+            this.getBalance()
+            this.showMoneyByMonth()
+            this.search()
+            break
+          case 'myCard':
+            this.searchCard()
+            break
+          case 'applyInvoice':
+            // this.formInvoiceDate.invoiceAmount=this.invoice;
+            this.getInvoiceList()
+            this.invoiceLimit()
+            break
         }
       },
       showMoneyByMonth() {
         this.$http.get('continue/showMoneyByMonth.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.billmonth = response.data.result;
+            this.billmonth = response.data.result
           }
         })
       },
       getBalance() {
         this.$http.post('device/DescribeWalletsBalance.do').then(response => {
-          if (response.status == 200 && response.data.status == "1") {
-            this.balance = response.data.data.remainder;
+          if (response.status == 200 && response.data.status == '1') {
+            this.balance = response.data.data.remainder
           }
-        });
+        })
       },
       torecharge() {
-        this.$store.commit("setSelect", "recharge")
-        this.$router.push('recharge');
+        this.$store.commit('setSelect', 'recharge')
+        this.$router.push('recharge')
       },
       currentChange(currentPage) {
-        this.currentPage = currentPage;
-        this.search();
+        this.currentPage = currentPage
+        this.search()
       },
       dataChange(time) {
-        this.dateRange = time;
+        this.dateRange = time
       },
       search() {
-        this.searchLoading = true;
+        this.searchLoading = true
         this.$http.get('information/searchWaterNumber.do?pageSize=' + this.wpageSize + '&page=' + this.currentPage +
           '&type=' + this.types + '&starttime=' + this.dateRange[0] + '&endtime=' + this.dateRange[1] + '&startcount=' + this.value1 + '&endcount=' + this.value2)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.tabledata = response.data.result.data;
-              this.total = response.data.result.totle;
-              this.searchLoading = false;
+              this.tabledata = response.data.result.data
+              this.total = response.data.result.totle
+              this.searchLoading = false
             }
-          });
+          })
       },
       deleteOrder() {
         if (this.orderNumber.length != 0) {
@@ -1018,7 +1018,7 @@
             onOk: () => {
               let order = ''
               this.orderNumber.forEach(item => {
-                order += ',' + item.ordernumber;
+                order += ',' + item.ordernumber
               })
               var url = `continue/delOrderpay.do?order=${order.substr(1)}`
               this.$http.get(url).then(response => {
@@ -1026,40 +1026,39 @@
                   this.$Message.success({
                     content: '订单删除成功',
                     duration: 3
-                  });
-                  this.searchOrderByType();
-                  this.init();
+                  })
+                  this.searchOrderByType()
+                  this.init()
                 }
               })
             },
             onCancel: () => {
             }
-          });
+          })
         } else {
           this.$Modal.error({
             content: '请选择需要删除的订单',
             duration: 3
           })
         }
-
       },
       changeOrder() {
         switch (this.order_type) {
-          case'all':
-            this.init();
-            this.order_type = '';
-            this.searchOrderByType();
-            break;
-          case'pay':
-            this.init();
-            this.order_type = '1';
-            this.searchOrderByType();
-            break;
-          case'notpay':
-            this.init();
-            this.order_type = '0';
-            this.searchOrderByType();
-            break;
+          case 'all':
+            this.init()
+            this.order_type = ''
+            this.searchOrderByType()
+            break
+          case 'pay':
+            this.init()
+            this.order_type = '1'
+            this.searchOrderByType()
+            break
+          case 'notpay':
+            this.init()
+            this.order_type = '0'
+            this.searchOrderByType()
+            break
         }
       },
       searchOrderByType() {
@@ -1069,25 +1068,25 @@
               item.resources = ''
               for (var index in JSON.parse(item.display)['资源']) {
                 for (var key in JSON.parse(item.display)['资源'][index]) {
-                  item.resources += `${key}:${JSON.parse(item.display)["资源"][index][key]}`
+                  item.resources += `${key}:${JSON.parse(item.display)['资源'][index][key]}`
                 }
               }
               item.display = JSON.parse(item.display)['title'] + item.resources + JSON.parse(item.display)['类型'] + JSON.parse(item.display)['数量']
             })
-            this.orderData = response.data.result.data;
-            this.ordertotal = response.data.result.totle;
+            this.orderData = response.data.result.data
+            this.ordertotal = response.data.result.totle
           }
         })
       },
       order_currentChange(order_currentPage) {
-        this.order_currentPage = order_currentPage;
-        this.searchOrderByType();
-        this.init();
+        this.order_currentPage = order_currentPage
+        this.searchOrderByType()
+        this.init()
       },
       order_dataChange(ordertime) {
-        this.order_dateRange = ordertime;
-        this.init();
-        this.searchOrderByType();
+        this.order_dateRange = ordertime
+        this.init()
+        this.searchOrderByType()
       },
       show(index) {
         this.$Modal.info({
@@ -1102,10 +1101,10 @@
             title: '',
             content: '<p>确定要支付选中的订单吗？</p>',
             onOk: () => {
-              this.payLoading = true;
+              this.payLoading = true
               let order = ''
               this.orderNumber.forEach(item => {
-                order += ',' + item.ordernumber;
+                order += ',' + item.ordernumber
               })
               var url = `information/payOrder.do?order=${order.substr(1)}&ticket=` + this.operatorid
               this.$http.get(url).then(response => {
@@ -1113,20 +1112,20 @@
                   this.$Message.success({
                     content: '订单支付成功',
                     duration: 5
-                  });
-                  this.payLoading = false;
-                  this.name = 'accountSummary';
-                  this.getBalance();
-                  this.showMoneyByMonth();
-                  this.search();
+                  })
+                  this.payLoading = false
+                  this.name = 'accountSummary'
+                  this.getBalance()
+                  this.showMoneyByMonth()
+                  this.search()
                 } else if (response.status == 200 && response.data.status == 2) {
-                  this.payLoading = false;
+                  this.payLoading = false
                 }
               })
             },
             onCancel: () => {
             }
-          });
+          })
         } else {
           this.$Modal.error({
             content: '请选择需要支付的订单',
@@ -1135,11 +1134,11 @@
         }
       },
       select(selection) {
-        this.orderNumber = [],
-          this.totalCost = 0;
-        this.orderNumber = selection;
+        this.orderNumber = []
+        this.totalCost = 0
+        this.orderNumber = selection
         if (this.orderNumber.length != 0) {
-          this.costSeen = true;
+          this.costSeen = true
           var cost = 0
           this.orderNumber.forEach(item => {
             if (item && item.paymentstatus == 0) {
@@ -1147,31 +1146,31 @@
             }
           })
           this.totalCost = Math.round(cost * 100) / 100
-          this.actualDelivery = this.totalCost;
+          this.actualDelivery = this.totalCost
           if (this.totalCost == 0) {
-            this.costSeen = false;
+            this.costSeen = false
           }
-          this.cardSelection = null;
-          this.activeIndex = null;
+          this.cardSelection = null
+          this.activeIndex = null
         } else {
-          this.costSeen = false;
+          this.costSeen = false
         }
       },
       searchCard() {
         this.$http.get('ticket/getUserTicket.do?pageSize=' + this.cardPageSize + '&page=' + this.card_currentPage + '&ticketType=' + this.cardType + '&isuse=' + this.cardState).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.cardVolumeTabledata = response.data.result.data;
-            this.cardTotal = response.data.result.total;
+            this.cardVolumeTabledata = response.data.result.data
+            this.cardTotal = response.data.result.total
           }
         })
       },
       cardCurrentChange(card_currentPage) {
-        this.card_currentPage = card_currentPage;
-        this.searchCard();
+        this.card_currentPage = card_currentPage
+        this.searchCard()
       },
       invoiceCertification() {
-        this.appreciation = true;
-        this.applyChange = false;
+        this.appreciation = true
+        this.applyChange = false
       },
       invoiceMake(name) {
         if (this.invoiceInformationShow == false) {
@@ -1187,27 +1186,25 @@
               }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.$Message.success({
-                      content: '发票申请成功！',
-                      duration: 5
-                    }
-                  );
+                    content: '发票申请成功！',
+                    duration: 5
+                  })
                   this.formInvoiceDate.invoiceAmount = ''
                   this.formInvoiceDate.InvoiceType = ''
                   this.formInvoiceDate.invoiceTitle = ''
                   this.formInvoiceDate.recipients = ''
                   this.formInvoiceDate.consigneeAddress = ''
                   this.formInvoiceDate.phone = ''
-                  this.getInvoiceList();
+                  this.getInvoiceList()
                 }
               })
             }
           })
         } else {
           this.$Message.error({
-              content: '您的资质认证没有完成！',
-              duration: 5
-            }
-          );
+            content: '您的资质认证没有完成！',
+            duration: 5
+          })
         }
       },
       showInvoice(index) {
@@ -1220,57 +1217,56 @@
       },
       changeInvoiceType(value) {
         switch (value) {
-          case'1':
+          case '1':
             this.$http.get('user/getExamine.do').then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.aptitudeStatus = response.data.result.result['status'];
+                this.aptitudeStatus = response.data.result.result['status']
                 if (this.aptitudeStatus == 0) {
-                  this.authenticationShow = true;
-                  this.companyname = response.data.result.result['companyname'];
-                  this.identicode = response.data.result.result['identicode'];
-                  this.phone = response.data.result.result['phone'];
-                  this.bankname = response.data.result.result['bankname'];
-                  this.banknum = response.data.result.result['banknum'];
+                  this.authenticationShow = true
+                  this.companyname = response.data.result.result['companyname']
+                  this.identicode = response.data.result.result['identicode']
+                  this.phone = response.data.result.result['phone']
+                  this.bankname = response.data.result.result['bankname']
+                  this.banknum = response.data.result.result['banknum']
                 } else if (this.aptitudeStatus == 1) {
                   this.$Message.error({
-                      content: '增值票资质认证审核失败！',
-                      duration: 5
-                    }
-                  );
-                  this.invoiceInformationShow = true;
-                  this.failureAudit = true;
-                  this.certificateStatus = false;
+                    content: '增值票资质认证审核失败！',
+                    duration: 5
+                  })
+                  this.invoiceInformationShow = true
+                  this.failureAudit = true
+                  this.certificateStatus = false
                 } else if (this.aptitudeStatus == 2) {
-                  this.invoiceInformationShow = true;
-                  this.underReview = true;
-                  this.certificateStatus = false;
+                  this.invoiceInformationShow = true
+                  this.underReview = true
+                  this.certificateStatus = false
                 }
               } else {
-                this.invoiceInformationShow = true;
+                this.invoiceInformationShow = true
               }
             })
-            break;
-          case'0':
-            this.invoiceInformationShow = false;
-            this.authenticationShow = false;
-            break;
+            break
+          case '0':
+            this.invoiceInformationShow = false
+            this.authenticationShow = false
+            break
         }
       },
       cancelCertification() {
-        this.appreciation = false;
-        this.applyChange = true;
+        this.appreciation = false
+        this.applyChange = true
       },
       getInvoiceList() {
         this.$http.get('user/getInvoiceList.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.billTabledata = response.data.result.result;
+            this.billTabledata = response.data.result.result
           }
         })
       },
       invoiceLimit() {
         this.$http.get('user/invoiceLimit.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.invoice = response.data.result.result;
+            this.invoice = response.data.result.result
           }
         })
       },
@@ -1287,36 +1283,34 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success({
-                    content: '增值票资质认证申请成功！我们将尽快完成审核',
-                    duration: 5
-                  }
-                );
-                this.appreciation = false;
-                this.applyChange = true;
-                this.certificateStatus = false;
-                this.underReview = true;
-                this.failureAudit = false;
+                  content: '增值票资质认证申请成功！我们将尽快完成审核',
+                  duration: 5
+                })
+                this.appreciation = false
+                this.applyChange = true
+                this.certificateStatus = false
+                this.underReview = true
+                this.failureAudit = false
               } else {
-                this.appreciation = false;
-                this.applyChange = true;
+                this.appreciation = false
+                this.applyChange = true
               }
             })
           } else {
             this.$Message.error({
-                content: '信息填写不正确！',
-                duration: 5
-              }
-            );
+              content: '信息填写不正确！',
+              duration: 5
+            })
           }
         })
       },
       conversion() {
-        this.formAppreciationDate.bankAccount = this.formAppreciationDate.bankAccount.replace(/\s/g, '').replace(/(\d{4})(?=\d)/g, '$1 ');
-        this.bank_account = this.formAppreciationDate.bankAccount;
+        this.formAppreciationDate.bankAccount = this.formAppreciationDate.bankAccount.replace(/\s/g, '').replace(/(\d{4})(?=\d)/g, '$1 ')
+        this.bank_account = this.formAppreciationDate.bankAccount
       },
       showlogistics(index) {
         this.$http.get('user/getInvoice.do?invoiceId=' + this.billTabledata[index].id).then(response => {
-          console.log(response);
+          console.log(response)
           if (response.status == 200 && response.data.status == 1) {
             this.$Modal.info({
               title: '发票物流信息',
@@ -1325,21 +1319,21 @@
                     查询网址：<a href="${response.data.result.kdurl}" target="_blank">${response.data.result.kdurl}</a>`
             })
           }
-        });
+        })
       },
       clipCoupons() {
         if (this.orderNumber.length != 0) {
           if (!this.orderNumber.some(checkPaymentStatus)) {
-            this.showModal.clipCoupons = true;
+            this.showModal.clipCoupons = true
             this.$http.get('ticket/getUserTicket.do?pageSize=' + this.card_pageSize + '&page=' + this.card_currentPage + '&ticketType=' + this.card_type + '&isuse=0&totalCost=' + this.totalCost).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.cardVolumeTableData = response.data.result.data;
+                this.cardVolumeTableData = response.data.result.data
                 for (var a = 0; a < this.cardVolumeTableData.length; a++) {
                   if (this.cardSelection && this.cardSelection.operatorid == this.cardVolumeTableData[a].operatorid) {
-                    this.activeIndex = a;
+                    this.activeIndex = a
                   }
                 }
-                this.cardTotal = response.data.result.total;
+                this.cardTotal = response.data.result.total
               }
             })
           } else {
@@ -1348,9 +1342,8 @@
               duration: 5
             })
           }
-
           function checkPaymentStatus(orderNumber) {
-            return orderNumber.paymentstatus == 1;
+            return orderNumber.paymentstatus == 1
           }
         } else {
           this.$Modal.error({
@@ -1360,37 +1353,37 @@
         }
       },
       cardSelect(item) {
-        this.cardSelection = item;
+        this.cardSelection = item
       },
       clipCoupons_ok() {
         var cost = 0
         if (this.activeIndex == null && this.cardSelection == null) {
-          this.showModal.clipCoupons = false;
-          this.actualDelivery = this.totalCost;
+          this.showModal.clipCoupons = false
+          this.actualDelivery = this.totalCost
         } else if (this.activeIndex != null && this.cardSelection != null) {
-          this.operatorid = this.cardSelection.operatorid;
-          this.showModal.clipCoupons = false;
+          this.operatorid = this.cardSelection.operatorid
+          this.showModal.clipCoupons = false
           if (this.cardSelection.tickettype == 0) {
-            cost = this.totalCost - this.cardSelection.money;
-            this.actualDelivery = Math.round(cost * 100) / 100;
+            cost = this.totalCost - this.cardSelection.money
+            this.actualDelivery = Math.round(cost * 100) / 100
           } else {
-            cost = this.totalCost * this.cardSelection.money;
-            this.actualDelivery = Math.round(cost * 100) / 100;
+            cost = this.totalCost * this.cardSelection.money
+            this.actualDelivery = Math.round(cost * 100) / 100
           }
         } else {
-          this.showModal.clipCoupons = false;
+          this.showModal.clipCoupons = false
         }
       },
       card_currentChange(card_currentPage) {
-        this.card_currentPage = card_currentPage;
-        this.cardSelection = null;
-        this.activeIndex = null;
-        this.actualDelivery = this.totalCost;
-        this.operatorid = '';
-        this.cardVolumeTableData = [];
-        this.clipCoupons();
-      },
-    },
+        this.card_currentPage = card_currentPage
+        this.cardSelection = null
+        this.activeIndex = null
+        this.actualDelivery = this.totalCost
+        this.operatorid = ''
+        this.cardVolumeTableData = []
+        this.clipCoupons()
+      }
+    }
   }
 </script>
 
