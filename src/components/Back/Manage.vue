@@ -317,6 +317,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from 'axios'
   import defaultOptions from '@/echarts/defaultOptions'
   import histogram from '@/echarts/Histogram'
   import ipOptions from '@/echarts/ipOptions'
@@ -623,17 +624,25 @@
       }
     },
     created() {
-      var computerInfoURL = `information/listVMByComputerName.do?computerName=${this.$route.query.computername}`
-      this.$http.get(computerInfoURL)
+      var computerInfoURL = `information/listVMByComputerName.do?computerName=${this.$route.query.computername}&zoneId=${this.$route.query.zoneid}`
+      axios.get(computerInfoURL)
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.computerInfo = response.data.result
-            this.$http.get(`information/listTemplates.do?ostype=${this.computerInfo.computerOsType}&zoneid=${this.$route.query.zoneid}`)
+            axios.get(`information/listTemplates.do?ostype=${this.computerInfo.computerOsType}&zoneid=${this.$route.query.zoneid}`)
               .then((response) => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.osOptions = response.data.result
                 }
               })
+          }
+        })
+      // 获取快照
+      var mirrorURL = `Snapshot/listVMSnapshotAll.do`
+      axios.get(mirrorURL)
+        .then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            console.log(response.data.result)
           }
         })
 

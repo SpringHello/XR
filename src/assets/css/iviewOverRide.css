@@ -103,6 +103,11 @@
   font-size: 12px;
 }
 /* 公共样式库 */
+.btn-cancel{
+  background: transparent;
+  color: #666666;
+  border-color: #e9e9e9;
+}
 .f24 {
   font-size: 24px;
 }
@@ -129,6 +134,10 @@
 
 .mt10 {
   margin-top: 10px;
+}
+
+.mb20 {
+  margin-bottom: 20px;
 }
 
 .lh24 {
