@@ -38,6 +38,7 @@ module.exports = {
     'no-mixed-operators': 0,
     'no-multiple-empty-lines': 0,
     'space-unary-ops': 0,
-    'camelcase': 0
+    'camelcase': 0,
+    'semi': 0
   }
 }

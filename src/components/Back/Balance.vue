@@ -264,8 +264,6 @@
             this.$refs.form1.resetFields();
           }
         })
-
-
       },
       nextStep () {
         this.$refs.form1.validate((valid) => {
