@@ -23,7 +23,7 @@
 
           <TabPane label="云主机快照策略">
             <div class="operator-bar">
-              <Button type="primary" @click="showModal.createMirror = true">创建备份策略</Button>
+              <Button type="primary" @click="createBackups(showModal.newBackups=true)">创建备份策略</Button>
               <Button type="primary">删除策略</Button>
             </div>
             <Table ref="selection" :columns="snapstrategyCol" :data="snapstrategyData"></Table>
@@ -65,6 +65,49 @@
         <Button type="primary" @click="NewSnapsSubmit">创建快照</Button>
       </div>
     </Modal>
+    <!-- 创建快照备份弹窗 -->
+    <Modal v-model="showModal.newBackups" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">创建备份策略</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="creatBackupsForm" ref="creatBackupsForm">
+          <FormItem label="自动备份策略名称">
+            <Input v-model="creatBackupsForm.name"></Input>
+          </FormItem>
+          <FormItem label="自动备份保留个数">
+            <InputNumber  :max="8" :min="1" v-model="creatBackupsForm.num"></InputNumber>
+          </FormItem>
+          <FormItem label="自动备份间隔">
+            <Select v-model="creatBackupsForm.inter">
+              <Option value="day">每天</Option>
+              <Option value="week">每周</Option>
+              <Option value="month">每月</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="自动备份时间">
+            <TimePicker type="time" format="HH:mm" placeholder="一天具体时间选择如09：00" v-model="creatBackupsForm.time"></TimePicker>
+        </FormItem>
+        <FormItem label="备份策略应用主机">
+            <Select v-model="creatBackupsForm.host"  multiple placeholder="主机名称可多选">
+              <Option v-for="item in vmOpenlist" :value="item.computerid" :key="item.computerid">{{ item.computername }}</Option>
+            </Select>
+          </FormItem>
+          <FormItem label="是否保存内存信息">
+            <RadioGroup v-model="creatBackupsForm.memory">
+              <Radio label="1">保存</Radio>
+              <Radio label="0">不保存</Radio>
+            </RadioGroup>
+          </FormItem>
+        </Form>
+        <p style="font-size: 12px;color: rgba(153,153,153,0.65);">提示：云主机快照为每块磁盘提供<span class="bluetext">8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点。您最多能创建<span class="bluetext">3个</span>自动快照策略
+        </p>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" class="btn-cancel" @click="showModal.newBackups=false">取消</Button>
+        <Button type="primary" @click="NewBackupsSubmit">创建策略</Button>
+      </div>
+    </Modal>
     <!-- 回滚弹窗 -->
     <Modal v-model="showModal.rollback" :scrollable="true" :closable="false" :width="390">
       <div class="modal-content-s">
@@ -94,12 +137,21 @@
       return {
         cursnapshot: null,
         chosenSelection: null,
+        creatBackupsForm: {
+          name: '',
+          memory: '1',
+          time: '',
+          num: '',
+          host: [],
+          inter: 'day'
+        },
         creatSnapsForm: {
           select: '',
           input: ''
         },
         // 已创建主机列表
         vmOpenlist: '',
+        //主机快照col
         snapshotCol: [
           {
             type: 'selection',
@@ -128,7 +180,11 @@
           },
           {
             title: '是否保留内存状态',
-            key: 'remainTime'
+            key: 'memorystatus',
+            render: (h, params) => {
+              var memorystatus = params.row.memorystatus == 1 ? '是' : '否'
+              return h('span', {}, memorystatus)
+            }
           },
           {
             title: '创建时间',
@@ -154,7 +210,9 @@
             }
           }
         ],
+        //主机快照数据
         snapshotData: [],
+        //主机备份策略col
         snapstrategyCol: [
           {
             type: 'selection',
@@ -163,31 +221,40 @@
           },
           {
             title: '策略名称',
-            key: 'name'
+            key: 'strategyname'
           },
           {
             title: '状态',
-            key: 'status'
+            key: 'status',
+            render: (h, params) => {
+              var status = params.row.status == 1 ? '正常' : '异常'
+              return h('span', {}, status)
+            }
           },
           {
             title: '自动备份保留个数',
-            key: 'num'
+            key: 'keepcount'
           },
           {
             title: '自动备份间隔',
-            key: 'inter'
+            key: 'keepupinterval',
+            render: (h, params) => {
+              var inter = params.row.keepupinterval
+              var keepupinterval = inter == 'day' ? ('每天') : inter == 'week' ? ('每周') : ('每月')
+              return h('span', {}, keepupinterval)
+            }
           },
 
           {
             title: '创建时间',
-            key: 'addtime'
+            key: 'createtime'
           },
           {
             title: '应用主机',
-            key: 'remainTime'
+            key: 'resourcename'
           },
           {
-            title: '添加/删除主机',
+            title: '操作',
             key: 'action',
             render: (h, params) => {
               return h('span', {
@@ -200,28 +267,39 @@
 
                   }
                 }
-              }, '回滚')
+              }, '添加/删除主机')
             }
           }
         ],
-        snapstrategyData: null,
+        //主机备份策略数据
+        snapstrategyData: [],
         showModal: {
           createMirror: false,
           newSnapshot: false,
-          rollback: false
+          rollback: false,
+          newBackups: false
         },
 
       }
     },
     created() {
+      //虚拟机（云主机）快照列表
       var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1`
-      axios.get(snapsURL)
+      var snapsResponse = axios.get(snapsURL)
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.snapshotData = response.data.result
           }
         })
-
+      //主机备份策略列表
+      var backupsURL = `information/listVMBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}`
+      var backupsResponse = axios.get(backupsURL)
+        .then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.snapstrategyData = response.data.result
+          }
+        })
+      //虚拟机列表
       var vmList = `information/listVirtualMachines.do?zoneId=${$store.state.zone.zoneid}`
       axios.get(vmList)
         .then(response => {
@@ -229,25 +307,29 @@
             this.vmOpenlist = response.data.result.open.list
           }
         })
+
+      //隔10秒调用
       this.inter()
+     
+      // Promise.all([napsResponse, backupsResponse]).then((ResponseValue) => {
+      //   next(vm => {
+      //     vm.setData(ResponseValue[0])
+      //     vm.setNatData(ResponseValue[1])
+      //   })
+      // })
     },
     methods: {
       rollbackSubmit() {
         this.showModal.rollback = false
-        console.log('cursnapshot')
-        console.log(this.cursnapshot.snapshotid)
         var URL = `Snapshot/revertToVMSnapshot.do?snapshotId=${this.cursnapshot.snapshotid}`
         axios.get(URL)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-
             }
           })
       },
       changeSelection(selection) {
         this.chosenSelection = selection
-        console.log('chosenSelection')
-        console.log(selection)
       },
       delsnapshot() {
         if (this.chosenSelection == null) {
@@ -259,7 +341,6 @@
           content: '<p>确定要删除选中的快照吗？</p>',
           onOk: () => {
             var ids = this.chosenSelection.map(item => item.id).join(',')
-            console.log(ids)
             var URL = `Snapshot/deleteVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&ids=${ids}`
             axios.get(URL)
               .then(response => {
@@ -270,10 +351,24 @@
           }
         })
       },
+      //确定创建快照
       NewSnapsSubmit() {
         this.showModal.newSnapshot = false
         var snapsURL = `Snapshot/createVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&snapshotName=${this.creatSnapsForm.input}&VMId=${this.creatSnapsForm.select}&memoryStatus=${this.creatSnapsForm.radio}`
         axios.get(snapsURL)
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+            }
+          })
+      },
+      //确定创建策略
+      NewBackupsSubmit() {
+        this.showModal.newBackups = false
+        var vmids = this.creatBackupsForm.host.join(',')
+        // var time1 = this.creatBackupsForm.time.format("hh:mm")
+        var time = '01:00'
+        var URL = `information/createVMBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}&strategyName=${this.creatBackupsForm.name}&keepCount=${this.creatBackupsForm.num}&keepInterval=${this.creatBackupsForm.inter}&autoBackUpTime=${time}&VMIds=${vmids}&memoryStatus=${this.creatBackupsForm.memory}`
+        axios.get(URL)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
             }
@@ -314,5 +409,7 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-
+    .ivu-input-number{
+      width: 187px;
+    }
 </style>
