@@ -726,8 +726,8 @@
             }
           })
         } else {
-          this.$message.error({
-            content: '请先选择一个网关'
+          this.$message.info({
+            content: '请先选择一个网关',
           })
         }
       },

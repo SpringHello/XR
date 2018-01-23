@@ -3,25 +3,27 @@
     <transition name="mask">
       <div v-show="visible" class="mask"></div>
     </transition>
-    <div v-if="visible" class="modal-wrapper" @click="close">
-      <transition name="modal">
+    <transition name="modal">
+      <div v-show="visible" class="modal-wrapper" @click="close">
         <div class="modal">
           <div class="header">
             <p>
-              <Icon type="close-circled" class="icon"></Icon>
-              <span style="vertical-align: middle">错误</span>
+              <Icon type="close-circled" class="icon error-icon" v-if="type==='error'"></Icon>
+              <Icon type="help-circled" class="icon warning-icon" v-if="type==='confirm'"></Icon>
+              <Icon type="information-circled" class="icon info-icon" v-if="type==='info'"></Icon>
+              <span style="vertical-align: middle">{{title}}</span>
             </p>
           </div>
           <div class="modal-body">
-            <p>需挂载主机有备份，无法挂载，若您仍需挂载硬盘，请先删除主机备份，在执行挂载操作。</p>
+            <p v-html="content"></p>
           </div>
           <div class="modal-foot">
-            <Button>{{cancelText}}</Button>
-            <Button type="primary">{{okText}}</Button>
+            <Button @click="cancel" v-if="type==='confirm'">{{cancelText}}</Button>
+            <Button type="primary" @click="ok">{{okText}}</Button>
           </div>
         </div>
-      </transition>
-    </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -37,6 +39,10 @@
         type: String,
         default: 'info'
       },
+      title: {
+        type: String,
+        default: '错误'
+      },
       content: {
         type: String,
         default: ''
@@ -46,8 +52,8 @@
         default: '取消'
       },
       onCancel: {
-        type: function () {
-          this.$parent.close()
+        type: Function,
+        default: () => {
         }
       },
       okText: {
@@ -55,8 +61,8 @@
         default: '确定'
       },
       onOk: {
-        type: function () {
-          this.$parent.close()
+        type: Function,
+        default: () => {
         }
       }
     },
@@ -64,8 +70,17 @@
       show(options){
         this.this.visible = true
       },
-      close(){
-        console.log('close')
+      close(event){
+        if (event.target === event.currentTarget) {
+          this.visible = false
+        }
+      },
+      cancel(){
+        this.onCancel()
+        this.visible = false
+      },
+      ok(){
+        this.onOk()
         this.visible = false
       }
     }
@@ -81,14 +96,29 @@
     opacity: 0;
   }
 
-  .modal-enter-active, .modal-leave-active {
+  .modal-enter-active {
     transition: all .5s;
+    animation: bounce-in .3s;
+    animation-fill-mode: forwards;
   }
 
-  .modal-enter {
-    width: 0px;
-    height: 0px;
+  .modal-leave-active {
+    transition: all .5s;
+    animation: bounce-in .3s reverse;
+    animation-fill-mode: forwards;
+  }
+
+  .modal-enter, .modal-leave-to {
     opacity: 0;
+  }
+
+  @keyframes bounce-in {
+    0% {
+      transform: scale(.8);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
 
   .mask {
@@ -121,10 +151,19 @@
       .header {
         padding: 30px 30px 0px;
         .icon {
-          color: #F56A00;
           margin-right: 10px;
           font-size: 24px;
           vertical-align: middle;
+        }
+        .info-icon {
+          color: #2d8cf0
+        }
+        .warning-icon {
+          color: #F56A00;
+        }
+        .error-icon {
+
+          color: #ed3f14;
         }
         span {
           vertical-align: middle;

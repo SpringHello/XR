@@ -59,7 +59,7 @@
             <div class="operator-bar">
               <Button type="primary" @click="openAddRouter">添加路由</Button>
             </div>
-            <Table :columns="vpcColumns" :data="vpcTableData"></Table>
+            <Table :columns="routeColumns" :data="routeTableData"></Table>
           </TabPane>
         </Tabs>
       </div>
@@ -130,26 +130,40 @@
       </p>
       <div class="universal-modal-content-flex">
         <Form :model="addRouterForm">
-          <FormItem label="源vpc">
-            <Select v-model="addRouterForm.origin">
-              <Option v-for="item in addRouterForm.netData" :value="item.vpcid" :key="item.vpcid"
-                      v-if="item.vpcid!=addGatewayForm.targetVPC">
-                {{item.vpcname}}
+          <FormItem label="VPC">
+            <Select v-model="currentRow.vpcid1" disabled>
+              <Option :value="currentRow.vpcid1">
+                {{currentRow.vpcname1}}
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="目标vpc">
-            <Select v-model="addRouterForm.target">
-              <Option v-for="item in addRouterForm.netData" :value="item.vpcid" :key="item.vpcid"
-                      v-if="item.vpcid!=addGatewayForm.originVPC">
-                {{item.vpcname}}
+          <FormItem label="VPC">
+            <Select v-model="currentRow.vpcid2" disabled>
+              <Option :value="currentRow.vpcid2">
+                {{currentRow.vpcname2}}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="子网">
+            <Select v-model="addRouterForm.gateWay1">
+              <Option v-for="item in addRouterForm.gateWayOptions1"
+                      :value="`${item.ipsegment}#${item.ipsegmentid}#${item.vpcid}`" :key="item.id">
+                {{item.name}}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="子网">
+            <Select v-model="addRouterForm.gateWay2">
+              <Option v-for="item in addRouterForm.gateWayOptions2"
+                      :value="`${item.ipsegment}#${item.ipsegmentid}#${item.vpcid}`" :key="item.id">
+                {{item.name}}
               </Option>
             </Select>
           </FormItem>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary">完成配置</Button>
+        <Button type="primary" @click="addRouterSubmit">完成配置</Button>
       </div>
     </Modal>
   </div>
@@ -223,9 +237,10 @@
 
         },
         addRouterForm: {
-          origin: '',
-          target: '',
-          netData: []
+          gateWayOptions1: [],
+          gateWayOptions2: [],
+          gateWay1: '',
+          gateWay2: ''
         },
         leaveForm: {
           networkid: '',
@@ -276,31 +291,34 @@
         // vpc互通网关tableData
         vpcColumns: [
           {
-            title: 'ip地址',
+            title: '本端VPC',
             align: 'center',
-            key: 'publicip'
+            key: 'vpcname1'
           },
           {
-            title: '网关',
+            title: '对端VPC',
             align: 'center',
-            key: 'privategateway'
+            key: 'vpcname2'
+          },
+          {
+            title: '本端网关',
+            align: 'center',
+            key: 'gateway1'
+          },
+          {
+            title: '对端网关',
+            align: 'center',
+            key: 'gateway2'
           },
           {
             title: '网络掩码',
             align: 'center',
-            key: 'netmask'
+            key: 'netmask1'
           },
           {
-            title: 'VLAN/VNI',
+            title: 'VLAN\\VNI',
             align: 'center',
-            key: 'vlan'
-          },
-          {
-            title: '源NAT',
-            align: 'center',
-            render: (h, object) => {
-              return h('span', {}, object.row.issourcenat == 'true' ? '开启' : '关闭')
-            }
+            key: 'vlan1'
           },
           {
             title: '操作',
@@ -313,14 +331,28 @@
                 },
                 on: {
                   click: () => {
-                    this.openRouteList(object.row.privategatewayid)
+                    this.openRouteList(object.row)
                   }
                 }
               }, '管理路由表')
             }
           }
         ],
-        vpcTableData: []
+        vpcTableData: [],
+        // 路由表数据
+        routeColumns: [
+          {
+            title: '名称',
+            key: 'computername'
+          },
+          {
+            title: '状态',
+            key: 'status'
+          }
+        ],
+        routeTableData: [],
+        // 当前行的数据
+        currentRow: {}
       }
     },
     methods: {
@@ -404,18 +436,49 @@
         })
       },
       // 打开管理路由列表Modal
-      openRouteList(id){
+      openRouteList(row){
         this.$http.get('network/listStaticRoutes.do', {
           params: {
-            gatewayId: id
+            vpcId1: row.vpcid1,
+            vpcId2: row.vpcid2
           }
         }).then(response => {
-          this.TabPane = 'routeTable'
-          console.log(response)
+          if (response.status == 200 && response.data.status == 1) {
+            this.routeTableData = response.data.result
+            // 跳转VPC路由表时，记录当前行的数据
+            this.currentRow = row
+            this.TabPane = 'routeTable'
+          }
         })
       },
       openAddRouter(){
-        this.showModal.addRouter = true
+        var Gateway1 = this.$http.get('network/getNetworkGatewayByVpcId.do', {
+          params: {
+            vpcId: this.currentRow.vpcid1
+          }
+        })
+        var Gateway2 = this.$http.get('network/getNetworkGatewayByVpcId.do', {
+          params: {
+            vpcId: this.currentRow.vpcid2
+          }
+        })
+        Promise.all([Gateway1, Gateway2]).then(responseArray => {
+          this.addRouterForm.gateWayOptions1 = responseArray[0].data.result
+          this.addRouterForm.gateWayOptions2 = responseArray[1].data.result
+          this.showModal.addRouter = true
+        })
+
+      },
+      // 提交添加路由操作
+      addRouterSubmit(){
+        console.log(this.addRouterForm)
+        var array1 = this.addRouterForm.gateWay1.split('#')
+        var array2 = this.addRouterForm.gateWay2.split('#')
+        this.$http.get('', {
+          params: {}
+        }).then(response => {
+
+        })
       },
       toggle: function (item) {
         item._show = !item._show

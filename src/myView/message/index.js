@@ -10,31 +10,47 @@ function message(options) {
 
 message.error = function (options = {}) {
   options.type = 'error'
-  var instance = getInstance()
+  options.title = options.title || '错误'
+  var instance = getInstance(options)
   instance.show(options)
 }
 
 message.confirm = function (options = {}) {
   options.type = 'confirm'
+  options.title = options.title || '确认'
   var instance = getInstance(options)
-  instance.show(options)
+  instance.show()
+}
+
+message.info = function (options = {}) {
+  options.type = 'info'
+  options.title = options.title || '信息'
+  var instance = getInstance(options)
+  instance.show()
 }
 
 let modalInstance
 
 function getInstance(options) {
   modalInstance = modalInstance || new Vue({
+      data: {
+        type: '',
+        content: '',
+        cancelText: '取消',
+        onCancel: '',
+        okText: '确定'
+      },
       render: (h) => {
-        return h(modal)
+        return h(modal, {
+          props: options
+        })
       }
     })
   modalInstance.$mount()
   document.body.appendChild(modalInstance.$el)
   return {
-    show (options) {
+    show () {
       modalInstance.$children[0].visible = true
-      modalInstance.$children[0].type = options.type
-      modalInstance.$children[0].content = options.content
     },
     remove () {
       modal.visible = false
