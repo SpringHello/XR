@@ -55,12 +55,6 @@
           <TabPane name="interoperability" label="VPC互通网关">
             <Table :columns="vpcColumns" :data="vpcTableData"></Table>
           </TabPane>
-          <TabPane name="routeTable" label="VPC路由表" disabled>
-            <div class="operator-bar">
-              <Button type="primary" @click="openAddRouter">添加路由</Button>
-            </div>
-            <Table :columns="routeColumns" :data="routeTableData"></Table>
-          </TabPane>
         </Tabs>
       </div>
     </div>
@@ -121,50 +115,6 @@
         <Button @click="showModal.leaveNetwork = false">取消</Button>
         <Button type="primary" @click="leaveNetwork_ok">确认离开</Button>
       </p>
-    </Modal>
-
-    <!-- 添加路由 modal -->
-    <Modal v-model="showModal.addRouter" width="550" :scrollable="true">
-      <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">添加路由</span>
-      </p>
-      <div class="universal-modal-content-flex">
-        <Form :model="addRouterForm">
-          <FormItem label="VPC">
-            <Select v-model="currentRow.vpcid1" disabled>
-              <Option :value="currentRow.vpcid1">
-                {{currentRow.vpcname1}}
-              </Option>
-            </Select>
-          </FormItem>
-          <FormItem label="VPC">
-            <Select v-model="currentRow.vpcid2" disabled>
-              <Option :value="currentRow.vpcid2">
-                {{currentRow.vpcname2}}
-              </Option>
-            </Select>
-          </FormItem>
-          <FormItem label="子网">
-            <Select v-model="addRouterForm.gateWay1">
-              <Option v-for="item in addRouterForm.gateWayOptions1"
-                      :value="`${item.ipsegment}#${item.ipsegmentid}#${item.vpcid}`" :key="item.id">
-                {{item.name}}
-              </Option>
-            </Select>
-          </FormItem>
-          <FormItem label="子网">
-            <Select v-model="addRouterForm.gateWay2">
-              <Option v-for="item in addRouterForm.gateWayOptions2"
-                      :value="`${item.ipsegment}#${item.ipsegmentid}#${item.vpcid}`" :key="item.id">
-                {{item.name}}
-              </Option>
-            </Select>
-          </FormItem>
-        </Form>
-      </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="addRouterSubmit">完成配置</Button>
-      </div>
     </Modal>
   </div>
 </template>
@@ -331,28 +281,28 @@
                 },
                 on: {
                   click: () => {
-                    this.openRouteList(object.row)
+                    this.$message.confirm({
+                      content: '确认删除该互通网关？',
+                      onOk: () => {
+                        this.$http.get('network/deletePrivateGateway.do', {
+                          params: {
+                            sourcePrivateId: object.row.privateGatewayid1,
+                            targetPrivateId: object.row.privateGatewayid2
+                          }
+                        }).then(response => {
+                          console.log(response)
+                        })
+                      }
+                    })
+                    //todo
+                    // 调用删除接口
                   }
                 }
-              }, '管理路由表')
+              }, '删除互通网关')
             }
           }
         ],
         vpcTableData: [],
-        // 路由表数据
-        routeColumns: [
-          {
-            title: '名称',
-            key: 'computername'
-          },
-          {
-            title: '状态',
-            key: 'status'
-          }
-        ],
-        routeTableData: [],
-        // 当前行的数据
-        currentRow: {}
       }
     },
     methods: {
@@ -433,51 +383,6 @@
           } else if (response.status == 200 && response.data.status == 2) {
             this.$error('error', response.data.message)
           }
-        })
-      },
-      // 打开管理路由列表Modal
-      openRouteList(row){
-        this.$http.get('network/listStaticRoutes.do', {
-          params: {
-            vpcId1: row.vpcid1,
-            vpcId2: row.vpcid2
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.routeTableData = response.data.result
-            // 跳转VPC路由表时，记录当前行的数据
-            this.currentRow = row
-            this.TabPane = 'routeTable'
-          }
-        })
-      },
-      openAddRouter(){
-        var Gateway1 = this.$http.get('network/getNetworkGatewayByVpcId.do', {
-          params: {
-            vpcId: this.currentRow.vpcid1
-          }
-        })
-        var Gateway2 = this.$http.get('network/getNetworkGatewayByVpcId.do', {
-          params: {
-            vpcId: this.currentRow.vpcid2
-          }
-        })
-        Promise.all([Gateway1, Gateway2]).then(responseArray => {
-          this.addRouterForm.gateWayOptions1 = responseArray[0].data.result
-          this.addRouterForm.gateWayOptions2 = responseArray[1].data.result
-          this.showModal.addRouter = true
-        })
-
-      },
-      // 提交添加路由操作
-      addRouterSubmit(){
-        console.log(this.addRouterForm)
-        var array1 = this.addRouterForm.gateWay1.split('#')
-        var array2 = this.addRouterForm.gateWay2.split('#')
-        this.$http.get('', {
-          params: {}
-        }).then(response => {
-
         })
       },
       toggle: function (item) {
@@ -587,11 +492,11 @@
       .body {
         padding: 20px;
         background: #FFFFFF;
+        min-height: 800px;
         .head-info {
           .top {
             display: flex;
             justify-content: space-between;
-            align-items: top;
             h3 {
               font-size: 16px;
               color: #2A99F2;

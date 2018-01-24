@@ -1,11 +1,11 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span>云存储 / 云硬盘</span>
+      <span>云网络 / VPN</span>
       <div id="content">
         <div id="header">
           <img src="../../assets/img/disk/disk.png" style="margin-right: 5px;vertical-align: text-bottom">
-          <span id="title">云硬盘</span>
+          <span id="title">VPN</span>
           <button id="refresh_button">刷新</button>
         </div>
         <Alert>

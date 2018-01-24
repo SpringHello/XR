@@ -4,7 +4,7 @@
       <div v-show="visible" class="mask"></div>
     </transition>
     <transition name="modal">
-      <div v-show="visible" class="modal-wrapper" @click="close">
+      <div v-show="visible" class="modal-wrapper" @click="close" ref="animation">
         <div class="modal">
           <div class="header">
             <p>
@@ -31,7 +31,8 @@
   export default{
     data() {
       return {
-        visible: false
+        visible: false,
+        animationEnd: false
       }
     },
     props: {
@@ -67,7 +68,7 @@
       }
     },
     methods: {
-      show(options){
+      show(){
         this.this.visible = true
       },
       close(event){
@@ -89,7 +90,7 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   .mask-enter-active, .mask-leave-active {
-    transition: opacity .5s;
+    transition: opacity .3s;
   }
 
   .mask-enter, .mask-leave-to {
@@ -97,13 +98,12 @@
   }
 
   .modal-enter-active {
-    transition: all .5s;
+    transition: all .3s;
     animation: bounce-in .3s;
-    animation-fill-mode: forwards;
   }
 
   .modal-leave-active {
-    transition: all .5s;
+    transition: all .3s;
     animation: bounce-in .3s reverse;
     animation-fill-mode: forwards;
   }

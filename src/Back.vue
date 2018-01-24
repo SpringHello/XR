@@ -48,7 +48,7 @@
                 </a>
                 <DropdownMenu slot="list">
                   <DropdownItem>
-                    <router-link to="">用户中心</router-link>
+                    <router-link to="userCenter">用户中心</router-link>
                   </DropdownItem>
                   <DropdownItem>
                     <router-link to="">费用中心</router-link>
