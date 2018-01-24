@@ -4,7 +4,9 @@
       <span>云服务器 / 镜像</span>
       <div id="content">
         <div id="header">
+          <img src="../../assets/img/host/hostMirror-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
           <span id="title">镜像</span>
+          <button id="refresh_button">刷新</button>
         </div>
         <Alert>
           镜像描述

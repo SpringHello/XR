@@ -4,7 +4,9 @@
       <span>云服务器 / 云主机快照</span>
       <div id="content">
         <div id="header">
+          <img src="../../assets/img/host/hostSnaps-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
           <span id="title">云主机快照</span>
+          <button id="refresh_button">刷新</button>
         </div>
         <Alert>
           云主机快照
@@ -13,11 +15,11 @@
           <TabPane label="云主机快照">
             <div class="operator-bar">
               <Button type="primary" @click="createsnapshot(showModal.newSnapshot=true)">创建快照</Button>
-              <Button type="primary" @click="createHostBySystem">创建快照策略</Button>
+              <Button type="primary" >创建快照策略</Button>
               <Button type="primary" @click="delsnapshot">删除快照</Button>
             </div>
             <Table ref="selection" :columns="snapshotCol" :data="snapshotData"
-                   @on-selection-change="changeSelection"></Table>
+                   @radio-change="changeSelection"></Table>
           </TabPane>
 
 
@@ -124,6 +126,20 @@
         <Button type="primary" @click="rollbackSubmit">确定</Button>
       </p>
     </Modal>
+    <!-- 删除快照弹窗 -->
+    <Modal v-model="showModal.delsnaps" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>删除快照</strong>
+          <p class="lh24">确定要删除选中的快照吗？</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.delsnaps=false">取消</Button>
+        <Button type="primary" @click="delsnapsSubm">确定</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -136,7 +152,7 @@
     data() {
       return {
         cursnapshot: null,
-        chosenSelection: null,
+        snapsSelection: null,
         creatBackupsForm: {
           name: '',
           memory: '1',
@@ -147,14 +163,15 @@
         },
         creatSnapsForm: {
           select: '',
-          input: ''
+          input: '',
+          radio: '1'
         },
         // 已创建主机列表
         vmOpenlist: '',
         //主机快照col
         snapshotCol: [
           {
-            type: 'selection',
+            type: 'radio',
             width: 60,
             align: 'center'
           },
@@ -166,8 +183,19 @@
             title: '状态',
             key: 'status',
             render: (h, params) => {
-              var status = params.row.status == 1 ? '正常' : '异常'
-              return h('span', {}, status)
+              const row = params.row
+              const text = row.status === -1 ? '异常' : row.status === 1 ? '可用' : row.status === 2 ? '正在创建' : row.status === 3 ? '删除中' : ''
+              // const text = row.status === -1 ? '异常' : row.status === 1 ? '可用' : row.status === 3 ? '删除中' : ''
+              if (row.status == 3) {
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', {}, text)])
+              } else {
+                return h('span', text)
+              }
             }
           },
           {
@@ -215,7 +243,7 @@
         //主机备份策略col
         snapstrategyCol: [
           {
-            type: 'selection',
+            type: 'radio',
             width: 60,
             align: 'center'
           },
@@ -227,8 +255,22 @@
             title: '状态',
             key: 'status',
             render: (h, params) => {
-              var status = params.row.status == 1 ? '正常' : '异常'
-              return h('span', {}, status)
+              // var status = params.row.status == 1 ? '正常' : '异常'
+              
+
+              const row = params.row
+              const text = row.status === 0 ? '异常' : row.status === 1 ? '可用' : row.status === 3 ? '删除中' : ''
+              return h('span', {}, text)
+              // if (row.status == 3) {
+              //   return h('div', {}, [h('Spin', {
+              //     style: {
+              //       display: 'inline-block',
+              //       marginRight: '10px'
+              //     }
+              //   }), h('span', {}, text)])
+              // } else {
+              //   return h('span', text)
+              // }
             }
           },
           {
@@ -277,28 +319,15 @@
           createMirror: false,
           newSnapshot: false,
           rollback: false,
-          newBackups: false
+          newBackups: false,
+          delsnaps: false
         },
 
       }
     },
     created() {
-      //虚拟机（云主机）快照列表
-      var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1`
-      var snapsResponse = axios.get(snapsURL)
-        .then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.snapshotData = response.data.result
-          }
-        })
-      //主机备份策略列表
-      var backupsURL = `information/listVMBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}`
-      var backupsResponse = axios.get(backupsURL)
-        .then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.snapstrategyData = response.data.result
-          }
-        })
+      this.listsnaps()
+      this.listBackups()
       //虚拟机列表
       var vmList = `information/listVirtualMachines.do?zoneId=${$store.state.zone.zoneid}`
       axios.get(vmList)
@@ -308,8 +337,8 @@
           }
         })
 
-      //隔10秒调用
-      this.inter()
+      隔10秒调用
+      // this.inter()
      
       // Promise.all([napsResponse, backupsResponse]).then((ResponseValue) => {
       //   next(vm => {
@@ -319,37 +348,68 @@
       // })
     },
     methods: {
+     
+      //获取主机备份策略列表
+      listBackups() {
+        var backupsURL = `information/listVMBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}`
+        var backupsResponse = axios.get(backupsURL)
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.snapstrategyData = response.data.result
+            }
+          })
+      },
+      //获取虚拟机（云主机）快照列表
+      listsnaps() {
+        var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1`
+        var snapsResponse = axios.get(snapsURL)
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.snapshotData = response.data.result
+            }
+          })
+      },
       rollbackSubmit() {
         this.showModal.rollback = false
         var URL = `Snapshot/revertToVMSnapshot.do?snapshotId=${this.cursnapshot.snapshotid}`
         axios.get(URL)
           .then(response => {
-            if (response.status == 200 && response.data.status == 1) {
+            if (response.status == 200) {
+              this.$error('error', response.data.message)
             }
           })
       },
       changeSelection(selection) {
-        this.chosenSelection = selection
+        this.snapsSelection = selection
       },
+      // 删除快照
       delsnapshot() {
-        if (this.chosenSelection == null) {
+        if (this.snapsSelection == null) {
           this.$Message.warning('请选择一个快照')
           return
         }
-        this.$Modal.confirm({
-          title: '',
-          content: '<p>确定要删除选中的快照吗？</p>',
-          onOk: () => {
-            var ids = this.chosenSelection.map(item => item.id).join(',')
-            var URL = `Snapshot/deleteVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&ids=${ids}`
-            axios.get(URL)
-              .then(response => {
-                if (response.status == 200 && response.data.status == 1) {
-
-                }
-              })
+        this.showModal.delsnaps=true
+      },
+      //确定删除快照
+       delsnapsSubm() {
+        this.showModal.delsnaps=false
+        this.snapshotData.forEach(item => {
+          if (item.snapshotid == this.snapsSelection.snapshotid) {
+            item.status = 3
           }
         })
+        var URL = `Snapshot/deleteVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&ids=${this.snapsSelection.id}`
+        axios.get(URL)
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.listsnaps()
+              this.$Message.success({
+              content: response.data.message,
+              duration: 5
+            })
+              
+            }
+          })
       },
       //确定创建快照
       NewSnapsSubmit() {
@@ -358,6 +418,7 @@
         axios.get(snapsURL)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
+              this.listsnaps()
             }
           })
       },
@@ -385,9 +446,11 @@
             })
         }, 10000)
       },
-      selectionsChange(selections) {
-        this.selections = selections
-      },
+      // selectionsChange(selections) {
+      //   this.selections = selections
+      //   console.log('selection')
+      //   console.log(selections)
+      // },
       // cancel() {
       //   this.formItem.vmInfo = ''
       //   this.formItem.mirrorName = ''
