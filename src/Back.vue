@@ -48,7 +48,7 @@
                 </a>
                 <DropdownMenu slot="list">
                   <DropdownItem>
-                    <router-link to="">用户中心</router-link>
+                    <router-link to="userCenter">用户中心</router-link>
                   </DropdownItem>
                   <DropdownItem>
                     <router-link to="">费用中心</router-link>
@@ -143,7 +143,7 @@
           {
             mainName: '云服务器',
             type: 'server',
-            subItem: [{subName: '主机', type: 'host'}, {subName: '镜像', type: 'mirror'}, {subName: '快照', type: 'snapshot'}]
+            subItem: [{subName: '主机', type: 'host'}, {subName: '云主机快照', type: 'snapshot'}, {subName: '镜像', type: 'mirror'}]
           },
           {
             mainName: '存储',

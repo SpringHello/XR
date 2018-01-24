@@ -55,12 +55,6 @@
           <TabPane name="interoperability" label="VPC互通网关">
             <Table :columns="vpcColumns" :data="vpcTableData"></Table>
           </TabPane>
-          <TabPane name="routeTable" label="VPC路由表" disabled>
-            <div class="operator-bar">
-              <Button type="primary" @click="openAddRouter">添加路由</Button>
-            </div>
-            <Table :columns="vpcColumns" :data="vpcTableData"></Table>
-          </TabPane>
         </Tabs>
       </div>
     </div>
@@ -121,36 +115,6 @@
         <Button @click="showModal.leaveNetwork = false">取消</Button>
         <Button type="primary" @click="leaveNetwork_ok">确认离开</Button>
       </p>
-    </Modal>
-
-    <!-- 添加路由 modal -->
-    <Modal v-model="showModal.addRouter" width="550" :scrollable="true">
-      <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">添加路由</span>
-      </p>
-      <div class="universal-modal-content-flex">
-        <Form :model="addRouterForm">
-          <FormItem label="源vpc">
-            <Select v-model="addRouterForm.origin">
-              <Option v-for="item in addRouterForm.netData" :value="item.vpcid" :key="item.vpcid"
-                      v-if="item.vpcid!=addGatewayForm.targetVPC">
-                {{item.vpcname}}
-              </Option>
-            </Select>
-          </FormItem>
-          <FormItem label="目标vpc">
-            <Select v-model="addRouterForm.target">
-              <Option v-for="item in addRouterForm.netData" :value="item.vpcid" :key="item.vpcid"
-                      v-if="item.vpcid!=addGatewayForm.originVPC">
-                {{item.vpcname}}
-              </Option>
-            </Select>
-          </FormItem>
-        </Form>
-      </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button type="primary">完成配置</Button>
-      </div>
     </Modal>
   </div>
 </template>
@@ -223,9 +187,10 @@
 
         },
         addRouterForm: {
-          origin: '',
-          target: '',
-          netData: []
+          gateWayOptions1: [],
+          gateWayOptions2: [],
+          gateWay1: '',
+          gateWay2: ''
         },
         leaveForm: {
           networkid: '',
@@ -276,31 +241,34 @@
         // vpc互通网关tableData
         vpcColumns: [
           {
-            title: 'ip地址',
+            title: '本端VPC',
             align: 'center',
-            key: 'publicip'
+            key: 'vpcname1'
           },
           {
-            title: '网关',
+            title: '对端VPC',
             align: 'center',
-            key: 'privategateway'
+            key: 'vpcname2'
+          },
+          {
+            title: '本端网关',
+            align: 'center',
+            key: 'gateway1'
+          },
+          {
+            title: '对端网关',
+            align: 'center',
+            key: 'gateway2'
           },
           {
             title: '网络掩码',
             align: 'center',
-            key: 'netmask'
+            key: 'netmask1'
           },
           {
-            title: 'VLAN/VNI',
+            title: 'VLAN\\VNI',
             align: 'center',
-            key: 'vlan'
-          },
-          {
-            title: '源NAT',
-            align: 'center',
-            render: (h, object) => {
-              return h('span', {}, object.row.issourcenat == 'true' ? '开启' : '关闭')
-            }
+            key: 'vlan1'
           },
           {
             title: '操作',
@@ -313,14 +281,28 @@
                 },
                 on: {
                   click: () => {
-                    this.openRouteList(object.row.privategatewayid)
+                    this.$message.confirm({
+                      content: '确认删除该互通网关？',
+                      onOk: () => {
+                        this.$http.get('network/deletePrivateGateway.do', {
+                          params: {
+                            sourcePrivateId: object.row.privateGatewayid1,
+                            targetPrivateId: object.row.privateGatewayid2
+                          }
+                        }).then(response => {
+                          console.log(response)
+                        })
+                      }
+                    })
+                    //todo
+                    // 调用删除接口
                   }
                 }
-              }, '管理路由表')
+              }, '删除互通网关')
             }
           }
         ],
-        vpcTableData: []
+        vpcTableData: [],
       }
     },
     methods: {
@@ -402,20 +384,6 @@
             this.$error('error', response.data.message)
           }
         })
-      },
-      // 打开管理路由列表Modal
-      openRouteList(id){
-        this.$http.get('network/listStaticRoutes.do', {
-          params: {
-            gatewayId: id
-          }
-        }).then(response => {
-          this.TabPane = 'routeTable'
-          console.log(response)
-        })
-      },
-      openAddRouter(){
-        this.showModal.addRouter = true
       },
       toggle: function (item) {
         item._show = !item._show
@@ -524,11 +492,11 @@
       .body {
         padding: 20px;
         background: #FFFFFF;
+        min-height: 800px;
         .head-info {
           .top {
             display: flex;
             justify-content: space-between;
-            align-items: top;
             h3 {
               font-size: 16px;
               color: #2A99F2;
