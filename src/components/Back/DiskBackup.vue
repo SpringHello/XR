@@ -16,19 +16,20 @@
           <TabPane label="云硬盘备份" name="diskBackups">
             <div class="operator-bar">
               <Button type="primary" @click="createDiskBackup">创建备份</Button>
-              <Button type="primary">删除备份</Button>
+              <Button type="primary" @click="deleteDiskBackup">删除备份</Button>
             </div>
             <div style="margin-top:20px">
-              <Table :columns="diskBackupsColumns" :data="diskBackupsData"></Table>
+              <Table :columns="diskBackupsColumns" :data="diskBackupsData" @radio-change="selectDiskBackups"></Table>
             </div>
           </TabPane>
           <TabPane label="云硬盘备份策略" name="diskBackupsStrategy">
             <div class="operator-bar">
               <Button type="primary" @click="createBackupStrategy">创建备份策略</Button>
-              <Button type="primary">删除备份策略</Button>
+              <Button type="primary" @click="deleteDiskStrategy">删除备份策略</Button>
             </div>
             <div style="margin-top:20px">
-              <Table :columns="diskBackupsStrategyColumns" :data="diskBackupsStrategyData"></Table>
+              <Table :columns="diskBackupsStrategyColumns" :data="diskBackupsStrategyData"
+                     @radio-change="selectDiskStrategy"></Table>
             </div>
           </TabPane>
         </Tabs>
@@ -42,7 +43,7 @@
       <div class="universal-modal-content-flex">
         <Form :model="diskForm" :rules="newRuleValidate" ref="newDisk">
           <Form-item label="硬盘名称" prop="diskName">
-            <Input v-model="diskForm.diskName" placeholder="小于20位数字或字母"></Input>
+            <Input v-model="diskForm.diskName" placeholder="请输入"></Input>
           </Form-item>
           <Form-item label="购买方式" prop="timeType">
             <Select v-model="diskForm.timeType" placeholder="请选择" @on-change="diskForm.timeValue=''">
@@ -62,14 +63,14 @@
           <Form-item label="购买数量">
             <div class="quantity">
               <p @click="reduce"><i></i></p>
-              <p style="width: 38px;cursor: auto;color:#2A99F2;margin:0 10px ">{{ quantity }}</p>
-              <p @click="quantity+=1"><i style="transform: translateX(-2px) rotate(311deg)"></i></p>
+              <p style="width: 38px;cursor: auto;color:#2A99F2;margin:0 10px ">{{ diskForm.quantity }}</p>
+              <p @click="diskForm.quantity+=1"><i style="transform: translateX(-2px) rotate(311deg)"></i></p>
             </div>
           </Form-item>
           <Form-item label="硬盘参数">
-            <p style="color: #999999;margin-bottom: 10px">磁盘类型：SSD</p>
-            <p style="color: #999999;margin-bottom: 10px">磁盘容量：40G</p>
-            <p style="color: #999999;">原始磁盘名称：原始磁盘名称</p>
+            <p style="color: #999999;margin-bottom: 10px">磁盘类型：{{ diskForm.diskType}}</p>
+            <p style="color: #999999;margin-bottom: 10px">磁盘容量：{{ diskForm.diskSize}}</p>
+            <p style="color: #999999;">原始磁盘名称：{{ diskForm.name }}</p>
           </Form-item>
         </Form>
         <div style="clear: both"></div>
@@ -116,7 +117,7 @@
           </Form-item>
           <Form-item label="备份策略应用磁盘">
             <Select v-model="backupsForm.strategyForDisk" filterable multiple style="width: 229px">
-              <Option v-for="item in backupsForm.applyDiskList" :value="item.value" :key="item.value">{{ item.label }}
+              <Option v-for="item in backupsForm.applyDiskList" :value="item.id" :key="item.id">{{ item.diskname }}
               </Option>
             </Select>
           </Form-item>
@@ -140,21 +141,21 @@
       </p>
       <div class="universal-modal-content-flex">
         <Form :model="createBackupsForm" :rules="createBackupsRuleValidate" ref="createBackups">
-          <Form-item label="需要备份的磁盘" prop="disk">
-            <Select v-model="createBackupsForm.disk" placeholder="请选择">
-              <Option v-for="item in createBackupsForm.diskList" :value="item.value"
-                      :label="item.label" :key="item.value">
-                {{item.label }}
+          <Form-item label="需要备份的磁盘" prop="diskId">
+            <Select v-model="createBackupsForm.diskId" placeholder="请选择">
+              <Option v-for="item in createBackupsForm.diskList" :value="item.diskid"
+                      :key="item.diskid">
+                {{item.diskname }}
               </Option>
             </Select>
           </Form-item>
           <Form-item label="备份名称" prop="backupsName">
             <Input v-model="createBackupsForm.backupsName" placeholder="请输入。。。"></Input>
           </Form-item>
-          <p style="font-family: MicrosoftYaHei;font-size: 12px;line-height:20px;color: #999999;">
-            提示：云硬盘数据服务为每块磁盘提供<span
-            style="color:#2A99F2">8</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。</p>
         </Form>
+        <p style="font-family: MicrosoftYaHei;font-size: 12px;line-height:20px;color: #999999;">
+          提示：云硬盘数据服务为每块磁盘提供<span
+          style="color:#2A99F2">8</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。</p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.createDiskBackup = false">取消</Button>
@@ -163,71 +164,132 @@
         </Button>
       </div>
     </Modal>
+    <!-- 备份策略添加/删除磁盘 -->
+    <Modal v-model="showModal.addOrDeleteDisk" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">创建/删除磁盘</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <p style="margin-bottom: 20px">您正为<span style="color:#2A99F2">{{ strategyName}}</span>添加/删除磁盘</p>
+        <Transfer
+          :data="diskForBackupsStrategyList"
+          :target-keys="diskForBackupsStrategyListKey"
+          :render-format="render"
+          :titles="['该区域下所有磁盘','已应用该策略磁盘']"
+          @on-change="handleChange"></Transfer>
+        <p style="margin-top: 20px;color: #999999;font-family: MicrosoftYaHei;font-size: 12px;">
+          提示：当您选择已绑定备份策略的磁盘时，新的备份策略将直接覆盖原有备份策略。</p>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.addOrDeleteDisk = false">取消</Button>
+        <Button type="primary"
+                @click="">确认
+        </Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import {customTimeOptions} from '../../options'
-  // import axios from 'axios'
+  import axios from 'axios'
+  import debounce from 'throttle-debounce/debounce'
+  import $store from '@/vuex'
   export default{
     data(){
       return {
+        // 获取应用该备份策略的磁盘列表
+        diskForBackupsStrategyList: this.getdiskForBackupsStrategyList(),
+        // 显示在穿梭框右侧的列表
+        diskForBackupsStrategyListKey: this.getkeys(),
         // 标签页选择
         tabPane: 'diskBackups',
         // 磁盘备份表头
         diskBackupsColumns: [
           {
-            type: 'selection',
+            type: 'radio',
             width: 60,
             align: 'center'
           },
           {
             title: '备份名称',
             align: 'center',
-            width: 180,
-            render: (h, params) => {
-              return h('span', {
-                style: {
-                  color: '#2A99F2',
-                  cursor: 'pointer'
-                }
-              }, params.row.diskBackupsName)
-            }
+            key: 'snapshotname',
+            width: 180
           },
           {
             title: '状态',
             align: 'center',
-            width: 100
+            width: 100,
+            render: (h, params) => {
+              switch (params.row.status) {
+                case 1:
+                  return h('span', {}, '正常')
+                case -1:
+                  return h('span', {
+                    style: {
+                      color: '#EE4545'
+                    }
+                  }, '异常')
+                case 2:
+                  return h('div', {}, [h('Spin', {
+                    style: {
+                      display: 'inline-block',
+                      marginRight: '10px'
+                    }
+                  }), h('span', {}, '创建中')])
+              }
+            }
           },
           {
             title: '硬盘名称',
+            key: 'name',
             align: 'center',
             width: 160
           },
           {
             title: '硬盘类型',
             align: 'center',
-            width: 130
+            width: 130,
+            render: (h, params) => {
+              const text = params.row.diskOffer === 'ssd' ? '超高性能型' : params.row.diskOffer === 'sas' ? '性能型' : '存储型'
+              return h('span', {}, text)
+            }
           },
           {
             title: '备份间隔',
             align: 'center',
-            width: 130
+            width: 130,
+            render: (h, params) => {
+              var text = '----'
+              switch (params.row.createway) {
+                case 'day':
+                  text = '每天'
+                  break
+                case 'week':
+                  text = '每周'
+                  break
+                case 'month':
+                  text = '每月'
+                  break
+              }
+              return h('span', {}, text)
+            }
           },
           {
             title: '创建时间',
             align: 'center',
-            width: 145
+            key: 'addtime',
+            width: 165
           },
-          {
-            title: '剩余保留时长',
-            align: 'center',
-            width: 120
-          },
+          /*        {
+           title: '剩余保留时长',
+           align: 'center',
+           width: 120
+           },*/
           {
             title: '操作',
             align: 'center',
-            width: 130,
             render: (h, params) => {
               return h('span', {
                 style: {
@@ -236,7 +298,7 @@
                 },
                 on: {
                   click: () => {
-                    this.createBackupsToDisk()
+                    this.createBackupsToDisk(params.row)
                   }
                 }
               }, '以备份新建磁盘')
@@ -244,17 +306,16 @@
           }
         ],
         // 磁盘备份数据
-        diskBackupsData: [
-          {}
-        ],
+        diskBackupsData: [],
+        /* 单项磁盘备份选中值 */
+        diskBackupsSelection: null,
         // 备份策略表头
         diskBackupsStrategyColumns: [
           {
-            type: 'selection',
+            type: 'radio',
             width: 60,
             align: 'center'
-          },
-          {
+          }, {
             title: '备份策略名称',
             align: 'center',
             key: 'strategyname',
@@ -292,13 +353,45 @@
           }, {
             title: '自动备份时间',
             align: 'center',
-            key: 'autobackuptime',
-            width: 140
+            width: 140,
+            render: (h, params) => {
+              var week_day = ''
+              if (params.row.keepupinterval == 'day') {
+                return h('span', {}, params.row.autobackuptime + ':00')
+              } else if (params.row.keepupinterval == 'week') {
+                switch (params.row.days) {
+                  case '1':
+                    week_day = '周一'
+                    break
+                  case '2':
+                    week_day = '周二'
+                    break
+                  case '3':
+                    week_day = '周三'
+                    break
+                  case '4':
+                    week_day = '周四'
+                    break
+                  case '5':
+                    week_day = '周五'
+                    break
+                  case '6':
+                    week_day = '周六'
+                    break
+                  case '7':
+                    week_day = '周日'
+                    break
+                }
+                return h('span', {}, week_day + ' ' + params.row.autobackuptime + ':00')
+              } else {
+                return h('span', {}, params.row.days + '号 ' + ' ' + params.row.autobackuptime + ':00')
+              }
+            }
           }, {
             title: '创建时间',
             align: 'center',
             key: 'createtime',
-            width: 180
+            width: 180,
           }, {
             title: '应用磁盘',
             align: 'center',
@@ -318,12 +411,12 @@
                 },
                 on: {
                   click: () => {
-                    alert('aa')
+                    this.addOrDeleteDisk(params.row)
                   }
                 }
               }, '添加/删除磁盘')
             }
-          },
+          }
         ],
         // 备份策略数据
         diskBackupsStrategyData: [],
@@ -334,16 +427,25 @@
           // 创建磁盘备份策略
           backupsStrategy: false,
           // 创建磁盘备份
-          createDiskBackup: false
+          createDiskBackup: false,
+          // 备份策略添加/删除磁盘
+          addOrDeleteDisk: false
         },
         // 以备份创建磁盘表单
         diskForm: {
+          // 备份id
+          diskSnapshotId: '',
           diskName: '',
+          // 磁盘类型
           diskType: '',
-          diskArea: '',
           timeType: '',
           timeValue: '',
-          diskSize: 20
+          // 磁盘大小
+          diskSize: 0,
+          // 购买磁盘数量
+          quantity: 1,
+          // 备份的原磁盘名称
+          name: ''
         },
         // 时间配置对象
         customTimeOptions,
@@ -362,8 +464,7 @@
         expenses: 0,
         // 新建磁盘优惠费用
         coupon: 0,
-        // 购买磁盘数量
-        quantity: 1,    // 新建备份表单
+        // 新建备份表单
         backupsForm: {
           // 备份名称
           backupsName: '',
@@ -390,73 +491,73 @@
               value: '00:00'
             }, {
               label: '01:00',
-              value: '01'
+              value: '01:00'
             }, {
               label: '02:00',
-              value: '2'
+              value: '02:00'
             }, {
               label: '03:00',
-              value: '3'
+              value: '03:00'
             }, {
               label: '04:00',
-              value: '4'
+              value: '04:00'
             }, {
               label: '05:00',
-              value: '5'
+              value: '05:00'
             }, {
               label: '06:00',
-              value: '6'
+              value: '06:00'
             }, {
               label: '07:00',
-              value: '07'
+              value: '07:00'
             }, {
               label: '08:00',
-              value: '8'
+              value: '08:00'
             }, {
               label: '09:00',
-              value: '9'
+              value: '09:00'
             }, {
               label: '10:00',
-              value: '10'
+              value: '10:00'
             }, {
               label: '11:00',
-              value: '11'
+              value: '11:00'
             }, {
               label: '12:00',
-              value: '12'
+              value: '12:00'
             }, {
               label: '13:00',
-              value: '13'
+              value: '13:00'
             }, {
               label: '14:00',
-              value: '14'
+              value: '14:00'
             }, {
               label: '15:00',
-              value: '15'
+              value: '15:00'
             }, {
               label: '16:00',
-              value: '16'
+              value: '16:00'
             }, {
               label: '17:00',
-              value: '17'
+              value: '17:00'
             }, {
               label: '18:00',
-              value: '18'
+              value: '18:00'
             }, {
               label: '19:00',
-              value: '19'
+              value: '19:00'
             }, {
               label: '20:00',
-              value: '20'
+              value: '20:00'
             }, {
               label: '21:00',
-              value: '21'
+              value: '21:00'
             }, {
               label: '22:00',
-              value: '22'
+              value: '22:00'
             }, {
               label: '23:00',
-              value: '23'
+              value: '23:00'
             },
           ],
           // 选择一周时的时间点
@@ -470,547 +571,547 @@
                   value: '00:00'
                 }, {
                   label: '01:00',
-                  value: '01'
+                  value: '01:00'
                 }, {
                   label: '02:00',
-                  value: '2'
+                  value: '02:00'
                 }, {
                   label: '03:00',
-                  value: '3'
+                  value: '03:00'
                 }, {
                   label: '04:00',
-                  value: '4'
+                  value: '04:00'
                 }, {
                   label: '05:00',
-                  value: '5'
+                  value: '05:00'
                 }, {
                   label: '06:00',
-                  value: '6'
+                  value: '06:00'
                 }, {
                   label: '07:00',
-                  value: '07'
+                  value: '07:00'
                 }, {
                   label: '08:00',
-                  value: '8'
+                  value: '08:00'
                 }, {
                   label: '09:00',
-                  value: '9'
+                  value: '09:00'
                 }, {
                   label: '10:00',
-                  value: '10'
+                  value: '10:00'
                 }, {
                   label: '11:00',
-                  value: '11'
+                  value: '11:00'
                 }, {
                   label: '12:00',
-                  value: '12'
+                  value: '12:00'
                 }, {
                   label: '13:00',
-                  value: '13'
+                  value: '13:00'
                 }, {
                   label: '14:00',
-                  value: '14'
+                  value: '14:00'
                 }, {
                   label: '15:00',
-                  value: '15'
+                  value: '15:00'
                 }, {
                   label: '16:00',
-                  value: '16'
+                  value: '16:00'
                 }, {
                   label: '17:00',
-                  value: '17'
+                  value: '17:00'
                 }, {
                   label: '18:00',
-                  value: '18'
+                  value: '18:00'
                 }, {
                   label: '19:00',
-                  value: '19'
+                  value: '19:00'
                 }, {
                   label: '20:00',
-                  value: '20'
+                  value: '20:00'
                 }, {
                   label: '21:00',
-                  value: '21'
+                  value: '21:00'
                 }, {
                   label: '22:00',
-                  value: '22'
+                  value: '22:00'
                 }, {
                   label: '23:00',
-                  value: '23'
+                  value: '23:00'
                 },
               ]
             },
             {
-              value: 'tuesday',
+              value: '2',
               label: '周二',
               children: [
                 {
                   label: '00:00',
-                  value: '0'
+                  value: '00:00'
                 }, {
                   label: '01:00',
-                  value: '01'
+                  value: '01:00'
                 }, {
                   label: '02:00',
-                  value: '2'
+                  value: '02:00'
                 }, {
                   label: '03:00',
-                  value: '3'
+                  value: '03:00'
                 }, {
                   label: '04:00',
-                  value: '4'
+                  value: '04:00'
                 }, {
                   label: '05:00',
-                  value: '5'
+                  value: '05:00'
                 }, {
                   label: '06:00',
-                  value: '6'
+                  value: '06:00'
                 }, {
                   label: '07:00',
-                  value: '07'
+                  value: '07:00'
                 }, {
                   label: '08:00',
-                  value: '8'
+                  value: '08:00'
                 }, {
                   label: '09:00',
-                  value: '9'
+                  value: '09:00'
                 }, {
                   label: '10:00',
-                  value: '10'
+                  value: '10:00'
                 }, {
                   label: '11:00',
-                  value: '11'
+                  value: '11:00'
                 }, {
                   label: '12:00',
-                  value: '12'
+                  value: '12:00'
                 }, {
                   label: '13:00',
-                  value: '13'
+                  value: '13:00'
                 }, {
                   label: '14:00',
-                  value: '14'
+                  value: '14:00'
                 }, {
                   label: '15:00',
-                  value: '15'
+                  value: '15:00'
                 }, {
                   label: '16:00',
-                  value: '16'
+                  value: '16:00'
                 }, {
                   label: '17:00',
-                  value: '17'
+                  value: '17:00'
                 }, {
                   label: '18:00',
-                  value: '18'
+                  value: '18:00'
                 }, {
                   label: '19:00',
-                  value: '19'
+                  value: '19:00'
                 }, {
                   label: '20:00',
-                  value: '20'
+                  value: '20:00'
                 }, {
                   label: '21:00',
-                  value: '21'
+                  value: '21:00'
                 }, {
                   label: '22:00',
-                  value: '22'
+                  value: '22:00'
                 }, {
                   label: '23:00',
-                  value: '23'
+                  value: '23:00'
                 },
               ]
             },
             {
-              value: 'wednesday',
+              value: '3',
               label: '周三',
               children: [
                 {
                   label: '00:00',
-                  value: '0'
+                  value: '00:00'
                 }, {
                   label: '01:00',
-                  value: '01'
+                  value: '01:00'
                 }, {
                   label: '02:00',
-                  value: '2'
+                  value: '02:00'
                 }, {
                   label: '03:00',
-                  value: '3'
+                  value: '03:00'
                 }, {
                   label: '04:00',
-                  value: '4'
+                  value: '04:00'
                 }, {
                   label: '05:00',
-                  value: '5'
+                  value: '05:00'
                 }, {
                   label: '06:00',
-                  value: '6'
+                  value: '06:00'
                 }, {
                   label: '07:00',
-                  value: '07'
+                  value: '07:00'
                 }, {
                   label: '08:00',
-                  value: '8'
+                  value: '08:00'
                 }, {
                   label: '09:00',
-                  value: '9'
+                  value: '09:00'
                 }, {
                   label: '10:00',
-                  value: '10'
+                  value: '10:00'
                 }, {
                   label: '11:00',
-                  value: '11'
+                  value: '11:00'
                 }, {
                   label: '12:00',
-                  value: '12'
+                  value: '12:00'
                 }, {
                   label: '13:00',
-                  value: '13'
+                  value: '13:00'
                 }, {
                   label: '14:00',
-                  value: '14'
+                  value: '14:00'
                 }, {
                   label: '15:00',
-                  value: '15'
+                  value: '15:00'
                 }, {
                   label: '16:00',
-                  value: '16'
+                  value: '16:00'
                 }, {
                   label: '17:00',
-                  value: '17'
+                  value: '17:00'
                 }, {
                   label: '18:00',
-                  value: '18'
+                  value: '18:00'
                 }, {
                   label: '19:00',
-                  value: '19'
+                  value: '19:00'
                 }, {
                   label: '20:00',
-                  value: '20'
+                  value: '20:00'
                 }, {
                   label: '21:00',
-                  value: '21'
+                  value: '21:00'
                 }, {
                   label: '22:00',
-                  value: '22'
+                  value: '22:00'
                 }, {
                   label: '23:00',
-                  value: '23'
+                  value: '23:00'
                 },
               ]
             },
             {
-              value: 'thursday',
+              value: '4',
               label: '周四',
               children: [
                 {
                   label: '00:00',
-                  value: '0'
+                  value: '00:00'
                 }, {
                   label: '01:00',
-                  value: '01'
+                  value: '01:00'
                 }, {
                   label: '02:00',
-                  value: '2'
+                  value: '02:00'
                 }, {
                   label: '03:00',
-                  value: '3'
+                  value: '03:00'
                 }, {
                   label: '04:00',
-                  value: '4'
+                  value: '04:00'
                 }, {
                   label: '05:00',
-                  value: '5'
+                  value: '05:00'
                 }, {
                   label: '06:00',
-                  value: '6'
+                  value: '06:00'
                 }, {
                   label: '07:00',
-                  value: '07'
+                  value: '07:00'
                 }, {
                   label: '08:00',
-                  value: '8'
+                  value: '08:00'
                 }, {
                   label: '09:00',
-                  value: '9'
+                  value: '09:00'
                 }, {
                   label: '10:00',
-                  value: '10'
+                  value: '10:00'
                 }, {
                   label: '11:00',
-                  value: '11'
+                  value: '11:00'
                 }, {
                   label: '12:00',
-                  value: '12'
+                  value: '12:00'
                 }, {
                   label: '13:00',
-                  value: '13'
+                  value: '13:00'
                 }, {
                   label: '14:00',
-                  value: '14'
+                  value: '14:00'
                 }, {
                   label: '15:00',
-                  value: '15'
+                  value: '15:00'
                 }, {
                   label: '16:00',
-                  value: '16'
+                  value: '16:00'
                 }, {
                   label: '17:00',
-                  value: '17'
+                  value: '17:00'
                 }, {
                   label: '18:00',
-                  value: '18'
+                  value: '18:00'
                 }, {
                   label: '19:00',
-                  value: '19'
+                  value: '19:00'
                 }, {
                   label: '20:00',
-                  value: '20'
+                  value: '20:00'
                 }, {
                   label: '21:00',
-                  value: '21'
+                  value: '21:00'
                 }, {
                   label: '22:00',
-                  value: '22'
+                  value: '22:00'
                 }, {
                   label: '23:00',
-                  value: '23'
+                  value: '23:00'
                 },
               ]
             },
             {
-              value: 'friday',
+              value: '5',
               label: '周五',
               children: [
                 {
                   label: '00:00',
-                  value: '0'
+                  value: '00:00'
                 }, {
                   label: '01:00',
-                  value: '01'
+                  value: '01:00'
                 }, {
                   label: '02:00',
-                  value: '2'
+                  value: '02:00'
                 }, {
                   label: '03:00',
-                  value: '3'
+                  value: '03:00'
                 }, {
                   label: '04:00',
-                  value: '4'
+                  value: '04:00'
                 }, {
                   label: '05:00',
-                  value: '5'
+                  value: '05:00'
                 }, {
                   label: '06:00',
-                  value: '6'
+                  value: '06:00'
                 }, {
                   label: '07:00',
-                  value: '07'
+                  value: '07:00'
                 }, {
                   label: '08:00',
-                  value: '8'
+                  value: '08:00'
                 }, {
                   label: '09:00',
-                  value: '9'
+                  value: '09:00'
                 }, {
                   label: '10:00',
-                  value: '10'
+                  value: '10:00'
                 }, {
                   label: '11:00',
-                  value: '11'
+                  value: '11:00'
                 }, {
                   label: '12:00',
-                  value: '12'
+                  value: '12:00'
                 }, {
                   label: '13:00',
-                  value: '13'
+                  value: '13:00'
                 }, {
                   label: '14:00',
-                  value: '14'
+                  value: '14:00'
                 }, {
                   label: '15:00',
-                  value: '15'
+                  value: '15:00'
                 }, {
                   label: '16:00',
-                  value: '16'
+                  value: '16:00'
                 }, {
                   label: '17:00',
-                  value: '17'
+                  value: '17:00'
                 }, {
                   label: '18:00',
-                  value: '18'
+                  value: '18:00'
                 }, {
                   label: '19:00',
-                  value: '19'
+                  value: '19:00'
                 }, {
                   label: '20:00',
-                  value: '20'
+                  value: '20:00'
                 }, {
                   label: '21:00',
-                  value: '21'
+                  value: '21:00'
                 }, {
                   label: '22:00',
-                  value: '22'
+                  value: '22:00'
                 }, {
                   label: '23:00',
-                  value: '23'
+                  value: '23:00'
                 },
               ]
             },
             {
-              value: 'saturday',
+              value: '6',
               label: '周六',
               children: [
                 {
                   label: '00:00',
-                  value: '0'
+                  value: '00:00'
                 }, {
                   label: '01:00',
-                  value: '01'
+                  value: '01:00'
                 }, {
                   label: '02:00',
-                  value: '2'
+                  value: '02:00'
                 }, {
                   label: '03:00',
-                  value: '3'
+                  value: '03:00'
                 }, {
                   label: '04:00',
-                  value: '4'
+                  value: '04:00'
                 }, {
                   label: '05:00',
-                  value: '5'
+                  value: '05:00'
                 }, {
                   label: '06:00',
-                  value: '6'
+                  value: '06:00'
                 }, {
                   label: '07:00',
-                  value: '07'
+                  value: '07:00'
                 }, {
                   label: '08:00',
-                  value: '8'
+                  value: '08:00'
                 }, {
                   label: '09:00',
-                  value: '9'
+                  value: '09:00'
                 }, {
                   label: '10:00',
-                  value: '10'
+                  value: '10:00'
                 }, {
                   label: '11:00',
-                  value: '11'
+                  value: '11:00'
                 }, {
                   label: '12:00',
-                  value: '12'
+                  value: '12:00'
                 }, {
                   label: '13:00',
-                  value: '13'
+                  value: '13:00'
                 }, {
                   label: '14:00',
-                  value: '14'
+                  value: '14:00'
                 }, {
                   label: '15:00',
-                  value: '15'
+                  value: '15:00'
                 }, {
                   label: '16:00',
-                  value: '16'
+                  value: '16:00'
                 }, {
                   label: '17:00',
-                  value: '17'
+                  value: '17:00'
                 }, {
                   label: '18:00',
-                  value: '18'
+                  value: '18:00'
                 }, {
                   label: '19:00',
-                  value: '19'
+                  value: '19:00'
                 }, {
                   label: '20:00',
-                  value: '20'
+                  value: '20:00'
                 }, {
                   label: '21:00',
-                  value: '21'
+                  value: '21:00'
                 }, {
                   label: '22:00',
-                  value: '22'
+                  value: '22:00'
                 }, {
                   label: '23:00',
-                  value: '23'
+                  value: '23:00'
                 },
               ]
             },
             {
-              value: 'weekend',
+              value: '7',
               label: '周日',
               children: [
                 {
                   label: '00:00',
-                  value: '0'
+                  value: '00:00'
                 }, {
                   label: '01:00',
-                  value: '01'
+                  value: '01:00'
                 }, {
                   label: '02:00',
-                  value: '2'
+                  value: '02:00'
                 }, {
                   label: '03:00',
-                  value: '3'
+                  value: '03:00'
                 }, {
                   label: '04:00',
-                  value: '4'
+                  value: '04:00'
                 }, {
                   label: '05:00',
-                  value: '5'
+                  value: '05:00'
                 }, {
                   label: '06:00',
-                  value: '6'
+                  value: '06:00'
                 }, {
                   label: '07:00',
-                  value: '07'
+                  value: '07:00'
                 }, {
                   label: '08:00',
-                  value: '8'
+                  value: '08:00'
                 }, {
                   label: '09:00',
-                  value: '9'
+                  value: '09:00'
                 }, {
                   label: '10:00',
-                  value: '10'
+                  value: '10:00'
                 }, {
                   label: '11:00',
-                  value: '11'
+                  value: '11:00'
                 }, {
                   label: '12:00',
-                  value: '12'
+                  value: '12:00'
                 }, {
                   label: '13:00',
-                  value: '13'
+                  value: '13:00'
                 }, {
                   label: '14:00',
-                  value: '14'
+                  value: '14:00'
                 }, {
                   label: '15:00',
-                  value: '15'
+                  value: '15:00'
                 }, {
                   label: '16:00',
-                  value: '16'
+                  value: '16:00'
                 }, {
                   label: '17:00',
-                  value: '17'
+                  value: '17:00'
                 }, {
                   label: '18:00',
-                  value: '18'
+                  value: '18:00'
                 }, {
                   label: '19:00',
-                  value: '19'
+                  value: '19:00'
                 }, {
                   label: '20:00',
-                  value: '20'
+                  value: '20:00'
                 }, {
                   label: '21:00',
-                  value: '21'
+                  value: '21:00'
                 }, {
                   label: '22:00',
-                  value: '22'
+                  value: '22:00'
                 }, {
                   label: '23:00',
-                  value: '23'
+                  value: '23:00'
                 },
               ]
             }
@@ -1026,73 +1127,73 @@
                   value: '00:00'
                 }, {
                   label: '01:00',
-                  value: '01'
+                  value: '01:00'
                 }, {
                   label: '02:00',
-                  value: '2'
+                  value: '02:00'
                 }, {
                   label: '03:00',
-                  value: '3'
+                  value: '03:00'
                 }, {
                   label: '04:00',
-                  value: '4'
+                  value: '04:00'
                 }, {
                   label: '05:00',
-                  value: '5'
+                  value: '05:00'
                 }, {
                   label: '06:00',
-                  value: '6'
+                  value: '06:00'
                 }, {
                   label: '07:00',
-                  value: '07'
+                  value: '07:00'
                 }, {
                   label: '08:00',
-                  value: '8'
+                  value: '08:00'
                 }, {
                   label: '09:00',
-                  value: '9'
+                  value: '09:00'
                 }, {
                   label: '10:00',
-                  value: '10'
+                  value: '10:00'
                 }, {
                   label: '11:00',
-                  value: '11'
+                  value: '11:00'
                 }, {
                   label: '12:00',
-                  value: '12'
+                  value: '12:00'
                 }, {
                   label: '13:00',
-                  value: '13'
+                  value: '13:00'
                 }, {
                   label: '14:00',
-                  value: '14'
+                  value: '14:00'
                 }, {
                   label: '15:00',
-                  value: '15'
+                  value: '15:00'
                 }, {
                   label: '16:00',
-                  value: '16'
+                  value: '16:00'
                 }, {
                   label: '17:00',
-                  value: '17'
+                  value: '17:00'
                 }, {
                   label: '18:00',
-                  value: '18'
+                  value: '18:00'
                 }, {
                   label: '19:00',
-                  value: '19'
+                  value: '19:00'
                 }, {
                   label: '20:00',
-                  value: '20'
+                  value: '20:00'
                 }, {
                   label: '21:00',
-                  value: '21'
+                  value: '21:00'
                 }, {
                   label: '22:00',
-                  value: '22'
+                  value: '22:00'
                 }, {
                   label: '23:00',
-                  value: '23'
+                  value: '23:00'
                 },
               ]
             },
@@ -1102,76 +1203,76 @@
               children: [
                 {
                   label: '00:00',
-                  value: '0'
+                  value: '00:00'
                 }, {
                   label: '01:00',
-                  value: '01'
+                  value: '01:00'
                 }, {
                   label: '02:00',
-                  value: '2'
+                  value: '02:00'
                 }, {
                   label: '03:00',
-                  value: '3'
+                  value: '03:00'
                 }, {
                   label: '04:00',
-                  value: '4'
+                  value: '04:00'
                 }, {
                   label: '05:00',
-                  value: '5'
+                  value: '05:00'
                 }, {
                   label: '06:00',
-                  value: '6'
+                  value: '06:00'
                 }, {
                   label: '07:00',
-                  value: '07'
+                  value: '07:00'
                 }, {
                   label: '08:00',
-                  value: '8'
+                  value: '08:00'
                 }, {
                   label: '09:00',
-                  value: '9'
+                  value: '09:00'
                 }, {
                   label: '10:00',
-                  value: '10'
+                  value: '10:00'
                 }, {
                   label: '11:00',
-                  value: '11'
+                  value: '11:00'
                 }, {
                   label: '12:00',
-                  value: '12'
+                  value: '12:00'
                 }, {
                   label: '13:00',
-                  value: '13'
+                  value: '13:00'
                 }, {
                   label: '14:00',
-                  value: '14'
+                  value: '14:00'
                 }, {
                   label: '15:00',
-                  value: '15'
+                  value: '15:00'
                 }, {
                   label: '16:00',
-                  value: '16'
+                  value: '16:00'
                 }, {
                   label: '17:00',
-                  value: '17'
+                  value: '17:00'
                 }, {
                   label: '18:00',
-                  value: '18'
+                  value: '18:00'
                 }, {
                   label: '19:00',
-                  value: '19'
+                  value: '19:00'
                 }, {
                   label: '20:00',
-                  value: '20'
+                  value: '20:00'
                 }, {
                   label: '21:00',
-                  value: '21'
+                  value: '21:00'
                 }, {
                   label: '22:00',
-                  value: '22'
+                  value: '22:00'
                 }, {
                   label: '23:00',
-                  value: '23'
+                  value: '23:00'
                 },
               ]
             },
@@ -1181,76 +1282,76 @@
               children: [
                 {
                   label: '00:00',
-                  value: '0'
+                  value: '00:00'
                 }, {
                   label: '01:00',
-                  value: '01'
+                  value: '01:00'
                 }, {
                   label: '02:00',
-                  value: '2'
+                  value: '02:00'
                 }, {
                   label: '03:00',
-                  value: '3'
+                  value: '03:00'
                 }, {
                   label: '04:00',
-                  value: '4'
+                  value: '04:00'
                 }, {
                   label: '05:00',
-                  value: '5'
+                  value: '05:00'
                 }, {
                   label: '06:00',
-                  value: '6'
+                  value: '06:00'
                 }, {
                   label: '07:00',
-                  value: '07'
+                  value: '07:00'
                 }, {
                   label: '08:00',
-                  value: '8'
+                  value: '08:00'
                 }, {
                   label: '09:00',
-                  value: '9'
+                  value: '09:00'
                 }, {
                   label: '10:00',
-                  value: '10'
+                  value: '10:00'
                 }, {
                   label: '11:00',
-                  value: '11'
+                  value: '11:00'
                 }, {
                   label: '12:00',
-                  value: '12'
+                  value: '12:00'
                 }, {
                   label: '13:00',
-                  value: '13'
+                  value: '13:00'
                 }, {
                   label: '14:00',
-                  value: '14'
+                  value: '14:00'
                 }, {
                   label: '15:00',
-                  value: '15'
+                  value: '15:00'
                 }, {
                   label: '16:00',
-                  value: '16'
+                  value: '16:00'
                 }, {
                   label: '17:00',
-                  value: '17'
+                  value: '17:00'
                 }, {
                   label: '18:00',
-                  value: '18'
+                  value: '18:00'
                 }, {
                   label: '19:00',
-                  value: '19'
+                  value: '19:00'
                 }, {
                   label: '20:00',
-                  value: '20'
+                  value: '20:00'
                 }, {
                   label: '21:00',
-                  value: '21'
+                  value: '21:00'
                 }, {
                   label: '22:00',
-                  value: '22'
+                  value: '22:00'
                 }, {
                   label: '23:00',
-                  value: '23'
+                  value: '23:00'
                 },
               ]
             },
@@ -1260,76 +1361,76 @@
               children: [
                 {
                   label: '00:00',
-                  value: '0'
+                  value: '00:00'
                 }, {
                   label: '01:00',
-                  value: '01'
+                  value: '01:00'
                 }, {
                   label: '02:00',
-                  value: '2'
+                  value: '02:00'
                 }, {
                   label: '03:00',
-                  value: '3'
+                  value: '03:00'
                 }, {
                   label: '04:00',
-                  value: '4'
+                  value: '04:00'
                 }, {
                   label: '05:00',
-                  value: '5'
+                  value: '05:00'
                 }, {
                   label: '06:00',
-                  value: '6'
+                  value: '06:00'
                 }, {
                   label: '07:00',
-                  value: '07'
+                  value: '07:00'
                 }, {
                   label: '08:00',
-                  value: '8'
+                  value: '08:00'
                 }, {
                   label: '09:00',
-                  value: '9'
+                  value: '09:00'
                 }, {
                   label: '10:00',
-                  value: '10'
+                  value: '10:00'
                 }, {
                   label: '11:00',
-                  value: '11'
+                  value: '11:00'
                 }, {
                   label: '12:00',
-                  value: '12'
+                  value: '12:00'
                 }, {
                   label: '13:00',
-                  value: '13'
+                  value: '13:00'
                 }, {
                   label: '14:00',
-                  value: '14'
+                  value: '14:00'
                 }, {
                   label: '15:00',
-                  value: '15'
+                  value: '15:00'
                 }, {
                   label: '16:00',
-                  value: '16'
+                  value: '16:00'
                 }, {
                   label: '17:00',
-                  value: '17'
+                  value: '17:00'
                 }, {
                   label: '18:00',
-                  value: '18'
+                  value: '18:00'
                 }, {
                   label: '19:00',
-                  value: '19'
+                  value: '19:00'
                 }, {
                   label: '20:00',
-                  value: '20'
+                  value: '20:00'
                 }, {
                   label: '21:00',
-                  value: '21'
+                  value: '21:00'
                 }, {
                   label: '22:00',
-                  value: '22'
+                  value: '22:00'
                 }, {
                   label: '23:00',
-                  value: '23'
+                  value: '23:00'
                 },
               ]
             },
@@ -1339,76 +1440,76 @@
               children: [
                 {
                   label: '00:00',
-                  value: '0'
+                  value: '00:00'
                 }, {
                   label: '01:00',
-                  value: '01'
+                  value: '01:00'
                 }, {
                   label: '02:00',
-                  value: '2'
+                  value: '02:00'
                 }, {
                   label: '03:00',
-                  value: '3'
+                  value: '03:00'
                 }, {
                   label: '04:00',
-                  value: '4'
+                  value: '04:00'
                 }, {
                   label: '05:00',
-                  value: '5'
+                  value: '05:00'
                 }, {
                   label: '06:00',
-                  value: '6'
+                  value: '06:00'
                 }, {
                   label: '07:00',
-                  value: '07'
+                  value: '07:00'
                 }, {
                   label: '08:00',
-                  value: '8'
+                  value: '08:00'
                 }, {
                   label: '09:00',
-                  value: '9'
+                  value: '09:00'
                 }, {
                   label: '10:00',
-                  value: '10'
+                  value: '10:00'
                 }, {
                   label: '11:00',
-                  value: '11'
+                  value: '11:00'
                 }, {
                   label: '12:00',
-                  value: '12'
+                  value: '12:00'
                 }, {
                   label: '13:00',
-                  value: '13'
+                  value: '13:00'
                 }, {
                   label: '14:00',
-                  value: '14'
+                  value: '14:00'
                 }, {
                   label: '15:00',
-                  value: '15'
+                  value: '15:00'
                 }, {
                   label: '16:00',
-                  value: '16'
+                  value: '16:00'
                 }, {
                   label: '17:00',
-                  value: '17'
+                  value: '17:00'
                 }, {
                   label: '18:00',
-                  value: '18'
+                  value: '18:00'
                 }, {
                   label: '19:00',
-                  value: '19'
+                  value: '19:00'
                 }, {
                   label: '20:00',
-                  value: '20'
+                  value: '20:00'
                 }, {
                   label: '21:00',
-                  value: '21'
+                  value: '21:00'
                 }, {
                   label: '22:00',
-                  value: '22'
+                  value: '22:00'
                 }, {
                   label: '23:00',
-                  value: '23'
+                  value: '23:00'
                 },
               ]
             },
@@ -1418,76 +1519,76 @@
               children: [
                 {
                   label: '00:00',
-                  value: '0'
+                  value: '00:00'
                 }, {
                   label: '01:00',
-                  value: '01'
+                  value: '01:00'
                 }, {
                   label: '02:00',
-                  value: '2'
+                  value: '02:00'
                 }, {
                   label: '03:00',
-                  value: '3'
+                  value: '03:00'
                 }, {
                   label: '04:00',
-                  value: '4'
+                  value: '04:00'
                 }, {
                   label: '05:00',
-                  value: '5'
+                  value: '05:00'
                 }, {
                   label: '06:00',
-                  value: '6'
+                  value: '06:00'
                 }, {
                   label: '07:00',
-                  value: '07'
+                  value: '07:00'
                 }, {
                   label: '08:00',
-                  value: '8'
+                  value: '08:00'
                 }, {
                   label: '09:00',
-                  value: '9'
+                  value: '09:00'
                 }, {
                   label: '10:00',
-                  value: '10'
+                  value: '10:00'
                 }, {
                   label: '11:00',
-                  value: '11'
+                  value: '11:00'
                 }, {
                   label: '12:00',
-                  value: '12'
+                  value: '12:00'
                 }, {
                   label: '13:00',
-                  value: '13'
+                  value: '13:00'
                 }, {
                   label: '14:00',
-                  value: '14'
+                  value: '14:00'
                 }, {
                   label: '15:00',
-                  value: '15'
+                  value: '15:00'
                 }, {
                   label: '16:00',
-                  value: '16'
+                  value: '16:00'
                 }, {
                   label: '17:00',
-                  value: '17'
+                  value: '17:00'
                 }, {
                   label: '18:00',
-                  value: '18'
+                  value: '18:00'
                 }, {
                   label: '19:00',
-                  value: '19'
+                  value: '19:00'
                 }, {
                   label: '20:00',
-                  value: '20'
+                  value: '20:00'
                 }, {
                   label: '21:00',
-                  value: '21'
+                  value: '21:00'
                 }, {
                   label: '22:00',
-                  value: '22'
+                  value: '22:00'
                 }, {
                   label: '23:00',
-                  value: '23'
+                  value: '23:00'
                 },
               ]
             },
@@ -1497,76 +1598,76 @@
               children: [
                 {
                   label: '00:00',
-                  value: '0'
+                  value: '00:00'
                 }, {
                   label: '01:00',
-                  value: '01'
+                  value: '01:00'
                 }, {
                   label: '02:00',
-                  value: '2'
+                  value: '02:00'
                 }, {
                   label: '03:00',
-                  value: '3'
+                  value: '03:00'
                 }, {
                   label: '04:00',
-                  value: '4'
+                  value: '04:00'
                 }, {
                   label: '05:00',
-                  value: '5'
+                  value: '05:00'
                 }, {
                   label: '06:00',
-                  value: '6'
+                  value: '06:00'
                 }, {
                   label: '07:00',
-                  value: '07'
+                  value: '07:00'
                 }, {
                   label: '08:00',
-                  value: '8'
+                  value: '08:00'
                 }, {
                   label: '09:00',
-                  value: '9'
+                  value: '09:00'
                 }, {
                   label: '10:00',
-                  value: '10'
+                  value: '10:00'
                 }, {
                   label: '11:00',
-                  value: '11'
+                  value: '11:00'
                 }, {
                   label: '12:00',
-                  value: '12'
+                  value: '12:00'
                 }, {
                   label: '13:00',
-                  value: '13'
+                  value: '13:00'
                 }, {
                   label: '14:00',
-                  value: '14'
+                  value: '14:00'
                 }, {
                   label: '15:00',
-                  value: '15'
+                  value: '15:00'
                 }, {
                   label: '16:00',
-                  value: '16'
+                  value: '16:00'
                 }, {
                   label: '17:00',
-                  value: '17'
+                  value: '17:00'
                 }, {
                   label: '18:00',
-                  value: '18'
+                  value: '18:00'
                 }, {
                   label: '19:00',
-                  value: '19'
+                  value: '19:00'
                 }, {
                   label: '20:00',
-                  value: '20'
+                  value: '20:00'
                 }, {
                   label: '21:00',
-                  value: '21'
+                  value: '21:00'
                 }, {
                   label: '22:00',
-                  value: '22'
+                  value: '22:00'
                 }, {
                   label: '23:00',
-                  value: '23'
+                  value: '23:00'
                 },
               ]
             }
@@ -1576,18 +1677,7 @@
           // 策略应用磁盘
           strategyForDisk: [],
           // 策略应用磁盘列表
-          applyDiskList: [
-            {
-              label: '云硬盘1',
-              value: '1'
-            }, {
-              label: '云硬盘2',
-              value: '2'
-            }, {
-              label: '云硬盘3',
-              value: '3'
-            }
-          ]
+          applyDiskList: []
         },
         // 新建备份策略表单验证规则
         newBackupsRuleValidate: {
@@ -1603,41 +1693,88 @@
         },
         // 新建备份表单
         createBackupsForm: {
-          disk: '',
-          diskList: [
-            {
-              label: '云硬盘1',
-              value: '1'
-            }, {
-              label: '云硬盘2',
-              value: '2'
-            }, {
-              label: '云硬盘3',
-              value: '3'
-            }
-          ],
+          diskId: '',
+          diskList: [],
           backupsName: ''
         },
         // 新建备份表单验证
         createBackupsRuleValidate: {
-          disk: [
+          diskId: [
             {required: true, message: '请选择需要备份的磁盘', trigger: 'change'}
           ],
           backupsName: [
             {required: true, message: '请输入备份名称', trigger: 'blur'}
           ]
-        }
+        },
+        // 选中备份策略某一项
+        diskSelectionStrategy: null,
+        // 备份策略名称，用于显示在添加删除磁盘模态框上
+        strategyName: '',
       }
     },
+    beforeRouteEnter(to, from, next) {
+      var zoneId = $store.state.zoneList[0].zoneid
+      // 获取备份列表数据
+      var diskBackupsResponse = axios.get(`Snapshot/listDiskSnapshots.do?zoneId=${zoneId}`)
+      Promise.all([diskBackupsResponse]).then((ResponseValue) => {
+        next(vm => {
+          vm.setDiskBackups(ResponseValue[0])
+        })
+      })
+    },
     created(){
-      this.diskAreaList = this.$store.state.zoneList
+    },
+    computed: {
+      // 该计算属性用于解决观测对象时currentValue与oldValue指向同一对象的问题，没有其他用处
+      copyDiskForm(){
+        var obj = {}
+        for (var i in this.diskForm) {
+          obj[i] = this.diskForm[i]
+        }
+        return obj
+      }
     },
     methods: {
+      /* 获取磁盘（包括已应用和未应用该备份策略） */
+      getdiskForBackupsStrategyList () {
+      },
+      /* 获取已应用该备份策略的磁盘 */
+      getkeys () {
+      },
+      /* 穿梭框的回调函数 */
+      handleChange () {
+      },
+      /* 穿梭框磁盘列表显示 */
+      render (item) {
+        return item.diskname
+      },
+      /* 添加或删除备份策略应用的磁盘 */
+      addOrDeleteDisk (data) {
+        this.strategyName = data.strategyname
+        this.showModal.addOrDeleteDisk = true
+      },
+      /* 把备份列表渲染到表格 */
+      setDiskBackups (response) {
+        if (response.status == 200 && response.data.status == 1) {
+          this.diskBackupsData = response.data.result
+        } else {
+          this.$error('error', response.data.message)
+        }
+      },
+      // 检测是否选中一项数据
+      checkSelect(){
+        if (this.diskSelectionStrategy === null) {
+          this.$Message.info('请选择需要删除的磁盘备份策略')
+          return false
+        }
+        return true
+      },
       // 验证以备份创建磁盘的表单
       _checkNewForm(){
         this.$refs.newDisk.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用创建磁盘方法
+            this.createBackupsToDisk_ok()
           }
         })
       },
@@ -1655,25 +1792,49 @@
         this.$refs.createBackups.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用创建备份方法
+            this.createDiskBackup_ok()
           }
         })
       },
       /* 购买数量操作 */
       reduce () {
-        this.quantity -= 1
-        switch (this.quantity) {
+        this.diskForm.quantity -= 1
+        switch (this.diskForm.quantity) {
           case 0:
-            this.quantity = 1
+            this.diskForm.quantity = 1
             break
           default:
             break
         }
       },
+      /* 列出磁盘备份 */
+      listDiskSnapshots () {
+        var url = `Snapshot/listDiskSnapshots.do`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.diskBackupsData = response.data.result
+          } else {
+            this.$error('error', response.data.message)
+          }
+        })
+      },
       /* 创建备份策略 弹出模态框 */
       createBackupStrategy () {
+        this.backupsForm.applyDiskList = []
         this.showModal.backupsStrategy = true
+        this.$http.get('Disk/listDisk.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            response.data.result.forEach((item) => {
+              if (item.status === 1) {
+                this.backupsForm.applyDiskList.push(item)
+              }
+            })
+          } else {
+            this.$error('error', response.data.message)
+          }
+        })
       },
-      /* 确认创建 */
+      /* 确认创建磁盘备份策略 */
       createDiskBackupStrategy_ok () {
         var url = `Disk/createDiskBackUpStrategy.do?strategyName=${this.backupsForm.backupsName}&keepCount=${this.backupsForm.keepNumber}&keepInterval=${this.backupsForm.timeType}&autoBackUpTime=${this.backupsForm.timeValue}&diskIds=${this.backupsForm.strategyForDisk}`
         this.$http.get(url).then(response => {
@@ -1681,6 +1842,12 @@
             this.showModal.backupsStrategy = false
             this.tabPane = 'diskBackupsStrategy'
             this.listDiskBackUpStrategy()
+            this.$Message.success({
+              content: response.data.message,
+              duration: 5
+            })
+          } else {
+            this.$error('error', response.data.message)
           }
         })
       },
@@ -1690,18 +1857,76 @@
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskBackupsStrategyData = response.data.result
+            this.diskSelectionStrategy = null
           } else {
             this.$error('error', response.data.message)
           }
         })
       },
       /* 以备份创建新磁盘 */
-      createBackupsToDisk () {
+      createBackupsToDisk (data) {
         this.showModal.backupsToDisk = true
+        this.diskForm.name = data.name
+        this.diskForm.diskSize = data.disSize
+        this.diskForm.diskSnapshotId = data.snapshotid
+        this.diskForm.diskType = data.diskOffer === 'ssd' ? '超高性能型' : data.diskOffer === 'sas' ? '性能型' : '存储型'
+      },
+      /* 确认以备份创建新磁盘，跳转订单*/
+      createBackupsToDisk_ok () {
+        var diskType = this.diskForm.diskType === '超高性能型' ? 'ssd' : this.diskForm.diskType === '性能型' ? 'sas' : 'sata'
+        var url = `Disk/createVolume.do?diskSize=${this.diskForm.diskSize}&diskName=${this.diskForm.diskName}&diskOfferingId=${diskType}&timeType=${this.diskForm.timeType}&timeValue=${this.diskForm.timeValue || 1}&diskSnapshotId=${this.diskForm.diskSnapshotId}&isAutorenew=0&count=${this.diskForm.quantity}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push('order')
+          } else {
+            this.$error('error', response.data.message)
+          }
+        })
       },
       /* 创建磁盘备份 */
       createDiskBackup () {
+        this.createBackupsForm.diskList = []
         this.showModal.createDiskBackup = true
+        this.$http.get('Disk/listDisk.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            response.data.result.forEach((item) => {
+              if (item.status === 1) {
+                this.createBackupsForm.diskList.push(item)
+              }
+            })
+          } else {
+            this.$error('error', response.data.message)
+          }
+        })
+      },
+      /* 确认创建磁盘备份 */
+      createDiskBackup_ok() {
+        this.showModal.createDiskBackup = false
+        var url = `Snapshot/createDiskSnapshot.do?diskId=${this.createBackupsForm.diskId}&name=${this.createBackupsForm.backupsName}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.info(response.data.message)
+            this.listDiskSnapshots()
+          } else {
+            this.$error('error', response.data.message)
+          }
+        })
+      },
+      /* 删除磁盘备份 */
+      deleteDiskBackup () {
+        if (this.diskBackupsSelection) {
+          var url = `Snapshot/deleteDiskSnapshot.do?id=${this.diskBackupsSelection.id}&zoneId=${this.diskBackupsSelection.zoneid}`
+          axios.get(url).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.info(response.data.message)
+              this.listDiskSnapshots()
+            } else {
+              this.$error('error', response.data.message)
+            }
+          })
+        } else {
+          this.$Message.info('请选择需要删除的磁盘备份')
+        }
       },
       /* 切换备份时间间隔时给准确时间点赋值 */
       changeType (value) {
@@ -1716,13 +1941,73 @@
             this.backupsForm.timeValue = ['1', '00:00']
             break
         }
-      }
+      },
+      /* 选中备份策略 */
+      selectDiskStrategy (currentRow) {
+        this.diskSelectionStrategy = currentRow
+      },
+      /* 删除备份策略 */
+      deleteDiskStrategy () {
+        if (this.checkSelect() === true) {
+          var url = `Disk/deleteDiskBackUpStrategy.do?id=${this.diskSelectionStrategy.id}&zoneId=${this.diskSelectionStrategy.zoneid}`
+          axios.get(url).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.info('磁盘备份策略删除成功')
+              this.listDiskBackUpStrategy()
+            } else {
+              this.$error('error', response.data.message)
+              this.listDiskBackUpStrategy()
+            }
+          })
+        }
+      },
+      /* 选择磁盘备份 */
+      selectDiskBackups (currentRow) {
+        this.diskBackupsSelection = currentRow
+      },
+      // 新建磁盘价格查询
+      queryDiskPrice: debounce(500, function () {
+        this.$http.post('device/QueryBillingPrice.do', {
+          cpuNum: 0 + '',
+          memory: 0 + '',
+          diskSize: this.diskForm.diskSize + '',
+          zoneId: this.$store.state.zoneList[0].zoneid,
+          timeType: this.diskForm.timeType + '',
+          timeValue: this.diskForm.timeValue + '',
+          diskType: this.diskForm.diskType + ''
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.expenses = response.data.cost
+            if (response.data.coupon) {
+              this.coupon = response.data.coupon
+            } else {
+              this.coupon = 0
+            }
+          } else {
+            this.$error('error', response.data.message)
+          }
+        })
+      }),
     },
     watch: {
       /* 如果标签切换到备份策略，调用列出策略方法 */
       tabPane () {
         if (this.tabPane === 'diskBackupsStrategy')
           this.listDiskBackUpStrategy()
+      },
+      // 观测计算属性变化，如果不是名称的变化则必须重新计算价格
+      // 新建磁盘价格计算
+      'copyDiskForm': {
+        handler: function (val, oldVal) {
+          if (val.timeType == 'current' || ((val.timeType && val.timeValue) && val.quantity)) {
+            if (val.diskName === oldVal.diskName) {
+              this.expenses = '正在计算'
+              this.coupon = 0
+              this.queryDiskPrice()
+            }
+          }
+        },
+        deep: true
       }
     }
   }

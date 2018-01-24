@@ -1,13 +1,13 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span>安全 / 防火墙</span>
+      <span>云服务器 / 镜像</span>
       <div id="content">
         <div id="header">
-          <span id="title">防火墙</span>
+          <span id="title">镜像</span>
         </div>
         <Alert>
-          防火墙描述
+          镜像描述
         </Alert>
         <Tabs type="card" :animated="false" style="min-height: 400px">
           <TabPane label="系统镜像">

@@ -67,11 +67,11 @@
         let diff = (this.currentX - this.startX) / this.$parent.$sliderSize * 100
         let newPosition = this.startPosition + diff
         this.setPosition(newPosition)
+        this.$emit('refresh')
       },
       DraggingEnd: function () {
         window.removeEventListener('mousemove', this.onDragging)
         window.removeEventListener('mouseup', this.DraggingEnd)
-        this.$emit('refresh')
       },
       setPosition (newPosition) {
         if (newPosition > 100) {
@@ -111,7 +111,7 @@
 
   .com-slider-active {
     position: absolute;
-    border-radius:100px 0px 0px 100px;
+    border-radius: 100px 0px 0px 100px;
     height: 100%;
     left: 0px;
     top: 0px;
