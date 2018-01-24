@@ -21,7 +21,7 @@
               <Icon type="arrow-down-b"></Icon>
             </Button>
             <Dropdown-menu slot="list">
-              
+
               <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
               <Dropdown-item name="rename" v-else>
                 <Tooltip content="异常、欠费状态，主机不可重命名" placement="top">
@@ -490,8 +490,8 @@
 
 <script type="text/ecmascript-6">
   import merge from 'merge'
-// import {mapState} from 'vuex'
-   import $store from '@/vuex'
+  // import {mapState} from 'vuex'
+  import $store from '@/vuex'
   export default {
     data() {
       var status = '开启'
@@ -512,14 +512,11 @@
         sessionStorage.removeItem('type')
       }
       return {
-        auth:true,
-        openHost: [
-        ],
+        openHost: [],
         closeHost: [],
         arrearsHost: [],
         errorHost: [],
-        waitHost: [
-        ],
+        waitHost: [],
         currentHost: [],
         status,
         showModal: {
@@ -564,11 +561,6 @@
       }
     },
     created() {
-      console.log('authInfo')
-      console.log(this.$store.state.authInfo)
-   
-     
-     
       this.getData()
       // 定时发送ajax 刷新页面
       this.intervalInstance = setInterval(() => {
@@ -963,6 +955,11 @@
       push(type) {
         sessionStorage.setItem('authType', type)
         this.$router.push('/usercenter')
+      }
+    },
+    computed: {
+      auth(){
+        return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
       }
     },
     watch: {
