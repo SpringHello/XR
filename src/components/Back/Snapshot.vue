@@ -256,7 +256,7 @@
             key: 'status',
             render: (h, params) => {
               // var status = params.row.status == 1 ? '正常' : '异常'
-              
+
 
               const row = params.row
               const text = row.status === 0 ? '异常' : row.status === 1 ? '可用' : row.status === 3 ? '删除中' : ''
@@ -339,7 +339,7 @@
 
       隔10秒调用
       // this.inter()
-     
+
       // Promise.all([napsResponse, backupsResponse]).then((ResponseValue) => {
       //   next(vm => {
       //     vm.setData(ResponseValue[0])
@@ -348,7 +348,7 @@
       // })
     },
     methods: {
-     
+
       //获取主机备份策略列表
       listBackups() {
         var backupsURL = `information/listVMBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}`
@@ -407,7 +407,7 @@
               content: response.data.message,
               duration: 5
             })
-              
+
             }
           })
       },
