@@ -4,13 +4,15 @@
       <span>云服务器 / 主机</span>
       <div id="content">
         <div id="header">
-          <!-- <img  src='..\..\assets\img\host\cloudhost-icon.png'/> -->
+          <img src="../../assets/img/host/cloudhost-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
           <span id="title">云主机</span>
+          <button id="refresh_button">刷新</button>
         </div>
         <Alert>
           为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。
         </Alert>
         <div class="operator-bar">
+          <Button type="primary" @click="startUp" :disabled="true">test</Button>
           <Button type="primary" @click="startUp">一键启动</Button>
           <Button type="primary" @click="">加入负载均衡</Button>
           <Button type="primary" @click="bindIP" :disabled="status!='开启'&&status!='关机'">绑定IP</Button>
@@ -19,7 +21,14 @@
               更多操作
               <Icon type="arrow-down-b"></Icon>
             </Button>
+
             <Dropdown-menu slot="list">
+              <DropdownItem>主机快照</DropdownItem>
+              <DropdownItem>主机镜像</DropdownItem>
+              <DropdownItem>主机升级</DropdownItem>
+              <DropdownItem>重启主机</DropdownItem>
+              <DropdownItem>主机续费</DropdownItem>
+              <DropdownItem>删除主机</DropdownItem>
               <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
               <Dropdown-item name="rename" v-else>
                 <Tooltip content="异常、欠费状态，主机不可重命名" placement="top">
@@ -129,11 +138,11 @@
                         <span v-else>公网地址:{{item.publicip}}</span>
                         <span>内网地址:{{item.privateip}}</span>
                         <span v-if="item.restart==1">重启中</span>
-                        <span v-else>运行中</span>
+                        <span v-else>运行中111</span>
                       </div>
                       <div class="foot">
                         <span>{{item.createtime}}</span>
-                        <button @click.stop="manage(item,'normal')" style="margin-left:55px;">管理
+                        <button @click.stop="manage(item,'normal')" :disabled="!auth" style="margin-left:55px;">管理2
                         </button>
                         <button v-if="!auth" :disabled="!auth">连接主机</button>
                         <a v-else :href="item.connecturl" target="_blank"
