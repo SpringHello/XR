@@ -4,13 +4,13 @@ var passwordLengthRegExp = /^\w{8,}$/
 var passwordRegExp = /(?:\d[a-zA-Z])|(?:[a-zA-Z]\d)/
 // var passwordRegExp = /ddd/;
 export default {
-  emailVail: (email) => {
-    return emailRegExp.test(email) || phoneRegExp.test(email)
+  emailValidate: (email) => {
+    return emailRegExp.test(email)
   },
-  phoneVail: (phone) => {
+  phoneValidate: (phone) => {
     return phoneRegExp.test(phone)
   },
-  passwordVail: (password) => {
+  passwordValidate: (password) => {
     if (!passwordLengthRegExp.exec(password)) {
       return false
     }
