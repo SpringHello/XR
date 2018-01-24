@@ -25,12 +25,12 @@ import carouselItem from './myView/carouselItem'
 // 引入滑块组件
 import slider from './myView/slider'
 // 引入错误提示框组件
-import error from './myView/message'
+import message from './myView/message'
 
-Vue.prototype.$error = error
+Vue.prototype.$message = message
 Vue.config.productionTip = false
 
-axios.defaults.baseURL = '/ruicloud/'
+axios.defaults.baseURL = 'http://192.168.3.204:8081/ruicloud/'
 
 axios.defaults.withCredentials = true
 /* axios.interceptors.request.use(function (config) {

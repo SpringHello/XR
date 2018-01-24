@@ -413,15 +413,18 @@
       handleNewIPSubmit(){
         this.$refs.newIPFormValidate.validate(validate => {
           if (validate) {
-            axios.get('network/associateIpAddress.do', {
-              brand: this.newIPForm.bandWidth,
-              value: this.newIPForm.timeType,
-              timevalue: this.newIPForm.timeValue,
-              zoneid: $store.state.zone.zoneid,
-              isautorenew: 0,
-              vpcid: this.newIPForm.vpc
+            axios.get('network/createPublicIp.do', {
+              params: {
+                brandWith: this.newIPForm.bandWidth,
+                timeType: this.newIPForm.timeType,
+                timeValue: this.newIPForm.timeValue || '1',
+                zoneId: $store.state.zone.zoneid,
+                isAutorenew: 0,
+                count: '1',
+                vpcId: this.newIPForm.vpc
+              }
             }).then(response => {
-              console.log(response)
+              this.$router.push('order')
             })
           }
         })

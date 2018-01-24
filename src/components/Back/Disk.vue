@@ -441,7 +441,7 @@
           // 创建磁盘备份模态框
           createDiskBackup: false,
           // 错误提示框
-          error: false
+          error: true
           /*
 
            mountDisk: false,
