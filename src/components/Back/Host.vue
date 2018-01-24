@@ -13,33 +13,43 @@
         </Alert>
         <div class="operator-bar">
           <Button type="primary" @click="startUp">一键启动</Button>
-          <Button type="primary" @click="">加入负载均衡</Button>
+          <Button type="primary" @click="joinBalance">加入负载均衡</Button>
           <Button type="primary" @click="bindIP" :disabled="status!='开启'&&status!='关机'">绑定IP</Button>
-          <Dropdown @on-click="hideEvent">
+          <Dropdown style="margin-left: 20px;vertical-align: middle;" @on-click="hideEvent">
             <Button type="primary">
               更多操作
               <Icon type="arrow-down-b"></Icon>
             </Button>
             <Dropdown-menu slot="list">
 
+              <!-- <DropdownItem>主机快照</DropdownItem>
+              <DropdownItem>主机镜像</DropdownItem>
+              <DropdownItem>主机升级</DropdownItem>
+              <DropdownItem>重启主机</DropdownItem>
+              <DropdownItem>主机续费</DropdownItem>
+              <DropdownItem>删除主机</DropdownItem> -->
+
+
+
+
+              <!-- 重命名 -->
               <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
-              <Dropdown-item name="rename" v-else>
-                <Tooltip content="异常、欠费状态，主机不可重命名" placement="top">
-                  主机备份
-                </Tooltip>
-              </Dropdown-item>
+              <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
+              <!-- 备份 -->
               <Dropdown-item name="backup" v-if="status!='开启'&&status!='关机'" :disabled=true>
                 <Tooltip content="异常、欠费状态，备份不可用" placement="top">
                   主机备份
                 </Tooltip>
               </Dropdown-item>
               <Dropdown-item name="backup" v-else>主机备份</Dropdown-item>
+              <!-- 镜像 -->
               <Dropdown-item name="mirror" v-if="status!='关机'" :disabled=true>
                 <Tooltip content="制作镜像前您必须关闭主机" placement="top">
                   制作镜像
                 </Tooltip>
               </Dropdown-item>
               <Dropdown-item name="mirror" v-else>制作镜像</Dropdown-item>
+              <!-- 升级主机 -->
               <Dropdown-item name="upgrade" v-if="status!='关机'" :disabled=true>
                 <Tooltip content="升级主机前您必须关闭主机" placement="top">
                   升级
@@ -48,6 +58,8 @@
               <Dropdown-item name="upgrade" v-else>
                 升级
               </Dropdown-item>
+
+              <!-- 重启主机 -->
               <Poptip
                 confirm
                 width="200"
@@ -57,6 +69,7 @@
                 @on-cancel="cancel">
                 <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>重启</li>
               </Poptip>
+              <!-- 删除主机 -->
               <Poptip
                 confirm
                 width="200"
@@ -67,6 +80,7 @@
                 style="display: block">
                 <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>删除</li>
               </Poptip>
+              <!-- 解绑主机 -->
               <Poptip
                 confirm
                 width="200"
@@ -82,10 +96,11 @@
         </div>
         <div>
           <Tabs type="card" :animated="false" v-model="status" @on-click="">
+
             <Tab-pane :label="`开启(${openHost.length+waitHost.length})`" name="开启">
               <div class="flex-wrapper">
                 <!-- 创建中主机列表 -->
-                <div v-for="(item,index) in waitHost" :key="item" :class="{select:item.select}"
+                <div v-for="(item,index) in waitHost" :key="index" :class="{select:item.select}"
                      style="margin-bottom: 20px;height:228px;">
                   <Card style="width:375px;">
                     <div style="text-align:center">
@@ -109,7 +124,7 @@
                 </div>
 
 
-                <div v-for="(item,index) in openHost" v-if="item.status==1" :key="item" :class="{select:item.select}"
+                <div v-for="(item,index) in openHost" v-if="item.status==1" :key="index" :class="{select:item.select}"
                      @click="toggle(item)"
                      style="margin-bottom: 20px;height:228px;">
                   <Card style="width:375px;height:228px;">
@@ -131,11 +146,11 @@
                         <span v-else>公网地址:{{item.publicip}}</span>
                         <span>内网地址:{{item.privateip}}</span>
                         <span v-if="item.restart==1">重启中</span>
-                        <span v-else>运行中111</span>
+                        <span v-else>运行中</span>
                       </div>
                       <div class="foot">
                         <span>{{item.createtime}}</span>
-                        <button @click.stop="manage(item,'normal')" :disabled="!auth" style="margin-left:55px;">管理2
+                        <button @click.stop="manage(item,'normal')" :disabled="!auth" style="margin-left:55px;">管理
                         </button>
                         <button v-if="!auth" :disabled="!auth">连接主机</button>
                         <a v-else :href="item.connecturl" target="_blank"
@@ -146,7 +161,7 @@
                 </div>
 
                 <!-- 关机中中主机列表 -->
-                <div v-for="(item,index) in openHost" v-if="item.status==2" :key="item" :class="{select:item.select}"
+                <div v-for="(item,index) in openHost" v-if="item.status==2" :key="index" :class="{select:item.select}"
                      style="margin-bottom: 20px;height:228px;">
                   <Card style="width:375px;height:228px;">
                     <div style="text-align:center">
@@ -184,7 +199,7 @@
             </Tab-pane>
             <Tab-pane :label="`异常(${errorHost.length})`" name="异常">
               <div class="flex-wrapper">
-                <div v-for="(item,index) in errorHost" :key="item" :class="{select:item.select}" @click="toggle(item)"
+                <div v-for="(item,index) in errorHost" :key="index" :class="{select:item.select}" @click="toggle(item)"
                      style="margin-bottom: 20px;height:228px;">
                   <Card style="width:375px;height:228px;">
                     <div style="text-align:center">
@@ -216,7 +231,7 @@
             </Tab-pane>
             <Tab-pane :label="`欠费(${arrearsHost.length})`" name="欠费">
               <div class="flex-wrapper">
-                <div v-for="(item,index) in arrearsHost" :key="item" :class="{select:item.select}" @click="toggle(item)"
+                <div v-for="(item,index) in arrearsHost" :key="index" :class="{select:item.select}" @click="toggle(item)"
                      style="margin-bottom: 20px;height:228px;">
                   <Card style="width:375px;height:228px;">
                     <div style="text-align:center">
@@ -247,7 +262,7 @@
             </Tab-pane>
             <Tab-pane :label="`关机(${closeHost.length})`" name="关机">
               <div class="flex-wrapper">
-                <div v-for="(item,index) in closeHost" v-if="item.status==1" :key="item" :class="{select:item.select}"
+                <div v-for="(item,index) in closeHost" v-if="item.status==1" :key="index" :class="{select:item.select}"
                      @click="toggle(item)"
                      style="margin-bottom: 20px;height:228px;">
                   <Card style="width:375px;height:228px;">
@@ -280,7 +295,7 @@
                 </div>
 
                 <!-- 开机中中主机列表 -->
-                <div v-for="(item,index) in closeHost" v-if="item.status==2" :key="item" :class="{select:item.select}"
+                <div v-for="(item,index) in closeHost" v-if="item.status==2" :key="index" :class="{select:item.select}"
                      style="margin-bottom: 20px;height:228px;">
                   <Card style="width:375px;height:228px;">
                     <div style="text-align:center">
@@ -314,7 +329,8 @@
     </div>
 
 
-    <Modal v-model="showModal.backup" width="590" scrollable="true">
+    <!-- 主机备份弹窗 -->
+    <Modal v-model="showModal.backup" width="590" :scrollable="true">
       <div slot="header"
            style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
         主机备份
@@ -336,8 +352,8 @@
         </Button>
       </div>
     </Modal>
-
-    <Modal v-model="showModal.rename" width="590" scrollable="true">
+    <!-- 主机重命名弹窗 -->
+    <Modal v-model="showModal.rename" width="590" :scrollable="true">
       <div slot="header"
            style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
         主机重命名
@@ -345,7 +361,7 @@
       <div style="width:60%">
         <Form :model="renameForm" :label-width="80">
           <Form-item label="主机名">
-            <Input v-model="renameForm.hostName" placeholder="请输入新主机名" maxlength="15"></Input>
+            <Input v-model="renameForm.hostName" placeholder="请输入新主机名" :maxlength="15"></Input>
           </Form-item>
         </Form>
       </div>
@@ -356,8 +372,8 @@
       </div>
     </Modal>
 
-
-    <Modal v-model="showModal.mirror" width="590" scrollable="true">
+    <!-- 生成镜像弹窗 -->
+    <Modal v-model="showModal.mirror" width="590" :scrollable="true">
       <div slot="header"
            style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
         生成镜像
@@ -380,8 +396,8 @@
       </div>
     </Modal>
 
-
-    <Modal v-model="showModal.bindIP" width="590" scrollable="true">
+    <!-- 绑定静态IP -->
+    <Modal v-model="showModal.bindIP" width="590" :scrollable="true">
       <div slot="header"
            style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
         绑定静态IP
@@ -390,7 +406,7 @@
         <Form :model="bindForm" :label-width="80">
           <Form-item label="公网IP">
             <Select v-model="bindForm.publicIP" placeholder="请选择">
-              <Option v-for="item in publicIPList" :key="item" :value="`${item.publicipid}#${item.publicip}`">
+              <Option v-for="(item,index) in publicIPList" :key="index" :value="`${item.publicipid}#${item.publicip}`">
                 {{item.publicip}}
               </Option>
             </Select>
@@ -403,25 +419,25 @@
         </Button>
       </div>
     </Modal>
-
+    <!-- 续费弹窗 -->
     <Modal
       v-model="showModal.renewal"
       title="续费选择"
       width="590"
-      @on-ok="ok" scrollable="true">
+      @on-ok="ok" :scrollable="true">
       <div style="height:100px;width:90%;margin:0px auto">
         <span style="font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;vertical-align:middle">
         付费类型 :
         </span>
         <Select v-model="renewalType" style="width:140px">
-          <Option v-for="item in timeOptions.renewalType" :value="item.value" :key="item">{{ item.label }}</Option>
+          <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}</Option>
         </Select>
         <span
           style="margin-left:30px;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;vertical-align:middle">
         付费时长 :
       </span>
         <Select v-model="renewalTime" style="width:140px">
-          <Option v-for="item in timeOptions.renewalTime" :value="item.value" :key="item">{{ item.label }}</Option>
+          <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}</Option>
         </Select>
       </div>
       <div style="width:90%;margin:0px auto;font-family: Microsoft Yahei,微软雅黑-Bold;font-size: 16px;color: #666666;">
@@ -432,8 +448,8 @@
         <div class="button ok" @click="ok">确认续费</div>
       </div>
     </Modal>
-
-    <Modal v-model="showModal.Renew" width="590" scrollable="true">
+    <!-- 欠费，续费弹窗 -->
+    <Modal v-model="showModal.Renew" width="590" :scrollable="true">
       <div slot="header"
            style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
         续费主机<br>（温馨提示：当前资源已欠费，如需激活需要1小时费用）
@@ -451,8 +467,8 @@
         </Button>
       </div>
     </Modal>
-
-    <Modal v-model="showModal.selectAuthType" width="590" :scrollable="true" :styles="{top:'172px'}">
+    <!-- 认证弹窗 -->
+    <Modal v-model="showModal.selectAuthType" width="590" ::scrollable="true" :styles="{top:'172px'}">
       <div slot="header"
            style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
         选择认证方式
@@ -484,7 +500,6 @@
         <p>提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：028-23242423</p>
       </div>
     </Modal>
-
   </div>
 </template>
 
@@ -512,6 +527,7 @@
         sessionStorage.removeItem('type')
       }
       return {
+        cost: '',
         openHost: [],
         closeHost: [],
         arrearsHost: [],
@@ -555,7 +571,7 @@
         loading: false,
         intervalInstance: null,
         RenewForm: {
-          cost: '0',
+          cost: 0,
           id: ''
         }
       }
@@ -563,11 +579,18 @@
     created() {
       this.getData()
       // 定时发送ajax 刷新页面
+
+      console.log('status')
+      console.log(this.status)
       this.intervalInstance = setInterval(() => {
         this.getData()
       }, 5 * 1000)
     },
     methods: {
+      joinBalance() {
+
+      },
+      //恢复主机
       recoverHost(id) {
         this.$Modal.confirm({
           title: '',
@@ -586,6 +609,7 @@
           }
         })
       },
+      //重命名主机
       renewHost(id) {
         this.showModal.Renew = true
         this.RenewForm.id = id
@@ -691,11 +715,12 @@
             break
         }
       },
-      stop(item) {
+      stop(item){
         this.loadingMessage = '正在停止主机'
         this.loading = true
         item.select = false
         item.status = 2
+        // alert(121324)
         this.$http.post('information/stopVirtualMachine.do', {
           virtualMachineid: item.computerid,
           forced: 'true'
@@ -709,7 +734,7 @@
           }
         })
       },
-      start(item) {
+      start(item){
         this.loadingMessage = '正在启动主机'
         this.loading = true
         item.select = false
