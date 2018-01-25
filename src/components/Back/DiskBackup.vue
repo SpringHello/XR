@@ -171,27 +171,22 @@
         <span class="universal-modal-title">创建/删除磁盘</span>
       </p>
       <div class="universal-modal-content-flex">
-        <p style="margin-bottom: 20px">您正为<span style="color:#2A99F2">{{ strategyName}}</span>添加/删除磁盘</p>
-        <!--<Transfer
-          :data="diskForBackupsStrategyList"
-          :target-keys="diskForBackupsStrategyListKey"
-          :render-format="renderDisk"
-          :titles="['该区域下所有磁盘','已应用该策略磁盘']"
-          @on-change="handleChange"></Transfer>-->
-        <div style="border: 1px solid #D8D8D8;border-radius: 4px; height: 150px;width: 510px;display: flex">
-          <div style="width: 50%;border-right: 1px solid #D8D8D8;">
-            <p style="font-family: MicrosoftYaHei;font-size: 12px;color: #333333;padding: 10px">该区域下所有磁盘</p>
-            <ol style="overflow:auto;height: 116px;width: 253px">
-              <li style="padding: 5px 10px;height: 28px" v-for="(item, index) in diskForBackupsStrategyList">
-                {{item.diskname}}111111111111<span style="float: right;color: #2A99F2" @click="addDisk(index,item)">＋添加</span></li>
-            </ol>
+        <p style="margin-bottom: 20px">您正为<span class="bluetext">{{ strategyName}}</span>添加/删除磁盘</p>
+        <div class="modal-main">
+          <div class="hostlist">
+            <p>该区域下所有磁盘</p>
+            <ul>
+              <li v-for="(item, index) in diskForBackupsStrategyList" :key="index"><span>{{item.diskname}}</span><i
+                @click="addDisk(index,item)" class="bluetext">+ 添加</i></li>
+            </ul>
           </div>
-          <div style="width: 50%">
-            <p style="font-family: MicrosoftYaHei;font-size: 12px;color: #333333;padding: 10px">已选择磁盘</p>
-            <ol style="overflow:auto;height: 116px;width: 253px">
-              <li style="padding: 5px 10px" v-for="item in diskForBackupsStrategyListKey">{{ item }}<span
-                style="float: right;color: #2A99F2">－删除</span></li>
-            </ol>
+          <div class="changelist">
+            <p>已选择磁盘</p>
+            <ul>
+              <li v-for="(item,index) in diskForBackupsStrategyListKey" :key="index"><span>{{ item }}</span><i class="bluetext">
+                <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
+                删除</i></li>
+            </ul>
           </div>
         </div>
         <p style="margin-top: 20px;color: #999999;font-family: MicrosoftYaHei;font-size: 12px;">
@@ -199,9 +194,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.addOrDeleteDisk = false">取消</Button>
-        <Button type="primary"
-                @click="showModal.addOrDeleteDisk = false">确认
-        </Button>
+        <Button type="primary" >确认</Button>
       </div>
     </Modal>
   </div>
@@ -2075,4 +2068,40 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .modal-main {
+    height: 146px;
+    display: flex;
+    border: 1px solid #D8D8D8;
+    border-radius: 4px;
+    div {
+      height: 146px;
+      padding: 10px;
+      padding-top: 0;
+      overflow: scroll;
+      width: 250px;
+      overflow-x: hidden;
+      p {
+        line-height: 36px;
+      }
+      li {
+        font-size: 12px;
+        line-height: 28px;
+        &:nth-child(odd) {
+          background: #F7F7F7;
+        }
+        > i {
+          float: right;
+          // background: gray;
+          // width: 30px;
+          font-size: 10px;
+          font-style: normal;
+
+        }
+
+      }
+    }
+    .changelist {
+      overflow-y: hidden;
+    }
+  }
 </style>

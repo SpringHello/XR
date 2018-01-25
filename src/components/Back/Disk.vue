@@ -670,7 +670,7 @@
       },
       // 打开扩容模态框
       dilatationDisk(data){
-        if (data.status === 1) {
+        if (data.status == 1) {
           this.operand = data
           this.dilatationForm.diskSize = this.operand.disksize
           this.dilatationForm.minDiskSize = this.dilatationForm.diskSize
@@ -683,7 +683,7 @@
       },
       // 修改磁盘名称弹出模态框
       modificationDisk(data){
-        if (data.status === 1) {
+        if (data.status == 1) {
           this.operand = data
           this.showModal.modificationDisk = true
           this.diskName = this.operand.diskname
@@ -824,7 +824,7 @@
       },
       /* 创建磁盘备份前的方法 （判断是否可以创建） */
       beforeCreateDiskBackup(data) {
-        if (data.status === 1) {
+        if (data.status == 1) {
           this.backupForDiskName = data.diskname
           this.operand = data
           this.showModal.createDiskBackup = true
