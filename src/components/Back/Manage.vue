@@ -145,7 +145,12 @@
             </Tab-pane>
             <TabPane label="快照管理" name="name2">
               <div class="body">
+                
+
+              <Poptip title="提示标题" content="提示内容">
                 <Button type="primary" @click="delSnapshot" style="margin-bottom:10px">删除快照</Button>
+              </Poptip>
+
                 <Table ref="selection" :columns="snapshotCol" :data="snapshotData"
                        @select="changeSelect(selection)"></Table>
                 <!-- <Button @click="handleSelectAll1(true)">Set all selected</Button>
