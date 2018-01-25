@@ -109,15 +109,16 @@
           </Form-item>
           <Form-item label="自动备份时间">
             <Cascader :data="backupsForm.dayTimeData" v-model="backupsForm.timeValue"
-                      v-if="backupsForm.timeType === 'day'"></Cascader>
+                      v-if="backupsForm.timeType === 'day'" :clearable="false"></Cascader>
             <Cascader :data="backupsForm.weekTimeData" v-model="backupsForm.timeValue"
-                      v-if="backupsForm.timeType === 'week'"></Cascader>
+                      v-if="backupsForm.timeType === 'week'" :clearable="false"></Cascader>
             <Cascader :data="backupsForm.monthTimeData" v-model="backupsForm.timeValue"
-                      v-if="backupsForm.timeType === 'month'"></Cascader>
+                      v-if="backupsForm.timeType === 'month'" :clearable="false"></Cascader>
           </Form-item>
           <Form-item label="备份策略应用磁盘">
             <Select v-model="backupsForm.strategyForDisk" filterable multiple style="width: 229px">
-              <Option v-for="item in backupsForm.applyDiskList" :value="item.id" :key="item.id">{{ item.diskname }}
+              <Option v-for="item in backupsForm.applyDiskList" :value="item.diskid" :key="item.diskid">{{ item.diskname
+                }}
               </Option>
             </Select>
           </Form-item>
@@ -171,19 +172,35 @@
       </p>
       <div class="universal-modal-content-flex">
         <p style="margin-bottom: 20px">您正为<span style="color:#2A99F2">{{ strategyName}}</span>添加/删除磁盘</p>
-        <Transfer
+        <!--<Transfer
           :data="diskForBackupsStrategyList"
           :target-keys="diskForBackupsStrategyListKey"
-          :render-format="render"
+          :render-format="renderDisk"
           :titles="['该区域下所有磁盘','已应用该策略磁盘']"
-          @on-change="handleChange"></Transfer>
+          @on-change="handleChange"></Transfer>-->
+        <div style="border: 1px solid #D8D8D8;border-radius: 4px; height: 150px;width: 510px;display: flex">
+          <div style="width: 50%;border-right: 1px solid #D8D8D8;">
+            <p style="font-family: MicrosoftYaHei;font-size: 12px;color: #333333;padding: 10px">该区域下所有磁盘</p>
+            <ol style="overflow:auto;height: 116px;width: 253px">
+              <li style="padding: 5px 10px;height: 28px" v-for="(item, index) in diskForBackupsStrategyList">
+                {{item.diskname}}111111111111<span style="float: right;color: #2A99F2" @click="addDisk(index,item)">＋添加</span></li>
+            </ol>
+          </div>
+          <div style="width: 50%">
+            <p style="font-family: MicrosoftYaHei;font-size: 12px;color: #333333;padding: 10px">已选择磁盘</p>
+            <ol style="overflow:auto;height: 116px;width: 253px">
+              <li style="padding: 5px 10px" v-for="item in diskForBackupsStrategyListKey">{{ item }}<span
+                style="float: right;color: #2A99F2">－删除</span></li>
+            </ol>
+          </div>
+        </div>
         <p style="margin-top: 20px;color: #999999;font-family: MicrosoftYaHei;font-size: 12px;">
           提示：当您选择已绑定备份策略的磁盘时，新的备份策略将直接覆盖原有备份策略。</p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.addOrDeleteDisk = false">取消</Button>
         <Button type="primary"
-                @click="">确认
+                @click="showModal.addOrDeleteDisk = false">确认
         </Button>
       </div>
     </Modal>
@@ -198,10 +215,10 @@
   export default{
     data(){
       return {
-        // 获取应用该备份策略的磁盘列表
-        diskForBackupsStrategyList: this.getdiskForBackupsStrategyList(),
-        // 显示在穿梭框右侧的列表
-        diskForBackupsStrategyListKey: this.getkeys(),
+        // 获取磁盘列表，显示穿梭框左面
+        diskForBackupsStrategyList: [],
+        // 应用该备份策略的磁盘,显示在穿梭框右面
+        resourceDisk: [],
         // 标签页选择
         tabPane: 'diskBackups',
         // 磁盘备份表头
@@ -336,9 +353,9 @@
               }
             }
           }, {
-            title: '自动备份保留个数',
+            title: '保留个数',
             align: 'center',
-            width: 140,
+            width: 100,
             render: (h, params) => {
               return h('span', {}, params.row.keepcount + '个')
             }
@@ -391,14 +408,24 @@
             title: '创建时间',
             align: 'center',
             key: 'createtime',
-            width: 180,
+            width: 160,
           }, {
             title: '应用磁盘',
             align: 'center',
-            width: 140,
+            width: 200,
             render: (h, params) => {
               const text = params.row.resourcename === '' ? '----' : params.row.resourcename
-              return h('span', {}, text)
+              const resourceName = text.split(',')
+              var renderArray = []
+              for (var i of resourceName) {
+                renderArray.push(h('p', {
+                  style: {
+                    lineHeight: '18px',
+                    color: '#2A99F2'
+                  }
+                }, i))
+              }
+              return h('div', {}, renderArray)
             }
           }, {
             title: '操作',
@@ -1709,7 +1736,7 @@
         // 选中备份策略某一项
         diskSelectionStrategy: null,
         // 备份策略名称，用于显示在添加删除磁盘模态框上
-        strategyName: '',
+        strategyName: ''
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -1732,24 +1759,36 @@
           obj[i] = this.diskForm[i]
         }
         return obj
+      },
+      /* 应用该磁盘备份策略的磁盘列表 */
+      diskForBackupsStrategyListKey () {
+        return this.resourceDisk
       }
     },
     methods: {
-      /* 获取磁盘（包括已应用和未应用该备份策略） */
-      getdiskForBackupsStrategyList () {
-      },
-      /* 获取已应用该备份策略的磁盘 */
-      getkeys () {
-      },
-      /* 穿梭框的回调函数 */
-      handleChange () {
-      },
-      /* 穿梭框磁盘列表显示 */
-      render (item) {
-        return item.diskname
+      /* 添加磁盘到备份策略 只是前端改变*/
+      addDisk (index, data) {
+        this.diskForBackupsStrategyList.splice(index, 1)
+        this.resourceDisk.push(data)
       },
       /* 添加或删除备份策略应用的磁盘 */
       addOrDeleteDisk (data) {
+        var diskData = []
+        this.$http.get('Disk/listDisk.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            response.data.result.forEach((item) => {
+              if (item.status === 1 && item.bankupstrategyid != data.id) {
+                diskData.push(item)
+              }
+            })
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
+        this.diskForBackupsStrategyList = diskData
+        this.resourceDisk = data.resourcename.split(',')
         this.strategyName = data.strategyname
         this.showModal.addOrDeleteDisk = true
       },
@@ -1758,7 +1797,9 @@
         if (response.status == 200 && response.data.status == 1) {
           this.diskBackupsData = response.data.result
         } else {
-          this.$error('error', response.data.message)
+          this.$message.error({
+            content: response.data.message
+          })
         }
       },
       // 检测是否选中一项数据
@@ -1814,7 +1855,9 @@
           if (response.status == 200 && response.data.status == 1) {
             this.diskBackupsData = response.data.result
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -1830,7 +1873,9 @@
               }
             })
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -1847,7 +1892,9 @@
               duration: 5
             })
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -1859,7 +1906,9 @@
             this.diskBackupsStrategyData = response.data.result
             this.diskSelectionStrategy = null
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -1879,7 +1928,9 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -1895,7 +1946,9 @@
               }
             })
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -1908,7 +1961,9 @@
             this.$Message.info(response.data.message)
             this.listDiskSnapshots()
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -1921,7 +1976,9 @@
               this.$Message.info(response.data.message)
               this.listDiskSnapshots()
             } else {
-              this.$error('error', response.data.message)
+              this.$message.error({
+                content: response.data.message
+              })
             }
           })
         } else {
@@ -1955,7 +2012,9 @@
               this.$Message.info('磁盘备份策略删除成功')
               this.listDiskBackUpStrategy()
             } else {
-              this.$error('error', response.data.message)
+              this.$message.error({
+                content: response.data.message
+              })
               this.listDiskBackUpStrategy()
             }
           })
@@ -1984,7 +2043,9 @@
               this.coupon = 0
             }
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       }),
