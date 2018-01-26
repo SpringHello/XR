@@ -21,7 +21,7 @@
               <Icon type="arrow-down-b"></Icon>
             </Button>
             <Dropdown-menu slot="list">
-              
+
 
 
               <!-- 重命名 -->
@@ -52,7 +52,7 @@
               </Dropdown-item>
 
               <!-- 重启主机 -->
-              
+
               <Poptip
                 confirm
                 width="200"
@@ -64,7 +64,7 @@
               </Poptip>
 
               <!-- 删除主机 -->
-             
+
               <Poptip
                 confirm
                 width="200"
@@ -75,10 +75,10 @@
                 style="display: block">
                 <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>删除主机</li>
               </Poptip>
-             
+
 
               <!-- 解绑主机 -->
-              
+
               <Poptip
                 confirm
                 width="200"
@@ -89,7 +89,7 @@
                 style="display: block">
                 <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>解绑公网IP</li>
               </Poptip>
-            
+
             </Dropdown-menu>
           </Dropdown>
         </div>

@@ -168,7 +168,7 @@
     <!-- 备份策略添加/删除磁盘 -->
     <Modal v-model="showModal.addOrDeleteDisk" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">创建/删除磁盘</span>
+        <span class="universal-modal-title">添加/删除磁盘</span>
       </p>
       <div class="universal-modal-content-flex">
         <p style="margin-bottom: 20px">您正为<span class="bluetext">{{ strategyName}}</span>添加/删除磁盘</p>
@@ -176,14 +176,15 @@
           <div class="hostlist">
             <p>该区域下所有磁盘</p>
             <ul>
-              <li v-for="(item, index) in diskForBackupsStrategyList" :key="index"><span>{{item.diskname}}</span><i
-                @click="addDisk(index,item)" class="bluetext">+ 添加</i></li>
+              <li v-for="(item, index) in diskForBackupsStrategyList" :key="index"><span>{{item.diskname}}</span><span v-if="item.bankupstrategyname">({{ item.bankupstrategyname}})</span><i
+                @click="addDisk(index,item)" class="bluetext" style="cursor: pointer">+ 添加</i></li>
             </ul>
           </div>
           <div class="changelist">
             <p>已选择磁盘</p>
             <ul>
-              <li v-for="(item,index) in diskForBackupsStrategyListKey" :key="index"><span>{{ item }}</span><i class="bluetext">
+              <li v-for="(item,index) in resourceDisk" :key="index"><span>{{ item.resourcesName }}</span><i
+                class="bluetext" style="cursor: pointer" @click="deleteDisk(index,item)">
                 <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
                 删除</i></li>
             </ul>
@@ -194,7 +195,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.addOrDeleteDisk = false">取消</Button>
-        <Button type="primary" >确认</Button>
+        <Button type="primary" @click="updateVMIntoBackUpStrategy">确认</Button>
       </div>
     </Modal>
   </div>
@@ -407,18 +408,21 @@
             align: 'center',
             width: 200,
             render: (h, params) => {
-              const text = params.row.resourcename === '' ? '----' : params.row.resourcename
-              const resourceName = text.split(',')
-              var renderArray = []
-              for (var i of resourceName) {
-                renderArray.push(h('p', {
-                  style: {
-                    lineHeight: '18px',
-                    color: '#2A99F2'
-                  }
-                }, i))
+              console.log(params.row.resourceBean)
+              if (params.row.resourceBean.length == 0) {
+                return h('span', {}, '----')
+              } else {
+                var renderArray = []
+                for (var i of params.row.resourceBean) {
+                  renderArray.push(h('p', {
+                    style: {
+                      lineHeight: '18px',
+                      color: '#2A99F2'
+                    }
+                  }, i.resourcesName))
+                }
+                return h('div', {}, renderArray)
               }
-              return h('div', {}, renderArray)
             }
           }, {
             title: '操作',
@@ -1729,7 +1733,9 @@
         // 选中备份策略某一项
         diskSelectionStrategy: null,
         // 备份策略名称，用于显示在添加删除磁盘模态框上
-        strategyName: ''
+        strategyName: '',
+        // 备份策略id
+        strategyId: ''
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -1752,26 +1758,54 @@
           obj[i] = this.diskForm[i]
         }
         return obj
-      },
-      /* 应用该磁盘备份策略的磁盘列表 */
-      diskForBackupsStrategyListKey () {
-        return this.resourceDisk
       }
     },
     methods: {
-      /* 添加磁盘到备份策略 只是前端改变*/
+      /* 添加磁盘到备份策略 */
       addDisk (index, data) {
         this.diskForBackupsStrategyList.splice(index, 1)
-        this.resourceDisk.push(data)
+        var resource = {
+          resourcesName: data.diskname,
+          resourcesId: data.diskid
+        }
+        this.resourceDisk.push(resource)
+      },
+      /* 删除应用该备份策略的磁盘 */
+      deleteDisk (index, data) {
+        this.resourceDisk.splice(index, 1)
+        data.diskname = data.resourcesName
+        this.diskForBackupsStrategyList.push(data)
+      },
+      /* 确定从磁盘备份策略添加或移除磁盘 */
+      updateVMIntoBackUpStrategy () {
+        var diskParams = this.resourceDisk.map(function (item) {
+          return item.resourcesId
+        })
+        var url = `Disk/updateVMIntoBackUpStrategy.do?backUpStrategyId=${this.strategyId}&diskIds=${diskParams.join(',')}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$message.info({
+              content: response.data.message
+            })
+            this.showModal.addOrDeleteDisk = false
+            this.listDiskBackUpStrategy()
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+            this.showModal.addOrDeleteDisk = false
+          }
+        })
       },
       /* 添加或删除备份策略应用的磁盘 */
       addOrDeleteDisk (data) {
-        var diskData = []
+        var leftData = []
+        this.resourceDisk = []
         this.$http.get('Disk/listDisk.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             response.data.result.forEach((item) => {
               if (item.status === 1 && item.bankupstrategyid != data.id) {
-                diskData.push(item)
+                leftData.push(item)
               }
             })
           } else {
@@ -1780,8 +1814,12 @@
             })
           }
         })
-        this.diskForBackupsStrategyList = diskData
-        this.resourceDisk = data.resourcename.split(',')
+        this.diskForBackupsStrategyList = leftData
+        data.resourceBean.forEach(item => {
+          this.resourceDisk.push(item)
+        })
+        this.resourceDisk = data.resourceBean
+        this.strategyId = data.id
         this.strategyName = data.strategyname
         this.showModal.addOrDeleteDisk = true
       },
@@ -2100,8 +2138,8 @@
 
       }
     }
-    .changelist {
-      overflow-y: hidden;
-    }
+    /*   .changelist {
+         overflow-y: hidden;
+       }*/
   }
 </style>
