@@ -15,7 +15,7 @@
           <TabPane label="云主机快照">
             <div class="operator-bar">
               <Button type="primary" @click="createsnapshot(showModal.newSnapshot=true)">创建快照</Button>
-              <Button type="primary">创建快照策略</Button>
+              <!-- <Button type="primary">创建快照策略</Button> -->
               <Button type="primary" @click="delsnapshot">删除快照</Button>
             </div>
             <Table ref="selection" :columns="snapshotCol" :data="snapshotData"
@@ -126,7 +126,7 @@
         <div>
           <strong>主机回滚</strong>
           <p class="lh24">是否确定回滚主机</p>
-          <p class="lh24">提示：您正使用<span class="bluetext">快照名称</span>回滚<span class="bluetext">主机名称</span>至<span
+          <p class="lh24">提示：您正使用<span class="bluetext">{{snapsName}}</span>回滚<span class="bluetext">{{hostName}}</span>至<span
             class="bluetext">时间点</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的主机内的数据将丢失。</p>
         </div>
       </div>
@@ -155,7 +155,7 @@
         <span class="universal-modal-title">创建/删除主机</span>
       </p>
       <div class="universal-modal-content-flex">
-        <p style="margin-bottom: 20px">您正为<span class="bluetext">策略名称</span>添加/删除主机</p>
+        <p style="margin-bottom: 20px">您正为<span class="bluetext">{{strategyName}}</span>添加/删除主机</p>
         <div class="modal-main">
           <div class="hostlist">
             <p>该区域下所有主机</p>
@@ -180,7 +180,7 @@
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.addOrDeleteHost = false">取消</Button>
         <Button type="primary"
-                @click="addOrDeleteHost">创建快照
+                @click="addOrDeleteHost">应用快照
         </Button>
       </div>
     </Modal>
@@ -195,6 +195,9 @@
   export default {
     data() {
       return {
+        snapsName: '',
+        hostName: '',
+        strategyId: '',
         changeHostlist: [],
         cursnapshot: null,
         snapsSelection: null,
@@ -204,7 +207,6 @@
           time: '',
           num: 1,
           host: [],
-          // inter: 'day',
           timeType: 'day',
           // 备份时间间隔选择
           timeTypeList: [
@@ -1431,18 +1433,22 @@
             title: '状态',
             key: 'status',
             render: (h, params) => {
-              const row = params.row
-              const text = row.status === -1 ? '异常' : row.status === 1 ? '可用' : row.status === 2 ? '正在创建' : row.status === 3 ? '删除中' : ''
-              // const text = row.status === -1 ? '异常' : row.status === 1 ? '可用' : row.status === 3 ? '删除中' : ''
-              if (row.status == 3) {
-                return h('div', {}, [h('Spin', {
-                  style: {
-                    display: 'inline-block',
-                    marginRight: '10px'
-                  }
-                }), h('span', {}, text)])
-              } else {
-                return h('span', text)
+              switch (params.row.status) {
+                case 1:
+                  return h('span', {}, '正常')
+                case -1:
+                  return h('span', {
+                    style: {
+                      color: '#EE4545'
+                    }
+                  }, '异常')
+                case 2:
+                  return h('div', {}, [h('Spin', {
+                    style: {
+                      display: 'inline-block',
+                      marginRight: '10px'
+                    }
+                  }), h('span', {}, '创建中')])
               }
             }
           },
@@ -1452,7 +1458,12 @@
           },
           {
             title: '快照间隔',
-            key: 'type'
+            key: 'interval',
+            render: (h, params) => {
+              const row = params.row
+              const text = row.createway === 'hand' ? '手动' : 'day' ? '每天' : 'week' ? '每周' : 'month' ? '每月' : ''
+              return h('span', {}, text)
+            }
           },
           {
             title: '是否保留内存状态',
@@ -1480,6 +1491,8 @@
                   click: () => {
                     this.showModal.rollback = true
                     this.cursnapshot = params.row
+                    this.snapsName=params.row.snapshotname
+                    this.hostName=params.row.name
                   }
                 }
               }, '回滚')
@@ -1503,9 +1516,6 @@
             title: '状态',
             key: 'status',
             render: (h, params) => {
-              // var status = params.row.status == 1 ? '正常' : '异常'
-
-
               const row = params.row
               const text = row.status === 0 ? '异常' : row.status === 1 ? '可用' : row.status === 3 ? '删除中' : ''
               return h('span', {}, text)
@@ -1523,15 +1533,55 @@
           },
           {
             title: '自动备份保留个数',
-            key: 'keepcount'
-          },
-          {
-            title: '自动备份间隔',
-            key: 'keepupinterval',
+            key: 'keepcount',
             render: (h, params) => {
-              var inter = params.row.keepupinterval
-              var keepupinterval = inter == 'day' ? ('每天') : inter == 'week' ? ('每周') : ('每月')
-              return h('span', {}, keepupinterval)
+              return h('span', {}, params.row.keepcount + '个')
+            }
+          },
+           {
+            title: '自动备份间隔',
+            align: 'center',
+            width: 120,
+            render: (h, params) => {
+              const text = params.row.keepupinterval === 'day' ? '每天' : params.row.keepupinterval === 'month' ? '每月' : ' 每周'
+              return h('span', {}, text)
+            }
+          }, {
+            title: '自动备份时间',
+            align: 'center',
+            width: 140,
+            render: (h, params) => {
+              var week_day = ''
+              if (params.row.keepupinterval == 'day') {
+                return h('span', {}, params.row.autobackuptime + ':00')
+              } else if (params.row.keepupinterval == 'week') {
+                switch (params.row.days) {
+                  case '1':
+                    week_day = '周一'
+                    break
+                  case '2':
+                    week_day = '周二'
+                    break
+                  case '3':
+                    week_day = '周三'
+                    break
+                  case '4':
+                    week_day = '周四'
+                    break
+                  case '5':
+                    week_day = '周五'
+                    break
+                  case '6':
+                    week_day = '周六'
+                    break
+                  case '7':
+                    week_day = '周日'
+                    break
+                }
+                return h('span', {}, week_day + ' ' + params.row.autobackuptime + ':00')
+              } else {
+                return h('span', {}, params.row.days + '号 ' + ' ' + params.row.autobackuptime + ':00')
+              }
             }
           },
 
@@ -1541,7 +1591,24 @@
           },
           {
             title: '应用主机',
-            key: 'resourcename'
+            key: 'resourceBean',
+            render: (h, params) => {
+              if (params.row.resourceBean.length == 0) {
+                return h('span', {}, '----')
+              } else {
+                var renderArray = []
+                for (var i of params.row.resourceBean) {
+                  renderArray.push(h('p', {
+                    style: {
+                      lineHeight: '18px',
+                      color: '#2A99F2'
+                    }
+                  }, i.resourcesName))
+                }
+                return h('div', {}, renderArray)
+              }
+            }
+            
           },
           {
             title: '操作',
@@ -1555,6 +1622,9 @@
                 on: {
                   click: () => {
                     this.showModal.addOrDeleteHost = true
+                    this.strategyName = params.row.strategyname
+                    this.strategyId = params.row.id
+
                   }
                 }
               }, '添加/删除主机')
@@ -1578,7 +1648,7 @@
       this.listsnaps()
       this.listBackups()
       this.listHost()
-      隔10秒调用
+      // 隔10秒调用
       // this.inter()
       // Promise.all([napsResponse, backupsResponse]).then((ResponseValue) => {
       //   next(vm => {
@@ -1595,6 +1665,20 @@
       removeHost(index) {
         this.changeHostlist.splice(index, 1)
 
+      },
+       /* 切换备份时间间隔时给准确时间点赋值 */
+      changeType (value) {
+        switch (value) {
+          case 'day':
+            this.backupsForm.timeValue = ['00:00']
+            break
+          case 'week':
+            this.backupsForm.timeValue = ['1', '00:00']
+            break
+          case 'month':
+            this.backupsForm.timeValue = ['1', '00:00']
+            break
+        }
       },
       //虚拟机列表
       listHost() {
@@ -1629,15 +1713,36 @@
       },
       //策略添加或者删除主机
       addOrDeleteHost() {
-        this.showModal.addOrDeleteHost = false
+        
+        // information/updateVMIntoBackUpStrategy.do  向备份策略移入主机    zoneId   ,  backUpStrategyId   ,    VMIds(非必传   多个以 ，隔开)
+      // information/updateVMIntoBackUpStrategy.do      向备份策略移入主机   zoneId   ,  backUpStrategyId（策略id）   ,VMIds（虚拟机id   多个主机以 ，隔开）
+        var vmidsArry=this.changeHostlist.map(item => {
+         return item.computerid
+        })
+        var vmids=vmidsArry.join(',')
+        var snapsURL = `information/updateVMIntoBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}&backUpStrategyId=${this.strategyId}&VMIds=${vmids}`
+        var snapsResponse = axios.get(snapsURL)
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.showModal.addOrDeleteHost = false
+              this.listBackups()
+              this.$Message.success({
+                content: response.data.message,
+                duration: 5
+              })
+            }
+          })
       },
       rollbackSubmit() {
         this.showModal.rollback = false
-        var URL = `Snapshot/revertToVMSnapshot.do?snapshotId=${this.cursnapshot.snapshotid}`
+        var URL = `Snapshot/revertToVMSnapshot.do?snapshotId=${this.cursnapshot.snapshotid}&zoneId=${$store.state.zone.zoneid}`
         axios.get(URL)
           .then(response => {
             if (response.status == 200) {
-              this.$error('error', response.data.message)
+              this.$Message.success({
+                content: response.data.message,
+                duration: 5
+              })
             }
           })
       },
@@ -1686,15 +1791,20 @@
       },
       //确定创建策略
       NewBackupsSubmit() {
-        this.showModal.newBackups = false
         var vmids = this.creatBackupsForm.host.join(',')
-        // var time1 = this.creatBackupsForm.time.format("hh:mm")
-        var time = '01:00'
-        var URL = `information/createVMBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}&strategyName=${this.creatBackupsForm.name}&keepCount=${this.creatBackupsForm.num}&keepInterval=${this.creatBackupsForm.inter}&autoBackUpTime=${time}&VMIds=${vmids}&memoryStatus=${this.creatBackupsForm.memory}`
+        var URL = `information/createVMBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}&strategyName=${this.creatBackupsForm.name}&keepCount=${this.creatBackupsForm.num}&keepInterval=${this.creatBackupsForm.timeType}&autoBackUpTime=${this.creatBackupsForm.timeValue}&VMIds=${vmids}&memoryStatus=${this.creatBackupsForm.memory}`
         axios.get(URL)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-            }
+              this.showModal.newBackups = false
+              this.listBackups()
+              this.$Message.success({
+              content: response.data.message,
+              duration: 5
+            })
+            }else {
+            this.$error('error', response.data.message)
+          }
           })
       },
       inter() {
@@ -1761,9 +1871,7 @@
           // width: 30px;
           font-size: 10px;
           font-style: normal;
-
         }
-
       }
     }
     .changelist {

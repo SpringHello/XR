@@ -145,16 +145,9 @@
             </Tab-pane>
             <TabPane label="快照管理" name="name2">
               <div class="body">
-                
-
-              <Poptip title="提示标题" content="提示内容">
-                <Button type="primary" @click="delSnapshot" style="margin-bottom:10px">删除快照</Button>
-              </Poptip>
-
+              <Button type="primary" @click="delSnapshot" style="margin-bottom:10px">删除快照</Button>
                 <Table ref="selection" :columns="snapshotCol" :data="snapshotData"
-                       @select="changeSelect(selection)"></Table>
-                <!-- <Button @click="handleSelectAll1(true)">Set all selected</Button>
-        <Button @click="handleSelectAll1(false)">Cancel all selected</Button> -->
+                        @radio-change="changeSelection"></Table>
               </div>
             </TabPane>
             <Tab-pane label="修改密码">
@@ -302,25 +295,56 @@
         </div>
       </Modal>
     </div>
+    <!-- 回滚确认弹窗 -->
     <Modal v-model="showModal.rollback" :scrollable="true" :closable="false" :width="390">
       <div class="modal-content-s">
         <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
           <strong>主机回滚</strong>
           <p class="lh24">是否确定回滚主机</p>
-          <p class="lh24">提示：您正使用<span class="bluetext">快照名称</span>回滚<span class="bluetext">主机名称</span>至<span
+          <p class="lh24">提示：您正使用<span class="bluetext">{{snapsName}}</span>回滚<span class="bluetext">{{hostName}}</span>至<span
             class="bluetext">时间点</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的主机内的数据将丢失。</p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.rollback=false">取消</Button>
-        <Button type="primary" @click="rollback">确定</Button>
+        <Button type="primary" @click="rollbackSubmit">确定</Button>
+      </p>
+    </Modal>
+     <!-- 确认系统重装弹窗 -->
+    <Modal v-model="showModal.reload" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>警告</strong>
+          <p class="lh24">为了数据安全，系统重装之前主机会自动关闭。重装结束后，主机会自动开机。</p>
+          <Input v-model="value" placeholder="请输入“confirm”" style="width: 300px"></Input>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.reload=false">取消</Button>
+        <Button type="primary" @click="reloadSubm">确定</Button>
+      </p>
+    </Modal>
+    <!-- 删除快照弹窗 -->
+    <Modal v-model="showModal.delsnaps" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>删除快照</strong>
+          <p class="lh24">确定要删除选中的快照吗？</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.delsnaps=false">取消</Button>
+        <Button type="primary" @click="delsnapsSubm">确定</Button>
       </p>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import $store from '@/vuex'
   import axios from 'axios'
   import defaultOptions from '@/echarts/defaultOptions'
   import histogram from '@/echarts/Histogram'
@@ -350,6 +374,8 @@
         }
       }
       return {
+        snapsName: '',
+        hostName: '',
         cursnapshot: null,
         CPUTime: '',
         diskTime: '',
@@ -364,33 +390,53 @@
         ipPolar: ipOptions,
         snapshotCol: [
           {
-            type: 'selection',
+            type: 'radio',
             width: 60,
             align: 'center'
           },
           {
             title: '快照名称',
-            key: 'name'
+            key: 'snapshotname'
           },
           {
             title: '状态',
-            key: 'status'
+            key: 'status',
+            render: (h, params) => {
+              const row = params.row
+              const text = row.status === 0 ? '异常' : row.status === 1 ? '可用' : row.status === 3 ? '删除中' : ''
+              if (row.status == 3) {
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', {}, text)])
+              } else {
+                return h('span', text)
+              }
+            }
           },
           {
             title: '快照策略',
-            key: 'stratege'
+            key: 'createway',
+            render: (h, params) => {
+              const row = params.row
+              const text = row.createway === 'hand' ? '手动备份' : row.createway
+              return h('span', {}, text)
+            }
           },
           {
             title: '间隔类型',
-            key: 'type'
+            key: 'interval',
+            render: (h, params) => {
+              const row = params.row
+              const text = row.createway === 'hand' ? '手动' : 'day' ? '每天' : 'week' ? '每周' : 'month' ? '每月' : ''
+              return h('span', {}, text)
+            }
           },
           {
             title: '创建于',
-            key: 'createTime'
-          },
-          {
-            title: '剩余保留时长',
-            key: 'remainTime'
+            key: 'addtime'
           },
           {
             title: '操作',
@@ -403,42 +449,17 @@
                 },
                 on: {
                   click: () => {
-                    console.log(params.index)
                     this.showModal.rollback = true
-                    console.log(params.row)
                     this.cursnapshot = params.row
+                    this.snapsName=params.row.snapshotname
+                    this.hostName=params.row.name
                   }
                 }
               }, '回滚')
             }
           }
         ],
-        snapshotData: [
-          {
-            name: 'TradeCode21',
-            status: 1,
-            stratege: '手动备份',
-            type: '手动',
-            createTime: '2016-10-03',
-            remainTime: '永久'
-          },
-          {
-            name: 'TradeCode211112',
-            status: 1,
-            stratege: '手动备份',
-            type: '手动11',
-            createTime: '2016-10-03',
-            remainTime: '永久'
-          },
-          {
-            name: 'TradeCode211213',
-            status: 1,
-            stratege: '手动备份',
-            type: '手动12',
-            createTime: '2016-10-03',
-            remainTime: '永久'
-          }
-        ],
+        snapshotData: [],
         cpu: {
           type: '今天',
           showType: '折线'
@@ -561,6 +582,8 @@
         showModal: {
           setMonitoringForm: false,
           rollback: false,
+          delsnaps: false,
+          reload: false
         },
         setList: [
           {
@@ -633,7 +656,7 @@
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.computerInfo = response.data.result
-            axios.get(`information/listTemplates.do?ostype=${this.computerInfo.computerOsType}&zoneid=${this.$route.query.zoneid}`)
+            axios.get(`information/listTemplates.do?osType=${this.computerInfo.computerOsType}&zoneId=${this.$route.query.zoneid}`)
               .then((response) => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.osOptions = response.data.result
@@ -641,17 +664,8 @@
               })
           }
         })
-      // 获取快照
-      var mirrorURL = `Snapshot/listVMSnapshotAll.do`
-      axios.get(mirrorURL)
-        .then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            console.log(response.data.result)
-          }
-        })
-
-      var url = `alarm/getVmAlarmByHour.do?vmname=${this.$route.query.instancename}&type=core`
-      this.$http.get(url)
+      var url1 = `alarm/getVmAlarmByHour.do?vmname=${this.$route.query.instancename}&type=core`
+      this.$http.get(url1)
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.cpuPolar.series[0].data = response.data.result.cpuUse
@@ -663,8 +677,8 @@
           }
         })
 
-      var url = `network/listNetworkByVM.do?vmid=${this.$route.query.vmid}`
-      this.$http.get(url)
+      var url2 = `network/listNetworkByVM.do?vmid=${this.$route.query.vmid}`
+      this.$http.get(url2)
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.tableData = response.data.result
@@ -684,19 +698,79 @@
       this.diskTime = this.getCurrentDate()
       this.memoryTime = this.getCurrentDate()
       this.IPTime = this.getCurrentDate()
+      this.getsnapsList()
     },
     methods: {
-      changeSelect(selection) {
-        alert(selection)
+      // 回滚确认弹窗
+      rollbackSubmit() {
+        this.showModal.rollback = false
+        var URL = `Snapshot/revertToVMSnapshot.do?snapshotId=${this.cursnapshot.snapshotid}&zoneId=${$store.state.zone.zoneid}`
+        axios.get(URL)
+          .then(response => {
+            if (response.status == 200) {
+              this.$Message.success({
+                content: response.data.message,
+                duration: 5
+              })
+            }
+          })
       },
-      handleSelectAll1(status) {
-        // this.$refs.selection.select(status);
+      changeSelection(selection) {
+        this.snapsSelection = selection
+      },
+      // 系统重装确认弹窗
+      reloadSubm() {
+        this.showModal.reload = false
+        var url = `information/restoreVirtualMachine.do?VMId=${this.computerInfo.computerId}&templateId=${this.reloadForm.system}&adminPassword=${this.reloadForm.password}`
+          this.reloadButton = '正在重装...'
+          this.$http.get(url).then(response => {
+            this.reloadButton = '确认重装'
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.success(response.data.message)
+            } else {
+              this.$Message.info(response.data.message)
+            }
+          })
+      },
+      // 获取具体主机下的快照列表
+      getsnapsList() {
+        var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1&resourceId=${this.$route.query.vmid}`
+        var snapsResponse = axios.get(snapsURL)
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.snapshotData = response.data.result
+            }
+          })
       },
       delSnapshot() {
+        if (this.snapsSelection == null) {
+          this.$Message.warning('请选择一个快照')
+          return
+        }
+        this.showModal.delsnaps= true
+      },
+      delsnapsSubm() {
+        this.showModal.delsnaps = false
+        this.snapshotData.forEach(item => {
+          if (item.snapshotid == this.snapsSelection.snapshotid) {
+            item.status = 3
+          }
+        })
+        var URL = `Snapshot/deleteVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&ids=${this.snapsSelection.id}`
+        axios.get(URL)
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              alert(1)
+              this.getsnapsLis()
+              this.$Message.success({
+                content: response.data.message,
+                duration: 5
+              })
 
+            }
+          })
       },
       rollback() {
-        console.log(this.cursnapshot.name)
         this.showModal.rollback = false
       },
       getCurrentDate() {
@@ -837,16 +911,8 @@
         } else if (this.reloadForm.password == '') {
           this.$Message.info('请输入登录密码')
         } else {
-          var url = `information/restoreVirtualMachine.do?vmid=${this.computerInfo.computerId}&templateid=${this.reloadForm.system}&adminpassword=${this.reloadForm.password}`
-          this.reloadButton = '正在重装...'
-          this.$http.get(url).then(response => {
-            this.reloadButton = '确认重装'
-            if (response.status == 200 && response.data.status == 1) {
-              this.$Message.success(response.data.message)
-            } else {
-              this.$Message.info(response.data.message)
-            }
-          })
+          this.showModal.reload = true
+          
         }
       },
       setMonitoring() {
