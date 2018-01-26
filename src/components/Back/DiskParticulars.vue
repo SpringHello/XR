@@ -472,7 +472,9 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -488,7 +490,9 @@
               }
             })
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -525,7 +529,9 @@
               this.coupon = 0
             }
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       }),
@@ -556,7 +562,9 @@
           if (response.status == 200 && response.data.status == 1) {
             this.diskBackupsData = response.data.result
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -569,7 +577,9 @@
             this.$Message.info(response.data.message)
             this.listDiskSnapshots()
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -582,7 +592,9 @@
               this.$Message.info(response.data.message)
               this.listDiskSnapshots()
             } else {
-              this.$error('error', response.data.message)
+              this.$message.error({
+                content: response.data.message
+              })
             }
           })
         } else {

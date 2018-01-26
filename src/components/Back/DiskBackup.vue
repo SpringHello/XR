@@ -109,15 +109,16 @@
           </Form-item>
           <Form-item label="自动备份时间">
             <Cascader :data="backupsForm.dayTimeData" v-model="backupsForm.timeValue"
-                      v-if="backupsForm.timeType === 'day'"></Cascader>
+                      v-if="backupsForm.timeType === 'day'" :clearable="false"></Cascader>
             <Cascader :data="backupsForm.weekTimeData" v-model="backupsForm.timeValue"
-                      v-if="backupsForm.timeType === 'week'"></Cascader>
+                      v-if="backupsForm.timeType === 'week'" :clearable="false"></Cascader>
             <Cascader :data="backupsForm.monthTimeData" v-model="backupsForm.timeValue"
-                      v-if="backupsForm.timeType === 'month'"></Cascader>
+                      v-if="backupsForm.timeType === 'month'" :clearable="false"></Cascader>
           </Form-item>
           <Form-item label="备份策略应用磁盘">
             <Select v-model="backupsForm.strategyForDisk" filterable multiple style="width: 229px">
-              <Option v-for="item in backupsForm.applyDiskList" :value="item.id" :key="item.id">{{ item.diskname }}
+              <Option v-for="item in backupsForm.applyDiskList" :value="item.diskid" :key="item.diskid">{{ item.diskname
+                }}
               </Option>
             </Select>
           </Form-item>
@@ -170,21 +171,30 @@
         <span class="universal-modal-title">创建/删除磁盘</span>
       </p>
       <div class="universal-modal-content-flex">
-        <p style="margin-bottom: 20px">您正为<span style="color:#2A99F2">{{ strategyName}}</span>添加/删除磁盘</p>
-        <Transfer
-          :data="diskForBackupsStrategyList"
-          :target-keys="diskForBackupsStrategyListKey"
-          :render-format="render"
-          :titles="['该区域下所有磁盘','已应用该策略磁盘']"
-          @on-change="handleChange"></Transfer>
+        <p style="margin-bottom: 20px">您正为<span class="bluetext">{{ strategyName}}</span>添加/删除磁盘</p>
+        <div class="modal-main">
+          <div class="hostlist">
+            <p>该区域下所有磁盘</p>
+            <ul>
+              <li v-for="(item, index) in diskForBackupsStrategyList" :key="index"><span>{{item.diskname}}</span><i
+                @click="addDisk(index,item)" class="bluetext">+ 添加</i></li>
+            </ul>
+          </div>
+          <div class="changelist">
+            <p>已选择磁盘</p>
+            <ul>
+              <li v-for="(item,index) in diskForBackupsStrategyListKey" :key="index"><span>{{ item }}</span><i class="bluetext">
+                <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
+                删除</i></li>
+            </ul>
+          </div>
+        </div>
         <p style="margin-top: 20px;color: #999999;font-family: MicrosoftYaHei;font-size: 12px;">
           提示：当您选择已绑定备份策略的磁盘时，新的备份策略将直接覆盖原有备份策略。</p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.addOrDeleteDisk = false">取消</Button>
-        <Button type="primary"
-                @click="">确认
-        </Button>
+        <Button type="primary" >确认</Button>
       </div>
     </Modal>
   </div>
@@ -198,10 +208,10 @@
   export default{
     data(){
       return {
-        // 获取应用该备份策略的磁盘列表
-        diskForBackupsStrategyList: this.getdiskForBackupsStrategyList(),
-        // 显示在穿梭框右侧的列表
-        diskForBackupsStrategyListKey: this.getkeys(),
+        // 获取磁盘列表，显示穿梭框左面
+        diskForBackupsStrategyList: [],
+        // 应用该备份策略的磁盘,显示在穿梭框右面
+        resourceDisk: [],
         // 标签页选择
         tabPane: 'diskBackups',
         // 磁盘备份表头
@@ -336,9 +346,9 @@
               }
             }
           }, {
-            title: '自动备份保留个数',
+            title: '保留个数',
             align: 'center',
-            width: 140,
+            width: 100,
             render: (h, params) => {
               return h('span', {}, params.row.keepcount + '个')
             }
@@ -391,14 +401,24 @@
             title: '创建时间',
             align: 'center',
             key: 'createtime',
-            width: 180,
+            width: 160,
           }, {
             title: '应用磁盘',
             align: 'center',
-            width: 140,
+            width: 200,
             render: (h, params) => {
               const text = params.row.resourcename === '' ? '----' : params.row.resourcename
-              return h('span', {}, text)
+              const resourceName = text.split(',')
+              var renderArray = []
+              for (var i of resourceName) {
+                renderArray.push(h('p', {
+                  style: {
+                    lineHeight: '18px',
+                    color: '#2A99F2'
+                  }
+                }, i))
+              }
+              return h('div', {}, renderArray)
             }
           }, {
             title: '操作',
@@ -1709,7 +1729,7 @@
         // 选中备份策略某一项
         diskSelectionStrategy: null,
         // 备份策略名称，用于显示在添加删除磁盘模态框上
-        strategyName: '',
+        strategyName: ''
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -1732,24 +1752,36 @@
           obj[i] = this.diskForm[i]
         }
         return obj
+      },
+      /* 应用该磁盘备份策略的磁盘列表 */
+      diskForBackupsStrategyListKey () {
+        return this.resourceDisk
       }
     },
     methods: {
-      /* 获取磁盘（包括已应用和未应用该备份策略） */
-      getdiskForBackupsStrategyList () {
-      },
-      /* 获取已应用该备份策略的磁盘 */
-      getkeys () {
-      },
-      /* 穿梭框的回调函数 */
-      handleChange () {
-      },
-      /* 穿梭框磁盘列表显示 */
-      render (item) {
-        return item.diskname
+      /* 添加磁盘到备份策略 只是前端改变*/
+      addDisk (index, data) {
+        this.diskForBackupsStrategyList.splice(index, 1)
+        this.resourceDisk.push(data)
       },
       /* 添加或删除备份策略应用的磁盘 */
       addOrDeleteDisk (data) {
+        var diskData = []
+        this.$http.get('Disk/listDisk.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            response.data.result.forEach((item) => {
+              if (item.status === 1 && item.bankupstrategyid != data.id) {
+                diskData.push(item)
+              }
+            })
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
+        this.diskForBackupsStrategyList = diskData
+        this.resourceDisk = data.resourcename.split(',')
         this.strategyName = data.strategyname
         this.showModal.addOrDeleteDisk = true
       },
@@ -1758,7 +1790,9 @@
         if (response.status == 200 && response.data.status == 1) {
           this.diskBackupsData = response.data.result
         } else {
-          this.$error('error', response.data.message)
+          this.$message.error({
+            content: response.data.message
+          })
         }
       },
       // 检测是否选中一项数据
@@ -1814,7 +1848,9 @@
           if (response.status == 200 && response.data.status == 1) {
             this.diskBackupsData = response.data.result
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -1830,7 +1866,9 @@
               }
             })
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -1847,7 +1885,9 @@
               duration: 5
             })
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -1859,7 +1899,9 @@
             this.diskBackupsStrategyData = response.data.result
             this.diskSelectionStrategy = null
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -1879,7 +1921,9 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -1895,7 +1939,9 @@
               }
             })
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -1908,7 +1954,9 @@
             this.$Message.info(response.data.message)
             this.listDiskSnapshots()
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -1921,7 +1969,9 @@
               this.$Message.info(response.data.message)
               this.listDiskSnapshots()
             } else {
-              this.$error('error', response.data.message)
+              this.$message.error({
+                content: response.data.message
+              })
             }
           })
         } else {
@@ -1955,7 +2005,9 @@
               this.$Message.info('磁盘备份策略删除成功')
               this.listDiskBackUpStrategy()
             } else {
-              this.$error('error', response.data.message)
+              this.$message.error({
+                content: response.data.message
+              })
               this.listDiskBackUpStrategy()
             }
           })
@@ -1984,7 +2036,9 @@
               this.coupon = 0
             }
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       }),
@@ -2014,4 +2068,40 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .modal-main {
+    height: 146px;
+    display: flex;
+    border: 1px solid #D8D8D8;
+    border-radius: 4px;
+    div {
+      height: 146px;
+      padding: 10px;
+      padding-top: 0;
+      overflow: scroll;
+      width: 250px;
+      overflow-x: hidden;
+      p {
+        line-height: 36px;
+      }
+      li {
+        font-size: 12px;
+        line-height: 28px;
+        &:nth-child(odd) {
+          background: #F7F7F7;
+        }
+        > i {
+          float: right;
+          // background: gray;
+          // width: 30px;
+          font-size: 10px;
+          font-style: normal;
+
+        }
+
+      }
+    }
+    .changelist {
+      overflow-y: hidden;
+    }
+  }
 </style>
