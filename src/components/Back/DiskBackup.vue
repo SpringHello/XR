@@ -1818,7 +1818,6 @@
         data.resourceBean.forEach(item => {
           this.resourceDisk.push(item)
         })
-        this.resourceDisk = data.resourceBean
         this.strategyId = data.id
         this.strategyName = data.strategyname
         this.showModal.addOrDeleteDisk = true
