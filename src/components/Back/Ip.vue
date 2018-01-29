@@ -129,7 +129,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import {debounce} from'throttle-debounce'
+  import {debounce} from 'throttle-debounce'
   import axios from 'axios'
   import {customTimeOptions} from '../../options'
   import $store from '@/vuex'
@@ -448,7 +448,6 @@
 
           })
         }
-
       },
       // 绑定弹性IP到云主机
       bindHostSubmit(){

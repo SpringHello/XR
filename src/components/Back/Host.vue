@@ -628,7 +628,7 @@
             axios.get(balanceUrl)
               .then(response => {
                 if (response.status == 200 && response.data.status == 1) {
-                  this.listLoadBalanceRole=response.data.result
+                  this.listLoadBalanceRole = response.data.result
                 }
               })
           }
@@ -949,7 +949,7 @@
         // this.showModal.backup = false
         // this.loadingMessage = '正在备份主机'
         // this.loading = true
-        this.showModal.backup=false
+        this.showModal.backup = false
         var url = `Snapshot/createVMSnapshot.do?VMId=${this.currentHost[0].computerid}&snapshotName=${this.backupForm.backupName}&&memoryStatus=${this.backupForm.radio}&zoneId=${this.currentHost[0].zoneid}`
         axios.get(url).then(response => {
           // this.loading = false
@@ -978,7 +978,7 @@
         // this.showModal.mirror = false
         // this.loadingMessage = '正在创建主机镜像'
         // this.loading = true
-        this.showModal.mirror=false
+        this.showModal.mirror = false
         var url = `Snapshot/createTemplate.do?rootDiskId=${this.currentHost[0].rootdiskid}&templateName=${this.mirrorForm.mirrorName}&descript=${this.mirrorForm.description}&zoneId=${this.currentHost[0].zoneid}`
         axios.get(url).then(response => {
           this.loading = false
