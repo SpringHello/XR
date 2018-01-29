@@ -452,8 +452,8 @@
                   click: () => {
                     this.showModal.rollback = true
                     this.cursnapshot = params.row
-                    this.snapsName=params.row.snapshotname
-                    this.hostName=params.row.name
+                    this.snapsName = params.row.snapshotname
+                    this.hostName = params.row.name
                   }
                 }
               }, '回滚')
@@ -736,7 +736,7 @@
       // 获取具体主机下的快照列表
       getsnapsList() {
         var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1&resourceId=${this.$route.query.vmid}`
-        var snapsResponse = axios.get(snapsURL)
+        axios.get(snapsURL)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.snapshotData = response.data.result
@@ -748,7 +748,7 @@
           this.$Message.warning('请选择一个快照')
           return
         }
-        this.showModal.delsnaps= true
+        this.showModal.delsnaps = true
       },
       delsnapsSubm() {
         this.showModal.delsnaps = false
@@ -761,13 +761,12 @@
         axios.get(URL)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              alert(1)
+              // alert(1)
               this.getsnapsLis()
               this.$Message.success({
                 content: response.data.message,
                 duration: 5
               })
-
             }
           })
       },
@@ -799,12 +798,12 @@
           polar.series[0].data = this[type + 'Polar'].series[0].data
           this[type + 'Polar'] = polar
         } else {
-          var polar = this[type].showType == '折线' ? ipOptions : ipHistogram
-          polar.xAxis.data = this.ipPolar.xAxis.data
-          polar.series[0].data = this.ipPolar.series[0].data
-          polar.series[1].data = this.ipPolar.series[1].data
-          console.log(polar)
-          this.ipPolar = polar
+          var polar1 = this[type].showType == '折线' ? ipOptions : ipHistogram
+          polar1.xAxis.data = this.ipPolar.xAxis.data
+          polar1.series[0].data = this.ipPolar.series[0].data
+          polar1.series[1].data = this.ipPolar.series[1].data
+          console.log(polar1)
+          this.ipPolar = polar1
         }
       },
       queryData(type) {
@@ -913,7 +912,6 @@
           this.$Message.info('请输入登录密码')
         } else {
           this.showModal.reload = true
-
         }
       },
       setMonitoring() {

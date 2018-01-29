@@ -1491,8 +1491,8 @@
                   click: () => {
                     this.showModal.rollback = true
                     this.cursnapshot = params.row
-                    this.snapsName=params.row.snapshotname
-                    this.hostName=params.row.name
+                    this.snapsName = params.row.snapshotname
+                    this.hostName = params.row.name
                   }
                 }
               }, '回滚')
@@ -1538,7 +1538,7 @@
               return h('span', {}, params.row.keepcount + '个')
             }
           },
-           {
+          {
             title: '自动备份间隔',
             align: 'center',
             width: 120,
@@ -1608,7 +1608,7 @@
                 return h('div', {}, renderArray)
               }
             }
-            
+
           },
           {
             title: '操作',
@@ -1624,7 +1624,6 @@
                     this.showModal.addOrDeleteHost = true
                     this.strategyName = params.row.strategyname
                     this.strategyId = params.row.id
-
                   }
                 }
               }, '添加/删除主机')
@@ -1660,14 +1659,13 @@
     methods: {
       addHost(item) {
         this.changeHostlist.push(item)
-
       },
       removeHost(index) {
         this.changeHostlist.splice(index, 1)
 
       },
-       /* 切换备份时间间隔时给准确时间点赋值 */
-      changeType (value) {
+      /* 切换备份时间间隔时给准确时间点赋值 */
+      changeType(value) {
         switch (value) {
           case 'day':
             this.backupsForm.timeValue = ['00:00']
@@ -1694,7 +1692,7 @@
       //获取主机备份策略列表
       listBackups() {
         var backupsURL = `information/listVMBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}`
-        var backupsResponse = axios.get(backupsURL)
+        axios.get(backupsURL)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.snapstrategyData = response.data.result
@@ -1704,7 +1702,7 @@
       //获取虚拟机（云主机）快照列表
       listsnaps() {
         var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1`
-        var snapsResponse = axios.get(snapsURL)
+        axios.get(snapsURL)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.snapshotData = response.data.result
@@ -1713,15 +1711,14 @@
       },
       //策略添加或者删除主机
       addOrDeleteHost() {
-        
         // information/updateVMIntoBackUpStrategy.do  向备份策略移入主机    zoneId   ,  backUpStrategyId   ,    VMIds(非必传   多个以 ，隔开)
-      // information/updateVMIntoBackUpStrategy.do      向备份策略移入主机   zoneId   ,  backUpStrategyId（策略id）   ,VMIds（虚拟机id   多个主机以 ，隔开）
-        var vmidsArry=this.changeHostlist.map(item => {
-         return item.computerid
+        // information/updateVMIntoBackUpStrategy.do      向备份策略移入主机   zoneId   ,  backUpStrategyId（策略id）   ,VMIds（虚拟机id   多个主机以 ，隔开）
+        var vmidsArry = this.changeHostlist.map(item => {
+          return item.computerid
         })
-        var vmids=vmidsArry.join(',')
+        var vmids = vmidsArry.join(',')
         var snapsURL = `information/updateVMIntoBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}&backUpStrategyId=${this.strategyId}&VMIds=${vmids}`
-        var snapsResponse = axios.get(snapsURL)
+        axios.get(snapsURL)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.showModal.addOrDeleteHost = false
@@ -1799,12 +1796,12 @@
               this.showModal.newBackups = false
               this.listBackups()
               this.$Message.success({
-              content: response.data.message,
-              duration: 5
-            })
-            }else {
-            this.$error('error', response.data.message)
-          }
+                content: response.data.message,
+                duration: 5
+              })
+            } else {
+              this.$error('error', response.data.message)
+            }
           })
       },
       inter() {
