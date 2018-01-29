@@ -22,8 +22,8 @@
             </Button>
             <Dropdown-menu slot="list">
               <!-- 重命名 -->
-              <!-- <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
-              <Dropdown-item name="rename" v-else>重命名</Dropdown-item> -->
+              <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
+              <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
               <!-- 备份 -->
               <Dropdown-item name="backup" v-if="status!='开启'&&status!='关机'" :disabled=true>
                 <Tooltip content="异常、欠费状态，快照不可用" placement="top">

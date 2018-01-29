@@ -44,7 +44,7 @@
         <Form :model="creatSnapsForm" ref="creatSnapsForm">
           <FormItem label="选择主机">
             <Select v-model="creatSnapsForm.select">
-              <Option v-for="item in vmOpenlist" :value="item.computerid" :key="item.computerid">{{ item.computername
+              <Option v-for="item in vmList" :value="item.computerid" :key="item.computerid">{{ item.computername
                 }}
               </Option>
             </Select>
@@ -98,7 +98,7 @@
           </Form-item>
           <FormItem label="备份策略应用主机">
             <Select v-model="creatBackupsForm.host" multiple placeholder="主机名称可多选">
-              <Option v-for="item in vmOpenlist" :value="item.computerid" :key="item.computerid">{{ item.computername
+              <Option v-for="item in vmList" :value="item.computerid" :key="item.computerid">{{ item.computername
                 }}
               </Option>
             </Select>
@@ -160,14 +160,14 @@
           <div class="hostlist">
             <p>该区域下所有主机</p>
             <ul>
-              <li v-for="(item,index) in vmOpenlist" :key="index"><span>{{ item.computername }}</span><i
-                @click="addHost(item)" class="bluetext">+ 添加</i></li>
+              <li v-for="(item,index) in hostForBackupsStrategyList" :key="index"><span>{{ item.computername }}</span><span v-if="item.bankupstrategyname">({{ item.bankupstrategyname}})</span><i
+                @click="addHost(index,item)" class="bluetext">+ 添加</i></li>
             </ul>
           </div>
           <div class="changelist">
             <p>已选择的主机</p>
             <ul>
-              <li v-for="(item,index) in changeHostlist" :key="index"><span>{{ item.computername }}</span><i
+              <li v-for="(item,index) in changeHostlist" :key="index"><span>{{ item.resourcesName }}</span><i
                 @click="removeHost(index)" class="bluetext">
                 <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
                 删除</i></li>
@@ -197,8 +197,11 @@
       return {
         snapsName: '',
         hostName: '',
+        strategyName: '',
         strategyId: '',
         changeHostlist: [],
+        // unchangeHostlist: [],
+        hostForBackupsStrategyList: [],
         cursnapshot: null,
         snapsSelection: null,
         creatBackupsForm: {
@@ -1417,7 +1420,7 @@
           radio: '1'
         },
         // 已创建主机列表
-        vmOpenlist: '',
+        vmList: '',
         //主机快照col
         snapshotCol: [
           {
@@ -1621,9 +1624,7 @@
                 },
                 on: {
                   click: () => {
-                    this.showModal.addOrDeleteHost = true
-                    this.strategyName = params.row.strategyname
-                    this.strategyId = params.row.id
+                    this.unchangeHostlist(params.row)
                   }
                 }
               }, '添加/删除主机')
@@ -1657,11 +1658,61 @@
       // })
     },
     methods: {
-      addHost(item) {
-        this.changeHostlist.push(item)
+       /* 添加主机到备份策略 */
+      addHost (index, data) {
+        this.hostForBackupsStrategyList.splice(index, 1)
+        var resource = {
+          resourcesName: data.computername,
+          resourcesId: data.computerid
+        }
+        this.changeHostlist.push(resource)
       },
-      removeHost(index) {
+      /* 删除应用该备份策略的主机 */
+      removeHost (index, data) {
         this.changeHostlist.splice(index, 1)
+        data.computername = data.resourcesName
+        this.hostForBackupsStrategyList.push(data)
+      },
+      /* 添加或删除备份策略应用的主机 */
+      unchangeHostlist(data) {
+        var leftData = []
+        this.changeHostlist = []
+        this.vmList.forEach((item) => {
+              if (item.status === 1 && item.bankupstrategyid != data.id) {
+                leftData.push(item)
+              }
+            })
+        this.hostForBackupsStrategyList = leftData
+        data.resourceBean.forEach(item => {
+          this.changeHostlist.push(item)
+        })
+        this.strategyName = data.strategyname
+        this.strategyId = data.id
+        this.showModal.addOrDeleteHost = true
+      },
+      /* 确定从快照备份策略添加或移除磁盘 */
+      addOrDeleteHost() {
+        console.log(this.changeHostlist)
+        var vmids = this.changeHostlist.map(item => {
+          return item.resourcesId
+        })
+        var snapsURL = `information/updateVMIntoBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}&backUpStrategyId=${this.strategyId}&VMIds=${vmids.join(',')}`
+        axios.get(snapsURL)
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.info({
+                content: response.data.message,
+                duration: 5
+              })
+              this.showModal.addOrDeleteHost = false
+              this.listBackups()
+            } else {
+            this.$message.error({
+              content: response.data.message
+            })
+            this.showModal.addOrDeleteHost = false
+          }
+          })
       },
       /* 切换备份时间间隔时给准确时间点赋值 */
       changeType(value) {
@@ -1679,11 +1730,12 @@
       },
       //虚拟机列表
       listHost() {
-        var vmList = `information/listVirtualMachines.do?zoneId=${$store.state.zone.zoneid}`
-        axios.get(vmList)
+        var vmListurl = `information/listVirtualMachines.do?zoneId=${$store.state.zone.zoneid}`
+        axios.get(vmListurl)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.vmOpenlist = response.data.result.open.list
+              var vmopenlist = response.data.result.open.list
+              this.vmList = vmopenlist.concat(response.data.result.close.list)
             }
           })
       },
@@ -1705,27 +1757,6 @@
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.snapshotData = response.data.result
-            }
-          })
-      },
-      //策略添加或者删除主机
-      addOrDeleteHost() {
-        // information/updateVMIntoBackUpStrategy.do  向备份策略移入主机    zoneId   ,  backUpStrategyId   ,    VMIds(非必传   多个以 ，隔开)
-        // information/updateVMIntoBackUpStrategy.do      向备份策略移入主机   zoneId   ,  backUpStrategyId（策略id）   ,VMIds（虚拟机id   多个主机以 ，隔开）
-        var vmidsArry = this.changeHostlist.map(item => {
-          return item.computerid
-        })
-        var vmids = vmidsArry.join(',')
-        var snapsURL = `information/updateVMIntoBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}&backUpStrategyId=${this.strategyId}&VMIds=${vmids}`
-        axios.get(snapsURL)
-          .then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.showModal.addOrDeleteHost = false
-              this.listBackups()
-              this.$Message.success({
-                content: response.data.message,
-                duration: 5
-              })
             }
           })
       },
@@ -1781,6 +1812,10 @@
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.listsnaps()
+            } else {
+              this.$message.error({
+              content: response.data.message
+            })
             }
           })
       },
@@ -1837,7 +1872,6 @@
     }
   }
 </script>
-
 <style rel="stylesheet/less" lang="less" scoped>
   .modal-main {
     height: 146px;
@@ -1869,8 +1903,8 @@
         }
       }
     }
-    .changelist {
-      overflow-y: hidden;
-    }
+    // .changelist {
+    //   overflow-y: hidden;
+    // }
   }
 </style>
