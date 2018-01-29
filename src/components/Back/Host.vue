@@ -13,7 +13,7 @@
         </Alert>
         <div class="operator-bar">
           <Button type="primary" @click="startUp">一键启动</Button>
-          <Button type="primary" @click="joinBalance">加入负载均衡</Button>
+          <Button type="primary" @click="joinBalance" :disabled="status!='开启'">加入负载均衡</Button>
           <Button type="primary" @click="bindIP" :disabled="status!='开启'&&status!='关机'">绑定IP</Button>
           <Dropdown style="margin-left: 20px;vertical-align: middle;" @on-click="hideEvent" class="moreOperation">
             <Button type="primary">
@@ -21,9 +21,6 @@
               <Icon type="arrow-down-b"></Icon>
             </Button>
             <Dropdown-menu slot="list">
-
-
-
               <!-- 重命名 -->
               <!-- <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
               <Dropdown-item name="rename" v-else>重命名</Dropdown-item> -->
@@ -79,7 +76,7 @@
 
               <!-- 解绑主机 -->
 
-              <Poptip
+              <!-- <Poptip
                 confirm
                 width="200"
                 placement="right"
@@ -88,7 +85,7 @@
                 @on-cancel="cancel"
                 style="display: block">
                 <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>解绑公网IP</li>
-              </Poptip>
+              </Poptip> -->
 
             </Dropdown-menu>
           </Dropdown>
@@ -353,29 +350,6 @@
         <Button type="primary" :disabled="backupForm.backupName==''" @click="backup">创建快照</Button>
       </div>
     </Modal>
-    <!-- 主机备份弹窗 -->
-    <!-- <Modal v-model="showModal.backup" width="590" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        主机快照
-      </div>
-      <div style="width:60%">
-        <Form :model="backupForm" :label-width="80">
-          <Form-item label="备份名">
-            <Input v-model="backupForm.backupName" placeholder="请输入备份名"></Input>
-          </Form-item>
-          <Form-item label="详细描述">
-            <Input v-model="backupForm.description" type="textarea" :autosize="{minRows: 3,maxRows: 5}"
-                   placeholder="请输入..."></Input>
-          </Form-item>
-        </Form>
-      </div>
-      <div slot="footer">
-        <Button type="ghost" @click="showModal.backup = false">取消</Button>
-        <Button type="primary" :disabled="backupForm.backupName==''||backupForm.description==''" @click="backup">确定
-        </Button>
-      </div>
-    </Modal> -->
     <!-- 主机重命名弹窗 -->
     <Modal v-model="showModal.rename" width="590" :scrollable="true">
       <div slot="header"
@@ -430,7 +404,7 @@
         <Form :model="bindForm" :label-width="80">
           <Form-item label="公网IP">
             <Select v-model="bindForm.publicIP" placeholder="请选择">
-              <Option v-for="(item,index) in publicIPList" :key="index" :value="`${item.publicipid}#${item.publicip}`">
+              <Option v-for="(item,index) in publicIPList" :key="index" :value="item.publicipid">
                 {{item.publicip}}
               </Option>
             </Select>
@@ -440,6 +414,29 @@
       <div slot="footer">
         <Button type="ghost" @click="showModal.bindIP = false">取消</Button>
         <Button type="primary" :disabled="bindForm.publicIP==''" @click="bind">确定
+        </Button>
+      </div>
+    </Modal>
+    <!-- 加入负载均衡弹窗 -->
+    <Modal v-model="showModal.balance" width="590" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        加入负载均衡
+      </div>
+      <div style="width:60%">
+        <Form :model="loadBalanceForm" :label-width="120">
+          <Form-item label="选择弹性负载均衡名称 ">
+            <Select v-model="loadBalanceForm.loadbalanceroleid" placeholder="请选择">
+              <Option v-for="(item,index) in listLoadBalanceRole" :key="index" :value="item.loadbalanceroleid">
+                {{item.name}}
+              </Option>
+            </Select>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.balance = false">取消</Button>
+        <Button type="primary" :disabled="loadBalanceForm.loadbalanceroleid==''" @click="joinBalanceSubm">确定
         </Button>
       </div>
     </Modal>
@@ -552,6 +549,7 @@
         sessionStorage.removeItem('type')
       }
       return {
+        listLoadBalanceRole: [],
         cost: '',
         openHost: [],
         closeHost: [],
@@ -567,7 +565,8 @@
           renewal: false,
           rename: false,
           Renew: false,
-          selectAuthType: false
+          selectAuthType: false,
+          balance: false
         },
         renameForm: {
           hostName: ''
@@ -582,6 +581,9 @@
         },
         bindForm: {
           publicIP: ''
+        },
+        loadBalanceForm: {
+          loadbalanceroleid: ''
         },
         publicIPList: [],
         renewalType: '',
@@ -603,18 +605,9 @@
     },
     created() {
       this.getData()
+
+
       // 定时发送ajax 刷新页面
-
-      console.log('status')
-      console.log(this.status)
-      // 获取负载均衡规则
-      var balanceUrl = `loadbalance/listLoadBalanceRole.do?zoneId=${$store.state.zone.zoneid}`
-            axios.get(balanceUrl)
-              .then(response => {
-                if (response.status == 200 && response.data.status == 1) {
-
-                }
-              })
       this.intervalInstance = setInterval(() => {
         this.getData()
       }, 5 * 1000)
@@ -622,18 +615,34 @@
     methods: {
       //加入负载均衡
       joinBalance() {
-          // loadbalance/assignToLoadBalancerRule.do    roleId （负载均衡规则id）,VMIds(虚拟机id   多个以  ，隔开) ,zoneId
-          // 向负载均衡规则添加主机
-          // 负载均衡是公网负载均衡
-          var vmList = `loadbalance/assignToLoadBalancerRule.do?zoneId=${$store.state.zone.zoneid}`
-            axios.get(vmList)
+        if (this.checkSelect()) {
+          if (this.currentHost[0].loadbalance) {
+            // this.$Message.warning('啊哦!已绑定主机无法再次绑定!')
+          } else {
+            // this.loadingMessage = '正在绑定IP'
+            // this.loading = true
+            // this.bindForm.publicIP = ''
+            this.showModal.balance = true
+            // 获取负载均衡规则
+            var balanceUrl = `loadbalance/listLoadBalanceRole.do?zoneId=${$store.state.zone.zoneid}`
+            axios.get(balanceUrl)
               .then(response => {
                 if (response.status == 200 && response.data.status == 1) {
-                  this.vmOpenlist = response.data.result.open.list
+                  this.listLoadBalanceRole=response.data.result
                 }
               })
-
-
+          }
+        }
+      },
+      // 确定加入负载均衡
+      joinBalanceSubm() {
+        this.showModal.balance = false
+        axios.get(`loadbalance/assignToLoadBalancerRule.do?zoneId=${this.currentHost[0].zoneid}&roleId=${this.loadBalanceForm.loadbalanceroleid}&VMIds=${this.currentHost[0].computerid}`)
+          .then(response => {
+            if (response.status == 200) {
+              this.$Message.success(response.data.message)
+            }
+          })
       },
       //恢复主机
       recoverHost(id) {
@@ -804,7 +813,7 @@
             this.loading = true
             this.bindForm.publicIP = ''
             this.showModal.bindIP = true
-           axios.get(`network/listPublicIp.do?useType=1&zoneId=${this.currentHost[0].zoneid}`)
+            axios.get(`network/listPublicIp.do?useType=1&zoneId=${this.currentHost[0].zoneid}`)
               .then(response => {
                 this.loading = false
                 if (response.status == 200 && response.data.status == 1) {
@@ -815,20 +824,24 @@
         }
       },
       bind() {
+        // this.showModal.bindIP = false
+        // this.loadingMessage = '正在绑定公网IP'
+        // this.loading = true
+        // var arr = this.bindForm.publicIP.split('#')
         this.showModal.bindIP = false
-        this.loadingMessage = '正在绑定公网IP'
-        this.loading = true
-        var arr = this.bindForm.publicIP.split('#')
-        var url = `network/enableStaticNat.do?ipId=${arr[0]}&vmid=${this.currentHost[0].computerid}`
+        var url = `network/enableStaticNat.do?ipId=${this.bindForm.publicIP}&vmid=${this.currentHost[0].computerid}`
         this.$http.get(url)
           .then(response => {
             this.loading = false
-            if (response.status == 200 && response.data.status == 1) {
-              this.$Message.success(response.data.message)
-              this.getData()
-            } else {
-              this.$Message.warning(response.data.message)
+            if (response.status == 200) {
+              this.$Message.error(response.data.message)
             }
+            // if (response.status == 200 && response.data.status == 1) {
+            //   this.$Message.success(response.data.message)
+            //   this.getData()
+            // } else {
+            //   this.$Message.warning(response.data.message)
+            // }
           })
       },
       unbind() {
@@ -1000,7 +1013,7 @@
         }
       },
       upgrade() {
-          // this.router()
+        this.$router.push('/upgrade')
       },
       reboot() {
         if (this.checkSelect()) {
@@ -1072,11 +1085,11 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   .moreOperation .ivu-poptip-rel li{
-  font-size: 12px;
-  line-height: normal;
-  padding: 7px 16px;
-  width: 100px;
-  cursor: pointer;
+    font-size: 12px;
+    line-height: normal;
+    padding: 7px 16px;
+    width: 100px;
+    cursor: pointer;
     &:hover{
       background: #f3f3f3;
     }

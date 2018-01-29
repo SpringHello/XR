@@ -408,7 +408,6 @@
             align: 'center',
             width: 200,
             render: (h, params) => {
-              console.log(params.row.resourceBean)
               if (params.row.resourceBean.length == 0) {
                 return h('span', {}, '----')
               } else {
