@@ -185,8 +185,7 @@
             <ul>
               <li v-for="(item,index) in resourceDisk" :key="index"><span>{{ item.resourcesName }}</span><i
                 class="bluetext" style="cursor: pointer" @click="deleteDisk(index,item)">
-                <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
-                删除</i></li>
+                <Icon type="ios-trash-outline" style="font-size:14px"></Icon>删除</i></li>
             </ul>
           </div>
         </div>
