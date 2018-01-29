@@ -21,14 +21,12 @@
             <Table ref="selection" :columns="snapshotCol" :data="snapshotData"
                    @radio-change="changeSelection"></Table>
           </TabPane>
-
-
           <TabPane label="云主机快照策略">
             <div class="operator-bar">
               <Button type="primary" @click="createBackups(showModal.newBackups=true)">创建备份策略</Button>
-              <Button type="primary">删除策略</Button>
+              <Button type="primary" @click="delStrategy">删除策略</Button>
             </div>
-            <Table ref="selection" :columns="snapstrategyCol" :data="snapstrategyData"></Table>
+            <Table ref="selection" :columns="snapstrategyCol" :data="snapstrategyData" @radio-change="strategySelection"></Table>
           </TabPane>
         </Tabs>
       </div>
@@ -149,6 +147,20 @@
         <Button type="primary" @click="delsnapsSubm">确定</Button>
       </p>
     </Modal>
+    <!-- 删除快照策略弹窗 -->
+    <Modal v-model="showModal.delStrategy" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>删除快照策略</strong>
+          <p class="lh24">确定要删除选中的快照策略吗？</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.delStrategy=false">取消</Button>
+        <Button type="primary" @click="delStrategySubm">确定</Button>
+      </p>
+    </Modal>
     <!-- 备份策略添加/删除主机 -->
     <Modal v-model="showModal.addOrDeleteHost" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
@@ -204,6 +216,7 @@
         hostForBackupsStrategyList: [],
         cursnapshot: null,
         snapsSelection: null,
+        strategySelectionItem: null,
         creatBackupsForm: {
           name: '',
           memory: '1',
@@ -1521,17 +1534,16 @@
             render: (h, params) => {
               const row = params.row
               const text = row.status === 0 ? '异常' : row.status === 1 ? '可用' : row.status === 3 ? '删除中' : ''
-              return h('span', {}, text)
-              // if (row.status == 3) {
-              //   return h('div', {}, [h('Spin', {
-              //     style: {
-              //       display: 'inline-block',
-              //       marginRight: '10px'
-              //     }
-              //   }), h('span', {}, text)])
-              // } else {
-              //   return h('span', text)
-              // }
+              if (row.status == 3) {
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', {}, text)])
+              } else {
+                return h('span', text)
+              }
             }
           },
           {
@@ -1639,7 +1651,8 @@
           rollback: false,
           newBackups: false,
           delsnaps: false,
-          addOrDeleteHost: false
+          addOrDeleteHost: false,
+          delStrategy: false
         },
 
       }
@@ -1648,16 +1661,27 @@
       this.listsnaps()
       this.listBackups()
       this.listHost()
-      // 隔10秒调用
-      // this.inter()
-      // Promise.all([napsResponse, backupsResponse]).then((ResponseValue) => {
-      //   next(vm => {
-      //     vm.setData(ResponseValue[0])
-      //     vm.setNatData(ResponseValue[1])
-      //   })
-      // })
     },
     methods: {
+      // delStrategy() {
+      //    var snapsURL = `information/deleteVMBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}&id=${this.strategyId}&VMIds=${vmids.join(',')}`
+      //   axios.get(snapsURL)
+      //     .then(response => {
+      //       if (response.status == 200 && response.data.status == 1) {
+      //         this.$Message.info({
+      //           content: response.data.message,
+      //           duration: 5
+      //         })
+      //         this.showModal.addOrDeleteHost = false
+      //         this.listBackups()
+      //       } else {
+      //       this.$message.error({
+      //         content: response.data.message
+      //       })
+      //       this.showModal.addOrDeleteHost = false
+      //     }
+      //     })
+      // },
        /* 添加主机到备份策略 */
       addHost (index, data) {
         this.hostForBackupsStrategyList.splice(index, 1)
@@ -1766,6 +1790,32 @@
         axios.get(URL)
           .then(response => {
             if (response.status == 200) {
+              this.$Message.success({
+                content: response.data.message,
+                duration: 5
+              })
+            }
+          })
+      },
+      strategySelection(selection) {
+        this.strategySelectionItem = selection
+      },
+      // 删除快照策略
+      delStrategy() {
+        if (this.strategySelectionItem == null) {
+          this.$Message.warning('请选择一个快照策略')
+          return
+        }
+        this.showModal.delStrategy = true
+      },
+      //确定删除快照策略
+      delStrategySubm() {
+        this.showModal.delStrategy = false
+        var URL = `information/deleteVMBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}&id=${this.strategySelectionItem.id}`
+        axios.get(URL)
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.listBackups()
               this.$Message.success({
                 content: response.data.message,
                 duration: 5
