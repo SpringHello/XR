@@ -431,7 +431,7 @@
             key: 'interval',
             render: (h, params) => {
               const row = params.row
-              const text = row.createway === 'hand' ? '手动' : 'day' ? '每天' : 'week' ? '每周' : 'month' ? '每月' : ''
+              const text = row.createway === 'hand' ? '手动' : row.createway === 'day' ? '每天' : row.createway === 'week' ? '每周' : row.createway === 'month' ? '每月' : ''
               return h('span', {}, text)
             }
           },
@@ -798,12 +798,12 @@
           polar.series[0].data = this[type + 'Polar'].series[0].data
           this[type + 'Polar'] = polar
         } else {
-          var polar1 = this[type].showType == '折线' ? ipOptions : ipHistogram
-          polar1.xAxis.data = this.ipPolar.xAxis.data
-          polar1.series[0].data = this.ipPolar.series[0].data
-          polar1.series[1].data = this.ipPolar.series[1].data
-          console.log(polar1)
-          this.ipPolar = polar1
+          polar = this[type].showType == '折线' ? ipOptions : ipHistogram
+          polar.xAxis.data = this.ipPolar.xAxis.data
+          polar.series[0].data = this.ipPolar.series[0].data
+          polar.series[1].data = this.ipPolar.series[1].data
+          console.log(polar)
+          this.ipPolar = polar
         }
       },
       queryData(type) {

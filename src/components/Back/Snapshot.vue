@@ -1461,7 +1461,7 @@
             key: 'interval',
             render: (h, params) => {
               const row = params.row
-              const text = row.createway === 'hand' ? '手动' : 'day' ? '每天' : 'week' ? '每周' : 'month' ? '每月' : ''
+              const text = row.createway === 'hand' ? '手动' : row.createway === 'day' ? '每天' : row.createway === 'week' ? '每周' : row.createway === 'month' ? '每月' : ''
               return h('span', {}, text)
             }
           },
@@ -1662,7 +1662,6 @@
       },
       removeHost(index) {
         this.changeHostlist.splice(index, 1)
-
       },
       /* 切换备份时间间隔时给准确时间点赋值 */
       changeType(value) {
@@ -1771,7 +1770,6 @@
                 content: response.data.message,
                 duration: 5
               })
-
             }
           })
       },
