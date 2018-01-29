@@ -176,7 +176,8 @@
           <div class="hostlist">
             <p>该区域下所有磁盘</p>
             <ul>
-              <li v-for="(item, index) in diskForBackupsStrategyList" :key="index"><span>{{item.diskname}}</span><span v-if="item.bankupstrategyname">({{ item.bankupstrategyname}})</span><i
+              <li v-for="(item, index) in diskForBackupsStrategyList" :key="index"><span>{{item.diskname}}</span><span
+                v-if="item.bankupstrategyname">({{ item.bankupstrategyname}})</span><i
                 @click="addDisk(index,item)" class="bluetext" style="cursor: pointer">+ 添加</i></li>
             </ul>
           </div>
@@ -185,7 +186,8 @@
             <ul>
               <li v-for="(item,index) in resourceDisk" :key="index"><span>{{ item.resourcesName }}</span><i
                 class="bluetext" style="cursor: pointer" @click="deleteDisk(index,item)">
-                <Icon type="ios-trash-outline" style="font-size:14px"></Icon>删除</i></li>
+                <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
+                删除</i></li>
             </ul>
           </div>
         </div>
@@ -583,1117 +585,9 @@
             },
           ],
           // 选择一周时的时间点
-          weekTimeData: [
-            {
-              value: '1',
-              label: '周一',
-              children: [
-                {
-                  label: '00:00',
-                  value: '00:00'
-                }, {
-                  label: '01:00',
-                  value: '01:00'
-                }, {
-                  label: '02:00',
-                  value: '02:00'
-                }, {
-                  label: '03:00',
-                  value: '03:00'
-                }, {
-                  label: '04:00',
-                  value: '04:00'
-                }, {
-                  label: '05:00',
-                  value: '05:00'
-                }, {
-                  label: '06:00',
-                  value: '06:00'
-                }, {
-                  label: '07:00',
-                  value: '07:00'
-                }, {
-                  label: '08:00',
-                  value: '08:00'
-                }, {
-                  label: '09:00',
-                  value: '09:00'
-                }, {
-                  label: '10:00',
-                  value: '10:00'
-                }, {
-                  label: '11:00',
-                  value: '11:00'
-                }, {
-                  label: '12:00',
-                  value: '12:00'
-                }, {
-                  label: '13:00',
-                  value: '13:00'
-                }, {
-                  label: '14:00',
-                  value: '14:00'
-                }, {
-                  label: '15:00',
-                  value: '15:00'
-                }, {
-                  label: '16:00',
-                  value: '16:00'
-                }, {
-                  label: '17:00',
-                  value: '17:00'
-                }, {
-                  label: '18:00',
-                  value: '18:00'
-                }, {
-                  label: '19:00',
-                  value: '19:00'
-                }, {
-                  label: '20:00',
-                  value: '20:00'
-                }, {
-                  label: '21:00',
-                  value: '21:00'
-                }, {
-                  label: '22:00',
-                  value: '22:00'
-                }, {
-                  label: '23:00',
-                  value: '23:00'
-                },
-              ]
-            },
-            {
-              value: '2',
-              label: '周二',
-              children: [
-                {
-                  label: '00:00',
-                  value: '00:00'
-                }, {
-                  label: '01:00',
-                  value: '01:00'
-                }, {
-                  label: '02:00',
-                  value: '02:00'
-                }, {
-                  label: '03:00',
-                  value: '03:00'
-                }, {
-                  label: '04:00',
-                  value: '04:00'
-                }, {
-                  label: '05:00',
-                  value: '05:00'
-                }, {
-                  label: '06:00',
-                  value: '06:00'
-                }, {
-                  label: '07:00',
-                  value: '07:00'
-                }, {
-                  label: '08:00',
-                  value: '08:00'
-                }, {
-                  label: '09:00',
-                  value: '09:00'
-                }, {
-                  label: '10:00',
-                  value: '10:00'
-                }, {
-                  label: '11:00',
-                  value: '11:00'
-                }, {
-                  label: '12:00',
-                  value: '12:00'
-                }, {
-                  label: '13:00',
-                  value: '13:00'
-                }, {
-                  label: '14:00',
-                  value: '14:00'
-                }, {
-                  label: '15:00',
-                  value: '15:00'
-                }, {
-                  label: '16:00',
-                  value: '16:00'
-                }, {
-                  label: '17:00',
-                  value: '17:00'
-                }, {
-                  label: '18:00',
-                  value: '18:00'
-                }, {
-                  label: '19:00',
-                  value: '19:00'
-                }, {
-                  label: '20:00',
-                  value: '20:00'
-                }, {
-                  label: '21:00',
-                  value: '21:00'
-                }, {
-                  label: '22:00',
-                  value: '22:00'
-                }, {
-                  label: '23:00',
-                  value: '23:00'
-                },
-              ]
-            },
-            {
-              value: '3',
-              label: '周三',
-              children: [
-                {
-                  label: '00:00',
-                  value: '00:00'
-                }, {
-                  label: '01:00',
-                  value: '01:00'
-                }, {
-                  label: '02:00',
-                  value: '02:00'
-                }, {
-                  label: '03:00',
-                  value: '03:00'
-                }, {
-                  label: '04:00',
-                  value: '04:00'
-                }, {
-                  label: '05:00',
-                  value: '05:00'
-                }, {
-                  label: '06:00',
-                  value: '06:00'
-                }, {
-                  label: '07:00',
-                  value: '07:00'
-                }, {
-                  label: '08:00',
-                  value: '08:00'
-                }, {
-                  label: '09:00',
-                  value: '09:00'
-                }, {
-                  label: '10:00',
-                  value: '10:00'
-                }, {
-                  label: '11:00',
-                  value: '11:00'
-                }, {
-                  label: '12:00',
-                  value: '12:00'
-                }, {
-                  label: '13:00',
-                  value: '13:00'
-                }, {
-                  label: '14:00',
-                  value: '14:00'
-                }, {
-                  label: '15:00',
-                  value: '15:00'
-                }, {
-                  label: '16:00',
-                  value: '16:00'
-                }, {
-                  label: '17:00',
-                  value: '17:00'
-                }, {
-                  label: '18:00',
-                  value: '18:00'
-                }, {
-                  label: '19:00',
-                  value: '19:00'
-                }, {
-                  label: '20:00',
-                  value: '20:00'
-                }, {
-                  label: '21:00',
-                  value: '21:00'
-                }, {
-                  label: '22:00',
-                  value: '22:00'
-                }, {
-                  label: '23:00',
-                  value: '23:00'
-                },
-              ]
-            },
-            {
-              value: '4',
-              label: '周四',
-              children: [
-                {
-                  label: '00:00',
-                  value: '00:00'
-                }, {
-                  label: '01:00',
-                  value: '01:00'
-                }, {
-                  label: '02:00',
-                  value: '02:00'
-                }, {
-                  label: '03:00',
-                  value: '03:00'
-                }, {
-                  label: '04:00',
-                  value: '04:00'
-                }, {
-                  label: '05:00',
-                  value: '05:00'
-                }, {
-                  label: '06:00',
-                  value: '06:00'
-                }, {
-                  label: '07:00',
-                  value: '07:00'
-                }, {
-                  label: '08:00',
-                  value: '08:00'
-                }, {
-                  label: '09:00',
-                  value: '09:00'
-                }, {
-                  label: '10:00',
-                  value: '10:00'
-                }, {
-                  label: '11:00',
-                  value: '11:00'
-                }, {
-                  label: '12:00',
-                  value: '12:00'
-                }, {
-                  label: '13:00',
-                  value: '13:00'
-                }, {
-                  label: '14:00',
-                  value: '14:00'
-                }, {
-                  label: '15:00',
-                  value: '15:00'
-                }, {
-                  label: '16:00',
-                  value: '16:00'
-                }, {
-                  label: '17:00',
-                  value: '17:00'
-                }, {
-                  label: '18:00',
-                  value: '18:00'
-                }, {
-                  label: '19:00',
-                  value: '19:00'
-                }, {
-                  label: '20:00',
-                  value: '20:00'
-                }, {
-                  label: '21:00',
-                  value: '21:00'
-                }, {
-                  label: '22:00',
-                  value: '22:00'
-                }, {
-                  label: '23:00',
-                  value: '23:00'
-                },
-              ]
-            },
-            {
-              value: '5',
-              label: '周五',
-              children: [
-                {
-                  label: '00:00',
-                  value: '00:00'
-                }, {
-                  label: '01:00',
-                  value: '01:00'
-                }, {
-                  label: '02:00',
-                  value: '02:00'
-                }, {
-                  label: '03:00',
-                  value: '03:00'
-                }, {
-                  label: '04:00',
-                  value: '04:00'
-                }, {
-                  label: '05:00',
-                  value: '05:00'
-                }, {
-                  label: '06:00',
-                  value: '06:00'
-                }, {
-                  label: '07:00',
-                  value: '07:00'
-                }, {
-                  label: '08:00',
-                  value: '08:00'
-                }, {
-                  label: '09:00',
-                  value: '09:00'
-                }, {
-                  label: '10:00',
-                  value: '10:00'
-                }, {
-                  label: '11:00',
-                  value: '11:00'
-                }, {
-                  label: '12:00',
-                  value: '12:00'
-                }, {
-                  label: '13:00',
-                  value: '13:00'
-                }, {
-                  label: '14:00',
-                  value: '14:00'
-                }, {
-                  label: '15:00',
-                  value: '15:00'
-                }, {
-                  label: '16:00',
-                  value: '16:00'
-                }, {
-                  label: '17:00',
-                  value: '17:00'
-                }, {
-                  label: '18:00',
-                  value: '18:00'
-                }, {
-                  label: '19:00',
-                  value: '19:00'
-                }, {
-                  label: '20:00',
-                  value: '20:00'
-                }, {
-                  label: '21:00',
-                  value: '21:00'
-                }, {
-                  label: '22:00',
-                  value: '22:00'
-                }, {
-                  label: '23:00',
-                  value: '23:00'
-                },
-              ]
-            },
-            {
-              value: '6',
-              label: '周六',
-              children: [
-                {
-                  label: '00:00',
-                  value: '00:00'
-                }, {
-                  label: '01:00',
-                  value: '01:00'
-                }, {
-                  label: '02:00',
-                  value: '02:00'
-                }, {
-                  label: '03:00',
-                  value: '03:00'
-                }, {
-                  label: '04:00',
-                  value: '04:00'
-                }, {
-                  label: '05:00',
-                  value: '05:00'
-                }, {
-                  label: '06:00',
-                  value: '06:00'
-                }, {
-                  label: '07:00',
-                  value: '07:00'
-                }, {
-                  label: '08:00',
-                  value: '08:00'
-                }, {
-                  label: '09:00',
-                  value: '09:00'
-                }, {
-                  label: '10:00',
-                  value: '10:00'
-                }, {
-                  label: '11:00',
-                  value: '11:00'
-                }, {
-                  label: '12:00',
-                  value: '12:00'
-                }, {
-                  label: '13:00',
-                  value: '13:00'
-                }, {
-                  label: '14:00',
-                  value: '14:00'
-                }, {
-                  label: '15:00',
-                  value: '15:00'
-                }, {
-                  label: '16:00',
-                  value: '16:00'
-                }, {
-                  label: '17:00',
-                  value: '17:00'
-                }, {
-                  label: '18:00',
-                  value: '18:00'
-                }, {
-                  label: '19:00',
-                  value: '19:00'
-                }, {
-                  label: '20:00',
-                  value: '20:00'
-                }, {
-                  label: '21:00',
-                  value: '21:00'
-                }, {
-                  label: '22:00',
-                  value: '22:00'
-                }, {
-                  label: '23:00',
-                  value: '23:00'
-                },
-              ]
-            },
-            {
-              value: '7',
-              label: '周日',
-              children: [
-                {
-                  label: '00:00',
-                  value: '00:00'
-                }, {
-                  label: '01:00',
-                  value: '01:00'
-                }, {
-                  label: '02:00',
-                  value: '02:00'
-                }, {
-                  label: '03:00',
-                  value: '03:00'
-                }, {
-                  label: '04:00',
-                  value: '04:00'
-                }, {
-                  label: '05:00',
-                  value: '05:00'
-                }, {
-                  label: '06:00',
-                  value: '06:00'
-                }, {
-                  label: '07:00',
-                  value: '07:00'
-                }, {
-                  label: '08:00',
-                  value: '08:00'
-                }, {
-                  label: '09:00',
-                  value: '09:00'
-                }, {
-                  label: '10:00',
-                  value: '10:00'
-                }, {
-                  label: '11:00',
-                  value: '11:00'
-                }, {
-                  label: '12:00',
-                  value: '12:00'
-                }, {
-                  label: '13:00',
-                  value: '13:00'
-                }, {
-                  label: '14:00',
-                  value: '14:00'
-                }, {
-                  label: '15:00',
-                  value: '15:00'
-                }, {
-                  label: '16:00',
-                  value: '16:00'
-                }, {
-                  label: '17:00',
-                  value: '17:00'
-                }, {
-                  label: '18:00',
-                  value: '18:00'
-                }, {
-                  label: '19:00',
-                  value: '19:00'
-                }, {
-                  label: '20:00',
-                  value: '20:00'
-                }, {
-                  label: '21:00',
-                  value: '21:00'
-                }, {
-                  label: '22:00',
-                  value: '22:00'
-                }, {
-                  label: '23:00',
-                  value: '23:00'
-                },
-              ]
-            }
-          ],
+          weekTimeData: [],
           // 选择一个月时的时间点
-          monthTimeData: [
-            {
-              value: '1',
-              label: '1号',
-              children: [
-                {
-                  label: '00:00',
-                  value: '00:00'
-                }, {
-                  label: '01:00',
-                  value: '01:00'
-                }, {
-                  label: '02:00',
-                  value: '02:00'
-                }, {
-                  label: '03:00',
-                  value: '03:00'
-                }, {
-                  label: '04:00',
-                  value: '04:00'
-                }, {
-                  label: '05:00',
-                  value: '05:00'
-                }, {
-                  label: '06:00',
-                  value: '06:00'
-                }, {
-                  label: '07:00',
-                  value: '07:00'
-                }, {
-                  label: '08:00',
-                  value: '08:00'
-                }, {
-                  label: '09:00',
-                  value: '09:00'
-                }, {
-                  label: '10:00',
-                  value: '10:00'
-                }, {
-                  label: '11:00',
-                  value: '11:00'
-                }, {
-                  label: '12:00',
-                  value: '12:00'
-                }, {
-                  label: '13:00',
-                  value: '13:00'
-                }, {
-                  label: '14:00',
-                  value: '14:00'
-                }, {
-                  label: '15:00',
-                  value: '15:00'
-                }, {
-                  label: '16:00',
-                  value: '16:00'
-                }, {
-                  label: '17:00',
-                  value: '17:00'
-                }, {
-                  label: '18:00',
-                  value: '18:00'
-                }, {
-                  label: '19:00',
-                  value: '19:00'
-                }, {
-                  label: '20:00',
-                  value: '20:00'
-                }, {
-                  label: '21:00',
-                  value: '21:00'
-                }, {
-                  label: '22:00',
-                  value: '22:00'
-                }, {
-                  label: '23:00',
-                  value: '23:00'
-                },
-              ]
-            },
-            {
-              value: '2',
-              label: '2号',
-              children: [
-                {
-                  label: '00:00',
-                  value: '00:00'
-                }, {
-                  label: '01:00',
-                  value: '01:00'
-                }, {
-                  label: '02:00',
-                  value: '02:00'
-                }, {
-                  label: '03:00',
-                  value: '03:00'
-                }, {
-                  label: '04:00',
-                  value: '04:00'
-                }, {
-                  label: '05:00',
-                  value: '05:00'
-                }, {
-                  label: '06:00',
-                  value: '06:00'
-                }, {
-                  label: '07:00',
-                  value: '07:00'
-                }, {
-                  label: '08:00',
-                  value: '08:00'
-                }, {
-                  label: '09:00',
-                  value: '09:00'
-                }, {
-                  label: '10:00',
-                  value: '10:00'
-                }, {
-                  label: '11:00',
-                  value: '11:00'
-                }, {
-                  label: '12:00',
-                  value: '12:00'
-                }, {
-                  label: '13:00',
-                  value: '13:00'
-                }, {
-                  label: '14:00',
-                  value: '14:00'
-                }, {
-                  label: '15:00',
-                  value: '15:00'
-                }, {
-                  label: '16:00',
-                  value: '16:00'
-                }, {
-                  label: '17:00',
-                  value: '17:00'
-                }, {
-                  label: '18:00',
-                  value: '18:00'
-                }, {
-                  label: '19:00',
-                  value: '19:00'
-                }, {
-                  label: '20:00',
-                  value: '20:00'
-                }, {
-                  label: '21:00',
-                  value: '21:00'
-                }, {
-                  label: '22:00',
-                  value: '22:00'
-                }, {
-                  label: '23:00',
-                  value: '23:00'
-                },
-              ]
-            },
-            {
-              value: '3',
-              label: '3号',
-              children: [
-                {
-                  label: '00:00',
-                  value: '00:00'
-                }, {
-                  label: '01:00',
-                  value: '01:00'
-                }, {
-                  label: '02:00',
-                  value: '02:00'
-                }, {
-                  label: '03:00',
-                  value: '03:00'
-                }, {
-                  label: '04:00',
-                  value: '04:00'
-                }, {
-                  label: '05:00',
-                  value: '05:00'
-                }, {
-                  label: '06:00',
-                  value: '06:00'
-                }, {
-                  label: '07:00',
-                  value: '07:00'
-                }, {
-                  label: '08:00',
-                  value: '08:00'
-                }, {
-                  label: '09:00',
-                  value: '09:00'
-                }, {
-                  label: '10:00',
-                  value: '10:00'
-                }, {
-                  label: '11:00',
-                  value: '11:00'
-                }, {
-                  label: '12:00',
-                  value: '12:00'
-                }, {
-                  label: '13:00',
-                  value: '13:00'
-                }, {
-                  label: '14:00',
-                  value: '14:00'
-                }, {
-                  label: '15:00',
-                  value: '15:00'
-                }, {
-                  label: '16:00',
-                  value: '16:00'
-                }, {
-                  label: '17:00',
-                  value: '17:00'
-                }, {
-                  label: '18:00',
-                  value: '18:00'
-                }, {
-                  label: '19:00',
-                  value: '19:00'
-                }, {
-                  label: '20:00',
-                  value: '20:00'
-                }, {
-                  label: '21:00',
-                  value: '21:00'
-                }, {
-                  label: '22:00',
-                  value: '22:00'
-                }, {
-                  label: '23:00',
-                  value: '23:00'
-                },
-              ]
-            },
-            {
-              value: '4',
-              label: '4号',
-              children: [
-                {
-                  label: '00:00',
-                  value: '00:00'
-                }, {
-                  label: '01:00',
-                  value: '01:00'
-                }, {
-                  label: '02:00',
-                  value: '02:00'
-                }, {
-                  label: '03:00',
-                  value: '03:00'
-                }, {
-                  label: '04:00',
-                  value: '04:00'
-                }, {
-                  label: '05:00',
-                  value: '05:00'
-                }, {
-                  label: '06:00',
-                  value: '06:00'
-                }, {
-                  label: '07:00',
-                  value: '07:00'
-                }, {
-                  label: '08:00',
-                  value: '08:00'
-                }, {
-                  label: '09:00',
-                  value: '09:00'
-                }, {
-                  label: '10:00',
-                  value: '10:00'
-                }, {
-                  label: '11:00',
-                  value: '11:00'
-                }, {
-                  label: '12:00',
-                  value: '12:00'
-                }, {
-                  label: '13:00',
-                  value: '13:00'
-                }, {
-                  label: '14:00',
-                  value: '14:00'
-                }, {
-                  label: '15:00',
-                  value: '15:00'
-                }, {
-                  label: '16:00',
-                  value: '16:00'
-                }, {
-                  label: '17:00',
-                  value: '17:00'
-                }, {
-                  label: '18:00',
-                  value: '18:00'
-                }, {
-                  label: '19:00',
-                  value: '19:00'
-                }, {
-                  label: '20:00',
-                  value: '20:00'
-                }, {
-                  label: '21:00',
-                  value: '21:00'
-                }, {
-                  label: '22:00',
-                  value: '22:00'
-                }, {
-                  label: '23:00',
-                  value: '23:00'
-                },
-              ]
-            },
-            {
-              value: '5',
-              label: '5号',
-              children: [
-                {
-                  label: '00:00',
-                  value: '00:00'
-                }, {
-                  label: '01:00',
-                  value: '01:00'
-                }, {
-                  label: '02:00',
-                  value: '02:00'
-                }, {
-                  label: '03:00',
-                  value: '03:00'
-                }, {
-                  label: '04:00',
-                  value: '04:00'
-                }, {
-                  label: '05:00',
-                  value: '05:00'
-                }, {
-                  label: '06:00',
-                  value: '06:00'
-                }, {
-                  label: '07:00',
-                  value: '07:00'
-                }, {
-                  label: '08:00',
-                  value: '08:00'
-                }, {
-                  label: '09:00',
-                  value: '09:00'
-                }, {
-                  label: '10:00',
-                  value: '10:00'
-                }, {
-                  label: '11:00',
-                  value: '11:00'
-                }, {
-                  label: '12:00',
-                  value: '12:00'
-                }, {
-                  label: '13:00',
-                  value: '13:00'
-                }, {
-                  label: '14:00',
-                  value: '14:00'
-                }, {
-                  label: '15:00',
-                  value: '15:00'
-                }, {
-                  label: '16:00',
-                  value: '16:00'
-                }, {
-                  label: '17:00',
-                  value: '17:00'
-                }, {
-                  label: '18:00',
-                  value: '18:00'
-                }, {
-                  label: '19:00',
-                  value: '19:00'
-                }, {
-                  label: '20:00',
-                  value: '20:00'
-                }, {
-                  label: '21:00',
-                  value: '21:00'
-                }, {
-                  label: '22:00',
-                  value: '22:00'
-                }, {
-                  label: '23:00',
-                  value: '23:00'
-                },
-              ]
-            },
-            {
-              value: '6',
-              label: '6号',
-              children: [
-                {
-                  label: '00:00',
-                  value: '00:00'
-                }, {
-                  label: '01:00',
-                  value: '01:00'
-                }, {
-                  label: '02:00',
-                  value: '02:00'
-                }, {
-                  label: '03:00',
-                  value: '03:00'
-                }, {
-                  label: '04:00',
-                  value: '04:00'
-                }, {
-                  label: '05:00',
-                  value: '05:00'
-                }, {
-                  label: '06:00',
-                  value: '06:00'
-                }, {
-                  label: '07:00',
-                  value: '07:00'
-                }, {
-                  label: '08:00',
-                  value: '08:00'
-                }, {
-                  label: '09:00',
-                  value: '09:00'
-                }, {
-                  label: '10:00',
-                  value: '10:00'
-                }, {
-                  label: '11:00',
-                  value: '11:00'
-                }, {
-                  label: '12:00',
-                  value: '12:00'
-                }, {
-                  label: '13:00',
-                  value: '13:00'
-                }, {
-                  label: '14:00',
-                  value: '14:00'
-                }, {
-                  label: '15:00',
-                  value: '15:00'
-                }, {
-                  label: '16:00',
-                  value: '16:00'
-                }, {
-                  label: '17:00',
-                  value: '17:00'
-                }, {
-                  label: '18:00',
-                  value: '18:00'
-                }, {
-                  label: '19:00',
-                  value: '19:00'
-                }, {
-                  label: '20:00',
-                  value: '20:00'
-                }, {
-                  label: '21:00',
-                  value: '21:00'
-                }, {
-                  label: '22:00',
-                  value: '22:00'
-                }, {
-                  label: '23:00',
-                  value: '23:00'
-                },
-              ]
-            },
-            {
-              value: '7',
-              label: '7号',
-              children: [
-                {
-                  label: '00:00',
-                  value: '00:00'
-                }, {
-                  label: '01:00',
-                  value: '01:00'
-                }, {
-                  label: '02:00',
-                  value: '02:00'
-                }, {
-                  label: '03:00',
-                  value: '03:00'
-                }, {
-                  label: '04:00',
-                  value: '04:00'
-                }, {
-                  label: '05:00',
-                  value: '05:00'
-                }, {
-                  label: '06:00',
-                  value: '06:00'
-                }, {
-                  label: '07:00',
-                  value: '07:00'
-                }, {
-                  label: '08:00',
-                  value: '08:00'
-                }, {
-                  label: '09:00',
-                  value: '09:00'
-                }, {
-                  label: '10:00',
-                  value: '10:00'
-                }, {
-                  label: '11:00',
-                  value: '11:00'
-                }, {
-                  label: '12:00',
-                  value: '12:00'
-                }, {
-                  label: '13:00',
-                  value: '13:00'
-                }, {
-                  label: '14:00',
-                  value: '14:00'
-                }, {
-                  label: '15:00',
-                  value: '15:00'
-                }, {
-                  label: '16:00',
-                  value: '16:00'
-                }, {
-                  label: '17:00',
-                  value: '17:00'
-                }, {
-                  label: '18:00',
-                  value: '18:00'
-                }, {
-                  label: '19:00',
-                  value: '19:00'
-                }, {
-                  label: '20:00',
-                  value: '20:00'
-                }, {
-                  label: '21:00',
-                  value: '21:00'
-                }, {
-                  label: '22:00',
-                  value: '22:00'
-                }, {
-                  label: '23:00',
-                  value: '23:00'
-                },
-              ]
-            }
-          ],
+          monthTimeData: [],
           // 备份时间值
           timeValue: ['00:00'],
           // 策略应用磁盘
@@ -1747,6 +641,8 @@
       })
     },
     created(){
+      this.getMonthCongigDate()
+      this.getWeekTimeData()
     },
     computed: {
       // 该计算属性用于解决观测对象时currentValue与oldValue指向同一对象的问题，没有其他用处
@@ -1759,6 +655,198 @@
       }
     },
     methods: {
+      /* 获取月配置时间  */
+      getMonthCongigDate () {
+        var date = [
+          {
+            label: '00:00',
+            value: '00:00'
+          }, {
+            label: '01:00',
+            value: '01:00'
+          }, {
+            label: '02:00',
+            value: '02:00'
+          }, {
+            label: '03:00',
+            value: '03:00'
+          }, {
+            label: '04:00',
+            value: '04:00'
+          }, {
+            label: '05:00',
+            value: '05:00'
+          }, {
+            label: '06:00',
+            value: '06:00'
+          }, {
+            label: '07:00',
+            value: '07:00'
+          }, {
+            label: '08:00',
+            value: '08:00'
+          }, {
+            label: '09:00',
+            value: '09:00'
+          }, {
+            label: '10:00',
+            value: '10:00'
+          }, {
+            label: '11:00',
+            value: '11:00'
+          }, {
+            label: '12:00',
+            value: '12:00'
+          }, {
+            label: '13:00',
+            value: '13:00'
+          }, {
+            label: '14:00',
+            value: '14:00'
+          }, {
+            label: '15:00',
+            value: '15:00'
+          }, {
+            label: '16:00',
+            value: '16:00'
+          }, {
+            label: '17:00',
+            value: '17:00'
+          }, {
+            label: '18:00',
+            value: '18:00'
+          }, {
+            label: '19:00',
+            value: '19:00'
+          }, {
+            label: '20:00',
+            value: '20:00'
+          }, {
+            label: '21:00',
+            value: '21:00'
+          }, {
+            label: '22:00',
+            value: '22:00'
+          }, {
+            label: '23:00',
+            value: '23:00'
+          },
+        ]
+        for (var i = 1; i <= 30; i++) {
+          var oneDate = {}
+          oneDate.label = i + '号'
+          oneDate.value = i + ''
+          oneDate.children = date
+          this.backupsForm.monthTimeData.push(oneDate)
+        }
+      },
+      /* 获取周配置时间 */
+      getWeekTimeData () {
+        var date = [
+          {
+            label: '00:00',
+            value: '00:00'
+          }, {
+            label: '01:00',
+            value: '01:00'
+          }, {
+            label: '02:00',
+            value: '02:00'
+          }, {
+            label: '03:00',
+            value: '03:00'
+          }, {
+            label: '04:00',
+            value: '04:00'
+          }, {
+            label: '05:00',
+            value: '05:00'
+          }, {
+            label: '06:00',
+            value: '06:00'
+          }, {
+            label: '07:00',
+            value: '07:00'
+          }, {
+            label: '08:00',
+            value: '08:00'
+          }, {
+            label: '09:00',
+            value: '09:00'
+          }, {
+            label: '10:00',
+            value: '10:00'
+          }, {
+            label: '11:00',
+            value: '11:00'
+          }, {
+            label: '12:00',
+            value: '12:00'
+          }, {
+            label: '13:00',
+            value: '13:00'
+          }, {
+            label: '14:00',
+            value: '14:00'
+          }, {
+            label: '15:00',
+            value: '15:00'
+          }, {
+            label: '16:00',
+            value: '16:00'
+          }, {
+            label: '17:00',
+            value: '17:00'
+          }, {
+            label: '18:00',
+            value: '18:00'
+          }, {
+            label: '19:00',
+            value: '19:00'
+          }, {
+            label: '20:00',
+            value: '20:00'
+          }, {
+            label: '21:00',
+            value: '21:00'
+          }, {
+            label: '22:00',
+            value: '22:00'
+          }, {
+            label: '23:00',
+            value: '23:00'
+          },
+        ]
+        for (var i = 1; i <= 7; i++) {
+          var oneDate = {}
+          switch (i) {
+            case 1:
+              oneDate.label = '周一'
+              break
+            case 2:
+              oneDate.label = '周二'
+              break
+            case 3:
+              oneDate.label = '周三'
+              break
+            case 4:
+              oneDate.label = '周四'
+              break
+            case 5:
+              oneDate.label = '周五'
+              break
+            case 6:
+              oneDate.label = '周六'
+              break
+            case 7:
+              oneDate.label = '周日'
+              break
+          }
+          oneDate.value = i + ''
+          oneDate.children = date
+          this.backupsForm.weekTimeData.push(oneDate)
+        }
+      },
       /* 添加磁盘到备份策略 */
       addDisk (index, data) {
         this.diskForBackupsStrategyList.splice(index, 1)
