@@ -233,7 +233,7 @@
         var listVPCUrl = `network/listVpc.do?page=1&pageSize=10`
         this.$http.get(listVPCUrl).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.vpcArray = response.data.result.data
+            this.vpcArray = response.data.result
           } else if (response.status == 200 && response.data.status == 3) {
             this.$router.push({path: 'login'})
           }
