@@ -6,7 +6,7 @@
         <div id="header">
           <img src="../../assets/img/disk/diskBackups.png" style="margin-right: 5px;vertical-align: text-bottom">
           <span id="title">云硬盘备份</span>
-          <button id="refresh_button">刷新</button>
+          <button id="refresh_button" @click="refreshPage">刷新</button>
         </div>
         <Alert>
           云硬盘备份能对磁盘（系统盘或数据盘）某个时刻的数据进行备份和回滚，云硬盘备份为全量备份，提升了云硬盘的安全性，同时增强了云硬盘备份的易用性。
@@ -655,6 +655,14 @@
       }
     },
     methods: {
+      /* 刷新页面 */
+      refreshPage () {
+        if (this.tabPane == 'diskBackups') {
+          this.listDiskSnapshots()
+        } else {
+          this.listDiskBackUpStrategy()
+        }
+      },
       /* 获取月配置时间  */
       getMonthCongigDate () {
         var date = [

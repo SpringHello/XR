@@ -6,7 +6,7 @@
         <div id="header">
           <img src="../../assets/img/disk/disk.png" style="margin-right: 5px;vertical-align: text-bottom">
           <span id="title">云硬盘</span>
-          <button id="refresh_button">刷新</button>
+          <button id="refresh_button" @click="refreshPage">刷新</button>
         </div>
         <Alert>
           为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。
@@ -536,6 +536,10 @@
       this.listDisk()
     },
     methods: {
+      /* 刷新页面 */
+      refreshPage () {
+        this.listDisk()
+      },
       // 验证新建磁盘的表单
       _checkNewForm(){
         this.$refs.newDisk.validate((valid) => {
