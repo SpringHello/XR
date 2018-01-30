@@ -17,7 +17,7 @@
             <li>容量：{{ diskInfo.disksize}} GB</li>
             <li>系统类型：{{ diskType}}</li>
             <li>状态：{{ diskState }}</li>
-            <li>挂载主机：<span style="color: #2A99F2">{{ mountHost}}</span></li>
+            <li>挂载主机：<span>{{ mountHost}}</span></li>
             <li>地区：{{ diskInfo.zonename}}</li>
           </ol>
           <ol style="width: 220px">
@@ -25,7 +25,7 @@
             <li>计费类型：{{ chargeType }}</li>
             <li>创建于：{{ diskInfo.createtime }}</li>
             <li>有效期：{{ diskInfo.endtime}}</li>
-            <li>自动续费：<span style="color: #2A99F2">{{ isautorenew}}</span></li>
+            <li>自动续费：<span>{{ isautorenew}}</span></li>
           </ol>
         </div>
         <div class="footer">
@@ -40,7 +40,7 @@
             <span>磁盘利用率</span>
             <Progress :percent="diskUtilization"
                       style="width: 50%;line-height: 12px;margin-left: 10px"></Progress>
-            <span style="color: #2A99F2;cursor: pointer" @click="dilatationDisk">扩容</span>
+            <!--<span style="color: #2A99F2;cursor: pointer" @click="dilatationDisk">扩容</span>-->
           </div>
           <div class="flex">
             <div class="item">
@@ -472,7 +472,9 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -488,7 +490,9 @@
               }
             })
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -525,7 +529,9 @@
               this.coupon = 0
             }
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       }),
@@ -556,7 +562,9 @@
           if (response.status == 200 && response.data.status == 1) {
             this.diskBackupsData = response.data.result
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -569,7 +577,9 @@
             this.$Message.info(response.data.message)
             this.listDiskSnapshots()
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -582,7 +592,9 @@
               this.$Message.info(response.data.message)
               this.listDiskSnapshots()
             } else {
-              this.$error('error', response.data.message)
+              this.$message.error({
+                content: response.data.message
+              })
             }
           })
         } else {

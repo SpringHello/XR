@@ -229,7 +229,8 @@
                 </FormItem>
                 <FormItem label="所属行业" prop="industry">
                   <Select v-model="notAuth.companyAuthForm.industry">
-                    <Option v-for="(item,index) in notAuth.companyAuthForm.industryOptions" :value="item.key">
+                    <Option v-for="(item,index) in notAuth.companyAuthForm.industryOptions" :key="item.key"
+                            :value="item.key">
                       {{item.label}}
                     </Option>
                   </Select>
@@ -242,7 +243,8 @@
                 </FormItem>
                 <FormItem label="证件类型" prop="certificateType">
                   <Select v-model="notAuth.companyAuthForm.certificateType">
-                    <Option v-for="(item,index) in notAuth.companyAuthForm.certificateTypeOptions" :value="item.key">
+                    <Option v-for="(item,index) in notAuth.companyAuthForm.certificateTypeOptions" :key="item.key"
+                            :value="item.key">
                       {{item.label}}
                     </Option>
                   </Select>

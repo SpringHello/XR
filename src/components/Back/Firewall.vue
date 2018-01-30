@@ -32,7 +32,7 @@
           </Dropdown>
         </div>
         <div>
-          <Table border :columns="columns" :data="tableData" :border="false"
+          <Table border :columns="columns" :data="tableData" :border="false" highlight-row
                  @on-current-change="setSelect" @radio-change="selectChange"></Table>
           <Page :total="pageInfo.total" :current="pageInfo.page" :page-size=10 style="float:right;margin-top:15px"
                 @on-change="next"></Page>
@@ -233,7 +233,7 @@
         var listVPCUrl = `network/listVpc.do?page=1&pageSize=10`
         this.$http.get(listVPCUrl).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.vpcArray = response.data.result.data
+            this.vpcArray = response.data.result
           } else if (response.status == 200 && response.data.status == 3) {
             this.$router.push({path: 'login'})
           }

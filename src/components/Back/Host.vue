@@ -13,35 +13,24 @@
         </Alert>
         <div class="operator-bar">
           <Button type="primary" @click="startUp">一键启动</Button>
-          <Button type="primary" @click="joinBalance">加入负载均衡</Button>
+          <Button type="primary" @click="joinBalance" :disabled="status!='开启'">加入负载均衡</Button>
           <Button type="primary" @click="bindIP" :disabled="status!='开启'&&status!='关机'">绑定IP</Button>
-          <Dropdown style="margin-left: 20px;vertical-align: middle;" @on-click="hideEvent">
+          <Dropdown style="margin-left: 20px;vertical-align: middle;" @on-click="hideEvent" class="moreOperation">
             <Button type="primary">
               更多操作
               <Icon type="arrow-down-b"></Icon>
             </Button>
             <Dropdown-menu slot="list">
-
-              <!-- <DropdownItem>主机快照</DropdownItem>
-              <DropdownItem>主机镜像</DropdownItem>
-              <DropdownItem>主机升级</DropdownItem>
-              <DropdownItem>重启主机</DropdownItem>
-              <DropdownItem>主机续费</DropdownItem>
-              <DropdownItem>删除主机</DropdownItem> -->
-
-
-
-
               <!-- 重命名 -->
               <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
               <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
               <!-- 备份 -->
               <Dropdown-item name="backup" v-if="status!='开启'&&status!='关机'" :disabled=true>
-                <Tooltip content="异常、欠费状态，备份不可用" placement="top">
-                  主机备份
+                <Tooltip content="异常、欠费状态，快照不可用" placement="top">
+                  创建快照
                 </Tooltip>
               </Dropdown-item>
-              <Dropdown-item name="backup" v-else>主机备份</Dropdown-item>
+              <Dropdown-item name="backup" v-else>创建快照</Dropdown-item>
               <!-- 镜像 -->
               <Dropdown-item name="mirror" v-if="status!='关机'" :disabled=true>
                 <Tooltip content="制作镜像前您必须关闭主机" placement="top">
@@ -52,7 +41,7 @@
               <!-- 升级主机 -->
               <Dropdown-item name="upgrade" v-if="status!='关机'" :disabled=true>
                 <Tooltip content="升级主机前您必须关闭主机" placement="top">
-                  升级
+                  主机升级
                 </Tooltip>
               </Dropdown-item>
               <Dropdown-item name="upgrade" v-else>
@@ -60,6 +49,7 @@
               </Dropdown-item>
 
               <!-- 重启主机 -->
+
               <Poptip
                 confirm
                 width="200"
@@ -67,9 +57,11 @@
                 title="您确认重启主机吗？"
                 @on-ok="reboot"
                 @on-cancel="cancel">
-                <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>重启</li>
+                <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>重启主机</li>
               </Poptip>
+
               <!-- 删除主机 -->
+
               <Poptip
                 confirm
                 width="200"
@@ -78,10 +70,13 @@
                 @on-ok="del"
                 @on-cancel="cancel"
                 style="display: block">
-                <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>删除</li>
+                <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>删除主机</li>
               </Poptip>
+
+
               <!-- 解绑主机 -->
-              <Poptip
+
+              <!-- <Poptip
                 confirm
                 width="200"
                 placement="right"
@@ -90,7 +85,8 @@
                 @on-cancel="cancel"
                 style="display: block">
                 <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>解绑公网IP</li>
-              </Poptip>
+              </Poptip> -->
+
             </Dropdown-menu>
           </Dropdown>
         </div>
@@ -230,7 +226,8 @@
             </Tab-pane>
             <Tab-pane :label="`欠费(${arrearsHost.length})`" name="欠费">
               <div class="flex-wrapper">
-                <div v-for="(item,index) in arrearsHost" :key="index" :class="{select:item.select}" @click="toggle(item)"
+                <div v-for="(item,index) in arrearsHost" :key="index" :class="{select:item.select}"
+                     @click="toggle(item)"
                      style="margin-bottom: 20px;height:228px;">
                   <Card style="width:375px;height:228px;">
                     <div style="text-align:center">
@@ -326,28 +323,30 @@
       </div>
     </div>
 
-
-    <!-- 主机备份弹窗 -->
-    <Modal v-model="showModal.backup" width="590" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        主机备份
-      </div>
-      <div style="width:60%">
-        <Form :model="backupForm" :label-width="80">
-          <Form-item label="备份名">
-            <Input v-model="backupForm.backupName" placeholder="请输入备份名"></Input>
-          </Form-item>
-          <Form-item label="详细描述">
-            <Input v-model="backupForm.description" type="textarea" :autosize="{minRows: 3,maxRows: 5}"
-                   placeholder="请输入..."></Input>
-          </Form-item>
+    <!-- 创建快照弹窗 -->
+    <Modal v-model="showModal.backup" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">创建快照</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <p class="mb20">您正为<span class="bluetext">主机名称</span>创建快照</p>
+        <Form :model="backupForm" ref="backupForm">
+          <FormItem label="快照名称">
+            <Input v-model="backupForm.backupName" placeholder="请输入2-4094范围内任意数字"></Input>
+          </FormItem>
+          <FormItem label="是否保存内存信息">
+            <RadioGroup v-model="backupForm.radio">
+              <Radio label="1">保存</Radio>
+              <Radio label="0">不保存</Radio>
+            </RadioGroup>
+          </FormItem>
         </Form>
+        <p style="font-size: 12px;color: rgba(153,153,153,0.65);">提示：云主机快照为每块磁盘提供<span>8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点
+        </p>
       </div>
-      <div slot="footer">
-        <Button type="ghost" @click="showModal.backup = false">取消</Button>
-        <Button type="primary" :disabled="backupForm.backupName==''||backupForm.description==''" @click="backup">确定
-        </Button>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" class="btn-cancel" @click="showModal.backup=false">取消</Button>
+        <Button type="primary" :disabled="backupForm.backupName==''" @click="backup">创建快照</Button>
       </div>
     </Modal>
     <!-- 主机重命名弹窗 -->
@@ -404,7 +403,7 @@
         <Form :model="bindForm" :label-width="80">
           <Form-item label="公网IP">
             <Select v-model="bindForm.publicIP" placeholder="请选择">
-              <Option v-for="(item,index) in publicIPList" :key="index" :value="`${item.publicipid}#${item.publicip}`">
+              <Option v-for="(item,index) in publicIPList" :key="index" :value="item.publicipid">
                 {{item.publicip}}
               </Option>
             </Select>
@@ -414,6 +413,29 @@
       <div slot="footer">
         <Button type="ghost" @click="showModal.bindIP = false">取消</Button>
         <Button type="primary" :disabled="bindForm.publicIP==''" @click="bind">确定
+        </Button>
+      </div>
+    </Modal>
+    <!-- 加入负载均衡弹窗 -->
+    <Modal v-model="showModal.balance" width="590" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        加入负载均衡
+      </div>
+      <div style="width:60%">
+        <Form :model="loadBalanceForm" :label-width="120">
+          <Form-item label="选择弹性负载均衡名称 ">
+            <Select v-model="loadBalanceForm.loadbalanceroleid" placeholder="请选择">
+              <Option v-for="(item,index) in listLoadBalanceRole" :key="index" :value="item.loadbalanceroleid">
+                {{item.name}}
+              </Option>
+            </Select>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.balance = false">取消</Button>
+        <Button type="primary" :disabled="loadBalanceForm.loadbalanceroleid==''" @click="joinBalanceSubm">确定
         </Button>
       </div>
     </Modal>
@@ -428,14 +450,16 @@
         付费类型 :
         </span>
         <Select v-model="renewalType" style="width:140px">
-          <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}</Option>
+          <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}
+          </Option>
         </Select>
         <span
           style="margin-left:30px;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;vertical-align:middle">
         付费时长 :
       </span>
         <Select v-model="renewalTime" style="width:140px">
-          <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}</Option>
+          <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
+          </Option>
         </Select>
       </div>
       <div style="width:90%;margin:0px auto;font-family: Microsoft Yahei,微软雅黑-Bold;font-size: 16px;color: #666666;">
@@ -505,6 +529,7 @@
   import merge from 'merge'
   // import {mapState} from 'vuex'
   import $store from '@/vuex'
+  import axios from 'axios'
   export default {
     data() {
       var status = '开启'
@@ -525,6 +550,7 @@
         sessionStorage.removeItem('type')
       }
       return {
+        listLoadBalanceRole: [],
         cost: '',
         openHost: [],
         closeHost: [],
@@ -540,14 +566,15 @@
           renewal: false,
           rename: false,
           Renew: false,
-          selectAuthType: false
+          selectAuthType: false,
+          balance: false
         },
         renameForm: {
           hostName: ''
         },
         backupForm: {
           backupName: '',
-          description: ''
+          radio: '1'
         },
         mirrorForm: {
           mirrorName: '',
@@ -555,6 +582,9 @@
         },
         bindForm: {
           publicIP: ''
+        },
+        loadBalanceForm: {
+          loadbalanceroleid: ''
         },
         publicIPList: [],
         renewalType: '',
@@ -577,15 +607,41 @@
     created() {
       this.getData()
       // 定时发送ajax 刷新页面
-      console.log('status')
-      console.log(this.status)
       this.intervalInstance = setInterval(() => {
         this.getData()
       }, 5 * 1000)
     },
     methods: {
+      //加入负载均衡
       joinBalance() {
-
+        if (this.checkSelect()) {
+          if (this.currentHost[0].loadbalance) {
+            // this.$Message.warning('啊哦!已绑定主机无法再次绑定!')
+          } else {
+            // this.loadingMessage = '正在绑定IP'
+            // this.loading = true
+            // this.bindForm.publicIP = ''
+            this.showModal.balance = true
+            // 获取负载均衡规则
+            var balanceUrl = `loadbalance/listLoadBalanceRole.do?zoneId=${$store.state.zone.zoneid}`
+            axios.get(balanceUrl)
+              .then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.listLoadBalanceRole = response.data.result
+                }
+              })
+          }
+        }
+      },
+      // 确定加入负载均衡
+      joinBalanceSubm() {
+        this.showModal.balance = false
+        axios.get(`loadbalance/assignToLoadBalancerRule.do?zoneId=${this.currentHost[0].zoneid}&roleId=${this.loadBalanceForm.loadbalanceroleid}&VMIds=${this.currentHost[0].computerid}`)
+          .then(response => {
+            if (response.status == 200) {
+              this.$Message.success(response.data.message)
+            }
+          })
       },
       //恢复主机
       recoverHost(id) {
@@ -756,7 +812,7 @@
             this.loading = true
             this.bindForm.publicIP = ''
             this.showModal.bindIP = true
-            this.$http.get(`network/listLoadBalancePublicIp.do?zoneid=${this.currentHost[0].zoneid}`)
+            axios.get(`network/listPublicIp.do?useType=1&zoneId=${this.currentHost[0].zoneid}`)
               .then(response => {
                 this.loading = false
                 if (response.status == 200 && response.data.status == 1) {
@@ -767,20 +823,24 @@
         }
       },
       bind() {
+        // this.showModal.bindIP = false
+        // this.loadingMessage = '正在绑定公网IP'
+        // this.loading = true
+        // var arr = this.bindForm.publicIP.split('#')
         this.showModal.bindIP = false
-        this.loadingMessage = '正在绑定公网IP'
-        this.loading = true
-        var arr = this.bindForm.publicIP.split('#')
-        var url = `network/enableStaticNat.do?ipId=${arr[0]}&vmid=${this.currentHost[0].computerid}`
+        var url = `network/enableStaticNat.do?ipId=${this.bindForm.publicIP}&vmid=${this.currentHost[0].computerid}`
         this.$http.get(url)
           .then(response => {
             this.loading = false
-            if (response.status == 200 && response.data.status == 1) {
-              this.$Message.success(response.data.message)
-              this.getData()
-            } else {
-              this.$Message.warning(response.data.message)
+            if (response.status == 200) {
+              this.$Message.error(response.data.message)
             }
+            // if (response.status == 200 && response.data.status == 1) {
+            //   this.$Message.success(response.data.message)
+            //   this.getData()
+            // } else {
+            //   this.$Message.warning(response.data.message)
+            // }
           })
       },
       unbind() {
@@ -885,12 +945,13 @@
         return true
       },
       backup() {
+        // this.showModal.backup = false
+        // this.loadingMessage = '正在备份主机'
+        // this.loading = true
         this.showModal.backup = false
-        this.loadingMessage = '正在备份主机'
-        this.loading = true
-        var url = `Snapshot/createVMSnapshot.do?virtualmachineid=${this.currentHost[0].computerid}&name=${this.backupForm.backupName}&description=${this.backupForm.description}&zoneid=${this.currentHost[0].zoneid}`
-        this.$http.get(url).then(response => {
-          this.loading = false
+        var url = `Snapshot/createVMSnapshot.do?VMId=${this.currentHost[0].computerid}&snapshotName=${this.backupForm.backupName}&&memoryStatus=${this.backupForm.radio}&zoneId=${this.currentHost[0].zoneid}`
+        axios.get(url).then(response => {
+          // this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
           }
@@ -911,12 +972,14 @@
           }
         })
       },
+      // 创建主机镜像
       mirror() {
+        // this.showModal.mirror = false
+        // this.loadingMessage = '正在创建主机镜像'
+        // this.loading = true
         this.showModal.mirror = false
-        this.loadingMessage = '正在创建主机镜像'
-        this.loading = true
-        var url = `Snapshot/createTemplate.do?rootdiskid=${this.currentHost[0].rootdiskid}&name=${this.mirrorForm.mirrorName}&discript=${this.mirrorForm.description}&zoneid=${this.currentHost[0].zoneid}`
-        this.$http.get(url).then(response => {
+        var url = `Snapshot/createTemplate.do?rootDiskId=${this.currentHost[0].rootdiskid}&templateName=${this.mirrorForm.mirrorName}&descript=${this.mirrorForm.description}&zoneId=${this.currentHost[0].zoneid}`
+        axios.get(url).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success({
@@ -949,7 +1012,7 @@
         }
       },
       upgrade() {
-
+        this.$router.push('/upgrade')
       },
       reboot() {
         if (this.checkSelect()) {
@@ -1020,6 +1083,17 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .moreOperation .ivu-poptip-rel li {
+    font-size: 12px;
+    line-height: normal;
+    padding: 7px 16px;
+    width: 100px;
+    cursor: pointer;
+    &:hover {
+      background: #f3f3f3;
+    }
+  }
+
   .flex-wrapper {
     display: flex;
     flex-wrap: wrap;

@@ -6,7 +6,7 @@
         <div id="header">
           <img src="../../assets/img/disk/disk.png" style="margin-right: 5px;vertical-align: text-bottom">
           <span id="title">云硬盘</span>
-          <button id="refresh_button">刷新</button>
+          <button id="refresh_button" @click="refreshPage">刷新</button>
         </div>
         <Alert>
           为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。
@@ -536,6 +536,10 @@
       this.listDisk()
     },
     methods: {
+      /* 刷新页面 */
+      refreshPage () {
+        this.listDisk()
+      },
       // 验证新建磁盘的表单
       _checkNewForm(){
         this.$refs.newDisk.validate((valid) => {
@@ -574,7 +578,9 @@
             this.diskData = response.data.result
             this.diskSelection = null
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -593,8 +599,9 @@
             }
           })
         } else {
-          this.errorMessage = '该硬盘当前状态下不能挂载主机'
-          this.showModal.error = true
+          this.$message.error({
+            content: '该硬盘当前状态下不能挂载主机'
+          })
         }
       },
       // 从主机中卸载磁盘
@@ -605,8 +612,9 @@
           this.diskName = this.operand.diskname
           this.hostName = this.operand.mountonname
         } else {
-          this.errorMessage = '该硬盘没有挂载主机，无法卸载'
-          this.showModal.error = true
+          this.$message.error({
+            content: '该硬盘没有挂载主机，无法卸载'
+          })
         }
       },
       // 新建磁盘价格查询
@@ -628,17 +636,21 @@
               this.coupon = 0
             }
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       }),
       // 磁盘扩容价格查询
       queryDiskCost: debounce(500, function () {
-        axios.get(`Disk/UpDiskConfigCost.do?diskId=${this.operand.id}&diskSize=${this.dilatationForm.diskSize}&zoneId=${this.operand.zoneid}`).then(response => {
+        axios.get(`Disk/UpDiskConfigCost.do?diskId=${this.operand.diskid}&diskSize=${this.dilatationForm.diskSize}&zoneId=${this.operand.zoneid}`).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskSizeExpenses = response.data.result
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       }),
@@ -650,7 +662,9 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -660,23 +674,27 @@
       },
       // 打开扩容模态框
       dilatationDisk(data){
-        if (data.status === 1) {
+        if (data.status == 1) {
           this.operand = data
           this.dilatationForm.diskSize = this.operand.disksize
           this.dilatationForm.minDiskSize = this.dilatationForm.diskSize
           this.showModal.dilatationDisk = true
         } else {
-          this.$error('error', '该硬盘当前状态下不能扩容')
+          this.$message.error({
+            content: '该硬盘当前状态下不能扩容'
+          })
         }
       },
       // 修改磁盘名称弹出模态框
       modificationDisk(data){
-        if (data.status === 1) {
+        if (data.status == 1) {
           this.operand = data
           this.showModal.modificationDisk = true
           this.diskName = this.operand.diskname
         } else {
-          this.$error('error', '该硬盘当前状态下不能修改')
+          this.$message.error({
+            content: '该硬盘当前状态下不能修改'
+          })
         }
       },
       // 删除跳转到卸载模态框
@@ -698,9 +716,9 @@
             this.showModal.deleteDisk = true
             this.diskName = this.diskSelection.diskname
           } else {
-            // 包年包月磁盘无法删除
-            this.errorMessage = '包年包月资费资源无法删除'
-            this.showModal.error = true
+            this.$message.error({
+              content: '包年包月资费资源无法删除'
+            })
           }
         }
       },
@@ -728,13 +746,15 @@
               duration: 5
             })
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
       /* 确认修改磁盘名称 */
       modificationDisk_ok(){
-        this.$http.get('Disk/updateDisk.do?diskId=' + this.operand.diskid + '&name=' + this.diskName).then(response => {
+        this.$http.get('Disk/updateDisk.do?diskId=' + this.operand.diskid + '&diskName=' + this.diskName).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success({
               content: response.data.message,
@@ -743,7 +763,9 @@
             this.showModal.modificationDisk = false
             this.listDisk()
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -763,7 +785,9 @@
             })
             this.listDisk()
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -783,7 +807,9 @@
               duration: 5
             })
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -794,18 +820,22 @@
             // this.$store.commit('setSelect', 'order')
             this.$router.push('order')
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
       /* 创建磁盘备份前的方法 （判断是否可以创建） */
       beforeCreateDiskBackup(data) {
-        if (data.status === 1) {
+        if (data.status == 1) {
           this.backupForDiskName = data.diskname
           this.operand = data
           this.showModal.createDiskBackup = true
         } else {
-          this.$error('error', '该硬盘当前状态下不能备份')
+          this.$message.error({
+            content: '该硬盘当前状态下不能备份'
+          })
         }
       },
       /* 确认创建磁盘备份 */
@@ -816,7 +846,9 @@
             this.$Message.info(response.data.message)
             this.$router.push('diskBackup')
           } else {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },

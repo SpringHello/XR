@@ -20,8 +20,8 @@
           </TabPane>
           <TabPane label="自有镜像">
             <div class="operator-bar">
-              <Button type="primary" @click="showModal.createMirror = true">创建镜像</Button>
-              <Button type="primary" @click="createHost">生成主机</Button>
+              <Button type="primary" @click="showModal.createMirror = true">制作镜像</Button>
+              <!-- <Button type="primary" @click="createHost">生成主机</Button> -->
               <Button type="primary" @click="deleteSelection">删除</Button>
             </div>
             <Table :columns="ownColumns" :data="ownData" @radio-change="selectionsChange" :type="selection"></Table>
@@ -59,6 +59,48 @@
       </Button>
     </div>
     </Modal>
+    <!-- 修改镜像弹窗 -->
+    <Modal
+      scrollable=false
+    v-model="showModal.modify"
+    title="修改镜像"
+    @on-ok="mirrorModify">
+    <Form :model="mirrorModifyForm" :label-width="80">
+      <FormItem label="镜像名称">
+        <Input v-model="mirrorModifyForm.name" placeholder="小于20位数字或字母小于20位数字或字母" style="width: 300px"></Input>
+      </FormItem>
+      <FormItem label="备注">
+        <Input v-model="mirrorModifyForm.remarks" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
+               placeholder="小于20个字"></Input>
+      </FormItem>
+    </Form>
+    <div slot="footer">
+      <Button type="ghost" @click="this.showModal.modify=false">取消</Button>
+      <Button type="primary"
+              :disabled="mirrorModifyForm.name==''||mirrorModifyForm.remarks==''"
+              @click="mirrorModify">确认修改
+      </Button>
+    </div>
+    </Modal>
+    <!-- 制作镜像提醒弹窗 -->
+    <Modal v-model="showModal.creatMirrorhint" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24">为避免数据丢失，我们将在制作镜像前关闭该云主机。您可以选择开机状态制作镜像，但是会存在数据丢失的风险。</p>
+          <RadioGroup v-model="creatMirrorhint" vertical>
+              <Radio label="1">同意制作镜像</Radio>
+              <Radio label="0">保持开机制作镜像（谨慎选择）</Radio>
+        </RadioGroup>
+        </div>
+        
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.creatMirrorhint=false">取消</Button>
+        <Button type="primary" @click="rollbackSubmit">确定</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -69,8 +111,11 @@
     data() {
       return {
         showModal: {
-          createMirror: false
+          createMirror: false,
+          modify: false,
+          creatMirrorhint: false
         },
+        creatMirrorhint: '1',
         filterKey: '全部',
         filterList: ['全部', 'centos', 'debian', 'ubuntu', 'window'],
         selections: null,  // 改为单选
@@ -163,13 +208,11 @@
         ownColumns: [
           {
             type: 'radio',
-            width: 60,
             align: 'center'
           },
           {
             title: '镜像名称',
             align: 'center',
-            width: 240,
             render: (h, params) => {
               return h('Tooltip', {
                 props: {
@@ -184,7 +227,6 @@
           {
             title: '镜像描述',
             align: 'center',
-            width: 240,
             ellipsis: true,
             render: (h, params) => {
               return h('Tooltip', {
@@ -200,7 +242,6 @@
           {
             title: '镜像平台',
             align: 'center',
-            width: 240,
             render: (h, params) => {
               if (params.row.status == 2) {
                 return '创建中'
@@ -246,15 +287,54 @@
           {
             title: '创建时间',
             align: 'center',
-            width: 160,
             key: 'createtime'
-          }
+          },
+          {
+            title: '操作',
+              key: 'action',
+              render: (h, params) => {
+                return h('div', [h('span', {
+                  style: {
+                      marginRight: '5px',
+                      color: '#2A99F2',
+                      cursor: 'point'
+                  },
+                  on: {
+                      click: () => {
+                        // let mirror = this.select
+                        // sessionStorage.setItem('zoneid', mirror.zoneid)
+                        // sessionStorage.setItem('templateid', mirror.systemtemplateid)
+                        // sessionStorage.setItem('ostypename', mirror.ostypename)
+                        // sessionStorage.setItem('templatename', mirror.templatename)
+                        // this.$store.commit('setSelect', 'price')
+                        this.$router.push({path: 'price'})
+                      }
+                  }
+              }, '生成主机'),
+              h('span', {
+                  style: {
+                      color: '#2A99F2',
+                      cursor: 'point'
+                  },
+                  on: {
+                      click: () => {
+                        // this.remove(params.index)
+                        this.showModal.modify = true
+                      }
+                  }
+              }, '修改')]);
+              }
+            }
         ],
         hostName: [],
         formItem: {
           vmInfo: '',
           mirrorName: '',
           mirrorDescription: ''
+        },
+        mirrorModifyForm: {
+          name: '',
+          remarks: ''
         }
       }
     },
@@ -294,7 +374,10 @@
       this.inter()
     },
     methods: {
-      filter(value) {
+      mirrorModify() {
+        this.showModal.modify = false
+      },
+       filter(value) {
         if (value != '全部') {
           this.systemData = this.originData.filter((item) => {
             return item.ostypename.toLowerCase().includes(value)
@@ -331,32 +414,31 @@
         console.log(select)
         this.select = select
       },
-      createHost() {
-        if (this.selections == null) {
-          this.$Message.warning('请选择一个镜像')
-          return
-        }
-        let mirror = this.selections
-        sessionStorage.setItem('zoneid', mirror.zoneid)
-        sessionStorage.setItem('templateid', mirror.systemtemplateid)
-        sessionStorage.setItem('ostypename', mirror.ostypename)
-        sessionStorage.setItem('templatename', mirror.templatename)
-        this.$store.commit('setSelect', 'new')
-        this.$router.push({path: 'new'})
-      },
+      // createHost() {
+      //   if (this.selections == null) {
+      //     this.$Message.warning('请选择一个镜像')
+      //     return
+      //   }
+      //   let mirror = this.selections
+      //   sessionStorage.setItem('zoneid', mirror.zoneid)
+      //   sessionStorage.setItem('templateid', mirror.systemtemplateid)
+      //   sessionStorage.setItem('ostypename', mirror.ostypename)
+      //   sessionStorage.setItem('templatename', mirror.templatename)
+      //   this.$store.commit('setSelect', 'new')
+      //   this.$router.push({path: 'price'})
+      // },
       createHostBySystem() {
         if (this.select == null) {
           this.$Message.warning('请选择一个镜像')
           return
         }
-
         let mirror = this.select
         sessionStorage.setItem('zoneid', mirror.zoneid)
         sessionStorage.setItem('templateid', mirror.systemtemplateid)
         sessionStorage.setItem('ostypename', mirror.ostypename)
         sessionStorage.setItem('templatename', mirror.templatename)
         this.$store.commit('setSelect', 'new')
-        this.$router.push({path: 'new'})
+        this.$router.push({path: 'price'})
       },
       deleteSelection() {
         if (this.selections == null) {
@@ -389,7 +471,7 @@
       },
       ok() {
         this.showModal.createMirror = false
-        var url = `Snapshot/createTemplate.do?rootdiskid=${this.formItem.vmInfo.split('#')[0]}&name=${this.formItem.mirrorName}&discript=${this.formItem.mirrorDescription}&zoneid=${this.formItem.vmInfo.split('#')[1]}`
+        var url = `Snapshot/createTemplate.do?rootdiskid=${this.formItem.vmInfo.split('#')[0]}&name=${this.formItem.mirrorName}&discript=${this.formItem.mirrorDescription}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.ownData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
