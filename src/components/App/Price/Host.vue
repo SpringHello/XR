@@ -9,7 +9,7 @@
     <div class="content">
       <!--区域选择-->
       <div class="region">
-        <h3 style="margin-top: 0">区域选择</h3>
+        <h3 style="margin-top: 0">区域选择{{$route.query.templateid}}</h3>
         <div class="config-button">
           <button v-for="item in zoneList" :class="{select:item.zoneid==zone}" @click="zone=item.zoneid">
             {{item.zonename}}
@@ -69,17 +69,26 @@
               镜像+应用
             </button>
             <button :class="{select:mirror=='UHub'}" @click="mirror='UHub',mirrorType='Windows'">公共镜像</button>
-            <button :class="{select:mirror=='customImage',disabled:userInfo==null}"
-                    @click="mirror='customImage',mirrorType=''" :disabled="userInfo==null">自定义镜像
+            <button :class="{select:mirror=='customMirror',disabled:userInfo==null}"
+                    @click="mirror='customMirror',mirrorType=''">自定义镜像
             </button>
           </div>
-          <div class="config-button public-image" style="margin-left: 103px;" v-if="mirror=='UHub'">
-            <div v-for="(item,index) in system" :key="index" class="button-col">
-              <button v-for="(content,index) in item" :key="index" @click="publicImage(content)"
-                      :class="{select:pImagename==content.templatedescript}">{{content.templatedescript}}
-              </button>
-            </div>
+         <!-- 公共镜像列表 -->
+        <div class="config-button public-image" style="margin-left: 103px;" v-if="mirror=='UHub'">
+          <div v-for="(item,index) in pubilcSystem" :key="index" class="button-col">
+            <button v-for="(content,index) in item" :key="index" @click="publicImage(content)"
+                    :class="{select:osId==content.systemtemplateid}">{{content.templatename}}
+            </button>
           </div>
+        </div>
+        <!-- 自有镜像列表 -->
+        <div class="config-button public-image" style="margin-left: 103px;" v-if="mirror=='customMirror'">
+          <div v-for="(item,index) in ownSystem" :key="index" class="button-col">
+            <button v-for="(content,index) in item" :key="index" @click="publicImage(content)"
+                    :class="{select:osId==content.systemtemplateid}">{{content.templatename}}
+            </button>
+          </div>
+        </div>
           <div class="configMirror-button" v-if="mirror=='imageApplication'">
             <button v-for="item in mirrorConfigList" :class="{select:item.value==mirrorType}"
                     @click="mirrorType=item.value">
@@ -252,17 +261,27 @@
           <button :class="{select:mirror=='imageApplication'}" @click="mirror='imageApplication',mirrorType='1'">镜像+应用
           </button>
           <button :class="{select:mirror=='UHub'}" @click="mirror='UHub',mirrorType='Windows'">公共镜像</button>
-          <button :class="{select:mirror=='customImage',disabled:userInfo==null}"
-                  @click="mirror='customImage',mirrorType=''" :disabled="userInfo==null">自定义镜像
+          <button :class="{select:mirror=='customMirror',disabled:userInfo==null}"
+                  @click="mirror='customMirror',mirrorType=''" >自定义镜像
           </button>
         </div>
+        <!-- 公共镜像列表 -->
         <div class="config-button public-image" style="margin-left: 103px;" v-if="mirror=='UHub'">
-          <div v-for="(item,index) in system" :key="index" class="button-col">
+          <div v-for="(item,index) in pubilcSystem" :key="index" class="button-col">
             <button v-for="(content,index) in item" :key="index" @click="publicImage(content)"
-                    :class="{select:pImagename==content.templatedescript}">{{content.templatedescript}}
+                    :class="{select:osId==content.systemtemplateid}">{{content.templatename}}
             </button>
           </div>
         </div>
+        <!-- 自有镜像列表 -->
+        <div class="config-button public-image" style="margin-left: 103px;" v-if="mirror=='customMirror'">
+          <div v-for="(item,index) in ownSystem" :key="index" class="button-col">
+            <button v-for="(content,index) in item" :key="index" @click="publicImage(content)"
+                    :class="{select:osId==content.systemtemplateid}">{{content.templatename}}
+            </button>
+          </div>
+        </div>
+
         <div class="configMirror-button" v-if="mirror=='imageApplication'">
           <button v-for="item in mirrorConfigList" :class="{select:item.value==mirrorType}"
                   @click="mirrorType=item.value">
@@ -410,9 +429,9 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import $store from '../../../vuex'
   import regExp from '../../../util/regExp'
-
+  import $store from '@/vuex'
+  import axios from 'axios'
   var debounce = require('throttle-debounce/debounce')
   var messageMap = {
     loginname: {
@@ -428,11 +447,33 @@
   }
   export default {
     data() {
+      var zone = '', osId = '', osType = '', os = '', privateNet = ''
+      var CPUNum = 1, RAMSize = 1, diskSize = 20, networkSize = 1, pane = '标准主机';
+      if (sessionStorage.getItem('over2new')) {
+        zone = sessionStorage.getItem('over2new')
+      }
+      if (sessionStorage.getItem('ipsegmentid')) {
+        zone = sessionStorage.getItem('zoneid')
+        privateNet = sessionStorage.getItem('ipsegmentid') + '#' + sessionStorage.getItem('ipsegment')
+        pane = '定制主机'
+      } else if (sessionStorage.getItem('zoneid')) {
+        zone = sessionStorage.getItem('zoneid')
+        osId = sessionStorage.getItem('templateid')
+        osType = sessionStorage.getItem('ostypename')
+        os = sessionStorage.getItem('templatename')
+      }
+      if (sessionStorage.getItem('cpu')) {
+        CPUNum = sessionStorage.getItem('cpu')
+        RAMSize = sessionStorage.getItem('memory')
+        diskSize = Number.parseInt(sessionStorage.getItem('disk'))
+        networkSize = Number.parseInt(sessionStorage.getItem('bandwith'))
+        pane = '定制主机'
+      }
+      sessionStorage.clear()
       return {
-        // 产品类型
-        pImagename: 'windows-2008-64',
         osId: '',
-        system: '',
+        pubilcSystem: '',
+        ownSystem: '',
         productList: [
           {
             label: '云主机',
@@ -622,21 +663,74 @@
     },
     created() {
       this.zoneList = $store.state.zoneList
+      // console.log(this.zoneList)
       this.zone = $store.state.zoneList[0].zoneid
       if ($store.state.userInfo) {
         this.userInfo = $store.state.userInfo
       }
       this.queryQuickHost()
-      //获取公共镜像
-      var url11 = `information/listTemplates.do?user=0&zoneid=${this.zone} `
-      this.$http.get(url11).then(response => {
-        var system = response.data.result
-        this.osId = system.window[0].systemtemplateid
-        this.system = system
+      // 获取公共镜像
+      this.$http.get(`information/listTemplates.do?user=0&zoneid=${this.zone}`).then(response => {
+        var responseData = response.data.result
+        this.pubilcSystem = responseData
+        this.osId = '6314094d-50fe-4659-8e36-dab9aeacbe85'
       })
+      // 获取自有镜像
+      this.$http.get(`information/listTemplates.do?user=1&zoneid=${this.zone}`).then(response => {
+        var responseData = response.data.result
+        this.ownSystem = responseData
+      })
+      
+            // if (this.$route.query.zoneid) {
+            //   this.zone = this.$router.query.zoneid
+            // }
+            // 镜像id
+            if (this.$route.query.templateid) {
+              // //公共镜像
+              // this.mirror = 'UHub'
+              // // 自定义镜像
+              // this.mirror = 'customMirror'
+              this.osId = this.$route.query.templateid
+              console.log(this.osId)
+              console.log(this.$route.query.templatename)
+            }
+            console.log(this.osId)
+            // 镜像名称
+            // if (this.$route.query.templatename) {
+            //   this.zone = this.$router.query.zoneid
+            // }
+
+
+      // 镜像生成主机，传入的参数
+      // var zone = '', osId = '', osType = '', os = '', privateNet = ''
+      // var CPUNum = 1, RAMSize = 1, diskSize = 20, networkSize = 1, pane = '标准主机';
+      // if (sessionStorage.getItem('over2new')) {
+      //   zone = sessionStorage.getItem('over2new')
+      // }
+      // if (sessionStorage.getItem('ipsegmentid')) {
+      //   zone = sessionStorage.getItem('zoneid')
+      //   privateNet = sessionStorage.getItem('ipsegmentid') + '#' + sessionStorage.getItem('ipsegment')
+      //   pane = '定制主机'
+      // } else if (sessionStorage.getItem('zoneid')) {
+      //   zone = sessionStorage.getItem('zoneid')
+      //   osId = sessionStorage.getItem('templateid')
+      //   osType = sessionStorage.getItem('ostypename')
+      //   os = sessionStorage.getItem('templatename')
+      // }
+      // if (sessionStorage.getItem('cpu')) {
+      //   CPUNum = sessionStorage.getItem('cpu')
+      //   RAMSize = sessionStorage.getItem('memory')
+      //   diskSize = Number.parseInt(sessionStorage.getItem('disk'))
+      //   networkSize = Number.parseInt(sessionStorage.getItem('bandwith'))
+      //   pane = '定制主机'
+      // }
     },
     mounted() {
-
+      this.osId = this.$route.query.templateid
+      // console.log('121323432')
+      // console.log(this.$route.query)
+      // console.log(this.$route.query.templateid)
+      // console.log(this.$route.query.templatename)
     },
     methods: {
       /* 切换到自定义 */
@@ -685,7 +779,7 @@
             timeType: this.timeType,
             time: this.time + '',
             net: 'no',
-            mirror: this.mirror === 'imageApplication' ? 'imageApplication' : this.mirror === 'UHub' ? 'UHub' : 'customImage',
+            mirror: this.mirror === 'imageApplication' ? 'imageApplication' : this.mirror === 'UHub' ? 'UHub' : 'customMirror',
             mirrorType: this.mirrorType,
             config: this.quickConfig,
             cost: this.quickTotalCost,
@@ -701,7 +795,7 @@
             timeType: this.timeType,
             time: this.time + '',
             net: this.private.substring(0, 2),
-            mirror: this.mirror === 'imageApplication' ? 'imageApplication' : this.mirror === 'UHub' ? 'UHub' : 'customImage',
+            mirror: this.mirror === 'imageApplication' ? 'imageApplication' : this.mirror === 'UHub' ? 'UHub' : 'customMirror',
             mirrorType: this.mirrorType,
             cpuNum: this.cpuNum + '',
             memorySize: this.memorySize + '',
@@ -717,12 +811,9 @@
           this.addButton = false
         }
       },
-      /* 立即购买 */
       publicImage(item) {
         this.osId = item.systemtemplateid
-        this.pImagename = item.templatedescript
         console.log(this.osId)
-        console.log(this.pImagename)
       },
       buyImmediately() {
         if (this.userInfo == null) {
@@ -1239,6 +1330,9 @@
       })
     },
     computed: {
+      templateid() {
+        // return this.$route.query.templateid
+      },
       /* 校检登录信息完整 */
       disabled() {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.agree && this.vailForm.loginname.warning == false)
