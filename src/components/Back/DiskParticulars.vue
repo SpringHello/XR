@@ -9,7 +9,7 @@
                 <Option v-for="item in diskList" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>-->
           <span>{{ diskInfo.diskname}}</span>
-          <button>刷新</button>
+      <!--    <button>刷新</button>-->
           <button style="margin-right: 10px" @click="$router.go(-1)">返回</button>
         </div>
         <div class="center">
@@ -30,7 +30,7 @@
         </div>
         <div class="footer">
           <button :class="{select:monitor}" @click="monitor=true">磁盘监控</button>
-          <button :class="{select:!monitor}" @click="monitor=false">备份管理</button>
+          <button :class="{select:!monitor}" @click="toBackupsManage">备份管理</button>
         </div>
       </div>
       <div id="content">
@@ -42,15 +42,52 @@
                       style="width: 50%;line-height: 12px;margin-left: 10px"></Progress>
             <span style="color: #2A99F2;cursor: pointer" @click="dilatationDisk">扩容</span>
           </div>
+          <div class="flex">
+            <div class="item">
+              <label>硬盘读写流量<span class="timeText"></span></label>
+              <div style="margin-top:10px;">
+                <Radio-group type="button">
+                  <Radio label="今天"></Radio>
+                  <Radio label="最近7天"></Radio>
+                  <Radio label="最近30天"></Radio>
+                </Radio-group>
+                <Radio-group v-model="rw.showType" type="button" style="float:right" @on-change="toggle('rw')">
+                  <Radio label="折线"></Radio>
+                  <Radio label="柱状图"></Radio>
+                </Radio-group>
+              </div>
+              <div style="width:1180px;position:relative;">
+                <chart :options="rwPolar"></chart>
+              </div>
+            </div>
+            <div class="item">
+              <label>硬盘读写IOPS<span class="timeText"></span></label>
+              <div style="margin-top:10px;">
+                <Radio-group type="button">
+                  <Radio label="今天"></Radio>
+                  <Radio label="最近7天"></Radio>
+                  <Radio label="最近30天"></Radio>
+                </Radio-group>
+                <Radio-group v-model="IOPS.showType" type="button" style="float:right" @on-change="toggle('IOPS')">
+                  <Radio label="折线"></Radio>
+                  <Radio label="柱状图"></Radio>
+                </Radio-group>
+
+              </div>
+              <div style="width:1180px;position:relative;">
+                <chart :options="IOPSPolar"></chart>
+              </div>
+            </div>
+          </div>
         </div>
         <!-- 磁盘备份管理 -->
         <div class="backupsManage" v-if="!monitor">
           <div class="operator-bar" style="margin: 0">
             <Button type="primary" @click="createDiskBackup">创建备份</Button>
-            <Button type="primary">删除备份</Button>
+            <Button type="primary" @click="deleteDiskBackup">删除备份</Button>
           </div>
           <div style="margin-top:10px">
-            <Table :columns="diskBackupsColumns" :data="diskBackupsData"></Table>
+            <Table :columns="diskBackupsColumns" :data="diskBackupsData" @radio-change="selectDiskBackups"></Table>
           </div>
         </div>
       </div>
@@ -63,7 +100,7 @@
       <div class="universal-modal-content-flex">
         <Form :model="diskForm" :rules="newRuleValidate" ref="newDisk">
           <Form-item label="硬盘名称" prop="diskName">
-            <Input v-model="diskForm.diskName" placeholder="小于20位数字或字母"></Input>
+            <Input v-model="diskForm.diskName" placeholder="请输入"></Input>
           </Form-item>
           <Form-item label="购买方式" prop="timeType">
             <Select v-model="diskForm.timeType" placeholder="请选择" @on-change="diskForm.timeValue=''">
@@ -83,14 +120,14 @@
           <Form-item label="购买数量">
             <div class="quantity">
               <p @click="reduce"><i></i></p>
-              <p style="width: 38px;cursor: auto;color:#2A99F2;margin:0 10px ">{{ quantity }}</p>
-              <p @click="quantity+=1"><i style="transform: translateX(-2px) rotate(311deg)"></i></p>
+              <p style="width: 38px;cursor: auto;color:#2A99F2;margin:0 10px ">{{ diskForm.quantity }}</p>
+              <p @click="diskForm.quantity+=1"><i style="transform: translateX(-2px) rotate(311deg)"></i></p>
             </div>
           </Form-item>
           <Form-item label="硬盘参数">
-            <p style="color: #999999;margin-bottom: 10px">磁盘类型：SSD</p>
-            <p style="color: #999999;margin-bottom: 10px">磁盘容量：40G</p>
-            <p style="color: #999999;">原始磁盘名称：原始磁盘名称</p>
+            <p style="color: #999999;margin-bottom: 10px">磁盘类型：{{ diskForm.diskType}}</p>
+            <p style="color: #999999;margin-bottom: 10px">磁盘容量：{{ diskForm.diskSize}}</p>
+            <p style="color: #999999;">原始磁盘名称：{{ diskForm.name }}</p>
           </Form-item>
         </Form>
         <div style="clear: both"></div>
@@ -113,21 +150,21 @@
       </p>
       <div class="universal-modal-content-flex">
         <Form :model="createBackupsForm" :rules="createBackupsRuleValidate" ref="createBackups">
-          <Form-item label="需要备份的磁盘" prop="disk">
-            <Select v-model="createBackupsForm.disk" placeholder="请选择">
-              <Option v-for="item in createBackupsForm.diskList" :value="item.value"
-                      :label="item.label" :key="item.value">
-                {{item.label }}
+          <Form-item label="需要备份的磁盘" prop="diskId">
+            <Select v-model="createBackupsForm.diskId" placeholder="请选择">
+              <Option v-for="item in createBackupsForm.diskList" :value="item.diskid"
+                      :key="item.diskid">
+                {{item.diskname }}
               </Option>
             </Select>
           </Form-item>
           <Form-item label="备份名称" prop="backupsName">
             <Input v-model="createBackupsForm.backupsName" placeholder="请输入。。。"></Input>
           </Form-item>
-          <p style="font-family: MicrosoftYaHei;font-size: 12px;line-height:20px;color: #999999;">
-            提示：云硬盘数据服务为每块磁盘提供<span
-            style="color:#2A99F2">8</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。</p>
         </Form>
+        <p style="font-family: MicrosoftYaHei;font-size: 12px;line-height:20px;color: #999999;">
+          提示：云硬盘数据服务为每块磁盘提供<span
+          style="color:#2A99F2">8</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。</p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.createDiskBackup = false">取消</Button>
@@ -179,78 +216,119 @@
   import {customTimeOptions} from '../../options'
   import debounce from 'throttle-debounce/debounce'
   import axios from 'axios'
+  import diskHistogram from '@/echarts/diskHistogram'
+  import diskOptions from '@/echarts/diskOptions'
+  var diskOptionsstr = JSON.stringify(diskOptions)
+  var diskHistogramstr = JSON.stringify(diskHistogram)
   export default{
     data(){
       return {
+        // 磁盘系列化对象
+        rwPolar: JSON.parse(diskOptionsstr),
+        IOPSPolar: JSON.parse(diskOptionsstr),
+        rw: {
+          showType: '折线'
+        },
+        IOPS: {
+          showType: '折线'
+        },
         // 用于切换磁盘监控和备份管理
         monitor: true,
         // 磁盘名称
         diskName: '测试',
         // 磁盘列表
-        diskList: [
-          {
-            label: '云主机',
-            value: 'hostPrice'
-          }, {
-            label: '云硬盘',
-            value: 'diskPrice'
-          }, {
-            label: '公网IP',
-            value: 'elasticIPPrice'
-          }],
+        diskList: [],
         // 磁盘利用率
         diskUtilization: 50,
         // 磁盘信息
         diskInfo: null,
         // 磁盘备份表头
+        // 磁盘备份表头
         diskBackupsColumns: [
           {
-            type: 'selection',
+            type: 'radio',
             width: 60,
             align: 'center'
           },
           {
             title: '备份名称',
             align: 'center',
-            width: 180,
-            render: (h, params) => {
-              return h('span', {
-                style: {
-                  color: '#2A99F2',
-                  cursor: 'pointer'
-                }
-              }, params.row.diskBackupsName)
-            }
+            key: 'snapshotname',
+            width: 180
           },
           {
             title: '状态',
             align: 'center',
-            width: 100
+            width: 100,
+            render: (h, params) => {
+              switch (params.row.status) {
+                case 1:
+                  return h('span', {}, '正常')
+                case -1:
+                  return h('span', {
+                    style: {
+                      color: '#EE4545'
+                    }
+                  }, '异常')
+                case 2:
+                  return h('div', {}, [h('Spin', {
+                    style: {
+                      display: 'inline-block',
+                      marginRight: '10px'
+                    }
+                  }), h('span', {}, '创建中')])
+              }
+            }
           },
           {
-            title: '备份策略',
-            align: 'center',
-            width: 230
-          },
-          {
-            title: '间隔类型',
-            align: 'center',
-            width: 130
-          },
-          {
-            title: '创建于',
+            title: '硬盘名称',
+            key: 'name',
             align: 'center',
             width: 160
           },
           {
-            title: '剩余保留时长',
+            title: '硬盘类型',
             align: 'center',
-            width: 140
+            width: 130,
+            render: (h, params) => {
+              const text = params.row.diskOffer === 'ssd' ? '超高性能型' : params.row.diskOffer === 'sas' ? '性能型' : '存储型'
+              return h('span', {}, text)
+            }
           },
+          {
+            title: '备份间隔',
+            align: 'center',
+            width: 130,
+            render: (h, params) => {
+              var text = '----'
+              switch (params.row.createway) {
+                case 'day':
+                  text = '每天'
+                  break
+                case 'week':
+                  text = '每周'
+                  break
+                case 'month':
+                  text = '每月'
+                  break
+              }
+              return h('span', {}, text)
+            }
+          },
+          {
+            title: '创建时间',
+            align: 'center',
+            key: 'addtime',
+            width: 165
+          },
+          /*        {
+           title: '剩余保留时长',
+           align: 'center',
+           width: 120
+           },*/
           {
             title: '操作',
             align: 'center',
-            width: 155,
             render: (h, params) => {
               return h('span', {
                 style: {
@@ -259,7 +337,7 @@
                 },
                 on: {
                   click: () => {
-                    this.createBackupsToDisk()
+                    this.createBackupsToDisk(params.row)
                   }
                 }
               }, '以备份新建磁盘')
@@ -267,9 +345,7 @@
           }
         ],
         // 磁盘备份数据
-        diskBackupsData: [
-          {}
-        ],
+        diskBackupsData: [],
         // 模态框
         showModal: {
           // 以备份创建磁盘
@@ -281,16 +357,23 @@
         },
         // 以备份创建磁盘表单
         diskForm: {
+          // 备份id
+          diskSnapshotId: '',
           diskName: '',
+          // 磁盘类型
           diskType: '',
-          diskArea: '',
           timeType: '',
           timeValue: '',
-          diskSize: 20
+          // 磁盘大小
+          diskSize: 0,
+          // 购买磁盘数量
+          quantity: 1,
+          // 备份的原磁盘名称
+          name: ''
         },
         // 时间配置对象
         customTimeOptions,
-        // 新建磁盘表单验证
+        // 以备份新建磁盘表单验证
         newRuleValidate: {
           diskName: [
             {required: true, message: '请输入磁盘名称', trigger: 'blur'}
@@ -310,24 +393,13 @@
         quantity: 1,
         // 新建备份表单
         createBackupsForm: {
-          disk: '',
-          diskList: [
-            {
-              label: '云硬盘1',
-              value: '1'
-            }, {
-              label: '云硬盘2',
-              value: '2'
-            }, {
-              label: '云硬盘3',
-              value: '3'
-            }
-          ],
+          diskId: '',
+          diskList: [],
           backupsName: ''
         },
         // 新建备份表单验证
         createBackupsRuleValidate: {
-          disk: [
+          diskId: [
             {required: true, message: '请选择需要备份的磁盘', trigger: 'change'}
           ],
           backupsName: [
@@ -342,11 +414,17 @@
           minDiskSize: 0
         },
         // 磁盘扩容价格
-        diskSizeExpenses: ''
+        diskSizeExpenses: '',
+        /* 单项磁盘备份选中值 */
+        diskBackupsSelection: null,
       }
     },
     created(){
       this.diskInfo = this.$route.query.data
+      this.rwPolar.series[0].data = [50, 20, 30, 60, 80, 100, 50, 70, 40, 20, 0, 40]
+      this.rwPolar.xAxis.data = ['00:00', '02:00', '04:00', '06:00', '08:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00']
+      this.IOPSPolar.series[0].data = [30, 50, 20, 40, 80, 60, 60, 70, 90, 100, 40, 10]
+      this.IOPSPolar.xAxis.data = ['00:00', '02:00', '04:00', '06:00', '08:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00']
     },
     methods: {
       // 验证以备份创建磁盘的表单
@@ -354,6 +432,7 @@
         this.$refs.newDisk.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用创建磁盘方法
+            this.createBackupsToDisk_ok()
           }
         })
       },
@@ -362,27 +441,56 @@
         this.$refs.createBackups.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用创建备份方法
+            this.createDiskBackup_ok()
           }
         })
       },
       /* 购买数量操作 */
       reduce () {
-        this.quantity -= 1
-        switch (this.quantity) {
+        this.diskForm.quantity -= 1
+        switch (this.diskForm.quantity) {
           case 0:
-            this.quantity = 1
+            this.diskForm.quantity = 1
             break
           default:
             break
         }
       },
       /* 以备份创建新磁盘 */
-      createBackupsToDisk () {
+      createBackupsToDisk (data) {
         this.showModal.backupsToDisk = true
+        this.diskForm.name = data.name
+        this.diskForm.diskSize = data.disSize
+        this.diskForm.diskSnapshotId = data.snapshotid
+        this.diskForm.diskType = data.diskOffer === 'ssd' ? '超高性能型' : data.diskOffer === 'sas' ? '性能型' : '存储型'
+      },
+      /* 确认以备份创建新磁盘，跳转订单*/
+      createBackupsToDisk_ok () {
+        var diskType = this.diskForm.diskType === '超高性能型' ? 'ssd' : this.diskForm.diskType === '性能型' ? 'sas' : 'sata'
+        var url = `Disk/createVolume.do?diskSize=${this.diskForm.diskSize}&diskName=${this.diskForm.diskName}&diskOfferingId=${diskType}&timeType=${this.diskForm.timeType}&timeValue=${this.diskForm.timeValue || 1}&diskSnapshotId=${this.diskForm.diskSnapshotId}&isAutorenew=0&count=${this.diskForm.quantity}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push('order')
+          } else {
+            this.$error('error', response.data.message)
+          }
+        })
       },
       /* 创建磁盘备份 */
       createDiskBackup () {
+        this.createBackupsForm.diskList = []
         this.showModal.createDiskBackup = true
+        this.$http.get('Disk/listDisk.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            response.data.result.forEach((item) => {
+              if (item.status === 1) {
+                this.createBackupsForm.diskList.push(item)
+              }
+            })
+          } else {
+            this.$error('error', response.data.message)
+          }
+        })
       },
       // 打开扩容模态框
       dilatationDisk(){
@@ -398,6 +506,29 @@
           }
         })
       }),
+      // 新建磁盘价格查询
+      queryDiskPrice: debounce(500, function () {
+        this.$http.post('device/QueryBillingPrice.do', {
+          cpuNum: 0 + '',
+          memory: 0 + '',
+          diskSize: this.diskForm.diskSize + '',
+          zoneId: this.$store.state.zoneList[0].zoneid,
+          timeType: this.diskForm.timeType + '',
+          timeValue: this.diskForm.timeValue + '',
+          diskType: this.diskForm.diskType + ''
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.expenses = response.data.cost
+            if (response.data.coupon) {
+              this.coupon = response.data.coupon
+            } else {
+              this.coupon = 0
+            }
+          } else {
+            this.$error('error', response.data.message)
+          }
+        })
+      }),
       /* 确认扩容磁盘 */
       adjustDisk_ok(){
         this.$http.get('Disk/UpDiskConfig.do?diskid=' + this.diskInfo.diskid + '&disksize=' + this.dilatationForm.diskSize).then(response => {
@@ -406,6 +537,61 @@
             this.$router.push('order')
           }
         })
+      },
+      toggle (type) {
+        var polar = this[type].showType == '折线' ? JSON.parse(diskOptionsstr) : JSON.parse(diskHistogramstr)
+        polar.xAxis.data = this[type + 'Polar'].xAxis.data
+        polar.series[0].data = this[type + 'Polar'].series[0].data
+        this[type + 'Polar'] = polar
+      },
+      /* 点击磁盘备份按钮时调用列出备份列表 */
+      toBackupsManage () {
+        this.monitor = false
+        this.listDiskSnapshots()
+      },
+      /* 列出磁盘备份 */
+      listDiskSnapshots () {
+        var url = `Snapshot/listDiskSnapshots.do`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.diskBackupsData = response.data.result
+          } else {
+            this.$error('error', response.data.message)
+          }
+        })
+      },
+      /* 确认创建磁盘备份 */
+      createDiskBackup_ok() {
+        this.showModal.createDiskBackup = false
+        var url = `Snapshot/createDiskSnapshot.do?diskId=${this.createBackupsForm.diskId}&name=${this.createBackupsForm.backupsName}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.info(response.data.message)
+            this.listDiskSnapshots()
+          } else {
+            this.$error('error', response.data.message)
+          }
+        })
+      },
+      /* 删除磁盘备份 */
+      deleteDiskBackup () {
+        if (this.diskBackupsSelection) {
+          var url = `Snapshot/deleteDiskSnapshot.do?id=${this.diskBackupsSelection.id}&zoneId=${this.diskBackupsSelection.zoneid}`
+          axios.get(url).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.info(response.data.message)
+              this.listDiskSnapshots()
+            } else {
+              this.$error('error', response.data.message)
+            }
+          })
+        } else {
+          this.$Message.info('请选择需要删除的磁盘备份')
+        }
+      },
+      /* 选择磁盘备份 */
+      selectDiskBackups (currentRow) {
+        this.diskBackupsSelection = currentRow
       }
     },
     computed: {
@@ -429,6 +615,14 @@
       // 是否自动续费
       isautorenew () {
         return this.diskInfo.isautorenew === 1 ? '开' : '关'
+      },
+      // 该计算属性用于解决观测对象时currentValue与oldValue指向同一对象的问题，没有其他用处
+      copyDiskForm(){
+        var obj = {}
+        for (var i in this.diskForm) {
+          obj[i] = this.diskForm[i]
+        }
+        return obj
       }
     },
     watch: {
@@ -436,6 +630,20 @@
       'dilatationForm.diskSize'(){
         this.diskSizeExpenses = '正在计算'
         this.queryDiskCost()
+      },
+      // 观测计算属性变化，如果不是名称的变化则必须重新计算价格
+      // 新建磁盘价格计算
+      'copyDiskForm': {
+        handler: function (val, oldVal) {
+          if (val.timeType == 'current' || ((val.timeType && val.timeValue) && val.quantity)) {
+            if (val.diskName === oldVal.diskName) {
+              this.expenses = '正在计算'
+              this.coupon = 0
+              this.queryDiskPrice()
+            }
+          }
+        },
+        deep: true
       }
     }
   }
@@ -523,6 +731,63 @@
         font-size: 14px;
         color: rgba(17, 17, 17, 0.75);
       }
+    }
+    .flex {
+      margin-top: 50px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      .item {
+        width: 100%;
+        margin-bottom: 50px;
+        //height: 444px;
+        & > label {
+          font-family: "微软雅黑";
+          font-size: 16px;
+          color: rgba(17, 17, 17, 0.95);
+          line-height: 14px;
+          display: block;
+          padding-bottom: 12px;
+          border-bottom: 1px solid #E9E9E9;
+          .timeText {
+            font-family: MicrosoftYaHei;
+            font-size: 14px;
+            color: rgba(102, 102, 102, 0.75);
+            line-height: 25px;
+            float: right;
+          }
+        }
+        button {
+          font-size: 12px;
+          margin-bottom: 0px;
+          padding: 5px 15px;
+          vertical-align: bottom;
+          margin-right: 20px;
+          float: right;
+        }
+        #in-icon::before {
+          content: '';
+          width: 8px;
+          height: 8px;
+          background-color: #3DBD7D;
+          display: inline-block;
+          border-radius: 5px;
+          margin-right: 5px;
+        }
+        #out-icon::before {
+          content: '';
+          width: 8px;
+          height: 8px;
+          background-color: #2A99F2;
+          display: inline-block;
+          border-radius: 5px;
+          margin-right: 5px;
+        }
+      }
+    }
+    .echarts {
+      width: 98%;
+      height: 300px;
     }
   }
 </style>

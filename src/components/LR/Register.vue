@@ -1,10 +1,10 @@
 <template>
   <div class="login-wrapper">
-    <div class="wrapper" v-show="loginShow">
+    <div class="wrapper">
       <div class="wrapper-form">
-        <div class="banner">
+        <div class="banner" v-show="loginShow">
         </div>
-        <div class="login-form">
+        <div class="login-form" v-show="loginShow">
           <div class="head">
             <span>注册</span>
           </div>
@@ -28,6 +28,13 @@
                 <label :class="{close:form.showPassword}" @click="form.showPassword=!form.showPassword"></label>
               </div>
               <div style="position:relative">
+                <span>{{vailForm.code.info}}</span>
+                <input type="text" autocomplete="off" v-model="form.code" name="vailCode"
+                       :placeholder="form.codePlaceholder" @blur="vail('code')" @focus="focus('code')"
+                       @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
+                <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+              </div>
+              <div style="position:relative">
                 <span>{{vailForm.vailCode.info}}</span>
                 <input type="text" v-model="form.vailCode" name="vailCode" :placeholder="form.vailCodePlaceholder"
                        @blur="vail('vailCode')" @focus="focus('vailCode')" @input="isCorrect('vailCode')">
@@ -44,7 +51,7 @@
               style="color:#0EB4FA;cursor:pointer;" @click="showRules">《睿云用户使用协议》</span>
             </div>
             <div>
-              <router-link to="/login"><span style="color:#0EB4FA">已有帐号点击登录</span></router-link>
+              <router-link to="login"><span style="color:#0EB4FA">已有帐号点击登录</span></router-link>
             </div>
           </div>
         </div>
@@ -53,12 +60,12 @@
     <div class="rules" v-show="rulesShow">
       <div class="rulesContent">
         <p style="text-align:center"><strong style="font-size: 16px">新睿云业务服务协议</strong></p>
-        <p style="margin-top: 30px"><strong>本网站（www.xinruicloud.cn）所提供服务是由北京允睿讯通科技有限公司新睿云向本网站注册用户提供的云计算产品和相关服务，
+        <p style="margin-top: 30px"><strong>本网站（www.xrcloud.net）所提供服务是由北京允睿讯通科技有限公司新睿云向本网站注册用户提供的云计算产品和相关服务，
           详见本网站相关产品及服务介绍。本协议由您和北京允睿讯通科技有限公司签订。</strong></p>
         <p style="margin-top: 20px; text-indent:0em"><strong>第一条 总则</strong></p>
-        <p>1.1 北京允睿讯通科技有限公司（以下称“乙方”,网址：www.xinruicloud.cn）按照本协议的规定及不定期发布的操作规则向用户（以下称“甲方”）提供系列云产品及
+        <p>1.1 北京允睿讯通科技有限公司（以下称“乙方”,网址：www.xrcloud.net）按照本协议的规定及不定期发布的操作规则向用户（以下称“甲方”）提供系列云产品及
           云业务服务（以下简称“ 本服务”）。</p>
-        <p>1.2 甲方须同意: 乙方变更本服务或协议内容的，将在乙方本服务网络平台（www.xinruicloud.cn）（以下称“服务门户”）上以公告的方式予以公布，无需另行单独通知
+        <p>1.2 甲方须同意: 乙方变更本服务或协议内容的，将在乙方本服务网络平台（www.xrcloud.net）（以下称“服务门户”）上以公告的方式予以公布，无需另行单独通知
           甲方；甲方在乙方公告之日起5个工作日之内可以选择继续使用原业务或调整后的本服务；若用户在本协议内容公告变更后继续使用本服务，表示用户已充分阅读、理解、接
           受并将遵守修改后的协议内容；若用户不同意修改后的内容，应告知乙方并终止使用本服务。</p>
         <p>1.3 甲方在使用乙方提供的各项服务之前，应仔细阅读本服务协议，如甲方不同意本服务协议及/或随时对其的修改，请停止使用乙方提供的服务。</p>
@@ -311,11 +318,26 @@
         </div>
       </div>
     </div>
+    <div class="foot-bar">
+      <div style="width:1200px;height:100%;margin:0px auto;">
+        <span>copyright © 2014-2017</span>
+        <span>北京允睿讯通科技有限公司</span>
+        <span style=" cursor:pointer;">京ICP备15035854号</span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922"
+           style=" cursor:pointer;float:none">
+          <img src="../../assets/img/app/record.png" style="vertical-align: middle">京公网安备11010802024922号
+        </a>
+        <a>
+          <router-link to="/about">关于我们</router-link>
+        </a>
+      </div>
+    </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import regExp from '../../util/regExp'
+  import axios from 'axios'
+  import regExp from '@/util/regExp'
   var messageMap = {
     loginname: {
       placeholder: '登录 邮箱/手机号',
@@ -324,24 +346,31 @@
     },
     password: {
       placeholder: '请输入至少8位包含字母与数字的密码',
-      errorMessage: '您设定的密码强度不足'
+      errorMessage: '您设定的密码强度不足',
     },
     vailCode: {
       placeholder: '请输入您收到的验证码',
-      errorMessage: '验证码错误'
-    }
+      errorMessage: '验证码错误',
+    },
+    code: {
+      placeholder: '请输入验证码',
+      errorMessage: '验证码错误',
+    },
   }
   export default{
-    data () {
+    data(){
       return {
+        imgSrc: 'user/getKaptchaImage.do',
         form: {
           loginname: '',
           password: '',
           vailCode: '',
+          code: '',
           showPassword: false,
           loginnamePlaceholder: '登录邮箱/手机号',
           passwordPlaceholder: '请输入至少8位包含字母与数字的密码',
-          vailCodePlaceholder: '请输入您收到的验证码'
+          vailCodePlaceholder: '请输入您收到的验证码',
+          codePlaceholder: '请输入验证码'
         },
         vailForm: {
           loginname: {
@@ -352,6 +381,9 @@
             info: ''
           },
           vailCode: {
+            info: ''
+          },
+          code: {
             info: ''
           }
         },
@@ -364,20 +396,21 @@
         countdown: 60
       }
     },
-    created () {
+    created(){
 
     },
     methods: {
-      vail (field) {
-        var text = this.form[field]
+      vail(field){
+        var text = this.form[field];
         if (text == '') {
           this.vailForm[field].info = ''
           this.form[field + 'Placeholder'] = messageMap[field].placeholder
+          return
         }
 
-        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true
+        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
         if (!isLegal) {
-          this.vailForm.loginname.message.unshift(messageMap[field].errorMessage)
+          this.vailForm.loginname.message.unshift(messageMap[field].errorMessage);
           this.vailForm.loginname.info = ''
         } else {
           this.vailForm.loginname.message = this.vailForm.loginname.message.filter(item => {
@@ -386,23 +419,55 @@
           if (this.vailForm.loginname.message.length == 0) {
             this.vailForm.loginname.info = messageMap.loginname.placeholder
           }
+          if (field == 'loginname') {
+            axios.get('user/isRegister.do?username=' + this.form.loginname).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+
+              } else {
+                this.vailForm.loginname.message.unshift(messageMap[field].warnMessage)
+                this.vailForm.loginname.info = ''
+              }
+            })
+          }
         }
       },
-      focus (field) {
-        var text = this.form[field]
+      focus(field){
+        var text = this.form[field];
         this.form[field + 'Placeholder'] = ''
         if (text == '') {
           this.vailForm[field].info = messageMap[field].placeholder
+          return
         }
+        //var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
+
+        /*if (!isLegal) {
+         this.vailForm[field].info = messageMap[field].errorMessage;
+         } else {
+         this.$http.get('user/isRegister.do?username=' + this.form.loginname).then(response => {
+         if (response.status == 200 && response.data.status == 1) {
+         this.vailForm[field].message = messageMap[field].placeholder;
+         this.vailForm[field].warning = false;
+         } else {
+         this.vailForm[field].message = messageMap[field].warnMessage;
+         this.vailForm[field].warning = true;
+         }
+         })
+         }*/
       },
-      isCorrect (field) {
+      isCorrect(field){
         if (field == 'vailCode') {
+          //this.vailForm.vailCode.message = messageMap.vailCode.placeholder
           this.vailForm.vailCode.warning = false
         } else if (field == 'loginname') {
+          this.vailForm.loginname.message = this.vailForm.loginname.message.filter(item => {
+            return item != messageMap.loginname.warnMessage
+          })
           if (regExp.emailVail(this.form[field])) {
             this.vailForm.loginname.message = this.vailForm.loginname.message.filter(item => {
               return item != messageMap.loginname.errorMessage
             })
+          }
+          if (this.vailForm.loginname.message.length == 0) {
             this.vailForm.loginname.info = messageMap.loginname.placeholder
           }
         } else {
@@ -410,28 +475,31 @@
             this.vailForm.loginname.message = this.vailForm.loginname.message.filter(item => {
               return item != messageMap.password.errorMessage
             })
-            if (this.form.loginname != '') {
+            if (this.form.loginname != '')
               this.vailForm.loginname.info = messageMap.loginname.placeholder
-            }
           }
         }
       },
-      toggle () {
-        this.agree = !this.agree
+      toggle(){
+        this.agree = !this.agree;
       },
-      submit () {
-        this.$http.get('user/register.do?username=' + this.form.loginname + '&password=' + this.form.password + '&code=' + this.form.vailCode).then(response => {
+      submit(){
+        axios.get('user/register.do?username=' + this.form.loginname + '&password=' + this.form.password + '&code=' + this.form.vailCode).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            console.log(response)
+            console.log(response);
             this.$Message.success({
               content: '注册成功',
               duration: 3
-            })
-            this.$router.push('login')
+            });
+            this.$router.push('login');
           }
         })
       },
-      sendCode () {
+      sendCode(){
+        if (this.form.code.length != 4) {
+          this.$Message.info('请输入正确的验证码')
+          return
+        }
         if (!regExp.emailVail(this.form.loginname)) {
           this.$Message.info('请输入正确的邮箱/手机号')
           return
@@ -439,36 +507,39 @@
         if (regExp.phoneVail(this.form.loginname)) {
           this.isemail = '0'
         }
-        this.codePlaceholder = '60s'
-        var inter = setInterval(() => {
-          this.countdown--
-          this.codePlaceholder = this.countdown + 's'
-          if (this.countdown == 0) {
-            clearInterval(inter)
-            this.countdown = 60
-            this.codePlaceholder = '发送验证码'
-          }
-        }, 1000)
-        this.$http.get('user/code.do?aim=' + this.form.loginname + '&type=' + this.type + '&isemail=' + this.isemail).then(response => {
+        this.codePlaceholder = '验证码发送中'
+        axios.get('user/code.do?aim=' + this.form.loginname + '&type=' + this.type + '&isemail=' + this.isemail + '&vailCode=' + this.form.code).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success({
               content: '验证码发送成功',
               duration: 5
-            })
+            });
+            this.codePlaceholder = '60s'
+            var inter = setInterval(() => {
+              this.countdown--
+              this.codePlaceholder = this.countdown + 's'
+              if (this.countdown == 0) {
+                clearInterval(inter)
+                this.countdown = 60
+                this.codePlaceholder = '发送验证码'
+              }
+            }, 1000)
+          } else {
+            this.codePlaceholder = '发送验证码'
           }
         })
       },
-      showRules () {
-        this.loginShow = false
-        this.rulesShow = true
+      showRules(){
+        this.loginShow = false;
+        this.rulesShow = true;
       },
-      allowRules () {
-        this.loginShow = true
-        this.rulesShow = false
+      allowRules(){
+        this.loginShow = true;
+        this.rulesShow = false;
       }
     },
     computed: {
-      disabled () {
+      disabled(){
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.agree && this.vailForm.loginname.message.length == 0)
       }
     }
@@ -478,6 +549,7 @@
 <style rel="stylesheet/less" lang="less" scoped>
   .login-wrapper {
     width: 100%;
+    background: #F4F4F4;
     .header {
       width: 100%;
       height: 70px;
@@ -492,10 +564,8 @@
         .logo {
           width: 130px;
           height: 36px;
-          background-color: white;
           margin: auto 0px;
-          background: url(../../assets/img/app/logo.gif) no-repeat center;
-          background-size: 110% 260%;
+          background: #ffffff url(../../assets/img/app/logo.gif) no-repeat center;
           background-position-y: -29px;
         }
         .home {
@@ -523,7 +593,7 @@
       }
     }
     .banner {
-      background: url(../../assets/img/login/login-banner.jpg) no-repeat center;
+      background: url(../../assets/img/app/loginbanner.jpg) no-repeat center;
       height: 493px;
       width: 730px;
     }
@@ -532,7 +602,7 @@
       height: 493px;
       background: #FFFFFF;
       border: 1px solid rgba(161, 161, 161, 0.00);
-      box-shadow: 0 2px 24px 0 #4990E2;
+      box-shadow: 0 2px 24px 0 rgba(126, 126, 126, 0.35);
       .disabled {
         cursor: not-allowed;
       }
@@ -552,7 +622,7 @@
         }
       }
       .body {
-        padding-bottom: 35px;
+        margin-bottom: 20px;
         form {
           margin-top: 5px;
         }
@@ -566,7 +636,7 @@
           width: 80%;
           margin: 0px auto;
           display: block;
-          margin-bottom: 20px;
+          margin-bottom: 10px;
           &:-webkit-autofill {
             -webkit-box-shadow: 0 0 0px 1000px white inset;
           }
@@ -701,13 +771,12 @@
       }
     }
     .rules {
-      //position: absolute;
-      //top: 9%;
-      margin:45px auto 0px;
-      height: 750px;
+      position: absolute;
+      top: 9%;
+      height: 875px;
       width: 750px;
       background: white;
-      //left: 30%;
+      left: 30%;
       overflow-y: scroll;
       .rulesContent {
         margin: 20px 75px 75px 60px;

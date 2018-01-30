@@ -152,22 +152,19 @@
       </div>
     </Modal>
     <!-- 删除磁盘模态框 -->
-    <Modal v-model="showModal.deleteDisk" width="550" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: MicrosoftYaHei;font-size: 16px;color: #666666;line-height: 24px;margin-top: 10px">
-        删除硬盘
+    <Modal v-model="showModal.deleteDisk" width="390" :scrollable="true">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>删除硬盘</strong>
+          <p class="lh24"><span style="color: #2A99F2 ">（{{ diskName }}）</span>删除之后将进入回收站，新睿云将为您保留24小时，在24小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。
+          </p>
+        </div>
       </div>
-      <div style="padding-bottom: 30px">
-        <p style="font-family: MicrosoftYaHei;font-size: 14px;color: #666666;">
-          <span style="color:#2d8cf0;">“{{ diskName }}”</span>删除之后将进入回收站，新睿云将为您保留24小时，在24小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。
-        </p>
-      </div>
-      <div slot="footer">
-        <Button type="ghost" @click="showModal.deleteDisk = false">取消</Button>
-        <Button type="primary"
-                @click="deleteDisk_ok">确认删除
-        </Button>
-      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.diskUnload = false">取消</Button>
+        <Button type="primary" @click="diskUnload_ok">确认删除</Button>
+      </p>
     </Modal>
 
     <!-- 错误弹出框 -->
@@ -235,16 +232,20 @@
       </p>
       <div>
         <p style="margin-bottom: 20px">您正为<span style="color:#2A99F2">{{ backupForDiskName}}</span>创建备份</p>
-        <p style="font-family: MicrosoftYaHei;font-size: 14px;color: #333333;margin-bottom:10px;line-height: 14px;">
-          备份名称：</p>
-        <Input v-model="diskBackupName" placeholder="请输入..." style="width: 240px;margin-bottom: 20px"></Input>
-        <p style="font-family: MicrosoftYaHei;font-size: 12px;line-height:20px;color: #999999;">提示：云硬盘数据服务为每块磁盘提供<span
-          style="color:#2A99F2">8</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。</p>
+        <div class="universal-modal-content-flex">
+          <Form :model="createBackupsForm" :rules="createBackupsRuleValidate" ref="createBackups">
+            <Form-item label="备份名称" prop="backupsName">
+              <Input v-model="createBackupsForm.backupsName" placeholder="请输入。。。"></Input>
+            </Form-item>
+          </Form>
+          <p style="font-family: MicrosoftYaHei;font-size: 12px;line-height:20px;color: #999999;">提示：云硬盘数据服务为每块磁盘提供<span
+            style="color:#2A99F2">8</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。</p>
+        </div>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.createDiskBackup = false">取消</Button>
         <Button type="primary"
-                @click="createDiskBackup_ok">确认创建
+                @click="_checkCreateBackupsForm">确认创建
         </Button>
       </div>
     </Modal>
@@ -441,7 +442,7 @@
           // 创建磁盘备份模态框
           createDiskBackup: false,
           // 错误提示框
-          error: true
+          error: false
           /*
 
            mountDisk: false,
@@ -516,7 +517,15 @@
         // 被卸载的磁盘的主机
         hostName: '',
         // 磁盘备份名称
-        diskBackupName: '',
+        createBackupsForm: {
+          backupsName: ''
+        },
+        // 新建备份表单验证
+        createBackupsRuleValidate: {
+          backupsName: [
+            {required: true, message: '请输入备份名称', trigger: 'blur'}
+          ]
+        },
         // 可挂载主机列表
         mountHostList: [],
         diskSizeExpenses: 0
@@ -545,6 +554,15 @@
           }
         })
       },
+      // 验证新建备份表单
+      _checkCreateBackupsForm(){
+        this.$refs.createBackups.validate((valid) => {
+          if (valid) {
+            // 表单验证通过，调用创建备份策略方法
+            this.createDiskBackup_ok()
+          }
+        })
+      },
       listDisk(){
         this.$http.get('Disk/listDisk.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -555,6 +573,8 @@
             })
             this.diskData = response.data.result
             this.diskSelection = null
+          } else {
+            this.$error('error', response.data.message)
           }
         })
       },
@@ -607,6 +627,8 @@
             } else {
               this.coupon = 0
             }
+          } else {
+            this.$error('error', response.data.message)
           }
         })
       }),
@@ -615,16 +637,20 @@
         axios.get(`Disk/UpDiskConfigCost.do?diskId=${this.operand.id}&diskSize=${this.dilatationForm.diskSize}&zoneId=${this.operand.zoneid}`).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskSizeExpenses = response.data.result
+          } else {
+            this.$error('error', response.data.message)
           }
         })
       }),
       // 确认创建磁盘
       newDisk_ok(){
         // 默认zoneList第一个元素为当前选中区域，以后会修改
-        var url = `Disk/createVolume.do?zoneId=${this.diskForm.diskArea}&diskSize=${this.diskForm.diskSize}&diskName=${this.diskForm.diskName}&diskOfferingId=${this.diskForm.diskType}&timeType=${this.diskForm.timeType}&timeValue=${this.diskForm.timeValue || 1}&isAutorenew=0&count=1`
+        var url = `Disk/createVolume.do?zoneId=${this.diskForm.diskArea}&diskSize=${this.diskForm.diskSize}&diskName=${this.diskForm.diskName}&diskOfferingId=${this.diskForm.diskType}&timeType=${this.diskForm.timeType}&timeValue=${this.diskForm.timeValue || 1}&isAutorenew=0&count=${this.diskForm.quantity}`
         axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
+          } else {
+            this.$error('error', response.data.message)
           }
         })
       },
@@ -634,16 +660,24 @@
       },
       // 打开扩容模态框
       dilatationDisk(data){
-        this.operand = data
-        this.dilatationForm.diskSize = this.operand.disksize
-        this.dilatationForm.minDiskSize = this.dilatationForm.diskSize
-        this.showModal.dilatationDisk = true
+        if (data.status === 1) {
+          this.operand = data
+          this.dilatationForm.diskSize = this.operand.disksize
+          this.dilatationForm.minDiskSize = this.dilatationForm.diskSize
+          this.showModal.dilatationDisk = true
+        } else {
+          this.$error('error', '该硬盘当前状态下不能扩容')
+        }
       },
       // 修改磁盘名称弹出模态框
       modificationDisk(data){
-        this.operand = data
-        this.showModal.modificationDisk = true
-        this.diskName = this.operand.diskname
+        if (data.status === 1) {
+          this.operand = data
+          this.showModal.modificationDisk = true
+          this.diskName = this.operand.diskname
+        } else {
+          this.$error('error', '该硬盘当前状态下不能修改')
+        }
       },
       // 删除跳转到卸载模态框
       beforeDelete(){
@@ -659,16 +693,6 @@
           if (this.diskSelection.status == 1 && this.diskSelection.mounton != '' && this.diskSelection.mountonname != '') {
             // 该磁盘已挂载主机，无法删除。弹出确认卸载框，点击卸载
             this.showModal.beforeDelete = true
-            /* this.$Modal.confirm({
-             content: '所选硬盘已挂载主机，无法删除，若您确认删除，请先卸载该硬盘' + '<span style="color: #2A99F2">（' + this.diskSelection.diskname + '）</span>',
-             okText: '卸载硬盘',
-             cancelText: '取消',
-             onOk: () => {
-             this.unload()
-             },
-             onCancel: () => {
-             }
-             }) */
           } else if (this.diskSelection.caseType != 1 && this.diskSelection.caseType != 2) {
             // 弹出删除框
             this.showModal.deleteDisk = true
@@ -703,6 +727,8 @@
               content: response.data.message,
               duration: 5
             })
+          } else {
+            this.$error('error', response.data.message)
           }
         })
       },
@@ -716,6 +742,8 @@
             })
             this.showModal.modificationDisk = false
             this.listDisk()
+          } else {
+            this.$error('error', response.data.message)
           }
         })
       },
@@ -734,6 +762,8 @@
               duration: 5
             })
             this.listDisk()
+          } else {
+            this.$error('error', response.data.message)
           }
         })
       },
@@ -752,6 +782,8 @@
               content: response.data.message,
               duration: 5
             })
+          } else {
+            this.$error('error', response.data.message)
           }
         })
       },
@@ -761,16 +793,32 @@
           if (response.status == 200 && response.data.status == 1) {
             // this.$store.commit('setSelect', 'order')
             this.$router.push('order')
+          } else {
+            this.$error('error', response.data.message)
           }
         })
       },
       /* 创建磁盘备份前的方法 （判断是否可以创建） */
       beforeCreateDiskBackup(data) {
-        this.backupForDiskName = data.diskname
-        this.showModal.createDiskBackup = true
+        if (data.status === 1) {
+          this.backupForDiskName = data.diskname
+          this.operand = data
+          this.showModal.createDiskBackup = true
+        } else {
+          this.$error('error', '该硬盘当前状态下不能备份')
+        }
       },
       /* 确认创建磁盘备份 */
       createDiskBackup_ok() {
+        var url = `Snapshot/createDiskSnapshot.do?diskId=${this.operand.diskid}&name=${this.createBackupsForm.backupsName}&zoneId=${this.operand.zoneid}`
+        axios.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.info(response.data.message)
+            this.$router.push('diskBackup')
+          } else {
+            this.$error('error', response.data.message)
+          }
+        })
       },
       /* 购买数量操作 */
       reduce () {
