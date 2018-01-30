@@ -21,14 +21,12 @@
             <Table ref="selection" :columns="snapshotCol" :data="snapshotData"
                    @radio-change="changeSelection"></Table>
           </TabPane>
-
-
           <TabPane label="云主机快照策略">
             <div class="operator-bar">
               <Button type="primary" @click="createBackups(showModal.newBackups=true)">创建备份策略</Button>
-              <Button type="primary">删除策略</Button>
+              <Button type="primary" @click="delStrategy">删除策略</Button>
             </div>
-            <Table ref="selection" :columns="snapstrategyCol" :data="snapstrategyData"></Table>
+            <Table ref="selection" :columns="snapstrategyCol" :data="snapstrategyData" @radio-change="strategySelection"></Table>
           </TabPane>
         </Tabs>
       </div>
@@ -44,7 +42,7 @@
         <Form :model="creatSnapsForm" ref="creatSnapsForm">
           <FormItem label="选择主机">
             <Select v-model="creatSnapsForm.select">
-              <Option v-for="item in vmOpenlist" :value="item.computerid" :key="item.computerid">{{ item.computername
+              <Option v-for="item in vmList" :value="item.computerid" :key="item.computerid">{{ item.computername
                 }}
               </Option>
             </Select>
@@ -98,7 +96,7 @@
           </Form-item>
           <FormItem label="备份策略应用主机">
             <Select v-model="creatBackupsForm.host" multiple placeholder="主机名称可多选">
-              <Option v-for="item in vmOpenlist" :value="item.computerid" :key="item.computerid">{{ item.computername
+              <Option v-for="item in vmList" :value="item.computerid" :key="item.computerid">{{ item.computername
                 }}
               </Option>
             </Select>
@@ -149,6 +147,20 @@
         <Button type="primary" @click="delsnapsSubm">确定</Button>
       </p>
     </Modal>
+    <!-- 删除快照策略弹窗 -->
+    <Modal v-model="showModal.delStrategy" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>删除快照策略</strong>
+          <p class="lh24">确定要删除选中的快照策略吗？</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.delStrategy=false">取消</Button>
+        <Button type="primary" @click="delStrategySubm">确定</Button>
+      </p>
+    </Modal>
     <!-- 备份策略添加/删除主机 -->
     <Modal v-model="showModal.addOrDeleteHost" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
@@ -160,14 +172,14 @@
           <div class="hostlist">
             <p>该区域下所有主机</p>
             <ul>
-              <li v-for="(item,index) in vmOpenlist" :key="index"><span>{{ item.computername }}</span><i
-                @click="addHost(item)" class="bluetext">+ 添加</i></li>
+              <li v-for="(item,index) in hostForBackupsStrategyList" :key="index"><span>{{ item.computername }}</span><span v-if="item.bankupstrategyname">({{ item.bankupstrategyname}})</span><i
+                @click="addHost(index,item)" class="bluetext">+ 添加</i></li>
             </ul>
           </div>
           <div class="changelist">
             <p>已选择的主机</p>
             <ul>
-              <li v-for="(item,index) in changeHostlist" :key="index"><span>{{ item.computername }}</span><i
+              <li v-for="(item,index) in changeHostlist" :key="index"><span>{{ item.resourcesName }}</span><i
                 @click="removeHost(index)" class="bluetext">
                 <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
                 删除</i></li>
@@ -197,10 +209,14 @@
       return {
         snapsName: '',
         hostName: '',
+        strategyName: '',
         strategyId: '',
         changeHostlist: [],
+        // unchangeHostlist: [],
+        hostForBackupsStrategyList: [],
         cursnapshot: null,
         snapsSelection: null,
+        strategySelectionItem: null,
         creatBackupsForm: {
           name: '',
           memory: '1',
@@ -1417,7 +1433,7 @@
           radio: '1'
         },
         // 已创建主机列表
-        vmOpenlist: '',
+        vmList: '',
         //主机快照col
         snapshotCol: [
           {
@@ -1518,17 +1534,16 @@
             render: (h, params) => {
               const row = params.row
               const text = row.status === 0 ? '异常' : row.status === 1 ? '可用' : row.status === 3 ? '删除中' : ''
-              return h('span', {}, text)
-              // if (row.status == 3) {
-              //   return h('div', {}, [h('Spin', {
-              //     style: {
-              //       display: 'inline-block',
-              //       marginRight: '10px'
-              //     }
-              //   }), h('span', {}, text)])
-              // } else {
-              //   return h('span', text)
-              // }
+              if (row.status == 3) {
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', {}, text)])
+              } else {
+                return h('span', text)
+              }
             }
           },
           {
@@ -1621,9 +1636,7 @@
                 },
                 on: {
                   click: () => {
-                    this.showModal.addOrDeleteHost = true
-                    this.strategyName = params.row.strategyname
-                    this.strategyId = params.row.id
+                    this.unchangeHostlist(params.row)
                   }
                 }
               }, '添加/删除主机')
@@ -1638,7 +1651,8 @@
           rollback: false,
           newBackups: false,
           delsnaps: false,
-          addOrDeleteHost: false
+          addOrDeleteHost: false,
+          delStrategy: false
         },
 
       }
@@ -1647,21 +1661,82 @@
       this.listsnaps()
       this.listBackups()
       this.listHost()
-      // 隔10秒调用
-      // this.inter()
-      // Promise.all([napsResponse, backupsResponse]).then((ResponseValue) => {
-      //   next(vm => {
-      //     vm.setData(ResponseValue[0])
-      //     vm.setNatData(ResponseValue[1])
-      //   })
-      // })
     },
     methods: {
-      addHost(item) {
-        this.changeHostlist.push(item)
+      // delStrategy() {
+      //    var snapsURL = `information/deleteVMBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}&id=${this.strategyId}&VMIds=${vmids.join(',')}`
+      //   axios.get(snapsURL)
+      //     .then(response => {
+      //       if (response.status == 200 && response.data.status == 1) {
+      //         this.$Message.info({
+      //           content: response.data.message,
+      //           duration: 5
+      //         })
+      //         this.showModal.addOrDeleteHost = false
+      //         this.listBackups()
+      //       } else {
+      //       this.$message.error({
+      //         content: response.data.message
+      //       })
+      //       this.showModal.addOrDeleteHost = false
+      //     }
+      //     })
+      // },
+       /* 添加主机到备份策略 */
+      addHost (index, data) {
+        this.hostForBackupsStrategyList.splice(index, 1)
+        var resource = {
+          resourcesName: data.computername,
+          resourcesId: data.computerid
+        }
+        this.changeHostlist.push(resource)
       },
-      removeHost(index) {
+      /* 删除应用该备份策略的主机 */
+      removeHost (index, data) {
         this.changeHostlist.splice(index, 1)
+        data.computername = data.resourcesName
+        this.hostForBackupsStrategyList.push(data)
+      },
+      /* 添加或删除备份策略应用的主机 */
+      unchangeHostlist(data) {
+        var leftData = []
+        this.changeHostlist = []
+        this.vmList.forEach((item) => {
+              if (item.status === 1 && item.bankupstrategyid != data.id) {
+                leftData.push(item)
+              }
+            })
+        this.hostForBackupsStrategyList = leftData
+        data.resourceBean.forEach(item => {
+          this.changeHostlist.push(item)
+        })
+        this.strategyName = data.strategyname
+        this.strategyId = data.id
+        this.showModal.addOrDeleteHost = true
+      },
+      /* 确定从快照备份策略添加或移除磁盘 */
+      addOrDeleteHost() {
+        console.log(this.changeHostlist)
+        var vmids = this.changeHostlist.map(item => {
+          return item.resourcesId
+        })
+        var snapsURL = `information/updateVMIntoBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}&backUpStrategyId=${this.strategyId}&VMIds=${vmids.join(',')}`
+        axios.get(snapsURL)
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.info({
+                content: response.data.message,
+                duration: 5
+              })
+              this.showModal.addOrDeleteHost = false
+              this.listBackups()
+            } else {
+            this.$message.error({
+              content: response.data.message
+            })
+            this.showModal.addOrDeleteHost = false
+          }
+          })
       },
       /* 切换备份时间间隔时给准确时间点赋值 */
       changeType(value) {
@@ -1679,11 +1754,12 @@
       },
       //虚拟机列表
       listHost() {
-        var vmList = `information/listVirtualMachines.do?zoneId=${$store.state.zone.zoneid}`
-        axios.get(vmList)
+        var vmListurl = `information/listVirtualMachines.do?zoneId=${$store.state.zone.zoneid}`
+        axios.get(vmListurl)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.vmOpenlist = response.data.result.open.list
+              var vmopenlist = response.data.result.open.list
+              this.vmList = vmopenlist.concat(response.data.result.close.list)
             }
           })
       },
@@ -1708,20 +1784,12 @@
             }
           })
       },
-      //策略添加或者删除主机
-      addOrDeleteHost() {
-        // information/updateVMIntoBackUpStrategy.do  向备份策略移入主机    zoneId   ,  backUpStrategyId   ,    VMIds(非必传   多个以 ，隔开)
-        // information/updateVMIntoBackUpStrategy.do      向备份策略移入主机   zoneId   ,  backUpStrategyId（策略id）   ,VMIds（虚拟机id   多个主机以 ，隔开）
-        var vmidsArry = this.changeHostlist.map(item => {
-          return item.computerid
-        })
-        var vmids = vmidsArry.join(',')
-        var snapsURL = `information/updateVMIntoBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}&backUpStrategyId=${this.strategyId}&VMIds=${vmids}`
-        axios.get(snapsURL)
+      rollbackSubmit() {
+        this.showModal.rollback = false
+        var URL = `Snapshot/revertToVMSnapshot.do?snapshotId=${this.cursnapshot.snapshotid}&zoneId=${$store.state.zone.zoneid}`
+        axios.get(URL)
           .then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.showModal.addOrDeleteHost = false
-              this.listBackups()
+            if (response.status == 200) {
               this.$Message.success({
                 content: response.data.message,
                 duration: 5
@@ -1729,12 +1797,25 @@
             }
           })
       },
-      rollbackSubmit() {
-        this.showModal.rollback = false
-        var URL = `Snapshot/revertToVMSnapshot.do?snapshotId=${this.cursnapshot.snapshotid}&zoneId=${$store.state.zone.zoneid}`
+      strategySelection(selection) {
+        this.strategySelectionItem = selection
+      },
+      // 删除快照策略
+      delStrategy() {
+        if (this.strategySelectionItem == null) {
+          this.$Message.warning('请选择一个快照策略')
+          return
+        }
+        this.showModal.delStrategy = true
+      },
+      //确定删除快照策略
+      delStrategySubm() {
+        this.showModal.delStrategy = false
+        var URL = `information/deleteVMBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}&id=${this.strategySelectionItem.id}`
         axios.get(URL)
           .then(response => {
-            if (response.status == 200) {
+            if (response.status == 200 && response.data.status == 1) {
+              this.listBackups()
               this.$Message.success({
                 content: response.data.message,
                 duration: 5
@@ -1781,6 +1862,10 @@
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.listsnaps()
+            } else {
+              this.$message.error({
+              content: response.data.message
+            })
             }
           })
       },
@@ -1837,7 +1922,6 @@
     }
   }
 </script>
-
 <style rel="stylesheet/less" lang="less" scoped>
   .modal-main {
     height: 146px;
@@ -1869,8 +1953,8 @@
         }
       }
     }
-    .changelist {
-      overflow-y: hidden;
-    }
+    // .changelist {
+    //   overflow-y: hidden;
+    // }
   }
 </style>

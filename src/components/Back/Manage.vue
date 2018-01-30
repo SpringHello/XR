@@ -319,12 +319,12 @@
         <div>
           <strong>警告</strong>
           <p class="lh24">为了数据安全，系统重装之前主机会自动关闭。重装结束后，主机会自动开机。</p>
-          <Input v-model="value" placeholder="请输入“confirm”" style="width: 300px"></Input>
+          <Input v-model="reloadhintForm.input" placeholder="请输入“confirm”" style="width: 300px"></Input>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.reload=false">取消</Button>
-        <Button type="primary" @click="reloadSubm">确定</Button>
+        <Button type="primary" @click="reloadSubm" :disabled="reloadhintForm.input!='confirm'">确定</Button>
       </p>
     </Modal>
     <!-- 删除快照弹窗 -->
@@ -384,6 +384,9 @@
         IPTime: '',
         showPassword: false,
         computerInfo: null,
+        reloadhintForm: {
+          input: ''
+        },
         //系列化对象
         cpuPolar: JSON.parse(defaultOptionstr),
         diskPolar: JSON.parse(defaultOptionstr),
