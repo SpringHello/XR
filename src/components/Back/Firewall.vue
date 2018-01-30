@@ -32,9 +32,9 @@
           </Dropdown>
         </div>
         <div>
-          <Table border :columns="columns" :data="tableData" :border="false"
+          <Table border :columns="columns" :data="tableData" :border="false" highlight-row
                  @on-current-change="setSelect" @radio-change="selectChange"></Table>
-          <Page :total="pageInfo.total" :current="pageInfo.page" :page-size=10 style="float:right;margin-top:15px"
+          <Page :total="pageInfo.total" :current="pageInfo.page" :page-size=10 style="float:right;margin-top:15px;font-size: 14px;"
                 @on-change="next"></Page>
         </div>
       </div>
@@ -141,6 +141,9 @@
             type: 'radio',
             width: 60,
             align: 'center',
+            render:(h, params) => {
+                return h('Radio',{},)
+            }
           },
           {
             title: '名称',
