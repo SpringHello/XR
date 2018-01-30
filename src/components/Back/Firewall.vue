@@ -32,7 +32,7 @@
           </Dropdown>
         </div>
         <div>
-          <Table border :columns="columns" :data="tableData" :border="false" highlight-row
+          <Table border :columns="columns" :data="tableData" :border="false"
                  @on-current-change="setSelect" @radio-change="selectChange"></Table>
           <Page :total="pageInfo.total" :current="pageInfo.page" :page-size=10 style="float:right;margin-top:15px"
                 @on-change="next"></Page>
