@@ -67,6 +67,8 @@ const Order = () => import('@/components/Back/Order')
 const PayResult = () => import('@/components/Back/PayResult')
 const Expenses = () => import('@/components/Back/Expenses')
 const UserCenter = () => import('@/components/Back/UserCenter')
+const MsgCenter = () => import('@/components/Back/MsgCenter')
+const OperationLog = () => import('@/components/Back/OperationLog')
 const Manage = () => import('@/components/Back/Manage')
 const Upgrade = () => import('@/components/Back/Upgrade')
 
@@ -158,6 +160,8 @@ var router = new Router({
         {path: 'payResult', name: 'payResult', component: PayResult},
         {path: 'expenses', name: 'expenses', component: Expenses},
         {path: 'userCenter', name: 'userCenter', component: UserCenter},
+        {path: 'operationLog', name: 'operationLog', component: OperationLog},
+        {path: 'msgCenter', name: 'msgCenter', component: MsgCenter},
         {path: 'manage', name: 'manage', component: Manage},
         {path: 'upgrade', name: 'upgrade', component: Upgrade}
       ]

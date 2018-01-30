@@ -51,13 +51,13 @@
                     <router-link to="userCenter">用户中心</router-link>
                   </DropdownItem>
                   <DropdownItem>
-                    <router-link to="">费用中心</router-link>
+                    <router-link to="expenses">费用中心</router-link>
                   </DropdownItem>
                   <DropdownItem>
-                    <router-link to="">消息中心</router-link>
+                    <router-link to="msgCenter">消息中心</router-link>
                   </DropdownItem>
                   <DropdownItem>
-                    <router-link to="">操作日志</router-link>
+                    <router-link to="operationLog">操作日志</router-link>
                   </DropdownItem>
                   <DropdownItem divided>
                     <router-link to="">退出</router-link>
