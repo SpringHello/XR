@@ -302,7 +302,6 @@
                   },
                   on: {
                       click: () => {
-                        console.log(params.row)
                         this.ownMirrorCreathost(params.row)
                       }
                   }
@@ -314,9 +313,7 @@
                   },
                   on: {
                       click: () => {
-                        // this.remove(params.index)
                         this.showModal.modify = true
-                        console.log(123)
                         this.systemtemplateid = params.row.systemtemplateid
                       }
                   }
@@ -376,10 +373,9 @@
         this.$router.push({
           path: 'price',
           query: {
-            ostypename: item.ostypename,
-            zoneid: item.zoneid,
             templateid: item.systemtemplateid,
-            templatename: item.templatename
+            zoneid: item.zoneid,
+            mirrorType: 'own'
           }
         })
       },
@@ -423,31 +419,20 @@
         console.log(select)
         this.select = select
       },
-      // createHost() {
-      //   if (this.selections == null) {
-      //     this.$Message.warning('请选择一个镜像')
-      //     return
-      //   }
-      //   let mirror = this.selections
-      //   sessionStorage.setItem('zoneid', mirror.zoneid)
-      //   sessionStorage.setItem('templateid', mirror.systemtemplateid)
-      //   sessionStorage.setItem('ostypename', mirror.ostypename)
-      //   sessionStorage.setItem('templatename', mirror.templatename)
-      //   this.$store.commit('setSelect', 'new')
-      //   this.$router.push({path: 'price'})
-      // },
       createHostBySystem() {
         if (this.select == null) {
           this.$Message.warning('请选择一个镜像')
           return
         }
-        let mirror = this.select
-        sessionStorage.setItem('zoneid', mirror.zoneid)
-        sessionStorage.setItem('templateid', mirror.systemtemplateid)
-        sessionStorage.setItem('ostypename', mirror.ostypename)
-        sessionStorage.setItem('templatename', mirror.templatename)
-        this.$store.commit('setSelect', 'new')
-        this.$router.push({path: 'price'})
+        var item = this.select
+        this.$router.push({
+          path: 'price',
+          query: {
+            templateid: item.systemtemplateid,
+            zoneid: item.zoneid,
+            mirrorType: 'public'
+          }
+        })
       },
       deleteSelection() {
         if (this.selections == null) {

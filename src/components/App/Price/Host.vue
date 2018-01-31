@@ -9,7 +9,7 @@
     <div class="content">
       <!--区域选择-->
       <div class="region">
-        <h3 style="margin-top: 0">区域选择{{$route.query.templateid}}</h3>
+        <h3 style="margin-top: 0">区域选择</h3>
         <div class="config-button">
           <button v-for="item in zoneList" :class="{select:item.zoneid==zone}" @click="zone=item.zoneid">
             {{item.zonename}}
@@ -260,9 +260,9 @@
           <span>镜像</span>
           <button :class="{select:mirror=='imageApplication'}" @click="mirror='imageApplication',mirrorType='1'">镜像+应用
           </button>
-          <button :class="{select:mirror=='UHub'}" @click="mirror='UHub',mirrorType='Windows'">公共镜像</button>
+          <button :class="{select:mirror=='UHub'}" @click="mirror='UHub'">公共镜像</button>
           <button :class="{select:mirror=='customMirror',disabled:userInfo==null}"
-                  @click="mirror='customMirror',mirrorType=''" >自定义镜像
+                  @click="mirror='customMirror'" >自定义镜像
           </button>
         </div>
         <!-- 公共镜像列表 -->
@@ -367,8 +367,8 @@
         <button @click="addBudgetList" :class="{select:addButton,disabled:hostDisabled}" :disabled="hostDisabled">
           加入预算清单
         </button>
-        <button style="margin-right: 0" :class="{select:buyButton,disabled:hostDisabled}" @click="buyImmediately"
-                :disabled="hostDisabled">立即购买
+        <button style="margin-right: 0"  @click="buyImmediately"
+                >立即购买
         </button>
       </div>
     </div>
@@ -447,29 +447,6 @@
   }
   export default {
     data() {
-      var zone = '', osId = '', osType = '', os = '', privateNet = ''
-      var CPUNum = 1, RAMSize = 1, diskSize = 20, networkSize = 1, pane = '标准主机';
-      if (sessionStorage.getItem('over2new')) {
-        zone = sessionStorage.getItem('over2new')
-      }
-      if (sessionStorage.getItem('ipsegmentid')) {
-        zone = sessionStorage.getItem('zoneid')
-        privateNet = sessionStorage.getItem('ipsegmentid') + '#' + sessionStorage.getItem('ipsegment')
-        pane = '定制主机'
-      } else if (sessionStorage.getItem('zoneid')) {
-        zone = sessionStorage.getItem('zoneid')
-        osId = sessionStorage.getItem('templateid')
-        osType = sessionStorage.getItem('ostypename')
-        os = sessionStorage.getItem('templatename')
-      }
-      if (sessionStorage.getItem('cpu')) {
-        CPUNum = sessionStorage.getItem('cpu')
-        RAMSize = sessionStorage.getItem('memory')
-        diskSize = Number.parseInt(sessionStorage.getItem('disk'))
-        networkSize = Number.parseInt(sessionStorage.getItem('bandwith'))
-        pane = '定制主机'
-      }
-      sessionStorage.clear()
       return {
         osId: '',
         pubilcSystem: '',
@@ -489,7 +466,7 @@
         // 地区
         zoneList: [],
         // 地区id
-        zone: '1',
+        zone: '',
         // 主机类型：快速配置+自定义配置
         pitchOn: 'quick',
         // 购买日期类型
@@ -673,64 +650,26 @@
       this.$http.get(`information/listTemplates.do?user=0&zoneid=${this.zone}`).then(response => {
         var responseData = response.data.result
         this.pubilcSystem = responseData
-        this.osId = '6314094d-50fe-4659-8e36-dab9aeacbe85'
+        if(this.$route.query.mirrorType == 'public'){
+          this.osId = this.$route.query.templateid
+          this.zone = this.$route.query.zoneid
+          this.mirror='UHub'
+        }else if(this.$route.query.mirrorType == 'own'){
+          this.mirror='customMirror'
+          this.osId = this.$route.query.templateid
+          this.zone = this.$route.query.zoneid
+          
+          }else{
+          this.osId = responseData.window[0].systemtemplateid
+        }
       })
       // 获取自有镜像
       this.$http.get(`information/listTemplates.do?user=1&zoneid=${this.zone}`).then(response => {
         var responseData = response.data.result
         this.ownSystem = responseData
       })
-      
-            // if (this.$route.query.zoneid) {
-            //   this.zone = this.$router.query.zoneid
-            // }
-            // 镜像id
-            if (this.$route.query.templateid) {
-              // //公共镜像
-              // this.mirror = 'UHub'
-              // // 自定义镜像
-              // this.mirror = 'customMirror'
-              this.osId = this.$route.query.templateid
-              console.log(this.osId)
-              console.log(this.$route.query.templatename)
-            }
-            console.log(this.osId)
-            // 镜像名称
-            // if (this.$route.query.templatename) {
-            //   this.zone = this.$router.query.zoneid
-            // }
-
-
-      // 镜像生成主机，传入的参数
-      // var zone = '', osId = '', osType = '', os = '', privateNet = ''
-      // var CPUNum = 1, RAMSize = 1, diskSize = 20, networkSize = 1, pane = '标准主机';
-      // if (sessionStorage.getItem('over2new')) {
-      //   zone = sessionStorage.getItem('over2new')
-      // }
-      // if (sessionStorage.getItem('ipsegmentid')) {
-      //   zone = sessionStorage.getItem('zoneid')
-      //   privateNet = sessionStorage.getItem('ipsegmentid') + '#' + sessionStorage.getItem('ipsegment')
-      //   pane = '定制主机'
-      // } else if (sessionStorage.getItem('zoneid')) {
-      //   zone = sessionStorage.getItem('zoneid')
-      //   osId = sessionStorage.getItem('templateid')
-      //   osType = sessionStorage.getItem('ostypename')
-      //   os = sessionStorage.getItem('templatename')
-      // }
-      // if (sessionStorage.getItem('cpu')) {
-      //   CPUNum = sessionStorage.getItem('cpu')
-      //   RAMSize = sessionStorage.getItem('memory')
-      //   diskSize = Number.parseInt(sessionStorage.getItem('disk'))
-      //   networkSize = Number.parseInt(sessionStorage.getItem('bandwith'))
-      //   pane = '定制主机'
-      // }
     },
     mounted() {
-      this.osId = this.$route.query.templateid
-      // console.log('121323432')
-      // console.log(this.$route.query)
-      // console.log(this.$route.query.templateid)
-      // console.log(this.$route.query.templatename)
     },
     methods: {
       /* 切换到自定义 */
@@ -944,8 +883,8 @@
           }
         }
         var renewal = this.autoRenewal ? 1 : 0
-        var url = `information/deployVirtualMachine.do?name=${this.hostName}&password=${this.hostPassword}&templateId=${this.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&bandWidth=${this.publicIP}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=1&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=no`
-        this.$http.get(url).then(response => {
+        var url = `information/deployVirtualMachine.do?zoneId=${this.zone}&name=${this.hostName}&password=${this.hostPassword}&templateId=${this.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&bandWidth=${this.publicIP}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=1&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=no`
+        axios.get(url).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
@@ -970,15 +909,17 @@
         var diskType = this.diskList.map(item => {
           return item.diskType
         }).join(',')
-        var url = `information/deployVirtualMachine.do?zoneid=${this.zone}&name=${this.hostName}&password=${this.hostPassword}&templateid=${this.osId}&size=${diskSize}&cpunum=${this.cpuNum}&memory=${this.memory}&value=${this.timeType}&timevalue=${this.time}&count=0&isautorenew=${renewal}&disktype=${diskType}&networkid=${this.private.split('#')[0]}`
+        // zoneId, templateId, bandWidth, timeType, timeValue, count, isAutoRenew, cpuNum, memory,
+        // networkId
+        var url = `information/deployVirtualMachine.do?zoneId=${this.zone}&name=${this.hostName}&password=${this.hostPassword}&templateId=${this.osId}&cpuNum=${this.cpuNum}&memory=${this.memory}&timeType=${this.timeType}&timeValue=${this.time}&count=0&isAutoRenew=${renewal}&disktype=${diskType}&networkId=${this.private.split('#')[0]}`
         if (this.buyPublicIP == false) {
           bandwidth = 0
         }
-        url = url + '&bandwidth=' + bandwidth
+        url = url + '&bandWidth=' + bandwidth
         if (this.specifyInfo != '指定IP') {
           url += '&ipaddress=' + this.specifyInfo
         }
-        this.$http.get(url)
+        axios.get(url)
           .then(response => {
             this.loading = false
             if (response.status == 200 && response.data.status == 1) {
