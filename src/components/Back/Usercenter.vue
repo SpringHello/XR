@@ -55,14 +55,15 @@
                 <p style="font-size: 14px;color: #666666;letter-spacing: 0.83px;margin-bottom:20px;">请上传实名认证图片
                   上传文件支持jpg/png/gif/pdf，单个文件最大不超过4MB。</p>
                 <div class="IDCard">
-                  <FormItem label="身份证人像面" prop="IDCardFront">
+                  <FormItem label="身份证人像面">
                     <Upload
                       v-if="notAuth.cardAuthForm.IDCardFront==''"
                       multiple
                       type="drag"
+                      :show-upload-list="false"
                       :with-credentials="true"
                       action="//localhost:8082/ruicloud/file/upFile.do"
-                      :on-success="setImage">
+                      :on-success="IDCardFront">
                       <div style="padding: 20px 0">
                         <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                         <p>Click or drag files here to upload</p>
@@ -70,14 +71,15 @@
                     </Upload>
                     <img v-else :src="notAuth.cardAuthForm.IDCardFront">
                   </FormItem>
-                  <FormItem label="身份证国徽面" prop="IDCardBack">
+                  <FormItem label="身份证国徽面">
                     <Upload
                       v-if="notAuth.cardAuthForm.IDCardBack==''"
                       multiple
                       type="drag"
+                      :show-upload-list="false"
                       :with-credentials="true"
                       action="//localhost:8082/ruicloud/file/upFile.do"
-                      :on-success="setImage">
+                      :on-success="IDCardBack">
                       <div style="padding: 20px 0">
                         <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                         <p>Click or drag files here to upload</p>
@@ -85,14 +87,15 @@
                     </Upload>
                     <img v-else :src="notAuth.cardAuthForm.IDCardBack">
                   </FormItem>
-                  <FormItem label="手持身份证人像面照片" prop="IDCardPerson">
+                  <FormItem label="手持身份证人像面照片">
                     <Upload
                       v-if="notAuth.cardAuthForm.IDCardPerson==''"
                       multiple
                       type="drag"
+                      :show-upload-list="false"
                       :with-credentials="true"
                       action="//localhost:8082/ruicloud/file/upFile.do"
-                      :on-success="setImage">
+                      :on-success="IDCardPerson">
                       <div style="padding: 20px 0">
                         <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                         <p>Click or drag files here to upload</p>
@@ -101,6 +104,9 @@
                     <img v-else :src="notAuth.cardAuthForm.IDCardPerson">
                   </FormItem>
                 </div>
+                <FormItem style="text-align: right">
+                  <Button type="primary" @click="personalAttest">确认提交</Button>
+                </FormItem>
               </Form>
             </div>
             <!--快速认证页面-->
@@ -150,7 +156,32 @@
               </Form>
             </div>
           </TabPane>
-          <!--个人认证-->
+          <!--个人认证中-->
+          <TabPane label="用户信息" v-else-if="userInfo.personalauth==2&&userInfo.companyauth==1" class="personal">
+            <p class="info-title">个人基本信息</p>
+            <div class="user-info">
+              <img src="../../assets/img/usercenter/client.png">
+              <div style="padding:10px 0px;margin-left:20px;">
+                <div style="margin-bottom: 10px;">
+                  <span
+                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
+                </div>
+                <div>
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
+                  <span style="vertical-align: middle">个人用户</span>
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
+                </div>
+              </div>
+            </div>
+            <p class="info-title" style="padding-bottom:20px;border-bottom:1px solid #E9E9E9;">个人认证信息</p>
+            <Steps :current="1">
+              <Step title="提交信息" :content="`真实姓名:${userInfo.realname}`"></Step>
+              <Step title="正在处理" content="信息审核中，我们将尽快为您处理"></Step>
+              <Step title="审核通过" content="即将完成"></Step>
+            </Steps>
+          </TabPane>
+          <!--个人认证完成-->
           <TabPane label="用户信息" v-else-if="userInfo.personalauth==0&&userInfo.companyauth==1" class="personal">
             <p class="info-title">用户基本信息</p>
             <div class="user-info">
@@ -159,7 +190,7 @@
                 <div style="margin-bottom: 10px;">
                   <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{userInfo.realname}}</span>
                   <div
-                    style="margin-left:20px;display: inline-block;background-color: #2A99F2;font-size: 12px;padding:4px 8px;color:#ffffff;border-radius: 5px;">
+                    style="margin-left:20px;display: inline-block;background-color: #2A99F2;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
                     个人认证
                   </div>
                 </div>
@@ -180,22 +211,22 @@
               <p>身份证号<span>{{authInfo.personalnumber}}</span></p>
             </div>
           </TabPane>
-          <!--企业认证-->
+          <!--企业认证完成-->
           <TabPane label="用户信息" v-else-if="userInfo.companyauth==0" class="personal">
             <p class="info-title">用户基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
-                  <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{userInfo.realname}}</span>
+                  <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{authInfo.name}}</span>
                   <div
-                    style="margin-left:20px;display: inline-block;background-color: #2A99F2;font-size: 12px;padding:4px 8px;color:#ffffff;border-radius: 5px;">
-                    个人认证
+                    style="margin-left:20px;display: inline-block;background-color: #2A99F2;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
+                    企业认证
                   </div>
                 </div>
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
-                  <span style="vertical-align: middle;margin-right:20px;">个人用户</span>
+                  <span style="vertical-align: middle;margin-right:20px;">企业用户</span>
                   <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
@@ -203,24 +234,126 @@
             </div>
             <p class="info-title" style="padding-bottom:20px;border-bottom:1px solid #E9E9E9;">企业认证信息</p>
             <div class="userInfo">
-              <p>真实姓名<span>{{userInfo.realname}}</span>升级
-                <span style="margin:0px;color: #2A99F2;cursor:pointer" @click="">企业认证</span>
-              </p>
-              <p>手机号码<span>{{userInfo.phone}}</span></p>
-              <p>身份证号<span>{{authInfo.personalnumber}}</span></p>
+              <p>公司名称<span>{{authInfo.name}}</span></p>
+              <p>联系方式<span>{{authInfo.phone}}</span></p>
             </div>
           </TabPane>
-
-          <TabPane label="提醒设置">
-
+          <!--企业认证中-->
+          <TabPane label="用户信息" v-else-if="userInfo.companyauth==2" class="personal">
+            <p class="info-title">个人基本信息</p>
+            <div class="user-info">
+              <img src="../../assets/img/usercenter/client.png">
+              <div style="padding:10px 0px;margin-left:20px;">
+                <div style="margin-bottom: 10px;">
+                  <span
+                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
+                </div>
+                <div>
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
+                  <span style="vertical-align: middle">个人用户</span>
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
+                </div>
+              </div>
+            </div>
+            <p class="info-title" style="padding-bottom:20px;border-bottom:1px solid #E9E9E9;">企业认证信息</p>
+            <Steps :current="1">
+              <Step title="提交信息" :content="`公司名称:${authInfo.name}`"></Step>
+              <Step title="正在处理" content="信息审核中，我们将尽快为您处理"></Step>
+              <Step title="审核通过" content="即将完成"></Step>
+            </Steps>
           </TabPane>
-          <TabPane label="安全设置">
 
-          </TabPane>
+          <Tab-pane label="提醒设置" name="remainder">
+            <h2 style="padding: 20px 0 0px;">联系人管理</h2>
+            <Button type="primary" style="margin-top: 20px" @click="addLinkman">添加联系人</Button>
+            <Table :columns="linkManColumns" :data="linkManData" style="margin-top: 20px"></Table>
+            <h2 style="margin-top: 40px">通知信息配置</h2>
+            <div style="border-top: 1px solid #E9E9E9;">
+              <p
+                style="font-family: MicrosoftYaHei;font-size: 14px;color: rgba(17,17,17,0.65);letter-spacing: 0.83px;margin-top: 20px;">
+                为了保障您在第一时间接收到有关财务、账号安全和系统公告等关键信息，本设置页面部分选项（打勾图标）默认激活且无法更改。其余可配置选项请依据您的具体需求激活或禁用。
+              </p>
+              <div style="margin-top: 40px;display: flex">
+                <div style="width: 200px;border-top: 1px solid rgb(233, 233, 233);">
+                  <div
+                    style="display: flex;padding-left: 20px;align-items: center;height: 39px;background:#F8F8F9 ">
+                        <span
+                          style="font-family: MicrosoftYaHei;font-size: 12px;color: rgba(17,17,17,0.75);letter-spacing: 0.95px;font-weight: bolder">信息项</span>
+                  </div>
+                  <div class="infTop"
+                       style="height: 241px;border-top:1px solid #E9E9E9; ">
+                        <span
+                          class="inf">账号信息</span>
+                  </div>
+                  <div
+                    class="infTop">
+                        <span
+                          class="inf">告警信息</span>
+                  </div>
+                  <div
+                    class="infTop">
+                    <span class="inf">虚拟机信息</span>
+                  </div>
+                </div>
+                <div style="width: 1000px">
+                  <Table :columns="setColumns" :data="setData"></Table>
+                </div>
+              </div>
+              <div style="float: right;margin-top: 40px">
+                <Button type="ghost" @click="recoverNotice">恢复默认</Button>
+                <Button type="primary" style="margin-left: 20px" @click="updateNotice">确认修改</Button>
+              </div>
+            </div>
+          </Tab-pane>
+          <Tab-pane label="安全设置" name="safe">
+            <p class="info-title">用户基本信息</p>
+            <div class="user-info">
+              <img src="../../assets/img/usercenter/client.png">
+              <div style="padding:10px 0px;margin-left:20px;">
+                <div style="margin-bottom: 10px;">
+                  <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{authInfo.name}}</span>
+                  <div
+                    style="margin-left:20px;display: inline-block;background-color: #2A99F2;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
+                    企业认证
+                  </div>
+                </div>
+                <div>
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
+                  <span style="vertical-align: middle;margin-right:20px;">企业用户</span>
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h2 style="border-bottom: 1px solid rgb(233, 233, 233);margin-top: 40px">安全设置</h2>
+              <div class="safe">
+                <div v-if="userInfo.phone">
+                  <p><span>手机绑定</span>&nbsp;&nbsp;&nbsp;您已经绑定了{{userInfo.phone}}。（您的手机号可以直接用于登陆）</p><span
+                  @click="showModal.modifyPhone=true;type='phone'" style="cursor:pointer">「修改」</span>
+                </div>
+                <div v-else>
+                  <p class="info"><span>手机绑定</span>&nbsp;&nbsp;&nbsp;您尚未绑定手机号。（绑定后,您的手机号可以直接用于登陆）</p><span
+                  @click="showModal.modifyPhone=true;type='phone'" style="cursor:pointer">「绑定」</span>
+                </div>
+                <div v-if="userInfo.loginname">
+                  <p><span>邮箱绑定</span>&nbsp;&nbsp;&nbsp;您已经绑定了{{userInfo.loginname}}。（您的邮箱可以直接用于登陆）</p><span
+                  @click="showModal.modifyPhone=true;type='email'" style="cursor:pointer">「修改」</span>
+                </div>
+                <div v-else>
+                  <p class="info"><span>邮箱绑定</span>&nbsp;&nbsp;&nbsp;您尚未绑定邮箱。（绑定后,您的邮箱可以直接用于登陆）</p><span
+                  @click="showModal.modifyPhone=true;type='email'" style="cursor:pointer">「绑定」</span>
+                </div>
+                <p class="info"><span>登录密码</span>&nbsp;&nbsp;&nbsp;安全性高的密码可以使账号更安全。建议您定期更换密码，设置一个包含字母，符号或数字中
+                  至少两项且长度超过8位的密码。</p><span @click="showModal.modifyPassword=true" style="cursor:pointer">「修改」</span>
+              </div>
+            </div>
+          </Tab-pane>
           <!--用于企业认证的pane-->
           <TabPane label="企业信息" name="companyInfo">
             <p class="info-title">企业基本信息</p>
-            <Form :model="notAuth.companyAuthForm" :label-width="70" ref="cardAuth"
+            <Form :model="notAuth.companyAuthForm" :label-width="70" ref="companyAuth"
                   :rules="notAuth.companyAuthFormValidate"
                   style="margin-top:20px;">
               <div style="width:500px">
@@ -252,72 +385,76 @@
               </div>
               <!--三证合一图片上传-->
               <div class="IDCard" v-show="notAuth.companyAuthForm.certificateType==1">
-                <FormItem label="身份证人像面" prop="IDCardFront">
+                <FormItem label="三证合一">
                   <Upload
-                    v-if="notAuth.cardAuthForm.IDCardFront==''"
+                    v-if="notAuth.companyAuthForm.combine==''"
                     multiple
                     type="drag"
+                    :show-upload-list="false"
                     :with-credentials="true"
                     action="//localhost:8082/ruicloud/file/upFile.do"
-                    :on-success="setImage">
+                    :on-success="combine">
                     <div style="padding: 20px 0">
                       <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                       <p>Click or drag files here to upload</p>
                     </div>
                   </Upload>
-                  <img v-else :src="notAuth.cardAuthForm.IDCardFront">
+                  <img v-else :src="notAuth.companyAuthForm.combine">
                 </FormItem>
               </div>
               <!--非三证合一图片上传-->
               <div class="IDCard" v-show="notAuth.companyAuthForm.certificateType==2">
-                <FormItem label="身份证人像面" prop="IDCardFront">
+                <FormItem label="营业执照">
                   <Upload
-                    v-if="notAuth.cardAuthForm.IDCardFront==''"
+                    v-if="notAuth.companyAuthForm.license==''"
                     multiple
                     type="drag"
+                    :show-upload-list="false"
                     :with-credentials="true"
                     action="//localhost:8082/ruicloud/file/upFile.do"
-                    :on-success="setImage">
+                    :on-success="license">
                     <div style="padding: 20px 0">
                       <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                       <p>Click or drag files here to upload</p>
                     </div>
                   </Upload>
-                  <img v-else :src="notAuth.cardAuthForm.IDCardFront">
+                  <img v-else :src="notAuth.companyAuthForm.license">
                 </FormItem>
-                <FormItem label="身份证国徽面" prop="IDCardBack">
+                <FormItem label="税务登记证">
                   <Upload
-                    v-if="notAuth.cardAuthForm.IDCardBack==''"
+                    v-if="notAuth.companyAuthForm.tax==''"
                     multiple
                     type="drag"
+                    :show-upload-list="false"
                     :with-credentials="true"
                     action="//localhost:8082/ruicloud/file/upFile.do"
-                    :on-success="setImage">
+                    :on-success="tax">
                     <div style="padding: 20px 0">
                       <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                       <p>Click or drag files here to upload</p>
                     </div>
                   </Upload>
-                  <img v-else :src="notAuth.cardAuthForm.IDCardBack">
+                  <img v-else :src="notAuth.companyAuthForm.tax">
                 </FormItem>
-                <FormItem label="手持身份证人像面照片" prop="IDCardPerson">
+                <FormItem label="组织机构代码证">
                   <Upload
-                    v-if="notAuth.cardAuthForm.IDCardPerson==''"
+                    v-if="notAuth.companyAuthForm.organization==''"
                     multiple
                     type="drag"
+                    :show-upload-list="false"
                     :with-credentials="true"
                     action="//localhost:8082/ruicloud/file/upFile.do"
-                    :on-success="setImage">
+                    :on-success="organization">
                     <div style="padding: 20px 0">
                       <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                       <p>Click or drag files here to upload</p>
                     </div>
                   </Upload>
-                  <img v-else :src="notAuth.cardAuthForm.IDCardPerson">
+                  <img v-else :src="notAuth.companyAuthForm.organization">
                 </FormItem>
               </div>
               <FormItem>
-                <Button type="primary" @click="">确认提交</Button>
+                <Button type="primary" @click="enterpriseAttest">确认提交</Button>
               </FormItem>
             </Form>
           </TabPane>
@@ -358,6 +495,32 @@
           提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：028-23242423</p>
       </div>
     </Modal>
+    <!--添加联系人-->
+    <Modal width="550" v-model="showModal.addLinkman" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 21px;font-weight: 600">
+        添加联系人（您还能添加<span style="color: #2A99F2">{{ remainLinkMan }}</span>个人）
+      </div>
+      <div>
+        <p style="font-family: MicrosoftYaHei;font-size: 14px;color: #666666;">提示：系统将自动发送验证信息到所填手机号和邮箱，通过验证后方可接收消息。</p>
+        <Form ref="addLinkmanForm" :model="addLinkmanForm" label-position="top" :rules="addLinkmanFormValidate"
+              style="width: 300px;margin-top: 20px">
+          <FormItem label="联系人姓名" prop="name">
+            <Input v-model="addLinkmanForm.name" :maxlength="8"></Input>
+          </FormItem>
+          <FormItem label="联系人电话" prop="phone">
+            <Input v-model="addLinkmanForm.phone" :maxlength="20"></Input>
+          </FormItem>
+          <FormItem label="联系人邮箱" prop="email">
+            <Input v-model="addLinkmanForm.email" :maxlength="32"></Input>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.addLinkman=false">取消</Button>
+        <Button type="primary" @click="addLinkmanOk('addLinkmanForm')" :disabled="remainLinkMan==0">确定添加</Button>
+      </div>
+    </Modal>
   </div>
 
 </template>
@@ -368,11 +531,32 @@
   import $store from '@/vuex'
   export default{
     data(){
+      const validaRegisteredPhone = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('联系电话不能为空'));
+        }
+        if (!(/^1(3|4|5|7|8)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
+          callback(new Error('请输入正确的电话号码'));
+        } else {
+          callback()
+        }
+      }
+      const validaRegisteredEmail = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('联系邮箱不能为空'));
+        }
+        if (!(/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(value))) {
+          callback(new Error('请输入正确的邮箱'));
+        } else {
+          callback()
+        }
+      }
       return {
         // 当前选中的tab页
         currentTab: '',
         showModal: {
-          selectAuthType: $store.state.authInfo === undefined
+          selectAuthType: $store.state.authInfo === undefined,
+          addLinkman: false
         },
         imgSrc: 'http://192.168.3.204:8081/ruicloud/user/getKaptchaImage.do',
         // 此对象存储所有未认证时页面的状态
@@ -441,18 +625,6 @@
             ],
             IDCard: [
               {required: true, message: '请输入身份证号'}
-            ],
-            // 身份证正面
-            IDCardFront: [
-              {required: true, message: '请上传身份证正面'}
-            ],
-            // 身份证反面
-            IDCardBack: [
-              {required: true, message: '请上传身份证反面'}
-            ],
-            // 手持身份证
-            IDCardPerson: [
-              {required: true, message: '请上传手持身份证'}
             ]
           },
           // 企业认证表单
@@ -470,7 +642,15 @@
             contact: '',
             contactPerson: '',
             certificateType: '1',
-            certificateTypeOptions: [{label: '三证合一', key: '1'}, {label: '非三证合一', key: '2'}]
+            certificateTypeOptions: [{label: '三证合一', key: '1'}, {label: '非三证合一', key: '2'}],
+            // 三证合一
+            combine: '',
+            // 营业执照
+            license: '',
+            // 税务登记证
+            tax: '',
+            // 组织机构代码
+            organization: ''
           },
           // 企业认证表单验证
           companyAuthFormValidate: {
@@ -489,10 +669,301 @@
             certificateType: [
               {required: true, message: '请选择证件类型'}
             ]
-          }
+          },
+        },
+        // 联系人表格
+        linkManColumns: [
+          {
+            title: '姓名',
+            align: 'center',
+            key: 'username',
+          },
+          {
+            title: '手机',
+            align: 'center',
+            render: (h, params) => {
+              if (params.row.phoneauth == 0 && params.row.telphone != '') {
+                return h('div', [
+                  h('span', {
+                    style: {
+                      verticalAlign: 'text-top'
+                    }
+                  }, params.row.telphone),
+                  h('Tooltip', {
+                    props: {
+                      placement: 'right',
+                    },
+                    'class': {
+                      myTooltip: true,
+                    },
+                  }, [
+                    h('Icon', {
+                      props: {
+                        type: 'ios-information',
+                        color: '#FFC439',
+                        size: '16px',
+                      },
+                      style: {
+                        fontSize: '20px',
+                        marginLeft: '10px',
+                      },
+                    }, ''), h('div', {
+                      style: {
+                        display: 'flex'
+                      },
+                      slot: 'content',
+                    }, [h('p', {
+                      style: {
+                        lineHeight: '24px'
+                      },
+                    }, '手机未验证，不能接收消息'), h('Button', {
+                      style: {
+                        cursor: this.recertifyPoiner,
+                        color: this.recertifyColor,
+                      },
+                      props: {
+                        type: 'text',
+                        disabled: this.unPhone,
+                        size: 'small'
+                      },
+                      on: {
+                        click: () => {
+                          this.sendPhone(params.row.telphone)
+                          this.recertifyPoiner = ''
+                          this.recertifyColor = '#FFF'
+                          this.recertify = '验证码已发送（60s）'
+                          this.unPhone = true
+                          var inter = setInterval(() => {
+                            this.countdown--
+                            this.recertify = '验证码已发送(' + this.countdown + 's)'
+                            if (this.countdown == 0) {
+                              clearInterval(inter)
+                              this.countdown = 60
+                              this.recertify = '重发验证'
+                              this.recertifyPoiner = 'pointer'
+                              this.recertifyColor = '#2A99F2'
+                              this.unPhone = false
+                            }
+                          }, 1000)
+                        }
+                      },
+                    }, this.recertify),]),
+                  ]),
 
-        }
+                ]);
+              } else {
+                return h('div', [
+                  h('span', {}, params.row.telphone)]
+                );
+              }
+            }
+          },
+          {
+            title: '邮箱',
+            align: 'right',
+            render: (h, params) => {
+              if (params.row.emailauth == 0 && params.row.email != '') {
+                return h('div', [
+                  h('span', {
+                    style: {
+                      verticalAlign: 'text-top'
+                    }
+                  }, params.row.email),
+                  h('Tooltip', {
+                    props: {
+                      placement: 'right',
+                    },
+                    'class': {
+                      myTooltip: true,
+                    },
+                  }, [
+                    h('Icon', {
+                      props: {
+                        type: 'ios-information',
+                        color: '#FFC439',
+                        size: '16px',
+                      },
+                      style: {
+                        fontSize: '20px',
+                        marginLeft: '10px',
+                      },
+                    }, ''), h('div', {
+                      style: {
+                        display: 'flex'
+                      },
+                      slot: 'content',
+                    }, [h('p', {
+                      style: {
+                        lineHeight: '24px'
+                      },
+                    }, '邮箱未验证，不能接收消息'), h('Button', {
+                      style: {
+                        cursor: this.recertifyPoinerEmail,
+                        color: this.recertifyColorEmail,
+                      },
+                      props: {
+                        type: 'text',
+                        disabled: this.unEmail,
+                        size: 'small'
+                      },
+                      on: {
+                        click: () => {
+                          this.sendEmail(params.row.email)
+                          this.recertifyEmail = '验证码已发送（60s）'
+                          this.recertifyPoinerEmail = ''
+                          this.recertifyColorEmail = '#FFF'
+                          this.unEmail = true
+                          var inter = setInterval(() => {
+                            this.countdownEmail--
+                            this.recertifyEmail = '验证码已发送(' + this.countdownEmail + 's)'
+                            if (this.countdownEmail == 0) {
+                              clearInterval(inter)
+                              this.countdownEmail = 60
+                              this.recertifyPoinerEmail = 'pointer'
+                              this.recertifyColorEmail = '#2A99F2'
+                              this.recertifyEmail = '重发验证'
+                              this.unEmail = false
+                            }
+                          }, 1000)
+                        }
+                      },
+                    }, this.recertifyEmail),]),
+                  ]),
+
+                ]);
+              } else {
+                return h('div', [
+                  h('span', {}, params.row.email)]
+                );
+              }
+            }
+          },
+          {
+            title: '添加时间',
+            align: 'center',
+            key: 'createTime',
+          }, {
+            title: '操作',
+            align: 'center',
+            render: (h, params) => {
+              return h('div', [
+                h('span', {
+                  style: {
+                    cursor: 'pointer',
+                    color: ' #2A99F2',
+                  },
+                  on: {
+                    click: () => {
+                      this.updateContacts(params.row)
+                    }
+                  }
+                }, '修改'),
+                h('Poptip', {
+                  props: {
+                    title: '您确认删除该联系人吗？',
+                    confirm: true
+                  },
+                  on: {
+                    'on-ok': () => {
+                      this.delContacts(params.row.id)
+                    }
+                  },
+                }, [h('span', {
+                  style: {
+                    cursor: 'pointer',
+                    color: '#2A99F2',
+                    marginLeft: '20px',
+                  }
+                }, '删除')])
+              ]);
+            }
+          },
+        ],
+        linkManData: [],
+        // 添加联系人表单
+        addLinkmanForm: {
+          phone: '',
+          email: '',
+          name: '',
+        },
+        addLinkmanFormValidate: {
+          phone: [
+            {required: true, validator: validaRegisteredPhone, trigger: 'blur'}
+          ],
+          email: [
+            {required: true, validator: validaRegisteredEmail, trigger: 'blur'},
+          ],
+          name: [
+            {required: true, message: '联系人姓名不能为空', trigger: 'blur'}
+          ],
+        },
+        // 通知信息表格
+        setColumns: [
+          {
+            title: '事件项',
+            key: 'companyid',
+          },
+          {
+            title: '站内信',
+            align: 'center',
+            render: (h, params) => {
+              return h('div', [
+                h('Checkbox', {
+                  props: {
+                    value: params.row.isLetter == 1,
+                  },
+                  on: {
+                    'on-change': () => {
+                      this.changeStatus(params.row, 'isLetter')
+                    }
+                  },
+                }, '')
+              ])
+            }
+          },
+          {
+            title: '邮件',
+            align: 'center',
+            render: (h, params) => {
+              return h('div', [
+                h('Checkbox', {
+                  props: {
+                    value: params.row.isEmail == 1,
+                  },
+                  on: {
+                    'on-change': () => {
+                      this.changeStatus(params.row, 'isEmail')
+                    }
+                  }
+                }, '')
+              ])
+            }
+          },
+          {
+            title: '短信',
+            align: 'center',
+            render: (h, params) => {
+
+              return h('div', [
+                h('Checkbox', {
+                  props: {
+                    value: params.row.isTel == 1,
+                  },
+                  on: {
+                    'on-change': () => {
+                      this.changeStatus(params.row, 'isTel')
+                    }
+                  }
+                }, '')
+              ])
+            }
+          }
+        ],
+        setData: [],
       }
+    },
+    created(){
+      this.listNotice()
     },
     methods: {
       // 快速认证时发送验证码
@@ -525,9 +996,180 @@
           }
         })
       },
-      // 图片上传成功回调，设置图片
-      setImage(response){
-        console.log(response)
+      // 个人认证
+      personalAttest(){
+        this.$refs.cardAuth.validate(validate => {
+          if (validate) {
+            if (!this.notAuth.cardAuthForm.IDCardFront || !this.notAuth.cardAuthForm.IDCardBack || !this.notAuth.cardAuthForm.IDCardPerson) {
+              this.$Message.warning('请上传证件图片')
+              return
+            }
+            axios.post('user/personalAttest.do', {
+              cardID: this.notAuth.cardAuthForm.IDCard,
+              name: this.notAuth.cardAuthForm.name,
+              cardFrontURL: this.notAuth.cardAuthForm.IDCardFront,
+              cardBakURL: this.notAuth.cardAuthForm.IDCardBack,
+              companyCardURL: this.notAuth.cardAuthForm.IDCardPerson,
+              type: '1'
+            }).then(response => {
+
+            })
+          }
+        })
+
+      },
+      // 企业认证
+      enterpriseAttest(){
+        this.$refs.companyAuth.validate(validate => {
+          if (validate) {
+            var params = {
+              authType: this.notAuth.companyAuthForm.certificateType,
+              name: this.notAuth.companyAuthForm.name,
+              linkmanName: this.notAuth.companyAuthForm.contactPerson,
+              trade: this.notAuth.companyAuthForm.industry,
+              phone: this.notAuth.companyAuthForm.contact
+            }
+            if (params.authType == 1) {
+              if (this.notAuth.companyAuthForm.combine == '') {
+                this.$Message.warning('请上传三证合一')
+                return
+              }
+              params.companyCardURL = this.notAuth.companyAuthForm.combine
+            } else {
+              if (this.notAuth.companyAuthForm.license == '') {
+                this.$Message.warning('请上传营业执照')
+                return
+              }
+              if (this.notAuth.companyAuthForm.tax == '') {
+                this.$Message.warning('请上传税务登记证')
+                return
+              }
+              if (this.notAuth.companyAuthForm.organization == '') {
+                this.$Message.warning('请上传组织机构代码')
+                return
+              }
+              params.businessLicense = this.notAuth.companyAuthForm.license
+              params.organizationCode = this.notAuth.companyAuthForm.organization
+              params.taxRegister = this.notAuth.companyAuthForm.tax
+            }
+            axios.post('user/enterpriseAttest.do', params).then(response => {
+              console.log(response)
+            })
+          }
+        })
+      },
+      // 列出通知信息
+      listNotice(){
+        var url = `user/listNotice.do`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.setData = response.data.result
+            this.inform = response.data.result
+          }
+        })
+      },
+      // 添加联系人
+      addLinkman(){
+        this.showModal.addLinkman = true;
+      },
+      addLinkmanOk(name){
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.showModal.addLinkman = false;
+            var url = `user/addcontacts.do?username=${this.addLinkmanForm.name}&phone=${this.addLinkmanForm.phone}&email=${this.addLinkmanForm.email}`;
+            this.$http.get(url).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+                this.getContacts()
+              } else {
+                this.getContacts()
+              }
+            })
+          }
+        })
+      },
+      // 更新通知配置
+      updateNotice(){
+        this.updateInform = []
+        for (var i = 0; i < this.inform.length; i++) {
+          if (this.inform[i].isLetter == 0 && this.inform[i].isEmail == 0 && this.inform[i].isTel == 0) {
+          } else {
+            this.updateInform.push(this.inform[i])
+          }
+        }
+        var updateValue = encodeURI(JSON.stringify(this.updateInform))
+        var url = `user/updateNotice.do?value=${updateValue}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+            this.listNotice()
+          } else {
+            this.listNotice()
+          }
+        })
+      },
+      // 恢复通知默认配置
+      recoverNotice(){
+        var url = `user/recoverNotice.do`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+            this.listNotice()
+          } else {
+            this.listNotice()
+          }
+        })
+      },
+      changeStatus(item, type){
+        this.inform.forEach(it => {
+          if (it.tempCode == item.tempCode) {
+            if (it[type] == 1) {
+              it[type] = 0
+            } else {
+              it[type] = 1
+            }
+          }
+        })
+      },
+      /* 图片上传成功回调，设置图片。每张图片上传都有一个method。
+       暂时没有找到更好的方法解决图片标记问题 */
+      IDCardFront(response){
+        if (response.status == 1) {
+          this.notAuth.cardAuthForm.IDCardFront = response.result
+        }
+      },
+      IDCardBack(response){
+        if (response.status == 1) {
+          this.notAuth.cardAuthForm.IDCardBack = response.result
+        }
+      },
+      IDCardPerson(response){
+        if (response.status == 1) {
+          this.notAuth.cardAuthForm.IDCardPerson = response.result
+        }
+      },
+      combine(response){
+        if (response.status == 1) {
+          this.notAuth.companyAuthForm.combine = response.result
+        }
+      },
+      // 营业执照
+      license(response){
+        if (response.status == 1) {
+          this.notAuth.companyAuthForm.license = response.result
+        }
+      },
+      // 税务登记证
+      tax(response){
+        if (response.status == 1) {
+          this.notAuth.companyAuthForm.tax = response.result
+        }
+      },
+      // 组织机构代码
+      organization(response){
+        if (response.status == 1) {
+          this.notAuth.companyAuthForm.organization = response.result
+        }
       },
       auth(){
         var quicklyAuth = this.$refs.quicklyAuth.validate(validate => {
@@ -556,7 +1198,11 @@
     computed: mapState({
       // 传字符串参数 'count' 等同于 `
       userInfo: 'userInfo',
-      authInfo: 'authInfo'
+      authInfo: 'authInfo',
+      // 剩余联系人个数
+      remainLinkMan(){
+        return 5 - this.linkManData.length
+      }
     })
   }
 </script>
@@ -647,6 +1293,10 @@
           label {
             float: unset;
           }
+          img {
+            width: 300px;
+            height: 161px;
+          }
         }
       }
     }
@@ -687,6 +1337,74 @@
         display: inline-block;
         vertical-align: middle;
       }
+    }
+  }
+
+  .infTop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 96px;
+    border-bottom: 1px solid #E9E9E9;
+    .inf {
+      font-family: MicrosoftYaHei;
+      font-size: 16px;
+      color: rgba(17, 17, 17, 0.75);
+      letter-spacing: 0.95px;
+    }
+  }
+
+  .imgbox {
+    font-size: 14px;
+    color: rgba(17, 17, 17, 0.65);
+    letter-spacing: 0.83px;
+    overflow: hidden;
+    img {
+      vertical-align: top;
+    }
+    ul {
+      display: inline-block;
+      li {
+        margin: 7px 0px;
+        margin-left: 23px;
+        line-height: 32px;
+        font-family: Microsoft Yahei, 微软雅黑;
+        font-size: 14px;
+        color: rgba(17, 17, 17, 0.65);
+        letter-spacing: 0.83px;
+      }
+    }
+  }
+
+  .safe {
+    padding-top: 9px;
+    p {
+      font-family: Microsoft Yahei, 微软雅黑;
+      font-size: 14px;
+      color: rgba(17, 17, 17, 0.65);
+      letter-spacing: 0.83px;
+      width: 84%;
+      display: inline-block;
+      padding: 11px 0px;
+      &::before {
+        content: "";
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        background: url('../../assets/img/usercenter/info-icon.png');
+        margin-right: 15px;
+        vertical-align: bottom;
+      }
+      &.info::before {
+        background-position: right;
+      }
+      span {
+        font-size: 16px;
+        color: rgba(17, 17, 17, 0.65);
+      }
+    }
+    span {
+      color: #2A99F2
     }
   }
 </style>

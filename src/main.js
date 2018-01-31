@@ -100,7 +100,7 @@ var vm = new Vue({
   render: h => h(Main)
 })
 vm.$Message.config({
-  top: 105,
+  top: 50,
   duration: 3
 })
 vm.$mount('#app')
