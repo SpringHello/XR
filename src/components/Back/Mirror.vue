@@ -483,7 +483,7 @@
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
            this.$Message.success(response.data.message)
-          }else{
+          } else {
            this.$Message.error(response.data.message)
           }
         })
