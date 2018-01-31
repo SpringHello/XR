@@ -640,7 +640,6 @@
     },
     created() {
       this.zoneList = $store.state.zoneList
-      // console.log(this.zoneList)
       this.zone = $store.state.zoneList[0].zoneid
       if ($store.state.userInfo) {
         this.userInfo = $store.state.userInfo
@@ -650,6 +649,7 @@
       this.$http.get(`information/listTemplates.do?user=0&zoneid=${this.zone}`).then(response => {
         var responseData = response.data.result
         this.pubilcSystem = responseData
+        // 镜像选择主机，默认选择参数
         if(this.$route.query.mirrorType == 'public'){
           this.osId = this.$route.query.templateid
           this.zone = this.$route.query.zoneid
@@ -658,7 +658,6 @@
           this.mirror='customMirror'
           this.osId = this.$route.query.templateid
           this.zone = this.$route.query.zoneid
-          
           }else{
           this.osId = responseData.window[0].systemtemplateid
         }

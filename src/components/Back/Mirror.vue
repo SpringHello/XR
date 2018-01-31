@@ -416,7 +416,6 @@
         this.selections = selections
       },
       selectChange(select) {
-        console.log(select)
         this.select = select
       },
       createHostBySystem() {
