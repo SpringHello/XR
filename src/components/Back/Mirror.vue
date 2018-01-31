@@ -78,7 +78,7 @@
       <Button type="ghost" @click="this.showModal.modify=false">取消</Button>
       <Button type="primary"
               :disabled="mirrorModifyForm.name==''||mirrorModifyForm.remarks==''"
-              @click="mirrorModify">确认修改
+              @click="mirrorModifySubm">确认修改
       </Button>
     </div>
     </Modal>
@@ -115,6 +115,7 @@
           modify: false,
           creatMirrorhint: false
         },
+        systemtemplateid: '',
         creatMirrorhint: '1',
         filterKey: '全部',
         filterList: ['全部', 'centos', 'debian', 'ubuntu', 'window'],
@@ -301,13 +302,7 @@
                   },
                   on: {
                       click: () => {
-                        // let mirror = this.select
-                        // sessionStorage.setItem('zoneid', mirror.zoneid)
-                        // sessionStorage.setItem('templateid', mirror.systemtemplateid)
-                        // sessionStorage.setItem('ostypename', mirror.ostypename)
-                        // sessionStorage.setItem('templatename', mirror.templatename)
-                        // this.$store.commit('setSelect', 'price')
-                        this.$router.push({path: 'price'})
+                        this.ownMirrorCreathost(params.row)
                       }
                   }
               }, '生成主机'),
@@ -318,8 +313,8 @@
                   },
                   on: {
                       click: () => {
-                        // this.remove(params.index)
                         this.showModal.modify = true
+                        this.systemtemplateid = params.row.systemtemplateid
                       }
                   }
               }, '修改')]);
@@ -374,6 +369,16 @@
       this.inter()
     },
     methods: {
+      ownMirrorCreathost(item) {
+        this.$router.push({
+          path: 'price',
+          query: {
+            templateid: item.systemtemplateid,
+            zoneid: item.zoneid,
+            mirrorType: 'own'
+          }
+        })
+      },
       mirrorModify() {
         this.showModal.modify = false
       },
@@ -411,34 +416,22 @@
         this.selections = selections
       },
       selectChange(select) {
-        console.log(select)
         this.select = select
       },
-      // createHost() {
-      //   if (this.selections == null) {
-      //     this.$Message.warning('请选择一个镜像')
-      //     return
-      //   }
-      //   let mirror = this.selections
-      //   sessionStorage.setItem('zoneid', mirror.zoneid)
-      //   sessionStorage.setItem('templateid', mirror.systemtemplateid)
-      //   sessionStorage.setItem('ostypename', mirror.ostypename)
-      //   sessionStorage.setItem('templatename', mirror.templatename)
-      //   this.$store.commit('setSelect', 'new')
-      //   this.$router.push({path: 'price'})
-      // },
       createHostBySystem() {
         if (this.select == null) {
           this.$Message.warning('请选择一个镜像')
           return
         }
-        let mirror = this.select
-        sessionStorage.setItem('zoneid', mirror.zoneid)
-        sessionStorage.setItem('templateid', mirror.systemtemplateid)
-        sessionStorage.setItem('ostypename', mirror.ostypename)
-        sessionStorage.setItem('templatename', mirror.templatename)
-        this.$store.commit('setSelect', 'new')
-        this.$router.push({path: 'price'})
+        var item = this.select
+        this.$router.push({
+          path: 'price',
+          query: {
+            templateid: item.systemtemplateid,
+            zoneid: item.zoneid,
+            mirrorType: 'public'
+          }
+        })
       },
       deleteSelection() {
         if (this.selections == null) {
@@ -471,7 +464,7 @@
       },
       ok() {
         this.showModal.createMirror = false
-        var url = `Snapshot/createTemplate.do?rootdiskid=${this.formItem.vmInfo.split('#')[0]}&name=${this.formItem.mirrorName}&discript=${this.formItem.mirrorDescription}`
+        var url = `Snapshot/createTemplate.do?rootDiskId=${this.formItem.vmInfo.split('#')[0]}&templateName=${this.formItem.mirrorName}&descript=${this.formItem.mirrorDescription}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.ownData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
@@ -483,6 +476,17 @@
         this.formItem.mirrorName = ''
         this.formItem.mirrorDescription = ''
         this.showModal.createMirror = false
+      },
+      mirrorModifySubm() {
+        this.showModal.modify = false
+        var url = `Snapshot/updateTemplate.do?templateId=${this.systemtemplateid}&templateName=${this.mirrorModifyForm.name}&descript=${this.mirrorModifyForm.remarks}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+           this.$Message.success(response.data.message)
+          } else {
+           this.$Message.error(response.data.message)
+          }
+        })
       }
     },
     computed: {

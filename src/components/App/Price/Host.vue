@@ -69,17 +69,26 @@
               镜像+应用
             </button>
             <button :class="{select:mirror=='UHub'}" @click="mirror='UHub',mirrorType='Windows'">公共镜像</button>
-            <button :class="{select:mirror=='customImage',disabled:userInfo==null}"
-                    @click="mirror='customImage',mirrorType=''" :disabled="userInfo==null">自定义镜像
+            <button :class="{select:mirror=='customMirror',disabled:userInfo==null}"
+                    @click="mirror='customMirror',mirrorType=''">自定义镜像
             </button>
           </div>
-          <div class="config-button public-image" style="margin-left: 103px;" v-if="mirror=='UHub'">
-            <div v-for="(item,index) in system" :key="index" class="button-col">
-              <button v-for="(content,index) in item" :key="index" @click="publicImage(content)"
-                      :class="{select:pImagename==content.templatedescript}">{{content.templatedescript}}
-              </button>
-            </div>
+         <!-- 公共镜像列表 -->
+        <div class="config-button public-image" style="margin-left: 103px;" v-if="mirror=='UHub'">
+          <div v-for="(item,index) in pubilcSystem" :key="index" class="button-col">
+            <button v-for="(content,index) in item" :key="index" @click="publicImage(content)"
+                    :class="{select:osId==content.systemtemplateid}">{{content.templatename}}
+            </button>
           </div>
+        </div>
+        <!-- 自有镜像列表 -->
+        <div class="config-button public-image" style="margin-left: 103px;" v-if="mirror=='customMirror'">
+          <div v-for="(item,index) in ownSystem" :key="index" class="button-col">
+            <button v-for="(content,index) in item" :key="index" @click="publicImage(content)"
+                    :class="{select:osId==content.systemtemplateid}">{{content.templatename}}
+            </button>
+          </div>
+        </div>
           <div class="configMirror-button" v-if="mirror=='imageApplication'">
             <button v-for="item in mirrorConfigList" :class="{select:item.value==mirrorType}"
                     @click="mirrorType=item.value">
@@ -251,18 +260,28 @@
           <span>镜像</span>
           <button :class="{select:mirror=='imageApplication'}" @click="mirror='imageApplication',mirrorType='1'">镜像+应用
           </button>
-          <button :class="{select:mirror=='UHub'}" @click="mirror='UHub',mirrorType='Windows'">公共镜像</button>
-          <button :class="{select:mirror=='customImage',disabled:userInfo==null}"
-                  @click="mirror='customImage',mirrorType=''" :disabled="userInfo==null">自定义镜像
+          <button :class="{select:mirror=='UHub'}" @click="mirror='UHub'">公共镜像</button>
+          <button :class="{select:mirror=='customMirror',disabled:userInfo==null}"
+                  @click="mirror='customMirror'" >自定义镜像
           </button>
         </div>
+        <!-- 公共镜像列表 -->
         <div class="config-button public-image" style="margin-left: 103px;" v-if="mirror=='UHub'">
-          <div v-for="(item,index) in system" :key="index" class="button-col">
+          <div v-for="(item,index) in pubilcSystem" :key="index" class="button-col">
             <button v-for="(content,index) in item" :key="index" @click="publicImage(content)"
-                    :class="{select:pImagename==content.templatedescript}">{{content.templatedescript}}
+                    :class="{select:osId==content.systemtemplateid}">{{content.templatename}}
             </button>
           </div>
         </div>
+        <!-- 自有镜像列表 -->
+        <div class="config-button public-image" style="margin-left: 103px;" v-if="mirror=='customMirror'">
+          <div v-for="(item,index) in ownSystem" :key="index" class="button-col">
+            <button v-for="(content,index) in item" :key="index" @click="publicImage(content)"
+                    :class="{select:osId==content.systemtemplateid}">{{content.templatename}}
+            </button>
+          </div>
+        </div>
+
         <div class="configMirror-button" v-if="mirror=='imageApplication'">
           <button v-for="item in mirrorConfigList" :class="{select:item.value==mirrorType}"
                   @click="mirrorType=item.value">
@@ -348,8 +367,8 @@
         <button @click="addBudgetList" :class="{select:addButton,disabled:hostDisabled}" :disabled="hostDisabled">
           加入预算清单
         </button>
-        <button style="margin-right: 0" :class="{select:buyButton,disabled:hostDisabled}" @click="buyImmediately"
-                :disabled="hostDisabled">立即购买
+        <button style="margin-right: 0"  @click="buyImmediately"
+                >立即购买
         </button>
       </div>
     </div>
@@ -410,9 +429,9 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import $store from '../../../vuex'
   import regExp from '../../../util/regExp'
-
+  import $store from '@/vuex'
+  import axios from 'axios'
   var debounce = require('throttle-debounce/debounce')
   var messageMap = {
     loginname: {
@@ -429,10 +448,9 @@
   export default {
     data() {
       return {
-        // 产品类型
-        pImagename: 'windows-2008-64',
         osId: '',
-        system: '',
+        pubilcSystem: '',
+        ownSystem: '',
         productList: [
           {
             label: '云主机',
@@ -448,7 +466,7 @@
         // 地区
         zoneList: [],
         // 地区id
-        zone: '1',
+        zone: '',
         // 主机类型：快速配置+自定义配置
         pitchOn: 'quick',
         // 购买日期类型
@@ -627,16 +645,30 @@
         this.userInfo = $store.state.userInfo
       }
       this.queryQuickHost()
-      //获取公共镜像
-      var url11 = `information/listTemplates.do?user=0&zoneid=${this.zone} `
-      this.$http.get(url11).then(response => {
-        var system = response.data.result
-        this.osId = system.window[0].systemtemplateid
-        this.system = system
+      // 获取公共镜像
+      this.$http.get(`information/listTemplates.do?user=0&zoneid=${this.zone}`).then(response => {
+        var responseData = response.data.result
+        this.pubilcSystem = responseData
+        // 镜像选择主机，默认选择参数
+        if(this.$route.query.mirrorType == 'public'){
+          this.osId = this.$route.query.templateid
+          this.zone = this.$route.query.zoneid
+          this.mirror='UHub'
+        }else if(this.$route.query.mirrorType == 'own'){
+          this.mirror='customMirror'
+          this.osId = this.$route.query.templateid
+          this.zone = this.$route.query.zoneid
+          }else{
+          this.osId = responseData.window[0].systemtemplateid
+        }
+      })
+      // 获取自有镜像
+      this.$http.get(`information/listTemplates.do?user=1&zoneid=${this.zone}`).then(response => {
+        var responseData = response.data.result
+        this.ownSystem = responseData
       })
     },
     mounted() {
-
     },
     methods: {
       /* 切换到自定义 */
@@ -685,7 +717,7 @@
             timeType: this.timeType,
             time: this.time + '',
             net: 'no',
-            mirror: this.mirror === 'imageApplication' ? 'imageApplication' : this.mirror === 'UHub' ? 'UHub' : 'customImage',
+            mirror: this.mirror === 'imageApplication' ? 'imageApplication' : this.mirror === 'UHub' ? 'UHub' : 'customMirror',
             mirrorType: this.mirrorType,
             config: this.quickConfig,
             cost: this.quickTotalCost,
@@ -701,7 +733,7 @@
             timeType: this.timeType,
             time: this.time + '',
             net: this.private.substring(0, 2),
-            mirror: this.mirror === 'imageApplication' ? 'imageApplication' : this.mirror === 'UHub' ? 'UHub' : 'customImage',
+            mirror: this.mirror === 'imageApplication' ? 'imageApplication' : this.mirror === 'UHub' ? 'UHub' : 'customMirror',
             mirrorType: this.mirrorType,
             cpuNum: this.cpuNum + '',
             memorySize: this.memorySize + '',
@@ -717,12 +749,9 @@
           this.addButton = false
         }
       },
-      /* 立即购买 */
       publicImage(item) {
         this.osId = item.systemtemplateid
-        this.pImagename = item.templatedescript
         console.log(this.osId)
-        console.log(this.pImagename)
       },
       buyImmediately() {
         if (this.userInfo == null) {
@@ -853,8 +882,8 @@
           }
         }
         var renewal = this.autoRenewal ? 1 : 0
-        var url = `information/deployVirtualMachine.do?name=${this.hostName}&password=${this.hostPassword}&templateId=${this.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&bandWidth=${this.publicIP}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=1&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=no`
-        this.$http.get(url).then(response => {
+        var url = `information/deployVirtualMachine.do?zoneId=${this.zone}&name=${this.hostName}&password=${this.hostPassword}&templateId=${this.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&bandWidth=${this.publicIP}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=1&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=no`
+        axios.get(url).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
@@ -879,15 +908,17 @@
         var diskType = this.diskList.map(item => {
           return item.diskType
         }).join(',')
-        var url = `information/deployVirtualMachine.do?zoneid=${this.zone}&name=${this.hostName}&password=${this.hostPassword}&templateid=${this.osId}&size=${diskSize}&cpunum=${this.cpuNum}&memory=${this.memory}&value=${this.timeType}&timevalue=${this.time}&count=0&isautorenew=${renewal}&disktype=${diskType}&networkid=${this.private.split('#')[0]}`
+        // zoneId, templateId, bandWidth, timeType, timeValue, count, isAutoRenew, cpuNum, memory,
+        // networkId
+        var url = `information/deployVirtualMachine.do?zoneId=${this.zone}&name=${this.hostName}&password=${this.hostPassword}&templateId=${this.osId}&cpuNum=${this.cpuNum}&memory=${this.memory}&timeType=${this.timeType}&timeValue=${this.time}&count=0&isAutoRenew=${renewal}&disktype=${diskType}&networkId=${this.private.split('#')[0]}`
         if (this.buyPublicIP == false) {
           bandwidth = 0
         }
-        url = url + '&bandwidth=' + bandwidth
+        url = url + '&bandWidth=' + bandwidth
         if (this.specifyInfo != '指定IP') {
           url += '&ipaddress=' + this.specifyInfo
         }
-        this.$http.get(url)
+        axios.get(url)
           .then(response => {
             this.loading = false
             if (response.status == 200 && response.data.status == 1) {
@@ -1239,6 +1270,9 @@
       })
     },
     computed: {
+      templateid() {
+        // return this.$route.query.templateid
+      },
       /* 校检登录信息完整 */
       disabled() {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.agree && this.vailForm.loginname.warning == false)
