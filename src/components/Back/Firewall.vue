@@ -110,6 +110,7 @@
         </Button>
       </div>
     </Modal>
+
   </div>
 </template>
 
@@ -138,12 +139,9 @@
         },
         columns: [
           {
-            type: 'radio',
+           type: 'radio',
             width: 60,
             align: 'center',
-            render:(h, params) => {
-                return h('Radio',{},)
-            }
           },
           {
             title: '名称',
