@@ -5,7 +5,7 @@ var passwordRegExp = /(?:\d[a-zA-Z])|(?:[a-zA-Z]\d)/
 //var passwordRegExp = /ddd/;
 export default{
   emailVail: (email) => {
-    return emailRegExp.test(email)||phoneRegExp.test(email);
+    return emailRegExp.test(email) || phoneRegExp.test(email);
   },
   phoneVail: (phone) => {
     return phoneRegExp.test(phone);

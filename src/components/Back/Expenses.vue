@@ -1062,7 +1062,7 @@
         }
       },
       searchOrderByType() {
-        this.$http.get('information/searchOrderByType.do?pageSize=' + this.pageSize + '&page=' + this.order_currentPage + '&type=' + this.order_type + '&starttime=' + this.order_dateRange[0] + '&endtime=' + this.order_dateRange[1]).then(response => {
+        this.$http.get('information/searchOrderByType.do?pageSize=' + this.pageSize + '&page=' + this.order_currentPage + '&type=' + this.order_type + '&startTime=' + this.order_dateRange[0] + '&endTime=' + this.order_dateRange[1]).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             response.data.result.data.forEach(item => {
               item.resources = ''
