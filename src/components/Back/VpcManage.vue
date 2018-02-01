@@ -337,6 +337,8 @@
       },
       // 提交添加子网
       handleNewNetworkSubmit(){
+        nameError = ''
+        getwayError = ''
         this.$refs.newNetworkValidate.validate((valid) => {
           if (valid) {
             var gateWay = this.data.cidr.split('.')
