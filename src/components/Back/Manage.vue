@@ -242,26 +242,26 @@
         </div>
       </div>
       <Modal width="700" v-model="showModal.setMonitoringForm" :scrollable="true">
-        <div slot="header"
+        <div slot="header" class="modal-header-border"
              style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;font-weight: 600">
           告警策略配置
         </div>
         <div style="height: 250px">
           <div style="display:flex;">
-            <p style=" font-size: 16px;line-height: 22px;">通知类型</p>
-            <Checkbox v-model="isletter" size="large" style="margin-left: 20px">站内信</Checkbox>
-            <Checkbox v-model="isemailalarm" size="large" style="margin-left: 20px">邮箱</Checkbox>
-            <Checkbox v-model="issmsalarm" size="large" style="margin-left: 20px">短信</Checkbox>
+            <p style=" font-size: 14px;line-height: 22px;">通知类型</p>
+            <Checkbox v-model="isletter" size="large" style="margin-left: 20px;font-size: 12px;line-height: 22px;">站内信</Checkbox>
+            <Checkbox v-model="isemailalarm" size="large" style="margin-left: 20px;font-size: 12px;line-height: 22px;">邮箱</Checkbox>
+            <Checkbox v-model="issmsalarm" size="large" style="margin-left: 20px;font-size: 12px;line-height: 22px;">短信</Checkbox>
           </div>
           <div class="setForm">
             <div>
-              <div style="display: flex">
+              <div>
                 <p>CPU利用率设定</p>
                 <Select v-model="setCPU" class="setSelect">
                   <Option v-for="item in setList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
               </div>
-              <div style="display: flex;margin-top: 40px;">
+              <div style="margin-top: 40px;">
                 <p>内存使用率设定</p>
                 <Select v-model="setRAM" class="setSelect">
                   <Option v-for="item in setList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -269,30 +269,30 @@
               </div>
             </div>
             <div>
-              <div style="display: flex;">
+              <div>
                 <p>磁盘空间利用率设定</p>
                 <Select v-model="setDisk" class="setSelect">
                   <Option v-for="item in setList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
               </div>
-              <div style="display: flex;margin-top: 40px;float: right">
-                <p>流量流入告警设定</p>
+              <div style="margin-top: 40px;float: right">
+                <p>流量告警设定</p>
                 <Select v-model="setFluxIn" class="setSelect">
                   <Option v-for="item in fluxList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
               </div>
             </div>
           </div>
-          <div style=" margin-top: 40px;display: flex;padding-left: 15px;">
+          <!-- <div style=" margin-top: 40px;padding-left: 15px;">
             <p style="font-size: 16px;line-height: 30px;">流量流出告警设定</p>
             <Select v-model="setFluxOut" style="  width:150px;margin-left: 5px">
               <Option v-for="item in fluxList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
-          </div>
+          </div> -->
         </div>
-        <div slot="footer">
+        <div slot="footer" class="modal-footer-border">
           <Button type="ghost" @click="showModal.setMonitoringForm=false">取消</Button>
-          <Button type="primary" @click="setMonitoringOk">完成</Button>
+          <Button type="primary" @click="setMonitoringOk">确定</Button>
         </div>
       </Modal>
     </div>
@@ -375,6 +375,7 @@
         }
       }
       return {
+        snapsId: '',
         snapsName: '',
         hostName: '',
         cursnapshot: null,
@@ -406,17 +407,29 @@
             title: '状态',
             key: 'status',
             render: (h, params) => {
-              const row = params.row
-              const text = row.status === 0 ? '异常' : row.status === 1 ? '可用' : row.status === 3 ? '删除中' : ''
-              if (row.status == 3) {
-                return h('div', {}, [h('Spin', {
-                  style: {
-                    display: 'inline-block',
-                    marginRight: '10px'
-                  }
-                }), h('span', {}, text)])
-              } else {
-                return h('span', text)
+              switch (params.row.status) {
+                case 1:
+                  return h('span', {}, '正常')
+                case -1:
+                  return h('span', {
+                    style: {
+                      color: '#EE4545'
+                    }
+                  }, '异常')
+                case 2:
+                  return h('div', {}, [h('Spin', {
+                    style: {
+                      display: 'inline-block',
+                      marginRight: '10px'
+                    }
+                  }), h('span', {}, '创建中')])
+                  case 3:
+                  return h('div', {}, [h('Spin', {
+                    style: {
+                      display: 'inline-block',
+                      marginRight: '10px'
+                    }
+                  }), h('span', {}, '删除中')])
               }
             }
           },
@@ -655,6 +668,7 @@
       }
     },
     created() {
+      this.snapsId = this.$route.query.vmid
       var computerInfoURL = `information/listVMByComputerName.do?computerName=${this.$route.query.computername}&zoneId=${this.$route.query.zoneid}`
       axios.get(computerInfoURL)
         .then(response => {
@@ -698,6 +712,28 @@
             this.ipPolar.xAxis.data = response.data.result.xaxis
           }
         })
+
+        this.intervalSnapsList = setInterval(() => {
+          var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1&resourceId=${this.snapsId}`
+          axios.get(snapsURL)
+            .then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                var snapshotData = response.data.result
+                  snapshotData.forEach(item => {
+                        if (this.snapsSelection) {
+                          if (this.snapsSelection.id == item.id) {
+                            item._checked = true
+                          }
+                          if (item.status == 2) {
+                            item._disabled = true
+                          }
+                        }
+                      })
+                      this.snapshotData = snapshotData
+                    }
+            })
+          }, 1000 * 10)
+
       this.CPUTime = this.getCurrentDate()
       this.diskTime = this.getCurrentDate()
       this.memoryTime = this.getCurrentDate()
@@ -738,13 +774,24 @@
       },
       // 获取具体主机下的快照列表
       getsnapsList() {
-        var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1&resourceId=${this.$route.query.vmid}`
+        var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1&resourceId=${this.snapsId}`
         axios.get(snapsURL)
-          .then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.snapshotData = response.data.result
-            }
-          })
+            .then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                var snapshotData = response.data.result
+                  snapshotData.forEach(item => {
+                        if (this.snapsSelection) {
+                          if (this.snapsSelection.id == item.id) {
+                            item._checked = true
+                          }
+                          if (item.status == 2) {
+                            item._disabled = true
+                          }
+                        }
+                      })
+                      this.snapshotData = snapshotData
+                    }
+            })
       },
       delSnapshot() {
         if (this.snapsSelection == null) {
@@ -764,12 +811,7 @@
         axios.get(URL)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              // alert(1)
-              this.getsnapsLis()
-              this.$Message.success({
-                content: response.data.message,
-                duration: 5
-              })
+              this.getsnapsList()
             }
           })
       },
@@ -888,7 +930,7 @@
       reset() {
         var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,}$/
         if (regExp.test(this.resetPasswordForm.newPassword) && this.resetPasswordForm.newPassword == this.resetPasswordForm.confirmPassword) {
-          var url = `information/resetPasswordForVirtualMachine.do?vmid=${this.computerInfo.computerId}&password=${this.resetPasswordForm.newPassword}`
+          var url = `information/resetPasswordForVirtualMachine.do?VMId=${this.computerInfo.computerId}&password=${this.resetPasswordForm.newPassword}`
           var password = this.resetPasswordForm.newPassword
           this.resetPasswordForm.buttonMessage = '正在重置中...'
           this.resetPasswordForm.buttonDisabled = true
@@ -935,6 +977,7 @@
           }
         })
       },
+      // 告警策略配置确定
       setMonitoringOk() {
         this.isLetter = this.isletter == true ? 1 : 0
         this.isEmailAlarm = this.isemailalarm == true ? 1 : 0
@@ -950,6 +993,11 @@
           }
         })
       }
+    },
+    beforeRouteLeave(to, from, next) {
+      // 导航离开该组件的对应路由时调用
+      clearInterval(this.intervalSnapsList)
+      next()
     }
   }
 </script>
@@ -1151,12 +1199,11 @@
     padding-left: 15px;
     padding-right: 15px;
     p {
-      font-size: 16px;
+      font-size: 14px;
       line-height: 30px;
     }
     .setSelect {
-      width: 150px;
-      margin-left: 20px;
+      width: 240px;
     }
   }
 </style>

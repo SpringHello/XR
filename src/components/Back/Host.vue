@@ -148,9 +148,9 @@
                         <span>{{item.createtime}}</span>
                         <button @click.stop="manage(item,'normal')" :disabled="!auth" style="margin-left:55px;">管理
                         </button>
-                        <button v-if="!auth" :disabled="!auth">连接主机</button>
+                        <button v-if="!auth" :disabled="!auth" class="lint-host">连接主机</button>
                         <a v-else :href="item.connecturl" target="_blank"
-                           style="line-height: 30px;border: 1px solid;border-radius: 4px;width: 76px;">连接主机</a>
+                           style="line-height: 30px;border: 1px solid;border-radius: 4px;width: 76px;background:#2A99F2;color:#fff">连接主机</a>
                       </div>
                     </div>
                   </Card>
@@ -616,7 +616,7 @@
       joinBalance() {
         if (this.checkSelect()) {
           if (this.currentHost[0].loadbalance) {
-            // this.$Message.warning('啊哦!已绑定主机无法再次绑定!')
+            this.$Message.warning('啊哦!已绑定主机无法再次绑定!')
           } else {
             // this.loadingMessage = '正在绑定IP'
             // this.loading = true
@@ -638,8 +638,10 @@
         this.showModal.balance = false
         axios.get(`loadbalance/assignToLoadBalancerRule.do?zoneId=${this.currentHost[0].zoneid}&roleId=${this.loadBalanceForm.loadbalanceroleid}&VMIds=${this.currentHost[0].computerid}`)
           .then(response => {
-            if (response.status == 200) {
+            if (response.status == 200 && response.data.status == 1) {
               this.$Message.success(response.data.message)
+            } else {
+              this.$Message.error(response.data.message)
             }
           })
       },
@@ -1001,11 +1003,12 @@
           }
           this.loadingMessage = '正在删除主机'
           this.loading = true
-          this.$http.get('information/deleteVM.do?virtualMachineid=' + this.currentHost[0].id)
+          this.$http.get('information/destroyVirtualMachine.do?virtualMachineId=' + this.currentHost[0].id)
             .then(response => {
               this.loading = false
               if (response.status == 200 && response.data.status == 1) {
                 // initRecycle.bind(this)()
+                this.$Message.success(response.data.message)
                 this.getData()
               }
             })
@@ -1018,7 +1021,7 @@
         if (this.checkSelect()) {
           this.loadingMessage = '正在重启主机'
           this.loading = true
-          this.$http.get('information/rebootVirtualMachine.do?vmid=' + this.currentHost[0].computerid)
+          this.$http.get('information/rebootVirtualMachine.do?VMId=' + this.currentHost[0].computerid)
             .then(response => {
               this.loading = false
               if (response.status == 200 && response.data.status == 1) {
@@ -1083,6 +1086,10 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .link-host{
+    background: #2A99F2;
+    color: #fff;
+  }
   .moreOperation .ivu-poptip-rel li {
     font-size: 12px;
     line-height: normal;

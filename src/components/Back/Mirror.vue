@@ -101,6 +101,20 @@
         <Button type="primary" @click="rollbackSubmit">确定</Button>
       </p>
     </Modal>
+     <!-- 删除镜像弹窗 -->
+    <Modal v-model="showModal.delmirror" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>删除镜像</strong>
+          <p class="lh24">确定要删除选中的镜像吗？</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.delmirror=false">取消</Button>
+        <Button type="primary" @click="delmirrorSubm">确定</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -113,7 +127,8 @@
         showModal: {
           createMirror: false,
           modify: false,
-          creatMirrorhint: false
+          creatMirrorhint: false,
+          delmirror: false
         },
         systemtemplateid: '',
         creatMirrorhint: '1',
@@ -335,24 +350,12 @@
     },
     created() {
       // 查询系统镜像
-      var url = `information/listTemplates.do?user=0&zoneid=${$store.state.zone.zoneid}`
+      var url = `information/listTemplates.do?user=0`
       this.$http.get(url).then(response => {
         if (response.status == 200 && response.data.status == 1) {
           this.systemData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
           this.originData = this.systemData
           this.systemData.forEach(item => {
-            if (item.status == 2) {
-              item._disabled = true
-            }
-          })
-        }
-      })
-      // 查询自有镜像
-      var url1 = `information/listTemplates.do?user=1&zoneid=${$store.state.zone.zoneid}`
-      this.$http.get(url1).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.ownData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
-          this.ownData.forEach(item => {
             if (item.status == 2) {
               item._disabled = true
             }
@@ -367,8 +370,23 @@
         }
       })
       this.inter()
+      this.ownMirrorList()
     },
     methods: {
+      // 查询自有镜像
+      ownMirrorList() {
+        var url1 = `information/listTemplates.do?user=1`
+        this.$http.get(url1).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.ownData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
+            this.ownData.forEach(item => {
+              if (item.status == 2) {
+                item._disabled = true
+              }
+            })
+          }
+        })
+      },
       ownMirrorCreathost(item) {
         this.$router.push({
           path: 'price',
@@ -393,7 +411,7 @@
       },
       inter() {
         this.intervalInstance = setInterval(() => {
-          var url1 = `information/listTemplates.do?user=1&zoneid=${$store.state.zone.zoneid}`
+          var url1 = `information/listTemplates.do?user=1`
           this.$http.get(url1).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               var ownData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
@@ -434,31 +452,18 @@
         })
       },
       deleteSelection() {
-        if (this.selections == null) {
+         if (this.selections == null) {
           this.$Message.warning('请选择一个镜像')
           return
         }
-        this.$Modal.confirm({
-          title: '',
-          content: '<p>确定要删除选中的镜像吗？</p>',
-          onOk: () => {
-            var url = `Snapshot/deleteTemplate.do?templateid=${this.selections.id}`
-            this.ownData.forEach(item => {
-              if (item.id == this.selections.id) {
-                item.status = 3 // 删除中
-              }
-            })
-            this.$http.get(url).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                var zoneid = this.$store.state.zoneOptions[0].zoneid
-                var url1 = `information/listTemplates.do?user=1&zoneid=${zoneid}`
-                this.$http.get(url1).then(response => {
-                  if (response.status == 200 && response.data.status == 1) {
-                    this.ownData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
-                  }
-                })
-              }
-            })
+        this.showModal.delmirror = true
+      },
+      delmirrorSubm() {
+        this.showModal.delmirror = false
+        this.$http.get(`Snapshot/deleteTemplate.do?id=${this.selections.id}`).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+            this.ownMirrorList()
           }
         })
       },
@@ -467,7 +472,7 @@
         var url = `Snapshot/createTemplate.do?rootDiskId=${this.formItem.vmInfo.split('#')[0]}&templateName=${this.formItem.mirrorName}&descript=${this.formItem.mirrorDescription}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.ownData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
+            this.ownMirrorList()
           }
         })
       },
@@ -482,6 +487,7 @@
         var url = `Snapshot/updateTemplate.do?templateId=${this.systemtemplateid}&templateName=${this.mirrorModifyForm.name}&descript=${this.mirrorModifyForm.remarks}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            this.ownMirrorList()
            this.$Message.success(response.data.message)
           } else {
            this.$Message.error(response.data.message)
