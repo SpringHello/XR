@@ -173,7 +173,10 @@
           },
           {
             mainName: '回收站',
-            type: 'recycle'
+            type: 'recycle',
+            subItem: [
+              {subName: '回收站', type: 'recycle'}
+            ]
           }
         ]
       }

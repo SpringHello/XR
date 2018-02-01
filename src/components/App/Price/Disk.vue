@@ -76,13 +76,16 @@
             @change="changeDiskSize(index,item.diskSize)"
             style="margin-right:30px;vertical-align: middle;width:66%">
           </i-slider>
-          <InputNumber :max="500" :min="20" v-model="item.diskSize" size="large" :step=10 @on-blur="changeDiskSize(index,item.diskSize)" @on-focus="changeDiskSize(index,item.diskSize)"></InputNumber>
+          <InputNumber :max="500" :min="20" v-model="item.diskSize" size="large" :step=10
+                       @on-blur="changeDiskSize(index,item.diskSize)"
+                       @on-focus="changeDiskSize(index,item.diskSize)"></InputNumber>
           GB
         </div>
       </div>
       <div style="display: flex;padding-left: 87px;">
         <p v-if="diskLimit!=0" style="cursor: pointer;color: #2A99F2" @click="addDisk">添加数据盘</p>
-        <p v-if="diskLimit==0">添加数据盘</p><span class="s1" v-show="userInfo!=null">您还可以添加<span class="s1" style="color:#F85E1D;margin-left: 0">{{ diskLimit}}块</span>数据盘</span>
+        <p v-if="diskLimit==0">添加数据盘</p><span class="s1" v-show="userInfo!=null">您还可以添加<span class="s1"
+                                                                                             style="color:#F85E1D;margin-left: 0">{{ diskLimit}}块</span>数据盘</span>
       </div>
       <div>
         <span>价格</span>
@@ -138,7 +141,8 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc"
+                 @click="imgSrc=`http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </div>
         </form>
       </div>
@@ -188,7 +192,7 @@
         // 是否自动续费
         autoRenewal: true,
         // 磁盘价格
-        diskPrice: 0,
+        diskPrice: 1,
         // 磁盘名称
         diskName: '',
         // 磁盘列表
@@ -235,6 +239,7 @@
     created () {
       this.zoneList = $store.state.zoneList
       this.zone = $store.state.zoneList[0].zoneid
+      console.log($store.state.zoneList)
       if ($store.state.userInfo) {
         this.userInfo = $store.state.userInfo
         this.getDiskLimit()

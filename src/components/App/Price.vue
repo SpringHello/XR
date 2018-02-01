@@ -55,11 +55,12 @@
               </div>
               <div class="footer">
                 <p>价格<span>{{ item.cost}} 元</span></p>
-                <!--<div class="quantity">
-                  <p @click="reduce">-</p>
-                  <p style="width: 50px;cursor: auto">{{ quantity }}</p>
-                  <p style="border-right:0" @click="quantity+=1">+</p>
-                </div>-->
+                <div class="quantity" v-if="item.budgetType=='quickHost'||item.budgetType=='customHost'">
+                  <p @click="item.count-=1" v-if="item.count>1">-</p>
+                  <p style="cursor: not-allowed" v-if="item.count==1">-</p>
+                  <p style="width: 50px;cursor: auto">{{ item.count }}</p>
+                  <p @click="item.count+=1">+</p>
+                </div>
               </div>
             </div>
           </div>
@@ -126,6 +127,7 @@
   import XLSX_SAVE from 'file-saver'
   import regExp from '../../util/regExp'
   import $store from '@/vuex'
+  import axios from 'axios'
   // xlsx 文件输出操作方法
   function s2ab(s) {
     const buf = new ArrayBuffer(s.length)
@@ -225,11 +227,11 @@
     },
     methods: {
       /* 购买数量操作 */
-      reduce () {
-        this.quantity -= 1
-        switch (this.quantity) {
+      reduce (val) {
+        val -= 1
+        switch (val) {
           case 0:
-            this.quantity = 1
+            val = 1
             break
           default:
             break
@@ -373,8 +375,50 @@
           this.detailedList.forEach(item => {
             switch (item.budgetType) {
               case 'quickHost':
+                var config = this.getConfig(item)
+                var params = {
+                  zone: item.zone,
+                  hostName: item.hostName,
+                  hostPassword: item.hostPassword,
+                  osId: item.osId,
+                  diskSize: 50,
+                  cpuNum: config.cpuNum,
+                  memory: config.memory,
+                  publicIP: config.bandWidth,
+                  timeType: item.timeType,
+                  timeValue: item.time,
+                  count: item.count,
+                  autoRenewal: item.autoRenewal,
+                  diskType: config.diskType
+                }
+                this.createQuickHostOrder(params)
                 break
               case 'customHost':
+                var diskType = ''
+                var diskSize = ''
+                console.log(item.diskList)
+                if (item.diskList.length !=0) {
+                  item.diskList.forEach(disk => {
+                    diskType += ',' + disk.diskType
+                    diskSize += ',' + disk.diskSize
+                  })
+                }
+                var params = {
+                  zone: item.zone,
+                  hostName: item.hostName,
+                  hostPassword: item.hostPassword,
+                  osId: item.osId,
+                  cpuNum: item.cpuNum,
+                  memory: item.memorySize,
+                  publicIP: item.publicIP,
+                  timeType: item.timeType,
+                  timeValue: item.time,
+                  count: item.count,
+                  autoRenewal: item.autoRenewal,
+                  diskType: diskType.substring(1),
+                  diskSize: diskSize.substring(1)
+                }
+                this.createQuickHostOrder(params)
                 break
               case 'ip':
                 var params = {
@@ -399,6 +443,60 @@
           })
         }
       },
+      getConfig (item) {
+        var data = {}
+        switch (item.config) {
+          case '1':
+            data.cpuNum = 1
+            data.memory = 1
+            data.bandWidth = 1
+            data.diskType = 'sas'
+            break
+          case '2':
+            data.cpuNum = 2
+            data.memory = 4
+            data.bandWidth = 1
+            data.diskType = 'sas'
+            break
+          case '3':
+            data.cpuNum = 4
+            data.memory = 4
+            data.bandWidth = 2
+            data.diskType = 'ssd'
+            break
+          case '4':
+            data.cpuNum = 4
+            data.memory = 8
+            data.bandWidth = 2
+            data.diskType = 'ssd'
+            break
+          case '5':
+            data.cpuNum = 1
+            data.memory = 1
+            data.bandWidth = 0
+            data.diskType = 'sas'
+            break
+          case '6':
+            data.cpuNum = 2
+            data.memory = 4
+            data.bandWidth = 0
+            data.diskType = 'sas'
+            break
+          case '7':
+            data.cpuNum = 4
+            data.memory = 4
+            data.bandWidth = 2
+            data.diskType = 'ssd'
+            break
+          case '8':
+            data.cpuNum = 4
+            data.memory = 8
+            data.bandWidth = 2
+            data.diskType = 'ssd'
+            break
+        }
+        return data
+      },
       /* 导出预算清单 */
       exportDetailed (data) {
         this.buyButton = false
@@ -420,21 +518,20 @@
         const wbout = XLSX.write(wb, {type: 'binary', bookType: 'xlsx'})
         XLSX_SAVE.saveAs(new Blob([s2ab(wbout)], {type: 'application/octet-stream'}), 'detailedList.xlsx')
       },
+      /* 自组件添加进购物清单，父组件实时刷新 */
+      updateList(){
+        this.detailedList = JSON.parse(sessionStorage.getItem('budget'))
+      },
       /* 创建快速配置主机订单 */
       createQuickHostOrder (params) {
-        if (params.hostPassword != '') {
-          if (!this.passwordRegExp.test(params.hostPassword)) {
-            return
-          }
-        }
-        var url = `information/deployVirtualMachine.do?zoneid=${this.zone}&name=${params.hostName}&password=${params.hostPassword}&templateid=${this.osId}&size=${params.diskSize}&cpunum=${params.cpuNum}&memory=${params.memory}&bandwidth=${params.publicIP}&value=${params.timeType}&timevalue=${params.timeValue}&count=1&isautorenew=${params.renewal}&disktype=${params.diskType}&networkid=no`
-        this.$http.get(url).then(response => {
+        var renewal = params.autoRenewal ? 1 : 0
+        var url = `information/deployVirtualMachine.do?zoneId=${params.zone}&name=${params.hostName}&password=${params.hostPassword}&templateId=${params.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&bandWidth=${params.publicIP}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=${params.count}&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=no`
+        axios.get(url).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
             this.infoMessage = response.data.message
-            this.modal4 = true
           }
         })
       },
@@ -644,7 +741,6 @@
                   }
                 }
                 .quantity {
-                  border: 1px solid #E9E9E9;
                   height: 35px;
                   width: 110px;
                   display: flex;
@@ -655,7 +751,7 @@
                     font-size: 14px;
                     align-items: center;
                     border-right: 1px solid #E9E9E9;
-                    cursor: pointer
+                    cursor: pointer;
                   }
                 }
               }
