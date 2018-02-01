@@ -306,7 +306,7 @@
               </div>
             </div>
           </Tab-pane>
-          <Tab-pane label="安全设置" name="safe">
+          <!--<Tab-pane label="安全设置" name="safe">
             <p class="info-title">用户基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
@@ -349,7 +349,7 @@
                   至少两项且长度超过8位的密码。</p><span @click="showModal.modifyPassword=true" style="cursor:pointer">「修改」</span>
               </div>
             </div>
-          </Tab-pane>
+          </Tab-pane>-->
           <!--用于企业认证的pane-->
           <TabPane label="企业信息" name="companyInfo">
             <p class="info-title">企业基本信息</p>
@@ -521,6 +521,129 @@
         <Button type="primary" @click="addLinkmanOk('addLinkmanForm')" :disabled="remainLinkMan==0">确定添加</Button>
       </div>
     </Modal>
+    <!--选择验证方式-->
+    <Modal v-model="showModal.modifyPhone" width="590" :scrollable="true" :styles="{top:'172px'}">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        选择验证方式
+      </div>
+      <div>
+        <div class='modal-wrapper'>
+          <span>通过手机验证</span>
+          <Button type="primary" @click="authByPhone" :disabled="!userInfo.phone">立即验证</Button>
+        </div>
+        <div class="modal-wrapper" style="margin-bottom: 0px">
+          <span>通过邮箱验证</span>
+          <Button type="primary" @click="authByEmail" :disabled="!userInfo.loginname">立即验证</Button>
+        </div>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.modifyPhone=false">取消</Button>
+      </div>
+    </Modal>
+
+    <Modal width="590" v-model="showModal.authByPhone" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        通过手机号验证
+      </div>
+      <div>
+        <div><span
+          style="display: block;margin: 15px 0px;font-size: 16px;color: rgba(17,17,17,0.65);width:80px;display: inline-block;margin-right:20px;">手机号码</span><span>{{userInfo.phone}}</span>
+        </div>
+        <div>
+          <span
+            style="font-size: 16px;color: rgba(17,17,17,0.65);vertical-align:sub;width:80px;display: inline-block;margin-right:20px;">随机验证码</span>
+          <Input type="text" autocomplete="off" v-model="code" placeholder="请输入随机验证码"
+                 style="width: 150px;margin-right: 30px"></Input>
+          <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
+               style="height:32px;vertical-align: middle">
+        </div>
+        <div style="margin-top:10px">
+        <span
+          style="font-size: 16px;color: rgba(17,17,17,0.65);vertical-align:sub;width:80px;display: inline-block;margin-right:20px;">手机验证码</span>
+          <Input
+            v-model="newPhoneForm.oldPhoneCode" placeholder="请输入手机验证码" style="width: 150px;margin-right:30px;"></Input>
+          <Button type="primary" :class="{codeDisabled:newPhoneForm.phoneVerCodeText!='获取验证码'}"
+                  :disabled="newPhoneForm.phoneVerCodeText!='获取验证码'"
+                  style="height:31px;width:92px" @click="getVerCode('phone')">{{newPhoneForm.phoneVerCodeText}}
+          </Button>
+        </div>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.authByPhone=false">取消</Button>
+        <Button type="primary" @click="next('phone')">下一步</Button>
+      </div>
+    </Modal>
+
+    <Modal width="590" v-model="showModal.authByEmail" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        通过邮箱验证
+      </div>
+      <div>
+        <div><span
+          style="display: block;margin: 15px 0px;font-size: 16px;color: rgba(17,17,17,0.65);width:80px;display: inline-block">邮箱</span><span>{{userInfo.loginname}}</span>
+        </div>
+        <span
+          style="font-size: 16px;color: rgba(17,17,17,0.65);vertical-align:sub;width:80px;display: inline-block">邮箱验证码</span><Input
+        v-model="newPhoneForm.oldPhoneCode" placeholder="请输入..." style="width: 150px;margin-right:30px;"></Input>
+        <Button type="primary" :class="{codeDisabled:emailVerCodeText!='获取验证码'}" :disabled="emailVerCodeText!='获取验证码'"
+                style="height:31px;width:92px" @click="getVerCode('email')">{{emailVerCodeText}}
+        </Button>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.authByEmail=false">取消</Button>
+        <Button type="primary" @click="next('email')">下一步</Button>
+      </div>
+    </Modal>
+
+    <Modal width="590" v-model="showModal.authNewPhone" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        重置手机号
+      </div>
+      <div class="newPhone">
+        <p style="margin-top:0px;">绑定新手机</p>
+        <Input v-model="newPhoneForm.newPhone" placeholder="新手机号" style="width:300px"></Input>
+        <p>随机验证码</p>
+        <Input v-model="newPhoneForm.code" placeholder="请输入随机验证码"
+               style="width:300px;margin-right:10px"></Input>
+        <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
+             style="height:32px;vertical-align: middle">
+        <p>短信验证码</p>
+        <Input v-model="newPhoneForm.verCode" placeholder="请输入短信验证码"
+               style="width:300px;margin-right:10px"></Input>
+        <Button type="primary" @click="getNewPhoneVerCode('phone')" :class="{codeDisabled:phoneVerCode!='获取验证码'}"
+                :disabled="phoneVerCode!='获取验证码'" style="height:31px;width:92px">{{phoneVerCode}}
+        </Button>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.authNewPhone=false">取消</Button>
+        <Button type="primary" @click="confirmPhone">完成</Button>
+      </div>
+    </Modal>
+
+    <Modal width="590" v-model="showModal.authNewEmail" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        重置邮箱
+      </div>
+      <div class="newPhone">
+        <p style="margin-top:0px;">绑定新邮箱</p>
+        <Input v-model="newPhoneForm.newPhone" placeholder="新邮箱地址" style="width:300px"></Input>
+        <p>邮箱验证码</p>
+        <Input v-model="newPhoneForm.verCode" placeholder="验证码"
+               style="width:300px;margin-right:10px"></Input>
+        <Button type="primary" @click="getNewPhoneVerCode('email')" :class="{codeDisabled:emailVerCode!='获取验证码'}"
+                :disabled="emailVerCode!='获取验证码'" style="height:31px;width:92px">{{emailVerCode}}
+        </Button>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.authNewEmail=false">取消</Button>
+        <Button type="primary" @click="confirmEmail">完成</Button>
+      </div>
+    </Modal>
   </div>
 
 </template>
@@ -556,7 +679,10 @@
         currentTab: '',
         showModal: {
           selectAuthType: $store.state.authInfo === undefined,
-          addLinkman: false
+          addLinkman: false,
+          modifyPhone: false,
+          authByPhone: false,
+          authByEmail: false
         },
         imgSrc: 'http://192.168.3.204:8081/ruicloud/user/getKaptchaImage.do',
         // 此对象存储所有未认证时页面的状态
@@ -960,6 +1086,16 @@
           }
         ],
         setData: [],
+        // 修改手机号时表单
+        code: '',
+        newPhoneForm: {
+          oldPhoneCode: '',
+          // 随机验证码
+          code: '',
+          newPhone: '',
+          verCode: '',
+          phoneVerCodeText: '获取验证码',
+        },
       }
     },
     created(){
@@ -1128,6 +1264,57 @@
             } else {
               it[type] = 1
             }
+          }
+        })
+      },
+      // 通过手机验证
+      authByPhone(){
+        this.showModal.modifyPhone = false;
+        this.newPhoneForm.oldPhoneCode = ''
+        this.showModal.authByPhone = true;
+      },
+      // 通过邮箱验证
+      authByEmail(){
+        this.showModal.modifyPhone = false;
+        this.newPhoneForm.oldPhoneCode = ''
+        this.showModal.authByEmail = true;
+      },
+      // 获取验证码下一步
+      next(type){
+        var aim = type == 'phone' ? this.userInfo.phone : this.userInfo.loginname
+        var isemail = type == 'phone' ? 0 : 1
+        var url = `user/judgeCode.do?aim=${aim}&code=${this.newPhoneForm.oldPhoneCode}&isemail=${isemail}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.showModal.authByPhone = false
+            this.showModal.authByEmail = false
+            if (this.type == 'phone') {
+              this.showModal.authNewPhone = true
+            } else {
+              this.showModal.authNewEmail = true
+            }
+          }
+        })
+      },
+      // 获取验证码
+      getVerCode(type){
+        var isemail = type == 'email' ? 1 : 0
+        var aim = type == 'email' ? this.userInfo.loginname : this.userInfo.phone
+        var url = `user/code.do?vailCode=${this.code}&type=0&isemail=${isemail}&aim=${aim}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+            var timeOut = 60
+            this.newPhoneForm[`${type}VerCodeText`] = '60s'
+            var interval = setInterval(function () {
+              timeOut--
+              if (timeOut == 0) {
+                this[`${type}VerCodeText`] = '获取验证码'
+                clearInterval(interval)
+                return
+              }
+              this[`${type}VerCodeText`] = timeOut + 's'
+            }.bind(this), 1000)
           }
         })
       },

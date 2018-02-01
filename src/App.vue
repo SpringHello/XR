@@ -342,18 +342,14 @@
       // 获取zone信息
       var zoneList = axios.get('ruicloud/information/zone.do')
       Promise.all([userInfo, zoneList]).then(values => {
-        if (values[0].data.status == 1 && values[0].status == 200) {
-          $store.commit('setAuthInfo2', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
-          localStorage.setItem('authToken', 'true')
-        } else {
-          localStorage.removeItem('authToken')
-          $store.state.authInfo = null
-          // 用户个人信息
-          $store.state.userInfo = null
-        }
-        $store.commit('setZoneList', values[1].data.result)
-        next()
-      },
+          if (values[0].data.status == 1 && values[0].status == 200) {
+            $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+          }
+          if (values[1].data.status == 1 && values[1].status == 200) {
+            $store.commit('setZoneList', values[1].data.result)
+          }
+          next()
+        },
         value => {
           next()
         }

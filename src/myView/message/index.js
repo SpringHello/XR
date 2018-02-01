@@ -32,20 +32,20 @@ message.info = function (options = {}) {
 let modalInstance
 
 function getInstance(options) {
-  modalInstance = modalInstance || new Vue({
-      data: {
-        type: '',
-        content: '',
-        cancelText: '取消',
-        onCancel: '',
-        okText: '确定'
-      },
-      render: (h) => {
-        return h(modal, {
-          props: options
-        })
-      }
-    })
+  modalInstance = new Vue({
+    data: {
+      type: '',
+      content: '',
+      cancelText: '取消',
+      onCancel: '',
+      okText: '确定'
+    },
+    render: (h) => {
+      return h(modal, {
+        props: options
+      })
+    }
+  })
   modalInstance.$mount()
   document.body.appendChild(modalInstance.$el)
   return {
