@@ -67,9 +67,9 @@
     </Modal>
     <!-- 创建快照备份弹窗 -->
     <Modal v-model="showModal.newBackups" width="550" :scrollable="true">
-      <p slot="header" class="modal-header-border">
+      <div slot="header" class="modal-header-border">
         <span class="universal-modal-title">创建备份策略</span>
-      </p>
+      </div>
       <div class="universal-modal-content-flex">
         <Form :model="creatBackupsForm" ref="creatBackupsForm">
           <FormItem label="自动备份策略名称">
@@ -1465,6 +1465,13 @@
                       marginRight: '10px'
                     }
                   }), h('span', {}, '创建中')])
+                  case 3:
+                  return h('div', {}, [h('Spin', {
+                    style: {
+                      display: 'inline-block',
+                      marginRight: '10px'
+                    }
+                  }), h('span', {}, '删除中')])
               }
             }
           },
@@ -1661,27 +1668,50 @@
       this.listsnaps()
       this.listBackups()
       this.listHost()
+      // 10s调用快照列表
+      this.intervalSnapsAlllist = setInterval(() => {
+          var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1`
+          axios.get(snapsURL)
+            .then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                var snapshotData = response.data.result
+                  snapshotData.forEach(item => {
+                        if (this.snapsSelection) {
+                          if (this.snapsSelection.id == item.id) {
+                            item._checked = true
+                          }
+                          if (item.status == 2) {
+                            item._disabled = true
+                          }
+                        }
+                      })
+                      this.snapshotData = snapshotData
+                    }
+            })
+          }, 1000 * 10)
     },
     methods: {
-      // delStrategy() {
-      //    var snapsURL = `information/deleteVMBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}&id=${this.strategyId}&VMIds=${vmids.join(',')}`
-      //   axios.get(snapsURL)
-      //     .then(response => {
-      //       if (response.status == 200 && response.data.status == 1) {
-      //         this.$Message.info({
-      //           content: response.data.message,
-      //           duration: 5
-      //         })
-      //         this.showModal.addOrDeleteHost = false
-      //         this.listBackups()
-      //       } else {
-      //       this.$message.error({
-      //         content: response.data.message
-      //       })
-      //       this.showModal.addOrDeleteHost = false
-      //     }
-      //     })
-      // },
+     //获取快照列表
+      listsnaps() {
+        var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1`
+        axios.get(snapsURL)
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              var snapshotData = response.data.result
+                snapshotData.forEach(item => {
+                      if (this.snapsSelection) {
+                        if (this.snapsSelection.id == item.id) {
+                          item._checked = true
+                        }
+                        if (item.status == 2) {
+                          item._disabled = true
+                        }
+                      }
+                    })
+                    this.snapshotData = snapshotData
+                  }
+          })
+      },
        /* 添加主机到备份策略 */
       addHost (index, data) {
         this.hostForBackupsStrategyList.splice(index, 1)
@@ -1774,16 +1804,6 @@
             }
           })
       },
-      //获取虚拟机（云主机）快照列表
-      listsnaps() {
-        var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1`
-        axios.get(snapsURL)
-          .then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.snapshotData = response.data.result
-            }
-          })
-      },
       rollbackSubmit() {
         this.showModal.rollback = false
         var URL = `Snapshot/revertToVMSnapshot.do?snapshotId=${this.cursnapshot.snapshotid}&zoneId=${$store.state.zone.zoneid}`
@@ -1847,10 +1867,6 @@
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.listsnaps()
-              this.$Message.success({
-                content: response.data.message,
-                duration: 5
-              })
             }
           })
       },
@@ -1887,22 +1903,6 @@
             }
           })
       },
-      inter() {
-        this.intervalInstance = setInterval(() => {
-          var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1`
-          axios.get(snapsURL)
-            .then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.snapshotData = response.data.result
-              }
-            })
-        }, 10000)
-      },
-      // selectionsChange(selections) {
-      //   this.selections = selections
-      //   console.log('selection')
-      //   console.log(selections)
-      // },
       // cancel() {
       //   this.formItem.vmInfo = ''
       //   this.formItem.mirrorName = ''
@@ -1917,7 +1917,7 @@
     },
     beforeRouteLeave(to, from, next) {
       // 导航离开该组件的对应路由时调用
-      clearInterval(this.intervalInstance)
+      clearInterval(this.intervalSnapsAlllist)
       next()
     }
   }

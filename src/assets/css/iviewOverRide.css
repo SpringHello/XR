@@ -89,8 +89,13 @@
 }
 
 /* 增加modal头部底部的border */
-.modal-header-border {
+p.modal-header-border {
   padding-bottom: 40px;
+  border-bottom: solid 1px #D8D8D8;
+}
+
+div.modal-header-border {
+  padding-bottom: 20px;
   border-bottom: solid 1px #D8D8D8;
 }
 
@@ -98,6 +103,11 @@
   padding-top: 20px;
   border-top: solid 1px #D8D8D8;
 }
+
+.modal-footer-border button {
+  font-size: 16px;
+}
+
 /* 时间选择器和reset冲突 */
 .ivu-time-picker-cells-list ul{
   font-size: 12px;
