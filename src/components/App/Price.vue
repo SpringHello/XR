@@ -533,7 +533,7 @@
         axios.get(url).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('order')
+            this.$router.push('/ruicloud/order')
           } else {
             this.infoMessage = response.data.message
           }
@@ -560,7 +560,7 @@
         axios.get(url)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.$router.push('order')
+              this.$router.push('/ruicloud/order')
             } else {
               this.$message.error({
                 content: response.data.message

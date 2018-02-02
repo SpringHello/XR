@@ -195,7 +195,7 @@
         // 磁盘价格
         diskPrice: 1,
         // 磁盘名称
-        diskName: '',
+        diskName: '磁盘',
         // 磁盘列表
         diskList: [],
         // 登录弹框
