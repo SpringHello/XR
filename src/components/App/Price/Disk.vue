@@ -164,6 +164,7 @@
 <script type="text/ecmascript-6">
   import $store from '../../../vuex'
   import regExp from '../../../util/regExp'
+  import axios from 'axios'
   var debounce = require('throttle-debounce/debounce')
   var messageMap = {
     loginname: {
@@ -282,7 +283,7 @@
       createDiskOrder () {
         var count = 0
         this.diskList.forEach(item => {
-          this.$http.get('http://localhost:8082/ruicloud/Disk/createVolume.do?zoneId=' + this.zone + '&diskSize=' + item.diskSize + '&diskName=' + this.diskName + '&diskOfferingId=' + item.diskType + '&timeType=' + this.timeType + '&timeValue=' + this.time).then(response => {
+          axios.get('http://localhost:8082/ruicloud/Disk/createVolume.do?zoneId=' + this.zone + '&diskSize=' + item.diskSize + '&diskName=' + this.diskName + '&diskOfferingId=' + item.diskType + '&timeType=' + this.timeType + '&timeValue=' + this.time).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               count++
             }
@@ -291,7 +292,9 @@
         if (count == this.diskList.length) {
           // this.$router.push('order')
         } else {
-          this.$Message.error('创建磁盘订单错误')
+          this.$message.error({
+            content: response.data.message
+          })
         }
       },
       /* 登录框校检等相关 */

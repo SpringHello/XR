@@ -169,6 +169,7 @@
 <script type="text/ecmascript-6">
   import $store from '../../../vuex'
   import regExp from '../../../util/regExp'
+  import axios from 'axios'
   var debounce = require('throttle-debounce/debounce')
   var messageMap = {
     loginname: {
@@ -312,7 +313,7 @@
       createIpOrder () {
         var autoRenewal = this.autoRenewal ? 1 : 0
         let url = `http://localhost:8082/ruicloud/network/associateIpAddress.do?brand=${this.publicIP}&value=${this.timeType}&timevalue=${this.time}&zoneid=${this.zone}&isautorenew=${autoRenewal}&vpcid=${this.vpcId}`
-        this.$http.get(url).then(response => {
+        axios.get(url).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({path: 'order'})

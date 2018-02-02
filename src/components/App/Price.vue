@@ -7,7 +7,7 @@
         <Select v-model="product" class="mySelect" style="width: 102px" @on-change="changeProduct">
           <Option v-for="item in productList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-        <h2>查看产品详情</h2>
+        <h2 @click="viewProduct">查看产品详情</h2>
       </div>
       <div class="body">
         <div class="left">
@@ -223,7 +223,7 @@
       }
     },
     mounted () {
-      window.addEventListener('scroll', this.handleScroll)
+      // window.addEventListener('scroll', this.handleScroll)
     },
     methods: {
       /* 购买数量操作 */
@@ -243,33 +243,33 @@
         sessionStorage.setItem('budget', JSON.stringify(this.detailedList))
         this.handleScroll()
       },
-      /* 鼠标滚动事件 */
-      handleScroll () {
-        /* 总价框悬浮 */
-        // 获取屏幕高度
-        var windowTop = window.innerHeight
-        // 屏幕卷去的高度
-        var scrollTops = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-        // 获取全文高度
-        var scrollHeight = document.body.scrollHeight
-        if (this.fixedState == false) {
-          // 获取div距离顶部的偏移量
-          var top = this.$refs.suspension.offsetTop
-          if ((windowTop + scrollTops) < top + 300) {
-            this.fixedState = true
-          }
-        } else {
-          // console.log(windowTop + scrollTops)
-          // console.log(scrollHeight)
-          if (windowTop + scrollTops == scrollHeight) {
-            this.fixedState = false
-            // window.removeEventListener('scroll', this.handleScroll)
-          }
-          /* if (windowTop + scrollTops == 1060) {
-           this.fixedState = false
-           } */
-        }
-      },
+      /* /!* 鼠标滚动事件 *!/
+       handleScroll () {
+       /!* 总价框悬浮 *!/
+       // 获取屏幕高度
+       var windowTop = window.innerHeight
+       // 屏幕卷去的高度
+       var scrollTops = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+       // 获取全文高度
+       var scrollHeight = document.body.scrollHeight
+       if (this.fixedState == false) {
+       // 获取div距离顶部的偏移量
+       var top = this.$refs.suspension.offsetTop
+       if ((windowTop + scrollTops) < top + 300) {
+       this.fixedState = true
+       }
+       } else {
+       // console.log(windowTop + scrollTops)
+       // console.log(scrollHeight)
+       if (windowTop + scrollTops == scrollHeight) {
+       this.fixedState = false
+       // window.removeEventListener('scroll', this.handleScroll)
+       }
+       /!* if (windowTop + scrollTops == 1060) {
+       this.fixedState = false
+       } *!/
+       }
+       },*/
       /* 登录表单验证提交等 */
       vail (field) {
         var text = this.form[field]
@@ -396,8 +396,7 @@
               case 'customHost':
                 var diskType = ''
                 var diskSize = ''
-                console.log(item.diskList)
-                if (item.diskList.length !=0) {
+                if (item.diskList.length != 0) {
                   item.diskList.forEach(disk => {
                     diskType += ',' + disk.diskType
                     diskSize += ',' + disk.diskSize
@@ -415,10 +414,14 @@
                   timeValue: item.time,
                   count: item.count,
                   autoRenewal: item.autoRenewal,
+                  specifyInfo: item.specifyInfo,
+                  buyPublicIP: item.buyPublicIP,
+                  private: item.private,
                   diskType: diskType.substring(1),
                   diskSize: diskSize.substring(1)
                 }
-                this.createQuickHostOrder(params)
+                console.log(params)
+                this.createCustomHostOrder(params)
                 break
               case 'ip':
                 var params = {
@@ -537,35 +540,30 @@
       },
       /* 创建自定义配置主机订单 */
       createCustomHostOrder (params) {
-        if (this.hostPassword != '') {
-          if (!this.passwordRegExp.test(this.hostPassword)) {
+        if (params.hostPassword != '') {
+          if (!params.passwordRegExp.test(params.hostPassword)) {
             return
           }
         }
-        var renewal = this.autoRenewal ? 1 : 0
-        var bandwidth = this.publicIP
-        var diskSize = this.diskList.map(item => {
-          return item.diskSize
-        }).join(',')
-        var diskType = this.diskList.map(item => {
-          return item.diskType
-        }).join(',')
-        var url = `information/deployVirtualMachine.do?zoneid=${this.zone}&name=${this.hostName}&password=${this.hostPassword}&templateid=${this.osId}&size=${diskSize}&cpunum=${this.cpuNum}&memory=${this.memory}&value=${this.timeType}&timevalue=${this.time}&count=0&isautorenew=${renewal}&disktype=${diskType}&networkid=${this.private.split('#')[0]}`
-        if (this.buyPublicIP == false) {
+        var renewal = params.autoRenewal ? 1 : 0
+        var bandwidth = params.publicIP
+        console.log(params)
+        var url = `information/deployVirtualMachine.do?zoneId=${params.zone}&name=${params.hostName}&password=${params.hostPassword}&templateId=${params.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=${params.count}&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=${params.private}`
+        if (params.buyPublicIP == false) {
           bandwidth = 0
         }
-        url = url + '&bandwidth=' + bandwidth
-        if (this.specifyInfo != '指定IP') {
-          url += '&ipaddress=' + this.specifyInfo
+        url = url + '&bandWidth=' + bandwidth
+        if (params.specifyInfo != '指定IP') {
+          url += '&ipaddress=' + params.specifyInfo
         }
-        this.$http.get(url)
+        axios.get(url)
           .then(response => {
-            this.loading = false
             if (response.status == 200 && response.data.status == 1) {
               this.$router.push('order')
             } else {
-              this.infoMessage = response.data.message
-              this.modal4 = true
+              this.$message.error({
+                content: response.data.message
+              })
             }
           })
       },
@@ -591,6 +589,23 @@
         if (count == this.diskList.length) {
         } else {
           this.$Message.error('创建磁盘订单错误')
+        }
+      },
+      /* 查看产品详情 */
+      viewProduct () {
+        switch (this.product) {
+          case 'hostPrice':
+           // this.$router.push('/ruicloud/Pecs')
+            window.open('/ruicloud/Pecs')
+            break
+          case 'diskPrice':
+           // this.$router.push('/ruicloud/Pdisk')
+            window.open('/ruicloud/Pdisk')
+            break
+          case 'elasticIPPrice':
+           // this.$router.push('/ruicloud/Peip')
+            window.open('/ruicloud/Peip')
+            break
         }
       }
     },
