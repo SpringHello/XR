@@ -667,7 +667,7 @@
                 this.getData()
               } else {
                 this.$Message.error({
-                  content:'服务器出错'
+                  content: '服务器出错'
                 })
                 this.getData()
               }
@@ -980,11 +980,10 @@
           }
         })
       },
-     
       // 主机续费
       renewalok() {
-        var list =[
-          {type:0,id:this.currentHost[0].id}
+        var list = [
+          {type: 0, id: this.currentHost[0].id}
         ]
         var param = {
           timeType: this.renewalType,
@@ -1085,8 +1084,7 @@
                   content: response.data.message})
               }
             })
-        
-        }
+         }
       },
       '$store.state.zone': {
         handler: function () {

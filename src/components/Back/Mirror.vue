@@ -24,13 +24,13 @@
               <!-- <Button type="primary" @click="createHost">生成主机</Button> -->
               <Button type="primary" @click="deleteSelection">删除</Button>
             </div>
-            <Table :columns="ownColumns" :data="ownData" @radio-change="selectionsChange" :type="selection"></Table>
+            <Table :columns="ownColumns" :data="ownData" @radio-change="selectionsChange"></Table>
           </TabPane>
         </Tabs>
       </div>
     </div>
     <Modal
-      scrollable=false
+      :scrollable="true"
     v-model="showModal.createMirror"
     title="创建镜像"
     @on-ok="ok">
@@ -61,7 +61,7 @@
     </Modal>
     <!-- 修改镜像弹窗 -->
     <Modal
-      scrollable=false
+      :scrollable="true"
     v-model="showModal.modify"
     title="修改镜像"
     @on-ok="mirrorModify">
@@ -398,7 +398,7 @@
               var ownData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
               ownData.forEach(item => {
                 if (this.selections) {
-                  if (this.selections.templateid == item.templateid) {
+                  if (this.selections.id == item.id) {
                     item._checked = true
                   }
                   if (item.status == 2) {
@@ -445,6 +445,10 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
             this.ownMirrorList()
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
