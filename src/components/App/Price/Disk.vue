@@ -281,21 +281,20 @@
       },
       /* 创建磁盘订单 */
       createDiskOrder () {
-        var count = 0
         this.diskList.forEach(item => {
-          axios.get('http://localhost:8082/ruicloud/Disk/createVolume.do?zoneId=' + this.zone + '&diskSize=' + item.diskSize + '&diskName=' + this.diskName + '&diskOfferingId=' + item.diskType + '&timeType=' + this.timeType + '&timeValue=' + this.time).then(response => {
+          axios.get('Disk/createVolume.do?zoneId=' + this.zone + '&diskSize=' + item.diskSize + '&diskName=' + this.diskName + '&diskOfferingId=' + item.diskType + '&timeType=' + this.timeType + '&timeValue=' + this.time + '&isAutorenew=0&count=1').then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              count++
+              this.$router.push('/ruicloud/order')
+            } else {
+              this.$message.error({
+                content: response.data.message
+              })
             }
           })
         })
-        if (count == this.diskList.length) {
-          // this.$router.push('order')
-        } else {
-          this.$message.error({
-            content: response.data.message
-          })
-        }
+   /*     if (count == this.diskList.length) {
+           this.$router.push('/ruicloud/order')
+        }*/
       },
       /* 登录框校检等相关 */
       vail (field) {
@@ -403,8 +402,8 @@
       },
       /* 获取当前用户还能购买的磁盘数量 */
       getDiskLimit () {
-        var url = 'http://localhost:8082/ruicloud/user/userSourceManager.do?zoneId=' + this.zone
-        this.$http.get(url).then(response => {
+        var url = 'user/userSourceManager.do?zoneId=' + this.zone
+        axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskLimit = response.data.result[3].items[0].total - response.data.result[3].items[0].used
             console.log(this.diskLimit)

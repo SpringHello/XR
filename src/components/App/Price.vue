@@ -429,7 +429,8 @@
                   time: item.time + '',
                   publicIP: item.publicIP + '',
                   autoRenewal: item.autoRenewal,
-                  vpcId: item.vpcId
+                  vpcId: item.vpcId,
+                  zone: item.zone
                 }
                 this.createIpOrder(params)
                 break
@@ -569,27 +570,34 @@
       },
       /* 创建公网ip订单 */
       createIpOrder (params) {
-        let url = `http://localhost:8082/ruicloud/network/associateIpAddress.do?brand=${params.publicIP}&value=${params.timeType}&timevalue=${params.time}&zoneid=${this.zone}&isautorenew=${params.autoRenewal}&vpcid=${params.vpcId}`
-        this.$http.get(url).then(response => {
-          this.loading = false
+        let url = `network/createPublicIp.do.do?brandWith=${params.publicIP}&timeType=${params.timeType}&timeValue=${params.time}&zoneId=${params.zone}&isAutorenew=${params.autoRenewal}&vpcId=${params.vpcId}&count=1`
+        axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            this.$router.push('/ruicloud/order')
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
       /* 创建磁盘订单 */
       createDiskOrder (params) {
-        var count = 0
         this.diskList.forEach(item => {
-          this.$http.get('http://localhost:8082/ruicloud/Disk/createVolume.do?zoneId=' + this.zone + '&diskSize=' + item.diskSize + '&diskName=' + item.diskName + '&diskOfferingId=' + item.diskType + '&timeType=' + params.timeType + '&timeValue=' + params.time).then(response => {
+          axios.get('Disk/createVolume.do?zoneId=' + this.zone + '&diskSize=' + item.diskSize + '&diskName=' + params.diskName + '&diskOfferingId=' + item.diskType + '&timeType=' + params.timeType + '&timeValue=' + params.time + '&count=1&isAutorenew=0').then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              count++
+              this.$router.push('/ruicloud/order')
+            } else {
+              this.$message.error({
+                content: response.data.message
+              })
             }
           })
         })
-        if (count == this.diskList.length) {
+    /*    if (count == this.diskList.length) {
         } else {
           this.$Message.error('创建磁盘订单错误')
-        }
+        }*/
       },
       /* 查看产品详情 */
       viewProduct () {

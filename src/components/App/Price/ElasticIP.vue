@@ -66,7 +66,7 @@
             </div>
           </div>
         </Poptip>-->
-        <Select v-model="vpcID" style="width:250px;margin-left: 20px">
+        <Select v-model="vpcId" style="width:250px;margin-left: 20px">
           <Option v-for="item in vpcTableData" :value="item.vpcid"
                   :key="item.vpcid">{{item.vpcname}}</Option>
         </Select>
@@ -199,9 +199,9 @@
         // 是否购买公网ip
         buyPublicIP: true,
         // vpcId
-        vpcID: '',
+        vpcId: '',
         // ip价格
-        ipPrice: 0,
+        ipPrice: 1,
         vpcTableData: [],
         // [{"id":117,"companyname":"11@qq.com","companyid":"148714318211","vpcname":"默认vpc148714318211","vpcdescript":"默认vpc","vpcofferingid":"b1c634b1-b87b-4ea0-afba-6eed002b67ab","cidr":"192.168.0.0/16","vpcid":"ce40a5f3-7a2e-4ff5-ad7e-0ed270fe8435","isdefault":1,"caseType":1,"createtime":"2017-07-14 17:50:39","endtime":"2018-07-14 17:50:39","status":1,"zoneid":"7b899cb6-b128-4328-a820-2f765d7d74ad","zonename":"北京1区"},{"id":118,"companyname":"11@qq.com","companyid":"148714318211","vpcname":"测试中文vpc","vpcdescript":"测试","vpcofferingid":"b1c634b1-b87b-4ea0-afba-6eed002b67ab","cidr":"192.168.0.0/16","vpcid":"95377e0c-72f8-495d-a108-864ae9fcdd25","isdefault":0,"cpCase":0.02,"caseType":3,"createtime":"2017-07-25 14:00:48","endtime":"2017-07-25 15:00:48","status":1,"zoneid":"7b899cb6-b128-4328-a820-2f765d7d74ad","zonename":"北京1区"}],
         // 网络选择
@@ -292,7 +292,8 @@
           autoRenewal: this.autoRenewal ? '1' : '0',
           cost: this.ipPrice,
           coupon: this.coupon,
-          vpcId: this.vpcId
+          vpcId: this.vpcId,
+          zone: this.zone
         }
         list.push(params)
         sessionStorage.setItem('budget', JSON.stringify(list))
@@ -304,7 +305,7 @@
           this.buyButton = true
           this.addButton = false
           this.showModal.login = true
-          this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
+          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
         } else {
           this.createIpOrder()
         }
@@ -312,11 +313,14 @@
       /* 创建公网ip订单 */
       createIpOrder () {
         var autoRenewal = this.autoRenewal ? 1 : 0
-        let url = `http://localhost:8082/ruicloud/network/associateIpAddress.do?brand=${this.publicIP}&value=${this.timeType}&timevalue=${this.time}&zoneid=${this.zone}&isautorenew=${autoRenewal}&vpcid=${this.vpcId}`
+        let url = `network/createPublicIp.do.do?brandWith=${this.publicIP}&timeType=${this.timeType}&timeValue=${this.time}&zoneId=${this.zone}&isAutorenew=${autoRenewal}&vpcId=${this.vpcId}&count=1`
         axios.get(url).then(response => {
-          this.loading = false
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push({path: 'order'})
+            this.$router.push('/ruicloud/order')
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -447,8 +451,8 @@
       },
       /* 查询vpc数据 */
       queryVPCData(){
-        var url = `http://localhost:8082/ruicloud/network/listVpc.do?zoneId=${this.zone}`
-        this.$http.get(url).then(response => {
+        var url = `network/listVpc.do?zoneId=${this.zone}`
+        axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.vpcTableData = response.data.result
           }
@@ -480,7 +484,7 @@
       },
       /* 校检是否选择商品 */
       cardDisabled () {
-        return (this.ipPrice == 0 || this.vpcID == '')
+        return (this.ipPrice == 0 || this.vpcId == '')
       }
     },
     watch: {
