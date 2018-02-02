@@ -82,25 +82,7 @@
       </Button>
     </div>
     </Modal>
-    <!-- 制作镜像提醒弹窗 -->
-    <Modal v-model="showModal.creatMirrorhint" :scrollable="true" :closable="false" :width="390">
-      <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
-        <div>
-          <strong>提示</strong>
-          <p class="lh24">为避免数据丢失，我们将在制作镜像前关闭该云主机。您可以选择开机状态制作镜像，但是会存在数据丢失的风险。</p>
-          <RadioGroup v-model="creatMirrorhint" vertical>
-              <Radio label="1">同意制作镜像</Radio>
-              <Radio label="0">保持开机制作镜像（谨慎选择）</Radio>
-        </RadioGroup>
-        </div>
-        
-      </div>
-      <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.creatMirrorhint=false">取消</Button>
-        <Button type="primary" @click="rollbackSubmit">确定</Button>
-      </p>
-    </Modal>
+    
      <!-- 删除镜像弹窗 -->
     <Modal v-model="showModal.delmirror" :scrollable="true" :closable="false" :width="390">
       <div class="modal-content-s">
@@ -127,11 +109,9 @@
         showModal: {
           createMirror: false,
           modify: false,
-          creatMirrorhint: false,
           delmirror: false
         },
         systemtemplateid: '',
-        creatMirrorhint: '1',
         filterKey: '全部',
         filterList: ['全部', 'centos', 'debian', 'ubuntu', 'window'],
         selections: null,  // 改为单选
@@ -224,6 +204,7 @@
         ownColumns: [
           {
             type: 'radio',
+            width: 60,
             align: 'center'
           },
           {
@@ -362,7 +343,7 @@
           })
         }
       })
-      // 查询已关闭主机
+     // 查询已关闭主机
       var url2 = 'information/getCloseListVirtualMachines.do'
       this.$http.get(url2).then(response => {
         if (response.status == 200 && response.data.status == 1) {

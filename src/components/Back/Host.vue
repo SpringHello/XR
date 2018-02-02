@@ -24,6 +24,9 @@
               <!-- 重命名 -->
               <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
               <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
+              <!-- 续费 -->
+              <Dropdown-item name="renewal" v-if="status=='欠费'||status=='异常'" :disabled=true>续费</Dropdown-item>
+              <Dropdown-item name="renewal" v-else>续费</Dropdown-item>
               <!-- 备份 -->
               <Dropdown-item name="backup" v-if="status!='开启'&&status!='关机'" :disabled=true>
                 <Tooltip content="异常、欠费状态，快照不可用" placement="top">
@@ -418,14 +421,14 @@
     </Modal>
     <!-- 加入负载均衡弹窗 -->
     <Modal v-model="showModal.balance" width="590" :scrollable="true">
-      <div slot="header"
+      <div slot="header" class="modal-header-border"
            style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
         加入负载均衡
       </div>
-      <div style="width:60%">
-        <Form :model="loadBalanceForm" :label-width="120">
+      <div>
+        <Form :model="loadBalanceForm" label-position="top">
           <Form-item label="选择弹性负载均衡名称 ">
-            <Select v-model="loadBalanceForm.loadbalanceroleid" placeholder="请选择">
+            <Select v-model="loadBalanceForm.loadbalanceroleid" placeholder="请选择" style="width:240px;">
               <Option v-for="(item,index) in listLoadBalanceRole" :key="index" :value="item.loadbalanceroleid">
                 {{item.name}}
               </Option>
@@ -467,7 +470,7 @@
       </div>
       <div slot="footer" style="display: flex;width:177px;margin-left:350px;">
         <div class="button cancel" @click="modal=false">取消</div>
-        <div class="button ok" @click="ok">确认续费</div>
+        <div class="button ok" @click="allRenewok">确认续费</div>
       </div>
     </Modal>
     <!-- 欠费，续费弹窗 -->
@@ -595,6 +598,10 @@
           year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}],
           month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '6月', value: 6}]
         },
+        requestParam: {
+          ipArray: [],
+          hostArray: []
+        },
         loadingMessage: '',
         loading: false,
         intervalInstance: null,
@@ -627,7 +634,7 @@
             axios.get(balanceUrl)
               .then(response => {
                 if (response.status == 200 && response.data.status == 1) {
-                  this.listLoadBalanceRole = response.data.result
+                  this.listLoadBalanceRole = response.data.result.publicLoadbalance
                 }
               })
           }
@@ -641,7 +648,9 @@
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.success(response.data.message)
             } else {
-              this.$Message.error(response.data.message)
+              this.$message.error({
+                content: response.data.message
+              })
             }
           })
       },
@@ -657,7 +666,9 @@
                 this.$Message.info(response.data.message)
                 this.getData()
               } else {
-                this.$Message.error('服务器出错')
+                this.$Message.error({
+                  content:'服务器出错'
+                })
                 this.getData()
               }
             })
@@ -825,24 +836,18 @@
         }
       },
       bind() {
-        // this.showModal.bindIP = false
-        // this.loadingMessage = '正在绑定公网IP'
-        // this.loading = true
-        // var arr = this.bindForm.publicIP.split('#')
         this.showModal.bindIP = false
         var url = `network/enableStaticNat.do?ipId=${this.bindForm.publicIP}&vmid=${this.currentHost[0].computerid}`
         this.$http.get(url)
           .then(response => {
             this.loading = false
-            if (response.status == 200) {
-              this.$Message.error(response.data.message)
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.success(response.data.message)
+            } else {
+              this.$message.error({
+                content: response.data.message
+              })
             }
-            // if (response.status == 200 && response.data.status == 1) {
-            //   this.$Message.success(response.data.message)
-            //   this.getData()
-            // } else {
-            //   this.$Message.warning(response.data.message)
-            // }
           })
       },
       unbind() {
@@ -870,6 +875,11 @@
             if (this.checkSelect()) {
               this.renameForm.hostName = ''
               this.showModal.rename = true
+            }
+            break
+          case 'renewal':
+          if (this.checkSelect()) {
+              this.showModal.renewal = true
             }
             break
           case 'backup':
@@ -911,9 +921,6 @@
 
             }
             this.reboot()
-            break
-          case 'renewal':
-            this.renewal()
             break
         }
       },
@@ -974,6 +981,44 @@
           }
         })
       },
+      // 选择某一个主机传递的信息
+      renewalOne(item){
+        this.modal = true;
+        this.renewalType = ''
+        this.renewalTime = ''
+        this.requestParam.ipArray = []
+        this.requestParam.hostArray = []
+        this.requestParam.diskArray = []
+        this.renewal = true
+        this.renewalItem = item
+        this.requestParam[`${item.type}Array`].push(item.id)
+      },
+      // 续费
+      renewal() {
+       if (this.renewal) {
+          var list = [{type:this.renewalItem.type == 'host' ? 0 : this.renewalItem.type == 'disk' ? 1 : 2,id:this.renewalItem.id}]
+        } else {
+          var list = this.selectArray.map((item) => {
+              return {
+                type: item.type == 'host' ? 0 : item.type == 'disk' ? 1 : 2,
+                id: item.id
+              }
+            })
+        }
+        var param = {
+          timeType: this.renewalType,
+          timeValue: this.renewalTime,
+          list: JSON.stringify(list)
+        }
+        this.loadingMessage = '创建订单中'
+        this.loading = true
+        this.$http.post("continue/continueOrder.do", param).then(response => {
+          this.loading = false
+        if (response.status == 200 && response.data.status == 1) {
+          this.$router.push({path: 'order'})
+        }
+      })
+      },
       // 创建主机镜像
       mirror() {
         // this.showModal.mirror = false
@@ -1027,14 +1072,14 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
               } else {
-                this.$Message.error(response.data.message)
+                this.$Message.error({
+                  content: response.data.message})
               }
             })
         }
       },
-      renewal() {
-      },
-      ok() {
+      
+      allRenewok() {
 
       },
       cancel() {
@@ -1043,6 +1088,9 @@
       push(type) {
         sessionStorage.setItem('authType', type)
         this.$router.push('/usercenter')
+      },
+      ok() {
+
       }
     },
     computed: {
@@ -1059,15 +1107,18 @@
         if (time == '') {
           this.cost = '--'
         } else {
-          let url = `information/getYjPrice.do?duration=${this.renewalTime}&type=${this.renewalType}&ipIdArr=${this.requestParam.ipArray.toString()}&hostIdArr=${this.requestParam.hostArray.toString()}`
-          this.$http.get(url)
+          // console.log(this.renewalTime+this.renewalType+this.requestParam.hostArray.toString())
+          var url = `information/getYjPrice.do?duration=${this.renewalTime}&type=${this.renewalType}&hostIdArr=1671127`
+          axios.get(url)
             .then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.cost = response.data.result
               } else {
-                this.$Message.error('对方不想说话，并且向你抛出了一个异常')
+                this.$Message.error({
+                  content: response.data.message})
               }
             })
+        
         }
       },
       '$store.state.zone': {
@@ -1086,6 +1137,27 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+.ivu-modal-footer {
+    .button {
+      height: 35.7px;
+      padding: 5.7px 17px;
+      line-height: 24.7px;
+      font-family: Microsoft Yahei, 微软雅黑;
+      font-size: 16px;
+      border-radius: 4.46px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .ok {
+      color: #FFFFFF;
+      background: #2A99F2;
+    }
+    .cancel {
+      margin-right: 10.5px;
+      border: 1px solid #D9D9D9;
+      color: #666666;
+    }
+  }
   .link-host{
     background: #2A99F2;
     color: #fff;
