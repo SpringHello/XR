@@ -183,22 +183,22 @@
                   <Form-item label="选择镜像">
                     <Select v-model="reloadForm.system">
                       <OptionGroup label="ubuntu" v-show="osOptions.ubuntu.length>0">
-                        <Option v-for="item in osOptions.ubuntu" :key="item" :value="item.systemtemplateid">
+                        <Option v-for="(item,index) in osOptions.ubuntu" :key="index" :value="item.systemtemplateid">
                           {{item.templatename}}
                         </Option>
                       </OptionGroup>
                       <OptionGroup label="window" v-show="osOptions.window.length>0">
-                        <Option v-for="item in osOptions.window" :key="item" :value="item.systemtemplateid">
+                        <Option v-for="(item,index) in osOptions.window" :key="index" :value="item.systemtemplateid">
                           {{item.templatename}}
                         </Option>
                       </OptionGroup>
                       <OptionGroup label="centos" v-show="osOptions.centos.length>0">
-                        <Option v-for="item in osOptions.centos" :key="item" :value="item.systemtemplateid">
+                        <Option v-for="(item,index) in osOptions.centos" :key="index" :value="item.systemtemplateid">
                           {{item.templatename}}
                         </Option>
                       </OptionGroup>
                       <OptionGroup label="debian" v-show="osOptions.debian.length>0">
-                        <Option v-for="item in osOptions.debian" :key="item" :value="item.systemtemplateid">
+                        <Option v-for="(item,index) in osOptions.debian" :key="index" :value="item.systemtemplateid">
                           {{item.templatename}}
                         </Option>
                       </OptionGroup>
