@@ -41,8 +41,8 @@
       </p>
       <div class="universal-modal-content-flex">
         <Form :model="newRemoteAccessForm" :rules="newRemoteAccessFormValidate" ref="newRemoteAccessFormValidate">
-          <FormItem label="VPN名称" prop="vpnName">
-            <Input v-model="newRemoteAccessForm.vpnName" placeholder="请输入VPN名称"></Input>
+          <FormItem label="接入点名称" prop="vpnName">
+            <Input v-model="newRemoteAccessForm.vpnName" placeholder="请输入接入点名称"></Input>
           </FormItem>
           <FormItem label="VPC ID" prop="vpcId">
             <Select v-model="newRemoteAccessForm.vpcId">
@@ -160,6 +160,40 @@
         <Button type="primary" @click="newTunnelVpnOk" v-if="newTunnelVpnForm.step==2">完成</Button>
       </div>
     </Modal>
+
+    <!-- 接入点用户管理 modal -->
+    <Modal v-model="showModal.userManage" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">接入点用户管理</span>
+      </p>
+      <div>
+        <p style="color: rgba(17,17,17,0.65);margin-bottom: 20px">您在对接入点进行用户管理</p>
+        <div>
+          <p v-for="item in userList" :key="item"
+             style="display: flex;font-size: 12px;color: rgba(17,17,17,0.65);margin-bottom: 20px">
+            <span style="width:60%">{{item}}</span>
+            <span style="width:30%">用户密码：**********</span>
+            <span style="color:#2A99F2;width:10%;text-align:right;cursor: pointer" @click="delUser(item)">删除</span>
+          </p>
+        </div>
+        <div class="universal-modal-content-flex">
+          <Form :model="addUserForm" :rules="addUserFormValidate" ref="addUserFormValidate">
+            <FormItem label="用户名称" prop="userName">
+              <Input v-model="addUserForm.userName" placeholder="请输入用户名称"></Input>
+            </FormItem>
+            <FormItem label="密码" prop="password">
+              <Input v-model="addUserForm.password" placeholder="请输入密码"></Input>
+            </FormItem>
+          </Form>
+          <Button type="primary" style="float:right" @click="addUser">添加用户</Button>
+          <div style="clear: both"></div>
+        </div>
+        <p style="color:#999999">提示：若您忘记用户密码，可删除该账户并重新添加新的用户名与密码。</p>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary">完成配置</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -190,8 +224,12 @@
     data(){
       return {
         showModal: {
+          // 远程VPN
           newRemoteAccess: false,
-          newTunnelVpn: false
+          // 隧道VPN
+          newTunnelVpn: false,
+          // 接入点用户管理
+          userManage: false
         },
         // 新建vpc接入点表单
         newRemoteAccessForm: {
@@ -199,7 +237,7 @@
           password: '',
           vpcId: '',
           vpcIdOptions: [],
-          vpnName:''
+          vpnName: ''
         },
         newRemoteAccessFormValidate: {
           userName: [
@@ -211,7 +249,7 @@
           vpcId: [
             {required: true, message: '请选择vpc', trigger: 'change'}
           ],
-          vpnName:[
+          vpnName: [
             {required: true, message: '请输入VPN名称', trigger: 'blur'}
           ],
         },
@@ -420,63 +458,19 @@
             title: '操作',
             align: 'center',
             render: (h, object) => {
-              var renderArray = []
-              if (object.row.prottransip) {
-                var prottransipArray = object.row.prottransip.split(',')
-                for (var item of prottransipArray) {
-                  renderArray.push(h('div', [h('span', {
-                    style: {
-                      marginRight: '10px'
-                    }
-                  }, item), h('Icon', {
-                    attrs: {
-                      type: 'close'
-                    },
-                    style: {
-                      cursor: 'pointer'
-                    },
-                    nativeOn: {
-                      click: () => {
-                        console.log('click')
-                        this.$Modal.confirm({
-                          render: (h) => {
-                            return h('p', {
-                              class: 'modal-content-s'
-                            }, [h('i', {
-                              class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
-                              style: {
-                                color: '#f90'
-                              }
-                            }), '确认解绑该弹性IP?'])
-                          },
-                          title: '解绑弹性IP',
-                          scrollable: true,
-                          okText: '确定解绑',
-                          cancelText: '取消',
-                          'onOk': () => {
-                            var url = `network/delNatGateway.do?natGatewayId=${this.select.id}`
-                            axios.get(url).then(response => {
-                              console.log(response)
-                            })
-                          }
-                        })
-                      }
-                    }
-                  }, '')]))
-                }
-              }
-              renderArray.push(h('div', {
+              return h('span', {
                 style: {
                   color: '#2A99F2',
-                  cursor: 'pointer',
+                  cursor: 'pointer'
                 },
                 on: {
                   click: () => {
-                    this.showModal.bindIP = true
+                    this.current = object.row.id
+                    this.listUser()
+                    this.showModal.userManage = true
                   }
                 }
-              }, '绑定弹性IP'))
-              return h('div', renderArray)
+              }, '管理用户')
             }
           }
         ],
@@ -716,9 +710,23 @@
           }
         ],
         tunnelVpnData: [],
+        // 管理用户列表
+        userList: [],
+        // 远程VPN id
+        current: null,
+        // 添加用户Form表单
+        addUserForm: {
+          userName: '',
+          password: '',
+        },
+        addUserFormValidate: {
+          userName: [{required: true, message: '请输入用户名', trigger: 'blur'}],
+          password: [{required: true, message: '请输入密码', trigger: 'blur'}]
+        },
         // 当前选中远程接入
         currentRemote: null,
-        currentTunnel: null
+        currentTunnel: null,
+
       }
     },
     methods: {
@@ -854,6 +862,49 @@
             }
           })
         }
+      },
+      // 列出所有用户
+      listUser(){
+        this.$http.get('network/listVpnUsers.do', {
+          params: {
+            remoteVpnId: this.current
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.userList = response.data.result
+          }
+        })
+      },
+      // 用户管理添加用户
+      addUser(){
+        this.$refs.addUserFormValidate.validate(validate => {
+          if (validate) {
+            this.$http.get('network/addVpnUser.do', {
+              params: {
+                userName: this.addUserForm.userName,
+                password: this.addUserForm.password,
+                remoteVpnId: this.current,
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.listUser()
+              }
+            })
+          }
+        })
+      },
+      // 删除用户
+      delUser(userName){
+        this.$http.get('network/removeVpnUser.do', {
+          params: {
+            userName,
+            remoteVpnId: this.current
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.listUser()
+          }
+        })
       }
     }
   }

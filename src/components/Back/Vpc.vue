@@ -14,8 +14,8 @@
             <div class="operator-bar">
               <Button type="primary" @click="openNewVpcModal">新建VPC</Button>
               <Button type="primary" @click="showModal.addGateway = true">添加VPC互通网关</Button>
-              <Button type="primary">修改VPC</Button>
-              <Button type="primary">删除VPC</Button>
+              <!--<Button type="primary">修改VPC</Button>-->
+              <Button type="primary" @click="delVpc">删除VPC</Button>
             </div>
             <div class="card-wrap">
               <div class="card" v-for="(item,index) in netData" :key="index" :class="{active:item._select}"
@@ -242,7 +242,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
-        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">99元</span>
+        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">{{addNatForm.cost}}元</span>
         <Button type="primary" @click="handleAddNatSubmit">完成配置</Button>
       </div>
     </Modal>
@@ -467,6 +467,24 @@
             title: '创建时间',
             align: 'center',
             key: 'createtime'
+          },
+          {
+            title: '操作',
+            align: 'center',
+            render: (h, object) => {
+              return h('span', {
+                style: {
+                  color: '#2A99F2',
+                  cursor: 'pointer'
+                },
+                on: {
+                  click: () => {
+                    sessionStorage.setItem('currentNat', object.row.id)
+                    this.$router.push('NATManage')
+                  }
+                }
+              }, '查看详情')
+            }
           }
         ],
         natData: [],
@@ -483,7 +501,7 @@
           // 绑定弹性IP模态框
           bindIP: false,
           // 解绑弹性IP模态框
-          unbindIP: false
+          unbindIP: false,
         },
         // 新建vpc表单数据
         newForm: {
@@ -525,7 +543,8 @@
           publicIp: '',
           timeType: '',
           timeValue: '',
-          IPSize: 1
+          IPSize: 1,
+          cost: '--'
         },
         // nat绑定源IP表单
         bindIPForm: {
@@ -677,6 +696,7 @@
       },
       // 打开添加nat网关modal
       openAddNatModal(){
+        this.addNatForm.publicIp = ''
         this.showModal.addNat = true
         /*
          useType : 0 代表未使用
@@ -731,6 +751,33 @@
           })
         }
       },
+      // 删除VPC
+      delVpc(){
+        var select = this.netData.filter(item => item._select)
+        console.log(select)
+        if (select.length == 0) {
+          this.$message.info({
+            content: '请选择一个VPC'
+          })
+          return
+        }
+        this.$message.confirm({
+          content: '您确认删除该VPC吗',
+          onOk: () => {
+            this.$http.get('network/delVpc.do', {
+              params: {
+                id: select[0].id
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 2) {
+                this.$message.error({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
       // 新建vpc价格查询
       queryVpcPrice(){
         if (this.newForm.timeType == 'current' || this.newForm.timeValue != '') {
@@ -742,6 +789,20 @@
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.newForm.cost = response.data.cost
+            }
+          })
+        }
+      },
+      // 新建NAT网关价格查询
+      queryNatPrice(){
+        if (this.addNatForm.timeType == 'current' || this.addNatForm.timeValue != '') {
+          axios.post('device/queryNetPrice.do.do', {
+            type: this.addNatForm.timeType,
+            timelong: this.addNatForm.timeType == 'current' ? '1' : this.addNatForm.timeValue + '',
+            zoneId: $store.state.zone.zoneid,
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.addNatForm.cost = response.data.cost
             }
           })
         }
@@ -847,14 +908,31 @@
     },
     computed: {},
     watch: {
-      // 检测到购买方式发生变化，重新查询价格
+      // 检测到新建VPC购买方式发生变化，重新查询价格
       'newForm.timeValue'(){
         this.queryVpcPrice()
       },
-      // 检测到购买方式发生变化，重新查询价格
+      // 检测到新建VPC购买方式发生变化，重新查询价格
       'newForm.timeType'(){
         this.newForm.timeValue = ''
         this.queryVpcPrice()
+      },
+      // 检测到添加NAT网关购买方式发生变化，重新查询价格
+      'addNatForm.timeValue'(){
+        this.queryNatPrice()
+      },
+      // 检测到添加NAT网关购买方式发生变化，重新查询价格
+      'addNatForm.timeType'(){
+        this.addNatForm.timeValue = ''
+        this.queryNatPrice()
+      },
+      // 新建弹性IP
+      'addNatForm.publicIp'(){
+        if (this.addNatForm.publicIp === '新建弹性IP') {
+          this.showModal.addNat = false
+          window.open('/ruicloud/ip')
+          // this.$router.push('ip')
+        }
       },
       // 查询当前源vpc下所有防火墙
       'addGatewayForm.originVPC'(){

@@ -11,12 +11,12 @@
         </Alert>
         <div class="operator-bar">
           <Button type="primary" @click="creatbalancemodal.showBalanceName = true">创建负载均衡</Button>
-          <Button type="primary" style="margin-left: 8px;">绑定虚拟机</Button>
+          <Button type="primary" style="margin-left: 8px;" @click="bind">绑定虚拟机</Button>
           <Button type="primary" style="margin-left: 8px;">解绑虚拟机</Button>
           <Button type="primary" style="margin-left: 8px;">删除</Button>
         </div>
         <!--负载均衡表-->
-        <Table highlight-row stripe :columns="columns" :data="data"></Table>
+        <Table highlight-row stripe :columns="balColumns" :data="balData"></Table>
         <!--模态框-->
         <Modal v-model="creatbalancemodal.showBalanceName" :scrollable="true" width="550" :closable="false">
           <p slot="header" style="font-size: 16px;color: rgba(17,17,17,0.75);line-height: 23.42px;"><b>创建负载均衡</b></p>
@@ -115,18 +115,57 @@
             <Button type="primary" @click="removeBalance" v-show="creatbalancemodal.current == 1">完成</Button>
           </div>
         </Modal>
+
+        <!-- 绑定源弹性IP -->
+        <Modal v-model="showModal.bind" width="550" :scrollable="true">
+          <p slot="header" class="modal-header-border">
+            <span class="universal-modal-title">绑定虚拟机</span>
+          </p>
+          <div class="universal-modal-content-flex">
+            <Form :model="bindHostForm" :rules="bindHostFormValidate" ref="bindHostFormValidate">
+              <FormItem label="选择虚拟机" prop="vm">
+                <Select v-model="bindHostForm.vm">
+                  <Option v-for="item in bindHostForm.vmOptions" :value="item.publicipid" :key="item.publicipid">
+                    {{item.publicip}}
+                  </Option>
+                </Select>
+              </FormItem>
+              <p style="font-size: 12px;color: rgba(153,153,153,0.65);">当前NAT网关可绑定弹性IP剩余额度5（点击提升配额）</p>
+            </Form>
+          </div>
+          <div slot="footer" class="modal-footer-border">
+            <Button type="primary" @click="handlebindIPSubmit">确认绑定</Button>
+          </div>
+        </Modal>
       </div>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from 'axios'
+  import $store from '@/vuex'
   export default {
+    beforeRouteEnter(from, to, next){
+      // 获取负载均衡的初始数据
+      axios.get('loadbalance/listLoadBalanceRole.do', {
+        params: {
+          zoneId: $store.state.zone.zoneid
+        }
+      }).then(response => {
+        next(vm => {
+          vm.setData(response)
+        })
+      })
+    },
     data (){
       return {
-        columns: [
+        showModal: {
+          bind: false
+        },
+        balColumns: [
           {
-            type: 'selection',
+            type: 'radio',
             width: 60,
             align: 'center'
           },
@@ -163,31 +202,7 @@
             }
           }
         ],
-        data: [
-          {
-            'balanceName': 'TradeCode21',
-            'status': '正常',
-            'NetworkType': '公网负载均衡',
-            'UseOrInpublic': '192.168.3.24',
-            'CreationTime': '2017-12-8',
-            _checked: true
-          },
-          {
-            'balanceName': 'TradeCode21',
-            'status': '正常',
-            'NetworkType': '公网负载均衡',
-            'UseOrInpublic': '192.168.3.24',
-            'CreationTime': '2017-11-12',
-            _checked: true
-          },
-          {
-            'balanceName': 'TradeCode21',
-            'status': '正常',
-            'NetworkType': '内网负载均衡',
-            'UseOrInpublic': '192.168.3.24',
-            'CreationTime': '2017-10-24'
-          }
-        ],
+        balData: [],
         //模态框
         creatbalancemodal: {
           showBalanceName: false,
@@ -238,10 +253,19 @@
               {required: true, message: '请输入0-65535之间任意数字 ', trigger: 'blur'}
             ],
           }
+        },
+        bindHostForm: {
+          vm: '',
+          vmOptions: []
         }
       }
     },
     methods: {
+      setData(response){
+        if (response.status == 200 && response.data.status == 1) {
+          this.balData = response.data.result.internalLoadbalance.concat(response.data.result.publicLoadbalance)
+        }
+      },
       show (index) {
         this.$Modal.info({
           title: 'User Info',
@@ -276,6 +300,15 @@
         if (this.creatbalancemodal.current > 0) {
           this.creatbalancemodal.current -= 1
         }
+      },
+      // 负载均衡绑定主机
+      bind(){
+        this.showModal.bind = true
+        this.$http.get('network/showLoadBalanceVM.do', {
+          params: {
+            netwrokid: ''
+          }
+        })
       }
     }
   }
