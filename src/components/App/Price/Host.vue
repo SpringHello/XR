@@ -734,6 +734,14 @@
           this.$parent.updateList()
           this.addButton = false
         } else {
+          var diskType = ''
+          var diskSize = ''
+          if (this.diskList.length !=0) {
+            this.diskList.forEach(disk => {
+              diskType += ',' + disk.diskType
+              diskSize += ',' + disk.diskSize
+            })
+          }
           var param = {
             zone: this.zone,
             hostName: this.hostName,
@@ -747,14 +755,17 @@
             mirror: this.mirror === 'imageApplication' ? 'imageApplication' : this.mirror === 'UHub' ? 'UHub' : 'customMirror',
             mirrorType: this.mirrorType,
             templateId: this.osId,
-            autoRenewal: this.autoRenewal,
             cpuNum: this.cpuNum + '',
             memorySize: this.memorySize + '',
             buyPublicIP: this.buyPublicIP,
             publicIP: this.publicIP + '',
             diskList: this.diskList,
+            private: this.private.split('#')[0],
             cost: this.customTotalCost,
             coupon: this.customTotalCoupon,
+            diskType: diskType.substring(1),
+            diskSize: diskSize.substring(1),
+            specifyInfo: this.specifyInfo,
             count: 1
           }
           list.push(param)
@@ -885,6 +896,36 @@
                 this.createQuickHostOrder(params)
                 break
             }
+          } else {
+            var diskType = ''
+            var diskSize = ''
+            if (this.diskList.length !=0) {
+              this.diskList.forEach(disk => {
+                diskType += ',' + disk.diskType
+                diskSize += ',' + disk.diskSize
+              })
+            }
+            var param = {
+              zone: this.zone,
+              hostName: this.hostName,
+              hostPassword: this.hostPassword,
+              osId: this.osId,
+              autoRenewal: this.autoRenewal,
+              timeType: this.timeType,
+              time: this.time + '',
+              net: this.private.substring(0, 2),
+              templateId: this.osId,
+              private: this.private.split('#')[0],
+              cpuNum: this.cpuNum + '',
+              memorySize: this.memorySize + '',
+              buyPublicIP: this.buyPublicIP,
+              publicIP: this.publicIP + '',
+              diskType: diskType.substring(1),
+              diskSize: diskSize.substring(1),
+              specifyInfo: this.specifyInfo,
+              count: 1
+            }
+            this.createCustomHostOrder(param)
           }
         }
       },
@@ -898,48 +939,40 @@
         var renewal = this.autoRenewal ? 1 : 0
         var url = `information/deployVirtualMachine.do?zoneId=${this.zone}&name=${this.hostName}&password=${this.hostPassword}&templateId=${this.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&bandWidth=${this.publicIP}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=1&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=no`
         axios.get(url).then(response => {
-          this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
-            this.infoMessage = response.data.message
-            this.modal4 = true
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
       /* 创建自定义配置主机订单 */
-      createCustomHostOrder() {
+      createCustomHostOrder (params) {
         if (this.hostPassword != '') {
           if (!this.passwordRegExp.test(this.hostPassword)) {
             return
           }
         }
-        var renewal = this.autoRenewal ? 1 : 0
-        var bandwidth = this.publicIP
-        var diskSize = this.diskList.map(item => {
-          return item.diskSize
-        }).join(',')
-        var diskType = this.diskList.map(item => {
-          return item.diskType
-        }).join(',')
-        // zoneId, templateId, bandWidth, timeType, timeValue, count, isAutoRenew, cpuNum, memory,
-        // networkId
-        var url = `information/deployVirtualMachine.do?zoneId=${this.zone}&name=${this.hostName}&password=${this.hostPassword}&templateId=${this.osId}&cpuNum=${this.cpuNum}&memory=${this.memory}&timeType=${this.timeType}&timeValue=${this.time}&count=0&isAutoRenew=${renewal}&disktype=${diskType}&networkId=${this.private.split('#')[0]}`
-        if (this.buyPublicIP == false) {
+        var renewal = params.autoRenewal ? 1 : 0
+        var bandwidth = params.publicIP
+        var url = `information/deployVirtualMachine.do?zoneId=${params.zone}&name=${params.hostName}&password=${params.hostPassword}&templateId=${params.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memorySize}&timeType=${params.timeType}&timeValue=${params.time}&count=${params.count}&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=${params.private.split('#')[0]}`
+        if (params.buyPublicIP == false) {
           bandwidth = 0
         }
         url = url + '&bandWidth=' + bandwidth
-        if (this.specifyInfo != '指定IP') {
-          url += '&ipaddress=' + this.specifyInfo
+        if (params.specifyInfo != '指定IP') {
+          url += '&ipaddress=' + params.specifyInfo
         }
         axios.get(url)
           .then(response => {
-            this.loading = false
             if (response.status == 200 && response.data.status == 1) {
               this.$router.push('order')
             } else {
-              this.infoMessage = response.data.message
-              this.modal4 = true
+              this.$message.error({
+                content: response.data.message
+              })
             }
           })
       },
