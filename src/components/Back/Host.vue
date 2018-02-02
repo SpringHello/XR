@@ -25,8 +25,8 @@
               <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
               <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
               <!-- 续费 -->
-              <Dropdown-item name="renewal" v-if="status=='欠费'||status=='异常'" :disabled=true>续费</Dropdown-item>
-              <Dropdown-item name="renewal" v-else>续费</Dropdown-item>
+              <Dropdown-item name="renewal" v-if="status=='欠费'||status=='异常'" :disabled=true>主机续费</Dropdown-item>
+              <Dropdown-item name="renewal" v-else>主机续费</Dropdown-item>
               <!-- 备份 -->
               <Dropdown-item name="backup" v-if="status!='开启'&&status!='关机'" :disabled=true>
                 <Tooltip content="异常、欠费状态，快照不可用" placement="top">
@@ -94,7 +94,7 @@
           </Dropdown>
         </div>
         <div>
-          <Tabs type="card" :animated="false" v-model="status" @on-click="">
+          <Tabs type="card" :animated="false" v-model="status">
 
             <Tab-pane :label="`开启(${openHost.length+waitHost.length})`" name="开启">
               <div class="flex-wrapper">
@@ -447,7 +447,7 @@
       v-model="showModal.renewal"
       title="续费选择"
       width="590"
-      @on-ok="ok" :scrollable="true">
+     :scrollable="true">
       <div style="height:100px;width:90%;margin:0px auto">
         <span style="font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;vertical-align:middle">
         付费类型 :
@@ -470,7 +470,7 @@
       </div>
       <div slot="footer" style="display: flex;width:177px;margin-left:350px;">
         <div class="button cancel" @click="modal=false">取消</div>
-        <div class="button ok" @click="allRenewok">确认续费</div>
+        <div class="button ok" @click="renewalok">确认续费</div>
       </div>
     </Modal>
     <!-- 欠费，续费弹窗 -->
@@ -553,8 +553,8 @@
         sessionStorage.removeItem('type')
       }
       return {
+        cost: '--',
         listLoadBalanceRole: [],
-        cost: '',
         openHost: [],
         closeHost: [],
         arrearsHost: [],
@@ -675,7 +675,7 @@
           }
         })
       },
-      //重命名主机
+      // 欠费主机续费
       renewHost(id) {
         this.showModal.Renew = true
         this.RenewForm.id = id
@@ -686,6 +686,7 @@
           }
         )
       },
+      // 欠费主机续费确认
       renewOk() {
         this.showModal.Renew = false
         this.$http.get('information/vmRenew.do?id=' + this.RenewForm.id).then(response => {
@@ -953,19 +954,17 @@
         }
         return true
       },
+      // 生成快照
       backup() {
-        // this.showModal.backup = false
-        // this.loadingMessage = '正在备份主机'
-        // this.loading = true
         this.showModal.backup = false
         var url = `Snapshot/createVMSnapshot.do?VMId=${this.currentHost[0].computerid}&snapshotName=${this.backupForm.backupName}&&memoryStatus=${this.backupForm.radio}&zoneId=${this.currentHost[0].zoneid}`
         axios.get(url).then(response => {
-          // this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
           }
         })
       },
+      // 重命名主机
       rename() {
         this.showModal.rename = false
         this.loadingMessage = '正在修改主机名'
@@ -981,39 +980,18 @@
           }
         })
       },
-      // 选择某一个主机传递的信息
-      renewalOne(item){
-        this.modal = true;
-        this.renewalType = ''
-        this.renewalTime = ''
-        this.requestParam.ipArray = []
-        this.requestParam.hostArray = []
-        this.requestParam.diskArray = []
-        this.renewal = true
-        this.renewalItem = item
-        this.requestParam[`${item.type}Array`].push(item.id)
-      },
-      // 续费
-      renewal() {
-       if (this.renewal) {
-          var list = [{type:this.renewalItem.type == 'host' ? 0 : this.renewalItem.type == 'disk' ? 1 : 2,id:this.renewalItem.id}]
-        } else {
-          var list = this.selectArray.map((item) => {
-              return {
-                type: item.type == 'host' ? 0 : item.type == 'disk' ? 1 : 2,
-                id: item.id
-              }
-            })
-        }
+     
+      // 主机续费
+      renewalok() {
+        var list =[
+          {type:0,id:this.currentHost[0].id}
+        ]
         var param = {
           timeType: this.renewalType,
           timeValue: this.renewalTime,
           list: JSON.stringify(list)
         }
-        this.loadingMessage = '创建订单中'
-        this.loading = true
         this.$http.post("continue/continueOrder.do", param).then(response => {
-          this.loading = false
         if (response.status == 200 && response.data.status == 1) {
           this.$router.push({path: 'order'})
         }
@@ -1021,9 +999,6 @@
       },
       // 创建主机镜像
       mirror() {
-        // this.showModal.mirror = false
-        // this.loadingMessage = '正在创建主机镜像'
-        // this.loading = true
         this.showModal.mirror = false
         var url = `Snapshot/createTemplate.do?rootDiskId=${this.currentHost[0].rootdiskid}&templateName=${this.mirrorForm.mirrorName}&descript=${this.mirrorForm.description}&zoneId=${this.currentHost[0].zoneid}`
         axios.get(url).then(response => {
@@ -1078,10 +1053,6 @@
             })
         }
       },
-      
-      allRenewok() {
-
-      },
       cancel() {
 
       },
@@ -1089,9 +1060,6 @@
         sessionStorage.setItem('authType', type)
         this.$router.push('/usercenter')
       },
-      ok() {
-
-      }
     },
     computed: {
       auth(){
@@ -1107,8 +1075,7 @@
         if (time == '') {
           this.cost = '--'
         } else {
-          // console.log(this.renewalTime+this.renewalType+this.requestParam.hostArray.toString())
-          var url = `information/getYjPrice.do?duration=${this.renewalTime}&type=${this.renewalType}&hostIdArr=1671127`
+          var url = `information/getYjPrice.do?duration=${this.renewalTime}&type=${this.renewalType}&hostIdArr=${this.currentHost[0].id}`
           axios.get(url)
             .then((response) => {
               if (response.status == 200 && response.data.status == 1) {
