@@ -73,6 +73,8 @@ const Manage = () => import('@/components/Back/Manage')
 const Upgrade = () => import('@/components/Back/Upgrade')
 const FirewallManage = () => import('@/components/Back/FirewallManage')
 const NATManage = () => import('@/components/Back/NATManage')
+const Recycle = () => import('@/components/Back/Recycle')
+
 
 // 404
 const notFindPage = () => import('@/components/404')
@@ -168,6 +170,7 @@ var router = new Router({
         {path: 'upgrade', name: 'upgrade', component: Upgrade},
         {path: 'firewallManage', name: 'firewallManage', component: FirewallManage},
         {path: 'NATManage', name: 'NATManage', component: NATManage},
+        {path: 'recycle', name: 'recycle', component: Recycle}
       ]
     },
     {

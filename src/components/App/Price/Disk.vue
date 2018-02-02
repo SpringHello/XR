@@ -76,13 +76,16 @@
             @change="changeDiskSize(index,item.diskSize)"
             style="margin-right:30px;vertical-align: middle;width:66%">
           </i-slider>
-          <InputNumber :max="500" :min="20" v-model="item.diskSize" size="large" :step=10 @on-blur="changeDiskSize(index,item.diskSize)" @on-focus="changeDiskSize(index,item.diskSize)"></InputNumber>
+          <InputNumber :max="500" :min="20" v-model="item.diskSize" size="large" :step=10
+                       @on-blur="changeDiskSize(index,item.diskSize)"
+                       @on-focus="changeDiskSize(index,item.diskSize)"></InputNumber>
           GB
         </div>
       </div>
       <div style="display: flex;padding-left: 87px;">
         <p v-if="diskLimit!=0" style="cursor: pointer;color: #2A99F2" @click="addDisk">添加数据盘</p>
-        <p v-if="diskLimit==0">添加数据盘</p><span class="s1" v-show="userInfo!=null">您还可以添加<span class="s1" style="color:#F85E1D;margin-left: 0">{{ diskLimit}}块</span>数据盘</span>
+        <p v-if="diskLimit==0">添加数据盘</p><span class="s1" v-show="userInfo!=null">您还可以添加<span class="s1"
+                                                                                             style="color:#F85E1D;margin-left: 0">{{ diskLimit}}块</span>数据盘</span>
       </div>
       <div>
         <span>价格</span>
@@ -138,7 +141,8 @@
             <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
                    :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                    @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img :src="imgSrc"
+                 @click="imgSrc=`http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </div>
         </form>
       </div>
@@ -160,6 +164,7 @@
 <script type="text/ecmascript-6">
   import $store from '../../../vuex'
   import regExp from '../../../util/regExp'
+  import axios from 'axios'
   var debounce = require('throttle-debounce/debounce')
   var messageMap = {
     loginname: {
@@ -188,9 +193,9 @@
         // 是否自动续费
         autoRenewal: true,
         // 磁盘价格
-        diskPrice: 0,
+        diskPrice: 1,
         // 磁盘名称
-        diskName: '',
+        diskName: '磁盘',
         // 磁盘列表
         diskList: [],
         // 登录弹框
@@ -235,6 +240,7 @@
     created () {
       this.zoneList = $store.state.zoneList
       this.zone = $store.state.zoneList[0].zoneid
+      console.log($store.state.zoneList)
       if ($store.state.userInfo) {
         this.userInfo = $store.state.userInfo
         this.getDiskLimit()
@@ -275,19 +281,20 @@
       },
       /* 创建磁盘订单 */
       createDiskOrder () {
-        var count = 0
         this.diskList.forEach(item => {
-          this.$http.get('http://localhost:8082/ruicloud/Disk/createVolume.do?zoneId=' + this.zone + '&diskSize=' + item.diskSize + '&diskName=' + this.diskName + '&diskOfferingId=' + item.diskType + '&timeType=' + this.timeType + '&timeValue=' + this.time).then(response => {
+          axios.get('Disk/createVolume.do?zoneId=' + this.zone + '&diskSize=' + item.diskSize + '&diskName=' + this.diskName + '&diskOfferingId=' + item.diskType + '&timeType=' + this.timeType + '&timeValue=' + this.time + '&isAutorenew=0&count=1').then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              count++
+              this.$router.push('/ruicloud/order')
+            } else {
+              this.$message.error({
+                content: response.data.message
+              })
             }
           })
         })
-        if (count == this.diskList.length) {
-          // this.$router.push('order')
-        } else {
-          this.$Message.error('创建磁盘订单错误')
-        }
+   /*     if (count == this.diskList.length) {
+           this.$router.push('/ruicloud/order')
+        }*/
       },
       /* 登录框校检等相关 */
       vail (field) {
@@ -395,8 +402,8 @@
       },
       /* 获取当前用户还能购买的磁盘数量 */
       getDiskLimit () {
-        var url = 'http://localhost:8082/ruicloud/user/userSourceManager.do?zoneId=' + this.zone
-        this.$http.get(url).then(response => {
+        var url = 'user/userSourceManager.do?zoneId=' + this.zone
+        axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskLimit = response.data.result[3].items[0].total - response.data.result[3].items[0].used
             console.log(this.diskLimit)

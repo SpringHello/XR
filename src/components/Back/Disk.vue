@@ -280,12 +280,8 @@
                   },
                   on: {
                     click: () => {
-                      this.$router.push({
-                        path: 'DiskParticulars',
-                        query: {
-                          data: params.row
-                        }
-                      })
+                      sessionStorage.setItem('diskInfo', JSON.stringify(params.row))
+                      this.$router.push('DiskParticulars')
                     }
                   }
                 }, params.row.diskname)

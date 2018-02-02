@@ -157,8 +157,12 @@
                 <Form ref="reset" :model="resetPasswordForm" label-position="left" :label-width="100"
                       style="margin-top:20px;"
                       :rules="resetRuleValidate">
+                  <Form-item label="请输入旧密码" prop="oldPassword">
+                    <Input v-model="resetPasswordForm.oldPassword" placeholder="请输入旧密码" type="password"
+                           style="width:200px;"></Input>
+                  </Form-item>
                   <Form-item label="请输入新密码" prop="newPassword">
-                    <Input v-model="resetPasswordForm.newPassword" placeholder="请输入新密码" type="password"
+                    <Input v-model="resetPasswordForm.newPassword" placeholder="请输入不小于六位数的新密码" type="password"
                            style="width:200px;"></Input>
                   </Form-item>
                   <Form-item label="请确认新密码" prop="confirmPassword">
@@ -179,22 +183,22 @@
                   <Form-item label="选择镜像">
                     <Select v-model="reloadForm.system">
                       <OptionGroup label="ubuntu" v-show="osOptions.ubuntu.length>0">
-                        <Option v-for="item in osOptions.ubuntu" :key="item" :value="item.systemtemplateid">
+                        <Option v-for="(item,index) in osOptions.ubuntu" :key="index" :value="item.systemtemplateid">
                           {{item.templatename}}
                         </Option>
                       </OptionGroup>
                       <OptionGroup label="window" v-show="osOptions.window.length>0">
-                        <Option v-for="item in osOptions.window" :key="item" :value="item.systemtemplateid">
+                        <Option v-for="(item,index) in osOptions.window" :key="index" :value="item.systemtemplateid">
                           {{item.templatename}}
                         </Option>
                       </OptionGroup>
                       <OptionGroup label="centos" v-show="osOptions.centos.length>0">
-                        <Option v-for="item in osOptions.centos" :key="item" :value="item.systemtemplateid">
+                        <Option v-for="(item,index) in osOptions.centos" :key="index" :value="item.systemtemplateid">
                           {{item.templatename}}
                         </Option>
                       </OptionGroup>
                       <OptionGroup label="debian" v-show="osOptions.debian.length>0">
-                        <Option v-for="item in osOptions.debian" :key="item" :value="item.systemtemplateid">
+                        <Option v-for="(item,index) in osOptions.debian" :key="index" :value="item.systemtemplateid">
                           {{item.templatename}}
                         </Option>
                       </OptionGroup>
@@ -577,6 +581,9 @@
           buttonDisabled: false
         },
         resetRuleValidate: {
+          oldPassword: [
+            {required: true, validator: validatePassword, trigger: 'blur'}
+          ],
           newPassword: [
             {required: true, validator: validatePassword, trigger: 'blur'}
           ],
@@ -761,6 +768,7 @@
       // 系统重装确认弹窗
       reloadSubm() {
         this.showModal.reload = false
+        this.reloadhintForm.input = ''
         var url = `information/restoreVirtualMachine.do?VMId=${this.computerInfo.computerId}&templateId=${this.reloadForm.system}&adminPassword=${this.reloadForm.password}`
           this.reloadButton = '正在重装...'
           this.$http.get(url).then(response => {
@@ -919,7 +927,7 @@
           })
       },
       resetConfirm() {
-        this.$Modal.confirm({
+        this.$message.confirm({
           title: '确认重置密码？',
           content: '<p>重置密码后，原密码失效。必须使用新密码登录主机</p>',
           onOk: () => {
@@ -930,7 +938,7 @@
       reset() {
         var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,}$/
         if (regExp.test(this.resetPasswordForm.newPassword) && this.resetPasswordForm.newPassword == this.resetPasswordForm.confirmPassword) {
-          var url = `information/resetPasswordForVirtualMachine.do?VMId=${this.computerInfo.computerId}&password=${this.resetPasswordForm.newPassword}`
+          var url = `information/resetPasswordForVirtualMachine.do?VMId=${this.computerInfo.computerId}&password=${this.resetPasswordForm.newPassword}&oldPassword=${this.resetPasswordForm.newPassword}`
           var password = this.resetPasswordForm.newPassword
           this.resetPasswordForm.buttonMessage = '正在重置中...'
           this.resetPasswordForm.buttonDisabled = true

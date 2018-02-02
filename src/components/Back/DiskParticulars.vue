@@ -9,7 +9,7 @@
                 <Option v-for="item in diskList" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>-->
           <span>{{ diskInfo.diskname}}</span>
-      <!--    <button>刷新</button>-->
+          <button @click="$router.go(0)">刷新</button>
           <button style="margin-right: 10px" @click="$router.go(-1)">返回</button>
         </div>
         <div class="center">
@@ -40,7 +40,7 @@
             <span>磁盘利用率</span>
             <Progress :percent="diskUtilization"
                       style="width: 50%;line-height: 12px;margin-left: 10px"></Progress>
-            <!--<span style="color: #2A99F2;cursor: pointer" @click="dilatationDisk">扩容</span>-->
+            <span style="color: #2A99F2;cursor: pointer" @click="dilatationDisk">扩容</span>
           </div>
           <div class="flex">
             <div class="item">
@@ -420,7 +420,9 @@
       }
     },
     created(){
-      this.diskInfo = this.$route.query.data
+      if (sessionStorage.getItem('diskInfo')) {
+        this.diskInfo = JSON.parse(sessionStorage.getItem('diskInfo'))
+      }
       this.rwPolar.series[0].data = [50, 20, 30, 60, 80, 100, 50, 70, 40, 20, 0, 40]
       this.rwPolar.xAxis.data = ['00:00', '02:00', '04:00', '06:00', '08:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00']
       this.IOPSPolar.series[0].data = [30, 50, 20, 40, 80, 60, 60, 70, 90, 100, 40, 10]
@@ -504,7 +506,7 @@
       },
       // 磁盘扩容价格查询
       queryDiskCost: debounce(500, function () {
-        axios.get(`Disk/UpDiskConfigCost.do?diskId=${this.diskInfo.id}&diskSize=${this.dilatationForm.diskSize}&zoneId=${this.diskInfo.zoneid}`).then(response => {
+        axios.get(`Disk/UpDiskConfigCost.do?diskId=${this.diskInfo.diskid}&diskSize=${this.dilatationForm.diskSize}&zoneId=${this.diskInfo.zoneid}`).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskSizeExpenses = response.data.result
           }
@@ -537,10 +539,14 @@
       }),
       /* 确认扩容磁盘 */
       adjustDisk_ok(){
-        this.$http.get('Disk/UpDiskConfig.do?diskid=' + this.diskInfo.diskid + '&disksize=' + this.dilatationForm.diskSize).then(response => {
+        this.$http.get('Disk/UpDiskConfig.do?diskId=' + this.diskInfo.diskid + '&diskSize=' + this.dilatationForm.diskSize).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             // this.$store.commit('setSelect', 'order')
             this.$router.push('order')
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },

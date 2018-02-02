@@ -24,13 +24,13 @@
               <!-- <Button type="primary" @click="createHost">生成主机</Button> -->
               <Button type="primary" @click="deleteSelection">删除</Button>
             </div>
-            <Table :columns="ownColumns" :data="ownData" @radio-change="selectionsChange" :type="selection"></Table>
+            <Table :columns="ownColumns" :data="ownData" @radio-change="selectionsChange"></Table>
           </TabPane>
         </Tabs>
       </div>
     </div>
     <Modal
-      scrollable=false
+      :scrollable="true"
     v-model="showModal.createMirror"
     title="创建镜像"
     @on-ok="ok">
@@ -61,7 +61,7 @@
     </Modal>
     <!-- 修改镜像弹窗 -->
     <Modal
-      scrollable=false
+      :scrollable="true"
     v-model="showModal.modify"
     title="修改镜像"
     @on-ok="mirrorModify">
@@ -82,25 +82,7 @@
       </Button>
     </div>
     </Modal>
-    <!-- 制作镜像提醒弹窗 -->
-    <Modal v-model="showModal.creatMirrorhint" :scrollable="true" :closable="false" :width="390">
-      <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
-        <div>
-          <strong>提示</strong>
-          <p class="lh24">为避免数据丢失，我们将在制作镜像前关闭该云主机。您可以选择开机状态制作镜像，但是会存在数据丢失的风险。</p>
-          <RadioGroup v-model="creatMirrorhint" vertical>
-              <Radio label="1">同意制作镜像</Radio>
-              <Radio label="0">保持开机制作镜像（谨慎选择）</Radio>
-        </RadioGroup>
-        </div>
-        
-      </div>
-      <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.creatMirrorhint=false">取消</Button>
-        <Button type="primary" @click="rollbackSubmit">确定</Button>
-      </p>
-    </Modal>
+    
      <!-- 删除镜像弹窗 -->
     <Modal v-model="showModal.delmirror" :scrollable="true" :closable="false" :width="390">
       <div class="modal-content-s">
@@ -127,11 +109,9 @@
         showModal: {
           createMirror: false,
           modify: false,
-          creatMirrorhint: false,
           delmirror: false
         },
         systemtemplateid: '',
-        creatMirrorhint: '1',
         filterKey: '全部',
         filterList: ['全部', 'centos', 'debian', 'ubuntu', 'window'],
         selections: null,  // 改为单选
@@ -224,6 +204,7 @@
         ownColumns: [
           {
             type: 'radio',
+            width: 60,
             align: 'center'
           },
           {
@@ -362,7 +343,7 @@
           })
         }
       })
-      // 查询已关闭主机
+     // 查询已关闭主机
       var url2 = 'information/getCloseListVirtualMachines.do'
       this.$http.get(url2).then(response => {
         if (response.status == 200 && response.data.status == 1) {
@@ -417,7 +398,7 @@
               var ownData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
               ownData.forEach(item => {
                 if (this.selections) {
-                  if (this.selections.templateid == item.templateid) {
+                  if (this.selections.id == item.id) {
                     item._checked = true
                   }
                   if (item.status == 2) {
@@ -464,6 +445,10 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
             this.ownMirrorList()
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },

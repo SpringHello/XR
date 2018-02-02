@@ -7,7 +7,7 @@
         <Select v-model="product" class="mySelect" style="width: 102px" @on-change="changeProduct">
           <Option v-for="item in productList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-        <h2>查看产品详情</h2>
+        <h2 @click="viewProduct">查看产品详情</h2>
       </div>
       <div class="body">
         <div class="left">
@@ -55,11 +55,12 @@
               </div>
               <div class="footer">
                 <p>价格<span>{{ item.cost}} 元</span></p>
-                <!--<div class="quantity">
-                  <p @click="reduce">-</p>
-                  <p style="width: 50px;cursor: auto">{{ quantity }}</p>
-                  <p style="border-right:0" @click="quantity+=1">+</p>
-                </div>-->
+                <div class="quantity" v-if="item.budgetType=='quickHost'||item.budgetType=='customHost'">
+                  <p @click="item.count-=1" v-if="item.count>1">-</p>
+                  <p style="cursor: not-allowed" v-if="item.count==1">-</p>
+                  <p style="width: 50px;cursor: auto">{{ item.count }}</p>
+                  <p @click="item.count+=1">+</p>
+                </div>
               </div>
             </div>
           </div>
@@ -126,6 +127,7 @@
   import XLSX_SAVE from 'file-saver'
   import regExp from '../../util/regExp'
   import $store from '@/vuex'
+  import axios from 'axios'
   // xlsx 文件输出操作方法
   function s2ab(s) {
     const buf = new ArrayBuffer(s.length)
@@ -221,15 +223,15 @@
       }
     },
     mounted () {
-      window.addEventListener('scroll', this.handleScroll)
+      // window.addEventListener('scroll', this.handleScroll)
     },
     methods: {
       /* 购买数量操作 */
-      reduce () {
-        this.quantity -= 1
-        switch (this.quantity) {
+      reduce (val) {
+        val -= 1
+        switch (val) {
           case 0:
-            this.quantity = 1
+            val = 1
             break
           default:
             break
@@ -241,33 +243,33 @@
         sessionStorage.setItem('budget', JSON.stringify(this.detailedList))
         this.handleScroll()
       },
-      /* 鼠标滚动事件 */
-      handleScroll () {
-        /* 总价框悬浮 */
-        // 获取屏幕高度
-        var windowTop = window.innerHeight
-        // 屏幕卷去的高度
-        var scrollTops = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
-        // 获取全文高度
-        var scrollHeight = document.body.scrollHeight
-        if (this.fixedState == false) {
-          // 获取div距离顶部的偏移量
-          var top = this.$refs.suspension.offsetTop
-          if ((windowTop + scrollTops) < top + 300) {
-            this.fixedState = true
-          }
-        } else {
-          // console.log(windowTop + scrollTops)
-          // console.log(scrollHeight)
-          if (windowTop + scrollTops == scrollHeight) {
-            this.fixedState = false
-            // window.removeEventListener('scroll', this.handleScroll)
-          }
-          /* if (windowTop + scrollTops == 1060) {
-           this.fixedState = false
-           } */
-        }
-      },
+      /* /!* 鼠标滚动事件 *!/
+       handleScroll () {
+       /!* 总价框悬浮 *!/
+       // 获取屏幕高度
+       var windowTop = window.innerHeight
+       // 屏幕卷去的高度
+       var scrollTops = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+       // 获取全文高度
+       var scrollHeight = document.body.scrollHeight
+       if (this.fixedState == false) {
+       // 获取div距离顶部的偏移量
+       var top = this.$refs.suspension.offsetTop
+       if ((windowTop + scrollTops) < top + 300) {
+       this.fixedState = true
+       }
+       } else {
+       // console.log(windowTop + scrollTops)
+       // console.log(scrollHeight)
+       if (windowTop + scrollTops == scrollHeight) {
+       this.fixedState = false
+       // window.removeEventListener('scroll', this.handleScroll)
+       }
+       /!* if (windowTop + scrollTops == 1060) {
+       this.fixedState = false
+       } *!/
+       }
+       },*/
       /* 登录表单验证提交等 */
       vail (field) {
         var text = this.form[field]
@@ -373,8 +375,53 @@
           this.detailedList.forEach(item => {
             switch (item.budgetType) {
               case 'quickHost':
+                var config = this.getConfig(item)
+                var params = {
+                  zone: item.zone,
+                  hostName: item.hostName,
+                  hostPassword: item.hostPassword,
+                  osId: item.osId,
+                  diskSize: 50,
+                  cpuNum: config.cpuNum,
+                  memory: config.memory,
+                  publicIP: config.bandWidth,
+                  timeType: item.timeType,
+                  timeValue: item.time,
+                  count: item.count,
+                  autoRenewal: item.autoRenewal,
+                  diskType: config.diskType
+                }
+                this.createQuickHostOrder(params)
                 break
               case 'customHost':
+                var diskType = ''
+                var diskSize = ''
+                if (item.diskList.length != 0) {
+                  item.diskList.forEach(disk => {
+                    diskType += ',' + disk.diskType
+                    diskSize += ',' + disk.diskSize
+                  })
+                }
+                var params = {
+                  zone: item.zone,
+                  hostName: item.hostName,
+                  hostPassword: item.hostPassword,
+                  osId: item.osId,
+                  cpuNum: item.cpuNum,
+                  memory: item.memorySize,
+                  publicIP: item.publicIP,
+                  timeType: item.timeType,
+                  timeValue: item.time,
+                  count: item.count,
+                  autoRenewal: item.autoRenewal,
+                  specifyInfo: item.specifyInfo,
+                  buyPublicIP: item.buyPublicIP,
+                  private: item.private,
+                  diskType: diskType.substring(1),
+                  diskSize: diskSize.substring(1)
+                }
+                console.log(params)
+                this.createCustomHostOrder(params)
                 break
               case 'ip':
                 var params = {
@@ -382,7 +429,8 @@
                   time: item.time + '',
                   publicIP: item.publicIP + '',
                   autoRenewal: item.autoRenewal,
-                  vpcId: item.vpcId
+                  vpcId: item.vpcId,
+                  zone: item.zone
                 }
                 this.createIpOrder(params)
                 break
@@ -398,6 +446,60 @@
             }
           })
         }
+      },
+      getConfig (item) {
+        var data = {}
+        switch (item.config) {
+          case '1':
+            data.cpuNum = 1
+            data.memory = 1
+            data.bandWidth = 1
+            data.diskType = 'sas'
+            break
+          case '2':
+            data.cpuNum = 2
+            data.memory = 4
+            data.bandWidth = 1
+            data.diskType = 'sas'
+            break
+          case '3':
+            data.cpuNum = 4
+            data.memory = 4
+            data.bandWidth = 2
+            data.diskType = 'ssd'
+            break
+          case '4':
+            data.cpuNum = 4
+            data.memory = 8
+            data.bandWidth = 2
+            data.diskType = 'ssd'
+            break
+          case '5':
+            data.cpuNum = 1
+            data.memory = 1
+            data.bandWidth = 0
+            data.diskType = 'sas'
+            break
+          case '6':
+            data.cpuNum = 2
+            data.memory = 4
+            data.bandWidth = 0
+            data.diskType = 'sas'
+            break
+          case '7':
+            data.cpuNum = 4
+            data.memory = 4
+            data.bandWidth = 2
+            data.diskType = 'ssd'
+            break
+          case '8':
+            data.cpuNum = 4
+            data.memory = 8
+            data.bandWidth = 2
+            data.diskType = 'ssd'
+            break
+        }
+        return data
       },
       /* 导出预算清单 */
       exportDetailed (data) {
@@ -420,80 +522,98 @@
         const wbout = XLSX.write(wb, {type: 'binary', bookType: 'xlsx'})
         XLSX_SAVE.saveAs(new Blob([s2ab(wbout)], {type: 'application/octet-stream'}), 'detailedList.xlsx')
       },
+      /* 自组件添加进购物清单，父组件实时刷新 */
+      updateList(){
+        this.detailedList = JSON.parse(sessionStorage.getItem('budget'))
+      },
       /* 创建快速配置主机订单 */
       createQuickHostOrder (params) {
-        if (params.hostPassword != '') {
-          if (!this.passwordRegExp.test(params.hostPassword)) {
-            return
-          }
-        }
-        var url = `information/deployVirtualMachine.do?zoneid=${this.zone}&name=${params.hostName}&password=${params.hostPassword}&templateid=${this.osId}&size=${params.diskSize}&cpunum=${params.cpuNum}&memory=${params.memory}&bandwidth=${params.publicIP}&value=${params.timeType}&timevalue=${params.timeValue}&count=1&isautorenew=${params.renewal}&disktype=${params.diskType}&networkid=no`
-        this.$http.get(url).then(response => {
+        var renewal = params.autoRenewal ? 1 : 0
+        var url = `information/deployVirtualMachine.do?zoneId=${params.zone}&name=${params.hostName}&password=${params.hostPassword}&templateId=${params.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&bandWidth=${params.publicIP}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=${params.count}&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=no`
+        axios.get(url).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('order')
+            this.$router.push('/ruicloud/order')
           } else {
             this.infoMessage = response.data.message
-            this.modal4 = true
           }
         })
       },
       /* 创建自定义配置主机订单 */
       createCustomHostOrder (params) {
-        if (this.hostPassword != '') {
-          if (!this.passwordRegExp.test(this.hostPassword)) {
+        if (params.hostPassword != '') {
+          if (!params.passwordRegExp.test(params.hostPassword)) {
             return
           }
         }
-        var renewal = this.autoRenewal ? 1 : 0
-        var bandwidth = this.publicIP
-        var diskSize = this.diskList.map(item => {
-          return item.diskSize
-        }).join(',')
-        var diskType = this.diskList.map(item => {
-          return item.diskType
-        }).join(',')
-        var url = `information/deployVirtualMachine.do?zoneid=${this.zone}&name=${this.hostName}&password=${this.hostPassword}&templateid=${this.osId}&size=${diskSize}&cpunum=${this.cpuNum}&memory=${this.memory}&value=${this.timeType}&timevalue=${this.time}&count=0&isautorenew=${renewal}&disktype=${diskType}&networkid=${this.private.split('#')[0]}`
-        if (this.buyPublicIP == false) {
+        var renewal = params.autoRenewal ? 1 : 0
+        var bandwidth = params.publicIP
+        console.log(params)
+        var url = `information/deployVirtualMachine.do?zoneId=${params.zone}&name=${params.hostName}&password=${params.hostPassword}&templateId=${params.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=${params.count}&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=${params.private}`
+        if (params.buyPublicIP == false) {
           bandwidth = 0
         }
-        url = url + '&bandwidth=' + bandwidth
-        if (this.specifyInfo != '指定IP') {
-          url += '&ipaddress=' + this.specifyInfo
+        url = url + '&bandWidth=' + bandwidth
+        if (params.specifyInfo != '指定IP') {
+          url += '&ipaddress=' + params.specifyInfo
         }
-        this.$http.get(url)
+        axios.get(url)
           .then(response => {
-            this.loading = false
             if (response.status == 200 && response.data.status == 1) {
-              this.$router.push('order')
+              this.$router.push('/ruicloud/order')
             } else {
-              this.infoMessage = response.data.message
-              this.modal4 = true
+              this.$message.error({
+                content: response.data.message
+              })
             }
           })
       },
       /* 创建公网ip订单 */
       createIpOrder (params) {
-        let url = `http://localhost:8082/ruicloud/network/associateIpAddress.do?brand=${params.publicIP}&value=${params.timeType}&timevalue=${params.time}&zoneid=${this.zone}&isautorenew=${params.autoRenewal}&vpcid=${params.vpcId}`
-        this.$http.get(url).then(response => {
-          this.loading = false
+        let url = `network/createPublicIp.do.do?brandWith=${params.publicIP}&timeType=${params.timeType}&timeValue=${params.time}&zoneId=${params.zone}&isAutorenew=${params.autoRenewal}&vpcId=${params.vpcId}&count=1`
+        axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            this.$router.push('/ruicloud/order')
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
       /* 创建磁盘订单 */
       createDiskOrder (params) {
-        var count = 0
         this.diskList.forEach(item => {
-          this.$http.get('http://localhost:8082/ruicloud/Disk/createVolume.do?zoneId=' + this.zone + '&diskSize=' + item.diskSize + '&diskName=' + item.diskName + '&diskOfferingId=' + item.diskType + '&timeType=' + params.timeType + '&timeValue=' + params.time).then(response => {
+          axios.get('Disk/createVolume.do?zoneId=' + this.zone + '&diskSize=' + item.diskSize + '&diskName=' + params.diskName + '&diskOfferingId=' + item.diskType + '&timeType=' + params.timeType + '&timeValue=' + params.time + '&count=1&isAutorenew=0').then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              count++
+              this.$router.push('/ruicloud/order')
+            } else {
+              this.$message.error({
+                content: response.data.message
+              })
             }
           })
         })
-        if (count == this.diskList.length) {
+    /*    if (count == this.diskList.length) {
         } else {
           this.$Message.error('创建磁盘订单错误')
+        }*/
+      },
+      /* 查看产品详情 */
+      viewProduct () {
+        switch (this.product) {
+          case 'hostPrice':
+           // this.$router.push('/ruicloud/Pecs')
+            window.open('/ruicloud/Pecs')
+            break
+          case 'diskPrice':
+           // this.$router.push('/ruicloud/Pdisk')
+            window.open('/ruicloud/Pdisk')
+            break
+          case 'elasticIPPrice':
+           // this.$router.push('/ruicloud/Peip')
+            window.open('/ruicloud/Peip')
+            break
         }
       }
     },
@@ -644,7 +764,6 @@
                   }
                 }
                 .quantity {
-                  border: 1px solid #E9E9E9;
                   height: 35px;
                   width: 110px;
                   display: flex;
@@ -655,7 +774,7 @@
                     font-size: 14px;
                     align-items: center;
                     border-right: 1px solid #E9E9E9;
-                    cursor: pointer
+                    cursor: pointer;
                   }
                 }
               }
