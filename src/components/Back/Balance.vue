@@ -12,11 +12,11 @@
         <div class="operator-bar">
           <Button type="primary" @click="creatbalancemodal.showBalanceName = true">创建负载均衡</Button>
           <Button type="primary" style="margin-left: 8px;" @click="bind">绑定虚拟机</Button>
-          <Button type="primary" style="margin-left: 8px;">解绑虚拟机</Button>
-          <Button type="primary" style="margin-left: 8px;">删除</Button>
+          <Button type="primary" style="margin-left: 8px;" @click="unbindHost">解绑虚拟机</Button>
+          <Button type="primary" style="margin-left: 8px;" @click="delBalance">删除</Button>
         </div>
         <!--负载均衡表-->
-        <Table highlight-row stripe :columns="balColumns" :data="balData"></Table>
+        <Table highlight-row stripe :columns="balColumns" :data="balData" @radio-change="selectBalance"></Table>
         <!--模态框-->
         <Modal v-model="creatbalancemodal.showBalanceName" :scrollable="true" width="550" :closable="false">
           <p slot="header" style="font-size: 16px;color: rgba(17,17,17,0.75);line-height: 23.42px;"><b>创建负载均衡</b></p>
@@ -116,7 +116,7 @@
           </div>
         </Modal>
 
-        <!-- 绑定源弹性IP -->
+        <!-- 绑定虚拟机 -->
         <Modal v-model="showModal.bind" width="550" :scrollable="true">
           <p slot="header" class="modal-header-border">
             <span class="universal-modal-title">绑定虚拟机</span>
@@ -135,6 +135,15 @@
           </div>
           <div slot="footer" class="modal-footer-border">
             <Button type="primary" @click="handlebindIPSubmit">确认绑定</Button>
+          </div>
+        </Modal>
+        <!-- 解绑虚拟机 -->
+        <Modal v-model="showModal.unbind" width="550" scrollable="true">
+          <p slot="header" class="modal-header-border">
+            <span class="universal-modal-title">解绑虚拟机</span>
+          </p>
+          <div slot="footer" class="modal-footer-border">
+            <Button type="primary" >确认解绑</Button>
           </div>
         </Modal>
       </div>
@@ -161,7 +170,8 @@
     data (){
       return {
         showModal: {
-          bind: false
+          bind: false,
+          unbind: false
         },
         balColumns: [
           {
@@ -171,7 +181,7 @@
           },
           {
             title: '负载均衡名称',
-            key: 'balanceName'
+            key: 'name'
           },
           {
             title: '状态',
@@ -257,7 +267,9 @@
         bindHostForm: {
           vm: '',
           vmOptions: []
-        }
+        },
+        // 选中单个负载均衡赋值给他
+        balanceSelection: null
       }
     },
     methods: {
@@ -284,8 +296,8 @@
           if (valid) {
             this.creatbalancemodal.showBalanceName = false
             this.creatbalancemodal.current = 0
-            this.$refs.form2.resetFields();
-            this.$refs.form1.resetFields();
+            this.$refs.form2.resetFields()
+            this.$refs.form1.resetFields()
           }
         })
       },
@@ -301,14 +313,43 @@
           this.creatbalancemodal.current -= 1
         }
       },
+      /* 选择单个负载均衡 */
+      selectBalance (currentRow) {
+        this.balanceSelection = currentRow
+      },
       // 负载均衡绑定主机
       bind(){
-        this.showModal.bind = true
-        this.$http.get('network/showLoadBalanceVM.do', {
-          params: {
-            netwrokid: ''
-          }
-        })
+        if (!this.balanceSelection) {
+          this.$Message.info('请选择一个负载均衡')
+        } else {
+          this.showModal.bind = true
+          var url = `network/showLoadBalanceVM.do?netwrokId=${this.balanceSelection.netwrokid}`
+          this.$http.get(url).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              console.log(response)
+            }
+          })
+        }
+      },
+      /* 解绑虚拟机 */
+      unbindHost(){
+        if (!this.balanceSelection) {
+          this.$Message.info('请选择一个负载均衡')
+        } else {
+          this.showModal.unbind = true
+        }
+      },
+      /* 删除负载均衡 */
+      delBalance () {
+        if (!this.balanceSelection) {
+          this.$Message.info('请选择一个负载均衡')
+        } else {
+          this.$message.confirm({
+            content: '确认删除该负载均衡？',
+            onOk: () => {
+            }
+          })
+        }
       }
     }
   }
