@@ -73,22 +73,22 @@
                     @click="mirror='customMirror',mirrorType=''">自定义镜像
             </button>
           </div>
-         <!-- 公共镜像列表 -->
-        <div class="config-button public-image" style="margin-left: 103px;" v-if="mirror=='UHub'">
-          <div v-for="(item,index) in pubilcSystem" :key="index" class="button-col">
-            <button v-for="(content,index) in item" :key="index" @click="publicImage(content)"
-                    :class="{select:osId==content.systemtemplateid}">{{content.templatename}}
-            </button>
+          <!-- 公共镜像列表 -->
+          <div class="config-button public-image" style="margin-left: 103px;" v-if="mirror=='UHub'">
+            <div v-for="(item,index) in pubilcSystem" :key="index" class="button-col">
+              <button v-for="(content,index) in item" :key="index" @click="publicImage(content)"
+                      :class="{select:osId==content.systemtemplateid}">{{content.templatename}}
+              </button>
+            </div>
           </div>
-        </div>
-        <!-- 自有镜像列表 -->
-        <div class="config-button public-image" style="margin-left: 103px;" v-if="mirror=='customMirror'">
-          <div v-for="(item,index) in ownSystem" :key="index" class="button-col">
-            <button v-for="(content,index) in item" :key="index" @click="publicImage(content)"
-                    :class="{select:osId==content.systemtemplateid}">{{content.templatename}}
-            </button>
+          <!-- 自有镜像列表 -->
+          <div class="config-button public-image" style="margin-left: 103px;" v-if="mirror=='customMirror'">
+            <div v-for="(item,index) in ownSystem" :key="index" class="button-col">
+              <button v-for="(content,index) in item" :key="index" @click="publicImage(content)"
+                      :class="{select:osId==content.systemtemplateid}">{{content.templatename}}
+              </button>
+            </div>
           </div>
-        </div>
           <div class="configMirror-button" v-if="mirror=='imageApplication'">
             <button v-for="item in mirrorConfigList" :class="{select:item.value==mirrorType}"
                     @click="mirrorType=item.value">
@@ -165,20 +165,6 @@
             </Poptip>
             <p>如需使用其他虚拟私有云（VPC），请选择已有虚拟私有云（VPC），也可以自行到<span>控制台新建</span>。</p>
           </div>
-          <!--  <div v-for="(item,index) in netWorkCards">
-              <span>网卡</span>
-              <Select v-model="networkCard" style="width:180px;margin-left: 68px">
-                <Option v-for="item in networkCardList" :value="item.value" :key="item.value">{{ item.label }}
-                </Option>
-              </Select>
-              <span v-show="networkCard==1" style="border: 1px solid #E9E9E9;font-size: 14px;padding: 4px 25px 8px 25px;margin-left: 10px;color: #666666;">自动分配IP地址</span>
-              <span style="font-size: 14px;color: #2A99F2;cursor: pointer;float: right" @click="delNetWorkCard(index)">删除</span>
-            </div>
-            <div style="display: flex">
-              <p style="cursor: pointer;color: #2A99F2" @click="addNetWorkCard" v-if="netWorkCardLimit!=0">添加网卡</p>
-              <p style="color: #666666" v-else>添加网卡</p>
-              <span class="s2">您还可以添加<span style="color:#F85E1D ">{{netWorkCardLimit}}</span>张网卡</span>
-            </div>-->
           <div>
             <span>公网IP</span>
             <Checkbox v-model="buyPublicIP" size="large" style="margin-left: 53px;font-size: 14px">购买公网IP
@@ -262,7 +248,7 @@
           </button>
           <button :class="{select:mirror=='UHub'}" @click="mirror='UHub'">公共镜像</button>
           <button :class="{select:mirror=='customMirror',disabled:userInfo==null}"
-                  @click="mirror='customMirror'" >自定义镜像
+                  @click="mirror='customMirror'">自定义镜像
           </button>
         </div>
         <!-- 公共镜像列表 -->
@@ -367,8 +353,8 @@
         <button @click="addBudgetList" :class="{select:addButton,disabled:hostDisabled}" :disabled="hostDisabled">
           加入预算清单
         </button>
-        <button style="margin-right: 0"  @click="buyImmediately"
-                >立即购买
+        <button style="margin-right: 0" @click="buyImmediately"
+        >立即购买
         </button>
       </div>
     </div>
@@ -640,7 +626,7 @@
     },
     created() {
       this.zoneList = $store.state.zoneList
-      this.zone = $store.state.zoneList[0].zoneid
+      this.zone = $store.state.zone
       if ($store.state.userInfo) {
         this.userInfo = $store.state.userInfo
       }
@@ -650,15 +636,15 @@
         var responseData = response.data.result
         this.pubilcSystem = responseData
         // 镜像选择主机，默认选择参数
-        if(this.$route.query.mirrorType == 'public'){
+        if (this.$route.query.mirrorType == 'public') {
           this.osId = this.$route.query.templateid
           this.zone = this.$route.query.zoneid
-          this.mirror='UHub'
-        }else if(this.$route.query.mirrorType == 'own'){
-          this.mirror='customMirror'
+          this.mirror = 'UHub'
+        } else if (this.$route.query.mirrorType == 'own') {
+          this.mirror = 'customMirror'
           this.osId = this.$route.query.templateid
           this.zone = this.$route.query.zoneid
-          }else{
+        } else {
           this.osId = responseData.window[0].systemtemplateid
         }
       })
@@ -736,7 +722,7 @@
         } else {
           var diskType = ''
           var diskSize = ''
-          if (this.diskList.length !=0) {
+          if (this.diskList.length != 0) {
             this.diskList.forEach(disk => {
               diskType += ',' + disk.diskType
               diskSize += ',' + disk.diskSize
@@ -899,7 +885,7 @@
           } else {
             var diskType = ''
             var diskSize = ''
-            if (this.diskList.length !=0) {
+            if (this.diskList.length != 0) {
               this.diskList.forEach(disk => {
                 diskType += ',' + disk.diskType
                 diskSize += ',' + disk.diskSize
@@ -937,7 +923,7 @@
           }
         }
         var renewal = this.autoRenewal ? 1 : 0
-        var url = `information/deployVirtualMachine.do?zoneId=${this.zone}&name=${this.hostName}&password=${this.hostPassword}&templateId=${this.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&bandWidth=${this.publicIP}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=1&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=no`
+        var url = `/ruicloud/information/deployVirtualMachine.do?zoneId=${this.zone}&name=${this.hostName}&password=${this.hostPassword}&templateId=${this.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&bandWidth=${this.publicIP}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=1&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=no`
         axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
@@ -957,7 +943,7 @@
         }
         var renewal = params.autoRenewal ? 1 : 0
         var bandwidth = params.publicIP
-        var url = `information/deployVirtualMachine.do?zoneId=${params.zone}&name=${params.hostName}&password=${params.hostPassword}&templateId=${params.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memorySize}&timeType=${params.timeType}&timeValue=${params.time}&count=${params.count}&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=${params.private.split('#')[0]}`
+        var url = `/ruicloud/information/deployVirtualMachine.do?zoneId=${params.zone}&name=${params.hostName}&password=${params.hostPassword}&templateId=${params.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memorySize}&timeType=${params.timeType}&timeValue=${params.time}&count=${params.count}&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=${params.private.split('#')[0]}`
         if (params.buyPublicIP == false) {
           bandwidth = 0
         }
@@ -1036,7 +1022,7 @@
         }
       },
       submit() {
-        this.$http.get('http://localhost:8082/ruicloud/user/login.do', {
+        axios.get('/ruicloud/user/login.do', {
           params: {
             username: this.form.loginname,
             password: this.form.password,
@@ -1047,14 +1033,11 @@
             if (response.data.status == 1) {
               this.$router.go(0)
             } else {
-              this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
+              this.imgSrc = `/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
               this.vailForm.loginname.message = response.data.message
               this.vailForm.loginname.warning = true
             }
           }
-        }).catch(() => {
-          this.vailForm.loginname.message = '服务器异常'
-          this.vailForm.loginname.warning = true
         })
       },
       /* 删除磁盘 */
@@ -1068,7 +1051,7 @@
       addDisk() {
         if (this.userInfo == null) {
           this.showModal.login = true
-          this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
+          this.imgSrc = `/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
         } else {
           var params = {
             diskType: 'ssd',
@@ -1109,7 +1092,7 @@
       },
       /* 获取当前用户还能购买的磁盘数量 */
       getDiskLimit() {
-        var url = 'http://localhost:8082/ruicloud/user/userSourceManager.do?zoneId=' + this.zone
+        var url = '/ruicloud/user/userSourceManager.do?zoneId=' + this.zone
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskLimit = response.data.result[3].items[0].total - response.data.result[3].items[0].used

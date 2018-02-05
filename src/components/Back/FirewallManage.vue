@@ -1,9 +1,5 @@
 <template>
   <div class="background">
-    <Spin fix v-show="loading">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-      <div>{{loadingMessage}}</div>
-    </Spin>
     <div class="wrapper">
       <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / <router-link
         to="firewall" style="color:rgba(17, 17, 17, 0.43);">防火墙</router-link> / 管理</span>
@@ -41,13 +37,12 @@
       </div>
     </div>
 
-    <Modal v-model="showModal.createRule" width="660" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        添加防火墙规则
-      </div>
-      <div style="width:100%;display: flex">
-        <Form ref="first" :model="newRuleForm" :rules="ruleValidate" :label-width="80" style="width:47%">
+    <Modal v-model="showModal.createRule" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">应用防火墙规则至</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form ref="newRuleFormValidate" :model="newRuleForm" :rules="ruleValidate">
           <Form-item label="名称" prop="name">
             <Input v-model="newRuleForm.name" placeholder="请输入..."></Input>
           </Form-item>
@@ -68,13 +63,8 @@
               </Option>
             </Select>
           </Form-item>
-          <Form-item label="起始端口" v-show="newRuleForm.protocol != 'ICMP' && newRuleForm.protocol != 'ALL'">
-            <InputNumber v-model="newRuleForm.startPort" :max="65535" :min="0"></InputNumber>
-          </Form-item>
-        </Form>
-        <Form ref="second" :model="newRuleForm" :rules="ruleValidate" :label-width="80" style="width:47%">
-          <Form-item label="优先级">
-            <InputNumber v-model="newRuleForm.itemid" :max="10" :min="0"></InputNumber>
+          <Form-item label="CIDR" prop="cidr">
+            <Input v-model="newRuleForm.cidr" placeholder="请输入IP地址..."></Input>
           </Form-item>
           <Form-item label="行为" prop="access">
             <Select v-model="newRuleForm.access" placeholder="请选择">
@@ -86,8 +76,11 @@
               </Option>
             </Select>
           </Form-item>
-          <Form-item label="CIDR" prop="cidr">
-            <Input v-model="newRuleForm.cidr" placeholder="请输入IP地址..."></Input>
+          <Form-item label="优先级">
+            <InputNumber v-model="newRuleForm.itemid" :max="10" :min="0"></InputNumber>
+          </Form-item>
+          <Form-item label="起始端口" v-show="newRuleForm.protocol != 'ICMP' && newRuleForm.protocol != 'ALL'">
+            <InputNumber v-model="newRuleForm.startPort" :max="65535" :min="0"></InputNumber>
           </Form-item>
           <Form-item label="结束端口" v-show="newRuleForm.protocol != 'ICMP' && newRuleForm.protocol != 'ALL'">
             <InputNumber v-model="newRuleForm.endPort" :max="65535" :min="0"></InputNumber>
@@ -95,8 +88,7 @@
         </Form>
       </div>
       <div slot="footer">
-        <Button type="ghost" @click="showModal.createRule = false">取消</Button>
-        <Button type="primary" @click="handleSubmit('first','second')">确定
+        <Button type="primary" @click="handleSubmit">确定
         </Button>
       </div>
     </Modal>
@@ -210,33 +202,48 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from 'axios'
+  import $store from '@/vuex'
+  const validateCdir = (rule, value, callback) => {
+    var re = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\/(\d|[1-2]\d|3[0-2])$/
+    if (!value) {
+      return callback(new Error('CIDR不能为空'));
+    } else {
+      if (!re.test(value)) {
+        callback(new Error('请输入正确的CIDR'));
+      } else {
+        callback();
+      }
+    }
+  }
   export default{
-    data(){
-      const validateCdir = (rule, value, callback) => {
-        var re = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\/(\d|[1-2]\d|3[0-2])$/
-        if (!value) {
-          return callback(new Error('CIDR不能为空'));
-        } else {
-          if (!re.test(value)) {
-            callback(new Error('请输入正确的CIDR'));
-          } else {
-            callback();
-          }
+    beforeRouteEnter(from, to, next){
+      axios.get('network/listaclListItem.do', {
+        params: {
+          zoneId: $store.state.zone.zoneid,
+          aclListId: sessionStorage.getItem('firewallId')
         }
-      };
+      }).then(response => {
+        next(vm => {
+          vm.setData(response)
+        })
+      })
+    },
+    data(){
       return {
         showModal: {
           createRule: false
         },
+        // 防火墙信息
         firewallInfo: {
-          fireId: localStorage.fireId,
-          createTime: localStorage.createTime,
-          firewallName: localStorage.firewallName
+          firewallName: sessionStorage.getItem('firewallName')
         },
+        // 上行规则数据
         upInformation: {
           open: true,
           tableData: []
         },
+        // 下行规则数据
         downInformation: {
           open: true,
           tableData: []
@@ -274,9 +281,6 @@
             title: '操作',
             width: 100,
             render: (h, params) => {
-              if (params.row.closing) {
-                return h('div', {}, [h('Spin'), h('span', {}, '删除中')])
-              }
               return h('div', {},
                 [
                   h('Poptip', {
@@ -288,6 +292,7 @@
                     },
                     on: {
                       'on-ok': () => {
+                        console.log(this)
                         this.del(params.row.id)
                       }
                     }
@@ -302,8 +307,7 @@
             }
           }
         ],
-        loadingMessage: '',
-        loading: false,
+        // 新建规则表单
         newRuleForm: {
           name: '',
           way: '',
@@ -347,73 +351,82 @@
       }
     },
     created(){
-      this.init()
+      // this.init()
     },
     methods: {
-      init(){
-        let url = `network/listaclListItem.do?aclListId=${this.firewallInfo.fireId}`
-        this.$http.get(url).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.upInformation.tableData = response.data.result.up
-            this.downInformation.tableData = response.data.result.down
-          }
-        })
-      },
-      handleSubmit (first, second) {
-        let bol = true
-        this.$refs[first].validate((valid) => {
-          bol = bol && valid
-        })
-        this.$refs[second].validate((valid) => {
-          bol = bol && valid
-        })
-
-        if (bol) {
-          this.showModal.createRule = false
-          this.loadingMessage = '正在创建防火墙规则'
-          this.loading = true
-          if (this.newRuleForm.protocol == 'ALL' || this.newRuleForm.protocol == 'ICMP') {
-            this.newRuleForm.startPort = 1
-            this.newRuleForm.endPort = 65535
-          }
-          var url = `network/createNetworkACL.do?name=${this.newRuleForm.name}&way=${this.newRuleForm.way}&protocol=${this.newRuleForm.protocol}&itemid=${this.newRuleForm.itemid}&cdir=${this.newRuleForm.cidr}&startport=${this.newRuleForm.startPort}&endport=${this.newRuleForm.endPort}&acllistid=${this.firewallInfo.fireId}&access=${this.newRuleForm.access}`
-          this.$http.get(url).then(response => {
-            this.loading = false
-            if (response.status == 200 && response.data.status == 1) {
-              this.init()
-              this.$Message.success(response.data.message)
-            }
+      // 设置数据
+      setData(response){
+        if (response.status == 200 && response.data.status == 1) {
+          this.upInformation.tableData = response.data.result.up
+          this.downInformation.tableData = response.data.result.down
+        } else {
+          this.$message.error({
+            content: response.data.message
           })
         }
       },
-      del(acllistitemid){
-        this.upInformation.tableData.forEach(item => {
-          if (item.acllistitemid == acllistitemid) {
-            item.closing = true
+      // 提交创建规则请求
+      handleSubmit () {
+        this.$refs.newRuleFormValidate.validate(validate => {
+          if (validate) {
+            if (this.newRuleForm.protocol == 'ALL' || this.newRuleForm.protocol == 'ICMP') {
+              this.newRuleForm.startPort = 1
+              this.newRuleForm.endPort = 65535
+            }
+            this.$http.get('network/createNetworkACL.do', {
+              params: {
+                name: this.newRuleForm.name,
+                way: this.newRuleForm.way,
+                protocol: this.newRuleForm.protocol,
+                itemid: this.newRuleForm.itemid,
+                cdir: this.newRuleForm.cidr,
+                startport: this.newRuleForm.startPort,
+                endport: this.newRuleForm.endPort,
+                acllistid: sessionStorage.getItem('firewallId'),
+                access: this.newRuleForm.access
+              }
+            }).then(response => {
+              this.showModal.createRule = false
+              if (response.status == 200 && response.data.status == 1) {
+                this.$http.get('network/listaclListItem.do', {
+                  params: {
+                    aclListId: sessionStorage.getItem('firewallId')
+                  }
+                }).then(response => {
+                  this.setData(response)
+                })
+              } else {
+                this.$message.error({
+                  content: response.data.message
+                })
+              }
+            })
           }
         })
-        this.downInformation.tableData.forEach(item => {
-          if (item.acllistitemid == acllistitemid) {
-            item.closing = true
+      },
+      // 删除规则
+      del(aclId){
+        this.$http.get('network/deleteNetworkACL.do', {
+          params: {
+            id: aclId
           }
-        })
-        this.loadingMessage = '正在删除规则'
-        this.loading = true
-        var url = `network/deleteNetworkACL.do?aclListItemId=${acllistitemid}`
-        this.$http.get(url).then(response => {
-          this.loading = false
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.upInformation.tableData = this.upInformation.tableData.filter(item => {
-              return item.acllistitemid != acllistitemid
+            this.$http.get('network/listaclListItem.do', {
+              params: {
+                aclListId: sessionStorage.getItem('firewallId')
+              }
+            }).then(response => {
+              this.setData(response)
             })
-            this.downInformation.tableData = this.downInformation.tableData.filter(item => {
-              return item.acllistitemid != acllistitemid
+          } else {
+            this.$message.error({
+              content: response.data.message
             })
-            this.$Message.success(response.data.message)
           }
         })
       }
-    },
+    }
   }
 </script>
 
@@ -421,6 +434,8 @@
   .background {
     background-color: #f5f5f5;
     width: 100%;
+    @diff: 146px;
+    min-height: calc(~'100% - @{diff}');
     .wrapper {
       width: 1200px;
       margin: 0px auto;

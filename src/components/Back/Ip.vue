@@ -402,8 +402,8 @@
       queryFunction: debounce(500, function () {
         axios.post('device/queryIpPrice.do', {
           brand: this.newIPForm.bandWidth,
-          timevalue: this.newIPForm.timeValue,
-          value: this.newIPForm.timeType,
+          timeValue: this.newIPForm.timeValue,
+          timeType: this.newIPForm.timeType,
           zoneId: $store.state.zone.zoneid
         }).then(response => {
           console.log(response)

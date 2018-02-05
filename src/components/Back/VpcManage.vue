@@ -46,12 +46,102 @@
                 <li>状态：{{item.status}}</li>
                 <li>防火墙：<span class="blue">{{item.acllistname}}</span></li>
                 <li>负载均衡：<span class="blue">{{item.loadbalance}}</span></li>
-                <li><span class="blue">添加主机</span><span class="vertical-line">|</span><span class="blue">更多</span></li>
+                <li><span class="blue">添加主机</span><span class="vertical-line">|</span><span class="blue">删除</span></li>
               </ul>
               <Table :columns="vmColumns" :data="item.vmList" v-show="item._show" class="table"></Table>
             </div>
           </TabPane>
-          <TabPane name="topo" label="网络拓扑">网络拓扑</TabPane>
+          <TabPane label="网络拓扑" name="网络拓扑">
+            <div style="min-height: 500px;display: flex">
+              <div style="width:180px;border-right:1px solid black">
+                <div class="internet"></div>
+                <div class="line"></div>
+                <Dropdown>
+                  <div class="router"></div>
+                  <DropdownMenu slot="list" style="transform:translate(0%,0%)">
+                    <div class="subnet-info" style="padding:5px 10px">
+                      <span>vpc名称：{{data.vpcname}}</span>
+                      <span>所属区域：{{data.zoneName}}</span>
+                    </div>
+                  </DropdownMenu>
+                </Dropdown>
+              </div>
+              <div style="width:100%">
+                <div v-for="item in data.ipsList" :key="item.id" class="item-wrapper">
+                  <Dropdown class="moreInfo" style="margin-right: 50px;position: absolute;bottom:-50%;">
+                    <span class="subnet"></span>
+                    <DropdownMenu slot="list" style="transform:translate(0%,0%)">
+                      <div style="display: flex">
+                        <div style="border-right:1px solid rgb(204, 204, 204);padding:20px 10px;">
+                          <div style="margin:0px auto;">
+                            <Button type="primary" size="small"
+                                    style="margin-bottom:15px;width:76px;text-align: center"
+                                    @click="openModifyModal(item)">修改子网
+                            </Button>
+                            <Button type="primary" size="small"
+                                    style="margin-bottom:15px;width:76px;text-align: center"
+                                    @click="delNetwork(item)">删除子网
+                            </Button>
+                            <Button type="primary" size="small" v-if="item.acllistid"
+                                    @click="modifyNetModal(item)">更换防火墙
+                            </Button>
+                          </div>
+                        </div>
+                        <div class="subnet-info" style="padding:20px 10px">
+                          <span>所属区域：{{item.zonename}}</span>
+                          <span>子网名称：{{item.name}}</span>
+                          <span>网关地址：{{item.ipsegment}}</span>
+                        </div>
+                      </div>
+                    </DropdownMenu>
+                  </Dropdown>
+                  <div class="firewall" v-if="item.acllistid"></div>
+                  <Tooltip content="添加云服务器" placement="right-start" style="margin:10px 110px;">
+                    <span class="vm new" @click="addHost(item,true)">
+                      +
+                    </span>
+                  </Tooltip>
+                  <Dropdown class="moreInfo" v-for="vm in item.vmList" :key="vm.id"
+                            style="margin: 10px 110px 10px 0px;">
+                      <span class="vm instance" :class="{staticnatip:vm.staticnatip}">
+                        <span
+                          style="font-size: 12px;position:absolute;white-space: nowrap;top:-25px;left:50%;transform: translateX(-50%)">{{vm.computername}}</span>
+                      </span>
+                    <DropdownMenu slot="list" style="transform:translate(0%,0%)">
+                      <div style="display: flex">
+                        <div style="border-right:1px solid rgb(204, 204, 204);padding:20px 10px;">
+                          <div style="margin:0px auto;width:65px;">
+                            <Button type="primary" size="small" style="margin-bottom:15px;width:64px"
+                                    @click="disbindNet(item,vm,true)">离开网络
+                            </Button>
+                            <Button type="primary" size="small"
+                                    style="margin-bottom:15px;width:64px;text-align: center" v-if="vm.staticnatip"
+                                    @click="unbind(vm)">解绑IP
+                            </Button>
+                            <Button type="primary" size="small"
+                                    style="margin-bottom:15px;width:64px;text-align: center" @click="bindIP(item,vm)"
+                                    v-else>绑定IP
+                            </Button>
+                          </div>
+                        </div>
+                        <div class="subnet-info" style="padding:20px 10px">
+                          <span>主机名称：{{vm.computername}}</span>
+                          <span>公网地址：{{vm.staticnatip}}</span>
+                          <span>内网地址：{{vm.privateip}}</span>
+                          <span>操作系统：{{vm.templateName}}</span>
+                          <span>系统配置：{{vm.serviceOfferName}}</span>
+                          <span>主机状态：{{vm.status==1?"正常":vm.status==0?"欠费":vm.status==-1?"异常":vm.status==-2?"已删除":"执行中"}}</span>
+                        </div>
+                      </div>
+                    </DropdownMenu>
+                  </Dropdown>
+                </div>
+                <div class="item-wrapper" style="height:46px;">
+                  <span class="newSubnet" @click="">+</span>
+                </div>
+              </div>
+            </div>
+          </TabPane>
           <TabPane name="interoperability" label="VPC互通网关">
             <Table :columns="vpcColumns" :data="vpcTableData"></Table>
           </TabPane>
@@ -445,7 +535,7 @@
 
   .blue {
     color: #2A99F2;
-
+    cursor: pointer
   }
 
   .dib {
@@ -584,4 +674,189 @@
       }
     }
   }
+
+  .internet {
+    height: 100px;
+    background: url(../../assets/img/vpcManage/internet.png) no-repeat center;
+  }
+
+  .line {
+    width: 2px;
+    margin: auto;
+    height: 70px;
+    background-color: #bdbcbc;
+  }
+
+  .subnet-info {
+    span {
+      white-space: nowrap;
+      line-height: 16px;
+      display: block;
+    }
+  }
+
+  .router {
+    width: 155px;
+    height: 60px;
+    background: url(../../assets/img/vpcManage/router.png) no-repeat center;
+    position: relative;
+    &::after {
+      content: "";
+      display: block;
+      height: 2px;
+      width: 50px;
+      position: absolute;
+      top: 50%;
+      right: 0px;
+      background-color: #bdbcbc;
+    }
+  }
+
+  .newSubnet {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 2px dashed rgb(102, 102, 102);
+    box-sizing: content-box;
+    position: absolute;
+    bottom: -50%;
+    font-size: 38px;
+    background-color: white;
+    text-align: center;
+    color: rgb(102, 102, 102);
+    cursor: pointer;
+  }
+
+  .firewall {
+    width: 52px;
+    height: 52px;
+    margin-left: 110px;
+    transform: translateY(50%);
+    background: url(../../assets/img/vpcManage/firewall.png) no-repeat center;
+  }
+
+  .title {
+    font-family: Microsoft Yahei, 微软雅黑;
+    font-family: 微软雅黑;
+    font-size: 16px;
+    color: #2A99F2;
+    display: block;
+    margin-bottom: 10px
+  }
+
+  .info {
+    font-weight: 600;
+    margin-right: 25px;
+    font-size: 14px;
+    color: #5E5E5E;
+  }
+
+  .operator-bar {
+
+  }
+
+  .body {
+    min-height: 500px;
+    .network-wrapper {
+      margin-top: 20px;
+      min-height: 50px;
+      background-color: #e9f4fd;
+      border-radius: 5px;
+      border-radius: 5px;
+      padding: 18px 25px;
+      .arrow {
+        border-top: 14px solid #2A99F2;
+        border-left: 7px solid rgba(0, 0, 0, 0);
+        border-right: 7px solid rgba(0, 0, 0, 0);
+        display: inline-block;
+        margin-right: 60px;
+        vertical-align: super;
+        transition: .5s;
+        cursor: pointer;
+        transform: translate(0px, 5px)
+      }
+      .open {
+        transform: translate(0px, 5px) rotate(-180deg);
+      }
+      .show {
+        height: 0px;
+      }
+      .operatingArea {
+        display: inline-block;
+        float: right;
+        & > span {
+          font-size: 14px;
+          color: #2A99F2;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .item-wrapper {
+    margin: 50px 0px;
+    border-bottom: 1px solid rgb(204, 204, 204);
+    display: flex;
+    padding-left: 100px;
+    position: relative;
+    .subnet {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 2px solid rgb(94, 204, 73);
+      display: inline-flex;
+      box-sizing: content-box;
+      background: url(../../assets/img/vpcManage/subnet.png) no-repeat center;
+      cursor: pointer
+    }
+
+    .vm {
+      display: inline-block;
+      font-size: 26px;
+      text-align: center;
+      line-height: 20px;
+      width: 30px;
+      height: 25px;
+      border-radius: 5px;
+      margin-bottom: 5px;
+      position: relative;
+      cursor: pointer;
+      &::after {
+        content: "";
+        width: 22px;
+        display: block;
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+    }
+    .new {
+      border: 1px dashed rgb(102, 102, 102);
+      &::after {
+        border-bottom: 1px dashed rgb(102, 102, 102);
+      }
+    }
+    .instance {
+      border: 2px solid rgb(102, 102, 102);
+      display: inline-flex;
+      &::after {
+        bottom: -6px;
+        border-bottom: 2px solid rgb(102, 102, 102);
+      }
+    }
+    .staticnatip {
+      &::before {
+        content: "IP";
+        position: absolute;
+        font-size: 10px;
+        height: 20px;
+        width: 22px;
+        text-align: center;
+        top: -4px;
+        right: -2px;
+      }
+    }
+  }
+
 </style>
