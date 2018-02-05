@@ -28,7 +28,7 @@
                 style="border: 1px solid #dddee1;border-right:none;height:41px;color:rgb(73, 80, 96);padding:10px 18px;font-weight:700;background-color:rgb(248, 248, 249);">
                 弹性IP
               </div>
-              <div v-for="v-for=(item,index) in DNATData" :key="index"
+              <div v-for="(item,index) in DNATData" :key="index"
                    style="position: relative;border-left: 1px solid #dddee1;border-bottom: 1px solid #dddee1;"
                    :style="{height:`${item[0].PortTransList.length*48}px`}">
                 <span style="position: absolute;top:50%;left:18px;transform: translateY(-50%)">{{item[0].publicIp}}</span>
