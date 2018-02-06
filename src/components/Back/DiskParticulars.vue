@@ -269,7 +269,7 @@
                     style: {
                       color: '#EE4545'
                     }
-                  }, '异常')
+                  }, '正常')
                 case 2:
                   return h('div', {}, [h('Spin', {
                     style: {
@@ -613,7 +613,6 @@
         var url = `alarm/getDiskAlarmByDay.do?diskId=${this.diskInfo.diskid}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-             console.log(response.data.result)
             this.rwPolar.series[0].data = response.data.result.rwPolar
             this.rwPolar.xAxis.data = response.data.result.xaxis
             this.IOPSPolar.series[0].data = response.data.result.IOPS

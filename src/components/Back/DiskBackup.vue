@@ -242,7 +242,7 @@
                     style: {
                       color: '#EE4545'
                     }
-                  }, '异常')
+                  }, '正常')
                 case 2:
                   return h('div', {}, [h('Spin', {
                     style: {
@@ -344,7 +344,7 @@
                   style: {
                     color: '#EE4545'
                   }
-                }, '异常')
+                }, '正常')
               }
             }
           }, {
