@@ -625,9 +625,6 @@
           if (this.currentHost[0].loadbalance) {
             this.$Message.warning('啊哦!已绑定主机无法再次绑定!')
           } else {
-            // this.loadingMessage = '正在绑定IP'
-            // this.loading = true
-            // this.bindForm.publicIP = ''
             this.showModal.balance = true
             // 获取负载均衡规则
             var balanceUrl = `loadbalance/listLoadBalanceRole.do?zoneId=${$store.state.zone.zoneid}`
@@ -660,13 +657,13 @@
           title: '',
           content: '<p>确定要恢复当前主机吗？</p>',
           onOk: () => {
-            this.$Message.info('主机正在恢复，请稍后')
+            this.$message.info('主机正在恢复，请稍后')
             this.$http.get('information/recoverVM.do?id=' + id).then(response => {
               if (response.status == 200) {
-                this.$Message.info(response.data.message)
+                this.$message.info(response.data.message)
                 this.getData()
               } else {
-                this.$Message.error({
+                this.$message.error({
                   content: '服务器出错'
                 })
                 this.getData()
@@ -714,6 +711,29 @@
           }
         })
       },
+      toggleData() {
+        var url = 'information/listVirtualMachines.do'
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.openHost = []
+            this.closeHost = []
+            this.arrearsHost = []
+            this.errorHost = []
+            this.waitHost = []
+            this.currentHost =  []
+            // 遍历各种主机类型，开启、关闭、欠费、错误、创建中
+            for (var type in response.data.result) {
+              var list = []
+              var target = response.data.result[type]
+              for (var index in target.list) {
+                var host = merge(this[`${type}Host`][index] || {}, target.list[index], {_select: this[`${type}Host`][index] ? this[`${type}Host`][index]._select : false})
+                list.push(host)
+              }
+              this[`${type}Host`] = list
+            }
+          }
+        })
+      },
       toggle(item) {
         if (!this.auth) {
           return
@@ -737,6 +757,8 @@
             instancename: item.instancename
           }
         })
+        // sessionStorage.setItem('oneHostinfo', JSON.stringify(item))
+        // this.$router.push('manage')
       },
       startUp() {
         switch (this.status) {
@@ -795,7 +817,7 @@
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             item.status = 2
-            this.$Message.info(response.data.message)
+            this.$message.info(response.data.message)
           } else {
             item.status = 1
           }
@@ -811,7 +833,7 @@
         }).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
-            this.$Message.info(response.data.message)
+            this.$message.info(response.data.message)
           } else {
             item.status = 1
           }
@@ -1046,7 +1068,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
               } else {
-                this.$Message.error({
+                this.$message.error({
                   content: response.data.message})
               }
             })
@@ -1080,7 +1102,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.cost = response.data.result
               } else {
-                this.$Message.error({
+                this.$message.error({
                   content: response.data.message})
               }
             })
@@ -1088,7 +1110,7 @@
       },
       '$store.state.zone': {
         handler: function () {
-          this.getData()
+          this.toggleData()
         },
         deep: true
       }
