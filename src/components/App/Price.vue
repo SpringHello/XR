@@ -150,6 +150,13 @@
     }
   }
   export default{
+    beforeRouteEnter(to, from, next){
+      console.log(to)
+      to.name
+      next(vm => {
+        vm.product = to.name
+      })
+    },
     data () {
       var detailedList = JSON.parse(sessionStorage.getItem('budget'))
       return {
@@ -594,24 +601,24 @@
             }
           })
         })
-    /*    if (count == this.diskList.length) {
-        } else {
-          this.$Message.error('创建磁盘订单错误')
-        }*/
+        /*    if (count == this.diskList.length) {
+         } else {
+         this.$Message.error('创建磁盘订单错误')
+         }*/
       },
       /* 查看产品详情 */
       viewProduct () {
         switch (this.product) {
           case 'hostPrice':
-           // this.$router.push('/ruicloud/Pecs')
+            // this.$router.push('/ruicloud/Pecs')
             window.open('/ruicloud/Pecs')
             break
           case 'diskPrice':
-           // this.$router.push('/ruicloud/Pdisk')
+            // this.$router.push('/ruicloud/Pdisk')
             window.open('/ruicloud/Pdisk')
             break
           case 'elasticIPPrice':
-           // this.$router.push('/ruicloud/Peip')
+            // this.$router.push('/ruicloud/Peip')
             window.open('/ruicloud/Peip')
             break
         }

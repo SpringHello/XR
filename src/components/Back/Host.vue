@@ -838,7 +838,7 @@
       },
       bind() {
         this.showModal.bindIP = false
-        var url = `network/enableStaticNat.do?ipId=${this.bindForm.publicIP}&vmid=${this.currentHost[0].computerid}`
+        var url = `network/enableStaticNat.do?ipId=${this.bindForm.publicIP}&VMId=${this.currentHost[0].computerid}`
         this.$http.get(url)
           .then(response => {
             this.loading = false
