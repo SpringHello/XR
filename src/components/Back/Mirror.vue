@@ -260,7 +260,7 @@
               if (params.row.status == 1) {
                 return '正常'
               } else if (params.row.status == -1) {
-                return '异常'
+                return '正常'
               } else if (params.row.status == 2) {
                 return h('div', {}, [h('Spin', {
                   style: {
@@ -481,7 +481,7 @@
             this.ownMirrorList()
            this.$Message.success(response.data.message)
           } else {
-           this.$Message.error(response.data.message)
+           this.$message.error(response.data.message)
           }
         })
       },

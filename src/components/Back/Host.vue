@@ -657,13 +657,13 @@
           title: '',
           content: '<p>确定要恢复当前主机吗？</p>',
           onOk: () => {
-            this.$Message.info('主机正在恢复，请稍后')
+            this.$message.info('主机正在恢复，请稍后')
             this.$http.get('information/recoverVM.do?id=' + id).then(response => {
               if (response.status == 200) {
-                this.$Message.info(response.data.message)
+                this.$message.info(response.data.message)
                 this.getData()
               } else {
-                this.$Message.error({
+                this.$message.error({
                   content: '服务器出错'
                 })
                 this.getData()
@@ -817,7 +817,7 @@
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             item.status = 2
-            this.$Message.info(response.data.message)
+            this.$message.info(response.data.message)
           } else {
             item.status = 1
           }
@@ -833,7 +833,7 @@
         }).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
-            this.$Message.info(response.data.message)
+            this.$message.info(response.data.message)
           } else {
             item.status = 1
           }
@@ -1068,7 +1068,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
               } else {
-                this.$Message.error({
+                this.$message.error({
                   content: response.data.message})
               }
             })
@@ -1102,7 +1102,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.cost = response.data.result
               } else {
-                this.$Message.error({
+                this.$message.error({
                   content: response.data.message})
               }
             })

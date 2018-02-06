@@ -419,7 +419,7 @@
                     style: {
                       color: '#EE4545'
                     }
-                  }, '异常')
+                  }, '正常')
                 case 2:
                   return h('div', {}, [h('Spin', {
                     style: {
@@ -528,7 +528,7 @@
                   value = '欠费'
                   break
                 case -2:
-                  value = '异常'
+                  value = '正常'
                   break
                 case -1:
                   value = '其他原因失败'
@@ -783,7 +783,7 @@
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.success(response.data.message)
             } else {
-              this.$Message.info(response.data.message)
+              this.$message.info(response.data.message)
             }
           })
       },
@@ -958,18 +958,18 @@
               this.resetPasswordForm.confirmPassword = ''
               this.$Message.success(response.data.message)
             } else {
-              this.$Message.info(response.data.message)
+              this.$message.info(response.data.message)
             }
           })
         } else if (this.resetPasswordForm.newPassword != this.resetPasswordForm.confirmPassword) {
-          this.$Message.info('密码与确认密码不一致')
+          this.$message.info('密码与确认密码不一致')
         }
       },
       reload() {
         if (this.reloadForm.system == '') {
-          this.$Message.info('请选择一个重装模版')
+          this.$message.info('请选择一个重装模版')
         } else if (this.reloadForm.password == '') {
-          this.$Message.info('请输入登录密码')
+          this.$message.info('请输入登录密码')
         } else {
           this.showModal.reload = true
         }
@@ -988,7 +988,7 @@
             this.isemailalarm = response.data.result.isemailalarm == 0 ? false : true
             this.issmsalarm = response.data.result.issmsalarm == 0 ? false : true
           } else {
-            this.$Message.info(response.data.message)
+            this.$message.info(response.data.message)
           }
         })
       },
@@ -1004,7 +1004,7 @@
             this.showModal.setMonitoringForm = false
           } else {
             this.showModal.setMonitoringForm = false
-            this.$Message.info(response.data.message)
+            this.$message.info(response.data.message)
           }
         })
       }

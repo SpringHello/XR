@@ -1472,7 +1472,7 @@
                     style: {
                       color: '#EE4545'
                     }
-                  }, '异常')
+                  }, '正常')
                 case 2:
                   return h('div', {}, [h('Spin', {
                     style: {
@@ -1555,7 +1555,7 @@
             key: 'status',
             render: (h, params) => {
               const row = params.row
-              const text = row.status === 0 ? '异常' : row.status === 1 ? '可用' : row.status === 3 ? '删除中' : ''
+              const text = row.status === 0 ? '正常' : row.status === 1 ? '可用' : row.status === 3 ? '删除中' : ''
               if (row.status == 3) {
                 return h('div', {}, [h('Spin', {
                   style: {
@@ -1777,8 +1777,8 @@
         axios.get(snapsURL)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.$Message.info({
-                content: response.data.message,
+              this.$message.info({
+                content: response.data.message+'1243546',
                 duration: 5
               })
               this.showModal.addOrDeleteHost = false
@@ -1936,7 +1936,7 @@
                     duration: 5
                   })
                 } else {
-                  this.$Message.info(response.data.message)
+                  this.$message.info(response.data.message)
                 }
               })
           }
