@@ -625,9 +625,6 @@
           if (this.currentHost[0].loadbalance) {
             this.$Message.warning('啊哦!已绑定主机无法再次绑定!')
           } else {
-            // this.loadingMessage = '正在绑定IP'
-            // this.loading = true
-            // this.bindForm.publicIP = ''
             this.showModal.balance = true
             // 获取负载均衡规则
             var balanceUrl = `loadbalance/listLoadBalanceRole.do?zoneId=${$store.state.zone.zoneid}`
@@ -701,6 +698,12 @@
         var url = 'information/listVirtualMachines.do'
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            this.openHost = []
+            this.closeHost = []
+            this.arrearsHost = []
+            this.errorHost = []
+            this.waitHost = []
+            this.currentHost =  []
             // 遍历各种主机类型，开启、关闭、欠费、错误、创建中
             for (var type in response.data.result) {
               var list = []
@@ -737,6 +740,8 @@
             instancename: item.instancename
           }
         })
+        // sessionStorage.setItem('oneHostinfo', JSON.stringify(item))
+        // this.$router.push('manage')
       },
       startUp() {
         switch (this.status) {

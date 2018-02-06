@@ -675,8 +675,11 @@
       }
     },
     created() {
+      // if (sessionStorage.getItem('oneHostinfo')) {
+      //   this.computerInfo = JSON.parse(sessionStorage.getItem('oneHostinfo'))
+      // }
       this.snapsId = this.$route.query.vmid
-      var computerInfoURL = `information/listVMByComputerName.do?computerName=${this.$route.query.computername}&zoneId=${this.$route.query.zoneid}`
+      var computerInfoURL = `information/listVMByComputerId.do?VMId=${this.$route.query.vmid}&zoneId=${this.$route.query.zoneid}`
       axios.get(computerInfoURL)
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -693,27 +696,31 @@
       this.$http.get(url1)
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.cpuPolar.series[0].data = response.data.result.cpuUse
-            this.diskPolar.series[0].data = response.data.result.diskUse
-            this.memoryPolar.series[0].data = response.data.result.memoryUse
+            // this.cpuPolar.series[0].data = response.data.result.cpuUse
+            // this.diskPolar.series[0].data = response.data.result.diskUse
+            // this.memoryPolar.series[0].data = response.data.result.memoryUse
+            this.cpuPolar.series[0].data = [0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 0, 0, 70, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            this.diskPolar.series[0].data = [0, 0, 0, 70, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            this.memoryPolar.series[0].data = [0, 0, 0, 0, 0, 0, 80, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             this.cpuPolar.xAxis.data = response.data.result.xaxis
             this.diskPolar.xAxis.data = response.data.result.xaxis
             this.memoryPolar.xAxis.data = response.data.result.xaxis
           }
         })
-      var url2 = `network/listNetworkByVM.do?vmid=${this.$route.query.vmid}`
-      this.$http.get(url2)
-        .then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.tableData = response.data.result
-          }
-        })
+      // var url2 = `network/listNetworkByVM.do?vmid=${this.$route.query.vmid}`
+      // this.$http.get(url2)
+      //   .then(response => {
+      //     if (response.status == 200 && response.data.status == 1) {
+      //       this.tableData = response.data.result
+      //     }
+      //   })
 
       var networkURL = `alarm/getVmAlarmByHour.do?vmname=${this.$route.query.instancename}&type=network`
       this.$http.get(networkURL)
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.ipPolar.series[0].data = response.data.result.networkIn
+            // this.ipPolar.series[0].data = response.data.result.networkIn
+            this.ipPolar.series[0].data = [0, 0, 0, 70, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             this.ipPolar.series[1].data = response.data.result.networkOut
             this.ipPolar.xAxis.data = response.data.result.xaxis
           }
