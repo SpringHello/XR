@@ -1026,7 +1026,7 @@
     &:before{
       content: '';
       position: absolute;
-      top: 2  px;
+      top: 2px;
       left: 3px;
       display: inline-block;
       width: 6px;
