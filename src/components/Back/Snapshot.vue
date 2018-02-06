@@ -1778,7 +1778,7 @@
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$message.info({
-                content: response.data.message+'1243546',
+                content: response.data.message,
                 duration: 5
               })
               this.showModal.addOrDeleteHost = false

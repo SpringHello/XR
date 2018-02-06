@@ -9,17 +9,12 @@
         <div class="info">
 
           <header>
-            <Icon type="chevron-down"></Icon>
+            <span class="arrowdown-icon"></span>
             <span>{{this.$route.query.computername}}</span>
             <div>
-              <Button class="btn">返回</Button>
-              <Button class="btn">连接主机</Button>
-              <!-- <Poptip confirm title="您确认关闭主机吗？">
-                <Icon type="power" style="padding-left: 10px;padding-top:2px;font-size: 25px;"></Icon>
-              </Poptip> -->
-
+              <Button class="btn" @click="goback()" >返回</Button>
+              <a :href="`${this.$route.query.connecturl}`" target="_blank" style="border:solid 1px #2A99F2;color: #2A99F2;border-radius: 5px;padding: 6px 15px;background-color:#f7f7f7;font-size:12px;">连接主机</a>
             </div>
-
           </header>
           <div class="pan" v-if="computerInfo!=null" style="width:28%">
             <span>
@@ -31,10 +26,10 @@
             <span>镜像系统：{{computerInfo.template}}</span>
             <span>到期时间／有效期：{{computerInfo.endtime}}</span>
             <span>内网地址：{{computerInfo.privateIp}}</span>
-            <span><span>登录密码：</span>
+            <!-- <span><span>登录密码：</span>
               <span v-show="showPassword" class="bluetext">{{computerInfo.password}}</span>
               <span v-show="!showPassword" class="bluetext">******</span>
-              <label :class="{close:showPassword}" @click="showPassword=!showPassword"></label></span>
+              <label :class="{close:showPassword}" @click="showPassword=!showPassword"></label></span> -->
           </div>
           <div class="pan" v-if="computerInfo!=null" style="width: 20%">
 
@@ -730,9 +725,12 @@
       this.memoryTime = this.getCurrentDate()
       this.IPTime = this.getCurrentDate()
       this.getsnapsList()
-      this.inter()
+      // this.inter()
     },
     methods: {
+      goback() {
+        this.$router.go(-1)
+      },
       inter() {
         this.intervalSnapsList = setInterval(() => {
           var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1&resourceId=${this.snapsId}`
@@ -1018,6 +1016,27 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .arrowdown-icon{
+    position: relative;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: solid 1px #fff;
+    border-radius: 50%;
+    &:before{
+      content: '';
+      position: absolute;
+      top: 2  px;
+      left: 3px;
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border: solid 1px #fff;
+      border-top:0;
+      border-left: 0;
+      transform:rotate(45deg); 
+    }
+  }
   .ivu-tabs-bar {
     padding-left: 55px;
   }

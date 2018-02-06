@@ -754,7 +754,8 @@
             computername: item.computername,
             zoneid: item.zoneid,
             vmid: item.computerid,
-            instancename: item.instancename
+            instancename: item.instancename,
+            connecturl: item.connecturl
           }
         })
         // sessionStorage.setItem('oneHostinfo', JSON.stringify(item))
