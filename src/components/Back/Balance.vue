@@ -549,6 +549,7 @@
               this.$message.info({
                 content: response.data.message
               })
+              this.balanceSelection = null
             } else {
               this.$message.error({
                 content: response.data.message
@@ -594,6 +595,7 @@
               this.$message.info({
                 content: response.data.message
               })
+              this.balanceSelection = null
             } else {
               this.$message.error({
                 content: response.data.message
@@ -624,6 +626,7 @@
                     content: response.data.message
                   })
                   this.listAllBalance()
+                  this.balanceSelection = null
                 } else {
                   this.$message.error({
                     content: response.data.message
