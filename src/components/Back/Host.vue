@@ -698,6 +698,23 @@
         var url = 'information/listVirtualMachines.do'
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            // 遍历各种主机类型，开启、关闭、欠费、错误、创建中
+            for (var type in response.data.result) {
+              var list = []
+              var target = response.data.result[type]
+              for (var index in target.list) {
+                var host = merge(this[`${type}Host`][index] || {}, target.list[index], {_select: this[`${type}Host`][index] ? this[`${type}Host`][index]._select : false})
+                list.push(host)
+              }
+              this[`${type}Host`] = list
+            }
+          }
+        })
+      },
+      toggleData() {
+        var url = 'information/listVirtualMachines.do'
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
             this.openHost = []
             this.closeHost = []
             this.arrearsHost = []
@@ -1093,7 +1110,7 @@
       },
       '$store.state.zone': {
         handler: function () {
-          this.getData()
+          this.toggleData()
         },
         deep: true
       }
