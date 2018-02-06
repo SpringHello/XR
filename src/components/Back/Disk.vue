@@ -536,6 +536,10 @@
       refreshPage () {
         this.listDisk()
       },
+      refresh () {
+        this.diskAreaList = this.$store.state.zoneList
+        this.listDisk()
+      },
       // 验证新建磁盘的表单
       _checkNewForm(){
         this.$refs.newDisk.validate((valid) => {
@@ -589,7 +593,7 @@
         if (!data.mounton && !data.mountonname && data.status == 1) {
           this.operand = data
           this.showModal.mountDisk = true
-          axios.get('Disk/listAttachComputer.do?diskId=' + data.diskid).then(response => {
+          this.$http.get('Disk/listAttachComputer.do?diskId=' + data.diskid).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.mountHostList = response.data.result
             }
@@ -889,6 +893,12 @@
       'dilatationForm.diskSize'(){
         this.diskSizeExpenses = '正在计算'
         this.queryDiskCost()
+      },
+      '$store.state.zone': {
+        handler: function () {
+          this.refresh()
+        },
+        deep: true
       }
     }
   }

@@ -196,7 +196,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.addOrDeleteDisk = false">取消</Button>
-        <Button type="primary" @click="updateVMIntoBackUpStrategy">确认</Button>
+        <Button type="primary" @click="updateDiskIntoBackUpStrategy">确认</Button>
       </div>
     </Modal>
   </div>
@@ -663,6 +663,16 @@
           this.listDiskBackUpStrategy()
         }
       },
+      /* 区域变更刷新数据 */
+      refresh () {
+        if (this.tabPane == 'diskBackups') {
+          this.listDiskSnapshots()
+        } else {
+          this.listDiskBackUpStrategy()
+        }
+        this.getMonthCongigDate()
+        this.getWeekTimeData()
+      },
       /* 获取月配置时间  */
       getMonthCongigDate () {
         var date = [
@@ -871,11 +881,11 @@
         this.diskForBackupsStrategyList.push(data)
       },
       /* 确定从磁盘备份策略添加或移除磁盘 */
-      updateVMIntoBackUpStrategy () {
+      updateDiskIntoBackUpStrategy () {
         var diskParams = this.resourceDisk.map(function (item) {
           return item.resourcesId
         })
-        var url = `Disk/updateVMIntoBackUpStrategy.do?backUpStrategyId=${this.strategyId}&diskIds=${diskParams.join(',')}`
+        var url = `Disk/updateDiskIntoBackUpStrategy.do?backUpStrategyId=${this.strategyId}&diskIds=${diskParams.join(',')}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$message.info({
@@ -1191,6 +1201,12 @@
               this.queryDiskPrice()
             }
           }
+        },
+        deep: true
+      },
+      '$store.state.zone': {
+        handler: function () {
+          this.refresh()
         },
         deep: true
       }
