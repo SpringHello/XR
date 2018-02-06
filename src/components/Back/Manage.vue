@@ -701,7 +701,6 @@
             this.memoryPolar.xAxis.data = response.data.result.xaxis
           }
         })
-
       var url2 = `network/listNetworkByVM.do?vmid=${this.$route.query.vmid}`
       this.$http.get(url2)
         .then(response => {
@@ -719,7 +718,15 @@
             this.ipPolar.xAxis.data = response.data.result.xaxis
           }
         })
-
+      this.CPUTime = this.getCurrentDate()
+      this.diskTime = this.getCurrentDate()
+      this.memoryTime = this.getCurrentDate()
+      this.IPTime = this.getCurrentDate()
+      this.getsnapsList()
+      this.inter()
+    },
+    methods: {
+      inter() {
         this.intervalSnapsList = setInterval(() => {
           var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1&resourceId=${this.snapsId}`
           axios.get(snapsURL)
@@ -740,14 +747,7 @@
                     }
             })
           }, 1000 * 10)
-
-      this.CPUTime = this.getCurrentDate()
-      this.diskTime = this.getCurrentDate()
-      this.memoryTime = this.getCurrentDate()
-      this.IPTime = this.getCurrentDate()
-      this.getsnapsList()
-    },
-    methods: {
+      },
       // 回滚确认弹窗
       rollbackSubmit() {
         this.showModal.rollback = false
