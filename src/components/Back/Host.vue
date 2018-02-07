@@ -657,10 +657,12 @@
           title: '',
           content: '<p>确定要恢复当前主机吗？</p>',
           onOk: () => {
-            this.$message.info('主机正在恢复，请稍后')
+            this.$Message.info('主机正在恢复，请稍后')
             this.$http.get('information/recoverVM.do?id=' + id).then(response => {
               if (response.status == 200) {
-                this.$message.info(response.data.message)
+                this.$message.info({
+                  content:response.data.message
+                })
                 this.getData()
               } else {
                 this.$message.error({
@@ -754,7 +756,8 @@
             computername: item.computername,
             zoneid: item.zoneid,
             vmid: item.computerid,
-            instancename: item.instancename
+            instancename: item.instancename,
+            connecturl: item.connecturl
           }
         })
         // sessionStorage.setItem('oneHostinfo', JSON.stringify(item))
@@ -817,7 +820,9 @@
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             item.status = 2
-            this.$message.info(response.data.message)
+            this.$message.info({
+              content:response.data.message
+            })
           } else {
             item.status = 1
           }
@@ -833,7 +838,9 @@
         }).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
-            this.$message.info(response.data.message)
+            this.$message.info({
+              content:response.data.message
+            })
           } else {
             item.status = 1
           }
@@ -1038,19 +1045,23 @@
       },
       del() {
         if (this.checkSelect()) {
-          if (this.currentHost[0].caseType != 3) {
-            this.$Message.warning('只能删除实时计费主机')
-            return
-          }
+          // if (this.currentHost[0].caseType != 3) {
+          //   this.$Message.warning('只能删除实时计费主机')
+          //   return
+          // }
           this.loadingMessage = '正在删除主机'
           this.loading = true
-          this.$http.get('information/destroyVirtualMachine.do?virtualMachineId=' + this.currentHost[0].id)
+          this.$http.get('information/deleteVM.do?id=' + this.currentHost[0].id)
             .then(response => {
               this.loading = false
               if (response.status == 200 && response.data.status == 1) {
                 // initRecycle.bind(this)()
                 this.$Message.success(response.data.message)
                 this.getData()
+              } else {
+                this.$message.info({
+                  content:response.data.message
+                })
               }
             })
         }
