@@ -781,7 +781,9 @@
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.success(response.data.message)
             } else {
-              this.$message.info(response.data.message)
+              this.$message.info({
+                content:response.data.message
+              })
             }
           })
       },
@@ -956,18 +958,20 @@
               this.resetPasswordForm.confirmPassword = ''
               this.$Message.success(response.data.message)
             } else {
-              this.$message.info(response.data.message)
+              this.$message.info({
+                content:response.data.message
+              })
             }
           })
         } else if (this.resetPasswordForm.newPassword != this.resetPasswordForm.confirmPassword) {
-          this.$message.info('密码与确认密码不一致')
+          this.$Message.info('密码与确认密码不一致')
         }
       },
       reload() {
         if (this.reloadForm.system == '') {
-          this.$message.info('请选择一个重装模版')
+          this.$Message.info('请选择一个重装模版')
         } else if (this.reloadForm.password == '') {
-          this.$message.info('请输入登录密码')
+          this.$Message.info('请输入登录密码')
         } else {
           this.showModal.reload = true
         }
@@ -986,7 +990,9 @@
             this.isemailalarm = response.data.result.isemailalarm == 0 ? false : true
             this.issmsalarm = response.data.result.issmsalarm == 0 ? false : true
           } else {
-            this.$message.info(response.data.message)
+            this.$message.info({
+              content:response.data.message
+            })
           }
         })
       },
@@ -1002,7 +1008,9 @@
             this.showModal.setMonitoringForm = false
           } else {
             this.showModal.setMonitoringForm = false
-            this.$message.info(response.data.message)
+            this.$message.info({
+              content:response.data.message
+            })
           }
         })
       }

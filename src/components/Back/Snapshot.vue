@@ -1936,7 +1936,9 @@
                     duration: 5
                   })
                 } else {
-                  this.$message.info(response.data.message)
+                  this.$message.info({
+                    content:response.data.message
+                  })
                 }
               })
           }
