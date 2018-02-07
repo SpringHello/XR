@@ -216,7 +216,14 @@
         return this.balanceInfo.algorithm == 'leastconn' ? '最小连接数算法' : this.balanceInfo.algorithm == 'source' ? '源算法' : '轮询算法'
       }
     },
-    watch: {}
+    watch: {
+      '$store.state.zone': {
+        handler: function () {
+          this.refresh()
+        },
+        deep: true
+      }
+    }
   }
 </script>
 <style rel="stylesheet/less" lang="less" scoped>

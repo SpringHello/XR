@@ -162,8 +162,8 @@
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.diskUnload = false">取消</Button>
-        <Button type="primary" @click="diskUnload_ok">确认删除</Button>
+        <Button @click="showModal.deleteDisk = false">取消</Button>
+        <Button type="primary" @click="deleteDisk_ok">确认删除</Button>
       </p>
     </Modal>
 
@@ -775,7 +775,7 @@
             item.status = 3
           }
         })
-        this.$http.get('Disk/delDisk.do?diskId=' + this.diskSelection.diskid).then(response => {
+        this.$http.get('Disk/deleteVolume.do?id=' + this.diskSelection.id + '').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$message.info({
               content: response.data.message,

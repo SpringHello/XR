@@ -155,7 +155,8 @@
             <Form :model="unbindForm">
               <Form-item label="解绑虚拟机">
                 <Select v-model="unbindForm.vm" multiple placeholder="请选择">
-                  <Option v-for="(item,index) in unbindForm.hostList" :key="item.computerid" :value="item.computerid">{{item.computername}}
+                  <Option v-for="(item,index) in unbindForm.hostList" :key="item.computerid" :value="item.computerid">
+                    {{item.computername}}
                   </Option>
                 </Select>
               </Form-item>
@@ -208,7 +209,16 @@
           {
             title: '状态',
             render: (h, object) => {
-              return h('span', {}, '正常')
+              if (object.row.status == 5) {
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', {}, '删除中')])
+              } else {
+                return h('span', {}, '正常')
+              }
             }
           },
           {
@@ -620,6 +630,11 @@
               } else {
                 url = `loadbalance/deleteLoadBalancerRule.do?id=${this.balanceSelection.id}`
               }
+              this.balData.forEach(item => {
+                if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
+                  item.status = 5
+                }
+              })
               this.$http.get(url).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.$message.info({
