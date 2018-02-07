@@ -909,7 +909,7 @@
             // 表单验证通过
             var url = `network/addPrivateGateway.do?vpcIdStart=${this.addGatewayForm.originVPC}&vpcIdEnd=${this.addGatewayForm.targetVPC}&zoneId=${$store.state.zone.zoneid}&aclIdStart=${this.addGatewayForm.originFirewall}&aclIdEnd=${this.addGatewayForm.targetFirewall}`
             axios.get(url).then(response => {
-              this.showModal.newVpc = false
+              this.showModal.addGateway = false
               if (response.status == 200 && response.data.status == 2) {
                 this.$error('error', response.data.message)
               }

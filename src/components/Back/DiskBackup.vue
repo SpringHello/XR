@@ -69,7 +69,7 @@
           </Form-item>
           <Form-item label="硬盘参数">
             <p style="color: #999999;margin-bottom: 10px">磁盘类型：{{ diskForm.diskType}}</p>
-            <p style="color: #999999;margin-bottom: 10px">磁盘容量：{{ diskForm.diskSize}}</p>
+            <p style="color: #999999;margin-bottom: 10px">磁盘容量：{{ diskForm.diskSize}} G</p>
             <p style="color: #999999;">原始磁盘名称：{{ diskForm.name }}</p>
           </Form-item>
         </Form>
@@ -631,7 +631,7 @@
       }
     },
     beforeRouteEnter(to, from, next) {
-      var zoneId = $store.state.zoneList[0].zoneid
+      var zoneId = $store.state.zone.zoneid
       // 获取备份列表数据
       var diskBackupsResponse = axios.get(`Snapshot/listDiskSnapshots.do?zoneId=${zoneId}`)
       Promise.all([diskBackupsResponse]).then((ResponseValue) => {
@@ -1164,7 +1164,7 @@
           cpuNum: 0 + '',
           memory: 0 + '',
           diskSize: this.diskForm.diskSize + '',
-          zoneId: this.$store.state.zoneList[0].zoneid,
+          zoneId: $store.state.zone.zoneid,
           timeType: this.diskForm.timeType + '',
           timeValue: this.diskForm.timeValue + '',
           diskType: this.diskForm.diskType + ''
