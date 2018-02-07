@@ -14,6 +14,23 @@
             <Button type="primary" @click="openNewFirewallModal">新建</Button>
             <!--Button type="primary">加入负载均衡</Button-->
             <Button type="primary" @click="openApplyFirewallModal">应用防火墙规则至</Button>
+            <Dropdown style="vertical-align: middle;" @on-click="handleEventModify">
+              <Button type="primary">
+                更多操作
+                <Icon type="arrow-down-b"></Icon>
+              </Button>
+              <Dropdown-menu slot="list">
+                <Poptip
+                  confirm
+                  width="200"
+                  placement="right"
+                  title="您确认删除该防火墙？"
+                  @on-ok="del">
+                  <li class="del">删除</li>
+                </Poptip>
+                <Dropdown-item name="modify">修改</Dropdown-item>
+              </Dropdown-menu>
+            </Dropdown>
           </div>
           <Table :columns="FirewallColumns" :data="FirewallData" @radio-change="selectFirewall"></Table>
         </div>
@@ -42,7 +59,6 @@
         <Button type="primary" @click="newFirewallOk">确认新建</Button>
       </div>
     </Modal>
-
     <!-- 应用防火墙规则至 -->
     <Modal v-model="showModal.applyFirewall" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
@@ -60,7 +76,26 @@
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="newFirewallOk">确认新建</Button>
+        <Button type="primary" @click="applyFirewallto">确认</Button>
+      </div>
+    </Modal>
+    <!-- 修改防火墙 -->
+    <Modal v-model="showModal.modify" width="590" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        修改防火墙
+      </div>
+      <div style="width:60%">
+        <Form :model="modifyForm" :label-width="80">
+          <Form-item label="防火墙名称">
+            <Input v-model="modifyForm.name" placeholder="请重置防火墙名称"></Input>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.modify = false;modifyForm.name=''">取消</Button>
+        <Button type="primary" :disabled="modifyForm.name==''" @click="modify">确定
+        </Button>
       </div>
     </Modal>
   </div>
@@ -80,7 +115,11 @@
       return {
         showModal: {
           newFirewall: false,
-          applyFirewall: false
+          applyFirewall: false,
+          modify: false
+        },
+        modifyForm: {
+          name: '',
         },
         FirewallColumns: [
           {
@@ -218,6 +257,20 @@
           }
         })
       },
+      // 应用防火墙规则至确定
+      applyFirewallto(){
+        this.showModal.applyFirewall = false
+        var url = `network/replaceNetworkACLList.do?aclListId=${this.select.acllistid}&networkId=${this.applyFirewallForm.network}`
+        this.$http.get(url).then(response => {
+          this.showModal.applyFirewall = false
+          this.applyFirewallForm.networkOptions = []
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+          } else {
+            this.$message.error({content: response.data.message})
+          }
+        })
+      },
       // 打开应用防火墙规则Modal
       openApplyFirewallModal(){
         if (this.select == null) {
@@ -236,12 +289,81 @@
             this.applyFirewallForm.networkOptions = response.data.result
           }
         })
+      },
+      // 打开修改防火墙弹窗
+      handleEventModify(params){
+        if (this.select == null) {
+          this.$message.info({
+            content: '请选择需要操作的防火墙'
+          })
+          return
+        }
+        this.showModal[params] = true
+      },
+      // 修改防火墙
+      modify(){
+        var url = `network/updateAclList.do?name=${this.modifyForm.name}&aclListId=${this.select.acllistid}`
+        this.$http.get(url).then(response => {
+          this.showModal.modify = false
+          this.modifyForm.name = ''
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+            this.$http.get('network/listAclList.do').then(response => {
+              this.setData(response)
+            })
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
+      },
+      // 删除防火墙
+      del(){
+        if (this.select == null) {
+          this.$message.info({
+            content: '请选中一条防火墙'
+          })
+          return
+        }
+        var url = `network/delAclList.do?id=${this.select.id}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+              this.$Message.success(response.data.message)
+              this.$http.get('network/listAclList.do').then(response => {
+                  this.setData(response)
+                })
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
+      },
+      refresh() {
+        this.$http.get('network/listAclList.do').then(response => {
+          this.setData(response)
+        })
       }
     },
-    watch: {},
+    watch: {
+      '$store.state.zone': {
+        handler: function () {
+          this.refresh()
+        },
+        deep: true
+      }
+    }
   }
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-
+  .del {
+    padding: 7px 16px;
+    cursor: pointer;
+    width: 100px;
+    &:hover {
+      background-color: #f3f3f3;
+    }
+  }
 </style>
