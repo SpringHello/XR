@@ -330,7 +330,9 @@
                   cursor: 'pointer'
                 },
                 on: {
-                  click: this.gotoVpc(params.row.id)
+                  click: () => {
+                    this.gotoVpc(params.row.id)
+                  }
                 },
               }, params.row.vpcname)
             }

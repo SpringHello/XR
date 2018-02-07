@@ -426,6 +426,10 @@
       this.getDiskAlarmByDay ()
     },
     methods: {
+      /* 切换地区刷新页面 */
+      refresh () {
+        this.listDiskSnapshots()
+      },
       // 验证以备份创建磁盘的表单
       _checkNewForm(){
         this.$refs.newDisk.validate((valid) => {
@@ -673,6 +677,12 @@
               this.queryDiskPrice()
             }
           }
+        },
+        deep: true
+      },
+      '$store.state.zone': {
+        handler: function () {
+          this.refresh()
         },
         deep: true
       }
