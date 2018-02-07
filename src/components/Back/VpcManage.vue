@@ -6,11 +6,11 @@
         <div class="head-info">
           <div class="top">
             <div>
-              <h3 class="dib">VPC名称</h3>
+              <h3 class="dib">{{ data.vpcname}}</h3>
               <div class="clock-show icon dib"></div>
             </div>
             <div>
-              <Button type="primary" class="btn-bgwhite">返回</Button>
+              <Button type="primary" class="btn-bgwhite" @click="$router.go(-1)">返回</Button>
               <Button type="primary">刷新</Button>
             </div>
           </div>

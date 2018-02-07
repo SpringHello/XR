@@ -374,6 +374,12 @@
       }
     },
     methods: {
+      refresh () {
+        // 获取ip数据
+        axios.get(`network/listPublicIp.do?page=1&pageSize=10&zoneId=${$store.state.zone.zoneid}`).then(response => {
+            this.setData(response)
+        })
+      },
       setData(response){
         if (response.status == 200 && response.data.status == 1) {
           this.ipData = response.data.result.data
@@ -406,7 +412,7 @@
           timeType: this.newIPForm.timeType,
           zoneId: $store.state.zone.zoneid
         }).then(response => {
-          console.log(response)
+          this.newIPForm.cost = response.data.cost
         })
       }),
       // 新建IP提交订单
@@ -493,6 +499,15 @@
             })
           }
         })
+      }
+    },
+    watch: {
+      // 监听区域变换
+      '$store.state.zone': {
+        handler: function () {
+          this.refresh()
+        },
+        deep: true
       }
     }
   }
