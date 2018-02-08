@@ -12,7 +12,14 @@
 
         <div class="operate">
           <Button type="primary" @click="openNewIPModal">创建弹性IP</Button>
-          <Button type="primary">释放弹性IP</Button>
+          <Poptip
+            confirm
+            width="200"
+            placement="right"
+            title="您确认删除该弹性IP？"
+            @on-ok="delElasticIP">
+            <Button type="primary">释放弹性IP</Button>
+          </Poptip>
           <!--<Button type="primary">创建端口映射</Button>
           <Dropdown>
             <Button type="primary">
@@ -31,7 +38,7 @@
           </Dropdown>-->
         </div>
         <div class="table-content">
-          <Table :columns="ipColumns" :data="ipData"></Table>
+          <Table :columns="ipColumns" :data="ipData" @radio-change="selectIp"></Table>
         </div>
       </div>
     </div>
@@ -87,11 +94,11 @@
       </p>
       <div class="universal-modal-content-flex">
         <p style="font-size: 12px;color: #666666;margin-bottom:20px;">您正为弹性IP<span style="color: #2A99F2 ;">{{bindForHostForm.row.publicip}}</span>绑定云主机。
-        </p>
+        </p><Icon type="ios-help-outline"></Icon>
         <Form :model="bindForHostForm" :rules="bindForHostRuleValidate" ref="bindForHostFormValidate">
           <FormItem label="选择云主机" prop="host">
-            <Select v-model="bindForHostForm.host" placeholder="请选择云主机">
-              <Option v-for="item in bindForHostForm.hostOptions" :key="item.vpcid" :value="item.vpcid">{{item.vpcname}}
+            <Select v-model="bindForHostForm.host" placeholder="云主机名称">
+              <Option v-for="(item,index) in bindForHostForm.hostOptions" :key="index" :value="item.computerid">{{item.instancename}}
               </Option>
             </Select>
           </FormItem>
@@ -99,7 +106,7 @@
         <p style="font-size: 12px;color: #999999">提示：弹性IP只能绑定一个资源，当您绑定该资源后，将不能再将该弹性IP用于其他资源绑定。</p>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="bindHostSubmit">完成配置</Button>
+        <Button type="primary" @click="bindHostSubmit">确认绑定</Button>
       </div>
     </Modal>
 
@@ -109,20 +116,20 @@
         <span class="universal-modal-title">绑定弹性IP</span>
       </p>
       <div class="universal-modal-content-flex">
-        <p style="font-size: 12px;color: #666666;margin-bottom:20px;">您正为弹性IP<span style="color: #2A99F2 ;">{{bindForHostForm.row.publicip}}</span>绑定云主机。
+        <p style="font-size: 12px;color: #666666;margin-bottom:20px;">您正为弹性IP<span style="color: #2A99F2 ;">{{bindForNATForm.row.publicip}}</span>绑定NAT网关。
         </p>
         <Form :model="bindForNATForm" :rules="bindForNATRuleValidate" ref="bindForNATFormValidate">
-          <FormItem label="选择云主机" prop="host">
-            <Select v-model="bindForNATForm.host" placeholder="请选择云主机">
-              <Option v-for="item in bindForNATForm.hostOptions" :key="item.vpcid" :value="item.vpcid">{{item.vpcname}}
+          <FormItem label="选择NAT网关" prop="NAT">
+            <Select v-model="bindForNATForm.NAT" placeholder="NAT网关名称">
+              <Option v-for="(item,index) in bindForNATForm.NATOptions" :key="index" :value="`${item.id.toString()}`">{{item.natname}}
               </Option>
             </Select>
           </FormItem>
         </Form>
-        <p style="font-size: 12px;color: #999999">提示：弹性IP只能绑定一个资源，当您绑定该资源后，将不能再将该弹性IP用于其他资源绑定。</p>
+        <p style="font-size: 12px;color: #999999">提示：弹性IP绑定NAT网关之后您可以在虚拟私有云-VPC管理-NAT网关中查看你所绑定的IP，并分配IP用以执行SNAT或DNAT。</p>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="bindNATSubmit">完成配置</Button>
+        <Button type="primary" @click="bindNATSubmit">确认绑定</Button>
       </div>
     </Modal>
   </div>
@@ -145,6 +152,8 @@
     },
     data(){
       return {
+         // 当前选中项
+        select: null,
         showModal: {
           newIPModal: false,
           bindIPForHost: false,
@@ -374,10 +383,20 @@
       }
     },
     methods: {
+      refresh () {
+        // 获取ip数据
+        axios.get(`network/listPublicIp.do?page=1&pageSize=10&zoneId=${$store.state.zone.zoneid}`).then(response => {
+            this.setData(response)
+        })
+      },
       setData(response){
         if (response.status == 200 && response.data.status == 1) {
           this.ipData = response.data.result.data
         }
+      },
+      // 选中当前项
+      selectIp(current){
+        this.select = current
       },
       // 打开新建IP模态框
       openNewIPModal(){
@@ -406,7 +425,7 @@
           timeType: this.newIPForm.timeType,
           zoneId: $store.state.zone.zoneid
         }).then(response => {
-          console.log(response)
+          this.newIPForm.cost = response.data.cost
         })
       }),
       // 新建IP提交订单
@@ -435,17 +454,20 @@
           this.bindForHostForm.row = row
           this.showModal.bindIPForHost = true
           // 获取所有能绑定弹性IP的云主机
-          // todo
-          axios.get('').then(response => {
-
+          this.$http.get('information/listVirtualMachines.do').then(response => {
+              var openHostlist = response.data.result.open.list
+              var hostlist = openHostlist.concat(response.data.result.close.list)
+              var bindIphostlist = hostlist.filter((item)=>{
+                return !item.publicip
+              })
+              this.bindForHostForm.hostOptions = bindIphostlist
           })
-        } else {
+        } else if (type == 'NAT') {
           this.bindForNATForm.row = row
           this.showModal.bindIPForNAT = true
           // 获取所有能绑定弹性IP的云主机
-          // todo
-          axios.get('').then(response => {
-
+          this.$http.get('network/listNatGateway.do').then(response => {
+              this.bindForNATForm.NATOptions = response.data.result
           })
         }
       },
@@ -453,21 +475,37 @@
       bindHostSubmit(){
         this.$refs.bindForHostFormValidate.validate(validate => {
           if (validate) {
-            axios.get('').then(response => {
-
+            this.$http.get(`network/enableStaticNat.do?ipId=${this.bindForHostForm.row.publicipid}&VMId=${this.bindForHostForm.host}`).then(response => {
+              this.showModal.bindIPForHost = false
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+              } else {
+                this.$message.error({
+                  content: response.data.message
+                })
+              }
             })
           }
         })
+        this.$refs.bindForHostFormValidate.resetFields();
       },
       // 绑定弹性IP到NAT
       bindNATSubmit(){
         this.$refs.bindForNATFormValidate.validate(validate => {
           if (validate) {
-            axios.get('').then(response => {
-
+            this.$http.get(`network/bindingElasticIP.do?publicIp=${this.bindForNATForm.row.publicip}&natGatewayId=${this.bindForNATForm.NAT}`).then(response => {
+              this.showModal.bindIPForNAT = false
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+              } else {
+                this.$message.error({
+                  content: response.data.message
+                })
+              }
             })
           }
         })
+        this.$refs.bindForNATFormValidate.resetFields();
       },
       // 解绑资源
       unbundle(row){
@@ -493,6 +531,28 @@
             })
           }
         })
+      },
+      // 删除弹性ip
+      delElasticIP(){
+        this.$http.get(`network/delPublic.do?id=${this.select.id}`).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+            this.refresh ()
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
+      }
+    },
+    watch: {
+      // 监听区域变换
+      '$store.state.zone': {
+        handler: function () {
+          this.refresh()
+        },
+        deep: true
       }
     }
   }

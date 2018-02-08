@@ -162,8 +162,8 @@
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.diskUnload = false">取消</Button>
-        <Button type="primary" @click="diskUnload_ok">确认删除</Button>
+        <Button @click="showModal.deleteDisk = false">取消</Button>
+        <Button type="primary" @click="deleteDisk_ok">确认删除</Button>
       </p>
     </Modal>
 
@@ -314,7 +314,7 @@
             width: 180,
             render: (h, params) => {
               const row = params.row
-              const text = row.status === 0 ? '欠费' : (row.status === 1 && !row.mounton && !row.mountonname) ? '可挂载' : (row.status === 1 && row.mounton && row.mountonname) ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '异常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '卸载中' : row.status === 5 ? '挂载中' : ''
+              const text = row.status === 0 ? '欠费' : (row.status === 1 && !row.mounton && !row.mountonname) ? '可挂载' : (row.status === 1 && row.mounton && row.mountonname) ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '正常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '卸载中' : row.status === 5 ? '挂载中' : ''
               if (row.status == 2 || row.status == 3 || row.status == 4 || row.status == 5) {
                 return h('div', {}, [h('Spin', {
                   style: {
@@ -536,6 +536,10 @@
       refreshPage () {
         this.listDisk()
       },
+      refresh () {
+        this.diskAreaList = this.$store.state.zoneList
+        this.listDisk()
+      },
       // 验证新建磁盘的表单
       _checkNewForm(){
         this.$refs.newDisk.validate((valid) => {
@@ -589,7 +593,7 @@
         if (!data.mounton && !data.mountonname && data.status == 1) {
           this.operand = data
           this.showModal.mountDisk = true
-          axios.get('Disk/listAttachComputer.do?diskId=' + data.diskid).then(response => {
+          this.$http.get('Disk/listAttachComputer.do?diskId=' + data.diskid).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.mountHostList = response.data.result
             }
@@ -734,12 +738,11 @@
             item.status = 4
           }
         })
-        axios.get(`Disk/detachVolume.do?zoneId=${this.operand.zoneid}&diskId=${this.operand.id}&VMId=${this.operand.mounton}`).then(response => {
+        axios.get(`Disk/detachVolume.do?zoneId=${this.operand.zoneid}&diskId=${this.operand.diskid}&VMId=${this.operand.mounton}`).then(response => {
           this.listDisk()
           if (response.status == 200 && response.statusText == 'OK') {
-            this.$Message.success({
+            this.$message.info({
               content: response.data.message,
-              duration: 5
             })
           } else {
             this.$message.error({
@@ -752,9 +755,8 @@
       modificationDisk_ok(){
         this.$http.get('Disk/updateDisk.do?diskId=' + this.operand.diskid + '&diskName=' + this.diskName).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success({
+            this.$message.info({
               content: response.data.message,
-              duration: 5
             })
             this.showModal.modificationDisk = false
             this.listDisk()
@@ -773,11 +775,10 @@
             item.status = 3
           }
         })
-        this.$http.get('Disk/delDisk.do?diskId=' + this.diskSelection.id).then(response => {
+        this.$http.get('Disk/deleteVolume.do?id=' + this.diskSelection.id + '').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success({
+            this.$message.info({
               content: response.data.message,
-              duration: 5
             })
             this.listDisk()
           } else {
@@ -795,12 +796,11 @@
             item.status = 5
           }
         })
-        this.$http.get('Disk/attachVolume.do?diskId=' + this.operand.id + '&VMId=' + this.diskMountForm.mountHost).then(response => {
+        this.$http.get('Disk/attachVolume.do?diskId=' + this.operand.diskid + '&VMId=' + this.diskMountForm.mountHost).then(response => {
           this.listDisk()
           if (response.status == 200 && response.statusText == 'OK') {
-            this.$Message.info({
+            this.$message.info({
               content: response.data.message,
-              duration: 5
             })
           } else {
             this.$message.error({
@@ -889,6 +889,12 @@
       'dilatationForm.diskSize'(){
         this.diskSizeExpenses = '正在计算'
         this.queryDiskCost()
+      },
+      '$store.state.zone': {
+        handler: function () {
+          this.refresh()
+        },
+        deep: true
       }
     }
   }

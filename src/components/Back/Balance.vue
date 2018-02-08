@@ -17,7 +17,7 @@
         </div>
         <!--负载均衡表-->
         <Table highlight-row stripe :columns="balColumns" :data="balData" @radio-change="selectBalance"></Table>
-        <!--模态框-->
+        <!--创建负载均衡模态框-->
         <Modal v-model="creatbalancemodal.showBalanceName" :scrollable="true" width="550" :closable="false">
           <p slot="header" style="font-size: 16px;color: rgba(17,17,17,0.75);line-height: 23.42px;"><b>创建负载均衡</b></p>
           <Steps :current="creatbalancemodal.current" size="small" style="margin:15px;">
@@ -35,42 +35,44 @@
                 </Input>
               </FormItem>
               <FormItem label="类型" prop="radio">
-                <RadioGroup v-model="creatbalancemodal.formInline.radio">
+                <RadioGroup v-model="creatbalancemodal.formInline.radio" @on-change="changeNet">
                   <Radio label="public">公网</Radio>
                   <Radio label="private">私网</Radio>
                 </RadioGroup>
               </FormItem>
               <!--当为公网时-->
-              <FormItem label="公网IP" prop="select" v-if="creatbalancemodal.formInline.radio == 'public'"
+              <FormItem label="公网IP" prop="publicIp" v-if="creatbalancemodal.formInline.radio == 'public'"
                         style="width:240px;">
-                <Select v-model="creatbalancemodal.formInline.select">
-                  <Option value="txt1">192.168.31.24</Option>
-                  <Option value="txt2">192.168.33.45</Option>
-                  <Option value="txt3">192.168.44.5</Option>
-                  <Option value="txt4">192.144.33.89</Option>
+                <Select v-model="creatbalancemodal.formInline.publicIp" @on-change="changePublicIp">
+                  <Option v-for="item in creatbalancemodal.formInline.PublicIpList"
+                          :value="`${item.vpcid}#${item.publicipid}`"
+                          :key="item.publicipid">{{ item.publicip }}
+                  </Option>
                 </Select>
               </FormItem>
 
               <!--当为私网时-->
-              <FormItem label="所属子网" prop="subnet" v-if="creatbalancemodal.formInline.radio == 'private'"
+              <FormItem label="所属子网" prop="subnet"
                         style="width:240px;">
-                <Select v-model="creatbalancemodal.formInline.subnet">
-                  <Option value="txt1">192.168.33.45</Option>
-                  <Option value="txt2">192.168.44.5</Option>
-                  <Option value="txt3">192.144.33.89</Option>
+                <Select v-model="creatbalancemodal.formInline.subnet" @on-change="changeSubnet">
+                  <Option v-for="item in creatbalancemodal.formInline.subnetList"
+                          :value="`${item.ipsegmentid}#${item.ipsegment}`"
+                          :key="item.ipsegmentid">{{ item.name }}
+                  </Option>
                 </Select>
               </FormItem>
               <FormItem label="内网IP" prop="intranetIp" v-if="creatbalancemodal.formInline.radio == 'private'">
                 <RadioGroup v-model="creatbalancemodal.formInline.intranetIp">
-                  <Radio label="auto">自动分配</Radio>
+                  <Radio label="auto" disabled>自动分配</Radio>
                   <Radio label="specify">指定IP</Radio>
                 </RadioGroup>
               </FormItem>
               <!--当为指定IP时-->
               <FormItem prop="num"
                         v-if="creatbalancemodal.formInline.radio == 'private'&& creatbalancemodal.formInline.intranetIp == 'specify'">
-                192.168.2.<Input type="text" v-model="creatbalancemodal.formInline.num"
-                                 style="width:100px;margin-left: 5px;">
+                192.168.{{ creatbalancemodal.formInline.intranetIpNum}}.<Input type="text"
+                                                                               v-model="creatbalancemodal.formInline.num"
+                                                                               style="width:100px;margin-left: 5px;">
                 </Input>
               </FormItem>
               <p style="font-size: 12px;color: #999999;"
@@ -82,24 +84,32 @@
           <!--步骤creatbalancemodal.current == 1-->
           <div v-show="creatbalancemodal.current == 1" class="universal-modal-content-flex">
             <Form ref="form2" :model="creatbalancemodal.formInline" :rules="creatbalancemodal.ruleInline">
-              <FormItem label="规则名称" prop="ruleName">
-                <Input type="text" v-model="creatbalancemodal.formInline.ruleName" placeholder="请输入规则名称">
+              <!--  <FormItem label="规则名称" prop="ruleName">
+                  <Input type="text" v-model="creatbalancemodal.formInline.ruleName" placeholder="请输入规则名称">
+                  </Input>
+                </FormItem>-->
+              <FormItem label="内网端口" prop="frontPort" v-if="creatbalancemodal.formInline.radio=='public'">
+                <Input type="text" v-model="creatbalancemodal.formInline.frontPort" placeholder="请输入0-65535之间任意数字">
+                </Input>
+              </FormItem>
+              <FormItem label="源端口" prop="frontPort" v-else>
+                <Input type="text" v-model="creatbalancemodal.formInline.frontPort" placeholder="请输入0-65535之间任意数字">
+                </Input>
+              </FormItem>
+              <FormItem label="公网端口" prop="rearPort" v-if="creatbalancemodal.formInline.radio=='public'">
+                <Input type="text" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入0-65535之间任意数字">
+                </Input>
+              </FormItem>
+              <FormItem label="实例端口" prop="rearPort" v-else>
+                <Input type="text" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入0-65535之间任意数字">
                 </Input>
               </FormItem>
               <FormItem label="算法" prop="algorithm">
                 <Select v-model="creatbalancemodal.formInline.algorithm">
-                  <Option value="txt1">轮询算法</Option>
-                  <Option value="txt2">最小连接数</Option>
-                  <Option value="txt3">源算法</Option>
+                  <Option v-for="item in creatbalancemodal.formInline.arithmeticList" :value="item.value"
+                          :key="item.value">{{ item.label }}
+                  </Option>
                 </Select>
-                </Input>
-              </FormItem>
-              <FormItem label="前端口" prop="frontPort">
-                <Input type="text" v-model="creatbalancemodal.formInline.frontPort" placeholder="请输入0-65535之间任意数字">
-                </Input>
-              </FormItem>
-              <FormItem label="后端口" prop="rearPort">
-                <Input type="text" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入0-65535之间任意数字">
                 </Input>
               </FormItem>
               <p v-if="creatbalancemodal.current == 1" style="font-size: 12px;color: #666666;line-height: 16px;">
@@ -122,28 +132,38 @@
             <span class="universal-modal-title">绑定虚拟机</span>
           </p>
           <div class="universal-modal-content-flex">
-            <Form :model="bindHostForm" :rules="bindHostFormValidate" ref="bindHostFormValidate">
-              <FormItem label="选择虚拟机" prop="vm">
+            <Form :model="bindHostForm" multiple>
+              <FormItem label="请选择虚拟机" prop="vm">
                 <Select v-model="bindHostForm.vm">
-                  <Option v-for="item in bindHostForm.vmOptions" :value="item.publicipid" :key="item.publicipid">
-                    {{item.publicip}}
+                  <Option v-for="item in bindHostForm.vmOptions" :value="item.computerid" :key="item.computerid">
+                    {{item.computername}}
                   </Option>
                 </Select>
               </FormItem>
-              <p style="font-size: 12px;color: rgba(153,153,153,0.65);">当前NAT网关可绑定弹性IP剩余额度5（点击提升配额）</p>
             </Form>
           </div>
           <div slot="footer" class="modal-footer-border">
-            <Button type="primary" @click="handlebindIPSubmit">确认绑定</Button>
+            <Button type="primary" @click="bindHost_ok">确认绑定</Button>
           </div>
         </Modal>
         <!-- 解绑虚拟机 -->
-        <Modal v-model="showModal.unbind" width="550" scrollable="true">
+        <Modal v-model="showModal.unbind" width="550" :scrollable="true">
           <p slot="header" class="modal-header-border">
             <span class="universal-modal-title">解绑虚拟机</span>
           </p>
+          <div class="universal-modal-content-flex">
+            <Form :model="unbindForm">
+              <Form-item label="解绑虚拟机">
+                <Select v-model="unbindForm.vm" multiple placeholder="请选择">
+                  <Option v-for="(item,index) in unbindForm.hostList" :key="item.computerid" :value="item.computerid">
+                    {{item.computername}}
+                  </Option>
+                </Select>
+              </Form-item>
+            </Form>
+          </div>
           <div slot="footer" class="modal-footer-border">
-            <Button type="primary" >确认解绑</Button>
+            <Button type="primary" @click="unbindHost_ok">确认解绑</Button>
           </div>
         </Modal>
       </div>
@@ -181,23 +201,43 @@
           },
           {
             title: '负载均衡名称',
-            key: 'name'
+            render: (h, object) => {
+              var name = object.row.lbname || object.row.name
+              return h('span', {}, name)
+            }
           },
           {
             title: '状态',
-            key: 'status'
+            render: (h, object) => {
+              if (object.row.status == 5) {
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', {}, '删除中')])
+              } else {
+                return h('span', {}, '正常')
+              }
+            }
           },
           {
             title: '网络类型',
-            key: 'NetworkType'
+            render: (h, object) => {
+              var text = object.row._internal ? '内网负载均衡' : '公网负载均衡'
+              return h('span', {}, text)
+            }
           },
           {
             title: '公网IP/内网IP',
-            key: 'UseOrInpublic'
+            render: (h, object) => {
+              var text = object.row.networkip || object.row.belongpublicip
+              return h('span', {}, text)
+            }
           },
           {
             title: '创建时间',
-            key: 'CreationTime'
+            key: 'createtime'
           },
           {
             title: '管理',
@@ -205,7 +245,8 @@
               return h('a', {
                 on: {
                   click: () => {
-                    this.show(params.index)
+                    sessionStorage.setItem('balanceInfo', JSON.stringify(params.row))
+                    this.$router.push('BalanceParticulars')
                   }
                 }
               }, '查看详情')
@@ -213,7 +254,7 @@
           }
         ],
         balData: [],
-        //模态框
+        //创建负载均衡模态框
         creatbalancemodal: {
           showBalanceName: false,
           current: 0,
@@ -222,13 +263,30 @@
             name: '',
             radio: 'public',
             subnet: '',
-            intranetIp: 'auto',
+            intranetIp: 'specify',
             num: '',
-            select: '',
+            intranetIpNum: '',
+            publicIp: '',
             ruleName: '',
             algorithm: '',
+            arithmeticList: [
+              {
+                label: '轮询算法',
+                value: 'roundrobin'
+              },
+              {
+                label: '最小连接',
+                value: 'leastconn'
+              },
+              {
+                label: '源算法',
+                value: 'source'
+              }
+            ],
             frontPort: '',
-            rearPort: ''
+            rearPort: '',
+            PublicIpList: [],
+            subnetList: []
           },
           //表单验证
           ruleInline: {
@@ -238,7 +296,7 @@
             radio: [
               {required: true, message: '请选择类型 ', trigger: 'change'}
             ],
-            select: [
+            publicIp: [
               {required: true, message: '请选择公网IP ', trigger: 'change'}
             ],
             ruleName: [
@@ -264,17 +322,39 @@
             ],
           }
         },
+        // 负载均衡主机表
         bindHostForm: {
-          vm: '',
+          vm: [],
           vmOptions: []
+        },
+        // 负载均衡解绑主机表
+        unbindForm: {
+          vm: [],
+          hostList: []
         },
         // 选中单个负载均衡赋值给他
         balanceSelection: null
       }
     },
+    created () {
+      this.listPublicIp()
+    },
     methods: {
+      refresh () {
+        // 获取负载均衡的初始数据
+        axios.get('loadbalance/listLoadBalanceRole.do', {
+          params: {
+            zoneId: $store.state.zone.zoneid
+          }
+        }).then(response => {
+          this.setData(response)
+        })
+      },
       setData(response){
         if (response.status == 200 && response.data.status == 1) {
+          response.data.result.internalLoadbalance.forEach(item => {
+            item._internal = true
+          })
           this.balData = response.data.result.internalLoadbalance.concat(response.data.result.publicLoadbalance)
         }
       },
@@ -291,13 +371,17 @@
         this.$refs.form2.resetFields();
         this.$refs.form1.resetFields();
       },
+      /* 关闭创建负载均衡窗口，确定创建负载均衡 */
       removeBalance (){
         this.$refs.form2.validate((valid) => {
           if (valid) {
             this.creatbalancemodal.showBalanceName = false
             this.creatbalancemodal.current = 0
-            this.$refs.form2.resetFields()
-            this.$refs.form1.resetFields()
+            if (this.creatbalancemodal.formInline.radio == 'public') {
+              this.createLoadBalanceRole()
+            } else {
+              this.createInternalLB()
+            }
           }
         })
       },
@@ -313,6 +397,130 @@
           this.creatbalancemodal.current -= 1
         }
       },
+      /*  列出所有负载均衡*/
+      listAllBalance () {
+        this.$http.get('loadbalance/listLoadBalanceRole.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            response.data.result.internalLoadbalance.forEach(item => {
+              item._internal = true
+            })
+            this.balData = response.data.result.internalLoadbalance.concat(response.data.result.publicLoadbalance)
+          }
+        })
+      },
+      /* 列出公网ip */
+      listPublicIp () {
+        // 获取可以挂载的所有弹性IP
+        this.$http.get('network/listPublicIp.do', {
+          params: {
+            useType: '0,2',
+            status: '1'
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.creatbalancemodal.formInline.PublicIpList = response.data.result
+          }
+        })
+      },
+      /* 选择公网ip时列出所属vpc下的子网*/
+      changePublicIp () {
+        if (this.creatbalancemodal.formInline.publicIp) {
+          var vpc = this.creatbalancemodal.formInline.publicIp.split('#')[0]
+        }
+        this.$http.get('network/listNetwork.do', {
+          params: {
+            vpcId: vpc,
+            publicLoadbalance: '1'
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.creatbalancemodal.formInline.subnetList = response.data.result
+          }
+        })
+      },
+      /* 切换子网时需要把子网的ip字段赋值给指定ip */
+      changeSubnet () {
+        if (this.creatbalancemodal.formInline.subnet) {
+          this.creatbalancemodal.formInline.intranetIpNum = this.creatbalancemodal.formInline.subnet.split('#')[1].split('.')[2]
+        }
+      },
+      /* 选择创建私网负载均衡时列出所有子网 */
+      listNetwork () {
+        this.$http.get('network/listNetwork.do', {
+          params: {
+            innerLoadbalance: '1'
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.creatbalancemodal.formInline.subnetList = response.data.result
+          }
+        })
+      },
+      /* 创建负载均衡切换公网和私网时给子网列表赋值 */
+      changeNet () {
+        switch (this.creatbalancemodal.formInline.radio) {
+          case 'public':
+            this.creatbalancemodal.formInline.subnetList = []
+            this.creatbalancemodal.formInline.intranetIpNum = ''
+            break
+          case 'private':
+            this.creatbalancemodal.formInline.subnetList = []
+            this.listNetwork()
+            break
+        }
+      },
+      /* 创建公网负载均衡 */
+      createLoadBalanceRole () {
+        this.$http.get('loadbalance/createLoadBalanceRole.do', {
+          params: {
+            algorithm: this.creatbalancemodal.formInline.algorithm,
+            name: this.creatbalancemodal.formInline.name,
+            privatePort: this.creatbalancemodal.formInline.frontPort,
+            publicPort: this.creatbalancemodal.formInline.rearPort,
+            publicIpId: this.creatbalancemodal.formInline.publicIp.split('#')[1],
+            networkId: this.creatbalancemodal.formInline.subnet.split('#')[0],
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$refs.form2.resetFields()
+            this.$refs.form1.resetFields()
+            this.$message.info({
+              content: response.data.message
+            })
+            this.listAllBalance()
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
+      },
+      /* 创建私网负载均衡 */
+      createInternalLB () {
+        this.$http.get('loadbalance/createInternalLB.do', {
+          params: {
+            algorithm: this.creatbalancemodal.formInline.algorithm,
+            name: this.creatbalancemodal.formInline.name,
+            sourcePort: this.creatbalancemodal.formInline.frontPort,
+            instancePort: this.creatbalancemodal.formInline.rearPort,
+            privateIp: '192.168.' + this.creatbalancemodal.formInline.intranetIpNum + '.' + this.creatbalancemodal.formInline.num,
+            networkId: this.creatbalancemodal.formInline.subnet.split('#')[0],
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$refs.form2.resetFields()
+            this.$refs.form1.resetFields()
+            this.$message.info({
+              content: response.data.message
+            })
+            this.listAllBalance()
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
+      },
       /* 选择单个负载均衡 */
       selectBalance (currentRow) {
         this.balanceSelection = currentRow
@@ -322,13 +530,44 @@
         if (!this.balanceSelection) {
           this.$Message.info('请选择一个负载均衡')
         } else {
+          var internalLoadbalance = this.balanceSelection._internal ? '1' : ''
           this.showModal.bind = true
-          var url = `network/showLoadBalanceVM.do?netwrokId=${this.balanceSelection.netwrokid}`
+          var url = `network/showLoadBalanceVM.do?netwrokId=${this.balanceSelection.networkid}&internalLoadbalance=${internalLoadbalance}`
           this.$http.get(url).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              console.log(response)
+              this.bindHostForm.vmOptions = response.data.result
+            } else {
+              this.$message.error({
+                content: response.data.message
+              })
             }
           })
+        }
+      },
+      /* 负载均衡确定绑定虚拟机 */
+      bindHost_ok () {
+        if (this.bindHostForm.vm.length != 0) {
+          var url = ``
+          if (this.balanceSelection._internal) {
+            url = `loadbalance/assignToInternalLoadBalancerRule.do?VMIds=${this.bindHostForm.vm}&lbId=${this.balanceSelection.lbid}`
+          } else {
+            url = `loadbalance/assignToLoadBalancerRule.do?VMIds=${this.bindHostForm.vm}&roleId=${this.balanceSelection.loadbalanceroleid}`
+          }
+          this.showModal.bind = false
+          this.$http.get(url).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$message.info({
+                content: response.data.message
+              })
+              this.balanceSelection = null
+            } else {
+              this.$message.error({
+                content: response.data.message
+              })
+            }
+          })
+        } else {
+          this.showModal.bind = false
         }
       },
       /* 解绑虚拟机 */
@@ -337,6 +576,44 @@
           this.$Message.info('请选择一个负载均衡')
         } else {
           this.showModal.unbind = true
+          var loadbalanceType = this.balanceSelection._internal ? '' : '1'
+          var roleId = this.balanceSelection.loadbalanceroleid || this.balanceSelection.lbid
+          var url = `loadbalance/listVmByRoleId.do?roleId=${roleId}&loadbalanceType=${loadbalanceType}`
+          this.$http.get(url).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.unbindForm.hostList = response.data.result
+            } else {
+              this.$message.error({
+                content: response.data.message
+              })
+            }
+          })
+        }
+      },
+      /* 确认解绑虚拟机 */
+      unbindHost_ok () {
+        if (this.unbindForm.vm.length != 0) {
+          var url = ``
+          if (this.balanceSelection._internal) {
+            url = `loadbalance/removeFromInternalLoadBalancerRule.do?VMIds=${this.unbindForm.vm}&lbId=${this.balanceSelection.lbid}`
+          } else {
+            url = `loadbalance/removeFromLoadBalancerRule.do?VMIds=${this.unbindForm.vm}&roleId=${this.balanceSelection.loadbalanceroleid}`
+          }
+          this.showModal.unbind = false
+          this.$http.get(url).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$message.info({
+                content: response.data.message
+              })
+              this.balanceSelection = null
+            } else {
+              this.$message.error({
+                content: response.data.message
+              })
+            }
+          })
+        } else {
+          this.showModal.unbind = false
         }
       },
       /* 删除负载均衡 */
@@ -347,9 +624,41 @@
           this.$message.confirm({
             content: '确认删除该负载均衡？',
             onOk: () => {
+              var url = ''
+              if (this.balanceSelection._internal) {
+                url = `loadbalance/deleteInternalLB.do?id=${this.balanceSelection.id}`
+              } else {
+                url = `loadbalance/deleteLoadBalancerRule.do?id=${this.balanceSelection.id}`
+              }
+              this.balData.forEach(item => {
+                if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
+                  item.status = 5
+                }
+              })
+              this.$http.get(url).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$message.info({
+                    content: response.data.message
+                  })
+                  this.listAllBalance()
+                  this.balanceSelection = null
+                } else {
+                  this.$message.error({
+                    content: response.data.message
+                  })
+                }
+              })
             }
           })
         }
+      }
+    },
+    watch: {
+      '$store.state.zone': {
+        handler: function () {
+          this.refresh()
+        },
+        deep: true
       }
     }
   }

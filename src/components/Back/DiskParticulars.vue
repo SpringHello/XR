@@ -46,7 +46,7 @@
             <div class="item">
               <label>硬盘读写流量<span class="timeText"></span></label>
               <div style="margin-top:10px;">
-                <Radio-group type="button">
+                <Radio-group type="button" @on-change="getDiskAlarmByDay">
                   <Radio label="今天"></Radio>
                   <Radio label="最近7天"></Radio>
                   <Radio label="最近30天"></Radio>
@@ -63,7 +63,7 @@
             <div class="item">
               <label>硬盘读写IOPS<span class="timeText"></span></label>
               <div style="margin-top:10px;">
-                <Radio-group type="button">
+                <Radio-group type="button" @on-change="getDiskAlarmByDay">
                   <Radio label="今天"></Radio>
                   <Radio label="最近7天"></Radio>
                   <Radio label="最近30天"></Radio>
@@ -269,7 +269,7 @@
                     style: {
                       color: '#EE4545'
                     }
-                  }, '异常')
+                  }, '正常')
                 case 2:
                   return h('div', {}, [h('Spin', {
                     style: {
@@ -423,12 +423,13 @@
       if (sessionStorage.getItem('diskInfo')) {
         this.diskInfo = JSON.parse(sessionStorage.getItem('diskInfo'))
       }
-      this.rwPolar.series[0].data = [50, 20, 30, 60, 80, 100, 50, 70, 40, 20, 0, 40]
-      this.rwPolar.xAxis.data = ['00:00', '02:00', '04:00', '06:00', '08:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00']
-      this.IOPSPolar.series[0].data = [30, 50, 20, 40, 80, 60, 60, 70, 90, 100, 40, 10]
-      this.IOPSPolar.xAxis.data = ['00:00', '02:00', '04:00', '06:00', '08:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00']
+      this.getDiskAlarmByDay ()
     },
     methods: {
+      /* 切换地区刷新页面 */
+      refresh () {
+        this.listDiskSnapshots()
+      },
       // 验证以备份创建磁盘的表单
       _checkNewForm(){
         this.$refs.newDisk.validate((valid) => {
@@ -610,6 +611,22 @@
       /* 选择磁盘备份 */
       selectDiskBackups (currentRow) {
         this.diskBackupsSelection = currentRow
+      },
+      /* 获取磁盘监控数据 */
+      getDiskAlarmByDay () {
+        var url = `alarm/getDiskAlarmByDay.do?diskId=${this.diskInfo.diskid}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.rwPolar.series[0].data = response.data.result.rwPolar
+            this.rwPolar.xAxis.data = response.data.result.xaxis
+            this.IOPSPolar.series[0].data = response.data.result.IOPS
+            this.IOPSPolar.xAxis.data = response.data.result.xaxis
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
       }
     },
     computed: {
@@ -660,6 +677,12 @@
               this.queryDiskPrice()
             }
           }
+        },
+        deep: true
+      },
+      '$store.state.zone': {
+        handler: function () {
+          this.refresh()
         },
         deep: true
       }

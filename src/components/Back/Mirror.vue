@@ -260,7 +260,7 @@
               if (params.row.status == 1) {
                 return '正常'
               } else if (params.row.status == -1) {
-                return '异常'
+                return '正常'
               } else if (params.row.status == 2) {
                 return h('div', {}, [h('Spin', {
                   style: {
@@ -294,7 +294,7 @@
                   style: {
                       marginRight: '5px',
                       color: '#2A99F2',
-                      cursor: 'point'
+                      cursor: 'pointer'
                   },
                   on: {
                       click: () => {
@@ -305,7 +305,7 @@
               h('span', {
                   style: {
                       color: '#2A99F2',
-                      cursor: 'point'
+                      cursor: 'pointer'
                   },
                   on: {
                       click: () => {
@@ -330,30 +330,36 @@
       }
     },
     created() {
-      // 查询系统镜像
-      var url = `information/listTemplates.do?user=0`
-      this.$http.get(url).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.systemData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
-          this.originData = this.systemData
-          this.systemData.forEach(item => {
-            if (item.status == 2) {
-              item._disabled = true
-            }
-          })
-        }
-      })
-     // 查询已关闭主机
-      var url2 = 'information/getCloseListVirtualMachines.do'
-      this.$http.get(url2).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.hostName = response.data.result
-        }
-      })
-      this.inter()
       this.ownMirrorList()
+      this.systemMirrorList()
+      this.openHostList()
+      this.inter()
     },
     methods: {
+       // 查询系统镜像
+      systemMirrorList() {
+       var url = `information/listTemplates.do?user=0`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.systemData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
+            this.originData = this.systemData
+            this.systemData.forEach(item => {
+              if (item.status == 2) {
+                item._disabled = true
+              }
+            })
+          }
+        })
+      },
+       // 查询已关闭主机
+      openHostList() {
+         var url2 = 'information/getCloseListVirtualMachines.do'
+          this.$http.get(url2).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.hostName = response.data.result
+            }
+          })
+      },
       // 查询自有镜像
       ownMirrorList() {
         var url1 = `information/listTemplates.do?user=1`
@@ -475,14 +481,28 @@
             this.ownMirrorList()
            this.$Message.success(response.data.message)
           } else {
-           this.$Message.error(response.data.message)
+           this.$message.error(response.data.message)
           }
         })
+      },
+       // 区域变更，刷新数据
+      refresh(){
+        this.ownMirrorList()
+        this.systemMirrorList()
+        this.openHostList()
       }
     },
     computed: {
       auth() {
         return this.$store.state.personalAuth == 0 || this.$store.state.enterpriseAuth == 0
+      }
+    },
+    watch: {
+      '$store.state.zone': {
+        handler: function () {
+          this.refresh()
+        },
+        deep: true
       }
     },
     beforeRouteLeave(to, from, next) {

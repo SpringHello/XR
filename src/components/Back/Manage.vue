@@ -9,17 +9,12 @@
         <div class="info">
 
           <header>
-            <Icon type="chevron-down"></Icon>
+            <span class="arrowdown-icon"></span>
             <span>{{this.$route.query.computername}}</span>
             <div>
-              <Button class="btn">返回</Button>
-              <Button class="btn">连接主机</Button>
-              <!-- <Poptip confirm title="您确认关闭主机吗？">
-                <Icon type="power" style="padding-left: 10px;padding-top:2px;font-size: 25px;"></Icon>
-              </Poptip> -->
-
+              <Button class="btn" @click="goback()" >返回</Button>
+              <a :href="`${this.$route.query.connecturl}`" target="_blank" style="border:solid 1px #2A99F2;color: #2A99F2;border-radius: 5px;padding: 6px 15px;background-color:#f7f7f7;font-size:12px;">连接主机</a>
             </div>
-
           </header>
           <div class="pan" v-if="computerInfo!=null" style="width:28%">
             <span>
@@ -31,10 +26,10 @@
             <span>镜像系统：{{computerInfo.template}}</span>
             <span>到期时间／有效期：{{computerInfo.endtime}}</span>
             <span>内网地址：{{computerInfo.privateIp}}</span>
-            <span><span>登录密码：</span>
+            <!-- <span><span>登录密码：</span>
               <span v-show="showPassword" class="bluetext">{{computerInfo.password}}</span>
               <span v-show="!showPassword" class="bluetext">******</span>
-              <label :class="{close:showPassword}" @click="showPassword=!showPassword"></label></span>
+              <label :class="{close:showPassword}" @click="showPassword=!showPassword"></label></span> -->
           </div>
           <div class="pan" v-if="computerInfo!=null" style="width: 20%">
 
@@ -419,7 +414,7 @@
                     style: {
                       color: '#EE4545'
                     }
-                  }, '异常')
+                  }, '正常')
                 case 2:
                   return h('div', {}, [h('Spin', {
                     style: {
@@ -466,7 +461,7 @@
               return h('span', {
                 style: {
                   color: '#2A99F2',
-                  cursor: 'point'
+                  cursor: 'pointer'
                 },
                 on: {
                   click: () => {
@@ -528,7 +523,7 @@
                   value = '欠费'
                   break
                 case -2:
-                  value = '异常'
+                  value = '正常'
                   break
                 case -1:
                   value = '其他原因失败'
@@ -675,8 +670,11 @@
       }
     },
     created() {
+      // if (sessionStorage.getItem('oneHostinfo')) {
+      //   this.computerInfo = JSON.parse(sessionStorage.getItem('oneHostinfo'))
+      // }
       this.snapsId = this.$route.query.vmid
-      var computerInfoURL = `information/listVMByComputerName.do?computerName=${this.$route.query.computername}&zoneId=${this.$route.query.zoneid}`
+      var computerInfoURL = `information/listVMByComputerId.do?VMId=${this.$route.query.vmid}&zoneId=${this.$route.query.zoneid}`
       axios.get(computerInfoURL)
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -693,33 +691,47 @@
       this.$http.get(url1)
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.cpuPolar.series[0].data = response.data.result.cpuUse
-            this.diskPolar.series[0].data = response.data.result.diskUse
-            this.memoryPolar.series[0].data = response.data.result.memoryUse
+            // this.cpuPolar.series[0].data = response.data.result.cpuUse
+            // this.diskPolar.series[0].data = response.data.result.diskUse
+            // this.memoryPolar.series[0].data = response.data.result.memoryUse
+            this.cpuPolar.series[0].data = [0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 0, 0, 70, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            this.diskPolar.series[0].data = [0, 0, 0, 70, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            this.memoryPolar.series[0].data = [0, 0, 0, 0, 0, 0, 80, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             this.cpuPolar.xAxis.data = response.data.result.xaxis
             this.diskPolar.xAxis.data = response.data.result.xaxis
             this.memoryPolar.xAxis.data = response.data.result.xaxis
           }
         })
-
-      var url2 = `network/listNetworkByVM.do?vmid=${this.$route.query.vmid}`
-      this.$http.get(url2)
-        .then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.tableData = response.data.result
-          }
-        })
+      // var url2 = `network/listNetworkByVM.do?vmid=${this.$route.query.vmid}`
+      // this.$http.get(url2)
+      //   .then(response => {
+      //     if (response.status == 200 && response.data.status == 1) {
+      //       this.tableData = response.data.result
+      //     }
+      //   })
 
       var networkURL = `alarm/getVmAlarmByHour.do?vmname=${this.$route.query.instancename}&type=network`
       this.$http.get(networkURL)
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.ipPolar.series[0].data = response.data.result.networkIn
+            // this.ipPolar.series[0].data = response.data.result.networkIn
+            this.ipPolar.series[0].data = [0, 0, 0, 70, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             this.ipPolar.series[1].data = response.data.result.networkOut
             this.ipPolar.xAxis.data = response.data.result.xaxis
           }
         })
-
+      this.CPUTime = this.getCurrentDate()
+      this.diskTime = this.getCurrentDate()
+      this.memoryTime = this.getCurrentDate()
+      this.IPTime = this.getCurrentDate()
+      this.getsnapsList()
+      // this.inter()
+    },
+    methods: {
+      goback() {
+        this.$router.go(-1)
+      },
+      inter() {
         this.intervalSnapsList = setInterval(() => {
           var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1&resourceId=${this.snapsId}`
           axios.get(snapsURL)
@@ -740,14 +752,7 @@
                     }
             })
           }, 1000 * 10)
-
-      this.CPUTime = this.getCurrentDate()
-      this.diskTime = this.getCurrentDate()
-      this.memoryTime = this.getCurrentDate()
-      this.IPTime = this.getCurrentDate()
-      this.getsnapsList()
-    },
-    methods: {
+      },
       // 回滚确认弹窗
       rollbackSubmit() {
         this.showModal.rollback = false
@@ -776,7 +781,9 @@
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.success(response.data.message)
             } else {
-              this.$Message.info(response.data.message)
+              this.$message.info({
+                content:response.data.message
+              })
             }
           })
       },
@@ -951,7 +958,9 @@
               this.resetPasswordForm.confirmPassword = ''
               this.$Message.success(response.data.message)
             } else {
-              this.$Message.info(response.data.message)
+              this.$message.info({
+                content:response.data.message
+              })
             }
           })
         } else if (this.resetPasswordForm.newPassword != this.resetPasswordForm.confirmPassword) {
@@ -981,7 +990,9 @@
             this.isemailalarm = response.data.result.isemailalarm == 0 ? false : true
             this.issmsalarm = response.data.result.issmsalarm == 0 ? false : true
           } else {
-            this.$Message.info(response.data.message)
+            this.$message.info({
+              content:response.data.message
+            })
           }
         })
       },
@@ -997,7 +1008,9 @@
             this.showModal.setMonitoringForm = false
           } else {
             this.showModal.setMonitoringForm = false
-            this.$Message.info(response.data.message)
+            this.$message.info({
+              content:response.data.message
+            })
           }
         })
       }
@@ -1011,6 +1024,27 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .arrowdown-icon{
+    position: relative;
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: solid 1px #fff;
+    border-radius: 50%;
+    &:before{
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 3px;
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border: solid 1px #fff;
+      border-top:0;
+      border-left: 0;
+      transform:rotate(45deg); 
+    }
+  }
   .ivu-tabs-bar {
     padding-left: 55px;
   }

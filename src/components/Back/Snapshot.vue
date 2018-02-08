@@ -1472,7 +1472,7 @@
                     style: {
                       color: '#EE4545'
                     }
-                  }, '异常')
+                  }, '正常')
                 case 2:
                   return h('div', {}, [h('Spin', {
                     style: {
@@ -1523,7 +1523,7 @@
               return h('span', {
                 style: {
                   color: '#2A99F2',
-                  cursor: 'point'
+                  cursor: 'pointer'
                 },
                 on: {
                   click: () => {
@@ -1555,7 +1555,7 @@
             key: 'status',
             render: (h, params) => {
               const row = params.row
-              const text = row.status === 0 ? '异常' : row.status === 1 ? '可用' : row.status === 3 ? '删除中' : ''
+              const text = row.status === 0 ? '正常' : row.status === 1 ? '可用' : row.status === 3 ? '删除中' : ''
               if (row.status == 3) {
                 return h('div', {}, [h('Spin', {
                   style: {
@@ -1654,7 +1654,7 @@
               return h('span', {
                 style: {
                   color: '#2A99F2',
-                  cursor: 'point'
+                  cursor: 'pointer'
                 },
                 on: {
                   click: () => {
@@ -1683,8 +1683,11 @@
       this.listsnaps()
       this.listBackups()
       this.listHost()
-      // 10s调用快照列表
-      this.intervalSnapsAlllist = setInterval(() => {
+      this.inter()
+    },
+    methods: {
+      inter() {
+        this.intervalSnapsAlllist = setInterval(() => {
         var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1`
         axios.get(snapsURL)
           .then(response => {
@@ -1703,9 +1706,8 @@
               this.snapshotData = snapshotData
             }
           })
-      }, 1000 * 10)
-    },
-    methods: {
+        }, 1000 * 10)
+      },
       //获取快照列表
       listsnaps() {
         var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1`
@@ -1746,11 +1748,18 @@
       unchangeHostlist(data) {
         var leftData = []
         this.changeHostlist = []
-        this.vmList.forEach((item) => {
-          if (item.status === 1 && item.bankupstrategyid != data.id) {
-            leftData.push(item)
-          }
-        })
+        this.$http.get(`information/listVirtualMachines.do`)
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              var vmopenlist = response.data.result.open.list
+              this.vmList = vmopenlist.concat(response.data.result.close.list)
+              this.vmList.forEach((item) => {
+                if (item.status === 1 && item.bankupstrategyid != data.id) {
+                  leftData.push(item)
+                }
+              })
+            }
+          })
         this.hostForBackupsStrategyList = leftData
         data.resourceBean.forEach(item => {
           this.changeHostlist.push(item)
@@ -1761,7 +1770,6 @@
       },
       /* 确定从快照备份策略添加或移除磁盘 */
       addOrDeleteHost() {
-        console.log(this.changeHostlist)
         var vmids = this.changeHostlist.map(item => {
           return item.resourcesId
         })
@@ -1769,7 +1777,7 @@
         axios.get(snapsURL)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.$Message.info({
+              this.$message.info({
                 content: response.data.message,
                 duration: 5
               })
@@ -1797,7 +1805,7 @@
             break
         }
       },
-      //虚拟机列表
+      // 虚拟机列表
       listHost() {
         var vmListurl = `information/listVirtualMachines.do?zoneId=${$store.state.zone.zoneid}`
         axios.get(vmListurl)
@@ -1809,7 +1817,7 @@
           })
       },
 
-      //获取主机备份策略列表
+      // 获取主机备份策略列表
       listBackups() {
         var backupsURL = `information/listVMBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}`
         axios.get(backupsURL)
@@ -1843,7 +1851,7 @@
         }
         this.showModal.delStrategy = true
       },
-      //确定删除快照策略
+      // 确定删除快照策略
       delStrategySubm() {
         this.showModal.delStrategy = false
         var URL = `information/deleteVMBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}&id=${this.strategySelectionItem.id}`
@@ -1873,7 +1881,7 @@
         }
         this.showModal.delsnaps = true
       },
-      //确定删除快照
+      // 确定删除快照
       delsnapsSubm() {
         this.showModal.delsnaps = false
         this.snapshotData.forEach(item => {
@@ -1889,7 +1897,7 @@
             }
           })
       },
-      //确定创建快照
+      // 确定创建快照
       NewSnapsSubmit(snapsname) {
         this.$refs[snapsname].validate((valid) => {
           if (valid) {
@@ -1912,7 +1920,7 @@
         this.$refs[name].resetFields()
         this.showModal.newSnapshot = false
       },
-      //确定创建策略
+      // 确定创建策略
       NewBackupsSubmit(backupname) {
         this.$refs[backupname].validate((valid) => {
           if (valid) {
@@ -1928,7 +1936,9 @@
                     duration: 5
                   })
                 } else {
-                  this.$Message.info(response.data.message)
+                  this.$message.info({
+                    content:response.data.message
+                  })
                 }
               })
           }
@@ -1937,11 +1947,26 @@
       cancleBackups(name) {
         this.$refs[name].resetFields()
         this.showModal.newBackups = false
+      },
+       // 区域变更，刷新数据
+      refresh(){
+        this.listsnaps()
+        this.listBackups()
+        this.listHost()
+        this.inter()
       }
     },
     computed: {
       auth() {
         return this.$store.state.personalAuth == 0 || this.$store.state.enterpriseAuth == 0
+      }
+    },
+    watch: {
+      '$store.state.zone': {
+        handler: function () {
+          this.refresh()
+        },
+        deep: true
       }
     },
     beforeRouteLeave(to, from, next) {

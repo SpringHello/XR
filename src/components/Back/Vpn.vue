@@ -730,6 +730,25 @@
       }
     },
     methods: {
+      // 切换地区重新获取数据
+      refresh () {
+        // 远程接入列表
+        var remote = axios.get('network/listRemoteVpn.do', {
+          params: {
+            zoneId: $store.state.zone.zoneid
+          }
+        })
+        // 隧道VPN
+        var customer = axios.get('network/listVpnCustomerGateways.do', {
+          params: {
+            zoneId: $store.state.zone.zoneid
+          }
+        })
+        Promise.all([remote, customer]).then(values => {
+            this.initRemoteData(values[0])
+            this.initCustomerData(values[1])
+        })
+      },
       initRemoteData(response){
         if (response.status == 200 && response.data.status == 1) {
           this.remoteVpnData = response.data.result
@@ -753,6 +772,7 @@
           if (validate) {
             this.$http.get('network/createRemoteAccessVpn.do', {
               params: {
+                remoteVpnName: this.newRemoteAccessForm.vpnName,
                 vpcId: this.newRemoteAccessForm.vpcId,
                 userName: this.newRemoteAccessForm.userName,
                 password: this.newRemoteAccessForm.password
@@ -905,6 +925,15 @@
             this.listUser()
           }
         })
+      }
+    },
+    watch: {
+      // 监听区域变换
+      '$store.state.zone': {
+        handler: function () {
+          this.refresh()
+        },
+        deep: true
       }
     }
   }

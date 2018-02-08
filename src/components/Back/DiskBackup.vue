@@ -69,7 +69,7 @@
           </Form-item>
           <Form-item label="硬盘参数">
             <p style="color: #999999;margin-bottom: 10px">磁盘类型：{{ diskForm.diskType}}</p>
-            <p style="color: #999999;margin-bottom: 10px">磁盘容量：{{ diskForm.diskSize}}</p>
+            <p style="color: #999999;margin-bottom: 10px">磁盘容量：{{ diskForm.diskSize}} G</p>
             <p style="color: #999999;">原始磁盘名称：{{ diskForm.name }}</p>
           </Form-item>
         </Form>
@@ -196,7 +196,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.addOrDeleteDisk = false">取消</Button>
-        <Button type="primary" @click="updateVMIntoBackUpStrategy">确认</Button>
+        <Button type="primary" @click="updateDiskIntoBackUpStrategy">确认</Button>
       </div>
     </Modal>
   </div>
@@ -242,7 +242,7 @@
                     style: {
                       color: '#EE4545'
                     }
-                  }, '异常')
+                  }, '正常')
                 case 2:
                   return h('div', {}, [h('Spin', {
                     style: {
@@ -344,7 +344,7 @@
                   style: {
                     color: '#EE4545'
                   }
-                }, '异常')
+                }, '正常')
               }
             }
           }, {
@@ -416,8 +416,7 @@
                 for (var i of params.row.resourceBean) {
                   renderArray.push(h('p', {
                     style: {
-                      lineHeight: '18px',
-                      color: '#2A99F2'
+                      lineHeight: '18px'
                     }
                   }, i.resourcesName))
                 }
@@ -631,7 +630,7 @@
       }
     },
     beforeRouteEnter(to, from, next) {
-      var zoneId = $store.state.zoneList[0].zoneid
+      var zoneId = $store.state.zone.zoneid
       // 获取备份列表数据
       var diskBackupsResponse = axios.get(`Snapshot/listDiskSnapshots.do?zoneId=${zoneId}`)
       Promise.all([diskBackupsResponse]).then((ResponseValue) => {
@@ -662,6 +661,16 @@
         } else {
           this.listDiskBackUpStrategy()
         }
+      },
+      /* 区域变更刷新数据 */
+      refresh () {
+        if (this.tabPane == 'diskBackups') {
+          this.listDiskSnapshots()
+        } else {
+          this.listDiskBackUpStrategy()
+        }
+        this.getMonthCongigDate()
+        this.getWeekTimeData()
       },
       /* 获取月配置时间  */
       getMonthCongigDate () {
@@ -871,11 +880,11 @@
         this.diskForBackupsStrategyList.push(data)
       },
       /* 确定从磁盘备份策略添加或移除磁盘 */
-      updateVMIntoBackUpStrategy () {
+      updateDiskIntoBackUpStrategy () {
         var diskParams = this.resourceDisk.map(function (item) {
           return item.resourcesId
         })
-        var url = `Disk/updateVMIntoBackUpStrategy.do?backUpStrategyId=${this.strategyId}&diskIds=${diskParams.join(',')}`
+        var url = `Disk/updateDiskIntoBackUpStrategy.do?backUpStrategyId=${this.strategyId}&diskIds=${diskParams.join(',')}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$message.info({
@@ -1154,7 +1163,7 @@
           cpuNum: 0 + '',
           memory: 0 + '',
           diskSize: this.diskForm.diskSize + '',
-          zoneId: this.$store.state.zoneList[0].zoneid,
+          zoneId: $store.state.zone.zoneid,
           timeType: this.diskForm.timeType + '',
           timeValue: this.diskForm.timeValue + '',
           diskType: this.diskForm.diskType + ''
@@ -1191,6 +1200,12 @@
               this.queryDiskPrice()
             }
           }
+        },
+        deep: true
+      },
+      '$store.state.zone': {
+        handler: function () {
+          this.refresh()
         },
         deep: true
       }
