@@ -27,7 +27,8 @@
                 </div>
               </div>
               <Table :columns="columns" :data="allData" @on-selection-change="select"></Table>
-              <Page style="margin-top:20px" :total="allPageInfo.total" :page="allPageInfo.currentPage"></Page>
+              <Page style="margin-top:20px" :total="allPageInfo.total" :page="allPageInfo.currentPage" :page-size="15"
+                    @on-change="getAllData"></Page>
             </Tab-pane>
             <Tab-pane :label="'未读'+paneLabel.notRead" name="notRead" style="min-height: 500px;">
               <div class="operating-bar">
@@ -47,7 +48,9 @@
                 </div>
               </div>
               <Table :columns="columns" :data="notReadData" @on-selection-change="select"></Table>
-              <Page style="margin-top:20px" :total="notReadPageInfo.total" :page="notReadPageInfo.currentPage"></Page>
+              <Page style="margin-top:20px" :total="notReadPageInfo.total" :page="notReadPageInfo.currentPage"
+                    :page-size="15"
+                    @on-change="getNotReadData"></Page>
             </Tab-pane>
             <Tab-pane :label="'已读'+paneLabel.read" name="read" style="min-height: 500px;">
               <div class="operating-bar">
@@ -67,7 +70,8 @@
                 </div>
               </div>
               <Table :columns="columns" :data="readData" @on-selection-change="select"></Table>
-              <Page style="margin-top:20px" :total="readPageInfo.total" :page="readPageInfo.currentPage"></Page>
+              <Page style="margin-top:20px" :total="readPageInfo.total" :page="readPageInfo.currentPage" :page-size="15"
+                    @on-change="getReadData"></Page>
             </Tab-pane>
           </Tabs>
         </div>
@@ -196,7 +200,8 @@
         notReadData: [],
         readData: [],
         searchInfo: {
-          searchDate: [],
+          searchStartDate: '',
+          searchEndDate: '',
           keyWords: '',
         },
         allPageInfo: {
@@ -232,9 +237,9 @@
       getData(type){
         let pageInfo = this[type + 'PageInfo']
         let url = `user/getEventNotifyList.do?rows=${pageInfo.pageSize}&page=${pageInfo.currentPage}`
-        if (this.searchInfo.searchDate.length == 2) {
-          url += '&starttime=' + this.searchInfo.searchDate[0]
-          url += '&endtime=' + this.searchInfo.searchDate[1]
+        if (this.searchInfo.searchStartDate != '') {
+          url += '&starttime=' + this.searchInfo.searchStartDate
+          url += '&endtime=' + this.searchInfo.searchEndDate
         }
         if (this.searchInfo.keyWords) {
           url += '&name=' + this.searchInfo.keyWords
@@ -249,13 +254,25 @@
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this[type + 'Data'] = response.data.result
-            pageInfo.total = Number.parseInt(response.data.pageTotal)
+            pageInfo.total = response.data.pageTotal
             this.paneLabel.all = response.data.total
             this.paneLabel.notRead = response.data.noReadTotal
-            // this.$store.commit('setMsg', Number.parseInt(response.data.noReadTotal))
+            this.$store.commit('setMsg', Number.parseInt(response.data.noReadTotal))
             this.paneLabel.read = response.data.alreadyTotal
           }
         })
+      },
+      getReadData(current){
+        this.readPageInfo.currentPage = current
+        this.getData('read')
+      },
+      getNotReadData(current){
+        this.notReadPageInfo.currentPage = current
+        this.getData('notRead')
+      },
+      getAllData(current){
+        this.allPageInfo.currentPage = current
+        this.getData('all')
       },
       select(selection){
         this[this.pane + 'Select'] = selection
@@ -274,7 +291,8 @@
         })
       },
       dataChange(data){
-        this.searchInfo.searchDate = data
+        this.searchInfo.searchStartDate = data[0]
+        this.searchInfo.searchEndDate = data[1]
       },
       show(param){
         this.modelInfo.title = param.row.name
