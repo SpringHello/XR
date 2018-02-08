@@ -897,7 +897,7 @@
       },
       gotoNew() {
         this.$store.commit('setSelect', 'new')
-        this.$router.push('price')
+        this.$router.push('buy')
       },
       hideEvent(name) {
         switch (name) {
