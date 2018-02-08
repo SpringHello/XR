@@ -352,9 +352,9 @@
         },
         value => {
           next()
-        }
-      )
+        })
     },
+
     created () {
       this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result

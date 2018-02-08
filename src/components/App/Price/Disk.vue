@@ -282,7 +282,7 @@
       /* 创建磁盘订单 */
       createDiskOrder () {
         this.diskList.forEach(item => {
-          axios.get('Disk/createVolume.do?zoneId=' + this.zone + '&diskSize=' + item.diskSize + '&diskName=' + this.diskName + '&diskOfferingId=' + item.diskType + '&timeType=' + this.timeType + '&timeValue=' + this.time + '&isAutorenew=0&count=1').then(response => {
+          axios.get('/ruicloud/Disk/createVolume.do?zoneId=' + this.zone + '&diskSize=' + item.diskSize + '&diskName=' + this.diskName + '&diskOfferingId=' + item.diskType + '&timeType=' + this.timeType + '&timeValue=' + this.time + '&isAutorenew=0&count=1').then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$router.push('/ruicloud/order')
             } else {
@@ -356,7 +356,7 @@
         }
       },
       submit () {
-        this.$http.get('http://localhost:8082/ruicloud/user/login.do', {
+        this.$http.get('/ruicloud/user/login.do', {
           params: {
             username: this.form.loginname,
             password: this.form.password,
@@ -402,7 +402,7 @@
       },
       /* 获取当前用户还能购买的磁盘数量 */
       getDiskLimit () {
-        var url = 'user/userSourceManager.do?zoneId=' + this.zone
+        var url = '/ruicloud/user/userSourceManager.do?zoneId=' + this.zone
         axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskLimit = response.data.result[3].items[0].total - response.data.result[3].items[0].used
@@ -437,7 +437,7 @@
           diskType += item.diskType + ','
           diskSize += item.diskSize + ','
         })
-        this.$http.post('http://localhost:8082/ruicloud/device/QueryBillingPrice.do', {
+        this.$http.post('/ruicloud/device/QueryBillingPrice.do', {
           cpuNum: 0 + '',
           memory: 0 + '',
           diskSize: diskSize.substring(0, diskSize.length - 1),

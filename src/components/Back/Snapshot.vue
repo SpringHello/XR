@@ -1523,7 +1523,7 @@
               return h('span', {
                 style: {
                   color: '#2A99F2',
-                  cursor: 'point'
+                  cursor: 'pointer'
                 },
                 on: {
                   click: () => {
@@ -1654,7 +1654,7 @@
               return h('span', {
                 style: {
                   color: '#2A99F2',
-                  cursor: 'point'
+                  cursor: 'pointer'
                 },
                 on: {
                   click: () => {

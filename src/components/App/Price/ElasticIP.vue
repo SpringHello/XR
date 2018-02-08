@@ -313,7 +313,7 @@
       /* 创建公网ip订单 */
       createIpOrder () {
         var autoRenewal = this.autoRenewal ? 1 : 0
-        let url = `network/createPublicIp.do.do?brandWith=${this.publicIP}&timeType=${this.timeType}&timeValue=${this.time}&zoneId=${this.zone}&isAutorenew=${autoRenewal}&vpcId=${this.vpcId}&count=1`
+        let url = `/ruicloud/network/createPublicIp.do.do?brandWith=${this.publicIP}&timeType=${this.timeType}&timeValue=${this.time}&zoneId=${this.zone}&isAutorenew=${autoRenewal}&vpcId=${this.vpcId}&count=1`
         axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('/ruicloud/order')
@@ -384,7 +384,7 @@
         }
       },
       submit () {
-        this.$http.get('http://localhost:8082/ruicloud/user/login.do', {
+        this.$http.get('/ruicloud/user/login.do', {
           params: {
             username: this.form.loginname,
             password: this.form.password,
@@ -426,7 +426,7 @@
       },
       /* 获取私网列表 */
       getPrivateList () {
-        this.$http.get(`http://localhost:8082/ruicloud/network/listNetDefault.do?zoneId=${this.zone}`)
+        this.$http.get(`/ruicloud/network/listNetDefault.do?zoneId=${this.zone}`)
           .then((response) => {
             if (response.status == 200 && response.data.status == 1) {
               this.privateList = [{
@@ -451,7 +451,7 @@
       },
       /* 查询vpc数据 */
       queryVPCData(){
-        var url = `network/listVpc.do?zoneId=${this.zone}`
+        var url = `/ruicloud/network/listVpc.do?zoneId=${this.zone}`
         axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.vpcTableData = response.data.result
@@ -460,7 +460,7 @@
       },
       /* 查询公网IP价格 */
       queryIpPrice: debounce(500, function () {
-        this.$http.post('http://localhost:8082/ruicloud/device/queryIpPrice.do', {
+        this.$http.post('/ruicloud/device/queryIpPrice.do', {
           brand: this.publicIP + '',
           zoneId: this.zone,
           timeType: this.timeType + '',
