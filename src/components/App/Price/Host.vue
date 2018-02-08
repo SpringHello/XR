@@ -632,7 +632,7 @@
       }
       this.queryQuickHost()
       // 获取公共镜像
-      this.$http.get(`information/listTemplates.do?user=0&zoneid=${this.zone}`).then(response => {
+      this.$http.get(`/ruicloud/information/listTemplates.do?user=0&zoneid=${this.zone}`).then(response => {
         var responseData = response.data.result
         this.pubilcSystem = responseData
         // 镜像选择主机，默认选择参数
@@ -649,7 +649,7 @@
         }
       })
       // 获取自有镜像
-      this.$http.get(`information/listTemplates.do?user=1&zoneid=${this.zone}`).then(response => {
+      this.$http.get(`/ruicloud/information/listTemplates.do?user=1&zoneid=${this.zone}`).then(response => {
         var responseData = response.data.result
         this.ownSystem = responseData
       })
@@ -1126,7 +1126,7 @@
           diskType += item.diskType + ','
           diskSize += item.diskSize + ','
         })
-        this.$http.post('http://localhost:8082/ruicloud/device/QueryBillingPrice.do', {
+        this.$http.post('/device/QueryBillingPrice.do', {
           cpuNum: 0 + '',
           memory: 0 + '',
           diskSize: diskSize.substring(0, diskSize.length - 1),
@@ -1147,7 +1147,7 @@
       }),
       /* 查询公网IP价格 */
       queryIpPrice: debounce(500, function () {
-        this.$http.post('http://localhost:8082/ruicloud/device/queryIpPrice.do', {
+        this.$http.post('/ruicloud/device/queryIpPrice.do', {
           brand: this.publicIP + '',
           zoneId: this.zone,
           timeType: this.timeType + '',
@@ -1278,7 +1278,7 @@
       }),
       /* 查询主机价格 */
       queryHost: debounce(500, function (params) {
-        this.$http.post('http://localhost:8082/ruicloud/device/QueryBillingPrice.do', params).then(response => {
+        this.$http.post('/ruicloud/device/QueryBillingPrice.do', params).then(response => {
           if (response.status == 200 && response.statusText == 'OK') {
             if (this.pitchOn == 'quick') {
               this.quickHostCost = response.data.cost

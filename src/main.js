@@ -30,7 +30,8 @@ import message from './myView/message'
 Vue.prototype.$message = message
 Vue.config.productionTip = false
 // axios.defaults.baseURL = '/ruicloud'
-// axios.defaults.withCredentials = true
+axios.defaults.baseURL = '//localhost:8082/ruicloud/'
+axios.defaults.withCredentials = true
 /* axios.interceptors.request.use(function (config) {
  config.headers.Cookie = 'JSESSIONID=22203C271B80F4A41C35D23B09B6BC83'
  console.log(config)

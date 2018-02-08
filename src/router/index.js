@@ -12,6 +12,7 @@ import LR from '@/LR'
 // import Price from '@/components/App/Price'
 const Home = () => import('@/components/App/Home')
 const Price = () => import('@/components/App/Price')
+const Buy = () => import('@/components/App/Buy')
 const Ecs = () => import('@/components/App/product/ECS')
 const Document = () => import('@/components/App/Document')
 const hostPrice = () => import('@/components/App/Price/Host')
@@ -121,6 +122,7 @@ var router = new Router({
             }
           ]
         },
+        {path: 'buy', name: 'buy', component: Buy},
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
         {path: 'Pecss', component: Pecss},
