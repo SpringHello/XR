@@ -1508,7 +1508,7 @@
           }
         }
         Promise.all(PromiseList).then(responseList => {
-          console.log(responseList)
+          this.$router.push('order')
         })
       },
       // 登录弹窗需要的方法
