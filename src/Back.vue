@@ -60,7 +60,8 @@
                     <router-link to="operationLog">操作日志</router-link>
                   </DropdownItem>
                   <DropdownItem divided>
-                    <router-link to="">退出</router-link>
+                    <!-- <router-link to="">退出</router-link> -->
+                    <span @click="exit" style="color:#2d8cf0">退出</span>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
@@ -276,6 +277,17 @@
             $store.commit('setZone', zone)
           }
         }
+      },
+      exit(){
+        axios.get(`user/logout.do`).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+              this.$router.push('/ruicloud/login')
+            } else {
+              this.$message.error({
+              content: response.data.message
+              })
+            }
+        })
       }
     },
     computed: mapState({

@@ -19,9 +19,10 @@
               <div class="money">
                 <div class="balance">
                   <span class="expenses_s1">账户余额</span>
-                  <span v-model="balance" class="expenses_s2">￥{{ balance }}</span>
-                  <Button type="warning" style="position: relative;bottom: 35px;left: 220px" @click="torecharge">充值
-                  </Button>
+                  <div class="expenses_s2_wrap">
+                    <span v-model="balance" class="expenses_s2">￥{{ balance }}</span>
+                    <Button type="warning" @click="torecharge">充值</Button>
+                  </div>
                 </div>
                 <div class="billmonth">
                   <span class="expenses_s3">本月账单金额</span>
@@ -1424,16 +1425,24 @@
               font-family: Microsoft Yahei, 微软雅黑;
               font-size: 16px;
               color: rgba(17, 17, 17, 0.65);
-            }
-            .expenses_s2 {
-              font-family: Microsoft Yahei, 微软雅黑;
-              font-size: 36px;
-              color: rgba(17, 17, 17, 0.65);
               display: block;
-              margin-top: 20px;
-              position: relative;
-              right: 8px;
             }
+            .expenses_s2_wrap{
+               margin-top: 20px;
+               padding-right:30px; 
+               overflow: hidden;
+              .expenses_s2 {
+                font-family: Microsoft Yahei, 微软雅黑;
+                font-size: 36px;
+                color: rgba(17, 17, 17, 0.65);
+                float: left;
+              }
+               button{
+                  float: right;
+                  vertical-align: middle;
+                }
+            }
+            
           }
           .billmonth {
             width: 33.5%;
