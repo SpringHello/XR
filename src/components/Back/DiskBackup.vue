@@ -416,8 +416,7 @@
                 for (var i of params.row.resourceBean) {
                   renderArray.push(h('p', {
                     style: {
-                      lineHeight: '18px',
-                      color: '#2A99F2'
+                      lineHeight: '18px'
                     }
                   }, i.resourcesName))
                 }
