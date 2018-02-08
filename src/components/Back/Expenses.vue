@@ -1001,7 +1001,7 @@
       },
       search() {
         this.searchLoading = true
-        this.$http.get('information/searchWaterNumber.do?pageSize=' + this.wpageSize + '&page=' + this.currentPage +
+        this.$http.get('user/searchWaterNumber.do?pageSize=' + this.wpageSize + '&page=' + this.currentPage +
           '&type=' + this.types + '&starttime=' + this.dateRange[0] + '&endtime=' + this.dateRange[1] + '&startcount=' + this.value1 + '&endcount=' + this.value2)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
@@ -1063,7 +1063,7 @@
         }
       },
       searchOrderByType() {
-        this.$http.get('information/searchOrderByType.do?pageSize=' + this.pageSize + '&page=' + this.order_currentPage + '&type=' + this.order_type + '&startTime=' + this.order_dateRange[0] + '&endTime=' + this.order_dateRange[1]).then(response => {
+        this.$http.get('user/searchOrderByType.do?pageSize=' + this.pageSize + '&page=' + this.order_currentPage + '&type=' + this.order_type + '&startTime=' + this.order_dateRange[0] + '&endTime=' + this.order_dateRange[1]).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             response.data.result.data.forEach(item => {
               item.resources = ''
