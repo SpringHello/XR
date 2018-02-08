@@ -287,7 +287,7 @@
         <Form :model="bindTargetIPForm" :rules="bindTargetIPRuleValidate" ref="bindTargetIPFormValidate">
           <FormItem label="选择源弹性IP" prop="IP">
             <Select v-model="bindTargetIPForm.IP">
-              <Option v-for="item in bindTargetIPForm.IPOptions" :value="item.publicipid" :key="item.publicipid">
+              <Option v-for="item in bindTargetIPForm.IPOptions" :value="item.publicip" :key="item.publicipid">
                 {{item.publicip}}
               </Option>
             </Select>
@@ -360,7 +360,7 @@
             }
           },
           {
-            title: '源IP',
+            title: '源NAT',
             align: 'center',
             render: (h, object) => {
               if (object.row.sourcenatip) {
@@ -386,17 +386,18 @@
                             style: {
                               color: '#f90'
                             }
-                          }), '确认解绑该弹性IP?'])
+                          }), '确认解绑该源NAT?'])
                         },
-                        title: '解绑弹性IP',
+                        title: '解绑源NAT',
                         scrollable: true,
                         okText: '确定解绑',
                         cancelText: '取消',
                         'onOk': () => {
-                          var url = 'network/unboundElasticIP.do'
+                          var url = 'network/natGatewayUnboundTargetIP.do'
                           this.$http.get(url, {
                             params: {
-                              natGatewayId: object.row.id
+                              natGatewayId: object.row.id,
+                              publicIpId: object.row.id
                             }
                           }).then(response => {
                             if (response.status == 200 && response.data.status == 1) {
@@ -420,7 +421,7 @@
                        this.bindIP(object.row)
                     }
                   }
-                }, '绑定源IP')
+                }, '绑定源NAT')
               }
             }
           },
@@ -445,7 +446,6 @@
                     },
                     nativeOn: {
                       click: () => {
-                        console.log('click')
                         this.$Modal.confirm({
                           render: (h) => {
                             return h('p', {
@@ -455,15 +455,15 @@
                               style: {
                                 color: '#f90'
                               }
-                            }), '确认解绑该弹性IP?'])
+                            }), '确认解绑该目标IP?'])
                           },
-                          title: '解绑弹性IP',
+                          title: '解绑目标IP',
                           scrollable: true,
                           okText: '确定解绑',
                           cancelText: '取消',
                           'onOk': () => {
-                            var url = `network/delNatGateway.do?natGatewayId=${this.select.id}`
-                            axios.get(url).then(response => {
+                            var url = `network/unboundElasticIP.do?natGatewayId=${object.row.id}&bindingElasticIP=${object.row.sourcenatipid}`
+                            this.$http.get(url).then(response => {
                               console.log(response)
                             })
                           }
@@ -909,7 +909,7 @@
             // 表单验证通过
             var url = `network/addPrivateGateway.do?vpcIdStart=${this.addGatewayForm.originVPC}&vpcIdEnd=${this.addGatewayForm.targetVPC}&zoneId=${$store.state.zone.zoneid}&aclIdStart=${this.addGatewayForm.originFirewall}&aclIdEnd=${this.addGatewayForm.targetFirewall}`
             axios.get(url).then(response => {
-              this.showModal.newVpc = false
+              this.showModal.addGateway = false
               if (response.status == 200 && response.data.status == 2) {
                 this.$error('error', response.data.message)
               }
@@ -999,7 +999,7 @@
             this.showModal.bindTargetIP = false
             this.$http.get('network/bindingElasticIP.do', {
               params: {
-                publicIpId: this.bindTargetIPForm.IP,
+                publicIp: this.bindTargetIPForm.IP,
                 natGatewayId: this.bindTargetIPForm.natGatewayId
               }
             }).then(response => {

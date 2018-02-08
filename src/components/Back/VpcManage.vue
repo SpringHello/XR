@@ -27,7 +27,7 @@
             <ul>
               <li>计费模式: 空</li>
               <li>到期时间：{{data.endtime}}</li>
-              <li>创建时间：{{data.creattime}}</li>
+              <li>创建时间：{{data.createtime}}</li>
             </ul>
           </div>
         </div>
@@ -46,7 +46,8 @@
                 <li>状态：{{item.status}}</li>
                 <li>防火墙：<span class="blue">{{item.acllistname}}</span></li>
                 <li>负载均衡：<span class="blue">{{item.loadbalance}}</span></li>
-                <li><span class="blue">添加主机</span><span class="vertical-line">|</span><span class="blue">删除</span></li>
+                <li><span class="blue" @click="addHostToVpc(item)">添加主机</span><span class="vertical-line">|</span><span
+                  class="blue" @click="deleteVpc(item)">删除</span></li>
               </ul>
               <Table :columns="vmColumns" :data="item.vmList" v-show="item._show" class="table"></Table>
             </div>
@@ -206,6 +207,26 @@
         <Button type="primary" @click="leaveNetwork_ok">确认离开</Button>
       </p>
     </Modal>
+    <!-- 添加主机到子网 -->
+    <Modal v-model="showModal.addHostToNet" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">添加虚拟机</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="addHostForm">
+          <FormItem label="请选择虚拟机" prop="vm">
+            <Select v-model="addHostForm.vm">
+              <Option v-for="item in addHostForm.vmOptions" :value="item.computerid" :key="item.computerid">
+                {{item.computername}}
+              </Option>
+            </Select>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="addHostForm_ok">确认添加</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -245,7 +266,8 @@
         showModal: {
           addNetwork: false,
           leaveNetwork: false,
-          addRouter: false
+          addRouter: false,
+          addHostToNet: false
         },
         newNetworkForm: {
           networkName: '',
@@ -255,6 +277,12 @@
           serviceOffer: '',
           serviceOfferOptions: [],
           gateway: 0
+        },
+        // 添加主机到子网表单
+        addHostForm: {
+          vm: '',
+          vmOptions: [],
+          ipsegmentid: ''
         },
         // 新建子网验证规则
         newNetworkRuleValidate: {
@@ -396,7 +424,69 @@
       }
     },
     methods: {
+      // 添加主机到vpc
+      addHostToVpc (item) {
+      this.showModal.addHostToNet = true
+        this.addHostForm.ipsegmentid = item.ipsegmentid
+        var url = `network/listVMToNetwork.do?networkid=${item.ipsegmentid}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.addHostForm.vmOptions = response.data.result
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
+      },
+      addHostForm_ok () {
+        this.showModal.addHostToNet = false
+        var url = `network/enterVMToNetwork.do?networkId=${this.addHostForm.ipsegmentid}&VMId=${this.addHostForm.vm}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$message.info({
+              content: response.data.message
+            })
+              this.refresh()
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
+      },
+      // 删除vpc
+      deleteVpc (item) {
+        console.log(item)
+        this.$message.confirm({
+          content: '确认删除该子网？',
+          onOk: () => {
+            var url = `network/deleteNetwork.do?id=${item.id}`
+            this.$http.get(url).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$message.info({
+                  content: response.data.message
+                })
+                this.refresh()
+              } else {
+                this.$message.error({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
       // 设置子网数据
+      refresh () {
+        var vpcId = sessionStorage.getItem('vpcId')
+        var vpcNetwork = axios.get(`information/getVpcTopo.do?vpcId=${vpcId}`)
+        var vpcGateway = axios.get(`network/listPrivateGateways.do?vpcId=${vpcId}&zoneId=${$store.state.zone.zoneid}`)
+        Promise.all([vpcNetwork, vpcGateway]).then((response) => {
+          this.setData(response[0])
+            this.setVPC(response[1])
+        })
+      },
       setData(response){
         if (response.status == 200 && response.data.status == 1) {
           response.data.result.ipsList.forEach(item => {
