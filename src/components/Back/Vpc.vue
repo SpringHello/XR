@@ -78,7 +78,7 @@
           <FormItem label="vpc描述" prop="desc">
             <Input v-model="newForm.desc" placeholder="请输入vpc描述"></Input>
           </FormItem>
-          <FormItem label="购买方式" prop="timeType">
+<!--          <FormItem label="购买方式" prop="timeType">
             <Select v-model="newForm.timeType">
               <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
                       :key="item.value">{{ item.label }}
@@ -91,7 +91,7 @@
                 {{item.label}}
               </Option>
             </Select>
-          </FormItem>
+          </FormItem>-->
           <p style="font-size: 12px;color: rgba(153,153,153,0.65);">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
         </Form>
         <!--创建vpc时暂时不绑定公网IP-->
@@ -107,8 +107,8 @@
         </div>-->
       </div>
       <div slot="footer" class="modal-footer-border">
-        <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
-        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">{{newForm.cost}}元</span>
+      <!--  <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
+        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">{{newForm.cost}}元</span>-->
         <Button type="primary" @click="handleNewVpcSubmit">完成配置</Button>
       </div>
     </Modal>
@@ -462,7 +462,7 @@
                           okText: '确定解绑',
                           cancelText: '取消',
                           'onOk': () => {
-                            var url = `network/unboundElasticIP.do?natGatewayId=${object.row.id}&bindingElasticIP=${object.row.sourcenatipid}`
+                            var url = `network/unboundElasticIP.do?natGatewayId=${object.row.id}&publicIp=${item}`
                             this.$http.get(url).then(response => {
                               console.log(response)
                             })
@@ -887,7 +887,7 @@
         this.$refs.newFormValidate.validate((valid) => {
           if (valid) {
             // 表单验证通过
-            var url = `network/createVPC.do?vpcName=${this.newForm.vpcName}&displayText=${this.newForm.desc}&zoneId=${$store.state.zone.zoneid}&count=1&cidr=${this.newForm.vpc}&timeType=${this.newForm.timeType}&timeValue=${this.newForm.timeValue || 1}&isAutorenew=0&isSourceNat=0&bandWith=${this.newForm.IPReq ? 0 : 0}`
+            var url = `network/createVPC.do?vpcName=${this.newForm.vpcName}&displayText=${this.newForm.desc}&zoneId=${$store.state.zone.zoneid}&count=1&cidr=${this.newForm.vpc}`
             axios.get(url).then(response => {
               this.showModal.newVpc = false
               if (response.status == 200 && response.data.status == 1) {
@@ -959,7 +959,7 @@
         this.bindIPForm.natGatewayId = row.id
         this.showModal.bindIP = true
       },
-      // nat网关绑定目标IP提交ajax
+      // nat网关绑定源IP提交ajax
       handlebindIPSubmit(){
         this.$refs.bindIPFormValidate.validate(validate => {
           if (validate) {
