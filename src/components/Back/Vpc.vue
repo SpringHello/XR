@@ -265,8 +265,8 @@
         <Form :model="bindIPForm" :rules="bindIPRuleValidate" ref="bindIPFormValidate">
           <FormItem label="选择源弹性IP" prop="IP">
             <Select v-model="bindIPForm.IP">
-              <Option v-for="item in bindIPForm.IPOptions" :value="item.publicipid" :key="item.publicipid">
-                {{item.publicip}}
+              <Option v-for="item in bindIPForm.IPOptions" :value="item" :key="item">
+                {{item}}
               </Option>
             </Select>
           </FormItem>
@@ -432,45 +432,53 @@
               var renderArray = []
               if (object.row.prottransip) {
                 var prottransipArray = object.row.prottransip.split(',')
+                prottransipArray.splice(0, 1)
+                this.bindIPForm.IPOptions = prottransipArray
                 for (var item of prottransipArray) {
-                  renderArray.push(h('div', [h('span', {
-                    style: {
-                      marginRight: '10px'
-                    }
-                  }, item), h('Icon', {
-                    attrs: {
-                      type: 'close'
-                    },
-                    style: {
-                      cursor: 'pointer'
-                    },
-                    nativeOn: {
-                      click: () => {
-                        this.$Modal.confirm({
-                          render: (h) => {
-                            return h('p', {
-                              class: 'modal-content-s'
-                            }, [h('i', {
-                              class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
-                              style: {
-                                color: '#f90'
-                              }
-                            }), '确认解绑该目标IP?'])
-                          },
-                          title: '解绑目标IP',
-                          scrollable: true,
-                          okText: '确定解绑',
-                          cancelText: '取消',
-                          'onOk': () => {
-                            var url = `network/unboundElasticIP.do?natGatewayId=${object.row.id}&publicIp=${item}`
-                            this.$http.get(url).then(response => {
-                              console.log(response)
-                            })
-                          }
-                        })
+                  if(item){
+                    renderArray.push(h('div', [h('span', {
+                      style: {
+                        marginRight: '10px'
                       }
-                    }
-                  }, '')]))
+                    }, item), h('Icon', {
+                      attrs: {
+                        type: 'close'
+                      },
+                      style: {
+                        cursor: 'pointer'
+                      },
+                      nativeOn: {
+                        click: () => {
+                          this.$Modal.confirm({
+                            render: (h) => {
+                              return h('p', {
+                                class: 'modal-content-s'
+                              }, [h('i', {
+                                class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
+                                style: {
+                                  color: '#f90'
+                                }
+                              }), '确认解绑该目标IP?'])
+                            },
+                            title: '解绑目标IP',
+                            scrollable: true,
+                            okText: '确定解绑',
+                            cancelText: '取消',
+                            'onOk': () => {
+                              var url = `network/unboundElasticIP.do?natGatewayId=${object.row.id}&publicIp=${item}`
+                              this.$http.get(url).then(response => {
+                                if (response.status == 200 && response.data.status == 1) {
+                                  this.$message.info({
+                                    content: response.data.message
+                                  })
+                                }
+                              })
+                            }
+                          })
+                        }
+                      }
+                    }, '')]))
+                  }
                 }
               }
               renderArray.push(h('div', {
@@ -946,7 +954,7 @@
       },
       // nat网关绑定源IP，获取所有可用的弹性IP
       bindIP(row){
-        // 获取可以挂载的所有弹性IP
+  /*      // 获取可以挂载的所有弹性IP
         this.$http.get('network/listPublicIp.do', {
           params: {
             useType: '0',
@@ -955,7 +963,7 @@
           }
         }).then(response => {
           this.bindIPForm.IPOptions = response.data.result
-        })
+        })*/
         this.bindIPForm.natGatewayId = row.id
         this.showModal.bindIP = true
       },
