@@ -11,7 +11,7 @@
             </div>
             <div>
               <Button type="primary" class="btn-bgwhite" @click="$router.go(-1)">返回</Button>
-              <Button type="primary">刷新</Button>
+              <Button type="primary" @click="$router.go(0)">刷新</Button>
             </div>
           </div>
           <div class="detail-info">
@@ -408,7 +408,15 @@
                             targetPrivateId: object.row.privateGatewayid2
                           }
                         }).then(response => {
-                          console.log(response)
+                          if(response.status == 200 && response.data.status == 1) {
+                            this.$message.info({
+                              content: response.data.message
+                            })
+                          } else {
+                            this.$message.error({
+                              content: response.data.message
+                            })
+                          }
                         })
                       }
                     })

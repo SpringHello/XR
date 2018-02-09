@@ -78,20 +78,20 @@
           <FormItem label="vpc描述" prop="desc">
             <Input v-model="newForm.desc" placeholder="请输入vpc描述"></Input>
           </FormItem>
-<!--          <FormItem label="购买方式" prop="timeType">
-            <Select v-model="newForm.timeType">
-              <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
-                      :key="item.value">{{ item.label }}
-              </Option>
-            </Select>
-          </FormItem>
-          <FormItem label="购买时长" prop="timeValue" v-if="newForm.timeType!='current'">
-            <Select v-model="newForm.timeValue">
-              <Option v-for="item in customTimeOptions[newForm.timeType]" :value="item.value" :key="item.value">
-                {{item.label}}
-              </Option>
-            </Select>
-          </FormItem>-->
+          <!--          <FormItem label="购买方式" prop="timeType">
+                      <Select v-model="newForm.timeType">
+                        <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
+                                :key="item.value">{{ item.label }}
+                        </Option>
+                      </Select>
+                    </FormItem>
+                    <FormItem label="购买时长" prop="timeValue" v-if="newForm.timeType!='current'">
+                      <Select v-model="newForm.timeValue">
+                        <Option v-for="item in customTimeOptions[newForm.timeType]" :value="item.value" :key="item.value">
+                          {{item.label}}
+                        </Option>
+                      </Select>
+                    </FormItem>-->
           <p style="font-size: 12px;color: rgba(153,153,153,0.65);">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
         </Form>
         <!--创建vpc时暂时不绑定公网IP-->
@@ -107,8 +107,8 @@
         </div>-->
       </div>
       <div slot="footer" class="modal-footer-border">
-      <!--  <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
-        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">{{newForm.cost}}元</span>-->
+        <!--  <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
+          <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">{{newForm.cost}}元</span>-->
         <Button type="primary" @click="handleNewVpcSubmit">完成配置</Button>
       </div>
     </Modal>
@@ -401,7 +401,14 @@
                             }
                           }).then(response => {
                             if (response.status == 200 && response.data.status == 1) {
-                              delete object.row.sourcenatip
+                              this.$message.info({
+                                content: response.data.message
+                              })
+                              this.refresh()
+                            } else {
+                              this.$message.error({
+                                content: response.data.message
+                              })
                             }
                           })
                         }
@@ -418,7 +425,7 @@
                   on: {
                     click: () => {
                       // 绑定sourceNat
-                       this.bindIP(object.row)
+                      this.bindIP(object.row)
                     }
                   }
                 }, '绑定源NAT')
@@ -435,7 +442,7 @@
                 prottransipArray.splice(0, 1)
                 this.bindIPForm.IPOptions = prottransipArray
                 for (var item of prottransipArray) {
-                  if(item){
+                  if (item) {
                     renderArray.push(h('div', [h('span', {
                       style: {
                         marginRight: '10px'
@@ -471,6 +478,7 @@
                                   this.$message.info({
                                     content: response.data.message
                                   })
+                                  this.refresh()
                                 }
                               })
                             }
@@ -695,8 +703,8 @@
         var NATResponse = axios.get(`network/listNatGateway.do?zoneId=${zoneId}`)
 
         Promise.all([vpcResponse, NATResponse]).then((ResponseValue) => {
-            this.setData(ResponseValue[0])
-            this.setNatData(ResponseValue[1])
+          this.setData(ResponseValue[0])
+          this.setNatData(ResponseValue[1])
         })
       },
       // 选中当前项
@@ -829,7 +837,11 @@
                 id: select[0].id
               }
             }).then(response => {
-              if (response.status == 200 && response.data.status == 2) {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$message.info({
+                  content: response.data.message
+                })
+              } else {
                 this.$message.error({
                   content: response.data.message
                 })
@@ -899,7 +911,8 @@
             axios.get(url).then(response => {
               this.showModal.newVpc = false
               if (response.status == 200 && response.data.status == 1) {
-                this.$router.push('order')
+                this.refresh()
+                this.$message.info({content: response.data.message})
                 // this.$error('error', response.data.message)
               } else {
                 this.$message.error({content: response.data.message})
@@ -918,8 +931,14 @@
             var url = `network/addPrivateGateway.do?vpcIdStart=${this.addGatewayForm.originVPC}&vpcIdEnd=${this.addGatewayForm.targetVPC}&zoneId=${$store.state.zone.zoneid}&aclIdStart=${this.addGatewayForm.originFirewall}&aclIdEnd=${this.addGatewayForm.targetFirewall}`
             axios.get(url).then(response => {
               this.showModal.addGateway = false
-              if (response.status == 200 && response.data.status == 2) {
-                this.$error('error', response.data.message)
+              if (response.status == 200 && response.data.status == 1) {
+                this.$message.info({
+                  content: response.data.message
+                })
+              } else {
+                this.$message.error({
+                  content: response.data.message
+                })
               }
             })
           } else {
@@ -944,7 +963,9 @@
                 this.$router.push('order')
               }
               if (response.status == 200 && response.data.status == 2) {
-                this.$error('error', response.data.message)
+                this.$message.error({
+                  content: response.data.message
+                })
               }
             })
           } else {
@@ -954,16 +975,16 @@
       },
       // nat网关绑定源IP，获取所有可用的弹性IP
       bindIP(row){
-  /*      // 获取可以挂载的所有弹性IP
-        this.$http.get('network/listPublicIp.do', {
-          params: {
-            useType: '0',
-            vpcId: row.vpcid,
-            status: '1'
-          }
-        }).then(response => {
-          this.bindIPForm.IPOptions = response.data.result
-        })*/
+        /*      // 获取可以挂载的所有弹性IP
+         this.$http.get('network/listPublicIp.do', {
+         params: {
+         useType: '0',
+         vpcId: row.vpcid,
+         status: '1'
+         }
+         }).then(response => {
+         this.bindIPForm.IPOptions = response.data.result
+         })*/
         this.bindIPForm.natGatewayId = row.id
         this.showModal.bindIP = true
       },
@@ -978,8 +999,15 @@
                 natGatewayId: this.bindIPForm.natGatewayId
               }
             }).then(response => {
-              if (response.status == 200 && response.data.status == 2) {
-                this.$error('error', response.data.message)
+              if (response.status == 200 && response.data.status == 1) {
+                this.$message.info({
+                  content: response.data.message
+                })
+                this.refresh()
+              } else {
+                this.$message.error({
+                  content: response.data.message
+                })
               }
             })
           }
@@ -1011,8 +1039,15 @@
                 natGatewayId: this.bindTargetIPForm.natGatewayId
               }
             }).then(response => {
-              if (response.status == 200 && response.data.status == 2) {
-                this.$error('error', response.data.message)
+              if (response.status == 200 && response.data.status == 1) {
+                this.$message.info({
+                  content: response.data.message
+                })
+                this.refresh()
+              } else {
+                this.$message.error({
+                  content: response.data.message
+                })
               }
             })
           }

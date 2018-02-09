@@ -176,8 +176,9 @@
           <div class="hostlist">
             <p>该区域下所有磁盘</p>
             <ul>
-              <li v-for="(item, index) in diskForBackupsStrategyList" :key="index"><span>{{item.diskname}}</span><span
-                v-if="item.bankupstrategyname">({{ item.bankupstrategyname}})</span><i
+              <li v-for="(item, index) in diskForBackupsStrategyList" :key="index">
+                <p><span>{{item.diskname}}</span><span
+                v-if="item.bankupstrategyname">({{ item.bankupstrategyname}})</span></p><i
                 @click="addDisk(index,item)" class="bluetext" style="cursor: pointer">+ 添加</i></li>
             </ul>
           </div>
