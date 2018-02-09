@@ -106,7 +106,7 @@
           img: require('../../../assets/img/product/monitor-logo.png'),
           title: '云监控',
           desc: '新睿云监控告警服务主要用图表化信息帮助您了解云服务器运行状况和性能。告警推送消息帮助您第一时间了解业务异常，让您无需额外开发，就能全面掌控云服务器资源使用、运行情况。',
-          linkRouter: $store.state.userInfo ? 'bal' : 'login'
+          linkRouter: $store.state.userInfo ? 'host' : 'login'
         },
         features: [
           {img: require('../../../assets/img/product/monitor-shujuji.png'), title: '数据自动分析计算', desc: '拥有强大的后台处理集群，自动汇总、聚合、统计数据，统计分析后的数据存入数据库，以此作为基础数据给用户展示使用。'},

@@ -7,7 +7,7 @@
         <div class="info">
           <span class="title">{{logo.title}}</span>
           <span class="desc">{{logo.desc}}</span>
-          <router-link :to="logo.linkRouter">立即购买</router-link>
+          <router-link :to="logo.linkRouter">立即体验</router-link>
         </div>
       </div>
     </div>
@@ -106,7 +106,7 @@
           img: require('../../../assets/img/product/ECS-logo.png'),
           title: 'ESC 快照',
           desc: '主机快照能对主机某个时刻的数据进行备份和回滚，快照为全量快照，提升了主机安全性同时降低对快照管理的难度。',
-          linkRouter: $store.state.userInfo ? 'new' : 'login'
+          linkRouter: $store.state.userInfo ? '/ruicloud/snapshot' : 'login'
         },
         features: [
           {img: require('../../../assets/img/product/snapshoot-1.png'), title: '自动快照', desc: '新睿云自动为用户创建的快照。用户需要首先创建自动快照策略，然后再把自动快照策略应用到磁盘上，新睿云就会在用户设置的时间，自动为该磁盘创建快照。'},

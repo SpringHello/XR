@@ -116,7 +116,7 @@
           img: require('../../../assets/img/product/p-balance.png'),
           title: '负载均衡',
           desc: '负载均衡处理器可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器上进行处理。新睿云负载均衡支持四层TCP协议和七层HTTP和HTTPS协议。',
-          linkRouter: $store.state.userInfo ? 'bal' : 'login'
+          linkRouter: $store.state.userInfo ? 'balance' : 'login'
         },
         features: [
           {

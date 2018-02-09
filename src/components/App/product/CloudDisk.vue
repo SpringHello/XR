@@ -7,7 +7,7 @@
         <div class="info">
           <span class="title" style="font-size: 48px;color: #fff;">{{logo.title}}</span>
           <span class="desc" style="color: #fff;">{{logo.desc}}</span>
-          <router-link :to="logo.linkRouter">立即体验</router-link>
+          <router-link :to="logo.linkRouter">立即购买</router-link>
         </div>
       </div>
     </div>
@@ -105,7 +105,7 @@
           img: require('../../../assets/img/product/disk-logo.png'),
           title: '云硬盘',
           desc: '新睿云云硬盘是为云服务器实例提供的块级别数据存储设备，可以连接到同一数据中心中任何正在运行的云服务器实例，云硬盘具有高可用、高可靠、灵活易用等特点。云硬盘可支持在线操作和管理云硬盘，也可像传统物理硬盘一样，对挂载到云主机的云硬盘做格式化、创建文件等操作。',
-          linkRouter: $store.state.userInfo ? 'bal' : 'login'
+          linkRouter: 'buy'
         },
         features: [
           {

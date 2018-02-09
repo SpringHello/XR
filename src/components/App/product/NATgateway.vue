@@ -7,7 +7,7 @@
         <div class="info">
           <span class="title">{{logo.title}}</span>
           <span class="desc">{{logo.desc}}</span>
-          <router-link :to="logo.linkRouter">立即购买</router-link>
+          <router-link :to="logo.linkRouter">立即体验</router-link>
         </div>
       </div>
     </div>
@@ -117,7 +117,7 @@
           img: require('../../../assets/img/product/p-net.png'),
           title: 'NAT网关',
           desc: '在VPC环境下构建一个公网流量的出入口，通过自定义SourceNAT，Destination NAT规则灵活使用网络资源。“支持多IP共享公网带宽”',
-          linkRouter: $store.state.userInfo ? 'mirror' : 'login'
+          linkRouter: $store.state.userInfo ? 'vpc' : 'login'
         },
         features: [
           {
