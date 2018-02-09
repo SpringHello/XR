@@ -16,7 +16,7 @@
             <span>
               <img src="../../assets/img/overview/phone.png" style="margin-right:10px;vertical-align: middle">
               <span v-if="userInfo.phone" style="vertical-align: middle">{{userInfo.phone}}</span>
-              <router-link v-else style="vertical-align: middle" to="">点击绑定</router-link>
+              <router-link v-else style="vertical-align: middle" to="/ruicloud/userCenter">点击绑定</router-link>
             </span>
           </div>
         </div>
@@ -27,12 +27,12 @@
               <p class="universal-large">{{item.value}}元</p>
             </div>
           </div>
-          <button class="universal-middle">立即充值</button>
+          <router-link to="/ruicloud/expenses"><button class="universal-middle">立即充值</button></router-link>
         </div>
         <div style="width:346px;">
           <p class="universal-middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">待处理事项</p>
-          <div class="pending" style="display: flex;justify-content: space-between">
-            <div v-for="(item,index) in pending" :key="index">
+          <div class="pending" style="display: flex;justify-content: space-between;cursor:pointer">
+            <div v-for="(item,index) in pending" :key="index" @click="togo(item.url)">
               <p class="universal-mini">{{item.itemName}}</p>
               <span class="universal-large">{{item.value}}项</span>
             </div>
@@ -63,8 +63,8 @@
           <div class="warn">
             <p class="universal-middle" :class="warning" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">
               告警</p>
-            <div style="display: flex;justify-content: space-between">
-              <div v-for="(item,index) in warnData" :key="index">
+            <div style="display: flex;justify-content: space-between;cursor:pointer">
+              <div v-for="(item,index) in warnData" :key="index" @click="togo(item.url)">
                 <p class="universal-mini">{{item.itemName}}</p>
                 <span class="universal-large" :class="{warning:item.value!=0}">{{item.value}}项</span>
               </div>
@@ -141,8 +141,18 @@
         var response = values[0]
         if (response.status == 200 && response.data.status == 1) {
           this.accountInfo = response.data.result[0].items
+           // 待处理事项数据
           this.pending = response.data.result[1].items
+          var pendingUrl = ['work','order','renew']
+          this.pending.forEach((item,index) => {
+            item.url = pendingUrl[index]
+          })
+          // 告警数据
           this.warnData = response.data.result[2].items
+          var warnUrl = ['host','disk','vpc']
+          this.warnData.forEach((item,index) => {
+            item.url = warnUrl[index]
+          })
         }
         response = values[1]
         if (response.status == 200 && response.data.status == 1) {
@@ -164,6 +174,10 @@
         Promise.all([accountInfo, adver, source]).then(values => {
           this.setData(values)
         })
+      },
+      // 跳转到相应的页面
+      togo(url){
+        this.$router.push(url)
       }
     },
     computed: {
