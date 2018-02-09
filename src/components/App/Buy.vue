@@ -1385,6 +1385,11 @@
       },
       // 主机加入购物车
       addCart(){
+        if (this.cart.length > 4) {
+          this.$message.error({
+            content: '购物车已满'
+          })
+        }
         if (this.PecsInfo.currentType == 'public' && this.PecsInfo.system.systemName == undefined) {
           this.$message.info({
             content: '请选择一个镜像'
@@ -1404,6 +1409,11 @@
       },
       // 磁盘加入购物车
       addDiskCart(){
+        if (this.cart.length > 4) {
+          this.$message.error({
+            content: '购物车已满'
+          })
+        }
         if (this.PdiskInfo.diskName == '') {
           this.$message.info({
             content: '请输入磁盘名'
@@ -1417,9 +1427,13 @@
       },
       // 公网IP加入购物车
       addIPCart(){
+        if (this.cart.length > 4) {
+          this.$message.error({
+            content: '购物车已满'
+          })
+        }
         var obj = JSON.parse(JSON.stringify(this.PeipInfo))
         var prod = Object.assign({typeName: '公网IP', zone: this.PeipInfo.zone, type: 'Peip', count: 1}, obj)
-        console.log(obj)
         this.cart.push(prod)
         this.store()
       },
@@ -1448,7 +1462,6 @@
       },
       // 立即购买
       buyNow(){
-        sessionStorage.removeItem('cart')
         if (this.cart.length == 0) {
           this.$message.info({
             content: '请添加商品到清单'
@@ -1457,6 +1470,7 @@
         }
         if (this.userInfo == null) {
           this.showModal.login = true
+          return
         }
         var PromiseList = []
         for (var prod of this.cart) {
@@ -1514,6 +1528,7 @@
             PromiseList.push(axios.get('information/deployVirtualMachine.do', {params}))
           }
         }
+        sessionStorage.removeItem('cart')
         Promise.all(PromiseList).then(responseList => {
           this.$router.push('order')
         })
