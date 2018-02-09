@@ -130,7 +130,7 @@
                       <Input v-model="notAuth.quicklyAuthForm.pictureCode" placeholder="请输入图片验证码"
                              style="width:280px;margin-right: 20px"></Input>
                       <img :src="imgSrc" style="height:33px;"
-                           @click="imgSrc=`http://192.168.3.204:8081/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                           @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
                     </div>
                   </FormItem>
                   <FormItem label="手机号码" prop="phone">
@@ -306,7 +306,7 @@
               </div>
             </div>
           </Tab-pane>
-          <!--<Tab-pane label="安全设置" name="safe">
+          <Tab-pane label="安全设置" name="safe">
             <p class="info-title">用户基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
@@ -349,7 +349,7 @@
                   至少两项且长度超过8位的密码。</p><span @click="showModal.modifyPassword=true" style="cursor:pointer">「修改」</span>
               </div>
             </div>
-          </Tab-pane>-->
+          </Tab-pane>
           <!--用于企业认证的pane-->
           <TabPane label="企业信息" name="companyInfo">
             <p class="info-title">企业基本信息</p>
@@ -644,6 +644,27 @@
         <Button type="primary" @click="confirmEmail">完成</Button>
       </div>
     </Modal>
+
+    <!--修改密码-->
+    <Modal width="590" v-model="showModal.modifyPassword" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        重置账户密码
+      </div>
+      <div class="newPhone">
+        <p style="margin-top:0px;">当前密码</p>
+        <Input v-model="resetPasswordForm.oldPassword" placeholder="当前密码" style="width:300px;"></Input>
+        <p>新的密码</p>
+        <Input v-model="resetPasswordForm.newPassword" placeholder="修改后的密码" style="width:300px;"></Input>
+        <p>确认密码</p>
+        <Input v-model="resetPasswordForm.confirmPassword" placeholder="确认新密码"
+               style="width:300px;"></Input>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.modifyPassword=false">取消</Button>
+        <Button type="primary" @click="resetPassword">完成</Button>
+      </div>
+    </Modal>
   </div>
 
 </template>
@@ -682,9 +703,10 @@
           addLinkman: false,
           modifyPhone: false,
           authByPhone: false,
-          authByEmail: false
+          authByEmail: false,
+          modifyPassword: false
         },
-        imgSrc: 'http://192.168.3.204:8081/ruicloud/user/getKaptchaImage.do',
+        imgSrc: 'user/getKaptchaImage.do',
         // 此对象存储所有未认证时页面的状态
         notAuth: {
           currentStep: 1,
@@ -1096,6 +1118,12 @@
           verCode: '',
           phoneVerCodeText: '获取验证码',
         },
+        // 充值密码表单
+        resetPasswordForm: {
+          oldPassword: '',
+          newPassword: '',
+          confirmPassword: ''
+        }
       }
     },
     created(){
@@ -1296,6 +1324,24 @@
           }
         })
       },
+      // 重置密码
+      resetPassword(){
+        if (this.resetPasswordForm.newPassword != this.resetPasswordForm.confirmPassword) {
+          this.$Message.info('两次输入的新密码不一致')
+          return
+        } else {
+          var url = `user/updatePassword.do?password=${this.resetPasswordForm.newPassword}&oldpassword=${this.resetPasswordForm.oldPassword}`
+          this.$http.get(url)
+            .then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.showModal.modifyPassword = false
+                this.$Message.success("修改密码成功")
+              } else {
+                this.$Message.error(response.data.message)
+              }
+            })
+        }
+      },
       // 获取验证码
       getVerCode(type){
         var isemail = type == 'email' ? 1 : 0
@@ -1309,11 +1355,11 @@
             var interval = setInterval(function () {
               timeOut--
               if (timeOut == 0) {
-                this[`${type}VerCodeText`] = '获取验证码'
+                this.newPhoneForm[`${type}VerCodeText`] = '获取验证码'
                 clearInterval(interval)
                 return
               }
-              this[`${type}VerCodeText`] = timeOut + 's'
+              this.newPhoneForm[`${type}VerCodeText`] = timeOut + 's'
             }.bind(this), 1000)
           }
         })
@@ -1592,6 +1638,30 @@
     }
     span {
       color: #2A99F2
+    }
+  }
+
+  .modal-wrapper {
+    background: #FFFFFF;
+    border: 1px solid #D9D9D9;
+    border-radius: 4px;
+    padding: 12px;
+    text-align: right;
+    margin-bottom: 10px;
+    span {
+      float: left;
+      line-height: 34px;
+      font-size: 14px;
+      color: rgba(17, 17, 17, 0.43);
+    }
+  }
+
+  .newPhone {
+    p {
+      font-size: 16px;
+      color: rgba(17, 17, 17, 0.65);
+      line-height: 23.42px;
+      margin: 12px 0px;
     }
   }
 </style>
