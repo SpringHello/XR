@@ -397,7 +397,7 @@
                           this.$http.get(url, {
                             params: {
                               natGatewayId: object.row.id,
-                              publicIpId: object.row.id
+                              publicIp: object.row.sourcenatip
                             }
                           }).then(response => {
                             if (response.status == 200 && response.data.status == 1) {
