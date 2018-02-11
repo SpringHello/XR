@@ -11,12 +11,12 @@
             <span style="margin-right:20px;width:50%">
               <img src="../../assets/img/overview/email.png" style="margin-right:10px;vertical-align: middle">
               <span v-if="userInfo.email" style="vertical-align: middle">{{userInfo.email}}</span>
-              <router-link v-else style="vertical-align: middle;" to="">点击绑定</router-link>
+              <router-link v-else style="vertical-align: middle;" to="/ruicloud/userCenter">点击绑定</router-link>
             </span>
             <span>
               <img src="../../assets/img/overview/phone.png" style="margin-right:10px;vertical-align: middle">
               <span v-if="userInfo.phone" style="vertical-align: middle">{{userInfo.phone}}</span>
-              <router-link v-else style="vertical-align: middle" to="/ruicloud/userCenter">点击绑定</router-link>
+              <router-link v-else style="vertical-align: middle" to="">点击绑定</router-link>
             </span>
           </div>
         </div>
@@ -27,7 +27,7 @@
               <p class="universal-large">{{item.value}}元</p>
             </div>
           </div>
-          <router-link to="/ruicloud/expenses"><button class="universal-middle">立即充值</button></router-link>
+          <router-link to="/ruicloud/recharge"><button class="universal-middle">立即充值</button></router-link>
         </div>
         <div style="width:346px;">
           <p class="universal-middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">待处理事项</p>
@@ -43,10 +43,10 @@
         <div id="left">
           <p class="universal-middle">资源</p>
           <div class="wrapper">
-            <div class="item" v-for="(item,index) in source">
+            <div class="item" v-for="(item,index) in source" :key="index">
               <p class="universal-middle"><img :src="sourceIcon[index]">{{item.name}}</p>
-              <div class="source-item" v-for="(subItem,sIndex) in item.items">
-                <span>{{subItem.itemName}}({{subItem.total}})</span>
+              <div class="source-item" v-for="(subItem,sIndex) in item.items" :key="sIndex">
+                <span @click="togo(subItem.url)" :class="{disable:!subItem.url}">{{subItem.itemName}}({{subItem.total}})</span>
                 <Tooltip style="padding: 1px 0px;height: 18px;"
                          :content="`已创建${subItem.used}个，还能创建${subItem.total-subItem.used}个`" placement="top">
                   <div style="height:10px;width:150px;display: flex">
@@ -55,7 +55,7 @@
                          :style="{width:`${100-(subItem.used/subItem.total*100)}%`}"></div>
                   </div>
                 </Tooltip>
-              </div>
+              </div>    
             </div>
           </div>
         </div>
@@ -64,7 +64,7 @@
             <p class="universal-middle" :class="warning" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">
               告警</p>
             <div style="display: flex;justify-content: space-between;cursor:pointer">
-              <div v-for="(item,index) in warnData" :key="index" @click="togo(item.url)">
+              <div v-for="(item,index) in warnData" :key="index" @click="togo(item.url)" style="">
                 <p class="universal-mini">{{item.itemName}}</p>
                 <span class="universal-large" :class="{warning:item.value!=0}">{{item.value}}项</span>
               </div>
@@ -76,6 +76,7 @@
               <div v-for="(item,index) in noticeData" :key="index">
                 <p class="universal-mini">{{item.title}}<span>{{item.createtime}}</span></p>
               </div>
+              <router-link to=""></router-link>
               <a href="javascript:;">查看更多</a>
             </div>
           </div>
@@ -95,6 +96,30 @@
     name: 'overview',
     data() {
       return {
+        // 资源列表url数据
+         sourceUrl: [
+              {
+                prod: '云计算',
+                prodUrl: ['/ruicloud/Pecs','/ruicloud/Phost','/ruicloud/Pecss','', '']
+              },
+              {
+                prod: '云网络',
+                prodUrl: ['/ruicloud/Pvpc','/ruicloud/Peip','/ruicloud/Pbalance','/ruicloud/Pnat','/ruicloud/Pvirvpn','','']
+              },
+              {
+                prod: '云存储',
+                prodUrl: ['/ruicloud/Pdisk','','/ruicloud/Pbackupdisk','']
+              },
+              {
+                prod: '云安全',
+                prodUrl: ['/ruicloud/Pfirewall','/ruicloud/Pddos']
+              },
+              {
+                prod: '云运维',
+                prodUrl: ['/ruicloud/Pmonitor','']
+              }
+            ],
+        isDisable: false,
         // 账户信息
         accountInfo: [],
         // 待处理事项
@@ -161,7 +186,19 @@
         }
         response = values[2]
         if (response.status == 200 && response.data.status == 1) {
+          // 资源列表数据
           this.source = response.data.result
+          // 资源列表数据添加相应url属性
+          this.source.forEach((item,index) => {
+            var that=item
+            var current=this.sourceUrl.filter(item=>{
+              return item.prod==that.name
+           })
+            var currentUrl=current[0].prodUrl
+            item.items.forEach((content,index)=>{
+              content.url=currentUrl[index]
+            })
+          })
         }
       },
       // 区域变更，刷新数据
@@ -177,7 +214,10 @@
       },
       // 跳转到相应的页面
       togo(url){
-        this.$router.push(url)
+          if(url=='host'){
+            sessionStorage.setItem('type', 'error')
+          }
+          this.$router.push(url)
       }
     },
     computed: {
@@ -353,6 +393,13 @@
                   font-size: 14px;
                   color: #666666;
                   width: 125px;
+                  cursor: pointer;
+                  // &:hover{
+                  //   cursor: not-allowed;
+                  // }
+                }
+                .disable:hover{
+                  cursor: not-allowed;
                 }
               }
               img {

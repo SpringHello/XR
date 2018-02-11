@@ -2,7 +2,7 @@
   <div id="back">
     <header>
       <div class="wrapper">
-        <router-link to="/home" class="logo">
+        <router-link to="/ruicloud/home" class="logo">
           <div></div>
         </router-link>
         <div class="operate">
@@ -32,7 +32,7 @@
           </ul>
           <ul class="right">
             <li>
-              <router-link to="price/hostPrice" :class="{active:pageInfo.path=='new'}"><span>创建主机</span></router-link>
+              <router-link to="buy" :class="{active:pageInfo.path=='buy'}"><span>创建主机</span></router-link>
             </li>
             <li>
               <router-link to="document" :class="{active:pageInfo.path=='document'}"><span>帮助文档</span></router-link>
@@ -358,7 +358,7 @@
         margin: 0px auto;
         .logo {
           width: 140px;
-          height: 100%;
+          height: 55px;
           float: left;
           margin-right: 38px;
           div {
