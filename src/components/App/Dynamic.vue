@@ -7,65 +7,69 @@
       </div>
 
       <div class="content-detail">
-        <Menu style="width: 300px;" :open-names="['1']" active-name="1-2">
+        <Menu style="width: 300px;" :open-names="['1']" active-name="1-1" @on-select="show">
           <Submenu name="1">
             <template slot="title">
               <img src="../../assets/img/product/dynamic-2.png" alt="" style="margin-right:8px;">
               <b>产品公告</b>
             </template>
-            <MenuItem name="1-1">[2018-1-9]新睿云NAT服务于…</MenuItem>
-            <MenuItem name="1-2">[2018-1-8]新睿云函数服务于…</MenuItem>
-            <MenuItem name="1-3">[2018-1-7]新睿云硬盘服务于…</MenuItem>
-            <MenuItem name="1-4">[2018-1-6]新睿云主机服务于…</MenuItem>
+            <MenuItem name="1-1">VPC系统更新</MenuItem>
+            <MenuItem name="1-2">弹性IP源NAT功能上线</MenuItem>
+            <MenuItem name="1-3">新睿云技术内测正式开启</MenuItem>
           </Submenu>
         </Menu>
       </div>
 
-      <div class="right">
-        <div v-for=" item in contentList" class="right-box">
-          <p v-for="subItem in item.des" class="msg">{{subItem.msg}}</p>
-          <div v-for="subItem in item.des" class="right-box-bottom">
-            <span>{{subItem.title1}}</span>
-            <p class="desc">{{subItem.desc}}</p>
-            <p class="title2">{{subItem.title2}}</p>
-            <p class="det" v-for="det in subItem.det">{{det}}</p>
-            <div class="time">
-              <p class="name">{{subItem.name}}</p>
-              <p class="name name2">{{subItem.time}}</p>
-            </div>
-          </div>
+      <div class="right" v-if="select=='1-1'">
+        <p class="title">公告 / VPC系统更新</p>
+        <div class="right-content">
+          <p class="sub-title">VPC系统更新</p>
+          <p class="sub-content">本次更新时间为2017-12-25 01:00:00  --  2017-12-25 05:00:00  ,届时将停止用户对VPC的所有操作。</p>
+          <p class="time">2017-12-01</p>
         </div>
-
+      </div>
+      <div class="right" v-if="select=='1-2'">
+        <p class="title">公告 / 弹性IP源NAT功能上线</p>
+        <div class="right-content">
+          <p class="sub-title">弹性IP源NAT功能上线</p>
+          <p class="sub-content">大家期待已久源NAT上线啦，源NAT可以绑定至VPC让下面的所有虚拟机都可以共用该弹性IP上网哟!</p>
+          <p class="time">2017-11-16</p>
+        </div>
+      </div>
+      <div class="right" v-if="select=='1-3'">
+        <p class="title">公告 / 新睿云技术内测正式开启</p>
+        <div class="right-content">
+          <p class="sub-title">新睿云技术内测正式开启</p>
+          <p class="sub-content">新睿云内测已开启，欢迎大家踊跃参与。</p>
+          <p class="time">2017-11-01</p>
+        </div>
       </div>
     </div>
+  </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from 'axios'
   export  default {
     data () {
       return {
-        contentList: [
-          {
-            des: [
-              {
-                msg: '公告／新睿云函数服务于2018年1月3日上线重大增强功能的通知',
-                title1: '新睿云函数服务于2018年1月3日上线重大增强功能的通知',
-                desc: '2018-01-08',
-                title2: '尊敬的新睿云客户：',
-                det: ['弹性云服务器是由CPU、内存、镜像、云硬盘组成的一种可随时获取、弹性可扩展的计算服务器，同时它结合VPC、虚拟防火墙、数据多副本保存等能力，为您打造一个高效、可靠、安全的计算环境，确保您的服务持久稳定运行。弹性云服务器创建成功后，您就可以像使用自己的本地PC或物理服务器一样，在云上使用弹性云服务器。', '弹性云服务器的开通是自助完成的，您只需要指定CPU、内存、镜像规格、登录鉴权方式即可，同时也可以根据您的需求随时调整您的弹性云服务器规格。'],
-                name: '新睿云客户服务中心',
-                time: '2018年1月8日'
-              }
-            ]
-          }
-        ]
+        select:'1-1',
+        contentList: []
       }
     },
-    methods: {
-      show () {
-
-      }
+    methods:{
+        show(name){
+            this.select = name
+          console.log(this.select)
+        }
+    },
+    created() {
+      axios.get('user/getAdvertisement.do').then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.contentList = response.data.result.announcement
+        }
+      })
     }
   }
 </script>
@@ -78,59 +82,32 @@
     .content {
       display: flex;
       .right {
-        .right-box {
-          .msg {
-            width: 915px;
-            height: 30px;
-            font-size: 14px;
-            color: #999999;
-            line-height: 30px;
-            padding-left: 20px;
-            border-bottom: 1px solid #D8D8D8;
+        .title {
+          width: 880px;
+          padding: 10px;
+          font-size: 14px;
+          color: #999999;
+          border-bottom: 1px solid #999999;
+        }
+        .right-content {
+          text-align: center;
+          .sub-title {
+            font-size: 28px;
+            color: #377DFF;
           }
-          .right-box-bottom {
-            width: 868px;
-            margin: 40px auto auto 40px;
-            span {
-              font-size: 28px;
-              color: #377DFF;
-              line-height: 28px;
-              margin-left: 70px;
-            }
-            .desc {
-              font-size: 16px;
-              color: #999999;
-              line-height: 16px;
-              margin-left: 390px;
-              margin-top: 30px;
-            }
-            .title2 {
-              font-size: 16px;
-              color: #666666;
-              line-height: 16px;
-              margin-bottom: 50px;
-            }
-            .det {
-              font-size: 16px;
-              color: #666666;
-              line-height: 32px;
-            }
-            .det:first-letter{
-              margin-left: 30px;
-            }
-            .time {
-              margin-top: 30px;
-              .name {
-                font-size: 16px;
-                color: #666666;
-                line-height: 16px;
-                margin-left: 720px;
-              }
-              .name2 {
-                margin-left: 760px;
-                margin-top: 20px;
-              }
-            }
+          .sub-content{
+            font-size: 16px;
+            color: #666666;
+            letter-spacing: 0;
+            line-height:24px;
+          }
+          .time{
+            font-size: 16px;
+            color: #666666;
+            float: right;
+          }
+          p{
+            margin: 20px;
           }
         }
       }

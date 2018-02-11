@@ -6,9 +6,9 @@
     </div>
     <div id="time">
       <ul>
-        <li v-for="item in timeProgress">
-          <p style="margin-right: 50px;">{{item.time}}</p>
-          <p><a href="dynamic">{{item.msg}}</a></p>
+        <li v-for="item in adverList">
+          <p style="margin-right: 50px;">{{item.createtime}}</p>
+          <p><a href="dynamic">{{item.title}}</a></p>
         </li>
       </ul>
     </div>
@@ -16,25 +16,20 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from 'axios'
   export default {
     data () {
       return {
-        // 时间轴
-        timeProgress: [
-          {time: '2017', msg: '「11月30日」新睿云技术内测正式开启。'},
-          {time: '2017', msg: '「11月30日」弹性IP源NAT功能上线测试。'},
-          {time: '2017', msg: '「11月30日」VPC系统更新。'},
-          {time: '2017', msg: 'eSDP解决方案发布，XRCloud公有云发布，通过ISO27001认证。'},
-          {time: '2016', msg: 'YRCloud云平台解决方案发布，成为华为云管理网络ISV合作伙伴并获最佳解决方案奖。'},
-          {time: '2015', msg: '承建大连广电云平台，公司无线业务解决方案eWlan 2.0发布。'},
-          {time: '2014', msg: '承建北方广电云平台。'},
-          {time: '2013', msg: '承建辽宁电视台新媒体融合业务云平台。'},
-          {time: '2012', msg: '无线业务运营平台解决方案发布，通过ISO9001质量体系认证。'},
-          {time: '2010', msg: '承担辽宁广电三网融合试点项目。'},
-          {time: '2008', msg: '承建沈阳广电干线传输项目。'},
-          {time: '2006', msg: '允睿讯通公司成立，服务于辽宁广电。'},
-        ]
+        adverList: []
       }
+    },
+    created() {
+      axios.get('user/getAdvertisement.do').then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.adverList = response.data.result.announcement
+          console.log(response.data.result.announcement)
+        }
+      })
     }
   }
 </script>
@@ -51,8 +46,8 @@
           margin-bottom: 25px;
           p {
             &:first-of-type {
-              width: 65px;
-              height: 60px;
+              width: 80px;
+              height: 70px;
               background-color: #616368;
               border-radius: 50%;
               text-align: center;
@@ -63,8 +58,8 @@
             }
             &:last-of-type {
               width: 1068px;
-              height: 60px;
-              padding: 15px 30px;
+              height: 70px;
+              padding: 22px;
               a {
                 font-size: 14px;
                 color: #666666;
