@@ -995,7 +995,7 @@
             this.showModal.bindIP = false
             this.$http.get('network/natGatewayBoundTargetIP.do', {
               params: {
-                publicIpId: this.bindIPForm.IP,
+                publicIp: this.bindIPForm.IP,
                 natGatewayId: this.bindIPForm.natGatewayId
               }
             }).then(response => {
