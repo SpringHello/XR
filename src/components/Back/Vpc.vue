@@ -1021,7 +1021,7 @@
         this.$http.get('network/listPublicIp.do', {
           params: {
             useType: '0',
-            vpcId: row.vpcid,
+            // vpcId: row.vpcid,
             status: '1'
           }
         }).then(response => {
