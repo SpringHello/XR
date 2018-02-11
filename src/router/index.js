@@ -19,6 +19,8 @@ const hostPrice = () => import('@/components/App/Price/Host')
 const diskPrice = () => import('@/components/App/Price/Disk')
 const elasticIPPrice = () => import('@/components/App/Price/ElasticIP')
 const Aboutus = () => import('@/components/App/Aboutus')
+const Dynamic = () => import('@/components/App/Dynamic')
+const ProductBulletin = () => import('@/components/App/ProductBulletin')
 
 
 /* 产品页面路由 */
@@ -96,6 +98,8 @@ var router = new Router({
         {path: 'ecs', name: 'ecs', component: Ecs},
         {path: 'about', name: 'about', component: Aboutus},
         {path: 'document', name: 'document', component: Document},
+        {path: 'dynamic', name: 'dynamic', component: Dynamic},
+        {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
         {
           path: 'price',
           name: 'price',

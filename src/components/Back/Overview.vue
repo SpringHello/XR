@@ -76,8 +76,7 @@
               <div v-for="(item,index) in noticeData" :key="index">
                 <p class="universal-mini">{{item.title}}<span>{{item.createtime}}</span></p>
               </div>
-              <router-link to=""></router-link>
-              <a href="javascript:;">查看更多</a>
+              <a href="productBulletin">查看更多</a>
             </div>
           </div>
           <div class="ad" v-for="(ad,index) in ads">
@@ -394,9 +393,6 @@
                   color: #666666;
                   width: 125px;
                   cursor: pointer;
-                  // &:hover{
-                  //   cursor: not-allowed;
-                  // }
                 }
                 .disable:hover{
                   cursor: not-allowed;

@@ -397,7 +397,7 @@
                           this.$http.get(url, {
                             params: {
                               natGatewayId: object.row.id,
-                              publicIpId: object.row.id
+                              publicIp: object.row.sourcenatip
                             }
                           }).then(response => {
                             if (response.status == 200 && response.data.status == 1) {
@@ -425,6 +425,9 @@
                   on: {
                     click: () => {
                       // 绑定sourceNat
+                      var prottransipArray = object.row.prottransip.split(',')
+                      prottransipArray.splice(0, 1)
+                      this.bindIPForm.IPOptions = prottransipArray
                       this.bindIP(object.row)
                     }
                   }
@@ -440,7 +443,6 @@
               if (object.row.prottransip) {
                 var prottransipArray = object.row.prottransip.split(',')
                 prottransipArray.splice(0, 1)
-                this.bindIPForm.IPOptions = prottransipArray
                 for (var item of prottransipArray) {
                   if (item) {
                     renderArray.push(h('div', [h('span', {
@@ -995,7 +997,7 @@
             this.showModal.bindIP = false
             this.$http.get('network/natGatewayBoundTargetIP.do', {
               params: {
-                publicIpId: this.bindIPForm.IP,
+                publicIp: this.bindIPForm.IP,
                 natGatewayId: this.bindIPForm.natGatewayId
               }
             }).then(response => {
@@ -1019,7 +1021,7 @@
         this.$http.get('network/listPublicIp.do', {
           params: {
             useType: '0',
-            vpcId: row.vpcid,
+            // vpcId: row.vpcid,
             status: '1'
           }
         }).then(response => {
