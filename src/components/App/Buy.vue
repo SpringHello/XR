@@ -91,7 +91,7 @@
                           </div>
                           <Dropdown-menu slot="list">
                             <Dropdown-item v-for="system in item.systemList" :key="system.ostypeid"
-                                           :name="`${system.ostypename}#${system.ostypeid}#${index}`"
+                                           :name="`${system.ostypename}#${system.systemtemplateid}#${index}`"
                                            style="white-space: pre-wrap;display:block;">
                               <span>{{system.templatename}}</span>
                             </Dropdown-item>
@@ -187,7 +187,7 @@
                           </div>
                           <Dropdown-menu slot="list">
                             <Dropdown-item v-for="system in item.systemList" :key="system.ostypeid"
-                                           :name="`${system.ostypename}#${system.ostypeid}#${index}`"
+                                           :name="`${system.ostypename}#${system.systemtemplateid}#${index}`"
                                            style="white-space: pre-wrap;display:block;">
                               <span>{{system.templatename}}</span>
                             </Dropdown-item>
@@ -728,6 +728,7 @@
                   ${prod.timeForm.currentTimeValue.label}`:'实时计费'}}
                 </p>
                 <!--镜像+应用-->
+                <p>类型：{{prod.currentType}}</p>
                 <p class="item" v-if="prod.currentType=='app'"><span class="title">镜像</span>{{prod.currentApp.templatename}}
                 </p>
                 <!--公共镜像-->
@@ -1170,7 +1171,7 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.PecsInfo.appList = response.data.result
-            this.PecsInfo.currentApp = response.data.result[0]
+            this.PecsInfo.currentApp = response.data.result[0] || {}
           }
         })
         axios.get('information/listTemplates.do', {
@@ -1185,6 +1186,7 @@
             this.PecsInfo.publicList[1].systemList = response.data.result.centos
             this.PecsInfo.publicList[2].systemList = response.data.result.ubuntu
             this.PecsInfo.publicList[3].systemList = response.data.result.debian
+            this.PecsInfo.system = {}
           }
         })
       },
@@ -1242,16 +1244,18 @@
           timeValue: this.PecsInfo.timeForm.currentTimeValue.value,
           zoneId: this.PecsInfo.zone.zoneid
         }
+        var ipParams = {
+          brand: this.PecsInfo.currentSystem.bandWidth,
+          timeType: this.PecsInfo.timeForm.currentTimeValue.type,
+          timeValue: this.PecsInfo.timeForm.currentTimeValue.value,
+          zoneId: this.PecsInfo.zone.zoneid
+        }
         if (this.PecsInfo.timeForm.currentTimeType === 'current') {
           params.timeType = 'current'
+          ipParams.timeType = 'current'
         }
         var host = axios.post('device/QueryBillingPrice.do', params)
-        var ip = axios.post('device/queryIpPrice.do', {
-          brand: "1",
-          timeType: "month",
-          timeValue: "1",
-          zoneId: this.PecsInfo.zone.zoneid
-        })
+        var ip = axios.post('device/queryIpPrice.do', ipParams)
         Promise.all([host, ip]).then(response => {
           this.PecsInfo.cost = response[0].data.cost + response[1].data.cost
         })
@@ -1405,7 +1409,7 @@
             content: '购物车已满'
           })
         }
-        if (this.PecsInfo.currentType == 'public' && this.PecsInfo.system.systemName == undefined) {
+        if (this.PecsInfo.currentType == 'app' && this.PecsInfo.currentApp.templatename == undefined) {
           this.$message.info({
             content: '请选择一个镜像'
           })
@@ -1425,6 +1429,7 @@
           customCost: this.totalCost,
           count: 1
         }, obj)
+        console.log(prod)
         this.cart.push(prod)
         this.store()
       },
@@ -1518,6 +1523,11 @@
               params.rootDiskType = prod.vmConfig.diskType
               params.networkId = prod.network
             }
+            if (prod.currentType === 'app') {
+              params.templateId = prod.currentApp.templateid
+            } else {
+              params.templateId = prod.system.systemId
+            }
             PromiseList.push(axios.get('information/deployVirtualMachine.do', {params}))
           } else if (prod.type == 'Pdisk') {
             var diskSize = ''
@@ -1544,9 +1554,9 @@
               count: prod.count,
               isAutorenew: prod.autoRenewal ? '1' : '0',
               brandWith: prod.bandWidth,
-              vpcId: vpc
+              vpcId: prod.vpc
             }
-            PromiseList.push(axios.get('information/deployVirtualMachine.do', {params}))
+            PromiseList.push(axios.get('network/createPublicIp.do', {params}))
           }
         }
         sessionStorage.removeItem('cart')
