@@ -55,53 +55,78 @@
                 <p style="font-size: 14px;color: #666666;letter-spacing: 0.83px;margin-bottom:20px;">请上传实名认证图片
                   上传文件支持jpg/png/gif/pdf，单个文件最大不超过4MB。</p>
                 <div class="IDCard">
-                  <FormItem label="身份证人像面">
-                    <Upload
-                      v-if="notAuth.cardAuthForm.IDCardFront==''"
-                      multiple
-                      type="drag"
-                      :show-upload-list="false"
-                      :with-credentials="true"
-                      action="//localhost:8082/ruicloud/file/upFile.do"
-                      :on-success="IDCardFront">
-                      <div style="padding: 20px 0">
-                        <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                        <p>Click or drag files here to upload</p>
+                  <FormItem label="身份证人像面" style="margin-left:0px;">
+                    <div style="display: flex;padding:20px;background-color: #f7f7f7">
+                      <div style="width:130px;">
+                        <Upload
+                          multiple
+                          type="drag"
+                          :show-upload-list="false"
+                          :with-credentials="true"
+                          action="file/upFile.do"
+                          :on-success="IDCardFront">
+                          <div v-if="notAuth.cardAuthForm.IDCardFront==''"
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                            暂无图片
+                          </div>
+                          <img v-else :src="notAuth.cardAuthForm.IDCardFront">
+                          <Button type="primary">上传</Button>
+                        </Upload>
                       </div>
-                    </Upload>
-                    <img v-else :src="notAuth.cardAuthForm.IDCardFront">
+                      <div style="width:130px;margin-left:20px;">
+                        <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
+                        <p style="line-height: 32px;text-align: center">示例图</p>
+                      </div>
+                    </div>
                   </FormItem>
                   <FormItem label="身份证国徽面">
-                    <Upload
-                      v-if="notAuth.cardAuthForm.IDCardBack==''"
-                      multiple
-                      type="drag"
-                      :show-upload-list="false"
-                      :with-credentials="true"
-                      action="//localhost:8082/ruicloud/file/upFile.do"
-                      :on-success="IDCardBack">
-                      <div style="padding: 20px 0">
-                        <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                        <p>Click or drag files here to upload</p>
+                    <div style="display: flex;padding:20px;background-color: #f7f7f7">
+                      <div style="width:130px;">
+                        <Upload
+                          multiple
+                          type="drag"
+                          :show-upload-list="false"
+                          :with-credentials="true"
+                          action="file/upFile.do"
+                          :on-success="IDCardBack">
+                          <div v-if="notAuth.cardAuthForm.IDCardBack==''"
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                            暂无图片
+                          </div>
+                          <img v-else :src="notAuth.cardAuthForm.IDCardBack">
+                          <Button type="primary">上传</Button>
+                        </Upload>
+
                       </div>
-                    </Upload>
-                    <img v-else :src="notAuth.cardAuthForm.IDCardBack">
+                      <div style="width:130px;margin-left:20px;">
+                        <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
+                        <p style="line-height: 32px;text-align: center">示例图</p>
+                      </div>
+                    </div>
                   </FormItem>
                   <FormItem label="手持身份证人像面照片">
-                    <Upload
-                      v-if="notAuth.cardAuthForm.IDCardPerson==''"
-                      multiple
-                      type="drag"
-                      :show-upload-list="false"
-                      :with-credentials="true"
-                      action="//localhost:8082/ruicloud/file/upFile.do"
-                      :on-success="IDCardPerson">
-                      <div style="padding: 20px 0">
-                        <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                        <p>Click or drag files here to upload</p>
+                    <div style="display: flex;padding:20px;background-color: #f7f7f7">
+                      <div style="width:130px;">
+                        <Upload
+                          multiple
+                          type="drag"
+                          :show-upload-list="false"
+                          :with-credentials="true"
+                          action="file/upFile.do"
+                          :on-success="IDCardPerson">
+                          <div v-if="notAuth.cardAuthForm.IDCardPerson==''"
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                            暂无图片
+                          </div>
+                          <img v-else :src="notAuth.cardAuthForm.IDCardPerson">
+                          <Button type="primary">上传</Button>
+                        </Upload>
                       </div>
-                    </Upload>
-                    <img v-else :src="notAuth.cardAuthForm.IDCardPerson">
+                      <div style="width:130px;margin-left:20px;">
+                        <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
+                        <p style="line-height: 32px;text-align: center">示例图</p>
+                      </div>
+                    </div>
                   </FormItem>
                 </div>
                 <FormItem style="text-align: right">
@@ -150,7 +175,7 @@
                 <FormItem>
                   <div style="float:right">
                     <Button style="margin-right:10px">重置表单</Button>
-                    <Button type="primary" @click="auth">确认提交</Button>
+                    <Button type="primary" @click="quicklyAuth">确认提交</Button>
                   </div>
                 </FormItem>
               </Form>
@@ -386,71 +411,103 @@
               <!--三证合一图片上传-->
               <div class="IDCard" v-show="notAuth.companyAuthForm.certificateType==1">
                 <FormItem label="三证合一">
-                  <Upload
-                    v-if="notAuth.companyAuthForm.combine==''"
-                    multiple
-                    type="drag"
-                    :show-upload-list="false"
-                    :with-credentials="true"
-                    action="//localhost:8082/ruicloud/file/upFile.do"
-                    :on-success="combine">
-                    <div style="padding: 20px 0">
-                      <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                      <p>Click or drag files here to upload</p>
+                  <div style="display: flex;padding:20px;background-color: #f7f7f7">
+                    <div style="width:130px;">
+                      <Upload
+                        multiple
+                        type="drag"
+                        :show-upload-list="false"
+                        :with-credentials="true"
+                        action="file/upFile.do"
+                        :on-success="combine">
+                        <div v-if="notAuth.companyAuthForm.combine==''"
+                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                          暂无图片
+                        </div>
+                        <img v-else :src="notAuth.companyAuthForm.combine">
+                        <Button type="primary">上传</Button>
+                      </Upload>
                     </div>
-                  </Upload>
-                  <img v-else :src="notAuth.companyAuthForm.combine">
+                    <div style="width:130px;margin-left:20px;">
+                      <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
+                      <p style="line-height: 32px;text-align: center">示例图</p>
+                    </div>
+                  </div>
                 </FormItem>
               </div>
               <!--非三证合一图片上传-->
               <div class="IDCard" v-show="notAuth.companyAuthForm.certificateType==2">
                 <FormItem label="营业执照">
-                  <Upload
-                    v-if="notAuth.companyAuthForm.license==''"
-                    multiple
-                    type="drag"
-                    :show-upload-list="false"
-                    :with-credentials="true"
-                    action="//localhost:8082/ruicloud/file/upFile.do"
-                    :on-success="license">
-                    <div style="padding: 20px 0">
-                      <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                      <p>Click or drag files here to upload</p>
+                  <div style="display: flex;padding:20px;background-color: #f7f7f7">
+                    <div style="width:130px;">
+                      <Upload
+                        multiple
+                        type="drag"
+                        :show-upload-list="false"
+                        :with-credentials="true"
+                        action="file/upFile.do"
+                        :on-success="license">
+                        <div v-if="notAuth.companyAuthForm.license==''"
+                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                          暂无图片
+                        </div>
+                        <img v-else :src="notAuth.companyAuthForm.license">
+                        <Button type="primary">上传</Button>
+                      </Upload>
                     </div>
-                  </Upload>
-                  <img v-else :src="notAuth.companyAuthForm.license">
+                    <div style="width:130px;margin-left:20px;">
+                      <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
+                      <p style="line-height: 32px;text-align: center">示例图</p>
+                    </div>
+                  </div>
                 </FormItem>
                 <FormItem label="税务登记证">
-                  <Upload
-                    v-if="notAuth.companyAuthForm.tax==''"
-                    multiple
-                    type="drag"
-                    :show-upload-list="false"
-                    :with-credentials="true"
-                    action="//localhost:8082/ruicloud/file/upFile.do"
-                    :on-success="tax">
-                    <div style="padding: 20px 0">
-                      <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                      <p>Click or drag files here to upload</p>
+                  <div style="display: flex;padding:20px;background-color: #f7f7f7">
+                    <div style="width:130px;">
+                      <Upload
+                        multiple
+                        type="drag"
+                        :show-upload-list="false"
+                        :with-credentials="true"
+                        action="file/upFile.do"
+                        :on-success="tax">
+                        <div v-if="notAuth.companyAuthForm.tax==''"
+                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                          暂无图片
+                        </div>
+                        <img v-else :src="notAuth.companyAuthForm.tax">
+                        <Button type="primary">上传</Button>
+                      </Upload>
                     </div>
-                  </Upload>
-                  <img v-else :src="notAuth.companyAuthForm.tax">
+                    <div style="width:130px;margin-left:20px;">
+                      <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
+                      <p style="line-height: 32px;text-align: center">示例图</p>
+                    </div>
+                  </div>
                 </FormItem>
                 <FormItem label="组织机构代码证">
-                  <Upload
-                    v-if="notAuth.companyAuthForm.organization==''"
-                    multiple
-                    type="drag"
-                    :show-upload-list="false"
-                    :with-credentials="true"
-                    action="//localhost:8082/ruicloud/file/upFile.do"
-                    :on-success="organization">
-                    <div style="padding: 20px 0">
-                      <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                      <p>Click or drag files here to upload</p>
+                  <div style="display: flex;padding:20px;background-color: #f7f7f7">
+                    <div style="width:130px;">
+                      <Upload
+                        multiple
+                        type="drag"
+                        :show-upload-list="false"
+                        :with-credentials="true"
+                        action="file/upFile.do"
+                        :on-success="organization">
+                        <div v-if="notAuth.companyAuthForm.organization==''"
+                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                          暂无图片
+                        </div>
+                        <img v-else :src="notAuth.companyAuthForm.organization">
+                        <Button type="primary">上传</Button>
+                      </Upload>
                     </div>
-                  </Upload>
-                  <img v-else :src="notAuth.companyAuthForm.organization">
+                    <div style="width:130px;margin-left:20px;">
+                      <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
+                      <p style="line-height: 32px;text-align: center">示例图</p>
+                    </div>
+                  </div>
                 </FormItem>
               </div>
               <FormItem>
@@ -1161,6 +1218,7 @@
         })
       },
       // 个人认证
+      // 身份证照片认证
       personalAttest(){
         this.$refs.cardAuth.validate(validate => {
           if (validate) {
@@ -1176,11 +1234,43 @@
               companyCardURL: this.notAuth.cardAuthForm.IDCardPerson,
               type: '1'
             }).then(response => {
-
+              if (response.status == 200 && response.data.status == 1) {
+                // 获取用户信息
+                axios.get('user/GetUserInfo.do').then(response => {
+                  this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+                })
+              }
             })
           }
         })
 
+      },
+      // 快速认证
+      quicklyAuth(){
+        var quicklyAuth = this.$refs.quicklyAuth.validate(validate => {
+          return Promise.resolve(validate)
+        })
+        var sendCode = this.$refs.sendCode.validate(validate => {
+          return Promise.resolve(validate)
+        })
+        Promise.all([quicklyAuth, sendCode]).then(results => {
+          if (results[0] === true && results[1] === true) {
+            axios.post('user/personalAttest.do', {
+              cardID: this.notAuth.quicklyAuthForm.IDCard,
+              name: this.notAuth.quicklyAuthForm.name,
+              phone: this.notAuth.quicklyAuthForm.phone,
+              phoneCode: this.notAuth.quicklyAuthForm.validateCode,
+              type: '0'
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                // 获取用户信息
+                axios.get('user/GetUserInfo.do').then(response => {
+                  this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+                })
+              }
+            })
+          }
+        })
       },
       // 企业认证
       enterpriseAttest(){
@@ -1217,7 +1307,12 @@
               params.taxRegister = this.notAuth.companyAuthForm.tax
             }
             axios.post('user/enterpriseAttest.do', params).then(response => {
-              console.log(response)
+              if (response.status == 200 && response.data.status == 1) {
+                // 获取用户信息
+                axios.get('user/GetUserInfo.do').then(response => {
+                  this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+                })
+              }
             })
           }
         })
@@ -1403,32 +1498,6 @@
         if (response.status == 1) {
           this.notAuth.companyAuthForm.organization = response.result
         }
-      },
-      auth(){
-        var quicklyAuth = this.$refs.quicklyAuth.validate(validate => {
-          return Promise.resolve(validate)
-        })
-        var sendCode = this.$refs.sendCode.validate(validate => {
-          return Promise.resolve(validate)
-        })
-        Promise.all([quicklyAuth, sendCode]).then(results => {
-          if (results[0] === true && results[1] === true) {
-            axios.post('user/personalAttest.do', {
-              cardID: this.notAuth.quicklyAuthForm.IDCard,
-              name: this.notAuth.quicklyAuthForm.name,
-              phone: this.notAuth.quicklyAuthForm.phone,
-              phoneCode: this.notAuth.quicklyAuthForm.validateCode,
-              type: '0'
-            }).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                // 获取用户信息
-                axios.get('user/GetUserInfo.do').then(response => {
-                  this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
-                })
-              }
-            })
-          }
-        })
       }
     },
     computed: mapState({
@@ -1530,8 +1599,10 @@
             float: unset;
           }
           img {
-            width: 300px;
-            height: 161px;
+            width: 130px;
+            height: 74px;
+            display: block;
+            margin-bottom: 20px;
           }
         }
       }
