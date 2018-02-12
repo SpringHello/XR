@@ -340,9 +340,9 @@
   import regExp from '@/util/regExp'
   var messageMap = {
     loginname: {
-      placeholder: '登录 邮箱/手机号',
-      errorMessage: '请输入正确的邮箱/手机号',
-      warnMessage: '该 邮箱/手机号 已注册'
+      placeholder: '登录手机号',
+      errorMessage: '请输入正确的手机号',
+      warnMessage: '该手机号 已注册'
     },
     password: {
       placeholder: '请输入至少8位包含字母与数字的密码',
@@ -367,7 +367,7 @@
           vailCode: '',
           code: '',
           showPassword: false,
-          loginnamePlaceholder: '登录邮箱/手机号',
+          loginnamePlaceholder: '登录手机号',
           passwordPlaceholder: '请输入至少8位包含字母与数字的密码',
           vailCodePlaceholder: '请输入您收到的验证码',
           codePlaceholder: '请输入验证码'
@@ -408,7 +408,7 @@
           return
         }
 
-        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
+        var isLegal = field == 'loginname' ? regExp.phoneVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
         if (!isLegal) {
           this.vailForm.loginname.message.unshift(messageMap[field].errorMessage);
           this.vailForm.loginname.info = ''
@@ -461,7 +461,7 @@
           this.vailForm.loginname.message = this.vailForm.loginname.message.filter(item => {
             return item != messageMap.loginname.warnMessage
           })
-          if (regExp.emailVail(this.form[field])) {
+          if (regExp.phoneVail(this.form[field])) {
             this.vailForm.loginname.message = this.vailForm.loginname.message.filter(item => {
               return item != messageMap.loginname.errorMessage
             })
@@ -495,12 +495,12 @@
         })
       },
       sendCode(){
-        if (this.form.code.length != 4) {
+        if (this.form.code.length != 4 && this.form.code.length != 0) {
           this.$Message.info('请输入正确的验证码')
           return
         }
-        if (!regExp.emailVail(this.form.loginname)) {
-          this.$Message.info('请输入正确的邮箱/手机号')
+        if (!regExp.phoneVail(this.form.loginname)) {
+          this.$Message.info('请输入正确的手机号')
           return
         }
         if (regExp.phoneVail(this.form.loginname)) {
