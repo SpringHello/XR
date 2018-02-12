@@ -11,7 +11,7 @@
           <Submenu name="1">
             <template slot="title">
               <img src="../../assets/img/product/dynamic-2.png" alt="" style="margin-right:8px;">
-              <b>产品公告</b>
+              <span style="font-size: 18px;color:#333333;font-family: MicrosoftYaHei;">产品公告</span>
             </template>
             <MenuItem name="1-1">VPC系统更新</MenuItem>
             <MenuItem name="1-2">弹性IP源NAT功能上线</MenuItem>
@@ -126,7 +126,7 @@
         ul {
           li {
             font-size: 14px;
-            color: #333333;
+           // color: #333333;
           }
         }
 
