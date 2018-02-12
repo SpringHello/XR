@@ -425,9 +425,11 @@
                   on: {
                     click: () => {
                       // 绑定sourceNat
-                      var prottransipArray = object.row.prottransip.split(',')
-                      prottransipArray.splice(0, 1)
-                      this.bindIPForm.IPOptions = prottransipArray
+                      if (object.row.prottransip) {
+                        var prottransipArray = object.row.prottransip.split(',')
+                        prottransipArray.splice(0, 1)
+                        this.bindIPForm.IPOptions = prottransipArray
+                      }
                       this.bindIP(object.row)
                     }
                   }
