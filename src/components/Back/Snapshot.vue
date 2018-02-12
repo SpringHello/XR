@@ -6,7 +6,7 @@
         <div id="header">
           <img src="../../assets/img/host/hostSnaps-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
           <span id="title">云主机快照</span>
-          <button id="refresh_button">刷新</button>
+          <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
         <Alert>
           云主机快照

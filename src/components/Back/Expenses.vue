@@ -3,11 +3,11 @@
     <div class="background">
       <div class="wrapper">
         <Spin fix v-show="payLoading">
-          <Icon type="load-c" size=80       class="demo-spin-icon-load"></Icon>
+          <Icon type="load-c" size=80 class="demo-spin-icon-load"></Icon>
           <span style="display: block;font-size:14px;color:black;font-family: Microsoft Yahei,微软雅黑;">正在支付，请稍后...</span>
         </Spin>
         <Spin fix v-show="">
-          <Icon type="load-c" size=80       class="demo-spin-icon-load"></Icon>
+          <Icon type="load-c" size=80 class="demo-spin-icon-load"></Icon>
           <span style="display: block;font-size:14px;color:black;font-family: Microsoft Yahei,微软雅黑;">正在查询，请稍后...</span>
         </Spin>
         <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 费用中心</span>
@@ -585,11 +585,11 @@
             width: 355,
             render: (h, params) => {
               return h('Tooltip', {
-                props: {
-                  content: params.row.descs,
-                  placement: 'top'
-                }
-              },
+                  props: {
+                    content: params.row.descs,
+                    placement: 'top'
+                  }
+                },
                 params.row.descs
               )
             }
@@ -666,17 +666,54 @@
           },
           {
             title: '交易明细',
-            align: 'center',
             width: 250,
+            align: 'left',
             render: (h, params) => {
-              return h('Tooltip', {
-                props: {
-                  content: params.row.display,
-                  placement: 'top'
-                }
-              },
-                params.row.display
-              )
+              var data = JSON.parse(params.row.display)
+              console.log(data.订单类型)
+              var type = ''
+              var arr = []
+              switch (data.订单类型) {
+                case 'host':
+                  type = '云主机'
+                  break
+                case 'vpc':
+                  type = 'vpc'
+                  break
+                case 'disk':
+                  type = '云磁盘'
+                  break
+                case 'publicIp':
+                  type = '网络'
+                  break
+                case 'continue':
+                  type = '续费'
+                  break
+                case 'upconfig':
+                  type = '升级'
+                  break
+                case 'nat' :
+                  type = '网络'
+                  break
+              }
+              for (var index in data.资源) {
+                for (var key in data.资源[index])
+                  arr.push(h('p', `${key}:${data.资源[index][key]}`))
+              }
+              return h('div', [
+                h('Collapse', {
+                  props: {
+                    accordion: true
+                  },
+                }, [h('Panel', {
+                    props: {
+                      name: 'content'
+                    },
+                  },
+                  [type, h('div', {
+                    slot: 'content'
+                  }, arr)])]),
+              ])
             }
           },
           {
@@ -1065,15 +1102,6 @@
       searchOrderByType() {
         this.$http.get('user/searchOrderByType.do?pageSize=' + this.pageSize + '&page=' + this.order_currentPage + '&type=' + this.order_type + '&startTime=' + this.order_dateRange[0] + '&endTime=' + this.order_dateRange[1]).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            response.data.result.data.forEach(item => {
-              item.resources = ''
-              for (var index in JSON.parse(item.display)['资源']) {
-                for (var key in JSON.parse(item.display)['资源'][index]) {
-                  item.resources += `${key}:${JSON.parse(item.display)['资源'][index][key]}`
-                }
-              }
-              item.display = JSON.parse(item.display)['title'] + item.resources + JSON.parse(item.display)['类型'] + JSON.parse(item.display)['数量']
-            })
             this.orderData = response.data.result.data
             this.ordertotal = response.data.result.totle
           }
@@ -1427,22 +1455,22 @@
               color: rgba(17, 17, 17, 0.65);
               display: block;
             }
-            .expenses_s2_wrap{
-               margin-top: 20px;
-               padding-right:30px; 
-               overflow: hidden;
+            .expenses_s2_wrap {
+              margin-top: 20px;
+              padding-right: 30px;
+              overflow: hidden;
               .expenses_s2 {
                 font-family: Microsoft Yahei, 微软雅黑;
                 font-size: 36px;
                 color: rgba(17, 17, 17, 0.65);
                 float: left;
               }
-               button{
-                  float: right;
-                  vertical-align: middle;
-                }
+              button {
+                float: right;
+                vertical-align: middle;
+              }
             }
-            
+
           }
           .billmonth {
             width: 33.5%;

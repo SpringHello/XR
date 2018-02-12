@@ -6,7 +6,7 @@
         <div id="header">
           <img src="../../assets/img/host/cloudhost-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
           <span id="title">云主机</span>
-          <button id="refresh_button">刷新</button>
+          <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
         <Alert>
           为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。
@@ -757,7 +757,8 @@
             zoneid: item.zoneid,
             vmid: item.computerid,
             instancename: item.instancename,
-            connecturl: item.connecturl
+            connecturl: item.connecturl,
+            id:item.id
           }
         })
         // sessionStorage.setItem('oneHostinfo', JSON.stringify(item))
@@ -1107,8 +1108,8 @@
         if (time == '') {
           this.cost = '--'
         } else {
-          var url = `information/getYjPrice.do?duration=${this.renewalTime}&type=${this.renewalType}&hostIdArr=${this.currentHost[0].id}`
-          axios.get(url)
+          var url = `information/getYjPrice.do?timeValue=${this.renewalTime}&timeType=${this.renewalType}&hostIdArr=${this.currentHost[0].id}`
+          this.$http.get(url)
             .then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.cost = response.data.result
