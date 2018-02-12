@@ -30,7 +30,7 @@ import message from './myView/message'
 Vue.prototype.$message = message
 Vue.config.productionTip = false
 // axios.defaults.baseURL = '/ruicloud'
-axios.defaults.baseURL = 'http://localhost:8082/ruicloud'
+axios.defaults.baseURL = 'http://192.168.3.244:8082/ruicloud'
 axios.defaults.withCredentials = true
 /* axios.interceptors.request.use(function (config) {
  config.headers.Cookie = 'JSESSIONID=22203C271B80F4A41C35D23B09B6BC83'
@@ -66,7 +66,7 @@ Vue.use(carouselItem)
 Vue.use(slider)
 Vue.component('chart', ECharts)
 
-// 日期圆形对象拓展
+// 日期原型对象拓展
 Date.prototype.format = function (fmt) {
   var o = {
     'y+': this.getFullYear(),
