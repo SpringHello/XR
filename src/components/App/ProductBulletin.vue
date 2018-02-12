@@ -8,7 +8,7 @@
       <ul>
         <li v-for="item in adverList">
           <p style="margin-right: 50px;">{{item.createtime}}</p>
-          <p><a href="dynamic">{{item.title}}</a></p>
+          <p><a href="/ruicloud/dynamic">{{item.title}}</a></p>
         </li>
       </ul>
     </div>

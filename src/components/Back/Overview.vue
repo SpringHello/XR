@@ -55,7 +55,7 @@
                          :style="{width:`${100-(subItem.used/subItem.total*100)}%`}"></div>
                   </div>
                 </Tooltip>
-              </div>    
+              </div>
             </div>
           </div>
         </div>
@@ -76,7 +76,7 @@
               <div v-for="(item,index) in noticeData" :key="index">
                 <p class="universal-mini">{{item.title}}<span>{{item.createtime}}</span></p>
               </div>
-              <a href="productBulletin">查看更多</a>
+              <a href="/ruicloud/productBulletin">查看更多</a>
             </div>
           </div>
           <div class="ad" v-for="(ad,index) in ads">
