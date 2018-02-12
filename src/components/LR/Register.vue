@@ -495,7 +495,7 @@
         })
       },
       sendCode(){
-        if (this.form.code.length != 4) {
+        if (this.form.code.length != 4 && this.form.code.length != 0) {
           this.$Message.info('请输入正确的验证码')
           return
         }
