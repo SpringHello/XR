@@ -15,12 +15,12 @@
             <InputNumber v-model="input" :min="10" :step="10" placeholder="请输入金额"
                          style="width: 75px;height:32px;margin-left: 40px;font-size: 14px;"></InputNumber>
             <span class="s4">元</span>
-            <Button type="ghost" style="margin-left: 40px;font-size: 14px;height: 32px;width: 75px;" @click="c1">200元
+            <Button type="ghost" style="margin-left: 40px;font-size: 14px;height: 32px;width: 75px;" @click="input = 200">200元
             </Button>
-            <Button type="ghost" class="but" @click="c2">500元</Button>
-            <Button type="ghost" class="but" @click="c3">1000元</Button>
-            <Button type="ghost" class="but" @click="c4">2000元</Button>
-            <Button type="ghost" class="but" @click="c5">5000元</Button>
+            <Button type="ghost" class="but" @click="input = 500">500元</Button>
+            <Button type="ghost" class="but" @click="input = 1000">1000元</Button>
+            <Button type="ghost" class="but" @click="input = 2000">2000元</Button>
+            <Button type="ghost" class="but" @click="input = 5000">5000元</Button>
           </div>
           <div class="pay">
             <Tabs type="card" :animated="false">
@@ -58,7 +58,7 @@
         </div>
       </div>
       <Modal
-        scrollable=false
+        :scrollable=false
         v-model="showModal.rechargeForm"
         title="确认充值">
         <div>
@@ -88,7 +88,7 @@
     created(){
       this.$http.post('device/DescribeWalletsBalance.do').then(response => {
         this.balance = response.data.data.remainder
-        if (this.balance > 500) {
+        if (this.balance < 500) {
           this.$Message.warning({
             content: '提示：您的余额不多，请及时充值，以免资源被冻结！',
             duration: 5,
@@ -122,24 +122,6 @@
             })
             break
         }
-      },
-      c1(){
-        this.input = 200
-      },
-      c2(){
-        this.input = 500
-      },
-      c3(){
-        this.input = 1000
-      },
-      c4(){
-        this.input = 2000
-      },
-      c5(){
-        this.input = 5000
-      },
-      c6(){
-        this.input = 10000
       },
       customerService(){
         window.open('http://192.168.3.144/im/text/4028838b5ac815e3015ac81645f90000.html')
