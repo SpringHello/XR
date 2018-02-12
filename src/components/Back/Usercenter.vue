@@ -6,7 +6,7 @@
         <p class="title">用户中心</p>
         <Tabs type="card" :animated="false" v-model="currentTab">
           <!--未认证-->
-          <TabPane label="用户信息" v-if="authInfo==undefined">
+          <TabPane label="用户信息" v-if="userInfo.personalauth==1&&userInfo.companyauth==1">
             <p class="info-title">个人基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
@@ -312,7 +312,7 @@
               <img src="../../assets/img/usercenter/client.png">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
-                  <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{authInfo.name}}</span>
+                  <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{userInfo.name}}</span>
                   <div
                     style="margin-left:20px;display: inline-block;background-color: #2A99F2;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
                     企业认证
@@ -322,7 +322,7 @@
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle;margin-right:20px;">企业用户</span>
                   <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
-                  <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
+                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
             </div>
@@ -585,8 +585,16 @@
         <div><span
           style="display: block;margin: 15px 0px;font-size: 16px;color: rgba(17,17,17,0.65);width:80px;display: inline-block">邮箱</span><span>{{userInfo.loginname}}</span>
         </div>
+        <div style="margin-bottom: 15px">
+          <span
+            style="font-size: 16px;color: rgba(17,17,17,0.65);vertical-align:sub;width:80px;display: inline-block;margin-right:20px;">随机验证码</span>
+          <Input type="text" autocomplete="off" v-model="code" placeholder="请输入随机验证码"
+                 style="width: 150px;margin-right: 30px"></Input>
+          <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
+               style="height:32px;vertical-align: middle">
+        </div>
         <span
-          style="font-size: 16px;color: rgba(17,17,17,0.65);vertical-align:sub;width:80px;display: inline-block">邮箱验证码</span><Input
+          style="font-size: 16px;color: rgba(17,17,17,0.65);vertical-align:sub;width:80px;display: inline-block;margin-right:23px;">邮箱验证码</span><Input
         v-model="newPhoneForm.oldPhoneCode" placeholder="请输入..." style="width: 150px;margin-right:30px;"></Input>
         <Button type="primary" :class="{codeDisabled:emailVerCodeText!='获取验证码'}" :disabled="emailVerCodeText!='获取验证码'"
                 style="height:31px;width:92px" @click="getVerCode('email')">{{emailVerCodeText}}
@@ -698,6 +706,7 @@
       return {
         // 当前选中的tab页
         currentTab: '',
+        emailVerCodeText: '获取验证码',
         showModal: {
           selectAuthType: $store.state.authInfo === undefined,
           addLinkman: false,
@@ -1421,7 +1430,10 @@
               type: '0'
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-
+                // 获取用户信息
+                axios.get('user/GetUserInfo.do').then(response => {
+                  this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+                })
               }
             })
           }
