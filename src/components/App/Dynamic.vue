@@ -94,20 +94,24 @@
           .sub-title {
             font-size: 28px;
             color: #377DFF;
+            letter-spacing: 0;
+            line-height: 28px;
           }
           .sub-content{
             font-size: 16px;
             color: #666666;
             letter-spacing: 0;
-            line-height:24px;
+            line-height: 32px;
           }
           .time{
             font-size: 16px;
             color: #666666;
+            letter-spacing: 0;
+            line-height: 16px;
             float: right;
           }
           p{
-            margin: 20px;
+            margin-top: 20px;
           }
         }
       }
