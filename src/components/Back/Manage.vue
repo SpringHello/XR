@@ -217,7 +217,34 @@
 
               </div>
             </Tab-pane>
-            <Tab-pane label="网卡设置">
+            <Tab-pane label="操作日志">
+              <div class="body">
+                <label style="border-bottom:none">操作日志</label>
+                <div>
+                  <RadioGroup v-model="log.type" type="button"  @on-change="logToggle('log')">
+                    <Radio label="近一天"></Radio>
+                    <Radio label="近一周"></Radio>
+                    <Radio label="近一月"></Radio>
+                </RadioGroup>
+                  <div style="float:right">
+                    <span
+                      style="font-size: 16px;vertical-align: middle;color: rgba(0,0,0,0.65);">开始结束时间&nbsp;&nbsp;</span>
+                    <Date-picker format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="选择日期" style="width: 200px" @on-change="dataChange"></Date-picker>
+                    <button @click="search">查询</button>
+                  </div>
+                </div>
+
+                <div class="log" style="margin-top: 20px">
+                  <Table highlight-row :columns="columnslog" :data="tableDatalog" ></Table>
+                  <div style="margin: 10px;overflow: hidden">
+                    <div style="float: right;">
+                      <Page :total="total" :current="1" @on-change="currentChange"></Page>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Tab-pane>
+            <!-- <Tab-pane label="网卡设置">
               <div class="body">
                 <label style="border-bottom:none">网卡设置</label>
                 <div>
@@ -236,7 +263,7 @@
 
                 <Table :columns="columns" :data="tableData"></Table>
               </div>
-            </Tab-pane>
+            </Tab-pane> -->
           </Tabs>
         </div>
       </div>
@@ -476,6 +503,44 @@
           }
         ],
         snapshotData: [],
+        // 操作日志
+        log:{
+          type: '近一天'
+        },
+        logTime: '',
+        target: 'host',
+        currentPage:1,
+        pageSize:10,
+        total:0,
+        columnslog: [
+          {
+            title: '操作对象',
+            key: 'operatetarget',
+            align: 'center',
+            width: 100,
+          },
+          {
+            title: '操作时间',
+            key: 'operatortime',
+            align: 'center',
+            width: 200,
+          },
+          {
+            title:'操作结果',
+            key:'operatestatus',
+            align: 'center',
+            width: 100,
+            render: (h, params) => {
+              return h('span', params.row.operatestatus==1?'成功':'失败')
+            }
+          }, {
+            title: '行为描述',
+            key: 'operatedes',
+            align: 'center',
+            ellipsis:true,
+          }
+        ],
+        tableDatalog:[],
         cpu: {
           type: '今天',
           showType: '折线'
@@ -724,8 +789,10 @@
       this.diskTime = this.getCurrentDate()
       this.memoryTime = this.getCurrentDate()
       this.IPTime = this.getCurrentDate()
+      this.logTime = this.getCurrentDate()
       this.getsnapsList()
       // this.inter()
+      this.search()
     },
     methods: {
       goback() {
@@ -752,6 +819,34 @@
                     }
             })
           }, 1000 * 10)
+      },
+      currentChange(currentPage){
+        this.currentPage = currentPage;
+        this.search();
+      },
+      dataChange(time){
+        this.logTime = time;
+      },
+      search(){
+        // log/queryLog.do    操作日志   pageSize(1页显示多少条),currentPage（第几页）,target（主机则传 host）  , queryTime（查询时间  格式： 开始时间 , 结束时间  非必传）
+        this.$http.get('log/queryLog.do?pageSize='+this.pageSize+'&currentPage='+this.currentPage+'&target='+this.target+'&queryTime='+this.logTime+'&targetId='+this.$route.query.id).then(response => {
+          this.total = response.data.total;
+          this.tableDatalog = response.data.tableData;
+        })
+      },
+      logToggle(type) {
+          switch (this[type].type) {
+            case '近一天':
+              this.logTime = this.getCurrentDate()
+              break
+            case '近一周':
+              this.logTime = this.getNearlySevenDays() + ',' + this.getCurrentDate()
+              break
+            case '近一月':
+              this.logTime = this.getNearlyThirtyDays() + ',' + this.getCurrentDate()
+              break
+          }
+          this.search()
       },
       // 回滚确认弹窗
       rollbackSubmit() {
