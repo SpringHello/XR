@@ -42,10 +42,10 @@
                 </div>
               </div>
               <div class="item-wrapper" v-if="PecsInfo.timeForm.currentTimeType=='annual'">
-                <div v-for="item in PecsInfo.timeValue" :key="item.value" class="zoneItem"
+                <div v-for="item in PecsInfo.timeValue" :key="item.value" class="timeType"
                      :class="{zoneSelect:PecsInfo.timeForm.currentTimeValue.label==item.label}"
                      @click="PecsInfo.timeForm.currentTimeValue=item"
-                     style="margin:0px;border-right:none;width:55px">
+                     style="margin:0px;width:55px">
                   {{item.label}}
                 </div>
               </div>
@@ -249,7 +249,7 @@
                       <p class="item-title" style="margin-top:0px;">价格</p>
                     </div>
                     <div>
-                      <p style="font-size: 16px;color: #F85E1D;">{{PecsInfo.vmConfig.cost}}元</p>
+                      <p style="font-size: 16px;color: #F85E1D;">{{PecsInfo.vmConfig.cost.toFixed(2)}}元</p>
                     </div>
                   </div>
                 </div>
@@ -326,7 +326,7 @@
                       <p class="item-title" style="margin-top:0px;">价格</p>
                     </div>
                     <div>
-                      <p style="font-size: 16px;color: #F85E1D;">{{PecsInfo.IPConfig.cost}}元</p>
+                      <p style="font-size: 16px;color: #F85E1D;">{{PecsInfo.IPConfig.cost.toFixed(2)}}元</p>
                     </div>
                   </div>
                 </div>
@@ -348,6 +348,8 @@
                              @click="disk.type=item.value">{{item.label}}
                         </div>
                       </div>
+                      <img src="../../assets/img/buy/across.png" @click="removeHostDisk(index)"
+                           style="cursor: pointer;height:11px;">
                     </div>
                   </div>
                   <div class="item-wrapper">
@@ -387,7 +389,7 @@
                       <p class="item-title" style="margin-top:0px;">价格</p>
                     </div>
                     <div>
-                      <p style="font-size: 16px;color: #F85E1D;">{{PecsInfo.dataDiskCost}}元</p>
+                      <p style="font-size: 16px;color: #F85E1D;">{{PecsInfo.dataDiskCost.toFixed(2)}}元</p>
                     </div>
                   </div>
                 </div>
@@ -462,10 +464,10 @@
             <!--费用、以及加入预算清单-->
             <div>
               <p v-if="PecsInfo.createType=='fast'" style="text-align: right;font-size: 14px;color: #666666;">总计费用：<span
-                style="font-size: 24px;color: #EE6723;">{{PecsInfo.cost}}元</span></p>
+                style="font-size: 24px;color: #EE6723;">{{PecsInfo.cost.toFixed(2)}}元</span></p>
               <p v-if="PecsInfo.createType=='custom'" style="text-align: right;font-size: 14px;color: #666666;">
                 总计费用：<span
-                style="font-size: 24px;color: #EE6723;">{{totalCost}}元</span>
+                style="font-size: 24px;color: #EE6723;">{{totalCost.toFixed(2)}}元</span>
               </p>
               <div style="text-align: right;margin-top: 20px;">
                 <button class="buyButton" @click="addCart">
@@ -501,7 +503,7 @@
               </div>
             </div>
             <div class="item-wrapper" v-if="PdiskInfo.timeForm.currentTimeType=='annual'">
-              <div v-for="item in PecsInfo.timeValue" :key="item.value" class="zoneItem"
+              <div v-for="item in PecsInfo.timeValue" :key="item.value" class="timeType"
                    :class="{zoneSelect:PdiskInfo.timeForm.currentTimeValue.label==item.label}"
                    @click="PdiskInfo.timeForm.currentTimeValue=item"
                    style="margin:0px;border-right:none;width:55px">
@@ -590,7 +592,7 @@
           <!--数据盘价格-->
           <div>
             <p style="text-align: right;font-size: 14px;color: #666666;">
-              总计费用：<span style="font-size: 24px;color: #EE6723;">{{PdiskInfo.dataDiskCost}}元</span>
+              总计费用：<span style="font-size: 24px;color: #EE6723;">{{PdiskInfo.dataDiskCost.toFixed(2)}}元</span>
             </p>
             <div style="text-align: right;margin-top: 20px;">
               <button class="buyButton" @click="addDiskCart">
@@ -625,7 +627,7 @@
               </div>
             </div>
             <div class="item-wrapper" v-if="PeipInfo.timeForm.currentTimeType=='annual'">
-              <div v-for="item in PecsInfo.timeValue" :key="item.value" class="zoneItem"
+              <div v-for="item in PecsInfo.timeValue" :key="item.value" class="timeType"
                    :class="{zoneSelect:PeipInfo.timeForm.currentTimeValue.label==item.label}"
                    @click="PeipInfo.timeForm.currentTimeValue=item"
                    style="margin:0px;border-right:none;width:55px">
@@ -702,7 +704,7 @@
           <!--费用、以及加入预算清单-->
           <div>
             <p style="text-align: right;font-size: 14px;color: #666666;">总计费用：<span
-              style="font-size: 24px;color: #EE6723;">{{PeipInfo.cost}}元</span></p>
+              style="font-size: 24px;color: #EE6723;">{{PeipInfo.cost.toFixed(2)}}元</span></p>
             <div style="text-align: right;margin-top: 20px;">
               <button class="buyButton" @click="addIPCart">
                 加入预算清单
@@ -750,11 +752,11 @@
                 </div>
                 <p class="item" v-if="prod.createType=='fast'" style="margin-top: 10px"><span class="title"
                                                                                               style="vertical-align: middle">价格</span>
-                  <span style="font-size: 24px;color: #F85E1D;vertical-align: middle">{{prod.cost}}元</span>
+                  <span style="font-size: 24px;color: #F85E1D;vertical-align: middle">{{prod.cost.toFixed(2)}}元</span>
                 </p>
                 <p class="item" v-if="prod.createType=='custom'" style="margin-top: 10px;"><span
                   class="title" style="vertical-align: middle">价格</span><span
-                  style="font-size: 24px;color: #F85E1D;vertical-align: middle">{{prod.customCost}}元</span>
+                  style="font-size: 24px;color: #F85E1D;vertical-align: middle">{{prod.customCost.toFixed(2)}}元</span>
                 </p>
               </div>
               <!--磁盘清单字段-->
@@ -768,7 +770,8 @@
                   <span class="title">硬盘</span>{{disk.size}}G{{disk.label}}
                 </p>
                 <p class="item" style="margin-top: 10px"><span class="title" style="vertical-align: middle">价格</span>
-                  <span style="font-size: 24px;color: #F85E1D;vertical-align: middle">{{prod.dataDiskCost}}元</span>
+                  <span
+                    style="font-size: 24px;color: #F85E1D;vertical-align: middle">{{prod.dataDiskCost.toFixed(2)}}元</span>
                 </p>
               </div>
 
@@ -783,7 +786,7 @@
                   <span class="title">带宽</span>{{prod.bandWidth}}
                 </p>
                 <p class="item" style="margin-top: 10px"><span class="title" style="vertical-align: middle">价格</span>
-                  <span style="font-size: 24px;color: #F85E1D;vertical-align: middle">{{prod.cost}}元</span>
+                  <span style="font-size: 24px;color: #F85E1D;vertical-align: middle">{{prod.cost.toFixed(2)}}元</span>
                 </p>
               </div>
             </div>
@@ -792,7 +795,7 @@
             <p
               style="font-size: 14px;margin:10px 0px;vertical-align:middle;color: #666666;line-height: 25px;text-align: center">
               总计：<span
-              style="font-size: 24px;color: #F85E1D;line-height: 25px;vertical-align: middle;margin-left:10px;">{{billListCost}}元</span>
+              style="font-size: 24px;color: #F85E1D;line-height: 25px;vertical-align: middle;margin-left:10px;">{{billListCost.toFixed(2)}}元</span>
             </p>
             <button class="buyButton" @click="buyNow"
                     style="display:block;width:300px;color:#ffffff;margin-bottom: 10px;background-image: linear-gradient(-42deg, #4481EB 0%, #04BEFE 100%);">
@@ -1049,7 +1052,7 @@
             kernel: 1,
             RAM: 1,
             diskSize: 50,
-            cost: '--'
+            cost: 0
           },
 
           // 虚拟私有云列表
@@ -1064,7 +1067,7 @@
             publicIP: true,
             // 带宽大小
             bandWidth: 1,
-            cost: '--'
+            cost: 0
           },
 
           // 云硬盘（数据盘）
@@ -1077,10 +1080,10 @@
           dataDiskList: [
             {type: 'ssd', size: 20, label: '超高性能型'}
           ],
-          dataDiskCost: '--',
+          dataDiskCost: 0,
 
           // 快速创建价格计算花费
-          cost: '--'
+          cost: 0
         },
         // 云硬盘信息对象
         PdiskInfo: {
@@ -1104,7 +1107,7 @@
           diskName: '',
           // 自动续费
           autoRenewal: true,
-          dataDiskCost: '--'
+          dataDiskCost: 0
         },
         // 公网IP
         PeipInfo: {
@@ -1123,7 +1126,7 @@
           // 自动续费
           autoRenewal: true,
           // 花费
-          cost: '--'
+          cost: 0
         },
         // 购物车
         cart,
@@ -1304,29 +1307,41 @@
       },
       // 查看主机IP价格
       queryIPPrice: debounce(500, function () {
-        axios.post('device/queryIpPrice.do', {
+        var params = {
           brand: this.PecsInfo.IPConfig.bandWidth,
           timeType: this.PecsInfo.timeForm.currentTimeValue.type,
           timeValue: this.PecsInfo.timeForm.currentTimeValue.value,
           zoneId: this.PecsInfo.zone.zoneid
-        }).then(response => {
+        }
+        if (this.PecsInfo.timeForm.currentTimeType === 'current') {
+          params.timeType = 'current'
+        }
+        axios.post('device/queryIpPrice.do', params).then(response => {
           this.PecsInfo.IPConfig.cost = response.data.cost
         })
       }),
       // 查询IP价格
       queryIPPriceInIP: debounce(500, function () {
-        axios.post('device/queryIpPrice.do', {
+        var params = {
           brand: this.PeipInfo.bandWidth,
           timeType: this.PeipInfo.timeForm.currentTimeValue.type,
           timeValue: this.PeipInfo.timeForm.currentTimeValue.value,
           zoneId: this.PeipInfo.zone.zoneid
-        }).then(response => {
+        }
+        if (this.PeipInfo.timeForm.currentTimeType === 'current') {
+          params.timeType = 'current'
+        }
+        axios.post('device/queryIpPrice.do', params).then(response => {
           this.PeipInfo.cost = response.data.cost
         })
       }),
-      // 添加数据盘
+      // 添加主机数据盘
       pushDisk(){
         this.PecsInfo.dataDiskList.push({type: 'ssd', size: 20, label: '超高性能型'})
+      },
+      // 删除主机数据盘
+      removeHostDisk(index){
+        this.PecsInfo.dataDiskList.splice(index, 1)
       },
       // 删除磁盘
       removeDisk(index){
@@ -1389,6 +1404,12 @@
           this.$message.error({
             content: '购物车已满'
           })
+        }
+        if (this.PecsInfo.currentType == 'public' && this.PecsInfo.system.systemName == undefined) {
+          this.$message.info({
+            content: '请选择一个镜像'
+          })
+          return
         }
         if (this.PecsInfo.currentType == 'public' && this.PecsInfo.system.systemName == undefined) {
           this.$message.info({
@@ -1512,7 +1533,7 @@
               diskOfferingId: diskType,
               timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
               timeValue: prod.timeForm.currentTimeValue.value,
-              isAutorenew: prod.autoRenewal
+              isAutorenew: prod.autoRenewal ? '1' : '0',
             }
             PromiseList.push(axios.get('Disk/createVolume.do', {params}))
           } else if (prod.type == 'Peip') {
@@ -1521,7 +1542,7 @@
               timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
               timeValue: prod.timeForm.currentTimeValue.value,
               count: prod.count,
-              isAutorenew: prod.autoRenewal,
+              isAutorenew: prod.autoRenewal ? '1' : '0',
               brandWith: prod.bandWidth,
               vpcId: vpc
             }
@@ -1794,6 +1815,20 @@
           margin-right: 10px;
           padding: 6px 0px;
           display: inline-block;
+        }
+        .timeType {
+          width: 55px;
+          margin: 0px;
+          border: 1px solid #d9d9d9;
+          border-right: none;
+          font-size: 14px;
+          text-align: center;
+          cursor: pointer;
+          padding: 6px 0px;
+          display: inline-block;
+          &:last-of-type {
+            border-right: 1px solid #d9d9d9;
+          }
         }
         .zoneSelect {
           border-color: #2A99F2;

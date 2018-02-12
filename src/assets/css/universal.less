@@ -528,23 +528,24 @@
 .IDCard {
   display: flex;
   > div {
-    width: 300px;
     margin-right: 20px;
-    height: 200px;
   }
   label {
     float: unset !important;
     width: 170px !important;
     text-align: left !important;
   }
-  div {
-    margin-left: 0px !important;
-  }
   .ivu-upload-drag {
-    div {
-      padding: 45px 0px !important;
+    > div {
     }
   }
+}
+
+.IDCard .ivu-form-item-content {
+  margin-left: 0px !important;
+  padding: 20px;
+  border: 1px solid #D8D8D8;
+  border-radius: 5px;
 }
 
 .item-wrapper {
@@ -556,4 +557,13 @@
 
 .ivu-switch-inner {
   top: 4px;
+}
+
+.ivu-upload-drag {
+  border: none;
+  background-color: #f7f7f7;
+}
+
+.ivu-upload-drag:hover {
+  border: none;
 }
