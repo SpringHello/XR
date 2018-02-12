@@ -107,7 +107,7 @@
           img: require('../../../assets/img/product/p-IP.png'),
           title: '弹性公网IP',
           desc: '公网 IP （Elastic IP） 是在互联网上合法的静态 IP 地址。在新睿云中，公网 IP 地址与用户账户绑定而非特定的云资源。用户可以将申请到的公网 IP 地址与任意主机/负载均衡器绑定，并随时可以解绑、再分配到其他资源上。用户可以按需购买，实时开通，配置变更实时生效。',
-          linkRouter: $store.state.userInfo ? 'new' : 'login'
+          linkRouter: 'buy'
         },
         features: [
           {img: require('../../../assets/img/product/ip-1.png'), title: '独立公网IP资源', desc: '为用户提供一个单独公网IP和一份带宽，为用户访问公网提供服务。公网IP可与任意云主机、VPC、负载均衡、端口转发、VPN网关等实例绑定或解绑，并支持随时升级和降级带宽，灵活匹配用户不同业务场景。'},

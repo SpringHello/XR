@@ -7,7 +7,7 @@
         <div class="info">
           <span class="title">{{logo.title}}</span>
           <span class="desc">{{logo.desc}}</span>
-          <router-link :to="logo.linkRouter">立即购买</router-link>
+          <router-link :to="logo.linkRouter">立即体验</router-link>
         </div>
       </div>
     </div>
@@ -117,7 +117,7 @@
           img: require('../../../assets/img/product/p-VPC.png'),
           title: '虚拟私有云VPC',
           desc: '基于新睿云构建出一个隔离的网络环境，并可以自定义IP 地址范围、网段、路由表和网关等；此外，也可以通过专线/VPN等连接方式实现云上VPC与传统IDC的互联，构建混合云业务。',
-          linkRouter: $store.state.userInfo ? 'mirror' : 'login'
+          linkRouter: $store.state.userInfo ? 'vpc' : 'login'
         },
         features: [
           {

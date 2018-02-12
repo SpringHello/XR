@@ -880,7 +880,14 @@
   }
   export default{
     beforeRouteEnter(to, from, next){
-      next()
+      console.log(from)
+      next(vm => {
+        if (from.path == '/ruicloud/Pdisk') {
+          vm.product.currentProduct = 'Pdisk'
+        } else if (from.path == '/ruicloud/Peip') {
+          vm.product.currentProduct = 'Peip'
+        }
+      })
     },
     data(){
       var zone = null

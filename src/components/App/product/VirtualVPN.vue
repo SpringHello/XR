@@ -7,7 +7,7 @@
         <div class="info">
           <span class="title">{{logo.title}}</span>
           <span class="desc">{{logo.desc}}</span>
-          <router-link :to="logo.linkRouter">立即购买</router-link>
+          <router-link :to="logo.linkRouter">立即体验</router-link>
         </div>
       </div>
     </div>
@@ -117,7 +117,7 @@
           img: require('../../../assets/img/product/p-VPN.png'),
           title: '虚拟专用网络VPN',
           desc: '虚拟专用网络（Virtual Private Network）用于搭建用户本地数据中心与新睿云VPC之间便捷、灵活，即开即用的IPsec加密连接通道，实现灵活一体，可伸缩的混合云计算环境。',
-          linkRouter: $store.state.userInfo ? 'mirror' : 'login'
+          linkRouter: $store.state.userInfo ? 'vpn' : 'login'
         },
         features: [
           {

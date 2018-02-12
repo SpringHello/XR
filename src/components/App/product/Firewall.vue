@@ -7,7 +7,7 @@
         <div class="info">
           <span class="title">{{logo.title}}</span>
           <span class="desc">{{logo.desc}}</span>
-          <router-link :to="logo.linkRouter">立即购买</router-link>
+          <router-link :to="logo.linkRouter">立即体验</router-link>
         </div>
       </div>
     </div>
@@ -118,7 +118,7 @@
           img: require('../../../assets/img/product/firewall-logo.png'),
           title: '虚拟防火墙',
           desc: '虚拟防火墙是VPC内部VLAN与VLAN之间的防火墙，默认所有端口都是封闭的，用户需要建立规则以打开相应端口。采用“白名单”的策略可以更大程度地保障来自外网的访问安全。',
-          linkRouter: $store.state.userInfo ? 'new' : 'login'
+          linkRouter: $store.state.userInfo ? 'firewall' : 'login'
         },
         features: [
           {

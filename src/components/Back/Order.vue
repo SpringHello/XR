@@ -224,7 +224,7 @@
       changePage(currentPage){
         this.totalCost = 0
         this.page = currentPage
-        this.$http.get(`information/searchOrderByType.do?paymentStatus=0&page=${this.page}&pageSize=${this.pageSize}`)
+        this.$http.get(`user/searchOrderByType.do?paymentStatus=0&page=${this.page}&pageSize=${this.pageSize}`)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.total = response.data.result.totle
