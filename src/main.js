@@ -66,7 +66,7 @@ Vue.use(carouselItem)
 Vue.use(slider)
 Vue.component('chart', ECharts)
 
-// 日期圆形对象拓展
+// 日期原型对象拓展
 Date.prototype.format = function (fmt) {
   var o = {
     'y+': this.getFullYear(),
