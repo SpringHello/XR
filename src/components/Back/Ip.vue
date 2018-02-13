@@ -94,11 +94,13 @@
       </p>
       <div class="universal-modal-content-flex">
         <p style="font-size: 12px;color: #666666;margin-bottom:20px;">您正为弹性IP<span style="color: #2A99F2 ;">{{bindForHostForm.row.publicip}}</span>绑定云主机。
-        </p><Icon type="ios-help-outline"></Icon>
+        </p>
+        <Icon type="ios-help-outline"></Icon>
         <Form :model="bindForHostForm" :rules="bindForHostRuleValidate" ref="bindForHostFormValidate">
           <FormItem label="选择云主机" prop="host">
             <Select v-model="bindForHostForm.host" placeholder="云主机名称">
-              <Option v-for="(item,index) in bindForHostForm.hostOptions" :key="index" :value="item.computerid">{{item.instancename}}
+              <Option v-for="(item,index) in bindForHostForm.hostOptions" :key="index" :value="item.computerid">
+                {{item.instancename}}
               </Option>
             </Select>
           </FormItem>
@@ -121,12 +123,14 @@
         <Form :model="bindForNATForm" :rules="bindForNATRuleValidate" ref="bindForNATFormValidate">
           <FormItem label="选择NAT网关" prop="NAT">
             <Select v-model="bindForNATForm.NAT" placeholder="NAT网关名称">
-              <Option v-for="(item,index) in bindForNATForm.NATOptions" :key="index" :value="`${item.id.toString()}`">{{item.natname}}
+              <Option v-for="(item,index) in bindForNATForm.NATOptions" :key="index" :value="`${item.id.toString()}`">
+                {{item.natname}}
               </Option>
             </Select>
           </FormItem>
         </Form>
-        <p style="font-size: 12px;color: #999999">提示：弹性IP绑定NAT网关之后您可以在虚拟私有云-VPC管理-NAT网关中查看你所绑定的IP，并分配IP用以执行SNAT或DNAT。</p>
+        <p style="font-size: 12px;color: #999999">
+          提示：弹性IP绑定NAT网关之后您可以在虚拟私有云-VPC管理-NAT网关中查看你所绑定的IP，并分配IP用以执行SNAT或DNAT。</p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="primary" @click="bindNATSubmit">确认绑定</Button>
@@ -152,7 +156,7 @@
     },
     data(){
       return {
-         // 当前选中项
+        // 当前选中项
         select: null,
         showModal: {
           newIPModal: false,
@@ -235,13 +239,20 @@
             key: 'usetype',
             align: 'center',
             render: (h, params) => {
-              return h('span', params.row.usetype == 0 ? '未使用' : params.row.usetype == 1 ? '绑定主机' : params.row.usetype == 2 ? '负载均衡' : '端口转发')
+              return h('span', params.row.usetype == 0 ? '未使用' : params.row.usetype == 1 ? '绑定主机' : params.row.usetype == 2 ? '负载均衡' : params.row.usetype == 3 ? '源NAT' : 'NAT网关')
             }
           },
           {
             title: '绑定资源',
-            key: 'resources',
-            align: 'center'
+            align: 'center',
+            render: (h, params) => {
+              if (params.row.usetype == 0) {
+                return h('span', {}, '----')
+              } else {
+                const text = params.row.computername || params.row.natgatewayname
+                return h('span', {}, text)
+              }
+            }
           },
           {
             title: '消费类型',
@@ -301,7 +312,7 @@
             title: '操作',
             align: 'center',
             render: (h, object) => {
-              if (true) {
+              if (object.row.usetype == 0) {
                 return h('Dropdown', {
                   on: {
                     'on-click': (type) => {
@@ -317,7 +328,7 @@
                     name: 'NAT'
                   }
                 }, 'NAT网关')])])
-              } else {
+              } else if (object.row.usetype != 2) {
                 return h('span', {
                   style: {
                     color: '#2d8cf0',
@@ -329,6 +340,8 @@
                     }
                   }
                 }, '解绑资源')
+              } else {
+                  return h('span', {}, '----')
               }
             }
           }
@@ -386,7 +399,7 @@
       refresh () {
         // 获取ip数据
         axios.get(`network/listPublicIp.do?page=1&pageSize=10&zoneId=${$store.state.zone.zoneid}`).then(response => {
-            this.setData(response)
+          this.setData(response)
         })
       },
       setData(response){
@@ -450,24 +463,38 @@
       },
       // 打开绑定IP到云主机模态框
       openBindIPModal(type, row){
+        this.bindForHostForm.hostOptions = []
         if (type == 'host') {
           this.bindForHostForm.row = row
           this.showModal.bindIPForHost = true
           // 获取所有能绑定弹性IP的云主机
-          this.$http.get('information/listVirtualMachines.do').then(response => {
-              var openHostlist = response.data.result.open.list
-              var hostlist = openHostlist.concat(response.data.result.close.list)
-              var bindIphostlist = hostlist.filter((item)=>{
-                return !item.publicip
+          this.$http.get(`information/listVirtualMachines.do?vpcId=${row.vpcid}`).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              var openHostlist = []
+              var closelist = []
+              var waitList = []
+              if (response.data.result.open) {
+                openHostlist = response.data.result.open.list
+              }
+              if (response.data.result.close) {
+                closelist = response.data.result.close.list
+              }
+              if (response.data.result.wait) {
+                waitList = response.data.result.wait.list
+              }
+              var hostList = openHostlist.concat(closelist).concat(waitList)
+              var bindIphostList = hostList.filter((item) => {
+                return item.status != 2
               })
-              this.bindForHostForm.hostOptions = bindIphostlist
+              this.bindForHostForm.hostOptions = bindIphostList
+            }
           })
         } else if (type == 'NAT') {
           this.bindForNATForm.row = row
           this.showModal.bindIPForNAT = true
           // 获取所有能绑定弹性IP的云主机
           this.$http.get('network/listNatGateway.do').then(response => {
-              this.bindForNATForm.NATOptions = response.data.result
+            this.bindForNATForm.NATOptions = response.data.result
           })
         }
       },
@@ -479,6 +506,7 @@
               this.showModal.bindIPForHost = false
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
+                this.refresh()
               } else {
                 this.$message.error({
                   content: response.data.message
@@ -496,7 +524,8 @@
             this.$http.get(`network/bindingElasticIP.do?publicIp=${this.bindForNATForm.row.publicip}&natGatewayId=${this.bindForNATForm.NAT}`).then(response => {
               this.showModal.bindIPForNAT = false
               if (response.status == 200 && response.data.status == 1) {
-                this.$Message.success(response.data.message)
+                this.$message.success(response.data.message)
+                this.refresh()
               } else {
                 this.$message.error({
                   content: response.data.message
@@ -525,9 +554,29 @@
           okText: '确定解绑',
           cancelText: '取消',
           'onOk': () => {
-            var url = `network/delNatGateway.do?natGatewayId=${this.select.id}`
-            axios.get(url).then(response => {
-              console.log(response)
+            var url = ''
+            switch (row.usetype) {
+              case 4 :
+                url = `network/natGatewayUnboundTargetIP.do?publicIp=${row.publicip}&natGatewayId=${row.natgatewayid}`
+                break
+              case 3 :
+                url = `network/natGatewayUnboundTargetIP.do?publicIp=${row.publicip}&natGatewayId=${row.natgatewayid}`
+                break
+              case 1 :
+                url = `network/disableStaticNat.do?VMId=${row.computerid}`
+                break
+            }
+            this.$http.get(url).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$message.info({
+                  content: response.data.message
+                })
+                this.refresh()
+              } else {
+                this.$message.error({
+                  content: response.data.message
+                })
+              }
             })
           }
         })
@@ -537,7 +586,7 @@
         this.$http.get(`network/delPublic.do?id=${this.select.id}`).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
-            this.refresh ()
+            this.refresh()
           } else {
             this.$message.error({
               content: response.data.message

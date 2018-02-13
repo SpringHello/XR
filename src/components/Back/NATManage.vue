@@ -31,7 +31,8 @@
               <div v-for="(item,index) in DNATData" :key="index"
                    style="position: relative;border-left: 1px solid #dddee1;border-bottom: 1px solid #dddee1;"
                    :style="{height:`${item[0].PortTransList.length*48}px`}">
-                <span style="position: absolute;top:50%;left:18px;transform: translateY(-50%)">{{item[0].publicIp}}</span>
+                <span
+                  style="position: absolute;top:50%;left:18px;transform: translateY(-50%)">{{item[0].publicIp}}</span>
               </div>
             </div>
             <div style="width:80%">
@@ -60,12 +61,12 @@
           <FormItem label="端口映射名称" prop="IP">
             <Input v-model="createDNATForm.name" placeholder="请输入16字以内的名称"></Input>
           </FormItem>
-          <FormItem label="前端口范围" prop="IP">
+          <FormItem label="公网端口范围" prop="IP">
             <InputNumber :max="10" :min="1" v-model="createDNATForm.frontStartPort"></InputNumber>
             <span style="margin:0px 10px;">--</span>
             <InputNumber :max="10" :min="1" v-model="createDNATForm.frontEndPort"></InputNumber>
           </FormItem>
-          <FormItem label="后端口范围" prop="IP">
+          <FormItem label="内网后端口范围" prop="IP">
             <InputNumber :max="10" :min="1" v-model="createDNATForm.backStartPort"></InputNumber>
             <span style="margin:0px 10px;">--</span>
             <InputNumber :max="10" :min="1" v-model="createDNATForm.backEndPort"></InputNumber>
@@ -79,15 +80,15 @@
           </FormItem>
           <FormItem label="选择子网" prop="subNetwork">
             <Select v-model="createDNATForm.subNetwork">
-              <Option v-for="item in createDNATForm.subNetworkOptions" :value="item.id" :key="item.id">
+              <Option v-for="item in createDNATForm.subNetworkOptions" :value="item.ipsegmentid" :key="item.id">
                 {{item.name}}
               </Option>
             </Select>
           </FormItem>
           <FormItem label="选择主机" prop="IP">
             <Select v-model="createDNATForm.vm">
-              <Option v-for="item in createDNATForm.vmOptions" :value="item.publicipid" :key="item.publicipid">
-                {{item.publicip}}
+              <Option v-for="item in createDNATForm.vmOptions" :value="item.computerid" :key="item.computerid">
+                {{item.computername}}
               </Option>
             </Select>
           </FormItem>
@@ -95,7 +96,7 @@
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary" @click="">确认绑定</Button>
+        <Button type="primary" @click="createPortForwardingRule">确认创建</Button>
       </div>
     </Modal>
   </div>
@@ -165,11 +166,11 @@
           // 端口映射名称
           name: '',
           frontStartPort: 1,
-          frontEndPort: 1,
+          frontEndPort: 2,
           backStartPort: 1,
-          backEndPort: 1,
+          backEndPort: 2,
           // 选择协议
-          protocol: '',
+          protocol: 'TCP',
           protocolOptions: [{label: 'TCP', value: 'TCP'}, {label: 'UDP', value: 'UDP'}],
           // 选择子网
           subNetwork: '',
@@ -181,6 +182,23 @@
       }
     },
     methods: {
+      refresh () {
+        var natGateway = axios.get('network/listNatGateway.do', {
+          params: {
+            natGatewayId,
+            zoneId: $store.state.zone.zoneid
+          }
+        })
+        var port = axios.get('network/listPortForwarding.do', {
+          params: {
+            natGatewayId,
+            zoneId: $store.state.zone.zoneid
+          }
+        })
+        Promise.all([natGateway, port]).then(values => {
+          this.setData(values)
+        })
+      },
       setData(values){
         if (values[0].status == 200 && values[0].data.status == 1) {
           this.vpnInfo = values[0].data.result[0]
@@ -190,6 +208,8 @@
         }
       },
       createDNAT(){
+        // 打开Modal
+        this.showModal.createDNAT = true
         // 列出子网
         this.$http.get('network/listNetwork.do', {
           params: {
@@ -210,8 +230,34 @@
             this.createDNATForm.publicIpOptions = response.data.result
           }
         })
-        // 打开Modal
-        this.showModal.createDNAT = true
+      },
+      /* 创建端口转发规则 */
+      createPortForwardingRule () {
+        this.$http.get(`network/createPortForwardingRule.do`, {
+          params: {
+            name: this.createDNATForm.name,
+            publicIpId: this.createDNATForm.publicIp,
+            privateStartPort: this.createDNATForm.backStartPort,
+            privateEndPort: this.createDNATForm.backEndPort,
+            protocol: this.createDNATForm.protocol,
+            publicStartPort: this.createDNATForm.frontStartPort,
+            publicEndPort: this.createDNATForm.backEndPort,
+            VMId: this.createDNATForm.vm,
+            networkId: this.createDNATForm.subNetwork
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.showModal.createDNAT = false
+            this.$Message.info({
+              content: response.data.message
+            })
+            this.refresh()
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
       }
     },
     watch: {
@@ -225,6 +271,12 @@
             this.createDNATForm.vmOptions = response.data.result
           }
         })
+      },
+      '$store.state.zone': {
+        handler: function () {
+          this.refresh()
+        },
+        deep: true
       }
     }
   }
