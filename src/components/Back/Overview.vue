@@ -55,6 +55,9 @@
                          :style="{width:`${100-(subItem.used/subItem.total*100)}%`}"></div>
                   </div>
                 </Tooltip>
+                <span class="cart-icon-wrap"  v-if="subItem.cartUrl" @click="togo(subItem.cartUrl.split('#')[0],subItem.cartUrl.split('#')[1])">
+                  <Icon type="ios-cart" class="cart-icon"></Icon>
+                </span>
               </div>
             </div>
           </div>
@@ -99,23 +102,23 @@
          sourceUrl: [
               {
                 prod: '云计算',
-                prodUrl: ['/ruicloud/Pecs','/ruicloud/Phost','/ruicloud/Pecss','', '']
+                prodUrl: ['host','mirror','snapshot','', '']
               },
               {
                 prod: '云网络',
-                prodUrl: ['/ruicloud/Pvpc','/ruicloud/Peip','/ruicloud/Pbalance','/ruicloud/Pnat','/ruicloud/Pvirvpn','','']
+                prodUrl: ['vpc','ip','balance','vpc','vpn','','vpcManage']
               },
               {
                 prod: '云存储',
-                prodUrl: ['/ruicloud/Pdisk','','/ruicloud/Pbackupdisk','']
+                prodUrl: ['disk','diskBackup','diskBackup','']
               },
               {
                 prod: '云安全',
-                prodUrl: ['/ruicloud/Pfirewall','/ruicloud/Pddos']
+                prodUrl: ['firewall','Pddos']
               },
               {
                 prod: '云运维',
-                prodUrl: ['/ruicloud/Pmonitor','']
+                prodUrl: ['Pmonitor','']
               }
             ],
         isDisable: false,
@@ -196,6 +199,14 @@
             var currentUrl=current[0].prodUrl
             item.items.forEach((content,index)=>{
               content.url=currentUrl[index]
+              // 需要跳转到购买页面的资源，添加url
+              if(content.itemName == '弹性云主机ECS'){
+                content.cartUrl='buy#Pecs'
+              } else if(content.itemName == '弹性IP'){
+                content.cartUrl='buy#Pdisk'
+              } else if(content.itemName == '云硬盘'){
+                content.cartUrl='buy#Peip'
+              }
             })
           })
         }
@@ -212,11 +223,14 @@
         })
       },
       // 跳转到相应的页面
-      togo(url){
-          if(url=='host'){
-            sessionStorage.setItem('type', 'error')
-          }
+      togo(url,type){
+          // if(url=='host'){
+          //   sessionStorage.setItem('type', 'error')
+          // } else {
+          //   sessionStorage.setItem('type', type)
+          // }
           this.$router.push(url)
+          sessionStorage.setItem('type', type)
       }
     },
     computed: {
@@ -396,6 +410,18 @@
                 }
                 .disable:hover{
                   cursor: not-allowed;
+                }
+                .cart-icon-wrap{
+                  margin-left: 36px;
+                  height: 25px;
+                  width: 25px;
+                  border: 1px solid #CCCCCC;
+                  border-radius: 50%;
+                  text-align: center;
+                  .cart-icon{
+                    line-height: 25px;
+                    color:  #CCCCCC;
+                  }
                 }
               }
               img {
