@@ -27,7 +27,7 @@
               <p class="universal-large">{{item.value}}元</p>
             </div>
           </div>
-          <router-link to="/ruicloud/recharge"><button class="universal-middle">立即充值</button></router-link>
+          <router-link to="/ruicloud/recharge"><button class="universal-middle" style="cursor:pointer">立即充值</button></router-link>
         </div>
         <div style="width:346px;">
           <p class="universal-middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">待处理事项</p>
@@ -203,9 +203,9 @@
               if(content.itemName == '弹性云主机ECS'){
                 content.cartUrl='buy#Pecs'
               } else if(content.itemName == '弹性IP'){
-                content.cartUrl='buy#Pdisk'
-              } else if(content.itemName == '云硬盘'){
                 content.cartUrl='buy#Peip'
+              } else if(content.itemName == '云硬盘'){
+                content.cartUrl='buy#Pdisk'
               }
             })
           })
