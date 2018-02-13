@@ -1,8 +1,8 @@
 <template>
   <!--产品与公告-->
   <div id="bulletin">
-    <div class="banner" style="width: 100%;">
-      <img src="../../assets/img/product/bulletin-logo.png" style="width: 100%;">
+    <div class="banner" style="width: 100%;height: 675px;">
+      <img src="../../assets/img/product/bulletin-logo.png" style="width: 100%;height: 675px;">
     </div>
     <div id="time">
       <ul>
@@ -38,7 +38,7 @@
   #bulletin {
     #time {
       width: 1200px;
-      padding: 50px;
+      padding: 50px 0;
       margin: 0 auto;
       ul {
         li {
@@ -46,7 +46,7 @@
           margin-bottom: 25px;
           p {
             &:first-of-type {
-              width: 80px;
+              width: 70px;
               height: 70px;
               background-color: #616368;
               border-radius: 50%;
