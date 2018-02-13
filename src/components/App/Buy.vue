@@ -890,10 +890,6 @@
         } else if (from.path == '/ruicloud/Peip') {
           vm.product.currentProduct = 'Peip'
         }
-        // product: {
-        //   currentProduct: 'Pecs',
-        //   productList: [{label: '云主机', value: 'Pecs'}, {label: '云硬盘', value: 'Pdisk'}, {label: '公网IP', value: 'Peip'}]
-        // },
         if (sessionStorage.getItem('type')) {
         switch (sessionStorage.getItem('type')) {
           case '':
