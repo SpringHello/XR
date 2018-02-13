@@ -249,7 +249,7 @@
               if (params.row.usetype == 0) {
                 return h('span', {}, '----')
               } else {
-                const text = params.row.computername || params.row.natgatewayname
+                const text = params.row.computername || params.row.natgatewayname || params.row.loadbalancerolename
                 return h('span', {}, text)
               }
             }

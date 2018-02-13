@@ -484,6 +484,10 @@
                                     content: response.data.message
                                   })
                                   this.refresh()
+                                } else{
+                                  this.$message.error({
+                                    content: response.data.message
+                                  })
                                 }
                               })
                             }

@@ -156,7 +156,34 @@
           {
             title: '操作',
             render: (h, object) => {
-              return h('span', {}, '删除规则')
+              return h('span', {
+                style: {
+                  color: '#2A99F2',
+                  cursor: 'pointer'
+                },
+                on: {
+                  click: () => {
+                    this.$message.confirm({
+                      content: '确认删除该规则？',
+                      onOk: () => {
+                        var url = `network/deletePortForwardingRule.do?id=${object.row.id}`
+                        this.$http.get(url).then(response => {
+                          if (response.status == 200 && response.data.status == 1) {
+                            this.$message.info({
+                              content: response.data.message
+                            })
+                            this.refresh()
+                          } else {
+                            this.$message.error({
+                              content: response.data.message
+                            })
+                          }
+                        })
+                      }
+                    })
+                  }
+                }
+              }, '删除规则')
             }
           }
         ],

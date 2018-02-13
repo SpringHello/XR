@@ -24,7 +24,8 @@
           <div class="wrapper">
             <div v-for="(item,index) in accountInfo" :key="index">
               <span class="universal-mini">{{item.itemName}}</span>
-              <p class="universal-large">{{item.value}}元</p>
+              <p class="universal-large" v-if="item.itemName == '消费预估天数'">{{item.value}}天</p>
+              <p class="universal-large" v-else>{{item.value}}元</p>
             </div>
           </div>
           <router-link to="/ruicloud/recharge"><button class="universal-middle">立即充值</button></router-link>
