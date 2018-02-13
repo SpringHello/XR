@@ -14,7 +14,7 @@
         <Tabs type="card" :animated="false" style="min-height: 400px">
           <TabPane label="云主机快照">
             <div class="operator-bar">
-              <Button type="primary" @click="createsnapshot(showModal.newSnapshot=true)">创建快照</Button>
+              <Button type="primary" @click="createsnapshot()">创建快照</Button>
               <!-- <Button type="primary">创建快照策略</Button> -->
               <Button type="primary" @click="delsnapshot">删除快照</Button>
             </div>
@@ -23,7 +23,7 @@
           </TabPane>
           <TabPane label="云主机快照策略">
             <div class="operator-bar">
-              <Button type="primary" @click="createBackups(showModal.newBackups=true)">创建备份策略</Button>
+              <Button type="primary" @click="createBackups()">创建备份策略</Button>
               <Button type="primary" @click="delStrategy">删除策略</Button>
             </div>
             <Table ref="selection" :columns="snapstrategyCol" :data="snapstrategyData"
@@ -1682,7 +1682,6 @@
     created() {
       this.listsnaps()
       this.listBackups()
-      this.listHost()
       this.inter()
     },
     methods: {
@@ -1707,6 +1706,14 @@
             }
           })
         }, 1000 * 10)
+      },
+      createsnapshot() {
+        this.listHost()
+        this.showModal.newSnapshot=true
+      },
+      createBackups() {
+        this.listHost()
+        this.showModal.newBackups=true
       },
       //获取快照列表
       listsnaps() {
@@ -1807,6 +1814,7 @@
       },
       // 虚拟机列表
       listHost() {
+        this.vmList = []
         var vmListurl = `information/listVirtualMachines.do?zoneId=${$store.state.zone.zoneid}`
         axios.get(vmListurl)
           .then(response => {
