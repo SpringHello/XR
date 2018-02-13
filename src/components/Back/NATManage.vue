@@ -32,12 +32,11 @@
                    style="position: relative;border-left: 1px solid #dddee1;border-bottom: 1px solid #dddee1;"
                    :style="{height:`${item[0].PortTransList.length*48}px`}">
                 <span
-                  style="position: absolute;top:50%;left:18px;transform: translateY(-50%)">{{item[0].publicIp}}</span>
+                  style="position: absolute;top:50%;left:18px;transform: translateY(-50%)">{{item.publicIp}}</span>
               </div>
             </div>
             <div style="width:80%">
-              <Table :columns="columns" :data="item[0].PortTransList" :key="index"
-                     v-for="(item,index) in DNATData" :show-header="index==0" :class="{border:index!=0}"></Table>
+              <Table :columns="columns" :data="item.PortTransList" :key="index" :show-header="index==0" :class="{border:index!=0}"></Table>
             </div>
           </div>
         </div>
