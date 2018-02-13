@@ -1,8 +1,8 @@
 <template>
   <!--产品与公告-->
   <div id="bulletin">
-    <div class="banner" style="width: 100%;height: 560px;border-bottom-color: #377DFF;">
-      <img src="../../assets/img/product/bulletin-logo.png" style="width: 100%; height: 560px;">
+    <div class="banner" style="width: 100%;">
+      <img src="../../assets/img/product/bulletin-logo.png" style="width: 100%;">
     </div>
     <div id="time">
       <ul>
