@@ -18,7 +18,6 @@ import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
 import 'echarts/lib/chart/line'
 import 'echarts/lib/component/tooltip'
-
 // 引入轮播组件
 import carousel from './myView/carousel'
 import carouselItem from './myView/carouselItem'
@@ -30,7 +29,7 @@ import message from './myView/message'
 Vue.prototype.$message = message
 Vue.config.productionTip = false
 // axios.defaults.baseURL = '/ruicloud'
- axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud'
+ axios.defaults.baseURL = 'http://192.168.3.229:8082/ruicloud'
  axios.defaults.withCredentials = true
 /* axios.interceptors.request.use(function (config) {
  config.headers.Cookie = 'JSESSIONID=22203C271B80F4A41C35D23B09B6BC83'
