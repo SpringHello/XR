@@ -1755,11 +1755,19 @@
       unchangeHostlist(data) {
         var leftData = []
         this.changeHostlist = []
+        this.vmList = []
+        var vmopenlist =[]
+        var vmcloselist =[]
         this.$http.get(`information/listVirtualMachines.do`)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              var vmopenlist = response.data.result.open.list
-              this.vmList = vmopenlist.concat(response.data.result.close.list)
+              if(response.data.result.open.list){
+                vmopenlist = response.data.result.open.list
+              }
+              if(response.data.result.open.list){
+                vmcloselist = response.data.result.close.list
+              }
+              this.vmList = vmopenlist.concat(vmcloselist)
               this.vmList.forEach((item) => {
                 if (item.status === 1 && item.bankupstrategyid != data.id) {
                   leftData.push(item)
@@ -1775,7 +1783,7 @@
         this.strategyId = data.id
         this.showModal.addOrDeleteHost = true
       },
-      /* 确定从快照备份策略添加或移除磁盘 */
+      /* 确定从快照备份策略添加或移除主机 */
       addOrDeleteHost() {
         var vmids = this.changeHostlist.map(item => {
           return item.resourcesId
@@ -1815,12 +1823,19 @@
       // 虚拟机列表
       listHost() {
         this.vmList = []
+        var vmopenlist =[]
+        var vmcloselist =[]
         var vmListurl = `information/listVirtualMachines.do?zoneId=${$store.state.zone.zoneid}`
         axios.get(vmListurl)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              var vmopenlist = response.data.result.open.list
-              this.vmList = vmopenlist.concat(response.data.result.close.list)
+              if(response.data.result.open.list){
+                vmopenlist = response.data.result.open.list
+              }
+              if(response.data.result.open.list){
+                vmcloselist = response.data.result.close.list
+              }
+              this.vmList = vmopenlist.concat(vmcloselist)
             }
           })
       },

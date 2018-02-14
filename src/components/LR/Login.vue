@@ -34,7 +34,7 @@
           </div>
           <div class="foot">
             <!--:disabled="disabled==true"-->
-            <button :class="{disabled:disabled}" @click="submit">登录</button>
+            <button :class="{disabled:disabled}" @click="submit" :disabled="disabled">登录</button>
             <div>
               <router-link to="register" style="color:#0EB4FA;cursor:pointer;float:left;font-size: 14px">
                 立即注册
@@ -189,7 +189,7 @@
     },
     computed: {
       disabled () {
-        return !(this.form.loginname && this.form.password && this.form.vailCode && this.agree && this.vailForm.loginname.warning == false)
+        return !(this.form.loginname && this.form.password && this.form.vailCode  && this.vailForm.loginname.warning == false)
       }
     }
   }
@@ -253,7 +253,7 @@
       background: #FFFFFF;
       border: 1px solid rgba(161, 161, 161, 0.00);
       box-shadow: 0 2px 24px 0 #4990E2;
-      .disabled {
+      &.disabled {
         cursor: not-allowed;
       }
       .head {

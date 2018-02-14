@@ -202,29 +202,30 @@
       <div class="universal-modal-content-flex">
         <Form :model="addNatForm" :rules="addNatRuleValidate" ref="addNatFormValidate">
           <FormItem label="网关名称" prop="natName">
-            <Input v-model="addNatForm.natName" placeholder="请输入网关名称"></Input>
+            <Input v-model="addNatForm.natName" placeholder="请输入网关名称" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="VPC ID" prop="vpc">
-            <Select v-model="addNatForm.vpc" placeholder="请选择">
+            <Select v-model="addNatForm.vpc" placeholder="请选择" style="width: 200px">
               <Option v-for="item in netData" :key="item.vpcid" :value="item.vpcid">{{item.vpcname}}</Option>
             </Select>
           </FormItem>
-          <FormItem label="选择弹性IP" prop="publicIp">
-            <Select v-model="addNatForm.publicIp">
+          <FormItem label="选择弹性IP">
+            <Select v-model="addNatForm.publicIp" style="width: 200px">
               <Option v-for="item in addNatForm.publicIpOptions" :value="item.publicipid" :key="item.publicipid">
                 {{item.publicip}}
               </Option>
             </Select>
+            <i @click="$router.push('ip')"><Icon type="plus" color="#2A99F2" size="20" style="position: relative;top: 4px;cursor:pointer;margin-left: 10px;"></Icon></i>
           </FormItem>
           <FormItem label="选择计费模式" prop="timeType">
-            <Select v-model="addNatForm.timeType">
+            <Select v-model="addNatForm.timeType" style="width: 200px">
               <Option v-for="item in customTimeOptions.renewalType" :value="item.value"
                       :key="item.value">{{ item.label }}
               </Option>
             </Select>
           </FormItem>
           <FormItem label="购买时长" prop="timeValue" v-if="addNatForm.timeType!='current'">
-            <Select v-model="addNatForm.timeValue">
+            <Select v-model="addNatForm.timeValue" style="width: 200px">
               <Option v-for="item in customTimeOptions[addNatForm.timeType]" :value="item.value" :key="item.value">
                 {{item.label}}
               </Option>
@@ -265,8 +266,8 @@
         <Form :model="bindIPForm" :rules="bindIPRuleValidate" ref="bindIPFormValidate">
           <FormItem label="选择源弹性IP" prop="IP">
             <Select v-model="bindIPForm.IP">
-              <Option v-for="item in bindIPForm.IPOptions" :value="item" :key="item">
-                {{item}}
+              <Option v-for="item in bindIPForm.IPOptions" :value="item.publicip" :key="item.publicipid">
+                {{item.publicip}}
               </Option>
             </Select>
           </FormItem>
@@ -424,12 +425,12 @@
                   },
                   on: {
                     click: () => {
-                      // 绑定sourceNat
-                      if (object.row.prottransip) {
-                        var prottransipArray = object.row.prottransip.split(',')
-                        prottransipArray.splice(0, 1)
-                        this.bindIPForm.IPOptions = prottransipArray
-                      }
+                      /*        // 绑定sourceNat
+                       if (object.row.prottransip) {
+                       var prottransipArray = object.row.prottransip.split(',')
+                       prottransipArray.splice(0, 1)
+                       this.bindIPForm.IPOptions = prottransipArray
+                       }*/
                       this.bindIP(object.row)
                     }
                   }
@@ -483,6 +484,10 @@
                                     content: response.data.message
                                   })
                                   this.refresh()
+                                } else{
+                                  this.$message.error({
+                                    content: response.data.message
+                                  })
                                 }
                               })
                             }
@@ -777,7 +782,7 @@
         var url = `network/listPublicIp.do?useType=0&status=1&zoneId=${$store.state.zone.zoneid}`
         axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            response.data.result.push({publicipid: '新建弹性IP', publicip: '新建弹性IP'})
+            // response.data.result.push({publicipid: '新建弹性IP', publicip: '新建弹性IP'})
             this.addNatForm.publicIpOptions = response.data.result
           }
         })
@@ -979,18 +984,18 @@
       },
       // nat网关绑定源IP，获取所有可用的弹性IP
       bindIP(row){
-        /*      // 获取可以挂载的所有弹性IP
-         this.$http.get('network/listPublicIp.do', {
-         params: {
-         useType: '0',
-         vpcId: row.vpcid,
-         status: '1'
-         }
-         }).then(response => {
-         this.bindIPForm.IPOptions = response.data.result
-         })*/
-        this.bindIPForm.natGatewayId = row.id
         this.showModal.bindIP = true
+        // 获取可以挂载的所有弹性IP
+        this.$http.get('network/listPublicIp.do', {
+          params: {
+            useType: '0',
+            vpcId: row.vpcid,
+            status: '1'
+          }
+        }).then(response => {
+          this.bindIPForm.IPOptions = response.data.result
+        })
+        this.bindIPForm.natGatewayId = row.id
       },
       // nat网关绑定源IP提交ajax
       handlebindIPSubmit(){
@@ -1023,7 +1028,7 @@
         this.$http.get('network/listPublicIp.do', {
           params: {
             useType: '0',
-            // vpcId: row.vpcid,
+            vpcId: row.vpcid,
             status: '1'
           }
         }).then(response => {

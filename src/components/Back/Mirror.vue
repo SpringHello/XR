@@ -332,7 +332,7 @@
     created() {
       this.ownMirrorList()
       this.systemMirrorList()
-      this.openHostList()
+      this.closeHostList()
       this.inter()
     },
     methods: {
@@ -352,11 +352,16 @@
         })
       },
        // 查询已关闭主机
-      openHostList() {
-         var url2 = 'information/getCloseListVirtualMachines.do'
-          this.$http.get(url2).then(response => {
+      closeHostList() {
+        var vmcloselist =[]
+        this.hostName = []
+        this.$http.get(`information/listVirtualMachines.do`)
+          .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.hostName = response.data.result
+              if(response.data.result.open.list){
+                vmcloselist = response.data.result.close.list
+              }
+              this.hostName = vmcloselist
             }
           })
       },
@@ -489,7 +494,7 @@
       refresh(){
         this.ownMirrorList()
         this.systemMirrorList()
-        this.openHostList()
+        this.closeHostList()
       }
     },
     computed: {
