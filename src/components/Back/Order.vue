@@ -129,6 +129,9 @@
                 case 'upconfig':
                   type = '升级'
                   break
+                case 'nat' :
+                  type = '网络'
+                  break
               }
               for (var index in params.row['资源']) {
                 for (var key in params.row['资源'][index])

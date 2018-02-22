@@ -24,10 +24,11 @@
           <div class="wrapper">
             <div v-for="(item,index) in accountInfo" :key="index">
               <span class="universal-mini">{{item.itemName}}</span>
-              <p class="universal-large">{{item.value}}元</p>
+              <p class="universal-large" v-if="item.itemName == '消费预估天数'">{{item.value}}天</p>
+              <p class="universal-large" v-else>{{item.value}}元</p>
             </div>
           </div>
-          <router-link to="/ruicloud/recharge"><button class="universal-middle">立即充值</button></router-link>
+          <router-link to="/ruicloud/recharge"><button class="universal-middle" style="cursor:pointer">立即充值</button></router-link>
         </div>
         <div style="width:346px;">
           <p class="universal-middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">待处理事项</p>
@@ -55,6 +56,9 @@
                          :style="{width:`${100-(subItem.used/subItem.total*100)}%`}"></div>
                   </div>
                 </Tooltip>
+                <span class="cart-icon-wrap"  v-if="subItem.cartUrl" @click="togo(subItem.cartUrl.split('#')[0],subItem.cartUrl.split('#')[1])">
+                  <Icon type="ios-cart" class="cart-icon"></Icon>
+                </span>
               </div>
             </div>
           </div>
@@ -99,23 +103,23 @@
          sourceUrl: [
               {
                 prod: '云计算',
-                prodUrl: ['/ruicloud/Pecs','/ruicloud/Phost','/ruicloud/Pecss','', '']
+                prodUrl: ['host','mirror','snapshot','', '']
               },
               {
                 prod: '云网络',
-                prodUrl: ['/ruicloud/Pvpc','/ruicloud/Peip','/ruicloud/Pbalance','/ruicloud/Pnat','/ruicloud/Pvirvpn','','']
+                prodUrl: ['vpc','ip','balance','vpc','vpn','','vpcManage']
               },
               {
                 prod: '云存储',
-                prodUrl: ['/ruicloud/Pdisk','','/ruicloud/Pbackupdisk','']
+                prodUrl: ['disk','diskBackup','diskBackup','']
               },
               {
                 prod: '云安全',
-                prodUrl: ['/ruicloud/Pfirewall','/ruicloud/Pddos']
+                prodUrl: ['firewall','Pddos']
               },
               {
                 prod: '云运维',
-                prodUrl: ['/ruicloud/Pmonitor','']
+                prodUrl: ['Pmonitor','']
               }
             ],
         isDisable: false,
@@ -196,6 +200,14 @@
             var currentUrl=current[0].prodUrl
             item.items.forEach((content,index)=>{
               content.url=currentUrl[index]
+              // 需要跳转到购买页面的资源，添加url
+              if(content.itemName == '弹性云主机ECS'){
+                content.cartUrl='buy#Pecs'
+              } else if(content.itemName == '弹性IP'){
+                content.cartUrl='buy#Peip'
+              } else if(content.itemName == '云硬盘'){
+                content.cartUrl='buy#Pdisk'
+              }
             })
           })
         }
@@ -212,11 +224,14 @@
         })
       },
       // 跳转到相应的页面
-      togo(url){
-          if(url=='host'){
-            sessionStorage.setItem('type', 'error')
-          }
+      togo(url,type){
+          // if(url=='host'){
+          //   sessionStorage.setItem('type', 'error')
+          // } else {
+          //   sessionStorage.setItem('type', type)
+          // }
           this.$router.push(url)
+          sessionStorage.setItem('type', type)
       }
     },
     computed: {
@@ -396,6 +411,18 @@
                 }
                 .disable:hover{
                   cursor: not-allowed;
+                }
+                .cart-icon-wrap{
+                  margin-left: 36px;
+                  height: 25px;
+                  width: 25px;
+                  border: 1px solid #CCCCCC;
+                  border-radius: 50%;
+                  text-align: center;
+                  .cart-icon{
+                    line-height: 25px;
+                    color:  #CCCCCC;
+                  }
                 }
               }
               img {

@@ -660,9 +660,7 @@
             this.$Message.info('主机正在恢复，请稍后')
             this.$http.get('information/recoverVM.do?id=' + id).then(response => {
               if (response.status == 200) {
-                this.$message.info({
-                  content:response.data.message
-                })
+                this.$Message.info(response.data.message)
                 this.getData()
               } else {
                 this.$message.error({
@@ -813,17 +811,12 @@
         this.loading = true
         item.select = false
         item.status = 2
-        // alert(121324)
-        this.$http.post('information/stopVirtualMachine.do', {
-          virtualMachineid: item.computerid,
-          forced: 'true'
-        }).then(response => {
+        this.$http.get(`information/stopVirtualMachine.do?VMId=${item.computerid}&forced=true`)
+         .then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             item.status = 2
-            this.$message.info({
-              content:response.data.message
-            })
+            this.$Message.info(response.data.message)
           } else {
             item.status = 1
           }
@@ -839,9 +832,7 @@
         }).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
-            this.$message.info({
-              content:response.data.message
-            })
+            this.$message.info(response.data.message)
           } else {
             item.status = 1
           }

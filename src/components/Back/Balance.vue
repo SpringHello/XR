@@ -531,8 +531,9 @@
           this.$Message.info('请选择一个负载均衡')
         } else {
           var internalLoadbalance = this.balanceSelection._internal ? '1' : ''
+          var balanceId = this.balanceSelection.loadbalanceroleid || this.balanceSelection.lbid
           this.showModal.bind = true
-          var url = `network/showLoadBalanceVM.do?netwrokId=${this.balanceSelection.networkid}&internalLoadbalance=${internalLoadbalance}`
+          var url = `network/showLoadBalanceVM.do?netwrokId=${this.balanceSelection.networkid}&internalLoadbalance=${internalLoadbalance}&loadbalanceId=${balanceId}`
           this.$http.get(url).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.bindHostForm.vmOptions = response.data.result

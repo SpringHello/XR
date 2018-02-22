@@ -12,8 +12,8 @@
           为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。
         </Alert>
 
-        <Tabs type="card" :animated="false">
-          <TabPane label="远程接入">
+        <Tabs type="card" :animated="false" v-model="pane">
+          <TabPane label="远程接入" name="remote">
             <div class="operator-bar">
               <Button type="primary" @click="newRemoteAccess">创建VPN接入点</Button>
               <Button type="primary" @click="delRemoteAccess">挂断VPN接入</Button>
@@ -21,7 +21,7 @@
                      style="margin-top:20px;"></Table>
             </div>
           </TabPane>
-          <TabPane label="隧道VPN">
+          <TabPane label="隧道VPN" name="VPN">
             <div class="operator-bar">
               <Button type="primary" @click="newTunnelVpn">创建隧道</Button>
               <Button type="primary">重启隧道</Button>
@@ -222,7 +222,10 @@
       })
     },
     data(){
+      var pane = sessionStorage.getItem('pane') || 'remote'
+      sessionStorage.removeItem('pane')
       return {
+        pane,
         showModal: {
           // 远程VPN
           newRemoteAccess: false,

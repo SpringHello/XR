@@ -884,13 +884,28 @@
   }
   export default{
     beforeRouteEnter(to, from, next){
-      console.log(from)
       next(vm => {
         if (from.path == '/ruicloud/Pdisk') {
           vm.product.currentProduct = 'Pdisk'
         } else if (from.path == '/ruicloud/Peip') {
           vm.product.currentProduct = 'Peip'
         }
+        if (sessionStorage.getItem('type')) {
+        switch (sessionStorage.getItem('type')) {
+          case '':
+            break
+          case 'Pecs':
+            vm.product.currentProduct = 'Pecs'
+            break
+          case 'Pdisk':
+            vm.product.currentProduct = 'Pdisk'
+            break
+          case 'Peip':
+            vm.product.currentProduct = 'Peip'
+            break
+        }
+        sessionStorage.removeItem('type')
+      }
       })
     },
     data(){

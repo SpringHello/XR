@@ -91,13 +91,13 @@
           <ul :ref="`${parentItem.type}-sub`" :class="{show:parentItem.type==pageInfo.hoverItem}">
             <li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"
                 @click="push(parentItem.type,subItem.type)" :class="{hover:subItem.type==pageInfo.sType}">
-              <Dropdown v-if="subItem.thrItem">
+              <Dropdown v-if="subItem.thrItem" @on-click="pane">
                 <a href="javascript:void(0)">
                   {{subItem.subName}}
                 </a>
                 <DropdownMenu slot="list">
-                  <DropdownItem v-for="(thrItem,index) in subItem.thrItem" :key="index">
-                    <router-link to="">{{thrItem.thrName}}</router-link>
+                  <DropdownItem v-for="(thrItem,index) in subItem.thrItem" :key="index" :name="thrItem.pane">
+                    <a>{{thrItem.thrName}}</a>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
@@ -144,7 +144,10 @@
           {
             mainName: '云服务器',
             type: 'server',
-            subItem: [{subName: '主机', type: 'host'}, {subName: '云主机快照', type: 'snapshot'}, {subName: '镜像', type: 'mirror'}]
+            subItem: [{subName: '主机', type: 'host'}, {subName: '云主机快照', type: 'snapshot'}, {
+              subName: '镜像',
+              type: 'mirror'
+            }]
           },
           {
             mainName: '存储',
@@ -159,10 +162,18 @@
             mainName: '网络',
             type: 'network',
             subItem: [
-              {subName: '虚拟私有云VPC', type: 'vpc', thrItem: [{thrName: '虚拟私有云VPC'}, {thrName: 'NAT网关'}]},
+              {
+                subName: '虚拟私有云VPC',
+                type: 'vpc',
+                thrItem: [{thrName: '虚拟私有云VPC', pane: 'VPC'}, {thrName: 'NAT网关', pane: 'NAT'}]
+              },
               {subName: '弹性IP', type: 'ip'},
               {subName: '负载均衡', type: 'balance'},
-              {subName: '虚拟专网VPN', type: 'vpn', thrItem: [{thrName: '远程接入'}, {thrName: '隧道VPN'}]}
+              {
+                subName: '虚拟专网VPN',
+                type: 'vpn',
+                thrItem: [{thrName: '远程接入', pane: 'remote'}, {thrName: '隧道VPN', pane: 'VPN'}]
+              }
             ]
           },
           {
@@ -253,10 +264,16 @@
 
       // 进入三级路由，记录二级路由入口
       push(pType, sType){
+        console.log('push')
         this.pageInfo.static = true
         this.pageInfo.selectItem = pType
         this.pageInfo.sType = sType
         this.$router.push(sType)
+      },
+
+      pane(pane){
+        console.log('pane', pane)
+        sessionStorage.setItem('pane', pane)
       },
 
       menuStyle(type){
@@ -281,12 +298,13 @@
       exit(){
         axios.get(`user/logout.do`).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-              this.$router.push('/ruicloud/login')
-            } else {
-              this.$message.error({
+            $store.commit('setAuthInfo', {authInfo: null, userInfo: null})
+            this.$router.push('/ruicloud/login')
+          } else {
+            this.$message.error({
               content: response.data.message
-              })
-            }
+            })
+          }
         })
       }
     },
