@@ -30,13 +30,13 @@
               </div>
               <div v-for="(item,index) in DNATData" :key="index"
                    style="position: relative;border-left: 1px solid #dddee1;border-bottom: 1px solid #dddee1;"
-                   :style="{height:`${item[0].PortTransList.length*48}px`}">
+                   :style="{height:item.protTransList.length == 0 ? `${(item.protTransList.length+1)*48}px` : `${(item.protTransList.length)*48}px`}">
                 <span
                   style="position: absolute;top:50%;left:18px;transform: translateY(-50%)">{{item.publicIp}}</span>
               </div>
             </div>
             <div style="width:80%">
-              <Table :columns="columns" :data="item.PortTransList" :key="index" :show-header="index==0" :class="{border:index!=0}"></Table>
+              <Table v-for="(item,index) in DNATData" :columns="columns" :data="item.protTransList" :key="index" :show-header="index==0" :class="{border:index!=0}"></Table>
             </div>
           </div>
         </div>
@@ -130,7 +130,10 @@
         },
         vpnInfo: {},
         // DNAT 数据
-        DNATData: [],
+        DNATData: [{
+          protTransList: [],
+          publicIp: ''
+        }],
         columns: [
           {
             title: '规则名称',
@@ -230,7 +233,9 @@
           this.vpnInfo = values[0].data.result[0]
         }
         if (values[1].status == 200 && values[1].data.status == 1) {
-          this.DNATData = values[1].data.result
+          if (values[1].data.result.length != 0) {
+            this.DNATData = values[1].data.result
+          }
         }
       },
       createDNAT(){
