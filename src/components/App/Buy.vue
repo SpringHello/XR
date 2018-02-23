@@ -728,7 +728,6 @@
                   ${prod.timeForm.currentTimeValue.label}`:'实时计费'}}
                 </p>
                 <!--镜像+应用-->
-                <p>类型：{{prod.currentType}}</p>
                 <p class="item" v-if="prod.currentType=='app'"><span class="title">镜像</span>{{prod.currentApp.templatename}}
                 </p>
                 <!--公共镜像-->

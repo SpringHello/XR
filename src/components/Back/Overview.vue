@@ -28,7 +28,9 @@
               <p class="universal-large" v-else>{{item.value}}元</p>
             </div>
           </div>
-          <router-link to="/ruicloud/recharge"><button class="universal-middle" style="cursor:pointer">立即充值</button></router-link>
+          <router-link to="/ruicloud/recharge">
+            <button class="universal-middle" style="cursor:pointer">立即充值</button>
+          </router-link>
         </div>
         <div style="width:346px;">
           <p class="universal-middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">待处理事项</p>
@@ -47,7 +49,8 @@
             <div class="item" v-for="(item,index) in source" :key="index">
               <p class="universal-middle"><img :src="sourceIcon[index]">{{item.name}}</p>
               <div class="source-item" v-for="(subItem,sIndex) in item.items" :key="sIndex">
-                <span @click="togo(subItem.url)" :class="{disable:!subItem.url}">{{subItem.itemName}}({{subItem.total}})</span>
+                <span @click="togo(subItem.url)"
+                      :class="{disable:!subItem.url}">{{subItem.itemName}}({{subItem.total}})</span>
                 <Tooltip style="padding: 1px 0px;height: 18px;"
                          :content="`已创建${subItem.used}个，还能创建${subItem.total-subItem.used}个`" placement="top">
                   <div style="height:10px;width:150px;display: flex">
@@ -56,7 +59,8 @@
                          :style="{width:`${100-(subItem.used/subItem.total*100)}%`}"></div>
                   </div>
                 </Tooltip>
-                <span class="cart-icon-wrap"  v-if="subItem.cartUrl" @click="togo(subItem.cartUrl.split('#')[0],subItem.cartUrl.split('#')[1])">
+                <span class="cart-icon-wrap" v-if="subItem.cartUrl"
+                      @click="togo(subItem.cartUrl.split('#')[0],subItem.cartUrl.split('#')[1])">
                   <Icon type="ios-cart" class="cart-icon"></Icon>
                 </span>
               </div>
@@ -83,8 +87,12 @@
               <a href="/ruicloud/productBulletin">查看更多</a>
             </div>
           </div>
-          <div class="ad" v-for="(ad,index) in ads">
-            <img src="../../assets/img/overview/ad_banner.png"/>
+          <div>
+            <Carousel v-model="value1">
+              <CarouselItem v-for="(item,index) in ads" :key="index">
+                <img src="http://localhost:8082/ruicloud/taobaoPicture/testTaobao.jpg">
+              </CarouselItem>
+            </Carousel>
           </div>
         </div>
       </div>
@@ -99,29 +107,30 @@
     name: 'overview',
     data() {
       return {
+        value1: 1,
         // 资源列表url数据
-         sourceUrl: [
-              {
-                prod: '云计算',
-                prodUrl: ['host','mirror','snapshot','', '']
-              },
-              {
-                prod: '云网络',
-                prodUrl: ['vpc','ip','balance','vpc','vpn','','vpcManage']
-              },
-              {
-                prod: '云存储',
-                prodUrl: ['disk','diskBackup','diskBackup','']
-              },
-              {
-                prod: '云安全',
-                prodUrl: ['firewall','Pddos']
-              },
-              {
-                prod: '云运维',
-                prodUrl: ['Pmonitor','']
-              }
-            ],
+        sourceUrl: [
+          {
+            prod: '云计算',
+            prodUrl: ['host', 'mirror', 'snapshot', '', '']
+          },
+          {
+            prod: '云网络',
+            prodUrl: ['vpc', 'ip', 'balance', 'vpc', 'vpn', '', 'vpcManage']
+          },
+          {
+            prod: '云存储',
+            prodUrl: ['disk', 'diskBackup', 'diskBackup', '']
+          },
+          {
+            prod: '云安全',
+            prodUrl: ['firewall', 'Pddos']
+          },
+          {
+            prod: '云运维',
+            prodUrl: ['Pmonitor', '']
+          }
+        ],
         isDisable: false,
         // 账户信息
         accountInfo: [],
@@ -169,44 +178,46 @@
         var response = values[0]
         if (response.status == 200 && response.data.status == 1) {
           this.accountInfo = response.data.result[0].items
-           // 待处理事项数据
+          // 待处理事项数据
           this.pending = response.data.result[1].items
-          var pendingUrl = ['work','order','renew']
-          this.pending.forEach((item,index) => {
+          var pendingUrl = ['work', 'order', 'renew']
+          this.pending.forEach((item, index) => {
             item.url = pendingUrl[index]
           })
           // 告警数据
           this.warnData = response.data.result[2].items
-          var warnUrl = ['host','disk','vpc']
-          this.warnData.forEach((item,index) => {
+          var warnUrl = ['host', 'disk', 'vpc']
+          this.warnData.forEach((item, index) => {
             item.url = warnUrl[index]
           })
         }
         response = values[1]
         if (response.status == 200 && response.data.status == 1) {
           this.noticeData = response.data.result.announcement
-          this.ads = response.data.result.advertisement
+          this.ads = response.data.result.advertisement.sort((adverA, adverB) => {
+            return adverA.displaynumber < adverB.displaynumber
+          })
         }
         response = values[2]
         if (response.status == 200 && response.data.status == 1) {
           // 资源列表数据
           this.source = response.data.result
           // 资源列表数据添加相应url属性
-          this.source.forEach((item,index) => {
-            var that=item
-            var current=this.sourceUrl.filter(item=>{
-              return item.prod==that.name
-           })
-            var currentUrl=current[0].prodUrl
-            item.items.forEach((content,index)=>{
-              content.url=currentUrl[index]
+          this.source.forEach((item, index) => {
+            var that = item
+            var current = this.sourceUrl.filter(item => {
+              return item.prod == that.name
+            })
+            var currentUrl = current[0].prodUrl
+            item.items.forEach((content, index) => {
+              content.url = currentUrl[index]
               // 需要跳转到购买页面的资源，添加url
-              if(content.itemName == '弹性云主机ECS'){
-                content.cartUrl='buy#Pecs'
-              } else if(content.itemName == '弹性IP'){
-                content.cartUrl='buy#Peip'
-              } else if(content.itemName == '云硬盘'){
-                content.cartUrl='buy#Pdisk'
+              if (content.itemName == '弹性云主机ECS') {
+                content.cartUrl = 'buy#Pecs'
+              } else if (content.itemName == '弹性IP') {
+                content.cartUrl = 'buy#Peip'
+              } else if (content.itemName == '云硬盘') {
+                content.cartUrl = 'buy#Pdisk'
               }
             })
           })
@@ -224,14 +235,17 @@
         })
       },
       // 跳转到相应的页面
-      togo(url,type){
-          // if(url=='host'){
-          //   sessionStorage.setItem('type', 'error')
-          // } else {
-          //   sessionStorage.setItem('type', type)
-          // }
-          this.$router.push(url)
-          sessionStorage.setItem('type', type)
+      togo(url, type){
+        // if(url=='host'){
+        //   sessionStorage.setItem('type', 'error')
+        // } else {
+        //   sessionStorage.setItem('type', type)
+        // }
+        this.$router.push(url)
+        sessionStorage.setItem('type', type)
+      },
+      change(){
+
       }
     },
     computed: {
@@ -409,19 +423,19 @@
                   width: 125px;
                   cursor: pointer;
                 }
-                .disable:hover{
+                .disable:hover {
                   cursor: not-allowed;
                 }
-                .cart-icon-wrap{
+                .cart-icon-wrap {
                   margin-left: 36px;
                   height: 25px;
                   width: 25px;
                   border: 1px solid #CCCCCC;
                   border-radius: 50%;
                   text-align: center;
-                  .cart-icon{
+                  .cart-icon {
                     line-height: 25px;
-                    color:  #CCCCCC;
+                    color: #CCCCCC;
                   }
                 }
               }
