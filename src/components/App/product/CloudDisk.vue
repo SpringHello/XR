@@ -151,7 +151,7 @@
           ],
           pImg: [
             {img: require('../../../assets/img/product/yunzhuji.png'), isc: '云主机'},
-            {img: require('../../../assets/img/product/vvpn.png'), isc: 'VPC'}
+            {img: require('../../../assets/img/product/backup-stage-f2.png'), isc: 'VPC'}
           ],
           selectIndex: 0
         },

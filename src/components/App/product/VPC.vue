@@ -168,7 +168,7 @@
           ],
           pImg: [
             {img: require('../../../assets/img/product/backup-stage-f1.png'), isc: '云主机'},
-            {img: require('../../../assets/img/product/vpn-.png'), isc: 'VPN'}
+            {img: require('../../../assets/img/product/vvpn.png'), isc: 'VPN'}
           ],
           selectIndex: 0
         },
