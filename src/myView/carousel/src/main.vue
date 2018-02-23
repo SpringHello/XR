@@ -48,14 +48,18 @@
       hoverStop: {
         type: Boolean,
         default: true
+      },
+      value: {
+        type: Number,
+        default: 0
       }
     },
     data(){
       return {
         items: [],
-        activeIndex: -1,
         hover: false,
         total: 0,
+        activeIndex: this.value,
         intervalID: null
       }
     },
@@ -64,7 +68,6 @@
     mounted(){
       this.items = this.updateItem()
       this.total = this.items.length
-      this.activeIndex = 0
       if (this.autoplay) {
         this.intervalID = window.setInterval(() => {
           this.setActiveItem(this.activeIndex + 1)
@@ -82,6 +85,7 @@
         this.$emit('on-change', this.activeIndex)
       }),
       updateItem(){
+
         return this.$children.filter(item => {
           return item.$options.name == 'my-carousel-item'
         })
