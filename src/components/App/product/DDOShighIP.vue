@@ -44,7 +44,7 @@
               <div>
                 <img :src="stage.activeIcon" v-show="index != stageInfo.selectIndex">
                 <img :src="stage.icon" v-show="index == stageInfo.selectIndex">
-                <p>{{stage.title}}</p>
+                <p style="letter-spacing: 1px;">{{stage.title}}</p>
               </div>
             </div>
           </div>
@@ -172,7 +172,7 @@
           ],
           pImg: [
             {img: require('../../../assets/img/product/backup-stage-f1.png'), isc: '云主机'},
-            {img: require('../../../assets/img/product/vpn-.png'), isc: 'VPN'}
+            {img: require('../../../assets/img/product/vpn-.png'), isc: 'VPC'}
           ],
           selectIndex: 0
         },

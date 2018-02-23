@@ -45,7 +45,7 @@
               <div>
                 <img :src="stage.activeIcon" v-show="index == stageInfo.selectIndex">
                 <img :src="stage.icon" v-show="index != stageInfo.selectIndex">
-                <p>{{stage.title}}</p>
+                <p style="letter-spacing: 1px;">{{stage.title}}</p>
               </div>
             </div>
           </div>
@@ -121,7 +121,7 @@
         },
         features: [
           {
-            img: require('../../../assets/img/product/net-1.png'),
+            img: require('../../../assets/img/product/nat-stage-1-icon-white.png'),
             title: 'SNAT',
             desc: 'NAT网关提供SNAT功能，为VPC内无公网IP的主机实例提供访问互联网的代理服务。'
           },
@@ -134,7 +134,7 @@
         stageInfo: {
           stages: [
             {
-              title: 'SNA网关',
+              title: 'SNAT网关',
               icon: require('../../../assets/img/product/nat-stage-1-icon-blue.png'),
               activeIcon: require('../../../assets/img/product/nat-stage-1-icon-white.png'),
               img: require('../../../assets/img/product/nat-stage-1-icon-background.png'),
@@ -150,7 +150,7 @@
           ],
           pImg: [
             {img: require('../../../assets/img/product/backup-stage-f1.png'), isc: '云主机'},
-            {img: require('../../../assets/img/product/vpn-.png'), isc: 'VPN'}
+            {img: require('../../../assets/img/product/vpn-.png'), isc: 'VPC'}
           ],
           selectIndex: 0
         },
