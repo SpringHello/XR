@@ -45,8 +45,8 @@
               <div>
                 <img :src="stage.activeIcon" v-show="index == stageInfo.selectIndex">
                 <img :src="stage.icon" v-show="index != stageInfo.selectIndex">
-                <p v-show="index == stageInfo.selectIndex" style="color: #377DFF;">{{stage.title}}</p>
-                <p v-show="index != stageInfo.selectIndex" style="color: #FFFFFF;">{{stage.title}}</p>
+                <p v-show="index == stageInfo.selectIndex" style="color: #377DFF;letter-spacing: 1px;">{{stage.title}}</p>
+                <p v-show="index != stageInfo.selectIndex" style="color: #FFFFFF;letter-spacing: 1px;">{{stage.title}}</p>
               </div>
             </div>
           </div>
@@ -159,7 +159,7 @@
               desc: ['虚拟防火墙通过设置防火墙的规则和策略来控制外网对云平台站点的安全防护和访问控制，能够有效的阻止非法的服务和进程的接入，云平台为用户每个的VPC提供了独立的虚拟防火墙，用户可以灵活配置虚拟防火墙的规则，在在子网上引用对进站、出站的流量进行匹配，满足访问规则的流量才能够正常的接收和发送。虚拟防火墙部署在互联网出口，用于阻断互联网上的非法的流量和行为，一般用于互联网网站的部署，将网站使用的端口开放，其他端口禁止访问。'],
               pImg: [
                 {img: require('../../../assets/img/product/backup-stage-f1.png'), isc: '云主机'},
-                {img: require('../../../assets/img/product/vpn-.png'), isc: 'VPN'}
+                {img: require('../../../assets/img/product/vpn-.png'), isc: 'VPC'}
               ]
             }
           ],

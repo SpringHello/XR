@@ -36,7 +36,7 @@
     <div class="stage">
       <div class="wrapper">
         <p class="subTitle">使用场景</p>
-        <div class="flex">
+        <div class="flex" style="min-height: 300px">
           <div class="left">
             <div  v-for="(stage,index) in stageInfo.stages"
                  :class="{active:index == stageInfo.selectIndex}"
@@ -44,7 +44,7 @@
               <div>
                 <img :src="stage.activeIcon" v-show="index != stageInfo.selectIndex">
                 <img :src="stage.icon" v-show="index == stageInfo.selectIndex">
-                <p>{{stage.title}}</p>
+                <p style="letter-spacing: 1px;">{{stage.title}}</p>
               </div>
             </div>
           </div>

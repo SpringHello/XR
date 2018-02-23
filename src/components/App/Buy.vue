@@ -890,21 +890,21 @@
           vm.product.currentProduct = 'Peip'
         }
         if (sessionStorage.getItem('type')) {
-        switch (sessionStorage.getItem('type')) {
-          case '':
-            break
-          case 'Pecs':
-            vm.product.currentProduct = 'Pecs'
-            break
-          case 'Pdisk':
-            vm.product.currentProduct = 'Pdisk'
-            break
-          case 'Peip':
-            vm.product.currentProduct = 'Peip'
-            break
+          switch (sessionStorage.getItem('type')) {
+            case '':
+              break
+            case 'Pecs':
+              vm.product.currentProduct = 'Pecs'
+              break
+            case 'Pdisk':
+              vm.product.currentProduct = 'Pdisk'
+              break
+            case 'Peip':
+              vm.product.currentProduct = 'Peip'
+              break
+          }
+          sessionStorage.removeItem('type')
         }
-        sessionStorage.removeItem('type')
-      }
       })
     },
     data(){
@@ -1148,6 +1148,7 @@
       }
     },
     created(){
+      scrollTo(0,0)
       window.addEventListener('scroll', () => {
         if (window.innerHeight - this.$refs.list.getBoundingClientRect().bottom < 246) {
           this.$refs.buyDiv.style.position = 'fixed'

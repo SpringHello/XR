@@ -98,90 +98,101 @@
     <!-- 云产品展示区域 -->
     <div class="cloud-content">
       <div class="container">
-        <p v-for="(item,index) in cloudContainer" :key="index" v-if="item.select">{{item.desc}}</p>
-        <div class="content-carousel">
-          <div v-for="(item,index) in cloudContainer">
-            <transition name="fade">
-              <div style="height:365px;position: relative;text-align: center" v-show="item.select"
-                   @mouseenter="item.ME=true"
-                   @mouseleave="item.ME=false">
-                <!-- 如果item.prodItem个数大于5个，则需要轮播条 -->
-                <!-- 绑定style width属性用于计算轮播图实际宽度，主要解决ie兼容性问题 -->
-                <div :class="{flexCarousel:item.prodItem.length>5,textCenter:item.prodItem.length<6}" :ref="item.title"
-                     :style="{width:item.prodItem.length*242-15+'px'}">
-                  <div v-for="(content,index) in item.prodItem" class="item"
-                       :class="{lastItem:index==item.prodItem.length-1,active:content.ME}"
-                       @mouseenter="handleMouseEnter(item,content)">
-                    <div class="header">
-                      <i></i>
-                      <h2>{{content.title}}</h2>
+        <transition name="cloudContentFade">
+          <div v-show="cloudContentFade">
+            <p v-for="(item,index) in cloudContainer" :key="index" v-if="item.select">{{item.desc}}</p>
+            <div class="content-carousel">
+              <div v-for="(item,index) in cloudContainer">
+                <transition name="fade">
+                  <div style="height:365px;position: relative;text-align: center" v-show="item.select"
+                       @mouseenter="item.ME=true"
+                       @mouseleave="item.ME=false">
+                    <!-- 如果item.prodItem个数大于5个，则需要轮播条 -->
+                    <!-- 绑定style width属性用于计算轮播图实际宽度，主要解决ie兼容性问题 -->
+                    <div :class="{flexCarousel:item.prodItem.length>5,textCenter:item.prodItem.length<6}"
+                         :ref="item.title"
+                         :style="{width:item.prodItem.length*242-15+'px'}">
+                      <div v-for="(content,index) in item.prodItem" class="item"
+                           :class="{lastItem:index==item.prodItem.length-1,active:content.ME}"
+                           @mouseenter="handleMouseEnter(item,content)">
+                        <div class="header">
+                          <i></i>
+                          <h2>{{content.title}}</h2>
+                        </div>
+                        <div class="body">
+                          <img v-show="!content.ME" :src="content.img">
+                          <img v-show="content.ME" :src="content.hoverImg">
+                          <p>{{content.desc}}</p>
+                        </div>
+                        <div class="foot">
+                          <router-link :to="content.detailLink" target="_blank" style="border-right: 1px solid #cccccc">
+                            {{content.detailText}}
+                          </router-link>
+                          <router-link :to="content.useLink" target="_blank" v-if="content.useText=='立即使用'">
+                            {{content.useText}}
+                          </router-link>
+                          <router-link :to="content.useLink" v-else>
+                            {{content.useText}}
+                          </router-link>
+                        </div>
+                      </div>
                     </div>
-                    <div class="body">
-                      <img v-show="!content.ME" :src="content.img">
-                      <img v-show="content.ME" :src="content.hoverImg">
-                      <p>{{content.desc}}</p>
-                    </div>
-                    <div class="foot">
-                      <router-link :to="content.detailLink" target="_blank" style="border-right: 1px solid #cccccc">
-                        {{content.detailText}}
-                      </router-link>
-                      <router-link :to="content.useLink" target="_blank" v-if="content.useText=='立即使用'">
-                        {{content.useText}}
-                      </router-link>
-                      <router-link :to="content.useLink" v-else>
-                        {{content.useText}}
-                      </router-link>
-                    </div>
-                  </div>
-                </div>
-                <transition name="carousel-arrow-left">
-                  <div v-if="item.prodItem.length>5" v-show="item.ME" class="arrow-left arrow"
-                       @click="scroll('left',item.title)">
-                    <i class="arrow-left-icon"></i>
-                  </div>
-                </transition>
-                <transition name="carousel-arrow-right">
-                  <div v-if="item.prodItem.length>5" v-show="item.ME" class="arrow-right arrow"
-                       @click="scroll('right',item.title),item.title">
-                    <i class="arrow-right-icon"></i>
+                    <transition name="carousel-arrow-left">
+                      <div v-if="item.prodItem.length>5" v-show="item.ME" class="arrow-left arrow"
+                           @click="scroll('left',item.title)">
+                        <i class="arrow-left-icon"></i>
+                      </div>
+                    </transition>
+                    <transition name="carousel-arrow-right">
+                      <div v-if="item.prodItem.length>5" v-show="item.ME" class="arrow-right arrow"
+                           @click="scroll('right',item.title),item.title">
+                        <i class="arrow-right-icon"></i>
+                      </div>
+                    </transition>
                   </div>
                 </transition>
               </div>
-            </transition>
+            </div>
           </div>
-        </div>
+        </transition>
       </div>
     </div>
     <!-- 满足严苛要求的卓越品质 -->
-    <div class="feature-container">
+    <div class="feature-container" id="fade">
       <div class="container">
         <div class="feature-desc">
-          <p class="title">满足严苛品质要求</p>
+          <p class="title" @click="fade=!fade">满足严苛品质要求</p>
           <p class="desc">顶级硬件与超大带宽，结合多重实时数据保护与高额度网络攻击防护。为企业与开发者交付优质云计算资源，将不间断的超高性能覆盖到更为广泛的终端客户</p>
         </div>
-        <div class="feature-banner">
-          <div v-for="(item,index) in featureContainer" class="banner" :class="{notMargin:index>2}"
-               @mouseenter="featureEnter(item)"
-               @mouseleave="featureLeave(item)">
-            <img v-show="!item.select" :src="item.img">
-            <img v-show="item.select" :src="item.clickImg">
-            <span class="title">{{item.title}}</span>
-            <span class="desc">{{item.desc}}</span>
+        <transition name="fade">
+          <div class="feature-banner" v-show="fade">
+            <div v-for="(item,index) in featureContainer" class="banner" :class="{notMargin:index>2}"
+                 @mouseenter="featureEnter(item)"
+                 @mouseleave="featureLeave(item)">
+              <img v-show="!item.select" :src="item.img">
+              <img v-show="item.select" :src="item.clickImg">
+              <span class="title">{{item.title}}</span>
+              <span class="desc">{{item.desc}}</span>
+            </div>
           </div>
-        </div>
+        </transition>
       </div>
     </div>
     <!-- 图形化控制台 -->
     <div class="console-container">
       <div class="container">
-        <p>云计算数据中心</p>
-        <span>专业的数据中心及运营机构，为您带来高水准的优质服务及流畅体验，五星级数据中心，与各骨干网络互联互通。</span>
-        <div id="echarts" style="width:1200px;height:700px"></div>
+        <transition name="consoleFade">
+          <div v-show="consoleFade">
+            <p>云计算数据中心</p>
+            <span>专业的数据中心及运营机构，为您带来高水准的优质服务及流畅体验，五星级数据中心，与各骨干网络互联互通。</span>
+            <div id="echarts" style="width:1200px;height:700px"></div>
+          </div>
+        </transition>
       </div>
       <div
         style="opacity:.8;width:100%;height:200px;position: absolute;bottom:0px;background-color: #ffffff;box-shadow: 0 -3px 8px 0 rgba(0,0,0,0.20);">
         <div style="width:1000px;height:200px;margin:0px auto;">
-          <my-carousel :interval=5000 class="carousel" @on-change="carChange">
+          <my-carousel :interval=10000 class="carousel" @on-change="carChange">
             <my-carousel-item class="carousel-item" v-for="(area,index) in areaInfo" style="padding:50px 100px"
                               :key="index">
               <div style="color:black;display: flex;align-items: center;justify-content: space-between">
@@ -189,8 +200,7 @@
                 <p style="font-size: 14px;color:#999999;line-height: 20px;width:500px;border-right: 1px solid #d8d8d8;
     padding-right: 40px;">
                   {{area.desc}}</p>
-                <router-link v-if="$store.state.userInfo" to="/ruicloud/new">立即购买</router-link>
-                <router-link v-else to="/ruicloud/login" class="buy" style="padding:13px 30px">立即购买</router-link>
+                <router-link to="/ruicloud/buy" class="buy" style="padding:13px 30px">立即购买</router-link>
               </div>
             </my-carousel-item>
           </my-carousel>
@@ -198,26 +208,53 @@
       </div>
     </div>
     <!-- 合作伙伴 -->
-    <div class="partner-container">
-      <div class="container">
-        <h1>合作伙伴</h1>
-        <p>行业领先的生态合作伙伴，售前覆盖各省市地区，提供本地化咨询、销售、服务、安全等一体化企业级解决方案。</p>
+    <!--<div class="partner-container">
+      <div>
+        <transition name="partner">
+          <div v-if="partnerFade">
+            <div class="container">
+              <h1>合作伙伴</h1>
+              <p>行业领先的生态合作伙伴，售前覆盖各省市地区，提供本地化咨询、销售、服务、安全等一体化企业级解决方案。</p>
+            </div>
+            <div class="partner">
+              <img v-for="(partner,index) in partners" :src="partner">
+            </div>
+          </div>
+        </transition>
       </div>
-      <div class="partner">
-        <img v-for="(partner,index) in partners" :src="partner">
+    </div>-->
+    <div class="partner-container">
+      <div>
+        <transition name="partner">
+          <div v-if="partnerFade">
+            <div class="container">
+              <h1>合作伙伴</h1>
+              <p>行业领先的生态合作伙伴，售前覆盖各省市地区，提供本地化咨询、销售、服务、安全等一体化企业级解决方案。</p>
+            </div>
+            <div class="partner">
+              <div v-for="(partner,index) in partners" :key="index" style="width:25%;position:relative;height:100px;">
+                <img :src="partner" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)">
+              </div>
+            </div>
+          </div>
+        </transition>
       </div>
     </div>
     <!-- 权威认证 -->
     <div class="authority-container">
       <div class="container">
-        <p>权威认证，我们始终为您提供安全可靠云产品</p>
-        <span>加入新睿云，即可获取安全可靠云服务，实现企业快速发展</span>
-        <ul>
-          <li v-for="(auth,index) in authorityContainer">
-            <img :src="auth.img">
-            <span>{{auth.title}}</span>
-          </li>
-        </ul>
+        <transition name="authorityFade">
+          <div v-if="authorityFade">
+            <p>权威认证，我们始终为您提供安全可靠云产品</p>
+            <span>加入新睿云，即可获取安全可靠云服务，实现企业快速发展</span>
+            <ul>
+              <li v-for="(auth,index) in authorityContainer">
+                <img :src="auth.img">
+                <span>{{auth.title}}</span>
+              </li>
+            </ul>
+          </div>
+        </transition>
       </div>
     </div>
   </div>
@@ -231,6 +268,14 @@
   export default{
     data () {
       return {
+        // 云产品滚动效果
+        cloudContentFade: false,
+        // 严苛品质要求滚动效果
+        fade: false,
+        // 地图滚动效果
+        consoleFade: false,
+        partnerFade: false,
+        authorityFade: false,
         bannerText: require('../../assets/img/home/active3Text.png'),
         bannerImages: [
           require('../../assets/img/active/quest-banner.png'),
@@ -487,10 +532,12 @@
         partners: [
           require('../../assets/img/home/partner-dell.png'),
           require('../../assets/img/home/partner-huawei.png'),
-          require('../../assets/img/home/partner-unicom.png'),
+          require('../../assets/img/home/partner-cooce.png'),
           require('../../assets/img/home/partner-vmware.png'),
-          require('../../assets/img/home/partner-telecom.png'),
-          require('../../assets/img/home/partner-sugon.png')
+          require('../../assets/img/home/partner-sugon.png'),
+          require('../../assets/img/home/partner-hitachi.png'),
+          require('../../assets/img/home/partner-unicom.png'),
+          require('../../assets/img/home/partner-telecom.png')
         ],
         /* 权威认证 */
         authorityContainer: [
@@ -520,6 +567,26 @@
       echarts.registerMap('china', china)
       this.myChart = echarts.init(document.getElementById('echarts'))
       this.myChart.setOption(polar)
+      // 待优化
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 300 && !this.cloudContentFade
+        )
+        {
+          this.cloudContentFade = true
+        }
+        if (window.scrollY > 1100 && !this.fade) {
+          this.fade = true
+        }
+        if (window.scrollY > 1800 && !this.consoleFade) {
+          this.consoleFade = true
+        }
+        if (window.scrollY > 2200 && !this.partnerFade) {
+          this.partnerFade = true
+        }
+        if (window.scrollY > 2600 && !this.authorityFade) {
+          this.authorityFade = true
+        }
+      })
     },
     created () {
 
@@ -733,186 +800,192 @@
       height: 600px;
       background-color: #f9f9f9;
       .container {
+        position: relative;
         width: 1200px;
         margin: 0px auto;
-        > p {
-          font-size: 14px;
-          color: #999999;
-          text-align: center;
-          padding: 76px 0px 80px;
-        }
-        .content-carousel {
-          margin-bottom: 70px;
-          overflow-x: hidden;
-          .fade-enter-active, .fade-leave-active {
-            transition: opacity .2s
-          }
-          .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */
-          {
-            display: none;
-          }
-          .arrow {
-            width: 36px;
-            height: 36px;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            border-radius: 50% 50%;
-            z-index: 4;
-            border: none;
-            cursor: pointer;
-            background-color: rgba(31, 45, 61, .11);
-            transition: .5s;
-            &:hover {
-              background-color: #384c6e;
-            }
-          }
-          .arrow-left {
-            left: 30px;
-            .arrow-left-icon {
-              display: block;
-              width: 15px;
-              height: 15px;
-              border-right: 4px solid white;
-              border-bottom: 4px solid white;
-              transform: rotate(135deg) translate(-1px, -16px);
-            }
-          }
-          .arrow-right {
-            right: 30px;
-            .arrow-right-icon {
-              display: block;
-              width: 15px;
-              height: 15px;
-              border-right: 4px solid white;
-              border-bottom: 4px solid white;
-              transform: rotate(-45deg) translate(-2px, 13px);
-            }
-          }
-          .carousel-arrow-left-enter-active, .carousel-arrow-left-leave-active, .carousel-arrow-right-enter-active, .carousel-arrow-right-leave-active {
-            transition: all .5s ease;
-          }
-          .carousel-arrow-left-enter, .carousel-arrow-left-leave-active {
-            opacity: 0;
-            transform: translate(-16px, -50%);
-          }
-          .carousel-arrow-right-enter, .carousel-arrow-right-leave-active {
-            opacity: 0;
-            transform: translate(16px, -50%);
-          }
-          .flexCarousel {
-            position: absolute;
-            display: flex;
-            align-items: center;
-            height: 360px;
-            transition: all .5s;
-            left: 0px;
-            margin: 2.5px 2.5px 2.5px;
-          }
-          .textCenter {
+        > div {
+          position: absolute;
+          width: 1200px;
+          top: 0px;
+          > p {
+            font-size: 14px;
+            color: #999999;
             text-align: center;
-            align-items: center;
-            height: 360px;
-            display: inline-flex;
-            margin: 2.5px auto;
-            div:last-child {
+            padding: 76px 0px 80px;
+          }
+          .content-carousel {
+            margin-bottom: 70px;
+            overflow-x: hidden;
+            .fade-enter-active, .fade-leave-active {
+              transition: opacity .2s
+            }
+            .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */
+            {
+              display: none;
+            }
+            .arrow {
+              width: 36px;
+              height: 36px;
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+              border-radius: 50% 50%;
+              z-index: 4;
+              border: none;
+              cursor: pointer;
+              background-color: rgba(31, 45, 61, .11);
+              transition: .5s;
+              &:hover {
+                background-color: #384c6e;
+              }
+            }
+            .arrow-left {
+              left: 30px;
+              .arrow-left-icon {
+                display: block;
+                width: 15px;
+                height: 15px;
+                border-right: 4px solid white;
+                border-bottom: 4px solid white;
+                transform: rotate(135deg) translate(-1px, -16px);
+              }
+            }
+            .arrow-right {
+              right: 30px;
+              .arrow-right-icon {
+                display: block;
+                width: 15px;
+                height: 15px;
+                border-right: 4px solid white;
+                border-bottom: 4px solid white;
+                transform: rotate(-45deg) translate(-2px, 13px);
+              }
+            }
+            .carousel-arrow-left-enter-active, .carousel-arrow-left-leave-active, .carousel-arrow-right-enter-active, .carousel-arrow-right-leave-active {
+              transition: all .5s ease;
+            }
+            .carousel-arrow-left-enter, .carousel-arrow-left-leave-active {
+              opacity: 0;
+              transform: translate(-16px, -50%);
+            }
+            .carousel-arrow-right-enter, .carousel-arrow-right-leave-active {
+              opacity: 0;
+              transform: translate(16px, -50%);
+            }
+            .flexCarousel {
+              position: absolute;
+              display: flex;
+              align-items: center;
+              height: 360px;
+              transition: all .5s;
+              left: 0px;
+              margin: 2.5px 2.5px 2.5px;
+            }
+            .textCenter {
+              text-align: center;
+              align-items: center;
+              height: 360px;
+              display: inline-flex;
+              margin: 2.5px auto;
+              div:last-child {
+                margin-right: 0px;
+              }
+            }
+            .item {
+              display: inline-block;
+              width: 227px;
+              margin-right: 15px;
+              background-color: #ffffff;
+              border-radius: 10px;
+              overflow: hidden;
+              .header {
+                height: 52px;
+                border-bottom: 1px solid #d8d8d8;
+                position: relative;
+                h2 {
+                  padding: 18px 0px;
+                  text-align: center;
+                  font-size: 16px;
+                  color: #999999;
+                  font-weight: normal;
+                }
+                i {
+                  display: block;
+                  width: 0px;
+                  height: 0px;
+                  border-bottom: 20px solid #d8d8d8;
+                  border-right: 20px solid transparent;
+                  border-left: 20px solid transparent;
+                  position: absolute;
+                  transform: rotate(45deg);
+                  right: -14px;
+                  top: -3px;
+                }
+              }
+              .body {
+                height: 243px;
+                transition: height .3s;
+                position: relative;
+                > p {
+                  position: absolute;
+                  top: 135px;
+                  left: 50%;
+                  width: 180px;
+                  line-height: 19px;
+                  font-size: 14px;
+                  color: #999999;
+                  transform: translateX(-50%);
+                }
+                img {
+                  position: absolute;
+                  top: 54px;
+                  left: 50%;
+                  transform: translateX(-50%);
+                }
+              }
+              .foot {
+                border-top: 1px solid #d8d8d8;
+                height: 45px;
+                display: flex;
+                a {
+                  width: 50%;
+                  text-align: center;
+                  color: #999999;
+                  font-size: 14px;
+                  vertical-align: middle;
+                  line-height: 45px;
+                  cursor: pointer;
+                }
+              }
+            }
+            .active {
+              background-color: #387dff;
+              box-shadow: 0 0px 10px 0 #387dff;
+              .header {
+                border-bottom: 1px solid #ffffff;
+                i {
+                  border-bottom: 20px solid #ffe876;
+                }
+                h2 {
+                  color: #ffffff;
+                }
+              }
+              .body {
+                height: 263px;
+                > p {
+                  color: #ffffff;
+                }
+              }
+              .foot {
+                border-top: 1px solid #ffffff;
+                > a {
+                  color: #ffffff;
+                }
+              }
+            }
+            .lastItem {
               margin-right: 0px;
             }
-          }
-          .item {
-            display: inline-block;
-            width: 227px;
-            margin-right: 15px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            overflow: hidden;
-            .header {
-              height: 52px;
-              border-bottom: 1px solid #d8d8d8;
-              position: relative;
-              h2 {
-                padding: 18px 0px;
-                text-align: center;
-                font-size: 16px;
-                color: #999999;
-                font-weight: normal;
-              }
-              i {
-                display: block;
-                width: 0px;
-                height: 0px;
-                border-bottom: 20px solid #d8d8d8;
-                border-right: 20px solid transparent;
-                border-left: 20px solid transparent;
-                position: absolute;
-                transform: rotate(45deg);
-                right: -14px;
-                top: -3px;
-              }
-            }
-            .body {
-              height: 243px;
-              transition: height .3s;
-              position: relative;
-              > p {
-                position: absolute;
-                top: 135px;
-                left: 50%;
-                width: 180px;
-                line-height: 19px;
-                font-size: 14px;
-                color: #999999;
-                transform: translateX(-50%);
-              }
-              img {
-                position: absolute;
-                top: 54px;
-                left: 50%;
-                transform: translateX(-50%);
-              }
-            }
-            .foot {
-              border-top: 1px solid #d8d8d8;
-              height: 45px;
-              display: flex;
-              a {
-                width: 50%;
-                text-align: center;
-                color: #999999;
-                font-size: 14px;
-                vertical-align: middle;
-                line-height: 45px;
-                cursor: pointer;
-              }
-            }
-          }
-          .active {
-            background-color: #387dff;
-            box-shadow: 0 0px 10px 0 #387dff;
-            .header {
-              border-bottom: 1px solid #ffffff;
-              i {
-                border-bottom: 20px solid #ffe876;
-              }
-              h2 {
-                color: #ffffff;
-              }
-            }
-            .body {
-              height: 263px;
-              > p {
-                color: #ffffff;
-              }
-            }
-            .foot {
-              border-top: 1px solid #ffffff;
-              > a {
-                color: #ffffff;
-              }
-            }
-          }
-          .lastItem {
-            margin-right: 0px;
           }
         }
       }
@@ -920,10 +993,12 @@
     > .feature-container {
       width: 100%;
       padding: 82px 0px 92px;
+      height: 800px;
       background-color: #ffffff;
       .container {
         width: 1200px;
         margin: 0px auto;
+        position: relative;
         .feature-desc {
           text-align: center;
           .title {
@@ -941,10 +1016,18 @@
           display: flex;
           flex-wrap: wrap;
           justify-content: space-between;
+          position: absolute;
+          width: 1200px;
+          top: 138px;
           .banner {
-            margin: 0px 6% 105px;
             width: 18%;
             cursor: pointer;
+            padding: 35px 80px;
+            box-sizing: content-box;
+            margin-bottom: 20px;
+            &:hover {
+              box-shadow: -1px 3px 22px 1px rgba(55, 125, 255, 0.18);
+            }
             img {
               display: block;
               margin: 0px auto 30px;
@@ -973,44 +1056,51 @@
       background-color: #f9f9f9;
       position: relative;
       .container {
+        height: 921px;
         padding: 82px 0px 72px;
         width: 1200px;
         margin: 0px auto;
         text-align: center;
-        > p {
-          font-size: 28px;
-          color: #333333;
-          margin-bottom: 25px;
-        }
-        > span {
-          font-size: 14px;
-          color: #999999;
-          display: inline-block;
-        }
-        .console-img {
-          display: flex;
-          width: 1160px;
-          margin: 0px auto;
-          background-color: #377dff;
-          .message {
-            padding: 59px 48px 52px;
-            width: 100%;
-            h2 {
-              font-size: 24px;
-              color: #ffffff;
-              text-align: left;
-              letter-spacing: 2px;
-              padding-bottom: 34px;
-              border-bottom: 1px solid #ffffff;
-              font-weight: normal;
-            }
-            p {
-              font-size: 14px;
-              color: #ffffff;
-              letter-spacing: 1px;
-              line-height: 200%;
-              text-align: left;
-              margin-top: 33px;
+        position: relative;
+        > div {
+          position: absolute;
+          width: 1200px;
+          top: 82px;
+          > p {
+            font-size: 28px;
+            color: #333333;
+            margin-bottom: 25px;
+          }
+          > span {
+            font-size: 14px;
+            color: #999999;
+            display: inline-block;
+          }
+          .console-img {
+            display: flex;
+            width: 1160px;
+            margin: 0px auto;
+            background-color: #377dff;
+            .message {
+              padding: 59px 48px 52px;
+              width: 100%;
+              h2 {
+                font-size: 24px;
+                color: #ffffff;
+                text-align: left;
+                letter-spacing: 2px;
+                padding-bottom: 34px;
+                border-bottom: 1px solid #ffffff;
+                font-weight: normal;
+              }
+              p {
+                font-size: 14px;
+                color: #ffffff;
+                letter-spacing: 1px;
+                line-height: 200%;
+                text-align: left;
+                margin-top: 33px;
+              }
             }
           }
         }
@@ -1018,6 +1108,16 @@
     }
     > .partner-container {
       background-color: #f9f9f9;
+      > div {
+        width: 1200px;
+        margin: 0px auto;
+        position: relative;
+        height: 440px;
+        > div {
+          position: absolute;
+          top: 0px;
+        }
+      }
       .container {
         background-color: #f9f9f9;
         padding: 80px 0px 25px;
@@ -1057,37 +1157,46 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        flex-wrap: wrap;
         img {
-          height: 100%;
+          // height: 100%;
         }
       }
     }
     > .authority-container {
       padding: 82px 0px 72px;
+      height: 331px;
       background-color: #ffffff;
       .container {
         width: 1200px;
         margin: 0px auto;
         text-align: center;
-        > p {
-          font-size: 28px;
-          color: #333333;
-          margin-bottom: 25px;
-        }
-        > span {
-          font-size: 14px;
-          color: #999999;
-          margin-bottom: 50px;
-          display: inline-block;
-        }
-        ul {
-          display: flex;
-          justify-content: space-between;
-          li {
+        position: relative;
+
+        > div {
+          position: absolute;
+          top: 0px;
+          width: 1200px;
+          > p {
+            font-size: 28px;
+            color: #333333;
+            margin-bottom: 25px;
+          }
+          > span {
             font-size: 14px;
             color: #999999;
-            img {
-              vertical-align: middle;
+            margin-bottom: 50px;
+            display: inline-block;
+          }
+          ul {
+            display: flex;
+            justify-content: space-between;
+            li {
+              font-size: 14px;
+              color: #999999;
+              img {
+                vertical-align: middle;
+              }
             }
           }
         }
@@ -1110,6 +1219,55 @@
         background: url('../../assets/img/active/newNodesText.png') no-repeat center;
       }
     }
+  }
 
+  // 移入移出动画
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+    top: 300px !important;
+  }
+
+  .fade-enter-active, .fade-leave-active {
+    transition: all .5s
+  }
+
+  // 移入移出动画
+  .cloudContentFade-enter, .cloudContentFade-leave-to {
+    opacity: 0;
+    top: 300px !important;
+  }
+
+  .cloudContentFade-enter-active, .cloudContentFade-leave-active {
+    transition: all .5s
+  }
+
+  // 移入移出动画
+  .consoleFade-enter, .consoleFade-leave-to {
+    opacity: 0;
+    top: 300px !important;
+  }
+
+  .consoleFade-enter-active, .consoleFade-leave-active {
+    transition: all .5s
+  }
+
+  // 移入移出动画
+  .partner-enter, .partner-leave-to {
+    opacity: 0;
+    top: 300px !important;
+  }
+
+  .partner-enter-active, .partner-leave-active {
+    transition: all .5s
+  }
+
+  // 移入移出动画
+  .authorityFade-enter, .authorityFade-leave-to {
+    opacity: 0;
+    top: 300px !important;
+  }
+
+  .authorityFade-enter-active, .authorityFade-leave-active {
+    transition: all .5s
   }
 </style>

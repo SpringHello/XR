@@ -44,7 +44,7 @@
               <div>
                 <img :src="stage.activeIcon" v-show="index != stageInfo.selectIndex">
                 <img :src="stage.icon" v-show="index == stageInfo.selectIndex">
-                <p>{{stage.title}}</p>
+                <p style="letter-spacing: 1px;">{{stage.title}}</p>
               </div>
             </div>
           </div>
@@ -209,8 +209,8 @@
                 // {title:'推荐配置',desc:'参考设计图'}
               ],
               config: [
-                {title: 'cpu', desc: '2核'},
-                {title: '内存', desc: '4核'},
+                {title: 'CPU', desc: '2核'},
+                {title: '内存', desc: '4G'},
                 {title: '硬盘', desc: '50G'},
                 {title: '宽带', desc: '5Mbps'},
                 {title: '公网IP', desc: '1个'}
@@ -227,8 +227,8 @@
                 // {title:'推荐配置',desc:'参考设计图'}
               ],
               config: [
-                {title: 'cpu', desc: '2核'},
-                {title: '内存', desc: '4核'},
+                {title: 'CPU', desc: '2核'},
+                {title: '内存', desc: '4G'},
                 {title: '硬盘', desc: '50G'},
                 {title: '宽带', desc: '5Mbps'},
                 {title: '公网IP', desc: '1个'}
@@ -245,8 +245,8 @@
                 // {title:'推荐配置',desc:'参考设计图'}
               ],
               config: [
-                {title: 'cpu', desc: '2核'},
-                {title: '内存', desc: '4核'},
+                {title: 'CPU', desc: '2核'},
+                {title: '内存', desc: '4G'},
                 {title: '硬盘', desc: '50G'},
                 {title: '宽带', desc: '5Mbps'},
                 {title: '公网IP', desc: '1个'}
