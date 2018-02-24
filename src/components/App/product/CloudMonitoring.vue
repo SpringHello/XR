@@ -44,7 +44,7 @@
               <div>
                 <img :src="stage.activeIcon" v-show="index != stageInfo.selectIndex">
                 <img :src="stage.icon" v-show="index == stageInfo.selectIndex">
-                <p style="letter-spacing: 1px;">{{stage.title}}</p>
+                <p style="margin-top: 10px;">{{stage.title}}</p>
               </div>
             </div>
           </div>
