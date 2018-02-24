@@ -48,10 +48,6 @@
       hoverStop: {
         type: Boolean,
         default: true
-      },
-      value: {
-        type: Number,
-        default: 0
       }
     },
     data(){
@@ -59,7 +55,7 @@
         items: [],
         hover: false,
         total: 0,
-        activeIndex: this.value,
+        activeIndex: -1,
         intervalID: null
       }
     },
@@ -68,6 +64,7 @@
     mounted(){
       this.items = this.updateItem()
       this.total = this.items.length
+      this.activeIndex = 0
       if (this.autoplay) {
         this.intervalID = window.setInterval(() => {
           this.setActiveItem(this.activeIndex + 1)
