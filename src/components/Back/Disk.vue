@@ -1,6 +1,10 @@
 <template>
   <div id="background">
     <div id="wrapper">
+      <Spin fix v-show="loading">
+        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+        <div>{{loadingMessage}}</div>
+      </Spin>
       <span>云存储 / 云硬盘</span>
       <div id="content">
         <div id="header">
@@ -260,6 +264,8 @@
   export default{
     data(){
       return {
+        loadingMessage: '',
+        loading: false,
         // 磁盘列包含信息
         diskColumns: [
           {
@@ -607,7 +613,7 @@
       // 从主机中卸载磁盘
       unload(data){
         this.operand = data
-        if (this.operand.mounton != '' && this.operand.mountonname != '' && this.operand.status == 1) {
+        if (this.operand.mounton  && this.operand.mountonname  && this.operand.status == 1) {
           this.showModal.diskUnload = true
           this.diskName = this.operand.diskname
           this.hostName = this.operand.mountonname
@@ -708,7 +714,7 @@
       // 删除磁盘
       deleteDisk(){
         if (this.checkSelect() == true) {
-          if (this.diskSelection.status == 1 && this.diskSelection.mounton != '' && this.diskSelection.mountonname != '') {
+          if (this.diskSelection.status == 1 && this.diskSelection.mounton  && this.diskSelection.mountonname ) {
             // 该磁盘已挂载主机，无法删除。弹出确认卸载框，点击卸载
             this.showModal.beforeDelete = true
           } else if (this.diskSelection.caseType != 1 && this.diskSelection.caseType != 2) {
@@ -836,6 +842,9 @@
       },
       /* 确认创建磁盘备份 */
       createDiskBackup_ok() {
+        this.loadingMessage = '正在备份磁盘，请稍候'
+        this.loading = true
+        this.showModal.createDiskBackup = false
         var url = `Snapshot/createDiskSnapshot.do?diskId=${this.operand.diskid}&name=${this.createBackupsForm.backupsName}&zoneId=${this.operand.zoneid}`
         axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {

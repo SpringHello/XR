@@ -195,6 +195,19 @@ div.modal-header-border {
   padding: 6px 15px;
   font-size: 12px;
 }
-
+.demo-spin-icon-load {
+  font-size: 60px !important;
+}
+.ivu-spin-fix {
+  opacity: 0.6;
+}
+.demo-spin-icon-load{
+  animation: ani-demo-spin 1s linear infinite;
+}
+@keyframes ani-demo-spin {
+  from { transform: rotate(0deg);}
+  50%  { transform: rotate(180deg);}
+  to   { transform: rotate(360deg);}
+}
 
 

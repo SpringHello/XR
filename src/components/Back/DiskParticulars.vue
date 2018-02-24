@@ -1,6 +1,10 @@
 <template>
   <div id="background">
     <div id="wrapper">
+      <Spin fix v-show="loading">
+        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+        <div>{{loadingMessage}}</div>
+      </Spin>
       <span>云存储 / 云硬盘</span>
       <!-- 磁盘相关信息 -->
       <div class="diskInfo">
@@ -223,6 +227,8 @@
   export default{
     data(){
       return {
+        loadingMessage: '',
+        loading: false,
         // 磁盘系列化对象
         rwPolar: JSON.parse(diskOptionsstr),
         IOPSPolar: JSON.parse(diskOptionsstr),
@@ -577,13 +583,17 @@
       },
       /* 确认创建磁盘备份 */
       createDiskBackup_ok() {
+        this.loadingMessage = '正在创建磁盘备份，请稍候'
+        this.loading = true
         this.showModal.createDiskBackup = false
         var url = `Snapshot/createDiskSnapshot.do?diskId=${this.createBackupsForm.diskId}&name=${this.createBackupsForm.backupsName}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            this.loading = false
             this.$Message.info(response.data.message)
             this.listDiskSnapshots()
           } else {
+            this.loading = false
             this.$message.error({
               content: response.data.message
             })
@@ -598,6 +608,7 @@
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.info(response.data.message)
               this.listDiskSnapshots()
+              this.diskBackupsSelection = null
             } else {
               this.$message.error({
                 content: response.data.message
