@@ -607,7 +607,7 @@
       // 从主机中卸载磁盘
       unload(data){
         this.operand = data
-        if (this.operand.mounton != '' && this.operand.mountonname != '' && this.operand.status == 1) {
+        if (this.operand.mounton  && this.operand.mountonname  && this.operand.status == 1) {
           this.showModal.diskUnload = true
           this.diskName = this.operand.diskname
           this.hostName = this.operand.mountonname
@@ -708,7 +708,7 @@
       // 删除磁盘
       deleteDisk(){
         if (this.checkSelect() == true) {
-          if (this.diskSelection.status == 1 && this.diskSelection.mounton != '' && this.diskSelection.mountonname != '') {
+          if (this.diskSelection.status == 1 && this.diskSelection.mounton  && this.diskSelection.mountonname ) {
             // 该磁盘已挂载主机，无法删除。弹出确认卸载框，点击卸载
             this.showModal.beforeDelete = true
           } else if (this.diskSelection.caseType != 1 && this.diskSelection.caseType != 2) {
