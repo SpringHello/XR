@@ -312,11 +312,21 @@
             title: '操作',
             align: 'center',
             render: (h, object) => {
-              if (object.row.usetype == 0) {
+              if (object.row.status == 2) {
+                // 创建中
+                return h('div', {}, [h('Spin'), h('span', {}, '创建中')])
+              } else if (object.row.status == 3) {
+                // 绑定中
+                return h('div', {}, [h('Spin'), h('span', {}, '绑定中')])
+              }
+              if (object.row.status == 4) {
+                // 解绑中
+                return h('div', {}, [h('Spin'), h('span', {}, '解绑中')])
+              } else if (object.row.usetype == 0) {
                 return h('Dropdown', {
                   on: {
                     'on-click': (type) => {
-                      this.openBindIPModal(type, object.row)
+                      this.openBindIPModal(type, object.row, object.row.id)
                     }
                   }
                 }, [h('a', {}, ['绑定资源 ', h('Icon', {attrs: {type: 'arrow-down-b'}})]), h('DropdownMenu', {slot: 'list'}, [h('DropdownItem', {
@@ -392,7 +402,9 @@
             {required: true, message: '请选择NAT网关', trigger: 'change'}
           ]
         },
-        customTimeOptions
+        customTimeOptions,
+        // 当前操作弹性IP的id
+        operatingId: null
       }
     },
     methods: {
@@ -462,8 +474,8 @@
         })
       },
       // 打开绑定IP到云主机模态框
-      openBindIPModal(type, row){
-        console.log(type,row)
+      openBindIPModal(type, row, id){
+        this.operatingId = id
         this.bindForHostForm.hostOptions = []
         if (type == 'host') {
           this.bindForHostForm.row = row
@@ -504,6 +516,12 @@
         this.$refs.bindForHostFormValidate.validate(validate => {
           if (validate) {
             this.showModal.bindIPForHost = false
+            this.ipData.forEach(item => {
+              if (item.id === this.operatingId) {
+                // 3代表绑定中
+                item.status = 3
+              }
+            })
             this.$http.get(`network/enableStaticNat.do?ipId=${this.bindForHostForm.row.publicipid}&VMId=${this.bindForHostForm.host}`).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
@@ -522,6 +540,12 @@
       bindNATSubmit(){
         this.$refs.bindForNATFormValidate.validate(validate => {
           if (validate) {
+            this.ipData.forEach(item => {
+              if (item.id === this.operatingId) {
+                // 3代表绑定中
+                item.status = 3
+              }
+            })
             this.$http.get(`network/bindingElasticIP.do?publicIp=${this.bindForNATForm.row.publicip}&natGatewayId=${this.bindForNATForm.NAT}`).then(response => {
               this.showModal.bindIPForNAT = false
               if (response.status == 200 && response.data.status == 1) {
@@ -567,6 +591,13 @@
                 url = `network/disableStaticNat.do?VMId=${row.computerid}`
                 break
             }
+            console.log('解绑')
+            this.ipData.forEach(item => {
+              if (item.id === this.operatingId) {
+                // 4代表绑定中
+                item.status = 4
+              }
+            })
             this.$http.get(url).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$message.info({
