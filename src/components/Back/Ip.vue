@@ -341,7 +341,7 @@
                   }
                 }, '解绑资源')
               } else {
-                  return h('span', {}, '----')
+                return h('span', {}, '----')
               }
             }
           }
@@ -463,6 +463,7 @@
       },
       // 打开绑定IP到云主机模态框
       openBindIPModal(type, row){
+        console.log(type,row)
         this.bindForHostForm.hostOptions = []
         if (type == 'host') {
           this.bindForHostForm.row = row
@@ -502,8 +503,8 @@
       bindHostSubmit(){
         this.$refs.bindForHostFormValidate.validate(validate => {
           if (validate) {
+            this.showModal.bindIPForHost = false
             this.$http.get(`network/enableStaticNat.do?ipId=${this.bindForHostForm.row.publicipid}&VMId=${this.bindForHostForm.host}`).then(response => {
-              this.showModal.bindIPForHost = false
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
                 this.refresh()
