@@ -30,16 +30,21 @@
                     </div>
                   </div>
                   <div class="item-wrap">
-                    <div class="item"><p>路由器（VPC）：<span>{{item.aclCount}}</span></p></div>
+                    <div class="item"><p>路由器（VPC）：<span>1</span></p></div>
                     <span class="dotted-across"></span>
                   </div>
                   <div class="item-wrap">
-                    <div class="item"><p>交换机：（子网）<span>{{item.networkCount}}</span></p></div>
+                    <div class="item" @click="manage(item)" style="cursor: pointer"><p>交换机：（子网）<span>{{item.networkCount}}</span>
+                    </p></div>
                     <span class="dotted-vertical"></span>
-                    <div class="item item4"><p>弹性云主机：<span>{{item.computerCount}}</span></p></div>
+                    <router-link to="host">
+                      <div class="item item4"><p>弹性云主机：<span>{{item.computerCount}}</span></p></div>
+                    </router-link>
                   </div>
                   <div class="item-wrap">
-                    <div class="item"><p>防火墙：<span>{{item.aclCount}}</span></p></div>
+                    <router-link to="firewall">
+                      <div class="item"><p>防火墙：<span>{{item.aclCount}}</span></p></div>
+                    </router-link>
                   </div>
                 </div>
                 <div class="card-bottom">
