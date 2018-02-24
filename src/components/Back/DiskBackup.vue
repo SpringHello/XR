@@ -1,6 +1,10 @@
 <template>
   <div id="background">
     <div id="wrapper">
+      <Spin fix v-show="loading">
+        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+        <div>{{loadingMessage}}</div>
+      </Spin>
       <span>云存储 / 云硬盘备份</span>
       <div id="content">
         <div id="header">
@@ -211,6 +215,8 @@
   export default{
     data(){
       return {
+        loadingMessage: '',
+        loading: false,
         // 获取磁盘列表，显示穿梭框左面
         diskForBackupsStrategyList: [],
         // 应用该备份策略的磁盘,显示在穿梭框右面
@@ -1089,12 +1095,16 @@
       /* 确认创建磁盘备份 */
       createDiskBackup_ok() {
         this.showModal.createDiskBackup = false
+        this.loadingMessage = '正在创建磁盘备份，请稍候'
+        this.loading = true
         var url = `Snapshot/createDiskSnapshot.do?diskId=${this.createBackupsForm.diskId}&name=${this.createBackupsForm.backupsName}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            this.loading = false
             this.$Message.info(response.data.message)
             this.listDiskSnapshots()
           } else {
+            this.loading = false
             this.$message.error({
               content: response.data.message
             })
@@ -1108,6 +1118,7 @@
           axios.get(url).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.info(response.data.message)
+              this.diskBackupsSelection = null
               this.listDiskSnapshots()
             } else {
               this.$message.error({

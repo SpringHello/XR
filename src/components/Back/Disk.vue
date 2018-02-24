@@ -1,6 +1,10 @@
 <template>
   <div id="background">
     <div id="wrapper">
+      <Spin fix v-show="loading">
+        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+        <div>{{loadingMessage}}</div>
+      </Spin>
       <span>云存储 / 云硬盘</span>
       <div id="content">
         <div id="header">
@@ -260,6 +264,8 @@
   export default{
     data(){
       return {
+        loadingMessage: '',
+        loading: false,
         // 磁盘列包含信息
         diskColumns: [
           {
@@ -836,6 +842,9 @@
       },
       /* 确认创建磁盘备份 */
       createDiskBackup_ok() {
+        this.loadingMessage = '正在备份磁盘，请稍候'
+        this.loading = true
+        this.showModal.createDiskBackup = false
         var url = `Snapshot/createDiskSnapshot.do?diskId=${this.operand.diskid}&name=${this.createBackupsForm.backupsName}&zoneId=${this.operand.zoneid}`
         axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
