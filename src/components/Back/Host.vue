@@ -790,9 +790,7 @@
             this.loading = true
             this.closeHost.forEach(item => {
               if (item.select == true) {
-                this.$http.post('information/startVirtualMachine.do', {
-                  virtualMachineid: item.computerid
-                }).then(response => {
+                this.$http.get(`information/startVirtualMachine.do?VMId=${item.computerid}`).then(response => {
                   num--
                   if (num == 0) {
                     this.loading = false
@@ -827,9 +825,7 @@
         this.loading = true
         item.select = false
         item.status = 2
-        this.$http.post('information/startVirtualMachine.do', {
-          virtualMachineid: item.computerid
-        }).then(response => {
+        this.$http.get(`information/startVirtualMachine.do?VMId=${item.computerid}`).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             this.$message.info(response.data.message)
