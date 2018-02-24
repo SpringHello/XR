@@ -320,8 +320,8 @@
             width: 180,
             render: (h, params) => {
               const row = params.row
-              const text = row.status === 0 ? '欠费' : (row.status === 1 && !row.mounton && !row.mountonname) ? '可挂载' : (row.status === 1 && row.mounton && row.mountonname) ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '正常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '卸载中' : row.status === 5 ? '挂载中' : ''
-              if (row.status == 2 || row.status == 3 || row.status == 4 || row.status == 5) {
+              const text = row.status === 0 ? '欠费' : (row.status === 1 && !row.mounton && !row.mountonname) ? '可挂载' : (row.status === 1 && row.mounton && row.mountonname) ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '正常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '卸载中' : row.status === 5 ? '挂载中' :row.status === 6 ? '备份中': ''
+              if (row.status == 2 || row.status == 3 || row.status == 4 || row.status == 5|| row.status == 6) {
                 return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block',
@@ -842,9 +842,12 @@
       },
       /* 确认创建磁盘备份 */
       createDiskBackup_ok() {
-        this.loadingMessage = '正在备份磁盘，请稍候'
-        this.loading = true
         this.showModal.createDiskBackup = false
+        this.diskData.forEach(item => {
+          if (item.diskid == this.operand.diskid) {
+            item.status = 6
+          }
+        })
         var url = `Snapshot/createDiskSnapshot.do?diskId=${this.operand.diskid}&name=${this.createBackupsForm.backupsName}&zoneId=${this.operand.zoneid}`
         axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
