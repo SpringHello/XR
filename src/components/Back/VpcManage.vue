@@ -62,7 +62,7 @@
                   <DropdownMenu slot="list" style="transform:translate(0%,0%)">
                     <div class="subnet-info" style="padding:5px 10px">
                       <span>vpc名称：{{data.vpcname}}</span>
-                      <span>所属区域：{{data.zoneName}}</span>
+                      <span>所属区域：{{data.zonename}}</span>
                     </div>
                   </DropdownMenu>
                 </Dropdown>
@@ -98,7 +98,7 @@
                   </Dropdown>
                   <div class="firewall" v-if="item.acllistid"></div>
                   <Tooltip content="添加云服务器" placement="right-start" style="margin:10px 110px;">
-                    <span class="vm new" @click="addHost(item,true)">
+                    <span class="vm new" @click="addHostToVpc(item)">
                       +
                     </span>
                   </Tooltip>
@@ -113,7 +113,7 @@
                         <div style="border-right:1px solid rgb(204, 204, 204);padding:20px 10px;">
                           <div style="margin:0px auto;width:65px;">
                             <Button type="primary" size="small" style="margin-bottom:15px;width:64px"
-                                    @click="disbindNet(item,vm,true)">离开网络
+                                    @click="leaveNetwork(vm.networkid,vm.computerid)">离开网络
                             </Button>
                             <Button type="primary" size="small"
                                     style="margin-bottom:15px;width:64px;text-align: center" v-if="vm.staticnatip"
@@ -138,7 +138,7 @@
                   </Dropdown>
                 </div>
                 <div class="item-wrapper" style="height:46px;">
-                  <span class="newSubnet" @click="">+</span>
+                  <span class="newSubnet" @click="openAddNetwork">+</span>
                 </div>
               </div>
             </div>
@@ -227,6 +227,75 @@
         <Button type="primary" @click="addHostForm_ok">确认添加</Button>
       </div>
     </Modal>
+    <!-- 修改子网模态框 -->
+    <Modal v-model="showModal.update" width="590" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        修改私有网络属性
+      </div>
+      <div style="width:69%">
+        <Form :model="updateForm" :label-width="80">
+          <Form-item label="名称">
+            <Input v-model="updateForm.name" placeholder="请输入..." style="width: 300px"></Input>
+          </Form-item>
+          <Form-item label="描述">
+            <Input v-model="updateForm.description" type="textarea" :rows="4" placeholder="请输入..."></Input>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.update = false">取消</Button>
+        <Button type="primary" @click="modifyNetwork">确定
+        </Button>
+      </div>
+    </Modal>
+    <!-- 更换防火墙模态框 -->
+    <Modal v-model="showModal.modifyFirewall" width="590" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        更换网络防火墙
+      </div>
+      <div style="width:69%">
+        <Form :model="modifyFirewallForm" :label-width="80">
+          <Form-item label="应用防火墙">
+            <Select v-model="modifyFirewallForm.acl" placeholder="请选择">
+              <Option v-for="item in aclList" :key="item.acllistid" :value="item.acllistid">
+                {{item.acllistname}}
+              </Option>
+            </Select>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.modifyFirewall = false">取消</Button>
+        <Button type="primary"
+                :disabled="modifyFirewallForm.acl==''" @click="modifyFirewall">确定
+        </Button>
+      </div>
+    </Modal>
+    <!-- 主机绑定ip模态框 -->
+    <Modal v-model="showModal.bindIP" width="590" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        绑定静态IP
+      </div>
+      <div style="width:60%">
+        <Form :model="bindForm" :label-width="80">
+          <Form-item label="公网IP">
+            <Select v-model="bindForm.publicIP" placeholder="请选择">
+              <Option v-for="item in publicIPList" :key="item.publicipid"
+                      :value="`${item.publicipid}#${item.publicip}`">
+                {{item.publicip}}
+              </Option>
+            </Select>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.bindIP = false">取消</Button>
+        <Button type="primary" :disabled="bindForm.publicIP==''" @click="bind">确定</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -267,7 +336,11 @@
           addNetwork: false,
           leaveNetwork: false,
           addRouter: false,
-          addHostToNet: false
+          addHostToNet: false,
+          update: false,
+          modifyFirewall: false,
+          newNetwork: false,
+          bindIP: false
         },
         newNetworkForm: {
           networkName: '',
@@ -278,6 +351,23 @@
           serviceOfferOptions: [],
           gateway: 0
         },
+        // 修改子网表单
+        updateForm: {
+          name: '',
+          description: '',
+          id: '',
+        },
+        // 更换防火墙表单
+        modifyFirewallForm: {
+          acl: ''
+        },
+        // 主机绑定ip表单
+        bindForm: {publicIP: '', vm: null},
+        // 公网ip列表
+        publicIPList: [],
+        // 防火墙
+        firewall: null,
+        aclList: [],
         // 添加主机到子网表单
         addHostForm: {
           vm: '',
@@ -408,7 +498,7 @@
                             targetPrivateId: object.row.privateGatewayid2
                           }
                         }).then(response => {
-                          if(response.status == 200 && response.data.status == 1) {
+                          if (response.status == 200 && response.data.status == 1) {
                             this.$message.info({
                               content: response.data.message
                             })
@@ -434,7 +524,7 @@
     methods: {
       // 添加主机到vpc
       addHostToVpc (item) {
-      this.showModal.addHostToNet = true
+        this.showModal.addHostToNet = true
         this.addHostForm.ipsegmentid = item.ipsegmentid
         var url = `network/listVMToNetwork.do?networkid=${item.ipsegmentid}`
         this.$http.get(url).then(response => {
@@ -455,7 +545,7 @@
             this.$message.info({
               content: response.data.message
             })
-              this.refresh()
+            this.refresh()
           } else {
             this.$message.error({
               content: response.data.message
@@ -492,7 +582,7 @@
         var vpcGateway = axios.get(`network/listPrivateGateways.do?vpcId=${vpcId}&zoneId=${$store.state.zone.zoneid}`)
         Promise.all([vpcNetwork, vpcGateway]).then((response) => {
           this.setData(response[0])
-            this.setVPC(response[1])
+          this.setVPC(response[1])
         })
       },
       setData(response){
@@ -508,6 +598,85 @@
         if (response.status == 200 && response.data.status == 1) {
           this.vpcTableData = response.data.result
         }
+      },
+      /* 修改子网 */
+      openModifyModal(item){
+        this.updateForm.name = item.name
+        this.updateForm.description = item.descript
+        this.updateForm.id = item.ipsegmentid
+        this.showModal.update = true
+      },
+      /* 确认修改子网 */
+      modifyNetwork(){
+        this.showModal.update = false
+        let url = `network/updateNetwork.do?name=${this.updateForm.name}&descript=${this.updateForm.description}&networkId=${this.updateForm.id}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.refresh()
+            this.$Message.success(response.data.message)
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
+      },
+      /* 删除子网 */
+      delNetwork(item){
+        var url = `network/deleteNetwork.do?id=${item.id}`
+        if (item.isdefault != 1) {
+          this.$message.confirm({
+            content: '确认删除该子网？',
+            onOk: () => {
+              item.delete = true
+              this.$http.get(url).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success(response.data.message)
+                  this.refresh()
+                } else {
+                  item.delete = false
+                  this.$message.error({
+                    content: response.data.message
+                  })
+                }
+              })
+            }
+          })
+        } else {
+          this.$message.error({
+            content: '默认子网不能删除',
+          })
+        }
+      },
+      /* 更换防火墙 */
+      modifyNetModal(item){
+        this.firewall = item
+        this.aclList = []
+        this.showModal.modifyFirewall = true
+        this.$http.get(`network/listAclList.do?vpcid=${this.data.vpcid}`).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.aclList = response.data.result
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
+      },
+      /* 确认更换防火墙 */
+      modifyFirewall(){
+        this.showModal.modifyFirewall = false
+        var url = `network/replaceNetworkACLList.do?aclListId=${this.modifyFirewallForm.acl}&networkId=${this.firewall.ipsegmentid}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+            this.refresh()
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
       },
       // 弹出添加子网modal
       openAddNetwork(){
@@ -542,6 +711,8 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+                this.refresh()
                 this.showModal.addNetwork = false
               } else {
                 nameError = ''
@@ -550,6 +721,10 @@
                   nameError = response.data.message
                 } else if (response.data.message == '您输入的网关已经存在，请换一个网关!') {
                   getwayError = response.data.message
+                } else {
+                  this.$message.error({
+                    content: response.data.message
+                  })
                 }
                 this.$refs.newNetworkValidate.validate()
               }
@@ -565,13 +740,64 @@
       },
       // 发送离开网络ajax
       leaveNetwork_ok(){
-        var url = `network/removeVMToNetwork.do?networkid=${this.leaveForm.networkid}&vmid=${this.leaveForm.vmId}`
+        var url = `network/removeVMToNetwork.do?networkId=${this.leaveForm.networkid}&VMId=${this.leaveForm.vmId}`
         this.showModal.leaveNetwork = false
-        axios.get(url).then(response => {
+        this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-
+            this.$Message.success(response.data.message)
+            this.refresh()
           } else if (response.status == 200 && response.data.status == 2) {
-            this.$error('error', response.data.message)
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
+      },
+      /* 主机绑定ip，弹出模态框*/
+      bindIP(item, vm){
+        this.bindForm.vm = vm
+        this.bindForm.publicIP = ''
+        this.showModal.bindIP = true
+        this.$http.get(`network/listPublicIp.do?useType=1`)
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.publicIPList = response.data.result
+            }
+          })
+      },
+      /* 主机确认绑定ip */
+      bind(){
+        this.showModal.bindIP = false
+        var arr = this.bindForm.publicIP.split("#")
+        var url = `network/enableStaticNat.do?ipId=${arr[0]}&VMId=${this.bindForm.vm.computerid}`
+        this.$http.get(url)
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.success(response.data.message)
+              this.refresh()
+            } else {
+              this.$message.error({
+                content: response.data.message
+              })
+            }
+          })
+      },
+      /* 主机解绑ip */
+      unbind(vm){
+        this.$message.confirm({
+          content: '该主机确认解绑IP？',
+          onOk: () => {
+            var url = `network/disableStaticNat.do?VMId=${vm.computerid}`
+            this.$http.get(url).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+                this.refresh()
+              } else {
+                this.$message.error({
+                  content: response.data.message
+                })
+              }
+            })
           }
         })
       },
@@ -790,6 +1016,7 @@
       white-space: nowrap;
       line-height: 16px;
       display: block;
+      font-size: 12px;
     }
   }
 
