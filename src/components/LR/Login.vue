@@ -28,7 +28,7 @@
                        :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
                        @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
                 <img :src="imgSrc"
-                     @click="imgSrc=`http://localhost:8082/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                     @click="imgSrc=`http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
               </div>
             </form>
           </div>
@@ -197,7 +197,10 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   .login-wrapper {
+    @diff: 129px;
+    min-height: calc(~"100% - @{diff}");
     width: 100%;
+    background: #F4F4F4;
     .header {
       width: 100%;
       height: 70px;

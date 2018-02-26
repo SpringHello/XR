@@ -753,6 +753,10 @@
         }
       }
       return {
+
+        phoneVerCode: '获取验证码',
+        emailVerCode: '获取验证码',
+
         // 当前选中的tab页
         currentTab: '',
         emailVerCodeText: '获取验证码',
@@ -1188,6 +1192,13 @@
       this.listNotice()
     },
     methods: {
+      init(){
+        axios.get('user/GetUserInfo.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            $store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+          }
+        })
+      },
       // 快速认证时发送验证码
       sendCode(){
         this.$refs.sendCode.validate(validate => {
@@ -1417,6 +1428,8 @@
             } else {
               this.showModal.authNewEmail = true
             }
+          } else {
+            this.$Message.error(response.data.message)
           }
         })
       },
@@ -1499,7 +1512,62 @@
         if (response.status == 1) {
           this.notAuth.companyAuthForm.organization = response.result
         }
-      }
+      },
+
+      // 更新手机号
+      confirmPhone(){
+        var url = `user/updatePhone.do?code=${this.newPhoneForm.verCode}&phone=${this.newPhoneForm.newPhone}`;
+        this.$http.get(url).then((response) => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message);
+            this.init()
+          }
+          this.showModal.authNewPhone = false
+        })
+      },
+      // 更新email
+      confirmEmail(){
+        this.showModal.authNewEmail = false
+        var url = `user/updateUserInfo.do?code=${this.newPhoneForm.verCode}&list=${this.newPhoneForm.newPhone}`;
+        this.$http.get(url).then((response) => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message);
+            this.init()
+          }
+          this.showModal.authNewPhone = false
+        })
+      },
+      // 获取新手机验证码
+      getNewPhoneVerCode(type){
+        if (type == 'phone' && this.newPhoneForm.code.length != 4) {
+          this.$Message.error('请输入正确的随机验证码')
+          return
+        }
+        //发送获取验证码ajax
+        var url = 'user/code.do?type=1'
+        if (type == 'phone') {
+          url += `&isemail=0&aim=${this.newPhoneForm.newPhone}&vailCode=${this.newPhoneForm.code}`
+        } else {
+          url += `&isemail=1&aim=${this.newPhoneForm.newPhone}`
+        }
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            //60秒倒计时
+            var timeOut = 60;
+            this[`${type}VerCode`] = '60s'
+            var interval = setInterval(function () {
+              timeOut--
+              if (timeOut == 0) {
+                this[`${type}VerCode`] = '获取验证码'
+                clearInterval(interval)
+                return
+              }
+              this[`${type}VerCodeText`] = timeOut + 's'
+            }.bind(this), 1000)
+            this.$Message.success(response.data.message)
+          }
+        })
+      },
     },
     computed: mapState({
       // 传字符串参数 'count' 等同于 `

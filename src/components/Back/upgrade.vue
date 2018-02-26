@@ -82,7 +82,7 @@
         this.calCost()
       },
       calCost(){
-        var url = `information/UpVMConfigCost.do?cpunum=${this.CPUNum}&memory=${this.RAMSize}&virtualMachineid=${this.virtualMachineid}`
+        var url = `information/UpVMConfigCost.do?cpunum=${this.CPUNum}&memory=${this.RAMSize}&VMId=${this.virtualMachineid}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.cost = response.data.result
@@ -95,7 +95,7 @@
         if (this.CPUNum + this.RAMSize == this.currentCPUNum + this.currentRAMSize) {
           return
         }
-        var url = `information/UpVMConfig.do?cpunum=${this.CPUNum}&memory=${this.RAMSize}&virtualMachineid=${this.virtualMachineid}&disksize=${this.diskSize}`
+        var url = `information/UpVMConfig.do?cpunum=${this.CPUNum}&memory=${this.RAMSize}&VMId=${this.virtualMachineid}&disksize=${this.diskSize}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success('订单提交成功')
