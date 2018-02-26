@@ -1,7 +1,11 @@
 <template>
   <div class="vpc-manage">
     <div class="wrapper">
-      <span class="title">总览<span class="i-line">/</span><span>虚拟私有云</span></span>
+      <span class="title">
+        云网络 /
+        <router-link to='/ruicloud/vpc' style="color:rgba(17, 17, 17, 0.43);">网络私有云VPC /</router-link>
+        <span style="">管理</span>
+      </span>
       <div class="body">
         <div class="head-info">
           <div class="top">
@@ -895,9 +899,6 @@
         line-height: 22px;
         display: inline-block;
         margin: 10px 0px;
-        .i-line {
-          padding: 0 10px;
-        }
         span:last-child {
           color: #666666;
         }
