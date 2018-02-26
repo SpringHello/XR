@@ -254,7 +254,7 @@
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this[type + 'Data'] = response.data.result
-            pageInfo.total = response.data.pageTotal
+            pageInfo.total = parseInt(response.data.pageTotal)
             this.paneLabel.all = response.data.total
             this.paneLabel.notRead = response.data.noReadTotal
             this.$store.commit('setMsg', Number.parseInt(response.data.noReadTotal))

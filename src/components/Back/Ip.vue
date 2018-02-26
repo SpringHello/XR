@@ -328,8 +328,7 @@
                     display: 'inline-block'
                   }
                 }), h('span', {}, '绑定中')])
-              }
-              if (object.row.status == 4) {
+              } else if (object.row.status == 4) {
                 // 解绑中
                 return h('div', {}, [h('Spin',{
                   style: {
@@ -490,6 +489,7 @@
       // 打开绑定IP到云主机模态框
       openBindIPModal(type, row, id){
         this.operatingId = id
+        console.log(id)
         this.bindForHostForm.hostOptions = []
         if (type == 'host') {
           this.bindForHostForm.row = row
@@ -542,7 +542,10 @@
                 this.refresh()
               } else {
                 this.$message.error({
-                  content: response.data.message
+                  content: response.data.message,
+                  'onOk': () => {
+                    this.refresh()
+                  }
                 })
               }
             })
@@ -567,7 +570,10 @@
                 this.refresh()
               } else {
                 this.$message.error({
-                  content: response.data.message
+                  content: response.data.message,
+                  'onOk': () => {
+                    this.refresh()
+                  }
                 })
               }
             })
@@ -606,9 +612,10 @@
                 break
             }
             // console.log('解绑')
+            this.operatingId = row.id
             this.ipData.forEach(item => {
               if (item.id === this.operatingId) {
-                // 4代表绑定中
+                // 4代表解绑中
                 item.status = 4
               }
             })
@@ -620,7 +627,10 @@
                 this.refresh()
               } else {
                 this.$message.error({
-                  content: response.data.message
+                  content: response.data.message,
+                  'onOk': () => {
+                    this.refresh()
+                  }
                 })
               }
             })
@@ -629,6 +639,10 @@
       },
       // 删除弹性ip
       delElasticIP(){
+         if (this.select == null) {
+          this.$Message.warning('请选择1个弹性IP')
+          return false
+        }
         this.$http.get(`network/delPublic.do?id=${this.select.id}`).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
