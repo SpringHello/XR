@@ -1033,10 +1033,10 @@
       },
       del() {
         if (this.checkSelect()) {
-          // if (this.currentHost[0].caseType != 3) {
-          //   this.$Message.warning('只能删除实时计费主机')
-          //   return
-          // }
+          if (this.currentHost[0].caseType != 3) {
+            this.$Message.warning('只能删除实时计费主机')
+            return
+          }
           this.loadingMessage = '正在删除主机'
           this.loading = true
           this.$http.get('information/deleteVM.do?id=' + this.currentHost[0].id)

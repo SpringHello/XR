@@ -72,7 +72,7 @@
             <p class="universal-middle" :class="warning" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">
               告警</p>
             <div style="display: flex;justify-content: space-between;cursor:pointer">
-              <div v-for="(item,index) in warnData" :key="index" @click="togo(item.url)" style="">
+              <div v-for="(item,index) in warnData" :key="index" @click="togo(item.url.split('#')[0],item.url.split('#')[1])" style="">
                 <p class="universal-mini">{{item.itemName}}</p>
                 <span class="universal-large" :class="{warning:item.value!=0}">{{item.value}}项</span>
               </div>
@@ -186,7 +186,7 @@
           })
           // 告警数据
           this.warnData = response.data.result[2].items
-          var warnUrl = ['host', 'disk', 'vpc']
+          var warnUrl = ['host#error', 'disk', 'vpc']
           this.warnData.forEach((item, index) => {
             item.url = warnUrl[index]
           })
@@ -236,11 +236,6 @@
       },
       // 跳转到相应的页面
       togo(url, type){
-        // if(url=='host'){
-        //   sessionStorage.setItem('type', 'error')
-        // } else {
-        //   sessionStorage.setItem('type', type)
-        // }
         this.$router.push(url)
         sessionStorage.setItem('type', type)
       },
