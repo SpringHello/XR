@@ -47,10 +47,11 @@
                      @click="PecsInfo.timeForm.currentTimeValue=item"
                      style="margin:0px;width:55px">
                   {{item.label}}
+                  <span v-if="item.type=='year'" class="discount-icon">惠</span>
                 </div>
               </div>
               <p style="margin-top: 10px;margin-bottom: 20px;font-size: 12px;color: #999999;line-height: 25px;">
-                满10月送两月，满一年打8折，满两年打7.5折，满3年5折</p>
+                满一年打8折，满两年打7.5折，满3年5折</p>
             </div>
 
             <!--快速配置主体页面-->
@@ -508,6 +509,7 @@
                    @click="PdiskInfo.timeForm.currentTimeValue=item"
                    style="margin:0px;border-right:none;width:55px">
                 {{item.label}}
+                <span v-if="item.type=='year'" class="discount-icon">惠</span>
               </div>
             </div>
             <p style="margin-top: 10px;margin-bottom: 20px;font-size: 12px;color: #999999;line-height: 25px;">
@@ -632,10 +634,11 @@
                    @click="PeipInfo.timeForm.currentTimeValue=item"
                    style="margin:0px;border-right:none;width:55px">
                 {{item.label}}
+                <span v-if="item.type=='year'" class="discount-icon">惠</span>
               </div>
             </div>
             <p style="margin-top: 10px;margin-bottom: 20px;font-size: 12px;color: #999999;line-height: 25px;">
-              满10月送两月，满一年打8折，满两年打7.5折，满3年5折</p>
+              满一年打8折，满两年打7.5折，满3年5折</p>
           </div>
 
           <!--主机网络与带宽-->
@@ -1148,7 +1151,7 @@
       }
     },
     created(){
-      scrollTo(0,0)
+      scrollTo(0, 0)
       window.addEventListener('scroll', () => {
         if (window.innerHeight - this.$refs.list.getBoundingClientRect().bottom < 246) {
           this.$refs.buyDiv.style.position = 'fixed'
@@ -1851,8 +1854,21 @@
           cursor: pointer;
           padding: 6px 0px;
           display: inline-block;
+          position: relative;
+          .discount-icon {
+            display: inline-block;
+            position: absolute;
+            background-color: rgb(255, 125, 45);
+            color: #ffffff;
+            right:2px;
+            top:1px;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+          }
           &:last-of-type {
-            border-right: 1px solid #d9d9d9;
+            border-right: 1px solid #d9d9d9 !important;
           }
         }
         .zoneSelect {

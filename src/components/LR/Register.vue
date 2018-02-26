@@ -547,6 +547,8 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   .login-wrapper {
+    @diff: 129px;
+    min-height: calc(~"100% - @{diff}");
     width: 100%;
     background: #F4F4F4;
     .header {
@@ -583,6 +585,7 @@
     .wrapper {
       width: 100%;
       padding: 120px 0px;
+      //height:
       .wrapper-form {
         width: 1200px;
         margin: 0px auto;
