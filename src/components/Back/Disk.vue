@@ -35,13 +35,13 @@
           <Form-item label="硬盘名称" prop="diskName" style="width: 65%">
             <Input v-model="diskForm.diskName" placeholder="小于20位数字或字母"></Input>
           </Form-item>
-          <Form-item label="购买数量" style="width: 65%">
+<!--          <Form-item label="购买数量" style="width: 65%">
             <div class="quantity">
               <p @click="reduce"><i></i></p>
               <p style="width: 38px;cursor: auto;color:#2A99F2;margin:0 10px ">{{ diskForm.quantity }}</p>
               <p @click="diskForm.quantity+=1"><i style="transform: translateX(-2px) rotate(311deg)"></i></p>
             </div>
-          </Form-item>
+          </Form-item>-->
           <Form-item label="区域" prop="diskArea">
             <Select v-model="diskForm.diskArea" placeholder="请选择">
               <Option v-for="item in diskAreaList" :key="item.zoneid" :value="item.zoneid">{{ item.zonename }}

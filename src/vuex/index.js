@@ -20,7 +20,9 @@ const store = new Vuex.Store({
     // 区域信息
     zoneList: null,
     // 当前区域
-    zone: null
+    zone: null,
+    // 消息条数
+    Msg: 0
   },
   getters: {},
 
@@ -37,6 +39,9 @@ const store = new Vuex.Store({
           state.zone = zone
         }
       }
+    },
+    setMsg(state, Msg){
+      state.Msg = Msg
     },
     setZone(state, zone){
       state.zone = zone
