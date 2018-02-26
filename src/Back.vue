@@ -41,22 +41,22 @@
               <router-link to="recharge" :class="{active:pageInfo.path=='recharge'}"><span>充值</span></router-link>
             </li>
             <li>
-              <Dropdown>
+              <Dropdown @on-click="go">
                 <a href="javascript:void(0)">
                   {{userInfo.realname}}
                   <Icon type="arrow-down-b"></Icon>
                 </a>
                 <DropdownMenu slot="list">
-                  <DropdownItem>
+                  <DropdownItem name="userCenter">
                     <router-link to="userCenter">用户中心</router-link>
                   </DropdownItem>
-                  <DropdownItem>
+                  <DropdownItem name="expenses">
                     <router-link to="expenses">费用中心</router-link>
                   </DropdownItem>
-                  <DropdownItem>
+                  <DropdownItem name="msgCenter">
                     <router-link to="msgCenter">消息中心</router-link>
                   </DropdownItem>
-                  <DropdownItem>
+                  <DropdownItem name="operationLog">
                     <router-link to="operationLog">操作日志</router-link>
                   </DropdownItem>
                   <DropdownItem divided>
@@ -264,15 +264,16 @@
 
       // 进入三级路由，记录二级路由入口
       push(pType, sType){
-        console.log('push')
         this.pageInfo.static = true
         this.pageInfo.selectItem = pType
         this.pageInfo.sType = sType
         this.$router.push(sType)
       },
-
+      go(path){
+        console.log(path)
+        this.$router.push(path)
+      },
       pane(pane){
-        console.log('pane', pane)
         sessionStorage.setItem('pane', pane)
       },
 

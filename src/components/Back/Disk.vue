@@ -747,7 +747,7 @@
         axios.get(`Disk/detachVolume.do?zoneId=${this.operand.zoneid}&diskId=${this.operand.diskid}&VMId=${this.operand.mounton}`).then(response => {
           this.listDisk()
           if (response.status == 200 && response.statusText == 'OK') {
-            this.$message.info({
+            this.$Message.info({
               content: response.data.message,
             })
           } else {
@@ -761,7 +761,7 @@
       modificationDisk_ok(){
         this.$http.get('Disk/updateDisk.do?diskId=' + this.operand.diskid + '&diskName=' + this.diskName).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$message.info({
+            this.$Message.info({
               content: response.data.message,
             })
             this.showModal.modificationDisk = false
@@ -783,7 +783,7 @@
         })
         this.$http.get('Disk/deleteVolume.do?id=' + this.diskSelection.id + '').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$message.info({
+            this.$Message.info({
               content: response.data.message,
             })
             this.listDisk()
@@ -805,7 +805,7 @@
         this.$http.get('Disk/attachVolume.do?diskId=' + this.operand.diskid + '&VMId=' + this.diskMountForm.mountHost).then(response => {
           this.listDisk()
           if (response.status == 200 && response.statusText == 'OK') {
-            this.$message.info({
+            this.$Message.info({
               content: response.data.message,
             })
           } else {
