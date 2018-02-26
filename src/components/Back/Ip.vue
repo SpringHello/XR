@@ -200,10 +200,12 @@
                   value = '创建中'
                   break
                 case 3:
-                  value = '绑定中'
+                  // value = '绑定中'
+                  value = '正常'
                   break
                 case 4:
-                  value = '解绑中'
+                  // value = '解绑中'
+                  value = '正常'
                   break
                 case 5:
                   value = '升级中'
@@ -223,14 +225,14 @@
                   }
                 }, "续费")]);
               }
-              if (obj.row.status != 1 && obj.row.status != 0 && obj.row.status != -1) {
-                return h('div', {}, [h('Spin', {
-                  style: {
-                    display: "inline-block",
-                    marginRight: "10px",
-                  },
-                }), h('span', {}, value)]);
-              }
+              // if (obj.row.status != 1 && obj.row.status != 0 && obj.row.status != -1) {
+              //   return h('div', {}, [h('Spin', {
+              //     style: {
+              //       display: "inline-block",
+              //       marginRight: "10px",
+              //     },
+              //   }), h('span', {}, value)]);
+              // }
               return h('span', value)
             }
           },
@@ -314,14 +316,26 @@
             render: (h, object) => {
               if (object.row.status == 2) {
                 // 创建中
-                return h('div', {}, [h('Spin'), h('span', {}, '创建中')])
+                return h('div', {}, [h('Spin',{
+                  style: {
+                    display: 'inline-block'
+                  }
+                }), h('span', {}, '创建中')])
               } else if (object.row.status == 3) {
                 // 绑定中
-                return h('div', {}, [h('Spin'), h('span', {}, '绑定中')])
+                return h('div', {}, [h('Spin',{
+                  style: {
+                    display: 'inline-block'
+                  }
+                }), h('span', {}, '绑定中')])
               }
               if (object.row.status == 4) {
                 // 解绑中
-                return h('div', {}, [h('Spin'), h('span', {}, '解绑中')])
+                return h('div', {}, [h('Spin',{
+                  style: {
+                    display: 'inline-block'
+                  }
+                }), h('span', {}, '解绑中')])
               } else if (object.row.usetype == 0) {
                 return h('Dropdown', {
                   on: {
@@ -338,7 +352,7 @@
                     name: 'NAT'
                   }
                 }, 'NAT网关')])])
-              } else if (object.row.usetype != 2) {
+              } else if (object.row.usetype != 2) { 
                 return h('span', {
                   style: {
                     color: '#2d8cf0',
@@ -591,7 +605,7 @@
                 url = `network/disableStaticNat.do?VMId=${row.computerid}`
                 break
             }
-            console.log('解绑')
+            // console.log('解绑')
             this.ipData.forEach(item => {
               if (item.id === this.operatingId) {
                 // 4代表绑定中
