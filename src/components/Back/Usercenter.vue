@@ -74,7 +74,8 @@
                         </Upload>
                       </div>
                       <div style="width:130px;margin-left:20px;">
-                        <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
+                        <img src="../../assets/img/usercenter/card-font.png"
+                             style="width:130px;height:74px;margin-bottom: 20px;">
                         <p style="line-height: 32px;text-align: center">示例图</p>
                       </div>
                     </div>
@@ -99,7 +100,8 @@
 
                       </div>
                       <div style="width:130px;margin-left:20px;">
-                        <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
+                        <img src="../../assets/img/usercenter/card-back.png"
+                             style="width:130px;height:74px;margin-bottom: 20px;">
                         <p style="line-height: 32px;text-align: center">示例图</p>
                       </div>
                     </div>
@@ -123,7 +125,8 @@
                         </Upload>
                       </div>
                       <div style="width:130px;margin-left:20px;">
-                        <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
+                        <img src="../../assets/img/usercenter/card-person.png"
+                             style="width:130px;height:74px;margin-bottom: 20px;">
                         <p style="line-height: 32px;text-align: center">示例图</p>
                       </div>
                     </div>
@@ -429,7 +432,8 @@
                       </Upload>
                     </div>
                     <div style="width:130px;margin-left:20px;">
-                      <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
+                      <img src="../../assets/img/usercenter/combine.jpg"
+                           style="width:130px;height:74px;margin-bottom: 20px;" @click="showPicture">
                       <p style="line-height: 32px;text-align: center">示例图</p>
                     </div>
                   </div>
@@ -722,6 +726,16 @@
         <Button type="primary" @click="resetPassword">完成</Button>
       </div>
     </Modal>
+
+    <!--显示图片-->
+    <Modal width="590" v-model="showModal.showPicture" :scrollable="true">
+      <div class="newPhone">
+        <img src="../../assets/img/usercenter/combine.jpg"
+             style="width:330px;height:450px;margin:0px auto;display:block">
+      </div>
+      <div slot="footer">
+      </div>
+    </Modal>
   </div>
 
 </template>
@@ -766,7 +780,8 @@
           modifyPhone: false,
           authByPhone: false,
           authByEmail: false,
-          modifyPassword: false
+          modifyPassword: false,
+          showPicture: false
         },
         imgSrc: 'user/getKaptchaImage.do',
         // 此对象存储所有未认证时页面的状态
@@ -1568,6 +1583,10 @@
           }
         })
       },
+      //显示三证合一原图
+      showPicture(){
+        this.showModal.showPicture = true
+      }
     },
     computed: mapState({
       // 传字符串参数 'count' 等同于 `
