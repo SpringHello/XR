@@ -1122,9 +1122,10 @@
         this.searchOrderByType()
       },
       show(index) {
+        var data = JSON.parse(this.orderData[index].display)
         this.$Modal.info({
           title: '订单信息',
-          content: `交易明细：${this.orderData[index].display}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
+          content: `交易明细：${data.title + '' + data['类型'] + '' +data['数量']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
                    <br>订单状态：${this.orderData[index].paymentstatus == '1' ? '已支付' : '未支付'}`
         })
       },
@@ -1424,6 +1425,7 @@
   .background {
     background-color: #f5f5f5;
     width: 100%;
+    min-height: 870px;
     .wrapper {
       width: 1200px;
       margin: 0px auto;
