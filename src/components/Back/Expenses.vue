@@ -670,7 +670,6 @@
             align: 'left',
             render: (h, params) => {
               var data = JSON.parse(params.row.display)
-              console.log(data.订单类型)
               var type = ''
               var arr = []
               switch (data.订单类型) {
@@ -697,8 +696,13 @@
                   break
               }
               for (var index in data.资源) {
-                for (var key in data.资源[index])
-                  arr.push(h('p', `${key}:${data.资源[index][key]}`))
+                for (var key in data.资源[index]){
+                  if(key!='地域'){
+                    arr.push(h('p', {style:{lineHeight:'1.5'}}, `${key}:${data.资源[index][key]}`))
+                  } else {
+                    arr[0]=h('p', {style:{lineHeight:'1.5'}}, `${key}:${data.资源[index][key]}`)
+                  }
+                }
               }
               return h('div', [
                 h('Collapse', {

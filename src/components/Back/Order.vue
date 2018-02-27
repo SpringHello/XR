@@ -9,7 +9,7 @@
       <div class="content">
         <span>订单确认</span>
         <span class="title">已选择{{selection.length}}项 | 总计:{{totalCost}}元 |</span>
-        <div style="margin-top:10px;">
+        <div style="margin-top:10px;" class="orderdata">
           <Table :columns="columns" :data="tableData" @on-selection-change="changeSelection"></Table>
           <div style="margin-top:15px;">
             <Page :total=total :current="page" @on-change="changePage"></Page>
@@ -134,8 +134,13 @@
                   break
               }
               for (var index in params.row['资源']) {
-                for (var key in params.row['资源'][index])
-                  arr.push(h('p', `${key}:${params.row['资源'][index][key]}`))
+                for (var key in params.row['资源'][index]){
+                  if(key!='地域'){
+                    arr.push(h('p', {style:{lineHeight:'1.5'}}, `${key}:${params.row['资源'][index][key]}`))
+                  } else {
+                    arr[0]=h('p', {style:{lineHeight:'1.5'}}, `${key}:${params.row['资源'][index][key]}`)
+                  }
+                }
               }
               return h('div', [
                 h('Collapse', {
