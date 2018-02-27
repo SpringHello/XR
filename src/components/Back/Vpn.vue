@@ -850,7 +850,7 @@
             onOk: () => {
               this.$http.get('network/deleteRemoteAccessVpn.do', {
                 params: {
-                  id: '1'
+                  id: this.currentRemote.id
                 }
               }).then(response => {
                 if (response.status == 200 && response.data.status == 2) {
@@ -876,7 +876,7 @@
             onOk: () => {
               this.$http.get('network/deleteTunnelVpn.do', {
                 params: {
-                  id: '1'
+                  id: this.currentTunnel.id
                 }
               }).then(response => {
                 if (response.status == 200 && response.data.status == 2) {
