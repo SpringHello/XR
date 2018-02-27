@@ -12,9 +12,9 @@
           <span id="title">云硬盘备份</span>
           <button id="refresh_button" @click="refreshPage">刷新</button>
         </div>
-        <Alert>
-          云硬盘备份能对磁盘（系统盘或数据盘）某个时刻的数据进行备份和回滚，云硬盘备份为全量备份，提升了云硬盘的安全性，同时增强了云硬盘备份的易用性。
-        </Alert>
+        <div class="universal-alert">
+          <p>云硬盘备份能对磁盘（系统盘或数据盘）某个时刻的数据进行备份和回滚，云硬盘备份为全量备份，提升了云硬盘的安全性，同时增强了云硬盘备份的易用性。</p>
+        </div>
         <Tabs type="card" :animated="false" v-model="tabPane">
           <!-- 云硬盘备份列表页面 -->
           <TabPane label="云硬盘备份" name="diskBackups">

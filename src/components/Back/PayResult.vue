@@ -111,6 +111,7 @@
           border: 1px solid;
           cursor: pointer;
           font-size: 12px;
+          margin-right: 10px;
         }
         .ghost {
           background-color: #fff;

@@ -27,6 +27,10 @@
   top: 10px;
 }
 
+.orderdata .ivu-collapse-content>.ivu-collapse-content-box{
+  padding-top: 0
+}
+
 /* 每行两列form表单样式 */
 .universal-modal-content-flex form {
   display: flex;

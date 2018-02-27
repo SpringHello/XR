@@ -255,7 +255,7 @@
       height: 493px;
       background: #FFFFFF;
       border: 1px solid rgba(161, 161, 161, 0.00);
-      box-shadow: 0 2px 24px 0 #4990E2;
+      box-shadow: 0 2px 24px 0 hsla(0,0%,49%,.35);
       &.disabled {
         cursor: not-allowed;
       }

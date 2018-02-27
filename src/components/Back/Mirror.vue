@@ -8,9 +8,9 @@
           <span id="title">镜像</span>
           <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
-        <Alert>
-          镜像描述
-        </Alert>
+        <div class="universal-alert">
+          <p>镜像描述</p>
+        </div>
         <Tabs type="card" :animated="false" style="min-height: 400px">
           <TabPane label="系统镜像">
             <div class="operator-bar">
@@ -82,7 +82,7 @@
       </Button>
     </div>
     </Modal>
-    
+
      <!-- 删除镜像弹窗 -->
     <Modal v-model="showModal.delmirror" :scrollable="true" :closable="false" :width="390">
       <div class="modal-content-s">

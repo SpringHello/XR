@@ -697,7 +697,7 @@
               }
               for (var index in data.资源) {
                 for (var key in data.资源[index])
-                  arr.push(h('p', {}, `${key}:${data.资源[index][key]}`))
+                  arr.push(h('p',`${key}:${data.资源[index][key]}`))
               }
               return h('div', [
                 h('Collapse', {

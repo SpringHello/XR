@@ -8,9 +8,9 @@
           <span id="title">云主机快照</span>
           <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
-        <Alert>
-          云主机快照
-        </Alert>
+        <div class="universal-alert">
+          <p> 云主机快照</p>
+        </div>
         <Tabs type="card" :animated="false" style="min-height: 400px">
           <TabPane label="云主机快照">
             <div class="operator-bar">

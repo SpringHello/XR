@@ -74,7 +74,8 @@
                         </Upload>
                       </div>
                       <div style="width:130px;margin-left:20px;">
-                        <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
+                        <img src="../../assets/img/usercenter/card-font.png"
+                             style="width:130px;height:74px;margin-bottom: 20px;">
                         <p style="line-height: 32px;text-align: center">示例图</p>
                       </div>
                     </div>
@@ -99,7 +100,8 @@
 
                       </div>
                       <div style="width:130px;margin-left:20px;">
-                        <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
+                        <img src="../../assets/img/usercenter/card-back.png"
+                             style="width:130px;height:74px;margin-bottom: 20px;">
                         <p style="line-height: 32px;text-align: center">示例图</p>
                       </div>
                     </div>
@@ -123,7 +125,8 @@
                         </Upload>
                       </div>
                       <div style="width:130px;margin-left:20px;">
-                        <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
+                        <img src="../../assets/img/usercenter/card-person.png"
+                             style="width:130px;height:74px;margin-bottom: 20px;">
                         <p style="line-height: 32px;text-align: center">示例图</p>
                       </div>
                     </div>
@@ -290,10 +293,10 @@
           </TabPane>
 
           <Tab-pane label="提醒设置" name="remainder">
-            <h2 style="padding: 20px 0 0px;">联系人管理</h2>
+            <h2 style="padding: 20px 0 0px;font-size: 18px;">联系人管理</h2>
             <Button type="primary" style="margin-top: 20px" @click="addLinkman">添加联系人</Button>
             <Table :columns="linkManColumns" :data="linkManData" style="margin-top: 20px"></Table>
-            <h2 style="margin-top: 40px">通知信息配置</h2>
+            <h2 style="margin-top: 40px;font-size: 18px;">通知信息配置</h2>
             <div style="border-top: 1px solid #E9E9E9;">
               <p
                 style="font-family: MicrosoftYaHei;font-size: 14px;color: rgba(17,17,17,0.65);letter-spacing: 0.83px;margin-top: 20px;">
@@ -352,7 +355,7 @@
               </div>
             </div>
             <div>
-              <h2 style="border-bottom: 1px solid rgb(233, 233, 233);margin-top: 40px">安全设置</h2>
+              <h2 style="border-bottom: 1px solid rgb(233, 233, 233);margin-top: 40px;padding-bottom: 20px;font-size: 18px;">安全设置</h2>
               <div class="safe">
                 <div v-if="userInfo.phone">
                   <p><span>手机绑定</span>&nbsp;&nbsp;&nbsp;您已经绑定了{{userInfo.phone}}。（您的手机号可以直接用于登陆）</p><span
@@ -399,14 +402,14 @@
                 <FormItem label="联系人" prop="contactPerson">
                   <Input v-model="notAuth.companyAuthForm.contactPerson" placeholder="请输入联系人姓名"></Input>
                 </FormItem>
-                <FormItem label="证件类型" prop="certificateType">
+                <!--<FormItem label="证件类型" prop="certificateType">
                   <Select v-model="notAuth.companyAuthForm.certificateType">
                     <Option v-for="(item,index) in notAuth.companyAuthForm.certificateTypeOptions" :key="item.key"
                             :value="item.key">
                       {{item.label}}
                     </Option>
                   </Select>
-                </FormItem>
+                </FormItem>-->
               </div>
               <!--三证合一图片上传-->
               <div class="IDCard" v-show="notAuth.companyAuthForm.certificateType==1">
@@ -429,7 +432,8 @@
                       </Upload>
                     </div>
                     <div style="width:130px;margin-left:20px;">
-                      <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
+                      <img src="../../assets/img/usercenter/combine.jpg"
+                           style="width:130px;height:74px;margin-bottom: 20px;" @click="showPicture">
                       <p style="line-height: 32px;text-align: center">示例图</p>
                     </div>
                   </div>
@@ -722,6 +726,16 @@
         <Button type="primary" @click="resetPassword">完成</Button>
       </div>
     </Modal>
+
+    <!--显示图片-->
+    <Modal width="590" v-model="showModal.showPicture" :scrollable="true">
+      <div class="newPhone">
+        <img src="../../assets/img/usercenter/combine.jpg"
+             style="width:330px;height:450px;margin:0px auto;display:block">
+      </div>
+      <div slot="footer">
+      </div>
+    </Modal>
   </div>
 
 </template>
@@ -766,7 +780,8 @@
           modifyPhone: false,
           authByPhone: false,
           authByEmail: false,
-          modifyPassword: false
+          modifyPassword: false,
+          showPicture: false
         },
         imgSrc: 'user/getKaptchaImage.do',
         // 此对象存储所有未认证时页面的状态
@@ -1568,6 +1583,10 @@
           }
         })
       },
+      //显示三证合一原图
+      showPicture(){
+        this.showModal.showPicture = true
+      }
     },
     computed: mapState({
       // 传字符串参数 'count' 等同于 `
@@ -1599,10 +1618,10 @@
           margin-bottom: 20px;
         }
         .info-title {
-          font-size: 22px;
+          font-size: 18px;
           color: rgba(17, 17, 17, 0.75);
           letter-spacing: 1.31px;
-          margin-bottom: 20px;
+          margin: 20px 0px;
         }
         .user-info {
           display: flex;
