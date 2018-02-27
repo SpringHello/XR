@@ -402,14 +402,14 @@
                 <FormItem label="联系人" prop="contactPerson">
                   <Input v-model="notAuth.companyAuthForm.contactPerson" placeholder="请输入联系人姓名"></Input>
                 </FormItem>
-                <FormItem label="证件类型" prop="certificateType">
+                <!--<FormItem label="证件类型" prop="certificateType">
                   <Select v-model="notAuth.companyAuthForm.certificateType">
                     <Option v-for="(item,index) in notAuth.companyAuthForm.certificateTypeOptions" :key="item.key"
                             :value="item.key">
                       {{item.label}}
                     </Option>
                   </Select>
-                </FormItem>
+                </FormItem>-->
               </div>
               <!--三证合一图片上传-->
               <div class="IDCard" v-show="notAuth.companyAuthForm.certificateType==1">
