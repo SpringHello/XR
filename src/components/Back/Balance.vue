@@ -1,9 +1,13 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span>网络 / 负载均衡</span>
-      <div id="content">
+      <span class="title">
+        云网络 /
+        <span style="color: #666666;">负载均衡</span>
+      </span>
+      <div id="content">  
         <div id="header">
+          <img src="../../assets/img/network/balance-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
           <span id="title">负载均衡</span>
         </div>
         <div class="universal-alert">

@@ -1,9 +1,13 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span>首页 / 网络私有云VPC</span>
+      <span class="title">
+        云网络 /
+        <span style="color: #666666;">网络私有云VPC</span>
+      </span>
       <div id="content">
         <div id="header">
+          <img src="../../assets/img/network/vpc-icon.jpg" style="margin-right: 5px;vertical-align: text-bottom">
           <span id="title">网络私有云VPC</span>
         </div>
         <div class="universal-alert">
@@ -1149,6 +1153,15 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  #wrapper{
+    .title{
+      font-size: 12px;
+      color: rgba(17, 17, 17, 0.43);
+      line-height: 22px;
+      display: inline-block;
+      margin: 10px 0px;
+    }
+  }
   .card-wrap {
     display: flex;
     justify-content: space-between;

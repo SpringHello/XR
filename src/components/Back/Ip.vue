@@ -1,14 +1,24 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span>网络 / 弹性IP</span>
+      <span class="title">
+        云网络 /
+        <span style="color: #666666;">弹性IP</span>
+      </span>
       <div id="content">
         <div id="header">
+          <img src="../../assets/img/network/elasticIp-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
           <span id="title">弹性IP</span>
         </div>
+<<<<<<< HEAD
         <div class="universal-alert">
           <p>为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。</p>
         </div>
+=======
+        <Alert>
+          弹性公网 IP是专为动态云计算设计的静态 IP 地址，在 新睿云 系统中弹性弹性IP地址与您的账户而非特定的资源关联。随时可以解绑、再分配到其他资源。
+        </Alert>
+>>>>>>> fd6652c6c4ab9d85351c6b34102760752d76e045
 
         <div class="operate">
           <Button type="primary" @click="openNewIPModal">创建弹性IP</Button>
