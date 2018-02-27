@@ -11,9 +11,9 @@
           <span id="title">VPN</span>
           <button id="refresh_button">刷新</button>
         </div>
-        <Alert>
-          为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。
-        </Alert>
+        <div class="universal-alert">
+          <p>为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。</p>
+        </div>
 
         <Tabs type="card" :animated="false" v-model="pane">
           <TabPane label="远程接入" name="remote">

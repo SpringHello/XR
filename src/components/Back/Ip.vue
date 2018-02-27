@@ -13,7 +13,6 @@
         <Alert>
           弹性公网 IP是专为动态云计算设计的静态 IP 地址，在 新睿云 系统中弹性弹性IP地址与您的账户而非特定的资源关联。随时可以解绑、再分配到其他资源。
         </Alert>
-
         <div class="operate">
           <Button type="primary" @click="openNewIPModal">创建弹性IP</Button>
           <Poptip
@@ -355,7 +354,7 @@
                     name: 'NAT'
                   }
                 }, 'NAT网关')])])
-              } else if (object.row.usetype != 2) { 
+              } else if (object.row.usetype != 2) {
                 return h('span', {
                   style: {
                     color: '#2d8cf0',

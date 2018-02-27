@@ -61,7 +61,7 @@
                   </DropdownItem>
                   <DropdownItem divided>
                     <!-- <router-link to="">退出</router-link> -->
-                    <span @click="exit" style="color:#2d8cf0">退出</span>
+                    <span @click="exit" style="color:#666">退出</span>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
@@ -399,6 +399,11 @@
               > li {
                 &:last-child {
                   position: relative;
+                  .ivu-dropdown-item {
+                    a{
+                      color: #666;
+                    }
+                  }
                   > a {
                     padding-right: 0px;
                   }

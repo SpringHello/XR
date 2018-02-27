@@ -78,6 +78,7 @@ const Upgrade = () => import('@/components/Back/Upgrade')
 const FirewallManage = () => import('@/components/Back/FirewallManage')
 const NATManage = () => import('@/components/Back/NATManage')
 const Recycle = () => import('@/components/Back/Recycle')
+const Wxpay = () => import('@/components/Back/Wxpay')
 
 
 // 404
@@ -178,7 +179,8 @@ var router = new Router({
         {path: 'upgrade', name: 'upgrade', component: Upgrade},
         {path: 'firewallManage', name: 'firewallManage', component: FirewallManage},
         {path: 'NATManage', name: 'NATManage', component: NATManage},
-        {path: 'recycle', name: 'recycle', component: Recycle}
+        {path: 'recycle', name: 'recycle', component: Recycle},
+        {path: 'wxpay', name: 'wxpay', component: Wxpay}
       ]
     },
     {
