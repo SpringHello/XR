@@ -115,11 +115,9 @@
             break
           case 'wx':
             this.$router.push({
-              name: 'wxpay',
-              params: {
-                total_fee: this.input
-              }
+              name: 'wxpay'
             })
+            sessionStorage.setItem('total_fee', this.input)
             break
         }
       },

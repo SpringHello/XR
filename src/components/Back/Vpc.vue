@@ -1,14 +1,18 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span>首页 / 网络私有云VPC</span>
+      <span class="title">
+        云网络 /
+        <span style="color: #666666;">网络私有云VPC</span>
+      </span>
       <div id="content">
         <div id="header">
+          <img src="../../assets/img/network/vpc-icon.jpg" style="margin-right: 5px;vertical-align: text-bottom">
           <span id="title">网络私有云VPC</span>
         </div>
-        <Alert>
-          为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。
-        </Alert>
+        <div class="universal-alert">
+          <p>为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。</p>
+        </div>
         <Tabs type="card" :animated="false" v-model="pane">
           <TabPane label="虚拟私有云VPC" name="VPC">
             <div class="operator-bar">
@@ -1149,6 +1153,15 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  #wrapper{
+    .title{
+      font-size: 12px;
+      color: rgba(17, 17, 17, 0.43);
+      line-height: 22px;
+      display: inline-block;
+      margin: 10px 0px;
+    }
+  }
   .card-wrap {
     display: flex;
     justify-content: space-between;

@@ -1,14 +1,18 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span>网络 / 负载均衡</span>
-      <div id="content">
+      <span class="title">
+        云网络 /
+        <span style="color: #666666;">负载均衡</span>
+      </span>
+      <div id="content">  
         <div id="header">
+          <img src="../../assets/img/network/balance-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
           <span id="title">负载均衡</span>
         </div>
-        <Alert>
-          负载均衡通过将访问流量自动分发到多台弹性云服务器，扩展应用系统对外的服务能力，实现更高水平的应用程序容错性能。
-        </Alert>
+        <div class="universal-alert">
+          <p>负载均衡通过将访问流量自动分发到多台弹性云服务器，扩展应用系统对外的服务能力，实现更高水平的应用程序容错性能。</p>
+        </div>
         <div class="operator-bar">
           <Button type="primary" @click="creatbalancemodal.showBalanceName = true">创建负载均衡</Button>
           <Button type="primary" style="margin-left: 8px;" @click="bind">绑定虚拟机</Button>
