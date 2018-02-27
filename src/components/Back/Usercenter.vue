@@ -293,10 +293,10 @@
           </TabPane>
 
           <Tab-pane label="提醒设置" name="remainder">
-            <h2 style="padding: 20px 0 0px;">联系人管理</h2>
+            <h2 style="padding: 20px 0 0px;font-size: 18px;">联系人管理</h2>
             <Button type="primary" style="margin-top: 20px" @click="addLinkman">添加联系人</Button>
             <Table :columns="linkManColumns" :data="linkManData" style="margin-top: 20px"></Table>
-            <h2 style="margin-top: 40px">通知信息配置</h2>
+            <h2 style="margin-top: 40px;font-size: 18px;">通知信息配置</h2>
             <div style="border-top: 1px solid #E9E9E9;">
               <p
                 style="font-family: MicrosoftYaHei;font-size: 14px;color: rgba(17,17,17,0.65);letter-spacing: 0.83px;margin-top: 20px;">
@@ -355,7 +355,7 @@
               </div>
             </div>
             <div>
-              <h2 style="border-bottom: 1px solid rgb(233, 233, 233);margin-top: 40px">安全设置</h2>
+              <h2 style="border-bottom: 1px solid rgb(233, 233, 233);margin-top: 40px;padding-bottom: 20px;font-size: 18px;">安全设置</h2>
               <div class="safe">
                 <div v-if="userInfo.phone">
                   <p><span>手机绑定</span>&nbsp;&nbsp;&nbsp;您已经绑定了{{userInfo.phone}}。（您的手机号可以直接用于登陆）</p><span
@@ -1618,10 +1618,10 @@
           margin-bottom: 20px;
         }
         .info-title {
-          font-size: 22px;
+          font-size: 18px;
           color: rgba(17, 17, 17, 0.75);
           letter-spacing: 1.31px;
-          margin-bottom: 20px;
+          margin: 20px 0px;
         }
         .user-info {
           display: flex;
