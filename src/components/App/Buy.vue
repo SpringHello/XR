@@ -1,7 +1,7 @@
 <template>
   <div id="buy">
     <div id="wrapper">
-      <div id="header">
+      <div id="header" style="margin-bottom: 30px">
         <Select v-model="product.currentProduct" class="mySelect" style="width: 102px">
           <Option v-for="item in product.productList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
@@ -20,7 +20,7 @@
 
             <!--两种配置方式公共页面-->
             <!--区域选择-->
-            <div>
+            <div style="border-bottom: 1px solid #D9D9D9;">
               <h2>区域选择</h2>
               <div class="item-wrapper">
                 <div v-for="item in zoneList" :key="item.zoneid" class="zoneItem"
@@ -33,7 +33,7 @@
             </div>
 
             <!--计费方式选择-->
-            <div>
+            <div style="border-bottom: 1px solid #D9D9D9;margin-top: 20px">
               <h2>计费方式选择</h2>
               <div class="item-wrapper">
                 <div v-for="item in PecsInfo.timeType" :key="item.value" class="zoneItem"
@@ -57,7 +57,7 @@
             <!--快速配置主体页面-->
             <div v-show="PecsInfo.createType=='fast'">
               <!--主机规格选择-->
-              <div>
+              <div style="border-bottom: 1px solid #D9D9D9;margin-top: 20px;padding-bottom: 20px">
                 <h2>主机规格选择</h2>
                 <!--镜像选择-->
                 <div class="item-wrapper">
@@ -139,7 +139,7 @@
             <!--自定义配置主体页面-->
             <div v-show="PecsInfo.createType=='custom'">
               <!--主机规格选择-->
-              <div style="padding-bottom: 20px;border-bottom: 1px solid #EDEDED">
+              <div style="padding-bottom: 20px;border-bottom: 1px solid #EDEDED;margin-top: 20px">
                 <h2>主机规格选择</h2>
                 <!--类型选择-->
                 <div class="item-wrapper">
@@ -257,7 +257,7 @@
               </div>
 
               <!--主机网络与带宽-->
-              <div style="margin-top:20px;">
+              <div style="margin-top:20px; border-bottom: 1px solid #D9D9D9;padding-bottom: 20px;">
                 <h2>网络与带宽</h2>
                 <!--虚拟私有云-->
                 <div class="item-wrapper">
@@ -307,7 +307,7 @@
                     <div>
                       <p class="item-title">带宽</p>
                     </div>
-                    <div style="width:300px;margin-top: 7px">
+                    <div style="width:500px;margin-top: 7px;display: flex">
                       <i-slider
                         v-model="PecsInfo.IPConfig.bandWidth"
                         unit="M"
@@ -317,6 +317,7 @@
                         :points="[20,50]"
                         style="margin-right:30px;vertical-align: middle;">
                       </i-slider>
+                      <InputNumber :max="100" :min="1" v-model="PecsInfo.IPConfig.bandWidth" size="large" style="position: relative;bottom: 10px"></InputNumber>
                     </div>
                   </div>
                 </div>
@@ -334,10 +335,10 @@
               </div>
 
               <!--云硬盘-->
-              <div style="margin-top:20px;">
+              <div style="margin-top:20px; border-bottom: 1px solid #D9D9D9;padding-bottom: 20px;">
                 <h2>云硬盘</h2>
                 <!--虚拟私有云-->
-                <div v-for="disk in PecsInfo.dataDiskList">
+                <div v-for="(disk,index) in PecsInfo.dataDiskList">
                   <div class="item-wrapper">
                     <div style="display: flex">
                       <div>
@@ -358,7 +359,7 @@
                       <div>
                         <p class="item-title" style="margin-top: 7px;">容量</p>
                       </div>
-                      <div style="width:300px;margin-top: 7px">
+                      <div style="width:500px;margin-top: 7px;display: flex">
                         <i-slider
                           v-model="disk.size"
                           unit="G"
@@ -368,6 +369,9 @@
                           :points="[500,800]"
                           style="margin-right:30px;vertical-align: middle;">
                         </i-slider>
+                        <InputNumber :max="500" :min="20" v-model="disk.size" size="large" :step=10
+                                     @on-blur="changeDiskSize(index,disk.size)"
+                                     @on-focus="changeDiskSize(index,disk.size)" style="position: relative;bottom: 10px"></InputNumber>
                       </div>
                     </div>
                   </div>
@@ -398,12 +402,12 @@
             </div>
 
             <!--登录设置-->
-            <div style="margin-top: 20px;">
+            <div style="margin-top: 20px;border-bottom: 1px solid #D9D9D9;padding-bottom: 20px">
               <h2>登录设置</h2>
               <div class="item-wrapper">
                 <div style="display: flex">
                   <div>
-                    <p class="item-title">镜像</p>
+                    <p class="item-title">主机信息</p>
                   </div>
                   <div v-for="item in PecsInfo.loginType" :key="item.type" class="zoneItem"
                        :class="{zoneSelect:PecsInfo.currentLoginType==item.type}"
@@ -463,7 +467,8 @@
               </div>
             </div>
             <!--费用、以及加入预算清单-->
-            <div>
+            <div style="margin-top: 20px">
+              <p style="text-align: left;font-size: 14px;color: #2A99F2;">查看计价详情</p>
               <p v-if="PecsInfo.createType=='fast'" style="text-align: right;font-size: 14px;color: #666666;">总计费用：<span
                 style="font-size: 24px;color: #EE6723;">{{PecsInfo.cost.toFixed(2)}}元</span></p>
               <p v-if="PecsInfo.createType=='custom'" style="text-align: right;font-size: 14px;color: #666666;">
@@ -483,7 +488,7 @@
         <div id="Pdisk" style="padding: 30px 40px 40px 40px;" v-show="product.currentProduct=='Pdisk'">
           <!--两种配置方式公共页面-->
           <!--区域选择-->
-          <div>
+          <div style="border-bottom: 1px solid #EDEDED;">
             <h2>区域选择</h2>
             <div class="item-wrapper">
               <div v-for="item in zoneList" :key="item.zoneid" class="zoneItem"
@@ -495,7 +500,7 @@
               不同区域的资源内网互不相通；请选择与您相近的区域，可降低网络时延、提高您客户的访问速度。</p>
           </div>
           <!--计费方式选择-->
-          <div>
+          <div style="border-bottom: 1px solid #EDEDED;margin-top: 20px">
             <h2>计费方式选择</h2>
             <div class="item-wrapper">
               <div v-for="item in PecsInfo.timeType" :key="item.value" class="zoneItem"
@@ -516,7 +521,7 @@
               满一年打8折，满两年打7.5折，满3年5折</p>
           </div>
           <!--云硬盘-->
-          <div style="margin-top:20px;">
+          <div style="margin-top:20px;border-bottom: 1px solid #D9D9D9;padding-bottom: 20px;">
             <h2>云硬盘</h2>
             <div class="item-wrapper">
               <div style="display: flex">
@@ -536,7 +541,7 @@
                     <p class="item-title" style="margin-top: 7px;">类型</p>
                   </div>
                   <div>
-                    <div v-for="item in PdiskInfo.dataDiskType" :key="item.value" class="zoneItem"
+                    <div v-for="(item,index) in PdiskInfo.dataDiskType" :key="item.value" class="zoneItem"
                          :class="{zoneSelect:disk.type==item.value}"
                          @click="disk.type=item.value;disk.label=item.label">{{item.label}}
                     </div>
@@ -551,7 +556,7 @@
                   <div>
                     <p class="item-title" style="margin-top: 7px;">容量</p>
                   </div>
-                  <div style="width:300px;margin-top: 7px">
+                  <div style="width:500px;margin-top: 7px;display: flex">
                     <i-slider
                       v-model="disk.size"
                       unit="G"
@@ -561,6 +566,9 @@
                       :points="[500,800]"
                       style="margin-right:30px;vertical-align: middle;">
                     </i-slider>
+                    <InputNumber :max="500" :min="20" v-model="disk.size" size="large" :step=10
+                                 @on-blur="change_DiskSize(index,disk.size)"
+                                 @on-focus="change_DiskSize(index,disk.size)" style="position: relative;bottom: 10px"></InputNumber>
                   </div>
                 </div>
               </div>
@@ -592,7 +600,8 @@
             </div>
           </div>
           <!--数据盘价格-->
-          <div>
+          <div style="margin-top: 20px">
+            <p style="text-align: left;font-size: 14px;color: #2A99F2;">查看计价详情</p>
             <p style="text-align: right;font-size: 14px;color: #666666;">
               总计费用：<span style="font-size: 24px;color: #EE6723;">{{PdiskInfo.dataDiskCost.toFixed(2)}}元</span>
             </p>
@@ -608,7 +617,7 @@
         <div id="Peip" style="padding: 30px 40px 40px 40px;" v-show="product.currentProduct=='Peip'">
           <!--两种配置方式公共页面-->
           <!--区域选择-->
-          <div>
+          <div style="border-bottom: 1px solid #D9D9D9;">
             <h2>区域选择</h2>
             <div class="item-wrapper">
               <div v-for="item in zoneList" :key="item.zoneid" class="zoneItem"
@@ -620,7 +629,7 @@
               不同区域的资源内网互不相通；请选择与您相近的区域，可降低网络时延、提高您客户的访问速度。</p>
           </div>
           <!--计费方式选择-->
-          <div>
+          <div style="border-bottom: 1px solid #D9D9D9;margin-top: 20px">
             <h2>计费方式选择</h2>
             <div class="item-wrapper">
               <div v-for="item in PecsInfo.timeType" :key="item.value" class="zoneItem"
@@ -642,7 +651,7 @@
           </div>
 
           <!--主机网络与带宽-->
-          <div style="margin-top:20px;">
+          <div style="margin-top:20px;border-bottom: 1px solid #D9D9D9;padding-bottom: 20px;">
             <h2>网络与带宽</h2>
             <!--虚拟私有云-->
             <div class="item-wrapper">
@@ -665,7 +674,7 @@
                 <div>
                   <p class="item-title">带宽</p>
                 </div>
-                <div style="width:300px;margin-top: 7px">
+                <div style="width:500px;margin-top: 7px;display: flex">
                   <i-slider
                     v-model="PeipInfo.bandWidth"
                     unit="M"
@@ -675,6 +684,7 @@
                     :points="[20,50]"
                     style="margin-right:30px;vertical-align: middle;">
                   </i-slider>
+                  <InputNumber :max="100" :min="1" v-model="PeipInfo.bandWidth" size="large" style="position: relative;bottom: 10px"></InputNumber>
                 </div>
               </div>
             </div>
@@ -705,7 +715,8 @@
           </div>
 
           <!--费用、以及加入预算清单-->
-          <div>
+          <div style="margin-top: 20px">
+            <p style="text-align: left;font-size: 14px;color: #2A99F2;">查看计价详情</p>
             <p style="text-align: right;font-size: 14px;color: #666666;">总计费用：<span
               style="font-size: 24px;color: #EE6723;">{{PeipInfo.cost.toFixed(2)}}元</span></p>
             <div style="text-align: right;margin-top: 20px;">
@@ -718,11 +729,18 @@
 
         <div id="list">
           <div ref="list"
-               style="padding:30px 30px;box-shadow: 0 2px 14px 0;background-color: #ffffff;max-height: 1050px;overflow-y: auto">
-            <p style="font-size: 24px;color: #333333;line-height: 43px;text-align: center">价格预算清单</p>
-            <div v-for="prod in cart" ref="detailed">
-              <h2 style="width:70px;text-align: right;font-size: 18px;color: #333333;line-height: 32px;">
-                {{prod.typeName}}</h2>
+               style="padding:30px 30px 0 30px;box-shadow: 0 2px 14px 0 rgba(193,193,193,0.30);background-color: #ffffff;max-height: 1050px;overflow-y: auto">
+            <p
+              style="font-size: 24px;color: #333333;line-height: 43px;text-align: center;border-bottom: 1px solid #D9D9D9; padding-bottom: 30px;">
+              价格预算清单</p>
+            <div v-for="(prod,index) in cart" ref="detailed" style="padding-top: 20px">
+              <div style="display: flex;justify-content: space-between;">
+                <h2 style="width:70px;text-align: right;font-size: 18px;color: #333333;line-height: 32px;">
+                  {{prod.typeName}}</h2>
+                <p
+                  style="cursor: pointer;font-family: MicrosoftYaHei;font-size: 14px;color: #2A99F2; line-height: 25px;"
+                  @click="delDetailed(index)">删除</p>
+              </div>
               <!--主机清单字段-->
               <div v-if="prod.type=='Pecs'" style="border-bottom:1px solid #ccc;padding:20px 0px;">
                 <p class="item"><span class="title">区域</span>{{prod.zone.zonename}}</p>
@@ -794,14 +812,16 @@
               </div>
             </div>
           </div>
-          <div style="padding:30px 40px;box-shadow: 0 2px 14px 0;background-color: #ffffff;width:380px;" ref="buyDiv">
+          <div
+            style="padding:30px 40px;box-shadow: 0 2px 14px 0rgba(193,193,193,0.30);background-color: #ffffff;width:380px;"
+            ref="buyDiv">
             <p
               style="font-size: 14px;margin:10px 0px;vertical-align:middle;color: #666666;line-height: 25px;text-align: center">
               总计：<span
               style="font-size: 24px;color: #F85E1D;line-height: 25px;vertical-align: middle;margin-left:10px;">{{billListCost.toFixed(2)}}元</span>
             </p>
             <button class="buyButton" @click="buyNow"
-                    style="display:block;width:300px;color:#ffffff;margin-bottom: 10px;background-image: linear-gradient(-42deg, #4481EB 0%, #04BEFE 100%);">
+                    style="display:block;width:300px;margin-bottom: 10px;">
               立即购买
             </button>
             <button class="buyButton" style="display:block;width:300px;" @click="exportXLSX">导出预算清单</button>
@@ -1361,6 +1381,22 @@
       pushDisk(){
         this.PecsInfo.dataDiskList.push({type: 'ssd', size: 20, label: '超高性能型'})
       },
+      /* 改变自定义主机页面磁盘容量，查询价格 */
+      changeDiskSize (index, value) {
+        var params = {
+          diskType: this.PecsInfo.dataDiskList[index].diskType,
+          diskSize: value
+        }
+        this.PecsInfo.dataDiskList.splice(index, 1, params)
+      },
+      /* 改变磁盘页面 */
+      change_DiskSize (index, value) {
+        var params = {
+          diskType: this.PdiskInfo.dataDiskList[index].diskType,
+          diskSize: value
+        }
+        this.PdiskInfo.dataDiskList.splice(index, 1, params)
+      },
       // 删除主机数据盘
       removeHostDisk(index){
         this.PecsInfo.dataDiskList.splice(index, 1)
@@ -1479,6 +1515,11 @@
         var obj = JSON.parse(JSON.stringify(this.PeipInfo))
         var prod = Object.assign({typeName: '公网IP', zone: this.PeipInfo.zone, type: 'Peip', count: 1}, obj)
         this.cart.push(prod)
+        this.store()
+      },
+      /* 删除一条购买清单 */
+      delDetailed (index) {
+        this.cart.splice(index, 1)
         this.store()
       },
       // 订单信息存入sessionStorage
@@ -1663,6 +1704,9 @@
       }
     },
     computed: mapState({
+      disabled () {
+        return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
+      },
       totalCost(){
         return this.PecsInfo.vmConfig.cost + this.PecsInfo.IPConfig.cost + this.PecsInfo.dataDiskCost
       },
@@ -1697,103 +1741,148 @@
       },
       zoneList: state => state.zoneList,
       userInfo: state => state.userInfo
-    }),
-    watch: {
-      // 选择区域发生变化
-      'PecsInfo.zone': {
-        handler: function () {
-          // 重新查询自定义IP的所属vpc，即虚拟私有云
-          this.queryVpc()
-          this.setTemplate()
-        },
-        deep: true
-      },
-      // 观测到计费方式变化
-      'PecsInfo.timeForm': {
-        handler: function () {
-          // 查询快速配置价格
-          this.queryQuick()
-          // 查询自定义配置主机价格
-          this.queryCustomVM()
-          // 查询数据盘价格
-          this.queryDiskPrice()
-          // 查询公网IP价格
-          this.queryIPPrice()
-        },
-        deep: true
-      },
-      // 观测到快速配置主机规格变化
-      'PecsInfo.currentSystem': {
-        handler: function () {
-          // 查询快速配置价格
-          this.queryQuick()
-        },
-        deep: true
-      },
-      // 观测到自定义配置主机规格变化
-      'PecsInfo.vmConfig': {
-        handler: function () {
-          // 查询自定义配置价格
-          this.queryCustomVM()
-        },
-        deep: true
-      },
-      // 选中的VPC发生变化
-      'PecsInfo.vpc'(){
-        this.changeNetwork()
-      },
-      // 公网IP带宽变化
-      'PecsInfo.IPConfig.bandWidth'(){
-        this.queryIPPrice()
-      },
-      // 磁盘变化，重新计算价格
-      'PecsInfo.dataDiskList': {
-        handler: function () {
-          this.queryDiskPrice()
-        },
-        deep: true
-      },
-
-      /*磁盘页面需要价格计算的变化*/
-      'PdiskInfo.timeForm': {
-        handler: function () {
-          // 查询数据盘价格
-          this.queryDiskPriceInDisk()
-        },
-        deep: true
-      },
-      // 磁盘变化，重新计算价格
-      'PdiskInfo.dataDiskList': {
-        handler: function () {
-          this.queryDiskPriceInDisk()
-        },
-        deep: true
-      },
-
-      // 公网IP选择区域发生变化
-      'PeipInfo.zone': {
-        handler: function () {
-          // 重新查询自定义IP的所属vpc，即虚拟私有云
-          this.queryIPVpc()
-        },
-        deep: true
-      },
-      /*公网IP页面需要价格计算的变化*/
-      'PeipInfo.timeForm': {
-        handler: function () {
-          // 查询公网IP价格
-          this.queryIPPriceInIP()
-        },
-        deep: true
-      },
-      // 公网IP变化，重新计算价格
-      'PeipInfo.bandWidth': {
-        handler: function () {
-          this.queryIPPriceInIP()
-        },
-        deep: true
-      },
     }
+  ),
+  watch: {
+    // 选择区域发生变化
+    'PecsInfo.zone'
+  :
+    {
+      handler: function () {
+        // 重新查询自定义IP的所属vpc，即虚拟私有云
+        this.queryVpc()
+        this.setTemplate()
+      }
+    ,
+      deep: true
+    }
+  ,
+    // 观测到计费方式变化
+    'PecsInfo.timeForm'
+  :
+    {
+      handler: function () {
+        // 查询快速配置价格
+        this.queryQuick()
+        // 查询自定义配置主机价格
+        this.queryCustomVM()
+        // 查询数据盘价格
+        this.queryDiskPrice()
+        // 查询公网IP价格
+        this.queryIPPrice()
+      }
+    ,
+      deep: true
+    }
+  ,
+    // 观测到快速配置主机规格变化
+    'PecsInfo.currentSystem'
+  :
+    {
+      handler: function () {
+        // 查询快速配置价格
+        this.queryQuick()
+      }
+    ,
+      deep: true
+    }
+  ,
+    // 观测到自定义配置主机规格变化
+    'PecsInfo.vmConfig'
+  :
+    {
+      handler: function () {
+        // 查询自定义配置价格
+        this.queryCustomVM()
+      }
+    ,
+      deep: true
+    }
+  ,
+    // 选中的VPC发生变化
+    'PecsInfo.vpc'()
+    {
+      this.changeNetwork()
+    }
+  ,
+    // 公网IP带宽变化
+    'PecsInfo.IPConfig.bandWidth'()
+    {
+      this.queryIPPrice()
+    }
+  ,
+    // 磁盘变化，重新计算价格
+    'PecsInfo.dataDiskList'
+  :
+    {
+      handler: function () {
+        this.queryDiskPrice()
+      }
+    ,
+      deep: true
+    }
+  ,
+
+    /*磁盘页面需要价格计算的变化*/
+    'PdiskInfo.timeForm'
+  :
+    {
+      handler: function () {
+        // 查询数据盘价格
+        this.queryDiskPriceInDisk()
+      }
+    ,
+      deep: true
+    }
+  ,
+    // 磁盘变化，重新计算价格
+    'PdiskInfo.dataDiskList'
+  :
+    {
+      handler: function () {
+        this.queryDiskPriceInDisk()
+      }
+    ,
+      deep: true
+    }
+  ,
+
+    // 公网IP选择区域发生变化
+    'PeipInfo.zone'
+  :
+    {
+      handler: function () {
+        // 重新查询自定义IP的所属vpc，即虚拟私有云
+        this.queryIPVpc()
+      }
+    ,
+      deep: true
+    }
+  ,
+    /*公网IP页面需要价格计算的变化*/
+    'PeipInfo.timeForm'
+  :
+    {
+      handler: function () {
+        // 查询公网IP价格
+        this.queryIPPriceInIP()
+      }
+    ,
+      deep: true
+    }
+  ,
+    // 公网IP变化，重新计算价格
+    'PeipInfo.bandWidth'
+  :
+    {
+      handler: function () {
+        this.queryIPPriceInIP()
+      }
+    ,
+      deep: true
+    }
+  ,
+  }
   }
 </script>
 
@@ -1860,8 +1949,8 @@
             position: absolute;
             background-color: rgb(255, 125, 45);
             color: #ffffff;
-            right:2px;
-            top:1px;
+            right: 2px;
+            top: 1px;
             border-radius: 50%;
             width: 20px;
             height: 20px;
@@ -1872,8 +1961,8 @@
           }
         }
         .zoneSelect {
-          border-color: #2A99F2;
-          background-color: #2A99F2;
+          border-color: #377dff;
+          background-color: #377dff;
           color: #ffffff;
         }
         .item-wrapper {
@@ -1902,7 +1991,7 @@
             }
           }
           .mirrorSelect {
-            background-color: #2A99F2;
+            background-color: #377dff;
             .appName {
               color: #ffffff;
             }
@@ -1938,7 +2027,11 @@
       border-radius: 10px;
       background-color: #ffffff;
       font-size: 16px;
-      color: #2A99F2
+      color: #2A99F2;
+      &:hover {
+        background-image: linear-gradient(-42deg, #4481EB 0%, #04BEFE 100%);
+        color: #ffffff;
+      }
     }
   }
 

@@ -83,7 +83,7 @@
       paySuccess(){
         this.loading = true;
         this.loadingMessage = '正在充值，请稍后...'
-        this.$http.get('information/payStatus.do?serialNum=' + this.serialNum).then(response => {
+        this.$http.get('user/payStatus.do?serialNum=' + this.serialNum).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.loading = false;
             this.$router.push('expenses');
@@ -93,6 +93,9 @@
             });
           } else {
             this.loading = false;
+            this.$message.error({
+                content: response.data.message
+            })
           }
         })
       }
