@@ -68,8 +68,8 @@
         <Form :model="applyFirewallForm" :rules="applyFirewallFormValidate" ref="applyFirewallFormValidate">
           <FormItem label="私有网络" prop="network">
             <Select v-model="applyFirewallForm.network" placeholder="请选择私有网络">
-              <Option v-for="item in applyFirewallForm.networkOptions" :key="item.vpcid" :value="item.vpcid">
-                {{item.vpcname}}
+              <Option v-for="item in applyFirewallForm.networkOptions" :key="item.ipsegmentid" :value="item.ipsegmentid">
+                {{item.name}}
               </Option>
             </Select>
           </FormItem>
