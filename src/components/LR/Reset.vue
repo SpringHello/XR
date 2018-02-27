@@ -16,6 +16,14 @@
                        @blur="vail('loginname')" @focus="focus('loginname')" @input="isCorrect('loginname')">
               </div>
 
+              <div style="position:relative" class="code">
+                <span>{{vailForm.code.message}}</span>
+                <input type="text" autocomplete="off" v-model="form.code" name="vailCode"
+                       :placeholder="form.codePlaceholder" @blur="vail('code')" @focus="focus('code')"
+                       @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
+                <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+              </div>
+
               <div style="position:relative">
                 <span>{{vailForm.vailCode.message}}</span>
                 <input type="text" v-model="form.vailCode" name="vailCode" :placeholder="form.vailCodePlaceholder"
@@ -25,19 +33,25 @@
                 </button>
               </div>
 
-              <div>
-                <span>{{vailForm.password.message}}</span>
-                <input type="password" autocomplete="off" v-model="form.password"
+              <div style="position: relative">
+                <span :class="{warning:vailForm.password.warning}">{{vailForm.password.message}}</span>
+                <input v-show="!form.showPassword" type="password" autocomplete="off" v-model="form.password"
                        :placeholder="form.passwordPlaceholder"
                        @blur="vail('password')" @focus="focus('password')">
+                <input v-show="form.showPassword" autocomplete="off" v-model="form.password"
+                       :placeholder="form.passwordPlaceholder"
+                       @blur="vail('password')" @focus="focus('password')">
+                <img v-show="!form.showPassword" src="../../assets/img/reset/eye.png" class="eyeIcon"
+                     @click="form.showPassword=!form.showPassword">
+                <img v-show="form.showPassword" src="../../assets/img/reset/closeEye.png" class="eyeIcon"
+                     @click="form.showPassword=!form.showPassword">
               </div>
-
-              <div>
+              <!--<div>
                 <span>{{vailForm.confirmPassword.message}}</span>
                 <input type="password" autocomplete="off" v-model="form.confirmPassword"
                        :placeholder="form.confirmPasswordPlaceholder"
                        @blur="vail('confirmPassword')" @focus="focus('confirmPassword')">
-              </div>
+              </div>-->
             </form>
           </div>
           <div class="foot">
@@ -57,33 +71,44 @@
 
 <script type="text/ecmascript-6">
   import regExp from '../../util/regExp'
+  import axios from 'axios'
   var messageMap = {
     loginname: {
       placeholder: '登录邮箱/手机号',
       errorMessage: '请输入正确的邮箱/手机号'
     },
     password: {
-      placeholder: '请输入新密码'
+      placeholder: '请输入新密码',
+      errorMessage: '密码必须包含字母、数字'
     },
     confirmPassword: {
       placeholder: '请确认新密码'
     },
     vailCode: {
       placeholder: '请输入验证码'
+    },
+    code: {
+      placeholder: '请输入图片验证码'
     }
   }
   export default{
     data(){
       return {
+        imgSrc: 'user/getKaptchaImage.do',
         form: {
+          // 是否明文显示密码
+          showPassword: false,
           loginname: '',
+          // 图形验证码
+          code: '',
           password: '',
           confirmPassword: '',
           vailCode: '',
           loginnamePlaceholder: '登录邮箱/手机号',
           passwordPlaceholder: '请输入新密码',
           confirmPasswordPlaceholder: '请确认新密码',
-          vailCodePlaceholder: '请输入验证码'
+          vailCodePlaceholder: '请输入验证码',
+          codePlaceholder: '请输入图片验证码'
         },
         vailForm: {
           loginname: {
@@ -99,6 +124,10 @@
             warning: false
           },
           vailCode: {
+            message: '',
+            warning: false
+          },
+          code: {
             message: '',
             warning: false
           }
@@ -122,7 +151,6 @@
         }
 
         var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true
-
         if (!isLegal) {
           this.vailForm[field].message = messageMap[field].errorMessage
           this.vailForm[field].warning = true
@@ -143,9 +171,7 @@
 
         var text = this.form[field]
         this.form[`${field}Placeholder`] = ''
-        console.log(text)
         if (text == '') {
-          console.log(messageMap[field].placeholder)
           this.vailForm[field].message = messageMap[field].placeholder
           return
         }
@@ -171,7 +197,7 @@
       },
       sendCode(){
         if (!regExp.emailVail(this.form.loginname)) {
-          this.$Message.info('请输入正确的邮箱/手机号')
+          this.$Message.info('请输入正确手机号')
           return
         }
         if (regExp.phoneVail(this.form.loginname)) {
@@ -187,7 +213,7 @@
             this.codePlaceholder = '发送验证码'
           }
         }, 1000)
-        this.$http.get('user/code.do?aim=' + this.form.loginname + '&type=' + this.type + '&isemail=' + this.isemail).then(response => {
+        axios.get(`user/code.do?aim=${this.form.loginname}&isemail=0&vailCode=${this.form.code}`).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success({
               content: response.data.message,
@@ -202,12 +228,7 @@
         })
       },
       submit(){
-        if (this.form.password != this.form.confirmPassword) {
-          this.vailForm.loginname.message = '新密码与确认密码不一致'
-          this.vailForm.loginname.warning = true
-          return
-        }
-        this.$http.get('user/findPassword.do', {
+        axios.get('user/findPassword.do', {
           params: {
             username: this.form.loginname,
             password: this.form.password,
@@ -369,22 +390,24 @@
             color: #F24747;
           }
         }
-        img {
-          width: 80px;
-          height: 30px;
-          position: absolute;
-          display: block;
-          bottom: 12px;
-          right: 43px;
-          cursor: pointer;
-          //background: #4990E2;
-          //border: 1px solid white;
-          border-radius: 3px;
-          font-family: PingFangSC-Regular;
-          font-size: 11px;
-          color: #FFFFFF;
-          letter-spacing: 0.71px;
-          outline: none;
+        .code {
+          img {
+            width: 80px;
+            height: 30px;
+            position: absolute;
+            display: block;
+            bottom: 12px;
+            right: 43px;
+            cursor: pointer;
+            //background: #4990E2;
+            //border: 1px solid white;
+            border-radius: 3px;
+            font-family: PingFangSC-Regular;
+            font-size: 11px;
+            color: #FFFFFF;
+            letter-spacing: 0.71px;
+            outline: none;
+          }
         }
         .sendCode {
           width: 80px;
@@ -403,6 +426,12 @@
           color: #FFFFFF;
           letter-spacing: 0.71px;
           outline: none;
+        }
+        .eyeIcon {
+          position: absolute;
+          right: 52px;
+          top: 33px;
+          cursor: pointer;
         }
       }
       .foot {

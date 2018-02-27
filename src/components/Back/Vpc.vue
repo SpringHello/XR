@@ -214,7 +214,7 @@
             <Input v-model="addNatForm.natName" placeholder="请输入网关名称" style="width: 200px"></Input>
           </FormItem>
           <FormItem label="VPC ID" prop="vpc">
-            <Select v-model="addNatForm.vpc" placeholder="请选择" style="width: 200px">
+            <Select v-model="addNatForm.vpc" placeholder="请选择" style="width: 200px" @on-change="listIP">
               <Option v-for="item in netData" :key="item.vpcid" :value="item.vpcid">{{item.vpcname}}</Option>
             </Select>
           </FormItem>
@@ -790,11 +790,15 @@
       openAddNatModal(){
         this.addNatForm.publicIp = ''
         this.showModal.addNat = true
+      },
+      // 当vpc id变化时，重新查询当前vpc下的弹性IP
+      listIP(){
         /*
          useType : 0 代表未使用
          status : 1 代表状态正常
          */
-        var url = `network/listPublicIp.do?useType=0&status=1&zoneId=${$store.state.zone.zoneid}`
+        var url = `network/listPublicIp.do?useType=0&status=1&zoneId=${$store.state.zone.zoneid}&vpcId=${this.addNatForm.vpc}`
+        this.addNatForm.publicIp = ''
         axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             // response.data.result.push({publicipid: '新建弹性IP', publicip: '新建弹性IP'})
@@ -823,7 +827,7 @@
             cancelText: '取消',
             'onOk': () => {
               var url = `network/delNatGateway.do?natGatewayId=${this.select.id}`
-              axios.get(url).then(response => {
+              this.$http.get(url).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.$http.get('network/listNatGateway.do').then(response => {
                     this.setNatData(response)
@@ -1153,8 +1157,8 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-  #wrapper{
-    .title{
+  #wrapper {
+    .title {
       font-size: 12px;
       color: rgba(17, 17, 17, 0.43);
       line-height: 22px;
@@ -1162,6 +1166,7 @@
       margin: 10px 0px;
     }
   }
+
   .card-wrap {
     display: flex;
     justify-content: space-between;

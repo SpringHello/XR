@@ -1178,7 +1178,7 @@
           zoneId: $store.state.zone.zoneid,
           timeType: this.diskForm.timeType + '',
           timeValue: this.diskForm.timeValue + '',
-          diskType: this.diskForm.diskType + ''
+          diskType: this.diskForm.diskType === '超高性能型' ? 'ssd' : this.diskForm.diskType === '性能型' ? 'sas' : 'sata'
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.expenses = response.data.cost
