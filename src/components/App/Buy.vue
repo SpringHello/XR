@@ -403,7 +403,7 @@
               <div class="item-wrapper">
                 <div style="display: flex">
                   <div>
-                    <p class="item-title">镜像</p>
+                    <p class="item-title">主机信息</p>
                   </div>
                   <div v-for="item in PecsInfo.loginType" :key="item.type" class="zoneItem"
                        :class="{zoneSelect:PecsInfo.currentLoginType==item.type}"

@@ -6,9 +6,9 @@
         <div id="header">
           <span id="title">防火墙</span>
         </div>
-        <Alert>
-          防火墙描述
-        </Alert>
+        <div class="universal-alert">
+          <p>防火墙描述</p>
+        </div>
         <div id="body">
           <div class="operator-bar">
             <Button type="primary" @click="openNewFirewallModal">新建</Button>

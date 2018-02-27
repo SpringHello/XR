@@ -6,9 +6,9 @@
         <div id="header">
           <span id="title">弹性IP</span>
         </div>
-        <Alert>
-          为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。
-        </Alert>
+        <div class="universal-alert">
+          <p>为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。</p>
+        </div>
 
         <div class="operate">
           <Button type="primary" @click="openNewIPModal">创建弹性IP</Button>
@@ -351,7 +351,7 @@
                     name: 'NAT'
                   }
                 }, 'NAT网关')])])
-              } else if (object.row.usetype != 2) { 
+              } else if (object.row.usetype != 2) {
                 return h('span', {
                   style: {
                     color: '#2d8cf0',
