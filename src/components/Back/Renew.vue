@@ -390,7 +390,7 @@
         }
         this.loadingMessage = '创建订单中'
         this.loading = true
-        this.$http.post('continue/continueOrder.do', param).then(response => {
+        this.$http.get('continue/continueOrder.do', param).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({path: 'order'})

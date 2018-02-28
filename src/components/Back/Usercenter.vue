@@ -297,7 +297,7 @@
             <Button type="primary" @click="addLinkman">添加联系人</Button>
             <Table :columns="linkManColumns" :data="linkManData" style="margin: 20px 0px"></Table>
             <p class="info-title info-border">通知信息配置</p>
-            <div style="border-top: 1px solid #E9E9E9;">
+            <div>
               <p
                 style="font-family: MicrosoftYaHei;font-size: 14px;color: rgba(17,17,17,0.65);letter-spacing: 0.83px;margin-top: 20px;">
                 为了保障您在第一时间接收到有关财务、账号安全和系统公告等关键信息，本设置页面部分选项（打勾图标）默认激活且无法更改。其余可配置选项请依据您的具体需求激活或禁用。
@@ -492,7 +492,7 @@
                         action="file/upFile.do"
                         :on-success="combine">
                         <div v-if="notAuth.companyAuthForm.combine==''"
-                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
                           暂无图片
                         </div>
                         <img v-else :src="notAuth.companyAuthForm.combine">
@@ -1692,7 +1692,7 @@
           font-size: 18px;
           color: rgba(17, 17, 17, 0.75);
           letter-spacing: 1.31px;
-          margin-bottom: 20px;
+          margin: 20px 0px;
         }
         .info-border {
           padding-bottom: 20px;
