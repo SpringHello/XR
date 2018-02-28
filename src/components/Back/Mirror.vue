@@ -381,11 +381,12 @@
       },
       ownMirrorCreathost(item) {
         this.$router.push({
-          path: 'price',
+          path: 'buy',
           query: {
             templateid: item.systemtemplateid,
             zoneid: item.zoneid,
-            mirrorType: 'own'
+            mirrorType: 'custom',
+            mirror: item
           }
         })
       },
@@ -435,7 +436,7 @@
         }
         var item = this.select
         this.$router.push({
-          path: 'price',
+          path: 'buy',
           query: {
             templateid: item.systemtemplateid,
             zoneid: item.zoneid,

@@ -64,14 +64,14 @@
               </Option>
             </Select>
           </Form-item>
-          <Form-item label="购买数量">
-            <div class="quantity">
-              <p @click="reduce"><i></i></p>
-              <p style="width: 38px;cursor: auto;color:#2A99F2;margin:0 10px ">{{ diskForm.quantity }}</p>
-              <p @click="diskForm.quantity+=1"><i style="transform: translateX(-2px) rotate(311deg)"></i></p>
-            </div>
-          </Form-item>
-          <Form-item label="硬盘参数">
+          <!--          <Form-item label="购买数量">
+                      <div class="quantity">
+                        <p @click="reduce"><i></i></p>
+                        <p style="width: 38px;cursor: auto;color:#2A99F2;margin:0 10px ">{{ diskForm.quantity }}</p>
+                        <p @click="diskForm.quantity+=1"><i style="transform: translateX(-2px) rotate(311deg)"></i></p>
+                      </div>
+                    </Form-item>-->
+          <Form-item label="硬盘参数" style="width: 80%">
             <p style="color: #999999;margin-bottom: 10px">磁盘类型：{{ diskForm.diskType}}</p>
             <p style="color: #999999;margin-bottom: 10px">磁盘容量：{{ diskForm.diskSize}} G</p>
             <p style="color: #999999;">原始磁盘名称：{{ diskForm.name }}</p>
@@ -1063,7 +1063,7 @@
       /* 确认以备份创建新磁盘，跳转订单*/
       createBackupsToDisk_ok () {
         var diskType = this.diskForm.diskType === '超高性能型' ? 'ssd' : this.diskForm.diskType === '性能型' ? 'sas' : 'sata'
-        var url = `Disk/createVolume.do?diskSize=${this.diskForm.diskSize}&diskName=${this.diskForm.diskName}&diskOfferingId=${diskType}&timeType=${this.diskForm.timeType}&timeValue=${this.diskForm.timeValue || 1}&diskSnapshotId=${this.diskForm.diskSnapshotId}&isAutorenew=0&count=${this.diskForm.quantity}`
+        var url = `Disk/createVolume.do?diskSize=${this.diskForm.diskSize}&diskName=${this.diskForm.diskName}&diskOfferingId=${diskType}&timeType=${this.diskForm.timeType}&timeValue=${this.diskForm.timeValue || 1}&diskSnapshotId=${this.diskForm.diskSnapshotId}&isAutorenew=0&count=1`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
@@ -1117,7 +1117,7 @@
           var url = `Snapshot/deleteDiskSnapshot.do?id=${this.diskBackupsSelection.id}&zoneId=${this.diskBackupsSelection.zoneid}`
           axios.get(url).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.$Message.info(response.data.message)
+              this.$Message.success(response.data.message)
               this.diskBackupsSelection = null
               this.listDiskSnapshots()
             } else {
@@ -1205,7 +1205,7 @@
       // 新建磁盘价格计算
       'copyDiskForm': {
         handler: function (val, oldVal) {
-          if (val.timeType == 'current' || ((val.timeType && val.timeValue) && val.quantity)) {
+          if (val.timeType == 'current' || val.timeType && val.timeValue) {
             if (val.diskName === oldVal.diskName) {
               this.expenses = '正在计算'
               this.coupon = 0
