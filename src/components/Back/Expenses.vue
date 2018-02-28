@@ -700,7 +700,7 @@
                   if(key!='地域'){
                     arr.push(h('p', {style:{lineHeight:'1.5'}}, `${key}:${data.资源[index][key]}`))
                   } else {
-                    arr[0]=h('p', {style:{lineHeight:'1.5'}}, `${key}:${data.资源[index][key]}`)
+                    arr.unshift(h('p', {style:{lineHeight:'1.5'}}, `${key}:${data.资源[index][key]}`))
                   }
                 }
               }
