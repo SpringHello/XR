@@ -5,10 +5,11 @@
         云网络 /
          <span>负载均衡</span>
       </span>
-      <div id="content">  
+      <div id="content">
         <div id="header">
           <img src="../../assets/img/network/balance-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
           <span id="title">负载均衡</span>
+          <button id="refresh_button">刷新</button>
         </div>
         <div class="universal-alert">
           <p>负载均衡通过将访问流量自动分发到多台弹性云服务器，扩展应用系统对外的服务能力，实现更高水平的应用程序容错性能。</p>
