@@ -16,7 +16,7 @@
             <li>
               <router-link to="renew" :class="{active:pageInfo.path=='renew'}"><span>一键续费</span></router-link>
             </li>
-            <li>
+            <!--<li>
               <Dropdown @on-click="toggleZone">
                 <a href="javascript:void(0)">
                   {{zone.zonename}}
@@ -28,7 +28,7 @@
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
-            </li>
+            </li>-->
           </ul>
           <ul class="right">
             <li>
@@ -72,7 +72,19 @@
     </header>
     <div class="sec-header">
       <div class="wrapper">
-        <div></div>
+        <div class="zoneList">
+          <Dropdown @on-click="toggleZone">
+            <a href="javascript:void(0)">
+              {{zone.zonename}}
+              <Icon type="arrow-down-b"></Icon>
+            </a>
+            <DropdownMenu slot="list">
+              <DropdownItem :name="zone.zoneid" v-for="(zone,index) in zoneList" :key="index">
+                {{zone.zonename}}
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </div>
         <div class="operate" ref="operate">
           <ul @mouseleave="ML">
             <li v-for="(item,index) in main" :key="index" @mouseenter="ME($event,item.type)" :ref="item.type"
@@ -290,6 +302,9 @@
         }
       },
       toggleZone(zoneId){
+        // 切换默认区域
+        axios.get('user/setDefaultZone.do', {params: {zoneId: zoneId}}).then(response => {
+        })
         for (var zone of this.zoneList) {
           if (zone.zoneid == zoneId) {
             $store.commit('setZone', zone)
@@ -400,7 +415,7 @@
                 &:last-child {
                   position: relative;
                   .ivu-dropdown-item {
-                    a{
+                    a {
                       color: #666;
                     }
                   }
@@ -477,6 +492,16 @@
         margin: 0px auto;
         display: flex;
         justify-content: space-between;
+        .zoneList{
+          .ivu-dropdown-rel {
+            a {
+              font-size: 14px;
+              line-height: 45px;
+              display: inline-block;
+              color: #333333;
+            }
+          }
+        }
         .operate {
           > ul {
             position: relative;

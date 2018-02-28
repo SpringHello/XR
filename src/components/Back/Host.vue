@@ -447,7 +447,7 @@
       v-model="showModal.renewal"
       title="续费选择"
       width="590"
-     :scrollable="true">
+      :scrollable="true">
       <div style="height:100px;width:90%;margin:0px auto">
         <span style="font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;vertical-align:middle">
         付费类型 :
@@ -533,6 +533,7 @@
   // import {mapState} from 'vuex'
   import $store from '@/vuex'
   import axios from 'axios'
+  import Vue from 'vue'
   export default {
     data() {
       var status = '开启'
@@ -720,7 +721,7 @@
             this.arrearsHost = []
             this.errorHost = []
             this.waitHost = []
-            this.currentHost =  []
+            this.currentHost = []
             // 遍历各种主机类型，开启、关闭、欠费、错误、创建中
             for (var type in response.data.result) {
               var list = []
@@ -738,11 +739,7 @@
         if (!this.auth) {
           return
         }
-        if (!item.select) {
-          item.select = true
-        } else {
-          item.select = false
-        }
+        this.$set(item,'select',!item.select)
       },
       createHost() {
 
@@ -756,7 +753,7 @@
             vmid: item.computerid,
             instancename: item.instancename,
             connecturl: item.connecturl,
-            id:item.id
+            id: item.id
           }
         })
         // sessionStorage.setItem('oneHostinfo', JSON.stringify(item))
@@ -810,15 +807,15 @@
         item.select = false
         item.status = 2
         this.$http.get(`information/stopVirtualMachine.do?VMId=${item.computerid}&forced=true`)
-         .then(response => {
-          this.loading = false
-          if (response.status == 200 && response.data.status == 1) {
-            item.status = 2
-            this.$Message.info(response.data.message)
-          } else {
-            item.status = 1
-          }
-        })
+          .then(response => {
+            this.loading = false
+            if (response.status == 200 && response.data.status == 1) {
+              item.status = 2
+              this.$Message.info(response.data.message)
+            } else {
+              item.status = 1
+            }
+          })
       },
       start(item){
         this.loadingMessage = '正在启动主机'
@@ -896,7 +893,7 @@
             }
             break
           case 'renewal':
-          if (this.checkSelect()) {
+            if (this.checkSelect()) {
               this.showModal.renewal = true
             }
             break
@@ -1008,10 +1005,10 @@
           list: JSON.stringify(list)
         }
         this.$http.post("continue/continueOrder.do", param).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.$router.push({path: 'order'})
-        }
-      })
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push({path: 'order'})
+          }
+        })
       },
       // 创建主机镜像
       mirror() {
@@ -1048,7 +1045,7 @@
                 this.getData()
               } else {
                 this.$message.info({
-                  content:response.data.message
+                  content: response.data.message
                 })
               }
             })
@@ -1068,7 +1065,8 @@
                 this.$Message.success(response.data.message)
               } else {
                 this.$message.error({
-                  content: response.data.message})
+                  content: response.data.message
+                })
               }
             })
         }
@@ -1102,10 +1100,11 @@
                 this.cost = response.data.result
               } else {
                 this.$message.error({
-                  content: response.data.message})
+                  content: response.data.message
+                })
               }
             })
-         }
+        }
       },
       '$store.state.zone': {
         handler: function () {
@@ -1123,7 +1122,7 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-.ivu-modal-footer {
+  .ivu-modal-footer {
     .button {
       height: 35.7px;
       padding: 5.7px 17px;
@@ -1144,10 +1143,12 @@
       color: #666666;
     }
   }
-  .link-host{
+
+  .link-host {
     background: #2A99F2;
     color: #fff;
   }
+
   .moreOperation .ivu-poptip-rel li {
     font-size: 12px;
     line-height: normal;
