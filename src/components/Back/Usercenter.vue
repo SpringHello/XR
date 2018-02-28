@@ -10,7 +10,7 @@
             <p class="info-title">个人基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
-              <div style="padding:10px 0px;margin-left:20px;">
+              <div style="  padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
                   <span
                     style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;color: #2A99F2;">添加认证信息</span>
@@ -18,12 +18,12 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle">未认证用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
             </div>
-            <p class="info-title" style="padding-bottom:20px;border-bottom:1px solid #E9E9E9;">个人认证信息</p>
+            <p class="info-title info-border">个人认证信息</p>
             <!--认证方式选择页面-->
             <div v-if="notAuth.currentStep == notAuth.allStep.selectAuthType"
                  v-for="(authType,index) in notAuth.authTypes" :key="index" class="authType">
@@ -66,7 +66,7 @@
                           action="file/upFile.do"
                           :on-success="IDCardFront">
                           <div v-if="notAuth.cardAuthForm.IDCardFront==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
                             暂无图片
                           </div>
                           <img v-else :src="notAuth.cardAuthForm.IDCardFront">
@@ -91,7 +91,7 @@
                           action="file/upFile.do"
                           :on-success="IDCardBack">
                           <div v-if="notAuth.cardAuthForm.IDCardBack==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
                             暂无图片
                           </div>
                           <img v-else :src="notAuth.cardAuthForm.IDCardBack">
@@ -117,7 +117,7 @@
                           action="file/upFile.do"
                           :on-success="IDCardPerson">
                           <div v-if="notAuth.cardAuthForm.IDCardPerson==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
                             暂无图片
                           </div>
                           <img v-else :src="notAuth.cardAuthForm.IDCardPerson">
@@ -197,7 +197,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -225,7 +225,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle;margin-right:20px;">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
               </div>
@@ -255,7 +255,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle;margin-right:20px;">企业用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
               </div>
@@ -279,7 +279,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -293,17 +293,17 @@
           </TabPane>
 
           <Tab-pane label="提醒设置" name="remainder">
-            <h2 style="padding: 20px 0 0px;font-size: 18px;">联系人管理</h2>
-            <Button type="primary" style="margin-top: 20px" @click="addLinkman">添加联系人</Button>
-            <Table :columns="linkManColumns" :data="linkManData" style="margin-top: 20px"></Table>
-            <h2 style="margin-top: 40px;font-size: 18px;">通知信息配置</h2>
-            <div style="border-top: 1px solid #E9E9E9;">
+            <p class="info-title">联系人管理</p>
+            <Button type="primary" @click="addLinkman">添加联系人</Button>
+            <Table :columns="linkManColumns" :data="linkManData" style="margin: 20px 0px"></Table>
+            <p class="info-title info-border">通知信息配置</p>
+            <div>
               <p
                 style="font-family: MicrosoftYaHei;font-size: 14px;color: rgba(17,17,17,0.65);letter-spacing: 0.83px;margin-top: 20px;">
                 为了保障您在第一时间接收到有关财务、账号安全和系统公告等关键信息，本设置页面部分选项（打勾图标）默认激活且无法更改。其余可配置选项请依据您的具体需求激活或禁用。
               </p>
               <div style="margin-top: 40px;display: flex">
-                <div style="width: 200px;border-top: 1px solid rgb(233, 233, 233);">
+                <div style="width: 200px">
                   <div
                     style="display: flex;padding-left: 20px;align-items: center;height: 39px;background:#F8F8F9 ">
                         <span
@@ -336,11 +336,63 @@
           </Tab-pane>
           <Tab-pane label="安全设置" name="safe">
             <p class="info-title">用户基本信息</p>
-            <div class="user-info">
+            <!--未认证-->
+            <div class="user-info" v-if="userInfo.personalauth==1&&userInfo.companyauth==1">
               <img src="../../assets/img/usercenter/client.png">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
-                  <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{userInfo.name}}</span>
+                  <span
+                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;color: #2A99F2;">添加认证信息</span>
+                </div>
+                <div>
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
+                  <span style="vertical-align: middle">未认证用户</span>
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
+                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
+                </div>
+              </div>
+            </div>
+            <!--个人认证中-->
+            <div class="user-info" v-else-if="userInfo.personalauth==2&&userInfo.companyauth==1">
+              <img src="../../assets/img/usercenter/client.png">
+              <div style="padding:10px 0px;margin-left:20px;">
+                <div style="margin-bottom: 10px;">
+                  <span
+                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
+                </div>
+                <div>
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
+                  <span style="vertical-align: middle">个人用户</span>
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
+                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
+                </div>
+              </div>
+            </div>
+            <!--个人认证完成-->
+            <div class="user-info" v-else-if="userInfo.personalauth==0&&userInfo.companyauth==1">
+              <img src="../../assets/img/usercenter/client.png">
+              <div style="padding:10px 0px;margin-left:20px;">
+                <div style="margin-bottom: 10px;">
+                  <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{userInfo.realname}}</span>
+                  <div
+                    style="margin-left:20px;display: inline-block;background-color: #2A99F2;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
+                    个人认证
+                  </div>
+                </div>
+                <div>
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
+                  <span style="vertical-align: middle;margin-right:20px;">个人用户</span>
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
+                  <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
+                </div>
+              </div>
+            </div>
+            <!--企业认证完成-->
+            <div class="user-info" v-else-if="userInfo.companyauth==0">
+              <img src="../../assets/img/usercenter/client.png">
+              <div style="padding:10px 0px;margin-left:20px;">
+                <div style="margin-bottom: 10px;">
+                  <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{authInfo.name}}</span>
                   <div
                     style="margin-left:20px;display: inline-block;background-color: #2A99F2;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
                     企业认证
@@ -349,13 +401,30 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle;margin-right:20px;">企业用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
+                  <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
+                </div>
+              </div>
+            </div>
+            <!--企业认证中-->
+            <div class="user-info" v-else-if="userInfo.companyauth==2">
+              <img src="../../assets/img/usercenter/client.png">
+              <div style="padding:10px 0px;margin-left:20px;">
+                <div style="margin-bottom: 10px;">
+                  <span
+                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
+                </div>
+                <div>
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
+                  <span style="vertical-align: middle">个人用户</span>
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
             </div>
             <div>
-              <h2 style="border-bottom: 1px solid rgb(233, 233, 233);margin-top: 40px;padding-bottom: 20px;font-size: 18px;">安全设置</h2>
+              <p class="info-title info-border">安全设置</p>
               <div class="safe">
                 <div v-if="userInfo.phone">
                   <p><span>手机绑定</span>&nbsp;&nbsp;&nbsp;您已经绑定了{{userInfo.phone}}。（您的手机号可以直接用于登陆）</p><span
@@ -379,7 +448,7 @@
             </div>
           </Tab-pane>
           <!--用于企业认证的pane-->
-          <TabPane label="企业信息" name="companyInfo">
+          <TabPane label="企业信息" name="companyInfo" v-if="showCompanyPane">
             <p class="info-title">企业基本信息</p>
             <Form :model="notAuth.companyAuthForm" :label-width="70" ref="companyAuth"
                   :rules="notAuth.companyAuthFormValidate"
@@ -424,7 +493,7 @@
                         action="file/upFile.do"
                         :on-success="combine">
                         <div v-if="notAuth.companyAuthForm.combine==''"
-                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
                           暂无图片
                         </div>
                         <img v-else :src="notAuth.companyAuthForm.combine">
@@ -1650,7 +1719,7 @@
       // 更新email
       confirmEmail(){
         this.showModal.authNewEmail = false
-        var url = `user/updateUserInfo.do?code=${this.newPhoneForm.verCode}&list=${this.newPhoneForm.newPhone}`;
+        var url = `user/updateUserInfo.do?code=${this.newPhoneForm.verCode}&email=${this.newPhoneForm.newPhone}`;
         this.$http.get(url).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message);
@@ -1726,6 +1795,9 @@
       // 剩余联系人个数
       remainLinkMan(){
         return 5 - this.linkManData.length
+      },
+      showCompanyPane(){
+        return this.userInfo.personalauth != 2 && this.userInfo.companyauth == 1
       }
     })
   }
@@ -1753,6 +1825,10 @@
           color: rgba(17, 17, 17, 0.75);
           letter-spacing: 1.31px;
           margin: 20px 0px;
+        }
+        .info-border {
+          padding-bottom: 20px;
+          border-bottom: 1px solid rgb(233, 233, 233);
         }
         .user-info {
           display: flex;
@@ -1791,7 +1867,7 @@
             .line {
               display: inline-block;
               width: 50px;
-              height: 3px;
+              height: 1px;
               background-color: #2A99F2;
               vertical-align: middle;
               margin: 0px 5px;

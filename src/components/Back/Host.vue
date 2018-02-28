@@ -1,7 +1,9 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span>云服务器 / 主机</span>
+      <span class="title">云服务器 / 
+         <span>主机</span>
+      </span>
       <div id="content">
         <div id="header">
           <img src="../../assets/img/host/cloudhost-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
@@ -15,7 +17,7 @@
           <Button type="primary" @click="startUp">一键启动</Button>
           <Button type="primary" @click="joinBalance" :disabled="status!='开启'">加入负载均衡</Button>
           <Button type="primary" @click="bindIP" :disabled="status!='开启'&&status!='关机'">绑定IP</Button>
-          <Dropdown style="margin-left: 20px;vertical-align: middle;" @on-click="hideEvent" class="moreOperation">
+          <Dropdown style="margin-left: 10px;vertical-align: middle;" @on-click="hideEvent" class="moreOperation">
             <Button type="primary">
               更多操作
               <Icon type="arrow-down-b"></Icon>

@@ -138,18 +138,19 @@
                   if(key!='地域'){
                     arr.push(h('p', {style:{lineHeight:'1.5'}}, `${key}:${params.row['资源'][index][key]}`))
                   } else {
-                    arr[0]=h('p', {style:{lineHeight:'1.5'}}, `${key}:${params.row['资源'][index][key]}`)
+                    arr.unshift(h('p', {style:{lineHeight:'1.5'}}, `${key}:${params.row['资源'][index][key]}`))
                   }
                 }
               }
               return h('div', [
                 h('Collapse', {
                   props: {
-                    accordion: true
+                    accordion: true,
+                    value: '0'
                   },
                 }, [h('Panel', {
                     props: {
-                      name: 'content'
+                      name: params.row._index
                     },
                   },
                   [type, h('div', {

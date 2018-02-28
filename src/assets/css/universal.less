@@ -60,6 +60,13 @@
   color: #111111;
 }
 
+// 单行文本溢出
+.one-line-text{
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap
+}
+
 // 模态框title样式
 .universal-modal-title {
   font-size: 16px;
@@ -119,6 +126,11 @@
   #wrapper {
     width: 1200px;
     margin: 0px auto;
+    .title{
+      span{
+        color: #666666
+      }
+    }
     & > span {
       font-family: PingFangSC-Regular;
       font-size: 12px;
@@ -132,7 +144,7 @@
       padding: 20px;
       min-height: 700px;
       #header {
-        padding-bottom: 30px;
+        padding-bottom: 20px;
        // border-bottom: 1px solid #E9E9E9;
         #title {
           font-size: 24px;

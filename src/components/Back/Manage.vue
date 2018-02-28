@@ -1199,6 +1199,9 @@
               margin-bottom: 10px;
               display: block;
               user-select: none;
+              overflow: hidden;
+              text-overflow:ellipsis;
+              white-space: nowrap;
               i {
                 font-style: normal;
               }

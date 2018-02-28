@@ -3,7 +3,7 @@
     <div id="wrapper">
       <span class="title">
         云网络 /
-        <span style="color: #666666;">弹性IP</span>
+         <span>弹性IP</span>
       </span>
       <div id="content">
         <div id="header">

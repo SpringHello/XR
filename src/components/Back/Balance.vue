@@ -3,7 +3,7 @@
     <div id="wrapper">
       <span class="title">
         云网络 /
-        <span style="color: #666666;">负载均衡</span>
+         <span>负载均衡</span>
       </span>
       <div id="content">  
         <div id="header">

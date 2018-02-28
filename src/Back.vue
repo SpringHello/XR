@@ -16,19 +16,6 @@
             <li>
               <router-link to="renew" :class="{active:pageInfo.path=='renew'}"><span>一键续费</span></router-link>
             </li>
-            <li>
-              <Dropdown @on-click="toggleZone">
-                <a href="javascript:void(0)">
-                  {{zone.zonename}}
-                  <Icon type="arrow-down-b"></Icon>
-                </a>
-                <DropdownMenu slot="list">
-                  <DropdownItem :name="zone.zoneid" v-for="(zone,index) in zoneList" :key="index">
-                    {{zone.zonename}}
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </li>
           </ul>
           <ul class="right">
             <li>
@@ -75,7 +62,20 @@
         <div></div>
         <div class="operate" ref="operate">
           <ul @mouseleave="ML">
-            <li v-for="(item,index) in main" :key="index" @mouseenter="ME($event,item.type)" :ref="item.type"
+            <li class="zone-collapse">
+              <Dropdown @on-click="toggleZone">
+                <a href="javascript:void(0)">
+                  {{zone.zonename}}
+                  <Icon type="arrow-down-b"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem :name="zone.zoneid" v-for="(zone,index) in zoneList" :key="index">
+                    {{zone.zonename}}
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </li>
+            <li class="sec-nav" v-for="(item,index) in main" :key="index" @mouseenter="ME($event,item.type)" :ref="item.type"
                 :class="{hover:item.type==pageInfo.hoverItem}">
               <a>{{item.mainName}}</a>
             </li>
@@ -480,7 +480,15 @@
         .operate {
           > ul {
             position: relative;
-            li {
+            .zone-collapse{
+              margin-right:20px; 
+              display: inline-block;
+              font-size: 14px;
+              a {
+                color: #333333;
+              }
+            }
+            .sec-nav {
               display: inline-block;
               font-size: 14px;
               line-height: 45px;

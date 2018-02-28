@@ -1,7 +1,9 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span>安全 / 防火墙</span>
+      <span class="title">安全 / 
+         <span>防火墙</span>
+      </span>
       <div id="content">
         <div id="header">
           <span id="title">防火墙</span>
