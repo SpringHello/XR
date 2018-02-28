@@ -1,7 +1,9 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span>云服务器 / 镜像</span>
+      <span class="title">云服务器 / 
+         <span>镜像</span>
+      </span>
       <div id="content">
         <div id="header">
           <img src="../../assets/img/host/hostMirror-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
@@ -381,11 +383,12 @@
       },
       ownMirrorCreathost(item) {
         this.$router.push({
-          path: 'price',
+          path: 'buy',
           query: {
             templateid: item.systemtemplateid,
             zoneid: item.zoneid,
-            mirrorType: 'own'
+            mirrorType: 'custom',
+            mirror: item
           }
         })
       },
@@ -435,7 +438,7 @@
         }
         var item = this.select
         this.$router.push({
-          path: 'price',
+          path: 'buy',
           query: {
             templateid: item.systemtemplateid,
             zoneid: item.zoneid,

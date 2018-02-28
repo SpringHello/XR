@@ -100,6 +100,13 @@
                         </Dropdown>
                       </div>
 
+                      <!--自定义镜像 列表-->
+                      <div v-if="PecsInfo.currentType=='custom'">
+                        <div v-for="item in PecsInfo.customList" :key="item.value" class="zoneItem"
+                             :class="{zoneSelect:PecsInfo.customMirror==item}"
+                             @click="PecsInfo.customMirror=item" style="margin-top: 20px;">{{item.templatename}}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -195,7 +202,13 @@
                           </Dropdown-menu>
                         </Dropdown>
                       </div>
-
+                      <!--自定义镜像 列表-->
+                      <div v-if="PecsInfo.currentType=='custom'">
+                        <div v-for="item in PecsInfo.customList" :key="item.value" class="zoneItem"
+                             :class="{zoneSelect:PecsInfo.customMirror==item}"
+                             @click="PecsInfo.customMirror=item" style="margin-top: 20px;">{{item.templatename}}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -317,7 +330,8 @@
                         :points="[20,50]"
                         style="margin-right:30px;vertical-align: middle;">
                       </i-slider>
-                      <InputNumber :max="100" :min="1" v-model="PecsInfo.IPConfig.bandWidth" size="large" style="position: relative;bottom: 10px"></InputNumber>
+                      <InputNumber :max="100" :min="1" v-model="PecsInfo.IPConfig.bandWidth" size="large"
+                                   style="position: relative;bottom: 10px"></InputNumber>
                     </div>
                   </div>
                 </div>
@@ -371,7 +385,8 @@
                         </i-slider>
                         <InputNumber :max="500" :min="20" v-model="disk.size" size="large" :step=10
                                      @on-blur="changeDiskSize(index,disk.size)"
-                                     @on-focus="changeDiskSize(index,disk.size)" style="position: relative;bottom: 10px"></InputNumber>
+                                     @on-focus="changeDiskSize(index,disk.size)"
+                                     style="position: relative;bottom: 10px"></InputNumber>
                       </div>
                     </div>
                   </div>
@@ -468,7 +483,8 @@
             </div>
             <!--费用、以及加入预算清单-->
             <div style="margin-top: 20px">
-              <p style="text-align: left;font-size: 14px;color: #2A99F2;">查看计价详情</p>
+              <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
+                 @click="$router.push('document')">查看计价详情</p>
               <p v-if="PecsInfo.createType=='fast'" style="text-align: right;font-size: 14px;color: #666666;">总计费用：<span
                 style="font-size: 24px;color: #EE6723;">{{PecsInfo.cost.toFixed(2)}}元</span></p>
               <p v-if="PecsInfo.createType=='custom'" style="text-align: right;font-size: 14px;color: #666666;">
@@ -568,7 +584,8 @@
                     </i-slider>
                     <InputNumber :max="500" :min="20" v-model="disk.size" size="large" :step=10
                                  @on-blur="change_DiskSize(index,disk.size)"
-                                 @on-focus="change_DiskSize(index,disk.size)" style="position: relative;bottom: 10px"></InputNumber>
+                                 @on-focus="change_DiskSize(index,disk.size)"
+                                 style="position: relative;bottom: 10px"></InputNumber>
                   </div>
                 </div>
               </div>
@@ -601,7 +618,8 @@
           </div>
           <!--数据盘价格-->
           <div style="margin-top: 20px">
-            <p style="text-align: left;font-size: 14px;color: #2A99F2;">查看计价详情</p>
+            <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
+               @click="$router.push('document')">查看计价详情</p>
             <p style="text-align: right;font-size: 14px;color: #666666;">
               总计费用：<span style="font-size: 24px;color: #EE6723;">{{PdiskInfo.dataDiskCost.toFixed(2)}}元</span>
             </p>
@@ -684,7 +702,8 @@
                     :points="[20,50]"
                     style="margin-right:30px;vertical-align: middle;">
                   </i-slider>
-                  <InputNumber :max="100" :min="1" v-model="PeipInfo.bandWidth" size="large" style="position: relative;bottom: 10px"></InputNumber>
+                  <InputNumber :max="100" :min="1" v-model="PeipInfo.bandWidth" size="large"
+                               style="position: relative;bottom: 10px"></InputNumber>
                 </div>
               </div>
             </div>
@@ -716,7 +735,8 @@
 
           <!--费用、以及加入预算清单-->
           <div style="margin-top: 20px">
-            <p style="text-align: left;font-size: 14px;color: #2A99F2;">查看计价详情</p>
+            <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
+               @click="$router.push('document')">查看计价详情</p>
             <p style="text-align: right;font-size: 14px;color: #666666;">总计费用：<span
               style="font-size: 24px;color: #EE6723;">{{PeipInfo.cost.toFixed(2)}}元</span></p>
             <div style="text-align: right;margin-top: 20px;">
@@ -753,6 +773,9 @@
                 </p>
                 <!--公共镜像-->
                 <p class="item" v-if="prod.currentType=='public'"><span class="title">镜像</span>{{prod.system.systemName}}
+                </p>
+                <!--自定义镜像-->
+                <p class="item" v-if="prod.currentType=='custom'"><span class="title">镜像</span>{{prod.customMirror.templatename}}
                 </p>
                 <!--快速配置-->
                 <div v-if="prod.createType=='fast'">
@@ -1022,6 +1045,9 @@
             {system: 'Ubuntu', systemList: [], selectSystem: ''},
             {system: 'Debian', systemList: [], selectSystem: ''}
           ],
+          // 自定义镜像 列表
+          customList: [],
+          customMirror: {},
           // 选中的镜像
           system: {},
 
@@ -1197,7 +1223,13 @@
       this.queryVpc()
       this.queryIPVpc()
       this.setTemplate()
+      this.ownMirrorList()
       this.queryIPPriceInIP()
+      /* 自定义镜像生成主机 页面跳转  页面赋值 */
+      if(this.$route.query.templateid) {
+        this.PecsInfo.zone.zoneid = this.$route.query.zoneid
+        this.PecsInfo.currentType = this.$route.query.mirrorType
+      }
     },
     methods: {
       // 设置镜像数据
@@ -1208,6 +1240,12 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            /* var len = response.data.result.length
+             if ( len != 0) {
+             response.data.result[0].src = '../../assets/img/buy/across.png'
+             response.data.result[1].src = '../../assets/img/buy/across.png'
+             response.data.result[2].src = '../../assets/img/buy/across.png'
+             }*/
             this.PecsInfo.appList = response.data.result
             this.PecsInfo.currentApp = response.data.result[0] || {}
           }
@@ -1227,6 +1265,18 @@
             this.PecsInfo.system = {}
           }
         })
+      },
+      // 设置自有镜像
+      ownMirrorList() {
+        if (this.userInfo != null) {
+          var url1 = `information/listTemplates.do?user=1&zoneId=${this.PecsInfo.zone.zoneid}`
+          axios.get(url1).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.PecsInfo.customList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
+              this.PecsInfo.customMirror = this.PecsInfo.customList[0] || {}
+            }
+          })
+        }
       },
       // 重新选择镜像
       setOS(name){
@@ -1475,6 +1525,12 @@
           })
           return
         }
+        if (this.PecsInfo.currentType == 'custom' && this.PecsInfo.customMirror.templatename == undefined) {
+          this.$message.info({
+            content: '请选择一个镜像'
+          })
+          return
+        }
         var obj = JSON.parse(JSON.stringify(this.PecsInfo))
         var prod = Object.assign({
           typeName: '云主机',
@@ -1564,7 +1620,7 @@
               zoneId: prod.zone.zoneid,
               timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
               timeValue: prod.timeForm.currentTimeValue.value,
-              templateId: prod.currentType == 'app' ? prod.currentApp.systemtemplateid : prod.system.systemtemplateid,
+              templateId: prod.currentType == 'app' ? prod.currentApp.systemtemplateid : prod.currentType == 'public'? prod.system.systemtemplateid : prod.customMirror.systemtemplateid,
               isAutoRenew: prod.autoRenewal ? '1' : '0',
               count: prod.count
             }
@@ -1584,8 +1640,10 @@
             }
             if (prod.currentType === 'app') {
               params.templateId = prod.currentApp.templateid
-            } else {
+            } else if (prod.currentType === 'public'){
               params.templateId = prod.system.systemId
+            } else {
+              params.templateId = prod.customMirror.systemtemplateid
             }
             PromiseList.push(axios.get('information/deployVirtualMachine.do', {params}))
           } else if (prod.type == 'Pdisk') {
@@ -1704,185 +1762,166 @@
       }
     },
     computed: mapState({
-      disabled () {
-        return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
-      },
-      totalCost(){
-        return this.PecsInfo.vmConfig.cost + this.PecsInfo.IPConfig.cost + this.PecsInfo.dataDiskCost
-      },
-      // 剩余添加磁盘数量
-      remainDisk(){
-        return 5 - this.PecsInfo.dataDiskList.length
-      },
-      // 商品清单总价
-      billListCost(){
-        var cost = 0
-        for (var prod of this.cart) {
-          switch (prod.type) {
-            case'Pecs':
-              if (prod.createType == 'custom') {
-                cost += prod.customCost
-              } else {
+        disabled () {
+          return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
+        },
+        totalCost(){
+          return this.PecsInfo.vmConfig.cost + this.PecsInfo.IPConfig.cost + this.PecsInfo.dataDiskCost
+        },
+        // 剩余添加磁盘数量
+        remainDisk(){
+          return 5 - this.PecsInfo.dataDiskList.length
+        },
+        // 商品清单总价
+        billListCost(){
+          var cost = 0
+          for (var prod of this.cart) {
+            switch (prod.type) {
+              case'Pecs':
+                if (prod.createType == 'custom') {
+                  cost += prod.customCost
+                } else {
+                  cost += prod.cost
+                }
+                break;
+              case'Pdisk':
+                cost += prod.dataDiskCost
+                break;
+              case'Peip':
                 cost += prod.cost
-              }
-              break;
-            case'Pdisk':
-              cost += prod.dataDiskCost
-              break;
-            case'Peip':
-              cost += prod.cost
-              break;
+                break;
+            }
           }
-        }
-        return cost
-      },
-      remainDiskInDisk(){
-        return 5 - this.PdiskInfo.dataDiskList.length
-      },
-      zoneList: state => state.zoneList,
-      userInfo: state => state.userInfo
-    }
-  ),
-  watch: {
-    // 选择区域发生变化
-    'PecsInfo.zone'
-  :
-    {
-      handler: function () {
-        // 重新查询自定义IP的所属vpc，即虚拟私有云
-        this.queryVpc()
-        this.setTemplate()
+          return cost
+        },
+        remainDiskInDisk(){
+          return 5 - this.PdiskInfo.dataDiskList.length
+        },
+        zoneList: state => state.zoneList,
+        userInfo: state => state.userInfo
       }
-    ,
-      deep: true
-    }
-  ,
-    // 观测到计费方式变化
-    'PecsInfo.timeForm'
-  :
-    {
-      handler: function () {
-        // 查询快速配置价格
-        this.queryQuick()
-        // 查询自定义配置主机价格
-        this.queryCustomVM()
-        // 查询数据盘价格
-        this.queryDiskPrice()
-        // 查询公网IP价格
+    ),
+    watch: {
+      // 选择区域发生变化
+      'PecsInfo.zone': {
+        handler: function () {
+          // 重新查询自定义IP的所属vpc，即虚拟私有云
+          this.queryVpc()
+          this.setTemplate()
+          this.ownMirrorList()
+        }
+        ,
+        deep: true
+      }
+      ,
+      // 观测到计费方式变化
+      'PecsInfo.timeForm': {
+        handler: function () {
+          // 查询快速配置价格
+          this.queryQuick()
+          // 查询自定义配置主机价格
+          this.queryCustomVM()
+          // 查询数据盘价格
+          this.queryDiskPrice()
+          // 查询公网IP价格
+          this.queryIPPrice()
+        }
+        ,
+        deep: true
+      }
+      ,
+      // 观测到快速配置主机规格变化
+      'PecsInfo.currentSystem': {
+        handler: function () {
+          // 查询快速配置价格
+          this.queryQuick()
+        }
+        ,
+        deep: true
+      }
+      ,
+      // 观测到自定义配置主机规格变化
+      'PecsInfo.vmConfig': {
+        handler: function () {
+          // 查询自定义配置价格
+          this.queryCustomVM()
+        }
+        ,
+        deep: true
+      }
+      ,
+      // 选中的VPC发生变化
+      'PecsInfo.vpc'()
+      {
+        this.changeNetwork()
+      }
+      ,
+      // 公网IP带宽变化
+      'PecsInfo.IPConfig.bandWidth'()
+      {
         this.queryIPPrice()
       }
-    ,
-      deep: true
-    }
-  ,
-    // 观测到快速配置主机规格变化
-    'PecsInfo.currentSystem'
-  :
-    {
-      handler: function () {
-        // 查询快速配置价格
-        this.queryQuick()
+      ,
+      // 磁盘变化，重新计算价格
+      'PecsInfo.dataDiskList': {
+        handler: function () {
+          this.queryDiskPrice()
+        }
+        ,
+        deep: true
       }
-    ,
-      deep: true
-    }
-  ,
-    // 观测到自定义配置主机规格变化
-    'PecsInfo.vmConfig'
-  :
-    {
-      handler: function () {
-        // 查询自定义配置价格
-        this.queryCustomVM()
-      }
-    ,
-      deep: true
-    }
-  ,
-    // 选中的VPC发生变化
-    'PecsInfo.vpc'()
-    {
-      this.changeNetwork()
-    }
-  ,
-    // 公网IP带宽变化
-    'PecsInfo.IPConfig.bandWidth'()
-    {
-      this.queryIPPrice()
-    }
-  ,
-    // 磁盘变化，重新计算价格
-    'PecsInfo.dataDiskList'
-  :
-    {
-      handler: function () {
-        this.queryDiskPrice()
-      }
-    ,
-      deep: true
-    }
-  ,
+      ,
 
-    /*磁盘页面需要价格计算的变化*/
-    'PdiskInfo.timeForm'
-  :
-    {
-      handler: function () {
-        // 查询数据盘价格
-        this.queryDiskPriceInDisk()
+      /*磁盘页面需要价格计算的变化*/
+      'PdiskInfo.timeForm': {
+        handler: function () {
+          // 查询数据盘价格
+          this.queryDiskPriceInDisk()
+        }
+        ,
+        deep: true
       }
-    ,
-      deep: true
-    }
-  ,
-    // 磁盘变化，重新计算价格
-    'PdiskInfo.dataDiskList'
-  :
-    {
-      handler: function () {
-        this.queryDiskPriceInDisk()
+      ,
+      // 磁盘变化，重新计算价格
+      'PdiskInfo.dataDiskList': {
+        handler: function () {
+          this.queryDiskPriceInDisk()
+        }
+        ,
+        deep: true
       }
-    ,
-      deep: true
-    }
-  ,
+      ,
 
-    // 公网IP选择区域发生变化
-    'PeipInfo.zone'
-  :
-    {
-      handler: function () {
-        // 重新查询自定义IP的所属vpc，即虚拟私有云
-        this.queryIPVpc()
+      // 公网IP选择区域发生变化
+      'PeipInfo.zone': {
+        handler: function () {
+          // 重新查询自定义IP的所属vpc，即虚拟私有云
+          this.queryIPVpc()
+        }
+        ,
+        deep: true
       }
-    ,
-      deep: true
-    }
-  ,
-    /*公网IP页面需要价格计算的变化*/
-    'PeipInfo.timeForm'
-  :
-    {
-      handler: function () {
-        // 查询公网IP价格
-        this.queryIPPriceInIP()
+      ,
+      /*公网IP页面需要价格计算的变化*/
+      'PeipInfo.timeForm': {
+        handler: function () {
+          // 查询公网IP价格
+          this.queryIPPriceInIP()
+        }
+        ,
+        deep: true
       }
-    ,
-      deep: true
-    }
-  ,
-    // 公网IP变化，重新计算价格
-    'PeipInfo.bandWidth'
-  :
-    {
-      handler: function () {
-        this.queryIPPriceInIP()
+      ,
+      // 公网IP变化，重新计算价格
+      'PeipInfo.bandWidth': {
+        handler: function () {
+          this.queryIPPriceInIP()
+        }
+        ,
+        deep: true
       }
-    ,
-      deep: true
+      ,
     }
-  ,
-  }
   }
 </script>
 

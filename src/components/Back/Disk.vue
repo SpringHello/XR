@@ -5,7 +5,9 @@
         <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
         <div>{{loadingMessage}}</div>
       </Spin>
-      <span>云存储 / 云硬盘</span>
+      <span class="title">云存储 / 
+         <span>云硬盘</span>
+      </span>
       <div id="content">
         <div id="header">
           <img src="../../assets/img/disk/disk.png" style="margin-right: 5px;vertical-align: text-bottom">
@@ -112,7 +114,7 @@
             </Select>
           </Form-item>
         </Form>
-        <span style="color: #666666;">提示：如果您购买了主机但主机列表中无选项，是因为待绑定主机上存在快照，无法完成挂载。</span>
+         <span>提示：如果您购买了主机但主机列表中无选项，是因为待绑定主机上存在快照，无法完成挂载。</span>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.mountDisk = false">取消</Button>
@@ -857,6 +859,7 @@
             this.$message.error({
               content: response.data.message
             })
+            this.refresh()
           }
         })
       },

@@ -213,5 +213,12 @@ div.modal-header-border {
   50%  { transform: rotate(180deg);}
   to   { transform: rotate(360deg);}
 }
+.ivu-btn-primary {
+  background-color: #2A99F2;
+  border-color: #2A99F2;
+}
 
+.zone-collapse .ivu-select-dropdown{
+    margin-top: 15px;
+}
 

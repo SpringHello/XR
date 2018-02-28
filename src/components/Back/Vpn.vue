@@ -3,7 +3,7 @@
     <div id="wrapper">
       <span class="title">
         云网络 /
-        <span style="color: #666666;">VPN</span>
+         <span>VPN</span>
       </span>
       <div id="content">
         <div id="header">

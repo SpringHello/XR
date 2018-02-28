@@ -2,7 +2,10 @@
   <div>
     <div class="background">
       <div class="wrapper">
-        <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 回收站</span>
+        <span class="title">
+          <router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link>
+           / <span style="color: #666666;">回收站</span>
+        </span>
   <!--      <Alert type="warning" show-icon style="margin-bottom:0px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
           <router-link to="/usercenter">立即认证</router-link>
         </Alert>-->

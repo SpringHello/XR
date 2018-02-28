@@ -1,13 +1,18 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span>云服务器 / 主机</span>
+      <span class="title">云服务器 /
+         <span>主机</span>
+      </span>
       <div id="content">
         <div id="header">
           <img src="../../assets/img/host/cloudhost-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
           <span id="title">云主机</span>
           <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
+        <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
+          <router-link to="/ruicloud/userCenter">立即认证</router-link>
+        </Alert>
         <div class="universal-alert">
           <p>为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。</p>
         </div>
@@ -15,7 +20,7 @@
           <Button type="primary" @click="startUp">一键启动</Button>
           <Button type="primary" @click="joinBalance" :disabled="status!='开启'">加入负载均衡</Button>
           <Button type="primary" @click="bindIP" :disabled="status!='开启'&&status!='关机'">绑定IP</Button>
-          <Dropdown style="margin-left: 20px;vertical-align: middle;" @on-click="hideEvent" class="moreOperation">
+          <Dropdown style="margin-left: 10px;vertical-align: middle;" @on-click="hideEvent" class="moreOperation">
             <Button type="primary">
               更多操作
               <Icon type="arrow-down-b"></Icon>
@@ -149,9 +154,10 @@
                       </div>
                       <div class="foot">
                         <span>{{item.createtime}}</span>
-                        <button @click.stop="manage(item,'normal')" :disabled="!auth" style="margin-left:55px;">管理
-                        </button>
-                        <button v-if="!auth" :disabled="!auth" class="lint-host">连接主机</button>
+                        <Button @click.stop="manage(item,'normal')" style="margin-left:55px;" :disabled="!auth"
+                                :class="{btnnormal:auth}">管理
+                        </Button>
+                        <Button v-if="!auth" :disabled="!auth">连接主机</Button>
                         <a v-else :href="item.connecturl" target="_blank"
                            style="line-height: 30px;border: 1px solid;border-radius: 4px;width: 76px;background:#2A99F2;color:#fff">连接主机</a>
                       </div>
@@ -285,9 +291,9 @@
                       </div>
                       <div class="foot" style="background-color: #D9D9D9">
                         <span style="color: rgba(17,17,17,0.65);">{{item.createtime}}</span>
-                        <button @click.stop="manage(item,'close')" style="margin-left: 55px;background-color: white"
-                                :disabled="!auth">管理
-                        </button>
+                        <Button @click.stop="manage(item,'close')" style="margin-left:55px;" :disabled="!auth"
+                                :class="{btnnormal:auth}">管理
+                        </Button>
                       </div>
                     </div>
                   </Card>
@@ -739,7 +745,7 @@
         if (!this.auth) {
           return
         }
-        this.$set(item,'select',!item.select)
+        this.$set(item, 'select', !item.select)
       },
       createHost() {
 
@@ -1122,6 +1128,11 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .btnnormal {
+    border: #2a99f2 solid 1px;
+    color: #2a99f2
+  }
+
   .ivu-modal-footer {
     .button {
       height: 35.7px;
@@ -1231,19 +1242,7 @@
         font-size: 12px;
         color: #999999;
       }
-      button {
-        float: right;
-        border: 1px solid #2A99F2;
-        border-radius: 4.46px;
-        line-height: 18px;
-        font-size: 12px;
-        color: #2A99F2;
-        cursor: pointer;
-        user-select: none;
-        padding: 5px 15px;
-        background-color: white;
-        outline: none;
-      }
+
     }
     .select {
       .ivu-card {

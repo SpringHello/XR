@@ -103,7 +103,7 @@
               {title: '账户安全', url: 'uaf/3-1'},
               {title: '个人/企业认证', url: 'uaf/3-1'},
               {title: '产品定价', url: 'uaf/4-1'},
-              {title: '计费说明', url: 'uaf/5-1'},
+              {title: '计费说明', url: ''},
               {title: '代金券', url: 'uaf/6-1'},
               {title: '充值', url: 'uaf/7-1'},
               {title: '发票申请', url: 'uaf/8-1'}

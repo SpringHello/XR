@@ -10,7 +10,7 @@
             <p class="info-title">个人基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
-              <div style="padding:10px 0px;margin-left:20px;">
+              <div style="  padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
                   <span
                     style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;color: #2A99F2;">添加认证信息</span>
@@ -18,7 +18,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle">未认证用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -66,7 +66,7 @@
                           action="file/upFile.do"
                           :on-success="IDCardFront">
                           <div v-if="notAuth.cardAuthForm.IDCardFront==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
                             暂无图片
                           </div>
                           <img v-else :src="notAuth.cardAuthForm.IDCardFront">
@@ -91,7 +91,7 @@
                           action="file/upFile.do"
                           :on-success="IDCardBack">
                           <div v-if="notAuth.cardAuthForm.IDCardBack==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
                             暂无图片
                           </div>
                           <img v-else :src="notAuth.cardAuthForm.IDCardBack">
@@ -117,7 +117,7 @@
                           action="file/upFile.do"
                           :on-success="IDCardPerson">
                           <div v-if="notAuth.cardAuthForm.IDCardPerson==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
                             暂无图片
                           </div>
                           <img v-else :src="notAuth.cardAuthForm.IDCardPerson">
@@ -197,7 +197,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -225,7 +225,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle;margin-right:20px;">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
               </div>
@@ -255,7 +255,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle;margin-right:20px;">企业用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
               </div>
@@ -279,7 +279,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -347,7 +347,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle">未认证用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -363,7 +363,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -382,7 +382,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle;margin-right:20px;">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
               </div>
@@ -401,7 +401,8 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle;margin-right:20px;">企业用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
               </div>
@@ -417,7 +418,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -650,6 +651,32 @@
         <Button type="primary" @click="addLinkmanOk('addLinkmanForm')" :disabled="remainLinkMan==0">确定添加</Button>
       </div>
     </Modal>
+    <!-- 修改联系人 -->
+    <Modal width="550" v-model="showModal.updateLinkman" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 21px;font-weight: 600">
+        修改联系人
+      </div>
+      <div>
+        <p style="font-family: MicrosoftYaHei;font-size: 14px;color: #666666;">提示：系统将自动发送验证信息到所填手机号和邮箱，通过验证后方可接收消息。</p>
+        <Form ref="updateLinkmanForm" :model="updateLinkmanForm" label-position="top" :rules="ruleValidate"
+              style="width: 300px;margin-top: 20px">
+          <FormItem label="联系人姓名" prop="name">
+            <Input v-model="updateLinkmanForm.name"></Input>
+          </FormItem>
+          <FormItem label="联系人电话" prop="phone">
+            <Input v-model="updateLinkmanForm.phone"></Input>
+          </FormItem>
+          <FormItem label="联系人邮箱" prop="email">
+            <Input v-model="updateLinkmanForm.email"></Input>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.updateLinkman=false">取消</Button>
+        <Button type="primary" @click="updateLinkmanOk('updateLinkmanForm')">确定修改</Button>
+      </div>
+    </Modal>
     <!--选择验证方式-->
     <Modal v-model="showModal.modifyPhone" width="590" :scrollable="true" :styles="{top:'172px'}">
       <div slot="header"
@@ -849,7 +876,8 @@
           authByPhone: false,
           authByEmail: false,
           modifyPassword: false,
-          showPicture: false
+          showPicture: false,
+          updateLinkman: false
         },
         imgSrc: 'user/getKaptchaImage.do',
         // 此对象存储所有未认证时页面的状态
@@ -1172,6 +1200,16 @@
             }
           },
         ],
+        recertify: '重发验证',
+        recertifyColor: '#2A99F2',
+        recertifyPoiner: 'pointer',
+        recertifyPoinerEmail: 'pointer',
+        recertifyColorEmail: '#2A99F2',
+        countdownEmail: 60,
+        countdown: 60,
+        recertifyEmail: '重发验证',
+        unPhone: false,
+        unEmail: false,
         linkManData: [],
         // 添加联系人表单
         addLinkmanForm: {
@@ -1180,6 +1218,24 @@
           name: '',
         },
         addLinkmanFormValidate: {
+          phone: [
+            {required: true, validator: validaRegisteredPhone, trigger: 'blur'}
+          ],
+          email: [
+            {required: true, validator: validaRegisteredEmail, trigger: 'blur'},
+          ],
+          name: [
+            {required: true, message: '联系人姓名不能为空', trigger: 'blur'}
+          ],
+        },
+        // 修改联系人表单
+        updateLinkmanForm: {
+          phone: '',
+          email: '',
+          name: '',
+          id: '',
+        },
+        ruleValidate: {
           phone: [
             {required: true, validator: validaRegisteredPhone, trigger: 'blur'}
           ],
@@ -1273,6 +1329,7 @@
     },
     created(){
       this.listNotice()
+      this.getContacts()
     },
     methods: {
       init(){
@@ -1422,6 +1479,15 @@
           }
         })
       },
+      // 列出联系人
+      getContacts(){
+        var url = `user/getcontacts.do`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.linkManData = response.data.result
+          }
+        })
+      },
       // 添加联系人
       addLinkman(){
         this.showModal.addLinkman = true;
@@ -1436,9 +1502,48 @@
                 this.$Message.success(response.data.message)
                 this.getContacts()
               } else {
+                this.$message.error({
+                  content: response.data.message
+                })
                 this.getContacts()
               }
             })
+          }
+        })
+      },
+      /* 修改联系人 */
+      updateContacts(item){
+        this.showModal.updateLinkman = true
+        this.updateLinkmanForm.name = item.username
+        this.updateLinkmanForm.phone = item.telphone
+        this.updateLinkmanForm.email = item.email
+        this.updateLinkmanForm.id = item.id
+      },
+      updateLinkmanOk(name){
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.showModal.updateLinkman = false
+            var url = `user/updateContacts.do?id=${this.updateLinkmanForm.id}&username=${this.updateLinkmanForm.name}&phone=${this.updateLinkmanForm.phone}&email=${this.updateLinkmanForm.email}`
+            this.$http.get(url).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+                this.getContacts()
+              } else {
+                this.getContacts()
+              }
+            })
+          }
+        })
+      },
+      /* 删除联系人 */
+      delContacts(id){
+        var url = `user/delContacts.do?id=${id}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+            this.getContacts()
+          } else {
+            this.getContacts()
           }
         })
       },
@@ -1452,12 +1557,15 @@
           }
         }
         var updateValue = encodeURI(JSON.stringify(this.updateInform))
-        var url = `user/updateNotice.do?value=${updateValue}`
+        var url = `user/updateNotice.do?list=${updateValue}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
             this.listNotice()
           } else {
+            this.$message.error({
+              content: response.data.message
+            })
             this.listNotice()
           }
         })
@@ -1654,7 +1762,31 @@
       //显示三证合一原图
       showPicture(){
         this.showModal.showPicture = true
-      }
+      },
+      sendPhone(value){
+        var url = `user/reSendMessage.do?phone=${value}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
+      },
+      sendEmail(value){
+        var url = `user/reSendMessage.do?email=${value}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
+      },
     },
     computed: mapState({
       // 传字符串参数 'count' 等同于 `
@@ -1735,7 +1867,7 @@
             .line {
               display: inline-block;
               width: 50px;
-              height: 3px;
+              height: 1px;
               background-color: #2A99F2;
               vertical-align: middle;
               margin: 0px 5px;
