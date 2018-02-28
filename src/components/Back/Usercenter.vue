@@ -66,7 +66,7 @@
                           action="file/upFile.do"
                           :on-success="IDCardFront">
                           <div v-if="notAuth.cardAuthForm.IDCardFront==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
                             暂无图片
                           </div>
                           <img v-else :src="notAuth.cardAuthForm.IDCardFront">
@@ -91,7 +91,7 @@
                           action="file/upFile.do"
                           :on-success="IDCardBack">
                           <div v-if="notAuth.cardAuthForm.IDCardBack==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
                             暂无图片
                           </div>
                           <img v-else :src="notAuth.cardAuthForm.IDCardBack">
@@ -117,7 +117,7 @@
                           action="file/upFile.do"
                           :on-success="IDCardPerson">
                           <div v-if="notAuth.cardAuthForm.IDCardPerson==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
                             暂无图片
                           </div>
                           <img v-else :src="notAuth.cardAuthForm.IDCardPerson">
