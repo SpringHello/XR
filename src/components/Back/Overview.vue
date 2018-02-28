@@ -412,6 +412,10 @@
                 display: flex;
                 align-items: center;
                 padding: 10px;
+                border:#f5f5f5 solid 1px;
+                &:hover {
+                  border: #2a99f2 solid 1px
+                }
                 > span {
                   font-size: 14px;
                   color: #666666;
@@ -428,6 +432,12 @@
                   border: 1px solid #CCCCCC;
                   border-radius: 50%;
                   text-align: center;
+                  &:hover{
+                    border: 1px solid #2a99f2;
+                  }
+                  &:hover .cart-icon{
+                    color: #2a99f2
+                  }
                   .cart-icon {
                     line-height: 25px;
                     color: #CCCCCC;
