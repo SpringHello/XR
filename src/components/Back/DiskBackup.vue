@@ -5,7 +5,9 @@
         <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
         <div>{{loadingMessage}}</div>
       </Spin>
-      <span>云存储 / 云硬盘备份</span>
+      <span class="title">云存储 / 
+         <span>云硬盘备份</span>
+      </span>
       <div id="content">
         <div id="header">
           <img src="../../assets/img/disk/diskBackups.png" style="margin-right: 5px;vertical-align: text-bottom">

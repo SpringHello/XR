@@ -1,7 +1,9 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span>云服务器 / 云主机快照</span>
+      <span class="title">云服务器 / 
+         <span>云主机快照</span>
+      </span>
       <div id="content">
         <div id="header">
           <img src="../../assets/img/host/hostSnaps-icon.png" style="margin-right: 5px;vertical-align: text-bottom">

@@ -899,9 +899,6 @@
         line-height: 22px;
         display: inline-block;
         margin: 10px 0px;
-        span:last-child {
-          color: #666666;
-        }
       }
       button {
         padding: 5px 15px;
