@@ -5,8 +5,9 @@
       <div id="head-info">
         <div style="width:346px">
           <span class="universal-mini" style="font-size: 14px">欢迎您：</span>
-          <p style="font-size: 18px;color: #333333;margin-top: 15px;position: relative">{{userInfo.realname}}<i
-            :class="auth" style="margin-left: 10px;"></i></p>
+          <p style="font-size: 18px;color: #333333;margin-top: 15px;position: relative">{{userInfo.realname}}
+            <i :class="auth" class="auth-icon" style="margin-left: 10px;"></i>
+          </p>
           <div style="display: flex;margin-top:25px">
             <span style="margin-right:20px;width:50%">
               <img src="../../assets/img/overview/email.png" style="margin-right:10px;vertical-align: middle">
@@ -293,46 +294,32 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   /* 未认证class icon */
-  .not-auth {
+  .auth-icon{
     width: 67px;
     height: 18px;
     display: inline-block;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+    background-repeat: no-repeat;
+  }
+  .not-auth {
     background-image: url(../../assets/img/overview/authenticate-icon-1.png);
+    
   }
 
   /* 个人认证class icon */
   .personal-icon {
-    width: 67px;
-    height: 18px;
-    display: inline-block;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
     background-image: url(../../assets/img/overview/authenticate-icon-4.png);
   }
 
   /* 企业认证class icon */
   .company-authing {
-    width: 67px;
-    height: 18px;
-    display: inline-block;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
     background-image: url(../../assets/img/overview/authenticate-icon-5.png);
   }
 
   /* 企业认证class icon */
   .company-icon {
-    width: 67px;
-    height: 18px;
-    display: inline-block;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
     background-image: url(../../assets/img/overview/authenticate-icon-7.png);
   }
 

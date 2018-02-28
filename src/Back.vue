@@ -484,7 +484,6 @@
               margin-right:20px; 
               display: inline-block;
               font-size: 14px;
-              text-align: center;
               a {
                 color: #333333;
               }
