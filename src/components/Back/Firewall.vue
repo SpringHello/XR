@@ -1,12 +1,13 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span class="title">安全 / 
+      <span class="title">安全 /
          <span>防火墙</span>
       </span>
       <div id="content">
         <div id="header">
           <span id="title">防火墙</span>
+          <button id="refresh_button">刷新</button>
         </div>
         <div class="universal-alert">
           <p>防火墙描述</p>

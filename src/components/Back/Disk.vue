@@ -859,6 +859,7 @@
             this.$message.error({
               content: response.data.message
             })
+            this.refresh()
           }
         })
       },
