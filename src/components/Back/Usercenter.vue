@@ -10,7 +10,7 @@
             <p class="info-title">个人基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
-              <div style="padding:10px 0px;margin-left:20px;">
+              <div style="  padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
                   <span
                     style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;color: #2A99F2;">添加认证信息</span>
@@ -18,7 +18,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle">未认证用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -66,7 +66,7 @@
                           action="file/upFile.do"
                           :on-success="IDCardFront">
                           <div v-if="notAuth.cardAuthForm.IDCardFront==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
                             暂无图片
                           </div>
                           <img v-else :src="notAuth.cardAuthForm.IDCardFront">
@@ -91,7 +91,7 @@
                           action="file/upFile.do"
                           :on-success="IDCardBack">
                           <div v-if="notAuth.cardAuthForm.IDCardBack==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
                             暂无图片
                           </div>
                           <img v-else :src="notAuth.cardAuthForm.IDCardBack">
@@ -117,7 +117,7 @@
                           action="file/upFile.do"
                           :on-success="IDCardPerson">
                           <div v-if="notAuth.cardAuthForm.IDCardPerson==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
                             暂无图片
                           </div>
                           <img v-else :src="notAuth.cardAuthForm.IDCardPerson">
@@ -197,7 +197,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -225,7 +225,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle;margin-right:20px;">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
               </div>
@@ -255,7 +255,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle;margin-right:20px;">企业用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
               </div>
@@ -279,7 +279,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -347,7 +347,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle">未认证用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -363,7 +363,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -382,7 +382,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle;margin-right:20px;">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
               </div>
@@ -401,7 +401,8 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle;margin-right:20px;">企业用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
               </div>
@@ -417,7 +418,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -1735,7 +1736,7 @@
             .line {
               display: inline-block;
               width: 50px;
-              height: 3px;
+              height: 1px;
               background-color: #2A99F2;
               vertical-align: middle;
               margin: 0px 5px;
