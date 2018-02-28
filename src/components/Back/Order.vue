@@ -145,11 +145,12 @@
               return h('div', [
                 h('Collapse', {
                   props: {
-                    accordion: true
+                    accordion: true,
+                    value: '0'
                   },
                 }, [h('Panel', {
                     props: {
-                      name: 'content'
+                      name: params.row._index
                     },
                   },
                   [type, h('div', {

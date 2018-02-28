@@ -32,7 +32,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import VueQArt from 'vue-qart'
+  // import VueQArt from 'vue-qart'
   export default{
     components: {
       VueQArt
