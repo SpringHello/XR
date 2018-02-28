@@ -10,7 +10,7 @@
             <p class="info-title">个人基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
-              <div style="padding:10px 0px;margin-left:20px;">
+              <div style="  padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
                   <span
                     style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;color: #2A99F2;">添加认证信息</span>
@@ -18,7 +18,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle">未认证用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -349,7 +349,7 @@
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle;margin-right:20px;">企业用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -1660,7 +1660,7 @@
             .line {
               display: inline-block;
               width: 50px;
-              height: 3px;
+              height: 1px;
               background-color: #2A99F2;
               vertical-align: middle;
               margin: 0px 5px;

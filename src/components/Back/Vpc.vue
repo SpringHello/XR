@@ -1159,7 +1159,7 @@
       color: rgba(17, 17, 17, 0.43);
       line-height: 22px;
       display: inline-block;
-      margin: 10px 0px;
+     // margin: 10px 0px;
     }
   }
   .card-wrap {
