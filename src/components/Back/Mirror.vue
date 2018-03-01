@@ -34,26 +34,30 @@
     <Modal
       :scrollable="true"
     v-model="showModal.createMirror"
-    title="创建镜像"
     @on-ok="ok">
-    <Form :model="formItem" :label-width="80">
-      <FormItem label="主机">
-        <Select v-model="formItem.vmInfo" style="width:200px">
-          <Option v-for="item in hostName" :value="`${item.rootdiskid}#${item.zoneid}`"
-                  :key="item.computerid">
-            {{item.computername}}
-          </Option>
-        </Select>
-      </FormItem>
-      <FormItem label="镜像名">
-        <Input v-model="formItem.mirrorName" placeholder="请输入" style="width: 300px"></Input>
-      </FormItem>
-      <FormItem label="镜像描述">
-        <Input v-model="formItem.mirrorDescription" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
-               placeholder="请输入..."></Input>
-      </FormItem>
-    </Form>
-    <div slot="footer">
+    <div slot="header" class="modal-header-border">
+      <span class="universal-modal-title">制作镜像</span>
+    </div>
+    <div class="universal-modal-content-flex">
+      <Form :model="formItem">
+        <FormItem label="主机">
+          <Select v-model="formItem.vmInfo">
+            <Option v-for="item in hostName" :value="`${item.rootdiskid}#${item.zoneid}`"
+                    :key="item.computerid">
+              {{item.computername}}
+            </Option>
+          </Select>
+        </FormItem>
+        <FormItem label="镜像名">
+          <Input v-model="formItem.mirrorName" placeholder="请输入"></Input>
+        </FormItem>
+        <FormItem label="镜像描述">
+          <Input v-model="formItem.mirrorDescription" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
+                placeholder="请输入..."></Input>
+        </FormItem>
+      </Form>
+    </div>
+    <div slot="footer" class="modal-footer-border">
       <Button type="ghost" @click="cancel">取消</Button>
       <Button type="primary"
               :disabled="formItem.vmInfo==''||formItem.mirrorName==''||formItem.mirrorDescription==''"
@@ -65,18 +69,22 @@
     <Modal
       :scrollable="true"
     v-model="showModal.modify"
-    title="修改镜像"
     @on-ok="mirrorModify">
-    <Form :model="mirrorModifyForm" :label-width="80">
-      <FormItem label="镜像名称">
-        <Input v-model="mirrorModifyForm.name" placeholder="小于20位数字或字母小于20位数字或字母" style="width: 300px"></Input>
-      </FormItem>
-      <FormItem label="备注">
-        <Input v-model="mirrorModifyForm.remarks" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
-               placeholder="小于20个字"></Input>
-      </FormItem>
-    </Form>
-    <div slot="footer">
+    <p slot="header" class="modal-header-border">
+      <span class="universal-modal-title">修改镜像</span>
+    </p>
+    <div class="universal-modal-content-flex">
+      <Form :model="mirrorModifyForm">
+        <FormItem label="镜像名称">
+          <Input v-model="mirrorModifyForm.name" placeholder="小于20位数字或字母小于20位数字或字母" type="textarea" :rows="3"></Input>
+        </FormItem>
+        <FormItem label="备注">
+          <Input v-model="mirrorModifyForm.remarks" type="textarea" :autosize="{minRows: 3,maxRows: 3}"
+                placeholder="小于20个字"></Input>
+        </FormItem>
+      </Form>
+    </div>
+    <div slot="footer" class="modal-footer-border">
       <Button type="ghost" @click="this.showModal.modify=false">取消</Button>
       <Button type="primary"
               :disabled="mirrorModifyForm.name==''||mirrorModifyForm.remarks==''"
@@ -127,7 +135,7 @@
           {
             title: '镜像名称',
             align: 'center',
-            width: 240,
+            width: 200,
             render: (h, params) => {
               return h('Tooltip', {
                 props: {
@@ -142,7 +150,7 @@
           {
             title: '镜像描述',
             align: 'center',
-            width: 240,
+            width: 200,
             ellipsis: true,
             render: (h, params) => {
               return h('Tooltip', {
@@ -158,7 +166,7 @@
           {
             title: '镜像平台',
             align: 'center',
-            width: 240,
+            width: 200,
             render: (h, params) => {
               return h('Tooltip', {
                 props: {
@@ -173,6 +181,8 @@
           {
             title: '镜像状态',
             key: 'status',
+            align: 'center',
+            width: 130,
             render: (h, params) => {
               if (params.row.status == 1) {
                 return h('span', {}, '正常')
@@ -196,7 +206,7 @@
           {
             title: '创建时间',
             key: 'createtime',
-            width: 160,
+            width: 220,
             align: 'center'
           }
         ],
@@ -258,6 +268,8 @@
           {
             title: '镜像状态',
             key: 'status',
+            align: 'center',
+            width: 130,
             render: (h, params) => {
               if (params.row.status == 1) {
                 return '正常'
@@ -286,11 +298,14 @@
           {
             title: '创建时间',
             align: 'center',
+            width: 200,
             key: 'createtime'
           },
           {
             title: '操作',
               key: 'action',
+              align: 'center',
+              width: 200,
               render: (h, params) => {
                 return h('div', [h('span', {
                   style: {

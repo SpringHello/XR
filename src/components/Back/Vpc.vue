@@ -1,5 +1,9 @@
 <template>
   <div id="background">
+    <Spin fix v-show="loading">
+      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <div>{{loadingMessage}}</div>
+    </Spin>
     <div id="wrapper">
       <span class="title">
         云网络 /
@@ -9,7 +13,7 @@
         <div id="header">
           <img src="../../assets/img/network/vpc-icon.jpg" style="margin-right: 5px;vertical-align: text-bottom">
           <span id="title">网络私有云VPC</span>
-          <button id="refresh_button">刷新</button>
+          <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
         <div class="universal-alert">
           <p>为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。</p>
@@ -54,7 +58,7 @@
                 </div>
                 <div class="card-bottom">
                   <Button type="primary" class="btn-bgwhite" @click="restartVpc(item)">重启</Button>
-                  <Button type="primary" @click="manage(item)">管理</Button>
+                  <Button type="primary" class="btn-bgwhite" @click="manage(item)">管理</Button>
                 </div>
               </div>
             </div>
@@ -102,7 +106,7 @@
                         </Option>
                       </Select>
                     </FormItem>-->
-          <p style="font-size: 12px;color: rgba(153,153,153,0.65);">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
+          <p class="modal-text-hint-bottom">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
         </Form>
         <!--创建vpc时暂时不绑定公网IP-->
         <!--<div>
@@ -251,7 +255,7 @@
                          style="margin-left: 20px"></InputNumber>
             <span style="margin-left: 10px">M</span>
           </FormItem>
-          <p style="font-size: 12px;color: rgba(153,153,153,0.65);">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
+          <p class="modal-text-hint-bottom">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -284,7 +288,7 @@
               </Option>
             </Select>
           </FormItem>
-          <p style="font-size: 12px;color: rgba(153,153,153,0.65);">当前NAT网关可绑定弹性IP剩余额度5（点击提升配额）</p>
+          <p class="modal-text-hint-bottom">当前NAT网关可绑定弹性IP剩余额度5（点击提升配额）</p>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -306,7 +310,7 @@
               </Option>
             </Select>
           </FormItem>
-          <p style="font-size: 12px;color: rgba(153,153,153,0.65);">当前NAT网关可绑定弹性IP剩余额度5（点击提升配额）</p>
+          <p class="modal-text-hint-bottom">当前NAT网关可绑定弹性IP剩余额度5（点击提升配额）</p>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -335,6 +339,8 @@
       sessionStorage.removeItem('pane')
       return {
         pane,
+        loadingMessage: '',
+        loading: false,
         // vpc列表数据
         netData: [],
         // nat列表数据
@@ -410,6 +416,8 @@
                         okText: '确定解绑',
                         cancelText: '取消',
                         'onOk': () => {
+                          this.loadingMessage = '正在解绑源NAT,请稍候'
+                          this.loading = true
                           var url = 'network/natGatewayUnboundTargetIP.do'
                           this.$http.get(url, {
                             params: {
@@ -418,11 +426,13 @@
                             }
                           }).then(response => {
                             if (response.status == 200 && response.data.status == 1) {
-                              this.$message.info({
+                              this.$Message.success({
                                 content: response.data.message
                               })
+                              this.loading = false
                               this.refresh()
                             } else {
+                              this.loading = false
                               this.$message.error({
                                 content: response.data.message
                               })
@@ -496,7 +506,7 @@
                               var url = `network/unboundElasticIP.do?natGatewayId=${object.row.id}&publicIp=${item}`
                               this.$http.get(url).then(response => {
                                 if (response.status == 200 && response.data.status == 1) {
-                                  this.$message.info({
+                                  this.$Message.success({
                                     content: response.data.message
                                   })
                                   this.refresh()
@@ -545,6 +555,10 @@
                 on: {
                   click: () => {
                     sessionStorage.setItem('currentNat', object.row.id)
+                    if (object.row.prottransip) {
+                      sessionStorage.setItem('ip', object.row.prottransip.substring(1))
+                      sessionStorage.setItem('ipId', object.row.prottransipid.substring(1))
+                    }
                     this.$router.push('NATManage')
                   }
                 }
@@ -827,9 +841,12 @@
             okText: '确定删除',
             cancelText: '取消',
             'onOk': () => {
-              var url = `network/delNatGateway.do?natGatewayId=${this.select.id}`
+              var url = `network/delNatGateway.do?id=${this.select.id}`
               this.$http.get(url).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success({
+                    content: response.data.message
+                  })
                   this.$http.get('network/listNatGateway.do').then(response => {
                     this.setNatData(response)
                     this.select = null
@@ -843,7 +860,7 @@
             }
           })
         } else {
-          this.$message.info({
+          this.$Message.info({
             content: '请先选择一个网关',
           })
         }
@@ -853,7 +870,7 @@
         var select = this.netData.filter(item => item._select)
         console.log(select)
         if (select.length == 0) {
-          this.$message.info({
+          this.$Message.info({
             content: '请选择一个VPC'
           })
           return
@@ -867,7 +884,7 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.$message.info({
+                this.$Message.success({
                   content: response.data.message
                 })
               } else {
@@ -890,7 +907,7 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.$message.info({
+                this.$Message.success({
                   content: response.data.message
                 })
               } else {
@@ -941,7 +958,7 @@
               this.showModal.newVpc = false
               if (response.status == 200 && response.data.status == 1) {
                 this.refresh()
-                this.$message.info({content: response.data.message})
+                this.$Message.success({content: response.data.message})
                 // this.$error('error', response.data.message)
               } else {
                 this.$message.error({content: response.data.message})
@@ -961,7 +978,7 @@
             axios.get(url).then(response => {
               this.showModal.addGateway = false
               if (response.status == 200 && response.data.status == 1) {
-                this.$message.info({
+                this.$Message.success({
                   content: response.data.message
                 })
               } else {
@@ -1022,6 +1039,8 @@
         this.$refs.bindIPFormValidate.validate(validate => {
           if (validate) {
             this.showModal.bindIP = false
+            this.loading = true
+            this.loadingMessage = '正在绑定源NAT,请稍候'
             this.$http.get('network/natGatewayBoundTargetIP.do', {
               params: {
                 publicIp: this.bindIPForm.IP,
@@ -1029,11 +1048,13 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.$message.info({
+                this.loading = false
+                this.$Message.success({
                   content: response.data.message
                 })
                 this.refresh()
               } else {
+                this.loading = false
                 this.$message.error({
                   content: response.data.message
                 })
@@ -1069,7 +1090,7 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.$message.info({
+                this.$Message.success({
                   content: response.data.message
                 })
                 this.refresh()
@@ -1237,6 +1258,10 @@
         .btn-bgwhite {
           background: #ffffff;
           color: #2A99F2;
+          &:hover {
+            background: #2A99F2;
+            color: #FFFFFF;
+          }
         }
       }
     }

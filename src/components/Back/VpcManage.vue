@@ -116,7 +116,7 @@
                       <div style="display: flex">
                         <div style="border-right:1px solid rgb(204, 204, 204);padding:20px 10px;">
                           <div style="margin:0px auto;width:65px;">
-                            <Button type="primary" size="small" style="margin-bottom:15px;width:64px"
+                            <Button type="primary" size="small" style="margin-bottom:15px;width:64px;padding: 5px 0px;"
                                     @click="leaveNetwork(vm.networkid,vm.computerid)">离开网络
                             </Button>
                             <Button type="primary" size="small"
@@ -189,7 +189,7 @@
                          style="width:55px;"></InputNumber>
             .1
           </Form-item>
-          <p style="font-size: 12px;color: rgba(153,153,153,0.65);">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
+          <p class="modal-text-hint-bottom">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">

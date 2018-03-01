@@ -60,11 +60,11 @@
             </RadioGroup>
           </FormItem>
         </Form>
-        <p style="font-size: 12px;color: rgba(153,153,153,0.65);">提示：云主机快照为每块磁盘提供<span>8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点
+        <p class="modal-text-hint-bottom">提示：云主机快照为每块磁盘提供<span>8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点
         </p>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary" class="btn-cancel" @click="cancleSnaps('creatSnapsForm')">取消</Button>
+        <Button type="ghost" @click="cancleSnaps('creatSnapsForm')">取消</Button>
         <Button type="primary" @click="NewSnapsSubmit('creatSnapsForm')">创建快照</Button>
       </div>
     </Modal>
@@ -111,12 +111,12 @@
             </RadioGroup>
           </FormItem>
         </Form>
-        <p style="font-size: 12px;color: rgba(153,153,153,0.65);">提示：云主机快照为每块磁盘提供<span class="bluetext">8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点。您最多能创建<span
+        <p class="modal-text-hint-bottom">提示：云主机快照为每块磁盘提供<span class="bluetext">8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点。您最多能创建<span
           class="bluetext">3个</span>自动快照策略
         </p>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary" class="btn-cancel" @click="cancleBackups('creatBackupsForm')">取消</Button>
+        <Button type="ghost"  @click="cancleBackups('creatBackupsForm')">取消</Button>
         <Button type="primary" @click="NewBackupsSubmit('creatBackupsForm')">创建策略</Button>
       </div>
     </Modal>
@@ -128,7 +128,7 @@
           <strong>主机回滚</strong>
           <p class="lh24">是否确定回滚主机</p>
           <p class="lh24">提示：您正使用<span class="bluetext">{{snapsName}}</span>回滚<span class="bluetext">{{hostName}}</span>至<span
-            class="bluetext">时间点</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的主机内的数据将丢失。</p>
+            class="bluetext">{{hostCreatetime}}</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的主机内的数据将丢失。</p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
@@ -213,6 +213,7 @@
       return {
         snapsName: '',
         hostName: '',
+        hostCreatetime: '',
         strategyName: '',
         strategyId: '',
         changeHostlist: [],
@@ -1460,11 +1461,13 @@
           },
           {
             title: '快照名称',
-            key: 'snapshotname'
+            key: 'snapshotname',
+            align: 'center',
           },
           {
             title: '状态',
             key: 'status',
+             align: 'center',
             render: (h, params) => {
               switch (params.row.status) {
                 case 1:
@@ -1494,11 +1497,13 @@
           },
           {
             title: '主机名称',
-            key: 'name'
+            key: 'name',
+            align: 'center',
           },
           {
             title: '快照间隔',
             key: 'interval',
+            align: 'center',
             render: (h, params) => {
               const row = params.row
               const text = row.createway === 'hand' ? '手动' : row.createway === 'day' ? '每天' : row.createway === 'week' ? '每周' : row.createway === 'month' ? '每月' : ''
@@ -1508,6 +1513,7 @@
           {
             title: '是否保留内存状态',
             key: 'memorystatus',
+            align: 'center',
             render: (h, params) => {
               var memorystatus = params.row.memorystatus == 1 ? '是' : '否'
               return h('span', {}, memorystatus)
@@ -1515,12 +1521,14 @@
           },
           {
             title: '创建时间',
-            key: 'addtime'
+            key: 'addtime',
+            align: 'center',
           },
 
           {
             title: '操作',
             key: 'action',
+            align: 'center',
             render: (h, params) => {
               return h('span', {
                 style: {
@@ -1533,6 +1541,8 @@
                     this.cursnapshot = params.row
                     this.snapsName = params.row.snapshotname
                     this.hostName = params.row.name
+                    this.hostCreatetime = params.row.addtime
+                    // console.log(params.row)
                   }
                 }
               }, '回滚')
@@ -1550,11 +1560,13 @@
           },
           {
             title: '策略名称',
-            key: 'strategyname'
+            key: 'strategyname',
+            align: 'center',
           },
           {
             title: '状态',
             key: 'status',
+            align: 'center',
             render: (h, params) => {
               const row = params.row
               const text = row.status === 0 ? '正常' : row.status === 1 ? '可用' : row.status === 3 ? '删除中' : ''
@@ -1573,6 +1585,7 @@
           {
             title: '自动备份保留个数',
             key: 'keepcount',
+            align: 'center',
             render: (h, params) => {
               return h('span', {}, params.row.keepcount + '个')
             }
@@ -1626,11 +1639,13 @@
 
           {
             title: '创建时间',
-            key: 'createtime'
+            key: 'createtime',
+            align: 'center',
           },
           {
             title: '应用主机',
             key: 'resourceBean',
+            align: 'center',
             render: (h, params) => {
               if (params.row.resourceBean.length == 0) {
                 return h('span', {}, '----')
@@ -1652,6 +1667,7 @@
           {
             title: '操作',
             key: 'action',
+            align: 'center',
             render: (h, params) => {
               return h('span', {
                 style: {
