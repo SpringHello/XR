@@ -7,7 +7,7 @@
       <div id="content">
         <div id="header">
           <span id="title">防火墙</span>
-          <button id="refresh_button">刷新</button>
+          <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
         <div class="universal-alert">
           <p>防火墙描述</p>
