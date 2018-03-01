@@ -155,11 +155,11 @@
                       <div class="foot">
                         <span>{{item.createtime}}</span>
                         <Button @click.stop="manage(item,'normal')" style="margin-left:55px;" :disabled="!auth"
-                                :class="{btnnormal:auth}">管理
+                                :class="{btnnormal:auth}" class="_hover">管理
                         </Button>
                         <Button v-if="!auth" :disabled="!auth">连接主机</Button>
                         <a v-else :href="item.connecturl" target="_blank"
-                           style="line-height: 30px;border: 1px solid;border-radius: 4px;width: 76px;background:#2A99F2;color:#fff">连接主机</a>
+                           style="line-height: 30px;border: 1px solid;border-radius: 4px;width: 76px;" class="_hover">连接主机</a>
                       </div>
                     </div>
                   </Card>
@@ -292,7 +292,7 @@
                       <div class="foot" style="background-color: #D9D9D9">
                         <span style="color: rgba(17,17,17,0.65);">{{item.createtime}}</span>
                         <Button @click.stop="manage(item,'close')" style="margin-left:55px;" :disabled="!auth"
-                                :class="{btnnormal:auth}">管理
+                                :class="{btnnormal:auth}" class="_hover">管理
                         </Button>
                       </div>
                     </div>
@@ -1286,6 +1286,12 @@
       left: 50%;
       width: 125px;
       transform: translate(-50%, -50%);
+    }
+    ._hover {
+      &:hover{
+        background: #2A99F2;
+        color: #FFFFFF;
+      }
     }
   }
 </style>
