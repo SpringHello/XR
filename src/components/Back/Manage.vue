@@ -330,7 +330,7 @@
           <strong>主机回滚</strong>
           <p class="lh24">是否确定回滚主机</p>
           <p class="lh24">提示：您正使用<span class="bluetext">{{snapsName}}</span>回滚<span class="bluetext">{{hostName}}</span>至<span
-            class="bluetext">时间点</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的主机内的数据将丢失。</p>
+            class="bluetext">{{hostCreatetime}}</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的主机内的数据将丢失。</p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
@@ -404,6 +404,7 @@
         snapsId: '',
         snapsName: '',
         hostName: '',
+        hostCreatetime: '',
         cursnapshot: null,
         CPUTime: '',
         diskTime: '',
@@ -496,6 +497,7 @@
                     this.cursnapshot = params.row
                     this.snapsName = params.row.snapshotname
                     this.hostName = params.row.name
+                    this.hostCreatetime = params.row.addtime
                   }
                 }
               }, '回滚')

@@ -155,7 +155,7 @@
                       <div class="foot">
                         <span>{{item.createtime}}</span>
                         <Button @click.stop="manage(item,'normal')" style="margin-left:55px;" :disabled="!auth"
-                                :class="{btnnormal:auth}" class="_hover">管理
+                                :class="{btnnormal:auth,_hover:auth}">管理
                         </Button>
                         <Button v-if="!auth" :disabled="!auth">连接主机</Button>
                         <a v-else :href="item.connecturl" target="_blank"
@@ -292,7 +292,7 @@
                       <div class="foot" style="background-color: #D9D9D9">
                         <span style="color: rgba(17,17,17,0.65);">{{item.createtime}}</span>
                         <Button @click.stop="manage(item,'close')" style="margin-left:55px;" :disabled="!auth"
-                                :class="{btnnormal:auth}" class="_hover">管理
+                                :class="{btnnormal:auth,_hover:auth}">管理
                         </Button>
                       </div>
                     </div>
@@ -350,7 +350,7 @@
             </RadioGroup>
           </FormItem>
         </Form>
-        <p style="font-size: 12px;color: rgba(153,153,153,0.65);">提示：云主机快照为每块磁盘提供<span>8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点
+        <p class="modal-text-hint-bottom">提示：云主机快照为每块磁盘提供<span>8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点
         </p>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -557,6 +557,7 @@
         sessionStorage.removeItem('type')
       }
       return {
+        // selectedHostname: '',
         cost: '--',
         listLoadBalanceRole: [],
         openHost: [],
@@ -742,6 +743,7 @@
         if (!this.auth) {
           return
         }
+        // this.selectedHostname =item.computername
         this.$set(item, 'select', !item.select)
       },
       createHost() {
@@ -1002,12 +1004,8 @@
         var list = [
           {type: 0, id: this.currentHost[0].id}
         ]
-        var param = {
-          timeType: this.renewalType,
-          timeValue: this.renewalTime,
-          list: JSON.stringify(list)
-        }
-        this.$http.post("continue/continueOrder.do", param).then(response => {
+        list = JSON.stringify(list)
+        this.$http.get(`continue/continueOrder.do?list=${list}&timeType=${this.renewalType}&timeValue=${this.renewalTime}`).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({path: 'order'})
           }
@@ -1290,7 +1288,7 @@
     ._hover {
       &:hover{
         background: #2A99F2;
-        color: #FFFFFF;
+        color: #FFFFFF
       }
     }
   }

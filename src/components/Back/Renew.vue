@@ -421,6 +421,12 @@
               }
             })
         }
+      },
+      '$store.state.zone': {
+        handler: function () {
+          this.search()
+        },
+        deep: true
       }
     },
     computed: {}

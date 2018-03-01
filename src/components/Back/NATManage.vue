@@ -91,7 +91,7 @@
               </Option>
             </Select>
           </FormItem>
-          <p style="font-size: 12px;color: rgba(153,153,153,0.65);">提示：当弹性IP被用于SNAT或DNAT之后，将不能绑定其他功能或实例。</p>
+          <p class="modal-text-hint-bottom">提示：当弹性IP被用于SNAT或DNAT之后，将不能绑定其他功能或实例。</p>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
