@@ -14,7 +14,7 @@
           <router-link to="/ruicloud/userCenter">立即认证</router-link>
         </Alert>
         <div class="universal-alert">
-          <p>为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。</p>
+          <p>云主机是一台配置好了的服务器，它有您期望的硬件配置、操作系统和网络配置。XRcloud为您提供的云主机具有安全、弹性、高性能等特点。</p>
         </div>
         <div class="operator-bar">
           <Button type="primary" @click="startUp">一键启动</Button>
@@ -72,9 +72,9 @@
 
               <Poptip
                 confirm
-                width="200"
+                width="250"
                 placement="right"
-                title="您确认删除这台主机吗？"
+                title="确认删除之后主机将进入回收站。"
                 @on-ok="del"
                 @on-cancel="cancel"
                 style="display: block">
@@ -471,7 +471,7 @@
         </FormItem>
         </Form>
         <div>
-          应付费:{{cost}}
+          资费: <span style="color: #2d8cf0;">￥{{cost}}</span>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -635,8 +635,8 @@
         timeOptions: {
           renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
           renewalTime: [],
-          year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}],
-          month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '6月', value: 6}]
+          year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}, {label: '4年', value: 4}, {label: '5年', value: 5}, {label: '6年', value: 7}, {label: '7年', value: 7}, {label: '8年', value: 8}, {label: '9年', value: 9}, {label: '10年', value: 10}, {label: '11年', value: 11}, {label: '12年', value: 12}],
+          month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '3月', value: 3}, {label: '4月', value: 4}, {label: '5月', value: 5}, {label: '6月', value: 7}, {label: '7月', value: 7}, {label: '8月', value: 8}, {label: '9月', value: 9}, {label: '10月', value: 10}, {label: '11月', value: 11}, {label: '12月', value: 12}]
         },
         requestParam: {
           ipArray: [],

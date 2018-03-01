@@ -5,7 +5,7 @@
         <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
         <div>{{loadingMessage}}</div>
       </Spin>
-      <span class="title">云存储 / 
+      <span class="title">云存储 /
          <span>云硬盘</span>
       </span>
       <div id="content">
@@ -542,6 +542,7 @@
     methods: {
       /* 刷新页面 */
       refreshPage () {
+        this.$router.go(0)
         this.listDisk()
       },
       refresh () {
