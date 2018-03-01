@@ -44,6 +44,16 @@
 
 .universal-modal-content-flex form .ivu-form-item .ivu-form-item-label {
   float: none;
+  font-size: 14px;
+}
+
+/* 通用弹窗底部文字提示 */
+.modal-text-hint-bottom{
+  color: rgb(153, 153, 153);
+    font-family: MicrosoftYaHei;
+    font-size: 12px;
+    line-height: 14px;
+    text-align: left;
 }
 
 /* 每行一列form表单样式 */
@@ -97,11 +107,13 @@
 p.modal-header-border {
   padding-bottom: 40px;
   border-bottom: solid 1px #D8D8D8;
+  font-weight: 700
 }
 
 div.modal-header-border {
   padding-bottom: 20px;
   border-bottom: solid 1px #D8D8D8;
+  font-weight: 700
 }
 
 .modal-footer-border {
@@ -119,11 +131,6 @@ div.modal-header-border {
 }
 
 /* 公共样式库 */
-.btn-cancel {
-  background: transparent;
-  color: #666666;
-  border-color: #e9e9e9;
-}
 
 .f24 {
   font-size: 24px;
