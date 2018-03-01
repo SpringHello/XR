@@ -5,7 +5,7 @@
         <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
         <div>{{loadingMessage}}</div>
       </Spin>
-      <span class="title">云存储 / 
+      <span class="title">云存储 /
          <span>云硬盘备份</span>
       </span>
       <div id="content">
@@ -670,6 +670,7 @@
         } else {
           this.listDiskBackUpStrategy()
         }
+        this.$router.go(0)
       },
       /* 区域变更刷新数据 */
       refresh () {
