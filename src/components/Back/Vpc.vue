@@ -1,5 +1,9 @@
 <template>
   <div id="background">
+    <Spin fix v-show="loading">
+      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <div>{{loadingMessage}}</div>
+    </Spin>
     <div id="wrapper">
       <span class="title">
         云网络 /
@@ -335,6 +339,8 @@
       sessionStorage.removeItem('pane')
       return {
         pane,
+        loadingMessage: '',
+        loading: false,
         // vpc列表数据
         netData: [],
         // nat列表数据
@@ -410,6 +416,8 @@
                         okText: '确定解绑',
                         cancelText: '取消',
                         'onOk': () => {
+                          this.loadingMessage = '正在解绑源NAT,请稍候'
+                          this.loading = true
                           var url = 'network/natGatewayUnboundTargetIP.do'
                           this.$http.get(url, {
                             params: {
@@ -421,8 +429,10 @@
                               this.$Message.success({
                                 content: response.data.message
                               })
+                              this.loading = false
                               this.refresh()
                             } else {
+                              this.loading = false
                               this.$message.error({
                                 content: response.data.message
                               })
@@ -831,9 +841,12 @@
             okText: '确定删除',
             cancelText: '取消',
             'onOk': () => {
-              var url = `network/delNatGateway.do?natGatewayId=${this.select.id}`
+              var url = `network/delNatGateway.do?id=${this.select.id}`
               this.$http.get(url).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success({
+                    content: response.data.message
+                  })
                   this.$http.get('network/listNatGateway.do').then(response => {
                     this.setNatData(response)
                     this.select = null
@@ -1026,6 +1039,8 @@
         this.$refs.bindIPFormValidate.validate(validate => {
           if (validate) {
             this.showModal.bindIP = false
+            this.loading = true
+            this.loadingMessage = '正在绑定源NAT,请稍候'
             this.$http.get('network/natGatewayBoundTargetIP.do', {
               params: {
                 publicIp: this.bindIPForm.IP,
@@ -1033,11 +1048,13 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
+                this.loading = false
                 this.$Message.success({
                   content: response.data.message
                 })
                 this.refresh()
               } else {
+                this.loading = false
                 this.$message.error({
                   content: response.data.message
                 })

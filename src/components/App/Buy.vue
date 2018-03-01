@@ -123,14 +123,31 @@
                   </div>
                 </div>
 
-                <!--系统配置-->
-                <div class="item-wrapper">
+                <!--系统配置 购买公网IP-->
+                <div class="item-wrapper" v-if="PecsInfo.publicIP == true">
                   <div style="display: flex">
                     <div>
                       <p class="item-title">配置</p>
                     </div>
                     <div>
                       <div v-for="item in PecsInfo.systemConfig" class="zoneItem"
+                           :class="{zoneSelect:PecsInfo.currentSystem.kernel==item.kernel&&PecsInfo.currentSystem.RAM==item.RAM}"
+                           @click="PecsInfo.currentSystem=item"
+                           style="display: block;width:360px;margin-bottom:10px;">
+                        {{`${item.kernel}核${item.RAM}G、${item.bandWidth}M带宽、${item.diskSize}G系统盘（${item.diskDesc}）`}}
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+                <!--系统配置 不购买公网ip-->
+                <div class="item-wrapper" v-if="PecsInfo.publicIP == false">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title">配置</p>
+                    </div>
+                    <div>
+                      <div v-for="item in PecsInfo.systemConfigNoNet" class="zoneItem"
                            :class="{zoneSelect:PecsInfo.currentSystem.kernel==item.kernel&&PecsInfo.currentSystem.RAM==item.RAM}"
                            @click="PecsInfo.currentSystem=item"
                            style="display: block;width:360px;margin-bottom:10px;">
@@ -1054,12 +1071,19 @@
           // 快速创建主机是否需要公网IP
           publicIP: true,
 
-          // 系统配置
+          // 系统配置 需要购买公网ip时
           systemConfig: [
             {kernel: '1', RAM: '1', bandWidth: '1', diskSize: '50', diskType: 'sas', diskDesc: '性能型'},
             {kernel: '2', RAM: '4', bandWidth: '1', diskSize: '50', diskType: 'sas', diskDesc: '性能型'},
             {kernel: '4', RAM: '4', bandWidth: '2', diskSize: '50', diskType: 'ssd', diskDesc: '超高性能型'},
             {kernel: '4', RAM: '8', bandWidth: '2', diskSize: '50', diskType: 'ssd', diskDesc: '超高性能型'}
+          ],
+          // 系统配置 不需要购买公网ip时
+          systemConfigNoNet: [
+            {kernel: '1', RAM: '1', bandWidth: '0', diskSize: '50', diskType: 'sas', diskDesc: '性能型'},
+            {kernel: '2', RAM: '4', bandWidth: '0', diskSize: '50', diskType: 'sas', diskDesc: '性能型'},
+            {kernel: '4', RAM: '4', bandWidth: '0', diskSize: '50', diskType: 'ssd', diskDesc: '超高性能型'},
+            {kernel: '4', RAM: '8', bandWidth: '0', diskSize: '50', diskType: 'ssd', diskDesc: '超高性能型'}
           ],
           // 选中的系统配置
           currentSystem: {kernel: '1', RAM: '1', bandWidth: '1', diskSize: '50', diskType: 'sas', diskDesc: '性能型'},
@@ -1226,7 +1250,7 @@
       this.ownMirrorList()
       this.queryIPPriceInIP()
       /* 自定义镜像生成主机 页面跳转  页面赋值 */
-      if(this.$route.query.templateid) {
+      if (this.$route.query.templateid) {
         this.PecsInfo.zone.zoneid = this.$route.query.zoneid
         this.PecsInfo.currentType = this.$route.query.mirrorType
       }
@@ -1620,7 +1644,7 @@
               zoneId: prod.zone.zoneid,
               timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
               timeValue: prod.timeForm.currentTimeValue.value,
-              templateId: prod.currentType == 'app' ? prod.currentApp.systemtemplateid : prod.currentType == 'public'? prod.system.systemtemplateid : prod.customMirror.systemtemplateid,
+              templateId: prod.currentType == 'app' ? prod.currentApp.systemtemplateid : prod.currentType == 'public' ? prod.system.systemtemplateid : prod.customMirror.systemtemplateid,
               isAutoRenew: prod.autoRenewal ? '1' : '0',
               count: prod.count
             }
@@ -1640,7 +1664,7 @@
             }
             if (prod.currentType === 'app') {
               params.templateId = prod.currentApp.templateid
-            } else if (prod.currentType === 'public'){
+            } else if (prod.currentType === 'public') {
               params.templateId = prod.system.systemId
             } else {
               params.templateId = prod.customMirror.systemtemplateid
@@ -1835,6 +1859,19 @@
         handler: function () {
           // 查询快速配置价格
           this.queryQuick()
+        }
+        ,
+        deep: true
+      }
+      ,
+      // 观测到快速配置主机是否购买公网IP
+      'PecsInfo.publicIP': {
+        handler: function () {
+           if(this.PecsInfo.publicIP) {
+             this.PecsInfo.currentSystem = {kernel: '1', RAM: '1', bandWidth: '1', diskSize: '50', diskType: 'sas', diskDesc: '性能型'}
+           }  else {
+             this.PecsInfo.currentSystem = {kernel: '1', RAM: '1', bandWidth: '0', diskSize: '50', diskType: 'sas', diskDesc: '性能型'}
+           }
         }
         ,
         deep: true

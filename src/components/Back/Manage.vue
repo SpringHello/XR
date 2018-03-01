@@ -68,7 +68,7 @@
                       </Radio-group>
 
                     </div>
-                    <div style="width:1180px;height:300px;position:relative;overflow: hidden;">
+                    <div style="width:1150px;height:300px;position:relative;overflow: hidden;">
                       <chart :options="cpuPolar"></chart>
                     </div>
                   </div>
@@ -87,7 +87,7 @@
                       </Radio-group>
 
                     </div>
-                    <div style="width:1180px;height:300px;position:relative;overflow: hidden;">
+                    <div style="width:1150px;height:300px;position:relative;overflow: hidden;">
                       <chart :options="memoryPolar"></chart>
                     </div>
                   </div>
@@ -107,7 +107,7 @@
                       </Radio-group>
 
                     </div>
-                    <div style="width:1180px;height:300px;position:relative;overflow: hidden;">
+                    <div style="width:1150px;height:300px;position:relative;overflow: hidden;">
                       <chart :options="diskPolar"></chart>
                     </div>
                   </div>
@@ -131,7 +131,7 @@
                       </Radio-group>
 
                     </div>
-                    <div style="width:1180px;height:300px;position:relative;overflow: hidden;">
+                    <div style="width:1150px;height:300px;position:relative;overflow: hidden;">
                       <chart :options="ipPolar"></chart>
                     </div>
                   </div>

@@ -345,7 +345,7 @@
           {
             title: 'VPN',
             align: 'center',
-            key: 'natname'
+            key: 'vpcname'
           },
           {
             title: '域共享密钥',
@@ -815,7 +815,9 @@
               }
             }).then(response => {
               this.showModal.newRemoteAccess = false
+              this.refresh()
               if (response.status == 200 && response.data.status == 2) {
+                this.refresh()
                 this.$message.error({
                   content: response.data.message
                 })
@@ -859,7 +861,9 @@
             passive: this.newTunnelVpnForm.connType
           }
         }).then(response => {
+          this.refresh()
           if (response.status == 200 && response.data.status == 2) {
+            this.refresh()
             this.$message.error({
               content: response.data.message
             })
