@@ -78,20 +78,32 @@
         <Step title="创建连接"></Step>
       </Steps>
       <div class="universal-modal-content-flex">
-        <Form :model="newTunnelVpnForm" :rules="newTunnelVpnFormValidate" ref="newTunnelVpnFormValidate">
-          <FormItem label="VPC ID" prop="vpcId" v-show="newTunnelVpnForm.step==0">
-            <Select v-model="newTunnelVpnForm.vpcId">
-              <Option v-for="item in newTunnelVpnForm.vpcIdOptions" :value="item.vpcid" :key="item.vpcid">
+        <Form :model="newTunnelVpnForm" :rules="newTunnelVpnFormValidate" ref="newTunnelVpnFormValidate0">
+          <FormItem label="源VPC" prop="vpcId1" v-show="newTunnelVpnForm.step==0">
+            <Select v-model="newTunnelVpnForm.vpcId1">
+              <Option v-for="item in newTunnelVpnForm.vpcIdOptions" :value="item.vpcid" :key="item.vpcid"
+                      v-if="item.vpcid!=newTunnelVpnForm.vpcId2">
+                {{item.vpcname}}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="目标VPC" prop="vpcId2" v-show="newTunnelVpnForm.step==0">
+            <Select v-model="newTunnelVpnForm.vpcId2">
+              <Option v-for="item in newTunnelVpnForm.vpcIdOptions" :value="item.vpcid" :key="item.vpcid"
+                      v-if="item.vpcid!=newTunnelVpnForm.vpcId1">
                 {{item.vpcname}}
               </Option>
             </Select>
           </FormItem>
         </Form>
-        <Form :model="newTunnelVpnForm" :rules="newTunnelVpnFormValidate" ref="newTunnelVpnFormValidate">
-          <FormItem label="名称" v-if="newTunnelVpnForm.step==1" prop="name">
-            <Input v-model="newTunnelVpnForm.name" placeholder="请输入0-16字节名称"></Input>
+        <Form :model="newTunnelVpnForm" :rules="newTunnelVpnFormValidate" ref="newTunnelVpnFormValidate1">
+          <FormItem label="名称" v-if="newTunnelVpnForm.step==1" prop="name1">
+            <Input v-model="newTunnelVpnForm.name1" placeholder="请输入0-16字节名称"></Input>
           </FormItem>
-          <FormItem label="目的IP地址" v-if="newTunnelVpnForm.step==1" prop="ip">
+          <FormItem label="名称" v-if="newTunnelVpnForm.step==1" prop="name2">
+            <Input v-model="newTunnelVpnForm.name2" placeholder="请输入0-16字节名称"></Input>
+          </FormItem>
+          <!--<FormItem label="目的IP地址" v-if="newTunnelVpnForm.step==1" prop="ip">
             <Input v-model="newTunnelVpnForm.IP" placeholder="例如10.132.31.27"></Input>
           </FormItem>
           <FormItem label="网关" v-if="newTunnelVpnForm.step==1" prop="gateway">
@@ -99,8 +111,8 @@
           </FormItem>
           <FormItem label="目的网络CIDR" v-if="newTunnelVpnForm.step==1" prop="cidr">
             <Input v-model="newTunnelVpnForm.CIDR" placeholder="例如192.168.0.0/16"></Input>
-          </FormItem>
-          <FormItem label="域共享密钥" v-if="newTunnelVpnForm.step==1" prop="password">
+          </FormItem>-->
+          <FormItem label="域共享密钥" v-if="newTunnelVpnForm.step==1" prop="key">
             <Input v-model="newTunnelVpnForm.key" placeholder="请输入0-128字节密码"></Input>
           </FormItem>
         </Form>
@@ -159,7 +171,7 @@
       <div slot="footer" class="modal-footer-border">
         <Button @click="newRemoteAccessOk" v-if="newTunnelVpnForm.step==0">取消</Button>
         <Button @click="newTunnelVpnForm.step--" v-if="newTunnelVpnForm.step!=0">上一步</Button>
-        <Button type="primary" @click="newTunnelVpnForm.step++" v-if="newTunnelVpnForm.step!=2">下一步</Button>
+        <Button type="primary" @click="nextStep" v-if="newTunnelVpnForm.step!=2">下一步</Button>
         <Button type="primary" @click="newTunnelVpnOk" v-if="newTunnelVpnForm.step==2">完成</Button>
       </div>
     </Modal>
@@ -261,14 +273,20 @@
         },
         // 新建隧道VPN表单
         newTunnelVpnForm: {
-          vpcId: '',
+          // 源VPC
+          vpcId1: '',
+          // 目标VPC
+          vpcId2: '',
           vpcIdOptions: '',
-          name: '',
+          // 源VPC对应名称
+          name1: '',
+          // 目标VPC对应名称
+          name2: '',
           IP: '',
           gateway: '',
           CIDR: '',
           key: '',
-          connType: '',
+          connType: 'true',
           connTypeOptions: [
             {label: '主动', key: 'true'},
             {label: '被动', key: 'false'}
@@ -301,9 +319,21 @@
           step: 0
         },
         newTunnelVpnFormValidate: {
-          vpcId: [
-            {required: true, message: '请选择vpc', trigger: 'blur'}
-          ]
+          vpcId1: [
+            {required: true, message: '请选择vpc', trigger: 'change'}
+          ],
+          vpcId2: [
+            {required: true, message: '请选择vpc', trigger: 'change'}
+          ],
+          name1: [
+            {required: true, message: '请输入隧道名称', trigger: 'blur'}
+          ],
+          name2: [
+            {required: true, message: '请输入隧道名称', trigger: 'blur'}
+          ],
+          key: [
+            {required: true, message: '请输入共享域密码', trigger: 'blur'}
+          ],
         },
         // 远程vpn列表
         remoteVpnColumns: [
@@ -751,8 +781,8 @@
           }
         })
         Promise.all([remote, customer]).then(values => {
-            this.initRemoteData(values[0])
-            this.initCustomerData(values[1])
+          this.initRemoteData(values[0])
+          this.initCustomerData(values[1])
         })
       },
       initRemoteData(response){
@@ -801,24 +831,31 @@
           this.newTunnelVpnForm.vpcIdOptions = response.data.result
         })
       },
+      nextStep(){
+        this.$refs[`newTunnelVpnFormValidate${this.newTunnelVpnForm.step}`].validate(validate => {
+          console.log(validate)
+          if (validate) {
+            this.newTunnelVpnForm.step++
+          }
+        })
+      },
       // 提交新建VPN隧道请求
       newTunnelVpnOk(){
         this.showModal.newTunnelVpn = false
         this.newTunnelVpnForm.step = 0
         this.newTunnelVpnForm.showDetail = false
-        this.$http.get('network/createTunnelVpn.do', {
+        this.$http.get('network/createTunnelVpnNew.do', {
           params: {
-            vpcId: this.newTunnelVpnForm.vpcId,
-            name: this.newTunnelVpnForm.name,
-            cidr: this.newTunnelVpnForm.CIDR,
+            sourceVpcId: this.newTunnelVpnForm.vpcId1, // 源vpcid   目标vpcid
+            targetVpcId: this.newTunnelVpnForm.vpcId2, // 源vpcid   目标vpcid
+            nameOne: this.newTunnelVpnForm.name1, // 源vpcid   目标vpcid  名称1
+            nameTwo: this.newTunnelVpnForm.name2, // 源vpcid   目标vpcid
             ipsecKey: this.newTunnelVpnForm.key,
             ikeEncryption: this.newTunnelVpnForm.IKE,
             ikeHash: this.newTunnelVpnForm.IKEHash,
             // ikeDH: '',
-            gateway: this.newTunnelVpnForm.gateway,
             espEncryption: this.newTunnelVpnForm.ESP,
             espHash: this.newTunnelVpnForm.ESPHash,
-            destinationIpAddress: this.newTunnelVpnForm.IP,
             passive: this.newTunnelVpnForm.connType
           }
         }).then(response => {
@@ -828,6 +865,28 @@
             })
           }
         })
+        /*this.$http.get('network/createTunnelVpn.do', {
+         params: {
+         vpcId: this.newTunnelVpnForm.vpcId,
+         name: this.newTunnelVpnForm.name,
+         cidr: this.newTunnelVpnForm.CIDR,
+         ipsecKey: this.newTunnelVpnForm.key,
+         ikeEncryption: this.newTunnelVpnForm.IKE,
+         ikeHash: this.newTunnelVpnForm.IKEHash,
+         // ikeDH: '',
+         gateway: this.newTunnelVpnForm.gateway,
+         espEncryption: this.newTunnelVpnForm.ESP,
+         espHash: this.newTunnelVpnForm.ESPHash,
+         destinationIpAddress: this.newTunnelVpnForm.IP,
+         passive: this.newTunnelVpnForm.connType
+         }
+         }).then(response => {
+         if (response.status == 200 && response.data.status == 2) {
+         this.$message.error({
+         content: response.data.message
+         })
+         }
+         })*/
       },
       // 选中远程接入
       remoteRadio(current){

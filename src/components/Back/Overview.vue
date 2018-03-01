@@ -305,7 +305,6 @@
   }
   .not-auth {
     background-image: url(../../assets/img/overview/authenticate-icon-1.png);
-    
   }
 
   /* 个人认证class icon */
