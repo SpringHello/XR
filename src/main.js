@@ -29,7 +29,8 @@ import message from './myView/message'
 Vue.prototype.$message = message
 Vue.config.productionTip = false
 
-// axios.defaults.baseURL = '/ruicloud' 
+
+// axios.defaults.baseURL = '/ruicloud'
  axios.defaults.baseURL = 'http://192.168.3.204:8082/ruicloud'
  axios.defaults.withCredentials = true
 /* axios.interceptors.request.use(function (config) {

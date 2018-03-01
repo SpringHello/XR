@@ -10,7 +10,7 @@
 
           <header>
             <span class="arrowdown-icon"></span>
-            <span>{{this.$route.query.computername}}</span>
+            <span><router-link to="host" style="color: #FFF;">{{this.$route.query.computername}}</router-link></span>
             <div>
               <Button class="btn" @click="$router.go(-1)" >返回</Button>
               <a :href="`${this.$route.query.connecturl}`" target="_blank" style="border:solid 1px #2A99F2;color: #2A99F2;border-radius: 5px;padding: 6px 15px;background-color:#f7f7f7;font-size:12px;">连接主机</a>
@@ -146,7 +146,7 @@
                         @radio-change="changeSelection"></Table>
               </div>
             </TabPane>
-            <Tab-pane label="修改密码">
+            <Tab-pane label="主机设置">
               <div class="body">
                 <label>重置密码</label>
                 <Form ref="reset" :model="resetPasswordForm" label-position="left" :label-width="100"
@@ -154,15 +154,15 @@
                       :rules="resetRuleValidate">
                   <Form-item label="请输入旧密码" prop="oldPassword">
                     <Input v-model="resetPasswordForm.oldPassword" placeholder="请输入旧密码" type="password"
-                           style="width:200px;"></Input>
+                           style="width:250px;"></Input>
                   </Form-item>
                   <Form-item label="请输入新密码" prop="newPassword">
                     <Input v-model="resetPasswordForm.newPassword" placeholder="请输入不小于六位数的新密码" type="password"
-                           style="width:200px;"></Input>
+                           style="width:250px;"></Input>
                   </Form-item>
                   <Form-item label="请确认新密码" prop="confirmPassword">
                     <Input v-model="resetPasswordForm.confirmPassword" placeholder="请确认新密码" type="password"
-                           style="width:200px;"></Input>
+                           style="width:250px;"></Input>
                   </Form-item>
                   <Form-item>
                     <Button type="primary" size="small" @click="resetConfirm"
@@ -199,8 +199,8 @@
                       </OptionGroup>
                     </Select>
                   </Form-item>
-                  <Form-item label="管理员密码">
-                    <Input v-model="reloadForm.password" placeholder="8～20位大小写字母加数字" type="password"></Input>
+                  <Form-item label="账号密码">
+                    <Input v-model="reloadForm.password" placeholder="请输入平台账号密码" type="password"></Input>
                   </Form-item>
                   <p
                     style="font-size: 14px;color: rgba(-2147483648,-2147483648,-2147483648,0.43);line-height: 18px;margin-bottom:15px;">
@@ -391,11 +391,11 @@
         if (value != '') {
           var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,}$/
           if (!regExp.test(value)) {
-            return callback(new Error('密码由6位及以上的字母数字组成，必须包含大小写字母、数字'))
+            return callback(new Error('密码不能为空'))
           }
           return callback()
         } else if (value == '') {
-          return callback(new Error('密码不能为空'))
+          return callback(new Error('密码由6位及以上的字母数字组成，必须包含大小写字母、数字'))
         } else {
           callback()
         }
@@ -1134,7 +1134,7 @@
       border: solid 1px #fff;
       border-top:0;
       border-left: 0;
-      transform:rotate(45deg); 
+      transform:rotate(45deg);
     }
   }
   .ivu-tabs-bar {
@@ -1241,6 +1241,7 @@
         }
         .charts {
           margin-top: -32px;
+          margin-left: 20px;
           .body {
             padding: 20px 19px;
             margin-top: -17px;
