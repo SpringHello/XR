@@ -226,7 +226,7 @@
         allType: [{value: '', label: '全部'}, {value: 'host', label: '云主机'}, {value: 'ip', label: '弹性IP'}, {
           value: 'disk',
           label: '硬盘'
-        }],
+        },{value: 'nat', label: 'NAT网关'}],
         selectType: '',
         modal: false,
 
@@ -372,13 +372,13 @@
       ok(){
         if (this.renewal) {
           var list = [{
-            type: this.renewalItem.type == 'host' ? 0 : this.renewalItem.type == 'disk' ? 1 : 2,
+            type: this.renewalItem.type == 'host' ? 0 : this.renewalItem.type == 'disk' ? 1 : this.renewalItem.type == 'nat' ? 4 : 2,
             id: this.renewalItem.id
           }]
         } else {
           list = this.selectArray.map((item) => {
             return {
-              type: item.type == 'host' ? 0 : item.type == 'disk' ? 1 : 2,
+              type: item.type == 'host' ? 0 : item.type == 'disk' ? 1 : this.renewalItem.type == 'nat' ? 4 : 2,
               id: item.id
             }
           })
