@@ -60,7 +60,7 @@
             </RadioGroup>
           </FormItem>
         </Form>
-        <p style="font-size: 12px;color: rgba(153,153,153,0.65);">提示：云主机快照为每块磁盘提供<span>8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点
+        <p class="modal-text-hint-bottom">提示：云主机快照为每块磁盘提供<span>8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点
         </p>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -111,7 +111,7 @@
             </RadioGroup>
           </FormItem>
         </Form>
-        <p style="font-size: 12px;color: rgba(153,153,153,0.65);">提示：云主机快照为每块磁盘提供<span class="bluetext">8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点。您最多能创建<span
+        <p class="modal-text-hint-bottom">提示：云主机快照为每块磁盘提供<span class="bluetext">8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点。您最多能创建<span
           class="bluetext">3个</span>自动快照策略
         </p>
       </div>
@@ -128,7 +128,7 @@
           <strong>主机回滚</strong>
           <p class="lh24">是否确定回滚主机</p>
           <p class="lh24">提示：您正使用<span class="bluetext">{{snapsName}}</span>回滚<span class="bluetext">{{hostName}}</span>至<span
-            class="bluetext">时间点</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的主机内的数据将丢失。</p>
+            class="bluetext">{{hostCreatetime}}</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的主机内的数据将丢失。</p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
@@ -213,6 +213,7 @@
       return {
         snapsName: '',
         hostName: '',
+        hostCreatetime: '',
         strategyName: '',
         strategyId: '',
         changeHostlist: [],
@@ -1540,6 +1541,8 @@
                     this.cursnapshot = params.row
                     this.snapsName = params.row.snapshotname
                     this.hostName = params.row.name
+                    this.hostCreatetime = params.row.addtime
+                    // console.log(params.row)
                   }
                 }
               }, '回滚')

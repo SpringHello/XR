@@ -81,7 +81,7 @@
                          style="margin-left: 20px" @on-change="queryNewIPPrice"></InputNumber>
             <span style="margin-left: 10px">M</span>
           </FormItem>
-          <p style="font-size: 12px;color: rgba(153,153,153,0.65);">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
+          <p class="modal-text-hint-bottom">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -99,7 +99,7 @@
       <div class="universal-modal-content-flex">
         <p style="font-size: 12px;color: #666666;margin-bottom:20px;">您正为弹性IP<span style="color: #2A99F2 ;">{{bindForHostForm.row.publicip}}</span>绑定云主机。
         </p>
-        <Icon type="ios-help-outline"></Icon>
+        <!-- <Icon type="ios-help-outline"></Icon> -->
         <Form :model="bindForHostForm" :rules="bindForHostRuleValidate" ref="bindForHostFormValidate">
           <FormItem label="选择云主机" prop="host">
             <Select v-model="bindForHostForm.host" placeholder="云主机名称">
