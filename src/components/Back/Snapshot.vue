@@ -1763,10 +1763,10 @@
         this.$http.get(`information/listVirtualMachines.do`)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              if(response.data.result.open.list){
+              if(response.data.result.open){
                 vmopenlist = response.data.result.open.list
               }
-              if(response.data.result.open.list){
+              if(response.data.result.close){
                 vmcloselist = response.data.result.close.list
               }
               this.vmList = vmopenlist.concat(vmcloselist)
@@ -1831,10 +1831,10 @@
         axios.get(vmListurl)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              if(response.data.result.open.list){
+              if(response.data.result.open){
                 vmopenlist = response.data.result.open.list
               }
-              if(response.data.result.open.list){
+              if(response.data.result.close){
                 vmcloselist = response.data.result.close.list
               }
               this.vmList = vmopenlist.concat(vmcloselist)
