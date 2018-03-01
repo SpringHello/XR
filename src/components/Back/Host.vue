@@ -18,8 +18,8 @@
         </div>
         <div class="operator-bar">
           <Button type="primary" @click="startUp">一键启动</Button>
-          <Button type="primary" @click="joinBalance" :disabled="status!='开启'">加入负载均衡</Button>
-          <Button type="primary" @click="bindIP" :disabled="status!='开启'&&status!='关机'">绑定IP</Button>
+          <Button type="primary" @click="joinBalance" :disabled="status!='全部'">加入负载均衡</Button>
+          <Button type="primary" @click="bindIP" :disabled="status!='全部'&&status!='关机'">绑定IP</Button>
           <Dropdown style="margin-left: 10px;vertical-align: middle;" @on-click="hideEvent" class="moreOperation">
             <Button type="primary">
               更多操作
@@ -33,7 +33,7 @@
               <Dropdown-item name="renewal" v-if="status=='欠费'||status=='异常'" :disabled=true>主机续费</Dropdown-item>
               <Dropdown-item name="renewal" v-else>主机续费</Dropdown-item>
               <!-- 备份 -->
-              <Dropdown-item name="backup" v-if="status!='开启'&&status!='关机'" :disabled=true>
+              <Dropdown-item name="backup" v-if="status!='全部'&&status!='关机'" :disabled=true>
                 <Tooltip content="异常、欠费状态，快照不可用" placement="top">
                   创建快照
                 </Tooltip>
@@ -72,9 +72,9 @@
 
               <Poptip
                 confirm
-                width="200"
+                width="250"
                 placement="right"
-                title="您确认删除这台主机吗？"
+                title="确认删除之后主机将进入回收站。"
                 @on-ok="del"
                 @on-cancel="cancel"
                 style="display: block">
@@ -575,7 +575,7 @@
   import Vue from 'vue'
   export default {
     data() {
-      var status = '开启'
+      var status = '全部'
       if (sessionStorage.getItem('type')) {
         switch (sessionStorage.getItem('type')) {
           case 'open':
@@ -635,8 +635,8 @@
         timeOptions: {
           renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
           renewalTime: [],
-          year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}, {label: '4年', value: 4}, {label: '5年', value: }, {label: '3年', value: 3}, {label: '3年', value: 3}, {label: '3年', value: 3}, {label: '3年', value: 3}, {label: '3年', value: 3}, {label: '3年', value: 3}, {label: '3年', value: 3}],
-          month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '3月', value: 3}]
+          year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}, {label: '4年', value: 4}, {label: '5年', value:5 }, {label: '6年', value: 6}, {label: '7年', value: 7}, {label: '8年', value: 9}, {label: '9年', value: 9}, {label: '10年', value: 10}, {label: '11年', value: 11}, {label: '12年', value: 12}],
+          month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '3月', value: 3}, {label: '4月', value: 4}, {label: '5月', value:5 }, {label: '6月', value: 6}, {label: '7月', value: 7}, {label: '8月', value: 9}, {label: '9月', value: 9}, {label: '10月', value: 10}, {label: '11月', value: 11}, {label: '12月', value: 12}]
         },
         requestParam: {
           ipArray: [],
@@ -738,7 +738,7 @@
         var url = 'information/listVirtualMachines.do'
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            // 遍历各种主机类型，开启、关闭、欠费、错误、创建中
+            // 遍历各种主机类型，全部、关闭、欠费、错误、创建中
             for (var type in response.data.result) {
               var list = []
               var target = response.data.result[type]
@@ -761,7 +761,7 @@
             this.errorHost = []
             this.waitHost = []
             this.currentHost = []
-            // 遍历各种主机类型，开启、关闭、欠费、错误、创建中
+            // 遍历各种主机类型，全部、关闭、欠费、错误、创建中
             for (var type in response.data.result) {
               var list = []
               var target = response.data.result[type]
@@ -800,7 +800,7 @@
       },
       startUp() {
         switch (this.status) {
-          case '开启':
+          case '全部':
             this.$Message.warning('请选择未开启的主机!')
             break
           case '异常':
@@ -937,7 +937,7 @@
             }
             break
           case 'backup':
-            if (this.status != '开启' && this.status != '关机') {
+            if (this.status != '全部' && this.status != '关机') {
               return
             }
             if (this.checkSelect()) {
@@ -980,7 +980,7 @@
       },
       checkSelect() {
         switch (this.status) {
-          case '开启':
+          case '全部':
             this.currentHost = this.openHost.filter(item => {
               return item.select == true
             })

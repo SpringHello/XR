@@ -116,7 +116,7 @@
                       <div style="display: flex">
                         <div style="border-right:1px solid rgb(204, 204, 204);padding:20px 10px;">
                           <div style="margin:0px auto;width:65px;">
-                            <Button type="primary" size="small" style="margin-bottom:15px;width:64px"
+                            <Button type="primary" size="small" style="margin-bottom:15px;width:64px;padding: 5px 0px;"
                                     @click="leaveNetwork(vm.networkid,vm.computerid)">离开网络
                             </Button>
                             <Button type="primary" size="small"
