@@ -75,14 +75,12 @@
               <!--当为指定IP时-->
               <FormItem prop="num"
                         v-if="creatbalancemodal.formInline.radio == 'private'&& creatbalancemodal.formInline.intranetIp == 'specify'">
-                192.168.{{ creatbalancemodal.formInline.intranetIpNum}}.<Input type="text"
-                                                                               v-model="creatbalancemodal.formInline.num"
-                                                                               style="width:100px;margin-left: 5px;">
-                </Input>
+                {{ creatbalancemodal.formInline.intranetIpNum}}.
+                <InputNumber v-model="creatbalancemodal.formInline.num" :max="254" :min="2"></InputNumber>
               </FormItem>
               <p style="font-size: 12px;color: #999999;"
                  v-if="creatbalancemodal.formInline.radio == 'private'&& creatbalancemodal.formInline.intranetIp == 'specify'">
-                网络范围：192.168.2-254</p>
+                网络范围：{{ creatbalancemodal.formInline.intranetIpNum}}.2-254</p>
             </Form>
           </div>
 
@@ -269,8 +267,8 @@
             radio: 'public',
             subnet: '',
             intranetIp: 'specify',
-            num: '',
-            intranetIpNum: '',
+            num: 2,
+            intranetIpNum: '192.168.0',
             publicIp: '',
             ruleName: '',
             algorithm: '',
@@ -446,7 +444,8 @@
       /* 切换子网时需要把子网的ip字段赋值给指定ip */
       changeSubnet () {
         if (this.creatbalancemodal.formInline.subnet) {
-          this.creatbalancemodal.formInline.intranetIpNum = this.creatbalancemodal.formInline.subnet.split('#')[1].split('.')[2]
+          let ip = this.creatbalancemodal.formInline.subnet.split('#')[1]
+          this.creatbalancemodal.formInline.intranetIpNum = ip.slice(0,ip.lastIndexOf('.'))
         }
       },
       /* 选择创建私网负载均衡时列出所有子网 */
@@ -508,7 +507,7 @@
             name: this.creatbalancemodal.formInline.name,
             sourcePort: this.creatbalancemodal.formInline.frontPort,
             instancePort: this.creatbalancemodal.formInline.rearPort,
-            privateIp: '192.168.' + this.creatbalancemodal.formInline.intranetIpNum + '.' + this.creatbalancemodal.formInline.num,
+            privateIp: this.creatbalancemodal.formInline.intranetIpNum + '.' + this.creatbalancemodal.formInline.num,
             networkId: this.creatbalancemodal.formInline.subnet.split('#')[0],
           }
         }).then(response => {

@@ -89,7 +89,7 @@
         </div>
         <div class="operate" ref="operate">
           <ul @mouseleave="ML">
-            <li class="zone-collapse">
+            <!--<li class="zone-collapse">
               <Dropdown @on-click="toggleZone">
                 <a href="javascript:void(0)">
                   {{zone.zonename}}
@@ -101,7 +101,7 @@
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
-            </li>
+            </li>-->
             <li class="sec-nav" v-for="(item,index) in main" :key="index" @mouseenter="ME($event,item.type)" :ref="item.type"
                 :class="{hover:item.type==pageInfo.hoverItem}">
               <a>{{item.mainName}}</a>

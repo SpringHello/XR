@@ -1,7 +1,7 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span class="title">云服务器 / 
+      <span class="title">云服务器 /
          <span>云主机快照</span>
       </span>
       <div id="content">
@@ -1828,13 +1828,14 @@
         var vmopenlist =[]
         var vmcloselist =[]
         var vmListurl = `information/listVirtualMachines.do?zoneId=${$store.state.zone.zoneid}`
+        console.log(vmListurl)
         axios.get(vmListurl)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              if(response.data.result.open.list){
+              if(response.data.result.open){
                 vmopenlist = response.data.result.open.list
               }
-              if(response.data.result.open.list){
+              if(response.data.result.close){
                 vmcloselist = response.data.result.close.list
               }
               this.vmList = vmopenlist.concat(vmcloselist)
