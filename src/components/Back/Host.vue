@@ -27,8 +27,8 @@
             </Button>
             <Dropdown-menu slot="list">
               <!-- 重命名 -->
-              <!-- <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
-              <Dropdown-item name="rename" v-else>重命名</Dropdown-item> -->
+              <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
+              <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
               <!-- 续费 -->
               <Dropdown-item name="renewal" v-if="status=='欠费'||status=='异常'" :disabled=true>主机续费</Dropdown-item>
               <Dropdown-item name="renewal" v-else>主机续费</Dropdown-item>

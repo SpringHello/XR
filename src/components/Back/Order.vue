@@ -150,7 +150,7 @@
                   },
                 }, [h('Panel', {
                     props: {
-                      name: params.row._index
+                      name: params.row._index.toString()
                     },
                   },
                   [type, h('div', {
