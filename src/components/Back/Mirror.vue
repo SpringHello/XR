@@ -360,7 +360,7 @@
         this.$http.get(`information/listVirtualMachines.do`)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              if(response.data.result.open.list){
+              if(response.data.result.open){
                 vmcloselist = response.data.result.close.list
               }
               this.hostName = vmcloselist
