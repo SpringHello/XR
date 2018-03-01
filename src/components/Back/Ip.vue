@@ -320,21 +320,21 @@
             render: (h, object) => {
               if (object.row.status == 2) {
                 // 创建中
-                return h('div', {}, [h('Spin',{
+                return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block'
                   }
                 }), h('span', {}, '创建中')])
               } else if (object.row.status == 3) {
                 // 绑定中
-                return h('div', {}, [h('Spin',{
+                return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block'
                   }
                 }), h('span', {}, '绑定中')])
               } else if (object.row.status == 4) {
                 // 解绑中
-                return h('div', {}, [h('Spin',{
+                return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block'
                   }
@@ -485,7 +485,14 @@
                 vpcId: this.newIPForm.vpc
               }
             }).then(response => {
-              this.$router.push('order')
+              if (response.status == 200 && response.data.status == 1) {
+                this.$router.push('order')
+              } else {
+                this.$message.warning({
+                  content: response.data.message
+                })
+              }
+
             })
           }
         })
@@ -643,7 +650,7 @@
       },
       // 删除弹性ip
       delElasticIP(){
-         if (this.select == null) {
+        if (this.select == null) {
           this.$Message.warning('请选择1个弹性IP')
           return false
         }

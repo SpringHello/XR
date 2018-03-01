@@ -68,7 +68,7 @@
               </FormItem>
               <FormItem label="内网IP" prop="intranetIp" v-if="creatbalancemodal.formInline.radio == 'private'">
                 <RadioGroup v-model="creatbalancemodal.formInline.intranetIp">
-                  <Radio label="auto" disabled>自动分配</Radio>
+                  <Radio label="auto">自动分配</Radio>
                   <Radio label="specify">指定IP</Radio>
                 </RadioGroup>
               </FormItem>
@@ -267,7 +267,7 @@
             radio: 'public',
             subnet: '',
             intranetIp: 'specify',
-            num: 2,
+            num: '2',
             intranetIpNum: '192.168.0',
             publicIp: '',
             ruleName: '',
@@ -312,7 +312,7 @@
               {required: true, message: '请选择 ', trigger: 'change'}
             ],
             num: [
-              {required: true, message: '请填写 ', trigger: 'blur'}
+              {required: true, message: '请填写指定IP', trigger: 'blur'}
             ],
             intranetIp: [
               {required: true, message: '请选择 ', trigger: 'change'}
@@ -445,7 +445,7 @@
       changeSubnet () {
         if (this.creatbalancemodal.formInline.subnet) {
           let ip = this.creatbalancemodal.formInline.subnet.split('#')[1]
-          this.creatbalancemodal.formInline.intranetIpNum = ip.slice(0,ip.lastIndexOf('.'))
+          this.creatbalancemodal.formInline.intranetIpNum = ip.slice(0, ip.lastIndexOf('.'))
         }
       },
       /* 选择创建私网负载均衡时列出所有子网 */
@@ -501,15 +501,18 @@
       },
       /* 创建私网负载均衡 */
       createInternalLB () {
+        let params = {
+          algorithm: this.creatbalancemodal.formInline.algorithm,
+          name: this.creatbalancemodal.formInline.name,
+          sourcePort: this.creatbalancemodal.formInline.frontPort,
+          instancePort: this.creatbalancemodal.formInline.rearPort,
+          networkId: this.creatbalancemodal.formInline.subnet.split('#')[0],
+        }
+        if (this.creatbalancemodal.formInline.intranetIp == 'specify') {
+          params.privateIp = this.creatbalancemodal.formInline.intranetIpNum + '.' + this.creatbalancemodal.formInline.num
+        }
         this.$http.get('loadbalance/createInternalLB.do', {
-          params: {
-            algorithm: this.creatbalancemodal.formInline.algorithm,
-            name: this.creatbalancemodal.formInline.name,
-            sourcePort: this.creatbalancemodal.formInline.frontPort,
-            instancePort: this.creatbalancemodal.formInline.rearPort,
-            privateIp: this.creatbalancemodal.formInline.intranetIpNum + '.' + this.creatbalancemodal.formInline.num,
-            networkId: this.creatbalancemodal.formInline.subnet.split('#')[0],
-          }
+          params
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$refs.form2.resetFields()

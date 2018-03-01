@@ -27,8 +27,8 @@
             </Button>
             <Dropdown-menu slot="list">
               <!-- 重命名 -->
-              <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
-              <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
+              <!-- <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
+              <Dropdown-item name="rename" v-else>重命名</Dropdown-item> -->
               <!-- 续费 -->
               <Dropdown-item name="renewal" v-if="status=='欠费'||status=='异常'" :disabled=true>主机续费</Dropdown-item>
               <Dropdown-item name="renewal" v-else>主机续费</Dropdown-item>
@@ -354,12 +354,12 @@
         </p>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary" class="btn-cancel" @click="showModal.backup=false">取消</Button>
+        <!-- <Button type="primary" class="btn-cancel" @click="showModal.backup=false">取消</Button> -->
         <Button type="primary" :disabled="backupForm.backupName==''" @click="backup">创建快照</Button>
       </div>
     </Modal>
     <!-- 主机重命名弹窗 -->
-    <Modal v-model="showModal.rename" width="590" :scrollable="true">
+    <!-- <Modal v-model="showModal.rename" width="590" :scrollable="true">
       <div slot="header"
            style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
         主机重命名
@@ -376,15 +376,14 @@
         <Button type="primary" :disabled="renameForm.hostName==''" @click="rename">确定
         </Button>
       </div>
-    </Modal>
+    </Modal> -->
 
     <!-- 生成镜像弹窗 -->
     <Modal v-model="showModal.mirror" width="590" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        生成镜像
+      <div slot="header" class="modal-header-border">
+        制作镜像
       </div>
-      <div style="width:60%">
+      <div class="universal-modal-content-flex">
         <Form :model="mirrorForm" :label-width="80">
           <Form-item label="镜像名">
             <Input v-model="mirrorForm.mirrorName" placeholder="请输入备份名"></Input>
@@ -395,7 +394,7 @@
           </Form-item>
         </Form>
       </div>
-      <div slot="footer">
+      <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.mirror = false">取消</Button>
         <Button type="primary" :disabled="mirrorForm.mirrorName==''||mirrorForm.description==''" @click="mirror">确定
         </Button>
@@ -451,32 +450,33 @@
     <!-- 续费弹窗 -->
     <Modal
       v-model="showModal.renewal"
-      title="续费选择"
       width="590"
       :scrollable="true">
-      <div style="height:100px;width:90%;margin:0px auto">
-        <span style="font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;vertical-align:middle">
-        付费类型 :
-        </span>
-        <Select v-model="renewalType" style="width:140px">
-          <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}
-          </Option>
-        </Select>
-        <span
-          style="margin-left:30px;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;vertical-align:middle">
-        付费时长 :
-      </span>
-        <Select v-model="renewalTime" style="width:140px">
-          <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
-          </Option>
-        </Select>
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">续费选择</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form>
+          <FormItem label="付费类型 :">
+            <Select v-model="renewalType">
+              <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="付费时长 :">
+            <Select v-model="renewalTime">
+              <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+        </Form>
+        <div>
+          应付费:{{cost}}
+        </div>
       </div>
-      <div style="width:90%;margin:0px auto;font-family: Microsoft Yahei,微软雅黑-Bold;font-size: 16px;color: #666666;">
-        应付费:{{cost}}
-      </div>
-      <div slot="footer" style="display: flex;width:177px;margin-left:350px;">
-        <div class="button cancel" @click="modal=false">取消</div>
-        <div class="button ok" @click="renewalok">确认续费</div>
+      <div slot="footer" class="modal-footer-border">
+        <!-- <div type="primary" class="btn-cancel" @click="modal=false">取消</div> -->
+        <Button type="primary" @click="renewalok">确认续费</Button>
       </div>
     </Modal>
     <!-- 欠费，续费弹窗 -->
@@ -498,6 +498,39 @@
         </Button>
       </div>
     </Modal>
+
+    <!-- <Modal v-model="showModal.newSnapshot" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">创建快照</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <p class="mb20">您正为<span class="bluetext">主机名称</span>创建快照</p>
+        <Form :model="creatSnapsForm" ref="creatSnapsForm" :rules="ruleSnaps">
+          <FormItem label="选择主机" prop="host">
+            <Select v-model="creatSnapsForm.host">
+              <Option v-for="item in vmList" :value="item.computerid" :key="item.computerid">{{ item.computername
+                }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="快照名称" prop="name">
+            <Input v-model="creatSnapsForm.name" placeholder="请输入2-4094范围内任意数字"></Input>
+          </FormItem>
+          <FormItem label="是否保存内存信息">
+            <RadioGroup v-model="creatSnapsForm.radio">
+              <Radio label="1">保存</Radio>
+              <Radio label="0">不保存</Radio>
+            </RadioGroup>
+          </FormItem>
+        </Form>
+        <p style="font-size: 12px;color: rgba(153,153,153,0.65);">提示：云主机快照为每块磁盘提供<span>8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点
+        </p>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" class="btn-cancel" @click="cancleSnaps('creatSnapsForm')">取消</Button>
+        <Button type="primary" @click="NewSnapsSubmit('creatSnapsForm')">创建快照</Button>
+      </div>
+    </Modal> -->
     <!-- 认证弹窗 -->
     <Modal v-model="showModal.selectAuthType" width="590" ::scrollable="true" :styles="{top:'172px'}">
       <div slot="header"
@@ -706,14 +739,16 @@
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             // 遍历各种主机类型，开启、关闭、欠费、错误、创建中
-            for (var type in response.data.result) {
+            for (var type of ['open', 'close', 'arrears', 'error']) {
               var list = []
-              var target = response.data.result[type]
+              var target = response.data.result[type] || {list: []}
+              console.log(target)
               for (var index in target.list) {
                 var host = merge(this[`${type}Host`][index] || {}, target.list[index], {_select: this[`${type}Host`][index] ? this[`${type}Host`][index]._select : false})
                 list.push(host)
               }
               this[`${type}Host`] = list
+              console.log(this[`${type}Host`])
             }
           }
         })

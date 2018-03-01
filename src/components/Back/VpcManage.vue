@@ -429,10 +429,38 @@
           {
             title: '操作',
             key: 'action',
-            width: 110,
-            align: 'left',
+            width: 220,
+            align: 'center',
             render: (h, params) => {
-              return h('div', [
+
+              let message = ''
+              if (params.row.status) {
+                switch (params.row.status) {
+                  // 状态为1代表添加主机loading
+                  case 1:
+                    message = '添加主机中...'
+                    break;
+                  // 状态为2代表删除主机loading
+                  case 2:
+                    message = '删除主机中...'
+                    break;
+                  // 状态为3代表切换主机网卡loading
+                  case 3:
+                    message = '切换网卡中...'
+                    break;
+                }
+                return h('div', [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight:'10px'
+                  }
+                }), h('span', {
+                  style: {
+                    verticalAlign: 'middle'
+                  }
+                }, message)])
+              }
+              let operatorList = [
                 h('span', {
                   style: {
                     color: '#2A99F2',
@@ -444,12 +472,31 @@
                     }
                   }
                 }, '离开网络')
-              ])
+              ]
+              if (params.row.ismain != 1) {
+                operatorList.push(
+                  h('span', {
+                    style: {
+                      color: '#2A99F2',
+                      cursor: 'pointer',
+                      marginLeft: '20px'
+                    },
+                    on: {
+                      click: () => {
+                        this.toggleNetwork(params.row.networkid, params.row.computerid)
+                      }
+                    }
+                  }, '切换为主网卡')
+                )
+              }
+              return h('div', operatorList)
             }
           }
         ],
         // 页面数据
-        data: {},
+        data: {
+          ipsList: []
+        },
         // vpc互通网关tableData
         vpcColumns: [
           {
@@ -544,12 +591,20 @@
       addHostForm_ok () {
         this.showModal.addHostToNet = false
         var url = `network/enterVMToNetwork.do?networkId=${this.addHostForm.ipsegmentid}&VMId=${this.addHostForm.vm}`
+        for (let network of this.data.ipsList) {
+          if (network.ipsegmentid = this.addHostForm.ipsegmentid) {
+            network.vmList.push({
+              status: 3,
+              computername: '添加中...'
+            })
+          }
+        }
         this.$http.get(url).then(response => {
+          this.refresh()
           if (response.status == 200 && response.data.status == 1) {
             this.$message.info({
               content: response.data.message
             })
-            this.refresh()
           } else {
             this.$message.error({
               content: response.data.message
@@ -589,12 +644,19 @@
           this.setVPC(response[1])
         })
       },
+      // 设置子网数据
       setData(response){
         if (response.status == 200 && response.data.status == 1) {
-          response.data.result.ipsList.forEach(item => {
-            item._show = false
-          })
+          for (let target of response.data.result.ipsList) {
+            target._show = false
+            for (let origin of this.data.ipsList) {
+              if (target.ipsegmentid == origin.ipsegmentid) {
+                target._show = origin._show
+              }
+            }
+          }
           this.data = response.data.result
+          // console.log(this.data)
         }
       },
       // 设置vpc互联互通数据
@@ -742,14 +804,45 @@
         this.leaveForm.networkid = networkid
         this.showModal.leaveNetwork = true
       },
+      // 弹出切换主网卡modal
+      toggleNetwork(networkId, VMId){
+        this.$message.confirm({
+          content: '确定切换当前网络卡为主网卡？',
+          onOk: () => {
+            for (let network of this.data.ipsList) {
+              for (let vm of network.vmList) {
+                if (vm.networkid == networkId && vm.computerid == VMId) {
+                  this.$set(vm, 'status', 3)
+                }
+              }
+            }
+            console.log(this.data.ipsList)
+            this.$http.get('network/updateDefaultNicForVirtualMachine.do', {
+              params: {
+                networkId,
+                VMId
+              }
+            }).then(response => {
+              this.refresh()
+            })
+          }
+        })
+      },
       // 发送离开网络ajax
       leaveNetwork_ok(){
         var url = `network/removeVMToNetwork.do?networkId=${this.leaveForm.networkid}&VMId=${this.leaveForm.vmId}`
         this.showModal.leaveNetwork = false
+        for (let network of this.data.ipsList) {
+          for (let vm of network.vmList) {
+            if (vm.networkid == this.leaveForm.networkid && vm.networkid.computerid == this.leaveForm.computerid) {
+              this.$set(vm, 'status', 2)
+            }
+          }
+        }
         this.$http.get(url).then(response => {
+          this.refresh()
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
-            this.refresh()
           } else if (response.status == 200 && response.data.status == 2) {
             this.$message.error({
               content: response.data.message
