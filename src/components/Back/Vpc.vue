@@ -54,7 +54,7 @@
                 </div>
                 <div class="card-bottom">
                   <Button type="primary" class="btn-bgwhite" @click="restartVpc(item)">重启</Button>
-                  <Button type="primary" @click="manage(item)">管理</Button>
+                  <Button type="primary" class="btn-bgwhite" @click="manage(item)">管理</Button>
                 </div>
               </div>
             </div>
@@ -418,7 +418,7 @@
                             }
                           }).then(response => {
                             if (response.status == 200 && response.data.status == 1) {
-                              this.$message.info({
+                              this.$Message.success({
                                 content: response.data.message
                               })
                               this.refresh()
@@ -496,7 +496,7 @@
                               var url = `network/unboundElasticIP.do?natGatewayId=${object.row.id}&publicIp=${item}`
                               this.$http.get(url).then(response => {
                                 if (response.status == 200 && response.data.status == 1) {
-                                  this.$message.info({
+                                  this.$Message.success({
                                     content: response.data.message
                                   })
                                   this.refresh()
@@ -545,6 +545,10 @@
                 on: {
                   click: () => {
                     sessionStorage.setItem('currentNat', object.row.id)
+                    if (object.row.prottransip) {
+                      sessionStorage.setItem('ip', object.row.prottransip.substring(1))
+                      sessionStorage.setItem('ipId', object.row.prottransipid.substring(1))
+                    }
                     this.$router.push('NATManage')
                   }
                 }
@@ -843,7 +847,7 @@
             }
           })
         } else {
-          this.$message.info({
+          this.$Message.info({
             content: '请先选择一个网关',
           })
         }
@@ -853,7 +857,7 @@
         var select = this.netData.filter(item => item._select)
         console.log(select)
         if (select.length == 0) {
-          this.$message.info({
+          this.$Message.info({
             content: '请选择一个VPC'
           })
           return
@@ -867,7 +871,7 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.$message.info({
+                this.$Message.success({
                   content: response.data.message
                 })
               } else {
@@ -890,7 +894,7 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.$message.info({
+                this.$Message.success({
                   content: response.data.message
                 })
               } else {
@@ -941,7 +945,7 @@
               this.showModal.newVpc = false
               if (response.status == 200 && response.data.status == 1) {
                 this.refresh()
-                this.$message.info({content: response.data.message})
+                this.$Message.success({content: response.data.message})
                 // this.$error('error', response.data.message)
               } else {
                 this.$message.error({content: response.data.message})
@@ -961,7 +965,7 @@
             axios.get(url).then(response => {
               this.showModal.addGateway = false
               if (response.status == 200 && response.data.status == 1) {
-                this.$message.info({
+                this.$Message.success({
                   content: response.data.message
                 })
               } else {
@@ -1029,7 +1033,7 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.$message.info({
+                this.$Message.success({
                   content: response.data.message
                 })
                 this.refresh()
@@ -1069,7 +1073,7 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.$message.info({
+                this.$Message.success({
                   content: response.data.message
                 })
                 this.refresh()
@@ -1237,6 +1241,10 @@
         .btn-bgwhite {
           background: #ffffff;
           color: #2A99F2;
+          &:hover {
+            background: #2A99F2;
+            color: #FFFFFF;
+          }
         }
       }
     }

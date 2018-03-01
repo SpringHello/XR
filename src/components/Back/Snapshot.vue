@@ -64,7 +64,7 @@
         </p>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary" class="btn-cancel" @click="cancleSnaps('creatSnapsForm')">取消</Button>
+        <Button type="ghost" @click="cancleSnaps('creatSnapsForm')">取消</Button>
         <Button type="primary" @click="NewSnapsSubmit('creatSnapsForm')">创建快照</Button>
       </div>
     </Modal>
@@ -116,7 +116,7 @@
         </p>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary" class="btn-cancel" @click="cancleBackups('creatBackupsForm')">取消</Button>
+        <Button type="ghost"  @click="cancleBackups('creatBackupsForm')">取消</Button>
         <Button type="primary" @click="NewBackupsSubmit('creatBackupsForm')">创建策略</Button>
       </div>
     </Modal>
@@ -1460,11 +1460,13 @@
           },
           {
             title: '快照名称',
-            key: 'snapshotname'
+            key: 'snapshotname',
+            align: 'center',
           },
           {
             title: '状态',
             key: 'status',
+             align: 'center',
             render: (h, params) => {
               switch (params.row.status) {
                 case 1:
@@ -1494,11 +1496,13 @@
           },
           {
             title: '主机名称',
-            key: 'name'
+            key: 'name',
+            align: 'center',
           },
           {
             title: '快照间隔',
             key: 'interval',
+            align: 'center',
             render: (h, params) => {
               const row = params.row
               const text = row.createway === 'hand' ? '手动' : row.createway === 'day' ? '每天' : row.createway === 'week' ? '每周' : row.createway === 'month' ? '每月' : ''
@@ -1508,6 +1512,7 @@
           {
             title: '是否保留内存状态',
             key: 'memorystatus',
+            align: 'center',
             render: (h, params) => {
               var memorystatus = params.row.memorystatus == 1 ? '是' : '否'
               return h('span', {}, memorystatus)
@@ -1515,12 +1520,14 @@
           },
           {
             title: '创建时间',
-            key: 'addtime'
+            key: 'addtime',
+            align: 'center',
           },
 
           {
             title: '操作',
             key: 'action',
+            align: 'center',
             render: (h, params) => {
               return h('span', {
                 style: {
@@ -1550,11 +1557,13 @@
           },
           {
             title: '策略名称',
-            key: 'strategyname'
+            key: 'strategyname',
+            align: 'center',
           },
           {
             title: '状态',
             key: 'status',
+            align: 'center',
             render: (h, params) => {
               const row = params.row
               const text = row.status === 0 ? '正常' : row.status === 1 ? '可用' : row.status === 3 ? '删除中' : ''
@@ -1573,6 +1582,7 @@
           {
             title: '自动备份保留个数',
             key: 'keepcount',
+            align: 'center',
             render: (h, params) => {
               return h('span', {}, params.row.keepcount + '个')
             }
@@ -1626,11 +1636,13 @@
 
           {
             title: '创建时间',
-            key: 'createtime'
+            key: 'createtime',
+            align: 'center',
           },
           {
             title: '应用主机',
             key: 'resourceBean',
+            align: 'center',
             render: (h, params) => {
               if (params.row.resourceBean.length == 0) {
                 return h('span', {}, '----')
@@ -1652,6 +1664,7 @@
           {
             title: '操作',
             key: 'action',
+            align: 'center',
             render: (h, params) => {
               return h('span', {
                 style: {

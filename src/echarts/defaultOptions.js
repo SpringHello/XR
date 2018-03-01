@@ -39,7 +39,7 @@ export default {
   series: [
     {
       type: 'line',
-      name: '使用率(%)',
+      name: '利用率(%)',
       lineStyle: {
         normal: {
           color: '#2A99F2'

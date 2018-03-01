@@ -72,9 +72,9 @@
 
               <Poptip
                 confirm
-                width="250"
+                width="200"
                 placement="right"
-                title="确认删除之后主机将进入回收站。"
+                title="您确认删除这台主机吗？"
                 @on-ok="del"
                 @on-cancel="cancel"
                 style="display: block">
@@ -101,7 +101,7 @@
         <div>
           <Tabs type="card" :animated="false" v-model="status">
 
-            <Tab-pane :label="`开启(${openHost.length+waitHost.length})`" name="开启">
+            <Tab-pane :label="`全部(${openHost.length+waitHost.length})`" name="全部">
               <div class="flex-wrapper">
                 <!-- 创建中主机列表 -->
                 <div v-for="(item,index) in waitHost" :key="index" :class="{select:item.select}"
@@ -471,7 +471,7 @@
         </FormItem>
         </Form>
         <div>
-          资费: <span style="color: #2d8cf0;">￥{{cost}}</span>
+          应付费: <span style="color: #2d8cf0;">￥{{cost}}</span>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -635,8 +635,8 @@
         timeOptions: {
           renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
           renewalTime: [],
-          year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}, {label: '4年', value: 4}, {label: '5年', value: 5}, {label: '6年', value: 7}, {label: '7年', value: 7}, {label: '8年', value: 8}, {label: '9年', value: 9}, {label: '10年', value: 10}, {label: '11年', value: 11}, {label: '12年', value: 12}],
-          month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '3月', value: 3}, {label: '4月', value: 4}, {label: '5月', value: 5}, {label: '6月', value: 7}, {label: '7月', value: 7}, {label: '8月', value: 8}, {label: '9月', value: 9}, {label: '10月', value: 10}, {label: '11月', value: 11}, {label: '12月', value: 12}]
+          year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}, {label: '4年', value: 4}, {label: '5年', value: }, {label: '3年', value: 3}, {label: '3年', value: 3}, {label: '3年', value: 3}, {label: '3年', value: 3}, {label: '3年', value: 3}, {label: '3年', value: 3}, {label: '3年', value: 3}],
+          month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '3月', value: 3}]
         },
         requestParam: {
           ipArray: [],
