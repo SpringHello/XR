@@ -1005,10 +1005,6 @@
             this.listUser()
           }
         })
-      },
-      gotoVpc(vpcId){
-        sessionStorage.setItem('vpcId', vpcId)
-        this.$router.push('/ruicloud/vpcManage')
       }
     },
     watch: {
