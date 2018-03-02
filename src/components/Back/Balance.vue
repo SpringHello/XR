@@ -1,5 +1,9 @@
 <template>
   <div id="background">
+    <Spin fix v-show="loading">
+      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <div>{{loadingMessage}}</div>
+    </Spin>
     <div id="wrapper">
       <span class="title">
         云网络 /
@@ -17,7 +21,7 @@
         <div class="operator-bar">
           <Button type="primary" @click="creatbalancemodal.showBalanceName = true">创建负载均衡</Button>
           <Button type="primary" style="margin-left: 8px;" @click="bind">绑定虚拟机</Button>
-          <Button type="primary" style="margin-left: 8px;" @click="unbindHost">解绑虚拟机</Button>
+         <!-- <Button type="primary" style="margin-left: 8px;" @click="unbindHost">解绑虚拟机</Button> -->
           <Button type="primary" style="margin-left: 8px;" @click="delBalance">删除</Button>
         </div>
         <!--负载均衡表-->
@@ -73,7 +77,7 @@
                 </RadioGroup>
               </FormItem>
               <!--当为指定IP时-->
-              <FormItem prop="num"
+              <FormItem
                         v-if="creatbalancemodal.formInline.radio == 'private'&& creatbalancemodal.formInline.intranetIp == 'specify'">
                 {{ creatbalancemodal.formInline.intranetIpNum}}.
                 <InputNumber v-model="creatbalancemodal.formInline.num" :max="254" :min="2"></InputNumber>
@@ -192,6 +196,8 @@
     },
     data (){
       return {
+        loadingMessage: '',
+        loading: false,
         showModal: {
           bind: false,
           unbind: false
@@ -267,7 +273,7 @@
             radio: 'public',
             subnet: '',
             intranetIp: 'specify',
-            num: '2',
+            num: 2,
             intranetIpNum: '192.168.0',
             publicIp: '',
             ruleName: '',
@@ -488,7 +494,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$refs.form2.resetFields()
             this.$refs.form1.resetFields()
-            this.$message.info({
+            this.$Message.success({
               content: response.data.message
             })
             this.listAllBalance()
@@ -517,7 +523,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$refs.form2.resetFields()
             this.$refs.form1.resetFields()
-            this.$message.info({
+            this.$Message.success({
               content: response.data.message
             })
             this.listAllBalance()
@@ -554,6 +560,8 @@
       },
       /* 负载均衡确定绑定虚拟机 */
       bindHost_ok () {
+        this.loadingMessage = '正在绑定虚拟机，请稍候'
+        this.loading = true
         if (this.bindHostForm.vm.length != 0) {
           var url = ``
           if (this.balanceSelection._internal) {
@@ -564,12 +572,13 @@
           this.showModal.bind = false
           this.$http.get(url).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.$message.info({
+              this.loading = false
+              this.$Message.success({
                 content: response.data.message
               })
-              this.balanceSelection = null
             } else {
-              this.$message.error({
+            this.loading = false
+            this.$message.error({
                 content: response.data.message
               })
             }
@@ -600,6 +609,8 @@
       },
       /* 确认解绑虚拟机 */
       unbindHost_ok () {
+        this.loadingMessage = '正在解绑虚拟机，请稍候'
+        this.loading = true
         if (this.unbindForm.vm.length != 0) {
           var url = ``
           if (this.balanceSelection._internal) {
@@ -610,12 +621,13 @@
           this.showModal.unbind = false
           this.$http.get(url).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.$message.info({
+            this.loading = false
+            this.$Message.success({
                 content: response.data.message
               })
-              this.balanceSelection = null
             } else {
-              this.$message.error({
+            this.loading = false
+            this.$message.error({
                 content: response.data.message
               })
             }
@@ -645,7 +657,7 @@
               })
               this.$http.get(url).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
-                  this.$message.info({
+                  this.$Message.success({
                     content: response.data.message
                   })
                   this.listAllBalance()

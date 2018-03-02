@@ -279,7 +279,6 @@
                     this.$router.push('payResult')
                   } else if (response.status == 200 && response.data.status == 4) {
                     sessionStorage.setItem('payResult', 'fail')
-
                     this.$router.push('payResult')
                   }
                 })
@@ -293,8 +292,7 @@
         }
       },
       cancelOrder(){
-        this.$store.commit('setSelect', 'new')
-        this.$router.push('new')
+        this.$router.go(-1)
       },
       clipCoupons(){
         if (this.selection.length != 0) {

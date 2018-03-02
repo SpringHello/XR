@@ -1322,6 +1322,7 @@
           }
         }).then(response => {
           this.PeipInfo.vpcList = response.data.result
+          this.PeipInfo.vpc = this.PeipInfo.vpcList[0].vpcid
         })
       },
       // 重新查询虚拟私有云（vpc）
@@ -1332,6 +1333,7 @@
           }
         }).then(response => {
           this.PecsInfo.vpcList = response.data.result
+          this.PecsInfo.vpc = this.PecsInfo.vpcList[0].vpcid
         })
       },
       // 重新查询vpc所属的子网
@@ -1343,6 +1345,7 @@
           }
         }).then(response => {
           this.PecsInfo.networkList = response.data.result
+          this.PecsInfo.network = this.PecsInfo.networkList[0].ipsegmentid
         })
       },
       // 查询云主机快速配置价格
