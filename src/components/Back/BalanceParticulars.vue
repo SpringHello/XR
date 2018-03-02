@@ -115,7 +115,7 @@
                         this.$http.get(url).then(response => {
                           if (response.status == 200 && response.data.status == 1) {
                             this.loading = false
-                            this.$message.info({
+                            this.$Message.success({
                               content: response.data.message
                             })
                             this.listHostByBalance()
@@ -195,7 +195,7 @@
           this.showModal.bind = false
           this.$http.get(url).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.$message.info({
+              this.$Message.success({
                 content: response.data.message
               })
               this.listHostByBalance()
