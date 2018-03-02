@@ -1146,11 +1146,6 @@
      }
    }
  }
-  .btnnormal {
-    border: #2a99f2 solid 1px;
-    color: #2a99f2
-  }
-
   .ivu-modal-footer {
     .button {
       height: 35.7px;

@@ -1,13 +1,12 @@
 <template>
-  <div class="background">
-    <div class="wrapper">
-      <span>
+  <div id="background">
+    <div id="wrapper">
+      <span class="title">
         <router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> /
-        <router-link to="host" style="color:rgba(17, 17, 17, 0.43);">云主机</router-link> / 管理
+        <router-link to="host" style="color:rgba(17, 17, 17, 0.43);">云主机</router-link> / <span>管理</span>
       </span>
       <div class="content">
         <div class="info">
-
           <header>
             <span class="arrowdown-icon"></span>
             <span><router-link to="host" style="color: #FFF;">{{this.$route.query.computername}}</router-link></span>
@@ -1142,196 +1141,178 @@
   .ivu-tabs-bar {
     padding-left: 55px;
   }
-
-  .background {
-    background-color: #f5f5f5;
-    width: 100%;
-    .wrapper {
-      width: 1200px;
-      margin: 0px auto;
-      margin-bottom: 25px;
-      & > span {
-        font-family: PingFangSC-Regular;
-        font-size: 12px;
-        color: rgba(17, 17, 17, 0.43);
-        line-height: 22px;
-        padding: 11px 0px;
-        display: block;
+  
+  .content {
+    padding: 0px;
+    .info {
+      height: 237px;
+      background-image: linear-gradient(-224deg, #05BCFD 0%, #4183EB 100%);
+      padding: 24px 30px 24px 20px;
+      position: relative;
+      font-family: MicrosoftYaHei;
+      header {
+        margin-bottom: 20px;
+        font-size: 18px;
+        color: white;
+        span {
+          margin-left: 10px;
+        }
+        div {
+          float: right;
+        }
+        .btn {
+          color: #2A99F2;
+          border-radius: 5px;
+          padding: 5px 15px;
+        }
       }
-      .content {
-        padding: 0px;
-        .info {
-          height: 237px;
-          background-image: linear-gradient(-224deg, #05BCFD 0%, #4183EB 100%);
-          padding: 24px 30px 24px 20px;
-          position: relative;
-          font-family: MicrosoftYaHei;
-          header {
-            margin-bottom: 20px;
-            font-size: 18px;
-            color: white;
-            span {
-              margin-left: 10px;
-            }
-            div {
-              float: right;
-            }
-            .btn {
-              color: #2A99F2;
-              border-radius: 5px;
-              padding: 5px 15px;
-            }
-          }
-          .pan {
-            float: left;
-            margin-right: 20px;
-            padding: 10px 20px;
-            height: 120px;
-            background: white;
-            color: #666666;
-            font-size: 12px;
-            line-height: 12px;
-            // box-shadow: 1px 1px 1px #666666;
-            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.35);
-            .bluetext {
-              color: rgb(42, 153, 242);
-            }
-            > span {
-              /*font-family: PingFangSC-Medium;*/
-              margin-bottom: 10px;
-              display: block;
-              user-select: none;
-              overflow: hidden;
-              text-overflow:ellipsis;
-              white-space: nowrap;
-              i {
-                font-style: normal;
-              }
-            }
-            label {
-              width: 24px;
-              height: 15px;
-              display: inline-block;
-              bottom: 18px;
-              right: 43px;
-              cursor: pointer;
-              vertical-align: sub;
-              background-image: url("../../assets/img/manage/closeEye.png");
-              &.close {
-                background-image: url("../../assets/img/manage/eye.png");
-              }
-            }
-          }
-          > h1 {
-            display: block;
-            position: absolute;
-            top: 86px;
-            left: 313px;
-            font-size: 63px;
-            color: rgba(0, 0, 0, 0.10);
-            user-select: none;
+      .pan {
+        float: left;
+        margin-right: 20px;
+        padding: 10px 20px;
+        height: 120px;
+        background: white;
+        color: #666666;
+        font-size: 12px;
+        line-height: 12px;
+        // box-shadow: 1px 1px 1px #666666;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.35);
+        .bluetext {
+          color: rgb(42, 153, 242);
+        }
+        > span {
+          /*font-family: PingFangSC-Medium;*/
+          margin-bottom: 10px;
+          display: block;
+          user-select: none;
+          overflow: hidden;
+          text-overflow:ellipsis;
+          white-space: nowrap;
+          i {
+            font-style: normal;
           }
         }
-        .arrears {
-          background-image: linear-gradient(-225deg, #FFC439 0%, #BD7F14 100%);
+        label {
+          width: 24px;
+          height: 15px;
+          display: inline-block;
+          bottom: 18px;
+          right: 43px;
+          cursor: pointer;
+          vertical-align: sub;
+          background-image: url("../../assets/img/manage/closeEye.png");
+          &.close {
+            background-image: url("../../assets/img/manage/eye.png");
+          }
         }
-        .error {
-          background-image: linear-gradient(-226deg, #F09292 0%, #C53C3C 100%);
+      }
+      > h1 {
+        display: block;
+        position: absolute;
+        top: 86px;
+        left: 313px;
+        font-size: 63px;
+        color: rgba(0, 0, 0, 0.10);
+        user-select: none;
+      }
+    }
+    .arrears {
+      background-image: linear-gradient(-225deg, #FFC439 0%, #BD7F14 100%);
+    }
+    .error {
+      background-image: linear-gradient(-226deg, #F09292 0%, #C53C3C 100%);
+    }
+    .close {
+      background: #D9D9D9;
+    }
+    .charts {
+      margin-top: -32px;
+      margin-left: 20px;
+      .body {
+        padding: 20px 19px;
+        margin-top: -17px;
+        background-color: white;
+        & > label {
+          font-family: "\5FAE\8F6F\96C5\9ED1";
+          font-size: 16px;
+          color: rgba(17, 17, 17, 0.95);
+          line-height: 14px;
+          display: block;
+          padding-bottom: 12px;
+          border-bottom: 1px solid #E9E9E9;
         }
-        .close {
-          background: #D9D9D9;
+        button {
+          outline: none;
+          padding: 5px 15px;
+          font-family: Microsoft Yahei, 微软雅黑;
+          font-size: 12px;
+          color: #FFFFFF;
+          line-height: 22px;
+          background: #2A99F2;
+          border-radius: 4.46px;
+          border: none;
+          margin-bottom: 16px;
+          //margin:20px 19px;
         }
-        .charts {
-          margin-top: -32px;
-          margin-left: 20px;
-          .body {
-            padding: 20px 19px;
-            margin-top: -17px;
-            background-color: white;
+        .flex {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          .item {
+            width: 100%;
+            margin-bottom: 50px;
+            //height: 444px;
             & > label {
-              font-family: "\5FAE\8F6F\96C5\9ED1";
+              font-family: "微软雅黑";
               font-size: 16px;
               color: rgba(17, 17, 17, 0.95);
               line-height: 14px;
               display: block;
               padding-bottom: 12px;
               border-bottom: 1px solid #E9E9E9;
-            }
-            button {
-              outline: none;
-              padding: 5px 15px;
-              font-family: Microsoft Yahei, 微软雅黑;
-              font-size: 12px;
-              color: #FFFFFF;
-              line-height: 22px;
-              background: #2A99F2;
-              border-radius: 4.46px;
-              border: none;
-              margin-bottom: 16px;
-              //margin:20px 19px;
-            }
-            .flex {
-              display: flex;
-              flex-wrap: wrap;
-              justify-content: space-between;
-              .item {
-                width: 100%;
-                margin-bottom: 50px;
-                //height: 444px;
-                & > label {
-                  font-family: "微软雅黑";
-                  font-size: 16px;
-                  color: rgba(17, 17, 17, 0.95);
-                  line-height: 14px;
-                  display: block;
-                  padding-bottom: 12px;
-                  border-bottom: 1px solid #E9E9E9;
-                  .timeText {
-                    font-family: MicrosoftYaHei;
-                    font-size: 14px;
-                    color: rgba(102, 102, 102, 0.75);
-                    line-height: 25px;
-                    float: right;
-                  }
-                }
-                button {
-                  font-size: 12px;
-                  margin-bottom: 0px;
-                  padding: 5px 15px;
-                  vertical-align: bottom;
-                  margin-right: 20px;
-                  float: right;
-                }
-                #in-icon::before {
-                  content: '';
-                  width: 8px;
-                  height: 8px;
-                  background-color: #3DBD7D;
-                  display: inline-block;
-                  border-radius: 5px;
-                  margin-right: 5px;
-                }
-                #out-icon::before {
-                  content: '';
-                  width: 8px;
-                  height: 8px;
-                  background-color: #2A99F2;
-                  display: inline-block;
-                  border-radius: 5px;
-                  margin-right: 5px;
-                }
+              .timeText {
+                font-family: MicrosoftYaHei;
+                font-size: 14px;
+                color: rgba(102, 102, 102, 0.75);
+                line-height: 25px;
+                float: right;
               }
             }
-          }
-          .echarts {
-            width: 100%;
-            height: 300px;
+            button {
+              font-size: 12px;
+              margin-bottom: 0px;
+              padding: 5px 15px;
+              vertical-align: bottom;
+              margin-right: 20px;
+              float: right;
+            }
+            #in-icon::before {
+              content: '';
+              width: 8px;
+              height: 8px;
+              background-color: #3DBD7D;
+              display: inline-block;
+              border-radius: 5px;
+              margin-right: 5px;
+            }
+            #out-icon::before {
+              content: '';
+              width: 8px;
+              height: 8px;
+              background-color: #2A99F2;
+              display: inline-block;
+              border-radius: 5px;
+              margin-right: 5px;
+            }
           }
         }
       }
+      .echarts {
+        width: 100%;
+        height: 300px;
+      }
     }
   }
-
   .setForm {
     display: flex;
     margin-top: 28px;

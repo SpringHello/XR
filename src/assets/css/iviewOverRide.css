@@ -49,7 +49,7 @@
 
 /* 通用弹窗底部文字提示 */
 .modal-text-hint-bottom{
-  color: rgb(153, 153, 153);
+    color: rgb(153, 153, 153);
     font-family: MicrosoftYaHei;
     font-size: 12px;
     line-height: 16px;
@@ -131,6 +131,10 @@ div.modal-header-border {
 }
 
 /* 公共样式库 */
+.btnnormal {
+  border: #2a99f2 solid 1px;
+  color: #2a99f2
+}
 
 .f24 {
   font-size: 24px;
