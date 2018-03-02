@@ -27,7 +27,7 @@
           <TabPane label="隧道VPN" name="VPN">
             <div class="operator-bar">
               <Button type="primary" @click="newTunnelVpn">创建隧道</Button>
-              <Button type="primary">重启隧道</Button>
+              <!--<Button type="primary" @click="restartVpn">重启隧道</Button>-->
               <Button type="primary" @click="delTunnelVpn">删除隧道</Button>
               <Table :columns="tunnelVpnColumns" :data="tunnelVpnData" @radio-change="tunnelRadio"
                      style="margin-top:20px;"></Table>
@@ -288,8 +288,7 @@
           key: '',
           connType: 'true',
           connTypeOptions: [
-            {label: '主动', key: 'true'},
-            {label: '被动', key: 'false'}
+            {label: '主动 ----> 被动', key: 'true'},
           ],
           IKE: '3des',
           IKEOptions: [
@@ -742,7 +741,7 @@
           {
             title: '创建时间',
             align: 'center',
-            key: 'createtime'
+            key: 'createtime2'
           }
         ],
         tunnelVpnData: [],
