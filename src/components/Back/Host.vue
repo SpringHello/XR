@@ -18,8 +18,8 @@
         </div>
         <div class="operator-bar">
           <Button type="primary" @click="startUp">一键启动</Button>
-          <Button type="primary" @click="joinBalance" :disabled="status!='全部'">加入负载均衡</Button>
-          <Button type="primary" @click="bindIP" :disabled="status!='全部'&&status!='关机'">绑定IP</Button>
+          <Button type="primary" @click="joinBalance" :disabled="status!='开启'">加入负载均衡</Button>
+          <Button type="primary" @click="bindIP" :disabled="status!='开启'&&status!='关机'">绑定IP</Button>
           <Dropdown style="margin-left: 10px;vertical-align: middle;" @on-click="hideEvent" class="moreOperation">
             <Button type="primary">
               更多操作
@@ -33,7 +33,7 @@
               <Dropdown-item name="renewal" v-if="status=='欠费'||status=='异常'" :disabled=true>主机续费</Dropdown-item>
               <Dropdown-item name="renewal" v-else>主机续费</Dropdown-item>
               <!-- 备份 -->
-              <Dropdown-item name="backup" v-if="status!='全部'&&status!='关机'" :disabled=true>
+              <Dropdown-item name="backup" v-if="status!='开启'&&status!='关机'" :disabled=true>
                 <Tooltip content="异常、欠费状态，快照不可用" placement="top">
                   创建快照
                 </Tooltip>
@@ -101,7 +101,7 @@
         <div>
           <Tabs type="card" :animated="false" v-model="status">
 
-            <Tab-pane :label="`全部(${openHost.length+waitHost.length})`" name="全部">
+            <Tab-pane :label="`开启(${openHost.length+waitHost.length})`" name="开启">
               <div class="flex-wrapper">
                 <!-- 创建中主机列表 -->
                 <div v-for="(item,index) in waitHost" :key="index" :class="{select:item.select}"
@@ -575,7 +575,7 @@
   import Vue from 'vue'
   export default {
     data() {
-      var status = '全部'
+      var status = '开启'
       if (sessionStorage.getItem('type')) {
         switch (sessionStorage.getItem('type')) {
           case 'open':
@@ -776,7 +776,7 @@
             this.errorHost = []
             this.waitHost = []
             this.currentHost = []
-            // 遍历各种主机类型，全部、关闭、欠费、错误、创建中
+            // 遍历各种主机类型，开启、关闭、欠费、错误、创建中
             for (var type in response.data.result) {
               var list = []
               var target = response.data.result[type]
@@ -816,7 +816,7 @@
       },
       startUp() {
         switch (this.status) {
-          case '全部':
+          case '开启':
             this.$Message.warning('请选择未开启的主机!')
             break
           case '异常':
@@ -953,7 +953,7 @@
             }
             break
           case 'backup':
-            if (this.status != '全部' && this.status != '关机') {
+            if (this.status != '开启' && this.status != '关机') {
               return
             }
             if (this.checkSelect()) {
@@ -996,7 +996,7 @@
       },
       checkSelect() {
         switch (this.status) {
-          case '全部':
+          case '开启':
             this.currentHost = this.openHost.filter(item => {
               return item.select == true
             })
