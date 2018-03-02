@@ -226,7 +226,7 @@
         allType: [{value: '', label: '全部'}, {value: 'host', label: '云主机'}, {value: 'ip', label: '弹性IP'}, {
           value: 'disk',
           label: '硬盘'
-        },{value: 'nat', label: 'NAT网关'}],
+        }, {value: 'nat', label: 'NAT网关'}],
         selectType: '',
         modal: false,
 
@@ -383,14 +383,16 @@
             }
           })
         }
-        var param = {
+        var params = {
           timeType: this.renewalType,
           timeValue: this.renewalTime,
           list: JSON.stringify(list)
         }
         this.loadingMessage = '创建订单中'
         this.loading = true
-        this.$http.get('continue/continueOrder.do', param).then(response => {
+        this.$http.get('continue/continueOrder.do', {
+          params
+        }).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({path: 'order'})
@@ -413,7 +415,7 @@
         if (time == '') {
           this.cost = '--'
         } else {
-          let url = `information/getYjPrice.do?duration=${this.renewalTime}&type=${this.renewalType}&ipIdArr=${this.requestParam.ipArray.toString()}&hostIdArr=${this.requestParam.hostArray.toString()}&diskArr=${this.requestParam.diskArray.toString()}`
+          let url = `information/getYjPrice.do?timeValue=${this.renewalTime}&timeType=${this.renewalType}&ipIdArr=${this.requestParam.ipArray.toString()}&hostIdArr=${this.requestParam.hostArray.toString()}&diskArr=${this.requestParam.diskArray.toString()}`
           this.$http.get(url)
             .then((response) => {
               if (response.status == 200 && response.data.status == 1) {

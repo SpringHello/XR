@@ -1,7 +1,7 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span class="title">云服务器 / 
+      <span class="title">云服务器 /
          <span>镜像</span>
       </span>
       <div id="content">
@@ -33,67 +33,67 @@
     </div>
     <Modal
       :scrollable="true"
-    v-model="showModal.createMirror"
-    @on-ok="ok">
-    <div slot="header" class="modal-header-border">
-      <span class="universal-modal-title">制作镜像</span>
-    </div>
-    <div class="universal-modal-content-flex">
-      <Form :model="formItem">
-        <FormItem label="主机">
-          <Select v-model="formItem.vmInfo">
-            <Option v-for="item in hostName" :value="`${item.rootdiskid}#${item.zoneid}`"
-                    :key="item.computerid">
-              {{item.computername}}
-            </Option>
-          </Select>
-        </FormItem>
-        <FormItem label="镜像名">
-          <Input v-model="formItem.mirrorName" placeholder="请输入"></Input>
-        </FormItem>
-        <FormItem label="镜像描述">
-          <Input v-model="formItem.mirrorDescription" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
-                placeholder="请输入..."></Input>
-        </FormItem>
-      </Form>
-    </div>
-    <div slot="footer" class="modal-footer-border">
-      <Button type="ghost" @click="cancel">取消</Button>
-      <Button type="primary"
-              :disabled="formItem.vmInfo==''||formItem.mirrorName==''||formItem.mirrorDescription==''"
-              @click="ok">确定
-      </Button>
-    </div>
+      v-model="showModal.createMirror"
+      @on-ok="ok">
+      <div slot="header" class="modal-header-border">
+        <span class="universal-modal-title">制作镜像</span>
+      </div>
+      <div class="universal-modal-content-flex">
+        <Form :model="formItem">
+          <FormItem label="主机">
+            <Select v-model="formItem.vmInfo">
+              <Option v-for="item in hostName" :value="`${item.rootdiskid}#${item.zoneid}`"
+                      :key="item.computerid">
+                {{item.computername}}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="镜像名">
+            <Input v-model="formItem.mirrorName" placeholder="请输入"></Input>
+          </FormItem>
+          <FormItem label="镜像描述">
+            <Input v-model="formItem.mirrorDescription" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
+                   placeholder="请输入..."></Input>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="cancel">取消</Button>
+        <Button type="primary"
+                :disabled="formItem.vmInfo==''||formItem.mirrorName==''||formItem.mirrorDescription==''"
+                @click="ok">确定
+        </Button>
+      </div>
     </Modal>
     <!-- 修改镜像弹窗 -->
     <Modal
       :scrollable="true"
-    v-model="showModal.modify"
-    @on-ok="mirrorModify">
-    <p slot="header" class="modal-header-border">
-      <span class="universal-modal-title">修改镜像</span>
-    </p>
-    <div class="universal-modal-content-flex">
-      <Form :model="mirrorModifyForm">
-        <FormItem label="镜像名称">
-          <Input v-model="mirrorModifyForm.name" placeholder="小于20位数字或字母小于20位数字或字母" type="textarea" :rows="3"></Input>
-        </FormItem>
-        <FormItem label="备注">
-          <Input v-model="mirrorModifyForm.remarks" type="textarea" :autosize="{minRows: 3,maxRows: 3}"
-                placeholder="小于20个字"></Input>
-        </FormItem>
-      </Form>
-    </div>
-    <div slot="footer" class="modal-footer-border">
-      <Button type="ghost" @click="this.showModal.modify=false">取消</Button>
-      <Button type="primary"
-              :disabled="mirrorModifyForm.name==''||mirrorModifyForm.remarks==''"
-              @click="mirrorModifySubm">确认修改
-      </Button>
-    </div>
+      v-model="showModal.modify"
+      @on-ok="mirrorModify">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">修改镜像</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="mirrorModifyForm">
+          <FormItem label="镜像名称">
+            <Input v-model="mirrorModifyForm.name" placeholder="小于20位数字或字母小于20位数字或字母" type="textarea" :rows="3"></Input>
+          </FormItem>
+          <FormItem label="备注">
+            <Input v-model="mirrorModifyForm.remarks" type="textarea" :autosize="{minRows: 3,maxRows: 3}"
+                   placeholder="小于20个字"></Input>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="this.showModal.modify=false">取消</Button>
+        <Button type="primary"
+                :disabled="mirrorModifyForm.name==''||mirrorModifyForm.remarks==''"
+                @click="mirrorModifySubm">确认修改
+        </Button>
+      </div>
     </Modal>
 
-     <!-- 删除镜像弹窗 -->
+    <!-- 删除镜像弹窗 -->
     <Modal v-model="showModal.delmirror" :scrollable="true" :closable="false" :width="390">
       <div class="modal-content-s">
         <Icon type="android-alert" class="yellow f24 mr10"></Icon>
@@ -138,11 +138,11 @@
             width: 200,
             render: (h, params) => {
               return h('Tooltip', {
-                props: {
-                  content: params.row.templatename,
-                  placement: 'top'
-                }
-              },
+                  props: {
+                    content: params.row.templatename,
+                    placement: 'top'
+                  }
+                },
                 params.row.templatename
               )
             }
@@ -154,11 +154,11 @@
             ellipsis: true,
             render: (h, params) => {
               return h('Tooltip', {
-                props: {
-                  content: params.row.templatedescript,
-                  placement: 'top'
-                }
-              },
+                  props: {
+                    content: params.row.templatedescript,
+                    placement: 'top'
+                  }
+                },
                 params.row.templatedescript
               )
             }
@@ -169,11 +169,11 @@
             width: 200,
             render: (h, params) => {
               return h('Tooltip', {
-                props: {
-                  content: params.row.ostypename,
-                  placement: 'top'
-                }
-              },
+                  props: {
+                    content: params.row.ostypename,
+                    placement: 'top'
+                  }
+                },
                 params.row.ostypename
               )
             }
@@ -224,11 +224,11 @@
             align: 'center',
             render: (h, params) => {
               return h('Tooltip', {
-                props: {
-                  content: params.row.templatename,
-                  placement: 'top'
-                }
-              },
+                  props: {
+                    content: params.row.templatename,
+                    placement: 'top'
+                  }
+                },
                 params.row.templatename
               )
             }
@@ -239,11 +239,11 @@
             ellipsis: true,
             render: (h, params) => {
               return h('Tooltip', {
-                props: {
-                  content: params.row.templatedescript,
-                  placement: 'top'
-                }
-              },
+                  props: {
+                    content: params.row.templatedescript,
+                    placement: 'top'
+                  }
+                },
                 params.row.templatedescript
               )
             }
@@ -256,11 +256,11 @@
                 return '创建中'
               }
               return h('Tooltip', {
-                props: {
-                  content: params.row.ostypename,
-                  placement: 'top'
-                }
-              },
+                  props: {
+                    content: params.row.ostypename,
+                    placement: 'top'
+                  }
+                },
                 params.row.ostypename
               )
             }
@@ -303,36 +303,36 @@
           },
           {
             title: '操作',
-              key: 'action',
-              align: 'center',
-              width: 200,
-              render: (h, params) => {
-                return h('div', [h('span', {
-                  style: {
-                      marginRight: '5px',
-                      color: '#2A99F2',
-                      cursor: 'pointer'
-                  },
-                  on: {
-                      click: () => {
-                        this.ownMirrorCreathost(params.row)
-                      }
+            key: 'action',
+            align: 'center',
+            width: 200,
+            render: (h, params) => {
+              return h('div', [h('span', {
+                style: {
+                  marginRight: '5px',
+                  color: '#2A99F2',
+                  cursor: 'pointer'
+                },
+                on: {
+                  click: () => {
+                    this.ownMirrorCreathost(params.row)
                   }
+                }
               }, '生成主机'),
-              h('span', {
+                h('span', {
                   style: {
-                      color: '#2A99F2',
-                      cursor: 'pointer'
+                    color: '#2A99F2',
+                    cursor: 'pointer'
                   },
                   on: {
-                      click: () => {
-                        this.showModal.modify = true
-                        this.systemtemplateid = params.row.systemtemplateid
-                      }
+                    click: () => {
+                      this.showModal.modify = true
+                      this.systemtemplateid = params.row.systemtemplateid
+                    }
                   }
-              }, '修改')]);
-              }
+                }, '修改')]);
             }
+          }
         ],
         hostName: [],
         formItem: {
@@ -353,9 +353,9 @@
       this.inter()
     },
     methods: {
-       // 查询系统镜像
+      // 查询系统镜像
       systemMirrorList() {
-       var url = `information/listTemplates.do?user=0`
+        var url = `information/listTemplates.do?user=0`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.systemData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
@@ -368,14 +368,14 @@
           }
         })
       },
-       // 查询已关闭主机
+      // 查询已关闭主机
       closeHostList() {
-        var vmcloselist =[]
+        var vmcloselist = []
         this.hostName = []
         this.$http.get(`information/listVirtualMachines.do`)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              if(response.data.result.open){
+              if (response.data.result.open) {
                 vmcloselist = response.data.result.close.list
               }
               this.hostName = vmcloselist
@@ -410,7 +410,7 @@
       mirrorModify() {
         this.showModal.modify = false
       },
-       filter(value) {
+      filter(value) {
         if (value != '全部') {
           this.systemData = this.originData.filter((item) => {
             return item.ostypename.toLowerCase().includes(value)
@@ -462,7 +462,7 @@
         })
       },
       deleteSelection() {
-         if (this.selections == null) {
+        if (this.selections == null) {
           this.$Message.warning('请选择一个镜像')
           return
         }
@@ -487,6 +487,10 @@
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.ownMirrorList()
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
           }
         })
       },
@@ -502,13 +506,13 @@
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.ownMirrorList()
-           this.$Message.success(response.data.message)
+            this.$Message.success(response.data.message)
           } else {
-           this.$message.error(response.data.message)
+            this.$message.error(response.data.message)
           }
         })
       },
-       // 区域变更，刷新数据
+      // 区域变更，刷新数据
       refresh(){
         this.ownMirrorList()
         this.systemMirrorList()

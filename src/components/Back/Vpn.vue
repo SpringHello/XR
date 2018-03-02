@@ -27,7 +27,7 @@
           <TabPane label="隧道VPN" name="VPN">
             <div class="operator-bar">
               <Button type="primary" @click="newTunnelVpn">创建隧道</Button>
-              <Button type="primary">重启隧道</Button>
+              <!--<Button type="primary">重启隧道</Button>-->
               <Button type="primary" @click="delTunnelVpn">删除隧道</Button>
               <Table :columns="tunnelVpnColumns" :data="tunnelVpnData" @radio-change="tunnelRadio"
                      style="margin-top:20px;"></Table>

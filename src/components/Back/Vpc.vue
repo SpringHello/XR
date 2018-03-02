@@ -57,8 +57,10 @@
                   </div>
                 </div>
                 <div class="card-bottom">
-                  <Button type="primary" class="btn-bgwhite" @click="restartVpc(item)">重启</Button>
-                  <Button type="primary" class="btn-bgwhite" @click="manage(item)">管理</Button>
+                  <div v-if="item.status!=2">
+                    <Button type="primary" class="btn-bgwhite" @click="restartVpc(item)">重启</Button>
+                    <Button type="primary" class="btn-bgwhite" @click="manage(item)">管理</Button>
+                  </div>
                 </div>
               </div>
             </div>
