@@ -1,5 +1,9 @@
 <template>
   <div id="background">
+    <Spin fix v-show="loading">
+      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <div>{{loadingMessage}}</div>
+    </Spin>
     <div id="wrapper">
       <span class="title">
         云网络 /
@@ -24,22 +28,16 @@
             @on-ok="delElasticIP">
             <Button type="primary">释放弹性IP</Button>
           </Poptip>
-          <!--<Button type="primary">创建端口映射</Button>
-          <Dropdown>
+          <Dropdown @on-click="hideEvent">
             <Button type="primary">
               更多操作
               <Icon type="arrow-down-b"></Icon>
             </Button>
-            <DropdownMenu slot="list">
-              <DropdownItem>调整带宽</DropdownItem>
-              <DropdownItem>绑定到VPC</DropdownItem>
-              <DropdownItem>解绑云主机</DropdownItem>
-              <DropdownItem>重命名</DropdownItem>
-              <DropdownItem>续费</DropdownItem>
-              <DropdownItem>修改计费模式</DropdownItem>
-              <DropdownItem>删除</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>-->
+            <Dropdown-menu slot="list">
+              <Dropdown-item name="adjust">调整带宽</Dropdown-item>
+              <Dropdown-item name="charges">资费变更</Dropdown-item>
+            </Dropdown-menu>
+          </Dropdown>
         </div>
         <div class="table-content">
           <Table :columns="ipColumns" :data="ipData" @radio-change="selectIp"></Table>
@@ -140,6 +138,64 @@
         <Button type="primary" @click="bindNATSubmit">确认绑定</Button>
       </div>
     </Modal>
+    <!-- 变更资费 -->
+    <Modal v-model="showModal.charges" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title"> 变更资费(资费变更适用于按需收费转包月/年)</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="chargesForm">
+          <Form-item label="购买方式" style="width: 80%">
+            <div style="display: flex;font-size:0px;">
+              <Select v-model="chargesForm.timeType" style="width:200px;margin-right: 25px;display: inline-block"
+                      @on-change="chargesForm.timeValue=''">
+                <Option v-for="item in customTimeOptions.renewalType" v-if="item.value!='current'" :value="item.value"
+                        :key="item.value">{{ item.label }}
+                </Option>
+              </Select>
+              <Select v-model="chargesForm.timeValue" style="width:200px;" @on-change="queryChargePrice">
+                <Option v-for="item in customTimeOptions[chargesForm.timeType]" :value="item.value" :key="item.value">
+                  {{item.label}}
+                </Option>
+              </Select>
+            </div>
+          </Form-item>
+          <Form-item label="资费" style="width: 80%">
+            <span style="font-family: MicrosoftYaHei;font-size: 24px;color: #2A99F2;line-height: 43px;">￥{{chargesForm.cost}}</span>
+            <span style="font-family: MicrosoftYaHei;font-size: 24px;color: #2A99F2;line-height: 43px;" v-if="chargesForm.discounts">（已优惠￥{{chargesForm.discounts}}）</span>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.charges = false">取消</Button>
+        <Button type="primary" :disabled="chargesForm.timeValue==''" @click="chargesOK">确定
+        </Button>
+      </div>
+    </Modal>
+    <!-- 带宽调整 -->
+    <Modal v-model="showModal.adjust" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">带宽调整</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="adjustForm" label-position="left" >
+          <Form-item label="带宽" style="width: 80%">
+            <div style="width:300px;display: inline-block;vertical-align: middle;margin-left: 11px">
+              <Slider v-model='adjustForm.brand' show-input :min='adjustForm.minBrand'></Slider>
+            </div>
+            <span>Mbps</span>
+          </Form-item>
+          <Form-item label="资费" style="width: 80%">
+            <span style="font-family: MicrosoftYaHei;font-size: 24px;color: #2A99F2;line-height: 43px;">￥{{adjustForm.cost}}</span>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.adjust = false">取消</Button>
+        <Button type="primary" @click="adjustOK" :disabled="adjustForm.minBrand==adjustForm.brand">确定
+        </Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -160,12 +216,32 @@
     },
     data(){
       return {
+        loadingMessage: '',
+        loading: false,
         // 当前选中项
         select: null,
         showModal: {
           newIPModal: false,
           bindIPForHost: false,
-          bindIPForNAT: false
+          bindIPForNAT: false,
+          charges: false,
+          adjust: false
+        },
+        chargesForm: {
+          timeType: '',
+          timeValue: '',
+          cost: '0',
+          discounts: null,
+        },
+        adjustForm: {
+          minBrand: 0,
+          brand: 0,
+          cost: '0'
+        },
+        customTimeOptions: {
+          renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}, {label: '实时', value: 'current'}],
+          year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}],
+          month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '6月', value: 6}],
         },
         ipColumns: [
           {
@@ -467,7 +543,11 @@
           timeType: this.newIPForm.timeType,
           zoneId: $store.state.zone.zoneid
         }).then(response => {
-          this.newIPForm.cost = response.data.cost
+          if (response.status == 200) {
+            this.newIPForm.cost = response.data.cost
+          } else {
+            this.newIPForm.cost = '正在计算'
+          }
         })
       }),
       // 新建IP提交订单
@@ -664,7 +744,99 @@
             })
           }
         })
-      }
+      },
+      hideEvent(type){
+        switch (type) {
+          case 'adjust': {
+            this.adjust()
+            break
+          }
+          case 'charges': {
+            this.charges()
+            break
+          }
+        }
+      },
+      adjust(){
+        if (this.select) {
+          this.adjustForm.minBrand = this.select.bandwith
+          this.adjustForm.brand = this.select.bandwith
+          this.showModal.adjust = true
+        } else{
+          this.$Message.warning('请选择1个弹性IP')
+          return false
+        }
+      },
+      adjustOK(){
+        this.showModal.adjust = false
+        let url = `continue/UpPublicBnadwith.do?bandwith=${this.adjustForm.brand}&publicIpId=${this.select.id}`
+        this.$http.get(url).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$router.push({path: 'order'})
+            } else {
+              this.$message.error({
+               content: response.data.message
+              })
+            }
+          }
+        )
+      },
+      charges(){
+        if (this.select) {
+          if (this.select.caseType != 3) {
+            this.$Message.info("实时计费才能变更资费")
+            return
+          }
+          this.chargesForm.discounts = null
+          this.showModal.charges = true
+        } else {
+          this.$Message.warning('请选择1个弹性IP')
+          return false
+        }
+      },
+      chargesOK(){
+        this.showModal.charges = false
+        this.loadingMessage = '正在变更资费，请稍候'
+        this.loading = true
+        var url = `continue/changeMoney.do?id=${this.select.id}&timeType=${this.chargesForm.timeType}&timeValue=${this.chargesForm.timeValue}&type=2`
+        this.$http.get(url).then(response => {
+            this.loading = false
+            if (response.status == 200 && response.data.status == 1) {
+              this.$router.push({path: 'order'})
+            }
+          }
+        )
+      },
+      queryAdjustPrice: debounce(500, function () {
+        this.$http.get(`continue/countMoneyByUpPublicBandwith.do?brandwith=${this.adjustForm.brand}&publicIpId=${this.select.id}`).then(response => {
+            if (response.status == 200) {
+              this.adjustForm.cost = response.data.result
+            } else {
+              this.adjustForm.cost = '正在计算'
+            }
+          }
+        )
+      }),
+      queryChargePrice(){
+        this.$http.post('device/queryIpPrice.do', {
+          brand: this.select.bandwith + '',
+          value: this.chargesForm.timeType,
+          timevalue: this.chargesForm.timeValue + '',
+          zoneId: this.select.zoneid
+        }).then(response => {
+            if (response.status == 200) {
+              this.chargesForm.cost = response.data.cost
+              if (response.data.coupon) {
+                this.chargesForm.discounts = response.data.coupon
+              } else {
+                this.chargesForm.discounts = null;
+              }
+            } else{
+              this.chargesForm.cost = '正在计算'
+            }
+          }
+        )
+      },
     },
     watch: {
       // 监听区域变换
@@ -673,6 +845,10 @@
           this.refresh()
         },
         deep: true
+      },
+      'adjustForm.brand'(value, oldValue){
+        this.adjustForm.cost = '正在计算'
+        this.queryAdjustPrice()
       }
     }
   }
