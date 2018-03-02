@@ -159,7 +159,7 @@
                 item.loading = false
 
               })
-              var host = [], ip = [], disk = [],nat = []
+              var host = [], ip = [], disk = [], nat = []
               response.data.result.forEach(item => {
                 switch (item.type) {
                   case 'host':
@@ -173,6 +173,7 @@
                    break;
                     case 'nat':
                         nat.push(item)
+                    break
                 }
               })
               this.allList = response.data.result
