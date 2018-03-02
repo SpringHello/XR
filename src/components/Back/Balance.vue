@@ -21,7 +21,7 @@
         <div class="operator-bar">
           <Button type="primary" @click="creatbalancemodal.showBalanceName = true">创建负载均衡</Button>
           <Button type="primary" style="margin-left: 8px;" @click="bind">绑定虚拟机</Button>
-         <!-- <Button type="primary" style="margin-left: 8px;" @click="unbindHost">解绑虚拟机</Button> -->
+          <Button type="primary" style="margin-left: 8px;" @click="unbindHost">解绑虚拟机</Button> 
           <Button type="primary" style="margin-left: 8px;" @click="delBalance">删除</Button>
         </div>
         <!--负载均衡表-->
