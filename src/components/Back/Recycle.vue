@@ -41,6 +41,11 @@
                   <Table :columns="columns" :data="diskList" @on-selection-change="selectionChange"></Table>
                 </div>
               </Tab-pane>
+              <Tab-pane label="NAT网关" name="NAT网关">
+                <div class="all">
+                  <Table :columns="columns" :data="natList" @on-selection-change="selectionChange"></Table>
+                </div>
+              </Tab-pane>
             </Tabs>
           </div>
         </div>
@@ -125,6 +130,8 @@
         ipSelection: [],
         diskList: [],
         diskSelection: [],
+        natList: [],
+        natSelection: [],
         keyWords: '',
       }
     },
@@ -152,7 +159,7 @@
                 item.loading = false
 
               })
-              var host = [], ip = [], disk = []
+              var host = [], ip = [], disk = [],nat = []
               response.data.result.forEach(item => {
                 switch (item.type) {
                   case 'host':
@@ -163,12 +170,16 @@
                     break;
                   case 'disk':
                     disk.push(item)
+                   break;
+                    case 'nat':
+                        nat.push(item)
                 }
               })
               this.allList = response.data.result
               this.hostList = host
               this.ipList = ip
               this.diskList = disk
+              this.natList = nat
             }
           })
 
@@ -186,6 +197,9 @@
             break
           case '硬盘':
             this.diskSelection = selections
+            break
+          case 'NAT网关':
+            this.natSelection = selections
             break
         }
       },
@@ -219,6 +233,9 @@
             break
           case '硬盘':
             operatingList = this.diskSelection
+            break
+          case 'NAT网关':
+            operatingList = this.natSelection
             break
         }
         var arr = []
@@ -270,6 +287,9 @@
             break
           case '硬盘':
             operatingList = this.diskSelection
+            break
+          case 'NAT网关':
+            operatingList = this.natSelection
             break
         }
         var arr = []
