@@ -18,8 +18,8 @@
         </div>
         <div class="operator-bar">
           <Button type="primary" @click="startUp">一键启动</Button>
-          <Button type="primary" @click="joinBalance" :disabled="status!='全部'">加入负载均衡</Button>
-          <Button type="primary" @click="bindIP" :disabled="status!='全部'&&status!='关机'">绑定IP</Button>
+          <Button type="primary" @click="joinBalance" :disabled="status!='开启'">加入负载均衡</Button>
+          <Button type="primary" @click="bindIP" :disabled="status!='开启'&&status!='关机'">绑定IP</Button>
           <Dropdown style="margin-left: 10px;vertical-align: middle;" @on-click="hideEvent" class="moreOperation">
             <Button type="primary">
               更多操作
@@ -27,13 +27,13 @@
             </Button>
             <Dropdown-menu slot="list">
               <!-- 重命名 -->
-              <!-- <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
-              <Dropdown-item name="rename" v-else>重命名</Dropdown-item> -->
+              <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
+              <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
               <!-- 续费 -->
               <Dropdown-item name="renewal" v-if="status=='欠费'||status=='异常'" :disabled=true>主机续费</Dropdown-item>
               <Dropdown-item name="renewal" v-else>主机续费</Dropdown-item>
               <!-- 备份 -->
-              <Dropdown-item name="backup" v-if="status!='全部'&&status!='关机'" :disabled=true>
+              <Dropdown-item name="backup" v-if="status!='开启'&&status!='关机'" :disabled=true>
                 <Tooltip content="异常、欠费状态，快照不可用" placement="top">
                   创建快照
                 </Tooltip>
@@ -101,7 +101,7 @@
         <div>
           <Tabs type="card" :animated="false" v-model="status">
 
-            <Tab-pane :label="`全部(${openHost.length+waitHost.length})`" name="全部">
+            <Tab-pane :label="`开启(${openHost.length+waitHost.length})`" name="开启">
               <div class="flex-wrapper">
                 <!-- 创建中主机列表 -->
                 <div v-for="(item,index) in waitHost" :key="index" :class="{select:item.select}"
@@ -155,11 +155,11 @@
                       <div class="foot">
                         <span>{{item.createtime}}</span>
                         <Button @click.stop="manage(item,'normal')" style="margin-left:55px;" :disabled="!auth"
-                                :class="{btnnormal:auth}">管理
+                                :class="{btnnormal:auth,_hover:auth}">管理
                         </Button>
                         <Button v-if="!auth" :disabled="!auth">连接主机</Button>
                         <a v-else :href="item.connecturl" target="_blank"
-                           style="line-height: 30px;border: 1px solid;border-radius: 4px;width: 76px;background:#2A99F2;color:#fff">连接主机</a>
+                           style="line-height: 30px;border: 1px solid;border-radius: 4px;width: 76px;" class="_hover">连接主机</a>
                       </div>
                     </div>
                   </Card>
@@ -292,7 +292,7 @@
                       <div class="foot" style="background-color: #D9D9D9">
                         <span style="color: rgba(17,17,17,0.65);">{{item.createtime}}</span>
                         <Button @click.stop="manage(item,'close')" style="margin-left:55px;" :disabled="!auth"
-                                :class="{btnnormal:auth}">管理
+                                :class="{btnnormal:auth,_hover:auth}">管理
                         </Button>
                       </div>
                     </div>
@@ -338,7 +338,7 @@
         <span class="universal-modal-title">创建快照</span>
       </p>
       <div class="universal-modal-content-flex">
-        <p class="mb20">您正为<span class="bluetext">主机名称</span>创建快照</p>
+        <p class="mb20">您正为<span class="bluetext">{{currentHostname}}</span>创建快照</p>
         <Form :model="backupForm" ref="backupForm">
           <FormItem label="快照名称">
             <Input v-model="backupForm.backupName" placeholder="请输入2-4094范围内任意数字"></Input>
@@ -354,18 +354,17 @@
         </p>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <!-- <Button type="primary" class="btn-cancel" @click="showModal.backup=false">取消</Button> -->
+        <Button type="ghost" @click="showModal.backup=false">取消</Button>
         <Button type="primary" :disabled="backupForm.backupName==''" @click="backup">创建快照</Button>
       </div>
     </Modal>
     <!-- 主机重命名弹窗 -->
-    <!-- <Modal v-model="showModal.rename" width="590" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        主机重命名
+    <Modal v-model="showModal.rename" width="590" :scrollable="true">
+      <div slot="header" class="modal-header-border">
+        <span class="universal-modal-title">主机重命名</span>
       </div>
-      <div style="width:60%">
-        <Form :model="renameForm" :label-width="80">
+      <div class="universal-modal-content-flex">
+        <Form :model="renameForm">
           <Form-item label="主机名">
             <Input v-model="renameForm.hostName" placeholder="请输入新主机名" :maxlength="15"></Input>
           </Form-item>
@@ -376,21 +375,21 @@
         <Button type="primary" :disabled="renameForm.hostName==''" @click="rename">确定
         </Button>
       </div>
-    </Modal> -->
+    </Modal>
 
     <!-- 生成镜像弹窗 -->
     <Modal v-model="showModal.mirror" width="590" :scrollable="true">
-      <div slot="header" class="modal-header-border">
-        制作镜像
+      <div slot="header" class="modal-header-border" >
+        <span class="universal-modal-title">制作镜像</span>
       </div>
       <div class="universal-modal-content-flex">
-        <Form :model="mirrorForm" :label-width="80">
-          <Form-item label="镜像名">
-            <Input v-model="mirrorForm.mirrorName" placeholder="请输入备份名"></Input>
+        <Form :model="mirrorForm">
+          <Form-item label="镜像名称">
+            <Input v-model="mirrorForm.mirrorName" placeholder="小于20位数字或字母小于20位数字或字母" type="textarea" :rows="3"></Input>
           </Form-item>
-          <Form-item label="镜像描述">
-            <Input v-model="mirrorForm.description" type="textarea" :autosize="{minRows: 3,maxRows: 5}"
-                   placeholder="请输入..."></Input>
+          <Form-item label="备注">
+            <Input v-model="mirrorForm.description" type="textarea" :autosize="{minRows: 3,maxRows: 3}"
+                   placeholder="小于20位数字、字母、中文及下划线（选填）"></Input>
           </Form-item>
         </Form>
       </div>
@@ -403,12 +402,11 @@
 
     <!-- 绑定静态IP -->
     <Modal v-model="showModal.bindIP" width="590" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        绑定静态IP
+      <div slot="header" class="modal-header-border">
+        <span class="universal-modal-title">绑定静态IP</span>
       </div>
-      <div style="width:60%">
-        <Form :model="bindForm" :label-width="80">
+      <div class="universal-modal-content-flex">
+        <Form :model="bindForm">
           <Form-item label="公网IP">
             <Select v-model="bindForm.publicIP" placeholder="请选择">
               <Option v-for="(item,index) in publicIPList" :key="index" :value="item.publicipid">
@@ -418,7 +416,7 @@
           </Form-item>
         </Form>
       </div>
-      <div slot="footer">
+      <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.bindIP = false">取消</Button>
         <Button type="primary" :disabled="bindForm.publicIP==''" @click="bind">确定
         </Button>
@@ -457,94 +455,60 @@
       </p>
       <div class="universal-modal-content-flex">
         <Form>
-          <FormItem label="付费类型 :">
-            <Select v-model="renewalType">
-              <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}
-              </Option>
-            </Select>
-          </FormItem>
-          <FormItem label="付费时长 :">
-            <Select v-model="renewalTime">
-              <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
-              </Option>
-            </Select>
-          </FormItem>
+         <FormItem label="付费类型 :">
+          <Select v-model="renewalType">
+            <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}
+            </Option>
+          </Select>
+        </FormItem>
+         <FormItem label="付费时长 :">
+          <Select v-model="renewalTime">
+            <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
+            </Option>
+          </Select>
+        </FormItem>
         </Form>
-        <div>
-          应付费: <span style="color: #2d8cf0;">￥{{cost}}</span>
+        <div style="font-size:16px;">
+          应付费:<span style="color: #2b85e4; text-indent:4px;display:inline-block">￥{{cost}}</span>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <!-- <div type="primary" class="btn-cancel" @click="modal=false">取消</div> -->
+        <!-- <div type="ghost" @click="modal=false">取消</div> -->
         <Button type="primary" @click="renewalok">确认续费</Button>
       </div>
     </Modal>
     <!-- 欠费，续费弹窗 -->
     <Modal v-model="showModal.Renew" width="590" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        续费主机<br>（温馨提示：当前资源已欠费，如需激活需要1小时费用）
+      <div slot="header" class="modal-header-border">
+        <span class="universal-modal-title">续费主机</span>
       </div>
-      <div style="width:69%">
-        <Form :model="RenewForm" :label-width="80" label-position="left">
+      <div class="universal-modal-content-flex">
+        <p style="margin-bottom: 20px">温馨提示：当前资源已欠费，如需激活需要<span class="bluetext">1小时费用</span></p>
+        <Form :model="RenewForm" label-position="left">
           <Form-item label="所需资费">
             <span style="font-size: 25px;color: #2b85e4;">￥{{RenewForm.cost}}</span>
           </Form-item>
         </Form>
       </div>
-      <div slot="footer">
+      <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.Renew = false">取消</Button>
         <Button type="primary" @click="renewOk">确定
         </Button>
       </div>
     </Modal>
-
-    <!-- <Modal v-model="showModal.newSnapshot" width="550" :scrollable="true">
-      <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">创建快照</span>
-      </p>
-      <div class="universal-modal-content-flex">
-        <p class="mb20">您正为<span class="bluetext">主机名称</span>创建快照</p>
-        <Form :model="creatSnapsForm" ref="creatSnapsForm" :rules="ruleSnaps">
-          <FormItem label="选择主机" prop="host">
-            <Select v-model="creatSnapsForm.host">
-              <Option v-for="item in vmList" :value="item.computerid" :key="item.computerid">{{ item.computername
-                }}
-              </Option>
-            </Select>
-          </FormItem>
-          <FormItem label="快照名称" prop="name">
-            <Input v-model="creatSnapsForm.name" placeholder="请输入2-4094范围内任意数字"></Input>
-          </FormItem>
-          <FormItem label="是否保存内存信息">
-            <RadioGroup v-model="creatSnapsForm.radio">
-              <Radio label="1">保存</Radio>
-              <Radio label="0">不保存</Radio>
-            </RadioGroup>
-          </FormItem>
-        </Form>
-        <p style="font-size: 12px;color: rgba(153,153,153,0.65);">提示：云主机快照为每块磁盘提供<span>8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点
-        </p>
-      </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button type="primary" class="btn-cancel" @click="cancleSnaps('creatSnapsForm')">取消</Button>
-        <Button type="primary" @click="NewSnapsSubmit('creatSnapsForm')">创建快照</Button>
-      </div>
-    </Modal> -->
     <!-- 认证弹窗 -->
-    <Modal v-model="showModal.selectAuthType" width="590" ::scrollable="true" :styles="{top:'172px'}">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        选择认证方式
+    <Modal v-model="showModal.selectAuthType" width="590" :scrollable="true" :styles="{top:'172px'}">
+      <div slot="header" class="modal-header-border">
+        <span class="universal-modal-title">选择认证方式</span>
       </div>
-      <div style="display: flex">
-        <div class="selectAuthType" style="border-right: 1px solid #D9D9D9">
+      <div class="select-auth">
+        <div class="content">
           <h2>个人用户</h2>
           <p><i></i>可以使用睿云所有资源</p>
           <p><i></i>个人级别的资源建立额度</p>
           <p><i></i>最长一个月的免费试用时间</p>
         </div>
-        <div class="selectAuthType">
+        <div class="content">
           <h2>企业用户</h2>
           <p><i></i>可以使用睿云所有资源</p>
           <p><i></i>企业级无限量的资源建立额度</p>
@@ -561,7 +525,7 @@
         </div>
       </div>
       <div slot="footer">
-        <p>提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：028-23242423</p>
+        <p class="modal-text-hint-bottom">提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：028-23242423</p>
       </div>
     </Modal>
   </div>
@@ -575,7 +539,7 @@
   import Vue from 'vue'
   export default {
     data() {
-      var status = '全部'
+      var status = '开启'
       if (sessionStorage.getItem('type')) {
         switch (sessionStorage.getItem('type')) {
           case 'open':
@@ -593,7 +557,6 @@
         sessionStorage.removeItem('type')
       }
       return {
-        // selectedHostname: '',
         cost: '--',
         listLoadBalanceRole: [],
         openHost: [],
@@ -602,6 +565,7 @@
         errorHost: [],
         waitHost: [],
         currentHost: [],
+        currentHostname: [],
         status,
         showModal: {
           backup: false,
@@ -636,13 +600,7 @@
         timeOptions: {
           renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
           renewalTime: [],
-          year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}, {
-            label: '4年',
-            value: 4
-          }, {label: '5年', value: 5}, {label: '6年', value: 6}, {label: '7年', value: 7}, {
-            label: '8年',
-            value: 9
-          }, {label: '9年', value: 9}, {label: '10年', value: 10}, {label: '11年', value: 11}, {label: '12年', value: 12}],
+          year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}],
           month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '3月', value: 3}, {
             label: '4月',
             value: 4
@@ -755,13 +713,13 @@
             for (var type of ['open', 'close', 'arrears', 'error']) {
               var list = []
               var target = response.data.result[type] || {list: []}
-              console.log(target)
+              // console.log(target)
               for (var index in target.list) {
                 var host = merge(this[`${type}Host`][index] || {}, target.list[index], {_select: this[`${type}Host`][index] ? this[`${type}Host`][index]._select : false})
                 list.push(host)
               }
               this[`${type}Host`] = list
-              console.log(this[`${type}Host`])
+              // console.log(this[`${type}Host`])
             }
           }
         })
@@ -776,7 +734,7 @@
             this.errorHost = []
             this.waitHost = []
             this.currentHost = []
-            // 遍历各种主机类型，全部、关闭、欠费、错误、创建中
+            // 遍历各种主机类型，开启、关闭、欠费、错误、创建中
             for (var type in response.data.result) {
               var list = []
               var target = response.data.result[type]
@@ -793,7 +751,6 @@
         if (!this.auth) {
           return
         }
-        // this.selectedHostname =item.computername
         this.$set(item, 'select', !item.select)
       },
       createHost() {
@@ -816,7 +773,7 @@
       },
       startUp() {
         switch (this.status) {
-          case '全部':
+          case '开启':
             this.$Message.warning('请选择未开启的主机!')
             break
           case '异常':
@@ -953,12 +910,13 @@
             }
             break
           case 'backup':
-            if (this.status != '全部' && this.status != '关机') {
+            if (this.status != '开启' && this.status != '关机') {
               return
             }
             if (this.checkSelect()) {
               this.backupForm.backupName = ''
               this.backupForm.description = ''
+              this.currentHostname = this.currentHost[0].computername
               this.showModal.backup = true
             }
             break
@@ -996,7 +954,7 @@
       },
       checkSelect() {
         switch (this.status) {
-          case '全部':
+          case '开启':
             this.currentHost = this.openHost.filter(item => {
               return item.select == true
             })
@@ -1173,6 +1131,15 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+ .select-auth {
+   display: flex;
+   justify-content: space-around;
+   .content{
+     p{
+       line-height: 18px;
+     }
+   }
+ }
   .btnnormal {
     border: #2a99f2 solid 1px;
     color: #2a99f2
@@ -1325,6 +1292,12 @@
       left: 50%;
       width: 125px;
       transform: translate(-50%, -50%);
+    }
+    ._hover {
+      &:hover{
+        background: #2A99F2;
+        color: #FFFFFF
+      }
     }
   }
 </style>

@@ -34,7 +34,7 @@
       </p>
       <div class="universal-modal-content-flex">
         <Form :model="diskForm" :rules="newRuleValidate" ref="newDisk">
-          <Form-item label="硬盘名称" prop="diskName" style="width: 65%">
+          <Form-item label="硬盘名称" prop="diskName">
             <Input v-model="diskForm.diskName" placeholder="小于20位数字或字母"></Input>
           </Form-item>
 <!--          <Form-item label="购买数量" style="width: 65%">
@@ -44,12 +44,12 @@
               <p @click="diskForm.quantity+=1"><i style="transform: translateX(-2px) rotate(311deg)"></i></p>
             </div>
           </Form-item>-->
-          <Form-item label="区域" prop="diskArea">
+    <!--      <Form-item label="区域" prop="diskArea">
             <Select v-model="diskForm.diskArea" placeholder="请选择">
               <Option v-for="item in diskAreaList" :key="item.zoneid" :value="item.zoneid">{{ item.zonename }}
               </Option>
             </Select>
-          </Form-item>
+          </Form-item>-->
           <Form-item label="类型" prop="diskType">
             <Select v-model="diskForm.diskType" placeholder="请选择">
               <Option v-for="item in diskTypeList" :key="item.value" :value="item.value">{{ item.label }}
@@ -666,8 +666,8 @@
       // 确认创建磁盘
       newDisk_ok(){
         // 默认zoneList第一个元素为当前选中区域，以后会修改
-        var url = `Disk/createVolume.do?zoneId=${this.diskForm.diskArea}&diskSize=${this.diskForm.diskSize}&diskName=${this.diskForm.diskName}&diskOfferingId=${this.diskForm.diskType}&timeType=${this.diskForm.timeType}&timeValue=${this.diskForm.timeValue || 1}&isAutorenew=0&count=${this.diskForm.quantity}`
-        axios.get(url).then(response => {
+        var url = `Disk/createVolume.do?diskSize=${this.diskForm.diskSize}&diskName=${this.diskForm.diskName}&diskOfferingId=${this.diskForm.diskType}&timeType=${this.diskForm.timeType}&timeValue=${this.diskForm.timeValue || 1}&isAutorenew=0&count=${this.diskForm.quantity}`
+        this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {

@@ -288,8 +288,7 @@
           key: '',
           connType: 'true',
           connTypeOptions: [
-            {label: '主动', key: 'true'},
-            {label: '被动', key: 'false'}
+            {label: '主动 ----> 被动', key: 'true'},
           ],
           IKE: '3des',
           IKEOptions: [
@@ -742,7 +741,7 @@
           {
             title: '创建时间',
             align: 'center',
-            key: 'createtime'
+            key: 'createtime2'
           }
         ],
         tunnelVpnData: [],
