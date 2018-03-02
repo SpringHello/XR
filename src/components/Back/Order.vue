@@ -292,8 +292,7 @@
         }
       },
       cancelOrder(){
-        this.$store.commit('setSelect', 'new')
-        this.$router.push('new')
+        this.$router.go(-1)
       },
       clipCoupons(){
         if (this.selection.length != 0) {

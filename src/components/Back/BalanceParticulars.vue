@@ -1,5 +1,9 @@
 <template>
   <div id="background">
+    <Spin fix v-show="loading">
+      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <div>{{loadingMessage}}</div>
+    </Spin>
     <div id="wrapper">
       <span>云网络 / 负载均衡</span>
       <!-- 负载均衡相关信息 -->
@@ -64,6 +68,8 @@
   export default{
     data(){
       return {
+        loadingMessage: '',
+        loading: false,
         balanceInfo: null,
         hostColumns: [
           {
@@ -98,6 +104,8 @@
                     this.$message.confirm({
                       content: '确认从负载均衡中移除该主机？',
                       onOk: () => {
+                        this.loadingMessage = '正在解绑虚拟机，请稍候'
+                        this.loading = true
                         var url = ``
                         if (this.balanceInfo._internal) {
                           url = `loadbalance/removeFromInternalLoadBalancerRule.do?VMIds=${object.row.computerid}&lbId=${this.balanceInfo.lbid}`
@@ -106,11 +114,13 @@
                         }
                         this.$http.get(url).then(response => {
                           if (response.status == 200 && response.data.status == 1) {
+                            this.loading = false
                             this.$message.info({
                               content: response.data.message
                             })
                             this.listHostByBalance()
                           } else {
+                            this.loading = false
                             this.$message.error({
                               content: response.data.message
                             })
@@ -174,6 +184,8 @@
       /* 负载均衡确定绑定虚拟机 */
       bindHost_ok () {
         if (this.bindHostForm.vm.length != 0) {
+          this.loadingMessage = '正在绑定虚拟机，请稍候'
+          this.loading = true
           var url = ``
           if (this.balanceInfo._internal) {
             url = `loadbalance/assignToInternalLoadBalancerRule.do?VMIds=${this.bindHostForm.vm}&lbId=${this.balanceInfo.lbid}`
@@ -187,7 +199,9 @@
                 content: response.data.message
               })
               this.listHostByBalance()
+            this.loading = false
             } else {
+              this.loading = false
               this.$message.error({
                 content: response.data.message
               })
