@@ -338,7 +338,7 @@
         <span class="universal-modal-title">创建快照</span>
       </p>
       <div class="universal-modal-content-flex">
-        <p class="mb20">您正为<span class="bluetext">主机名称</span>创建快照</p>
+        <p class="mb20">您正为<span class="bluetext">{{currentHostname}}</span>创建快照</p>
         <Form :model="backupForm" ref="backupForm">
           <FormItem label="快照名称">
             <Input v-model="backupForm.backupName" placeholder="请输入2-4094范围内任意数字"></Input>
@@ -557,7 +557,6 @@
         sessionStorage.removeItem('type')
       }
       return {
-        // selectedHostname: '',
         cost: '--',
         listLoadBalanceRole: [],
         openHost: [],
@@ -566,6 +565,7 @@
         errorHost: [],
         waitHost: [],
         currentHost: [],
+        currentHostname: [],
         status,
         showModal: {
           backup: false,
@@ -757,7 +757,6 @@
         if (!this.auth) {
           return
         }
-        // this.selectedHostname =item.computername
         this.$set(item, 'select', !item.select)
       },
       createHost() {
@@ -923,6 +922,7 @@
             if (this.checkSelect()) {
               this.backupForm.backupName = ''
               this.backupForm.description = ''
+              this.currentHostname = this.currentHost[0].computername
               this.showModal.backup = true
             }
             break
