@@ -520,32 +520,32 @@
           {
             title: 'VPN',
             align: 'center',
-            key: 'natname'
+            key: 'vpnCustomerName1'
           },
           {
             title: 'VPC',
             align: 'center',
-            key: 'status',
-            render: (h, params) => {
-              var status = params.row.status == 1 ? '正常' : '异常'
-              return h('span', {}, status)
-            }
+            key: 'vpcName1'
+            /*      render: (h, params) => {
+             var status = params.row.status == 1 ? '正常' : '异常'
+             return h('span', {}, status)
+             }*/
           },
           {
             title: '本地IP地址',
             align: 'center',
-            key: 'vpcname',
-            render: (h, params) => {
-              return h('span', {
-                style: {
-                  color: '#2A99F2',
-                  cursor: 'pointer'
-                },
-                on: {
-                  click: this.gotoVpc(params.row.id)
-                },
-              }, params.row.vpcname)
-            }
+            key: 'destinationipaddress1',
+            /*            render: (h, params) => {
+             return h('span', {
+             style: {
+             color: '#2A99F2',
+             cursor: 'pointer'
+             },
+             on: {
+             click: this.gotoVpc(params.row.id)
+             },
+             }, params.row.vpcname)
+             }*/
           },
           {
             title: '目的IP地址',
@@ -934,7 +934,7 @@
       // 删除隧道VPN
       delTunnelVpn(){
         if (this.currentTunnel == null) {
-          this.$message.info({
+          this.$Message.info({
             content: '请选择要删除的隧道VPN'
           })
           return
@@ -942,11 +942,8 @@
           this.$message.confirm({
             content: '确定要删除该隧道VPN吗',
             onOk: () => {
-              this.$http.get('network/deleteTunnelVpn.do', {
-                params: {
-                  id: this.currentTunnel.id
-                }
-              }).then(response => {
+              console.log(this.currentTunnel)
+              this.$http.get(`network/deleteTunnelVpn.do?id=${this.currentTunnel.id}`).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.$Message.success({
                     content: response.data.message
