@@ -915,10 +915,16 @@
                   id: this.currentRemote.id
                 }
               }).then(response => {
-                if (response.status == 200 && response.data.status == 2) {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success({
+                    content: response.data.message
+                  })
+                  this.refresh()
+                } else {
                   this.$message.error({
                     content: response.data.message
                   })
+                  this.refresh()
                 }
               })
             }
@@ -941,10 +947,16 @@
                   id: this.currentTunnel.id
                 }
               }).then(response => {
-                if (response.status == 200 && response.data.status == 2) {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success({
+                    content: response.data.message
+                  })
+                  this.refresh()
+                } else {
                   this.$message.error({
                     content: response.data.message
                   })
+                  this.refresh()
                 }
               })
             }
