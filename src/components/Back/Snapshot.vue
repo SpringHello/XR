@@ -177,14 +177,14 @@
             <ul>
               <li v-for="(item,index) in hostForBackupsStrategyList" :key="index"><span>{{ item.computername
                 }}</span><span v-if="item.bankupstrategyname">({{ item.bankupstrategyname}})</span><i
-                @click="addHost(index,item)" class="bluetext">+ 添加</i></li>
+                @click="addHost(index,item)" class="bluetext" style="cursor:pointer">+ 添加</i></li>
             </ul>
           </div>
           <div class="changelist">
             <p>已选择的主机</p>
             <ul>
               <li v-for="(item,index) in changeHostlist" :key="index"><span>{{ item.resourcesName }}</span><i
-                @click="removeHost(index)" class="bluetext">
+                @click="removeHost(index)" class="bluetext" style="cursor:pointer">
                 <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
                 删除</i></li>
             </ul>
@@ -1473,10 +1473,11 @@
                 case 1:
                   return h('span', {}, '正常')
                 case -1:
+                // -1异常
                   return h('span', {
-                    style: {
-                      color: '#EE4545'
-                    }
+                    // style: {
+                    //   color: '#EE4545'
+                    // }
                   }, '正常')
                 case 2:
                   return h('div', {}, [h('Spin', {

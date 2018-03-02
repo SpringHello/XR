@@ -790,7 +790,7 @@
       this.diskTime = this.getCurrentDate()
       this.memoryTime = this.getCurrentDate()
       this.IPTime = this.getCurrentDate()
-      this.logTime = this.getCurrentDate()
+      this.logTime =this.getCurrentDate() + ',' + this.getTomorrow()
       this.getsnapsList()
       // this.inter()
       this.search()
@@ -835,13 +835,13 @@
       logToggle(type) {
           switch (this[type].type) {
             case '近一天':
-              this.logTime = this.getCurrentDate()
+              this.logTime =this.getCurrentDate() + ',' + this.getTomorrow()
               break
             case '近一周':
-              this.logTime = this.getNearlySevenDays() + ',' + this.getCurrentDate()
+              this.logTime = this.logNearlySevenDays() + ',' + this.getTomorrow()
               break
             case '近一月':
-              this.logTime = this.getNearlyThirtyDays() + ',' + this.getCurrentDate()
+              this.logTime = this.logNearlyThirtyDays() + ',' + this.getTomorrow()
               break
           }
           this.search()
@@ -926,6 +926,22 @@
       rollback() {
         this.showModal.rollback = false
       },
+      // 获取操作日志，近一天日期应该设置明天
+      getTomorrow() {
+        var day = new Date()
+        day.setTime(day.getTime() + 24 * 60 * 60 * 1000)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      logNearlySevenDays() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 6)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      logNearlyThirtyDays() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 29)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
       getCurrentDate() {
         return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
       },
@@ -934,6 +950,7 @@
         day.setTime(day.getTime() - 24 * 60 * 60 * 1000)
         return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
       },
+      
       getNearlySevenDays() {
         var day = new Date()
         day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 7)

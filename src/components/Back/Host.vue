@@ -84,7 +84,7 @@
 
               <!-- 解绑主机 -->
 
-              <!-- <Poptip
+              <Poptip
                 confirm
                 width="200"
                 placement="right"
@@ -93,7 +93,7 @@
                 @on-cancel="cancel"
                 style="display: block">
                 <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>解绑公网IP</li>
-              </Poptip> -->
+              </Poptip>
 
             </Dropdown-menu>
           </Dropdown>
@@ -858,7 +858,7 @@
             this.loading = true
             this.bindForm.publicIP = ''
             this.showModal.bindIP = true
-            axios.get(`network/listPublicIp.do?useType=1&zoneId=${this.currentHost[0].zoneid}`)
+            axios.get(`network/listPublicIp.do?useType=0&zoneId=${this.currentHost[0].zoneid}`)
               .then(response => {
                 this.loading = false
                 if (response.status == 200 && response.data.status == 1) {
@@ -885,15 +885,15 @@
       },
       unbind() {
         if (this.checkSelect()) {
-          var url = `network/disableStaticNat.do?ipId=${this.currentHost[0].belongnetworkid.split('#')[0]}&computerId=${this.currentHost[0].computerid}`
-          this.loadingMessage = '正在解绑公网IP'
-          this.loading = true
+          var url = `network/disableStaticNat.do?ipId=${this.currentHost[0].publicip}&VMId=${this.currentHost[0].computerid}`
           this.$http.get(url).then(response => {
-            this.loading = false
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.success(response.data.message)
-              this.currentHost[0].belongnetworkid = ''
               this.currentHost[0].publicip = ''
+            } else if(response.status == 200 && response.data.status == 2) {
+              this.$message.info({
+                content: response.data.message
+                })
             }
           })
         }
