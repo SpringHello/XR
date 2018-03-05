@@ -17,7 +17,7 @@
               </div>
               <div>
                 <span :class="{warning:vailForm.password.warning}">{{vailForm.password.message}}</span>
-                <input type="password" autocomplete="off" v-model="form.password"
+                <input type="password" autocomplete="off" v-model="form.password" ref="password"
                        :placeholder="form.passwordPlaceholder"
                        @blur="vail('password')" @focus="focus('password')" @input="isCorrect('password')"
                        v-on:keyup.enter="submit">
@@ -25,7 +25,7 @@
               <div style="position:relative">
                 <span>{{vailForm.vailCode.message}}</span>
                 <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
-                       :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
+                       :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"  ref="vailCode"
                        @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
                 <img :src="imgSrc"
                      @click="imgSrc=`/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
@@ -173,6 +173,8 @@
          this.vailForm.loginname.warning = true
          return
          } */
+        this.$refs.password.blur()
+        this.$refs.vailCode.blur()
         axios.get(`user/login.do?username=${this.form.loginname}&password=${this.form.password}&vailCode=${this.form.vailCode}`).then((response) => {
           if (response.status == 200 && response.statusText == 'OK') {
             if (response.data.status == 1) {

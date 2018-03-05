@@ -402,7 +402,6 @@
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
                   <span style="vertical-align: middle;margin-right:20px;">企业用户</span>
                   <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
               </div>

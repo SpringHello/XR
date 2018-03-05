@@ -65,7 +65,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -249,7 +248,7 @@
     },
     computed: {
       disabled(){
-        return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
+        return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false && this.password.loginname.warning == false)
       }
     }
   }

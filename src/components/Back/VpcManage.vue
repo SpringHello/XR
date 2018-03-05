@@ -45,9 +45,9 @@
                        :class="{rotateup:item._show,rotatedown:!item._show}"></div>
                   {{item.name}}
                 </li>
-                <li>网络地址：{{item.network}}</li>
-                <li>网关地址：{{item.ipsegment}}</li>
-                <li>状态：{{item.status}}</li>
+                <li>网关地址：{{item.ipsegment.split('/')[0]}}</li>
+                <li>网段地址：{{item.ipsegment}}</li>
+                <li>服务方案：{{item.netoffername}}</li>
                 <li>防火墙：<span class="blue">{{item.acllistname}}</span></li>
                 <li>负载均衡：<span class="blue">{{item.loadbalance}}</span></li>
                 <li><span class="blue" @click="addHostToVpc(item)">添加主机</span><span class="vertical-line">|</span><span
