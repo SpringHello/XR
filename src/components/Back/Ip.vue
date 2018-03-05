@@ -568,7 +568,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.$router.push('order')
               } else {
-                this.$message.info({
+                this.$Message.info({
                   content: response.data.message
                 })
               }
@@ -657,7 +657,7 @@
             this.$http.get(`network/bindingElasticIP.do?publicIp=${this.bindForNATForm.row.publicip}&natGatewayId=${this.bindForNATForm.NAT}`).then(response => {
               this.showModal.bindIPForNAT = false
               if (response.status == 200 && response.data.status == 1) {
-                this.$message.success(response.data.message)
+                this.$Message.success(response.data.message)
                 this.refresh()
               } else {
                 this.$message.error({
@@ -712,7 +712,7 @@
             })
             this.$http.get(url).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.$message.info({
+                this.$Message.success({
                   content: response.data.message
                 })
                 this.refresh()
