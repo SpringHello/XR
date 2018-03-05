@@ -523,14 +523,6 @@
         .operate {
           > ul {
             position: relative;
-            .zone-collapse {
-              margin-right: 20px;
-              display: inline-block;
-              font-size: 14px;
-              a {
-                color: #333333;
-              }
-            }
             .sec-nav {
               display: inline-block;
               font-size: 14px;

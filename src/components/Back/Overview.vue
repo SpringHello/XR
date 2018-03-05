@@ -9,15 +9,15 @@
             <i :class="auth" class="auth-icon" style="margin-left: 10px;"></i>
           </p>
           <div style="display: flex;margin-top:25px">
-            <span style="margin-right:20px;width:50%">
+            <span style="margin-right:20px;">
               <img src="../../assets/img/overview/email.png" style="margin-right:10px;vertical-align: middle">
-              <span v-if="userInfo.email" style="vertical-align: middle">{{userInfo.email}}</span>
+              <span v-if="userInfo.loginname" style="vertical-align: middle">{{userInfo.loginname}}</span>
               <router-link v-else style="vertical-align: middle;" to="/ruicloud/userCenter">点击绑定</router-link>
             </span>
             <span>
               <img src="../../assets/img/overview/phone.png" style="margin-right:10px;vertical-align: middle">
               <span v-if="userInfo.phone" style="vertical-align: middle">{{userInfo.phone}}</span>
-              <router-link v-else style="vertical-align: middle" to="">点击绑定</router-link>
+              <router-link v-else style="vertical-align: middle" to="/ruicloud/userCenter">点击绑定</router-link>
             </span>
           </div>
         </div>

@@ -1724,6 +1724,8 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message);
             this.init()
+          } else {
+            this.$message.error(response.data.message);
           }
           this.showModal.authNewPhone = false
         })
