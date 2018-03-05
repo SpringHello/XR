@@ -2013,7 +2013,7 @@
     },
     computed: {
       auth() {
-        // return this.$store.state.personalAuth == 0 || this.$store.state.enterpriseAuth == 0
+        return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
         
       }
     },
