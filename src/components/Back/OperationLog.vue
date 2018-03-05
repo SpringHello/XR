@@ -88,8 +88,9 @@
               text: '最近一周',
               value () {
                 const end = new Date();
+                end.setTime(end.getTime() + 3600 * 1000 * 24 * 1);
                 const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 6);
                 return [start, end];
               }
             },
@@ -97,8 +98,9 @@
               text: '最近一个月',
               value () {
                 const end = new Date();
+                end.setTime(end.getTime() + 3600 * 1000 * 24 * 1);
                 const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 29);
                 return [start, end];
               }
             },
@@ -106,8 +108,9 @@
               text: '最近三个月',
               value () {
                 const end = new Date();
+                end.setTime(end.getTime() + 3600 * 1000 * 24 * 1);
                 const start = new Date();
-                start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                start.setTime(start.getTime() - 3600 * 1000 * 24 * 89);
                 return [start, end];
               }
             }

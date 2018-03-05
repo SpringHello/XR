@@ -784,7 +784,7 @@
             item.status = 3
           }
         })
-        this.$http.get('Disk/deleteVolume.do?id=' + this.diskSelection.id + '').then(response => {
+        this.$http.get('Disk/delDisk.do?id=' + this.diskSelection.id + '').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.info({
               content: response.data.message,

@@ -279,7 +279,6 @@
                     this.$router.push('payResult')
                   } else if (response.status == 200 && response.data.status == 4) {
                     sessionStorage.setItem('payResult', 'fail')
-
                     this.$router.push('payResult')
                   }
                 })

@@ -488,7 +488,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.ownMirrorList()
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
