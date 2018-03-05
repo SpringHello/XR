@@ -417,7 +417,7 @@
             title: '状态',
             key: 'status',
             render: (h, params) => {
-              var status = params.row.computerstate == 1 ? '开启' : '关机'
+              var status = params.row.computerStatus == 1 ? '开启' : '关机'
               return h('span', {}, status)
             }
           },
