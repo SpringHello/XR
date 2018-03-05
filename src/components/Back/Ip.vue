@@ -16,7 +16,7 @@
           <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
         <div class="universal-alert">
-          <p>为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。</p>
+          <p>弹性公网IP为互联网上的合法静态IP地址。在新睿云中，公网IP地址与用户账户绑定而非特定的云资源，您可以将申请的公网IP绑定到任意资源，并随时解绑。</p>
         </div>
         <div class="operate">
           <Button type="primary" @click="openNewIPModal">创建弹性IP</Button>
@@ -568,7 +568,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.$router.push('order')
               } else {
-                this.$message.warning({
+                this.$Message.info({
                   content: response.data.message
                 })
               }
@@ -657,7 +657,7 @@
             this.$http.get(`network/bindingElasticIP.do?publicIp=${this.bindForNATForm.row.publicip}&natGatewayId=${this.bindForNATForm.NAT}`).then(response => {
               this.showModal.bindIPForNAT = false
               if (response.status == 200 && response.data.status == 1) {
-                this.$message.success(response.data.message)
+                this.$Message.success(response.data.message)
                 this.refresh()
               } else {
                 this.$message.error({
@@ -712,7 +712,7 @@
             })
             this.$http.get(url).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.$message.info({
+                this.$Message.success({
                   content: response.data.message
                 })
                 this.refresh()
@@ -820,8 +820,8 @@
       queryChargePrice(){
         this.$http.post('device/queryIpPrice.do', {
           brand: this.select.bandwith + '',
-          value: this.chargesForm.timeType,
-          timevalue: this.chargesForm.timeValue + '',
+          timeType: this.chargesForm.timeType,
+          timeValue: this.chargesForm.timeValue + '',
           zoneId: this.select.zoneid
         }).then(response => {
             if (response.status == 200) {

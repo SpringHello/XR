@@ -11,7 +11,7 @@
           <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
         <div class="universal-alert">
-          <p>镜像描述</p>
+          <p>镜像是一个包含了软件及必要配置的云主机模板，至少包含操作系统，还可以包含应用软件（例如，数据库软件）和私有软件。通过镜像，您可以创建云主机。</p>
         </div>
         <Tabs type="card" :animated="false" style="min-height: 400px">
           <TabPane label="系统镜像">
@@ -76,7 +76,7 @@
       <div class="universal-modal-content-flex">
         <Form :model="mirrorModifyForm">
           <FormItem label="镜像名称">
-            <Input v-model="mirrorModifyForm.name" placeholder="小于20位数字或字母小于20位数字或字母" type="textarea" :rows="3"></Input>
+            <Input v-model="mirrorModifyForm.name" placeholder="小于20位数字或字母"></Input>
           </FormItem>
           <FormItem label="备注">
             <Input v-model="mirrorModifyForm.remarks" type="textarea" :autosize="{minRows: 3,maxRows: 3}"
@@ -85,7 +85,7 @@
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="ghost" @click="this.showModal.modify=false">取消</Button>
+        <Button type="ghost" @click="showModal.modify=false">取消</Button>
         <Button type="primary"
                 :disabled="mirrorModifyForm.name==''||mirrorModifyForm.remarks==''"
                 @click="mirrorModifySubm">确认修改
@@ -353,6 +353,8 @@
                   },
                   on: {
                     click: () => {
+                      this.mirrorModifyForm.name = ''
+                      this.mirrorModifyForm.remarks = ''
                       this.showModal.modify = true
                       this.systemtemplateid = params.row.systemtemplateid
                     }

@@ -121,6 +121,23 @@
         </div>
       </div>
     </div>-->
+
+    <!-- 相关推荐 -->
+    <div class="recommendation">
+      <div class="wrapper">
+        <p class="subTitle">相关推荐</p>
+        <div class="recommendation-flex">
+          <div v-for="(recommendation,index) in recommendations" class="flex-item">
+            <img :src="recommendation.img">
+            <div>
+              <span class="title">{{recommendation.title}}</span>
+              <span class="desc">{{recommendation.desc}}</span>
+            </div>
+            <router-link :to="recommendation.path" target="_blank">详情</router-link>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -257,25 +274,28 @@
         },
         recommendations: [
           {
-            title: '标准型',
-            desc: '经典1:2与1:4配比，实现计算、网络与资源的良好平衡，采用Inter Xeon E5最新处理器，拥有高稳定新、高性价比的特点',
-            config: '2核2G',
-            fit: '适合初始阶段网站，中小型企业官网，简单开发环境',
-            price: 99
+            img: require('../../../assets/img/product/cloudServer.png'),
+            title: '云服务器',
+            desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
+            path: 'Pecs'
           },
           {
-            title: '内存优化型',
-            desc: '提供大容量内存，优化的内存访问速度。1:8内存优化配比，适用于高性能数据库、分布式内存缓存等需要大量的内存操作、查找和计算的应用。',
-            config: '2核16G',
-            fit: '高性能数据库、内存数据库、分布式内存缓存、数据分析和挖掘、Hadoop/Spark集群以及其它企业应用程序。',
-            price: 99
+            img: require('../../../assets/img/product/vpc.png'),
+            title: '虚拟私有云VPC',
+            desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
+            path: 'Pvpc'
           },
           {
-            title: 'IO优化型',
-            desc: '高磁盘IO的最佳选择，提供每秒数万次低延迟性随机IO,适合于低延迟，IO密集型应用',
-            config: '4核8G',
-            fit: '大规模并行处理（MPP）数据仓库、MapReduce和Hadoop分布式计算、分布式文件系统、网络文件系统、日志或数据处理应用',
-            price: 99
+            img: require('../../../assets/img/product/ECS-recommendation-4.png'),
+            title: '负载均衡',
+            desc: '负载均衡处理器可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器...',
+            path: 'Pbalance'
+          },
+          {
+            img: require('../../../assets/img/product/vpn.png'),
+            title: '虚拟专网VPN',
+            desc: '虚拟专用网络VPN，用于搭建用户本地数据中心与新睿云VPC之间便捷、灵活...',
+            path: 'Pvirvpn'
           }
         ]
       }
