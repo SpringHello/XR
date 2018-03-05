@@ -76,7 +76,7 @@
       <div class="universal-modal-content-flex">
         <Form :model="mirrorModifyForm">
           <FormItem label="镜像名称">
-            <Input v-model="mirrorModifyForm.name" placeholder="小于20位数字或字母小于20位数字或字母" type="textarea" :rows="3"></Input>
+            <Input v-model="mirrorModifyForm.name" placeholder="小于20位数字或字母"></Input>
           </FormItem>
           <FormItem label="备注">
             <Input v-model="mirrorModifyForm.remarks" type="textarea" :autosize="{minRows: 3,maxRows: 3}"
@@ -85,7 +85,7 @@
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="ghost" @click="this.showModal.modify=false">取消</Button>
+        <Button type="ghost" @click="showModal.modify=false">取消</Button>
         <Button type="primary"
                 :disabled="mirrorModifyForm.name==''||mirrorModifyForm.remarks==''"
                 @click="mirrorModifySubm">确认修改
@@ -326,6 +326,8 @@
                   },
                   on: {
                     click: () => {
+                      this.mirrorModifyForm.name = ''
+                      this.mirrorModifyForm.remarks = ''
                       this.showModal.modify = true
                       this.systemtemplateid = params.row.systemtemplateid
                     }
