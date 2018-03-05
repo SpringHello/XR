@@ -521,7 +521,7 @@
                         action="file/upFile.do"
                         :on-success="license">
                         <div v-if="notAuth.companyAuthForm.license==''"
-                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
                           暂无图片
                         </div>
                         <img v-else :src="notAuth.companyAuthForm.license">
@@ -545,7 +545,7 @@
                         action="file/upFile.do"
                         :on-success="tax">
                         <div v-if="notAuth.companyAuthForm.tax==''"
-                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
                           暂无图片
                         </div>
                         <img v-else :src="notAuth.companyAuthForm.tax">
@@ -569,7 +569,7 @@
                         action="file/upFile.do"
                         :on-success="organization">
                         <div v-if="notAuth.companyAuthForm.organization==''"
-                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;">
+                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
                           暂无图片
                         </div>
                         <img v-else :src="notAuth.companyAuthForm.organization">
@@ -1724,6 +1724,8 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message);
             this.init()
+          } else {
+            this.$message.error(response.data.message);
           }
           this.showModal.authNewPhone = false
         })
