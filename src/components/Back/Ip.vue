@@ -586,7 +586,7 @@
           this.bindForHostForm.row = row
           this.showModal.bindIPForHost = true
           // 获取所有能绑定弹性IP的云主机
-          this.$http.get(`information/listVirtualMachines.do?vpcId=${row.vpcid}`).then(response => {
+          this.$http.get(`information/listVirtualMachines.do?vpcId=${row.vpcid}&num=0`).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               var openHostlist = []
               var closelist = []
