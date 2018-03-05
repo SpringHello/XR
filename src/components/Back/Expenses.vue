@@ -1426,11 +1426,11 @@
   .background {
     background-color: #f5f5f5;
     width: 100%;
-    min-height: 870px;
+    @diff: 101px;
+    min-height: calc(~"100% - @{diff}");
     .wrapper {
       width: 1200px;
       margin: 0px auto;
-      margin-bottom: 25px;
       & > span {
         font-family: PingFangSC-Regular;
         font-size: 12px;

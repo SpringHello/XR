@@ -1,16 +1,23 @@
 <template>
   <div id="background">
+    <Spin fix v-show="loading">
+      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <div>{{loadingMessage}}</div>
+    </Spin>
     <div id="wrapper">
       <span class="title">安全 /
          <span>防火墙</span>
       </span>
+      <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
+        <router-link to="/ruicloud/userCenter">立即认证</router-link>
+      </Alert>
       <div id="content">
         <div id="header">
           <span id="title">防火墙</span>
           <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
         <div class="universal-alert">
-          <p>防火墙描述</p>
+          <p>防火墙是对一个或多个子网的访问控制策略系统，根据与子网关联的入站/出站规则，判断数据包是否被允许流入/流出关联子网。</p>
         </div>
         <div id="body">
           <div class="operator-bar">
@@ -116,6 +123,8 @@
   export default{
     data(){
       return {
+        loadingMessage: '',
+        loading: false,
         showModal: {
           newFirewall: false,
           applyFirewall: false,
@@ -243,6 +252,8 @@
             creatingData.acllistname = this.newFirewallForm.name
             creatingData.vpcname = this.newFirewallForm.vpc
             this.FirewallData.push(creatingData)
+            this.loadingMessage = '正在创建防火墙，请稍候'
+            this.loading = true
             this.$http.get('network/createNetworkACLList.do', {
               params: {
                 name: this.newFirewallForm.name,
@@ -250,10 +261,12 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
+                this.loading = false
                 this.$http.get('network/listAclList.do').then(response => {
                   this.setData(response)
                 })
               } else {
+                this.loading = false
                 this.$message.error({content: response.data.message})
               }
             })
@@ -263,13 +276,17 @@
       // 应用防火墙规则至确定
       applyFirewallto(){
         this.showModal.applyFirewall = false
+        this.loadingMessage = '正在应用防火墙规则，请稍候'
+        this.loading = true
         var url = `network/replaceNetworkACLList.do?aclListId=${this.select.acllistid}&networkId=${this.applyFirewallForm.network}`
         this.$http.get(url).then(response => {
           this.showModal.applyFirewall = false
           this.applyFirewallForm.networkOptions = []
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
+            this.loading = false
           } else {
+            this.loading = false
             this.$message.error({content: response.data.message})
           }
         })
@@ -277,7 +294,7 @@
       // 打开应用防火墙规则Modal
       openApplyFirewallModal(){
         if (this.select == null) {
-          this.$message.info({
+          this.$Message.info({
             content: '请选择一个防火墙'
           })
           return
@@ -296,7 +313,7 @@
       // 打开修改防火墙弹窗
       handleEventModify(params){
         if (this.select == null) {
-          this.$message.info({
+          this.$Message.info({
             content: '请选择需要操作的防火墙'
           })
           return
@@ -324,19 +341,23 @@
       // 删除防火墙
       del(){
         if (this.select == null) {
-          this.$message.info({
+          this.$Message.info({
             content: '请选中一条防火墙'
           })
           return
         }
+        this.loadingMessage = '正在删除防火墙，请稍候'
+        this.loading = true
         var url = `network/delAclList.do?id=${this.select.id}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+              this.loading = false
               this.$Message.success(response.data.message)
               this.$http.get('network/listAclList.do').then(response => {
                   this.setData(response)
                 })
           } else {
+              this.loading = false
             this.$message.error({
               content: response.data.message
             })
@@ -355,6 +376,12 @@
           this.refresh()
         },
         deep: true
+      }
+    },
+    computed: {
+       auth(){
+        return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
+        
       }
     }
   }

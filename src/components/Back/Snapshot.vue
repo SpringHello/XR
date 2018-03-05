@@ -1,9 +1,16 @@
 <template>
   <div id="background">
     <div id="wrapper">
+      <Spin fix v-show="loading">
+        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+        <div>{{loadingMessage}}</div>
+      </Spin>
       <span class="title">云服务器 /
          <span>云主机快照</span>
       </span>
+      <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
+        <router-link to="/ruicloud/userCenter">立即认证</router-link>
+      </Alert>
       <div id="content">
         <div id="header">
           <img src="../../assets/img/host/hostSnaps-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
@@ -11,7 +18,7 @@
           <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
         <div class="universal-alert">
-          <p> 云主机快照</p>
+          <p> 云主机快照能对主机（包含挂载磁盘）某个时刻的数据进行备份和回滚，云主机快照为增量备份，提升了云主机的安全性，同时增强了云主机快照的易用性。</p>
         </div>
         <Tabs type="card" :animated="false" style="min-height: 400px">
           <TabPane label="云主机快照">
@@ -211,6 +218,8 @@
   export default {
     data() {
       return {
+        loading: false,
+        loadingMessage: '',
         snapsName: '',
         hostName: '',
         hostCreatetime: '',
@@ -1872,10 +1881,13 @@
       },
       rollbackSubmit() {
         this.showModal.rollback = false
+        this.loadingMessage = '正在回滚主机'
+        this.loading = true
         var URL = `Snapshot/revertToVMSnapshot.do?snapshotId=${this.cursnapshot.snapshotid}&zoneId=${$store.state.zone.zoneid}`
         axios.get(URL)
           .then(response => {
             if (response.status == 200) {
+              this.loading = false
               this.$Message.success({
                 content: response.data.message,
                 duration: 5
@@ -2001,7 +2013,8 @@
     },
     computed: {
       auth() {
-        return this.$store.state.personalAuth == 0 || this.$store.state.enterpriseAuth == 0
+        return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
+        
       }
     },
     watch: {

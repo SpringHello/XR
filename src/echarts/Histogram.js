@@ -42,7 +42,7 @@ export default {
   ],
   series: [
     {
-      name: '使用率(%)',
+      name: '利用率(%)',
       type: 'bar',
       barWidth: '60%',
       data: []

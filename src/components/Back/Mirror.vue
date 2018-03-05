@@ -4,6 +4,9 @@
       <span class="title">云服务器 /
          <span>镜像</span>
       </span>
+      <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
+        <router-link to="/ruicloud/userCenter">立即认证</router-link>
+      </Alert>
       <div id="content">
         <div id="header">
           <img src="../../assets/img/host/hostMirror-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
@@ -11,7 +14,7 @@
           <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
         <div class="universal-alert">
-          <p>镜像描述</p>
+          <p>镜像是一个包含了软件及必要配置的云主机模板，至少包含操作系统，还可以包含应用软件（例如，数据库软件）和私有软件。通过镜像，您可以创建云主机。</p>
         </div>
         <Tabs type="card" :animated="false" style="min-height: 400px">
           <TabPane label="系统镜像">
@@ -76,7 +79,7 @@
       <div class="universal-modal-content-flex">
         <Form :model="mirrorModifyForm">
           <FormItem label="镜像名称">
-            <Input v-model="mirrorModifyForm.name" placeholder="小于20位数字或字母小于20位数字或字母" type="textarea" :rows="3"></Input>
+            <Input v-model="mirrorModifyForm.name" placeholder="小于20位数字或字母"></Input>
           </FormItem>
           <FormItem label="备注">
             <Input v-model="mirrorModifyForm.remarks" type="textarea" :autosize="{minRows: 3,maxRows: 3}"
@@ -85,7 +88,7 @@
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="ghost" @click="this.showModal.modify=false">取消</Button>
+        <Button type="ghost" @click="showModal.modify=false">取消</Button>
         <Button type="primary"
                 :disabled="mirrorModifyForm.name==''||mirrorModifyForm.remarks==''"
                 @click="mirrorModifySubm">确认修改
@@ -307,11 +310,34 @@
             align: 'center',
             width: 200,
             render: (h, params) => {
-              return h('div', [h('span', {
+              var cursorValue = ''
+              var disabledValue = ''
+              switch (params.row.status) {
+                // 正常
+                case 1:
+                  cursorValue = 'pointer'
+                  disabledValue = false
+                  break
+                // 异常
+                case -1:
+                  cursorValue = 'pointer'
+                  disabledValue = false
+                  break
+                // 创建中
+                case 2:
+                  cursorValue = 'not-allowed'
+                  disabledValue = 'disabled'
+                  break
+              }
+              return h('div', [h('Button', {
                 style: {
                   marginRight: '5px',
                   color: '#2A99F2',
-                  cursor: 'pointer'
+                  cursor: cursorValue
+                },
+                props:  {
+                  disabled: disabledValue,
+                  type: 'text'
                 },
                 on: {
                   click: () => {
@@ -319,13 +345,19 @@
                   }
                 }
               }, '生成主机'),
-                h('span', {
+                h('Button', {
                   style: {
                     color: '#2A99F2',
-                    cursor: 'pointer'
+                    cursor: cursorValue,
+                  },
+                  props:  {
+                    disabled: disabledValue,
+                    type: 'text'
                   },
                   on: {
                     click: () => {
+                      this.mirrorModifyForm.name = ''
+                      this.mirrorModifyForm.remarks = ''
                       this.showModal.modify = true
                       this.systemtemplateid = params.row.systemtemplateid
                     }
@@ -521,7 +553,8 @@
     },
     computed: {
       auth() {
-        return this.$store.state.personalAuth == 0 || this.$store.state.enterpriseAuth == 0
+        return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
+        
       }
     },
     watch: {

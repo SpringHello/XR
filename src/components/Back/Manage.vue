@@ -1,6 +1,10 @@
 <template>
   <div id="background">
     <div id="wrapper">
+      <Spin fix v-show="loading">
+        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+        <div>{{loadingMessage}}</div>
+      </Spin>
       <span class="title">
         <router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> /
         <router-link to="host" style="color:rgba(17, 17, 17, 0.43);">云主机</router-link> / <span>管理</span>
@@ -9,7 +13,7 @@
         <div class="info">
           <header>
             <span class="arrowdown-icon"></span>
-            <span><router-link to="host" style="color: #FFF;">{{this.$route.query.computername}}</router-link></span>
+            <span>{{this.$route.query.computername}}</span>
             <div>
               <Button class="btn" @click="$router.go(-1)" >返回</Button>
               <a :href="`${this.$route.query.connecturl}`" target="_blank" style="border:solid 1px #2A99F2;color: #2A99F2;border-radius: 5px;padding: 6px 15px;background-color:#f7f7f7;font-size:12px;">连接主机</a>
@@ -374,6 +378,8 @@
   import axios from 'axios'
   import defaultOptions from '@/echarts/defaultOptions'
   import histogram from '@/echarts/Histogram'
+  import hostDiskOptions from '@/echarts/hostDiskOptions'
+  import hostDiskHistogram from '@/echarts/hostDiskHistogram'
   import ipOptions from '@/echarts/ipOptions'
   import ipHistogram from '@/echarts/ipHistogram'
   // import {deepClone} from '../util/util'
@@ -383,6 +389,8 @@
   }
   var defaultOptionstr = JSON.stringify(defaultOptions)
   var histogramstr = JSON.stringify(histogram)
+  var hostDiskOptionstr = JSON.stringify(hostDiskOptions)
+  var hostDiskHistogramstr = JSON.stringify(hostDiskHistogram)
   export default {
 
     data() {
@@ -400,6 +408,8 @@
         }
       }
       return {
+        loading: false,
+        loadingMessage: '',
         snapsId: '',
         snapsName: '',
         hostName: '',
@@ -417,7 +427,7 @@
         //系列化对象
         cpuPolar: JSON.parse(defaultOptionstr),
         diskPolar: JSON.parse(defaultOptionstr),
-        memoryPolar: JSON.parse(defaultOptionstr),
+        memoryPolar: JSON.parse(hostDiskOptionstr),
         ipPolar: ipOptions,
         snapshotCol: [
           {
@@ -849,10 +859,13 @@
       // 回滚确认弹窗
       rollbackSubmit() {
         this.showModal.rollback = false
+        this.loadingMessage = '正在回滚主机'
+        this.loading = true
         var URL = `Snapshot/revertToVMSnapshot.do?snapshotId=${this.cursnapshot.snapshotid}&zoneId=${$store.state.zone.zoneid}`
         axios.get(URL)
           .then(response => {
             if (response.status == 200) {
+              this.loading = false
               this.$Message.success({
                 content: response.data.message,
                 duration: 5
@@ -950,7 +963,7 @@
         day.setTime(day.getTime() - 24 * 60 * 60 * 1000)
         return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
       },
-      
+
       getNearlySevenDays() {
         var day = new Date()
         day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 7)
@@ -962,18 +975,23 @@
         return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
       },
       toggle(type) {
-        if (type != 'flow') {
+        if (type != 'flow' && type != 'memory') {
           var polar = this[type].showType == '折线' ? JSON.parse(defaultOptionstr) : JSON.parse(histogramstr)
           polar.xAxis.data = this[type + 'Polar'].xAxis.data
           polar.series[0].data = this[type + 'Polar'].series[0].data
           this[type + 'Polar'] = polar
-        } else {
+        } else if(type == 'flow'){
           polar = this[type].showType == '折线' ? ipOptions : ipHistogram
           polar.xAxis.data = this.ipPolar.xAxis.data
           polar.series[0].data = this.ipPolar.series[0].data
           polar.series[1].data = this.ipPolar.series[1].data
           console.log(polar)
           this.ipPolar = polar
+        } else {
+          var polar = this[type].showType == '折线' ? JSON.parse(hostDiskOptionstr) : JSON.parse(hostDiskHistogram)
+          polar.xAxis.data = this[type + 'Polar'].xAxis.data
+          polar.series[0].data = this[type + 'Polar'].series[0].data
+          this[type + 'Polar'] = polar
         }
       },
       queryData(type) {
@@ -1158,7 +1176,7 @@
   .ivu-tabs-bar {
     padding-left: 55px;
   }
-  
+
   .content {
     padding: 0px;
     .info {
@@ -1244,9 +1262,9 @@
     }
     .charts {
       margin-top: -32px;
-      margin-left: 20px;
+      padding-left: 20px;
       .body {
-        padding: 20px 19px;
+        padding-top: 20px;
         margin-top: -17px;
         background-color: white;
         & > label {
@@ -1328,6 +1346,7 @@
         width: 100%;
         height: 300px;
       }
+
     }
   }
   .setForm {

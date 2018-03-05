@@ -1,10 +1,17 @@
 <template>
   <div id="background">
+    <Spin fix v-show="loading">
+      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <div>{{loadingMessage}}</div>
+    </Spin>
     <div id="wrapper">
       <span class="title">
         云网络 /
          <span>VPN</span>
       </span>
+      <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
+        <router-link to="/ruicloud/userCenter">立即认证</router-link>
+      </Alert>
       <div id="content">
         <div id="header">
           <img src="../../assets/img/network/vpn-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
@@ -12,7 +19,7 @@
           <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
         <div class="universal-alert">
-          <p>为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。</p>
+          <p>VPN业务用于在远端用户和VPC之间建立一条安全加密的通信隧道，使远端用户通过VPN使用VPC中的业务资源。</p>
         </div>
 
         <Tabs type="card" :animated="false" v-model="pane">
@@ -87,22 +94,28 @@
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="目标VPC" prop="vpcId2" v-show="newTunnelVpnForm.step==0">
+<!--          <FormItem label="目标VPC" prop="vpcId2" v-show="newTunnelVpnForm.step==0">
             <Select v-model="newTunnelVpnForm.vpcId2">
               <Option v-for="item in newTunnelVpnForm.vpcIdOptions" :value="item.vpcid" :key="item.vpcid"
                       v-if="item.vpcid!=newTunnelVpnForm.vpcId1">
                 {{item.vpcname}}
               </Option>
             </Select>
-          </FormItem>
+          </FormItem>-->
         </Form>
         <Form :model="newTunnelVpnForm" :rules="newTunnelVpnFormValidate" ref="newTunnelVpnFormValidate1">
           <FormItem label="名称" v-if="newTunnelVpnForm.step==1" prop="name1">
             <Input v-model="newTunnelVpnForm.name1" placeholder="请输入0-16字节名称"></Input>
           </FormItem>
-          <FormItem label="名称" v-if="newTunnelVpnForm.step==1" prop="name2">
-            <Input v-model="newTunnelVpnForm.name2" placeholder="请输入0-16字节名称"></Input>
+          <FormItem label="目的IP地址" v-if="newTunnelVpnForm.step==1" prop="IP">
+            <Input v-model="newTunnelVpnForm.IP" placeholder="例如10.132.31.27"></Input>
           </FormItem>
+          <FormItem label="目的网络CIDR" v-if="newTunnelVpnForm.step==1" prop="CIDR">
+            <Input v-model="newTunnelVpnForm.CIDR" placeholder="例如192.168.0.0/16"></Input>
+          </FormItem>
+         <!-- <FormItem label="名称" v-if="newTunnelVpnForm.step==1" prop="name2">
+            <Input v-model="newTunnelVpnForm.name2" placeholder="请输入0-16字节名称"></Input>
+          </FormItem>-->
           <!--<FormItem label="目的IP地址" v-if="newTunnelVpnForm.step==1" prop="ip">
             <Input v-model="newTunnelVpnForm.IP" placeholder="例如10.132.31.27"></Input>
           </FormItem>
@@ -169,7 +182,7 @@
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button @click="newRemoteAccessOk" v-if="newTunnelVpnForm.step==0">取消</Button>
+        <Button @click="showModal.newTunnelVpn = false" v-if="newTunnelVpnForm.step==0">取消</Button>
         <Button @click="newTunnelVpnForm.step--" v-if="newTunnelVpnForm.step!=0">上一步</Button>
         <Button type="primary" @click="nextStep" v-if="newTunnelVpnForm.step!=2">下一步</Button>
         <Button type="primary" @click="newTunnelVpnOk" v-if="newTunnelVpnForm.step==2">完成</Button>
@@ -243,6 +256,8 @@
       var pane = sessionStorage.getItem('pane') || 'remote'
       sessionStorage.removeItem('pane')
       return {
+        loadingMessage: '',
+        loading: false,
         pane,
         showModal: {
           // 远程VPN
@@ -335,6 +350,12 @@
           ],
           key: [
             {required: true, message: '请输入共享域密码', trigger: 'blur'}
+          ],
+          IP: [
+            {required: true, message: '请输入目的ip地址', trigger: 'blur'}
+          ],
+          CIDR: [
+            {required: true, message: '请输入目的网络cidr', trigger: 'blur'}
           ],
         },
         // 远程vpn列表
@@ -785,6 +806,8 @@
         Promise.all([remote, customer]).then(values => {
           this.initRemoteData(values[0])
           this.initCustomerData(values[1])
+          this.currentTunnel = null
+          this.currentRemote = null
         })
       },
       initRemoteData(response){
@@ -808,6 +831,9 @@
       newRemoteAccessOk(){
         this.$refs.newRemoteAccessFormValidate.validate(validate => {
           if (validate) {
+            this.loading = true
+            this.loadingMessage = '正在创建VPN接入点，请稍候'
+            this.showModal.newRemoteAccess = false
             this.$http.get('network/createRemoteAccessVpn.do', {
               params: {
                 remoteVpnName: this.newRemoteAccessForm.vpnName,
@@ -816,10 +842,15 @@
                 password: this.newRemoteAccessForm.password
               }
             }).then(response => {
-              this.showModal.newRemoteAccess = false
-              this.refresh()
-              if (response.status == 200 && response.data.status == 2) {
+              if (response.status == 200 && response.data.status == 1) {
                 this.refresh()
+                this.loading = false
+                this.$Message.success({
+                  content: response.data.message
+                })
+              } else {
+                this.refresh()
+                this.loading = false
                 this.$message.error({
                   content: response.data.message
                 })
@@ -827,6 +858,8 @@
             })
           }
         })
+        this.showModal.newTunnelVpn = false
+
       },
       // 打开创建隧道VPN modal
       newTunnelVpn(){
@@ -848,12 +881,14 @@
         this.showModal.newTunnelVpn = false
         this.newTunnelVpnForm.step = 0
         this.newTunnelVpnForm.showDetail = false
-        this.$http.get('network/createTunnelVpnNew.do', {
+        this.$http.get('network/createTunnelVpn.do', {
           params: {
-            sourceVpcId: this.newTunnelVpnForm.vpcId1, // 源vpcid   目标vpcid
-            targetVpcId: this.newTunnelVpnForm.vpcId2, // 源vpcid   目标vpcid
-            nameOne: this.newTunnelVpnForm.name1, // 源vpcid   目标vpcid  名称1
-            nameTwo: this.newTunnelVpnForm.name2, // 源vpcid   目标vpcid
+            vpcId: this.newTunnelVpnForm.vpcId1, // 源vpcid   目标vpcid
+            // targetVpcId: this.newTunnelVpnForm.vpcId2, // 源vpcid   目标vpcid
+            name: this.newTunnelVpnForm.name1, // 源vpcid   目标vpcid  名称1
+            // nameTwo: this.newTunnelVpnForm.name2, // 源vpcid   目标vpcid
+            destinationIpAddress: this.newTunnelVpnForm.IP,
+            cidr: this.newTunnelVpnForm.CIDR,
             ipsecKey: this.newTunnelVpnForm.key,
             ikeEncryption: this.newTunnelVpnForm.IKE,
             ikeHash: this.newTunnelVpnForm.IKEHash,
@@ -863,8 +898,12 @@
             passive: this.newTunnelVpnForm.connType
           }
         }).then(response => {
-          this.refresh()
-          if (response.status == 200 && response.data.status == 2) {
+          if (response.status == 200 && response.data.status == 1) {
+            this.refresh()
+            this.$Message.success({
+              content: response.data.message
+            })
+          } else {
             this.refresh()
             this.$message.error({
               content: response.data.message
@@ -905,7 +944,7 @@
       // 挂断VPN接入
       delRemoteAccess(){
         if (this.currentRemote == null) {
-          this.$message.info({
+          this.$Message.info({
             content: '请选择要挂断的远程VPN接入'
           })
           return
@@ -913,17 +952,21 @@
           this.$message.confirm({
             content: '确定要删除该远程VPN接入吗',
             onOk: () => {
+              this.loadingMessage = '正在删除远程VPN接入，请稍候'
+              this.loading = true
               this.$http.get('network/deleteRemoteAccessVpn.do', {
                 params: {
                   id: this.currentRemote.id
                 }
               }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
+                  this.loading = false
                   this.$Message.success({
                     content: response.data.message
                   })
                   this.refresh()
                 } else {
+                  this.loading = false
                   this.$message.error({
                     content: response.data.message
                   })
@@ -1028,6 +1071,12 @@
           this.refresh()
         },
         deep: true
+      }
+    },
+    computed: {
+       auth(){
+        return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
+        
       }
     }
   }
