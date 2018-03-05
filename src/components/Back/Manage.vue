@@ -13,7 +13,7 @@
         <div class="info">
           <header>
             <span class="arrowdown-icon"></span>
-            <span><router-link to="host" style="color: #FFF;">{{this.$route.query.computername}}</router-link></span>
+            <span>{{this.$route.query.computername}}</span>
             <div>
               <Button class="btn" @click="$router.go(-1)" >返回</Button>
               <a :href="`${this.$route.query.connecturl}`" target="_blank" style="border:solid 1px #2A99F2;color: #2A99F2;border-radius: 5px;padding: 6px 15px;background-color:#f7f7f7;font-size:12px;">连接主机</a>
@@ -1262,9 +1262,9 @@
     }
     .charts {
       margin-top: -32px;
-      margin-left: 20px;
+      padding-left: 20px;
       .body {
-        padding: 20px 19px;
+        padding-top: 20px;
         margin-top: -17px;
         background-color: white;
         & > label {
@@ -1346,6 +1346,7 @@
         width: 100%;
         height: 300px;
       }
+
     }
   }
   .setForm {
