@@ -76,10 +76,11 @@
       <div class="wrapper">
         <div class="zoneList">
           <Dropdown @on-click="toggleZone">
-            <a href="javascript:void(0)">
-              {{zone.zonename}}
-              <Icon type="arrow-down-b"></Icon>
-            </a>
+            <div style="height:30px;">
+              <div style="display: inline-block;background: #2A99F2;border-radius: 4px;height: 30px;padding: 4px 0px;cursor:pointer">
+                <img src="./assets/img/back/zoneIcon.png" style="vertical-align: middle;margin:0px 10px;"></img><span style="font-size: 14px;color: #FFFFFF;line-height: 21px;vertical-align: middle;margin-right:10px;">{{zone.zonename}}</span>
+              </div>
+            </div>
             <DropdownMenu slot="list">
               <DropdownItem :name="zone.zoneid" v-for="(zone,index) in zoneList" :key="index">
                 {{zone.zonename}}
@@ -89,7 +90,25 @@
         </div>
         <div class="operate" ref="operate">
           <ul @mouseleave="ML">
+<<<<<<< HEAD
             <li class="sec-nav" v-for="(item,index) in main" :key="index" @mouseenter="ME($event,item.type)" :ref="item.type"
+=======
+            <!--<li class="zone-collapse">
+
+              <Dropdown @on-click="toggleZone">
+                <a href="javascript:void(0)">
+                  {{zone.zonename}}
+                  <Icon type="arrow-down-b"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem :name="zone.zoneid" v-for="(zone,index) in zoneList" :key="index">
+                    {{zone.zonename}}
+                  </DropdownItem>
+                </DropdownMenu>
+            </li>-->
+            <li class="sec-nav" v-for="(item,index) in main" :key="index" @mouseenter="ME($event,item.type)"
+                :ref="item.type"
+>>>>>>> fa1eb4acb33851a831cee85e6a4bf59ed76c7092
                 :class="{hover:item.type==pageInfo.hoverItem}">
               <a>{{item.mainName}}</a>
             </li>
@@ -284,7 +303,6 @@
         this.$router.push(sType)
       },
       go(path){
-        console.log(path)
         this.$router.push(path)
       },
       pane(pane){
@@ -494,7 +512,9 @@
         margin: 0px auto;
         display: flex;
         justify-content: space-between;
-        .zoneList{
+        .zoneList {
+          height:30px;
+          margin:7.5px 0px;
           .ivu-dropdown-rel {
             a {
               font-size: 14px;
@@ -507,6 +527,17 @@
         .operate {
           > ul {
             position: relative;
+<<<<<<< HEAD
+=======
+            .zone-collapse {
+              margin-right: 20px;
+              display: inline-block;
+              font-size: 14px;
+              a {
+                color: #333333;
+              }
+            }
+>>>>>>> fa1eb4acb33851a831cee85e6a4bf59ed76c7092
             .sec-nav {
               display: inline-block;
               font-size: 14px;
