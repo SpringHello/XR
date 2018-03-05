@@ -1,11 +1,15 @@
 <template>
   <div class="background">
+    <Spin fix v-show="loading">
+      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <div>{{loadingMessage}}</div>
+    </Spin>
     <div class="wrapper">
       <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / <router-link
         to="firewall" style="color:rgba(17, 17, 17, 0.43);">防火墙</router-link> / 管理</span>
       <div class="content">
         <div>
-          <span class="title">防火墙名称</span>
+          <!--<span class="title">{{firewallInfo.firewallName}}</span>-->
           <span class="info" style="min-width: 80px;display: inline-block">{{firewallInfo.firewallName}}</span>
         </div>
         <div style="margin-top:20px">
@@ -39,7 +43,7 @@
 
     <Modal v-model="showModal.createRule" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">应用防火墙规则至</span>
+        <span class="universal-modal-title">创建规则</span>
       </p>
       <div class="universal-modal-content-flex">
         <Form ref="newRuleFormValidate" :model="newRuleForm" :rules="ruleValidate">
@@ -76,7 +80,7 @@
               </Option>
             </Select>
           </Form-item>
-          <Form-item label="优先级">
+          <Form-item label="优先级（数字越小优先级越高）">
             <InputNumber v-model="newRuleForm.itemid" :max="10" :min="0"></InputNumber>
           </Form-item>
           <Form-item label="起始端口" v-show="newRuleForm.protocol != 'ICMP' && newRuleForm.protocol != 'ALL'">
@@ -231,6 +235,8 @@
     },
     data(){
       return {
+        loadingMessage: '',
+        loading: false,
         showModal: {
           createRule: false
         },
@@ -292,7 +298,6 @@
                     },
                     on: {
                       'on-ok': () => {
-                        console.log(this)
                         this.del(params.row.id)
                       }
                     }
@@ -373,6 +378,9 @@
               this.newRuleForm.startPort = 1
               this.newRuleForm.endPort = 65535
             }
+            this.showModal.createRule = false
+            this.loadingMessage = '正在创建规则，请稍候'
+            this.loading = true
             this.$http.get('network/createNetworkACL.do', {
               params: {
                 name: this.newRuleForm.name,
@@ -386,8 +394,11 @@
                 access: this.newRuleForm.access
               }
             }).then(response => {
-              this.showModal.createRule = false
               if (response.status == 200 && response.data.status == 1) {
+                this.loading = false
+                this.$Message.success({
+                    content: response.data.message
+                })
                 this.$http.get('network/listaclListItem.do', {
                   params: {
                     aclListId: sessionStorage.getItem('firewallId')
@@ -396,6 +407,7 @@
                   this.setData(response)
                 })
               } else {
+                this.loading = false
                 this.$message.error({
                   content: response.data.message
                 })
@@ -406,12 +418,18 @@
       },
       // 删除规则
       del(aclId){
+        this.loadingMessage = '正在删除规则，请稍候'
+        this.loading = true
         this.$http.get('network/deleteNetworkACL.do', {
           params: {
             id: aclId
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            this.loading = false
+            this.$Message.success({
+              content: response.data.message
+            })
             this.$http.get('network/listaclListItem.do', {
               params: {
                 aclListId: sessionStorage.getItem('firewallId')
@@ -420,6 +438,7 @@
               this.setData(response)
             })
           } else {
+            this.loading = false
             this.$message.error({
               content: response.data.message
             })

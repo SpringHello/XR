@@ -886,10 +886,12 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
+                this.refresh()
                 this.$Message.success({
                   content: response.data.message
                 })
               } else {
+                this.refresh()
                 this.$message.error({
                   content: response.data.message
                 })

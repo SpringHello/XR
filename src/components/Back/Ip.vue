@@ -820,8 +820,8 @@
       queryChargePrice(){
         this.$http.post('device/queryIpPrice.do', {
           brand: this.select.bandwith + '',
-          value: this.chargesForm.timeType,
-          timevalue: this.chargesForm.timeValue + '',
+          timeType: this.chargesForm.timeType,
+          timeValue: this.chargesForm.timeValue + '',
           zoneId: this.select.zoneid
         }).then(response => {
             if (response.status == 200) {
