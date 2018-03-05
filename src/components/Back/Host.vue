@@ -710,7 +710,7 @@
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             // 遍历各种主机类型，开启、关闭、欠费、错误、创建中
-            for (var type of ['open', 'close', 'arrears', 'error']) {
+            for (var type of ['open', 'close', 'arrears', 'error','wait']) {
               var list = []
               var target = response.data.result[type] || {list: []}
               // console.log(target)

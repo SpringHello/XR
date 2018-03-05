@@ -307,11 +307,34 @@
             align: 'center',
             width: 200,
             render: (h, params) => {
-              return h('div', [h('span', {
+              var cursorValue = ''
+              var disabledValue = ''
+              switch (params.row.status) {
+                // 正常
+                case 1:
+                  cursorValue = 'pointer'
+                  disabledValue = false
+                  break
+                // 异常
+                case -1:
+                  cursorValue = 'pointer'
+                  disabledValue = false
+                  break
+                // 创建中
+                case 2:
+                  cursorValue = 'not-allowed'
+                  disabledValue = 'disabled'
+                  break
+              }
+              return h('div', [h('Button', {
                 style: {
                   marginRight: '5px',
                   color: '#2A99F2',
-                  cursor: 'pointer'
+                  cursor: cursorValue
+                },
+                props:  {
+                  disabled: disabledValue,
+                  type: 'text'
                 },
                 on: {
                   click: () => {
@@ -319,10 +342,14 @@
                   }
                 }
               }, '生成主机'),
-                h('span', {
+                h('Button', {
                   style: {
                     color: '#2A99F2',
-                    cursor: 'pointer'
+                    cursor: cursorValue,
+                  },
+                  props:  {
+                    disabled: disabledValue,
+                    type: 'text'
                   },
                   on: {
                     click: () => {
