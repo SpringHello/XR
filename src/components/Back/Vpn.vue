@@ -827,6 +827,8 @@
             })
           }
         })
+        this.showModal.newTunnelVpn = false
+
       },
       // 打开创建隧道VPN modal
       newTunnelVpn(){
