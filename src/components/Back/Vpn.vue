@@ -184,11 +184,14 @@
       <div>
         <p style="color: rgba(17,17,17,0.65);margin-bottom: 20px">您在对接入点进行用户管理</p>
         <div>
-          <p v-for="item in userList" :key="item"
+          <p v-for="(item,index) in userList" :key="item"
              style="display: flex;font-size: 12px;color: rgba(17,17,17,0.65);margin-bottom: 20px">
-            <span style="width:60%">{{item}}</span>
+            <span style="width:60%">{{item.name||item}}</span>
             <span style="width:30%">用户密码：**********</span>
-            <span style="color:#2A99F2;width:10%;text-align:right;cursor: pointer" @click="delUser(item)">删除</span>
+            <span style="color:#2A99F2;width:10%;text-align:right;cursor: pointer" v-if="item.status==1">创建中</span>
+            <span style="color:#2A99F2;width:10%;text-align:right;cursor: pointer" v-if="item.status==2">删除中</span>
+            <span style="color:#2A99F2;width:10%;text-align:right;cursor: pointer" v-else
+                  @click="delUser(item,index)">删除</span>
           </p>
         </div>
         <div class="universal-modal-content-flex">
@@ -967,6 +970,8 @@
       addUser(){
         this.$refs.addUserFormValidate.validate(validate => {
           if (validate) {
+            // status   1：创建中  2：删除中
+            this.userList.push({name: this.addUserForm.userName, status: 1})
             this.$http.get('network/addVpnUser.do', {
               params: {
                 userName: this.addUserForm.userName,
@@ -976,13 +981,22 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.listUser()
+              } else {
+                this.listUser()
+                this.$Message.error(response.data.message)
               }
             })
+            this.addUserForm.userName = ''
+            this.addUserForm.password = ''
           }
         })
       },
       // 删除用户
-      delUser(userName){
+      delUser(userName, index){
+        this.userList.splice(index, 1, {
+          name: userName,
+          status: 2
+        })
         this.$http.get('network/removeVpnUser.do', {
           params: {
             userName,
@@ -991,6 +1005,9 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.listUser()
+          } else {
+            this.listUser()
+            this.$Message.error(response.data.message)
           }
         })
       }
