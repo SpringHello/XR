@@ -1,4 +1,7 @@
 /**
+ * Created by yunrui013 on 2018/3/5.
+ */
+/**
  * Created by yunrui001 on 2017-09-11.
  */
 export default {
@@ -42,7 +45,7 @@ export default {
   ],
   series: [
     {
-      name: '利用率(%)',
+      name: '使用率(%)',
       type: 'bar',
       barWidth: '60%',
       data: []

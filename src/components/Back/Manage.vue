@@ -378,6 +378,8 @@
   import axios from 'axios'
   import defaultOptions from '@/echarts/defaultOptions'
   import histogram from '@/echarts/Histogram'
+  import hostDiskOptions from '@/echarts/hostDiskOptions'
+  import hostDiskHistogram from '@/echarts/hostDiskHistogram'
   import ipOptions from '@/echarts/ipOptions'
   import ipHistogram from '@/echarts/ipHistogram'
   // import {deepClone} from '../util/util'
@@ -387,6 +389,8 @@
   }
   var defaultOptionstr = JSON.stringify(defaultOptions)
   var histogramstr = JSON.stringify(histogram)
+  var hostDiskOptionstr = JSON.stringify(hostDiskOptions)
+  var hostDiskHistogramstr = JSON.stringify(hostDiskHistogram)
   export default {
 
     data() {
@@ -423,7 +427,7 @@
         //系列化对象
         cpuPolar: JSON.parse(defaultOptionstr),
         diskPolar: JSON.parse(defaultOptionstr),
-        memoryPolar: JSON.parse(defaultOptionstr),
+        memoryPolar: JSON.parse(hostDiskOptionstr),
         ipPolar: ipOptions,
         snapshotCol: [
           {
@@ -959,7 +963,7 @@
         day.setTime(day.getTime() - 24 * 60 * 60 * 1000)
         return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
       },
-      
+
       getNearlySevenDays() {
         var day = new Date()
         day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 7)
@@ -971,18 +975,23 @@
         return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
       },
       toggle(type) {
-        if (type != 'flow') {
+        if (type != 'flow' && type != 'memory') {
           var polar = this[type].showType == '折线' ? JSON.parse(defaultOptionstr) : JSON.parse(histogramstr)
           polar.xAxis.data = this[type + 'Polar'].xAxis.data
           polar.series[0].data = this[type + 'Polar'].series[0].data
           this[type + 'Polar'] = polar
-        } else {
+        } else if(type == 'flow'){
           polar = this[type].showType == '折线' ? ipOptions : ipHistogram
           polar.xAxis.data = this.ipPolar.xAxis.data
           polar.series[0].data = this.ipPolar.series[0].data
           polar.series[1].data = this.ipPolar.series[1].data
           console.log(polar)
           this.ipPolar = polar
+        } else {
+          var polar = this[type].showType == '折线' ? JSON.parse(hostDiskOptionstr) : JSON.parse(hostDiskHistogram)
+          polar.xAxis.data = this[type + 'Polar'].xAxis.data
+          polar.series[0].data = this[type + 'Polar'].series[0].data
+          this[type + 'Polar'] = polar
         }
       },
       queryData(type) {
@@ -1167,7 +1176,7 @@
   .ivu-tabs-bar {
     padding-left: 55px;
   }
-  
+
   .content {
     padding: 0px;
     .info {
