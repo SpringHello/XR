@@ -15,7 +15,7 @@
           <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
         <div class="universal-alert">
-          <p> 云主机快照</p>
+          <p> 云主机快照能对主机（包含挂载磁盘）某个时刻的数据进行备份和回滚，云主机快照为增量备份，提升了云主机的安全性，同时增强了云主机快照的易用性。</p>
         </div>
         <Tabs type="card" :animated="false" style="min-height: 400px">
           <TabPane label="云主机快照">

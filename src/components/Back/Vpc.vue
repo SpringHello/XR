@@ -16,7 +16,7 @@
           <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
         <div class="universal-alert">
-          <p>为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。</p>
+          <p>虚拟私有云，通过逻辑方式进行网络隔离，提供安全、隔离的网络环境。VPC为您提供与传统网络无差别的虚拟网络，同时还可以为您提供弹性IP、安全组、VPN等高级网络服务。</p>
         </div>
         <Tabs type="card" :animated="false" v-model="pane">
           <TabPane label="虚拟私有云VPC" name="VPC">

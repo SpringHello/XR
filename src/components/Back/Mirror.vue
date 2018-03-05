@@ -11,7 +11,7 @@
           <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
         <div class="universal-alert">
-          <p>镜像描述</p>
+          <p>镜像是一个包含了软件及必要配置的云主机模板，至少包含操作系统，还可以包含应用软件（例如，数据库软件）和私有软件。通过镜像，您可以创建云主机。</p>
         </div>
         <Tabs type="card" :animated="false" style="min-height: 400px">
           <TabPane label="系统镜像">

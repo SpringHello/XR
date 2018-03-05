@@ -10,7 +10,7 @@
           <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
         <div class="universal-alert">
-          <p>防火墙描述</p>
+          <p>防火墙是对一个或多个子网的访问控制策略系统，根据与子网关联的入站/出站规则，判断数据包是否被允许流入/流出关联子网。</p>
         </div>
         <div id="body">
           <div class="operator-bar">
