@@ -35,11 +35,11 @@
                       <img src="../../assets/img/recharge/pay-icon-wx.png"
                            style="width: 122px;height: 40px;vertical-align: middle">
                     </Radio>
-                    <Button type="primary" @click="recharge"
-                            style=" font-size: 16px; margin-top: 100px; margin-left: 1060px">确认充值
-                    </Button>
                   </Radio-group>
                 </div>
+                <Button type="primary" @click="recharge"
+                        style=" font-size: 16px; margin-top: 100px;">确认充值
+                </Button>
               </Tab-pane>
               <Tab-pane label="线下支付">
                 <p class="p">公司名称：北京允睿讯通科技有限公司</p>
