@@ -90,9 +90,6 @@
         </div>
         <div class="operate" ref="operate">
           <ul @mouseleave="ML">
-<<<<<<< HEAD
-            <li class="sec-nav" v-for="(item,index) in main" :key="index" @mouseenter="ME($event,item.type)" :ref="item.type"
-=======
             <!--<li class="zone-collapse">
 
               <Dropdown @on-click="toggleZone">
@@ -108,7 +105,6 @@
             </li>-->
             <li class="sec-nav" v-for="(item,index) in main" :key="index" @mouseenter="ME($event,item.type)"
                 :ref="item.type"
->>>>>>> fa1eb4acb33851a831cee85e6a4bf59ed76c7092
                 :class="{hover:item.type==pageInfo.hoverItem}">
               <a>{{item.mainName}}</a>
             </li>
@@ -527,17 +523,6 @@
         .operate {
           > ul {
             position: relative;
-<<<<<<< HEAD
-=======
-            .zone-collapse {
-              margin-right: 20px;
-              display: inline-block;
-              font-size: 14px;
-              a {
-                color: #333333;
-              }
-            }
->>>>>>> fa1eb4acb33851a831cee85e6a4bf59ed76c7092
             .sec-nav {
               display: inline-block;
               font-size: 14px;
