@@ -16,7 +16,7 @@
           <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
         <div class="universal-alert">
-          <p>为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。</p>
+          <p>VPN业务用于在远端用户和VPC之间建立一条安全加密的通信隧道，使远端用户通过VPN使用VPC中的业务资源。</p>
         </div>
 
         <Tabs type="card" :animated="false" v-model="pane">
@@ -855,6 +855,8 @@
             })
           }
         })
+        this.showModal.newTunnelVpn = false
+
       },
       // 打开创建隧道VPN modal
       newTunnelVpn(){
