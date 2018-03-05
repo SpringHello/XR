@@ -316,10 +316,10 @@
           }
         ], // 页尾列表详情
         document: [
-          {title: '计算', url: '/ruicloud/computed/1-1'},
-          {title: '网络', url: '/ruicloud/networks/1-1'},
-          {title: '安全', url: ''},
-          {title: '财务与账户', url: '/ruicloud/uaf/3-1'}
+          {title: '计算', url: '/ruicloud/document'},
+          {title: '网络', url: '/ruicloud/document'},
+          {title: '安全', url: '/ruicloud/document'},
+          {title: '财务与账户', url: '/ruicloud/document'}
         ],
         Preparation: [
           {

@@ -1,6 +1,10 @@
 <template>
   <div id="background">
     <div id="wrapper">
+      <Spin fix v-show="loading">
+        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+        <div>{{loadingMessage}}</div>
+      </Spin>
       <span class="title">云服务器 /
          <span>云主机快照</span>
       </span>
@@ -211,6 +215,8 @@
   export default {
     data() {
       return {
+        loading: false,
+        loadingMessage: '',
         snapsName: '',
         hostName: '',
         hostCreatetime: '',
@@ -1872,10 +1878,13 @@
       },
       rollbackSubmit() {
         this.showModal.rollback = false
+        this.loadingMessage = '正在回滚主机'
+        this.loading = true
         var URL = `Snapshot/revertToVMSnapshot.do?snapshotId=${this.cursnapshot.snapshotid}&zoneId=${$store.state.zone.zoneid}`
         axios.get(URL)
           .then(response => {
             if (response.status == 200) {
+              this.loading = false
               this.$Message.success({
                 content: response.data.message,
                 duration: 5
