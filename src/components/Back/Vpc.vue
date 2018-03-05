@@ -9,6 +9,9 @@
         云网络 /
          <span>网络私有云VPC</span>
       </span>
+      <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
+        <router-link to="/ruicloud/userCenter">立即认证</router-link>
+      </Alert>
       <div id="content">
         <div id="header">
           <img src="../../assets/img/network/vpc-icon.jpg" style="margin-right: 5px;vertical-align: text-bottom">
@@ -746,6 +749,7 @@
         Promise.all([vpcResponse, NATResponse]).then((ResponseValue) => {
           this.setData(ResponseValue[0])
           this.setNatData(ResponseValue[1])
+          this.select = null
         })
       },
       // 选中当前项
@@ -849,11 +853,9 @@
                   this.$Message.success({
                     content: response.data.message
                   })
-                  this.$http.get('network/listNatGateway.do').then(response => {
-                    this.setNatData(response)
-                    this.select = null
-                  })
-                } else {
+              this.refresh()
+            } else {
+                  this.refresh()
                   this.$message.error({
                     content: response.data.message
                   })
@@ -886,10 +888,12 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
+                this.refresh()
                 this.$Message.success({
                   content: response.data.message
                 })
               } else {
+                this.refresh()
                 this.$message.error({
                   content: response.data.message
                 })
@@ -1110,7 +1114,12 @@
         this.$router.push('/ruicloud/vpcManage')
       }
     },
-    computed: {},
+   computed: {
+       auth(){
+        return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
+        
+      }
+    },
     watch: {
       // 检测到新建VPC购买方式发生变化，重新查询价格
       'newForm.timeValue'(){
