@@ -15,6 +15,9 @@
     </div>
 </template>
 <style scoped>
+  p {
+    line-height: 1.5;
+  }
   h2 {
 
     font-weight: 700;

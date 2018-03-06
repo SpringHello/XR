@@ -22,7 +22,7 @@
                                  @on-change="dataChange"></Date-picker>
                     <Input v-model="searchInfo.keyWords" placeholder="请输入消息名称"
                            style="width: 200px;display: inline-block;margin-right: 10px"></Input>
-                    <Button type="primary" @click="getData('all')">查询</Button>
+                    <Button type="primary" @click="getData('all')" style="margin-left: 20px;">查询</Button>
                   </div>
                 </div>
               </div>
@@ -43,7 +43,7 @@
                                  @on-change="dataChange"></Date-picker>
                     <Input v-model="searchInfo.keyWords" placeholder="请输入消息名称"
                            style="width: 200px;display: inline-block;margin-right: 10px"></Input>
-                    <Button type="primary" @click="getData('notRead')">查询</Button>
+                    <Button type="primary" @click="getData('notRead')" style="margin-left: 20px;">查询</Button>
                   </div>
                 </div>
               </div>
@@ -65,7 +65,7 @@
                                  @on-change="dataChange"></Date-picker>
                     <Input v-model="searchInfo.keyWords" placeholder="请输入消息名称"
                            style="width: 200px;display: inline-block;margin-right: 10px"></Input>
-                    <Button type="primary" @click="getData('read')">查询</Button>
+                    <Button type="primary" @click="getData('read')" style="margin-left: 20px;">查询</Button>
                   </div>
                 </div>
               </div>

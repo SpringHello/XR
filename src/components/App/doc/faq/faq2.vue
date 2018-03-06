@@ -53,6 +53,9 @@
     </div>
 </template>
 <style scoped>
+  p {
+    line-height: 1.5;
+  }
   h1 {
     font-weight: 700;
   }

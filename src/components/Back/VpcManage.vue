@@ -18,7 +18,7 @@
               <div class="clock-show icon dib"></div>
             </div>
             <div>
-              <Button type="primary" class="btn-bgwhite" @click="$router.go(-1)">返回</Button>
+              <Button type="primary" class="btn-bgwhite" @click="$router.go(-1)" style="margin-right: 10px;">返回</Button>
               <Button type="primary" @click="$router.go(0)">刷新</Button>
             </div>
           </div>
