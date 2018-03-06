@@ -1,5 +1,9 @@
 <template>
   <div class="vpc-manage">
+    <Spin fix v-show="loading">
+      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+      <div>{{loadingMessage}}</div>
+    </Spin>
     <div class="wrapper">
       <span class="title">
         云网络 /
@@ -45,9 +49,9 @@
                        :class="{rotateup:item._show,rotatedown:!item._show}"></div>
                   {{item.name}}
                 </li>
-                <li>网络地址：{{item.network}}</li>
-                <li>网关地址：{{item.ipsegment}}</li>
-                <li>状态：{{item.status}}</li>
+                <li>网关地址：{{item.ipsegment.split('/')[0]}}</li>
+                <li>网段地址：{{item.ipsegment}}</li>
+                <li>服务方案：{{item.netoffername}}</li>
                 <li>防火墙：<span class="blue">{{item.acllistname}}</span></li>
                 <li>负载均衡：<span class="blue">{{item.loadbalance}}</span></li>
                 <li><span class="blue" @click="addHostToVpc(item)">添加主机</span><span class="vertical-line">|</span><span
@@ -335,6 +339,8 @@
     },
     data() {
       return {
+        loadingMessage: '',
+        loading: false,
         TabPane: 'subNetwork',
         showModal: {
           addNetwork: false,
@@ -452,7 +458,7 @@
                 return h('div', [h('Spin', {
                   style: {
                     display: 'inline-block',
-                    marginRight:'10px'
+                    marginRight: '10px'
                   }
                 }), h('span', {
                   style: {
@@ -589,6 +595,8 @@
         })
       },
       addHostForm_ok () {
+        this.loadingMessage = '正在添加主机，请稍候'
+        this.loading = true
         this.showModal.addHostToNet = false
         var url = `network/enterVMToNetwork.do?networkId=${this.addHostForm.ipsegmentid}&VMId=${this.addHostForm.vm}`
         for (let network of this.data.ipsList) {
@@ -600,12 +608,15 @@
           }
         }
         this.$http.get(url).then(response => {
-          this.refresh()
           if (response.status == 200 && response.data.status == 1) {
-            this.$message.info({
+            this.loading = false
+            this.refresh()
+            this.$Message.success({
               content: response.data.message
             })
           } else {
+            this.loading = false
+            this.refresh()
             this.$message.error({
               content: response.data.message
             })
@@ -614,21 +625,25 @@
       },
       // 删除vpc
       deleteVpc (item) {
-        console.log(item)
         this.$message.confirm({
           content: '确认删除该子网？',
           onOk: () => {
+            this.loadingMessage = '正在删除子网，请稍候'
+            this.loading = true
             var url = `network/deleteNetwork.do?id=${item.id}`
             this.$http.get(url).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.$message.info({
+                this.loading = false
+                this.$Message.info({
                   content: response.data.message
                 })
                 this.refresh()
               } else {
+                this.loading = false
                 this.$message.error({
                   content: response.data.message
                 })
+                this.refresh()
               }
             })
           }
@@ -694,12 +709,16 @@
           this.$message.confirm({
             content: '确认删除该子网？',
             onOk: () => {
+              this.loadingMessage = '正在删除子网，请稍候'
+              this.loading = true
               item.delete = true
               this.$http.get(url).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.$Message.success(response.data.message)
+                  this.loading = false
                   this.refresh()
                 } else {
+                  this.loading = false
                   item.delete = false
                   this.$message.error({
                     content: response.data.message
@@ -731,13 +750,18 @@
       },
       /* 确认更换防火墙 */
       modifyFirewall(){
+        this.loadingMessage = '正在更换防火墙，请稍候'
+        this.loading = true
         this.showModal.modifyFirewall = false
         var url = `network/replaceNetworkACLList.do?aclListId=${this.modifyFirewallForm.acl}&networkId=${this.firewall.ipsegmentid}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            this.loading = false
             this.$Message.success(response.data.message)
             this.refresh()
           } else {
+            this.loading = false
+            this.refresh()
             this.$message.error({
               content: response.data.message
             })
@@ -765,6 +789,9 @@
         this.$refs.newNetworkValidate.validate((valid) => {
           if (valid) {
             var gateWay = this.data.cidr.split('.')
+            this.loadingMessage = '正在添加子网，请稍候'
+            this.loading = true
+            this.showModal.addNetwork = false
             axios.get('network/createNetwork.do', {
               params: {
                 vpcId: this.data.vpcid,
@@ -777,9 +804,9 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
+                this.loading = false
                 this.$Message.success(response.data.message)
                 this.refresh()
-                this.showModal.addNetwork = false
               } else {
                 nameError = ''
                 getwayError = ''
@@ -823,7 +850,16 @@
                 VMId
               }
             }).then(response => {
-              this.refresh()
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success({
+                  content: response.data.message
+                })
+                this.refresh()
+              } else {
+                this.$message.error({
+                  content: response.data.message
+                })
+              }
             })
           }
         })
@@ -840,10 +876,11 @@
           }
         }
         this.$http.get(url).then(response => {
-          this.refresh()
           if (response.status == 200 && response.data.status == 1) {
+            this.refresh()
             this.$Message.success(response.data.message)
           } else if (response.status == 200 && response.data.status == 2) {
+            this.refresh()
             this.$message.error({
               content: response.data.message
             })
@@ -864,15 +901,19 @@
       },
       /* 主机确认绑定ip */
       bind(){
+        this.loadingMessage = '主机正在绑定ip,请稍候'
+        this.loading = true
         this.showModal.bindIP = false
         var arr = this.bindForm.publicIP.split("#")
         var url = `network/enableStaticNat.do?ipId=${arr[0]}&VMId=${this.bindForm.vm.computerid}`
         this.$http.get(url)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
+              this.loading = false
               this.$Message.success(response.data.message)
               this.refresh()
             } else {
+              this.loading = false
               this.$message.error({
                 content: response.data.message
               })
@@ -884,12 +925,16 @@
         this.$message.confirm({
           content: '该主机确认解绑IP？',
           onOk: () => {
+            this.loadingMessage = '主机正在解绑ip,请稍候'
+            this.loading = true
             var url = `network/disableStaticNat.do?VMId=${vm.computerid}`
             this.$http.get(url).then(response => {
               if (response.status == 200 && response.data.status == 1) {
+                this.loading = false
                 this.$Message.success(response.data.message)
                 this.refresh()
               } else {
+                this.loading = false
                 this.$message.error({
                   content: response.data.message
                 })

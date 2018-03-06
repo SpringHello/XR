@@ -51,7 +51,7 @@
                 </div>
               </div>
               <p style="margin-top: 10px;margin-bottom: 20px;font-size: 12px;color: #999999;line-height: 25px;">
-                满一年打8折，满两年打7.5折，满3年5折</p>
+                满一年打8.3折，满两年打7折，满3年6折</p>
             </div>
 
             <!--快速配置主体页面-->
@@ -551,7 +551,7 @@
               </div>
             </div>
             <p style="margin-top: 10px;margin-bottom: 20px;font-size: 12px;color: #999999;line-height: 25px;">
-              满一年打8折，满两年打7.5折，满3年5折</p>
+              满一年打8.3折，满两年打7折，满3年6折</p>
           </div>
           <!--云硬盘-->
           <div style="margin-top:20px;border-bottom: 1px solid #D9D9D9;padding-bottom: 20px;">
@@ -682,7 +682,7 @@
               </div>
             </div>
             <p style="margin-top: 10px;margin-bottom: 20px;font-size: 12px;color: #999999;line-height: 25px;">
-              满一年打8折，满两年打7.5折，满3年5折</p>
+              满一年打8.3折，满两年打7折，满3年6折</p>
           </div>
 
           <!--主机网络与带宽-->

@@ -469,7 +469,11 @@
         </FormItem>
         </Form>
         <div style="font-size:16px;">
-          应付费:<span style="color: #2b85e4; text-indent:4px;display:inline-block">￥{{cost}}</span>
+          应付费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{cost}}
+          <span v-if="renewalTime != ''">/</span>
+          <span style="font-size: 15px;">{{renewalTime}}<span v-if="renewalType == 'year' && renewalTime != ''">年</span>
+          <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span>
+        </span>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -609,7 +613,7 @@
           }, {label: '5月', value: 5}, {label: '6月', value: 6}, {label: '7月', value: 7}, {
             label: '8月',
             value: 9
-          }, {label: '9月', value: 9}, {label: '10月', value: 10}, {label: '11月', value: 11}, {label: '12月', value: 12}]
+          }, {label: '9月', value: 9}, {label: '10月', value: 10}]
         },
         requestParam: {
           ipArray: [],
@@ -1096,7 +1100,7 @@
     computed: {
       auth(){
         return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
-        
+
       }
     },
     watch: {

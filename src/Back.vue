@@ -61,9 +61,9 @@
                   <DropdownItem name="operationLog">
                     <router-link to="operationLog">操作日志</router-link>
                   </DropdownItem>
-                  <DropdownItem divided>
+                  <DropdownItem divided name="exit">
                     <!-- <router-link to="">退出</router-link> -->
-                    <span @click="exit" style="color:#666">退出</span>
+                    <span style="color:#666;">退出</span>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
@@ -77,8 +77,10 @@
         <div class="zoneList">
           <Dropdown @on-click="toggleZone">
             <div style="height:30px;">
-              <div style="display: inline-block;background: #2A99F2;border-radius: 4px;height: 30px;padding: 4px 0px;cursor:pointer">
-                <img src="./assets/img/back/zoneIcon.png" style="vertical-align: middle;margin:0px 10px;"></img><span style="font-size: 14px;color: #FFFFFF;line-height: 21px;vertical-align: middle;margin-right:10px;">{{zone.zonename}}</span>
+              <div
+                style="display: inline-block;background: #2A99F2;border-radius: 4px;height: 30px;padding: 4px 0px;cursor:pointer">
+                <img src="./assets/img/back/zoneIcon.png" style="vertical-align: middle;margin:0px 10px;"></img><span
+                style="font-size: 14px;color: #FFFFFF;line-height: 21px;vertical-align: middle;margin-right:10px;">{{zone.zonename}}</span>
               </div>
             </div>
             <DropdownMenu slot="list">
@@ -286,6 +288,9 @@
         this.$router.push(sType)
       },
       go(path){
+        if (path == 'exit') {
+          this.exit()
+        }
         this.$router.push(path)
       },
       pane(pane){
@@ -496,8 +501,8 @@
         display: flex;
         justify-content: space-between;
         .zoneList {
-          height:30px;
-          margin:7.5px 0px;
+          height: 30px;
+          margin: 7.5px 0px;
           .ivu-dropdown-rel {
             a {
               font-size: 14px;

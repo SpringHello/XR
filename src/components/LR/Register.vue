@@ -508,6 +508,7 @@
         }
         this.codePlaceholder = '验证码发送中'
         axios.get('user/code.do?aim=' + this.form.loginname + '&type=' + this.type + '&isemail=' + this.isemail + '&vailCode=' + this.form.code).then(response => {
+          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success({
               content: '验证码发送成功',
@@ -524,6 +525,7 @@
               }
             }, 1000)
           } else {
+            this.$Message.error(response.data.message)
             this.codePlaceholder = '发送验证码'
           }
         })
