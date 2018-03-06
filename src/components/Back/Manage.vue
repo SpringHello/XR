@@ -15,7 +15,7 @@
             <span class="arrowdown-icon"></span>
             <span>{{this.$route.query.computername}}</span>
             <div>
-              <Button class="btn" @click="$router.go(-1)" >返回</Button>
+              <Button class="btn" @click="$router.go(-1)" style="margin-right: 10px;">返回</Button>
               <a :href="`${this.$route.query.connecturl}`" target="_blank" style="border:solid 1px #2A99F2;color: #2A99F2;border-radius: 5px;padding: 6px 15px;background-color:#f7f7f7;font-size:12px;">连接主机</a>
             </div>
           </header>
@@ -1199,6 +1199,10 @@
           color: #2A99F2;
           border-radius: 5px;
           padding: 5px 15px;
+        }
+        .btn:hover {
+          color: #fff;
+          background: #2A99F2;
         }
       }
       .pan {

@@ -885,16 +885,13 @@
         this.$message.confirm({
           content: '您确认删除该VPC吗',
           onOk: () => {
-            this.$http.get('network/delVpc.do', {
+            this.$http.get('network/deleteVpc.do', {
               params: {
                 id: select[0].id
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.refresh()
-                this.$Message.success({
-                  content: response.data.message
-                })
               } else {
                 this.refresh()
                 this.$message.error({

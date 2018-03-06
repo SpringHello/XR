@@ -38,7 +38,7 @@
                   </Radio-group>
                 </div>
                 <Button type="primary" @click="recharge"
-                        style=" font-size: 16px; margin-top: 100px;">确认充值
+                        style=" font-size: 16px; margin-top: 20px;">确认充值
                 </Button>
               </Tab-pane>
               <Tab-pane label="线下支付">

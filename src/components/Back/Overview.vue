@@ -73,7 +73,8 @@
             <p class="universal-middle" :class="warning" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">
               告警</p>
             <div style="display: flex;justify-content: space-between;cursor:pointer">
-              <div v-for="(item,index) in warnData" :key="index" @click="togo(item.url.split('#')[0],item.url.split('#')[1])" style="">
+              <div v-for="(item,index) in warnData" :key="index"
+                   @click="togo(item.url.split('#')[0],item.url.split('#')[1])" style="">
                 <p class="universal-mini">{{item.itemName}}</p>
                 <span class="universal-large" :class="{warning:item.value!=0}">{{item.value}}项</span>
               </div>
@@ -91,7 +92,7 @@
           <div>
             <Carousel v-model="value1">
               <CarouselItem v-for="(item,index) in ads" :key="index">
-                <img src="http://localhost:8082/ruicloud/taobaoPicture/testTaobao.jpg">
+                <img :src="item.pictureurl">
               </CarouselItem>
             </Carousel>
           </div>
@@ -294,7 +295,7 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   /* 未认证class icon */
-  .auth-icon{
+  .auth-icon {
     width: 67px;
     height: 18px;
     display: inline-block;
@@ -303,6 +304,7 @@
     transform: translateY(-50%);
     background-repeat: no-repeat;
   }
+
   .not-auth {
     background-image: url(../../assets/img/overview/authenticate-icon-1.png);
   }
@@ -398,7 +400,7 @@
                 display: flex;
                 align-items: center;
                 padding: 10px;
-                border:#f5f5f5 solid 1px;
+                border: #f5f5f5 solid 1px;
                 &:hover {
                   border: #2a99f2 solid 1px
                 }
@@ -418,10 +420,10 @@
                   border: 1px solid #CCCCCC;
                   border-radius: 50%;
                   text-align: center;
-                  &:hover{
+                  &:hover {
                     border: 1px solid #2a99f2;
                   }
-                  &:hover .cart-icon{
+                  &:hover .cart-icon {
                     color: #2a99f2
                   }
                   .cart-icon {

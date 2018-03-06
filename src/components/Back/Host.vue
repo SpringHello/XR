@@ -500,19 +500,20 @@
         </Button>
       </div>
     </Modal>
-    <!-- 认证弹窗 -->
+   <!--选择两种认证方式-->
     <Modal v-model="showModal.selectAuthType" width="590" :scrollable="true" :styles="{top:'172px'}">
-      <div slot="header" class="modal-header-border">
-        <span class="universal-modal-title">选择认证方式</span>
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        选择认证方式
       </div>
-      <div class="select-auth">
-        <div class="content">
+      <div style="display: flex">
+        <div class="selectAuthType" style="border-right: 1px solid #D9D9D9">
           <h2>个人用户</h2>
           <p><i></i>可以使用睿云所有资源</p>
           <p><i></i>个人级别的资源建立额度</p>
           <p><i></i>最长一个月的免费试用时间</p>
         </div>
-        <div class="content">
+        <div class="selectAuthType">
           <h2>企业用户</h2>
           <p><i></i>可以使用睿云所有资源</p>
           <p><i></i>企业级无限量的资源建立额度</p>
@@ -529,7 +530,8 @@
         </div>
       </div>
       <div slot="footer">
-        <p class="modal-text-hint-bottom">提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：028-23242423</p>
+        <p class="modal-text-hint-bottom">
+          提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：028-23242423</p>
       </div>
     </Modal>
   </div>
@@ -627,6 +629,9 @@
       }
     },
     created() {
+      if(this.$store.state.userInfo.personalauth != 0 && this.$store.state.userInfo.companyauth != 0){
+        this.showModal.selectAuthType = true
+      }
       this.getData()
       // 定时发送ajax 刷新页面
       this.intervalInstance = setInterval(() => {
@@ -1089,7 +1094,7 @@
       },
       push(type) {
         sessionStorage.setItem('authType', type)
-        this.$router.push('/usercenter')
+        this.$router.push('/ruicloud/usercenter')
       },
     },
     computed: {
@@ -1136,15 +1141,6 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
- .select-auth {
-   display: flex;
-   justify-content: space-around;
-   .content{
-     p{
-       line-height: 18px;
-     }
-   }
- }
   .ivu-modal-footer {
     .button {
       height: 35.7px;
@@ -1297,6 +1293,43 @@
       &:hover{
         background: #2A99F2;
         color: #FFFFFF
+      }
+    }
+  }
+  .selectAuthType {
+    width: 50%;
+    h2 {
+      text-align: center;
+      font-size: 16px;
+      color: rgba(17, 17, 17, 0.75);
+      margin-bottom: 20px;
+    }
+    p {
+      position: relative;
+      font-size: 14px;
+      color: rgba(17, 17, 17, 0.65);
+      margin-bottom: 10px;
+      padding-left: 60px;
+      i {
+        transform: rotate(-45deg);
+        position: absolute;
+        width: 7px;
+        height: 4px;
+        top: 5px;
+        left: 62px;
+        border-left: 1px solid #3DBD7D;
+        border-bottom: 1px solid #3DBD7D;
+        display: inline-block;
+      }
+      &::before {
+        margin-right: 7px;
+        content: '';
+        width: 12px;
+        height: 12px;
+        border: 1px solid #3DBD7D;
+        border-radius: 50%;
+        display: inline-block;
+        vertical-align: middle;
       }
     }
   }

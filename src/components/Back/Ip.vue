@@ -165,7 +165,8 @@
           </Form-item>
           <Form-item label="资费" style="width: 80%">
             <span style="font-family: MicrosoftYaHei;font-size: 24px;color: #2A99F2;line-height: 43px;">￥{{chargesForm.cost}}</span>
-            <span style="font-family: MicrosoftYaHei;font-size: 24px;color: #2A99F2;line-height: 43px;" v-if="chargesForm.discounts">（已优惠￥{{chargesForm.discounts}}）</span>
+            <span style="font-family: MicrosoftYaHei;font-size: 24px;color: #2A99F2;line-height: 43px;"
+                  v-if="chargesForm.discounts">（已优惠￥{{chargesForm.discounts}}）</span>
           </Form-item>
         </Form>
       </div>
@@ -181,7 +182,7 @@
         <span class="universal-modal-title">带宽调整</span>
       </p>
       <div class="universal-modal-content-flex">
-        <Form :model="adjustForm" label-position="left" >
+        <Form :model="adjustForm" label-position="left">
           <Form-item label="带宽" style="width: 80%">
             <div style="width:300px;display: inline-block;vertical-align: middle;margin-left: 11px">
               <Slider v-model='adjustForm.brand' show-input :min='adjustForm.minBrand'></Slider>
@@ -255,7 +256,7 @@
           {
             title: 'IP地址',
             key: 'publicip',
-            width: 120,
+            width: 150,
             align: 'center'
           },
           {
@@ -342,6 +343,7 @@
           {
             title: '消费类型',
             key: 'caseType',
+            width: 150,
             align: 'center',
             filters: [
               {
@@ -371,21 +373,23 @@
               let value = ''
               switch (obj.row.caseType) {
                 case 1:
-                  value = '包年'
+                  value = `包年(${obj.row.cpCase}/年)`
                   break
                 case 2:
-                  value = '包月'
+                  value = `包月(${obj.row.cpCase}/月)`
                   break
                 case 3:
-                  value = '实时计费'
+                  value = `实时计费(${obj.row.cpCase}/时)`
               }
               return h('span', value)
             }
           },
           {
             title: '带宽',
-            key: 'bandwith',
-            align: 'center'
+            align: 'center',
+            render(h, obj){
+              return h('span', `${obj.row.bandwith}M`)
+            }
           },
           {
             title: '创建时间',
@@ -765,7 +769,7 @@
           this.adjustForm.minBrand = this.select.bandwith
           this.adjustForm.brand = this.select.bandwith
           this.showModal.adjust = true
-        } else{
+        } else {
           this.$Message.warning('请选择1个弹性IP')
           return false
         }
@@ -778,7 +782,7 @@
               this.$router.push({path: 'order'})
             } else {
               this.$message.error({
-               content: response.data.message
+                content: response.data.message
               })
             }
           }
@@ -834,7 +838,7 @@
               } else {
                 this.chargesForm.discounts = null;
               }
-            } else{
+            } else {
               this.chargesForm.cost = '正在计算'
             }
           }
@@ -855,9 +859,9 @@
       }
     },
     computed: {
-       auth(){
+      auth(){
         return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
-        
+
       }
     }
   }
