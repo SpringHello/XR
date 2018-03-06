@@ -87,6 +87,8 @@ const WorkOrder = () => import('@/components/Back/WorkOrder')
 // 帮助文档路由
 const computed = () => import('@/components/App/doc/computed')
 const computed1 = () => import('@/components/App/doc/computed1')
+const fs1 = () => import('@/components/App/doc/faststart/computed2')
+const fs2 = () => import('@/components/App/doc/faststart/computed3')
 const fs3 = () => import('@/components/App/doc/faststart/fs3')
 const fs4 = () => import('@/components/App/doc/faststart/fs4')
 const fs5 = () => import('@/components/App/doc/faststart/buyGuide')
@@ -227,6 +229,16 @@ var router = new Router({
               path: '',
               name: 'computed',
               component: computed1
+            },
+            {
+              path: '2-1',
+              name: '2-1',
+              component: fs1
+            },
+            {
+              path: '2-2',
+              name: '2-2',
+              component: fs2
             },
             {
               path: '2-3',

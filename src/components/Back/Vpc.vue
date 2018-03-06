@@ -66,6 +66,9 @@
                   </div>
                 </div>
               </div>
+              <div class="logo" v-if="netData.length === 0">
+                <span>暂无VPC数据</span>
+              </div>
             </div>
           </TabPane>
           <TabPane label="NAT网关" name="NAT">
@@ -980,14 +983,18 @@
         this.$refs.gatewayFormValidate.validate((valid) => {
           if (valid) {
             // 表单验证通过
+            this.loadingMessage = '正在添加VPC互通网关，请稍候'
+            this.loading = true
             var url = `network/addPrivateGateway.do?vpcIdStart=${this.addGatewayForm.originVPC}&vpcIdEnd=${this.addGatewayForm.targetVPC}&zoneId=${$store.state.zone.zoneid}&aclIdStart=${this.addGatewayForm.originFirewall}&aclIdEnd=${this.addGatewayForm.targetFirewall}`
             axios.get(url).then(response => {
               this.showModal.addGateway = false
               if (response.status == 200 && response.data.status == 1) {
+                this.loading = false
                 this.$Message.success({
                   content: response.data.message
                 })
               } else {
+                this.loading = false
                 this.$message.error({
                   content: response.data.message
                 })
@@ -1117,7 +1124,7 @@
    computed: {
        auth(){
         return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
-        
+
       }
     },
     watch: {
@@ -1194,6 +1201,7 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    min-height: 200px;
     .card:hover {
       border: 1px solid #2A99F2;
       box-shadow: 0 0 2px 0 rgba(42, 153, 242, 0.35);
@@ -1274,6 +1282,25 @@
             color: #FFFFFF;
           }
         }
+      }
+    }
+    .logo {
+      width: 218px;
+      height: 80px;
+      background: url("../../assets/img/public/no-info-logo.png") no-repeat center;
+      position: absolute;
+      top: 160px;
+      left: 50%;
+      transform: translateX(-50%);
+      & > span {
+        position: absolute;
+        top: 33px;
+        left: 38px;
+        font-size: 14px;
+        color: #666666;
+        letter-spacing: 10px;
+        user-select: none;
+        cursor: default;
       }
     }
   }
