@@ -160,7 +160,7 @@
                       click: () => {
                         this.$store.commit("setSelect", "workorder")
                         this.$router.push({
-                          path:'/workorder',
+                          path:'/ruicloud/workOrder',
                           query:{logData:params.row}
                         });
                       }

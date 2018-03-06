@@ -79,6 +79,7 @@ const FirewallManage = () => import('@/components/Back/FirewallManage')
 const NATManage = () => import('@/components/Back/NATManage')
 const Recycle = () => import('@/components/Back/Recycle')
 const Wxpay = () => import('@/components/Back/Wxpay')
+const WorkOrder = () => import('@/components/Back/WorkOrder')
 
 // 帮助文档路由
 const computed = () => import('@/components/App/doc/computed')
@@ -589,7 +590,8 @@ var router = new Router({
         {path: 'firewallManage', name: 'firewallManage', component: FirewallManage},
         {path: 'NATManage', name: 'NATManage', component: NATManage},
         {path: 'recycle', name: 'recycle', component: Recycle},
-        {path: 'wxpay', name: 'wxpay', component: Wxpay}
+        {path: 'wxpay', name: 'wxpay', component: Wxpay},
+        {path: 'workOrder', name: 'workOrder', component: WorkOrder}
       ]
     },
     {
