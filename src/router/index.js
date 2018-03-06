@@ -22,6 +22,9 @@ const Aboutus = () => import('@/components/App/Aboutus')
 const Dynamic = () => import('@/components/App/Dynamic')
 const ProductBulletin = () => import('@/components/App/ProductBulletin')
 
+// 前台活动页面路由
+const Active = () => import('@/components/App/active/active')
+const Vps = () => import('@/components/App/active/vps')
 
 /* 产品页面路由 */
 const Pecs = () => import('@/components/App/product/ECS.vue')
@@ -197,6 +200,8 @@ var router = new Router({
           ]
         },
         {path: 'buy', name: 'buy', component: Buy},
+        {path: 'active', name: 'active', component: Active},
+        {path: 'vps', name: 'vps', component: Vps},
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
         {path: 'Pecss', component: Pecss},
