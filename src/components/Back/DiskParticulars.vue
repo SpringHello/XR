@@ -12,7 +12,7 @@
           <!--    <Select v-model="diskName" class="mySelect" style="width: 102px">
                 <Option v-for="item in diskList" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>-->
-          <span>{{ diskInfo.diskname}}</span>
+          <span style="color: #FFFFFF">{{ diskInfo.diskname}}</span>
           <button @click="$router.go(0)">刷新</button>
           <button style="margin-right: 10px" @click="$router.go(-1)">返回</button>
         </div>
