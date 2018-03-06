@@ -22,6 +22,9 @@ const Aboutus = () => import('@/components/App/Aboutus')
 const Dynamic = () => import('@/components/App/Dynamic')
 const ProductBulletin = () => import('@/components/App/ProductBulletin')
 
+// 前台活动页面路由
+const Active = () => import('@/components/App/active/active')
+const Vps = () => import('@/components/App/active/vps')
 
 /* 产品页面路由 */
 const Pecs = () => import('@/components/App/product/ECS.vue')
@@ -79,6 +82,7 @@ const FirewallManage = () => import('@/components/Back/FirewallManage')
 const NATManage = () => import('@/components/Back/NATManage')
 const Recycle = () => import('@/components/Back/Recycle')
 const Wxpay = () => import('@/components/Back/Wxpay')
+const WorkOrder = () => import('@/components/Back/WorkOrder')
 
 // 帮助文档路由
 const computed = () => import('@/components/App/doc/computed')
@@ -196,6 +200,8 @@ var router = new Router({
           ]
         },
         {path: 'buy', name: 'buy', component: Buy},
+        {path: 'active', name: 'active', component: Active},
+        {path: 'vps', name: 'vps', component: Vps},
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
         {path: 'Pecss', component: Pecss},
@@ -589,7 +595,8 @@ var router = new Router({
         {path: 'firewallManage', name: 'firewallManage', component: FirewallManage},
         {path: 'NATManage', name: 'NATManage', component: NATManage},
         {path: 'recycle', name: 'recycle', component: Recycle},
-        {path: 'wxpay', name: 'wxpay', component: Wxpay}
+        {path: 'wxpay', name: 'wxpay', component: Wxpay},
+        {path: 'workOrder', name: 'workOrder', component: WorkOrder}
       ]
     },
     {

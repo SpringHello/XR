@@ -10,7 +10,7 @@
             <div style="margin:auto;width:457px;">
               <div style="display: flex">
                 <img v-if="payResult=='success'" src="../../assets/img/payresult/paySuccess.png"
-                     style="margin-right:30px;">
+                     style="margin-right:30px;height: 77px;margin-top: 6px;">
                 <img v-if="payResult=='fail'" src="../../assets/img/payresult/payFail.png" style="margin-right:30px;">
                 <div style="position:relative">
                   <h1 style="margin-bottom:9px;font-size: 24px;color:#111111;font-weight: normal;">{{title}}</h1>
@@ -84,6 +84,7 @@
     .wrapper {
       width: 1200px;
       margin: 0px auto;
+      background-color: white;
       & > span {
         font-family: Microsoft Yahei, 微软雅黑;
         font-size: 12px;
@@ -93,7 +94,7 @@
         display: block;
       }
       .content {
-        background-color: white;
+       // background-color: white;
         padding: 20px;
         & > span {
           display: block;

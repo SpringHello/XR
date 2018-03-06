@@ -91,7 +91,9 @@
           </Form-item>
         </Form>
       </div>
-      <div slot="footer">
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.createRule = false">取消
+        </Button>
         <Button type="primary" @click="handleSubmit">确定
         </Button>
       </div>
