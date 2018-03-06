@@ -1200,6 +1200,10 @@
           border-radius: 5px;
           padding: 5px 15px;
         }
+        .btn:hover {
+          color: #fff;
+          background: #2A99F2;
+        }
       }
       .pan {
         float: left;
