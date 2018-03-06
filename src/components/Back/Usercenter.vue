@@ -6,7 +6,7 @@
         <p class="title">用户中心</p>
         <Tabs type="card" :animated="false" v-model="currentTab">
           <!--未认证-->
-          <TabPane label="用户信息" v-if="userInfo.personalauth==1&&userInfo.companyauth==1" name="info">
+          <TabPane label="用户信息" v-if="userInfo.personalauth==1&&userInfo.companyauth==1">
             <p class="info-title">个人基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
@@ -840,10 +840,15 @@
   import $store from '@/vuex'
   export default{
     data(){
-      var authType = sessionStorage.getItem('authType')
-      var currentTab = 'info' 
+     var authType = sessionStorage.getItem('authType')
+    //  console.log(authType)
+      var currentTab = '' 
       if (authType == 'company') {
         currentTab = 'companyInfo'
+      } else if (authType == 'person') {
+        currentTab = ''
+      } else {
+        currentTab = authType
       }
       sessionStorage.removeItem('authType')
       const validaRegisteredPhone = (rule, value, callback) => {
