@@ -6,7 +6,7 @@
         <p class="title">用户中心</p>
         <Tabs type="card" :animated="false" v-model="currentTab">
           <!--未认证-->
-          <TabPane label="用户信息" v-if="userInfo.personalauth==1&&userInfo.companyauth==1">
+          <TabPane label="用户信息" v-if="userInfo.personalauth==1&&userInfo.companyauth==1" name="info">
             <p class="info-title">个人基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
@@ -617,11 +617,11 @@
           <Button type="primary" @click="showModal.selectAuthType = false">立即认证</Button>
         </div>
         <div style="width:50%;text-align: center">
-          <Button type="primary" @click="showModal.selectAuthType = false;pane = 'companyAuth'">立即认证</Button>
+          <Button type="primary" @click="showModal.selectAuthType = false;currentTab='companyInfo'">立即认证</Button>
         </div>
       </div>
       <div slot="footer">
-        <p style="font-size: 12px;color: rgba(17,17,17,0.43);letter-spacing: 0.71px;line-height: 18px;">
+        <p class="modal-text-hint-bottom">
           提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：028-23242423</p>
       </div>
     </Modal>
@@ -841,6 +841,12 @@
   import $store from '@/vuex'
   export default{
     data(){
+      var authType = sessionStorage.getItem('authType')
+      var currentTab = 'info' 
+      if (authType == 'company') {
+        currentTab = 'companyInfo'
+      }
+      sessionStorage.removeItem('authType')
       const validaRegisteredPhone = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('联系电话不能为空'));
@@ -865,12 +871,12 @@
 
         phoneVerCode: '获取验证码',
         emailVerCode: '获取验证码',
-
+        authType,
         // 当前选中的tab页
-        currentTab: '',
+        currentTab,
         emailVerCodeText: '获取验证码',
         showModal: {
-          selectAuthType: $store.state.authInfo === undefined,
+          selectAuthType: false,
           addLinkman: false,
           modifyPhone: false,
           authByPhone: false,
@@ -1328,6 +1334,13 @@
       }
     },
     created(){
+      if(this.authType == 'person'|| this.authType == 'company'){
+        this.showModal.selectAuthType = false
+      }else {
+        if(this.$store.state.userInfo.personalauth != 0 && this.$store.state.userInfo.companyauth != 0){
+          this.showModal.selectAuthType = true
+        }
+      }
       this.listNotice()
       this.getContacts()
     },
