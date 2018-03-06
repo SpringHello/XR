@@ -163,7 +163,7 @@
             </Select>
           </Form-item>
           <Form-item label="备份名称" prop="backupsName">
-            <Input v-model="createBackupsForm.backupsName" placeholder="请输入。。。"></Input>
+            <Input v-model="createBackupsForm.backupsName" placeholder="请输入"></Input>
           </Form-item>
         </Form>
         <p style="font-family: MicrosoftYaHei;font-size: 12px;line-height:20px;color: #999999;">
