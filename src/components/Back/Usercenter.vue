@@ -1,7 +1,7 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 费用中心</span>
+      <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 用户中心</span>
       <div id="content">
         <p class="title">用户中心</p>
         <Tabs type="card" :animated="false" v-model="currentTab">
@@ -1691,7 +1691,7 @@
           this.notAuth.companyAuthForm.license = response.result
         }
       },
-      // 税务登记证 
+      // 税务登记证
       tax(response){
         if (response.status == 1) {
           this.notAuth.companyAuthForm.tax = response.result
