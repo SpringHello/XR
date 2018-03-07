@@ -223,14 +223,16 @@
         <span class="universal-modal-title">修改硬盘</span>
       </p>
       <div>
-        <p style="font-family: MicrosoftYaHei;font-size: 14px;color: #666666;line-height: 24px;margin-bottom: 10px">
-          硬盘名称：</p>
-        <Input :maxlength="20" v-model="diskName" placeholder="小于20位数字或字母" style="width: 366px"></Input>
+        <Form :model="modificationDiskForm" :rules="modificationDiskRuleValidate" ref="modificationDisk">
+          <Form-item label="硬盘名称" prop="diskName">
+            <Input v-model="modificationDiskForm.diskName" placeholder="请输入"></Input>
+          </Form-item>
+        </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.modificationDisk = false">取消</Button>
         <Button type="primary"
-                @click="modificationDisk_ok">确认修改
+                @click="_checkModificationDiskForm">确认修改
         </Button>
       </div>
     </Modal>
@@ -266,8 +268,10 @@
   import {customTimeOptions, diskTypeList} from '../../options'
   import debounce from 'throttle-debounce/debounce'
   import axios from 'axios'
+  import regExp from '../../util/regExp'
   export default{
     data(){
+      const validaRegisteredName = regExp.validaRegisteredName
       return {
         loadingMessage: '',
         loading: false,
@@ -467,6 +471,14 @@
           // 购买磁盘数量
           quantity: 1,
         },
+        modificationDiskForm: {
+          diskName: '',
+        },
+        modificationDiskRuleValidate: {
+          diskName: [
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
+          ]
+        },
         // 挂载磁盘表单（只含有一个字段）
         diskMountForm: {
           mountHost: ''
@@ -487,7 +499,7 @@
         // 新增磁盘表单的验证规则
         newRuleValidate: {
           diskName: [
-            {required: true, message: '请输入磁盘名称', trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ],
           diskType: [
             {required: true, message: '请选择磁盘类型', trigger: 'change'}
@@ -531,7 +543,7 @@
         // 新建备份表单验证
         createBackupsRuleValidate: {
           backupsName: [
-            {required: true, message: '请输入备份名称', trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ]
         },
         // 可挂载主机列表
@@ -577,6 +589,15 @@
           if (valid) {
             // 表单验证通过，调用创建备份策略方法
             this.createDiskBackup_ok()
+          }
+        })
+      },
+      // 验证修改磁盘表单
+      _checkModificationDiskForm(){
+        this.$refs.modificationDisk.validate((valid) => {
+          if (valid) {
+            // 表单验证通过，调用创建备份策略方法
+            this.modificationDisk_ok()
           }
         })
       },
@@ -703,7 +724,7 @@
         if (data.status == 1) {
           this.operand = data
           this.showModal.modificationDisk = true
-          this.diskName = this.operand.diskname
+          this.modificationDiskForm.diskName = this.operand.diskname
         } else {
           this.$message.error({
             content: '该硬盘当前状态下不能修改'
@@ -766,7 +787,7 @@
       },
       /* 确认修改磁盘名称 */
       modificationDisk_ok(){
-        this.$http.get('Disk/updateDisk.do?diskId=' + this.operand.diskid + '&diskName=' + this.diskName).then(response => {
+        this.$http.get('Disk/updateDisk.do?diskId=' + this.operand.diskid + '&diskName=' + this.modificationDiskForm.diskName).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.info({
               content: response.data.message,

@@ -52,8 +52,8 @@
                 <li>网关地址：{{item.ipsegment.split('/')[0]}}</li>
                 <li>网段地址：{{item.ipsegment}}</li>
                 <li>服务方案：{{item.netoffername}}</li>
-                <li>防火墙：<span class="blue">{{item.acllistname}}</span></li>
-                <li>负载均衡：<span class="blue">{{item.loadbalance}}</span></li>
+                <li>防火墙：<span class="blue" @click="$router.push('firewall')">{{item.acllistname}}</span></li>
+                <li>负载均衡：<span class="blue" @click="$router.push('balance')">{{item.netoffername}}</span></li>
                 <li><span class="blue" @click="addHostToVpc(item)">添加主机</span><span class="vertical-line">|</span><span
                   class="blue" @click="deleteVpc(item)">删除</span></li>
               </ul>
@@ -166,10 +166,10 @@
       <div class="universal-modal-content-flex">
         <Form :model="newNetworkForm" :rules="newNetworkRuleValidate" ref="newNetworkValidate">
           <FormItem label="子网名称" prop="networkName">
-            <Input v-model="newNetworkForm.networkName" placeholder="请输入vpc名称"></Input>
+            <Input v-model="newNetworkForm.networkName" placeholder="请输入子网名称"></Input>
           </FormItem>
           <FormItem label="子网描述" prop="networkDesc">
-            <Input v-model="newNetworkForm.networkDesc" placeholder="请输入vpc名称"></Input>
+            <Input v-model="newNetworkForm.networkDesc" placeholder="请输入子网描述"></Input>
           </FormItem>
           <FormItem label="应用防火墙" prop="firewall">
             <Select v-model="newNetworkForm.firewall" placeholder="请选择">
