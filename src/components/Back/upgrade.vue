@@ -26,15 +26,20 @@
             </div>
             <div class="conf-wrapper">
               <h1>升级前配置</h1>
-              <span>规格 : {{currentCPUNum}}核{{currentRAMSize}}G</span>
+              <span>主机名称 : {{hostname}}</span>
+              <span>主机配置 : {{currentCPUNum}}核{{currentRAMSize}}G</span>
+              <span>剩余时长 : {{endtime}}</span>
             </div>
             <div class="conf-wrapper">
               <h1>升级后配置</h1>
-              <span>规格 : {{CPUNum}}核{{RAMSize}}G</span>
-              <span>应付差价 : {{cost}}</span>
-              <span style="margin-top:20px;">
+              <span>主机名称 : {{hostname}}</span>
+              <span>主机配置 : {{CPUNum}}核{{RAMSize}}G</span>
+              <span>剩余时长 : {{endtime}}</span>
+              <span style="line-height:24px;">应付差价 :
+                 <i class="money">{{cost}}元</i>
+              </span>
+              <span style="margin-top:10px;">
                 <a href="/ruicloud/#/computed/3-1" target="_blank">购买和计费说明</a>
-                <i class="money">{{cost}}元</i>
               </span>
               <button @click="payOrder" >立即购买</button>
             </div>
@@ -50,9 +55,15 @@
     data(){
       var currentCPUNum = Number.parseInt(localStorage.serviceoffername.replace(/[^0-9]/ig, "")[0])
       var currentRAMSize = Number.parseInt(localStorage.serviceoffername.replace(/[^0-9]/ig, "")[2])
+      var hostname = sessionStorage.getItem('hostname')
+      var endtime = sessionStorage.getItem('endtime')
+      sessionStorage.removeItem('hostname')
+      sessionStorage.removeItem('endtime')
       return {
         currentCPUNum,
         currentRAMSize,
+        hostname,
+        endtime,
         CPUNum: currentCPUNum,
         RAMSize: currentRAMSize,
         minDisk: Number.parseInt(localStorage.disksize),
@@ -205,7 +216,7 @@
           display: block;
         }
         button {
-          margin-top: 20px;
+          margin-top: 10px;
           padding: 7px 0px;
           width: 100%;
           background: #2A99F2;
