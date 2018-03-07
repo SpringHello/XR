@@ -114,6 +114,7 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import $store from '@/vuex'
+  import regExp from '../../util/regExp'
   // 定义一条创建中的假数据
   var creatingData = {
     createtime: '创建中',
@@ -122,6 +123,7 @@
   }
   export default{
     data(){
+      const validaRegisteredName = regExp.validaRegisteredName
       return {
         loadingMessage: '',
         loading: false,
@@ -194,7 +196,7 @@
         },
         // 新建防火墙表单验证
         newFirewallFormValidate: {
-          name: [{required: true, message: '请输入防火墙名称', trigger: 'blur'}],
+          name: [{required: true, validator: validaRegisteredName, trigger: 'blur'}],
           vpc: [{required: true, message: '请选择一个VPC', trigger: 'change'}]
         },
         // 应用防火墙规则至
@@ -381,7 +383,7 @@
     computed: {
        auth(){
         return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
-        
+
       }
     }
   }

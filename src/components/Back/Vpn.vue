@@ -230,6 +230,7 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import $store from '@/vuex'
+  import regExp from '../../util/regExp'
   import {mapState} from 'vuex'
   export default{
     beforeRouteEnter(from, to, next){
@@ -253,6 +254,9 @@
       })
     },
     data(){
+      const validaRegisteredName = regExp.validaRegisteredName
+      var pane = sessionStorage.getItem('pane') || 'remote'
+      sessionStorage.removeItem('pane')
       return {
         loadingMessage: '',
         loading: false,
@@ -283,7 +287,7 @@
             {required: true, message: '请选择vpc', trigger: 'change'}
           ],
           vpnName: [
-            {required: true, message: '请输入VPN名称', trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ],
         },
         // 新建隧道VPN表单
@@ -340,7 +344,7 @@
             {required: true, message: '请选择vpc', trigger: 'change'}
           ],
           name1: [
-            {required: true, message: '请输入隧道名称', trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ],
           name2: [
             {required: true, message: '请输入隧道名称', trigger: 'blur'}
@@ -1077,7 +1081,7 @@
       auth(){
         return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
       }
-    }),
+    })
   }
 </script>
 

@@ -363,15 +363,15 @@
         <span class="universal-modal-title">主机重命名</span>
       </div>
       <div class="universal-modal-content-flex">
-        <Form :model="renameForm">
-          <Form-item label="主机名">
+        <Form :model="renameForm" ref="renameForm" :rules="renameFormRule">
+          <Form-item label="主机名" prop="hostName">
             <Input v-model="renameForm.hostName" placeholder="请输入新主机名" :maxlength="15"></Input>
           </Form-item>
         </Form>
       </div>
-      <div slot="footer">
+      <div slot="footer" class="modal-footer-s">
         <Button type="ghost" @click="showModal.rename = false">取消</Button>
-        <Button type="primary" :disabled="renameForm.hostName==''" @click="rename">确定
+        <Button type="primary" :disabled="renameForm.hostName==''" @click="checkRenameForm">确定
         </Button>
       </div>
     </Modal>
@@ -542,8 +542,10 @@
   import $store from '@/vuex'
   import axios from 'axios'
   import Vue from 'vue'
+  import regExp from '../../util/regExp'
   export default {
     data() {
+      const validaRegisteredName = regExp.validaRegisteredName
       var status = '开启'
       if (sessionStorage.getItem('pane')) {
         switch (sessionStorage.getItem('pane')) {
@@ -584,6 +586,11 @@
         },
         renameForm: {
           hostName: ''
+        },
+        renameFormRule: {
+          hostName: [
+            {name: true, validator: validaRegisteredName, trigger: 'blur'}
+          ]
         },
         backupForm: {
           backupName: '',
@@ -638,11 +645,19 @@
       }, 5 * 1000)
     },
     methods: {
+      checkRenameForm(){
+        this.$refs.renameForm.validate((valid) => {
+          if (valid) {
+            // 表单验证通过，调用制作镜像的方法
+            this.rename()
+          }
+        })
+      },
       //加入负载均衡
       joinBalance() {
         if (this.checkSelect()) {
           if (this.currentHost[0].loadbalance) {
-            this.$Message.warning('啊哦!已绑定主机无法再次绑定!')
+            this.$Message.warning('已绑定主机无法再次绑定!')
           } else {
             this.showModal.balance = true
             // 获取负载均衡规则
@@ -855,7 +870,7 @@
       bindIP() {
         if (this.checkSelect()) {
           if (this.currentHost[0].publicip) {
-            this.$Message.warning('啊哦!已绑定主机无法再次绑定!')
+            this.$Message.warning('已绑定主机无法再次绑定!')
           } else {
             this.loadingMessage = '正在绑定IP'
             this.loading = true

@@ -19,7 +19,7 @@
             </div>
             <div>
               <Button type="primary" class="btn-bgwhite" @click="$router.go(-1)" style="margin-right: 10px;">返回</Button>
-              <Button type="primary" @click="$router.go(0)">刷新</Button>
+              <Button type="primary" class="btn-bgwhite" @click="$router.go(0)">刷新</Button>
             </div>
           </div>
           <div class="detail-info">
@@ -310,8 +310,10 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   import axios from 'axios'
+  import regExp from '../../util/regExp'
   var nameError = ''
   var getwayError = ''
+  const validaRegisteredName = regExp.validaRegisteredName
   const validateName = (rule, value, callback) => {
     if (nameError) {
       callback(new Error(nameError))
@@ -387,7 +389,7 @@
         // 新建子网验证规则
         newNetworkRuleValidate: {
           networkName: [
-            {required: true, message: '请输入子网名称', trigger: 'blur'},
+            {required: true, validator: validaRegisteredName, trigger: 'blur'},
             {required: true, validator: validateName, trigger: 'blur'}
           ],
           networkDesc: [
@@ -997,6 +999,10 @@
   .btn-bgwhite {
     background: #ffffff;
     color: #2A99F2;
+    &:hover{
+      background: #2A99F2;
+      color: #FFFFFF;
+    }
   }
 
   .blue {
