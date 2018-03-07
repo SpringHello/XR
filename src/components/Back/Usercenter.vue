@@ -840,7 +840,7 @@
   import $store from '@/vuex'
   export default{
     data(){
-     var authType = sessionStorage.getItem('authType')
+     var authType = sessionStorage.getItem('pane')
     //  console.log(authType)
       var currentTab = '' 
       if (authType == 'company') {
@@ -850,7 +850,7 @@
       } else {
         currentTab = authType
       }
-      sessionStorage.removeItem('authType')
+      sessionStorage.removeItem('pane')
       const validaRegisteredPhone = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('联系电话不能为空'));

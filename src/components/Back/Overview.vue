@@ -12,7 +12,7 @@
             <span style="margin-right:20px;">
               <img src="../../assets/img/overview/email.png" style="margin-right:10px;vertical-align: middle">
               <span v-if="userInfo.loginname11" style="vertical-align: middle">{{userInfo.loginname}}</span>
-              <span v-else style="vertical-align: middle;cursor:pointer;color:#2d8cf0;" @click="push('/ruicloud/userCenter','safe')">点击绑定</span>
+              <span v-else style="vertical-align: middle;cursor:pointer;color:#2d8cf0;" @click="togo('/ruicloud/userCenter','safe')">点击绑定</span>
             </span>
             <span>
               <img src="../../assets/img/overview/phone.png" style="margin-right:10px;vertical-align: middle">
@@ -50,7 +50,7 @@
             <div class="item" v-for="(item,index) in source" :key="index">
               <p class="universal-middle"><img :src="sourceIcon[index]">{{item.name}}</p>
               <div class="source-item" v-for="(subItem,sIndex) in item.items" :key="sIndex">
-                <span @click="togo(subItem.url)"
+                <span @click="togo(subItem.url.split('#')[0],subItem.url.split('#')[1])"
                       :class="{disable:!subItem.url}">{{subItem.itemName}}({{subItem.total}})</span>
                 <Tooltip style="padding: 1px 0px;height: 18px;"
                          :content="`已创建${subItem.used}个，还能创建${subItem.total-subItem.used}个`" placement="top">
@@ -118,7 +118,7 @@
           },
           {
             prod: '云网络',
-            prodUrl: ['vpc', 'ip', 'balance', 'vpc', 'vpn', '', 'vpcManage']
+            prodUrl: ['vpc#VPC', 'ip', 'balance', 'vpc#NAT', 'vpn#remote', '', 'vpcManage']
           },
           {
             prod: '云存储',
@@ -220,6 +220,8 @@
                 content.cartUrl = 'buy#Peip'
               } else if (content.itemName == '云硬盘') {
                 content.cartUrl = 'buy#Pdisk'
+              } else if (content.itemName == 'NAT网关') {
+                content.cartUrl = 'vpc#NAT'
               }
             })
           })
@@ -237,13 +239,9 @@
         })
       },
       // 跳转到相应的页面
-      togo(url, type){
+      togo(url, pane){
         this.$router.push(url)
-        sessionStorage.setItem('type', type)
-      },
-      push(url, pane){
-        this.$router.push(url)
-        sessionStorage.setItem('authType', pane)
+        sessionStorage.setItem('pane', pane)
       },
       change(){
 
