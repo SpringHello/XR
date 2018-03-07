@@ -82,7 +82,7 @@
                 </div>
                 <div style="display: inline-block">
                   <Button type="primary" style="margin-left: 406px" @click="orderPay">支付</Button>
-                  <Button type="primary" style="margin-left: 20px" @click="deleteOrder">删除</Button>
+                  <Button type="primary" style="margin-left: 10px" @click="deleteOrder">删除</Button>
                 </div>
               </div>
               <div class="orderdata">
@@ -1461,11 +1461,12 @@
               font-size: 16px;
               color: rgba(17, 17, 17, 0.65);
               display: block;
+              margin-left: 10px;
             }
             .expenses_s2_wrap {
               margin-top: 20px;
               padding-right: 30px;
-              overflow: hidden;
+             // overflow: hidden;
               .expenses_s2 {
                 font-family: Microsoft Yahei, 微软雅黑;
                 font-size: 36px;
