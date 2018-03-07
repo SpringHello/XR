@@ -952,8 +952,8 @@
         } else if (from.path == '/ruicloud/Peip') {
           vm.product.currentProduct = 'Peip'
         }
-        if (sessionStorage.getItem('type')) {
-          switch (sessionStorage.getItem('type')) {
+        if (sessionStorage.getItem('pane')) {
+          switch (sessionStorage.getItem('pane')) {
             case '':
               break
             case 'Pecs':
@@ -966,7 +966,7 @@
               vm.product.currentProduct = 'Peip'
               break
           }
-          sessionStorage.removeItem('type')
+          sessionStorage.removeItem('pane')
         }
       })
     },

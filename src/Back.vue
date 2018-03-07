@@ -17,20 +17,6 @@
               <router-link to="renew" :class="{active:pageInfo.path=='renew'}"><span>一键续费</span></router-link>
             </li>
 
-            <!--<li>
-              <Dropdown @on-click="toggleZone">
-                <a href="javascript:void(0)">
-                  {{zone.zonename}}
-                  <Icon type="arrow-down-b"></Icon>
-                </a>
-                <DropdownMenu slot="list">
-                  <DropdownItem :name="zone.zoneid" v-for="(zone,index) in zoneList" :key="index">
-                    {{zone.zonename}}
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </li>-->
-
           </ul>
           <ul class="right">
             <li>
@@ -44,8 +30,9 @@
             </li>
             <li>
               <Dropdown @on-click="go">
-                <a href="javascript:void(0)">
+                <a href="javascript:void(0)" style="position:relative">
                   {{userInfo.realname}}
+                  <sup class="circle-dot" v-if="this.$store.state.Msg>0"></sup>
                   <Icon type="arrow-down-b"></Icon>
                 </a>
                 <DropdownMenu slot="list">
@@ -55,8 +42,8 @@
                   <DropdownItem name="expenses">
                     <router-link to="expenses">费用中心</router-link>
                   </DropdownItem>
-                  <DropdownItem name="msgCenter">
-                    <router-link to="msgCenter">消息中心</router-link>
+                  <DropdownItem name="msgCenter" style="position:relative">
+                    <router-link to="msgCenter">消息中心<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup></router-link>
                   </DropdownItem>
                   <DropdownItem name="operationLog">
                     <router-link to="operationLog">操作日志</router-link>
@@ -142,7 +129,7 @@
     data(){
       return {
         // pageInfo用于存储当前页面信息
-        pageInfo: {
+        pageInfo: { 
           // hover选中的item
           hoverItem: '',
           // 点击选中的二级item
@@ -230,6 +217,7 @@
       })
     },
     created(){
+      this.notice()
     },
     mounted(){
       // mounted时期根据路径修改选中的menu
@@ -247,6 +235,14 @@
       }
     },
     methods: {
+      notice(){
+        this.$http.get(`user/getEventNotifyList.do`)
+          .then(response => {
+            if (response.status == 200) {
+              this.$store.commit('setMsg', Number.parseInt(response.data.noReadTotal))
+            }
+          })
+      },
       // 进入二级栏
       ME: debounce(200, function (event, type) {
         this.pageInfo.enter2Hover = true
@@ -382,6 +378,12 @@
             }
           }
         }
+      },
+      '$store.state.zone': {
+        handler: function () {
+          this.notice()
+        },
+        deep: true
       }
     }
   }
@@ -601,5 +603,25 @@
         }
       }
     }
+  }
+  .badge {
+    border-radius: 50%;
+    background-color: rgb(237, 63, 20, 0.5);
+    top: 8px;
+    right: 7px;
+    position: absolute;
+    padding: 9px 5px;
+    box-sizing: border-box;
+    color: white;
+  }
+  .circle-dot{
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background-color: rgb(237, 63, 20, 0.5);
+    position: absolute;
+    top: 14px;
+    right: 10px;
   }
 </style>

@@ -35,8 +35,8 @@
                 <div class="content">
                   <div class="item-wrap">
                     <div class="item item1">
-                      <p>名称：<span style="float:unset">{{item.status==2?'创建中':item.vpcname}}</span>
-                        <Spin size="small" v-if="item.status==2" style="display: inline-block"></Spin>
+                      <p>名称：<span style="float:unset">{{item.status==2?'创建中':item.status==3?'删除中':item.vpcname}}</span>
+                        <Spin size="small" v-if="item.status!=1" style="display: inline-block"></Spin>
                       </p>
                       <p>网段：<span>{{item.cidr}}</span></p>
                     </div>
@@ -54,7 +54,7 @@
                     </router-link>
                   </div>
                   <div class="item-wrap">
-                    <router-link to="firewall">
+                    <router-link to="firewall" style="display:inline-block;width:265px;">
                       <div class="item"><p>防火墙：<span>{{item.aclCount}}</span></p></div>
                     </router-link>
                   </div>
@@ -856,8 +856,8 @@
                   this.$Message.success({
                     content: response.data.message
                   })
-              this.refresh()
-            } else {
+                  this.refresh()
+                } else {
                   this.refresh()
                   this.$message.error({
                     content: response.data.message
@@ -875,7 +875,6 @@
       // 删除VPC
       delVpc(){
         var select = this.netData.filter(item => item._select)
-        console.log(select)
         if (select.length == 0) {
           this.$Message.info({
             content: '请选择一个VPC'
@@ -885,6 +884,12 @@
         this.$message.confirm({
           content: '您确认删除该VPC吗',
           onOk: () => {
+            this.netData.forEach(item => {
+              if (item.id == select[0].id) {
+                this.$set(item, 'status', 3)
+              }
+            })
+            //select[0]._select = 3 // 3代表删除中
             this.$http.get('network/deleteVpc.do', {
               params: {
                 id: select[0].id
@@ -1118,8 +1123,8 @@
         this.$router.push('/ruicloud/vpcManage')
       }
     },
-   computed: {
-       auth(){
+    computed: {
+      auth(){
         return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
 
       }
