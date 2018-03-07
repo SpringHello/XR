@@ -103,7 +103,7 @@
       <div class="universal-modal-content-flex">
         <Form :model="backupsForm" :rules="newBackupsRuleValidate" ref="newBackups">
           <Form-item label="自动备份策略名称" prop="backupsName">
-            <Input v-model="backupsForm.backupsName" placeholder="请输入。。。"></Input>
+            <Input v-model="backupsForm.backupsName" placeholder="请输入"></Input>
           </Form-item>
           <Form-item label="自动备份保留个数" prop="keepNumber">
             <InputNumber :max="8" :min="1" v-model="backupsForm.keepNumber" style="width: 229px"></InputNumber>
@@ -160,7 +160,7 @@
             </Select>
           </Form-item>
           <Form-item label="备份名称" prop="backupsName">
-            <Input v-model="createBackupsForm.backupsName" placeholder="请输入。。。"></Input>
+            <Input v-model="createBackupsForm.backupsName" placeholder="请输入"></Input>
           </Form-item>
         </Form>
         <p style="font-family: MicrosoftYaHei;font-size: 12px;line-height:20px;color: #999999;">
@@ -666,7 +666,7 @@
       },
       auth(){
         return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
-        
+
       }
     },
     methods: {

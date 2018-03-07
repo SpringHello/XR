@@ -12,7 +12,7 @@
           <!--    <Select v-model="diskName" class="mySelect" style="width: 102px">
                 <Option v-for="item in diskList" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>-->
-          <span>{{ diskInfo.diskname}}</span>
+          <span style="color: #FFFFFF">{{ diskInfo.diskname}}</span>
           <button @click="$router.go(0)">刷新</button>
           <button style="margin-right: 10px" @click="$router.go(-1)">返回</button>
         </div>
@@ -163,7 +163,7 @@
             </Select>
           </Form-item>
           <Form-item label="备份名称" prop="backupsName">
-            <Input v-model="createBackupsForm.backupsName" placeholder="请输入。。。"></Input>
+            <Input v-model="createBackupsForm.backupsName" placeholder="请输入"></Input>
           </Form-item>
         </Form>
         <p style="font-family: MicrosoftYaHei;font-size: 12px;line-height:20px;color: #999999;">

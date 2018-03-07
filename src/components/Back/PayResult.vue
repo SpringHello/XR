@@ -11,7 +11,7 @@
               <div style="display: flex">
                 <img v-if="payResult=='success'" src="../../assets/img/payresult/paySuccess.png"
                      style="margin-right:30px;height: 77px;margin-top: 6px;">
-                <img v-if="payResult=='fail'" src="../../assets/img/payresult/payFail.png" style="margin-right:30px;">
+                <img v-if="payResult=='fail'" src="../../assets/img/payresult/payFail.png" style="margin-right:30px;height: 77px;margin-top: 6px;">
                 <div style="position:relative">
                   <h1 style="margin-bottom:9px;font-size: 24px;color:#111111;font-weight: normal;">{{title}}</h1>
                   <p style="font-size: 14px;color: #292626;line-height: 22px;">{{message}}</p>

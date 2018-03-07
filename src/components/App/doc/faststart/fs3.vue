@@ -29,6 +29,9 @@
   </div>
 </template>
 <style lang="less" scoped>
+  p {
+    line-height: 1.5;
+  }
   .table-box1 {
     width: 502px;
     margin: 20px 0;
@@ -82,11 +85,13 @@
         columns: [
           {
             key: 'name',
+            type: 'html',
             width: 100,
 
           },
           {
             key: 'age',
+            type: 'html',
             width: 400,
           },
         ],

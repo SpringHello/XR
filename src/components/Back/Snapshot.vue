@@ -1573,7 +1573,7 @@
             key: 'strategyname',
             align: 'center',
           },
-          {
+          /*{
             title: '状态',
             key: 'status',
             align: 'center',
@@ -1590,6 +1590,15 @@
               } else {
                 return h('span', text)
               }
+            }
+          },*/
+          {
+            title: '是否保留内存状态',
+            key: 'memorymessage',
+            align: 'center',
+            render: (h, params) => {
+              var memorymessage = params.row.memorymessage == 1 ? '是' : '否'
+              return h('span', {}, memorymessage)
             }
           },
           {
@@ -2014,7 +2023,7 @@
     computed: {
       auth() {
         return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
-        
+
       }
     },
     watch: {

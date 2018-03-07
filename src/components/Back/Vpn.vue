@@ -216,13 +216,12 @@
               <Input v-model="addUserForm.password" placeholder="请输入密码"></Input>
             </FormItem>
           </Form>
-          <Button type="primary" style="float:right" @click="addUser">添加用户</Button>
           <div style="clear: both"></div>
         </div>
         <p style="color:#999999">提示：若您忘记用户密码，可删除该账户并重新添加新的用户名与密码。</p>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary">完成配置</Button>
+        <Button type="primary" @click="addUser">确定添加</Button>
       </div>
     </Modal>
   </div>
@@ -1032,10 +1031,11 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
                 this.listUser()
               } else {
                 this.listUser()
-                this.$Message.error(response.data.message)
+                this.$message.error(response.data.message)
               }
             })
             this.addUserForm.userName = ''
@@ -1056,10 +1056,11 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
             this.listUser()
           } else {
             this.listUser()
-            this.$Message.error(response.data.message)
+            this.$message.error(response.data.message)
           }
         })
       }
@@ -1076,7 +1077,7 @@
     computed: {
        auth(){
         return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
-        
+
       }
     }
   }
