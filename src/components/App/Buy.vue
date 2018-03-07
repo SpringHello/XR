@@ -1645,8 +1645,11 @@
           return
         }
         var PromiseList = []
+        // 创建的主机数量  创建的磁盘数量 创建的公网IP数量
+        var hostCount = 0, diskCount = 0, ipCount = 0
         for (var prod of this.cart) {
           if (prod.type == 'Pecs') {
+            hostCount++
             var params = {
               zoneId: prod.zone.zoneid,
               timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
@@ -1662,12 +1665,26 @@
               params.bandWidth = prod.publicIP ? prod.currentSystem.bandWidth : 0
               params.rootDiskType = prod.currentSystem.diskType
               params.networkId = 'no'
+              if (params.bandWidth != 0) {
+                ipCount++
+              }
             } else {
               params.cpuNum = prod.vmConfig.kernel
               params.memory = prod.vmConfig.RAM
               params.bandWidth = prod.IPConfig.publicIP ? prod.IPConfig.bandWidth : 0
               params.rootDiskType = prod.vmConfig.diskType
               params.networkId = prod.network
+              var diskType = '', diskSize = ''
+              diskCount += prod.dataDiskList.length
+              if (params.bandWidth != 0) {
+                ipCount++
+              }
+              for (let disk of prod.dataDiskList) {
+                diskType += `${disk.type},`
+                diskSize += `${disk.size},`
+              }
+              params.diskType = diskType
+              params.diskSize = diskSize
             }
             if (prod.currentType === 'app') {
               params.templateId = prod.currentApp.templateid
@@ -1678,6 +1695,7 @@
             }
             PromiseList.push(axios.get('information/deployVirtualMachine.do', {params}))
           } else if (prod.type == 'Pdisk') {
+            diskCount += prod.dataDiskList.length
             var diskSize = ''
             var diskType = ''
             prod.dataDiskList.forEach(item => {
@@ -1695,6 +1713,7 @@
             }
             PromiseList.push(axios.get('Disk/createVolume.do', {params}))
           } else if (prod.type == 'Peip') {
+            ipCount++
             var params = {
               zoneId: prod.zone.zoneid,
               timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
@@ -1707,9 +1726,25 @@
             PromiseList.push(axios.get('network/createPublicIp.do', {params}))
           }
         }
-        sessionStorage.removeItem('cart')
-        Promise.all(PromiseList).then(responseList => {
-          this.$router.push('order')
+        this.$http.get('user/getRemainCount.do').then(response => {
+          let errorMessage = ''
+          if (hostCount > response.data.result.computer) {
+            errorMessage = '创建的主机超出个数限制'
+          } else if (diskCount > response.data.result.disk) {
+            errorMessage = '创建的磁盘超出个数限制'
+          } else if (ipCount > response.data.result.publicIp) {
+            errorMessage = '创建的公网IP超出个数限制'
+          }
+          if (errorMessage != '') {
+            this.$message.error({
+              content: errorMessage
+            })
+          } else {
+            sessionStorage.removeItem('cart')
+            Promise.all(PromiseList).then(responseList => {
+              this.$router.push('order')
+            })
+          }
         })
       },
       // 登录弹窗需要的方法

@@ -12,7 +12,8 @@
             <span style="margin-right:20px;">
               <img src="../../assets/img/overview/email.png" style="margin-right:10px;vertical-align: middle">
               <span v-if="userInfo.loginname11" style="vertical-align: middle">{{userInfo.loginname}}</span>
-              <span v-else style="vertical-align: middle;cursor:pointer;color:#2d8cf0;" @click="togo('/ruicloud/userCenter','safe')">点击绑定</span>
+              <span v-else style="vertical-align: middle;cursor:pointer;color:#2d8cf0;"
+                    @click="togo('/ruicloud/userCenter','safe')">点击绑定</span>
             </span>
             <span>
               <img src="../../assets/img/overview/phone.png" style="margin-right:10px;vertical-align: middle">
@@ -91,8 +92,11 @@
           </div>
           <div>
             <Carousel v-model="value1">
+
               <CarouselItem v-for="(item,index) in ads" :key="index">
-                <img :src="item.pictureurl">
+                <a :href="item.url" target="_blank">
+                  <img :src="item.pictureurl">
+                </a>
               </CarouselItem>
             </Carousel>
           </div>
