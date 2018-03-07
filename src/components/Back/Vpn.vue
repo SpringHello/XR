@@ -94,14 +94,14 @@
               </Option>
             </Select>
           </FormItem>
-<!--          <FormItem label="目标VPC" prop="vpcId2" v-show="newTunnelVpnForm.step==0">
-            <Select v-model="newTunnelVpnForm.vpcId2">
-              <Option v-for="item in newTunnelVpnForm.vpcIdOptions" :value="item.vpcid" :key="item.vpcid"
-                      v-if="item.vpcid!=newTunnelVpnForm.vpcId1">
-                {{item.vpcname}}
-              </Option>
-            </Select>
-          </FormItem>-->
+          <!--          <FormItem label="目标VPC" prop="vpcId2" v-show="newTunnelVpnForm.step==0">
+                      <Select v-model="newTunnelVpnForm.vpcId2">
+                        <Option v-for="item in newTunnelVpnForm.vpcIdOptions" :value="item.vpcid" :key="item.vpcid"
+                                v-if="item.vpcid!=newTunnelVpnForm.vpcId1">
+                          {{item.vpcname}}
+                        </Option>
+                      </Select>
+                    </FormItem>-->
         </Form>
         <Form :model="newTunnelVpnForm" :rules="newTunnelVpnFormValidate" ref="newTunnelVpnFormValidate1">
           <FormItem label="名称" v-if="newTunnelVpnForm.step==1" prop="name1">
@@ -113,9 +113,9 @@
           <FormItem label="目的网络CIDR" v-if="newTunnelVpnForm.step==1" prop="CIDR">
             <Input v-model="newTunnelVpnForm.CIDR" placeholder="例如192.168.0.0/16"></Input>
           </FormItem>
-         <!-- <FormItem label="名称" v-if="newTunnelVpnForm.step==1" prop="name2">
-            <Input v-model="newTunnelVpnForm.name2" placeholder="请输入0-16字节名称"></Input>
-          </FormItem>-->
+          <!-- <FormItem label="名称" v-if="newTunnelVpnForm.step==1" prop="name2">
+             <Input v-model="newTunnelVpnForm.name2" placeholder="请输入0-16字节名称"></Input>
+           </FormItem>-->
           <!--<FormItem label="目的IP地址" v-if="newTunnelVpnForm.step==1" prop="ip">
             <Input v-model="newTunnelVpnForm.IP" placeholder="例如10.132.31.27"></Input>
           </FormItem>
@@ -230,6 +230,7 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import $store from '@/vuex'
+  import regExp from '../../util/regExp'
   export default{
     beforeRouteEnter(from, to, next){
       // 远程接入列表
@@ -252,6 +253,7 @@
       })
     },
     data(){
+      const validaRegisteredName = regExp.validaRegisteredName
       var pane = sessionStorage.getItem('pane') || 'remote'
       sessionStorage.removeItem('pane')
       return {
@@ -285,7 +287,7 @@
             {required: true, message: '请选择vpc', trigger: 'change'}
           ],
           vpnName: [
-            {required: true, message: '请输入VPN名称', trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ],
         },
         // 新建隧道VPN表单
@@ -342,7 +344,7 @@
             {required: true, message: '请选择vpc', trigger: 'change'}
           ],
           name1: [
-            {required: true, message: '请输入隧道名称', trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ],
           name2: [
             {required: true, message: '请输入隧道名称', trigger: 'blur'}
@@ -1075,7 +1077,7 @@
       }
     },
     computed: {
-       auth(){
+      auth(){
         return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
 
       }

@@ -332,11 +332,12 @@
   import {customTimeOptions} from '../../options'
   import axios from 'axios'
   import $store from '@/vuex'
-
+  import regExp from '../../util/regExp'
   export default {
     name: 'vpc',
     data() {
       // 验证vpc互通网关，源IP与目标IP不能相同
+      const validaRegisteredName = regExp.validaRegisteredName
       const validateIP = (rule, value, callback) => {
         if (this.addGatewayForm.originIP == this.addGatewayForm.targetIP && this.addGatewayForm.originIP2 == this.addGatewayForm.targetIP2) {
           callback(new Error('源IP与目标IP不能相同'))
@@ -652,7 +653,7 @@
         // 新建vpc验证规则
         newRuleValidate: {
           vpcName: [
-            {required: true, message: '请输入vpc名称', trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ],
           vpc: [
             {required: true, message: '请选择vpc地址范围', trigger: 'change'}
@@ -691,7 +692,7 @@
         // 添加nat网关验证规则
         addNatRuleValidate: {
           natName: [
-            {required: true, message: '请输入nat网关名称', trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ],
           vpc: [
             {required: true, message: '请选择VPC', trigger: 'change'}

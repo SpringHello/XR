@@ -42,8 +42,8 @@
         <span class="universal-modal-title">制作镜像</span>
       </div>
       <div class="universal-modal-content-flex">
-        <Form :model="formItem">
-          <FormItem label="主机">
+        <Form :model="formItem" ref="formItem" :rules="ruleMirror">
+          <FormItem label="主机" prop="vmInfo">
             <Select v-model="formItem.vmInfo">
               <Option v-for="item in hostName" :value="`${item.rootdiskid}#${item.zoneid}`"
                       :key="item.computerid">
@@ -51,8 +51,8 @@
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="镜像名">
-            <Input v-model="formItem.mirrorName" placeholder="请输入"></Input>
+          <FormItem label="镜像名" prop="mirrorName">
+            <Input v-model="formItem.mirrorName" placeholder="请输入" :maxlength="20"></Input>
           </FormItem>
           <FormItem label="镜像描述">
             <Input v-model="formItem.mirrorDescription" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
@@ -64,7 +64,7 @@
         <Button type="ghost" @click="cancel">取消</Button>
         <Button type="primary"
                 :disabled="formItem.vmInfo==''||formItem.mirrorName==''||formItem.mirrorDescription==''"
-                @click="ok">确定
+                @click="checkFormItem">确定
         </Button>
       </div>
     </Modal>
@@ -77,9 +77,9 @@
         <span class="universal-modal-title">修改镜像</span>
       </p>
       <div class="universal-modal-content-flex">
-        <Form :model="mirrorModifyForm">
-          <FormItem label="镜像名称">
-            <Input v-model="mirrorModifyForm.name" placeholder="小于20位数字或字母"></Input>
+        <Form :model="mirrorModifyForm" ref="mirrorModifyForm" :rules="mirrorModifyFormRule">
+          <FormItem label="镜像名称" prop="name">
+            <Input v-model="mirrorModifyForm.name" placeholder="小于20位数字或字母" :maxlength="20"></Input>
           </FormItem>
           <FormItem label="备注">
             <Input v-model="mirrorModifyForm.remarks" type="textarea" :autosize="{minRows: 3,maxRows: 3}"
@@ -91,7 +91,7 @@
         <Button type="ghost" @click="showModal.modify=false">取消</Button>
         <Button type="primary"
                 :disabled="mirrorModifyForm.name==''||mirrorModifyForm.remarks==''"
-                @click="mirrorModifySubm">确认修改
+                @click="checkMirrorModifyForm">确认修改
         </Button>
       </div>
     </Modal>
@@ -116,8 +116,10 @@
 <script type="text/ecmascript-6">
   // import axios from 'axios'
   import $store from '@/vuex'
+  import regExp from '../../util/regExp'
   export default {
     data() {
+      const validaRegisteredName = regExp.validaRegisteredName
       return {
         showModal: {
           createMirror: false,
@@ -372,10 +374,23 @@
           mirrorName: '',
           mirrorDescription: ''
         },
+        ruleMirror: {
+          vmInfo: [
+            {required: true, message: '请选择一台主机', trigger: 'change'}
+          ],
+          mirrorName: [
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
+          ]
+        },
         mirrorModifyForm: {
           name: '',
           remarks: ''
-        }
+        },
+        mirrorModifyFormRule: {
+          vmInfo: [
+            {name: true, validator: validaRegisteredName, trigger: 'blur'}
+          ]
+        },
       }
     },
     created() {
@@ -385,6 +400,22 @@
       this.inter()
     },
     methods: {
+      checkFormItem(){
+        this.$refs.formItem.validate((valid) => {
+          if (valid) {
+            // 表单验证通过，调用制作镜像的方法
+            this.ok()
+          }
+        })
+      },
+      checkMirrorModifyForm(){
+        this.$refs.formItem.validate((valid) => {
+          if (valid) {
+            // 表单验证通过，调用修改镜像的方法
+            this.mirrorModifySubm()
+          }
+        })
+      },
       // 查询系统镜像
       systemMirrorList() {
         var url = `information/listTemplates.do?user=0`
@@ -554,7 +585,7 @@
     computed: {
       auth() {
         return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
-        
+
       }
     },
     watch: {

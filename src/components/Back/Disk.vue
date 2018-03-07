@@ -284,8 +284,6 @@
           },
           {
             title: '硬盘名称',
-            align: 'center',
-            width: 180,
             render: (h, params) => {
               if (params.row.status === 1) {
                 return h('span', {
@@ -307,8 +305,6 @@
           },
           {
             title: '硬盘类型',
-            align: 'center',
-            width: 130,
             key: 'diskoffer',
             render: (h, params) => {
               return h('span', params.row.diskoffer == 'ssd' ? '超高性能型' : params.row.diskoffer == 'sas' ? '性能型' : '存储型')
@@ -316,8 +312,6 @@
           },
           {
             title: '容量',
-            align: 'center',
-            width: 120,
             key: 'disksize',
             render: (h, params) => {
               return h('span', params.row.disksize + 'GB')
@@ -325,9 +319,7 @@
           },
           {
             title: '状态',
-            align: 'center',
             key: 'status',
-            width: 180,
             render: (h, params) => {
               const row = params.row
               const text = row.status === 0 ? '欠费' : (row.status === 1 && !row.mounton && !row.mountonname) ? '可挂载' : (row.status === 1 && row.mounton && row.mountonname) ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '正常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '卸载中' : row.status === 5 ? '挂载中' :row.status === 6 ? '备份中': ''
@@ -345,7 +337,6 @@
           },
           {
             title: '计费类型',
-            align: 'center',
             width: 130,
             key: 'caseType',
             render: (h, params) => {
@@ -354,8 +345,6 @@
           },
           {
             title: '价格',
-            align: 'center',
-            width: 140,
             key: 'cpCase',
             render: (h, params) => {
               if (typeof (params.row.cpCase) != 'undefined') {
@@ -367,7 +356,7 @@
           },
           {
             title: '操作',
-            align: 'center',
+            width: 200,
             render: (h, params) => {
               return h('div', {}, [
                 h('span', {
