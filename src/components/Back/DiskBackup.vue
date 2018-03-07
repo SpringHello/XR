@@ -235,18 +235,14 @@
           {
             type: 'radio',
             width: 60,
-            align: 'center'
           },
           {
             title: '备份名称',
-            align: 'center',
             key: 'snapshotname',
-            width: 180
+            ellipsis: 'true'
           },
           {
             title: '状态',
-            align: 'center',
-            width: 100,
             render: (h, params) => {
               switch (params.row.status) {
                 case 1:
@@ -270,13 +266,10 @@
           {
             title: '硬盘名称',
             key: 'name',
-            align: 'center',
-            width: 160
+            ellipsis: 'true'
           },
           {
             title: '硬盘类型',
-            align: 'center',
-            width: 130,
             render: (h, params) => {
               const text = params.row.diskOffer === 'ssd' ? '超高性能型' : params.row.diskOffer === 'sas' ? '性能型' : '存储型'
               return h('span', {}, text)
@@ -284,8 +277,6 @@
           },
           {
             title: '备份间隔',
-            align: 'center',
-            width: 130,
             render: (h, params) => {
               var text = '----'
               switch (params.row.createway) {
@@ -304,9 +295,8 @@
           },
           {
             title: '创建时间',
-            align: 'center',
             key: 'addtime',
-            width: 165
+
           },
           /*        {
            title: '剩余保留时长',
@@ -315,7 +305,6 @@
            },*/
           {
             title: '操作',
-            align: 'center',
             render: (h, params) => {
               return h('span', {
                 style: {
@@ -340,16 +329,11 @@
           {
             type: 'radio',
             width: 60,
-            align: 'center'
           }, {
             title: '备份策略名称',
-            align: 'center',
             key: 'strategyname',
-            width: 140
           }, {
             title: '状态',
-            align: 'center',
-            width: 100,
             render: (h, params) => {
               if (params.row.status === 1) {
                 return h('span', {}, '可用')
@@ -363,23 +347,17 @@
             }
           }, {
             title: '保留个数',
-            align: 'center',
-            width: 100,
             render: (h, params) => {
               return h('span', {}, params.row.keepcount + '个')
             }
           }, {
             title: '自动备份间隔',
-            align: 'center',
-            width: 120,
             render: (h, params) => {
               const text = params.row.keepupinterval === 'day' ? '每天' : params.row.keepupinterval === 'month' ? '每月' : ' 每周'
               return h('span', {}, text)
             }
           }, {
             title: '自动备份时间',
-            align: 'center',
-            width: 140,
             render: (h, params) => {
               var week_day = ''
               if (params.row.keepupinterval == 'day') {
@@ -415,13 +393,9 @@
             }
           }, {
             title: '创建时间',
-            align: 'center',
             key: 'createtime',
-            width: 160,
           }, {
             title: '应用磁盘',
-            align: 'center',
-            width: 200,
             render: (h, params) => {
               if (params.row.resourceBean.length == 0) {
                 return h('span', {}, '----')
@@ -439,7 +413,6 @@
             }
           }, {
             title: '操作',
-            align: 'center',
             render: (h, params) => {
               return h('span', {
                 style: {

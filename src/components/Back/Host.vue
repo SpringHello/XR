@@ -359,18 +359,18 @@
       </div>
     </Modal>
     <!-- 主机重命名弹窗 -->
-    <Modal v-model="showModal.rename" width="590" :scrollable="true">
-      <div slot="header" class="modal-header-border">
+    <Modal v-model="showModal.rename" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">主机重命名</span>
-      </div>
-      <div class="universal-modal-content-flex">
+      </p>
+      <div>
         <Form :model="renameForm" ref="renameForm" :rules="renameFormRule">
           <Form-item label="主机名" prop="hostName">
             <Input v-model="renameForm.hostName" placeholder="请输入新主机名" :maxlength="15"></Input>
           </Form-item>
         </Form>
       </div>
-      <div slot="footer" class="modal-footer-s">
+      <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.rename = false">取消</Button>
         <Button type="primary" :disabled="renameForm.hostName==''" @click="checkRenameForm">确定
         </Button>
