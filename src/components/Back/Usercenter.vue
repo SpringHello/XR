@@ -592,11 +592,11 @@
     </div>
     <!--选择两种认证方式-->
     <Modal v-model="showModal.selectAuthType" width="590" :scrollable="true" style="top:172px">
-      <div slot="header"
+      <!--<div slot="header"
            style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
         选择认证方式
-      </div>
-      <div style="display: flex">
+      </div>-->
+      <div style="display: flex;margin-top: 20px;">
         <div class="selectAuthType" style="border-right: 1px solid #D9D9D9">
           <h2>个人用户</h2>
           <p><i></i>可以使用睿云所有资源</p>
@@ -619,7 +619,7 @@
           <Button type="primary" @click="showModal.selectAuthType = false;currentTab='companyInfo'">立即认证</Button>
         </div>
       </div>
-      <div slot="footer">
+      <div slot="footer" style="margin-bottom: 20px;">
         <p class="modal-text-hint-bottom">
           提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：028-23242423</p>
       </div>
@@ -1942,7 +1942,7 @@
   }
 
   .selectAuthType {
-    width: 50%;
+    width:50%;
     h2 {
       text-align: center;
       font-size: 16px;
@@ -1954,14 +1954,14 @@
       font-size: 14px;
       color: rgba(17, 17, 17, 0.65);
       margin-bottom: 10px;
-      padding-left: 60px;
+      padding-left: 40px;
       i {
         transform: rotate(-45deg);
         position: absolute;
         width: 7px;
         height: 4px;
         top: 5px;
-        left: 62px;
+        left: 42px;
         border-left: 1px solid #3DBD7D;
         border-bottom: 1px solid #3DBD7D;
         display: inline-block;
