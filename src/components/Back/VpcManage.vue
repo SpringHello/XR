@@ -105,13 +105,13 @@
                     </DropdownMenu>
                   </Dropdown>
                   <div class="firewall" v-if="item.acllistid"></div>
-                  <Tooltip content="添加云服务器" placement="right-start" style="margin:10px 110px;">
+                  <Tooltip content="添加云服务器" placement="right-start" style="margin:10px 60px;">
                     <span class="vm new" @click="addHostToVpc(item)">
                       +
                     </span>
                   </Tooltip>
                   <Dropdown class="moreInfo" v-for="vm in item.vmList" :key="vm.id"
-                            style="margin: 10px 110px 10px 0px;">
+                            style="margin: 10px 80px 10px 0px;">
                       <span class="vm instance" :class="{staticnatip:vm.staticnatip}">
                         <span
                           style="font-size: 12px;position:absolute;white-space: nowrap;top:-25px;left:50%;transform: translateX(-50%)">{{vm.computername}}</span>
@@ -137,9 +137,9 @@
                           <span>主机名称：{{vm.computername}}</span>
                           <span>公网地址：{{vm.staticnatip}}</span>
                           <span>内网地址：{{vm.privateip}}</span>
-                          <span>操作系统：{{vm.templateName}}</span>
-                          <span>系统配置：{{vm.serviceOfferName}}</span>
-                          <span>主机状态：{{vm.status==1?"正常":vm.status==0?"欠费":vm.status==-1?"异常":vm.status==-2?"已删除":"执行中"}}</span>
+                          <span>操作系统：{{vm.operatingSystem}}</span>
+                          <span>系统配置：{{vm.systemConfiguration}}</span>
+                          <span>主机状态：{{vm.computerStatus==1?"正常":vm.computerStatus==0?"关机":vm.computerStatus==-1?"异常":vm.computerStatus==-2?"已删除":"执行中"}}</span>
                         </div>
                       </div>
                     </DropdownMenu>

@@ -85,11 +85,13 @@
         columns: [
           {
             key: 'name',
+            type: 'html',
             width: 100,
 
           },
           {
             key: 'age',
+            type: 'html',
             width: 400,
           },
         ],
