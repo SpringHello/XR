@@ -1218,6 +1218,14 @@
         },
         // 购物车
         cart,
+        scrollFun: () => {
+          if (window.innerHeight - this.$refs.list.getBoundingClientRect().bottom < 246) {
+            this.$refs.buyDiv.style.position = 'fixed'
+            this.$refs.buyDiv.style.bottom = 0
+          } else {
+            this.$refs.buyDiv.style.position = 'unset'
+          }
+        }
       }
     },
     created(){
@@ -1225,14 +1233,7 @@
         this.$Message.info('当前账户尚未认证通过，创建的主机无法操作');
       }
       scrollTo(0, 0)
-      window.addEventListener('scroll', () => {
-        if (window.innerHeight - this.$refs.list.getBoundingClientRect().bottom < 246) {
-          this.$refs.buyDiv.style.position = 'fixed'
-          this.$refs.buyDiv.style.bottom = 0
-        } else {
-          this.$refs.buyDiv.style.position = 'unset'
-        }
-      })
+      window.addEventListener('scroll', this.scrollFun)
       /*// 自定义主机所在的vpc列表
        axios.get('network/listVpc.do', {
        params: {
@@ -1873,11 +1874,25 @@
       // 观测到快速配置主机是否购买公网IP
       'PecsInfo.publicIP': {
         handler: function () {
-           if(this.PecsInfo.publicIP) {
-             this.PecsInfo.currentSystem = {kernel: '1', RAM: '1', bandWidth: '1', diskSize: '50', diskType: 'sas', diskDesc: '性能型'}
-           }  else {
-             this.PecsInfo.currentSystem = {kernel: '1', RAM: '1', bandWidth: '0', diskSize: '50', diskType: 'sas', diskDesc: '性能型'}
-           }
+          if (this.PecsInfo.publicIP) {
+            this.PecsInfo.currentSystem = {
+              kernel: '1',
+              RAM: '1',
+              bandWidth: '1',
+              diskSize: '50',
+              diskType: 'sas',
+              diskDesc: '性能型'
+            }
+          } else {
+            this.PecsInfo.currentSystem = {
+              kernel: '1',
+              RAM: '1',
+              bandWidth: '0',
+              diskSize: '50',
+              diskType: 'sas',
+              diskDesc: '性能型'
+            }
+          }
         }
         ,
         deep: true
@@ -1964,6 +1979,9 @@
         deep: true
       }
       ,
+    },
+    destroyed(){
+      window.removeEventListener('scroll', this.scrollFun)
     }
   }
 </script>

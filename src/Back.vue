@@ -114,7 +114,8 @@
                   {{subItem.subName}}
                 </a>
                 <DropdownMenu slot="list">
-                  <DropdownItem v-for="(thrItem,index) in subItem.thrItem" :key="index" :name="thrItem.pane">
+                  <DropdownItem v-for="(thrItem,index) in subItem.thrItem" :key="index"
+                                :name="`${thrItem.pane}#${subItem.subName}`">
                     <a>{{thrItem.thrName}}</a>
                   </DropdownItem>
                 </DropdownMenu>
@@ -294,7 +295,17 @@
         this.$router.push(path)
       },
       pane(pane){
-        sessionStorage.setItem('pane', pane)
+        var paneStatue = {
+          vpc: 'VPC',
+          vpn: 'remote'
+        }
+        let arr = pane.split('#')
+        if (arr[1] == '虚拟专网VPN') {
+          paneStatue.vpn = arr[0]
+        } else {
+          paneStatue.vpc = arr[0]
+        }
+        this.$store.commit('setPane', paneStatue)
       },
 
       menuStyle(type){
