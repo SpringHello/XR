@@ -21,7 +21,7 @@
         <div class="universal-alert">
           <p>虚拟私有云，通过逻辑方式进行网络隔离，提供安全、隔离的网络环境。VPC为您提供与传统网络无差别的虚拟网络，同时还可以为您提供弹性IP、安全组、VPN等高级网络服务。</p>
         </div>
-        <Tabs type="card" :animated="false" v-model="pane">
+        <Tabs type="card" :animated="false" v-model="paneStatus.vpc">
           <TabPane label="虚拟私有云VPC" name="VPC">
             <div class="operator-bar">
               <Button type="primary" @click="openNewVpcModal">新建VPC</Button>
@@ -332,7 +332,7 @@
   import {customTimeOptions} from '../../options'
   import axios from 'axios'
   import $store from '@/vuex'
-
+  import {mapState} from 'vuex'
   export default {
     name: 'vpc',
     data() {
@@ -343,10 +343,7 @@
         }
         callback()
       }
-      var pane = sessionStorage.getItem('pane') || 'VPC'
-      sessionStorage.removeItem('pane')
       return {
-        pane,
         loadingMessage: '',
         loading: false,
         // vpc列表数据
@@ -1123,12 +1120,12 @@
         this.$router.push('/ruicloud/vpcManage')
       }
     },
-    computed: {
+    computed: mapState({
+      paneStatus: state => state.paneStatus,
       auth(){
         return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
-
       }
-    },
+    }),
     watch: {
       // 检测到新建VPC购买方式发生变化，重新查询价格
       'newForm.timeValue'(){
