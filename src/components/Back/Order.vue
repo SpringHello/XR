@@ -287,6 +287,7 @@
         } else {
           this.$Modal.error({
             content: '请选择需要支付的订单',
+            scrollable: true,
             duration: 5
           })
         }
@@ -314,6 +315,7 @@
         } else {
           this.$Modal.error({
             content: '请选择需支付的订单',
+            scrollable: true,
             duration: 5
           })
         }

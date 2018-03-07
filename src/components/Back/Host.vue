@@ -221,7 +221,7 @@
                       <div class="foot" style="background-color: #F24747">
                         <span style="color:white">{{item.createtime}}</span>
                         <button @click="recoverHost(item.id)"
-                                style="margin-left: 65px;color: rgb(242, 71, 71);background-color: white;border-color: white;">
+                                style="margin-left: 55px;color: rgb(242, 71, 71);background-color: white;border-color: white;">
                           恢复
                         </button>
                       </div>
