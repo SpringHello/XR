@@ -18,5 +18,15 @@ export default{
       return false
     }
     return true;
+  },
+  validaRegisteredName: (rule, value, callback) => {
+    if (!value) {
+      return callback(new Error('输入名称不能为空'));
+    }
+    if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value))||(/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value))||(/\s+/.test(value))) {
+      callback(new Error('输入名称中不能包含特殊字符或空格'));
+    } else {
+      callback()
+    }
   }
 }

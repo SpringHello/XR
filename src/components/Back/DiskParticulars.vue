@@ -41,7 +41,7 @@
         <!-- 监控磁盘数据 -->
         <div class="diskManage" v-if="monitor">
           <div class="utilization">
-            <span>磁盘利用率</span>
+            <span style="color: rgba(17, 17, 17, 0.95);font-size: 16px">硬盘利用率</span>
             <Progress :percent="diskUtilization"
                       style="width: 50%;line-height: 12px;margin-left: 10px"></Progress>
             <span style="color: #2A99F2;cursor: pointer" @click="dilatationDisk">扩容</span>
@@ -222,10 +222,12 @@
   import axios from 'axios'
   import diskHistogram from '@/echarts/diskHistogram'
   import diskOptions from '@/echarts/diskOptions'
+  import regExp from '../../util/regExp'
   var diskOptionsstr = JSON.stringify(diskOptions)
   var diskHistogramstr = JSON.stringify(diskHistogram)
   export default{
     data(){
+      const validaRegisteredName = regExp.validaRegisteredName
       return {
         loadingMessage: '',
         loading: false,
@@ -382,7 +384,7 @@
         // 以备份新建磁盘表单验证
         newRuleValidate: {
           diskName: [
-            {required: true, message: '请输入磁盘名称', trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ],
           timeType: [
             {required: true, message: '请选择购买方式', trigger: 'change'}
@@ -409,7 +411,7 @@
             {required: true, message: '请选择需要备份的磁盘', trigger: 'change'}
           ],
           backupsName: [
-            {required: true, message: '请输入备份名称', trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ]
         },
         // 磁盘扩容表单

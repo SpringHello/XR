@@ -217,8 +217,10 @@
   import axios from 'axios'
   import debounce from 'throttle-debounce/debounce'
   import $store from '@/vuex'
+  import regExp from '../../util/regExp'
   export default{
     data(){
+      const validaRegisteredName = regExp.validaRegisteredName
       return {
         loadingMessage: '',
         loading: false,
@@ -486,7 +488,7 @@
         customTimeOptions,
         newRuleValidate: {
           diskName: [
-            {required: true, message: '请输入磁盘名称', trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ],
           timeType: [
             {required: true, message: '请选择购买方式', trigger: 'change'}
@@ -609,7 +611,7 @@
         // 新建备份策略表单验证规则
         newBackupsRuleValidate: {
           backupsName: [
-            {required: true, message: '请输入备份策略名称', trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ],
           timeType: [
             {required: true, message: '请选择自动备份时间间隔', trigger: 'change'}
@@ -630,7 +632,7 @@
             {required: true, message: '请选择需要备份的磁盘', trigger: 'change'}
           ],
           backupsName: [
-            {required: true, message: '请输入备份名称', trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ]
         },
         // 选中备份策略某一项
