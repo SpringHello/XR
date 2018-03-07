@@ -163,7 +163,7 @@
           {
             img: require('../../../assets/img/product/net-4.png'),
             title: '高性能',
-            desc: 'NAT网关是基于阿里云自研分布式网关，使用SDN技术虚拟化推出的一款虚拟网络硬件。NAT网关支持10Gbps级别的转发能力，为大规模公网应用提供支撑。'
+            desc: 'NAT网关是基于新睿云自研分布式网关，使用SDN技术虚拟化推出的一款虚拟网络硬件。NAT网关支持10Gbps级别的转发能力，为大规模公网应用提供支撑。'
           },
           {
             img: require('../../../assets/img/product/net-5.png'),
