@@ -430,7 +430,7 @@
             }
           },
           {
-            title: 'Ip地址',
+            title: 'IP地址',
             align: 'center',
             key: 'privateip'
           },

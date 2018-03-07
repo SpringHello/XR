@@ -218,12 +218,11 @@
                         <span>内网地址:{{item.privateip}}</span>
                         <span style="color:#f24747;top:112px">异常</span>
                       </div>
-                      <div class="foot" style="background-color: #F24747">
+                      <div class="foot" style="background-color: #F24747;">
                         <span style="color:white">{{item.createtime}}</span>
-                        <button @click="recoverHost(item.id)"
-                                style="margin-left: 55px;color: rgb(242, 71, 71);background-color: white;border-color: white;">
+                        <Button type="primary" @click="recoverHost(item.id)" class="abnormal-btn">
                           恢复
-                        </button>
+                        </Button>
                       </div>
                     </div>
                   </Card>
@@ -379,7 +378,7 @@
 
     <!-- 生成镜像弹窗 -->
     <Modal v-model="showModal.mirror" width="590" :scrollable="true">
-      <div slot="header" class="modal-header-border" >
+      <div slot="header" class="modal-header-border">
         <span class="universal-modal-title">制作镜像</span>
       </div>
       <div class="universal-modal-content-flex">
@@ -455,18 +454,18 @@
       </p>
       <div class="universal-modal-content-flex">
         <Form>
-         <FormItem label="付费类型 :">
-          <Select v-model="renewalType">
-            <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}
-            </Option>
-          </Select>
-        </FormItem>
-         <FormItem label="付费时长 :">
-          <Select v-model="renewalTime">
-            <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
-            </Option>
-          </Select>
-        </FormItem>
+          <FormItem label="付费类型 :">
+            <Select v-model="renewalType">
+              <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="付费时长 :">
+            <Select v-model="renewalTime">
+              <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
         </Form>
         <div style="font-size:16px;">
           应付费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{cost}}
@@ -500,7 +499,7 @@
         </Button>
       </div>
     </Modal>
-   <!--选择两种认证方式-->
+    <!--选择两种认证方式-->
     <Modal v-model="showModal.selectAuthType" width="590" :scrollable="true" :styles="{top:'172px'}">
       <div slot="header"
            style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
@@ -636,7 +635,7 @@
       }
     },
     created() {
-      if(this.$store.state.userInfo.personalauth != 0 && this.$store.state.userInfo.companyauth != 0){
+      if (this.$store.state.userInfo.personalauth != 0 && this.$store.state.userInfo.companyauth != 0) {
         this.showModal.selectAuthType = true
       }
       this.getData()
@@ -735,7 +734,7 @@
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             // 遍历各种主机类型，开启、关闭、欠费、错误、创建中
-            for (var type of ['open', 'close', 'arrears', 'error','wait']) {
+            for (var type of ['open', 'close', 'arrears', 'error', 'wait']) {
               var list = []
               var target = response.data.result[type] || {list: []}
               // console.log(target)
@@ -909,10 +908,10 @@
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.success(response.data.message)
               this.currentHost[0].publicip = ''
-            } else if(response.status == 200 && response.data.status == 2) {
+            } else if (response.status == 200 && response.data.status == 2) {
               this.$message.info({
                 content: response.data.message
-                })
+              })
             }
           })
         }
@@ -1268,7 +1267,14 @@
         font-size: 12px;
         color: #999999;
       }
-
+      .abnormal-btn {
+        color: #2A99F2;
+        background-color: #FFF;
+        &:hover {
+          background: #2A99F2;
+          color: #FFFFFF;
+        }
+      }
     }
     .select {
       .ivu-card {
@@ -1308,12 +1314,13 @@
       transform: translate(-50%, -50%);
     }
     ._hover {
-      &:hover{
+      &:hover {
         background: #2A99F2;
         color: #FFFFFF
       }
     }
   }
+
   .selectAuthType {
     width: 50%;
     h2 {
