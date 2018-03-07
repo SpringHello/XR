@@ -546,8 +546,8 @@
   export default {
     data() {
       var status = '开启'
-      if (sessionStorage.getItem('type')) {
-        switch (sessionStorage.getItem('type')) {
+      if (sessionStorage.getItem('pane')) {
+        switch (sessionStorage.getItem('pane')) {
           case 'open':
             break
           case 'close':
@@ -560,7 +560,7 @@
             status = '异常'
             break
         }
-        sessionStorage.removeItem('type')
+        sessionStorage.removeItem('pane')
       }
       return {
         cost: '--',
@@ -1095,7 +1095,7 @@
 
       },
       push(type) {
-        sessionStorage.setItem('authType', type)
+        sessionStorage.setItem('pane', type)
         this.$router.push('/ruicloud/usercenter')
       },
     },

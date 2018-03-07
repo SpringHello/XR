@@ -1,5 +1,4 @@
 <template>
-  <div>
     <div class="background">
       <div class="wrapper">
         <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / <router-link
@@ -30,7 +29,6 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script type="text/ecmascript-6">
@@ -84,7 +82,6 @@
     .wrapper {
       width: 1200px;
       margin: 0px auto;
-      background-color: white;
       & > span {
         font-family: Microsoft Yahei, 微软雅黑;
         font-size: 12px;
@@ -94,6 +91,7 @@
         display: block;
       }
       .content {
+        background-color: white;
        // background-color: white;
         padding: 20px;
         & > span {
