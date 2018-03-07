@@ -699,24 +699,23 @@
 
     <Modal width="590" v-model="showModal.authByPhone" :scrollable="true">
       <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        通过手机号验证
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #e9e9e9;padding-bottom: 20px;">
+        手机号验证
       </div>
       <div>
-        <div><span
-          style="display: block;margin: 15px 0px;font-size: 16px;color: rgba(17,17,17,0.65);width:80px;display: inline-block;margin-right:20px;">手机号码</span><span>{{userInfo.phone}}</span>
+        <div><span style="display: block;margin: 15px 0px;font-size: 16px;color: rgba(17,17,17,0.65);width:80px;margin: 15px 0px;">手机号</span><span>{{userInfo.phone}}</span>
         </div>
         <div>
           <span
-            style="font-size: 16px;color: rgba(17,17,17,0.65);vertical-align:sub;width:80px;display: inline-block;margin-right:20px;">随机验证码</span>
+            style="font-size: 16px;color: rgba(17,17,17,0.65);vertical-align:sub;width:80px;display:block;margin: 15px 0px;">随机验证码</span>
           <Input type="text" autocomplete="off" v-model="code" placeholder="请输入随机验证码"
                  style="width: 150px;margin-right: 30px"></Input>
           <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
                style="height:32px;vertical-align: middle">
         </div>
-        <div style="margin-top:10px">
+        <div>
         <span
-          style="font-size: 16px;color: rgba(17,17,17,0.65);vertical-align:sub;width:80px;display: inline-block;margin-right:20px;">手机验证码</span>
+          style="font-size: 16px;color: rgba(17,17,17,0.65);vertical-align:sub;width:80px;display: block;margin: 15px 0px;">验证码</span>
           <Input
             v-model="newPhoneForm.oldPhoneCode" placeholder="请输入手机验证码" style="width: 150px;margin-right:30px;"></Input>
           <Button type="primary" :class="{codeDisabled:newPhoneForm.phoneVerCodeText!='获取验证码'}"
@@ -724,6 +723,11 @@
                   style="height:31px;width:92px" @click="getVerCode('phone')">{{newPhoneForm.phoneVerCodeText}}
           </Button>
         </div>
+      </div>
+      <div style="padding: 20px;">
+        <p style="line-height: 1.5;color: #999;">没有收到验证码？</p>
+        <p style="line-height: 1.5;color: #999;">1、网络通讯异常可能会造成短信丢失，请重新获取或稍后再试。</p>
+        <p style="line-height: 1.5;color: #999;">2、如果手机已丢失或停机，请<span style="color: rgb(42, 153, 242);cursor: pointer" @click="changWay1">更换验证方式</span>。</p>
       </div>
       <div slot="footer">
         <Button type="ghost" @click="showModal.authByPhone=false">取消</Button>
@@ -733,19 +737,24 @@
 
     <Modal width="590" v-model="showModal.authByEmail" :scrollable="true">
       <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        通过邮箱验证
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #e9e9e9;padding-bottom: 20px;">
+        邮箱验证
       </div>
       <div>
         <div><span
-          style="display: block;margin: 15px 0px;font-size: 16px;color: rgba(17,17,17,0.65);width:80px;display: inline-block">邮箱</span><span>{{userInfo.loginname}}</span>
+          style="display: block;margin: 15px 0px;font-size: 16px;color: rgba(17,17,17,0.65);width:80px;margin: 15px 0px;">邮箱</span><span>{{userInfo.loginname}}</span>
         </div>
         <span
-          style="font-size: 16px;color: rgba(17,17,17,0.65);vertical-align:sub;width:80px;display: inline-block;margin-right:23px;">邮箱验证码</span><Input
-        v-model="newPhoneForm.oldPhoneCode" placeholder="请输入..." style="width: 150px;margin-right:30px;"></Input>
+          style="font-size: 16px;color: rgba(17,17,17,0.65);vertical-align:sub;width:80px;display: block;margin: 15px 0px;">验证码</span><Input
+        v-model="newPhoneForm.oldPhoneCode" placeholder="请输入" style="width: 150px;margin-right:30px;"></Input>
         <Button type="primary" :class="{codeDisabled:emailVerCodeText!='获取验证码'}" :disabled="emailVerCodeText!='获取验证码'"
                 style="height:31px;width:92px" @click="getVerCode('email')">{{emailVerCodeText}}
         </Button>
+      </div>
+      <div style="padding: 20px;">
+        <p style="line-height: 1.5;color: #999;">没有收到验证码？</p>
+        <p style="line-height: 1.5;color: #999;">1、网络通讯异常可能会造成短信丢失，请重新获取或稍后再试。</p>
+        <p style="line-height: 1.5;color: #999;">2、如果手机已丢失或停机，请<span style="color: rgb(42, 153, 242);cursor: pointer" @click="changWay2">更换验证方式</span>。</p>
       </div>
       <div slot="footer">
         <Button type="ghost" @click="showModal.authByEmail=false">取消</Button>
@@ -842,7 +851,7 @@
     data(){
      var authType = sessionStorage.getItem('pane')
     //  console.log(authType)
-      var currentTab = '' 
+      var currentTab = ''
       if (authType == 'company') {
         currentTab = 'companyInfo'
       } else if (authType == 'person') {
@@ -1609,6 +1618,15 @@
             }
           }
         })
+      },
+      // 更换验证方式
+      changWay1() {
+         this.showModal.authByPhone = false
+         this.showModal.modifyPhone = true
+      },
+      changWay2() {
+        this.showModal.authByEmail = false
+        this.showModal.modifyPhone = true
       },
       // 通过手机验证
       authByPhone(){
