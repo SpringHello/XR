@@ -691,6 +691,7 @@
         this.$Modal.confirm({
           title: '',
           content: '<p>确定要恢复当前主机吗？</p>',
+          scrollable: true,
           onOk: () => {
             this.$Message.info('主机正在恢复，请稍后')
             this.$http.get('information/recoverVM.do?id=' + id).then(response => {

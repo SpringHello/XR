@@ -22,7 +22,7 @@
           <p>VPN业务用于在远端用户和VPC之间建立一条安全加密的通信隧道，使远端用户通过VPN使用VPC中的业务资源。</p>
         </div>
 
-        <Tabs type="card" :animated="false" v-model="pane">
+        <Tabs type="card" :animated="false" v-model="paneStatus.vpn">
           <TabPane label="远程接入" name="remote">
             <div class="operator-bar">
               <Button type="primary" @click="newRemoteAccess">创建VPN接入点</Button>
@@ -231,6 +231,7 @@
   import axios from 'axios'
   import $store from '@/vuex'
   import regExp from '../../util/regExp'
+  import {mapState} from 'vuex'
   export default{
     beforeRouteEnter(from, to, next){
       // 远程接入列表
@@ -259,7 +260,6 @@
       return {
         loadingMessage: '',
         loading: false,
-        pane,
         showModal: {
           // 远程VPN
           newRemoteAccess: false,
@@ -1076,12 +1076,12 @@
         deep: true
       }
     },
-    computed: {
+    computed: mapState({
+      paneStatus: state => state.paneStatus,
       auth(){
         return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
-
       }
-    }
+    })
   }
 </script>
 

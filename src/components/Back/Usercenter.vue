@@ -430,7 +430,7 @@
                   @click="showModal.modifyPhone=true;type='phone'" style="cursor:pointer">「修改」</span>
                 </div>
                 <div v-else>
-                  <p class="info"><span>手机绑定</span>&nbsp;&nbsp;&nbsp;您尚未绑定手机号。（绑定后,您的手机号可以直接用于登陆）</p><span
+                  <p class="info"><span>手机绑定</span>&nbsp;&nbsp;&nbsp;您尚未绑定手机号。（绑定后，您的手机号可以直接用于登陆）</p><span
                   @click="showModal.modifyPhone=true;type='phone'" style="cursor:pointer">「绑定」</span>
                 </div>
                 <div v-if="userInfo.loginname">
@@ -438,11 +438,11 @@
                   @click="showModal.modifyPhone=true;type='email'" style="cursor:pointer">「修改」</span>
                 </div>
                 <div v-else>
-                  <p class="info"><span>邮箱绑定</span>&nbsp;&nbsp;&nbsp;您尚未绑定邮箱。（绑定后,您的邮箱可以直接用于登陆）</p><span
+                  <p class="info"><span>邮箱绑定</span>&nbsp;&nbsp;&nbsp;您尚未绑定邮箱。（绑定后，您的邮箱可以直接用于登陆）</p><span
                   @click="showModal.modifyPhone=true;type='email'" style="cursor:pointer">「绑定」</span>
                 </div>
-                <p class="info"><span>登录密码</span>&nbsp;&nbsp;&nbsp;安全性高的密码可以使账号更安全。建议您定期更换密码，设置一个包含字母，符号或数字中
-                  至少两项且长度超过8位的密码。</p><span @click="showModal.modifyPassword=true" style="cursor:pointer">「修改」</span>
+                <p class="info"><span>登录密码</span>&nbsp;&nbsp;&nbsp;安全性高的密码可以使账号更安全。建议您定期更换密码，设置一个包含字母，符号或数字中至少两项且长度超过8位的密码。
+                </p><span @click="showModal.modifyPassword=true" style="cursor:pointer">「修改」</span>
               </div>
             </div>
           </Tab-pane>
@@ -850,7 +850,6 @@
   export default{
     data(){
      var authType = sessionStorage.getItem('pane')
-    //  console.log(authType)
       var currentTab = ''
       if (authType == 'company') {
         currentTab = 'companyInfo'
@@ -1347,10 +1346,10 @@
       }
     },
     created(){
-      if(this.authType == 'person'|| this.authType == 'company'){
+      if (this.authType == 'person' || this.authType == 'company') {
         this.showModal.selectAuthType = false
-      }else {
-        if(this.$store.state.userInfo.personalauth != 0 && this.$store.state.userInfo.companyauth != 0){
+      } else {
+        if (this.$store.state.userInfo.personalauth != 0 && this.$store.state.userInfo.companyauth != 0) {
           this.showModal.selectAuthType = true
         }
       }
@@ -1767,6 +1766,7 @@
       },
       // 获取新手机验证码
       getNewPhoneVerCode(type){
+        console.log(type)
         if (type == 'phone' && this.newPhoneForm.code.length != 4) {
           this.$Message.error('请输入正确的随机验证码')
           return
@@ -1790,7 +1790,7 @@
                 clearInterval(interval)
                 return
               }
-              this[`${type}VerCodeText`] = timeOut + 's'
+              this[`${type}VerCode`] = timeOut + 's'
             }.bind(this), 1000)
             this.$Message.success(response.data.message)
           }
