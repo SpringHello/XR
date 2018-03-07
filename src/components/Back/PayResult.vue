@@ -1,8 +1,8 @@
 <template>
     <div class="background">
       <div class="wrapper">
-        <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / <router-link
-          to="order" style="color:rgba(17, 17, 17, 0.43);">订单</router-link> / 支付</span>
+        <span><router-link to="host" style="color:rgba(17, 17, 17, 0.43);">云服务器  / </router-link><router-link
+          to="host" style="color:rgba(17, 17, 17, 0.43);">云主机 / </router-link><router-link to="upgrade" style="color:rgba(17, 17, 17, 0.43);">升级 / </router-link><router-link to="order" style="color:rgba(17, 17, 17, 0.43);">订单确认 / </router-link> 支付</span>
         <div class="content">
           <span>支付</span>
           <div style="padding:40px 0px 140px;">
@@ -75,7 +75,7 @@
 <style rel="stylesheet/less" lang="less" scoped>
 
   .background {
-    background-color: #f5f5f5;
+   // background-color: #f5f5f5;
     width: 100%;
     @diff: 101px;
     min-height: calc(~"100% - @{diff}");
@@ -85,19 +85,18 @@
       & > span {
         font-family: Microsoft Yahei, 微软雅黑;
         font-size: 12px;
-        color: rgba(17, 17, 17, 0.43);
-        line-height: 22px;
+        color: #666666;
+        line-height: 18px;
         padding: 11px 0px;
         display: block;
       }
       .content {
         background-color: white;
-       // background-color: white;
         padding: 20px;
         & > span {
           display: block;
           padding-bottom: 20px;
-          border-bottom: 1px solid #E9E9E9;
+         // border-bottom: 1px solid #E9E9E9;
           font-family: MicrosoftYaHei-Bold;
           font-size: 24px;
           color: rgba(17, 17, 17, 0.75);
