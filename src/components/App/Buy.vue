@@ -472,6 +472,7 @@
                     </div>
                     <Input v-model="PecsInfo.computerName" placeholder="请输入主机名" style="width: 300px"></Input>
                   </div>
+                  <p class="item-desc">当购买数量大于1台之时，主机命名规则为主机名称加随机数字。</p>
                 </div>
                 <div class="item-wrapper">
                   <div style="display: flex">
@@ -511,6 +512,9 @@
               <div style="text-align: right;margin-top: 20px;">
                 <button class="buyButton" @click="addCart">
                   加入预算清单
+                </button>
+                <button class="buyButton" @click="buyHost">
+                  立即购买
                 </button>
               </div>
             </div>
@@ -644,6 +648,9 @@
               <button class="buyButton" @click="addDiskCart">
                 加入预算清单
               </button>
+              <button class="buyButton" @click="buyDisk">
+                立即购买
+              </button>
             </div>
           </div>
         </div>
@@ -759,6 +766,9 @@
             <div style="text-align: right;margin-top: 20px;">
               <button class="buyButton" @click="addIPCart">
                 加入预算清单
+              </button>
+              <button class="buyButton" @click="buyIP">
+                立即购买
               </button>
             </div>
           </div>
@@ -983,6 +993,8 @@
       }
 
       return {
+        // 当前可以创建的剩余资源数
+        remainCount: {},
         // 登录Modal需要的数据
         form: {
           loginname: '',
@@ -1111,8 +1123,8 @@
 
           // 系统磁盘类型选择
           diskTypeList: [
-            {label: '高IO型', value: 'sas'},
-            {label: '超高IO型', value: 'ssd'}
+            {label: 'SAS存储', value: 'sas'},
+            {label: 'SSD存储', value: 'ssd'}
           ],
 
           // 核心个数选择
@@ -1160,9 +1172,9 @@
 
           // 云硬盘（数据盘）
           dataDiskType: [
-            {label: '存储型', value: 'sata'},
-            {label: '性能型', value: 'sas'},
-            {label: '超高性能型', value: 'ssd'}
+            {label: 'SATA存储', value: 'sata'},
+            {label: 'SAS存储', value: 'sas'},
+            {label: 'SSD存储', value: 'ssd'}
           ],
           // 添加购买的数据盘
           dataDiskList: [
@@ -1184,9 +1196,9 @@
 
           // 云硬盘（数据盘）
           dataDiskType: [
-            {label: '存储型', value: 'sata'},
-            {label: '性能型', value: 'sas'},
-            {label: '超高性能型', value: 'ssd'}
+            {label: 'SATA存储', value: 'sata'},
+            {label: 'SAS存储', value: 'sas'},
+            {label: 'SSD存储', value: 'ssd'}
           ],
           // 添加购买的数据盘
           dataDiskList: [
@@ -1229,7 +1241,7 @@
       }
     },
     created(){
-      if (this.$store.state.userInfo.personalauth != 0 && this.$store.state.userInfo.companyauth != 0) {
+      if (this.$store.state.userInfo && this.$store.state.userInfo.personalauth != 0 && this.$store.state.userInfo.companyauth != 0) {
         this.$Message.info('当前账户尚未认证通过，创建的主机无法操作');
       }
       scrollTo(0, 0)
@@ -1243,6 +1255,7 @@
        this.PecsInfo.vpcList = response.data.result
        this.PeipInfo.vpcList = response.data.result
        })*/
+      this.queryRemainCount()
       this.queryQuick()
       this.queryCustomVM()
       this.queryDiskPrice()
@@ -1260,6 +1273,17 @@
       }
     },
     methods: {
+      queryRemainCount(){
+        axios.get('user/getRemainCount.do', {
+          params: {
+            zoneId: 'hello'
+          }
+        }).then(response => {
+          this.remainCount.hostCount = response.data.result.computer
+          this.remainCount.diskCount = response.data.result.disk
+          this.remainCount.publicIpCount = response.data.result.publicIp
+        })
+      },
       // 设置镜像数据
       setTemplate(){
         axios.get('information/getSoftTempList.do', {
@@ -1570,9 +1594,92 @@
           customCost: this.totalCost,
           count: 1
         }, obj)
-        console.log(prod)
         this.cart.push(prod)
         this.store()
+        window.scrollTo(0,170)
+      },
+      buyHost(){
+        if (this.PecsInfo.currentType == 'app' && this.PecsInfo.currentApp.templatename == undefined) {
+          this.$message.info({
+            content: '请选择一个镜像'
+          })
+          return
+        }
+        if (this.PecsInfo.currentType == 'public' && this.PecsInfo.system.systemName == undefined) {
+          this.$message.info({
+            content: '请选择一个镜像'
+          })
+          return
+        }
+        if (this.PecsInfo.currentType == 'custom' && this.PecsInfo.customMirror.templatename == undefined) {
+          this.$message.info({
+            content: '请选择一个镜像'
+          })
+          return
+        }
+
+        var obj = JSON.parse(JSON.stringify(this.PecsInfo))
+        var prod = Object.assign({
+          typeName: '云主机',
+          zone: this.PecsInfo.zone,
+          type: 'Pecs',
+          customCost: this.totalCost,
+          count: 1
+        }, obj)
+
+        var hostCount = 0, ipCount = 0, diskCount = 0
+
+        if (prod.type == 'Pecs') {
+          hostCount++
+          var params = {
+            zoneId: prod.zone.zoneid,
+            timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
+            timeValue: prod.timeForm.currentTimeValue.value,
+            templateId: prod.currentType == 'app' ? prod.currentApp.systemtemplateid : prod.currentType == 'public' ? prod.system.systemtemplateid : prod.customMirror.systemtemplateid,
+            isAutoRenew: prod.autoRenewal ? '1' : '0',
+            count: prod.count
+          }
+          // 快速创建主机
+          if (prod.createType == 'fast') {
+            params.cpuNum = prod.currentSystem.kernel
+            params.memory = prod.currentSystem.RAM
+            params.bandWidth = prod.publicIP ? prod.currentSystem.bandWidth : 0
+            params.rootDiskType = prod.currentSystem.diskType
+            params.networkId = 'no'
+            if (params.bandWidth != 0) {
+              ipCount++
+            }
+          } else {
+            params.cpuNum = prod.vmConfig.kernel
+            params.memory = prod.vmConfig.RAM
+            params.bandWidth = prod.IPConfig.publicIP ? prod.IPConfig.bandWidth : 0
+            params.rootDiskType = prod.vmConfig.diskType
+            params.networkId = prod.network
+            var diskType = '', diskSize = ''
+            diskCount += prod.dataDiskList.length
+            if (params.bandWidth != 0) {
+              ipCount++
+            }
+            for (let disk of prod.dataDiskList) {
+              diskType += `${disk.type},`
+              diskSize += `${disk.size},`
+            }
+            params.diskType = diskType
+            params.diskSize = diskSize
+          }
+          if (prod.currentType === 'app') {
+            params.templateId = prod.currentApp.templateid
+          } else if (prod.currentType === 'public') {
+            params.templateId = prod.system.systemId
+          } else {
+            params.templateId = prod.customMirror.systemtemplateid
+          }
+        }
+        if (this._checkCount(hostCount, diskCount, ipCount)) {
+          axios.get('information/deployVirtualMachine.do', {params}).then(response => {
+            this.$router.push('order')
+          })
+        }
       },
       // 磁盘加入购物车
       addDiskCart(){
@@ -1591,6 +1698,35 @@
         var prod = Object.assign({typeName: '云硬盘', zone: this.PdiskInfo.zone, type: 'Pdisk', count: 1}, obj)
         this.cart.push(prod)
         this.store()
+        window.scrollTo(0,170)
+      },
+      buyDisk(){
+        var obj = JSON.parse(JSON.stringify(this.PdiskInfo))
+        var prod = Object.assign({typeName: '云硬盘', zone: this.PdiskInfo.zone, type: 'Pdisk', count: 1}, obj)
+        let diskCount = 0
+        if (prod.type == 'Pdisk') {
+          diskCount += prod.dataDiskList.length
+          if (this._checkCount(0, diskCount, 0)) {
+            var diskSize = ''
+            var diskType = ''
+            prod.dataDiskList.forEach(item => {
+              diskSize += `${item.size},`
+              diskType += `${item.type},`
+            })
+            var params = {
+              zoneId: prod.zone.zoneid,
+              diskSize,
+              diskName: prod.diskName,
+              diskOfferingId: diskType,
+              timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
+              timeValue: prod.timeForm.currentTimeValue.value,
+              isAutorenew: prod.autoRenewal ? '1' : '0',
+            }
+            axios.get('Disk/createVolume.do', {params}).then(response => {
+              this.$router.push('order')
+            })
+          }
+        }
       },
       // 公网IP加入购物车
       addIPCart(){
@@ -1603,6 +1739,25 @@
         var prod = Object.assign({typeName: '公网IP', zone: this.PeipInfo.zone, type: 'Peip', count: 1}, obj)
         this.cart.push(prod)
         this.store()
+        window.scrollTo(0,170)
+      },
+      buyIP(){
+        var obj = JSON.parse(JSON.stringify(this.PeipInfo))
+        var prod = Object.assign({typeName: '公网IP', zone: this.PeipInfo.zone, type: 'Peip', count: 1}, obj)
+        if (this._checkCount(0, 0, 1)) {
+          var params = {
+            zoneId: prod.zone.zoneid,
+            timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
+            timeValue: prod.timeForm.currentTimeValue.value,
+            count: prod.count,
+            isAutorenew: prod.autoRenewal ? '1' : '0',
+            brandWith: prod.bandWidth,
+            vpcId: prod.vpc
+          }
+          axios.get('network/createPublicIp.do', {params}).then(
+            this.$router.push('order')
+          )
+        }
       },
       /* 删除一条购买清单 */
       delDetailed (index) {
@@ -1726,26 +1881,31 @@
             PromiseList.push(axios.get('network/createPublicIp.do', {params}))
           }
         }
-        this.$http.get('user/getRemainCount.do').then(response => {
-          let errorMessage = ''
-          if (hostCount > response.data.result.computer) {
-            errorMessage = '创建的主机超出个数限制'
-          } else if (diskCount > response.data.result.disk) {
-            errorMessage = '创建的磁盘超出个数限制'
-          } else if (ipCount > response.data.result.publicIp) {
-            errorMessage = '创建的公网IP超出个数限制'
-          }
-          if (errorMessage != '') {
-            this.$message.error({
-              content: errorMessage
-            })
-          } else {
-            sessionStorage.removeItem('cart')
-            Promise.all(PromiseList).then(responseList => {
-              this.$router.push('order')
-            })
-          }
-        })
+        if (this._checkCount(hostCount, diskCount, ipCount)) {
+          sessionStorage.removeItem('cart')
+          Promise.all(PromiseList).then(responseList => {
+            this.$router.push('order')
+          })
+        }
+      },
+      _checkCount(hostCount, diskCount, ipCount) {
+        if (hostCount > this.remainCount.hostCount) {
+          this.$message.error({
+            content: '创建的主机数超过限制'
+          })
+          return false
+        } else if (diskCount > this.remainCount.diskCount) {
+          this.$message.error({
+            content: '创建的磁盘数超过限制'
+          })
+          return false
+        } else if (ipCount > this.remainCount.publicIpCount) {
+          this.$message.error({
+            content: '创建的公网IP数超过限制'
+          })
+          return false
+        }
+        return true
       },
       // 登录弹窗需要的方法
       vail(field) {
@@ -1832,7 +1992,11 @@
           return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
         },
         totalCost(){
-          return this.PecsInfo.vmConfig.cost + this.PecsInfo.IPConfig.cost + this.PecsInfo.dataDiskCost
+          if (this.PecsInfo.IPConfig.publicIP) {
+            return this.PecsInfo.vmConfig.cost + this.PecsInfo.IPConfig.cost + this.PecsInfo.dataDiskCost
+          } else {
+            return this.PecsInfo.vmConfig.cost + this.PecsInfo.dataDiskCost
+          }
         },
         // 剩余添加磁盘数量
         remainDisk(){
@@ -2054,7 +2218,8 @@
         }
         .typeSelect {
           background-color: #FFFFFF;
-          color: #2A99F2
+          color: #2A99F2;
+          border-top: 3px solid #377DFF;
         }
         .zoneItem {
           width: 101px;
@@ -2101,12 +2266,19 @@
           color: #ffffff;
         }
         .item-wrapper {
-          margin-top: 20px;
+          margin-top: 10px;
           .item-title {
             font-size: 16px;
             color: #333333;
             width: 90px;
             margin-top: 9px;
+          }
+          .item-desc {
+            margin-top: 10px;
+            margin-left: 90px;
+            font-size: 14px;
+            color: #999999;
+            line-height: 25px;
           }
           .mirror {
             display: flex;

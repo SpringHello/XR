@@ -1,7 +1,7 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 用户中心</span>
+      <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">个人中心</router-link> / 用户中心</span>
       <div id="content">
         <p class="title">用户中心</p>
         <Tabs type="card" :animated="false" v-model="currentTab">
@@ -480,7 +480,7 @@
                 </FormItem>-->
               </div>
               <!--三证合一图片上传-->
-              <div class="IDCard" v-show="notAuth.companyAuthForm.certificateType==1">
+              <div class="IDCard" v-show="notAuth.companyAuthForm.certificateType==1" style="display: block">
                 <FormItem label="三证合一">
                   <div style="display: flex;padding:20px;background-color: #f7f7f7">
                     <div style="width:130px;">
@@ -506,6 +506,7 @@
                     </div>
                   </div>
                 </FormItem>
+                <p style="margin: -15px 0px 20px;">提示：照片支持jpg、png、gif格式，图片最大不要超过200KB</p>
               </div>
               <!--非三证合一图片上传-->
               <div class="IDCard" v-show="notAuth.companyAuthForm.certificateType==2">
@@ -582,9 +583,9 @@
                   </div>
                 </FormItem>
               </div>
-              <FormItem>
+              <div style="width:500px;">
                 <Button type="primary" @click="enterpriseAttest">确认提交</Button>
-              </FormItem>
+              </div>
             </Form>
           </TabPane>
         </Tabs>
@@ -703,7 +704,8 @@
         手机号验证
       </div>
       <div>
-        <div><span style="display: block;margin: 15px 0px;font-size: 16px;color: rgba(17,17,17,0.65);width:80px;margin: 15px 0px;">手机号</span><span>{{userInfo.phone}}</span>
+        <div><span
+          style="display: block;margin: 15px 0px;font-size: 16px;color: rgba(17,17,17,0.65);width:80px;margin: 15px 0px;">手机号</span><span>{{userInfo.phone}}</span>
         </div>
         <div>
           <span
@@ -727,7 +729,8 @@
       <div style="padding: 20px;">
         <p style="line-height: 1.5;color: #999;">没有收到验证码？</p>
         <p style="line-height: 1.5;color: #999;">1、网络通讯异常可能会造成短信丢失，请重新获取或稍后再试。</p>
-        <p style="line-height: 1.5;color: #999;">2、如果手机已丢失或停机，请<span style="color: rgb(42, 153, 242);cursor: pointer" @click="changWay1">更换验证方式</span>。</p>
+        <p style="line-height: 1.5;color: #999;">2、如果手机已丢失或停机，请<span style="color: rgb(42, 153, 242);cursor: pointer"
+                                                                     @click="changWay1">更换验证方式</span>。</p>
       </div>
       <div slot="footer">
         <Button type="ghost" @click="showModal.authByPhone=false">取消</Button>
@@ -754,7 +757,8 @@
       <div style="padding: 20px;">
         <p style="line-height: 1.5;color: #999;">没有收到验证码？</p>
         <p style="line-height: 1.5;color: #999;">1、网络通讯异常可能会造成短信丢失，请重新获取或稍后再试。</p>
-        <p style="line-height: 1.5;color: #999;">2、如果手机已丢失或停机，请<span style="color: rgb(42, 153, 242);cursor: pointer" @click="changWay2">更换验证方式</span>。</p>
+        <p style="line-height: 1.5;color: #999;">2、如果手机已丢失或停机，请<span style="color: rgb(42, 153, 242);cursor: pointer"
+                                                                     @click="changWay2">更换验证方式</span>。</p>
       </div>
       <div slot="footer">
         <Button type="ghost" @click="showModal.authByEmail=false">取消</Button>
@@ -849,7 +853,7 @@
   import $store from '@/vuex'
   export default{
     data(){
-     var authType = sessionStorage.getItem('pane')
+      var authType = sessionStorage.getItem('pane')
       var currentTab = ''
       if (authType == 'company') {
         currentTab = 'companyInfo'
@@ -858,6 +862,7 @@
       } else {
         currentTab = authType
       }
+      console.log('用户中心pane', currentTab)
       sessionStorage.removeItem('pane')
       const validaRegisteredPhone = (rule, value, callback) => {
         if (!value) {
@@ -1488,6 +1493,7 @@
                 // 获取用户信息
                 axios.get('user/GetUserInfo.do').then(response => {
                   this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+                  this.currentTab = ''
                 })
               }
             })
@@ -1620,8 +1626,8 @@
       },
       // 更换验证方式
       changWay1() {
-         this.showModal.authByPhone = false
-         this.showModal.modifyPhone = true
+        this.showModal.authByPhone = false
+        this.showModal.modifyPhone = true
       },
       changWay2() {
         this.showModal.authByEmail = false
@@ -1927,6 +1933,7 @@
         }
 
         .IDCard {
+          width: 362px;
           label {
             float: unset;
           }
@@ -1942,7 +1949,7 @@
   }
 
   .selectAuthType {
-    width:50%;
+    width: 50%;
     h2 {
       text-align: center;
       font-size: 16px;

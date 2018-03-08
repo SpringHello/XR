@@ -53,7 +53,7 @@
                 <li>网段地址：{{item.ipsegment}}</li>
                 <li>服务方案：{{item.netoffername}}</li>
                 <li>防火墙：<span class="blue" @click="$router.push('firewall')">{{item.acllistname}}</span></li>
-                <li>负载均衡：<span class="blue" @click="$router.push('balance')">{{item.netoffername}}</span></li>
+                <li>负载均衡：<span class="blue" @click="$router.push('balance')">{{item.loadbalance}}</span></li>
                 <li><span class="blue" @click="addHostToVpc(item)">添加主机</span><span class="vertical-line">|</span><span
                   class="blue" @click="deleteVpc(item)">删除</span></li>
               </ul>
