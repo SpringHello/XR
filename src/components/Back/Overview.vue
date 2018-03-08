@@ -11,7 +11,7 @@
           <div style="display: flex;margin-top:25px">
             <span style="margin-right:20px;">
               <img src="../../assets/img/overview/email.png" style="margin-right:10px;vertical-align: middle">
-              <span v-if="userInfo.loginname11" style="vertical-align: middle">{{userInfo.loginname}}</span>
+              <span v-if="userInfo.loginname" style="vertical-align: middle">{{userInfo.loginname}}</span>
               <span v-else style="vertical-align: middle;cursor:pointer;color:#2d8cf0;"
                     @click="togo('/ruicloud/userCenter','safe')">点击绑定</span>
             </span>
