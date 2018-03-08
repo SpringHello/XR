@@ -338,12 +338,12 @@
       </p>
       <div class="universal-modal-content-flex">
         <p class="mb20">您正为<span class="bluetext">{{currentHostname}}</span>创建快照</p>
-        <Form :model="backupForm" ref="backupForm">
-          <FormItem label="快照名称">
-            <Input v-model="backupForm.backupName" placeholder="请输入2-4094范围内任意数字"></Input>
+        <Form ref="backupForm" :model="backupForm" :rules="backupFormRule">
+          <FormItem label="快照名称" prop="name">
+              <Input v-model="backupForm.name" placeholder="请输入2-4094范围内任意数字" :maxlength="15"></Input>
           </FormItem>
           <FormItem label="是否保存内存信息">
-            <RadioGroup v-model="backupForm.radio">
+            <RadioGroup v-model="backupForm.memory">
               <Radio label="1">保存</Radio>
               <Radio label="0">不保存</Radio>
             </RadioGroup>
@@ -354,7 +354,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.backup=false">取消</Button>
-        <Button type="primary" :disabled="backupForm.backupName==''" @click="backup">创建快照</Button>
+        <Button type="primary" @click="backupSubmit('backupForm')">创建快照</Button>
       </div>
     </Modal>
     <!-- 主机重命名弹窗 -->
@@ -371,7 +371,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.rename = false">取消</Button>
-        <Button type="primary" :disabled="renameForm.hostName==''" @click="checkRenameForm">确定
+        <Button type="primary" @click="checkRenameForm">确定
         </Button>
       </div>
     </Modal>
@@ -432,7 +432,8 @@
           <Form-item label="选择弹性负载均衡名称 ">
             <Select v-model="loadBalanceForm.loadbalanceroleid" placeholder="请选择" style="width:240px;">
               <Option v-for="(item,index) in listLoadBalanceRole" :key="index" :value="item.loadbalanceroleid">
-                {{item.name}}
+                <span v-if="item.name">{{item.name}}</span>
+                <span v-if="item.lbname">{{item.lbname}}</span>
               </Option>
             </Select>
           </Form-item>
@@ -589,12 +590,17 @@
         },
         renameFormRule: {
           hostName: [
-            {name: true, validator: validaRegisteredName, trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ]
         },
         backupForm: {
-          backupName: '',
-          radio: '1'
+          name: '',
+          memory: '1'
+        },
+        backupFormRule:{
+          name: [
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
+          ]
         },
         mirrorForm: {
           mirrorName: '',
@@ -648,7 +654,7 @@
       checkRenameForm(){
         this.$refs.renameForm.validate((valid) => {
           if (valid) {
-            // 表单验证通过，调用制作镜像的方法
+            // 表单验证通过，调用重命名的方法
             this.rename()
           }
         })
@@ -665,7 +671,8 @@
             axios.get(balanceUrl)
               .then(response => {
                 if (response.status == 200 && response.data.status == 1) {
-                  this.listLoadBalanceRole = response.data.result.publicLoadbalance
+                  var publicLoadbalance = response.data.result.publicLoadbalance
+                  this.listLoadBalanceRole = publicLoadbalance.concat(response.data.result.internalLoadbalance)
                 }
               })
           }
@@ -1008,12 +1015,18 @@
         return true
       },
       // 生成快照
-      backup() {
-        this.showModal.backup = false
-        var url = `Snapshot/createVMSnapshot.do?VMId=${this.currentHost[0].computerid}&snapshotName=${this.backupForm.backupName}&&memoryStatus=${this.backupForm.radio}&zoneId=${this.currentHost[0].zoneid}`
-        axios.get(url).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message)
+      backupSubmit(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.showModal.backup = false
+            var url = `Snapshot/createVMSnapshot.do?VMId=${this.currentHost[0].computerid}&snapshotName=${this.backupForm.name}&&memoryStatus=${this.backupForm.memory}&zoneId=${this.currentHost[0].zoneid}`
+            axios.get(url).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+              } else {
+                this.$Message.error('Fail!');
+              }
+            })
           }
         })
       },
