@@ -1107,7 +1107,7 @@
         }
       },
       searchOrderByType() {
-        this.$http.get('user/searchOrderByType.do?pageSize=' + this.pageSize + '&page=' + this.order_currentPage + '&type=' + this.order_type + '&startTime=' + this.order_dateRange[0] + '&endTime=' + this.order_dateRange[1]).then(response => {
+        this.$http.get('user/searchOrderByType.do?pageSize=' + this.pageSize + '&page=' + this.order_currentPage + '&paymentStatus=' + this.order_type + '&startTime=' + this.order_dateRange[0] + '&endTime=' + this.order_dateRange[1]).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.orderData = response.data.result.data
             this.ordertotal = response.data.result.totle

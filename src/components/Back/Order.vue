@@ -118,10 +118,10 @@
                   type = 'vpc'
                   break
                 case 'disk':
-                  type = '云磁盘'
+                  type = '云硬盘'
                   break
                 case 'publicIp':
-                  type = '网络'
+                  type = '弹性IP'
                   break
                 case 'continue':
                   type = '续费'
@@ -130,7 +130,7 @@
                   type = '升级'
                   break
                 case 'nat' :
-                  type = '网络'
+                  type = 'NAT网关'
                   break
               }
               for (var index in params.row['资源']) {
