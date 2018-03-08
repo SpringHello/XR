@@ -214,9 +214,11 @@
   // import axios from 'axios'
   import $store from '@/vuex'
   import axios from 'axios'
+  import regExp from '../../util/regExp'
 
   export default {
     data() {
+      const validaRegisteredName = regExp.validaRegisteredName
       return {
         loading: false,
         loadingMessage: '',
@@ -233,12 +235,12 @@
         strategySelectionItem: null,
         ruleBackups: {
           name: [
-            {required: true, message: '策略名不能为空', trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ]
         },
         ruleSnaps: {
           name: [
-            {required: true, message: '快照名称不能为空', trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ],
           host: [
             {required: true, message: '请选择主机', trigger: 'change'}

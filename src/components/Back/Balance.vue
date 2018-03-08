@@ -43,7 +43,7 @@
             <Form ref="form1" :model="creatbalancemodal.formInline" :rules="creatbalancemodal.ruleInline">
               <FormItem label="名称" prop="name">
                 <Input type="text" v-model="creatbalancemodal.formInline.name" placeholder="请输入小于16位的负载均衡名称"
-                       style="width:240px;">
+                       style="width:240px;" :maxlength="16">
                 </Input>
               </FormItem>
               <FormItem label="类型" prop="radio">
@@ -184,6 +184,7 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import $store from '@/vuex'
+  import regExp from '../../util/regExp'
   export default {
     beforeRouteEnter(from, to, next){
       // 获取负载均衡的初始数据
@@ -198,6 +199,7 @@
       })
     },
     data (){
+      const validaRegisteredName = regExp.validaRegisteredName
       return {
         loadingMessage: '',
         loading: false,
@@ -303,7 +305,7 @@
           //表单验证
           ruleInline: {
             name: [
-              {required: true, message: '请输入小于16位的负载均衡名称', trigger: 'blur'}
+              {required: true, validator: validaRegisteredName, trigger: 'blur'}
             ],
             radio: [
               {required: true, message: '请选择类型 ', trigger: 'change'}
@@ -484,6 +486,8 @@
       },
       /* 创建公网负载均衡 */
       createLoadBalanceRole () {
+        this.loadingMessage = '正在创建公网负载均衡，请稍候'
+        this.loading = true
         this.$http.get('loadbalance/createLoadBalanceRole.do', {
           params: {
             algorithm: this.creatbalancemodal.formInline.algorithm,
@@ -497,11 +501,13 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$refs.form2.resetFields()
             this.$refs.form1.resetFields()
+            this.loading = false
             this.$Message.success({
               content: response.data.message
             })
             this.listAllBalance()
           } else {
+            this.loading = false
             this.$message.error({
               content: response.data.message
             })
@@ -520,17 +526,21 @@
         if (this.creatbalancemodal.formInline.intranetIp == 'specify') {
           params.privateIp = this.creatbalancemodal.formInline.intranetIpNum + '.' + this.creatbalancemodal.formInline.num
         }
+        this.loadingMessage = '正在创建私网负载均衡，请稍候'
+        this.loading = true
         this.$http.get('loadbalance/createInternalLB.do', {
           params
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$refs.form2.resetFields()
             this.$refs.form1.resetFields()
+            this.loading = false
             this.$Message.success({
               content: response.data.message
             })
             this.listAllBalance()
           } else {
+            this.loading = false
             this.$message.error({
               content: response.data.message
             })
@@ -687,7 +697,7 @@
     computed: {
        auth(){
         return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
-        
+
       }
     }
   }

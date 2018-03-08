@@ -11,7 +11,7 @@
           <div style="display: flex;margin-top:25px">
             <span style="margin-right:20px;">
               <img src="../../assets/img/overview/email.png" style="margin-right:10px;vertical-align: middle">
-              <span v-if="userInfo.loginname11" style="vertical-align: middle">{{userInfo.loginname}}</span>
+              <span v-if="userInfo.loginname" style="vertical-align: middle">{{userInfo.loginname}}</span>
               <span v-else style="vertical-align: middle;cursor:pointer;color:#2d8cf0;"
                     @click="togo('/ruicloud/userCenter','safe')">点击绑定</span>
             </span>
@@ -130,11 +130,11 @@
           },
           {
             prod: '云安全',
-            prodUrl: ['firewall', 'Pddos']
+            prodUrl: ['firewall', '']
           },
           {
             prod: '云运维',
-            prodUrl: ['Pmonitor', '']
+            prodUrl: ['userCenter#remainder', '']
           }
         ],
         isDisable: false,
@@ -192,7 +192,7 @@
           })
           // 告警数据
           this.warnData = response.data.result[2].items
-          var warnUrl = ['host#error', 'disk', 'vpc']
+          var warnUrl = ['host#error', 'disk', 'ip']
           this.warnData.forEach((item, index) => {
             item.url = warnUrl[index]
           })

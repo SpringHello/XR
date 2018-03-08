@@ -1058,6 +1058,7 @@
           this.$Modal.confirm({
             title: '',
             content: '<p>确定要删除选中的订单吗？</p>',
+            scrollable: true,
             onOk: () => {
               let order = ''
               this.orderNumber.forEach(item => {
@@ -1081,6 +1082,7 @@
         } else {
           this.$Modal.error({
             content: '请选择需要删除的订单',
+            scrollable: true,
             duration: 3
           })
         }
@@ -1105,7 +1107,7 @@
         }
       },
       searchOrderByType() {
-        this.$http.get('user/searchOrderByType.do?pageSize=' + this.pageSize + '&page=' + this.order_currentPage + '&type=' + this.order_type + '&startTime=' + this.order_dateRange[0] + '&endTime=' + this.order_dateRange[1]).then(response => {
+        this.$http.get('user/searchOrderByType.do?pageSize=' + this.pageSize + '&page=' + this.order_currentPage + '&paymentStatus=' + this.order_type + '&startTime=' + this.order_dateRange[0] + '&endTime=' + this.order_dateRange[1]).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.orderData = response.data.result.data
             this.ordertotal = response.data.result.totle
@@ -1126,6 +1128,7 @@
         var data = JSON.parse(this.orderData[index].display)
         this.$Modal.info({
           title: '订单信息',
+          scrollable: true,
           content: `交易明细：${data.title + '' + data['类型'] + '' +data['数量']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
                    <br>订单状态：${this.orderData[index].paymentstatus == '1' ? '已支付' : '未支付'}`
         })
@@ -1135,6 +1138,7 @@
           this.$Modal.confirm({
             title: '',
             content: '<p>确定要支付选中的订单吗？</p>',
+            scrollable: true,
             onOk: () => {
               this.payLoading = true
               let order = ''
@@ -1164,6 +1168,7 @@
         } else {
           this.$Modal.error({
             content: '请选择需要支付的订单',
+            scrollable: true,
             duration: 3
           })
         }
@@ -1246,6 +1251,7 @@
         this.$Modal.info({
           title: '发票详情',
           width: '500',
+          scrollable: true,
           content: `收件人：${this.billTabledata[index].recipients}<br>开票金额：￥${this.billTabledata[index].amount}<br>发票类型：${this.billTabledata[index].type == '0' ? '普票' : '专票'}
                    <br>收件地址：${this.billTabledata[index].address}<br>发票抬头：${this.billTabledata[index].title}<br>联系电话：${this.billTabledata[index].phone}`
         })
@@ -1349,6 +1355,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$Modal.info({
               title: '发票物流信息',
+              scrollable: true,
               content: `物流公司：${response.data.result.logisticsName}<br>
                     物流单号：${response.data.result.logistics}<br>
                     查询网址：<a href="${response.data.result.kdurl}" target="_blank">${response.data.result.kdurl}</a>`
@@ -1374,6 +1381,7 @@
           } else {
             this.$Modal.error({
               content: '请选择未支付的订单',
+              scrollable: true,
               duration: 5
             })
           }
@@ -1383,6 +1391,7 @@
         } else {
           this.$Modal.error({
             content: '请选择需要支付的订单',
+            scrollable: true,
             duration: 5
           })
         }

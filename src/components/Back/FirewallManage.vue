@@ -210,6 +210,7 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import $store from '@/vuex'
+  import regExp from '../../util/regExp'
   const validateCdir = (rule, value, callback) => {
     var re = /^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\/(\d|[1-2]\d|3[0-2])$/
     if (!value) {
@@ -236,6 +237,7 @@
       })
     },
     data(){
+      const validaRegisteredName = regExp.validaRegisteredName
       return {
         loadingMessage: '',
         loading: false,
@@ -328,7 +330,7 @@
         },
         ruleValidate: {
           name: [
-            {required: true, message: '名称不能为空', trigger: 'change'}
+            {required: true, validator: validaRegisteredName, trigger: 'change'}
           ],
           way: [
             {required: true, message: '请选择方向', trigger: 'change'},

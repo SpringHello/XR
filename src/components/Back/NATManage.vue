@@ -1,7 +1,7 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span>首页 / 硬盘</span>
+      <span>首页 / NAT网关</span>
       <div id="content">
         <div id="header">
           <div>
@@ -104,6 +104,7 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import $store from '@/vuex'
+  import regExp from '../../util/regExp'
   var natGatewayId = sessionStorage.getItem('currentNat')
   export default{
     beforeRouteEnter(from, to, next){
@@ -124,10 +125,11 @@
       })
     },
     data(){
+      const validaRegisteredName = regExp.validaRegisteredName
       return {
         ruleValidate: {
           name: [
-            { required: true, message: '端口映射名称不能为空', trigger: 'blur' }
+            { required: true, validator: validaRegisteredName, trigger: 'blur' }
           ],
           publicIP: [
             { required: true, message: '请选择一个公网IP', trigger: 'change' }

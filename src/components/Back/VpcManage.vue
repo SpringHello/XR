@@ -19,7 +19,7 @@
             </div>
             <div>
               <Button type="primary" class="btn-bgwhite" @click="$router.go(-1)" style="margin-right: 10px;">返回</Button>
-              <Button type="primary" @click="$router.go(0)">刷新</Button>
+              <Button type="primary" class="btn-bgwhite" @click="$router.go(0)">刷新</Button>
             </div>
           </div>
           <div class="detail-info">
@@ -52,8 +52,8 @@
                 <li>网关地址：{{item.ipsegment.split('/')[0]}}</li>
                 <li>网段地址：{{item.ipsegment}}</li>
                 <li>服务方案：{{item.netoffername}}</li>
-                <li>防火墙：<span class="blue" @click="$router.push('firewall')">{{item.acllistname}}</span></li>
-                <li>负载均衡：<span class="blue" @click="$router.push('balance')">{{item.loadbalance}}</span></li>
+                <li>防火墙：<span class="blue" @click="toFirewall(item)">{{item.acllistname}}</span></li>
+                <li v-if="item.netoffername==='公网负载均衡网络'||item.netoffername==='内网负载均衡网络'">负载均衡：<span class="blue" @click="toBalance(item)">{{item.loadbalance}}</span></li>
                 <li><span class="blue" @click="addHostToVpc(item)">添加主机</span><span class="vertical-line">|</span><span
                   class="blue" @click="deleteVpc(item)">删除</span></li>
               </ul>
@@ -310,8 +310,10 @@
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   import axios from 'axios'
+  import regExp from '../../util/regExp'
   var nameError = ''
   var getwayError = ''
+  const validaRegisteredName = regExp.validaRegisteredName
   const validateName = (rule, value, callback) => {
     if (nameError) {
       callback(new Error(nameError))
@@ -387,7 +389,7 @@
         // 新建子网验证规则
         newNetworkRuleValidate: {
           networkName: [
-            {required: true, message: '请输入子网名称', trigger: 'blur'},
+            {required: true, validator: validaRegisteredName, trigger: 'blur'},
             {required: true, validator: validateName, trigger: 'blur'}
           ],
           networkDesc: [
@@ -428,7 +430,7 @@
             }
           },
           {
-            title: 'Ip地址',
+            title: 'IP地址',
             align: 'center',
             key: 'privateip'
           },
@@ -808,6 +810,7 @@
                 this.$Message.success(response.data.message)
                 this.refresh()
               } else {
+                this.loading = false
                 nameError = ''
                 getwayError = ''
                 if (response.data.message == '名称重复，请重新输入!') {
@@ -945,6 +948,38 @@
       },
       toggle: function (item) {
         item._show = !item._show
+      },
+      /* 点击负载均衡名称跳转到该负载均衡详情页 */
+      toBalance (item) {
+        if (item.loadbalanceId.indexOf(',') > -1) {
+          this.$router.push('balance')
+        } else {
+          var url = 'loadbalance/listLoadBalanceRole.do'
+          this.$http.get(url).then(response => {
+            if(response.status === 200 && response.data.status === 1) {
+              response.data.result.internalLoadbalance.forEach(item => {
+                item._internal = true
+              })
+              var balanceArray = response.data.result.internalLoadbalance.concat(response.data.result.publicLoadbalance)
+              balanceArray.forEach(balance =>{
+                if (balance.lbid === item.loadbalanceId || balance.loadbalanceroleid === item.loadbalanceId ) {
+                  sessionStorage.setItem('balanceInfo', JSON.stringify(balance))
+                  this.$router.push('BalanceParticulars')
+                }
+              })
+            } else {
+              this.$message.error({
+                content: response.data.message
+              })
+            }
+          })
+        }
+      },
+      /* 点击防火墙名称跳转到该防火墙详情页 */
+      toFirewall (item) {
+        sessionStorage.setItem('firewallId', item.acllistid)
+        sessionStorage.setItem('firewallName', item.acllistname)
+        this.$router.push('firewallManage')
       }
     }
   }
@@ -997,6 +1032,10 @@
   .btn-bgwhite {
     background: #ffffff;
     color: #2A99F2;
+    &:hover{
+      background: #2A99F2;
+      color: #FFFFFF;
+    }
   }
 
   .blue {

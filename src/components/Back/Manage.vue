@@ -233,7 +233,7 @@
                     <span
                       style="font-size: 16px;vertical-align: middle;color: rgba(0,0,0,0.65);">开始结束时间&nbsp;&nbsp;</span>
                     <Date-picker format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="选择日期" style="width: 200px" @on-change="dataChange"></Date-picker>
-                    <button @click="search">查询</button>
+                    <button @click="search" style="margin-left: 20px;">查询</button>
                   </div>
                 </div>
 
