@@ -140,7 +140,7 @@
         <div style="clear: both"></div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="ghost" @click="showModal.newDisk = false">取消</Button>
+        <Button type="ghost" @click="showModal.backupsStrategy = false">取消</Button>
         <Button type="primary" @click="_checkNewBackupsForm">确定创建</Button>
       </div>
     </Modal>
