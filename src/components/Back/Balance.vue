@@ -486,6 +486,8 @@
       },
       /* 创建公网负载均衡 */
       createLoadBalanceRole () {
+        this.loadingMessage = '正在创建公网负载均衡，请稍候'
+        this.loading = true
         this.$http.get('loadbalance/createLoadBalanceRole.do', {
           params: {
             algorithm: this.creatbalancemodal.formInline.algorithm,
@@ -499,11 +501,13 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$refs.form2.resetFields()
             this.$refs.form1.resetFields()
+            this.loading = false
             this.$Message.success({
               content: response.data.message
             })
             this.listAllBalance()
           } else {
+            this.loading = false
             this.$message.error({
               content: response.data.message
             })
@@ -522,17 +526,21 @@
         if (this.creatbalancemodal.formInline.intranetIp == 'specify') {
           params.privateIp = this.creatbalancemodal.formInline.intranetIpNum + '.' + this.creatbalancemodal.formInline.num
         }
+        this.loadingMessage = '正在创建私网负载均衡，请稍候'
+        this.loading = true
         this.$http.get('loadbalance/createInternalLB.do', {
           params
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$refs.form2.resetFields()
             this.$refs.form1.resetFields()
+            this.loading = false
             this.$Message.success({
               content: response.data.message
             })
             this.listAllBalance()
           } else {
+            this.loading = false
             this.$message.error({
               content: response.data.message
             })

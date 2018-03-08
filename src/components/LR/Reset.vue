@@ -37,10 +37,10 @@
                 <span :class="{warning:vailForm.password.warning}">{{vailForm.password.message}}</span>
                 <input v-show="!form.showPassword" type="password" autocomplete="off" v-model="form.password"
                        :placeholder="form.passwordPlaceholder"
-                       @blur="vail('password')" @focus="focus('password')">
+                       @blur="vail('password')" @focus="focus('password')" @input="isCorrect('password')">
                 <input v-show="form.showPassword" autocomplete="off" v-model="form.password"
                        :placeholder="form.passwordPlaceholder"
-                       @blur="vail('password')" @focus="focus('password')">
+                       @blur="vail('password')" @focus="focus('password')" @input="isCorrect('password')">
                 <img v-show="!form.showPassword" src="../../assets/img/reset/eye.png" class="eyeIcon"
                      @click="form.showPassword=!form.showPassword">
                 <img v-show="form.showPassword" src="../../assets/img/reset/closeEye.png" class="eyeIcon"
@@ -186,11 +186,19 @@
       },
       isCorrect(field){
         if (field == 'vailCode') {
+          // 验证码重新输入直接取消警告
           this.vailForm.vailCode.warning = false
-        } else {
+        } else if (field == 'loginname') {
+          // 登录名验证是否符合规则，符合规则取消警告
           if (regExp.emailVail(this.form[field])) {
             this.vailForm.loginname.message = messageMap.loginname.placeholder
             this.vailForm.loginname.warning = false
+          }
+        } else {
+          // 密码验证是否符合规则，符合规则取消警告
+          if (regExp.passwordVail(this.form[field])) {
+            this.vailForm.password.message = messageMap.password.placeholder
+            this.vailForm.password.warning = false
           }
         }
       },
@@ -202,22 +210,23 @@
         if (regExp.phoneVail(this.form.loginname)) {
           this.isemail = '0'
         }
-        this.codePlaceholder = '60s'
-        var inter = setInterval(() => {
-          this.countdown--
-          this.codePlaceholder = this.countdown + 's'
-          if (this.countdown == 0) {
-            clearInterval(inter)
-            this.countdown = 60
-            this.codePlaceholder = '发送验证码'
-          }
-        }, 1000)
         axios.get(`user/code.do?aim=${this.form.loginname}&isemail=0&vailCode=${this.form.code}`).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success({
               content: response.data.message,
               duration: 5
             })
+            this.codePlaceholder = '60s'
+            var inter = setInterval(() => {
+              this.countdown--
+              this.codePlaceholder = this.countdown + 's'
+              if (this.countdown == 0) {
+                clearInterval(inter)
+                this.countdown = 60
+                this.codePlaceholder = '发送验证码'
+              }
+            }, 1000)
+            this.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`
           } else {
             this.$Message.error({
               content: response.data.message,
@@ -248,7 +257,7 @@
     },
     computed: {
       disabled(){
-        return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false && this.password.loginname.warning == false)
+        return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false && this.vailForm.password.warning == false)
       }
     }
   }
@@ -314,7 +323,7 @@
       height: 493px;
       background: #FFFFFF;
       border: 1px solid rgba(161, 161, 161, 0.00);
-      box-shadow: 0 2px 24px 0 #4990E2;
+      box-shadow: 0 2px 24px 0 rgba(125, 125, 125, 0.35);
       .disabled {
         cursor: not-allowed;
       }

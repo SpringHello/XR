@@ -130,11 +130,11 @@
           },
           {
             prod: '云安全',
-            prodUrl: ['firewall', 'Pddos']
+            prodUrl: ['firewall', '']
           },
           {
             prod: '云运维',
-            prodUrl: ['Pmonitor', '']
+            prodUrl: ['userCenter#remainder', '']
           }
         ],
         isDisable: false,
@@ -192,7 +192,7 @@
           })
           // 告警数据
           this.warnData = response.data.result[2].items
-          var warnUrl = ['host#error', 'disk', 'vpc']
+          var warnUrl = ['host#error', 'disk', 'ip']
           this.warnData.forEach((item, index) => {
             item.url = warnUrl[index]
           })

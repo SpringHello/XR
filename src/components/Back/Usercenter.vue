@@ -879,6 +879,16 @@
           callback()
         }
       }
+      const validaRegisteredName = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('联系人不能为空'));
+        }
+        if (!(/^[\u4e00-\u9fa5],{0,}$/.test(value))) {
+          callback(new Error('输入姓名不合法'));
+        } else {
+          callback()
+        }
+      }
       return {
 
         phoneVerCode: '获取验证码',
@@ -1243,7 +1253,7 @@
             {required: true, validator: validaRegisteredEmail, trigger: 'blur'},
           ],
           name: [
-            {required: true, message: '联系人姓名不能为空', trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ],
         },
         // 修改联系人表单
@@ -1261,7 +1271,7 @@
             {required: true, validator: validaRegisteredEmail, trigger: 'blur'},
           ],
           name: [
-            {required: true, message: '联系人姓名不能为空', trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ],
         },
         // 通知信息表格
