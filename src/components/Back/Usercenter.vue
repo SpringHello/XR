@@ -1,7 +1,7 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 用户中心</span>
+      <span>个人中心 / 用户中心</span>
       <div id="content">
         <p class="title">用户中心</p>
         <Tabs type="card" :animated="false" v-model="currentTab">
@@ -591,7 +591,7 @@
       </div>
     </div>
     <!--选择两种认证方式-->
-    <Modal v-model="showModal.selectAuthType" width="590" :scrollable="true" style="top:172px">
+    <Modal v-model="showModal.selectAuthType" width="550" :scrollable="true" style="top:172px">
       <!--<div slot="header"
            style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
         选择认证方式
@@ -677,17 +677,20 @@
       </div>
     </Modal>
     <!--选择验证方式-->
-    <Modal v-model="showModal.modifyPhone" width="590" :scrollable="true" :styles="{top:'172px'}">
+    <Modal v-model="showModal.modifyPhone" width="550" :scrollable="true" :styles="{top:'172px'}">
       <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #e9e9e9;padding-bottom: 20px;">
         选择验证方式
       </div>
-      <div>
+      <div style="border-bottom: 1px solid #e9e9e9;padding-bottom: 20px;">
+        <div>
+          <p style="font-size: 14px;color: rgba(17,17,17,0.65);padding-bottom: 20px;">您正在为帐号{{userInfo.realname}}修改绑定手机，请选择一种身份验证方式：</p>
+        </div>
         <div class='modal-wrapper'>
           <span>通过手机验证</span>
           <Button type="primary" @click="authByPhone" :disabled="!userInfo.phone">立即验证</Button>
         </div>
-        <div class="modal-wrapper" style="margin-bottom: 0px">
+        <div class="modal-wrapper">
           <span>通过邮箱验证</span>
           <Button type="primary" @click="authByEmail" :disabled="!userInfo.loginname">立即验证</Button>
         </div>
@@ -697,7 +700,7 @@
       </div>
     </Modal>
 
-    <Modal width="590" v-model="showModal.authByPhone" :scrollable="true">
+    <Modal width="550" v-model="showModal.authByPhone" :scrollable="true">
       <div slot="header"
            style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #e9e9e9;padding-bottom: 20px;">
         手机号验证
@@ -724,7 +727,7 @@
           </Button>
         </div>
       </div>
-      <div style="padding: 20px;">
+      <div style="padding: 20px;border-bottom: 1px solid #e9e9e9;background-color: #f5f1f1;">
         <p style="line-height: 1.5;color: #999;">没有收到验证码？</p>
         <p style="line-height: 1.5;color: #999;">1、网络通讯异常可能会造成短信丢失，请重新获取或稍后再试。</p>
         <p style="line-height: 1.5;color: #999;">2、如果手机已丢失或停机，请<span style="color: rgb(42, 153, 242);cursor: pointer" @click="changWay1">更换验证方式</span>。</p>
@@ -735,7 +738,7 @@
       </div>
     </Modal>
 
-    <Modal width="590" v-model="showModal.authByEmail" :scrollable="true">
+    <Modal width="550" v-model="showModal.authByEmail" :scrollable="true">
       <div slot="header"
            style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #e9e9e9;padding-bottom: 20px;">
         邮箱验证
@@ -751,7 +754,7 @@
                 style="height:31px;width:92px" @click="getVerCode('email')">{{emailVerCodeText}}
         </Button>
       </div>
-      <div style="padding: 20px;">
+      <div style="padding: 20px;border-bottom: 1px solid #e9e9e9;background-color: #f5f1f1;">
         <p style="line-height: 1.5;color: #999;">没有收到验证码？</p>
         <p style="line-height: 1.5;color: #999;">1、网络通讯异常可能会造成短信丢失，请重新获取或稍后再试。</p>
         <p style="line-height: 1.5;color: #999;">2、如果手机已丢失或停机，请<span style="color: rgb(42, 153, 242);cursor: pointer" @click="changWay2">更换验证方式</span>。</p>
@@ -762,7 +765,7 @@
       </div>
     </Modal>
 
-    <Modal width="590" v-model="showModal.authNewPhone" :scrollable="true">
+    <Modal width="550" v-model="showModal.authNewPhone" :scrollable="true">
       <div slot="header"
            style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
         重置手机号
@@ -788,7 +791,7 @@
       </div>
     </Modal>
 
-    <Modal width="590" v-model="showModal.authNewEmail" :scrollable="true">
+    <Modal width="550" v-model="showModal.authNewEmail" :scrollable="true">
       <div slot="header"
            style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
         重置邮箱
@@ -810,7 +813,7 @@
     </Modal>
 
     <!--修改密码-->
-    <Modal width="590" v-model="showModal.modifyPassword" :scrollable="true">
+    <Modal width="550" v-model="showModal.modifyPassword" :scrollable="true">
       <div slot="header"
            style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
         重置账户密码
@@ -831,7 +834,7 @@
     </Modal>
 
     <!--显示图片-->
-    <Modal width="590" v-model="showModal.showPicture" :scrollable="true">
+    <Modal width="550" v-model="showModal.showPicture" :scrollable="true">
       <div class="newPhone">
         <img src="../../assets/img/usercenter/combine.jpg"
              style="width:330px;height:450px;margin:0px auto;display:block">
@@ -2051,14 +2054,13 @@
     background: #FFFFFF;
     border: 1px solid #D9D9D9;
     border-radius: 4px;
-    padding: 12px;
-    text-align: right;
+    padding: 10px;
     margin-bottom: 10px;
     span {
-      float: left;
       line-height: 34px;
       font-size: 14px;
       color: rgba(17, 17, 17, 0.43);
+      margin-right: 20px;
     }
   }
 
