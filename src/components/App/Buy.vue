@@ -1229,7 +1229,7 @@
       }
     },
     created(){
-      if (this.$store.state.userInfo.personalauth != 0 && this.$store.state.userInfo.companyauth != 0) {
+      if (this.$store.state.userInfo && this.$store.state.userInfo.personalauth != 0 && this.$store.state.userInfo.companyauth != 0) {
         this.$Message.info('当前账户尚未认证通过，创建的主机无法操作');
       }
       scrollTo(0, 0)
