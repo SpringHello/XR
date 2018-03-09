@@ -362,7 +362,7 @@
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">主机重命名</span>
       </p>
-      <div>
+      <div class="universal-modal-content-flex">
         <Form :model="renameForm" ref="renameForm" :rules="renameFormRule">
           <Form-item label="主机名" prop="hostName">
             <Input v-model="renameForm.hostName" placeholder="请输入新主机名" :maxlength="15"></Input>
@@ -405,8 +405,8 @@
         <span class="universal-modal-title">绑定静态IP</span>
       </div>
       <div class="universal-modal-content-flex">
-        <Form :model="bindForm">
-          <Form-item label="公网IP">
+        <Form :model="bindForm" ref="bindForm" :rules="bindFormRule">
+          <Form-item label="公网IP" prop="publicIP">
             <Select v-model="bindForm.publicIP" placeholder="请选择">
               <Option v-for="(item,index) in publicIPList" :key="index" :value="item.publicipid">
                 {{item.publicip}}
@@ -417,19 +417,18 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.bindIP = false">取消</Button>
-        <Button type="primary" :disabled="bindForm.publicIP==''" @click="bind">确定
+        <Button type="primary"  @click="bindipSubmit('bindForm')">确定
         </Button>
       </div>
     </Modal>
     <!-- 加入负载均衡弹窗 -->
     <Modal v-model="showModal.balance" width="590" :scrollable="true">
-      <div slot="header" class="modal-header-border"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        加入负载均衡
+      <div slot="header" class="modal-header-border">
+          <span class="universal-modal-title">加入负载均衡</span>
       </div>
-      <div>
-        <Form :model="loadBalanceForm" label-position="top">
-          <Form-item label="选择弹性负载均衡名称 ">
+      <div class="universal-modal-content-flex">
+        <Form :model="loadBalanceForm" ref="loadBalanceForm" :rules="loadBalanceFormRule">
+          <Form-item label="选择弹性负载均衡名称" prop="loadbalanceroleid">
             <Select v-model="loadBalanceForm.loadbalanceroleid" placeholder="请选择" style="width:240px;">
               <Option v-for="(item,index) in listLoadBalanceRole" :key="index" :value="item.loadbalanceroleid">
                 <span v-if="item.name">{{item.name}}</span>
@@ -439,9 +438,9 @@
           </Form-item>
         </Form>
       </div>
-      <div slot="footer">
+      <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.balance = false">取消</Button>
-        <Button type="primary" :disabled="loadBalanceForm.loadbalanceroleid==''" @click="joinBalanceSubm">确定
+        <Button type="primary" @click="joinBalanceSubm('loadBalanceForm')">确定
         </Button>
       </div>
     </Modal>
@@ -477,11 +476,11 @@
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <!-- <div type="ghost" @click="modal=false">取消</div> -->
+        <Button type="ghost" @click="showModal.renewal = false">取消</Button>
         <Button type="primary" @click="renewalok">确认续费</Button>
       </div>
     </Modal>
-    <!-- 欠费，续费弹窗 -->
+    <!-- 欠费tab页，续费弹窗 -->
     <Modal v-model="showModal.Renew" width="590" :scrollable="true">
       <div slot="header" class="modal-header-border">
         <span class="universal-modal-title">续费主机</span>
@@ -614,8 +613,18 @@
         bindForm: {
           publicIP: ''
         },
+        bindFormRule: {
+          publicIP: [
+            {required: true, message: '请选择', trigger: 'change'}
+          ]
+        },
         loadBalanceForm: {
           loadbalanceroleid: ''
+        },
+        loadBalanceFormRule: {
+          loadbalanceroleid: [
+            {required: true, message: '请选择', trigger: 'change'}
+          ]
         },
         publicIPList: [],
         renewalType: '',
@@ -684,18 +693,22 @@
         }
       },
       // 确定加入负载均衡
-      joinBalanceSubm() {
-        this.showModal.balance = false
-        axios.get(`loadbalance/assignToLoadBalancerRule.do?zoneId=${this.currentHost[0].zoneid}&roleId=${this.loadBalanceForm.loadbalanceroleid}&VMIds=${this.currentHost[0].computerid}`)
-          .then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.$Message.success(response.data.message)
-            } else {
-              this.$message.error({
-                content: response.data.message
+      joinBalanceSubm(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.showModal.balance = false
+            axios.get(`loadbalance/assignToLoadBalancerRule.do?zoneId=${this.currentHost[0].zoneid}&roleId=${this.loadBalanceForm.loadbalanceroleid}&VMIds=${this.currentHost[0].computerid}`)
+              .then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success(response.data.message)
+                } else {
+                  this.$message.error({
+                    content: response.data.message
+                  })
+                }
               })
-            }
-          })
+          }
+        })
       },
       //恢复主机
       recoverHost(id) {
@@ -898,20 +911,24 @@
           }
         }
       },
-      bind() {
-        this.showModal.bindIP = false
-        var url = `network/enableStaticNat.do?ipId=${this.bindForm.publicIP}&VMId=${this.currentHost[0].computerid}`
-        this.$http.get(url)
-          .then(response => {
-            this.loading = false
-            if (response.status == 200 && response.data.status == 1) {
-              this.$Message.success(response.data.message)
-            } else {
-              this.$message.error({
-                content: response.data.message
+      bindipSubmit(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.showModal.bindIP = false
+            var url = `network/enableStaticNat.do?ipId=${this.bindForm.publicIP}&VMId=${this.currentHost[0].computerid}`
+            this.$http.get(url)
+              .then(response => {
+                this.loading = false
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success(response.data.message)
+                } else {
+                  this.$message.error({
+                    content: response.data.message
+                  })
+                }
               })
-            }
-          })
+          }
+        })
       },
       unbind() {
         if (this.checkSelect()) {

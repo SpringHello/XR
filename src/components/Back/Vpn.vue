@@ -362,9 +362,9 @@
         // 远程vpn列表
         remoteVpnColumns: [
           {
-            type: 'radio',
+            type: 'selection',
             width: 60,
-            align: 'center',
+            align: 'center'
           },
           {
             title: 'VPN',
@@ -538,9 +538,9 @@
         // 隧道vpn
         tunnelVpnColumns: [
           {
-            type: 'radio',
+            type: 'selection',
             width: 60,
-            align: 'center',
+            align: 'center'
           },
           {
             title: 'VPN',
