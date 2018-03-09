@@ -133,7 +133,7 @@
                   </FormItem>
                 </div>
                 <FormItem style="text-align: right">
-                  <Button type="primary" @click="personalAttest" style="font-size: 16px;">确认提交</Button>
+                  <Button type="primary" @click="personalAttest" style="font-size: 12px;">确认提交</Button>
                 </FormItem>
               </Form>
             </div>
@@ -584,7 +584,7 @@
                 </FormItem>
               </div>
               <div style="text-align: right">
-                <Button type="primary" @click="enterpriseAttest" style="font-size: 16px;color: #FFFFFF;">确认提交</Button>
+                <Button type="primary" @click="enterpriseAttest" style="font-size: 12px;color: #FFFFFF;">确认提交</Button>
               </div>
             </Form>
           </TabPane>
