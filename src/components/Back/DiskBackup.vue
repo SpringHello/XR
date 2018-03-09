@@ -233,8 +233,9 @@
         // 磁盘备份表头
         diskBackupsColumns: [
           {
-            type: 'radio',
+            type: 'selection',
             width: 60,
+            align: 'center'
           },
           {
             title: '备份名称',
@@ -327,8 +328,9 @@
         // 备份策略表头
         diskBackupsStrategyColumns: [
           {
-            type: 'radio',
+            type: 'selection',
             width: 60,
+            align: 'center'
           }, {
             title: '备份策略名称',
             key: 'strategyname',

@@ -1,8 +1,8 @@
 <template>
     <div class="background">
       <div class="wrapper">
-        <span><router-link to="host" style="color:rgba(17, 17, 17, 0.43);">云服务器  / </router-link><router-link
-          to="host" style="color:rgba(17, 17, 17, 0.43);">云主机 / </router-link><router-link to="upgrade" style="color:rgba(17, 17, 17, 0.43);">升级 / </router-link><router-link to="order" style="color:rgba(17, 17, 17, 0.43);">订单确认 / </router-link> 支付</span>
+        <span><router-link to="host" style="color:rgba(17, 17, 17, 0.43);margin-right: 5px;">云服务器</router-link> / <router-link
+          to="host" style="color:rgba(17, 17, 17, 0.43);margin: 0 5px;">云主机</router-link> / <router-link to="upgrade" style="color:rgba(17, 17, 17, 0.43);margin: 0 5px;">升级</router-link> / <router-link to="order" style="color:rgba(17, 17, 17, 0.43);margin: 0 5px;">订单确认</router-link> /  <span style="margin-left: 5px;"> 支付</span></span>
         <div class="content">
           <span>支付</span>
           <div style="padding:40px 0px 140px;">
@@ -14,11 +14,11 @@
                 <div style="position:relative">
                   <h1 style="margin-bottom:9px;font-size: 24px;color:#111111;font-weight: normal;">{{title}}</h1>
                   <p style="font-size: 14px;color: #292626;line-height: 22px;">{{message}}</p>
-                  <div v-if="payResult=='success'" style="position:absolute;left:0px;bottom:-45px;">
+                  <div v-if="payResult=='success'" style="position:absolute;left:0px;bottom:-60px;">
                     <button class="ghost button" @click="push('expenses')">查看订单</button>
                     <button class="primary button" @click="push('overview')">进入控制台</button>
                   </div>
-                  <div v-if="payResult=='fail'" style="position:absolute;left:0px;bottom:-45px;">
+                  <div v-if="payResult=='fail'" style="position:absolute;left:0px;bottom:-60px;">
                     <button class="ghost button" @click="kf">联系客服</button>
                     <button class="primary button" @click="push('order')">返回订单</button>
                   </div>

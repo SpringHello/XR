@@ -42,7 +42,7 @@
             <!--Menu-item name="4-7">修改主机名称</Menu-item-->
             <Menu-item name="4-8">重置主机密码</Menu-item>
             <Menu-item name="4-9">重装云主机</Menu-item>
-            <Menu-item name="4-10">创建快照</Menu-item>
+            <Menu-item name="4-10">制作快照</Menu-item>
             <Menu-item name="4-11">回滚快照</Menu-item>
             <Menu-item name="4-12">升级主机配置</Menu-item>
             <Menu-item name="4-13">升级云主机宽带</Menu-item>

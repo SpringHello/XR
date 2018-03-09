@@ -1,7 +1,7 @@
 <template>
   <div class="background">
     <div class="wrapper">
-      <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / <router-link
+      <span>个人中心 / <router-link
         to="expenses" style="color:rgba(17, 17, 17, 0.43);">费用中心</router-link> / 账户充值</span>
       <div class="content">
         <span class="title">账户充值</span>
@@ -38,7 +38,7 @@
                   </Radio-group>
                 </div>
                 <Button type="primary" @click="recharge"
-                        style=" font-size: 16px; margin-top: 20px;">确认充值
+                        style=" font-size: 16px; margin-top: 20px;float: right">确认充值
                 </Button>
               </Tab-pane>
               <Tab-pane label="线下支付">

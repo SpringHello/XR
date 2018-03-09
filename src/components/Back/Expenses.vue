@@ -9,7 +9,7 @@
           <Icon type="load-c" size=80 class="demo-spin-icon-load"></Icon>
           <span style="display: block;font-size:14px;color:black;font-family: Microsoft Yahei,微软雅黑;">正在查询，请稍后...</span>
         </Spin>
-        <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 费用中心</span>
+        <span>个人中心 / 费用中心</span>
         <div class="content">
           <span class="title">费用中心</span>
           <Tabs v-model="name" type="card" :animated="false" @on-click="changecard"

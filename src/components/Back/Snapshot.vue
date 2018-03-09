@@ -23,8 +23,8 @@
         <Tabs type="card" :animated="false" style="min-height: 400px">
           <TabPane label="云主机快照">
             <div class="operator-bar">
-              <Button type="primary" @click="createsnapshot()">创建快照</Button>
-              <!-- <Button type="primary">创建快照策略</Button> -->
+              <Button type="primary" @click="createsnapshot()">制作快照</Button>
+              <!-- <Button type="primary">制作快照策略</Button> -->
               <Button type="primary" @click="delsnapshot">删除快照</Button>
             </div>
             <Table ref="selection" :columns="snapshotCol" :data="snapshotData"
@@ -42,18 +42,16 @@
       </div>
     </div>
 
-    <!-- 创建快照弹窗 -->
+    <!-- 制作快照弹窗 -->
     <Modal v-model="showModal.newSnapshot" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">创建快照</span>
+        <span class="universal-modal-title">制作快照</span>
       </p>
       <div class="universal-modal-content-flex">
-        <p class="mb20">您正为<span class="bluetext">主机名称</span>创建快照</p>
         <Form :model="creatSnapsForm" ref="creatSnapsForm" :rules="ruleSnaps">
           <FormItem label="选择主机" prop="host">
             <Select v-model="creatSnapsForm.host">
-              <Option v-for="item in vmList" :value="item.computerid" :key="item.computerid">{{ item.computername
-                }}
+              <Option v-for="item in vmList" :value="item.computerid" :key="item.computerid">{{ item.computername }}
               </Option>
             </Select>
           </FormItem>
@@ -72,10 +70,10 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="cancleSnaps('creatSnapsForm')">取消</Button>
-        <Button type="primary" @click="NewSnapsSubmit('creatSnapsForm')">创建快照</Button>
+        <Button type="primary" @click="NewSnapsSubmit('creatSnapsForm')">制作快照</Button>
       </div>
     </Modal>
-    <!-- 创建快照备份弹窗 -->
+    <!-- 制作快照备份弹窗 -->
     <Modal v-model="showModal.newBackups" width="550" :scrollable="true">
       <div slot="header" class="modal-header-border">
         <span class="universal-modal-title">创建备份策略</span>
@@ -1466,7 +1464,7 @@
         //主机快照col
         snapshotCol: [
           {
-            type: 'radio',
+            type: 'selection',
             width: 60,
             align: 'center'
           },
@@ -1566,7 +1564,7 @@
         //主机备份策略col
         snapstrategyCol: [
           {
-            type: 'radio',
+            type: 'selection',
             width: 60,
             align: 'center'
           },
@@ -1963,7 +1961,7 @@
             }
           })
       },
-      // 确定创建快照
+      // 确定制作快照
       NewSnapsSubmit(snapsname) {
         this.$refs[snapsname].validate((valid) => {
           if (valid) {
