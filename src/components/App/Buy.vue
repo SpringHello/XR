@@ -503,12 +503,19 @@
             <div style="margin-top: 20px">
               <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
                  @click="$router.push('document')">查看计价详情</p>
-              <p v-if="PecsInfo.createType=='fast'" style="text-align: right;font-size: 14px;color: #666666;">总计费用：<span
+              <p v-if="PecsInfo.createType=='fast'" style="text-align: right;font-size: 14px;color: #666666;">费用：<span
                 style="font-size: 24px;color: #EE6723;">{{PecsInfo.cost.toFixed(2)}}元</span></p>
+              <p v-if="PecsInfo.createType=='fast'&&PecsInfo.fastCoupon!=0"
+                 style="text-align: right;font-size: 14px;color: #666666;">优惠费用：<span
+                style="font-size: 14px;color: #EE6723;">{{PecsInfo.fastCoupon.toFixed(2)}}元</span></p>
               <p v-if="PecsInfo.createType=='custom'" style="text-align: right;font-size: 14px;color: #666666;">
-                总计费用：<span
+                费用：<span
                 style="font-size: 24px;color: #EE6723;">{{totalCost.toFixed(2)}}元</span>
               </p>
+              <p v-if="PecsInfo.createType=='custom'&&totalCoupon!=0"
+                 style="text-align: right;font-size: 14px;color: #666666;">
+                优惠费用：<span
+                style="font-size: 14px;color: #EE6723;">{{totalCoupon.toFixed(2)}}元</span></p>
               <div style="text-align: right;margin-top: 20px;">
                 <Button size="large"
                         class="btn" @click="addCart">
@@ -644,8 +651,10 @@
             <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
                @click="$router.push('document')">查看计价详情</p>
             <p style="text-align: right;font-size: 14px;color: #666666;">
-              总计费用：<span style="font-size: 24px;color: #EE6723;">{{PdiskInfo.dataDiskCost.toFixed(2)}}元</span>
+              费用：<span style="font-size: 24px;color: #EE6723;">{{PdiskInfo.dataDiskCost.toFixed(2)}}元</span>
             </p>
+            <p style="text-align: right;font-size: 14px;color: #666666;" v-if="PdiskInfo.coupon!=0">优惠费用：<span
+              style="font-size: 14px;color: #EE6723;">{{PdiskInfo.coupon.toFixed(2)}}元</span></p>
             <div style="text-align: right;margin-top: 20px;">
               <Button size="large"
                       class="btn" @click="addCart">
@@ -765,8 +774,11 @@
           <div style="margin-top: 20px">
             <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
                @click="$router.push('document')">查看计价详情</p>
-            <p style="text-align: right;font-size: 14px;color: #666666;">总计费用：<span
+            <p style="text-align: right;font-size: 14px;color: #666666;">费用：<span
               style="font-size: 24px;color: #EE6723;">{{PeipInfo.cost.toFixed(2)}}元</span></p>
+            <p style="text-align: right;font-size: 14px;color: #666666;">优惠费用：<span
+              style="font-size: 14px;color: #EE6723;" v-if="PeipInfo.coupon!=0">{{PeipInfo.coupon.toFixed(2)}}元</span>
+            </p>
             <div style="text-align: right;margin-top: 20px;">
               <Button size="large"
                       class="btn" @click="addCart">
@@ -1158,7 +1170,8 @@
             kernel: 1,
             RAM: 1,
             diskSize: 50,
-            cost: 0
+            cost: 0,
+            coupon: 0
           },
 
           // 虚拟私有云列表
@@ -1173,7 +1186,8 @@
             publicIP: true,
             // 带宽大小
             bandWidth: 1,
-            cost: 0
+            cost: 0,
+            coupon: 0
           },
 
           // 云硬盘（数据盘）
@@ -1187,9 +1201,12 @@
             {type: 'ssd', size: 20, label: '超高性能型'}
           ],
           dataDiskCost: 0,
-
+          // 磁盘优惠价
+          coupon: 0,
           // 快速创建价格计算花费
-          cost: 0
+          cost: 0,
+          // 快速创建优惠价格
+          fastCoupon: 0
         },
         // 云硬盘信息对象
         PdiskInfo: {
@@ -1213,7 +1230,8 @@
           diskName: '',
           // 自动续费
           autoRenewal: true,
-          dataDiskCost: 0
+          dataDiskCost: 0,
+          coupon: 0
         },
         // 公网IP
         PeipInfo: {
@@ -1232,7 +1250,8 @@
           // 自动续费
           autoRenewal: true,
           // 花费
-          cost: 0
+          cost: 0,
+          coupon: 0
         },
         // 购物车
         cart,
@@ -1282,7 +1301,7 @@
       queryRemainCount(){
         axios.get('user/getRemainCount.do', {
           params: {
-            zoneId: 'hello'
+            zoneId: this[`${this.product.currentProduct}Info`].zone.zoneid
           }
         }).then(response => {
           this.remainCount.hostCount = response.data.result.computer
@@ -1407,6 +1426,11 @@
         var ip = axios.post('device/queryIpPrice.do', ipParams)
         Promise.all([host, ip]).then(response => {
           this.PecsInfo.cost = response[0].data.cost + response[1].data.cost
+          if (response[0].data.coupon) {
+            this.PecsInfo.fastCoupon = response[0].data.coupon + response[1].data.coupon
+          } else {
+            this.PecsInfo.fastCoupon = 0
+          }
         })
       },
       // 查询自定义主机配置价格  （仅包含主机，因为主机与公网IP是分开计算并显示的）
@@ -1425,6 +1449,11 @@
         }
         axios.post('device/QueryBillingPrice.do', params).then(response => {
           this.PecsInfo.vmConfig.cost = response.data.cost
+          if (response.data.coupon) {
+            this.PecsInfo.vmConfig.coupon = response.data.coupon
+          } else {
+            this.PecsInfo.vmConfig.coupon = 0
+          }
         })
       },
       // 三种推荐配置切换
@@ -1471,6 +1500,11 @@
         }
         axios.post('device/queryIpPrice.do', params).then(response => {
           this.PecsInfo.IPConfig.cost = response.data.cost
+          if (response.data.coupon) {
+            this.PecsInfo.IPConfig.coupon = response.data.coupon
+          } else {
+            this.PecsInfo.IPConfig.coupon = 0
+          }
         })
       }),
       // 查询IP价格
@@ -1486,6 +1520,11 @@
         }
         axios.post('device/queryIpPrice.do', params).then(response => {
           this.PeipInfo.cost = response.data.cost
+          if (response.data.coupon) {
+            this.PeipInfo.coupon = response.data.coupon
+          } else {
+            this.PeipInfo.coupon = 0
+          }
         })
       }),
       // 添加主机数据盘
@@ -1538,6 +1577,11 @@
         }
         axios.post('device/QueryBillingPrice.do', params).then(response => {
           this.PecsInfo.dataDiskCost = response.data.cost
+          if (response.data.coupon) {
+            this.PecsInfo.coupon = response.data.coupon
+          } else {
+            this.PecsInfo.coupon = 0
+          }
         })
       }),
       // 磁盘页面数据盘价格
@@ -1562,6 +1606,11 @@
         }
         axios.post('device/QueryBillingPrice.do', params).then(response => {
           this.PdiskInfo.dataDiskCost = response.data.cost
+          if (response.data.coupon) {
+            this.PdiskInfo.coupon = response.data.coupon
+          } else {
+            this.PdiskInfo.coupon = 0
+          }
         })
       }),
       pushDiskInDisk(){
@@ -2004,6 +2053,9 @@
             return this.PecsInfo.vmConfig.cost + this.PecsInfo.dataDiskCost
           }
         },
+        totalCoupon(){
+          return this.PecsInfo.vmConfig.coupon + this.PecsInfo.IPConfig.coupon + this.PecsInfo.coupon
+        },
         // 剩余添加磁盘数量
         remainDisk(){
           return 5 - this.PecsInfo.dataDiskList.length
@@ -2038,6 +2090,9 @@
       }
     ),
     watch: {
+      'product.currentProduct'(){
+        this.queryRemainCount()
+      },
       // 选择区域发生变化
       'PecsInfo.zone': {
         handler: function () {
@@ -2045,6 +2100,8 @@
           this.queryVpc()
           this.setTemplate()
           this.ownMirrorList()
+
+          this.queryRemainCount()
         }
         ,
         deep: true
@@ -2114,14 +2171,12 @@
       }
       ,
       // 选中的VPC发生变化
-      'PecsInfo.vpc'()
-      {
+      'PecsInfo.vpc'(){
         this.changeNetwork()
       }
       ,
       // 公网IP带宽变化
-      'PecsInfo.IPConfig.bandWidth'()
-      {
+      'PecsInfo.IPConfig.bandWidth'(){
         this.queryIPPrice()
       }
       ,
@@ -2129,11 +2184,9 @@
       'PecsInfo.dataDiskList': {
         handler: function () {
           this.queryDiskPrice()
-        }
-        ,
+        },
         deep: true
-      }
-      ,
+      },
 
       /*磁盘页面需要价格计算的变化*/
       'PdiskInfo.timeForm': {
@@ -2160,11 +2213,22 @@
         handler: function () {
           // 重新查询自定义IP的所属vpc，即虚拟私有云
           this.queryIPVpc()
+          // 查询当前区域的剩余资源
+          this.queryRemainCount()
         }
         ,
         deep: true
-      }
-      ,
+      },
+
+      // 公网IP选择区域发生变化
+      'PdiskInfo.zone': {
+        handler: function () {
+          // 查询当前区域的剩余资源
+          this.queryRemainCount()
+        }
+        ,
+        deep: true
+      },
       /*公网IP页面需要价格计算的变化*/
       'PeipInfo.timeForm': {
         handler: function () {

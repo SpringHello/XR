@@ -652,7 +652,7 @@
         ],
         columns_order: [
           {
-            type: 'selection',
+            type: 'radio',
             width: 60,
             align: 'center'
           },
@@ -1467,12 +1467,12 @@
             .expenses_s2_wrap {
               margin-top: 20px;
               padding-right: 30px;
-             // overflow: hidden;
+              // overflow: hidden;
               .expenses_s2 {
                 font-family: Microsoft Yahei, 微软雅黑;
                 font-size: 36px;
                 color: rgba(17, 17, 17, 0.65);
-               // float: left;
+                // float: left;
               }
               button {
                 float: right;
