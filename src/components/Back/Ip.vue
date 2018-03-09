@@ -249,7 +249,7 @@
         },
         ipColumns: [
           {
-            type: 'selection',
+            type: 'radio',
             width: 60,
             align: 'center'
           },
@@ -521,6 +521,7 @@
       },
       // 选中当前项
       selectIp(current){
+        console.log(current)
         this.select = current
       },
       // 打开新建IP模态框
