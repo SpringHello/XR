@@ -597,8 +597,6 @@
         })
       },
       addHostForm_ok () {
-        this.loadingMessage = '正在添加主机，请稍候'
-        this.loading = true
         this.showModal.addHostToNet = false
         var url = `network/enterVMToNetwork.do?networkId=${this.addHostForm.ipsegmentid}&VMId=${this.addHostForm.vm}`
         for (let network of this.data.ipsList) {
@@ -611,13 +609,11 @@
         }
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.loading = false
             this.refresh()
             this.$Message.success({
               content: response.data.message
             })
           } else {
-            this.loading = false
             this.refresh()
             this.$message.error({
               content: response.data.message

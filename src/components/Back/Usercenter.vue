@@ -892,8 +892,8 @@
         if (!value) {
           return callback(new Error('联系人不能为空'));
         }
-        if (!(/^[\u4e00-\u9fa5],{0,}$/.test(value))) {
-          callback(new Error('输入姓名不合法'));
+        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value))||(/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value))||(/\s+/.test(value))||(/^[0-9]*$/.test(value))) {
+          callback(new Error('输入姓名不能包含特殊字符、空格或是纯数字'));
         } else {
           callback()
         }

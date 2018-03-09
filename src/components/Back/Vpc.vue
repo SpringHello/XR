@@ -986,9 +986,9 @@
             // 表单验证通过
             this.loadingMessage = '正在添加VPC互通网关，请稍候'
             this.loading = true
+            this.showModal.addGateway = false
             var url = `network/addPrivateGateway.do?vpcIdStart=${this.addGatewayForm.originVPC}&vpcIdEnd=${this.addGatewayForm.targetVPC}&zoneId=${$store.state.zone.zoneid}&aclIdStart=${this.addGatewayForm.originFirewall}&aclIdEnd=${this.addGatewayForm.targetFirewall}`
             axios.get(url).then(response => {
-              this.showModal.addGateway = false
               if (response.status == 200 && response.data.status == 1) {
                 this.loading = false
                 this.$Message.success({

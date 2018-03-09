@@ -495,12 +495,12 @@
         })
       },
       sendCode(){
-        if (this.form.code.length != 4 && this.form.code.length != 0) {
-          this.$Message.info('请输入正确的验证码')
-          return
-        }
         if (!regExp.phoneVail(this.form.loginname)) {
           this.$Message.info('请输入正确的手机号')
+          return
+        }
+        if (this.form.code.length != 4) {
+          this.$Message.info('请输入正确的验证码')
           return
         }
         if (regExp.phoneVail(this.form.loginname)) {
@@ -514,10 +514,10 @@
               content: '验证码发送成功',
               duration: 5
             });
-            this.codePlaceholder = '60s'
+            this.codePlaceholder = '重新发送（60s）'
             var inter = setInterval(() => {
               this.countdown--
-              this.codePlaceholder = this.countdown + 's'
+              this.codePlaceholder ='重新发送（' + this.countdown + 's）'
               if (this.countdown == 0) {
                 clearInterval(inter)
                 this.countdown = 60
@@ -715,6 +715,9 @@
           color: #FFFFFF;
           letter-spacing: 0.71px;
           outline: none;
+          &.codeDisabled{
+            cursor: not-allowed;
+          }
         }
       }
       .foot {
