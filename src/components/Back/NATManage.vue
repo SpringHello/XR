@@ -5,16 +5,14 @@
       <div id="content">
         <div id="header">
           <div>
-            <div style="font-size: 16px;color: #2A99F2;">NAT网关名称</div>
+            <div style="font-size: 16px;color: #2A99F2;">{{vpnInfo.natname}}</div>
           </div>
           <div class="VPN-info">
-            <div>ID：rtr-589jg294</div>
-            <div>所属网络：192.168.3.0/16</div>
-            <div>计费方式：包年包月</div>
+            <div>所属VPC：{{vpnInfo.vpcname}}</div>
+            <div>计费方式：{{vpnInfo.caseType==1?'包年计费':vpnInfo.caseType==2?'包月计费':'实时计费'}}</div>
           </div>
           <div class="VPN-info">
             <div>区域：{{vpnInfo.zonename}}</div>
-            <div>ID：</div>
             <div>创建时间：{{vpnInfo.createtime}}</div>
           </div>
         </div>
@@ -36,7 +34,8 @@
               </div>
             </div>
             <div style="width:80%">
-              <Table v-for="(item,index) in DNATData" :columns="columns" :data="item.protTransList" :key="index" :show-header="index==0" :class="{border:index!=0}"></Table>
+              <Table v-for="(item,index) in DNATData" :columns="columns" :data="item.protTransList" :key="index"
+                     :show-header="index==0" :class="{border:index!=0}"></Table>
             </div>
           </div>
         </div>
@@ -52,7 +51,8 @@
         <Form :model="createDNATForm" ref="createDNATFormValidate" :rules="ruleValidate">
           <FormItem label="选择弹性IP" prop="publicIP">
             <Select v-model="createDNATForm.publicIP">
-              <Option v-for="(item, index) in createDNATForm.publicIpOptions" :value="ipId[index]" :key="ipId[index]">
+              <Option v-for="(item, index) in createDNATForm.publicIpOptions" :value="`${ipId[index]}#${item}`"
+                      :key="ipId[index]">
                 {{item}}
               </Option>
             </Select>
@@ -60,15 +60,15 @@
           <FormItem label="端口映射名称" prop="name">
             <Input v-model="createDNATForm.name" placeholder="请输入16字以内的名称"></Input>
           </FormItem>
-          <FormItem label="公网端口范围" >
-            <InputNumber :max="10" :min="1" v-model="createDNATForm.frontStartPort"></InputNumber>
+          <FormItem label="公网端口范围">
+            <InputNumber :max="65535" :min="1" v-model="createDNATForm.frontStartPort"></InputNumber>
             <span style="margin:0px 10px;">--</span>
-            <InputNumber :max="10" :min="1" v-model="createDNATForm.frontEndPort"></InputNumber>
+            <InputNumber :max="65535" :min="1" v-model="createDNATForm.frontEndPort"></InputNumber>
           </FormItem>
-          <FormItem label="内网后端口范围" >
-            <InputNumber :max="10" :min="1" v-model="createDNATForm.backStartPort"></InputNumber>
+          <FormItem label="内网后端口范围">
+            <InputNumber :max="65535" :min="1" v-model="createDNATForm.backStartPort"></InputNumber>
             <span style="margin:0px 10px;">--</span>
-            <InputNumber :max="10" :min="1" v-model="createDNATForm.backEndPort"></InputNumber>
+            <InputNumber :max="65535" :min="1" v-model="createDNATForm.backEndPort"></InputNumber>
           </FormItem>
           <FormItem label="选择协议">
             <Select v-model="createDNATForm.protocol">
@@ -86,7 +86,8 @@
           </FormItem>
           <FormItem label="选择主机" prop="vm">
             <Select v-model="createDNATForm.vm">
-              <Option v-for="item in createDNATForm.vmOptions" :value="item.computerid" :key="item.computerid">
+              <Option v-for="item in createDNATForm.vmOptions" :value="`${item.computerid}#${item.computername}`"
+                      :key="item.computerid">
                 {{item.computername}}
               </Option>
             </Select>
@@ -126,22 +127,23 @@
     },
     data(){
       const validaRegisteredName = regExp.validaRegisteredName
+      console.log(this)
       return {
         ruleValidate: {
           name: [
-            { required: true, validator: validaRegisteredName, trigger: 'blur' }
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ],
           publicIP: [
-            { required: true, message: '请选择一个公网IP', trigger: 'change' }
+            {required: true, message: '请选择一个公网IP', trigger: 'change'}
           ],
           subNetwork: [
-            { required: true, message: '请选择一个子网', trigger: 'change' }
+            {required: true, message: '请选择一个子网', trigger: 'change'}
           ],
           vm: [
-            { required: true, message: '请选择一台主机', trigger: 'change' }
+            {required: true, message: '请选择一台主机', trigger: 'change'}
           ]
         },
-        ipId : [],
+        ipId: [],
         showModal: {
           createDNAT: false
         },
@@ -175,6 +177,22 @@
           {
             title: '操作',
             render: (h, object) => {
+              if (object.row.status == -1) {
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', {}, '创建中')])
+              }
+              if (object.row.status == -2) {
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', {}, '删除中')])
+              }
               return h('span', {
                 style: {
                   color: '#2A99F2',
@@ -186,12 +204,19 @@
                       content: '确认删除该规则？',
                       onOk: () => {
                         var url = `network/deletePortForwardingRule.do?id=${object.row.id}`
+                        this.DNATData.forEach(item => {
+                          item.protTransList.forEach(i => {
+                            if (i.id == object.row.id) {
+                              this.$set(i, 'status', -2)
+                            }
+                          })
+                        })
                         this.$http.get(url).then(response => {
+                          this.refresh()
                           if (response.status == 200 && response.data.status == 1) {
                             this.$message.info({
                               content: response.data.message
                             })
-                            this.refresh()
                           } else {
                             this.$message.error({
                               content: response.data.message
@@ -259,11 +284,9 @@
         // 打开Modal
         this.showModal.createDNAT = true
         if (sessionStorage.getItem('ip')) {
-          this.createDNATForm.publicIpOptions =  sessionStorage.getItem('ip').split(',')
+          this.createDNATForm.publicIpOptions = sessionStorage.getItem('ip').split(',')
           this.ipId = sessionStorage.getItem('ipId').split(',')
         }
-        sessionStorage.removeItem('ip')
-        sessionStorage.removeItem('ipId')
         // 列出子网
         this.$http.get('network/listNetwork.do', {
           params: {
@@ -279,25 +302,37 @@
       createPortForwardingRule (name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
+            this.showModal.createDNAT = false
+            this.DNATData.forEach(item => {
+              if (item.publicIp == this.createDNATForm.publicIP.split('#')[1]) {
+                item.protTransList.push({
+                  prottransname: this.createDNATForm.name,
+                  protocol: this.createDNATForm.protocol,
+                  publicstartport: this.createDNATForm.backStartPort,
+                  publicendport: this.createDNATForm.backEndPort,
+                  computername: this.createDNATForm.vm.split('#')[1],
+                  status: -1 //-1代表创建中
+                })
+              }
+            })
             this.$http.get(`network/createPortForwardingRule.do`, {
               params: {
                 name: this.createDNATForm.name,
-                publicIpId: this.createDNATForm.publicIP,
+                publicIpId: this.createDNATForm.publicIP.split('#')[0],
                 privateStartPort: this.createDNATForm.backStartPort,
                 privateEndPort: this.createDNATForm.backEndPort,
                 protocol: this.createDNATForm.protocol,
                 publicStartPort: this.createDNATForm.frontStartPort,
                 publicEndPort: this.createDNATForm.backEndPort,
-                VMId: this.createDNATForm.vm,
+                VMId: this.createDNATForm.vm.split('#')[0],
                 networkId: this.createDNATForm.subNetwork
               }
             }).then(response => {
+              this.refresh()
               if (response.status == 200 && response.data.status == 1) {
-                this.showModal.createDNAT = false
                 this.$Message.info({
                   content: response.data.message
                 })
-                this.refresh()
               } else {
                 this.$message.error({
                   content: response.data.message

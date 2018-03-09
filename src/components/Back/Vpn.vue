@@ -125,7 +125,7 @@
           <FormItem label="目的网络CIDR" v-if="newTunnelVpnForm.step==1" prop="cidr">
             <Input v-model="newTunnelVpnForm.CIDR" placeholder="例如192.168.0.0/16"></Input>
           </FormItem>-->
-          <FormItem label="域共享密钥" v-if="newTunnelVpnForm.step==1" prop="key">
+          <FormItem label="预共享密钥" v-if="newTunnelVpnForm.step==1" prop="key">
             <Input v-model="newTunnelVpnForm.key" placeholder="请输入0-128字节密码"></Input>
           </FormItem>
         </Form>
@@ -350,7 +350,7 @@
             {required: true, message: '请输入隧道名称', trigger: 'blur'}
           ],
           key: [
-            {required: true, message: '请输入共享域密码', trigger: 'blur'}
+            {required: true, message: '请输入预共享密钥', trigger: 'blur'}
           ],
           IP: [
             {required: true, message: '请输入目的ip地址', trigger: 'blur'}
@@ -362,7 +362,7 @@
         // 远程vpn列表
         remoteVpnColumns: [
           {
-            type: 'selection',
+            type: 'radio',
             width: 60,
             align: 'center'
           },
@@ -372,7 +372,7 @@
             key: 'vpcname'
           },
           {
-            title: '域共享密钥',
+            title: '预共享密钥',
             align: 'center',
             key: 'ipseckey'
           },
@@ -538,7 +538,7 @@
         // 隧道vpn
         tunnelVpnColumns: [
           {
-            type: 'selection',
+            type: 'radio',
             width: 60,
             align: 'center'
           },

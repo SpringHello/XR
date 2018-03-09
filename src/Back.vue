@@ -130,7 +130,7 @@
     data(){
       return {
         // pageInfo用于存储当前页面信息
-        pageInfo: { 
+        pageInfo: {
           // hover选中的item
           hoverItem: '',
           // 点击选中的二级item
@@ -156,7 +156,7 @@
             }]
           },
           {
-            mainName: '存储',
+            mainName: '云存储',
             type: 'storage',
             subItem: [
               {subName: '云硬盘', type: 'disk'},

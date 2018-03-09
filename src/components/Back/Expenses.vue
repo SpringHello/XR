@@ -1,5 +1,4 @@
 <template>
-  <div>
     <div class="background">
       <div class="wrapper">
         <Spin fix v-show="payLoading">
@@ -10,7 +9,7 @@
           <Icon type="load-c" size=80 class="demo-spin-icon-load"></Icon>
           <span style="display: block;font-size:14px;color:black;font-family: Microsoft Yahei,微软雅黑;">正在查询，请稍后...</span>
         </Spin>
-        <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 费用中心</span>
+        <span>个人中心 / 费用中心</span>
         <div class="content">
           <span class="title">费用中心</span>
           <Tabs v-model="name" type="card" :animated="false" @on-click="changecard"
@@ -129,10 +128,10 @@
                   <Form ref="formInvoiceDate" :model="formInvoiceDate" :rules="ruleValidate" :label-width="80"
                         label-position="left">
                     <Form-item label="温馨提示">
-                      <p style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);line-height: 18px;">
+                      <p style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);line-height: 18px;margin-top: 5px;">
                         1.您选择的发票金额不能小于1000元，增值发票准票金额不能小于10000请累计之后一并申请。</p>
                       <p
-                        style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);margin-bottom: -10px;line-height: 18px; ">
+                        style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);margin-bottom: -10px;line-height: 18px;">
                         2.发票寄出时间：每月20号统一寄出，15号之前申请的发票将在当月20号寄出，15号之后申请的发票将在次月20号寄出。</p>
                     </Form-item>
                     <Form-item label="开票金额" prop="invoiceAmount">
@@ -160,7 +159,7 @@
                       <span>银行账号：{{ banknum }}</span>
                     </Form-item>
                     <Form-item label="发票信息" v-show="invoiceInformationShow">
-                      <p>您需要通过<span style="color: dodgerblue;cursor:pointer;"
+                      <p style="line-height: 2.5;">您需要通过<span style="color: dodgerblue;cursor:pointer;"
                                     @click="invoiceCertification">增票资质认证</span>才能开具增值税专用发票</p>
                       <Button type="primary" style="margin-left: 235px" @click="invoiceCertification"
                               v-show="certificateStatus">点击认证
@@ -182,7 +181,7 @@
                              style="width: 317px"></Input>
                     </Form-item>
                     <Form-item>
-                      <Button type="primary" style="margin-left: 235px" @click="invoiceMake('formInvoiceDate')">确认开票
+                      <Button type="primary" style="float: right;font-size: 12px;" @click="invoiceMake('formInvoiceDate')">确认开票
                       </Button>
                     </Form-item>
                   </Form>
@@ -242,56 +241,55 @@
           </Tabs>
         </div>
       </div>
-    </div>
-    <Modal v-model="showModal.clipCoupons" width="690" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        可用优惠券（请选择一张优惠券）
-      </div>
-      <div>
-        <!--Table :columns="cardVolumeColumns" :data="cardVolumeTabledata" @on-selection-change="cardSelect"></Table-->
-        <table style="width:100%;border: 1px solid #e9eaec;">
-          <thead>
-          <tr style="border-bottom: 1px solid #e9eaec;height: 40px;">
-            <th style="width:60px">选择</th>
-            <th>类型</th>
-            <th>面值/折扣</th>
-            <th>描述</th>
-            <th>失效时间</th>
-            <th>备注</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="(item,index) in cardVolumeTableData"
-              style="height:48px;border-bottom: 1px solid #e9eaec;color:rgba(0,0,0,.65);font-weight: normal;">
-            <th>
-              <div class="head">
+      <Modal v-model="showModal.clipCoupons" width="690" :scrollable="true">
+        <div slot="header"
+             style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+          可用优惠券（请选择一张优惠券）
+        </div>
+        <div>
+          <!--Table :columns="cardVolumeColumns" :data="cardVolumeTabledata" @on-selection-change="cardSelect"></Table-->
+          <table style="width:100%;border: 1px solid #e9eaec;">
+            <thead>
+            <tr style="border-bottom: 1px solid #e9eaec;height: 40px;">
+              <th style="width:60px">选择</th>
+              <th>类型</th>
+              <th>面值/折扣</th>
+              <th>描述</th>
+              <th>失效时间</th>
+              <th>备注</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(item,index) in cardVolumeTableData"
+                style="height:48px;border-bottom: 1px solid #e9eaec;color:rgba(0,0,0,.65);font-weight: normal;">
+              <th>
+                <div class="head">
                 <span v-bind:class="{'select':index==activeIndex,'notAllow':item.startmoney > totalCost}"
                       @click="selectChange(item,index)">
                   <input type="checkbox" style="float:left;display: none">
                 </span>
-              </div>
-            </th>
-            <th style="font-weight: normal;">{{item.operator}}</th>
-            <th v-if="item.tickettype==0" style="font-weight: normal;">{{item.money}}元</th>
-            <th v-if="item.tickettype==1" style="font-weight: normal;">{{item.money}}折</th>
-            <th style="font-weight: normal;">{{item.ticketdescript}}</th>
-            <th style="font-weight: normal;">{{item.endtime}}</th>
-            <th style="font-weight: normal;">{{item.remark}}</th>
-          </tr>
-          </tbody>
-        </table>
-        <div style="margin: 10px;overflow: hidden">
-          <div style="float: right;">
-            <Page :total="cardTotal" :current="1" :page-size="5" @on-change="card_currentChange"></Page>
+                </div>
+              </th>
+              <th style="font-weight: normal;">{{item.operator}}</th>
+              <th v-if="item.tickettype==0" style="font-weight: normal;">{{item.money}}元</th>
+              <th v-if="item.tickettype==1" style="font-weight: normal;">{{item.money}}折</th>
+              <th style="font-weight: normal;">{{item.ticketdescript}}</th>
+              <th style="font-weight: normal;">{{item.endtime}}</th>
+              <th style="font-weight: normal;">{{item.remark}}</th>
+            </tr>
+            </tbody>
+          </table>
+          <div style="margin: 10px;overflow: hidden">
+            <div style="float: right;">
+              <Page :total="cardTotal" :current="1" :page-size="5" @on-change="card_currentChange"></Page>
+            </div>
           </div>
         </div>
-      </div>
-      <div slot="footer">
-        <button class="ivu-btn ivu-btn-primary" @click="clipCoupons_ok"><span>确定</span></button>
-      </div>
-    </Modal>
-  </div>
+        <div slot="footer">
+          <button class="ivu-btn ivu-btn-primary" @click="clipCoupons_ok"><span>确定</span></button>
+        </div>
+      </Modal>
+    </div>
 </template>
 
 <script type="text/ecmascript-6">
@@ -469,7 +467,6 @@
             title: '发票状态',
             key: 'status',
             align: 'center',
-            width: 150,
             render: (h, params) => {
               const row = params.row
               const color = row.status === 0 ? 'green' : row.status === 1 ? 'red' : row.status === 2 ? 'yellow' : 'blue'
@@ -486,7 +483,6 @@
             title: '发票种类',
             key: 'type',
             align: 'center',
-            width: 190,
             render: (h, params) => {
               return h('span', params.row.type == 0 ? '普通发票' : '增值税专用发票')
             }
@@ -495,21 +491,18 @@
             title: '发票抬头',
             key: 'title',
             align: 'center',
-            width: 220
           },
           {
             title: '发票申请时间',
             key: 'createtime',
             align: 'center',
-            width: 200
           },
           {
             title: '发票金额',
             key: 'amount',
             align: 'center',
-            width: 140
           },
-          {
+         /* {
             title: '物流信息',
             key: 'status',
             align: 'center',
@@ -531,12 +524,11 @@
                 }, text)
               ])
             }
-          },
+          },*/
           {
             title: '操作',
             key: 'cz',
             align: 'center',
-            width: 140,
             render: (h, params) => {
               return h('div', [
                 h('span', {
@@ -660,7 +652,7 @@
         ],
         columns_order: [
           {
-            type: 'selection',
+            type: 'radio',
             width: 60,
             align: 'center'
           },
@@ -1475,12 +1467,12 @@
             .expenses_s2_wrap {
               margin-top: 20px;
               padding-right: 30px;
-             // overflow: hidden;
+              // overflow: hidden;
               .expenses_s2 {
                 font-family: Microsoft Yahei, 微软雅黑;
                 font-size: 36px;
                 color: rgba(17, 17, 17, 0.65);
-               // float: left;
+                // float: left;
               }
               button {
                 float: right;

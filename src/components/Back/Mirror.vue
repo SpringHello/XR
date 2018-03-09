@@ -127,7 +127,7 @@
         select: null,
         systemColumns: [
           {
-            type: 'radio',
+            type: 'selection',
             width: 60,
             align: 'center'
           },
@@ -214,7 +214,7 @@
         ownData: [],
         ownColumns: [
           {
-            type: 'selection',
+            type: 'radio',
             width: 60,
             align: 'center'
           },
