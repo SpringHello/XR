@@ -62,10 +62,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="cancel">取消</Button>
-        <Button type="primary"
-                :disabled="formItem.vmInfo==''||formItem.mirrorName==''||formItem.mirrorDescription==''"
-                @click="checkFormItem">确定
-        </Button>
+        <Button type="primary" @click="checkFormItem">确定</Button>
       </div>
     </Modal>
     <!-- 修改镜像弹窗 -->
@@ -82,17 +79,14 @@
             <Input v-model="mirrorModifyForm.name" placeholder="小于20位数字或字母" :maxlength="20"></Input>
           </FormItem>
           <FormItem label="备注">
-            <Input v-model="mirrorModifyForm.remarks" type="textarea" :autosize="{minRows: 3,maxRows: 3}"
-                   placeholder="小于20个字"></Input>
+            <Input v-model="mirrorModifyForm.remarks" type="textarea" :autosize="{minRows: 2,maxRows: 2}"
+                   placeholder="小于20个字（选填)"></Input>
           </FormItem>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.modify=false">取消</Button>
-        <Button type="primary"
-                :disabled="mirrorModifyForm.name==''||mirrorModifyForm.remarks==''"
-                @click="checkMirrorModifyForm">确认修改
-        </Button>
+        <Button type="primary" @click="checkMirrorModifyForm">确认修改</Button>
       </div>
     </Modal>
 
@@ -387,8 +381,8 @@
           remarks: ''
         },
         mirrorModifyFormRule: {
-          vmInfo: [
-            {name: true, validator: validaRegisteredName, trigger: 'blur'}
+          name: [
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ]
         },
       }
@@ -409,7 +403,7 @@
         })
       },
       checkMirrorModifyForm(){
-        this.$refs.formItem.validate((valid) => {
+        this.$refs.mirrorModifyForm.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用修改镜像的方法
             this.mirrorModifySubm()
