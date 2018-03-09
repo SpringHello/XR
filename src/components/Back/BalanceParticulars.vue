@@ -9,7 +9,7 @@
       <!-- 负载均衡相关信息 -->
       <div class="balanceInfo">
         <div class="title">
-          <span>{{ balanceName }}</span>
+          <span style="color:#2A99F2">{{ balanceName }}</span>
           <button @click="$router.go(0)">刷新</button>
           <button style="margin-right: 10px" @click="$router.go(-1)">返回</button>
         </div>
@@ -35,7 +35,7 @@
             <li v-if="balanceInfo.publicport">外网端口：{{ balanceInfo.publicport}}</li>
             <li v-if="balanceInfo.sourceport">源端口：{{balanceInfo.sourceport}}</li>
             <li v-if="balanceInfo.instanceport">实例端口：{{balanceInfo.instanceport}}</li>
-            <span style="margin-left: 630px;color: #2A99F2;cursor: pointer" @click="bind">添加主机</span>
+            <span style="margin-left: 618px;color: #2A99F2;cursor: pointer" @click="bind">添加主机</span>
           </ul>
           <Table :columns="hostColumns" :data="hostData"></Table>
         </div>

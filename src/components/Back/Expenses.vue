@@ -1,5 +1,4 @@
 <template>
-  <div>
     <div class="background">
       <div class="wrapper">
         <Spin fix v-show="payLoading">
@@ -160,7 +159,7 @@
                       <span>银行账号：{{ banknum }}</span>
                     </Form-item>
                     <Form-item label="发票信息" v-show="invoiceInformationShow">
-                      <p>您需要通过<span style="color: dodgerblue;cursor:pointer;"
+                      <p style="line-height: 2.5;">您需要通过<span style="color: dodgerblue;cursor:pointer;"
                                     @click="invoiceCertification">增票资质认证</span>才能开具增值税专用发票</p>
                       <Button type="primary" style="margin-left: 235px" @click="invoiceCertification"
                               v-show="certificateStatus">点击认证
@@ -242,56 +241,55 @@
           </Tabs>
         </div>
       </div>
-    </div>
-    <Modal v-model="showModal.clipCoupons" width="690" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        可用优惠券（请选择一张优惠券）
-      </div>
-      <div>
-        <!--Table :columns="cardVolumeColumns" :data="cardVolumeTabledata" @on-selection-change="cardSelect"></Table-->
-        <table style="width:100%;border: 1px solid #e9eaec;">
-          <thead>
-          <tr style="border-bottom: 1px solid #e9eaec;height: 40px;">
-            <th style="width:60px">选择</th>
-            <th>类型</th>
-            <th>面值/折扣</th>
-            <th>描述</th>
-            <th>失效时间</th>
-            <th>备注</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="(item,index) in cardVolumeTableData"
-              style="height:48px;border-bottom: 1px solid #e9eaec;color:rgba(0,0,0,.65);font-weight: normal;">
-            <th>
-              <div class="head">
+      <Modal v-model="showModal.clipCoupons" width="690" :scrollable="true">
+        <div slot="header"
+             style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+          可用优惠券（请选择一张优惠券）
+        </div>
+        <div>
+          <!--Table :columns="cardVolumeColumns" :data="cardVolumeTabledata" @on-selection-change="cardSelect"></Table-->
+          <table style="width:100%;border: 1px solid #e9eaec;">
+            <thead>
+            <tr style="border-bottom: 1px solid #e9eaec;height: 40px;">
+              <th style="width:60px">选择</th>
+              <th>类型</th>
+              <th>面值/折扣</th>
+              <th>描述</th>
+              <th>失效时间</th>
+              <th>备注</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(item,index) in cardVolumeTableData"
+                style="height:48px;border-bottom: 1px solid #e9eaec;color:rgba(0,0,0,.65);font-weight: normal;">
+              <th>
+                <div class="head">
                 <span v-bind:class="{'select':index==activeIndex,'notAllow':item.startmoney > totalCost}"
                       @click="selectChange(item,index)">
                   <input type="checkbox" style="float:left;display: none">
                 </span>
-              </div>
-            </th>
-            <th style="font-weight: normal;">{{item.operator}}</th>
-            <th v-if="item.tickettype==0" style="font-weight: normal;">{{item.money}}元</th>
-            <th v-if="item.tickettype==1" style="font-weight: normal;">{{item.money}}折</th>
-            <th style="font-weight: normal;">{{item.ticketdescript}}</th>
-            <th style="font-weight: normal;">{{item.endtime}}</th>
-            <th style="font-weight: normal;">{{item.remark}}</th>
-          </tr>
-          </tbody>
-        </table>
-        <div style="margin: 10px;overflow: hidden">
-          <div style="float: right;">
-            <Page :total="cardTotal" :current="1" :page-size="5" @on-change="card_currentChange"></Page>
+                </div>
+              </th>
+              <th style="font-weight: normal;">{{item.operator}}</th>
+              <th v-if="item.tickettype==0" style="font-weight: normal;">{{item.money}}元</th>
+              <th v-if="item.tickettype==1" style="font-weight: normal;">{{item.money}}折</th>
+              <th style="font-weight: normal;">{{item.ticketdescript}}</th>
+              <th style="font-weight: normal;">{{item.endtime}}</th>
+              <th style="font-weight: normal;">{{item.remark}}</th>
+            </tr>
+            </tbody>
+          </table>
+          <div style="margin: 10px;overflow: hidden">
+            <div style="float: right;">
+              <Page :total="cardTotal" :current="1" :page-size="5" @on-change="card_currentChange"></Page>
+            </div>
           </div>
         </div>
-      </div>
-      <div slot="footer">
-        <button class="ivu-btn ivu-btn-primary" @click="clipCoupons_ok"><span>确定</span></button>
-      </div>
-    </Modal>
-  </div>
+        <div slot="footer">
+          <button class="ivu-btn ivu-btn-primary" @click="clipCoupons_ok"><span>确定</span></button>
+        </div>
+      </Modal>
+    </div>
 </template>
 
 <script type="text/ecmascript-6">
