@@ -1,7 +1,7 @@
 <template>
   <div class="background">
     <div class="wrapper">
-      <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 消息中心</span>
+      <span>个人中心 / 消息中心</span>
       <div class="content">
         <div>
           <span class="title">消息中心</span>

@@ -133,7 +133,7 @@
                   </FormItem>
                 </div>
                 <FormItem style="text-align: right">
-                  <Button type="primary" @click="personalAttest">确认提交</Button>
+                  <Button type="primary" @click="personalAttest" style="font-size: 16px;">确认提交</Button>
                 </FormItem>
               </Form>
             </div>
@@ -583,8 +583,8 @@
                   </div>
                 </FormItem>
               </div>
-              <div style="width:500px;">
-                <Button type="primary" @click="enterpriseAttest">确认提交</Button>
+              <div style="text-align: right">
+                <Button type="primary" @click="enterpriseAttest" style="font-size: 16px;color: #FFFFFF;">确认提交</Button>
               </div>
             </Form>
           </TabPane>
@@ -628,10 +628,10 @@
     <!--添加联系人-->
     <Modal width="550" v-model="showModal.addLinkman" :scrollable="true">
       <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 21px;font-weight: 600">
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 21px;font-weight: 600;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         添加联系人（您还能添加<span style="color: #2A99F2">{{ remainLinkMan }}</span>个人）
       </div>
-      <div>
+      <div style="border-bottom: 1px solid #D8D8D8;">
         <p style="font-family: MicrosoftYaHei;font-size: 14px;color: #666666;">提示：系统将自动发送验证信息到所填手机号和邮箱，通过验证后方可接收消息。</p>
         <Form ref="addLinkmanForm" :model="addLinkmanForm" label-position="top" :rules="addLinkmanFormValidate"
               style="width: 300px;margin-top: 20px">
@@ -654,10 +654,10 @@
     <!-- 修改联系人 -->
     <Modal width="550" v-model="showModal.updateLinkman" :scrollable="true">
       <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 21px;font-weight: 600">
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 21px;font-weight: 600;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         修改联系人
       </div>
-      <div>
+      <div style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         <p style="font-family: MicrosoftYaHei;font-size: 14px;color: #666666;">提示：系统将自动发送验证信息到所填手机号和邮箱，通过验证后方可接收消息。</p>
         <Form ref="updateLinkmanForm" :model="updateLinkmanForm" label-position="top" :rules="ruleValidate"
               style="width: 300px;margin-top: 20px">
@@ -680,10 +680,10 @@
     <!--选择验证方式-->
     <Modal v-model="showModal.modifyPhone" width="550" :scrollable="true" :styles="{top:'172px'}">
       <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #e9e9e9;padding-bottom: 20px;">
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         选择验证方式
       </div>
-      <div style="border-bottom: 1px solid #e9e9e9;padding-bottom: 20px;">
+      <div style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         <div>
           <p style="font-size: 14px;color: rgba(17,17,17,0.65);padding-bottom: 25px;">
             您正在为帐号{{userInfo.realname}}修改绑定手机，请选择一种身份验证方式：</p>
@@ -704,7 +704,7 @@
 
     <Modal width="550" v-model="showModal.authByPhone" :scrollable="true">
       <div slot="header"
-           style="color:#333333;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;line-height: 16px;border-bottom: 1px solid #e9e9e9;padding-bottom: 20px;">
+           style="color:#333333;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;line-height: 16px;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         验证手机号
       </div>
       <div>
@@ -730,7 +730,7 @@
           </Button>
         </div>
       </div>
-      <div style="padding: 20px;border-bottom: 1px solid #e9e9e9;background-color: #f5f1f1;">
+      <div style="padding: 20px;border-bottom: 1px solid #D8D8D8;background-color: #F7F7F7;">
         <p style="line-height: 1.5;color: #999;">没有收到验证码？</p>
         <p style="line-height: 1.5;color: #999;">1、网络通讯异常可能会造成短信丢失，请重新获取或稍后再试。</p>
         <p style="line-height: 1.5;color: #999;">2、如果手机已丢失或停机，请<span style="color: rgb(42, 153, 242);cursor: pointer"
@@ -744,7 +744,7 @@
 
     <Modal width="550" v-model="showModal.authByEmail" :scrollable="true">
       <div slot="header"
-           style="color:#333333;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;line-height: 16px;border-bottom: 1px solid #e9e9e9;padding-bottom: 20px;">
+           style="color:#333333;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;line-height: 16px;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         邮箱验证
       </div>
       <div>
@@ -758,7 +758,7 @@
                 style="height:31px;width:92px" @click="getVerCode('email')">{{emailVerCodeText}}
         </Button>
       </div>
-      <div style="padding: 20px;border-bottom: 1px solid #e9e9e9;background-color: #f5f1f1;">
+      <div style="padding: 20px;border-bottom: 1px solid #D8D8D8;background-color: #F7F7F7;">
         <p style="line-height: 1.5;color: #999;">没有收到验证码？</p>
         <p style="line-height: 1.5;color: #999;">1、网络通讯异常可能会造成短信丢失，请重新获取或稍后再试。</p>
         <p style="line-height: 1.5;color: #999;">2、如果手机已丢失或停机，请<span style="color: rgb(42, 153, 242);cursor: pointer"
@@ -772,10 +772,10 @@
 
     <Modal width="550" v-model="showModal.authNewPhone" :scrollable="true">
       <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         重置手机号
       </div>
-      <div class="newPhone">
+      <div class="newPhone" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         <p style="margin-top:0px;">绑定新手机</p>
         <Input v-model="newPhoneForm.newPhone" placeholder="新手机号" style="width:300px"></Input>
         <p>随机验证码</p>
@@ -798,10 +798,10 @@
 
     <Modal width="550" v-model="showModal.authNewEmail" :scrollable="true">
       <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         重置邮箱
       </div>
-      <div class="newPhone">
+      <div class="newPhone" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         <p style="margin-top:0px;">绑定新邮箱</p>
         <Input v-model="newPhoneForm.newPhone" placeholder="新邮箱地址" style="width:300px"></Input>
         <p>邮箱验证码</p>
@@ -820,16 +820,16 @@
     <!--修改密码-->
     <Modal width="550" v-model="showModal.modifyPassword" :scrollable="true">
       <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         重置账户密码
       </div>
-      <div class="newPhone">
+      <div class="newPhone" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         <p style="margin-top:0px;">当前密码</p>
-        <Input v-model="resetPasswordForm.oldPassword" placeholder="当前密码" style="width:300px;"></Input>
+        <Input type="password" v-model="resetPasswordForm.oldPassword" placeholder="当前密码" style="width:300px;"></Input>
         <p>新的密码</p>
-        <Input v-model="resetPasswordForm.newPassword" placeholder="修改后的密码" style="width:300px;"></Input>
+        <Input type="password" v-model="resetPasswordForm.newPassword" placeholder="修改后的密码" style="width:300px;"></Input>
         <p>确认密码</p>
-        <Input v-model="resetPasswordForm.confirmPassword" placeholder="确认新密码"
+        <Input type="password" v-model="resetPasswordForm.confirmPassword" placeholder="确认新密码"
                style="width:300px;"></Input>
       </div>
       <div slot="footer">
