@@ -509,6 +509,8 @@
                 总计费用：<span
                 style="font-size: 24px;color: #EE6723;">{{totalCost.toFixed(2)}}元</span>
               </p>
+              <p style="text-align: right;font-size: 14px;color: #666666;">优惠费用：<span
+                style="font-size: 24px;color: #EE6723;">{{PeipInfo.cost.toFixed(2)}}元</span></p>
               <div style="text-align: right;margin-top: 20px;">
                 <button class="buyButton" @click="addCart">
                   加入预算清单
@@ -644,6 +646,8 @@
             <p style="text-align: right;font-size: 14px;color: #666666;">
               总计费用：<span style="font-size: 24px;color: #EE6723;">{{PdiskInfo.dataDiskCost.toFixed(2)}}元</span>
             </p>
+            <p style="text-align: right;font-size: 14px;color: #666666;">优惠费用：<span
+              style="font-size: 24px;color: #EE6723;">{{PeipInfo.cost.toFixed(2)}}元</span></p>
             <div style="text-align: right;margin-top: 20px;">
               <button class="buyButton" @click="addDiskCart">
                 加入预算清单
@@ -762,6 +766,8 @@
             <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
                @click="$router.push('document')">查看计价详情</p>
             <p style="text-align: right;font-size: 14px;color: #666666;">总计费用：<span
+              style="font-size: 24px;color: #EE6723;">{{PeipInfo.cost.toFixed(2)}}元</span></p>
+            <p style="text-align: right;font-size: 14px;color: #666666;">优惠费用：<span
               style="font-size: 24px;color: #EE6723;">{{PeipInfo.cost.toFixed(2)}}元</span></p>
             <div style="text-align: right;margin-top: 20px;">
               <button class="buyButton" @click="addIPCart">
@@ -1276,7 +1282,7 @@
       queryRemainCount(){
         axios.get('user/getRemainCount.do', {
           params: {
-            zoneId: 'hello'
+            zoneId: this[`${this.product.currentProduct}Info`].zone.zoneid
           }
         }).then(response => {
           this.remainCount.hostCount = response.data.result.computer
@@ -1596,7 +1602,7 @@
         }, obj)
         this.cart.push(prod)
         this.store()
-        window.scrollTo(0,170)
+        window.scrollTo(0, 170)
       },
       buyHost(){
         if (this.PecsInfo.currentType == 'app' && this.PecsInfo.currentApp.templatename == undefined) {
@@ -1698,7 +1704,7 @@
         var prod = Object.assign({typeName: '云硬盘', zone: this.PdiskInfo.zone, type: 'Pdisk', count: 1}, obj)
         this.cart.push(prod)
         this.store()
-        window.scrollTo(0,170)
+        window.scrollTo(0, 170)
       },
       buyDisk(){
         var obj = JSON.parse(JSON.stringify(this.PdiskInfo))
@@ -1739,7 +1745,7 @@
         var prod = Object.assign({typeName: '公网IP', zone: this.PeipInfo.zone, type: 'Peip', count: 1}, obj)
         this.cart.push(prod)
         this.store()
-        window.scrollTo(0,170)
+        window.scrollTo(0, 170)
       },
       buyIP(){
         var obj = JSON.parse(JSON.stringify(this.PeipInfo))
@@ -2032,6 +2038,9 @@
       }
     ),
     watch: {
+      'product.currentProduct'(){
+        this.queryRemainCount()
+      },
       // 选择区域发生变化
       'PecsInfo.zone': {
         handler: function () {
@@ -2039,6 +2048,8 @@
           this.queryVpc()
           this.setTemplate()
           this.ownMirrorList()
+
+          this.queryRemainCount()
         }
         ,
         deep: true
@@ -2108,14 +2119,12 @@
       }
       ,
       // 选中的VPC发生变化
-      'PecsInfo.vpc'()
-      {
+      'PecsInfo.vpc'(){
         this.changeNetwork()
       }
       ,
       // 公网IP带宽变化
-      'PecsInfo.IPConfig.bandWidth'()
-      {
+      'PecsInfo.IPConfig.bandWidth'(){
         this.queryIPPrice()
       }
       ,
@@ -2123,11 +2132,9 @@
       'PecsInfo.dataDiskList': {
         handler: function () {
           this.queryDiskPrice()
-        }
-        ,
+        },
         deep: true
-      }
-      ,
+      },
 
       /*磁盘页面需要价格计算的变化*/
       'PdiskInfo.timeForm': {
@@ -2154,11 +2161,22 @@
         handler: function () {
           // 重新查询自定义IP的所属vpc，即虚拟私有云
           this.queryIPVpc()
+          // 查询当前区域的剩余资源
+          this.queryRemainCount()
         }
         ,
         deep: true
-      }
-      ,
+      },
+
+      // 公网IP选择区域发生变化
+      'PdiskInfo.zone': {
+        handler: function () {
+          // 查询当前区域的剩余资源
+          this.queryRemainCount()
+        }
+        ,
+        deep: true
+      },
       /*公网IP页面需要价格计算的变化*/
       'PeipInfo.timeForm': {
         handler: function () {
