@@ -5,8 +5,7 @@
         <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
         <div>{{loadingMessage}}</div>
       </Spin>
-      <span class="title">云存储 /
-         <span>云硬盘</span>
+      <span class="title">云存储 &nbsp; / &nbsp; <span>云硬盘</span>
       </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
         <router-link to="/ruicloud/userCenter">立即认证</router-link>
@@ -337,7 +336,6 @@
           },
           {
             title: '计费类型',
-            width: 130,
             key: 'caseType',
             render: (h, params) => {
               return h('span', params.row.caseType == 1 ? '包年' : params.row.caseType == 2 ? '包月' : '实时计费')
@@ -353,6 +351,11 @@
                 return h('span', '--')
               }
             }
+          },
+          {
+           title: '创建时间',
+           ellipsis: true,
+           key: 'createtime',
           },
           {
             title: '操作',
@@ -623,7 +626,7 @@
           })
         } else {
           this.$message.error({
-            content: '该硬盘当前状态下不能挂载主机'
+            content: '该硬盘已挂载主机“' + data.mountonname + '”，若需挂载其他主机请先卸载硬盘。'
           })
         }
       },

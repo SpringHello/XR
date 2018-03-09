@@ -35,10 +35,10 @@
               <!-- 备份 -->
               <Dropdown-item name="backup" v-if="status!='开启'&&status!='关机'" :disabled=true>
                 <Tooltip content="异常、欠费状态，快照不可用" placement="top">
-                  创建快照
+                  制作快照
                 </Tooltip>
               </Dropdown-item>
-              <Dropdown-item name="backup" v-else>创建快照</Dropdown-item>
+              <Dropdown-item name="backup" v-else>制作快照</Dropdown-item>
               <!-- 镜像 -->
               <Dropdown-item name="mirror" v-if="status!='关机'" :disabled=true>
                 <Tooltip content="制作镜像前您必须关闭主机" placement="top">
@@ -53,7 +53,7 @@
                 </Tooltip>
               </Dropdown-item>
               <Dropdown-item name="upgrade" v-else>
-                升级
+                主机升级
               </Dropdown-item>
 
               <!-- 重启主机 -->
@@ -331,13 +331,13 @@
       </div>
     </div>
 
-    <!-- 创建快照弹窗 -->
+    <!-- 制作快照弹窗 -->
     <Modal v-model="showModal.backup" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">创建快照</span>
+        <span class="universal-modal-title">制作快照</span>
       </p>
       <div class="universal-modal-content-flex">
-        <p class="mb20">您正为<span class="bluetext">{{currentHostname}}</span>创建快照</p>
+        <p class="mb20">您正为<span class="bluetext">{{currentHostname}}</span>制作快照</p>
         <Form ref="backupForm" :model="backupForm" :rules="backupFormRule">
           <FormItem label="快照名称" prop="name">
               <Input v-model="backupForm.name" placeholder="请输入2-4094范围内任意数字" :maxlength="15"></Input>
@@ -354,7 +354,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.backup=false">取消</Button>
-        <Button type="primary" @click="backupSubmit('backupForm')">创建快照</Button>
+        <Button type="primary" @click="backupSubmit('backupForm')">制作快照</Button>
       </div>
     </Modal>
     <!-- 主机重命名弹窗 -->
