@@ -27,7 +27,7 @@
               <i v-if="computerInfo.zoneName"> | {{computerInfo.zoneName}}</i>
             </span>
             <span>镜像系统：{{computerInfo.template}}</span>
-            <span>到期时间／有效期：{{computerInfo.endtime}}</span>
+            <span>到期时间／有效期：{{computerInfo.endTime}}</span>
             <span>内网地址：{{computerInfo.privateIp}}</span>
             <!-- <span><span>登录密码：</span>
               <span v-show="showPassword" class="bluetext">{{computerInfo.password}}</span>
@@ -270,58 +270,50 @@
           </Tabs>
         </div>
       </div>
-      <Modal width="700" v-model="showModal.setMonitoringForm" :scrollable="true">
-        <div slot="header" class="modal-header-border"
-             style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;font-weight: 600">
-          告警策略配置
+     <Modal width="550" v-model="showModal.setMonitoringForm" :scrollable="true">
+        <div slot="header" class="modal-header-border">
+          <span class="universal-modal-title">告警策略配置</span>
         </div>
-        <div style="height: 250px">
+        <div>
           <div style="display:flex;">
             <p style=" font-size: 14px;line-height: 22px;">通知类型</p>
-            <Checkbox v-model="isletter" size="large" style="margin-left: 20px;font-size: 12px;line-height: 22px;">站内信</Checkbox>
-            <Checkbox v-model="isemailalarm" size="large" style="margin-left: 20px;font-size: 12px;line-height: 22px;">邮箱</Checkbox>
-            <Checkbox v-model="issmsalarm" size="large" style="margin-left: 20px;font-size: 12px;line-height: 22px;">短信</Checkbox>
+            <Checkbox v-model="isletter" size="large" style="margin-left: 20px">站内信</Checkbox>
+            <Checkbox v-model="isemailalarm" size="large" style="margin-left: 20px">邮箱</Checkbox>
+            <Checkbox v-model="issmsalarm" size="large" style="margin-left: 20px">短信</Checkbox>
           </div>
-          <div class="setForm">
-            <div>
-              <div>
-                <p>CPU利用率设定</p>
-                <Select v-model="setCPU" class="setSelect">
+          <div class="universal-modal-content-flex">
+            <Form>
+              <FormItem label="CPU利用率设定">
+                <Select v-model="setCPU">
                   <Option v-for="item in setList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
-              </div>
-              <div style="margin-top: 40px;">
-                <p>内存使用率设定</p>
-                <Select v-model="setRAM" class="setSelect">
+              </FormItem>
+              <FormItem label="内存使用率设定">
+                <Select v-model="setRAM">
                   <Option v-for="item in setList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
-              </div>
-            </div>
-            <div>
-              <div>
-                <p>磁盘空间利用率设定</p>
-                <Select v-model="setDisk" class="setSelect">
+              </FormItem>
+              <FormItem label="磁盘空间利用率设定">
+                <Select v-model="setDisk">
                   <Option v-for="item in setList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
-              </div>
-              <div style="margin-top: 40px;float: right">
-                <p>流量告警设定</p>
-                <Select v-model="setFluxIn" class="setSelect">
+              </FormItem>
+              <FormItem label="流量流入告警设定">
+                <Select v-model="setFluxIn">
                   <Option v-for="item in fluxList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
-              </div>
-            </div>
+              </FormItem>
+              <FormItem label="流量流出告警设定">
+                <Select v-model="setFluxOut">
+                  <Option v-for="item in fluxList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+            </Form>
           </div>
-          <!-- <div style=" margin-top: 40px;padding-left: 15px;">
-            <p style="font-size: 16px;line-height: 30px;">流量流出告警设定</p>
-            <Select v-model="setFluxOut" style="  width:150px;margin-left: 5px">
-              <Option v-for="item in fluxList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
-          </div> -->
         </div>
         <div slot="footer" class="modal-footer-border">
           <Button type="ghost" @click="showModal.setMonitoringForm=false">取消</Button>
-          <Button type="primary" @click="setMonitoringOk">确定</Button>
+          <Button type="primary" @click="setMonitoringOk">完成</Button>
         </div>
       </Modal>
     </div>
@@ -449,7 +441,7 @@
                 case -1:
                   return h('span', {
                     style: {
-                      color: '#EE4545'
+                      // color: '#EE4545'
                     }
                   }, '正常')
                 case 2:
@@ -767,12 +759,12 @@
       this.$http.get(url1)
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            // this.cpuPolar.series[0].data = response.data.result.cpuUse
-            // this.diskPolar.series[0].data = response.data.result.diskUse
-            // this.memoryPolar.series[0].data = response.data.result.memoryUse
-            this.cpuPolar.series[0].data = [0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 0, 0, 70, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            this.diskPolar.series[0].data = [0, 0, 0, 70, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-            this.memoryPolar.series[0].data = [0, 0, 0, 0, 0, 0, 80, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            this.cpuPolar.series[0].data = response.data.result.cpuUse
+            this.diskPolar.series[0].data = response.data.result.diskUse
+            this.memoryPolar.series[0].data = response.data.result.memoryUse
+            // this.cpuPolar.series[0].data = [0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 0, 0, 70, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            // this.diskPolar.series[0].data = [0, 0, 0, 70, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            // this.memoryPolar.series[0].data = [0, 0, 0, 0, 0, 0, 80, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             this.cpuPolar.xAxis.data = response.data.result.xaxis
             this.diskPolar.xAxis.data = response.data.result.xaxis
             this.memoryPolar.xAxis.data = response.data.result.xaxis
@@ -790,8 +782,8 @@
       this.$http.get(networkURL)
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            // this.ipPolar.series[0].data = response.data.result.networkIn
-            this.ipPolar.series[0].data = [0, 0, 0, 70, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            this.ipPolar.series[0].data = response.data.result.networkIn
+            // this.ipPolar.series[0].data = [0, 0, 0, 70, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             this.ipPolar.series[1].data = response.data.result.networkOut
             this.ipPolar.xAxis.data = response.data.result.xaxis
           }
@@ -1152,6 +1144,9 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  #wrapper{
+    background:#fff;
+  }
   .arrowdown-icon{
     position: relative;
     display: inline-block;
@@ -1297,6 +1292,7 @@
           display: flex;
           flex-wrap: wrap;
           justify-content: space-between;
+          margin-right:20px;
           .item {
             width: 100%;
             margin-bottom: 50px;
