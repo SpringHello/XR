@@ -1,10 +1,12 @@
 <template>
     <div class="background">
       <div class="wrapper">
-        <span><router-link to="host" style="color:rgba(17, 17, 17, 0.43);">云服务器  / </router-link><router-link
-          to="host" style="color:rgba(17, 17, 17, 0.43);">云主机 / </router-link><router-link to="upgrade" style="color:rgba(17, 17, 17, 0.43);">升级 / </router-link><router-link to="order" style="color:rgba(17, 17, 17, 0.43);">订单确认 / </router-link> 支付</span>
+        <span><router-link to="host" style="color:rgba(17, 17, 17, 0.43);margin-right: 5px;">云服务器</router-link> / <router-link
+          to="host" style="color:rgba(17, 17, 17, 0.43);margin: 0 5px;">云主机</router-link> / <router-link to="upgrade" style="color:rgba(17, 17, 17, 0.43);margin: 0 5px;">升级</router-link> / <router-link to="order" style="color:rgba(17, 17, 17, 0.43);margin: 0 5px;">订单确认</router-link> /  <span style="margin-left: 5px;"> 支付</span></span>
         <div class="content">
+
           <span>支付</span>
+          <Button>返回</Button>
           <div style="padding:40px 0px 140px;">
             <div style="margin:auto;width:457px;">
               <div style="display: flex">

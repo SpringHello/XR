@@ -479,7 +479,7 @@
                     <div>
                       <p class="item-title" style="margin-top: 8px">登录密码</p>
                     </div>
-                    <Input v-model="PecsInfo.password" placeholder="请输入主机登录密码"
+                    <Input v-model="PecsInfo.password" placeholder="请输入至少6位包含大小写与数字的密码"
                            style="width: 300px"></Input>
                   </div>
                 </div>
@@ -510,12 +510,14 @@
                 style="font-size: 24px;color: #EE6723;">{{totalCost.toFixed(2)}}元</span>
               </p>
               <div style="text-align: right;margin-top: 20px;">
-                <button class="buyButton" @click="addCart">
+                <Button size="large"
+                        class="btn" @click="addCart">
                   加入预算清单
-                </button>
-                <button class="buyButton" @click="buyHost">
+                </Button>
+                <Button size="large" class="btn"
+                        @click="buyHost">
                   立即购买
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -645,12 +647,14 @@
               总计费用：<span style="font-size: 24px;color: #EE6723;">{{PdiskInfo.dataDiskCost.toFixed(2)}}元</span>
             </p>
             <div style="text-align: right;margin-top: 20px;">
-              <button class="buyButton" @click="addDiskCart">
+              <Button size="large"
+                      class="btn" @click="addCart">
                 加入预算清单
-              </button>
-              <button class="buyButton" @click="buyDisk">
+              </Button>
+              <Button size="large" class="btn"
+                      @click="buyHost">
                 立即购买
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -764,12 +768,14 @@
             <p style="text-align: right;font-size: 14px;color: #666666;">总计费用：<span
               style="font-size: 24px;color: #EE6723;">{{PeipInfo.cost.toFixed(2)}}元</span></p>
             <div style="text-align: right;margin-top: 20px;">
-              <button class="buyButton" @click="addIPCart">
+              <Button size="large"
+                      class="btn" @click="addCart">
                 加入预算清单
-              </button>
-              <button class="buyButton" @click="buyIP">
+              </Button>
+              <Button size="large" class="btn"
+                      @click="buyHost">
                 立即购买
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -1596,7 +1602,7 @@
         }, obj)
         this.cart.push(prod)
         this.store()
-        window.scrollTo(0,170)
+        window.scrollTo(0, 170)
       },
       buyHost(){
         if (this.PecsInfo.currentType == 'app' && this.PecsInfo.currentApp.templatename == undefined) {
@@ -1698,7 +1704,7 @@
         var prod = Object.assign({typeName: '云硬盘', zone: this.PdiskInfo.zone, type: 'Pdisk', count: 1}, obj)
         this.cart.push(prod)
         this.store()
-        window.scrollTo(0,170)
+        window.scrollTo(0, 170)
       },
       buyDisk(){
         var obj = JSON.parse(JSON.stringify(this.PdiskInfo))
@@ -1739,7 +1745,7 @@
         var prod = Object.assign({typeName: '公网IP', zone: this.PeipInfo.zone, type: 'Peip', count: 1}, obj)
         this.cart.push(prod)
         this.store()
-        window.scrollTo(0,170)
+        window.scrollTo(0, 170)
       },
       buyIP(){
         var obj = JSON.parse(JSON.stringify(this.PeipInfo))
@@ -2305,6 +2311,18 @@
             .desc {
               color: #ffffff
             }
+          }
+        }
+        .btn {
+          border-color: #377DFF;
+          font-size: 16px;
+          color: #377DFF;
+          &:first-of-type {
+            margin-right: 10px;
+          }
+          &:hover {
+            background-color: #377DFF;
+            color: #FFFFFF;
           }
         }
 
