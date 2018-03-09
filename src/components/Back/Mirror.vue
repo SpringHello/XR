@@ -220,7 +220,7 @@
         ownData: [],
         ownColumns: [
           {
-            type: 'radio',
+            type: 'selection',
             width: 60,
             align: 'center'
           },

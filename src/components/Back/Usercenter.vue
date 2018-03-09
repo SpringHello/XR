@@ -6,7 +6,7 @@
         <p class="title">用户中心</p>
         <Tabs type="card" :animated="false" v-model="currentTab">
           <!--未认证-->
-          <TabPane label="用户信息" v-if="userInfo.personalauth==1&&userInfo.companyauth==1">
+          <TabPane label="个人信息" v-if="userInfo.personalauth==1&&userInfo.companyauth==1">
             <p class="info-title">个人基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
@@ -16,9 +16,9 @@
                     style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;color: #2A99F2;">添加认证信息</span>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
-                  <span style="vertical-align: middle">未认证用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <span style="vertical-align: middle;margin-right: 20px;">未认证用户</span>
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -177,7 +177,7 @@
                 </FormItem>
                 <FormItem>
                   <div style="float:right">
-                    <Button style="margin-right:10px">重置表单</Button>
+                    <Button style="margin-right:10px" @click="reset">重置表单</Button>
                     <Button type="primary" @click="quicklyAuth">确认提交</Button>
                   </div>
                 </FormItem>
@@ -185,7 +185,7 @@
             </div>
           </TabPane>
           <!--个人认证中-->
-          <TabPane label="用户信息" v-else-if="userInfo.personalauth==2&&userInfo.companyauth==1" class="personal">
+          <TabPane label="个人信息" v-else-if="userInfo.personalauth==2&&userInfo.companyauth==1" class="personal">
             <p class="info-title">个人基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
@@ -195,9 +195,9 @@
                     style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
-                  <span style="vertical-align: middle">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -210,7 +210,7 @@
             </Steps>
           </TabPane>
           <!--个人认证完成-->
-          <TabPane label="用户信息" v-else-if="userInfo.personalauth==0&&userInfo.companyauth==1" class="personal">
+          <TabPane label="个人信息" v-else-if="userInfo.personalauth==0&&userInfo.companyauth==1" class="personal">
             <p class="info-title">用户基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
@@ -223,9 +223,9 @@
                   </div>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
                   <span style="vertical-align: middle;margin-right:20px;">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
               </div>
@@ -240,7 +240,7 @@
             </div>
           </TabPane>
           <!--企业认证完成-->
-          <TabPane label="用户信息" v-else-if="userInfo.companyauth==0" class="personal">
+          <TabPane label="个人信息" v-else-if="userInfo.companyauth==0" class="personal">
             <p class="info-title">用户基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
@@ -253,9 +253,9 @@
                   </div>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
                   <span style="vertical-align: middle;margin-right:20px;">企业用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
               </div>
@@ -267,7 +267,7 @@
             </div>
           </TabPane>
           <!--企业认证中-->
-          <TabPane label="用户信息" v-else-if="userInfo.companyauth==2" class="personal">
+          <TabPane label="个人信息" v-else-if="userInfo.companyauth==2" class="personal">
             <p class="info-title">个人基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
@@ -277,9 +277,9 @@
                     style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
-                  <span style="vertical-align: middle">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -345,9 +345,9 @@
                     style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;color: #2A99F2;">添加认证信息</span>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
-                  <span style="vertical-align: middle">未认证用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <span style="vertical-align: middle;margin-right: 20px;">未认证用户</span>
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -361,9 +361,9 @@
                     style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
-                  <span style="vertical-align: middle">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -380,9 +380,9 @@
                   </div>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
-                  <span style="vertical-align: middle;margin-right:20px;">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
               </div>
@@ -399,9 +399,9 @@
                   </div>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
-                  <span style="vertical-align: middle;margin-right:20px;">企业用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <span style="vertical-align: middle;margin-right: 20px;">企业用户</span>
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
               </div>
@@ -415,9 +415,9 @@
                     style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle">
-                  <span style="vertical-align: middle">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-left: 20px;">
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -685,16 +685,16 @@
       </div>
       <div style="border-bottom: 1px solid #e9e9e9;padding-bottom: 20px;">
         <div>
-          <p style="font-size: 14px;color: rgba(17,17,17,0.65);padding-bottom: 20px;">
+          <p style="font-size: 14px;color: rgba(17,17,17,0.65);padding-bottom: 25px;">
             您正在为帐号{{userInfo.realname}}修改绑定手机，请选择一种身份验证方式：</p>
         </div>
         <div class='modal-wrapper'>
           <span>通过手机验证</span>
-          <Button type="primary" @click="authByPhone" :disabled="!userInfo.phone">立即验证</Button>
+          <Button type="primary" @click="authByPhone" :disabled="!userInfo.phone" style="margin-top: -5px;">立即验证</Button>
         </div>
         <div class="modal-wrapper">
           <span>通过邮箱验证</span>
-          <Button type="primary" @click="authByEmail" :disabled="!userInfo.loginname">立即验证</Button>
+          <Button type="primary" @click="authByEmail" :disabled="!userInfo.loginname" style="margin-top: -5px;">立即验证</Button>
         </div>
       </div>
       <div slot="footer">
@@ -704,26 +704,26 @@
 
     <Modal width="550" v-model="showModal.authByPhone" :scrollable="true">
       <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #e9e9e9;padding-bottom: 20px;">
-        手机号验证
+           style="color:#333333;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;line-height: 16px;border-bottom: 1px solid #e9e9e9;padding-bottom: 20px;">
+        验证手机号
       </div>
       <div>
         <div><span
-          style="display: block;margin: 15px 0px;font-size: 16px;color: rgba(17,17,17,0.65);width:80px;margin: 15px 0px;">手机号</span><span>{{userInfo.phone}}</span>
+          style="display: block;margin: 15px 0px;font-size: 16px;color: #333333;width:80px;font-size: 14px;line-height: 14px;">手机号</span><span>{{userInfo.phone}}</span>
         </div>
         <div>
           <span
-            style="font-size: 16px;color: rgba(17,17,17,0.65);vertical-align:sub;width:80px;display:block;margin: 15px 0px;">随机验证码</span>
+            style="font-size: 14px;color: #333333;line-height: 14px;vertical-align:sub;width:80px;display:block;margin: 15px 0px;">随机验证码</span>
           <Input type="text" autocomplete="off" v-model="code" placeholder="请输入随机验证码"
-                 style="width: 150px;margin-right: 30px"></Input>
+                 style="width: 240px;margin-right: 30px"></Input>
           <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
                style="height:32px;vertical-align: middle">
         </div>
         <div>
         <span
-          style="font-size: 16px;color: rgba(17,17,17,0.65);vertical-align:sub;width:80px;display: block;margin: 15px 0px;">验证码</span>
+          style="font-size: 14px;line-height: 14px;color:#333333;vertical-align:sub;width:80px;display: block;margin: 15px 0px;">验证码</span>
           <Input
-            v-model="newPhoneForm.oldPhoneCode" placeholder="请输入手机验证码" style="width: 150px;margin-right:30px;"></Input>
+            v-model="newPhoneForm.oldPhoneCode" placeholder="请输入手机验证码" style="width: 240px;margin-right:30px;"></Input>
           <Button type="primary" :class="{codeDisabled:newPhoneForm.phoneVerCodeText!='获取验证码'}"
                   :disabled="newPhoneForm.phoneVerCodeText!='获取验证码'"
                   style="height:31px;width:92px" @click="getVerCode('phone')">{{newPhoneForm.phoneVerCodeText}}
@@ -744,16 +744,16 @@
 
     <Modal width="550" v-model="showModal.authByEmail" :scrollable="true">
       <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #e9e9e9;padding-bottom: 20px;">
+           style="color:#333333;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;line-height: 16px;border-bottom: 1px solid #e9e9e9;padding-bottom: 20px;">
         邮箱验证
       </div>
       <div>
         <div><span
-          style="display: block;margin: 15px 0px;font-size: 16px;color: rgba(17,17,17,0.65);width:80px;margin: 15px 0px;">邮箱</span><span>{{userInfo.loginname}}</span>
+          style="display: block;margin: 15px 0px;font-size: 14px;color: #333333;line-height: 14px;width:80px;">邮箱</span><span>{{userInfo.loginname}}</span>
         </div>
         <span
-          style="font-size: 16px;color: rgba(17,17,17,0.65);vertical-align:sub;width:80px;display: block;margin: 15px 0px;">验证码</span><Input
-        v-model="newPhoneForm.oldPhoneCode" placeholder="请输入" style="width: 150px;margin-right:30px;"></Input>
+          style="font-size: 14px;color: #333333;line-height: 14px;vertical-align:sub;width:80px;display: block;margin: 15px 0px;">验证码</span><Input
+        v-model="newPhoneForm.oldPhoneCode" placeholder="请输入" style="width: 240px;margin-right:30px;"></Input>
         <Button type="primary" :class="{codeDisabled:emailVerCodeText!='获取验证码'}" :disabled="emailVerCodeText!='获取验证码'"
                 style="height:31px;width:92px" @click="getVerCode('email')">{{emailVerCodeText}}
         </Button>
@@ -1382,6 +1382,14 @@
             $store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
           }
         })
+      },
+      // 重置表单
+      reset() {
+        this.notAuth.quicklyAuthForm.name = ''
+        this.notAuth.quicklyAuthForm.IDCard = ''
+        this.notAuth.quicklyAuthForm.pictureCode = ''
+        this.notAuth.quicklyAuthForm.phone = ''
+        this.notAuth.quicklyAuthForm.validateCode = ''
       },
       // 快速认证时发送验证码
       sendCode(){
@@ -2070,14 +2078,14 @@
 
   .modal-wrapper {
     background: #FFFFFF;
-    border: 1px solid #D9D9D9;
-    border-radius: 4px;
-    padding: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     span {
-      line-height: 34px;
-      font-size: 14px;
-      color: rgba(17, 17, 17, 0.43);
+      padding: 5px 132px 5px 10px;
+      border: 1px solid #D9D9D9;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #999999;
+      line-height: 18px;
       margin-right: 20px;
     }
   }
