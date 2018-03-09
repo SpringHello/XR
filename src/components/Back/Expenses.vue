@@ -128,10 +128,10 @@
                   <Form ref="formInvoiceDate" :model="formInvoiceDate" :rules="ruleValidate" :label-width="80"
                         label-position="left">
                     <Form-item label="温馨提示">
-                      <p style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);line-height: 18px;">
+                      <p style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);line-height: 18px;margin-top: 5px;">
                         1.您选择的发票金额不能小于1000元，增值发票准票金额不能小于10000请累计之后一并申请。</p>
                       <p
-                        style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);margin-bottom: -10px;line-height: 18px; ">
+                        style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);margin-bottom: -10px;line-height: 18px;">
                         2.发票寄出时间：每月20号统一寄出，15号之前申请的发票将在当月20号寄出，15号之后申请的发票将在次月20号寄出。</p>
                     </Form-item>
                     <Form-item label="开票金额" prop="invoiceAmount">
@@ -181,7 +181,7 @@
                              style="width: 317px"></Input>
                     </Form-item>
                     <Form-item>
-                      <Button type="primary" style="margin-left: 235px" @click="invoiceMake('formInvoiceDate')">确认开票
+                      <Button type="primary" style="float: right;font-size: 12px;" @click="invoiceMake('formInvoiceDate')">确认开票
                       </Button>
                     </Form-item>
                   </Form>
