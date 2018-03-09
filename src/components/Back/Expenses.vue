@@ -467,7 +467,6 @@
             title: '发票状态',
             key: 'status',
             align: 'center',
-            width: 150,
             render: (h, params) => {
               const row = params.row
               const color = row.status === 0 ? 'green' : row.status === 1 ? 'red' : row.status === 2 ? 'yellow' : 'blue'
@@ -484,7 +483,6 @@
             title: '发票种类',
             key: 'type',
             align: 'center',
-            width: 190,
             render: (h, params) => {
               return h('span', params.row.type == 0 ? '普通发票' : '增值税专用发票')
             }
@@ -493,21 +491,18 @@
             title: '发票抬头',
             key: 'title',
             align: 'center',
-            width: 220
           },
           {
             title: '发票申请时间',
             key: 'createtime',
             align: 'center',
-            width: 200
           },
           {
             title: '发票金额',
             key: 'amount',
             align: 'center',
-            width: 140
           },
-          {
+         /* {
             title: '物流信息',
             key: 'status',
             align: 'center',
@@ -529,12 +524,11 @@
                 }, text)
               ])
             }
-          },
+          },*/
           {
             title: '操作',
             key: 'cz',
             align: 'center',
-            width: 140,
             render: (h, params) => {
               return h('div', [
                 h('span', {
