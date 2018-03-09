@@ -353,9 +353,9 @@
         // nat列表数据
         natColumns: [
           {
-            type: 'radio',
+            type: 'selection',
             width: 60,
-            align: 'center',
+            align: 'center'
           },
           {
             title: '网关名称',

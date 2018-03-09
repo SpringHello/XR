@@ -84,11 +84,11 @@
                         <div style="border-right:1px solid rgb(204, 204, 204);padding:20px 10px;">
                           <div style="margin:0px auto;">
                             <Button type="primary" size="small"
-                                    style="margin-bottom:15px;width:76px;text-align: center"
+                                    style="margin-bottom:15px;"
                                     @click="openModifyModal(item)">修改子网
                             </Button>
                             <Button type="primary" size="small"
-                                    style="margin-bottom:15px;width:76px;text-align: center"
+                                    style="margin-bottom:15px;"
                                     @click="delNetwork(item)">删除子网
                             </Button>
                             <Button type="primary" size="small" v-if="item.acllistid"

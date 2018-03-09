@@ -1464,7 +1464,7 @@
         //主机快照col
         snapshotCol: [
           {
-            type: 'radio',
+            type: 'selection',
             width: 60,
             align: 'center'
           },
@@ -1564,7 +1564,7 @@
         //主机备份策略col
         snapstrategyCol: [
           {
-            type: 'radio',
+            type: 'selection',
             width: 60,
             align: 'center'
           },
