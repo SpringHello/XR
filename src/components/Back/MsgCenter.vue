@@ -6,9 +6,9 @@
         <div>
           <span class="title">消息中心</span>
         </div>
-        <div style="margin-top:10px">
+        <div style="margin-top:20px">
           <Tabs type="card" v-model="pane" :animated="false">
-            <Tab-pane :label="'全部'+paneLabel.all" name="all" style="min-height: 500px;">
+            <Tab-pane :label="'全部('+paneLabel.all+')'" name="all" style="min-height: 500px;">
               <div class="operating-bar">
                 <Button type="primary" @click="mark('readed')" style="margin-right: 10px">标为已读</Button>
                 <Button type="primary" @click="mark('unreaded')" style="margin-right: 10px">标为未读</Button>
@@ -21,16 +21,16 @@
                                  placeholder="选择日期" style="width: 200px;display: inline-block"
                                  @on-change="dataChange"></Date-picker>
                     <Input v-model="searchInfo.keyWords" placeholder="请输入消息名称"
-                           style="width: 200px;display: inline-block;margin-right: 10px"></Input>
+                           style="width: 200px;display: inline-block;margin-right: 10px;margin-left: 10px;"></Input>
                     <Button type="primary" @click="getData('all')" style="margin-left: 20px;">查询</Button>
                   </div>
                 </div>
               </div>
               <Table :columns="columns" :data="allData" @on-selection-change="select"></Table>
-              <Page style="margin-top:20px" :total="allPageInfo.total" :page="allPageInfo.currentPage" :page-size="15"
+              <Page style="margin-top:20px;float: right;" :total="allPageInfo.total" :page="allPageInfo.currentPage" :page-size="15"
                     @on-change="getAllData"></Page>
             </Tab-pane>
-            <Tab-pane :label="'未读'+paneLabel.notRead" name="notRead" style="min-height: 500px;">
+            <Tab-pane :label="'未读('+paneLabel.notRead+')'" name="notRead" style="min-height: 500px;">
               <div class="operating-bar">
                 <Button type="primary" @click="mark('readed')" style="margin-right: 10px">标为已读</Button>
                 <Button type="primary" @click="mark('del')">删除</Button>
@@ -42,17 +42,17 @@
                                  placeholder="选择日期" style="width: 200px;display: inline-block"
                                  @on-change="dataChange"></Date-picker>
                     <Input v-model="searchInfo.keyWords" placeholder="请输入消息名称"
-                           style="width: 200px;display: inline-block;margin-right: 10px"></Input>
+                           style="width: 200px;display: inline-block;margin-right: 10px;margin-left: 10px;"></Input>
                     <Button type="primary" @click="getData('notRead')" style="margin-left: 20px;">查询</Button>
                   </div>
                 </div>
               </div>
               <Table :columns="columns" :data="notReadData" @on-selection-change="select"></Table>
-              <Page style="margin-top:20px" :total="notReadPageInfo.total" :page="notReadPageInfo.currentPage"
+              <Page style="margin-top:20px;float: right;" :total="notReadPageInfo.total" :page="notReadPageInfo.currentPage"
                     :page-size="15"
                     @on-change="getNotReadData"></Page>
             </Tab-pane>
-            <Tab-pane :label="'已读'+paneLabel.read" name="read" style="min-height: 500px;">
+            <Tab-pane :label="'已读('+paneLabel.read+')'" name="read" style="min-height: 500px;">
               <div class="operating-bar">
                 <Button type="primary" @click="mark('unreaded')" style="margin-right: 10px">标为未读</Button>
                 <Button type="primary" @click="mark('del')">删除</Button>
@@ -64,13 +64,13 @@
                                  placeholder="选择日期" style="width: 200px;display: inline-block;"
                                  @on-change="dataChange"></Date-picker>
                     <Input v-model="searchInfo.keyWords" placeholder="请输入消息名称"
-                           style="width: 200px;display: inline-block;margin-right: 10px"></Input>
+                           style="width: 200px;display: inline-block;margin-right: 10px;margin-left: 10px;"></Input>
                     <Button type="primary" @click="getData('read')" style="margin-left: 20px;">查询</Button>
                   </div>
                 </div>
               </div>
               <Table :columns="columns" :data="readData" @on-selection-change="select"></Table>
-              <Page style="margin-top:20px" :total="readPageInfo.total" :page="readPageInfo.currentPage" :page-size="15"
+              <Page style="margin-top:20px;float: right;" :total="readPageInfo.total" :page="readPageInfo.currentPage" :page-size="15"
                     @on-change="getReadData"></Page>
             </Tab-pane>
           </Tabs>
