@@ -436,7 +436,7 @@
             title: '失效时间',
             key: 'endtime',
             align: 'left',
-            width: 175
+            width: 175,
             title: '生效/失效时间',
               render: (h, params) => {
               return h('span', params.row.starttime + '/' + params.row.endtime)
