@@ -413,7 +413,6 @@
             render: (h, params) => {
               return h('span', params.row.operator == '优惠券' ? `${params.row.money}元` : `${params.row.money}折`)
             },
-            width: 110
           },
           {
             title: '适用产品',
@@ -434,16 +433,14 @@
             }
           },
           {
-            title: '生效时间',
-            key: 'starttime',
-            align: 'left',
-            width: 175
-          },
-          {
             title: '失效时间',
             key: 'endtime',
             align: 'left',
             width: 175
+            title: '生效/失效时间',
+              render: (h, params) => {
+              return h('span', params.row.starttime + '/' + params.row.endtime)
+           }
           },
           {
             title: '描述',
@@ -502,11 +499,9 @@
             key: 'amount',
             align: 'left',
           },
-         {
+          {
             title: '物流信息',
             key: 'status',
-            align: 'left',
-            width: 110,
             render: (h, params) => {
               const row = params.row
               const text = row.status === 0 ? '查看' : row.status === 3 ? '查看' : ''
@@ -652,7 +647,7 @@
         ],
         columns_order: [
           {
-            type: 'radio',
+            type: 'selection',
             width: 60,
             align: 'center'
           },
