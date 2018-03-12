@@ -404,22 +404,16 @@
           {
             title: '类型',
             key: 'operator',
-            align: 'center',
-            width: 120
           },
           {
             title: '面值/折扣',
-            align: 'center',
             render: (h, params) => {
               return h('span', params.row.operator == '优惠券' ? `${params.row.money}元` : `${params.row.money}折`)
             },
-            width: 110
           },
           {
             title: '适用产品',
             key: 'tickettype',
-            align: 'center',
-            width: 140,
             render: (h, params) => {
               return h('span', params.row.tickettype == 1 ? '所有产品' : '--')
             }
@@ -427,34 +421,24 @@
           {
             title: '状态',
             key: 'maketicketover',
-            align: 'center',
-            width: 110,
             render: (h, params) => {
               return h('span', params.row.maketicketover == 1 ? '已使用' : '未使用')
             }
           },
           {
-            title: '生效时间',
-            key: 'starttime',
-            align: 'center',
-            width: 175
-          },
-          {
-            title: '失效时间',
-            key: 'endtime',
-            align: 'center',
-            width: 175
+            title: '生效/失效时间',
+              render: (h, params) => {
+              return h('span', params.row.starttime + '/' + params.row.endtime)
+           }
           },
           {
             title: '描述',
             key: 'ticketdescript',
-            align: 'center',
             ellipsis: true
           },
           {
             title: '备注',
             key: 'remark',
-            align: 'center',
             ellipsis: true,
             render: (h, params) => {
               return h('span', params.row.remark == null ? '--' : params.row.remark)
@@ -466,7 +450,6 @@
           {
             title: '发票状态',
             key: 'status',
-            align: 'center',
             render: (h, params) => {
               const row = params.row
               const color = row.status === 0 ? 'green' : row.status === 1 ? 'red' : row.status === 2 ? 'yellow' : 'blue'
@@ -482,7 +465,6 @@
           {
             title: '发票种类',
             key: 'type',
-            align: 'center',
             render: (h, params) => {
               return h('span', params.row.type == 0 ? '普通发票' : '增值税专用发票')
             }
@@ -490,23 +472,18 @@
           {
             title: '发票抬头',
             key: 'title',
-            align: 'center',
           },
           {
             title: '发票申请时间',
             key: 'createtime',
-            align: 'center',
           },
           {
             title: '发票金额',
             key: 'amount',
-            align: 'center',
           },
-         /* {
+          {
             title: '物流信息',
             key: 'status',
-            align: 'center',
-            width: 110,
             render: (h, params) => {
               const row = params.row
               const text = row.status === 0 ? '查看' : row.status === 3 ? '查看' : ''
@@ -524,11 +501,10 @@
                 }, text)
               ])
             }
-          },*/
+          },
           {
             title: '操作',
             key: 'cz',
-            align: 'center',
             render: (h, params) => {
               return h('div', [
                 h('span', {
@@ -652,7 +628,7 @@
         ],
         columns_order: [
           {
-            type: 'radio',
+            type: 'selection',
             width: 60,
             align: 'center'
           },
