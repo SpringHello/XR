@@ -690,11 +690,13 @@
         </div>
         <div class='modal-wrapper'>
           <span>通过手机验证</span>
-          <Button type="primary" @click="authByPhone" :disabled="!userInfo.phone" style="margin-top: -5px;">立即验证</Button>
+          <Button type="primary" @click="authByPhone" :disabled="!userInfo.phone" style="margin-top: -5px;">立即验证
+          </Button>
         </div>
         <div class="modal-wrapper">
           <span>通过邮箱验证</span>
-          <Button type="primary" @click="authByEmail" :disabled="!userInfo.loginname" style="margin-top: -5px;">立即验证</Button>
+          <Button type="primary" @click="authByEmail" :disabled="!userInfo.loginname" style="margin-top: -5px;">立即验证
+          </Button>
         </div>
       </div>
       <div slot="footer">
@@ -827,7 +829,8 @@
         <p style="margin-top:0px;">当前密码</p>
         <Input type="password" v-model="resetPasswordForm.oldPassword" placeholder="当前密码" style="width:300px;"></Input>
         <p>新的密码</p>
-        <Input type="password" v-model="resetPasswordForm.newPassword" placeholder="修改后的密码" style="width:300px;"></Input>
+        <Input type="password" v-model="resetPasswordForm.newPassword" placeholder="修改后的密码"
+               style="width:300px;"></Input>
         <p>确认密码</p>
         <Input type="password" v-model="resetPasswordForm.confirmPassword" placeholder="确认新密码"
                style="width:300px;"></Input>
@@ -892,7 +895,7 @@
         if (!value) {
           return callback(new Error('联系人不能为空'));
         }
-        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value))||(/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value))||(/\s+/.test(value))||(/^[0-9]*$/.test(value))) {
+        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
           callback(new Error('输入姓名不能包含特殊字符、空格或是纯数字'));
         } else {
           callback()
@@ -1794,7 +1797,14 @@
       },
       // 获取新手机验证码
       getNewPhoneVerCode(type){
-        console.log(type)
+        if (type == 'phone' && this.userInfo.phone == this.newPhoneForm.newPhone) {
+          this.$Message.info('新手机号不能与旧手机号相同')
+          return
+        }
+        if (type == 'email' && this.userInfo.loginname == this.newPhoneForm.newPhone) {
+          this.$Message.info('新邮箱不能与旧邮箱相同')
+          return
+        }
         if (type == 'phone' && this.newPhoneForm.code.length != 4) {
           this.$Message.error('请输入正确的随机验证码')
           return

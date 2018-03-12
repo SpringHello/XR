@@ -134,11 +134,11 @@
                   break
               }
               for (var index in params.row['资源']) {
-                for (var key in params.row['资源'][index]){
-                  if(key!='地域'){
-                    arr.push(h('p', {style:{lineHeight:'1.5'}}, `${key}:${params.row['资源'][index][key]}`))
+                for (var key in params.row['资源'][index]) {
+                  if (key != '地域') {
+                    arr.push(h('p', {style: {lineHeight: '1.5'}}, `${key}:${params.row['资源'][index][key]}`))
                   } else {
-                    arr.unshift(h('p', {style:{lineHeight:'1.5'}}, `${key}:${params.row['资源'][index][key]}`))
+                    arr.unshift(h('p', {style: {lineHeight: '1.5'}}, `${key}:${params.row['资源'][index][key]}`))
                   }
                 }
               }
@@ -160,8 +160,13 @@
             }
           },
           {
-            title: '类型',
+            title: '计费类型',
             key: '类型',
+            align: 'left'
+          },
+          {
+            title: '购买时长',
+            key: '时长',
             align: 'left'
           },
           {
@@ -171,12 +176,24 @@
           },
           {
             title: '原价',
-            key: '原价',
+            render(h, obj){
+              if (obj.row.originalcost > obj.row.cost) {
+                return h('span', {
+                  style: {
+                    textDecorationLine: 'line-through',
+                    textDecorationStyle: 'initial',
+                    textDecorationColor: 'red',
+                  }
+                }, obj.row.originalcost)
+              } else {
+                return h('span', {}, obj.row.originalcost)
+              }
+            },
             align: 'left'
           },
           {
             title: '优惠价',
-            key: '优惠价',
+            key: 'cost',
             align: 'left',
             width: 120
           },
@@ -222,9 +239,9 @@
         this.selection = item
         var totalCost = 0
         item.forEach(item => {
-          totalCost += Number.parseFloat(item['原价']) * 100
+          totalCost += item.cost
         })
-        this.totalCost = totalCost / 100
+        this.totalCost = totalCost.toFixed(2)
         this.coupon = this.totalCost
         this.cardSelection = null
         this.activeIndex = null
@@ -240,6 +257,8 @@
               this.tableData = response.data.result.data.map(item => {
                 var data = JSON.parse(item.display)
                 data.orderId = item.ordernumber
+                data.originalcost = item.originalcost
+                data.cost = item.cost
                 return data
               })
               if (this.tableData[0]) {
@@ -247,7 +266,7 @@
                 this.selection = []
                 this.selection.push(this.tableData[0])
                 this.selection.forEach(item => {
-                  this.totalCost += Number.parseFloat(item['原价'])
+                  this.totalCost += item.cost
                 })
                 this.coupon = this.totalCost
               }
@@ -262,18 +281,21 @@
             scrollable: true,
             onOk: () => {
               this.payLoading = true
-              var orderId =
-                this.selection.reduce((prev, curr) => {
-                  return prev + ',' + curr.orderId
-                }, '')
+              var orderId = this.selection.reduce((prev, curr) => {
+                return prev + ',' + curr.orderId
+              }, '')
               orderId = orderId.slice(1, orderId.length)
               this.$http.get(`information/payOrder.do?order=${orderId}&ticket=${this.operatorid}`)
                 .then(response => {
                   this.payLoading = false
-                  this.$store.commit('setSelect', 'payResult')
+                  //this.$store.commit('setSelect', 'payResult')
+                  console.log(1)
                   if (response.status == 200 && response.data.status == 1) {
+                    console.log(2)
                     sessionStorage.setItem('payResult', 'success')
+                    console.log(3)
                     this.$router.push('payResult')
+                    console.log(4)
                   } else if (response.status == 200 && response.data.status == 2) {
                     sessionStorage.setItem('payResult', 'fail')
                     this.$router.push('payResult')
@@ -359,9 +381,10 @@
     width: 100%;
     @diff: 101px;
     min-height: calc(~"100% - @{diff}");
+    padding-bottom: 25px;
     .wrapper {
       width: 1200px;
-      margin: 0px auto 25px;
+      margin: 0px auto;
       & > span {
         font-family: PingFangSC-Regular;
         font-size: 12px;

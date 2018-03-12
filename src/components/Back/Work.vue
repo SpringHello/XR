@@ -217,7 +217,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import timeago from 'timeago'
+  import timeago from 'timeago.js'
   export default{
     data(){
       return {
