@@ -1471,12 +1471,10 @@
           {
             title: '快照名称',
             key: 'snapshotname',
-            align: 'center',
           },
           {
             title: '状态',
             key: 'status',
-             align: 'center',
             render: (h, params) => {
               switch (params.row.status) {
                 case 1:
@@ -1508,12 +1506,10 @@
           {
             title: '主机名称',
             key: 'name',
-            align: 'center',
           },
           {
             title: '快照间隔',
             key: 'interval',
-            align: 'center',
             render: (h, params) => {
               const row = params.row
               const text = row.createway === 'hand' ? '手动' : row.createway === 'day' ? '每天' : row.createway === 'week' ? '每周' : row.createway === 'month' ? '每月' : ''
@@ -1523,7 +1519,6 @@
           {
             title: '是否保留内存状态',
             key: 'memorystatus',
-            align: 'center',
             render: (h, params) => {
               var memorystatus = params.row.memorystatus == 1 ? '是' : '否'
               return h('span', {}, memorystatus)
@@ -1532,13 +1527,11 @@
           {
             title: '创建时间',
             key: 'addtime',
-            align: 'center',
           },
 
           {
             title: '操作',
             key: 'action',
-            align: 'center',
             render: (h, params) => {
               return h('span', {
                 style: {
@@ -1571,7 +1564,6 @@
           {
             title: '策略名称',
             key: 'strategyname',
-            align: 'center',
           },
           /*{
             title: '状态',
@@ -1595,7 +1587,6 @@
           {
             title: '是否保留内存状态',
             key: 'memorymessage',
-            align: 'center',
             render: (h, params) => {
               var memorymessage = params.row.memorymessage == 1 ? '是' : '否'
               return h('span', {}, memorymessage)
@@ -1604,14 +1595,12 @@
           {
             title: '自动备份保留个数',
             key: 'keepcount',
-            align: 'center',
             render: (h, params) => {
               return h('span', {}, params.row.keepcount + '个')
             }
           },
           {
             title: '自动备份间隔',
-            align: 'center',
             width: 120,
             render: (h, params) => {
               const text = params.row.keepupinterval === 'day' ? '每天' : params.row.keepupinterval === 'month' ? '每月' : ' 每周'
@@ -1619,7 +1608,6 @@
             }
           }, {
             title: '自动备份时间',
-            align: 'center',
             width: 140,
             render: (h, params) => {
               var week_day = ''
@@ -1659,12 +1647,11 @@
           {
             title: '创建时间',
             key: 'createtime',
-            align: 'center',
+            width: 180
           },
           {
             title: '应用主机',
             key: 'resourceBean',
-            align: 'center',
             render: (h, params) => {
               if (params.row.resourceBean.length == 0) {
                 return h('span', {}, '----')
@@ -1686,7 +1673,6 @@
           {
             title: '操作',
             key: 'action',
-            align: 'center',
             render: (h, params) => {
               return h('span', {
                 style: {

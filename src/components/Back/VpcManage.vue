@@ -509,37 +509,30 @@
         vpcColumns: [
           {
             title: '本端VPC',
-            align: 'center',
             key: 'vpcname1'
           },
           {
             title: '对端VPC',
-            align: 'center',
             key: 'vpcname2'
           },
           {
             title: '本端网关',
-            align: 'center',
             key: 'gateway1'
           },
           {
             title: '对端网关',
-            align: 'center',
             key: 'gateway2'
           },
           {
             title: '网络掩码',
-            align: 'center',
             key: 'netmask1'
           },
           {
             title: 'VLAN\\VNI',
-            align: 'center',
             key: 'vlan1'
           },
           {
             title: '操作',
-            align: 'center',
             render: (h, object) => {
               return h('span', {
                 style: {

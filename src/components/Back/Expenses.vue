@@ -404,12 +404,12 @@
           {
             title: '类型',
             key: 'operator',
-            align: 'center',
+            align: 'left',
             width: 120
           },
           {
             title: '面值/折扣',
-            align: 'center',
+            align: 'left',
             render: (h, params) => {
               return h('span', params.row.operator == '优惠券' ? `${params.row.money}元` : `${params.row.money}折`)
             },
@@ -418,7 +418,7 @@
           {
             title: '适用产品',
             key: 'tickettype',
-            align: 'center',
+            align: 'left',
             width: 140,
             render: (h, params) => {
               return h('span', params.row.tickettype == 1 ? '所有产品' : '--')
@@ -427,7 +427,7 @@
           {
             title: '状态',
             key: 'maketicketover',
-            align: 'center',
+            align: 'left',
             width: 110,
             render: (h, params) => {
               return h('span', params.row.maketicketover == 1 ? '已使用' : '未使用')
@@ -436,25 +436,25 @@
           {
             title: '生效时间',
             key: 'starttime',
-            align: 'center',
+            align: 'left',
             width: 175
           },
           {
             title: '失效时间',
             key: 'endtime',
-            align: 'center',
+            align: 'left',
             width: 175
           },
           {
             title: '描述',
             key: 'ticketdescript',
-            align: 'center',
+            align: 'left',
             ellipsis: true
           },
           {
             title: '备注',
             key: 'remark',
-            align: 'center',
+            align: 'left',
             ellipsis: true,
             render: (h, params) => {
               return h('span', params.row.remark == null ? '--' : params.row.remark)
@@ -466,7 +466,7 @@
           {
             title: '发票状态',
             key: 'status',
-            align: 'center',
+            align: 'left',
             render: (h, params) => {
               const row = params.row
               const color = row.status === 0 ? 'green' : row.status === 1 ? 'red' : row.status === 2 ? 'yellow' : 'blue'
@@ -482,7 +482,7 @@
           {
             title: '发票种类',
             key: 'type',
-            align: 'center',
+            align: 'left',
             render: (h, params) => {
               return h('span', params.row.type == 0 ? '普通发票' : '增值税专用发票')
             }
@@ -490,22 +490,22 @@
           {
             title: '发票抬头',
             key: 'title',
-            align: 'center',
+            align: 'left',
           },
           {
             title: '发票申请时间',
             key: 'createtime',
-            align: 'center',
+            align: 'left',
           },
           {
             title: '发票金额',
             key: 'amount',
-            align: 'center',
+            align: 'left',
           },
-         /* {
+         {
             title: '物流信息',
             key: 'status',
-            align: 'center',
+            align: 'left',
             width: 110,
             render: (h, params) => {
               const row = params.row
@@ -524,11 +524,11 @@
                 }, text)
               ])
             }
-          },*/
+          },
           {
             title: '操作',
             key: 'cz',
-            align: 'center',
+            align: 'left',
             render: (h, params) => {
               return h('div', [
                 h('span', {
@@ -573,8 +573,8 @@
           //  },
           {
             title: '交易详情',
-            align: 'center',
-            width: 355,
+            align: 'left',
+            width: 370,
             render: (h, params) => {
               return h('Tooltip', {
                   props: {
@@ -589,7 +589,7 @@
           {
             title: '交易金额',
             key: 'amount',
-            align: 'center',
+            align: 'left',
             width: 150,
             render: (h, params) => {
               return h('div', [
@@ -602,8 +602,8 @@
           {
             title: '交易类型',
             key: 'type',
-            align: 'center',
-            width: 150,
+            align: 'left',
+            width: 120,
             render: (h, params) => {
               return h('span', params.row.type == '1' ? '扣费' : '充值')
             }
@@ -611,13 +611,13 @@
           {
             title: '交易时间',
             key: 'createtime',
-            align: 'center',
+            align: 'left',
             width: 240
           },
           {
             title: '流水编号',
             key: 'trno',
-            align: 'center',
+            align: 'left',
             width: 260
           }
         ],
@@ -715,7 +715,7 @@
           },
           {
             title: '交易金额',
-            align: 'center',
+            align: 'left',
             width: 100,
             key: 'cost',
             render: (h, params) => {
@@ -727,13 +727,13 @@
           },
           {
             title: '订单创建时间',
-            align: 'center',
+            align: 'left',
             width: 180,
             key: 'ordercreatetime'
           },
           {
             title: '订单结束时间',
-            align: 'center',
+            align: 'left',
             width: 180,
             key: 'orderendtime',
             render: (h, params) => {
@@ -742,7 +742,7 @@
           },
           {
             title: '订单状态',
-            align: 'center',
+            align: 'left',
             width: 100,
             key: 'paymentstatus',
             render: (h, params) => {
@@ -751,7 +751,7 @@
           },
           {
             title: '订单编号',
-            align: 'center',
+            align: 'left',
             width: 180,
             key: 'ordernumber'
           },
@@ -759,7 +759,7 @@
             title: '操作',
             key: 'handle',
             width: 100,
-            align: 'center',
+            align: 'left',
             render: (h, params) => {
               return h('div', [
                 h('span', {
