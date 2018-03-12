@@ -41,9 +41,9 @@
                 <input v-show="form.showPassword" autocomplete="off" v-model="form.password"
                        :placeholder="form.passwordPlaceholder"
                        @blur="vail('password')" @focus="focus('password')" @input="isCorrect('password')">
-                <img v-show="!form.showPassword" src="../../assets/img/reset/eye.png" class="eyeIcon"
+                <img v-show="!form.showPassword" src="../../assets/img/reset/closeEye.png" class="eyeIcon"
                      @click="form.showPassword=!form.showPassword">
-                <img v-show="form.showPassword" src="../../assets/img/reset/closeEye.png" class="eyeIcon"
+                <img v-show="form.showPassword" src="../../assets/img/reset/eye.png" class="eyeIcon"
                      @click="form.showPassword=!form.showPassword">
               </div>
               <!--<div>

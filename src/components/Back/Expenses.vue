@@ -410,7 +410,6 @@
             render: (h, params) => {
               return h('span', params.row.operator == '优惠券' ? `${params.row.money}元` : `${params.row.money}折`)
             },
-            width: 110
           },
           {
             title: '适用产品',
@@ -427,12 +426,10 @@
             }
           },
           {
-            title: '生效时间',
-            key: 'starttime',
-          },
-          {
-            title: '失效时间',
-            key: 'endtime',
+            title: '生效/失效时间',
+              render: (h, params) => {
+              return h('span', params.row.starttime + '/' + params.row.endtime)
+           }
           },
           {
             title: '描述',
