@@ -35,7 +35,7 @@
             <li v-if="balanceInfo.publicport">外网端口：{{ balanceInfo.publicport}}</li>
             <li v-if="balanceInfo.sourceport">源端口：{{balanceInfo.sourceport}}</li>
             <li v-if="balanceInfo.instanceport">实例端口：{{balanceInfo.instanceport}}</li>
-            <span style="margin-left: 618px;color: #2A99F2;cursor: pointer" @click="bind">添加主机</span>
+            <li style="margin-left: 618px;color: #2A99F2;cursor: pointer" @click="bind">添加主机</li>
           </ul>
           <Table :columns="hostColumns" :data="hostData"></Table>
         </div>

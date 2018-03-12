@@ -39,13 +39,6 @@
           <Form-item label="硬盘名称" prop="diskName">
             <Input v-model="diskForm.diskName" placeholder="小于20位数字或字母"></Input>
           </Form-item>
-          <!--          <Form-item label="购买数量" style="width: 65%">
-                      <div class="quantity">
-                        <p @click="reduce"><i></i></p>
-                        <p style="width: 38px;cursor: auto;color:#2A99F2;margin:0 10px ">{{ diskForm.quantity }}</p>
-                        <p @click="diskForm.quantity+=1"><i style="transform: translateX(-2px) rotate(311deg)"></i></p>
-                      </div>
-                    </Form-item>-->
           <!--      <Form-item label="区域" prop="diskArea">
                   <Select v-model="diskForm.diskArea" placeholder="请选择">
                     <Option v-for="item in diskAreaList" :key="item.zoneid" :value="item.zoneid">{{ item.zonename }}
@@ -57,6 +50,13 @@
               <Option v-for="item in diskTypeList" :key="item.value" :value="item.value">{{ item.label }}
               </Option>
             </Select>
+          </Form-item>
+          <Form-item label="购买数量" style="width: 65%">
+            <div class="quantity">
+              <p @click="reduce"><i></i></p>
+              <p style="width: 38px;cursor: auto;color:#2A99F2;margin:0 10px ">{{ diskForm.quantity }}</p>
+              <p @click="diskForm.quantity+=1"><i style="transform: translateX(-2px) rotate(311deg)"></i></p>
+            </div>
           </Form-item>
           <Form-item label="容量" style="width:100%;user-select: none">
             <i-slider
@@ -645,14 +645,27 @@
       },
       // 新建磁盘价格查询
       queryDiskPrice: debounce(500, function () {
+        var diskType = ''
+        var diskSize = ''
+        if (this.diskForm.quantity === 1){
+          diskType = this.diskForm.diskType
+          diskSize = this.diskForm.diskSize + ''
+        } else {
+          for(var i = 0; i< this.diskForm.quantity; i++){
+            diskType += this.diskForm.diskType + ','
+            diskSize += this.diskForm.diskSize + ','
+          }
+          diskType = diskType.substring(0,diskType.length - 1)
+          diskSize = diskSize.substring(0,diskSize.length - 1)
+        }
         this.$http.post('device/QueryBillingPrice.do', {
           cpuNum: 0 + '',
           memory: 0 + '',
-          diskSize: this.diskForm.diskSize + '',
+          diskSize: diskSize,
           zoneId: this.$store.state.zoneList[0].zoneid,
           timeType: this.diskForm.timeType + '',
           timeValue: this.diskForm.timeValue + '',
-          diskType: this.diskForm.diskType + ''
+          diskType: diskType
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.expenses = response.data.cost
@@ -682,8 +695,21 @@
       }),
       // 确认创建磁盘
       newDisk_ok(){
+        var diskType = ''
+        var diskSize = ''
+        if (this.diskForm.quantity === 1){
+          diskType = this.diskForm.diskType
+          diskSize = this.diskForm.diskSize + ''
+        } else {
+          for(var i = 0; i< this.diskForm.quantity; i++){
+            diskType += this.diskForm.diskType + ','
+            diskSize += this.diskForm.diskSize + ','
+          }
+          diskType = diskType.substring(0,diskType.length - 1)
+          diskSize = diskSize.substring(0,diskSize.length - 1)
+        }
         // 默认zoneList第一个元素为当前选中区域，以后会修改
-        var url = `Disk/createVolume.do?diskSize=${this.diskForm.diskSize}&diskName=${this.diskForm.diskName}&diskOfferingId=${this.diskForm.diskType}&timeType=${this.diskForm.timeType}&timeValue=${this.diskForm.timeValue || 1}&isAutorenew=0&count=${this.diskForm.quantity}`
+        var url = `Disk/createVolume.do?diskSize=${diskSize}&diskName=${this.diskForm.diskName}&diskOfferingId=${diskType}&timeType=${this.diskForm.timeType}&timeValue=${this.diskForm.timeValue || 1}&isAutorenew=0`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')

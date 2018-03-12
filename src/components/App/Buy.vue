@@ -657,7 +657,7 @@
               style="font-size: 14px;color: #EE6723;">{{PdiskInfo.coupon.toFixed(2)}}元</span></p>
             <div style="text-align: right;margin-top: 20px;">
               <Button size="large"
-                      class="btn" @click="addCart">
+                      class="btn" @click="addDiskCart">
                 加入预算清单
               </Button>
               <Button size="large" class="btn"
@@ -781,7 +781,7 @@
             </p>
             <div style="text-align: right;margin-top: 20px;">
               <Button size="large"
-                      class="btn" @click="addCart">
+                      class="btn" @click="addIPCart">
                 加入预算清单
               </Button>
               <Button size="large" class="btn"

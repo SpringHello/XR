@@ -120,33 +120,33 @@
           {
             title: '操作对象',
             key: 'operatetarget',
-            align: 'center',
-            width: 100,
+            align: 'left',
+            width: 150,
           },
           {
             title: '操作时间',
             key: 'operatortime',
-            align: 'center',
+            align: 'left',
             width: 200,
           },
           {
             title:'操作结果',
             key:'operatestatus',
-            align: 'center',
-            width: 100,
+            align: 'left',
+            width: 150,
             render: (h, params) => {
               return h('span', params.row.operatestatus==1?'成功':'失败')
             }
           }, {
             title: '行为描述',
             key: 'operatedes',
-            align: 'center',
+            align: 'left',
             ellipsis:true,
           },
           {
             title: '操作',
             key: 'cz',
-            align: 'center',
+            align: 'left',
             width: 120,
             render: (h, params) => {
               if (params.row.operatestatus!=1) {
