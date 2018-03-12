@@ -355,16 +355,13 @@
           {
             type: 'radio',
             width: 60,
-            align: 'center'
           },
           {
             title: '网关名称',
-            align: 'center',
             key: 'natname'
           },
           {
             title: '状态',
-            align: 'center',
             key: 'status',
             render: (h, params) => {
               var status = params.row.status == 1 ? '正常' : '异常'
@@ -373,7 +370,6 @@
           },
           {
             title: '所属网络',
-            align: 'center',
             key: 'vpcname',
             render: (h, params) => {
               return h('span', {
@@ -391,7 +387,6 @@
           },
           {
             title: '源NAT',
-            align: 'center',
             render: (h, object) => {
               if (object.row.sourcenatip) {
                 return h('div', [h('span', {
@@ -473,7 +468,6 @@
           },
           {
             title: '目标IP',
-            align: 'center',
             render: (h, object) => {
               var renderArray = []
               if (object.row.prottransip) {
@@ -547,12 +541,10 @@
           },
           {
             title: '创建时间',
-            align: 'center',
             key: 'createtime'
           },
           {
             title: '操作',
-            align: 'center',
             render: (h, object) => {
               return h('span', {
                 style: {

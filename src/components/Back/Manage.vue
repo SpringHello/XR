@@ -152,7 +152,7 @@
             <Tab-pane label="主机设置">
               <div class="body">
                 <label>重置密码</label>
-                <Form ref="reset" :model="resetPasswordForm" label-position="left" :label-width="100"
+                <Form ref="resetPasswordForm" :model="resetPasswordForm" label-position="left" :label-width="100"
                       style="margin-top:20px;"
                       :rules="resetRuleValidate">
                   <Form-item label="请输入旧密码" prop="oldPassword">
@@ -168,15 +168,13 @@
                            style="width:250px;"></Input>
                   </Form-item>
                   <Form-item>
-                    <Button type="primary" size="small" @click="resetConfirm"
-                            :disabled="resetPasswordForm.buttonDisabled">
+                    <Button type="primary" size="small" @click="resetConfirm('resetPasswordForm')">
                       {{resetPasswordForm.buttonMessage}}
                     </Button>
                   </Form-item>
                 </Form>
 
                 <label>重装系统</label>
-
                 <Form :model="reloadForm" :label-width="100" label-position="left" style="margin-top:20px;width:350px;">
                   <Form-item label="选择镜像">
                     <Select v-model="reloadForm.system">
@@ -386,18 +384,34 @@
   export default {
 
     data() {
-      const validatePassword = (rule, value, callback) => {
-        if (value != '') {
-          var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,}$/
-          if (!regExp.test(value)) {
-            return callback(new Error('密码不能为空'))
-          }
-          return callback()
-        } else if (value == '') {
-          return callback(new Error('密码由6位及以上的字母数字组成，必须包含大小写字母、数字'))
-        } else {
-          callback()
+      const validateoldPassword = (rule, value, callback) => {
+            if (!value) {
+                callback(new Error('密码不能为空'));
+            } else {
+                callback();
+            }
         }
+      const validatePassword = (rule, value, callback) => {
+          var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,23}$/
+          if (!value) {
+                callback(new Error('密码不能为空'));
+            } else if(!regExp.test(value)){
+                callback(new Error('密码由6位及以上23位以下的字母数字组成，必须包含大小写字母、数字'));
+            } else {
+                if(regExp.test(value)){
+                  this.$refs.resetPasswordForm.validateField('confirmPassword');
+                }
+                callback();
+            }
+        }
+      const validatePassCheck = (rule, value, callback) => {
+          if (!value) {
+                callback(new Error('密码不能为空'));
+            } else if(this.resetPasswordForm.newPassword != value){
+                callback(new Error('两次密码不一致'));
+            } else {
+                callback();
+            }
       }
       return {
         loading: false,
@@ -423,7 +437,7 @@
         ipPolar: ipOptions,
         snapshotCol: [
           {
-            type: 'selection',
+            type: 'radio',
             width: 60,
             align: 'center'
           },
@@ -519,27 +533,20 @@
           {
             title: '操作对象',
             key: 'operatetarget',
-            align: 'center',
-            width: 100,
           },
           {
             title: '操作时间',
             key: 'operatortime',
-            align: 'center',
-            width: 200,
           },
           {
             title:'操作结果',
             key:'operatestatus',
-            align: 'center',
-            width: 100,
             render: (h, params) => {
               return h('span', params.row.operatestatus==1?'成功':'失败')
             }
           }, {
             title: '行为描述',
             key: 'operatedes',
-            align: 'center',
             ellipsis:true,
           }
         ],
@@ -638,20 +645,20 @@
         tableData: [],
 
         resetPasswordForm: {
+          oldPassword: '',
           newPassword: '',
           confirmPassword: '',
           buttonMessage: '确认重置',
-          buttonDisabled: false
         },
         resetRuleValidate: {
           oldPassword: [
-            {required: true, validator: validatePassword, trigger: 'blur'}
+            {required: true, validator: validateoldPassword, trigger: 'blur'}
           ],
           newPassword: [
             {required: true, validator: validatePassword, trigger: 'blur'}
           ],
           confirmPassword: [
-            {required: true, validator: validatePassword, trigger: 'blur'}
+            {required: true, validator: validatePassCheck, trigger: 'blur'}
           ],
         },
         reloadForm: {
@@ -977,7 +984,7 @@
           polar.xAxis.data = this.ipPolar.xAxis.data
           polar.series[0].data = this.ipPolar.series[0].data
           polar.series[1].data = this.ipPolar.series[1].data
-          console.log(polar)
+          // console.log(polar)
           this.ipPolar = polar
         } else {
           var polar = this[type].showType == '折线' ? JSON.parse(hostDiskOptionstr) : JSON.parse(hostDiskHistogram)
@@ -1053,39 +1060,27 @@
             }
           })
       },
-      resetConfirm() {
-        this.$message.confirm({
-          title: '确认重置密码？',
-          content: '<p>重置密码后，原密码失效。必须使用新密码登录主机</p>',
-          onOk: () => {
-            this.reset()
-          }
-        })
-      },
-      reset() {
-        var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,}$/
-        if (regExp.test(this.resetPasswordForm.newPassword) && this.resetPasswordForm.newPassword == this.resetPasswordForm.confirmPassword) {
-          var url = `information/resetPasswordForVirtualMachine.do?VMId=${this.computerInfo.computerId}&password=${this.resetPasswordForm.newPassword}&oldPassword=${this.resetPasswordForm.newPassword}`
-          var password = this.resetPasswordForm.newPassword
-          this.resetPasswordForm.buttonMessage = '正在重置中...'
-          this.resetPasswordForm.buttonDisabled = true
-          this.$http.get(url).then(response => {
-            this.resetPasswordForm.buttonMessage = '确认重置'
-            this.resetPasswordForm.buttonDisabled = false
-            if (response.status == 200 && response.data.status == 1) {
-              this.computerInfo.password = password
-              this.resetPasswordForm.newPassword = ''
-              this.resetPasswordForm.confirmPassword = ''
-              this.$Message.success(response.data.message)
-            } else {
-              this.$message.info({
-                content:response.data.message
-              })
+      resetConfirm(name) {
+        this.$refs[name].validate((valid) => {
+            if (valid) {
+                  var url = `information/resetPasswordForVirtualMachine.do?VMId=${this.computerInfo.computerId}&password=${this.resetPasswordForm.newPassword}&oldPassword=${this.resetPasswordForm.oldPassword}`
+                  var password = this.resetPasswordForm.newPassword
+                  this.resetPasswordForm.buttonMessage = '正在重置中...'
+                  this.$http.get(url).then(response => {
+                    if (response.status == 200 && response.data.status == 1) {
+                      this.$Message.success(response.data.message)
+                    } else {
+                      this.$message.info({
+                        content:response.data.message
+                      })
+                    }
+                    this.resetPasswordForm.buttonMessage = '确认重置'
+                    this.resetPasswordForm.oldPassword = ''
+                    this.resetPasswordForm.newPassword = ''
+                    this.resetPasswordForm.confirmPassword = ''
+                  })
             }
-          })
-        } else if (this.resetPasswordForm.newPassword != this.resetPasswordForm.confirmPassword) {
-          this.$Message.info('密码与确认密码不一致')
-        }
+        })
       },
       reload() {
         if (this.reloadForm.system == '') {

@@ -30,8 +30,8 @@
         <!--负载均衡表-->
         <Table highlight-row stripe :columns="balColumns" :data="balData" @radio-change="selectBalance"></Table>
         <!--创建负载均衡模态框-->
-        <Modal v-model="creatbalancemodal.showBalanceName" :scrollable="true" width="550" :closable="false">
-          <p slot="header" style="font-size: 16px;color: rgba(17,17,17,0.75);line-height: 23.42px;"><b>创建负载均衡</b></p>
+        <Modal v-model="creatbalancemodal.showBalanceName" :scrollable="true" width="550">
+          <p slot="header" style="font-size: 16px;color: rgba(17,17,17,0.75);line-height: 23.42px;border-bottom: 1px solid #D8D8D8;padding-bottom: 40px;"><b>创建负载均衡</b></p>
           <Steps :current="creatbalancemodal.current" size="small" style="margin:15px;">
             <Step title="创建负载均衡" style="opacity:0.7"></Step>
             <Step title="配置转发规则"></Step>
@@ -39,7 +39,7 @@
           </Steps>
 
           <!--步骤creatbalancemodal.current == 0-->
-          <div v-show="creatbalancemodal.current == 0" class="universal-modal-content">
+          <div v-show="creatbalancemodal.current == 0" class="universal-modal-content" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
             <Form ref="form1" :model="creatbalancemodal.formInline" :rules="creatbalancemodal.ruleInline">
               <FormItem label="名称" prop="name">
                 <Input type="text" v-model="creatbalancemodal.formInline.name" placeholder="请输入小于16位的负载均衡名称"
@@ -92,7 +92,7 @@
           </div>
 
           <!--步骤creatbalancemodal.current == 1-->
-          <div v-show="creatbalancemodal.current == 1" class="universal-modal-content-flex">
+          <div v-show="creatbalancemodal.current == 1" class="universal-modal-content-flex" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
             <Form ref="form2" :model="creatbalancemodal.formInline" :rules="creatbalancemodal.ruleInline">
               <!--  <FormItem label="规则名称" prop="ruleName">
                   <Input type="text" v-model="creatbalancemodal.formInline.ruleName" placeholder="请输入规则名称">

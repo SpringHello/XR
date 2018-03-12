@@ -142,7 +142,6 @@
           {
             title: '类型',
             width: 200,
-            align: 'center',
             key: 'actType',
             filters: [
               {
@@ -171,13 +170,11 @@
           {
             title: '发布时间',
             width: 500,
-            align: 'center',
             key: 'publishtime'
           },
           {
             title: '操作',
             width: 98,
-            align: 'center',
             key: 'action',
             render: (h, params) => {
               return h('div', [

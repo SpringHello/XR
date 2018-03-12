@@ -368,22 +368,18 @@
           },
           {
             title: 'VPN',
-            align: 'center',
             key: 'vpcname'
           },
           {
             title: '预共享密钥',
-            align: 'center',
             key: 'ipseckey'
           },
           {
             title: '弹性IP地址',
-            align: 'center',
             key: 'publicip'
           },
           {
             title: '用户一名称',
-            align: 'center',
             render: (h, object) => {
               if (object.row.sourcenatip) {
                 return h('div', [h('span', {
@@ -448,7 +444,6 @@
           },
           {
             title: '用户二名称',
-            align: 'center',
             render: (h, object) => {
               var renderArray = []
               if (object.row.prottransip) {
@@ -511,12 +506,10 @@
           },
           {
             title: '创建时间',
-            align: 'center',
             key: 'createtime'
           },
           {
             title: '操作',
-            align: 'center',
             render: (h, object) => {
               return h('span', {
                 style: {
@@ -539,17 +532,15 @@
         tunnelVpnColumns: [
           {
             type: 'radio',
+            align: 'center',
             width: 60,
-            align: 'center'
           },
           {
             title: 'VPN',
-            align: 'center',
             key: 'vpnCustomerName1'
           },
           {
             title: 'VPC',
-            align: 'center',
             key: 'vpcName1'
             /*      render: (h, params) => {
              var status = params.row.status == 1 ? '正常' : '异常'
@@ -558,7 +549,6 @@
           },
           {
             title: '本地IP地址',
-            align: 'center',
             key: 'destinationipaddress1',
             /*            render: (h, params) => {
              return h('span', {
@@ -574,7 +564,6 @@
           },
           {
             title: '目的IP地址',
-            align: 'center',
             render: (h, object) => {
               if (object.row.sourcenatip) {
                 return h('div', [h('span', {
@@ -639,7 +628,6 @@
           },
           {
             title: '目的网络CIDR',
-            align: 'center',
             render: (h, object) => {
               var renderArray = []
               if (object.row.prottransip) {
@@ -702,7 +690,6 @@
           },
           {
             title: '状态',
-            align: 'center',
             render: (h, object) => {
               var renderArray = []
               if (object.row.prottransip) {
@@ -765,7 +752,6 @@
           },
           {
             title: '创建时间',
-            align: 'center',
             key: 'createtime2'
           }
         ],

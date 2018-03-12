@@ -144,26 +144,21 @@
           {
             title: '名称',
             key: 'acllistname',
-            align: 'center'
           },
           {
             title: '所属vpc',
             key: 'vpcname',
-            align: 'center'
           },
           {
             title: '所属区域',
             key: 'zonename',
-            align: 'center'
           },
           {
             title: '创建时间',
             key: 'createtime',
-            align: 'center'
           },
           {
             title: '操作',
-            align: 'center',
             render: (h, object) => {
               if (object.row.mockCreating) {
                 return h('Spin', {}, '创建中')

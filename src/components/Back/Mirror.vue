@@ -133,8 +133,7 @@
           },
           {
             title: '镜像名称',
-            align: 'center',
-            width: 200,
+            width: 210,
             render: (h, params) => {
               return h('Tooltip', {
                   props: {
@@ -148,7 +147,6 @@
           },
           {
             title: '镜像描述',
-            align: 'center',
             width: 200,
             ellipsis: true,
             render: (h, params) => {
@@ -164,8 +162,7 @@
           },
           {
             title: '镜像平台',
-            align: 'center',
-            width: 200,
+            width: 240,
             render: (h, params) => {
               return h('Tooltip', {
                   props: {
@@ -180,7 +177,6 @@
           {
             title: '镜像状态',
             key: 'status',
-            align: 'center',
             width: 130,
             render: (h, params) => {
               if (params.row.status == 1) {
@@ -200,13 +196,11 @@
             render: (h, params) => {
               return h('span', {}, params.row.size + 'M')
             },
-            align: 'center'
           },
           {
             title: '创建时间',
             key: 'createtime',
             width: 220,
-            align: 'center'
           }
         ],
         originData: [],
@@ -220,7 +214,6 @@
           },
           {
             title: '镜像名称',
-            align: 'center',
             render: (h, params) => {
               return h('Tooltip', {
                   props: {
@@ -234,7 +227,6 @@
           },
           {
             title: '镜像描述',
-            align: 'center',
             ellipsis: true,
             render: (h, params) => {
               return h('Tooltip', {
@@ -249,7 +241,7 @@
           },
           {
             title: '镜像平台',
-            align: 'center',
+            width: 240,
             render: (h, params) => {
               if (params.row.status == 2) {
                 return '创建中'
@@ -267,7 +259,6 @@
           {
             title: '镜像状态',
             key: 'status',
-            align: 'center',
             width: 130,
             render: (h, params) => {
               if (params.row.status == 1) {
@@ -286,7 +277,6 @@
 
           {
             title: '镜像大小',
-            align: 'center',
             render: (h, params) => {
               if (params.row.status == 2) {
                 return '创建中'
@@ -296,14 +286,12 @@
           },
           {
             title: '创建时间',
-            align: 'center',
             width: 200,
             key: 'createtime'
           },
           {
             title: '操作',
             key: 'action',
-            align: 'center',
             width: 200,
             render: (h, params) => {
               var cursorValue = ''
@@ -325,11 +313,11 @@
                   disabledValue = 'disabled'
                   break
               }
-              return h('div', [h('Button', {
+              return h('div', [h('span', {
                 style: {
-                  marginRight: '5px',
+                  marginRight: '10px',
                   color: '#2A99F2',
-                  cursor: cursorValue
+                  cursor: cursorValue,
                 },
                 props:  {
                   disabled: disabledValue,
@@ -341,7 +329,7 @@
                   }
                 }
               }, '生成主机'),
-                h('Button', {
+                h('span', {
                   style: {
                     color: '#2A99F2',
                     cursor: cursorValue,
