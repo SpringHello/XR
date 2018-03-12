@@ -39,7 +39,13 @@
             <span>所属VPC：<span class="bluetext">{{computerInfo.vpc}}</span></span>
             <span>绑定公网：<span class="bluetext">{{computerInfo.publicIp}}</span></span>
             <span>所属负载均衡：<span class="bluetext">{{computerInfo.loadbalance.join('|')}}</span></span>
-            <span>挂载磁盘：<span class="bluetext">{{computerInfo.disk.join('|')}}</span></span>
+            <Tooltip placement="top-start">
+              <span class="one-row-text" style="width:190px">挂载磁盘：<span class="bluetext">{{computerInfo.disk.join('|')}}</span></span>
+              <div slot="content" v-for="(item,index) in computerInfo.disk" :key="index">
+                  <p>{{item}}</p>
+              </div>
+          </Tooltip>
+            
             <span>状态：<span class="bluetext">{{computerInfo.computerStatus ? "开机" : "关机"}}</span></span>
           </div>
           <div class="pan" v-if="computerInfo!=null" style="width: 20%">
@@ -202,6 +208,7 @@
                   </Form-item>
                   <Form-item label="账号密码">
                     <Input v-model="reloadForm.password" placeholder="请输入平台账号密码" type="password"></Input>
+                    <input type="text" style="display:none">
                   </Form-item>
                   <p
                     style="font-size: 14px;color: rgba(-2147483648,-2147483648,-2147483648,0.43);line-height: 18px;margin-bottom:15px;">
@@ -338,6 +345,7 @@
         <div>
           <strong>警告</strong>
           <p class="lh24">为了数据安全，系统重装之前主机会自动关闭。重装结束后，主机会自动开机。</p>
+          <p>请输入“confirm”</p>
           <Input v-model="reloadhintForm.input" placeholder="请输入“confirm”" style="width: 300px"></Input>
         </div>
       </div>
@@ -897,6 +905,8 @@
                 content:response.data.message
               })
             }
+            this.reloadForm.system = ''
+            this.reloadForm.password = ''
           })
       },
       // 获取具体主机下的快照列表
@@ -1216,7 +1226,7 @@
         .bluetext {
           color: rgb(42, 153, 242);
         }
-        > span {
+        > span,.one-row-text {
           /*font-family: PingFangSC-Medium;*/
           margin-bottom: 10px;
           display: block;
