@@ -483,10 +483,10 @@
           margin-bottom: 10px
         }
         .info {
-          font-weight: 600;
+         // font-weight: 600;
           margin-right: 25px;
-          font-size: 14px;
-          color: #5E5E5E;
+          font-size: 16px;
+          color: #2a99f2;
         }
         .operator-bar {
 
@@ -496,10 +496,11 @@
           .network-wrapper {
             margin-top: 20px;
             min-height: 50px;
-            background-color: #e9f4fd;
+           // background-color: #e9f4fd;
             border-radius: 5px;
             border-radius: 5px;
             padding: 18px 25px;
+            border:1px solid #d8d8d8;
             .arrow {
               border-top: 14px solid #2A99F2;
               border-left: 7px solid rgba(0, 0, 0, 0);

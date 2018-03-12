@@ -1,295 +1,295 @@
 <template>
-    <div class="background">
-      <div class="wrapper">
-        <Spin fix v-show="payLoading">
-          <Icon type="load-c" size=80 class="demo-spin-icon-load"></Icon>
-          <span style="display: block;font-size:14px;color:black;font-family: Microsoft Yahei,微软雅黑;">正在支付，请稍后...</span>
-        </Spin>
-        <Spin fix v-show="">
-          <Icon type="load-c" size=80 class="demo-spin-icon-load"></Icon>
-          <span style="display: block;font-size:14px;color:black;font-family: Microsoft Yahei,微软雅黑;">正在查询，请稍后...</span>
-        </Spin>
-        <span>个人中心 / 费用中心</span>
-        <div class="content">
-          <span class="title">费用中心</span>
-          <Tabs v-model="name" type="card" :animated="false" @on-click="changecard"
-                style="margin-top: 20px;min-height: 550px">
-            <Tab-pane label="账户概览" name="accountSummary">
-              <div class="money">
-                <div class="balance">
-                  <span class="expenses_s1">账户余额</span>
-                  <div class="expenses_s2_wrap">
-                    <span v-model="balance" class="expenses_s2">￥{{ balance }}</span>
-                    <Button type="warning" @click="torecharge">充值</Button>
-                  </div>
-                </div>
-                <div class="billmonth">
-                  <span class="expenses_s3">本月账单金额</span>
-                  <span v-model="billmonth" class="expenses_s4">￥{{ billmonth }}</span>
-                </div>
-                <div class="coupon">
-                  <span class="expenses_s5">现金券额度</span>
-                  <span v-model="coupon" class="expenses_s6">￥{{ coupon }}</span>
+  <div class="background">
+    <div class="wrapper">
+      <Spin fix v-show="payLoading">
+        <Icon type="load-c" size=80 class="demo-spin-icon-load"></Icon>
+        <span style="display: block;font-size:14px;color:black;font-family: Microsoft Yahei,微软雅黑;">正在支付，请稍后...</span>
+      </Spin>
+      <Spin fix v-show="">
+        <Icon type="load-c" size=80 class="demo-spin-icon-load"></Icon>
+        <span style="display: block;font-size:14px;color:black;font-family: Microsoft Yahei,微软雅黑;">正在查询，请稍后...</span>
+      </Spin>
+      <span>个人中心 / 费用中心</span>
+      <div class="content">
+        <span class="title">费用中心</span>
+        <Tabs v-model="name" type="card" :animated="false" @on-click="changecard"
+              style="margin-top: 20px;min-height: 550px">
+          <Tab-pane label="账户概览" name="accountSummary">
+            <div class="money">
+              <div class="balance">
+                <span class="expenses_s1">账户余额</span>
+                <div class="expenses_s2_wrap">
+                  <span v-model="balance" class="expenses_s2">￥{{ balance }}</span>
+                  <Button type="warning" @click="torecharge">充值</Button>
                 </div>
               </div>
-              <div class="expenses_condition">
-                <span>按交易时间</span>
-                <Row style="display: inline-block;margin-left: 10px">
-                  <Col span="12">
-                  <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
-                               placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
-                  </Col>
-                </Row>
-                <span style="margin-left: 20px">按交易类型</span>
-                <Select v-model="types" style="width:231px;margin-left: 10px;position: relative;bottom: 12px">
-                  <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
-                <span style="margin-left: 20px">按交易金额</span>
-                <Input-number :min="0" v-model="value1"
-                              style="width: 116px;margin-left: 10px;position: relative;bottom: 12px"></Input-number>
-                &nbsp;&nbsp;
-                <Icon type="minus" style="position: relative;bottom: 10px"></Icon>
-                &nbsp;&nbsp;
-                <Input-number :min="1" v-model="value2"
-                              style="width: 116px;position: relative;bottom: 12px"></Input-number>
-                <Button type="primary" style="bottom: 12px; margin-left: 20px;position: relative" @click="search">查询
-                </Button>
-                <Table highlight-row :columns="columns" :data="tabledata"></Table>
-                <div style="margin: 10px;overflow: hidden">
-                  <div style="float: right;">
-                    <Page :total="total" :current="1" :page-size="7" @on-change="currentChange"></Page>
-                  </div>
-                </div>
+              <div class="billmonth">
+                <span class="expenses_s3">本月账单金额</span>
+                <span v-model="billmonth" class="expenses_s4">￥{{ billmonth }}</span>
               </div>
-            </Tab-pane>
-            <Tab-pane label="订单管理" name="orderManage">
-              <div class="ordertype">
-                <div style="display: inline-block">
-                  <span class="order_s1">订单类型</span>
-                  <Select v-model="order_type" @on-change="changeOrder" style="width:231px;margin-left: 10px">
-                    <Option v-for="item in orderList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                  </Select>
-                </div>
-                <div style="display: inline-block">
-                  <span class="order_s2"> 订单时间</span>
-                  <Row style="display: inline-block;margin-left: 10px;position: relative;top: 12px">
-                    <Col span="12">
-                    <Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start"
-                                 placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
-                    </Col>
-                  </Row>
-                </div>
-                <div style="display: inline-block">
-                  <Button type="primary" style="margin-left: 406px" @click="orderPay">支付</Button>
-                  <Button type="primary" style="margin-left: 10px" @click="deleteOrder">删除</Button>
-                </div>
+              <div class="coupon">
+                <span class="expenses_s5">现金券额度</span>
+                <span v-model="coupon" class="expenses_s6">￥{{ coupon }}</span>
               </div>
-              <div class="orderdata">
-                <Table highlight-row :columns="columns_order" :data="orderData" @on-selection-change="select"></Table>
-                <span
-                  style="display:inline-block;margin-top:10px;font-family: PingFangSC-Regular;font-size: 14px;color: #2A99F2;line-height: 18px;cursor:pointer"
-                  @click="clipCoupons">使用优惠券</span>
-                <span v-show="costSeen"
-                      style="font-family: Microsoft Yahei,微软雅黑;font-size: 20px;color: rgba(0,0,0,0.65);float: right;margin-top: 10px">总计支付 : {{totalCost}} 元（实际支付：{{ actualDelivery
-                  }}元）</span>
-                <div style="margin: 10px;overflow: hidden">
-                  <div style="float: right;">
-                    <Page :total="ordertotal" :current="1" :page-size="10" @on-change="order_currentChange"></Page>
-                  </div>
-                </div>
-              </div>
-            </Tab-pane>
-            <Tab-pane label="我的卡券" name="myCard">
-              <div class="searchCard">
-                <span>类型</span>
-                <Select v-model="cardType" style="width:231px;margin-left: 10px">
-                  <Option v-for="item in cardTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
-                <span style="margin-left: 20px">状态</span>
-                <Select v-model="cardState" style="width:231px;margin-left: 10px">
-                  <Option v-for="item in cardStateList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
-                <Button type="primary" style="float: right" @click="searchCard">查询</Button>
-              </div>
-              <Table highlight-row :columns="cardVolumeColumns" :data="cardVolumeTabledata" style="margin-top:10px">
-              </Table>
+            </div>
+            <div class="expenses_condition">
+              <span>按交易时间</span>
+              <Row style="display: inline-block;margin-left: 10px">
+                <Col span="12">
+                <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
+                             placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
+                </Col>
+              </Row>
+              <span style="margin-left: 20px">按交易类型</span>
+              <Select v-model="types" style="width:231px;margin-left: 10px;position: relative;bottom: 12px">
+                <Option v-for="item in typeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+              <span style="margin-left: 20px">按交易金额</span>
+              <Input-number :min="0" v-model="value1"
+                            style="width: 116px;margin-left: 10px;position: relative;bottom: 12px"></Input-number>
+              &nbsp;&nbsp;
+              <Icon type="minus" style="position: relative;bottom: 10px"></Icon>
+              &nbsp;&nbsp;
+              <Input-number :min="1" v-model="value2"
+                            style="width: 116px;position: relative;bottom: 12px"></Input-number>
+              <Button type="primary" style="bottom: 12px; margin-left: 20px;position: relative" @click="search">查询
+              </Button>
+              <Table highlight-row :columns="columns" :data="tabledata"></Table>
               <div style="margin: 10px;overflow: hidden">
                 <div style="float: right;">
-                  <Page :total="cardTotal" :current="1" @on-change="cardCurrentChange"></Page>
+                  <Page :total="total" :current="1" :page-size="7" @on-change="currentChange"></Page>
                 </div>
               </div>
-            </Tab-pane>
-            <Tab-pane label="发票申请" name="applyInvoice">
-              <div v-show="applyChange">
-                <div class="invoiceType">
-                  <span>实际可开金额发票：￥{{ invoice }}</span>
+            </div>
+          </Tab-pane>
+          <Tab-pane label="订单管理" name="orderManage">
+            <div class="ordertype">
+              <div style="display: inline-block">
+                <span class="order_s1">订单类型</span>
+                <Select v-model="order_type" @on-change="changeOrder" style="width:231px;margin-left: 10px">
+                  <Option v-for="item in orderList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                </Select>
+              </div>
+              <div style="display: inline-block">
+                <span class="order_s2"> 订单时间</span>
+                <Row style="display: inline-block;margin-left: 10px;position: relative;top: 12px">
+                  <Col span="12">
+                  <Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start"
+                               placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
+                  </Col>
+                </Row>
+              </div>
+              <div style="display: inline-block">
+                <Button type="primary" style="margin-left: 423px" @click="orderPay">支付</Button>
+                <Button type="primary" style="margin-left: 10px" @click="deleteOrder">删除</Button>
+              </div>
+            </div>
+            <div class="orderdata">
+              <Table highlight-row :columns="columns_order" :data="orderData" @on-selection-change="select"></Table>
+              <span
+                style="display:inline-block;margin-top:10px;font-family: PingFangSC-Regular;font-size: 14px;color: #2A99F2;line-height: 18px;cursor:pointer"
+                @click="clipCoupons">使用优惠券</span>
+              <span v-show="costSeen"
+                    style="font-family: Microsoft Yahei,微软雅黑;font-size: 20px;color: rgba(0,0,0,0.65);float: right;margin-top: 10px">总计支付 : {{totalCost}} 元（实际支付：{{ actualDelivery
+                  }}元）</span>
+              <div style="margin: 10px;overflow: hidden">
+                <div style="float: right;">
+                  <Page :total="ordertotal" :current="1" :page-size="10" @on-change="order_currentChange"></Page>
                 </div>
-                <div class="invoiceInformation">
-                  <Form ref="formInvoiceDate" :model="formInvoiceDate" :rules="ruleValidate" :label-width="80"
-                        label-position="left">
-                    <Form-item label="温馨提示">
-                      <p style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);line-height: 18px;margin-top: 5px;">
-                        1.您选择的发票金额不能小于1000元，增值发票准票金额不能小于10000请累计之后一并申请。</p>
-                      <p
-                        style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);margin-bottom: -10px;line-height: 18px;">
-                        2.发票寄出时间：每月20号统一寄出，15号之前申请的发票将在当月20号寄出，15号之后申请的发票将在次月20号寄出。</p>
-                    </Form-item>
-                    <Form-item label="开票金额" prop="invoiceAmount">
-                      <Input :maxlength="10" v-model="formInvoiceDate.invoiceAmount" placeholder="请输入开票金额"
+              </div>
+            </div>
+          </Tab-pane>
+          <Tab-pane label="我的卡券" name="myCard">
+            <div class="searchCard">
+              <span>类型</span>
+              <Select v-model="cardType" style="width:231px;margin-left: 10px">
+                <Option v-for="item in cardTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+              <span style="margin-left: 20px">状态</span>
+              <Select v-model="cardState" style="width:231px;margin-left: 10px">
+                <Option v-for="item in cardStateList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+              <Button type="primary" style="float: right" @click="searchCard">查询</Button>
+            </div>
+            <Table highlight-row :columns="cardVolumeColumns" :data="cardVolumeTabledata" style="margin-top:10px">
+            </Table>
+            <div style="margin: 10px;overflow: hidden">
+              <div style="float: right;">
+                <Page :total="cardTotal" :current="1" @on-change="cardCurrentChange"></Page>
+              </div>
+            </div>
+          </Tab-pane>
+          <Tab-pane label="发票申请" name="applyInvoice">
+            <div v-show="applyChange">
+              <div class="invoiceType">
+                <span>实际可开金额发票：￥{{ invoice }}</span>
+              </div>
+              <div class="invoiceInformation">
+                <Form ref="formInvoiceDate" :model="formInvoiceDate" :rules="ruleValidate" :label-width="80"
+                      label-position="left">
+                  <Form-item label="温馨提示">
+                    <p style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);line-height: 18px;margin-top: 5px;">
+                      1.您选择的发票金额不能小于1000元，增值发票准票金额不能小于10000请累计之后一并申请。</p>
+                    <p
+                      style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);margin-bottom: -10px;line-height: 18px;">
+                      2.发票寄出时间：每月20号统一寄出，15号之前申请的发票将在当月20号寄出，15号之后申请的发票将在次月20号寄出。</p>
+                  </Form-item>
+                  <Form-item label="开票金额" prop="invoiceAmount">
+                    <Input :maxlength="10" v-model="formInvoiceDate.invoiceAmount" placeholder="请输入开票金额"
+                           style="width: 317px"
+                           number></Input>
+                  </Form-item>
+                  <Form-item label="发票类型" prop="InvoiceType">
+                    <Select v-model="formInvoiceDate.InvoiceType" placeholder="请选择发票类型" style="width: 317px"
+                            @on-change="changeInvoiceType">
+                      <Option value="1">增值税专用发票</Option>
+                      <Option value="0">普通发票</Option>
+                    </Select>
+                  </Form-item>
+                  <Form-item label="发票抬头" prop="invoiceTitle">
+                    <Input :maxlength="32" v-model="formInvoiceDate.invoiceTitle" placeholder="请输入发票抬头"
+                           style="width: 317px"></Input>
+                    <!-- <span class="bill_s1">备注：如果是企业认证用户，且开具的是企业发票，则开具发票的抬头名称默认为认证企业，无需填写，但是可以修改。</span>-->
+                  </Form-item>
+                  <Form-item label="发票信息" v-show="authenticationShow">
+                    <span style="display: block">单位：{{ companyname }}</span>
+                    <span style="display: block">纳税人识别码：{{ identicode }}</span>
+                    <span style="display: block">注册电话：{{ phone }}</span>
+                    <span style="display: block">开户银行：{{ bankname }}</span>
+                    <span>银行账号：{{ banknum }}</span>
+                  </Form-item>
+                  <Form-item label="发票信息" v-show="invoiceInformationShow">
+                    <p style="line-height: 2.5;">您需要通过<span style="color: dodgerblue;cursor:pointer;"
+                                                            @click="invoiceCertification">增票资质认证</span>才能开具增值税专用发票</p>
+                    <Button type="primary" style="margin-left: 235px" @click="invoiceCertification"
+                            v-show="certificateStatus">点击认证
+                    </Button>
+                    <Button type="warning" style="margin-left: 245px" v-show="underReview">审核中</Button>
+                    <Button type="error" style="margin-left: 235px" v-show="failureAudit">审核失败</Button>
+                  </Form-item>
+                  <Form-item label="收件人" prop="recipients">
+                    <Input :maxlength="10" v-model="formInvoiceDate.recipients" placeholder="请输入收件人姓名"
+                           style="width: 317px"></Input>
+                  </Form-item>
+                  <Form-item label="收件地址" prop="consigneeAddress">
+                    <Input :maxlength="64" v-model="formInvoiceDate.consigneeAddress" placeholder="请输入收件地址"
+                           style="width: 317px"></Input>
+                    <!--<span class="bill_s1">备注：如果是企业认证用户，且开具的是企业发票，则开具发票的收件地址默认为认证企业地址，无需填写，但是可以修改。</span>-->
+                  </Form-item>
+                  <Form-item label="联系电话" prop="phone">
+                    <Input :maxlength="20" v-model="formInvoiceDate.phone" placeholder="请输入联系电话"
+                           style="width: 317px"></Input>
+                  </Form-item>
+                  <Form-item>
+                    <Button type="primary" style="float: right;font-size: 12px;" @click="invoiceMake('formInvoiceDate')">确认开票
+                    </Button>
+                  </Form-item>
+                </Form>
+                <div class="InvoiceRecords">
+                  <span>发票申请记录</span>
+                  <Table highlight-row :columns="billColumns" :data="billTabledata" style="margin-top: 20px"></Table>
+                </div>
+              </div>
+            </div>
+            <div v-show="appreciation">
+              <span class="appreciation_s1">增值资质认证</span>
+              <div style="margin-top: 20px">
+                <p class="appreciation_p">我们会在一个工作日内审核完成。</p>
+                <p class="appreciation_p">1、注意有效增值税发票开票资质仅为一个。</p>
+                <p class="appreciation_p">2、发票常见问题查看增票资质帮助。</p>
+              </div>
+              <div style="margin-top: 20px">
+                <Form ref="formAppreciationDate" :model="formAppreciationDate" :rules="ruleValidate"
+                      :label-width="120" label-position="left">
+                  <Form-item label="单位名称" prop="companyName">
+                    <Input :maxlength="32" v-model="formAppreciationDate.companyName" placeholder="请输入单位名称"
+                           style="width: 317px"></Input>
+                  </Form-item>
+                  <Form-item label="纳税人识别码" prop="taxpayerID">
+                    <Input :maxlength="32" v-model="formAppreciationDate.taxpayerID" placeholder="请输入纳税人识别码"
+                           style="width: 317px"></Input>
+                  </Form-item>
+                  <Form-item label="注册地址" prop="registeredAddress">
+                    <Input :maxlength="64" v-model="formAppreciationDate.registeredAddress" placeholder="请输入注册地址"
+                           style="width: 317px"></Input>
+                  </Form-item>
+                  <Form-item label="注册电话" prop="registeredPhone">
+                    <Input :maxlength="20" v-model="formAppreciationDate.registeredPhone" placeholder="请输入注册电话"
+                           style="width: 317px"></Input>
+                  </Form-item>
+                  <Form-item label="开户银行" prop="depositBank">
+                    <Input :maxlength="32" v-model="formAppreciationDate.depositBank" placeholder="请输入开户银行"
+                           style="width: 317px"></Input>
+                  </Form-item>
+                  <Tooltip :content="bank_account" placement="right-start">
+                    <Form-item label="银行账户" prop="bankAccount">
+                      <Input :maxlength="32" v-model="formAppreciationDate.bankAccount" placeholder="请输入银行账户"
                              style="width: 317px"
-                             number></Input>
+                             v-on:input="conversion"></Input>
                     </Form-item>
-                    <Form-item label="发票类型" prop="InvoiceType">
-                      <Select v-model="formInvoiceDate.InvoiceType" placeholder="请选择发票类型" style="width: 317px"
-                              @on-change="changeInvoiceType">
-                        <Option value="1">增值税专用发票</Option>
-                        <Option value="0">普通发票</Option>
-                      </Select>
-                    </Form-item>
-                    <Form-item label="发票抬头" prop="invoiceTitle">
-                      <Input :maxlength="32" v-model="formInvoiceDate.invoiceTitle" placeholder="请输入发票抬头"
-                             style="width: 317px"></Input>
-                      <!-- <span class="bill_s1">备注：如果是企业认证用户，且开具的是企业发票，则开具发票的抬头名称默认为认证企业，无需填写，但是可以修改。</span>-->
-                    </Form-item>
-                    <Form-item label="发票信息" v-show="authenticationShow">
-                      <span style="display: block">单位：{{ companyname }}</span>
-                      <span style="display: block">纳税人识别码：{{ identicode }}</span>
-                      <span style="display: block">注册电话：{{ phone }}</span>
-                      <span style="display: block">开户银行：{{ bankname }}</span>
-                      <span>银行账号：{{ banknum }}</span>
-                    </Form-item>
-                    <Form-item label="发票信息" v-show="invoiceInformationShow">
-                      <p style="line-height: 2.5;">您需要通过<span style="color: dodgerblue;cursor:pointer;"
-                                    @click="invoiceCertification">增票资质认证</span>才能开具增值税专用发票</p>
-                      <Button type="primary" style="margin-left: 235px" @click="invoiceCertification"
-                              v-show="certificateStatus">点击认证
-                      </Button>
-                      <Button type="warning" style="margin-left: 245px" v-show="underReview">审核中</Button>
-                      <Button type="error" style="margin-left: 235px" v-show="failureAudit">审核失败</Button>
-                    </Form-item>
-                    <Form-item label="收件人" prop="recipients">
-                      <Input :maxlength="10" v-model="formInvoiceDate.recipients" placeholder="请输入收件人姓名"
-                             style="width: 317px"></Input>
-                    </Form-item>
-                    <Form-item label="收件地址" prop="consigneeAddress">
-                      <Input :maxlength="64" v-model="formInvoiceDate.consigneeAddress" placeholder="请输入收件地址"
-                             style="width: 317px"></Input>
-                      <!--<span class="bill_s1">备注：如果是企业认证用户，且开具的是企业发票，则开具发票的收件地址默认为认证企业地址，无需填写，但是可以修改。</span>-->
-                    </Form-item>
-                    <Form-item label="联系电话" prop="phone">
-                      <Input :maxlength="20" v-model="formInvoiceDate.phone" placeholder="请输入联系电话"
-                             style="width: 317px"></Input>
-                    </Form-item>
-                    <Form-item>
-                      <Button type="primary" style="float: right;font-size: 12px;" @click="invoiceMake('formInvoiceDate')">确认开票
-                      </Button>
-                    </Form-item>
-                  </Form>
-                  <div class="InvoiceRecords">
-                    <span>发票申请记录</span>
-                    <Table highlight-row :columns="billColumns" :data="billTabledata" style="margin-top: 20px"></Table>
-                  </div>
-                </div>
+                  </Tooltip>
+                  <Form-item>
+                    <Button style="margin-left: 178px" @click="cancelCertification">取消</Button>
+                    <Button type="primary" style="margin-left: 10px"
+                            @click="affirmCertification('formAppreciationDate')">确定
+                    </Button>
+                  </Form-item>
+                </Form>
               </div>
-              <div v-show="appreciation">
-                <span class="appreciation_s1">增值资质认证</span>
-                <div style="margin-top: 20px">
-                  <p class="appreciation_p">我们会在一个工作日内审核完成。</p>
-                  <p class="appreciation_p">1、注意有效增值税发票开票资质仅为一个。</p>
-                  <p class="appreciation_p">2、发票常见问题查看增票资质帮助。</p>
-                </div>
-                <div style="margin-top: 20px">
-                  <Form ref="formAppreciationDate" :model="formAppreciationDate" :rules="ruleValidate"
-                        :label-width="120" label-position="left">
-                    <Form-item label="单位名称" prop="companyName">
-                      <Input :maxlength="32" v-model="formAppreciationDate.companyName" placeholder="请输入单位名称"
-                             style="width: 317px"></Input>
-                    </Form-item>
-                    <Form-item label="纳税人识别码" prop="taxpayerID">
-                      <Input :maxlength="32" v-model="formAppreciationDate.taxpayerID" placeholder="请输入纳税人识别码"
-                             style="width: 317px"></Input>
-                    </Form-item>
-                    <Form-item label="注册地址" prop="registeredAddress">
-                      <Input :maxlength="64" v-model="formAppreciationDate.registeredAddress" placeholder="请输入注册地址"
-                             style="width: 317px"></Input>
-                    </Form-item>
-                    <Form-item label="注册电话" prop="registeredPhone">
-                      <Input :maxlength="20" v-model="formAppreciationDate.registeredPhone" placeholder="请输入注册电话"
-                             style="width: 317px"></Input>
-                    </Form-item>
-                    <Form-item label="开户银行" prop="depositBank">
-                      <Input :maxlength="32" v-model="formAppreciationDate.depositBank" placeholder="请输入开户银行"
-                             style="width: 317px"></Input>
-                    </Form-item>
-                    <Tooltip :content="bank_account" placement="right-start">
-                      <Form-item label="银行账户" prop="bankAccount">
-                        <Input :maxlength="32" v-model="formAppreciationDate.bankAccount" placeholder="请输入银行账户"
-                               style="width: 317px"
-                               v-on:input="conversion"></Input>
-                      </Form-item>
-                    </Tooltip>
-                    <Form-item>
-                      <Button style="margin-left: 178px" @click="cancelCertification">取消</Button>
-                      <Button type="primary" style="margin-left: 10px"
-                              @click="affirmCertification('formAppreciationDate')">确定
-                      </Button>
-                    </Form-item>
-                  </Form>
-                </div>
-              </div>
-            </Tab-pane>
-          </Tabs>
-        </div>
+            </div>
+          </Tab-pane>
+        </Tabs>
       </div>
-      <Modal v-model="showModal.clipCoupons" width="690" :scrollable="true">
-        <div slot="header"
-             style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-          可用优惠券（请选择一张优惠券）
-        </div>
-        <div>
-          <!--Table :columns="cardVolumeColumns" :data="cardVolumeTabledata" @on-selection-change="cardSelect"></Table-->
-          <table style="width:100%;border: 1px solid #e9eaec;">
-            <thead>
-            <tr style="border-bottom: 1px solid #e9eaec;height: 40px;">
-              <th style="width:60px">选择</th>
-              <th>类型</th>
-              <th>面值/折扣</th>
-              <th>描述</th>
-              <th>失效时间</th>
-              <th>备注</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="(item,index) in cardVolumeTableData"
-                style="height:48px;border-bottom: 1px solid #e9eaec;color:rgba(0,0,0,.65);font-weight: normal;">
-              <th>
-                <div class="head">
+    </div>
+    <Modal v-model="showModal.clipCoupons" width="690" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+        可用优惠券（请选择一张优惠券）
+      </div>
+      <div>
+        <!--Table :columns="cardVolumeColumns" :data="cardVolumeTabledata" @on-selection-change="cardSelect"></Table-->
+        <table style="width:100%;border: 1px solid #e9eaec;">
+          <thead>
+          <tr style="border-bottom: 1px solid #e9eaec;height: 40px;">
+            <th style="width:60px">选择</th>
+            <th>类型</th>
+            <th>面值/折扣</th>
+            <th>描述</th>
+            <th>失效时间</th>
+            <th>备注</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(item,index) in cardVolumeTableData"
+              style="height:48px;border-bottom: 1px solid #e9eaec;color:rgba(0,0,0,.65);font-weight: normal;">
+            <th>
+              <div class="head">
                 <span v-bind:class="{'select':index==activeIndex,'notAllow':item.startmoney > totalCost}"
                       @click="selectChange(item,index)">
                   <input type="checkbox" style="float:left;display: none">
                 </span>
-                </div>
-              </th>
-              <th style="font-weight: normal;">{{item.operator}}</th>
-              <th v-if="item.tickettype==0" style="font-weight: normal;">{{item.money}}元</th>
-              <th v-if="item.tickettype==1" style="font-weight: normal;">{{item.money}}折</th>
-              <th style="font-weight: normal;">{{item.ticketdescript}}</th>
-              <th style="font-weight: normal;">{{item.endtime}}</th>
-              <th style="font-weight: normal;">{{item.remark}}</th>
-            </tr>
-            </tbody>
-          </table>
-          <div style="margin: 10px;overflow: hidden">
-            <div style="float: right;">
-              <Page :total="cardTotal" :current="1" :page-size="5" @on-change="card_currentChange"></Page>
-            </div>
+              </div>
+            </th>
+            <th style="font-weight: normal;">{{item.operator}}</th>
+            <th v-if="item.tickettype==0" style="font-weight: normal;">{{item.money}}元</th>
+            <th v-if="item.tickettype==1" style="font-weight: normal;">{{item.money}}折</th>
+            <th style="font-weight: normal;">{{item.ticketdescript}}</th>
+            <th style="font-weight: normal;">{{item.endtime}}</th>
+            <th style="font-weight: normal;">{{item.remark}}</th>
+          </tr>
+          </tbody>
+        </table>
+        <div style="margin: 10px;overflow: hidden">
+          <div style="float: right;">
+            <Page :total="cardTotal" :current="1" :page-size="5" @on-change="card_currentChange"></Page>
           </div>
         </div>
-        <div slot="footer">
-          <button class="ivu-btn ivu-btn-primary" @click="clipCoupons_ok"><span>确定</span></button>
-        </div>
-      </Modal>
-    </div>
+      </div>
+      <div slot="footer">
+        <button class="ivu-btn ivu-btn-primary" @click="clipCoupons_ok"><span>确定</span></button>
+      </div>
+    </Modal>
+  </div>
 </template>
 
 <script type="text/ecmascript-6">
@@ -404,12 +404,12 @@
           {
             title: '类型',
             key: 'operator',
-            align: 'center',
+            align: 'left',
             width: 120
           },
           {
             title: '面值/折扣',
-            align: 'center',
+            align: 'left',
             render: (h, params) => {
               return h('span', params.row.operator == '优惠券' ? `${params.row.money}元` : `${params.row.money}折`)
             },
@@ -418,7 +418,7 @@
           {
             title: '适用产品',
             key: 'tickettype',
-            align: 'center',
+            align: 'left',
             width: 140,
             render: (h, params) => {
               return h('span', params.row.tickettype == 1 ? '所有产品' : '--')
@@ -427,34 +427,33 @@
           {
             title: '状态',
             key: 'maketicketover',
-            align: 'center',
+            align: 'left',
             width: 110,
             render: (h, params) => {
               return h('span', params.row.maketicketover == 1 ? '已使用' : '未使用')
             }
           },
           {
-            title: '生效时间',
-            key: 'starttime',
-            align: 'center',
-            width: 175
-          },
-          {
             title: '失效时间',
             key: 'endtime',
-            align: 'center',
-            width: 175
+            align: 'left',
+            width: 175,
+            title: '生效/失效时间',
+            key: 'starttime',
+            render: (h, params) => {
+              return h('span', params.row.starttime + '/' + params.row.endtime)
+            }
           },
           {
             title: '描述',
             key: 'ticketdescript',
-            align: 'center',
+            align: 'left',
             ellipsis: true
           },
           {
             title: '备注',
             key: 'remark',
-            align: 'center',
+            align: 'left',
             ellipsis: true,
             render: (h, params) => {
               return h('span', params.row.remark == null ? '--' : params.row.remark)
@@ -466,7 +465,7 @@
           {
             title: '发票状态',
             key: 'status',
-            align: 'center',
+            align: 'left',
             render: (h, params) => {
               const row = params.row
               const color = row.status === 0 ? 'green' : row.status === 1 ? 'red' : row.status === 2 ? 'yellow' : 'blue'
@@ -482,7 +481,7 @@
           {
             title: '发票种类',
             key: 'type',
-            align: 'center',
+            align: 'left',
             render: (h, params) => {
               return h('span', params.row.type == 0 ? '普通发票' : '增值税专用发票')
             }
@@ -490,23 +489,21 @@
           {
             title: '发票抬头',
             key: 'title',
-            align: 'center',
+            align: 'left',
           },
           {
             title: '发票申请时间',
             key: 'createtime',
-            align: 'center',
+            align: 'left',
           },
           {
             title: '发票金额',
             key: 'amount',
-            align: 'center',
+            align: 'left',
           },
-         /* {
+          {
             title: '物流信息',
             key: 'status',
-            align: 'center',
-            width: 110,
             render: (h, params) => {
               const row = params.row
               const text = row.status === 0 ? '查看' : row.status === 3 ? '查看' : ''
@@ -524,11 +521,11 @@
                 }, text)
               ])
             }
-          },*/
+          },
           {
             title: '操作',
             key: 'cz',
-            align: 'center',
+            align: 'left',
             render: (h, params) => {
               return h('div', [
                 h('span', {
@@ -573,8 +570,8 @@
           //  },
           {
             title: '交易详情',
-            align: 'center',
-            width: 355,
+            align: 'left',
+            width: 370,
             render: (h, params) => {
               return h('Tooltip', {
                   props: {
@@ -589,7 +586,7 @@
           {
             title: '交易金额',
             key: 'amount',
-            align: 'center',
+            align: 'left',
             width: 150,
             render: (h, params) => {
               return h('div', [
@@ -602,8 +599,8 @@
           {
             title: '交易类型',
             key: 'type',
-            align: 'center',
-            width: 150,
+            align: 'left',
+            width: 120,
             render: (h, params) => {
               return h('span', params.row.type == '1' ? '扣费' : '充值')
             }
@@ -611,13 +608,13 @@
           {
             title: '交易时间',
             key: 'createtime',
-            align: 'center',
+            align: 'left',
             width: 240
           },
           {
             title: '流水编号',
             key: 'trno',
-            align: 'center',
+            align: 'left',
             width: 260
           }
         ],
@@ -652,14 +649,12 @@
         ],
         columns_order: [
           {
-            type: 'radio',
+            type: 'selection',
             width: 60,
-            align: 'center'
           },
           {
             title: '交易明细',
             width: 250,
-            align: 'left',
             render: (h, params) => {
               var data = JSON.parse(params.row.display)
               var type = ''
@@ -715,8 +710,7 @@
           },
           {
             title: '交易金额',
-            align: 'center',
-            width: 100,
+            width: 108,
             key: 'cost',
             render: (h, params) => {
               return h('div', [
@@ -727,13 +721,11 @@
           },
           {
             title: '订单创建时间',
-            align: 'center',
             width: 180,
             key: 'ordercreatetime'
           },
           {
             title: '订单结束时间',
-            align: 'center',
             width: 180,
             key: 'orderendtime',
             render: (h, params) => {
@@ -742,7 +734,6 @@
           },
           {
             title: '订单状态',
-            align: 'center',
             width: 100,
             key: 'paymentstatus',
             render: (h, params) => {
@@ -751,7 +742,6 @@
           },
           {
             title: '订单编号',
-            align: 'center',
             width: 180,
             key: 'ordernumber'
           },
@@ -759,7 +749,6 @@
             title: '操作',
             key: 'handle',
             width: 100,
-            align: 'center',
             render: (h, params) => {
               return h('div', [
                 h('span', {

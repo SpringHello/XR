@@ -251,23 +251,19 @@
           {
             type: 'radio',
             width: 60,
-            align: 'center'
           },
           {
             title: 'IP地址',
             key: 'publicip',
-            width: 150,
-            align: 'center'
+            width: 150
           },
           {
             title: '所属VPC',
             key: 'vpcname',
-            align: 'center'
           },
           {
             title: '状态',
             key: 'status',
-            align: 'left',
             render: (h, obj) => {
               let value = ''
               switch (obj.row.status) {
@@ -323,14 +319,13 @@
           {
             title: 'IP用途',
             key: 'usetype',
-            align: 'center',
             render: (h, params) => {
               return h('span', params.row.usetype == 0 ? '未使用' : params.row.usetype == 1 ? '绑定主机' : params.row.usetype == 2 ? '负载均衡' : params.row.usetype == 3 ? '源NAT' : 'NAT网关')
             }
           },
           {
             title: '绑定资源',
-            align: 'center',
+            width:150,
             render: (h, params) => {
               if (params.row.usetype == 0) {
                 return h('span', {}, '----')
@@ -344,7 +339,6 @@
             title: '消费类型',
             key: 'caseType',
             width: 150,
-            align: 'center',
             filters: [
               {
                 label: '包年',
@@ -386,7 +380,6 @@
           },
           {
             title: '带宽',
-            align: 'center',
             render(h, obj){
               return h('span', `${obj.row.bandwith}M`)
             }
@@ -394,12 +387,10 @@
           {
             title: '创建时间',
             key: 'createtime',
-            align: 'center',
-            width: 200
+            width: 160
           },
           {
             title: '操作',
-            align: 'center',
             render: (h, object) => {
               if (object.row.status == 2) {
                 // 创建中

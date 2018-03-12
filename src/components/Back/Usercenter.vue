@@ -837,7 +837,7 @@
       </div>
       <div slot="footer">
         <Button type="ghost" @click="showModal.modifyPassword=false">取消</Button>
-        <Button type="primary" @click="resetPassword">完成</Button>
+        <Button type="primary" @click="resetPassword" :disabled="resetPasswordForm.oldPassword == '' && resetPasswordForm.newPassword == '' && resetPasswordForm.confirmPassword == ''">完成</Button>
       </div>
     </Modal>
 
