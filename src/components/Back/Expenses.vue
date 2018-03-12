@@ -80,7 +80,7 @@
                   </Row>
                 </div>
                 <div style="display: inline-block">
-                  <Button type="primary" style="margin-left: 406px" @click="orderPay">支付</Button>
+                  <Button type="primary" style="margin-left: 423px" @click="orderPay">支付</Button>
                   <Button type="primary" style="margin-left: 10px" @click="deleteOrder">删除</Button>
                 </div>
               </div>
@@ -410,6 +410,7 @@
             render: (h, params) => {
               return h('span', params.row.operator == '优惠券' ? `${params.row.money}元` : `${params.row.money}折`)
             },
+            width: 110
           },
           {
             title: '适用产品',
@@ -427,6 +428,7 @@
           },
           {
             title: '生效/失效时间',
+            key: 'starttime',
               render: (h, params) => {
               return h('span', params.row.starttime + '/' + params.row.endtime)
            }
@@ -630,12 +632,10 @@
           {
             type: 'selection',
             width: 60,
-            align: 'center'
           },
           {
             title: '交易明细',
             width: 250,
-            align: 'left',
             render: (h, params) => {
               var data = JSON.parse(params.row.display)
               var type = ''
@@ -691,8 +691,7 @@
           },
           {
             title: '交易金额',
-            align: 'center',
-            width: 100,
+            width: 108,
             key: 'cost',
             render: (h, params) => {
               return h('div', [
@@ -703,13 +702,11 @@
           },
           {
             title: '订单创建时间',
-            align: 'center',
             width: 180,
             key: 'ordercreatetime'
           },
           {
             title: '订单结束时间',
-            align: 'center',
             width: 180,
             key: 'orderendtime',
             render: (h, params) => {
@@ -718,7 +715,6 @@
           },
           {
             title: '订单状态',
-            align: 'center',
             width: 100,
             key: 'paymentstatus',
             render: (h, params) => {
@@ -727,7 +723,6 @@
           },
           {
             title: '订单编号',
-            align: 'center',
             width: 180,
             key: 'ordernumber'
           },
@@ -735,7 +730,6 @@
             title: '操作',
             key: 'handle',
             width: 100,
-            align: 'center',
             render: (h, params) => {
               return h('div', [
                 h('span', {
