@@ -233,7 +233,7 @@
         // 磁盘备份表头
         diskBackupsColumns: [
           {
-            type: 'selection',
+            type: 'radio',
             width: 60,
             align: 'center'
           },
@@ -328,7 +328,7 @@
         // 备份策略表头
         diskBackupsStrategyColumns: [
           {
-            type: 'selection',
+            type: 'radio',
             width: 60,
             align: 'center'
           }, {

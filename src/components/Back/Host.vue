@@ -384,11 +384,11 @@
       <div class="universal-modal-content-flex">
         <Form :model="mirrorForm" ref="mirrorForm" :rules="mirrorFormRule">
           <Form-item label="镜像名称" prop="mirrorName">
-            <Input v-model="mirrorForm.mirrorName" placeholder="小于20位数字或字母小于20位数字或字母" type="textarea" :rows="3"></Input>
+            <Input v-model="mirrorForm.mirrorName" placeholder="小于20位数字或字母"></Input>
           </Form-item>
           <Form-item label="备注">
-            <Input v-model="mirrorForm.description" type="textarea" :autosize="{minRows: 3,maxRows: 3}"
-                   placeholder="小于20位数字、字母、中文及下划线（选填）"></Input>
+            <Input v-model="mirrorForm.description" type="textarea" :autosize="{minRows: 2,maxRows: 2}"
+                   placeholder="小于20个字（选填)"></Input>
           </Form-item>
         </Form>
       </div>

@@ -128,10 +128,10 @@
                   <Form ref="formInvoiceDate" :model="formInvoiceDate" :rules="ruleValidate" :label-width="80"
                         label-position="left">
                     <Form-item label="温馨提示">
-                      <p style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);line-height: 18px;">
+                      <p style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);line-height: 18px;margin-top: 5px;">
                         1.您选择的发票金额不能小于1000元，增值发票准票金额不能小于10000请累计之后一并申请。</p>
                       <p
-                        style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);margin-bottom: -10px;line-height: 18px; ">
+                        style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);margin-bottom: -10px;line-height: 18px;">
                         2.发票寄出时间：每月20号统一寄出，15号之前申请的发票将在当月20号寄出，15号之后申请的发票将在次月20号寄出。</p>
                     </Form-item>
                     <Form-item label="开票金额" prop="invoiceAmount">
@@ -181,7 +181,7 @@
                              style="width: 317px"></Input>
                     </Form-item>
                     <Form-item>
-                      <Button type="primary" style="margin-left: 235px" @click="invoiceMake('formInvoiceDate')">确认开票
+                      <Button type="primary" style="float: right;font-size: 12px;" @click="invoiceMake('formInvoiceDate')">确认开票
                       </Button>
                     </Form-item>
                   </Form>
@@ -404,12 +404,9 @@
           {
             title: '类型',
             key: 'operator',
-            align: 'center',
-            width: 120
           },
           {
             title: '面值/折扣',
-            align: 'center',
             render: (h, params) => {
               return h('span', params.row.operator == '优惠券' ? `${params.row.money}元` : `${params.row.money}折`)
             },
@@ -418,8 +415,6 @@
           {
             title: '适用产品',
             key: 'tickettype',
-            align: 'center',
-            width: 140,
             render: (h, params) => {
               return h('span', params.row.tickettype == 1 ? '所有产品' : '--')
             }
@@ -427,8 +422,6 @@
           {
             title: '状态',
             key: 'maketicketover',
-            align: 'center',
-            width: 110,
             render: (h, params) => {
               return h('span', params.row.maketicketover == 1 ? '已使用' : '未使用')
             }
@@ -436,25 +429,19 @@
           {
             title: '生效时间',
             key: 'starttime',
-            align: 'center',
-            width: 175
           },
           {
             title: '失效时间',
             key: 'endtime',
-            align: 'center',
-            width: 175
           },
           {
             title: '描述',
             key: 'ticketdescript',
-            align: 'center',
             ellipsis: true
           },
           {
             title: '备注',
             key: 'remark',
-            align: 'center',
             ellipsis: true,
             render: (h, params) => {
               return h('span', params.row.remark == null ? '--' : params.row.remark)
@@ -466,8 +453,6 @@
           {
             title: '发票状态',
             key: 'status',
-            align: 'center',
-            width: 150,
             render: (h, params) => {
               const row = params.row
               const color = row.status === 0 ? 'green' : row.status === 1 ? 'red' : row.status === 2 ? 'yellow' : 'blue'
@@ -483,8 +468,6 @@
           {
             title: '发票种类',
             key: 'type',
-            align: 'center',
-            width: 190,
             render: (h, params) => {
               return h('span', params.row.type == 0 ? '普通发票' : '增值税专用发票')
             }
@@ -492,26 +475,18 @@
           {
             title: '发票抬头',
             key: 'title',
-            align: 'center',
-            width: 220
           },
           {
             title: '发票申请时间',
             key: 'createtime',
-            align: 'center',
-            width: 200
           },
           {
             title: '发票金额',
             key: 'amount',
-            align: 'center',
-            width: 140
           },
           {
             title: '物流信息',
             key: 'status',
-            align: 'center',
-            width: 110,
             render: (h, params) => {
               const row = params.row
               const text = row.status === 0 ? '查看' : row.status === 3 ? '查看' : ''
@@ -533,8 +508,6 @@
           {
             title: '操作',
             key: 'cz',
-            align: 'center',
-            width: 140,
             render: (h, params) => {
               return h('div', [
                 h('span', {
@@ -1473,12 +1446,12 @@
             .expenses_s2_wrap {
               margin-top: 20px;
               padding-right: 30px;
-             // overflow: hidden;
+              // overflow: hidden;
               .expenses_s2 {
                 font-family: Microsoft Yahei, 微软雅黑;
                 font-size: 36px;
                 color: rgba(17, 17, 17, 0.65);
-               // float: left;
+                // float: left;
               }
               button {
                 float: right;

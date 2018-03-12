@@ -277,7 +277,7 @@
         // 磁盘列包含信息
         diskColumns: [
           {
-            type: 'selection',
+            type: 'radio',
             width: 60,
             align: 'center'
           },
