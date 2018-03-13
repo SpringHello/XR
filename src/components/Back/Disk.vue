@@ -283,6 +283,7 @@
           },
           {
             title: '硬盘名称',
+            width: 150,
             render: (h, params) => {
               if (params.row.status === 1) {
                 return h('span', {
@@ -319,6 +320,7 @@
           {
             title: '状态',
             key: 'status',
+            width: 200,
             render: (h, params) => {
               const row = params.row
               const text = row.status === 0 ? '欠费' : (row.status === 1 && !row.mounton && !row.mountonname) ? '可挂载' : (row.status === 1 && row.mounton && row.mountonname) ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '正常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '卸载中' : row.status === 5 ? '挂载中' :row.status === 6 ? '备份中': ''
@@ -355,6 +357,7 @@
           {
            title: '创建时间',
            ellipsis: true,
+            width:160,
            key: 'createtime',
           },
           {
