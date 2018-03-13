@@ -1036,12 +1036,12 @@
         linkManColumns: [
           {
             title: '姓名',
-            align: 'center',
+            align: 'left',
             key: 'username',
           },
           {
             title: '手机',
-            align: 'center',
+            align: 'left',
             render: (h, params) => {
               if (params.row.phoneauth == 0 && params.row.telphone != '') {
                 return h('div', [
@@ -1121,7 +1121,7 @@
           },
           {
             title: '邮箱',
-            align: 'right',
+            align: 'left',
             render: (h, params) => {
               if (params.row.emailauth == 0 && params.row.email != '') {
                 return h('div', [
@@ -1201,11 +1201,12 @@
           },
           {
             title: '添加时间',
-            align: 'center',
+            align: 'left',
             key: 'createTime',
-          }, {
+          },
+          {
             title: '操作',
-            align: 'center',
+            align: 'left',
             render: (h, params) => {
               return h('div', [
                 h('span', {
