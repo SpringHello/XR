@@ -897,8 +897,6 @@
           if (this.currentHost[0].publicip) {
             this.$Message.warning('已绑定主机无法再次绑定!')
           } else {
-            this.loadingMessage = '正在绑定IP'
-            this.loading = true
             this.bindForm.publicIP = ''
             this.showModal.bindIP = true
             axios.get(`network/listPublicIp.do?useType=0&zoneId=${this.currentHost[0].zoneid}`)
@@ -915,6 +913,9 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.showModal.bindIP = false
+            this.$Message.info({
+                    content: `<span style="color:#2A99F2">${this.currentHost[0].computername}</span>云主机,正在绑定公网IP`
+                  })
             var url = `network/enableStaticNat.do?ipId=${this.bindForm.publicIP}&VMId=${this.currentHost[0].computerid}`
             this.$http.get(url)
               .then(response => {
@@ -932,6 +933,9 @@
       },
       unbind() {
         if (this.checkSelect()) {
+          this.$Message.info({
+                  content: `<span style="color:#2A99F2">${this.currentHost[0].computername}</span>云主机,正在解绑公网IP`
+                })
           var url = `network/disableStaticNat.do?ipId=${this.currentHost[0].publicip}&VMId=${this.currentHost[0].computerid}`
           this.$http.get(url).then(response => {
             if (response.status == 200 && response.data.status == 1) {
