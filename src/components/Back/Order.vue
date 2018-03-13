@@ -20,9 +20,11 @@
               @click="clipCoupons">使用优惠券</span>
             <div style="text-align: right">
               <span
-                style="font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: rgba(0,0,0,0.65);">总计支付 : <span style="color: #377DFF;font-size: 18px;">{{totalCost}}</span>  <span style="font-size: 14px;">/元</span> </span>
+                style="font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: rgba(0,0,0,0.65);">总计支付 : <span
+                style="color: #377DFF;font-size: 18px;">{{totalCost}}</span>  <span style="font-size: 14px;">/元</span> </span>
               <span v-show="actualPayment"
-                    style="font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: rgba(0,0,0,0.65);">（实际支付：<span style="color: #377DFF;font-size: 18px;">{{totalCost}}</span>  <span style="font-size: 14px;">/元</span>）</span>
+                    style="font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: rgba(0,0,0,0.65);">（实际支付：<span
+                style="color: #377DFF;font-size: 18px;">{{totalCost}}</span>  <span style="font-size: 14px;">/元</span>）</span>
               <div style="margin-top:20px;">
                 <button
                   style="cursor:pointer;margin-right:15px;padding:5px 15px;outline: none;background-color: white;
@@ -289,13 +291,9 @@
                 .then(response => {
                   this.payLoading = false
                   //this.$store.commit('setSelect', 'payResult')
-                  console.log(1)
                   if (response.status == 200 && response.data.status == 1) {
-                    console.log(2)
                     sessionStorage.setItem('payResult', 'success')
-                    console.log(3)
                     this.$router.push('payResult')
-                    console.log(4)
                   } else if (response.status == 200 && response.data.status == 2) {
                     sessionStorage.setItem('payResult', 'fail')
                     this.$router.push('payResult')

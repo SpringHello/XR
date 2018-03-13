@@ -106,9 +106,9 @@
   import axios from 'axios'
   import $store from '@/vuex'
   import regExp from '../../util/regExp'
-  var natGatewayId = sessionStorage.getItem('currentNat')
   export default{
     beforeRouteEnter(from, to, next){
+      var natGatewayId = sessionStorage.getItem('currentNat')
       var natGateway = axios.get('network/listNatGateway.do', {
         params: {
           natGatewayId,
