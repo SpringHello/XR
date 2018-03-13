@@ -438,10 +438,9 @@
           {
             title: '操作',
             key: 'action',
-            width: 150,
+            width: 250,
             align: 'left',
             render: (h, params) => {
-
               let message = ''
               if (params.row.status) {
                 switch (params.row.status) {
