@@ -392,8 +392,7 @@
         type: '0',
         loginShow: true,
         rulesShow: false,
-        codePlaceholder: '发送验证码',
-        countdown: 60
+        codePlaceholder: '发送验证码'
       }
     },
     created(){
@@ -509,24 +508,24 @@
         this.codePlaceholder = '验证码发送中'
         axios.get('user/code.do?aim=' + this.form.loginname + '&type=' + this.type + '&isemail=' + this.isemail + '&vailCode=' + this.form.code).then(response => {
           this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+          // 发送倒计时
+          let countdown = 60
+          this.codePlaceholder = '60s'
+          var inter = setInterval(() => {
+            countdown--
+            this.codePlaceholder = this.countdown + 's'
+            if (countdown == 0) {
+              clearInterval(inter)
+              this.codePlaceholder = '发送验证码'
+            }
+          }, 1000)
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success({
               content: '验证码发送成功',
               duration: 5
-            });
-            this.codePlaceholder = '重新发送（60s）'
-            var inter = setInterval(() => {
-              this.countdown--
-              this.codePlaceholder ='重新发送（' + this.countdown + 's）'
-              if (this.countdown == 0) {
-                clearInterval(inter)
-                this.countdown = 60
-                this.codePlaceholder = '发送验证码'
-              }
-            }, 1000)
+            })
           } else {
             this.$Message.error(response.data.message)
-            this.codePlaceholder = '发送验证码'
           }
         })
       },
@@ -715,7 +714,7 @@
           color: #FFFFFF;
           letter-spacing: 0.71px;
           outline: none;
-          &.codeDisabled{
+          &.codeDisabled {
             cursor: not-allowed;
           }
         }

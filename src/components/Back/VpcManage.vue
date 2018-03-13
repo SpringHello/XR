@@ -603,7 +603,7 @@
         for (let network of this.data.ipsList) {
           if (network.ipsegmentid == this.addHostForm.ipsegmentid) {
             network.vmList.push({
-              status: 3,
+              status: 1,
               computername: '添加中...'
             })
           }

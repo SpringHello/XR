@@ -277,11 +277,23 @@
           },
           {
             title: '起始端口',
-            key: 'startport'
+            render(h, obj){
+              if (obj.row.agreement == 'ICMP' || obj.row.agreement == 'ALL') {
+                return h('span', '--')
+              } else {
+                return h('span', obj.row.startport)
+              }
+            }
           },
           {
             title: '结束端口',
-            key: 'endport'
+            render(h, obj){
+              if (obj.row.agreement == 'ICMP' || obj.row.agreement == 'ALL') {
+                return h('span', '--')
+              } else {
+                return h('span', obj.row.endport)
+              }
+            }
           },
           {
             title: 'CIDR',
@@ -294,25 +306,27 @@
               return h('div', {},
                 [
                   h('Poptip', {
-                    props: {
-                      confirm: true,
-                      placement: 'top-end',
-                      width: 200,
-                      title: '确认要删除该规则？',
-                    },
-                    on: {
-                      'on-ok': () => {
-                        this.del(params.row.id)
+                      props: {
+                        confirm: true,
+                        placement: 'top-end',
+                        width: 200,
+                        title: '确认要删除该规则？',
+                      },
+                      on: {
+                        'on-ok': () => {
+                          this.del(params.row.id)
+                        }
                       }
-                    }
-                  }, [h('span', {
-                    style: {
-                      cursor: 'pointer',
-                      color: '#2A99F2'
-                    }
-                  }, '删除')])
+                    }, [h('span', {
+                      style: {
+                        cursor: 'pointer',
+                        color: '#2A99F2'
+                      }
+                    }, '删除')]
+                  )
                 ]
-              );
+              )
+                ;
             }
           }
         ],
@@ -327,7 +341,8 @@
           access: '',
           cidr: '0.0.0.0/0',
           itemid: 1,
-        },
+        }
+        ,
         ruleValidate: {
           name: [
             {required: true, validator: validaRegisteredName, trigger: 'change'}
@@ -347,15 +362,18 @@
           cidr: [
             {required: true, validator: validateCdir, trigger: 'blur'}
           ]
-        },
+        }
+        ,
         updateForm: {
           name: '',
           description: ''
-        },
+        }
+        ,
         addHostForm: {
           hostid: '',
           hostList: []
-        },
+        }
+        ,
         currentNetwork: ''
       }
     },
@@ -398,10 +416,11 @@
                 access: this.newRuleForm.access
               }
             }).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
+              if (response.status == 200 && response.data.status == 1
+              ) {
                 this.loading = false
                 this.$Message.success({
-                    content: response.data.message
+                  content: response.data.message
                 })
                 this.$http.get('network/listaclListItem.do', {
                   params: {
@@ -410,7 +429,8 @@
                 }).then(response => {
                   this.setData(response)
                 })
-              } else {
+              }
+              else {
                 this.loading = false
                 this.$message.error({
                   content: response.data.message
@@ -418,7 +438,8 @@
               }
             })
           }
-        })
+        }
+      )
       },
       // 删除规则
       del(aclId){
@@ -483,7 +504,7 @@
           margin-bottom: 10px
         }
         .info {
-         // font-weight: 600;
+          // font-weight: 600;
           margin-right: 25px;
           font-size: 16px;
           color: #2a99f2;
@@ -496,11 +517,11 @@
           .network-wrapper {
             margin-top: 20px;
             min-height: 50px;
-           // background-color: #e9f4fd;
+            // background-color: #e9f4fd;
             border-radius: 5px;
             border-radius: 5px;
             padding: 18px 25px;
-            border:1px solid #d8d8d8;
+            border: 1px solid #d8d8d8;
             .arrow {
               border-top: 14px solid #2A99F2;
               border-left: 7px solid rgba(0, 0, 0, 0);
