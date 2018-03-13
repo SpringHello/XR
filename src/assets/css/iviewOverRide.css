@@ -31,6 +31,7 @@
   padding-top: 0
 }
 
+
 /* 每行两列form表单样式 */
 .universal-modal-content-flex form {
   display: flex;
@@ -235,4 +236,8 @@ div.modal-header-border {
 
 .ivu-modal{
   top:180px;
+}
+.ivu-collapse {
+  background-color: #FFFFFF;
+  border: none;
 }

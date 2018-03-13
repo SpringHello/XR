@@ -20,43 +20,45 @@
             </div>
           </header>
           <div class="pan" v-if="computerInfo!=null" style="width:28%">
-            <span>
+            <div>
               <i v-if="computerInfo.cpuNum">{{computerInfo.cpuNum}}CPU  , </i>
               <i v-if="computerInfo.memory">{{computerInfo.memory}}G内存 , </i>
               <i v-if="computerInfo.bandwith">{{computerInfo.bandwith}}M宽带  </i>
               <i v-if="computerInfo.zoneName"> | {{computerInfo.zoneName}}</i>
-            </span>
-            <span>镜像系统：{{computerInfo.template}}</span>
-            <span>到期时间／有效期：{{computerInfo.endTime}}</span>
-            <span>内网地址：{{computerInfo.privateIp}}</span>
-            <!-- <span><span>登录密码：</span>
-              <span v-show="showPassword" class="bluetext">{{computerInfo.password}}</span>
-              <span v-show="!showPassword" class="bluetext">******</span>
-              <label :class="{close:showPassword}" @click="showPassword=!showPassword"></label></span> -->
+            </div>
+            <div>镜像系统：{{computerInfo.template}}</div>
+            <div>到期时间／有效期：{{computerInfo.endTime}}</div>
+            <div>内网地址：{{computerInfo.privateIp}}</div>
           </div>
           <div class="pan" v-if="computerInfo!=null" style="width: 20%">
-
-            <span>所属VPC：<span class="bluetext">{{computerInfo.vpc}}</span></span>
-            <span>绑定公网：<span class="bluetext">{{computerInfo.publicIp}}</span></span>
-            <span>所属负载均衡：<span class="bluetext">{{computerInfo.loadbalance.join('|')}}</span></span>
-            <Tooltip placement="top-start">
-              <span class="one-row-text" style="width:190px">挂载磁盘：<span class="bluetext">{{computerInfo.disk.join('|')}}</span></span>
-              <div slot="content" v-for="(item,index) in computerInfo.disk" :key="index">
+            <div>所属VPC：<span class="bluetext">{{computerInfo.vpc}}</span></div>
+            <div>绑定公网：<span class="bluetext">{{computerInfo.publicIp}}</span></div>
+            <div>所属负载均衡：
+                <Tooltip placement="top-start" v-if="computerInfo.loadbalance.length>0">
+                  <span class="bluetext one-row-text"  style="width:100px;">{{computerInfo.loadbalance.join('|')}}</span>
+                  <div slot="content" v-for="(item,index) in computerInfo.loadbalance" :key="index">
+                    <p>{{item}}</p>
+                  </div>
+                </Tooltip>
+                <span class="bluetext one-row-text"  style="width:100px;" v-else>{{computerInfo.loadbalance.join('|')}}</span>
+            </div>
+            <div>挂载磁盘：
+              <Tooltip placement="top-start" v-if="computerInfo.disk.length>0">
+                <span class="bluetext one-row-text"  style="width:120px;">{{computerInfo.disk.join('|')}}</span>
+                <div slot="content" v-for="(item,index) in computerInfo.disk" :key="index">
                   <p>{{item}}</p>
-              </div>
-          </Tooltip>
-            
-            <span>状态：<span class="bluetext">{{computerInfo.computerStatus ? "开机" : "关机"}}</span></span>
+                </div>
+              </Tooltip>
+              <span class="bluetext one-row-text"  style="width:120px;" v-else>{{computerInfo.disk.join('|')}}</span>
+            </div>
+            <div>状态：<span class="bluetext">{{computerInfo.computerStatus ? "开机" : "关机"}}</span></div>
           </div>
           <div class="pan" v-if="computerInfo!=null" style="width: 20%">
-
-            <span>计费类型：{{computerInfo.case_type == 1 ? '包年' : computerInfo.case_type == 2 ? '包月' : '实时'}}</span>
-            <span>创建于：{{computerInfo.createTime}}</span>
-            <span>自动续费：<span class="bluetext">{{computerInfo.isAutoRenw ? '开' : '关'}}</span></span>
-
+            <div>计费类型：{{computerInfo.case_type == 1 ? '包年' : computerInfo.case_type == 2 ? '包月' : '实时'}}</div>
+            <div>创建于：{{computerInfo.createTime}}</div>
+            <div>自动续费：<span class="bluetext">{{computerInfo.isAutoRenw ? '开' : '关'}}</span></div>
           </div>
         </div>
-
         <div class="charts">
           <Tabs type="card" :animated="false">
             <Tab-pane label="监控">
@@ -75,7 +77,6 @@
                         <Radio label="折线"></Radio>
                         <Radio label="柱状图"></Radio>
                       </Radio-group>
-
                     </div>
                     <div style="width:1150px;height:300px;position:relative;overflow: hidden;">
                       <chart :options="cpuPolar"></chart>
@@ -94,13 +95,11 @@
                         <Radio label="折线"></Radio>
                         <Radio label="柱状图"></Radio>
                       </Radio-group>
-
                     </div>
                     <div style="width:1150px;height:300px;position:relative;overflow: hidden;">
                       <chart :options="memoryPolar"></chart>
                     </div>
                   </div>
-
                   <div class="item">
                     <label>磁盘空间利用率<span class="timeText">{{ diskTime }}</span></label>
                     <div style="margin-top:10px;">
@@ -114,13 +113,11 @@
                         <Radio label="折线"></Radio>
                         <Radio label="柱状图"></Radio>
                       </Radio-group>
-
                     </div>
                     <div style="width:1150px;height:300px;position:relative;overflow: hidden;">
                       <chart :options="diskPolar"></chart>
                     </div>
                   </div>
-
                   <div class="item">
                     <label>弹性IP弹性流量<span class="timeText">{{ IPTime}}</span></label>
                     <div style="margin-top:10px;">
@@ -138,7 +135,6 @@
                         <Radio label="折线"></Radio>
                         <Radio label="柱状图"></Radio>
                       </Radio-group>
-
                     </div>
                     <div style="width:1150px;height:300px;position:relative;overflow: hidden;">
                       <chart :options="ipPolar"></chart>
@@ -150,7 +146,6 @@
             <TabPane label="快照管理" name="name2">
               <div class="body">
               <Button type="primary" @click="delSnapshot" style="margin-bottom:10px">删除快照</Button>
-
                 <Table ref="selection" :columns="snapshotCol" :data="snapshotData"
                         @radio-change="changeSelection"></Table>
               </div>
@@ -179,7 +174,6 @@
                     </Button>
                   </Form-item>
                 </Form>
-
                 <label>重装系统</label>
                 <Form :model="reloadForm" :label-width="100" label-position="left" style="margin-top:20px;width:350px;">
                   <Form-item label="选择镜像">
@@ -222,7 +216,6 @@
                     <Button v-else type="primary" size="small" disabled>{{reloadButton}}</Button>
                   </Form-item>
                 </Form>
-
               </div>
             </Tab-pane>
             <Tab-pane label="操作日志">
@@ -241,7 +234,6 @@
                     <button @click="search" style="margin-left: 20px;">查询</button>
                   </div>
                 </div>
-
                 <div class="log" style="margin-top: 20px">
                   <Table highlight-row :columns="columnslog" :data="tableDatalog" ></Table>
                   <div style="margin: 10px;overflow: hidden">
@@ -346,7 +338,7 @@
           <strong>警告</strong>
           <p class="lh24">为了数据安全，系统重装之前主机会自动关闭。重装结束后，主机会自动开机。</p>
           <p>请输入“confirm”</p>
-          <Input v-model="reloadhintForm.input" placeholder="请输入“confirm”" style="width: 300px"></Input>
+          <Input v-model="reloadhintForm.input" placeholder="请输入“confirm”" style="width: 300px;margin-top: 10px;"></Input>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
@@ -508,6 +500,7 @@
           {
             title: '操作',
             key: 'action',
+            width: 100,
             render: (h, params) => {
               return h('span', {
                 style: {
@@ -1214,35 +1207,22 @@
         color: #666666;
         font-size: 12px;
         line-height: 12px;
-        // box-shadow: 1px 1px 1px #666666;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.35);
-        .bluetext {
-          color: rgb(42, 153, 242);
-        }
-        > span,.one-row-text {
-          /*font-family: PingFangSC-Medium;*/
-          margin-bottom: 10px;
-          display: block;
+        > div{
+          line-height: 20px;
           user-select: none;
-          overflow: hidden;
-          text-overflow:ellipsis;
-          white-space: nowrap;
-          i {
+            i {
             font-style: normal;
           }
         }
-        label {
-          width: 24px;
-          height: 15px;
+        .bluetext {
+          color: rgb(42, 153, 242);
+        }
+       .one-row-text {
           display: inline-block;
-          bottom: 18px;
-          right: 43px;
-          cursor: pointer;
-          vertical-align: sub;
-          background-image: url("../../assets/img/manage/closeEye.png");
-          &.close {
-            background-image: url("../../assets/img/manage/eye.png");
-          }
+          overflow: hidden;
+          text-overflow:ellipsis;
+          white-space: nowrap;
         }
       }
       > h1 {

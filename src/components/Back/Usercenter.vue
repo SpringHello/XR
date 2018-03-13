@@ -710,29 +710,26 @@
         验证手机号
       </div>
       <div>
-        <div><span
-          style="display: block;margin: 15px 0px;font-size: 16px;color: #333333;width:80px;font-size: 14px;line-height: 14px;">手机号</span><span>{{userInfo.phone}}</span>
+        <div style="margin: 15px 0;">
+          <span style="display: block;margin: 10px 0px;font-size: 16px;color: #333333;width:80px;font-size: 14px;line-height: 14px;">手机号</span><span>{{userInfo.phone}}</span>
         </div>
-        <div>
-          <span
-            style="font-size: 14px;color: #333333;line-height: 14px;vertical-align:sub;width:80px;display:block;margin: 15px 0px;">随机验证码</span>
+        <div style="margin: 15px 0 20px 0;">
+          <span style="font-size: 14px;color: #333333;line-height: 14px;vertical-align:sub;width:80px;display:block;margin: 10px 0px;">随机验证码</span>
           <Input type="text" autocomplete="off" v-model="code" placeholder="请输入随机验证码"
-                 style="width: 240px;margin-right: 30px"></Input>
+                 style="width: 240px;margin-right: 20px;height: 28px;"></Input>
           <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
                style="height:32px;vertical-align: middle">
         </div>
-        <div>
-        <span
-          style="font-size: 14px;line-height: 14px;color:#333333;vertical-align:sub;width:80px;display: block;margin: 15px 0px;">验证码</span>
-          <Input
-            v-model="newPhoneForm.oldPhoneCode" placeholder="请输入手机验证码" style="width: 240px;margin-right:30px;"></Input>
+        <div style="margin: 20px 0 10px 0;">
+        <span style="font-size: 14px;line-height: 14px;color:#333333;vertical-align:sub;width:80px;display: block;margin: 10px 0px;">验证码</span>
+          <Input v-model="newPhoneForm.oldPhoneCode" placeholder="请输入手机验证码" style="width: 240px;margin-right:20px;height: 28px;"></Input>
           <Button type="primary" :class="{codeDisabled:newPhoneForm.phoneVerCodeText!='获取验证码'}"
                   :disabled="newPhoneForm.phoneVerCodeText!='获取验证码'"
                   style="height:31px;width:92px" @click="getVerCode('phone')">{{newPhoneForm.phoneVerCodeText}}
           </Button>
         </div>
       </div>
-      <div style="padding: 20px;border-bottom: 1px solid #D8D8D8;background-color: #F7F7F7;">
+      <div style="padding: 20px 20px 50px 20px;border-bottom: 1px solid #D8D8D8;background-color: #F7F7F7;">
         <p style="line-height: 1.5;color: #999;">没有收到验证码？</p>
         <p style="line-height: 1.5;color: #999;">1、网络通讯异常可能会造成短信丢失，请重新获取或稍后再试。</p>
         <p style="line-height: 1.5;color: #999;">2、如果手机已丢失或停机，请<span style="color: rgb(42, 153, 242);cursor: pointer"
@@ -750,17 +747,19 @@
         邮箱验证
       </div>
       <div>
-        <div><span
-          style="display: block;margin: 15px 0px;font-size: 14px;color: #333333;line-height: 14px;width:80px;">邮箱</span><span>{{userInfo.loginname}}</span>
+        <div style="margin: 15px 0;"><span
+          style="display: block;margin: 10px 0px;font-size: 14px;color: #333333;line-height: 14px;width:80px;">邮箱</span><span>{{userInfo.loginname}}</span>
         </div>
-        <span
-          style="font-size: 14px;color: #333333;line-height: 14px;vertical-align:sub;width:80px;display: block;margin: 15px 0px;">验证码</span><Input
-        v-model="newPhoneForm.oldPhoneCode" placeholder="请输入" style="width: 240px;margin-right:30px;"></Input>
-        <Button type="primary" :class="{codeDisabled:emailVerCodeText!='获取验证码'}" :disabled="emailVerCodeText!='获取验证码'"
-                style="height:31px;width:92px" @click="getVerCode('email')">{{emailVerCodeText}}
-        </Button>
+        <div style="margin: 15px 0 20px 0;">
+          <span
+            style="font-size: 14px;color: #333333;line-height: 14px;vertical-align:sub;width:80px;display: block;margin: 10px 0px;">验证码</span><Input
+          v-model="newPhoneForm.oldPhoneCode" placeholder="请输入" style="width: 240px;margin-right:20px;height: 28px;"></Input>
+          <Button type="primary" :class="{codeDisabled:emailVerCodeText!='获取验证码'}" :disabled="emailVerCodeText!='获取验证码'"
+                  style="height:31px;width:92px" @click="getVerCode('email')">{{emailVerCodeText}}
+          </Button>
+        </div>
       </div>
-      <div style="padding: 20px;border-bottom: 1px solid #D8D8D8;background-color: #F7F7F7;">
+      <div style="padding: 20px 20px 50px 20px;border-bottom: 1px solid #D8D8D8;background-color: #F7F7F7;">
         <p style="line-height: 1.5;color: #999;">没有收到验证码？</p>
         <p style="line-height: 1.5;color: #999;">1、网络通讯异常可能会造成短信丢失，请重新获取或稍后再试。</p>
         <p style="line-height: 1.5;color: #999;">2、如果手机已丢失或停机，请<span style="color: rgb(42, 153, 242);cursor: pointer"
@@ -1036,12 +1035,12 @@
         linkManColumns: [
           {
             title: '姓名',
-            align: 'center',
+            align: 'left',
             key: 'username',
           },
           {
             title: '手机',
-            align: 'center',
+            align: 'left',
             render: (h, params) => {
               if (params.row.phoneauth == 0 && params.row.telphone != '') {
                 return h('div', [
@@ -1121,7 +1120,7 @@
           },
           {
             title: '邮箱',
-            align: 'right',
+            align: 'left',
             render: (h, params) => {
               if (params.row.emailauth == 0 && params.row.email != '') {
                 return h('div', [
@@ -1201,11 +1200,13 @@
           },
           {
             title: '添加时间',
-            align: 'center',
+            align: 'left',
             key: 'createTime',
-          }, {
+          },
+          {
             title: '操作',
-            align: 'center',
+            align: 'left',
+            width: 150,
             render: (h, params) => {
               return h('div', [
                 h('span', {

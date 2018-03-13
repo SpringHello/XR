@@ -260,7 +260,7 @@
                       display: 'inline-block',
                       marginRight: '10px'
                     }
-                  }), h('span', {}, '创建中')])
+                  }), h('span', {}, '删除中')])
               }
             }
           },
@@ -339,6 +339,13 @@
             render: (h, params) => {
               if (params.row.status === 1) {
                 return h('span', {}, '可用')
+              } else if (params.row.status === 2) {
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', {}, '删除中')])
               } else {
                 return h('span', {
                   style: {
@@ -396,6 +403,7 @@
           }, {
             title: '创建时间',
             key: 'createtime',
+            width:160
           }, {
             title: '应用磁盘',
             render: (h, params) => {
@@ -881,7 +889,7 @@
         var url = `Disk/updateDiskIntoBackUpStrategy.do?backUpStrategyId=${this.strategyId}&diskIds=${diskParams.join(',')}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$message.info({
+            this.$Message.success({
               content: response.data.message
             })
             this.showModal.addOrDeleteDisk = false
@@ -1101,6 +1109,11 @@
       /* 删除磁盘备份 */
       deleteDiskBackup () {
         if (this.diskBackupsSelection) {
+          this.diskBackupsData.forEach(item => {
+            if (this.diskBackupsSelection.id === item.id) {
+              item.status = 2
+            }
+          })
           var url = `Snapshot/deleteDiskSnapshot.do?id=${this.diskBackupsSelection.id}&zoneId=${this.diskBackupsSelection.zoneid}`
           axios.get(url).then(response => {
             if (response.status == 200 && response.data.status == 1) {
@@ -1138,6 +1151,11 @@
       /* 删除备份策略 */
       deleteDiskStrategy () {
         if (this.checkSelect() === true) {
+          this.diskBackupsStrategyData.forEach(item => {
+            if (this.diskSelectionStrategy.id === item.id) {
+              item.status = 2
+            }
+          })
           var url = `Disk/deleteDiskBackUpStrategy.do?id=${this.diskSelectionStrategy.id}&zoneId=${this.diskSelectionStrategy.zoneid}`
           axios.get(url).then(response => {
             if (response.status == 200 && response.data.status == 1) {

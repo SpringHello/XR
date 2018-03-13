@@ -49,11 +49,12 @@
                        :class="{rotateup:item._show,rotatedown:!item._show}"></div>
                   {{item.name}}
                 </li>
-                <li>网关地址：{{item.ipsegment.split('/')[0]}}</li>
-                <li>网段地址：{{item.ipsegment}}</li>
-                <li>服务方案：{{item.netoffername}}</li>
-                <li>防火墙：<span class="blue" @click="toFirewall(item)">{{item.acllistname}}</span></li>
-                <li v-if="item.netoffername==='公网负载均衡网络'||item.netoffername==='内网负载均衡网络'">负载均衡：<span class="blue" @click="toBalance(item)">{{item.loadbalance}}</span></li>
+                <li style="flex-basis: 160px;">网关地址：{{item.ipsegment.split('/')[0]}}</li>
+                <li style="flex-basis: 160px;">网段地址：{{item.ipsegment}}</li>
+                <li style="flex-basis: 180px;">服务方案：{{item.netoffername}}</li>
+                <li style="flex-basis: 180px;">防火墙：<span class="blue" @click="toFirewall(item)">{{item.acllistname}}</span></li>
+                <li style="flex-basis: 180px; overflow: hidden;text-overflow:ellipsis;white-space: nowrap;" v-if="item.netoffername==='公网负载均衡网络'||item.netoffername==='内网负载均衡网络'">负载均衡：<span class="blue" @click="toBalance(item)">{{item.loadbalance}}</span></li>
+                <li style="flex-basis: 180px;" v-else></li>
                 <li><span class="blue" @click="addHostToVpc(item)">添加主机</span><span class="vertical-line">|</span><span
                   class="blue" @click="deleteVpc(item)">删除</span></li>
               </ul>
@@ -431,14 +432,14 @@
           },
           {
             title: 'IP地址',
-            align: 'center',
+            align: 'left',
             key: 'privateip'
           },
           {
             title: '操作',
             key: 'action',
-            width: 220,
-            align: 'center',
+            width: 150,
+            align: 'left',
             render: (h, params) => {
 
               let message = ''
@@ -533,6 +534,7 @@
           },
           {
             title: '操作',
+            width: 150,
             render: (h, object) => {
               return h('span', {
                 style: {
@@ -544,6 +546,8 @@
                     this.$message.confirm({
                       content: '确认删除该互通网关？',
                       onOk: () => {
+                        this.loadingMessage = '正在删除互通网关，请稍候'
+                        this.loading = true
                         this.$http.get('network/deletePrivateGateway.do', {
                           params: {
                             sourcePrivateId: object.row.privateGatewayid1,
@@ -551,13 +555,17 @@
                           }
                         }).then(response => {
                           if (response.status == 200 && response.data.status == 1) {
-                            this.$message.info({
+                            this.$Message.success({
                               content: response.data.message
                             })
+                            this.loading = false
+                            this.refresh()
                           } else {
                             this.$message.error({
                               content: response.data.message
                             })
+                            this.loading = false
+                            this.refresh()
                           }
                         })
                       }
@@ -862,8 +870,8 @@
         this.showModal.leaveNetwork = false
         for (let network of this.data.ipsList) {
           for (let vm of network.vmList) {
-            if (vm.networkid == this.leaveForm.networkid && vm.networkid.computerid == this.leaveForm.computerid) {
-              this.$set(vm, 'status', 2)
+            if (vm.networkid == this.leaveForm.networkid && vm.computerid == this.leaveForm.vmId) {
+              vm.computername = '离开中...'
             }
           }
         }
@@ -893,19 +901,23 @@
       },
       /* 主机确认绑定ip */
       bind(){
-        this.loadingMessage = '主机正在绑定ip,请稍候'
-        this.loading = true
         this.showModal.bindIP = false
         var arr = this.bindForm.publicIP.split("#")
         var url = `network/enableStaticNat.do?ipId=${arr[0]}&VMId=${this.bindForm.vm.computerid}`
+        for (let network of this.data.ipsList) {
+          for (let vm of network.vmList) {
+            if (vm.networkid == this.bindForm.vm.networkid && vm.computerid == this.bindForm.vm.computerid) {
+              vm.computername = '绑定IP中...'
+            }
+          }
+        }
         this.$http.get(url)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.loading = false
               this.$Message.success(response.data.message)
               this.refresh()
             } else {
-              this.loading = false
+              this.refresh()
               this.$message.error({
                 content: response.data.message
               })
@@ -917,16 +929,19 @@
         this.$message.confirm({
           content: '该主机确认解绑IP？',
           onOk: () => {
-            this.loadingMessage = '主机正在解绑ip,请稍候'
-            this.loading = true
+            for (let network of this.data.ipsList) {
+              for (let VM of network.vmList) {
+                if (VM.networkid == vm.networkid && VM.computerid == vm.computerid) {
+                  VM.computername = '解绑IP中...'
+                }
+              }
+            }
             var url = `network/disableStaticNat.do?VMId=${vm.computerid}`
             this.$http.get(url).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.loading = false
                 this.$Message.success(response.data.message)
                 this.refresh()
               } else {
-                this.loading = false
                 this.$message.error({
                   content: response.data.message
                 })
@@ -1124,7 +1139,6 @@
             border-radius: 4px;
             ul {
               display: flex;
-              justify-content: space-between;
               font-size: 12px;
               color: #333333;
               line-height: 18px;
@@ -1143,12 +1157,12 @@
               li:nth-child(1) {
                 display: flex;
                 align-items: center;
+                flex-basis: 160px;
                 .icon {
                   margin-right: 10px;
                 }
               }
               li:last-child {
-                margin-left: 160px;
                 .vertical-line {
                   padding: 0 10px;
                 }

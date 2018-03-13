@@ -545,6 +545,7 @@
           },
           {
             title: '操作',
+              width: 100,
             render: (h, object) => {
               return h('span', {
                 style: {

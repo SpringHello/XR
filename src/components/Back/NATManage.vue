@@ -4,8 +4,9 @@
       <span>首页 / NAT网关</span>
       <div id="content">
         <div id="header">
-          <div>
-            <div style="font-size: 16px;color: #2A99F2;">{{vpnInfo.natname}}</div>
+          <div class="header">
+            <div style="font-size: 16px;color: #2A99F2;padding-top: 5px;">{{vpnInfo.natname}}</div>
+            <Button class="btn" @click="$router.go(-1)">返回</Button>
           </div>
           <div class="VPN-info">
             <div>所属VPC：{{vpnInfo.vpcname}}</div>
@@ -373,6 +374,18 @@
         #header {
           background-color: #E9E9E9;
           padding: 20px;
+          div.header{
+            display: flex;
+            justify-content: space-between;
+            .btn{
+              border: 1px solid #2A99F2;
+              color: #2A99F2;
+              &:hover {
+                color: #FFF;
+                background-color: #2A99F2;
+              }
+            }
+          }
           .VPN-info {
             margin: 10px 0px;
             &:last-of-type {
