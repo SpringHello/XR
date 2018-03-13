@@ -437,7 +437,7 @@
           {
             title: '操作',
             key: 'action',
-            width: 220,
+            width: 150,
             align: 'left',
             render: (h, params) => {
 
@@ -533,6 +533,7 @@
           },
           {
             title: '操作',
+            width: 150,
             render: (h, object) => {
               return h('span', {
                 style: {

@@ -1206,6 +1206,7 @@
           {
             title: '操作',
             align: 'left',
+            width: 150,
             render: (h, params) => {
               return h('div', [
                 h('span', {

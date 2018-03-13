@@ -159,6 +159,7 @@
           },
           {
             title: '操作',
+            width: 100,
             render: (h, object) => {
               if (object.row.mockCreating) {
                 return h('Spin', {}, '创建中')

@@ -500,6 +500,7 @@
           {
             title: '操作',
             key: 'action',
+            width: 100,
             render: (h, params) => {
               return h('span', {
                 style: {
