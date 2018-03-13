@@ -338,7 +338,7 @@
           <strong>警告</strong>
           <p class="lh24">为了数据安全，系统重装之前主机会自动关闭。重装结束后，主机会自动开机。</p>
           <p>请输入“confirm”</p>
-          <Input v-model="reloadhintForm.input" placeholder="请输入“confirm”" style="width: 300px"></Input>
+          <Input v-model="reloadhintForm.input" placeholder="请输入“confirm”" style="width: 300px;margin-top: 10px;"></Input>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
