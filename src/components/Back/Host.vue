@@ -430,7 +430,7 @@
         <Form :model="loadBalanceForm" ref="loadBalanceForm" :rules="loadBalanceFormRule">
           <Form-item label="选择弹性负载均衡名称" prop="loadbalanceroleid">
             <Select v-model="loadBalanceForm.loadbalanceroleid" placeholder="请选择" style="width:240px;">
-              <Option v-for="(item,index) in listLoadBalanceRole" :key="index" :value="item.loadbalanceroleid">
+              <Option v-for="(item,index) in listLoadBalanceRole" :key="index" :value="item.loadbalanceroleid||item.lbid">
                 <span v-if="item.name">{{item.name}}</span>
                 <span v-if="item.lbname">{{item.lbname}}</span>
               </Option>

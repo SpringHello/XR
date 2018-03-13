@@ -41,7 +41,7 @@
                     <p>{{item}}</p>
                   </div>
                 </Tooltip>
-                <span class="bluetext one-row-text"  style="width:100px;" v-else>{{computerInfo.loadbalance.join('|')}}</span>
+                <span class="bluetext"  style="width:0px;" v-else>{{computerInfo.loadbalance.join('|')}}</span>
             </div>
             <div>挂载磁盘：
               <Tooltip placement="top-start" v-if="computerInfo.disk.length>0">
@@ -50,7 +50,7 @@
                   <p>{{item}}</p>
                 </div>
               </Tooltip>
-              <span class="bluetext one-row-text"  style="width:120px;" v-else>{{computerInfo.disk.join('|')}}</span>
+              <span class="bluetext"  style="width:0px;" v-else>{{computerInfo.disk.join('|')}}</span>
             </div>
             <div>状态：<span class="bluetext">{{computerInfo.computerStatus ? "开机" : "关机"}}</span></div>
           </div>
@@ -283,9 +283,9 @@
           </div>
           <div style="display:flex;">
             <p style=" font-size: 14px;line-height: 22px;">密码接收渠道</p>
-            <Checkbox v-model="isletterSec" size="large" style="margin-left: 20px;font-size: 12px;">站内信</Checkbox>
-            <Checkbox v-model="isemailalarmSec" size="large" style="margin-left: 20px;font-size: 12px;">邮箱</Checkbox>
-            <Checkbox v-model="issmsalarmSec" size="large" style="margin-left: 20px;font-size: 12px;">短信</Checkbox>
+            <Checkbox v-model="lookPasswordForm.isletterSec" size="large" style="margin-left: 20px;font-size: 12px;">站内信</Checkbox>
+            <Checkbox v-model="lookPasswordForm.isemailalarmSec" size="large" style="margin-left: 20px;font-size: 12px;">邮箱</Checkbox>
+            <Checkbox v-model="lookPasswordForm.issmsalarmSec" size="large" style="margin-left: 20px;font-size: 12px;">短信</Checkbox>
           </div>
         </div>
         <div slot="footer" class="modal-footer-border">
@@ -704,7 +704,13 @@
           ],
         },
         lookPasswordForm: {
-          input: ''
+          input: '',
+          isletterSec: false,
+          isemailalarmSec: false,
+          issmsalarmSec: false,
+          isLetterSec: 0,
+          isEmailAlarmSec: 0,
+          isSmsAlarmSec: 0,
         },
         lookPasswordFormRule: {
           input: [
@@ -925,6 +931,30 @@
             }, 1000)
           }
         })
+        
+          // isletterSec: false,
+          // isemailalarmSec: false,
+          // issmsalarmSec: false,
+          // isLetterSec: 0,
+          // isEmailAlarmSec: 0,
+          // isSmsAlarmSec: 0,
+          // this.lookPasswordForm.isLetterSec
+        // log/sendVMPassword.do    
+        // VMId 虚拟机id ,code 验证码  ,
+        // password  密码 ,letter 站站内信（选中则传  1 ，为选中传0）,
+        // meail 邮箱（选中则传  1 ，为选中传0）,phone 手机（选中则传  1 ，为选中传0）
+        // var url = `information/upalarmConfig.do?VMId=${this.computerInfo.computerId}&password=${this.lookPasswordForm.input}&code=111&letter=${this.lookPasswordForm.isLetterSec}&meail=${this.lookPasswordForm.isEmailAlarmSec}&phone=${this.lookPasswordForm.isSmsAlarmSec}`
+        // this.$http.get(url).then(response => {
+        //   if (response.status == 200 && response.data.status == 1) {
+        //     this.$Message.success(response.data.message)
+        //     this.showModal.setMonitoringForm = false
+        //   } else {
+        //     this.showModal.setMonitoringForm = false
+        //     this.$message.info({
+        //       content:response.data.message
+        //     })
+        //   }
+        // })
       },
       // 回滚确认弹窗
       rollbackSubmit() {
@@ -1323,8 +1353,9 @@
       margin-top: -32px;
       padding-left: 20px;
       .body {
-        padding-top: 20px;
         margin-top: -17px;
+        padding-top: 20px;
+        padding-right:20px; 
         background-color: white;
         & > label {
           font-family: "\5FAE\8F6F\96C5\9ED1";
