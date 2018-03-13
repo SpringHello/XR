@@ -49,7 +49,7 @@
       <div class="universal-modal-content-flex">
         <Form :model="bindHostForm" multiple>
           <FormItem label="请选择虚拟机" prop="vm">
-            <Select v-model="bindHostForm.vm">
+            <Select v-model="bindHostForm.vm" multiple>
               <Option v-for="item in bindHostForm.vmOptions" :value="item.computerid" :key="item.computerid">
                 {{item.computername}}
               </Option>

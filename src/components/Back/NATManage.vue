@@ -5,7 +5,7 @@
       <div id="content">
         <div id="header">
           <div class="header">
-            <div style="font-size: 16px;color: #2A99F2;padding-top: 5px;">{{vpnInfo.natname}}</div>
+            <div style="font-size: 16px;color: #2A99F2;padding-top: 4px;">{{vpnInfo.natname}}</div>
             <Button class="btn" @click="$router.go(-1)">返回</Button>
           </div>
           <div class="VPN-info">
@@ -291,7 +291,8 @@
         // 列出子网
         this.$http.get('network/listNetwork.do', {
           params: {
-            vpcId: this.vpnInfo.vpcid
+            vpcId: this.vpnInfo.vpcid,
+            noInnerLoadbalance: 1
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
