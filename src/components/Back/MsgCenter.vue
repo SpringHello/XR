@@ -115,7 +115,6 @@
           },
           {
             title: '消息名称',
-            width: 300,
             render: (h, param) => {
               return h('div', [
                 h('span', {
@@ -141,7 +140,6 @@
           },
           {
             title: '类型',
-            width: 200,
             key: 'actType',
             filters: [
               {
@@ -169,12 +167,10 @@
           },
           {
             title: '发布时间',
-            width: 500,
             key: 'publishtime'
           },
           {
             title: '操作',
-            width: 98,
             key: 'action',
             render: (h, params) => {
               return h('div', [

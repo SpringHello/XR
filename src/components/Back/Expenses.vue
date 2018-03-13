@@ -454,6 +454,7 @@
             title: '备注',
             key: 'remark',
             align: 'left',
+            width: 150,
             ellipsis: true,
             render: (h, params) => {
               return h('span', params.row.remark == null ? '--' : params.row.remark)
@@ -526,6 +527,7 @@
             title: '操作',
             key: 'cz',
             align: 'left',
+            width:100,
             render: (h, params) => {
               return h('div', [
                 h('span', {
@@ -570,8 +572,8 @@
           //  },
           {
             title: '交易详情',
-            align: 'left',
             width: 370,
+            align: 'left',
             render: (h, params) => {
               return h('Tooltip', {
                   props: {
@@ -587,7 +589,6 @@
             title: '交易金额',
             key: 'amount',
             align: 'left',
-            width: 150,
             render: (h, params) => {
               return h('div', [
                 h('span', '￥'),
@@ -600,7 +601,6 @@
             title: '交易类型',
             key: 'type',
             align: 'left',
-            width: 120,
             render: (h, params) => {
               return h('span', params.row.type == '1' ? '扣费' : '充值')
             }
@@ -609,13 +609,12 @@
             title: '交易时间',
             key: 'createtime',
             align: 'left',
-            width: 240
           },
           {
             title: '流水编号',
             key: 'trno',
             align: 'left',
-            width: 260
+            width: 180
           }
         ],
         tabledata: [],

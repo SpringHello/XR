@@ -237,3 +237,7 @@ div.modal-header-border {
 .ivu-modal{
   top:180px;
 }
+.ivu-collapse {
+  background-color: #FFFFFF;
+  border: none;
+}

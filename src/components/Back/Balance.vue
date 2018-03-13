@@ -255,6 +255,7 @@
           },
           {
             title: '管理',
+              width: 100,
             render: (h, params) => {
               return h('a', {
                 on: {
