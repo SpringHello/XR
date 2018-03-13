@@ -68,11 +68,11 @@
         },
           {
             title: '资源名称',
-            key: 'resourcesName'
+            key: 'resourcesName',
           },
           {
             title: '删除时间',
-            key: 'deleteTime'
+            key: 'deleteTime',
           },
           {
             title: '销毁倒计时',
@@ -82,6 +82,7 @@
           },
           {
             title: '操作',
+            width: 150,
             render: (h, params) => {
               if (params.row.loading) {
                 return h('Spin', {})
@@ -321,7 +322,7 @@
     computed: {
        auth(){
         return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
-        
+
       }
     }
   }

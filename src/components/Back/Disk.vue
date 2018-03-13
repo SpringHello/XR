@@ -355,9 +355,10 @@
             }
           },
           {
-           title: '创建时间',
-           ellipsis: true,
-           key: 'createtime',
+            title: '创建时间',
+            ellipsis: true,
+            width:160,
+            key: 'createtime',
           },
           {
             title: '操作',

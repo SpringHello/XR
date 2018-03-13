@@ -133,7 +133,7 @@
           },
           {
             title: '镜像名称',
-            width: 210,
+            width: 220,
             render: (h, params) => {
               return h('Tooltip', {
                   props: {
@@ -147,7 +147,6 @@
           },
           {
             title: '镜像描述',
-            width: 200,
             ellipsis: true,
             render: (h, params) => {
               return h('Tooltip', {
@@ -162,7 +161,7 @@
           },
           {
             title: '镜像平台',
-            width: 240,
+              width: 240,
             render: (h, params) => {
               return h('Tooltip', {
                   props: {
@@ -177,7 +176,6 @@
           {
             title: '镜像状态',
             key: 'status',
-            width: 130,
             render: (h, params) => {
               if (params.row.status == 1) {
                 return h('span', {}, '正常')
@@ -200,7 +198,7 @@
           {
             title: '创建时间',
             key: 'createtime',
-            width: 220,
+            width: 180,
           }
         ],
         originData: [],
@@ -214,6 +212,7 @@
           },
           {
             title: '镜像名称',
+            width: 150,
             render: (h, params) => {
               return h('Tooltip', {
                   props: {
@@ -259,7 +258,6 @@
           {
             title: '镜像状态',
             key: 'status',
-            width: 130,
             render: (h, params) => {
               const text = params.row.status === 2 ? '创建中' : '删除中'
               if (params.row.status == 1) {
@@ -287,13 +285,13 @@
           },
           {
             title: '创建时间',
-            width: 200,
+              width: 200,
             key: 'createtime'
           },
           {
             title: '操作',
             key: 'action',
-            width: 200,
+            width: 150,
             render: (h, params) => {
               var cursorValue = ''
               var disabledValue = ''

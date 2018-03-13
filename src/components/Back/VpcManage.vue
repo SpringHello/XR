@@ -432,14 +432,14 @@
           },
           {
             title: 'IP地址',
-            align: 'center',
+            align: 'left',
             key: 'privateip'
           },
           {
             title: '操作',
             key: 'action',
-            width: 220,
-            align: 'center',
+            width: 150,
+            align: 'left',
             render: (h, params) => {
 
               let message = ''
@@ -534,6 +534,7 @@
           },
           {
             title: '操作',
+            width: 150,
             render: (h, object) => {
               return h('span', {
                 style: {

@@ -195,7 +195,7 @@
             title: '优惠价',
             key: 'cost',
             align: 'left',
-            width: 120
+            width: 100
           },
         ],
         tableData: [],

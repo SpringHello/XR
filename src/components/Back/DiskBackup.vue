@@ -403,6 +403,7 @@
           }, {
             title: '创建时间',
             key: 'createtime',
+            width:160
           }, {
             title: '应用磁盘',
             render: (h, params) => {
