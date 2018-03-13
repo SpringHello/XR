@@ -291,7 +291,8 @@
         // 列出子网
         this.$http.get('network/listNetwork.do', {
           params: {
-            vpcId: this.vpnInfo.vpcid
+            vpcId: this.vpnInfo.vpcid,
+            noInnerLoadbalance: 1
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {

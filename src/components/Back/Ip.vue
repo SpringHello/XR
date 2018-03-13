@@ -692,7 +692,7 @@
             var url = ''
             switch (row.usetype) {
               case 4 :
-                url = `network/natGatewayUnboundTargetIP.do?publicIp=${row.publicip}&natGatewayId=${row.natgatewayid}`
+                url = `network/unboundElasticIP.do?publicIp=${row.publicip}&natGatewayId=${row.natgatewayid}`
                 break
               case 3 :
                 url = `network/natGatewayUnboundTargetIP.do?publicIp=${row.publicip}&natGatewayId=${row.natgatewayid}`
