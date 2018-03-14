@@ -213,12 +213,13 @@
                           })
                         })
                         this.$http.get(url).then(response => {
-                          this.refresh()
                           if (response.status == 200 && response.data.status == 1) {
-                            this.$message.info({
+                            this.refresh()
+                            this.$Message.info({
                               content: response.data.message
                             })
                           } else {
+                            this.refresh()
                             this.$message.error({
                               content: response.data.message
                             })
@@ -255,6 +256,7 @@
     },
     methods: {
       refresh () {
+        var natGatewayId = sessionStorage.getItem('currentNat')
         var natGateway = axios.get('network/listNatGateway.do', {
           params: {
             natGatewayId,
@@ -330,12 +332,13 @@
                 networkId: this.createDNATForm.subNetwork
               }
             }).then(response => {
-              this.refresh()
               if (response.status == 200 && response.data.status == 1) {
+                this.refresh()
                 this.$Message.info({
                   content: response.data.message
                 })
               } else {
+                this.refresh()
                 this.$message.error({
                   content: response.data.message
                 })
