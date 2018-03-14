@@ -29,7 +29,9 @@
             <div>镜像系统：{{computerInfo.template}}</div>
             <div>到期时间／有效期：{{computerInfo.endTime}}</div>
             <div>内网地址：{{computerInfo.privateIp}}</div>
-            <div>登陆密码：<span :class="{bluetext:isActive}" style="cursor:pointer" @click="showModal.lookPassword = true">点击发送</span><i v-show="!isActive">{{codePlaceholder}}</i></div>
+            <div>登陆密码：
+              <span :class="[isActive ? 'send' : 'nosend']" @click="lookPassword()">{{codePlaceholder}}</span>
+            </div>
           </div>
           <div class="pan" v-if="computerInfo!=null" style="width: 20%">
             <div>所属VPC：<span class="bluetext">{{computerInfo.vpc}}</span></div>
@@ -283,14 +285,13 @@
           </div>
           <div style="display:flex;">
             <p style=" font-size: 14px;line-height: 22px;">密码接收渠道</p>
-            <Checkbox v-model="lookPasswordForm.isletterSec" size="large" style="margin-left: 20px;font-size: 12px;">站内信</Checkbox>
             <Checkbox v-model="lookPasswordForm.isemailalarmSec" size="large" style="margin-left: 20px;font-size: 12px;">邮箱</Checkbox>
             <Checkbox v-model="lookPasswordForm.issmsalarmSec" size="large" style="margin-left: 20px;font-size: 12px;">短信</Checkbox>
           </div>
         </div>
         <div slot="footer" class="modal-footer-border">
           <Button type="ghost" @click="showModal.lookPassword=false">取消</Button>
-          <Button type="primary" @click="lookPasswordSubm('lookPasswordForm')">确定</Button>
+          <Button type="primary" @click="lookPasswordSubm('lookPasswordForm')" :disabled="!(lookPasswordForm.isemailalarmSec || lookPasswordForm.issmsalarmSec)">确定</Button>
         </div>
       </Modal>
     <!-- 告警策略配置弹窗 -->
@@ -443,12 +444,13 @@
             }
         }
         const validatelookPassword = (rule, value, callback) => {
+          var passwordRegExp = /(?:\d[a-zA-Z])|(?:[a-zA-Z]\d)/
           if (!value) {
                 callback(new Error('密码不能为空'));
             } 
-            // else if(!regExp.test(value)){
-            //     callback(new Error('密码由6位及以上23位以下的字母数字组成，必须包含大小写字母、数字'));
-            // } 
+            else if(!passwordRegExp.test(value)){
+                callback(new Error('必须且只能包含数字大小写字母,长度至少6位'));
+            } 
             else {
                 callback();
             }
@@ -456,7 +458,7 @@
       return {
         isActive: true,
         countdown: 60,
-        codePlaceholder: '60s',
+        codePlaceholder: '点击发送',
         loading: false,
         loadingMessage: '',
         snapsId: '',
@@ -709,10 +711,10 @@
           input: '',
           isletterSec: false,
           isemailalarmSec: false,
-          issmsalarmSec: false,
+          issmsalarmSec: true,
           isLetterSec: 0,
           isEmailAlarmSec: 0,
-          isSmsAlarmSec: 0,
+          isSmsAlarmSec: 1,
         },
         lookPasswordFormRule: {
           input: [
@@ -914,40 +916,46 @@
           }
           this.search()
       },
+      lookPassword() {
+        if (this.isActive) {
+            this.showModal.lookPassword = true
+          }
+      },
       lookPasswordSubm(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.showModal.lookPassword = false
             this.isActive = false
-            this.codePlaceholder = '（60s）'
+            this.codePlaceholder = '点击发送（60s）'
             var inter = setInterval(() => {
               this.countdown--
-              this.codePlaceholder ='（' + this.countdown + 's）'
+              this.codePlaceholder ='点击发送（' + this.countdown + 's）'
               if (this.countdown == 0) {
                 clearInterval(inter)
                 this.countdown = 60
-                this.codePlaceholder = '（60s）'
+                this.codePlaceholder = '点击发送'
+                this.isActive = true
               }
             }, 1000)
-              this.lookPasswordForm.isLetterSec = this.lookPasswordForm.isletterSec == false ? 0 : 1
-              this.lookPasswordForm.isSmsAlarmSec  = this.lookPasswordForm.issmsalarmSec == false ? 0 : 1
-              this.lookPasswordForm.isEmailAlarmSec = this.lookPasswordForm.isemailalarmSec == false ? 0 : 1
+            this.lookPasswordForm.isLetterSec = this.lookPasswordForm.isletterSec == false ? 0 : 1
+            this.lookPasswordForm.isSmsAlarmSec  = this.lookPasswordForm.issmsalarmSec == false ? 0 : 1
+            this.lookPasswordForm.isEmailAlarmSec = this.lookPasswordForm.isemailalarmSec == false ? 0 : 1
             this.$http.post('log/sendVMPassword.do',{
               VMId: this.computerInfo.computerId,
               password: this.lookPasswordForm.input,
               letter:this.lookPasswordForm.isLetterSec,
               meail: this.lookPasswordForm.isEmailAlarmSec,
               phone: this.lookPasswordForm.isSmsAlarmSec
-            }).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.$Message.success(response.data.message)
-              } else {
-                this.$message.info({
-                  content:response.data.message
-                })
-              }
-            this.lookPasswordForm.input = ''
-            })
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success(response.data.message)
+                } else {
+                  this.$message.info({
+                    content:response.data.message
+                  })
+                }
+              this.lookPasswordForm.input = ''
+              })
           }
         })
       },
@@ -1315,8 +1323,13 @@
             font-style: normal;
           }
         }
-        .bluetext {
+        .send {
           color: rgb(42, 153, 242);
+          cursor: pointer;
+        }
+        .nosend {
+          color: #666666;
+          cursor: not-allowed;
         }
        .one-row-text {
           display: inline-block;
