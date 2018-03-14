@@ -409,9 +409,9 @@
   var histogramstr = JSON.stringify(histogram)
   var hostDiskOptionstr = JSON.stringify(hostDiskOptions)
   var hostDiskHistogramstr = JSON.stringify(hostDiskHistogram)
+  const validaSinginName = regExp.validaSinginName
   export default {
     data() {
-      const validaSinginName = regExp.validaSinginName
       var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,23}$/
       const validateoldPassword = (rule, value, callback) => {
             if (!value) {
