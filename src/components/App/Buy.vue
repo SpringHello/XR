@@ -276,7 +276,7 @@
                   </div>
                 </div>
                 <!--自定义主机价格-->
-                <div class="item-wrapper">
+                <div class="item-wrapper" style="margin-top: 28px;">
                   <div style="display: flex">
                     <div>
                       <p class="item-title" style="margin-top:0px;">价格</p>
@@ -661,7 +661,7 @@
               style="font-size: 14px;color: #EE6723;">{{PdiskInfo.coupon.toFixed(2)}}元</span></p>
             <div style="text-align: right;margin-top: 20px;">
               <Button size="large"
-                      class="btn" @click="addCart">
+                      class="btn" @click="addDiskCart">
                 加入预算清单
               </Button>
               <Button @click="buyDisk" type="primary" style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377DFF;">
@@ -784,7 +784,7 @@
             </p>
             <div style="text-align: right;margin-top: 20px;">
               <Button size="large"
-                      class="btn" @click="addCart">
+                      class="btn" @click="addIPCart">
                 加入预算清单
               </Button>
               <Button @click="buyIP" type="primary" style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377dff;">
