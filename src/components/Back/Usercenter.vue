@@ -629,7 +629,7 @@
     <Modal width="550" v-model="showModal.addLinkman" :scrollable="true">
       <div slot="header"
            style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 21px;font-weight: 600;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        添加联系人（您还能添加<span style="color: #2A99F2">{{ remainLinkMan }}</span>个人）
+        添加联系人
       </div>
       <div style="border-bottom: 1px solid #D8D8D8;">
         <p style="font-family: MicrosoftYaHei;font-size: 14px;color: #666666;">提示：系统将自动发送验证信息到所填手机号和邮箱，通过验证后方可接收消息。</p>
@@ -1870,6 +1870,7 @@
       authInfo: 'authInfo',
       // 剩余联系人个数
       remainLinkMan(){
+        
         return 5 - this.linkManData.length
       },
       showCompanyPane(){
