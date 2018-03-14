@@ -118,7 +118,7 @@
         sourceUrl: [
           {
             prod: '云计算',
-            prodUrl: ['host', 'mirror', 'snapshot', '', '']
+            prodUrl: ['host', 'mirror#own', 'snapshot', '', '']
           },
           {
             prod: '云网络',
@@ -245,7 +245,7 @@
       // 跳转到相应的页面
       togo(url, pane){
         this.$router.push(url)
-        console.log(url, pane)
+        // console.log(url, pane)
         if (url == 'vpc') {
           this.$store.commit('setPane', {vpc: pane})
           return
