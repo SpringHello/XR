@@ -103,7 +103,7 @@
                       <!--自定义镜像 列表-->
                       <div v-if="PecsInfo.currentType=='custom'">
                         <div v-for="item in PecsInfo.customList" :key="item.value" class="zoneItem"
-                             :class="{zoneSelect:PecsInfo.customMirror==item}"
+                             :class="{zoneSelect:PecsInfo.customMirror.id==item.id}"
                              @click="PecsInfo.customMirror=item" style="margin-top: 20px;">{{item.templatename}}
                         </div>
                       </div>
@@ -224,7 +224,7 @@
                       <!--自定义镜像 列表-->
                       <div v-if="PecsInfo.currentType=='custom'">
                         <div v-for="item in PecsInfo.customList" :key="item.value" class="zoneItem"
-                             :class="{zoneSelect:PecsInfo.customMirror==item}"
+                             :class="{zoneSelect:PecsInfo.customMirror.id==item.id}"
                              @click="PecsInfo.customMirror=item" style="margin-top: 20px;">{{item.templatename}}
                         </div>
                       </div>
@@ -1298,7 +1298,7 @@
       this.ownMirrorList()
       this.queryIPPriceInIP()
       /* 自定义镜像生成主机 页面跳转  页面赋值 */
-      if (this.$route.query.templateid) {
+      if (this.$route.query.mirror) {
         this.PecsInfo.zone.zoneid = this.$route.query.zoneid
         this.PecsInfo.currentType = this.$route.query.mirrorType
       }
@@ -1356,9 +1356,13 @@
           axios.get(url1).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.PecsInfo.customList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
-              this.PecsInfo.customMirror = this.PecsInfo.customList[0] || {}
             }
           })
+          if (!this.$route.query.mirror) {
+            this.PecsInfo.customMirror = this.PecsInfo.customList[0] || {}
+          } else {
+            this.PecsInfo.customMirror = this.$route.query.mirror || {}
+          }
         }
       },
       // 重新选择镜像

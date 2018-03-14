@@ -33,8 +33,8 @@
               <li>状态：{{data.status ? "正常" : "不正常"}}</li>
             </ul>
             <ul>
-              <li>计费模式: 空</li>
-              <li>到期时间：{{data.endtime}}</li>
+              <!--<li>计费模式: 空</li>
+              <li>到期时间：{{data.endtime}}</li>-->
               <li>创建时间：{{data.createtime}}</li>
             </ul>
           </div>
@@ -52,8 +52,12 @@
                 <li style="flex-basis: 160px;">网关地址：{{item.ipsegment.split('/')[0]}}</li>
                 <li style="flex-basis: 160px;">网段地址：{{item.ipsegment}}</li>
                 <li style="flex-basis: 180px;">服务方案：{{item.netoffername}}</li>
-                <li style="flex-basis: 180px;">防火墙：<span class="blue" @click="toFirewall(item)">{{item.acllistname}}</span></li>
-                <li style="flex-basis: 180px; overflow: hidden;text-overflow:ellipsis;white-space: nowrap;" v-if="item.netoffername==='公网负载均衡网络'||item.netoffername==='内网负载均衡网络'">负载均衡：<span class="blue" @click="toBalance(item)">{{item.loadbalance}}</span></li>
+                <li style="flex-basis: 180px;">防火墙：<span class="blue"
+                                                         @click="toFirewall(item)">{{item.acllistname}}</span></li>
+                <li style="flex-basis: 180px; overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"
+                    v-if="item.netoffername==='公网负载均衡网络'||item.netoffername==='内网负载均衡网络'">负载均衡：<span class="blue"
+                                                                                                     @click="toBalance(item)">{{item.loadbalance}}</span>
+                </li>
                 <li style="flex-basis: 180px;" v-else></li>
                 <li><span class="blue" @click="addHostToVpc(item)">添加主机</span><span class="vertical-line">|</span><span
                   class="blue" @click="deleteVpc(item)">删除</span></li>
@@ -455,6 +459,9 @@
                   // 状态为3代表切换主机网卡loading
                   case 3:
                     message = '切换网卡中...'
+                    break;
+                  case 4:
+                    message = '离开网络中...'
                     break;
                 }
                 return h('div', [h('Spin', {
@@ -871,6 +878,8 @@
           for (let vm of network.vmList) {
             if (vm.networkid == this.leaveForm.networkid && vm.computerid == this.leaveForm.vmId) {
               vm.computername = '离开中...'
+              // 设置为4代表修改操作为 离开网络中...
+              vm.status = 4
             }
           }
         }
@@ -959,13 +968,13 @@
         } else {
           var url = 'loadbalance/listLoadBalanceRole.do'
           this.$http.get(url).then(response => {
-            if(response.status === 200 && response.data.status === 1) {
+            if (response.status === 200 && response.data.status === 1) {
               response.data.result.internalLoadbalance.forEach(item => {
                 item._internal = true
               })
               var balanceArray = response.data.result.internalLoadbalance.concat(response.data.result.publicLoadbalance)
-              balanceArray.forEach(balance =>{
-                if (balance.lbid === item.loadbalanceId || balance.loadbalanceroleid === item.loadbalanceId ) {
+              balanceArray.forEach(balance => {
+                if (balance.lbid === item.loadbalanceId || balance.loadbalanceroleid === item.loadbalanceId) {
                   sessionStorage.setItem('balanceInfo', JSON.stringify(balance))
                   this.$router.push('BalanceParticulars')
                 }
@@ -1035,7 +1044,7 @@
   .btn-bgwhite {
     background: #ffffff;
     color: #2A99F2;
-    &:hover{
+    &:hover {
       background: #2A99F2;
       color: #FFFFFF;
     }
