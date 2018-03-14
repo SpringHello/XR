@@ -21,7 +21,7 @@
             <div style="text-align: right">
               <span
                 style="font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: rgba(0,0,0,0.65);">总计支付 : <span
-                style="color: #377DFF;font-size: 18px;">{{totalCost}}</span>  <span style="font-size: 14px;">/元</span> </span>
+                style="color: #377DFF;font-size: 18px;">{{totalCost}}</span>  <span style="font-size: 14px;">元</span> </span>
               <span v-show="actualPayment"
                     style="font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: rgba(0,0,0,0.65);">（实际支付：<span
                 style="color: #377DFF;font-size: 18px;">{{totalCost}}</span>  <span style="font-size: 14px;">/元</span>）</span>

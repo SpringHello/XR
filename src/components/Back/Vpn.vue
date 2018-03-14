@@ -210,7 +210,8 @@
         <div class="universal-modal-content-flex">
           <Form :model="addUserForm" :rules="addUserFormValidate" ref="addUserFormValidate">
             <FormItem label="用户名称" prop="userName">
-              <Input v-model="addUserForm.userName" placeholder="请输入用户名称"></Input>
+              <span style="line-height: 32px;margin-right:5px">{{$store.state.userInfo.companyid}}</span><Input
+              v-model="addUserForm.userName" placeholder="请输入用户名称" style="width:61%"></Input>
             </FormItem>
             <FormItem label="密码" prop="password">
               <Input v-model="addUserForm.password" placeholder="请输入密码"></Input>
@@ -254,10 +255,19 @@
       })
     },
     data(){
+      // 校验接入点用户名
+      const validateUserName = (rule, value, callback) => {
+        if (!/^\w{1,6}$/.test(value)) {
+          callback(new Error('用户名由1-6位字母或数字组成'))
+        }
+        callback()
+      }
+
       const validaRegisteredName = regExp.validaRegisteredName
       var pane = sessionStorage.getItem('pane') || 'remote'
       sessionStorage.removeItem('pane')
       return {
+        $store,
         loadingMessage: '',
         loading: false,
         showModal: {
@@ -766,7 +776,10 @@
           password: '',
         },
         addUserFormValidate: {
-          userName: [{required: true, message: '请输入用户名', trigger: 'blur'}],
+          userName: [
+            {required: true, message: '请输入用户名', trigger: 'blur'},
+            {validator: validateUserName, trigger: 'blur'}
+          ],
           password: [{required: true, message: '请输入密码', trigger: 'blur'}]
         },
         // 当前选中远程接入
@@ -1010,10 +1023,10 @@
         this.$refs.addUserFormValidate.validate(validate => {
           if (validate) {
             // status   1：创建中  2：删除中
-            this.userList.push({name: this.addUserForm.userName, status: 1})
+            this.userList.push({name: this.$store.state.userInfo.companyid + this.addUserForm.userName, status: 1})
             this.$http.get('network/addVpnUser.do', {
               params: {
-                userName: this.addUserForm.userName,
+                userName: this.$store.state.userInfo.companyid + this.addUserForm.userName,
                 password: this.addUserForm.password,
                 remoteVpnId: this.current,
               }
@@ -1023,7 +1036,7 @@
                 this.listUser()
               } else {
                 this.listUser()
-                this.$message.error(response.data.message)
+                this.$Message.error(response.data.message)
               }
             })
             this.addUserForm.userName = ''

@@ -189,7 +189,7 @@
                 </div>
 
                 <div @click="createHost">
-                  <Card style="width:375px;height:228px;">
+                  <Card style="width:375px;height:228px;cursor:pointer">
                     <div
                       style="height: 224px;pxcursor:pointer"
                       @click="gotoNew">
@@ -340,7 +340,7 @@
         <p class="mb20">您正为<span class="bluetext">{{currentHostname}}</span>制作快照</p>
         <Form ref="backupForm" :model="backupForm" :rules="backupFormRule">
           <FormItem label="快照名称" prop="name">
-              <Input v-model="backupForm.name" placeholder="请输入2-4094范围内任意数字" :maxlength="15"></Input>
+            <Input v-model="backupForm.name" placeholder="请输入2-4094范围内任意数字" :maxlength="15"></Input>
           </FormItem>
           <FormItem label="是否保存内存信息">
             <RadioGroup v-model="backupForm.memory">
@@ -377,7 +377,7 @@
     </Modal>
 
     <!-- 生成镜像弹窗 -->
-    <Modal v-model="showModal.mirror" width="590" :scrollable="true" >
+    <Modal v-model="showModal.mirror" width="590" :scrollable="true">
       <div slot="header" class="modal-header-border">
         <span class="universal-modal-title">制作镜像</span>
       </div>
@@ -394,7 +394,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.mirror = false">取消</Button>
-        <Button type="primary"  @click="mirrorSubmit('mirrorForm')">确定
+        <Button type="primary" @click="mirrorSubmit('mirrorForm')">确定
         </Button>
       </div>
     </Modal>
@@ -417,20 +417,21 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.bindIP = false">取消</Button>
-        <Button type="primary"  @click="bindipSubmit('bindForm')">确定
+        <Button type="primary" @click="bindipSubmit('bindForm')">确定
         </Button>
       </div>
     </Modal>
     <!-- 加入负载均衡弹窗 -->
     <Modal v-model="showModal.balance" width="590" :scrollable="true">
       <div slot="header" class="modal-header-border">
-          <span class="universal-modal-title">加入负载均衡</span>
+        <span class="universal-modal-title">加入负载均衡</span>
       </div>
       <div class="universal-modal-content-flex">
         <Form :model="loadBalanceForm" ref="loadBalanceForm" :rules="loadBalanceFormRule">
           <Form-item label="选择弹性负载均衡名称" prop="loadbalanceroleid">
             <Select v-model="loadBalanceForm.loadbalanceroleid" placeholder="请选择" style="width:240px;">
-              <Option v-for="(item,index) in listLoadBalanceRole" :key="index" :value="item.loadbalanceroleid||item.lbid">
+              <Option v-for="(item,index) in listLoadBalanceRole" :key="index"
+                      :value="item.loadbalanceroleid||item.lbid">
                 <span v-if="item.name">{{item.name}}</span>
                 <span v-if="item.lbname">{{item.lbname}}</span>
               </Option>
@@ -596,7 +597,7 @@
           name: '',
           memory: '1'
         },
-        backupFormRule:{
+        backupFormRule: {
           name: [
             {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ]
@@ -911,37 +912,40 @@
       },
       bindipSubmit(name) {
         this.$refs[name].validate((valid) => {
-          if (valid) {
-            this.showModal.bindIP = false
-            this.$Message.info({
-                    content: `<span style="color:#2A99F2">${this.currentHost[0].computername}</span>云主机,正在绑定公网IP`
-                  })
-            var url = `network/enableStaticNat.do?ipId=${this.bindForm.publicIP}&VMId=${this.currentHost[0].computerid}`
-            this.$http.get(url)
-              .then(response => {
-                this.loading = false
-                if (response.status == 200 && response.data.status == 1) {
-                  this.$Message.success(response.data.message)
-                } else {
-                  this.$message.error({
-                    content: response.data.message
-                  })
-                }
+            if (valid) {
+              this.showModal.bindIP = false
+              this.$Message.info({
+                content: `<span style="color:#2A99F2">${this.currentHost[0].computername}</span>云主机,正在绑定公网IP`
               })
+              var url = `network/enableStaticNat.do?ipId=${this.bindForm.publicIP}&VMId=${this.currentHost[0].computerid}`
+              this.$http.get(url)
+                .then(response => {
+                  this.loading = false
+                  if (response.status == 200 && response.data.status == 1) {
+                    this.$Message.success(response.data.message)
+                  } else {
+                    this.$message.error({
+                      content: response.data.message
+                    })
+                  }
+                })
+            }
           }
-        })
+        )
       },
       unbind() {
         if (this.checkSelect()) {
           this.$Message.info({
-                  content: `<span style="color:#2A99F2">${this.currentHost[0].computername}</span>云主机,正在解绑公网IP`
-                })
+            content: `<span style="color:#2A99F2">${this.currentHost[0].computername}</span>云主机,正在解绑公网IP`
+          })
           var url = `network/disableStaticNat.do?ipId=${this.currentHost[0].publicip}&VMId=${this.currentHost[0].computerid}`
           this.$http.get(url).then(response => {
-            if (response.status == 200 && response.data.status == 1) {
+            if (response.status == 200 && response.data.status == 1
+            ) {
               this.$Message.success(response.data.message)
               this.currentHost[0].publicip = ''
-            } else if (response.status == 200 && response.data.status == 2) {
+            }
+            else if (response.status == 200 && response.data.status == 2) {
               this.$message.info({
                 content: response.data.message
               })
