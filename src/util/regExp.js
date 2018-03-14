@@ -1,8 +1,9 @@
 var emailRegExp = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
 var phoneRegExp = /^1[0-9]{10}$/
 var passwordLengthRegExp = /^\w{8,}$/
+// 登录密码 长度至少8位
 var passwordRegExp = /(?:\d[a-zA-Z])|(?:[a-zA-Z]\d)/
-// 主机密码 必须且只能包含数字大小写字母。长度至少6位
+// 登录密码 必须且只能包含数字大小写字母
 const hostPassword = /(?!^([\da-z]+|[\dA-Z]+|[a-zA-Z]+)$)^[\w]{6,}$/
 //var passwordRegExp = /ddd/;
 export default{
@@ -27,6 +28,17 @@ export default{
     }
     if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value))) {
       callback(new Error('输入名称中不能包含特殊字符或空格'));
+    } else {
+      callback()
+    }
+  },
+
+  validaSinginName: (rule, value, callback) => {
+    if (!value) {
+      return callback(new Error('密码不能为空'))
+    }
+    if (!passwordLengthRegExp.test(value) || !passwordRegExp.test(value)) {
+      callback(new Error('必须且只能包含数字大小写字母,长度至少为8位'))
     } else {
       callback()
     }

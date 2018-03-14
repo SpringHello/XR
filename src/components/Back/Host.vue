@@ -1054,7 +1054,9 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
               } else {
-                this.$Message.error('Fail!');
+                this.$message.error({
+                  content: response.data.message
+                })
               }
             })
           }
