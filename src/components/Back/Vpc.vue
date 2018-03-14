@@ -475,7 +475,7 @@
               if (object.row.prottransip) {
                 var prottransipArray = object.row.prottransip.split(',')
                 prottransipArray.splice(0, 1)
-                for (var item of prottransipArray) {
+                for (let item of prottransipArray) {
                   if (item) {
                     renderArray.push(h('div', [h('span', {
                       style: {
@@ -547,7 +547,7 @@
           },
           {
             title: '操作',
-              width: 100,
+            width: 100,
             render: (h, object) => {
               return h('span', {
                 style: {

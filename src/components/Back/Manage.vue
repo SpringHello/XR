@@ -29,7 +29,7 @@
             <div>镜像系统：{{computerInfo.template}}</div>
             <div>到期时间／有效期：{{computerInfo.endTime}}</div>
             <div>内网地址：{{computerInfo.privateIp}}</div>
-            <div>登陆密码：<span :class="{bluetext:isActive}" style="cursor:pointer" @click="showModal.lookPassword = true">点击查看</span><i v-show="!isActive">{{codePlaceholder}}</i></div>
+            <div>登陆密码：<span :class="{bluetext:isActive}" style="cursor:pointer" @click="showModal.lookPassword = true">点击发送</span><i v-show="!isActive">{{codePlaceholder}}</i></div>
           </div>
           <div class="pan" v-if="computerInfo!=null" style="width: 20%">
             <div>所属VPC：<span class="bluetext">{{computerInfo.vpc}}</span></div>
@@ -445,9 +445,11 @@
         const validatelookPassword = (rule, value, callback) => {
           if (!value) {
                 callback(new Error('密码不能为空'));
-            } else if(!regExp.test(value)){
-                callback(new Error('密码由6位及以上23位以下的字母数字组成，必须包含大小写字母、数字'));
-            } else {
+            } 
+            // else if(!regExp.test(value)){
+            //     callback(new Error('密码由6位及以上23位以下的字母数字组成，必须包含大小写字母、数字'));
+            // } 
+            else {
                 callback();
             }
         }
@@ -916,9 +918,7 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.showModal.lookPassword = false
-            this.lookPasswordForm.input = ''
             this.isActive = false
-
             this.codePlaceholder = '（60s）'
             var inter = setInterval(() => {
               this.countdown--
@@ -929,32 +929,27 @@
                 this.codePlaceholder = '（60s）'
               }
             }, 1000)
+              this.lookPasswordForm.isLetterSec = this.lookPasswordForm.isletterSec == false ? 0 : 1
+              this.lookPasswordForm.isSmsAlarmSec  = this.lookPasswordForm.issmsalarmSec == false ? 0 : 1
+              this.lookPasswordForm.isEmailAlarmSec = this.lookPasswordForm.isemailalarmSec == false ? 0 : 1
+            this.$http.post('log/sendVMPassword.do',{
+              VMId: this.computerInfo.computerId,
+              password: this.lookPasswordForm.input,
+              letter:this.lookPasswordForm.isLetterSec,
+              meail: this.lookPasswordForm.isEmailAlarmSec,
+              phone: this.lookPasswordForm.isSmsAlarmSec
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+              } else {
+                this.$message.info({
+                  content:response.data.message
+                })
+              }
+            this.lookPasswordForm.input = ''
+            })
           }
         })
-        
-          // isletterSec: false,
-          // isemailalarmSec: false,
-          // issmsalarmSec: false,
-          // isLetterSec: 0,
-          // isEmailAlarmSec: 0,
-          // isSmsAlarmSec: 0,
-          // this.lookPasswordForm.isLetterSec
-        // log/sendVMPassword.do    
-        // VMId 虚拟机id ,code 验证码  ,
-        // password  密码 ,letter 站站内信（选中则传  1 ，为选中传0）,
-        // meail 邮箱（选中则传  1 ，为选中传0）,phone 手机（选中则传  1 ，为选中传0）
-        // var url = `information/upalarmConfig.do?VMId=${this.computerInfo.computerId}&password=${this.lookPasswordForm.input}&code=111&letter=${this.lookPasswordForm.isLetterSec}&meail=${this.lookPasswordForm.isEmailAlarmSec}&phone=${this.lookPasswordForm.isSmsAlarmSec}`
-        // this.$http.get(url).then(response => {
-        //   if (response.status == 200 && response.data.status == 1) {
-        //     this.$Message.success(response.data.message)
-        //     this.showModal.setMonitoringForm = false
-        //   } else {
-        //     this.showModal.setMonitoringForm = false
-        //     this.$message.info({
-        //       content:response.data.message
-        //     })
-        //   }
-        // })
       },
       // 回滚确认弹窗
       rollbackSubmit() {
