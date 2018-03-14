@@ -122,7 +122,7 @@
           },
           {
             prod: '云网络',
-            prodUrl: ['vpc#VPC', 'ip', 'balance', 'natmanage', 'vpn#remote', '', 'vpcManage']
+            prodUrl: ['vpc#VPC', 'ip', 'balance', 'vpc#NAT', 'vpn#remote', '', 'vpcManage']
           },
           {
             prod: '云存储',
@@ -245,6 +245,15 @@
       // 跳转到相应的页面
       togo(url, pane){
         this.$router.push(url)
+        console.log(url, pane)
+        if (url == 'vpc') {
+          this.$store.commit('setPane', {vpc: pane})
+          return
+        }
+        if (url == 'vpn') {
+          this.$store.commit('setPane', {vpn: pane})
+          return
+        }
         sessionStorage.setItem('pane', pane)
       },
       change(){
