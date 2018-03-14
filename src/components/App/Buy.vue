@@ -473,7 +473,8 @@
                     <div>
                       <p class="item-title" style="margin-top: 8px">主机名称</p>
                     </div>
-                    <Input v-model="PecsInfo.computerName" placeholder="请输入主机名" style="width: 300px"></Input>
+                    <Input v-model="PecsInfo.computerName" placeholder="请输入主机名" style="width: 300px" @on-change="PecsInfo.computerNameWarning=''"></Input>
+                    <span style="line-height: 32px;color:red;margin-left:10px">{{PecsInfo.computerNameWarning}}</span>
                   </div>
                   <p class="item-desc">当购买数量大于1台之时，主机命名规则为主机名称加随机数字。</p>
                 </div>
@@ -483,7 +484,8 @@
                       <p class="item-title" style="margin-top: 8px">登录密码</p>
                     </div>
                     <Input v-model="PecsInfo.password" placeholder="请输入至少6位包含大小写与数字的密码"
-                           style="width: 300px"></Input>
+                           style="width: 300px" @on-change="PecsInfo.passwordWarning=''"></Input>
+                    <span style="line-height: 32px;color:red;margin-left:10px">{{PecsInfo.passwordWarning}}</span>
                   </div>
                 </div>
               </div>
@@ -662,7 +664,7 @@
                       class="btn" @click="addCart">
                 加入预算清单
               </Button>
-              <Button @click="buyHost" type="primary" style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377DFF;">
+              <Button @click="buyDisk" type="primary" style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377DFF;">
                 立即购买
               </Button>
             </div>
@@ -785,7 +787,7 @@
                       class="btn" @click="addCart">
                 加入预算清单
               </Button>
-              <Button @click="buyHost" type="primary" style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377dff;">
+              <Button @click="buyIP" type="primary" style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377dff;">
                 立即购买
               </Button>
             </div>
@@ -1127,8 +1129,12 @@
           autoRenewal: false,
           // 主机名称
           computerName: '',
+          // 主机名称提示信息
+          computerNameWarning: '',
           // 登录密码
           password: '',
+          // 登录密码提示信息
+          passwordWarning: '',
 
           // 下面是自定义配置的数据
           // 主机类型
@@ -1641,6 +1647,16 @@
           })
           return
         }
+        if (this.PecsInfo.currentLoginType == 'custom') {
+          if (this.PecsInfo.computerName.trim() == '') {
+            this.PecsInfo.computerNameWarning = '请输入主机名称'
+            return
+          }
+          if (!regExp.hostPassword(this.PecsInfo.password)) {
+            this.PecsInfo.passwordWarning = '请输入至少6位包含大小写与数字的密码'
+            return
+          }
+        }
         var obj = JSON.parse(JSON.stringify(this.PecsInfo))
         var prod = Object.assign({
           typeName: '云主机',
@@ -1671,6 +1687,17 @@
             content: '请选择一个镜像'
           })
           return
+        }
+
+        if (this.PecsInfo.currentLoginType == 'custom') {
+          if (this.PecsInfo.computerName.trim() == '') {
+            this.PecsInfo.computerNameWarning = '请输入主机名称'
+            return
+          }
+          if (!regExp.hostPassword(this.PecsInfo.password)) {
+            this.PecsInfo.passwordWarning = '请输入至少6位包含大小写与数字的密码'
+            return
+          }
         }
 
         var obj = JSON.parse(JSON.stringify(this.PecsInfo))
@@ -2043,52 +2070,51 @@
       }
     },
     computed: mapState({
-        disabled () {
-          return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
-        },
-        totalCost(){
-          if (this.PecsInfo.IPConfig.publicIP) {
-            return this.PecsInfo.vmConfig.cost + this.PecsInfo.IPConfig.cost + this.PecsInfo.dataDiskCost
-          } else {
-            return this.PecsInfo.vmConfig.cost + this.PecsInfo.dataDiskCost
-          }
-        },
-        totalCoupon(){
-          return this.PecsInfo.vmConfig.coupon + this.PecsInfo.IPConfig.coupon + this.PecsInfo.coupon
-        },
-        // 剩余添加磁盘数量
-        remainDisk(){
-          return 5 - this.PecsInfo.dataDiskList.length
-        },
-        // 商品清单总价
-        billListCost(){
-          var cost = 0
-          for (var prod of this.cart) {
-            switch (prod.type) {
-              case'Pecs':
-                if (prod.createType == 'custom') {
-                  cost += prod.customCost
-                } else {
-                  cost += prod.cost
-                }
-                break;
-              case'Pdisk':
-                cost += prod.dataDiskCost
-                break;
-              case'Peip':
+      disabled () {
+        return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
+      },
+      totalCost(){
+        if (this.PecsInfo.IPConfig.publicIP) {
+          return this.PecsInfo.vmConfig.cost + this.PecsInfo.IPConfig.cost + this.PecsInfo.dataDiskCost
+        } else {
+          return this.PecsInfo.vmConfig.cost + this.PecsInfo.dataDiskCost
+        }
+      },
+      totalCoupon(){
+        return this.PecsInfo.vmConfig.coupon + this.PecsInfo.IPConfig.coupon + this.PecsInfo.coupon
+      },
+      // 剩余添加磁盘数量
+      remainDisk(){
+        return 5 - this.PecsInfo.dataDiskList.length
+      },
+      // 商品清单总价
+      billListCost(){
+        var cost = 0
+        for (var prod of this.cart) {
+          switch (prod.type) {
+            case'Pecs':
+              if (prod.createType == 'custom') {
+                cost += prod.customCost
+              } else {
                 cost += prod.cost
-                break;
-            }
+              }
+              break;
+            case'Pdisk':
+              cost += prod.dataDiskCost
+              break;
+            case'Peip':
+              cost += prod.cost
+              break;
           }
-          return cost
-        },
-        remainDiskInDisk(){
-          return 5 - this.PdiskInfo.dataDiskList.length
-        },
-        zoneList: state => state.zoneList,
-        userInfo: state => state.userInfo
-      }
-    ),
+        }
+        return cost
+      },
+      remainDiskInDisk(){
+        return 5 - this.PdiskInfo.dataDiskList.length
+      },
+      zoneList: state => state.zoneList,
+      userInfo: state => state.userInfo
+    }),
     watch: {
       'product.currentProduct'(){
         this.queryRemainCount()

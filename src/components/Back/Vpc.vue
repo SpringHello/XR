@@ -46,7 +46,9 @@
                     <span class="dotted-across"></span>
                   </div>
                   <div class="item-wrap">
-                    <div class="item" @click="manage(item)" style="cursor: pointer"><p>交换机：（子网）<span>{{item.networkCount}}</span>
+                    <div class="item"v-if="item.status === 2 || item.status === 3"><p>交换机（子网）：<span>{{item.networkCount}}</span>
+                    </p></div>
+                    <div class="item" @click="manage(item)" style="cursor: pointer" v-else><p>交换机（子网）：<span>{{item.networkCount}}</span>
                     </p></div>
                     <span class="dotted-vertical"></span>
                     <router-link to="host">
@@ -473,7 +475,7 @@
               if (object.row.prottransip) {
                 var prottransipArray = object.row.prottransip.split(',')
                 prottransipArray.splice(0, 1)
-                for (var item of prottransipArray) {
+                for (let item of prottransipArray) {
                   if (item) {
                     renderArray.push(h('div', [h('span', {
                       style: {
@@ -545,7 +547,7 @@
           },
           {
             title: '操作',
-              width: 100,
+            width: 100,
             render: (h, object) => {
               return h('span', {
                 style: {
