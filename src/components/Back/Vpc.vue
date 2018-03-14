@@ -46,7 +46,9 @@
                     <span class="dotted-across"></span>
                   </div>
                   <div class="item-wrap">
-                    <div class="item" @click="manage(item)" style="cursor: pointer"><p>交换机：（子网）<span>{{item.networkCount}}</span>
+                    <div class="item"v-if="item.status === 2 || item.status === 3"><p>交换机（子网）：<span>{{item.networkCount}}</span>
+                    </p></div>
+                    <div class="item" @click="manage(item)" style="cursor: pointer" v-else><p>交换机（子网）：<span>{{item.networkCount}}</span>
                     </p></div>
                     <span class="dotted-vertical"></span>
                     <router-link to="host">
