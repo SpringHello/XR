@@ -37,7 +37,7 @@ export default{
     if (!value) {
       return callback(new Error('密码不能为空'))
     }
-    if (!passwordLengthRegExp.test(value) || !passwordLengthRegExp.test(value)) {
+    if (!passwordLengthRegExp.test(value) || !passwordRegExp.test(value)) {
       callback(new Error('必须且只能包含数字大小写字母,长度至少为8位'))
     } else {
       callback()
