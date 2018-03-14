@@ -43,7 +43,8 @@
                     <router-link to="expenses">费用中心</router-link>
                   </DropdownItem>
                   <DropdownItem name="msgCenter" style="position:relative">
-                    <router-link to="msgCenter">消息中心<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup></router-link>
+                    <router-link to="msgCenter">消息中心<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup>
+                    </router-link>
                   </DropdownItem>
                   <DropdownItem name="operationLog">
                     <router-link to="operationLog">操作日志</router-link>
@@ -115,6 +116,54 @@
         </div>
         <div style="clear:right"></div>
       </div>
+    </div>
+    <!-- 客服浮动块 -->
+    <div id="affix">
+      <span class="qq" @mouseenter="QME" @mouseleave="QML">
+        <div ref="qq" style="overflow: hidden">
+          <div class="wrapper">
+            <div>
+              <Tooltip :content="QQInfo['1740534974']?'在线咨询':'请留言'" placement="top">
+                <a target="_blank" href="tencent://message/?uin=1740534974&amp;Site=www.cloudsoar.com&amp;Menu=yes"
+                   style="color:rgb(73, 80, 96)">
+                <img src="./assets/img/app/QQ.png">
+                <span>新睿云-01</span>
+                <i :class="{inline:QQInfo['1740534974']}"></i>
+                </a>
+              </Tooltip>
+            </div>
+            <div>
+              <Tooltip :content="QQInfo['1014172393']?'在线咨询':'请留言'" placement="top">
+                <a target="_blank" href="tencent://message/?uin=1014172393&amp;Site=www.cloudsoar.com&amp;Menu=yes"
+                   style="color:rgb(73, 80, 96)">
+              <img src="./assets/img/app/QQ.png">
+              <span>新睿云-02</span>
+              <i :class="{inline:QQInfo['1014172393']}"></i>
+                </a>
+              </Tooltip>
+            </div>
+            <div>
+              <Tooltip :content="QQInfo['2455433934']?'在线咨询':'请留言'" placement="top">
+              <a target="_blank" href="tencent://message/?uin=2455433934&amp;Site=www.cloudsoar.com&amp;Menu=yes"
+                 style="color:rgb(73, 80, 96)">
+                <img src="./assets/img/app/QQ.png">
+              <span>新睿云-03</span>
+              <i :class="{inline:QQInfo['2455433934']}"></i>
+              </a>
+              </Tooltip>
+            </div>
+          </div>
+        </div>
+      </span>
+      <span class="service"><a
+        :href="kfURL"
+        target="_blank"></a></span>
+      <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
+        <span class="phone"></span>
+      </Poptip>
+      <BackTop :bottom="65" :right="50" :duration="0" :height="1600">
+        <Icon type="chevron-up" class="backtop"></Icon>
+      </BackTop>
     </div>
     <router-view/>
   </div>
@@ -196,7 +245,9 @@
               {subName: '回收站', type: 'recycle'}
             ]
           }
-        ]
+        ],
+        kfURL: '',  // 客服url地址
+        QQInfo: []  // QQ客服在线情况
       }
     },
     beforeRouteEnter(to, from, next){
@@ -218,6 +269,13 @@
       })
     },
     created(){
+      this.$http.get('user/getKfAdd.do').then(response => {
+        this.kfURL = response.data.result
+      })
+      // QQ客服在线情况
+      this.$http.get('network/getQQCustomerServiceStatus.do').then(response => {
+        this.QQInfo = response.data.result
+      })
       this.notice()
     },
     mounted(){
@@ -236,6 +294,12 @@
       }
     },
     methods: {
+      QME(){
+        this.$refs.qq.style.width = '116px'
+      },
+      QML(){
+        this.$refs.qq.style.width = '0px'
+      },
       notice(){
         this.$http.get(`user/getEventNotifyList.do`)
           .then(response => {
@@ -615,6 +679,7 @@
       }
     }
   }
+
   .badge {
     border-radius: 50%;
     background-color: rgb(237, 63, 20, 0.5);
@@ -625,7 +690,8 @@
     box-sizing: border-box;
     color: white;
   }
-  .circle-dot{
+
+  .circle-dot {
     display: inline-block;
     height: 10px;
     width: 10px;
@@ -634,5 +700,87 @@
     position: absolute;
     top: 14px;
     right: 10px;
+  }
+
+  #affix {
+    position: fixed;
+    right: 50px;
+    bottom: 100px;
+    z-index: 100000;
+    > span {
+      width: 48px;
+      height: 48px;
+      display: block;
+      padding: 10px;
+      background: #E1E1E1 no-repeat center;
+    }
+    .service {
+      background-image: url('./assets/img/app/customer-service-gray.png');
+      &:hover {
+        background: #2A99F2 url('./assets/img/app/customer-service-white.png') no-repeat center;
+      }
+      & > a {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+    }
+    .qq {
+      background-image: url('./assets/img/app/QQ-gray.png');
+      &:hover {
+        background: #2A99F2 url('./assets/img/app/QQ-white.png') no-repeat center;
+      }
+      > div {
+        position: absolute;
+        width: 0px;
+        height: 145px;
+        background-color: #ffffff;
+        right: 48px;
+        top: 0px;
+        transition: width .3s;
+      }
+      & > a {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+      .wrapper {
+        width: 116px;
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        height: 100%;
+        > div {
+          height: 48px;
+          padding: 16px 10px;
+          cursor: pointer;
+          img, span {
+            vertical-align: middle;
+          }
+          i {
+            width: 10px;
+            height: 10px;
+            background: #E1E1E1;
+            display: inline-block;
+            vertical-align: middle;
+            border-radius: 50%;
+            margin-left: 8px;
+            &.inline {
+              background: #17C786;
+            }
+          }
+        }
+      }
+    }
+    .phone {
+      width: 48px;
+      height: 48px;
+      display: block;
+      padding: 10px;
+      background: #E1E1E1 url('./assets/img/app/phone-gray.png') no-repeat center;
+      &:hover {
+        background: #2A99F2 url('./assets/img/app/phone-white.png') no-repeat center;
+      }
+    }
   }
 </style>
