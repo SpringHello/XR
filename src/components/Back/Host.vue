@@ -191,7 +191,7 @@
                 <div @click="createHost">
                   <Card style="width:375px;height:228px;cursor:pointer">
                     <div
-                      style="height: 224px;pxcursor:pointer"
+                      style="height: 224px;cursor:pointer"
                       @click="gotoNew">
                       <i class="add"></i>
                       <i class="add" style="transform: translate(-50%,-50%) rotate(90deg);"></i>

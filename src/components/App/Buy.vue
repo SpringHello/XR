@@ -172,10 +172,12 @@
                       <p class="item-title">类型</p>
                     </div>
                     <div>
-                      <div v-for="item in PecsInfo.vmTypeList" :key="item.value" class="zoneItem"
-                           :class="{zoneSelect:PecsInfo.vmType==item.value}"
-                           @click="changeType(item.value)">{{item.label}}
-                      </div>
+                      <Poptip trigger="hover" content="经典1：2与1：4配比，实现计算、网络与资源的良好平衡，高性价比" placement="top-start">
+                        <div v-for="item in PecsInfo.vmTypeList" :key="item.value" class="zoneItem"
+                             :class="{zoneSelect:PecsInfo.vmType==item.value}"
+                             @click="changeType(item.value)">{{item.label}}
+                        </div>
+                      </Poptip>
                     </div>
                   </div>
                 </div>
@@ -274,7 +276,7 @@
                   </div>
                 </div>
                 <!--自定义主机价格-->
-                <div class="item-wrapper">
+                <div class="item-wrapper" style="margin-top: 28px;">
                   <div style="display: flex">
                     <div>
                       <p class="item-title" style="margin-top:0px;">价格</p>
@@ -304,6 +306,7 @@
                     </div>
                   </div>
                 </div>
+                <p style="font-size: 14px;color: #999999;line-height: 25px;margin: 10px 0 10px 90px;">如需使用其他虚拟私有云（VPC），请选择已有虚拟私有云（VPC），也可以自行到<span style="color: rgb(42, 153, 242);cursor: pointer" @click="$router.push('overview')">控制台新建。</span></p>
                 <!--网卡选择-->
                 <div class="item-wrapper">
                   <div style="display: flex">
@@ -340,7 +343,7 @@
                     <div style="width:500px;margin-top: 7px;display: flex">
                       <i-slider
                         v-model="PecsInfo.IPConfig.bandWidth"
-                        unit="M"
+                        unit="MB"
                         :min=1
                         :max=100
                         :step=1
@@ -393,7 +396,7 @@
                       <div style="width:500px;margin-top: 7px;display: flex">
                         <i-slider
                           v-model="disk.size"
-                          unit="G"
+                          unit="GB"
                           :min=20
                           :max=1000
                           :step=10
@@ -505,12 +508,12 @@
             <div style="margin-top: 20px">
               <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
                  @click="$router.push('document')">查看计价详情</p>
-              <p v-if="PecsInfo.createType=='fast'" style="text-align: right;font-size: 14px;color: #666666;">费用：<span
+              <p v-if="PecsInfo.createType=='fast'" style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">费用：<span
                 style="font-size: 24px;color: #EE6723;">{{PecsInfo.cost.toFixed(2)}}元</span></p>
               <p v-if="PecsInfo.createType=='fast'&&PecsInfo.fastCoupon!=0"
                  style="text-align: right;font-size: 14px;color: #666666;">优惠费用：<span
                 style="font-size: 14px;color: #EE6723;">{{PecsInfo.fastCoupon.toFixed(2)}}元</span></p>
-              <p v-if="PecsInfo.createType=='custom'" style="text-align: right;font-size: 14px;color: #666666;">
+              <p v-if="PecsInfo.createType=='custom'" style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
                 费用：<span
                 style="font-size: 24px;color: #EE6723;">{{totalCost.toFixed(2)}}元</span>
               </p>
@@ -523,8 +526,7 @@
                         class="btn" @click="addCart">
                   加入预算清单
                 </Button>
-                <Button size="large" class="btn"
-                        @click="buyHost">
+                <Button @click="buyHost" type="primary" style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377DFF;">
                   立即购买
                 </Button>
               </div>
@@ -607,7 +609,7 @@
                   <div style="width:500px;margin-top: 7px;display: flex">
                     <i-slider
                       v-model="disk.size"
-                      unit="G"
+                      unit="GB"
                       :min=20
                       :max=1000
                       :step=10
@@ -652,7 +654,7 @@
           <div style="margin-top: 20px">
             <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
                @click="$router.push('document')">查看计价详情</p>
-            <p style="text-align: right;font-size: 14px;color: #666666;">
+            <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
               费用：<span style="font-size: 24px;color: #EE6723;">{{PdiskInfo.dataDiskCost.toFixed(2)}}元</span>
             </p>
             <p style="text-align: right;font-size: 14px;color: #666666;" v-if="PdiskInfo.coupon!=0">优惠费用：<span
@@ -662,8 +664,7 @@
                       class="btn" @click="addDiskCart">
                 加入预算清单
               </Button>
-              <Button size="large" class="btn"
-                      @click="buyDisk">
+              <Button @click="buyDisk" type="primary" style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377DFF;">
                 立即购买
               </Button>
             </div>
@@ -734,7 +735,7 @@
                 <div style="width:500px;margin-top: 7px;display: flex">
                   <i-slider
                     v-model="PeipInfo.bandWidth"
-                    unit="M"
+                    unit="MB"
                     :min=1
                     :max=100
                     :step=1
@@ -776,18 +777,17 @@
           <div style="margin-top: 20px">
             <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
                @click="$router.push('document')">查看计价详情</p>
-            <p style="text-align: right;font-size: 14px;color: #666666;">费用：<span
+            <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">费用：<span
               style="font-size: 24px;color: #EE6723;">{{PeipInfo.cost.toFixed(2)}}元</span></p>
-            <p style="text-align: right;font-size: 14px;color: #666666;">优惠费用：<span
-              style="font-size: 14px;color: #EE6723;" v-if="PeipInfo.coupon!=0">{{PeipInfo.coupon.toFixed(2)}}元</span>
+            <p style="text-align: right;font-size: 14px;color: #666666;" v-if="PeipInfo.coupon!=0">优惠费用：<span
+              style="font-size: 14px;color: #EE6723;">{{PeipInfo.coupon.toFixed(2)}}元</span>
             </p>
             <div style="text-align: right;margin-top: 20px;">
               <Button size="large"
                       class="btn" @click="addIPCart">
                 加入预算清单
               </Button>
-              <Button size="large" class="btn"
-                      @click="buyIP">
+              <Button @click="buyIP" type="primary" style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377dff;">
                 立即购买
               </Button>
             </div>
@@ -812,9 +812,9 @@
               <div v-if="prod.type=='Pecs'" style="border-bottom:1px solid #ccc;padding:20px 0px;">
                 <p class="item"><span class="title">区域</span>{{prod.zone.zonename}}</p>
                 <p class="item">
-                  <span class="title">计费模式</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月
-                  ${prod.timeForm.currentTimeValue.label}`:'实时计费'}}
+                  <span class="title">计费模式</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
                 </p>
+                <p class="item"><span class="title">购买时长</span>{{prod.timeForm.currentTimeValue.label}}</p>
                 <!--镜像+应用-->
                 <p class="item" v-if="prod.currentType=='app'"><span class="title">镜像</span>{{prod.currentApp.templatename}}
                 </p>
@@ -854,9 +854,9 @@
               <div v-if="prod.type=='Pdisk'" style="border-bottom:1px solid #ccc;padding:20px 0px;">
                 <p class="item"><span class="title">区域</span>{{prod.zone.zonename}}</p>
                 <p class="item">
-                  <span class="title">计费模式</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月
-                  ${prod.timeForm.currentTimeValue.label}`:'实时计费'}}
+                  <span class="title">计费模式</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
                 </p>
+                <p class="item"><span class="title">购买时长</span>{{prod.timeForm.currentTimeValue.label}}</p>
                 <p class="item" v-for="disk in prod.dataDiskList">
                   <span class="title">硬盘</span>{{disk.size}}G{{disk.label}}
                 </p>
@@ -870,9 +870,9 @@
               <div v-if="prod.type=='Peip'" style="border-bottom:1px solid #ccc;padding:20px 0px;">
                 <p class="item"><span class="title">区域</span>{{prod.zone.zonename}}</p>
                 <p class="item">
-                  <span class="title">计费模式</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月
-                  ${prod.timeForm.currentTimeValue.label}`:'实时计费'}}
+                  <span class="title">计费模式</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
                 </p>
+                <p class="item"><span class="title">购买时长</span>{{prod.timeForm.currentTimeValue.label}}</p>
                 <p class="item">
                   <span class="title">带宽</span>{{prod.bandWidth}}
                 </p>
@@ -890,8 +890,8 @@
               总计：<span
               style="font-size: 24px;color: #F85E1D;line-height: 25px;vertical-align: middle;margin-left:10px;">{{billListCost.toFixed(2)}}元</span>
             </p>
-            <button class="buyButton" @click="buyNow"
-                    style="display:block;width:300px;margin-bottom: 10px;">
+            <button @click="buyNow"
+                    style="display:block;width:300px;margin-bottom: 10px;cursor: pointer;outline: none;padding: 10px 38px; border: 1px solid #2A99F2;border-radius: 10px;background-image: linear-gradient(-42deg, #377DFF 0%, #4481EB 100%);border-radius: 10px;font-size: 16px;color: #FFF;">
               立即购买
             </button>
             <button class="buyButton" style="display:block;width:300px;" @click="exportXLSX">导出预算清单</button>
@@ -2310,7 +2310,7 @@
           text-align: center;
           cursor: pointer;
           color: #666666;
-          background-color: #F7F7F7;
+          background: #E9E9E9;
         }
         .typeSelect {
           background-color: #FFFFFF;
@@ -2407,6 +2407,7 @@
           border-color: #377DFF;
           font-size: 16px;
           color: #377DFF;
+          border-radius: 10px;
           &:first-of-type {
             margin-right: 10px;
           }
@@ -2438,14 +2439,14 @@
       cursor: pointer;
       outline: none;
       padding: 10px 38px;
-      border: 1px solid #2A99F2;
+      border: 1px solid #377dff;
       border-radius: 10px;
       background-color: #ffffff;
       font-size: 16px;
-      color: #2A99F2;
+      color: #377DFF;
       &:hover {
-        background-image: linear-gradient(-42deg, #4481EB 0%, #04BEFE 100%);
-        color: #ffffff;
+        background-image: linear-gradient(-42deg, #377DFF 0%, #4481EB 100%);
+        color: #FFF;
       }
     }
   }
