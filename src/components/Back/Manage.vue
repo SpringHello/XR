@@ -29,7 +29,7 @@
             <div>镜像系统：{{computerInfo.template}}</div>
             <div>到期时间／有效期：{{computerInfo.endTime}}</div>
             <div>内网地址：{{computerInfo.privateIp}}</div>
-            <div>登陆密码：
+            <div>登录密码：
               <span :class="[isActive ? 'send' : 'nosend']" @click="lookPassword()">{{codePlaceholder}}</span>
             </div>
           </div>
@@ -273,7 +273,7 @@
       <!-- 查看密码弹窗 -->
       <Modal width="550" v-model="showModal.lookPassword" :scrollable="true" class="lookPassword">
         <div slot="header" class="modal-header-border">
-          <span class="universal-modal-title">查看登陆密码</span>
+          <span class="universal-modal-title">查看登录密码</span>
         </div>
         <div>
           <div class="universal-modal-content-flex">
@@ -400,7 +400,7 @@
   import hostDiskHistogram from '@/echarts/hostDiskHistogram'
   import ipOptions from '@/echarts/ipOptions'
   import ipHistogram from '@/echarts/ipHistogram'
-  // import {deepClone} from '../util/util'
+  import regExp from '../../util/regExp'
   var urlList = {
     dayURL: 'alarm/getVmAlarmByHour.do',
     otherURL: 'alarm/getVmAlarmByDay.do'
@@ -410,8 +410,8 @@
   var hostDiskOptionstr = JSON.stringify(hostDiskOptions)
   var hostDiskHistogramstr = JSON.stringify(hostDiskHistogram)
   export default {
-
     data() {
+      const validaSinginName = regExp.validaSinginName
       var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,23}$/
       const validateoldPassword = (rule, value, callback) => {
             if (!value) {
@@ -440,18 +440,6 @@
             } else if(this.resetPasswordForm.newPassword != value){
                 callback(new Error('两次密码不一致'));
             } else {
-                callback();
-            }
-        }
-        const validatelookPassword = (rule, value, callback) => {
-          var passwordRegExp = /(?:\d[a-zA-Z])|(?:[a-zA-Z]\d)/
-          if (!value) {
-                callback(new Error('密码不能为空'));
-            } 
-            else if(!passwordRegExp.test(value)){
-                callback(new Error('必须且只能包含数字大小写字母,长度至少6位'));
-            } 
-            else {
                 callback();
             }
         }
@@ -718,7 +706,7 @@
         },
         lookPasswordFormRule: {
           input: [
-            {required: true, validator: validatelookPassword, trigger: 'blur'}
+            {required: true, validator: validaSinginName, trigger: 'blur'}
           ]
         },
         reloadForm: {

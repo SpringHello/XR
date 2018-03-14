@@ -16,14 +16,14 @@
         <div class="universal-alert">
           <p>镜像是一个包含了软件及必要配置的云主机模板，至少包含操作系统，还可以包含应用软件（例如，数据库软件）和私有软件。通过镜像，您可以创建云主机。</p>
         </div>
-        <Tabs type="card" :animated="false" style="min-height: 400px">
-          <TabPane label="系统镜像">
+        <Tabs type="card" :animated="false" style="min-height: 400px" v-model="panselected">
+          <TabPane label="系统镜像" name="system">
             <div class="operator-bar">
               <Button type="primary" @click="createHostBySystem">以镜像创建主机</Button>
             </div>
             <Table :columns="systemColumns" :data="systemData" class="table" @radio-change="selectChange"></Table>
           </TabPane>
-          <TabPane label="自有镜像">
+          <TabPane label="自有镜像" name="own">
             <div class="operator-bar">
               <Button type="primary" @click="showModal.createMirror = true">制作镜像</Button>
               <!-- <Button type="primary" @click="createHost">生成主机</Button> -->
@@ -113,6 +113,8 @@
   import regExp from '../../util/regExp'
   export default {
     data() {
+      var pan=sessionStorage.getItem('pane')
+      sessionStorage.removeItem('pane')
       const validaRegisteredName = regExp.validaRegisteredName
       return {
         showModal: {
@@ -120,6 +122,8 @@
           modify: false,
           delmirror: false
         },
+        pan,
+        panselected: pan,
         systemtemplateid: '',
         filterKey: '全部',
         filterList: ['全部', 'centos', 'debian', 'ubuntu', 'window'],
