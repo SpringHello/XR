@@ -161,7 +161,7 @@
           },
           {
             title: '镜像平台',
-              width: 240,
+            width: 240,
             render: (h, params) => {
               return h('Tooltip', {
                   props: {
@@ -285,7 +285,7 @@
           },
           {
             title: '创建时间',
-              width: 200,
+            width: 200,
             key: 'createtime'
           },
           {
@@ -293,59 +293,46 @@
             key: 'action',
             width: 150,
             render: (h, params) => {
-              var cursorValue = ''
-              var disabledValue = ''
-              switch (params.row.status) {
-                // 正常
-                case 1:
-                  cursorValue = 'pointer'
-                  disabledValue = false
-                  break
-                // 异常
-                case -1:
-                  cursorValue = 'pointer'
-                  disabledValue = false
-                  break
-                // 创建中
-                case 2:
-                  cursorValue = 'not-allowed'
-                  disabledValue = 'disabled'
-                  break
-              }
-              return h('div', [h('span', {
-                style: {
-                  marginRight: '10px',
-                  color: '#2A99F2',
-                  cursor: cursorValue,
-                },
-                props:  {
-                  disabled: disabledValue,
-                  type: 'text'
-                },
-                on: {
-                  click: () => {
-                    this.ownMirrorCreathost(params.row)
-                  }
-                }
-              }, '生成主机'),
-                h('span', {
+              if (params.row.status == 2 || params.row.status == 3) {
+                return h('div',[h('span', {
                   style: {
+                    marginRight: '10px',
+                    color: '#495060',
+                  }
+                }, '生成主机'),
+                  h('span', {
+                    style: {
+                      color: '#495060',
+                    }
+                  }, '修改')]);
+              } else {
+                return h('div',[h('span', {
+                  style: {
+                    marginRight: '10px',
                     color: '#2A99F2',
-                    cursor: cursorValue,
-                  },
-                  props:  {
-                    disabled: disabledValue,
-                    type: 'text'
+                    cursor: 'pointer',
                   },
                   on: {
                     click: () => {
-                      this.mirrorModifyForm.name = ''
-                      this.mirrorModifyForm.remarks = ''
-                      this.showModal.modify = true
-                      this.systemtemplateid = params.row.systemtemplateid
+                      this.ownMirrorCreathost(params.row)
                     }
                   }
-                }, '修改')]);
+                }, '生成主机'),
+                  h('span', {
+                    style: {
+                      color: '#2A99F2',
+                      cursor: 'pointer',
+                    },
+                    on: {
+                      click: () => {
+                        this.mirrorModifyForm.name = params.row.templatename
+                        this.mirrorModifyForm.remarks = params.row.templatedescript
+                        this.showModal.modify = true
+                        this.systemtemplateid = params.row.systemtemplateid
+                      }
+                    }
+                  }, '修改')]);
+              }
             }
           }
         ],
@@ -444,7 +431,6 @@
         this.$router.push({
           path: 'buy',
           query: {
-            templateid: item.systemtemplateid,
             zoneid: item.zoneid,
             mirrorType: 'custom',
             mirror: item
@@ -499,9 +485,9 @@
         this.$router.push({
           path: 'buy',
           query: {
-            templateid: item.systemtemplateid,
             zoneid: item.zoneid,
-            mirrorType: 'public'
+            mirrorType: 'public',
+            mirror: item
           }
         })
       },
