@@ -189,30 +189,37 @@
     </div>
     <Modal
       v-model="modal"
-      title="续费选择"
-      width="590"
+      width="550"
       @on-ok="ok" scrollable="true">
-      <div style="height:100px;width:90%;margin:0px auto">
-        <span style="font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;vertical-align:middle">
-        付费类型 :
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">续费选择</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form>
+          <FormItem label="付费类型 :">
+            <Select v-model="renewalType">
+              <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="付费时长 :">
+            <Select v-model="renewalTime">
+              <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+        </Form>
+        <div style="font-size:16px;">
+          应付费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{cost}}
+          <span v-if="renewalTime != ''">/</span>
+          <span style="font-size: 15px;">{{renewalTime}}<span v-if="renewalType == 'year' && renewalTime != ''">年</span>
+          <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span>
         </span>
-        <Select v-model="renewalType" style="width:140px">
-          <Option v-for="item in timeOptions.renewalType" :value="item.value" :key="item">{{ item.label }}</Option>
-        </Select>
-        <span
-          style="margin-left:30px;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;vertical-align:middle">
-        付费时长 :
-      </span>
-        <Select v-model="renewalTime" style="width:140px">
-          <Option v-for="item in timeOptions.renewalTime" :value="item.value" :key="item">{{ item.label }}</Option>
-        </Select>
+        </div>
       </div>
-      <div style="width:90%;margin:0px auto;font-family: MicrosoftYaHei-Bold;font-size: 16px;color: #666666;">
-        应付费:{{cost}}
-      </div>
-      <div slot="footer" style="display: flex;width:177px;margin-left:350px;">
-        <div class="button cancel" @click="modal=false">取消</div>
-        <div class="button ok" @click="ok">确认续费</div>
+      <div slot="footer" style="" class="modal-footer-border">
+        <Button class="button cancel" @click="modal=false">取消</Button>
+        <Button class="button ok" @click="ok">确认续费</Button>
       </div>
     </Modal>
   </div>
@@ -242,7 +249,7 @@
           }, {label: '5月', value: 5}, {label: '6月', value: 6}, {label: '7月', value: 7}, {
             label: '8月',
             value: 9
-          }, {label: '9月', value: 9}, {label: '10月', value: 10}, {label: '11月', value: 11}, {label: '12月', value: 12}]
+          }, {label: '9月', value: 9}, {label: '10月', value: 10}]
         },
 
         selectArray: [],
@@ -458,9 +465,13 @@
       background: #2A99F2;
     }
     .cancel {
-      margin-right: 10.5px;
+    //  margin-right: 5px;
       border: 1px solid #D9D9D9;
       color: #666666;
+      &:hover {
+        color: #377dff;
+        border: 1px solid #377DFF;
+      }
     }
   }
 
