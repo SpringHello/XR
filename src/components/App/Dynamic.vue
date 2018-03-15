@@ -1,7 +1,6 @@
 <template>
   <div id="dynamic">
-    <div class="content">
-
+    <div v-if="$route.query.id == 5 || $route.query.id == 0"><div class="content">
       <div class="left" style="padding:15px;">
         <img src="../../assets/img/product/dynamic-1.png" style="width: 16px; height: 16px;">
       </div>
@@ -44,7 +43,95 @@
           <p class="time">2017-11-16</p>
         </div>
       </div>
-    </div>
+    </div></div>
+    <div v-if="$route.query.id == 2"><div class="content">
+      <div class="left" style="padding:15px;">
+        <img src="../../assets/img/product/dynamic-1.png" style="width: 16px; height: 16px;">
+      </div>
+
+      <div class="content-detail">
+        <Menu style="width: 300px;" :open-names="['1']" active-name="1-2" @on-select="show">
+          <Submenu name="1">
+            <template slot="title">
+              <img src="../../assets/img/product/dynamic-2.png" alt="" style="margin-right:8px;">
+              <span style="font-size: 18px;color:#333333;font-family: MicrosoftYaHei;">产品公告</span>
+            </template>
+            <MenuItem name="1-1">新睿云技术产品部门测试</MenuItem>
+            <MenuItem name="1-2">VPC系统更新</MenuItem>
+            <MenuItem name="1-3">弹性IP源NAT功能上线</MenuItem>
+          </Submenu>
+        </Menu>
+      </div>
+
+      <div class="right" v-if="select=='1-1'">
+        <p class="title">公告 / 新睿云技术产品部门测试</p>
+        <div class="right-content">
+          <p class="sub-title">新睿云技术产品部门测试</p>
+          <p class="sub-content">新睿云技术产品部门测试</p>
+          <p class="time">2017-10-01</p>
+        </div>
+      </div>
+      <div class="right" v-if="select=='1-2'">
+        <p class="title">公告 / VPC系统更新</p>
+        <div class="right-content">
+          <p class="sub-title">VPC系统更新</p>
+          <p class="sub-content">本次更新时间为2017-12-25 01:00:00  --  2017-12-25 05:00:00  ,届时将停止用户对VPC的所有操作。</p>
+          <p class="time">2017-12-01</p>
+        </div>
+      </div>
+      <div class="right" v-if="select=='1-3'">
+        <p class="title">公告 / 弹性IP源NAT功能上线</p>
+        <div class="right-content">
+          <p class="sub-title">弹性IP源NAT功能上线</p>
+          <p class="sub-content">大家期待已久源NAT上线啦，源NAT可以绑定至VPC让下面的所有虚拟机都可以共用该弹性IP上网哟!</p>
+          <p class="time">2017-11-16</p>
+        </div>
+      </div>
+    </div></div>
+    <div v-if="$route.query.id == 3"><div class="content">
+      <div class="left" style="padding:15px;">
+        <img src="../../assets/img/product/dynamic-1.png" style="width: 16px; height: 16px;">
+      </div>
+
+      <div class="content-detail">
+        <Menu style="width: 300px;" :open-names="['1']" active-name="1-3" @on-select="show">
+          <Submenu name="1">
+            <template slot="title">
+              <img src="../../assets/img/product/dynamic-2.png" alt="" style="margin-right:8px;">
+              <span style="font-size: 18px;color:#333333;font-family: MicrosoftYaHei;">产品公告</span>
+            </template>
+            <MenuItem name="1-1">新睿云技术产品部门测试</MenuItem>
+            <MenuItem name="1-2">VPC系统更新</MenuItem>
+            <MenuItem name="1-3">弹性IP源NAT功能上线</MenuItem>
+          </Submenu>
+        </Menu>
+      </div>
+
+      <div class="right" v-if="select=='1-1'">
+        <p class="title">公告 / 新睿云技术产品部门测试</p>
+        <div class="right-content">
+          <p class="sub-title">新睿云技术产品部门测试</p>
+          <p class="sub-content">新睿云技术产品部门测试</p>
+          <p class="time">2017-10-01</p>
+        </div>
+      </div>
+      <div class="right" v-if="select=='1-2'">
+        <p class="title">公告 / VPC系统更新</p>
+        <div class="right-content">
+          <p class="sub-title">VPC系统更新</p>
+          <p class="sub-content">本次更新时间为2017-12-25 01:00:00  --  2017-12-25 05:00:00  ,届时将停止用户对VPC的所有操作。</p>
+          <p class="time">2017-12-01</p>
+        </div>
+      </div>
+      <div class="right" v-if="select=='1-3'">
+        <p class="title">公告 / 弹性IP源NAT功能上线</p>
+        <div class="right-content">
+          <p class="sub-title">弹性IP源NAT功能上线</p>
+          <p class="sub-content">大家期待已久源NAT上线啦，源NAT可以绑定至VPC让下面的所有虚拟机都可以共用该弹性IP上网哟!</p>
+          <p class="time">2017-11-16</p>
+        </div>
+      </div>
+    </div></div>
   </div>
   </div>
 </template>
@@ -55,7 +142,7 @@
     data () {
       return {
         select:'1-1',
-        contentList: []
+        contentList: [],
       }
     },
     methods:{

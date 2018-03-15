@@ -1600,7 +1600,6 @@
       }
     }
   }
-
   .head {
     padding: 0px 18px;
     height: 16px;

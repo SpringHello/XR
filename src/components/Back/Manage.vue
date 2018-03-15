@@ -513,16 +513,16 @@
             key: 'createway',
             render: (h, params) => {
               const row = params.row
-              const text = row.createway === 'hand' ? '手动备份' : row.createway
+              const text = row.createway === 'hand' ? '手动' : row.createway
               return h('span', {}, text)
             }
           },
           {
-            title: '间隔类型',
-            key: 'interval',
+            title: '快照间隔',
+            key: 'intervals',
             render: (h, params) => {
               const row = params.row
-              const text = row.createway === 'hand' ? '手动' : row.createway === 'day' ? '每天' : row.createway === 'week' ? '每周' : row.createway === 'month' ? '每月' : ''
+              const text = row.intervals === 'hand' ? '手动' : row.intervals === 'day' ? '每天' : row.intervals === 'week' ? '每周' : row.intervals === 'month' ? '每月' : ''
               return h('span', {}, text)
             }
           },
@@ -535,21 +535,30 @@
             key: 'action',
             width: 100,
             render: (h, params) => {
-              return h('span', {
-                style: {
-                  color: '#2A99F2',
-                  cursor: 'pointer'
-                },
-                on: {
-                  click: () => {
-                    this.showModal.rollback = true
-                    this.cursnapshot = params.row
-                    this.snapsName = params.row.snapshotname
-                    this.hostName = params.row.name
-                    this.hostCreatetime = params.row.addtime
+              if (params.row.status == 2 || params.row.status == 3){
+                return h('span', {
+                  style: {
+                    cursor: 'not-allowed'
+                  },
+                }, '回滚')
+              } else {
+                return h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      this.showModal.rollback = true
+                      this.cursnapshot = params.row
+                      this.snapsName = params.row.snapshotname
+                      this.hostName = params.row.name
+                      this.hostCreatetime = params.row.addtime
+                      // console.log(params.row)
+                    }
                   }
-                }
-              }, '回滚')
+                }, '回滚')
+              }
             }
           }
         ],
@@ -1349,6 +1358,7 @@
       margin-top: -32px;
       padding-left: 20px;
       .body {
+        min-height: 400px;
         margin-top: -17px;
         padding-top: 20px;
         padding-right:20px;

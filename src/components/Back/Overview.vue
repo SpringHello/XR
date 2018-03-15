@@ -85,9 +85,9 @@
             <p class="universal-middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">公告</p>
             <div>
               <div v-for="(item,index) in noticeData" :key="index">
-                <p class="universal-mini">{{item.title}}<span>{{item.createtime}}</span></p>
+                <p class="universal-mini" @click="$router.push({ path: 'dynamic', query: { id: item.id }})">{{item.title}}<span>{{item.createtime}}</span></p>
               </div>
-              <a href="/ruicloud/productBulletin">查看更多</a>
+              <a href="/ruicloud/dynamic?id=0">查看更多</a>
             </div>
           </div>
           <div>
@@ -489,6 +489,7 @@
             .universal-mini {
               padding: 11px 0px;
               font-size: 14px;
+              cursor: pointer;
               span {
                 float: right;
               }
