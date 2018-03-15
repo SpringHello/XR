@@ -87,7 +87,7 @@
               <div v-for="(item,index) in noticeData" :key="index">
                 <p class="universal-mini">{{item.title}}<span>{{item.createtime}}</span></p>
               </div>
-              <a href="/ruicloud/productBulletin">查看更多</a>
+              <a href="/ruicloud/dynamic">查看更多</a>
             </div>
           </div>
           <div>
@@ -489,6 +489,7 @@
             .universal-mini {
               padding: 11px 0px;
               font-size: 14px;
+              cursor: pointer;
               span {
                 float: right;
               }
