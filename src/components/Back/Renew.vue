@@ -26,7 +26,7 @@
                   <Alert style="border: solid 1px #2A99F2;border-radius: 4px;width:100%">
                     在余额充足的情况下，如开启自动续费，系统将在资源即将到期时为其续费。如关闭自动续费，系统将不做任何续费操作，且过期后资源进入欠费状态。
                   </Alert>
-                  <div v-for="(item,index) in hostList" :key="item" v-bind:class="{select:item.select}"
+                  <div v-for="(item,index) in hostList" :key="index" v-bind:class="{select:item.select}"
                        @click="toggle(item)" style="margin-bottom: 20px">
                     <Card style="width:375px">
                       <div style="text-align:center">
@@ -34,6 +34,7 @@
                           <div class="icon host" v-if="item.type=='host'"></div>
                           <div class="icon ip" v-if="item.type=='ip'"></div>
                           <div class="icon disk" v-if="item.type=='disk'"></div>
+                          <div class="icon nat" v-if="item.type=='nat'"></div>
                           <div class="info">
                             <h1>{{item.resourcesName}}</h1>
                             <span>
@@ -66,14 +67,15 @@
                   <Alert style="border: solid 1px #2A99F2;border-radius: 4px;width:100%">
                     在余额充足的情况下，如开启自动续费，系统将在资源即将到期时为其续费。如关闭自动续费，系统将不做任何续费操作，且过期后资源进入欠费状态。
                   </Alert>
-                  <div v-for="(item,index) in hostList" :key="item" v-bind:class="{select:item.select}"
-                       v-if="item.remainingDay==0" @click="toggle(item)" style="margin-bottom: 20px">
+                  <div v-for="(item,index) in hostList" :key="index" v-bind:class="{select:item.select}"
+                      v-if="item.remainingDay==0" @click="toggle(item)" style="margin-bottom: 20px">
                     <Card style="width:375px">
                       <div style="text-align:center">
                         <div class="head">
                           <div class="icon host" v-if="item.type=='host'"></div>
                           <div class="icon ip" v-if="item.type=='ip'"></div>
                           <div class="icon disk" v-if="item.type=='disk'"></div>
+                          <div class="icon nat" v-if="item.type=='nat'"></div>
                           <div class="info">
                             <h1>{{item.resourcesName}}</h1>
                             <span>
@@ -106,7 +108,7 @@
                   <Alert style="border: solid 1px #2A99F2;border-radius: 4px;width:100%">
                     在余额充足的情况下，如开启自动续费，系统将在资源即将到期时为其续费。如关闭自动续费，系统将不做任何续费操作，且过期后资源进入欠费状态。
                   </Alert>
-                  <div v-for="(item,index) in hostList" :key="item" v-bind:class="{select:item.select}"
+                  <div v-for="(item,index) in hostList" :key="index" v-bind:class="{select:item.select}"
                        v-if="-1<item.remainingDay&&item.remainingDay<7" @click="toggle(item)"
                        style="margin-bottom: 20px">
                     <Card style="width:375px">
@@ -115,6 +117,7 @@
                           <div class="icon host" v-if="item.type=='host'"></div>
                           <div class="icon ip" v-if="item.type=='ip'"></div>
                           <div class="icon disk" v-if="item.type=='disk'"></div>
+                          <div class="icon nat" v-if="item.type=='nat'"></div>
                           <div class="info">
                             <h1>{{item.resourcesName}}</h1>
                             <span>
@@ -147,7 +150,7 @@
                   <Alert style="border: solid 1px #2A99F2;border-radius: 4px;width:100%">
                     在余额充足的情况下，如开启自动续费，系统将在资源即将到期时为其续费。如关闭自动续费，系统将不做任何续费操作，且过期后资源进入欠费状态。
                   </Alert>
-                  <div v-for="(item,index) in hostList" :key="item" v-bind:class="{select:item.select}"
+                  <div v-for="(item,index) in hostList" :key="index" v-bind:class="{select:item.select}"
                        v-if="item.remainingDay<0" @click="toggle(item)" style="margin-bottom: 20px">
                     <Card style="width:375px">
                       <div style="text-align:center">
@@ -155,6 +158,7 @@
                           <div class="icon host" v-if="item.type=='host'"></div>
                           <div class="icon ip" v-if="item.type=='ip'"></div>
                           <div class="icon disk" v-if="item.type=='disk'"></div>
+                          <div class="icon nat" v-if="item.type=='nat'"></div>
                           <div class="info">
                             <h1>{{item.resourcesName}}</h1>
                             <span>
@@ -190,7 +194,7 @@
     <Modal
       v-model="modal"
       width="550"
-      @on-ok="ok" scrollable="true">
+      @on-ok="ok" :scrollable="true">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">续费选择</span>
       </p>
@@ -243,7 +247,7 @@
           renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
           renewalTime: [],
           year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}],
-          month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '3月', value: 3},{
+          month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '3月', value: 3}, {
             label: '4月',
             value: 4
           }, {label: '5月', value: 5}, {label: '6月', value: 6}, {label: '7月', value: 7}, {
@@ -326,39 +330,69 @@
       },
       selectAll(){
         this.selectArray = []
-        console.log(this.tabLabel)
+        var isselectAll = this.hostList.some((item) => {
+            return item.select == true
+          })
         if (this.tabLabel == '全部') {
-          this.hostList.forEach((item) => {
-            item.select = true
-            this.selectArray.push(item)
-          })
+          if (isselectAll) {
+              this.hostList.forEach((item) => {
+                item.select = false
+                this.selectArray.push(item)
+              })
+          } else {
+              this.hostList.forEach((item) => {
+                item.select = true
+                this.selectArray.push(item)
+              })
+          }
         } else if (this.tabLabel == '24小时之内') {
-          this.hostList.forEach((item) => {
-            if (item.remainingDay == 0) {
-              item.select = true
-              this.selectArray.push(item)
-            } else {
-              item.select = false
-            }
-          })
+          if (isselectAll) {
+            this.hostList.forEach((item) => {
+              if (item.remainingDay == 0) {
+                item.select = false
+                this.selectArray.push(item)
+              }
+            })
+          } else{
+            this.hostList.forEach((item) => {
+              if (item.remainingDay == 0) {
+                item.select = true
+                this.selectArray.push(item)
+              }
+            })
+          }
         } else if (this.tabLabel == '7天内') {
-          this.hostList.forEach((item) => {
-            if (item.remainingDay > -1 && item.remainingDay < 7) {
-              item.select = true
-              this.selectArray.push(item)
-            } else {
-              item.select = false
-            }
-          })
+          if (isselectAll) {
+            this.hostList.forEach((item) => {
+              if (item.remainingDay > -1 && item.remainingDay < 7) {
+                item.select = false
+                this.selectArray.push(item)
+              }
+            })
+          } else {
+            this.hostList.forEach((item) => {
+              if (item.remainingDay > -1 && item.remainingDay < 7) {
+                item.select = true
+                this.selectArray.push(item)
+              }
+            })
+          }
         } else if (this.tabLabel == '已过期') {
-          this.hostList.forEach((item) => {
-            if (item.remainingDay < 0) {
-              item.select = true
-              this.selectArray.push(item)
-            } else {
-              item.select = false
-            }
-          })
+          if (isselectAll) {
+            this.hostList.forEach((item) => {
+              if (item.remainingDay < 0) {
+                item.select = false
+                this.selectArray.push(item)
+              }
+            })
+          } else {
+            this.hostList.forEach((item) => {
+              if (item.remainingDay < 0) {
+                item.select = true
+                this.selectArray.push(item)
+              }
+            })
+          }
         }
       },
       toggle(item){
@@ -403,9 +437,7 @@
         }
         this.loadingMessage = '创建订单中'
         this.loading = true
-        this.$http.get('continue/continueOrder.do', {
-          params
-        }).then(response => {
+        this.$http.post('continue/continueOrder.do', params).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({path: 'order'})
@@ -465,7 +497,7 @@
       background: #2A99F2;
     }
     .cancel {
-    //  margin-right: 5px;
+      //  margin-right: 5px;
       border: 1px solid #D9D9D9;
       color: #666666;
       &:hover {
@@ -548,6 +580,9 @@
           }
           .disk {
             background-image: url('../../assets/img/renew/resource-icon-3.png');
+          }
+          .nat{
+            background-image: url('../../assets/img/renew/resource-icon-4.png');
           }
           .info {
             width: 76%;

@@ -50,8 +50,8 @@
               &nbsp;&nbsp;
               <Icon type="minus" style="position: relative;bottom: 10px"></Icon>
               &nbsp;&nbsp;
-              <Input-number :min="1" v-model="value2"
-                            style="width: 116px;position: relative;bottom: 12px"></Input-number>
+              <Input-number :min="0" v-model="value2"
+                            style="width: 116px;position: relative;bottom: 12px" ></Input-number>
               <Button type="primary" style="bottom: 12px; margin-left: 20px;position: relative" @click="search">查询
               </Button>
               <Table highlight-row :columns="columns" :data="tabledata"></Table>
@@ -80,7 +80,7 @@
                 </Row>
               </div>
               <div style="display: inline-block">
-                <Button type="primary" style="margin-left: 423px" @click="orderPay">支付</Button>
+                <Button type="primary" style="margin-left: 423px" @click="orderPay" :disabled="payDisabled">支付</Button>
                 <Button type="primary" style="margin-left: 10px" @click="deleteOrder">删除</Button>
               </div>
             </div>
@@ -125,10 +125,11 @@
                 <span>实际可开金额发票：￥{{ invoice }}</span>
               </div>
               <div class="invoiceInformation">
-                <Form ref="formInvoiceDate" :model="formInvoiceDate" :rules="ruleValidate" :label-width="80"
+                <Form ref="formInvoiceDate" :model="formInvoiceDate" :rules="ruleValidate" :label-width="100"
                       label-position="left">
                   <Form-item label="温馨提示">
-                    <p style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);line-height: 18px;margin-top: 5px;">
+                    <p
+                      style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);line-height: 18px;margin-top: 5px;">
                       1.您选择的发票金额不能小于1000元，增值发票准票金额不能小于10000请累计之后一并申请。</p>
                     <p
                       style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);margin-bottom: -10px;line-height: 18px;">
@@ -151,6 +152,10 @@
                            style="width: 317px"></Input>
                     <!-- <span class="bill_s1">备注：如果是企业认证用户，且开具的是企业发票，则开具发票的抬头名称默认为认证企业，无需填写，但是可以修改。</span>-->
                   </Form-item>
+                  <Form-item label="纳税人识别码" prop="taxpayerID" v-if="formInvoiceDate.InvoiceType == 0">
+                    <Input :maxlength="32" v-model="formInvoiceDate.taxpayerID" placeholder="请输入纳税人识别码"
+                           style="width: 317px"></Input>
+                  </Form-item>
                   <Form-item label="发票信息" v-show="authenticationShow">
                     <span style="display: block">单位：{{ companyname }}</span>
                     <span style="display: block">纳税人识别码：{{ identicode }}</span>
@@ -161,7 +166,7 @@
                   <Form-item label="发票信息" v-show="invoiceInformationShow">
                     <p style="line-height: 2.5;">您需要通过<span style="color: dodgerblue;cursor:pointer;"
                                                             @click="invoiceCertification">增票资质认证</span>才能开具增值税专用发票</p>
-                    <Button type="primary" style="margin-left: 235px" @click="invoiceCertification"
+                    <Button type="primary" style="margin-left: 237px" @click="invoiceCertification"
                             v-show="certificateStatus">点击认证
                     </Button>
                     <Button type="warning" style="margin-left: 245px" v-show="underReview">审核中</Button>
@@ -181,7 +186,8 @@
                            style="width: 317px"></Input>
                   </Form-item>
                   <Form-item>
-                    <Button type="primary" style="float: right;font-size: 12px;" @click="invoiceMake('formInvoiceDate')">确认开票
+                    <Button type="primary" style="font-size: 12px;margin-left: 237px"
+                            @click="invoiceMake('formInvoiceDate')">确认开票
                     </Button>
                   </Form-item>
                 </Form>
@@ -200,7 +206,7 @@
               </div>
               <div style="margin-top: 20px">
                 <Form ref="formAppreciationDate" :model="formAppreciationDate" :rules="ruleValidate"
-                      :label-width="120" label-position="left">
+                      :label-width="100" label-position="left">
                   <Form-item label="单位名称" prop="companyName">
                     <Input :maxlength="32" v-model="formAppreciationDate.companyName" placeholder="请输入单位名称"
                            style="width: 317px"></Input>
@@ -229,7 +235,7 @@
                     </Form-item>
                   </Tooltip>
                   <Form-item>
-                    <Button style="margin-left: 178px" @click="cancelCertification">取消</Button>
+                    <Button style="margin-left: 191px" @click="cancelCertification">取消</Button>
                     <Button type="primary" style="margin-left: 10px"
                             @click="affirmCertification('formAppreciationDate')">确定
                     </Button>
@@ -527,7 +533,7 @@
             title: '操作',
             key: 'cz',
             align: 'left',
-            width:100,
+            width: 100,
             render: (h, params) => {
               return h('div', [
                 h('span', {
@@ -682,11 +688,11 @@
                   break
               }
               for (var index in data.资源) {
-                for (var key in data.资源[index]){
-                  if(key!='地域'){
-                    arr.push(h('p', {style:{lineHeight:'1.5'}}, `${key}:${data.资源[index][key]}`))
+                for (var key in data.资源[index]) {
+                  if (key != '地域') {
+                    arr.push(h('p', {style: {lineHeight: '1.5'}}, `${key}:${data.资源[index][key]}`))
                   } else {
-                    arr.unshift(h('p', {style:{lineHeight:'1.5'}}, `${key}:${data.资源[index][key]}`))
+                    arr.unshift(h('p', {style: {lineHeight: '1.5'}}, `${key}:${data.资源[index][key]}`))
                   }
                 }
               }
@@ -840,7 +846,8 @@
           recipients: '',
           consigneeAddress: '',
           phone: '',
-          invoiceTitle: ''
+          invoiceTitle: '',
+          taxpayerID: ''
         },
         ruleValidate: {
           invoiceAmount: [
@@ -1060,10 +1067,8 @@
             }
           })
         } else {
-          this.$Modal.error({
-            content: '请选择需要删除的订单',
-            scrollable: true,
-            duration: 3
+          this.$message.info({
+            content: '请选择需要删除的订单'
           })
         }
       },
@@ -1109,7 +1114,7 @@
         this.$Modal.info({
           title: '订单信息',
           scrollable: true,
-          content: `交易明细：${data.title + ' ' + data['数量'] + ' ' +data['类型']+' ' +data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
+          content: `交易明细：${data.title + ' ' + data['数量'] + ' ' + data['类型'] + ' ' + data['时长']}<br>交易金额：￥${this.orderData[index].cost}<br>订单创建时间：${this.orderData[index].ordercreatetime}
                    <br>订单状态：${this.orderData[index].paymentstatus == '1' ? '已支付' : '未支付'}`
         })
       },
@@ -1141,15 +1146,7 @@
                   this.payLoading = false
                 }
               })
-            },
-            onCancel: () => {
             }
-          })
-        } else {
-          this.$Modal.error({
-            content: '请选择需要支付的订单',
-            scrollable: true,
-            duration: 3
           })
         }
       },
@@ -1331,7 +1328,6 @@
       },
       showlogistics(index) {
         this.$http.get('user/getInvoice.do?invoiceId=' + this.billTabledata[index].id).then(response => {
-          console.log(response)
           if (response.status == 200 && response.data.status == 1) {
             this.$Modal.info({
               title: '发票物流信息',
@@ -1359,20 +1355,16 @@
               }
             })
           } else {
-            this.$Modal.error({
-              content: '请选择未支付的订单',
-              scrollable: true,
-              duration: 5
+            this.$message.info({
+              content: '请选择未支付的订单'
             })
           }
           function checkPaymentStatus(orderNumber) {
             return orderNumber.paymentstatus == 1
           }
         } else {
-          this.$Modal.error({
-            content: '请选择需要支付的订单',
-            scrollable: true,
-            duration: 5
+          this.$message.info({
+            content: '请选择需要支付的订单'
           })
         }
       },
@@ -1406,6 +1398,18 @@
         this.operatorid = ''
         this.cardVolumeTableData = []
         this.clipCoupons()
+      }
+    },
+    computed: {
+      payDisabled () {
+        if (this.orderNumber.some(checkPaymentStatus) || this.orderNumber.length === 0) {
+          return true
+        } else {
+          return false
+        }
+        function checkPaymentStatus(orderNumber) {
+          return orderNumber.paymentstatus == 1
+        }
       }
     }
   }
@@ -1523,7 +1527,7 @@
           }
         }
         .ordertype {
-          margin-top: 35px;
+          margin-top: 15px;
           .order_s1 {
             font-family: Microsoft Yahei, 微软雅黑;
             font-size: 12px;
@@ -1540,7 +1544,7 @@
           margin-top: 10px;
         }
         .searchCard {
-          margin-top: 45px;
+          margin-top: 20px;
           & > span {
             font-family: Microsoft Yahei, 微软雅黑;
             font-size: 12px;
@@ -1589,7 +1593,7 @@
         .appreciation_p {
           font-family: Microsoft Yahei, 微软雅黑;
           font-size: 12px;
-          color: rgba(17, 17, 17, 0.75);
+          color: rgba(0, 0, 0, 0.43);
           letter-spacing: 0.71px;
           line-height: 18px;
         }

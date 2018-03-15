@@ -513,16 +513,16 @@
             key: 'createway',
             render: (h, params) => {
               const row = params.row
-              const text = row.createway === 'hand' ? '手动备份' : row.createway
+              const text = row.createway === 'hand' ? '手动' : row.createway
               return h('span', {}, text)
             }
           },
           {
-            title: '间隔类型',
-            key: 'interval',
+            title: '快照间隔',
+            key: 'intervals',
             render: (h, params) => {
               const row = params.row
-              const text = row.createway === 'hand' ? '手动' : row.createway === 'day' ? '每天' : row.createway === 'week' ? '每周' : row.createway === 'month' ? '每月' : ''
+              const text = row.intervals === 'hand' ? '手动' : row.intervals === 'day' ? '每天' : row.intervals === 'week' ? '每周' : row.intervals === 'month' ? '每月' : ''
               return h('span', {}, text)
             }
           },

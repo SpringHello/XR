@@ -475,7 +475,8 @@
                     <div>
                       <p class="item-title" style="margin-top: 8px">主机名称</p>
                     </div>
-                    <Input v-model="PecsInfo.computerName" placeholder="请输入主机名" style="width: 300px" @on-change="PecsInfo.computerNameWarning=''"></Input>
+                    <Input v-model="PecsInfo.computerName" placeholder="请输入主机名" style="width: 300px"
+                           @on-change="PecsInfo.computerNameWarning=''"></Input>
                     <span style="line-height: 32px;color:red;margin-left:10px">{{PecsInfo.computerNameWarning}}</span>
                   </div>
                   <p class="item-desc">当购买数量大于1台之时，主机命名规则为主机名称加随机数字。</p>
@@ -510,12 +511,14 @@
             <div style="margin-top: 20px">
               <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
                  @click="$router.push('document')">查看计价详情</p>
-              <p v-if="PecsInfo.createType=='fast'" style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">费用：<span
+              <p v-if="PecsInfo.createType=='fast'"
+                 style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">费用：<span
                 style="font-size: 24px;color: #EE6723;">{{PecsInfo.cost.toFixed(2)}}元</span></p>
               <p v-if="PecsInfo.createType=='fast'&&PecsInfo.fastCoupon!=0"
                  style="text-align: right;font-size: 14px;color: #666666;">优惠费用：<span
                 style="font-size: 14px;color: #EE6723;">{{PecsInfo.fastCoupon.toFixed(2)}}元</span></p>
-              <p v-if="PecsInfo.createType=='custom'" style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
+              <p v-if="PecsInfo.createType=='custom'"
+                 style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
                 费用：<span
                 style="font-size: 24px;color: #EE6723;">{{totalCost.toFixed(2)}}元</span>
               </p>
@@ -528,7 +531,8 @@
                         class="btn" @click="addCart">
                   加入预算清单
                 </Button>
-                <Button @click="buyHost" type="primary" style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377DFF;">
+                <Button @click="buyHost" type="primary"
+                        style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377DFF;">
                   立即购买
                 </Button>
               </div>
@@ -666,7 +670,8 @@
                       class="btn" @click="addDiskCart">
                 加入预算清单
               </Button>
-              <Button @click="buyDisk" type="primary" style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377DFF;">
+              <Button @click="buyDisk" type="primary"
+                      style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377DFF;">
                 立即购买
               </Button>
             </div>
@@ -789,7 +794,8 @@
                       class="btn" @click="addIPCart">
                 加入预算清单
               </Button>
-              <Button @click="buyIP" type="primary" style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377dff;">
+              <Button @click="buyIP" type="primary"
+                      style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377dff;">
                 立即购买
               </Button>
             </div>
@@ -1755,6 +1761,11 @@
             params.diskType = diskType
             params.diskSize = diskSize
           }
+          // 设置了主机名和密码
+          if (prod.currentLoginType == 'custom') {
+            params.VMName = prod.computerName
+            params.password = prod.password
+          }
           if (prod.currentType === 'app') {
             params.templateId = prod.currentApp.templateid
           } else if (prod.currentType === 'public') {
@@ -1935,6 +1946,11 @@
               params.templateId = prod.system.systemId
             } else {
               params.templateId = prod.customMirror.systemtemplateid
+            }
+            // 设置了主机名和密码
+            if (prod.currentLoginType == 'custom') {
+              params.VMName = prod.computerName
+              params.password = prod.password
             }
             PromiseList.push(axios.get('information/deployVirtualMachine.do', {params}))
           } else if (prod.type == 'Pdisk') {
