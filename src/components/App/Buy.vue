@@ -11,7 +11,7 @@
         <!--云主机div-->
         <div id="Pecs" v-show="product.currentProduct=='Pecs'">
           <!--选择配置方式，快速配置、自定义配置-->
-          <div style="height:83px;display: flex">
+          <div style="height:60px;display: flex">
             <div v-for="item in PecsInfo.createTypeList" :key="item.value" @click="PecsInfo.createType=item.value"
                  :class="{'typeSelect':item.value==PecsInfo.createType}" class="config-title">{{item.label}}
             </div>
@@ -2327,7 +2327,7 @@
 
         .config-title {
           font-size: 24px;
-          line-height: 83px;
+          line-height: 60px;
           width: 50%;
           text-align: center;
           cursor: pointer;

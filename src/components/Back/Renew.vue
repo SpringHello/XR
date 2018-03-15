@@ -26,7 +26,7 @@
                   <Alert style="border: solid 1px #2A99F2;border-radius: 4px;width:100%">
                     在余额充足的情况下，如开启自动续费，系统将在资源即将到期时为其续费。如关闭自动续费，系统将不做任何续费操作，且过期后资源进入欠费状态。
                   </Alert>
-                  <div v-for="(item,index) in hostList" :key="item" v-bind:class="{select:item.select}"
+                  <div v-for="(item,index) in hostList" :key="index" v-bind:class="{select:item.select}"
                        @click="toggle(item)" style="margin-bottom: 20px">
                     <Card style="width:375px">
                       <div style="text-align:center">
@@ -67,8 +67,8 @@
                   <Alert style="border: solid 1px #2A99F2;border-radius: 4px;width:100%">
                     在余额充足的情况下，如开启自动续费，系统将在资源即将到期时为其续费。如关闭自动续费，系统将不做任何续费操作，且过期后资源进入欠费状态。
                   </Alert>
-                  <div v-for="(item,index) in hostList" :key="item" v-bind:class="{select:item.select}"
-                       v-if="item.remainingDay==0" @click="toggle(item)" style="margin-bottom: 20px">
+                  <div v-for="(item,index) in hostList" :key="index" v-bind:class="{select:item.select}"
+                      v-if="item.remainingDay==0" @click="toggle(item)" style="margin-bottom: 20px">
                     <Card style="width:375px">
                       <div style="text-align:center">
                         <div class="head">
@@ -108,7 +108,7 @@
                   <Alert style="border: solid 1px #2A99F2;border-radius: 4px;width:100%">
                     在余额充足的情况下，如开启自动续费，系统将在资源即将到期时为其续费。如关闭自动续费，系统将不做任何续费操作，且过期后资源进入欠费状态。
                   </Alert>
-                  <div v-for="(item,index) in hostList" :key="item" v-bind:class="{select:item.select}"
+                  <div v-for="(item,index) in hostList" :key="index" v-bind:class="{select:item.select}"
                        v-if="-1<item.remainingDay&&item.remainingDay<7" @click="toggle(item)"
                        style="margin-bottom: 20px">
                     <Card style="width:375px">
@@ -150,7 +150,7 @@
                   <Alert style="border: solid 1px #2A99F2;border-radius: 4px;width:100%">
                     在余额充足的情况下，如开启自动续费，系统将在资源即将到期时为其续费。如关闭自动续费，系统将不做任何续费操作，且过期后资源进入欠费状态。
                   </Alert>
-                  <div v-for="(item,index) in hostList" :key="item" v-bind:class="{select:item.select}"
+                  <div v-for="(item,index) in hostList" :key="index" v-bind:class="{select:item.select}"
                        v-if="item.remainingDay<0" @click="toggle(item)" style="margin-bottom: 20px">
                     <Card style="width:375px">
                       <div style="text-align:center">
@@ -194,7 +194,7 @@
     <Modal
       v-model="modal"
       width="550"
-      @on-ok="ok" scrollable="true">
+      @on-ok="ok" :scrollable="true">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">续费选择</span>
       </p>
@@ -252,7 +252,7 @@
             value: 4
           }, {label: '5月', value: 5}, {label: '6月', value: 6}, {label: '7月', value: 7}, {
             label: '8月',
-            value: 9
+            value: 8
           }, {label: '9月', value: 9}, {label: '10月', value: 10}]
         },
 
@@ -330,39 +330,69 @@
       },
       selectAll(){
         this.selectArray = []
-        console.log(this.tabLabel)
+        var isselectAll = this.hostList.some((item) => {
+            return item.select == true
+          })
         if (this.tabLabel == '全部') {
-          this.hostList.forEach((item) => {
-            item.select = true
-            this.selectArray.push(item)
-          })
+          if (isselectAll) {
+              this.hostList.forEach((item) => {
+                item.select = false
+                this.selectArray.push(item)
+              })
+          } else {
+              this.hostList.forEach((item) => {
+                item.select = true
+                this.selectArray.push(item)
+              })
+          }
         } else if (this.tabLabel == '24小时之内') {
-          this.hostList.forEach((item) => {
-            if (item.remainingDay == 0) {
-              item.select = true
-              this.selectArray.push(item)
-            } else {
-              item.select = false
-            }
-          })
+          if (isselectAll) {
+            this.hostList.forEach((item) => {
+              if (item.remainingDay == 0) {
+                item.select = false
+                this.selectArray.push(item)
+              }
+            })
+          } else{
+            this.hostList.forEach((item) => {
+              if (item.remainingDay == 0) {
+                item.select = true
+                this.selectArray.push(item)
+              }
+            })
+          }
         } else if (this.tabLabel == '7天内') {
-          this.hostList.forEach((item) => {
-            if (item.remainingDay > -1 && item.remainingDay < 7) {
-              item.select = true
-              this.selectArray.push(item)
-            } else {
-              item.select = false
-            }
-          })
+          if (isselectAll) {
+            this.hostList.forEach((item) => {
+              if (item.remainingDay > -1 && item.remainingDay < 7) {
+                item.select = false
+                this.selectArray.push(item)
+              }
+            })
+          } else {
+            this.hostList.forEach((item) => {
+              if (item.remainingDay > -1 && item.remainingDay < 7) {
+                item.select = true
+                this.selectArray.push(item)
+              }
+            })
+          }
         } else if (this.tabLabel == '已过期') {
-          this.hostList.forEach((item) => {
-            if (item.remainingDay < 0) {
-              item.select = true
-              this.selectArray.push(item)
-            } else {
-              item.select = false
-            }
-          })
+          if (isselectAll) {
+            this.hostList.forEach((item) => {
+              if (item.remainingDay < 0) {
+                item.select = false
+                this.selectArray.push(item)
+              }
+            })
+          } else {
+            this.hostList.forEach((item) => {
+              if (item.remainingDay < 0) {
+                item.select = true
+                this.selectArray.push(item)
+              }
+            })
+          }
         }
       },
       toggle(item){

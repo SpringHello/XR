@@ -288,12 +288,11 @@
     </Modal>
     <!-- 主机绑定ip模态框 -->
     <Modal v-model="showModal.bindIP" width="590" :scrollable="true">
-      <div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        绑定静态IP
+      <div slot="header" class="modal-header-border">
+        <span class="universal-modal-title">绑定静态IP</span>
       </div>
-      <div style="width:60%">
-        <Form :model="bindForm" :label-width="80">
+      <div class="universal-modal-content-flex">
+        <Form :model="bindForm">
           <Form-item label="公网IP">
             <Select v-model="bindForm.publicIP" placeholder="请选择">
               <Option v-for="item in publicIPList" :key="item.publicipid"
@@ -304,7 +303,7 @@
           </Form-item>
         </Form>
       </div>
-      <div slot="footer">
+      <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.bindIP = false">取消</Button>
         <Button type="primary" :disabled="bindForm.publicIP==''" @click="bind">确定</Button>
       </div>
@@ -896,7 +895,7 @@
         this.bindForm.vm = vm
         this.bindForm.publicIP = ''
         this.showModal.bindIP = true
-        this.$http.get(`network/listPublicIp.do?useType=1`)
+        this.$http.get(`network/listPublicIp.do?useType=0`)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.publicIPList = response.data.result
