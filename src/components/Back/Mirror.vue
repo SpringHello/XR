@@ -302,11 +302,13 @@
                   style: {
                     marginRight: '10px',
                     color: '#495060',
+                    cursor: 'not-allowed'
                   }
                 }, '生成主机'),
                   h('span', {
                     style: {
                       color: '#495060',
+                      cursor: 'not-allowed'
                     }
                   }, '修改')]);
               } else {
