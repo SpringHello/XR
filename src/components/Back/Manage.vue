@@ -107,7 +107,7 @@
                     <label>磁盘空间利用率<span class="timeText">{{ diskTime }}</span></label>
                     <div style="margin-top:10px;">
                       <Radio-group v-model="disk.type" type="button" @on-change="queryData('disk')">
-                        <Radio label="今日"></Radio>
+                        <Radio label="今天"></Radio>
                         <Radio label="最近7天"></Radio>
                         <Radio label="最近30天"></Radio>
                       </Radio-group>
@@ -1068,7 +1068,7 @@
         return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
       },
       toggle(type) {
-        if (type != 'flow' && type != 'memory') {
+        if (type == 'cpu' || type == 'memory') {
           var polar = this[type].showType == '折线' ? JSON.parse(defaultOptionstr) : JSON.parse(histogramstr)
           polar.xAxis.data = this[type + 'Polar'].xAxis.data
           polar.series[0].data = this[type + 'Polar'].series[0].data
@@ -1351,7 +1351,7 @@
       .body {
         margin-top: -17px;
         padding-top: 20px;
-        padding-right:20px; 
+        padding-right:20px;
         background-color: white;
         & > label {
           font-family: "\5FAE\8F6F\96C5\9ED1";
@@ -1456,5 +1456,5 @@
   .lookPassword .ivu-input-wrapper{
     width: 45%
   }
-  
+
 </style>
