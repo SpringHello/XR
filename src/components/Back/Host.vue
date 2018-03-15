@@ -639,7 +639,7 @@
             value: 4
           }, {label: '5月', value: 5}, {label: '6月', value: 6}, {label: '7月', value: 7}, {
             label: '8月',
-            value: 9
+            value: 8
           }, {label: '9月', value: 9}, {label: '10月', value: 10}]
         },
         requestParam: {
@@ -1054,7 +1054,9 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
               } else {
-                this.$Message.error('Fail!');
+                this.$message.error({
+                  content: response.data.message
+                })
               }
             })
           }
