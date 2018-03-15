@@ -1534,22 +1534,30 @@
             key: 'action',
             width: 100,
             render: (h, params) => {
-              return h('span', {
-                style: {
-                  color: '#2A99F2',
-                  cursor: 'pointer'
-                },
-                on: {
-                  click: () => {
-                    this.showModal.rollback = true
-                    this.cursnapshot = params.row
-                    this.snapsName = params.row.snapshotname
-                    this.hostName = params.row.name
-                    this.hostCreatetime = params.row.addtime
-                    // console.log(params.row)
+              if (params.row.status == 2 || params.row.status == 3){
+                return h('span', {
+                  style: {
+                    cursor: 'not-allowed'
+                  },
+                }, '回滚')
+              } else {
+                return h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      this.showModal.rollback = true
+                      this.cursnapshot = params.row
+                      this.snapsName = params.row.snapshotname
+                      this.hostName = params.row.name
+                      this.hostCreatetime = params.row.addtime
+                      // console.log(params.row)
+                    }
                   }
-                }
-              }, '回滚')
+                }, '回滚')
+              }
             }
           }
         ],
