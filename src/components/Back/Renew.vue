@@ -248,7 +248,7 @@
             value: 4
           }, {label: '5月', value: 5}, {label: '6月', value: 6}, {label: '7月', value: 7}, {
             label: '8月',
-            value: 9
+            value: 8
           }, {label: '9月', value: 9}, {label: '10月', value: 10}]
         },
 
