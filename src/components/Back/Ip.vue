@@ -325,7 +325,7 @@
           },
           {
             title: '绑定资源',
-            width:150,
+            width: 150,
             render: (h, params) => {
               if (params.row.usetype == 0) {
                 return h('span', {}, '----')
@@ -610,7 +610,11 @@
           this.bindForNATForm.row = row
           this.showModal.bindIPForNAT = true
           // 获取所有能绑定弹性IP的云主机
-          this.$http.get('network/listNatGateway.do').then(response => {
+          this.$http.get('network/listNatGateway.do', {
+            params: {
+              vpcId: row.vpcid
+            }
+          }).then(response => {
             this.bindForNATForm.NATOptions = response.data.result
           })
         }
