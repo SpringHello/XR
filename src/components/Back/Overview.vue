@@ -164,7 +164,10 @@
       var zoneId = $store.state.zone.zoneid
       // 获取总览页账户信息
       var accountInfo = axios.get(`user/userAccountInfo.do?zoneId=${zoneId}`)
-      var adver = axios.get('user/getAdvertisement.do')
+      var adver = axios.get('user/getAnnouncement.do',{
+        params: {
+          listAll: 3,
+        }})
       var source = axios.get(`user/userSourceManager.do?zoneId=${zoneId}`)
       Promise.all([accountInfo, adver, source]).then(values => {
         next(vm => {

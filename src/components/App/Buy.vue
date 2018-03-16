@@ -63,7 +63,8 @@
                 <div class="item-wrapper">
                   <div style="display: flex">
                     <div>
-                      <p class="item-title">镜像</p>
+                      <p class="item-title">镜像类型</p>
+                      <p class="item-title" style="margin-top: 40px;">镜像系统</p>
                     </div>
                     <div>
                       <div v-for="item in PecsInfo.mirrorType" class="zoneItem"
@@ -186,7 +187,7 @@
                   <div style="display: flex">
                     <div>
                       <p class="item-title">镜像类型</p>
-                      <p class="item-title" style="margin-top: 40px;" v-if="PecsInfo.currentType !='custom'">镜像系统</p>
+                      <p class="item-title" style="margin-top: 40px;">镜像系统</p>
 
                     </div>
                     <div>

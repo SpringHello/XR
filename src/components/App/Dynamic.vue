@@ -42,33 +42,32 @@
       }
     },
     created() {
+       //获取公告title
       axios.get('user/getAnnouncement.do', {
         params: {
           listAll: -1,
-         // announcementId: this.$route.query.id,
-         // needContent: 1
         }
       }).then(response => {
         if (response.status == 200 && response.data.status == 1) {
-          this.announcementArray = this.contentList = response.data.result.announcement
-          this.announcement = this.announcementArray[0]
+          this.announcementArray = response.data.result.announcement
         }
       })
+      // 获取公告content
       axios.get('user/getAnnouncement.do', {
         params: {
-         // listAll: -1,
            announcementId: this.$route.query.id,
            needContent: 1
         }
       }).then(response => {
         if (response.status == 200 && response.data.status == 1) {
-          this.announcementArray = this.contentList = response.data.result.announcement
-          this.announcement = this.announcementArray[0]
+          this.announcementArray = response.data.result.announcement
+          this.announcement = this.announcementArray[this.$route.query.id]
         }
       })
     },
     methods: {
       show(index){
+        this.selectAnnouncement = index
         this.announcement = this.announcementArray[index]
       }
     },
