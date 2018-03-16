@@ -804,7 +804,7 @@
 
         <div id="list">
           <div ref="list"
-               style="padding:30px 30px 0 30px;box-shadow: 0 2px 14px 0 rgba(193,193,193,0.30);background-color: #ffffff;max-height: 1050px;overflow-y: auto">
+               style="padding:30px 30px 0 30px;background-color: #ffffff;max-height: 1050px;overflow-y: auto">
             <p
               style="font-size: 24px;color: #333333;line-height: 43px;text-align: center;border-bottom: 1px solid #D9D9D9; padding-bottom: 30px;">
               价格预算清单</p>
@@ -917,7 +917,7 @@
             </div>
           </div>
           <div
-            style="padding:30px 40px;box-shadow: 0 2px 14px 0rgba(193,193,193,0.30);background-color: #ffffff;width:380px;"
+            style="padding:30px 40px;box-shadow: 0 2px 14px 0 rgba(193,193,193,0.30);background-color: #ffffff;width:380px;"
             ref="buyDiv">
             <p
               style="font-size: 14px;margin:10px 0px;vertical-align:middle;color: #666666;line-height: 25px;text-align: center">
