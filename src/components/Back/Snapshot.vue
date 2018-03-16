@@ -58,12 +58,14 @@
           <FormItem label="快照名称" prop="name">
             <Input v-model="creatSnapsForm.name" placeholder="请输入2-4094范围内任意数字"></Input>
           </FormItem>
-          <FormItem label="是否保存内存信息">
+          <div style="padding-top: 11px;margin-right: 100px;margin-bottom: 20px">
+            <p style="font-size: 14px;color:#495060;margin-bottom: 15px">是否保存内存信息<Poptip trigger="hover" content="您可以选择在制作快照的时候保存您主机的当前运行状态。当您选择“保存”之时，当前主机的内存将被记录，在您对快照执行回滚操作的时候，也只能在开机状态下执行；当您选择“不保存”时
+此次快照将不记录主机内存信息，您在通过该快照回滚的时候只能在关机状态下执行。"> <span style="border: 1px solid #2A99F2;border-radius: 10px;padding: 0px 6px;color: #2A99F2;cursor: pointer;margin-left: 5px">?</span></Poptip></p>
             <RadioGroup v-model="creatSnapsForm.radio">
               <Radio label="1">保存</Radio>
               <Radio label="0">不保存</Radio>
             </RadioGroup>
-          </FormItem>
+          </div>
         </Form>
         <p class="modal-text-hint-bottom">提示：云主机快照为每块磁盘提供<span>8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点
         </p>
