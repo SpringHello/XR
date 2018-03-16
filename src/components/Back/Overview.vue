@@ -88,7 +88,7 @@
                 <p class="universal-mini" @click="$router.push({ path: 'dynamic', query: { id: index }})">
                   {{item.title}}<span>{{item.createtime}}</span></p>
               </div>
-              <a href="/ruicloud/dynamic?id=0">查看更多</a>
+              <span @click="$router.push({ path: 'dynamic', query: { id: 0 }})" style="color: #2A99F2;margin-top: 10px;display: block;font-size: 14px;cursor: pointer;">查看更多</span>
             </div>
           </div>
           <div>
