@@ -71,7 +71,7 @@
                 </Select>
               </div>
               <div style="display: inline-block">
-                <span class="order_s2"> 订单时间</span>
+                <span class="order_s2"> 订单创建时间/订单结束时间</span>
                 <Row style="display: inline-block;margin-left: 10px;position: relative;top: 12px">
                   <Col span="12">
                   <Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start"
@@ -80,7 +80,7 @@
                 </Row>
               </div>
               <div style="display: inline-block">
-                <Button type="primary" style="margin-left: 423px" @click="orderPay" :disabled="payDisabled">支付</Button>
+                <Button type="primary" style="margin-left: 322px" @click="orderPay" :disabled="payDisabled">支付</Button>
                 <Button type="primary" style="margin-left: 10px" @click="deleteOrder">删除</Button>
               </div>
             </div>
@@ -152,15 +152,15 @@
                            style="width: 317px"></Input>
                     <!-- <span class="bill_s1">备注：如果是企业认证用户，且开具的是企业发票，则开具发票的抬头名称默认为认证企业，无需填写，但是可以修改。</span>-->
                   </Form-item>
-                  <Form-item label="纳税人识别码" prop="taxpayerID" v-if="formInvoiceDate.InvoiceType == 0">
-                    <Input :maxlength="32" v-model="formInvoiceDate.taxpayerID" placeholder="请输入纳税人识别码"
+                  <Form-item label="纳税人识别码" prop="taxpayerId" v-if="formInvoiceDate.InvoiceType == 0">
+                    <Input :maxlength="32" v-model="formInvoiceDate.taxpayerId" placeholder="请输入纳税人识别码"
                            style="width: 317px"></Input>
                   </Form-item>
                   <Form-item label="发票信息" v-show="authenticationShow">
-                    <span style="display: block">单位：{{ companyname }}</span>
-                    <span style="display: block">纳税人识别码：{{ identicode }}</span>
-                    <span style="display: block">注册电话：{{ phone }}</span>
-                    <span style="display: block">开户银行：{{ bankname }}</span>
+                    <span style="display: block;line-height:1.5">单位：{{ companyname }}</span>
+                    <span style="display: block;line-height:1.5">纳税人识别码：{{ identicode }}</span>
+                    <span style="display: block;line-height:1.5">注册电话：{{ phone }}</span>
+                    <span style="display: block;line-height:1.5">开户银行：{{ bankname }}</span>
                     <span>银行账号：{{ banknum }}</span>
                   </Form-item>
                   <Form-item label="发票信息" v-show="invoiceInformationShow">
@@ -319,7 +319,12 @@
         callback()
       }
       const validateType = (rule, value, callback) => {
-        this.$refs.formInvoiceDate.validateField('invoiceAmount')
+        /*this.$refs.formInvoiceDate.validateField('invoiceAmount')*/
+        if (!value) {
+          return callback(new Error('请选择开票类型'))
+        } else {
+          callback()
+        }
       }
       const validateTitle = (rule, value, callback) => {
         if (!value) {
@@ -865,7 +870,7 @@
           consigneeAddress: '',
           phone: '',
           invoiceTitle: '',
-          taxpayerID: ''
+          taxpayerId: ''
         },
         ruleValidate: {
           invoiceAmount: [
@@ -888,6 +893,9 @@
           ],
           companyName: [
             {required: true, validator: validateCompanyName, trigger: 'blur'}
+          ],
+          taxpayerId: [
+            {required: true, validator: validaTetaxpayerID, trigger: 'blur'}
           ],
           taxpayerID: [
             {required: true, validator: validaTetaxpayerID, trigger: 'blur'}
@@ -1269,10 +1277,6 @@
                   this.bankname = response.data.result.result['bankname']
                   this.banknum = response.data.result.result['banknum']
                 } else if (this.aptitudeStatus == 1) {
-                  this.$Message.error({
-                    content: '增值票资质认证审核失败！',
-                    duration: 5
-                  })
                   this.invoiceInformationShow = true
                   this.failureAudit = true
                   this.certificateStatus = false
