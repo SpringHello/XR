@@ -364,67 +364,89 @@
             title: '操作',
             width: 200,
             render: (h, params) => {
-              return h('div', {}, [
-                h('span', {
-                  style: {
-                    marginRight: '10px',
-                    color: '#2A99F2',
-                    cursor: 'pointer'
-                  },
-                  on: {
-                    click: () => {
-                      this.mount(params.row)
+              if (params.row.status == 1) {
+                return h('div', {}, [
+                  h('span', {
+                    style: {
+                      marginRight: '10px',
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        this.mount(params.row)
+                      }
                     }
-                  }
-                }, '挂载'),
-                h('span', {
-                  style: {
-                    marginRight: '10px',
-                    color: '#2A99F2',
-                    cursor: 'pointer'
-                  },
-                  on: {
-                    click: () => {
-                      this.unload(params.row)
+                  }, '挂载'),
+                  h('span', {
+                    style: {
+                      marginRight: '10px',
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        this.unload(params.row)
+                      }
                     }
-                  }
-                }, '卸载'),
-                h('span', {
-                  style: {
-                    marginRight: '10px',
-                    color: '#2A99F2',
-                    cursor: 'pointer'
-                  },
-                  on: {
-                    click: () => {
-                      this.beforeCreateDiskBackup(params.row)
+                  }, '卸载'),
+                  h('span', {
+                    style: {
+                      marginRight: '10px',
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        this.beforeCreateDiskBackup(params.row)
+                      }
                     }
-                  }
-                }, '备份'),
-                h('Dropdown', {
-                  props: {
-                    trigger: 'click'
-                  }
-                }, [h('a', {
-                  attrs: {
-                    href: 'javascript:void(0)'
-                  }
-                }, '更多操作'), h('DropdownMenu', {
-                  slot: 'list'
-                }, [h('DropdownItem', {
-                  nativeOn: {
-                    click: () => {
-                      this.dilatationDisk(params.row)
+                  }, '备份'),
+                  h('Dropdown', {
+                    props: {
+                      trigger: 'click'
                     }
-                  }
-                }, '扩容磁盘'), h('DropdownItem', {
-                  nativeOn: {
-                    click: () => {
-                      this.modificationDisk(params.row)
+                  }, [h('a', {
+                    attrs: {
+                      href: 'javascript:void(0)'
                     }
-                  }
-                }, '修改资料')])
-                ])])
+                  }, '更多操作'), h('DropdownMenu', {
+                    slot: 'list'
+                  }, [h('DropdownItem', {
+                    nativeOn: {
+                      click: () => {
+                        this.dilatationDisk(params.row)
+                      }
+                    }
+                  }, '扩容磁盘'), h('DropdownItem', {
+                    nativeOn: {
+                      click: () => {
+                        this.modificationDisk(params.row)
+                      }
+                    }
+                  }, '修改资料')])
+                  ])])
+              } else {
+                return h('div', {}, [
+                  h('span', {
+                    style: {
+                      marginRight: '10px',
+                      color: '#495060',
+                    }
+                  }, '挂载'),
+                  h('span', {
+                    style: {
+                      marginRight: '10px',
+                      color: '#495060',
+                    }
+                  }, '卸载'),
+                  h('span', {
+                    style: {
+                      marginRight: '10px',
+                      color: '#495060',
+                    }
+                  }, '备份')])
+              }
             }
           }
         ],
@@ -599,11 +621,11 @@
       listDisk(){
         this.$http.get('Disk/listDisk.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            response.data.result.forEach((item) => {
+     /*       response.data.result.forEach((item) => {
               if (item.status != 1) {
                 item._disabled = true
               }
-            })
+            })*/
             this.diskData = response.data.result
             this.diskSelection = null
           } else {

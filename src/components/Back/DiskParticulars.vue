@@ -325,17 +325,25 @@
           {
             title: '操作',
             render: (h, params) => {
-              return h('span', {
-                style: {
-                  color: '#2A99F2',
-                  cursor: 'pointer'
-                },
-                on: {
-                  click: () => {
+              if (params.row.status == 1) {
+                return h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
                     this.createBackupsToDisk(params.row)
-                  }
                 }
+              }
               }, '以备份新建磁盘')
+              } else {
+                return h('span', {
+                  style: {
+                    color: '#495060',
+                  }
+              }, '以备份新建磁盘')
+              }
             }
           }
         ],
