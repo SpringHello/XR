@@ -55,13 +55,13 @@
       // 获取公告content
       axios.get('user/getAnnouncement.do', {
         params: {
+          announcementId: this.$route.query.id,
           needContent: 1
         }
       }).then(response => {
+        this.selectAnnouncement = this.$route.query.id
         if (response.status == 200 && response.data.status == 1) {
-          this.selectAnnouncement = this.$route.query.id
-          this.announcementArray = response.data.result.announcement
-          this.announcement = this.announcementArray[this.$route.query.id]
+          this.announcement = response.data.result.announcement
         }
       })
     },
