@@ -81,7 +81,7 @@
               </div>
               <div style="display: inline-block">
                 <Button type="primary" style="margin-left: 322px" @click="orderPay" :disabled="payDisabled">支付</Button>
-                <Button type="primary" style="margin-left: 10px" @click="deleteOrder">删除</Button>
+                <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除</Button>
               </div>
             </div>
             <div class="orderdata">
@@ -1092,10 +1092,6 @@
             onCancel: () => {
             }
           })
-        } else {
-          this.$message.info({
-            content: '请选择需要删除的订单'
-          })
         }
       },
       changeOrder() {
@@ -1433,6 +1429,13 @@
         }
         function checkPaymentStatus(orderNumber) {
           return orderNumber.paymentstatus == 1
+        }
+      },
+      deleteDisabled () {
+        if (this.orderNumber.length === 0) {
+          return true
+        } else {
+          return false
         }
       }
     }
