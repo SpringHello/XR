@@ -36,7 +36,7 @@
   export  default {
     data () {
       return {
-        selectAnnouncement: '',
+        selectAnnouncement: null,
         announcementArray: [],
         announcement: null
       }
