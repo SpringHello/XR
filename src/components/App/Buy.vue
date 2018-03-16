@@ -133,7 +133,7 @@
                       <div v-for="item in PecsInfo.systemConfig" class="zoneItem"
                            :class="{zoneSelect:PecsInfo.currentSystem.kernel==item.kernel&&PecsInfo.currentSystem.RAM==item.RAM}"
                            @click="PecsInfo.currentSystem=item"
-                           style="display: block;width:360px;margin-bottom:10px;">
+                           style="display: block;width:360px;margin-bottom:20px;">
                         {{`${item.kernel}核${item.RAM}G、${item.bandWidth}M带宽、${item.diskSize}G系统盘（${item.diskDesc}）`}}
                       </div>
 
@@ -185,7 +185,9 @@
                 <div class="item-wrapper">
                   <div style="display: flex">
                     <div>
-                      <p class="item-title">镜像</p>
+                      <p class="item-title">镜像类型</p>
+                      <p class="item-title" style="margin-top: 40px;" v-if="PecsInfo.currentType !='custom'">镜像系统</p>
+
                     </div>
                     <div>
                       <div v-for="item in PecsInfo.mirrorType" class="zoneItem"
@@ -306,9 +308,7 @@
                     </div>
                   </div>
                 </div>
-                <p style="font-size: 14px;color: #999999;line-height: 25px;margin: 10px 0 10px 90px;">
-                  如需使用其他虚拟私有云（VPC），请选择已有虚拟私有云（VPC），也可以自行到<span style="color: rgb(42, 153, 242);cursor: pointer"
-                                                               @click="$router.push('overview')">控制台新建。</span></p>
+                <p style="font-size: 14px;color: #999999;line-height: 20px;margin: 10px 0 10px 90px;">如需使用其他虚拟私有云（VPC），请选择已有虚拟私有云（VPC），也可以自行到<span style="color: rgb(42, 153, 242);cursor: pointer" @click="$router.push('overview')">控制台新建。</span></p>
                 <!--网卡选择-->
                 <div class="item-wrapper">
                   <div style="display: flex">
@@ -413,7 +413,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="item-wrapper" v-if="remainDisk>0">
+                <div class="item-wrapper" v-if="remainDisk>0" style="margin-top: 10px;">
                   <div style="display: flex">
                     <div>
                       <p class="item-title"></p>
@@ -2423,7 +2423,7 @@
           color: #ffffff;
         }
         .item-wrapper {
-          margin-top: 10px;
+          margin-top: 20px;
           .item-title {
             font-size: 16px;
             color: #333333;
