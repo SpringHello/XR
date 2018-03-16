@@ -63,7 +63,8 @@
                 <div class="item-wrapper">
                   <div style="display: flex">
                     <div>
-                      <p class="item-title">镜像</p>
+                      <p class="item-title">镜像类型</p>
+                      <p class="item-title" style="margin-top: 40px;">镜像系统</p>
                     </div>
                     <div>
                       <div v-for="item in PecsInfo.mirrorType" class="zoneItem"
@@ -172,12 +173,11 @@
                       <p class="item-title">类型</p>
                     </div>
                     <div>
-                      <Poptip trigger="hover" content="经典1：2与1：4配比，实现计算、网络与资源的良好平衡，高性价比" placement="top-start">
                         <div v-for="item in PecsInfo.vmTypeList" :key="item.value" class="zoneItem"
                              :class="{zoneSelect:PecsInfo.vmType==item.value}"
-                             @click="changeType(item.value)">{{item.label}}
+                             @click="changeType(item.value)" @hover="pop(item.value)">
+                          {{item.label}}
                         </div>
-                      </Poptip>
                     </div>
                   </div>
                 </div>
@@ -186,7 +186,7 @@
                   <div style="display: flex">
                     <div>
                       <p class="item-title">镜像类型</p>
-                      <p class="item-title" style="margin-top: 40px;" v-if="PecsInfo.currentType !='custom'">镜像系统</p>
+                      <p class="item-title" style="margin-top: 40px;">镜像系统</p>
 
                     </div>
                     <div>
@@ -1530,6 +1530,20 @@
             this.PecsInfo.vmConfig.diskType = 'ssd'
             this.PecsInfo.vmConfig.kernel = '16'
             this.PecsInfo.vmConfig.RAM = '16'
+            break
+        }
+      },
+      pop(type){
+        this.PecsInfo.vmType = type
+        switch (type) {
+          case 'standard':
+              alert('123')
+              break
+          case 'optimization':
+            alert('14')
+            break
+          case 'IO':
+            alert('56')
             break
         }
       },

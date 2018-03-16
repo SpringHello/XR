@@ -28,8 +28,8 @@
             </div>
 
             <div class="network-wrapper">
-              <i class="arrow" :class="{open:upInformation.open}"
-                 @click="upInformation.open=!upInformation.open"></i><span style="user-select:none">入站规则</span>
+              <i class="arrow" :class="{open:upInformation.open}" @click="upInformation.open=!upInformation.open"></i>
+              <span style="user-select:none">入站规则</span>
               <div>
                 <Table v-if="upInformation.open" style="margin-top:15px;transition:.5s"
                        :data="upInformation.tableData"
@@ -523,17 +523,33 @@
             padding: 18px 25px;
             border: 1px solid #d8d8d8;
             .arrow {
-              border-top: 14px solid #2A99F2;
-              border-left: 7px solid rgba(0, 0, 0, 0);
-              border-right: 7px solid rgba(0, 0, 0, 0);
               display: inline-block;
               margin-right: 5px;
+              position: relative;
+              width: 13px;
+              height: 13px;
+              border: solid 1px #2A99F2;
+              border-radius: 50%;
               transition: .5s;
               vertical-align: middle;
-              cursor: pointer
+              cursor: pointer;
+              transform: rotate(-45deg);
+              -ms-transform: rotate(-45deg);
+              -webkit-transform: rotate(-45deg);
+            }
+            .arrow:before {
+              content: '';
+              position: absolute;
+              top: 2px;
+              left: 4px;
+              width: 5px;
+              height: 5px;
+              border: #2A99F2 solid 1px;
+              border-top-style: none;
+              border-right-style: none;
             }
             .open {
-              transform: rotate(-180deg);
+              transform: rotate(-225deg);
             }
             .show {
               height: 0px;

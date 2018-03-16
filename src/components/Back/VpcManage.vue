@@ -46,7 +46,7 @@
               <ul>
                 <li>
                   <div class="clock-show icon" @click="toggle(item)"
-                       :class="{rotateup:item._show,rotatedown:!item._show}"></div>
+                       :class="{rotateup:item._show}"></div>
                   {{item.name}}
                 </li>
                 <li style="flex-basis: 160px;">网关地址：{{item.ipsegment.split('/')[0]}}</li>
@@ -1002,38 +1002,29 @@
     height: 13px;
     border: solid 1px currentColor;
     border-radius: 50%;
+    cursor: pointer;
+    transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    transition: all 0.5s;
   }
 
   .clock-show.icon:before {
     content: '';
     position: absolute;
-    top: 3px;
-    left: 5px;
-    width: 1px;
+    top: 2px;
+    left: 4px;
+    width: 5px;
     height: 5px;
-    background-color: currentColor;
-    transform: rotate(-45deg);
-    -ms-transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
-    transform-origin: 0% 0%;
-    -webkit-transform-origin: 0% 0%;
-    transform-origin: center bottom;
+    border: currentColor solid 1px;
+    border-top-style: none;
+    border-right-style: none;
   }
 
-  .clock-show.icon:after {
-    content: '';
-    position: absolute;
-    top: 3px;
-    left: 5px;
-    width: 1px;
-    height: 5px;
-    background-color: currentColor;
-    transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    -webkit-transform: rotate(45deg);
-    transform-origin: 0%;
-    -webkit-transform-origin: 0% 0%;
-    transform-origin: center bottom;
+  .rotateup.icon {
+    transform: rotate(-225deg);
+    -ms-transform: rotate(-225deg);
+    -webkit-transform: rotate(-225deg);
   }
 
   .btn-bgwhite {
@@ -1145,18 +1136,7 @@
               font-size: 12px;
               color: #333333;
               line-height: 18px;
-              .rotateup {
-                transform: rotate(180deg);
-                -ms-transform: rotate(180deg);
-                -webkit-transform: rotate(180deg);
-                transition: all 0.2s;
-              }
-              .rotatedown {
-                transform: rotate(360deg);
-                -ms-transform: rotate(360deg);
-                -webkit-transform: rotate(360deg);
-                transition: all 0.2s;
-              }
+              
               li:nth-child(1) {
                 display: flex;
                 align-items: center;

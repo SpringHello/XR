@@ -5,7 +5,7 @@
         <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
         <div>{{loadingMessage}}</div>
       </Spin>
-      <span class="title">
+      <span class="title" style="background-color: #f5f5f5;">
         <router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> /
         <router-link to="host" style="color:rgba(17, 17, 17, 0.43);">云主机</router-link> / <span>管理</span>
       </span>
