@@ -85,7 +85,7 @@
             <p class="universal-middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">公告</p>
             <div>
               <div v-for="(item,index) in noticeData" :key="index">
-                <p class="universal-mini" @click="$router.push({ path: 'dynamic', query: { id: item.id }})">
+                <p class="universal-mini" @click="$router.push({ path: 'dynamic', query: { id: index }})">
                   {{item.title}}<span>{{item.createtime}}</span></p>
               </div>
               <a href="/ruicloud/dynamic?id=0">查看更多</a>

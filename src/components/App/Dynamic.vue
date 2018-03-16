@@ -36,13 +36,13 @@
   export  default {
     data () {
       return {
-        selectAnnouncement: '0',
+        selectAnnouncement: '',
         announcementArray: [],
         announcement: null
       }
     },
     created() {
-       //获取公告title
+      // 获取公告title
       axios.get('user/getAnnouncement.do', {
         params: {
           listAll: -1,
@@ -55,11 +55,11 @@
       // 获取公告content
       axios.get('user/getAnnouncement.do', {
         params: {
-           announcementId: this.$route.query.id,
-           needContent: 1
+          needContent: 1
         }
       }).then(response => {
         if (response.status == 200 && response.data.status == 1) {
+          this.selectAnnouncement = this.$route.query.id
           this.announcementArray = response.data.result.announcement
           this.announcement = this.announcementArray[this.$route.query.id]
         }
@@ -67,7 +67,6 @@
     },
     methods: {
       show(index){
-        this.selectAnnouncement = index
         this.announcement = this.announcementArray[index]
       }
     },
