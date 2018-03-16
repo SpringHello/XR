@@ -51,7 +51,7 @@
               <Icon type="minus" style="position: relative;bottom: 10px"></Icon>
               &nbsp;&nbsp;
               <Input-number :min="0" v-model="value2"
-                            style="width: 116px;position: relative;bottom: 12px" ></Input-number>
+                            style="width: 116px;position: relative;bottom: 12px"></Input-number>
               <Button type="primary" style="bottom: 12px; margin-left: 20px;position: relative" @click="search">查询
               </Button>
               <Table highlight-row :columns="columns" :data="tabledata"></Table>
@@ -324,6 +324,9 @@
       const validateTitle = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('发票抬头不能为空'))
+        }
+        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
+          callback(new Error('发票抬头不能包含特殊字符、空格或是纯数字'));
         } else {
           callback()
         }
@@ -331,6 +334,9 @@
       const validateRecipients = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('收件人姓名不能为空'))
+        }
+        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
+          callback(new Error('收件人姓名不能包含特殊字符、空格或是纯数字'));
         } else {
           callback()
         }
@@ -339,8 +345,8 @@
         if (!value) {
           return callback(new Error('收件人地址不能为空'))
         }
-        if ((/^[0-9a-zA-Z]+$/.test(value))) {
-          callback(new Error('请输入正确的收件地址'))
+        if ((/^[0-9a-zA-Z]+$/.test(value)) || (/\s+/.test(value))) {
+          callback(new Error('收件地址不能包含空格或是纯数字、英文'))
         } else {
           callback()
         }
@@ -358,6 +364,9 @@
       const validateCompanyName = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('单位名称不能为空'))
+        }
+        if ((/^[ ]+$/.test(value))) {
+          callback(new Error('单位名称不能为空格'))
         } else {
           callback()
         }
@@ -365,6 +374,9 @@
       const validaTetaxpayerID = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('纳税人识别码不能为空'))
+        }
+        if (!(/^[0-9]*$/.test(value))) {
+          return callback(new Error('请输入正确的纳税人识别码'))
         } else {
           callback()
         }
@@ -372,6 +384,9 @@
       const validaRegisteredAddress = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('注册地址不能为空'))
+        }
+        if ((/^[0-9a-zA-Z]+$/.test(value)) || (/\s+/.test(value))) {
+          callback(new Error('注册地址不能包含空格或是纯数字、英文'))
         } else {
           callback()
         }
@@ -389,6 +404,9 @@
       const validaDepositBank = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('开户银行不能为空'))
+        }
+        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
+          callback(new Error('开户银行不能包含特殊字符、空格或是纯数字'));
         } else {
           callback()
         }
@@ -1190,9 +1208,9 @@
         this.applyChange = false
       },
       invoiceMake(name) {
-        if (this.invoiceInformationShow == false) {
-          this.$refs[name].validate((valid) => {
-            if (valid) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            if (this.invoiceInformationShow == false) {
               this.$http.post('user/applyInvoice.do', {
                 amount: this.formInvoiceDate.invoiceAmount,
                 type: this.formInvoiceDate.InvoiceType,
@@ -1213,16 +1231,20 @@
                   this.formInvoiceDate.consigneeAddress = ''
                   this.formInvoiceDate.phone = ''
                   this.getInvoiceList()
+                } else {
+                  this.$message.error({
+                    content: response.data.message
+                  })
                 }
               })
+            } else {
+              this.$Message.error({
+                content: '您的资质认证没有完成！',
+                duration: 5
+              })
             }
-          })
-        } else {
-          this.$Message.error({
-            content: '您的资质认证没有完成！',
-            duration: 5
-          })
-        }
+          }
+        })
       },
       showInvoice(index) {
         this.$Modal.info({
@@ -1312,12 +1334,10 @@
               } else {
                 this.appreciation = false
                 this.applyChange = true
+                this.$message.error({
+                  content: response.data.message
+                })
               }
-            })
-          } else {
-            this.$Message.error({
-              content: '信息填写不正确！',
-              duration: 5
             })
           }
         })
@@ -1600,6 +1620,7 @@
       }
     }
   }
+
   .head {
     padding: 0px 18px;
     height: 16px;
