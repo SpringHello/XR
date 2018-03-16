@@ -1,10 +1,6 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <Spin fix v-show="loading">
-        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-        <div>{{loadingMessage}}</div>
-      </Spin>
       <span class="title">云存储 &nbsp; / &nbsp; <span>云硬盘</span>
       </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
@@ -272,8 +268,6 @@
     data(){
       const validaRegisteredName = regExp.validaRegisteredName
       return {
-        loadingMessage: '',
-        loading: false,
         // 磁盘列包含信息
         diskColumns: [
           {

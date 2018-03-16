@@ -1,10 +1,6 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <Spin fix v-show="loading">
-        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-        <div>{{loadingMessage}}</div>
-      </Spin>
       <span class="title">云存储 /
          <span>云硬盘备份</span>
       </span>
@@ -222,8 +218,6 @@
     data(){
       const validaRegisteredName = regExp.validaRegisteredName
       return {
-        loadingMessage: '',
-        loading: false,
         // 获取磁盘列表，显示穿梭框左面
         diskForBackupsStrategyList: [],
         // 应用该备份策略的磁盘,显示在穿梭框右面
@@ -261,6 +255,13 @@
                       marginRight: '10px'
                     }
                   }), h('span', {}, '删除中')])
+                case 3:
+                  return h('div', {}, [h('Spin', {
+                    style: {
+                      display: 'inline-block',
+                      marginRight: '10px'
+                    }
+                  }), h('span', {}, '创建中')])
               }
             }
           },
@@ -1098,16 +1099,18 @@
       /* 确认创建磁盘备份 */
       createDiskBackup_ok() {
         this.showModal.createDiskBackup = false
-        this.loadingMessage = '正在创建磁盘备份，请稍候'
-        this.loading = true
+        var diskBackup = {
+          snapshotname: this.createBackupsForm.backupsName,
+          status: 3,
+        }
+        this.diskBackupsData.push(diskBackup)
         var url = `Snapshot/createDiskSnapshot.do?diskId=${this.createBackupsForm.diskId}&name=${this.createBackupsForm.backupsName}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.loading = false
             this.$Message.info(response.data.message)
             this.listDiskSnapshots()
           } else {
-            this.loading = false
+            this.listDiskSnapshots()
             this.$message.error({
               content: response.data.message
             })
