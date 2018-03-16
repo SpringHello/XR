@@ -105,7 +105,7 @@
           <FormItem label="选择云主机" prop="host">
             <Select v-model="bindForHostForm.host" placeholder="云主机名称">
               <Option v-for="(item,index) in bindForHostForm.hostOptions" :key="index" :value="item.computerid">
-                {{item.instancename}}
+                {{item.computername}}
               </Option>
             </Select>
           </FormItem>

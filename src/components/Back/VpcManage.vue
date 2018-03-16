@@ -59,7 +59,12 @@
                                                                                                      @click="toBalance(item)">{{item.loadbalance}}</span>
                 </li>
                 <li style="flex-basis: 180px;" v-else></li>
-                <li><span class="blue" @click="addHostToVpc(item)">添加主机</span><span class="vertical-line">|</span><span
+                <li v-if="item._status==1">
+                  <Spin></Spin>
+                  <span>添加子网中...</span>
+                </li>
+                <li v-else><span class="blue" @click="addHostToVpc(item)">添加主机</span><span
+                  class="vertical-line">|</span><span
                   class="blue" @click="deleteVpc(item)">删除</span></li>
               </ul>
               <Table :columns="vmColumns" :data="item.vmList" v-show="item._show" class="table"></Table>
@@ -793,8 +798,14 @@
         this.$refs.newNetworkValidate.validate((valid) => {
           if (valid) {
             var gateWay = this.data.cidr.split('.')
-            this.loadingMessage = '正在添加子网，请稍候'
-            this.loading = true
+            this.data.ipsList.push({
+              name: this.newNetworkForm.networkName,
+              ipsegment: `${gateWay[0]}.${gateWay[1]}.${this.newNetworkForm.gateway}.1/24`,
+              netoffername: '',
+              acllistname: '',
+              // _status：1代表添加子网中
+              _status: 1
+            })
             this.showModal.addNetwork = false
             axios.get('network/createNetwork.do', {
               params: {
@@ -807,10 +818,9 @@
                 aclListId: this.newNetworkForm.firewall
               }
             }).then(response => {
-              this.loading = false
+              this.refresh()
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
-                this.refresh()
               } else {
                 this.$Message.error(response.data.message)
                 nameError = ''

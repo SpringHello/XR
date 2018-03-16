@@ -46,7 +46,7 @@
                     <span class="dotted-across"></span>
                   </div>
                   <div class="item-wrap">
-                    <div class="item"v-if="item.status === 2 || item.status === 3"><p>交换机（子网）：<span>{{item.networkCount}}</span>
+                    <div class="item" v-if="item.status === 2 || item.status === 3"><p>交换机（子网）：<span>{{item.networkCount}}</span>
                     </p></div>
                     <div class="item" @click="manage(item)" style="cursor: pointer" v-else><p>交换机（子网）：<span>{{item.networkCount}}</span>
                     </p></div>
@@ -64,7 +64,7 @@
                 <div class="card-bottom">
                   <div v-if="item.status!=2">
                     <Button type="primary" class="btn-bgwhite" @click="restartVpc(item)">重启</Button>
-                    <Button type="primary"  @click="manage(item)">管理</Button>
+                    <Button type="primary" @click="manage(item)">管理</Button>
                   </div>
                 </div>
               </div>
@@ -390,6 +390,14 @@
           {
             title: '源NAT',
             render: (h, object) => {
+              if (object.row._status) {
+                let message = object.row._status == 1 ? '正在添加源NAT...' : '正在删除源NAT...'
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block'
+                  }
+                }), h('span', {}, message)])
+              }
               if (object.row.sourcenatip) {
                 return h('div', [h('span', {
                   style: {
@@ -420,8 +428,11 @@
                         okText: '确定解绑',
                         cancelText: '取消',
                         'onOk': () => {
-                          this.loadingMessage = '正在解绑源NAT,请稍候'
-                          this.loading = true
+                          this.natData.forEach(item => {
+                            if (item.id == object.row.id) {
+                              this.$set(item, '_status', 2)
+                            }
+                          })
                           var url = 'network/natGatewayUnboundTargetIP.do'
                           this.$http.get(url, {
                             params: {
@@ -429,14 +440,12 @@
                               publicIp: object.row.sourcenatip
                             }
                           }).then(response => {
+                            this.refresh()
                             if (response.status == 200 && response.data.status == 1) {
                               this.$Message.success({
                                 content: response.data.message
                               })
-                              this.loading = false
-                              this.refresh()
                             } else {
-                              this.loading = false
                               this.$message.error({
                                 content: response.data.message
                               })
@@ -979,18 +988,15 @@
         this.$refs.gatewayFormValidate.validate((valid) => {
           if (valid) {
             // 表单验证通过
-            this.loadingMessage = '正在添加VPC互通网关，请稍候'
-            this.loading = true
+            this.$Message.info('正在添加VPC互通网关，请稍候...')
             this.showModal.addGateway = false
             var url = `network/addPrivateGateway.do?vpcIdStart=${this.addGatewayForm.originVPC}&vpcIdEnd=${this.addGatewayForm.targetVPC}&zoneId=${$store.state.zone.zoneid}&aclIdStart=${this.addGatewayForm.originFirewall}&aclIdEnd=${this.addGatewayForm.targetFirewall}`
             axios.get(url).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.loading = false
                 this.$Message.success({
                   content: response.data.message
                 })
               } else {
-                this.loading = false
                 this.$message.error({
                   content: response.data.message
                 })
@@ -1048,22 +1054,23 @@
         this.$refs.bindIPFormValidate.validate(validate => {
           if (validate) {
             this.showModal.bindIP = false
-            this.loading = true
-            this.loadingMessage = '正在绑定源NAT,请稍候'
+            this.natData.forEach(item => {
+              if (item.id == this.bindIPForm.natGatewayId) {
+                this.$set(item, '_status', 1)
+              }
+            })
             this.$http.get('network/natGatewayBoundTargetIP.do', {
               params: {
                 publicIp: this.bindIPForm.IP,
                 natGatewayId: this.bindIPForm.natGatewayId
               }
             }).then(response => {
+              this.refresh()
               if (response.status == 200 && response.data.status == 1) {
-                this.loading = false
                 this.$Message.success({
                   content: response.data.message
                 })
-                this.refresh()
               } else {
-                this.loading = false
                 this.$message.error({
                   content: response.data.message
                 })

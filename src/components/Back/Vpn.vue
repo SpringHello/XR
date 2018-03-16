@@ -420,6 +420,14 @@
           {
             title: '操作',
             render: (h, object) => {
+              if (object.row.status) {
+                let message = object.row.status == 1 ? '正在创建VPN接入点...' : '正在删除VPN接入点...'
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block'
+                  }
+                }), h('span', {}, message)])
+              }
               return h('span', {
                 style: {
                   color: '#2A99F2',
@@ -730,9 +738,15 @@
       newRemoteAccessOk(){
         this.$refs.newRemoteAccessFormValidate.validate(validate => {
           if (validate) {
-            this.loading = true
-            this.loadingMessage = '正在创建VPN接入点，请稍候'
             this.showModal.newRemoteAccess = false
+            this.remoteVpnData.push({
+              vpcname: this.newRemoteAccessForm.vpnName,
+              ipseckey: '******',
+              publicip: '******',
+              username: '',
+              // 状态1代表创建中
+              status: 1
+            })
             this.$http.get('network/createRemoteAccessVpn.do', {
               params: {
                 remoteVpnName: this.newRemoteAccessForm.vpnName,
@@ -741,15 +755,12 @@
                 password: this.newRemoteAccessForm.password
               }
             }).then(response => {
+              this.refresh()
               if (response.status == 200 && response.data.status == 1) {
-                this.refresh()
-                this.loading = false
                 this.$Message.success({
                   content: response.data.message
                 })
               } else {
-                this.refresh()
-                this.loading = false
                 this.$message.error({
                   content: response.data.message
                 })
@@ -851,25 +862,26 @@
           this.$message.confirm({
             content: '确定要删除该远程VPN接入吗',
             onOk: () => {
-              this.loadingMessage = '正在删除远程VPN接入，请稍候'
-              this.loading = true
+              this.remoteVpnData.forEach(item => {
+                if (item.id = this.currentRemote.id) {
+                  // status为2代表正在删除
+                  this.$set(item, 'status', 2)
+                }
+              })
               this.$http.get('network/deleteRemoteAccessVpn.do', {
                 params: {
                   id: this.currentRemote.id
                 }
               }).then(response => {
+                this.refresh()
                 if (response.status == 200 && response.data.status == 1) {
-                  this.loading = false
                   this.$Message.success({
                     content: response.data.message
                   })
-                  this.refresh()
                 } else {
-                  this.loading = false
                   this.$message.error({
                     content: response.data.message
                   })
-                  this.refresh()
                 }
               })
             }
