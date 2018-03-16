@@ -6,7 +6,7 @@
         <div>{{loadingMessage}}</div>
       </Spin>
       <div class="wrapper">
-        <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 一键续费</span>
+        <span style="background-color: white"><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 一键续费</span>
         <div class="content">
           <span>一键续费</span>
           <div style="margin-top:15px;position:relative">

@@ -63,7 +63,8 @@
                 <div class="item-wrapper">
                   <div style="display: flex">
                     <div>
-                      <p class="item-title">镜像</p>
+                      <p class="item-title">镜像类型</p>
+                      <p class="item-title" style="margin-top: 40px;">镜像系统</p>
                     </div>
                     <div>
                       <div v-for="item in PecsInfo.mirrorType" class="zoneItem"
@@ -172,12 +173,11 @@
                       <p class="item-title">类型</p>
                     </div>
                     <div>
-                      <Poptip trigger="hover" content="经典1：2与1：4配比，实现计算、网络与资源的良好平衡，高性价比" placement="top-start">
                         <div v-for="item in PecsInfo.vmTypeList" :key="item.value" class="zoneItem"
                              :class="{zoneSelect:PecsInfo.vmType==item.value}"
-                             @click="changeType(item.value)">{{item.label}}
+                             @click="changeType(item.value)" @hover="pop(item.value)">
+                          {{item.label}}
                         </div>
-                      </Poptip>
                     </div>
                   </div>
                 </div>
@@ -186,7 +186,7 @@
                   <div style="display: flex">
                     <div>
                       <p class="item-title">镜像类型</p>
-                      <p class="item-title" style="margin-top: 40px;" v-if="PecsInfo.currentType !='custom'">镜像系统</p>
+                      <p class="item-title" style="margin-top: 40px;">镜像系统</p>
 
                     </div>
                     <div>
@@ -405,7 +405,7 @@
                           :points="[500,800]"
                           style="margin-right:30px;vertical-align: middle;">
                         </i-slider>
-                        <InputNumber :max="500" :min="20" v-model="disk.size" size="large" :step=10
+                        <InputNumber :max="1000" :min="20" v-model="disk.size" size="large" :step=10
                                      @on-blur="changeDiskSize(index,disk.size)"
                                      @on-focus="changeDiskSize(index,disk.size)"
                                      style="position: relative;bottom: 10px"></InputNumber>
@@ -818,57 +818,78 @@
               </div>
               <!--主机清单字段-->
               <div v-if="prod.type=='Pecs'" style="border-bottom:1px solid #ccc;padding:20px 0px;">
-                <p class="item"><span class="title">区域</span>{{prod.zone.zonename}}</p>
+                <p class="item"><span class="hidden">$</span><span class="title">区域</span><span class="hidden">#</span>{{prod.zone.zonename}}</p>
+
                 <p class="item">
-                  <span class="title">计费模式</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
+                  <span class="hidden">$</span><span class="title">计费模式</span><span class="hidden">#</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
                 </p>
-                <p class="item"><span class="title">购买时长</span>{{prod.timeForm.currentTimeValue.label}}</p>
+                <p class="item"><span class="hidden">$</span><span class="title">购买时长</span><span class="hidden">#</span>{{prod.timeForm.currentTimeValue.label}}
+                </p>
                 <!--镜像+应用-->
-                <p class="item" v-if="prod.currentType=='app'"><span class="title">镜像</span>{{prod.currentApp.templatename}}
+                <p class="item" v-if="prod.currentType=='app'">
+                  <span class="hidden">$</span><span class="title">镜像</span><span
+                  class="hidden">#</span>{{prod.currentApp.templatename}}
                 </p>
                 <!--公共镜像-->
-                <p class="item" v-if="prod.currentType=='public'"><span class="title">镜像</span>{{prod.system.systemName}}
+                <p class="item" v-if="prod.currentType=='public'">
+                  <span class="hidden">$</span>
+                  <span class="title">镜像</span><span
+                  class="hidden">#</span>{{prod.system.systemName}}
                 </p>
                 <!--自定义镜像-->
-                <p class="item" v-if="prod.currentType=='custom'"><span class="title">镜像</span>{{prod.customMirror.templatename}}
+                <p class="item" v-if="prod.currentType=='custom'">
+                  <span class="hidden">$</span><span class="title">镜像</span><span
+                  class="hidden">#</span>{{prod.customMirror.templatename}}
                 </p>
                 <!--快速配置-->
                 <div v-if="prod.createType=='fast'">
-                  <p class="item" v-if="prod.publicIP"><span class="title">配置</span>{{`${prod.currentSystem.kernel}核${prod.currentSystem.RAM}G、${prod.currentSystem.bandWidth}带宽、${prod.currentSystem.diskSize}G系统盘`}}
+                  <p class="item" v-if="prod.publicIP"><span class="hidden">$</span><span class="title">配置</span><span class="hidden">#</span>{{`${prod.currentSystem.kernel}核${prod.currentSystem.RAM}G、${prod.currentSystem.bandWidth}带宽、${prod.currentSystem.diskSize}G系统盘`}}
                   </p>
-                  <p class="item" v-if="prod.publicIP==false"><span class="title">配置</span>{{`${prod.currentSystem.kernel}核${prod.currentSystem.RAM}G、${prod.currentSystem.diskSize}G系统盘`}}
+                  <p class="item" v-if="prod.publicIP==false"><span class="hidden">$</span><span class="title">配置</span><span class="hidden">#</span>{{`${prod.currentSystem.kernel}核${prod.currentSystem.RAM}G、${prod.currentSystem.diskSize}G系统盘`}}
                   </p>
                 </div>
                 <!--自定义配置-->
                 <div v-if="prod.createType=='custom'">
-                  <p class="item" v-if="prod.IPConfig.publicIP"><span class="title">配置</span>{{`${prod.vmConfig.kernel}核${prod.vmConfig.RAM}G、${prod.IPConfig.bandWidth}M带宽、${prod.vmConfig.diskSize}G系统盘`}}
+                  <p class="item" v-if="prod.IPConfig.publicIP">
+                    <span class="hidden">$</span>
+                    <span class="title">配置</span><span
+                    class="hidden">#</span>{{`${prod.vmConfig.kernel}核${prod.vmConfig.RAM}G、${prod.IPConfig.bandWidth}M带宽、${prod.vmConfig.diskSize}G系统盘`}}
                   </p>
-                  <p class="item" v-else><span class="title">配置</span>{{`${prod.vmConfig.kernel}核${prod.vmConfig.RAM}G、${prod.vmConfig.diskSize}G系统盘`}}
+                  <p class="item" v-else><span class="title">配置</span><span class="hidden">#</span>{{`${prod.vmConfig.kernel}核${prod.vmConfig.RAM}G、${prod.vmConfig.diskSize}G系统盘`}}
                   </p>
                   <!--快速创建没有数据盘，只有自定义配置包含硬盘-->
-                  <p class="item" v-for="disk in prod.dataDiskList"><span class="title">硬盘</span>{{disk.size+disk.label}}
+                  <p class="item" v-for="disk in prod.dataDiskList">
+                    <span class="hidden">$</span>
+                    <span class="title">硬盘</span><span
+                    class="hidden">#</span>{{disk.size+disk.label}}
                   </p>
                 </div>
+
                 <p class="item" v-if="prod.createType=='fast'" style="margin-top: 10px"><span class="title"
                                                                                               style="vertical-align: middle">价格</span>
+                  <span class="hidden">#</span>
                   <span style="font-size: 24px;color: #F85E1D;vertical-align: middle">{{prod.cost.toFixed(2)}}元</span>
                 </p>
                 <p class="item" v-if="prod.createType=='custom'" style="margin-top: 10px;"><span
                   class="title" style="vertical-align: middle">价格</span><span
+                  class="hidden">#</span><span
                   style="font-size: 24px;color: #F85E1D;vertical-align: middle">{{prod.customCost.toFixed(2)}}元</span>
                 </p>
               </div>
               <!--磁盘清单字段-->
               <div v-if="prod.type=='Pdisk'" style="border-bottom:1px solid #ccc;padding:20px 0px;">
-                <p class="item"><span class="title">区域</span>{{prod.zone.zonename}}</p>
+                <p class="item"><span class="hidden">$</span><span class="title">区域</span><span class="hidden">#</span>{{prod.zone.zonename}}</p>
                 <p class="item">
-                  <span class="title">计费模式</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
+                  <span class="hidden">$</span><span class="title">计费模式</span><span class="hidden">#</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
                 </p>
-                <p class="item"><span class="title">购买时长</span>{{prod.timeForm.currentTimeValue.label}}</p>
+                <p class="item"><span class="hidden">$</span><span class="title">购买时长</span><span class="hidden">#</span>{{prod.timeForm.currentTimeValue.label}}
+                </p>
                 <p class="item" v-for="disk in prod.dataDiskList">
-                  <span class="title">硬盘</span>{{disk.size}}G{{disk.label}}
+                  <span class="hidden">$</span>
+                  <span class="title">硬盘</span><span class="hidden">#</span>{{disk.size}}G{{disk.label}}
                 </p>
-                <p class="item" style="margin-top: 10px"><span class="title" style="vertical-align: middle">价格</span>
+                <p class="item" style="margin-top: 10px"><span class="hidden">$</span><span class="title" style="vertical-align: middle">价格</span>
+                  <span class="hidden">#</span>
                   <span
                     style="font-size: 24px;color: #F85E1D;vertical-align: middle">{{prod.dataDiskCost.toFixed(2)}}元</span>
                 </p>
@@ -876,15 +897,20 @@
 
               <!--公网IP清单字段-->
               <div v-if="prod.type=='Peip'" style="border-bottom:1px solid #ccc;padding:20px 0px;">
-                <p class="item"><span class="title">区域</span>{{prod.zone.zonename}}</p>
+                <p class="item"><span class="hidden">$</span><span class="title">区域</span><span class="hidden">#</span>{{prod.zone.zonename}}</p>
                 <p class="item">
-                  <span class="title">计费模式</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
+                  <span class="hidden">$</span><span class="title">计费模式</span><span class="hidden">#</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
                 </p>
-                <p class="item"><span class="title">购买时长</span>{{prod.timeForm.currentTimeValue.label}}</p>
+                <p class="item"><span class="hidden">$</span><span class="title">购买时长</span><span class="hidden">#</span>{{prod.timeForm.currentTimeValue.label}}
+                </p>
                 <p class="item">
-                  <span class="title">带宽</span>{{prod.bandWidth}}
+                  <span class="hidden">$</span>
+                  <span class="title">带宽</span><span class="hidden">#</span>{{prod.bandWidth}}
                 </p>
-                <p class="item" style="margin-top: 10px"><span class="title" style="vertical-align: middle">价格</span>
+                <p class="item" style="margin-top: 10px">
+                  <span class="hidden">$</span>
+                  <span class="title" style="vertical-align: middle">价格</span>
+                  <span class="hidden">#</span>
                   <span style="font-size: 24px;color: #F85E1D;vertical-align: middle">{{prod.cost.toFixed(2)}}元</span>
                 </p>
               </div>
@@ -895,7 +921,7 @@
             ref="buyDiv">
             <p
               style="font-size: 14px;margin:10px 0px;vertical-align:middle;color: #666666;line-height: 25px;text-align: center">
-              总计：<span
+              总计：<span class="hidden">#</span><span
               style="font-size: 24px;color: #F85E1D;line-height: 25px;vertical-align: middle;margin-left:10px;">{{billListCost.toFixed(2)}}元</span>
             </p>
             <button @click="buyNow"
@@ -1495,6 +1521,20 @@
             break
         }
       },
+      pop(type){
+        this.PecsInfo.vmType = type
+        switch (type) {
+          case 'standard':
+              alert('123')
+              break
+          case 'optimization':
+            alert('14')
+            break
+          case 'IO':
+            alert('56')
+            break
+        }
+      },
       // 切换核心数
       changeKernel(kernel){
         this.PecsInfo.vmConfig.kernel = kernel
@@ -1869,13 +1909,26 @@
       },
       // 导出清单
       exportXLSX(){
-        var data = []
         if (this.cart.length != 0) {
-          for (var i = 0; i < this.cart.length; i++) {
-            data[i] = new Array(2)
-            data[i][0] = '订单' + '：'
-            data[i][1] = this.$refs.detailed[i].innerText.replace(/[\r\n'删除']/g, ' ')
-            console.log(data[i][1])
+          // 记录当前行数
+          let currentRow = 0
+          let data = []
+          for (let i = 0; i < this.cart.length; i++) {
+            console.log(this.$refs.detailed[i].innerText.replace(/[\r\n'删除']/g, ' '))
+            let contentArray = this.$refs.detailed[i].innerText.replace(/[\r\n'删除']/g, ' ').split('$')
+            //第一行字段代表订单类型特殊处理
+            data[currentRow] = new Array(2)
+            data[currentRow][0] = contentArray[0].trim()
+            currentRow++
+            for (let j = 1; j < contentArray.length; j++) {
+              data[currentRow] = new Array(2)
+              console.log(contentArray[j])
+              data[currentRow][0] = contentArray[j].split('#')[0].trim()
+              data[currentRow][1] = contentArray[j].split('#')[1].trim()
+              currentRow++
+            }
+            data[currentRow] = new Array(2)
+            currentRow++
           }
           // covert json to sheet
           const ws = XLSX.utils.aoa_to_sheet(data)
@@ -2605,5 +2658,9 @@
       font-size: 14px;
       letter-spacing: 0.83px;
     }
+  }
+
+  .hidden {
+    font-size: 0px;
   }
 </style>

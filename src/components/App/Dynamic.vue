@@ -36,34 +36,32 @@
   export  default {
     data () {
       return {
-        selectAnnouncement: '0',
+        selectAnnouncement: null,
         announcementArray: [],
         announcement: null
       }
     },
     created() {
+      // 获取公告title
       axios.get('user/getAnnouncement.do', {
         params: {
           listAll: -1,
-         // announcementId: this.$route.query.id,
-         // needContent: 1
         }
       }).then(response => {
         if (response.status == 200 && response.data.status == 1) {
-          this.announcementArray = this.contentList = response.data.result.announcement
-          this.announcement = this.announcementArray[0]
+          this.announcementArray = response.data.result.announcement
         }
       })
+      // 获取公告content
       axios.get('user/getAnnouncement.do', {
         params: {
-         // listAll: -1,
-           announcementId: this.$route.query.id,
-           needContent: 1
+          announcementId: this.$route.query.id,
+          needContent: 1
         }
       }).then(response => {
+        this.selectAnnouncement = this.$route.query.id
         if (response.status == 200 && response.data.status == 1) {
-          this.announcementArray = this.contentList = response.data.result.announcement
-          this.announcement = this.announcementArray[0]
+          this.announcement = response.data.result.announcement
         }
       })
     },

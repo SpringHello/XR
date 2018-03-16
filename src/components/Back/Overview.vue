@@ -85,9 +85,10 @@
             <p class="universal-middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">公告</p>
             <div>
               <div v-for="(item,index) in noticeData" :key="index">
-                <p class="universal-mini" @click="$router.push({ path: 'dynamic', query: { id: item.id }})">{{item.title}}<span>{{item.createtime}}</span></p>
+                <p class="universal-mini" @click="$router.push({ path: 'dynamic', query: { id: index }})">
+                  {{item.title}}<span>{{item.createtime}}</span></p>
               </div>
-              <a href="/ruicloud/dynamic?id=0">查看更多</a>
+              <span @click="$router.push({ path: 'dynamic', query: { id: 0 }})" style="color: #2A99F2;margin-top: 10px;display: block;font-size: 14px;cursor: pointer;">查看更多</span>
             </div>
           </div>
           <div>
@@ -165,8 +166,13 @@
       // 获取总览页账户信息
       var accountInfo = axios.get(`user/userAccountInfo.do?zoneId=${zoneId}`)
       var adver = axios.get('user/getAdvertisement.do')
+      var Announcement = axios.get('user/getAnnouncement.do', {
+        params: {
+          listAll: 3
+        }
+      })
       var source = axios.get(`user/userSourceManager.do?zoneId=${zoneId}`)
-      Promise.all([accountInfo, adver, source]).then(values => {
+      Promise.all([accountInfo, adver, source, Announcement]).then(values => {
         next(vm => {
           vm.setData(values)
         })
@@ -199,8 +205,7 @@
         }
         response = values[1]
         if (response.status == 200 && response.data.status == 1) {
-          this.noticeData = response.data.result.announcement
-          this.ads = response.data.result.advertisement.sort((adverA, adverB) => {
+          this.ads = response.data.result.sort((adverA, adverB) => {
             return adverA.displaynumber < adverB.displaynumber
           })
         }
@@ -229,6 +234,10 @@
               }
             })
           })
+        }
+        response = values[3]
+        if (response.status == 200 && response.data.status == 1) {
+          this.noticeData = response.data.result.announcement
         }
       },
       // 区域变更，刷新数据
