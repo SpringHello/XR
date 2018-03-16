@@ -446,7 +446,7 @@
       return {
         isActive: true,
         countdown: 60,
-        codePlaceholder: '点击发送',
+        codePlaceholder: '发送密码',
         loading: false,
         loadingMessage: '',
         snapsId: '',
@@ -923,14 +923,14 @@
           if (valid) {
             this.showModal.lookPassword = false
             this.isActive = false
-            this.codePlaceholder = '点击发送（60s）'
+            this.codePlaceholder = '发送密码（60s）'
             var inter = setInterval(() => {
               this.countdown--
-              this.codePlaceholder ='点击发送（' + this.countdown + 's）'
+              this.codePlaceholder ='发送密码（' + this.countdown + 's）'
               if (this.countdown == 0) {
                 clearInterval(inter)
                 this.countdown = 60
-                this.codePlaceholder = '点击发送'
+                this.codePlaceholder = '发送密码'
                 this.isActive = true
               }
             }, 1000)
