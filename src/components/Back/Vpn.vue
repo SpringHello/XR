@@ -378,24 +378,29 @@
           },
           {
             title: 'VPN',
+            width: 120,
             key: 'vpcname'
           },
           {
             title: '预共享密钥',
+            width: 260,
             key: 'ipseckey'
           },
           {
             title: '弹性IP地址',
+            width: 200,
             key: 'publicip'
           },
           {
             title: '用户名',
+            width: 160,
             render: (h, object) => {
               return h('span', object.row.username.split(',')[0])
             }
           },
           {
             title: '创建时间',
+            width: 220,
             key: 'createtime'
           },
           {

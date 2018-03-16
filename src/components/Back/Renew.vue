@@ -573,16 +573,16 @@
             margin-top: 20px;
           }
           .host {
-            background-image: url('../../assets/img/renew/resource-icon-1.png');
+            background-image: url('../../assets/img/renew/resource-icon-host.png');
           }
           .ip {
-            background-image: url('../../assets/img/renew/resource-icon-2.png');
+            background-image: url('../../assets/img/renew/resource-icon-ip.png');
           }
           .disk {
-            background-image: url('../../assets/img/renew/resource-icon-3.png');
+            background-image: url('../../assets/img/renew/resource-icon-disk.png');
           }
           .nat{
-            background-image: url('../../assets/img/renew/resource-icon-4.png');
+            background-image: url('../../assets/img/renew/resource-icon-nat.png');
           }
           .info {
             width: 76%;
