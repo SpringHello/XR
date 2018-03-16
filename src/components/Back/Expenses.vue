@@ -1547,7 +1547,7 @@
           }
         }
         .ordertype {
-          margin-top: 35px;
+          margin-top: 15px;
           .order_s1 {
             font-family: Microsoft Yahei, 微软雅黑;
             font-size: 12px;
@@ -1564,7 +1564,7 @@
           margin-top: 10px;
         }
         .searchCard {
-          margin-top: 45px;
+          margin-top: 20px;
           & > span {
             font-family: Microsoft Yahei, 微软雅黑;
             font-size: 12px;

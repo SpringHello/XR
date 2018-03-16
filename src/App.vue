@@ -139,38 +139,18 @@
       </div>
     </div>
     <!-- 客服浮动块 -->
-    <div id="affix">
+    <div class="affix">
       <span class="qq" @mouseenter="QME" @mouseleave="QML">
         <div ref="qq" style="overflow: hidden">
           <div class="wrapper">
-            <div>
-              <Tooltip :content="QQInfo['1740534974']?'在线咨询':'请留言'" placement="top">
-                <a target="_blank" href="tencent://message/?uin=1740534974&amp;Site=www.cloudsoar.com&amp;Menu=yes"
+            <div v-for="(qq,index) of QQInfo">
+              <Tooltip :content="qq.value?'在线咨询':'请留言'" placement="top">
+                <a target="_blank" :href="`tencent://message/?uin=${qq.key}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
                    style="color:rgb(73, 80, 96)">
                 <img src="./assets/img/app/QQ.png">
-                <span>新睿云-01</span>
-                <i :class="{inline:QQInfo['1740534974']}"></i>
+                <span>新睿云-0{{index+1}}</span>
+                <i :class="{inline:qq.value}"></i>
                 </a>
-              </Tooltip>
-            </div>
-            <div>
-              <Tooltip :content="QQInfo['1014172393']?'在线咨询':'请留言'" placement="top">
-                <a target="_blank" href="tencent://message/?uin=1014172393&amp;Site=www.cloudsoar.com&amp;Menu=yes"
-                   style="color:rgb(73, 80, 96)">
-              <img src="./assets/img/app/QQ.png">
-              <span>新睿云-02</span>
-              <i :class="{inline:QQInfo['1014172393']}"></i>
-                </a>
-              </Tooltip>
-            </div>
-            <div>
-              <Tooltip :content="QQInfo['2455433934']?'在线咨询':'请留言'" placement="top">
-              <a target="_blank" href="tencent://message/?uin=2455433934&amp;Site=www.cloudsoar.com&amp;Menu=yes"
-                 style="color:rgb(73, 80, 96)">
-                <img src="./assets/img/app/QQ.png">
-              <span>新睿云-03</span>
-              <i :class="{inline:QQInfo['2455433934']}"></i>
-              </a>
               </Tooltip>
             </div>
           </div>
@@ -182,7 +162,7 @@
       <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
         <span class="phone"></span>
       </Poptip>
-      <BackTop :bottom="65" :right="50" :duration="0" :height="1600">
+      <BackTop :bottom="61" :right="50" :duration="0" :height="1600">
         <Icon type="chevron-up" class="backtop"></Icon>
       </BackTop>
     </div>
@@ -361,7 +341,12 @@
       })
       // QQ客服在线情况
       this.$http.get('network/getQQCustomerServiceStatus.do').then(response => {
-        this.QQInfo = response.data.result
+        for (let key in response.data.result) {
+          this.QQInfo.push({
+            key,
+            value: response.data.result[key]
+          })
+        }
       })
     },
     methods: {
@@ -709,28 +694,17 @@
         }
       }
     }
-    #affix {
+    .affix {
       position: fixed;
       right: 50px;
       bottom: 100px;
-      z-index: 100000;
+      z-index: 100;
       > span {
         width: 48px;
         height: 48px;
         display: block;
         padding: 10px;
         background: #E1E1E1 no-repeat center;
-      }
-      .service {
-        background-image: url('./assets/img/app/customer-service-gray.png');
-        &:hover {
-          background: #2A99F2 url('./assets/img/app/customer-service-white.png') no-repeat center;
-        }
-        & > a {
-          width: 100%;
-          height: 100%;
-          display: block;
-        }
       }
       .qq {
         background-image: url('./assets/img/app/QQ-gray.png');
@@ -740,7 +714,6 @@
         > div {
           position: absolute;
           width: 0px;
-          height: 145px;
           background-color: #ffffff;
           right: 48px;
           top: 0px;
@@ -753,10 +726,8 @@
         }
         .wrapper {
           width: 116px;
-          position: absolute;
           right: 0px;
           top: 0px;
-          height: 100%;
           > div {
             height: 48px;
             padding: 16px 10px;
@@ -779,14 +750,41 @@
           }
         }
       }
+      .service {
+        width: 48px;
+        height: 48px;
+        display: block;
+        padding: 10px;
+        background: #E1E1E1;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-image: url('./assets/img/app/customer-service-gray.png');
+        &:hover {
+          background: #2A99F2;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-image: url('./assets/img/app/customer-service-white.png');
+        }
+        & > a {
+          width: 100%;
+          height: 100%;
+          display: block;
+        }
+      }
       .phone {
         width: 48px;
         height: 48px;
         display: block;
         padding: 10px;
-        background: #E1E1E1 url('./assets/img/app/phone-gray.png') no-repeat center;
+        background: #E1E1E1;
+        background-repeat: no-repeat;
+        background-position: center;
+        background-image: url('./assets/img/app/phone-gray.png');
         &:hover {
-          background: #2A99F2 url('./assets/img/app/phone-white.png') no-repeat center;
+          background: #2A99F2;
+          background-repeat: no-repeat;
+          background-position: center;
+          background-image: url('./assets/img/app/phone-white.png');
         }
       }
     }

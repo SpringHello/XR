@@ -34,6 +34,7 @@
                           <div class="icon host" v-if="item.type=='host'"></div>
                           <div class="icon ip" v-if="item.type=='ip'"></div>
                           <div class="icon disk" v-if="item.type=='disk'"></div>
+                          <div class="icon nat" v-if="item.type=='nat'"></div>
                           <div class="info">
                             <h1>{{item.resourcesName}}</h1>
                             <span>
@@ -74,6 +75,7 @@
                           <div class="icon host" v-if="item.type=='host'"></div>
                           <div class="icon ip" v-if="item.type=='ip'"></div>
                           <div class="icon disk" v-if="item.type=='disk'"></div>
+                          <div class="icon nat" v-if="item.type=='nat'"></div>
                           <div class="info">
                             <h1>{{item.resourcesName}}</h1>
                             <span>
@@ -115,6 +117,7 @@
                           <div class="icon host" v-if="item.type=='host'"></div>
                           <div class="icon ip" v-if="item.type=='ip'"></div>
                           <div class="icon disk" v-if="item.type=='disk'"></div>
+                          <div class="icon nat" v-if="item.type=='nat'"></div>
                           <div class="info">
                             <h1>{{item.resourcesName}}</h1>
                             <span>
@@ -155,6 +158,7 @@
                           <div class="icon host" v-if="item.type=='host'"></div>
                           <div class="icon ip" v-if="item.type=='ip'"></div>
                           <div class="icon disk" v-if="item.type=='disk'"></div>
+                          <div class="icon nat" v-if="item.type=='nat'"></div>
                           <div class="info">
                             <h1>{{item.resourcesName}}</h1>
                             <span>
@@ -243,7 +247,7 @@
           renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
           renewalTime: [],
           year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}],
-          month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '3月', value: 3},{
+          month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '3月', value: 3}, {
             label: '4月',
             value: 4
           }, {label: '5月', value: 5}, {label: '6月', value: 6}, {label: '7月', value: 7}, {
@@ -433,9 +437,7 @@
         }
         this.loadingMessage = '创建订单中'
         this.loading = true
-        this.$http.get('continue/continueOrder.do', {
-          params
-        }).then(response => {
+        this.$http.post('continue/continueOrder.do', params).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({path: 'order'})
@@ -495,7 +497,7 @@
       background: #2A99F2;
     }
     .cancel {
-    //  margin-right: 5px;
+      //  margin-right: 5px;
       border: 1px solid #D9D9D9;
       color: #666666;
       &:hover {
@@ -578,6 +580,9 @@
           }
           .disk {
             background-image: url('../../assets/img/renew/resource-icon-3.png');
+          }
+          .nat{
+            background-image: url('../../assets/img/renew/resource-icon-4.png');
           }
           .info {
             width: 76%;

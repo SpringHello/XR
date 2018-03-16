@@ -137,11 +137,7 @@
               }
               for (var index in params.row['资源']) {
                 for (var key in params.row['资源'][index]) {
-                  if (key != '地域') {
-                    arr.push(h('p', {style: {lineHeight: '1.5'}}, `${key}:${params.row['资源'][index][key]}`))
-                  } else {
-                    arr.unshift(h('p', {style: {lineHeight: '1.5'}}, `${key}:${params.row['资源'][index][key]}`))
-                  }
+                  arr.push(h('p', {style: {lineHeight: '1.5'}}, `${key}:${params.row['资源'][index][key]}`))
                 }
               }
               return h('div', [

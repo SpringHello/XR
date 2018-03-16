@@ -807,22 +807,18 @@
                 aclListId: this.newNetworkForm.firewall
               }
             }).then(response => {
+              this.loading = false
               if (response.status == 200 && response.data.status == 1) {
-                this.loading = false
                 this.$Message.success(response.data.message)
                 this.refresh()
               } else {
-                this.loading = false
+                this.$Message.error(response.data.message)
                 nameError = ''
                 getwayError = ''
                 if (response.data.message == '名称重复，请重新输入!') {
                   nameError = response.data.message
                 } else if (response.data.message == '您输入的网关已经存在，请换一个网关!') {
                   getwayError = response.data.message
-                } else {
-                  this.$message.error({
-                    content: response.data.message
-                  })
                 }
                 this.$refs.newNetworkValidate.validate()
               }

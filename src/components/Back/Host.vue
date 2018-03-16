@@ -900,13 +900,18 @@
           } else {
             this.bindForm.publicIP = ''
             this.showModal.bindIP = true
-            axios.get(`network/listPublicIp.do?useType=0&zoneId=${this.currentHost[0].zoneid}`)
-              .then(response => {
-                this.loading = false
-                if (response.status == 200 && response.data.status == 1) {
-                  this.publicIPList = response.data.result
-                }
-              })
+            axios.get('network/listPublicIp.do', {
+              params: {
+                useType: 0,
+                zoneId: this.currentHost[0].zoneid,
+                vpcId: this.currentHost[0].vpcid
+              }
+            }).then(response => {
+              this.loading = false
+              if (response.status == 200 && response.data.status == 1) {
+                this.publicIPList = response.data.result
+              }
+            })
           }
         }
       },
@@ -1084,7 +1089,12 @@
           {type: 0, id: this.currentHost[0].id}
         ]
         list = JSON.stringify(list)
-        this.$http.get(`continue/continueOrder.do?list=${list}&timeType=${this.renewalType}&timeValue=${this.renewalTime}`).then(response => {
+
+        this.$http.post('continue/continueOrder.do', {
+          list: list,
+          timeType: this.renewalType,
+          timeValue: this.renewalTime
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({path: 'order'})
           }
