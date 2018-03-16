@@ -869,11 +869,23 @@
                                                                                               style="vertical-align: middle">价格</span>
                   <span class="hidden">#</span>
                   <span style="font-size: 24px;color: #F85E1D;vertical-align: middle">{{prod.cost.toFixed(2)}}元</span>
+                  <ul style="float: right;font-size: 14px">
+                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-right: -5px;" v-if="prod.count == 1">-</span>
+                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-right: -5px;cursor: pointer"@click="prod.count -= 1" v-else>-</span>
+                  <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
+                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-left: -5px;" v-if="prod.count == 5" >+</span>
+                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-left: -5px;cursor: pointer" @click="prod.count += 1" v-else>+</span></ul>
                 </p>
                 <p class="item" v-if="prod.createType=='custom'" style="margin-top: 10px;"><span
                   class="title" style="vertical-align: middle">价格</span><span
                   class="hidden">#</span><span
                   style="font-size: 24px;color: #F85E1D;vertical-align: middle">{{prod.customCost.toFixed(2)}}元</span>
+                <ul style="float: right;font-size: 14px">
+                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-right: -5px;" v-if="prod.count == 1">-</span>
+                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-right: -5px;cursor: pointer"@click="prod.count -= 1" v-else>-</span>
+                  <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
+                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-left: -5px;" v-if="prod.count == 5" >+</span>
+                <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-left: -5px;cursor: pointer" @click="prod.count += 1" v-else>+</span></ul>
                 </p>
               </div>
               <!--磁盘清单字段-->
@@ -1901,7 +1913,6 @@
           let currentRow = 0
           let data = []
           for (let i = 0; i < this.cart.length; i++) {
-            console.log(this.$refs.detailed[i].innerText.replace(/[\r\n'删除']/g, ' '))
             let contentArray = this.$refs.detailed[i].innerText.replace(/[\r\n'删除']/g, ' ').split('$')
             //第一行字段代表订单类型特殊处理
             data[currentRow] = new Array(2)

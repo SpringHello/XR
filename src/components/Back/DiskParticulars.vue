@@ -1,10 +1,6 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <Spin fix v-show="loading">
-        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-        <div>{{loadingMessage}}</div>
-      </Spin>
       <span>云存储 / 云硬盘</span>
       <!-- 磁盘相关信息 -->
       <div class="diskInfo">
@@ -229,8 +225,6 @@
     data(){
       const validaRegisteredName = regExp.validaRegisteredName
       return {
-        loadingMessage: '',
-        loading: false,
         // 磁盘系列化对象
         rwPolar: JSON.parse(diskOptionsstr),
         IOPSPolar: JSON.parse(diskOptionsstr),
@@ -275,6 +269,13 @@
                     }
                   }, '正常')
                 case 2:
+                  return h('div', {}, [h('Spin', {
+                    style: {
+                      display: 'inline-block',
+                      marginRight: '10px'
+                    }
+                  }), h('span', {}, '删除中')])
+                case 3:
                   return h('div', {}, [h('Spin', {
                     style: {
                       display: 'inline-block',
@@ -325,17 +326,25 @@
           {
             title: '操作',
             render: (h, params) => {
-              return h('span', {
-                style: {
-                  color: '#2A99F2',
-                  cursor: 'pointer'
-                },
-                on: {
-                  click: () => {
-                    this.createBackupsToDisk(params.row)
+              if (params.row.status == 1) {
+                return h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      this.createBackupsToDisk(params.row)
+                    }
                   }
-                }
-              }, '以备份新建磁盘')
+                }, '以备份新建磁盘')
+              } else {
+                return h('span', {
+                  style: {
+                    color: '#495060',
+                  }
+                }, '以备份新建磁盘')
+              }
             }
           }
         ],
@@ -572,17 +581,19 @@
       },
       /* 确认创建磁盘备份 */
       createDiskBackup_ok() {
-        this.loadingMessage = '正在创建磁盘备份，请稍候'
-        this.loading = true
         this.showModal.createDiskBackup = false
+        var diskBackup = {
+          snapshotname: this.createBackupsForm.backupsName,
+          status: 3,
+        }
+        this.diskBackupsData.push(diskBackup)
         var url = `Snapshot/createDiskSnapshot.do?diskId=${this.createBackupsForm.diskId}&name=${this.createBackupsForm.backupsName}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.loading = false
             this.$Message.info(response.data.message)
             this.listDiskSnapshots()
           } else {
-            this.loading = false
+            this.listDiskSnapshots()
             this.$message.error({
               content: response.data.message
             })

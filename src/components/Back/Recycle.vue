@@ -171,9 +171,9 @@
                     break;
                   case 'disk':
                     disk.push(item)
-                   break;
-                    case 'nat':
-                        nat.push(item)
+                    break;
+                  case 'nat':
+                    nat.push(item)
                     break
                 }
               })
@@ -320,7 +320,7 @@
       }
     },
     computed: {
-       auth(){
+      auth(){
         return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
 
       }

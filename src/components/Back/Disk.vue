@@ -1,10 +1,6 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <Spin fix v-show="loading">
-        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-        <div>{{loadingMessage}}</div>
-      </Spin>
       <span class="title">云存储 &nbsp; / &nbsp; <span>云硬盘</span>
       </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
@@ -272,8 +268,6 @@
     data(){
       const validaRegisteredName = regExp.validaRegisteredName
       return {
-        loadingMessage: '',
-        loading: false,
         // 磁盘列包含信息
         diskColumns: [
           {
@@ -323,7 +317,7 @@
             ellipsis: true,
             render: (h, params) => {
               const row = params.row
-              const text = row.status === 0 ? '欠费' : (row.status === 1 && !row.mounton && !row.mountonname) ? '可挂载' : (row.status === 1 && row.mounton && row.mountonname) ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '正常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '卸载中' : row.status === 5 ? '挂载中' :row.status === 6 ? '备份中': ''
+              const text = row.status === 0 ? '欠费' : (row.status === 1 && !row.mounton && !row.mountonname) ? '可挂载' : (row.status === 1 && row.mounton && row.mountonname) ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '异常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '卸载中' : row.status === 5 ? '挂载中' :row.status === 6 ? '备份中': ''
               if (row.status == 2 || row.status == 3 || row.status == 4 || row.status == 5|| row.status == 6) {
                 return h('div', {}, [h('Spin', {
                   style: {
@@ -364,67 +358,89 @@
             title: '操作',
             width: 200,
             render: (h, params) => {
-              return h('div', {}, [
-                h('span', {
-                  style: {
-                    marginRight: '10px',
-                    color: '#2A99F2',
-                    cursor: 'pointer'
-                  },
-                  on: {
-                    click: () => {
-                      this.mount(params.row)
+              if (params.row.status == 1) {
+                return h('div', {}, [
+                  h('span', {
+                    style: {
+                      marginRight: '10px',
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        this.mount(params.row)
+                      }
                     }
-                  }
-                }, '挂载'),
-                h('span', {
-                  style: {
-                    marginRight: '10px',
-                    color: '#2A99F2',
-                    cursor: 'pointer'
-                  },
-                  on: {
-                    click: () => {
-                      this.unload(params.row)
+                  }, '挂载'),
+                  h('span', {
+                    style: {
+                      marginRight: '10px',
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        this.unload(params.row)
+                      }
                     }
-                  }
-                }, '卸载'),
-                h('span', {
-                  style: {
-                    marginRight: '10px',
-                    color: '#2A99F2',
-                    cursor: 'pointer'
-                  },
-                  on: {
-                    click: () => {
-                      this.beforeCreateDiskBackup(params.row)
+                  }, '卸载'),
+                  h('span', {
+                    style: {
+                      marginRight: '10px',
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        this.beforeCreateDiskBackup(params.row)
+                      }
                     }
-                  }
-                }, '备份'),
-                h('Dropdown', {
-                  props: {
-                    trigger: 'click'
-                  }
-                }, [h('a', {
-                  attrs: {
-                    href: 'javascript:void(0)'
-                  }
-                }, '更多操作'), h('DropdownMenu', {
-                  slot: 'list'
-                }, [h('DropdownItem', {
-                  nativeOn: {
-                    click: () => {
-                      this.dilatationDisk(params.row)
+                  }, '备份'),
+                  h('Dropdown', {
+                    props: {
+                      trigger: 'click'
                     }
-                  }
-                }, '扩容磁盘'), h('DropdownItem', {
-                  nativeOn: {
-                    click: () => {
-                      this.modificationDisk(params.row)
+                  }, [h('a', {
+                    attrs: {
+                      href: 'javascript:void(0)'
                     }
-                  }
-                }, '修改资料')])
-                ])])
+                  }, '更多操作'), h('DropdownMenu', {
+                    slot: 'list'
+                  }, [h('DropdownItem', {
+                    nativeOn: {
+                      click: () => {
+                        this.dilatationDisk(params.row)
+                      }
+                    }
+                  }, '扩容磁盘'), h('DropdownItem', {
+                    nativeOn: {
+                      click: () => {
+                        this.modificationDisk(params.row)
+                      }
+                    }
+                  }, '修改资料')])
+                  ])])
+              } else {
+                return h('div', {}, [
+                  h('span', {
+                    style: {
+                      marginRight: '10px',
+                      color: '#495060',
+                    }
+                  }, '挂载'),
+                  h('span', {
+                    style: {
+                      marginRight: '10px',
+                      color: '#495060',
+                    }
+                  }, '卸载'),
+                  h('span', {
+                    style: {
+                      marginRight: '10px',
+                      color: '#495060',
+                    }
+                  }, '备份')])
+              }
             }
           }
         ],
@@ -599,11 +615,11 @@
       listDisk(){
         this.$http.get('Disk/listDisk.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            response.data.result.forEach((item) => {
+     /*       response.data.result.forEach((item) => {
               if (item.status != 1) {
                 item._disabled = true
               }
-            })
+            })*/
             this.diskData = response.data.result
             this.diskSelection = null
           } else {
