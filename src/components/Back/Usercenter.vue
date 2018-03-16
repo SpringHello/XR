@@ -302,7 +302,7 @@
                 style="font-family: MicrosoftYaHei;font-size: 14px;color: rgba(17,17,17,0.65);letter-spacing: 0.83px;margin-top: 20px;">
                 为了保障您在第一时间接收到有关财务、账号安全和系统公告等关键信息，本设置页面部分选项（打勾图标）默认激活且无法更改。其余可配置选项请依据您的具体需求激活或禁用。
               </p>
-              <div style="margin-top: 40px;display: flex">
+              <div style="margin-top: 20px;display: flex">
                 <div style="width: 200px">
                   <div
                     style="display: flex;padding-left: 20px;align-items: center;height: 39px;background:#F8F8F9 ">
@@ -328,7 +328,7 @@
                   <Table :columns="setColumns" :data="setData"></Table>
                 </div>
               </div>
-              <div style="float: right;margin-top: 40px">
+              <div style="float: right;margin-top: 20px">
                 <Button type="ghost" @click="recoverNotice">恢复默认</Button>
                 <Button type="primary" style="margin-left: 20px" @click="updateNotice">确认修改</Button>
               </div>
@@ -1870,7 +1870,7 @@
       authInfo: 'authInfo',
       // 剩余联系人个数
       remainLinkMan(){
-        
+
         return 5 - this.linkManData.length
       },
       showCompanyPane(){

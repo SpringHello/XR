@@ -6,7 +6,7 @@
         <div>{{loadingMessage}}</div>
       </Spin>
       <div class="wrapper">
-        <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 一键续费</span>
+        <span style="background-color: white"><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 一键续费</span>
         <div class="content">
           <span>一键续费</span>
           <div style="margin-top:15px;position:relative">
@@ -573,16 +573,16 @@
             margin-top: 20px;
           }
           .host {
-            background-image: url('../../assets/img/renew/resource-icon-1.png');
+            background-image: url('../../assets/img/renew/resource-icon-host.png');
           }
           .ip {
-            background-image: url('../../assets/img/renew/resource-icon-2.png');
+            background-image: url('../../assets/img/renew/resource-icon-ip.png');
           }
           .disk {
-            background-image: url('../../assets/img/renew/resource-icon-3.png');
+            background-image: url('../../assets/img/renew/resource-icon-disk.png');
           }
           .nat{
-            background-image: url('../../assets/img/renew/resource-icon-4.png');
+            background-image: url('../../assets/img/renew/resource-icon-nat.png');
           }
           .info {
             width: 76%;

@@ -5,7 +5,7 @@
         <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
         <div>{{loadingMessage}}</div>
       </Spin>
-      <span class="title">
+      <span class="title" style="background-color: #f5f5f5;">
         <router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> /
         <router-link to="host" style="color:rgba(17, 17, 17, 0.43);">云主机</router-link> / <span>管理</span>
       </span>
@@ -446,7 +446,7 @@
       return {
         isActive: true,
         countdown: 60,
-        codePlaceholder: '点击发送',
+        codePlaceholder: '发送密码',
         loading: false,
         loadingMessage: '',
         snapsId: '',
@@ -923,14 +923,14 @@
           if (valid) {
             this.showModal.lookPassword = false
             this.isActive = false
-            this.codePlaceholder = '点击发送（60s）'
+            this.codePlaceholder = '发送密码（60s）'
             var inter = setInterval(() => {
               this.countdown--
-              this.codePlaceholder ='点击发送（' + this.countdown + 's）'
+              this.codePlaceholder ='发送密码（' + this.countdown + 's）'
               if (this.countdown == 0) {
                 clearInterval(inter)
                 this.countdown = 60
-                this.codePlaceholder = '点击发送'
+                this.codePlaceholder = '发送密码'
                 this.isActive = true
               }
             }, 1000)
