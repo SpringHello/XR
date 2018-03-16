@@ -175,7 +175,7 @@
                     <div>
                         <div v-for="item in PecsInfo.vmTypeList" :key="item.value" class="zoneItem"
                              :class="{zoneSelect:PecsInfo.vmType==item.value}"
-                             @click="changeType(item.value)" @hover="pop(item.value)">
+                             @click="changeType(item.value)">
                           {{item.label}}
                         </div>
                     </div>
@@ -1059,6 +1059,7 @@
       }
 
       return {
+        popList:['1','2','3'],
         // 当前可以创建的剩余资源数
         remainCount: {},
         // 登录Modal需要的数据
@@ -1530,20 +1531,6 @@
             this.PecsInfo.vmConfig.diskType = 'ssd'
             this.PecsInfo.vmConfig.kernel = '16'
             this.PecsInfo.vmConfig.RAM = '16'
-            break
-        }
-      },
-      pop(type){
-        this.PecsInfo.vmType = type
-        switch (type) {
-          case 'standard':
-              alert('123')
-              break
-          case 'optimization':
-            alert('14')
-            break
-          case 'IO':
-            alert('56')
             break
         }
       },

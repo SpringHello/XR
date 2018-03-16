@@ -85,10 +85,10 @@
             <p class="universal-middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">公告</p>
             <div>
               <div v-for="(item,index) in noticeData" :key="index">
-                <p class="universal-mini" @click="$router.push({ path: 'dynamic', query: { id: index }})">
+                <p class="universal-mini" @click="$router.push({ path: 'dynamic', query: { id: item.id }})">
                   {{item.title}}<span>{{item.createtime}}</span></p>
               </div>
-              <span @click="$router.push({ path: 'dynamic', query: { id: 0 }})" style="color: #2A99F2;margin-top: 10px;display: block;font-size: 14px;cursor: pointer;">查看更多</span>
+              <span @click="$router.push({ path: 'dynamic', query: { id: 5 }})" style="color: #2A99F2;margin-top: 10px;display: block;font-size: 14px;cursor: pointer;">查看更多</span>
             </div>
           </div>
           <div>

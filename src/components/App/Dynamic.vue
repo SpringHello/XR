@@ -7,13 +7,13 @@
         </div>
 
         <div class="content-detail">
-          <Menu style="width: 300px;" :open-names="['1']" :active-name="selectAnnouncement" @on-select="show">
+          <Menu style="width: 300px;" :open-names="['1']" active-name="selectAnnouncement" @on-select="show">
             <Submenu name="1">
               <template slot="title">
                 <img src="../../assets/img/product/dynamic-2.png" alt="" style="margin-right:8px;">
                 <span style="font-size: 18px;color:#333333;font-family: MicrosoftYaHei;">产品公告</span>
               </template>
-              <MenuItem :name="index" v-for="(item,index) in announcementArray" :key="index">{{item.title}}</MenuItem>
+              <MenuItem :name="item.id" v-for="(item,index) in announcementArray" :key="index">{{item.title}}</MenuItem>
             </Submenu>
           </Menu>
         </div>
@@ -38,7 +38,7 @@
       return {
         selectAnnouncement: null,
         announcementArray: [],
-        announcement: null
+        announcement: null,
       }
     },
     created() {
@@ -49,7 +49,7 @@
         }
       }).then(response => {
         if (response.status == 200 && response.data.status == 1) {
-          this.announcementArray = response.data.result.announcement
+            this.announcementArray = response.data.result.announcement
         }
       })
       // 获取公告content
@@ -59,15 +59,25 @@
           needContent: 1
         }
       }).then(response => {
-        this.selectAnnouncement = this.$route.query.id
         if (response.status == 200 && response.data.status == 1) {
-          this.announcement = response.data.result.announcement
+          this.announcement = response.data.result.announcement[0]
         }
       })
     },
     methods: {
-      show(index){
-        this.announcement = this.announcementArray[index]
+      show(name){
+          console.log(name)
+        this.selectAnnouncement = name
+        axios.get('user/getAnnouncement.do', {
+          params: {
+            announcementId: name,
+            needContent: 1
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.announcement = response.data.result.announcement[0]
+          }
+        })
       }
     },
   }
