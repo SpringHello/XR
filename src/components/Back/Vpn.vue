@@ -255,6 +255,9 @@
       })
     },
     data(){
+      const validaRegisteredName = regExp.validaRegisteredName
+      var pane = sessionStorage.getItem('pane') || 'remote'
+      sessionStorage.removeItem('pane')
       // 校验接入点用户名
       const validateUserName = (rule, value, callback) => {
         if (!/^\w{1,6}$/.test(value)) {
@@ -262,10 +265,16 @@
         }
         callback()
       }
-
-      const validaRegisteredName = regExp.validaRegisteredName
-      var pane = sessionStorage.getItem('pane') || 'remote'
-      sessionStorage.removeItem('pane')
+      const validalength = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('请输入用户名'))
+        }
+        if (value.length>8) {
+          callback(new Error('长度小于等于8位'))
+        } else {
+          callback()
+        }
+      }
       return {
         $store,
         loadingMessage: '',
@@ -288,7 +297,7 @@
         },
         newRemoteAccessFormValidate: {
           userName: [
-            {required: true, message: '请输入用户名', trigger: 'blur'}
+            {required: true, validator: validalength, trigger: 'blur'}
           ],
           password: [
             {required: true, message: '请输入密码', trigger: 'blur'}
@@ -395,7 +404,12 @@
             title: '用户名',
             width: 160,
             render: (h, object) => {
-              return h('span', object.row.username.split(',')[0])
+              var resultArr = []
+              var arr = object.row.username.split(',')
+              for(var i=0;i<arr.length;i++){
+                resultArr.push(h('p',{style: {lineHeight: '1.5'}}, arr[i]))
+              }
+             return h('div',resultArr)
             }
           },
           {
