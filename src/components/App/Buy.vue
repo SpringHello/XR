@@ -173,11 +173,13 @@
                       <p class="item-title">类型</p>
                     </div>
                     <div>
-                        <div v-for="item in PecsInfo.vmTypeList" :key="item.value" class="zoneItem"
+                      <Poptip  v-for="item in PecsInfo.vmTypeList" trigger="hover" :content="item.content" :key="item.value">
+                        <div  class="zoneItem"
                              :class="{zoneSelect:PecsInfo.vmType==item.value}"
                              @click="changeType(item.value)">
                           {{item.label}}
                         </div>
+                      </Poptip>
                     </div>
                   </div>
                 </div>
@@ -1186,9 +1188,9 @@
           // 下面是自定义配置的数据
           // 主机类型
           vmTypeList: [
-            {label: '标准型', value: 'standard'},
-            {label: '内存优化型', value: 'optimization'},
-            {label: '高I/O型', value: 'IO'}
+            {label: '标准型', value: 'standard',content: '经典1：2与1：4配比，实现计算、网络与资源的良好平衡，高性价比。'},
+            {label: '内存优化型', value: 'optimization',content: '内存优化型系统内存比例更高的实例，最高可达1：16，适用于对内存要求较高，数据量大的产品。'},
+            {label: '高I/O型', value: 'IO',content: '高I/O型提供更稳定，具备更高数据吞吐速度与读写速度的主机，适用于高吞吐量场景，如科学计算。'}
           ],
           vmType: 'standard',
 

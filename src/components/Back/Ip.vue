@@ -87,7 +87,11 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
-        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">{{newIPForm.cost}}元</span>
+        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">{{newIPForm.cost}}元 <span v-if="newIPForm.timeValue != ''">/</span>
+          <span v-if="newIPForm.timeType == 'year' && newIPForm.timeValue != ''" style="font-size: 16px;">{{newIPForm.timeValue}}年</span>
+          <span v-if="newIPForm.timeType == 'month' && newIPForm.timeValue != ''" style="font-size: 16px;">{{newIPForm.timeValue}}月</span>
+          <span v-if="newIPForm.timeType == 'current'">/ <span style="font-size: 16px;">时</span></span>
+        </span>
         <Button type="primary" @click="handleNewIPSubmit">完成配置</Button>
       </div>
     </Modal>
@@ -164,12 +168,13 @@
             </div>
           </Form-item>
           <Form-item label="资费" style="width: 80%">
-            <span style="font-family: MicrosoftYaHei;font-size: 24px;color: #2A99F2;line-height: 43px;">￥{{chargesForm.cost}}<span v-if="chargesForm.timeValue!=''">/</span>
-              <span v-if="chargesForm.timeType == 'year' && chargesForm.timeValue !=''" style="font-size: 15px;">{{chargesForm.timeValue}}年</span>
-              <span v-if="chargesForm.timeType == 'month' && chargesForm.timeValue !=''" style="font-size: 15px;">{{chargesForm.timeValue}}月</span>
+            <span style="font-family: MicrosoftYaHei;font-size: 24px;color: #2A99F2;line-height: 43px;">￥{{chargesForm.cost}}
+              <span v-if="chargesForm.timeValue!=''">/</span>
+              <span v-if="chargesForm.timeType == 'year' && chargesForm.timeValue !=''" style="font-size: 16px;">{{chargesForm.timeValue}}年</span>
+              <span v-if="chargesForm.timeType == 'month' && chargesForm.timeValue !=''" style="font-size: 16px;">{{chargesForm.timeValue}}月</span>
             </span>
-            <span style="font-family: MicrosoftYaHei;font-size: 18px;color: #2A99F2;line-height: 43px;display: block"
-                  v-if="chargesForm.discounts">（已优惠￥{{chargesForm.discounts}}/元）</span>
+            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #2A99F2;line-height: 43px;display: block;"
+                  v-if="chargesForm.discounts">（已优惠￥{{chargesForm.discounts}} /元）</span>
           </Form-item>
         </Form>
       </div>
@@ -193,7 +198,9 @@
             <span>Mbps</span>
           </Form-item>
           <Form-item label="资费" style="width: 80%">
-            <span style="font-family: MicrosoftYaHei;font-size: 24px;color: #2A99F2;line-height: 43px;">￥{{adjustForm.cost}}/ <span style="font-size: 15px;"></span></span>
+            <span style="font-family: MicrosoftYaHei;font-size: 24px;color: #2A99F2;line-height: 43px;">￥{{adjustForm.cost}}
+              <span>/ <span style="font-size: 16px;">{{adjustFormType}}</span></span>
+            </span>
           </Form-item>
         </Form>
       </div>
@@ -243,8 +250,10 @@
         adjustForm: {
           minBrand: 0,
           brand: 0,
-          cost: '0'
+          cost: '0',
+          caseType: 0
         },
+        adjustFormType: '',
         customTimeOptions: {
           renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}, {label: '实时', value: 'current'}],
           year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}],
@@ -767,6 +776,17 @@
         if (this.select) {
           this.adjustForm.minBrand = this.select.bandwith
           this.adjustForm.brand = this.select.bandwith
+          switch (this.select.caseType) {
+            case 1:
+              this.adjustFormType = '年'
+              break;
+            case 2:
+              this.adjustFormType = '月'
+              break;
+            case 3:
+              this.adjustFormType = '时'
+              break;
+          }
           this.showModal.adjust = true
         } else {
           this.$Message.warning('请选择1个弹性IP')
