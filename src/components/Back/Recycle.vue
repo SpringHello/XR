@@ -82,7 +82,7 @@
           },
           {
             title: '操作',
-            width: 150,
+            width: 180,
             render: (h, params) => {
               if (params.row.loading) {
                 return h('Spin', {})
@@ -108,6 +108,7 @@
               }, '还原')]), h('Poptip', {
                 props: {
                   title: '您确认删除该回收站资源吗？',
+                  width:208,
                   confirm: true
                 },
                 on: {
