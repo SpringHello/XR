@@ -1152,17 +1152,17 @@
 
           // 系统配置 需要购买公网ip时
           systemConfig: [
-            {kernel: '1', RAM: '1', bandWidth: '1', diskSize: '50', diskType: 'sas', diskDesc: '性能型'},
-            {kernel: '2', RAM: '4', bandWidth: '1', diskSize: '50', diskType: 'sas', diskDesc: '性能型'},
-            {kernel: '4', RAM: '4', bandWidth: '2', diskSize: '50', diskType: 'ssd', diskDesc: '超高性能型'},
-            {kernel: '4', RAM: '8', bandWidth: '2', diskSize: '50', diskType: 'ssd', diskDesc: '超高性能型'}
+            {kernel: '1', RAM: '1', bandWidth: '1', diskSize: '40', diskType: 'sas', diskDesc: '性能型'},
+            {kernel: '2', RAM: '4', bandWidth: '1', diskSize: '40', diskType: 'sas', diskDesc: '性能型'},
+            {kernel: '4', RAM: '4', bandWidth: '2', diskSize: '40', diskType: 'ssd', diskDesc: '超高性能型'},
+            {kernel: '4', RAM: '8', bandWidth: '2', diskSize: '40', diskType: 'ssd', diskDesc: '超高性能型'}
           ],
           // 系统配置 不需要购买公网ip时
           systemConfigNoNet: [
-            {kernel: '1', RAM: '1', bandWidth: '0', diskSize: '50', diskType: 'sas', diskDesc: '性能型'},
-            {kernel: '2', RAM: '4', bandWidth: '0', diskSize: '50', diskType: 'sas', diskDesc: '性能型'},
-            {kernel: '4', RAM: '4', bandWidth: '0', diskSize: '50', diskType: 'ssd', diskDesc: '超高性能型'},
-            {kernel: '4', RAM: '8', bandWidth: '0', diskSize: '50', diskType: 'ssd', diskDesc: '超高性能型'}
+            {kernel: '1', RAM: '1', bandWidth: '0', diskSize: '40', diskType: 'sas', diskDesc: '性能型'},
+            {kernel: '2', RAM: '4', bandWidth: '0', diskSize: '40', diskType: 'sas', diskDesc: '性能型'},
+            {kernel: '4', RAM: '4', bandWidth: '0', diskSize: '40', diskType: 'ssd', diskDesc: '超高性能型'},
+            {kernel: '4', RAM: '8', bandWidth: '0', diskSize: '40', diskType: 'ssd', diskDesc: '超高性能型'}
           ],
           // 选中的系统配置
           currentSystem: {kernel: '1', RAM: '1', bandWidth: '1', diskSize: '50', diskType: 'sas', diskDesc: '性能型'},

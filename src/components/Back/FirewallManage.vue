@@ -301,8 +301,21 @@
           },
           {
             title: '操作',
-            width: 100,
+            width: 150,
             render: (h, params) => {
+              const message = params.row._status == 1 ? '规则创建中...' : '规则删除中...'
+              if (params.row._status) {
+                return h('div', [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', {
+                  style: {
+                    verticalAlign: 'middle'
+                  }
+                }, message)])
+              }
               return h('div', {},
                 [
                   h('Poptip', {
@@ -395,63 +408,91 @@
       // 提交创建规则请求
       handleSubmit () {
         this.$refs.newRuleFormValidate.validate(validate => {
-          if (validate) {
-            if (this.newRuleForm.protocol == 'ALL' || this.newRuleForm.protocol == 'ICMP') {
-              this.newRuleForm.startPort = 1
-              this.newRuleForm.endPort = 65535
-            }
-            this.showModal.createRule = false
-            this.loadingMessage = '正在创建规则，请稍候'
-            this.loading = true
-            this.$http.get('network/createNetworkACL.do', {
-              params: {
-                name: this.newRuleForm.name,
-                way: this.newRuleForm.way,
-                protocol: this.newRuleForm.protocol,
+            if (validate) {
+              if (this.newRuleForm.protocol == 'ALL' || this.newRuleForm.protocol == 'ICMP') {
+                this.newRuleForm.startPort = 1
+                this.newRuleForm.endPort = 65535
+              }
+              this.showModal.createRule = false
+              let data = {
+                acllistitemname: this.newRuleForm.name,
                 itemid: this.newRuleForm.itemid,
-                cdir: this.newRuleForm.cidr,
-                startport: this.newRuleForm.startPort,
-                endport: this.newRuleForm.endPort,
-                acllistid: sessionStorage.getItem('firewallId'),
-                access: this.newRuleForm.access
+                agreement: this.newRuleForm.protocol,
+                operation: this.newRuleForm.access == 'Allow' ? '接受' : '拒绝',
+                _status: 1
               }
-            }).then(response => {
-              if (response.status == 200 && response.data.status == 1
-              ) {
-                this.loading = false
-                this.$Message.success({
-                  content: response.data.message
-                })
-                this.$http.get('network/listaclListItem.do', {
-                  params: {
-                    aclListId: sessionStorage.getItem('firewallId')
-                  }
-                }).then(response => {
-                  this.setData(response)
-                })
+              if (this.newRuleForm.way == 'Egress') {
+                this.upInformation.tableData.push(data)
+              } else {
+                this.downInformation.tableData.push(data)
               }
-              else {
-                this.loading = false
-                this.$message.error({
-                  content: response.data.message
-                })
-              }
-            })
+              //this.loadingMessage = '正在创建规则，请稍候'
+              //this.loading = true
+              this.$http.get('network/createNetworkACL.do', {
+                params: {
+                  name: this.newRuleForm.name,
+                  way: this.newRuleForm.way,
+                  protocol: this.newRuleForm.protocol,
+                  itemid: this.newRuleForm.itemid,
+                  cdir: this.newRuleForm.cidr,
+                  startport: this.newRuleForm.startPort,
+                  endport: this.newRuleForm.endPort,
+                  acllistid: sessionStorage.getItem('firewallId'),
+                  access: this.newRuleForm.access
+                }
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  //this.loading = false
+                  this.$Message.success({
+                    content: response.data.message
+                  })
+                  this.$http.get('network/listaclListItem.do', {
+                    params: {
+                      aclListId: sessionStorage.getItem('firewallId')
+                    }
+                  }).then(response => {
+                    this.setData(response)
+                  })
+                }
+                else {
+                  this.$http.get('network/listaclListItem.do', {
+                    params: {
+                      aclListId: sessionStorage.getItem('firewallId')
+                    }
+                  }).then(response => {
+                    this.setData(response)
+                  })
+                  //this.loading = false
+                  this.$message.error({
+                    content: response.data.message
+                  })
+                }
+              })
+            }
           }
-        }
-      )
+        )
       },
       // 删除规则
       del(aclId){
-        this.loadingMessage = '正在删除规则，请稍候'
-        this.loading = true
+        //this.loadingMessage = '正在删除规则，请稍候'
+        //this.loading = true
+        this.upInformation.tableData.forEach(item => {
+          if (item.id == aclId) {
+            this.$set(item, '_status', 2)
+          }
+        })
+        this.downInformation.tableData.forEach(item => {
+          if (item.id == aclId) {
+            this.$set(item, '_status', 2)
+          }
+        })
         this.$http.get('network/deleteNetworkACL.do', {
           params: {
             id: aclId
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.loading = false
+            //this.loading = false
             this.$Message.success({
               content: response.data.message
             })
@@ -463,7 +504,14 @@
               this.setData(response)
             })
           } else {
-            this.loading = false
+            this.$http.get('network/listaclListItem.do', {
+              params: {
+                aclListId: sessionStorage.getItem('firewallId')
+              }
+            }).then(response => {
+              this.setData(response)
+            })
+            //this.loading = false
             this.$message.error({
               content: response.data.message
             })

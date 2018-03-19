@@ -123,12 +123,13 @@
         <div ref="qq" style="overflow: hidden">
           <div class="wrapper">
             <div v-for="(qq,index) of QQInfo">
-              <Tooltip :content="qq.value?'在线咨询':'请留言'" placement="top">
-                <a target="_blank" :href="`tencent://message/?uin=${qq.key}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
+              <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
+                <a target="_blank"
+                   :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
                    style="color:rgb(73, 80, 96)">
                 <img src="./assets/img/app/QQ.png">
-                <span>新睿云-0{{index+1}}</span>
-                <i :class="{inline:qq.value}"></i>
+                <span>{{qq.servicename}}</span>
+                <i :class="{inline:qq.qqstatus}"></i>
                 </a>
               </Tooltip>
             </div>
@@ -254,12 +255,7 @@
       })
       // QQ客服在线情况
       this.$http.get('network/getQQCustomerServiceStatus.do').then(response => {
-        for (let key in response.data.result) {
-          this.QQInfo.push({
-            key,
-            value: response.data.result[key]
-          })
-        }
+        this.QQInfo = response.data.result
       })
       this.notice()
     },
