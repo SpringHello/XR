@@ -87,7 +87,10 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
-        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">{{newIPForm.cost}}元</span>
+        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">{{newIPForm.cost}}元 <span v-if="newIPForm.timeValue != ''">/</span>
+          <span v-if="newIPForm.timeType == 'year' && newIPForm.timeValue != ''" style="font-size: 16px;">{{newIPForm.timeValue}}年</span>
+          <span v-if="newIPForm.timeType == 'month' && newIPForm.timeValue != ''" style="font-size: 16px;">{{newIPForm.timeValue}}月</span>
+        </span>
         <Button type="primary" @click="handleNewIPSubmit">完成配置</Button>
       </div>
     </Modal>
@@ -165,10 +168,10 @@
           </Form-item>
           <Form-item label="资费" style="width: 80%">
             <span style="font-family: MicrosoftYaHei;font-size: 24px;color: #2A99F2;line-height: 43px;">￥{{chargesForm.cost}}<span v-if="chargesForm.timeValue!=''">/</span>
-              <span v-if="chargesForm.timeType == 'year' && chargesForm.timeValue !=''" style="font-size: 15px;">{{chargesForm.timeValue}}年</span>
-              <span v-if="chargesForm.timeType == 'month' && chargesForm.timeValue !=''" style="font-size: 15px;">{{chargesForm.timeValue}}月</span>
+              <span v-if="chargesForm.timeType == 'year' && chargesForm.timeValue !=''" style="font-size: 16px;">{{chargesForm.timeValue}}年</span>
+              <span v-if="chargesForm.timeType == 'month' && chargesForm.timeValue !=''" style="font-size: 16px;">{{chargesForm.timeValue}}月</span>
             </span>
-            <span style="font-family: MicrosoftYaHei;font-size: 18px;color: #2A99F2;line-height: 43px;display: block"
+            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #2A99F2;line-height: 43px;display: block;"
                   v-if="chargesForm.discounts">（已优惠￥{{chargesForm.discounts}}/元）</span>
           </Form-item>
         </Form>
