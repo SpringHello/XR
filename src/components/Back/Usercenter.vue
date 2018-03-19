@@ -1206,7 +1206,7 @@
           {
             title: '操作',
             align: 'left',
-            width: 150,
+            width: 180,
             render: (h, params) => {
               return h('div', [
                 h('span', {
@@ -1223,6 +1223,7 @@
                 h('Poptip', {
                   props: {
                     title: '您确认删除该联系人吗？',
+                    width:208,
                     confirm: true
                   },
                   on: {

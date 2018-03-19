@@ -173,11 +173,13 @@
                       <p class="item-title">类型</p>
                     </div>
                     <div>
-                        <div v-for="item in PecsInfo.vmTypeList" :key="item.value" class="zoneItem"
+                      <Poptip  v-for="item in PecsInfo.vmTypeList" trigger="hover" :content="item.content" :key="item.value">
+                        <div  class="zoneItem"
                              :class="{zoneSelect:PecsInfo.vmType==item.value}"
                              @click="changeType(item.value)">
                           {{item.label}}
                         </div>
+                      </Poptip>
                     </div>
                   </div>
                 </div>
@@ -868,24 +870,24 @@
                 <p class="item" v-if="prod.createType=='fast'" style="margin-top: 10px"><span class="title"
                                                                                               style="vertical-align: middle">价格</span>
                   <span class="hidden">#</span>
-                  <span style="font-size: 24px;color: #F85E1D;vertical-align: middle">{{prod.cost.toFixed(2)}}元</span>
+                  <span style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.cost.toFixed(2)}}元</span>
                   <ul style="float: right;font-size: 14px">
                   <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-right: -5px;" v-if="prod.count == 1">-</span>
-                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-right: -5px;cursor: pointer"@click="prod.count -= 1" v-else>-</span>
+                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-right: -5px;cursor: pointer"@click="prod.count -= 1,prod.cost *= prod.count" v-else>-</span>
                   <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
                   <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-left: -5px;" v-if="prod.count == 5" >+</span>
-                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-left: -5px;cursor: pointer" @click="prod.count += 1" v-else>+</span></ul>
+                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-left: -5px;cursor: pointer" @click="prod.count += 1,prod.cost *= prod.count" v-else>+</span></ul>
                 </p>
                 <p class="item" v-if="prod.createType=='custom'" style="margin-top: 10px;"><span
                   class="title" style="vertical-align: middle">价格</span><span
                   class="hidden">#</span><span
-                  style="font-size: 24px;color: #F85E1D;vertical-align: middle">{{prod.customCost.toFixed(2)}}元</span>
+                  style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.customCost.toFixed(2)}}元</span>
                 <ul style="float: right;font-size: 14px">
                   <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-right: -5px;" v-if="prod.count == 1">-</span>
-                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-right: -5px;cursor: pointer"@click="prod.count -= 1" v-else>-</span>
+                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-right: -5px;cursor: pointer"@click="prod.count -= 1,prod.customCost *= prod.count" v-else>-</span>
                   <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
                   <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-left: -5px;" v-if="prod.count == 5" >+</span>
-                <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-left: -5px;cursor: pointer" @click="prod.count += 1" v-else>+</span></ul>
+                <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-left: -5px;cursor: pointer" @click="prod.count += 1,prod.customCost *= prod.count" v-else>+</span></ul>
                 </p>
               </div>
               <!--磁盘清单字段-->
@@ -903,7 +905,7 @@
                 <p class="item" style="margin-top: 10px"><span class="hidden">$</span><span class="title" style="vertical-align: middle">价格</span>
                   <span class="hidden">#</span>
                   <span
-                    style="font-size: 24px;color: #F85E1D;vertical-align: middle">{{prod.dataDiskCost.toFixed(2)}}元</span>
+                    style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.dataDiskCost.toFixed(2)}}元</span>
                 </p>
               </div>
 
@@ -923,7 +925,7 @@
                   <span class="hidden">$</span>
                   <span class="title" style="vertical-align: middle">价格</span>
                   <span class="hidden">#</span>
-                  <span style="font-size: 24px;color: #F85E1D;vertical-align: middle">{{prod.cost.toFixed(2)}}元</span>
+                  <span style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.cost.toFixed(2)}}元</span>
                 </p>
               </div>
             </div>
@@ -934,7 +936,7 @@
             <p
               style="font-size: 14px;margin:10px 0px;vertical-align:middle;color: #666666;line-height: 25px;text-align: center">
               总计：<span class="hidden">#</span><span
-              style="font-size: 24px;color: #F85E1D;line-height: 25px;vertical-align: middle;margin-left:10px;">{{billListCost.toFixed(2)}}元</span>
+              style="font-size: 24px;color: #F85E1D;line-height: 25px;vertical-align: middle;margin-left:10px;user-select: none;">{{billListCost.toFixed(2)}}元</span>
             </p>
             <button @click="buyNow"
                     style="display:block;width:300px;margin-bottom: 10px;cursor: pointer;outline: none;padding: 10px 38px; border: 1px solid #2A99F2;border-radius: 10px;background-image: linear-gradient(-42deg, #377DFF 0%, #4481EB 100%);border-radius: 10px;font-size: 16px;color: #FFF;">
@@ -1186,9 +1188,9 @@
           // 下面是自定义配置的数据
           // 主机类型
           vmTypeList: [
-            {label: '标准型', value: 'standard'},
-            {label: '内存优化型', value: 'optimization'},
-            {label: '高I/O型', value: 'IO'}
+            {label: '标准型', value: 'standard',content: '经典1：2与1：4配比，实现计算、网络与资源的良好平衡，高性价比。'},
+            {label: '内存优化型', value: 'optimization',content: '内存优化型系统内存比例更高的实例，最高可达1：16，适用于对内存要求较高，数据量大的产品。'},
+            {label: '高I/O型', value: 'IO',content: '高I/O型提供更稳定，具备更高数据吞吐速度与读写速度的主机，适用于高吞吐量场景，如科学计算。'}
           ],
           vmType: 'standard',
 

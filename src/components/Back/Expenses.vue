@@ -64,25 +64,24 @@
           </Tab-pane>
           <Tab-pane label="订单管理" name="orderManage">
             <div class="ordertype">
-              <div style="display: inline-block">
-                <span class="order_s1">订单类型</span>
-                <Select v-model="order_type" @on-change="changeOrder" style="width:231px;margin-left: 10px">
-                  <Option v-for="item in orderList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
-              </div>
-              <div style="display: inline-block">
-                <span class="order_s2"> 订单创建时间/订单结束时间</span>
-                <Row style="display: inline-block;margin-left: 10px;position: relative;top: 12px">
-                  <Col span="12">
-                  <Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start"
-                               placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
-                  </Col>
-                </Row>
-              </div>
-              <div style="display: inline-block">
-                <Button type="primary" style="margin-left: 322px" @click="orderPay" :disabled="payDisabled">支付</Button>
-                <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除</Button>
-              </div>
+              <span class="order_s1">订单类型</span>
+              <Select v-model="order_type" @on-change="changeOrder" style="width:231px;margin-left: 10px">
+                <Option v-for="item in orderList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+              <span class="order_s2"> 订单时间</span>
+              <Select v-model="timeType" style="width:231px;margin-left: 10px" @on-change="searchOrderByType">
+                <Option v-for="item in timeTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+              <span style="line-height: 30px;">～</span>
+              <Row>
+                <Col span="12">
+                <Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start"
+                             placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
+                </Col>
+              </Row>
+              <Button type="primary" style="margin-left: 197px" @click="orderPay" :disabled="payDisabled">支付</Button>
+              <Button type="primary" style="margin-left: 10px" @click="deleteOrder" :disabled="deleteDisabled">删除
+              </Button>
             </div>
             <div class="orderdata">
               <Table highlight-row :columns="columns_order" :data="orderData" @on-selection-change="select"></Table>
@@ -577,6 +576,17 @@
         billTabledata: [],
         name: 'accountSummary',
         ordertotal: 0,
+        timeType: '',
+        timeTypeList: [
+          {
+            label: '订单创建时间',
+            value: '1'
+          },
+          {
+            label: '订单结束时间',
+            value: '2'
+          }
+        ],
         ordertime: '',
         time: '',
         total: 0,
@@ -663,7 +673,7 @@
         ],
         orderList: [
           {
-            value: 'all',
+            value: '',
             label: '全部订单'
           },
           {
@@ -1104,17 +1114,29 @@
           case 'pay':
             this.init()
             this.order_type = '1'
+            this.timeType = '1'
             this.searchOrderByType()
             break
           case 'notpay':
             this.init()
             this.order_type = '0'
+            this.timeType = '1'
             this.searchOrderByType()
             break
         }
       },
       searchOrderByType() {
-        this.$http.get('user/searchOrderByType.do?pageSize=' + this.pageSize + '&page=' + this.order_currentPage + '&paymentStatus=' + this.order_type + '&startTime=' + this.order_dateRange[0] + '&endTime=' + this.order_dateRange[1]).then(response => {
+        var url = ''
+        switch (this.timeType) {
+          case '':
+          case '1':
+            url = 'user/searchOrderByType.do?pageSize=' + this.pageSize + '&page=' + this.order_currentPage + '&paymentStatus=' + this.order_type + '&startTime=' + this.order_dateRange[0] + '&endTime=' + this.order_dateRange[1]
+            break
+          case '2':
+            url = 'user/searchOrderByType.do?pageSize=' + this.pageSize + '&page=' + this.order_currentPage + '&paymentStatus=' + this.order_type + '&aleradyStartTime=' + this.order_dateRange[0] + '&alreadyEndTime=' + this.order_dateRange[1]
+            break
+        }
+        this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.orderData = response.data.result.data
             this.ordertotal = response.data.result.totle
@@ -1554,13 +1576,16 @@
           }
         }
         .ordertype {
+          display: inline-flex;
           margin-top: 15px;
           .order_s1 {
+            line-height: 30px;
             font-family: Microsoft Yahei, 微软雅黑;
             font-size: 12px;
             color: rgba(17, 17, 17, 0.65);
           }
           .order_s2 {
+            line-height: 30px;
             font-family: Microsoft Yahei, 微软雅黑;
             font-size: 12px;
             color: rgba(17, 17, 17, 0.65);
