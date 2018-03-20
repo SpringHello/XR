@@ -87,10 +87,10 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
-        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">{{newIPForm.cost}}元 <span v-if="newIPForm.timeValue != ''">/</span>
+        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">￥{{newIPForm.cost}} <span v-if="newIPForm.timeValue != ''">/</span>
           <span v-if="newIPForm.timeType == 'year' && newIPForm.timeValue != ''" style="font-size: 16px;">{{newIPForm.timeValue}}年</span>
           <span v-if="newIPForm.timeType == 'month' && newIPForm.timeValue != ''" style="font-size: 16px;">{{newIPForm.timeValue}}月</span>
-          <span v-if="newIPForm.timeType == 'current'">/ <span style="font-size: 16px;">时</span></span>
+          <!--<span v-if="newIPForm.timeType == 'current'">/ <span style="font-size: 16px;">时</span></span>-->
         </span>
         <Button type="primary" @click="handleNewIPSubmit">完成配置</Button>
       </div>

@@ -1,0 +1,831 @@
+<template>
+  <div>
+    <div class="banner">
+      <div style="position: relative; top: 15%; left: 20%;">
+        <p>庆新节点上线</p>
+        <p style="font-size: 44px;line-height: 62px;font-family: PingFangSC-Light;">配置升级 | 限时低价体验</p>
+        <!--<button>立即领取</button>-->
+      </div>
+      <ul class="banner_text">
+        <li>DELL第十四代服务器</li>
+        <li>采用高端Intel E5 V4系列CPU</li>
+        <li>全新高速DDR4内存</li>
+        <li>HDS G系列存储</li>
+        <li>IOPS高达120000+的极致性能</li>
+      </ul>
+    </div>
+    <div style="background:#2B2E47;">
+      <div class="center">
+        <div class="process">
+          <h2>活动流程</h2>
+          <div class="items">
+            <dl>
+              <dt v-if="isLogin==1"><img src="../../../assets/img/active/newNodes/zc.png"></dt>
+              <dt v-else><img src="../../../assets/img/active/vps/one.png"></dt>
+              <dd :class="{select:isLogin==1}">① 新用户注册登录<i
+                :class="{select:(companyauth==0&&isLogin==1)||(personalauth==0&&isLogin==1)}"></i>
+              </dd>
+            </dl>
+            <dl>
+              <dt v-if="companyauth==0||personalauth==0"><img src="../../../assets/img/active/newNodes/rz.png">
+              </dt>
+              <dt v-else><img src="../../../assets/img/active/vps/five.png"></dt>
+              <dd :class="{select:companyauth==0||personalauth==0}">② 完成实名认证<i
+                :class="{select:(isLogin==1&&companyauth==0&&isReceive!=0)||(isLogin==1&&personalauth==0&&isReceive!=0)}"></i>
+              </dd>
+            </dl>
+            <dl>
+              <dt v-if="isReceive==0"><img src="../../../assets/img/active/vps/lingquzhuji.png"></dt>
+              <dt v-else><img src="../../../assets/img/active/newNodes/cy.png"></dt>
+              <dd :class="{select:isReceive!=0}">③ 参与活动</dd>
+            </dl>
+          </div>
+        </div>
+        <div class="active_one">
+          <img style="position: absolute; left: -159px; bottom: 60px;"
+               src="../../../assets/img/active/newNodes/icon_one.png">
+          <h2 style="margin-bottom: 20px">限时<img style="position: relative;top: 32px;margin: 0 5px"
+                                                 src="../../../assets/img/active/newNodes/threez.png">折秒杀</h2>
+          <p>每天<span>10：00开抢</span>，每款产品<span>限量20台</span>，每人仅限参与一次</p>
+          <div class="config_one">
+            <div v-for="(item,index) in config_one" class="content">
+              <div class="title">
+                <p>{{ item.title}}</p>
+              </div>
+              <div class="info">
+                <p><span>{{ item.discript}}</span></p>
+                <div class="info_right">
+                  <Select v-model="item.node" style="width:135px;margin-right: 10px" placeholder="节点选择">
+                    <Option v-for="item in nodeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                  </Select>
+                  <Select v-model="item.system" style="width:135px" placeholder="镜像选择">
+                    <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                  </Select>
+                  <div class="price">
+                    <img src="../../../assets/img/active/newNodes/tag.png">
+                    <span class="s1">¥302.4／1年</span>
+                    <span class="s2">原价1008／1年</span>
+                  </div>
+                  <button>立即抢购</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="active_two">
+          <h2 style="margin-bottom: 20px">套餐4折起</h2>
+          <p>每人每款限购2台，<span>3个月5折、6个月4折</span></p>
+          <div class="config_two">
+            <div v-for="(item,index) in config_two" class="content">
+              <div class="title">
+                <p>{{ item.discript }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="rules">
+          <h2>活动规则</h2>
+          <dl>
+            <dt>1、活动对象：</dt>
+            <dd>所有通过过实名／企业认证审核的用户。</dd>
+          </dl>
+          <dl>
+            <dt>2、活动规则：</dt>
+            <dd>
+              1） 此次活动仅限北方二区、华中二区节点；
+            </dd>
+            <dd>
+              2） 同一用户可选择多款4折、5折产品进行优惠购买，但不可重复参加此次3折秒杀活动；
+            </dd>
+            <dd>
+              3） 未领取本次活动优惠券、直接在控制台购买不享受活动优惠待遇；
+            </dd>
+            <dd>
+              4） 此次活动产品已属超低优惠，不可再与其他优惠券叠加使用；
+            </dd>
+            <dd>
+              5） 活动产品中的资源可随时进行升级，升级费用按新睿云标准收费进行收取；
+            </dd>
+            <dd>
+              6） 产品使用期间，若对免费资源进行了销毁，则视为放弃此产品优惠使用权，我司不予退费或恢复。
+            </dd>
+          </dl>
+          <dl>
+            <dt> 3、活动主机7天内可无理由退款。</dt>
+          </dl>
+          <dl>
+            <dt>4、为保证活动的公平公正，新睿云有权对恶意刷抢（如通过程序等技术手段）活动资源、利用资源从事违法违规行为的用户收回使用资格。</dt>
+          </dl>
+          <dl>
+            <dt>5、活动最终解释权在法律范围内归新睿云所有。</dt>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <Modal v-model="loginModal" width="420" class="login-modal">
+      <p slot="header" style="color:#5F5F5F;text-align:center;height: 30px;padding-top: 5px;">
+        <span style="font-family: PingFangSC-Regular;font-size: 26px;">登录</span>
+      </p>
+      <div class="body">
+        <form>
+          <div>
+            <span :class="{warning:vailForm.loginname.warning}">{{vailForm.loginname.message}}</span>
+            <input type="text" autocomplete="off" v-model="form.loginname" :placeholder="form.loginnamePlaceholder"
+                   @blur="vail('loginname')" @focus="focus('loginname')" @input="isCorrect('loginname')">
+          </div>
+          <div>
+            <span :class="{warning:vailForm.password.warning}">{{vailForm.password.message}}</span>
+            <input type="password" autocomplete="off" v-model="form.password" :placeholder="form.passwordPlaceholder"
+                   @blur="vail('password')" @focus="focus('password')" @input="isCorrect('password')"
+                   v-on:keyup.enter="submit">
+          </div>
+          <div style="position:relative">
+            <span>{{vailForm.vailCode.message}}</span>
+            <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
+                   :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
+                   @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
+            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+          </div>
+        </form>
+      </div>
+      <div slot="footer" class="foot">
+        <button :class="{disabled:disabled}" :disabled="disabled==true" @click="submit">登录</button>
+        <div>
+          <!--span class="checkBox" :class="{agree:agree}" @click="toggle"></span>&nbsp;<span>我已阅读并同意</span><span
+          style="color:#0EB4FA;cursor:pointer;" @click="showRules">《睿云用户使用协议》</span-->
+          <router-link to="register" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:left;font-size: 14px">
+            立即注册
+          </router-link>
+          <router-link to="reset" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:right;font-size:14px">
+            忘记密码
+          </router-link>
+        </div>
+      </div>
+    </Modal>
+  </div>
+</template>
+<style rel="stylesheet/less" lang="less" scoped>
+  .banner {
+    height: 560px;
+    position: relative;
+    height: 560px;
+    background: linear-gradient(90.8deg, rgba(200, 85, 254, 1), rgba(6, 46, 141, 1));
+    overflow: hidden;
+    .banner_text {
+      margin: 15% auto;
+      display: flex;
+      justify-content: space-around;
+      width: 1200px;
+      height: 80px;
+      background: linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
+      opacity: 0.8;
+      li {
+        &::before {
+          content: '';
+          width: 10px;
+          height: 10px;
+          background: #03FAEF;
+          display: inline-block;
+          border-radius: 50%;
+          margin-right: 10px;
+        }
+        font-size: 14px;
+        font-family: PingFangSC-Regular;
+        color: #FFFFFF;
+        line-height: 78px;
+      }
+    }
+    p {
+      margin-bottom: 20px;
+      font-size: 80px;
+      font-family: PingFangSC-Medium;
+      color: rgba(255, 255, 255, 1);
+      line-height: 112px;
+    }
+  }
+
+  .type {
+    margin: 0 auto 0;
+    height: 60px;
+    color: #333;
+    font-size: 24px;
+    line-height: 100px;
+    width: 1200px;
+    background-color: #fff;
+    display: flex;
+    cursor: pointer;
+    span {
+      display: inline-block;
+      width: 50%;
+      text-align: center;
+      font-family: PingFangSC-Regular;
+      font-size: 24px;
+      color: #666666;
+      line-height: 60px;
+      img {
+        position: relative;
+        top: 10px;
+        margin-right: 20px;
+      }
+    }
+
+    .active {
+      position: relative;
+      color: #377DFF;
+      &::after {
+        position: absolute;
+        bottom: 0px;
+        content: '';
+        width: 100%;
+        height: 2px;
+        display: block;
+        background: #357AFC;
+      }
+    }
+  }
+
+  .center {
+    width: 1200px;
+    margin: 0 auto;
+    z-index: 2;
+    h2 {
+      margin-bottom: 40px;
+      font-weight: normal;
+      font-family: PingFangSC-Medium;
+      font-size: 36px;
+      color: #E400FF;
+      text-align: center;
+      &::before {
+        content: '';
+        width: 12px;
+        height: 12px;
+        display: inline-block;
+        background: #E400FF;
+        margin-right: 20px;
+        transform: translateY(-6px) rotate(45deg);
+      }
+      &::after {
+        content: '';
+        width: 12px;
+        height: 12px;
+        display: inline-block;
+        background: #E400FF;
+        margin-left: 20px;
+        transform: translateY(-6px) rotate(45deg);
+      }
+    }
+    .process {
+      text-align: center;
+      padding: 60px 200px 60px;
+      position: relative;
+      .items {
+        display: flex;
+        justify-content: space-between;
+        text-align: center;
+        dl {
+          width: 270px;
+          dt {
+            margin: 0 auto;
+            width: 100px;
+            height: 100px;
+            background-size: cover;
+            color: #ccc;
+            line-height: 100px;
+            span {
+              text-align: center;
+              font-size: 45px;
+            }
+            img {
+              vertical-align: middle;
+            }
+          }
+          dd {
+            margin-top: 20px;
+            font-family: PingFangSC-Regular;
+            font-size: 16px;
+            color: #ffffff;
+            &.select {
+              color: #E400FF;
+            }
+            i {
+              display: inline-block;
+              width: 10px;
+              height: 10px;
+              border-right: 1px solid #ffffff;
+              border-bottom: 1px solid #ffffff;
+              transform: translateY(7px) rotate(311deg);
+              float: right;
+              top: 21px;
+              &.select {
+                border-right: 1px solid #E400FF;
+                border-bottom: 1px solid #E400FF;;
+              }
+            }
+          }
+        }
+        dl.spacer {
+          width: 200px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+      }
+    }
+    .active_one {
+      padding: 40px 0 60px 0;
+      position: relative;
+      > p {
+        text-align: center;
+        font-size: 16px;
+        font-family: PingFangSC-Regular;
+        color: rgba(102, 102, 102, 1);
+        span {
+          color: #E400FF;
+        }
+      }
+      .config_one {
+        margin-top: 50px;
+        display: flex;
+        justify-content: space-between;
+        .content {
+          background: #FFFFFF;
+          width: 590px;
+          .title {
+            height: 72px;
+            text-align: center;
+            background: linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
+            p {
+              font-size: 30px;
+              font-family: PingFangSC-Medium;
+              color: rgba(255, 255, 255, 1);
+              line-height: 72px;
+            }
+          }
+          .info {
+            display: -webkit-box;
+            padding: 16px 20px;
+            p {
+              width: 45%;
+              border-right: 1px solid #CECECE;
+              height: 150px;
+              padding: 20px;
+              span {
+                font-size: 14px;
+                font-family: PingFangSC-Regular;
+                color: #333333;
+                line-height: 28px;
+              }
+            }
+            .info_right {
+              padding: 0 20px;
+              .price {
+                height: 18px;
+                margin-top: 25px;
+                .s1 {
+                  font-size: 22px;
+                  font-family: Arial-Black;
+                  color: rgba(221, 39, 41, 1);
+                  line-height: 24px;
+                }
+                .s2 {
+                  font-size: 14px;
+                  font-family: PingFangSC-Regular;
+                  color: rgba(102, 102, 102, 1);
+                  line-height: 14px;
+                  text-decoration: line-through;
+                }
+              }
+              button {
+                font-size: 18px;
+                font-family: PingFangSC-Regular;
+                color: rgba(255, 255, 255, 1);
+                background: #377DFF;
+                padding: 10px 40px;
+                outline: none;
+                border: none;
+                cursor: pointer;
+                margin-top: 20px;
+              }
+            }
+          }
+        }
+      }
+    }
+    .active_two {
+      padding: 40px 0 60px 0;
+      position: relative;
+      > p {
+        text-align: center;
+        font-size: 16px;
+        font-family: PingFangSC-Regular;
+        color: rgba(102, 102, 102, 1);
+        span {
+          color: #E400FF;
+        }
+      }
+      .config_two {
+        margin-top: 50px;
+        .content {
+          height: 254px;
+          background: #377DFF;
+          margin-bottom: 60px;
+          .title {
+            background-image: url("../../../assets/img/active/newNodes/config_banner.png");
+            text-align: center;
+            padding: 26px 0 16px;
+            p {
+              font-size: 18px;
+              font-family: PingFangSC-Regular;
+              //color:rgba(255,255,255,1);
+              color: #2A99F2;
+            }
+          }
+        }
+      }
+    }
+    .rules {
+      padding: 60px 120px;
+      font-family: PingFangSC;
+      position: relative;
+      dl {
+        color: #FFFFFF;
+        text-align: justify;
+        dt {
+          font-size: 14px;
+          color: #FFFFFF;
+          line-height: 28px;
+          font-weight: 600;
+        }
+        dd {
+          font-size: 12px;
+          color: #FFFFFF;
+          line-height: 27px;
+          padding-left: 20px;
+        }
+      }
+    }
+  }
+
+  .body {
+    height: 55%;
+    form {
+      margin-top: 15px;
+    }
+    input {
+      border: none;
+      border-bottom: 1px solid #ccc;
+      outline: none;
+      background: rgba(0, 0, 0, 0);
+      height: 50px;
+      font-size: 14px;
+      width: 80%;
+      margin: 0px auto;
+      display: block;
+      margin-bottom: 20px;
+      &:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0px 1000px white inset;
+      }
+      &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #B6B6B6;
+      }
+      &::-moz-placeholder { /* Firefox 19+ */
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #B6B6B6;
+      }
+      &:-ms-input-placeholder { /* IE 10+ */
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #B6B6B6;
+      }
+      &:-moz-placeholder { /* Firefox 18- */
+        font-family: PingFangSC-Regular;
+        font-size: 14px;
+        color: #B6B6B6;
+      }
+    }
+    span {
+      display: block;
+      width: 80%;
+      margin: 0px auto;
+      font-family: PingFangSC-Regular;
+      font-family: PingFangSC-Regular;
+      font-size: 14px;
+      color: #B6B6B6;
+      font-size: 14px;
+      line-height: 14px;
+      height: 14px;
+      transition: all .5s;
+      &.warning {
+        color: #F24747;
+      }
+    }
+    img {
+      width: 80px;
+      height: 30px;
+      position: absolute;
+      display: block;
+      bottom: 12px;
+      right: 43px;
+      cursor: pointer;
+      //background: #4990E2;
+      //border: 1px solid white;
+      border-radius: 3px;
+      font-family: PingFangSC-Regular;
+      font-size: 11px;
+      color: #FFFFFF;
+      letter-spacing: 0.71px;
+      outline: none;
+    }
+  }
+
+  .foot {
+    padding-top: 10px;
+    height: 32%;
+    button {
+      width: 80%;
+      margin: 0px auto;
+      display: block;
+      height: 45px;
+      background-color: #4990E2;
+      border: none;
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      color: #FFFFFF;
+      letter-spacing: 0.83px;
+      cursor: pointer;
+      margin-bottom: 15px;
+      &.disabled {
+        cursor: not-allowed;
+      }
+    }
+    .checkBox {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+      display: inline-block;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+    .agree {
+      background-color: #2d8cf0;
+      border-color: #2d8cf0;
+      position: relative;
+      &::after {
+        content: "";
+        display: table;
+        width: 4px;
+        height: 8px;
+        position: absolute;
+        top: 0px;
+        left: 3px;
+        border: 2px solid #fff;
+        border-top: 0;
+        border-left: 0;
+        transform: rotate(45deg) scale(1);
+      }
+    }
+    div {
+      width: 80%;
+      height: 35px;
+      margin: 0px auto;
+    }
+    span {
+      vertical-align: middle;
+      font-family: PingFangSC-Regular;
+      font-size: 14px;
+      letter-spacing: 0.83px;
+    }
+  }
+</style>
+<script type="text/ecmascript-6">
+  import regExp from '../../../util/regExp'
+
+  var messageMap = {
+    loginname: {
+      placeholder: '登录邮箱/手机号',
+      errorMessage: '请输入正确的邮箱/手机号'
+    },
+    password: {
+      placeholder: '密码',
+    },
+    vailCode: {
+      placeholder: '请输入验证码',
+    },
+  }
+  export default {
+    data() {
+      return {
+        company: false,
+        loginModal: false,
+        form: {
+          loginname: '',
+          password: '',
+          vailCode: '',
+          loginnamePlaceholder: '登录邮箱/手机号',
+          passwordPlaceholder: '密码',
+          vailCodePlaceholder: '请输入验证码',
+        },
+        vailForm: {
+          loginname: {
+            message: '',
+            warning: false
+          },
+          password: {
+            message: '',
+            warning: false
+          },
+          vailCode: {
+            message: '',
+            warning: false
+          },
+        },
+        imgSrc: 'user/getKaptchaImage.do',
+        agree: true,
+        personalauth: 1,
+        companyauth: 1,
+        isLogin: 0,
+        // 是否领取主机 0未领取
+        isReceive: 0,
+        userInfo: null,
+        config_one: [
+          {
+            title: '2C+4G+40G系统盘+5M 1年',
+            discript: '适用于日常运营活动、企业办公环境、小型开发测试环境、普通数据处理服务等场景。',
+            node: '',
+            system: ''
+          },
+          {
+            title: '4C+8G+40G系统盘+10M 1年',
+            discript: '适用于高并发应用业务部署、高内存大数据分析处理、分布式分析等业务场景。',
+            node: '',
+            system: ''
+          }
+        ],
+        config_two: [
+          {
+            discript: '适用于日常运营活动、企业办公环境、小型开发测试环境、普通数据处理服务等场景。',
+          },
+          {
+            discript: '适用于高并发应用业务部署、高内存大数据分析处理、分布式分析等业务场景。',
+          },
+          {
+            discript: '适用于对计算性能要求较高的企业运营活动、批量处理、分布式分析、游戏APP等业务场景。',
+          },
+          {
+            discript: '用于需要高网络性能、高计算资源的业务部署、广告服务、MMO游戏、视频编码等场景。',
+          }
+        ],
+        nodeList: [
+          {
+            label: '华中一区',
+            value: '1'
+          },
+          {
+            label: '华中二区',
+            value: '2'
+          }
+        ],
+        systemList: [
+          {
+            label: 'CentOS',
+            value: 'linux'
+          },
+          {
+            label: 'Windows',
+            value: 'windows'
+          },
+        ]
+      }
+    },
+    created(){
+      if (this.$store.state.userInfo != null) {
+        this.isLogin = 1
+        this.userInfo = this.$store.state.userInfo
+        this.companyauth = this.userInfo.companyauth
+        this.personalauth = this.userInfo.personalauth
+        this.isReceive = this.userInfo.activityInfo[0].companytype
+      }
+    },
+    components: {},
+    methods: {
+      vail(field) {
+        var text = this.form[field];
+        if (text == '') {
+          this.vailForm[field].message = ''
+          this.form[`${field}Placeholder`] = messageMap[field].placeholder
+          this.vailForm[field].warning = false;
+          return
+        }
+
+        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
+        if (!isLegal && field == 'loginname') {
+          this.vailForm[field].message = messageMap[field].errorMessage;
+          this.vailForm[field].warning = true
+        } else {
+          this.vailForm[field].message = messageMap[field].placeholder;
+          this.vailForm[field].warning = false
+        }
+      },
+      isCorrect(field) {
+        if (field == 'vailCode') {
+          //this.vailForm.vailCode.message = messageMap.vailCode.placeholder
+          this.vailForm.vailCode.warning = false
+        } else if (field == 'loginname') {
+          if (regExp.emailVail(this.form[field])) {
+            this.vailForm.loginname.message = messageMap.loginname.placeholder
+            this.vailForm.loginname.warning = false
+          }
+        } else {
+          if (regExp.passwordVail(this.form[field])) {
+            this.vailForm.loginname.message = messageMap.loginname.placeholder
+            this.vailForm.loginname.warning = false
+          }
+        }
+
+      },
+      focus(field) {
+        if (field == 'vailCode' && this.vailForm.loginname.message == '验证码错误') {
+          this.vailForm.loginname.message = messageMap.loginname.placeholder
+          this.vailForm.loginname.warning = false
+        }
+        if ((field == 'loginname' || field == 'password') && this.vailForm.loginname.message == '用户名或密码错误') {
+          this.vailForm.loginname.message = messageMap.loginname.placeholder
+          this.vailForm.loginname.warning = false
+        }
+        var text = this.form[field];
+        this.form[`${field}Placeholder`] = ''
+        if (text == '') {
+          this.vailForm[field].message = messageMap[field].placeholder
+          return
+        }
+        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
+
+        if (!isLegal && field == 'loginname') {
+          this.vailForm[field].message = messageMap[field].errorMessage;
+          this.vailForm[field].warning = true
+        } else {
+          this.vailForm[field].message = messageMap[field].placeholder;
+          this.vailForm[field].warning = false
+        }
+      },
+      submit() {
+        this.$http.get('user/login.do', {
+          params: {
+            username: this.form.loginname,
+            password: this.form.password,
+            vailCode: this.form.vailCode
+          }
+        }).then((response) => {
+            if (response.status == 200 && response.statusText == 'OK') {
+              if (response.data.status == 1) {
+                this.$router.go(0)
+              } else {
+                this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+                this.vailForm.loginname.message = response.data.message
+                this.vailForm.loginname.warning = true
+              }
+            }
+          }
+        )
+        ;
+      }
+    },
+    computed: {
+      disabled() {
+        return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
+      },
+      getUserInfo (){
+        if (this.$store.state.userInfo != null) {
+          this.isLogin = 1
+          return this.$store.state.userInfo
+        } else {
+          var parms = {
+            companyauth: 1,
+            personalauth: 1,
+            activityInfo: [
+              {
+                companytype: 0
+              },
+              {
+                companytype: 0
+              }
+            ]
+          }
+          this.isLogin = 0
+          return parms
+        }
+      }
+    },
+    watch: {
+      getUserInfo (val){
+        this.userInfo = val
+        this.companyauth = this.userInfo.companyauth
+        this.personalauth = this.userInfo.personalauth
+        this.isReceive = this.userInfo.activityInfo[0].companytype
+      }
+    }
+  }
+</script>

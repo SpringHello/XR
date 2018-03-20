@@ -437,7 +437,7 @@
           <Form-item label="选择弹性负载均衡名称" prop="loadbalanceroleid">
             <Select v-model="loadBalanceForm.loadbalanceroleid" placeholder="请选择" style="width:240px;">
               <Option v-for="(item,index) in listLoadBalanceRole" :key="index"
-                      :value="item.loadbalanceroleid||item.lbid">
+                      :value="item.loadbalanceroleid+item.type||item.lbid">
                 <span v-if="item.name">{{item.name}}</span>
                 <span v-if="item.lbname">{{item.lbname}}</span>
               </Option>
@@ -488,7 +488,7 @@
       </div>
     </Modal>
     <!-- 欠费tab页，续费弹窗 -->
-    <Modal v-model="showModal.Renew" width="590" :scrollable="true">
+    <Modal v-model="showModal.Renew" width="550" :scrollable="true">
       <div slot="header" class="modal-header-border">
         <span class="universal-modal-title">续费主机</span>
       </div>
@@ -688,11 +688,14 @@
           } else {
             this.showModal.balance = true
             // 获取负载均衡规则
-            var balanceUrl = `loadbalance/listLoadBalanceRole.do?zoneId=${$store.state.zone.zoneid}`
+            var balanceUrl = `loadbalance/listLoadBalanceRoleVM.do?zoneId=${$store.state.zone.zoneid}&VMId=${this.currentHost[0].computerid}`
             axios.get(balanceUrl)
               .then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   var publicLoadbalance = response.data.result.publicLoadbalance
+                  publicLoadbalance.forEach(item => {
+                    item.type = '#public'
+                  })
                   this.listLoadBalanceRole = publicLoadbalance.concat(response.data.result.internalLoadbalance)
                 }
               })
@@ -704,7 +707,8 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.showModal.balance = false
-            axios.get(`loadbalance/assignToLoadBalancerRule.do?zoneId=${this.currentHost[0].zoneid}&roleId=${this.loadBalanceForm.loadbalanceroleid}&VMIds=${this.currentHost[0].computerid}`)
+            if(this.loadBalanceForm.loadbalanceroleid.split('#')[1] == 'public'){
+              axios.get(`loadbalance/assignToLoadBalancerRule.do?VMIds=${this.currentHost[0].computerid}&zoneId=${this.currentHost[0].zoneid}&roleId=${this.loadBalanceForm.loadbalanceroleid.split('#')[0]}`)
               .then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.$Message.success(response.data.message)
@@ -714,6 +718,18 @@
                   })
                 }
               })
+            } else {
+              axios.get(`loadbalance/assignToInternalLoadBalancerRule.do?VMIds=${this.currentHost[0].computerid}&zoneId=${this.currentHost[0].zoneid}&lbId=${this.loadBalanceForm.loadbalanceroleid}`)
+              .then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success(response.data.message)
+                } else {
+                  this.$message.error({
+                    content: response.data.message
+                  })
+                }
+              })
+            }
           }
         })
       },

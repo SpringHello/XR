@@ -138,7 +138,7 @@
         less 处理css计算属性calc有bug
         申明变量diff，可正常使用
       */
-    @diff: 101px;
+    @diff: 102px;
     min-height: calc(~"100% - @{diff}");
     .wrapper {
       width: 1200px;
@@ -154,7 +154,7 @@
       }
       .content {
         background-color: white;
-        //height: 855px;
+        min-height: 700px;
         padding: 20px;
         .title {
           font-family: MicrosoftYaHei-Bold;

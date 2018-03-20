@@ -23,7 +23,7 @@
             </div>
             <Table :columns="systemColumns" :data="systemData" class="table" @radio-change="selectChange"></Table>
           </TabPane>
-          <TabPane label="自有镜像" name="own">
+          <TabPane label="私有镜像" name="own">
             <div class="operator-bar">
               <Button type="primary" @click="showModal.createMirror = true">制作镜像</Button>
               <!-- <Button type="primary" @click="createHost">生成主机</Button> -->
@@ -419,7 +419,7 @@
             }
           })
       },
-      // 查询自有镜像
+      // 查询私有镜像
       ownMirrorList() {
         var url1 = `information/listTemplates.do?user=1`
         this.$http.get(url1).then(response => {
