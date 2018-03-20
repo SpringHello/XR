@@ -5,10 +5,6 @@
         <Icon type="load-c" size=80 class="demo-spin-icon-load"></Icon>
         <span style="display: block;font-size:14px;color:black;font-family: Microsoft Yahei,微软雅黑;">正在支付，请稍后...</span>
       </Spin>
-      <Spin fix v-show="">
-        <Icon type="load-c" size=80 class="demo-spin-icon-load"></Icon>
-        <span style="display: block;font-size:14px;color:black;font-family: Microsoft Yahei,微软雅黑;">正在查询，请稍后...</span>
-      </Spin>
       <span>个人中心 / 费用中心</span>
       <div class="content">
         <span class="title">费用中心</span>
@@ -426,7 +422,6 @@
         }
       }
       return {
-        searchLoading: false,
         payLoading: false,
         cardVolumeColumns: [
           {
@@ -673,7 +668,7 @@
         ],
         orderList: [
           {
-            value: '',
+            value: 'all',
             label: '全部订单'
           },
           {
@@ -1065,14 +1060,12 @@
         this.dateRange = time
       },
       search() {
-        this.searchLoading = true
         this.$http.get('user/searchWaterNumber.do?pageSize=' + this.wpageSize + '&page=' + this.currentPage +
           '&type=' + this.types + '&starttime=' + this.dateRange[0] + '&endtime=' + this.dateRange[1] + '&startcount=' + this.value1 + '&endcount=' + this.value2)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.tabledata = response.data.result.data
               this.total = response.data.result.totle
-              this.searchLoading = false
             }
           })
       },
@@ -1109,17 +1102,43 @@
           case 'all':
             this.init()
             this.order_type = ''
+            this.timeTypeList = [
+              {
+                label: '订单创建时间',
+                value: '1'
+              },
+              {
+                label: '订单结束时间',
+                value: '2'
+              }
+            ]
             this.searchOrderByType()
             break
           case 'pay':
             this.init()
             this.order_type = '1'
+            this.timeTypeList = [
+              {
+                label: '订单创建时间',
+                value: '1'
+              },
+              {
+                label: '订单结束时间',
+                value: '2'
+              }
+            ]
             this.timeType = '1'
             this.searchOrderByType()
             break
           case 'notpay':
             this.init()
             this.order_type = '0'
+            this.timeTypeList = [
+              {
+                label: '订单创建时间',
+                value: '1'
+              }
+            ]
             this.timeType = '1'
             this.searchOrderByType()
             break

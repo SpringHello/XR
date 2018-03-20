@@ -871,23 +871,23 @@
                                                                                               style="vertical-align: middle">价格</span>
                   <span class="hidden">#</span>
                   <span style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.cost.toFixed(2)}}元</span>
-                  <ul style="float: right;font-size: 14px">
-                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-right: -5px;" v-if="prod.count == 1">-</span>
-                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-right: -5px;cursor: pointer"@click="prod.count -= 1,prod.cost *= prod.count" v-else>-</span>
+                  <ul style="float: right;font-size: 14px;user-select: none">
+                  <span class="numberAdd" v-if="prod.count == 1">-</span>
+                  <span class="numberAdd" style="cursor: pointer"@click="prod.count -= 1,prod.cost = PecsInfo.cost * prod.count" v-else>-</span>
                   <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
-                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-left: -5px;" v-if="prod.count == 5" >+</span>
-                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-left: -5px;cursor: pointer" @click="prod.count += 1,prod.cost *= prod.count" v-else>+</span></ul>
+                  <span class="numberMinus" v-if="prod.count == 5" >+</span>
+                  <span class="numberMinus" style="cursor: pointer" @click="prod.count += 1,prod.cost = PecsInfo.cost * prod.count" v-else>+</span></ul>
                 </p>
                 <p class="item" v-if="prod.createType=='custom'" style="margin-top: 10px;"><span
                   class="title" style="vertical-align: middle">价格</span><span
                   class="hidden">#</span><span
                   style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.customCost.toFixed(2)}}元</span>
-                <ul style="float: right;font-size: 14px">
-                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-right: -5px;" v-if="prod.count == 1">-</span>
-                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-right: -5px;cursor: pointer"@click="prod.count -= 1,prod.customCost *= prod.count" v-else>-</span>
+                <ul style="float: right;font-size: 14px;user-select: none">
+                  <span class="numberAdd"  v-if="prod.count == 1">-</span>
+                  <span class="numberAdd" style="cursor: pointer"@click="prod.count -= 1,prod.customCost = totalCost * prod.count" v-else>-</span>
                   <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
-                  <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-left: -5px;" v-if="prod.count == 5" >+</span>
-                <span style="border: 1px solid #D9D9D9;padding: 4px 10px;margin-left: -5px;cursor: pointer" @click="prod.count += 1,prod.customCost *= prod.count" v-else>+</span></ul>
+                  <span class="numberMinus" v-if="prod.count == 5" >+</span>
+                <span class="numberMinus" style="cursor: pointer" @click="prod.count += 1,prod.customCost = totalCost * prod.count" v-else>+</span></ul>
                 </p>
               </div>
               <!--磁盘清单字段-->
@@ -926,6 +926,12 @@
                   <span class="title" style="vertical-align: middle">价格</span>
                   <span class="hidden">#</span>
                   <span style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.cost.toFixed(2)}}元</span>
+                <ul style="float: right;font-size: 14px;user-select: none">
+                  <span class="numberAdd" v-if="prod.count == 1">-</span>
+                  <span class="numberAdd" style="cursor: pointer"@click="prod.count -= 1,prod.cost = PeipInfo.cost * prod.count" v-else>-</span>
+                  <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
+                  <span class="numberMinus"  v-if="prod.count == 5" >+</span>
+                  <span class="numberMinus" style="cursor: pointer" @click="prod.count += 1,prod.cost = PeipInfo.cost * prod.count" v-else>+</span></ul>
                 </p>
               </div>
             </div>
@@ -2662,5 +2668,15 @@
 
   .hidden {
     font-size: 0px;
+  }
+  .numberAdd{
+    border: 1px solid #D9D9D9;
+    padding: 4px 10px;
+    margin-right: -5px;
+  }
+  .numberMinus{
+    border: 1px solid #D9D9D9;
+    padding: 4px 8px;
+    margin-left: -5px;
   }
 </style>
