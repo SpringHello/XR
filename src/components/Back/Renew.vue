@@ -6,7 +6,8 @@
         <div>{{loadingMessage}}</div>
       </Spin>
       <div class="wrapper">
-        <span style="background-color: #f5f5f5;"><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 一键续费</span>
+        <span style="background-color: #f5f5f5;"><router-link to="overview"
+                                                              style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 一键续费</span>
         <div class="content">
           <span>一键续费</span>
           <div style="margin-top:15px;position:relative">
@@ -68,7 +69,7 @@
                     在余额充足的情况下，如开启自动续费，系统将在资源即将到期时为其续费。如关闭自动续费，系统将不做任何续费操作，且过期后资源进入欠费状态。
                   </Alert>
                   <div v-for="(item,index) in hostList" :key="index" v-bind:class="{select:item.select}"
-                      v-if="item.remainingDay==0" @click="toggle(item)" style="margin-bottom: 20px">
+                       v-if="item.remainingDay==0" @click="toggle(item)" style="margin-bottom: 20px">
                     <Card style="width:375px">
                       <div style="text-align:center">
                         <div class="head">
@@ -331,19 +332,19 @@
       selectAll(){
         this.selectArray = []
         var isselectAll = this.hostList.some((item) => {
-            return item.select == true
-          })
+          return item.select == true
+        })
         if (this.tabLabel == '全部') {
           if (isselectAll) {
-              this.hostList.forEach((item) => {
-                item.select = false
-                this.selectArray.push(item)
-              })
+            this.hostList.forEach((item) => {
+              item.select = false
+              this.selectArray.push(item)
+            })
           } else {
-              this.hostList.forEach((item) => {
-                item.select = true
-                this.selectArray.push(item)
-              })
+            this.hostList.forEach((item) => {
+              item.select = true
+              this.selectArray.push(item)
+            })
           }
         } else if (this.tabLabel == '24小时之内') {
           if (isselectAll) {
@@ -353,7 +354,7 @@
                 this.selectArray.push(item)
               }
             })
-          } else{
+          } else {
             this.hostList.forEach((item) => {
               if (item.remainingDay == 0) {
                 item.select = true
@@ -432,7 +433,7 @@
         }
         var params = {
           timeType: this.renewalType,
-          timeValue: this.renewalTime,
+          timeValue: this.renewalTime + '',
           list: JSON.stringify(list)
         }
         //this.loadingMessage = '创建订单中'
@@ -581,7 +582,7 @@
           .disk {
             background-image: url('../../assets/img/renew/resource-icon-disk.png');
           }
-          .nat{
+          .nat {
             background-image: url('../../assets/img/renew/resource-icon-nat.png');
           }
           .info {
