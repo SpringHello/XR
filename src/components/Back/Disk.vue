@@ -90,8 +90,13 @@
         <div style="float: left">
           <span class="universal-middle">资费：</span>
           <span class="universal-price"> ￥{{ expenses }}</span>
-          <span v-if="diskForm.timeType=='current'">/小时</span>
-          <p v-if="coupon>0">已优惠：<span>（￥{{ coupon }}）</span></p>
+          <span v-if="diskForm.timeValue != ''" style="color: #2A99F2;font-size: 24px;"> /
+            <span style="font-size: 16px;color: #2A99F2;" v-if="diskForm.timeType == 'year'">{{diskForm.timeValue}}年</span>
+            <span style="font-size: 16px;color: #2A99F2;" v-if="diskForm.timeType == 'month'">{{diskForm.timeValue}}月</span>
+          </span>
+
+          <span v-if="diskForm.timeType=='current'" style="color: #2A99F2;font-size: 24px;"> / <span style="font-size: 16px;color: #2A99F2;">小时</span></span>
+          <p v-if="coupon>0">已优惠：<span style="font-size: 16px;color: #2A99F2;">（￥{{ coupon }}）</span></p>
         </div>
         <Button type="ghost" @click="showModal.newDisk = false">取消</Button>
         <Button type="primary" @click="_checkNewForm">确定新建</Button>
@@ -147,7 +152,8 @@
         <div style="float: left">
           <span class="universal-middle">资费：</span>
           <span class="universal-price"> ￥{{ diskSizeExpenses }}</span>
-          <span v-if="diskForm.timeType=='current'">/小时</span>
+          <span style="color: #2A99F2;font-size: 24px;"> / </span>
+          <span style="font-size: 16px;color: #2A99F2;">{{dilatationDiskCaseType}}</span>
         </div>
         <Button type="ghost" @click="showModal.dilatationDisk = false">取消</Button>
         <Button type="primary" :disabled="dilatationForm.minDiskSize==dilatationForm.diskSize"
@@ -268,6 +274,7 @@
     data(){
       const validaRegisteredName = regExp.validaRegisteredName
       return {
+        dilatationDiskCaseType: '',
         // 磁盘列包含信息
         diskColumns: [
           {
@@ -301,7 +308,7 @@
             title: '硬盘类型',
             key: 'diskoffer',
             render: (h, params) => {
-              return h('span', params.row.diskoffer == 'ssd' ? '超高性能型' : params.row.diskoffer == 'sas' ? '性能型' : '存储型')
+              return h('span', params.row.diskoffer == 'ssd' ? 'SSD存储' : params.row.diskoffer == 'sas' ? 'SAS存储' : 'SATA存储')
             }
           },
           {
@@ -749,6 +756,18 @@
           this.operand = data
           this.dilatationForm.diskSize = this.operand.disksize
           this.dilatationForm.minDiskSize = this.dilatationForm.diskSize
+          switch(this.operand.caseType) {
+            case 1:
+             this.dilatationDiskCaseType = '年'
+                  break;
+            case 2:
+              this.dilatationDiskCaseType = '月'
+              break;
+            case 3:
+              this.dilatationDiskCaseType = '时'
+              break;
+         }
+
           this.showModal.dilatationDisk = true
         } else {
           this.$message.error({
