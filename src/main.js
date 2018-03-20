@@ -49,6 +49,11 @@ function requestIntercept(config) {
       zoneId: store.state.zone.zoneid,
       ...config.params
     }
+  } else if (config.method == 'post') {
+    config.data = {
+      ...config.data,
+      zoneId: store.state.zone.zoneid
+    }
   }
   return config
 }

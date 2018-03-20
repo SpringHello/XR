@@ -30,15 +30,15 @@ const customTimeOptions = {
 const diskTypeList = [
   {
     value: 'sas',
-    label: '性能型'
+    label: 'SAS存储'
   },
   {
     value: 'ssd',
-    label: '超高性能型'
+    label: 'SSD存储'
   },
   {
     value: 'sata',
-    label: '存储型'
+    label: 'SATA存储'
   }
 ]
 export {customTimeOptions, diskTypeList}

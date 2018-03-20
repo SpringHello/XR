@@ -1160,20 +1160,20 @@
 
           // 系统配置 需要购买公网ip时
           systemConfig: [
-            {kernel: '1', RAM: '1', bandWidth: '1', diskSize: '50', diskType: 'sas', diskDesc: '性能型'},
-            {kernel: '2', RAM: '4', bandWidth: '1', diskSize: '50', diskType: 'sas', diskDesc: '性能型'},
-            {kernel: '4', RAM: '4', bandWidth: '2', diskSize: '50', diskType: 'ssd', diskDesc: '超高性能型'},
-            {kernel: '4', RAM: '8', bandWidth: '2', diskSize: '50', diskType: 'ssd', diskDesc: '超高性能型'}
+            {kernel: '1', RAM: '1', bandWidth: '1', diskSize: '40', diskType: 'sas', diskDesc: 'SAS存储'},
+            {kernel: '2', RAM: '4', bandWidth: '1', diskSize: '40', diskType: 'sas', diskDesc: 'SAS存储'},
+            {kernel: '4', RAM: '4', bandWidth: '2', diskSize: '40', diskType: 'ssd', diskDesc: 'SSD存储'},
+            {kernel: '4', RAM: '8', bandWidth: '2', diskSize: '40', diskType: 'ssd', diskDesc: 'SSD存储'}
           ],
           // 系统配置 不需要购买公网ip时
           systemConfigNoNet: [
-            {kernel: '1', RAM: '1', bandWidth: '0', diskSize: '50', diskType: 'sas', diskDesc: '性能型'},
-            {kernel: '2', RAM: '4', bandWidth: '0', diskSize: '50', diskType: 'sas', diskDesc: '性能型'},
-            {kernel: '4', RAM: '4', bandWidth: '0', diskSize: '50', diskType: 'ssd', diskDesc: '超高性能型'},
-            {kernel: '4', RAM: '8', bandWidth: '0', diskSize: '50', diskType: 'ssd', diskDesc: '超高性能型'}
+            {kernel: '1', RAM: '1', bandWidth: '0', diskSize: '40', diskType: 'sas', diskDesc: 'SAS存储'},
+            {kernel: '2', RAM: '4', bandWidth: '0', diskSize: '40', diskType: 'sas', diskDesc: 'SAS存储'},
+            {kernel: '4', RAM: '4', bandWidth: '0', diskSize: '40', diskType: 'ssd', diskDesc: 'SSD存储'},
+            {kernel: '4', RAM: '8', bandWidth: '0', diskSize: '40', diskType: 'ssd', diskDesc: 'SSD存储'}
           ],
           // 选中的系统配置
-          currentSystem: {kernel: '1', RAM: '1', bandWidth: '1', diskSize: '50', diskType: 'sas', diskDesc: '性能型'},
+          currentSystem: {kernel: '1', RAM: '1', bandWidth: '1', diskSize: '50', diskType: 'sas', diskDesc: 'SAS存储'},
 
           // 两种登录设置  默认设置/自定义设置
           loginType: [{type: 'default', label: '默认设置'}, {type: 'custom', label: '自定义设置'}],
@@ -1259,7 +1259,7 @@
           ],
           // 添加购买的数据盘
           dataDiskList: [
-            {type: 'ssd', size: 20, label: '超高性能型'}
+            {type: 'ssd', size: 20, label: 'SSD存储'}
           ],
           dataDiskCost: 0,
           // 磁盘优惠价
@@ -1286,7 +1286,7 @@
           ],
           // 添加购买的数据盘
           dataDiskList: [
-            {type: 'ssd', size: 20, label: '超高性能型'}
+            {type: 'ssd', size: 20, label: 'SSD存储'}
           ],
           diskName: '',
           // 自动续费
@@ -1594,7 +1594,7 @@
       }),
       // 添加主机数据盘
       pushDisk(){
-        this.PecsInfo.dataDiskList.push({type: 'ssd', size: 20, label: '超高性能型'})
+        this.PecsInfo.dataDiskList.push({type: 'ssd', size: 20, label: 'SSD存储'})
       },
       /* 改变自定义主机页面磁盘容量，查询价格 */
       changeDiskSize (index, value) {
@@ -1679,7 +1679,7 @@
         })
       }),
       pushDiskInDisk(){
-        this.PdiskInfo.dataDiskList.push({type: 'ssd', size: 20, label: '超高性能型'})
+        this.PdiskInfo.dataDiskList.push({type: 'ssd', size: 20, label: 'SSD存储'})
       },
       // 主机加入购物车
       addCart(){

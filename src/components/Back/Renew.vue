@@ -435,10 +435,10 @@
           timeValue: this.renewalTime,
           list: JSON.stringify(list)
         }
-        this.loadingMessage = '创建订单中'
-        this.loading = true
+        //this.loadingMessage = '创建订单中'
+        //this.loading = true
         this.$http.post('continue/continueOrder.do', params).then(response => {
-          this.loading = false
+          //this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({path: 'order'})
           }

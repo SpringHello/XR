@@ -546,6 +546,18 @@
             title: '操作',
             width: 150,
             render: (h, object) => {
+              if (object.row._status == 2) {
+                return h('div', [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', {
+                  style: {
+                    verticalAlign: 'middle'
+                  }
+                }, '正在删除互通网关...')])
+              }
               return h('span', {
                 style: {
                   color: '#2A99F2',
@@ -556,26 +568,29 @@
                     this.$message.confirm({
                       content: '确认删除该互通网关？',
                       onOk: () => {
-                        this.loadingMessage = '正在删除互通网关，请稍候'
-                        this.loading = true
+                        //this.loadingMessage = '正在删除互通网关，请稍候'
+                        //this.loading = true
+                        this.vpcTableData.forEach(item => {
+                          if (item.privateGatewayid1 == object.row.privateGatewayid1 && item.privateGatewayid2 == object.row.privateGatewayid2) {
+                            this.$set(item, '_status', 2)
+                          }
+                        })
                         this.$http.get('network/deletePrivateGateway.do', {
                           params: {
                             sourcePrivateId: object.row.privateGatewayid1,
                             targetPrivateId: object.row.privateGatewayid2
                           }
                         }).then(response => {
+                          this.refresh()
                           if (response.status == 200 && response.data.status == 1) {
                             this.$Message.success({
                               content: response.data.message
                             })
-                            this.loading = false
-                            this.refresh()
                           } else {
                             this.$message.error({
                               content: response.data.message
                             })
-                            this.loading = false
-                            this.refresh()
+
                           }
                         })
                       }
@@ -1146,7 +1161,7 @@
               font-size: 12px;
               color: #333333;
               line-height: 18px;
-              
+
               li:nth-child(1) {
                 display: flex;
                 align-items: center;
