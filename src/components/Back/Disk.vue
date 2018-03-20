@@ -94,8 +94,7 @@
             <span style="font-size: 16px;color: #2A99F2;" v-if="diskForm.timeType == 'year'">{{diskForm.timeValue}}年</span>
             <span style="font-size: 16px;color: #2A99F2;" v-if="diskForm.timeType == 'month'">{{diskForm.timeValue}}月</span>
           </span>
-
-          <span v-if="diskForm.timeType=='current'" style="color: #2A99F2;font-size: 24px;"> / <span style="font-size: 16px;color: #2A99F2;">小时</span></span>
+          <!--<span v-if="diskForm.timeType=='current'" style="color: #2A99F2;font-size: 24px;"> / <span style="font-size: 16px;color: #2A99F2;">小时</span></span>-->
           <p v-if="coupon>0">已优惠：<span style="font-size: 16px;color: #2A99F2;">（￥{{ coupon }}）</span></p>
         </div>
         <Button type="ghost" @click="showModal.newDisk = false">取消</Button>

@@ -488,7 +488,7 @@
       </div>
     </Modal>
     <!-- 欠费tab页，续费弹窗 -->
-    <Modal v-model="showModal.Renew" width="590" :scrollable="true">
+    <Modal v-model="showModal.Renew" width="550" :scrollable="true">
       <div slot="header" class="modal-header-border">
         <span class="universal-modal-title">续费主机</span>
       </div>
