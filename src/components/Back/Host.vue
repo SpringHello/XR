@@ -724,6 +724,7 @@
                     content: response.data.message
                   })
                 }
+                this.loadBalanceForm.loadbalanceroleid == ''
               })
             } else {
               axios.get(`loadbalance/assignToInternalLoadBalancerRule.do?VMIds=${this.currentHost[0].computerid}&zoneId=${this.currentHost[0].zoneid}&lbId=${this.loadBalanceForm.loadbalanceroleid}`)
@@ -735,6 +736,7 @@
                     content: response.data.message
                   })
                 }
+                this.loadBalanceForm.loadbalanceroleid == ''
               })
             }
           }
