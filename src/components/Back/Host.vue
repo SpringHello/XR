@@ -2,7 +2,7 @@
   <div id="background">
     <div id="wrapper">
       <span class="title">云服务器 /
-         <span>主机</span>
+         <span>云主机</span>
       </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
         <router-link to="/ruicloud/userCenter">立即认证</router-link>
@@ -332,7 +332,7 @@
     </div>
 
     <!-- 制作快照弹窗 -->
-    <Modal v-model="showModal.backup" width="550" :scrollable="true">
+    <Modal v-model="showModal.backup" width="550" :scrollable="true" class="create-snas-modal">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">制作快照</span>
       </p>
@@ -343,12 +343,18 @@
             <Input v-model="backupForm.name" placeholder="请输入2-4094范围内任意数字" :maxlength="15"></Input>
           </FormItem>
            <div style="padding-top: 11px;margin-right: 100px;">
-             <p style="font-size: 14px;color:#495060;margin-bottom: 15px">是否保存内存信息<Poptip trigger="hover" content="您可以选择在制作快照的时候
-保存您主机的当前运行状态。当您选择“保存”之时，
-当前主机的内存将被记录，在您对快照执行回滚操作的
-时候，也只能在开机状态下执行；当您选择“不保存”时
-此次快照将不记录主机内存信息，您在通过该快照回滚的
-时候只能在关机状态下执行。"> <span style="border: 1px solid #2A99F2;border-radius: 10px;padding: 0px 6px;color: #2A99F2;cursor: pointer;margin-left: 5px">?</span></Poptip></p>
+             <div style="font-size: 14px;color:#495060;margin-bottom: 15px">是否保存内存信息
+               <Poptip trigger="hover" width="400">
+                  <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
+                  <div slot="content">
+                      <div>
+                          您可以选择在制作快照的时候保存您主机的当前运行状态。当您选择“保存”之时，
+                          当前主机的内存将被记录，在您对快照执行回滚操作的时候，也只能在开机状态下执行；当您选择“不保存”时
+                          此次快照将不记录主机内存信息，您在通过该快照回滚的时候只能在关机状态下执行。
+                      </div>
+                  </div>
+                </Poptip>
+              </div>
              <RadioGroup v-model="backupForm.memory">
                <Radio label="1">保存</Radio>
                <Radio label="0">不保存</Radio>
@@ -707,6 +713,7 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.showModal.balance = false
+            this.$Message.info('主机正在加入负载均衡，请稍后')
             if(this.loadBalanceForm.loadbalanceroleid.split('#')[1] == 'public'){
               axios.get(`loadbalance/assignToLoadBalancerRule.do?VMIds=${this.currentHost[0].computerid}&zoneId=${this.currentHost[0].zoneid}&roleId=${this.loadBalanceForm.loadbalanceroleid.split('#')[0]}`)
               .then(response => {
@@ -717,6 +724,7 @@
                     content: response.data.message
                   })
                 }
+                this.loadBalanceForm.loadbalanceroleid == ''
               })
             } else {
               axios.get(`loadbalance/assignToInternalLoadBalancerRule.do?VMIds=${this.currentHost[0].computerid}&zoneId=${this.currentHost[0].zoneid}&lbId=${this.loadBalanceForm.loadbalanceroleid}`)
@@ -728,6 +736,7 @@
                     content: response.data.message
                   })
                 }
+                this.loadBalanceForm.loadbalanceroleid == ''
               })
             }
           }

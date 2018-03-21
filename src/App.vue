@@ -115,6 +115,12 @@
                 {{d.title}}
               </router-link>
             </div>
+            <div class="document">
+              <p>服务与公告</p>
+              <router-link v-for="(d,index) in notice" :key="index" :to="d.url" target="_blank">
+                {{d.title}}
+              </router-link>
+            </div>
             <div class="contact">
               <span>联系我们</span>
               <span>企业电话：010-82527988</span>
@@ -302,9 +308,15 @@
           {title: '安全', url: '/ruicloud/document'},
           {title: '财务与账户', url: '/ruicloud/document'}
         ],
+        // 服务与公告
+        notice: [
+          {title: '最新公告', url: '/ruicloud/dynamic'},
+          {title: '新闻动态', url: '/ruicloud/dynamic'},
+          {title: '技术支持', url: '/ruicloud/dynamic'},
+        ],
         Preparation: [
           {
-            time: '@2014-2017',
+            time: '©2014-2017',
             title: '北京允睿讯通科技有限公司',
             preparation: '京ICP备15035854号',
             desc: '京公网安备11010802024922号',
@@ -613,7 +625,7 @@
                 margin-bottom: 30px;
               }
               > div {
-                margin-right: 15px;
+                margin-right: 20px;
                 display: inline-block;
                 height: 149px;
                 vertical-align: bottom;
@@ -639,11 +651,11 @@
               }
             }
             .document {
-              width: 15%;
+              width: 12%;
               > p {
                 color: #ffffff;
                 font-size: 14px;
-                margin-bottom: 30px;
+                margin-bottom: 26px;
               }
               > a {
                 color: #ffffff;
@@ -660,7 +672,7 @@
                 color: #ffffff;
                 display: table;
                 font-size: 14px;
-                margin-bottom: 15px;
+                margin-bottom: 18px;
                 &:first-of-type {
                   margin-bottom: 30px;
                 }

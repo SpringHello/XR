@@ -1,10 +1,36 @@
 <template>
   <div>
     <div class="banner">
-      <div style="position: relative; top: 15%; left: 20%;">
+      <img style="position: absolute;bottom: 0;z-index: -1"
+           src="../../../assets/img/active/newNodes/banner_1.png">
+      <img style="position: absolute;top: 7%;left: 7%;"
+           src="../../../assets/img/active/newNodes/circle.png">
+      <div style="width:1200px;margin:0px auto;position: absolute; top: 20%; left: 19%;">
         <p>庆新节点上线</p>
         <p style="font-size: 44px;line-height: 62px;font-family: PingFangSC-Light;">配置升级 | 限时低价体验</p>
         <!--<button>立即领取</button>-->
+      </div>
+      <div>
+        <img style="position:absolute;left: 44%; top: 44%;z-index: -2;"
+             src="../../../assets/img/active/newNodes/banner_2.png">
+        <img style="position: absolute;left: 52%;top: 22%;z-index: -3;"
+             src="../../../assets/img/active/newNodes/banner_3.png">
+        <img style="position: absolute;left: 61%;top: 11%;z-index: -4;"
+             src="../../../assets/img/active/newNodes/banner_4.png">
+        <img style="position: absolute;left: 70%; top: 35%;z-index: -5;"
+             src="../../../assets/img/active/newNodes/banner_5.png">
+        <img style="position: absolute;left: 72.5%; top:32%;z-index: -4;"
+             src="../../../assets/img/active/newNodes/banner_6.png">
+        <img style="position: absolute;left: 70%; top: 28%;z-index: -4;"
+             src="../../../assets/img/active/newNodes/banner_6.png">
+        <img style="position:absolute;left: 48%; top: 8%;z-index: -2;"
+             src="../../../assets/img/active/newNodes/arrows_1.png">
+        <img style="position:absolute;left: 77%; top: 6%;z-index: -2;"
+             src="../../../assets/img/active/newNodes/arrows_2.png">
+        <img style="position:absolute;left: 78%; top: 18%;z-index: -2;"
+             src="../../../assets/img/active/newNodes/arrows_3.png">
+        <img style="position:absolute;left: 50%; top: 35%;z-index: -2;"
+             src="../../../assets/img/active/newNodes/arrows_4.png">
       </div>
       <ul class="banner_text">
         <li>DELL第十四代服务器</li>
@@ -14,9 +40,19 @@
         <li>IOPS高达120000+的极致性能</li>
       </ul>
     </div>
-    <div style="background:#2B2E47;">
+    <div style="background:#2B2E47;position: relative">
+      <img style="position: absolute;right: 0;top: 4%;"
+           src="../../../assets/img/active/newNodes/icon_2.png">
+      <img style="position: absolute;left: 3%;top: 11%;"
+           src="../../../assets/img/active/newNodes/icon_3.png">
+      <img style="position: absolute;right: 0;top: 19%;"
+           src="../../../assets/img/active/newNodes/icon_5.png">
       <div class="center">
         <div class="process">
+          <img style="position: absolute;left: 0;top: -31px;"
+               src="../../../assets/img/active/newNodes/textBanner.png">
+          <img style="position: absolute;left:0;bottom: 42%;"
+               src="../../../assets/img/active/newNodes/icon_1.png">
           <h2>活动流程</h2>
           <div class="items">
             <dl>
@@ -42,8 +78,10 @@
           </div>
         </div>
         <div class="active_one">
-          <img style="position: absolute; left: -159px; bottom: 60px;"
-               src="../../../assets/img/active/newNodes/icon_one.png">
+          <img style="position: absolute; left: -15%; bottom: 8%;"
+               src="../../../assets/img/active/newNodes/icon_6.png">
+          <img style="position: absolute;right: 20%;top: 30%;"
+               src="../../../assets/img/active/newNodes/icon_4.png">
           <h2 style="margin-bottom: 20px">限时<img style="position: relative;top: 32px;margin: 0 5px"
                                                  src="../../../assets/img/active/newNodes/threez.png">折秒杀</h2>
           <p>每天<span>10：00开抢</span>，每款产品<span>限量20台</span>，每人仅限参与一次</p>
@@ -56,7 +94,8 @@
                 <p><span>{{ item.discript}}</span></p>
                 <div class="info_right">
                   <Select v-model="item.node" style="width:135px;margin-right: 10px" placeholder="节点选择">
-                    <Option v-for="item in nodeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    <Option v-for="item in nodeList" :value="item.value" :key="item.value">{{ item.label }}
+                    </Option>
                   </Select>
                   <Select v-model="item.system" style="width:135px" placeholder="镜像选择">
                     <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -66,24 +105,72 @@
                     <span class="s1">¥302.4／1年</span>
                     <span class="s2">原价1008／1年</span>
                   </div>
-                  <button>立即抢购</button>
+                  <button @click="buyNow_one(item,index)">立即抢购</button>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="active_two">
+          <img style="position: absolute;left: 25%;top: 5%;"
+               src="../../../assets/img/active/newNodes/icon_7.png">
+          <img style="position: absolute;left: -22%;top: 15%;"
+               src="../../../assets/img/active/newNodes/icon_8.png">
+          <img style="position: absolute;right: -29%;top: 28%;"
+               src="../../../assets/img/active/newNodes/icon_9.png">
+          <img style="position: absolute;right: -20%;top: 48%;"
+               src="../../../assets/img/active/newNodes/icon_10.png">
+          <img style="position: absolute;left: -21%;bottom: 4%;"
+               src="../../../assets/img/active/newNodes/icon_11.png">
           <h2 style="margin-bottom: 20px">套餐4折起</h2>
           <p>每人每款限购2台，<span>3个月5折、6个月4折</span></p>
           <div class="config_two">
             <div v-for="(item,index) in config_two" class="content">
-              <div class="title">
+              <div class="title" :class="{one: index == 0, two: index == 1, three: index == 2, fore: index == 3}">
                 <p>{{ item.discript }}</p>
+              </div>
+              <div class="info">
+                <div class="info_left">
+                  <div class="info_left_top">
+                    <ul>
+                      <li><img src="../../../assets/img/active/newNodes/cpu.png"/>{{ item.cpu }}</li>
+                      <li><img src="../../../assets/img/active/newNodes/memory.png"/>{{ item.memory }}</li>
+                      <li><img src="../../../assets/img/active/newNodes/disc.png"/>{{ item.disk }}</li>
+                      <li><img src="../../../assets/img/active/newNodes/bandWidth.png"/>{{ item.bandWidth}}</li>
+                    </ul>
+                  </div>
+                  <div class="info_left_bottom">
+                    <Select v-model="item.node" style="width:135px;margin-right: 10px" placeholder="节点选择">
+                      <Option v-for="item in nodeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                    <Select v-model="item.system" style="width:135px" placeholder="镜像选择">
+                      <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                  </div>
+                </div>
+                <div class="info_right">
+                  <p>「5折后参考价」</p>
+                  <p>¥302.4／3个月</p>
+                  <p>原价1008／3个月</p>
+                  <button @click="buyNow_two(item,index,3)">立即抢购</button>
+                </div>
+                <div class="info_right">
+                  <p>「4折后参考价」</p>
+                  <p>¥302.4／6个月</p>
+                  <p>原价1008／6个月</p>
+                  <button @click="buyNow_two(item,index,6)">立即抢购</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div class="rules">
+          <img style="position: absolute;top: -5%;right: 18%;"
+               src="../../../assets/img/active/newNodes/icon_12.png">
+          <img style="position: absolute;top: 15%; right: -6%;"
+               src="../../../assets/img/active/newNodes/icon_13.png">
+          <img style="position: absolute;left: -12%;top: 50%;"
+               src="../../../assets/img/active/newNodes/icon_14.png">
           <h2>活动规则</h2>
           <dl>
             <dt>1、活动对象：</dt>
@@ -166,18 +253,21 @@
 </template>
 <style rel="stylesheet/less" lang="less" scoped>
   .banner {
-    height: 560px;
     position: relative;
-    height: 560px;
+    height: 750px;
     background: linear-gradient(90.8deg, rgba(200, 85, 254, 1), rgba(6, 46, 141, 1));
     overflow: hidden;
+    z-index: 1;
     .banner_text {
-      margin: 15% auto;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
       display: flex;
       justify-content: space-around;
       width: 1200px;
-      height: 80px;
-      background: linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
+      background:url('../../../assets/img/active/newNodes/textBanner1.png'),linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
       opacity: 0.8;
       li {
         &::before {
@@ -189,10 +279,11 @@
           border-radius: 50%;
           margin-right: 10px;
         }
+        list-style-type: none;
         font-size: 14px;
         font-family: PingFangSC-Regular;
         color: #FFFFFF;
-        line-height: 78px;
+        line-height: 74px;
       }
     }
     p {
@@ -247,7 +338,6 @@
   .center {
     width: 1200px;
     margin: 0 auto;
-    z-index: 2;
     h2 {
       margin-bottom: 40px;
       font-weight: normal;
@@ -338,7 +428,7 @@
         text-align: center;
         font-size: 16px;
         font-family: PingFangSC-Regular;
-        color: rgba(102, 102, 102, 1);
+        color: #FFFFFF;
         span {
           color: #E400FF;
         }
@@ -353,7 +443,7 @@
           .title {
             height: 72px;
             text-align: center;
-            background: linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
+            background: url('../../../assets/img/active/newNodes/hostBanner.png'),linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
             p {
               font-size: 30px;
               font-family: PingFangSC-Medium;
@@ -405,6 +495,9 @@
                 border: none;
                 cursor: pointer;
                 margin-top: 20px;
+                &:hover {
+                  box-shadow: 0px 2px 13px 0px rgba(79, 140, 255, 0.72);
+                }
               }
             }
           }
@@ -418,7 +511,7 @@
         text-align: center;
         font-size: 16px;
         font-family: PingFangSC-Regular;
-        color: rgba(102, 102, 102, 1);
+        color: #FFFFFF;
         span {
           color: #E400FF;
         }
@@ -426,22 +519,114 @@
       .config_two {
         margin-top: 50px;
         .content {
-          height: 254px;
-          background: #377DFF;
+          background: #FFFFFF;
           margin-bottom: 60px;
           .title {
-            background-image: url("../../../assets/img/active/newNodes/config_banner.png");
             text-align: center;
             padding: 26px 0 16px;
+            &.one {
+              background: url("../../../assets/img/active/newNodes/config_banner.png"), linear-gradient(90deg, #FF5B5F, #FF9F53);
+            }
+            &.two {
+              background: url("../../../assets/img/active/newNodes/config_banner.png"), linear-gradient(90deg, #4B39FF, #03FAEF);
+            }
+            &.three {
+              background: url("../../../assets/img/active/newNodes/config_banner.png"), linear-gradient(90deg, #543BF8, #EE5481);
+            }
+            &.fore {
+              background: url("../../../assets/img/active/newNodes/config_banner.png"), linear-gradient(90deg, #55A7FF, #0033FF);
+            }
             p {
               font-size: 18px;
               font-family: PingFangSC-Regular;
-              //color:rgba(255,255,255,1);
-              color: #2A99F2;
+              color: rgba(255, 255, 255, 1);
+            }
+          }
+          .info {
+            padding: 14px 0 17px;
+            display: -webkit-box;
+            .info_left {
+              width: 52%;
+              padding: 0 20px;
+              border-right: 1px solid #CECECE;
+              .info_left_top {
+                height: 50%;
+                border-bottom: 1px dashed #CECECE;
+                ul {
+                  display: flex;
+                  justify-content: space-between;
+                  li {
+                    list-style-type: none;
+                    font-size: 22px;
+                    font-family: ArialMT;
+                    color: rgba(51, 51, 51, 1);
+                    line-height: 74px;
+                    img {
+                      margin-right: 10px;
+                      position: relative;
+                      top: 5px;
+                    }
+                  }
+                  li:nth-child(2) {
+                    img {
+                      position: relative;
+                      top: 1px;
+                    }
+                  }
+                }
+              }
+              .info_left_bottom {
+                padding: 21px 0 20px;
+              }
+            }
+            .info_right {
+              width: 24%;
+              border-right: 1px solid #CECECE;
+              text-align: center;
+              p {
+                margin: 10px 0;
+              }
+              p:first-child {
+                font-size: 12px;
+                font-family: PingFangSC-Regular;
+                color: rgba(221, 39, 41, 1);
+                line-height: 12px;
+                margin-top: 20px;
+              }
+              p:nth-child(2) {
+                font-size: 22px;
+                font-family: Arial-Black;
+                color: rgba(221, 39, 41, 1);
+                line-height: 20px;
+              }
+              p:nth-child(3) {
+                font-size: 14px;
+                font-family: PingFangSC-Regular;
+                color: rgba(102, 102, 102, 1);
+                line-height: 14px;
+                text-decoration: line-through
+              }
+              button {
+                outline: none;
+                border: none;
+                cursor: pointer;
+                font-size: 18px;
+                font-family: PingFangSC-Regular;
+                color: rgba(255, 255, 255, 1);
+                padding: 10px 40px;
+                background: #377DFF;
+                &:hover {
+                  box-shadow: 0px 2px 13px 0px rgba(79, 140, 255, 0.72);
+                }
+              }
             }
           }
         }
+        .content:last-child {
+          margin-bottom: 0;
+        }
       }
+
     }
     .rules {
       padding: 60px 120px;
@@ -543,7 +728,7 @@
 
   .foot {
     padding-top: 10px;
-    height: 32%;
+    height: 32.1%;
     button {
       width: 80%;
       margin: 0px auto;
@@ -599,10 +784,11 @@
       letter-spacing: 0.83px;
     }
   }
+
 </style>
 <script type="text/ecmascript-6">
   import regExp from '../../../util/regExp'
-
+  import axios from 'axios'
   var messageMap = {
     loginname: {
       placeholder: '登录邮箱/手机号',
@@ -667,25 +853,49 @@
         config_two: [
           {
             discript: '适用于日常运营活动、企业办公环境、小型开发测试环境、普通数据处理服务等场景。',
+            cpu: '2核CPU',
+            memory: '4G内存',
+            disk: '40G磁盘',
+            bandWidth: '2mb/s带宽',
+            node: '',
+            system: ''
           },
           {
             discript: '适用于高并发应用业务部署、高内存大数据分析处理、分布式分析等业务场景。',
+            cpu: '4核CPU',
+            memory: '8G内存',
+            disk: '40G磁盘',
+            bandWidth: '2mb/s带宽',
+            node: '',
+            system: ''
           },
           {
             discript: '适用于对计算性能要求较高的企业运营活动、批量处理、分布式分析、游戏APP等业务场景。',
+            cpu: '8核CPU',
+            memory: '16G内存',
+            disk: '40G磁盘',
+            bandWidth: '5mb/s带宽',
+            node: '',
+            system: ''
           },
           {
             discript: '用于需要高网络性能、高计算资源的业务部署、广告服务、MMO游戏、视频编码等场景。',
+            cpu: '16核CPU',
+            memory: '32G内存',
+            disk: '40G磁盘',
+            bandWidth: '10mb/s带宽',
+            node: '',
+            system: ''
           }
         ],
         nodeList: [
           {
-            label: '华中一区',
-            value: '1'
+            label: '北方二区',
+            value: '华中一区'
           },
           {
             label: '华中二区',
-            value: '2'
+            value: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2'
           }
         ],
         systemList: [
@@ -700,13 +910,13 @@
         ]
       }
     },
-    created(){
+    created() {
       if (this.$store.state.userInfo != null) {
         this.isLogin = 1
         this.userInfo = this.$store.state.userInfo
         this.companyauth = this.userInfo.companyauth
         this.personalauth = this.userInfo.personalauth
-        this.isReceive = this.userInfo.activityInfo[0].companytype
+        this.isReceive = this.userInfo.activityInfo[6].companytype
       }
     },
     components: {},
@@ -791,13 +1001,91 @@
           }
         )
         ;
+      },
+      buyNow_one(item, index) {
+        if (this.userInfo==null) {
+          this.loginModal = true
+          return
+        }
+        if (item.node === '') {
+          this.$Message.info('请选择主机节点')
+          return
+        }
+        if (item.system === '') {
+          this.$Message.info('请选择主机系统')
+          return
+        }
+        var vmConfigId = index === 0 ? '11' : '12'
+        var url = `information/getDiskcountMv.do?vmConfigId=${vmConfigId}&osType=${item.system}&defzoneid=${item.node}`
+        axios.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push('order')
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
+      },
+      buyNow_two(item, index, month){
+        if (this.userInfo == null) {
+          this.loginModal = true
+          return
+        }
+        if (item.node === '') {
+          this.$Message.info('请选择主机节点')
+          return
+        }
+        if (item.system === '') {
+          this.$Message.info('请选择主机系统')
+          return
+        }
+        var vmConfigId = ''
+        var hostType = index + month
+        switch (hostType) {
+          case 3:
+            vmConfigId = '13'
+            break;
+          case 6:
+            vmConfigId = '14'
+            break;
+          case 4:
+            vmConfigId = '15'
+            break;
+          case 7:
+            vmConfigId = '16'
+            break;
+          case 5:
+            vmConfigId = '17'
+            break;
+          case 8:
+            vmConfigId = '18'
+            break;
+          case 6:
+            vmConfigId = '19'
+            break;
+          case 9:
+            vmConfigId = '20'
+            break;
+        }
+
+        var url = `information/getDiskcountMv.do?vmConfigId=${vmConfigId}&osType=${item.system}&defzoneid=${item.node}`
+        axios.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push('order')
+          } else {
+            this.$message.error({
+              content: response.data.message
+            })
+          }
+        })
       }
     },
     computed: {
       disabled() {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
       },
-      getUserInfo (){
+      getUserInfo() {
         if (this.$store.state.userInfo != null) {
           this.isLogin = 1
           return this.$store.state.userInfo
@@ -806,9 +1094,6 @@
             companyauth: 1,
             personalauth: 1,
             activityInfo: [
-              {
-                companytype: 0
-              },
               {
                 companytype: 0
               }
@@ -820,11 +1105,11 @@
       }
     },
     watch: {
-      getUserInfo (val){
+      getUserInfo(val) {
         this.userInfo = val
         this.companyauth = this.userInfo.companyauth
         this.personalauth = this.userInfo.personalauth
-        this.isReceive = this.userInfo.activityInfo[0].companytype
+        this.isReceive = this.userInfo.activityInfo[6].companytype
       }
     }
   }

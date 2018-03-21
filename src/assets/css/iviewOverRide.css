@@ -241,3 +241,8 @@ div.modal-header-border {
   background-color: #FFFFFF;
   border: none;
 }
+
+/* 制作快照？提醒小提示 */
+.create-snas-modal .ivu-poptip-inner{
+  white-space: normal;
+}

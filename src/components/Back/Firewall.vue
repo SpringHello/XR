@@ -5,7 +5,7 @@
       <div>{{loadingMessage}}</div>
     </Spin>
     <div id="wrapper">
-      <span class="title">安全 /
+      <span class="title">云安全 /
          <span>防火墙</span>
       </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，

@@ -8,18 +8,19 @@
           <div class="search">
             <span style="margin-top: 29px;font-size: 12px;">操作时间</span>
             <Row style="margin-left: 10px;margin-right: 20px;margin-top: 20px">
-              <Col span="12" >
-              <Date-picker  v-model="time" type="daterange" :options="options" placement="bottom-end" placeholder="选择日期" style="width: 231px" @on-change="dataChange"></Date-picker>
+              <Col span="12">
+              <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-end" placeholder="选择日期"
+                           style="width: 231px" @on-change="dataChange"></Date-picker>
               </Col>
             </Row>
             <span style="margin-top: 29px;font-size: 12px">请选择操作对象</span>
-            <Select v-model="target" style="width:231px;margin-left: 10px;margin-top: 20px" >
+            <Select v-model="target" style="width:231px;margin-left: 10px;margin-top: 20px">
               <Option v-for="item in operandList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
             <Button type="primary" style="margin-top: 20px;margin-left: 10px" @click="search">查询</Button>
           </div>
           <div class="log" style="margin-top: 20px">
-            <Table highlight-row :columns="columns" :data="tableData" ></Table>
+            <Table highlight-row :columns="columns" :data="tableData"></Table>
             <div style="margin: 10px;overflow: hidden">
               <div style="float: right;">
                 <Page :total="total" :current="1" @on-change="currentChange"></Page>
@@ -35,10 +36,10 @@
 <script type="text/ecmascript-6">
   export default{
     data(){
-      return{
+      return {
         operandList: [
           {
-            value: '',
+            value: 'all',
             label: '所有'
           },
           {
@@ -130,18 +131,18 @@
             width: 200,
           },
           {
-            title:'操作结果',
-            key:'operatestatus',
+            title: '操作结果',
+            key: 'operatestatus',
             align: 'left',
             width: 150,
             render: (h, params) => {
-              return h('span', params.row.operatestatus==1?'成功':'失败')
+              return h('span', params.row.operatestatus == 1 ? '成功' : '失败')
             }
           }, {
             title: '行为描述',
             key: 'operatedes',
             align: 'left',
-            ellipsis:true,
+            ellipsis: true,
           },
           {
             title: '操作',
@@ -149,7 +150,7 @@
             align: 'left',
             width: 120,
             render: (h, params) => {
-              if (params.row.operatestatus!=1) {
+              if (params.row.operatestatus != 1) {
                 return h('div', [
                   h('span', {
                     style: {
@@ -160,35 +161,42 @@
                       click: () => {
                         this.$store.commit("setSelect", "workorder")
                         this.$router.push({
-                          path:'/ruicloud/workOrder',
-                          query:{logData:params.row}
+                          path: '/ruicloud/workOrder',
+                          query: {logData: params.row}
                         });
                       }
                     }
                   }, '申请工单'),
                 ]);
-              }else{
-                return h('span','--')
+              } else {
+                return h('span', '--')
               }
             }
           },
         ],
-        tableData:[],
+        tableData: [],
         target: '',
-        time:'',
-        dateRange:'',
-        currentPage:1,
-        pageSize:10,
-        total:0,
+        time: '',
+        dateRange: '',
+        currentPage: 1,
+        pageSize: 10,
+        total: 0,
       }
     },
     created(){
-      this.$http.get('log/queryLog.do?pageSize='+this.pageSize+'&currentPage='+this.currentPage+'&target='+this.target+'&queryTime='+this.time).then(response => {
+      this.$http.get('log/queryLog.do', {
+        params: {
+          pageSize: this.pageSize,
+          currentPage: this.currentPage,
+          target: this.target,
+          queryTime: this.time
+        }
+      }).then(response => {
         this.total = response.data.total;
         this.tableData = response.data.tableData;
       })
     },
-    methods:{
+    methods: {
       currentChange(currentPage){
         this.currentPage = currentPage;
         this.search();
@@ -197,7 +205,14 @@
         this.dateRange = time;
       },
       search(){
-        this.$http.get('log/queryLog.do?pageSize='+this.pageSize+'&currentPage='+this.currentPage+'&target='+this.target+'&queryTime='+this.dateRange).then(response => {
+        this.$http.get('log/queryLog.do', {
+          params: {
+            pageSize: this.pageSize,
+            currentPage: this.currentPage,
+            target: this.target == 'all' ? '' : this.target,
+            queryTime: this.dateRange
+          }
+        }).then(response => {
           this.total = response.data.total;
           this.tableData = response.data.tableData;
         })
@@ -223,27 +238,27 @@
         padding: 11px 0px;
         display: block;
       }
-      .content{
+      .content {
         background-color: white;
-        padding:20px;
+        padding: 20px;
         height: inherit;
-        .title{
-          font-family: Microsoft Yahei,微软雅黑;
+        .title {
+          font-family: Microsoft Yahei, 微软雅黑;
           font-size: 24px;
-          color: rgba(17,17,17,0.75);
+          color: rgba(17, 17, 17, 0.75);
         }
-        .changecard{
+        .changecard {
           font-family: PingFangSC-Regular;
           font-size: 12px;
           color: #2A99F2;
           float: right;
-          cursor:pointer;
-          user-select:none
+          cursor: pointer;
+          user-select: none
         }
-        .logdata{
+        .logdata {
           margin-top: 20px;
           border-top: 1px solid #E9E9E9;
-          .search{
+          .search {
             display: flex;
           }
         }

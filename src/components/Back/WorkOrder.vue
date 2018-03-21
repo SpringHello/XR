@@ -8,7 +8,7 @@
       <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 工单</span>
       <div class="content">
         <span>工单</span>
-        <div style="margin-top:15px;min-height:660px;">
+        <div style="margin-top:20px;min-height:660px;">
           <Tabs type="card" v-model="tableName" :animated="false">
             <Tab-pane label="发起工单" name="发起工单">
 
