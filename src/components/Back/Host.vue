@@ -2,7 +2,7 @@
   <div id="background">
     <div id="wrapper">
       <span class="title">云服务器 /
-         <span>主机</span>
+         <span>云主机</span>
       </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
         <router-link to="/ruicloud/userCenter">立即认证</router-link>
@@ -1269,7 +1269,7 @@
       color: #666666;
     }
   }
-  
+
   .link-host {
     background: #2A99F2;
     color: #fff;
