@@ -1173,7 +1173,7 @@
             {kernel: '4', RAM: '8', bandWidth: '0', diskSize: '40', diskType: 'ssd', diskDesc: 'SSD存储'}
           ],
           // 选中的系统配置
-          currentSystem: {kernel: '1', RAM: '1', bandWidth: '1', diskSize: '50', diskType: 'sas', diskDesc: 'SAS存储'},
+          currentSystem: {kernel: '1', RAM: '1', bandWidth: '1', diskSize: '40', diskType: 'sas', diskDesc: 'SAS存储'},
 
           // 两种登录设置  默认设置/自定义设置
           loginType: [{type: 'default', label: '默认设置'}, {type: 'custom', label: '自定义设置'}],
@@ -1230,7 +1230,7 @@
             diskType: 'sas',
             kernel: 1,
             RAM: 1,
-            diskSize: 50,
+            diskSize: 40,
             cost: 0,
             coupon: 0
           },
@@ -1502,7 +1502,7 @@
       queryCustomVM(){
         var params = {
           cpuNum: this.PecsInfo.vmConfig.kernel.toString(),
-          diskSize: '50',
+          diskSize: '40',
           diskType: this.PecsInfo.vmConfig.diskType,
           memory: this.PecsInfo.vmConfig.RAM.toString(),
           timeType: this.PecsInfo.timeForm.currentTimeValue.type,
@@ -2248,7 +2248,7 @@
               kernel: '1',
               RAM: '1',
               bandWidth: '1',
-              diskSize: '50',
+              diskSize: '40',
               diskType: 'sas',
               diskDesc: '性能型'
             }
@@ -2257,7 +2257,7 @@
               kernel: '1',
               RAM: '1',
               bandWidth: '0',
-              diskSize: '50',
+              diskSize: '40',
               diskType: 'sas',
               diskDesc: '性能型'
             }
