@@ -4,6 +4,45 @@
     <div class="banner">
       <my-carousel :interval=5000 effect="fade" class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
+          <div @click="push('newNodes')"
+               style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
+            <div class="newNodes">
+              <img style="position: absolute;bottom: 0;z-index: -1"
+                   src="../../assets/img/active/newNodes/banner_1.png">
+              <img style="position: absolute;top: 7%;left: 7%;"
+                   src="../../assets/img/active/newNodes/circle.png">
+              <div style="width:1200px;margin:0px auto;position: absolute; top: 15%; left: 19%;">
+                <p>庆新节点上线</p>
+                <p style="font-size: 44px;line-height: 62px;font-family: PingFangSC-Light;">配置升级 | 限时低价体验</p>
+                <button>立即体验</button>
+              </div>
+              <div>
+                <img style="position:absolute;left: 44%; top: 34%;z-index: -2;"
+                     src="../../assets/img/active/newNodes/banner_2.png">
+                <img style="position: absolute;left: 52%;top: 12%;z-index: -3;"
+                     src="../../assets/img/active/newNodes/banner_3.png">
+                <img style="position: absolute;left: 61%;top: 1%;z-index: -4;"
+                     src="../../assets/img/active/newNodes/banner_4.png">
+                <img style="position: absolute;left: 70%; top: 25%;z-index: -5;"
+                     src="../../assets/img/active/newNodes/banner_5.png">
+                <img style="position: absolute;left: 72.5%; top:22.1%;z-index: -4;"
+                     src="../../assets/img/active/newNodes/banner_6.png">
+                <img style="position: absolute;left: 70%; top: 18%;z-index: -4;"
+                     src="../../assets/img/active/newNodes/banner_6.png">
+                <img style="position:absolute;left: 48%; top: 5%;z-index: -2;"
+                     src="../../assets/img/active/newNodes/arrows_1.png">
+                <img style="position:absolute;left: 77%; top: 2%;z-index: -2;"
+                     src="../../assets/img/active/newNodes/arrows_2.png">
+                <img style="position:absolute;left: 78%; top: 15%;z-index: -2;"
+                     src="../../assets/img/active/newNodes/arrows_3.png">
+                <img style="position:absolute;left: 50%; top: 30%;z-index: -2;"
+                     src="../../assets/img/active/newNodes/arrows_4.png">
+
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
           <div @click="push('active')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
             <div style="width:1200px;height:560px;margin:0px auto;position:relative">
               <img src="../../assets/img/home/carousel-2-1.png" style="position:absolute;right:0px;top:20px;">
@@ -54,7 +93,8 @@
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->
-    <div class="box-container" :class="{two:this.activeBanner==2,three:this.activeBanner==3}">
+    <div class="box-container"
+         :class="{one:this.activeBanner == 1,two:this.activeBanner==3,three:this.activeBanner==4}">
       <div class="container">
         <div v-for="(item,index) in boxContainer" class="container-item">
           <img :src=item.img>
@@ -558,8 +598,7 @@
       // 待优化
       window.addEventListener('scroll', () => {
         if (window.scrollY > 300 && !this.cloudContentFade
-        )
-        {
+        ) {
           this.cloudContentFade = true
         }
         if (window.scrollY > 1100 && !this.fade) {
@@ -675,6 +714,9 @@
       height: 110px;
       width: 100%;
       background-color: #5692fe;
+      &.one {
+        background-color: #C254FA;
+      }
       &.three {
         background-color: rgb(80, 182, 235);
       }
@@ -1190,19 +1232,30 @@
   }
 
   .newNodes {
-    background: url('../../assets/img/active/newNodesBanner.png') no-repeat center;
     position: relative;
-    > div {
-      &:after {
-        content: '';
-        width: 662px;
-        height: 400px;
-        display: block;
-        top: 20px;
-        left: 0px;
-        position: absolute;
-        background: url('../../assets/img/active/newNodesText.png') no-repeat center;
-      }
+    height: 750px;
+    background: linear-gradient(90.8deg, rgba(200, 85, 254, 1), rgba(6, 46, 141, 1));
+    overflow: hidden;
+    z-index: 1;
+    p {
+      margin-bottom: 20px;
+      font-size: 80px;
+      font-family: PingFangSC-Medium;
+      color: rgba(255, 255, 255, 1);
+      line-height: 112px;
+    }
+    button {
+      outline: none;
+      border: none;
+      padding: 20px 40px;
+      font-size:36px;
+      font-family:PingFangSC-Regular;
+      color:rgba(255,255,255,1);
+      line-height:36px;
+      background:rgba(200,85,254,1);
+      margin-top: 40px;
+      box-shadow: 0 3px 31px 0 #8A4BC4;
+      cursor: pointer;
     }
   }
 
