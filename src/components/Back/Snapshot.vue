@@ -43,7 +43,7 @@
     </div>
 
     <!-- 制作快照弹窗 -->
-    <Modal v-model="showModal.newSnapshot" width="550" :scrollable="true">
+    <Modal v-model="showModal.newSnapshot" width="550" :scrollable="true" class="create-snas-modal">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">制作快照</span>
       </p>
@@ -59,8 +59,18 @@
             <Input v-model="creatSnapsForm.name" placeholder="请输入2-4094范围内任意数字"></Input>
           </FormItem>
           <div style="padding-top: 11px;margin-right: 100px;margin-bottom: 20px">
-            <p style="font-size: 14px;color:#495060;margin-bottom: 15px">是否保存内存信息<Poptip trigger="hover" content="您可以选择在制作快照的时候保存您主机的当前运行状态。当您选择“保存”之时，当前主机的内存将被记录，在您对快照执行回滚操作的时候，也只能在开机状态下执行；当您选择“不保存”时
-此次快照将不记录主机内存信息，您在通过该快照回滚的时候只能在关机状态下执行。"> <span style="border: 1px solid #2A99F2;border-radius: 10px;padding: 0px 6px;color: #2A99F2;cursor: pointer;margin-left: 5px">?</span></Poptip></p>
+            <div style="font-size: 14px;color:#495060;margin-bottom: 15px">是否保存内存信息
+              <Poptip trigger="hover" width="400">
+                <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
+                <div slot="content">
+                    <div>
+                        您可以选择在制作快照的时候保存您主机的当前运行状态。当您选择“保存”之时，
+                        当前主机的内存将被记录，在您对快照执行回滚操作的时候，也只能在开机状态下执行；当您选择“不保存”时
+                        此次快照将不记录主机内存信息，您在通过该快照回滚的时候只能在关机状态下执行。
+                    </div>
+                </div>
+              </Poptip>
+            </div>
             <RadioGroup v-model="creatSnapsForm.radio">
               <Radio label="1">保存</Radio>
               <Radio label="0">不保存</Radio>

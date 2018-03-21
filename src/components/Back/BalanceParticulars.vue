@@ -1,9 +1,5 @@
 <template>
   <div id="background">
-    <Spin fix v-show="loading">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-      <div>{{loadingMessage}}</div>
-    </Spin>
     <div id="wrapper">
       <span>云网络 / 负载均衡</span>
       <!-- 负载均衡相关信息 -->
@@ -68,8 +64,6 @@
   export default{
     data(){
       return {
-        loadingMessage: '',
-        loading: false,
         balanceInfo: null,
         hostColumns: [
           {
@@ -95,6 +89,30 @@
             title: '操作',
             width: 100,
             render: (h, object) => {
+              if (object.row._status == 1) {
+                return h('div', [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', {
+                  style: {
+                    verticalAlign: 'middle'
+                  }
+                }, '正在添加主机...')])
+              }
+              if (object.row._status == 2) {
+                return h('div', [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', {
+                  style: {
+                    verticalAlign: 'middle'
+                  }
+                }, '正在删除主机...')])
+              }
               return h('span', {
                 style: {
                   color: '#2A99F2',
@@ -105,23 +123,24 @@
                     this.$message.confirm({
                       content: '确认从负载均衡中移除该主机？',
                       onOk: () => {
-                        this.loadingMessage = '正在解绑虚拟机，请稍候'
-                        this.loading = true
                         var url = ``
                         if (this.balanceInfo._internal) {
                           url = `loadbalance/removeFromInternalLoadBalancerRule.do?VMIds=${object.row.computerid}&lbId=${this.balanceInfo.lbid}`
                         } else {
                           url = `loadbalance/removeFromLoadBalancerRule.do?VMIds=${object.row.computerid}&roleId=${this.balanceInfo.loadbalanceroleid}`
                         }
+                        this.hostData.forEach(item => {
+                          if (item.computerid == object.row.computerid) {
+                            this.$set(item, '_status', 2)
+                          }
+                        })
                         this.$http.get(url).then(response => {
                           if (response.status == 200 && response.data.status == 1) {
-                            this.loading = false
                             this.$Message.success({
                               content: response.data.message
                             })
                             this.listHostByBalance()
                           } else {
-                            this.loading = false
                             this.$message.error({
                               content: response.data.message
                             })
@@ -185,8 +204,6 @@
       /* 负载均衡确定绑定虚拟机 */
       bindHost_ok () {
         if (this.bindHostForm.vm.length != 0) {
-          this.loadingMessage = '正在绑定虚拟机，请稍候'
-          this.loading = true
           var url = ``
           if (this.balanceInfo._internal) {
             url = `loadbalance/assignToInternalLoadBalancerRule.do?VMIds=${this.bindHostForm.vm}&lbId=${this.balanceInfo.lbid}`
@@ -194,15 +211,19 @@
             url = `loadbalance/assignToLoadBalancerRule.do?VMIds=${this.bindHostForm.vm}&roleId=${this.balanceInfo.loadbalanceroleid}`
           }
           this.showModal.bind = false
+          this.hostData.push({
+            computername: '添加中...',
+            privateip: '添加中...',
+            computerid: this.bindHostForm.vm,
+            _status: 1
+          })
           this.$http.get(url).then(response => {
+            this.listHostByBalance()
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.success({
                 content: response.data.message
               })
-              this.listHostByBalance()
-              this.loading = false
             } else {
-              this.loading = false
               this.$message.error({
                 content: response.data.message
               })

@@ -11,7 +11,7 @@
         </Alert>
         <div class="content">
           <span>回收站</span>
-          <div style="margin-top:15px;position:relative">
+          <div style="margin-top:20px;position:relative">
             <div class="operate">
               <Button type="ghost" class="ghost" @click="deleteSelect" style="margin-right:10px;">一键删除</Button>
               <Button type="primary" @click="recoverSelect">一键还原</Button>
