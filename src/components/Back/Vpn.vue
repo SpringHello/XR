@@ -210,8 +210,7 @@
         <div class="universal-modal-content-flex">
           <Form :model="addUserForm" :rules="addUserFormValidate" ref="addUserFormValidate">
             <FormItem label="用户名称" prop="userName">
-              <span style="line-height: 32px;margin-right:5px">{{$store.state.userInfo.companyid}}</span><Input
-              v-model="addUserForm.userName" placeholder="请输入用户名称" style="width:61%"></Input>
+              <Input v-model="addUserForm.userName" placeholder="请输入用户名称"></Input>
             </FormItem>
             <FormItem label="密码" prop="password">
               <Input v-model="addUserForm.password" placeholder="请输入密码"></Input>
@@ -269,7 +268,7 @@
         if (!value) {
           return callback(new Error('请输入用户名'))
         }
-        if (value.length>8) {
+        if (value.length > 8) {
           callback(new Error('长度小于等于8位'))
         } else {
           callback()
@@ -406,10 +405,10 @@
             render: (h, object) => {
               var resultArr = []
               var arr = object.row.username.split(',')
-              for(var i=0;i<arr.length;i++){
-                resultArr.push(h('p',{style: {lineHeight: '1.5'}}, arr[i]))
+              for (var i = 0; i < arr.length; i++) {
+                resultArr.push(h('p', {style: {lineHeight: '1.5'}}, arr[i]))
               }
-             return h('div',resultArr)
+              return h('div', resultArr)
             }
           },
           {
@@ -934,10 +933,10 @@
         this.$refs.addUserFormValidate.validate(validate => {
           if (validate) {
             // status   1：创建中  2：删除中
-            this.userList.push({name: this.$store.state.userInfo.companyid + this.addUserForm.userName, status: 1})
+            this.userList.push({name: this.addUserForm.userName, status: 1})
             this.$http.get('network/addVpnUser.do', {
               params: {
-                userName: this.$store.state.userInfo.companyid + this.addUserForm.userName,
+                userName: this.addUserForm.userName,
                 password: this.addUserForm.password,
                 remoteVpnId: this.current,
               }
