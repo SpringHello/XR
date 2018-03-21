@@ -60,8 +60,12 @@
                 </li>
                 <li style="flex-basis: 180px;" v-else></li>
                 <li v-if="item._status==1">
-                  <Spin></Spin>
+                  <Spin style="display: inline-block"></Spin>
                   <span>添加子网中...</span>
+                </li>
+                <li v-else-if="item._status==2">
+                  <Spin style="display: inline-block"></Spin>
+                  <span>删除子网中...</span>
                 </li>
                 <li v-else><span class="blue" @click="addHostToVpc(item)">添加主机</span><span
                   class="vertical-line">|</span><span
@@ -652,22 +656,20 @@
         this.$message.confirm({
           content: '确认删除该子网？',
           onOk: () => {
-            this.loadingMessage = '正在删除子网，请稍候'
-            this.loading = true
+            // 设置删除子网的状态
+            this.$set(item, '_status', 2)
             var url = `network/deleteNetwork.do?id=${item.id}`
             this.$http.get(url).then(response => {
+              this.refresh()
               if (response.status == 200 && response.data.status == 1) {
-                this.loading = false
                 this.$Message.info({
                   content: response.data.message
                 })
-                this.refresh()
+
               } else {
-                this.loading = false
                 this.$message.error({
                   content: response.data.message
                 })
-                this.refresh()
               }
             })
           }

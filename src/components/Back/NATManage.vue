@@ -128,7 +128,6 @@
     },
     data(){
       const validaRegisteredName = regExp.validaRegisteredName
-      console.log(this)
       return {
         ruleValidate: {
           name: [
@@ -239,9 +238,9 @@
           // 端口映射名称
           name: '',
           frontStartPort: 1,
-          frontEndPort: 2,
+          frontEndPort: 65535,
           backStartPort: 1,
-          backEndPort: 2,
+          backEndPort: 65535,
           // 选择协议
           protocol: 'TCP',
           protocolOptions: [{label: 'TCP', value: 'TCP'}, {label: 'UDP', value: 'UDP'}],
@@ -327,7 +326,7 @@
                 privateEndPort: this.createDNATForm.backEndPort,
                 protocol: this.createDNATForm.protocol,
                 publicStartPort: this.createDNATForm.frontStartPort,
-                publicEndPort: this.createDNATForm.backEndPort,
+                publicEndPort: this.createDNATForm.frontEndPort,
                 VMId: this.createDNATForm.vm.split('#')[0],
                 networkId: this.createDNATForm.subNetwork
               }
@@ -360,6 +359,12 @@
           }
         })
       },
+      'createDNATForm.frontStartPort'(){
+        this.createDNATForm.backStartPort = this.createDNATForm.frontStartPort
+      },
+      'createDNATForm.frontEndPort'(){
+        this.createDNATForm.backEndPort = this.createDNATForm.frontEndPort
+      },
       '$store.state.zone': {
         handler: function () {
           this.refresh()
@@ -378,10 +383,10 @@
         #header {
           background-color: #E9E9E9;
           padding: 20px;
-          div.header{
+          div.header {
             display: flex;
             justify-content: space-between;
-            .btn{
+            .btn {
               border: 1px solid #2A99F2;
               color: #2A99F2;
               &:hover {
