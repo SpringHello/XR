@@ -10,7 +10,7 @@
                                                               style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 一键续费</span>
         <div class="content">
           <span>一键续费</span>
-          <div style="margin-top:15px;position:relative">
+          <div style="margin-top:20px;position:relative">
             <div class="operate">
               <div class="button" @click="selectAll"><span>全选</span></div>
               <div class="button" @click="renewalAll"><span>一键续费</span></div>

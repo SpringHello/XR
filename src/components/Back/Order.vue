@@ -402,7 +402,7 @@
           background: rgb(238, 247, 254);
           border: 1px solid rgb(173, 216, 247);
           border-radius: 4px;
-          margin-top: 15px;
+          margin-top: 20px;
           font-family: Microsoft Yahei, 微软雅黑;
           font-size: 12px;
           color: rgba(0, 0, 0, 0.65);
