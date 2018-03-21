@@ -187,7 +187,7 @@
           {
             img: require('../../../assets/img/product/ECS-recommendation-4.png'),
             title: 'NAT网关',
-            desc: '在VPC环境下构建一个公网流量的出入口，通过自定义SourceNAT，Destination NAT规则灵活使用网络资源。“支持多IP共享公网带宽”',
+            desc: '添加端口转发规则，允许来自公网或其他VPC对您的私有网络服务进行访问。',
             path: 'Pnat'
           }
         ]
