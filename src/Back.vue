@@ -195,7 +195,7 @@
             ]
           },
           {
-            mainName: '网络',
+            mainName: '云网络',
             type: 'network',
             subItem: [
               {
@@ -213,7 +213,7 @@
             ]
           },
           {
-            mainName: '安全',
+            mainName: '云安全',
             type: 'security',
             subItem: [
               {subName: '防火墙', type: 'firewall'}
