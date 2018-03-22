@@ -6,8 +6,10 @@
       <div class="balanceInfo">
         <div class="title">
           <span style="color:#2A99F2">{{ balanceName }}</span>
-          <button @click="$router.go(0)">刷新</button>
-          <button style="margin-right: 10px" @click="$router.go(-1)">返回</button>
+          <div style="float: right;">
+            <button @click="$router.go(0)">刷新</button>
+            <button style="margin-right: 10px" @click="$router.go(-1)">返回</button>
+          </div>
         </div>
         <div class="center">
           <ol>
@@ -278,12 +280,13 @@
     background-color: #FFFFFF;
     padding: 20px;
     .title {
-      display: inline;
+     // display: inline;
       span {
         font-family: MicrosoftYaHei;
         font-size: 16px;
         color: #2A99F2;
         letter-spacing: 0;
+        line-height: 32px;
       }
       button {
         border: 1px solid #2A99F2;
@@ -305,7 +308,7 @@
       }
     }
     .center {
-      margin-top: 10px;
+      margin-top: 20px;
       display: flex;
       padding-bottom: 20px;
       border-bottom: 1px solid #D8D8D8;
