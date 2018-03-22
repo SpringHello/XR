@@ -196,13 +196,17 @@
             </dd>
           </dl>
           <dl>
-            <dt> 3、活动主机7天内可无理由退款。</dt>
+            <dt> 3、活动开始时间：</dt>
+            <dd>2018-4-10</dd>
           </dl>
           <dl>
-            <dt>4、为保证活动的公平公正，新睿云有权对恶意刷抢（如通过程序等技术手段）活动资源、利用资源从事违法违规行为的用户收回使用资格。</dt>
+            <dt> 4、活动主机7天内可无理由退款。</dt>
           </dl>
           <dl>
-            <dt>5、活动最终解释权在法律范围内归新睿云所有。</dt>
+            <dt>5、为保证活动的公平公正，新睿云有权对恶意刷抢（如通过程序等技术手段）活动资源、利用资源从事违法违规行为的用户收回使用资格。</dt>
+          </dl>
+          <dl>
+            <dt>6、活动最终解释权在法律范围内归新睿云所有。</dt>
           </dl>
         </div>
       </div>
@@ -634,13 +638,12 @@
         color: #FFFFFF;
         text-align: justify;
         dt {
-          font-size: 14px;
+          font-size: 16px;
           color: #FFFFFF;
           line-height: 28px;
-          font-weight: 600;
         }
         dd {
-          font-size: 12px;
+          font-size: 14px;
           color: #FFFFFF;
           line-height: 27px;
           padding-left: 20px;

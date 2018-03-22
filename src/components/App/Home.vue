@@ -4,6 +4,22 @@
     <div class="banner">
       <my-carousel :interval=5000 effect="fade" class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
+          <div @click="push('active')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
+            <div style="width:1200px;height:560px;margin:0px auto;position:relative">
+              <img src="../../assets/img/home/carousel-2-1.png" style="position:absolute;right:0px;top:20px;">
+              <div style="position: relative; top: 30%">
+                <p style="font-size: 48px;color: #5692fe;margin-bottom: 20px;">新睿云盛大上线</p>
+                <p style="font-size: 20px;color: #5692fe;margin-bottom: 20px;">全品类折扣优惠 礼包零门槛领取</p>
+                <p style="font-size: 24px;color:#5692fe">最高省500元</p>
+                <button
+                  style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
+                  立即领取
+                </button>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
           <div @click="push('newNodes')"
                style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
             <div class="newNodes">
@@ -35,22 +51,6 @@
                      src="../../assets/img/active/newNodes/arrows_3.png">
                 <img style="position:absolute;left: 53%; top: 46%;z-index: -2;"
                      src="../../assets/img/active/newNodes/arrows_4.png">
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
-          <div @click="push('active')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
-            <div style="width:1200px;height:560px;margin:0px auto;position:relative">
-              <img src="../../assets/img/home/carousel-2-1.png" style="position:absolute;right:0px;top:20px;">
-              <div style="position: relative; top: 30%">
-                <p style="font-size: 48px;color: #5692fe;margin-bottom: 20px;">新睿云盛大上线</p>
-                <p style="font-size: 20px;color: #5692fe;margin-bottom: 20px;">全品类折扣优惠 礼包零门槛领取</p>
-                <p style="font-size: 24px;color:#5692fe">最高省500元</p>
-                <button
-                  style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
-                  立即领取
-                </button>
               </div>
             </div>
           </div>
@@ -91,7 +91,7 @@
     </div>
     <!-- 功能介绍区域 -->
     <div class="box-container"
-         :class="{one:this.activeBanner == 1,two:this.activeBanner==3,three:this.activeBanner==4}">
+         :class="{one:this.activeBanner == 2,two:this.activeBanner==3,three:this.activeBanner==4}">
       <div class="container">
         <div v-for="(item,index) in boxContainer" class="container-item">
           <img :src=item.img>
