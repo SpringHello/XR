@@ -1,9 +1,5 @@
 <template>
   <div id="background">
-    <Spin fix v-show="loading">
-      <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-      <div>{{loadingMessage}}</div>
-    </Spin>
     <div id="wrapper">
       <span class="title">
         云网络 /
@@ -87,7 +83,8 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
-        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">￥{{newIPForm.cost}} <span v-if="newIPForm.timeValue != ''">/</span>
+        <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">￥{{newIPForm.cost}} <span
+          v-if="newIPForm.timeValue != ''">/</span>
           <span v-if="newIPForm.timeType == 'year' && newIPForm.timeValue != ''" style="font-size: 16px;">{{newIPForm.timeValue}}年</span>
           <span v-if="newIPForm.timeType == 'month' && newIPForm.timeValue != ''" style="font-size: 16px;">{{newIPForm.timeValue}}月</span>
           <!--<span v-if="newIPForm.timeType == 'current'">/ <span style="font-size: 16px;">时</span></span>-->
@@ -210,6 +207,42 @@
         </Button>
       </div>
     </Modal>
+    <!-- 续费modal -->
+    <Modal
+      v-model="showModal.renew"
+      width="550"
+      :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">续费选择</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form>
+          <FormItem label="付费类型 :">
+            <Select v-model="renewalType">
+              <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="付费时长 :">
+            <Select v-model="renewalTime">
+              <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+        </Form>
+        <div style="font-size:16px;">
+          应付费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{renewalCost}}
+          <span v-if="renewalTime != ''">/</span>
+          <span style="font-size: 15px;">{{renewalTime}}<span v-if="renewalType == 'year' && renewalTime != ''">年</span>
+          <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span>
+        </span>
+        </div>
+      </div>
+      <div slot="footer" style="" class="modal-footer-border">
+        <Button class="button cancel" @click="showModal.renew=false">取消</Button>
+        <Button class="button ok" @click="renewOk">确认续费</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -230,11 +263,28 @@
     },
     data(){
       return {
-        loadingMessage: '',
-        loading: false,
+        // IP续费
+        renewalType: '',
+        renewalTime: '',
+        renewalCost: '--',
+        timeOptions: {
+          renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
+          renewalTime: [],
+          year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}],
+          month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '3月', value: 3}, {
+            label: '4月',
+            value: 4
+          }, {label: '5月', value: 5}, {label: '6月', value: 6}, {label: '7月', value: 7}, {
+            label: '8月',
+            value: 8
+          }, {label: '9月', value: 9}, {label: '10月', value: 10}]
+        },
+        currentIp: '',
         // 当前选中项
         select: null,
         showModal: {
+          // 续费modal
+          renew: false,
           newIPModal: false,
           bindIPForHost: false,
           bindIPForNAT: false,
@@ -304,18 +354,57 @@
                   break
               }
               if (obj.row.status == 0) {
-                return h('div', {}, [h('span', {}, value), h('span', {
-                  style: {
-                    cursor: 'pointer',
-                    color: '#2A99F2',
-                    marginLeft: '10px'
-                  },
-                  on: {
-                    click: () => {
-                      this.renewIp(obj.row.id)
+                // 实时计费的续费模态框
+                if (obj.row.caseType == 3) {
+                  return h('div', {}, [h('span', {}, value), h('span', {
+                    style: {
+                      cursor: 'pointer',
+                      color: '#2A99F2',
+                      marginLeft: '10px'
+                    },
+                    on: {
+                      click: () => {
+                        this.$message.confirm({
+                          content: '确认续费该IP一小时？',
+                          onOk: () => {
+                            this.$http.get('information/getResCost.do', {
+                              params: {
+                                type: 'publicIp',
+                                id: obj.row.id
+                              }
+                            }).then(response => {
+                              if (response.status == 200 && response.data.status == 1) {
+                                this.refresh()
+                              } else {
+                                this.$message.info({
+                                  content: response.data.message
+                                })
+                              }
+                            })
+                          }
+                        })
+                      }
                     }
-                  }
-                }, "续费")]);
+                  }, "续费")]);
+                } else {
+                  // 包年包月计费的续费模态框
+                  return h('div', {}, [h('span', {}, value), h('span', {
+                    style: {
+                      cursor: 'pointer',
+                      color: '#2A99F2',
+                      marginLeft: '10px'
+                    },
+                    on: {
+                      click: () => {
+                        this.currentIp = obj.row.id
+                        this.renewalType = ''
+                        this.renewalTime = ''
+                        this.showModal.renew = true
+                      }
+                    }
+                  }, "续费")]);
+                }
+
               }
               // if (obj.row.status != 1 && obj.row.status != 0 && obj.row.status != -1) {
               //   return h('div', {}, [h('Spin', {
@@ -524,7 +613,6 @@
       },
       // 选中当前项
       selectIp(current){
-        console.log(current)
         this.select = current
       },
       // 打开新建IP模态框
@@ -647,7 +735,7 @@
                 this.$Message.success(response.data.message)
                 this.refresh()
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message,
                   'onOk': () => {
                     this.refresh()
@@ -675,7 +763,7 @@
                 this.$Message.success(response.data.message)
                 this.refresh()
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message,
                   'onOk': () => {
                     this.refresh()
@@ -732,7 +820,7 @@
                 })
                 this.refresh()
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message,
                   'onOk': () => {
                     this.refresh()
@@ -754,7 +842,7 @@
             this.$Message.success(response.data.message)
             this.refresh()
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -800,7 +888,7 @@
             if (response.status == 200 && response.data.status == 1) {
               this.$router.push({path: 'order'})
             } else {
-              this.$message.error({
+              this.$message.info({
                 content: response.data.message
               })
             }
@@ -822,11 +910,8 @@
       },
       chargesOK(){
         this.showModal.charges = false
-        this.loadingMessage = '正在变更资费，请稍候'
-        this.loading = true
         var url = `continue/changeMoney.do?id=${this.select.id}&timeType=${this.chargesForm.timeType}&timeValue=${this.chargesForm.timeValue}&type=2`
         this.$http.get(url).then(response => {
-            this.loading = false
             if (response.status == 200 && response.data.status == 1) {
               this.$router.push({path: 'order'})
             }
@@ -863,8 +948,44 @@
           }
         )
       },
+      renewOk(){
+        this.$http.post('continue/continueOrder.do', {
+          list: [{type: 2, id: this.currentIp}],
+          timeType: this.renewalType,
+          timeValue: this.renewalTime + ''
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push({path: 'order'})
+          }
+        })
+      }
     },
     watch: {
+      // 监听计费模式变化
+      renewalType(type){
+        this.renewalTime = ''
+        this.timeOptions.renewalTime = this.timeOptions[type]
+      },
+      renewalTime(time){
+        if (time == '') {
+          this.renewalCost = '--'
+        } else {
+          this.$http.get('information/getYjPrice.do', {
+            params: {
+              timeValue: this.renewalTime,
+              timeType: this.renewalType,
+              ipIdArr: this.currentIp,
+              hostIdArr: '',
+              diskArr: ''
+            }
+          })
+            .then((response) => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.renewalCost = response.data.result
+              }
+            })
+        }
+      },
       // 监听区域变换
       '$store.state.zone': {
         handler: function () {

@@ -451,7 +451,7 @@
                                 content: response.data.message
                               })
                             } else {
-                              this.$message.error({
+                              this.$message.info({
                                 content: response.data.message
                               })
                             }
@@ -528,7 +528,7 @@
                                   })
                                   this.refresh()
                                 } else {
-                                  this.$message.error({
+                                  this.$message.info({
                                     content: response.data.message
                                   })
                                 }
@@ -867,7 +867,7 @@
                   this.refresh()
                 } else {
                   this.refresh()
-                  this.$message.error({
+                  this.$message.info({
                     content: response.data.message
                   })
                 }
@@ -907,7 +907,7 @@
                 this.refresh()
               } else {
                 this.refresh()
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }
@@ -930,7 +930,7 @@
                   content: response.data.message
                 })
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }
@@ -980,7 +980,7 @@
                 this.$Message.success({content: response.data.message})
                 // this.$error('error', response.data.message)
               } else {
-                this.$message.error({content: response.data.message})
+                this.$message.info({content: response.data.message})
               }
             })
           } else {
@@ -1002,7 +1002,7 @@
                   content: response.data.message
                 })
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }
@@ -1029,7 +1029,7 @@
                 this.$router.push('order')
               }
               if (response.status == 200 && response.data.status == 2) {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }
@@ -1076,7 +1076,7 @@
                   content: response.data.message
                 })
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }
@@ -1116,7 +1116,7 @@
                 })
                 this.refresh()
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }

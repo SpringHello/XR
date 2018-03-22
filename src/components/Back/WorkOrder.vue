@@ -7,6 +7,7 @@
     <div class="wrapper">
       <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 工单</span>
       <div class="content">
+        <img src="../../assets/img/usercenter/expenses.png" style="margin-right: 5px;vertical-align: text-bottom">
         <span>工单</span>
         <div style="margin-top:20px;min-height:660px;">
           <Tabs type="card" v-model="tableName" :animated="false">
@@ -315,7 +316,7 @@
               this.closingOrder.push(order)
               this.$Message.success('已关闭工单')
             } else {
-              this.$message.error({
+              this.$message.info({
                   content: response.data.msg
               })
             }
@@ -330,7 +331,7 @@
               this.closingOrder.splice(index, 1);
               this.$Message.success(response.data.msg)
             } else {
-              this.$message.error({
+              this.$message.info({
                 content: response.data.msg
               })
             }
@@ -381,7 +382,7 @@
               })
               this.tableName = '处理中的工单'
             } else {
-              this.$message.error({
+              this.$message.info({
                 content: response.data.msg,
               })
             }

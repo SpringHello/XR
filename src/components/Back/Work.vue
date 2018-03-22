@@ -7,6 +7,7 @@
     <div class="wrapper">
       <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 工单</span>
       <div class="content">
+        <img src="../../assets/img/app/order.png" style="margin-right: 5px;vertical-align: text-bottom">
         <span>工单</span>
         <div style="margin-top:20px;min-height:660px;">
           <Tabs type="card" v-model="tableName" :animated="false">

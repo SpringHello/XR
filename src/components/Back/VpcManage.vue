@@ -591,7 +591,7 @@
                               content: response.data.message
                             })
                           } else {
-                            this.$message.error({
+                            this.$message.info({
                               content: response.data.message
                             })
 
@@ -620,7 +620,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.addHostForm.vmOptions = response.data.result
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -645,7 +645,7 @@
             })
           } else {
             this.refresh()
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -667,7 +667,7 @@
                 })
 
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }
@@ -722,7 +722,7 @@
             this.refresh()
             this.$Message.success(response.data.message)
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -746,7 +746,7 @@
                 } else {
                   this.loading = false
                   item.delete = false
-                  this.$message.error({
+                  this.$message.info({
                     content: response.data.message
                   })
                 }
@@ -754,7 +754,7 @@
             }
           })
         } else {
-          this.$message.error({
+          this.$message.info({
             content: '默认子网不能删除',
           })
         }
@@ -768,7 +768,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.aclList = response.data.result
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -788,7 +788,7 @@
           } else {
             this.loading = false
             this.refresh()
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -884,7 +884,7 @@
                 })
                 this.refresh()
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }
@@ -911,7 +911,7 @@
             this.$Message.success(response.data.message)
           } else if (response.status == 200 && response.data.status == 2) {
             this.refresh()
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -948,7 +948,7 @@
               this.refresh()
             } else {
               this.refresh()
-              this.$message.error({
+              this.$message.info({
                 content: response.data.message
               })
             }
@@ -972,7 +972,7 @@
                 this.$Message.success(response.data.message)
                 this.refresh()
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }
@@ -1002,7 +1002,7 @@
                 }
               })
             } else {
-              this.$message.error({
+              this.$message.info({
                 content: response.data.message
               })
             }

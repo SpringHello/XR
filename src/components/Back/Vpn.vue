@@ -760,7 +760,7 @@
                   content: response.data.message
                 })
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }
@@ -814,7 +814,7 @@
             })
           } else {
             this.refresh()
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -836,7 +836,7 @@
          }
          }).then(response => {
          if (response.status == 200 && response.data.status == 2) {
-         this.$message.error({
+         this.$message.info({
          content: response.data.message
          })
          }
@@ -878,7 +878,7 @@
                     content: response.data.message
                   })
                 } else {
-                  this.$message.error({
+                  this.$message.info({
                     content: response.data.message
                   })
                 }
@@ -906,7 +906,7 @@
                   })
                   this.refresh()
                 } else {
-                  this.$message.error({
+                  this.$message.info({
                     content: response.data.message
                   })
                   this.refresh()
@@ -971,7 +971,7 @@
             this.listUser()
           } else {
             this.listUser()
-            this.$message.error(response.data.message)
+            this.$message.info(response.data.message)
           }
         })
       }

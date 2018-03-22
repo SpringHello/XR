@@ -1704,7 +1704,7 @@
       // 主机加入购物车
       addCart(){
         if (this.cart.length > 4) {
-          this.$message.error({
+          this.$message.info({
             content: '购物车已满'
           })
         }
@@ -1850,7 +1850,7 @@
       // 磁盘加入购物车
       addDiskCart(){
         if (this.cart.length > 4) {
-          this.$message.error({
+          this.$message.info({
             content: '购物车已满'
           })
         }
@@ -1897,7 +1897,7 @@
       // 公网IP加入购物车
       addIPCart(){
         if (this.cart.length > 4) {
-          this.$message.error({
+          this.$message.info({
             content: '购物车已满'
           })
         }
@@ -2073,17 +2073,17 @@
       },
       _checkCount(hostCount, diskCount, ipCount) {
         if (hostCount > this.remainCount.hostCount) {
-          this.$message.error({
+          this.$message.info({
             content: '创建的主机数超过限制'
           })
           return false
         } else if (diskCount > this.remainCount.diskCount) {
-          this.$message.error({
+          this.$message.info({
             content: '创建的磁盘数超过限制'
           })
           return false
         } else if (ipCount > this.remainCount.publicIpCount) {
-          this.$message.error({
+          this.$message.info({
             content: '创建的公网IP数超过限制'
           })
           return false

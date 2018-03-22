@@ -67,7 +67,7 @@
           this.loading = false
         } else {
           this.loading = false
-          this.$message.error({
+          this.$message.info({
               content: response.data.message
           })
         }
@@ -93,7 +93,7 @@
             });
           } else {
             this.loading = false;
-            this.$message.error({
+            this.$message.info({
                 content: response.data.message
             })
           }

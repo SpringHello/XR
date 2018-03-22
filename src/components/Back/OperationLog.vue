@@ -3,6 +3,7 @@
     <div class="wrapper">
       <span>个人中心 / 操作日志</span>
       <div class="content">
+        <img src="../../assets/img/usercenter/operationLog.png" style="margin-right: 5px;vertical-align: text-bottom">
         <span class="title">操作日志</span>
         <div class="logdata">
           <div class="search">

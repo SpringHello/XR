@@ -629,7 +629,7 @@
             this.diskData = response.data.result
             this.diskSelection = null
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -650,7 +650,7 @@
             }
           })
         } else {
-          this.$message.error({
+          this.$message.info({
             content: '该硬盘已挂载主机“' + data.mountonname + '”，若需挂载其他主机请先卸载硬盘。'
           })
         }
@@ -663,7 +663,7 @@
           this.diskName = this.operand.diskname
           this.hostName = this.operand.mountonname
         } else {
-          this.$message.error({
+          this.$message.info({
             content: '该硬盘没有挂载主机，无法卸载'
           })
         }
@@ -700,7 +700,7 @@
               this.coupon = 0
             }
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -712,7 +712,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.diskSizeExpenses = response.data.result
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -739,7 +739,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -769,7 +769,7 @@
 
           this.showModal.dilatationDisk = true
         } else {
-          this.$message.error({
+          this.$message.info({
             content: '该硬盘当前状态下不能扩容'
           })
         }
@@ -781,7 +781,7 @@
           this.showModal.modificationDisk = true
           this.modificationDiskForm.diskName = this.operand.diskname
         } else {
-          this.$message.error({
+          this.$message.info({
             content: '该硬盘当前状态下不能修改'
           })
         }
@@ -805,7 +805,7 @@
             this.showModal.deleteDisk = true
             this.diskName = this.diskSelection.diskname
           } else {
-            this.$message.error({
+            this.$message.info({
               content: '包年包月资费资源无法删除'
             })
           }
@@ -834,7 +834,7 @@
               content: response.data.message,
             })
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -850,7 +850,7 @@
             this.showModal.modificationDisk = false
             this.listDisk()
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -871,7 +871,7 @@
             })
             this.listDisk()
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -892,7 +892,7 @@
               content: response.data.message,
             })
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -905,7 +905,7 @@
             // this.$store.commit('setSelect', 'order')
             this.$router.push('order')
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -918,7 +918,7 @@
           this.operand = data
           this.showModal.createDiskBackup = true
         } else {
-          this.$message.error({
+          this.$message.info({
             content: '该硬盘当前状态下不能备份'
           })
         }
@@ -937,7 +937,7 @@
             this.$Message.info(response.data.message)
             this.$router.push('diskBackup')
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
             this.refresh()

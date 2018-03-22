@@ -518,7 +518,7 @@
             this.listAllBalance()
           } else {
             this.loading = false
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -551,7 +551,7 @@
             this.listAllBalance()
           } else {
             this.loading = false
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -574,7 +574,7 @@
             if (response.status == 200 && response.data.status == 1) {
               this.bindHostForm.vmOptions = response.data.result
             } else {
-              this.$message.error({
+              this.$message.info({
                 content: response.data.message
               })
             }
@@ -605,7 +605,7 @@
               })
             } else {
               this.refresh()
-              this.$message.error({
+              this.$message.info({
                 content: response.data.message
               })
             }
@@ -627,7 +627,7 @@
             if (response.status == 200 && response.data.status == 1) {
               this.unbindForm.hostList = response.data.result
             } else {
-              this.$message.error({
+              this.$message.info({
                 content: response.data.message
               })
             }
@@ -657,7 +657,7 @@
               })
               this.refresh()
             } else {
-              this.$message.error({
+              this.$message.info({
                 content: response.data.message
               })
               this.refresh()
@@ -696,7 +696,7 @@
                   this.balanceSelection = null
                 } else {
                   this.refresh()
-                  this.$message.error({
+                  this.$message.info({
                     content: response.data.message
                   })
                 }

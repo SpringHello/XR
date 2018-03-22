@@ -400,7 +400,7 @@
           this.upInformation.tableData = response.data.result.up
           this.downInformation.tableData = response.data.result.down
         } else {
-          this.$message.error({
+          this.$message.info({
             content: response.data.message
           })
         }
@@ -463,7 +463,7 @@
                     this.setData(response)
                   })
                   //this.loading = false
-                  this.$message.error({
+                  this.$message.info({
                     content: response.data.message
                   })
                 }
@@ -512,7 +512,7 @@
               this.setData(response)
             })
             //this.loading = false
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
