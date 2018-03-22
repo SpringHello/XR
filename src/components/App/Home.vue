@@ -11,33 +11,30 @@
                    src="../../assets/img/active/newNodes/banner_1.png">
               <img style="position: absolute;top: 7%;left: 7%;"
                    src="../../assets/img/active/newNodes/circle.png">
-              <div style="width:1200px;margin:0px auto;position: absolute; top: 15%; left: 19%;">
+              <div style="width:1200px;margin:0px auto;padding-top: 6%;position: relative">
                 <p>庆新节点上线</p>
                 <p style="font-size: 44px;line-height: 62px;font-family: PingFangSC-Light;">配置升级 | 限时低价体验</p>
                 <button>立即体验</button>
-              </div>
-              <div>
-                <img style="position:absolute;left: 44%; top: 34%;z-index: -2;"
+                <img style="position:absolute;left: 41%; top: 54%;z-index: -2;"
                      src="../../assets/img/active/newNodes/banner_2.png">
-                <img style="position: absolute;left: 52%;top: 12%;z-index: -3;"
+                <img style="position: absolute;left: 55%;top: 30%;z-index: -3;"
                      src="../../assets/img/active/newNodes/banner_3.png">
-                <img style="position: absolute;left: 61%;top: 1%;z-index: -4;"
+                <img style="position: absolute;left: 69%;top: 11%;z-index: -4;"
                      src="../../assets/img/active/newNodes/banner_4.png">
-                <img style="position: absolute;left: 70%; top: 25%;z-index: -5;"
+                <img style="position: absolute;left: 83%; top: 53%;z-index: -5;"
                      src="../../assets/img/active/newNodes/banner_5.png">
-                <img style="position: absolute;left: 72.5%; top:22.1%;z-index: -4;"
+                <img style="position: absolute;left: 86.5%; top:48%;z-index: -4;"
                      src="../../assets/img/active/newNodes/banner_6.png">
-                <img style="position: absolute;left: 70%; top: 18%;z-index: -4;"
+                <img style="position: absolute;left: 82%; top: 40%;z-index: -4;"
                      src="../../assets/img/active/newNodes/banner_6.png">
-                <img style="position:absolute;left: 48%; top: 5%;z-index: -2;"
+                <img style="position:absolute;left: 50%; top: 8%;z-index: -2;"
                      src="../../assets/img/active/newNodes/arrows_1.png">
-                <img style="position:absolute;left: 77%; top: 2%;z-index: -2;"
+                <img style="position:absolute;left: 90%; top: 7%;z-index: -2;"
                      src="../../assets/img/active/newNodes/arrows_2.png">
-                <img style="position:absolute;left: 78%; top: 15%;z-index: -2;"
+                <img style="position:absolute;left: 92%; top: 28%;z-index: -2;"
                      src="../../assets/img/active/newNodes/arrows_3.png">
-                <img style="position:absolute;left: 50%; top: 30%;z-index: -2;"
+                <img style="position:absolute;left: 53%; top: 46%;z-index: -2;"
                      src="../../assets/img/active/newNodes/arrows_4.png">
-
               </div>
             </div>
           </div>
