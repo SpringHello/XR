@@ -937,13 +937,6 @@
       }
     },
     created() {
-      if (this.$store.state.userInfo != null) {
-        this.isLogin = 1
-        this.userInfo = this.$store.state.userInfo
-        this.companyauth = this.userInfo.companyauth
-        this.personalauth = this.userInfo.personalauth
-        this.isReceive = this.userInfo.activityInfo[6].companytype
-      }
       setTimeout(() => {
         this.img_2 = true
       }, 1500)
@@ -953,6 +946,13 @@
       setTimeout(() => {
         this.img_4 = true
       }, 4500)
+      if (this.$store.state.userInfo != null) {
+        this.isLogin = 1
+        this.userInfo = this.$store.state.userInfo
+        this.companyauth = this.userInfo.companyauth
+        this.personalauth = this.userInfo.personalauth
+        this.isReceive = this.userInfo.activityInfo[6].companytype
+      }
     },
     components: {},
     methods: {
