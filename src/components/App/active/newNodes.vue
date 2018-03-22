@@ -9,18 +9,30 @@
         <p>庆新节点上线</p>
         <p style="font-size: 44px;line-height: 62px;font-family: PingFangSC-Light;">配置升级 | 限时低价体验</p>
         <!--<button>立即领取</button>-->
-        <img style="position:absolute;left: 41%; top: 100%;z-index: -2;"
-             src="../../../assets/img/active/newNodes/banner_2.png">
-        <img style="position: absolute;left: 55%;top: 56%;z-index: -3;"
-             src="../../../assets/img/active/newNodes/banner_3.png">
-        <img style="position: absolute;left: 69%;top: 32%;z-index: -4;"
-             src="../../../assets/img/active/newNodes/banner_4.png">
-        <img style="position: absolute;left: 83%; top: 83%;z-index: -5;"
-             src="../../../assets/img/active/newNodes/banner_5.png">
-        <img style="position: absolute;left: 86.5%; top:78%;z-index: -4;"
-             src="../../../assets/img/active/newNodes/banner_6.png">
-        <img style="position: absolute;left: 82%; top: 68%;z-index: -4;"
-             src="../../../assets/img/active/newNodes/banner_6.png">
+        <transition name="list">
+          <img v-if="img_1" style="position:absolute;left: 41%; top: 94%;z-index: -2;"
+               src="../../../assets/img/active/newNodes/banner_2.png">
+        </transition>
+        <transition name="list">
+          <img v-if="img_2" style="position: absolute;left: 55%;top: 50%;z-index: -3;"
+               src="../../../assets/img/active/newNodes/banner_3.png">
+        </transition>
+        <transition name="list">
+          <img v-if="img_3" style="position: absolute;left: 69%;top: 32%;z-index: -4;"
+               src="../../../assets/img/active/newNodes/banner_4.png">
+        </transition>
+        <transition name="list">
+          <img v-if="img_4" style="position: absolute;left: 83%; top: 83%;z-index: -5;"
+               src="../../../assets/img/active/newNodes/banner_5.png">
+        </transition>
+        <transition name="list">
+          <img v-if="img_4" style="position: absolute;left: 86.5%; top:78%;z-index: -4;"
+               src="../../../assets/img/active/newNodes/banner_6.png">
+        </transition>
+        <transition name="list">
+          <img v-if="img_3" style="position: absolute;left: 82%; top: 68%;z-index: -4;"
+               src="../../../assets/img/active/newNodes/banner_6.png">
+        </transition>
         <img style="position:absolute;left: 50%; top: 18%;z-index: -2;"
              src="../../../assets/img/active/newNodes/arrows_1.png">
         <img style="position:absolute;left: 90%; top: 9%;z-index: -2;"
@@ -269,7 +281,7 @@
       display: flex;
       justify-content: space-around;
       width: 1200px;
-      background:url('../../../assets/img/active/newNodes/textBanner1.png'),linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
+      background: url('../../../assets/img/active/newNodes/textBanner1.png') 655px no-repeat, linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
       opacity: 0.8;
       li {
         &::before {
@@ -445,7 +457,7 @@
           .title {
             height: 72px;
             text-align: center;
-            background: url('../../../assets/img/active/newNodes/hostBanner.png'),linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
+            background: url('../../../assets/img/active/newNodes/hostBanner.png'), linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
             p {
               font-size: 30px;
               font-family: PingFangSC-Medium;
@@ -786,6 +798,16 @@
     }
   }
 
+  .list-enter-active, .list-leave-active {
+    transition: all 5s;
+  }
+
+  .list-enter, .list-leave-to
+    /* .list-leave-active for below version 2.1.8 */
+  {
+    opacity: 0;
+    transform: translateY(300px);
+  }
 </style>
 <script type="text/ecmascript-6">
   import regExp from '../../../util/regExp'
@@ -805,6 +827,10 @@
   export default {
     data() {
       return {
+        img_1: false,
+        img_2: false,
+        img_3: false,
+        img_4: false,
         company: false,
         loginModal: false,
         form: {
@@ -919,6 +945,15 @@
         this.personalauth = this.userInfo.personalauth
         this.isReceive = this.userInfo.activityInfo[6].companytype
       }
+      setTimeout(() => {
+        this.img_2 = true
+      }, 2000)
+      setTimeout(() => {
+        this.img_3 = true
+      }, 4000)
+      setTimeout(() => {
+        this.img_4 = true
+      }, 6000)
     },
     components: {},
     methods: {
@@ -1004,7 +1039,7 @@
         ;
       },
       buyNow_one(item, index) {
-        if (this.userInfo==null) {
+        if (this.userInfo == null) {
           this.loginModal = true
           return
         }
@@ -1112,6 +1147,9 @@
         this.personalauth = this.userInfo.personalauth
         this.isReceive = this.userInfo.activityInfo[6].companytype
       }
-    }
+    },
+    mounted () {
+      this.img_1 = true
+    },
   }
 </script>
