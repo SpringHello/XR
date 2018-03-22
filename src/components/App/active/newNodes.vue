@@ -799,7 +799,7 @@
   }
 
   .list-enter-active, .list-leave-active {
-    transition: all 5s;
+    transition: all 4s;
   }
 
   .list-enter, .list-leave-to
@@ -947,13 +947,13 @@
       }
       setTimeout(() => {
         this.img_2 = true
-      }, 2000)
+      }, 1500)
       setTimeout(() => {
         this.img_3 = true
-      }, 4000)
+      }, 3000)
       setTimeout(() => {
         this.img_4 = true
-      }, 6000)
+      }, 4500)
     },
     components: {},
     methods: {
