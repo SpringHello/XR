@@ -269,7 +269,7 @@
   .banner {
     position: relative;
     height: 750px;
-    background: linear-gradient(90.8deg, rgba(200, 85, 254, 1), rgba(6, 46, 141, 1));
+    background: linear-gradient(90deg, rgba(200, 85, 254, 1), rgba(6, 46, 141, 1));
     overflow: hidden;
     z-index: 1;
     .banner_text {
@@ -282,7 +282,6 @@
       justify-content: space-around;
       width: 1200px;
       background: url('../../../assets/img/active/newNodes/textBanner1.png') 655px no-repeat, linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
-      opacity: 0.8;
       li {
         &::before {
           content: '';
