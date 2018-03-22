@@ -278,7 +278,7 @@
         <div>
           <div class="universal-modal-content-flex">
             <Form :model="lookPasswordForm" ref="lookPasswordForm" :rules="lookPasswordFormRule">
-              <FormItem label="请输入密码" prop="input">
+              <FormItem label="请输入控制台登录密码" prop="input">
                 <Input v-model="lookPasswordForm.input" placeholder="请输入控制台登录密码" type="password"></Input>
               </FormItem>
             </Form>
