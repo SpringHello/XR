@@ -13,13 +13,13 @@
       <div class="body">
         <div class="head-info">
           <div class="top">
-            <div>
-              <h3 class="dib">{{ data.vpcname}}</h3>
+            <div style="display: inline-block;">
+              <h3 class="dib" style="line-height: 32px;">{{ data.vpcname}}</h3>
               <div class="clock-show icon dib"></div>
             </div>
-            <div>
-              <Button type="primary" class="btn-bgwhite" @click="$router.go(-1)" style="margin-right: 10px;">返回</Button>
-              <Button type="primary" class="btn-bgwhite" @click="$router.go(0)">刷新</Button>
+            <div style="float: right;">
+              <Button class="btn-bgwhite" @click="$router.go(-1)">返回</Button>
+              <Button class="btn-bgwhite" @click="$router.go(0)">刷新</Button>
             </div>
           </div>
           <div class="detail-info">
@@ -1055,11 +1055,14 @@
   }
 
   .btn-bgwhite {
-    background: #ffffff;
+    border-color: #2A99F2 ;
     color: #2A99F2;
+    &:first-of-type{
+      margin-right: 10px;
+    }
     &:hover {
-      background: #2A99F2;
-      color: #FFFFFF;
+      background-color: #2A99F2;
+      color: #fff;
     }
   }
 
@@ -1111,8 +1114,9 @@
         min-height: 800px;
         .head-info {
           .top {
-            display: flex;
-            justify-content: space-between;
+           // display: flex;
+           // justify-content: space-between;
+            margin-bottom: 20px;
             h3 {
               font-size: 16px;
               color: #2A99F2;

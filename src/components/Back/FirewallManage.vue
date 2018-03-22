@@ -10,7 +10,11 @@
       <div class="content">
         <div>
           <!--<span class="title">{{firewallInfo.firewallName}}</span>-->
-          <span class="info" style="min-width: 80px;display: inline-block">{{firewallInfo.firewallName}}</span>
+          <span class="info" style="min-width: 80px;display: inline-block;line-height: 32px;">{{firewallInfo.firewallName}}</span>
+          <div style="float: right;">
+            <Button class="btn" @click="$router.go(-1)">返回</Button>
+            <Button class="btn" @click="$router.go(0)">刷新</Button>
+          </div>
         </div>
         <div style="margin-top:20px">
           <div class="operator-bar">
@@ -556,6 +560,17 @@
           margin-right: 25px;
           font-size: 16px;
           color: #2a99f2;
+        }
+        .btn {
+          border-color: #2A99F2 ;
+          color: #2A99F2;
+          &:first-of-type{
+            margin-right: 10px;
+          }
+          &:hover {
+            background-color: #2A99F2;
+            color: #fff;
+          }
         }
         .operator-bar {
 
