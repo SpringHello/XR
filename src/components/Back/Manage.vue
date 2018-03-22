@@ -13,7 +13,7 @@
         <div class="info">
           <header>
             <span class="arrowdown-icon"></span>
-            <span>{{this.$route.query.computername}}</span>
+            <span style="line-height: 32px;">{{this.$route.query.computername}}</span>
             <div>
               <Button class="btn" @click="$router.go(-1)" style="margin-right: 10px;">返回</Button>
               <a :href="`${this.$route.query.connecturl}`" target="_blank" style="border:solid 1px #2A99F2;color: #2A99F2;border-radius: 5px;padding: 6px 15px;background-color:#f7f7f7;font-size:12px;">连接主机</a>
@@ -278,7 +278,7 @@
         <div>
           <div class="universal-modal-content-flex">
             <Form :model="lookPasswordForm" ref="lookPasswordForm" :rules="lookPasswordFormRule">
-              <FormItem label="请输入密码" prop="input">
+              <FormItem label="请输入控制台登录密码" prop="input">
                 <Input v-model="lookPasswordForm.input" placeholder="请输入控制台登录密码" type="password"></Input>
               </FormItem>
             </Form>
@@ -1280,7 +1280,7 @@
     .info {
       height: 237px;
       background-image: linear-gradient(-224deg, #05BCFD 0%, #4183EB 100%);
-      padding: 24px 30px 24px 20px;
+      padding: 20px 30px 20px 20px;
       position: relative;
       font-family: MicrosoftYaHei;
       header {

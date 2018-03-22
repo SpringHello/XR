@@ -767,8 +767,8 @@
       </div>
       <div style="padding: 20px 20px 50px 20px;border-bottom: 1px solid #D8D8D8;background-color: #F7F7F7;">
         <p style="line-height: 1.5;color: #999;">没有收到验证码？</p>
-        <p style="line-height: 1.5;color: #999;">1、网络通讯异常可能会造成短信丢失，请重新获取或稍后再试。</p>
-        <p style="line-height: 1.5;color: #999;">2、如果手机已丢失或停机，请<span style="color: rgb(42, 153, 242);cursor: pointer"
+        <p style="line-height: 1.5;color: #999;">1、检查您的邮箱垃圾箱。</p>
+        <p style="line-height: 1.5;color: #999;">2、如果邮箱仍收不到验证码，请<span style="color: rgb(42, 153, 242);cursor: pointer"
                                                                      @click="changWay2">更换验证方式</span>。</p>
       </div>
       <div slot="footer">

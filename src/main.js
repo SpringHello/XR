@@ -41,7 +41,6 @@ Vue.config.productionTip = false
 Vue.prototype.$http = axios.create({
   params: {}
 })
-
 /* axios ajax请求拦截 需要zoneid的接口都使用this.$http的形式调用 */
 function requestIntercept(config) {
   if (config.method == 'get') {

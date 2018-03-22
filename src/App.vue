@@ -74,12 +74,12 @@
     <router-view/>
     <!-- 所有前台页面共用底部导航块 -->
     <div id="app-foot">
-      <!-- 新用户注册最大6个月免费 -->
+<!--      &lt;!&ndash; 新用户注册最大6个月免费 &ndash;&gt;
       <div id="foot-free">
         <p>新用户注册享最大2个月免费试用</p>
         <span>零成本体验，快速认证与审核通道</span>
         <router-link to="vps" target="_blank">立即体验</router-link>
-      </div>
+      </div>-->
       <!-- 客服支持、意见反馈 -->
       <div id="foot-support">
         <div id="wrapper">

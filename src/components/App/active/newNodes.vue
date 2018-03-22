@@ -5,31 +5,41 @@
            src="../../../assets/img/active/newNodes/banner_1.png">
       <img style="position: absolute;top: 7%;left: 7%;"
            src="../../../assets/img/active/newNodes/circle.png">
-      <div style="width:1200px;margin:0px auto;position: absolute; top: 20%; left: 19%;">
+      <div style="width:1200px;margin:0px auto;padding-top: 7%;position: relative">
         <p>庆新节点上线</p>
         <p style="font-size: 44px;line-height: 62px;font-family: PingFangSC-Light;">配置升级 | 限时低价体验</p>
         <!--<button>立即领取</button>-->
-      </div>
-      <div>
-        <img style="position:absolute;left: 44%; top: 44%;z-index: -2;"
-             src="../../../assets/img/active/newNodes/banner_2.png">
-        <img style="position: absolute;left: 52%;top: 22%;z-index: -3;"
-             src="../../../assets/img/active/newNodes/banner_3.png">
-        <img style="position: absolute;left: 61%;top: 11%;z-index: -4;"
-             src="../../../assets/img/active/newNodes/banner_4.png">
-        <img style="position: absolute;left: 70%; top: 35%;z-index: -5;"
-             src="../../../assets/img/active/newNodes/banner_5.png">
-        <img style="position: absolute;left: 72.5%; top:32%;z-index: -4;"
-             src="../../../assets/img/active/newNodes/banner_6.png">
-        <img style="position: absolute;left: 70%; top: 28%;z-index: -4;"
-             src="../../../assets/img/active/newNodes/banner_6.png">
-        <img style="position:absolute;left: 48%; top: 8%;z-index: -2;"
+        <transition name="list">
+          <img v-if="img_1" style="position:absolute;left: 41%; top: 94%;z-index: -2;"
+               src="../../../assets/img/active/newNodes/banner_2.png">
+        </transition>
+        <transition name="list">
+          <img v-if="img_2" style="position: absolute;left: 55%;top: 50%;z-index: -3;"
+               src="../../../assets/img/active/newNodes/banner_3.png">
+        </transition>
+        <transition name="list">
+          <img v-if="img_3" style="position: absolute;left: 69%;top: 32%;z-index: -4;"
+               src="../../../assets/img/active/newNodes/banner_4.png">
+        </transition>
+        <transition name="list">
+          <img v-if="img_4" style="position: absolute;left: 83%; top: 83%;z-index: -5;"
+               src="../../../assets/img/active/newNodes/banner_5.png">
+        </transition>
+        <transition name="list">
+          <img v-if="img_4" style="position: absolute;left: 86.5%; top:78%;z-index: -4;"
+               src="../../../assets/img/active/newNodes/banner_6.png">
+        </transition>
+        <transition name="list">
+          <img v-if="img_3" style="position: absolute;left: 82%; top: 68%;z-index: -4;"
+               src="../../../assets/img/active/newNodes/banner_6.png">
+        </transition>
+        <img style="position:absolute;left: 50%; top: 18%;z-index: -2;"
              src="../../../assets/img/active/newNodes/arrows_1.png">
-        <img style="position:absolute;left: 77%; top: 6%;z-index: -2;"
+        <img style="position:absolute;left: 90%; top: 9%;z-index: -2;"
              src="../../../assets/img/active/newNodes/arrows_2.png">
-        <img style="position:absolute;left: 78%; top: 18%;z-index: -2;"
+        <img style="position:absolute;left: 92%; top: 38%;z-index: -2;"
              src="../../../assets/img/active/newNodes/arrows_3.png">
-        <img style="position:absolute;left: 50%; top: 35%;z-index: -2;"
+        <img style="position:absolute;left: 53%; top: 74%;z-index: -2;"
              src="../../../assets/img/active/newNodes/arrows_4.png">
       </div>
       <ul class="banner_text">
@@ -198,13 +208,17 @@
             </dd>
           </dl>
           <dl>
-            <dt> 3、活动主机7天内可无理由退款。</dt>
+            <dt> 3、活动开始时间：</dt>
+            <dd>2018-4-10</dd>
           </dl>
           <dl>
-            <dt>4、为保证活动的公平公正，新睿云有权对恶意刷抢（如通过程序等技术手段）活动资源、利用资源从事违法违规行为的用户收回使用资格。</dt>
+            <dt> 4、活动主机7天内可无理由退款。</dt>
           </dl>
           <dl>
-            <dt>5、活动最终解释权在法律范围内归新睿云所有。</dt>
+            <dt>5、为保证活动的公平公正，新睿云有权对恶意刷抢（如通过程序等技术手段）活动资源、利用资源从事违法违规行为的用户收回使用资格。</dt>
+          </dl>
+          <dl>
+            <dt>6、活动最终解释权在法律范围内归新睿云所有。</dt>
           </dl>
         </div>
       </div>
@@ -255,7 +269,7 @@
   .banner {
     position: relative;
     height: 750px;
-    background: linear-gradient(90.8deg, rgba(200, 85, 254, 1), rgba(6, 46, 141, 1));
+    background: linear-gradient(90deg, rgba(200, 85, 254, 1), rgba(6, 46, 141, 1));
     overflow: hidden;
     z-index: 1;
     .banner_text {
@@ -267,8 +281,7 @@
       display: flex;
       justify-content: space-around;
       width: 1200px;
-      background:url('../../../assets/img/active/newNodes/textBanner1.png'),linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
-      opacity: 0.8;
+      background: url('../../../assets/img/active/newNodes/textBanner1.png') 655px no-repeat, linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
       li {
         &::before {
           content: '';
@@ -443,7 +456,7 @@
           .title {
             height: 72px;
             text-align: center;
-            background: url('../../../assets/img/active/newNodes/hostBanner.png'),linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
+            background: url('../../../assets/img/active/newNodes/hostBanner.png'), linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
             p {
               font-size: 30px;
               font-family: PingFangSC-Medium;
@@ -636,13 +649,12 @@
         color: #FFFFFF;
         text-align: justify;
         dt {
-          font-size: 14px;
+          font-size: 16px;
           color: #FFFFFF;
           line-height: 28px;
-          font-weight: 600;
         }
         dd {
-          font-size: 12px;
+          font-size: 14px;
           color: #FFFFFF;
           line-height: 27px;
           padding-left: 20px;
@@ -785,6 +797,16 @@
     }
   }
 
+  .list-enter-active, .list-leave-active {
+    transition: all 4s;
+  }
+
+  .list-enter, .list-leave-to
+    /* .list-leave-active for below version 2.1.8 */
+  {
+    opacity: 0;
+    transform: translateY(300px);
+  }
 </style>
 <script type="text/ecmascript-6">
   import regExp from '../../../util/regExp'
@@ -804,6 +826,10 @@
   export default {
     data() {
       return {
+        img_1: false,
+        img_2: false,
+        img_3: false,
+        img_4: false,
         company: false,
         loginModal: false,
         form: {
@@ -911,6 +937,15 @@
       }
     },
     created() {
+      setTimeout(() => {
+        this.img_2 = true
+      }, 1500)
+      setTimeout(() => {
+        this.img_3 = true
+      }, 3000)
+      setTimeout(() => {
+        this.img_4 = true
+      }, 4500)
       if (this.$store.state.userInfo != null) {
         this.isLogin = 1
         this.userInfo = this.$store.state.userInfo
@@ -1003,7 +1038,7 @@
         ;
       },
       buyNow_one(item, index) {
-        if (this.userInfo==null) {
+        if (this.userInfo == null) {
           this.loginModal = true
           return
         }
@@ -1111,6 +1146,9 @@
         this.personalauth = this.userInfo.personalauth
         this.isReceive = this.userInfo.activityInfo[6].companytype
       }
-    }
+    },
+    mounted () {
+      this.img_1 = true
+    },
   }
 </script>
