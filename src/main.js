@@ -30,7 +30,7 @@ Vue.prototype.$message = message
 Vue.config.productionTip = false
 
 // axios.defaults.baseURL = '/ruicloud'
-axios.defaults.baseURL = 'http://192.168.3.204:8082/ruicloud'
+axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud'
 axios.defaults.withCredentials = true
 /* axios.interceptors.request.use(function (config) {
  config.headers.Cookie = 'JSESSIONID=22203C271B80F4A41C35D23B09B6BC83'
@@ -41,7 +41,6 @@ axios.defaults.withCredentials = true
 Vue.prototype.$http = axios.create({
   params: {}
 })
-
 /* axios ajax请求拦截 需要zoneid的接口都使用this.$http的形式调用 */
 function requestIntercept(config) {
   if (config.method == 'get') {
