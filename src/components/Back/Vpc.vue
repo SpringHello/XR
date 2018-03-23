@@ -143,7 +143,7 @@
       </p>
       <div class="universal-modal-content-flex">
         <Form :model="addGatewayForm" :rules="gatewayRuleValidate" ref="gatewayFormValidate">
-          <FormItem label="源vpc" prop="originVPC">
+          <FormItem label="源VPC" prop="originVPC">
             <Select v-model="addGatewayForm.originVPC">
               <Option v-for="item in netData" :value="item.vpcid" :key="item.vpcid"
                       v-if="item.vpcid!=addGatewayForm.targetVPC">
@@ -151,7 +151,7 @@
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="目标vpc" prop="targetVPC">
+          <FormItem label="目标VPC" prop="targetVPC">
             <Select v-model="addGatewayForm.targetVPC">
               <Option v-for="item in netData" :value="item.vpcid" :key="item.vpcid"
                       v-if="item.vpcid!=addGatewayForm.originVPC">
@@ -214,6 +214,7 @@
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
+        <Button @click="showModal.addGateway = false">取消</Button>
         <Button type="primary" @click="handleNewGateSubmit">完成配置</Button>
       </div>
     </Modal>
