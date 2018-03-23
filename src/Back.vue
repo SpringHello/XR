@@ -570,11 +570,12 @@
             .sec-nav {
               display: inline-block;
               font-size: 14px;
+              margin: 0px 20px;
               line-height: 45px;
               padding: 0px 20px;
               cursor: pointer;
-              &:last-child {
-                padding-right: 0px;
+              &:last-of-type {
+                margin-right: 0px;
               }
               &.hover {
                 a {

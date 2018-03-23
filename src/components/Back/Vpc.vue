@@ -42,7 +42,7 @@
                     </div>
                   </div>
                   <div class="item-wrap">
-                    <div class="item"><p>路由器（VPC）：<span>1</span></p></div>
+                    <div class="item" @click="manage(item)" style="cursor:pointer"><p>路由器（VPC）：<span>1</span></p></div>
                     <span class="dotted-across"></span>
                   </div>
                   <div class="item-wrap">
@@ -272,8 +272,10 @@
         <span style="font-size: 16px;color: rgba(17,17,17,0.65);line-height: 32px;float:left">资费：</span>
         <span style="font-size: 24px;color: #2A99F2;line-height: 32px;float:left">￥{{addNatForm.cost}}
         <span v-if="addNatForm.timeValue != ''"> /
-        <span v-if="addNatForm.timeType == 'year'" style="font-size: 16px; color: #2A99F2;">{{addNatForm.timeValue}}年</span>
-        <span v-if="addNatForm.timeType == 'month'" style="font-size: 16px; color: #2A99F2;">{{addNatForm.timeValue}}月</span>
+        <span v-if="addNatForm.timeType == 'year'"
+              style="font-size: 16px; color: #2A99F2;">{{addNatForm.timeValue}}年</span>
+        <span v-if="addNatForm.timeType == 'month'"
+              style="font-size: 16px; color: #2A99F2;">{{addNatForm.timeValue}}月</span>
         </span>
         </span>
         <Button type="primary" @click="handleAddNatSubmit">完成配置</Button>
