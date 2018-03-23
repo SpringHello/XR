@@ -3,11 +3,14 @@
  */
 import modal from './src/modal.vue'
 import Vue from 'vue'
-
+import router from '../../router'
 function message(options) {
 
 }
-
+// 名称与路径的Map
+var namePathMap = {
+  'NAT网关': 'vpc'
+}
 message.error = function (options = {}) {
   options.type = 'error'
   options.title = options.title || '错误'
@@ -26,7 +29,7 @@ message.info = function (options = {}) {
   options.type = 'info'
   options.title = options.title || '信息'
   var instance = getInstance(options)
-  instance.show()
+  // instance.show()
 }
 
 let modalInstance
@@ -41,9 +44,24 @@ function getInstance(options) {
       okText: '确定'
     },
     render: (h) => {
+      var contentArray = options.content.split(/\<a\>(.+?)\<\/a\>/)
+      var result = []
+      for (let i = 0; i < contentArray.length; i++) {
+        if (i % 2 == 0) {
+          result.push(contentArray[i])
+        } else {
+          result.push(h('a', {
+            on: {
+              click: () => {
+                router.push(namePathMap[contentArray[i]])
+              }
+            }
+          }, contentArray[i]))
+        }
+      }
       return h(modal, {
         props: options
-      })
+      }, [h('p', result)])
     }
   })
   modalInstance.$mount()
