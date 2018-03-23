@@ -40,7 +40,7 @@
 
           <!--步骤creatbalancemodal.current == 0-->
           <div v-show="creatbalancemodal.current == 0" class="universal-modal-content" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-            <Form ref="form1" :model="creatbalancemodal.formInline" :rules="creatbalancemodal.ruleInline">
+            <Form ref="form1" :model="creatbalancemodal.formInline" :rules="creatbalancemodal.ruleInline" style="width: 100%">
               <FormItem label="名称" prop="name">
                 <Input type="text" v-model="creatbalancemodal.formInline.name" placeholder="请输入小于16位的负载均衡名称"
                        style="width:240px;" :maxlength="16">
@@ -49,7 +49,7 @@
               <FormItem label="类型" prop="radio">
                 <RadioGroup v-model="creatbalancemodal.formInline.radio" @on-change="changeNet">
                   <Radio label="public">公网</Radio>
-                  <Radio label="private">私网</Radio>
+                  <Radio label="private">内网</Radio>
                 </RadioGroup>
               </FormItem>
               <!--当为公网时-->
@@ -62,7 +62,16 @@
                   </Option>
                 </Select>
               </FormItem>
-
+              <Poptip trigger="hover" style="float: right;position: relative;right: 240px;bottom: 50px;" v-if="creatbalancemodal.formInline.radio == 'public'">
+                <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
+                <div slot="content" style="height: 50px;">
+                  <div>
+                    <p style="line-height: 14px;">没有可选子网？</p>
+                    <p style="line-height: 14px;">创建私网负载均衡需要所属子网服务方案为内网负载均衡;</p>
+                    <p style="line-height: 14px;">您需要先创建一个服务方案为内网负载均衡的子网，在创建内网负载均衡。</p>
+                  </div>
+                </div>
+              </Poptip>
               <!--当为私网时-->
               <FormItem label="所属子网" prop="subnet"
                         style="width:240px;">
@@ -73,6 +82,16 @@
                   </Option>
                 </Select>
               </FormItem>
+              <Poptip trigger="hover" style="float: right;position: relative;right: 240px;bottom: 50px;" v-if="creatbalancemodal.formInline.radio == 'public'">
+                <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
+                <div slot="content">
+                  <div style="height: 50px;">
+                    <p style="line-height: 14px;">没有可选子网</p>
+                    <p style="line-height: 14px;">创建公网负载均衡需要所属子网服务方案为公网负载均衡;</p>
+                    <p style="line-height: 14px;">您需要先创建一个服务方案为公网负载均衡的子网，在创建公网负载均衡。</p>
+                  </div>
+                </div>
+              </Poptip>
               <FormItem label="内网IP" prop="intranetIp" v-if="creatbalancemodal.formInline.radio == 'private'">
                 <RadioGroup v-model="creatbalancemodal.formInline.intranetIp">
                   <Radio label="auto">自动分配</Radio>
