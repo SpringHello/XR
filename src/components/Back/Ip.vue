@@ -322,6 +322,27 @@
           {
             title: '所属VPC',
             key: 'vpcname',
+            render: (h, params) => {
+              if (params.row.vpcname) {
+                return h('span',{
+                  style: {
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () =>{
+                      sessionStorage.setItem('vpcId', params.row.vpcid)
+                      this.$router.push('/ruicloud/vpcManage')
+                    }
+                  }
+                },params.row.vpcname)
+              } else {
+                return h('span',{
+                  style: {
+                    cursor: 'not-allowed'
+                  },
+                },'----')
+              }
+            }
           },
           {
             title: '状态',
@@ -429,10 +450,23 @@
             width: 150,
             render: (h, params) => {
               if (params.row.usetype == 0) {
-                return h('span', {}, '----')
+                return h('span', {
+                  style: {
+                    cursor: 'not-allowed'
+                  }
+                }, '----')
               } else {
                 const text = params.row.computername || params.row.natgatewayname || params.row.loadbalancerolename
-                return h('span', {}, text)
+                return h('span', {
+                  style: {
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      this.$router.push('/ruicloud/host')
+                    }
+                  }
+                }, text)
               }
             }
           },
