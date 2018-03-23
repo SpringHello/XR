@@ -15,7 +15,7 @@
             </p>
           </div>
           <div class="modal-body">
-            <p v-html="content"></p>
+            <slot></slot>
           </div>
           <div class="modal-foot">
             <Button @click="cancel" v-if="type==='confirm'">{{cancelText}}</Button>
@@ -31,7 +31,7 @@
   export default{
     data() {
       return {
-        visible: false,
+        visible: true,
         animationEnd: false
       }
     },
@@ -47,6 +47,10 @@
       content: {
         type: String,
         default: ''
+      },
+      url: {
+        type: Array,
+        default: []
       },
       cancelText: {
         type: String,
@@ -67,9 +71,12 @@
         }
       }
     },
+    create(){
+
+    },
     methods: {
       show(){
-        this.this.visible = true
+        this.visible = true
       },
       close(event){
         if (event.target === event.currentTarget) {

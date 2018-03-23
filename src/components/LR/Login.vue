@@ -25,7 +25,8 @@
               <div style="position:relative">
                 <span>{{vailForm.vailCode.message}}</span>
                 <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
-                       :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"  ref="vailCode"
+                       :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
+                       ref="vailCode"
                        @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
                 <img :src="imgSrc"
                      @click="imgSrc=`/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
@@ -191,7 +192,7 @@
     },
     computed: {
       disabled () {
-        return !(this.form.loginname && this.form.password && this.form.vailCode  && this.vailForm.loginname.warning == false)
+        return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
       }
     }
   }
@@ -257,7 +258,7 @@
       height: 493px;
       background: #FFFFFF;
       border: 1px solid rgba(161, 161, 161, 0.00);
-      box-shadow: 0 2px 24px 0 hsla(0,0%,49%,.35);
+      box-shadow: 0 2px 24px 0 hsla(0, 0%, 49%, .35);
       &.disabled {
         cursor: not-allowed;
       }
