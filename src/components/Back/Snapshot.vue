@@ -1852,7 +1852,7 @@
               this.showModal.addOrDeleteHost = false
               this.listBackups()
             } else {
-              this.$message.error({
+              this.$message.info({
                 content: response.data.message
               })
               this.showModal.addOrDeleteHost = false
@@ -1944,7 +1944,7 @@
                 duration: 5
               })
             } else if (response.status == 200 && response.data.status == 2) {
-              this.$message.error({
+              this.$message.info({
                 content: response.data.message
               })
             }
@@ -1988,7 +1988,7 @@
                   this.showModal.newSnapshot = false
                   this.listsnaps()
                 } else {
-                  this.$message.error({
+                  this.$message.info({
                     content: response.data.message
                   })
                 }

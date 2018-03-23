@@ -10,6 +10,7 @@
           <router-link to="/ruicloud/userCenter">立即认证</router-link>
         </Alert>
         <div class="content">
+          <img src="../../assets/img/app/recycle.png" style="margin-right: 5px;vertical-align: text-bottom">
           <span>回收站</span>
           <div style="margin-top:20px;position:relative">
             <div class="operate">

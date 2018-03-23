@@ -3,7 +3,8 @@
     <div id="wrapper">
       <span>个人中心 / 用户中心</span>
       <div id="content">
-        <p class="title">用户中心</p>
+        <img src="../../assets/img/usercenter/usercenter.png" style="margin-right: 5px;vertical-align: text-bottom">
+        <span class="title" style="display: inline-block">用户中心</span>
         <Tabs type="card" :animated="false" v-model="currentTab">
           <!--未认证-->
           <TabPane label="个人信息" v-if="userInfo.personalauth==1&&userInfo.companyauth==1">
@@ -711,18 +712,22 @@
       </div>
       <div>
         <div style="margin: 15px 0;">
-          <span style="display: block;margin: 10px 0px;font-size: 16px;color: #333333;width:80px;font-size: 14px;line-height: 14px;">手机号</span><span>{{userInfo.phone}}</span>
+          <span
+            style="display: block;margin: 10px 0px;font-size: 16px;color: #333333;width:80px;font-size: 14px;line-height: 14px;">手机号</span><span>{{userInfo.phone}}</span>
         </div>
         <div style="margin: 15px 0 20px 0;">
-          <span style="font-size: 14px;color: #333333;line-height: 14px;vertical-align:sub;width:80px;display:block;margin: 10px 0px;">随机验证码</span>
+          <span
+            style="font-size: 14px;color: #333333;line-height: 14px;vertical-align:sub;width:80px;display:block;margin: 10px 0px;">随机验证码</span>
           <Input type="text" autocomplete="off" v-model="code" placeholder="请输入随机验证码"
                  style="width: 240px;margin-right: 20px;height: 28px;"></Input>
           <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
                style="height:32px;vertical-align: middle">
         </div>
         <div style="margin: 20px 0 10px 0;">
-        <span style="font-size: 14px;line-height: 14px;color:#333333;vertical-align:sub;width:80px;display: block;margin: 10px 0px;">验证码</span>
-          <Input v-model="newPhoneForm.oldPhoneCode" placeholder="请输入手机验证码" style="width: 240px;margin-right:20px;height: 28px;"></Input>
+          <span
+            style="font-size: 14px;line-height: 14px;color:#333333;vertical-align:sub;width:80px;display: block;margin: 10px 0px;">验证码</span>
+          <Input v-model="newPhoneForm.oldPhoneCode" placeholder="请输入手机验证码"
+                 style="width: 240px;margin-right:20px;height: 28px;"></Input>
           <Button type="primary" :class="{codeDisabled:newPhoneForm.phoneVerCodeText!='获取验证码'}"
                   :disabled="newPhoneForm.phoneVerCodeText!='获取验证码'"
                   style="height:31px;width:92px" @click="getVerCode('phone')">{{newPhoneForm.phoneVerCodeText}}
@@ -753,7 +758,8 @@
         <div style="margin: 15px 0 20px 0;">
           <span
             style="font-size: 14px;color: #333333;line-height: 14px;vertical-align:sub;width:80px;display: block;margin: 10px 0px;">验证码</span><Input
-          v-model="newPhoneForm.oldPhoneCode" placeholder="请输入" style="width: 240px;margin-right:20px;height: 28px;"></Input>
+          v-model="newPhoneForm.oldPhoneCode" placeholder="请输入"
+          style="width: 240px;margin-right:20px;height: 28px;"></Input>
           <Button type="primary" :class="{codeDisabled:emailVerCodeText!='获取验证码'}" :disabled="emailVerCodeText!='获取验证码'"
                   style="height:31px;width:92px" @click="getVerCode('email')">{{emailVerCodeText}}
           </Button>
@@ -836,7 +842,10 @@
       </div>
       <div slot="footer">
         <Button type="ghost" @click="showModal.modifyPassword=false">取消</Button>
-        <Button type="primary" @click="resetPassword" :disabled="resetPasswordForm.oldPassword == '' && resetPasswordForm.newPassword == '' && resetPasswordForm.confirmPassword == ''">完成</Button>
+        <Button type="primary" @click="resetPassword"
+                :disabled="resetPasswordForm.oldPassword == '' && resetPasswordForm.newPassword == '' && resetPasswordForm.confirmPassword == ''">
+          完成
+        </Button>
       </div>
     </Modal>
 
@@ -1223,7 +1232,7 @@
                 h('Poptip', {
                   props: {
                     title: '您确认删除该联系人吗？',
-                    width:208,
+                    width: 208,
                     confirm: true
                   },
                   on: {
@@ -1560,7 +1569,7 @@
                 this.$Message.success(response.data.message)
                 this.getContacts()
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
                 this.getContacts()
@@ -1621,7 +1630,7 @@
             this.$Message.success(response.data.message)
             this.listNotice()
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
             this.listNotice()
@@ -1846,7 +1855,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -1858,7 +1867,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }

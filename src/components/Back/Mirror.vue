@@ -517,7 +517,7 @@
             this.ownMirrorList()
           } else {
             this.ownMirrorList()
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -550,7 +550,7 @@
             this.ownMirrorList()
             this.$Message.success(response.data.message)
           } else {
-            this.$message.error(response.data.message)
+            this.$message.info(response.data.message)
           }
         })
       },

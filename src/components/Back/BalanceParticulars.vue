@@ -143,7 +143,7 @@
                             })
                             this.listHostByBalance()
                           } else {
-                            this.$message.error({
+                            this.$message.info({
                               content: response.data.message
                             })
                           }
@@ -182,7 +182,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.hostData = response.data.result
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -197,7 +197,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.bindHostForm.vmOptions = response.data.result
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -226,7 +226,7 @@
                 content: response.data.message
               })
             } else {
-              this.$message.error({
+              this.$message.info({
                 content: response.data.message
               })
             }

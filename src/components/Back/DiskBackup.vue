@@ -904,7 +904,7 @@
             this.showModal.addOrDeleteDisk = false
             this.listDiskBackUpStrategy()
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
             this.showModal.addOrDeleteDisk = false
@@ -923,7 +923,7 @@
               }
             })
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -941,7 +941,7 @@
         if (response.status == 200 && response.data.status == 1) {
           this.diskBackupsData = response.data.result
         } else {
-          this.$message.error({
+          this.$message.info({
             content: response.data.message
           })
         }
@@ -999,7 +999,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.diskBackupsData = response.data.result
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -1017,7 +1017,7 @@
               }
             })
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -1036,7 +1036,7 @@
               duration: 5
             })
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -1050,7 +1050,7 @@
             this.diskBackupsStrategyData = response.data.result
             this.diskSelectionStrategy = null
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -1072,7 +1072,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -1090,7 +1090,7 @@
               }
             })
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -1111,7 +1111,7 @@
             this.listDiskSnapshots()
           } else {
             this.listDiskSnapshots()
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -1132,7 +1132,7 @@
               this.diskBackupsSelection = null
               this.listDiskSnapshots()
             } else {
-              this.$message.error({
+              this.$message.info({
                 content: response.data.message
               })
             }
@@ -1173,7 +1173,7 @@
               this.$Message.info('磁盘备份策略删除成功')
               this.listDiskBackUpStrategy()
             } else {
-              this.$message.error({
+              this.$message.info({
                 content: response.data.message
               })
               this.listDiskBackUpStrategy()
@@ -1204,7 +1204,7 @@
               this.coupon = 0
             }
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }

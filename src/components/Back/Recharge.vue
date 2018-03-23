@@ -4,6 +4,7 @@
       <span>个人中心 / <router-link
         to="expenses" style="color:rgba(17, 17, 17, 0.43);">费用中心</router-link> / 账户充值</span>
       <div class="content">
+        <img src="../../assets/img/recharge/recharge.png" style="margin-right: 5px;vertical-align: text-bottom">
         <span class="title">账户充值</span>
         <div class="recharge">
           <div class="balance">
@@ -15,7 +16,8 @@
             <InputNumber v-model="input" :min="10" :step="10" placeholder="请输入金额"
                          style="width: 75px;height:32px;margin-left: 40px;font-size: 14px;"></InputNumber>
             <span class="s4">元</span>
-            <Button type="ghost" style="margin-left: 40px;font-size: 14px;height: 32px;width: 75px;" @click="input = 200">200元
+            <Button type="ghost" style="margin-left: 40px;font-size: 14px;height: 32px;width: 75px;"
+                    @click="input = 200">200元
             </Button>
             <Button type="ghost" class="but" @click="input = 500">500元</Button>
             <Button type="ghost" class="but" @click="input = 1000">1000元</Button>

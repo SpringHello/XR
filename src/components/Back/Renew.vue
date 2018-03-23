@@ -9,6 +9,7 @@
         <span style="background-color: #f5f5f5;"><router-link to="overview"
                                                               style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 一键续费</span>
         <div class="content">
+          <img src="../../assets/img/app/renew.png" style="margin-right: 5px;vertical-align: text-bottom">
           <span>一键续费</span>
           <div style="margin-top:20px;position:relative">
             <div class="operate">
@@ -248,13 +249,7 @@
           renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
           renewalTime: [],
           year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}],
-          month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '3月', value: 3}, {
-            label: '4月',
-            value: 4
-          }, {label: '5月', value: 5}, {label: '6月', value: 6}, {label: '7月', value: 7}, {
-            label: '8月',
-            value: 8
-          }, {label: '9月', value: 9}, {label: '10月', value: 10}]
+          month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '3月', value: 3}, {label: '4月', value: 4}, {label: '5月', value: 5}, {label: '6月', value: 6}, {label: '7月', value: 7}, {label: '8月', value: 8}, {label: '9月', value: 9}, {label: '10月', value: 10}]
         },
 
         selectArray: [],

@@ -143,7 +143,7 @@
       </p>
       <div class="universal-modal-content-flex">
         <Form :model="addGatewayForm" :rules="gatewayRuleValidate" ref="gatewayFormValidate">
-          <FormItem label="源vpc" prop="originVPC">
+          <FormItem label="源VPC" prop="originVPC">
             <Select v-model="addGatewayForm.originVPC">
               <Option v-for="item in netData" :value="item.vpcid" :key="item.vpcid"
                       v-if="item.vpcid!=addGatewayForm.targetVPC">
@@ -151,7 +151,7 @@
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="目标vpc" prop="targetVPC">
+          <FormItem label="目标VPC" prop="targetVPC">
             <Select v-model="addGatewayForm.targetVPC">
               <Option v-for="item in netData" :value="item.vpcid" :key="item.vpcid"
                       v-if="item.vpcid!=addGatewayForm.originVPC">
@@ -214,6 +214,7 @@
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
+        <Button @click="showModal.addGateway = false">取消</Button>
         <Button type="primary" @click="handleNewGateSubmit">完成配置</Button>
       </div>
     </Modal>
@@ -451,7 +452,7 @@
                                 content: response.data.message
                               })
                             } else {
-                              this.$message.error({
+                              this.$message.info({
                                 content: response.data.message
                               })
                             }
@@ -528,7 +529,7 @@
                                   })
                                   this.refresh()
                                 } else {
-                                  this.$message.error({
+                                  this.$message.info({
                                     content: response.data.message
                                   })
                                 }
@@ -867,7 +868,7 @@
                   this.refresh()
                 } else {
                   this.refresh()
-                  this.$message.error({
+                  this.$message.info({
                     content: response.data.message
                   })
                 }
@@ -907,7 +908,7 @@
                 this.refresh()
               } else {
                 this.refresh()
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }
@@ -930,7 +931,7 @@
                   content: response.data.message
                 })
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }
@@ -980,7 +981,7 @@
                 this.$Message.success({content: response.data.message})
                 // this.$error('error', response.data.message)
               } else {
-                this.$message.error({content: response.data.message})
+                this.$message.info({content: response.data.message})
               }
             })
           } else {
@@ -1002,7 +1003,7 @@
                   content: response.data.message
                 })
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }
@@ -1029,7 +1030,7 @@
                 this.$router.push('order')
               }
               if (response.status == 200 && response.data.status == 2) {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }
@@ -1076,7 +1077,7 @@
                   content: response.data.message
                 })
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }
@@ -1116,7 +1117,7 @@
                 })
                 this.refresh()
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }

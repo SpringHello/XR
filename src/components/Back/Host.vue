@@ -720,7 +720,7 @@
                 if (response.status == 200 && response.data.status == 1) {
                   this.$Message.success(response.data.message)
                 } else {
-                  this.$message.error({
+                  this.$message.info({
                     content: response.data.message
                   })
                 }
@@ -732,7 +732,7 @@
                 if (response.status == 200 && response.data.status == 1) {
                   this.$Message.success(response.data.message)
                 } else {
-                  this.$message.error({
+                  this.$message.info({
                     content: response.data.message
                   })
                 }
@@ -755,7 +755,7 @@
                 this.$Message.info(response.data.message)
                 this.getData()
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: '服务器出错'
                 })
                 this.getData()
@@ -960,7 +960,7 @@
                   if (response.status == 200 && response.data.status == 1) {
                     this.$Message.success(response.data.message)
                   } else {
-                    this.$message.error({
+                    this.$message.info({
                       content: response.data.message
                     })
                   }
@@ -1090,7 +1090,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }
@@ -1189,7 +1189,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }
@@ -1225,7 +1225,7 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.cost = response.data.result
               } else {
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }

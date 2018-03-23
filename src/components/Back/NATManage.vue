@@ -219,7 +219,7 @@
                             })
                           } else {
                             this.refresh()
-                            this.$message.error({
+                            this.$message.info({
                               content: response.data.message
                             })
                           }
@@ -338,7 +338,7 @@
                 })
               } else {
                 this.refresh()
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }

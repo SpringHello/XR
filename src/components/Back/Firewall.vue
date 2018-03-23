@@ -13,6 +13,7 @@
       </Alert>
       <div id="content">
         <div id="header">
+          <img src="../../assets/img/firewall/firewall-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
           <span id="title">防火墙</span>
           <button id="refresh_button" @click="$router.go(0)">刷新</button>
         </div>
@@ -78,7 +79,8 @@
         <Form :model="applyFirewallForm" :rules="applyFirewallFormValidate" ref="applyFirewallFormValidate">
           <FormItem label="私有网络" prop="network">
             <Select v-model="applyFirewallForm.network" placeholder="请选择私有网络">
-              <Option v-for="item in applyFirewallForm.networkOptions" :key="item.ipsegmentid" :value="item.ipsegmentid">
+              <Option v-for="item in applyFirewallForm.networkOptions" :key="item.ipsegmentid"
+                      :value="item.ipsegmentid">
                 {{item.name}}
               </Option>
             </Select>
@@ -226,7 +228,7 @@
         if (response.status == 200 && response.data.status == 1) {
           this.FirewallData = response.data.result
         } else {
-          this.$message.error({
+          this.$message.info({
             content: response.data.message
           })
         }
@@ -265,7 +267,7 @@
                 })
               } else {
                 this.loading = false
-                this.$message.error({content: response.data.message})
+                this.$message.info({content: response.data.message})
               }
             })
           }
@@ -285,7 +287,7 @@
             this.loading = false
           } else {
             this.loading = false
-            this.$message.error({content: response.data.message})
+            this.$message.info({content: response.data.message})
           }
         })
       },
@@ -330,7 +332,7 @@
               this.setData(response)
             })
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -349,14 +351,14 @@
         var url = `network/delAclList.do?id=${this.select.id}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-              this.loading = false
-              this.$Message.success(response.data.message)
-              this.$http.get('network/listAclList.do').then(response => {
-                  this.setData(response)
-                })
+            this.loading = false
+            this.$Message.success(response.data.message)
+            this.$http.get('network/listAclList.do').then(response => {
+              this.setData(response)
+            })
           } else {
-              this.loading = false
-            this.$message.error({
+            this.loading = false
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -377,7 +379,7 @@
       }
     },
     computed: {
-       auth(){
+      auth(){
         return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
 
       }

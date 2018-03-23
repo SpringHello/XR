@@ -173,8 +173,9 @@
                       <p class="item-title">类型</p>
                     </div>
                     <div>
-                      <Poptip  v-for="item in PecsInfo.vmTypeList" trigger="hover" :content="item.content" :key="item.value">
-                        <div  class="zoneItem"
+                      <Poptip v-for="item in PecsInfo.vmTypeList" trigger="hover" :content="item.content"
+                              :key="item.value">
+                        <div class="zoneItem"
                              :class="{zoneSelect:PecsInfo.vmType==item.value}"
                              @click="changeType(item.value)">
                           {{item.label}}
@@ -310,7 +311,9 @@
                     </div>
                   </div>
                 </div>
-                <p style="font-size: 14px;color: #999999;line-height: 20px;margin: 10px 0 10px 90px;">如需使用其他虚拟私有云（VPC），请选择已有虚拟私有云（VPC），也可以自行到<span style="color: rgb(42, 153, 242);cursor: pointer" @click="$router.push('overview')">控制台新建。</span></p>
+                <p style="font-size: 14px;color: #999999;line-height: 20px;margin: 10px 0 10px 90px;">
+                  如需使用其他虚拟私有云（VPC），请选择已有虚拟私有云（VPC），也可以自行到<span style="color: rgb(42, 153, 242);cursor: pointer"
+                                                               @click="$router.push('vpc')">控制台新建。</span></p>
                 <!--网卡选择-->
                 <div class="item-wrapper">
                   <div style="display: flex">
@@ -820,12 +823,14 @@
               </div>
               <!--主机清单字段-->
               <div v-if="prod.type=='Pecs'" style="border-bottom:1px solid #ccc;padding:20px 0px;">
-                <p class="item"><span class="hidden">$</span><span class="title">区域</span><span class="hidden">#</span>{{prod.zone.zonename}}</p>
+                <p class="item"><span class="hidden">$</span><span class="title">区域</span><span class="hidden">#</span>{{prod.zone.zonename}}
+                </p>
 
                 <p class="item">
                   <span class="hidden">$</span><span class="title">计费模式</span><span class="hidden">#</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
                 </p>
-                <p class="item"><span class="hidden">$</span><span class="title">购买时长</span><span class="hidden">#</span>{{prod.timeForm.currentTimeValue.label}}
+                <p class="item"><span class="hidden">$</span><span class="title">购买时长</span><span
+                  class="hidden">#</span>{{prod.timeForm.currentTimeValue.label}}
                 </p>
                 <!--镜像+应用-->
                 <p class="item" v-if="prod.currentType=='app'">
@@ -845,9 +850,11 @@
                 </p>
                 <!--快速配置-->
                 <div v-if="prod.createType=='fast'">
-                  <p class="item" v-if="prod.publicIP"><span class="hidden">$</span><span class="title">配置</span><span class="hidden">#</span>{{`${prod.currentSystem.kernel}核${prod.currentSystem.RAM}G、${prod.currentSystem.bandWidth}带宽、${prod.currentSystem.diskSize}G系统盘`}}
+                  <p class="item" v-if="prod.publicIP"><span class="hidden">$</span><span class="title">配置</span><span
+                    class="hidden">#</span>{{`${prod.currentSystem.kernel}核${prod.currentSystem.RAM}G、${prod.currentSystem.bandWidth}带宽、${prod.currentSystem.diskSize}G系统盘`}}
                   </p>
-                  <p class="item" v-if="prod.publicIP==false"><span class="hidden">$</span><span class="title">配置</span><span class="hidden">#</span>{{`${prod.currentSystem.kernel}核${prod.currentSystem.RAM}G、${prod.currentSystem.diskSize}G系统盘`}}
+                  <p class="item" v-if="prod.publicIP==false"><span class="hidden">$</span><span class="title">配置</span><span
+                    class="hidden">#</span>{{`${prod.currentSystem.kernel}核${prod.currentSystem.RAM}G、${prod.currentSystem.diskSize}G系统盘`}}
                   </p>
                 </div>
                 <!--自定义配置-->
@@ -867,42 +874,51 @@
                   </p>
                 </div>
 
-                <p class="item" v-if="prod.createType=='fast'" style="margin-top: 10px"><span class="title"
-                                                                                              style="vertical-align: middle">价格</span>
+                <p class="item" v-if="prod.createType=='fast'" style="margin-top: 10px">
+                  <span class="hidden">$</span>
+                  <span class="title" style="vertical-align: middle">价格</span>
                   <span class="hidden">#</span>
                   <span style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.cost.toFixed(2)}}元</span>
-                  <ul style="float: right;font-size: 14px;user-select: none">
+                <ul style="float: right;font-size: 14px;user-select: none">
                   <span class="numberAdd" v-if="prod.count == 1">-</span>
-                  <span class="numberAdd" style="cursor: pointer"@click="prod.count -= 1,prod.cost = PecsInfo.cost * prod.count" v-else>-</span>
+                  <span class="numberAdd" style="cursor: pointer"
+                        @click="prod.count -= 1,prod.cost = PecsInfo.cost * prod.count" v-else>-</span>
                   <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
-                  <span class="numberMinus" v-if="prod.count == 5" >+</span>
-                  <span class="numberMinus" style="cursor: pointer" @click="prod.count += 1,prod.cost = PecsInfo.cost * prod.count" v-else>+</span></ul>
+                  <span class="numberMinus" v-if="prod.count == 5">+</span>
+                  <span class="numberMinus" style="cursor: pointer"
+                        @click="prod.count += 1,prod.cost = PecsInfo.cost * prod.count" v-else>+</span></ul>
                 </p>
-                <p class="item" v-if="prod.createType=='custom'" style="margin-top: 10px;"><span
-                  class="title" style="vertical-align: middle">价格</span><span
-                  class="hidden">#</span><span
+                <p class="item" v-if="prod.createType=='custom'" style="margin-top: 10px;">
+                  <span class="hidden">$</span>
+                  <span class="title" style="vertical-align: middle">价格</span>
+                  <span class="hidden">#</span><span
                   style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.customCost.toFixed(2)}}元</span>
                 <ul style="float: right;font-size: 14px;user-select: none">
-                  <span class="numberAdd"  v-if="prod.count == 1">-</span>
-                  <span class="numberAdd" style="cursor: pointer"@click="prod.count -= 1,prod.customCost = totalCost * prod.count" v-else>-</span>
+                  <span class="numberAdd" v-if="prod.count == 1">-</span>
+                  <span class="numberAdd" style="cursor: pointer"
+                        @click="prod.count -= 1,prod.customCost = totalCost * prod.count" v-else>-</span>
                   <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
-                  <span class="numberMinus" v-if="prod.count == 5" >+</span>
-                <span class="numberMinus" style="cursor: pointer" @click="prod.count += 1,prod.customCost = totalCost * prod.count" v-else>+</span></ul>
+                  <span class="numberMinus" v-if="prod.count == 5">+</span>
+                  <span class="numberMinus" style="cursor: pointer"
+                        @click="prod.count += 1,prod.customCost = totalCost * prod.count" v-else>+</span></ul>
                 </p>
               </div>
               <!--磁盘清单字段-->
               <div v-if="prod.type=='Pdisk'" style="border-bottom:1px solid #ccc;padding:20px 0px;">
-                <p class="item"><span class="hidden">$</span><span class="title">区域</span><span class="hidden">#</span>{{prod.zone.zonename}}</p>
+                <p class="item"><span class="hidden">$</span><span class="title">区域</span><span class="hidden">#</span>{{prod.zone.zonename}}
+                </p>
                 <p class="item">
                   <span class="hidden">$</span><span class="title">计费模式</span><span class="hidden">#</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
                 </p>
-                <p class="item"><span class="hidden">$</span><span class="title">购买时长</span><span class="hidden">#</span>{{prod.timeForm.currentTimeValue.label}}
+                <p class="item"><span class="hidden">$</span><span class="title">购买时长</span><span
+                  class="hidden">#</span>{{prod.timeForm.currentTimeValue.label}}
                 </p>
                 <p class="item" v-for="disk in prod.dataDiskList">
                   <span class="hidden">$</span>
                   <span class="title">硬盘</span><span class="hidden">#</span>{{disk.size}}G{{disk.label}}
                 </p>
-                <p class="item" style="margin-top: 10px"><span class="hidden">$</span><span class="title" style="vertical-align: middle">价格</span>
+                <p class="item" style="margin-top: 10px"><span class="hidden">$</span><span class="title"
+                                                                                            style="vertical-align: middle">价格</span>
                   <span class="hidden">#</span>
                   <span
                     style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.dataDiskCost.toFixed(2)}}元</span>
@@ -911,11 +927,13 @@
 
               <!--公网IP清单字段-->
               <div v-if="prod.type=='Peip'" style="border-bottom:1px solid #ccc;padding:20px 0px;">
-                <p class="item"><span class="hidden">$</span><span class="title">区域</span><span class="hidden">#</span>{{prod.zone.zonename}}</p>
+                <p class="item"><span class="hidden">$</span><span class="title">区域</span><span class="hidden">#</span>{{prod.zone.zonename}}
+                </p>
                 <p class="item">
                   <span class="hidden">$</span><span class="title">计费模式</span><span class="hidden">#</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
                 </p>
-                <p class="item"><span class="hidden">$</span><span class="title">购买时长</span><span class="hidden">#</span>{{prod.timeForm.currentTimeValue.label}}
+                <p class="item"><span class="hidden">$</span><span class="title">购买时长</span><span
+                  class="hidden">#</span>{{prod.timeForm.currentTimeValue.label}}
                 </p>
                 <p class="item">
                   <span class="hidden">$</span>
@@ -928,10 +946,12 @@
                   <span style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.cost.toFixed(2)}}元</span>
                 <ul style="float: right;font-size: 14px;user-select: none">
                   <span class="numberAdd" v-if="prod.count == 1">-</span>
-                  <span class="numberAdd" style="cursor: pointer"@click="prod.count -= 1,prod.cost = PeipInfo.cost * prod.count" v-else>-</span>
+                  <span class="numberAdd" style="cursor: pointer"
+                        @click="prod.count -= 1,prod.cost = PeipInfo.cost * prod.count" v-else>-</span>
                   <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
-                  <span class="numberMinus"  v-if="prod.count == 5" >+</span>
-                  <span class="numberMinus" style="cursor: pointer" @click="prod.count += 1,prod.cost = PeipInfo.cost * prod.count" v-else>+</span></ul>
+                  <span class="numberMinus" v-if="prod.count == 5">+</span>
+                  <span class="numberMinus" style="cursor: pointer"
+                        @click="prod.count += 1,prod.cost = PeipInfo.cost * prod.count" v-else>+</span></ul>
                 </p>
               </div>
             </div>
@@ -1067,7 +1087,7 @@
       }
 
       return {
-        popList:['1','2','3'],
+        popList: ['1', '2', '3'],
         // 当前可以创建的剩余资源数
         remainCount: {},
         // 登录Modal需要的数据
@@ -1194,9 +1214,9 @@
           // 下面是自定义配置的数据
           // 主机类型
           vmTypeList: [
-            {label: '标准型', value: 'standard',content: '经典1：2与1：4配比，实现计算、网络与资源的良好平衡，高性价比。'},
-            {label: '内存优化型', value: 'optimization',content: '内存优化型系统内存比例更高的实例，最高可达1：16，适用于对内存要求较高，数据量大的产品。'},
-            {label: '高I/O型', value: 'IO',content: '高I/O型提供更稳定，具备更高数据吞吐速度与读写速度的主机，适用于高吞吐量场景，如科学计算。'}
+            {label: '标准型', value: 'standard', content: '经典1：2与1：4配比，实现计算、网络与资源的良好平衡，高性价比。'},
+            {label: '内存优化型', value: 'optimization', content: '内存优化型系统内存比例更高的实例，最高可达1：16，适用于对内存要求较高，数据量大的产品。'},
+            {label: '高I/O型', value: 'IO', content: '高I/O型提供更稳定，具备更高数据吞吐速度与读写速度的主机，适用于高吞吐量场景，如科学计算。'}
           ],
           vmType: 'standard',
 
@@ -1684,7 +1704,7 @@
       // 主机加入购物车
       addCart(){
         if (this.cart.length > 4) {
-          this.$message.error({
+          this.$message.info({
             content: '购物车已满'
           })
         }
@@ -1830,7 +1850,7 @@
       // 磁盘加入购物车
       addDiskCart(){
         if (this.cart.length > 4) {
-          this.$message.error({
+          this.$message.info({
             content: '购物车已满'
           })
         }
@@ -1877,7 +1897,7 @@
       // 公网IP加入购物车
       addIPCart(){
         if (this.cart.length > 4) {
-          this.$message.error({
+          this.$message.info({
             content: '购物车已满'
           })
         }
@@ -2053,17 +2073,17 @@
       },
       _checkCount(hostCount, diskCount, ipCount) {
         if (hostCount > this.remainCount.hostCount) {
-          this.$message.error({
+          this.$message.info({
             content: '创建的主机数超过限制'
           })
           return false
         } else if (diskCount > this.remainCount.diskCount) {
-          this.$message.error({
+          this.$message.info({
             content: '创建的磁盘数超过限制'
           })
           return false
         } else if (ipCount > this.remainCount.publicIpCount) {
-          this.$message.error({
+          this.$message.info({
             content: '创建的公网IP数超过限制'
           })
           return false
@@ -2669,12 +2689,14 @@
   .hidden {
     font-size: 0px;
   }
-  .numberAdd{
+
+  .numberAdd {
     border: 1px solid #D9D9D9;
     padding: 4px 10px;
     margin-right: -5px;
   }
-  .numberMinus{
+
+  .numberMinus {
     border: 1px solid #D9D9D9;
     padding: 4px 8px;
     margin-left: -5px;

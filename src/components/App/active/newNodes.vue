@@ -1056,7 +1056,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -1109,7 +1109,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }

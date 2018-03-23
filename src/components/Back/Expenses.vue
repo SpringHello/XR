@@ -7,6 +7,7 @@
       </Spin>
       <span>个人中心 / 费用中心</span>
       <div class="content">
+        <img src="../../assets/img/usercenter/expenses.png" style="margin-right: 5px;vertical-align: text-bottom">
         <span class="title">费用中心</span>
         <Tabs v-model="name" type="card" :animated="false" @on-click="changecard"
               style="margin-top: 20px;min-height: 550px">
@@ -1277,7 +1278,7 @@
                   this.formInvoiceDate.phone = ''
                   this.getInvoiceList()
                 } else {
-                  this.$message.error({
+                  this.$message.info({
                     content: response.data.message
                   })
                 }
@@ -1375,7 +1376,7 @@
               } else {
                 this.appreciation = false
                 this.applyChange = true
-                this.$message.error({
+                this.$message.info({
                   content: response.data.message
                 })
               }

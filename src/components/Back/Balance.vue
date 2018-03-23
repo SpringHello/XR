@@ -123,8 +123,8 @@
                 </Input>
               </FormItem>
               <p v-if="creatbalancemodal.current == 1" style="font-size: 12px;color: #666666;line-height: 16px;">
-                提示：当您完成负载均衡创建之后，您可以在负载均衡管理页面修改转发规则与健康检查规则，并管理您的后端服务器。同时您也可以在该页面选择开启或者关闭会保持功能。什么是 <span
-                style="color: #377DFF;">会话保持？</span>
+                提示：当您完成负载均衡创建之后，您可以在负载均衡详情页面<!--修改转发规则与健康检查规则，并-->管理您的后端服务器。<!--同时您也可以在该页面选择开启或者关闭会保持功能。什么是 <span
+                style="color: #377DFF;">会话保持？</span>-->
               </p>
             </Form>
           </div>
@@ -518,7 +518,7 @@
             this.listAllBalance()
           } else {
             this.loading = false
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -551,7 +551,7 @@
             this.listAllBalance()
           } else {
             this.loading = false
-            this.$message.error({
+            this.$message.info({
               content: response.data.message
             })
           }
@@ -574,7 +574,7 @@
             if (response.status == 200 && response.data.status == 1) {
               this.bindHostForm.vmOptions = response.data.result
             } else {
-              this.$message.error({
+              this.$message.info({
                 content: response.data.message
               })
             }
@@ -605,7 +605,7 @@
               })
             } else {
               this.refresh()
-              this.$message.error({
+              this.$message.info({
                 content: response.data.message
               })
             }
@@ -627,7 +627,7 @@
             if (response.status == 200 && response.data.status == 1) {
               this.unbindForm.hostList = response.data.result
             } else {
-              this.$message.error({
+              this.$message.info({
                 content: response.data.message
               })
             }
@@ -657,7 +657,7 @@
               })
               this.refresh()
             } else {
-              this.$message.error({
+              this.$message.info({
                 content: response.data.message
               })
               this.refresh()
@@ -696,7 +696,7 @@
                   this.balanceSelection = null
                 } else {
                   this.refresh()
-                  this.$message.error({
+                  this.$message.info({
                     content: response.data.message
                   })
                 }
