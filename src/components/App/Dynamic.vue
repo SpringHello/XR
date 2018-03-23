@@ -22,7 +22,7 @@
           <p class="title">{{announcement.title}}</p>
           <div class="right-content">
             <p class="sub-title">{{announcement.title}}</p>
-            <p class="sub-content">{{announcement.content}}</p>
+            <p class="sub-content" v-html="announcement.content"></p>
             <p class="time">{{announcement.createtime}}</p>
           </div>
         </div>

@@ -16,14 +16,15 @@
             <span style="line-height: 32px;">{{this.$route.query.computername}}</span>
             <div>
               <Button class="btn" @click="$router.go(-1)" style="margin-right: 10px;">返回</Button>
-              <a :href="`${this.$route.query.connecturl}`" target="_blank" style="border:solid 1px #2A99F2;color: #2A99F2;border-radius: 5px;padding: 6px 15px;background-color:#f7f7f7;font-size:12px;">连接主机</a>
+              <a :href="`${this.$route.query.connecturl}`" target="_blank"
+                 style="border:solid 1px #2A99F2;color: #2A99F2;border-radius: 5px;padding: 6px 15px;background-color:#f7f7f7;font-size:12px;">连接主机</a>
             </div>
           </header>
           <div class="pan" v-if="computerInfo!=null" style="width:28%">
             <div>
-              <i v-if="computerInfo.cpuNum">{{computerInfo.cpuNum}}CPU  , </i>
+              <i v-if="computerInfo.cpuNum">{{computerInfo.cpuNum}}CPU , </i>
               <i v-if="computerInfo.memory">{{computerInfo.memory}}G内存 , </i>
-              <i v-if="computerInfo.bandwith">{{computerInfo.bandwith}}M宽带  </i>
+              <i v-if="computerInfo.bandwith">{{computerInfo.bandwith}}M宽带 </i>
               <i v-if="computerInfo.zoneName"> | {{computerInfo.zoneName}}</i>
             </div>
             <div>镜像系统：{{computerInfo.template}}</div>
@@ -37,22 +38,22 @@
             <div>所属VPC：<span class="bluetext">{{computerInfo.vpc}}</span></div>
             <div>绑定公网：<span class="bluetext">{{computerInfo.publicIp}}</span></div>
             <div>所属负载均衡：
-                <Tooltip placement="top-start" v-if="computerInfo.loadbalance.length>0">
-                  <span class="bluetext one-row-text"  style="width:100px;">{{computerInfo.loadbalance.join('|')}}</span>
-                  <div slot="content" v-for="(item,index) in computerInfo.loadbalance" :key="index">
-                    <p>{{item}}</p>
-                  </div>
-                </Tooltip>
-                <span class="bluetext"  style="width:0px;" v-else>{{computerInfo.loadbalance.join('|')}}</span>
+              <Tooltip placement="top-start" v-if="computerInfo.loadbalance.length>0">
+                <span class="bluetext one-row-text" style="width:100px;">{{computerInfo.loadbalance.join('|')}}</span>
+                <div slot="content" v-for="(item,index) in computerInfo.loadbalance" :key="index">
+                  <p>{{item}}</p>
+                </div>
+              </Tooltip>
+              <span class="bluetext" style="width:0px;" v-else>{{computerInfo.loadbalance.join('|')}}</span>
             </div>
             <div>挂载磁盘：
               <Tooltip placement="top-start" v-if="computerInfo.disk.length>0">
-                <span class="bluetext one-row-text"  style="width:120px;">{{computerInfo.disk.join('|')}}</span>
+                <span class="bluetext one-row-text" style="width:120px;">{{computerInfo.disk.join('|')}}</span>
                 <div slot="content" v-for="(item,index) in computerInfo.disk" :key="index">
                   <p>{{item}}</p>
                 </div>
               </Tooltip>
-              <span class="bluetext"  style="width:0px;" v-else>{{computerInfo.disk.join('|')}}</span>
+              <span class="bluetext" style="width:0px;" v-else>{{computerInfo.disk.join('|')}}</span>
             </div>
             <div>状态：<span class="bluetext">{{computerInfo.computerStatus ? "开机" : "关机"}}</span></div>
           </div>
@@ -148,9 +149,9 @@
             </Tab-pane>
             <TabPane label="快照管理" name="name2">
               <div class="body">
-              <Button type="primary" @click="delSnapshot" style="margin-bottom:10px">删除快照</Button>
+                <Button type="primary" @click="delSnapshot" style="margin-bottom:10px">删除快照</Button>
                 <Table ref="selection" :columns="snapshotCol" :data="snapshotData"
-                        @radio-change="changeSelection"></Table>
+                       @radio-change="changeSelection"></Table>
               </div>
             </TabPane>
             <Tab-pane label="主机设置">
@@ -225,20 +226,21 @@
               <div class="body">
                 <label style="border-bottom:none">操作日志</label>
                 <div>
-                  <RadioGroup v-model="log.type" type="button"  @on-change="logToggle('log')">
+                  <RadioGroup v-model="log.type" type="button" @on-change="logToggle('log')">
                     <Radio label="近一天"></Radio>
                     <Radio label="近一周"></Radio>
                     <Radio label="近一月"></Radio>
-                </RadioGroup>
+                  </RadioGroup>
                   <div style="float:right">
                     <span
                       style="font-size: 16px;vertical-align: middle;color: rgba(0,0,0,0.65);">开始结束时间&nbsp;&nbsp;</span>
-                    <Date-picker format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="选择日期" style="width: 200px" @on-change="dataChange"></Date-picker>
+                    <Date-picker format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="选择日期"
+                                 style="width: 200px" @on-change="dataChange"></Date-picker>
                     <button @click="search" style="margin-left: 20px;">查询</button>
                   </div>
                 </div>
                 <div class="log" style="margin-top: 20px">
-                  <Table highlight-row :columns="columnslog" :data="tableDatalog" ></Table>
+                  <Table highlight-row :columns="columnslog" :data="tableDatalog"></Table>
                   <div style="margin: 10px;overflow: hidden">
                     <div style="float: right;">
                       <Page :total="total" :current="1" @on-change="currentChange"></Page>
@@ -277,25 +279,32 @@
         </div>
         <div>
           <div class="universal-modal-content-flex">
-            <Form :model="lookPasswordForm" ref="lookPasswordForm" :rules="lookPasswordFormRule">
+            <Form :model="lookPasswordForm" ref="lookPasswordForm" :rules="lookPasswordFormRule" @submit.native.prevent>
               <FormItem label="请输入控制台登录密码" prop="input">
                 <Input v-model="lookPasswordForm.input" placeholder="请输入控制台登录密码" type="password"></Input>
               </FormItem>
+              <!--<input type="text" hidden>-->
             </Form>
           </div>
           <div style="display:flex;">
             <p style=" font-size: 14px;line-height: 22px;">密码接收渠道</p>
-            <Checkbox v-model="lookPasswordForm.isemailalarmSec" size="large" style="margin-left: 20px;font-size: 12px;">邮箱</Checkbox>
-            <Checkbox v-model="lookPasswordForm.issmsalarmSec" size="large" style="margin-left: 20px;font-size: 12px;">短信</Checkbox>
+            <Checkbox v-model="lookPasswordForm.isemailalarmSec" size="large"
+                      style="margin-left: 20px;font-size: 12px;">邮箱
+            </Checkbox>
+            <Checkbox v-model="lookPasswordForm.issmsalarmSec" size="large" style="margin-left: 20px;font-size: 12px;">
+              短信
+            </Checkbox>
           </div>
         </div>
         <div slot="footer" class="modal-footer-border">
           <Button type="ghost" @click="showModal.lookPassword=false">取消</Button>
-          <Button type="primary" @click="lookPasswordSubm('lookPasswordForm')" :disabled="!(lookPasswordForm.isemailalarmSec || lookPasswordForm.issmsalarmSec)">确定</Button>
+          <Button type="primary" @click="lookPasswordSubm('lookPasswordForm')"
+                  :disabled="!(lookPasswordForm.isemailalarmSec || lookPasswordForm.issmsalarmSec)">确定
+          </Button>
         </div>
       </Modal>
-    <!-- 告警策略配置弹窗 -->
-     <Modal width="550" v-model="showModal.setMonitoringForm" :scrollable="true">
+      <!-- 告警策略配置弹窗 -->
+      <Modal width="550" v-model="showModal.setMonitoringForm" :scrollable="true">
         <div slot="header" class="modal-header-border">
           <span class="universal-modal-title">告警策略配置</span>
         </div>
@@ -341,52 +350,54 @@
           <Button type="primary" @click="setMonitoringOk">完成</Button>
         </div>
       </Modal>
-    <!-- 回滚确认弹窗 -->
-    <Modal v-model="showModal.rollback" :scrollable="true" :closable="false" :width="390">
-      <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
-        <div>
-          <strong>主机回滚</strong>
-          <p class="lh24">是否确定回滚主机</p>
-          <p class="lh24">提示：您正使用<span class="bluetext">{{snapsName}}</span>回滚<span class="bluetext">{{hostName}}</span>至<span
-            class="bluetext">{{hostCreatetime}}</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的主机内的数据将丢失。</p>
+      <!-- 回滚确认弹窗 -->
+      <Modal v-model="showModal.rollback" :scrollable="true" :closable="false" :width="390">
+        <div class="modal-content-s">
+          <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+          <div>
+            <strong>主机回滚</strong>
+            <p class="lh24">是否确定回滚主机</p>
+            <p class="lh24">提示：您正使用<span class="bluetext">{{snapsName}}</span>回滚<span
+              class="bluetext">{{hostName}}</span>至<span
+              class="bluetext">{{hostCreatetime}}</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的主机内的数据将丢失。</p>
+          </div>
         </div>
-      </div>
-      <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.rollback=false">取消</Button>
-        <Button type="primary" @click="rollbackSubmit">确定</Button>
-      </p>
-    </Modal>
-     <!-- 确认系统重装弹窗 -->
-    <Modal v-model="showModal.reload" :scrollable="true" :closable="false" :width="390">
-      <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
-        <div>
-          <strong>警告</strong>
-          <p class="lh24">为了数据安全，系统重装之前主机会自动关闭。重装结束后，主机会自动开机。</p>
-          <p>请输入“confirm”</p>
-          <Input v-model="reloadhintForm.input" placeholder="请输入“confirm”" style="width: 300px;margin-top: 10px;"></Input>
+        <p slot="footer" class="modal-footer-s">
+          <Button @click="showModal.rollback=false">取消</Button>
+          <Button type="primary" @click="rollbackSubmit">确定</Button>
+        </p>
+      </Modal>
+      <!-- 确认系统重装弹窗 -->
+      <Modal v-model="showModal.reload" :scrollable="true" :closable="false" :width="390">
+        <div class="modal-content-s">
+          <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+          <div>
+            <strong>警告</strong>
+            <p class="lh24">为了数据安全，系统重装之前主机会自动关闭。重装结束后，主机会自动开机。</p>
+            <p>请输入“confirm”</p>
+            <Input v-model="reloadhintForm.input" placeholder="请输入“confirm”"
+                   style="width: 300px;margin-top: 10px;"></Input>
+          </div>
         </div>
-      </div>
-      <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.reload=false">取消</Button>
-        <Button type="primary" @click="reloadSubm" :disabled="reloadhintForm.input!='confirm'">确定</Button>
-      </p>
-    </Modal>
-    <!-- 删除快照弹窗 -->
-    <Modal v-model="showModal.delsnaps" :scrollable="true" :closable="false" :width="390">
-      <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
-        <div>
-          <strong>删除快照</strong>
-          <p class="lh24">确定要删除选中的快照吗？</p>
+        <p slot="footer" class="modal-footer-s">
+          <Button @click="showModal.reload=false">取消</Button>
+          <Button type="primary" @click="reloadSubm" :disabled="reloadhintForm.input!='confirm'">确定</Button>
+        </p>
+      </Modal>
+      <!-- 删除快照弹窗 -->
+      <Modal v-model="showModal.delsnaps" :scrollable="true" :closable="false" :width="390">
+        <div class="modal-content-s">
+          <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+          <div>
+            <strong>删除快照</strong>
+            <p class="lh24">确定要删除选中的快照吗？</p>
+          </div>
         </div>
-      </div>
-      <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.delsnaps=false">取消</Button>
-        <Button type="primary" @click="delsnapsSubm">确定</Button>
-      </p>
-    </Modal>
+        <p slot="footer" class="modal-footer-s">
+          <Button @click="showModal.delsnaps=false">取消</Button>
+          <Button type="primary" @click="delsnapsSubm">确定</Button>
+        </p>
+      </Modal>
     </div>
   </div>
 </template>
@@ -414,35 +425,35 @@
     data() {
       var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,23}$/
       const validateoldPassword = (rule, value, callback) => {
-            if (!value) {
-                callback(new Error('密码不能为空'));
-            } else if(!regExp.test(value)){
-                callback(new Error('密码由6位及以上23位以下的字母数字组成，必须包含大小写字母、数字'));
-            } else {
-                callback();
-            }
+        if (!value) {
+          callback(new Error('密码不能为空'));
+        } else if (!regExp.test(value)) {
+          callback(new Error('密码由6位及以上23位以下的字母数字组成，必须包含大小写字母、数字'));
+        } else {
+          callback();
         }
+      }
       const validatePassword = (rule, value, callback) => {
-          if (!value) {
-                callback(new Error('密码不能为空'));
-            } else if(!regExp.test(value)){
-                callback(new Error('密码由6位及以上23位以下的字母数字组成，必须包含大小写字母、数字'));
-            } else {
-                if(regExp.test(value)){
-                  this.$refs.resetPasswordForm.validateField('confirmPassword');
-                }
-                callback();
-            }
+        if (!value) {
+          callback(new Error('密码不能为空'));
+        } else if (!regExp.test(value)) {
+          callback(new Error('密码由6位及以上23位以下的字母数字组成，必须包含大小写字母、数字'));
+        } else {
+          if (regExp.test(value)) {
+            this.$refs.resetPasswordForm.validateField('confirmPassword');
+          }
+          callback();
         }
+      }
       const validatePassCheck = (rule, value, callback) => {
-          if (!value) {
-                callback(new Error('密码不能为空'));
-            } else if(this.resetPasswordForm.newPassword != value){
-                callback(new Error('两次密码不一致'));
-            } else {
-                callback();
-            }
+        if (!value) {
+          callback(new Error('密码不能为空'));
+        } else if (this.resetPasswordForm.newPassword != value) {
+          callback(new Error('两次密码不一致'));
+        } else {
+          callback();
         }
+      }
       return {
         isActive: true,
         countdown: 60,
@@ -498,7 +509,7 @@
                       marginRight: '10px'
                     }
                   }), h('span', {}, '创建中')])
-                  case 3:
+                case 3:
                   return h('div', {}, [h('Spin', {
                     style: {
                       display: 'inline-block',
@@ -535,7 +546,7 @@
             key: 'action',
             width: 100,
             render: (h, params) => {
-              if (params.row.status == 2 || params.row.status == 3){
+              if (params.row.status == 2 || params.row.status == 3) {
                 return h('span', {
                   style: {
                     cursor: 'not-allowed'
@@ -564,14 +575,14 @@
         ],
         snapshotData: [],
         // 操作日志
-        log:{
+        log: {
           type: '近一天'
         },
         logTime: '',
         target: 'host',
-        currentPage:1,
-        pageSize:10,
-        total:0,
+        currentPage: 1,
+        pageSize: 10,
+        total: 0,
         columnslog: [
           {
             title: '操作对象',
@@ -582,18 +593,18 @@
             key: 'operatortime',
           },
           {
-            title:'操作结果',
-            key:'operatestatus',
+            title: '操作结果',
+            key: 'operatestatus',
             render: (h, params) => {
-              return h('span', params.row.operatestatus==1?'成功':'失败')
+              return h('span', params.row.operatestatus == 1 ? '成功' : '失败')
             }
           }, {
             title: '行为描述',
             key: 'operatedes',
-            ellipsis:true,
+            ellipsis: true,
           }
         ],
-        tableDatalog:[],
+        tableDatalog: [],
         cpu: {
           type: '今天',
           showType: '折线'
@@ -735,7 +746,7 @@
           rollback: false,
           delsnaps: false,
           reload: false,
-          lookPassword :false
+          lookPassword: false
         },
         setList: [
           {
@@ -857,7 +868,7 @@
       this.diskTime = this.getCurrentDate()
       this.memoryTime = this.getCurrentDate()
       this.IPTime = this.getCurrentDate()
-      this.logTime =this.getCurrentDate() + ',' + this.getTomorrow()
+      this.logTime = this.getCurrentDate() + ',' + this.getTomorrow()
       this.getsnapsList()
       // this.inter()
       this.search()
@@ -870,20 +881,20 @@
             .then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 var snapshotData = response.data.result
-                  snapshotData.forEach(item => {
-                        if (this.snapsSelection) {
-                          if (this.snapsSelection.id == item.id) {
-                            item._checked = true
-                          }
-                          if (item.status == 2) {
-                            item._disabled = true
-                          }
-                        }
-                      })
-                      this.snapshotData = snapshotData
+                snapshotData.forEach(item => {
+                  if (this.snapsSelection) {
+                    if (this.snapsSelection.id == item.id) {
+                      item._checked = true
                     }
+                    if (item.status == 2) {
+                      item._disabled = true
+                    }
+                  }
+                })
+                this.snapshotData = snapshotData
+              }
             })
-          }, 1000 * 10)
+        }, 1000 * 10)
       },
       currentChange(currentPage){
         this.currentPage = currentPage;
@@ -894,29 +905,29 @@
       },
       search(){
         // log/queryLog.do    操作日志   pageSize(1页显示多少条),currentPage（第几页）,target（主机则传 host）  , queryTime（查询时间  格式： 开始时间 , 结束时间  非必传）
-        this.$http.get('log/queryLog.do?pageSize='+this.pageSize+'&currentPage='+this.currentPage+'&target='+this.target+'&queryTime='+this.logTime+'&targetId='+this.$route.query.id).then(response => {
+        this.$http.get('log/queryLog.do?pageSize=' + this.pageSize + '&currentPage=' + this.currentPage + '&target=' + this.target + '&queryTime=' + this.logTime + '&targetId=' + this.$route.query.id).then(response => {
           this.total = response.data.total;
           this.tableDatalog = response.data.tableData;
         })
       },
       logToggle(type) {
-          switch (this[type].type) {
-            case '近一天':
-              this.logTime =this.getCurrentDate() + ',' + this.getTomorrow()
-              break
-            case '近一周':
-              this.logTime = this.logNearlySevenDays() + ',' + this.getTomorrow()
-              break
-            case '近一月':
-              this.logTime = this.logNearlyThirtyDays() + ',' + this.getTomorrow()
-              break
-          }
-          this.search()
+        switch (this[type].type) {
+          case '近一天':
+            this.logTime = this.getCurrentDate() + ',' + this.getTomorrow()
+            break
+          case '近一周':
+            this.logTime = this.logNearlySevenDays() + ',' + this.getTomorrow()
+            break
+          case '近一月':
+            this.logTime = this.logNearlyThirtyDays() + ',' + this.getTomorrow()
+            break
+        }
+        this.search()
       },
       lookPassword() {
         if (this.isActive) {
-            this.showModal.lookPassword = true
-          }
+          this.showModal.lookPassword = true
+        }
       },
       lookPasswordSubm(name) {
         this.$refs[name].validate((valid) => {
@@ -926,7 +937,7 @@
             this.codePlaceholder = '发送密码（60s）'
             var inter = setInterval(() => {
               this.countdown--
-              this.codePlaceholder ='发送密码（' + this.countdown + 's）'
+              this.codePlaceholder = '发送密码（' + this.countdown + 's）'
               if (this.countdown == 0) {
                 clearInterval(inter)
                 this.countdown = 60
@@ -935,24 +946,24 @@
               }
             }, 1000)
             this.lookPasswordForm.isLetterSec = this.lookPasswordForm.isletterSec == false ? 0 : 1
-            this.lookPasswordForm.isSmsAlarmSec  = this.lookPasswordForm.issmsalarmSec == false ? 0 : 1
+            this.lookPasswordForm.isSmsAlarmSec = this.lookPasswordForm.issmsalarmSec == false ? 0 : 1
             this.lookPasswordForm.isEmailAlarmSec = this.lookPasswordForm.isemailalarmSec == false ? 0 : 1
-            this.$http.post('log/sendVMPassword.do',{
+            this.$http.post('log/sendVMPassword.do', {
               VMId: this.computerInfo.computerId,
               password: this.lookPasswordForm.input,
-              letter:this.lookPasswordForm.isLetterSec,
+              letter: this.lookPasswordForm.isLetterSec,
               meail: this.lookPasswordForm.isEmailAlarmSec,
               phone: this.lookPasswordForm.isSmsAlarmSec
-              }).then(response => {
-                if (response.status == 200 && response.data.status == 1) {
-                  this.$Message.success(response.data.message)
-                } else {
-                  this.$message.info({
-                    content:response.data.message
-                  })
-                }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
               this.lookPasswordForm.input = ''
-              })
+            })
           }
         })
       },
@@ -981,40 +992,40 @@
         this.showModal.reload = false
         this.reloadhintForm.input = ''
         var url = `information/restoreVirtualMachine.do?VMId=${this.computerInfo.computerId}&templateId=${this.reloadForm.system}&adminPassword=${this.reloadForm.password}`
-          this.reloadButton = '正在重装...'
-          this.$http.get(url).then(response => {
-            this.reloadButton = '确认重装'
-            if (response.status == 200 && response.data.status == 1) {
-              this.$Message.success(response.data.message)
-            } else {
-              this.$message.info({
-                content:response.data.message
-              })
-            }
-            this.reloadForm.system = ''
-            this.reloadForm.password = ''
-          })
+        this.reloadButton = '正在重装...'
+        this.$http.get(url).then(response => {
+          this.reloadButton = '确认重装'
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+          this.reloadForm.system = ''
+          this.reloadForm.password = ''
+        })
       },
       // 获取具体主机下的快照列表
       getsnapsList() {
         var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1&resourceId=${this.snapsId}`
         axios.get(snapsURL)
-            .then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                var snapshotData = response.data.result
-                  snapshotData.forEach(item => {
-                        if (this.snapsSelection) {
-                          if (this.snapsSelection.id == item.id) {
-                            item._checked = true
-                          }
-                          if (item.status == 2) {
-                            item._disabled = true
-                          }
-                        }
-                      })
-                      this.snapshotData = snapshotData
-                    }
-            })
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              var snapshotData = response.data.result
+              snapshotData.forEach(item => {
+                if (this.snapsSelection) {
+                  if (this.snapsSelection.id == item.id) {
+                    item._checked = true
+                  }
+                  if (item.status == 2) {
+                    item._disabled = true
+                  }
+                }
+              })
+              this.snapshotData = snapshotData
+            }
+          })
       },
       delSnapshot() {
         if (this.snapsSelection == null) {
@@ -1082,7 +1093,7 @@
           polar.xAxis.data = this[type + 'Polar'].xAxis.data
           polar.series[0].data = this[type + 'Polar'].series[0].data
           this[type + 'Polar'] = polar
-        } else if(type == 'flow'){
+        } else if (type == 'flow') {
           polar = this[type].showType == '折线' ? ipOptions : ipHistogram
           polar.xAxis.data = this.ipPolar.xAxis.data
           polar.series[0].data = this.ipPolar.series[0].data
@@ -1165,24 +1176,24 @@
       },
       resetConfirm(name) {
         this.$refs[name].validate((valid) => {
-            if (valid) {
-                  var url = `information/resetPasswordForVirtualMachine.do?VMId=${this.computerInfo.computerId}&password=${this.resetPasswordForm.newPassword}&oldPassword=${this.resetPasswordForm.oldPassword}`
-                  var password = this.resetPasswordForm.newPassword
-                  this.resetPasswordForm.buttonMessage = '正在重置中...'
-                  this.$http.get(url).then(response => {
-                    if (response.status == 200 && response.data.status == 1) {
-                      this.$Message.success(response.data.message)
-                    } else {
-                      this.$message.info({
-                        content:response.data.message
-                      })
-                    }
-                    this.resetPasswordForm.buttonMessage = '确认重置'
-                    this.resetPasswordForm.oldPassword = ''
-                    this.resetPasswordForm.newPassword = ''
-                    this.resetPasswordForm.confirmPassword = ''
-                  })
-            }
+          if (valid) {
+            var url = `information/resetPasswordForVirtualMachine.do?VMId=${this.computerInfo.computerId}&password=${this.resetPasswordForm.newPassword}&oldPassword=${this.resetPasswordForm.oldPassword}`
+            var password = this.resetPasswordForm.newPassword
+            this.resetPasswordForm.buttonMessage = '正在重置中...'
+            this.$http.get(url).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+              this.resetPasswordForm.buttonMessage = '确认重置'
+              this.resetPasswordForm.oldPassword = ''
+              this.resetPasswordForm.newPassword = ''
+              this.resetPasswordForm.confirmPassword = ''
+            })
+          }
         })
       },
       reload() {
@@ -1209,7 +1220,7 @@
             this.issmsalarm = response.data.result.issmsalarm == 0 ? false : true
           } else {
             this.$message.info({
-              content:response.data.message
+              content: response.data.message
             })
           }
         })
@@ -1227,7 +1238,7 @@
           } else {
             this.showModal.setMonitoringForm = false
             this.$message.info({
-              content:response.data.message
+              content: response.data.message
             })
           }
         })
@@ -1246,17 +1257,19 @@
     @diff: 102px;
     min-height: calc(~"100% - @{diff}");
   }
-  #wrapper{
-    background:#fff;
+
+  #wrapper {
+    background: #fff;
   }
-  .arrowdown-icon{
+
+  .arrowdown-icon {
     position: relative;
     display: inline-block;
     width: 14px;
     height: 14px;
     border: solid 1px #fff;
     border-radius: 50%;
-    &:before{
+    &:before {
       content: '';
       position: absolute;
       top: 2px;
@@ -1265,11 +1278,12 @@
       width: 6px;
       height: 6px;
       border: solid 1px #fff;
-      border-top:0;
+      border-top: 0;
       border-left: 0;
-      transform:rotate(45deg);
+      transform: rotate(45deg);
     }
   }
+
   .ivu-tabs-bar {
     padding-left: 55px;
   }
@@ -1313,10 +1327,10 @@
         font-size: 12px;
         line-height: 12px;
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.35);
-        > div{
+        > div {
           line-height: 20px;
           user-select: none;
-            i {
+          i {
             font-style: normal;
           }
         }
@@ -1328,10 +1342,10 @@
           color: #666666;
           cursor: not-allowed;
         }
-       .one-row-text {
+        .one-row-text {
           display: inline-block;
           overflow: hidden;
-          text-overflow:ellipsis;
+          text-overflow: ellipsis;
           white-space: nowrap;
         }
       }
@@ -1361,7 +1375,7 @@
         min-height: 400px;
         margin-top: -17px;
         padding-top: 20px;
-        padding-right:20px;
+        padding-right: 20px;
         background-color: white;
         & > label {
           font-family: "\5FAE\8F6F\96C5\9ED1";
@@ -1389,7 +1403,7 @@
           display: flex;
           flex-wrap: wrap;
           justify-content: space-between;
-          margin-right:20px;
+          margin-right: 20px;
           .item {
             width: 100%;
             margin-bottom: 50px;
@@ -1446,6 +1460,7 @@
 
     }
   }
+
   .setForm {
     display: flex;
     margin-top: 28px;
@@ -1460,10 +1475,12 @@
       width: 240px;
     }
   }
+
   .lookPassword .universal-modal-content-flex form .ivu-form-item {
     width: 100%;
   }
-  .lookPassword .ivu-input-wrapper{
+
+  .lookPassword .ivu-input-wrapper {
     width: 45%
   }
 
