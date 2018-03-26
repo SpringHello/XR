@@ -2104,14 +2104,17 @@
     border: 1px solid #D9D9D9;
     border-radius: 4px;
     height: 60px;
-    width: 480px;
-    padding-left: 20px;
+    width: 510px;
+    padding: 0px 20px 0px 10px;
     span {
-      padding-right: 210px;
       font-size: 14px;
       color: #999999;
       line-height: 60px;
 
+    }
+    button {
+      float: right;
+      margin-top: 20px;
     }
   }
 
