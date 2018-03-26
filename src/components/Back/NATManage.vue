@@ -367,7 +367,7 @@
       },
       '$store.state.zone': {
         handler: function () {
-          this.refresh()
+          this.$router.push('/ruicloud/vpc')
         },
         deep: true
       }
