@@ -387,7 +387,7 @@
           {
             title: 'VPN',
             width: 120,
-            key: 'vpcname'
+            key: 'remoteVpnName'
           },
           {
             title: '预共享密钥',
@@ -862,7 +862,7 @@
             content: '确定要删除该远程VPN接入吗',
             onOk: () => {
               this.remoteVpnData.forEach(item => {
-                if (item.id = this.currentRemote.id) {
+                if (item.id == this.currentRemote.id) {
                   // status为2代表正在删除
                   this.$set(item, 'status', 2)
                 }
@@ -928,6 +928,18 @@
           }
         })
       },
+      // 远程vpn数据
+      remoteData(){
+        axios.get('network/listRemoteVpn.do', {
+                params: {
+                  zoneId: $store.state.zone.zoneid
+                }
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.remoteVpnData = response.data.result
+                }
+              })
+      },
       // 用户管理添加用户
       addUser(){
         this.$refs.addUserFormValidate.validate(validate => {
@@ -945,8 +957,8 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
                 this.listUser()
+                this.remoteData()
               } else {
-                this.listUser()
                 this.$Message.error(response.data.message)
               }
             })
