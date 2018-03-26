@@ -456,7 +456,7 @@
           .title {
             height: 72px;
             text-align: center;
-            background: url('../../../assets/img/active/newNodes/hostBanner.png'), linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
+            background: url('../../../assets/img/active/newNodes/hostBanner.png') 20px no-repeat,url('../../../assets/img/active/newNodes/hostBanner.png') 430px no-repeat, linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
             p {
               font-size: 30px;
               font-family: PingFangSC-Medium;
