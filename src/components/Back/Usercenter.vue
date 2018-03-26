@@ -689,14 +689,14 @@
           <p style="font-size: 14px;color: rgba(17,17,17,0.65);padding-bottom: 25px;line-height: 19px;">
             您正在为帐号{{userInfo.realname}}修改绑定，请选择一种身份验证方式：</p>
         </div>
-        <div class='modal-wrapper' @click="authByPhone" :disabled="!userInfo.phone">
+        <div class='modal-wrapper'  >
           <span>通过手机验证</span>
-          <Button type="primary">立即验证
+          <Button type="primary" :disabled="!userInfo.phone" @click="authByPhone">立即验证
           </Button>
         </div>
-        <div class="modal-wrapper" @click="authByEmail" :disabled="!userInfo.loginname">
+        <div class="modal-wrapper">
           <span>通过邮箱验证</span>
-          <Button type="primary">立即验证
+          <Button type="primary" :disabled="!userInfo.loginname" @click="authByEmail">立即验证
           </Button>
         </div>
       </div>
@@ -2105,7 +2105,6 @@
     border-radius: 4px;
     height: 60px;
     width: 480px;
-    cursor: pointer;
     padding-left: 20px;
     span {
       padding-right: 210px;
