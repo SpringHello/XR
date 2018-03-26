@@ -227,6 +227,16 @@
     },
     data (){
       const validaRegisteredName = regExp.validaRegisteredName
+      const validateNumber = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('输入端口不能为空'))
+        }
+        if (!(/^[0-9]*$/.test(value))) {
+          callback(new Error('请输入纯数字格式的端口'))
+        } else {
+          callback()
+        }
+      }
       return {
         loadingMessage: '',
         loading: false,
@@ -358,10 +368,10 @@
               {required: true, message: '请选择 ', trigger: 'change'}
             ],
             frontPort: [
-              {required: true, message: '请输入0-65535之间任意数字 ', trigger: 'blur'}
+              {required: true, validator: validateNumber, trigger: 'blur'}
             ],
             rearPort: [
-              {required: true, message: '请输入0-65535之间任意数字 ', trigger: 'blur'}
+              {required: true, validator: validateNumber, trigger: 'blur'}
             ],
           }
         },
