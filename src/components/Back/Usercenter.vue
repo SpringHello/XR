@@ -687,7 +687,7 @@
       <div style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         <div>
           <p style="font-size: 14px;color: rgba(17,17,17,0.65);padding-bottom: 25px;line-height: 19px;">
-            您正在为帐号{{userInfo.realname}}修改绑定手机，请选择一种身份验证方式：</p>
+            您正在为帐号{{userInfo.realname}}修改绑定，请选择一种身份验证方式：</p>
         </div>
         <div class='modal-wrapper' @click="authByPhone" :disabled="!userInfo.phone">
           <span>通过手机验证</span>
