@@ -456,7 +456,7 @@
           .title {
             height: 72px;
             text-align: center;
-            background: url('../../../assets/img/active/newNodes/hostBanner.png'), linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
+            background: url('../../../assets/img/active/newNodes/hostBanner.png') 20px no-repeat,url('../../../assets/img/active/newNodes/hostBanner.png') 430px no-repeat, linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
             p {
               font-size: 30px;
               font-family: PingFangSC-Medium;
@@ -798,7 +798,7 @@
   }
 
   .list-enter-active, .list-leave-active {
-    transition: all 4s;
+    transition: all 1s;
   }
 
   .list-enter, .list-leave-to
@@ -939,13 +939,13 @@
     created() {
       setTimeout(() => {
         this.img_2 = true
-      }, 1500)
+      }, 350)
       setTimeout(() => {
         this.img_3 = true
-      }, 3000)
+      }, 500)
       setTimeout(() => {
         this.img_4 = true
-      }, 4500)
+      }, 600)
       if (this.$store.state.userInfo != null) {
         this.isLogin = 1
         this.userInfo = this.$store.state.userInfo
