@@ -798,7 +798,7 @@
   }
 
   .list-enter-active, .list-leave-active {
-    transition: all 4s;
+    transition: all 1s;
   }
 
   .list-enter, .list-leave-to
@@ -939,13 +939,13 @@
     created() {
       setTimeout(() => {
         this.img_2 = true
-      }, 1500)
+      }, 350)
       setTimeout(() => {
         this.img_3 = true
-      }, 3000)
+      }, 500)
       setTimeout(() => {
         this.img_4 = true
-      }, 4500)
+      }, 600)
       if (this.$store.state.userInfo != null) {
         this.isLogin = 1
         this.userInfo = this.$store.state.userInfo
