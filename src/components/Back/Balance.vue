@@ -31,7 +31,9 @@
         <Table highlight-row stripe :columns="balColumns" :data="balData" @radio-change="selectBalance"></Table>
         <!--创建负载均衡模态框-->
         <Modal v-model="creatbalancemodal.showBalanceName" :scrollable="true" width="550">
-          <p slot="header" style="font-size: 16px;color: rgba(17,17,17,0.75);line-height: 23.42px;border-bottom: 1px solid #D8D8D8;padding-bottom: 40px;"><b>创建负载均衡</b></p>
+          <p slot="header"
+             style="font-size: 16px;color: rgba(17,17,17,0.75);line-height: 23.42px;border-bottom: 1px solid #D8D8D8;padding-bottom: 40px;">
+            <b>创建负载均衡</b></p>
           <Steps :current="creatbalancemodal.current" size="small" style="margin:15px;">
             <Step title="创建负载均衡" style="opacity:0.7"></Step>
             <Step title="配置转发规则"></Step>
@@ -39,8 +41,10 @@
           </Steps>
 
           <!--步骤creatbalancemodal.current == 0-->
-          <div v-show="creatbalancemodal.current == 0" class="universal-modal-content" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-            <Form ref="form1" :model="creatbalancemodal.formInline" :rules="creatbalancemodal.ruleInline">
+          <div v-show="creatbalancemodal.current == 0" class="universal-modal-content"
+               style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
+            <Form ref="form1" :model="creatbalancemodal.formInline" :rules="creatbalancemodal.ruleInline"
+                  style="width: 100%">
               <FormItem label="名称" prop="name">
                 <Input type="text" v-model="creatbalancemodal.formInline.name" placeholder="请输入小于16位的负载均衡名称"
                        style="width:240px;" :maxlength="16">
@@ -49,30 +53,52 @@
               <FormItem label="类型" prop="radio">
                 <RadioGroup v-model="creatbalancemodal.formInline.radio" @on-change="changeNet">
                   <Radio label="public">公网</Radio>
-                  <Radio label="private">私网</Radio>
+                  <Radio label="private">内网</Radio>
                 </RadioGroup>
               </FormItem>
               <!--当为公网时-->
+              <FormItem label="所属子网" prop="subnet"
+                        style="width:240px;">
+                <Select v-model="creatbalancemodal.formInline.subnet" @on-change="changeSubnet">
+                  <Option v-for="item in creatbalancemodal.formInline.subnetList"
+                          :value="`${item.ipsegmentid}#${item.ipsegment}#${item.vpcid}`"
+                          :key="item.ipsegmentid">{{ item.name }}
+                  </Option>
+                </Select>
+              </FormItem>
+              <Poptip trigger="hover" style="float: right;position: relative;right: 240px;bottom: 50px;"
+                      v-if="creatbalancemodal.formInline.radio == 'public'">
+                <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
+                <div slot="content">
+                  <div style="height: 50px;">
+                    <p style="line-height: 14px;">没有可选子网</p>
+                    <p style="line-height: 14px;">创建公网负载均衡需要所属子网服务方案为公网负载均衡;</p>
+                    <p style="line-height: 14px;">您需要先创建一个服务方案为公网负载均衡的子网，在创建公网负载均衡。</p>
+                  </div>
+                </div>
+              </Poptip>
               <FormItem label="公网IP" prop="publicIp" v-if="creatbalancemodal.formInline.radio == 'public'"
                         style="width:240px;">
-                <Select v-model="creatbalancemodal.formInline.publicIp" @on-change="changePublicIp">
+                <Select v-model="creatbalancemodal.formInline.publicIp">
                   <Option v-for="item in creatbalancemodal.formInline.PublicIpList"
                           :value="`${item.vpcid}#${item.publicipid}`"
                           :key="item.publicipid">{{ item.publicip }}
                   </Option>
                 </Select>
               </FormItem>
-
+              <Poptip trigger="hover" style="float: right;position: relative;right: 240px;bottom: 50px;"
+                      v-if="creatbalancemodal.formInline.radio == 'public'">
+                <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
+                <div slot="content" style="height: 50px;">
+                  <div>
+                    <p style="line-height: 14px;">没有可选子网？</p>
+                    <p style="line-height: 14px;">创建私网负载均衡需要所属子网服务方案为内网负载均衡;</p>
+                    <p style="line-height: 14px;">您需要先创建一个服务方案为内网负载均衡的子网，在创建内网负载均衡。</p>
+                  </div>
+                </div>
+              </Poptip>
               <!--当为私网时-->
-              <FormItem label="所属子网" prop="subnet"
-                        style="width:240px;">
-                <Select v-model="creatbalancemodal.formInline.subnet" @on-change="changeSubnet">
-                  <Option v-for="item in creatbalancemodal.formInline.subnetList"
-                          :value="`${item.ipsegmentid}#${item.ipsegment}`"
-                          :key="item.ipsegmentid">{{ item.name }}
-                  </Option>
-                </Select>
-              </FormItem>
+
               <FormItem label="内网IP" prop="intranetIp" v-if="creatbalancemodal.formInline.radio == 'private'">
                 <RadioGroup v-model="creatbalancemodal.formInline.intranetIp">
                   <Radio label="auto">自动分配</Radio>
@@ -92,7 +118,8 @@
           </div>
 
           <!--步骤creatbalancemodal.current == 1-->
-          <div v-show="creatbalancemodal.current == 1" class="universal-modal-content-flex" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
+          <div v-show="creatbalancemodal.current == 1" class="universal-modal-content-flex"
+               style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
             <Form ref="form2" :model="creatbalancemodal.formInline" :rules="creatbalancemodal.ruleInline">
               <!--  <FormItem label="规则名称" prop="ruleName">
                   <Input type="text" v-model="creatbalancemodal.formInline.ruleName" placeholder="请输入规则名称">
@@ -223,8 +250,8 @@
           {
             title: '状态',
             render: (h, params) => {
-              const text = params.row.status == 5 ? '删除中': params.row.status == 6 ? '解绑主机中' : '绑定主机中'
-              if (params.row.status == 5 || params.row.status == 6 || params.row.status == 7 ) {
+              const text = params.row.status == 5 ? '删除中' : params.row.status == 6 ? '解绑主机中' : '绑定主机中'
+              if (params.row.status == 5 || params.row.status == 6 || params.row.status == 7) {
                 return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block',
@@ -353,7 +380,7 @@
       }
     },
     created () {
-      this.listPublicIp()
+      this.changePublicIp()
     },
     methods: {
       refresh () {
@@ -464,6 +491,18 @@
       },
       /* 切换子网时需要把子网的ip字段赋值给指定ip */
       changeSubnet () {
+        // 获取可以挂载的所有弹性IP
+        this.$http.get('network/listPublicIp.do', {
+          params: {
+            vpcId: this.creatbalancemodal.formInline.subnet.split('#')[2],
+            useType: '0,2',
+            status: '1'
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.creatbalancemodal.formInline.PublicIpList = response.data.result
+          }
+        })
         if (this.creatbalancemodal.formInline.subnet) {
           let ip = this.creatbalancemodal.formInline.subnet.split('#')[1]
           this.creatbalancemodal.formInline.intranetIpNum = ip.slice(0, ip.lastIndexOf('.'))
@@ -724,5 +763,4 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-
 </style>

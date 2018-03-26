@@ -434,7 +434,7 @@
                 },
                 on: {
                   click: () => {
-                    this.current = object.row.id
+                    this.current = object.row
                     this.listUser()
                     this.showModal.userManage = true
                   }
@@ -920,7 +920,7 @@
       listUser(){
         this.$http.get('network/listVpnUsers.do', {
           params: {
-            remoteVpnId: this.current
+            remoteVpnId: this.current.id
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -936,9 +936,10 @@
             this.userList.push({name: this.addUserForm.userName, status: 1})
             this.$http.get('network/addVpnUser.do', {
               params: {
+                vpcId: this.current.vpcid,
                 userName: this.addUserForm.userName,
                 password: this.addUserForm.password,
-                remoteVpnId: this.current,
+                remoteVpnId: this.current.id,
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
@@ -963,7 +964,7 @@
         this.$http.get('network/removeVpnUser.do', {
           params: {
             userName,
-            remoteVpnId: this.current
+            remoteVpnId: this.current.id
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
