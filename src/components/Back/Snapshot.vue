@@ -29,6 +29,9 @@
             </div>
             <Table ref="selection" :columns="snapshotCol" :data="snapshotData"
                    @radio-change="changeSelection"></Table>
+            <div style="margin: 10px;overflow: hidden;text-align:right">
+                <Page :total="total" :current="1" @on-change="currentChange"></Page>
+            </div>
           </TabPane>
           <TabPane label="云主机快照策略">
             <div class="operator-bar">
@@ -1741,7 +1744,9 @@
           addOrDeleteHost: false,
           delStrategy: false
         },
-
+        page: 1,
+        pageSize: 10,
+        total: 0,
       }
     },
     created() {
@@ -1752,12 +1757,13 @@
     methods: {
       inter() {
         this.intervalSnapsAlllist = setInterval(() => {
-        var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1`
+        var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1&page=${this.page}&pageSize=${this.pageSize}`
         axios.get(snapsURL)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
+              this.total = response.data.total  
               var snapshotData = response.data.result
-              snapshotData.forEach(item => {
+              snapshotData.forEach(item => {  
                 if (this.snapsSelection) {
                   if (this.snapsSelection.id == item.id) {
                     item._checked = true
@@ -1772,6 +1778,11 @@
           })
         }, 1000 * 10)
       },
+      // 分页
+      currentChange(page){
+        this.page = page
+        this.listsnaps()
+      },
       createsnapshot() {
         this.listHost()
         this.showModal.newSnapshot=true
@@ -1782,10 +1793,11 @@
       },
       //获取快照列表
       listsnaps() {
-        var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1`
+        var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1&page=${this.page}&pageSize=${this.pageSize}`
         axios.get(snapsURL)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
+              this.total = response.data.total
               var snapshotData = response.data.result
               snapshotData.forEach(item => {
                 if (this.snapsSelection) {
