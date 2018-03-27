@@ -627,7 +627,7 @@
       },
       addHostForm_ok () {
         this.showModal.addHostToNet = false
-        var url = `network/enterVMToNetwork.do?networkId=${this.addHostForm.ipsegmentid}&VMId=${this.addHostForm.vm}`
+        var url = `network/enterVMToNetwork.do?networkId=${this.addHostForm.ipsegmentid}&VMId=${this.addHostForm.vm}&_t=${new Date().toTimeString()}`
         for (let network of this.data.ipsList) {
           if (network.ipsegmentid == this.addHostForm.ipsegmentid) {
             network.vmList.push({
@@ -643,7 +643,11 @@
               content: response.data.message
             })
           } else {
-            this.refresh()
+            for (let network of this.data.ipsList) {
+              if (network.ipsegmentid == this.addHostForm.ipsegmentid) {
+                network.vmList.pop()
+              }
+            }
             this.$message.info({
               content: response.data.message
             })
@@ -664,7 +668,6 @@
                 this.$Message.info({
                   content: response.data.message
                 })
-
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -1063,10 +1066,10 @@
   }
 
   .btn-bgwhite {
-    border-color: #2A99F2 ;
+    border-color: #2A99F2;
     color: #2A99F2;
     background: #FFFFFF;
-    &:first-of-type{
+    &:first-of-type {
       margin-right: 10px;
     }
     &:hover {

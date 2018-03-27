@@ -190,7 +190,7 @@
     </Modal>
 
     <!-- 接入点用户管理 modal -->
-    <Modal v-model="showModal.userManage" width="550" :scrollable="true">
+    <Modal v-model="showModal.userManage" width="550" :scrollable="true" @on-cancel="remoteData()">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">接入点用户管理</span>
       </p>
@@ -957,7 +957,6 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
                 this.listUser()
-                this.remoteData()
               } else {
                 this.$Message.error(response.data.message)
               }
