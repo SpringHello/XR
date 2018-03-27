@@ -769,7 +769,7 @@
         <p style="line-height: 1.5;color: #999;">没有收到验证码？</p>
         <p style="line-height: 1.5;color: #999;">1、检查您的邮箱垃圾箱。</p>
         <p style="line-height: 1.5;color: #999;">2、如果邮箱仍收不到验证码，请<span style="color: rgb(42, 153, 242);cursor: pointer"
-                                                                     @click="changWay2">更换验证方式</span>。</p>
+                                                                      @click="changWay2">更换验证方式</span>。</p>
       </div>
       <div slot="footer">
         <Button type="ghost" @click="showModal.authByEmail=false">取消</Button>
@@ -1457,6 +1457,10 @@
                 axios.get('user/GetUserInfo.do').then(response => {
                   this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
                 })
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
               }
             })
           }
@@ -1484,6 +1488,10 @@
                 // 获取用户信息
                 axios.get('user/GetUserInfo.do').then(response => {
                   this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+                })
+              } else {
+                this.$message.info({
+                  content: response.data.message
                 })
               }
             })
@@ -1982,7 +1990,7 @@
             float: unset;
           }
           img {
-            width: 130px;
+            width: 110px;
             height: 74px;
             display: block;
             margin-bottom: 20px;

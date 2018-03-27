@@ -9,7 +9,18 @@ function message(options) {
 }
 // 名称与路径的Map
 var namePathMap = {
-  'NAT网关': 'vpc'
+  'NAT网关': 'vpc',
+  '回收站': 'recycle',
+  '防火墙': 'firewall',
+  '虚拟私有云VPC': 'vpc',
+  '弹性IP': 'ip',
+  '负载均衡': 'balance',
+  '虚拟专网VPN': 'vpn',
+  '云硬盘': 'disk',
+  '云硬盘备份': 'diskBackup',
+  '云主机': 'host',
+  '云主机快照': 'snapshot',
+  '云主机镜像': 'mirror',
 }
 message.error = function (options = {}) {
   options.type = 'error'
@@ -53,6 +64,7 @@ function getInstance(options) {
           result.push(h('a', {
             on: {
               click: () => {
+                modalInstance.$children[0].visible = false
                 router.push(namePathMap[contentArray[i]])
               }
             }

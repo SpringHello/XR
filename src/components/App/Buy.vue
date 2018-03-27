@@ -107,6 +107,9 @@
                              :class="{zoneSelect:PecsInfo.customMirror.id==item.id}"
                              @click="PecsInfo.customMirror=item" style="margin-top: 20px;">{{item.templatename}}
                         </div>
+                        <div v-if="PecsInfo.customList.length==0" class="zoneItem" style="margin-top: 20px;">
+                          暂无镜像
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -232,6 +235,9 @@
                         <div v-for="item in PecsInfo.customList" :key="item.value" class="zoneItem"
                              :class="{zoneSelect:PecsInfo.customMirror.id==item.id}"
                              @click="PecsInfo.customMirror=item" style="margin-top: 20px;">{{item.templatename}}
+                        </div>
+                        <div v-if="PecsInfo.customList.length==0" class="zoneItem" style="margin-top: 20px;">
+                          暂无镜像
                         </div>
                       </div>
                     </div>
@@ -1078,7 +1084,8 @@
     data(){
       var zone = null
       $store.state.zoneList.forEach(item => {
-        if (item.isdefault === 1) {
+        if (item.isdefault === 1
+        ) {
           zone = item
         }
       })
@@ -1154,11 +1161,11 @@
           },
           // 镜像
           mirrorType: [
-            {label: '镜像+应用', value: 'app'},
+            /*{label: '镜像+应用', value: 'app'},*/
             {label: '公共镜像', value: 'public'},
             {label: '自定义镜像', value: 'custom'}
           ],
-          currentType: 'app',
+          currentType: 'public',
           // 镜像+应用 列表
           appList: [],
           currentApp: {},
@@ -1338,10 +1345,12 @@
         // 购物车
         cart,
         scrollFun: () => {
-          if (window.innerHeight - this.$refs.list.getBoundingClientRect().bottom < 246) {
+          if (window.innerHeight - this.$refs.list.getBoundingClientRect().bottom < 246
+          ) {
             this.$refs.buyDiv.style.position = 'fixed'
             this.$refs.buyDiv.style.bottom = 0
-          } else {
+          }
+          else {
             this.$refs.buyDiv.style.position = 'unset'
           }
         }
@@ -1386,9 +1395,11 @@
             zoneId: this[`${this.product.currentProduct}Info`].zone.zoneid
           }
         }).then(response => {
-          this.remainCount.hostCount = response.data.result.computer
-          this.remainCount.diskCount = response.data.result.disk
-          this.remainCount.publicIpCount = response.data.result.publicIp
+          if (response.status == 200 && response.data.status == 1) {
+            this.remainCount.hostCount = response.data.result.computer
+            this.remainCount.diskCount = response.data.result.disk
+            this.remainCount.publicIpCount = response.data.result.publicIp
+          }
         })
       },
       // 设置镜像数据
