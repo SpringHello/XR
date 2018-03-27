@@ -306,8 +306,9 @@
               </Option>
             </Select>
           </FormItem>
-          <p class="modal-text-hint-bottom">当前NAT网关可绑定弹性IP剩余额度5（点击提升配额）</p>
+
         </Form>
+        <p class="modal-text-hint-bottom">当前NAT网关可绑定弹性IP剩余额度5</p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="primary" @click="handlebindIPSubmit">确认绑定</Button>
