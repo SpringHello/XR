@@ -686,17 +686,17 @@
       </div>
       <div style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         <div>
-          <p style="font-size: 14px;color: rgba(17,17,17,0.65);padding-bottom: 25px;">
-            您正在为帐号{{userInfo.realname}}修改绑定手机，请选择一种身份验证方式：</p>
+          <p style="font-size: 14px;color: rgba(17,17,17,0.65);padding-bottom: 25px;line-height: 19px;">
+            您正在为帐号{{userInfo.realname}}修改绑定，请选择一种身份验证方式：</p>
         </div>
-        <div class='modal-wrapper'>
+        <div class='modal-wrapper'  >
           <span>通过手机验证</span>
-          <Button type="primary" @click="authByPhone" :disabled="!userInfo.phone" style="margin-top: -5px;">立即验证
+          <Button type="primary" :disabled="!userInfo.phone" @click="authByPhone">立即验证
           </Button>
         </div>
         <div class="modal-wrapper">
           <span>通过邮箱验证</span>
-          <Button type="primary" @click="authByEmail" :disabled="!userInfo.loginname" style="margin-top: -5px;">立即验证
+          <Button type="primary" :disabled="!userInfo.loginname" @click="authByEmail">立即验证
           </Button>
         </div>
       </div>
@@ -2109,14 +2109,20 @@
   .modal-wrapper {
     background: #FFFFFF;
     margin-bottom: 20px;
+    border: 1px solid #D9D9D9;
+    border-radius: 4px;
+    height: 60px;
+    width: 510px;
+    padding: 0px 20px 0px 10px;
     span {
-      padding: 5px 132px 5px 10px;
-      border: 1px solid #D9D9D9;
-      border-radius: 4px;
-      font-size: 12px;
+      font-size: 14px;
       color: #999999;
-      line-height: 18px;
-      margin-right: 20px;
+      line-height: 60px;
+
+    }
+    button {
+      float: right;
+      margin-top: 20px;
     }
   }
 

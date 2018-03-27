@@ -1018,7 +1018,16 @@
         sessionStorage.setItem('firewallName', item.acllistname)
         this.$router.push('firewallManage')
       }
-    }
+    },
+    watch: {
+      // 监听区域变换
+      '$store.state.zone': {
+        handler: function () {
+          this.$router.push('/ruicloud/vpc')
+        },
+        deep: true
+      }
+    },
   }
 </script>
 

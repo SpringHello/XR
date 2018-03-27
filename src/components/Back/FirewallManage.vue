@@ -522,7 +522,16 @@
           }
         })
       }
-    }
+    },
+    watch: {
+      // 监听区域变换
+      '$store.state.zone': {
+        handler: function () {
+          this.$router.push('/ruicloud/firewall')
+        },
+        deep: true
+      }
+    },
   }
 </script>
 

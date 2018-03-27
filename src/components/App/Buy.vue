@@ -196,6 +196,7 @@
 
                     </div>
                     <div>
+
                       <div v-for="item in PecsInfo.mirrorType" class="zoneItem"
                            :class="{zoneSelect:PecsInfo.currentType==item.value}"
                            @click="PecsInfo.currentType=item.value">{{item.label}}
@@ -524,14 +525,14 @@
                  @click="$router.push('document')">查看计价详情</p>
               <p v-if="PecsInfo.createType=='fast'"
                  style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">费用：<span
-                style="font-size: 24px;color: #EE6723;">{{PecsInfo.cost.toFixed(2)}}元</span></p>
+                style="font-size: 24px;color: #EE6723;">{{PecsInfo.cost.toFixed(2)}}元</span><span v-show="PecsInfo.timeForm.currentTimeType == 'current'">/小时</span></p>
               <p v-if="PecsInfo.createType=='fast'&&PecsInfo.fastCoupon!=0"
                  style="text-align: right;font-size: 14px;color: #666666;">优惠费用：<span
                 style="font-size: 14px;color: #EE6723;">{{PecsInfo.fastCoupon.toFixed(2)}}元</span></p>
               <p v-if="PecsInfo.createType=='custom'"
                  style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
                 费用：<span
-                style="font-size: 24px;color: #EE6723;">{{totalCost.toFixed(2)}}元</span>
+                style="font-size: 24px;color: #EE6723;">{{totalCost.toFixed(2)}}元</span><span v-show="PecsInfo.timeForm.currentTimeType == 'current'">/小时</span>
               </p>
               <p v-if="PecsInfo.createType=='custom'&&totalCoupon!=0"
                  style="text-align: right;font-size: 14px;color: #666666;">
@@ -672,7 +673,7 @@
             <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
                @click="$router.push('document')">查看计价详情</p>
             <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
-              费用：<span style="font-size: 24px;color: #EE6723;">{{PdiskInfo.dataDiskCost.toFixed(2)}}元</span>
+              费用：<span style="font-size: 24px;color: #EE6723;">{{PdiskInfo.dataDiskCost.toFixed(2)}}元</span><span v-show="PdiskInfo.timeForm.currentTimeType == 'current'">/小时</span>
             </p>
             <p style="text-align: right;font-size: 14px;color: #666666;" v-if="PdiskInfo.coupon!=0">优惠费用：<span
               style="font-size: 14px;color: #EE6723;">{{PdiskInfo.coupon.toFixed(2)}}元</span></p>
@@ -796,7 +797,7 @@
             <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
                @click="$router.push('document')">查看计价详情</p>
             <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">费用：<span
-              style="font-size: 24px;color: #EE6723;">{{PeipInfo.cost.toFixed(2)}}元</span></p>
+              style="font-size: 24px;color: #EE6723;">{{PeipInfo.cost.toFixed(2)}}元</span><span v-show="PeipInfo.timeForm.currentTimeType == 'current'">/小时</span></p>
             <p style="text-align: right;font-size: 14px;color: #666666;" v-if="PeipInfo.coupon!=0">优惠费用：<span
               style="font-size: 14px;color: #EE6723;">{{PeipInfo.coupon.toFixed(2)}}元</span>
             </p>
