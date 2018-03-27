@@ -513,7 +513,7 @@
           this.codePlaceholder = '60s'
           var inter = setInterval(() => {
             countdown--
-            this.codePlaceholder = this.countdown + 's'
+            this.codePlaceholder = countdown + 's'
             if (countdown == 0) {
               clearInterval(inter)
               this.codePlaceholder = '发送验证码'

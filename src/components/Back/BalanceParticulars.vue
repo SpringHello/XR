@@ -208,9 +208,9 @@
         if (this.bindHostForm.vm.length != 0) {
           var url = ``
           if (this.balanceInfo._internal) {
-            url = `loadbalance/assignToInternalLoadBalancerRule.do?VMIds=${this.bindHostForm.vm}&lbId=${this.balanceInfo.lbid}`
+            url = `loadbalance/assignToInternalLoadBalancerRule.do?VMIds=${this.bindHostForm.vm}&lbId=${this.balanceInfo.lbid}&_t=${new Date().toTimeString()}`
           } else {
-            url = `loadbalance/assignToLoadBalancerRule.do?VMIds=${this.bindHostForm.vm}&roleId=${this.balanceInfo.loadbalanceroleid}`
+            url = `loadbalance/assignToLoadBalancerRule.do?VMIds=${this.bindHostForm.vm}&roleId=${this.balanceInfo.loadbalanceroleid}&_t=${new Date().toTimeString()}`
           }
           this.showModal.bind = false
           this.hostData.push({
@@ -226,6 +226,7 @@
                 content: response.data.message
               })
             } else {
+              this.hostData.pop()
               this.$message.info({
                 content: response.data.message
               })
@@ -280,7 +281,7 @@
     background-color: #FFFFFF;
     padding: 20px;
     .title {
-     // display: inline;
+      // display: inline;
       span {
         font-family: MicrosoftYaHei;
         font-size: 16px;

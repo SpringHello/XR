@@ -73,7 +73,7 @@
                   <div style="height: 50px;">
                     <p style="line-height: 14px;">没有可选子网</p>
                     <p style="line-height: 14px;">创建公网负载均衡需要所属子网服务方案为公网负载均衡;</p>
-                    <p style="line-height: 14px;">您需要先创建一个服务方案为公网负载均衡的子网，在创建公网负载均衡。</p>
+                    <p style="line-height: 14px;">您需要先创建一个服务方案为公网负载均衡的子网，再创建公网负载均衡。</p>
                   </div>
                 </div>
               </Poptip>
@@ -93,7 +93,7 @@
                   <div>
                     <p style="line-height: 14px;">没有可选子网？</p>
                     <p style="line-height: 14px;">创建私网负载均衡需要所属子网服务方案为内网负载均衡;</p>
-                    <p style="line-height: 14px;">您需要先创建一个服务方案为内网负载均衡的子网，在创建内网负载均衡。</p>
+                    <p style="line-height: 14px;">您需要先创建一个服务方案为内网负载均衡的子网，再创建内网负载均衡。</p>
                   </div>
                 </div>
               </Poptip>
@@ -632,9 +632,9 @@
         if (this.bindHostForm.vm.length != 0) {
           var url = ``
           if (this.balanceSelection._internal) {
-            url = `loadbalance/assignToInternalLoadBalancerRule.do?VMIds=${this.bindHostForm.vm}&lbId=${this.balanceSelection.lbid}`
+            url = `loadbalance/assignToInternalLoadBalancerRule.do?VMIds=${this.bindHostForm.vm}&lbId=${this.balanceSelection.lbid}&_t=${new Date().toTimeString()}`
           } else {
-            url = `loadbalance/assignToLoadBalancerRule.do?VMIds=${this.bindHostForm.vm}&roleId=${this.balanceSelection.loadbalanceroleid}`
+            url = `loadbalance/assignToLoadBalancerRule.do?VMIds=${this.bindHostForm.vm}&roleId=${this.balanceSelection.loadbalanceroleid}&_t=${new Date().toTimeString()}`
           }
           this.$http.get(url).then(response => {
             if (response.status == 200 && response.data.status == 1) {
@@ -643,7 +643,6 @@
                 content: response.data.message
               })
             } else {
-              this.refresh()
               this.$message.info({
                 content: response.data.message
               })

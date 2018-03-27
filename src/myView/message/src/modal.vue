@@ -48,10 +48,6 @@
         type: String,
         default: ''
       },
-      url: {
-        type: Array,
-        default: []
-      },
       cancelText: {
         type: String,
         default: '取消'
