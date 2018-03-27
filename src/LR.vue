@@ -20,9 +20,9 @@
            style="cursor:pointer;float:none">
           <img src="./assets/img/app/record.png" style="vertical-align: middle">京公网安备11010802024922号
         </a>
-        <a>
-          <router-link to="/about">关于我们</router-link>
-        </a>
+        <span>
+         <router-link to="/ruicloud/about">关于我们</router-link>
+        </span>
       </div>
     </div>
   </div>
@@ -80,14 +80,14 @@
             background-size: cover;
           }
         }
-        .home{
+        .home {
           font-size: 18px;
-          height:70px;
-          a{
+          height: 70px;
+          a {
             line-height: 70px;
-            color:#fff;
-            padding:0px 15px;
-            height:70px;
+            color: #fff;
+            padding: 0px 15px;
+            height: 70px;
             display: block;
           }
         }
