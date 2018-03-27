@@ -193,6 +193,7 @@
 
                     </div>
                     <div>
+
                       <div v-for="item in PecsInfo.mirrorType" class="zoneItem"
                            :class="{zoneSelect:PecsInfo.currentType==item.value}"
                            @click="PecsInfo.currentType=item.value">{{item.label}}
