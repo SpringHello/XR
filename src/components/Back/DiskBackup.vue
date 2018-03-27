@@ -25,6 +25,11 @@
             </div>
             <div style="margin-top:20px">
               <Table :columns="diskBackupsColumns" :data="diskBackupsData" @radio-change="selectDiskBackups"></Table>
+              <div style="margin: 10px;overflow: hidden">
+                <div style="float: right;">
+                  <Page :total="diskBackupsTotal" :current="1" :page-size="10" @on-change="changePage"></Page>
+                </div>
+              </div>
             </div>
           </TabPane>
           <TabPane label="云硬盘备份策略" name="diskBackupsStrategy">
@@ -330,6 +335,9 @@
             }
           }
         ],
+        // 磁盘备份总页数
+        diskBackupsTotal: 0,
+        diskBackupPage: 1,
         // 磁盘备份数据
         diskBackupsData: [],
         /* 单项磁盘备份选中值 */
@@ -638,7 +646,7 @@
     beforeRouteEnter(to, from, next) {
       var zoneId = $store.state.zone.zoneid
       // 获取备份列表数据
-      var diskBackupsResponse = axios.get(`Snapshot/listDiskSnapshots.do?zoneId=${zoneId}`)
+      var diskBackupsResponse = axios.get(`Snapshot/listDiskSnapshots.do?zoneId=${zoneId}&page=1&pageSize=10`)
       Promise.all([diskBackupsResponse]).then((ResponseValue) => {
         next(vm => {
           vm.setDiskBackups(ResponseValue[0])
@@ -940,6 +948,7 @@
       setDiskBackups (response) {
         if (response.status == 200 && response.data.status == 1) {
           this.diskBackupsData = response.data.result
+          this.diskBackupsTotal = response.data.total
         } else {
           this.$message.info({
             content: response.data.message
@@ -994,16 +1003,22 @@
       },
       /* 列出磁盘备份 */
       listDiskSnapshots () {
-        var url = `Snapshot/listDiskSnapshots.do`
+        var url = `Snapshot/listDiskSnapshots.do?pageSize=10&page=${this.diskBackupPage}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskBackupsData = response.data.result
+            this.diskBackupsTotal = response.data.total
           } else {
             this.$message.info({
               content: response.data.message
             })
           }
         })
+      },
+      /* 分页 切换 */
+      changePage (page) {
+        this.diskBackupPage = page
+        this.listDiskSnapshots()
       },
       /* 创建备份策略 弹出模态框 */
       createBackupStrategy () {
@@ -1060,7 +1075,7 @@
       createBackupsToDisk (data) {
         this.showModal.backupsToDisk = true
         this.diskForm.name = data.name
-        this.diskForm.diskSize = data.disSize
+        this.diskForm.diskSize = data.disksize
         this.diskForm.diskSnapshotId = data.snapshotid
         this.diskForm.diskType = data.diskOffer === 'ssd' ? '超高性能型' : data.diskOffer === 'sas' ? '性能型' : '存储型'
       },
@@ -1214,8 +1229,11 @@
     watch: {
       /* 如果标签切换到备份策略，调用列出策略方法 */
       tabPane () {
-        if (this.tabPane === 'diskBackupsStrategy')
+        if (this.tabPane === 'diskBackupsStrategy'){
           this.listDiskBackUpStrategy()
+        } else {
+          this.listDiskSnapshots()
+        }
       },
       // 观测计算属性变化，如果不是名称的变化则必须重新计算价格
       // 新建磁盘价格计算

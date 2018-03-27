@@ -12,18 +12,18 @@
           </div>
         </div>
         <div class="center">
-          <ol>
+          <ul style="padding: 0 20px 0 0">
             <li>ID: {{ balanceId }}</li>
             <li>区域：{{ balanceInfo.zonename }}</li>
-          </ol>
-          <ol>
+          </ul>
+          <ul>
             <li>IP地址：{{ ipAddress }}</li>
             <li>状态：正常</li>
-          </ol>
-          <ol>
+          </ul>
+          <ul style="border-right: none">
             <li>类型：{{ balanceType }}</li>
             <li>创建时间：{{ balanceInfo.createtime}}</li>
-          </ol>
+          </ul>
         </div>
         <div class="footer">
           <ul>
@@ -286,7 +286,6 @@
         font-size: 16px;
         color: #2A99F2;
         letter-spacing: 0;
-        line-height: 32px;
       }
       button {
         border: 1px solid #2A99F2;
@@ -308,12 +307,11 @@
       }
     }
     .center {
-      margin-top: 20px;
       display: flex;
       padding-bottom: 20px;
-      border-bottom: 1px solid #D8D8D8;
-      ol {
-        margin-right: 60px;
+      ul {
+        padding: 0 20px;
+        border-right: 1px solid #D9D9D9;
         li {
           font-family: MicrosoftYaHei;
           font-size: 14px;

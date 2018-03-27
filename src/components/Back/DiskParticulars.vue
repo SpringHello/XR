@@ -88,6 +88,11 @@
           </div>
           <div style="margin-top:10px">
             <Table :columns="diskBackupsColumns" :data="diskBackupsData" @radio-change="selectDiskBackups"></Table>
+            <div style="margin: 10px;overflow: hidden">
+              <div style="float: right;">
+                <Page :total="diskBackupsTotal" :current="1" :page-size="5" @on-change="changePage"></Page>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -126,7 +131,7 @@
           </Form-item>
           <Form-item label="硬盘参数">
             <p style="color: #999999;margin-bottom: 10px">磁盘类型：{{ diskForm.diskType}}</p>
-            <p style="color: #999999;margin-bottom: 10px">磁盘容量：{{ diskForm.diskSize}}</p>
+            <p style="color: #999999;margin-bottom: 10px">磁盘容量：{{ diskForm.diskSize}}G</p>
             <p style="color: #999999;">原始磁盘名称：{{ diskForm.name }}</p>
           </Form-item>
         </Form>
@@ -146,18 +151,18 @@
     <!-- 创建磁盘备份模态框 -->
     <Modal v-model="showModal.createDiskBackup" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">创建磁盘备份</span>
+        <span class="universal-modal-title">您正为{{ diskInfo.diskname}}创建磁盘备份</span>
       </p>
       <div class="universal-modal-content-flex">
         <Form :model="createBackupsForm" :rules="createBackupsRuleValidate" ref="createBackups">
-          <Form-item label="需要备份的磁盘" prop="diskId">
+<!--          <Form-item label="需要备份的磁盘" prop="diskId">
             <Select v-model="createBackupsForm.diskId" placeholder="请选择">
               <Option v-for="item in createBackupsForm.diskList" :value="item.diskid"
                       :key="item.diskid">
                 {{item.diskname }}
               </Option>
             </Select>
-          </Form-item>
+          </Form-item>-->
           <Form-item label="备份名称" prop="backupsName">
             <Input v-model="createBackupsForm.backupsName" placeholder="请输入"></Input>
           </Form-item>
@@ -348,6 +353,9 @@
             }
           }
         ],
+        // 磁盘备份总页数
+        diskBackupsTotal: 0,
+        diskBackupPage: 1,
         // 磁盘备份数据
         diskBackupsData: [],
         // 模态框
@@ -467,7 +475,7 @@
       createBackupsToDisk (data) {
         this.showModal.backupsToDisk = true
         this.diskForm.name = data.name
-        this.diskForm.diskSize = data.disSize
+        this.diskForm.diskSize = data.disksize
         this.diskForm.diskSnapshotId = data.snapshotid
         this.diskForm.diskType = data.diskOffer === 'ssd' ? '超高性能型' : data.diskOffer === 'sas' ? '性能型' : '存储型'
       },
@@ -485,11 +493,16 @@
           }
         })
       },
+      /* 分页 切换 */
+      changePage (page) {
+        this.diskBackupPage = page
+        this.listDiskSnapshots()
+      },
       /* 创建磁盘备份 */
       createDiskBackup () {
         this.createBackupsForm.diskList = []
         this.showModal.createDiskBackup = true
-        this.$http.get('Disk/listDisk.do').then(response => {
+/*        this.$http.get('Disk/listDisk.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             response.data.result.forEach((item) => {
               if (item.status === 1) {
@@ -501,7 +514,7 @@
               content: response.data.message
             })
           }
-        })
+        })*/
       },
       // 打开扩容模态框
       dilatationDisk(){
@@ -568,10 +581,11 @@
       },
       /* 列出磁盘备份 */
       listDiskSnapshots () {
-        var url = `Snapshot/listDiskSnapshots.do`
+        var url = `Snapshot/listDiskSnapshots.do?pageSize=10&page=${this.diskBackupPage}&diskId=${this.diskInfo.diskid}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskBackupsData = response.data.result
+            this.diskBackupsTotal = response.data.total
           } else {
             this.$message.info({
               content: response.data.message
@@ -587,7 +601,7 @@
           status: 3,
         }
         this.diskBackupsData.push(diskBackup)
-        var url = `Snapshot/createDiskSnapshot.do?diskId=${this.createBackupsForm.diskId}&name=${this.createBackupsForm.backupsName}`
+        var url = `Snapshot/createDiskSnapshot.do?diskId=${this.diskInfo.diskid}&name=${this.createBackupsForm.backupsName}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.info(response.data.message)
