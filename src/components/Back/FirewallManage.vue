@@ -573,6 +573,7 @@
         .btn {
           border-color: #2A99F2 ;
           color: #2A99F2;
+          background: #FFFFFF;
           &:first-of-type{
             margin-right: 10px;
           }
