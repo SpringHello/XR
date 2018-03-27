@@ -71,9 +71,20 @@
                 <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
                 <div slot="content">
                   <div style="height: 50px;">
-                    <p style="line-height: 14px;">没有可选子网</p>
+                    <p style="line-height: 14px;">没有可选子网？</p>
                     <p style="line-height: 14px;">创建公网负载均衡需要所属子网服务方案为公网负载均衡;</p>
                     <p style="line-height: 14px;">您需要先创建一个服务方案为公网负载均衡的子网，在创建公网负载均衡。</p>
+                  </div>
+                </div>
+              </Poptip>
+              <Poptip trigger="hover" style="float: right;position: relative;right: 240px;bottom: 50px;"
+                      v-if="creatbalancemodal.formInline.radio == 'private'">
+                <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
+                <div slot="content" style="height: 50px;">
+                  <div>
+                    <p style="line-height: 14px;">没有可选子网？</p>
+                    <p style="line-height: 14px;">创建内网负载均衡需要所属子网服务方案为内网负载均衡;</p>
+                    <p style="line-height: 14px;">您需要先创建一个服务方案为内网负载均衡的子网，在创建内网负载均衡。</p>
                   </div>
                 </div>
               </Poptip>
@@ -86,18 +97,7 @@
                   </Option>
                 </Select>
               </FormItem>
-              <Poptip trigger="hover" style="float: right;position: relative;right: 240px;bottom: 50px;"
-                      v-if="creatbalancemodal.formInline.radio == 'public'">
-                <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
-                <div slot="content" style="height: 50px;">
-                  <div>
-                    <p style="line-height: 14px;">没有可选子网？</p>
-                    <p style="line-height: 14px;">创建私网负载均衡需要所属子网服务方案为内网负载均衡;</p>
-                    <p style="line-height: 14px;">您需要先创建一个服务方案为内网负载均衡的子网，在创建内网负载均衡。</p>
-                  </div>
-                </div>
-              </Poptip>
-              <!--当为私网时-->
+              <!--当为内网时-->
 
               <FormItem label="内网IP" prop="intranetIp" v-if="creatbalancemodal.formInline.radio == 'private'">
                 <RadioGroup v-model="creatbalancemodal.formInline.intranetIp">
