@@ -78,7 +78,7 @@
     },
     password: {
       placeholder: '请输入新密码',
-      errorMessage: '密码必须包含字母、数字'
+      errorMessage: '密码必须包含数字和字母大小写'
     },
     confirmPassword: {
       placeholder: '请确认新密码'
@@ -148,7 +148,7 @@
           return
         }
 
-        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true
+        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.registerPasswordVail(text) : true
         if (!isLegal) {
           this.vailForm[field].message = messageMap[field].errorMessage
           this.vailForm[field].warning = true
@@ -173,7 +173,7 @@
           this.vailForm[field].message = messageMap[field].placeholder
           return
         }
-        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true
+        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.registerPasswordVail(text) : true
 
         if (!isLegal) {
           this.vailForm[field].message = messageMap[field].errorMessage
@@ -195,7 +195,7 @@
           }
         } else {
           // 密码验证是否符合规则，符合规则取消警告
-          if (regExp.passwordVail(this.form[field])) {
+          if (regExp.registerPasswordVail(this.form[field])) {
             this.vailForm.password.message = messageMap.password.placeholder
             this.vailForm.password.warning = false
           }
