@@ -2521,6 +2521,7 @@
           font-size: 16px;
           color: #377DFF;
           border-radius: 10px;
+          background: #FFFFFF;
           &:first-of-type {
             margin-right: 10px;
           }

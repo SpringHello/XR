@@ -5,16 +5,21 @@
       <div id="content">
         <div id="header">
           <div class="header">
-            <div style="font-size: 16px;color: #2A99F2;padding-top: 4px;">{{vpnInfo.natname}}</div>
-            <Button class="btn" @click="$router.go(-1)">返回</Button>
+            <div>
+              <span style="font-size: 16px;color: #2A99F2;">{{vpnInfo.natname}}</span>
+              <Button class="btn" @click="$router.go(0)">刷新</Button>
+              <Button class="btn" @click="$router.go(-1)" style="margin-right: 10px">返回</Button>
+            </div>
           </div>
           <div class="VPN-info">
-            <div>所属VPC：{{vpnInfo.vpcname}}</div>
-            <div>计费方式：{{vpnInfo.caseType==1?'包年计费':vpnInfo.caseType==2?'包月计费':'实时计费'}}</div>
-          </div>
-          <div class="VPN-info">
-            <div>区域：{{vpnInfo.zonename}}</div>
-            <div>创建时间：{{vpnInfo.createtime}}</div>
+            <ul style="padding: 0 20px 0 0">
+              <li>所属VPC：{{vpnInfo.vpcname}}</li>
+              <li>区域：{{vpnInfo.zonename}}</li>
+            </ul>
+            <ul style="border-right: none">
+              <li>计费方式：{{vpnInfo.caseType==1?'包年计费':vpnInfo.caseType==2?'包月计费':'实时计费'}}</li>
+              <li>创建时间：{{vpnInfo.createtime}}</li>
+            </ul>
           </div>
         </div>
         <div id="body">
@@ -381,14 +386,14 @@
       #content {
         padding: 0px;
         #header {
-          background-color: #E9E9E9;
+          background-color: #FFFFFF;
           padding: 20px;
           div.header {
-            display: flex;
-            justify-content: space-between;
             .btn {
+              float: right;
               border: 1px solid #2A99F2;
               color: #2A99F2;
+              background: #FFFFFF;
               &:hover {
                 color: #FFF;
                 background-color: #2A99F2;
@@ -396,15 +401,20 @@
             }
           }
           .VPN-info {
-            margin: 10px 0px;
+            display: flex;
             &:last-of-type {
               margin-bottom: 0px;
             }
-            > div {
-              font-size: 14px;
-              color: #5E5E5E;
-              display: inline-block;
-              width: 200px;
+            ul {
+              padding: 0 20px;
+              border-right: 1px solid #D9D9D9;
+              li {
+                font-family: MicrosoftYaHei;
+                font-size: 14px;
+                line-height: 28px;
+                color: #5E5E5E;
+                letter-spacing: 0;
+              }
             }
           }
         }

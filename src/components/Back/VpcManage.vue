@@ -15,7 +15,7 @@
           <div class="top">
             <div style="display: inline-block;">
               <h3 class="dib" style="line-height: 32px;">{{ data.vpcname}}</h3>
-              <div class="clock-show icon dib"></div>
+              <!--<div class="clock-show icon dib"></div>-->
             </div>
             <div style="float: right;">
               <Button class="btn-bgwhite" @click="$router.go(-1)">返回</Button>
@@ -51,9 +51,8 @@
                 </li>
                 <li style="flex-basis: 160px;">网关地址：{{item.ipsegment.split('/')[0]}}</li>
                 <li style="flex-basis: 160px;">网段地址：{{item.ipsegment}}</li>
-                <li style="flex-basis: 180px;">服务方案：{{item.netoffername}}</li>
-                <li style="flex-basis: 180px;">防火墙：<span class="blue"
-                                                         @click="toFirewall(item)">{{item.acllistname}}</span></li>
+                <li style="flex-basis: 180px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">服务方案：{{item.netoffername}}</li>
+                <li style="flex-basis: 180px;">防火墙：<span class="blue" @click="toFirewall(item)">{{item.acllistname}}</span></li>
                 <li style="flex-basis: 180px; overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"
                     v-if="item.netoffername==='公网负载均衡网络'||item.netoffername==='内网负载均衡网络'">负载均衡：<span class="blue"
                                                                                                      @click="toBalance(item)">{{item.loadbalance}}</span>
@@ -1041,7 +1040,7 @@
     height: 13px;
     border: solid 1px currentColor;
     border-radius: 50%;
-    cursor: pointer;
+    //cursor: pointer;
     transform: rotate(-45deg);
     -ms-transform: rotate(-45deg);
     -webkit-transform: rotate(-45deg);
@@ -1069,6 +1068,7 @@
   .btn-bgwhite {
     border-color: #2A99F2;
     color: #2A99F2;
+    background: #FFFFFF;
     &:first-of-type {
       margin-right: 10px;
     }
@@ -1126,9 +1126,9 @@
         min-height: 800px;
         .head-info {
           .top {
-            // display: flex;
-            // justify-content: space-between;
-            margin-bottom: 20px;
+           // display: flex;
+           // justify-content: space-between;
+            margin-bottom: 10px;
             h3 {
               font-size: 16px;
               color: #2A99F2;
@@ -1151,9 +1151,9 @@
             ul {
               padding: 0 20px;
               border-right: 1px solid #E9E9E9;
-              font-size: 14px;
               li {
                 margin-bottom: 10px;
+                font-size: 14px;
               }
               li:last-child {
                 margin-bottom: 0;
