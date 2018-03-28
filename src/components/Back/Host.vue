@@ -342,24 +342,24 @@
           <FormItem label="快照名称" prop="name">
             <Input v-model="backupForm.name" placeholder="请输入2-4094范围内任意数字" :maxlength="15"></Input>
           </FormItem>
-           <div style="padding-top: 11px;margin-right: 100px;">
-             <div style="font-size: 14px;color:#495060;margin-bottom: 15px">是否保存内存信息
-               <Poptip trigger="hover" width="400">
-                  <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
-                  <div slot="content">
-                      <div>
-                          您可以选择在制作快照的时候保存您主机的当前运行状态。当您选择“保存”之时，
-                          当前主机的内存将被记录，在您对快照执行回滚操作的时候，也只能在开机状态下执行；当您选择“不保存”时
-                          此次快照将不记录主机内存信息，您在通过该快照回滚的时候只能在关机状态下执行。
-                      </div>
+          <div style="padding-top: 11px;margin-right: 100px;">
+            <div style="font-size: 14px;color:#495060;margin-bottom: 15px">是否保存内存信息
+              <Poptip trigger="hover" width="400">
+                <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
+                <div slot="content">
+                  <div>
+                    您可以选择在制作快照的时候保存您主机的当前运行状态。当您选择“保存”之时，
+                    当前主机的内存将被记录，在您对快照执行回滚操作的时候，也只能在开机状态下执行；当您选择“不保存”时
+                    此次快照将不记录主机内存信息，您在通过该快照回滚的时候只能在关机状态下执行。
                   </div>
-                </Poptip>
-              </div>
-             <RadioGroup v-model="backupForm.memory">
-               <Radio label="1">保存</Radio>
-               <Radio label="0">不保存</Radio>
-             </RadioGroup>
-           </div>
+                </div>
+              </Poptip>
+            </div>
+            <RadioGroup v-model="backupForm.memory">
+              <Radio label="1">保存</Radio>
+              <Radio label="0">不保存</Radio>
+            </RadioGroup>
+          </div>
         </Form>
         <p class="modal-text-hint-bottom">提示：云主机快照为每块磁盘提供<span>8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点
         </p>
@@ -668,15 +668,20 @@
       }
     },
     created() {
-      if (this.$store.state.userInfo.personalauth != 0 && this.$store.state.userInfo.companyauth != 0) {
+      // 用户未认证，弹出认证提示框
+      if (this.$store.state.authInfo == null) {
         this.showModal.selectAuthType = true
       }
+      /*if (this.$store.state.userInfo.personalauth != 0 && this.$store.state.userInfo.companyauth != 0) {
+       this.showModal.selectAuthType = true
+       }*/
       this.getData()
       // 定时发送ajax 刷新页面
       this.intervalInstance = setInterval(() => {
         this.getData()
       }, 5 * 1000)
     },
+
     methods: {
       checkRenameForm(){
         this.$refs.renameForm.validate((valid) => {
@@ -714,30 +719,30 @@
           if (valid) {
             this.showModal.balance = false
             this.$Message.info('主机正在加入负载均衡，请稍后')
-            if(this.loadBalanceForm.loadbalanceroleid.split('#')[1] == 'public'){
+            if (this.loadBalanceForm.loadbalanceroleid.split('#')[1] == 'public') {
               axios.get(`loadbalance/assignToLoadBalancerRule.do?VMIds=${this.currentHost[0].computerid}&zoneId=${this.currentHost[0].zoneid}&roleId=${this.loadBalanceForm.loadbalanceroleid.split('#')[0]}`)
-              .then(response => {
-                if (response.status == 200 && response.data.status == 1) {
-                  this.$Message.success(response.data.message)
-                } else {
-                  this.$message.info({
-                    content: response.data.message
-                  })
-                }
-                this.loadBalanceForm.loadbalanceroleid == ''
-              })
+                .then(response => {
+                  if (response.status == 200 && response.data.status == 1) {
+                    this.$Message.success(response.data.message)
+                  } else {
+                    this.$message.info({
+                      content: response.data.message
+                    })
+                  }
+                  this.loadBalanceForm.loadbalanceroleid == ''
+                })
             } else {
               axios.get(`loadbalance/assignToInternalLoadBalancerRule.do?VMIds=${this.currentHost[0].computerid}&zoneId=${this.currentHost[0].zoneid}&lbId=${this.loadBalanceForm.loadbalanceroleid}`)
-              .then(response => {
-                if (response.status == 200 && response.data.status == 1) {
-                  this.$Message.success(response.data.message)
-                } else {
-                  this.$message.info({
-                    content: response.data.message
-                  })
-                }
-                this.loadBalanceForm.loadbalanceroleid == ''
-              })
+                .then(response => {
+                  if (response.status == 200 && response.data.status == 1) {
+                    this.$Message.success(response.data.message)
+                  } else {
+                    this.$message.info({
+                      content: response.data.message
+                    })
+                  }
+                  this.loadBalanceForm.loadbalanceroleid == ''
+                })
             }
           }
         })
@@ -1206,8 +1211,7 @@
     },
     computed: {
       auth(){
-        return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
-
+        return this.$store.state.authInfo != null
       }
     },
     watch: {

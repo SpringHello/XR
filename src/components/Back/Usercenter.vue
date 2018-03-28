@@ -217,8 +217,10 @@
               <img src="../../assets/img/usercenter/client.png">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
-                  <span
-                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证失败</span>
+                  <div
+                    style="margin-left:20px;margin-right:10px;display: inline-block;background-color: #F24747;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
+                    认证失败
+                  </div>
                   <span @click="reAuthenticate('0')">重新认证</span>
                 </div>
                 <div>
@@ -298,8 +300,10 @@
               <img src="../../assets/img/usercenter/client.png">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
-                  <span
-                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证失败</span>
+                  <div
+                    style="margin-left:20px;margin-right:10px;display: inline-block;background-color: #F24747;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
+                    认证失败
+                  </div>
                   <span @click="reAuthenticate('1')">重新认证</span>
                 </div>
                 <div>
@@ -883,19 +887,22 @@
         重置账户密码
       </div>
       <div class="newPhone" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        <p style="margin-top:0px;">当前密码</p>
-        <Input type="password" v-model="resetPasswordForm.oldPassword" placeholder="当前密码" style="width:300px;"></Input>
-        <p>新的密码</p>
-        <Input type="password" v-model="resetPasswordForm.newPassword" placeholder="修改后的密码"
-               style="width:300px;"></Input>
-        <p>确认密码</p>
-        <Input type="password" v-model="resetPasswordForm.confirmPassword" placeholder="确认新密码"
-               style="width:300px;"></Input>
+        <Form ref="resetPasswordForm" :model="resetPasswordForm" label-position="top" :rules="resetPasswordruleValidate"
+              style="width: 300px;">
+          <FormItem label="当前密码" prop="oldPassword">
+            <Input v-model="resetPasswordForm.oldPassword"></Input>
+          </FormItem>
+          <FormItem label="新的密码" prop="newPassword">
+            <Input v-model="resetPasswordForm.newPassword"></Input>
+          </FormItem>
+          <FormItem label="确认密码" prop="confirmPassword">
+            <Input v-model="resetPasswordForm.confirmPassword"></Input>
+          </FormItem>
+        </Form>
       </div>
       <div slot="footer">
         <Button type="ghost" @click="showModal.modifyPassword=false">取消</Button>
-        <Button type="primary" @click="resetPassword"
-                :disabled="resetPasswordForm.oldPassword == '' && resetPasswordForm.newPassword == '' && resetPasswordForm.confirmPassword == ''">
+        <Button type="primary" @click="resetPassword">
           完成
         </Button>
       </div>
@@ -1444,11 +1451,22 @@
           phoneVerCodeText: '获取验证码',
         }
         ,
-        // 充值密码表单
+        // 重值密码表单
         resetPasswordForm: {
           oldPassword: '',
           newPassword: '',
           confirmPassword: ''
+        },
+        resetPasswordruleValidate: {
+          oldPassword: [
+            {required: true, message: '请输入旧密码', trigger: 'blur'}
+          ],
+          newPassword: [
+            {required: true, message: '请输入新密码', trigger: 'blur'}
+          ],
+          confirmPassword: [
+            {required: true, message: '请输入新密码', trigger: 'blur'}
+          ],
         }
       }
     },
@@ -1456,7 +1474,6 @@
       if (this.authType == 'person' || this.authType == 'company') {
         this.showModal.selectAuthType = false
       } else {
-        console.log(this.$store.state.authInfo)
         if (this.$store.state.authInfo == null) {
           this.showModal.selectAuthType = true
         }
@@ -1977,7 +1994,7 @@
         return 5 - this.linkManData.length
       },
       showCompanyPane(){
-        return this.authInfo == null || this.authInfo.authtype == 1
+        return this.authInfo == null || this.authInfo.authtype == 0
       }
     })
   }
