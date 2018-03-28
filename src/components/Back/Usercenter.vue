@@ -7,7 +7,7 @@
         <span class="title" style="display: inline-block">用户中心</span>
         <Tabs type="card" :animated="false" v-model="currentTab">
           <!--未认证-->
-          <TabPane label="个人信息" v-if="userInfo.personalauth==1&&userInfo.companyauth==1">
+          <TabPane label="个人信息" v-if="authInfo==null">
             <p class="info-title">个人基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
@@ -186,7 +186,7 @@
             </div>
           </TabPane>
           <!--个人认证中-->
-          <TabPane label="个人信息" v-else-if="userInfo.personalauth==2&&userInfo.companyauth==1" class="personal">
+          <TabPane label="个人信息" v-else-if="authInfo.authtype==0&&authInfo.checkstatus==2" class="personal">
             <p class="info-title">个人基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
@@ -210,8 +210,34 @@
               <Step title="审核通过" content="即将完成"></Step>
             </Steps>
           </TabPane>
+          <!--个人认证失败-->
+          <TabPane label="个人信息" v-else-if="authInfo.authtype==0&&authInfo.checkstatus==1" class="personal">
+            <p class="info-title">个人基本信息</p>
+            <div class="user-info">
+              <img src="../../assets/img/usercenter/client.png">
+              <div style="padding:10px 0px;margin-left:20px;">
+                <div style="margin-bottom: 10px;">
+                  <span
+                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证失败</span>
+                  <span @click="reAuthenticate('0')">重新认证</span>
+                </div>
+                <div>
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
+                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
+                </div>
+              </div>
+            </div>
+            <p class="info-title" style="padding-bottom:20px;border-bottom:1px solid #E9E9E9;">个人认证信息</p>
+            <Steps :current="2" status="error">
+              <Step title="提交信息" :content="`真实姓名:${userInfo.realname}`"></Step>
+              <Step title="正在处理" content="信息审核中，我们将尽快为您处理"></Step>
+              <Step title="审核未通过" :content="authInfo.checkdesc"></Step>
+            </Steps>
+          </TabPane>
           <!--个人认证完成-->
-          <TabPane label="个人信息" v-else-if="userInfo.personalauth==0&&userInfo.companyauth==1" class="personal">
+          <TabPane label="个人信息" v-else-if="authInfo.authtype==0&&authInfo.checkstatus==0" class="personal">
             <p class="info-title">用户基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
@@ -240,8 +266,59 @@
               <p>身份证号<span>{{authInfo.personalnumber}}</span></p>
             </div>
           </TabPane>
+          <!--企业认证中-->
+          <TabPane label="个人信息" v-else-if="authInfo.authtype!=0&&authInfo.checkstatus==2" class="personal">
+            <p class="info-title">个人基本信息</p>
+            <div class="user-info">
+              <img src="../../assets/img/usercenter/client.png">
+              <div style="padding:10px 0px;margin-left:20px;">
+                <div style="margin-bottom: 10px;">
+                  <span
+                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
+                </div>
+                <div>
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
+                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
+                </div>
+              </div>
+            </div>
+            <p class="info-title" style="padding-bottom:20px;border-bottom:1px solid #E9E9E9;">企业认证信息</p>
+            <Steps :current="1">
+              <Step title="提交信息" :content="`公司名称:${authInfo.name}`"></Step>
+              <Step title="正在处理" content="信息审核中，我们将尽快为您处理"></Step>
+              <Step title="审核通过" content="即将完成"></Step>
+            </Steps>
+          </TabPane>
+          <!--企业认证失败-->
+          <TabPane label="个人信息" v-else-if="authInfo.authtype!=0&&authInfo.checkstatus==1" class="personal">
+            <p class="info-title">个人基本信息</p>
+            <div class="user-info">
+              <img src="../../assets/img/usercenter/client.png">
+              <div style="padding:10px 0px;margin-left:20px;">
+                <div style="margin-bottom: 10px;">
+                  <span
+                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证失败</span>
+                  <span @click="reAuthenticate('1')">重新认证</span>
+                </div>
+                <div>
+                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
+                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
+                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
+                </div>
+              </div>
+            </div>
+            <p class="info-title" style="padding-bottom:20px;border-bottom:1px solid #E9E9E9;">企业认证信息</p>
+            <Steps :current="2" status="error">
+              <Step title="提交信息" :content="`公司名称:${authInfo.name}`"></Step>
+              <Step title="正在处理" content="信息审核中，我们将尽快为您处理"></Step>
+              <Step title="审核未通过" :content="authInfo.checkdesc"></Step>
+            </Steps>
+          </TabPane>
           <!--企业认证完成-->
-          <TabPane label="个人信息" v-else-if="userInfo.companyauth==0" class="personal">
+          <TabPane label="个人信息" v-else-if="authInfo.authtype!=0&&authInfo.checkstatus==0" class="personal">
             <p class="info-title">用户基本信息</p>
             <div class="user-info">
               <img src="../../assets/img/usercenter/client.png">
@@ -266,31 +343,6 @@
               <p>公司名称<span>{{authInfo.name}}</span></p>
               <p>联系方式<span>{{authInfo.phone}}</span></p>
             </div>
-          </TabPane>
-          <!--企业认证中-->
-          <TabPane label="个人信息" v-else-if="userInfo.companyauth==2" class="personal">
-            <p class="info-title">个人基本信息</p>
-            <div class="user-info">
-              <img src="../../assets/img/usercenter/client.png">
-              <div style="padding:10px 0px;margin-left:20px;">
-                <div style="margin-bottom: 10px;">
-                  <span
-                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
-                </div>
-                <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
-                  <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
-                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
-                </div>
-              </div>
-            </div>
-            <p class="info-title" style="padding-bottom:20px;border-bottom:1px solid #E9E9E9;">企业认证信息</p>
-            <Steps :current="1">
-              <Step title="提交信息" :content="`公司名称:${authInfo.name}`"></Step>
-              <Step title="正在处理" content="信息审核中，我们将尽快为您处理"></Step>
-              <Step title="审核通过" content="即将完成"></Step>
-            </Steps>
           </TabPane>
 
           <Tab-pane label="提醒设置" name="remainder">
@@ -689,7 +741,7 @@
           <p style="font-size: 14px;color: rgba(17,17,17,0.65);padding-bottom: 25px;line-height: 19px;">
             您正在为帐号{{userInfo.realname}}修改绑定，请选择一种身份验证方式：</p>
         </div>
-        <div class='modal-wrapper'  >
+        <div class='modal-wrapper'>
           <span>通过手机验证</span>
           <Button type="primary" :disabled="!userInfo.phone" @click="authByPhone">立即验证
           </Button>
@@ -866,6 +918,7 @@
   import {mapState} from 'vuex'
   import axios from 'axios'
   import $store from '@/vuex'
+  import reg from '../../util/regExp'
   export default{
     data(){
       var authType = sessionStorage.getItem('pane')
@@ -877,7 +930,6 @@
       } else {
         currentTab = authType
       }
-      console.log('用户中心pane', currentTab)
       sessionStorage.removeItem('pane')
       const validaRegisteredPhone = (rule, value, callback) => {
         if (!value) {
@@ -887,6 +939,11 @@
           callback(new Error('请输入正确的电话号码'));
         } else {
           callback()
+        }
+      }
+      const validaRegisteredID = (rule, value,callback) =>{
+        if (!reg.IDCardVail(value)) {
+          callback(new Error('请输入正确的身份证号码'));
         }
       }
       const validaRegisteredEmail = (rule, value, callback) => {
@@ -964,16 +1021,19 @@
           // 快速认证表单验证
           quicklyAuthFormValidate: {
             name: [
-              {required: true, message: '请输入姓名'}
+              {required: true, message: '请输入姓名'},
+              {validator: validaRegisteredName}
             ],
             IDCard: [
-              {required: true, message: '请输入身份证号'}
+              {required: true, message: '请输入身份证号'},
+              {validator: validaRegisteredID}
             ],
             pictureCode: [
               {required: true, message: '请输入图片验证码'}
             ],
             phone: [
-              {required: true, message: '请输入以该身份证开户的手机号码'}
+              {required: true, message: '请输入以该身份证开户的手机号码'},
+              {validator: validaRegisteredPhone}
             ],
             validateCode: [
               {required: true, message: '请输入验证码'}
@@ -990,10 +1050,12 @@
           // 身份证认证表单验证
           cardAuthFormValidate: {
             name: [
-              {required: true, message: '请输入姓名'}
+              {required: true, message: '请输入姓名'},
+              {validator: validaRegisteredName}
             ],
             IDCard: [
-              {required: true, message: '请输入身份证号'}
+              {required: true, message: '请输入身份证号'},
+              {validator: validaRegisteredID}
             ]
           },
           // 企业认证表单
@@ -1027,13 +1089,16 @@
               {required: true, message: '请输入公司名称'}
             ],
             industry: [
-              {required: true, message: '请输入身份证号'}
+              {required: true,  message: '请输入身份证号'},
+              {validator: validaRegisteredID}
             ],
             contact: [
-              {required: true, message: '请输入联系方式'}
+              {required: true, message: '请输入联系方式'},
+              {validator: validaRegisteredPhone}
             ],
             contactPerson: [
-              {required: true, message: '请输入联系人姓名'}
+              {required: true, message: '请输入联系人姓名'},
+              {validator: validaRegisteredName}
             ],
             certificateType: [
               {required: true, message: '请选择证件类型'}
@@ -1086,40 +1151,44 @@
                         lineHeight: '24px'
                       },
                     }, '手机未验证，不能接收消息'), h('Button', {
-                      style: {
-                        cursor: this.recertifyPoiner,
-                        color: this.recertifyColor,
+                        style: {
+                          cursor: this.recertifyPoiner,
+                          color: this.recertifyColor,
+                        },
+                        props: {
+                          type: 'text',
+                          disabled: this.unPhone,
+                          size: 'small'
+                        },
+                        on: {
+                          click: () => {
+                            this.sendPhone(params.row.telphone)
+                            this.recertifyPoiner = ''
+                            this.recertifyColor = '#FFF'
+                            this.recertify = '验证码已发送（60s）'
+                            this.unPhone = true
+                            var inter = setInterval(() => {
+                                this.countdown--
+                                this.recertify = '验证码已发送(' + this.countdown + 's)'
+                                if (this.countdown == 0) {
+                                  clearInterval(inter)
+                                  this.countdown = 60
+                                  this.recertify = '重发验证'
+                                  this.recertifyPoiner = 'pointer'
+                                  this.recertifyColor = '#2A99F2'
+                                  this.unPhone = false
+                                }
+                              },
+                              1000
+                            )
+                          }
+                        },
                       },
-                      props: {
-                        type: 'text',
-                        disabled: this.unPhone,
-                        size: 'small'
-                      },
-                      on: {
-                        click: () => {
-                          this.sendPhone(params.row.telphone)
-                          this.recertifyPoiner = ''
-                          this.recertifyColor = '#FFF'
-                          this.recertify = '验证码已发送（60s）'
-                          this.unPhone = true
-                          var inter = setInterval(() => {
-                            this.countdown--
-                            this.recertify = '验证码已发送(' + this.countdown + 's)'
-                            if (this.countdown == 0) {
-                              clearInterval(inter)
-                              this.countdown = 60
-                              this.recertify = '重发验证'
-                              this.recertifyPoiner = 'pointer'
-                              this.recertifyColor = '#2A99F2'
-                              this.unPhone = false
-                            }
-                          }, 1000)
-                        }
-                      },
-                    }, this.recertify),]),
+                      this.recertify
+                    ),]),
                   ]),
 
-                ]);
+                ])
               } else {
                 return h('div', [
                   h('span', {}, params.row.telphone)]
@@ -1196,10 +1265,7 @@
                           }, 1000)
                         }
                       },
-                    }, this.recertifyEmail),]),
-                  ]),
-
-                ]);
+                    }, this.recertifyEmail),]),]),]);
               } else {
                 return h('div', [
                   h('span', {}, params.row.email)]
@@ -1219,37 +1285,41 @@
             render: (h, params) => {
               return h('div', [
                 h('span', {
-                  style: {
-                    cursor: 'pointer',
-                    color: ' #2A99F2',
-                  },
-                  on: {
-                    click: () => {
-                      this.updateContacts(params.row)
+                    style: {
+                      cursor: 'pointer',
+                      color: ' #2A99F2',
+                    },
+                    on: {
+                      click: () => {
+                        this.updateContacts(params.row)
+                      }
                     }
-                  }
-                }, '修改'),
+                  },
+                  '修改'
+                ),
                 h('Poptip', {
-                  props: {
-                    title: '您确认删除该联系人吗？',
-                    width: 208,
-                    confirm: true
+                    props: {
+                      title: '您确认删除该联系人吗？',
+                      width: 208,
+                      confirm: true
+                    },
+                    on: {
+                      'on-ok': () => {
+                        this.delContacts(params.row.id)
+                      }
+                    },
                   },
-                  on: {
-                    'on-ok': () => {
-                      this.delContacts(params.row.id)
+                  [h('span', {
+                    style: {
+                      cursor: 'pointer',
+                      color: '#2A99F2',
+                      marginLeft: '20px',
                     }
-                  },
-                }, [h('span', {
-                  style: {
-                    cursor: 'pointer',
-                    color: '#2A99F2',
-                    marginLeft: '20px',
-                  }
-                }, '删除')])
+                  }, '删除')]
+                )
               ]);
             }
-          },
+          }
         ],
         recertify: '重发验证',
         recertifyColor: '#2A99F2',
@@ -1267,7 +1337,8 @@
           phone: '',
           email: '',
           name: '',
-        },
+        }
+        ,
         addLinkmanFormValidate: {
           phone: [
             {required: true, validator: validaRegisteredPhone, trigger: 'blur'}
@@ -1278,7 +1349,8 @@
           name: [
             {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ],
-        },
+        }
+        ,
         // 修改联系人表单
         updateLinkmanForm: {
           phone: '',
@@ -1309,15 +1381,17 @@
             render: (h, params) => {
               return h('div', [
                 h('Checkbox', {
-                  props: {
-                    value: params.row.isLetter == 1,
+                    props: {
+                      value: params.row.isLetter == 1,
+                    },
+                    on: {
+                      'on-change': () => {
+                        this.changeStatus(params.row, 'isLetter')
+                      }
+                    },
                   },
-                  on: {
-                    'on-change': () => {
-                      this.changeStatus(params.row, 'isLetter')
-                    }
-                  },
-                }, '')
+                  ''
+                )
               ])
             }
           },
@@ -1343,7 +1417,6 @@
             title: '短信',
             align: 'center',
             render: (h, params) => {
-
               return h('div', [
                 h('Checkbox', {
                   props: {
@@ -1369,7 +1442,8 @@
           newPhone: '',
           verCode: '',
           phoneVerCodeText: '获取验证码',
-        },
+        }
+        ,
         // 充值密码表单
         resetPasswordForm: {
           oldPassword: '',
@@ -1382,7 +1456,8 @@
       if (this.authType == 'person' || this.authType == 'company') {
         this.showModal.selectAuthType = false
       } else {
-        if (this.$store.state.userInfo.personalauth != 0 && this.$store.state.userInfo.companyauth != 0) {
+        console.log(this.$store.state.authInfo)
+        if (this.$store.state.authInfo == null) {
           this.showModal.selectAuthType = true
         }
       }
@@ -1881,6 +1956,16 @@
           }
         })
       },
+      // 重新认证
+      reAuthenticate(type){
+        axios.get('user/rAttest.do', {
+          params: {
+            authType: type
+          }
+        }).then(response => {
+          this.init()
+        })
+      }
     },
     computed: mapState({
       // 传字符串参数 'count' 等同于 `
@@ -1892,7 +1977,7 @@
         return 5 - this.linkManData.length
       },
       showCompanyPane(){
-        return this.userInfo.personalauth != 2 && this.userInfo.companyauth == 1
+        return this.authInfo == null || this.authInfo.authtype == 1
       }
     })
   }

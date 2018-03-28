@@ -5,6 +5,8 @@ var passwordLengthRegExp = /^\w{8,}$/
 var passwordRegExp = /(?:\d[a-zA-Z])|(?:[a-zA-Z]\d)/
 // 登录密码 必须且只能包含数字大小写字母
 const hostPassword = /(?!^([\da-z]+|[\dA-Z]+|[a-zA-Z]+)$)^[\w]{6,}$/
+// 身份证号码验证
+const IDCard = (/^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/)|(/^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$/)
 //var passwordRegExp = /ddd/;
 export default{
   emailVail: (email) => {
@@ -22,6 +24,9 @@ export default{
     }
     return true;
   },
+  IDCardVail: (idCard) => {
+    return phoneRegExp.test(idCard);
+  },
   validaRegisteredName: (rule, value, callback) => {
     if (!value) {
       return callback(new Error('输入名称不能为空'));
@@ -32,7 +37,6 @@ export default{
       callback()
     }
   },
-
   validaSinginName: (rule, value, callback) => {
     if (!value) {
       return callback(new Error('密码不能为空'))
