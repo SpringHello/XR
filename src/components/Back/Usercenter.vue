@@ -1809,6 +1809,8 @@
               }
               this.newPhoneForm[`${type}VerCodeText`] = timeOut + 's'
             }.bind(this), 1000)
+          } else {
+            this.$Message.error(response.data.message)
           }
         })
       },
@@ -1914,6 +1916,8 @@
               this[`${type}VerCode`] = timeOut + 's'
             }.bind(this), 1000)
             this.$Message.success(response.data.message)
+          } else {
+            this.$Message.error(response.data.message)
           }
         })
       },
