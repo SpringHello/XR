@@ -1,11 +1,13 @@
 var emailRegExp = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
 var phoneRegExp = /^1[0-9]{10}$/
-var passwordLengthRegExp = /^\w{8,}$/
 // 登录密码 长度至少8位
-var passwordRegExp = /(?:\d[a-zA-Z])|(?:[a-zA-Z]\d)/
+var passwordLengthRegExp = /^\w{8,}$/
 // 登录密码 必须且只能包含数字大小写字母
+var passwordRegExp = /(?:\d[a-zA-Z])|(?:[a-zA-Z]\d)/
+// 注册密码 长度不小于8位，必须包含至少一个大写字母一个小写字母和一个数字
+var registerpPasswordRegExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{8,}$/
+// 重置主机密码
 const hostPassword = /(?!^([\da-z]+|[\dA-Z]+|[a-zA-Z]+)$)^[\w]{6,}$/
-//var passwordRegExp = /ddd/;
 export default{
   emailVail: (email) => {
     return emailRegExp.test(email) || phoneRegExp.test(email);
@@ -21,6 +23,12 @@ export default{
       return false
     }
     return true;
+  },
+  registerPasswordVail: (password) => {
+    if (!registerpPasswordRegExp.test(password)) {
+      return false
+    }
+    return true
   },
   validaRegisteredName: (rule, value, callback) => {
     if (!value) {
