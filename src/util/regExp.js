@@ -8,7 +8,11 @@ var passwordRegExp = /(?:\d[a-zA-Z])|(?:[a-zA-Z]\d)/
 var registerpPasswordRegExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{8,}$/
 // 重置主机密码
 const hostPassword = /(?!^([\da-z]+|[\dA-Z]+|[a-zA-Z]+)$)^[\w]{6,}$/
-export default{
+// 身份证号码验证
+const IDCardRegExp = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+const idCardRegExp = /^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$/
+//var passwordRegExp = /ddd/;
+export default {
   emailVail: (email) => {
     return emailRegExp.test(email) || phoneRegExp.test(email);
   },
@@ -23,6 +27,12 @@ export default{
       return false
     }
     return true;
+  },
+  IDCardVail: (idCard) => {
+    if (IDCardRegExp.test(idCard) || idCardRegExp.test(idCard)) {
+      return true
+    }
+    return false
   },
   registerPasswordVail: (password) => {
     if (!registerpPasswordRegExp.test(password)) {
@@ -40,7 +50,6 @@ export default{
       callback()
     }
   },
-
   validaSinginName: (rule, value, callback) => {
     if (!value) {
       return callback(new Error('密码不能为空'))
