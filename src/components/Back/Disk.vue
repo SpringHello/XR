@@ -966,7 +966,7 @@
         return obj
       },
       auth(){
-        return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
+        return this.$store.state.authInfo != null
 
       }
     },

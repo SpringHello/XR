@@ -102,7 +102,7 @@
 <style scoped>
   #pole {
     width: 100%;
-    height: 16px;
+    height: 28px;
     position: relative;
     font-size: 0px;
     user-select: none;
@@ -127,19 +127,19 @@
 
   span:last-of-type {
     border-right: 1px solid rgb(221, 221, 221);
-    border-radius: 0px 100px 100px 0px;
+    border-radius: 0px 1px 1px 0px;
   }
 
   span:first-of-type {
     border-left: 1px solid rgb(221, 221, 221);
-    border-radius: 100px 0px 0px 100px;
+    border-radius: 1px 0px 0px 1px;
   }
 
   .points {
     position: absolute;
     z-index: 100;
     right: 8px;
-
-    font-size: 10px;
+    line-height: 26px;
+    font-size: 12px;
   }
 </style>

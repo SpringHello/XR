@@ -1761,9 +1761,9 @@
         axios.get(snapsURL)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              this.total = response.data.total  
+              this.total = response.data.total
               var snapshotData = response.data.result
-              snapshotData.forEach(item => {  
+              snapshotData.forEach(item => {
                 if (this.snapsSelection) {
                   if (this.snapsSelection.id == item.id) {
                     item._checked = true
@@ -2062,7 +2062,7 @@
     },
     computed: {
       auth() {
-        return this.$store.state.userInfo.personalauth == 0 || this.$store.state.userInfo.companyauth == 0
+        return this.$store.state.authInfo != null
 
       }
     },

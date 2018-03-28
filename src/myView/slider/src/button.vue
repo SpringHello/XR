@@ -93,25 +93,49 @@
   }
 </script>
 
-<style scoped>
+<style rel="stylesheet/less" lang="less" scoped>
   .com-slider-button {
-    width: 8px;
-    height: 30px;
-    border-radius: 100px;
-    background-color: #2A99F2;
+    width: 14px;
+    height: 40px;
+    border-radius: 1px;
+    background-color: #2b99f2;
     cursor: pointer;
     position: absolute;
     top: 50%;
     transform: translate(0%, -50%);
-    z-index: 101
+    z-index: 101;
+    &::before {
+      content: '';
+      width: 2px;
+      height: 15px;
+      background-color: #fff;
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 4px;
+      transform: translateY(-50%);
+    }
+    &::after {
+      content: '';
+      width: 2px;
+      height: 15px;
+      background-color: #fff;
+      display: block;
+      position: absolute;
+      top: 50%;
+      right: 4px;
+      transform: translateY(-50%);
+    }
   }
 
   .hover {
   }
 
   .com-slider-active {
+    border: 1px solid #2A99F2;
+    border-right: none;
     position: absolute;
-    border-radius: 100px 0px 0px 100px;
+    border-radius: 1px 0px 0px 1px;
     height: 100%;
     left: 0px;
     top: 0px;

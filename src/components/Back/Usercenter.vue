@@ -217,8 +217,10 @@
               <img src="../../assets/img/usercenter/client.png">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
-                  <span
-                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证失败</span>
+                  <div
+                    style="margin-left:20px;margin-right:10px;display: inline-block;background-color: #F24747;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
+                    认证失败
+                  </div>
                   <span @click="reAuthenticate('0')">重新认证</span>
                 </div>
                 <div>
@@ -298,8 +300,10 @@
               <img src="../../assets/img/usercenter/client.png">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
-                  <span
-                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证失败</span>
+                  <div
+                    style="margin-left:20px;margin-right:10px;display: inline-block;background-color: #F24747;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
+                    认证失败
+                  </div>
                   <span @click="reAuthenticate('1')">重新认证</span>
                 </div>
                 <div>
@@ -1442,7 +1446,6 @@
       if (this.authType == 'person' || this.authType == 'company') {
         this.showModal.selectAuthType = false
       } else {
-        console.log(this.$store.state.authInfo)
         if (this.$store.state.authInfo == null) {
           this.showModal.selectAuthType = true
         }
@@ -1963,7 +1966,7 @@
         return 5 - this.linkManData.length
       },
       showCompanyPane(){
-        return this.authInfo == null || this.authInfo.authtype == 1
+        return this.authInfo == null || this.authInfo.authtype == 0
       }
     })
   }
