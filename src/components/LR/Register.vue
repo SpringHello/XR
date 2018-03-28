@@ -346,7 +346,7 @@
     },
     password: {
       placeholder: '请输入至少8位包含字母与数字的密码',
-      errorMessage: '您设定的密码强度不足',
+      errorMessage: '密码必须包含数字和字母大小写',
     },
     vailCode: {
       placeholder: '请输入您收到的验证码',
@@ -368,7 +368,7 @@
           code: '',
           showPassword: false,
           loginnamePlaceholder: '登录手机号',
-          passwordPlaceholder: '请输入至少8位包含字母与数字的密码',
+          passwordPlaceholder: '请输入至少8位包含大小写字母与数字的密码',
           vailCodePlaceholder: '请输入您收到的验证码',
           codePlaceholder: '请输入验证码'
         },
@@ -407,7 +407,7 @@
           return
         }
 
-        var isLegal = field == 'loginname' ? regExp.phoneVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
+        var isLegal = field == 'loginname' ? regExp.phoneVail(text) : field == 'password' ? regExp.registerPasswordVail(text) : true;
         if (!isLegal) {
           this.vailForm.loginname.message.unshift(messageMap[field].errorMessage);
           this.vailForm.loginname.info = ''
@@ -436,7 +436,7 @@
         if (text == '') {
           this.vailForm[field].info = messageMap[field].placeholder
         }
-        //var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
+        //var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.registerPasswordVail(text) : true;
 
         /*if (!isLegal) {
          this.vailForm[field].info = messageMap[field].errorMessage;
@@ -469,7 +469,7 @@
             this.vailForm.loginname.info = messageMap.loginname.placeholder
           }
         } else {
-          if (regExp.passwordVail(this.form[field])) {
+          if (regExp.registerPasswordVail(this.form[field])) {
             this.vailForm.loginname.message = this.vailForm.loginname.message.filter(item => {
               return item != messageMap.password.errorMessage
             })
@@ -496,6 +496,10 @@
       sendCode(){
         if (!regExp.phoneVail(this.form.loginname)) {
           this.$Message.info('请输入正确的手机号')
+          return
+        }
+        if (!regExp.registerPasswordVail(this.form.password)) {
+          this.$Message.info('密码必须包含数字和字母大小写')
           return
         }
         if (this.form.code.length != 4) {

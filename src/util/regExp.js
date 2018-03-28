@@ -1,15 +1,18 @@
 var emailRegExp = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/
 var phoneRegExp = /^1[0-9]{10}$/
-var passwordLengthRegExp = /^\w{8,}$/
 // 登录密码 长度至少8位
-var passwordRegExp = /(?:\d[a-zA-Z])|(?:[a-zA-Z]\d)/
+var passwordLengthRegExp = /^\w{8,}$/
 // 登录密码 必须且只能包含数字大小写字母
+var passwordRegExp = /(?:\d[a-zA-Z])|(?:[a-zA-Z]\d)/
+// 注册密码 长度不小于8位，必须包含至少一个大写字母一个小写字母和一个数字
+var registerpPasswordRegExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{8,}$/
+// 重置主机密码
 const hostPassword = /(?!^([\da-z]+|[\dA-Z]+|[a-zA-Z]+)$)^[\w]{6,}$/
 // 身份证号码验证
 const IDCardRegExp = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
 const idCardRegExp = /^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$/
 //var passwordRegExp = /ddd/;
-export default{
+export default {
   emailVail: (email) => {
     return emailRegExp.test(email) || phoneRegExp.test(email);
   },
@@ -26,10 +29,16 @@ export default{
     return true;
   },
   IDCardVail: (idCard) => {
-    if (IDCardRegExp.test(idCard)||idCardRegExp.test(idCard)) {
+    if (IDCardRegExp.test(idCard) || idCardRegExp.test(idCard)) {
       return true
     }
-    return false;
+    return false
+  },
+  registerPasswordVail: (password) => {
+    if (!registerpPasswordRegExp.test(password)) {
+      return false
+    }
+    return true
   },
   validaRegisteredName: (rule, value, callback) => {
     if (!value) {
