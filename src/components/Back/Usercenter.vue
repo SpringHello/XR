@@ -221,7 +221,7 @@
                     style="margin-left:20px;margin-right:10px;display: inline-block;background-color: #F24747;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
                     认证失败
                   </div>
-                  <span @click="reAuthenticate('0')">重新认证</span>
+                  <span @click="reAuthenticate('0')" style="color: #2A99F2;cursor: pointer;">重新认证</span>
                 </div>
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
@@ -887,19 +887,21 @@
         重置账户密码
       </div>
       <div class="newPhone" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        <p style="margin-top:0px;">当前密码</p>
-        <Input type="password" v-model="resetPasswordForm.oldPassword" placeholder="当前密码" style="width:300px;"></Input>
-        <p>新的密码</p>
-        <Input type="password" v-model="resetPasswordForm.newPassword" placeholder="修改后的密码"
-               style="width:300px;"></Input>
-        <p>确认密码</p>
-        <Input type="password" v-model="resetPasswordForm.confirmPassword" placeholder="确认新密码"
-               style="width:300px;"></Input>
+        <Form :model="resetPasswordForm" label-position="top" :rules="resetPasswordruleValidate" style="width: 300px;" ref="resetPassword">
+          <FormItem label="当前密码" prop="oldPassword">
+            <Input v-model="resetPasswordForm.oldPassword"></Input>
+          </FormItem>
+          <FormItem label="新的密码" prop="newPassword">
+            <Input v-model="resetPasswordForm.newPassword"></Input>
+          </FormItem>
+          <FormItem label="确认密码" prop="confirmPassword">
+            <Input v-model="resetPasswordForm.confirmPassword"></Input>
+          </FormItem>
+        </Form>
       </div>
       <div slot="footer">
         <Button type="ghost" @click="showModal.modifyPassword=false">取消</Button>
-        <Button type="primary" @click="resetPassword"
-                :disabled="resetPasswordForm.oldPassword == '' && resetPasswordForm.newPassword == '' && resetPasswordForm.confirmPassword == ''">
+        <Button type="primary" @click="_checkResetPasswordForm">
           完成
         </Button>
       </div>
@@ -922,8 +924,10 @@
   import {mapState} from 'vuex'
   import axios from 'axios'
   import $store from '@/vuex'
-  export default{
-    data(){
+  import reg from '../../util/regExp'
+
+  export default {
+    data() {
       var authType = sessionStorage.getItem('pane')
       var currentTab = ''
       if (authType == 'company') {
@@ -941,6 +945,27 @@
         if (!(/^1(3|4|5|7|8|9)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
           callback(new Error('请输入正确的电话号码'));
         } else {
+          callback()
+        }
+      }
+      const validaRegisteredID = (rule, value, callback) => {
+        if (!reg.IDCardVail(value)) {
+          callback(new Error('请输入正确的身份证号码'));
+        }else {
+          callback()
+        }
+      }
+      const validaRegisteredPassWord = (rule, value, callback) => {
+        if (!reg.registerPasswordVail(value)) {
+          callback(new Error('密码必须包含数字和字母大小写'));
+        }else {
+          callback()
+        }
+      }
+      const validaRegisteredPassWordTwo = (rule, value, callback) => {
+        if (this.resetPasswordForm.newPassword != value) {
+          callback(new Error('两次输入的密码不一致'));
+        }else {
           callback()
         }
       }
@@ -1019,16 +1044,19 @@
           // 快速认证表单验证
           quicklyAuthFormValidate: {
             name: [
-              {required: true, message: '请输入姓名'}
+              {required: true, message: '请输入姓名'},
+              {validator: validaRegisteredName}
             ],
             IDCard: [
-              {required: true, message: '请输入身份证号'}
+              {required: true, message: '请输入身份证号'},
+              {validator: validaRegisteredID}
             ],
             pictureCode: [
               {required: true, message: '请输入图片验证码'}
             ],
             phone: [
-              {required: true, message: '请输入以该身份证开户的手机号码'}
+              {required: true, message: '请输入以该身份证开户的手机号码'},
+              {validator: validaRegisteredPhone}
             ],
             validateCode: [
               {required: true, message: '请输入验证码'}
@@ -1045,10 +1073,12 @@
           // 身份证认证表单验证
           cardAuthFormValidate: {
             name: [
-              {required: true, message: '请输入姓名'}
+              {required: true, message: '请输入姓名'},
+              {validator: validaRegisteredName}
             ],
             IDCard: [
-              {required: true, message: '请输入身份证号'}
+              {required: true, message: '请输入身份证号'},
+              {validator: validaRegisteredID}
             ]
           },
           // 企业认证表单
@@ -1082,13 +1112,16 @@
               {required: true, message: '请输入公司名称'}
             ],
             industry: [
-              {required: true, message: '请输入身份证号'}
+              {required: true, message: '请输入身份证号'},
+              {validator: validaRegisteredID}
             ],
             contact: [
-              {required: true, message: '请输入联系方式'}
+              {required: true, message: '请输入联系方式'},
+              {validator: validaRegisteredPhone}
             ],
             contactPerson: [
-              {required: true, message: '请输入联系人姓名'}
+              {required: true, message: '请输入联系人姓名'},
+              {validator: validaRegisteredName}
             ],
             certificateType: [
               {required: true, message: '请选择证件类型'}
@@ -1434,15 +1467,28 @@
           phoneVerCodeText: '获取验证码',
         }
         ,
-        // 充值密码表单
+        // 重值密码表单
         resetPasswordForm: {
           oldPassword: '',
           newPassword: '',
           confirmPassword: ''
+        },
+        resetPasswordruleValidate: {
+          oldPassword: [
+            {required: true, message: '请输入旧密码', trigger: 'blur'},
+          ],
+          newPassword: [
+            {required: true, message: '请输入新密码', trigger: 'blur'},
+            {validator: validaRegisteredPassWord, trigger: 'blur'}
+          ],
+          confirmPassword: [
+            {required: true, message: '请输入新密码', trigger: 'blur'},
+            {validator: validaRegisteredPassWordTwo, trigger: 'blur'}
+          ],
         }
       }
     },
-    created(){
+    created() {
       if (this.authType == 'person' || this.authType == 'company') {
         this.showModal.selectAuthType = false
       } else {
@@ -1454,7 +1500,7 @@
       this.getContacts()
     },
     methods: {
-      init(){
+      init() {
         axios.get('user/GetUserInfo.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             $store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
@@ -1470,7 +1516,7 @@
         this.notAuth.quicklyAuthForm.validateCode = ''
       },
       // 快速认证时发送验证码
-      sendCode(){
+      sendCode() {
         this.$refs.sendCode.validate(validate => {
           if (validate) {
             axios.get('user/code.do', {
@@ -1501,7 +1547,7 @@
       },
       // 个人认证
       // 身份证照片认证
-      personalAttest(){
+      personalAttest() {
         this.$refs.cardAuth.validate(validate => {
           if (validate) {
             if (!this.notAuth.cardAuthForm.IDCardFront || !this.notAuth.cardAuthForm.IDCardBack || !this.notAuth.cardAuthForm.IDCardPerson) {
@@ -1532,7 +1578,7 @@
 
       },
       // 快速认证
-      quicklyAuth(){
+      quicklyAuth() {
         var quicklyAuth = this.$refs.quicklyAuth.validate(validate => {
           return Promise.resolve(validate)
         })
@@ -1563,7 +1609,7 @@
         })
       },
       // 企业认证
-      enterpriseAttest(){
+      enterpriseAttest() {
         this.$refs.companyAuth.validate(validate => {
           if (validate) {
             var params = {
@@ -1609,7 +1655,7 @@
         })
       },
       // 列出通知信息
-      listNotice(){
+      listNotice() {
         var url = `user/listNotice.do`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -1619,7 +1665,7 @@
         })
       },
       // 列出联系人
-      getContacts(){
+      getContacts() {
         var url = `user/getcontacts.do`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -1628,10 +1674,10 @@
         })
       },
       // 添加联系人
-      addLinkman(){
+      addLinkman() {
         this.showModal.addLinkman = true;
       },
-      addLinkmanOk(name){
+      addLinkmanOk(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.showModal.addLinkman = false;
@@ -1651,14 +1697,14 @@
         })
       },
       /* 修改联系人 */
-      updateContacts(item){
+      updateContacts(item) {
         this.showModal.updateLinkman = true
         this.updateLinkmanForm.name = item.username
         this.updateLinkmanForm.phone = item.telphone
         this.updateLinkmanForm.email = item.email
         this.updateLinkmanForm.id = item.id
       },
-      updateLinkmanOk(name){
+      updateLinkmanOk(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.showModal.updateLinkman = false
@@ -1675,7 +1721,7 @@
         })
       },
       /* 删除联系人 */
-      delContacts(id){
+      delContacts(id) {
         var url = `user/delContacts.do?id=${id}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -1687,7 +1733,7 @@
         })
       },
       // 更新通知配置
-      updateNotice(){
+      updateNotice() {
         this.updateInform = []
         for (var i = 0; i < this.inform.length; i++) {
           if (this.inform[i].isLetter == 0 && this.inform[i].isEmail == 0 && this.inform[i].isTel == 0) {
@@ -1710,7 +1756,7 @@
         })
       },
       // 恢复通知默认配置
-      recoverNotice(){
+      recoverNotice() {
         var url = `user/recoverNotice.do`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -1721,7 +1767,7 @@
           }
         })
       },
-      changeStatus(item, type){
+      changeStatus(item, type) {
         this.inform.forEach(it => {
           if (it.tempCode == item.tempCode) {
             if (it[type] == 1) {
@@ -1742,19 +1788,19 @@
         this.showModal.modifyPhone = true
       },
       // 通过手机验证
-      authByPhone(){
+      authByPhone() {
         this.showModal.modifyPhone = false;
         this.newPhoneForm.oldPhoneCode = ''
         this.showModal.authByPhone = true;
       },
       // 通过邮箱验证
-      authByEmail(){
+      authByEmail() {
         this.showModal.modifyPhone = false;
         this.newPhoneForm.oldPhoneCode = ''
         this.showModal.authByEmail = true;
       },
       // 获取验证码下一步
-      next(type){
+      next(type) {
         var aim = type == 'phone' ? this.userInfo.phone : this.userInfo.loginname
         var isemail = type == 'phone' ? 0 : 1
         var url = `user/judgeCode.do?aim=${aim}&code=${this.newPhoneForm.oldPhoneCode}&isemail=${isemail}`
@@ -1772,26 +1818,29 @@
           }
         })
       },
+      // 验证重置密码表单
+      _checkResetPasswordForm () {
+        this.$refs.resetPassword.validate((valid) => {
+          if (valid) {
+            // 表单验证通过，调用挂载磁盘方法
+            this.resetPassword_ok()
+          }
+        })
+      },
       // 重置密码
-      resetPassword(){
-        if (this.resetPasswordForm.newPassword != this.resetPasswordForm.confirmPassword) {
-          this.$Message.info('两次输入的新密码不一致')
-          return
-        } else {
-          var url = `user/updatePassword.do?password=${this.resetPasswordForm.newPassword}&oldpassword=${this.resetPasswordForm.oldPassword}`
-          this.$http.get(url)
-            .then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.showModal.modifyPassword = false
-                this.$Message.success("修改密码成功")
-              } else {
-                this.$Message.error(response.data.message)
-              }
-            })
-        }
+      resetPassword_ok() {
+        var url = `user/updatePassword.do?password=${this.resetPasswordForm.newPassword}&oldpassword=${this.resetPasswordForm.oldPassword}`
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.showModal.modifyPassword = false
+            this.$Message.success(response.data.message)
+          } else {
+            this.$message.info(response.data.message)
+          }
+        })
       },
       // 获取验证码
-      getVerCode(type){
+      getVerCode(type) {
         var isemail = type == 'email' ? 1 : 0
         var aim = type == 'email' ? this.userInfo.loginname : this.userInfo.phone
         var url = `user/code.do?vailCode=${this.code}&type=0&isemail=${isemail}&aim=${aim}`
@@ -1816,47 +1865,47 @@
       },
       /* 图片上传成功回调，设置图片。每张图片上传都有一个method。
        暂时没有找到更好的方法解决图片标记问题 */
-      IDCardFront(response){
+      IDCardFront(response) {
         if (response.status == 1) {
           this.notAuth.cardAuthForm.IDCardFront = response.result
         }
       },
-      IDCardBack(response){
+      IDCardBack(response) {
         if (response.status == 1) {
           this.notAuth.cardAuthForm.IDCardBack = response.result
         }
       },
-      IDCardPerson(response){
+      IDCardPerson(response) {
         if (response.status == 1) {
           this.notAuth.cardAuthForm.IDCardPerson = response.result
         }
       },
-      combine(response){
+      combine(response) {
         if (response.status == 1) {
           this.notAuth.companyAuthForm.combine = response.result
         }
       },
       // 营业执照
-      license(response){
+      license(response) {
         if (response.status == 1) {
           this.notAuth.companyAuthForm.license = response.result
         }
       },
       // 税务登记证
-      tax(response){
+      tax(response) {
         if (response.status == 1) {
           this.notAuth.companyAuthForm.tax = response.result
         }
       },
       // 组织机构代码
-      organization(response){
+      organization(response) {
         if (response.status == 1) {
           this.notAuth.companyAuthForm.organization = response.result
         }
       },
 
       // 更新手机号
-      confirmPhone(){
+      confirmPhone() {
         var url = `user/updatePhone.do?code=${this.newPhoneForm.verCode}&phone=${this.newPhoneForm.newPhone}`;
         this.$http.get(url).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
@@ -1867,7 +1916,7 @@
         })
       },
       // 更新email
-      confirmEmail(){
+      confirmEmail() {
         this.showModal.authNewEmail = false
         var url = `user/updateUserInfo.do?code=${this.newPhoneForm.verCode}&email=${this.newPhoneForm.newPhone}`;
         this.$http.get(url).then((response) => {
@@ -1881,7 +1930,7 @@
         })
       },
       // 获取新手机验证码
-      getNewPhoneVerCode(type){
+      getNewPhoneVerCode(type) {
         if (type == 'phone' && this.userInfo.phone == this.newPhoneForm.newPhone) {
           this.$Message.info('新手机号不能与旧手机号相同')
           return
@@ -1922,10 +1971,10 @@
         })
       },
       //显示三证合一原图
-      showPicture(){
+      showPicture() {
         this.showModal.showPicture = true
       },
-      sendPhone(value){
+      sendPhone(value) {
         var url = `user/reSendMessage.do?phone=${value}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -1937,7 +1986,7 @@
           }
         })
       },
-      sendEmail(value){
+      sendEmail(value) {
         var url = `user/reSendMessage.do?email=${value}`
         this.$http.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -1950,7 +1999,7 @@
         })
       },
       // 重新认证
-      reAuthenticate(type){
+      reAuthenticate(type) {
         axios.get('user/rAttest.do', {
           params: {
             authType: type
@@ -1965,11 +2014,11 @@
       userInfo: 'userInfo',
       authInfo: 'authInfo',
       // 剩余联系人个数
-      remainLinkMan(){
+      remainLinkMan() {
 
         return 5 - this.linkManData.length
       },
-      showCompanyPane(){
+      showCompanyPane() {
         return this.authInfo == null || this.authInfo.authtype == 0
       }
     })
