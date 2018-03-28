@@ -78,7 +78,7 @@
                          style="margin-left: 20px" @on-change="queryNewIPPrice"></InputNumber>
             <span style="margin-left: 10px">M</span>
           </FormItem>
-          <!--<p class="modal-text-hint-bottom">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>-->
+          <p class="modal-text-hint-bottom">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
