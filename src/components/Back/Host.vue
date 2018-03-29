@@ -681,7 +681,6 @@
         this.getData()
       }, 5 * 1000)
     },
-
     methods: {
       checkRenameForm(){
         this.$refs.renameForm.validate((valid) => {
