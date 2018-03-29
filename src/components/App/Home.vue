@@ -121,7 +121,7 @@
       </div>
     </div>
     <!-- 云产品展示区域 -->
-    <div class="cloud-content">
+    <div class="cloud-content" ref="cloudContentFade">
       <div class="container">
         <transition name="cloudContentFade">
           <div v-show="cloudContentFade">
@@ -183,7 +183,7 @@
       </div>
     </div>
     <!-- 满足严苛要求的卓越品质 -->
-    <div class="feature-container" id="fade">
+    <div class="feature-container" id="fade" ref="fade">
       <div class="container">
         <div class="feature-desc">
           <p class="title" @click="fade=!fade">满足严苛品质要求</p>
@@ -204,7 +204,7 @@
       </div>
     </div>
     <!-- 图形化控制台 -->
-    <div class="console-container">
+    <div class="console-container" ref="consoleFade">
       <div class="container">
         <transition name="consoleFade">
           <div v-show="consoleFade">
@@ -248,7 +248,7 @@
         </transition>
       </div>
     </div>-->
-    <div class="partner-container">
+    <div class="partner-container" ref="partnerFade">
       <div>
         <transition name="partner">
           <div v-if="partnerFade">
@@ -266,7 +266,7 @@
       </div>
     </div>
     <!-- 权威认证 -->
-    <div class="authority-container">
+    <div class="authority-container" ref="authorityFade">
       <div class="container">
         <transition name="authorityFade">
           <div v-if="authorityFade">
@@ -290,8 +290,9 @@
   import polar from '@/echarts/home'
   import echarts from 'echarts'
   import china from '@/echarts/china.json'
-  export default{
-    data () {
+
+  export default {
+    data() {
       return {
         // 云产品滚动效果
         cloudContentFade: false,
@@ -588,36 +589,40 @@
         activeBanner: 1
       }
     },
-    mounted(){
+    mounted() {
       echarts.registerMap('china', china)
       this.myChart = echarts.init(document.getElementById('echarts'))
       this.myChart.setOption(polar)
+      if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY > 300 ) {
+        this.cloudContentFade = true
+      }
+      if (document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY > 300 ) {
+        this.fade = true
+      }
       // 待优化
       window.addEventListener('scroll', () => {
-        if (window.scrollY > 300 && !this.cloudContentFade
-        ) {
+        if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY > 300 && !this.cloudContentFade) {
           this.cloudContentFade = true
         }
-        if (window.scrollY > 1100 && !this.fade) {
+        if (document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY > 300 && !this.fade) {
           this.fade = true
         }
-        if (window.scrollY > 1800 && !this.consoleFade) {
+        if (document.body.clientHeight - this.$refs.consoleFade.offsetTop + window.scrollY > 300 && !this.consoleFade) {
           this.consoleFade = true
         }
-        if (window.scrollY > 2200 && !this.partnerFade) {
+        if (document.body.clientHeight - this.$refs.partnerFade.offsetTop + window.scrollY > 300 && !this.partnerFade) {
           this.partnerFade = true
         }
-        if (window.scrollY > 2600 && !this.authorityFade) {
+        if (document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY > 300 && !this.authorityFade) {
           this.authorityFade = true
         }
       })
     },
-    created () {
-
+    created() {
     },
     methods: {
       // 切换云产品
-      changeProduct(item, event){
+      changeProduct(item, event) {
         document.getElementById('')
         this.$refs.line.style.left = `${event.currentTarget.offsetLeft}px`
         this.cloudContainer.forEach(product => {
@@ -632,7 +637,7 @@
        direction指明方向left or right
        title指示vue $refs当前目标
        */
-      scroll(direction, title){
+      scroll(direction, title) {
         var clientWidth = this.$refs[title][0].clientWidth
         var offsetLeft = this.$refs[title][0].offsetLeft
         if (direction === 'right') {
@@ -651,7 +656,7 @@
         this.$refs[title][0].style.left = `${offsetLeft}px`
       },
       // 捕捉到鼠标移入 具体的item
-      handleMouseEnter(item, content){
+      handleMouseEnter(item, content) {
         item.prodItem.forEach(con => {
           if (con.title == content.title) {
             con.ME = true
@@ -660,17 +665,17 @@
           }
         })
       },
-      featureEnter(content){
+      featureEnter(content) {
         content.select = true
       },
-      featureLeave(content){
+      featureLeave(content) {
         content.select = false
       },
-      push(path){
+      push(path) {
         this.$router.push(path)
       },
       /* 切换地区 */
-      carChange(activeIndex){
+      carChange(activeIndex) {
         var conf = {
           geo: {
             regions: [{
@@ -687,7 +692,7 @@
         this.myChart.setOption(conf)
       },
       /* 切换banner */
-      change(activeIndex){
+      change(activeIndex) {
         this.activeBanner = activeIndex + 1
       }
     }
@@ -843,8 +848,7 @@
             .fade-enter-active, .fade-leave-active {
               transition: opacity .2s
             }
-            .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */
-            {
+            .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
               display: none;
             }
             .arrow {
@@ -1245,11 +1249,11 @@
       outline: none;
       border: none;
       padding: 20px 40px;
-      font-size:36px;
-      font-family:PingFangSC-Regular;
-      color:rgba(255,255,255,1);
-      line-height:36px;
-      background:rgba(200,85,254,1);
+      font-size: 36px;
+      font-family: PingFangSC-Regular;
+      color: rgba(255, 255, 255, 1);
+      line-height: 36px;
+      background: rgba(200, 85, 254, 1);
       margin-top: 40px;
       box-shadow: 0 3px 31px 0 #8A4BC4;
       cursor: pointer;

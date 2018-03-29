@@ -84,7 +84,7 @@
       width="450"
       :scrollable="true">
       <div
-        style="height:100px;width:90%;margin:0px auto;font-size: 14px;color: rgba(-2147483648,-2147483648,-2147483648,0.65);line-height: 19px;">
+        style="width:90%;margin:0px auto;font-size: 14px;color: rgba(-2147483648,-2147483648,-2147483648,0.65);line-height: 19px;">
         {{modelInfo.content}}
       </div>
       <div slot="footer" style="display: flex;width:177px;margin-left:350px;">
