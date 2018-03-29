@@ -354,7 +354,7 @@
                     <div>
                       <p class="item-title">带宽</p>
                     </div>
-                    <div style="width:500px;margin-top: 7px;display: flex">
+                    <div style="width:500px;display: flex;align-items:center">
                       <i-slider
                         v-model="PecsInfo.IPConfig.bandWidth"
                         unit="MB"
@@ -364,8 +364,7 @@
                         :points="[20,50]"
                         style="margin-right:30px;vertical-align: middle;">
                       </i-slider>
-                      <InputNumber :max="100" :min="1" v-model="PecsInfo.IPConfig.bandWidth" size="large"
-                                   style="position: relative;bottom: 10px"></InputNumber>
+                      <InputNumber :max="100" :min="1" v-model="PecsInfo.IPConfig.bandWidth" size="large"></InputNumber>
                     </div>
                   </div>
                 </div>
@@ -405,9 +404,9 @@
                   <div class="item-wrapper">
                     <div style="display: flex">
                       <div>
-                        <p class="item-title" style="margin-top: 7px;">容量</p>
+                        <p class="item-title" style="">容量</p>
                       </div>
-                      <div style="width:500px;margin-top: 7px;display: flex">
+                      <div style="width:500px;display: flex;align-items:center">
                         <i-slider
                           v-model="disk.size"
                           unit="GB"
@@ -419,8 +418,7 @@
                         </i-slider>
                         <InputNumber :max="1000" :min="20" v-model="disk.size" size="large" :step=10
                                      @on-blur="changeDiskSize(index,disk.size)"
-                                     @on-focus="changeDiskSize(index,disk.size)"
-                                     style="position: relative;bottom: 10px"></InputNumber>
+                                     @on-focus="changeDiskSize(index,disk.size)"></InputNumber>
                       </div>
                     </div>
                   </div>
@@ -622,9 +620,9 @@
               <div class="item-wrapper">
                 <div style="display: flex">
                   <div>
-                    <p class="item-title" style="margin-top: 7px;">容量</p>
+                    <p class="item-title" style="">容量</p>
                   </div>
-                  <div style="width:500px;margin-top: 7px;display: flex">
+                  <div style="width:500px;display: flex;align-items:center">
                     <i-slider
                       v-model="disk.size"
                       unit="GB"
@@ -636,8 +634,7 @@
                     </i-slider>
                     <InputNumber :max="500" :min="20" v-model="disk.size" size="large" :step=10
                                  @on-blur="change_DiskSize(index,disk.size)"
-                                 @on-focus="change_DiskSize(index,disk.size)"
-                                 style="position: relative;bottom: 10px"></InputNumber>
+                                 @on-focus="change_DiskSize(index,disk.size)"></InputNumber>
                   </div>
                 </div>
               </div>
@@ -751,7 +748,7 @@
                 <div>
                   <p class="item-title">带宽</p>
                 </div>
-                <div style="width:500px;margin-top: 7px;display: flex">
+                <div style="width:500px;display: flex;align-items:center">
                   <i-slider
                     v-model="PeipInfo.bandWidth"
                     unit="MB"
@@ -762,7 +759,7 @@
                     style="margin-right:30px;vertical-align: middle;">
                   </i-slider>
                   <InputNumber :max="100" :min="1" v-model="PeipInfo.bandWidth" size="large"
-                               style="position: relative;bottom: 10px"></InputNumber>
+                               style="position: relative;bottom: 5px"></InputNumber>
                 </div>
               </div>
             </div>

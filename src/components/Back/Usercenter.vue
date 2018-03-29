@@ -221,7 +221,7 @@
                     style="margin-left:20px;margin-right:10px;display: inline-block;background-color: #F24747;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
                     认证失败
                   </div>
-                  <span @click="reAuthenticate('0')">重新认证</span>
+                  <span @click="reAuthenticate('0')" style="color: #2A99F2;cursor: pointer;">重新认证</span>
                 </div>
                 <div>
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
@@ -1858,6 +1858,8 @@
               }
               this.newPhoneForm[`${type}VerCodeText`] = timeOut + 's'
             }.bind(this), 1000)
+          } else {
+            this.$Message.error(response.data.message)
           }
         })
       },
@@ -1963,6 +1965,8 @@
               this[`${type}VerCode`] = timeOut + 's'
             }.bind(this), 1000)
             this.$Message.success(response.data.message)
+          } else {
+            this.$Message.error(response.data.message)
           }
         })
       },

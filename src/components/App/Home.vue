@@ -149,7 +149,7 @@
                           <img v-show="content.ME" :src="content.hoverImg">
                           <p>{{content.desc}}</p>
                         </div>
-                        <div class="foot">
+                        <div class="foot" v-if="content.type!='comeSoon'">
                           <router-link :to="content.detailLink" target="_blank" style="border-right: 1px solid #cccccc">
                             {{content.detailText}}
                           </router-link>
@@ -159,6 +159,9 @@
                           <router-link :to="content.useLink" v-else>
                             {{content.useText}}
                           </router-link>
+                        </div>
+                        <div class="foot" v-else>
+                          <a style="width:100%">敬请期待</a>
                         </div>
                       </div>
                     </div>
@@ -353,6 +356,32 @@
                 useText: '立即使用',
                 detailLink: 'Pecss',
                 useLink: $store.state.userInfo ? 'snapshot' : 'login',
+                ME: false
+              },
+              {
+                title: '裸金属服务器',
+                desc: '专属物理服务器',
+                img: require('../../assets/img/home/cal-host-2-1.png'),
+                hoverImg: require('../../assets/img/home/cal-host-2-2.png'),
+                detailText: '查看详情',
+                useText: '立即使用',
+                detailLink: 'Phost',
+                useLink: $store.state.userInfo ? 'mirror' : 'login',
+                // 敬请期待
+                type: 'comeSoon',
+                ME: false
+              },
+              {
+                title: '弹性伸缩',
+                desc: '高可用、可视化、低成本',
+                img: require('../../assets/img/home/cal-shen-2-1.png'),
+                hoverImg: require('../../assets/img/home/cal-shen-2-2.png'),
+                detailText: '查看详情',
+                useText: '立即使用',
+                detailLink: 'Pecss',
+                useLink: $store.state.userInfo ? 'snapshot' : 'login',
+                // 敬请期待
+                type: 'comeSoon',
                 ME: false
               }
             ],
