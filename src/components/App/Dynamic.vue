@@ -98,8 +98,9 @@
           border-bottom: 1px solid #999999;
         }
         .right-content {
-          text-align: center;
+          padding: 20px;
           .sub-title {
+            text-align: center;
             font-size: 28px;
             color: #377DFF;
             letter-spacing: 0;

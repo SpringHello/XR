@@ -1112,8 +1112,8 @@
               {required: true, message: '请输入公司名称'}
             ],
             industry: [
-              {required: true, message: '请输入身份证号'},
-              {validator: validaRegisteredID}
+              {required: true, message: '请输入选择所属行业'},
+              /*{validator: validaRegisteredID}*/
             ],
             contact: [
               {required: true, message: '请输入联系方式'},
