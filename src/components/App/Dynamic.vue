@@ -49,7 +49,7 @@
         }
       }).then(response => {
         if (response.status == 200 && response.data.status == 1) {
-            this.announcementArray = response.data.result.announcement
+          this.announcementArray = response.data.result.announcement
         }
       })
       // 获取公告content
@@ -66,7 +66,6 @@
     },
     methods: {
       show(name){
-          console.log(name)
         this.selectAnnouncement = name
         axios.get('user/getAnnouncement.do', {
           params: {

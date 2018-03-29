@@ -440,7 +440,7 @@
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
                   <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
                   <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
-                  <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
+                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
             </div>
@@ -449,7 +449,7 @@
               <img src="../../assets/img/usercenter/client.png">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
-                  <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{authInfo.name}}</span>
+                  <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{userInfo.name}}</span>
                   <div
                     style="margin-left:20px;display: inline-block;background-color: #2A99F2;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
                     企业认证
@@ -459,7 +459,7 @@
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
                   <span style="vertical-align: middle;margin-right: 20px;">企业用户</span>
                   <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
-                  <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
+                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
             </div>

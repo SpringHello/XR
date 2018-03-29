@@ -84,15 +84,19 @@
           <div class="notice">
             <p class="universal-middle" style="padding-bottom: 11px;border-bottom: 1px solid #e9e9e9;">公告</p>
             <div>
-              <div v-for="(item,index) in noticeData" :key="index">
-                <p class="universal-mini" @click="$router.push({ path: 'dynamic', query: { id: item.id }})">
-                  {{item.title}}<span>{{item.createtime}}</span></p>
+              <div v-for="(item,index) in noticeData" :key="index" style="margin:11px 0px;">
+                <p class="universal-mini"
+                   style="padding:0px;width:200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;display: inline-block"
+                   @click="$router.push({ path: 'dynamic', query: { id: item.id }})">
+                  {{item.title}}</p>
+                <p style="font-size: 14px;float:right">{{item.createtime}}</p>
               </div>
-              <span @click="$router.push({ path: 'dynamic', query: { id: 5 }})" style="color: #2A99F2;margin-top: 10px;display: block;font-size: 14px;cursor: pointer;">查看更多</span>
+              <span @click="$router.push({ path: 'dynamic', query: { id: 5 }})"
+                    style="color: #2A99F2;margin-top: 10px;display: block;font-size: 14px;cursor: pointer;">查看更多</span>
             </div>
           </div>
           <div>
-            <Carousel v-model="value1">
+            <Carousel v-model="currentCarouse">
 
               <CarouselItem v-for="(item,index) in ads" :key="index">
                 <a :href="item.url" target="_blank">
@@ -114,7 +118,7 @@
     name: 'overview',
     data() {
       return {
-        value1: 1,
+        currentCarouse: 0,
         // 资源列表url数据
         sourceUrl: [
           {
