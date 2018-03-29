@@ -628,6 +628,15 @@
       if (document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY > 300 ) {
         this.fade = true
       }
+      if (document.body.clientHeight - this.$refs.consoleFade.offsetTop + window.scrollY > 300) {
+        this.consoleFade = true
+      }
+      if (document.body.clientHeight - this.$refs.partnerFade.offsetTop + window.scrollY > 300) {
+        this.partnerFade = true
+      }
+      if (document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY > 300 ) {
+        this.authorityFade = true
+      }
       // 待优化
       window.addEventListener('scroll', () => {
         if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY > 300 && !this.cloudContentFade) {
