@@ -2,7 +2,7 @@
   <div id="back">
     <header>
       <div class="wrapper">
-        <router-link to="/ruicloud/overview" class="logo">
+        <router-link to="/ruicloud/home" class="logo">
           <div></div>
         </router-link>
         <div class="operate">

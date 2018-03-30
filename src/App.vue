@@ -3,9 +3,9 @@
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
-        <a class="logo">
+        <router-link to="/ruicloud/home" class="logo">
           <div></div>
-        </a>
+        </router-link>
         <div class="operate">
           <ul @mouseleave="ME(-1)">
             <li v-for="(item,index) in titleItem" :key="index" @mouseenter="ME(index,$event)">
