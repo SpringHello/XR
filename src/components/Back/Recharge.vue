@@ -145,7 +145,6 @@
     .wrapper {
       width: 1200px;
       margin: 0px auto;
-      margin-bottom: 25px;
       & > span {
         font-family: PingFangSC-Regular;
         font-size: 12px;

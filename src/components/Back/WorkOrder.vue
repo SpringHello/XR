@@ -453,10 +453,11 @@
   .background {
     background-color: #f5f5f5;
     width: 100%;
+    @diff: 101px;
+    min-height: calc(~"100% - @{diff}");
     .wrapper {
       width: 1200px;
       margin: 0px auto;
-      margin-bottom: 25px;
       & > span {
         font-family: Microsoft Yahei, 微软雅黑;
         font-size: 12px;
