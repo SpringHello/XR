@@ -9,9 +9,9 @@
       </Alert>
       <div id="content">
         <div id="header">
-          <img src="../../assets/img/host/hostMirror-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
+          <i class="iconfont icon-jingxiangfuwu" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
           <span id="title">镜像</span>
-          <button id="refresh_button" @click="$router.go(0)">刷新</button>
+          <button id="refresh_button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>
         </div>
         <div class="universal-alert">
           <p>镜像是一个包含了软件及必要配置的云主机模板，至少包含操作系统，还可以包含应用软件（例如，数据库软件）和私有软件。通过镜像，您可以创建云主机。</p>

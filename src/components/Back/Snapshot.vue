@@ -13,9 +13,9 @@
       </Alert>
       <div id="content">
         <div id="header">
-          <img src="../../assets/img/host/hostSnaps-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
+          <i class="iconfont icon-ECSkuaizhao" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
           <span id="title">云主机快照</span>
-          <button id="refresh_button" @click="$router.go(0)">刷新</button>
+          <button id="refresh_button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>
         </div>
         <div class="universal-alert">
           <p> 云主机快照能对主机（包含挂载磁盘）某个时刻的数据进行备份和回滚，云主机快照为增量备份，提升了云主机的安全性，同时增强了云主机快照的易用性。</p>

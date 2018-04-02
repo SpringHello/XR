@@ -7,7 +7,7 @@
       </Spin>
       <span>个人中心 / 费用中心</span>
       <div class="content">
-        <img src="../../assets/img/usercenter/expenses.png" style="margin-right: 5px;vertical-align: text-bottom">
+        <i class="iconfont icon-feiyongzhongxin" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
         <span class="title">费用中心</span>
         <Tabs v-model="name" type="card" :animated="false" @on-click="changecard"
               style="margin-top: 20px;min-height: 550px">

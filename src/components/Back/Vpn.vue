@@ -14,9 +14,9 @@
       </Alert>
       <div id="content">
         <div id="header">
-          <img src="../../assets/img/network/vpn-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
+          <i class="iconfont icon-xunizhuanwangVPN" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
           <span id="title">VPN</span>
-          <button id="refresh_button" @click="$router.go(0)">刷新</button>
+          <button id="refresh_button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>
         </div>
         <div class="universal-alert">
           <p>VPN业务用于在远端用户和VPC之间建立一条安全加密的通信隧道，使远端用户通过VPN使用VPC中的业务资源。</p>
