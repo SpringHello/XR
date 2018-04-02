@@ -421,7 +421,7 @@
         } else {
           list = this.selectArray.map((item) => {
             return {
-              type: item.type == 'host' ? 0 : item.type == 'disk' ? 1 : this.renewalItem.type == 'nat' ? 4 : 2,
+              type: item.type == 'host' ? 0 : item.type == 'disk' ? 1 : item.type == 'nat' ? 4 : 2,
               id: item.id
             }
           })
