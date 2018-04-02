@@ -252,7 +252,7 @@
                       </div>
                       <div class="foot" style="background-color: #ffc439">
                         <span style="color:white">{{item.createtime}}</span>
-                        <button @click="renewHost(item.id)"
+                        <button @click="renewHost(item)"
                                 style="margin-left: 55px;color: #ffc439;background-color: white;border-color: white;">续费
                         </button>
                       </div>
@@ -681,7 +681,6 @@
         this.getData()
       }, 5 * 1000)
     },
-
     methods: {
       checkRenameForm(){
         this.$refs.renameForm.validate((valid) => {
@@ -770,15 +769,20 @@
         })
       },
       // 欠费主机续费
-      renewHost(id) {
-        this.showModal.Renew = true
-        this.RenewForm.id = id
-        this.$http.get('information/getResCost.do?id=' + id + '&type=' + 'computer').then(response => {
-            if (response.status == 200) {
-              this.RenewForm.cost = response.data.cost
+      renewHost(item) {
+        if (item.caseType == 3) {
+          this.showModal.Renew = true
+          this.RenewForm.id = item.id
+          this.$http.get('information/getResCost.do?id=' + item.id + '&type=' + 'computer').then(response => {
+              if (response.status == 200) {
+                this.RenewForm.cost = response.data.cost
+              }
             }
-          }
-        )
+          )
+        } else {
+          this.currentHost[0] = item
+          this.showModal.renewal = true
+        }
       },
       // 欠费主机续费确认
       renewOk() {
@@ -1129,7 +1133,7 @@
         this.$http.post('continue/continueOrder.do', {
           list: list,
           timeType: this.renewalType,
-          timeValue: this.renewalTime
+          timeValue: this.renewalTime + ''
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({path: 'order'})

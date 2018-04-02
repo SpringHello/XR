@@ -25,7 +25,7 @@ const Dynamic = () => import('@/components/App/Dynamic')
 // 前台活动页面路由
 const Active = () => import('@/components/App/active/active')
 const Vps = () => import('@/components/App/active/vps')
-//const NewNodes = () => import('@/components/App/active/newNodes')
+const NewNodes = () => import('@/components/App/active/newNodes')
 
 /* 产品页面路由 */
 const Pecs = () => import('@/components/App/product/ECS.vue')
@@ -205,7 +205,7 @@ var router = new Router({
         {path: 'buy', name: 'buy', component: Buy},
         {path: 'active', name: 'active', component: Active},
         {path: 'vps', name: 'vps', component: Vps},
-        // {path: 'newNodes', name: 'newNodes', component: NewNodes},
+        {path: 'newNodes', name: 'newNodes', component: NewNodes},
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
         {path: 'Pecss', component: Pecss},

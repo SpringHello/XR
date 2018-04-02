@@ -44,7 +44,7 @@
               <span style="font-size: 14px;color: #666666;letter-spacing: 0.83px;">您选择了“通过身份证照片”方式，点击<span
                 style="color:#2A99F2;cursor: pointer"
                 @click="notAuth.currentStep=notAuth.allStep.selectAuthType">重新选择</span></span>
-              <Form :model="notAuth.cardAuthForm" :label-width="70" ref="cardAuth"
+              <Form :model="notAuth.cardAuthForm" :label-width="100" ref="cardAuth"
                     :rules="notAuth.cardAuthFormValidate"
                     style="margin-top:20px;">
                 <FormItem label="真实姓名" prop="name">
@@ -143,7 +143,7 @@
               <span style="font-size: 14px;color: #666666;letter-spacing: 0.83px;">您选择了“快速认证”方式，点击<span
                 style="color:#2A99F2;cursor: pointer"
                 @click="notAuth.currentStep=notAuth.allStep.selectAuthType">重新选择</span></span>
-              <Form :model="notAuth.quicklyAuthForm" :label-width="70" ref="quicklyAuth"
+              <Form :model="notAuth.quicklyAuthForm" :label-width="100" ref="quicklyAuth"
                     :rules="notAuth.quicklyAuthFormValidate"
                     style="width:450px;margin-top:20px;">
                 <FormItem label="真实姓名" prop="name">
@@ -153,7 +153,7 @@
                   <Input v-model="notAuth.quicklyAuthForm.IDCard" placeholder="请输入身份证号"></Input>
                 </FormItem>
                 <Form :model="notAuth.quicklyAuthForm" :rules="notAuth.quicklyAuthFormValidate" ref="sendCode"
-                      :label-width="70">
+                      :label-width="100">
                   <FormItem label="验证码" prop="pictureCode">
                     <div style="display: flex">
                       <Input v-model="notAuth.quicklyAuthForm.pictureCode" placeholder="请输入图片验证码"
@@ -440,7 +440,7 @@
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
                   <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
                   <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
-                  <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
+                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
             </div>
@@ -449,7 +449,7 @@
               <img src="../../assets/img/usercenter/client.png">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
-                  <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{authInfo.name}}</span>
+                  <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{userInfo.name}}</span>
                   <div
                     style="margin-left:20px;display: inline-block;background-color: #2A99F2;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
                     企业认证
@@ -459,7 +459,7 @@
                   <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
                   <span style="vertical-align: middle;margin-right: 20px;">企业用户</span>
                   <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
-                  <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
+                  <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
             </div>
@@ -1112,8 +1112,8 @@
               {required: true, message: '请输入公司名称'}
             ],
             industry: [
-              {required: true, message: '请输入身份证号'},
-              {validator: validaRegisteredID}
+              {required: true, message: '请输入选择所属行业'},
+              /*{validator: validaRegisteredID}*/
             ],
             contact: [
               {required: true, message: '请输入联系方式'},
