@@ -944,21 +944,18 @@
            title: "系统提示",
            content: '今日免费主机已全部领取完,欢迎明日再来。'
            }); */
-          this.$noInterceptorsHttp.get(url).then(response => {
+          this.$http.get(url).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$Modal.success({
                 title: "领取主机成功",
                 content: response.data.message
               });
-            } else if (response.status == 200 && response.data.status == 2) {
+            } else{
               this.$Modal.warning({
                 title: "系统提示",
                 content: response.data.message
               });
             }
-            /*else if (response.status == 200 && response.data.status == 3) {
-             this.$router.push('/login')
-             }*/
           })
         }
       },

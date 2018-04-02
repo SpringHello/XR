@@ -823,7 +823,12 @@
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.computerInfo = response.data.result
-            axios.get(`information/listTemplates.do?osType=${this.computerInfo.computerOsType}&zoneId=${this.$route.query.zoneid}`)
+            axios.get('information/listTemplates.do', {
+              params: {
+                //osType: this.computerInfo.computerOsType,
+                zoneId: this.$route.query.zoneid
+              }
+            })
               .then((response) => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.osOptions = response.data.result

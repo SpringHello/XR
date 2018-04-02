@@ -44,7 +44,7 @@
               <span style="font-size: 14px;color: #666666;letter-spacing: 0.83px;">您选择了“通过身份证照片”方式，点击<span
                 style="color:#2A99F2;cursor: pointer"
                 @click="notAuth.currentStep=notAuth.allStep.selectAuthType">重新选择</span></span>
-              <Form :model="notAuth.cardAuthForm" :label-width="70" ref="cardAuth"
+              <Form :model="notAuth.cardAuthForm" :label-width="100" ref="cardAuth"
                     :rules="notAuth.cardAuthFormValidate"
                     style="margin-top:20px;">
                 <FormItem label="真实姓名" prop="name">
@@ -143,7 +143,7 @@
               <span style="font-size: 14px;color: #666666;letter-spacing: 0.83px;">您选择了“快速认证”方式，点击<span
                 style="color:#2A99F2;cursor: pointer"
                 @click="notAuth.currentStep=notAuth.allStep.selectAuthType">重新选择</span></span>
-              <Form :model="notAuth.quicklyAuthForm" :label-width="70" ref="quicklyAuth"
+              <Form :model="notAuth.quicklyAuthForm" :label-width="100" ref="quicklyAuth"
                     :rules="notAuth.quicklyAuthFormValidate"
                     style="width:450px;margin-top:20px;">
                 <FormItem label="真实姓名" prop="name">
@@ -153,7 +153,7 @@
                   <Input v-model="notAuth.quicklyAuthForm.IDCard" placeholder="请输入身份证号"></Input>
                 </FormItem>
                 <Form :model="notAuth.quicklyAuthForm" :rules="notAuth.quicklyAuthFormValidate" ref="sendCode"
-                      :label-width="70">
+                      :label-width="100">
                   <FormItem label="验证码" prop="pictureCode">
                     <div style="display: flex">
                       <Input v-model="notAuth.quicklyAuthForm.pictureCode" placeholder="请输入图片验证码"

@@ -4,13 +4,13 @@
     <div class="banner">
       <my-carousel :interval=5000 effect="fade" class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
-          <div @click="push('active')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
+          <div @click="push('vps')" style="cursor: pointer;background-image:linear-gradient(90deg,#29abe2,#9cf)">
             <div style="width:1200px;height:560px;margin:0px auto;position:relative">
-              <img src="../../assets/img/home/carousel-2-1.png" style="position:absolute;right:0px;top:20px;">
+              <img src="../../assets/img/home/carousel-1-1.png" style="position:absolute;right:0px;top:20px;">
               <div style="position: relative; top: 30%">
-                <p style="font-size: 48px;color: #5692fe;margin-bottom: 20px;">新睿云盛大上线</p>
-                <p style="font-size: 20px;color: #5692fe;margin-bottom: 20px;">全品类折扣优惠 礼包零门槛领取</p>
-                <p style="font-size: 24px;color:#5692fe">最高省500元</p>
+                <p style="font-size: 48px;color: #fff;margin-bottom: 20px;">新手上云</p>
+                <p style="font-size: 48px;color: #fff;margin-bottom: 20px;">可享60天免费体验</p>
+                <p style="font-size: 24px;color:#fff">数量有限，送完为止</p>
                 <button
                   style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
                   立即领取
@@ -19,7 +19,7 @@
             </div>
           </div>
         </my-carousel-item>
-        <!--<my-carousel-item class="carousel-item">
+        <my-carousel-item class="carousel-item">
           <div @click="push('newNodes')"
                style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
             <div class="newNodes">
@@ -54,8 +54,24 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>-->
+        </my-carousel-item>
         <my-carousel-item class="carousel-item">
+          <div @click="push('active')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
+            <div style="width:1200px;height:560px;margin:0px auto;position:relative">
+              <img src="../../assets/img/home/carousel-2-1.png" style="position:absolute;right:0px;top:20px;">
+              <div style="position: relative; top: 30%">
+                <p style="font-size: 48px;color: #5692fe;margin-bottom: 20px;">新睿云盛大上线</p>
+                <p style="font-size: 20px;color: #5692fe;margin-bottom: 20px;">全品类折扣优惠 礼包零门槛领取</p>
+                <p style="font-size: 24px;color:#5692fe">最高省500元</p>
+                <button
+                  style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
+                  立即领取
+                </button>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
+       <!-- <my-carousel-item class="carousel-item">
           <div @click="push('login')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
             <div style="width:1200px;height:560px;margin:0px auto;position:relative">
               <img src="../../assets/img/home/carousel-3-1.png"
@@ -70,28 +86,12 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
-          <div @click="push('vps')" style="cursor: pointer;background-image:linear-gradient(90deg,#29abe2,#9cf)">
-            <div style="width:1200px;height:560px;margin:0px auto;position:relative">
-              <img src="../../assets/img/home/carousel-1-1.png" style="position:absolute;right:0px;top:20px;">
-              <div style="position: relative; top: 30%">
-                <p style="font-size: 48px;color: #fff;margin-bottom: 20px;">新手上云</p>
-                <p style="font-size: 48px;color: #fff;margin-bottom: 20px;">可享60天免费体验</p>
-                <p style="font-size: 24px;color:#fff">数量有限，送完为止</p>
-                <button
-                  style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
-                  立即领取
-                </button>
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>
+        </my-carousel-item>-->
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->
     <div class="box-container"
-         :class="{two:this.activeBanner==2,three:this.activeBanner==3}">
+         :class="{one:this.activeBanner==2,three:this.activeBanner==1}">
       <div class="container">
         <div v-for="(item,index) in boxContainer" class="container-item">
           <img :src=item.img>
@@ -754,9 +754,9 @@
       height: 110px;
       width: 100%;
       background-color: #5692fe;
-/*      &.one {
+      &.one {
         background-color: #C254FA;
-      }*/
+      }
       &.three {
         background-color: rgb(80, 182, 235);
       }
