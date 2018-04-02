@@ -332,6 +332,7 @@
       go(path){
         if (path == 'exit') {
           this.exit()
+          return
         }
         this.$router.push(path)
       },

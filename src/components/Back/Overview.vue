@@ -91,7 +91,7 @@
                   {{item.title}}</p>
                 <p style="font-size: 14px;float:right">{{item.createtime}}</p>
               </div>
-              <span @click="$router.push({ path: 'dynamic', query: { id: 5 }})"
+              <span @click="$router.push({ path: 'dynamic',})"
                     style="color: #2A99F2;margin-top: 10px;display: block;font-size: 14px;cursor: pointer;">查看更多</span>
             </div>
           </div>
