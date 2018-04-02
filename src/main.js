@@ -11,6 +11,7 @@ import 'iview/dist/styles/iview.css'
 import '@/assets/css/iviewOverRide.css'
 import '@/assets/css/reset.css'
 import '@/assets/css/universal.less'
+import '@/assets/css/frontend.css'
 
 // import ECharts from 'vue-echarts/components/ECharts.vue'
 import ECharts from 'vue-echarts/components/ECharts'
