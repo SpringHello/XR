@@ -9,7 +9,7 @@
         <span style="background-color: #f5f5f5;"><router-link to="overview"
                                                               style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 一键续费</span>
         <div class="content">
-          <img src="../../assets/img/app/renew.png" style="margin-right: 5px;vertical-align: text-bottom">
+          <i class="iconfont icon-yijianxufei" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
           <span>一键续费</span>
           <div style="margin-top:20px;position:relative">
             <div class="operate">
@@ -511,7 +511,6 @@
     .wrapper {
       width: 1200px;
       margin: 0px auto;
-      margin-bottom: 25px;
       & > span {
         font-family: Microsoft Yahei, 微软雅黑;
         font-size: 12px;

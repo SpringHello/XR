@@ -74,17 +74,17 @@
     <router-view/>
     <!-- 所有前台页面共用底部导航块 -->
     <div id="app-foot">
-<!--      &lt;!&ndash; 新用户注册最大6个月免费 &ndash;&gt;
-      <div id="foot-free">
-        <p>新用户注册享最大2个月免费试用</p>
-        <span>零成本体验，快速认证与审核通道</span>
-        <router-link to="vps" target="_blank">立即体验</router-link>
-      </div>-->
+      <!--      &lt;!&ndash; 新用户注册最大6个月免费 &ndash;&gt;
+            <div id="foot-free">
+              <p>新用户注册享最大2个月免费试用</p>
+              <span>零成本体验，快速认证与审核通道</span>
+              <router-link to="vps" target="_blank">立即体验</router-link>
+            </div>-->
       <!-- 客服支持、意见反馈 -->
       <div id="foot-support">
         <div id="wrapper">
-          <div v-for="(support,index) in support" class="flex-item">
-            <img :src="support.img">
+          <div v-for="(support,index) in support" class="flex-item" :key="index">
+            <i class="iconfont" :class="support.img"></i>
             <div style="display: inline-block;vertical-align: middle">
               <span>{{support.title}}</span>
               <span style="display: block">{{support.subTitle}}</span>
@@ -98,10 +98,10 @@
           <div class="description">
             <div class="product">
               <p>产品</p>
-              <div v-for="(item,index) in description">
+              <div v-for="(item,index) in description" :key="index">
                 <ul>
                   <span>{{item.title}}</span>
-                  <li v-for="(subItem,subIndex) in item.desc">
+                  <li v-for="(subItem,subIndex) in item.desc" :key="subIndex">
                     <router-link v-if="subItem.url!=''" :to="subItem.url" target="_blank">{{subItem.subTitle}}
                     </router-link>
                     <router-link v-else :to="subItem.url">{{subItem.subTitle}}</router-link>
@@ -131,7 +131,7 @@
           </div>
         </div>
         <div class="footer-bottom">
-          <ul v-for="item in Preparation ">
+          <ul v-for="(item,index) in Preparation " :key="index">
             <p>{{item.time}}</p>
             <li style="cursor: auto">{{item.title}}</li>
             <li @click="toAQ('1')">{{item.preparation}}</li>
@@ -149,7 +149,7 @@
       <span class="qq" @mouseenter="QME" @mouseleave="QML">
         <div ref="qq" style="overflow: hidden">
           <div class="wrapper">
-            <div v-for="(qq,index) of QQInfo">
+            <div v-for="(qq,index) of QQInfo" :key="index">
               <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
                 <a target="_blank"
                    :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
@@ -163,9 +163,11 @@
           </div>
         </div>
       </span>
+      <Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px">
       <span class="service"><a
         :href="kfURL"
         target="_blank"></a></span>
+      </Poptip>
       <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
         <span class="phone"></span>
       </Poptip>
@@ -181,6 +183,7 @@
   import $store from './vuex'
   import {mapState} from 'vuex'
   import debounce from 'throttle-debounce/debounce'
+  import './assets/iconfontjs/iconfont.js'
   export default {
     name: 'app',
     data () {
@@ -254,9 +257,9 @@
           transition: 'width .3s'
         }, // line的width和left属性
         support: [
-          {img: require('./assets/img/app/support-1.png'), title: '7*24', subTitle: '多渠道服务与支持'},
-          {img: require('./assets/img/app/support-2.png'), title: '意见', subTitle: '反馈与投诉建议'},
-          {img: require('./assets/img/app/support-3.png'), title: '1V1', subTitle: '专项服务'}
+          {img: 'icon-duoqudaofuwuyuzhichi', title: '7*24', subTitle: '多渠道服务与支持'},
+          {img: 'icon-fankuiyutousujianyiA', title: '意见', subTitle: '反馈与投诉建议'},
+          {img: 'icon-zhuanxiangfuwu', title: '1V1', subTitle: '专项服务'}
         ],
         description: [
           {
@@ -418,7 +421,10 @@
   }
 </script>
 
-<style rel="stylesheet/less" lang="less" scoped>
+<style rel="stylesheet/less" lang="less">
+  @import './assets/css/frontend.css';
+  // import '@/assets/css/backend.css'
+  //import '@/assets/iconfontjs/iconfont.js'
   #app {
     header {
       width: 100%;
@@ -597,8 +603,10 @@
           display: flex;
           justify-content: space-between;
           .flex-item {
-            img {
+            i {
               vertical-align: middle;
+              font-size: 40px;
+              color: #cccccc;
             }
             span {
               font-size: 14px;
@@ -713,6 +721,8 @@
       right: 50px;
       bottom: 100px;
       z-index: 100;
+      display: flex;
+      flex-direction: column;
       > span {
         width: 48px;
         height: 48px;

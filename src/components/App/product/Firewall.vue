@@ -18,7 +18,7 @@
         <div class="features-flex">
           <div v-for="(feature,index) in features" class="flex-item">
             <div>
-              <img :src="feature.img">
+              <i class="iconfont" :class="feature.img" style="font-size:36px;color:#fff;line-height:1;vertical-align: middle;margin-right: 5px;"></i>
               <div>
                 <span class="title">{{feature.title}}</span>
                 <span class="desc">{{feature.desc}}</span>
@@ -63,7 +63,7 @@
                 <div style="display: flex">
                   <div v-for="pimg in stage.pImg" style="margin-right: 10px;">
                     <div style="width: 90px;height: 90px;background-color: #ffffff;text-align: center;padding:24px">
-                      <img :src="pimg.img">
+                      <i class="iconfont" :class="pimg.img" style="font-size:36px;color:#2A99F2;"></i>
                       <span style="font-size: 14px; color:#666666;">{{pimg.isc}}</span>
                     </div>
                   </div>
@@ -80,7 +80,7 @@
         <p class="subTitle">产品优势</p>
         <div class="advantage-flex">
           <div v-for="(advantage,index) in advantages" class="flex-item">
-            <img :src="advantage.img">
+            <i class="iconfont" :class="advantage.img" style="font-size:36px;color: #2A99F2;margin-right: 10px;"></i>
             <div>
               <span class="title">{{advantage.title}}</span>
               <span class="desc">{{advantage.desc}}</span>
@@ -96,7 +96,9 @@
         <p class="subTitle">相关产品推荐</p>
         <div class="recommendation-flex">
           <div v-for="(recommendation,index) in recommendations" class="flex-item">
-            <img :src="recommendation.img">
+            <p style="width: 60px;height: 60px;background-color: #377dff;text-align: center;margin-right: 16px;padding: 10px 0px;">
+              <i class="iconfont" :class="recommendation.img" style="font-size:40px;color:#fff;line-height:1;"></i>
+            </p>
             <div>
               <span class="title">{{recommendation.title}}</span>
               <span class="desc">{{recommendation.desc}}</span>
@@ -122,29 +124,29 @@
         },
         features: [
           {
-            img: require('../../../assets/img/product/firewall-baohu.png'),
+            img: 'icon-duankoubaohu',
             title: '端口保护',
             desc: '除常用端口外其他端口默认关闭，最大程度保障主机安全。'
           },
           {
-            img: require('../../../assets/img/product/firewall-fenceng.png'),
+            img: 'icon-shujubeifen1',
             title: '分层管理',
             desc: '虚拟防火墙策略根据不同的优先级生效，方便灵活。'
           }
         ],
         advantages: [
           {
-            img: require('../../../assets/img/product/firewall-miananzhuang.png'),
+            img:'icon-miananzhuang',
             title: '免安装',
             desc: '操作简便。虚拟防火墙通过清晰友好的界面，可以更方便的管理开放的端口。'
           },
           {
-            img: require('../../../assets/img/product/firewall-yunwei.png'),
+            img: 'icon-jianjieyunwei',
             title: '简介运维',
             desc: '虚拟防火墙不需要复杂的运维操作，添加删除更轻松。'
           },
           {
-            img: require('../../../assets/img/product/firewall-diziyuan.png'),
+            img: 'icon-diziyuanzhanyong',
             title: '低资源占用',
             desc: '不需要在主机上安装任何agent，更关注于业务。'
           }
@@ -158,8 +160,8 @@
               img: require('../../../assets/img/product/firewall-stage-background.png'),
               desc: ['虚拟防火墙通过设置防火墙的规则和策略来控制外网对云平台站点的安全防护和访问控制，能够有效的阻止非法的服务和进程的接入，云平台为用户每个的VPC提供了独立的虚拟防火墙，用户可以灵活配置虚拟防火墙的规则，在在子网上引用对进站、出站的流量进行匹配，满足访问规则的流量才能够正常的接收和发送。虚拟防火墙部署在互联网出口，用于阻断互联网上的非法的流量和行为，一般用于互联网网站的部署，将网站使用的端口开放，其他端口禁止访问。'],
               pImg: [
-                {img: require('../../../assets/img/product/backup-stage-f1.png'), isc: '云主机'},
-                {img: require('../../../assets/img/product/vpn-.png'), isc: 'VPC'}
+                {img: 'icon-danxingyunfuwuqiECS', isc: '云主机'},
+                {img: 'icon-xunisiyouyunVPC', isc: 'VPC'}
               ]
             }
           ],
@@ -167,25 +169,25 @@
         },
         recommendations: [
           {
-            img: require('../../../assets/img/product/yunfuwuqi.png'),
+            img: 'icon-danxingyunfuwuqiECS',
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
             path: 'Pecs'
           },
           {
-            img: require('../../../assets/img/product/ECS-recommendation-3.png'),
+            img: 'icon-xunisiyouyunVPC',
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
             path: 'Pvpc'
           },
           {
-            img: require('../../../assets/img/product/ECS-recommendation-1.png'),
+            img: 'icon-fuzaijunheng2',
             title: '负载均衡',
             desc: '负载均衡处理器可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器...',
             path: 'Pbalance'
           },
           {
-            img: require('../../../assets/img/product/ECS-recommendation-4.png'),
+            img: 'icon-NATwangguan',
             title: 'NAT网关',
             desc: '添加端口转发规则，允许来自公网或其他VPC对您的私有网络服务进行访问。',
             path: 'Pnat'

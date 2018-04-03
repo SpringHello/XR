@@ -20,22 +20,6 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('active')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
-            <div style="width:1200px;height:560px;margin:0px auto;position:relative">
-              <img src="../../assets/img/home/carousel-2-1.png" style="position:absolute;right:0px;top:20px;">
-              <div style="position: relative; top: 30%">
-                <p style="font-size: 48px;color: #5692fe;margin-bottom: 20px;">新睿云盛大上线</p>
-                <p style="font-size: 20px;color: #5692fe;margin-bottom: 20px;">全品类折扣优惠 礼包零门槛领取</p>
-                <p style="font-size: 24px;color:#5692fe">最高省500元</p>
-                <button
-                  style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
-                  立即领取
-                </button>
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>
-        <!--<my-carousel-item class="carousel-item">
           <div @click="push('newNodes')"
                style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
             <div class="newNodes">
@@ -70,31 +54,47 @@
               </div>
             </div>
           </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
+          <div @click="push('active')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
+            <div style="width:1200px;height:560px;margin:0px auto;position:relative">
+              <img src="../../assets/img/home/carousel-2-1.png" style="position:absolute;right:0px;top:20px;">
+              <div style="position: relative; top: 30%">
+                <p style="font-size: 48px;color: #5692fe;margin-bottom: 20px;">新睿云盛大上线</p>
+                <p style="font-size: 20px;color: #5692fe;margin-bottom: 20px;">全品类折扣优惠 礼包零门槛领取</p>
+                <p style="font-size: 24px;color:#5692fe">最高省500元</p>
+                <button
+                  style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
+                  立即领取
+                </button>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
+       <!-- <my-carousel-item class="carousel-item">
+          <div @click="push('login')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
+            <div style="width:1200px;height:560px;margin:0px auto;position:relative">
+              <img src="../../assets/img/home/carousel-3-1.png"
+                   style="position:absolute;right:0px;top:20px;width:630px;">
+              <div style="position: relative; top: 30%">
+                <p style="font-size: 48px;color: #5692fe;margin-bottom: 20px;">新睿云技术内测Beat1.0</p>
+                <p style="font-size: 20px;color: #5692fe;margin-bottom: 20px;">限时开启</p>
+                <button
+                  style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
+                  立即领取
+                </button>
+              </div>
+            </div>
+          </div>
         </my-carousel-item>-->
-        <!-- <my-carousel-item class="carousel-item">
-           <div @click="push('login')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
-             <div style="width:1200px;height:560px;margin:0px auto;position:relative">
-               <img src="../../assets/img/home/carousel-3-1.png"
-                    style="position:absolute;right:0px;top:20px;width:630px;">
-               <div style="position: relative; top: 30%">
-                 <p style="font-size: 48px;color: #5692fe;margin-bottom: 20px;">新睿云技术内测Beat1.0</p>
-                 <p style="font-size: 20px;color: #5692fe;margin-bottom: 20px;">限时开启</p>
-                 <button
-                   style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
-                   立即领取
-                 </button>
-               </div>
-             </div>
-           </div>
-         </my-carousel-item>-->
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->
     <div class="box-container"
-         :class="{two:this.activeBanner==2,three:this.activeBanner==1}">
+         :class="{one:this.activeBanner==2,three:this.activeBanner==1}">
       <div class="container">
-        <div v-for="(item,index) in boxContainer" class="container-item">
-          <img :src=item.img>
+        <div v-for="(item,index) in boxContainer" :key="index" class="container-item">
+          <i class="iconfont" :class="item.img" style="font-size:60px;color:#fff;line-height:1"></i>
           <div>
             <p>{{item.title}}</p>
             <span>{{item.desc}}</span>
@@ -112,8 +112,14 @@
         <div class="cloud-display">
           <div v-for="(item,index) in cloudContainer" :key="index" @click="changeProduct(item,$event)"
                :class="{select:item.select}">
-            <img v-show="!item.select" :src="item.img">
-            <img v-show="item.select" :src="item.clickImg">
+              <div style="padding-top:72px;">
+                <svg v-show="!item.select" class="icon" aria-hidden="true" style="font-size:62px;color:#999999">
+                  <use :xlink:href="item.img"></use>
+                </svg>
+                <svg v-show="item.select" class="icon" aria-hidden="true" style="font-size:62px;">
+                  <use :xlink:href="item.clickImg"></use>
+                </svg>
+              </div>
             <span>{{item.title}}</span>
           </div>
           <div class="line" ref="line"></div>
@@ -127,7 +133,7 @@
           <div v-show="cloudContentFade">
             <p v-for="(item,index) in cloudContainer" :key="index" v-if="item.select">{{item.desc}}</p>
             <div class="content-carousel">
-              <div v-for="(item,index) in cloudContainer">
+              <div v-for="(item,index) in cloudContainer" :key="index">
                 <transition name="fade">
                   <div style="height:365px;position: relative;text-align: center" v-show="item.select"
                        @mouseenter="item.ME=true"
@@ -137,16 +143,15 @@
                     <div :class="{flexCarousel:item.prodItem.length>5,textCenter:item.prodItem.length<6}"
                          :ref="item.title"
                          :style="{width:item.prodItem.length*242-15+'px'}">
-                      <div v-for="(content,index) in item.prodItem" class="item"
+                      <div v-for="(content,index) in item.prodItem" :key="index" class="item"
                            :class="{lastItem:index==item.prodItem.length-1,active:content.ME}"
                            @mouseenter="handleMouseEnter(item,content)">
                         <div class="header">
                           <i></i>
                           <h2>{{content.title}}</h2>
                         </div>
-                        <div class="body">
-                          <img v-show="!content.ME" :src="content.img">
-                          <img v-show="content.ME" :src="content.hoverImg">
+                        <div class="body" style="padding-top:35px">
+                          <i class="iconfont" :class="content.img" :style="[styleObject,content.ME?white:'']"></i>
                           <p>{{content.desc}}</p>
                         </div>
                         <div class="foot" v-if="content.type!='comeSoon'">
@@ -194,11 +199,17 @@
         </div>
         <transition name="fade">
           <div class="feature-banner" v-show="fade">
-            <div v-for="(item,index) in featureContainer" class="banner" :class="{notMargin:index>2}"
+            <div v-for="(item,index) in featureContainer" :key="index" class="banner" :class="{notMargin:index>2}"
                  @mouseenter="featureEnter(item)"
                  @mouseleave="featureLeave(item)">
-              <img v-show="!item.select" :src="item.img">
-              <img v-show="item.select" :src="item.clickImg">
+                 <div style="padding-top:10px;">
+                  <svg v-show="!item.select" class="icon" aria-hidden="true" style="font-size:90px;color:#999999">
+                    <use :xlink:href="item.img"></use>
+                  </svg>
+                  <svg v-show="item.select" class="icon" aria-hidden="true" style="font-size:90px;">
+                    <use :xlink:href="item.clickImg"></use>
+                  </svg>
+                </div>
               <span class="title">{{item.title}}</span>
               <span class="desc">{{item.desc}}</span>
             </div>
@@ -276,7 +287,7 @@
             <p>权威认证，我们始终为您提供安全可靠云产品</p>
             <span>加入新睿云，即可获取安全可靠云服务，实现企业快速发展</span>
             <ul>
-              <li v-for="(auth,index) in authorityContainer">
+              <li v-for="(auth,index) in authorityContainer" :key="index">
                 <img :src="auth.img">
                 <span>{{auth.title}}</span>
               </li>
@@ -297,6 +308,13 @@
   export default {
     data() {
       return {
+        white:{
+          color: '#fff',
+        },
+        styleObject: {
+          color: '#999',
+          fontSize: '62px'
+        },
         // 云产品滚动效果
         cloudContentFade: false,
         // 严苛品质要求滚动效果
@@ -312,24 +330,23 @@
           require('../../assets/img/home/carousel-4-1.jpg')
         ],
         boxContainer: [
-          {title: '10万级IOPS', desc: '高性能SSD硬盘', img: require('../../assets/img/home/box-container-1.png')},
-          {title: '全场景存储', desc: 'SDS、SAS、SATA', img: require('../../assets/img/home/box-container-2.png')},
-          {title: '40G免费防护', desc: '采用华为DDoS硬件', img: require('../../assets/img/home/box-container-3.png')},
-          {title: '全冗余架构', desc: '高可用保障', img: require('../../assets/img/home/box-container-4.png')},
-          {title: '虚拟私有云', desc: '网络隔离、子网分配', img: require('../../assets/img/home/box-container-5.png')}
+          {title: '10万级IOPS', desc: '高性能SSD硬盘', img: 'icon-wanjiIOPS'},
+          {title: '全场景存储', desc: 'SDS、SAS、SATA', img: 'icon-quanchangjingcunchu'},
+          {title: '40G免费防护', desc: '采用华为DDoS硬件', img: 'icon-Gmianfeifanghu'},
+          {title: '全冗余架构', desc: '高可用保障', img: 'icon-quanrongyujiagou'},
+          {title: '虚拟私有云', desc: '网络隔离、子网分配', img: 'icon-xunisiyouyun'}
         ],
         /* title--产品名  img--未选中img  clickImg--选中img  select--是否选中 ME--是否显示左右切换箭头  prodItem中ME表示单个item是否hover选中 */
         cloudContainer: [
           {
             title: '云计算',
-            img: require('../../assets/img/home/cloud-1-1.png'),
-            clickImg: require('../../assets/img/home/cloud-1-2.png'),
+            img: '#icon-yunjisuan1',
+            clickImg: '#icon-yunjisuan',
             prodItem: [
               {
                 title: '弹性云服务器（ECS）',
                 desc: '通用型、内存优化型、高IO型',
-                img: require('../../assets/img/home/cal-serve-1-1.png'),
-                hoverImg: require('../../assets/img/home/cal-serve-1-2.png'),
+                img: 'icon-danxingyunfuwuqiECS',
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Pecs',
@@ -339,8 +356,7 @@
               {
                 title: '镜像服务',
                 desc: '公共镜像、功能镜像、自定义镜像',
-                img: require('../../assets/img/home/cal-mirror-2-1.png'),
-                hoverImg: require('../../assets/img/home/cal-mirror-2-2.png'),
+                img: 'icon-jingxiangfuwu',
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Phost',
@@ -350,8 +366,7 @@
               {
                 title: 'ECS快照',
                 desc: '稳定可靠、安全保障',
-                img: require('../../assets/img/home/cal-photo-3-1.png'),
-                hoverImg: require('../../assets/img/home/cal-photo-3-2.png'),
+                img: 'icon-ECSkuaizhao',
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Pecss',
@@ -361,8 +376,7 @@
               {
                 title: '裸金属服务器',
                 desc: '专属物理服务器',
-                img: require('../../assets/img/home/cal-host-2-1.png'),
-                hoverImg: require('../../assets/img/home/cal-host-2-2.png'),
+                img: 'icon-ECSkuaizhao',
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Phost',
@@ -372,8 +386,7 @@
               {
                 title: '弹性伸缩',
                 desc: '高可用、可视化、低成本',
-                img: require('../../assets/img/home/cal-shen-2-1.png'),
-                hoverImg: require('../../assets/img/home/cal-shen-2-2.png'),
+                img: 'icon-ECSkuaizhao',
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Pecss',
@@ -387,14 +400,13 @@
           },
           {
             title: '云网络',
-            img: require('../../assets/img/home/cloud-2-1.png'),
-            clickImg: require('../../assets/img/home/cloud-2-2.png'),
+            img: '#icon-yunwangluo1',
+            clickImg: '#icon-yunwangluo',
             prodItem: [
               {
                 title: '虚拟私有云VPC',
                 desc: '网络隔离、分配子网',
-                img: require('../../assets/img/home/net-vpc-1-1.png'),
-                hoverImg: require('../../assets/img/home/net-vpc-1-2.png'),
+                img: 'icon-xunisiyouyunVPC',
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Pvpc',
@@ -404,8 +416,7 @@
               {
                 title: '弹性IP',
                 desc: '绑定与解绑IP、扩容',
-                img: require('../../assets/img/home/net-ip-2-1.png'),
-                hoverImg: require('../../assets/img/home/net-ip-2-2.png'),
+                img: 'icon-danxingIP',
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Peip',
@@ -415,8 +426,7 @@
               {
                 title: '负载均衡',
                 desc: '源算法、轮询、最小连接数',
-                img: require('../../assets/img/home/net-balance-3-1.png'),
-                hoverImg: require('../../assets/img/home/net-balance-3-2.png'),
+                img: 'icon-fuzaijunheng2',
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Pbalance',
@@ -426,8 +436,7 @@
               {
                 title: 'NAT网关',
                 desc: 'TCP/HTTP协议、多对一支持',
-                img: require('../../assets/img/home/net-gateway-4-1.png'),
-                hoverImg: require('../../assets/img/home/net-gateway-4-2.png'),
+                img: 'icon-NATwangguan',
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Pnat',
@@ -437,8 +446,7 @@
               {
                 title: '虚拟专网VPN',
                 desc: '跨VPC链接',
-                img: require('../../assets/img/home/net-vpn-5-1.png'),
-                hoverImg: require('../../assets/img/home/net-vpn-5-2.png'),
+                img: 'icon-xunizhuanwangVPN',
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Pvirvpn',
@@ -452,14 +460,13 @@
           },
           {
             title: '云存储',
-            img: require('../../assets/img/home/cloud-3-1.png'),
-            clickImg: require('../../assets/img/home/cloud-3-2.png'),
+            img: '#icon-yuncunchu1',
+            clickImg: '#icon-yuncunchu',
             prodItem: [
               {
                 title: '云硬盘',
                 desc: '性能型、超高性能型、存储型',
-                img: require('../../assets/img/home/memory-hd-1-1.png'),
-                hoverImg: require('../../assets/img/home/memory-hd-1-2.png'),
+                img: 'icon-yunyingpan',
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Pdisk',
@@ -469,8 +476,7 @@
               {
                 title: '云硬盘备份',
                 desc: '高可用保障、敏捷易用',
-                img: require('../../assets/img/home/memory-backup-2-1.png'),
-                hoverImg: require('../../assets/img/home/memory-backup-2-2.png'),
+                img: 'icon-yunyingpanbeifen',
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Pbackupdisk',
@@ -484,14 +490,13 @@
           },
           {
             title: '云安全',
-            img: require('../../assets/img/home/cloud-4-1.png'),
-            clickImg: require('../../assets/img/home/cloud-4-2.png'),
+            img: '#icon-yunanquan1',
+            clickImg: '#icon-yunanquan',
             prodItem: [
               {
                 title: '防火墙',
                 desc: '自定义规则、协议、端口',
-                img: require('../../assets/img/home/security-firawork-1-1.png'),
-                hoverImg: require('../../assets/img/home/security-firawork-1-2.png'),
+                img: 'icon-fanghuoqiang',
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Pfirewall',
@@ -501,8 +506,7 @@
               {
                 title: 'DDOS高防IP',
                 desc: '硬件防护、40G超大流量',
-                img: require('../../assets/img/home/security-ddos-2-1.png'),
-                hoverImg: require('../../assets/img/home/security-ddos-2-2.png'),
+                img: 'icon-DDOSgaofangIP',
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Pddos',
@@ -516,14 +520,13 @@
           },
           {
             title: '云运维',
-            img: require('../../assets/img/home/cloud-5-1.png'),
-            clickImg: require('../../assets/img/home/cloud-5-2.png'),
+            img: '#icon-yunyunwei1',
+            clickImg: '#icon-yunyunwei',
             prodItem: [
               {
                 title: '云监控',
                 desc: '自定义监控项、多告警推送方式',
-                img: require('../../assets/img/home/opera-monitor-1-1.png'),
-                hoverImg: require('../../assets/img/home/opera-monitor-1-2.png'),
+                img: 'icon-yunjiankong',
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Pmonitor',
@@ -540,43 +543,43 @@
           {
             title: '独享intel高性能CPU',
             desc: 'xeon E5系列最新一代',
-            img: require('../../assets/img/home/feature-1-1.png'),
-            clickImg: require('../../assets/img/home/feature-1-2.png'),
+            img: '#icon-duxiangintelgaoxingnengCPU1',
+            clickImg: '#icon-duxiangintelgaoxingnengCPU',
             select: false
           },
           {
             title: '独享DDR4最高频率内存',
             desc: '3000MHz倍数读取效率提升',
-            img: require('../../assets/img/home/feature-2-1.png'),
-            clickImg: require('../../assets/img/home/feature-2-2.png'),
+            img: '#icon-duxiangDDRzuigaopinshuaineicun1',
+            clickImg: '#icon-duxiangDDRzuigaopinshuaineicun',
             select: false
           },
           {
             title: '高性能SSD固态硬盘',
             desc: '低延迟超高IOPS及吞吐能力',
-            img: require('../../assets/img/home/feature-3-1.png'),
-            clickImg: require('../../assets/img/home/feature-3-2.png'),
+            img: '#icon-gaoxingnengSSDgutaiyingpan1',
+            clickImg: '#icon-gaoxingnengSSDgutaiyingpan',
             select: false
           },
           {
             title: '负载均衡',
             desc: '均衡应用流量，提高业务可用性',
-            img: require('../../assets/img/home/feature-4-1.png'),
-            clickImg: require('../../assets/img/home/feature-4-2.png'),
+            img: '#icon-fuzaijunheng1',
+            clickImg: '#icon-fuzaijunheng',
             select: false
           },
           {
             title: '多层网络结构',
             desc: '随时扩容、轻松应对高并发',
-            img: require('../../assets/img/home/feature-5-1.png'),
-            clickImg: require('../../assets/img/home/feature-5-2.png'),
+            img: '#icon-duocengwangluojiegou1',
+            clickImg: '#icon-duocengwangluojiegou',
             select: false
           },
           {
             title: 'DDOS防护，秒级检测和清洗',
             desc: '零部署成本',
-            img: require('../../assets/img/home/feature-6-1.png'),
-            clickImg: require('../../assets/img/home/feature-6-2.png'),
+            img: '#icon-DDOSfanghumiaojijianceheqingxi1',
+            clickImg: '#icon-DDOSfanghumiaojijianceheqingxi',
             select: false
           }
         ],
@@ -741,6 +744,12 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   #home {
+    .icon {
+        width: 1em; height: 1em;
+        vertical-align: -0.15em;
+        fill: currentColor;
+        overflow: hidden;
+      }
     > .banner {
       height: 560px;
       .carousel {
@@ -756,9 +765,10 @@
       height: 110px;
       width: 100%;
       background-color: #5692fe;
-      /*      &.one {
-              background-color: #C254FA;
-            }*/
+
+      &.one {
+        background-color: #C254FA;
+      }
       &.three {
         background-color: rgb(80, 182, 235);
       }
@@ -779,10 +789,6 @@
           }
           &:hover {
             opacity: 1;
-          }
-          img {
-            width: 62px;
-            height: 62px;
           }
           > div {
             margin-left: 10px;
@@ -827,18 +833,11 @@
           height: 194px;
           display: flex;
           position: relative;
+          text-align: center;
           > div {
             width: 20%;
             position: relative;
             cursor: pointer;
-            > img {
-              position: absolute;
-              top: 72px;
-              left: 50%;
-              transform: translateX(-50%);
-              width: 62px;
-              height: 62px;
-            }
             > span {
               position: absolute;
               font-size: 16px;
@@ -1089,6 +1088,7 @@
           width: 1200px;
           top: 138px;
           .banner {
+            text-align: center;
             width: 18%;
             cursor: pointer;
             padding: 35px 80px;
@@ -1109,6 +1109,7 @@
               font-size: 16px;
               color: #666666;
               padding-bottom: 18px;
+              margin-top: 20px;
             }
             .desc {
               font-size: 14px;

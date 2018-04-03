@@ -13,9 +13,9 @@
       </Alert>
       <div id="content">
         <div id="header">
-          <img src="../../assets/img/firewall/firewall-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
+          <i class="iconfont icon-fanghuoqiang" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
           <span id="title">防火墙</span>
-          <button id="refresh_button" @click="$router.go(0)">刷新</button>
+          <button id="refresh_button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>
         </div>
         <div class="universal-alert">
           <p>防火墙是对一个或多个子网的访问控制策略系统，根据与子网关联的入站/出站规则，判断数据包是否被允许流入/流出关联子网。</p>

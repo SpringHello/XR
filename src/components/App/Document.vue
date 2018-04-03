@@ -7,7 +7,7 @@
         <div v-for="(item,index) in contentList" :class="{active:item.active}" @mouseenter="ME(item)"
              @mouseleave="ML(item)">
           <div class="header">
-            <img :src=item.img>
+            <i class="iconfont" :class="item.img" style="font-size:30px;color:#fff;line-height:1"></i>
             <p>{{item.title}}</p>
           </div>
           <div class="body">
@@ -38,7 +38,7 @@
         // 帮助文档
         contentList: [
           {
-            img: require('../../assets/img/document/stockpile.png'),
+            img:'icon-yunjisuan1',
             title: '云计算',
             list: [
               {
@@ -55,7 +55,7 @@
             active: false
           },
           {
-            img: require('../../assets/img/document/ops.png'),
+            img: 'icon-yunwangluo1',
             title: '云网络',
             list: [
               {
@@ -70,7 +70,7 @@
             active: false
           },
           {
-            img: require('../../assets/img/document/calculate.png'),
+            img: 'icon-yuncunchu1',
             title: '云存储',
             list: [
               {title: '云硬盘', desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]},
@@ -79,7 +79,7 @@
             active: false
           },
           {
-            img: require('../../assets/img/document/network.png'),
+            img: 'icon-yunanquan1',
             title: '云安全',
             list: [
               {title: '防火墙', desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]},
@@ -88,7 +88,7 @@
             active: false
           },
           {
-            img: require('../../assets/img/document/safe.png'),
+            img: 'icon-yuncunchu1',
             title: '云运维',
             list: [
               {title: '云监控', desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]}
@@ -96,7 +96,7 @@
             active: false
           },
           {
-            img: require('../../assets/img/document/user.png'),
+            img:'../../assets/img/document/user.png',
             title: '账户与财务',
             list: [
               {title: '登录/注册', url: 'uaf/3-1'},

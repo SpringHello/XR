@@ -11,7 +11,9 @@ import 'iview/dist/styles/iview.css'
 import '@/assets/css/iviewOverRide.css'
 import '@/assets/css/reset.css'
 import '@/assets/css/universal.less'
-
+//import '@/assets/css/frontend.css'
+// import '@/assets/css/backend.css'
+//import '@/assets/iconfontjs/iconfont.js'
 // import ECharts from 'vue-echarts/components/ECharts.vue'
 import ECharts from 'vue-echarts/components/ECharts'
 // import ECharts modules manually to reduce bundle size
@@ -29,17 +31,13 @@ import message from './myView/message'
 Vue.prototype.$message = message
 Vue.config.productionTip = false
 
-// axios.defaults.baseURL = '/ruicloud'
-//axios.defaults.baseURL = 'http://192.168.3.29:8082/ruicloud'
-//axios.defaults.withCredentials = true
-/* axios.interceptors.request.use(function (config) {
- config.headers.Cookie = 'JSESSIONID=22203C271B80F4A41C35D23B09B6BC83'
- console.log(config)
- return config
- }) */
+//axios.defaults.baseURL = '/ruicloud'
+axios.defaults.baseURL = 'http://192.168.3.29:8082/ruicloud'
+axios.defaults.withCredentials = true
+
 // axios挂载到Vue原型
 Vue.prototype.$http = axios.create({
-  params: {}
+    params: {}
 })
 /* axios ajax请求拦截 需要zoneid的接口都使用this.$http的形式调用 */
 function requestIntercept(config) {

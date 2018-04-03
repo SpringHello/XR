@@ -10,7 +10,7 @@
           <router-link to="/ruicloud/userCenter">立即认证</router-link>
         </Alert>
         <div class="content">
-          <img src="../../assets/img/app/recycle.png" style="margin-right: 5px;vertical-align: text-bottom">
+          <i class="iconfont icon-huishouzhan" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
           <span>回收站</span>
           <div style="margin-top:20px;position:relative">
             <div class="operate">
@@ -361,10 +361,11 @@
   .background {
     background-color: #f5f5f5;
     width: 100%;
+    @diff: 101px;
+    min-height: calc(~"100% - @{diff}");
     .wrapper {
       width: 1200px;
       margin: 0px auto;
-      margin-bottom: 25px;
       & > span {
         font-family: PingFangSC-Regular;
         font-size: 12px;

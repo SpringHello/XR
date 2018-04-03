@@ -10,13 +10,13 @@
           </p>
           <div style="display: flex;margin-top:25px">
             <span style="margin-right:20px;">
-              <img src="../../assets/img/overview/email-icon.png" style="margin-right:10px;vertical-align: middle">
+             <i class="iconfont icon-xinxibangding" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
               <span v-if="userInfo.loginname" style="vertical-align: middle">{{userInfo.loginname}}</span>
               <span v-else style="vertical-align: middle;cursor:pointer;color:#2d8cf0;"
                     @click="togo('/ruicloud/userCenter','safe')">点击绑定</span>
             </span>
             <span>
-              <img src="../../assets/img/overview/phone-icon.png" style="margin-right:10px;vertical-align: middle">
+              <i class="iconfont icon-shouji" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
               <span v-if="userInfo.phone" style="vertical-align: middle">{{userInfo.phone}}</span>
               <router-link v-else style="vertical-align: middle" to="/ruicloud/userCenter">点击绑定</router-link>
             </span>

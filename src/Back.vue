@@ -136,9 +136,12 @@
           </div>
         </div>
       </span>
-      <span class="service"><a
-        :href="kfURL"
-        target="_blank"></a></span>
+      <Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px">
+      <span class="service">
+       <a :href="kfURL"
+          target="_blank"></a>
+       </span>
+      </Poptip>
       <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
         <span class="phone"></span>
       </Poptip>
@@ -440,7 +443,9 @@
   }
 </script>
 
-<style rel="stylesheet/less" lang="less" scoped>
+<style rel="stylesheet/less" lang="less">
+  @import "../src/assets/css/backend.css";
+
   #back {
     height: 100%;
     header {
@@ -684,6 +689,8 @@
     right: 50px;
     bottom: 100px;
     z-index: 100;
+    display: flex;
+    flex-direction: column;
     > span {
       width: 48px;
       height: 48px;

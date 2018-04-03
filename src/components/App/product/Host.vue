@@ -18,9 +18,9 @@
       <div class="features-wrapper">
         <p class="subTitle">功能描述</p>
         <div class="features-flex">
-          <div v-for="(feature,index) in features" class="flex-item">
+          <div v-for="(feature,index) in features" class="flex-item" :key="index">
             <div>
-              <img :src="feature.img">
+              <i class="iconfont" :class="feature.img" style="font-size:40px;color:#fff;"></i>
               <div>
                 <span class="title">{{feature.title}}</span>
                 <span class="desc">{{feature.desc}}</span>
@@ -78,8 +78,8 @@
       <div class="wrapper">
         <p class="subTitle">产品优势</p>
         <div class="advantage-flex">
-          <div v-for="(advantage,index) in advantages" class="flex-item">
-            <img :src="advantage.img">
+          <div v-for="(advantage,index) in advantages" class="flex-item" :key="index">
+            <i class="iconfont" :class="advantage.img"></i>
             <div>
               <span class="title">{{advantage.title}}</span>
               <span class="desc">{{advantage.desc}}</span>
@@ -94,8 +94,10 @@
       <div class="wrapper">
         <p class="subTitle">相关推荐</p>
         <div class="recommendation-flex">
-          <div v-for="(recommendation,index) in recommendations" class="flex-item">
-            <img :src="recommendation.img">
+          <div v-for="(recommendation,index) in recommendations" class="flex-item" :key="index">
+            <div class="icon-wrap">
+              <i class="iconfont" :class="recommendation.img"></i>
+            </div>
             <div>
               <span class="title">{{recommendation.title}}</span>
               <span class="desc">{{recommendation.desc}}</span>
@@ -121,54 +123,54 @@
         },
         features: [
           {
-            img: require('../../../assets/img/product/mirror-1.png'),
+            img: 'icon-gonggongjingxiang',
             title: '公共镜像',
             desc: '新睿云平台提供的常见的标准操作系统镜像，所有用户可见。包含操作系统以及预装的公共应用。请根据您的实际情况自助配置应用环境或相关软件。'
           },
           {
-            img: require('../../../assets/img/product/mirror-2.png'),
+            img: 'icon-siyoujingxiang',
             title: '私有镜像',
             desc: '用户基于ECS实例或者外部镜像文件创建的个人镜像，仅用户自己可见。包含操作系统、预装的公共应用以及用户的私有应用。选择私有镜像创建云主机，可以节省您重复配置云主机的时间。'
           },
           {
-            img: require('../../../assets/img/product/mirror-2.png'),
+            img: 'icon-gongxiangjingxiang',
             title: '共享镜像',
             desc: '包含操作系统、预装的公共应用以及用户的私有应用。共享镜像是某一个租户的私有镜像，只对拥有者及被共享者可见。用户可以选择共享镜像创建云主机。'
           },
           {
-            img: require('../../../assets/img/product/mirror-3.png'),
+            img: 'icon-jingxiangshichang',
             title: '镜像市场',
             desc: '提供预装操作系统、应用环境和各类软件的优质第三方镜像。无需配置，可一键部署，满足建站、应用开发、可视化管理等个性化需求。'
           },
           {
-            img: require('../../../assets/img/product/mirror-4.png'),
+            img: 'icon-jingxiangguanli',
             title: '镜像管理',
             desc: '镜像的备份、删除，私有镜像的上传／下载／删除／共享，同时用户可以灵活使用公有镜像或者私有镜像创建ECS实例。'
           }
         ],
         advantages: [
           {
-            img: require('../../../assets/img/product/speedy.png'),
+            img: 'icon-bianjie',
             title: '便捷',
             desc: '用户可通过弹性云服务器或者云服务器系统盘备份制作私有镜像，也可通过镜像批量开通云服务器。'
           },
           {
-            img: require('../../../assets/img/product/safety.png'),
+            img: 'icon-anquan',
             title: '安全',
             desc: '使用多份冗余存储私用镜像,持久性长。'
           },
           {
-            img: require('../../../assets/img/product/flexible.png'),
+            img: 'icon-linghuo',
             title: '灵活',
             desc: '用户可以通过控制台或开放API，完成对镜像的自定义管理，帮助用户轻松搞定镜像管理。'
           },
           {
-            img: require('../../../assets/img/product/unify.png'),
+            img: 'icon-tongyi',
             title: '统一',
             desc: '通过自定义镜象，实现应用系统统一部署与升级，提高维护效率。保证应用环境的一致性， 简化升级维护。'
           },
           {
-            img: require('../../../assets/img/product/abundant.png'),
+            img: 'icon-fengfu',
             title: '丰富',
             desc: '种类繁多的镜像，免安装快速部署操作系统与软件。'
           }
@@ -196,13 +198,13 @@
         },
         recommendations: [
           {
-            img: require('../../../assets/img/product/cloudServer.png'),
+            img: 'icon-danxingyunfuwuqiECS',
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
             path: 'Pecs'
           },
           {
-            img: require('../../../assets/img/product/vpc.png'),
+            img: 'icon-xunisiyouyunVPC',
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
             path: 'Pvpc'

@@ -297,7 +297,7 @@
             span {
               display: block;
             }
-            img {
+            i {
               margin: 10px 16px 10px 0px;
               display: inline-block;
               vertical-align: middle;
@@ -368,6 +368,9 @@
           width: 100px;
           display: flex;
           flex-direction: column;
+          i{
+            font-size:40px
+          }
           > div {
             cursor: pointer;
             padding: 30px;
@@ -446,9 +449,11 @@
           span {
             display: block;
           }
-          img {
-            margin: 10px 16px 10px 0px;
+          i {
+            margin: 0 16px 10px 0px;
             display: inline-block;
+            font-size:40px;
+            color:#5d95fd;
           }
           div {
             padding: 11px 0px;
@@ -497,9 +502,19 @@
           span {
             display: block;
           }
-          img {
-            margin: 10px 16px 10px 0px;
-            display: inline-block;
+          .icon-wrap{
+            margin: 10px 16px 10px 0;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #3c7efb;
+            i{
+              display: inline-block;
+              font-size: 40px;
+              color: #fff
+            }
           }
           div {
             display: inline-block;
