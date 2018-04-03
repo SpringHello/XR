@@ -927,11 +927,11 @@
         nodeList: [
           {
             label: '北京一区',
-            value: '北京一区'
+            value: '39a6af0b-6624-4194-b9d5-0c552d903858'
           },
           {
             label: '北方二区',
-            value: '北方二区'
+            value: '3c7270be-8394-4d22-934a-218c4e81eed1'
           }
         ],
         systemList: [
