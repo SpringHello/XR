@@ -152,7 +152,7 @@
                         </div>
                         <div class="body" style="padding-top:35px">
                           <i class="iconfont" :class="content.img" :style="[styleObject,content.ME?white:'']"></i>
-                          <p>{{content.desc}}</p> 
+                          <p>{{content.desc}}</p>
                         </div>
                         <div class="foot" v-if="content.type!='comeSoon'">
                           <router-link :to="content.detailLink" target="_blank" style="border-right: 1px solid #cccccc">
@@ -378,11 +378,9 @@
                 desc: '专属物理服务器',
                 img: 'icon-ECSkuaizhao',
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '敬请期待',
                 detailLink: 'Phost',
-                useLink: $store.state.userInfo ? 'mirror' : 'login',
-                // 敬请期待
-                type: 'comeSoon',
+                useLink: '',
                 ME: false
               },
               {
@@ -390,11 +388,9 @@
                 desc: '高可用、可视化、低成本',
                 img: 'icon-ECSkuaizhao',
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '敬请期待',
                 detailLink: 'Pecss',
-                useLink: $store.state.userInfo ? 'snapshot' : 'login',
-                // 敬请期待
-                type: 'comeSoon',
+                useLink: '',
                 ME: false
               }
             ],
@@ -618,17 +614,18 @@
             desc: '五星级IDC机房标准，整体抗震8级,双路市电引入，并配备模块式UPS和大型油机。机房网络层次分三层结构，即用户接入层、汇聚层、核心层，并采用全冗余网络结构，避免单点故障'
           }
         ],
-        activeBanner: 1
+        activeBanner: 1,
+        scrollFn: null
       }
     },
     mounted() {
       echarts.registerMap('china', china)
       this.myChart = echarts.init(document.getElementById('echarts'))
       this.myChart.setOption(polar)
-      if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY > 300 ) {
+      if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY > 300) {
         this.cloudContentFade = true
       }
-      if (document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY > 300 ) {
+      if (document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY > 300) {
         this.fade = true
       }
       if (document.body.clientHeight - this.$refs.consoleFade.offsetTop + window.scrollY > 300) {
@@ -637,11 +634,11 @@
       if (document.body.clientHeight - this.$refs.partnerFade.offsetTop + window.scrollY > 300) {
         this.partnerFade = true
       }
-      if (document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY > 300 ) {
+      if (document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY > 300) {
         this.authorityFade = true
       }
       // 待优化
-      window.addEventListener('scroll', () => {
+      this.scrollFn = () => {
         if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY > 300 && !this.cloudContentFade) {
           this.cloudContentFade = true
         }
@@ -657,7 +654,8 @@
         if (document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY > 300 && !this.authorityFade) {
           this.authorityFade = true
         }
-      })
+      }
+      window.addEventListener('scroll', this.scrollFn)
     },
     created() {
     },
@@ -736,6 +734,10 @@
       change(activeIndex) {
         this.activeBanner = activeIndex + 1
       }
+    },
+    beforeRouteLeave(to, from, next){
+      window.removeEventListener('scroll', this.scrollFn)
+      next()
     }
   }
 </script>
@@ -763,6 +765,7 @@
       height: 110px;
       width: 100%;
       background-color: #5692fe;
+
       &.one {
         background-color: #C254FA;
       }
@@ -884,7 +887,8 @@
             .fade-enter-active, .fade-leave-active {
               transition: opacity .2s
             }
-            .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
+            .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */
+            {
               display: none;
             }
             .arrow {

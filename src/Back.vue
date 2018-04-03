@@ -158,6 +158,7 @@
   import {mapState} from 'vuex'
   import axios from 'axios'
   import debounce from 'throttle-debounce/debounce'
+  import './assets/js/iconfont'
   export default {
     name: 'back',
     data(){
@@ -444,7 +445,6 @@
 </script>
 
 <style rel="stylesheet/less" lang="less">
-  @import "../src/assets/css/backend.css";
 
   #back {
     height: 100%;
@@ -779,5 +779,13 @@
         background-image: url('./assets/img/app/phone-white.png');
       }
     }
+  }
+
+  .icon {
+    width: 40px;
+    height: 40px;
+    // vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
   }
 </style>

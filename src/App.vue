@@ -74,12 +74,12 @@
     <router-view/>
     <!-- 所有前台页面共用底部导航块 -->
     <div id="app-foot">
-<!--      &lt;!&ndash; 新用户注册最大6个月免费 &ndash;&gt;
-      <div id="foot-free">
-        <p>新用户注册享最大2个月免费试用</p>
-        <span>零成本体验，快速认证与审核通道</span>
-        <router-link to="vps" target="_blank">立即体验</router-link>
-      </div>-->
+      <!--      &lt;!&ndash; 新用户注册最大6个月免费 &ndash;&gt;
+            <div id="foot-free">
+              <p>新用户注册享最大2个月免费试用</p>
+              <span>零成本体验，快速认证与审核通道</span>
+              <router-link to="vps" target="_blank">立即体验</router-link>
+            </div>-->
       <!-- 客服支持、意见反馈 -->
       <div id="foot-support">
         <div id="wrapper">
@@ -123,7 +123,7 @@
             </div>
             <div class="contact">
               <span>联系我们</span>
-              <span>企业电话：010-82527988</span>
+              <span>服务热线：400-0505-565</span>
               <span>企业邮箱：service@unionstech.cn</span>
               <span>企业地址：北京市海淀区东升大厦AB座611、612</span>
               <img src="./assets/img/app/QR-code.jpg" style="width:100px;height:100px;">
@@ -183,6 +183,7 @@
   import $store from './vuex'
   import {mapState} from 'vuex'
   import debounce from 'throttle-debounce/debounce'
+  import './assets/iconfontjs/iconfont.js'
   export default {
     name: 'app',
     data () {
@@ -420,7 +421,10 @@
   }
 </script>
 
-<style rel="stylesheet/less" lang="less" scoped>
+<style rel="stylesheet/less" lang="less">
+  @import './assets/css/frontend.css';
+  // import '@/assets/css/backend.css'
+  //import '@/assets/iconfontjs/iconfont.js'
   #app {
     header {
       width: 100%;

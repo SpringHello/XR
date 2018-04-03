@@ -61,9 +61,9 @@
 }
 
 // 单行文本溢出
-.one-line-text{
+.one-line-text {
   overflow: hidden;
-  text-overflow:ellipsis;
+  text-overflow: ellipsis;
   white-space: nowrap
 }
 
@@ -126,8 +126,8 @@
   #wrapper {
     width: 1200px;
     margin: 0px auto;
-    .title{
-      span{
+    .title {
+      span {
         color: #666666
       }
     }
@@ -145,10 +145,14 @@
       min-height: 700px;
       #header {
         padding-bottom: 20px;
-       // border-bottom: 1px solid #E9E9E9;
+        // border-bottom: 1px solid #E9E9E9;
         #title {
           font-size: 24px;
           color: rgba(17, 17, 17, 0.75);
+          line-height: 40px;
+          display: inline-block;
+          vertical-align: top;
+          margin-left: 5px;
         }
         /* 头部刷新按钮 */
         #refresh_button {
@@ -164,7 +168,7 @@
           cursor: pointer;
           outline: none;
           float: right;
-          &:hover{
+          &:hover {
             color: #fff;
             background: #2A99F2;
           }
@@ -368,8 +372,8 @@
           width: 100px;
           display: flex;
           flex-direction: column;
-          i{
-            font-size:40px
+          i {
+            font-size: 40px
           }
           > div {
             cursor: pointer;
@@ -452,8 +456,8 @@
           i {
             margin: 0 16px 10px 0px;
             display: inline-block;
-            font-size:40px;
-            color:#5d95fd;
+            font-size: 40px;
+            color: #5d95fd;
           }
           div {
             padding: 11px 0px;
@@ -502,7 +506,7 @@
           span {
             display: block;
           }
-          .icon-wrap{
+          .icon-wrap {
             margin: 10px 16px 10px 0;
             width: 60px;
             height: 60px;
@@ -510,7 +514,7 @@
             justify-content: center;
             align-items: center;
             background-color: #3c7efb;
-            i{
+            i {
               display: inline-block;
               font-size: 40px;
               color: #fff

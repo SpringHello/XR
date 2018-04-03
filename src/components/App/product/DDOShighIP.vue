@@ -18,7 +18,7 @@
         <div class="features-flex">
           <div v-for="(feature,index) in features" class="flex-item">
             <div>
-              <i class="iconfont" :class="feature.img" style="font-size:36px;color:#fff;line-height:1;vertical-align: middle;margin-right: 5px;"></i>
+              <i class="iconfont" :class="feature.img" style="font-size:40px;color:#fff;"></i>
               <div>
                 <span class="title">{{feature.title}}</span>
                 <span class="desc">{{feature.desc}}</span>
@@ -42,8 +42,8 @@
                  :class="{active:index == stageInfo.selectIndex}"
                  @click="stageInfo.selectIndex=index">
               <div>
-                <i class="iconfont" :class="stage.icon" style="font-size:36px;color:#2A99F2;" v-show="index != stageInfo.selectIndex"></i>
-                <i class="iconfont" :class="stage.icon" style="font-size:36px;color:#fff;" v-show="index == stageInfo.selectIndex"></i>
+                <i class="iconfont" :class="stage.icon" style="font-size:40px;color:#2A99F2;" v-show="index != stageInfo.selectIndex"></i>
+                <i class="iconfont" :class="stage.icon" style="font-size:40px;color:#fff;" v-show="index == stageInfo.selectIndex"></i>
                 <p style="margin-top: 10px;">{{stage.title}}</p>
               </div>
             </div>
@@ -61,7 +61,7 @@
                 <div style="display: flex">
                   <div v-for="pimg in stageInfo.pImg" style="margin-right: 10px;">
                     <div style="width: 90px;height: 90px;background-color: #ffffff;text-align: center;padding:24px">
-                      <i class="iconfont" :class="pimg.img" style="font-size:36px;color:#2A99F2;"></i>
+                      <i class="iconfont" :class="pimg.img" style="font-size:40px;color:#2A99F2;"></i>
                       <span style="font-size: 14px; color:#666666;">{{pimg.isc}}</span>
                     </div>
                   </div>
@@ -78,7 +78,7 @@
         <p class="subTitle">产品优势</p>
         <div class="advantage-flex">
           <div v-for="(advantage,index) in advantages" class="flex-item">
-            <i class="iconfont" :class="advantage.img" style="font-size:36px;color: #2A99F2;margin-right: 10px;"></i>
+            <i class="iconfont" :class="advantage.img"></i>
             <div>
               <span class="title">{{advantage.title}}</span>
               <span class="desc">{{advantage.desc}}</span>
@@ -94,9 +94,9 @@
         <p class="subTitle">相关产品推荐</p>
         <div class="recommendation-flex">
           <div v-for="(recommendation,index) in recommendations" class="flex-item">
-            <p style="width: 60px;height: 60px;background-color: #377dff;text-align: center;margin-right: 16px;padding: 10px 0px;">
-              <i class="iconfont" :class="recommendation.img" style="font-size:40px;color:#fff;line-height:1;"></i>
-            </p>
+            <div class="icon-wrap">
+              <i class="iconfont" :class="recommendation.img" style="font-size:40px;color:#fff;display:inline-block;"></i>
+            </div>
             <div>
               <span class="title">{{recommendation.title}}</span>
               <span class="desc">{{recommendation.desc}}</span>

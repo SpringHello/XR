@@ -12,9 +12,10 @@ import '@/assets/css/iviewOverRide.css'
 import '@/assets/css/reset.css'
 import '@/assets/css/universal.less'
 import '@/assets/css/frontend.css'
-// import '@/assets/css/backend.css'
+//import '@/assets/css/backend.css'
 import '@/assets/iconfontjs/iconfont.js'
 // import ECharts from 'vue-echarts/components/ECharts.vue'
+
 import ECharts from 'vue-echarts/components/ECharts'
 // import ECharts modules manually to reduce bundle size
 import 'echarts/lib/chart/bar'
@@ -27,21 +28,17 @@ import carouselItem from './myView/carouselItem'
 import slider from './myView/slider'
 // 引入错误提示框组件
 import message from './myView/message'
-
+//import md5 from 'md5'
 Vue.prototype.$message = message
 Vue.config.productionTip = false
 
-// axios.defaults.baseURL = '/ruicloud'
-axios.defaults.baseURL = 'http://192.168.3.204:8081/ruicloud'
+//axios.defaults.baseURL = '/ruicloud'
+axios.defaults.baseURL = 'http://192.168.3.29:8082/ruicloud'
 axios.defaults.withCredentials = true
-/* axios.interceptors.request.use(function (config) {
- config.headers.Cookie = 'JSESSIONID=22203C271B80F4A41C35D23B09B6BC83'
- console.log(config)
- return config
- }) */
+
 // axios挂载到Vue原型
 Vue.prototype.$http = axios.create({
-  params: {}
+    params: {}
 })
 /* axios ajax请求拦截 需要zoneid的接口都使用this.$http的形式调用 */
 function requestIntercept(config) {
@@ -50,6 +47,19 @@ function requestIntercept(config) {
       zoneId: store.state.zone.zoneid,
       ...config.params
     }
+    /*var str = '', count = 0
+     for (let i in config.params) {
+     str += i.substr(0, 1) + config.params[i]
+     count++
+     }
+     if (str !== '') {
+     str = md5(str)
+     var mac = str.substr(0, count) + count + str.substr(count)
+     config.params = {
+     ...config.params,
+     mac: mac.toUpperCase()
+     }
+     }*/
   } else if (config.method == 'post') {
     config.data = {
       ...config.data,
@@ -59,8 +69,31 @@ function requestIntercept(config) {
   return config
 }
 
+/*function macIntercept(config) {
+  if (config.method == 'get') {
+    var str = '', count = 0
+    for (let i in config.params) {
+      str += i.substr(0, 1) + config.params[i]
+      count++
+    }
+    if (str !== '') {
+      str = md5(str)
+      var mac = str.substr(0, count) + count + str.substr(count)
+      var a = 'hello'
+      console.log(a.toUpperCase())
+      config.params = {
+        ...config.params,
+        mac: mac.toUpperCase()
+      }
+    }
+  } else if (config.method == 'post') {
+  }
+  return config
+}*/
+
 // axios 请求拦截
 Vue.prototype.$http.interceptors.request.use(requestIntercept)
+//axios.interceptors.request.use(macIntercept)
 
 // 使用iview库
 Vue.use(iview)

@@ -9,7 +9,9 @@
       </Alert>
       <div id="content">
         <div id="header">
-          <i class="iconfont icon-jingxiangfuwu" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-jingxiangfuwu"></use>
+          </svg>
           <span id="title">镜像</span>
           <button id="refresh_button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>
         </div>

@@ -7,8 +7,10 @@
       </Spin>
       <span>个人中心 / 费用中心</span>
       <div class="content">
-        <i class="iconfont icon-feiyongzhongxin" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
-        <span class="title">费用中心</span>
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-feiyongzhongxin"></use>
+        </svg>
+        <span class="title" style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">费用中心</span>
         <Tabs v-model="name" type="card" :animated="false" @on-click="changecard"
               style="margin-top: 20px;min-height: 550px">
           <Tab-pane label="账户概览" name="accountSummary">

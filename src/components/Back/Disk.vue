@@ -8,7 +8,9 @@
       </Alert>
       <div id="content">
         <div id="header">
-          <i class="iconfont icon-yunyingpan1" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-yunyingpan1"></use>
+          </svg>
           <span id="title">云硬盘</span>
           <button id="refresh_button" @click="refreshPage" style="margin-top: 10px;">刷新</button>
         </div>

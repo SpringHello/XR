@@ -7,8 +7,10 @@
     <div class="wrapper">
       <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 工单</span>
       <div class="content">
-        <i class="iconfont icon-gongdan" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
-        <span>工单</span>
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-gongdan"></use>
+        </svg>
+        <span style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">工单</span>
         <div style="margin-top:20px;min-height:660px;">
           <Tabs type="card" v-model="tableName" :animated="false">
             <Tab-pane label="发起工单" name="发起工单">
