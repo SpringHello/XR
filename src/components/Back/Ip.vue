@@ -10,9 +10,9 @@
       </Alert>
       <div id="content">
         <div id="header">
-          <img src="../../assets/img/network/elasticIp-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
+          <i class="iconfont icon-danxingIP1" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
           <span id="title">弹性IP</span>
-          <button id="refresh_button" @click="$router.go(0)">刷新</button>
+          <button id="refresh_button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>
         </div>
         <div class="universal-alert">
           <p>弹性公网IP为互联网上的合法静态IP地址。在新睿云中，公网IP地址与用户账户绑定而非特定的云资源，您可以将申请的公网IP绑定到任意资源，并随时解绑。</p>

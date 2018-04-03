@@ -4,7 +4,7 @@
       <span>个人中心 / 消息中心</span>
       <div class="content">
         <div>
-          <img src="../../assets/img/usercenter/msgcenter.png" style="margin-right: 5px;vertical-align: text-bottom">
+          <i class="iconfont icon-xiaoxizhongxin" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
           <span class="title">消息中心</span>
         </div>
         <div style="margin-top:20px">

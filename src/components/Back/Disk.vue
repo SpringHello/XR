@@ -8,9 +8,9 @@
       </Alert>
       <div id="content">
         <div id="header">
-          <img src="../../assets/img/disk/disk.png" style="margin-right: 5px;vertical-align: text-bottom">
+          <i class="iconfont icon-yunyingpan1" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
           <span id="title">云硬盘</span>
-          <button id="refresh_button" @click="refreshPage">刷新</button>
+          <button id="refresh_button" @click="refreshPage" style="margin-top: 10px;">刷新</button>
         </div>
         <div class="universal-alert">
           <p>为主机提供块存储设备，它独立于主机的生命周期而存在，可以被连接到任意运行中的主机上。注意，硬盘附加到主机上后，您还需要登录到您的主机的操作系统中去加载该硬盘。</p>

@@ -14,9 +14,9 @@
       </Alert>
       <div id="content">
         <div id="header">
-          <img src="../../assets/img/network/balance-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
+          <i class="iconfont icon-fuzaijunheng2" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
           <span id="title">负载均衡</span>
-          <button id="refresh_button" @click="$router.go(0)">刷新</button>
+          <button id="refresh_button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>
         </div>
         <div class="universal-alert">
           <p>负载均衡通过将访问流量自动分发到多台弹性云服务器，扩展应用系统对外的服务能力，实现更高水平的应用程序容错性能。</p>

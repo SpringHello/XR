@@ -9,9 +9,9 @@
       </Alert>
       <div id="content">
         <div id="header">
-          <img src="../../assets/img/host/cloudhost-icon.png" style="margin-right: 5px;vertical-align: text-bottom">
+          <i class="iconfont icon-danxingyunfuwuqiECS" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
           <span id="title">云主机</span>
-          <button id="refresh_button" @click="$router.go(0)">刷新</button>
+          <button id="refresh_button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>
         </div>
         <div class="universal-alert">
           <p>云主机是一台配置好了的服务器，它有您期望的硬件配置、操作系统和网络配置。XRcloud为您提供的云主机具有安全、弹性、高性能等特点。</p>

@@ -4,7 +4,7 @@
       <span>个人中心 / <router-link
         to="expenses" style="color:rgba(17, 17, 17, 0.43);">费用中心</router-link> / 账户充值</span>
       <div class="content">
-        <img src="../../assets/img/recharge/recharge.png" style="margin-right: 5px;vertical-align: text-bottom">
+        <i class="iconfont icon-chongzhi" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
         <span class="title">账户充值</span>
         <div class="recharge">
           <div class="balance">

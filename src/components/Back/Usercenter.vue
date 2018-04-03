@@ -3,23 +3,23 @@
     <div id="wrapper">
       <span>个人中心 / 用户中心</span>
       <div id="content">
-        <img src="../../assets/img/usercenter/usercenter.png" style="margin-right: 5px;vertical-align: text-bottom">
+        <i class="iconfont icon-yonghuzhongxin" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
         <span class="title" style="display: inline-block">用户中心</span>
         <Tabs type="card" :animated="false" v-model="currentTab">
           <!--未认证-->
           <TabPane label="个人信息" v-if="authInfo==null">
             <p class="info-title">个人基本信息</p>
             <div class="user-info">
-              <img src="../../assets/img/usercenter/client.png">
+              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
               <div style="  padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
                   <span
                     style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;color: #2A99F2;">添加认证信息</span>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-yonghu" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle;margin-right: 20px;">未认证用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-shouji" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -189,16 +189,16 @@
           <TabPane label="个人信息" v-else-if="authInfo.authtype==0&&authInfo.checkstatus==2" class="personal">
             <p class="info-title">个人基本信息</p>
             <div class="user-info">
-              <img src="../../assets/img/usercenter/client.png">
+              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
                   <span
                     style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-yonghu" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-shouji" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -214,7 +214,7 @@
           <TabPane label="个人信息" v-else-if="authInfo.authtype==0&&authInfo.checkstatus==1" class="personal">
             <p class="info-title">个人基本信息</p>
             <div class="user-info">
-              <img src="../../assets/img/usercenter/client.png">
+              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
                   <div
@@ -224,9 +224,9 @@
                   <span @click="reAuthenticate('0')" style="color: #2A99F2;cursor: pointer;">重新认证</span>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-yonghu" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-shouji" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -242,7 +242,7 @@
           <TabPane label="个人信息" v-else-if="authInfo.authtype==0&&authInfo.checkstatus==0" class="personal">
             <p class="info-title">用户基本信息</p>
             <div class="user-info">
-              <img src="../../assets/img/usercenter/client.png">
+              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
                   <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{userInfo.realname}}</span>
@@ -252,9 +252,9 @@
                   </div>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-yonghu" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle;margin-right:20px;">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-shouji" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
               </div>
@@ -272,16 +272,16 @@
           <TabPane label="个人信息" v-else-if="authInfo.authtype!=0&&authInfo.checkstatus==2" class="personal">
             <p class="info-title">个人基本信息</p>
             <div class="user-info">
-              <img src="../../assets/img/usercenter/client.png">
+              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
                   <span
                     style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-yonghu" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-shouji" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -297,19 +297,19 @@
           <TabPane label="个人信息" v-else-if="authInfo.authtype!=0&&authInfo.checkstatus==1" class="personal">
             <p class="info-title">个人基本信息</p>
             <div class="user-info">
-              <img src="../../assets/img/usercenter/client.png">
+              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
                   <div
                     style="margin-left:20px;margin-right:10px;display: inline-block;background-color: #F24747;font-size: 12px;padding:5px 15px;color:#ffffff;border-radius: 5px;">
                     认证失败
                   </div>
-                  <span @click="reAuthenticate('1')">重新认证</span>
+                  <span @click="reAuthenticate('1')" style="color: #2A99F2;cursor: pointer;">重新认证</span>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-yonghu" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-shouji" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
@@ -325,7 +325,7 @@
           <TabPane label="个人信息" v-else-if="authInfo.authtype!=0&&authInfo.checkstatus==0" class="personal">
             <p class="info-title">用户基本信息</p>
             <div class="user-info">
-              <img src="../../assets/img/usercenter/client.png">
+              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
                   <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{authInfo.name}}</span>
@@ -335,9 +335,9 @@
                   </div>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-yonghu" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle;margin-right:20px;">企业用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-shouji" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
               </div>
@@ -395,39 +395,39 @@
             <p class="info-title">用户基本信息</p>
             <!--未认证-->
             <div class="user-info" v-if="userInfo.personalauth==1&&userInfo.companyauth==1">
-              <img src="../../assets/img/usercenter/client.png">
+              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
                   <span
                     style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;color: #2A99F2;">添加认证信息</span>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-yonghu" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle;margin-right: 20px;">未认证用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-shouji" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
             </div>
             <!--个人认证中-->
             <div class="user-info" v-else-if="userInfo.personalauth==2&&userInfo.companyauth==1">
-              <img src="../../assets/img/usercenter/client.png">
+              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
                   <span
                     style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-yonghu" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-shouji" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
             </div>
             <!--个人认证完成-->
             <div class="user-info" v-else-if="userInfo.personalauth==0&&userInfo.companyauth==1">
-              <img src="../../assets/img/usercenter/client.png">
+              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
                   <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{userInfo.realname}}</span>
@@ -437,16 +437,16 @@
                   </div>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-yonghu" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-shouji" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
             </div>
             <!--企业认证完成-->
             <div class="user-info" v-else-if="userInfo.companyauth==0">
-              <img src="../../assets/img/usercenter/client.png">
+              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
                   <span style="font-size: 14px;color: rgba(0,0,0,0.65);letter-spacing: 0.83px;line-height: 14px;">{{userInfo.name}}</span>
@@ -456,25 +456,25 @@
                   </div>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-yonghu" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle;margin-right: 20px;">企业用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-shouji" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
             </div>
             <!--企业认证中-->
             <div class="user-info" v-else-if="userInfo.companyauth==2">
-              <img src="../../assets/img/usercenter/client.png">
+              <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
                   <span
                     style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
                 </div>
                 <div>
-                  <img src="../../assets/img/usercenter/avatar.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-yonghu" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
-                  <img src="../../assets/img/usercenter/phone.png" style="vertical-align: middle;margin-right: 10px;">
+                  <i class="iconfont icon-shouji" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
               </div>
