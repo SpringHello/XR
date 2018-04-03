@@ -16,9 +16,9 @@
       <div class="features-wrapper">
         <p class="subTitle">功能描述</p>
         <div class="features-flex">
-          <div v-for="(feature,index) in features" class="flex-item">
+          <div v-for="(feature,index) in features" class="flex-item" :key="index">
             <div>
-              <img :src="feature.img">
+              <i class="iconfont" :class="feature.img" style="font-size:40px;color:#fff;"></i>
               <div>
                 <span class="title">{{feature.title}}</span>
                 <span class="desc">{{feature.desc}}</span>
@@ -42,8 +42,7 @@
                  :class="{active:index == stageInfo.selectIndex}"
                  @click="stageInfo.selectIndex=index">
               <div>
-                <img :src="stage.activeIcon" v-show="index != stageInfo.selectIndex">
-                <img :src="stage.icon" v-show="index == stageInfo.selectIndex">
+                <i class="iconfont" :class="stage.icon"></i>
                 <p style="margin-top: 10px;">{{stage.title}}</p>
               </div>
             </div>
@@ -86,8 +85,8 @@
       <div class="wrapper">
         <p class="subTitle">产品优势</p>
         <div class="advantage-flex">
-          <div v-for="(advantage,index) in advantages" class="flex-item">
-            <img :src="advantage.img">
+          <div v-for="(advantage,index) in advantages" class="flex-item" :key="index">
+            <i class="iconfont" :class="advantage.img"></i>
             <div>
               <span class="title">{{advantage.title}}</span>
               <span class="desc">{{advantage.desc}}</span>
@@ -127,8 +126,10 @@
       <div class="wrapper">
         <p class="subTitle">相关推荐</p>
         <div class="recommendation-flex">
-          <div v-for="(recommendation,index) in recommendations" class="flex-item">
-            <img :src="recommendation.img">
+          <div v-for="(recommendation,index) in recommendations" class="flex-item" :key="index">
+            <div class="icon-wrap">
+              <i class="iconfont" :class="recommendation.img"></i>
+            </div>
             <div>
               <span class="title">{{recommendation.title}}</span>
               <span class="desc">{{recommendation.desc}}</span>
@@ -153,62 +154,68 @@
           linkRouter: '/ruicloud/buy'
         },
         features: [
-          {img: require('../../../assets/img/product/host-1.png'), title: '计算能力', desc: '提供多种类型的弹性云服务器，可满足不同的使用场景。'},
-          {img: require('../../../assets/img/product/host-2.png'), title: '弹性计算', desc: '分钟级主机创建与释放，轻松应对业务的快速变化。'},
           {
-            img: require('../../../assets/img/product/host-3.png'),
+            img: 'icon-jisuannengli', 
+            title: '计算能力', 
+            desc: '提供多种类型的弹性云服务器，可满足不同的使用场景。'},
+          {
+            img: 'icon-danxingjisuan', 
+            title: '弹性计算', 
+            desc: '分钟级主机创建与释放，轻松应对业务的快速变化。'},
+          {
+            img: 'icon-cunchunengli',
             title: '存储能力',
             desc: '支持云硬盘挂载与备份，通过挂载不同类型云硬盘以实现主机存储能力的快速扩展。'
           },
           {
-            img: require('../../../assets/img/product/host-4.png'),
+            img: 'icon-duozhongjingxiangxuanze',
             title: '多种镜像选择',
             desc: '支持公共镜像、服务集成镜像、自定义镜像，包括主流Windows与Linux发行版本，自定义镜像让您可以随时备份或批量克隆云服务器。'
           },
           {
-            img: require('../../../assets/img/product/host-5.png'),
+            img: 'icon-beifenyukuaizhao',
             title: '备份与快照',
             desc: '您可以为主机设定自动快照策略，以保障数据的安全性与服务稳定性，快照可保存当前服务器运行状态，并实现不停机回滚。'
           },
           {
-            img: require('../../../assets/img/product/host-6.png'),
+            img: 'icon-wangluofangwen',
             title: '网络访问',
             desc: '新睿云为您提供安全、稳定、高速、隔离的网络传输通道，通过VPC轻松构建隔离的虚拟网络环境，借助VPN功能，实现企业混合云部署。'
           },
           {
-            img: require('../../../assets/img/product/host-7.png'),
+            img: 'icon-shujufenxi',
             title: '云端监控',
             desc: '提供开放的云监控服务平台，提供资源的实时监、告警、通知等服务。'
           }
         ],
         advantages: [
           {
-            img: require('../../../assets/img/product/ECS-advantage-1.png'),
+            img: 'icon-kuaisuhuoqu',
             title: '快速获取',
             desc: '分钟级主机创建速度，无论是1台还是100台。'
           },
           {
-            img: require('../../../assets/img/product/ECS-advantage-2.png'),
+            img: 'icon-mobanchuangjian',
             title: '模板创建',
             desc: '可依据当前主机的镜像生成新的主机，一步到位。'
           },
           {
-            img: require('../../../assets/img/product/ECS-advantage-3.png'),
+            img: 'icon-danxingshensuo',
             title: '弹性伸缩',
             desc: '性能与规格弹性伸缩，迎合业务需求。'
           },
           {
-            img: require('../../../assets/img/product/ECS-advantage-4.png'),
+            img: 'icon-yijianhuifu',
             title: '一键恢复',
             desc: '一键生成备份，可随时回滚到某一个备份点。'
           },
           {
-            img: require('../../../assets/img/product/host-8.png'),
+            img: 'icon-shishijiankong',
             title: '实时监控',
             desc: '历史数据与实时数据双向监控，为您的性能保驾护航。'
           },
           {
-            img: require('../../../assets/img/product/host-9.png'),
+            img: 'icon-huaban',
             title: '在线迁移',
             desc: '应用不中断，服务自由迁移。'
           }
@@ -217,8 +224,7 @@
           stages: [
             {
               title: '网站应用',
-              activeIcon: require('../../../assets/img/product/esc-storage-icon-1-2.png'),
-              icon: require('../../../assets/img/product/esc-storage-icon-1-1.png'),
+              icon: 'icon-wangzhanyingyong',
               img: require('../../../assets/img/product/esc-topology-1.png'),
               text: [
                 {title: '场景描述', desc: '轻量级企业业务应用，访问量维持在一个较低的水平，对服务器没有特殊要求，追求稳定性与性价比。'},
@@ -235,8 +241,7 @@
             },
             {
               title: '数据分析',
-              activeIcon: require('../../../assets/img/product/esc-storage-icon-2-2.png'),
-              icon: require('../../../assets/img/product/esc-storage-icon-2-1.png'),
+              icon: 'icon-shujufenxi',
               img: require('../../../assets/img/product/esc-topology-2.png'),
               text: [
                 {title: '场景描述', desc: '中量级业务应用，对运行速度与内存要求提高，需要应对大容量数据处理。'},
@@ -253,8 +258,7 @@
             },
             {
               title: '密集型应用',
-              activeIcon: require('../../../assets/img/product/esc-storage-icon-3-2.png'),
-              icon: require('../../../assets/img/product/esc-storage-icon-3-1.png'),
+              icon: 'icon-mijixingyingyong',
               img: require('../../../assets/img/product/esc-topology-3.png'),
               text: [
                 {title: '场景描述', desc: '大数据分析、CDN/Cache等 I/O 密集型业务场景，搭配高性能磁盘，更好的支持高IO并发和保证数据可靠性 。'},
@@ -274,25 +278,25 @@
         },
         recommendations: [
           {
-            img: require('../../../assets/img/product/cloudServer.png'),
+            img: 'icon-danxingyunfuwuqiECS',
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
             path: 'Pecs'
           },
           {
-            img: require('../../../assets/img/product/vpc.png'),
+            img: 'icon-xunisiyouyunVPC',
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
             path: 'Pvpc'
           },
           {
-            img: require('../../../assets/img/product/ECS-recommendation-4.png'),
+            img: 'icon-fuzaijunheng2',
             title: '负载均衡',
             desc: '负载均衡处理器可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器...',
             path: 'Pbalance'
           },
           {
-            img: require('../../../assets/img/product/vpn.png'),
+            img: 'icon-xunizhuanwangVPN',
             title: '虚拟专网VPN',
             desc: '虚拟专用网络VPN，用于搭建用户本地数据中心与新睿云VPC之间便捷、灵活...',
             path: 'Pvirvpn'
