@@ -96,7 +96,7 @@
             active: false
           },
           {
-            img:'icon-feiyongzhongxin',
+            img:'icon-zhanghuyucaiwu',
             title: '账户与财务',
             list: [
               {title: '登录/注册', url: 'uaf/3-1'},
