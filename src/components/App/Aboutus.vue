@@ -13,7 +13,7 @@
       <div class="wrap" v-for="(item,index) in tabsinfo" :key="index" :class="{active:index == num}"
            @click="tab(index,item.view)">
         <div>
-          <img :src="item.img"/>
+          <i class="iconfont" :class="item.img"></i>
           <span>{{item.title}}</span>
         </div>
       </div>
@@ -199,12 +199,12 @@
         num: 0,
         tabsinfo: [
           {
-            img: require('../../assets/img/aboutus/enterprise-icon.png'),
+            img: 'icon-qiyejieshao',
             title: '企业介绍',
             view: 'enterprise'
           },
           {
-            img: require('../../assets/img/aboutus/develop-history-icon.png'),
+            img: 'icon-fazhanlicheng',
             title: '发展历程',
             view: 'history'
           }
@@ -499,9 +499,10 @@
       line-height: 60px;
       div {
         display: inline;
-        img {
+        i {
           vertical-align: middle;
           margin-right: 16px;
+          font-size: 30px;
         }
       }
     }
