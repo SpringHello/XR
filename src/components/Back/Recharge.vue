@@ -4,7 +4,9 @@
       <span>个人中心 / <router-link
         to="expenses" style="color:rgba(17, 17, 17, 0.43);">费用中心</router-link> / 账户充值</span>
       <div class="content">
-        <i class="iconfont icon-chongzhi" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-chongzhi"></use>
+        </svg>
         <span class="title">账户充值</span>
         <div class="recharge">
           <div class="balance">
@@ -162,6 +164,9 @@
           font-size: 24px;
           color: hsla(0, 0%, 7%, .75);
           font-weight: 700;
+          line-height: 40px;display:
+          inline-block;vertical-align:
+          top;margin-left: 5px;
         }
         .recharge {
           margin-top: 20px;
