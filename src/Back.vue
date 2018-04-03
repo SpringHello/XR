@@ -136,7 +136,7 @@
           </div>
         </div>
       </span>
-      <Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px">
+      <Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px" class="online">
       <span class="service">
        <a :href="kfURL"
           target="_blank"></a>
