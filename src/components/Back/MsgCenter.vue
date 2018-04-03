@@ -4,8 +4,10 @@
       <span>个人中心 / 消息中心</span>
       <div class="content">
         <div>
-          <i class="iconfont icon-xiaoxizhongxin" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
-          <span class="title">消息中心</span>
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-xiaoxizhongxin"></use>
+          </svg>
+          <span class="title" style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">消息中心</span>
         </div>
         <div style="margin-top:20px">
           <Tabs type="card" v-model="pane" :animated="false">

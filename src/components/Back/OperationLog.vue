@@ -3,8 +3,10 @@
     <div class="wrapper">
       <span>个人中心 / 操作日志</span>
       <div class="content">
-        <i class="iconfont icon-caozuorizhi" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
-        <span class="title">操作日志</span>
+        <svg class="icon" aria-hidden="true">
+          <use xlink:href="#icon-caozuorizhi"></use>
+        </svg>
+        <span class="title" style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">操作日志</span>
         <div class="logdata">
           <div class="search">
             <span style="margin-top: 29px;font-size: 12px;">操作时间</span>

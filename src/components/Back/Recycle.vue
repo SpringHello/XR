@@ -10,8 +10,10 @@
           <router-link to="/ruicloud/userCenter">立即认证</router-link>
         </Alert>
         <div class="content">
-          <i class="iconfont icon-huishouzhan" style="font-size: 28px;vertical-align: baseline;margin-right: 5px;"></i>
-          <span>回收站</span>
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-huishouzhan"></use>
+          </svg>
+          <span style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">回收站</span>
           <div style="margin-top:20px;position:relative">
             <div class="operate">
               <Button type="ghost" class="ghost" @click="deleteSelect" style="margin-right:10px;">一键删除</Button>

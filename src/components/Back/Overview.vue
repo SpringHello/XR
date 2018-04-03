@@ -10,13 +10,17 @@
           </p>
           <div style="display: flex;margin-top:25px">
             <span style="margin-right:20px;">
-             <i class="iconfont icon-xinxibangding" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
+              <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
+            <use xlink:href="#icon-xinxibangding"></use>
+          </svg>
               <span v-if="userInfo.loginname" style="vertical-align: middle">{{userInfo.loginname}}</span>
               <span v-else style="vertical-align: middle;cursor:pointer;color:#2d8cf0;"
                     @click="togo('/ruicloud/userCenter','safe')">点击绑定</span>
             </span>
             <span>
-              <i class="iconfont icon-shouji" style="font-size: 20px;vertical-align: middle;margin-right: 10px;"></i>
+              <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
+            <use xlink:href="#icon-shouji"></use>
+          </svg>
               <span v-if="userInfo.phone" style="vertical-align: middle">{{userInfo.phone}}</span>
               <router-link v-else style="vertical-align: middle" to="/ruicloud/userCenter">点击绑定</router-link>
             </span>
