@@ -83,8 +83,8 @@
       <!-- 客服支持、意见反馈 -->
       <div id="foot-support">
         <div id="wrapper">
-          <div v-for="(support,index) in support" class="flex-item">
-            <img :src="support.img">
+          <div v-for="(support,index) in support" class="flex-item" :key="index">
+            <i class="iconfont" :class="support.img"></i>
             <div style="display: inline-block;vertical-align: middle">
               <span>{{support.title}}</span>
               <span style="display: block">{{support.subTitle}}</span>
@@ -98,10 +98,10 @@
           <div class="description">
             <div class="product">
               <p>产品</p>
-              <div v-for="(item,index) in description">
+              <div v-for="(item,index) in description" :key="index">
                 <ul>
                   <span>{{item.title}}</span>
-                  <li v-for="(subItem,subIndex) in item.desc">
+                  <li v-for="(subItem,subIndex) in item.desc" :key="subIndex">
                     <router-link v-if="subItem.url!=''" :to="subItem.url" target="_blank">{{subItem.subTitle}}
                     </router-link>
                     <router-link v-else :to="subItem.url">{{subItem.subTitle}}</router-link>
@@ -131,7 +131,7 @@
           </div>
         </div>
         <div class="footer-bottom">
-          <ul v-for="item in Preparation ">
+          <ul v-for="(item,index) in Preparation " :key="index">
             <p>{{item.time}}</p>
             <li style="cursor: auto">{{item.title}}</li>
             <li @click="toAQ('1')">{{item.preparation}}</li>
@@ -149,7 +149,7 @@
       <span class="qq" @mouseenter="QME" @mouseleave="QML">
         <div ref="qq" style="overflow: hidden">
           <div class="wrapper">
-            <div v-for="(qq,index) of QQInfo">
+            <div v-for="(qq,index) of QQInfo" :key="index">
               <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
                 <a target="_blank"
                    :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
@@ -256,9 +256,9 @@
           transition: 'width .3s'
         }, // line的width和left属性
         support: [
-          {img: require('./assets/img/app/support-1.png'), title: '7*24', subTitle: '多渠道服务与支持'},
-          {img: require('./assets/img/app/support-2.png'), title: '意见', subTitle: '反馈与投诉建议'},
-          {img: require('./assets/img/app/support-3.png'), title: '1V1', subTitle: '专项服务'}
+          {img: 'icon-duoqudaofuwuyuzhichi', title: '7*24', subTitle: '多渠道服务与支持'},
+          {img: 'icon-fankuiyutousujianyiA', title: '意见', subTitle: '反馈与投诉建议'},
+          {img: 'icon-zhuanxiangfuwu', title: '1V1', subTitle: '专项服务'}
         ],
         description: [
           {
@@ -599,8 +599,10 @@
           display: flex;
           justify-content: space-between;
           .flex-item {
-            img {
+            i {
               vertical-align: middle;
+              font-size: 40px;
+              color: #cccccc;
             }
             span {
               font-size: 14px;

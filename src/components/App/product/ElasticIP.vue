@@ -16,9 +16,9 @@
       <div class="features-wrapper">
         <p class="subTitle">功能描述</p>
         <div class="features-flex">
-          <div v-for="(feature,index) in features" class="flex-item">
+          <div v-for="(feature,index) in features" class="flex-item" :key="index">
             <div>
-              <img :src="feature.img">
+              <i class="iconfont" :class="feature.img" style="font-size:40px;color:#fff;"></i>
               <div>
                 <span class="title">{{feature.title}}</span>
                 <span class="desc">{{feature.desc}}</span>
@@ -43,8 +43,7 @@
                  :class="{active:index == stageInfo.selectIndex}"
                  @click="stageInfo.selectIndex=index">
               <div>
-                <img :src="stage.activeIcon" v-show="index != stageInfo.selectIndex">
-                <img :src="stage.icon" v-show="index == stageInfo.selectIndex">
+                <i class="iconfont" :class="stage.icon"></i>
                 <p>{{stage.title}}</p>
               </div>
             </div>
@@ -68,8 +67,8 @@
       <div class="wrapper">
         <p class="subTitle">产品优势</p>
         <div class="advantage-flex">
-          <div v-for="(advantage,index) in advantages" class="flex-item">
-            <img :src="advantage.img">
+          <div v-for="(advantage,index) in advantages" class="flex-item" :key="index">
+            <i class="iconfont" :class="advantage.img"></i>
             <div>
               <span class="title">{{advantage.title}}</span>
               <span class="desc">{{advantage.desc}}</span>
@@ -84,8 +83,10 @@
       <div class="wrapper">
         <p class="subTitle">相关推荐</p>
         <div class="recommendation-flex">
-          <div v-for="(recommendation,index) in recommendations" class="flex-item">
-            <img :src="recommendation.img">
+          <div v-for="(recommendation,index) in recommendations" class="flex-item" :key="index">
+            <div class="icon-wrap">
+              <i class="iconfont" :class="recommendation.img"></i>
+            </div>
             <div>
               <span class="title">{{recommendation.title}}</span>
               <span class="desc">{{recommendation.desc}}</span>
@@ -110,22 +111,20 @@
           linkRouter: 'buy'
         },
         features: [
-          {img: require('../../../assets/img/product/ip-1.png'), title: '独立公网IP资源', desc: '为用户提供一个单独公网IP和一份带宽，为用户访问公网提供服务。公网IP可与任意云主机、VPC、负载均衡、端口转发、VPN网关等实例绑定或解绑，并支持随时升级和降级带宽，灵活匹配用户不同业务场景。'},
-          {img: require('../../../assets/img/product/ip-2.png'), title: '灵活购买', desc: '公网IP支持丰富的付费方案，在满足用户业务需求的前提下帮助用户节约成本。实时开通，变更配置实时生效。'}
+          {img: 'icon-duligongwangipziyuan', title: '独立公网IP资源', desc: '为用户提供一个单独公网IP和一份带宽，为用户访问公网提供服务。公网IP可与任意云主机、VPC、负载均衡、端口转发、VPN网关等实例绑定或解绑，并支持随时升级和降级带宽，灵活匹配用户不同业务场景。'},
+          {img: 'icon-linghuogoumai', title: '灵活购买', desc: '公网IP支持丰富的付费方案，在满足用户业务需求的前提下帮助用户节约成本。实时开通，变更配置实时生效。'}
         ],
         stageInfo: {
           stages: [
             {
               title: '大流量门户',
-              activeIcon: require('../../../assets/img/product/balance-stage-1-icon-blue.png'),
-              icon: require('../../../assets/img/product/balance-stage-1-icon-white.png'),
+              icon: 'icon-daliuliangmenhu',
               img: require('../../../assets/img/product/bal-stage-1-icon-background.png'),
               desc: ['针对超多用户服务访问量高的特点，通过负载均衡将用户的访问流量均匀的分发到多个后端云主机上，确保业务快速平稳的运行。']
             },
             {
               title: '混合云下数据互通',
-              activeIcon: require('../../../assets/img/product/balance-stage-2-icon-blue.png'),
-              icon: require('../../../assets/img/product/balance-stage-2-icon-white.png'),
+              icon: 'icon-hunheyunxiashujuhutong',
               img: require('../../../assets/img/product/bal-stage-2-icon-background.png'),
               desc: ['基大型网站常有上百个业务子模块，通过设置不同的转发规则/转发组，分析HTTP头部信息，有效分离业务模块，实现基于内容的路由转发。此外，用户通过自定义转发路径代替二级域名，有效减少 DNS 轮询次数，收敛 IP，提升用户访问速度，保证服务的高效运行']
             }
@@ -134,42 +133,42 @@
         },
         advantages: [
           {
-            img: require('../../../assets/img/product/flexible.png'),
+            img: 'icon-shiyonglinghuo',
             title: '使用灵活',
             desc: '用户可以灵活的配置公网IP地址的使用，通过静态NAT、端口转发等功能实现IP地址灵活的使用。'
           },
           {
-            img: require('../../../assets/img/product/ip-3.png'),
+            img: 'icon-dichengben',
             title: '低成本',
             desc: '用户购买虚拟机，默认为用户分配一个公网IP地址，用于用户虚拟机通过源NAT方式访问互联网，满足用户原始的互联网使用需求，不收取额外费用。'
           },
           {
-            img: require('../../../assets/img/product/ECS-advantage-1.png'),
+            img: 'icon-youzhidegongwangIPdizhi',
             title: '优质的公网IP地址',
             desc: '使用联通、电信两大运营商的公网地址，可以根据用户的需求分配公网IP资源。'
           }
         ],
         recommendations: [
           {
-            img: require('../../../assets/img/product/cloudServer.png'),
+            img: 'icon-danxingyunfuwuqiECS',
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
             path: 'Pecs'
           },
           {
-            img: require('../../../assets/img/product/vpc.png'),
+            img: 'icon-xunisiyouyunVPC',
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
             path: 'Pvpc'
           },
           {
-            img: require('../../../assets/img/product/ECS-recommendation-4.png'),
+            img: 'icon-fuzaijunheng2',
             title: '负载均衡',
             desc: '负载均衡处理器可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器...',
             path: 'Pbalance'
           },
           {
-            img: require('../../../assets/img/product/vpn.png'),
+            img: 'icon-xunizhuanwangVPN',
             title: '虚拟专网VPN',
             desc: '虚拟专用网络VPN，用于搭建用户本地数据中心与新睿云VPC之间便捷、灵活…',
             path: 'Pvirvpn'

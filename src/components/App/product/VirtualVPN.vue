@@ -16,9 +16,9 @@
       <div class="features-wrapper">
         <p class="subTitle">功能描述</p>
         <div class="features-flex">
-          <div v-for="(feature,index) in features" class="flex-item">
+          <div v-for="(feature,index) in features" class="flex-item" :key="index">
             <div>
-              <img :src="feature.img">
+              <i class="iconfont" :class="feature.img" style="font-size:40px;color:#fff;"></i>
               <div>
                 <span class="title">{{feature.title}}</span>
                 <span class="desc">{{feature.desc}}</span>
@@ -41,26 +41,25 @@
           <div class="left">
             <div  v-for="(stage,index) in stageInfo.stages"
                  :class="{active:index == stageInfo.selectIndex}"
-                 @click="stageInfo.selectIndex=index">
+                 @click="stageInfo.selectIndex=index" :key="index">
               <div>
-                <img :src="stage.activeIcon" v-show="index != stageInfo.selectIndex">
-                <img :src="stage.icon" v-show="index == stageInfo.selectIndex">
+                <i class="iconfont" :class="stage.icon"></i>
                 <p style="margin-top: 10px;">{{stage.title}}</p>
               </div>
             </div>
           </div>
           <div class="right">
-            <div v-for="(stage,index) in stageInfo.stages" v-show="index == stageInfo.selectIndex">
+            <div v-for="(stage,index) in stageInfo.stages" v-show="index == stageInfo.selectIndex" :key="index">
               <img :src="stage.img">
               <div style="padding:20px;">
                 <span>场景描述</span>
-                <p v-for="(p,i) in stage.desc">
+                <p v-for="(p,i) in stage.desc" :key="i">
                   {{p}}
                 </p>
 
                 <span style="margin-top:40px;">配合使用</span>
                 <div style="display: flex">
-                  <div v-for="pimg in stageInfo.pImg" style="margin-right: 10px;">
+                  <div v-for="(pimg,index) in stageInfo.pImg" style="margin-right: 10px;" :key="index">
                     <div style="width: 90px;height: 90px;background-color: #ffffff;text-align: center;padding:24px">
                       <img :src="pimg.img">
                       <span style="font-size: 14px; color:#666666;">{{pimg.isc}}</span>
@@ -78,8 +77,8 @@
       <div class="wrapper">
         <p class="subTitle">产品优势</p>
         <div class="advantage-flex">
-          <div v-for="(advantage,index) in advantages" class="flex-item">
-            <img :src="advantage.img">
+          <div v-for="(advantage,index) in advantages" class="flex-item" :key="index">
+            <i class="iconfont" :class="advantage.img"></i>
             <div>
               <span class="title">{{advantage.title}}</span>
               <span class="desc">{{advantage.desc}}</span>
@@ -94,8 +93,10 @@
       <div class="wrapper">
         <p class="subTitle">相关推荐</p>
         <div class="recommendation-flex">
-          <div v-for="(recommendation,index) in recommendations" class="flex-item">
-            <img :src="recommendation.img">
+          <div v-for="(recommendation,index) in recommendations" class="flex-item" :key="index"> 
+            <div class="icon-wrap">
+              <i class="iconfont" :class="recommendation.img"></i>
+            </div>
             <div>
               <span class="title">{{recommendation.title}}</span>
               <span class="desc">{{recommendation.desc}}</span>
@@ -121,12 +122,12 @@
         },
         features: [
           {
-            img: require('../../../assets/img/product/vpn-1.png'),
+            img: 'icon-dianduidianVPN',
             title: '点对点VPN（site2siteVPN）',
             desc: '基于Internet，在客户本地数据中心、第三方公有云（第三方需支持VPC和VPN）和新睿云虚拟私有云（VPC）之间建立的起IPsec加密通信隧道。'
           },
           {
-            img: require('../../../assets/img/product/vpn-2.png'),
+            img: 'icon-dianduiduoVPN',
             title: '点对多VPN（Remote VPN）',
             desc: '基于Interne，在客户本地主机/第三方公有云主机与新睿云虚拟私有云（VPC）之间建立的起IPsec加密通信隧道。'
           }
@@ -135,15 +136,13 @@
           stages: [
             {
               title: '混合云部署',
-              activeIcon: require('../../../assets/img/product/vpn-stage-1-icon-blue.png'),
-              icon: require('../../../assets/img/product/vpn-stage-1-icon-white.png'),
+              icon: 'icon-hunheyunbushu1',
               img: require('../../../assets/img/product/vpn-stage-1-icon-background.png'),
               desc: ['您可以在云端的私有网络内部署应用程序，在您的企业数据中心部署数据库服务器。新睿私有网络提供稳定安全的 VPN 连接帮您打通企业数据中心与云端资源。']
             },
             {
               title: '跨地域VPN互联',
-              activeIcon: require('../../../assets/img/product/vpn-stage-2-icon-blue.png'),
-              icon: require('../../../assets/img/product/vpn-stage-2-icon-white.png'),
+              icon: 'icon-kuadiyuVPNhulian',
               img: require('../../../assets/img/product/vpn-stage-2-icon-background.png'),
               desc: ['通过VPN将新睿云上的不同区域的VPC连接，使得用户的数据和服务在不同地域能够互联互通。']
             }
@@ -156,35 +155,35 @@
         },
         advantages: [
           {
-            img: require('../../../assets/img/product/vpn-3.png'),
+            img: 'icon-wufenglianjie',
             title: '无缝连接',
             desc: '将用户本地数据中心与云上VPC互联，业务快速扩展上云，实现混合云部署。'
           },
           {
-            img: require('../../../assets/img/product/vpn-4.png'),
+            img: 'icon-gaoanquan',
             title: '高安全',
             desc: '基于IKE和IPsec对传输数据加密，提供了电信级的高可靠性机制。'
           },
           {
-            img: require('../../../assets/img/product/vpn-5.png'),
+            img: 'icon-chengbendi',
             title: '成本低',
             desc: '利用Internet构建IPsec加密通道，费用低廉。'
           },
           {
-            img: require('../../../assets/img/product/vpn-6.png'),
+            img: 'icon-kaitongkuai',
             title: '开通快',
             desc: '对用户本地IDC的VPN设备进行简单配置即可完成对接，即开即用，部署快速，实时生效。'
           }
         ],
         recommendations: [
           {
-            img: require('../../../assets/img/product/cloudServer.png'),
+            img: 'icon-danxingyunfuwuqiECS',
             title: '云服务器',
             desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。',
             path: 'Pecs'
           },
           {
-            img: require('../../../assets/img/product/vpc.png'),
+            img: 'icon-xunisiyouyunVPC',
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
             path: 'Pvpc'
