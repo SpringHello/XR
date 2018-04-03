@@ -40,7 +40,7 @@
           <div class="left">
             <div  v-for="(stage,index) in stageInfo.stages"
                  :class="{active:index == stageInfo.selectIndex}"
-                 @click="stageInfo.selectIndex=index">
+                 @click="stageInfo.selectIndex=index" :key="index">
               <div>
                 <i class="iconfont" :class="stage.icon"></i>
                 <p style="margin-top: 10px;">{{stage.title}}</p>
@@ -48,7 +48,7 @@
             </div>
           </div>
           <div class="right" style="height:620px;">
-            <div v-for="(stage,index) in stageInfo.stages" v-show="index == stageInfo.selectIndex">
+            <div v-for="(stage,index) in stageInfo.stages" v-show="index == stageInfo.selectIndex" :key="index">
               <div style="flex: 0 0 70%">
                 <img :src="stage.img">
               </div>
