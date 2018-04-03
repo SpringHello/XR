@@ -18,7 +18,7 @@
         <div class="features-flex">
           <div v-for="(feature,index) in features" class="flex-item">
             <div>
-              <img :src="feature.img">
+              <i class="iconfont" :class="feature.img" style="font-size:36px;color:#fff;line-height:1;vertical-align: middle;margin-right: 5px;"></i>
               <div>
                 <span class="title">{{feature.title}}</span>
                 <span class="desc">{{feature.desc}}</span>
@@ -42,8 +42,8 @@
                  :class="{active:index == stageInfo.selectIndex}"
                  @click="stageInfo.selectIndex=index">
               <div>
-                <img :src="stage.activeIcon" v-show="index != stageInfo.selectIndex">
-                <img :src="stage.icon" v-show="index == stageInfo.selectIndex">
+                <i class="iconfont" :class="stage.icon" style="font-size:36px;color:#2A99F2;" v-show="index != stageInfo.selectIndex"></i>
+                <i class="iconfont" :class="stage.icon" style="font-size:36px;color:#fff;" v-show="index == stageInfo.selectIndex"></i>
                 <p style="margin-top: 10px;">{{stage.title}}</p>
               </div>
             </div>
@@ -60,7 +60,7 @@
                 <div style="display: flex;">
                   <div v-for="pimg in stageInfo.pImg" style="margin-right:10px;">
                     <div style="width: 90px;height: 90px;background-color: #ffffff;text-align: center;padding:24px">
-                      <img :src="pimg.img">
+                      <i class="iconfont" :class="pimg.img" style="font-size:36px;color:#2A99F2;"></i>
                       <span style="font-size: 14px; color:#666666;">{{pimg.isc}}</span>
                     </div>
                   </div>
@@ -77,7 +77,7 @@
         <p class="subTitle">产品优势</p>
         <div class="advantage-flex">
           <div v-for="(advantage,index) in advantages" class="flex-item">
-            <img :src="advantage.img">
+            <i class="iconfont" :class="advantage.img" style="font-size:36px;color: #2A99F2;margin-right: 10px;"></i>
             <div>
               <span class="title">{{advantage.title}}</span>
               <span class="desc">{{advantage.desc}}</span>
@@ -109,70 +109,70 @@
         },
         features: [
           {
-            img: require('../../../assets/img/product/disk-beifen.png'),
+            img: 'icon-shujubeifen',
             title: '数据备份',
             desc: '云硬盘可建立快照，快照是对云硬盘的完全拷贝，该拷贝包括磁盘在拷贝开始的时间点的映像，并以冗余的方式存储在多个可用区。'
           },
           {
-            img: require('../../../assets/img/product/disk-guazhai.png'),
+            img: 'icon-danxingguazai',
             title: '弹性挂载',
             desc: '云盘可在区域内自由挂载、卸载，无需关闭或重启服务器；云盘的容量可弹性配置，您可按需升级容量。'
           },
           {
-            img: require('../../../assets/img/product/disk-kuaizhao.png'),
+            img: 'icon-cipanbeifen',
             title: '磁盘克隆',
             desc: '云硬盘控制台提供使用快照创建弹性云盘的功能，您可以通过加载快照文件快速克隆磁盘，帮您实现快速批量业务部署或业务迁移。'
           },
-          {img: require('../../../assets/img/product/disk-guanli.png'), title: '灵活管理', desc: '可以使用界面进行管理配置，操作简单易用。'}
+          {img: 'icon-linghuoguanli', title: '灵活管理', desc: '可以使用界面进行管理配置，操作简单易用。'}
         ],
         stageInfo: {
           stages: [
             {
               title: '避免单点故障',
-              activeIcon: require('../../../assets/img/product/disk-stage-1-icon-blue.png'),
-              icon: require('../../../assets/img/product/disk-stage-1-icon-white.png'),
+             // activeIcon: require('../../../assets/img/product/disk-stage-1-icon-blue.png'),
+              icon: 'icon-bimiandandianguzhang',
               img: require('../../../assets/img/product/disk-stage-1-icon-background.png'),
               desc: ['传统存储的硬件故障，会导致核心业务中断数十小时。云硬盘支持虚拟机热迁移，您可在原物理服务器故障前提前热迁移，避免物理故障造成业务中断。']
             },
             {
               title: '数据仓库',
-              activeIcon: require('../../../assets/img/product/disk-stage-2-icon-blue.png'),
-              icon: require('../../../assets/img/product/disk-stage-2-icon-white.png'),
+             // activeIcon: require('../../../assets/img/product/disk-stage-2-icon-blue.png'),
+              icon: 'icon-shujucangku',
               img: require('../../../assets/img/product/disk-stage-2-icon-background.png'),
               desc: ['数据读密集型应用场景，部署数据仓库，如Oracle RAC、SAP HANA。建议选用超高IO云硬盘，满足低延迟、高读写速率以及大吞吐量的应用需求。']
             },
             {
               title: 'NoSQL/ 关系型数据库',
-              activeIcon: require('../../../assets/img/product/disk-stage-3-icon-blue.png'),
-              icon: require('../../../assets/img/product/disk-stage-3-icon-white.png'),
+             // activeIcon: require('../../../assets/img/product/disk-stage-3-icon-blue.png'),
+              icon: 'icon-NoSQLguanxixingshujuku',
               img: require('../../../assets/img/product/disk-stage-3-icon-background.png'),
               desc: ['为游戏用户提供高稳定性、高业务带宽、低时延的DDoS防护能力，保障游戏业务流畅稳定。']
             }
           ],
           pImg: [
-            {img: require('../../../assets/img/product/yunzhuji.png'), isc: '云主机'},
-            {img: require('../../../assets/img/product/backup-stage-f2.png'), isc: 'VPC'}
+            {img: 'icon-danxingyunfuwuqiECS', isc: '云主机'},
+            {img: 'icon-xunisiyouyunVPC', isc: 'VPC'}
           ],
           selectIndex: 0
         },
         advantages: [
           {
-            img: require('../../../assets/img/product/disk-gaoxingneng.png'),
+            img: 'icon-gaokekaogaoxingneng',
             title: '高可靠高性能',
             desc: '自定义备份策略，保障数据安全可靠。超高 IOPS、超高速吞吐，可根据业务需要灵活选择不同性能的云硬盘。'
           },
           {
-            img: require('../../../assets/img/product/disk-darongliang.png'),
+            img: 'icon-darongliang',
             title: '大容量',
             desc: '提供超大容量块存储，一台云服务器可挂载多块云硬盘，可弹性扩容，按使用量付费，性价比高。'
           },
           {
-            img: require('../../../assets/img/product/disk-guige.png'),
+            img: 'icon-guigefengfu',
             title: '规格丰富',
             desc: '提供普通IO、高IO、超高IO三种性能的硬盘，满足不同业务场景需求后续有新增规格，可直接使用。'
           },
           {
-            img: require('../../../assets/img/product/disk-duli.png'),
+            img: 'icon-dulichijiuhua',
             title: '独立持久化',
             desc: '云硬盘可以挂载到任意一台云服务器上，两者拥有不同的生命周期，当该台云主机被删除时，云硬盘数据仍然存在，并可以挂载到其它的云主机上进行访问。'
           }
