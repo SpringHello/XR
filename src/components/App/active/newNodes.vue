@@ -112,7 +112,7 @@
                   </Select>
                   <div class="price">
                     <img src="../../../assets/img/active/newNodes/tag.png">
-                    <span class="s1">¥302.4／1年</span>
+                    <span class="s1">{{ item.price}}</span>
                     <span class="s2">原价1008／1年</span>
                   </div>
                   <button @click="buyNow_one(item,index)">立即抢购</button>
@@ -160,13 +160,13 @@
                 </div>
                 <div class="info_right">
                   <p>「5折后参考价」</p>
-                  <p>¥302.4／3个月</p>
+                  <p>{{ item.price_one}}</p>
                   <p>原价1008／3个月</p>
                   <button @click="buyNow_two(item,index,3)">立即抢购</button>
                 </div>
                 <div class="info_right">
                   <p>「4折后参考价」</p>
-                  <p>¥302.4／6个月</p>
+                  <p>{{ item.price_two}}</p>
                   <p>原价1008／6个月</p>
                   <button @click="buyNow_two(item,index,6)">立即抢购</button>
                 </div>
@@ -867,13 +867,15 @@
             title: '2C+4G+40G系统盘+5M 1年',
             discript: '适用于日常运营活动、企业办公环境、小型开发测试环境、普通数据处理服务等场景。',
             node: '',
-            system: ''
+            system: '',
+            price: '¥302.4／1年',
           },
           {
             title: '4C+8G+40G系统盘+10M 1年',
             discript: '适用于高并发应用业务部署、高内存大数据分析处理、分布式分析等业务场景。',
             node: '',
-            system: ''
+            system: '',
+            price: '¥402.4／1年',
           }
         ],
         config_two: [
@@ -884,7 +886,9 @@
             disk: '40G磁盘',
             bandWidth: '2mb/s带宽',
             node: '',
-            system: ''
+            system: '',
+            price_one: '¥302.4／3个月',
+            price_two: '¥502.4／6个月'
           },
           {
             discript: '适用于高并发应用业务部署、高内存大数据分析处理、分布式分析等业务场景。',
@@ -893,7 +897,9 @@
             disk: '40G磁盘',
             bandWidth: '2mb/s带宽',
             node: '',
-            system: ''
+            system: '',
+            price_one: '¥302.4／3个月',
+            price_two: '¥502.4／6个月'
           },
           {
             discript: '适用于对计算性能要求较高的企业运营活动、批量处理、分布式分析、游戏APP等业务场景。',
@@ -902,7 +908,9 @@
             disk: '40G磁盘',
             bandWidth: '5mb/s带宽',
             node: '',
-            system: ''
+            system: '',
+            price_one: '¥302.4／3个月',
+            price_two: '¥502.4／6个月'
           },
           {
             discript: '用于需要高网络性能、高计算资源的业务部署、广告服务、MMO游戏、视频编码等场景。',
@@ -911,17 +919,19 @@
             disk: '40G磁盘',
             bandWidth: '10mb/s带宽',
             node: '',
-            system: ''
+            system: '',
+            price_one: '¥302.4／3个月',
+            price_two: '¥502.4／6个月'
           }
         ],
         nodeList: [
           {
-            label: '北方二区',
-            value: '华中一区'
+            label: '北京一区',
+            value: '39a6af0b-6624-4194-b9d5-0c552d903858'
           },
           {
-            label: '华中二区',
-            value: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2'
+            label: '北方二区',
+            value: '3c7270be-8394-4d22-934a-218c4e81eed1'
           }
         ],
         systemList: [

@@ -136,7 +136,7 @@
           </div>
         </div>
       </span>
-      <Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px">
+      <Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px" class="online">
       <span class="service">
        <a :href="kfURL"
           target="_blank"></a>
@@ -159,6 +159,7 @@
   import axios from 'axios'
   import debounce from 'throttle-debounce/debounce'
   import './assets/js/iconfont'
+  import '@/assets/iconfontjs/iconfont.js'
   export default {
     name: 'back',
     data(){

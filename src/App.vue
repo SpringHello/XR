@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="front">
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
@@ -17,9 +17,9 @@
                   <div class="content-dropdown">
                     <div class="content" ref="content" style="height:0px;">
                       <div v-if="item.content" class="column">
-                        <div v-for="(prod,index) in item.content">
+                        <div v-for="(prod,index) in item.content" :key="index">
                           <h2>{{prod.prod}}</h2>
-                          <div v-for="(i,index) in prod.prodItem" style="line-height: normal">
+                          <div v-for="(i,index) in prod.prodItem" style="line-height: normal" :key="index">
                             <router-link :to="i.path" v-if="i.path==''">{{i.title}}</router-link>
                             <router-link :to="i.path" target="_blank" v-else>{{i.title}}</router-link>
                             <p>{{i.desc}}</p>
@@ -163,7 +163,7 @@
           </div>
         </div>
       </span>
-      <Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px">
+      <Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px" class="online">
       <span class="service"><a
         :href="kfURL"
         target="_blank"></a></span>
@@ -423,9 +423,7 @@
 
 <style rel="stylesheet/less" lang="less">
   @import './assets/css/frontend.css';
-  // import '@/assets/css/backend.css'
-  //import '@/assets/iconfontjs/iconfont.js'
-  #app {
+  #front {
     header {
       width: 100%;
       height: 70px;
@@ -824,6 +822,4 @@
 
     }
   }
-
-
 </style>

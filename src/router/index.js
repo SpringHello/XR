@@ -49,6 +49,7 @@ const Pmonitor = () => import('@/components/App/product/CloudMonitoring.vue')
 const Login = () => import('@/components/LR/Login')
 const Register = () => import('@/components/LR/Register')
 const Reset = () => import('@/components/LR/Reset')
+const RegisterSuccess = () => import('@/components/LR/RegisterSuccess')
 
 // 后台页面子路由
 // import Overview from '@/components/Back/Overview'
@@ -620,7 +621,8 @@ var router = new Router({
       children: [
         {path: 'login', name: 'login', component: Login},
         {path: 'register', name: 'register', component: Register},
-        {path: 'reset', name: 'reset', component: Reset}
+        {path: 'reset', name: 'reset', component: Reset},
+        {path: 'registerSuccess', name: 'registerSuccess', component: RegisterSuccess}
       ]
     },
     {path: '/*', name: '404', component: notFindPage}

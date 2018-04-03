@@ -246,3 +246,7 @@ div.modal-header-border {
 .create-snas-modal .ivu-poptip-inner{
   white-space: normal;
 }
+.online .ivu-poptip-inner {
+  width: 60%;
+  float: right;
+}

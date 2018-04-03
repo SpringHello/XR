@@ -484,12 +484,11 @@
       submit(){
         axios.get('user/register.do?username=' + this.form.loginname + '&password=' + this.form.password + '&code=' + this.form.vailCode).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            console.log(response);
             this.$Message.success({
               content: '注册成功',
               duration: 3
             });
-            this.$router.push('login');
+            this.$router.push('registerSuccess');
           }
         })
       },
