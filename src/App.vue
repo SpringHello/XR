@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="front">
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
@@ -423,7 +423,7 @@
 
 <style rel="stylesheet/less" lang="less">
   @import './assets/css/frontend.css';
-  #app {
+  #front {
     header {
       width: 100%;
       height: 70px;
@@ -822,6 +822,4 @@
 
     }
   }
-
-
 </style>
