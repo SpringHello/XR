@@ -376,7 +376,7 @@
               {
                 title: '裸金属服务器',
                 desc: '专属物理服务器',
-                img: 'icon-ECSkuaizhao',
+                img: 'icon-luojinshu',
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Phost',
@@ -386,7 +386,7 @@
               {
                 title: '弹性伸缩',
                 desc: '高可用、可视化、低成本',
-                img: 'icon-ECSkuaizhao',
+                img: 'icon-danxingshensuo4',
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Pecss',

@@ -5,16 +5,16 @@
       <div class="dotitle">帮助文档</div>
       <div class="content">
         <div v-for="(item,index) in contentList" :class="{active:item.active}" @mouseenter="ME(item)"
-             @mouseleave="ML(item)">
+             @mouseleave="ML(item)" :key="index">
           <div class="header">
             <i class="iconfont" :class="item.img" style="font-size:30px;color:#fff;line-height:1"></i>
             <p>{{item.title}}</p>
           </div>
           <div class="body">
-            <ul v-for="(item,index) in item.list">
+            <ul v-for="(item,index) in item.list" :key="index">
               <div v-if="item.desc">
                 <p class="title">{{item.title}}</p>
-                <li v-for="(subItem,subIndex) in item.desc">
+                <li v-for="(subItem,subIndex) in item.desc" :key="subIndex">
                   <router-link :to="subItem.url" :class="{notAllow:subItem.url === ''}">{{subItem.subTitle}}
                   </router-link>
                 </li>
@@ -96,7 +96,7 @@
             active: false
           },
           {
-            img:'../../assets/img/document/user.png',
+            img:'icon-zhanghuyucaiwu',
             title: '账户与财务',
             list: [
               {title: '登录/注册', url: 'uaf/3-1'},
