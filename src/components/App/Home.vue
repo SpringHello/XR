@@ -71,22 +71,22 @@
             </div>
           </div>
         </my-carousel-item>-->
-       <!-- <my-carousel-item class="carousel-item">
-          <div @click="push('login')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
-            <div style="width:1200px;height:560px;margin:0px auto;position:relative">
-              <img src="../../assets/img/home/carousel-3-1.png"
-                   style="position:absolute;right:0px;top:20px;width:630px;">
-              <div style="position: relative; top: 30%">
-                <p style="font-size: 48px;color: #5692fe;margin-bottom: 20px;">新睿云技术内测Beat1.0</p>
-                <p style="font-size: 20px;color: #5692fe;margin-bottom: 20px;">限时开启</p>
-                <button
-                  style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
-                  立即领取
-                </button>
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>-->
+        <!-- <my-carousel-item class="carousel-item">
+           <div @click="push('login')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
+             <div style="width:1200px;height:560px;margin:0px auto;position:relative">
+               <img src="../../assets/img/home/carousel-3-1.png"
+                    style="position:absolute;right:0px;top:20px;width:630px;">
+               <div style="position: relative; top: 30%">
+                 <p style="font-size: 48px;color: #5692fe;margin-bottom: 20px;">新睿云技术内测Beat1.0</p>
+                 <p style="font-size: 20px;color: #5692fe;margin-bottom: 20px;">限时开启</p>
+                 <button
+                   style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
+                   立即领取
+                 </button>
+               </div>
+             </div>
+           </div>
+         </my-carousel-item>-->
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->
@@ -364,11 +364,9 @@
                 img: require('../../assets/img/home/cal-host-2-1.png'),
                 hoverImg: require('../../assets/img/home/cal-host-2-2.png'),
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '敬请期待',
                 detailLink: 'Phost',
-                useLink: $store.state.userInfo ? 'mirror' : 'login',
-                // 敬请期待
-                type: 'comeSoon',
+                useLink: '',
                 ME: false
               },
               {
@@ -377,11 +375,9 @@
                 img: require('../../assets/img/home/cal-shen-2-1.png'),
                 hoverImg: require('../../assets/img/home/cal-shen-2-2.png'),
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '敬请期待',
                 detailLink: 'Pecss',
-                useLink: $store.state.userInfo ? 'snapshot' : 'login',
-                // 敬请期待
-                type: 'comeSoon',
+                useLink: '',
                 ME: false
               }
             ],
@@ -615,17 +611,18 @@
             desc: '五星级IDC机房标准，整体抗震8级,双路市电引入，并配备模块式UPS和大型油机。机房网络层次分三层结构，即用户接入层、汇聚层、核心层，并采用全冗余网络结构，避免单点故障'
           }
         ],
-        activeBanner: 1
+        activeBanner: 1,
+        scrollFn: null
       }
     },
     mounted() {
       echarts.registerMap('china', china)
       this.myChart = echarts.init(document.getElementById('echarts'))
       this.myChart.setOption(polar)
-      if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY > 300 ) {
+      if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY > 300) {
         this.cloudContentFade = true
       }
-      if (document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY > 300 ) {
+      if (document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY > 300) {
         this.fade = true
       }
       if (document.body.clientHeight - this.$refs.consoleFade.offsetTop + window.scrollY > 300) {
@@ -634,11 +631,11 @@
       if (document.body.clientHeight - this.$refs.partnerFade.offsetTop + window.scrollY > 300) {
         this.partnerFade = true
       }
-      if (document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY > 300 ) {
+      if (document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY > 300) {
         this.authorityFade = true
       }
       // 待优化
-      window.addEventListener('scroll', () => {
+      this.scrollFn = () => {
         if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY > 300 && !this.cloudContentFade) {
           this.cloudContentFade = true
         }
@@ -654,7 +651,8 @@
         if (document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY > 300 && !this.authorityFade) {
           this.authorityFade = true
         }
-      })
+      }
+      window.addEventListener('scroll', this.scrollFn)
     },
     created() {
     },
@@ -733,6 +731,10 @@
       change(activeIndex) {
         this.activeBanner = activeIndex + 1
       }
+    },
+    beforeRouteLeave(to, from, next){
+      window.removeEventListener('scroll', this.scrollFn)
+      next()
     }
   }
 </script>
@@ -754,9 +756,9 @@
       height: 110px;
       width: 100%;
       background-color: #5692fe;
-/*      &.one {
-        background-color: #C254FA;
-      }*/
+      /*      &.one {
+              background-color: #C254FA;
+            }*/
       &.three {
         background-color: rgb(80, 182, 235);
       }
@@ -886,7 +888,8 @@
             .fade-enter-active, .fade-leave-active {
               transition: opacity .2s
             }
-            .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
+            .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */
+            {
               display: none;
             }
             .arrow {

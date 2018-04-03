@@ -123,7 +123,7 @@
             </div>
             <div class="contact">
               <span>联系我们</span>
-              <span>企业电话：010-82527988</span>
+              <span>服务热线：400-0505-565</span>
               <span>企业邮箱：service@unionstech.cn</span>
               <span>企业地址：北京市海淀区东升大厦AB座611、612</span>
               <img src="./assets/img/app/QR-code.jpg" style="width:100px;height:100px;">
