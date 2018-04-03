@@ -18,7 +18,7 @@
         <div class="features-flex">
           <div v-for="(feature,index) in features" class="flex-item">
             <div>
-              <i class="iconfont" :class="feature.img" style="font-size:36px;color:#fff;"></i>
+              <i class="iconfont" :class="feature.img" style="font-size:40px;color:#fff;"></i>
               <div>
                 <span class="title">{{feature.title}}</span>
                 <span class="desc">{{feature.desc}}</span>
