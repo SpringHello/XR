@@ -192,7 +192,7 @@
             desc: '可以使用私有IP地址实现两个VPC之间的互通。'
           },
           {
-            img: '',
+            img: 'icon-hunheyunjiagou',
             title: '支持混合云架构',
             desc: '提供多种VPN，支持混合云和跨云能力。'
           }
