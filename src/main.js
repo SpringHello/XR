@@ -13,7 +13,6 @@ import '@/assets/css/reset.css'
 import '@/assets/css/universal.less'
 //import '@/assets/css/frontend.css'
 //import '@/assets/css/backend.css'
-import '@/assets/iconfontjs/iconfont.js'
 // import ECharts from 'vue-echarts/components/ECharts.vue'
 
 import ECharts from 'vue-echarts/components/ECharts'

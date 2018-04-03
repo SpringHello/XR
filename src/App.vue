@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="front">
     <!-- 首页公用header -->
     <header>
       <div class="wrapper">
@@ -425,7 +425,7 @@
   @import './assets/css/frontend.css';
   // import '@/assets/css/backend.css'
   //import '@/assets/iconfontjs/iconfont.js'
-  #app {
+  #front {
     header {
       width: 100%;
       height: 70px;
@@ -824,6 +824,4 @@
 
     }
   }
-
-
 </style>
