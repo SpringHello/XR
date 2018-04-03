@@ -139,7 +139,7 @@
       <Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px">
       <span class="service">
        <a :href="kfURL"
-        target="_blank"></a>
+          target="_blank"></a>
        </span>
       </Poptip>
       <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
@@ -443,7 +443,9 @@
   }
 </script>
 
-<style rel="stylesheet/less" lang="less" scoped>
+<style rel="stylesheet/less" lang="less">
+  @import "../src/assets/css/backend.css";
+
   #back {
     height: 100%;
     header {
