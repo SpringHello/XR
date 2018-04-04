@@ -409,7 +409,7 @@
               padding: 0 20px;
               border-right: 1px solid #D9D9D9;
               li {
-                font-family: MicrosoftYaHei;
+                font-family: Microsoft YaHei;
                 font-size: 14px;
                 line-height: 28px;
                 color: #5E5E5E;

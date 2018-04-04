@@ -167,12 +167,12 @@
             </div>
           </Form-item>
           <Form-item label="资费" style="width: 80%">
-            <span style="font-family: MicrosoftYaHei;font-size: 24px;color: #2A99F2;line-height: 43px;">￥{{chargesForm.cost}}
+            <span style="font-family: Microsoft YaHei;font-size: 24px;color: #2A99F2;line-height: 43px;">￥{{chargesForm.cost}}
               <span v-if="chargesForm.timeValue!=''">/</span>
               <span v-if="chargesForm.timeType == 'year' && chargesForm.timeValue !=''" style="font-size: 16px;">{{chargesForm.timeValue}}年</span>
               <span v-if="chargesForm.timeType == 'month' && chargesForm.timeValue !=''" style="font-size: 16px;">{{chargesForm.timeValue}}月</span>
             </span>
-            <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #2A99F2;line-height: 43px;display: block;"
+            <span style="font-family: Microsoft YaHei;font-size: 16px;color: #2A99F2;line-height: 43px;display: block;"
                   v-if="chargesForm.discounts">（已优惠￥{{chargesForm.discounts}} /元）</span>
           </Form-item>
         </Form>
@@ -197,7 +197,7 @@
             <span>Mbps</span>
           </Form-item>
           <Form-item label="资费" style="width: 80%">
-            <span style="font-family: MicrosoftYaHei;font-size: 24px;color: #2A99F2;line-height: 43px;">￥{{adjustForm.cost}}
+            <span style="font-family: Microsoft YaHei;font-size: 24px;color: #2A99F2;line-height: 43px;">￥{{adjustForm.cost}}
               <span>/ <span style="font-size: 16px;">{{adjustFormType}}</span></span>
             </span>
           </Form-item>

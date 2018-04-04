@@ -89,9 +89,9 @@
       </div>
       <div>
         <span>价格</span>
-        <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"
+        <span style="font-family: Microsoft YaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"
               v-if="timeType=='current'">{{ diskPrice}}元/小时</span>
-        <span style="font-family: MicrosoftYaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"
+        <span style="font-family: Microsoft YaHei;font-size: 16px;color: #F85E1D;line-height: 29px;"
               v-else>{{ diskPrice}}元</span>
       </div>
       <div>
@@ -493,7 +493,7 @@
     background: #FFFFFF;
     padding: 30px 40px 40px 40px;
     h3 {
-      font-family: MicrosoftYaHei-Bold;
+      font-family: Microsoft YaHei-Bold;
       font-size: 18px;
       color: #333333;
       line-height: 32px;
@@ -505,7 +505,7 @@
       p {
         margin-top: 10px;
         margin-bottom: 20px;
-        font-family: MicrosoftYaHei;
+        font-family: Microsoft YaHei;
         font-size: 12px;
         color: #999999;
         line-height: 25px;
@@ -560,13 +560,13 @@
       p {
         margin-top: 10px;
         margin-bottom: 20px;
-        font-family: MicrosoftYaHei;
+        font-family: Microsoft YaHei;
         font-size: 12px;
         color: #999999;
         line-height: 25px;
       }
       span {
-        font-family: MicrosoftYaHei;
+        font-family: Microsoft YaHei;
         font-size: 14px;
         color: #333333;
         line-height: 29px;
@@ -580,21 +580,21 @@
         & > div {
           margin-top: 20px;
           & > span {
-            font-family: MicrosoftYaHei;
+            font-family: Microsoft YaHei;
             font-size: 14px;
             color: #333333;
             line-height: 29px;
             margin-right: 52px;
           }
           p {
-            font-family: MicrosoftYaHei;
+            font-family: Microsoft YaHei;
             font-size: 12px;
             color: #999999;;
             line-height: 25px;
             margin-top: 20px;
             margin-left: 88px;
             span {
-              font-family: MicrosoftYaHei;
+              font-family: Microsoft YaHei;
               font-size: 14px;
               color: #333333;
               line-height: 25px;
@@ -606,20 +606,20 @@
       & > div {
         margin-top: 20px;
         & > span {
-          font-family: MicrosoftYaHei;
+          font-family: Microsoft YaHei;
           font-size: 14px;
           color: #333333;
           line-height: 29px;
           margin-right: 52px;
         }
         p {
-          font-family: MicrosoftYaHei;
+          font-family: Microsoft YaHei;
           font-size: 12px;
           color: #999999;
           line-height: 25px;
         }
         .s1 {
-          font-family: MicrosoftYaHei;
+          font-family: Microsoft YaHei;
           font-size: 12px;
           color: #333333;
           line-height: 25px;
@@ -631,7 +631,7 @@
     .settleAccounts {
       margin-top: 20px;
       span {
-        font-family: MicrosoftYaHei;
+        font-family: Microsoft YaHei;
         font-size: 14px;
         color: #2A99F2;
         line-height: 25px;

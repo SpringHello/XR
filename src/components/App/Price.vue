@@ -672,7 +672,7 @@
         padding-top: 50px;
         display: -webkit-box;
         h1 {
-          font-family: MicrosoftYaHei;
+          font-family: Microsoft YaHei;
           font-size: 24px;
           color: #333333;
           line-height: 43px;
@@ -680,7 +680,7 @@
           font-weight: normal;
         }
         h2 {
-          font-family: MicrosoftYaHei;
+          font-family: Microsoft YaHei;
           font-size: 14px;
           color: #2A99F2;
           line-height: 38px;
@@ -709,7 +709,7 @@
             background: #FFFFFF;
             box-shadow: 0 2px 14px 0 rgba(193, 193, 193, 0.30);
             h1 {
-              font-family: MicrosoftYaHei;
+              font-family: Microsoft YaHei;
               font-size: 24px;
               color: #333333;
               line-height: 43px;
@@ -724,13 +724,13 @@
                 display: flex;
                 justify-content: space-between;
                 h3 {
-                  font-family: MicrosoftYaHei;
+                  font-family: Microsoft YaHei;
                   font-size: 18px;
                   color: #333333;
                   line-height: 32px;
                 }
                 p {
-                  font-family: MicrosoftYaHei;
+                  font-family: Microsoft YaHei;
                   font-size: 14px;
                   color: #2A99F2;
                   line-height: 25px;
@@ -740,7 +740,7 @@
                 margin-top: 10px;
                 ul {
                   li {
-                    font-family: MicrosoftYaHei;
+                    font-family: Microsoft YaHei;
                     font-size: 14px;
                     color: #666666;
                     line-height: 25px;
@@ -757,13 +757,13 @@
                 display: flex;
                 justify-content: space-between;
                 & > p {
-                  font-family: MicrosoftYaHei;
+                  font-family: Microsoft YaHei;
                   font-size: 14px;
                   color: #666666;
                   line-height: 25px;
                   margin-left: 28px;
                   & > span {
-                    font-family: MicrosoftYaHei;
+                    font-family: Microsoft YaHei;
                     font-size: 24px;
                     color: #F85E1D;
                     line-height: 25px;
@@ -799,13 +799,13 @@
               bottom: 0;
             }
             .p1 {
-              font-family: MicrosoftYaHei;
+              font-family: Microsoft YaHei;
               font-size: 14px;
               color: #666666;
               line-height: 25px;
               margin-left: 28px;
               span {
-                font-family: MicrosoftYaHei;
+                font-family: Microsoft YaHei;
                 font-size: 24px;
                 color: #F85E1D;
                 line-height: 25px;
@@ -814,7 +814,7 @@
               }
             }
             .p2 {
-              font-family: MicrosoftYaHei;
+              font-family: Microsoft YaHei;
               font-size: 12px;
               color: #333333;
               line-height: 21px;

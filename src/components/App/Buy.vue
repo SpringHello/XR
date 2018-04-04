@@ -822,7 +822,7 @@
                 <h2 style="width:70px;text-align: right;font-size: 18px;color: #333333;line-height: 32px;">
                   {{prod.typeName}}</h2>
                 <p
-                  style="cursor: pointer;font-family: MicrosoftYaHei;font-size: 14px;color: #2A99F2; line-height: 25px;"
+                  style="cursor: pointer;font-family: Microsoft YaHei;font-size: 14px;color: #2A99F2; line-height: 25px;"
                   @click="delDetailed(index)">删除</p>
               </div>
               <!--主机清单字段-->

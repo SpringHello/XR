@@ -12,7 +12,7 @@
                 <p style="font-size: 48px;color: #fff;margin-bottom: 20px;">可享60天免费体验</p>
                 <p style="font-size: 24px;color:#fff">数量有限，送完为止</p>
                 <button
-                  style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
+                  style="width: 170px;height: 55px;font-family: Microsoft YaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
                   立即领取
                 </button>
               </div>
@@ -64,7 +64,7 @@
                 <p style="font-size: 20px;color: #5692fe;margin-bottom: 20px;">全品类折扣优惠 礼包零门槛领取</p>
                 <p style="font-size: 24px;color:#5692fe">最高省500元</p>
                 <button
-                  style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
+                  style="width: 170px;height: 55px;font-family: Microsoft YaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
                   立即领取
                 </button>
               </div>
@@ -80,7 +80,7 @@
                  <p style="font-size: 48px;color: #5692fe;margin-bottom: 20px;">新睿云技术内测Beat1.0</p>
                  <p style="font-size: 20px;color: #5692fe;margin-bottom: 20px;">限时开启</p>
                  <button
-                   style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
+                   style="width: 170px;height: 55px;font-family: Microsoft YaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
                    立即领取
                  </button>
                </div>

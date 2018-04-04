@@ -525,7 +525,7 @@
         background-color: white;
         padding: 20px;
         & > span {
-          font-family: MicrosoftYaHei-Bold;
+          font-family: Microsoft YaHei-Bold;
           font-size: 24px;
           color: rgba(17, 17, 17, 0.75);
           font-weight: bold;

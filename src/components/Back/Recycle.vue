@@ -380,7 +380,7 @@
         background-color: white;
         padding: 20px;
         & > span {
-          font-family: MicrosoftYaHei;
+          font-family: Microsoft YaHei;
           font-size: 24px;
           color: rgba(17, 17, 17, 0.75);
         }

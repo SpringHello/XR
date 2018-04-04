@@ -135,7 +135,7 @@
             </Select>
           </Form-item>
           <div>
-            <p style="font-family: MicrosoftYaHei;font-size: 12px;color: #999999;line-height: 15px">
+            <p style="font-family: Microsoft YaHei;font-size: 12px;color: #999999;line-height: 15px">
               提示：云硬盘数据服务为每块磁盘提供<span style="color: #2A99F2;">8</span>个快照额度，当某块磁盘的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点。您当前总共可设置3个备份策略。
             </p>
           </div>
@@ -166,7 +166,7 @@
             <Input v-model="createBackupsForm.backupsName" placeholder="请输入"></Input>
           </Form-item>
         </Form>
-        <p style="font-family: MicrosoftYaHei;font-size: 12px;line-height:20px;color: #999999;">
+        <p style="font-family: Microsoft YaHei;font-size: 12px;line-height:20px;color: #999999;">
           提示：云硬盘数据服务为每块磁盘提供<span
           style="color:#2A99F2">8</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。</p>
       </div>
@@ -204,7 +204,7 @@
             </ul>
           </div>
         </div>
-        <p style="margin-top: 20px;color: #999999;font-family: MicrosoftYaHei;font-size: 12px;">
+        <p style="margin-top: 20px;color: #999999;font-family: Microsoft YaHei;font-size: 12px;">
           提示：当您选择已绑定备份策略的磁盘时，新的备份策略将直接覆盖原有备份策略。</p>
       </div>
       <div slot="footer" class="modal-footer-border">

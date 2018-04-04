@@ -454,7 +454,7 @@
         background-color: white;
         padding: 20px;
         & > span {
-          font-family: MicrosoftYaHei-Bold;
+          font-family: Microsoft YaHei-Bold;
           font-size: 24px;
           color: rgba(17, 17, 17, 0.75);
           font-weight: bold;
@@ -493,7 +493,7 @@
             }
           }
           label {
-            font-family: MicrosoftYaHei;
+            font-family: Microsoft YaHei;
             font-size: 18px;
             color: rgba(17, 17, 17, .85);
             letter-spacing: 0;

@@ -14,7 +14,7 @@
 
 .mySelect .ivu-select-selection .ivu-select-selected-value {
   padding-left: 30px;
-  font-family: MicrosoftYaHei;
+  font-family: Microsoft YaHei;
   font-size: 24px;
   color: #333333;
   padding-right: 0;
@@ -51,7 +51,7 @@
 /* 通用弹窗底部文字提示 */
 .modal-text-hint-bottom{
     color: rgb(153, 153, 153);
-    font-family: MicrosoftYaHei;
+    font-family: Microsoft YaHei;
     font-size: 12px;
     line-height: 16px;
     text-align: left;
