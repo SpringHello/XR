@@ -183,7 +183,7 @@
   import $store from './vuex'
   import {mapState} from 'vuex'
   import debounce from 'throttle-debounce/debounce'
-  import './assets/js/iconfont.js'
+  import './assets/JS/iconfont.js'
   export default {
     name: 'app',
     data () {
