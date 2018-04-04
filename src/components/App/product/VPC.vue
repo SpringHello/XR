@@ -131,7 +131,7 @@
             title: '自定义网络',
             desc: '子网，IP地址段，DHCP等子服务，自由选择组合定义。'
           },
-          {img: require('../../../assets/img/product/vpc-3.png'), title: '访问控制', desc: 'ACL防火墙设置，自定义开放端口与访问协议。'},
+          {img: 'icon-fangwenkongzhi', title: '访问控制', desc: 'ACL防火墙设置，自定义开放端口与访问协议。'},
           {
             img: 'icon-gongwangjieru',
             title: '公网接入',
