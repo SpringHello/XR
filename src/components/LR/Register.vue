@@ -345,7 +345,7 @@
       warnMessage: '该手机号 已注册'
     },
     password: {
-      placeholder: '请输入至少8位包含字母与数字的密码',
+      placeholder: '请输入至少8位包含大小写字母与数字的密码',
       errorMessage: '密码必须包含数字和字母大小写',
     },
     vailCode: {
@@ -489,6 +489,10 @@
               duration: 3
             });
             this.$router.push('registerSuccess');
+          } else {
+            this.$Message.error({
+              content: response.data.message
+            })
           }
         })
       },
