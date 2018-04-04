@@ -158,7 +158,7 @@
   import {mapState} from 'vuex'
   import axios from 'axios'
   import debounce from 'throttle-debounce/debounce'
-  import './assets/js/iconfont'
+  import './assets/JS/iconfont'
   import '@/assets/iconfontjs/iconfont.js'
   export default {
     name: 'back',
