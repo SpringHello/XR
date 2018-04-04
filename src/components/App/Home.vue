@@ -19,7 +19,7 @@
             </div>
           </div>
         </my-carousel-item>
-        <my-carousel-item class="carousel-item">
+       <!-- <my-carousel-item class="carousel-item">
           <div @click="push('newNodes')"
                style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
             <div class="newNodes">
@@ -54,7 +54,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>
+        </my-carousel-item>-->
         <my-carousel-item class="carousel-item">
           <div @click="push('active')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
             <div style="width:1200px;height:560px;margin:0px auto;position:relative">
@@ -91,7 +91,7 @@
     </div>
     <!-- 功能介绍区域 -->
     <div class="box-container"
-         :class="{one:this.activeBanner==2,three:this.activeBanner==1}">
+         :class="{three:this.activeBanner==1}">
       <div class="container">
         <div v-for="(item,index) in boxContainer" :key="index" class="container-item">
           <i class="iconfont" :class="item.img" style="font-size:60px;color:#fff;line-height:1"></i>
