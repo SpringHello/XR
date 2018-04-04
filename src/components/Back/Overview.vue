@@ -53,7 +53,12 @@
           <p class="universal-middle">资源</p>
           <div class="wrapper">
             <div class="item" v-for="(item,index) in source" :key="index">
-              <p class="universal-middle"><img :src="sourceIcon[index]">{{item.name}}</p>
+              <p class="universal-middle">
+                <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;">
+                  <use :xlink:href="sourceIcon[index]"></use>
+                </svg>
+                {{item.name}}
+              </p>
               <div class="source-item" v-for="(subItem,sIndex) in item.items" :key="sIndex">
                 <span @click="togo(subItem.url.split('#')[0],subItem.url.split('#')[1])"
                       :class="{disable:!subItem.url}">{{subItem.itemName}}({{subItem.total}})</span>
@@ -161,11 +166,11 @@
         source: [],
         // 资源icon
         sourceIcon: [
-          require('../../assets/img/overview/item-1.png'),
-          require('../../assets/img/overview/item-2.png'),
-          require('../../assets/img/overview/item-3.png'),
-          require('../../assets/img/overview/item-4.png'),
-          require('../../assets/img/overview/item-5.png')
+          '#icon-yunjisuan1',
+          '#icon-yunwangluo1',
+          '#icon-yuncunchu1',
+          '#icon-yunanquan1',
+          '#icon-yunyunwei1'
         ]
       }
     },

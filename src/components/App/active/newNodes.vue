@@ -113,7 +113,7 @@
                   <div class="price">
                     <img src="../../../assets/img/active/newNodes/tag.png">
                     <span class="s1">{{ item.price}}</span>
-                    <span class="s2">原价1008／1年</span>
+                    <span class="s2">{{ item.oldPrice}}</span>
                   </div>
                   <button @click="buyNow_one(item,index)">立即抢购</button>
                 </div>
@@ -161,13 +161,13 @@
                 <div class="info_right">
                   <p>「5折后参考价」</p>
                   <p>{{ item.price_one}}</p>
-                  <p>原价1008／3个月</p>
+                  <p>{{item.oldPrice_one}}</p>
                   <button @click="buyNow_two(item,index,3)">立即抢购</button>
                 </div>
                 <div class="info_right">
                   <p>「4折后参考价」</p>
                   <p>{{ item.price_two}}</p>
-                  <p>原价1008／6个月</p>
+                  <p>{{item.oldPrice_two}}</p>
                   <button @click="buyNow_two(item,index,6)">立即抢购</button>
                 </div>
               </div>
@@ -208,8 +208,7 @@
             </dd>
           </dl>
           <dl>
-            <dt> 3、活动开始时间：</dt>
-            <dd>2018-4-10</dd>
+            <dt> 3、活动开始时间：2018-4-10</dt>
           </dl>
           <dl>
             <dt> 4、活动主机7天内可无理由退款。</dt>
@@ -223,7 +222,7 @@
         </div>
       </div>
     </div>
-    <Modal v-model="loginModal" width="420" class="login-modal">
+    <Modal v-model="loginModal" width="420" class="login-modal" :scrollable="true">
       <p slot="header" style="color:#5F5F5F;text-align:center;height: 30px;padding-top: 5px;">
         <span style="font-family: PingFangSC-Regular;font-size: 26px;">登录</span>
       </p>
@@ -868,14 +867,16 @@
             discript: '适用于日常运营活动、企业办公环境、小型开发测试环境、普通数据处理服务等场景。',
             node: '',
             system: '',
-            price: '¥302.4／1年',
+            price: '¥1050.2／1年',
+            oldPrice: '¥3500.64/年'
           },
           {
             title: '4C+8G+40G系统盘+10M 1年',
             discript: '适用于高并发应用业务部署、高内存大数据分析处理、分布式分析等业务场景。',
             node: '',
             system: '',
-            price: '¥402.4／1年',
+            price: '¥3037.4／1年',
+            oldPrice: '¥10124.64/年'
           }
         ],
         config_two: [
@@ -887,8 +888,10 @@
             bandWidth: '2mb/s带宽',
             node: '',
             system: '',
-            price_one: '¥302.4／3个月',
-            price_two: '¥502.4／6个月'
+            price_one: '¥295.08／3个月',
+            price_two: '¥472.128／6个月',
+            oldPrice_one: '¥590.16／3个月',
+            oldPrice_two: '¥1180.32／6个月'
           },
           {
             discript: '适用于高并发应用业务部署、高内存大数据分析处理、分布式分析等业务场景。',
@@ -898,8 +901,10 @@
             bandWidth: '2mb/s带宽',
             node: '',
             system: '',
-            price_one: '¥302.4／3个月',
-            price_two: '¥502.4／6个月'
+            price_one: '¥587.58／3个月',
+            price_two: '¥940.128／6个月',
+            oldPrice_one: '¥1175.16／3个月',
+            oldPrice_two: '¥2350.32／6个月'
           },
           {
             discript: '适用于对计算性能要求较高的企业运营活动、批量处理、分布式分析、游戏APP等业务场景。',
@@ -909,8 +914,10 @@
             bandWidth: '5mb/s带宽',
             node: '',
             system: '',
-            price_one: '¥302.4／3个月',
-            price_two: '¥502.4／6个月'
+            price_one: '¥1193.00／3个月',
+            price_two: '¥1909.728／6个月',
+            oldPrice_one: '¥2387.16／3个月',
+            oldPrice_two: '¥4774.32／6个月'
           },
           {
             discript: '用于需要高网络性能、高计算资源的业务部署、广告服务、MMO游戏、视频编码等场景。',
@@ -920,8 +927,10 @@
             bandWidth: '10mb/s带宽',
             node: '',
             system: '',
-            price_one: '¥302.4／3个月',
-            price_two: '¥502.4／6个月'
+            price_one: '¥2656.08／3个月',
+            price_two: '¥4249.728／6个月',
+            oldPrice_one: '¥5312.16／3个月',
+            oldPrice_two: '¥10624.32／6个月'
           }
         ],
         nodeList: [

@@ -169,7 +169,7 @@
         </div>
       </div>
     </div>
-    <Modal v-model="loginModal" width="420" class="login-modal">
+    <Modal v-model="loginModal" width="420" class="login-modal" :scrollable="true">
       <p slot="header" style="color:#5F5F5F;text-align:center;height: 30px;padding-top: 5px;">
         <span style="font-family: PingFangSC-Regular;font-size: 26px;">登录</span>
       </p>
