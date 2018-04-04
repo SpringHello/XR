@@ -158,7 +158,7 @@
   import {mapState} from 'vuex'
   import axios from 'axios'
   import debounce from 'throttle-debounce/debounce'
-  import './assets/JS/backend.js'
+  import './assets/js/backend.js'
   export default {
     name: 'back',
     data(){
