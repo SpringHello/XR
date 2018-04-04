@@ -71,22 +71,22 @@
             </div>
           </div>
         </my-carousel-item>
-       <!-- <my-carousel-item class="carousel-item">
-          <div @click="push('login')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
-            <div style="width:1200px;height:560px;margin:0px auto;position:relative">
-              <img src="../../assets/img/home/carousel-3-1.png"
-                   style="position:absolute;right:0px;top:20px;width:630px;">
-              <div style="position: relative; top: 30%">
-                <p style="font-size: 48px;color: #5692fe;margin-bottom: 20px;">新睿云技术内测Beat1.0</p>
-                <p style="font-size: 20px;color: #5692fe;margin-bottom: 20px;">限时开启</p>
-                <button
-                  style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
-                  立即领取
-                </button>
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>-->
+        <!-- <my-carousel-item class="carousel-item">
+           <div @click="push('login')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
+             <div style="width:1200px;height:560px;margin:0px auto;position:relative">
+               <img src="../../assets/img/home/carousel-3-1.png"
+                    style="position:absolute;right:0px;top:20px;width:630px;">
+               <div style="position: relative; top: 30%">
+                 <p style="font-size: 48px;color: #5692fe;margin-bottom: 20px;">新睿云技术内测Beat1.0</p>
+                 <p style="font-size: 20px;color: #5692fe;margin-bottom: 20px;">限时开启</p>
+                 <button
+                   style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
+                   立即领取
+                 </button>
+               </div>
+             </div>
+           </div>
+         </my-carousel-item>-->
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->
@@ -112,14 +112,14 @@
         <div class="cloud-display">
           <div v-for="(item,index) in cloudContainer" :key="index" @click="changeProduct(item,$event)"
                :class="{select:item.select}">
-              <div style="padding-top:72px;">
-                <svg v-show="!item.select" class="icon" aria-hidden="true" style="font-size:62px;color:#999999">
-                  <use :xlink:href="item.img"></use>
-                </svg>
-                <svg v-show="item.select" class="icon" aria-hidden="true" style="font-size:62px;">
-                  <use :xlink:href="item.clickImg"></use>
-                </svg>
-              </div>
+            <div style="padding-top:72px;">
+              <svg v-show="!item.select" class="icon" aria-hidden="true" style="font-size:62px;color:#999999">
+                <use :xlink:href="item.img"></use>
+              </svg>
+              <svg v-show="item.select" class="icon" aria-hidden="true" style="font-size:62px;">
+                <use :xlink:href="item.clickImg"></use>
+              </svg>
+            </div>
             <span>{{item.title}}</span>
           </div>
           <div class="line" ref="line"></div>
@@ -151,7 +151,10 @@
                           <h2>{{content.title}}</h2>
                         </div>
                         <div class="body" style="padding-top:35px">
-                          <i class="iconfont" :class="content.img" :style="[styleObject,content.ME?white:'']"></i>
+                          <svg class="pIcon" aria-hidden="true">
+                            <use :xlink:href="content.img"></use>
+                          </svg>
+                          <!--<i class="iconfont" :class="content.img" :style="[styleObject,content.ME?white:'']"></i>-->
                           <p>{{content.desc}}</p>
                         </div>
                         <div class="foot" v-if="content.type!='comeSoon'">
@@ -202,14 +205,14 @@
             <div v-for="(item,index) in featureContainer" :key="index" class="banner" :class="{notMargin:index>2}"
                  @mouseenter="featureEnter(item)"
                  @mouseleave="featureLeave(item)">
-                 <div style="padding-top:10px;">
-                  <svg v-show="!item.select" class="icon" aria-hidden="true" style="font-size:90px;color:#999999">
-                    <use :xlink:href="item.img"></use>
-                  </svg>
-                  <svg v-show="item.select" class="icon" aria-hidden="true" style="font-size:90px;">
-                    <use :xlink:href="item.clickImg"></use>
-                  </svg>
-                </div>
+              <div style="padding-top:10px;">
+                <svg v-show="!item.select" class="icon" aria-hidden="true" style="font-size:90px;color:#999999">
+                  <use :xlink:href="item.img"></use>
+                </svg>
+                <svg v-show="item.select" class="icon" aria-hidden="true" style="font-size:90px;">
+                  <use :xlink:href="item.clickImg"></use>
+                </svg>
+              </div>
               <span class="title">{{item.title}}</span>
               <span class="desc">{{item.desc}}</span>
             </div>
@@ -308,7 +311,7 @@
   export default {
     data() {
       return {
-        white:{
+        white: {
           color: '#fff',
         },
         styleObject: {
@@ -346,7 +349,7 @@
               {
                 title: '弹性云服务器（ECS）',
                 desc: '通用型、内存优化型、高IO型',
-                img: 'icon-danxingyunfuwuqiECS',
+                img: '#icon-danxingyunfuwuqiECS',
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Pecs',
@@ -356,7 +359,7 @@
               {
                 title: '镜像服务',
                 desc: '公共镜像、功能镜像、自定义镜像',
-                img: 'icon-jingxiangfuwu',
+                img: '#icon-feiyongzhongxin',
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Phost',
@@ -366,7 +369,7 @@
               {
                 title: 'ECS快照',
                 desc: '稳定可靠、安全保障',
-                img: 'icon-ECSkuaizhao',
+                img: '#icon-ECSkuaizhao',
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Pecss',
@@ -376,7 +379,7 @@
               {
                 title: '裸金属服务器',
                 desc: '专属物理服务器',
-                img: 'icon-luojinshu',
+                img: '#icon-luojinshu',
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Phost',
@@ -386,7 +389,7 @@
               {
                 title: '弹性伸缩',
                 desc: '高可用、可视化、低成本',
-                img: 'icon-danxingshensuo4',
+                img: '#icon-danxingshensuo4',
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Pecss',
@@ -406,7 +409,7 @@
               {
                 title: '虚拟私有云VPC',
                 desc: '网络隔离、分配子网',
-                img: 'icon-xunisiyouyunVPC',
+                img: '#icon-xunisiyouyunVPC',
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Pvpc',
@@ -416,7 +419,7 @@
               {
                 title: '弹性IP',
                 desc: '绑定与解绑IP、扩容',
-                img: 'icon-danxingIP',
+                img: '#icon-danxingIP1',
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Peip',
@@ -426,7 +429,7 @@
               {
                 title: '负载均衡',
                 desc: '源算法、轮询、最小连接数',
-                img: 'icon-fuzaijunheng2',
+                img: '#icon-fuzaijunheng2',
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Pbalance',
@@ -436,7 +439,7 @@
               {
                 title: 'NAT网关',
                 desc: 'TCP/HTTP协议、多对一支持',
-                img: 'icon-NATwangguan',
+                img: '#icon-NTAwangguan',
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Pnat',
@@ -446,7 +449,7 @@
               {
                 title: '虚拟专网VPN',
                 desc: '跨VPC链接',
-                img: 'icon-xunizhuanwangVPN',
+                img: '#icon-xunizhuanwangVPN',
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Pvirvpn',
@@ -466,7 +469,7 @@
               {
                 title: '云硬盘',
                 desc: '性能型、超高性能型、存储型',
-                img: 'icon-yunyingpan',
+                img: '#icon-yunyingpan1',
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Pdisk',
@@ -476,7 +479,7 @@
               {
                 title: '云硬盘备份',
                 desc: '高可用保障、敏捷易用',
-                img: 'icon-yunyingpanbeifen',
+                img: '#icon-yunyingpanbeifen',
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Pbackupdisk',
@@ -496,7 +499,7 @@
               {
                 title: '防火墙',
                 desc: '自定义规则、协议、端口',
-                img: 'icon-fanghuoqiang',
+                img: '#icon-fanghuoqiang',
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Pfirewall',
@@ -506,7 +509,7 @@
               {
                 title: 'DDOS高防IP',
                 desc: '硬件防护、40G超大流量',
-                img: 'icon-DDOSgaofangIP',
+                img: '#icon-DDOSgaofangIP1',
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Pddos',
@@ -526,7 +529,7 @@
               {
                 title: '云监控',
                 desc: '自定义监控项、多告警推送方式',
-                img: 'icon-yunjiankong',
+                img: '#icon-yunjiankong2',
                 detailText: '查看详情',
                 useText: '敬请期待',
                 detailLink: 'Pmonitor',
@@ -745,11 +748,20 @@
 <style rel="stylesheet/less" lang="less" scoped>
   #home {
     .icon {
-        width: 1em; height: 1em;
-        vertical-align: -0.15em;
-        fill: currentColor;
-        overflow: hidden;
-      }
+      width: 1em;
+      height: 1em;
+      vertical-align: -0.15em;
+      fill: currentColor;
+      overflow: hidden;
+    }
+    .pIcon {
+      width: 72px;
+      height: 67px;
+      color: rgb(153, 153, 153);
+      vertical-align: -0.15em;
+      fill: currentColor;
+      overflow: hidden;
+    }
     > .banner {
       height: 560px;
       .carousel {
@@ -1049,6 +1061,9 @@
                 > a {
                   color: #ffffff;
                 }
+              }
+              .pIcon {
+                fill: #fff;
               }
             }
             .lastItem {
