@@ -41,28 +41,56 @@
         announcement: null,
       }
     },
-    created() {
-      // 获取公告title
-      axios.get('user/getAnnouncement.do', {
+    beforeRouteEnter(to, from, next){
+      var id = sessionStorage.getItem('announcementId')
+      sessionStorage.removeItem('announcementId')
+      var title = axios.get('user/getAnnouncement.do', {
         params: {
           listAll: -1,
         }
-      }).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.announcementArray = response.data.result.announcement
-        }
       })
-      // 获取公告content
-      axios.get('user/getAnnouncement.do', {
-        params: {
-          announcementId: this.$route.query.id,
-          needContent: 1
-        }
-      }).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.announcement = response.data.result.announcement[0]
-        }
+      let params = {
+        needContent: 1
+      }
+      params = id ? {
+          ...params,
+          announcementId: id
+        } : params
+      var content = axios.get('user/getAnnouncement.do', {
+        params
       })
+      Promise.all([title, content]).then(values => {
+        next(vm => {
+          vm.setData(values)
+        })
+      }, values => {
+        next(vm => {
+          vm.setData(values)
+        })
+      })
+    },
+    created() {
+      /*// 获取公告title
+       axios.get('user/getAnnouncement.do', {
+       params: {
+       listAll: -1,
+       }
+       }).then(response => {
+       if (response.status == 200 && response.data.status == 1) {
+       this.announcementArray = response.data.result.announcement
+       }
+       })
+       // 获取公告content
+       axios.get('user/getAnnouncement.do', {
+       params: {
+       announcementId: this.$route.query.id,
+       needContent: 1
+       }
+       }).then(response => {
+       if (response.status == 200 && response.data.status == 1) {
+       this.announcement = response.data.result.announcement[0]
+       }
+       })*/
     },
     methods: {
       show(name){
@@ -77,7 +105,18 @@
             this.announcement = response.data.result.announcement[0]
           }
         })
-      }
+      },
+      // 获取数据
+      setData(values) {
+        var response = values[0]
+        if (response.status == 200 && response.data.status == 1) {
+          this.announcementArray = response.data.result.announcement
+        }
+        var response = values[1]
+        if (response.status == 200 && response.data.status == 1) {
+          this.announcement = response.data.result.announcement[0]
+        }
+      },
     },
   }
 </script>
