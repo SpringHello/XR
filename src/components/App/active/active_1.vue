@@ -1,6 +1,45 @@
 <template>
   <div>
-    <div class="head"></div>
+    <div class="head">
+      <div class="head-banner">
+        <div>
+          <p>
+            <img src="../../../assets/img/active/active_1/ziti.png">
+          </p>
+          <button>立即领取</button>
+        </div>
+
+      </div>
+      <div class="head-nav">
+        <div v-for="item in headNav" class="nav">
+          <img :src=item.img>
+          <div>
+            <p class="title">{{item.title}}</p>
+            <span class="desc">{{item.desc}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="head-progress">
+        <div class="progress">
+          <div class="pro-itr">
+            <img src="../../../assets/img/active/active_1/pr01.png">
+            <h1>活动流程</h1>
+            <img src="../../../assets/img/active/active_1/pr02.png">
+          </div>
+          <div class="pro-libao">
+            <p>注册即可获得158元现金大礼包，</p>
+            <span>立即注册>></span>
+          </div>
+          <div class="prg-liuc">
+            <ul>
+              <li>1、注册领红包</li>
+              <li>2、限时领取现金券</li>
+              <li>3、购买畅享新睿云</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="body"></div>
     <div class="foot"></div>
     <Modal v-model="loginModal" width="420" class="login-modal" :scrollable="true">
@@ -46,7 +85,7 @@
   </div>
 </template>
 
-<script  type="text/ecmascript-6">
+<script type="text/ecmascript-6">
   import axios from 'axios'
   import regExp from '../../../util/regExp'
 
@@ -89,6 +128,18 @@
           },
         },
         imgSrc: 'user/getKaptchaImage.do',
+        headNav: [
+          {
+            img: require("../../../assets/img/active/active_1/Group 9.png"),
+            title: "注册即可领取158元现金大礼包",
+            desc: "注册送现金，云上主机0元购超高性能还超靠!"
+          },
+          {
+            img: require("../../../assets/img/active/active_1/Group 9.png"),
+            title: "38元无门槛优惠券整点抢",
+            desc: "发现金啦！买云服务器不花钱，统统拿到你手软!"
+          }
+        ]
       }
     },
     created() {
@@ -182,12 +233,139 @@
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
       }
     },
-    watch: {
-    }
+    watch: {}
   }
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .head {
+    .head-banner {
+      height: 560px;
+      background: url("../../../assets/img/active/active_1/banner图@72x.png"), no-repeat linear-gradient(-180deg, #FEF5ED 4%, #FCE6CC 95%);
+      padding: 133px 0 0 350px;
+      div {
+        button {
+          width: 176px;
+          height: 54px;
+          background: #F26667;
+          border-radius: 100px;
+          font-family: PingFangSC-Regular;
+          font-size: 24px;
+          color: #FFFFFF;
+          line-height: 24px;
+          margin-top: 100px;
+          outline: none;
+          border: none;
+          cursor: pointer;
+
+        }
+      }
+    }
+    .head-nav {
+      background: #FFF8F6;
+      width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      .nav {
+        width: 600px;
+        padding: 20px 0 0px 50px;
+        &:hover {
+          background-color: rgba(249, 175, 127, 0.17);
+        }
+        > div {
+          display: inline-block;
+          .title {
+            font-size: 24px;
+            color: #F26667;
+            line-height: 24px;
+            margin-bottom: 5px;
+          }
+          .desc {
+            font-size: 16px;
+            color: #666666;
+            line-height: 16px;
+          }
+        }
+        img {
+          width: 62px;
+          height: 91px;
+          vertical-align: middle;
+          margin-right: 10px;
+        }
+
+      }
+
+    }
+    .head-progress {
+      background: #F9AF80;
+      box-shadow: 0 5px 21px 0 rgba(251, 238, 231, 0.53);
+      height: 423px;
+      .progress {
+        width: 1200px;
+        margin: 0 auto;
+        text-align: center;
+        padding: 120px 0 100px 0;
+        .pro-itr {
+          margin-bottom: 10px;
+          h1 {
+            font-size: 36px;
+            color: #FFFFFF;
+            line-height: 36px;
+            display: inline-block;
+          }
+          img {
+            position: relative;
+            bottom: 10px;
+            &:first-of-type {
+              position: relative;
+              top: 10px;
+            }
+          }
+        }
+        .pro-libao {
+          background: url("../../../assets/img/active/active_1/pr-1.png") no-repeat center;
+          padding: 10px 0;
+          p {
+            font-size: 18px;
+            color: #FFFFFF;
+            line-height: 25px;
+            display: inline-block;
+          }
+          span {
+            font-family: PingFangSC-Regular;
+            font-size: 18px;
+            color: #377dff;
+            cursor: pointer;
+          }
+        }
+        .prg-liuc {
+          margin-top: 40px;
+          ul {
+            display: flex;
+            text-align: center;
+            li {
+              background: #FFFCFD;
+              font-family: PingFangSC-Medium;
+              width: 400px;
+              height: 70px;
+              padding: 23px 122px 22px 123px;
+              font-size: 18px;
+              color: #F26667;
+              &:first-of-type {
+                background-color: rgba(255, 252, 253, 0.6);
+              }
+              &:nth-last-of-type(2) {
+                background-color: rgba(255, 252, 253, 0.8);
+              }
+            }
+          }
+        }
+
+      }
+    }
+  }
+
   .body {
     height: 55%;
     form {
