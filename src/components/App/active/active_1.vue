@@ -1,29 +1,27 @@
 <template>
-    <div>
-
-    </div>
+  <div>
+    <div class="head"></div>
+    <div class="body"></div>
+    <div class="foot"></div>
+  </div>
 </template>
 
 <script>
   export default {
     data() {
-     return{}
+      return {}
 
     },
     created() {
 
     },
     components: {},
-    methods: {
-
-    },
-    computed: {
-
-    },
-    watch: {
-    }
+    methods: {},
+    computed: {},
+    watch: {}
+  }
 </script>
 
-<style  rel="stylesheet/less" lang="less" scoped>
+<style rel="stylesheet/less" lang="less" scoped>
 
 </style>
