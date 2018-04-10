@@ -46,7 +46,7 @@
       <p slot="header" style="color:#5F5F5F;text-align:center;height: 30px;padding-top: 5px;">
         <span style="font-family: PingFangSC-Regular;font-size: 26px;">登录</span>
       </p>
-      <div class="body">
+      <div class="modal-body">
         <form>
           <div>
             <span :class="{warning:vailForm.loginname.warning}">{{vailForm.loginname.message}}</span>
@@ -68,7 +68,7 @@
           </div>
         </form>
       </div>
-      <div slot="footer" class="foot">
+      <div slot="footer" class="modal-foot">
         <button :class="{disabled:disabled}" :disabled="disabled==true" @click="submit">登录</button>
         <div>
           <!--span class="checkBox" :class="{agree:agree}" @click="toggle"></span>&nbsp;<span>我已阅读并同意</span><span
@@ -238,6 +238,7 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+
   .head {
     .head-banner {
       height: 560px;
@@ -365,8 +366,7 @@
       }
     }
   }
-
-  .body {
+  .modal-body {
     height: 55%;
     form {
       margin-top: 15px;
@@ -441,7 +441,7 @@
     }
   }
 
-  .foot {
+  .modal-foot {
     padding-top: 10px;
     height: 32.1%;
     button {
