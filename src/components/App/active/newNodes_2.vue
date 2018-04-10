@@ -4,12 +4,12 @@
       <img style="position: absolute;bottom: 0px;z-index: -1"
            src="../../../assets/img/active/newNodes/banner_1.png">
       <img style="position: absolute;" src="../../../assets/img/active/newNodes/circle.png">
-      <div style="width:1200px;margin:0px auto;padding-top: 9%;position: relative">
+      <div style="width:1200px;margin:0px auto;padding-top: 12%;position: relative">
         <p style="position: relative">庆北方2区（沈阳）节点上线<img style="position: absolute;left: 0;bottom: -35%;" src="../../../assets/img/active/newNodes/text1.png"/></p>
         <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Regular;">配置升级 | 限时低价体验</p>
         <!--<button>立即领取</button>-->
         <transition name="list">
-          <img v-if="img_1" style="position:absolute;left: 51%; top: 20%;z-index: -2;"
+          <img v-if="img_1" style="position:absolute;left: 51%; top: 12%;z-index: -2;"
                src="../../../assets/img/active/newNodes/banner_2.png">
         </transition>
       </div>
@@ -232,8 +232,8 @@
       display: flex;
       justify-content: space-around;
       width: 1200px;
-      border: 1px solid #1F5FFF;
-      //background: url('../../../assets/img/active/newNodes/textBanner1.png') -16px no-repeat;
+      //border: 1px solid #1F5FFF;
+      background: url('../../../assets/img/active/newNodes/textBanner2.png') no-repeat;
       li {
         &::before {
           content: '';
@@ -248,7 +248,7 @@
         font-size: 14px;
         font-family: PingFangSC-Regular;
         color: #333333;
-        line-height: 74px;
+        line-height: 80px;
       }
     }
     p {
@@ -469,7 +469,7 @@
                 cursor: pointer;
                 margin-top: 20px;
                 &:hover {
-                  box-shadow: 0px 2px 30px -10px rgba(79,140,255,0.5);
+                  box-shadow: 0px 0px 13px 0px rgba(79,140,255,0.5)
                 }
               }
             }

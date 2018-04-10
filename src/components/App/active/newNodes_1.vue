@@ -5,12 +5,12 @@
            src="../../../assets/img/active/newNodes/banner_3.png">
       <img style="position: absolute;top: 7%;left: 7%;"
            src="../../../assets/img/active/newNodes/circle_1.png">
-      <div style="width:1200px;margin:0px auto;padding-top: 7%;position: relative">
+      <div style="width:1200px;margin:0px auto;padding-top: 12%;position: relative">
         <p style="position: relative">庆北京1区节点上线<img style="position: absolute;left: -2%;top: -45%;" src="../../../assets/img/active/newNodes/text.png"/></p>
         <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Regular;">配置升级 | 限时低价体验</p>
         <!--<button>立即领取</button>-->
         <transition name="list">
-          <img v-if="img_1" style="position:absolute;left: 45%; top: 40%;z-index: -2;"
+          <img v-if="img_1" style="position:absolute;left: 45%; top: 30%;z-index: -2;"
                src="../../../assets/img/active/newNodes/banner_4.png">
         </transition>
       </div>
@@ -246,7 +246,7 @@
         font-size: 14px;
         font-family: PingFangSC-Regular;
         color: #FFFFFF;
-        line-height: 74px;
+        line-height: 80px;
       }
     }
     p {
@@ -465,7 +465,7 @@
                 cursor: pointer;
                 margin-top: 20px;
                 &:hover {
-                  box-shadow: 0px 2px 30px -10px rgba(22, 24, 40, 0.25);
+                  box-shadow: 0px 2px 13px 0px rgba(242, 115, 105, 1);
                 }
               }
             }

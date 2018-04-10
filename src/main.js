@@ -30,8 +30,8 @@ Vue.prototype.$message = message
 Vue.config.productionTip = false
 
 //axios.defaults.baseURL = '/ruicloud'
-//axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud'
-//axios.defaults.withCredentials = true
+axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud'
+axios.defaults.withCredentials = true
 // axios挂载到Vue原型
 Vue.prototype.$http = axios.create({
     params: {}

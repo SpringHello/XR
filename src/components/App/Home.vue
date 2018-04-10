@@ -1305,11 +1305,11 @@
     button {
       outline: none;
       border: none;
-      padding: 20px 40px;
-      font-size:36px;
+      padding: 15px 40px;
+      font-size:24px;
       font-family:PingFangSC-Regular;
       color:rgba(255,255,255,1);
-      line-height: 36px;
+      line-height: 24px;
       background:linear-gradient(90deg,rgba(248,174,127,1),rgba(242,123,114,1));
       margin-top: 80px;
       box-shadow: 0px 15px 31px -13px rgba(128,25,22,0.55);
@@ -1333,11 +1333,11 @@
     button {
       outline: none;
       border: none;
-      padding: 20px 40px;
-      font-size:36px;
+      padding: 15px 40px;
+      font-size:24px;
       font-family:PingFangSC-Regular;
       color:rgba(255,255,255,1);
-      line-height: 36px;
+      line-height: 24px;
       background:#1F5FFF;
       margin-top: 80px;
       box-shadow: 0px 15px 31px -13px rgba(79,140,255,0.5);
