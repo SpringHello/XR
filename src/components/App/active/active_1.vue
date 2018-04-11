@@ -1,7 +1,31 @@
 <template>
   <div>
     <div class="head"></div>
-    <div class="body"></div>
+    <div class="body">
+      <div class="content">
+        <h2>
+          <img style="position: relative; top: 15px;" src="../../../assets/img/active/active_1/redPacket_icon_2.png"/>
+          限时领取
+          <img src="../../../assets/img/active/active_1/redPacket_icon_1.png"/>
+        </h2>
+        <p>10点、12点、15点、17点整点领取38元现金券</p>
+        <div class="red-packet-active">
+          <ul v-for="item in timeList">
+            <div class="left">
+              <p :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.text}}</p>
+              <p :class="{notGet: item.time ===0 && item.ticket === 0}"><span :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.h1 }}{{ item.h2}}</span>:<span :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.m1 }}{{ item.m2 }}</span>:<span :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.s1 }}{{ item.s2 }}</span>
+              </p>
+            </div>
+            <div class="right">
+              <p><span>￥</span>38<span>现金券</span></p>
+              <button v-if="item.time !== 0">立即领取</button>
+              <button v-if="item.time === 0 && item.ticket !== 0" :class="{canGet: true}">剩余{{ item.ticket}}%</button>
+              <button v-if="item.time === 0 && item.ticket === 0">本场结束</button>
+            </div>
+          </ul>
+        </div>
+      </div>
+    </div>
     <div class="foot"></div>
     <Modal v-model="loginModal" width="420" class="login-modal" :scrollable="true">
       <p slot="header" style="color:#5F5F5F;text-align:center;height: 30px;padding-top: 5px;">
@@ -46,7 +70,7 @@
   </div>
 </template>
 
-<script  type="text/ecmascript-6">
+<script type="text/ecmascript-6">
   import axios from 'axios'
   import regExp from '../../../util/regExp'
 
@@ -89,12 +113,91 @@
           },
         },
         imgSrc: 'user/getKaptchaImage.do',
+        timeList: [
+          {
+            text: '距离10点场还剩',
+            h1: 0,
+            h2: 0,
+            m1: 0,
+            m2: 0,
+            s1: 0,
+            s2: 0,
+            time: 1,
+            ticket: 0
+          },
+          {
+            text: '距离12点场还剩',
+            h1: 0,
+            h2: 0,
+            m1: 0,
+            m2: 0,
+            s1: 0,
+            s2: 0,
+            time: 1,
+            ticket: 0
+          },
+          {
+            text: '距离15点场还剩',
+            h1: 0,
+            h2: 0,
+            m1: 0,
+            m2: 0,
+            s1: 0,
+            s2: 0,
+            time: 1,
+            ticket: 0
+          },
+          {
+            text: '距离17点场还剩',
+            h1: 0,
+            h2: 0,
+            m1: 0,
+            m2: 0,
+            s1: 0,
+            s2: 0,
+            time: 1,
+            ticket: 0
+          }
+        ],
+        serviceTime: 0
       }
     },
     created() {
     },
+    beforeRouteEnter(to, from, next) {
+      var serviceTime = axios.get(`network/getTime.do`)
+      var tickets = axios.get('ticket/couponIsUsed.do')
+      Promise.all([serviceTime, tickets]).then(values => {
+        next(vm => {
+          vm.setData(values)
+        })
+      }, values => {
+        next(vm => {
+          vm.setData(values)
+        })
+      })
+    },
     components: {},
     methods: {
+      // 设置数据
+      setData(values) {
+        var response = values[0]
+        var serviceTime = 0
+        if (response.status == 200 && response.data.status == 1) {
+          serviceTime = response.data.result
+        } else {
+          serviceTime = new Date().getTime()
+        }
+        this.setServerTime(serviceTime)
+        response = values[1]
+        var tickets = []
+        if (response.status == 200 && response.data.status == 1) {
+          tickets = response.data.data
+        } else {
+          tickets = []
+        }
+        this.setTicket(tickets)
+      },
       vail(field) {
         var text = this.form[field];
         if (text == '') {
@@ -176,18 +279,230 @@
         )
         ;
       },
+      setServerTime(serviceTime) {
+        var date_1 = new Date(new Date().toLocaleDateString() + ' ' + '10:00:00').getTime()
+        var date_2 = new Date(new Date().toLocaleDateString() + ' ' + '12:00:00').getTime()
+        var date_3 = new Date(new Date().toLocaleDateString() + ' ' + '15:00:00').getTime()
+        var date_4 = new Date(new Date().toLocaleDateString() + ' ' + '17:00:00').getTime()
+        var minSecondInMinute = 1000 * 60
+        var minSecondInHour = minSecondInMinute * 60
+        var minSecondInDay = minSecondInHour * 24
+        var _self = this
+
+        function interval() {
+          serviceTime += 1000
+          var remainder_1 = date_1 - serviceTime
+          var remainder_2 = date_2 - serviceTime
+          var remainder_3 = date_3 - serviceTime
+          var remainder_4 = date_4 - serviceTime
+          if (remainder_1 > 0) {
+            _self.timeList[0].time = remainder_1
+            //_self.d = Number.parseInt(remainder / minSecondInDay)
+            _self.timeList[0].h1 = Number.parseInt((remainder_1 % minSecondInDay) / minSecondInHour / 10)
+            _self.timeList[0].h2 = Number.parseInt((remainder_1 % minSecondInDay) / minSecondInHour % 10)
+            _self.timeList[0].m1 = Number.parseInt((remainder_1 % minSecondInHour) / minSecondInMinute / 10)
+            _self.timeList[0].m2 = Number.parseInt((remainder_1 % minSecondInHour) / minSecondInMinute % 10)
+            _self.timeList[0].s1 = Number.parseInt((remainder_1 % minSecondInMinute) / 1000 / 10)
+            _self.timeList[0].s2 = Number.parseInt((remainder_1 % minSecondInMinute) / 1000 % 10)
+          } else {
+            _self.timeList[0].time = 0
+          }
+          if (remainder_2 > 0) {
+            _self.timeList[1].time = remainder_2
+            //_self.d = Number.parseInt(remainder / minSecondInDay)
+            _self.timeList[1].h1 = Number.parseInt((remainder_2 % minSecondInDay) / minSecondInHour / 10)
+            _self.timeList[1].h2 = Number.parseInt((remainder_2 % minSecondInDay) / minSecondInHour % 10)
+            _self.timeList[1].m1 = Number.parseInt((remainder_2 % minSecondInHour) / minSecondInMinute / 10)
+            _self.timeList[1].m2 = Number.parseInt((remainder_2 % minSecondInHour) / minSecondInMinute % 10)
+            _self.timeList[1].s1 = Number.parseInt((remainder_2 % minSecondInMinute) / 1000 / 10)
+            _self.timeList[1].s2 = Number.parseInt((remainder_2 % minSecondInMinute) / 1000 % 10)
+          } else {
+            _self.timeList[1].time = 0
+          }
+          if (remainder_3 > 0) {
+            _self.timeList[2].time = remainder_3
+            //_self.d = Number.parseInt(remainder / minSecondInDay)
+            _self.timeList[2].h1 = Number.parseInt((remainder_3 % minSecondInDay) / minSecondInHour / 10)
+            _self.timeList[2].h2 = Number.parseInt((remainder_3 % minSecondInDay) / minSecondInHour % 10)
+            _self.timeList[2].m1 = Number.parseInt((remainder_3 % minSecondInHour) / minSecondInMinute / 10)
+            _self.timeList[2].m2 = Number.parseInt((remainder_3 % minSecondInHour) / minSecondInMinute % 10)
+            _self.timeList[2].s1 = Number.parseInt((remainder_3 % minSecondInMinute) / 1000 / 10)
+            _self.timeList[2].s2 = Number.parseInt((remainder_3 % minSecondInMinute) / 1000 % 10)
+          } else {
+            _self.timeList[2].time = 0
+          }
+          if (remainder_4 > 0) {
+            _self.timeList[3].time = remainder_4
+            //_self.d = Number.parseInt(remainder / minSecondInDay)
+            _self.timeList[3].h1 = Number.parseInt((remainder_4 % minSecondInDay) / minSecondInHour / 10)
+            _self.timeList[3].h2 = Number.parseInt((remainder_4 % minSecondInDay) / minSecondInHour % 10)
+            _self.timeList[3].m1 = Number.parseInt((remainder_4 % minSecondInHour) / minSecondInMinute / 10)
+            _self.timeList[3].m2 = Number.parseInt((remainder_4 % minSecondInHour) / minSecondInMinute % 10)
+            _self.timeList[3].s1 = Number.parseInt((remainder_4 % minSecondInMinute) / 1000 / 10)
+            _self.timeList[3].s2 = Number.parseInt((remainder_4 % minSecondInMinute) / 1000 % 10)
+          } else {
+            _self.timeList[3].time = 0
+          }
+        }
+
+        interval()
+        this.intervalInstance = setInterval(interval, 1000)
+      },
+      setTicket(data) {
+        this.timeList[0].ticket = data[0]
+        this.timeList[1].ticket = data[1]
+        this.timeList[2].ticket = data[2]
+        this.timeList[3].ticket = data[3]
+      }
     },
     computed: {
       disabled() {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
-      }
+      },
     },
     watch: {
+      // 监听倒计时，如果全部为0时清除定时器
+      timeList() {
+        if (this.timeList[3].time === 0) {
+          clearInterval(this.intervalInstance)
+        }
+      }
     }
   }
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .body {
+    background: url("../../../assets/img/active/active_1/redPacket_background_1.png") no-repeat, url("../../../assets/img/active/active_1/redPacket_background_1.png") 140% 200% no-repeat, rgba(249, 175, 128, 1);
+    padding-top: 120px;
+    padding-bottom: 100px;
+    .content {
+      width: 1200px;
+      margin: 0 auto;
+      h2 {
+        font-size: 36px;
+        font-family: PingFangSC-Medium;
+        color: rgba(255, 255, 255, 1);
+        line-height: 36px;
+        text-align: center;
+        margin-bottom: 15px;
+      }
+      > p {
+        font-size: 18px;
+        font-family: PingFangSC-Regular;
+        color: rgba(255, 255, 255, 1);
+        line-height: 25px;
+        padding: 8px;
+        text-align: center;
+        margin-bottom: 50px;
+        background: url("../../../assets/img/active/active_1/redPacket_background_2.png") 370px no-repeat;
+      }
+      .red-packet-active {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0 25px;
+        justify-content: space-between;
+        > ul {
+          width: 550px;
+          height: 178px;
+          background: url("../../../assets/img/active/active_1/redPacket_background_3.png");
+          box-shadow: 0px 9px 16px -8px rgba(242, 102, 103, 0.37);
+          .left {
+            float: left;
+            width: 59.5%;
+            padding: 40px;
+            border-right: 1px dashed #F9AF80;
+            > p {
+              font-size: 32px;
+              font-family: PingFangSC-Medium;
+              color: rgba(242, 102, 103, 1);
+              line-height: 32px;
+              text-align: center;
+              &.notGet {
+                color: rgba(214, 214, 214, 1);
+              }
+            }
+            p:first-child {
+              font-size: 24px;
+              font-family: PingFangSC-Medium;
+              line-height: 24px;
+              margin-bottom: 20px;
+            }
+            p:last-child {
+              span {
+                display: inline-block;
+                font-size: 32px;
+                font-family: PingFangSC-Medium;
+                color: rgba(255, 255, 255, 1);
+                line-height: 32px;
+                padding: 8px 9px 10px;
+                background: rgba(242, 102, 103, 1);
+                &.notGet{
+                  background:rgba(214, 214, 214, 1);
+                }
+              }
+              span:nth-child(1) {
+                margin-right: 9px;
+              }
+              span:nth-child(2) {
+                margin-left: 9px;
+                margin-right: 9px;
+              }
+              span:nth-child(3) {
+                margin-left: 9px;
+              }
+            }
+          }
+          .right {
+            float: right;
+            width: 40.5%;
+            padding-top: 36px;
+            > p {
+              font-size: 60px;
+              font-family: Arial-Black;
+              color: rgba(242, 102, 103, 1);
+              line-height: 60px;
+              text-align: center;
+              margin-bottom: 20px;
+              span:nth-child(1) {
+                font-size: 18px;
+              }
+              span:nth-child(2) {
+                font-size: 14px;
+              }
+            }
+            button {
+              font-size: 18px;
+              font-family: PingFangSC-Regular;
+              color: rgba(255, 255, 255, 1);
+              line-height: 18px;
+              outline: none;
+              border: none;
+              padding: 12px 40px;
+              border-radius: 24px;
+              margin-left: 34px;
+              &.canGet {
+                cursor: pointer;
+                background: rgba(242, 102, 103, 1);
+                box-shadow: 0px 7px 26px -10px rgba(242, 102, 103, 1);
+                &:hover {
+                  background: rgba(249, 175, 128, 1);
+                  box-shadow: 0px 7px 26px -8px rgba(227, 147, 96, 1)
+                }
+              }
+            }
+          }
+        }
+        ul:nth-child(1) {
+          margin-bottom: 48px;
+        }
+        ul:nth-child(2) {
+          margin-bottom: 48px;
+        }
+      }
+    }
+  }
+
   .modal-body {
     height: 55%;
     form {

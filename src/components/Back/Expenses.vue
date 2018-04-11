@@ -1048,6 +1048,7 @@
         this.$http.post('device/DescribeWalletsBalance.do').then(response => {
           if (response.status == 200 && response.data.status == '1') {
             this.balance = response.data.data.remainder
+            this.coupon = response.data.data.voucher
           }
         })
       },

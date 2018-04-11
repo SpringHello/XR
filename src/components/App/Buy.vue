@@ -1436,7 +1436,7 @@
       // 设置自有镜像
       ownMirrorList() {
         if (this.userInfo != null) {
-          var url1 = `information/listTemplates.do?user=1&zoneId=${this.PecsInfo.zone.zoneid}`
+          var url1 = `information/listTemplates.do?user=1&zoneId=${this.PecsInfo.zone.zoneid}&status=1`
           axios.get(url1).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.PecsInfo.customList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)

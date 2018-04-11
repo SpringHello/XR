@@ -6,8 +6,8 @@
       <img style="position: absolute;top: 7%;left: 7%;"
            src="../../../assets/img/active/newNodes/circle_1.png">
       <div style="width:1200px;margin:0px auto;padding-top: 12%;position: relative">
-        <p style="position: relative">庆北京1区节点上线<img style="position: absolute;left: -2%;top: -45%;" src="../../../assets/img/active/newNodes/text.png"/></p>
-        <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Regular;">配置升级 | 限时低价体验</p>
+        <p style="position: relative">北京一区盛大开服<img style="position: absolute;left: -2%;top: -45%;" src="../../../assets/img/active/newNodes/text.png"/></p>
+        <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Regular;">布局首都，新购特惠，限时抢购</p>
         <!--<button>立即领取</button>-->
         <transition name="list">
           <img v-if="img_1" style="position:absolute;left: 45%; top: 30%;z-index: -2;"
@@ -29,7 +29,7 @@
             <img style="position: absolute;right: 0; top: -34px;" src="../../../assets/img/active/newNodes/shadow1.png"/>
             <img style="position: absolute;left: 102%" src="../../../assets/img/active/newNodes/icon_1.png"/>
             <h2 style="margin-bottom: 20px">活动流程</h2>
-            <p>活动时间：2018.4.10-2018.5.10</p>
+            <p>活动时间：2018.4.16-2018.5.16</p>
             <div class="items">
               <dl>
                 <dt v-if="isLogin==1"><img src="../../../assets/img/active/newNodes/dl.png"></dt>
@@ -141,7 +141,7 @@
             <dl>
               <dt>2、活动规则：</dt>
               <dd>
-                1） 此次活动仅限北京一区、北方二区（辽宁）节点；
+                1） 此次活动仅限北京一区节点；
               </dd>
               <dd>
                 2） 同一用户可选择多款4折、5折产品进行优惠购买，但不可重复参加此次3折秒杀活动；

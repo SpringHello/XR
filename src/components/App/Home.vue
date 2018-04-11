@@ -10,9 +10,9 @@
               <div style="width:1200px;margin:0px auto;padding-top: 8%;position: relative;z-index: 1">
                 <img style="position: absolute;top: 10%;left: -20%;z-index: 2"
                      src="../../assets/img/active/newNodes/circle_1.png">
-                <p>庆北京一区节点上线
+                <p>北京一区盛大开服
                   <img style="position: absolute;left: -2%;top: 28%;z-index: 1" src="../../assets/img/active/newNodes/text.png"/></p>
-                <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">配置升级 | 限时低价体验</p>
+                <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">布局首都，新购特惠，限时抢购</p>
                 <button>立即体验</button>
                 <img style="position:absolute;left: 45%; top: 13%;z-index: -2;"
                      src="../../assets/img/active/newNodes/banner_4.png">
@@ -25,10 +25,11 @@
                style="cursor: pointer;background:#87B6FF">
             <div class="newNodes_2">
               <img style="position: absolute;z-index: 1" src="../../assets/img/active/newNodes/circle.png">
-              <div style="width:1200px;margin:0px auto;padding-top: 8%;position: relative;z-index: 1">
-                <p>庆北方二区（沈阳）节点上线
-                  <img style="position: absolute;left: 0;top: 20%;z-index: 1" src="../../assets/img/active/newNodes/text1.png"/></p>
-                <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">配置升级 | 限时低价体验</p>
+              <div style="width:1200px;margin:0px auto;padding-top: 7%;position: relative;z-index: 1">
+                <p>华北二区盛大开服
+                  <img style="position: absolute;left: 0;top: 30%;z-index: 1" src="../../assets/img/active/newNodes/text1.png"/></p>
+                <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">春暖花开，活动绽放</p>
+                <p>3折优惠<span style="font-size: 24px">起</span></p>
                 <button>立即体验</button>
                 <img style="position:absolute;left: 58%; top: 2%;z-index: -2;"
                      src="../../assets/img/active/newNodes/banner_2.png">
@@ -1339,7 +1340,7 @@
       color:rgba(255,255,255,1);
       line-height: 24px;
       background:#1F5FFF;
-      margin-top: 80px;
+      margin-top: 40px;
       box-shadow: 0px 15px 31px -13px rgba(79,140,255,0.5);
       border-radius:38px;
       cursor: pointer;
