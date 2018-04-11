@@ -404,7 +404,7 @@
         width: 1200px;
         margin: 0 auto;
         text-align: center;
-        padding: 120px 0 100px 0;
+        padding: 120px 0 50px 0;
         .pro-itr {
           margin-bottom: 10px;
           h1 {
