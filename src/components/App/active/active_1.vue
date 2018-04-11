@@ -39,7 +39,7 @@
               <li>3、购买畅享新睿云</li>
             </ul>
           </div>
-          <button>立即注册</button>
+          <button @click="$router.push('register')">立即注册</button>
         </div>
       </div>
     </div>
@@ -79,7 +79,7 @@
         <div class="center">
           <div class="rules">
             <h2>活动规则</h2>
-            <p>1. 新用户完成注册即可领取196元现金红包。</p> 
+            <p>1. 新用户完成注册即可领取196元现金红包。</p>
             <p>2. 代金券包括68元优惠券（满88元可用，有效期三个月），90元优惠券（满150元可用，有效期六个月）和38元无门槛代金券（需在官网领取，有效期7天） </p>
             <p>3. 38元无门槛优惠券领取规则：可在活动页面每天整点抢购。整点抢购时间：每个工作日早上10点、12点、 15点、17点共四轮，数量多多，机会多多。 </p>
             <p>4. 注册完成158元代金券将会下发到用户账户，38元优惠券抢到后即可使用。使用前均需实名认证，且同一用户仅能领取一次。（同一用户是指：根据不同新睿云账号在注册、登录、使用中的关联信息，新睿云判断其实际为同一用户。关联信息举例：同一证件、同一手机号、同一支付账号、同一设备、同一地址等。） </p>
@@ -657,7 +657,7 @@
         background: #fff;
         .parameter{
           p{
-            margin-bottom:24px; 
+            margin-bottom:24px;
             span{
               font-size: 18px;
               color: #333;
@@ -679,7 +679,7 @@
           }
           span{
             display: inline-block;
-            margin-top:10px; 
+            margin-top:10px;
             width: 136px;
             height: 34px;
             color: #fff;
