@@ -49,41 +49,26 @@
        <div class="center">
          <h2 class="head-headline" style="color:#F26667">推荐购买产品</h2>
          <div class="content">
-          <div class="item">
+          <div class="item" v-for="(item,index) in product" :key="index">
             <div class="top">
-              <h4>高IO型</h4>
-              <p>高磁盘IO的最佳选择，提供每秒数万次低延迟性随机 I/O (IOPS)，适合于低延时，I/O密集型应用。</p>
+              <h4>{{item.title}}</h4>
+              <p>{{item.desc}}</p>
             </div>
             <div class="bottom">
               <div class="parameter">
-                <p>2核<span>CPU</span>4G<span>内存</span>40G<span>磁盘</span>2mb/s<span>带宽</span></p>
-                <RadioGroup v-model="system" size="large" class="activity-radio">
-                  <Radio label="Centos"></Radio>
-                  <Radio label="Windows"></Radio>
+                <p>
+                  <span v-for="(secitem,index) in item.params" :key="index">
+                    {{secitem.num}}
+                    <i>{{secitem.unit}}</i>
+                  </span>
+                </p>
+                <RadioGroup v-model="item.system" class="activity-radio" size="large">
+                  <Radio :label="system.label" v-for="(system,index) in systemList"  :key="index">{{system.text}}</Radio>
                 </RadioGroup>
               </div>
             <div class="count">
-              <p>0.75元／小时</p>
-              <button>立即购买</button>
-            </div>
-            </div>
-          </div>
-          <div class="item">
-            <div class="top">
-              <h4>超高IO型</h4>
-              <p>采用高性能SSD系统盘，适用于NoSQL 数据库、群集化数据库、联机事务处理等高I/O负载需求。</p>
-            </div>
-            <div class="bottom">
-              <div class="parameter">
-                <p>4核<span>CPU</span>8G<span>内存</span>40G<span>磁盘</span>2mb/s<span>带宽</span></p>
-                <RadioGroup v-model="highsystem" size="large" class="activity-radio">
-                  <Radio label="Centos"></Radio>
-                  <Radio label="Windows"></Radio>
-                </RadioGroup>
-              </div>
-            <div class="count">
-              <p>1.35元／小时</p>
-              <button>立即购买</button>
+              <p>{{item.price}}</p>
+              <span @click="productBuy(item,index)">立即购买</span>
             </div>
             </div>
           </div>
@@ -169,8 +154,6 @@
   export default {
     data() {
       return {
-        system: 'Centos',
-        highsystem: 'Centos',
         loginModal: false,
         form: {
           loginname: '',
@@ -206,6 +189,42 @@
             title: "38元无门槛优惠券整点抢",
             desc: "发现金啦！买云服务器不花钱，统统拿到你手软!"
           }
+        ],
+        product:[
+          {
+            title: '高IO型',
+            desc: '高磁盘IO的最佳选择，提供每秒数万次低延迟性随机 I/O (IOPS)，适合于低延时，I/O密集型应用。',
+            system: 'CentOS',
+            price: '0.25元／小时',
+            params:[
+              {num:'1核',unit:'CPU'},
+              {num:'1G',unit:'内存'},
+              {num:'40G',unit:'磁盘'},
+              {num:'1mb/s',unit:'带宽'},
+            ]
+          },
+          {
+            title: '超高IO型',
+            desc: '采用高性能SSD系统盘，适用于NoSQL 数据库、群集化数据库、联机事务处理等高I/O负载需求。',
+            system: 'CentOS',
+            price: '0.52元／小时',
+            params:[
+              {num:'2核',unit:'CPU'},
+              {num:'2G',unit:'内存'},
+              {num:'40G',unit:'磁盘'},
+              {num:'2mb/s',unit:'带宽'},
+            ]
+          }
+        ],
+        systemList: [
+          {
+            label: 'CentOS',
+            text: 'CentOS'
+          },
+          {
+            label: 'Windows',
+            text: 'Windows'
+          },
         ]
       }
     },
@@ -294,6 +313,14 @@
         )
         ;
       },
+      productBuy(item,index) {
+        if (this.userInfo == null) {
+          this.loginModal = true
+          return
+        }
+        // console.log(item.system+index+item.price)
+        // console.log(item.params)
+      }
     },
     computed: {
       disabled() {
@@ -329,7 +356,6 @@
             outline: none;
             border: none;
             cursor: pointer;
-
           }
         }
         img {
@@ -630,15 +656,18 @@
         height: 122px;
         background: #fff;
         .parameter{
-          font-size: 18px;
-          color: #333;
-          line-height: 24px;
           p{
             margin-bottom:24px; 
             span{
-              font-size: 14px;
-              color:#999999;
-              margin-right: 20px;
+              font-size: 18px;
+              color: #333;
+              line-height: 24px;
+              i{
+                font-size: 14px;
+                color:#999999;
+                margin-right: 20px;
+                font-style: normal;
+              }
             }
           }
         }
@@ -648,13 +677,19 @@
           p{
             text-align: right;
           }
-          button{
+          span{
+            display: inline-block;
             margin-top:10px; 
             width: 136px;
             height: 34px;
             color: #fff;
             background: #F26667;
-            border: none;
+            text-align: center;
+            line-height: 34px;
+            cursor: pointer;
+            &:hover {
+              box-shadow: 0px 2px 13px 0px rgba(242, 115, 105, 1);
+            }
           }
         }
       }
@@ -681,8 +716,4 @@
       }
     }
   }
-  .ivu-radio-large .ivu-radio-wrapper{
-    font-size: 18px;
-  }
-  
 </style>
