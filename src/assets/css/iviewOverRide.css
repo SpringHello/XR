@@ -250,3 +250,10 @@ div.modal-header-border {
   width: 60%;
   float: right;
 }
+
+.activity-radio .ivu-radio-checked .ivu-radio-inner {
+  border-color: #F26667;
+}
+.activity-radio .ivu-radio-inner:after{
+  background-color: #F26667;
+}
