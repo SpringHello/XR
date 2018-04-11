@@ -8,7 +8,9 @@
               <img src="../../../assets/img/active/active_1/ziti.png">
             </p>
           </div>
-          <img src="../../../assets/img/active/active_1/baner.png">
+          <transition name="list">
+          <img v-if="img" src="../../../assets/img/active/active_1/baner.png">
+          </transition>
         </div>
       </div>
       <div class="head-nav">
@@ -179,6 +181,7 @@
   export default {
     data() {
       return {
+        img: false,
         loginModal: false,
         form: {
           loginname: '',
@@ -531,6 +534,9 @@
           clearInterval(this.intervalInstance)
         }
       }
+    },
+    mounted() {
+      this.img = true
     }
   }
 </script>
@@ -1052,6 +1058,16 @@
         line-height: 28px;
       }
     }
+  }
+
+  .list-enter-active, .list-leave-active {
+    transition: all 1s;
+  }
+
+  .list-enter, .list-leave-to
+    /* .list-leave-active for below version 2.1.8 */ {
+    opacity: 0;
+    transform: translateY(300px);
   }
 
 </style>
