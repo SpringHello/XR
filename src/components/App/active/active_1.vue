@@ -1,6 +1,48 @@
 <template>
   <div>
-    <div class="head"></div>
+    <div class="head">
+      <div class="head-banner">
+        <div>
+          <div>
+            <p>
+              <img src="../../../assets/img/active/active_1/ziti.png">
+            </p>
+          </div>
+          <img src="../../../assets/img/active/active_1/baner.png">
+        </div>
+      </div>
+      <div class="head-nav">
+        <div>
+          <div v-for="item in headNav" class="nav">
+            <img :src=item.img>
+            <div>
+              <p class="title">{{item.title}}</p>
+              <span class="desc">{{item.desc}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="head-progress">
+        <div class="progress">
+          <div class="pro-itr">
+            <img src="../../../assets/img/active/active_1/pr01.png">
+            <h1>活动流程</h1>
+            <img src="../../../assets/img/active/active_1/pr02.png">
+          </div>
+          <div class="pro-libao">
+            <p>注册即可获得158元现金大礼包</p>
+          </div>
+          <div class="prg-liuc">
+            <ul>
+              <li>1、注册领红包</li>
+              <li>2、限时领取现金券</li>
+              <li>3、购买畅享新睿云</li>
+            </ul>
+          </div>
+          <button>立即注册</button>
+        </div>
+      </div>
+    </div>
     <div class="body">
       <div class="content">
         <h2>
@@ -13,20 +55,68 @@
           <ul v-for="item in timeList">
             <div class="left">
               <p :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.text}}</p>
-              <p :class="{notGet: item.time ===0 && item.ticket === 0}"><span :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.h1 }}{{ item.h2}}</span>:<span :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.m1 }}{{ item.m2 }}</span>:<span :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.s1 }}{{ item.s2 }}</span>
+              <p :class="{notGet: item.time ===0 && item.ticket === 0}"><span :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.h1 }}{{ item.h2}}</span>:<span
+                :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.m1 }}{{ item.m2 }}</span>:<span :class="{notGet: item.time ===0 && item.ticket === 0}">{{ item.s1 }}{{ item.s2 }}</span>
               </p>
             </div>
             <div class="right">
               <p><span>￥</span>38<span>现金券</span></p>
               <button v-if="item.time !== 0">立即领取</button>
-              <button v-if="item.time === 0 && item.ticket !== 0" :class="{canGet: true}">剩余{{ item.ticket}}%</button>
+              <button v-if="item.time === 0 && item.ticket !== 0" :class="{canGet: true}" @click="getTicket">剩余{{ item.ticket}}%</button>
               <button v-if="item.time === 0 && item.ticket === 0">本场结束</button>
             </div>
           </ul>
         </div>
       </div>
     </div>
-    <div class="foot"></div>
+    <div class="foot">
+      <div class="recommend-product" style="height:546px;">
+        <div class="center">
+          <h2 class="head-headline" style="color:#F26667">推荐购买产品</h2>
+          <div class="content">
+            <div class="item" v-for="(item,index) in product" :key="index">
+              <div class="top">
+                <h4>{{item.title}}</h4>
+                <p>{{item.desc}}</p>
+              </div>
+              <div class="bottom">
+                <div class="parameter">
+                  <p>
+                  <span v-for="(secitem,index) in item.params" :key="index">
+                    {{secitem.num}}
+                    <i>{{secitem.unit}}</i>
+                  </span>
+                  </p>
+                  <RadioGroup v-model="item.system" class="activity-radio" size="large">
+                    <Radio :label="system.label" v-for="(system,index) in systemList" :key="index">{{system.text}}</Radio>
+                  </RadioGroup>
+                </div>
+                <div class="count">
+                  <p>{{item.price}}</p>
+                  <span @click="productBuy(item,index)">立即购买</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="activity-rule">
+        <div class="center">
+          <div class="rules">
+            <h2>活动规则</h2>
+            <p>1. 新用户完成注册即可领取196元现金红包。</p>
+            <p>2. 代金券包括68元优惠券（满88元可用，有效期三个月），90元优惠券（满150元可用，有效期六个月）和38元无门槛代金券（需在官网领取，有效期7天） </p>
+            <p>3. 38元无门槛优惠券领取规则：可在活动页面每天整点抢购。整点抢购时间：每个工作日早上10点、12点、 15点、17点共四轮，数量多多，机会多多。 </p>
+            <p>4. 注册完成158元代金券将会下发到用户账户，38元优惠券抢到后即可使用。使用前均需实名认证，且同一用户仅能领取一次。（同一用户是指：根据不同新睿云账号在注册、登录、使用中的关联信息，新睿云判断其实际为同一用户。关联信息举例：同一证件、同一手机号、同一支付账号、同一设备、同一地址等。） </p>
+            <p>5. 若之前注册用户尚未使用过新睿云平台产品，经判定，可向客服申请，领取优惠券。 </p>
+            <p>6. 此现金红包仅用于支付新睿云平台北京节点订单，抵减相应金额，不能进行兑现或其他用途。 </p>
+            <p>7. 代金券有有效期的，失效后，未使用的余额无法使用，您可在已失效代金券中查看 </p>
+            <p>8. 使用代金券支付的订单，发生退款时，代金券支付的部分不予返还 </p>
+            <p>9. 活动最终解释权在法律范围内归新睿云所有</p>
+          </div>
+        </div>
+      </div>
+    </div>
     <Modal v-model="loginModal" width="420" class="login-modal" :scrollable="true">
       <p slot="header" style="color:#5F5F5F;text-align:center;height: 30px;padding-top: 5px;">
         <span style="font-family: PingFangSC-Regular;font-size: 26px;">登录</span>
@@ -159,7 +249,55 @@
             ticket: 0
           }
         ],
-        serviceTime: 0
+        serviceTime: 0,
+        headNav: [
+          {
+            img: require("../../../assets/img/active/active_1/Group 9.png"),
+            title: "注册即可领取158元现金大礼包",
+            desc: "注册送现金，云上主机0元购超高性能还超靠!"
+          },
+          {
+            img: require("../../../assets/img/active/active_1/Group 10.png"),
+            title: "38元无门槛优惠券整点抢",
+            desc: "发现金啦！买云服务器不花钱，统统拿到你手软!"
+          }
+        ],
+        product: [
+          {
+            title: '高IO型',
+            desc: '高磁盘IO的最佳选择，提供每秒数万次低延迟性随机 I/O (IOPS)，适合于低延时，I/O密集型应用。',
+            system: 'CentOS',
+            price: '0.25元／小时',
+            params: [
+              {num: '1核', unit: 'CPU'},
+              {num: '1G', unit: '内存'},
+              {num: '40G', unit: '磁盘'},
+              {num: '1mb/s', unit: '带宽'},
+            ]
+          },
+          {
+            title: '超高IO型',
+            desc: '采用高性能SSD系统盘，适用于NoSQL 数据库、群集化数据库、联机事务处理等高I/O负载需求。',
+            system: 'CentOS',
+            price: '0.52元／小时',
+            params: [
+              {num: '2核', unit: 'CPU'},
+              {num: '2G', unit: '内存'},
+              {num: '40G', unit: '磁盘'},
+              {num: '2mb/s', unit: '带宽'},
+            ]
+          }
+        ],
+        systemList: [
+          {
+            label: 'CentOS',
+            text: 'CentOS'
+          },
+          {
+            label: 'Windows',
+            text: 'Windows'
+          },
+        ]
       }
     },
     created() {
@@ -353,6 +491,18 @@
         this.timeList[1].ticket = data[1]
         this.timeList[2].ticket = data[2]
         this.timeList[3].ticket = data[3]
+      },
+      getTicket () {
+        if (this.this.$store.state.userInfo == null) {
+          this.loginModal = true
+          return
+        }
+      },
+      productBuy(item, index) {
+        if (this.userInfo == null) {
+          this.loginModal = true
+          return
+        }
       }
     },
     computed: {
@@ -437,8 +587,8 @@
                 line-height: 32px;
                 padding: 8px 9px 10px;
                 background: rgba(242, 102, 103, 1);
-                &.notGet{
-                  background:rgba(214, 214, 214, 1);
+                &.notGet {
+                  background: rgba(214, 214, 214, 1);
                 }
               }
               span:nth-child(1) {
@@ -498,6 +648,142 @@
         }
         ul:nth-child(2) {
           margin-bottom: 48px;
+        }
+      }
+    }
+  }
+
+  .head {
+    .head-banner {
+      background: linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));
+      > div {
+        width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 65px;
+        div {
+          padding-top: 133px;
+          button {
+            width: 176px;
+            height: 54px;
+            background: #F26667;
+            border-radius: 100px;
+            font-size: 24px;
+            color: #FFFFFF;
+            line-height: 24px;
+            margin-top: 100px;
+            outline: none;
+            border: none;
+            cursor: pointer;
+          }
+        }
+        img {
+          padding-top: 70px;
+        }
+      }
+    }
+    .head-nav {
+      background: rgba(249, 175, 128, 0.5);
+      > div {
+        width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        .nav {
+          cursor: pointer;
+          width: 600px;
+          padding: 23px 0 0 50px;
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+          }
+          > div {
+            display: inline-block;
+            .title {
+              font-size: 24px;
+              color: #F26667;
+              line-height: 24px;
+              margin-bottom: 5px;
+            }
+            .desc {
+              font-size: 16px;
+              color: #666666;
+              line-height: 16px;
+            }
+          }
+          img {
+            vertical-align: middle;
+            margin-right: 10px;
+          }
+
+        }
+      }
+    }
+    .head-progress {
+      .progress {
+        width: 1200px;
+        margin: 0 auto;
+        text-align: center;
+        padding: 120px 0 50px 0;
+        .pro-itr {
+          margin-bottom: 10px;
+          h1 {
+            font-size: 36px;
+            color: #F26667;
+            line-height: 36px;
+            display: inline-block;
+          }
+          img {
+            position: relative;
+            bottom: 10px;
+            &:first-of-type {
+              position: relative;
+              top: 10px;
+            }
+          }
+        }
+        .pro-libao {
+          background: url("../../../assets/img/active/active_1/pr-1.png") no-repeat center;
+          padding: 10px 0;
+          p {
+            font-size: 18px;
+            color: #FFFFFF;
+            line-height: 25px;
+          }
+        }
+        .prg-liuc {
+          margin-top: 40px;
+          ul {
+            display: flex;
+            text-align: center;
+            li {
+              background: rgba(249, 175, 128, 1);
+              width: 400px;
+              height: 70px;
+              padding: 23px 122px 22px 123px;
+              font-size: 18px;
+              color: #FFFFFF;
+              &:first-of-type {
+                background-color: rgba(249, 175, 128, 0.6);
+              }
+              &:nth-last-of-type(2) {
+                background-color: rgba(249, 175, 128, 0.8);
+              }
+            }
+          }
+        }
+        button {
+          width: 153px;
+          height: 42px;
+          background: rgba(242, 102, 103, 1);
+          border-radius: 21px;
+          color: #FFFFFF;
+          border: none;
+          outline: none;
+          margin-top: 40px;
+          cursor: pointer;
+          font-size: 18px;
+          line-height: 18px;
         }
       }
     }
@@ -634,6 +920,123 @@
       font-family: PingFangSC-Regular;
       font-size: 14px;
       letter-spacing: 0.83px;
+    }
+  }
+
+  .head-headline {
+    font-size: 36px;
+    text-align: center;
+    &::before {
+      content: url(../../../assets/img/active/active_1/title-before-icon.png);
+      width: 50px;
+      display: inline-block;
+    }
+    &::after {
+      content: url(../../../assets/img/active/active_1/title-after-icon.png);
+      width: 50px;
+      display: inline-block;
+    }
+  }
+
+  .recommend-product {
+    padding-top: 100px;
+    background-color: #FFF8F6;
+    .center {
+      width: 1200px;
+      margin: 0 auto;
+    }
+    .content {
+      display: flex;
+      justify-content: space-between;
+    }
+    .item:nth-of-type(2) .top {
+      background: url("../../../assets/img/active/active_1/bg-product-right.png") no-repeat center;
+    }
+    .item {
+      margin-top: 50px;
+      width: 590px;
+      height: 266px;
+      box-shadow: 0px 4px 20px 0px rgba(242, 102, 103, 0.35);
+      .top {
+        padding: 20px 40px;
+        height: 144px;
+        color: #fff;
+        text-align: center;
+        font-size: 16px;
+        background: url("../../../assets/img/active/active_1/bg-product-left.png") no-repeat center;
+        h4 {
+          font-size: 30px;
+        }
+        p {
+          line-height: 32px;
+        }
+      }
+      .bottom {
+        padding: 20px 40px;
+        display: flex;
+        justify-content: space-between;
+        height: 122px;
+        background: #fff;
+        .parameter {
+          p {
+            margin-bottom: 24px;
+            span {
+              font-size: 18px;
+              color: #333;
+              line-height: 24px;
+              i {
+                font-size: 14px;
+                color: #999999;
+                margin-right: 20px;
+                font-style: normal;
+              }
+            }
+          }
+        }
+        .count {
+          color: #F26667;
+          font-size: 18px;
+          p {
+            text-align: right;
+          }
+          span {
+            display: inline-block;
+            margin-top: 10px;
+            width: 136px;
+            height: 34px;
+            color: #fff;
+            background: #F26667;
+            text-align: center;
+            line-height: 34px;
+            cursor: pointer;
+            &:hover {
+              box-shadow: 0px 2px 13px 0px rgba(242, 115, 105, 1);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .activity-rule {
+    background: #fff8f6 url(../../../assets/img/active/active_1/bg-rules.png) no-repeat center;
+    .center {
+      width: 1200px;
+      margin: 0 auto;
+    }
+    .rules {
+      padding: 20px 0 50px;
+      font-family: PingFangSC;
+      color: #666666;
+      h2 {
+        font-size: 16px;
+        line-height: 22px;
+        margin-bottom: 10px;
+      }
+      p {
+        font-size: 14px;
+        line-height: 28px;
+      }
     }
   }
 </style>
