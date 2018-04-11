@@ -250,7 +250,7 @@
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
-        padding-bottom: 70px;
+        padding-bottom: 65px;
         div{
           padding-top: 133px;
           button {
