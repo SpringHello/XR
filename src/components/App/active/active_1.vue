@@ -39,7 +39,7 @@
               <li>3、购买畅享新睿云</li>
             </ul>
           </div>
-          <button>立即注册</button>
+          <button @click="$router.push('register')">立即注册</button>
         </div>
       </div>
     </div>
@@ -492,11 +492,23 @@
         this.timeList[2].ticket = data[2]
         this.timeList[3].ticket = data[3]
       },
-      getTicket () {
-        if (this.this.$store.state.userInfo == null) {
+      getTicket() {
+        if (this.$store.state.userInfo == null) {
           this.loginModal = true
           return
         }
+        var url = `ticket/takeTicket.do`
+        axios.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$message.info({
+              content: response.data.message
+            })
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
       },
       productBuy(item, index) {
         if (this.userInfo == null) {
@@ -1039,4 +1051,5 @@
       }
     }
   }
+
 </style>
