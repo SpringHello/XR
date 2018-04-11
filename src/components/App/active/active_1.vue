@@ -3,10 +3,12 @@
     <div class="head">
       <div class="head-banner">
         <div>
-          <p>
+          <div>
+            <p>
             <img src="../../../assets/img/active/active_1/ziti.png">
           </p>
-          <button>立即领取</button>
+            <button>立即领取</button></div>
+          <img src="../../../assets/img/active/active_1/baner.png">
         </div>
       </div>
       <div class="head-nav">
@@ -136,7 +138,7 @@
             desc: "注册送现金，云上主机0元购超高性能还超靠!"
           },
           {
-            img: require("../../../assets/img/active/active_1/Group 9.png"),
+            img: require("../../../assets/img/active/active_1/Group 10.png"),
             title: "38元无门槛优惠券整点抢",
             desc: "发现金啦！买云服务器不花钱，统统拿到你手软!"
           }
@@ -242,30 +244,37 @@
 
   .head {
     .head-banner {
-      height: 560px;
-      background: url("../../../assets/img/active/active_1/banner图@72x.png"), no-repeat linear-gradient(-180deg, #FEF5ED 4%, #FCE6CC 95%);
-      div {
+      background:linear-gradient(90deg,rgba(255,251,250,1),rgba(255,248,246,1));
+      >div {
         width: 1200px;
         margin: 0 auto;
-        padding-top: 133px;
-        button {
-          width: 176px;
-          height: 54px;
-          background: #F26667;
-          border-radius: 100px;
-          font-size: 24px;
-          color: #FFFFFF;
-          line-height: 24px;
-          margin-top: 100px;
-          outline: none;
-          border: none;
-          cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 70px;
+        div{
+          padding-top: 133px;
+          button {
+            width: 176px;
+            height: 54px;
+            background: #F26667;
+            border-radius: 100px;
+            font-size: 24px;
+            color: #FFFFFF;
+            line-height: 24px;
+            margin-top: 100px;
+            outline: none;
+            border: none;
+            cursor: pointer;
 
+          }
+        }
+        img {
+          padding-top: 70px;
         }
       }
     }
     .head-nav {
-      background:rgba(249,175,128,1);
+      background:rgba(249,175,128,0.5);
       >div{
         width: 1200px;
         margin: 0 auto;
@@ -274,7 +283,7 @@
         .nav {
           cursor: pointer;
           width: 600px;
-          padding: 24px 0 5px 50px;
+          padding: 23px 0 0 50px;
           &:hover {
             background-color: rgba(255, 255, 255, 0.4);
           }
@@ -293,8 +302,6 @@
             }
           }
           img {
-            width: 62px;
-            height: 91px;
             vertical-align: middle;
             margin-right: 10px;
           }
@@ -363,7 +370,7 @@
           color: #FFFFFF;
           border: none;
           outline: none;
-          margin-top: 20px;
+          margin-top: 40px;
           cursor: pointer;
           font-size:18px;
           line-height:18px;
