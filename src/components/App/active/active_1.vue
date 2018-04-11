@@ -8,14 +8,15 @@
           </p>
           <button>立即领取</button>
         </div>
-
       </div>
       <div class="head-nav">
-        <div v-for="item in headNav" class="nav">
-          <img :src=item.img>
-          <div>
-            <p class="title">{{item.title}}</p>
-            <span class="desc">{{item.desc}}</span>
+        <div>
+          <div v-for="item in headNav" class="nav">
+            <img :src=item.img>
+            <div>
+              <p class="title">{{item.title}}</p>
+              <span class="desc">{{item.desc}}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -27,8 +28,7 @@
             <img src="../../../assets/img/active/active_1/pr02.png">
           </div>
           <div class="pro-libao">
-            <p>注册即可获得158元现金大礼包，</p>
-            <span>立即注册>></span>
+            <p>注册即可获得158元现金大礼包</p>
           </div>
           <div class="prg-liuc">
             <ul>
@@ -37,6 +37,7 @@
               <li>3、购买畅享新睿云</li>
             </ul>
           </div>
+          <button>立即注册</button>
         </div>
       </div>
     </div>
@@ -243,14 +244,15 @@
     .head-banner {
       height: 560px;
       background: url("../../../assets/img/active/active_1/banner图@72x.png"), no-repeat linear-gradient(-180deg, #FEF5ED 4%, #FCE6CC 95%);
-      padding: 133px 0 0 350px;
       div {
+        width: 1200px;
+        margin: 0 auto;
+        padding-top: 133px;
         button {
           width: 176px;
           height: 54px;
           background: #F26667;
           border-radius: 100px;
-          font-family: PingFangSC-Regular;
           font-size: 24px;
           color: #FFFFFF;
           line-height: 24px;
@@ -263,45 +265,44 @@
       }
     }
     .head-nav {
-      background: #FFF8F6;
-      width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      .nav {
-        width: 600px;
-        padding: 20px 0 0px 50px;
-        &:hover {
-          background-color: rgba(249, 175, 127, 0.17);
-        }
-        > div {
-          display: inline-block;
-          .title {
-            font-size: 24px;
-            color: #F26667;
-            line-height: 24px;
-            margin-bottom: 5px;
+      background:rgba(249,175,128,1);
+      >div{
+        width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        .nav {
+          cursor: pointer;
+          width: 600px;
+          padding: 24px 0 5px 50px;
+          &:hover {
+            background-color: rgba(255, 255, 255, 0.4);
           }
-          .desc {
-            font-size: 16px;
-            color: #666666;
-            line-height: 16px;
+          > div {
+            display: inline-block;
+            .title {
+              font-size: 24px;
+              color: #F26667;
+              line-height: 24px;
+              margin-bottom: 5px;
+            }
+            .desc {
+              font-size: 16px;
+              color: #666666;
+              line-height: 16px;
+            }
           }
-        }
-        img {
-          width: 62px;
-          height: 91px;
-          vertical-align: middle;
-          margin-right: 10px;
-        }
+          img {
+            width: 62px;
+            height: 91px;
+            vertical-align: middle;
+            margin-right: 10px;
+          }
 
+        }
       }
-
     }
     .head-progress {
-      background: #F9AF80;
-      box-shadow: 0 5px 21px 0 rgba(251, 238, 231, 0.53);
-      height: 423px;
       .progress {
         width: 1200px;
         margin: 0 auto;
@@ -311,7 +312,7 @@
           margin-bottom: 10px;
           h1 {
             font-size: 36px;
-            color: #FFFFFF;
+            color: #F26667;
             line-height: 36px;
             display: inline-block;
           }
@@ -331,13 +332,6 @@
             font-size: 18px;
             color: #FFFFFF;
             line-height: 25px;
-            display: inline-block;
-          }
-          span {
-            font-family: PingFangSC-Regular;
-            font-size: 18px;
-            color: #377dff;
-            cursor: pointer;
           }
         }
         .prg-liuc {
@@ -346,26 +340,38 @@
             display: flex;
             text-align: center;
             li {
-              background: #FFFCFD;
-              font-family: PingFangSC-Medium;
+              background:rgba(249,175,128,1);
               width: 400px;
               height: 70px;
               padding: 23px 122px 22px 123px;
               font-size: 18px;
-              color: #F26667;
+              color: #FFFFFF;
               &:first-of-type {
-                background-color: rgba(255, 252, 253, 0.6);
+                background-color: rgba(249,175,128,0.6);
               }
               &:nth-last-of-type(2) {
-                background-color: rgba(255, 252, 253, 0.8);
+                background-color: rgba(249,175,128,0.8);
               }
             }
           }
         }
-
+        button {
+          width:153px;
+          height:42px;
+          background:rgba(242,102,103,1);
+          border-radius: 21px ;
+          color: #FFFFFF;
+          border: none;
+          outline: none;
+          margin-top: 20px;
+          cursor: pointer;
+          font-size:18px;
+          line-height:18px;
+        }
       }
     }
   }
+
   .modal-body {
     height: 55%;
     form {
