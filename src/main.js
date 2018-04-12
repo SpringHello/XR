@@ -30,8 +30,8 @@ Vue.prototype.$message = message
 Vue.config.productionTip = false
 
 //axios.defaults.baseURL = '/ruicloud'
-axios.defaults.baseURL = 'http://192.168.3.124:8082/ruicloud'
-axios.defaults.withCredentials = true
+//axios.defaults.baseURL = 'http://192.168.3.124:8082/ruicloud'
+//axios.defaults.withCredentials = true
 // axios挂载到Vue原型
 Vue.prototype.$http = axios.create({
   params: {}
@@ -45,7 +45,7 @@ function requestIntercept(config) {
       config.url.split(/\?|\&/).forEach((item, index) => {
         if (index) {
           let arr = item.split('=')
-          params[arr[0]] = arr[1]
+          params[arr[0]] = encodeURI(arr[1])
         }
       })
       let mac = appendMD5(params, true).toUpperCase()
@@ -79,7 +79,7 @@ function appendMD5(params, bol) {
   }
   var str = '', count = 0
   for (let i in params) {
-    str += i.substr(0, 1) + params[i]
+    str += i.substr(0, 1) + encodeURI(params[i])
     count++
   }
   str += count
