@@ -270,7 +270,7 @@
             title: '高IO型',
             desc: '高磁盘IO的最佳选择，提供每秒数万次低延迟性随机 I/O (IOPS)，适合于低延时，I/O密集型应用。',
             system: 'c11d2f8d-4fec-44e3-99e0-15e6e9acede6',
-            price: '0.26元／小时',
+            price: '0.35元／小时',
             params: [
               {num: '1核', unit: 'CPU'},
               {num: '1G', unit: '内存'},
@@ -282,7 +282,7 @@
             title: '超高IO型',
             desc: '采用高性能SSD系统盘，适用于NoSQL 数据库、群集化数据库、联机事务处理等高I/O负载需求。',
             system: 'c11d2f8d-4fec-44e3-99e0-15e6e9acede6',
-            price: '0.51元／小时',
+            price: '0.6元／小时',
             params: [
               {num: '2核', unit: 'CPU'},
               {num: '4G', unit: '内存'},
@@ -537,7 +537,7 @@
           cpuNum:paramsNum[0],
           memory:paramsNum[1],
           bandWidth:paramsNum[3],
-          rootDiskType:'sas',
+          rootDiskType:'ssd',
           networkId:'no',
         }
         this.$http.get('information/deployVirtualMachine.do', {params}).then((response) => {
