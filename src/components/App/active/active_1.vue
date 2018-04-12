@@ -320,6 +320,17 @@
     },
     components: {},
     methods: {
+      // 领取成功后需要刷新剩余现金券数量
+      getResidue () {
+        var url = `ticket/couponIsUsed.do`
+        var tickets  = []
+        axios.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            tickets = response.data.data
+            this.setTicket(tickets)
+          }
+        })
+      },
       // 设置数据
       setData(values) {
         var response = values[0]
@@ -511,10 +522,12 @@
             this.$message.info({
               content: response.data.message
             })
+            this.getResidue()
           } else {
             this.$message.info({
               content: response.data.message
             })
+            this.getResidue()
           }
         })
       },
