@@ -972,7 +972,7 @@
 
 <script type="text/ecmascript-6">
   import {mapState} from 'vuex'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   import $store from '@/vuex'
   import reg from '../../util/regExp'
 

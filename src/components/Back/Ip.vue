@@ -250,7 +250,7 @@
 
 <script type="text/ecmascript-6">
   import {debounce} from 'throttle-debounce'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   import {customTimeOptions} from '../../options'
   import $store from '@/vuex'
   export default{

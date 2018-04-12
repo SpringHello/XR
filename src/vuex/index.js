@@ -4,7 +4,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import {Promise} from 'es6-promise-polyfill'
-import axios from 'axios'
+import axios from '@/util/axiosInterceptor'
 if (!window.Promise) {
   window.Promise = Promise
 }

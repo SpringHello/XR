@@ -336,7 +336,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   import regExp from '@/util/regExp'
   var messageMap = {
     loginname: {
@@ -488,7 +488,7 @@
               content: '注册成功',
               duration: 3
             });
-            this.$router.push('registerSuccess');
+            this.$router.push('login');
           } else {
             this.$Message.error({
               content: response.data.message

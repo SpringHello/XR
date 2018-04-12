@@ -17,7 +17,6 @@
             </div>
           </div>
           <div style="padding:40px;">
-
             <!--两种配置方式公共页面-->
             <!--区域选择-->
             <div style="border-bottom: 1px solid #D9D9D9;">
@@ -523,14 +522,16 @@
                  @click="$router.push('document')">查看计价详情</p>
               <p v-if="PecsInfo.createType=='fast'"
                  style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">费用：<span
-                style="font-size: 24px;color: #EE6723;">{{PecsInfo.cost.toFixed(2)}}元</span><span v-show="PecsInfo.timeForm.currentTimeType == 'current'">/小时</span></p>
+                style="font-size: 24px;color: #EE6723;">{{PecsInfo.cost.toFixed(2)}}元</span><span
+                v-show="PecsInfo.timeForm.currentTimeType == 'current'">/小时</span></p>
               <p v-if="PecsInfo.createType=='fast'&&PecsInfo.fastCoupon!=0"
                  style="text-align: right;font-size: 14px;color: #666666;">优惠费用：<span
                 style="font-size: 14px;color: #EE6723;">{{PecsInfo.fastCoupon.toFixed(2)}}元</span></p>
               <p v-if="PecsInfo.createType=='custom'"
                  style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
                 费用：<span
-                style="font-size: 24px;color: #EE6723;">{{totalCost.toFixed(2)}}元</span><span v-show="PecsInfo.timeForm.currentTimeType == 'current'">/小时</span>
+                style="font-size: 24px;color: #EE6723;">{{totalCost.toFixed(2)}}元</span><span
+                v-show="PecsInfo.timeForm.currentTimeType == 'current'">/小时</span>
               </p>
               <p v-if="PecsInfo.createType=='custom'&&totalCoupon!=0"
                  style="text-align: right;font-size: 14px;color: #666666;">
@@ -670,7 +671,8 @@
             <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
                @click="$router.push('document')">查看计价详情</p>
             <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
-              费用：<span style="font-size: 24px;color: #EE6723;">{{PdiskInfo.dataDiskCost.toFixed(2)}}元</span><span v-show="PdiskInfo.timeForm.currentTimeType == 'current'">/小时</span>
+              费用：<span style="font-size: 24px;color: #EE6723;">{{PdiskInfo.dataDiskCost.toFixed(2)}}元</span><span
+              v-show="PdiskInfo.timeForm.currentTimeType == 'current'">/小时</span>
             </p>
             <p style="text-align: right;font-size: 14px;color: #666666;" v-if="PdiskInfo.coupon!=0">优惠费用：<span
               style="font-size: 14px;color: #EE6723;">{{PdiskInfo.coupon.toFixed(2)}}元</span></p>
@@ -794,7 +796,8 @@
             <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
                @click="$router.push('document')">查看计价详情</p>
             <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">费用：<span
-              style="font-size: 24px;color: #EE6723;">{{PeipInfo.cost.toFixed(2)}}元</span><span v-show="PeipInfo.timeForm.currentTimeType == 'current'">/小时</span></p>
+              style="font-size: 24px;color: #EE6723;">{{PeipInfo.cost.toFixed(2)}}元</span><span
+              v-show="PeipInfo.timeForm.currentTimeType == 'current'">/小时</span></p>
             <p style="text-align: right;font-size: 14px;color: #666666;" v-if="PeipInfo.coupon!=0">优惠费用：<span
               style="font-size: 14px;color: #EE6723;">{{PeipInfo.coupon.toFixed(2)}}元</span>
             </p>
@@ -833,7 +836,8 @@
                 <p class="item">
                   <span class="hidden">$</span><span class="title">计费模式</span><span class="hidden">#</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
                 </p>
-                <p class="item"><span class="hidden">$</span><span class="title">购买时长</span><span
+                <p class="item" v-if="prod.timeForm.currentTimeType=='annual'">
+                  <span class="hidden">$</span><span class="title">购买时长</span><span
                   class="hidden">#</span>{{prod.timeForm.currentTimeValue.label}}
                 </p>
                 <!--镜像+应用-->
@@ -1025,7 +1029,7 @@
 <script type="text/ecmascript-6">
   import XLSX from 'xlsx'
   import XLSX_SAVE from 'file-saver'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   import $store from '@/vuex'
   import {mapState} from 'vuex'
   import regExp from '../../util/regExp'
@@ -1436,8 +1440,12 @@
       // 设置自有镜像
       ownMirrorList() {
         if (this.userInfo != null) {
-          var url1 = `information/listTemplates.do?user=1&zoneId=${this.PecsInfo.zone.zoneid}`
-          axios.get(url1).then(response => {
+          axios.get('information/listTemplates.do', {
+            params: {
+              user: '1',
+              zoneId: this.PecsInfo.zone.zoneid
+            }
+          }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.PecsInfo.customList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
             }

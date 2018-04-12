@@ -417,7 +417,7 @@
 <script type="text/ecmascript-6">
   import regExp from '../../../util/regExp'
   import $store from '@/vuex'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   var debounce = require('throttle-debounce/debounce')
   var messageMap = {
     loginname: {

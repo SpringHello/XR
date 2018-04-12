@@ -127,7 +127,7 @@
   import XLSX_SAVE from 'file-saver'
   import regExp from '../../util/regExp'
   import $store from '@/vuex'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   // xlsx 文件输出操作方法
   function s2ab(s) {
     const buf = new ArrayBuffer(s.length)
@@ -536,8 +536,24 @@
       /* 创建快速配置主机订单 */
       createQuickHostOrder (params) {
         var renewal = params.autoRenewal ? 1 : 0
-        var url = `information/deployVirtualMachine.do?zoneId=${params.zone}&name=${params.hostName}&password=${params.hostPassword}&templateId=${params.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&bandWidth=${params.publicIP}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=${params.count}&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=no`
-        axios.get(url).then(response => {
+        axios.get('information/deployVirtualMachine.do', {
+          params: {
+            zoneId: params.zone,
+            name: params.hostName,
+            password: params.hostPassword,
+            templateId: params.osId,
+            diskSize: params.diskSize,
+            cpuNum: params.cpuNum,
+            memory: params.memory,
+            bandWidth: params.publicIP,
+            timeType: params.timeType,
+            timeValue: params.timeValue,
+            count: params.count,
+            isAutoRenew: renewal,
+            diskType: params.diskType,
+            networkId: 'no'
+          }
+        }).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('/ruicloud/order')
@@ -555,7 +571,6 @@
         }
         var renewal = params.autoRenewal ? 1 : 0
         var bandwidth = params.publicIP
-        console.log(params)
         var url = `information/deployVirtualMachine.do?zoneId=${params.zone}&name=${params.hostName}&password=${params.hostPassword}&templateId=${params.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=${params.count}&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=${params.private}`
         if (params.buyPublicIP == false) {
           bandwidth = 0

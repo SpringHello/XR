@@ -404,7 +404,7 @@
 
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   import defaultOptions from '@/echarts/defaultOptions'
   import histogram from '@/echarts/Histogram'
   import hostDiskOptions from '@/echarts/hostDiskOptions'

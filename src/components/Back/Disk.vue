@@ -269,7 +269,7 @@
 <script type="text/ecmascript-6">
   import {customTimeOptions, diskTypeList} from '../../options'
   import debounce from 'throttle-debounce/debounce'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   import regExp from '../../util/regExp'
   export default{
     data(){

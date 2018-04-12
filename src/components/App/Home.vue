@@ -19,42 +19,42 @@
             </div>
           </div>
         </my-carousel-item>
-        <my-carousel-item class="carousel-item">
-          <div @click="push('newNodes')"
-               style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
-            <div class="newNodes">
-              <img style="position: absolute;bottom: 0;z-index: -1"
-                   src="../../assets/img/active/newNodes/banner_1.png">
-              <img style="position: absolute;top: 7%;left: 7%;"
-                   src="../../assets/img/active/newNodes/circle.png">
-              <div style="width:1200px;margin:0px auto;padding-top: 6%;position: relative">
-                <p>庆新节点上线</p>
-                <p style="font-size: 44px;line-height: 62px;font-family: PingFangSC-Light;">配置升级 | 限时低价体验</p>
-                <button>立即体验</button>
-                <img style="position:absolute;left: 41%; top: 54%;z-index: -2;"
-                     src="../../assets/img/active/newNodes/banner_2.png">
-                <img style="position: absolute;left: 55%;top: 30%;z-index: -3;"
-                     src="../../assets/img/active/newNodes/banner_3.png">
-                <img style="position: absolute;left: 69%;top: 11%;z-index: -4;"
-                     src="../../assets/img/active/newNodes/banner_4.png">
-                <img style="position: absolute;left: 83%; top: 53%;z-index: -5;"
-                     src="../../assets/img/active/newNodes/banner_5.png">
-                <img style="position: absolute;left: 86.5%; top:48%;z-index: -4;"
-                     src="../../assets/img/active/newNodes/banner_6.png">
-                <img style="position: absolute;left: 82%; top: 40%;z-index: -4;"
-                     src="../../assets/img/active/newNodes/banner_6.png">
-                <img style="position:absolute;left: 50%; top: 8%;z-index: -2;"
-                     src="../../assets/img/active/newNodes/arrows_1.png">
-                <img style="position:absolute;left: 90%; top: 7%;z-index: -2;"
-                     src="../../assets/img/active/newNodes/arrows_2.png">
-                <img style="position:absolute;left: 92%; top: 28%;z-index: -2;"
-                     src="../../assets/img/active/newNodes/arrows_3.png">
-                <img style="position:absolute;left: 53%; top: 46%;z-index: -2;"
-                     src="../../assets/img/active/newNodes/arrows_4.png">
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>
+        <!-- <my-carousel-item class="carousel-item">
+           <div @click="push('newNodes')"
+                style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
+             <div class="newNodes">
+               <img style="position: absolute;bottom: 0;z-index: -1"
+                    src="../../assets/img/active/newNodes/banner_1.png">
+               <img style="position: absolute;top: 7%;left: 7%;"
+                    src="../../assets/img/active/newNodes/circle.png">
+               <div style="width:1200px;margin:0px auto;padding-top: 6%;position: relative">
+                 <p>庆新节点上线</p>
+                 <p style="font-size: 44px;line-height: 62px;font-family: PingFangSC-Light;">配置升级 | 限时低价体验</p>
+                 <button>立即体验</button>
+                 <img style="position:absolute;left: 41%; top: 54%;z-index: -2;"
+                      src="../../assets/img/active/newNodes/banner_2.png">
+                 <img style="position: absolute;left: 55%;top: 30%;z-index: -3;"
+                      src="../../assets/img/active/newNodes/banner_3.png">
+                 <img style="position: absolute;left: 69%;top: 11%;z-index: -4;"
+                      src="../../assets/img/active/newNodes/banner_4.png">
+                 <img style="position: absolute;left: 83%; top: 53%;z-index: -5;"
+                      src="../../assets/img/active/newNodes/banner_5.png">
+                 <img style="position: absolute;left: 86.5%; top:48%;z-index: -4;"
+                      src="../../assets/img/active/newNodes/banner_6.png">
+                 <img style="position: absolute;left: 82%; top: 40%;z-index: -4;"
+                      src="../../assets/img/active/newNodes/banner_6.png">
+                 <img style="position:absolute;left: 50%; top: 8%;z-index: -2;"
+                      src="../../assets/img/active/newNodes/arrows_1.png">
+                 <img style="position:absolute;left: 90%; top: 7%;z-index: -2;"
+                      src="../../assets/img/active/newNodes/arrows_2.png">
+                 <img style="position:absolute;left: 92%; top: 28%;z-index: -2;"
+                      src="../../assets/img/active/newNodes/arrows_3.png">
+                 <img style="position:absolute;left: 53%; top: 46%;z-index: -2;"
+                      src="../../assets/img/active/newNodes/arrows_4.png">
+               </div>
+             </div>
+           </div>
+         </my-carousel-item>-->
         <my-carousel-item class="carousel-item">
           <div @click="push('active')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
             <div style="width:1200px;height:560px;margin:0px auto;position:relative">
@@ -91,7 +91,7 @@
     </div>
     <!-- 功能介绍区域 -->
     <div class="box-container"
-         :class="{one:this.activeBanner==2,three:this.activeBanner==1}">
+         :class="{three:this.activeBanner==1}">
       <div class="container">
         <div v-for="(item,index) in boxContainer" :key="index" class="container-item">
           <i class="iconfont" :class="item.img" style="font-size:60px;color:#fff;line-height:1"></i>
@@ -334,7 +334,7 @@
         ],
         boxContainer: [
           {title: '10万级IOPS', desc: '高性能SSD硬盘', img: 'icon-wanjiIOPS'},
-          {title: '全场景存储', desc: 'SDS、SAS、SATA', img: 'icon-quanchangjingcunchu'},
+          {title: '全场景存储', desc: 'SSD、SAS、SATA', img: 'icon-quanchangjingcunchu'},
           {title: '40G免费防护', desc: '采用华为DDoS硬件', img: 'icon-Gmianfeifanghu'},
           {title: '全冗余架构', desc: '高可用保障', img: 'icon-quanrongyujiagou'},
           {title: '虚拟私有云', desc: '网络隔离、子网分配', img: 'icon-xunisiyouyun'}
@@ -625,36 +625,36 @@
       echarts.registerMap('china', china)
       this.myChart = echarts.init(document.getElementById('echarts'))
       this.myChart.setOption(polar)
-      if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY > 300) {
+      if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY || window.pageYOffset > 300) {
         this.cloudContentFade = true
       }
-      if (document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY > 300) {
+      if (document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY || window.pageYOffset > 300) {
         this.fade = true
       }
-      if (document.body.clientHeight - this.$refs.consoleFade.offsetTop + window.scrollY > 300) {
+      if (document.body.clientHeight - this.$refs.consoleFade.offsetTop + window.scrollY || window.pageYOffset > 300) {
         this.consoleFade = true
       }
-      if (document.body.clientHeight - this.$refs.partnerFade.offsetTop + window.scrollY > 300) {
+      if (document.body.clientHeight - this.$refs.partnerFade.offsetTop + window.scrollY || window.pageYOffset > 300) {
         this.partnerFade = true
       }
-      if (document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY > 300) {
+      if (document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY || window.pageYOffset > 300) {
         this.authorityFade = true
       }
       // 待优化
       this.scrollFn = () => {
-        if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY > 300 && !this.cloudContentFade) {
+        if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY || window.pageYOffset > 300 && !this.cloudContentFade) {
           this.cloudContentFade = true
         }
-        if (document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY > 300 && !this.fade) {
+        if (document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY || window.pageYOffset > 300 && !this.fade) {
           this.fade = true
         }
-        if (document.body.clientHeight - this.$refs.consoleFade.offsetTop + window.scrollY > 300 && !this.consoleFade) {
+        if (document.body.clientHeight - this.$refs.consoleFade.offsetTop + window.scrollY || window.pageYOffset > 300 && !this.consoleFade) {
           this.consoleFade = true
         }
-        if (document.body.clientHeight - this.$refs.partnerFade.offsetTop + window.scrollY > 300 && !this.partnerFade) {
+        if (document.body.clientHeight - this.$refs.partnerFade.offsetTop + window.scrollY || window.pageYOffset > 300 && !this.partnerFade) {
           this.partnerFade = true
         }
-        if (document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY > 300 && !this.authorityFade) {
+        if (document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY || window.pageYOffset > 300 && !this.authorityFade) {
           this.authorityFade = true
         }
       }

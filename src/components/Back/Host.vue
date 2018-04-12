@@ -555,7 +555,7 @@
   import merge from 'merge'
   // import {mapState} from 'vuex'
   import $store from '@/vuex'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   import Vue from 'vue'
   import regExp from '../../util/regExp'
   export default {

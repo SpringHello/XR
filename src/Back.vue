@@ -156,7 +156,7 @@
 <script>
   import $store from './vuex'
   import {mapState} from 'vuex'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   import debounce from 'throttle-debounce/debounce'
   import './assets/js/backend.js'
   export default {
@@ -448,7 +448,7 @@
 
   #back {
     height: 100%;
-    header {
+    > header {
       width: 100%;
       height: 56px;
       position: relative;
@@ -556,9 +556,10 @@
         width: 1200px;
         height: 100%;
         margin: 0px auto;
-        display: flex;
-        justify-content: space-between;
+        /*display: flex;
+        justify-content: space-between;*/
         .zoneList {
+          display: inline-block;
           height: 30px;
           margin: 7.5px 0px;
           .ivu-dropdown-rel {
@@ -571,6 +572,7 @@
           }
         }
         .operate {
+          float: right;
           > ul {
             position: relative;
             .sec-nav {
@@ -659,6 +661,13 @@
           }
         }
       }
+    }
+    .icon {
+      width: 40px;
+      height: 40px;
+      // vertical-align: -0.15em;
+      fill: currentColor;
+      overflow: hidden;
     }
   }
 
@@ -781,11 +790,4 @@
     }
   }
 
-  .icon {
-    width: 40px;
-    height: 40px;
-    // vertical-align: -0.15em;
-    fill: currentColor;
-    overflow: hidden;
-  }
 </style>

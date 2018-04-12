@@ -10,7 +10,8 @@
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-feiyongzhongxin"></use>
         </svg>
-        <span class="title" style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">费用中心</span>
+        <span class="title"
+              style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">费用中心</span>
         <Tabs v-model="name" type="card" :animated="false" @on-click="changecard"
               style="margin-top: 20px;min-height: 550px">
           <Tab-pane label="账户概览" name="accountSummary">
@@ -28,7 +29,7 @@
               </div>
               <div class="coupon">
                 <span class="expenses_s5">现金券额度</span>
-                <span v-model="coupon" class="expenses_s6">￥{{ coupon }}</span>
+                <span class="expenses_s6">￥{{ voucher }}</span>
               </div>
             </div>
             <div class="expenses_condition">
@@ -437,7 +438,7 @@
             title: '面值/折扣',
             align: 'left',
             render: (h, params) => {
-              return h('span', params.row.operator == '优惠券' ? `${params.row.money}元` : `${params.row.money}折`)
+              return h('span', params.row.tickettype == '1' ? `${params.row.money}折` : `${params.row.money}元`)
             },
             width: 110
           },
@@ -480,10 +481,58 @@
             title: '备注',
             key: 'remark',
             align: 'left',
-            width: 150,
+            width: 250,
             ellipsis: true,
             render: (h, params) => {
               return h('span', params.row.remark == null ? '--' : params.row.remark)
+            }
+          },
+          {
+            title: '操作',
+            render: (h, obj) => {
+              if (obj.row.maketicketover != 1) {
+                // 现金券
+                if (obj.row.tickettype == '2') {
+                  return h('span', {
+                    style: {
+                      color: '#2d8cf0',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        this.$message.confirm({
+                          content: '确认使用该现金券吗？',
+                          onOk: () => {
+                            // 调用使用现金券接口
+                            this.$http.get('ticket/useMoneyTicket.do', {
+                              params: {
+                                moneyTicketId: obj.row.id
+                              }
+                            }).then(response => {
+                              if (response.status == 200 && response.data.status == 1) {
+                                this.searchCard()
+                              } else {
+                                this.$message.info({
+                                  content: response.data.message
+                                })
+                              }
+                            })
+                          }
+                        })
+                      }
+                    }
+                  }, '立即使用')
+                } else {
+                  return h('router-link', {
+                    attrs: {
+                      to: 'buy'
+                    }
+                  }, '立即使用')
+                }
+              } else {
+                return h('span', '--')
+              }
+
             }
           }
         ],
@@ -592,8 +641,8 @@
         order_currentPage: 1,
         pageSize: 10,
         balance: 0,
+        voucher: 0,
         billmonth: 0,
-        coupon: 0,
         types: '',
         value1: 0,
         value2: 10000,
@@ -843,6 +892,10 @@
             label: '全部'
           },
           {
+            value: '2',
+            label: '现金券'
+          },
+          {
             value: '1',
             label: '折扣券'
           },
@@ -1048,6 +1101,7 @@
         this.$http.post('device/DescribeWalletsBalance.do').then(response => {
           if (response.status == 200 && response.data.status == '1') {
             this.balance = response.data.data.remainder
+            this.voucher = response.data.data.voucher
           }
         })
       },

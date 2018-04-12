@@ -217,7 +217,7 @@
 
 <script type="text/ecmascript-6">
   import {customTimeOptions} from '../../options'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   import debounce from 'throttle-debounce/debounce'
   import $store from '@/vuex'
   import regExp from '../../util/regExp'

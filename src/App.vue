@@ -179,7 +179,7 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   import $store from './vuex'
   import {mapState} from 'vuex'
   import debounce from 'throttle-debounce/debounce'

@@ -220,7 +220,7 @@
 <script type="text/ecmascript-6">
   import {customTimeOptions} from '../../options'
   import debounce from 'throttle-debounce/debounce'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   import diskHistogram from '@/echarts/diskHistogram'
   import diskOptions from '@/echarts/diskOptions'
   import regExp from '../../util/regExp'

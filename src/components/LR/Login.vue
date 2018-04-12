@@ -54,7 +54,7 @@
 <script type="text/ecmascript-6">
   /* 登录名/密码 正则校验 */
   import regExp from '../../util/regExp'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   const messageMap = {
     /* 登录名input tips */
     loginname: {
@@ -176,7 +176,13 @@
          } */
         this.$refs.password.blur()
         this.$refs.vailCode.blur()
-        axios.get(`user/login.do?username=${this.form.loginname}&password=${this.form.password}&vailCode=${this.form.vailCode}`).then((response) => {
+        axios.get('user/login.do', {
+          params: {
+            username: this.form.loginname,
+            password: this.form.password,
+            vailCode: this.form.vailCode
+          }
+        }).then((response) => {
           if (response.status == 200 && response.statusText == 'OK') {
             if (response.data.status == 1) {
               localStorage.setItem('authToken', response.data.message)
