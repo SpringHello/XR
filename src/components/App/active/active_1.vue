@@ -510,11 +510,56 @@
           }
         })
       },
-      productBuy(item, index) {
-        if (this.userInfo == null) {
-          this.loginModal = true
-          return
+      productBuy(item,index) {
+        // if (this.userInfo == null) {
+        //   this.loginModal = true
+        //   return
+        // }
+        // console.log(item.system+index+item.price)
+        // console.log(item.params)
+        if(item.system == 'Centos') {
+            item.system == 'c11d2f8d-4fec-44e3-99e0-15e6e9acede6'
+        } if(item.system == 'Windows') {
+            item.system == 'c11d2f8d-4fec-44e3-99e0-15e6e9acede6'
         }
+        var resultParams = {}
+        var params1 = {
+          zoneId:'39a6af0b-6624-4194-b9d5-0c552d903858',
+          timeType:'current',
+          timeValue:'1',
+          templateId:'c11d2f8d-4fec-44e3-99e0-15e6e9acede6',
+          isAutoRenew:'0',
+          count:'1',
+          cpuNum:'1',
+          memory:'1',
+          bandWidth:'1',
+          rootDiskType:'sas',
+          networkId:'no',
+          mac:'2F8DF04A3789513DC96E641BE010426E2A'
+        }
+        var params2 = {
+          zoneId:'39a6af0b-6624-4194-b9d5-0c552d903858',
+          timeType:'current',
+          timeValue:'1',
+          templateId:'c11d2f8d-4fec-44e3-99e0-15e6e9acede6',
+          isAutoRenew:'0',
+          count:'1',
+          cpuNum:'2',
+          memory:'4',
+          bandWidth:'2',
+          rootDiskType:'sas',
+          networkId:'c85f8623-43c0-49ac-96bd-787b1c50808e',
+          mac:'9ADBC1D22FB35139C5C851AA2B23B76600',
+        }
+        if(index==0) {
+          resultParams = params1
+        }else{
+          resultParams = params2
+        }
+        this.$http.get('information/deployVirtualMachine.do', {resultParams}).then((response) => {
+            this.$router.push('order')
+          }
+        )
       }
     },
     computed: {
