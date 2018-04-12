@@ -488,6 +488,9 @@
 
         interval()
         this.intervalInstance = setInterval(interval, 1000)
+        if (this.timeList[3].time === 0) {
+          clearInterval(this.intervalInstance)
+        }
       },
       setTicket(data) {
         if(data.length != 0 ) {
@@ -528,12 +531,6 @@
       },
     },
     watch: {
-      // 监听倒计时，如果全部为0时清除定时器
-      timeList() {
-        if (this.timeList[3].time === 0) {
-          clearInterval(this.intervalInstance)
-        }
-      }
     },
     mounted() {
       this.img = true
