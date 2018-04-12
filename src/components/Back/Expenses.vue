@@ -448,7 +448,7 @@
             align: 'left',
             width: 140,
             render: (h, params) => {
-              return h('span', params.row.tickettype == 1 ? '所有产品' : '--')
+              return h('span', params.row.tickettype == 2 ? '北方一区' : '全区')
             }
           },
           {
@@ -511,6 +511,9 @@
                             }).then(response => {
                               if (response.status == 200 && response.data.status == 1) {
                                 this.searchCard()
+                                this.$message.info({
+                                  content: '现金券充值成功'
+                                })
                               } else {
                                 this.$message.info({
                                   content: response.data.message
@@ -521,7 +524,7 @@
                         })
                       }
                     }
-                  }, '立即使用')
+                  }, '立即重置')
                 } else {
                   return h('router-link', {
                     attrs: {

@@ -20,7 +20,7 @@ var namePathMap = {
   '云硬盘备份': 'diskBackup',
   '云主机': 'host',
   '云主机快照': 'snapshot',
-  '云主机镜像': 'mirror',
+  '云主机镜像': 'mirror'
 }
 message.error = function (options = {}) {
   options.type = 'error'

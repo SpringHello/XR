@@ -4,17 +4,20 @@
 import axios from 'axios'
 import md5 from 'md5'
 
-function appendMD5(params, bol) {
+function appendMD5(params, type, bol) {
   if (params === undefined) {
     return undefined
   }
   var str = '', count = 0
   for (let i in params) {
-    str += i.substr(0, 1) + encodeURI(params[i])
+    str += i.substr(0, 1) + params[i]
     count++
   }
   str += count
   if (str !== '') {
+    if (type != 'post') {
+      str = encodeURI(str)
+    }
     str = md5(str)
     var mac = str.substr(0, count) + count + str.substr(count)
     if (bol) {
@@ -34,16 +37,16 @@ function macIntercept(config) {
       config.url.split(/\?|\&/).forEach((item, index) => {
         if (index) {
           let arr = item.split('=')
-          params[arr[0]] = encodeURI(arr[1])
+          params[arr[0]] = arr[1]
         }
       })
-      let mac = appendMD5(params, true).toUpperCase()
+      let mac = appendMD5(params, 'get', true).toUpperCase()
       config.url = `${config.url}&mac=${mac}`
     } else if (config.params) {
       config.params = appendMD5(config.params)
     }
   } else if (config.method == 'post') {
-    config.data = appendMD5(config.data)
+    config.data = appendMD5(config.data, 'post')
   }
   return config
 }
