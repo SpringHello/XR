@@ -30,12 +30,7 @@ Vue.prototype.$message = message
 Vue.config.productionTip = false
 
 //axios.defaults.baseURL = '/ruicloud'
-<<<<<<< HEAD
 axios.defaults.baseURL = 'http://192.168.3.124:8082/ruicloud'
-=======
->>>>>>> 3bb15e9bf4676e01c7fb19bbf14b68d89e2fb573
-
-axios.defaults.baseURL = 'http://192.168.3.204:8081/ruicloud'
 axios.defaults.withCredentials = true
 //axios.defaults.baseURL = 'http://192.168.3.124:8082/ruicloud'
 //axios.defaults.withCredentials = true
