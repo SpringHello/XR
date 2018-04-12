@@ -8,7 +8,9 @@
               <img src="../../../assets/img/active/active_1/ziti.png">
             </p>
           </div>
-          <img src="../../../assets/img/active/active_1/baner.png">
+          <transition name="list">
+          <img v-if="img" src="../../../assets/img/active/active_1/baner.png">
+          </transition>
         </div>
       </div>
       <div class="head-nav">
@@ -179,6 +181,7 @@
   export default {
     data() {
       return {
+        img: false,
         loginModal: false,
         form: {
           loginname: '',
@@ -485,12 +488,17 @@
 
         interval()
         this.intervalInstance = setInterval(interval, 1000)
+        if (this.timeList[3].time === 0) {
+          clearInterval(this.intervalInstance)
+        }
       },
       setTicket(data) {
-        this.timeList[0].ticket = data[0]
-        this.timeList[1].ticket = data[1]
-        this.timeList[2].ticket = data[2]
-        this.timeList[3].ticket = data[3]
+        if(data.length != 0 ) {
+          this.timeList[0].ticket = data[0]
+          this.timeList[1].ticket = data[1]
+          this.timeList[2].ticket = data[2]
+          this.timeList[3].ticket = data[3]
+        }
       },
       getTicket() {
         if (this.$store.state.userInfo == null) {
@@ -568,12 +576,9 @@
       },
     },
     watch: {
-      // 监听倒计时，如果全部为0时清除定时器
-      timeList() {
-        if (this.timeList[3].time === 0) {
-          clearInterval(this.intervalInstance)
-        }
-      }
+    },
+    mounted() {
+      this.img = true
     }
   }
 </script>
@@ -581,7 +586,7 @@
 <style rel="stylesheet/less" lang="less" scoped>
   .body {
     background: url("../../../assets/img/active/active_1/redPacket_background_1.png") no-repeat, url("../../../assets/img/active/active_1/redPacket_background_1.png") 140% 200% no-repeat, rgba(249, 175, 128, 1);
-    padding-top: 120px;
+    padding-top: 110px;
     padding-bottom: 100px;
     .content {
       width: 1200px;
@@ -1095,6 +1100,16 @@
         line-height: 28px;
       }
     }
+  }
+
+  .list-enter-active, .list-leave-active {
+    transition: all 1s;
+  }
+
+  .list-enter, .list-leave-to
+    /* .list-leave-active for below version 2.1.8 */ {
+    opacity: 0;
+    transform: translateY(300px);
   }
 
 </style>

@@ -4,6 +4,21 @@
     <div class="banner">
       <my-carousel :interval=5000 effect="fade" class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
+          <div @click="push('active_1')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
+            <div class="head-banner">
+              <div>
+                <div>
+                  <p>
+                    <img style="padding-top: 0" src="../../assets/img/active/active_1/ziti.png">
+                  </p>
+                  <button>立即领取</button>
+                </div>
+                <img src="../../assets/img/active/active_1/baner.png">
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
           <div @click="push('newNodes_1')"
                style="cursor: pointer;background:linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="newNodes_1">
@@ -37,7 +52,7 @@
             </div>
           </div>
         </my-carousel-item>
-        <my-carousel-item class="carousel-item">
+        <!--<my-carousel-item class="carousel-item">
           <div @click="push('vps')" style="cursor: pointer;background-image:linear-gradient(90deg,#29abe2,#9cf)">
             <div style="width:1200px;height:560px;margin:0px auto;position:relative">
               <img src="../../assets/img/home/carousel-1-1.png" style="position:absolute;right:0px;top:20px;">
@@ -52,7 +67,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>
+        </my-carousel-item>-->
         <my-carousel-item class="carousel-item">
           <div @click="push('active')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
             <div style="width:1200px;height:560px;margin:0px auto;position:relative">
@@ -89,7 +104,7 @@
     </div>
     <!-- 功能介绍区域 -->
     <div class="box-container"
-         :class="{one:this.activeBanner==1,two: this.activeBanner==2, three:this.activeBanner==3}">
+         :class="{one:this.activeBanner==2,two: this.activeBanner==3, three:this.activeBanner==1}">
       <div class="container">
         <div v-for="(item,index) in boxContainer" :key="index" class="container-item">
           <i class="iconfont" :class="item.img" style="font-size:60px;color:#fff;line-height:1"></i>
@@ -783,7 +798,7 @@
         background-color: #135BFF;
       }
       &.three {
-        background-color: rgb(80, 182, 235);
+        background-color: #F9AF80;
       }
       .container {
         width: 1200px;
@@ -1344,6 +1359,35 @@
       box-shadow: 0px 15px 31px -13px rgba(79,140,255,0.5);
       border-radius:38px;
       cursor: pointer;
+    }
+  }
+  .head-banner {
+    background: linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));
+    > div {
+      width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 65px;
+      div {
+        padding-top: 133px;
+        button {
+          width: 176px;
+          height: 54px;
+          background: #F26667;
+          border-radius: 100px;
+          font-size: 24px;
+          color: #FFFFFF;
+          line-height: 24px;
+          margin-top: 100px;
+          outline: none;
+          border: none;
+          cursor: pointer;
+        }
+      }
+      img {
+        padding-top: 70px;
+      }
     }
   }
 
