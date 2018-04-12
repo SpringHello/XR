@@ -160,7 +160,7 @@
         min-height: 700px;
         padding: 20px;
         .title {
-          font-family: MicrosoftYaHei-Bold;
+          font-family: Microsoft YaHei-Bold;
           font-size: 24px;
           color: hsla(0, 0%, 7%, .75);
           font-weight: 700;

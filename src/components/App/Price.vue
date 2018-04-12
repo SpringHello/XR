@@ -127,7 +127,7 @@
   import XLSX_SAVE from 'file-saver'
   import regExp from '../../util/regExp'
   import $store from '@/vuex'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   // xlsx 文件输出操作方法
   function s2ab(s) {
     const buf = new ArrayBuffer(s.length)
@@ -536,8 +536,24 @@
       /* 创建快速配置主机订单 */
       createQuickHostOrder (params) {
         var renewal = params.autoRenewal ? 1 : 0
-        var url = `information/deployVirtualMachine.do?zoneId=${params.zone}&name=${params.hostName}&password=${params.hostPassword}&templateId=${params.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&bandWidth=${params.publicIP}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=${params.count}&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=no`
-        axios.get(url).then(response => {
+        axios.get('information/deployVirtualMachine.do', {
+          params: {
+            zoneId: params.zone,
+            name: params.hostName,
+            password: params.hostPassword,
+            templateId: params.osId,
+            diskSize: params.diskSize,
+            cpuNum: params.cpuNum,
+            memory: params.memory,
+            bandWidth: params.publicIP,
+            timeType: params.timeType,
+            timeValue: params.timeValue,
+            count: params.count,
+            isAutoRenew: renewal,
+            diskType: params.diskType,
+            networkId: 'no'
+          }
+        }).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('/ruicloud/order')
@@ -555,7 +571,6 @@
         }
         var renewal = params.autoRenewal ? 1 : 0
         var bandwidth = params.publicIP
-        console.log(params)
         var url = `information/deployVirtualMachine.do?zoneId=${params.zone}&name=${params.hostName}&password=${params.hostPassword}&templateId=${params.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=${params.count}&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=${params.private}`
         if (params.buyPublicIP == false) {
           bandwidth = 0
@@ -672,7 +687,7 @@
         padding-top: 50px;
         display: -webkit-box;
         h1 {
-          font-family: MicrosoftYaHei;
+          font-family: Microsoft YaHei;
           font-size: 24px;
           color: #333333;
           line-height: 43px;
@@ -680,7 +695,7 @@
           font-weight: normal;
         }
         h2 {
-          font-family: MicrosoftYaHei;
+          font-family: Microsoft YaHei;
           font-size: 14px;
           color: #2A99F2;
           line-height: 38px;
@@ -709,7 +724,7 @@
             background: #FFFFFF;
             box-shadow: 0 2px 14px 0 rgba(193, 193, 193, 0.30);
             h1 {
-              font-family: MicrosoftYaHei;
+              font-family: Microsoft YaHei;
               font-size: 24px;
               color: #333333;
               line-height: 43px;
@@ -724,13 +739,13 @@
                 display: flex;
                 justify-content: space-between;
                 h3 {
-                  font-family: MicrosoftYaHei;
+                  font-family: Microsoft YaHei;
                   font-size: 18px;
                   color: #333333;
                   line-height: 32px;
                 }
                 p {
-                  font-family: MicrosoftYaHei;
+                  font-family: Microsoft YaHei;
                   font-size: 14px;
                   color: #2A99F2;
                   line-height: 25px;
@@ -740,7 +755,7 @@
                 margin-top: 10px;
                 ul {
                   li {
-                    font-family: MicrosoftYaHei;
+                    font-family: Microsoft YaHei;
                     font-size: 14px;
                     color: #666666;
                     line-height: 25px;
@@ -757,13 +772,13 @@
                 display: flex;
                 justify-content: space-between;
                 & > p {
-                  font-family: MicrosoftYaHei;
+                  font-family: Microsoft YaHei;
                   font-size: 14px;
                   color: #666666;
                   line-height: 25px;
                   margin-left: 28px;
                   & > span {
-                    font-family: MicrosoftYaHei;
+                    font-family: Microsoft YaHei;
                     font-size: 24px;
                     color: #F85E1D;
                     line-height: 25px;
@@ -799,13 +814,13 @@
               bottom: 0;
             }
             .p1 {
-              font-family: MicrosoftYaHei;
+              font-family: Microsoft YaHei;
               font-size: 14px;
               color: #666666;
               line-height: 25px;
               margin-left: 28px;
               span {
-                font-family: MicrosoftYaHei;
+                font-family: Microsoft YaHei;
                 font-size: 24px;
                 color: #F85E1D;
                 line-height: 25px;
@@ -814,7 +829,7 @@
               }
             }
             .p2 {
-              font-family: MicrosoftYaHei;
+              font-family: Microsoft YaHei;
               font-size: 12px;
               color: #333333;
               line-height: 21px;

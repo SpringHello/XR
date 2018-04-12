@@ -11,7 +11,7 @@
             <Submenu name="1">
               <template slot="title">
                 <img src="../../assets/img/product/dynamic-2.png" alt="" style="margin-right:8px;">
-                <span style="font-size: 18px;color:#333333;font-family: MicrosoftYaHei;">产品公告</span>
+                <span style="font-size: 18px;color:#333333;font-family: Microsoft YaHei;">产品公告</span>
               </template>
               <MenuItem :name="item.id" v-for="(item,index) in announcementArray" :key="index">{{item.title}}</MenuItem>
             </Submenu>
@@ -32,7 +32,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   export  default {
     data () {
       return {

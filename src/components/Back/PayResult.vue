@@ -98,7 +98,7 @@
           display: block;
           padding-bottom: 20px;
           // border-bottom: 1px solid #E9E9E9;
-          font-family: MicrosoftYaHei-Bold;
+          font-family: Microsoft YaHei-Bold;
           font-size: 24px;
           color: rgba(17, 17, 17, 0.75);
           font-weight: normal;

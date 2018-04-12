@@ -1,5 +1,5 @@
 <template>
- 
+
     <div id="background">
       <div id="wrapper">
         <span class="title">
@@ -47,7 +47,7 @@
         </div>
       </div>
     </div>
-  
+
 </template>
 
 <script type="text/ecmascript-6">
@@ -142,7 +142,7 @@
     background-color: white;
     padding: 20px;
     .title {
-      font-family: MicrosoftYaHei-Bold;
+      font-family: Microsoft YaHei-Bold;
       font-size: 24px;
       color: hsla(0, 0%, 7%, .75);
       font-weight: 700;
