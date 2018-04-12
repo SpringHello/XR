@@ -775,8 +775,7 @@
 </style>
 <script type="text/ecmascript-6">
   import regExp from '../../../util/regExp'
-  import axios from 'axios'
-
+  import axios from '@/util/axiosInterceptor'
   var messageMap = {
     loginname: {
       placeholder: '登录邮箱/手机号',

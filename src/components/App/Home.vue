@@ -61,7 +61,7 @@
                 <p style="font-size: 48px;color: #fff;margin-bottom: 20px;">可享60天免费体验</p>
                 <p style="font-size: 24px;color:#fff">数量有限，送完为止</p>
                 <button
-                  style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
+                  style="width: 170px;height: 55px;font-family: Microsoft YaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
                   立即领取
                 </button>
               </div>
@@ -77,7 +77,7 @@
                 <p style="font-size: 20px;color: #5692fe;margin-bottom: 20px;">全品类折扣优惠 礼包零门槛领取</p>
                 <p style="font-size: 24px;color:#5692fe">最高省500元</p>
                 <button
-                  style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
+                  style="width: 170px;height: 55px;font-family: Microsoft YaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
                   立即领取
                 </button>
               </div>
@@ -93,7 +93,7 @@
                  <p style="font-size: 48px;color: #5692fe;margin-bottom: 20px;">新睿云技术内测Beat1.0</p>
                  <p style="font-size: 20px;color: #5692fe;margin-bottom: 20px;">限时开启</p>
                  <button
-                   style="width: 170px;height: 55px;font-family: MicrosoftYaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
+                   style="width: 170px;height: 55px;font-family: Microsoft YaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
                    立即领取
                  </button>
                </div>
@@ -347,7 +347,7 @@
         ],
         boxContainer: [
           {title: '10万级IOPS', desc: '高性能SSD硬盘', img: 'icon-wanjiIOPS'},
-          {title: '全场景存储', desc: 'SDS、SAS、SATA', img: 'icon-quanchangjingcunchu'},
+          {title: '全场景存储', desc: 'SSD、SAS、SATA', img: 'icon-quanchangjingcunchu'},
           {title: '40G免费防护', desc: '采用华为DDoS硬件', img: 'icon-Gmianfeifanghu'},
           {title: '全冗余架构', desc: '高可用保障', img: 'icon-quanrongyujiagou'},
           {title: '虚拟私有云', desc: '网络隔离、子网分配', img: 'icon-xunisiyouyun'}
@@ -638,36 +638,36 @@
       echarts.registerMap('china', china)
       this.myChart = echarts.init(document.getElementById('echarts'))
       this.myChart.setOption(polar)
-      if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY > 300) {
+      if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY || window.pageYOffset > 300) {
         this.cloudContentFade = true
       }
-      if (document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY > 300) {
+      if (document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY || window.pageYOffset > 300) {
         this.fade = true
       }
-      if (document.body.clientHeight - this.$refs.consoleFade.offsetTop + window.scrollY > 300) {
+      if (document.body.clientHeight - this.$refs.consoleFade.offsetTop + window.scrollY || window.pageYOffset > 300) {
         this.consoleFade = true
       }
-      if (document.body.clientHeight - this.$refs.partnerFade.offsetTop + window.scrollY > 300) {
+      if (document.body.clientHeight - this.$refs.partnerFade.offsetTop + window.scrollY || window.pageYOffset > 300) {
         this.partnerFade = true
       }
-      if (document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY > 300) {
+      if (document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY || window.pageYOffset > 300) {
         this.authorityFade = true
       }
       // 待优化
       this.scrollFn = () => {
-        if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY > 300 && !this.cloudContentFade) {
+        if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY || window.pageYOffset > 300 && !this.cloudContentFade) {
           this.cloudContentFade = true
         }
-        if (document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY > 300 && !this.fade) {
+        if (document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY || window.pageYOffset > 300 && !this.fade) {
           this.fade = true
         }
-        if (document.body.clientHeight - this.$refs.consoleFade.offsetTop + window.scrollY > 300 && !this.consoleFade) {
+        if (document.body.clientHeight - this.$refs.consoleFade.offsetTop + window.scrollY || window.pageYOffset > 300 && !this.consoleFade) {
           this.consoleFade = true
         }
-        if (document.body.clientHeight - this.$refs.partnerFade.offsetTop + window.scrollY > 300 && !this.partnerFade) {
+        if (document.body.clientHeight - this.$refs.partnerFade.offsetTop + window.scrollY || window.pageYOffset > 300 && !this.partnerFade) {
           this.partnerFade = true
         }
-        if (document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY > 300 && !this.authorityFade) {
+        if (document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY || window.pageYOffset > 300 && !this.authorityFade) {
           this.authorityFade = true
         }
       }

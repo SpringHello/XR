@@ -122,7 +122,7 @@
 
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   export default {
     name: 'overview',
     data() {

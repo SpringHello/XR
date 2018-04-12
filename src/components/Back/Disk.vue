@@ -251,7 +251,7 @@
               <Input v-model="createBackupsForm.backupsName" placeholder="请输入"></Input>
             </Form-item>
           </Form>
-          <p style="font-family: MicrosoftYaHei;font-size: 12px;line-height:20px;color: #999999;">提示：云硬盘数据服务为每块磁盘提供<span
+          <p style="font-family: Microsoft YaHei;font-size: 12px;line-height:20px;color: #999999;">提示：云硬盘数据服务为每块磁盘提供<span
             style="color:#2A99F2">8</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。</p>
         </div>
       </div>
@@ -269,7 +269,7 @@
 <script type="text/ecmascript-6">
   import {customTimeOptions, diskTypeList} from '../../options'
   import debounce from 'throttle-debounce/debounce'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   import regExp from '../../util/regExp'
   export default{
     data(){

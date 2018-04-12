@@ -224,7 +224,7 @@
             </ul>
           </div>
         </div>
-        <p style="margin-top: 20px;color: #999999;font-family: MicrosoftYaHei;font-size: 12px;">
+        <p style="margin-top: 20px;color: #999999;font-family: Microsoft YaHei;font-size: 12px;">
           提示：当您选择已绑定快照策略的主机时，新的快照策略将直接覆盖原有快照策略。</p>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -238,9 +238,9 @@
 </template>
 
 <script type="text/ecmascript-6">
-  // import axios from 'axios'
+  // import axios from '@/util/axiosInterceptor'
   import $store from '@/vuex'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   import regExp from '../../util/regExp'
 
   export default {

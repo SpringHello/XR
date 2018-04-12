@@ -75,6 +75,7 @@ const VpcManage = () => import('@/components/Back/VpcManage')
 const Vpn = () => import('@/components/Back/Vpn')
 const Ip = () => import('@/components/Back/Ip')
 const Order = () => import('@/components/Back/Order')
+const Order1 = () => import('@/components/Back/Order1')
 const PayResult = () => import('@/components/Back/PayResult')
 const Expenses = () => import('@/components/Back/Expenses')
 const UserCenter = () => import('@/components/Back/UserCenter')
@@ -604,6 +605,7 @@ var router = new Router({
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
         {path: 'ip', name: 'ip', component: Ip},
         {path: 'order', name: 'order', component: Order},
+        //{path: 'order1', name: 'order1', component: Order1},
         {path: 'payResult', name: 'payResult', component: PayResult},
         {path: 'expenses', name: 'expenses', component: Expenses},
         {path: 'userCenter', name: 'userCenter', component: UserCenter},

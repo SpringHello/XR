@@ -171,7 +171,7 @@
                     <label>{{orderDetail[2][0].title}}</label>
                     <div>
                       <span>问题类型 : {{orderDetail[0].description}}</span>
-                      <span>创建时间 : {{new Date(Number.parseInt(orderDetail[2][0].puddate)).format('yyyy-MM-dd')}}</span>
+                      <span>创建时间 : {{new Date(parseInt(orderDetail[2][0].puddate)).format('yyyy-MM-dd')}}</span>
                       <!--span>{{orderDetail[1].description}}</span-->
                     </div>
                     <div class="reply-wrapper" ref="reply">
@@ -184,7 +184,7 @@
                         <span v-if="item.uname==null" class="main">您</span>
                         <span class="mini">{{item.g_reply}}</span>
                         <span
-                          style="position: absolute;bottom: -17px;right: 65px;font-size: 12px;color: rgba(153,153,153,0.65);">{{new Date(Number.parseInt(item.repdate)).format('yyyy-MM-dd hh:mm')}}</span>
+                          style="position: absolute;bottom: -17px;right: 65px;font-size: 12px;color: rgba(153,153,153,0.65);">{{new Date(parseInt(item.repdate)).format('yyyy-MM-dd hh:mm')}}</span>
                       </div>
 
                     </div>
@@ -403,7 +403,7 @@
               this[type + 'Order'] = []
               this[type + 'Total'] = response.data.count
               response.data.result.forEach(item => {
-                item.puddate = Number.parseInt(item.puddate)
+                item.puddate = parseInt(item.puddate)
                 item.timeago = timeago().format(item.puddate, 'zh_CN')
                 item.puddate = new Date(item.puddate).format('yyyy年MM月dd日 hh:mm:ss')
                 this[type + 'Order'].push(item)
@@ -454,7 +454,7 @@
         background-color: white;
         padding: 20px;
         & > span {
-          font-family: MicrosoftYaHei-Bold;
+          font-family: Microsoft YaHei-Bold;
           font-size: 24px;
           color: rgba(17, 17, 17, 0.75);
           font-weight: bold;
@@ -493,7 +493,7 @@
             }
           }
           label {
-            font-family: MicrosoftYaHei;
+            font-family: Microsoft YaHei;
             font-size: 18px;
             color: rgba(17, 17, 17, .85);
             letter-spacing: 0;

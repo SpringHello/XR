@@ -25,72 +25,81 @@ import carouselItem from './myView/carouselItem'
 import slider from './myView/slider'
 // 引入错误提示框组件
 import message from './myView/message'
-//import md5 from 'md5'
+import md5 from 'md5'
 Vue.prototype.$message = message
 Vue.config.productionTip = false
 
 //axios.defaults.baseURL = '/ruicloud'
-// axios.defaults.baseURL = 'http://192.168.3.124:8082/ruicloud'
 
-// axios.defaults.withCredentials = true
+//axios.defaults.baseURL = 'http://192.168.3.124:8082/ruicloud'
+//axios.defaults.withCredentials = true
+
 // axios挂载到Vue原型
 Vue.prototype.$http = axios.create({
-    params: {}
+  params: {}
 })
 /* axios ajax请求拦截 需要zoneid的接口都使用this.$http的形式调用 */
 function requestIntercept(config) {
   if (config.method == 'get') {
-    config.params = {
-      zoneId: store.state.zone.zoneid,
-      ...config.params
+    if (config.url.indexOf('?') != -1) {
+      config.url += `&zoneId=${store.state.zone.zoneid}`
+      let params = {}
+      config.url.split(/\?|\&/).forEach((item, index) => {
+        if (index) {
+          let arr = item.split('=')
+          params[arr[0]] = encodeURI(arr[1])
+        }
+      })
+      let mac = appendMD5(params, true).toUpperCase()
+      config.url = `${config.url}&mac=${mac}`
+    } else if (config.params) {
+      config.params = {
+        zoneId: store.state.zone.zoneid,
+        ...config.params
+      }
+      config.params = appendMD5(config.params)
     }
-    /*var str = '', count = 0
-     for (let i in config.params) {
-     str += i.substr(0, 1) + config.params[i]
-     count++
+    /*config.params = {
+     zoneId: store.state.zone.zoneid,
+     ...config.params
      }
-     if (str !== '') {
-     str = md5(str)
-     var mac = str.substr(0, count) + count + str.substr(count)
-     config.params = {
-     ...config.params,
-     mac: mac.toUpperCase()
-     }
-     }*/
+     config.params = appendMD5(config.params)*/
   } else if (config.method == 'post') {
     config.data = {
       ...config.data,
       zoneId: store.state.zone.zoneid
     }
+    config.data = appendMD5(config.data)
   }
   return config
 }
 
-/*function macIntercept(config) {
-  if (config.method == 'get') {
-    var str = '', count = 0
-    for (let i in config.params) {
-      str += i.substr(0, 1) + config.params[i]
-      count++
-    }
-    if (str !== '') {
-      str = md5(str)
-      var mac = str.substr(0, count) + count + str.substr(count)
-      var a = 'hello'
-      console.log(a.toUpperCase())
-      config.params = {
-        ...config.params,
-        mac: mac.toUpperCase()
-      }
-    }
-  } else if (config.method == 'post') {
+
+function appendMD5(params, bol) {
+  if (params === undefined) {
+    return undefined
   }
-  return config
-}*/
+  var str = '', count = 0
+  for (let i in params) {
+    str += i.substr(0, 1) + encodeURI(params[i])
+    count++
+  }
+  str += count
+  if (str !== '') {
+    str = md5(str)
+    var mac = str.substr(0, count) + count + str.substr(count)
+    if (bol) {
+      return mac
+    }
+    return {
+      ...params,
+      mac: mac.toUpperCase()
+    }
+  }
+}
 
 // axios 请求拦截
 Vue.prototype.$http.interceptors.request.use(requestIntercept)
-//axios.interceptors.request.use(macIntercept)
 
 // 使用iview库
 Vue.use(iview)

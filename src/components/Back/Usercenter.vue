@@ -386,7 +386,7 @@
             <p class="info-title info-border">通知信息配置</p>
             <div>
               <p
-                style="font-family: MicrosoftYaHei;font-size: 14px;color: rgba(17,17,17,0.65);letter-spacing: 0.83px;margin-top: 20px;">
+                style="font-family: Microsoft YaHei;font-size: 14px;color: rgba(17,17,17,0.65);letter-spacing: 0.83px;margin-top: 20px;">
                 为了保障您在第一时间接收到有关财务、账号安全和系统公告等关键信息，本设置页面部分选项（打勾图标）默认激活且无法更改。其余可配置选项请依据您的具体需求激活或禁用。
               </p>
               <div style="margin-top: 20px;display: flex">
@@ -394,7 +394,7 @@
                   <div
                     style="display: flex;padding-left: 20px;align-items: center;height: 39px;background:#F8F8F9 ">
                         <span
-                          style="font-family: MicrosoftYaHei;font-size: 12px;color: rgba(17,17,17,0.75);letter-spacing: 0.95px;font-weight: bolder">信息项</span>
+                          style="font-family: Microsoft YaHei;font-size: 12px;color: rgba(17,17,17,0.75);letter-spacing: 0.95px;font-weight: bolder">信息项</span>
                   </div>
                   <div class="infTop"
                        style="height: 241px;border-top:1px solid #E9E9E9; ">
@@ -739,7 +739,7 @@
         添加联系人
       </div>
       <div style="border-bottom: 1px solid #D8D8D8;">
-        <p style="font-family: MicrosoftYaHei;font-size: 14px;color: #666666;">提示：系统将自动发送验证信息到所填手机号和邮箱，通过验证后方可接收消息。</p>
+        <p style="font-family: Microsoft YaHei;font-size: 14px;color: #666666;">提示：系统将自动发送验证信息到所填手机号和邮箱，通过验证后方可接收消息。</p>
         <Form ref="addLinkmanForm" :model="addLinkmanForm" label-position="top" :rules="addLinkmanFormValidate"
               style="width: 300px;margin-top: 20px">
           <FormItem label="联系人姓名" prop="name">
@@ -765,7 +765,7 @@
         修改联系人
       </div>
       <div style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        <p style="font-family: MicrosoftYaHei;font-size: 14px;color: #666666;">提示：系统将自动发送验证信息到所填手机号和邮箱，通过验证后方可接收消息。</p>
+        <p style="font-family: Microsoft YaHei;font-size: 14px;color: #666666;">提示：系统将自动发送验证信息到所填手机号和邮箱，通过验证后方可接收消息。</p>
         <Form ref="updateLinkmanForm" :model="updateLinkmanForm" label-position="top" :rules="ruleValidate"
               style="width: 300px;margin-top: 20px">
           <FormItem label="联系人姓名" prop="name">
@@ -972,7 +972,7 @@
 
 <script type="text/ecmascript-6">
   import {mapState} from 'vuex'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   import $store from '@/vuex'
   import reg from '../../util/regExp'
 
@@ -2222,7 +2222,7 @@
     height: 96px;
     border-bottom: 1px solid #E9E9E9;
     .inf {
-      font-family: MicrosoftYaHei;
+      font-family: Microsoft YaHei;
       font-size: 16px;
       color: rgba(17, 17, 17, 0.75);
       letter-spacing: 0.95px;

@@ -404,7 +404,7 @@
 
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   import defaultOptions from '@/echarts/defaultOptions'
   import histogram from '@/echarts/Histogram'
   import hostDiskOptions from '@/echarts/hostDiskOptions'
@@ -1301,7 +1301,7 @@
       background-image: linear-gradient(-224deg, #05BCFD 0%, #4183EB 100%);
       padding: 20px 30px 20px 20px;
       position: relative;
-      font-family: MicrosoftYaHei;
+      font-family: Microsoft YaHei;
       header {
         margin-bottom: 20px;
         font-size: 18px;
@@ -1422,7 +1422,7 @@
               padding-bottom: 12px;
               border-bottom: 1px solid #E9E9E9;
               .timeText {
-                font-family: MicrosoftYaHei;
+                font-family: Microsoft YaHei;
                 font-size: 14px;
                 color: rgba(102, 102, 102, 0.75);
                 line-height: 25px;

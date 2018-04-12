@@ -283,7 +283,7 @@
     .title {
       // display: inline;
       span {
-        font-family: MicrosoftYaHei;
+        font-family: Microsoft YaHei;
         font-size: 16px;
         color: #2A99F2;
         letter-spacing: 0;
@@ -291,7 +291,7 @@
       button {
         border: 1px solid #2A99F2;
         border-radius: 4px;
-        font-family: MicrosoftYaHei;
+        font-family: Microsoft YaHei;
         font-size: 14px;
         color: #2A99F2;
         line-height: 18px;
@@ -314,7 +314,7 @@
         padding: 0 20px;
         border-right: 1px solid #D9D9D9;
         li {
-          font-family: MicrosoftYaHei;
+          font-family: Microsoft YaHei;
           font-size: 14px;
           line-height: 28px;
           color: #5E5E5E;

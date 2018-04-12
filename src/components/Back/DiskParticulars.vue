@@ -167,7 +167,7 @@
             <Input v-model="createBackupsForm.backupsName" placeholder="请输入"></Input>
           </Form-item>
         </Form>
-        <p style="font-family: MicrosoftYaHei;font-size: 12px;line-height:20px;color: #999999;">
+        <p style="font-family: Microsoft YaHei;font-size: 12px;line-height:20px;color: #999999;">
           提示：云硬盘数据服务为每块磁盘提供<span
           style="color:#2A99F2">8</span>个备份额度，当某块磁盘的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点。</p>
       </div>
@@ -220,7 +220,7 @@
 <script type="text/ecmascript-6">
   import {customTimeOptions} from '../../options'
   import debounce from 'throttle-debounce/debounce'
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   import diskHistogram from '@/echarts/diskHistogram'
   import diskOptions from '@/echarts/diskOptions'
   import regExp from '../../util/regExp'
@@ -721,7 +721,7 @@
     .title {
       display: inline;
       span {
-        font-family: MicrosoftYaHei;
+        font-family: Microsoft YaHei;
         font-size: 18px;
         color: #FFFFFF;
         line-height: 18px;
@@ -729,7 +729,7 @@
       button {
         border: 1px solid #2A99F2;
         border-radius: 4px;
-        font-family: MicrosoftYaHei;
+        font-family: Microsoft YaHei;
         font-size: 14px;
         color: #2A99F2;
         line-height: 18px;
@@ -751,7 +751,7 @@
         box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.35);
         padding: 10px 20px;
         li {
-          font-family: MicrosoftYaHei;
+          font-family: Microsoft YaHei;
           font-size: 12px;
           color: #666666;
           line-height: 20px;
@@ -772,7 +772,7 @@
         border-radius: 4px 4px 0 0;
         height: 34px;
         width: 94px;
-        font-family: MicrosoftYaHei;
+        font-family: Microsoft YaHei;
         font-size: 16px;
         color: #FFFFFF;
         line-height: 16px;
@@ -793,7 +793,7 @@
     .utilization {
       display: flex;
       span {
-        font-family: MicrosoftYaHei;
+        font-family: Microsoft YaHei;
         font-size: 14px;
         color: rgba(17, 17, 17, 0.75);
       }
@@ -816,7 +816,7 @@
           padding-bottom: 12px;
           border-bottom: 1px solid #E9E9E9;
           .timeText {
-            font-family: MicrosoftYaHei;
+            font-family: Microsoft YaHei;
             font-size: 14px;
             color: rgba(102, 102, 102, 0.75);
             line-height: 25px;

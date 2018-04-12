@@ -227,7 +227,7 @@
     button{
       width: 170px;
       height: 55px;
-      font-family: MicrosoftYaHei;
+      font-family: Microsoft YaHei;
       font-size: 24px;
       color: #4481EB;
       background: #FEFE00;
@@ -308,7 +308,7 @@
         h2 {
           margin-bottom: 36px;
           font-weight: normal;
-          font-family: MicrosoftYaHei;
+          font-family: Microsoft YaHei;
           font-size: 36px;
           color: #377DFF;
         }
@@ -420,7 +420,7 @@
             font-size: 14px;
             font-weight: 400;
             line-height: 24px;
-            font-family: MicrosoftYaHei;
+            font-family: Microsoft YaHei;
             color: #999999;
           }
           .config-type {
@@ -509,7 +509,7 @@
         h2 {
           text-align: center;
           margin-bottom: 30px;
-          font-family: MicrosoftYaHei;
+          font-family: Microsoft YaHei;
           font-size: 24px;
           color: #333333;
           font-weight: normal;

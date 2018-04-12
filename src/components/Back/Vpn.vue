@@ -230,7 +230,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import axios from 'axios'
+  import axios from '@/util/axiosInterceptor'
   import $store from '@/vuex'
   import regExp from '../../util/regExp'
   import {mapState} from 'vuex'
