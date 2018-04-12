@@ -96,11 +96,11 @@
               <div v-for="(item,index) in noticeData" :key="index" style="margin:11px 0px;">
                 <p class="universal-mini"
                    style="padding:0px;width:200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;display: inline-block"
-                   @click="$router.push({ path: 'dynamic', query: { id: item.id }})">
+                   @click="goDynamic(item.id)">
                   {{item.title}}</p>
                 <p style="font-size: 14px;float:right">{{item.createtime}}</p>
               </div>
-              <span @click="$router.push({ path: 'dynamic',})"
+              <span @click="$router.push('dynamic')"
                     style="color: #2A99F2;margin-top: 10px;display: block;font-size: 14px;cursor: pointer;">查看更多</span>
             </div>
           </div>
@@ -280,6 +280,10 @@
       },
       change(){
 
+      },
+      goDynamic(id){
+        sessionStorage.setItem('announcementId', id)
+        this.$router.push('dynamic')
       }
     },
     computed: {

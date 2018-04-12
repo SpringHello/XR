@@ -11,13 +11,13 @@ import LR from '@/LR'
 // import Home from '@/components/App/Home'
 // import Price from '@/components/App/Price'
 const Home = () => import('@/components/App/Home')
-const Price = () => import('@/components/App/Price')
+//const Price = () => import('@/components/App/Price')
 const Buy = () => import('@/components/App/Buy')
 const Ecs = () => import('@/components/App/product/ECS')
 const Document = () => import('@/components/App/Document')
-const hostPrice = () => import('@/components/App/Price/Host')
-const diskPrice = () => import('@/components/App/Price/Disk')
-const elasticIPPrice = () => import('@/components/App/Price/ElasticIP')
+//const hostPrice = () => import('@/components/App/Price/Host')
+//const diskPrice = () => import('@/components/App/Price/Disk')
+//const elasticIPPrice = () => import('@/components/App/Price/ElasticIP')
 const Aboutus = () => import('@/components/App/Aboutus')
 const Dynamic = () => import('@/components/App/Dynamic')
 // const ProductBulletin = () => import('@/components/App/ProductBulletin')
@@ -25,7 +25,9 @@ const Dynamic = () => import('@/components/App/Dynamic')
 // 前台活动页面路由
 const Active = () => import('@/components/App/active/active')
 const Vps = () => import('@/components/App/active/vps')
-//const NewNodes = () => import('@/components/App/active/newNodes')
+const NewNodes_1 = () => import('@/components/App/active/newNodes_1')
+const NewNodes_2 = () => import('@/components/App/active/newNodes_2')
+const active_1 = () => import('@/components/App/active/active_1')
 
 /* 产品页面路由 */
 const Pecs = () => import('@/components/App/product/ECS.vue')
@@ -177,7 +179,7 @@ var router = new Router({
         {path: 'document', name: 'document', component: Document},
         {path: 'dynamic', name: 'dynamic', component: Dynamic},
       //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
-        {
+        /*{
           path: 'price',
           name: 'price',
           component: Price,
@@ -203,11 +205,13 @@ var router = new Router({
               component: elasticIPPrice
             }
           ]
-        },
+        },*/
         {path: 'buy', name: 'buy', component: Buy},
         {path: 'active', name: 'active', component: Active},
         {path: 'vps', name: 'vps', component: Vps},
-        //{path: 'newNodes', name: 'newNodes', component: NewNodes},
+        {path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
+        {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},
+        {path: 'active_1', name: 'active_1', component: active_1},
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
         {path: 'Pecss', component: Pecss},

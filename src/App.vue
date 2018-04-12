@@ -146,6 +146,10 @@
     </div>
     <!-- 客服浮动块 -->
     <div class="affix">
+      <div class="registerImg" @click="$router.push('register')">
+        <p>立即领取</p>
+      </div>
+      <!--<img src="./assets/img/app/regiterTag.png"/>-->
       <span class="qq" @mouseenter="QME" @mouseleave="QML">
         <div ref="qq" style="overflow: hidden">
           <div class="wrapper">
@@ -727,6 +731,20 @@
         display: block;
         padding: 10px;
         background: #E1E1E1 no-repeat center;
+      }
+      .registerImg{
+        height: 201px;
+        width: 48px;
+        background: url("./assets/img/app/regiterTag.png") no-repeat;
+        margin-bottom: 10px;
+        cursor: pointer;
+        padding: 154px 10px 9px;
+        >p{
+          font-size:14px;
+          font-family:MicrosoftYaHei;
+          color:rgba(55,125,255,1);
+          line-height:19px;
+        }
       }
       .qq {
         background-image: url('./assets/img/app/QQ-gray.png');

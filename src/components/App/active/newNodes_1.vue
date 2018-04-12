@@ -1,46 +1,18 @@
 <template>
   <div>
     <div class="banner">
-      <img style="position: absolute;bottom: 0;z-index: -1"
-           src="../../../assets/img/active/newNodes/banner_1.png">
+      <img style="position: absolute;bottom: 0px;z-index: -1"
+           src="../../../assets/img/active/newNodes/banner_3.png">
       <img style="position: absolute;top: 7%;left: 7%;"
-           src="../../../assets/img/active/newNodes/circle.png">
-      <div style="width:1200px;margin:0px auto;padding-top: 7%;position: relative">
-        <p>庆新节点上线</p>
-        <p style="font-size: 44px;line-height: 62px;font-family: PingFangSC-Light;">配置升级 | 限时低价体验</p>
+           src="../../../assets/img/active/newNodes/circle_1.png">
+      <div style="width:1200px;margin:0px auto;padding-top: 12%;position: relative">
+        <p style="position: relative">北京一区盛大开服<img style="position: absolute;left: -2%;top: -45%;" src="../../../assets/img/active/newNodes/text.png"/></p>
+        <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Regular;">布局首都，新购特惠，限时抢购</p>
         <!--<button>立即领取</button>-->
         <transition name="list">
-          <img v-if="img_1" style="position:absolute;left: 41%; top: 94%;z-index: -2;"
-               src="../../../assets/img/active/newNodes/banner_2.png">
-        </transition>
-        <transition name="list">
-          <img v-if="img_2" style="position: absolute;left: 55%;top: 50%;z-index: -3;"
-               src="../../../assets/img/active/newNodes/banner_3.png">
-        </transition>
-        <transition name="list">
-          <img v-if="img_3" style="position: absolute;left: 69%;top: 32%;z-index: -4;"
+          <img v-if="img_1" style="position:absolute;left: 45%; top: 30%;z-index: -2;"
                src="../../../assets/img/active/newNodes/banner_4.png">
         </transition>
-        <transition name="list">
-          <img v-if="img_4" style="position: absolute;left: 83%; top: 83%;z-index: -5;"
-               src="../../../assets/img/active/newNodes/banner_5.png">
-        </transition>
-        <transition name="list">
-          <img v-if="img_4" style="position: absolute;left: 86.5%; top:78%;z-index: -4;"
-               src="../../../assets/img/active/newNodes/banner_6.png">
-        </transition>
-        <transition name="list">
-          <img v-if="img_3" style="position: absolute;left: 82%; top: 68%;z-index: -4;"
-               src="../../../assets/img/active/newNodes/banner_6.png">
-        </transition>
-        <img style="position:absolute;left: 50%; top: 18%;z-index: -2;"
-             src="../../../assets/img/active/newNodes/arrows_1.png">
-        <img style="position:absolute;left: 90%; top: 9%;z-index: -2;"
-             src="../../../assets/img/active/newNodes/arrows_2.png">
-        <img style="position:absolute;left: 92%; top: 38%;z-index: -2;"
-             src="../../../assets/img/active/newNodes/arrows_3.png">
-        <img style="position:absolute;left: 53%; top: 74%;z-index: -2;"
-             src="../../../assets/img/active/newNodes/arrows_4.png">
       </div>
       <ul class="banner_text">
         <li>DELL第十四代服务器</li>
@@ -50,175 +22,153 @@
         <li>IOPS高达120000+的极致性能</li>
       </ul>
     </div>
-    <div style="background:#2B2E47;position: relative">
-      <img style="position: absolute;right: 0;top: 4%;"
-           src="../../../assets/img/active/newNodes/icon_2.png">
-      <img style="position: absolute;left: 3%;top: 11%;"
-           src="../../../assets/img/active/newNodes/icon_3.png">
-      <img style="position: absolute;right: 0;top: 19%;"
-           src="../../../assets/img/active/newNodes/icon_5.png">
-      <div class="center">
-        <div class="process">
-          <img style="position: absolute;left: 0;top: -31px;"
-               src="../../../assets/img/active/newNodes/textBanner.png">
-          <img style="position: absolute;left:0;bottom: 42%;"
-               src="../../../assets/img/active/newNodes/icon_1.png">
-          <h2>活动流程</h2>
-          <div class="items">
-            <dl>
-              <dt v-if="isLogin==1"><img src="../../../assets/img/active/newNodes/zc.png"></dt>
-              <dt v-else><img src="../../../assets/img/active/vps/one.png"></dt>
-              <dd :class="{select:isLogin==1}">① 新用户注册登录<i
-                :class="{select:(companyauth==0&&isLogin==1)||(personalauth==0&&isLogin==1)}"></i>
-              </dd>
-            </dl>
-            <dl>
-              <dt v-if="companyauth==0||personalauth==0"><img src="../../../assets/img/active/newNodes/rz.png">
-              </dt>
-              <dt v-else><img src="../../../assets/img/active/vps/five.png"></dt>
-              <dd :class="{select:companyauth==0||personalauth==0}">② 完成实名认证<i
-                :class="{select:(isLogin==1&&companyauth==0&&isReceive!=0)||(isLogin==1&&personalauth==0&&isReceive!=0)}"></i>
-              </dd>
-            </dl>
-            <dl>
-              <dt v-if="isReceive==0"><img src="../../../assets/img/active/vps/lingquzhuji.png"></dt>
-              <dt v-else><img src="../../../assets/img/active/newNodes/cy.png"></dt>
-              <dd :class="{select:isReceive!=0}">③ 参与活动</dd>
-            </dl>
-          </div>
-        </div>
-        <div class="active_one">
-          <img style="position: absolute; left: -15%; bottom: 8%;"
-               src="../../../assets/img/active/newNodes/icon_6.png">
-          <img style="position: absolute;right: 20%;top: 30%;"
-               src="../../../assets/img/active/newNodes/icon_4.png">
-          <h2 style="margin-bottom: 20px">限时<img style="position: relative;top: 32px;margin: 0 5px"
-                                                 src="../../../assets/img/active/newNodes/threez.png">折秒杀</h2>
-          <p>每天<span>10：00开抢</span>，每款产品<span>限量20台</span>，每人仅限参与一次</p>
-          <div class="config_one">
-            <div v-for="(item,index) in config_one" class="content">
-              <div class="title">
-                <p>{{ item.title}}</p>
-              </div>
-              <div class="info">
-                <p><span>{{ item.discript}}</span></p>
-                <div class="info_right">
-                  <Select v-model="item.node" style="width:135px;margin-right: 10px" placeholder="节点选择">
-                    <Option v-for="item in nodeList" :value="item.value" :key="item.value">{{ item.label }}
-                    </Option>
-                  </Select>
-                  <Select v-model="item.system" style="width:135px" placeholder="镜像选择">
-                    <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                  </Select>
-                  <div class="price">
-                    <img src="../../../assets/img/active/newNodes/tag.png">
-                    <span class="s1">{{ item.price}}</span>
-                    <span class="s2">{{ item.oldPrice}}</span>
-                  </div>
-                  <button @click="buyNow_one(item,index)">立即抢购</button>
-                </div>
-              </div>
+    <div style="position: relative;">
+      <div style="background: rgba(247,163,125,0.5)">
+        <div class="center">
+          <div class="process">
+            <img style="position: absolute;right: 0; top: -34px;" src="../../../assets/img/active/newNodes/shadow1.png"/>
+            <img style="position: absolute;left: 102%" src="../../../assets/img/active/newNodes/icon_1.png"/>
+            <h2 style="margin-bottom: 20px">活动流程</h2>
+            <p>活动时间：2018.4.16-2018.5.16</p>
+            <div class="items">
+              <dl>
+                <dt v-if="isLogin==1"><img src="../../../assets/img/active/newNodes/dl.png"></dt>
+                <dt v-else><img src="../../../assets/img/active/vps/one.png"></dt>
+                <dd :class="{select:isLogin==1}">① 新用户注册登录<i
+                  :class="{select:(companyauth==0&&isLogin==1)||(personalauth==0&&isLogin==1)}"></i>
+                </dd>
+              </dl>
+              <dl>
+                <dt v-if="companyauth==0||personalauth==0"><img src="../../../assets/img/active/newNodes/zc.png">
+                </dt>
+                <dt v-else><img src="../../../assets/img/active/vps/five.png"></dt>
+                <dd :class="{select:companyauth==0||personalauth==0}">② 完成实名认证<i
+                  :class="{select:(isLogin==1&&companyauth==0&&isReceive!=0)||(isLogin==1&&personalauth==0&&isReceive!=0)}"></i>
+                </dd>
+              </dl>
+              <dl>
+                <dt v-if="isReceive==0"><img src="../../../assets/img/active/vps/lingquzhuji.png"></dt>
+                <dt v-else><img src="../../../assets/img/active/newNodes/lq.png"></dt>
+                <dd :class="{select:isReceive!=0}">③ 购买折扣主机</dd>
+              </dl>
             </div>
           </div>
         </div>
-        <div class="active_two">
-          <img style="position: absolute;left: 25%;top: 5%;"
-               src="../../../assets/img/active/newNodes/icon_7.png">
-          <img style="position: absolute;left: -22%;top: 15%;"
-               src="../../../assets/img/active/newNodes/icon_8.png">
-          <img style="position: absolute;right: -29%;top: 28%;"
-               src="../../../assets/img/active/newNodes/icon_9.png">
-          <img style="position: absolute;right: -20%;top: 48%;"
-               src="../../../assets/img/active/newNodes/icon_10.png">
-          <img style="position: absolute;left: -21%;bottom: 4%;"
-               src="../../../assets/img/active/newNodes/icon_11.png">
-          <h2 style="margin-bottom: 20px">套餐4折起</h2>
-          <p>每人每款限购2台，<span>3个月5折、6个月4折</span></p>
-          <div class="config_two">
-            <div v-for="(item,index) in config_two" class="content">
-              <div class="title" :class="{one: index == 0, two: index == 1, three: index == 2, fore: index == 3}">
-                <p>{{ item.discript }}</p>
-              </div>
-              <div class="info">
-                <div class="info_left">
-                  <div class="info_left_top">
-                    <ul>
-                      <li><img src="../../../assets/img/active/newNodes/cpu.png"/>{{ item.cpu }}</li>
-                      <li><img src="../../../assets/img/active/newNodes/memory.png"/>{{ item.memory }}</li>
-                      <li><img src="../../../assets/img/active/newNodes/disc.png"/>{{ item.disk }}</li>
-                      <li><img src="../../../assets/img/active/newNodes/bandWidth.png"/>{{ item.bandWidth}}</li>
-                    </ul>
-                  </div>
-                  <div class="info_left_bottom">
-                    <Select v-model="item.node" style="width:135px;margin-right: 10px" placeholder="节点选择">
-                      <Option v-for="item in nodeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                    </Select>
+      </div>
+      <div style="background: rgba(255,248,246,1)">
+        <div class="center">
+          <div class="active_one">
+            <img style="position: absolute;right: 102%" src="../../../assets/img/active/newNodes/icon_2.png"/>
+            <h2 style="margin-bottom: 20px">限时<img style="position: relative;top: 32px;margin: 0 5px"
+                                                   src="../../../assets/img/active/newNodes/threez.png">折秒杀</h2>
+            <p>每天10：00开抢，每款产品限量20台，每人仅限参与一次</p>
+            <div class="config_one">
+              <div v-for="(item,index) in config_one" class="content">
+                <div class="title">
+                  <p>{{ item.title}}</p>
+                </div>
+                <div class="info">
+                  <p><span>{{ item.discript}}</span></p>
+                  <div class="info_right">
                     <Select v-model="item.system" style="width:135px" placeholder="镜像选择">
                       <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
+                    <div class="price">
+                      <img src="../../../assets/img/active/newNodes/tag.png">
+                      <span class="s1">{{ item.price}}</span>
+                      <span class="s2">{{ item.oldPrice}}</span>
+                    </div>
+                    <button @click="buyNow_one(item,index)">立即抢购</button>
                   </div>
-                </div>
-                <div class="info_right">
-                  <p>「5折后参考价」</p>
-                  <p>{{ item.price_one}}</p>
-                  <p>{{item.oldPrice_one}}</p>
-                  <button @click="buyNow_two(item,index,3)">立即抢购</button>
-                </div>
-                <div class="info_right">
-                  <p>「4折后参考价」</p>
-                  <p>{{ item.price_two}}</p>
-                  <p>{{item.oldPrice_two}}</p>
-                  <button @click="buyNow_two(item,index,6)">立即抢购</button>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="rules">
-          <img style="position: absolute;top: -5%;right: 18%;"
-               src="../../../assets/img/active/newNodes/icon_12.png">
-          <img style="position: absolute;top: 15%; right: -6%;"
-               src="../../../assets/img/active/newNodes/icon_13.png">
-          <img style="position: absolute;left: -12%;top: 50%;"
-               src="../../../assets/img/active/newNodes/icon_14.png">
-          <h2>活动规则</h2>
-          <dl>
-            <dt>1、活动对象：</dt>
-            <dd>所有通过个人实名／企业认证审核的用户。</dd>
-          </dl>
-          <dl>
-            <dt>2、活动规则：</dt>
-            <dd>
-              1） 此次活动仅限北京一区、北方二区（辽宁）节点；
-            </dd>
-            <dd>
-              2） 同一用户可选择多款4折、5折产品进行优惠购买，但不可重复参加此次3折秒杀活动；
-            </dd>
-            <dd>
-              3） 未领取本次活动优惠券、直接在控制台购买不享受活动优惠待遇；
-            </dd>
-            <dd>
-              4） 此次活动产品已属超低优惠，不可再与其他优惠券叠加使用；
-            </dd>
-            <dd>
-              5） 活动产品中的资源可随时进行升级，升级费用按新睿云标准收费进行收取；
-            </dd>
-            <dd>
-              6） 产品使用期间，若对免费资源进行了销毁，则视为放弃此产品优惠使用权，我司不予退费或恢复。
-            </dd>
-          </dl>
-          <dl>
-            <dt> 3、活动开始时间：2018-4-10</dt>
-          </dl>
-          <dl>
-            <dt> 4、活动主机7天内可无理由退款。</dt>
-          </dl>
-          <dl>
-            <dt>5、为保证活动的公平公正，新睿云有权对恶意刷抢（如通过程序等技术手段）活动资源、利用资源从事违法违规行为的用户收回使用资格。</dt>
-          </dl>
-          <dl>
-            <dt>6、活动最终解释权在法律范围内归新睿云所有。</dt>
-          </dl>
+        <div class="center">
+          <div class="active_two">
+            <img style="position: absolute;left: 110%;top:20%;" src="../../../assets/img/active/newNodes/icon_3.png"/>
+            <img style="position: absolute;right: 105%;bottom: 15%" src="../../../assets/img/active/newNodes/icon_4.png"/>
+            <h2 style="margin-bottom: 20px">套餐4折起</h2>
+            <p>每人每款限购2台，3个月5折、6个月4折</p>
+            <div class="config_two">
+              <div v-for="(item,index) in config_two" class="content">
+                <div class="title" :class="{one: index == 0, two: index == 1, three: index == 2, fore: index == 3}">
+                  <p>{{ item.discript }}</p>
+                </div>
+                <div class="info">
+                  <div class="info_left">
+                    <div class="info_left_top">
+                      <ul>
+                        <li><img src="../../../assets/img/active/newNodes/cpu.png"/>{{ item.cpu }}</li>
+                        <li><img src="../../../assets/img/active/newNodes/memory.png"/>{{ item.memory }}</li>
+                        <li><img src="../../../assets/img/active/newNodes/disc.png"/>{{ item.disk }}</li>
+                        <li><img src="../../../assets/img/active/newNodes/bandWidth.png"/>{{ item.bandWidth}}</li>
+                      </ul>
+                    </div>
+                    <div class="info_left_bottom">
+                      <Select v-model="item.system" style="width:135px" placeholder="镜像选择">
+                        <Option v-for="item in systemList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                      </Select>
+                    </div>
+                  </div>
+                  <div class="info_right">
+                    <p>「5折后参考价」</p>
+                    <p>{{ item.price_one}}</p>
+                    <p>{{item.oldPrice_one}}</p>
+                    <button @click="buyNow_two(item,index,3)">立即抢购</button>
+                  </div>
+                  <div class="info_right" style="border: none">
+                    <p>「4折后参考价」</p>
+                    <p>{{ item.price_two}}</p>
+                    <p>{{item.oldPrice_two}}</p>
+                    <button @click="buyNow_two(item,index,6)">立即抢购</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="background:rgba(246,148,119,1);">
+        <div class="center">
+          <div class="rules">
+            <h2 class="h">活动规则</h2>
+            <dl>
+              <dt>1、活动对象：</dt>
+              <dd>所有通过个人实名／企业认证审核的用户。</dd>
+            </dl>
+            <dl>
+              <dt>2、活动规则：</dt>
+              <dd>
+                1） 此次活动仅限北京一区节点；
+              </dd>
+              <dd>
+                2） 同一用户可选择多款4折、5折产品进行优惠购买，但不可重复参加此次3折秒杀活动；
+              </dd>
+              <dd>
+                3） 未领取本次活动优惠券、直接在控制台购买不享受活动优惠待遇；
+              </dd>
+              <dd>
+                4） 此次活动产品已属超低优惠，不可再与其他优惠券叠加使用；
+              </dd>
+              <dd>
+                5） 活动产品中的资源可随时进行升级，升级费用按新睿云标准收费进行收取；
+              </dd>
+              <dd>
+                6） 产品使用期间，若对免费资源进行了销毁，则视为放弃此产品优惠使用权，我司不予退费或恢复。
+              </dd>
+            </dl>
+            <dl>
+              <dt> 4、活动主机7天内可无理由退款。</dt>
+            </dl>
+            <dl>
+              <dt>5、为保证活动的公平公正，新睿云有权对恶意刷抢（如通过程序等技术手段）活动资源、利用资源从事违法违规行为的用户收回使用资格。</dt>
+            </dl>
+            <dl>
+              <dt>6、活动最终解释权在法律范围内归新睿云所有。</dt>
+            </dl>
+          </div>
         </div>
       </div>
     </div>
@@ -267,8 +217,8 @@
 <style rel="stylesheet/less" lang="less" scoped>
   .banner {
     position: relative;
-    height: 750px;
-    background: linear-gradient(90deg, rgba(200, 85, 254, 1), rgba(6, 46, 141, 1));
+    height: 730px;
+    background: linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));
     overflow: hidden;
     z-index: 1;
     .banner_text {
@@ -280,13 +230,14 @@
       display: flex;
       justify-content: space-around;
       width: 1200px;
-      background: url('../../../assets/img/active/newNodes/textBanner1.png') 655px no-repeat, linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
+      background: url('../../../assets/img/active/newNodes/textBanner1.png') -18px no-repeat;
+      box-shadow: 0px 15px 31px -13px rgba(128, 25, 22, 0.55);
       li {
         &::before {
           content: '';
           width: 10px;
           height: 10px;
-          background: #03FAEF;
+          background: #F0D41D;
           display: inline-block;
           border-radius: 50%;
           margin-right: 10px;
@@ -295,15 +246,15 @@
         font-size: 14px;
         font-family: PingFangSC-Regular;
         color: #FFFFFF;
-        line-height: 74px;
+        line-height: 80px;
       }
     }
     p {
       margin-bottom: 20px;
-      font-size: 80px;
+      font-size: 48px;
       font-family: PingFangSC-Medium;
-      color: rgba(255, 255, 255, 1);
-      line-height: 112px;
+      color: rgba(243, 108, 110, 1);
+      line-height: 67px;
     }
   }
 
@@ -355,14 +306,14 @@
       font-weight: normal;
       font-family: PingFangSC-Medium;
       font-size: 36px;
-      color: #E400FF;
+      color: #F36C6E;
       text-align: center;
       &::before {
         content: '';
         width: 12px;
         height: 12px;
         display: inline-block;
-        background: #E400FF;
+        background: #F36C6E;
         margin-right: 20px;
         transform: translateY(-6px) rotate(45deg);
       }
@@ -371,7 +322,7 @@
         width: 12px;
         height: 12px;
         display: inline-block;
-        background: #E400FF;
+        background: #F36C6E;
         margin-left: 20px;
         transform: translateY(-6px) rotate(45deg);
       }
@@ -380,6 +331,13 @@
       text-align: center;
       padding: 60px 200px 60px;
       position: relative;
+      > p {
+        font-size: 16px;
+        font-family: PingFangSC-Regular;
+        color: rgba(243, 108, 110, 1);
+        line-height: 16px;
+        margin-bottom: 40px;
+      }
       .items {
         display: flex;
         justify-content: space-between;
@@ -407,7 +365,7 @@
             font-size: 16px;
             color: #ffffff;
             &.select {
-              color: #E400FF;
+              color: #F2776C;
             }
             i {
               display: inline-block;
@@ -419,8 +377,8 @@
               float: right;
               top: 21px;
               &.select {
-                border-right: 1px solid #E400FF;
-                border-bottom: 1px solid #E400FF;;
+                border-right: 1px solid #F2776C;
+                border-bottom: 1px solid #F2776C;
               }
             }
           }
@@ -440,10 +398,7 @@
         text-align: center;
         font-size: 16px;
         font-family: PingFangSC-Regular;
-        color: #FFFFFF;
-        span {
-          color: #E400FF;
-        }
+        color: #F36C6E;
       }
       .config_one {
         margin-top: 50px;
@@ -452,10 +407,12 @@
         .content {
           background: #FFFFFF;
           width: 590px;
+          box-shadow: 0px 2px 30px -10px rgba(22, 24, 40, 0.25);
           .title {
             height: 72px;
             text-align: center;
-            background: url('../../../assets/img/active/newNodes/hostBanner.png') 20px no-repeat,url('../../../assets/img/active/newNodes/hostBanner.png') 430px no-repeat, linear-gradient(90deg, rgba(244, 86, 135, 1), rgba(84, 59, 248, 1));
+            background: url('../../../assets/img/active/newNodes/hostBanner.png') 430px no-repeat, linear-gradient(90deg, rgba(244, 130, 116, 1), rgba(243, 111, 104, 1));
+
             p {
               font-size: 30px;
               font-family: PingFangSC-Medium;
@@ -501,14 +458,14 @@
                 font-size: 18px;
                 font-family: PingFangSC-Regular;
                 color: rgba(255, 255, 255, 1);
-                background: #377DFF;
+                background: #F27369;
                 padding: 10px 40px;
                 outline: none;
                 border: none;
                 cursor: pointer;
                 margin-top: 20px;
                 &:hover {
-                  box-shadow: 0px 2px 13px 0px rgba(79, 140, 255, 0.72);
+                  box-shadow: 0px 2px 13px 0px rgba(242, 115, 105, 1);
                 }
               }
             }
@@ -523,7 +480,7 @@
         text-align: center;
         font-size: 16px;
         font-family: PingFangSC-Regular;
-        color: #FFFFFF;
+        color: #F36C6E;
         span {
           color: #E400FF;
         }
@@ -533,6 +490,7 @@
         .content {
           background: #FFFFFF;
           margin-bottom: 60px;
+          box-shadow: 0px 2px 30px -10px rgba(22,24,40,0.25);
           .title {
             text-align: center;
             padding: 26px 0 16px;
@@ -626,9 +584,9 @@
                 font-family: PingFangSC-Regular;
                 color: rgba(255, 255, 255, 1);
                 padding: 10px 40px;
-                background: #377DFF;
+                background: #F27369;
                 &:hover {
-                  box-shadow: 0px 2px 13px 0px rgba(79, 140, 255, 0.72);
+                  box-shadow: 0px 2px 13px 0px rgba(242, 115, 105, 1);
                 }
               }
             }
@@ -644,6 +602,15 @@
       padding: 60px 120px;
       font-family: PingFangSC;
       position: relative;
+      .h{
+        color: #FFFFFF;
+        &::before {
+          background: #FFFFFF;
+        }
+        &::after {
+          background: #FFFFFF;
+        }
+      }
       dl {
         color: #FFFFFF;
         text-align: justify;
@@ -801,8 +768,7 @@
   }
 
   .list-enter, .list-leave-to
-    /* .list-leave-active for below version 2.1.8 */
-  {
+    /* .list-leave-active for below version 2.1.8 */ {
     opacity: 0;
     transform: translateY(300px);
   }
@@ -826,9 +792,6 @@
     data() {
       return {
         img_1: false,
-        img_2: false,
-        img_3: false,
-        img_4: false,
         company: false,
         loginModal: false,
         form: {
@@ -865,7 +828,7 @@
           {
             title: '2C+4G+40G系统盘+5M 1年',
             discript: '适用于日常运营活动、企业办公环境、小型开发测试环境、普通数据处理服务等场景。',
-            node: '',
+            node: '39a6af0b-6624-4194-b9d5-0c552d903858',
             system: '',
             price: '¥1050.2／1年',
             oldPrice: '¥3500.64/年'
@@ -873,7 +836,7 @@
           {
             title: '4C+8G+40G系统盘+10M 1年',
             discript: '适用于高并发应用业务部署、高内存大数据分析处理、分布式分析等业务场景。',
-            node: '',
+            node: '39a6af0b-6624-4194-b9d5-0c552d903858',
             system: '',
             price: '¥3037.4／1年',
             oldPrice: '¥10124.64/年'
@@ -886,7 +849,7 @@
             memory: '4G内存',
             disk: '40G磁盘',
             bandWidth: '2mb/s带宽',
-            node: '',
+            node: '39a6af0b-6624-4194-b9d5-0c552d903858',
             system: '',
             price_one: '¥295.08／3个月',
             price_two: '¥472.128／6个月',
@@ -899,7 +862,7 @@
             memory: '8G内存',
             disk: '40G磁盘',
             bandWidth: '2mb/s带宽',
-            node: '',
+            node: '39a6af0b-6624-4194-b9d5-0c552d903858',
             system: '',
             price_one: '¥587.58／3个月',
             price_two: '¥940.128／6个月',
@@ -912,7 +875,7 @@
             memory: '16G内存',
             disk: '40G磁盘',
             bandWidth: '5mb/s带宽',
-            node: '',
+            node: '39a6af0b-6624-4194-b9d5-0c552d903858',
             system: '',
             price_one: '¥1193.00／3个月',
             price_two: '¥1909.728／6个月',
@@ -925,7 +888,7 @@
             memory: '32G内存',
             disk: '40G磁盘',
             bandWidth: '10mb/s带宽',
-            node: '',
+            node: '39a6af0b-6624-4194-b9d5-0c552d903858',
             system: '',
             price_one: '¥2656.08／3个月',
             price_two: '¥4249.728／6个月',
@@ -933,7 +896,7 @@
             oldPrice_two: '¥10624.32／6个月'
           }
         ],
-        nodeList: [
+        /*nodeList: [
           {
             label: '北京一区',
             value: '39a6af0b-6624-4194-b9d5-0c552d903858'
@@ -942,7 +905,7 @@
             label: '北方二区（辽宁）',
             value: '3c7270be-8394-4d22-934a-218c4e81eed1'
           }
-        ],
+        ],*/
         systemList: [
           {
             label: 'CentOS',
@@ -956,15 +919,6 @@
       }
     },
     created() {
-      setTimeout(() => {
-        this.img_2 = true
-      }, 350)
-      setTimeout(() => {
-        this.img_3 = true
-      }, 500)
-      setTimeout(() => {
-        this.img_4 = true
-      }, 600)
       if (this.$store.state.userInfo != null) {
         this.isLogin = 1
         this.userInfo = this.$store.state.userInfo
@@ -1061,10 +1015,6 @@
           this.loginModal = true
           return
         }
-        if (item.node === '') {
-          this.$Message.info('请选择主机节点')
-          return
-        }
         if (item.system === '') {
           this.$Message.info('请选择主机系统')
           return
@@ -1081,13 +1031,9 @@
           }
         })
       },
-      buyNow_two(item, index, month){
+      buyNow_two(item, index, month) {
         if (this.userInfo == null) {
           this.loginModal = true
-          return
-        }
-        if (item.node === '') {
-          this.$Message.info('请选择主机节点')
           return
         }
         if (item.system === '') {
@@ -1166,7 +1112,7 @@
         this.isReceive = this.userInfo.activityInfo[6].companytype
       }
     },
-    mounted () {
+    mounted() {
       this.img_1 = true
     },
   }

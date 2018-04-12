@@ -4,6 +4,55 @@
     <div class="banner">
       <my-carousel :interval=5000 effect="fade" class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
+          <div @click="push('active_1')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
+            <div class="head-banner">
+              <div>
+                <div>
+                  <p>
+                    <img style="padding-top: 0" src="../../assets/img/active/active_1/ziti.png">
+                  </p>
+                  <button>立即领取</button>
+                </div>
+                <img src="../../assets/img/active/active_1/baner.png">
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
+          <div @click="push('newNodes_1')"
+               style="cursor: pointer;background:linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
+            <div class="newNodes_1">
+              <div style="width:1200px;margin:0px auto;padding-top: 8%;position: relative;z-index: 1">
+                <img style="position: absolute;top: 10%;left: -20%;z-index: 2"
+                     src="../../assets/img/active/newNodes/circle_1.png">
+                <p>北京一区盛大开服
+                  <img style="position: absolute;left: -2%;top: 28%;z-index: 1" src="../../assets/img/active/newNodes/text.png"/></p>
+                <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">布局首都，新购特惠，限时抢购</p>
+                <button>立即体验</button>
+                <img style="position:absolute;left: 45%; top: 13%;z-index: -2;"
+                     src="../../assets/img/active/newNodes/banner_4.png">
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
+          <div @click="push('newNodes_2')"
+               style="cursor: pointer;background:#87B6FF">
+            <div class="newNodes_2">
+              <img style="position: absolute;z-index: 1" src="../../assets/img/active/newNodes/circle.png">
+              <div style="width:1200px;margin:0px auto;padding-top: 7%;position: relative;z-index: 1">
+                <p>华北二区盛大开服
+                  <img style="position: absolute;left: 0;top: 30%;z-index: 1" src="../../assets/img/active/newNodes/text1.png"/></p>
+                <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">春暖花开，活动绽放</p>
+                <p>3折优惠<span style="font-size: 24px">起</span></p>
+                <button>立即体验</button>
+                <img style="position:absolute;left: 58%; top: 2%;z-index: -2;"
+                     src="../../assets/img/active/newNodes/banner_2.png">
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
+        <!--<my-carousel-item class="carousel-item">
           <div @click="push('vps')" style="cursor: pointer;background-image:linear-gradient(90deg,#29abe2,#9cf)">
             <div style="width:1200px;height:560px;margin:0px auto;position:relative">
               <img src="../../assets/img/home/carousel-1-1.png" style="position:absolute;right:0px;top:20px;">
@@ -18,43 +67,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>
-        <!-- <my-carousel-item class="carousel-item">
-           <div @click="push('newNodes')"
-                style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
-             <div class="newNodes">
-               <img style="position: absolute;bottom: 0;z-index: -1"
-                    src="../../assets/img/active/newNodes/banner_1.png">
-               <img style="position: absolute;top: 7%;left: 7%;"
-                    src="../../assets/img/active/newNodes/circle.png">
-               <div style="width:1200px;margin:0px auto;padding-top: 6%;position: relative">
-                 <p>庆新节点上线</p>
-                 <p style="font-size: 44px;line-height: 62px;font-family: PingFangSC-Light;">配置升级 | 限时低价体验</p>
-                 <button>立即体验</button>
-                 <img style="position:absolute;left: 41%; top: 54%;z-index: -2;"
-                      src="../../assets/img/active/newNodes/banner_2.png">
-                 <img style="position: absolute;left: 55%;top: 30%;z-index: -3;"
-                      src="../../assets/img/active/newNodes/banner_3.png">
-                 <img style="position: absolute;left: 69%;top: 11%;z-index: -4;"
-                      src="../../assets/img/active/newNodes/banner_4.png">
-                 <img style="position: absolute;left: 83%; top: 53%;z-index: -5;"
-                      src="../../assets/img/active/newNodes/banner_5.png">
-                 <img style="position: absolute;left: 86.5%; top:48%;z-index: -4;"
-                      src="../../assets/img/active/newNodes/banner_6.png">
-                 <img style="position: absolute;left: 82%; top: 40%;z-index: -4;"
-                      src="../../assets/img/active/newNodes/banner_6.png">
-                 <img style="position:absolute;left: 50%; top: 8%;z-index: -2;"
-                      src="../../assets/img/active/newNodes/arrows_1.png">
-                 <img style="position:absolute;left: 90%; top: 7%;z-index: -2;"
-                      src="../../assets/img/active/newNodes/arrows_2.png">
-                 <img style="position:absolute;left: 92%; top: 28%;z-index: -2;"
-                      src="../../assets/img/active/newNodes/arrows_3.png">
-                 <img style="position:absolute;left: 53%; top: 46%;z-index: -2;"
-                      src="../../assets/img/active/newNodes/arrows_4.png">
-               </div>
-             </div>
-           </div>
-         </my-carousel-item>-->
+        </my-carousel-item>-->
         <my-carousel-item class="carousel-item">
           <div @click="push('active')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
             <div style="width:1200px;height:560px;margin:0px auto;position:relative">
@@ -91,7 +104,7 @@
     </div>
     <!-- 功能介绍区域 -->
     <div class="box-container"
-         :class="{three:this.activeBanner==1}">
+         :class="{one:this.activeBanner==2,two: this.activeBanner==3, three:this.activeBanner==1}">
       <div class="container">
         <div v-for="(item,index) in boxContainer" :key="index" class="container-item">
           <i class="iconfont" :class="item.img" style="font-size:60px;color:#fff;line-height:1"></i>
@@ -779,10 +792,13 @@
       background-color: #5692fe;
 
       &.one {
-        background-color: #C254FA;
+        background-color: #F36C69;
+      }
+      &.two{
+        background-color: #135BFF;
       }
       &.three {
-        background-color: rgb(80, 182, 235);
+        background-color: #F9AF80;
       }
       .container {
         width: 1200px;
@@ -1289,31 +1305,89 @@
     }
   }
 
-  .newNodes {
+  .newNodes_1 {
     position: relative;
     height: 750px;
-    background: linear-gradient(90.8deg, rgba(200, 85, 254, 1), rgba(6, 46, 141, 1));
+    background: linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));
     overflow: hidden;
     z-index: 1;
     p {
       margin-bottom: 20px;
-      font-size: 80px;
+      font-size: 48px;
       font-family: PingFangSC-Medium;
-      color: rgba(255, 255, 255, 1);
-      line-height: 112px;
+      color: rgba(243, 108, 110, 1);
+      line-height: 67px;
     }
     button {
       outline: none;
       border: none;
-      padding: 20px 40px;
-      font-size: 36px;
-      font-family: PingFangSC-Regular;
-      color: rgba(255, 255, 255, 1);
-      line-height: 36px;
-      background: rgba(200, 85, 254, 1);
-      margin-top: 40px;
-      box-shadow: 0 3px 31px 0 #8A4BC4;
+      padding: 15px 40px;
+      font-size:24px;
+      font-family:PingFangSC-Regular;
+      color:rgba(255,255,255,1);
+      line-height: 24px;
+      background:linear-gradient(90deg,rgba(248,174,127,1),rgba(242,123,114,1));
+      margin-top: 80px;
+      box-shadow: 0px 15px 31px -13px rgba(128,25,22,0.55);
+      border-radius:38px;
       cursor: pointer;
+    }
+  }
+  .newNodes_2 {
+    position: relative;
+    height: 750px;
+    background: #87B6FF;
+    overflow: hidden;
+    z-index: 1;
+    p {
+      margin-bottom: 20px;
+      font-size: 48px;
+      font-family: PingFangSC-Medium;
+      color: rgba(255, 255, 255, 1);
+      line-height: 67px;
+    }
+    button {
+      outline: none;
+      border: none;
+      padding: 15px 40px;
+      font-size:24px;
+      font-family:PingFangSC-Regular;
+      color:rgba(255,255,255,1);
+      line-height: 24px;
+      background:#1F5FFF;
+      margin-top: 40px;
+      box-shadow: 0px 15px 31px -13px rgba(79,140,255,0.5);
+      border-radius:38px;
+      cursor: pointer;
+    }
+  }
+  .head-banner {
+    background: linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));
+    > div {
+      width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      padding-bottom: 65px;
+      div {
+        padding-top: 133px;
+        button {
+          width: 176px;
+          height: 54px;
+          background: #F26667;
+          border-radius: 100px;
+          font-size: 24px;
+          color: #FFFFFF;
+          line-height: 24px;
+          margin-top: 100px;
+          outline: none;
+          border: none;
+          cursor: pointer;
+        }
+      }
+      img {
+        padding-top: 70px;
+      }
     }
   }
 
