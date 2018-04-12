@@ -269,8 +269,8 @@
           {
             title: '高IO型',
             desc: '高磁盘IO的最佳选择，提供每秒数万次低延迟性随机 I/O (IOPS)，适合于低延时，I/O密集型应用。',
-            system: 'CentOS',
-            price: '0.25元／小时',
+            system: 'c11d2f8d-4fec-44e3-99e0-15e6e9acede6',
+            price: '0.26元／小时',
             params: [
               {num: '1核', unit: 'CPU'},
               {num: '1G', unit: '内存'},
@@ -281,11 +281,11 @@
           {
             title: '超高IO型',
             desc: '采用高性能SSD系统盘，适用于NoSQL 数据库、群集化数据库、联机事务处理等高I/O负载需求。',
-            system: 'CentOS',
-            price: '0.52元／小时',
+            system: 'c11d2f8d-4fec-44e3-99e0-15e6e9acede6',
+            price: '0.51元／小时',
             params: [
               {num: '2核', unit: 'CPU'},
-              {num: '2G', unit: '内存'},
+              {num: '4G', unit: '内存'},
               {num: '40G', unit: '磁盘'},
               {num: '2mb/s', unit: '带宽'},
             ]
@@ -293,11 +293,11 @@
         ],
         systemList: [
           {
-            label: 'CentOS',
+            label: 'c11d2f8d-4fec-44e3-99e0-15e6e9acede6',
             text: 'CentOS'
           },
           {
-            label: 'Windows',
+            label: '86a0d0fc-6645-48dd-8bfe-306def16c4f8',
             text: 'Windows'
           },
         ]
@@ -519,52 +519,28 @@
         })
       },
       productBuy(item,index) {
-        // if (this.userInfo == null) {
-        //   this.loginModal = true
-        //   return
-        // }
-        // console.log(item.system+index+item.price)
-        // console.log(item.params)
-        if(item.system == 'Centos') {
-            item.system == 'c11d2f8d-4fec-44e3-99e0-15e6e9acede6'
-        } if(item.system == 'Windows') {
-            item.system == 'c11d2f8d-4fec-44e3-99e0-15e6e9acede6'
+        if (this.$store.state.userInfo == null) {
+          this.loginModal = true
+          return
         }
-        var resultParams = {}
-        var params1 = {
+        var paramsNum = []
+        paramsNum = item.params.map(content =>{
+          return content.num.match(/\d+/g).join()
+        })
+        var params = {
           zoneId:'39a6af0b-6624-4194-b9d5-0c552d903858',
           timeType:'current',
           timeValue:'1',
-          templateId:'c11d2f8d-4fec-44e3-99e0-15e6e9acede6',
+          templateId:item.system,
           isAutoRenew:'0',
           count:'1',
-          cpuNum:'1',
-          memory:'1',
-          bandWidth:'1',
+          cpuNum:paramsNum[0],
+          memory:paramsNum[1],
+          bandWidth:paramsNum[3],
           rootDiskType:'sas',
           networkId:'no',
-          mac:'2F8DF04A3789513DC96E641BE010426E2A'
         }
-        var params2 = {
-          zoneId:'39a6af0b-6624-4194-b9d5-0c552d903858',
-          timeType:'current',
-          timeValue:'1',
-          templateId:'c11d2f8d-4fec-44e3-99e0-15e6e9acede6',
-          isAutoRenew:'0',
-          count:'1',
-          cpuNum:'2',
-          memory:'4',
-          bandWidth:'2',
-          rootDiskType:'sas',
-          networkId:'c85f8623-43c0-49ac-96bd-787b1c50808e',
-          mac:'9ADBC1D22FB35139C5C851AA2B23B76600',
-        }
-        if(index==0) {
-          resultParams = params1
-        }else{
-          resultParams = params2
-        }
-        this.$http.get('information/deployVirtualMachine.do', {resultParams}).then((response) => {
+        this.$http.get('information/deployVirtualMachine.do', {params}).then((response) => {
             this.$router.push('order')
           }
         )
