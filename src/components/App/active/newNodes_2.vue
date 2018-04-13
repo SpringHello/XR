@@ -5,7 +5,7 @@
            src="../../../assets/img/active/newNodes/banner_1.png">
       <img style="position: absolute;" src="../../../assets/img/active/newNodes/circle.png">
       <div style="width:1200px;margin:0px auto;padding-top: 12%;position: relative">
-        <p style="position: relative">北方二区（辽宁）盛大开服<img style="position: absolute;left: 0;top: 7%;" src="../../../assets/img/active/newNodes/text1.png"/></p>
+        <p style="position: relative">北方二区（沈阳）盛大开服<img style="position: absolute;left: 0;top: 7%;" src="../../../assets/img/active/newNodes/text1.png"/></p>
         <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Regular;">春暖花开，活动绽放</p>
         <p>3折优惠<span style="font-size: 24px">起</span></p>
         <!--<button>立即领取</button>-->
@@ -144,7 +144,7 @@
             <dl>
               <dt>2、活动规则：</dt>
               <dd>
-                1） 此次活动仅限北方二区（辽宁）节点；
+                1） 此次活动仅限北方二区（沈阳）节点；
               </dd>
               <dd>
                 2） 同一用户可选择多款4折、5折产品进行优惠购买，但不可重复参加此次3折秒杀活动；

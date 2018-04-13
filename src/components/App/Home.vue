@@ -41,7 +41,7 @@
             <div class="newNodes_2">
               <img style="position: absolute;z-index: 1" src="../../assets/img/active/newNodes/circle.png">
               <div style="width:1200px;margin:0px auto;padding-top: 7%;position: relative;z-index: 1">
-                <p>北方二区（辽宁）盛大开服
+                <p>北方二区（沈阳）盛大开服
                   <img style="position: absolute;left: 0;top: 30%;z-index: 1" src="../../assets/img/active/newNodes/text1.png"/></p>
                 <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">春暖花开，活动绽放</p>
                 <p>3折优惠<span style="font-size: 24px">起</span></p>

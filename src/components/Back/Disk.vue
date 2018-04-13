@@ -168,7 +168,7 @@
         <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
           <strong>删除硬盘</strong>
-          <p class="lh24"><span style="color: #2A99F2 ">（{{ diskName }}）</span>删除之后将进入回收站，新睿云将为您保留24小时，在24小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。
+          <p class="lh24"><span style="color: #2A99F2 ">（{{ diskName }}）</span>删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留24小时，在24小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。
           </p>
         </div>
       </div>

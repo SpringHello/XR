@@ -160,6 +160,19 @@
                     </div>
                   </div>
                 </div>
+                <!-- 防火墙选择 -->
+                <div class="item-wrapper">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title">防火墙</p>
+                    </div>
+                    <div>
+                      <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:25px;    border: 1px solid #D9D9D9;padding: 5px 25px;">默认设置</p>
+                    </div>
+                  </div>
+                  <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-top: 10px;margin-left: 90px;line-height: 1.5;">
+                    默认防火墙仅打开22、3389、443、80端口，您可以在创建之后再控制台自定义防火墙规则。<span style="color: #377DFF;cursor: pointer" @click="$router.push('firewall')">如何修改</span></p>
+                </div>
               </div>
             </div>
 
@@ -367,6 +380,20 @@
                     </div>
                   </div>
                 </div>
+                <!-- 防火墙选择 -->
+                <div class="item-wrapper">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title">防火墙</p>
+                    </div>
+                    <div>
+                      <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:25px; border: 1px solid #D9D9D9;padding: 5px 25px;">默认设置
+                      </p>
+                    </div>
+                  </div>
+                  <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-top: 10px;margin-left: 90px;line-height: 1.5;">
+                    默认防火墙仅打开22、3389、443、80端口，您可以在创建之后再控制台自定义防火墙规则。<span style="color: #377DFF;cursor: pointer" @click="$router.push('firewall')">如何修改</span></p>
+                </div>
                 <!--公网IP价格-->
                 <div class="item-wrapper" style="margin-top: 28px;" v-show="PecsInfo.IPConfig.publicIP">
                   <div style="display: flex">
@@ -468,11 +495,17 @@
                 <div class="item-wrapper">
                   <div style="display: flex">
                     <div>
-                      <p class="item-title" style="margin-top: 8px">安全组</p>
+                      <p class="item-title" style="margin-top: 8px">系统用户名</p>
                     </div>
-                    <Select v-model="PecsInfo.safe" style="width:200px">
-                      <Option value="default">默认安全组</Option>
-                    </Select>
+                    <span style="padding:10px 0;font-size: 14px;color: #999999;">{{ systemUsername }}</span>
+                  </div>
+                </div>
+                <div class="item-wrapper">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title" style="margin-top: 8px">登录密码</p>
+                    </div>
+                    <span style="padding:10px 0;font-size: 14px;color: #999999;">默认密码 创建成功后通过短信和站内信查看</span>
                   </div>
                 </div>
               </div>
@@ -1047,6 +1080,7 @@
     }
   }
   var debounce = require('throttle-debounce/debounce')
+
   // xlsx 文件输出操作方法
   function s2ab(s) {
     const buf = new ArrayBuffer(s.length)
@@ -1056,8 +1090,9 @@
     }
     return buf
   }
-  export default{
-    beforeRouteEnter(to, from, next){
+
+  export default {
+    beforeRouteEnter(to, from, next) {
       next(vm => {
         if (from.path == '/ruicloud/Pdisk') {
           vm.product.currentProduct = 'Pdisk'
@@ -1082,7 +1117,7 @@
         }
       })
     },
-    data(){
+    data() {
       var zone = null
       $store.state.zoneList.forEach(item => {
         if (item.isdefault === 1
@@ -1263,7 +1298,6 @@
             cost: 0,
             coupon: 0
           },
-
           // 虚拟私有云列表
           vpcList: [],
           vpc: '',
@@ -1343,6 +1377,8 @@
           cost: 0,
           coupon: 0
         },
+        // 系统用户名
+        systemUsername: '',
         // 购物车
         cart,
         scrollFun: () => {
@@ -1357,7 +1393,7 @@
         }
       }
     },
-    created(){
+    created() {
       if (this.$store.state.userInfo && this.$store.state.userInfo.personalauth != 0 && this.$store.state.userInfo.companyauth != 0) {
         this.$Message.info('当前账户尚未认证通过，创建的主机无法操作');
       }
@@ -1390,7 +1426,7 @@
       }
     },
     methods: {
-      queryRemainCount(){
+      queryRemainCount() {
         axios.get('user/getRemainCount.do', {
           params: {
             zoneId: this[`${this.product.currentProduct}Info`].zone.zoneid
@@ -1404,7 +1440,7 @@
         })
       },
       // 设置镜像数据
-      setTemplate(){
+      setTemplate() {
         axios.get('information/getSoftTempList.do', {
           params: {
             zoneId: this.PecsInfo.zone.zoneid,
@@ -1458,7 +1494,7 @@
         }
       },
       // 重新选择镜像
-      setOS(name){
+      setOS(name) {
         var arg = name.split('#')
         for (var item of this.PecsInfo.publicList) {
           item.selectSystem = ''
@@ -1467,10 +1503,17 @@
           systemName: arg[0],
           systemId: arg[1]
         }
+        // 根据镜像名称第一个字符确定系统用户名是admin还是root
+        var str = this.PecsInfo.system.systemName.substr(0, 1)
+        if (str === 'W') {
+          this.systemUsername = 'administrator'
+        } else {
+          this.systemUsername = 'root'
+        }
         this.PecsInfo.publicList[arg[2]].selectSystem = arg[0]
       },
       // 新建公网IP所在vpc
-      queryIPVpc(){
+      queryIPVpc() {
         axios.get('network/listVpcBuyComputer.do', {
           params: {
             zoneId: this.PeipInfo.zone.zoneid
@@ -1481,7 +1524,7 @@
         })
       },
       // 重新查询虚拟私有云（vpc）
-      queryVpc(){
+      queryVpc() {
         axios.get('network/listVpcBuyComputer.do', {
           params: {
             zoneId: this.PecsInfo.zone.zoneid
@@ -1492,7 +1535,7 @@
         })
       },
       // 重新查询vpc所属的子网
-      changeNetwork(){
+      changeNetwork() {
         axios.get('network/listNetworkBuyComputer.do', {
           params: {
             zoneId: this.PecsInfo.zone.zoneid,
@@ -1504,7 +1547,7 @@
         })
       },
       // 查询云主机快速配置价格
-      queryQuick(){
+      queryQuick() {
         var params = {
           cpuNum: this.PecsInfo.currentSystem.kernel,
           diskSize: this.PecsInfo.currentSystem.diskSize,
@@ -1536,7 +1579,7 @@
         })
       },
       // 查询自定义主机配置价格  （仅包含主机，因为主机与公网IP是分开计算并显示的）
-      queryCustomVM(){
+      queryCustomVM() {
         var params = {
           cpuNum: this.PecsInfo.vmConfig.kernel.toString(),
           diskSize: '40',
@@ -1559,7 +1602,7 @@
         })
       },
       // 三种推荐配置切换
-      changeType(type){
+      changeType(type) {
         this.PecsInfo.vmType = type
         switch (type) {
           case 'standard':
@@ -1580,7 +1623,7 @@
         }
       },
       // 切换核心数
-      changeKernel(kernel){
+      changeKernel(kernel) {
         this.PecsInfo.vmConfig.kernel = kernel
         if (this.PecsInfo.vmConfig.RAM < this.PecsInfo.vmConfig.kernel) {
           this.PecsInfo.vmConfig.RAM = this.PecsInfo.vmConfig.kernel
@@ -1630,11 +1673,11 @@
         })
       }),
       // 添加主机数据盘
-      pushDisk(){
+      pushDisk() {
         this.PecsInfo.dataDiskList.push({type: 'ssd', size: 20, label: 'SSD存储'})
       },
       /* 改变自定义主机页面磁盘容量，查询价格 */
-      changeDiskSize (index, value) {
+      changeDiskSize(index, value) {
         var params = {
           diskType: this.PecsInfo.dataDiskList[index].diskType,
           diskSize: value
@@ -1642,7 +1685,7 @@
         this.PecsInfo.dataDiskList.splice(index, 1, params)
       },
       /* 改变磁盘页面 */
-      change_DiskSize (index, value) {
+      change_DiskSize(index, value) {
         var params = {
           diskType: this.PdiskInfo.dataDiskList[index].diskType,
           diskSize: value
@@ -1650,11 +1693,11 @@
         this.PdiskInfo.dataDiskList.splice(index, 1, params)
       },
       // 删除主机数据盘
-      removeHostDisk(index){
+      removeHostDisk(index) {
         this.PecsInfo.dataDiskList.splice(index, 1)
       },
       // 删除磁盘
-      removeDisk(index){
+      removeDisk(index) {
         this.PdiskInfo.dataDiskList.splice(index, 1)
       },
       // 查询数据盘价格
@@ -1715,11 +1758,11 @@
           }
         })
       }),
-      pushDiskInDisk(){
+      pushDiskInDisk() {
         this.PdiskInfo.dataDiskList.push({type: 'ssd', size: 20, label: 'SSD存储'})
       },
       // 主机加入购物车
-      addCart(){
+      addCart() {
         if (this.cart.length > 4) {
           this.$message.info({
             content: '购物车已满'
@@ -1765,7 +1808,7 @@
         this.store()
         window.scrollTo(0, 170)
       },
-      buyHost(){
+      buyHost() {
         if (this.PecsInfo.currentType == 'app' && this.PecsInfo.currentApp.templatename == undefined) {
           this.$message.info({
             content: '请选择一个镜像'
@@ -1865,7 +1908,7 @@
         }
       },
       // 磁盘加入购物车
-      addDiskCart(){
+      addDiskCart() {
         if (this.cart.length > 4) {
           this.$message.info({
             content: '购物车已满'
@@ -1883,7 +1926,7 @@
         this.store()
         window.scrollTo(0, 170)
       },
-      buyDisk(){
+      buyDisk() {
         var obj = JSON.parse(JSON.stringify(this.PdiskInfo))
         var prod = Object.assign({typeName: '云硬盘', zone: this.PdiskInfo.zone, type: 'Pdisk', count: 1}, obj)
         let diskCount = 0
@@ -1912,7 +1955,7 @@
         }
       },
       // 公网IP加入购物车
-      addIPCart(){
+      addIPCart() {
         if (this.cart.length > 4) {
           this.$message.info({
             content: '购物车已满'
@@ -1924,7 +1967,7 @@
         this.store()
         window.scrollTo(0, 170)
       },
-      buyIP(){
+      buyIP() {
         var obj = JSON.parse(JSON.stringify(this.PeipInfo))
         var prod = Object.assign({typeName: '公网IP', zone: this.PeipInfo.zone, type: 'Peip', count: 1}, obj)
         if (this._checkCount(0, 0, 1)) {
@@ -1943,16 +1986,16 @@
         }
       },
       /* 删除一条购买清单 */
-      delDetailed (index) {
+      delDetailed(index) {
         this.cart.splice(index, 1)
         this.store()
       },
       // 订单信息存入sessionStorage
-      store(){
+      store() {
         sessionStorage.setItem('cart', JSON.stringify(this.cart))
       },
       // 导出清单
-      exportXLSX(){
+      exportXLSX() {
         if (this.cart.length != 0) {
           // 记录当前行数
           let currentRow = 0
@@ -1983,7 +2026,7 @@
         }
       },
       // 立即购买
-      buyNow(){
+      buyNow() {
         if (this.cart.length == 0) {
           this.$message.info({
             content: '请添加商品到清单'
@@ -2188,25 +2231,25 @@
       }
     },
     computed: mapState({
-      disabled () {
+      disabled() {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
       },
-      totalCost(){
+      totalCost() {
         if (this.PecsInfo.IPConfig.publicIP) {
           return this.PecsInfo.vmConfig.cost + this.PecsInfo.IPConfig.cost + this.PecsInfo.dataDiskCost
         } else {
           return this.PecsInfo.vmConfig.cost + this.PecsInfo.dataDiskCost
         }
       },
-      totalCoupon(){
+      totalCoupon() {
         return this.PecsInfo.vmConfig.coupon + this.PecsInfo.IPConfig.coupon + this.PecsInfo.coupon
       },
       // 剩余添加磁盘数量
-      remainDisk(){
+      remainDisk() {
         return 5 - this.PecsInfo.dataDiskList.length
       },
       // 商品清单总价
-      billListCost(){
+      billListCost() {
         var cost = 0
         for (var prod of this.cart) {
           switch (prod.type) {
@@ -2227,14 +2270,14 @@
         }
         return cost
       },
-      remainDiskInDisk(){
+      remainDiskInDisk() {
         return 5 - this.PdiskInfo.dataDiskList.length
       },
       zoneList: state => state.zoneList,
       userInfo: state => state.userInfo
     }),
     watch: {
-      'product.currentProduct'(){
+      'product.currentProduct'() {
         this.queryRemainCount()
       },
       // 选择区域发生变化
@@ -2315,12 +2358,12 @@
       }
       ,
       // 选中的VPC发生变化
-      'PecsInfo.vpc'(){
+      'PecsInfo.vpc'() {
         this.changeNetwork()
       }
       ,
       // 公网IP带宽变化
-      'PecsInfo.IPConfig.bandWidth'(){
+      'PecsInfo.IPConfig.bandWidth'() {
         this.queryIPPrice()
       }
       ,
@@ -2393,7 +2436,7 @@
       }
       ,
     },
-    destroyed(){
+    destroyed() {
       window.removeEventListener('scroll', this.scrollFun)
     }
   }
