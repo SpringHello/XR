@@ -924,7 +924,11 @@
         this.userInfo = this.$store.state.userInfo
         this.companyauth = this.userInfo.companyauth
         this.personalauth = this.userInfo.personalauth
-        this.isReceive = this.userInfo.activityInfo[6].companytype
+        if (this.userInfo.activityInfo[6].companytype === 1 && this.userInfo.activityInfo[7].companytype === 1) {
+          this.isReceive = 1
+        } else {
+          this.isReceive = 0
+        }
       }
     },
     components: {},
@@ -1019,7 +1023,7 @@
           this.$Message.info('请选择主机系统')
           return
         }
-        var vmConfigId = index === 0 ? '11' : '12'
+        var vmConfigId = index === 0 ? '21' : '22'
         var url = `information/getDiskcountMv.do?vmConfigId=${vmConfigId}&osType=${item.system}&defzoneid=${item.node}`
         axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -1044,28 +1048,28 @@
         var hostType = index + month
         switch (hostType) {
           case 3:
-            vmConfigId = '13'
+            vmConfigId = '23'
             break;
           case 6:
-            vmConfigId = '14'
+            vmConfigId = '24'
             break;
           case 4:
-            vmConfigId = '15'
+            vmConfigId = '25'
             break;
           case 7:
-            vmConfigId = '16'
+            vmConfigId = '26'
             break;
           case 5:
-            vmConfigId = '17'
+            vmConfigId = '27'
             break;
           case 8:
-            vmConfigId = '18'
+            vmConfigId = '28'
             break;
           case 6:
-            vmConfigId = '19'
+            vmConfigId = '29'
             break;
           case 9:
-            vmConfigId = '20'
+            vmConfigId = '30'
             break;
         }
 
@@ -1109,7 +1113,11 @@
         this.userInfo = val
         this.companyauth = this.userInfo.companyauth
         this.personalauth = this.userInfo.personalauth
-        this.isReceive = this.userInfo.activityInfo[6].companytype
+        if (this.userInfo.activityInfo[6].companytype === 1 && this.userInfo.activityInfo[7].companytype === 1) {
+          this.isReceive = 1
+        } else {
+          this.isReceive = 0
+        }
       }
     },
     mounted() {

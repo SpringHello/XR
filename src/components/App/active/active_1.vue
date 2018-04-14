@@ -9,7 +9,7 @@
             </p>
           </div>
           <transition name="list">
-          <img v-if="img" src="../../../assets/img/active/active_1/baner.png">
+            <img v-if="img" src="../../../assets/img/active/active_1/baner.png">
           </transition>
         </div>
       </div>
@@ -270,7 +270,7 @@
             title: '高IO型',
             desc: '高磁盘IO的最佳选择，提供每秒数万次低延迟性随机 I/O (IOPS)，适合于低延时，I/O密集型应用。',
             system: 'c11d2f8d-4fec-44e3-99e0-15e6e9acede6',
-            price: '0.26元／小时',
+            price: '0.35元／小时',
             params: [
               {num: '1核', unit: 'CPU'},
               {num: '1G', unit: '内存'},
@@ -282,7 +282,7 @@
             title: '超高IO型',
             desc: '采用高性能SSD系统盘，适用于NoSQL 数据库、群集化数据库、联机事务处理等高I/O负载需求。',
             system: 'c11d2f8d-4fec-44e3-99e0-15e6e9acede6',
-            price: '0.51元／小时',
+            price: '0.6元／小时',
             params: [
               {num: '2核', unit: 'CPU'},
               {num: '4G', unit: '内存'},
@@ -320,6 +320,17 @@
     },
     components: {},
     methods: {
+      // 领取成功后需要刷新剩余现金券数量
+      getResidue() {
+        var url = `ticket/couponIsUsed.do`
+        var tickets = []
+        axios.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            tickets = response.data.data
+            this.setTicket(tickets)
+          }
+        })
+      },
       // 设置数据
       setData(values) {
         var response = values[0]
@@ -421,83 +432,50 @@
         ;
       },
       setServerTime(serviceTime) {
-        var date_1 = new Date(new Date().toLocaleDateString() + ' ' + '10:00:00').getTime()
-        var date_2 = new Date(new Date().toLocaleDateString() + ' ' + '12:00:00').getTime()
-        var date_3 = new Date(new Date().toLocaleDateString() + ' ' + '15:00:00').getTime()
-        var date_4 = new Date(new Date().toLocaleDateString() + ' ' + '17:00:00').getTime()
+        let hours = [9, 12, 15, 17].map(function (hour) {
+          let h = new Date()
+          h.setHours(hour)
+          h.setMinutes(0)
+          h.setSeconds(0)
+          return h.getTime()
+        })
+
         var minSecondInMinute = 1000 * 60
         var minSecondInHour = minSecondInMinute * 60
-        var minSecondInDay = minSecondInHour * 24
-        var _self = this
 
-        function interval() {
+        var setTime =  setInterval(() => {
           serviceTime += 1000
-          var remainder_1 = date_1 - serviceTime
-          var remainder_2 = date_2 - serviceTime
-          var remainder_3 = date_3 - serviceTime
-          var remainder_4 = date_4 - serviceTime
-          if (remainder_1 > 0) {
-            _self.timeList[0].time = remainder_1
-            //_self.d = Number.parseInt(remainder / minSecondInDay)
-            _self.timeList[0].h1 = Number.parseInt((remainder_1 % minSecondInDay) / minSecondInHour / 10)
-            _self.timeList[0].h2 = Number.parseInt((remainder_1 % minSecondInDay) / minSecondInHour % 10)
-            _self.timeList[0].m1 = Number.parseInt((remainder_1 % minSecondInHour) / minSecondInMinute / 10)
-            _self.timeList[0].m2 = Number.parseInt((remainder_1 % minSecondInHour) / minSecondInMinute % 10)
-            _self.timeList[0].s1 = Number.parseInt((remainder_1 % minSecondInMinute) / 1000 / 10)
-            _self.timeList[0].s2 = Number.parseInt((remainder_1 % minSecondInMinute) / 1000 % 10)
-          } else {
-            _self.timeList[0].time = 0
-          }
-          if (remainder_2 > 0) {
-            _self.timeList[1].time = remainder_2
-            //_self.d = Number.parseInt(remainder / minSecondInDay)
-            _self.timeList[1].h1 = Number.parseInt((remainder_2 % minSecondInDay) / minSecondInHour / 10)
-            _self.timeList[1].h2 = Number.parseInt((remainder_2 % minSecondInDay) / minSecondInHour % 10)
-            _self.timeList[1].m1 = Number.parseInt((remainder_2 % minSecondInHour) / minSecondInMinute / 10)
-            _self.timeList[1].m2 = Number.parseInt((remainder_2 % minSecondInHour) / minSecondInMinute % 10)
-            _self.timeList[1].s1 = Number.parseInt((remainder_2 % minSecondInMinute) / 1000 / 10)
-            _self.timeList[1].s2 = Number.parseInt((remainder_2 % minSecondInMinute) / 1000 % 10)
-          } else {
-            _self.timeList[1].time = 0
-          }
-          if (remainder_3 > 0) {
-            _self.timeList[2].time = remainder_3
-            //_self.d = Number.parseInt(remainder / minSecondInDay)
-            _self.timeList[2].h1 = Number.parseInt((remainder_3 % minSecondInDay) / minSecondInHour / 10)
-            _self.timeList[2].h2 = Number.parseInt((remainder_3 % minSecondInDay) / minSecondInHour % 10)
-            _self.timeList[2].m1 = Number.parseInt((remainder_3 % minSecondInHour) / minSecondInMinute / 10)
-            _self.timeList[2].m2 = Number.parseInt((remainder_3 % minSecondInHour) / minSecondInMinute % 10)
-            _self.timeList[2].s1 = Number.parseInt((remainder_3 % minSecondInMinute) / 1000 / 10)
-            _self.timeList[2].s2 = Number.parseInt((remainder_3 % minSecondInMinute) / 1000 % 10)
-          } else {
-            _self.timeList[2].time = 0
-          }
-          if (remainder_4 > 0) {
-            _self.timeList[3].time = remainder_4
-            //_self.d = Number.parseInt(remainder / minSecondInDay)
-            _self.timeList[3].h1 = Number.parseInt((remainder_4 % minSecondInDay) / minSecondInHour / 10)
-            _self.timeList[3].h2 = Number.parseInt((remainder_4 % minSecondInDay) / minSecondInHour % 10)
-            _self.timeList[3].m1 = Number.parseInt((remainder_4 % minSecondInHour) / minSecondInMinute / 10)
-            _self.timeList[3].m2 = Number.parseInt((remainder_4 % minSecondInHour) / minSecondInMinute % 10)
-            _self.timeList[3].s1 = Number.parseInt((remainder_4 % minSecondInMinute) / 1000 / 10)
-            _self.timeList[3].s2 = Number.parseInt((remainder_4 % minSecondInMinute) / 1000 % 10)
-          } else {
-            _self.timeList[3].time = 0
-          }
-        }
-
-        interval()
-        this.intervalInstance = setInterval(interval, 1000)
+          hours.forEach((hour, index) => {
+            let reduce = hour - serviceTime
+            if (reduce > 0) {
+              let hourRemainder = parseInt(reduce / minSecondInHour)
+              let minRemainder = parseInt((reduce % minSecondInHour) / minSecondInMinute)
+              let secRemainder = parseInt((reduce % minSecondInMinute) / 1000)
+              this.timeList[index].h1 = parseInt(hourRemainder / 10)
+              this.timeList[index].h2 = parseInt(hourRemainder % 10)
+              this.timeList[index].m1 = parseInt(minRemainder / 10)
+              this.timeList[index].m2 = parseInt(minRemainder % 10)
+              this.timeList[index].s1 = parseInt(secRemainder / 10)
+              this.timeList[index].s2 = parseInt(secRemainder % 10)
+              this.timeList[index].time = reduce
+            } else {
+              this.timeList[index].time = 0
+            }
+          })
+        }, 1000)
         if (this.timeList[3].time === 0) {
-          clearInterval(this.intervalInstance)
+          clearInterval(setTime)
         }
       },
       setTicket(data) {
-        if(data.length != 0 ) {
-          this.timeList[0].ticket = data[0]
-          this.timeList[1].ticket = data[1]
-          this.timeList[2].ticket = data[2]
-          this.timeList[3].ticket = data[3]
+        if (data.length > 0) {
+          this.timeList.forEach((item,index) => {
+            item.ticket = data[index]
+          })
+        } else {
+          this.timeList.forEach(item => {
+            item.ticket = 0
+          })
         }
       },
       getTicket() {
@@ -511,20 +489,22 @@
             this.$message.info({
               content: response.data.message
             })
+            this.getResidue()
           } else {
             this.$message.info({
               content: response.data.message
             })
+            this.getResidue()
           }
         })
       },
-      productBuy(item,index) {
+      productBuy(item, index) {
         if (this.$store.state.userInfo == null) {
           this.loginModal = true
           return
         }
         var paramsNum = []
-        paramsNum = item.params.map(content =>{
+        paramsNum = item.params.map(content => {
           return content.num.match(/\d+/g).join()
         })
         var params = {
@@ -537,7 +517,7 @@
           cpuNum:paramsNum[0],
           memory:paramsNum[1],
           bandWidth:paramsNum[3],
-          rootDiskType:'sas',
+          rootDiskType:'ssd',
           networkId:'no',
         }
         this.$http.get('information/deployVirtualMachine.do', {params}).then((response) => {
@@ -551,8 +531,7 @@
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
       },
     },
-    watch: {
-    },
+    watch: {},
     mounted() {
       this.img = true
     }

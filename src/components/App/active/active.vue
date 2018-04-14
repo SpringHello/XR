@@ -3,7 +3,10 @@
     <!-- banner div -->
     <div id="banner">
       <div style="width:1200px;height:560px;margin:0px auto;position:relative">
-        <img src="../../../assets/img/home/carousel-2-1.png" style="position:absolute;right:0px;top:20px;">
+        <transition name="active" >
+          <img v-if="active" src="../../../assets/img/home/carousel-2-1.png" style="position:absolute;right:0px;top:20px;">
+        </transition>
+
         <div style="position: relative; top: 30%">
           <p style="font-size: 48px;color: rgb(86, 146, 254);margin-bottom: 20px;">新睿云盛大上线</p>
           <p style="font-size: 20px;color: rgb(86, 146, 254);margin-bottom: 20px;">全品类折扣优惠 礼包零门槛领取</p>
@@ -89,6 +92,7 @@
 
     data(){
       return {
+        active: false,
         banner,
         coupons: {
           coupon50,
@@ -226,6 +230,9 @@
         })
 
       }
+    },
+    mounted() {
+      this.active = true
     }
   }
 </script>
@@ -322,6 +329,15 @@
           outline: none;
         }
       }
+    }
+    .active-enter-active, .active-leave-active {
+      transition: all 1s;
+    }
+
+    .active-enter, .active-leave-to
+      {
+      opacity: 0;
+      transform: translateY(150px);
     }
   }
 </style>
