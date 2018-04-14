@@ -81,12 +81,12 @@
         this.$router.push('expenses');
       },
       paySuccess(){
-        this.loading = true;
+        this.loading = true
         this.loadingMessage = '正在充值，请稍后...'
         this.$http.get('user/payStatus.do?serialNum=' + this.serialNum).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.loading = false;
-            this.$router.push('expenses');
+            this.loading = false
+            this.$router.push('expenses')
             this.$Message.success({
               content: '账户充值成功',
               duration: 3

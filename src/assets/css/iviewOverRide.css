@@ -27,10 +27,9 @@
   top: 10px;
 }
 
-.orderdata .ivu-collapse-content>.ivu-collapse-content-box{
+.orderdata .ivu-collapse-content > .ivu-collapse-content-box {
   padding-top: 0
 }
-
 
 /* 每行两列form表单样式 */
 .universal-modal-content-flex form {
@@ -49,12 +48,12 @@
 }
 
 /* 通用弹窗底部文字提示 */
-.modal-text-hint-bottom{
-    color: rgb(153, 153, 153);
-    font-family: Microsoft YaHei;
-    font-size: 12px;
-    line-height: 16px;
-    text-align: left;
+.modal-text-hint-bottom {
+  color: rgb(153, 153, 153);
+  font-family: Microsoft YaHei;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: left;
 }
 
 /* 每行一列form表单样式 */
@@ -211,41 +210,54 @@ div.modal-header-border {
   padding: 6px 15px;
   font-size: 12px;
 }
+
 .demo-spin-icon-load {
   font-size: 60px !important;
 }
+
 .ivu-spin-fix {
   opacity: 0.6;
 }
-.demo-spin-icon-load{
+
+.demo-spin-icon-load {
   animation: ani-demo-spin 1s linear infinite;
 }
+
 @keyframes ani-demo-spin {
-  from { transform: rotate(0deg);}
-  50%  { transform: rotate(180deg);}
-  to   { transform: rotate(360deg);}
+  from {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
+
 .ivu-btn-primary {
   background-color: #2A99F2;
   border-color: #2A99F2;
 }
 
-.zone-collapse .ivu-select-dropdown{
-    margin-top: 15px;
+.zone-collapse .ivu-select-dropdown {
+  margin-top: 15px;
 }
 
-.ivu-modal{
-  top:180px;
+.ivu-modal {
+  top: 180px;
 }
+
 .ivu-collapse {
   background-color: #FFFFFF;
   border: none;
 }
 
 /* 制作快照？提醒小提示 */
-.create-snas-modal .ivu-poptip-inner{
+.create-snas-modal .ivu-poptip-inner {
   white-space: normal;
 }
+
 .online .ivu-poptip-inner {
   width: 60%;
   float: right;
@@ -254,9 +266,17 @@ div.modal-header-border {
 .activity-radio .ivu-radio-wrapper {
   font-size: 18px;
 }
+
 .activity-radio .ivu-radio-checked .ivu-radio-inner {
   border-color: #F26667;
 }
-.activity-radio .ivu-radio-inner:after{
+
+.activity-radio .ivu-radio-inner:after {
   background-color: #F26667;
+}
+
+.coupon .ivu-radio {
+  vertical-align: top;
+  top: 3px;
+  margin-right:10px;
 }
