@@ -168,7 +168,7 @@
         <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
           <strong>删除硬盘</strong>
-          <p class="lh24"><span style="color: #2A99F2 ">（{{ diskName }}）</span>删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留24小时，在24小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。
+          <p class="lh24"><span style="color: #2A99F2 ">（{{ diskName }}）</span>删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。
           </p>
         </div>
       </div>
@@ -868,9 +868,9 @@
         })
         this.$http.get('Disk/delDisk.do?id=' + this.diskSelection.id + '').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$message.info({
-                    content: `您正将${this.diskSelection.diskname}云硬盘移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。`
-                  })
+            this.$Message.info({
+              content: response.data.message
+              })
             this.listDisk()
           } else {
             this.$message.info({
