@@ -112,11 +112,11 @@
             </div>
             <Table highlight-row :columns="cardVolumeColumns" :data="cardVolumeTabledata" style="margin-top:10px">
             </Table>
-            <div style="margin: 10px;overflow: hidden">
+       <!--     <div style="margin: 10px;overflow: hidden">
               <div style="float: right;">
                 <Page :total="cardTotal" :current="1" @on-change="cardCurrentChange"></Page>
               </div>
-            </div>
+            </div>-->
           </Tab-pane>
           <Tab-pane label="发票申请" name="applyInvoice">
             <div v-show="applyChange">
@@ -284,11 +284,11 @@
           </tr>
           </tbody>
         </table>
-        <div style="margin: 10px;overflow: hidden">
+ <!--       <div style="margin: 10px;overflow: hidden">
           <div style="float: right;">
             <Page :total="cardTotal" :current="1" :page-size="5" @on-change="card_currentChange"></Page>
           </div>
-        </div>
+        </div>-->
       </div>
       <div slot="footer">
         <button class="ivu-btn ivu-btn-primary" @click="clipCoupons_ok"><span>确定</span></button>
@@ -524,7 +524,7 @@
                         })
                       }
                     }
-                  }, '立即重置')
+                  }, '立即充值')
                 } else {
                   return h('router-link', {
                     attrs: {
@@ -1299,8 +1299,7 @@
       searchCard() {
         this.$http.get('ticket/getUserTicket.do?pageSize=' + this.cardPageSize + '&page=' + this.card_currentPage + '&ticketType=' + this.cardType + '&isuse=' + this.cardState).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.cardVolumeTabledata = response.data.result.data
-            this.cardTotal = response.data.result.total
+            this.cardVolumeTabledata = response.data.result
           }
         })
       },
