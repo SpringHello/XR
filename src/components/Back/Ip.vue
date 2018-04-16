@@ -23,9 +23,9 @@
           <Button type="primary" @click="openNewIPModal">创建弹性IP</Button>
           <Poptip
             confirm
-            width="200"
+            width="250"
             placement="right"
-            title="您确认删除该弹性IP？"
+            title="删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留24小时，在24小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。"
             @on-ok="delElasticIP">
             <Button type="primary">释放弹性IP</Button>
           </Poptip>
