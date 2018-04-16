@@ -13,11 +13,11 @@
           </Checkbox>
           <div style="margin:20px 0px;border-bottom: 1px solid rgb(233,233,233);">
             <RadioGroup v-model="couponInfo.selectTicket">
-              <Radio v-for="(item,index) in couponInfo.couponList" :label="item.id" :key="item.id"
+              <Radio v-for="(item,index) in couponInfo.couponList" :label="item.operatorid" :key="item.operatorid"
                      style="display:block;margin:20px 0px;">
                 <div class="ticketInfo">
                   <span style="width:100px;">{{item.money}}{{item.tickettype==1?'折':'元'}}</span><span>适用产品：{{item.ticketdescript}}</span><span>过期时间：{{item.endtime}}</span><span
-                  style="display: block;margin-left:100px;">使用条件：北京一区</span>
+                  style="display: block;margin-left:100px;">使用条件：{{item.remark}}</span>
                 </div>
               </Radio>
             </RadioGroup>
@@ -143,11 +143,13 @@
       }
     },
     beforeRouteEnter(to, from, next){
+      let params = {}
+      if (to.query.countOrder) {
+        params.countOrder = to.query.countOrder
+      }
+      console.log(from)
       axios.get('user/searchOrderByBuy.do', {
-        params: {
-          // 批次号
-          //countOrder: '111'
-        }
+        params
       }).then(response => {
         next(vm => {
           vm.setOrder(response)
@@ -195,12 +197,17 @@
         this.couponInfo.originCost = originCost
         if (this.couponInfo.selectTicket != '') {
           this.couponInfo.couponList.forEach(item => {
-            if (item.id == this.couponInfo.selectTicket) {
-              this.couponInfo.totalCost = cost * item.money
+            if (item.operatorid == this.couponInfo.selectTicket) {
+              if (item.tickettype == 1) {
+                this.couponInfo.totalCost = (cost * item.money).toFixed(2)
+              } else if (item.tickettype == 2) {
+                this.couponInfo.totalCost = (cost - item.money).toFixed(2)
+              }
+
             }
           })
         } else {
-          this.couponInfo.totalCost = cost
+          this.couponInfo.totalCost = cost.toFixed(2)
         }
       },
       // 是否使用优惠券开关
@@ -245,13 +252,13 @@
           if (this.couponInfo.selectTicket != '') {
             this.couponInfo.couponList.forEach(item => {
               if (item.id == this.couponInfo.selectTicket) {
-                this.couponInfo.totalCost = this.couponInfo.cost * item.money
+                this.couponInfo.totalCost = (this.couponInfo.cost * item.money).toFixed(2)
                 return
               }
             })
             this.couponInfo.isUse = true
           } else {
-            this.couponInfo.totalCost = this.couponInfo.cost
+            this.couponInfo.totalCost = this.couponInfo.cost.toFixed(2)
           }
         },
         deep: true
