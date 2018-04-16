@@ -191,23 +191,26 @@
         let originCost = 0, cost = 0
         selection.forEach((item) => {
           cost += item.cost
-          console.log(item.originalcost)
           originCost += item.originalcost
         })
+        this.cost = cost
         this.couponInfo.originCost = originCost
-        if (this.couponInfo.selectTicket != '') {
-          this.couponInfo.couponList.forEach(item => {
-            if (item.operatorid == this.couponInfo.selectTicket) {
-              if (item.tickettype == 1) {
-                this.couponInfo.totalCost = (cost * item.money).toFixed(2)
-              } else if (item.tickettype == 2) {
-                this.couponInfo.totalCost = (cost - item.money).toFixed(2)
+        if (cost != 0) {
+          if (this.couponInfo.selectTicket != '') {
+            this.couponInfo.couponList.forEach(item => {
+              if (item.operatorid == this.couponInfo.selectTicket) {
+                if (item.tickettype == 1) {
+                  this.couponInfo.totalCost = (cost * item.money).toFixed(2)
+                } else if (item.tickettype == 0) {
+                  this.couponInfo.totalCost = (cost - item.money).toFixed(2)
+                }
               }
-
-            }
-          })
+            })
+          } else {
+            this.couponInfo.totalCost = cost.toFixed(2)
+          }
         } else {
-          this.couponInfo.totalCost = cost.toFixed(2)
+          this.couponInfo.totalCost = 0
         }
       },
       // 是否使用优惠券开关
@@ -251,9 +254,12 @@
         handler: function () {
           if (this.couponInfo.selectTicket != '') {
             this.couponInfo.couponList.forEach(item => {
-              if (item.id == this.couponInfo.selectTicket) {
-                this.couponInfo.totalCost = (this.couponInfo.cost * item.money).toFixed(2)
-                return
+              if (item.operatorid == this.couponInfo.selectTicket) {
+                if (item.tickettype == 1) {
+                  this.couponInfo.totalCost = (this.couponInfo.cost * item.money).toFixed(2)
+                } else if (item.tickettype == 0) {
+                  this.couponInfo.totalCost = (this.couponInfo.cost - item.money).toFixed(2)
+                }
               }
             })
             this.couponInfo.isUse = true
