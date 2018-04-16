@@ -1032,7 +1032,7 @@
           }
         })
       },
-      buyNow_two(item, index, month) {
+      buyNow_two(item, index, val) {
         if (this.userInfo == null) {
           this.loginModal = true
           return
@@ -1042,30 +1042,30 @@
           return
         }
         var vmConfigId = ''
-        var hostType = index + month
+        var hostType = index + ''+ val
         switch (hostType) {
-          case 3:
+          case '03':
             vmConfigId = '13'
             break;
-          case 6:
+          case '06':
             vmConfigId = '14'
             break;
-          case 4:
+          case '13':
             vmConfigId = '15'
             break;
-          case 7:
+          case '16':
             vmConfigId = '16'
             break;
-          case 5:
+          case '23':
             vmConfigId = '17'
             break;
-          case 8:
+          case '26':
             vmConfigId = '18'
             break;
-          case 6:
+          case '33':
             vmConfigId = '19'
             break;
-          case 9:
+          case '36':
             vmConfigId = '20'
             break;
         }
