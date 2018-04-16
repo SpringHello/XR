@@ -1170,14 +1170,15 @@
             this.$Message.warning('只能删除实时计费主机')
             return
           }
-          this.loadingMessage = '正在删除主机'
-          this.loading = true
+          // this.loadingMessage = '正在删除主机'
+          // this.loading = true
           this.$http.get('information/deleteVM.do?id=' + this.currentHost[0].id)
             .then(response => {
               this.loading = false
               if (response.status == 200 && response.data.status == 1) {
-                // initRecycle.bind(this)()
-                this.$Message.success(response.data.message)
+                this.$message.info({
+                    content: `您正将${this.currentHost[0].computername}主机移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。`
+                  })
                 this.getData()
               } else {
                 this.$message.info({
