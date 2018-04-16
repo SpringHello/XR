@@ -167,11 +167,16 @@
                       <p class="item-title">防火墙</p>
                     </div>
                     <div>
-                      <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:25px;    border: 1px solid #D9D9D9;padding: 5px 25px;">默认设置</p>
+                      <p
+                        style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:25px;    border: 1px solid #D9D9D9;padding: 5px 25px;">
+                        默认设置</p>
                     </div>
                   </div>
-                  <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-top: 10px;margin-left: 90px;line-height: 1.5;">
-                    默认防火墙仅打开22、3389、443、80端口，您可以在创建之后再控制台自定义防火墙规则。<span style="color: #377DFF;cursor: pointer" @click="$router.push('firewall')">如何修改</span></p>
+                  <p
+                    style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-top: 10px;margin-left: 90px;line-height: 1.5;">
+                    默认防火墙仅打开22、3389、443、80端口，您可以在创建之后再控制台自定义防火墙规则。<span style="color: #377DFF;cursor: pointer"
+                                                                        @click="$router.push('firewall')">如何修改</span>
+                  </p>
                 </div>
               </div>
             </div>
@@ -415,12 +420,17 @@
                       <p class="item-title">防火墙</p>
                     </div>
                     <div>
-                      <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:25px; border: 1px solid #D9D9D9;padding: 5px 25px;">默认设置
+                      <p
+                        style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:25px; border: 1px solid #D9D9D9;padding: 5px 25px;">
+                        默认设置
                       </p>
                     </div>
                   </div>
-                  <p style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-top: 10px;margin-left: 90px;line-height: 1.5;">
-                    默认防火墙仅打开22、3389、443、80端口，您可以在创建之后再控制台自定义防火墙规则。<span style="color: #377DFF;cursor: pointer" @click="$router.push('firewall')">如何修改</span></p>
+                  <p
+                    style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-top: 10px;margin-left: 90px;line-height: 1.5;">
+                    默认防火墙仅打开22、3389、443、80端口，您可以在创建之后再控制台自定义防火墙规则。<span style="color: #377DFF;cursor: pointer"
+                                                                        @click="$router.push('firewall')">如何修改</span>
+                  </p>
                 </div>
                 <!--公网IP价格-->
                 <div class="item-wrapper" style="margin-top: 28px;" v-show="PecsInfo.IPConfig.publicIP">
@@ -1094,7 +1104,7 @@
   import $store from '@/vuex'
   import {mapState} from 'vuex'
   import regExp from '../../util/regExp'
-
+  import uuid from 'uuid'
   var messageMap = {
     loginname: {
       placeholder: '登录邮箱/手机号',
@@ -2241,7 +2251,7 @@
         }
         if (this._checkCount(hostCount, diskCount, ipCount)) {
           axios.get('information/deployVirtualMachine.do', {params}).then(response => {
-            this.$router.push('order')
+            this.$router.push('order1')
           })
         }
       },
@@ -2287,7 +2297,7 @@
               isAutorenew: prod.autoRenewal ? '1' : '0',
             }
             axios.get('Disk/createVolume.do', {params}).then(response => {
-              this.$router.push('order')
+              this.$router.push('order1')
             })
           }
         }
@@ -2319,7 +2329,7 @@
             vpcId: prod.vpc
           }
           axios.get('network/createPublicIp.do', {params}).then(
-            this.$router.push('order')
+            this.$router.push('order1')
           )
         }
       },
@@ -2376,6 +2386,8 @@
           return
         }
         var PromiseList = []
+        // 批次号
+        var countOrder = uuid.v4()
         // 创建的主机数量  创建的磁盘数量 创建的公网IP数量
         var hostCount = 0, diskCount = 0, ipCount = 0
         for (var prod of this.cart) {
@@ -2387,7 +2399,8 @@
               timeValue: prod.timeForm.currentTimeValue.value,
               templateId: prod.currentType == 'app' ? prod.currentApp.systemtemplateid : prod.currentType == 'public' ? prod.system.systemtemplateid : prod.customMirror.systemtemplateid,
               isAutoRenew: prod.autoRenewal ? '1' : '0',
-              count: prod.count
+              count: prod.count,
+              countOrder
             }
             // 快速创建主机
             if (prod.createType == 'fast') {
@@ -2446,6 +2459,7 @@
               timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
               timeValue: prod.timeForm.currentTimeValue.value,
               isAutorenew: prod.autoRenewal ? '1' : '0',
+              countOrder
             }
             PromiseList.push(axios.get('Disk/createVolume.do', {params}))
           } else if (prod.type == 'Peip') {
@@ -2457,7 +2471,8 @@
               count: prod.count,
               isAutorenew: prod.autoRenewal ? '1' : '0',
               brandWith: prod.bandWidth,
-              vpcId: prod.vpc
+              vpcId: prod.vpc,
+              countOrder
             }
             PromiseList.push(axios.get('network/createPublicIp.do', {params}))
           }
@@ -2465,7 +2480,9 @@
         if (this._checkCount(hostCount, diskCount, ipCount)) {
           sessionStorage.removeItem('cart')
           Promise.all(PromiseList).then(responseList => {
-            this.$router.push('order')
+            this.$router.push({path:'order1',query:{
+              countOrder
+            }})
           })
         }
       },

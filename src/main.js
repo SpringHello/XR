@@ -28,6 +28,7 @@ import message from './myView/message'
 import md5 from 'md5'
 Vue.prototype.$message = message
 Vue.config.productionTip = false
+//axios.defaults.baseURL = '/ruicloud'
 
 axios.defaults.baseURL = 'http://192.168.3.130:8082/ruicloud'
 axios.defaults.withCredentials = true
