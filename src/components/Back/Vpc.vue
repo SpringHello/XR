@@ -848,22 +848,9 @@
       openDeleteNatModal(){
         if (this.select != null) {
           // 单选检测通过
-          this.$Modal.confirm({
-            render: (h) => {
-              return h('p', {
-                class: 'modal-content-s'
-              }, [h('i', {
-                class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
-                style: {
-                  color: '#f90'
-                }
-              }), this.select.natname+' '+'删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留24小时，在24小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。'])
-            },
-            title: '删除NAT',
-            scrollable: true,
-            okText: '确定删除',
-            cancelText: '取消',
-            'onOk': () => {
+          this.$message.confirm({
+            content: '您正将“' + this.select.natname + '”移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。',
+            onOk: () => {
               var url = `network/delNatGateway.do?id=${this.select.id}`
               this.$http.get(url).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
