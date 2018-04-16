@@ -28,8 +28,6 @@
               <Icon type="arrow-down-b"></Icon>
             </Button>
             <Dropdown-menu slot="list">
-              <Dropdown-item name="delhost" v-if="status=='欠费'||status=='异常'" :disabled=true>删除主机</Dropdown-item>
-              <Dropdown-item name="delhost" v-else>删除主机</Dropdown-item>
               <!-- 重命名 -->
               <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
               <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
