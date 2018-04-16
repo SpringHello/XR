@@ -296,7 +296,7 @@
         this.showModal.detail = true
         if (param.row.isread == 0) {
           let url = `user/readedEventNotify.do?list=[{"id":"${param.row.id}"}]`
-          this.$http.get(encodeURI(url)).then(response => {
+          this.$http.get(url).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.getData('all')
               this.getData('notRead')

@@ -271,8 +271,8 @@
     margin-left: 10px;
     color: #2A99F2;
     position: relative;
-    width: 13px;
-    height: 13px;
+    width: 13px !important;
+    height: 13px !important;
     border: solid 1px currentColor;
     border-radius: 50%;
   }

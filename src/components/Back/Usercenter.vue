@@ -6,7 +6,8 @@
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-yonghuzhongxin"></use>
         </svg>
-        <span class="title" style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">用户中心</span>
+        <span class="title"
+              style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">用户中心</span>
         <Tabs type="card" :animated="false" v-model="currentTab">
           <!--未认证-->
           <TabPane label="个人信息" v-if="authInfo==null">
@@ -937,7 +938,8 @@
         重置账户密码
       </div>
       <div class="newPhone" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
-        <Form :model="resetPasswordForm" label-position="top" :rules="resetPasswordruleValidate" style="width: 300px;" ref="resetPassword">
+        <Form :model="resetPasswordForm" label-position="top" :rules="resetPasswordruleValidate" style="width: 300px;"
+              ref="resetPassword">
           <FormItem label="当前密码" prop="oldPassword">
             <Input v-model="resetPasswordForm.oldPassword"></Input>
           </FormItem>
@@ -1001,21 +1003,21 @@
       const validaRegisteredID = (rule, value, callback) => {
         if (!reg.IDCardVail(value)) {
           callback(new Error('请输入正确的身份证号码'));
-        }else {
+        } else {
           callback()
         }
       }
       const validaRegisteredPassWord = (rule, value, callback) => {
         if (!reg.registerPasswordVail(value)) {
           callback(new Error('密码必须包含数字和字母大小写'));
-        }else {
+        } else {
           callback()
         }
       }
       const validaRegisteredPassWordTwo = (rule, value, callback) => {
         if (this.resetPasswordForm.newPassword != value) {
           callback(new Error('两次输入的密码不一致'));
-        }else {
+        } else {
           callback()
         }
       }
@@ -1885,7 +1887,7 @@
             this.showModal.modifyPassword = false
             this.$Message.success(response.data.message)
           } else {
-            this.$message.info(response.data.message)
+            this.$message.info({content: response.data.message})
           }
         })
       },

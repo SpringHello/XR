@@ -51,8 +51,11 @@
                 </li>
                 <li style="flex-basis: 160px;">网关地址：{{item.ipsegment.split('/')[0]}}</li>
                 <li style="flex-basis: 160px;">网段地址：{{item.ipsegment}}</li>
-                <li style="flex-basis: 180px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">服务方案：{{item.netoffername}}</li>
-                <li style="flex-basis: 180px;">防火墙：<span class="blue" @click="toFirewall(item)">{{item.acllistname}}</span></li>
+                <li style="flex-basis: 180px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                  服务方案：{{item.netoffername}}
+                </li>
+                <li style="flex-basis: 180px;">防火墙：<span class="blue"
+                                                         @click="toFirewall(item)">{{item.acllistname}}</span></li>
                 <li style="flex-basis: 180px; overflow: hidden;text-overflow:ellipsis;white-space: nowrap;"
                     v-if="item.netoffername==='公网负载均衡网络'||item.netoffername==='内网负载均衡网络'">负载均衡：<span class="blue"
                                                                                                      @click="toBalance(item)">{{item.loadbalance}}</span>
@@ -1036,8 +1039,8 @@
     margin-left: 10px;
     color: #2A99F2;
     position: relative;
-    width: 13px;
-    height: 13px;
+    width: 13px !important;
+    height: 13px !important;
     border: solid 1px currentColor;
     border-radius: 50%;
     //cursor: pointer;
@@ -1052,8 +1055,8 @@
     position: absolute;
     top: 2px;
     left: 4px;
-    width: 5px;
-    height: 5px;
+    width: 5px !important;
+    height: 5px!important;
     border: currentColor solid 1px;
     border-top-style: none;
     border-right-style: none;
@@ -1126,8 +1129,8 @@
         min-height: 800px;
         .head-info {
           .top {
-           // display: flex;
-           // justify-content: space-between;
+            // display: flex;
+            // justify-content: space-between;
             margin-bottom: 10px;
             h3 {
               font-size: 16px;
