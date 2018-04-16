@@ -1474,7 +1474,7 @@
                   RAMList: [
                     {label: '4G', value: 4},
                     {label: '8G', value: 8},
-                    {label: '16G', value: 16}
+                    {label: '12G', value: 12},
                   ]
                 },
                 {
@@ -1492,8 +1492,8 @@
                   label: '8核',
                   value: 8,
                   RAMList: [
-                    {label: '8G', value: 8},
                     {label: '16G', value: 16},
+                    {label: '24G', value: 24},
                     {label: '32G', value: 32}
                   ]
                 },
@@ -1534,7 +1534,7 @@
                   RAMList: [
                     {label: '4G', value: 4},
                     {label: '8G', value: 8},
-                    {label: '16G', value: 16}
+                    {label: '12G', value: 12},
                   ]
                 },
                 {
@@ -1552,9 +1552,9 @@
                   label: '8核',
                   value: 8,
                   RAMList: [
-                    {label: '8G', value: 8},
                     {label: '16G', value: 16},
-                    {label: '32G', value: 32}
+                    {label: '24G', value: 24},
+                    {label: '32G', value: 32},
                   ]
                 },
                 {
