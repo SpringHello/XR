@@ -1793,9 +1793,10 @@
             this.updateInform.push(this.inform[i])
           }
         }
-        var updateValue = encodeURI(JSON.stringify(this.updateInform))
-        var url = `user/updateNotice.do?list=${updateValue}`
-        this.$http.get(url).then(response => {
+        var updateValue = JSON.stringify(this.updateInform)
+        this.$http.post('user/updateNotice.do', {
+          list: updateValue
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
             this.listNotice()

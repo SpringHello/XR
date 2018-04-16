@@ -236,8 +236,8 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({
-              path: 'result',
-              query: response.data.result
+              name: 'result',
+              params: response.data.result
             })
           } else {
             this.$message.info({

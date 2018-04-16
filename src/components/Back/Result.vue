@@ -15,12 +15,38 @@
               <span>现金券余额</span>
               <span class="remain">￥{{orderInfo.voucher}}</span>
             </Checkbox>
-            <span style="float:right;line-height:31px">余额与现金券支付金额{{accountPayCount}}元</span>
+            <span style="float:right;line-height:31px">余额与现金券支付金额：{{accountPayCount}}元</span>
           </CheckboxGroup>
         </div>
         <div class="pay">
-          <div v-if="currentTab=='otherPay'">
+
+          <!--包年包月第三方支付页面-->
+          <div v-if="currentTab=='otherPay'&&orderInfo.timeType!=1">
             <span style="margin-bottom: 20px;display:block;font-size: 14px;">第三方支付渠道<span style="float:right">使用其他支付需渠道金额：{{otherPayCount.toFixed(2)}}元</span></span>
+            <div class="payContent">
+              <RadioGroup v-model="otherPay" @on-change="otherPayChange">
+                <Radio label="ali" style="margin-right: 40px;">
+                  <img src="../../assets/img/payresult/alipay.png">
+                </Radio>
+                <Radio label="wx">
+                  <img src="../../assets/img/payresult/wxpay.png">
+                </Radio>
+              </RadioGroup>
+              <p style="font-size: 14px;margin-top: 20px;">除以上在线支付方式之外，您也可以使用<span style="color:#2A99F2;cursor: pointer"
+                                                                                   @click="currentTab='outLine'">线下汇款充值</span>的方式先充值到您的新睿云账户，再用账户余额进行支付。
+              </p>
+            </div>
+          </div>
+
+          <!--实时资源第三方支付页面-->
+          <div v-if="currentTab=='otherPay'&&orderInfo.timeType==1">
+            <span style="margin-bottom: 20px;display:block;font-size: 14px;">第三方支付渠道<span style="float:right">使用其他支付需渠道金额：{{rechargeValue!=otherPayCount?rechargeValue:otherPayCount.toFixed(2)}}元</span></span>
+            <p style="margin-bottom: 20px;color:rgba(153,153,153,1);line-height:16px;">
+              为保障您的服务体验，建议您在购买实时主机之时预留足够余额，避免频繁欠费充值。</p>
+            <div style="margin-bottom: 20px;">
+              <InputNumber :min="rechargeMin" v-model="rechargeValue" style="margin-right: 20px;"></InputNumber>
+              <div class="rechargeItem" v-for="item in rechargeArray" @click="resetRecharge(item)">{{item}}元</div>
+            </div>
             <div class="payContent">
               <RadioGroup v-model="otherPay" @on-change="otherPayChange">
                 <Radio label="ali" style="margin-right: 40px;">
@@ -74,24 +100,37 @@
         currentTab: 'otherPay',
         // 余额与现金券支付金额
         accountPayCount: 0,
+
+        rechargeArray: [100, 500, 1000, 2000, 5000, 10000],
+
+        rechargeValue: 0,
+        rechargeMin: 0
       }
     },
     beforeRouteEnter(to, from, next){
       next()
     },
     created(){
-      this.orderInfo = this.$route.query
+      this.orderInfo = this.$route.params
       if (this.orderInfo.isUseVoucher == 1) {
         this.accountPay.push('voucher')
       }
       if (this.orderInfo.isUseVoucher == 1 && Number(this.orderInfo.voucher) < Number(this.orderInfo.money)) {
         this.accountPay.push('account')
       }
+      // 充值有限制  不能少于10元
+      if (this.orderInfo.isNilNorm == 0) {
+        this.rechargeMin = 10
+        if (this.orderInfo.money - this.accountPayCount > 10) {
+          this.rechargeValue = this.orderInfo.money - this.accountPayCount
+        } else {
+          this.rechargeValue = 10
+        }
+      }
     },
     methods: {
       // 判断能否使用现金券余额
       checkUseVoucher(bol){
-        console.log('checkUseVoucher')
         // 不允许使用现金券余额，但是点击了使用
         if (this.orderInfo.isUseVoucher == 0 && bol.indexOf('voucher') > -1) {
           this.accountPay.splice(bol.indexOf('voucher'), 1)
@@ -175,11 +214,23 @@
           })
         } else if (this.otherPay == 'ali') {
           // 支付宝支付
-          window.open(`zfb/alipayapi.do?total_fee=${this.otherPayCount.toFixed(2)}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
+          if (this.orderInfo.timeType == 1) {
+            window.open(`zfb/alipayapi.do?total_fee=${this.rechargeValue.toFixed(2)}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
+          } else {
+            window.open(`zfb/alipayapi.do?total_fee=${this.otherPayCount.toFixed(2)}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
+          }
         } else if (this.otherPay == 'wx') {
-          sessionStorage.setItem('total_fee', this.otherPayCount.toFixed(2))
+          if (this.orderInfo.timeType == 1) {
+            sessionStorage.setItem('total_fee', this.rechargeValue.toFixed(2))
+          } else {
+            sessionStorage.setItem('total_fee', this.otherPayCount.toFixed(2))
+          }
           this.$router.push('wxpay')
         }
+      },
+      // 充值其他可选金额
+      resetRecharge(item){
+        this.rechargeValue = item
       }
     },
     computed: {
@@ -217,6 +268,11 @@
       otherPayCount(){
         if (this.otherPayCount == 0) {
           this.otherPay = ''
+        }
+        // 无限制
+        if (this.orderInfo.isNilNorm == 1) {
+          this.rechargeMin = this.otherPayCount
+          this.rechargeValue = this.otherPayCount
         }
       }
     }
@@ -322,6 +378,14 @@
             img {
               vertical-align: middle;
             }
+          }
+          .rechargeItem {
+            display: inline-block;
+            border: 1px solid rgb(233, 233, 233);
+            border-radius: 4px;
+            margin-right: 20px;
+            padding: 6px 15px;
+            cursor: pointer;
           }
           .outLineContent {
             .hint {

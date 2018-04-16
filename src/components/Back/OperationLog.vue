@@ -6,7 +6,8 @@
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-caozuorizhi"></use>
         </svg>
-        <span class="title" style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">操作日志</span>
+        <span class="title"
+              style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">操作日志</span>
         <div class="logdata">
           <div class="search">
             <span style="margin-top: 29px;font-size: 12px;">操作时间</span>
@@ -213,7 +214,7 @@
             pageSize: this.pageSize,
             currentPage: this.currentPage,
             target: this.target == 'all' ? '' : this.target,
-            queryTime: this.dateRange
+            queryTime: this.dateRange.join(',')
           }
         }).then(response => {
           this.total = response.data.total;

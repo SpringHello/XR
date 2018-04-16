@@ -29,7 +29,7 @@
           </ol>
         </div>
         <div class="footer">
-          <button :class="{select:monitor}" @click="monitor=true">磁盘监控</button>
+          <!--<button :class="{select:monitor}" @click="monitor=true">磁盘监控</button>-->
           <button :class="{select:!monitor}" @click="toBackupsManage">备份管理</button>
         </div>
       </div>
@@ -240,7 +240,7 @@
           showType: '折线'
         },
         // 用于切换磁盘监控和备份管理
-        monitor: true,
+        monitor: false,
         // 磁盘名称
         diskName: '测试',
         // 磁盘列表

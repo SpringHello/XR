@@ -1027,7 +1027,7 @@
         var url = `information/getDiskcountMv.do?vmConfigId=${vmConfigId}&osType=${item.system}&defzoneid=${item.node}`
         axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('order1')
+            this.$router.push('order')
           } else {
             this.$message.info({
               content: response.data.message
@@ -1076,7 +1076,7 @@
         var url = `information/getDiskcountMv.do?vmConfigId=${vmConfigId}&osType=${item.system}&defzoneid=${item.node}`
         axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('order1')
+            this.$router.push('order')
           } else {
             this.$message.info({
               content: response.data.message

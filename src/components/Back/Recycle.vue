@@ -212,10 +212,9 @@
       recover(item){
         var arr = [{id: item.id, type: item.type}]
         var param = JSON.stringify(arr)
-        param = encodeURI(param)
-        var url = "information/recover.do?list=" + param
-        item.loading = true
-        this.$http.get(url).then(response => {
+        this.$http.post('information/recover.do', {
+          list: param
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
             initRecycle.bind(this)()
@@ -254,7 +253,9 @@
           return
         }
         var param = JSON.stringify(arr)
-        this.$http.get(encodeURI("information/recover.do?list=" + param)).then(response => {
+        this.$http.post("information/recover.do", {
+          list: param
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
             initRecycle.bind(this)()
@@ -267,9 +268,9 @@
       del(item){
         var arr = [{id: item.id, type: item.type}]
         var param = JSON.stringify(arr)
-        param = encodeURI(param)
-        item.loading = true
-        this.$http.get("information/deleteRecover.do?list=" + param).then(response => {
+        this.$http.post("information/deleteRecover.do", {
+          list: param
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
             initRecycle.bind(this)()
@@ -312,7 +313,9 @@
           return
         }
         var param = JSON.stringify(arr)
-        this.$http.get(encodeURI("information/deleteRecover.do?list=" + param)).then(response => {
+        this.$http.post("information/deleteRecover.do", {
+          list: param
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
             initRecycle.bind(this)()
