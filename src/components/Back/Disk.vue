@@ -162,22 +162,7 @@
         </Button>
       </div>
     </Modal>
-    <!-- 删除磁盘模态框 -->
-    <Modal v-model="showModal.deleteDisk" width="390" :scrollable="true">
-      <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
-        <div>
-          <strong>删除硬盘</strong>
-          <p class="lh24"><span style="color: #2A99F2 ">（{{ diskName }}）</span>删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。
-          </p>
-        </div>
-      </div>
-      <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.deleteDisk = false">取消</Button>
-        <Button type="primary" @click="deleteDisk_ok">确认删除</Button>
-      </p>
-    </Modal>
-
+    
     <!-- 错误弹出框 -->
     <Modal v-model="showModal.error" :scrollable="true" :closable="false" :width="350">
       <p class="modal-content-s">
@@ -465,7 +450,6 @@
           // 磁盘扩容模态框
           dilatationDisk: false,
           // 删除磁盘模态框
-          deleteDisk: false,
           // 挂载主机，弹出无法卸载框。
           beforeDelete: false,
           // 修改磁盘名称模态框
@@ -804,13 +788,34 @@
             this.showModal.beforeDelete = true
           } else if (this.diskSelection.caseType != 1 && this.diskSelection.caseType != 2) {
             // 弹出删除框
-            this.showModal.deleteDisk = true
             this.diskName = this.diskSelection.diskname
-          } else {
-            this.$message.info({
-              content: '包年包月资费资源无法删除'
+            this.diskData.forEach(item => {
+              if (item.diskid == this.diskSelection.diskid) {
+                item.status = 3
+              }
             })
-          }
+            this.$message.confirm({
+                        content: `${this.diskName}云硬盘删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。`,
+                          onOk: () => {
+                            this.$http.get('Disk/delDisk.do?id=' + this.diskSelection.id + '').then(response => {
+                              if (response.status == 200 && response.data.status == 1) {
+                                this.$Message.info({
+                                  content: response.data.message
+                                  })
+                                this.listDisk()
+                              } else {
+                                this.$message.info({
+                                  content: response.data.message
+                                })
+                              }
+                            })
+                          }
+                      })
+              } else {
+                this.$message.info({
+                  content: '包年包月资费资源无法删除'
+                })
+              }
         }
       },
       // 检测是否选中一项数据
@@ -850,27 +855,6 @@
               content: response.data.message,
             })
             this.showModal.modificationDisk = false
-            this.listDisk()
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
-      },
-      /* 确认删除磁盘 */
-      deleteDisk_ok(){
-        this.showModal.deleteDisk = false
-        this.diskData.forEach(item => {
-          if (item.diskid == this.diskSelection.diskid) {
-            item.status = 3
-          }
-        })
-        this.$http.get('Disk/delDisk.do?id=' + this.diskSelection.id + '').then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.info({
-              content: response.data.message
-              })
             this.listDisk()
           } else {
             this.$message.info({
