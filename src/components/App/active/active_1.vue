@@ -36,8 +36,8 @@
           </div>
           <div class="prg-liuc">
             <ul>
-              <li>1、注册领红包</li>
-              <li>2、限时领取现金券</li>
+              <li>1、注册即得158元红包</li>
+              <li>2、限时领取38元代金券</li>
               <li>3、购买畅享新睿云</li>
             </ul>
           </div>
@@ -256,8 +256,8 @@
         headNav: [
           {
             img: require("../../../assets/img/active/active_1/Group 9.png"),
-            title: "注册即可领取158元现金大礼包",
-            desc: "注册送现金，云上主机0元购超高性能还超靠!"
+            title: "注册即可获得158元现金大礼包",
+            desc: "注册送现金，云上主机0元购超高性能超靠谱!"
           },
           {
             img: require("../../../assets/img/active/active_1/Group 10.png"),
@@ -432,7 +432,7 @@
         ;
       },
       setServerTime(serviceTime) {
-        let hours = [9, 12, 15, 17].map(function (hour) {
+        let hours = [10, 12, 15, 17].map(function (hour) {
           let h = new Date()
           h.setHours(hour)
           h.setMinutes(0)
@@ -521,7 +521,13 @@
           networkId:'no',
         }
         this.$http.get('information/deployVirtualMachine.do', {params}).then((response) => {
+          if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
           }
         )
       }
@@ -604,6 +610,8 @@
                 line-height: 32px;
                 padding: 8px 9px 10px;
                 background: rgba(242, 102, 103, 1);
+                width: 55px;
+                height: 50px;
                 &.notGet {
                   background: rgba(214, 214, 214, 1);
                 }
@@ -648,6 +656,7 @@
               padding: 12px 40px;
               border-radius: 24px;
               margin-left: 34px;
+              background: #D6D6D6;
               &.canGet {
                 cursor: pointer;
                 background: rgba(242, 102, 103, 1);
@@ -777,7 +786,7 @@
               background: rgba(249, 175, 128, 1);
               width: 400px;
               height: 70px;
-              padding: 23px 122px 22px 123px;
+              padding-top: 22px;
               font-size: 18px;
               color: #FFFFFF;
               &:first-of-type {
