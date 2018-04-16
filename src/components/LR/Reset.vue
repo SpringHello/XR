@@ -213,7 +213,11 @@
         if (regExp.phoneVail(this.form.loginname)) {
           this.isemail = '0'
         }
-        axios.get(`user/code.do?aim=${this.form.loginname}&isemail=0&vailCode=${this.form.code}`).then(response => {
+        let isemail = 0
+        if (this.form.loginname.indexOf('@') > -1) {
+          isemail = 1
+        }
+        axios.get(`user/code.do?aim=${this.form.loginname}&isemail=${isemail}&vailCode=${this.form.code}`).then(response => {
           let countdown = 60
           this.codePlaceholder = '60s'
           var inter = setInterval(() => {
