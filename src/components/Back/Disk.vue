@@ -868,9 +868,9 @@
         })
         this.$http.get('Disk/delDisk.do?id=' + this.diskSelection.id + '').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$Message.info({
-              content: response.data.message,
-            })
+            this.$message.info({
+                    content: `您正将${this.diskSelection.diskname}云硬盘移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。`
+                  })
             this.listDisk()
           } else {
             this.$message.info({
