@@ -28,6 +28,8 @@
               <Icon type="arrow-down-b"></Icon>
             </Button>
             <Dropdown-menu slot="list">
+              <Dropdown-item name="delhost" v-if="status=='欠费'||status=='异常'" :disabled=true>删除主机</Dropdown-item>
+              <Dropdown-item name="delhost" v-else>删除主机</Dropdown-item>
               <!-- 重命名 -->
               <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
               <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
@@ -72,17 +74,8 @@
 
               <!-- 删除主机 -->
 
-              <Poptip
-                confirm
-                width="250"
-                placement="right"
-                title=" 删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留24小时，在24小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。"
-                @on-ok="del"
-                @on-cancel="cancel"
-                style="display: block">
-                <li class="del" v-if="status!='欠费'&&status!='异常'" :disabled=true>删除主机</li>
-              </Poptip>
-
+              <Dropdown-item name="delhost" v-if="status=='欠费'||status=='异常'" :disabled=true>删除主机</Dropdown-item>
+              <Dropdown-item name="delhost" v-else>删除主机</Dropdown-item>
 
               <!-- 解绑主机 -->
 
@@ -1006,6 +999,11 @@
       },
       hideEvent(name) {
         switch (name) {
+          case 'delhost':
+          if (this.checkSelect()) {
+              this.del()
+            }
+            break
           case 'rename':
             if (this.checkSelect()) {
               this.renameForm.hostName = ''
@@ -1170,22 +1168,23 @@
             this.$Message.warning('只能删除实时计费主机')
             return
           }
-          // this.loadingMessage = '正在删除主机'
-          // this.loading = true
-          this.$http.get('information/deleteVM.do?id=' + this.currentHost[0].id)
-            .then(response => {
-              this.loading = false
-              if (response.status == 200 && response.data.status == 1) {
-                this.$message.info({
-                    content: `您正将${this.currentHost[0].computername}主机移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。`
+          this.$message.confirm({
+                    content: `${this.currentHost[0].computername}主机删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。`,
+                      onOk: () => {
+                        this.$http.get('information/deleteVM.do?id=' + this.currentHost[0].id)
+                            .then(response => {
+                              if (response.status == 200 && response.data.status == 1) {
+                                this.$Message.success(response.data.message)
+                                this.getData()
+                              } else {
+                                this.$message.info({
+                                  content: response.data.message
+                                })
+                              }
+                            })
+                      }
                   })
-                this.getData()
-              } else {
-                this.$message.info({
-                  content: response.data.message
-                })
-              }
-            })
+          
         }
       },
       upgrade() {
