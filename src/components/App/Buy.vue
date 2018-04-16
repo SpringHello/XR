@@ -104,7 +104,7 @@
                       <div v-if="PecsInfo.currentType=='custom'">
                         <div v-for="item in PecsInfo.customList" :key="item.value" class="zoneItem"
                              :class="{zoneSelect:PecsInfo.customMirror.id==item.id}"
-                             @click="PecsInfo.customMirror=item" style="margin-top: 20px;">{{item.templatename}}
+                             @click="setOwnTemplate(item)" style="margin-top: 20px;">{{item.templatename}}
                         </div>
                         <div v-if="PecsInfo.customList.length==0" class="zoneItem" style="margin-top: 20px;">
                           暂无镜像
@@ -246,7 +246,7 @@
                       <div v-if="PecsInfo.currentType=='custom'">
                         <div v-for="item in PecsInfo.customList" :key="item.value" class="zoneItem"
                              :class="{zoneSelect:PecsInfo.customMirror.id==item.id}"
-                             @click="PecsInfo.customMirror=item" style="margin-top: 20px;">{{item.templatename}}
+                             @click="setOwnTemplate(item)" style="margin-top: 20px;">{{item.templatename}}
                         </div>
                         <div v-if="PecsInfo.customList.length==0" class="zoneItem" style="margin-top: 20px;">
                           暂无镜像
@@ -1126,6 +1126,8 @@
           vm.product.currentProduct = 'Pdisk'
         } else if (from.path == '/ruicloud/Peip') {
           vm.product.currentProduct = 'Peip'
+        } else {
+          vm.product.currentProduct = 'Pecs'
         }
         if (sessionStorage.getItem('pane')) {
           switch (sessionStorage.getItem('pane')) {
@@ -1832,10 +1834,16 @@
             this.PecsInfo.customMirror = this.PecsInfo.customList[0] || {}
           } else {
             this.PecsInfo.customMirror = this.$route.query.mirror || {}
+            var str = this.$route.query.mirror.ostypename.substr(0, 1)
+            if (str === 'W') {
+              this.systemUsername = 'administrator'
+            } else {
+              this.systemUsername = 'root'
+            }
           }
         }
       },
-      // 重新选择镜像
+      // 重新选择系统镜像
       setOS(name) {
         var arg = name.split('#')
         for (var item of this.PecsInfo.publicList) {
@@ -1853,6 +1861,16 @@
           this.systemUsername = 'root'
         }
         this.PecsInfo.publicList[arg[2]].selectSystem = arg[0]
+      },
+      // 根据选择自定义镜像判断登录名是admin还是root
+      setOwnTemplate (item) {
+        this.PecsInfo.customMirror = item
+        var str = item.ostypename.substr(0, 1)
+        if (str === 'W') {
+          this.systemUsername = 'administrator'
+        } else {
+          this.systemUsername = 'root'
+        }
       },
       // 新建公网IP所在vpc
       queryIPVpc() {
