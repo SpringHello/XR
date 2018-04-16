@@ -174,12 +174,11 @@
             this.$router.push('payResult')
           })
         } else if (this.otherPay == 'ali') {
-
-          let total_fee = Number(this.orderInfo.money) - cost
           // 支付宝支付
-          window.open(`zfb/alipayapi.do?total_fee=${total_fee}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
+          window.open(`zfb/alipayapi.do?total_fee=${this.otherPayCount.toFixed(2)}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
         } else if (this.otherPay == 'wx') {
-          window.open(`zfb/alipayapi.do?total_fee=${total_fee}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
+          sessionStorage.setItem('total_fee', this.otherPayCount.toFixed(2))
+          this.$router.push('wxpay')
         }
       }
     },
