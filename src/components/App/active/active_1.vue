@@ -32,7 +32,7 @@
             <img src="../../../assets/img/active/active_1/pr02.png">
           </div>
           <div class="pro-libao">
-            <p>注册即可获得158元现金大礼包</p>
+            <p>注册即可获得196元现金大礼包</p>
           </div>
           <div class="prg-liuc">
             <ul>
@@ -810,6 +810,7 @@
           cursor: pointer;
           font-size: 18px;
           line-height: 18px;
+          box-shadow: 0px 7px 26px -10px rgba(242,102,103,1)
         }
       }
     }
