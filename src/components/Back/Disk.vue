@@ -789,14 +789,14 @@
           } else if (this.diskSelection.caseType != 1 && this.diskSelection.caseType != 2) {
             // 弹出删除框
             this.diskName = this.diskSelection.diskname
-            this.diskData.forEach(item => {
-              if (item.diskid == this.diskSelection.diskid) {
-                item.status = 3
-              }
-            })
             this.$message.confirm({
                         content: `${this.diskName}云硬盘删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。`,
                           onOk: () => {
+                            this.diskData.forEach(item => {
+                              if (item.diskid == this.diskSelection.diskid) {
+                                item.status = 3
+                              }
+                            })
                             this.$http.get('Disk/delDisk.do?id=' + this.diskSelection.id + '').then(response => {
                               if (response.status == 200 && response.data.status == 1) {
                                 this.$Message.info({
