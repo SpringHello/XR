@@ -21,14 +21,7 @@
         </div>
         <div class="operate">
           <Button type="primary" @click="openNewIPModal">创建弹性IP</Button>
-          <Poptip
-            confirm
-            width="200"
-            placement="right"
-            title="您确认删除该弹性IP？"
-            @on-ok="delElasticIP">
-            <Button type="primary">释放弹性IP</Button>
-          </Poptip>
+          <Button type="primary" @click="resetIP">释放弹性IP</Button>
           <Dropdown @on-click="hideEvent">
             <Button type="primary">
               更多操作
@@ -45,7 +38,16 @@
         </div>
       </div>
     </div>
-
+    <!--释放弹性IP-->
+    <!--<Modal v-model="resetip" width="300" :scrollable="true" :closable="false">
+      <div>
+        您正将“ <span>{{publicIP}}</span>”移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。
+      </div>
+      <div slot="footer">
+        <Button @click="resetip = false">取消</Button>
+        <Button type="primary" @click="delElasticIP">确定</Button>
+      </div>
+    </Modal>-->
     <!-- 新建vpc modal -->
     <Modal v-model="showModal.newIPModal" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
@@ -265,6 +267,9 @@
     },
     data(){
       return {
+        // 释放弹性IP
+        resetip: false,
+        publicIP: '',
         // IP续费
         renewalType: '',
         renewalTime: '',
@@ -326,23 +331,23 @@
             key: 'vpcname',
             render: (h, params) => {
               if (params.row.vpcname) {
-                return h('span',{
+                return h('span', {
                   style: {
                     cursor: 'pointer'
                   },
                   on: {
-                    click: () =>{
+                    click: () => {
                       sessionStorage.setItem('vpcId', params.row.vpcid)
                       this.$router.push('/ruicloud/vpcManage')
                     }
                   }
-                },params.row.vpcname)
+                }, params.row.vpcname)
               } else {
-                return h('span',{
+                return h('span', {
                   style: {
                     cursor: 'not-allowed'
                   },
-                },'----')
+                }, '----')
               }
             }
           },
@@ -636,6 +641,21 @@
       }
     },
     methods: {
+      // 释放弹性IP
+      resetIP(){
+        if (this.select != null) {
+          this.$message.confirm({
+            content: '您确认删除改弹性IP吗？',
+            onOk: () => {
+              this.delElasticIP()
+            }
+          })
+        } else {
+          this.$Message.info({
+            content: '请先选择一个弹性IP',
+          })
+        }
+      },
       refresh () {
         // 获取ip数据
         axios.get(`network/listPublicIp.do?page=1&pageSize=10&zoneId=${$store.state.zone.zoneid}`).then(response => {
@@ -869,6 +889,7 @@
       },
       // 删除弹性ip
       delElasticIP(){
+        this.resetip = false
         if (this.select == null) {
           this.$Message.warning('请选择1个弹性IP')
           return false

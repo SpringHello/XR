@@ -638,39 +638,25 @@
       echarts.registerMap('china', china)
       this.myChart = echarts.init(document.getElementById('echarts'))
       this.myChart.setOption(polar)
-      if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY || window.pageYOffset > 300) {
-        this.cloudContentFade = true
-      }
-      if (document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY || window.pageYOffset > 300) {
-        this.fade = true
-      }
-      if (document.body.clientHeight - this.$refs.consoleFade.offsetTop + window.scrollY || window.pageYOffset > 300) {
-        this.consoleFade = true
-      }
-      if (document.body.clientHeight - this.$refs.partnerFade.offsetTop + window.scrollY || window.pageYOffset > 300) {
-        this.partnerFade = true
-      }
-      if (document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY || window.pageYOffset > 300) {
-        this.authorityFade = true
-      }
       // 待优化
       this.scrollFn = () => {
-        if (document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY || window.pageYOffset > 300 && !this.cloudContentFade) {
+        if ((document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.cloudContentFade) {
           this.cloudContentFade = true
         }
-        if (document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY || window.pageYOffset > 300 && !this.fade) {
+        if ((document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.fade) {
           this.fade = true
         }
-        if (document.body.clientHeight - this.$refs.consoleFade.offsetTop + window.scrollY || window.pageYOffset > 300 && !this.consoleFade) {
+        if ((document.body.clientHeight - this.$refs.consoleFade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.consoleFade) {
           this.consoleFade = true
         }
-        if (document.body.clientHeight - this.$refs.partnerFade.offsetTop + window.scrollY || window.pageYOffset > 300 && !this.partnerFade) {
+        if ((document.body.clientHeight - this.$refs.partnerFade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.partnerFade) {
           this.partnerFade = true
         }
-        if (document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY || window.pageYOffset > 300 && !this.authorityFade) {
+        if ((document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.authorityFade) {
           this.authorityFade = true
         }
       }
+      this.scrollFn()
       window.addEventListener('scroll', this.scrollFn)
     },
     created() {

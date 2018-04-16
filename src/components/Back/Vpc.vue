@@ -848,22 +848,9 @@
       openDeleteNatModal(){
         if (this.select != null) {
           // 单选检测通过
-          this.$Modal.confirm({
-            render: (h) => {
-              return h('p', {
-                class: 'modal-content-s'
-              }, [h('i', {
-                class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
-                style: {
-                  color: '#f90'
-                }
-              }), '确认删除该NAT?'])
-            },
-            title: '删除NAT',
-            scrollable: true,
-            okText: '确定删除',
-            cancelText: '取消',
-            'onOk': () => {
+          this.$message.confirm({
+            content: '您正将“' + this.select.natname + '”移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。',
+            onOk: () => {
               var url = `network/delNatGateway.do?id=${this.select.id}`
               this.$http.get(url).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
