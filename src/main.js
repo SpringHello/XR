@@ -29,16 +29,9 @@ import md5 from 'md5'
 Vue.prototype.$message = message
 Vue.config.productionTip = false
 
-<<<<<<< HEAD
-//axios.defaults.baseURL = '/ruicloud'
-axios.defaults.baseURL = 'http://192.168.3.124:8082/ruicloud'
+axios.defaults.baseURL = 'http://192.168.3.130:8082/ruicloud'
 axios.defaults.withCredentials = true
-//axios.defaults.baseURL = 'http://192.168.3.124:8082/ruicloud'
-=======
-//axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud'
-//axios.defaults.withCredentials = true
->>>>>>> 1720dccc2d2882456ef269e6141dd1c850b48916
-//axios.defaults.withCredentials = true
+
 // axios挂载到Vue原型
 Vue.prototype.$http = axios.create({
   params: {}

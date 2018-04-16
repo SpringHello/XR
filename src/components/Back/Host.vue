@@ -76,7 +76,7 @@
                 confirm
                 width="250"
                 placement="right"
-                title="确认删除之后主机将进入回收站。"
+                title=" 删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留24小时，在24小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。"
                 @on-ok="del"
                 @on-cancel="cancel"
                 style="display: block">
