@@ -644,15 +644,24 @@
       // 释放弹性IP
       resetIP(){
         if (this.select != null) {
-          this.$message.confirm({
-            content: '您确认删除改弹性IP吗？',
-            onOk: () => {
-              this.delElasticIP()
-            }
-          })
-        } else {
+            this.$http.get(`network/delPublic.do?id=${this.select.id}`).then(response => {
+              if (response.status != 200 || response.data.status != 1) {
+                this.$message.info({
+                  content: response.data.message
+                })
+              } else{
+                this.$message.confirm({
+                  content: '您正将“'+this.select.publicip+'”移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。',
+                  onOk: () => {
+                    this.$Message.success(response.data.message)
+                    this.refresh()
+                  }
+                })
+              }
+            })
+          }else {
           this.$Message.info({
-            content: '请先选择一个弹性IP',
+            content: '请先选择一个弹性IP'
           })
         }
       },
