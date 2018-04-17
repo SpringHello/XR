@@ -2269,7 +2269,7 @@
         }
         if (this._checkCount(hostCount, diskCount, ipCount)) {
           axios.get('information/deployVirtualMachine.do', {params}).then(response => {
-            this.$router.push('order1')
+            this.$router.push('order')
           })
         }
       },
@@ -2315,7 +2315,7 @@
               isAutorenew: prod.autoRenewal ? '1' : '0',
             }
             axios.get('Disk/createVolume.do', {params}).then(response => {
-              this.$router.push('order1')
+              this.$router.push('order')
             })
           }
         }
@@ -2347,7 +2347,7 @@
             vpcId: prod.vpc
           }
           axios.get('network/createPublicIp.do', {params}).then(
-            this.$router.push('order1')
+            this.$router.push('order')
           )
         }
       },
@@ -2498,7 +2498,7 @@
         if (this._checkCount(hostCount, diskCount, ipCount)) {
           sessionStorage.removeItem('cart')
           Promise.all(PromiseList).then(responseList => {
-            this.$router.push({path:'order1',query:{
+            this.$router.push({path:'order',query:{
               countOrder
             }})
           })

@@ -7,7 +7,8 @@
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-xiaoxizhongxin"></use>
           </svg>
-          <span class="title" style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">消息中心</span>
+          <span class="title"
+                style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">消息中心</span>
         </div>
         <div style="margin-top:20px">
           <Tabs type="card" v-model="pane" :animated="false">
@@ -30,7 +31,8 @@
                 </div>
               </div>
               <Table :columns="columns" :data="allData" @on-selection-change="select"></Table>
-              <Page style="margin-top:20px;float: right;" :total="allPageInfo.total" :page="allPageInfo.currentPage" :page-size="15"
+              <Page style="margin-top:20px;float: right;" :total="allPageInfo.total" :page="allPageInfo.currentPage"
+                    :page-size="15"
                     @on-change="getAllData"></Page>
             </Tab-pane>
             <Tab-pane :label="'未读('+paneLabel.notRead+')'" name="notRead" style="min-height: 500px;">
@@ -51,7 +53,8 @@
                 </div>
               </div>
               <Table :columns="columns" :data="notReadData" @on-selection-change="select"></Table>
-              <Page style="margin-top:20px;float: right;" :total="notReadPageInfo.total" :page="notReadPageInfo.currentPage"
+              <Page style="margin-top:20px;float: right;" :total="notReadPageInfo.total"
+                    :page="notReadPageInfo.currentPage"
                     :page-size="15"
                     @on-change="getNotReadData"></Page>
             </Tab-pane>
@@ -73,7 +76,8 @@
                 </div>
               </div>
               <Table :columns="columns" :data="readData" @on-selection-change="select"></Table>
-              <Page style="margin-top:20px;float: right;" :total="readPageInfo.total" :page="readPageInfo.currentPage" :page-size="15"
+              <Page style="margin-top:20px;float: right;" :total="readPageInfo.total" :page="readPageInfo.currentPage"
+                    :page-size="15"
                     @on-change="getReadData"></Page>
             </Tab-pane>
           </Tabs>
@@ -277,8 +281,9 @@
         let ids = this[this.pane + 'Select'].map(item => {
           return {id: item.id}
         })
-        let url = `user/${type}EventNotify.do?list=${encodeURI(JSON.stringify(ids))}`
-        this.$http.get(url).then(response => {
+        this.$http.post(`user/${type}EventNotify.do`, {
+          list: JSON.stringify(ids)
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.getData('all')
             this.getData('notRead')
@@ -295,8 +300,10 @@
         this.modelInfo.content = param.row.content
         this.showModal.detail = true
         if (param.row.isread == 0) {
-          let url = `user/readedEventNotify.do?list=[{"id":"${param.row.id}"}]`
-          this.$http.get(url).then(response => {
+          //let url = `user/readedEventNotify.do?list=[{"id":"${param.row.id}"}]`
+          this.$http.post('user/readedEventNotify.do', {
+            list: `[{"id":"${param.row.id}"}]`
+          }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.getData('all')
               this.getData('notRead')

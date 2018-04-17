@@ -111,7 +111,7 @@
               }, '还原')]), h('Poptip', {
                 props: {
                   title: '您确认删除该回收站资源吗？',
-                  width:208,
+                  width: 208,
                   confirm: true
                 },
                 on: {
@@ -145,50 +145,50 @@
     },
     methods: {
       fetchData(){
-        var url = 'information/listRecharge.do?'
-        if (this.keyWords != '')
-          url += '&name=' + this.keyWords
-        this.$http.get(url)
-          .then((response) => {
-            if (response.status == 200 && response.data.status == 1) {
-              var mSecInDay = 1000 * 60 * 60 * 24
-              var mSecInHour = 1000 * 60 * 60
-              var mSecInMinute = 1000 * 60
-              var nowTime = new Date().getTime()
-              response.data.result.forEach((item) => {
-                item.remainingDay = Math.floor(item.remainTime / mSecInDay)
-                item.remainingHour = Math.floor((item.remainTime % mSecInDay) / mSecInHour)
-                item.remainingMinute = Math.floor((item.remainTime % mSecInHour) / mSecInMinute)
-                item.deleteTime = new Date(item.deleteTime).format('yyyy年MM月dd日 hh:mm:ss')
-                item.createTime = new Date(item.createTime).format('yyyy年MM月dd日 hh:mm:ss')
-                item.loading = false
-
-              })
-              var host = [], ip = [], disk = [], nat = []
-              response.data.result.forEach(item => {
-                switch (item.type) {
-                  case 'host':
-                    host.push(item)
-                    break;
-                  case 'ip':
-                    ip.push(item)
-                    break;
-                  case 'disk':
-                    disk.push(item)
-                    break;
-                  case 'nat':
-                    nat.push(item)
-                    break
-                }
-              })
-              this.allList = response.data.result
-              this.hostList = host
-              this.ipList = ip
-              this.diskList = disk
-              this.natList = nat
-            }
-          })
-
+        let params = {}
+        if (this.keyWords != '') {
+          params.name = this.keyWords
+        }
+        this.$http.get('information/listRecharge.do', {
+          params,
+        }).then((response) => {
+          if (response.status == 200 && response.data.status == 1) {
+            var mSecInDay = 1000 * 60 * 60 * 24
+            var mSecInHour = 1000 * 60 * 60
+            var mSecInMinute = 1000 * 60
+            var nowTime = new Date().getTime()
+            response.data.result.forEach((item) => {
+              item.remainingDay = Math.floor(item.remainTime / mSecInDay)
+              item.remainingHour = Math.floor((item.remainTime % mSecInDay) / mSecInHour)
+              item.remainingMinute = Math.floor((item.remainTime % mSecInHour) / mSecInMinute)
+              item.deleteTime = new Date(item.deleteTime).format('yyyy年MM月dd日 hh:mm:ss')
+              item.createTime = new Date(item.createTime).format('yyyy年MM月dd日 hh:mm:ss')
+              item.loading = false
+            })
+            var host = [], ip = [], disk = [], nat = []
+            response.data.result.forEach(item => {
+              switch (item.type) {
+                case 'host':
+                  host.push(item)
+                  break;
+                case 'ip':
+                  ip.push(item)
+                  break;
+                case 'disk':
+                  disk.push(item)
+                  break;
+                case 'nat':
+                  nat.push(item)
+                  break
+              }
+            })
+            this.allList = response.data.result
+            this.hostList = host
+            this.ipList = ip
+            this.diskList = disk
+            this.natList = nat
+          }
+        })
       },
       selectionChange(selections){
         switch (this.currentPane) {
@@ -212,10 +212,9 @@
       recover(item){
         var arr = [{id: item.id, type: item.type}]
         var param = JSON.stringify(arr)
-        param = encodeURI(param)
-        var url = "information/recover.do?list=" + param
-        item.loading = true
-        this.$http.get(url).then(response => {
+        this.$http.post('information/recover.do', {
+          list: param
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
             initRecycle.bind(this)()
@@ -254,7 +253,9 @@
           return
         }
         var param = JSON.stringify(arr)
-        this.$http.get(encodeURI("information/recover.do?list=" + param)).then(response => {
+        this.$http.post("information/recover.do", {
+          list: param
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
             initRecycle.bind(this)()
@@ -267,9 +268,9 @@
       del(item){
         var arr = [{id: item.id, type: item.type}]
         var param = JSON.stringify(arr)
-        param = encodeURI(param)
-        item.loading = true
-        this.$http.get("information/deleteRecover.do?list=" + param).then(response => {
+        this.$http.post("information/deleteRecover.do", {
+          list: param
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
             initRecycle.bind(this)()
@@ -312,7 +313,9 @@
           return
         }
         var param = JSON.stringify(arr)
-        this.$http.get(encodeURI("information/deleteRecover.do?list=" + param)).then(response => {
+        this.$http.post("information/deleteRecover.do", {
+          list: param
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
             initRecycle.bind(this)()
