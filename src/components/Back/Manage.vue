@@ -411,7 +411,7 @@
   import hostDiskHistogram from '@/echarts/hostDiskHistogram'
   import ipOptions from '@/echarts/ipOptions'
   import ipHistogram from '@/echarts/ipHistogram'
-  import regExp from '../../util/regExp'
+  
   var urlList = {
     dayURL: 'alarm/getVmAlarmByHour.do',
     otherURL: 'alarm/getVmAlarmByDay.do'
@@ -420,7 +420,6 @@
   var histogramstr = JSON.stringify(histogram)
   var hostDiskOptionstr = JSON.stringify(hostDiskOptions)
   var hostDiskHistogramstr = JSON.stringify(hostDiskHistogram)
-  const validaSinginName = regExp.validaSinginName
   export default {
     data() {
       var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,23}$/
@@ -450,6 +449,15 @@
           callback(new Error('密码不能为空'));
         } else if (this.resetPasswordForm.newPassword != value) {
           callback(new Error('两次密码不一致'));
+        } else {
+          callback();
+        }
+      }
+      const validaSinginName = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('密码不能为空'));
+        } else if (value.length<8) {
+          callback(new Error('长度至少为8位'));
         } else {
           callback();
         }
