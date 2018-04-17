@@ -5,7 +5,7 @@
       <div class="content">
         <span>支付</span>
         <span class="title">已选择{{orderInfo.orderNum}}项 | 总计:{{orderInfo.money}}元 |</span>
-        <div class="accountInfo">
+        <div class="accountInfo" v-if="currentTab=='otherPay'">
           <CheckboxGroup v-model="accountPay" @on-change="checkUseVoucher">
             <Checkbox label="account" style="margin-right:40px;user-select: none">
               <span>账户余额</span>
@@ -15,26 +15,50 @@
               <span>现金券余额</span>
               <span class="remain">￥{{orderInfo.voucher}}</span>
             </Checkbox>
+            <span style="float:right;line-height:31px">余额与现金券支付金额：{{accountPayCount}}元</span>
           </CheckboxGroup>
         </div>
         <div class="pay">
-          <div class="toggleWrapper">
-            <ul>
-              <li :class="{active:currentTab=='otherPay'}" @click="currentTab='otherPay'">在线支付</li>
-              <li :class="{active:currentTab=='outLine'}" @click="currentTab='outLine'">线下支付</li>
-            </ul>
+
+          <!--包年包月第三方支付页面-->
+          <div v-if="currentTab=='otherPay'&&orderInfo.timeType!=1">
+            <span style="margin-bottom: 20px;display:block;font-size: 14px;">第三方支付渠道<span style="float:right">使用其他支付需渠道金额：{{otherPayCount.toFixed(2)}}元</span></span>
+            <div class="payContent">
+              <RadioGroup v-model="otherPay" @on-change="otherPayChange">
+                <Radio label="ali" style="margin-right: 40px;">
+                  <img src="../../assets/img/payresult/alipay.png">
+                </Radio>
+                <Radio label="wx">
+                  <img src="../../assets/img/payresult/wxpay.png">
+                </Radio>
+              </RadioGroup>
+              <p style="font-size: 14px;margin-top: 20px;">除以上在线支付方式之外，您也可以使用<span style="color:#2A99F2;cursor: pointer"
+                                                                                   @click="currentTab='outLine'">线下汇款充值</span>的方式先充值到您的新睿云账户，再用账户余额进行支付。
+              </p>
+            </div>
           </div>
-          <div class="payContent" v-if="currentTab=='otherPay'">
-            <RadioGroup v-model="otherPay" @on-change="otherPayChange">
-              <Radio label="ali" style="margin-right: 40px;">
-                <img src="../../assets/img/payresult/alipay.png">
-              </Radio>
-              <Radio label="wx">
-                <img src="../../assets/img/payresult/wxpay.png">
-              </Radio>
-            </RadioGroup>
-            <div style="margin-top:20px;">
-              <Button type="primary" @click="pay">确认支付</Button>
+
+          <!--实时资源第三方支付页面-->
+          <div v-if="currentTab=='otherPay'&&orderInfo.timeType==1">
+            <span style="margin-bottom: 20px;display:block;font-size: 14px;">第三方支付渠道<span style="float:right">使用其他支付需渠道金额：{{rechargeValue!=otherPayCount?rechargeValue:otherPayCount.toFixed(2)}}元</span></span>
+            <p style="margin-bottom: 20px;color:rgba(153,153,153,1);line-height:16px;">
+              为保障您的服务体验，建议您在购买实时主机之时预留足够余额，避免频繁欠费充值。</p>
+            <div style="margin-bottom: 20px;">
+              <InputNumber :min="rechargeMin" v-model="rechargeValue" style="margin-right: 20px;"></InputNumber>
+              <div class="rechargeItem" v-for="item in rechargeArray" @click="resetRecharge(item)">{{item}}元</div>
+            </div>
+            <div class="payContent">
+              <RadioGroup v-model="otherPay" @on-change="otherPayChange">
+                <Radio label="ali" style="margin-right: 40px;">
+                  <img src="../../assets/img/payresult/alipay.png">
+                </Radio>
+                <Radio label="wx">
+                  <img src="../../assets/img/payresult/wxpay.png">
+                </Radio>
+              </RadioGroup>
+              <p style="font-size: 14px;margin-top: 20px;">除以上在线支付方式之外，您也可以使用<span style="color:#2A99F2;cursor: pointer"
+                                                                                   @click="currentTab='outLine'">线下汇款充值</span>的方式先充值到您的新睿云账户，再用账户余额进行支付。
+              </p>
             </div>
           </div>
 
@@ -49,7 +73,13 @@
                 ，会将汇款金额充值到您的注册账户。为了避免因账户欠帐影响您的正常使用，请务必至少提前三到五个工作日进行线下汇款
                 ，以免造成不必要的损失。</p>
             </div>
+            <p style="font-size: 14px;margin-top: 20px;">除以上线下汇款的支付方式之外，您也可以使用<span
+              style="color:#2A99F2;cursor: pointer"
+              @click="currentTab='otherPay'">线上充值</span>的方式先充值到您的新睿云账户。</p>
           </div>
+        </div>
+        <div style="margin-top:20px;" v-if="currentTab=='otherPay'">
+          <Button type="primary" @click="pay">确认支付</Button>
         </div>
       </div>
     </div>
@@ -67,19 +97,35 @@
         // 第三方支付
         otherPay: '',
         // 默认显示第三方支付
-        currentTab: 'otherPay'
+        currentTab: 'otherPay',
+        // 余额与现金券支付金额
+        accountPayCount: 0,
+
+        rechargeArray: [100, 500, 1000, 2000, 5000, 10000],
+
+        rechargeValue: 0,
+        rechargeMin: 0
       }
     },
     beforeRouteEnter(to, from, next){
       next()
     },
     created(){
-      this.orderInfo = this.$route.query
+      this.orderInfo = this.$route.params
       if (this.orderInfo.isUseVoucher == 1) {
         this.accountPay.push('voucher')
       }
       if (this.orderInfo.isUseVoucher == 1 && Number(this.orderInfo.voucher) < Number(this.orderInfo.money)) {
         this.accountPay.push('account')
+      }
+      // 充值有限制  不能少于10元
+      if (this.orderInfo.isNilNorm == 0) {
+        this.rechargeMin = 10
+        if (this.orderInfo.money - this.accountPayCount > 10) {
+          this.rechargeValue = this.orderInfo.money - this.accountPayCount
+        } else {
+          this.rechargeValue = 10
+        }
       }
     },
     methods: {
@@ -159,16 +205,32 @@
               ticket: this.orderInfo.ticket
             }
           }).then(response => {
-            console.log(response)
+            if (response.status == 200 && response.data.status == 1) {
+              sessionStorage.setItem('payResult', 'success')
+            } else {
+              sessionStorage.setItem('payResult', 'fail')
+            }
+            this.$router.push('payResult')
           })
         } else if (this.otherPay == 'ali') {
-
-          let total_fee = Number(this.orderInfo.money) - cost
           // 支付宝支付
-          window.open(`zfb/alipayapi.do?total_fee=${total_fee}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
+          if (this.orderInfo.timeType == 1) {
+            window.open(`zfb/alipayapi.do?total_fee=${this.rechargeValue.toFixed(2)}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
+          } else {
+            window.open(`zfb/alipayapi.do?total_fee=${this.otherPayCount.toFixed(2)}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
+          }
         } else if (this.otherPay == 'wx') {
-          window.open(`zfb/alipayapi.do?total_fee=${total_fee}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
+          if (this.orderInfo.timeType == 1) {
+            sessionStorage.setItem('total_fee', this.rechargeValue.toFixed(2))
+          } else {
+            sessionStorage.setItem('total_fee', this.otherPayCount.toFixed(2))
+          }
+          this.$router.push('wxpay')
         }
+      },
+      // 充值其他可选金额
+      resetRecharge(item){
+        this.rechargeValue = item
       }
     },
     computed: {
@@ -183,9 +245,37 @@
         if (this.accountPay.indexOf('voucher') > -1) {
 
         }
+      },
+      otherPayCount(){
+        if (this.orderInfo && this.otherPay != '') {
+          return this.orderInfo.money - this.accountPayCount
+        }
+        return 0
       }
     },
-    watch: {}
+    watch: {
+      accountPay(){
+        let count = 0
+        this.accountPay.forEach(item => {
+          if (item == 'voucher') {
+            count += Number(this.orderInfo.voucher)
+          } else {
+            count += Number(this.orderInfo.remainder)
+          }
+        })
+        this.accountPayCount = count > this.orderInfo.money ? this.orderInfo.money : count
+      },
+      otherPayCount(){
+        if (this.otherPayCount == 0) {
+          this.otherPay = ''
+        }
+        // 无限制
+        if (this.orderInfo.isNilNorm == 1) {
+          this.rechargeMin = this.otherPayCount
+          this.rechargeValue = this.otherPayCount
+        }
+      }
+    }
   }
 </script>
 
@@ -220,9 +310,7 @@
         }
         .title {
           display: block;
-          padding: 6px 10px;
-          background: rgb(238, 247, 254);
-          border: 1px solid rgb(173, 216, 247);
+          padding: 6px 0px;
           border-radius: 4px;
           margin-top: 20px;
           font-family: Microsoft Yahei, 微软雅黑;
@@ -236,7 +324,6 @@
             width: 13px;
             height: 13px;
             margin-right: 6px;
-            margin-left: 6px;
             text-align: center;
             border-radius: 50% 50%;
             background: #2A99F2;
@@ -245,7 +332,10 @@
           }
         }
         .accountInfo {
+          border: 1px solid rgb(233, 233, 233);
+          border-radius: 3px;
           margin: 20px 0px;
+          padding: 10px 15px;
           span {
             font-size: 14px;
             color: rgba(17, 17, 17, 0.65);
@@ -259,6 +349,9 @@
           }
         }
         .pay {
+          border: 1px solid rgb(233, 233, 233);
+          border-radius: 3px;
+          padding: 20px 15px;
           .toggleWrapper {
             border-bottom: 1px solid #f0f0f0;
             margin-bottom: 20px;
@@ -285,6 +378,14 @@
             img {
               vertical-align: middle;
             }
+          }
+          .rechargeItem {
+            display: inline-block;
+            border: 1px solid rgb(233, 233, 233);
+            border-radius: 4px;
+            margin-right: 20px;
+            padding: 6px 15px;
+            cursor: pointer;
           }
           .outLineContent {
             .hint {

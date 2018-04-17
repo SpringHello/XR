@@ -3,6 +3,7 @@
     <div class="wrapper">
       <div class="wrapper-form">
         <div class="banner">
+          <img src="../../assets/img/login/banner-text.png"  width="42%" style="margin-top:80px;"/>
         </div>
         <div class="login-form">
           <div class="head">
@@ -255,9 +256,10 @@
       }
     }
     .banner {
-      background: url(../../assets/img/login/login-banner.png) no-repeat center;
+      background:url(../../assets/img/login/login-banner.jpg) no-repeat center;
       height: 493px;
       width: 730px;
+      text-align: center;
     }
     .login-form {
       width: 421px;

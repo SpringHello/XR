@@ -825,7 +825,7 @@
           {
             title: '2C+4G+40G系统盘+5M 1年',
             discript: '适用于日常运营活动、企业办公环境、小型开发测试环境、普通数据处理服务等场景。',
-            node: '3c7270be-8394-4d22-934a-218c4e81eed1',
+            node: '1ce0d0b9-a964-432f-8078-a61100789e30',
             system: '',
             price: '¥1050.2／1年',
             oldPrice: '¥3500.64/年'
@@ -833,7 +833,7 @@
           {
             title: '4C+8G+40G系统盘+10M 1年',
             discript: '适用于高并发应用业务部署、高内存大数据分析处理、分布式分析等业务场景。',
-            node: '3c7270be-8394-4d22-934a-218c4e81eed1',
+            node: '1ce0d0b9-a964-432f-8078-a61100789e30',
             system: '',
             price: '¥3037.4／1年',
             oldPrice: '¥10124.64/年'
@@ -846,7 +846,7 @@
             memory: '4G内存',
             disk: '40G磁盘',
             bandWidth: '2mb/s带宽',
-            node: '3c7270be-8394-4d22-934a-218c4e81eed1',
+            node: '1ce0d0b9-a964-432f-8078-a61100789e30',
             system: '',
             price_one: '¥295.08／3个月',
             price_two: '¥472.128／6个月',
@@ -859,7 +859,7 @@
             memory: '8G内存',
             disk: '40G磁盘',
             bandWidth: '2mb/s带宽',
-            node: '3c7270be-8394-4d22-934a-218c4e81eed1',
+            node: '1ce0d0b9-a964-432f-8078-a61100789e30',
             system: '',
             price_one: '¥587.58／3个月',
             price_two: '¥940.128／6个月',
@@ -872,7 +872,7 @@
             memory: '16G内存',
             disk: '40G磁盘',
             bandWidth: '5mb/s带宽',
-            node: '3c7270be-8394-4d22-934a-218c4e81eed1',
+            node: '1ce0d0b9-a964-432f-8078-a61100789e30',
             system: '',
             price_one: '¥1193.00／3个月',
             price_two: '¥1909.728／6个月',
@@ -885,7 +885,7 @@
             memory: '32G内存',
             disk: '40G磁盘',
             bandWidth: '10mb/s带宽',
-            node: '3c7270be-8394-4d22-934a-218c4e81eed1',
+            node: '1ce0d0b9-a964-432f-8078-a61100789e30',
             system: '',
             price_one: '¥2656.08／3个月',
             price_two: '¥4249.728／6个月',
@@ -1032,7 +1032,7 @@
           }
         })
       },
-      buyNow_two(item, index, month) {
+      buyNow_two(item, index, val) {
         if (this.userInfo == null) {
           this.loginModal = true
           return
@@ -1042,30 +1042,30 @@
           return
         }
         var vmConfigId = ''
-        var hostType = index + month
+        var hostType = index + ''+ val
         switch (hostType) {
-          case 3:
+          case '03':
             vmConfigId = '13'
             break;
-          case 6:
+          case '06':
             vmConfigId = '14'
             break;
-          case 4:
+          case '13':
             vmConfigId = '15'
             break;
-          case 7:
+          case '16':
             vmConfigId = '16'
             break;
-          case 5:
+          case '23':
             vmConfigId = '17'
             break;
-          case 8:
+          case '26':
             vmConfigId = '18'
             break;
-          case 6:
+          case '33':
             vmConfigId = '19'
             break;
-          case 9:
+          case '36':
             vmConfigId = '20'
             break;
         }

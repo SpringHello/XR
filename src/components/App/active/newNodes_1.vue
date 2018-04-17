@@ -116,13 +116,13 @@
                     <p>「5折后参考价」</p>
                     <p>{{ item.price_one}}</p>
                     <p>{{item.oldPrice_one}}</p>
-                    <button @click="buyNow_two(item,index,3)">立即抢购</button>
+                    <button @click="buyNow_two(item,index,'3')">立即抢购</button>
                   </div>
                   <div class="info_right" style="border: none">
                     <p>「4折后参考价」</p>
                     <p>{{ item.price_two}}</p>
                     <p>{{item.oldPrice_two}}</p>
-                    <button @click="buyNow_two(item,index,6)">立即抢购</button>
+                    <button @click="buyNow_two(item,index,'6')">立即抢购</button>
                   </div>
                 </div>
               </div>
@@ -1035,7 +1035,7 @@
           }
         })
       },
-      buyNow_two(item, index, month) {
+      buyNow_two(item, index, val) {
         if (this.userInfo == null) {
           this.loginModal = true
           return
@@ -1045,30 +1045,30 @@
           return
         }
         var vmConfigId = ''
-        var hostType = index + month
+        var hostType = index + ''+ val
         switch (hostType) {
-          case 3:
+          case '03':
             vmConfigId = '23'
             break;
-          case 6:
+          case '06':
             vmConfigId = '24'
             break;
-          case 4:
+          case '13':
             vmConfigId = '25'
             break;
-          case 7:
+          case '16':
             vmConfigId = '26'
             break;
-          case 5:
+          case '23':
             vmConfigId = '27'
             break;
-          case 8:
+          case '26':
             vmConfigId = '28'
             break;
-          case 6:
+          case '33':
             vmConfigId = '29'
             break;
-          case 9:
+          case '36':
             vmConfigId = '30'
             break;
         }

@@ -3,6 +3,7 @@
     <div class="wrapper">
       <div class="wrapper-form">
         <div class="banner">
+          <img src="../../assets/img/login/banner-text.png"  width="42%" style="margin-top:80px;"/>
         </div>
         <div class="login-form">
           <div class="head">
@@ -213,7 +214,11 @@
         if (regExp.phoneVail(this.form.loginname)) {
           this.isemail = '0'
         }
-        axios.get(`user/code.do?aim=${this.form.loginname}&isemail=0&vailCode=${this.form.code}`).then(response => {
+        let isemail = 0
+        if (this.form.loginname.indexOf('@') > -1) {
+          isemail = 1
+        }
+        axios.get(`user/code.do?aim=${this.form.loginname}&isemail=${isemail}&vailCode=${this.form.code}`).then(response => {
           let countdown = 60
           this.codePlaceholder = '60s'
           var inter = setInterval(() => {
@@ -316,9 +321,10 @@
       }
     }
     .banner {
-      background: url(../../assets/img/login/login-banner.png) no-repeat center;
+      background:url(../../assets/img/login/login-banner.jpg) no-repeat center;
       height: 493px;
       width: 730px;
+      text-align: center;
     }
     .login-form {
       width: 421px;

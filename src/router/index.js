@@ -605,8 +605,8 @@ var router = new Router({
         {path: 'vpn', name: 'vpn', component: Vpn},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
         {path: 'ip', name: 'ip', component: Ip},
-        {path: 'order', name: 'order', component: Order},
-        {path: 'order1', name: 'order1', component: Order1},
+        /*{path: 'order', name: 'order', component: Order},*/
+        {path: 'order', name: 'order', component: Order1},
         {path: 'payResult', name: 'payResult', component: PayResult},
         {path: 'result', name: 'result', component: Result},
         {path: 'expenses', name: 'expenses', component: Expenses},
