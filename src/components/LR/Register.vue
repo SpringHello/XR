@@ -488,7 +488,7 @@
               content: '注册成功',
               duration: 3
             });
-            this.$router.push('login');
+            this.$router.push('registerSuccess');
           } else {
             this.$Message.error({
               content: response.data.message
