@@ -620,17 +620,22 @@
           var internalLoadbalance = this.balanceSelection._internal ? '1' : ''
           var balanceId = this.balanceSelection.loadbalanceroleid || this.balanceSelection.lbid
           this.showModal.bind = true
-          var url = `network/showLoadBalanceVM.do?netwrokId=${this.balanceSelection.networkid}&internalLoadbalance=${internalLoadbalance}&loadbalanceId=${balanceId}`
-          this.$http.get(url).then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.bindHostForm.vmOptions = response.data.result
-            } else {
-              this.$message.info({
-                content: response.data.message
-              })
+          this.$http.get('network/showLoadBalanceVM.do', {
+            params: {
+              netwrokId: this.balanceSelection.networkid,
+              internalLoadbalance: internalLoadbalance,
+              loadbalanceId: balanceId
             }
-          })
-        }
+          }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.bindHostForm.vmOptions = response.data.result
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
       },
       /* 负载均衡确定绑定虚拟机 */
       bindHost_ok () {
@@ -642,13 +647,24 @@
           }
         })
         if (this.bindHostForm.vm.length != 0) {
-          var url = ``
+          var url = ''
+          var params = {}
           if (this.balanceSelection._internal) {
-            url = `loadbalance/assignToInternalLoadBalancerRule.do?VMIds=${this.bindHostForm.vm}&lbId=${this.balanceSelection.lbid}&_t=${new Date().toTimeString()}`
+            url = 'loadbalance/assignToInternalLoadBalancerRule.do'
+            params = {
+              VMIds: this.bindHostForm.vm,
+              lbId: this.balanceSelection.lbid,
+              _t: new Date().toTimeString(),
+            }
           } else {
-            url = `loadbalance/assignToLoadBalancerRule.do?VMIds=${this.bindHostForm.vm}&roleId=${this.balanceSelection.loadbalanceroleid}&_t=${new Date().toTimeString()}`
+            url = 'loadbalance/assignToLoadBalancerRule.do'
+            params = {
+              VMIds: this.bindHostForm.vm,
+              lbId: this.balanceSelection.loadbalanceroleid,
+              _t: new Date().toTimeString(),
+            }
           }
-          this.$http.get(url).then(response => {
+          this.$http.get(url,{params}).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.refresh()
               this.$Message.success({
@@ -672,8 +688,13 @@
           this.showModal.unbind = true
           var loadbalanceType = this.balanceSelection._internal ? '' : '1'
           var roleId = this.balanceSelection.loadbalanceroleid || this.balanceSelection.lbid
-          var url = `loadbalance/listVmByRoleId.do?roleId=${roleId}&loadbalanceType=${loadbalanceType}`
-          this.$http.get(url).then(response => {
+          var url = `loadbalance/listVmByRoleId.do`
+          this.$http.get(url,{
+            params: {
+              roleId: roleId,
+              loadbalanceType: loadbalanceType
+            }
+          }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.unbindForm.hostList = response.data.result
             } else {
@@ -694,13 +715,22 @@
           }
         })
         if (this.unbindForm.vm.length != 0) {
-          var url = ``
+          var url = ''
+          var params = {}
           if (this.balanceSelection._internal) {
-            url = `loadbalance/removeFromInternalLoadBalancerRule.do?VMIds=${this.unbindForm.vm}&lbId=${this.balanceSelection.lbid}`
+            url = `loadbalance/removeFromInternalLoadBalancerRule.do`
+            params = {
+              VMIds: this.unbindForm.vm,
+              lbId: this.balanceSelection.lbid
+            }
           } else {
-            url = `loadbalance/removeFromLoadBalancerRule.do?VMIds=${this.unbindForm.vm}&roleId=${this.balanceSelection.loadbalanceroleid}`
+            url = `loadbalance/removeFromLoadBalancerRule.do`
+            params = {
+              VMIds: this.unbindForm.vm,
+              roleId: this.balanceSelection.loadbalanceroleid
+            }
           }
-          this.$http.get(url).then(response => {
+          this.$http.get(url,{params}).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.success({
                 content: response.data.message
@@ -727,9 +757,9 @@
             onOk: () => {
               var url = ''
               if (this.balanceSelection._internal) {
-                url = `loadbalance/deleteInternalLB.do?id=${this.balanceSelection.id}`
+                url = 'loadbalance/deleteInternalLB.do'
               } else {
-                url = `loadbalance/deleteLoadBalancerRule.do?id=${this.balanceSelection.id}`
+                url = 'loadbalance/deleteLoadBalancerRule.do'
               }
               this.balData.forEach(item => {
                 if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
@@ -737,7 +767,11 @@
                   item._disabled = true
                 }
               })
-              this.$http.get(url).then(response => {
+              this.$http.get(url,{
+                params:{
+                id: this.balanceSelection.id
+                }
+              }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.$Message.success({
                     content: response.data.message

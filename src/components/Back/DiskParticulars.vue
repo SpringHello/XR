@@ -482,8 +482,18 @@
       /* 确认以备份创建新磁盘，跳转订单*/
       createBackupsToDisk_ok () {
         var diskType = this.diskForm.diskType === '超高性能型' ? 'ssd' : this.diskForm.diskType === '性能型' ? 'sas' : 'sata'
-        var url = `Disk/createVolume.do?diskSize=${this.diskForm.diskSize}&diskName=${this.diskForm.diskName}&diskOfferingId=${diskType}&timeType=${this.diskForm.timeType}&timeValue=${this.diskForm.timeValue || 1}&diskSnapshotId=${this.diskForm.diskSnapshotId}&isAutorenew=0&count=${this.diskForm.quantity}`
-        this.$http.get(url).then(response => {
+        this.$http.get('Disk/createVolume.do',{
+          params: {
+            diskSize: this.diskForm.diskSize,
+            diskName: this.diskForm.diskName,
+            diskOfferingId: diskType,
+            timeType: this.diskForm.timeType,
+            timeValue: this.diskForm.timeValue || 1,
+            diskSnapshotId: this.diskForm.diskSnapshotId,
+            isAutorenew: 0,
+            count: this.diskForm.quantity
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
@@ -524,7 +534,13 @@
       },
       // 磁盘扩容价格查询
       queryDiskCost: debounce(500, function () {
-        axios.get(`Disk/UpDiskConfigCost.do?diskId=${this.diskInfo.diskid}&diskSize=${this.dilatationForm.diskSize}&zoneId=${this.diskInfo.zoneid}`).then(response => {
+        axios.get('Disk/UpDiskConfigCost.do',{
+          params: {
+            diskId: this.diskInfo.diskid,
+            diskSize: this.dilatationForm.diskSize,
+            zoneId: this.diskInfo.zoneid
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskSizeExpenses = response.data.result
           }
@@ -557,7 +573,12 @@
       }),
       /* 确认扩容磁盘 */
       adjustDisk_ok(){
-        this.$http.get('Disk/UpDiskConfig.do?diskId=' + this.diskInfo.diskid + '&diskSize=' + this.dilatationForm.diskSize).then(response => {
+        this.$http.get('Disk/UpDiskConfig.do',{
+          params: {
+            diskId: this.diskInfo.diskid,
+            diskSize: this.dilatationForm.diskSize
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             // this.$store.commit('setSelect', 'order')
             this.$router.push('order')
@@ -581,8 +602,13 @@
       },
       /* 列出磁盘备份 */
       listDiskSnapshots () {
-        var url = `Snapshot/listDiskSnapshots.do?pageSize=10&page=${this.diskBackupPage}&diskId=${this.diskInfo.diskid}`
-        this.$http.get(url).then(response => {
+        this.$http.get('Snapshot/listDiskSnapshots.do',{
+          params: {
+            pageSize: 10,
+            page: this.diskBackupPage,
+            diskId: this.diskInfo.diskid
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskBackupsData = response.data.result
             this.diskBackupsTotal = response.data.total
@@ -601,8 +627,12 @@
           status: 3,
         }
         this.diskBackupsData.push(diskBackup)
-        var url = `Snapshot/createDiskSnapshot.do?diskId=${this.diskInfo.diskid}&name=${this.createBackupsForm.backupsName}`
-        this.$http.get(url).then(response => {
+        this.$http.get('Snapshot/createDiskSnapshot.do',{
+          params: {
+            diskId: this.diskInfo.diskid,
+            name: this.createBackupsForm.backupsName
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.info(response.data.message)
             this.listDiskSnapshots()
@@ -617,8 +647,12 @@
       /* 删除磁盘备份 */
       deleteDiskBackup () {
         if (this.diskBackupsSelection) {
-          var url = `Snapshot/deleteDiskSnapshot.do?id=${this.diskBackupsSelection.id}&zoneId=${this.diskBackupsSelection.zoneid}`
-          axios.get(url).then(response => {
+          axios.get('Snapshot/deleteDiskSnapshot.do',{
+            params: {
+              id: this.diskBackupsSelection.id,
+              zoneId: this.diskBackupsSelection.zoneid
+            }
+          }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.info(response.data.message)
               this.listDiskSnapshots()
@@ -639,8 +673,11 @@
       },
       /* 获取磁盘监控数据 */
       getDiskAlarmByDay () {
-        var url = `alarm/getDiskAlarmByDay.do?diskId=${this.diskInfo.diskid}`
-        this.$http.get(url).then(response => {
+        this.$http.get('alarm/getDiskAlarmByDay.do',{
+          params: {
+            diskId: this.diskInfo.diskid
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.rwPolar.series[0].data = response.data.result.rwPolar
             this.rwPolar.xAxis.data = response.data.result.xaxis

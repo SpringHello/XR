@@ -236,7 +236,6 @@
     methods: {
       getData(type){
         let pageInfo = this[type + 'PageInfo']
-        let url = `user/getEventNotifyList.do?rows=${pageInfo.pageSize}&page=${pageInfo.currentPage}`
         if (this.searchInfo.searchStartDate != '') {
           url += '&starttime=' + this.searchInfo.searchStartDate
           url += '&endtime=' + this.searchInfo.searchEndDate
@@ -251,7 +250,12 @@
         } else if (type == 'all') {
           url += '&isRead=2'
         }
-        this.$http.get(url).then(response => {
+        this.$http.get('user/getEventNotifyList.do',{
+          params: {
+            rows: pageInfo.pageSize,
+            page: pageInfo.currentPage
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this[type + 'Data'] = response.data.result
             pageInfo.total = parseInt(response.data.pageTotal)

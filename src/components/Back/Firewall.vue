@@ -280,8 +280,12 @@
         this.showModal.applyFirewall = false
         this.loadingMessage = '正在应用防火墙规则，请稍候'
         this.loading = true
-        var url = `network/replaceNetworkACLList.do?aclListId=${this.select.acllistid}&networkId=${this.applyFirewallForm.network}`
-        this.$http.get(url).then(response => {
+        this.$http.get('network/replaceNetworkACLList.do',{
+          params: {
+            aclListId: this.select.acllistid,
+            networkId: this.applyFirewallForm.network
+          }
+        }).then(response => {
           this.showModal.applyFirewall = false
           this.applyFirewallForm.networkOptions = []
           if (response.status == 200 && response.data.status == 1) {
@@ -324,8 +328,12 @@
       },
       // 修改防火墙
       modify(){
-        var url = `network/updateAclList.do?name=${this.modifyForm.name}&aclListId=${this.select.acllistid}`
-        this.$http.get(url).then(response => {
+        this.$http.get('network/updateAclList.do',{
+          params: {
+            name: this.modifyForm.name,
+            aclListId: this.select.acllistid
+          }
+        }).then(response => {
           this.showModal.modify = false
           this.modifyForm.name = ''
           if (response.status == 200 && response.data.status == 1) {
@@ -350,8 +358,11 @@
         }
         this.loadingMessage = '正在删除防火墙，请稍候'
         this.loading = true
-        var url = `network/delAclList.do?id=${this.select.id}`
-        this.$http.get(url).then(response => {
+        this.$http.get('network/delAclList.do',{
+          params: {
+            id: this.select.id
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.loading = false
             this.$Message.success(response.data.message)
