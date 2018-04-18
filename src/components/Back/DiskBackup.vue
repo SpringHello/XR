@@ -646,9 +646,14 @@
       }
     },
     beforeRouteEnter(to, from, next) {
-      var zoneId = $store.state.zone.zoneid
       // 获取备份列表数据
-      var diskBackupsResponse = axios.get(`Snapshot/listDiskSnapshots.do?zoneId=${zoneId}&page=1&pageSize=10`)
+      var diskBackupsResponse = axios.get('Snapshot/listDiskSnapshots.do',{
+        params: {
+          zoneId: $store.state.zone.zoneid,
+          page: 1,
+          pageSize: 10
+        }
+      })
       Promise.all([diskBackupsResponse]).then((ResponseValue) => {
         next(vm => {
           vm.setDiskBackups(ResponseValue[0])
@@ -905,8 +910,12 @@
         var diskParams = this.resourceDisk.map(function (item) {
           return item.resourcesId
         })
-        var url = `Disk/updateDiskIntoBackUpStrategy.do?backUpStrategyId=${this.strategyId}&diskIds=${diskParams.join(',')}`
-        this.$http.get(url).then(response => {
+        this.$http.get('Disk/updateDiskIntoBackUpStrategy.do',{
+          params: {
+            backUpStrategyId: this.strategyId,
+            diskIds: diskParams.join(',')
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success({
               content: response.data.message
@@ -1005,8 +1014,12 @@
       },
       /* 列出磁盘备份 */
       listDiskSnapshots () {
-        var url = `Snapshot/listDiskSnapshots.do?pageSize=10&page=${this.diskBackupPage}`
-        this.$http.get(url).then(response => {
+        this.$http.get('Snapshot/listDiskSnapshots.do',{
+          params: {
+            pageSize: 10,
+            page: this.diskBackupPage
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskBackupsData = response.data.result
             this.diskBackupsTotal = response.data.total
@@ -1042,8 +1055,15 @@
       },
       /* 确认创建磁盘备份策略 */
       createDiskBackupStrategy_ok () {
-        var url = `Disk/createDiskBackUpStrategy.do?strategyName=${this.backupsForm.backupsName}&keepCount=${this.backupsForm.keepNumber}&keepInterval=${this.backupsForm.timeType}&autoBackUpTime=${this.backupsForm.timeValue}&diskIds=${this.backupsForm.strategyForDisk}`
-        this.$http.get(url).then(response => {
+        this.$http.get('Disk/createDiskBackUpStrategy.do',{
+          params: {
+            strategyName: this.backupsForm.backupsName,
+            keepCount: this.backupsForm.keepNumber,
+            keepInterval: this.backupsForm.timeType,
+            autoBackUpTime: this.backupsForm.timeValue,
+            diskIds: this.backupsForm.strategyForDisk
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.showModal.backupsStrategy = false
             this.tabPane = 'diskBackupsStrategy'
@@ -1061,8 +1081,7 @@
       },
       /* 列出磁盘备份策略 */
       listDiskBackUpStrategy () {
-        var url = `Disk/listDiskBackUpStrategy.do`
-        this.$http.get(url).then(response => {
+        this.$http.get('Disk/listDiskBackUpStrategy.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskBackupsStrategyData = response.data.result
             this.diskSelectionStrategy = null
@@ -1083,9 +1102,18 @@
       },
       /* 确认以备份创建新磁盘，跳转订单*/
       createBackupsToDisk_ok () {
-        var diskType = this.diskForm.diskType === '超高性能型' ? 'ssd' : this.diskForm.diskType === '性能型' ? 'sas' : 'sata'
-        var url = `Disk/createVolume.do?diskSize=${this.diskForm.diskSize}&diskName=${this.diskForm.diskName}&diskOfferingId=${diskType}&timeType=${this.diskForm.timeType}&timeValue=${this.diskForm.timeValue || 1}&diskSnapshotId=${this.diskForm.diskSnapshotId}&isAutorenew=0&count=1`
-        this.$http.get(url).then(response => {
+        this.$http.get('Disk/createVolume.do',{
+          params: {
+            diskSize: this.diskForm.diskSize,
+            diskName: this.diskForm.diskName,
+            diskOfferingId: diskType,
+            timeType: this.diskForm.timeType,
+            timeValue: this.diskForm.timeValue || 1,
+            diskSnapshotId: this.diskForm.diskSnapshotId,
+            isAutorenew: 0,
+            count: 1
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
@@ -1121,8 +1149,12 @@
           status: 3,
         }
         this.diskBackupsData.push(diskBackup)
-        var url = `Snapshot/createDiskSnapshot.do?diskId=${this.createBackupsForm.diskId}&name=${this.createBackupsForm.backupsName}`
-        this.$http.get(url).then(response => {
+        this.$http.get('Snapshot/createDiskSnapshot.do',{
+          params: {
+            diskId: this.createBackupsForm.diskId,
+            name: this.createBackupsForm.backupsName
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.info(response.data.message)
             this.listDiskSnapshots()
@@ -1142,8 +1174,12 @@
               item.status = 2
             }
           })
-          var url = `Snapshot/deleteDiskSnapshot.do?id=${this.diskBackupsSelection.id}&zoneId=${this.diskBackupsSelection.zoneid}`
-          axios.get(url).then(response => {
+          axios.get('Snapshot/deleteDiskSnapshot.do',{
+            params: {
+              id: this.diskBackupsSelection.id,
+              zoneId: this.diskBackupsSelection.zoneid
+            }
+          }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.success(response.data.message)
               this.diskBackupsSelection = null
@@ -1184,8 +1220,12 @@
               item.status = 2
             }
           })
-          var url = `Disk/deleteDiskBackUpStrategy.do?id=${this.diskSelectionStrategy.id}&zoneId=${this.diskSelectionStrategy.zoneid}`
-          axios.get(url).then(response => {
+          axios.get('Disk/deleteDiskBackUpStrategy.do',{
+            params: {
+              id: this.diskSelectionStrategy.id,
+              zoneId: this.diskSelectionStrategy.zoneid
+            }
+          }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.info('磁盘备份策略删除成功')
               this.listDiskBackUpStrategy()
