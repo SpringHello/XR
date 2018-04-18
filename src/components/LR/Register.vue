@@ -3,7 +3,7 @@
     <div class="wrapper">
       <div class="wrapper-form">
         <div class="banner" v-show="loginShow">
-          <img src="../../assets/img/login/banner-text.png"  width="42%" style="margin-top:80px;"/>
+          <img src="../../assets/img/login/banner-text.png" width="42%" style="margin-top:80px;"/>
         </div>
         <div class="login-form" v-show="loginShow">
           <div class="head">
@@ -420,7 +420,11 @@
             this.vailForm.loginname.info = messageMap.loginname.placeholder
           }
           if (field == 'loginname') {
-            axios.get('user/isRegister.do?username=' + this.form.loginname).then(response => {
+            axios.get('user/isRegister.do', {
+              params: {
+                username: this.form.loginname
+              }
+            }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
 
               } else {
@@ -437,21 +441,6 @@
         if (text == '') {
           this.vailForm[field].info = messageMap[field].placeholder
         }
-        //var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.registerPasswordVail(text) : true;
-
-        /*if (!isLegal) {
-         this.vailForm[field].info = messageMap[field].errorMessage;
-         } else {
-         this.$http.get('user/isRegister.do?username=' + this.form.loginname).then(response => {
-         if (response.status == 200 && response.data.status == 1) {
-         this.vailForm[field].message = messageMap[field].placeholder;
-         this.vailForm[field].warning = false;
-         } else {
-         this.vailForm[field].message = messageMap[field].warnMessage;
-         this.vailForm[field].warning = true;
-         }
-         })
-         }*/
       },
       isCorrect(field){
         if (field == 'vailCode') {
@@ -483,7 +472,13 @@
         this.agree = !this.agree;
       },
       submit(){
-        axios.get('user/register.do?username=' + this.form.loginname + '&password=' + this.form.password + '&code=' + this.form.vailCode).then(response => {
+        axios.get('user/register.do', {
+          params: {
+            username: this.form.loginname,
+            password: this.form.password,
+            code: this.form.vailCode
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success({
               content: '注册成功',
@@ -514,7 +509,14 @@
           this.isemail = '0'
         }
         this.codePlaceholder = '验证码发送中'
-        axios.get('user/code.do?aim=' + this.form.loginname + '&type=' + this.type + '&isemail=' + this.isemail + '&vailCode=' + this.form.code).then(response => {
+        axios.get('user/code.do', {
+          params: {
+            aim: this.form.loginname,
+            type: this.type,
+            isemail: this.isemail,
+            vailCode: this.form.code,
+          }
+        }).then(response => {
           this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
           // 发送倒计时
           let countdown = 60
@@ -604,7 +606,7 @@
       }
     }
     .banner {
-      background:url(../../assets/img/login/login-banner.jpg) no-repeat center;
+      background: url(../../assets/img/login/login-banner.jpg) no-repeat center;
       height: 493px;
       width: 730px;
       text-align: center;

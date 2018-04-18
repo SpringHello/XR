@@ -411,7 +411,7 @@
   import hostDiskHistogram from '@/echarts/hostDiskHistogram'
   import ipOptions from '@/echarts/ipOptions'
   import ipHistogram from '@/echarts/ipHistogram'
-  
+
   var urlList = {
     dayURL: 'alarm/getVmAlarmByHour.do',
     otherURL: 'alarm/getVmAlarmByDay.do'
@@ -456,7 +456,7 @@
       const validaSinginName = (rule, value, callback) => {
         if (!value) {
           callback(new Error('密码不能为空'));
-        } else if (value.length<8) {
+        } else if (value.length < 8) {
           callback(new Error('长度至少为8位'));
         } else {
           callback();
@@ -1004,9 +1004,14 @@
       reloadSubm() {
         this.showModal.reload = false
         this.reloadhintForm.input = ''
-        var url = `information/restoreVirtualMachine.do?VMId=${this.computerInfo.computerId}&templateId=${this.reloadForm.system}&adminPassword=${this.reloadForm.password}`
         this.reloadButton = '正在重装...'
-        this.$http.get(url).then(response => {
+        this.$http.get('information/restoreVirtualMachine.do', {
+          params: {
+            VMId: this.computerInfo.computerId,
+            templateId: this.reloadForm.system,
+            adminPassword: this.reloadForm.password
+          }
+        }).then(response => {
           this.reloadButton = '确认重装'
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
