@@ -411,7 +411,7 @@
   import hostDiskHistogram from '@/echarts/hostDiskHistogram'
   import ipOptions from '@/echarts/ipOptions'
   import ipHistogram from '@/echarts/ipHistogram'
-  
+
   var urlList = {
     dayURL: 'alarm/getVmAlarmByHour.do',
     otherURL: 'alarm/getVmAlarmByDay.do'
@@ -456,7 +456,7 @@
       const validaSinginName = (rule, value, callback) => {
         if (!value) {
           callback(new Error('密码不能为空'));
-        } else if (value.length<8) {
+        } else if (value.length < 8) {
           callback(new Error('长度至少为8位'));
         } else {
           callback();
@@ -826,7 +826,7 @@
       //   this.computerInfo = JSON.parse(sessionStorage.getItem('oneHostinfo'))
       // }
       this.snapsId = this.$route.query.vmid
-      axios.get('information/listVMByComputerId.do',{
+      axios.get('information/listVMByComputerId.do', {
         params: {
           VMId: this.$route.query.vmid,
           zoneId: this.$route.query.zoneid
@@ -848,7 +848,7 @@
               })
           }
         })
-      this.$http.get('alarm/getVmAlarmByHour.do',{
+      this.$http.get('alarm/getVmAlarmByHour.do', {
         params: {
           vmname: this.$route.query.instancename,
           type: 'core'
@@ -874,7 +874,7 @@
       //       this.tableData = response.data.result
       //     }
       //   })
-      this.$http.get('alarm/getVmAlarmByHour.do',{
+      this.$http.get('alarm/getVmAlarmByHour.do', {
         params: {
           vmname: this.$route.query.instancename,
           type: 'network'
@@ -900,7 +900,7 @@
     methods: {
       inter() {
         this.intervalSnapsList = setInterval(() => {
-          axios.get('Snapshot/listVMSnapshot.do',{
+          axios.get('Snapshot/listVMSnapshot.do', {
             params: {
               zoneId: $store.state.zone.zoneid,
               resourceType: 1,
@@ -934,7 +934,7 @@
       },
       search(){
         // log/queryLog.do    操作日志   pageSize(1页显示多少条),currentPage（第几页）,target（主机则传 host）  , queryTime（查询时间  格式： 开始时间 , 结束时间  非必传）
-        this.$http.get('log/queryLog.do',{
+        this.$http.get('log/queryLog.do', {
           params: {
             pageSize: this.pageSize,
             currentPage: his.currentPage,
@@ -1009,7 +1009,7 @@
         this.showModal.rollback = false
         this.loadingMessage = '正在回滚主机'
         this.loading = true
-        axios.get('Snapshot/revertToVMSnapshot.do',{
+        axios.get('Snapshot/revertToVMSnapshot.do', {
           params: {
             snapshotId: this.cursnapshot.snapshotid,
             zoneId: $store.state.zone.zoneid
@@ -1033,7 +1033,7 @@
         this.showModal.reload = false
         this.reloadhintForm.input = ''
         this.reloadButton = '正在重装...'
-        this.$http.get('information/restoreVirtualMachine.do',{
+        this.$http.get('information/restoreVirtualMachine.do', {
           params: {
             VMId: this.computerInfo.computerId,
             templateId: this.reloadForm.system,
@@ -1054,7 +1054,7 @@
       },
       // 获取具体主机下的快照列表
       getsnapsList() {
-        axios.get('Snapshot/listVMSnapshot.do',{
+        axios.get('Snapshot/listVMSnapshot.do', {
           params: {
             zoneId: $store.state.zone.zoneid,
             resourceType: 1,
@@ -1092,7 +1092,7 @@
             item.status = 3
           }
         })
-        axios.get('Snapshot/deleteVMSnapshot.do',{
+        axios.get('Snapshot/deleteVMSnapshot.do', {
           params: {
             zoneId: $store.state.zone.zoneid,
             ids: this.snapsSelection.id
@@ -1234,7 +1234,7 @@
           if (valid) {
             var password = this.resetPasswordForm.newPassword
             this.resetPasswordForm.buttonMessage = '正在重置中...'
-            this.$http.get('information/resetPasswordForVirtualMachine.do',{
+            this.$http.get('information/resetPasswordForVirtualMachine.do', {
               params: {
                 VMId: this.computerInfo.computerId,
                 password: this.resetPasswordForm.newPassword,
@@ -1267,7 +1267,7 @@
       },
       setMonitoring() {
         this.showModal.setMonitoringForm = true
-        this.$http.get('information/alarmConfig.do',{
+        this.$http.get('information/alarmConfig.do', {
           params: {
             instancename: this.$route.query.instancename
           }
@@ -1293,7 +1293,7 @@
         this.isLetter = this.isletter == true ? 1 : 0
         this.isEmailAlarm = this.isemailalarm == true ? 1 : 0
         this.isSmsAlarm = this.issmsalarm == true ? 1 : 0
-        this.$http.get('information/upalarmConfig.do',{
+        this.$http.get('information/upalarmConfig.do', {
           params: {
             instancename: this.$route.query.instancename,
             cpuUse: this.setCPU,
