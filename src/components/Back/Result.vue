@@ -185,12 +185,21 @@
               content: '请选择支付方式'
             })
             return
-          } else if (this.accountPay.length == 1 && Number(this.orderInfo.remainder) < Number(this.orderInfo.money)) {
+          } else if (this.accountPay.length == 1) {
+            // 选中余额支付
+            if (this.accountPay[0] == 'account' && Number(this.orderInfo.remainder) < Number(this.orderInfo.money)) {
+              this.$message.info({
+                content: '账户余额不足'
+              })
+              return
+            } else if (this.accountPay[0] == 'voucher' && Number(this.orderInfo.voucher) < Number(this.orderInfo.money)) {
+              // 选中现金券
+              this.$message.info({
+                content: '账户余额不足'
+              })
+              return
+            }
             cost += Number(this.orderInfo.remainder)
-            this.$message.info({
-              content: '账户余额不足'
-            })
-            return
           } else if (this.accountPay.length == 2 && Number(this.orderInfo.remainder) + Number(this.orderInfo.voucher) < Number(this.orderInfo.money)) {
             cost += Number(this.orderInfo.remainder) + Number(this.orderInfo.voucher)
             this.$message.info({

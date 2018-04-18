@@ -1882,8 +1882,12 @@
       },
       // 重置密码
       resetPassword_ok() {
-        var url = `user/updatePassword.do?password=${this.resetPasswordForm.newPassword}&oldpassword=${this.resetPasswordForm.oldPassword}`
-        this.$http.get(url).then(response => {
+        this.$http.get('user/updatePassword.do', {
+          params: {
+            password: this.resetPasswordForm.newPassword,
+            oldpassword: this.resetPasswordForm.oldPassword
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.showModal.modifyPassword = false
             this.$Message.success(response.data.message)
