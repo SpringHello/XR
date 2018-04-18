@@ -1733,8 +1733,14 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.showModal.addLinkman = false;
-            var url = `user/addcontacts.do?username=${this.addLinkmanForm.name}&phone=${this.addLinkmanForm.phone}&email=${this.addLinkmanForm.email}`;
-            this.$http.get(url).then(response => {
+            var url = 'user/addcontacts.do'
+            this.$http.get(url, {
+              params: {
+                username: this.addLinkmanForm.name,
+                phone: this.addLinkmanForm.phone,
+                email: this.addLinkmanForm.email
+              }
+            }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
                 this.getContacts()
@@ -1760,8 +1766,15 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.showModal.updateLinkman = false
-            var url = `user/updateContacts.do?id=${this.updateLinkmanForm.id}&username=${this.updateLinkmanForm.name}&phone=${this.updateLinkmanForm.phone}&email=${this.updateLinkmanForm.email}`
-            this.$http.get(url).then(response => {
+            var url = 'user/updateContacts.do'
+            this.$http.get(url, {
+              params: {
+                id: this.updateLinkmanForm.id,
+                username: this.updateLinkmanForm.name,
+                phone: this.updateLinkmanForm.phone,
+                email: this.updateLinkmanForm.email
+              }
+            }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
                 this.getContacts()
@@ -1774,8 +1787,10 @@
       },
       /* 删除联系人 */
       delContacts(id) {
-        var url = `user/delContacts.do?id=${id}`
-        this.$http.get(url).then(response => {
+        var url = 'user/delContacts.do'
+        this.$http.get(url, {
+          id: id
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
             this.getContacts()
@@ -1856,8 +1871,14 @@
       next(type) {
         var aim = type == 'phone' ? this.userInfo.phone : this.userInfo.loginname
         var isemail = type == 'phone' ? 0 : 1
-        var url = `user/judgeCode.do?aim=${aim}&code=${this.newPhoneForm.oldPhoneCode}&isemail=${isemail}`
-        this.$http.get(url).then(response => {
+        var url = 'user/judgeCode.do'
+        this.$http.get(url, {
+          params: {
+            aim: aim,
+            code: this.newPhoneForm.oldPhoneCode,
+            isemail: isemail
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.showModal.authByPhone = false
             this.showModal.authByEmail = false
@@ -1900,8 +1921,15 @@
       getVerCode(type) {
         var isemail = type == 'email' ? 1 : 0
         var aim = type == 'email' ? this.userInfo.loginname : this.userInfo.phone
-        var url = `user/code.do?vailCode=${this.code}&type=0&isemail=${isemail}&aim=${aim}`
-        this.$http.get(url).then(response => {
+        var url = 'user/code.do'
+        this.$http.get(url, {
+          params: {
+            vailCode: this.code,
+            type: 0,
+            isemail: isemail,
+            aim: aim
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
             var timeOut = 60
@@ -1963,8 +1991,13 @@
 
       // 更新手机号
       confirmPhone() {
-        var url = `user/updatePhone.do?code=${this.newPhoneForm.verCode}&phone=${this.newPhoneForm.newPhone}`;
-        this.$http.get(url).then((response) => {
+        var url = 'user/updatePhone.do'
+        this.$http.get(url, {
+          params: {
+            code: this.newPhoneForm.verCode,
+            phone: this.newPhoneForm.newPhone
+          }
+        }).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message);
             this.init()
@@ -1975,8 +2008,13 @@
       // 更新email
       confirmEmail() {
         this.showModal.authNewEmail = false
-        var url = `user/updateUserInfo.do?code=${this.newPhoneForm.verCode}&email=${this.newPhoneForm.newPhone}`;
-        this.$http.get(url).then((response) => {
+        var url = 'user/updateUserInfo.do'
+        this.$http.get(url, {
+          params: {
+            code: this.newPhoneForm.verCode,
+            email: this.newPhoneForm.newPhone
+          }
+        }).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message);
             this.init()
@@ -2001,13 +2039,21 @@
           return
         }
         //发送获取验证码ajax
-        var url = 'user/code.do?type=1'
-        if (type == 'phone') {
-          url += `&isemail=0&aim=${this.newPhoneForm.newPhone}&vailCode=${this.newPhoneForm.code}`
-        } else {
-          url += `&isemail=1&aim=${this.newPhoneForm.newPhone}`
+        var url = 'user/code.do'
+        let params = {
+          type: 1
         }
-        this.$http.get(url).then(response => {
+        if (type == 'phone') {
+          params.isemail = 0,
+            params.aim = this.newPhoneForm.newPhone,
+            params.vailCode = this.newPhoneForm.code
+        } else {
+          params.isemail = 1,
+            params.aim = this.newPhoneForm.newPhone
+        }
+        this.$http.get(url, {
+          params
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             //60秒倒计时
             var timeOut = 60;
@@ -2032,8 +2078,12 @@
         this.showModal.showPicture = true
       },
       sendPhone(value) {
-        var url = `user/reSendMessage.do?phone=${value}`
-        this.$http.get(url).then(response => {
+        var url = 'user/reSendMessage.do'
+        this.$http.get(url, {
+          params: {
+            phone: value
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
           } else {
@@ -2044,8 +2094,12 @@
         })
       },
       sendEmail(value) {
-        var url = `user/reSendMessage.do?email=${value}`
-        this.$http.get(url).then(response => {
+        var url = 'user/reSendMessage.do'
+        this.$http.get(url, {
+          parms: {
+            email: value
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
           } else {

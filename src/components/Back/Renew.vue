@@ -282,8 +282,14 @@
     methods: {
       toggleStatus(item){
         var flag = item.isAuto ? 1 : 0
-        var url = `information/setAutoRenew.do?type=${item.type}&id=${item.id}&flag=${flag}`
-        this.$http.get(url).then(response => {
+        var url = 'information/setAutoRenew.do'
+        this.$http.get(url, {
+          params: {
+            type: item.type,
+            id: item.id,
+            flag: flag
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
           } else {
             item.isAuto = !item.isAuto
@@ -292,10 +298,13 @@
       },
       search(){
         var url = 'information/listRenew.do'
+        let params = {}
         if (this.selectType) {
-          url += `?type=${this.selectType}`
+          params.type = this.selectType
         }
-        this.$http.get(url)
+        this.$http.get(url, {
+          params
+        })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               var mSecInDay = 1000 * 60 * 60 * 24
@@ -464,8 +473,16 @@
         if (time == '') {
           this.cost = '--'
         } else {
-          let url = `information/getYjPrice.do?timeValue=${this.renewalTime}&timeType=${this.renewalType}&ipIdArr=${this.requestParam.ipArray.toString()}&hostIdArr=${this.requestParam.hostArray.toString()}&diskArr=${this.requestParam.diskArray.toString()}`
-          this.$http.get(url)
+          let url = 'information/getYjPrice.do'
+          this.$http.get(url, {
+            params: {
+              timeValue: this.renewalTime,
+              timeType: this.renewalType,
+              ipIdArr: this.requestParam.ipArray.toString(),
+              hostIdArr: this.requestParam.hostArray.toString(),
+              diskArr: this.requestParam.diskArray.toString()
+            }
+          })
             .then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.cost = response.data.result

@@ -526,8 +526,13 @@
                             okText: '确定解绑',
                             cancelText: '取消',
                             'onOk': () => {
-                              var url = `network/unboundElasticIP.do?natGatewayId=${object.row.id}&publicIp=${item}`
-                              this.$http.get(url).then(response => {
+                              var url = 'network/unboundElasticIP.do'
+                              this.$http.get(url, {
+                                params: {
+                                  natGatewayId: object.row.id,
+                                  publicIp: item
+                                }
+                              }).then(response => {
                                 if (response.status == 200 && response.data.status == 1) {
                                   this.$Message.success({
                                     content: response.data.message
@@ -740,9 +745,17 @@
     beforeRouteEnter(to, from, next) {
       var zoneId = $store.state.zone.zoneid
       // 获取vpc数据
-      var vpcResponse = axios.get(`network/listVpc.do?zoneId=${zoneId}`)
+      var vpcResponse = axios.get('network/listVpc.do', {
+        params: {
+          zoneId: zoneId
+        }
+      })
       // 获取NAT网关数据
-      var NATResponse = axios.get(`network/listNatGateway.do?zoneId=${zoneId}`)
+      var NATResponse = axios.get('network/listNatGateway.do', {
+        params: {
+          zoneId: zoneId
+        }
+      })
 
       Promise.all([vpcResponse, NATResponse]).then((ResponseValue) => {
         next(vm => {
@@ -759,9 +772,15 @@
       refresh () {
         var zoneId = $store.state.zone.zoneid
         // 获取vpc数据
-        var vpcResponse = axios.get(`network/listVpc.do?zoneId=${zoneId}`)
+        var vpcResponse = axios.get('network/listVpc.do', {
+          zoneId: zoneId
+        })
         // 获取NAT网关数据
-        var NATResponse = axios.get(`network/listNatGateway.do?zoneId=${zoneId}`)
+        var NATResponse = axios.get('network/listNatGateway.do', {
+          params: {
+            zoneId: zoneId
+          }
+        })
 
         Promise.all([vpcResponse, NATResponse]).then((ResponseValue) => {
           this.setData(ResponseValue[0])
@@ -774,7 +793,11 @@
         this.select = current
       },
       getVpcData(){
-        axios.get(`network/listVpc.do?zoneId=${$store.state.zone.zoneid}`).then(response => {
+        axios.get('network/listVpc.do', {
+          params: {
+            zoneId: $store.state.zone.zoneid
+          }
+        }).then(response => {
           if (response.status == 200) {
             this.setData(response)
           }
@@ -835,9 +858,16 @@
          useType : 0 代表未使用
          status : 1 代表状态正常
          */
-        var url = `network/listPublicIp.do?useType=0&status=1&zoneId=${$store.state.zone.zoneid}&vpcId=${this.addNatForm.vpc}`
+        var url = 'network/listPublicIp.do'
         this.addNatForm.publicIp = ''
-        axios.get(url).then(response => {
+        axios.get(url, {
+          params: {
+            useType: 0,
+            status: 1,
+            zoneId: $store.state.zone.zoneid,
+            vpcId: this.addNatForm.vpc
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             // response.data.result.push({publicipid: '新建弹性IP', publicip: '新建弹性IP'})
             this.addNatForm.publicIpOptions = response.data.result
@@ -848,17 +878,21 @@
       openDeleteNatModal(){
         if (this.select != null) {
           // 单选检测通过
-          var url = `network/delNatGateway.do?id=${this.select.id}`
-          this.$http.get(url).then(response =>{
-            if (response.status != 200 || response.data.status != 1){
+          var url = 'network/delNatGateway.do'
+          this.$http.get(url, {
+            params: {
+              id: this.select.id
+            }
+          }).then(response => {
+            if (response.status != 200 || response.data.status != 1) {
               this.refresh()
               this.$message.info({
                 content: response.data.message
               })
-            }else{
+            } else {
               this.$message.confirm({
                 content: '您正将“' + this.select.natname + '”移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。',
-                onOk:() =>{
+                onOk: () => {
                   this.$Message.success({
                     content: response.data.message
                   })
@@ -868,350 +902,383 @@
             }
           })
 
-        }else {
+        } else {
           this.$Message.info({
             content: '请先选择一个网关',
           })
         }
-  },
-  // 删除VPC
-  delVpc(){
-    var select = this.netData.filter(item => item._select)
-    if (select.length == 0) {
-      this.$Message.info({
-        content: '请选择一个VPC'
-      })
-      return
-    }
-    this.$message.confirm({
-      content: '您确认删除该VPC吗',
-      onOk: () => {
-        this.netData.forEach(item => {
-          if (item.id == select[0].id) {
-            this.$set(item, 'status', 3)
-          }
-        })
-        //select[0]._select = 3 // 3代表删除中
-        this.$http.get('network/deleteVpc.do', {
-          params: {
-            id: select[0].id
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.refresh()
-          } else {
-            this.refresh()
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
-      }
-    })
-  },
-  // 重启vpc
-  restartVpc(item) {
-    this.$message.confirm({
-      content: '您确认重启该VPC吗',
-      onOk: () => {
-        this.$http.get('network/restartVpc.do', {
-          params: {
-            vpcId: item.vpcid
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success({
-              content: response.data.message
-            })
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
-      }
-    })
-  },
-  // 新建vpc价格查询
-  queryVpcPrice(){
-    if (this.newForm.timeType == 'current' || this.newForm.timeValue != '') {
-      axios.post('device/queryVpcPrice.do', {
-        type: this.newForm.timeType,
-        timelong: this.newForm.timeType == 'current' ? '1' : this.newForm.timeValue + '',
-        zoneId: $store.state.zone.zoneid,
-        isBindPublicIp: '0'
-      }).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.newForm.cost = response.data.cost
+      },
+      // 删除VPC
+      delVpc(){
+        var select = this.netData.filter(item => item._select)
+        if (select.length == 0) {
+          this.$Message.info({
+            content: '请选择一个VPC'
+          })
+          return
         }
-      })
-    }
-  },
-  // 新建NAT网关价格查询
-  queryNatPrice(){
-    if (this.addNatForm.timeType == 'current' || this.addNatForm.timeValue != '') {
-      axios.post('device/queryNetPrice.do.do', {
-        type: this.addNatForm.timeType,
-        timelong: this.addNatForm.timeType == 'current' ? '1' : this.addNatForm.timeValue + '',
-        zoneId: $store.state.zone.zoneid,
-      }).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.addNatForm.cost = response.data.cost
+        this.$message.confirm({
+          content: '您确认删除该VPC吗',
+          onOk: () => {
+            this.netData.forEach(item => {
+              if (item.id == select[0].id) {
+                this.$set(item, 'status', 3)
+              }
+            })
+            //select[0]._select = 3 // 3代表删除中
+            this.$http.get('network/deleteVpc.do', {
+              params: {
+                id: select[0].id
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.refresh()
+              } else {
+                this.refresh()
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+      // 重启vpc
+      restartVpc(item) {
+        this.$message.confirm({
+          content: '您确认重启该VPC吗',
+          onOk: () => {
+            this.$http.get('network/restartVpc.do', {
+              params: {
+                vpcId: item.vpcid
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success({
+                  content: response.data.message
+                })
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
+      // 新建vpc价格查询
+      queryVpcPrice(){
+        if (this.newForm.timeType == 'current' || this.newForm.timeValue != '') {
+          axios.post('device/queryVpcPrice.do', {
+            type: this.newForm.timeType,
+            timelong: this.newForm.timeType == 'current' ? '1' : this.newForm.timeValue + '',
+            zoneId: $store.state.zone.zoneid,
+            isBindPublicIp: '0'
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.newForm.cost = response.data.cost
+            }
+          })
         }
-      })
-    }
-  },
-  // 提交新建vpc表单
-  handleNewVpcSubmit() {
-    this.$refs.newFormValidate.validate((valid) => {
-      if (valid) {
-        // 表单验证通过
-        var url = `network/createVPC.do?vpcName=${this.newForm.vpcName}&displayText=${this.newForm.desc}&zoneId=${$store.state.zone.zoneid}&count=1&cidr=${this.newForm.vpc}`
-        axios.get(url).then(response => {
-          this.showModal.newVpc = false
-          if (response.status == 200 && response.data.status == 1) {
-            this.refresh()
-            this.$Message.success({content: response.data.message})
-            // this.$error('error', response.data.message)
-          } else {
-            this.$message.info({content: response.data.message})
-          }
-        })
-      } else {
-        // 表单验证失败
-      }
-    })
-  },
-  // 提交新建网关表单
-  handleNewGateSubmit(){
-    this.$refs.gatewayFormValidate.validate((valid) => {
-      if (valid) {
-        // 表单验证通过
-        this.$Message.info('正在添加VPC互通网关，请稍候...')
-        this.showModal.addGateway = false
-        var url = `network/addPrivateGateway.do?vpcIdStart=${this.addGatewayForm.originVPC}&vpcIdEnd=${this.addGatewayForm.targetVPC}&zoneId=${$store.state.zone.zoneid}&aclIdStart=${this.addGatewayForm.originFirewall}&aclIdEnd=${this.addGatewayForm.targetFirewall}`
-        axios.get(url).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success({
-              content: response.data.message
-            })
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
-      } else {
-        // 表单验证失败
-      }
-    })
-  },
-  // 提交新建nat网关表单
-  handleAddNatSubmit(){
-    this.$refs.addNatFormValidate.validate((valid) => {
-      if (valid) {
-        // 表单验证通过
-        var url = `network/createNatGateway.do?isAutorenew=0&natName=${this.addNatForm.natName}&vpcId=${this.addNatForm.vpc}&zoneId=${$store.state.zone.zoneid}&timeType=${this.addNatForm.timeType}&timeValue=${this.addNatForm.timeValue || 1}`
-        if (this.addNatForm.publicIp == '新建弹性IP') {
-          url += `&bandWith=${this.addNatForm.IPSize}`
-        } else {
-          url += `&publicIpId=${this.addNatForm.publicIp}`
+      },
+      // 新建NAT网关价格查询
+      queryNatPrice(){
+        if (this.addNatForm.timeType == 'current' || this.addNatForm.timeValue != '') {
+          axios.post('device/queryNetPrice.do', {
+            type: this.addNatForm.timeType,
+            timelong: this.addNatForm.timeType == 'current' ? '1' : this.addNatForm.timeValue + '',
+            zoneId: $store.state.zone.zoneid,
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.addNatForm.cost = response.data.cost
+            }
+          })
         }
-        axios.get(url).then(response => {
-          this.showModal.addNat = false
-          if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('order')
-          }
-          if (response.status == 200 && response.data.status == 2) {
-            this.$message.info({
-              content: response.data.message
+      },
+      // 提交新建vpc表单
+      handleNewVpcSubmit() {
+        this.$refs.newFormValidate.validate((valid) => {
+          if (valid) {
+            // 表单验证通过
+            var url = 'network/createVPC.do'
+            axios.get(url, {
+              params: {
+                vpcName: this.newForm.vpcName,
+                displayText: this.newForm.desc,
+                zoneId: $store.state.zone.zoneid,
+                count: 1,
+                cidr: this.newForm.vpc
+              }
+            }).then(response => {
+              this.showModal.newVpc = false
+              if (response.status == 200 && response.data.status == 1) {
+                this.refresh()
+                this.$Message.success({content: response.data.message})
+                // this.$error('error', response.data.message)
+              } else {
+                this.$message.info({content: response.data.message})
+              }
             })
+          } else {
+            // 表单验证失败
           }
         })
-      } else {
-        // 表单验证失败
-      }
-    })
-  },
-  // nat网关绑定源IP，获取所有可用的弹性IP
-  bindIP(row){
-    this.showModal.bindIP = true
-    // 获取可以挂载的所有弹性IP
-    this.$http.get('network/listPublicIp.do', {
-      params: {
-        useType: '0',
-        vpcId: row.vpcid,
-        status: '1'
-      }
-    }).then(response => {
-      this.bindIPForm.IPOptions = response.data.result
-    })
-    this.bindIPForm.natGatewayId = row.id
-  },
-  // nat网关绑定源IP提交ajax
-  handlebindIPSubmit(){
-    this.$refs.bindIPFormValidate.validate(validate => {
-      if (validate) {
-        this.showModal.bindIP = false
-        this.natData.forEach(item => {
-          if (item.id == this.bindIPForm.natGatewayId) {
-            this.$set(item, '_status', 1)
+      },
+      // 提交新建网关表单
+      handleNewGateSubmit(){
+        this.$refs.gatewayFormValidate.validate((valid) => {
+          if (valid) {
+            // 表单验证通过
+            this.$Message.info('正在添加VPC互通网关，请稍候...')
+            this.showModal.addGateway = false
+            var url = 'network/addPrivateGateway.do'
+            axios.get(url, {
+              params: {
+                vpcIdStart: this.addGatewayForm.originVPC,
+                vpcIdEnd: this.addGatewayForm.targetVPC,
+                zoneId: $store.state.zone.zoneid,
+                aclIdStart: this.addGatewayForm.originFirewall,
+                aclIdEnd: this.addGatewayForm.targetFirewall
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success({
+                  content: response.data.message
+                })
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          } else {
+            // 表单验证失败
           }
         })
-        this.$http.get('network/natGatewayBoundTargetIP.do', {
+      },
+      // 提交新建nat网关表单
+      handleAddNatSubmit(){
+        this.$refs.addNatFormValidate.validate((valid) => {
+          if (valid) {
+            // 表单验证通过
+            let params = {
+              isAutorenew: 0,
+              natName: this.addNatForm.natName,
+              vpcId: this.addNatForm.vpc,
+              zoneId: $store.state.zone.zoneid,
+              timeType: this.addNatForm.timeType,
+              timeValue: this.addNatForm.timeValue || 1
+            }
+            if (this.addNatForm.publicIp == '新建弹性IP') {
+              params.bandWith = this.addNatForm.IPSize
+            } else {
+              params.publicIpId = this.addNatForm.publicIp
+            }
+            axios.get('network/createNatGateway.do', {
+              params
+            }).then(response => {
+              this.showModal.addNat = false
+              if (response.status == 200 && response.data.status == 1) {
+                this.$router.push('order')
+              }
+              if (response.status == 200 && response.data.status == 2) {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          } else {
+            // 表单验证失败
+          }
+        })
+      },
+      // nat网关绑定源IP，获取所有可用的弹性IP
+      bindIP(row){
+        this.showModal.bindIP = true
+        // 获取可以挂载的所有弹性IP
+        this.$http.get('network/listPublicIp.do', {
           params: {
-            publicIp: this.bindIPForm.IP,
-            natGatewayId: this.bindIPForm.natGatewayId
+            useType: '0',
+            vpcId: row.vpcid,
+            status: '1'
           }
         }).then(response => {
-          this.refresh()
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success({
-              content: response.data.message
+          this.bindIPForm.IPOptions = response.data.result
+        })
+        this.bindIPForm.natGatewayId = row.id
+      },
+      // nat网关绑定源IP提交ajax
+      handlebindIPSubmit(){
+        this.$refs.bindIPFormValidate.validate(validate => {
+          if (validate) {
+            this.showModal.bindIP = false
+            this.natData.forEach(item => {
+              if (item.id == this.bindIPForm.natGatewayId) {
+                this.$set(item, '_status', 1)
+              }
             })
-          } else {
-            this.$message.info({
-              content: response.data.message
+            this.$http.get('network/natGatewayBoundTargetIP.do', {
+              params: {
+                publicIp: this.bindIPForm.IP,
+                natGatewayId: this.bindIPForm.natGatewayId
+              }
+            }).then(response => {
+              this.refresh()
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success({
+                  content: response.data.message
+                })
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
             })
           }
         })
-      }
-    })
-  },
-  // nat网关绑定目标IP，获取所有可用的弹性IP
-  bindTargetIP(row){
-    // 获取可以挂载的所有弹性IP
-    this.$http.get('network/listPublicIp.do', {
-      params: {
-        useType: '0',
-        vpcId: row.vpcid,
-        status: '1'
-      }
-    }).then(response => {
-      this.bindTargetIPForm.IPOptions = response.data.result
-    })
-    this.bindTargetIPForm.natGatewayId = row.id
-    this.showModal.bindTargetIP = true
-  },
-  // nat网关绑定目标IP提交ajax
-  handlebindTargetIPSubmit(){
-    this.$refs.bindTargetIPFormValidate.validate(validate => {
-      if (validate) {
-        this.showModal.bindTargetIP = false
-        this.$http.get('network/bindingElasticIP.do', {
+      },
+      // nat网关绑定目标IP，获取所有可用的弹性IP
+      bindTargetIP(row){
+        // 获取可以挂载的所有弹性IP
+        this.$http.get('network/listPublicIp.do', {
           params: {
-            publicIp: this.bindTargetIPForm.IP,
-            natGatewayId: this.bindTargetIPForm.natGatewayId
+            useType: '0',
+            vpcId: row.vpcid,
+            status: '1'
           }
         }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success({
-              content: response.data.message
-            })
-            this.refresh()
-          } else {
-            this.$message.info({
-              content: response.data.message
+          this.bindTargetIPForm.IPOptions = response.data.result
+        })
+        this.bindTargetIPForm.natGatewayId = row.id
+        this.showModal.bindTargetIP = true
+      },
+      // nat网关绑定目标IP提交ajax
+      handlebindTargetIPSubmit(){
+        this.$refs.bindTargetIPFormValidate.validate(validate => {
+          if (validate) {
+            this.showModal.bindTargetIP = false
+            this.$http.get('network/bindingElasticIP.do', {
+              params: {
+                publicIp: this.bindTargetIPForm.IP,
+                natGatewayId: this.bindTargetIPForm.natGatewayId
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success({
+                  content: response.data.message
+                })
+                this.refresh()
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
             })
           }
         })
+      },
+      gotoVpc(vpcId){
+        sessionStorage.setItem('vpcId', vpcId)
+        this.$router.push('/ruicloud/vpcManage')
       }
-    })
-  },
-  gotoVpc(vpcId){
-    sessionStorage.setItem('vpcId', vpcId)
-    this.$router.push('/ruicloud/vpcManage')
-  }
-  },
-  computed: mapState({
-    paneStatus: state => state.paneStatus,
-    auth(){
-      return this.$store.state.authInfo != null
-    }
-  }),
+    },
+    computed: mapState({
+      paneStatus: state => state.paneStatus,
+      auth(){
+        return this.$store.state.authInfo != null
+      }
+    }),
     watch: {
-    // 检测到新建VPC购买方式发生变化，重新查询价格
-    'newForm.timeValue'()
-    {
-      this.queryVpcPrice()
-    }
-  ,
-    // 检测到新建VPC购买方式发生变化，重新查询价格
-    'newForm.timeType'()
-    {
-      this.newForm.timeValue = ''
-      this.queryVpcPrice()
-    }
-  ,
-    // 检测到添加NAT网关购买方式发生变化，重新查询价格
-    'addNatForm.timeValue'()
-    {
-      this.queryNatPrice()
-    }
-  ,
-    // 检测到添加NAT网关购买方式发生变化，重新查询价格
-    'addNatForm.timeType'()
-    {
-      this.addNatForm.timeValue = ''
-      this.queryNatPrice()
-    }
-  ,
-    // 新建弹性IP
-    'addNatForm.publicIp'()
-    {
-      if (this.addNatForm.publicIp === '新建弹性IP') {
-        this.showModal.addNat = false
-        window.open('/ruicloud/ip')
-        // this.$router.push('ip')
+      // 检测到新建VPC购买方式发生变化，重新查询价格
+      'newForm.timeValue'()
+      {
+        this.queryVpcPrice()
       }
-    }
-  ,
-    // 查询当前源vpc下所有防火墙
-    'addGatewayForm.originVPC'()
-    {
-      var originPreArray = []
-      this.netData.forEach(item => {
-        if (item.vpcid == this.addGatewayForm.originVPC) {
-          originPreArray = item.cidr.split('.')
-          this.addGatewayForm.originPreIP = [originPreArray[0], originPreArray[1]]
-          var url = `network/listAclList.do?zoneId=${$store.state.zone.zoneid}&vpcId=${item.vpcid}`
-          axios.get(url).then(response => {
-            this.addGatewayForm.originFirewallList = response.data.result
-          })
-        }
-      })
-    }
-  ,
-    // 查询当前目标vpc下所有防火墙
-    'addGatewayForm.targetVPC'()
-    {
-      var targetPreArray = []
-      this.netData.forEach(item => {
-        if (item.vpcid == this.addGatewayForm.targetVPC) {
-          targetPreArray = item.cidr.split('.')
-          this.addGatewayForm.targetPreIP = [targetPreArray[0], targetPreArray[1]]
-          var url = `network/listAclList.do?zoneId=${$store.state.zone.zoneid}&vpcId=${item.vpcid}`
-          axios.get(url).then(response => {
-            this.addGatewayForm.targetFirewallList = response.data.result
-          })
-        }
-      })
-    }
-  ,
-    '$store.state.zone'
-  :
-    {
-      handler: function () {
-        this.refresh()
+      ,
+      // 检测到新建VPC购买方式发生变化，重新查询价格
+      'newForm.timeType'()
+      {
+        this.newForm.timeValue = ''
+        this.queryVpcPrice()
       }
-    ,
-      deep: true
+      ,
+      // 检测到添加NAT网关购买方式发生变化，重新查询价格
+      'addNatForm.timeValue'()
+      {
+        this.queryNatPrice()
+      }
+      ,
+      // 检测到添加NAT网关购买方式发生变化，重新查询价格
+      'addNatForm.timeType'()
+      {
+        this.addNatForm.timeValue = ''
+        this.queryNatPrice()
+      }
+      ,
+      // 新建弹性IP
+      'addNatForm.publicIp'()
+      {
+        if (this.addNatForm.publicIp === '新建弹性IP') {
+          this.showModal.addNat = false
+          window.open('/ruicloud/ip')
+          // this.$router.push('ip')
+        }
+      }
+      ,
+      // 查询当前源vpc下所有防火墙
+      'addGatewayForm.originVPC'()
+      {
+        var originPreArray = []
+        this.netData.forEach(item => {
+          if (item.vpcid == this.addGatewayForm.originVPC) {
+            originPreArray = item.cidr.split('.')
+            this.addGatewayForm.originPreIP = [originPreArray[0], originPreArray[1]]
+            var url = 'network/listAclList.do'
+            axios.get(url, {
+              params: {
+                zoneId: $store.state.zone.zoneid,
+                vpcId: item.vpcid
+              }
+            }).then(response => {
+              this.addGatewayForm.originFirewallList = response.data.result
+            })
+          }
+        })
+      }
+      ,
+      // 查询当前目标vpc下所有防火墙
+      'addGatewayForm.targetVPC'()
+      {
+        var targetPreArray = []
+        this.netData.forEach(item => {
+          if (item.vpcid == this.addGatewayForm.targetVPC) {
+            targetPreArray = item.cidr.split('.')
+            this.addGatewayForm.targetPreIP = [targetPreArray[0], targetPreArray[1]]
+            var url = 'network/listAclList.do'
+            axios.get(url, {
+              params: {
+                zoneId: $store.state.zone.zoneid,
+                vpcId: item.vpcid
+              }
+            }).then(response => {
+              this.addGatewayForm.targetFirewallList = response.data.result
+            })
+          }
+        })
+      }
+      ,
+      '$store.state.zone': {
+        handler: function () {
+          this.refresh()
+        }
+        ,
+        deep: true
+      }
+    },
+    beforeRouteLeave(to, from, next){
+      clearInterval(this.intervalInstance)
+      next()
     }
-  },
-  beforeRouteLeave(to, from, next){
-    clearInterval(this.intervalInstance)
-    next()
-  }
   }
 </script>
 

@@ -112,13 +112,13 @@
         this.RAMSize = ram.memory
         this.calCost()
       },
-      calCost() {
-        var url = `information/UpVMConfigCost.do`
-        this.$http.get(url, {
-          params: {
-            cpunum: this.CPUNum,
-            memory: this.RAMSize,
-            VMId: this.virtualMachineid
+      calCost(){
+        var url = 'information/UpVMConfigCost.do'
+        this.$http.get(url,{
+          params:{
+            cpunum:this.CPUNum,
+            memory:this.RAMSize,
+            VMId:this.virtualMachineid
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -132,14 +132,14 @@
         if (this.cost === 0) {
           return
         }
-        var url = `information/UpVMConfig.do`
-        this.$http.get(url, {
-          params: {
-            cpunum: this.CPUNum,
-            memory: this.RAMSize,
-            VMId: this.virtualMachineid,
-            disksize: this.diskSize
-          }
+        var url = 'information/UpVMConfig.do'
+        this.$http.get(url,{
+            params:{
+              cpunum:this.CPUNum,
+              memory:this.RAMSize,
+              VMId:this.virtualMachineid,
+              disksize:this.diskSize
+            }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')

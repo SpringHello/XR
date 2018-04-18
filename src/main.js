@@ -32,9 +32,13 @@ Vue.config.productionTip = false
 //axios.defaults.baseURL = '/ruicloud'
 
 
+// axios.defaults.baseURL = 'http://192.168.3.204:8081/ruicloud'
+// axios.defaults.withCredentials = true
+
 //axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud'
 // axios.defaults.baseURL = 'http://192.168.3.204:8081/ruicloud'
 // axios.defaults.withCredentials = true
+
 
 // axios挂载到Vue原型
 Vue.prototype.$http = axios.create({
@@ -43,29 +47,13 @@ Vue.prototype.$http = axios.create({
 /* axios ajax请求拦截 需要zoneid的接口都使用this.$http的形式调用 */
 function requestIntercept(config) {
   if (config.method == 'get') {
-    if (config.url.indexOf('?') != -1) {
-      config.url += `&zoneId=${store.state.zone.zoneid}`
-      let params = {}
-      config.url.split(/\?|\&/).forEach((item, index) => {
-        if (index) {
-          let arr = item.split('=')
-          params[arr[0]] = arr[1]
-        }
-      })
-      let mac = appendMD5(params, 'get', true).toUpperCase()
-      config.url = `${config.url}&mac=${mac}`
-    } else if (config.params) {
+    if (config.params) {
       config.params = {
         zoneId: store.state.zone.zoneid,
         ...config.params
       }
       config.params = appendMD5(config.params)
     }
-    /*config.params = {
-     zoneId: store.state.zone.zoneid,
-     ...config.params
-     }
-     config.params = appendMD5(config.params)*/
   } else if (config.method == 'post') {
     config.data = {
       ...config.data,
@@ -77,7 +65,7 @@ function requestIntercept(config) {
 }
 
 
-function appendMD5(params, type, bol) {
+function appendMD5(params, type) {
   if (params === undefined) {
     return undefined
   }
@@ -94,9 +82,6 @@ function appendMD5(params, type, bol) {
     str = md5(str)
 
     var mac = str.substr(0, count) + count + str.substr(count)
-    if (bol) {
-      return mac
-    }
     return {
       ...params,
       mac: mac.toUpperCase()

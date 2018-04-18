@@ -178,7 +178,7 @@
         axios.get('ticket/getUserTicket.do', {
           params: {
             ticketType: '',
-            zoneId: store.state.zone.zoneid,
+            zoneId: $store.state.zone.zoneid,
             isuse: 0,
             totalCost: this.couponInfo.originCost
           }

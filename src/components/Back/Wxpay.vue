@@ -60,7 +60,9 @@
     created(){
       this.loading = true
       this.loadingMessage = '正在生成二维码，请稍后...'
-      this.$http.get('wx/wxpayapi.do?total_fee=' + this.price).then(response => {
+      this.$http.get('wx/wxpayapi.do',{
+        total_fee:this.price
+      }).then(response => {
         if (response.status == 200 && response.data.status == 1) {
           this.serialNum = response.data.result.serialNum
           this.config.value = response.data.result.codeUrl
@@ -83,7 +85,11 @@
       paySuccess(){
         this.loading = true
         this.loadingMessage = '正在充值，请稍后...'
-        this.$http.get('user/payStatus.do?serialNum=' + this.serialNum).then(response => {
+        this.$http.get('user/payStatus.do',{
+            params:{
+              serialNum:this.serialNum
+            }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.loading = false
             this.$router.push('expenses')
