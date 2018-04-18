@@ -32,7 +32,7 @@
             <Table ref="selection" :columns="snapshotCol" :data="snapshotData"
                    @radio-change="changeSelection"></Table>
             <div style="margin: 10px;overflow: hidden;text-align:right">
-                <Page :total="total" :current="1" @on-change="currentChange"></Page>
+              <Page :total="total" :current="1" @on-change="currentChange"></Page>
             </div>
           </TabPane>
           <TabPane label="云主机快照策略">
@@ -68,11 +68,11 @@
               <Poptip trigger="hover" width="400">
                 <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
                 <div slot="content">
-                    <div>
-                        您可以选择在制作快照的时候保存您主机的当前运行状态。当您选择“保存”之时，
-                        当前主机的内存将被记录，在您对快照执行回滚操作的时候，也只能在开机状态下执行；当您选择“不保存”时
-                        此次快照将不记录主机内存信息，您在通过该快照回滚的时候只能在关机状态下执行。
-                    </div>
+                  <div>
+                    您可以选择在制作快照的时候保存您主机的当前运行状态。当您选择“保存”之时，
+                    当前主机的内存将被记录，在您对快照执行回滚操作的时候，也只能在开机状态下执行；当您选择“不保存”时
+                    此次快照将不记录主机内存信息，您在通过该快照回滚的时候只能在关机状态下执行。
+                  </div>
                 </div>
               </Poptip>
             </div>
@@ -150,7 +150,7 @@
         </p>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="ghost"  @click="cancleBackups('creatBackupsForm')">取消</Button>
+        <Button type="ghost" @click="cancleBackups('creatBackupsForm')">取消</Button>
         <Button type="primary" @click="NewBackupsSubmit('creatBackupsForm')">创建策略</Button>
       </div>
     </Modal>
@@ -1509,7 +1509,7 @@
                 case 1:
                   return h('span', {}, '正常')
                 case -1:
-                // -1异常
+                  // -1异常
                   return h('span', {
                     // style: {
                     //   color: '#EE4545'
@@ -1572,7 +1572,7 @@
             key: 'action',
             width: 100,
             render: (h, params) => {
-              if (params.row.status == 2 || params.row.status == 3){
+              if (params.row.status == 2 || params.row.status == 3) {
                 return h('span', {
                   style: {
                     cursor: 'not-allowed'
@@ -1613,24 +1613,24 @@
             key: 'strategyname',
           },
           /*{
-            title: '状态',
-            key: 'status',
-            align: 'center',
-            render: (h, params) => {
-              const row = params.row
-              const text = row.status === 0 ? '正常' : row.status === 1 ? '可用' : row.status === 3 ? '删除中' : ''
-              if (row.status == 3) {
-                return h('div', {}, [h('Spin', {
-                  style: {
-                    display: 'inline-block',
-                    marginRight: '10px'
-                  }
-                }), h('span', {}, text)])
-              } else {
-                return h('span', text)
-              }
-            }
-          },*/
+           title: '状态',
+           key: 'status',
+           align: 'center',
+           render: (h, params) => {
+           const row = params.row
+           const text = row.status === 0 ? '正常' : row.status === 1 ? '可用' : row.status === 3 ? '删除中' : ''
+           if (row.status == 3) {
+           return h('div', {}, [h('Spin', {
+           style: {
+           display: 'inline-block',
+           marginRight: '10px'
+           }
+           }), h('span', {}, text)])
+           } else {
+           return h('span', text)
+           }
+           }
+           },*/
           {
             title: '是否保留内存状态',
             key: 'memorymessage',
@@ -1759,25 +1759,32 @@
     methods: {
       inter() {
         this.intervalSnapsAlllist = setInterval(() => {
-        var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1&page=${this.page}&pageSize=${this.pageSize}`
-        axios.get(snapsURL)
-          .then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.total = response.data.total
-              var snapshotData = response.data.result
-              snapshotData.forEach(item => {
-                if (this.snapsSelection) {
-                  if (this.snapsSelection.id == item.id) {
-                    item._checked = true
-                  }
-                  if (item.status == 2) {
-                    item._disabled = true
-                  }
-                }
-              })
-              this.snapshotData = snapshotData
+          var snapsURL = 'Snapshot/listVMSnapshot.do'
+          axios.get(snapsURL, {
+            params: {
+              zoneId: $store.state.zone.zoneid,
+              resourceType: 1,
+              page: this.page,
+              pageSize: this.pageSize
             }
           })
+            .then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.total = response.data.total
+                var snapshotData = response.data.result
+                snapshotData.forEach(item => {
+                  if (this.snapsSelection) {
+                    if (this.snapsSelection.id == item.id) {
+                      item._checked = true
+                    }
+                    if (item.status == 2) {
+                      item._disabled = true
+                    }
+                  }
+                })
+                this.snapshotData = snapshotData
+              }
+            })
         }, 1000 * 10)
       },
       // 分页
@@ -1787,16 +1794,23 @@
       },
       createsnapshot() {
         this.listHost()
-        this.showModal.newSnapshot=true
+        this.showModal.newSnapshot = true
       },
       createBackups() {
         this.listHost()
-        this.showModal.newBackups=true
+        this.showModal.newBackups = true
       },
       //获取快照列表
       listsnaps() {
-        var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1&page=${this.page}&pageSize=${this.pageSize}`
-        axios.get(snapsURL)
+        var snapsURL = 'Snapshot/listVMSnapshot.do'
+        axios.get(snapsURL, {
+          params: {
+            zoneId: $store.state.zone.zoneid,
+            resourceType: 1,
+            page: this.page,
+            pageSize: this.pageSize
+          }
+        })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.total = response.data.total
@@ -1835,15 +1849,15 @@
         var leftData = []
         this.changeHostlist = []
         this.vmList = []
-        var vmopenlist =[]
-        var vmcloselist =[]
+        var vmopenlist = []
+        var vmcloselist = []
         this.$http.get(`information/listVirtualMachines.do`)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              if(response.data.result.open){
+              if (response.data.result.open) {
                 vmopenlist = response.data.result.open.list
               }
-              if(response.data.result.close){
+              if (response.data.result.close) {
                 vmcloselist = response.data.result.close.list
               }
               this.vmList = vmopenlist.concat(vmcloselist)
@@ -1867,8 +1881,12 @@
         var vmids = this.changeHostlist.map(item => {
           return item.resourcesId
         })
-        var snapsURL = `information/updateVMIntoBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}&backUpStrategyId=${this.strategyId}&VMIds=${vmids.join(',')}`
-        axios.get(snapsURL)
+        var snapsURL = 'information/updateVMIntoBackUpStrategy.do'
+        axios.get(snapsURL, {
+          zoneId: $store.state.zone.zoneid,
+          backUpStrategyId: this.strategyId,
+          VMIds: vmids.join(',')
+        })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$message.info({
@@ -1902,17 +1920,21 @@
       // 虚拟机列表
       listHost() {
         this.vmList = []
-        var vmopenlist =[]
-        var vmcloselist =[]
-        var vmListurl = `information/listVirtualMachines.do?zoneId=${$store.state.zone.zoneid}`
-        console.log(vmListurl)
+        var vmopenlist = []
+        var vmcloselist = []
+        var vmListurl = 'information/listVirtualMachines.do'
+        console.log(vmListurl, {
+          params: {
+            zoneId: $store.state.zone.zoneid
+          }
+        })
         axios.get(vmListurl)
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              if(response.data.result.open){
+              if (response.data.result.open) {
                 vmopenlist = response.data.result.open.list
               }
-              if(response.data.result.close){
+              if (response.data.result.close) {
                 vmcloselist = response.data.result.close.list
               }
               this.vmList = vmopenlist.concat(vmcloselist)
@@ -1922,8 +1944,12 @@
 
       // 获取主机备份策略列表
       listBackups() {
-        var backupsURL = `information/listVMBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}`
-        axios.get(backupsURL)
+        var backupsURL = 'information/listVMBackUpStrategy.do'
+        axios.get(backupsURL, {
+          params: {
+            zoneId: $store.state.zone.zoneid
+          }
+        })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.snapstrategyData = response.data.result
@@ -1934,8 +1960,13 @@
         this.showModal.rollback = false
         this.loadingMessage = '正在回滚主机'
         this.loading = true
-        var URL = `Snapshot/revertToVMSnapshot.do?snapshotId=${this.cursnapshot.snapshotid}&zoneId=${$store.state.zone.zoneid}`
-        axios.get(URL)
+        var URL = 'Snapshot/revertToVMSnapshot.do'
+        axios.get(URL, {
+          params: {
+            snapshotId: this.cursnapshot.snapshotid,
+            zoneId: $store.state.zone.zoneid
+          }
+        })
           .then(response => {
             if (response.status == 200) {
               this.loading = false
@@ -1960,8 +1991,13 @@
       // 确定删除快照策略
       delStrategySubm() {
         this.showModal.delStrategy = false
-        var URL = `information/deleteVMBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}&id=${this.strategySelectionItem.id}`
-        axios.get(URL)
+        var URL = 'information/deleteVMBackUpStrategy.do'
+        axios.get(URL,{
+            params:{
+              zoneId:$store.state.zone.zoneid,
+              id:this.strategySelectionItem.id
+            }
+        })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.listBackups()
@@ -1995,8 +2031,13 @@
             item.status = 3
           }
         })
-        var URL = `Snapshot/deleteVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&ids=${this.snapsSelection.id}`
-        axios.get(URL)
+        var URL = 'Snapshot/deleteVMSnapshot.do'
+        axios.get(URL,{
+            params:{
+              zoneId:$store.state.zone.zoneid,
+              ids:this.snapsSelection.id
+            }
+        })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.listsnaps()
@@ -2007,8 +2048,15 @@
       NewSnapsSubmit(snapsname) {
         this.$refs[snapsname].validate((valid) => {
           if (valid) {
-            var snapsURL = `Snapshot/createVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&snapshotName=${this.creatSnapsForm.name}&VMId=${this.creatSnapsForm.host}&memoryStatus=${this.creatSnapsForm.radio}`
-            axios.get(snapsURL)
+            var snapsURL = 'Snapshot/createVMSnapshot.do'
+            axios.get(snapsURL,{
+                params:{
+                  zoneId:$store.state.zone.zoneid,
+                  snapshotName:this.creatSnapsForm.name,
+                  VMId:this.creatSnapsForm.host,
+                  memoryStatus:this.creatSnapsForm.radio
+                }
+            })
               .then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.showModal.newSnapshot = false
@@ -2031,8 +2079,18 @@
         this.$refs[backupname].validate((valid) => {
           if (valid) {
             var vmids = this.creatBackupsForm.host.join(',')
-            var URL = `information/createVMBackUpStrategy.do?zoneId=${$store.state.zone.zoneid}&strategyName=${this.creatBackupsForm.name}&keepCount=${this.creatBackupsForm.num}&keepInterval=${this.creatBackupsForm.timeType}&autoBackUpTime=${this.creatBackupsForm.timeValue}&VMIds=${vmids}&memoryStatus=${this.creatBackupsForm.memory}`
-            axios.get(URL)
+            var URL = 'information/createVMBackUpStrategy.do'
+            axios.get(URL,{
+                params:{
+                  zoneId:$store.state.zone.zoneid,
+                  strategyName:this.creatBackupsForm.name,
+                  keepCount:this.creatBackupsForm.num,
+                  keepInterval:this.creatBackupsForm.timeType,
+                  autoBackUpTime:this.creatBackupsForm.timeValue,
+                  VMIds:vmids,
+                  memoryStatus:this.creatBackupsForm.memory
+                }
+            })
               .then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.showModal.newBackups = false
@@ -2043,7 +2101,7 @@
                   })
                 } else {
                   this.$message.info({
-                    content:response.data.message
+                    content: response.data.message
                   })
                 }
               })
@@ -2054,7 +2112,7 @@
         this.$refs[name].resetFields()
         this.showModal.newBackups = false
       },
-       // 区域变更，刷新数据
+      // 区域变更，刷新数据
       refresh(){
         this.listsnaps()
         this.listBackups()

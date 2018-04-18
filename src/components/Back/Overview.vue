@@ -177,14 +177,22 @@
     beforeRouteEnter(to, from, next){
       var zoneId = $store.state.zone.zoneid
       // 获取总览页账户信息
-      var accountInfo = axios.get(`user/userAccountInfo.do?zoneId=${zoneId}`)
+      var accountInfo = axios.get('user/userAccountInfo.do',{
+          params:{
+            zoneId:zoneId
+          }
+      })
       var adver = axios.get('user/getAdvertisement.do')
       var Announcement = axios.get('user/getAnnouncement.do', {
         params: {
           listAll: 3
         }
       })
-      var source = axios.get(`user/userSourceManager.do?zoneId=${zoneId}`)
+      var source = axios.get('user/userSourceManager.do',{
+          params:{
+            zoneId:zoneId
+          }
+      })
       Promise.all([accountInfo, adver, source, Announcement]).then(values => {
         next(vm => {
           vm.setData(values)
@@ -257,9 +265,17 @@
       refresh(){
         var zoneId = $store.state.zone.zoneid
         // 获取总览页账户信息
-        var accountInfo = axios.get(`user/userAccountInfo.do?zoneId=${zoneId}`)
+        var accountInfo = axios.get('user/userAccountInfo.do',{
+            params:{
+              zoneId:zoneId
+            }
+        })
         var adver = axios.get('user/getAdvertisement.do')
-        var source = axios.get(`user/userSourceManager.do?zoneId=${zoneId}`)
+        var source = axios.get('user/userSourceManager.do',{
+            params:{
+              zoneId:zoneId
+            }
+        })
         Promise.all([accountInfo, adver, source]).then(values => {
           this.setData(values)
         })

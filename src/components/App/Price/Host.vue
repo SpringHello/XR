@@ -632,7 +632,12 @@
       }
       this.queryQuickHost()
       // 获取公共镜像
-      this.$http.get(`/ruicloud/information/listTemplates.do?user=0&zoneid=${this.zone}`).then(response => {
+      this.$http.get('/ruicloud/information/listTemplates.do', {
+        params: {
+          user: 0,
+          zoneid: this.zone
+        }
+      }).then(response => {
         var responseData = response.data.result
         this.pubilcSystem = responseData
         // 镜像选择主机，默认选择参数
@@ -649,7 +654,12 @@
         }
       })
       // 获取自有镜像
-      this.$http.get(`/ruicloud/information/listTemplates.do?user=1&zoneid=${this.zone}`).then(response => {
+      this.$http.get('/ruicloud/information/listTemplates.do', {
+        params: {
+          user: 1,
+          zoneid: this.zone
+        }
+      }).then(response => {
         var responseData = response.data.result
         this.ownSystem = responseData
       })
@@ -923,8 +933,25 @@
           }
         }
         var renewal = this.autoRenewal ? 1 : 0
-        var url = `/ruicloud/information/deployVirtualMachine.do?zoneId=${this.zone}&name=${this.hostName}&password=${this.hostPassword}&templateId=${this.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&bandWidth=${this.publicIP}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=1&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=no`
-        axios.get(url).then(response => {
+        var url = '/ruicloud/information/deployVirtualMachine.do'
+        axios.get(url, {
+          params: {
+            zoneId: this.zone,
+            name: this.hostName,
+            password: this.hostPassword,
+            templateId: this.osId,
+            diskSize: params.diskSize,
+            cpuNum: params.cpuNum,
+            memory: params.memory,
+            bandWidth: this.publicIP,
+            timeType: params.timeType,
+            timeValue: params.timeValue,
+            count: 1,
+            isAutoRenew: renewal,
+            diskType: params.diskType,
+            networkId: no
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
@@ -943,15 +970,32 @@
         }
         var renewal = params.autoRenewal ? 1 : 0
         var bandwidth = params.publicIP
-        var url = `/ruicloud/information/deployVirtualMachine.do?zoneId=${params.zone}&name=${params.hostName}&password=${params.hostPassword}&templateId=${params.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memorySize}&timeType=${params.timeType}&timeValue=${params.time}&count=${params.count}&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=${params.private.split('#')[0]}`
+        var url = '/ruicloud/information/deployVirtualMachine.do'
+        let param = {
+          zoneId: params.zone,
+          name: params.hostName,
+          password: params.hostPassword,
+          templateId: params.osId,
+          diskSize: params.diskSize,
+          cpuNum: params.cpuNum,
+          memory: params.memorySize,
+          timeType: params.timeType,
+          timeValue: params.time,
+          count: params.count,
+          isAutoRenew: renewal,
+          diskType: params.diskType,
+          networkId: params.private.split('#')[0]
+        }
         if (params.buyPublicIP == false) {
           bandwidth = 0
         }
-        url = url + '&bandWidth=' + bandwidth
+        param.bandWidth = bandwidth
         if (params.specifyInfo != '指定IP') {
-          url += '&ipaddress=' + params.specifyInfo
+          param.ipaddress = params.specifyInfo
         }
-        axios.get(url)
+        axios.get(url,{
+            param
+        })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$router.push('order')
@@ -1092,8 +1136,12 @@
       },
       /* 获取当前用户还能购买的磁盘数量 */
       getDiskLimit() {
-        var url = '/ruicloud/user/userSourceManager.do?zoneId=' + this.zone
-        this.$http.get(url).then(response => {
+        var url = '/ruicloud/user/userSourceManager.do'
+        this.$http.get(url,{
+            params:{
+              zoneId:this.zone
+            }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskLimit = response.data.result[3].items[0].total - response.data.result[3].items[0].used
           }
