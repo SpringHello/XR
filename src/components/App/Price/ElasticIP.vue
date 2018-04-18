@@ -313,8 +313,18 @@
       /* 创建公网ip订单 */
       createIpOrder () {
         var autoRenewal = this.autoRenewal ? 1 : 0
-        let url = `/ruicloud/network/createPublicIp.do.do?brandWith=${this.publicIP}&timeType=${this.timeType}&timeValue=${this.time}&zoneId=${this.zone}&isAutorenew=${autoRenewal}&vpcId=${this.vpcId}&count=1`
-        axios.get(url).then(response => {
+        let url = '/ruicloud/network/createPublicIp.do.do'
+        axios.get(url,{
+            params:{
+              brandWith:this.publicIP,
+              timeType:this.timeType,
+              timeValue:this.time,
+              zoneId:this.zone,
+              isAutorenew:autoRenewal,
+              vpcId:this.vpcId,
+              count:1
+            }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('/ruicloud/order')
           } else {
@@ -426,8 +436,11 @@
       },
       /* 获取私网列表 */
       getPrivateList () {
-        this.$http.get(`/ruicloud/network/listNetDefault.do?zoneId=${this.zone}`)
-          .then((response) => {
+        this.$http.get('/ruicloud/network/listNetDefault.do',{
+          params:{
+            zoneId:this.zone
+          }
+        }).then((response) => {
             if (response.status == 200 && response.data.status == 1) {
               this.privateList = [{
                 'ipsegmentid': 'no',
@@ -451,8 +464,12 @@
       },
       /* 查询vpc数据 */
       queryVPCData(){
-        var url = `/ruicloud/network/listVpc.do?zoneId=${this.zone}`
-        axios.get(url).then(response => {
+        var url = '/ruicloud/network/listVpc.do'
+        axios.get(url,{
+            params:{
+              zoneId:this.zone
+            }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.vpcTableData = response.data.result
           }

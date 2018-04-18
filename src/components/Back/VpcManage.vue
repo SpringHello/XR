@@ -345,8 +345,17 @@
     name: 'vpc',
     beforeRouteEnter(to, from, next){
       var vpcId = sessionStorage.getItem('vpcId')
-      var vpcNetwork = axios.get(`information/getVpcTopo.do?vpcId=${vpcId}`)
-      var vpcGateway = axios.get(`network/listPrivateGateways.do?vpcId=${vpcId}&zoneId=${$store.state.zone.zoneid}`)
+      var vpcNetwork = axios.get('information/getVpcTopo.do',{
+          params:{
+            vpcId:vpcId
+          }
+      })
+      var vpcGateway = axios.get('network/listPrivateGateways.do',{
+          params:{
+            vpcId:vpcId,
+            zoneId:$store.state.zone.zoneid
+          }
+      })
       Promise.all([vpcNetwork, vpcGateway]).then((response) => {
         next(vm => {
           vm.setData(response[0])
@@ -617,8 +626,12 @@
       addHostToVpc (item) {
         this.showModal.addHostToNet = true
         this.addHostForm.ipsegmentid = item.ipsegmentid
-        var url = `network/listVMToNetwork.do?networkid=${item.ipsegmentid}`
-        this.$http.get(url).then(response => {
+        var url = 'network/listVMToNetwork.do'
+        this.$http.get(url,{
+            params:{
+              networkid:item.ipsegmentid
+            }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.addHostForm.vmOptions = response.data.result
           } else {
@@ -630,7 +643,7 @@
       },
       addHostForm_ok () {
         this.showModal.addHostToNet = false
-        var url = `network/enterVMToNetwork.do?networkId=${this.addHostForm.ipsegmentid}&VMId=${this.addHostForm.vm}&_t=${new Date().toTimeString()}`
+        var url = 'network/enterVMToNetwork.do'
         for (let network of this.data.ipsList) {
           if (network.ipsegmentid == this.addHostForm.ipsegmentid) {
             network.vmList.push({
@@ -639,7 +652,13 @@
             })
           }
         }
-        this.$http.get(url).then(response => {
+        this.$http.get(url,{
+            params:{
+              networkId:this.addHostForm.ipsegmentid,
+              VMId:this.addHostForm.vm,
+              _t:new Date().toTimeString()
+            }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.refresh()
             this.$Message.success({
@@ -664,8 +683,12 @@
           onOk: () => {
             // 设置删除子网的状态
             this.$set(item, '_status', 2)
-            var url = `network/deleteNetwork.do?id=${item.id}`
-            this.$http.get(url).then(response => {
+            var url = 'network/deleteNetwork.do'
+            this.$http.get(url,{
+                params:{
+                  id:item.id
+                }
+            }).then(response => {
               this.refresh()
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.info({
@@ -683,8 +706,17 @@
       // 设置子网数据
       refresh () {
         var vpcId = sessionStorage.getItem('vpcId')
-        var vpcNetwork = axios.get(`information/getVpcTopo.do?vpcId=${vpcId}`)
-        var vpcGateway = axios.get(`network/listPrivateGateways.do?vpcId=${vpcId}&zoneId=${$store.state.zone.zoneid}`)
+        var vpcNetwork = axios.get('information/getVpcTopo.do',{
+            params:{
+              vpcId:vpcId
+            }
+        })
+        var vpcGateway = axios.get('network/listPrivateGateways.do',{
+            params:{
+              vpcId:vpcId,
+              zoneId:$store.state.zone.zoneid
+            }
+        })
         Promise.all([vpcNetwork, vpcGateway]).then((response) => {
           this.setData(response[0])
           this.setVPC(response[1])
@@ -721,8 +753,14 @@
       /* 确认修改子网 */
       modifyNetwork(){
         this.showModal.update = false
-        let url = `network/updateNetwork.do?name=${this.updateForm.name}&descript=${this.updateForm.description}&networkId=${this.updateForm.id}`
-        this.$http.get(url).then(response => {
+        let url = 'network/updateNetwork.do'
+        this.$http.get(url,{
+            params:{
+              name:this.updateForm.name,
+              descript:this.updateForm.description,
+              networkId:this.updateForm.id
+            }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.refresh()
             this.$Message.success(response.data.message)
@@ -735,7 +773,7 @@
       },
       /* 删除子网 */
       delNetwork(item){
-        var url = `network/deleteNetwork.do?id=${item.id}`
+        var url = 'network/deleteNetwork.do'
         if (item.isdefault != 1) {
           this.$message.confirm({
             content: '确认删除该子网？',
@@ -743,7 +781,11 @@
               this.loadingMessage = '正在删除子网，请稍候'
               this.loading = true
               item.delete = true
-              this.$http.get(url).then(response => {
+              this.$http.get(url,{
+                  params:{
+                    id:item.id
+                  }
+              }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.$Message.success(response.data.message)
                   this.loading = false
@@ -769,7 +811,11 @@
         this.firewall = item
         this.aclList = []
         this.showModal.modifyFirewall = true
-        this.$http.get(`network/listAclList.do?vpcid=${this.data.vpcid}`).then(response => {
+        this.$http.get('network/listAclList.do',{
+            params:{
+              vpcid:this.data.vpcid
+            }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.aclList = response.data.result
           } else {
@@ -784,8 +830,13 @@
         this.loadingMessage = '正在更换防火墙，请稍候'
         this.loading = true
         this.showModal.modifyFirewall = false
-        var url = `network/replaceNetworkACLList.do?aclListId=${this.modifyFirewallForm.acl}&networkId=${this.firewall.ipsegmentid}`
-        this.$http.get(url).then(response => {
+        var url = 'network/replaceNetworkACLList.do'
+        this.$http.get(url,{
+            params:{
+              aclListId:this.modifyFirewallForm.acl,
+              networkId:this.firewall.ipsegmentid
+            }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.loading = false
             this.$Message.success(response.data.message)
@@ -802,12 +853,20 @@
       // 弹出添加子网modal
       openAddNetwork(){
         this.showModal.addNetwork = true
-        axios.get(`network/listAclList.do?vpcId=${this.data.vpcid}`).then(response => {
+        axios.get('network/listAclList.do',{
+            params:{
+              vpcId:this.data.vpcid
+            }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.newNetworkForm.firewallOptions = response.data.result
           }
         })
-        axios.get(`network/listNetworkServiceOffer.do?zoneId=${this.$store.state.zone.zoneid}`).then(response => {
+        axios.get('network/listNetworkServiceOffer.do',{
+            params:{
+              zoneId:this.$store.state.zone.zoneid
+            }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.newNetworkForm.serviceOfferOptions = response.data.result
           }
@@ -899,7 +958,7 @@
       },
       // 发送离开网络ajax
       leaveNetwork_ok(){
-        var url = `network/removeVMToNetwork.do?networkId=${this.leaveForm.networkid}&VMId=${this.leaveForm.vmId}`
+        var url = 'network/removeVMToNetwork.do'
         this.showModal.leaveNetwork = false
         for (let network of this.data.ipsList) {
           for (let vm of network.vmList) {
@@ -910,7 +969,12 @@
             }
           }
         }
-        this.$http.get(url).then(response => {
+        this.$http.get(url,{
+            params:{
+              networkId:this.leaveForm.networkid,
+              VMId:this.leaveForm.vmId
+            }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.refresh()
             this.$Message.success(response.data.message)
@@ -927,7 +991,11 @@
         this.bindForm.vm = vm
         this.bindForm.publicIP = ''
         this.showModal.bindIP = true
-        this.$http.get(`network/listPublicIp.do?useType=0`)
+        this.$http.get('network/listPublicIp.do',{
+            params:{
+              useType:0
+            }
+        })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.publicIPList = response.data.result
@@ -938,7 +1006,7 @@
       bind(){
         this.showModal.bindIP = false
         var arr = this.bindForm.publicIP.split("#")
-        var url = `network/enableStaticNat.do?ipId=${arr[0]}&VMId=${this.bindForm.vm.computerid}`
+        var url = 'network/enableStaticNat.do'
         for (let network of this.data.ipsList) {
           for (let vm of network.vmList) {
             if (vm.networkid == this.bindForm.vm.networkid && vm.computerid == this.bindForm.vm.computerid) {
@@ -946,7 +1014,12 @@
             }
           }
         }
-        this.$http.get(url)
+        this.$http.get(url,{
+            params:{
+              ipId:arr[0],
+              VMId:this.bindForm.vm.computerid
+            }
+        })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.success(response.data.message)
@@ -971,8 +1044,12 @@
                 }
               }
             }
-            var url = `network/disableStaticNat.do?VMId=${vm.computerid}`
-            this.$http.get(url).then(response => {
+            var url = 'network/disableStaticNat.do'
+            this.$http.get(url,{
+                params:{
+                  VMId:vm.computerid
+                }
+            }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
                 this.refresh()

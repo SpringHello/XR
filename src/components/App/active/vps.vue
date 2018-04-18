@@ -934,17 +934,23 @@
           // this.$router.push({path: 'login'})
           this.loginModal = true;
         } else {
-          let url = `information/getFreeMv.do?vmConfigId=${item.config.configAll[0].id}&osType=${item.system}`
+          let url = 'information/getFreeMv.do'
+          let params={
+            vmConfigId:item.config.configAll[0].id,
+            osType:item.system
+          }
           if (this.company) {
-            url += `&type=2`
+            params.type=2
           } else {
-            url += `&type=1`
+            params.type=1
           }
           /* this.$Modal.warning({
            title: "系统提示",
            content: '今日免费主机已全部领取完,欢迎明日再来。'
            }); */
-          this.$http.get(url).then(response => {
+          this.$http.get(url,{
+              params
+          }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$Modal.success({
                 title: "领取主机成功",

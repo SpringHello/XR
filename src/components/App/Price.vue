@@ -571,15 +571,32 @@
         }
         var renewal = params.autoRenewal ? 1 : 0
         var bandwidth = params.publicIP
-        var url = `information/deployVirtualMachine.do?zoneId=${params.zone}&name=${params.hostName}&password=${params.hostPassword}&templateId=${params.osId}&diskSize=${params.diskSize}&cpuNum=${params.cpuNum}&memory=${params.memory}&timeType=${params.timeType}&timeValue=${params.timeValue}&count=${params.count}&isAutoRenew=${renewal}&diskType=${params.diskType}&networkId=${params.private}`
+        var url = 'information/deployVirtualMachine.do'
+        let param = {
+          zoneId: params.zone,
+          name: params.hostName,
+          password: params.hostPassword,
+          templateId: params.osId,
+          diskSize: params.diskSize,
+          cpuNum: params.cpuNum,
+          memory: params.memory,
+          timeType: params.timeType,
+          timeValue: params.timeValue,
+          count: params.count,
+          isAutoRenew: renewal,
+          diskType: params.diskType,
+          networkId: params.private
+        }
         if (params.buyPublicIP == false) {
           bandwidth = 0
         }
-        url = url + '&bandWidth=' + bandwidth
+        param.bandWidth = bandwidth
         if (params.specifyInfo != '指定IP') {
-          url += '&ipaddress=' + params.specifyInfo
+          param.ipaddress = params.specifyInfo
         }
-        axios.get(url)
+        axios.get(url, {
+          param
+        })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$router.push('/ruicloud/order')
@@ -592,21 +609,46 @@
       },
       /* 创建公网ip订单 */
       createIpOrder (params) {
-        let url = `network/createPublicIp.do.do?brandWith=${params.publicIP}&timeType=${params.timeType}&timeValue=${params.time}&zoneId=${params.zone}&isAutorenew=${params.autoRenewal}&vpcId=${params.vpcId}&count=1`
-        axios.get(url).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('/ruicloud/order')
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
+        let url = 'network/createPublicIp.do'
+        axios.get(url, {
+          params: {
+            brandWith: params.publicIP,
+            timeType: params.timeType,
+            timeValue: params.time,
+            zoneId: params.zone,
+            isAutorenew: params.autoRenewal,
+            vpcId: params.vpcId,
+            count: 1
           }
-        })
+        }).then(response = > {
+          if (response.status == 200 && response.data.status == 1
+      )
+        {
+          this.$router.push('/ruicloud/order')
+        }
+      else
+        {
+          this.$message.info({
+            content: response.data.message
+          })
+        }
+      })
       },
       /* 创建磁盘订单 */
       createDiskOrder (params) {
         this.diskList.forEach(item => {
-          axios.get('Disk/createVolume.do?zoneId=' + this.zone + '&diskSize=' + item.diskSize + '&diskName=' + params.diskName + '&diskOfferingId=' + item.diskType + '&timeType=' + params.timeType + '&timeValue=' + params.time + '&count=1&isAutorenew=0').then(response => {
+          axios.get('Disk/createVolume.do', {
+            params: {
+              zoneId: this.zone,
+              diskSize: item.diskSize,
+              diskName: params.diskName,
+              diskOfferingId: item.diskType,
+              timeType: params.timeType,
+              timeValue: params.time,
+              count: 1,
+              isAutorenew: 0
+            }
+          }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$router.push('/ruicloud/order')
             } else {
