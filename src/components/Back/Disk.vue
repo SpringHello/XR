@@ -630,7 +630,11 @@
         if (!data.mounton && !data.mountonname && data.status == 1) {
           this.operand = data
           this.showModal.mountDisk = true
-          this.$http.get('Disk/listAttachComputer.do?diskId=' + data.diskid).then(response => {
+          this.$http.get('Disk/listAttachComputer.do',{
+            params:{
+              diskId: data.diskid
+            }
+          }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.mountHostList = response.data.result
             }
@@ -694,7 +698,13 @@
       }),
       // 磁盘扩容价格查询
       queryDiskCost: debounce(500, function () {
-        axios.get(`Disk/UpDiskConfigCost.do?diskId=${this.operand.diskid}&diskSize=${this.dilatationForm.diskSize}&zoneId=${this.operand.zoneid}`).then(response => {
+        axios.get('Disk/UpDiskConfigCost.do',{
+          params: {
+            diskId: this.operand.diskid,
+            diskSize: this.dilatationForm.diskSize,
+            zoneId: this.operand.zoneid
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskSizeExpenses = response.data.result
           } else {
@@ -720,8 +730,16 @@
           diskSize = diskSize.substring(0,diskSize.length - 1)
         }
         // 默认zoneList第一个元素为当前选中区域，以后会修改
-        var url = `Disk/createVolume.do?diskSize=${diskSize}&diskName=${this.diskForm.diskName}&diskOfferingId=${diskType}&timeType=${this.diskForm.timeType}&timeValue=${this.diskForm.timeValue || 1}&isAutorenew=0`
-        this.$http.get(url).then(response => {
+        this.$http.get('Disk/createVolume.do',{
+          params: {
+            diskSize: diskSize,
+            diskName: this.diskForm.diskName,
+            diskOfferingId: diskType,
+            timeType: this.diskForm.timeType,
+            timeValue: this.diskForm.timeValue || 1,
+            isAutorenew: 0
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
@@ -797,7 +815,11 @@
                                 item.status = 3
                               }
                             })
-                            this.$http.get('Disk/delDisk.do?id=' + this.diskSelection.id + '').then(response => {
+                            this.$http.get('Disk/delDisk.do',{
+                              params: {
+                                id: this.diskSelection.id + ''
+                              }
+                            }).then(response => {
                               if (response.status == 200 && response.data.status == 1) {
                                 this.$Message.info({
                                   content: response.data.message
@@ -834,7 +856,13 @@
             item.status = 4
           }
         })
-        axios.get(`Disk/detachVolume.do?zoneId=${this.operand.zoneid}&diskId=${this.operand.diskid}&VMId=${this.operand.mounton}`).then(response => {
+        axios.get('Disk/detachVolume.do',{
+          params: {
+            zoneId: this.operand.zoneid,
+            diskId: this.operand.diskid,
+            VMId: this.operand.mounton
+          }
+        }).then(response => {
           this.listDisk()
           if (response.status == 200 && response.statusText == 'OK') {
             this.$Message.info({
@@ -849,7 +877,12 @@
       },
       /* 确认修改磁盘名称 */
       modificationDisk_ok(){
-        this.$http.get('Disk/updateDisk.do?diskId=' + this.operand.diskid + '&diskName=' + this.modificationDiskForm.diskName).then(response => {
+        this.$http.get('Disk/updateDisk.do',{
+          params: {
+            diskId: this.operand.diskid,
+            diskName: this.modificationDiskForm.diskName
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.info({
               content: response.data.message,
@@ -871,7 +904,12 @@
             item.status = 5
           }
         })
-        this.$http.get('Disk/attachVolume.do?diskId=' + this.operand.diskid + '&VMId=' + this.diskMountForm.mountHost).then(response => {
+        this.$http.get('Disk/attachVolume.do',{
+          params: {
+            diskId: this.operand.diskid,
+            VMId: this.diskMountForm.mountHost
+          }
+        }).then(response => {
           this.listDisk()
           if (response.status == 200 && response.statusText == 'OK') {
             this.$Message.info({
@@ -886,7 +924,12 @@
       },
       /* 确认扩容磁盘 */
       adjustDisk_ok(){
-        this.$http.get('Disk/UpDiskConfig.do?diskId=' + this.operand.diskid + '&diskSize=' + this.dilatationForm.diskSize).then(response => {
+        this.$http.get('Disk/UpDiskConfig.do',{
+          params: {
+            diskId: this.operand.diskid,
+            diskSize: this.dilatationForm.diskSize
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             // this.$store.commit('setSelect', 'order')
             this.$router.push('order')
@@ -917,8 +960,13 @@
             item.status = 6
           }
         })
-        var url = `Snapshot/createDiskSnapshot.do?diskId=${this.operand.diskid}&name=${this.createBackupsForm.backupsName}&zoneId=${this.operand.zoneid}`
-        axios.get(url).then(response => {
+        axios.get('Snapshot/createDiskSnapshot.do',{
+          params: {
+            diskId: this.operand.diskid,
+            name: this.createBackupsForm.backupsName,
+            zoneId: this.operand.zoneid
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.info(response.data.message)
             this.$router.push('diskBackup')

@@ -826,8 +826,12 @@
       //   this.computerInfo = JSON.parse(sessionStorage.getItem('oneHostinfo'))
       // }
       this.snapsId = this.$route.query.vmid
-      var computerInfoURL = `information/listVMByComputerId.do?VMId=${this.$route.query.vmid}&zoneId=${this.$route.query.zoneid}`
-      axios.get(computerInfoURL)
+      axios.get('information/listVMByComputerId.do',{
+        params: {
+          VMId: this.$route.query.vmid,
+          zoneId: this.$route.query.zoneid
+        }
+      })
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.computerInfo = response.data.result
@@ -844,8 +848,12 @@
               })
           }
         })
-      var url1 = `alarm/getVmAlarmByHour.do?vmname=${this.$route.query.instancename}&type=core`
-      this.$http.get(url1)
+      this.$http.get('alarm/getVmAlarmByHour.do',{
+        params: {
+          vmname: this.$route.query.instancename,
+          type: 'core'
+        }
+      })
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.cpuPolar.series[0].data = response.data.result.cpuUse
@@ -866,9 +874,12 @@
       //       this.tableData = response.data.result
       //     }
       //   })
-
-      var networkURL = `alarm/getVmAlarmByHour.do?vmname=${this.$route.query.instancename}&type=network`
-      this.$http.get(networkURL)
+      this.$http.get('alarm/getVmAlarmByHour.do',{
+        params: {
+          vmname: this.$route.query.instancename,
+          type: 'network'
+        }
+      })
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.ipPolar.series[0].data = response.data.result.networkIn
@@ -889,8 +900,13 @@
     methods: {
       inter() {
         this.intervalSnapsList = setInterval(() => {
-          var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1&resourceId=${this.snapsId}`
-          axios.get(snapsURL)
+          axios.get('Snapshot/listVMSnapshot.do',{
+            params: {
+              zoneId: $store.state.zone.zoneid,
+              resourceType: 1,
+              resourceId: this.snapsId
+            }
+          })
             .then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 var snapshotData = response.data.result
@@ -918,7 +934,15 @@
       },
       search(){
         // log/queryLog.do    操作日志   pageSize(1页显示多少条),currentPage（第几页）,target（主机则传 host）  , queryTime（查询时间  格式： 开始时间 , 结束时间  非必传）
-        this.$http.get('log/queryLog.do?pageSize=' + this.pageSize + '&currentPage=' + this.currentPage + '&target=' + this.target + '&queryTime=' + this.logTime + '&targetId=' + this.$route.query.id).then(response => {
+        this.$http.get('log/queryLog.do',{
+          params: {
+            pageSize: this.pageSize,
+            currentPage: his.currentPage,
+            target: this.target,
+            queryTime: this.logTime,
+            targetId: this.$route.query.id
+          }
+        }).then(response => {
           this.total = response.data.total;
           this.tableDatalog = response.data.tableData;
         })
@@ -985,8 +1009,12 @@
         this.showModal.rollback = false
         this.loadingMessage = '正在回滚主机'
         this.loading = true
-        var URL = `Snapshot/revertToVMSnapshot.do?snapshotId=${this.cursnapshot.snapshotid}&zoneId=${$store.state.zone.zoneid}`
-        axios.get(URL)
+        axios.get('Snapshot/revertToVMSnapshot.do',{
+          params: {
+            snapshotId: this.cursnapshot.snapshotid,
+            zoneId: $store.state.zone.zoneid
+          }
+        })
           .then(response => {
             if (response.status == 200) {
               this.loading = false
@@ -1004,9 +1032,14 @@
       reloadSubm() {
         this.showModal.reload = false
         this.reloadhintForm.input = ''
-        var url = `information/restoreVirtualMachine.do?VMId=${this.computerInfo.computerId}&templateId=${this.reloadForm.system}&adminPassword=${this.reloadForm.password}`
         this.reloadButton = '正在重装...'
-        this.$http.get(url).then(response => {
+        this.$http.get('information/restoreVirtualMachine.do',{
+          params: {
+            VMId: this.computerInfo.computerId,
+            templateId: this.reloadForm.system,
+            adminPassword: this.reloadForm.password
+          }
+        }).then(response => {
           this.reloadButton = '确认重装'
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
@@ -1021,8 +1054,13 @@
       },
       // 获取具体主机下的快照列表
       getsnapsList() {
-        var snapsURL = `Snapshot/listVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&resourceType=1&resourceId=${this.snapsId}`
-        axios.get(snapsURL)
+        axios.get('Snapshot/listVMSnapshot.do',{
+          params: {
+            zoneId: $store.state.zone.zoneid,
+            resourceType: 1,
+            resourceId: this.snapsId
+          }
+        })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               var snapshotData = response.data.result
@@ -1054,8 +1092,12 @@
             item.status = 3
           }
         })
-        var URL = `Snapshot/deleteVMSnapshot.do?zoneId=${$store.state.zone.zoneid}&ids=${this.snapsSelection.id}`
-        axios.get(URL)
+        axios.get('Snapshot/deleteVMSnapshot.do',{
+          params: {
+            zoneId: $store.state.zone.zoneid,
+            ids: this.snapsSelection.id
+          }
+        })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.getsnapsList()
@@ -1190,10 +1232,15 @@
       resetConfirm(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
-            var url = `information/resetPasswordForVirtualMachine.do?VMId=${this.computerInfo.computerId}&password=${this.resetPasswordForm.newPassword}&oldPassword=${this.resetPasswordForm.oldPassword}`
             var password = this.resetPasswordForm.newPassword
             this.resetPasswordForm.buttonMessage = '正在重置中...'
-            this.$http.get(url).then(response => {
+            this.$http.get('information/resetPasswordForVirtualMachine.do',{
+              params: {
+                VMId: this.computerInfo.computerId,
+                password: this.resetPasswordForm.newPassword,
+                oldPassword: this.resetPasswordForm.oldPassword
+              }
+            }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
               } else {
@@ -1220,8 +1267,11 @@
       },
       setMonitoring() {
         this.showModal.setMonitoringForm = true
-        var url = `information/alarmConfig.do?instancename=${this.$route.query.instancename}`
-        this.$http.get(url).then(response => {
+        this.$http.get('information/alarmConfig.do',{
+          params: {
+            instancename: this.$route.query.instancename
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.setCPU = response.data.result.cpuuse
             this.setRAM = response.data.result.memoryuse
@@ -1243,8 +1293,19 @@
         this.isLetter = this.isletter == true ? 1 : 0
         this.isEmailAlarm = this.isemailalarm == true ? 1 : 0
         this.isSmsAlarm = this.issmsalarm == true ? 1 : 0
-        var url = `information/upalarmConfig.do?instancename=${this.$route.query.instancename}&cpuUse=${this.setCPU}&memoryUse=${this.setRAM}&diskUse=${this.setDisk}&networkIn=${this.setFluxIn}&networkOut=${this.setFluxOut}&isLetter=${this.isLetter}&isSmsAlarm=${this.isSmsAlarm}&isEmailAlarm=${this.isEmailAlarm}`
-        this.$http.get(url).then(response => {
+        this.$http.get('information/upalarmConfig.do',{
+          params: {
+            instancename: this.$route.query.instancename,
+            cpuUse: this.setCPU,
+            memoryUse: this.setRAM,
+            diskUse: this.setDisk,
+            networkIn: this.setFluxIn,
+            networkOut: this.setFluxOut,
+            isLetter: this.isLetter,
+            isSmsAlarm: this.isSmsAlarm,
+            isEmailAlarm: this.isEmailAlarm
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
             this.showModal.setMonitoringForm = false

@@ -125,18 +125,27 @@
                     this.$message.confirm({
                       content: '确认从负载均衡中移除该主机？',
                       onOk: () => {
-                        var url = ``
+                        var url = ''
+                        var params =''
                         if (this.balanceInfo._internal) {
-                          url = `loadbalance/removeFromInternalLoadBalancerRule.do?VMIds=${object.row.computerid}&lbId=${this.balanceInfo.lbid}`
+                          url = 'loadbalance/removeFromInternalLoadBalancerRule.do'
+                          params = {
+                            VMIds: object.row.computerid, 
+                            lbId: this.balanceInfo.lbid
+                          }
                         } else {
-                          url = `loadbalance/removeFromLoadBalancerRule.do?VMIds=${object.row.computerid}&roleId=${this.balanceInfo.loadbalanceroleid}`
+                          url = 'loadbalance/removeFromLoadBalancerRule.do'
+                          params = {
+                            VMIds: object.row.computerid, 
+                            roleId: this.balanceInfo.loadbalanceroleid
+                          }
                         }
                         this.hostData.forEach(item => {
                           if (item.computerid == object.row.computerid) {
                             this.$set(item, '_status', 2)
                           }
                         })
-                        this.$http.get(url).then(response => {
+                        this.$http.get(url,{params}).then(response => {
                           if (response.status == 200 && response.data.status == 1) {
                             this.$Message.success({
                               content: response.data.message
@@ -177,8 +186,12 @@
       listHostByBalance () {
         var loadbalanceType = this.balanceInfo._internal ? '' : '1'
         var roleId = this.balanceInfo.loadbalanceroleid || this.balanceInfo.lbid
-        var url = `loadbalance/listVmByRoleId.do?roleId=${roleId}&loadbalanceType=${loadbalanceType}`
-        this.$http.get(url).then(response => {
+        this.$http.get('loadbalance/listVmByRoleId.do',{
+          params: {
+            roleId: roleId,
+            loadbalanceType: loadbalanceType
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.hostData = response.data.result
           } else {
@@ -192,8 +205,13 @@
       bind(loadbalanceId){
         var internalLoadbalance = this.balanceInfo._internal ? '1' : ''
         this.showModal.bind = true
-        var url = `network/showLoadBalanceVM.do?netwrokId=${this.balanceInfo.networkid}&internalLoadbalance=${internalLoadbalance}&loadbalanceId=${loadbalanceId}`
-        this.$http.get(url).then(response => {
+        this.$http.get('network/showLoadBalanceVM.do',{
+          params: {
+            netwrokId: this.balanceInfo.networkid,
+            internalLoadbalance: internalLoadbalance,
+            loadbalanceId: loadbalanceId
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.bindHostForm.vmOptions = response.data.result
           } else {
@@ -206,11 +224,22 @@
       /* 负载均衡确定绑定虚拟机 */
       bindHost_ok () {
         if (this.bindHostForm.vm.length != 0) {
-          var url = ``
+          var url = ''
+          var params = {}
           if (this.balanceInfo._internal) {
-            url = `loadbalance/assignToInternalLoadBalancerRule.do?VMIds=${this.bindHostForm.vm}&lbId=${this.balanceInfo.lbid}&_t=${new Date().toTimeString()}`
+            url = 'loadbalance/assignToInternalLoadBalancerRule.do'
+            params = {
+              VMIds: this.bindHostForm.vm,
+              lbId: this.balanceInfo.lbid,
+              _t: new Date().toTimeString()
+            }
           } else {
-            url = `loadbalance/assignToLoadBalancerRule.do?VMIds=${this.bindHostForm.vm}&roleId=${this.balanceInfo.loadbalanceroleid}&_t=${new Date().toTimeString()}`
+            url = 'loadbalance/assignToLoadBalancerRule.do'
+            params = {
+              VMIds: this.bindHostForm.vm,
+              roleId: this.balanceInfo.loadbalanceroleid,
+              _t: new Date().toTimeString()
+            }
           }
           this.showModal.bind = false
           this.hostData.push({
@@ -219,7 +248,7 @@
             computerid: this.bindHostForm.vm,
             _status: 1
           })
-          this.$http.get(url).then(response => {
+          this.$http.get(url,{params}).then(response => {
             this.listHostByBalance()
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.success({

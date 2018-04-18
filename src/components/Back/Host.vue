@@ -245,9 +245,9 @@
                       </div>
                       <div class="foot" style="background-color: #ffc439">
                         <span style="color:white">{{item.createtime}}</span>
-                        <Button @click="renewHost(item)"
-                                style="margin-left: 55px;color: #ffc439;background-color: white;border-color: white;">续费
-                        </Button>
+                        <button @click="renewHost(item)"
+                                style="color: #ffc439;background-color: white;padding: 5px 10px;cursor: pointer;outline: none;border: none">续费
+                        </button>
                       </div>
                     </div>
                   </Card>
@@ -691,9 +691,12 @@
           } else {
             this.showModal.balance = true
             // 获取负载均衡规则
-            var balanceUrl = `loadbalance/listLoadBalanceRoleVM.do?zoneId=${$store.state.zone.zoneid}&VMId=${this.currentHost[0].computerid}`
-            axios.get(balanceUrl)
-              .then(response => {
+            axios.get('loadbalance/listLoadBalanceRoleVM.do',{
+              params: {
+                zoneId: $store.state.zone.zoneid,
+                VMId: this.currentHost[0].computerid
+              }
+            }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   var publicLoadbalance = response.data.result.publicLoadbalance
                   publicLoadbalance.forEach(item => {
@@ -712,19 +715,31 @@
             this.showModal.balance = false
             this.$Message.info('主机正在加入负载均衡，请稍后')
             if (this.loadBalanceForm.loadbalanceroleid.split('#')[1] == 'public') {
-              axios.get(`loadbalance/assignToLoadBalancerRule.do?VMIds=${this.currentHost[0].computerid}&zoneId=${this.currentHost[0].zoneid}&roleId=${this.loadBalanceForm.loadbalanceroleid.split('#')[0]}`)
-                .then(response => {
-                  if (response.status == 200 && response.data.status == 1) {
-                    this.$Message.success(response.data.message)
-                  } else {
-                    this.$message.info({
-                      content: response.data.message
-                    })
-                  }
-                  this.loadBalanceForm.loadbalanceroleid == ''
-                })
+              axios.get('loadbalance/assignToLoadBalancerRule.do',{
+                params: {
+                  VMIds: this.currentHost[0].computerid,
+                  zoneId: this.currentHost[0].zoneid,
+                  roleId: this.loadBalanceForm.loadbalanceroleid.split('#')[0]
+                }
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success(response.data.message)
+                } else {
+                  this.$message.info({
+                    content: response.data.message
+                  })
+                }
+                this.loadBalanceForm.loadbalanceroleid == ''
+              })
             } else {
-              axios.get(`loadbalance/assignToInternalLoadBalancerRule.do?VMIds=${this.currentHost[0].computerid}&zoneId=${this.currentHost[0].zoneid}&lbId=${this.loadBalanceForm.loadbalanceroleid}`)
+              axios.get('loadbalance/assignToInternalLoadBalancerRule.do',{
+                params: {
+                  VMIds: this.currentHost[0].computerid,
+                  zoneId: this.currentHost[0].zoneid,
+                  roleId: this.loadBalanceForm.loadbalanceroleid,
+                  lbId: this.loadBalanceForm.loadbalanceroleid
+                }
+              })
                 .then(response => {
                   if (response.status == 200 && response.data.status == 1) {
                     this.$Message.success(response.data.message)
@@ -747,7 +762,11 @@
           scrollable: true,
           onOk: () => {
             this.$Message.info('主机正在恢复，请稍后')
-            this.$http.get('information/recoverVM.do?id=' + id).then(response => {
+            this.$http.get('information/recoverVM.do',{
+              params: {
+                id: id
+              }
+            }).then(response => {
               if (response.status == 200) {
                 this.$Message.info(response.data.message)
                 this.getData()
@@ -766,7 +785,12 @@
         if (item.caseType == 3) {
           this.showModal.Renew = true
           this.RenewForm.id = item.id
-          this.$http.get('information/getResCost.do?id=' + item.id + '&type=' + 'computer').then(response => {
+          this.$http.get('information/getResCost.do',{
+            params: {
+              id: item.id,
+              type: 'computer'
+            }
+          }).then(response => {
               if (response.status == 200) {
                 this.RenewForm.cost = response.data.cost
               }
@@ -780,7 +804,11 @@
       // 欠费主机续费确认
       renewOk() {
         this.showModal.Renew = false
-        this.$http.get('information/vmRenew.do?id=' + this.RenewForm.id).then(response => {
+        this.$http.get('information/vmRenew.do',{
+          params: {
+            id: this.RenewForm.id
+          }
+        }).then(response => {
           this.getData()
           if (response.status == 200) {
             this.$Message.success('主机续费成功')
@@ -789,8 +817,7 @@
       },
       // 获取数据的主要接口
       getData() {
-        var url = 'information/listVirtualMachines.do'
-        this.$http.get(url).then(response => {
+        this.$http.get('information/listVirtualMachines.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             // 遍历各种主机类型，开启、关闭、欠费、错误、创建中
             for (var type of ['open', 'close', 'arrears', 'error', 'wait']) {
@@ -808,8 +835,7 @@
         })
       },
       toggleData() {
-        var url = 'information/listVirtualMachines.do'
-        this.$http.get(url).then(response => {
+        this.$http.get('information/listVirtualMachines.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.openHost = []
             this.closeHost = []
@@ -882,7 +908,11 @@
             this.loading = true
             this.closeHost.forEach(item => {
               if (item.select == true) {
-                this.$http.get(`information/startVirtualMachine.do?VMId=${item.computerid}`).then(response => {
+                this.$http.get('information/startVirtualMachine.do',{
+                  params: {
+                    VMId: item.computerid
+                  }
+                }).then(response => {
                   num--
                   if (num == 0) {
                     this.loading = false
@@ -901,7 +931,12 @@
         this.loading = true
         item.select = false
         item.status = 2
-        this.$http.get(`information/stopVirtualMachine.do?VMId=${item.computerid}&forced=true`)
+        this.$http.get('information/stopVirtualMachine.do',{
+          params: {
+            VMId: item.computerid,
+            forced: true
+          }
+        })
           .then(response => {
             this.loading = false
             if (response.status == 200 && response.data.status == 1) {
@@ -917,7 +952,11 @@
         this.loading = true
         item.select = false
         item.status = 2
-        this.$http.get(`information/startVirtualMachine.do?VMId=${item.computerid}`).then(response => {
+        this.$http.get('information/startVirtualMachine.do',{
+          params: {
+            VMId: item.computerid
+          }
+        }).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             this.$message.info(response.data.message)
@@ -955,9 +994,12 @@
               this.$Message.info({
                 content: `<span style="color:#2A99F2">${this.currentHost[0].computername}</span>云主机,正在绑定公网IP`
               })
-              var url = `network/enableStaticNat.do?ipId=${this.bindForm.publicIP}&VMId=${this.currentHost[0].computerid}`
-              this.$http.get(url)
-                .then(response => {
+              this.$http.get('network/enableStaticNat.do',{
+                params: {
+                  ipId: this.bindForm.publicIP,
+                  VMId: this.currentHost[0].computerid
+                }
+              }).then(response => {
                   this.loading = false
                   if (response.status == 200 && response.data.status == 1) {
                     this.$Message.success(response.data.message)
@@ -976,8 +1018,12 @@
           this.$Message.info({
             content: `<span style="color:#2A99F2">${this.currentHost[0].computername}</span>云主机,正在解绑公网IP`
           })
-          var url = `network/disableStaticNat.do?ipId=${this.currentHost[0].publicip}&VMId=${this.currentHost[0].computerid}`
-          this.$http.get(url).then(response => {
+          this.$http.get('network/disableStaticNat.do',{
+            params: {
+              ipId: this.currentHost[0].publicip,
+              VMId: this.currentHost[0].computerid
+            }
+          }).then(response => {
             if (response.status == 200 && response.data.status == 1
             ) {
               this.$Message.success(response.data.message)
@@ -1092,8 +1138,14 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.showModal.backup = false
-            var url = `Snapshot/createVMSnapshot.do?VMId=${this.currentHost[0].computerid}&snapshotName=${this.backupForm.name}&&memoryStatus=${this.backupForm.memory}&zoneId=${this.currentHost[0].zoneid}`
-            axios.get(url).then(response => {
+            axios.get('Snapshot/createVMSnapshot.do',{
+              params: {
+                VMId: this.currentHost[0].computerid,
+                snapshotName: this.backupForm.name,
+                memoryStatus: this.backupForm.memory,
+                zoneId: this.currentHost[0].zoneid
+              }
+            }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
               } else {
@@ -1143,8 +1195,12 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.showModal.mirror = false
-            var url = `Snapshot/createTemplate.do?rootDiskId=${this.currentHost[0].rootdiskid}&templateName=${this.mirrorForm.mirrorName}&descript=${this.mirrorForm.description}&zoneId=${this.currentHost[0].zoneid}`
-            axios.get(url).then(response => {
+            axios.get('Snapshot/createTemplate.do',{
+              rootDiskId: this.currentHost[0].rootdiskid,
+              templateName: this.mirrorForm.mirrorName,
+              descript: this.mirrorForm.description,
+              zoneId: this.currentHost[0].zoneid
+            }).then(response => {
               this.loading = false
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success({
@@ -1169,8 +1225,11 @@
           this.$message.confirm({
                     content: `${this.currentHost[0].computername}主机删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。`,
                       onOk: () => {
-                        this.$http.get('information/deleteVM.do?id=' + this.currentHost[0].id)
-                            .then(response => {
+                        this.$http.get('information/deleteVM.do',{
+                          params: {
+                            id: this.currentHost[0].id
+                          }
+                        }).then(response => {
                               if (response.status == 200 && response.data.status == 1) {
                                 this.$Message.success(response.data.message)
                                 this.getData()
@@ -1182,7 +1241,7 @@
                             })
                       }
                   })
-          
+
         }
       },
       upgrade() {
@@ -1192,7 +1251,11 @@
         if (this.checkSelect()) {
           this.loadingMessage = '正在重启主机'
           this.loading = true
-          this.$http.get('information/rebootVirtualMachine.do?VMId=' + this.currentHost[0].computerid)
+          this.$http.get('information/rebootVirtualMachine.do',{
+            params: {
+              VMId: this.currentHost[0].computerid
+            }
+          })
             .then(response => {
               this.loading = false
               if (response.status == 200 && response.data.status == 1) {
@@ -1227,8 +1290,13 @@
         if (time == '') {
           this.cost = '--'
         } else {
-          var url = `information/getYjPrice.do?timeValue=${this.renewalTime}&timeType=${this.renewalType}&hostIdArr=${this.currentHost[0].id}`
-          this.$http.get(url)
+          this.$http.get('information/getYjPrice.do',{
+            params: {
+              timeValue: this.renewalTime,
+              timeType: this.renewalType,
+              hostIdArr: this.currentHost[0].id
+            }
+          })
             .then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.cost = response.data.result
