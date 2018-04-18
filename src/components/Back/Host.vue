@@ -245,9 +245,9 @@
                       </div>
                       <div class="foot" style="background-color: #ffc439">
                         <span style="color:white">{{item.createtime}}</span>
-                        <Button @click="renewHost(item)"
-                                style="margin-left: 55px;color: #ffc439;background-color: white;border-color: white;">续费
-                        </Button>
+                        <button @click="renewHost(item)"
+                                style="color: #ffc439;background-color: white;padding: 5px 10px;cursor: pointer;outline: none;border: none">续费
+                        </button>
                       </div>
                     </div>
                   </Card>
@@ -1241,7 +1241,7 @@
                             })
                       }
                   })
-          
+
         }
       },
       upgrade() {
