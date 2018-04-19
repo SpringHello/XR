@@ -32,8 +32,8 @@ Vue.config.productionTip = false
 //axios.defaults.baseURL = '/ruicloud'
 
 
- // axios.defaults.baseURL = 'http://192.168.3.204:8082/ruicloud'
- // axios.defaults.withCredentials = true
+//axios.defaults.baseURL = 'http://192.168.3.124:8082/ruicloud'
+//axios.defaults.withCredentials = true
 
 //axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud'
 // axios.defaults.baseURL = 'http://192.168.3.204:8081/ruicloud'
@@ -77,7 +77,7 @@ function appendMD5(params, type) {
   str += count
   if (str !== '') {
     if (type != 'post') {
-      str = encodeURIComponent(str)
+      str = encodeURI(str)
     }
     str = md5(str)
 

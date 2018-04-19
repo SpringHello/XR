@@ -16,7 +16,7 @@ function appendMD5(params, type) {
   str += count
   if (str !== '') {
     if (type != 'post') {
-      str = encodeURIComponent(str)
+      str = encodeURI(str)
     }
     str = md5(str)
     var mac = str.substr(0, count) + count + str.substr(count)

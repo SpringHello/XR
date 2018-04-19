@@ -15,12 +15,14 @@
           <div style="width:50%">
             <p class="content-title">CPU</p>
             <div class="cpu">
-                <span v-for="item in CPU" v-if="currentCPUNum <= item.CPU" :class="{select:item.CPU==CPUNum}" :key="item.CPU"
+                <span v-for="item in CPU" v-if="currentCPUNum <= item.CPU" :class="{select:item.CPU==CPUNum}"
+                      :key="item.CPU"
                       @click="changeCPU(item)">{{item.CPU}}核</span>
             </div>
             <p class="content-title">内存</p>
             <div class="cpu">
-                <span v-for="item in RAM"  v-if="currentRAMSize <= item.memory" :class="{select:item.memory==RAMSize}" :key="item.memory"
+                <span v-for="item in RAM" v-if="currentRAMSize <= item.memory" :class="{select:item.memory==RAMSize}"
+                      :key="item.memory"
                       @click="changeCache(item)">{{item.memory}}G</span>
             </div>
           </div>
@@ -114,11 +116,11 @@
       },
       calCost(){
         var url = 'information/UpVMConfigCost.do'
-        this.$http.get(url,{
-          params:{
-            cpunum:this.CPUNum,
-            memory:this.RAMSize,
-            VMId:this.virtualMachineid
+        this.$http.get(url, {
+          params: {
+            cpunum: this.CPUNum,
+            memory: this.RAMSize,
+            VMId: this.virtualMachineid
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -133,13 +135,13 @@
           return
         }
         var url = 'information/UpVMConfig.do'
-        this.$http.get(url,{
-            params:{
-              cpunum:this.CPUNum,
-              memory:this.RAMSize,
-              VMId:this.virtualMachineid,
-              disksize:this.diskSize
-            }
+        this.$http.get(url, {
+          params: {
+            cpunum: this.CPUNum,
+            memory: this.RAMSize,
+            VMId: this.virtualMachineid,
+            disksize: this.diskSize
+          }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
@@ -149,8 +151,7 @@
         })
       }
     },
-    watch: {
-    }
+    watch: {}
   }
 </script>
 
@@ -249,7 +250,7 @@
           cursor: pointer;
           font-size: 12px;
           color: #FFFFFF;
-          &.dis{
+          &.dis {
             cursor: not-allowed;
           }
         }

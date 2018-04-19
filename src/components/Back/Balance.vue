@@ -392,7 +392,7 @@
       }
     },
     created () {
-      this.changePublicIp()
+      this.listPublicIp()
     },
     methods: {
       refresh () {

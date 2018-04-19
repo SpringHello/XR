@@ -115,11 +115,7 @@
       rechargeOk(){
         switch (this.zf) {
           case 'zfb':
-            window.open('zfb/alipayapi.do', {
-              params: {
-                total_fee: this.input
-              }
-            })
+            window.open(`zfb/alipayapi.do?total_fee=${this.input}`)
             break
           case 'wx':
             this.$router.push({
