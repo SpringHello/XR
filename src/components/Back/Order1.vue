@@ -9,7 +9,7 @@
         </div>
         <div style="margin-top:10px;" class="coupon">
           <Checkbox v-model="couponInfo.isUse" @on-change="changeCheckbox">
-            <span style="font-weight: 700;margin-left: 10px;">使用优惠券（该产品有1张优惠券）</span>
+            <span style="font-weight: 700;margin-left: 10px;">使用优惠券（该产品有{{couponInfo.couponList.length}}张优惠券）</span>
           </Checkbox>
           <div style="margin:20px 0px;border-bottom: 1px solid rgb(233,233,233);">
             <RadioGroup v-model="couponInfo.selectTicket">
@@ -175,10 +175,9 @@
             return data
           })
         }
-        axios.get('ticket/getUserTicket.do', {
+        this.$http.get('ticket/getUserTicket.do', {
           params: {
             ticketType: '',
-            zoneId: $store.state.zone.zoneid,
             isuse: 0,
             totalCost: this.couponInfo.originCost
           }

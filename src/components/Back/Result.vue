@@ -4,7 +4,7 @@
       <span>首页 / 订单确认 / 支付</span>
       <div class="content">
         <span>支付</span>
-        <span class="title">已选择{{orderInfo.orderNum}}项 | 总计:{{orderInfo.money}}元 |</span>
+        <span class="title">已选择{{orderInfo.orderNum}}项 | 总计：<span style="font-size: 24px;">{{orderInfo.money}}</span>元 </span>
         <div class="accountInfo" v-if="currentTab=='otherPay'">
           <CheckboxGroup v-model="accountPay" @on-change="checkUseVoucher">
             <Checkbox label="account" style="margin-right:40px;user-select: none">
@@ -15,14 +15,15 @@
               <span>现金券余额</span>
               <span class="remain">￥{{orderInfo.voucher}}</span>
             </Checkbox>
-            <span style="float:right;line-height:31px">余额与现金券支付金额：{{accountPayCount}}元</span>
+            <span style="float:right;line-height:31px;color:rgba(102,102,102,1);">余额与现金券支付金额：{{accountPayCount}}元</span>
           </CheckboxGroup>
         </div>
         <div class="pay">
 
           <!--包年包月第三方支付页面-->
           <div v-if="currentTab=='otherPay'&&orderInfo.timeType!=1">
-            <span style="margin-bottom: 20px;display:block;font-size: 14px;">第三方支付渠道<span style="float:right">使用其他支付需渠道金额：{{otherPayCount.toFixed(2)}}元</span></span>
+            <span style="margin-bottom: 20px;display:block;font-size: 14px;">第三方支付渠道<span
+              style="float:right;color:rgba(102,102,102,1);">使用其他支付需渠道金额：{{otherPayCount.toFixed(2)}}元</span></span>
             <div class="payContent">
               <RadioGroup v-model="otherPay" @on-change="otherPayChange">
                 <Radio label="ali" style="margin-right: 40px;">
@@ -135,7 +136,7 @@
         if (this.orderInfo.isUseVoucher == 0 && bol.indexOf('voucher') > -1) {
           this.accountPay.splice(bol.indexOf('voucher'), 1)
           this.$message.info({
-            content: '当前订单不满足使用现金券要求'
+            content: this.orderInfo.xjqdesc || '该订单暂不能使用现金券'
           })
         }
         // 必须使用现金券，但点击了取消使用
@@ -224,21 +225,9 @@
         } else if (this.otherPay == 'ali') {
           // 支付宝支付
           if (this.orderInfo.timeType == 1) {
-            window.open('zfb/alipayapi.do',{
-                params:{
-                  total_fee:this.rechargeValue.toFixed(2),
-                  orders:this.orderInfo.order,
-                  ticket:this.orderInfo.ticket
-                }
-            })
+            window.open(`zfb/alipayapi.do?total_fee=${this.rechargeValue.toFixed(2)}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
           } else {
-            window.open('zfb/alipayapi.do',{
-              params:{
-                total_fee:this.otherPayCount.toFixed(2),
-                orders:this.orderInfo.order,
-                ticket:this.orderInfo.ticket
-              }
-            })
+            window.open(`zfb/alipayapi.do?total_fee=${this.otherPayCount.toFixed(2)}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
           }
         } else if (this.otherPay == 'wx') {
           if (this.orderInfo.timeType == 1) {
@@ -334,22 +323,23 @@
           padding: 6px 0px;
           border-radius: 4px;
           margin-top: 20px;
+          font-weight: normal;
           font-family: Microsoft Yahei, 微软雅黑;
-          font-size: 12px;
+          font-size: 16px;
           color: rgba(0, 0, 0, 0.65);
           letter-spacing: 0px;
           line-height: 18px;
           &::before {
             content: "i";
             display: inline-block;
-            width: 13px;
-            height: 13px;
-            margin-right: 6px;
+            width: 15px;
+            height: 15px;
+            margin-right: 10px;
             text-align: center;
             border-radius: 50% 50%;
             background: #2A99F2;
             color: white;
-            vertical-align: sub
+            vertical-align: middle
           }
         }
         .accountInfo {

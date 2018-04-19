@@ -851,7 +851,7 @@
                 item.status = 3
               }
             })
-            this.$http.get('`network/bindingElasticIP.do',{
+            this.$http.get('network/bindingElasticIP.do',{
               params: {
                 publicIp: this.bindForNATForm.row.publicip,
                 natGatewayId: this.bindForNATForm.NAT

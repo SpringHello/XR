@@ -112,11 +112,11 @@
             </div>
             <Table highlight-row :columns="cardVolumeColumns" :data="cardVolumeTabledata" style="margin-top:10px">
             </Table>
-       <!--     <div style="margin: 10px;overflow: hidden">
-              <div style="float: right;">
-                <Page :total="cardTotal" :current="1" @on-change="cardCurrentChange"></Page>
-              </div>
-            </div>-->
+            <!--     <div style="margin: 10px;overflow: hidden">
+                   <div style="float: right;">
+                     <Page :total="cardTotal" :current="1" @on-change="cardCurrentChange"></Page>
+                   </div>
+                 </div>-->
           </Tab-pane>
           <Tab-pane label="发票申请" name="applyInvoice">
             <div v-show="applyChange">
@@ -284,11 +284,11 @@
           </tr>
           </tbody>
         </table>
- <!--       <div style="margin: 10px;overflow: hidden">
-          <div style="float: right;">
-            <Page :total="cardTotal" :current="1" :page-size="5" @on-change="card_currentChange"></Page>
-          </div>
-        </div>-->
+        <!--       <div style="margin: 10px;overflow: hidden">
+                 <div style="float: right;">
+                   <Page :total="cardTotal" :current="1" :page-size="5" @on-change="card_currentChange"></Page>
+                 </div>
+               </div>-->
       </div>
       <div slot="footer">
         <button class="ivu-btn ivu-btn-primary" @click="clipCoupons_ok"><span>确定</span></button>
@@ -1120,7 +1120,7 @@
         this.dateRange = time
       },
       search() {
-        this.$http.get('user/searchWaterNumber.do',{
+        this.$http.get('user/searchWaterNumber.do', {
           params: {
             pageSize: this.wpageSize,
             page: this.currentPage,
@@ -1149,7 +1149,7 @@
               this.orderNumber.forEach(item => {
                 order += ',' + item.ordernumber
               })
-              this.$http.get('continue/delOrderpay.do',{
+              this.$http.get('continue/delOrderpay.do', {
                 params: {
                   order: order.substr(1)
                 }
@@ -1242,7 +1242,7 @@
             }
             break
         }
-        this.$http.get(url,{params}).then(response => {
+        this.$http.get(url, {params}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.orderData = response.data.result.data
             this.ordertotal = response.data.result.totle
@@ -1275,27 +1275,22 @@
             content: '<p>确定要支付选中的订单吗？</p>',
             scrollable: true,
             onOk: () => {
-              this.payLoading = true
               let order = ''
               this.orderNumber.forEach(item => {
                 order += ',' + item.ordernumber
               })
-              this.$http.get('information/payOrder.do',{
+              this.$http.get('information/zfconfirm.do', {
                 params: {
                   order: order.substr(1),
-                  ticket: this.operatorid
+                  ticket: this.operatorid,
+                  money: this.actualDelivery
                 }
               }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
-                  this.$Message.success({
-                    content: '订单支付成功',
-                    duration: 5
+                  this.$router.push({
+                    name: 'result',
+                    params: response.data.result
                   })
-                  this.payLoading = false
-                  this.name = 'accountSummary'
-                  this.getBalance()
-                  this.showMoneyByMonth()
-                  this.search()
                 } else if (response.status == 200 && response.data.status == 2) {
                   this.payLoading = false
                 }
@@ -1328,7 +1323,7 @@
         }
       },
       searchCard() {
-        this.$http.get('ticket/getUserTicket.do',{
+        this.$http.get('ticket/getUserTicket.do', {
           params: {
             pageSize: this.cardPageSize,
             page: this.card_currentPage,
@@ -1485,7 +1480,7 @@
         this.bank_account = this.formAppreciationDate.bankAccount
       },
       showlogistics(index) {
-        this.$http.get('user/getInvoice.do',{
+        this.$http.get('user/getInvoice.do', {
           params: {
             invoiceId: this.billTabledata[index].id
           }
@@ -1505,7 +1500,7 @@
         if (this.orderNumber.length != 0) {
           if (!this.orderNumber.some(checkPaymentStatus)) {
             this.showModal.clipCoupons = true
-            this.$http.get('ticket/getUserTicket.do',{
+            this.$http.get('ticket/getUserTicket.do', {
               params: {
                 pageSize: this.card_pageSize,
                 page: this.card_currentPage,
@@ -1515,7 +1510,7 @@
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.cardVolumeTableData = response.data.result.data
+                this.cardVolumeTableData = response.data.result
                 for (var a = 0; a < this.cardVolumeTableData.length; a++) {
                   if (this.cardSelection && this.cardSelection.operatorid == this.cardVolumeTableData[a].operatorid) {
                     this.activeIndex = a

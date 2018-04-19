@@ -236,25 +236,26 @@
     methods: {
       getData(type){
         let pageInfo = this[type + 'PageInfo']
+        let params = {
+          rows: pageInfo.pageSize,
+          page: pageInfo.currentPage
+        }
         if (this.searchInfo.searchStartDate != '') {
-          url += '&starttime=' + this.searchInfo.searchStartDate
-          url += '&endtime=' + this.searchInfo.searchEndDate
+          params.starttime = this.searchInfo.searchStartDate
+          params.endtime = this.searchInfo.searchEndDate
         }
         if (this.searchInfo.keyWords) {
-          url += '&name=' + this.searchInfo.keyWords
+          params.name = this.searchInfo.keyWords
         }
         if (type == 'read') {
-          url += '&isRead=1'
+          params.isRead = '1'
         } else if (type == 'notRead') {
-          url += '&isRead=0'
+          params.isRead = '0'
         } else if (type == 'all') {
-          url += '&isRead=2'
+          params.isRead = '2'
         }
-        this.$http.get('user/getEventNotifyList.do',{
-          params: {
-            rows: pageInfo.pageSize,
-            page: pageInfo.currentPage
-          }
+        this.$http.get('user/getEventNotifyList.do', {
+          params
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this[type + 'Data'] = response.data.result
@@ -304,7 +305,6 @@
         this.modelInfo.content = param.row.content
         this.showModal.detail = true
         if (param.row.isread == 0) {
-          //let url = `user/readedEventNotify.do?list=[{"id":"${param.row.id}"}]`
           this.$http.post('user/readedEventNotify.do', {
             list: `[{"id":"${param.row.id}"}]`
           }).then(response => {
