@@ -627,7 +627,7 @@
               internalLoadbalance: internalLoadbalance,
               loadbalanceId: balanceId
             }
-          }).then(response = > {
+          }).then(response => {
             if (response.status == 200 && response.data.status == 1
         )
           {
@@ -645,7 +645,7 @@
       /* 负载均衡确定绑定虚拟机 */
       bindHost_ok () {
         this.showModal.bind = false
-        this.balData.forEach(item = > {
+        this.balData.forEach(item => {
           if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid
       )
         {
@@ -671,7 +671,7 @@
               _t: new Date().toTimeString(),
             }
           }
-          this.$http.get(url, {params}).then(response = > {
+          this.$http.get(url, {params}).then(response => {
             if (response.status == 200 && response.data.status == 1
         )
           {
@@ -705,7 +705,7 @@
               roleId: roleId,
               loadbalanceType: loadbalanceType
             }
-          }).then(response = > {
+          }).then(response => {
             if (response.status == 200 && response.data.status == 1
         )
           {
@@ -723,7 +723,7 @@
       /* 确认解绑虚拟机 */
       unbindHost_ok () {
         this.showModal.unbind = false
-        this.balData.forEach(item = > {
+        this.balData.forEach(item => {
           if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid
       )
         {
@@ -747,7 +747,7 @@
               roleId: this.balanceSelection.loadbalanceroleid
             }
           }
-          this.$http.get(url, {params}).then(response = > {
+          this.$http.get(url, {params}).then(response => {
             if (response.status == 200 && response.data.status == 1
         )
           {
@@ -775,7 +775,7 @@
         } else {
           this.$message.confirm({
               content: '确认删除该负载均衡？',
-              onOk: () = > {
+              onOk: () => {
               var url = ''
               if (this.balanceSelection._internal)
           {
@@ -785,7 +785,7 @@
           {
             url = 'loadbalance/deleteLoadBalancerRule.do'
           }
-          this.balData.forEach(item = > {
+          this.balData.forEach(item => {
             if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid
         )
           {
@@ -797,7 +797,7 @@
             params: {
               id: this.balanceSelection.id
             }
-          }).then(response = > {
+          }).then(response => {
             if (response.status == 200 && response.data.status == 1
         )
           {
