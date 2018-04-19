@@ -773,7 +773,9 @@
         var zoneId = $store.state.zone.zoneid
         // 获取vpc数据
         var vpcResponse = axios.get('network/listVpc.do', {
-          zoneId: zoneId
+          params: {
+            zoneId: zoneId
+          }
         })
         // 获取NAT网关数据
         var NATResponse = axios.get('network/listNatGateway.do', {
@@ -784,9 +786,9 @@
 
         Promise.all([vpcResponse, NATResponse]).then((ResponseValue) => {
           this.setData(ResponseValue[0])
-          this.setNatData(ResponseValue[1])
-          this.select = null
-        })
+        this.setNatData(ResponseValue[1])
+        this.select = null
+      })
       },
       // 选中当前项
       selectNAT(current){
