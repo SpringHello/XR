@@ -126,7 +126,7 @@
                       content: '确认从负载均衡中移除该主机？',
                       onOk: () => {
                         var url = ''
-                        var params =''
+                        var params = {}
                         if (this.balanceInfo._internal) {
                           url = 'loadbalance/removeFromInternalLoadBalancerRule.do'
                           params = {
