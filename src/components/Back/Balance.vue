@@ -59,6 +59,15 @@
                 </RadioGroup>
               </FormItem>
               <!--当为公网时-->
+              <FormItem label="公网IP" prop="publicIp" v-if="creatbalancemodal.formInline.radio == 'public'"
+                        style="width:240px;">
+                <Select v-model="creatbalancemodal.formInline.publicIp" @on-change="changePublicIp">
+                  <Option v-for="item in creatbalancemodal.formInline.PublicIpList"
+                          :value="`${item.vpcid}#${item.publicipid}`"
+                          :key="item.publicipid">{{ item.publicip }}
+                  </Option>
+                </Select>
+              </FormItem>
               <FormItem label="所属子网" prop="subnet"
                         style="width:240px;">
                 <Select v-model="creatbalancemodal.formInline.subnet" @on-change="changeSubnet">
@@ -90,15 +99,7 @@
                   </div>
                 </div>
               </Poptip>
-              <FormItem label="公网IP" prop="publicIp" v-if="creatbalancemodal.formInline.radio == 'public'"
-                        style="width:240px;">
-                <Select v-model="creatbalancemodal.formInline.publicIp">
-                  <Option v-for="item in creatbalancemodal.formInline.PublicIpList"
-                          :value="`${item.vpcid}#${item.publicipid}`"
-                          :key="item.publicipid">{{ item.publicip }}
-                  </Option>
-                </Select>
-              </FormItem>
+
               <!--当为内网时-->
 
               <FormItem label="内网IP" prop="intranetIp" v-if="creatbalancemodal.formInline.radio == 'private'">
@@ -627,25 +628,31 @@
               loadbalanceId: balanceId
             }
           }).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.bindHostForm.vmOptions = response.data.result
-              } else {
-                this.$message.info({
-                  content: response.data.message
-                })
-              }
+            if (response.status == 200 && response.data.status == 1
+        )
+          {
+            this.bindHostForm.vmOptions = response.data.result
+          }
+        else
+          {
+            this.$message.info({
+              content: response.data.message
             })
           }
+        })
+        }
       },
       /* 负载均衡确定绑定虚拟机 */
       bindHost_ok () {
         this.showModal.bind = false
         this.balData.forEach(item => {
-          if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
-            item.status = 7
-            item._disabled = true
-          }
-        })
+          if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid
+      )
+        {
+          item.status = 7
+          item._disabled = true
+        }
+      })
         if (this.bindHostForm.vm.length != 0) {
           var url = ''
           var params = {}
@@ -664,18 +671,22 @@
               _t: new Date().toTimeString(),
             }
           }
-          this.$http.get(url,{params}).then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.refresh()
-              this.$Message.success({
-                content: response.data.message
-              })
-            } else {
-              this.$message.info({
-                content: response.data.message
-              })
-            }
-          })
+          this.$http.get(url, {params}).then(response => {
+            if (response.status == 200 && response.data.status == 1
+        )
+          {
+            this.refresh()
+            this.$Message.success({
+              content: response.data.message
+            })
+          }
+        else
+          {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
         } else {
           this.showModal.bind = false
         }
@@ -689,31 +700,37 @@
           var loadbalanceType = this.balanceSelection._internal ? '' : '1'
           var roleId = this.balanceSelection.loadbalanceroleid || this.balanceSelection.lbid
           var url = `loadbalance/listVmByRoleId.do`
-          this.$http.get(url,{
+          this.$http.get(url, {
             params: {
               roleId: roleId,
               loadbalanceType: loadbalanceType
             }
           }).then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.unbindForm.hostList = response.data.result
-            } else {
-              this.$message.info({
-                content: response.data.message
-              })
-            }
-          })
+            if (response.status == 200 && response.data.status == 1
+        )
+          {
+            this.unbindForm.hostList = response.data.result
+          }
+        else
+          {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
         }
       },
       /* 确认解绑虚拟机 */
       unbindHost_ok () {
         this.showModal.unbind = false
         this.balData.forEach(item => {
-          if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
-            item.status = 6
-            item._disabled = true
-          }
-        })
+          if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid
+      )
+        {
+          item.status = 6
+          item._disabled = true
+        }
+      })
         if (this.unbindForm.vm.length != 0) {
           var url = ''
           var params = {}
@@ -730,19 +747,23 @@
               roleId: this.balanceSelection.loadbalanceroleid
             }
           }
-          this.$http.get(url,{params}).then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.$Message.success({
-                content: response.data.message
-              })
-              this.refresh()
-            } else {
-              this.$message.info({
-                content: response.data.message
-              })
-              this.refresh()
-            }
-          })
+          this.$http.get(url, {params}).then(response => {
+            if (response.status == 200 && response.data.status == 1
+        )
+          {
+            this.$Message.success({
+              content: response.data.message
+            })
+            this.refresh()
+          }
+        else
+          {
+            this.$message.info({
+              content: response.data.message
+            })
+            this.refresh()
+          }
+        })
         } else {
           this.showModal.unbind = false
         }
@@ -753,40 +774,49 @@
           this.$Message.info('请选择一个负载均衡')
         } else {
           this.$message.confirm({
-            content: '确认删除该负载均衡？',
-            onOk: () => {
+              content: '确认删除该负载均衡？',
+              onOk: () => {
               var url = ''
-              if (this.balanceSelection._internal) {
-                url = 'loadbalance/deleteInternalLB.do'
-              } else {
-                url = 'loadbalance/deleteLoadBalancerRule.do'
-              }
-              this.balData.forEach(item => {
-                if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
-                  item.status = 5
-                  item._disabled = true
-                }
-              })
-              this.$http.get(url,{
-                params:{
-                id: this.balanceSelection.id
-                }
-              }).then(response => {
-                if (response.status == 200 && response.data.status == 1) {
-                  this.$Message.success({
-                    content: response.data.message
-                  })
-                  this.listAllBalance()
-                  this.balanceSelection = null
-                } else {
-                  this.refresh()
-                  this.$message.info({
-                    content: response.data.message
-                  })
-                }
-              })
+              if (this.balanceSelection._internal)
+          {
+            url = 'loadbalance/deleteInternalLB.do'
+          }
+        else
+          {
+            url = 'loadbalance/deleteLoadBalancerRule.do'
+          }
+          this.balData.forEach(item => {
+            if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid
+        )
+          {
+            item.status = 5
+            item._disabled = true
+          }
+        })
+          this.$http.get(url, {
+            params: {
+              id: this.balanceSelection.id
             }
-          })
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1
+        )
+          {
+            this.$Message.success({
+              content: response.data.message
+            })
+            this.listAllBalance()
+            this.balanceSelection = null
+          }
+        else
+          {
+            this.refresh()
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+        }
+        })
         }
       }
     },
