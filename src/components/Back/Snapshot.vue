@@ -1883,9 +1883,11 @@
         })
         var snapsURL = 'information/updateVMIntoBackUpStrategy.do'
         axios.get(snapsURL, {
-          zoneId: $store.state.zone.zoneid,
-          backUpStrategyId: this.strategyId,
-          VMIds: vmids.join(',')
+          params: {
+            zoneId: $store.state.zone.zoneid,
+            backUpStrategyId: this.strategyId,
+            VMIds: vmids.join(',')
+          }
         })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
@@ -1992,11 +1994,11 @@
       delStrategySubm() {
         this.showModal.delStrategy = false
         var URL = 'information/deleteVMBackUpStrategy.do'
-        axios.get(URL,{
-            params:{
-              zoneId:$store.state.zone.zoneid,
-              id:this.strategySelectionItem.id
-            }
+        axios.get(URL, {
+          params: {
+            zoneId: $store.state.zone.zoneid,
+            id: this.strategySelectionItem.id
+          }
         })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
@@ -2032,11 +2034,11 @@
           }
         })
         var URL = 'Snapshot/deleteVMSnapshot.do'
-        axios.get(URL,{
-            params:{
-              zoneId:$store.state.zone.zoneid,
-              ids:this.snapsSelection.id
-            }
+        axios.get(URL, {
+          params: {
+            zoneId: $store.state.zone.zoneid,
+            ids: this.snapsSelection.id
+          }
         })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
@@ -2049,13 +2051,13 @@
         this.$refs[snapsname].validate((valid) => {
           if (valid) {
             var snapsURL = 'Snapshot/createVMSnapshot.do'
-            axios.get(snapsURL,{
-                params:{
-                  zoneId:$store.state.zone.zoneid,
-                  snapshotName:this.creatSnapsForm.name,
-                  VMId:this.creatSnapsForm.host,
-                  memoryStatus:this.creatSnapsForm.radio
-                }
+            axios.get(snapsURL, {
+              params: {
+                zoneId: $store.state.zone.zoneid,
+                snapshotName: this.creatSnapsForm.name,
+                VMId: this.creatSnapsForm.host,
+                memoryStatus: this.creatSnapsForm.radio
+              }
             })
               .then(response => {
                 if (response.status == 200 && response.data.status == 1) {
@@ -2080,16 +2082,16 @@
           if (valid) {
             var vmids = this.creatBackupsForm.host.join(',')
             var URL = 'information/createVMBackUpStrategy.do'
-            axios.get(URL,{
-                params:{
-                  zoneId:$store.state.zone.zoneid,
-                  strategyName:this.creatBackupsForm.name,
-                  keepCount:this.creatBackupsForm.num,
-                  keepInterval:this.creatBackupsForm.timeType,
-                  autoBackUpTime:this.creatBackupsForm.timeValue,
-                  VMIds:vmids,
-                  memoryStatus:this.creatBackupsForm.memory
-                }
+            axios.get(URL, {
+              params: {
+                zoneId: $store.state.zone.zoneid,
+                strategyName: this.creatBackupsForm.name,
+                keepCount: this.creatBackupsForm.num,
+                keepInterval: this.creatBackupsForm.timeType,
+                autoBackUpTime: this.creatBackupsForm.timeValue,
+                VMIds: vmids,
+                memoryStatus: this.creatBackupsForm.memory
+              }
             })
               .then(response => {
                 if (response.status == 200 && response.data.status == 1) {

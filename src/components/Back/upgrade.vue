@@ -15,13 +15,15 @@
           <div style="width:50%">
             <p class="content-title">CPU</p>
             <div class="cpu">
-                <span v-for="item in CPU" :class="{select:item==CPUNum,disabled:item<currentCPUNum}"
-                      @click="changeCPU(item)">{{item}}核</span>
+                <span v-for="item in CPU" v-if="currentCPUNum <= item.CPU" :class="{select:item.CPU==CPUNum}"
+                      :key="item.CPU"
+                      @click="changeCPU(item)">{{item.CPU}}核</span>
             </div>
             <p class="content-title">内存</p>
             <div class="cpu">
-                <span v-for="item in RAM" :class="{select:item==RAMSize}"
-                      v-show="item>=CPUNum&&item<=CPUNum*4" @click="changeCache(item)">{{item}}G</span>
+                <span v-for="item in RAM" v-if="currentRAMSize <= item.memory" :class="{select:item.memory==RAMSize}"
+                      :key="item.memory"
+                      @click="changeCache(item)">{{item.memory}}G</span>
             </div>
           </div>
           <div class="conf-wrapper">
@@ -41,7 +43,7 @@
             <span style="margin-top:10px;">
                 <a href="/ruicloud/#/computed/3-1" target="_blank">购买和计费说明</a>
               </span>
-            <button @click="payOrder" >立即购买</button>
+            <button @click="payOrder" :class="{ dis: cost==0}">立即购买</button>
           </div>
         </div>
       </div>
@@ -51,8 +53,10 @@
 </template>
 
 <script type="text/ecmascript-6">
-  export default{
-    data(){
+  import axios from 'axios'
+
+  export default {
+    data() {
       var currentCPUNum = Number.parseInt(localStorage.serviceoffername.replace(/[^0-9]/ig, "")[0])
       var currentRAMSize = Number.parseInt(localStorage.serviceoffername.replace(/[^0-9]/ig, "")[2])
       var hostname = sessionStorage.getItem('hostname')
@@ -70,38 +74,55 @@
         diskSize: localStorage.disksize,
         virtualMachineid: localStorage.virtualMachineid,
         cost: 0,
-        CPU: [1, 2, 4, 8, 16, 32],
-        RAM: [1, 2, 4, 8, 16, 32]
+        CPU: [],
+        RAM: []
       }
     },
-    created(){
+    beforeRouteEnter(from, to, next) {
+      // 获取负载均衡的初始数据
+      var zoneId = localStorage.getItem('zoneid')
+      axios.get(`information/getZonesConfig.do`, {
+        params: {
+          zoneId: zoneId
+        }
+      }).then(response => {
+        next(vm => {
+          vm.setData(response)
+        })
+      })
+    },
+    created() {
     },
     methods: {
-      changeCPU(cpu){
-        if (this.currentCPUNum > cpu) {
-          this.$Message.info("啊哦!无法选择更低的配置")
-          return
+      setData(response) {
+        if (response.status == 200 && response.data.status == 1) {
+          this.CPU = response.data.data
+          this.CPU.forEach(item => {
+            if (Number(item.CPU) === this.CPUNum) {
+              this.RAM = item.list
+            }
+          })
         }
-        if (this.RAMSize < cpu) {
-          this.RAMSize = cpu
-        }
-        if (this.RAMSize > cpu * 4) {
-          this.RAMSize = cpu * 4
-        }
-        this.CPUNum = cpu;
+      },
+      changeCPU(cpu) {
+        this.CPUNum = cpu.CPU
+        this.RAM = cpu.list
+        this.RAMSize = cpu.list[0].memory
         this.calCost()
       },
-      changeCache(ram){
-        if (ram < this.currentRAMSize) {
-          this.$Message.info("啊哦!无法选择更低的配置")
-          return
-        }
-        this.RAMSize = ram
+      changeCache(ram) {
+        this.RAMSize = ram.memory
         this.calCost()
       },
       calCost(){
-        var url = `information/UpVMConfigCost.do?cpunum=${this.CPUNum}&memory=${this.RAMSize}&VMId=${this.virtualMachineid}`
-        this.$http.get(url).then(response => {
+        var url = 'information/UpVMConfigCost.do'
+        this.$http.get(url, {
+          params: {
+            cpunum: this.CPUNum,
+            memory: this.RAMSize,
+            VMId: this.virtualMachineid
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.cost = response.data.result
           } else {
@@ -109,26 +130,28 @@
           }
         })
       },
-      payOrder(){
-        if (this.CPUNum + this.RAMSize == this.currentCPUNum + this.currentRAMSize) {
+      payOrder() {
+        if (this.cost === 0) {
           return
         }
-        var url = `information/UpVMConfig.do?cpunum=${this.CPUNum}&memory=${this.RAMSize}&VMId=${this.virtualMachineid}&disksize=${this.diskSize}`
-        this.$http.get(url).then(response => {
+        var url = 'information/UpVMConfig.do'
+        this.$http.get(url, {
+          params: {
+            cpunum: this.CPUNum,
+            memory: this.RAMSize,
+            VMId: this.virtualMachineid,
+            disksize: this.diskSize
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success('订单提交成功')
-            this.$router.replace("order")
+            this.$router.push('order')
           } else {
-            this.$Message.error(response.data.message)
+            this.$message.error(response.data.message)
           }
         })
       }
     },
-    watch: {
-      diskSize(){
-        this.calCost();
-      }
-    }
+    watch: {}
   }
 </script>
 
@@ -138,6 +161,7 @@
     @diff: 102px;
     min-height: calc(~"100% - @{diff}")
   }
+
   .upgrade {
     background-color: white;
     padding: 20px;
@@ -151,10 +175,10 @@
       display: flex;
       margin-top: 15px;
       justify-content: space-between;
-      .content-title{
+      .content-title {
         font-size: 16px;
         font-weight: 700;
-        color: rgba(17,17,17,0.75);
+        color: rgba(17, 17, 17, 0.75);
         line-height: 18px
       }
       .cpu {
@@ -188,7 +212,7 @@
         box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.20);
         border-radius: 4px;
         padding: 23px 19px;
-        .money{
+        .money {
           font-size: 24px;
           color: #2A99F2;
           font-style: normal;
@@ -226,6 +250,9 @@
           cursor: pointer;
           font-size: 12px;
           color: #FFFFFF;
+          &.dis {
+            cursor: not-allowed;
+          }
         }
       }
     }

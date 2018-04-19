@@ -349,7 +349,7 @@
         if (!value) {
           return callback(new Error('收件人地址不能为空'))
         }
-        if ((/^[0-9a-zA-Z]+$/.test(value)) || (/\s+/.test(value))) {
+         if ((/^[0-9a-zA-Z]+$/.test(value)) || (/\s+/.test(value))) {
           callback(new Error('收件地址不能包含空格或是纯数字、英文'))
         } else {
           callback()
@@ -379,7 +379,7 @@
         if (!value) {
           return callback(new Error('纳税人识别码不能为空'))
         }
-        if (!(/^[0-9]*$/.test(value))) {
+         if (!(/^[0-9a-zA-Z]*$/.test(value))) {
           return callback(new Error('请输入正确的纳税人识别码'))
         } else {
           callback()
@@ -389,8 +389,8 @@
         if (!value) {
           return callback(new Error('注册地址不能为空'))
         }
-        if ((/^[0-9a-zA-Z]+$/.test(value)) || (/\s+/.test(value))) {
-          callback(new Error('注册地址不能包含空格或是纯数字、英文'))
+        if (/^[0-9a-zA-Z]+$/.test(value)) {
+          callback(new Error('注册地址不能包含纯数字或纯英文'))
         } else {
           callback()
         }
