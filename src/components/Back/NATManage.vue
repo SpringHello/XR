@@ -208,7 +208,6 @@
                     this.$message.confirm({
                       content: '确认删除该规则？',
                       onOk: () => {
-                        var url = `network/deletePortForwardingRule.do?id=${object.row.id}`
                         this.DNATData.forEach(item => {
                           item.protTransList.forEach(i => {
                             if (i.id == object.row.id) {
@@ -216,7 +215,11 @@
                             }
                           })
                         })
-                        this.$http.get(url).then(response => {
+                        this.$http.get('network/deletePortForwardingRule.do',{
+                          params: {
+                            id: object.row.id
+                          }
+                        }).then(response => {
                           if (response.status == 200 && response.data.status == 1) {
                             this.refresh()
                             this.$Message.info({

@@ -112,11 +112,11 @@
             </div>
             <Table highlight-row :columns="cardVolumeColumns" :data="cardVolumeTabledata" style="margin-top:10px">
             </Table>
-       <!--     <div style="margin: 10px;overflow: hidden">
-              <div style="float: right;">
-                <Page :total="cardTotal" :current="1" @on-change="cardCurrentChange"></Page>
-              </div>
-            </div>-->
+            <!--     <div style="margin: 10px;overflow: hidden">
+                   <div style="float: right;">
+                     <Page :total="cardTotal" :current="1" @on-change="cardCurrentChange"></Page>
+                   </div>
+                 </div>-->
           </Tab-pane>
           <Tab-pane label="发票申请" name="applyInvoice">
             <div v-show="applyChange">
@@ -284,11 +284,11 @@
           </tr>
           </tbody>
         </table>
- <!--       <div style="margin: 10px;overflow: hidden">
-          <div style="float: right;">
-            <Page :total="cardTotal" :current="1" :page-size="5" @on-change="card_currentChange"></Page>
-          </div>
-        </div>-->
+        <!--       <div style="margin: 10px;overflow: hidden">
+                 <div style="float: right;">
+                   <Page :total="cardTotal" :current="1" :page-size="5" @on-change="card_currentChange"></Page>
+                 </div>
+               </div>-->
       </div>
       <div slot="footer">
         <button class="ivu-btn ivu-btn-primary" @click="clipCoupons_ok"><span>确定</span></button>
@@ -1120,8 +1120,17 @@
         this.dateRange = time
       },
       search() {
-        this.$http.get('user/searchWaterNumber.do?pageSize=' + this.wpageSize + '&page=' + this.currentPage +
-          '&type=' + this.types + '&starttime=' + this.dateRange[0] + '&endtime=' + this.dateRange[1] + '&startcount=' + this.value1 + '&endcount=' + this.value2)
+        this.$http.get('user/searchWaterNumber.do', {
+          params: {
+            pageSize: this.wpageSize,
+            page: this.currentPage,
+            type: this.types,
+            starttime: this.dateRange[0],
+            endtime: this.dateRange[1],
+            startcount: this.value1,
+            endcount: this.value2
+          }
+        })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.tabledata = response.data.result.data
@@ -1140,8 +1149,11 @@
               this.orderNumber.forEach(item => {
                 order += ',' + item.ordernumber
               })
-              var url = `continue/delOrderpay.do?order=${order.substr(1)}`
-              this.$http.get(url).then(response => {
+              this.$http.get('continue/delOrderpay.do', {
+                params: {
+                  order: order.substr(1)
+                }
+              }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.$Message.success({
                     content: '订单删除成功',
@@ -1206,16 +1218,31 @@
       },
       searchOrderByType() {
         var url = ''
+        var params = {}
         switch (this.timeType) {
           case '':
           case '1':
-            url = 'user/searchOrderByType.do?pageSize=' + this.pageSize + '&page=' + this.order_currentPage + '&paymentStatus=' + this.order_type + '&startTime=' + this.order_dateRange[0] + '&endTime=' + this.order_dateRange[1]
+            url = 'user/searchOrderByType.do'
+            params = {
+              pageSize: this.pageSize,
+              page: this.order_currentPage,
+              paymentStatus: this.order_type,
+              startTime: this.order_dateRange[0],
+              endTime: this.order_dateRange[1]
+            }
             break
           case '2':
-            url = 'user/searchOrderByType.do?pageSize=' + this.pageSize + '&page=' + this.order_currentPage + '&paymentStatus=' + this.order_type + '&aleradyStartTime=' + this.order_dateRange[0] + '&alreadyEndTime=' + this.order_dateRange[1]
+            url = 'user/searchOrderByType.do'
+            params = {
+              pageSize: this.pageSize,
+              page: this.order_currentPage,
+              paymentStatus: this.order_type,
+              aleradyStartTime: this.order_dateRange[0],
+              alreadyEndTime: this.order_dateRange[1]
+            }
             break
         }
-        this.$http.get(url).then(response => {
+        this.$http.get(url, {params}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.orderData = response.data.result.data
             this.ordertotal = response.data.result.totle
@@ -1248,23 +1275,22 @@
             content: '<p>确定要支付选中的订单吗？</p>',
             scrollable: true,
             onOk: () => {
-              this.payLoading = true
               let order = ''
               this.orderNumber.forEach(item => {
                 order += ',' + item.ordernumber
               })
-              var url = `information/payOrder.do?order=${order.substr(1)}&ticket=` + this.operatorid
-              this.$http.get(url).then(response => {
+              this.$http.get('information/zfconfirm.do', {
+                params: {
+                  order: order.substr(1),
+                  ticket: this.operatorid,
+                  money: this.actualDelivery
+                }
+              }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
-                  this.$Message.success({
-                    content: '订单支付成功',
-                    duration: 5
+                  this.$router.push({
+                    name: 'result',
+                    params: response.data.result
                   })
-                  this.payLoading = false
-                  this.name = 'accountSummary'
-                  this.getBalance()
-                  this.showMoneyByMonth()
-                  this.search()
                 } else if (response.status == 200 && response.data.status == 2) {
                   this.payLoading = false
                 }
@@ -1297,7 +1323,14 @@
         }
       },
       searchCard() {
-        this.$http.get('ticket/getUserTicket.do?pageSize=' + this.cardPageSize + '&page=' + this.card_currentPage + '&ticketType=' + this.cardType + '&isuse=' + this.cardState).then(response => {
+        this.$http.get('ticket/getUserTicket.do', {
+          params: {
+            pageSize: this.cardPageSize,
+            page: this.card_currentPage,
+            ticketType: this.cardType,
+            isuse: this.cardState
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.cardVolumeTabledata = response.data.result
           }
@@ -1447,7 +1480,11 @@
         this.bank_account = this.formAppreciationDate.bankAccount
       },
       showlogistics(index) {
-        this.$http.get('user/getInvoice.do?invoiceId=' + this.billTabledata[index].id).then(response => {
+        this.$http.get('user/getInvoice.do', {
+          params: {
+            invoiceId: this.billTabledata[index].id
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Modal.info({
               title: '发票物流信息',
@@ -1463,9 +1500,17 @@
         if (this.orderNumber.length != 0) {
           if (!this.orderNumber.some(checkPaymentStatus)) {
             this.showModal.clipCoupons = true
-            this.$http.get('ticket/getUserTicket.do?pageSize=' + this.card_pageSize + '&page=' + this.card_currentPage + '&ticketType=' + this.card_type + '&isuse=0&totalCost=' + this.totalCost).then(response => {
+            this.$http.get('ticket/getUserTicket.do', {
+              params: {
+                pageSize: this.card_pageSize,
+                page: this.card_currentPage,
+                ticketType: this.card_type,
+                isuse: 0,
+                totalCost: this.totalCost
+              }
+            }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
-                this.cardVolumeTableData = response.data.result.data
+                this.cardVolumeTableData = response.data.result
                 for (var a = 0; a < this.cardVolumeTableData.length; a++) {
                   if (this.cardSelection && this.cardSelection.operatorid == this.cardVolumeTableData[a].operatorid) {
                     this.activeIndex = a

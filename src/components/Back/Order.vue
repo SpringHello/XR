@@ -21,7 +21,8 @@
             <div style="text-align: right">
               <span
                 style="font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: rgba(0,0,0,0.65);">总计支付 : <span
-                style="color: #377DFF;font-size: 18px;">{{totalCost}}</span>  <span style="font-size: 14px;">元</span> </span>
+                style="color: #377DFF;font-size: 18px;">{{totalCost}}</span>  <span
+                style="font-size: 14px;">元</span> </span>
               <span v-show="actualPayment"
                     style="font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: rgba(0,0,0,0.65);">（实际支付：<span
                 style="color: #377DFF;font-size: 18px;">{{totalCost}}</span>  <span style="font-size: 14px;">/元</span>）</span>
@@ -248,28 +249,33 @@
       changePage(currentPage){
         this.totalCost = 0
         this.page = currentPage
-        this.$http.get(`user/searchOrderByType.do?paymentStatus=0&page=${this.page}&pageSize=${this.pageSize}`)
-          .then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.total = response.data.result.totle
-              this.tableData = response.data.result.data.map(item => {
-                var data = JSON.parse(item.display)
-                data.orderId = item.ordernumber
-                data.originalcost = item.originalcost
-                data.cost = item.cost
-                return data
+        this.$http.get('user/searchOrderByType.do', {
+          params: {
+            paymentStatus: 0,
+            page: this.page,
+            pageSize: this.pageSize
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.total = response.data.result.totle
+            this.tableData = response.data.result.data.map(item => {
+              var data = JSON.parse(item.display)
+              data.orderId = item.ordernumber
+              data.originalcost = item.originalcost
+              data.cost = item.cost
+              return data
+            })
+            if (this.tableData[0]) {
+              this.tableData[0]._checked = true
+              this.selection = []
+              this.selection.push(this.tableData[0])
+              this.selection.forEach(item => {
+                this.totalCost += item.cost
               })
-              if (this.tableData[0]) {
-                this.tableData[0]._checked = true
-                this.selection = []
-                this.selection.push(this.tableData[0])
-                this.selection.forEach(item => {
-                  this.totalCost += item.cost
-                })
-                this.coupon = this.totalCost
-              }
+              this.coupon = this.totalCost
             }
-          })
+          }
+        })
       },
       pay(){
         if (this.selection.length != 0) {
@@ -283,7 +289,12 @@
                 return prev + ',' + curr.orderId
               }, '')
               orderId = orderId.slice(1, orderId.length)
-              this.$http.get(`information/payOrder.do?order=${orderId}&ticket=${this.operatorid}`)
+              this.$http.get('information/payOrder.do', {
+                params: {
+                  order: orderId,
+                  ticket: this.operatorid
+                }
+              })
                 .then(response => {
                   this.payLoading = false
                   //this.$store.commit('setSelect', 'payResult')
@@ -314,7 +325,15 @@
       clipCoupons(){
         if (this.selection.length != 0) {
           this.showModal.clipCoupons = true
-          this.$http.get('ticket/getUserTicket.do?pageSize=' + this.cardPageSize + '&page=' + this.card_currentPage + '&ticketType=' + this.cardType + '&isuse=0&totalCost=' + this.totalCost).then(response => {
+          this.$http.get('ticket/getUserTicket.do', {
+            params: {
+              pageSize: this.cardPageSize,
+              page: this.card_currentPage,
+              ticketType: this.cardType,
+              isuse: 0,
+              totalCost: this.totalCost
+            }
+          }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.cardVolumeTabledata = response.data.result.data
               for (var a = 0; a < this.cardVolumeTabledata.length; a++) {

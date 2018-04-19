@@ -60,7 +60,11 @@
     created(){
       this.loading = true
       this.loadingMessage = '正在生成二维码，请稍后...'
-      this.$http.get('wx/wxpayapi.do?total_fee=' + this.price).then(response => {
+      this.$http.get('wx/wxpayapi.do', {
+        params: {
+          total_fee: this.price
+        }
+      }).then(response => {
         if (response.status == 200 && response.data.status == 1) {
           this.serialNum = response.data.result.serialNum
           this.config.value = response.data.result.codeUrl
@@ -68,7 +72,7 @@
         } else {
           this.loading = false
           this.$message.info({
-              content: response.data.message
+            content: response.data.message
           })
         }
       })
@@ -78,23 +82,27 @@
         this.$router.push('recharge');
       },
       payError(){
-        this.$router.push('expenses');
+        this.$router.push('recharge');
       },
       paySuccess(){
         this.loading = true
-        this.loadingMessage = '正在充值，请稍后...'
-        this.$http.get('user/payStatus.do?serialNum=' + this.serialNum).then(response => {
+        this.loadingMessage = '正在支付，请稍后...'
+        this.$http.get('user/payStatus.do', {
+          params: {
+            serialNum: this.serialNum
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.loading = false
             this.$router.push('expenses')
             this.$Message.success({
-              content: '账户充值成功',
+              content: '支付成功',
               duration: 3
             });
           } else {
             this.loading = false;
             this.$message.info({
-                content: response.data.message
+              content: '支付失败'
             })
           }
         })

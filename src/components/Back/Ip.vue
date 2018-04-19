@@ -259,7 +259,13 @@
     name: 'ip',
     beforeRouteEnter(to, from, next) {
       // 获取ip数据
-      axios.get(`network/listPublicIp.do?page=1&pageSize=10&zoneId=${$store.state.zone.zoneid}`).then(response => {
+      axios.get('network/listPublicIp.do',{
+        params: {
+          page: 1,
+          pageSize: 10,
+          zoneId: $store.state.zone.zoneid
+        }
+      }).then(response => {
         next(vm => {
           vm.setData(response)
         })
@@ -644,7 +650,11 @@
       // 释放弹性IP
       resetIP(){
         if (this.select != null) {
-            this.$http.get(`network/delPublic.do?id=${this.select.id}`).then(response => {
+            this.$http.get('network/delPublic.do',{
+              params: {
+                id: this.select.id
+              }
+            }).then(response => {
               if (response.status != 200 || response.data.status != 1) {
                 this.$message.info({
                   content: response.data.message
@@ -667,7 +677,13 @@
       },
       refresh () {
         // 获取ip数据
-        axios.get(`network/listPublicIp.do?page=1&pageSize=10&zoneId=${$store.state.zone.zoneid}`).then(response => {
+        axios.get('network/listPublicIp.do',{
+          params:{
+            page: 1,
+            pageSize: 10,
+            zoneId: $store.state.zone.zoneid
+          }
+        }).then(response => {
           this.setData(response)
         })
       },
@@ -683,8 +699,11 @@
       // 打开新建IP模态框
       openNewIPModal(){
         this.showModal.newIPModal = true
-        var url = `network/listVpc.do?zoneId=${$store.state.zone.zoneid}`
-        axios.get(url).then(response => {
+        axios.get('network/listVpc.do',{
+          params: {
+            zoneId: $store.state.zone.zoneid
+          }
+        }).then(response => {
           this.newIPForm.VPCOptions = response.data.result
         })
       },
@@ -750,7 +769,12 @@
           this.bindForHostForm.row = row
           this.showModal.bindIPForHost = true
           // 获取所有能绑定弹性IP的云主机
-          this.$http.get(`information/listVirtualMachines.do?vpcId=${row.vpcid}&num=0`).then(response => {
+          this.$http.get('information/listVirtualMachines.do',{
+            params: {
+              vpcId: row.vpcid,
+              num: 0
+            }
+          }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               var openHostlist = []
               var closelist = []
@@ -795,7 +819,12 @@
                 item.status = 3
               }
             })
-            this.$http.get(`network/enableStaticNat.do?ipId=${this.bindForHostForm.row.publicipid}&VMId=${this.bindForHostForm.host}`).then(response => {
+            this.$http.get('network/enableStaticNat.do',{
+              params: {
+                ipId: this.bindForHostForm.row.publicipid,
+                VMId: this.bindForHostForm.host
+              }
+            }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
                 this.refresh()
@@ -822,7 +851,12 @@
                 item.status = 3
               }
             })
-            this.$http.get(`network/bindingElasticIP.do?publicIp=${this.bindForNATForm.row.publicip}&natGatewayId=${this.bindForNATForm.NAT}`).then(response => {
+            this.$http.get('network/bindingElasticIP.do',{
+              params: {
+                publicIp: this.bindForNATForm.row.publicip,
+                natGatewayId: this.bindForNATForm.NAT
+              }
+            }).then(response => {
               this.showModal.bindIPForNAT = false
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success(response.data.message)
@@ -859,15 +893,27 @@
           cancelText: '取消',
           'onOk': () => {
             var url = ''
+            var params = {}
             switch (row.usetype) {
               case 4 :
-                url = `network/unboundElasticIP.do?publicIp=${row.publicip}&natGatewayId=${row.natgatewayid}`
+                url = 'network/unboundElasticIP.do'
+                params = {
+                  publicIp: row.publicip,
+                  natGatewayId: row.natgatewayid
+                }
                 break
               case 3 :
-                url = `network/natGatewayUnboundTargetIP.do?publicIp=${row.publicip}&natGatewayId=${row.natgatewayid}`
+                url = 'network/natGatewayUnboundTargetIP.do'
+                params = {
+                  publicIp: row.publicip,
+                  natGatewayId: row.natgatewayid
+                }
                 break
               case 1 :
-                url = `network/disableStaticNat.do?VMId=${row.computerid}`
+                url = 'network/disableStaticNat.do'
+                params = {
+                  VMId: row.computerid,
+                }
                 break
             }
             // console.log('解绑')
@@ -878,7 +924,7 @@
                 item.status = 4
               }
             })
-            this.$http.get(url).then(response => {
+            this.$http.get(url,{params}).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success({
                   content: response.data.message
@@ -903,7 +949,11 @@
           this.$Message.warning('请选择1个弹性IP')
           return false
         }
-        this.$http.get(`network/delPublic.do?id=${this.select.id}`).then(response => {
+        this.$http.get('network/delPublic.do',{
+          params: {
+            id: this.select.id
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
             this.refresh()
@@ -949,8 +999,12 @@
       },
       adjustOK(){
         this.showModal.adjust = false
-        let url = `continue/UpPublicBnadwith.do?bandwith=${this.adjustForm.brand}&publicIpId=${this.select.id}`
-        this.$http.get(url).then(response => {
+        this.$http.get('continue/UpPublicBnadwith.do',{
+          params: {
+            bandwith: this.adjustForm.brand,
+            publicIpId: this.select.id
+          }
+        }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$router.push({path: 'order'})
             } else {
@@ -976,8 +1030,14 @@
       },
       chargesOK(){
         this.showModal.charges = false
-        var url = `continue/changeMoney.do?id=${this.select.id}&timeType=${this.chargesForm.timeType}&timeValue=${this.chargesForm.timeValue}&type=2`
-        this.$http.get(url).then(response => {
+        this.$http.get('continue/changeMoney.do',{
+          params: {
+            id: this.select.id,
+            timeType: this.chargesForm.timeType,
+            timeValue: this.chargesForm.timeValue,
+            type: 2
+          }
+        }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$router.push({path: 'order'})
             }
@@ -985,7 +1045,12 @@
         )
       },
       queryAdjustPrice: debounce(500, function () {
-        this.$http.get(`continue/countMoneyByUpPublicBandwith.do?brandwith=${this.adjustForm.brand}&publicIpId=${this.select.id}`).then(response => {
+        this.$http.get('continue/countMoneyByUpPublicBandwith.do',{
+          params: {
+            brandwith: this.adjustForm.brand,
+            publicIpId: this.select.id
+          }
+        }).then(response => {
             if (response.status == 200) {
               this.adjustForm.cost = response.data.result
             } else {

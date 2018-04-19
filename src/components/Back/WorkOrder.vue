@@ -310,8 +310,12 @@
         })
       },
       ok(order, index){
-        var url = `order/closeOrder.do?orderid=${order.id}`;
-        this.$http.get(url)
+        var url = 'order/closeOrder.do'
+        this.$http.get(url,{
+            params:{
+              orderid:order.id
+            }
+        })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.operatingOrder.splice(index, 1)
@@ -326,8 +330,12 @@
 
       },
       del(item, index){
-        var url = `order/delOrder.do?orderid=${item.id}`
-        this.$http.get(url)
+        var url = 'order/delOrder.do'
+        this.$http.get(url,{
+            params:{
+              orderid:item.id
+            }
+        })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.closingOrder.splice(index, 1);
@@ -341,9 +349,13 @@
       },
       viewDetail(item){
 
-        var url = `order/viewOrder.do?orderid=${item.id}`
+        var url = 'order/viewOrder.do'
         this.$Loading.start();
-        this.$http.get(url).then(response => {
+        this.$http.get(url,{
+            params:{
+              orderid:item.id
+            }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.orderDetail = response.data.msg
             this.$Loading.finish()
@@ -366,8 +378,15 @@
         }
         this.loadingMessage = '创建工单中'
         this.loading = true
-        var url = `order/createOrder.do?title=${this.formItem.title}&content=${this.formItem.description}&gid=${this.orderType[this.formItem.type][0].gid}&cid=${this.formItem.product}`
-        this.$http.get(url)
+        var url = 'order/createOrder.do'
+        this.$http.get(url,{
+            params:{
+              title:this.formItem.title,
+              content:this.formItem.description,
+              gid:this.orderType[this.formItem.type][0].gid,
+              cid:this.formItem.product
+            }
+        })
           .then(response => {
             this.loading = false
             if (response.status == 200 && response.data.status == 1) {
@@ -396,8 +415,11 @@
           this.$Message.warning("请输入回复内容!");
           return
         }
-        var url = `order/reply.do?orderid=${this.orderDetail[2][0].id}&editorValue=${this.editorValue}`
-        this.$http.get(url)
+        var url = 'order/reply.do'
+        this.$http.get(url,{
+          orderid:this.orderDetail[2][0].id,
+          editorValue:this.editorValue
+        })
           .then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.orderDetail[3].push({g_reply: response.data.msg.g_reply, uname: null, repdate: new Date().getTime()})
@@ -406,8 +428,14 @@
           })
       },
       getOrders(type){
-        var url = `order/getOrders.do?type=${type}&currentPage=${this[type + 'CurrPage']}&pageSize=${this.pageSize}`;
-        this.$http.get(url)
+        var url = 'order/getOrders.do'
+        this.$http.get(url,{
+            params:{
+              type:type,
+              currentPage:this[type + 'CurrPage'],
+              pageSize:this.pageSize
+            }
+        })
           .then(response => {
             if (response.status == 200) {
               this[type + 'Order'] = []

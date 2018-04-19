@@ -4,7 +4,7 @@
 import axios from 'axios'
 import md5 from 'md5'
 
-function appendMD5(params, type, bol) {
+function appendMD5(params, type) {
   if (params === undefined) {
     return undefined
   }
@@ -20,9 +20,6 @@ function appendMD5(params, type, bol) {
     }
     str = md5(str)
     var mac = str.substr(0, count) + count + str.substr(count)
-    if (bol) {
-      return mac
-    }
     return {
       ...params,
       mac: mac.toUpperCase()
@@ -32,17 +29,7 @@ function appendMD5(params, type, bol) {
 
 function macIntercept(config) {
   if (config.method == 'get') {
-    if (config.url.indexOf('?') != -1) {
-      let params = {}
-      config.url.split(/\?|\&/).forEach((item, index) => {
-        if (index) {
-          let arr = item.split('=')
-          params[arr[0]] = arr[1]
-        }
-      })
-      let mac = appendMD5(params, 'get', true).toUpperCase()
-      config.url = `${config.url}&mac=${mac}`
-    } else if (config.params) {
+    if (config.params) {
       config.params = appendMD5(config.params)
     }
   } else if (config.method == 'post') {

@@ -394,8 +394,11 @@
       },
       // 查询系统镜像
       systemMirrorList() {
-        var url = `information/listTemplates.do?user=0`
-        this.$http.get(url).then(response => {
+        this.$http.get('information/listTemplates.do',{
+          params: {
+            user: 0
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.systemData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
             this.originData = this.systemData
@@ -423,8 +426,11 @@
       },
       // 查询私有镜像
       ownMirrorList() {
-        var url1 = `information/listTemplates.do?user=1`
-        this.$http.get(url1).then(response => {
+        this.$http.get('information/listTemplates.do',{
+          params: {
+            user: 1
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.ownData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
             this.ownData.forEach(item => {
@@ -459,8 +465,11 @@
       },
       inter() {
         this.intervalInstance = setInterval(() => {
-          var url1 = `information/listTemplates.do?user=1`
-          this.$http.get(url1).then(response => {
+          this.$http.get('information/listTemplates.do',{
+            params: {
+              user: 1
+            }
+          }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               var ownData = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
               ownData.forEach(item => {
@@ -513,7 +522,11 @@
             item.status = 3
           }
         })
-        this.$http.get(`Snapshot/deleteTemplate.do?id=${this.selections.id}`).then(response => {
+        this.$http.get('Snapshot/deleteTemplate.do',{
+          params: {
+            id: this.selections.id
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
             this.ownMirrorList()
@@ -527,8 +540,13 @@
       },
       ok() {
         this.showModal.createMirror = false
-        var url = `Snapshot/createTemplate.do?rootDiskId=${this.formItem.vmInfo.split('#')[0]}&templateName=${this.formItem.mirrorName}&descript=${this.formItem.mirrorDescription}`
-        this.$http.get(url).then(response => {
+        this.$http.get('Snapshot/createTemplate.do',{
+          params: {
+            rootDiskId: this.formItem.vmInfo.split('#')[0],
+            templateName: this.formItem.mirrorName,
+            descript: this.formItem.mirrorDescription
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.ownMirrorList()
           } else {
@@ -546,8 +564,13 @@
       },
       mirrorModifySubm() {
         this.showModal.modify = false
-        var url = `Snapshot/updateTemplate.do?templateId=${this.systemtemplateid}&templateName=${this.mirrorModifyForm.name}&descript=${this.mirrorModifyForm.remarks}`
-        this.$http.get(url).then(response => {
+        this.$http.get('Snapshot/updateTemplate.do',{
+          params: {
+            templateId: this.systemtemplateid,
+            templateName: this.mirrorModifyForm.name,
+            descript: this.mirrorModifyForm.remarks
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.ownMirrorList()
             this.$Message.success(response.data.message)

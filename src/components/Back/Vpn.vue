@@ -581,8 +581,12 @@
                           okText: '确定解绑',
                           cancelText: '取消',
                           'onOk': () => {
-                            var url = `network/delNatGateway.do?natGatewayId=${this.select.id}`
-                            axios.get(url).then(response => {
+                            var url = 'network/delNatGateway.do'
+                            axios.get(url,{
+                                params:{
+                                  natGatewayId:this.select.id
+                                }
+                            }).then(response => {
                               console.log(response)
                             })
                           }
@@ -643,8 +647,10 @@
                           okText: '确定解绑',
                           cancelText: '取消',
                           'onOk': () => {
-                            var url = `network/delNatGateway.do?natGatewayId=${this.select.id}`
-                            axios.get(url).then(response => {
+                            var url = 'network/delNatGateway.do'
+                            axios.get(url,{
+                              natGatewayId:this.select.id
+                            }).then(response => {
                               console.log(response)
                             })
                           }
@@ -901,7 +907,11 @@
             content: '确定要删除该隧道VPN吗',
             onOk: () => {
               console.log(this.currentTunnel)
-              this.$http.get(`network/deleteTunnelVpn.do?id=${this.currentTunnel.id}`).then(response => {
+              this.$http.get('network/deleteTunnelVpn.do',{
+                  params:{
+                    id:this.currentTunnel.id
+                  }
+              }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.$Message.success({
                     content: response.data.message

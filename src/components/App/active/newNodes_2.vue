@@ -1021,8 +1021,14 @@
           return
         }
         var vmConfigId = index === 0 ? '11' : '12'
-        var url = `information/getDiskcountMv.do?vmConfigId=${vmConfigId}&osType=${item.system}&defzoneid=${item.node}`
-        axios.get(url).then(response => {
+        var url = 'information/getDiskcountMv.do'
+        axios.get(url,{
+            params:{
+              vmConfigId:vmConfigId,
+              osType:item.system,
+              defzoneid:item.node
+            }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {
@@ -1070,8 +1076,14 @@
             break;
         }
 
-        var url = `information/getDiskcountMv.do?vmConfigId=${vmConfigId}&osType=${item.system}&defzoneid=${item.node}`
-        axios.get(url).then(response => {
+        var url = 'information/getDiskcountMv.do'
+        axios.get(url,{
+            params:{
+              vmConfigId:vmConfigId,
+              osType:item.system,
+              defzoneid:item.node
+            }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('order')
           } else {

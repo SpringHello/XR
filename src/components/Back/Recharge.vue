@@ -115,7 +115,7 @@
       rechargeOk(){
         switch (this.zf) {
           case 'zfb':
-            window.open('zfb/alipayapi.do?total_fee=' + this.input)
+            window.open(`zfb/alipayapi.do?total_fee=${this.input}`)
             break
           case 'wx':
             this.$router.push({
@@ -164,9 +164,10 @@
           font-size: 24px;
           color: hsla(0, 0%, 7%, .75);
           font-weight: 700;
-          line-height: 40px;display:
-          inline-block;vertical-align:
-          top;margin-left: 5px;
+          line-height: 40px;
+          display: inline-block;
+          vertical-align: top;
+          margin-left: 5px;
         }
         .recharge {
           margin-top: 20px;
