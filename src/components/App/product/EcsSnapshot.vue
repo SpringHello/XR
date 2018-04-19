@@ -106,12 +106,12 @@
         logo: {
           img: require('../../../assets/img/product/ECS-logo.png'),
           title: 'ESC 快照',
-          desc: '主机快照能对主机某个时刻的数据进行备份和回滚，快照为全量快照，提升了主机安全性同时降低对快照管理的难度。',
+          desc: 'ECS快照能对云服务器某个时刻的数据进行备份和回滚，且ECS快照为全量快照，提升了安全性的同时，降低了ECS快照的管理难度。',
           linkRouter: $store.state.userInfo ? '/ruicloud/snapshot' : 'login'
         },
         features: [
-          {img: 'icon-zidongkuaizhao', title: '自动快照', desc: '新睿云自动为用户创建的快照。用户需要首先创建自动快照策略，然后再把自动快照策略应用到磁盘上，新睿云就会在用户设置的时间，自动为该磁盘创建快照。'},
-          {img: 'icon-shoudongkuaizhao', title: '手动快照', desc: '由用户手动创建。您可以根据需要，手动为磁盘创建快照，作为数据备份。'},
+          {img: 'icon-zidongkuaizhao', title: '自动快照', desc: '自动为用户创建快照。用户需要首先创建自动快照策略，然后再把自动快照策略应用到虚拟机实例或磁盘上，系统按照策略自动为该虚拟机或磁盘创建快照。'},
+          {img: 'icon-shoudongkuaizhao', title: '手动快照', desc: '由用户手动创建。可以根据需要，手动为虚拟机实例或磁盘创建快照，作为数据备份。'},
           {img: 'icon-cipankelonghuifu', title: '磁盘克隆恢复', desc: '用户可以通过克隆的云硬盘创建和原始硬盘一样的数据盘。'}
         ],
         advantages: [
@@ -146,8 +146,13 @@
             {
               title: '临时数据备份',
               icon: 'icon-linshishujubeifen',
-              desc: ['a) 系统更新、应用发布等系统临时变更，为防止操作错误，在执行变更前手工创建快照对系统进行备', ' b) 系统盘扩容;', 'c) 磁盘数据迁移，通过对磁盘执行快照，将磁盘作为另一块磁盘的基础数据。']
-            }
+              desc: ['系统更新、应用发布等系统临时变更，为防止操作错误，在执行变更前手工创建快照对系统进行备份。']
+            },
+            {
+              title: '系统盘扩容',
+              icon: 'icon-linshishujubeifen',
+              desc: ['磁盘数据迁移，通过对磁盘执行快照，将磁盘作为新建磁盘的基础数据。']
+            },
           ],
           selectIndex: 0
         },

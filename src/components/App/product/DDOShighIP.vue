@@ -117,59 +117,60 @@
         logo: {
           img: require('../../../assets/img/product/ddos-logo.png'),
           title: 'DDOS防护',
-          desc: '针对DDoS攻击，新睿云为用户提供高防IP服务，新睿云高防IP为用户已备案的域名提供最高40Gbps的DDoS高级防护。用户在遭遇大流量DDoS攻击的情况下，可以在配置后将攻击流量引至高防IP，确保源站稳定可用。',
+          desc: '新睿云通过专用硬件，针对DDoS攻击，为用户提供高防IP服务。高防IP为用户已备案的域名提供最高40Gbps的DDoS高级防护。用户在遭遇大流量DDoS攻击的情况下，可以在配置高防IP后将攻击流量引至高防IP，确保源站稳定可用。',
           linkRouter: $store.state.userInfo ? 'firewall' : 'login'
         },
         features: [
           {img: 'icon-DDOSliuliangqingxi', title: 'DDOS流量清洗', desc: '支持畸形报文过滤，对SYN flood、ACK flood、UDP flood、ICMP flood、RST flood等攻击类型进行清洗。'},
           {img: 'icon-jiyuyingyongcengdejichufanghu', title: '基于应用层的基础防护', desc: '有效抵御HTTP get/post flood攻击；CC 攻击；HTTP slow header/post攻击等。'},
-          {img: 'icon-jiyuwangluochuanshudegongjifanghu', title: '基于网络传输的公积防护', desc: '有效抵御SYN flood攻击；ACK flood攻击；FIN/RST flood攻击；UDP flood攻击；ICMP flood；TCP连接耗尽攻击等。'},
+          {img: 'icon-jiyuwangluochuanshudegongjifanghu', title: '基于网络传输的攻击防护', desc: '有效抵御SYN flood攻击；ACK flood攻击；FIN/RST flood攻击；UDP flood攻击；TCP连接耗尽攻击等。'},
           {img: 'icon-linghuoguanli', title: '灵活管理', desc: '可以使用界面进行管理配置，操作简单易用。'}
         ],
         advantages: [
           {
             img: 'icon-gaoxingjiabi',
-            title: '高性价比',
-            desc: '灵活选择固定或弹性计费模式，起点带宽低至5Gbps。'
+            title: '高品质硬件',
+            desc: '采用华为最新一代DDoS防护硬件，高效稳定。'
           },
+//          {
+//            img: 'icon-xiangyingxunsu',
+//            title: '响应迅速',
+//            desc: '灵活选择固定或弹性计费模式，起点带宽低至5Gbps。'
+//          },
           {
-            img: 'icon-xiangyingxunsu',
-            title: '响应迅速',
-            desc: '灵活选择固定或弹性计费模式，起点带宽低至5Gbps。'
+            img: 'icon-lingbushuchengben',
+            title: '零部署成本',
+            desc: '无需更改网络拓扑，不需要采购设备，只需使用高防IP。'
           },
           {
             img: 'icon-hailiangqingxinengli',
             title: '海量清洗能力',
-            desc: '弹性计费下最高可防御40G的DDoS攻击流量。'
-          },
-          {
-            img: 'icon-lingbushuchengben',
-            title: '零部署成本',
-            desc: '无需更改网络拓扑，不需要采购设备。'
+            desc: '可防御40G的DDoS攻击流量，支持升级到100G。'
           }
+
         ],
         stageInfo: {
           stages: [
             {
-              title: '门户网站',
+              title: '互联网金融',
 //              activeIcon: require('../../../assets/img/product/ddos-stage-1-blue.png'),
               icon: 'icon-menhuwangzhan',
               img: require('../../../assets/img/product/ddos-stage-1-background.png'),
-              desc: ['为企业门户提供低成本、高可靠的DDoS防护，通过多转发规则将用户访问流量均匀分发到多个后端云服务器上，确保用户业务的稳定可靠。']
+              desc: ['为互联网金融用户提供高稳定、高带宽、低时延的DDoS防护，保障业务在大流量突发攻击时的稳定性。']
             },
             {
               title: '电商网站',
 //              activeIcon: require('../../../assets/img/product/ddos-stage-2-blue.png'),
               icon: 'icon-dianshangwangzhan',
               img: require('../../../assets/img/product/ddos-stage-2-background.png'),
-              desc: ['为电商用户提供高可靠，高带宽的DDoS防护，保障金融业务在大流量突发攻击时的业务稳定。']
+              desc: ['为电商行业提供高稳定、高带宽、低时延的DDoS防护，保障业务在高峰时段大流量突发攻击时的稳定性。']
             },
             {
               title: '游戏',
 //              activeIcon: require('../../../assets/img/product/ddos-stage-3-icon-blue.png'),
               icon: 'icon-youxi',
               img: require('../../../assets/img/product/ddos-stage-3-background.png'),
-              desc: ['读写密集型应用场景，部署各类数据库，MongoDB、Oracle、SQL Server、MySQL 和PostgreSQL。建议选用超高IO云硬盘，满足低延迟、高读写速率需求。']
+              desc: ['采用专用防护硬件为游戏行业用户提供高稳定、高带宽、低时延的DDoS防护，保障游戏业务的流畅与稳定。']
             }
           ],
           pImg: [

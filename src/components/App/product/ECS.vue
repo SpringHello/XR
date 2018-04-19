@@ -38,7 +38,7 @@
         <p class="subTitle">使用场景</p>
         <div class="flex">
           <div class="left">
-            <div  v-for="(stage,index) in stageInfo.stages"
+            <div v-for="(stage,index) in stageInfo.stages"
                  :class="{active:index == stageInfo.selectIndex}"
                  @click="stageInfo.selectIndex=index" :key="index">
               <div>
@@ -149,19 +149,21 @@
       return {
         logo: {
           img: require('../../../assets/img/product/ECS-host.png'),
-          title: '云主机',
-          desc: '云主机是一种可以根据需求随时改变处理能力并且按照实际使用量来计费的计算服务。在使用云主机时，大家不需要承担高昂的初始接入硬件架构成本，也不需要承担持续的硬件维护和管理成本。相比传统服务器而言，云主机管理起来更加简单高效。大家可以根据业务的实际需要，随时配置或修改对应的计算资源类型和规模。',
+          title: '弹性云服务器（ECS）',
+          desc: '弹性云服务器（(Elastic Compute Service,简称 ECS）是一种可随时自助获取，处理能力可弹性伸缩的计算服务，帮助用户构建可靠、安全、灵活、高效的应用环境，确保服务持久稳定运行，提升运维效率，降低用户的CAPEX和OPEX。',
           linkRouter: '/ruicloud/buy'
         },
         features: [
           {
-            img: 'icon-jisuannengli', 
-            title: '计算能力', 
-            desc: '提供多种类型的弹性云服务器，可满足不同的使用场景。'},
+            img: 'icon-jisuannengli',
+            title: '计算能力',
+            desc: '提供多种规格、多种类型、多网卡的弹性云服务器，可满足用户不同的使用场景。'
+          },
           {
-            img: 'icon-danxingjisuan', 
-            title: '弹性计算', 
-            desc: '分钟级主机创建与释放，轻松应对业务的快速变化。'},
+            img: 'icon-danxingjisuan',
+            title: '弹性计算',
+            desc: '根据业务需求，可弹性创建与释放云服务器，轻松应对业务的快速变化。'
+          },
           {
             img: 'icon-cunchunengli',
             title: '存储能力',
@@ -169,45 +171,45 @@
           },
           {
             img: 'icon-duozhongjingxiangxuanze',
-            title: '多种镜像选择',
-            desc: '支持公共镜像、服务集成镜像、自定义镜像，包括主流Windows与Linux发行版本，自定义镜像让您可以随时备份或批量克隆云服务器。'
+            title: '丰富的镜像',
+            desc: '支持公共系统镜像、服务集成镜像、自定义镜像和用户本地镜像，自定义镜像让您可以随时备份或批量创建云服务器。'
           },
           {
             img: 'icon-beifenyukuaizhao',
             title: '备份与快照',
-            desc: '您可以为主机设定自动快照策略，以保障数据的安全性与服务稳定性，快照可保存当前服务器运行状态，并实现不停机回滚。'
+            desc: '快照能对云服务器某个时刻的数据进行备份和回滚，且快照为全量快照，提升了安全性的同时，降低了快照的管理难度。'
           },
           {
             img: 'icon-wangluofangwen',
-            title: '网络访问',
-            desc: '新睿云为您提供安全、稳定、高速、隔离的网络传输通道，通过VPC轻松构建隔离的虚拟网络环境，借助VPN功能，实现企业混合云部署。'
+            title: '强大的网络功能',
+            desc: '提供安全、稳定、高速、隔离的网络连接，具有VPC功能，帮助用户构建虚拟私有云，支持二层和三层网络能力，具有防火墙、负载均衡、DDoS、私有网关和VPN等功能，能实现混合云和跨云部署。'
           },
           {
             img: 'icon-shujufenxi',
-            title: '云端监控',
-            desc: '提供开放的云监控服务平台，提供资源的实时监、告警、通知等服务。'
+            title: '云监控',
+            desc: '提供开放的云监控服务平台，提供资源的实时监控、告警、通知等服务。'
           }
         ],
         advantages: [
           {
             img: 'icon-kuaisuhuoqu',
             title: '快速获取',
-            desc: '分钟级主机创建速度，无论是1台还是100台。'
+            desc: '强大的计算和存储资源池，用户可便捷、快速的获取相应云计算服务，能快速实现云服务器的批量创建。'
           },
           {
             img: 'icon-mobanchuangjian',
             title: '模板创建',
-            desc: '可依据当前主机的镜像生成新的主机，一步到位。'
+            desc: '可依据当前主机的镜像批量生成新的主机。'
           },
           {
             img: 'icon-danxingshensuo',
             title: '弹性伸缩',
-            desc: '性能与规格弹性伸缩，迎合业务需求。'
+            desc: '性能与规格弹性伸缩，满足业务弹性变化的需求。'
           },
           {
             img: 'icon-yijianhuifu',
             title: '一键恢复',
-            desc: '一键生成备份，可随时回滚到某一个备份点。'
+            desc: '一键生成备份镜像，可随时恢复到某一个备份点。'
           },
           {
             img: 'icon-shishijiankong',
@@ -217,18 +219,18 @@
           {
             img: 'icon-huaban',
             title: '在线迁移',
-            desc: '应用不中断，服务自由迁移。'
+            desc: '云服务器业务不中断，可以在同一可用区下实现热迁移。'
           }
         ],
         stageInfo: {
           stages: [
             {
-              title: '网站应用',
+              title: '普通应用',
               icon: 'icon-wangzhanyingyong',
               img: require('../../../assets/img/product/esc-topology-1.png'),
               text: [
                 {title: '场景描述', desc: '轻量级企业业务应用，访问量维持在一个较低的水平，对服务器没有特殊要求，追求稳定性与性价比。'},
-                {title: '推荐方案', desc: '推荐使用标准型云主机，主要提供均衡的计算、内存和网络资源，适用于业务负载压力适中的应用场景，满足企业或个人普通业务搬迁上云需求。'}
+                {title: '推荐方案', desc: '推荐使用标准型云服务器，主要提供均衡的计算、内存和网络资源，适用于业务负载压力适中的应用场景，满足企业或个人普通业务上云需求。'}
                 // {title:'推荐配置',desc:'参考设计图'}
               ],
               config: [
@@ -261,8 +263,8 @@
               icon: 'icon-mijixingyingyong',
               img: require('../../../assets/img/product/esc-topology-3.png'),
               text: [
-                {title: '场景描述', desc: '大数据分析、CDN/Cache等 I/O 密集型业务场景，搭配高性能磁盘，更好的支持高IO并发和保证数据可靠性 。'},
-                {title: '推荐方案', desc: '推荐使用磁盘增强型弹性云服务器，主要适用于需要对本地存储上的极大型数据集进行高性能顺序读写访问的工作负载工作。'}
+                {title: '场景描述', desc: '大数据分析、CDN/Cache等I/O密集型业务场景，搭配高性能磁盘，更好的支持高I/O并发和保证数据可靠性。'},
+                {title: '推荐方案', desc: '推荐使用超高性能型磁盘的弹性云服务器，主要适用于需要对本地存储上的大型数据集进行高性能读写访问。'}
                 // {title:'推荐配置',desc:'参考设计图'}
               ],
               config: [
