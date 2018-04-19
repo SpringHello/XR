@@ -649,7 +649,9 @@
                           'onOk': () => {
                             var url = 'network/delNatGateway.do'
                             axios.get(url,{
-                              natGatewayId:this.select.id
+                                params:{
+                                  natGatewayId:this.select.id
+                                }
                             }).then(response => {
                               console.log(response)
                             })

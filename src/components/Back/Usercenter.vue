@@ -1789,7 +1789,9 @@
       delContacts(id) {
         var url = 'user/delContacts.do'
         this.$http.get(url, {
-          id: id
+            params:{
+              id: id
+            }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
