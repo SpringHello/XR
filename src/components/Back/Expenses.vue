@@ -987,7 +987,7 @@
           depositBank: '',
           bankAccount: ''
         },
-        appreciation: true,
+        appreciation: false,
         authenticationShow: false, // 增值税信息
         certificateStatus: true, // 点击认证
         underReview: false, // 审核中
