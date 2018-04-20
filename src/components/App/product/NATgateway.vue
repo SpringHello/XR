@@ -117,7 +117,7 @@
         logo: {
           img: require('../../../assets/img/product/p-net.png'),
           title: 'NAT网关',
-          desc: '在VPC环境下构建一个公网流量的出入口，通过自定义SourceNAT，Destination NAT规则灵活使用网络资源。“支持多IP共享公网带宽”',
+          desc: '在VPC环境下构建一个公网流量的出入口，通过自定义SourceNAT、Destination NAT、StaticNAT规则灵活使用网络资源，支持多IP共享公网带宽。',
           linkRouter: $store.state.userInfo ? 'vpc' : 'login'
         },
         features: [
@@ -130,21 +130,26 @@
             img: 'icon-DNAT',
             title: 'DNAT',
             desc: 'NAT网关支持DNAT功能，将NAT网关上的公网IP映射给ECS实例使用，使主机实例能够提供互联网服务。DNAT支持端口映射。'
+          },
+          {
+            img: 'icon-gongxiangkuandai',
+            title: '共享带宽',
+            desc: '多IP共享公网带宽，对于应用间存在流量错峰效应的业务，可有效降低带宽成本。'
           }
         ],
         stageInfo: {
           stages: [
             {
-              title: 'SNAT网关',
-              icon: 'icon-SNAT',
+              title: '多主机访问公网',
+              icon: 'icon-duozhujifangwengongwang',
               img: require('../../../assets/img/product/nat-stage-1-icon-background.png'),
-              desc: ['在IT系统中，往往存在一些服务器需要主动访问互联网，但出于安全性考虑需要避免将这些服务器所持有的公网IP暴露在公网上。此时，可以使用NAT网关的SNAT功能实现这一需求。']
+              desc: ['VPC下多台ECS可以通过SNAT网关上的一个公网IP实现上网功能，同时保证这些ECS不暴露在公网上。']
             },
             {
               title: '共享宽带',
               icon: 'icon-gongxiangkuandai',
               img: require('../../../assets/img/product/nat-stage-2-icon-background.png'),
-              desc: ['部署一个面向互联网提供的服务，需要为该服务购置公网带宽。通常，为了保证系统能够应对业务流量可能发生的各种变化，在购买带宽时会考虑一定的冗余。当IT系统中同时存在多个面向互联网的应用时，为每个应用都冗余购置带宽会造成许多不必要的成本。这时，多IP共享带宽的功能能够帮助您更好地进行公网带宽资源的管理和成本的控制。另外，考虑到多个面向互联网的应用可能存在的流量错峰情况，多IP共享带宽的功能可以进一步缩减所需购置的公网带宽总量。']
+              desc: ['VPC搭建多个应用，各应用都需要对外提供服务，且其波峰时间点不一致，多IP共享带宽，尽量减小波峰波谷效应从而降低成本。']
             }
           ],
           pImg: [
@@ -157,17 +162,17 @@
           {
             img: 'icon-linghuoyiyongdezhuanfanengli',
             title: '灵活易用的转发能力',
-            desc: '作为一款企业级VPC公网网关，NAT网关提供SNAT和DNAT功能。无需用户基于云服务器自己搭建，功能灵活、简单易用、稳定可靠。'
+            desc: 'NAT网关提供SNAT和DNAT功能。无需用户自己搭建，功能灵活、简单易用、稳定可靠。'
           },
           {
             img: 'icon-gaoxingneng',
             title: '高性能',
-            desc: 'NAT网关是基于新睿云自研分布式网关，使用SDN技术虚拟化推出的一款虚拟网络硬件。NAT网关支持10Gbps级别的转发能力，为大规模公网应用提供支撑。'
+            desc: 'NAT网关采用SDN技术，支持10Gbps级别的转发能力，为大规模公网应用提供支撑。'
           },
           {
             img: 'icon-gaokeyong1',
             title: '高可用',
-            desc: 'AT网关跨可用区部署，可用性高。单个可用区的任何故障都不会影响NAT网关的业务连续性。'
+            desc: 'NAT网关采用NFV技术，支持本地再生功能，可用性高。'
           },
           {
             img: 'icon-anxugoumai',

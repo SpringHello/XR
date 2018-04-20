@@ -31,7 +31,6 @@
           <div style="height:0px;width:382px;"></div>
         </div>
       </div>
-
     </div>
     <!-- 使用场景 -->
     <div class="stage">
@@ -117,30 +116,35 @@
         logo: {
           img: require('../../../assets/img/product/p-VPC.png'),
           title: '虚拟私有云VPC',
-          desc: '基于新睿云构建出一个隔离的网络环境，并可以自定义IP 地址范围、网段、路由表和网关等；此外，也可以通过专线/VPN等连接方式实现云上VPC与传统IDC的互联，构建混合云业务。',
+          desc: '基于新睿云给用户构建隔离的、私密的虚拟网络环境，用户可以自由配置VPC内的IP地址范围、子网、路由表、安全组和网关等，用户可以申请弹性带宽和弹性IP搭建业务系统，同时也可以通过专线/VPN等接入方式实现云上VPC与传统IDC的互联，构建混合云系统。',
           linkRouter: $store.state.userInfo ? 'vpc' : 'login'
         },
         features: [
           {
             img: 'icon-wangluogeli',
             title: '网络隔离',
-            desc: '租户间100%隔离利用VxLAN协议使得VPC之间严格的逻辑隔离。'
+            desc: '利用Vlan/VxLAN协议使得VPC之间严格的逻辑隔离，实现租户间100%隔离。'
           },
           {
             img: 'icon-zidingyiwangluo',
             title: '自定义网络',
-            desc: '子网，IP地址段，DHCP等子服务，自由选择组合定义。'
+            desc: '可自定义子网、IP地址段或DHCP等服务，也可自由组合。'
           },
-          {img: 'icon-fangwenkongzhi', title: '访问控制', desc: 'ACL防火墙设置，自定义开放端口与访问协议。'},
+          {img: 'icon-fangwenkongzhi', title: '访问控制', desc: '通过设置防火墙ACL策略，实现自定义端口和协议的控制。'},
           {
             img: 'icon-gongwangjieru',
             title: '公网接入',
-            desc: '绑定公网IP到相同地域下VPC类型的云产品实例上，可实现与公网互访。'
+            desc: '绑定公网IP到同一可用区下VPC内的云产品实例上，实现公网互通及相关网络功能。'
+          },
+          {
+            img: 'icon-qiangdadeNATnengli',
+            title: 'NAT网关',
+            desc: '在VPC环境下构建一个公网流量的出入口，通过自定义SourceNAT、DestinationNAT、StaticNAT规则灵活使用网络资源，同时支持多IP共享公网带宽。'
           },
           {
             img: 'icon-VPNwangguan',
             title: 'VPN网关',
-            desc: '通过VPN方式，与客户的多个IDC环境构建VPN隧道，实现混合云。'
+            desc: 'VPN网关是通过互联网，采用IPsec加密技术，实现用户本地数据中心、用户办公网络与新睿云VPC之间安全可靠的连接，使用便捷灵活，即开即用，打造可伸缩的混合云环境。'
           }
         ],
         stageInfo: {
@@ -149,19 +153,19 @@
               title: '专有网络',
               icon: 'icon-zhuanyouwangluo',
               img: require('../../../assets/img/product/vpc-stage-1-icon-background.png'),
-              desc: ['基于新睿云构建的云上私有网络环境，用户通过弹性IP访问云上私有网络环境，配置部署业务。混合云部署—场景描述：基于新睿云提供的VPN服务，高速连接云上私有网络和用户自有IT设施，满足云上和自有设施间业务和数据的迁移，支撑混合云场景等。']
+              desc: ['基于新睿云构建的云上私有网络环境，用户通过弹性IP访问云上私有网络环境，配置部署业务。']
             },
             {
               title: 'WEB访问',
               icon: 'icon-WEBfangwen',
               img: require('../../../assets/img/product/vpc-stage-2-icon-background.png'),
-              desc: ['基于新睿云提供的VPN服务，高速连接云上私有网络和用户自有IT设施，满足云上和自有设施间业务和数据的迁移，支撑混合云场景等。']
+              desc: ['基大型网站常有上百个业务子模块，通过设置不同的转发规则/转发组，分析HTTP头部信息，有效分离业务模块，实现基于内容的路由转发。此外，用户通过自定义转发路径代替二级域名，有效减少 DNS 轮询次数，收敛 IP，提升用户访问速度，保证服务的高效运行。']
             },
             {
               title: '混合云部署',
               icon: 'icon-hunheyunbushu1',
               img: require('../../../assets/img/product/vpc-stage-3-icon-background.png'),
-              desc: ['基大型网站常有上百个业务子模块，通过设置不同的转发规则/转发组，分析HTTP头部信息，有效分离业务模块，实现基于内容的路由转发。此外，用户通过自定义转发路径代替二级域名，有效减少 DNS 轮询次数，收敛 IP，提升用户访问速度，保证服务的高效运行']
+              desc: ['基于新睿云提供的VPN服务，高速连接云上VPC网络和用户自有IT设施，满足云上系统和自有设施间业务和数据的迁移，同时支持跨云业务等场景。']
             }
           ],
           pImg: [
@@ -174,17 +178,17 @@
           {
             img: 'icon-zuhujiangeli',
             title: '租户间100%隔离',
-            desc: '支持VLAN协议，使得VPC之间严格的逻辑隔离。'
+            desc: '利用Vlan/VxLAN协议使得VPC之间严格的逻辑隔离，实现租户间100%。'
           },
           {
             img: 'icon-yonghuzidingyi',
             title: '用户100%自定义',
-            desc: '子网，IP地址段，DHCP等子服务，客户可以根据自己需要选择搭配，自由定义。'
+            desc: '可自定义子网、IP地址段或DHCP等服务，也可自由组合。'
           },
           {
             img: 'icon-qiangdadeNATnengli',
             title: '强大的NAT能力',
-            desc: '自定义Source NAT、Static NAT、Destination NAT，保证网络能力的灵活性。'
+            desc: '自定义Source NAT，Static NAT，Destination NAT，保证网络能力的灵活性。同时支持多IP共享公网带宽。'
           },
           {
             img: 'icon-qiangdadesiyouwangguan',

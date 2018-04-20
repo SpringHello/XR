@@ -116,7 +116,7 @@
         logo: {
           img: require('../../../assets/img/product/p-balance.png'),
           title: '负载均衡',
-          desc: '负载均衡处理器可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器上进行处理。新睿云负载均衡支持四层TCP协议和七层HTTP和HTTPS协议。',
+          desc: '弹性负载均衡将访问流量自动分发到多台云服务器上，扩展应用系统对外的服务能力，实现更高水平的应用容错。弹性负载均衡可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器上进行处理。',
           linkRouter: $store.state.userInfo ? 'balance' : 'login'
         },
         features: [
@@ -138,7 +138,7 @@
           {
             img: 'icon-gongwangfangwen',
             title: '公网访问',
-            desc: '通过绑定公网IP，您可以让自己的负载均衡具备公网访问能力。您也可以随时解绑公网IP，让负载均衡仅对内网流量进行均衡。'
+            desc: '通过绑定公网IP，可实现负载均衡的公网服务能力，也可以随时解绑公网IP，让负载均衡仅对内网流量进行均衡。'
           }
         ],
         stageInfo: {
@@ -150,10 +150,16 @@
               desc: ['针对超多用户服务访问量高的特点，通过负载均衡将用户的访问流量均匀的分发到多个后端云主机上，确保业务快速平稳的运行。']
             },
             {
-              title: '混合云下数据互通',
-              icon: 'icon-hunheyunxiashujuhutong',
+              title: '音视频大流量',
+              icon: 'icon-yinshipindaliuliang',
               img: require('../../../assets/img/product/balance-stage-2-background.png'),
-              desc: ['基大型网站常有上百个业务子模块，通过设置不同的转发规则/转发组，分析HTTP头部信息，有效分离业务模块，实现基于内容的路由转发。此外，用户通过自定义转发路径代替二级域名，有效减少 DNS 轮询次数，收敛 IP，提升用户访问速度，保证服务的高效运行']
+              desc: ['音视频应用中由于用户与主播之间需要实时大量的互动，因此，用户的流量非常大，而直播业务的波峰波谷效应明显，通过弹性负载均衡提高了系统的横向扩展能力，能够抵御海量流量，提升了业务的可用性和稳定性。']
+            },
+            {
+              title: '跨可用区同城容灾',
+              icon: 'icon-kuakeyongqutongchengrongzai',
+              img: require('../../../assets/img/product/balance-stage-3-background.png'),
+              desc: ['弹性负载均衡可将流量跨可用区进行分发，建立实时的同城容灾机制，满足银行贸易等企业对系统的高可用性要求。']
             }
           ],
           pImg: [
@@ -177,12 +183,12 @@
           {
             img: 'icon-daliuliangxuqiu',
             title: '大流量需求',
-            desc: '持最高10万并发连接，满足用户的大流量需求；支持用户使用4层（TCP协议）或7层（HTTP协议、HTTPS协议）的负载分发。'
+            desc: '支持最高10万并发连接，满足用户的大流量需求；支持用户使用4层（TCP协议）或7层（HTTP协议、HTTPS协议）的负载分发。'
           },
           {
             img: 'icon-huihuabaochi',
             title: '会话保持',
-            desc: '基于源IP、HTTP Cookie、Application Cookie 将同一客户端发送的多个请求。分发给同一后端服务器处理器，保持请求处理逻辑的可持续性。'
+            desc: '基于源IP、HTTP Cookie、Application Cookie 将同一客户端发送的多个请求。分发给同一后端服务器处理，保持请求处理逻辑的可持续性。'
           }
         ],
         recommendations: [
