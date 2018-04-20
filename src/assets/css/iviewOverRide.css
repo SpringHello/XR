@@ -205,7 +205,6 @@ div.modal-header-border {
   background-color: #f7f7f7;
   border-color: #dddee1;
 }
-
 .ivu-modal-confirm-footer .ivu-btn-primary {
   padding: 6px 15px;
   font-size: 12px;
@@ -278,5 +277,5 @@ div.modal-header-border {
 .coupon .ivu-radio {
   vertical-align: top;
   top: 3px;
-  margin-right:10px;
+  margin-right: 10px;
 }

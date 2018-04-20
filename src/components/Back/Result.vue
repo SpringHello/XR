@@ -1,10 +1,14 @@
 <template>
   <div class="background">
     <div class="wrapper">
+      <Spin fix v-show="loading">
+        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+        <div>{{loadingMessage}}</div>
+      </Spin>
       <span>首页 / 订单确认 / 支付</span>
       <div class="content">
         <span>支付</span>
-        <span class="title">已选择{{orderInfo.orderNum}}项 | 总计：<span style="font-size: 24px;">{{orderInfo.money}}</span>元 </span>
+        <span class="title">已选择{{orderInfo.orderNum}}项 | 总计:{{orderInfo.money}}元 |</span>
         <div class="accountInfo" v-if="currentTab=='otherPay'">
           <CheckboxGroup v-model="accountPay" @on-change="checkUseVoucher">
             <Checkbox label="account" style="margin-right:40px;user-select: none">
@@ -15,15 +19,14 @@
               <span>现金券余额</span>
               <span class="remain">￥{{orderInfo.voucher}}</span>
             </Checkbox>
-            <span style="float:right;line-height:31px;color:rgba(102,102,102,1);">余额与现金券支付金额：{{accountPayCount}}元</span>
+            <span style="float:right;line-height:31px">余额与现金券支付金额：{{accountPayCount}}元</span>
           </CheckboxGroup>
         </div>
         <div class="pay">
 
           <!--包年包月第三方支付页面-->
           <div v-if="currentTab=='otherPay'&&orderInfo.timeType!=1">
-            <span style="margin-bottom: 20px;display:block;font-size: 14px;">第三方支付渠道<span
-              style="float:right;color:rgba(102,102,102,1);">使用其他支付需渠道金额：{{otherPayCount.toFixed(2)}}元</span></span>
+            <span style="margin-bottom: 20px;display:block;font-size: 14px;">第三方支付渠道<span style="float:right">使用其他支付需渠道金额：{{otherPayCount.toFixed(2)}}元</span></span>
             <div class="payContent">
               <RadioGroup v-model="otherPay" @on-change="otherPayChange">
                 <Radio label="ali" style="margin-right: 40px;">
@@ -84,13 +87,28 @@
         </div>
       </div>
     </div>
+    <!-- 支付状态模态框 -->
+    <Modal v-model="showModal.paymentCofirm" :scrollable="true" :closable="true" :width="390" :mask-closable="false">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>确认支付</strong>
+          <p class="lh24">请您在新打开的页面进行支付，支付完成前请不要关闭此窗口。</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.paymentCofirm = false">更换支付方式</Button>
+        <Button type="primary" @click="paySuccess">已完成支付</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 <script type="text/ecmascript-6">
   import axios from '@/util/axiosInterceptor'
   import store from '@/vuex'
-  export default{
-    data(){
+
+  export default {
+    data() {
       return {
         orderInfo: null,
         // 账户支付方式
@@ -105,13 +123,20 @@
         rechargeArray: [100, 500, 1000, 2000, 5000, 10000],
 
         rechargeValue: 0,
-        rechargeMin: 0
+        rechargeMin: 0,
+        showModal: {
+          paymentCofirm: false
+        },
+        // 支付宝流水号
+        zfbNum: '',
+        loadingMessage: '',
+        load: false
       }
     },
-    beforeRouteEnter(to, from, next){
+    beforeRouteEnter(to, from, next) {
       next()
     },
-    created(){
+    created() {
       this.orderInfo = this.$route.params
       if (this.orderInfo.isUseVoucher == 1) {
         this.accountPay.push('voucher')
@@ -131,12 +156,12 @@
     },
     methods: {
       // 判断能否使用现金券余额
-      checkUseVoucher(bol){
+      checkUseVoucher(bol) {
         // 不允许使用现金券余额，但是点击了使用
         if (this.orderInfo.isUseVoucher == 0 && bol.indexOf('voucher') > -1) {
           this.accountPay.splice(bol.indexOf('voucher'), 1)
           this.$message.info({
-            content: this.orderInfo.xjqdesc || '该订单暂不能使用现金券'
+            content: '当前订单不满足使用现金券要求'
           })
         }
         // 必须使用现金券，但点击了取消使用
@@ -162,7 +187,7 @@
         }
       },
       // 第三方支付
-      otherPayChange(bol){
+      otherPayChange(bol) {
         // 余额已足够支付 不应使用第三方支付
         if (this.accountPay.indexOf('voucher') > -1 && Number(this.orderInfo.voucher) >= Number(this.orderInfo.money)) {
           this.otherPay = ''
@@ -177,7 +202,7 @@
         }
       },
       // 调用支付接口
-      pay(){
+      pay() {
         // 账户支付的金额
         let cost = 0
         if (this.otherPay == '') {
@@ -224,11 +249,7 @@
           })
         } else if (this.otherPay == 'ali') {
           // 支付宝支付
-          if (this.orderInfo.timeType == 1) {
-            window.open(`zfb/alipayapi.do?total_fee=${this.rechargeValue.toFixed(2)}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
-          } else {
-            window.open(`zfb/alipayapi.do?total_fee=${this.otherPayCount.toFixed(2)}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
-          }
+          this.getzfbNum()
         } else if (this.otherPay == 'wx') {
           if (this.orderInfo.timeType == 1) {
             sessionStorage.setItem('total_fee', this.rechargeValue.toFixed(2))
@@ -239,13 +260,63 @@
         }
       },
       // 充值其他可选金额
-      resetRecharge(item){
+      resetRecharge(item) {
         this.rechargeValue = item
+      },
+      // 支付宝支付 获取支付宝流水号再跳转
+      getzfbNum() {
+        var url = `zfb/getzfbinfo.do`
+        var params = {}
+        if (this.orderInfo.timeType == 1) {
+          params = {
+            total_fee: this.rechargeValue.toFixed(2),
+            orders: this.orderInfo.order,
+            ticket: this.orderInfo.ticket
+          }
+        } else {
+          params = {
+            total_fee: this.otherPayCount.toFixed(2),
+            orders: this.orderInfo.order,
+            ticket: this.orderInfo.ticket
+          }
+        }
+        axios.get(url, {
+          params: params
+        }).then(response => {
+          if (response.data.status === 1 && response.status == 200) {
+            this.zfbNum = response.data.serialNum
+            window.open(`zfb/alipayapi.do?serialNum=${this.zfbNum}`)
+            this.showModal.paymentCofirm = true
+          } else {
+            this.$message.info({
+              content: '支付遇到问题，请稍候再试'
+            })
+          }
+        })
+      },
+      // 支付完成
+      paySuccess() {
+        this.showModal.paymentCofirm = false
+        this.loading = true
+        this.loadingMessage = '正在支付，请稍后...'
+        this.$http.get('user/payStatus.do', {
+          params: {
+            serialNum: this.zfbNum
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            sessionStorage.setItem('payResult', 'success')
+            this.$router.push('payResult')
+          } else {
+            sessionStorage.setItem('payResult', 'fail')
+            this.$router.push('payResult')
+          }
+        })
       }
     },
     computed: {
       // 是否允许第三方支付
-      allowOtherPay(){
+      allowOtherPay() {
         let total = 0
         // 选中了余额支付
         if (this.accountPay.indexOf('account') > -1) {
@@ -256,7 +327,7 @@
 
         }
       },
-      otherPayCount(){
+      otherPayCount() {
         if (this.orderInfo && this.otherPay != '') {
           return this.orderInfo.money - this.accountPayCount
         }
@@ -264,7 +335,7 @@
       }
     },
     watch: {
-      accountPay(){
+      accountPay() {
         let count = 0
         this.accountPay.forEach(item => {
           if (item == 'voucher') {
@@ -275,7 +346,7 @@
         })
         this.accountPayCount = count > this.orderInfo.money ? this.orderInfo.money : count
       },
-      otherPayCount(){
+      otherPayCount() {
         if (this.otherPayCount == 0) {
           this.otherPay = ''
         }
@@ -323,23 +394,22 @@
           padding: 6px 0px;
           border-radius: 4px;
           margin-top: 20px;
-          font-weight: normal;
           font-family: Microsoft Yahei, 微软雅黑;
-          font-size: 16px;
+          font-size: 12px;
           color: rgba(0, 0, 0, 0.65);
           letter-spacing: 0px;
           line-height: 18px;
           &::before {
             content: "i";
             display: inline-block;
-            width: 15px;
-            height: 15px;
-            margin-right: 10px;
+            width: 13px;
+            height: 13px;
+            margin-right: 6px;
             text-align: center;
             border-radius: 50% 50%;
             background: #2A99F2;
             color: white;
-            vertical-align: middle
+            vertical-align: sub
           }
         }
         .accountInfo {
