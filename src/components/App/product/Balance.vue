@@ -60,7 +60,7 @@
                 <div style="display: flex">
                   <div v-for="(pimg,index) in stageInfo.pImg" style="margin-right: 10px;" :key="index">
                     <div style="width: 90px;height: 90px;background-color: #ffffff;text-align: center;padding:24px">
-                      <img :src="pimg.img">
+                      <p><i class="iconfont" :class="pimg.icon" style="font-size:40px;color:#3c7efb;"></i></p>
                       <span style="font-size: 14px; color:#666666;">{{pimg.isc}}</span>
                     </div>
                   </div>
@@ -163,9 +163,9 @@
             }
           ],
           pImg: [
-            {img: require('../../../assets/img/product/backup-stage-f1.png'), isc: '云主机'},
-            {img: require('../../../assets/img/product/stage-ip.png'), isc: ''},
-            {img: require('../../../assets/img/product/backup-stage-f2.png'), isc: 'VPC'}
+            {icon: 'icon-danxingyunfuwuqiECS', isc: '云主机'},
+            {icon: 'icon-danxingIP', isc: '弹性IP'},
+            {icon: 'icon-xunisiyouyunVPC', isc: 'VPC'}
           ],
           selectIndex: 0
         },

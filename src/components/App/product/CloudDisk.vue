@@ -60,7 +60,7 @@
                 <div style="display: flex;">
                   <div v-for="pimg in stageInfo.pImg" style="margin-right:10px;">
                     <div style="width: 90px;height: 90px;background-color: #ffffff;text-align: center;padding:24px">
-                      <i class="iconfont" :class="pimg.img" style="font-size:40px;color:#2A99F2;"></i>
+                      <p><i class="iconfont" :class="pimg.icon" style="font-size:40px;color:#3c7efb;"></i></p>
                       <span style="font-size: 14px; color:#666666;">{{pimg.isc}}</span>
                     </div>
                   </div>
@@ -147,8 +147,8 @@
             }
           ],
           pImg: [
-            {img: 'icon-danxingyunfuwuqiECS', isc: '云主机'},
-            {img: 'icon-xunisiyouyunVPC', isc: 'VPC'}
+            {icon: 'icon-danxingyunfuwuqiECS', isc: '云主机'},
+            {icon: 'icon-xunisiyouyunVPC', isc: 'VPC'}
           ],
           selectIndex: 0
         },
