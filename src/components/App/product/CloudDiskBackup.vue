@@ -62,7 +62,7 @@
                 <div style="display: flex">
                   <div v-for="pimg in stage.pImg" style="margin-right: 10px;">
                     <div style="width: 90px;height: 90px;background-color: #ffffff;text-align: center;padding:24px">
-                      <i class="iconfont" :class="pimg.img" style="font-size:40px;color:#2A99F2;"></i>
+                      <p><i class="iconfont" :class="pimg.icon" style="font-size:40px;color:#3c7efb;"></i></p>
                       <span style="font-size: 14px; color:#666666;">{{pimg.isc}}</span>
                     </div>
                   </div>
@@ -126,14 +126,17 @@
           {
             img: 'icon-zidongkuaizhao',
             title: '自动快照',
-            desc: '新睿云自动为用户创建的快照。用户需要首先创建自动快照策略，然后再把自动快照策略应用到磁盘上，新睿云就会在用户设置的时间，自动为该磁盘创建快照。'
+            desc: '自动为用户创建的快照。用户首先需要创建自动快照策略，然后再把自动快照策略应用到磁盘上，就会在用户设置的时间，自动为该磁盘创建快照。'
           },
           {
             img: 'icon-shoudongkuaizhao',
             title: '手动快照',
-            desc: '由用户手动创建。您可以根据需要，手动…'
+            desc: '由用户手动创建。用户可以根据需要，手动为磁盘创建快照，作为数据备份。'
           },
-          {img: 'icon-cipankelonghuifu', title: '磁盘克隆恢复', desc: '用户可以通过克隆的云硬盘创建和原始硬…'}
+          {img: 'icon-cipankelonghuifu',
+           title: '磁盘克隆恢复', 
+           desc: '用户可以通过克隆的云硬盘创建和原始硬盘一样的数据盘。'
+          }
         ],
         stageInfo: {
           stages: [
@@ -144,8 +147,8 @@
               img: require('../../../assets/img/product/backup-stage-1-background.png'),
               desc: ['为云硬盘提供在线备份，通过备份快速恢复数据，保证业务安全可靠。'],
               pImg: [
-                {img: 'icon-danxingyunfuwuqiECS', isc: '云主机'},
-                {img: 'icon-xunisiyouyunVPC', isc: 'VPC'}
+                {icon: 'icon-danxingyunfuwuqiECS', isc: '云主机'},
+                {icon: 'icon-xunisiyouyunVPC', isc: 'VPC'}
               ],
             }
           ],
@@ -155,12 +158,12 @@
           {
             img: 'icon-anquankekao',
             title: '安全可靠',
-            desc: '云硬盘备份是提供对公有云环境中基于云硬盘快照技术的本地数据保护服务,使您的数据更加安全可靠,保护数据安全无忧'
+            desc: '云硬盘备份是提供对公有云环境中基于云硬盘快照技术的本地数据保护服务,使用户的数据更加安全可靠,保护数据安全无忧。'
           },
           {
             img: 'icon-jiandanyiyong',
             title: '简单易用',
-            desc: '简单的备份/恢复界面，只需一键，便可轻松保护您的数据。'
+            desc: '简单的备份/恢复界面，只需一键，便可轻松保护用户的数据。'
           }
         ],
         recommendations: [

@@ -61,7 +61,7 @@
                 <div style="display: flex">
                   <div v-for="(pimg,index) in stageInfo.pImg" style="margin-right: 10px;" :key="index">
                     <div style="width: 90px;height: 90px;background-color: #ffffff;text-align: center;padding:24px">
-                      <img :src="pimg.img">
+                      <p><i class="iconfont" :class="pimg.icon" style="font-size:40px;color:#3c7efb;"></i></p>
                       <span style="font-size: 14px; color:#666666;">{{pimg.isc}}</span>
                     </div>
                   </div>
@@ -117,7 +117,7 @@
         logo: {
           img: require('../../../assets/img/product/p-VPN.png'),
           title: '虚拟专用网络VPN',
-          desc: '虚拟专用网络（Virtual Private Network）用于搭建用户本地数据中心与新睿云VPC之间便捷、灵活，即开即用的IPsec加密连接通道，实现灵活一体，可伸缩的混合云计算环境。',
+          desc: '虚拟专用网络（Virtual Private Network）是通过互联网，采用IPsec加密技术，实现用户本地数据中心、用户办公网络与新睿云VPC之间安全可靠的连接，使用便捷灵活，即开即用，打造可伸缩的混合云环境。',
           linkRouter: $store.state.userInfo ? 'vpn' : 'login'
         },
         features: [
@@ -138,18 +138,18 @@
               title: '混合云部署',
               icon: 'icon-hunheyunbushu1',
               img: require('../../../assets/img/product/vpn-stage-1-icon-background.png'),
-              desc: ['您可以在云端的私有网络内部署应用程序，在您的企业数据中心部署数据库服务器。新睿私有网络提供稳定安全的 VPN 连接帮您打通企业数据中心与云端资源。']
+              desc: ['通过VPN将用户本地数据中心和新睿云VPC互联，利用新睿云的弹性和快速伸缩能力，快速扩展应用或业务的服务能力。']
             },
             {
               title: '跨地域VPN互联',
               icon: 'icon-kuadiyuVPNhulian',
               img: require('../../../assets/img/product/vpn-stage-2-icon-background.png'),
-              desc: ['通过VPN将新睿云上的不同区域的VPC连接，使得用户的数据和服务在不同地域能够互联互通。']
+              desc: ['通过VPN将新睿云不同可用区的VPC实现互联，使用户的数据和服务在不同区域能够互联互通。']
             }
           ],
           pImg: [
-            {img: require('../../../assets/img/product/backup-stage-f1.png'), isc: '云主机'},
-            {img: require('../../../assets/img/product/vpn-.png'), isc: 'VPC'}
+            {icon: 'icon-danxingyunfuwuqiECS', isc: '云主机'},
+            {icon: 'icon-xunisiyouyunVPC', isc: 'VPC'}
           ],
           selectIndex: 0
         },

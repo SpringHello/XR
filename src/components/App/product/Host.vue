@@ -61,8 +61,9 @@
                   <span>配合使用</span>
                   <div class="flex">
 
-                    <div style="background:#ffffff;padding:10px 20px;margin-right:20px;" v-for="(item,i) in stage.bottomimg" :key="i">
-                      <img :src="item.img">
+                    <div style="background:#ffffff;padding:24px;margin-right:10px;width: 90px;height: 90px;" v-for="(item,i) in stage.bottomimg" :key="i">
+                      <i class="iconfont" :class="item.img" style="font-size:40px;color:#3c7efb;"></i>
+                      <p style="font-size: 14px;color: rgb(102, 102, 102);">{{item.title}}</p>
                     </div>
                   </div>
 
@@ -125,17 +126,17 @@
           {
             img: 'icon-gonggongjingxiang',
             title: '公共镜像',
-            desc: '新睿云平台提供的常见的标准操作系统镜像，所有用户可见。包含操作系统以及预装的公共应用。请根据您的实际情况自助配置应用环境或相关软件。'
+            desc: '提供的常见的标准操作系统镜像，所有用户可见。包含操作系统以及预装的公共应用。用户根据实际情况自助配置应用环境或相关软件。'
           },
           {
             img: 'icon-siyoujingxiang',
             title: '私有镜像',
-            desc: '用户基于ECS实例或者外部镜像文件创建的个人镜像，仅用户自己可见。包含操作系统、预装的公共应用以及用户的私有应用。选择私有镜像创建云主机，可以节省您重复配置云主机的时间。'
+            desc: '用户基于ECS实例或者外部镜像文件创建的个人镜像，仅用户自己可见。包含操作系统、预装的公共应用以及用户的私有应用。选择私有镜像创建ECS，可以节省用户重复配置ECS的时间。'
           },
           {
             img: 'icon-gongxiangjingxiang',
             title: '共享镜像',
-            desc: '包含操作系统、预装的公共应用以及用户的私有应用。共享镜像是某一个租户的私有镜像，只对拥有者及被共享者可见。用户可以选择共享镜像创建云主机。'
+            desc: '包含操作系统、预装的公共应用以及用户的私有应用。共享镜像是某一个租户的私有镜像，只对拥有者及被共享者可见。用户可以选择共享镜像创建ECS。'
           },
           {
             img: 'icon-jingxiangshichang',
@@ -152,17 +153,17 @@
           {
             img: 'icon-bianjie',
             title: '便捷',
-            desc: '用户可通过弹性云服务器或者云服务器系统盘备份制作私有镜像，也可通过镜像批量开通云服务器。'
+            desc: '用户可通过运行的ECS或使用ECS系统磁盘的备份文件制作私有镜像,用户可通过镜像批量创建ECS。'
           },
           {
             img: 'icon-anquan',
             title: '安全',
-            desc: '使用多份冗余存储私用镜像,持久性长。'
+            desc: '整体系统采用专用的存储硬件，保证数据的99.999999999%可用性与持久性。'
           },
           {
             img: 'icon-linghuo',
             title: '灵活',
-            desc: '用户可以通过控制台或开放API，完成对镜像的自定义管理，帮助用户轻松搞定镜像管理。'
+            desc: '用户可以通过控制台或开放API，完成对镜像的自定义管理。'
           },
           {
             img: 'icon-tongyi',
@@ -172,25 +173,27 @@
           {
             img: 'icon-fengfu',
             title: '丰富',
-            desc: '种类繁多的镜像，免安装快速部署操作系统与软件。'
+            desc: '种类繁多的镜像，实现快速部署操作系统与软件。'
           }
         ],
         stageInfo: {
           stages: [
             {
               img: require('../../../assets/img/product/mirror-topology.png'),
-              desc: ['创建虚拟机：以已经完成安装和配置的系统为模板，创建新的应用服务器，如批量部署。', '迁移虚拟机：跨可用区域或跨VPC还原或迁移虚拟机，使用镜像克隆。', '虚拟机备份：备份短期内不会更改的系统，如已经完成发布或更新的应用系统。'],
+              desc: ['创建虚拟机：以已经完成安装和配置的镜像为模板，创建新的应用服务器，如批量创建ECS。', '迁移虚拟机：跨可用区域或跨VPC还原或迁移虚拟机实例。', '虚拟机备份：备份短期内不会更改的系统或应用，如已经完成发布或更新的应用系统。'],
               secdesc: [
-                {title: '便捷导入', desc: '私有镜像支持导入，业务灵活迁移'},
-                {title: '统一部署', desc: '快速批量部署业务'},
+                {title: '便捷导入', desc: '支持私有镜像的导入，业务灵活迁移'},
+                {title: '统一部署', desc: '快速批量部署ECS'},
                 {title: '高持久性', desc: '设计规格为99.999999999%持久性，镜像数据不丢失'}
               ],
               bottomimg: [
                 {
-                  img: require('../../../assets/img/product/mirror-storage-1.png')
+                  img: 'icon-danxingyunfuwuqiECS',
+                  title:'云主机'
                 },
                 {
-                  img: require('../../../assets/img/product/mirror-storage-2.png')
+                  img: 'icon-yunyingpan',
+                  title:'云硬盘'
                 }
               ]
             }

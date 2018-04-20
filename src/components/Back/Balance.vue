@@ -670,6 +670,7 @@
               loadbalanceId: balanceId
             }
           }).then(response => {
+
             if (response.status == 200 && response.data.status == 1) {
               this.bindHostForm.vmOptions = response.data.result
             } else {
@@ -678,17 +679,20 @@
               })
             }
           })
+
         }
       },
       /* 负载均衡确定绑定虚拟机 */
       bindHost_ok () {
         this.showModal.bind = false
         this.balData.forEach(item => {
+
           if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
             item.status = 7
             item._disabled = true
           }
         })
+
         if (this.bindHostForm.vm.length != 0) {
           var url = ''
           var params = {}
@@ -708,6 +712,7 @@
             }
           }
           this.$http.get(url, {params}).then(response => {
+
             if (response.status == 200 && response.data.status == 1) {
               this.refresh()
               this.$Message.success({
@@ -738,6 +743,7 @@
               loadbalanceType: loadbalanceType
             }
           }).then(response => {
+
             if (response.status == 200 && response.data.status == 1) {
               this.unbindForm.hostList = response.data.result
             } else {
@@ -757,6 +763,7 @@
             item._disabled = true
           }
         })
+
         if (this.unbindForm.vm.length != 0) {
           var url = ''
           var params = {}
@@ -844,7 +851,6 @@
     computed: {
       auth(){
         return this.$store.state.authInfo != null
-
       }
     }
   }

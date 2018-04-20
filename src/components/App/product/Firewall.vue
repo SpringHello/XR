@@ -6,7 +6,8 @@
         <img :src="logo.img">
         <div class="info">
           <span class="title">{{logo.title}}</span>
-          <span class="desc">{{logo.desc}}</span>
+          <span class="desc" style="margin-bottom: 5px;">{{logo.desc}}</span>
+          <span class="desc">{{logo.desc1}}</span>
           <router-link :to="logo.linkRouter">立即体验</router-link>
         </div>
       </div>
@@ -119,37 +120,43 @@
         logo: {
           img: require('../../../assets/img/product/firewall-logo.png'),
           title: '虚拟防火墙',
-          desc: '虚拟防火墙是VPC内部VLAN与VLAN之间的防火墙，默认所有端口都是封闭的，用户需要建立规则以打开相应端口。采用“白名单”的策略可以更大程度地保障来自外网的访问安全。',
+          desc: '虚拟防火墙是VPC内部VLAN与VLAN之间的安全组策略，用户根据需要建立访问规则对端口和协议进行进/出站控制。',
+          desc1: '虚拟防火墙通过设置安全组规则对相应VPC下子网的访问进行控制，能够有效阻止非法的服务和进程入侵。云平台为每个VPC提供了独立的虚拟防火墙，用户可以灵活配置虚拟防火墙的规则，在子网上引用相应规则对进站、出站的流量进行匹配，实现子网的防护。虚拟防火墙也可部署在互联网出口，用于阻断互联网上非法的流量和行为，实现对外服务站点的防护。',
           linkRouter: $store.state.userInfo ? 'firewall' : 'login'
         },
         features: [
           {
             img: 'icon-duankoubaohu',
             title: '端口保护',
-            desc: '除常用端口外其他端口默认关闭，最大程度保障主机安全。'
+            desc: '用户根据需要可建立访问规则对端口和协议进行进/出站控制，最大程度保障主机安全。'
           },
           {
             img: 'icon-shujubeifen1',
             title: '分层管理',
-            desc: '虚拟防火墙策略根据不同的优先级生效，方便灵活。'
-          }
+            desc: '同一VPC下的不同子网可以通过设置防火墙规则实现网络的分层管理。'
+          },
+          {
+            img: 'icon-linghuopeizhi1',
+            title: '灵活配置',
+            desc: '虚拟防火墙策略可以设置不同的优先级，实现规则的精确匹配，配置即时生效，使用灵活方便。'
+          },
         ],
         advantages: [
           {
             img:'icon-miananzhuang',
-            title: '免安装',
-            desc: '操作简便。虚拟防火墙通过清晰友好的界面，可以更方便的管理开放的端口。'
+            title: '高性能防护',
+            desc: '防火墙采用高效的NFV技术，独立于主机存在，性能优异，资源占用低，防护更安全。'
           },
           {
             img: 'icon-jianjieyunwei',
-            title: '简介运维',
-            desc: '虚拟防火墙不需要复杂的运维操作，添加删除更轻松。'
-          },
-          {
-            img: 'icon-diziyuanzhanyong',
-            title: '低资源占用',
-            desc: '不需要在主机上安装任何agent，更关注于业务。'
+            title: '运维简单',
+            desc: '虚拟防火墙界面友好，操作简单，配置即时生效。'
           }
+//          {
+//            img: 'icon-diziyuanzhanyong',
+//            title: '低资源占用',
+//            desc: '不需要在主机上安装任何agent，更关注于业务。'
+//          }
         ],
         stageInfo: {
           stages: [
