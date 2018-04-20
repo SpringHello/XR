@@ -60,7 +60,7 @@
                 <div style="display: flex;">
                   <div v-for="pimg in stageInfo.pImg" style="margin-right:10px;">
                     <div style="width: 90px;height: 90px;background-color: #ffffff;text-align: center;padding:24px">
-                      <i class="iconfont" :class="pimg.img" style="font-size:40px;color:#2A99F2;"></i>
+                      <p><i class="iconfont" :class="pimg.icon" style="font-size:40px;color:#3c7efb;"></i></p>
                       <span style="font-size: 14px; color:#666666;">{{pimg.isc}}</span>
                     </div>
                   </div>
@@ -104,54 +104,51 @@
         logo: {
           img: require('../../../assets/img/product/disk-logo.png'),
           title: '云硬盘',
-          desc: '云硬盘是为云服务器实例提供持久性块存储的服务，可以挂载到同一可用区下的云服务器实例上，云硬盘具有高可靠、高性能、灵活易用等特点，同时云硬盘支持在线操作和管理。 ',
+          desc: '云硬盘是为云服务器实例提供持久性块存储的服务，可以挂载到同一可用区下的云服务器实例上，云硬盘具有高可靠、高性能、灵活易用等特点，同时云硬盘支持在线操作和管理。',
           linkRouter: 'buy'
         },
         features: [
           {
-            img: 'icon-shujubeifen',
-            title: '磁盘克隆',
-            desc: '对数据盘整体进行克隆和备份，备份数据存储在新睿云的对象存储里面，不占用租户云硬盘空间，用户可以通过克隆的云硬盘创建和原始硬盘一样的数据盘。'
-          },
-          {
             img: 'icon-danxingguazai',
             title: '弹性挂载',
-            desc: '云硬盘可自由挂载、卸载，无需关闭或重启服务器，云硬盘的容量可在线弹性配置，支持实时计费。'
+            desc: '云硬盘可自由挂载、卸载，无需关闭或重启服务器;云硬盘的容量可在线弹性配置，支持实时计费。'
+          },
+          {
+            img: 'icon-shujubeifen',
+            title: '磁盘快照',
+            desc: '磁盘快照能对云硬盘某个时刻的数据进行备份和回滚，磁盘快照为全量快照，用户可使用快照创建云硬盘，可批量快速部署或迁移业务。'
           },
           {
             img: 'icon-cipanbeifen',
-            title: '磁盘快照',
-            desc: '磁盘快照能对云硬盘某个时刻的数据进行备份和回滚，磁盘快照为全量快照，用户可使用快照创建云硬盘，可批量快速部署或迁移业务。'
-          }
-//          {img: 'icon-linghuoguanli', title: '灵活管理', desc: '可以使用界面进行管理配置，操作简单易用。'}
+            title: '磁盘克隆',
+            desc: '对数据盘整体进行克隆和备份，备份数据存储在新睿云的对象存储里面，不占用租户云硬盘空间，用户可以通过克隆的云硬盘创建和原始硬盘一样的数据盘。'
+          },
+          {img: 'icon-linghuoguanli', title: '灵活管理', desc: '可以使用界面进行管理配置，操作简单易用。'}
         ],
         stageInfo: {
           stages: [
             {
               title: '高性能计算',
-             // activeIcon: require('../../../assets/img/product/disk-stage-1-icon-blue.png'),
-              icon: 'icon-gaoxingnengjisuan',
-              img: require('../../../assets/img/product/disk-gaoxiangnejisuan.png'),
+              icon: 'icon-bimiandandianguzhang',
+              img: require('../../../assets/img/product/disk-stage-1-icon-background.png'),
               desc: ['高性能计算应用场景，部署分布式文件系统，如Lustre、GPFS，需要高性能存储的支持。建议选用超高IO云硬盘，满足大吞吐量、高读写速率需求。支持10万级IOPS，单盘最大容量达32TB。']
             },
             {
               title: '数据仓库',
-             // activeIcon: require('../../../assets/img/product/disk-stage-2-icon-blue.png'),
               icon: 'icon-shujucangku',
               img: require('../../../assets/img/product/disk-stage-2-icon-background.png'),
               desc: ['数据读密集型应用场景，部署数据仓库，如Oracle RAC、SAP HANA。建议选用超高IO云硬盘，满足低延迟、高读写速率以及大吞吐量的应用需求。']
             },
             {
               title: 'NoSQL/ 关系型数据库',
-             // activeIcon: require('../../../assets/img/product/disk-stage-3-icon-blue.png'),
               icon: 'icon-NoSQLguanxixingshujuku',
               img: require('../../../assets/img/product/disk-stage-3-icon-background.png'),
               desc: ['读写密集型应用场景，部署各类数据库，MongoDB、Oracle、SQL Server、MySQL 和PostgreSQL。建议选用超高IO云硬盘，满足低延迟、高读写速率需求。']
             }
           ],
           pImg: [
-            {img: 'icon-danxingyunfuwuqiECS', isc: '云主机'},
-            {img: 'icon-xunisiyouyunVPC', isc: 'VPC'}
+            {icon: 'icon-danxingyunfuwuqiECS', isc: '云主机'},
+            {icon: 'icon-xunisiyouyunVPC', isc: 'VPC'}
           ],
           selectIndex: 0
         },
