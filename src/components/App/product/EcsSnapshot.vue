@@ -150,7 +150,7 @@
             },
             {
               title: '系统盘扩容',
-              icon: 'icon-linshishujubeifen',
+              icon: 'icon-xitongpankuorong',
               desc: ['磁盘数据迁移，通过对磁盘执行快照，将磁盘作为新建磁盘的基础数据。']
             },
           ],

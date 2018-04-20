@@ -130,7 +130,7 @@
             {
               title: '高性能计算',
              // activeIcon: require('../../../assets/img/product/disk-stage-1-icon-blue.png'),
-              icon: 'icon-bimiandandianguzhang',
+              icon: 'icon-gaoxingnengjisuan',
               img: require('../../../assets/img/product/disk-gaoxiangnejisuan.png'),
               desc: ['高性能计算应用场景，部署分布式文件系统，如Lustre、GPFS，需要高性能存储的支持。建议选用超高IO云硬盘，满足大吞吐量、高读写速率需求。支持10万级IOPS，单盘最大容量达32TB。']
             },

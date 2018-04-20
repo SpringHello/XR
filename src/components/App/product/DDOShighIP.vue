@@ -128,7 +128,7 @@
         ],
         advantages: [
           {
-            img: 'icon-gaoxingjiabi',
+            img: 'icon-gaoxingnengyingjian',
             title: '高品质硬件',
             desc: '采用华为最新一代DDoS防护硬件，高效稳定。'
           },
