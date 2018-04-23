@@ -61,8 +61,9 @@
                   <span>配合使用</span>
                   <div class="flex">
 
-                    <div style="background:#ffffff;padding:10px 20px;margin-right:20px;" v-for="(item,i) in stage.bottomimg" :key="i">
-                      <img :src="item.img">
+                    <div style="background:#ffffff;padding:24px;margin-right:10px;width: 90px;height: 90px;" v-for="(item,i) in stage.bottomimg" :key="i">
+                      <i class="iconfont" :class="item.img" style="font-size:40px;color:#3c7efb;"></i>
+                      <p style="font-size: 14px;color: rgb(102, 102, 102);">{{item.title}}</p>
                     </div>
                   </div>
 
@@ -187,10 +188,12 @@
               ],
               bottomimg: [
                 {
-                  img: require('../../../assets/img/product/mirror-storage-1.png')
+                  img: 'icon-danxingyunfuwuqiECS',
+                  title:'云主机'
                 },
                 {
-                  img: require('../../../assets/img/product/mirror-storage-2.png')
+                  img: 'icon-yunyingpan',
+                  title:'云硬盘'
                 }
               ]
             }

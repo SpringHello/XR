@@ -1592,9 +1592,9 @@
                   label: '2核',
                   value: 2,
                   RAMList: [
+                    {label: '2G', value: 2},
                     {label: '4G', value: 4},
-                    {label: '8G', value: 8},
-                    {label: '16G', value: 16}
+                    {label: '8G', value: 8}
                   ]
                 },
                 {
@@ -1603,9 +1603,7 @@
                   RAMList: [
                     {label: '4G', value: 4},
                     {label: '8G', value: 8},
-                    {label: '12G', value: 12},
-                    {label: '16G', value: 16},
-                    {label: '32G', value: 32}
+                    {label: '16G', value: 16}
                   ]
                 },
                 {
@@ -1622,7 +1620,6 @@
                   value: 16,
                   RAMList: [
                     {label: '16G', value: 16},
-                    {label: '24G', value: 24},
                     {label: '32G', value: 32}
                   ]
                 },
@@ -2498,9 +2495,11 @@
         if (this._checkCount(hostCount, diskCount, ipCount)) {
           sessionStorage.removeItem('cart')
           Promise.all(PromiseList).then(responseList => {
-            this.$router.push({path:'order',query:{
-              countOrder
-            }})
+            this.$router.push({
+              path: 'order', query: {
+                countOrder
+              }
+            })
           })
         }
       },
