@@ -564,6 +564,14 @@
                 <div class="item-wrapper">
                   <div style="display: flex">
                     <div>
+                      <p class="item-title" style="margin-top: 8px">系统用户名</p>
+                    </div>
+                    <span style="padding:10px 0;font-size: 14px;color: #999999;">{{ systemUsername }}</span>
+                  </div>
+                </div>
+                <div class="item-wrapper">
+                  <div style="display: flex">
+                    <div>
                       <p class="item-title" style="margin-top: 8px">登录密码</p>
                     </div>
                     <Input v-model="PecsInfo.password" placeholder="请输入至少6位包含大小写与数字的密码"

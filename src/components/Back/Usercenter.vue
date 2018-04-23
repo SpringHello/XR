@@ -557,7 +557,7 @@
           <!--用于企业认证的pane-->
           <TabPane label="企业信息" name="companyInfo" v-if="showCompanyPane">
             <p class="info-title">企业基本信息</p>
-            <Form :model="notAuth.companyAuthForm" :label-width="70" ref="companyAuth"
+            <Form :model="notAuth.companyAuthForm" :label-width="100" ref="companyAuth"
                   :rules="notAuth.companyAuthFormValidate"
                   style="margin-top:20px;">
               <div style="width:500px">
@@ -572,11 +572,27 @@
                     </Option>
                   </Select>
                 </FormItem>
-                <FormItem label="联系方式" prop="contact">
+                <FormItem label="企业联系方式" prop="contact">
                   <Input v-model="notAuth.companyAuthForm.contact" placeholder="请输入联系方式"></Input>
                 </FormItem>
-                <FormItem label="联系人" prop="contactPerson">
-                  <Input v-model="notAuth.companyAuthForm.contactPerson" placeholder="请输入联系人姓名"></Input>
+                <p class="info-title">企业联系人信息</p>
+                <FormItem label="联系人姓名" prop="linkManName">
+                  <Input v-model="notAuth.companyAuthForm.linkManName" placeholder="请输入联系人姓名"></Input>
+                </FormItem>
+                <FormItem label="身份证号码" prop="linkManNameID">
+                  <Input v-model="notAuth.companyAuthForm.linkManNameID" placeholder="请输入身份证号码"></Input>
+                </FormItem>
+                <FormItem label="图形验证码" prop="imgCode">
+                  <Input v-model="notAuth.companyAuthForm.imgCode" placeholder="请输入图形验证码" style="width: 300px"></Input>
+                  <img style="position: absolute;right: 0px;bottom:0;cursor: pointer" :src="notAuth.companyAuthForm.imgSrc" @click="notAuth.companyAuthForm.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                </FormItem>
+                <FormItem label="联系方式" prop="linkManPhone">
+                  <Input v-model="notAuth.companyAuthForm.linkManPhone" placeholder="请输入联系方式" style="width: 300px"></Input>
+                  <button class="sendCompanyCode" :class="{codeDisabled:notAuth.companyAuthForm.codePlaceholder!='发送验证码'}" @click.prevent="sendCompanyCode"
+                          :disabled="notAuth.companyAuthForm.codePlaceholder!='发送验证码'">{{ notAuth.companyAuthForm.codePlaceholder }}</button>
+                </FormItem>
+                <FormItem label="验证码" prop="verificationCode">
+                  <Input v-model="notAuth.companyAuthForm.verificationCode" placeholder="请输入收到的验证码"></Input>
                 </FormItem>
                 <!--<FormItem label="证件类型" prop="certificateType">
                   <Select v-model="notAuth.companyAuthForm.certificateType">
@@ -1147,6 +1163,20 @@
             ],
             contact: '',
             contactPerson: '',
+            // 联系人姓名
+            linkManName: '',
+            // 联系人身份证号
+            linkManNameID: '',
+            //  联系人电话
+            linkManPhone: '',
+            // 验证码
+            verificationCode: '',
+            // 企业认证时的图形验证码
+            imgSrc: 'user/getKaptchaImage.do',
+            // 企业认证发送短信的图形验证码
+            imgCode: '',
+            // 企业认证的表单验证码按钮文字
+            codePlaceholder: '发送验证码',
             certificateType: '1',
             certificateTypeOptions: [{label: '三证合一', key: '1'}, {label: '非三证合一', key: '2'}],
             // 三证合一
@@ -1168,7 +1198,7 @@
               /*{validator: validaRegisteredID}*/
             ],
             contact: [
-              {required: true, message: '请输入联系方式'},
+              {required: true, message: '请输入公司联系方式'},
               {validator: validaRegisteredPhone}
             ],
             contactPerson: [
@@ -1177,6 +1207,24 @@
             ],
             certificateType: [
               {required: true, message: '请选择证件类型'}
+            ],
+            linkManName: [
+              {required: true, message: '请输入联系人姓名'},
+              {validator: validaRegisteredName}
+            ],
+            linkManNameID: [
+              {required: true, message: '请输入身份证号码'},
+              {validator: validaRegisteredID}
+            ],
+            imgCode: [
+              {required: true, message: '请输入图形验证码'},
+            ],
+            linkManPhone: [
+              {required: true, message: '请输入联系方式'},
+              {validator: validaRegisteredPhone}
+            ],
+            verificationCode: [
+              {required: true, message: '请输入收到的手机验证码'},
             ]
           },
         },
@@ -1396,6 +1444,7 @@
             }
           }
         ],
+        // 联系人表格render需要
         recertify: '重发验证',
         recertifyColor: '#2A99F2',
         recertifyPoiner: 'pointer',
@@ -1669,7 +1718,10 @@
               name: this.notAuth.companyAuthForm.name,
               linkmanName: this.notAuth.companyAuthForm.contactPerson,
               trade: this.notAuth.companyAuthForm.industry,
-              phone: this.notAuth.companyAuthForm.contact
+              phone: this.notAuth.companyAuthForm.contact,
+              idCard: this.notAuth.companyAuthForm.linkManNameID,
+              contectPhone: this.notAuth.companyAuthForm.linkManPhone,
+              phoneCode: this.notAuth.companyAuthForm.verificationCode,
             }
             if (params.authType == 1) {
               if (this.notAuth.companyAuthForm.combine == '') {
@@ -1705,6 +1757,52 @@
             })
           }
         })
+      },
+      /* 企业认证发送验证码 */
+      sendCompanyCode(){
+        var regPhone = false
+        var regCode = false
+        this.$refs.companyAuth.validateField('linkManPhone',(text)=>{
+          if(text ===''){
+            regPhone = true
+          }
+        })
+        this.$refs.companyAuth.validateField('imgCode',(text)=>{
+          if(text!==''){
+            regCode = true
+          }
+        })
+        if (regPhone&&regPhone) {
+          this.notAuth.companyAuthForm.codePlaceholder = '验证码发送中'
+          axios.get('user/code.do', {
+            params: {
+              aim: this.notAuth.companyAuthForm.linkManPhone,
+              isemail: '0',
+              vailCode: this.notAuth.companyAuthForm.imgCode,
+            }
+          }).then(response => {
+            this.notAuth.companyAuthForm.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+            // 发送倒计时
+            let countdown = 60
+            this.notAuth.companyAuthForm.codePlaceholder = '60s'
+            var inter = setInterval(() => {
+              countdown--
+              this.notAuth.companyAuthForm.codePlaceholder = countdown + 's'
+              if (countdown == 0) {
+                clearInterval(inter)
+                this.notAuth.companyAuthForm.codePlaceholder = '发送验证码'
+              }
+            }, 1000)
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.success({
+                content: '验证码发送成功',
+                duration: 5
+              })
+            } else {
+              this.$Message.error(response.data.message)
+            }
+          })
+        }
       },
       // 列出通知信息
       listNotice() {
@@ -2234,6 +2332,28 @@
             height: 74px;
             display: block;
             margin-bottom: 20px;
+          }
+        }
+        // 企业认证发送验证码的button
+        .sendCompanyCode {
+          width: 80px;
+          height: 30px;
+          position: absolute;
+          text-align: center;
+          line-height: 27px;
+          display: block;
+          bottom: 1px;
+          left: 320px;
+          cursor: pointer;
+          background: #4990E2;
+          border: 1px solid rgba(15, 179, 250, 0.00);
+          font-family: PingFangSC-Regular;
+          font-size: 11px;
+          color: #FFFFFF;
+          letter-spacing: 0.71px;
+          outline: none;
+          &.codeDisabled {
+            cursor: not-allowed;
           }
         }
       }
