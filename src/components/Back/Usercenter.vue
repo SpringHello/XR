@@ -60,6 +60,17 @@
                 <FormItem label="身份证号" prop="IDCard">
                   <Input v-model="notAuth.cardAuthForm.IDCard" placeholder="请输入身份证号" style="width:380px;"></Input>
                 </FormItem>
+                <FormItem label="联系方式" prop="tel">
+                  <Input v-model="notAuth.cardAuthForm.tel" style="width:380px;"></Input>
+                </FormItem>
+                <FormItem label="图形验证码" prop="imgCode">
+                  <Input v-model="notAuth.cardAuthForm.imgCode" style="width:300px;"></Input>
+                  <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" width="80" height="30" style="vertical-align:middle;cursor:pointer">
+                </FormItem>
+                <FormItem label="验证码" prop="verificationCode">
+                  <Input v-model="notAuth.cardAuthForm.verificationCode" style="width:280px;"></Input>
+                  <Button type="primary" @click.prevent="sendCodePersonal" :disabled="notAuth.cardAuthForm.sendCodeText !='获取验证码'">{{notAuth.cardAuthForm.sendCodeText}}</Button>
+                </FormItem>
                 <p style="font-size: 14px;color: #666666;letter-spacing: 0.83px;margin-bottom:20px;">请上传实名认证图片
                   上传文件支持jpg/png/gif/pdf，单个文件最大不超过4MB。</p>
                 <div class="IDCard">
@@ -1134,9 +1145,13 @@
           cardAuthForm: {
             name: '',
             IDCard: '',
+            tel: '',
+            imgCode: '',
+            verificationCode: '',
             IDCardFront: '',
             IDCardBack: '',
-            IDCardPerson: ''
+            IDCardPerson: '',
+            sendCodeText: '获取验证码'
           },
           // 身份证认证表单验证
           cardAuthFormValidate: {
@@ -1147,6 +1162,16 @@
             IDCard: [
               {required: true, message: '请输入身份证号'},
               {validator: validaRegisteredID}
+            ],
+            tel: [
+              {required: true, message: '请输入手机号码'},
+              {validator: validaRegisteredPhone}
+            ],
+            imgCode: [
+              {required: true, message: '请输入图形验证码'},
+            ],
+            verificationCode: [
+              {required: true, message: '请输入验证码'},
             ]
           },
           // 企业认证表单
@@ -1646,6 +1671,42 @@
           }
         })
       },
+      // 个人认证，发送验证码
+      sendCodePersonal() {
+        var validataTel = null
+        var validataImgcode = null
+        this.$refs.cardAuth.validateField('tel',function(text){
+          validataTel = text==''
+        })
+        this.$refs.cardAuth.validateField('imgCode',function(text){
+            validataImgcode = text==''
+          })
+        if(validataTel&&validataImgcode){
+           axios.get('user/code.do', {
+              params: {
+                aim: this.notAuth.cardAuthForm.tel,
+                isemail: 0,
+                vailCode: this.notAuth.cardAuthForm.imgCode
+              }
+            }).then(response => {
+              // 发送成功，进入倒计时
+              if (response.status == 200 && response.data.status == 1) {
+                var countdown = 60
+                this.notAuth.cardAuthForm.sendCodeText = `${countdown}S`
+                var Interval = setInterval(() => {
+                  countdown--
+                  this.notAuth.cardAuthForm.sendCodeText = `${countdown}S`
+                  if (countdown == 0) {
+                    clearInterval(Interval)
+                    this.notAuth.cardAuthForm.sendCodeText = '获取验证码'
+                  }
+                }, 1000)
+              } else {
+                this.$Message.error(response.data.message)
+              }
+            })
+        }
+      },
       // 个人认证
       // 身份证照片认证
       personalAttest() {
@@ -1661,6 +1722,8 @@
               cardFrontURL: this.notAuth.cardAuthForm.IDCardFront,
               cardBakURL: this.notAuth.cardAuthForm.IDCardBack,
               companyCardURL: this.notAuth.cardAuthForm.IDCardPerson,
+              phone: this.notAuth.cardAuthForm.tel,
+              phoneCode: this.notAuth.cardAuthForm.verificationCode,
               type: '1'
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {

@@ -249,7 +249,13 @@
           })
         } else if (this.otherPay == 'ali') {
           // 支付宝支付
-          this.getzfbNum()
+          //this.getzfbNum()
+          // 支付宝支付
+          if (this.orderInfo.timeType == 1) {
+            window.open(`zfb/alipayapi.do?total_fee=${this.rechargeValue.toFixed(2)}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
+          } else {
+            window.open(`zfb/alipayapi.do?total_fee=${this.otherPayCount.toFixed(2)}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
+          }
         } else if (this.otherPay == 'wx') {
           if (this.orderInfo.timeType == 1) {
             sessionStorage.setItem('total_fee', this.rechargeValue.toFixed(2))
