@@ -252,6 +252,10 @@
           {
             title: '关于我们',
             path: '/ruicloud/about'
+          },
+          {
+            title: '备案',
+            path: '/ruicloud/entrance'
           }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
@@ -473,7 +477,7 @@
               line-height: 70px;
               display: inline-block;
               font-size: 14px;
-              &:nth-child(4) {
+              &:nth-child(5) {
                 span {
                   border-right: 1px solid #939393;
                   display: inline-block;

@@ -29,6 +29,9 @@ const NewNodes_1 = () => import('@/components/App/active/newNodes_1')
 const NewNodes_2 = () => import('@/components/App/active/newNodes_2')
 const active_1 = () => import('@/components/App/active/active_1')
 
+// 备案系统页面路由
+const Entrance = () => import('@/components/App/records/Entrance')
+
 /* 产品页面路由 */
 const Pecs = () => import('@/components/App/product/ECS.vue')
 const Phost = () => import('@/components/App/product/Host.vue')
@@ -213,6 +216,7 @@ var router = new Router({
         {path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
         {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},
         {path: 'active_1', name: 'active_1', component: active_1},
+        {path: 'entrance', name: 'entrance', component: Entrance},
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
         {path: 'Pecss', component: Pecss},
