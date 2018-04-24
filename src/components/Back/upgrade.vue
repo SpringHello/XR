@@ -15,15 +15,14 @@
           <div style="width:50%">
             <p class="content-title">CPU</p>
             <div class="cpu">
-                <span v-for="item in CPU" v-if="currentCPUNum <= item.CPU" :class="{select:item.CPU==CPUNum}"
-                      :key="item.CPU"
-                      @click="changeCPU(item)">{{item.CPU}}核</span>
+                <span v-for="item in zoneInfo.kernelList"
+                      :class="{select:item.value==CPUNum,disabled:item.value<currentCPUNum}"
+                      @click="changeCPU(item.value)">{{item.value}}核</span>
             </div>
             <p class="content-title">内存</p>
-            <div class="cpu">
-                <span v-for="item in RAM" v-if="currentRAMSize <= item.memory" :class="{select:item.memory==RAMSize}"
-                      :key="item.memory"
-                      @click="changeCache(item)">{{item.memory}}G</span>
+            <div class="cpu" v-for="item in zoneInfo.kernelList" v-if="item.value==CPUNum">
+                <span v-for="ram in item.RAMList" :class="{select:ram.value==RAMSize}"
+                      v-show="ram.value>=CPUNum" @click="changeCache(ram.value)">{{ram.value}}G</span>
             </div>
           </div>
           <div class="conf-wrapper">
@@ -43,7 +42,7 @@
             <span style="margin-top:10px;">
                 <a href="/ruicloud/#/computed/3-1" target="_blank">购买和计费说明</a>
               </span>
-            <button @click="payOrder" :class="{ dis: cost==0}">立即购买</button>
+            <button @click="payOrder">立即购买</button>
           </div>
         </div>
       </div>
@@ -53,16 +52,345 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import axios from 'axios'
-
-  export default {
-    data() {
-      var currentCPUNum = Number.parseInt(localStorage.serviceoffername.replace(/[^0-9]/ig, "")[0])
-      var currentRAMSize = Number.parseInt(localStorage.serviceoffername.replace(/[^0-9]/ig, "")[2])
+  var info = [
+    {
+      zoneId: '39a6af0b-6624-4194-b9d5-0c552d903858',
+      zoneName: '北京一区',
+      kernelList: [
+        {
+          label: '1核',
+          value: 1,
+          RAMList: [
+            {label: '1G', value: 1},
+            {label: '2G', value: 2},
+            {label: '4G', value: 4},
+            {label: '8G', value: 8}
+          ]
+        },
+        {
+          label: '2核',
+          value: 2,
+          RAMList: [
+            {label: '2G', value: 2},
+            {label: '4G', value: 4},
+            {label: '8G', value: 8},
+            {label: '16G', value: 16}
+          ]
+        },
+        {
+          label: '4核',
+          value: 4,
+          RAMList: [
+            {label: '4G', value: 4},
+            {label: '8G', value: 8},
+            {label: '16G', value: 16},
+            {label: '32G', value: 32}
+          ]
+        },
+        {
+          label: '8核',
+          value: 8,
+          RAMList: [
+            {label: '8G', value: 8},
+            {label: '16G', value: 16},
+            {label: '32G', value: 32},
+            {label: '64G', value: 64}
+          ]
+        },
+        {
+          label: '16核',
+          value: 16,
+          RAMList: [
+            {label: '16G', value: 16},
+            {label: '32G', value: 32},
+            {label: '64G', value: 64},
+            {label: '128G', value: 128}
+          ]
+        },
+        {
+          label: '32核',
+          value: 32,
+          RAMList: [
+            {label: '64G', value: 64},
+            {label: '128G', value: 128}
+          ]
+        },
+        {
+          label: '64核',
+          value: 64,
+          RAMList: [
+            {label: '128G', value: 128},
+            {label: '256G', value: 256},
+          ]
+        }
+      ],
+    },
+    {
+      zoneId: '1ce0d0b9-a964-432f-8078-a61100789e30',
+      zoneName: '北方二区(沈阳)',
+      kernelList: [
+        {
+          label: '1核',
+          value: 1,
+          RAMList: [
+            {label: '1G', value: 1},
+            {label: '2G', value: 2},
+            {label: '4G', value: 4},
+            {label: '8G', value: 8}
+          ]
+        },
+        {
+          label: '2核',
+          value: 2,
+          RAMList: [
+            {label: '2G', value: 2},
+            {label: '4G', value: 4},
+            {label: '8G', value: 8},
+            {label: '16G', value: 16}
+          ]
+        },
+        {
+          label: '4核',
+          value: 4,
+          RAMList: [
+            {label: '4G', value: 4},
+            {label: '8G', value: 8},
+            {label: '16G', value: 16},
+            {label: '32G', value: 32}
+          ]
+        },
+        {
+          label: '8核',
+          value: 8,
+          RAMList: [
+            {label: '8G', value: 8},
+            {label: '16G', value: 16},
+            {label: '32G', value: 32},
+            {label: '64G', value: 64}
+          ]
+        },
+        {
+          label: '16核',
+          value: 16,
+          RAMList: [
+            {label: '16G', value: 16},
+            {label: '32G', value: 32},
+            {label: '64G', value: 64},
+            {label: '128G', value: 128}
+          ]
+        },
+        {
+          label: '32核',
+          value: 32,
+          RAMList: [
+            {label: '64G', value: 64},
+            {label: '128G', value: 128}
+          ]
+        },
+        {
+          label: '64核',
+          value: 64,
+          RAMList: [
+            {label: '128G', value: 128},
+            {label: '256G', value: 256},
+          ]
+        }
+      ],
+    },
+    {
+      zoneId: 'a0a7df65-dec3-48da-82cb-cff9a55a4b6d',
+      zoneName: '北方一区',
+      kernelList: [
+        {
+          label: '1核',
+          value: 1,
+          RAMList: [
+            {label: '1G', value: 1},
+            {label: '2G', value: 2},
+            {label: '4G', value: 4}
+          ]
+        },
+        {
+          label: '2核',
+          value: 2,
+          RAMList: [
+            {label: '4G', value: 4},
+            {label: '8G', value: 8},
+            {label: '12G', value: 12},
+          ]
+        },
+        {
+          label: '4核',
+          value: 4,
+          RAMList: [
+            {label: '4G', value: 4},
+            {label: '8G', value: 8},
+            {label: '12G', value: 12},
+            {label: '16G', value: 16},
+            {label: '32G', value: 32}
+          ]
+        },
+        {
+          label: '8核',
+          value: 8,
+          RAMList: [
+            {label: '16G', value: 16},
+            {label: '24G', value: 24},
+            {label: '32G', value: 32}
+          ]
+        },
+        {
+          label: '16核',
+          value: 16,
+          RAMList: [
+            {label: '16G', value: 16},
+            {label: '24G', value: 24},
+            {label: '32G', value: 32}
+          ]
+        },
+        {
+          label: '32核',
+          value: 32,
+          RAMList: [
+            {label: '32G', value: 32}
+          ]
+        }
+      ],
+    },
+    {
+      zoneId: '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c',
+      zoneName: '华中一区',
+      kernelList: [
+        {
+          label: '1核',
+          value: 1,
+          RAMList: [
+            {label: '1G', value: 1},
+            {label: '2G', value: 2},
+            {label: '4G', value: 4}
+          ]
+        },
+        {
+          label: '2核',
+          value: 2,
+          RAMList: [
+            {label: '4G', value: 4},
+            {label: '8G', value: 8},
+            {label: '12G', value: 12},
+          ]
+        },
+        {
+          label: '4核',
+          value: 4,
+          RAMList: [
+            {label: '4G', value: 4},
+            {label: '8G', value: 8},
+            {label: '12G', value: 12},
+            {label: '16G', value: 16},
+            {label: '32G', value: 32}
+          ]
+        },
+        {
+          label: '8核',
+          value: 8,
+          RAMList: [
+            {label: '16G', value: 16},
+            {label: '24G', value: 24},
+            {label: '32G', value: 32},
+          ]
+        },
+        {
+          label: '16核',
+          value: 16,
+          RAMList: [
+            {label: '16G', value: 16},
+            {label: '24G', value: 24},
+            {label: '32G', value: 32}
+          ]
+        },
+        {
+          label: '32核',
+          value: 32,
+          RAMList: [
+            {label: '32G', value: 32}
+          ]
+        }
+      ],
+    },
+    {
+      zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
+      zoneName: '华中二区',
+      kernelList: [
+        {
+          label: '1核',
+          value: 1,
+          RAMList: [
+            {label: '1G', value: 1},
+            {label: '2G', value: 2},
+            {label: '4G', value: 4}
+          ]
+        },
+        {
+          label: '2核',
+          value: 2,
+          RAMList: [
+            {label: '2G', value: 2},
+            {label: '4G', value: 4},
+            {label: '8G', value: 8}
+          ]
+        },
+        {
+          label: '4核',
+          value: 4,
+          RAMList: [
+            {label: '4G', value: 4},
+            {label: '8G', value: 8},
+            {label: '16G', value: 16}
+          ]
+        },
+        {
+          label: '8核',
+          value: 8,
+          RAMList: [
+            {label: '8G', value: 8},
+            {label: '16G', value: 16},
+            {label: '32G', value: 32}
+          ]
+        },
+        {
+          label: '16核',
+          value: 16,
+          RAMList: [
+            {label: '16G', value: 16},
+            {label: '32G', value: 32}
+          ]
+        },
+        {
+          label: '32核',
+          value: 32,
+          RAMList: [
+            {label: '32G', value: 32}
+          ]
+        }
+      ],
+    }
+  ]
+  import $store from '@/vuex'
+  export default{
+    data(){
+      var confInfo = localStorage.serviceoffername.match(/\d+/g)
+      var currentCPUNum = Number.parseInt(confInfo[0])
+      var currentRAMSize = Number.parseInt(confInfo[2])
       var hostname = sessionStorage.getItem('hostname')
       var endtime = sessionStorage.getItem('endtime')
       sessionStorage.removeItem('hostname')
       sessionStorage.removeItem('endtime')
+      var zoneInfo = null
+      info.forEach(item => {
+        if (item.zoneId == $store.state.zone.zoneid) {
+          zoneInfo = item
+        }
+      })
       return {
         currentCPUNum,
         currentRAMSize,
@@ -70,53 +398,39 @@
         endtime,
         CPUNum: currentCPUNum,
         RAMSize: currentRAMSize,
-        minDisk: Number.parseInt(localStorage.disksize),
-        diskSize: localStorage.disksize,
         virtualMachineid: localStorage.virtualMachineid,
         cost: 0,
-        CPU: [],
-        RAM: []
+        CPU: [1, 2, 4, 8, 16, 32],
+        RAM: [1, 2, 4, 8, 16, 32],
+        zoneInfo
       }
     },
-    beforeRouteEnter(from, to, next) {
-      // 获取负载均衡的初始数据
-      var zoneId = localStorage.getItem('zoneid')
-      axios.get(`information/getZonesConfig.do`, {
-        params: {
-          zoneId: zoneId
-        }
-      }).then(response => {
-        next(vm => {
-          vm.setData(response)
-        })
-      })
-    },
-    created() {
+    created(){
     },
     methods: {
-      setData(response) {
-        if (response.status == 200 && response.data.status == 1) {
-          this.CPU = response.data.data
-          this.CPU.forEach(item => {
-            if (Number(item.CPU) === this.CPUNum) {
-              this.RAM = item.list
-            }
-          })
+      changeCPU(cpu){
+        if (this.currentCPUNum > cpu) {
+          this.$Message.info("无法选择更低的配置")
+          return
         }
-      },
-      changeCPU(cpu) {
-        this.CPUNum = cpu.CPU
-        this.RAM = cpu.list
-        this.RAMSize = cpu.list[0].memory
+        this.zoneInfo.kernelList.forEach(item => {
+          if (item.value == cpu) {
+            this.RAMSize = this.currentRAMSize > item.RAMList[0].value ? this.currentRAMSize : item.RAMList[0].value
+          }
+        })
+        this.CPUNum = cpu;
         this.calCost()
       },
-      changeCache(ram) {
-        this.RAMSize = ram.memory
+      changeCache(ram){
+        if (ram < this.currentRAMSize) {
+          this.$Message.info("无法选择更低的配置")
+          return
+        }
+        this.RAMSize = ram
         this.calCost()
       },
       calCost(){
-        var url = 'information/UpVMConfigCost.do'
-        this.$http.get(url, {
+        this.$http.get('information/UpVMConfigCost.do', {
           params: {
             cpunum: this.CPUNum,
             memory: this.RAMSize,
@@ -130,28 +444,26 @@
           }
         })
       },
-      payOrder() {
-        if (this.cost === 0) {
+      payOrder(){
+        if (this.CPUNum + this.RAMSize == this.currentCPUNum + this.currentRAMSize) {
           return
         }
-        var url = 'information/UpVMConfig.do'
-        this.$http.get(url, {
+        this.$http.get('information/UpVMConfig.do', {
           params: {
             cpunum: this.CPUNum,
             memory: this.RAMSize,
             VMId: this.virtualMachineid,
-            disksize: this.diskSize
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('order')
+            this.$Message.success('订单提交成功')
+            this.$router.replace("order")
           } else {
-            this.$message.error(response.data.message)
+            this.$Message.error(response.data.message)
           }
         })
       }
-    },
-    watch: {}
+    }
   }
 </script>
 
@@ -250,9 +562,6 @@
           cursor: pointer;
           font-size: 12px;
           color: #FFFFFF;
-          &.dis {
-            cursor: not-allowed;
-          }
         }
       }
     }
