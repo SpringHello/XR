@@ -1925,23 +1925,17 @@
         var vmopenlist = []
         var vmcloselist = []
         var vmListurl = 'information/listVirtualMachines.do'
-        console.log(vmListurl, {
-          params: {
-            zoneId: $store.state.zone.zoneid
+        this.$http.get(vmListurl).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            if (response.data.result.open) {
+              vmopenlist = response.data.result.open.list
+            }
+            if (response.data.result.close) {
+              vmcloselist = response.data.result.close.list
+            }
+            this.vmList = vmopenlist.concat(vmcloselist)
           }
         })
-        axios.get(vmListurl)
-          .then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              if (response.data.result.open) {
-                vmopenlist = response.data.result.open.list
-              }
-              if (response.data.result.close) {
-                vmcloselist = response.data.result.close.list
-              }
-              this.vmList = vmopenlist.concat(vmcloselist)
-            }
-          })
       },
 
       // 获取主机备份策略列表
@@ -2088,7 +2082,7 @@
                 strategyName: this.creatBackupsForm.name,
                 keepCount: this.creatBackupsForm.num,
                 keepInterval: this.creatBackupsForm.timeType,
-                autoBackUpTime: this.creatBackupsForm.timeValue,
+                autoBackUpTime: this.creatBackupsForm.timeValue[0],
                 VMIds: vmids,
                 memoryStatus: this.creatBackupsForm.memory
               }
