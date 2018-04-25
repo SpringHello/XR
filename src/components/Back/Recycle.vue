@@ -149,9 +149,7 @@
         if (this.keyWords != '') {
           params.name = this.keyWords
         }
-        this.$http.get('information/listRecharge.do', {
-          params,
-        }).then((response) => {
+        this.$http.post('information/listRecharge.do', params).then((response) => {
           if (response.status == 200 && response.data.status == 1) {
             var mSecInDay = 1000 * 60 * 60 * 24
             var mSecInHour = 1000 * 60 * 60

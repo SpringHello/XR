@@ -491,11 +491,9 @@
         if (this.creatbalancemodal.formInline.publicIp) {
           var vpc = this.creatbalancemodal.formInline.publicIp.split('#')[0]
         }
-        this.$http.get('network/listNetwork.do', {
-          params: {
-            vpcId: vpc,
-            publicLoadbalance: '1'
-          }
+        this.$http.post('network/listNetwork.do', {
+          vpcId: vpc,
+          publicLoadbalance: '1'
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.creatbalancemodal.formInline.subnetList = response.data.result
@@ -523,10 +521,8 @@
       },
       /* 选择创建私网负载均衡时列出所有子网 */
       listNetwork () {
-        this.$http.get('network/listNetwork.do', {
-          params: {
-            innerLoadbalance: '1'
-          }
+        this.$http.post('network/listNetwork.do', {
+          innerLoadbalance: '1'
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.creatbalancemodal.formInline.subnetList = response.data.result
@@ -629,17 +625,15 @@
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1
-        )
-          {
-            this.bindHostForm.vmOptions = response.data.result
-          }
-        else
-          {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
+            ) {
+              this.bindHostForm.vmOptions = response.data.result
+            }
+            else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          })
         }
       },
       /* 负载均衡确定绑定虚拟机 */
@@ -647,12 +641,11 @@
         this.showModal.bind = false
         this.balData.forEach(item => {
           if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid
-      )
-        {
-          item.status = 7
-          item._disabled = true
-        }
-      })
+          ) {
+            item.status = 7
+            item._disabled = true
+          }
+        })
         if (this.bindHostForm.vm.length != 0) {
           var url = ''
           var params = {}
@@ -673,20 +666,18 @@
           }
           this.$http.get(url, {params}).then(response => {
             if (response.status == 200 && response.data.status == 1
-        )
-          {
-            this.refresh()
-            this.$Message.success({
-              content: response.data.message
-            })
-          }
-        else
-          {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
+            ) {
+              this.refresh()
+              this.$Message.success({
+                content: response.data.message
+              })
+            }
+            else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          })
         } else {
           this.showModal.bind = false
         }
@@ -707,17 +698,15 @@
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1
-        )
-          {
-            this.unbindForm.hostList = response.data.result
-          }
-        else
-          {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
+            ) {
+              this.unbindForm.hostList = response.data.result
+            }
+            else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          })
         }
       },
       /* 确认解绑虚拟机 */
@@ -725,12 +714,11 @@
         this.showModal.unbind = false
         this.balData.forEach(item => {
           if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid
-      )
-        {
-          item.status = 6
-          item._disabled = true
-        }
-      })
+          ) {
+            item.status = 6
+            item._disabled = true
+          }
+        })
         if (this.unbindForm.vm.length != 0) {
           var url = ''
           var params = {}
@@ -749,21 +737,19 @@
           }
           this.$http.get(url, {params}).then(response => {
             if (response.status == 200 && response.data.status == 1
-        )
-          {
-            this.$Message.success({
-              content: response.data.message
-            })
-            this.refresh()
-          }
-        else
-          {
-            this.$message.info({
-              content: response.data.message
-            })
-            this.refresh()
-          }
-        })
+            ) {
+              this.$Message.success({
+                content: response.data.message
+              })
+              this.refresh()
+            }
+            else {
+              this.$message.info({
+                content: response.data.message
+              })
+              this.refresh()
+            }
+          })
         } else {
           this.showModal.unbind = false
         }
@@ -774,49 +760,44 @@
           this.$Message.info('请选择一个负载均衡')
         } else {
           this.$message.confirm({
-              content: '确认删除该负载均衡？',
-              onOk: () => {
+            content: '确认删除该负载均衡？',
+            onOk: () => {
               var url = ''
-              if (this.balanceSelection._internal)
-          {
-            url = 'loadbalance/deleteInternalLB.do'
-          }
-        else
-          {
-            url = 'loadbalance/deleteLoadBalancerRule.do'
-          }
-          this.balData.forEach(item => {
-            if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid
-        )
-          {
-            item.status = 5
-            item._disabled = true
-          }
-        })
-          this.$http.get(url, {
-            params: {
-              id: this.balanceSelection.id
+              if (this.balanceSelection._internal) {
+                url = 'loadbalance/deleteInternalLB.do'
+              }
+              else {
+                url = 'loadbalance/deleteLoadBalancerRule.do'
+              }
+              this.balData.forEach(item => {
+                if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid
+                ) {
+                  item.status = 5
+                  item._disabled = true
+                }
+              })
+              this.$http.get(url, {
+                params: {
+                  id: this.balanceSelection.id
+                }
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1
+                ) {
+                  this.$Message.success({
+                    content: response.data.message
+                  })
+                  this.listAllBalance()
+                  this.balanceSelection = null
+                }
+                else {
+                  this.refresh()
+                  this.$message.info({
+                    content: response.data.message
+                  })
+                }
+              })
             }
-          }).then(response => {
-            if (response.status == 200 && response.data.status == 1
-        )
-          {
-            this.$Message.success({
-              content: response.data.message
-            })
-            this.listAllBalance()
-            this.balanceSelection = null
-          }
-        else
-          {
-            this.refresh()
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
-        }
-        })
+          })
         }
       }
     },

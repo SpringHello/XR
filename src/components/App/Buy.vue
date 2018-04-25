@@ -2269,7 +2269,13 @@
         }
         if (this._checkCount(hostCount, diskCount, ipCount)) {
           axios.get('information/deployVirtualMachine.do', {params}).then(response => {
-            this.$router.push('order')
+            if (response.status == 200 && response.data.status == 1) {
+              this.$router.push('order')
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
           })
         }
       },
@@ -2498,9 +2504,19 @@
         if (this._checkCount(hostCount, diskCount, ipCount)) {
           sessionStorage.removeItem('cart')
           Promise.all(PromiseList).then(responseList => {
-            this.$router.push({path:'order',query:{
-              countOrder
-            }})
+            if (responseList.every(item => {
+                return item.status == 200 && item.data.status == 1
+              })) {
+              this.$router.push({
+                path: 'order', query: {
+                  countOrder
+                }
+              })
+            } else {
+              this.$message.info({
+                content: responseList[0].data.message
+              })
+            }
           })
         }
       },
