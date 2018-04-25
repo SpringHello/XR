@@ -62,7 +62,7 @@
                 <div style="display: flex">
                   <div v-for="pimg in stage.pImg" style="margin-right: 10px;">
                     <div style="width: 90px;height: 90px;background-color: #ffffff;text-align: center;padding:24px">
-                      <i class="iconfont" :class="pimg.img" style="font-size:40px;color:#2A99F2;"></i>
+                      <p><i class="iconfont" :class="pimg.icon" style="font-size:40px;color:#3c7efb;"></i></p>
                       <span style="font-size: 14px; color:#666666;">{{pimg.isc}}</span>
                     </div>
                   </div>
@@ -133,7 +133,10 @@
             title: '手动快照',
             desc: '由用户手动创建。用户可以根据需要，手动为磁盘创建快照，作为数据备份。'
           },
-          {img: 'icon-cipankelonghuifu', title: '磁盘克隆恢复', desc: '用户可以通过克隆的云硬盘创建和原始硬盘一样的数据盘。'}
+          {img: 'icon-cipankelonghuifu',
+           title: '磁盘克隆恢复', 
+           desc: '用户可以通过克隆的云硬盘创建和原始硬盘一样的数据盘。'
+          }
         ],
         stageInfo: {
           stages: [
@@ -144,8 +147,8 @@
               img: require('../../../assets/img/product/backup-stage-1-background.png'),
               desc: ['为云硬盘提供在线备份，通过备份快速恢复数据，保证业务安全可靠。'],
               pImg: [
-                {img: 'icon-danxingyunfuwuqiECS', isc: '云主机'},
-                {img: 'icon-xunisiyouyunVPC', isc: 'VPC'}
+                {icon: 'icon-danxingyunfuwuqiECS', isc: '云主机'},
+                {icon: 'icon-xunisiyouyunVPC', isc: 'VPC'}
               ],
             }
           ],

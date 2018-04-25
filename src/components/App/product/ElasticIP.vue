@@ -31,29 +31,28 @@
           <div style="height:0px;width:382px;"></div>
         </div>
       </div>
-
     </div>
     <!-- 使用场景 -->
-    <!--<div class="stage">
+    <div class="stage">
       <div class="wrapper">
         <p class="subTitle">使用场景</p>
         <div class="flex">
           <div class="left">
-            <div  v-for="(stage,index) in stageInfo.stages"
+            <div  v-for="(stage,index) in stageInfo.stages" :key="index"
                  :class="{active:index == stageInfo.selectIndex}"
                  @click="stageInfo.selectIndex=index">
               <div>
                 <i class="iconfont" :class="stage.icon"></i>
-                <p>{{stage.title}}</p>
+                <p style="margin-top: 10px;">{{stage.title}}</p>
               </div>
             </div>
           </div>
           <div class="right">
-            <div v-for="(stage,index) in stageInfo.stages" v-show="index == stageInfo.selectIndex">
+            <div v-for="(stage,index) in stageInfo.stages" v-show="index == stageInfo.selectIndex" :key="index">
               <img :src="stage.img">
               <div style="padding:20px;">
                 <span>场景描述</span>
-                <p v-for="(p,i) in stage.desc">
+                <p v-for="(p,i) in stage.desc" :key="i"> 
                   {{p}}
                 </p>
               </div>
@@ -61,7 +60,7 @@
           </div>
         </div>
       </div>
-    </div>-->
+    </div>
     <!-- 产品优势 -->
     <div class="advantage">
       <div class="wrapper">
@@ -107,26 +106,26 @@
         logo: {
           img: require('../../../assets/img/product/p-IP.png'),
           title: '弹性公网IP',
-          desc: '公网 IP （Elastic IP） 是在互联网上合法的静态 IP 地址。在新睿云中，公网 IP 地址与用户账户绑定而非特定的云资源。用户可以将申请到的公网 IP 地址与任意主机/负载均衡器绑定，并随时可以解绑、再分配到其他资源上。用户可以按需购买，实时开通，配置变更实时生效。',
+          desc: '弹性公网IP是互联网上合法的静态公网IP地址。弹性公网IP地址是与用户账户相关联的资源，用户可以将弹性公网IP地址与任意虚拟机实例/NAT网关/VPN/负载均衡绑定，并可以随时解绑对应关系，再分配到其他资源实例上。用户可以按需购买，实时开通，同时配置变更实时生效。',
           linkRouter: 'buy'
         },
         features: [
-          {img: 'icon-duligongwangipziyuan', title: '独立公网IP资源', desc: '为用户提供一个单独公网IP和一份带宽，为用户访问公网提供服务。公网IP可与任意云主机、VPC、负载均衡、端口转发、VPN网关等实例绑定或解绑，并支持随时升级和降级带宽，灵活匹配用户不同业务场景。'},
-          {img: 'icon-linghuogoumai', title: '灵活购买', desc: '公网IP支持丰富的付费方案，在满足用户业务需求的前提下帮助用户节约成本。实时开通，变更配置实时生效。'}
+          {img: 'icon-duligongwangipziyuan', title: '独立公网IP资源', desc: '为用户提供一个单独公网IP和一定速率带宽，实现与互联网的互通。公网IP可与任意虚拟机实例、NAT网关、负载均衡、VPN网关等实例绑定或解绑，并支持带宽速率的提升和降低，灵活匹配用户不同业务场景。'},
+          {img: 'icon-linghuogoumai', title: '按需购买，使用灵活', desc: '弹性公网IP支持丰富的付费方案，在满足用户业务需求的前提下帮助用户节约成本。实时开通，配置变更实时生效。'}
         ],
         stageInfo: {
           stages: [
             {
-              title: '大流量门户',
-              icon: 'icon-daliuliangmenhu',
+              title: '业务公网出口',
+              icon: 'icon-yewugongwangchukou',
               img: require('../../../assets/img/product/bal-stage-1-icon-background.png'),
-              desc: ['针对超多用户服务访问量高的特点，通过负载均衡将用户的访问流量均匀的分发到多个后端云主机上，确保业务快速平稳的运行。']
+              desc: ['企业网站、邮箱、CRM等企业应用通过公网IP提供对外的互联网服务。']
             },
             {
-              title: '混合云下数据互通',
-              icon: 'icon-hunheyunxiashujuhutong',
+              title: '多运营商出口',
+              icon: 'icon-duoyunyingshangchukou',
               img: require('../../../assets/img/product/bal-stage-2-icon-background.png'),
-              desc: ['基大型网站常有上百个业务子模块，通过设置不同的转发规则/转发组，分析HTTP头部信息，有效分离业务模块，实现基于内容的路由转发。此外，用户通过自定义转发路径代替二级域名，有效减少 DNS 轮询次数，收敛 IP，提升用户访问速度，保证服务的高效运行']
+              desc: ['新睿云提供联通、电信等公网IP，可满足用户的分区需求。如游戏、视频等低时延应用。']
             }
           ],
           selectIndex: 0
@@ -135,12 +134,12 @@
           {
             img: 'icon-shiyonglinghuo',
             title: '使用灵活',
-            desc: '用户可以灵活的配置公网IP地址的使用，通过静态NAT、端口转发等功能实现IP地址灵活的使用。'
+            desc: '用户可以通过NAT网关、负载均衡、VPN等功能实现IP地址灵活的使用。'
           },
           {
             img: 'icon-dichengben',
             title: '低成本',
-            desc: '用户购买虚拟机，默认为用户分配一个公网IP地址，用于用户虚拟机通过源NAT方式访问互联网，满足用户原始的互联网使用需求，不收取额外费用。'
+            desc: '用户按需购买，灵活计费，同时支持多IP共享带宽，有效的降低用户网络使用的费用。'
           },
           {
             img: 'icon-youzhidegongwangIPdizhi',

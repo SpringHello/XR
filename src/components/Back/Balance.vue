@@ -59,9 +59,18 @@
                 </RadioGroup>
               </FormItem>
               <!--当为公网时-->
+              <FormItem label="所属VPC" prop="vpc"
+                        style="width:240px;">
+                <Select v-model="creatbalancemodal.formInline.vpc" @on-change="changeVPC">
+                  <Option v-for="item in creatbalancemodal.formInline.VPCList"
+                          :value="item.vpcid"
+                          :key="item.vpcid">{{ item.vpcname }}
+                  </Option>
+                </Select>
+              </FormItem>
               <FormItem label="公网IP" prop="publicIp" v-if="creatbalancemodal.formInline.radio == 'public'"
                         style="width:240px;">
-                <Select v-model="creatbalancemodal.formInline.publicIp" @on-change="changePublicIp">
+                <Select v-model="creatbalancemodal.formInline.publicIp">
                   <Option v-for="item in creatbalancemodal.formInline.PublicIpList"
                           :value="`${item.vpcid}#${item.publicipid}`"
                           :key="item.publicipid">{{ item.publicip }}
@@ -70,7 +79,7 @@
               </FormItem>
               <FormItem label="所属子网" prop="subnet"
                         style="width:240px;">
-                <Select v-model="creatbalancemodal.formInline.subnet" @on-change="changeSubnet">
+                <Select v-model="creatbalancemodal.formInline.subnet">
                   <Option v-for="item in creatbalancemodal.formInline.subnetList"
                           :value="`${item.ipsegmentid}#${item.ipsegment}#${item.vpcid}`"
                           :key="item.ipsegmentid">{{ item.name }}
@@ -99,7 +108,6 @@
                   </div>
                 </div>
               </Poptip>
-
               <!--当为内网时-->
 
               <FormItem label="内网IP" prop="intranetIp" v-if="creatbalancemodal.formInline.radio == 'private'">
@@ -341,6 +349,8 @@
             ],
             frontPort: '',
             rearPort: '',
+            VPCList: [],
+            vpc: '',
             PublicIpList: [],
             subnetList: []
           },
@@ -362,6 +372,9 @@
               {required: true, message: '请选择 ', trigger: 'change'}
             ],
             subnet: [
+              {required: true, message: '请选择 ', trigger: 'change'}
+            ],
+            vpc: [
               {required: true, message: '请选择 ', trigger: 'change'}
             ],
             num: [
@@ -393,7 +406,11 @@
       }
     },
     created () {
-      this.listPublicIp()
+      this.$http.get('network/listVpc.do').then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.creatbalancemodal.formInline.VPCList = response.data.result
+        }
+      })
     },
     methods: {
       refresh () {
@@ -496,28 +513,20 @@
           publicLoadbalance: '1'
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.creatbalancemodal.formInline.subnetList = response.data.result
-          }
-        })
-      },
-      /* 切换子网时需要把子网的ip字段赋值给指定ip */
-      changeSubnet () {
-        // 获取可以挂载的所有弹性IP
-        this.$http.get('network/listPublicIp.do', {
-          params: {
-            vpcId: this.creatbalancemodal.formInline.subnet.split('#')[2],
-            useType: '0,2',
-            status: '1'
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
             this.creatbalancemodal.formInline.PublicIpList = response.data.result
           }
         })
-        if (this.creatbalancemodal.formInline.subnet) {
-          let ip = this.creatbalancemodal.formInline.subnet.split('#')[1]
-          this.creatbalancemodal.formInline.intranetIpNum = ip.slice(0, ip.lastIndexOf('.'))
-        }
+        /*列出vpc下所有公网子网*/
+        this.$http.get('network/listNetwork.do', {
+          params: {
+            vpcId: this.creatbalancemodal.formInline.vpc,
+            publicLoadbalance: '1'
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.creatbalancemodal.formInline.subnetList = response.data.result
+          }
+        })
       },
       /* 选择创建私网负载均衡时列出所有子网 */
       listNetwork () {
@@ -624,11 +633,9 @@
               loadbalanceId: balanceId
             }
           }).then(response => {
-            if (response.status == 200 && response.data.status == 1
-            ) {
+            if (response.status == 200 && response.data.status == 1) {
               this.bindHostForm.vmOptions = response.data.result
-            }
-            else {
+            } else {
               this.$message.info({
                 content: response.data.message
               })
@@ -640,8 +647,7 @@
       bindHost_ok () {
         this.showModal.bind = false
         this.balData.forEach(item => {
-          if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid
-          ) {
+          if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
             item.status = 7
             item._disabled = true
           }
@@ -665,14 +671,12 @@
             }
           }
           this.$http.get(url, {params}).then(response => {
-            if (response.status == 200 && response.data.status == 1
-            ) {
+            if (response.status == 200 && response.data.status == 1) {
               this.refresh()
               this.$Message.success({
                 content: response.data.message
               })
-            }
-            else {
+            } else {
               this.$message.info({
                 content: response.data.message
               })
@@ -697,11 +701,9 @@
               loadbalanceType: loadbalanceType
             }
           }).then(response => {
-            if (response.status == 200 && response.data.status == 1
-            ) {
+            if (response.status == 200 && response.data.status == 1) {
               this.unbindForm.hostList = response.data.result
-            }
-            else {
+            } else {
               this.$message.info({
                 content: response.data.message
               })
@@ -713,8 +715,7 @@
       unbindHost_ok () {
         this.showModal.unbind = false
         this.balData.forEach(item => {
-          if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid
-          ) {
+          if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
             item.status = 6
             item._disabled = true
           }
@@ -736,14 +737,12 @@
             }
           }
           this.$http.get(url, {params}).then(response => {
-            if (response.status == 200 && response.data.status == 1
-            ) {
+            if (response.status == 200 && response.data.status == 1) {
               this.$Message.success({
                 content: response.data.message
               })
               this.refresh()
-            }
-            else {
+            } else {
               this.$message.info({
                 content: response.data.message
               })
@@ -781,15 +780,13 @@
                   id: this.balanceSelection.id
                 }
               }).then(response => {
-                if (response.status == 200 && response.data.status == 1
-                ) {
+                if (response.status == 200 && response.data.status == 1) {
                   this.$Message.success({
                     content: response.data.message
                   })
                   this.listAllBalance()
                   this.balanceSelection = null
-                }
-                else {
+                } else {
                   this.refresh()
                   this.$message.info({
                     content: response.data.message
@@ -812,7 +809,6 @@
     computed: {
       auth(){
         return this.$store.state.authInfo != null
-
       }
     }
   }
