@@ -30,6 +30,7 @@ const NewNodes_2 = () => import('@/components/App/active/newNodes_2')
 const active_1 = () => import('@/components/App/active/active_1')
 
 // 备案系统页面路由
+//const Records  = () => import('@/components/App/Records')
 const Entrance = () => import('@/components/App/records/Entrance')
 
 /* 产品页面路由 */

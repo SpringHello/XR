@@ -25,6 +25,7 @@
     </div>
     <div class="body-center">
       <div class="content">
+        <img src="../../../assets/img/records/records-icon9.png"/>
         <ul v-for="item in flowList" :key="item.step">
           <img :src="item.src"/>
           <p>{{ item.title }}</p>
@@ -101,7 +102,7 @@
             step: 5
           },
           {
-            src: require('../../../assets/img/records/records-icon1.png'),
+            src: require('../../../assets/img/records/records-icon6.png'),
             title: '备案成功',
             step: 6
           }
@@ -272,7 +273,7 @@
     background: #FFFFFF;
     .content {
       .center();
-      padding: 60px 0 20px;
+      padding: 60px 0 40px;
       h1 {
         .h1();
       }
@@ -313,10 +314,19 @@
   .body-center {
     height: 270px;
     background: #F8F9FB;
+    position: relative;
+    border-top: 1px solid #ECF0F7;
+    border-bottom: 1px solid #ECF0F7;
     .content {
       display: flex;
       padding: 80px 0 60px;
+      position: relative;
       .center();
+      >img{
+        position: absolute;
+        top: -22px;
+        left: 135px;
+      }
       ul {
         position: relative;
         height: 130px;
@@ -350,12 +360,12 @@
           z-index: -1;
         }
       }
-      ul:nth-child(3) {
+      ul:nth-child(4) {
         img {
           padding-top: 6px;
         }
       }
-      ul:nth-child(5) {
+      ul:nth-child(6) {
         img {
           padding-top: 8px;
         }
