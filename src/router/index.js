@@ -32,6 +32,8 @@ const active_1 = () => import('@/components/App/active/active_1')
 // 备案系统页面路由
 const Records = () => import('@/components/App/Records')
 const Entrance = () => import('@/components/App/records/Entrance')
+const NewAccess = () => import('@/components/App/records/NewAccess')
+const NewRecord = () => import('@/components/App/records/NewRecord')
 
 /* 产品页面路由 */
 const Pecs = () => import('@/components/App/product/ECS.vue')
@@ -197,6 +199,16 @@ var router = new Router({
               path: 'entrance',
               name: 'entrance',
               component: Entrance
+            },
+            {
+              path: 'newAccess',
+              name: 'newAccess',
+              component: NewAccess
+            },
+            {
+              path: 'newRecord',
+              name: 'newRecord',
+              component: NewRecord
             }
           ]
         },

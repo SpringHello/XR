@@ -2,7 +2,7 @@
   <div>
     <div class="body-top">
       <div class="content">
-        <h1>备案类型选择</h1>
+        <h2>备案类型选择</h2>
         <div class="recordsType">
           <ul v-for="item in typeList" :class="{ select: type === item.value }" @click="type = item.value" :key="item.value">
             <p>{{ item.title }}</p>
@@ -24,11 +24,11 @@
     </div>
     <div class="body-bottom">
       <div class="content">
-        <h1>备案区域选择</h1>
+        <h2>备案区域选择</h2>
         <div class="area">
-          <button v-for="item in areaList" :key="item.zoneId" :class="{select: item.zoneId === areaId }" @click="changeArea(item)"><img :src="item.src"/> {{ item.text }}</button>
+          <button v-for="item in areaList" :key="item.zoneId" :class="{select: item.text === area }" @click="changeArea(item)"><img :src="item.src"/> {{ item.text }}</button>
         </div>
-        <button>立即备案</button>
+        <button @click="putOnRecord">立即备案</button>
       </div>
     </div>
   </div>
@@ -119,7 +119,7 @@
             zoneId: '5'
           }
         ],
-        areaId: '1',
+        area: '北京一区',
         // 区域切换时icon变化
         selectImg: require('../../../assets/img/records/records-icon7.png'),
         unSelectImg: require('../../../assets/img/records/records-icon8.png')
@@ -133,8 +133,27 @@
         this.areaList.forEach(area => {
           area.src = this.unSelectImg
         })
-        this.areaId = item.zoneId
+        this.area = item.text
         item.src = this.selectImg
+      },
+      // 立即备案
+      putOnRecord () {
+        sessionStorage.setItem('zone', this.area)
+        sessionStorage.setItem('recordsType',this.type + '')
+        // 根据选择的备案类型决定跳入哪个起始页面
+        switch (this.type) {
+          case 1:
+            this.$router.push('newRecord')
+            break
+          case 2:
+            this.$router.push('newAccess')
+            break;
+          case 3:
+            this.$router.push('newAccess')
+            break
+          case 4:
+            break
+        }
       }
     },
     computed: {},
@@ -155,8 +174,8 @@
     cursor: pointer;
   }
 
-  // 定义h1公用样式
-  .h1() {
+  // 定义h2公用样式
+  .h2() {
     font-size: 24px;
     font-family: PingFangSC-Medium;
     color: rgba(51, 51, 51, 1);
@@ -195,8 +214,8 @@
     .content {
       .center();
       padding: 60px 0 40px;
-      h1 {
-        .h1();
+      h2 {
+        .h2();
       }
       .recordsType {
         display: flex;
@@ -296,8 +315,8 @@
     .content {
       padding: 60px 0 60px;
       .center();
-      h1 {
-        .h1()
+      h2 {
+        .h2()
       }
       .area {
         display: flex;

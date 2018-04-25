@@ -255,7 +255,7 @@
           },
           {
             title: '备案',
-            path: '/ruicloud/records'
+            path: '/ruicloud/records/entrance'
           }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
