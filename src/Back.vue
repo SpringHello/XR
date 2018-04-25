@@ -286,7 +286,7 @@
         this.$refs.qq.style.width = '0px'
       },
       notice(){
-        this.$http.get(`user/getEventNotifyList.do`)
+        this.$http.post('user/getEventNotifyList.do')
           .then(response => {
             if (response.status == 200) {
               this.$store.commit('setMsg', Number.parseInt(response.data.noReadTotal))

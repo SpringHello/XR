@@ -254,9 +254,7 @@
         } else if (type == 'all') {
           params.isRead = '2'
         }
-        this.$http.get('user/getEventNotifyList.do', {
-          params
-        }).then(response => {
+        this.$http.post('user/getEventNotifyList.do', params).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this[type + 'Data'] = response.data.result
             pageInfo.total = parseInt(response.data.pageTotal)

@@ -564,6 +564,14 @@
                 <div class="item-wrapper">
                   <div style="display: flex">
                     <div>
+                      <p class="item-title" style="margin-top: 8px">系统用户名</p>
+                    </div>
+                    <span style="padding:10px 0;font-size: 14px;color: #999999;">{{ systemUsername }}</span>
+                  </div>
+                </div>
+                <div class="item-wrapper">
+                  <div style="display: flex">
+                    <div>
                       <p class="item-title" style="margin-top: 8px">登录密码</p>
                     </div>
                     <Input v-model="PecsInfo.password" placeholder="请输入至少6位包含大小写与数字的密码"
@@ -2266,7 +2274,13 @@
         }
         if (this._checkCount(hostCount, diskCount, ipCount)) {
           axios.get('information/deployVirtualMachine.do', {params}).then(response => {
-            this.$router.push('order')
+            if (response.status == 200 && response.data.status == 1) {
+              this.$router.push('order')
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
           })
         }
       },
@@ -2495,11 +2509,19 @@
         if (this._checkCount(hostCount, diskCount, ipCount)) {
           sessionStorage.removeItem('cart')
           Promise.all(PromiseList).then(responseList => {
-            this.$router.push({
-              path: 'order', query: {
-                countOrder
-              }
-            })
+            if (responseList.every(item => {
+                return item.status == 200 && item.data.status == 1
+              })) {
+              this.$router.push({
+                path: 'order', query: {
+                  countOrder
+                }
+              })
+            } else {
+              this.$message.info({
+                content: responseList[0].data.message
+              })
+            }
           })
         }
       },
