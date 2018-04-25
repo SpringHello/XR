@@ -30,7 +30,7 @@ const NewNodes_2 = () => import('@/components/App/active/newNodes_2')
 const active_1 = () => import('@/components/App/active/active_1')
 
 // 备案系统页面路由
-//const Records  = () => import('@/components/App/Records')
+const Records = () => import('@/components/App/Records')
 const Entrance = () => import('@/components/App/records/Entrance')
 
 /* 产品页面路由 */
@@ -183,7 +183,24 @@ var router = new Router({
         {path: 'about', name: 'about', component: Aboutus},
         {path: 'document', name: 'document', component: Document},
         {path: 'dynamic', name: 'dynamic', component: Dynamic},
-      //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
+        {
+          path: 'records',
+          name: 'records',
+          component: Records,
+          children: [
+            {
+              path: '',
+              name: 'entrance',
+              component: Entrance
+            },
+            {
+              path: 'entrance',
+              name: 'entrance',
+              component: Entrance
+            }
+          ]
+        },
+        //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
         /*{
           path: 'price',
           name: 'price',
@@ -217,7 +234,7 @@ var router = new Router({
         {path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
         {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},
         {path: 'active_1', name: 'active_1', component: active_1},
-        {path: 'entrance', name: 'entrance', component: Entrance},
+        //{path: 'entrance', name: 'entrance', component: Entrance},
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
         {path: 'Pecss', component: Pecss},
@@ -643,7 +660,9 @@ var router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(route => { return route.meta.requiresAuth })) {
+  if (to.matched.some(route => {
+    return route.meta.requiresAuth
+  })) {
     if (!localStorage.getItem('authToken')) {
       next({
         path: '/ruicloud/login'
