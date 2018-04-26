@@ -1765,7 +1765,8 @@
               zoneId: $store.state.zone.zoneid,
               resourceType: 1,
               page: this.page,
-              pageSize: this.pageSize
+              pageSize: this.pageSize,
+              _t: new Date().getTime()
             }
           })
             .then(response => {
@@ -1808,7 +1809,8 @@
             zoneId: $store.state.zone.zoneid,
             resourceType: 1,
             page: this.page,
-            pageSize: this.pageSize
+            pageSize: this.pageSize,
+            _t: new Date().getTime()
           }
         })
           .then(response => {
