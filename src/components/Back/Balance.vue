@@ -660,14 +660,14 @@
             params = {
               VMIds: this.bindHostForm.vm,
               lbId: this.balanceSelection.lbid,
-              _t: new Date().toTimeString(),
+              _t: new Date().getTime(),
             }
           } else {
             url = 'loadbalance/assignToLoadBalancerRule.do'
             params = {
               VMIds: this.bindHostForm.vm,
               lbId: this.balanceSelection.loadbalanceroleid,
-              _t: new Date().toTimeString(),
+              _t: new Date().getTime(),
             }
           }
           this.$http.get(url, {params}).then(response => {
