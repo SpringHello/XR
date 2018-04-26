@@ -62,6 +62,10 @@
             color: #FFF;
           }
         }
+        button:nth-child(1) {
+          background: #377DFF;
+          color: #FFFFFF;
+        }
         button:nth-child(2) {
           margin-top: 20px;
         }

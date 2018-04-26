@@ -160,7 +160,7 @@
     watch: {}
   }
 </script>
-<style rel="stylesheet/less" lang="less">
+<style rel="stylesheet/less" lang="less" scoped>
   // 定义center公用样式
   .center() {
     width: 1200px;
