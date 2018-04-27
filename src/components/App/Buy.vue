@@ -2413,7 +2413,6 @@
             currentRow++
             for (let j = 1; j < contentArray.length; j++) {
               data[currentRow] = new Array(2)
-              console.log(contentArray[j])
               data[currentRow][0] = contentArray[j].split('#')[0].trim()
               data[currentRow][1] = contentArray[j].split('#')[1].trim()
               currentRow++

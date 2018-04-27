@@ -65,11 +65,14 @@
                 </FormItem>
                 <FormItem label="图形验证码" prop="imgCode">
                   <Input v-model="notAuth.cardAuthForm.imgCode" style="width:300px;"></Input>
-                  <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" width="80" height="30" style="vertical-align:middle;cursor:pointer">
+                  <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" width="80"
+                       height="30" style="vertical-align:middle;cursor:pointer">
                 </FormItem>
                 <FormItem label="验证码" prop="verificationCode">
                   <Input v-model="notAuth.cardAuthForm.verificationCode" style="width:280px;"></Input>
-                  <Button type="primary" @click.prevent="sendCodePersonal" :disabled="notAuth.cardAuthForm.sendCodeText !='获取验证码'">{{notAuth.cardAuthForm.sendCodeText}}</Button>
+                  <Button type="primary" @click.prevent="sendCodePersonal"
+                          :disabled="notAuth.cardAuthForm.sendCodeText !='获取验证码'">{{notAuth.cardAuthForm.sendCodeText}}
+                  </Button>
                 </FormItem>
                 <p style="font-size: 14px;color: #666666;letter-spacing: 0.83px;margin-bottom:20px;">请上传实名认证图片
                   上传文件支持jpg/png/gif/pdf，单个文件最大不超过4MB。</p>
@@ -595,12 +598,19 @@
                 </FormItem>
                 <FormItem label="图形验证码" prop="imgCode">
                   <Input v-model="notAuth.companyAuthForm.imgCode" placeholder="请输入图形验证码" style="width: 300px"></Input>
-                  <img style="position: absolute;right: 0px;bottom:0;cursor: pointer" :src="notAuth.companyAuthForm.imgSrc" @click="notAuth.companyAuthForm.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                  <img style="position: absolute;right: 0px;bottom:0;cursor: pointer"
+                       :src="notAuth.companyAuthForm.imgSrc"
+                       @click="notAuth.companyAuthForm.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
                 </FormItem>
                 <FormItem label="联系方式" prop="linkManPhone">
-                  <Input v-model="notAuth.companyAuthForm.linkManPhone" placeholder="请输入联系方式" style="width: 300px"></Input>
-                  <button class="sendCompanyCode" :class="{codeDisabled:notAuth.companyAuthForm.codePlaceholder!='发送验证码'}" @click.prevent="sendCompanyCode"
-                          :disabled="notAuth.companyAuthForm.codePlaceholder!='发送验证码'">{{ notAuth.companyAuthForm.codePlaceholder }}</button>
+                  <Input v-model="notAuth.companyAuthForm.linkManPhone" placeholder="请输入联系方式"
+                         style="width: 300px"></Input>
+                  <button class="sendCompanyCode"
+                          :class="{codeDisabled:notAuth.companyAuthForm.codePlaceholder!='发送验证码'}"
+                          @click.prevent="sendCompanyCode"
+                          :disabled="notAuth.companyAuthForm.codePlaceholder!='发送验证码'">{{
+                    notAuth.companyAuthForm.codePlaceholder }}
+                  </button>
                 </FormItem>
                 <FormItem label="验证码" prop="verificationCode">
                   <Input v-model="notAuth.companyAuthForm.verificationCode" placeholder="请输入收到的验证码"></Input>
@@ -1675,36 +1685,36 @@
       sendCodePersonal() {
         var validataTel = null
         var validataImgcode = null
-        this.$refs.cardAuth.validateField('tel',function(text){
-          validataTel = text==''
+        this.$refs.cardAuth.validateField('tel', function (text) {
+          validataTel = text == ''
         })
-        this.$refs.cardAuth.validateField('imgCode',function(text){
-            validataImgcode = text==''
-          })
-        if(validataTel&&validataImgcode){
-           axios.get('user/code.do', {
-              params: {
-                aim: this.notAuth.cardAuthForm.tel,
-                isemail: 0,
-                vailCode: this.notAuth.cardAuthForm.imgCode
-              }
-            }).then(response => {
-              // 发送成功，进入倒计时
-              if (response.status == 200 && response.data.status == 1) {
-                var countdown = 60
+        this.$refs.cardAuth.validateField('imgCode', function (text) {
+          validataImgcode = text == ''
+        })
+        if (validataTel && validataImgcode) {
+          axios.get('user/code.do', {
+            params: {
+              aim: this.notAuth.cardAuthForm.tel,
+              isemail: 0,
+              vailCode: this.notAuth.cardAuthForm.imgCode
+            }
+          }).then(response => {
+            // 发送成功，进入倒计时
+            if (response.status == 200 && response.data.status == 1) {
+              var countdown = 60
+              this.notAuth.cardAuthForm.sendCodeText = `${countdown}S`
+              var Interval = setInterval(() => {
+                countdown--
                 this.notAuth.cardAuthForm.sendCodeText = `${countdown}S`
-                var Interval = setInterval(() => {
-                  countdown--
-                  this.notAuth.cardAuthForm.sendCodeText = `${countdown}S`
-                  if (countdown == 0) {
-                    clearInterval(Interval)
-                    this.notAuth.cardAuthForm.sendCodeText = '获取验证码'
-                  }
-                }, 1000)
-              } else {
-                this.$Message.error(response.data.message)
-              }
-            })
+                if (countdown == 0) {
+                  clearInterval(Interval)
+                  this.notAuth.cardAuthForm.sendCodeText = '获取验证码'
+                }
+              }, 1000)
+            } else {
+              this.$Message.error(response.data.message)
+            }
+          })
         }
       },
       // 个人认证
@@ -1829,17 +1839,17 @@
       sendCompanyCode(){
         var regPhone = false
         var regCode = false
-        this.$refs.companyAuth.validateField('linkManPhone',(text)=>{
-          if(text ===''){
+        this.$refs.companyAuth.validateField('linkManPhone', (text) => {
+          if (text === '') {
             regPhone = true
           }
         })
-        this.$refs.companyAuth.validateField('imgCode',(text)=>{
-          if(text!==''){
+        this.$refs.companyAuth.validateField('imgCode', (text) => {
+          if (text !== '') {
             regCode = true
           }
         })
-        if (regPhone&&regPhone) {
+        if (regPhone && regPhone) {
           this.notAuth.companyAuthForm.codePlaceholder = '验证码发送中'
           axios.get('user/code.do', {
             params: {
@@ -1954,9 +1964,9 @@
       delContacts(id) {
         var url = 'user/delContacts.do'
         this.$http.get(url, {
-            params:{
-              id: id
-            }
+          params: {
+            id: id
+          }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
@@ -2186,7 +2196,9 @@
             this.$Message.success(response.data.message);
             this.init()
           } else {
-            this.$Message.error(response.data.message);
+            this.$message.info({
+              content: response.data.message
+            });
           }
           this.showModal.authNewPhone = false
         })

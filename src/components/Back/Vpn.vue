@@ -109,10 +109,10 @@
           <FormItem label="名称" v-if="newTunnelVpnForm.step==1" prop="name1">
             <Input v-model="newTunnelVpnForm.name1" placeholder="请输入0-16字节名称"></Input>
           </FormItem>
-          <FormItem label="目的IP地址" v-if="newTunnelVpnForm.step==1" prop="IP">
+          <FormItem label="对端源IP地址" v-if="newTunnelVpnForm.step==1" prop="IP">
             <Input v-model="newTunnelVpnForm.IP" placeholder="例如10.132.31.27"></Input>
           </FormItem>
-          <FormItem label="目的网络CIDR" v-if="newTunnelVpnForm.step==1" prop="CIDR">
+          <FormItem label="对端网络CIDR" v-if="newTunnelVpnForm.step==1" prop="CIDR">
             <Input v-model="newTunnelVpnForm.CIDR" placeholder="例如192.168.0.0/16"></Input>
           </FormItem>
           <!-- <FormItem label="名称" v-if="newTunnelVpnForm.step==1" prop="name2">
@@ -131,11 +131,13 @@
             <Input v-model="newTunnelVpnForm.key" placeholder="请输入0-128字节密码"></Input>
           </FormItem>
         </Form>
-        <span style="display: inline-block;color:#2A99F2;cursor:pointer" @click="newTunnelVpnForm.showDetail=true"
+        <p v-if="newTunnelVpnForm.step==1" style="opacity: 0.8;text-align: right;">本端的共享密钥必须和对端的共享密钥一致</p>
+        <span style="display: inline-block;color:#2A99F2;cursor:pointer;margin-top: 10px;"
+              @click="newTunnelVpnForm.showDetail=true"
               v-show="!newTunnelVpnForm.showDetail&&newTunnelVpnForm.step==1">
             高级选项&nbsp;
           </span>
-        <span style="display: inline-block;margin-bottom: 10px;color:#2A99F2;cursor:pointer"
+        <span style="display: inline-block;margin-bottom: 10px;color:#2A99F2;cursor:pointer;margin-top: 10px;"
               @click="newTunnelVpnForm.showDetail=false"
               v-show="newTunnelVpnForm.showDetail&&newTunnelVpnForm.step==1">
             隐藏高级选项
@@ -171,6 +173,26 @@
               </Option>
             </Select>
           </FormItem>
+          <FormItem label="IKE DH算法" prop="vpcId" v-show="newTunnelVpnForm.step==1&&newTunnelVpnForm.showDetail">
+            <Select v-model="newTunnelVpnForm.IKEDH">
+              <Option v-for="item in newTunnelVpnForm.IKEDHoptions" :value="item.key" :key="item.label">
+                {{item.label}}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="完全正向保密" prop="vpcId" v-show="newTunnelVpnForm.step==1&&newTunnelVpnForm.showDetail">
+            <Select v-model="newTunnelVpnForm.secret">
+              <Option v-for="item in newTunnelVpnForm.secretOptions" :value="item.key" :key="item.label">
+                {{item.label}}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="IKE使用期限第二阶段" prop="vpcId" v-show="newTunnelVpnForm.step==1&&newTunnelVpnForm.showDetail">
+            <InputNumber v-model="newTunnelVpnForm.ikelifetime" :min="-1" style="width: 230px;"></InputNumber>
+          </FormItem>
+          <FormItem label="ESP使用期限第二阶段" prop="vpcId" v-show="newTunnelVpnForm.step==1&&newTunnelVpnForm.showDetail">
+            <InputNumber v-model="newTunnelVpnForm.esplifetime" :min="-1" style="width: 230px;"></InputNumber>
+          </FormItem>
         </Form>
 
         <Form :model="newTunnelVpnForm" :rules="newTunnelVpnFormValidate" ref="newTunnelVpnFormValidate">
@@ -181,6 +203,17 @@
               </Option>
             </Select>
           </FormItem>
+          <Poptip trigger="hover" style="float: right;position: relative;right: 250px;top: 40px;"
+                  v-if="newTunnelVpnForm.step==2">
+            <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
+            <div slot="content">
+              <div>
+                <p style="line-height: 20px;">注意在选择连接方式的时候:</p>
+                <p style="line-height: 18px;">本端连接方式选择的是主动,对端的连接方式必须是被动。</p>
+                <p style="line-height: 18px;">本端连接方式选择的是被动,对端的连接方式必须是主动。</p>
+              </div>
+            </div>
+          </Poptip>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -245,7 +278,7 @@
       // 隧道VPN
       var customer = axios.get('network/listVpnCustomerGateways.do', {
         params: {
-          zoneId: $store.state.zone.zoneid
+          zoneId: $store.state.zone.zoneid,
         }
       })
       Promise.all([remote, customer]).then(values => {
@@ -327,7 +360,8 @@
           key: '',
           connType: 'true',
           connTypeOptions: [
-            {label: '主动 ----> 被动', key: 'true'},
+            {label: '主动', key: 'true'},
+            {label: '被动', key: 'fasle'},
           ],
           IKE: '3des',
           IKEOptions: [
@@ -353,6 +387,18 @@
             {label: 'md5', key: 'md5'},
             {label: 'sha1', key: 'sha1'}
           ],
+          IKEDH: 'modp1536',
+          IKEDHoptions: [
+            {label: 'modp1024', key: 'modp1024'},
+            {label: 'modp1536', key: 'modp1536'}
+          ],
+          secret: 'modp1536',
+          secretOptions: [
+            {label: 'modp1024', key: 'modp1024'},
+            {label: 'modp1536', key: 'modp1536'}
+          ],
+          ikelifetime: '86400',
+          esplifetime: '3600',
           showDetail: false,
           step: 0
         },
@@ -373,10 +419,10 @@
             {required: true, message: '请输入预共享密钥', trigger: 'blur'}
           ],
           IP: [
-            {required: true, message: '请输入目的ip地址', trigger: 'blur'}
+            {required: true, message: '请输入对端源IP地址', trigger: 'blur'}
           ],
           CIDR: [
-            {required: true, message: '请输入目的网络cidr', trigger: 'blur'}
+            {required: true, message: '请输入对端网络CIDR', trigger: 'blur'}
           ],
         },
         // 远程vpn列表
@@ -454,20 +500,16 @@
             width: 60,
           },
           {
-            title: 'VPN',
-            key: 'vpnCustomerName1'
-          },
-          {
-            title: 'VPC',
-            key: 'vpcName1'
+            title: '本端CIDR',
+            key: 'localcidr'
             /*      render: (h, params) => {
              var status = params.row.status == 1 ? '正常' : '异常'
              return h('span', {}, status)
              }*/
           },
           {
-            title: '本地IP地址',
-            key: 'destinationipaddress1',
+            title: '本端IP地址',
+            key: 'localgateway',
             /*            render: (h, params) => {
              return h('span', {
              style: {
@@ -481,204 +523,221 @@
              }*/
           },
           {
-            title: '目的IP地址',
-            render: (h, object) => {
-              if (object.row.sourcenatip) {
-                return h('div', [h('span', {
-                  style: {
-                    marginRight: '10px'
-                  }
-                }, object.row.sourcenatip), h('Icon', {
-                  attrs: {
-                    type: 'close'
-                  },
-                  style: {
-                    cursor: 'pointer'
-                  },
-                  nativeOn: {
-                    click: () => {
-                      this.$Modal.confirm({
-                        render: (h) => {
-                          return h('p', {
-                            class: 'modal-content-s'
-                          }, [h('i', {
-                            class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
-                            style: {
-                              color: '#f90'
-                            }
-                          }), '确认解绑该弹性IP?'])
-                        },
-                        title: '解绑弹性IP',
-                        scrollable: true,
-                        okText: '确定解绑',
-                        cancelText: '取消',
-                        'onOk': () => {
-                          var url = 'network/unboundElasticIP.do'
-                          this.$http.get(url, {
-                            params: {
-                              natGatewayId: object.row.id
-                            }
-                          }).then(response => {
-                            if (response.status == 200 && response.data.status == 1) {
-                              delete object.row.sourcenatip
-                            }
-                          })
-                        }
-                      })
-                    }
-                  }
-                }, '')])
-              } else {
-                return h('span', {
-                  style: {
-                    color: '#2A99F2',
-                    cursor: 'pointer',
-                  },
-                  on: {
-                    click: () => {
-                      // 绑定sourceNat
-                      this.bindIP(object.row)
-                    }
-                  }
-                }, '绑定弹性IP')
-              }
-            }
+            title: '对端IP地址',
+            key: 'targetdestinationipaddress'
+//            render: (h, object) => {
+//              if (object.row.sourcenatip) {
+//                return h('div', [h('span', {
+//                  style: {
+//                    marginRight: '10px'
+//                  }
+//                }, object.row.sourcenatip), h('Icon', {
+//                  attrs: {
+//                    type: 'close'
+//                  },
+//                  style: {
+//                    cursor: 'pointer'
+//                  },
+//                  nativeOn: {
+//                    click: () => {
+//                      this.$Modal.confirm({
+//                        render: (h) => {
+//                          return h('p', {
+//                            class: 'modal-content-s'
+//                          }, [h('i', {
+//                            class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
+//                            style: {
+//                              color: '#f90'
+//                            }
+//                          }), '确认解绑该弹性IP?'])
+//                        },
+//                        title: '解绑弹性IP',
+//                        scrollable: true,
+//                        okText: '确定解绑',
+//                        cancelText: '取消',
+//                        'onOk': () => {
+//                          var url = 'network/unboundElasticIP.do'
+//                          this.$http.get(url, {
+//                            params: {
+//                              natGatewayId: object.row.id
+//                            }
+//                          }).then(response => {
+//                            if (response.status == 200 && response.data.status == 1) {
+//                              delete object.row.sourcenatip
+//                            }
+//                          })
+//                        }
+//                      })
+//                    }
+//                  }
+//                }, '')])
+//              } else {
+//                return h('span', {
+//                  style: {
+//                    color: '#2A99F2',
+//                    cursor: 'pointer',
+//                  },
+//                  on: {
+//                    click: () => {
+//                      // 绑定sourceNat
+//                      this.bindIP(object.row)
+//                    }
+//                  }
+//                }, '绑定弹性IP')
+//              }
+//            }
           },
           {
-            title: '目的网络CIDR',
-            render: (h, object) => {
-              var renderArray = []
-              if (object.row.prottransip) {
-                var prottransipArray = object.row.prottransip.split(',')
-                for (var item of prottransipArray) {
-                  renderArray.push(h('div', [h('span', {
-                    style: {
-                      marginRight: '10px'
-                    }
-                  }, item), h('Icon', {
-                    attrs: {
-                      type: 'close'
-                    },
-                    style: {
-                      cursor: 'pointer'
-                    },
-                    nativeOn: {
-                      click: () => {
-                        console.log('click')
-                        this.$Modal.confirm({
-                          render: (h) => {
-                            return h('p', {
-                              class: 'modal-content-s'
-                            }, [h('i', {
-                              class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
-                              style: {
-                                color: '#f90'
-                              }
-                            }), '确认解绑该弹性IP?'])
-                          },
-                          title: '解绑弹性IP',
-                          scrollable: true,
-                          okText: '确定解绑',
-                          cancelText: '取消',
-                          'onOk': () => {
-                            var url = 'network/delNatGateway.do'
-                            axios.get(url,{
-                                params:{
-                                  natGatewayId:this.select.id
-                                }
-                            }).then(response => {
-                              console.log(response)
-                            })
-                          }
-                        })
-                      }
-                    }
-                  }, '')]))
-                }
-              }
-              renderArray.push(h('div', {
-                style: {
-                  color: '#2A99F2',
-                  cursor: 'pointer',
-                },
-                on: {
-                  click: () => {
-                    this.showModal.bindIP = true
-                  }
-                }
-              }, '绑定弹性IP'))
-              return h('div', renderArray)
-            }
+            title: '对端网络CIDR',
+            key: 'targetcidr',
+//            render: (h, object) => {
+//              var renderArray = []
+//              if (object.row.prottransip) {
+//                var prottransipArray = object.row.prottransip.split(',')
+//                for (var item of prottransipArray) {
+//                  renderArray.push(h('div', [h('span', {
+//                    style: {
+//                      marginRight: '10px'
+//                    }
+//                  }, item), h('Icon', {
+//                    attrs: {
+//                      type: 'close'
+//                    },
+//                    style: {
+//                      cursor: 'pointer'
+//                    },
+//                    nativeOn: {
+//                      click: () => {
+//                        console.log('click')
+//                        this.$Modal.confirm({
+//                          render: (h) => {
+//                            return h('p', {
+//                              class: 'modal-content-s'
+//                            }, [h('i', {
+//                              class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
+//                              style: {
+//                                color: '#f90'
+//                              }
+//                            }), '确认解绑该弹性IP?'])
+//                          },
+//                          title: '解绑弹性IP',
+//                          scrollable: true,
+//                          okText: '确定解绑',
+//                          cancelText: '取消',
+//                          'onOk': () => {
+//                            var url = 'network/delNatGateway.do'
+//                            axios.get(url,{
+//                                params:{
+//                                  natGatewayId:this.select.id
+//                                }
+//                            }).then(response => {
+//                              console.log(response)
+//                            })
+//                          }
+//                        })
+//                      }
+//                    }
+//                  }, '')]))
+//                }
+//              }
+//              renderArray.push(h('div', {
+//                style: {
+//                  color: '#2A99F2',
+//                  cursor: 'pointer',
+//                },
+//                on: {
+//                  click: () => {
+//                    this.showModal.bindIP = true
+//                  }
+//                }
+//              }, '绑定弹性IP'))
+//              return h('div', renderArray)
+//            }
           },
           {
             title: '状态',
-            render: (h, object) => {
-              var renderArray = []
-              if (object.row.prottransip) {
-                var prottransipArray = object.row.prottransip.split(',')
-                for (var item of prottransipArray) {
-                  renderArray.push(h('div', [h('span', {
-                    style: {
-                      marginRight: '10px'
-                    }
-                  }, item), h('Icon', {
-                    attrs: {
-                      type: 'close'
-                    },
-                    style: {
-                      cursor: 'pointer'
-                    },
-                    nativeOn: {
-                      click: () => {
-                        console.log('click')
-                        this.$Modal.confirm({
-                          render: (h) => {
-                            return h('p', {
-                              class: 'modal-content-s'
-                            }, [h('i', {
-                              class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
-                              style: {
-                                color: '#f90'
-                              }
-                            }), '确认解绑该弹性IP?'])
-                          },
-                          title: '解绑弹性IP',
-                          scrollable: true,
-                          okText: '确定解绑',
-                          cancelText: '取消',
-                          'onOk': () => {
-                            var url = 'network/delNatGateway.do'
-                            axios.get(url,{
-                                params:{
-                                  natGatewayId:this.select.id
-                                }
-                            }).then(response => {
-                              console.log(response)
-                            })
-                          }
-                        })
-                      }
-                    }
-                  }, '')]))
-                }
+            key: 'sourcestatus',
+            render: (h, params) => {
+              var text = ''
+              switch (params.row.sourcestatus) {
+                case '1':
+                case '-1':
+                  text = '正常';
+                  break;
               }
-              renderArray.push(h('div', {
-                style: {
-                  color: '#2A99F2',
-                  cursor: 'pointer',
-                },
-                on: {
-                  click: () => {
-                    this.showModal.bindIP = true
-                  }
-                }
-              }, '绑定弹性IP'))
-              return h('div', renderArray)
+              return h('span', {}, text)
             }
+//            render: (h, object) => {
+//              var renderArray = []
+//              if (object.row.prottransip) {
+//                var prottransipArray = object.row.prottransip.split(',')
+//                for (var item of prottransipArray) {
+//                  renderArray.push(h('div', [h('span', {
+//                    style: {
+//                      marginRight: '10px'
+//                    }
+//                  }, item), h('Icon', {
+//                    attrs: {
+//                      type: 'close'
+//                    },
+//                    style: {
+//                      cursor: 'pointer'
+//                    },
+//                    nativeOn: {
+//                      click: () => {
+//                        console.log('click')
+//                        this.$Modal.confirm({
+//                          render: (h) => {
+//                            return h('p', {
+//                              class: 'modal-content-s'
+//                            }, [h('i', {
+//                              class: 'f24 mr10 ivu-icon ivu-icon-android-alert',
+//                              style: {
+//                                color: '#f90'
+//                              }
+//                            }), '确认解绑该弹性IP?'])
+//                          },
+//                          title: '解绑弹性IP',
+//                          scrollable: true,
+//                          okText: '确定解绑',
+//                          cancelText: '取消',
+//                          'onOk': () => {
+//                            var url = 'network/delNatGateway.do'
+//                            axios.get(url,{
+//                                params:{
+//                                  natGatewayId:this.select.id
+//                                }
+//                            }).then(response => {
+//                              console.log(response)
+//                            })
+//                          }
+//                        })
+//                      }
+//                    }
+//                  }, '')]))
+//                }
+//              }
+//              renderArray.push(h('div', {
+//                style: {
+//                  color: '#2A99F2',
+//                  cursor: 'pointer',
+//                },
+//                on: {
+//                  click: () => {
+//                    this.showModal.bindIP = true
+//                  }
+//                }
+//              }, '绑定弹性IP'))
+//              return h('div', renderArray)
+//            }
+          },
+          {
+            title: '预共享秘钥',
+            key: 'sourceipsecKey'
           },
           {
             title: '创建时间',
-            key: 'createtime2'
+            key: 'sourcecreatetime',
           }
         ],
         tunnelVpnData: [],
@@ -716,7 +775,7 @@
         // 隧道VPN
         var customer = axios.get('network/listVpnCustomerGateways.do', {
           params: {
-            zoneId: $store.state.zone.zoneid
+            zoneId: $store.state.zone.zoneid,
           }
         })
         Promise.all([remote, customer]).then(values => {
@@ -789,7 +848,6 @@
       },
       nextStep(){
         this.$refs[`newTunnelVpnFormValidate${this.newTunnelVpnForm.step}`].validate(validate => {
-          console.log(validate)
           if (validate) {
             this.newTunnelVpnForm.step++
           }
@@ -811,10 +869,13 @@
             ipsecKey: this.newTunnelVpnForm.key,
             ikeEncryption: this.newTunnelVpnForm.IKE,
             ikeHash: this.newTunnelVpnForm.IKEHash,
-            // ikeDH: '',
             espEncryption: this.newTunnelVpnForm.ESP,
             espHash: this.newTunnelVpnForm.ESPHash,
-            passive: this.newTunnelVpnForm.connType
+            passive: this.newTunnelVpnForm.connType,
+            completeSecrecy:this.newTunnelVpnForm.secret,
+            ikeDH:this.newTunnelVpnForm.IKEDH,
+            ikelifetime:this.newTunnelVpnForm.ikelifetime,
+            esplifetime:this.newTunnelVpnForm.esplifetime
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -908,11 +969,13 @@
           this.$message.confirm({
             content: '确定要删除该隧道VPN吗',
             onOk: () => {
-              console.log(this.currentTunnel)
-              this.$http.get('network/deleteTunnelVpn.do',{
-                  params:{
-                    id:this.currentTunnel.id
-                  }
+              this.$http.get('network/deleteTunnelVpn.do', {
+                params: {
+                  s2sVpnGatewayId:this.currentTunnel.sourcevpnId,
+                  vpcId: this.currentTunnel.sourcevpcId,
+                  zoneId: $store.state.zone.zoneid
+
+                }
               }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.$Message.success({
@@ -945,14 +1008,14 @@
       // 远程vpn数据
       remoteData(){
         axios.get('network/listRemoteVpn.do', {
-                params: {
-                  zoneId: $store.state.zone.zoneid
-                }
-              }).then(response => {
-                if (response.status == 200 && response.data.status == 1) {
-                  this.remoteVpnData = response.data.result
-                }
-              })
+          params: {
+            zoneId: $store.state.zone.zoneid
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.remoteVpnData = response.data.result
+          }
+        })
       },
       // 用户管理添加用户
       addUser(){

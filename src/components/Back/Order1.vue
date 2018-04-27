@@ -147,7 +147,6 @@
       if (to.query.countOrder) {
         params.countOrder = to.query.countOrder
       }
-      console.log(from)
       axios.get('user/searchOrderByBuy.do', {
         params
       }).then(response => {
@@ -157,7 +156,6 @@
       })
     },
     created(){
-      console.log(this.orderData)
     },
     methods: {
       // 设置order列表

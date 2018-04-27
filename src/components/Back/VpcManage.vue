@@ -935,7 +935,6 @@
                 }
               }
             }
-            console.log(this.data.ipsList)
             this.$http.get('network/updateDefaultNicForVirtualMachine.do', {
               params: {
                 networkId,
