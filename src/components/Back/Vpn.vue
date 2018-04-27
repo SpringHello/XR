@@ -387,15 +387,15 @@
             {label: 'md5', key: 'md5'},
             {label: 'sha1', key: 'sha1'}
           ],
-          IKEDH: 'Group5（modp1536）',
+          IKEDH: 'modp1536',
           IKEDHoptions: [
-            {label: 'Group2（modp1024）', key: 'Group2（modp1024）'},
-            {label: 'Group5（modp1536）', key: 'Group5（modp1536）'}
+            {label: 'modp1024', key: 'modp1024'},
+            {label: 'modp1536', key: 'modp1536'}
           ],
-          secret: 'Group5（modp1536）',
+          secret: 'modp1536',
           secretOptions: [
-            {label: 'Group2（modp1024）', key: 'Group2（modp1024）'},
-            {label: 'Group5（modp1536）', key: 'Group5（modp1536）'}
+            {label: 'modp1024', key: 'modp1024'},
+            {label: 'modp1536', key: 'modp1536'}
           ],
           ikelifetime: '86400',
           esplifetime: '3600',
@@ -848,7 +848,6 @@
       },
       nextStep(){
         this.$refs[`newTunnelVpnFormValidate${this.newTunnelVpnForm.step}`].validate(validate => {
-          console.log(validate)
           if (validate) {
             this.newTunnelVpnForm.step++
           }
@@ -970,7 +969,6 @@
           this.$message.confirm({
             content: '确定要删除该隧道VPN吗',
             onOk: () => {
-              console.log(this.currentTunnel)
               this.$http.get('network/deleteTunnelVpn.do', {
                 params: {
                   s2sVpnGatewayId:this.currentTunnel.sourcevpnId,

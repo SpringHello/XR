@@ -665,7 +665,6 @@
                 case -1:
                   value = '其他原因失败'
               }
-              console.log(value)
               return h('span', value)
             }
           },

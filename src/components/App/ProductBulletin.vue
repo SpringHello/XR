@@ -27,7 +27,6 @@
       axios.get('user/getAdvertisement.do').then(response => {
         if (response.status == 200 && response.data.status == 1) {
           this.adverList = response.data.result.announcement
-          console.log(response.data.result.announcement)
         }
       })
     }
