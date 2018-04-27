@@ -497,6 +497,9 @@
           this.$Message.info('请输入正确的邮箱/手机号')
           return
         }
+        if (this.vailForm.loginname.message.length>0 ) {
+         return
+        }
         if (!regExp.registerPasswordVail(this.form.password)) {
           this.$Message.info('密码必须包含数字和字母大小写')
           return

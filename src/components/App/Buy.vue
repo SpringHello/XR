@@ -1113,6 +1113,7 @@
   import {mapState} from 'vuex'
   import regExp from '../../util/regExp'
   import uuid from 'uuid'
+
   var messageMap = {
     loginname: {
       placeholder: '登录邮箱/手机号',
@@ -1878,7 +1879,7 @@
         this.PecsInfo.publicList[arg[2]].selectSystem = arg[0]
       },
       // 根据选择自定义镜像判断登录名是admin还是root
-      setOwnTemplate (item) {
+      setOwnTemplate(item) {
         this.PecsInfo.customMirror = item
         var str = item.ostypename.substr(0, 1)
         if (str === 'W') {
@@ -2180,6 +2181,10 @@
         window.scrollTo(0, 170)
       },
       buyHost() {
+        if (this.userInfo == null) {
+          this.showModal.login = true
+          return
+        }
         if (this.PecsInfo.currentType == 'app' && this.PecsInfo.currentApp.templatename == undefined) {
           this.$message.info({
             content: '请选择一个镜像'
@@ -2238,6 +2243,7 @@
             params.bandWidth = prod.publicIP ? prod.currentSystem.bandWidth : 0
             params.rootDiskType = prod.currentSystem.diskType
             params.networkId = 'no'
+            params.vpcId = 'no'
             if (params.bandWidth != 0) {
               ipCount++
             }
@@ -2247,6 +2253,7 @@
             params.bandWidth = prod.IPConfig.publicIP ? prod.IPConfig.bandWidth : 0
             params.rootDiskType = prod.vmConfig.diskType
             params.networkId = prod.network
+            params.vpcId = prod.vpc
             var diskType = '', diskSize = ''
             diskCount += prod.dataDiskList.length
             if (params.bandWidth != 0) {
@@ -2304,6 +2311,10 @@
         window.scrollTo(0, 170)
       },
       buyDisk() {
+        if (this.userInfo == null) {
+          this.showModal.login = true
+          return
+        }
         var obj = JSON.parse(JSON.stringify(this.PdiskInfo))
         var prod = Object.assign({typeName: '云硬盘', zone: this.PdiskInfo.zone, type: 'Pdisk', count: 1}, obj)
         let diskCount = 0
@@ -2326,7 +2337,13 @@
               isAutorenew: prod.autoRenewal ? '1' : '0',
             }
             axios.get('Disk/createVolume.do', {params}).then(response => {
-              this.$router.push('order')
+              if (response.status == 200 && response.data.status == 1) {
+                this.$router.push('order')
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
             })
           }
         }
@@ -2345,6 +2362,10 @@
         window.scrollTo(0, 170)
       },
       buyIP() {
+        if (this.userInfo == null) {
+          this.showModal.login = true
+          return
+        }
         var obj = JSON.parse(JSON.stringify(this.PeipInfo))
         var prod = Object.assign({typeName: '公网IP', zone: this.PeipInfo.zone, type: 'Peip', count: 1}, obj)
         if (this._checkCount(0, 0, 1)) {
@@ -2357,8 +2378,15 @@
             brandWith: prod.bandWidth,
             vpcId: prod.vpc
           }
-          axios.get('network/createPublicIp.do', {params}).then(
-            this.$router.push('order')
+          axios.get('network/createPublicIp.do', {params}).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$router.push('order')
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            }
           )
         }
       },
@@ -2438,6 +2466,7 @@
               params.bandWidth = prod.publicIP ? prod.currentSystem.bandWidth : 0
               params.rootDiskType = prod.currentSystem.diskType
               params.networkId = 'no'
+              params.vpcId = 'no'
               if (params.bandWidth != 0) {
                 ipCount++
               }
@@ -2447,6 +2476,7 @@
               params.bandWidth = prod.IPConfig.publicIP ? prod.IPConfig.bandWidth : 0
               params.rootDiskType = prod.vmConfig.diskType
               params.networkId = prod.network
+              params.vpcId = prod.vpc
               var diskType = '', diskSize = ''
               diskCount += prod.dataDiskList.length
               if (params.bandWidth != 0) {
@@ -2510,8 +2540,8 @@
           sessionStorage.removeItem('cart')
           Promise.all(PromiseList).then(responseList => {
             if (responseList.every(item => {
-                return item.status == 200 && item.data.status == 1
-              })) {
+              return item.status == 200 && item.data.status == 1
+            })) {
               this.$router.push({
                 path: 'order', query: {
                   countOrder
@@ -2683,25 +2713,46 @@
           this.ownMirrorList()
           this.queryRemainCount()
           // 区域的主机配额不同 初始化相关主机配置核心数，内存
-          this.PecsInfo.RAMList = [
-            {label: '1G', value: 1},
-            {label: '2G', value: 2},
-            {label: '4G', value: 4},
-            {label: '8G', value: 8}
-          ]
-          this.PecsInfo.vmConfig = {
-            diskType: 'sas',
-            kernel: 1,
-            RAM: 1,
-            diskSize: 40,
-            cost: 0,
-            coupon: 0
+          if (this.PecsInfo.createType != 'fast') {
+            this.PecsInfo.RAMList = [
+              {label: '1G', value: 1},
+              {label: '2G', value: 2},
+              {label: '4G', value: 4},
+              {label: '8G', value: 8}
+            ]
+            this.PecsInfo.vmConfig = {
+              diskType: 'sas',
+              kernel: 1,
+              RAM: 1,
+              diskSize: 40,
+              cost: 0,
+              coupon: 0
+            }
+          } else {
+            this.queryQuick()
           }
         }
         ,
         deep: true
       }
       ,
+      // 配置变化
+      'PecsInfo.createType': {
+        handler: function () {
+          if (this.PecsInfo.createType == 'fast') {
+            this.queryQuick()
+          } else{
+            // 查询自定义配置主机价格
+            this.queryCustomVM()
+            // 查询数据盘价格
+            this.queryDiskPrice()
+            // 查询公网IP价格
+            this.queryIPPrice()
+          }
+        }
+        ,
+        deep: true
+      },
       // 观测到计费方式变化
       'PecsInfo.timeForm': {
         handler: function () {
