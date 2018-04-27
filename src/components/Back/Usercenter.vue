@@ -586,9 +586,6 @@
                 <FormItem label="企业联系方式" prop="contact">
                   <Input v-model="notAuth.companyAuthForm.contact" placeholder="请输入联系方式"></Input>
                 </FormItem>
-                <FormItem label="组织机构代码" prop="organizationCertificate">
-                  <Input v-model="notAuth.companyAuthForm.organizationCertificate" placeholder="请输入组织机构代码"></Input>
-                </FormItem>
                 <p class="info-title">企业联系人信息</p>
                 <FormItem label="联系人姓名" prop="linkManName">
                   <Input v-model="notAuth.companyAuthForm.linkManName" placeholder="请输入联系人姓名"></Input>
@@ -619,7 +616,7 @@
               </div>
               <!--三证合一图片上传-->
               <div class="IDCard" v-show="notAuth.companyAuthForm.certificateType==1" style="display: block">
-                <FormItem label="请上传企业三合一执照">
+                <FormItem label="三证合一">
                   <div style="display: flex;padding:20px;background-color: #f7f7f7">
                     <div style="width:130px;">
                       <Upload
@@ -721,7 +718,7 @@
                   </div>
                 </FormItem>
               </div>
-              <div style="padding-left: 36.5%">
+              <div style="text-align: right">
                 <Button type="primary" @click="enterpriseAttest" style="font-size: 12px;color: #FFFFFF;">确认提交</Button>
               </div>
             </Form>
@@ -1191,8 +1188,6 @@
             ],
             contact: '',
             contactPerson: '',
-            // 组织机构证件代码
-            organizationCertificate: '',
             // 联系人姓名
             linkManName: '',
             // 联系人身份证号
@@ -1230,10 +1225,6 @@
             contact: [
               {required: true, message: '请输入公司联系方式'},
               {validator: validaRegisteredPhone}
-            ],
-            organizationCertificate: [
-              {required: true, message: '请输入组织机构代码'},
-
             ],
             contactPerson: [
               {required: true, message: '请输入联系人姓名'},
@@ -1788,13 +1779,12 @@
             var params = {
               authType: this.notAuth.companyAuthForm.certificateType,
               name: this.notAuth.companyAuthForm.name,
-              organizationCertificate: this.notAuth.companyAuthForm.organizationCertificate,
               linkmanName: this.notAuth.companyAuthForm.contactPerson,
               trade: this.notAuth.companyAuthForm.industry,
               phone: this.notAuth.companyAuthForm.contact,
               idCard: this.notAuth.companyAuthForm.linkManNameID,
               contectPhone: this.notAuth.companyAuthForm.linkManPhone,
-              phoneCode: this.notAuth.companyAuthForm.verificationCode
+              phoneCode: this.notAuth.companyAuthForm.verificationCode,
             }
             if (params.authType == 1) {
               if (this.notAuth.companyAuthForm.combine == '') {
@@ -1825,6 +1815,10 @@
                 axios.get('user/GetUserInfo.do').then(response => {
                   this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
                   this.currentTab = ''
+                })
+              } else {
+                this.$message.info({
+                  content: response.data.message
                 })
               }
             })
