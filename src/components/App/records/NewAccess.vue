@@ -31,7 +31,7 @@
           <FormItem label="网站域名" prop="websiteDomain">
             <Input v-model="filingInformation.websiteDomain" placeholder="请输入网站域名" style="width: 500px"></Input>
           </FormItem>
-          <FormItem label="网站备案号" prop="websiteRecordNumber">
+          <FormItem label="主体备案号" prop="websiteRecordNumber">
             <Input v-model="filingInformation.websiteRecordNumber" placeholder="请输入网站备案号" style="width: 500px"></Input>
           </FormItem>
           <FormItem label="ICP备案密码" prop="IPCPassword">

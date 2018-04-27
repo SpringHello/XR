@@ -5,7 +5,7 @@
       <div class="content">
         <h2>备案区域</h2>
         <p class="recordsArea-but"><img src="../../../assets/img/records/records-icon7.png"/> {{ area }}</p>
-        <div v-if="false">
+        <div>
           <h3>主体单位信息</h3>
           <Form ref="mainUnitInformation" :model="mainUnitInformation" :rules="mainUnitInformationRuleValidate" :label-width="135">
             <FormItem label="主体单位所属区域" prop="area">
@@ -68,13 +68,43 @@
             </FormItem>
           </Form>
         </div>
-        <div class="main-info">
+        <div class="main-info" v-if="true">
           <h2>主体信息</h2>
           <div>
-            <ul></ul>
-            <ul></ul>
-            <ul></ul>
+            <ul>
+              <li>主体单位所属区域：最多显示长度为20字站位站位站位站位站</li>
+              <li>主体单位证件类型：我是证件类型</li>
+              <li>主体单位性质：我是单位性质</li>
+              <li>主体单位证件号码：我是证件号码</li>
+              <li>主体单位名称：最多显示长度为20字站位站位站位站位站</li>
+            </ul>
+            <ul>
+              <li>主体单位证件住所：我是证件类型</li>
+              <li>主体单位通信地址：我是单位性质</li>
+              <li>投资人或主管单位姓名：我是证件号码</li>
+              <li>法人姓名：我是法人姓名</li>
+              <li>法人证件类型：我是证件类型</li>
+            </ul>
+            <ul>
+              <li>法人证件号码：我是单位性质</li>
+              <li>办公室电话：我是证件号码</li>
+              <li>手机号码：我是证件号码</li>
+              <li>电子邮箱地址：我是证件号码</li>
+            </ul>
           </div>
+          <h3>网站基本信息</h3>
+          <Form ref="basicInformation" :model="basicInformation" :rules="basicInformationRuleValidate" :label-width="135">
+            <FormItem label="网站名称" prop="legalPersonName">
+              <Input v-model="basicInformation.siteName" placeholder="请输入网站名称" style="width: 500px"></Input>
+            </FormItem>
+            <FormItem label="网站域名" prop="websiteDomain">
+              <Input v-model="basicInformation.websiteDomain" placeholder="请输入网站域名" style="width: 500px"></Input>
+              <p class="form-p"><img src="../../../assets/img/records/records-icon19.png"/> 新增网站域名</p>
+            </FormItem>
+            <FormItem label="网站首页URL" prop="websiteHomepage">
+              <Input v-model="basicInformation.websiteHomepage" placeholder="请输入网站首页URL" style="width: 500px"></Input>
+            </FormItem>
+          </Form>
         </div>
       </div>
       <div class="content-footer">
@@ -268,6 +298,17 @@
         },
         // 主体单位验证信息
         mainUnitInformationRuleValidate: {},
+        // 网站基本信息表单
+        basicInformation: {
+          // 网站名称
+          siteName: '',
+          // 网站域名
+          websiteDomain: '',
+          // 网站首页URL
+          websiteHomepage: '',
+        },
+        // 网站基本信息表单验证
+        basicInformationRuleValidate: {}
       }
     },
     methods: {
@@ -306,6 +347,15 @@
     font-weight: normal;
   }
 
+  // 定义h3公用样式
+  .h3() {
+    font-size: 18px;
+    font-family: MicrosoftYaHei;
+    color: rgba(51, 51, 51, 1);
+    line-height: 24px;
+    font-weight: normal;
+  }
+
   .body-bottom {
     .content {
       padding: 60px 0 36px;
@@ -324,13 +374,9 @@
         }
       }
       h3 {
-        font-size: 18px;
-        font-family: MicrosoftYaHei;
-        color: rgba(51, 51, 51, 1);
-        line-height: 24px;
-        margin-top: 60px;
-        font-weight: normal;
+        .h3();
         margin-bottom: 20px;
+        margin-top: 60px;
       }
       .main-info {
         margin-top: 60px;
@@ -340,20 +386,40 @@
           background: rgba(55, 125, 255, 0.05);
           padding: 20px 40px;
           display: flex;
-          ul{
+          ul {
             height: 100%;
+            > li {
+              font-size: 14px;
+              font-family: PingFangSC-Medium;
+              color: rgba(102, 102, 102, 1);
+              line-height: 28px;
+            }
           }
-          ul:nth-child(1){
+          ul:nth-child(1) {
             width: 45%;
           }
-          ul:nth-child(2){
+          ul:nth-child(2) {
             width: 30%;
           }
-          ul:nth-child(3){
+          ul:nth-child(3) {
             width: 25%;
           }
         }
+
       }
+    }
+  }
+
+  .form-p {
+    font-family: MicrosoftYaHei;
+    color: rgba(55, 125, 255, 1);
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 14px;
+    img{
+      margin-right: 5px;
+      position: relative;
+      top: 2px;
     }
   }
 </style>
