@@ -278,7 +278,7 @@
       // 隧道VPN
       var customer = axios.get('network/listVpnCustomerGateways.do', {
         params: {
-          zoneId: $store.state.zone.zoneid
+          zoneId: $store.state.zone.zoneid,
         }
       })
       Promise.all([remote, customer]).then(values => {
@@ -387,15 +387,15 @@
             {label: 'md5', key: 'md5'},
             {label: 'sha1', key: 'sha1'}
           ],
-          IKEDH: 'Group5（modp1536）',
+          IKEDH: 'modp1536',
           IKEDHoptions: [
-            {label: 'Group2（modp1024）', key: 'Group2（modp1024）'},
-            {label: 'Group5（modp1536）', key: 'Group5（modp1536）'}
+            {label: 'modp1024', key: 'modp1024'},
+            {label: 'modp1536', key: 'modp1536'}
           ],
-          secret: 'Group5（modp1536）',
+          secret: 'modp1536',
           secretOptions: [
-            {label: 'Group2（modp1024）', key: 'Group2（modp1024）'},
-            {label: 'Group5（modp1536）', key: 'Group5（modp1536）'}
+            {label: 'modp1024', key: 'modp1024'},
+            {label: 'modp1536', key: 'modp1536 '}
           ],
           ikelifetime: '86400',
           esplifetime: '3600',
@@ -501,7 +501,7 @@
           },
           {
             title: '本端CIDR',
-            key: 'sourcecidr2'
+            key: 'localcidr'
             /*      render: (h, params) => {
              var status = params.row.status == 1 ? '正常' : '异常'
              return h('span', {}, status)
@@ -509,7 +509,7 @@
           },
           {
             title: '本端IP地址',
-            key: 'sourcedestinationipaddress2',
+            key: 'localgateway',
             /*            render: (h, params) => {
              return h('span', {
              style: {
@@ -524,7 +524,7 @@
           },
           {
             title: '对端IP地址',
-            key: 'targetdestinationipaddress1'
+            key: 'targetdestinationipaddress'
 //            render: (h, object) => {
 //              if (object.row.sourcenatip) {
 //                return h('div', [h('span', {
@@ -589,7 +589,7 @@
           },
           {
             title: '对端网络CIDR',
-            key: 'targetcidr1',
+            key: 'targetcidr',
 //            render: (h, object) => {
 //              var renderArray = []
 //              if (object.row.prottransip) {
@@ -656,10 +656,10 @@
           },
           {
             title: '状态',
-            key: 'targetstatus1',
+            key: 'sourcestatus',
             render: (h, params) => {
               var text = ''
-              switch (params.row.targetstatus1) {
+              switch (params.row.sourcestatus) {
                 case '1':
                 case '-1':
                   text = '正常';
@@ -733,11 +733,11 @@
           },
           {
             title: '预共享秘钥',
-            key: 'targetipsecKey1'
+            key: 'sourceipsecKey'
           },
           {
             title: '创建时间',
-            key: 'sourcecreatetime2',
+            key: 'sourcecreatetime',
           }
         ],
         tunnelVpnData: [],
@@ -775,7 +775,7 @@
         // 隧道VPN
         var customer = axios.get('network/listVpnCustomerGateways.do', {
           params: {
-            zoneId: $store.state.zone.zoneid
+            zoneId: $store.state.zone.zoneid,
           }
         })
         Promise.all([remote, customer]).then(values => {
@@ -870,10 +870,13 @@
             ipsecKey: this.newTunnelVpnForm.key,
             ikeEncryption: this.newTunnelVpnForm.IKE,
             ikeHash: this.newTunnelVpnForm.IKEHash,
-            // ikeDH: '',
             espEncryption: this.newTunnelVpnForm.ESP,
             espHash: this.newTunnelVpnForm.ESPHash,
-            passive: this.newTunnelVpnForm.connType
+            passive: this.newTunnelVpnForm.connType,
+            completeSecrecy:this.newTunnelVpnForm.secret,
+            ikeDH:this.newTunnelVpnForm.IKEDH,
+            ikelifetime:this.newTunnelVpnForm.ikelifetime,
+            esplifetime:this.newTunnelVpnForm.esplifetime
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -970,7 +973,10 @@
               console.log(this.currentTunnel)
               this.$http.get('network/deleteTunnelVpn.do', {
                 params: {
-                  id: this.currentTunnel.id
+                  s2sVpnGatewayId:this.currentTunnel.sourcevpnId,
+                  vpcId: this.currentTunnel.sourcevpcId,
+                  zoneId: $store.state.zone.zoneid
+
                 }
               }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
