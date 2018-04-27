@@ -517,11 +517,9 @@
           }
         })
         /*列出vpc下所有公网子网*/
-        this.$http.get('network/listNetwork.do', {
-          params: {
-            vpcId: this.creatbalancemodal.formInline.vpc,
-            publicLoadbalance: '1'
-          }
+        this.$http.post('network/listNetwork.do', {
+          vpcId: this.creatbalancemodal.formInline.vpc,
+          publicLoadbalance: '1'
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.creatbalancemodal.formInline.subnetList = response.data.result
