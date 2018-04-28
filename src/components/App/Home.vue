@@ -2,7 +2,24 @@
   <div id="home">
     <!-- banner 轮播图 -->
     <div class="banner">
+      
+
       <my-carousel :interval=5000 effect="fade" class="carousel" @on-change="change">
+        <my-carousel-item class="carousel-item">
+          <div @click="push('active_2')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
+            <div class="head-banner">
+              <div>
+                <div>
+                  <p>
+                    <img style="padding-top: 0" src="../../assets/img/active/active_2/ziti.png">
+                  </p>
+                  <button>立即领取</button>
+                </div>
+                <img src="../../assets/img/active/active_2/banner-aircraft.png">
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
         <my-carousel-item class="carousel-item">
           <div @click="push('active_1')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
@@ -18,6 +35,9 @@
             </div>
           </div>
         </my-carousel-item>
+
+        
+
         <my-carousel-item class="carousel-item">
           <div @click="push('newNodes_1')"
                style="cursor: pointer;background:linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
@@ -104,7 +124,7 @@
     </div>
     <!-- 功能介绍区域 -->
     <div class="box-container"
-         :class="{one:this.activeBanner==2,two: this.activeBanner==3, three:this.activeBanner==1}">
+         :class="{one:this.activeBanner==3,two: this.activeBanner==4, three:this.activeBanner==1,four:this.activeBanner==2}">
       <div class="container">
         <div v-for="(item,index) in boxContainer" :key="index" class="container-item">
           <i class="iconfont" :class="item.img" style="font-size:60px;color:#fff;line-height:1"></i>
@@ -778,13 +798,16 @@
       background-color: #5692fe;
 
       &.one {
-        background-color: #F36C69;
+        background-color: #F9AF80;
       }
       &.two{
         background-color: #135BFF;
       }
       &.three {
-        background-color: #F9AF80;
+        background-color: #F36C69;
+      }
+      &.four {
+        background-color: #F36C69;
       }
       .container {
         width: 1200px;
