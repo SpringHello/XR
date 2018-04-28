@@ -18,10 +18,27 @@
           <div class="process">
             <h2 style="margin-bottom: 20px">活动流程</h2>
             <div class="items">
-              <div v-for="(item,index) in processData" :key="index">
-                <img :src="item.img"/>
-                <p>{{item.text}}</p>
-              </div>
+              <dl>
+                <dt v-if="isLogin==1"><img src="../../../assets/img/active/active_2/icon-process-1.png"></dt>
+                <dt v-else><img src="../../../assets/img/active/active_2/icon-process-11.png"></dt>
+                <dd :class="{select:isLogin==1}">① 新用户注册登录<i
+                  :class="{select:(companyauth==0&&isLogin==1)||(personalauth==0&&isLogin==1)}"></i>
+                </dd>
+              </dl>
+              <dl>
+                <dt v-if="companyauth==0||personalauth==0"><img src="../../../assets/img/active/active_2/icon-process-2.png">
+                </dt>
+                <dt v-else><img src="../../../assets/img/active/active_2/icon-process-22.png"></dt>
+                <dd :class="{select:companyauth==0||personalauth==0}">② 完成实名认证<i
+                  :class="{select:(isLogin==1&&companyauth==0&&isReceive!=0)||(isLogin==1&&personalauth==0&&isReceive!=0)}"></i>
+                </dd>
+              </dl>
+              <dl>
+                <dt v-if="isReceive==0"><img src="../../../assets/img/active/active_2/icon-process-3.png"></dt>
+                <dt v-else><img src="../../../assets/img/active/active_2/icon-process-33.png"></dt>
+                <dd :class="{select:isReceive!=0}">③ 免费领取个人云主机</dd>
+              </dl>
+
             </div>
           </div>
         </div>
@@ -30,77 +47,76 @@
     <div class="body">
       <div class="content">
         <h2>
-          企业免费产品
+          免费云主机
         </h2>
-        <a>活动规则></a>
+        <p style="text-align:center;padding:20px 0 50px;font-size:18px;">
+          <a @click="modal4=true">活动规则></a>
+        </p>
         <div class="free-product">
-          <div v-for="(item,index) in productData" :key="index" class="item">
+          <div v-for="(item,index) in productData" :key="index" class="item" v-if="index>=startIndex&&index<=startIndex+1">
             <div class="left">
               <h4>{{item.title}}</h4>
               <p>{{item.desc}}</p>
             </div>
             <div class="right">
               <div class="params">
-                <div v-for="(subitem,index) in item.params" :key="index">
-                  <img :src="subitem.img">
-                  <p>{{item.desc}}</p>
-                </div>
-              </div>
-              <
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="foot">
-      <div class="recommend-product" style="height:546px;">
-        <div class="center">
-          <h2 class="head-headline" style="color:#F26667">推荐购买产品</h2>
-          <div class="content">
-            <div class="item" v-for="(item,index) in product" :key="index">
-              <div class="top">
-                <h4>{{item.title}}</h4>
-                <p>{{item.desc}}</p>
-              </div>
-              <div class="bottom">
-                <div class="parameter">
-                  <p>
-                  <span v-for="(secitem,index) in item.params" :key="index">
-                    {{secitem.num}}
-                    <i>{{secitem.unit}}</i>
-                  </span>
-                  </p>
-                  <RadioGroup v-model="item.system" class="activity-radio" size="large">
-                    <Radio :label="system.label" v-for="(system,index) in systemList" :key="index">{{system.text}}</Radio>
+                <div v-for="(subitem,index) in paramsList" :key="index" class="section">
+                  <RadioGroup v-model="item.selectedConfig" class="activity-radio" size="large">
+                    <Radio class="activity-radio" size="large" :label="subitem.label">{{subitem.radiotext}}
+                      <span v-for="(content,index) in subitem.item" :key="index">
+                        {{content.num}}
+                        <i>{{content.unit}}</i>
+                      </span>
+                      <span>{{subitem.time}}</span>
+                    </Radio>
                   </RadioGroup>
                 </div>
-                <div class="count">
-                  <p>{{item.price}}</p>
-                  <span @click="productBuy(item,index)">立即购买</span>
-                </div>
+                <RadioGroup v-model="item.system" class="activity-radio" size="large">
+                  <Radio :label="system.label" v-for="(system,index) in systemList" :key="index">{{system.text}}</Radio>
+                </RadioGroup>
+              </div>
+              
+              <div class="timer">
+                  <div class="">
+                    <p  class="title">距离{{ item.timerText}}点场还剩</p>
+                    <p  class="time">
+                      <span>{{ item.h1 }}{{ item.h2}}</span>:
+                      <span>{{ item.m1 }}{{ item.m2 }}</span>:
+                      <span>{{ item.s1 }}{{ item.s2 }}</span>
+                    </p>
+                  </div>
+                  
+                  <button v-if="item.timerTime === 0&&!item.remainder">已领完</button>
+                  <button v-if="item.timerTime === 0 && item.remainder" :class="{canGet: true}" @click="freeReceive(item)">立即领取</button>
+                  <button v-if="item.timerTime > 0">立即领取</button>
+
+
+                  <!-- <button v-if="item.timerTime !== 0" :class="{canGet: true}" @click="freeReceive(item)" >立即领取</button>
+                  <button v-if="item.timerTime === 0">立即领取</button> -->
               </div>
             </div>
           </div>
         </div>
+        
       </div>
-      <div class="activity-rule">
+      <div class="recommend-product">
         <div class="center">
-          <div class="rules">
-            <h2>活动规则</h2>
-            <p>1. 新用户完成注册即可领取196元现金红包。</p>
-            <p>2. 代金券包括68元优惠券（满88元可用，有效期三个月），90元优惠券（满150元可用，有效期六个月）和38元无门槛代金券（需在官网领取，有效期7天） </p>
-            <p>3. 38元无门槛优惠券领取规则：可在活动页面每天整点抢购。整点抢购时间：每个工作日早上10点、12点、 15点、17点共四轮，数量多多，机会多多。 </p>
-            <p>4. 注册完成158元代金券将会下发到用户账户，38元优惠券抢到后即可使用。使用前均需实名认证，且同一用户仅能领取一次。（同一用户是指：根据不同新睿云账号在注册、登录、使用中的关联信息，新睿云判断其实际为同一用户。关联信息举例：同一证件、同一手机号、同一支付账号、同一设备、同一地址等。） </p>
-            <p>5. 若之前注册用户尚未使用过新睿云平台产品，经判定，可向客服申请，领取优惠券。 </p>
-            <p>6. 此现金红包仅用于支付新睿云平台北京节点订单，抵减相应金额，不能进行兑现或其他用途。 </p>
-            <p>7. 代金券有有效期的，失效后，未使用的余额无法使用，您可在已失效代金券中查看 </p>
-            <p>8. 使用代金券支付的订单，发生退款时，代金券支付的部分不予返还 </p>
-            <p>9. 活动最终解释权在法律范围内归新睿云所有</p>
+          <div class="head">
+            <span>推荐</span>您还可以参加
+          </div>
+          <div class="content">
+            <div v-for="(item,index) in recommendData" :key="index" class="item">
+              <h4>{{item.title}}</h4>
+              <p>
+                <span>{{item.text}}</span><a style="float:right" :href="item.src">前往参加></a>
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <Modal v-model="loginModal" width="420" class="login-modal" :scrollable="true">
+   
+    <Modal v-model="loginModal" width="420" class="login-modal" ::scrollable="true">
       <p slot="header" style="color:#5F5F5F;text-align:center;height: 30px;padding-top: 5px;">
         <span style="font-family: PingFangSC-Regular;font-size: 26px;">登录</span>
       </p>
@@ -140,6 +156,55 @@
         </div>
       </div>
     </Modal>
+    <Modal v-model="modal2" width="550" :scrollable="true">
+        <div style="text-align:center" class="gethost-success">
+            <h2 class="head-title">抢到啦！</h2>
+            <div class="content">
+              <h3>恭喜你获得</h3>
+              <p>{{messageSuccess}}</p>
+            </div>
+        </div>
+        <div slot="footer" style="text-align:center">
+            <Button type="primary" size="large" style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;margin:20px 0;">立即查看</Button>
+        </div>
+    </Modal>
+    <Modal v-model="modal3" width="550" :scrollable="true">
+        <div style="text-align:center" class="gethost-success">
+            <h2 class="head-title" style="padding:0">sorry</h2>
+            <div class="content" style="background:none;color:#000">
+              <h3>已经被抢光了</h3>
+              <p>您可以等待下一场活动或者移步隔壁活动专区，<a href="/ruicloud/active_1">38元无门槛券</a>等您拿！</p>
+            </div>
+        </div>
+        <div slot="footer">
+            <!-- <Button type="primary" size="large" style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;margin:20px 0;">立即查看</Button> -->
+        </div>
+    </Modal>
+    <Modal v-model="modal4" width="700" :scrollable="true">
+        <div style="text-align:center" class="rules-modal">
+            <h2 class="head-title">活动规则</h2>
+            <div class="content" >
+              <h3>1.活动时间：</h3>
+               <p>2018年4月29日开始，数量有限，送完为止。</p>
+              <h3>2.活动对象：</h3>
+                  <p>新注册且已通过个人／企业认证，且未领取和购买过本平台资源的用户。</p>
+                <h3>3.活动内容： </h3>
+                  <p>符合条件的用户在每天10点、12点、15点、17点抢购免费主机。抢购成功即可使用。活动期间每人限领一次。 </p>
+                <h3>4.资格详细规则： </h3>
+                <p>1） 用户如果已购买、已体验过对应的产品，不能再次申请； </p>
+                <p>2） 同一手机号对应的多个账号只能申请一次；</p>
+                <p>3） 同一个实名认证用户，仅可申请一次，同一个账号只能领取一次。</p>
+                <h3> 5.领取免费产品规则：</h3>
+                  <p>1） 免费产品中的资源可随时进行升级，升级费用按新睿云标准收费进行收取； </p>
+                  <p>2） 在各产品免费使用期间，若对免费资源进行了销毁，则视为放弃免费使用权。 </p>
+                  <h3>6.为保证活动的公平公正，新睿云有权对恶意刷抢（如通过程序等技术手段）活动资源，领取后7天内未使用资源、利用资源从事违法违规行为的用户收回免费套餐使用资格。</h3>
+                    <h3>7.活动最终解释权在法律范围内归新睿云所有。 </h3>
+            </div>
+        </div>
+        <div slot="footer" style="text-align:center">
+            <Button type="primary" size="large" style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;" @click="modal4=false">知道了</Button>
+        </div>
+    </Modal>
   </div>
 </template>
 
@@ -162,6 +227,17 @@
   export default {
     data() {
       return {
+        messageSuccess:'1核CPU、1G内存、1M宽带、40GSSD高效云盘。试用时间1个月 ，请进珍惜尽快使用哦！',
+        personalauth: 1,
+        companyauth: 1,
+        isLogin: 0,
+        // 是否领取主机 0未领取
+        isReceive: 0,
+        userInfo: null,
+        mocktime:1524794400379,
+        modal2:false,
+        modal3:false,
+        modal4:false,
         processData:[
           {
             img:require('../../../assets/img/active/active_2/icon-process-11.png'),
@@ -180,46 +256,81 @@
           {
             title:'弹性云服务器',
             desc:'适用于个人建站或者初创公司宣传网站，轻量级应用',
-            params:[
-              {
-                img:require('../../../assets/img/active/active_2/icon-param-1.png'),
-                desc:'1核CPU'
-              },
-              {
-                img:require('../../../assets/img/active/active_2/icon-param-2.png'),
-                desc:'1核CPU'
-              },
-              {
-                img:require('../../../assets/img/active/active_2/icon-param-3.png'),
-                desc:'1核CPU'
-              },
-              {
-                img:require('../../../assets/img/active/active_2/icon-param-4.png'),
-                desc:'1核CPU'
-              }
-            ],
+            system: 'windows',
+            selectedConfig:31,
+            h1: 0,
+            h2: 0,
+            m1: 0,
+            m2: 0,
+            s1: 0,
+            s2: 0,
+            // 剩余时间
+            timerTime: 1,
+      // 是否有剩余
+        remainder:true,
           },
           {
             title:'弹性云服务器',
             desc:'适用于个人建站或者初创公司宣传网站，轻量级应用',
-            params:[
-              {
-                img:require('../../../assets/img/active/active_2/icon-param-1.png'),
-                desc:'1核CPU'
-              },
-              {
-                img:require('../../../assets/img/active/active_2/icon-param-2.png'),
-                desc:'1核CPU'
-              },
-              {
-                img:require('../../../assets/img/active/active_2/icon-param-3.png'),
-                desc:'1核CPU'
-              },
-              {
-                img:require('../../../assets/img/active/active_2/icon-param-4.png'),
-                desc:'1核CPU'
-              }
-            ],
+            system: 'windows',
+            selectedConfig:31,
+            h1: 0,
+            h2: 0,
+            m1: 0,
+            m2: 0,
+            s1: 0,
+            s2: 0,
+            timerTime: 1,
+       // 是否有剩余
+        remainder:true,
+          },
+          {
+            title:'弹性云服务器',
+            desc:'适用于个人建站或者初创公司宣传网站，轻量级应用',
+            system: 'windows',
+            selectedConfig:31,
+            h1: 0,
+            h2: 0,
+            m1: 0,
+            m2: 0,
+            s1: 0,
+            s2: 0,
+            timerTime: 1,
+       // 是否有剩余
+        remainder:true,
+          },
+          {
+            title:'弹性云服务器',
+            desc:'适用于个人建站或者初创公司宣传网站，轻量级应用',
+            system: 'windows',
+            selectedConfig:31,
+            h1: 0,
+            h2: 0,
+            m1: 0,
+            m2: 0,
+            s1: 0,
+            s2: 0,
+            timerTime: 1,
+            // 是否有剩余
+        remainder:true,
+          }
+        ],
+    
+        recommendData:[
+          {
+            title:'0元购主机，注册领现金',
+            text:'198元现金大礼包免费领',
+            src:'/ruicloud/active_1'
+          },
+          {
+            title:'北京一区盛大开服',
+            text:'布局首都，新购特惠，限时抢购',
+            src:'/ruicloud/newNodes_1'
+          },
+          {
+            title:'北京二区（沈阳）盛大开服',
+            text:'春暖花开，活动绽放，3折优惠起',
+            src:'/ruicloud/newNodes_2'
           }
         ],
         img: false,
@@ -247,108 +358,59 @@
           },
         },
         imgSrc: 'user/getKaptchaImage.do',
-        timeList: [
-          {
-            text: '距离10点场还剩',
-            h1: 0,
-            h2: 0,
-            m1: 0,
-            m2: 0,
-            s1: 0,
-            s2: 0,
-            time: 1,
-            ticket: 0
-          },
-          {
-            text: '距离12点场还剩',
-            h1: 0,
-            h2: 0,
-            m1: 0,
-            m2: 0,
-            s1: 0,
-            s2: 0,
-            time: 1,
-            ticket: 0
-          },
-          {
-            text: '距离15点场还剩',
-            h1: 0,
-            h2: 0,
-            m1: 0,
-            m2: 0,
-            s1: 0,
-            s2: 0,
-            time: 1,
-            ticket: 0
-          },
-          {
-            text: '距离17点场还剩',
-            h1: 0,
-            h2: 0,
-            m1: 0,
-            m2: 0,
-            s1: 0,
-            s2: 0,
-            time: 1,
-            ticket: 0
-          }
-        ],
         serviceTime: 0,
-        headNav: [
-          {
-            img: require("../../../assets/img/active/active_1/Group 9.png"),
-            title: "注册即可获得158元现金大礼包",
-            desc: "注册送现金，云上主机0元购超高性能超靠谱!"
-          },
-          {
-            img: require("../../../assets/img/active/active_1/Group 10.png"),
-            title: "38元无门槛优惠券整点抢",
-            desc: "发现金啦！买云服务器不花钱，统统拿到你手软!"
-          }
-        ],
-        product: [
-          {
-            title: '高IO型',
-            desc: '高磁盘IO的最佳选择，提供每秒数万次低延迟性随机 I/O (IOPS)，适合于低延时，I/O密集型应用。',
-            system: 'c11d2f8d-4fec-44e3-99e0-15e6e9acede6',
-            price: '0.35元／小时',
-            params: [
-              {num: '1核', unit: 'CPU'},
-              {num: '1G', unit: '内存'},
-              {num: '40G', unit: '磁盘'},
-              {num: '1mb/s', unit: '带宽'},
-            ]
-          },
-          {
-            title: '超高IO型',
-            desc: '采用高性能SSD系统盘，适用于NoSQL 数据库、群集化数据库、联机事务处理等高I/O负载需求。',
-            system: 'c11d2f8d-4fec-44e3-99e0-15e6e9acede6',
-            price: '0.6元／小时',
-            params: [
-              {num: '2核', unit: 'CPU'},
-              {num: '4G', unit: '内存'},
-              {num: '40G', unit: '磁盘'},
-              {num: '2mb/s', unit: '带宽'},
-            ]
-          }
-        ],
+        paramsList: [
+               {
+                 time:'1个月',
+                 label: 31,
+                 item:[
+                  {num: '1核', unit: 'CPU'},
+                  {num: '1G', unit: '内存'},
+                  {num: '1mb/s', unit: '带宽'},
+                  {num: '40G', unit: '磁盘'}
+                ]
+               },
+               {
+                 time:'15天',
+                 label:32,
+                 item:[
+                  {num: '2核', unit: 'CPU'},
+                  {num: '4G', unit: '内存'},
+                  {num: '5mb/s', unit: '带宽'},
+                  {num: '40G', unit: '磁盘'}
+                ]
+               }
+            ],
         systemList: [
           {
-            label: 'c11d2f8d-4fec-44e3-99e0-15e6e9acede6',
-            text: 'CentOS'
+            label: 'windows',
+            text: 'windows'
           },
           {
-            label: '86a0d0fc-6645-48dd-8bfe-306def16c4f8',
-            text: 'Windows'
+            label: 'linux',
+            text: 'linux'
           },
         ]
       }
     },
     created() {
+      // this.setServerTime(this.mocktime)
+      // console.log(this.mocktime)
+     if (this.$store.state.userInfo != null) {
+        this.isLogin = 1
+        this.userInfo = this.$store.state.userInfo
+        this.companyauth = this.userInfo.companyauth
+        this.personalauth = this.userInfo.personalauth
+        if (this.userInfo.activityInfo[6].companytype === 1 && this.userInfo.activityInfo[7].companytype === 1) {
+          this.isReceive = 1
+        } else {
+          this.isReceive = 0
+        }
+      }
     },
     beforeRouteEnter(to, from, next) {
       var serviceTime = axios.get(`network/getTime.do`)
-      var tickets = axios.get('ticket/couponIsUsed.do')
+      var tickets = axios.get('network/isCanGetFreeVm.do')
       Promise.all([serviceTime, tickets]).then(values => {
         next(vm => {
           vm.setData(values)
@@ -361,9 +423,42 @@
     },
     components: {},
     methods: {
+     
+      // 免费领取主机
+      freeReceive(item) {
+        // if (this.$store.state.userInfo == null) {
+        //   this.loginModal = true
+        //   return
+        // }
+         var params={
+            vmConfigId:item.selectedConfig,
+            osType:item.system,
+            defzoneid:'39a6af0b-6624-4194-b9d5-0c552d903858'
+          }
+          axios.get('information/getFreeMv.do',{
+              params
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              // this.$Modal.success({
+              //   title: "领取主机成功",
+              //   content: response.data.message,
+              //   scrollable: true
+              // });
+              this.messageSuccess=response.data.message
+              this.modal2=true
+            } else{
+              // this.$Modal.warning({
+              //   title: "系统提示",
+              //   content: response.data.message,
+              //   scrollable: true
+              // });
+              this.modal3=true
+            }
+          })
+      },
       // 领取成功后需要刷新剩余现金券数量
       getResidue() {
-        var url = `ticket/couponIsUsed.do`
+        var url = 'network/isCanGetFreeVm.do'
         var tickets = []
         axios.get(url).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -374,22 +469,9 @@
       },
       // 设置数据
       setData(values) {
-        var response = values[0]
-        var serviceTime = 0
-        if (response.status == 200 && response.data.status == 1) {
-          serviceTime = response.data.result
-        } else {
-          serviceTime = new Date().getTime()
-        }
-        this.setServerTime(serviceTime)
-        response = values[1]
-        var tickets = []
-        if (response.status == 200 && response.data.status == 1) {
-          tickets = response.data.data
-        } else {
-          tickets = []
-        }
-        this.setTicket(tickets)
+        let serviceTime = values[0].status==200&&values[0].data.status==1?values[0].data.result:new Date().getTime
+        let remainder = values[1].data.result
+        this.setServerTime(serviceTime,remainder)
       },
       vail(field) {
         var text = this.form[field];
@@ -472,51 +554,69 @@
         )
         ;
       },
-      setServerTime(serviceTime) {
+      setServerTime(serviceTime,remainder) {
         let hours = [10, 12, 15, 17].map(function (hour) {
-          let h = new Date()
-          h.setHours(hour)
-          h.setMinutes(0)
-          h.setSeconds(0)
-          return h.getTime()
+          let h = new Date(2018,4,3); 
+          h.setHours(hour,0,0)
+          // h.setMinutes(0)
+          // h.setSeconds(0)
+          return {time:h.getTime(),timerText:hour}
         })
 
         var minSecondInMinute = 1000 * 60
         var minSecondInHour = minSecondInMinute * 60
 
-        var setTime =  setInterval(() => {
-          serviceTime += 1000
-          hours.forEach((hour, index) => {
-            let reduce = hour - serviceTime
+        hours.forEach((hour, index) => {
+            let reduce = hour.time - serviceTime
+            this.$set(this.productData[index],'timerText',hour.timerText)
             if (reduce > 0) {
               let hourRemainder = parseInt(reduce / minSecondInHour)
               let minRemainder = parseInt((reduce % minSecondInHour) / minSecondInMinute)
               let secRemainder = parseInt((reduce % minSecondInMinute) / 1000)
-              this.timeList[index].h1 = parseInt(hourRemainder / 10)
-              this.timeList[index].h2 = parseInt(hourRemainder % 10)
-              this.timeList[index].m1 = parseInt(minRemainder / 10)
-              this.timeList[index].m2 = parseInt(minRemainder % 10)
-              this.timeList[index].s1 = parseInt(secRemainder / 10)
-              this.timeList[index].s2 = parseInt(secRemainder % 10)
-              this.timeList[index].time = reduce
+              this.productData[index].h1 = parseInt(hourRemainder / 10)
+              this.productData[index].h2 = parseInt(hourRemainder % 10)
+              this.productData[index].m1 = parseInt(minRemainder / 10)
+              this.productData[index].m2 = parseInt(minRemainder % 10)
+              this.productData[index].s1 = parseInt(secRemainder / 10)
+              this.productData[index].s2 = parseInt(secRemainder % 10)
+              this.productData[index].timerTime = reduce
+              this.productData[index].remainder = true
             } else {
-              this.timeList[index].time = 0
+              this.productData[index].timerTime = 0
+              this.productData[index].remainder = remainder
+            }
+          })
+
+        
+        var setTime =  setInterval(() => {
+          serviceTime += 1000
+         
+          hours.forEach((hour, index) => {
+            let reduce = hour.time - serviceTime
+            if (reduce > 0) {
+              let hourRemainder = parseInt(reduce / minSecondInHour)
+              let minRemainder = parseInt((reduce % minSecondInHour) / minSecondInMinute)
+              let secRemainder = parseInt((reduce % minSecondInMinute) / 1000)
+              this.productData[index].h1 = parseInt(hourRemainder / 10)
+              this.productData[index].h2 = parseInt(hourRemainder % 10)
+              this.productData[index].m1 = parseInt(minRemainder / 10)
+              this.productData[index].m2 = parseInt(minRemainder % 10)
+              this.productData[index].s1 = parseInt(secRemainder / 10)
+              this.productData[index].s2 = parseInt(secRemainder % 10)
+              this.productData[index].timerTime = reduce
+            } else {
+              this.productData[index].timerTime = 0
             }
           })
         }, 1000)
-        if (this.timeList[3].time === 0) {
+        
+        // console.log('aimeeeeeee')
+        // console.log(resultarry)
+        // console.log(this.productData[3].h2)
+        // console.log(this.productData[3].m1)
+        // console.log(this.productData[3].m2)
+        if (this.productData[3].timerTime === 0) {
           clearInterval(setTime)
-        }
-      },
-      setTicket(data) {
-        if (data.length > 0) {
-          this.timeList.forEach((item,index) => {
-            item.ticket = data[index]
-          })
-        } else {
-          this.timeList.forEach(item => {
-            item.ticket = 0
-          })
         }
       },
       getTicket() {
@@ -539,57 +639,110 @@
           }
         })
       },
-      productBuy(item, index) {
-        if (this.$store.state.userInfo == null) {
-          this.loginModal = true
-          return
-        }
-        var paramsNum = []
-        paramsNum = item.params.map(content => {
-          return content.num.match(/\d+/g).join()
-        })
-        var params = {
-          zoneId:'39a6af0b-6624-4194-b9d5-0c552d903858',
-          timeType:'current',
-          timeValue:'1',
-          templateId:item.system,
-          isAutoRenew:'0',
-          count:'1',
-          cpuNum:paramsNum[0],
-          memory:paramsNum[1],
-          bandWidth:paramsNum[3],
-          rootDiskType:'ssd',
-          networkId:'no',
-        }
-        this.$http.get('information/deployVirtualMachine.do', {params}).then((response) => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('order')
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-          }
-        )
-      }
     },
     computed: {
+      getUserInfo() {
+        if (this.$store.state.userInfo != null) {
+          this.isLogin = 1
+          return this.$store.state.userInfo
+        } else {
+          var parms = {
+            companyauth: 1,
+            personalauth: 1,
+            activityInfo: [
+              {
+                companytype: 0
+              }
+            ]
+          }
+          this.isLogin = 0
+          return parms
+        }
+      },
       disabled() {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
       },
+      startIndex(){
+        let startIndex = 2
+        for(let i=0;i<this.productData.length-1;i++){
+          if(this.productData[i].timerTime>0){
+            startIndex = i
+            break;
+          }else if(this.productData[i].timerTime<=0&&this.productData[i+1].timerTime>0){
+            startIndex = i
+            break;
+          }
+        }
+        return startIndex
+      }
     },
     watch: {},
     mounted() {
       this.img = true
-    }
+    },
+     getUserInfo(val) {
+        this.userInfo = val
+        this.companyauth = this.userInfo.companyauth
+        this.personalauth = this.userInfo.personalauth
+        if (this.userInfo.activityInfo[6].companytype === 1 && this.userInfo.activityInfo[7].companytype === 1) {
+          this.isReceive = 1
+        } else {
+          this.isReceive = 0
+        }
+      }
   }
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .rules-modal{
+    padding:40px;
+    text-align: left;
+    .head-title{
+      font-size:24px;
+      text-align: left;
+      margin-bottom: 20px;
+    }
+    .content{
+      text-align: left;
+      font-size:14px;
+      h3{
+        line-height: 28px;
+      }
+      p{
+        line-height: 28px;
+        color: #999999;
+      }
+    }
+  }
+  .gethost-success{
+    .head-title{
+      padding: 40px 0 40px;
+      font-size:36px;
+      color:rgba(243,123,114,1);
+    }
+    .content{
+      padding:0 40px;
+      h3{
+        padding: 30px 0;
+      }
+      p{
+      line-height:28px;
+      text-align: left;
+      }
+      margin: 0 auto;
+      // width:293px;
+      width: 384px;
+      height:165px; 
+      font-size:14px;
+      font-family:PingFangSC-Medium;
+      color:rgba(255,255,255,1);
+      background:url("../../../assets/img/active/active_2/bg-success-geted.png") no-repeat;
+      }
+    }
   .body {
-    background: url("../../../assets/img/active/active_1/redPacket_background_1.png") no-repeat, url("../../../assets/img/active/active_1/redPacket_background_1.png") 140% 200% no-repeat, rgba(249, 175, 128, 1);
+    background:  rgba(249, 175, 128, 1);
     padding-top: 110px;
-    padding-bottom: 100px;
+    // padding-bottom: 100px;
     .content {
       width: 1200px;
       margin: 0 auto;
@@ -601,35 +754,149 @@
         text-align: center;
         margin-bottom: 15px;
       }
-      
       .free-product{
+        font-family:PingFangSC-Medium;
         .item{
           display: flex;
           margin-bottom: 20px;
           width:1200px;
-          // height:250px; 
+          border-radius:4px; 
+          // height: 250px;
+          // overflow: hidden;
           background:rgba(255,255,255,1);
           box-shadow: 0px 2px 31px -11px rgba(255,103,2,0.7);
           .left{
             width:264px;
-            height:249px; 
             padding: 40px;
-            background:url("../../../assets/img/active/active_2/bg-product-item.png");
+            background:url("../../../assets/img/active/active_2/bg-product-item.png") no-repeat;
+            background-size:100% 100%;
+            color: #fff;
+            font-family:PingFangSC-Medium;
+            h4{
+              margin-bottom: 20px;
+              font-size:24px;
+              color:rgba(255,255,255,1);
+              line-height:24px;
+            }
+            p{
+              font-size:18px;
+              line-height:36px;
+            }
           }
           .right{
-            width: 550px;
+            // width: 550px;
+            width: 940px;
+            padding: 40px;
             display: flex;
-            justify-content: space-around;
-            div{
-              width:100px;
-              height:100px; 
-              border-radius: 4px ; 
-              border: solid 1px #F9B181;
+            justify-content: space-between;
+            .params{
+              margin-top: 30px;
+              .section {
+                margin-bottom: 22px;
+                span {
+                  font-size: 18px;
+                  color: #333;
+                  line-height: 24px;
+                  i {
+                    font-size: 14px;
+                    color: #999999;
+                    margin-right: 32px;
+                    font-style: normal;
+                  }
+                }
+                span:last-child{
+                  color:#F37B72
+                }
+              }
+              .section:nth-of-type(2){
+                margin-bottom: 40px;
+              }
+            }
+            .timer{
+              text-align: center;
+              .title{
+                font-size:24px;
+                color:rgba(243,123,114,1);
+                line-height:33px;
+              }
+              .time{
+                margin: 20px 0;
+                font-size: 36px;
+                color: #F4766F;
+                font-family:Arial-BoldMT;
+                span{
+                  margin: 0 10px;
+                  display: inline-block;
+                  padding:5px 10px;
+                  background:rgba(243,123,114,1);
+                  border-radius: 4px ; 
+                  line-height:60px;
+                  color:rgba(255,255,255,1);
+                }
+              }
+              button {
+                cursor: pointer;
+                font-size: 18px;
+                font-family: PingFangSC-Regular;
+                color: rgba(255, 255, 255, 1);
+                line-height: 18px;
+                outline: none;
+                border: none;
+                padding: 12px 40px;
+                border-radius: 24px;
+                margin-left: 34px;
+                background: #D6D6D6;
+                &.canGet {
+                  cursor: pointer;
+                  background: rgba(242, 102, 103, 1);
+                  box-shadow: 0px 7px 26px -10px rgba(242, 102, 103, 1);
+                  &:hover {
+                    background: rgba(249, 175, 128, 1);
+                    box-shadow: 0px 7px 26px -8px rgba(227, 147, 96, 1)
+                  }
+                }
+              }
             }
           }
         }
       }
+      
     }
+    .center{
+      width: 1200px;
+      margin: 0 auto;
+    }
+    .recommend-product{
+        background: url("../../../assets/img/active/active_2/bg-bottom.png") no-repeat;
+        height: 400px;
+        .head{
+          padding-top:100px; 
+          margin-bottom: 24px;
+          font-size:18px;
+          span{
+            display: inline-block;
+            width:109px;
+            height:32px; 
+            line-height: 32px;
+            background: url("../../../assets/img/active/active_2/bg-headtitle.png");
+            color: #fff;
+            text-align: center;
+          }
+        }
+        .content{
+          display: flex;
+          justify-content: space-between;
+          div{
+            padding: 40px;
+            width: 390px;
+            background: #fff;
+            h4{
+              font-size: 18px;
+              margin-bottom:15px; 
+            }
+          }
+        }
+      }
   }
 
   .head {
@@ -708,20 +975,60 @@
       line-height:36px;
       font-size: 36px;
     }
-    .items{
-        margin: 0 auto;
-        margin-top:85px; 
-        width: 655px;
-        display: flex;
-        justify-content: space-between;
-        div{
-          p{
-          margin-top:28px; 
-          color:rgba(102,102,102,1);
-          font-size: 16px;
+    .items {
+          margin: 0 auto;
+          display: flex;
+          justify-content: space-between;
+          text-align: center;
+          width: 655px;
+          dl {
+            width: 270px;
+            dt {
+              margin: 0 auto;
+              width: 100px;
+              height: 100px;
+              background-size: cover;
+              color: #ccc;
+              line-height: 100px;
+              span {
+                text-align: center;
+                font-size: 45px;
+              }
+              img {
+                vertical-align: middle;
+              }
+            }
+            dd {
+              margin-top: 20px;
+              font-family: PingFangSC-Regular;
+              font-size: 16px;
+              color: #999999;
+              // &.select{
+              //   color:#377dff;
+              // }
+              i{
+                display: inline-block;
+                width: 11px;
+                height: 11px;
+                border-right: 1px solid #999999;
+                border-bottom: 1px solid #999999;
+                transform: translateY(3px) rotate(311deg);
+                float: right;
+                top: 21px;
+                // &.select{
+                //   border-right: 1px solid #377dff;
+                //   border-bottom: 1px solid #377dff;
+                // }
+              }
+            }
+          }
+          dl.spacer {
+            width: 200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          }
         }
-      }
-    }
   }
   .modal-body {
     height: 55%;
@@ -871,87 +1178,6 @@
       display: inline-block;
     }
   }
-
-  .recommend-product {
-    padding-top: 100px;
-    background-color: #FFF8F6;
-    .center {
-      width: 1200px;
-      margin: 0 auto;
-    }
-    .content {
-      display: flex;
-      justify-content: space-between;
-    }
-    .item:nth-of-type(2) .top {
-      background: url("../../../assets/img/active/active_1/bg-product-right.png") no-repeat center;
-    }
-    .item {
-      margin-top: 50px;
-      width: 590px;
-      height: 266px;
-      box-shadow: 0px 4px 20px 0px rgba(242, 102, 103, 0.35);
-      .top {
-        padding: 20px 40px;
-        height: 144px;
-        color: #fff;
-        text-align: center;
-        font-size: 16px;
-        background: url("../../../assets/img/active/active_1/bg-product-left.png") no-repeat center;
-        h4 {
-          font-size: 30px;
-        }
-        p {
-          line-height: 32px;
-        }
-      }
-      .bottom {
-        padding: 20px 40px;
-        display: flex;
-        justify-content: space-between;
-        height: 122px;
-        background: #fff;
-        .parameter {
-          p {
-            margin-bottom: 24px;
-            span {
-              font-size: 18px;
-              color: #333;
-              line-height: 24px;
-              i {
-                font-size: 14px;
-                color: #999999;
-                margin-right: 20px;
-                font-style: normal;
-              }
-            }
-          }
-        }
-        .count {
-          color: #F26667;
-          font-size: 18px;
-          p {
-            text-align: right;
-          }
-          span {
-            display: inline-block;
-            margin-top: 10px;
-            width: 136px;
-            height: 34px;
-            color: #fff;
-            background: #F26667;
-            text-align: center;
-            line-height: 34px;
-            cursor: pointer;
-            &:hover {
-              box-shadow: 0px 2px 13px 0px rgba(242, 115, 105, 1);
-            }
-          }
-        }
-      }
-    }
-  }
-
   .activity-rule {
     background: #fff8f6 url(../../../assets/img/active/active_1/bg-rules.png) no-repeat center;
     .center {
