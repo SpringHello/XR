@@ -9,7 +9,7 @@
             </p>
           </div>
           <transition name="list">
-            <img v-if="img" src="../../../assets/img/active/active_2/banner-aircraft.png" style="padding-right:40px;">
+            <img v-if="img" src="../../../assets/img/active/active_2/banner-aircraft.png" style="padding-right:80px;">
           </transition>
         </div>
       </div>
@@ -1169,7 +1169,7 @@
     font-size: 36px;
     text-align: center;
     position: relative;
-    width: 526px;
+    width: 520px;
     margin: 0 auto;
     z-index: 3;
     &::before {
@@ -1186,7 +1186,7 @@
     font-size: 36px;
     text-align: center;
     position: relative;
-    width: 314px;
+    width: 290px;
     margin: 0 auto;
     z-index: 3;
     &::before {
