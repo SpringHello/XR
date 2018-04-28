@@ -9,14 +9,14 @@
             </p>
           </div>
           <transition name="list">
-            <img v-if="img" src="../../../assets/img/active/active_2/banner-aircraft.png">
+            <img v-if="img" src="../../../assets/img/active/active_2/banner-aircraft.png" style="padding-right:40px;">
           </transition>
         </div>
       </div>
       <div style="background: rgba(255,255,255,0.5);">
         <div class="center">
           <div class="process">
-            <h2 style="margin-bottom: 20px">活动流程</h2>
+            <h2 style="margin-bottom: 20px" class="head-headline-process">活动流程</h2>
             <div class="items">
               <dl>
                 <dt v-if="isLogin==1"><img src="../../../assets/img/active/active_2/icon-process-1.png"></dt>
@@ -46,7 +46,7 @@
     </div>
     <div class="body">
       <div class="content">
-        <h2>
+        <h2 class="head-headline-product">
           免费云主机
         </h2>
         <p style="text-align:center;padding:20px 0 50px;font-size:18px;">
@@ -78,7 +78,7 @@
               
               <div class="timer">
                   <div class="">
-                    <p  class="title">距离{{ item.timerText}}点场还剩</p>
+                    <p  class="title">距离5月3号{{ item.timerText}}点场还剩</p>
                     <p  class="time">
                       <span>{{ item.h1 }}{{ item.h2}}</span>:
                       <span>{{ item.m1 }}{{ item.m2 }}</span>:
@@ -102,7 +102,7 @@
       <div class="recommend-product">
         <div class="center">
           <div class="head">
-            <span>推荐</span>您还可以参加
+            <span>推荐</span><i style="font-style: normal;padding-left:10px;">您还可以参加</i>
           </div>
           <div class="content">
             <div v-for="(item,index) in recommendData" :key="index" class="item">
@@ -361,7 +361,7 @@
         serviceTime: 0,
         paramsList: [
                {
-                 time:'1个月',
+                 time:'60天',
                  label: 31,
                  item:[
                   {num: '1核', unit: 'CPU'},
@@ -371,7 +371,7 @@
                 ]
                },
                {
-                 time:'15天',
+                 time:'30天',
                  label:32,
                  item:[
                   {num: '2核', unit: 'CPU'},
@@ -401,7 +401,7 @@
         this.userInfo = this.$store.state.userInfo
         this.companyauth = this.userInfo.companyauth
         this.personalauth = this.userInfo.personalauth
-        if (this.userInfo.activityInfo[6].companytype === 1 && this.userInfo.activityInfo[7].companytype === 1) {
+        if (this.userInfo.activityInfo[13].companytype === 1 ) {
           this.isReceive = 1
         } else {
           this.isReceive = 0
@@ -426,10 +426,10 @@
      
       // 免费领取主机
       freeReceive(item) {
-        // if (this.$store.state.userInfo == null) {
-        //   this.loginModal = true
-        //   return
-        // }
+        if (this.$store.state.userInfo == null) {
+          this.loginModal = true
+          return
+        }
          var params={
             vmConfigId:item.selectedConfig,
             osType:item.system,
@@ -684,7 +684,7 @@
         this.userInfo = val
         this.companyauth = this.userInfo.companyauth
         this.personalauth = this.userInfo.personalauth
-        if (this.userInfo.activityInfo[6].companytype === 1 && this.userInfo.activityInfo[7].companytype === 1) {
+        if (this.userInfo.activityInfo[13].companytype === 1) {
           this.isReceive = 1
         } else {
           this.isReceive = 0
@@ -901,7 +901,8 @@
 
   .head {
     .head-banner {
-      background: linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));
+      // background: linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));
+      background: url("../../../assets/img/active/active_2/bg.png");
       > div {
         width: 1200px;
         margin: 0 auto;
@@ -968,7 +969,7 @@
    
   }
  .process {
-   padding: 90px 0 50px;
+   padding: 50px 0;
    text-align: center;
     h2{
       color:rgba(51,51,51,1);
@@ -1164,18 +1165,38 @@
     }
   }
 
-  .head-headline {
+  .head-headline-product {
     font-size: 36px;
     text-align: center;
+    position: relative;
+    width: 526px;
+    margin: 0 auto;
+    z-index: 3;
     &::before {
-      content: url(../../../assets/img/active/active_1/title-before-icon.png);
+      content: url(../../../assets/img/active/active_2/free-product.png);
       width: 50px;
       display: inline-block;
+      position: absolute;
+      z-index: -1;
+      left:0;
+      top:-16px;
     }
-    &::after {
-      content: url(../../../assets/img/active/active_1/title-after-icon.png);
+  }
+  .head-headline-process {
+    font-size: 36px;
+    text-align: center;
+    position: relative;
+    width: 314px;
+    margin: 0 auto;
+    z-index: 3;
+    &::before {
+      content: url(../../../assets/img/active/active_2/process.png);
       width: 50px;
       display: inline-block;
+      position: absolute;
+      z-index: -1;
+      left:0;
+      top:-16px;
     }
   }
   .activity-rule {
