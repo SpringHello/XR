@@ -657,13 +657,17 @@
           {
             title: '状态',
             key: 'sourcestatus',
-            render: (h, params) => {
-              var text = ''
-              switch (params.row.sourcestatus) {
-                case '1':
-                case '-1':
-                  text = '正常';
-                  break;
+            render: (h, obj) => {
+              if (obj.row.sourcestatus == -2) {
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block'
+                  }
+                }), h('span', {}, '创建中')])
+              }
+              var text = '正常'
+              if (obj.row.sourcestatus == -1) {
+                text = '异常'
               }
               return h('span', {}, text)
             }
@@ -858,6 +862,22 @@
         this.showModal.newTunnelVpn = false
         this.newTunnelVpnForm.step = 0
         this.newTunnelVpnForm.showDetail = false
+        let localcidr, localgateway
+        this.newTunnelVpnForm.vpcIdOptions.forEach(item => {
+          if (this.newTunnelVpnForm.vpcId1 == item.vpcid) {
+            localcidr = item.cidr
+            localgateway = item.sourcenatip
+          }
+        })
+        this.tunnelVpnData.push({
+          localcidr,
+          localgateway,
+          targetdestinationipaddress: this.newTunnelVpnForm.IP,
+          targetcidr: this.newTunnelVpnForm.CIDR,
+          sourcestatus: '-2',
+          sourceipsecKey: this.newTunnelVpnForm.key,
+          sourcecreatetime: '创建中'
+        })
         this.$http.get('network/createTunnelVpn.do', {
           params: {
             vpcId: this.newTunnelVpnForm.vpcId1, // 源vpcid   目标vpcid
@@ -872,10 +892,10 @@
             espEncryption: this.newTunnelVpnForm.ESP,
             espHash: this.newTunnelVpnForm.ESPHash,
             passive: this.newTunnelVpnForm.connType,
-            completeSecrecy:this.newTunnelVpnForm.secret,
-            ikeDH:this.newTunnelVpnForm.IKEDH,
-            ikelifetime:this.newTunnelVpnForm.ikelifetime,
-            esplifetime:this.newTunnelVpnForm.esplifetime
+            completeSecrecy: this.newTunnelVpnForm.secret,
+            ikeDH: this.newTunnelVpnForm.IKEDH,
+            ikelifetime: this.newTunnelVpnForm.ikelifetime,
+            esplifetime: this.newTunnelVpnForm.esplifetime
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -890,28 +910,6 @@
             })
           }
         })
-        /*this.$http.get('network/createTunnelVpn.do', {
-         params: {
-         vpcId: this.newTunnelVpnForm.vpcId,
-         name: this.newTunnelVpnForm.name,
-         cidr: this.newTunnelVpnForm.CIDR,
-         ipsecKey: this.newTunnelVpnForm.key,
-         ikeEncryption: this.newTunnelVpnForm.IKE,
-         ikeHash: this.newTunnelVpnForm.IKEHash,
-         // ikeDH: '',
-         gateway: this.newTunnelVpnForm.gateway,
-         espEncryption: this.newTunnelVpnForm.ESP,
-         espHash: this.newTunnelVpnForm.ESPHash,
-         destinationIpAddress: this.newTunnelVpnForm.IP,
-         passive: this.newTunnelVpnForm.connType
-         }
-         }).then(response => {
-         if (response.status == 200 && response.data.status == 2) {
-         this.$message.info({
-         content: response.data.message
-         })
-         }
-         })*/
       },
       // 选中远程接入
       remoteRadio(current){
@@ -971,7 +969,7 @@
             onOk: () => {
               this.$http.get('network/deleteTunnelVpn.do', {
                 params: {
-                  s2sVpnGatewayId:this.currentTunnel.sourcevpnId,
+                  s2sVpnGatewayId: this.currentTunnel.sourcevpnId,
                   vpcId: this.currentTunnel.sourcevpcId,
                   zoneId: $store.state.zone.zoneid
 

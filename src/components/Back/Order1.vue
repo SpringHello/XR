@@ -120,7 +120,7 @@
             title: '优惠价',
             render(h, obj){
               if (obj.row.originalcost > obj.row.cost) {
-                return h('span', {}, obj.row.originalcost)
+                return h('span', {}, obj.row.cost)
               } else {
                 return h('span', '--')
               }
