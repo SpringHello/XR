@@ -92,7 +92,7 @@
                           </div>
                           <Dropdown-menu slot="list">
                             <Dropdown-item v-for="system in item.systemList" :key="system.ostypeid"
-                                           :name="`${system.ostypename}#${system.systemtemplateid}#${index}`"
+                                           :name="`${system.templatename}#${system.systemtemplateid}#${index}`"
                                            style="white-space: pre-wrap;display:block;">
                               <span>{{system.templatename}}</span>
                             </Dropdown-item>
