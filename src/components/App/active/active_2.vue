@@ -13,7 +13,7 @@
           </transition>
         </div>
       </div>
-      <div style="background: rgba(255,255,255,0.5);">
+      <div style="background-color: #FFF8F6;padding-top: 65px;">
         <div class="center">
           <div class="process">
             <h2 style="margin-bottom: 20px" class="head-headline-process">活动流程</h2>
@@ -900,15 +900,14 @@
   }
 
   .head {
+ 
     .head-banner {
-      // background: linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));
-      background: url("../../../assets/img/active/active_2/bg.png");
+      background:url("../../../assets/img/active/active_2/bg.png") no-repeat 0 70px;
       > div {
         width: 1200px;
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
-        padding-bottom: 65px;
         div {
           padding-top: 133px;
           button {
