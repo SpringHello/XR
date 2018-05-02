@@ -93,16 +93,98 @@
             </ul>
           </div>
           <h3>网站基本信息</h3>
-          <Form ref="basicInformation" :model="basicInformation" :rules="basicInformationRuleValidate" :label-width="135">
+          <Form ref="basicInformation" :model="basicInformation" :rules="basicInformationRuleValidate" :label-width="145">
             <FormItem label="网站名称" prop="legalPersonName">
               <Input v-model="basicInformation.siteName" placeholder="请输入网站名称" style="width: 500px"></Input>
             </FormItem>
             <FormItem label="网站域名" prop="websiteDomain">
-              <Input v-model="basicInformation.websiteDomain" placeholder="请输入网站域名" style="width: 500px"></Input>
-              <p class="form-p"><img src="../../../assets/img/records/records-icon19.png"/> 新增网站域名</p>
+              <div v-for="(item, index) in basicInformation.websiteDomainList" >
+                <Input v-model="basicInformation.websiteDomain[index]" placeholder="请输入网站域名"
+                       style="width: 500px;margin-bottom: 24px;"></Input>
+                <span v-if="index!==0" style="color: #377dff;margin-left: 20px;cursor: pointer;font-size: 14px">删除</span>
+              </div>
+              <p class="form-p" @click="addWebsiteDomain"><img src="../../../assets/img/records/records-icon19.png"/> 新增网站域名</p>
             </FormItem>
             <FormItem label="网站首页URL" prop="websiteHomepage">
               <Input v-model="basicInformation.websiteHomepage" placeholder="请输入网站首页URL" style="width: 500px"></Input>
+            </FormItem>
+            <FormItem label="网站服务内容" prop="serviceContent">
+              <RadioGroup v-model="basicInformation.serviceContent" style="width: 650px;" class="records-radio">
+                <Radio label="网络借贷信息中介" ></Radio>
+                <Radio label="网上邮局" ></Radio>
+                <Radio label="网络新闻" ></Radio>
+                <Radio label="综合门户" ></Radio>
+                <Radio label="网络广告/信息" ></Radio>
+                <Radio label="单位门户网站" ></Radio>
+                <Radio label="博客个人空间" ></Radio>
+                <Radio label="网上支付" ></Radio>
+                <Radio label="网上银行" ></Radio>
+                <Radio label="网络购物" ></Radio>
+                <Radio label="网络游戏" ></Radio>
+                <Radio label="网络音乐" ></Radio>
+                <Radio label="网上炒股/股票基金" ></Radio>
+                <Radio label="网络图片" ></Radio>
+                <Radio label="网络软件/下载" ></Radio>
+                <Radio label="网络影视" ></Radio>
+                <Radio label="网上交友/婚介" ></Radio>
+                <Radio label="网上房产" ></Radio>
+                <Radio label="网上求职" ></Radio>
+                <Radio label="网站建设" ></Radio>
+                <Radio label="网上招聘" ></Radio>
+                <Radio label="网络教育" ></Radio>
+                <Radio label="基础应用" ></Radio>
+                <Radio label="WAP" ></Radio>
+                <Radio label="电子政务、电子商务" ></Radio>
+                <Radio label="数字娱乐" ></Radio>
+                <Radio label="网络媒体" ></Radio>
+                <Radio label="互联网股权融资" ></Radio>
+                <Radio label="互联网跨界金融及资产管理" ></Radio>
+                <Radio label="APP" ></Radio>
+                <Radio label="互联网保险" ></Radio>
+                <Radio label="网上非银支付" ></Radio>
+                <Radio label="移动应用" ></Radio>
+                <Radio label="即时通信" ></Radio>
+                <Radio label="搜索引擎" ></Radio>
+                <Radio label="其他" ></Radio>
+              </RadioGroup>
+            </FormItem>
+            <FormItem label="网站语言" prop="contentsLanguage">
+              <CheckboxGroup  v-model="basicInformation.contentsLanguage" style="width: 650px;" class="records-checkbox">
+                <Checkbox label="中文简体"></Checkbox>
+                <Checkbox label="蒙古语"></Checkbox>
+                <Checkbox label="苗语"></Checkbox>
+                <Checkbox label="中文繁体"></Checkbox>
+                <Checkbox label="藏语"></Checkbox>
+                <Checkbox label="英语"></Checkbox>
+                <Checkbox label="维吾尔语"></Checkbox>
+                <Checkbox label="壮语"></Checkbox>
+                <Checkbox label="日语"></Checkbox>
+                <Checkbox label="哈萨克语"></Checkbox>
+                <Checkbox label="朝鲜语"></Checkbox>
+                <Checkbox label="法语"></Checkbox>
+                <Checkbox label="柯尔克孜语"></Checkbox>
+                <Checkbox label="彝语"></Checkbox>
+                <Checkbox label="俄罗斯语"></Checkbox>
+                <Checkbox label="西班牙语"></Checkbox>
+                <Checkbox label="阿拉伯语"></Checkbox>
+              </CheckboxGroup >
+            </FormItem>
+            <FormItem label="前置或专项审批内容类型" prop="contentsType">
+              <CheckboxGroup  v-model="basicInformation.contentsType" style="width: 650px;" class="records-checkbox">
+                <Checkbox label="新闻"></Checkbox>
+                <Checkbox label="出版"></Checkbox>
+                <Checkbox label="教育"></Checkbox>
+                <Checkbox label="医疗保健"></Checkbox>
+                <Checkbox label="药品和医疗器械"></Checkbox>
+                <Checkbox label="电子公告服务"></Checkbox>
+                <Checkbox label="博客"></Checkbox>
+                <Checkbox label="WAP网站"></Checkbox>
+                <Checkbox label="WAP网站"></Checkbox>
+                <Checkbox label="广播电影电视节目"></Checkbox>
+              </CheckboxGroup >
+            </FormItem>
+            <FormItem label="备注" prop="remark">
+              <Input v-model="basicInformation.remark" placeholder="请填写备注信息" style="width: 500px"></Input>
             </FormItem>
           </Form>
         </div>
@@ -303,9 +385,21 @@
           // 网站名称
           siteName: '',
           // 网站域名
-          websiteDomain: '',
+          websiteDomain: [],
+          websiteDomainList: [
+            {},
+            {}
+          ],
           // 网站首页URL
           websiteHomepage: '',
+          // 网站服务内容
+          serviceContent: '网络借贷信息中介',
+          // 网站语言
+          contentsLanguage: ['中文简体'],
+          // 前置或专项审批内容类型
+          contentsType: ['新闻'],
+          // 备注
+          remark: '',
         },
         // 网站基本信息表单验证
         basicInformationRuleValidate: {}
@@ -325,6 +419,11 @@
       changeUnitProperties(val) {
         this.mainUnitInformation.certificateTypeList = this.mainUnitInformation.unitPropertiesList[val].certificate
         this.mainUnitInformation.certificateType = ''
+      },
+      // 新增网站域名
+      addWebsiteDomain() {
+        this.basicInformation.websiteDomainList.push({})
+        console.log(this.basicInformation.websiteDomain)
       }
     },
   }
@@ -414,9 +513,8 @@
     font-family: MicrosoftYaHei;
     color: rgba(55, 125, 255, 1);
     cursor: pointer;
-    margin-top: 10px;
     font-size: 14px;
-    img{
+    img {
       margin-right: 5px;
       position: relative;
       top: 2px;

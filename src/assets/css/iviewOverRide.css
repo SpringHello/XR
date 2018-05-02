@@ -205,6 +205,7 @@ div.modal-header-border {
   background-color: #f7f7f7;
   border-color: #dddee1;
 }
+
 .ivu-modal-confirm-footer .ivu-btn-primary {
   padding: 6px 15px;
   font-size: 12px;
@@ -279,4 +280,11 @@ div.modal-header-border {
   top: 3px;
   margin-right: 10px;
 }
-
+/* 备案单选 */
+.records-radio .ivu-radio-wrapper {
+  width: 190px;
+}
+/* 备案多选 */
+.records-checkbox .ivu-checkbox-wrapper {
+  width: 190px;
+}
