@@ -32,33 +32,74 @@
         </div>
         <div class="main-info">
           <h2>网站信息</h2>
-          <div>
-            <ul>
-              <li>网站名称：最多显示长度为20字站位站位站位站位站</li>
-              <li>网站域名：我是证件类型</li>
-              <li>网站首页URL：我是单位性质</li>
-              <li>网站服务内容：我是证件号码</li>
-              <li>网站语言：最多显示长度为20字站位站位站位站位站</li>
-            </ul>
-            <ul>
-              <li>网站负责人姓名：我是证件类型</li>
-              <li>有效证件类型：我是单位性质</li>
-              <li>有效证件号码：我是证件号码</li>
-              <li>办公室电话：我是法人姓名</li>
-              <li>电子邮箱地址：我是证件类型</li>
-            </ul>
-            <ul>
-              <li>ISP名称：我是单位性质</li>
-              <li>网站IP地址：我是证件号码</li>
-              <li>网站接入方式：我是证件号码</li>
-              <li>服务器放置地：我是证件号码</li>
-            </ul>
-          </div>
+          <transition name="list">
+            <div v-if="siteInfoShow">
+              <ul>
+                <li>网站名称：最多显示长度为20字站位站位站位站位站</li>
+                <li>网站域名：我是证件类型</li>
+                <li>网站首页URL：我是单位性质</li>
+                <li>网站服务内容：我是证件号码</li>
+                <li>网站语言：最多显示长度为20字站位站位站位站位站</li>
+              </ul>
+              <ul>
+                <li>网站负责人姓名：我是证件类型</li>
+                <li>有效证件类型：我是单位性质</li>
+                <li>有效证件号码：我是证件号码</li>
+                <li>办公室电话：我是法人姓名</li>
+                <li>电子邮箱地址：我是证件类型</li>
+              </ul>
+              <ul>
+                <li>ISP名称：我是单位性质</li>
+                <li>网站IP地址：我是证件号码</li>
+                <li>网站接入方式：我是证件号码</li>
+                <li>服务器放置地：我是证件号码</li>
+              </ul>
+            </div>
+          </transition>
         </div>
         <h2 style="margin-top: 60px">请上传主办单位负责人相关资料</h2>
-        <Form>
-
-        </Form>
+        <div class="uploadIDCard">
+          <div class="item">
+            <div class="item-content">
+              <div style="width:130px;">
+                <Upload
+                  type="drag"
+                  :show-upload-list="false"
+                  :with-credentials="true"
+                  action="file/upFile.do">
+                  <div class="item-content-text">
+                    暂无图片
+                  </div>
+                  <Button type="primary">上传</Button>
+                </Upload>
+              </div>
+              <div class="item-img">
+                <img src="../../../assets/img/usercenter/card-font.png">
+                <p>示例图</p>
+              </div>
+            </div>
+          </div>
+          <div class="item" style="margin-left: 20px">
+            <div class="item-content">
+              <div style="width:130px;">
+                <Upload
+                  type="drag"
+                  :show-upload-list="false"
+                  :with-credentials="true"
+                  action="file/upFile.do">
+                  <div class="item-content-text">
+                    暂无图片
+                  </div>
+                  <Button type="primary">上传</Button>
+                </Upload>
+              </div>
+              <div class="item-img">
+                <img src="../../../assets/img/usercenter/card-back.png">
+                <p>示例图</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="content-footer">
         <button @click="$router.push('newRecordStepTwo')">上一步，填写网站信息</button>
@@ -84,6 +125,7 @@
     },
     data() {
       return {
+        siteInfoShow: false,
         // 备案区域
         area: '',
         // 备案类型
@@ -103,6 +145,9 @@
         }
       },
     },
+    mounted() {
+      this.siteInfoShow = true
+    }
   }
 </script>
 
@@ -154,7 +199,52 @@
         margin-bottom: 20px;
         margin-top: 60px;
       }
+      .uploadIDCard {
+        display: flex;
+        .item {
+          width: 450px;
+          padding: 20px;
+          border-radius: 4px;
+          border: 1px solid #d8d8d8;
+          margin-top: 20px;
+          .item-content {
+            display: flex;
+            padding: 20px;
+            background-color: #f7f7f7;
+            .item-content-text {
+              padding: 20px 0px;
+              margin-bottom: 20px;
+              border: 1px solid #ffffff;
+              background-color: #ffffff;
+              color: #999;
+            }
+          }
+          .item-img {
+            width: 130px;
+            margin-left: 20px;
+            > img {
+              width: 130px;
+              height: 74px;
+              margin-bottom: 20px;
+            }
+            > p {
+              line-height: 32px;
+              text-align: center;
+            }
+          }
+        }
+      }
     }
+  }
+
+  .list-enter-active, .list-leave-active {
+    transition: all 1s;
+  }
+
+  .list-enter, .list-leave-to
+    /* .list-leave-active for below version 2.1.8 */ {
+    opacity: 0;
+    transform: translateY(100px);
   }
 
 </style>

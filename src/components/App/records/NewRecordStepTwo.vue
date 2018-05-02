@@ -7,7 +7,8 @@
         <p class="recordsArea-but"><img src="../../../assets/img/records/records-icon7.png"/> {{ area }}</p>
         <div class="main-info">
           <h2>主体信息</h2>
-          <div>
+          <transition name="list">
+          <div v-if="mainInfoShow">
             <ul>
               <li>主体单位所属区域：最多显示长度为20字站位站位站位站位站</li>
               <li>主体单位证件类型：我是证件类型</li>
@@ -29,6 +30,7 @@
               <li>电子邮箱地址：我是证件号码</li>
             </ul>
           </div>
+          </transition>
           <h3>网站基本信息</h3>
           <Form ref="basicInformation" :model="basicInformation" :rules="basicInformationRuleValidate" :label-width="145">
             <FormItem label="网站名称" prop="legalPersonName">
@@ -210,6 +212,7 @@
     },
     data() {
       return {
+        mainInfoShow: false,
         // 备案区域
         area: '',
         // 备案类型
@@ -295,6 +298,9 @@
         console.log(this.basicInformation.websiteDomain)
       }
     },
+    mounted() {
+      this.mainInfoShow = true
+    }
   }
 </script>
 
@@ -359,5 +365,14 @@
       position: relative;
       top: 2px;
     }
+  }
+  .list-enter-active, .list-leave-active {
+    transition: all 1s;
+  }
+
+  .list-enter, .list-leave-to
+    /* .list-leave-active for below version 2.1.8 */ {
+    opacity: 0;
+    transform: translateY(100px);
   }
 </style>
