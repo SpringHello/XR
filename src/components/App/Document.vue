@@ -9,7 +9,7 @@
           <div class="header">
             <i class="iconfont" :class="item.img" style="font-size:30px;color:#fff;line-height:1"></i>
             <p>{{item.title}}</p>
-          </div>
+          </div> 
           <div class="body">
             <ul v-for="(item,index) in item.list" :key="index">
               <div v-if="item.desc">

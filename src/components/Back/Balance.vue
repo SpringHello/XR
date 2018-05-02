@@ -503,72 +503,33 @@
           }
         })
       },
-      changeVPC(){
-        /*列出vpc下所有公网IP*/
-        this.$http.get('network/listPublicIp.do', {
-          params: {
-            vpcId: this.creatbalancemodal.formInline.vpc,
-            useType: '0,2',
-            status: '1'
-          }
+      /* 选择公网ip时列出所属vpc下的子网*/
+      changePublicIp () {
+        if (this.creatbalancemodal.formInline.publicIp) {
+          var vpc = this.creatbalancemodal.formInline.publicIp.split('#')[0]
+        }
+        this.$http.post('network/listNetwork.do', {
+          vpcId: vpc,
+          publicLoadbalance: '1'
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.creatbalancemodal.formInline.PublicIpList = response.data.result
           }
         })
         /*列出vpc下所有公网子网*/
-        this.$http.get('network/listNetwork.do', {
-          params: {
-            vpcId: this.creatbalancemodal.formInline.vpc,
-            publicLoadbalance: '1'
-          }
+        this.$http.post('network/listNetwork.do', {
+          vpcId: this.creatbalancemodal.formInline.vpc,
+          publicLoadbalance: '1'
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.creatbalancemodal.formInline.subnetList = response.data.result
           }
         })
       },
-      /* 选择公网ip时列出所属vpc下的子网*/
-      /*changePublicIp () {
-       if (this.creatbalancemodal.formInline.publicIp) {
-       var vpc = this.creatbalancemodal.formInline.publicIp.split('#')[0]
-       }
-       this.$http.get('network/listNetwork.do', {
-       params: {
-       vpcId: vpc,
-       publicLoadbalance: '1'
-       }
-       }).then(response => {
-       if (response.status == 200 && response.data.status == 1) {
-       this.creatbalancemodal.formInline.subnetList = response.data.result
-       }
-       })
-       },*/
-      /* 切换子网时需要把子网的ip字段赋值给指定ip */
-      /*changeSubnet () {
-       // 获取可以挂载的所有弹性IP
-       this.$http.get('network/listPublicIp.do', {
-       params: {
-       vpcId: this.creatbalancemodal.formInline.subnet.split('#')[2],
-       useType: '0,2',
-       status: '1'
-       }
-       }).then(response => {
-       if (response.status == 200 && response.data.status == 1) {
-       this.creatbalancemodal.formInline.PublicIpList = response.data.result
-       }
-       })
-       if (this.creatbalancemodal.formInline.subnet) {
-       let ip = this.creatbalancemodal.formInline.subnet.split('#')[1]
-       this.creatbalancemodal.formInline.intranetIpNum = ip.slice(0, ip.lastIndexOf('.'))
-       }
-       },*/
       /* 选择创建私网负载均衡时列出所有子网 */
       listNetwork () {
-        this.$http.get('network/listNetwork.do', {
-          params: {
-            innerLoadbalance: '1'
-          }
+        this.$http.post('network/listNetwork.do', {
+          innerLoadbalance: '1'
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.creatbalancemodal.formInline.subnetList = response.data.result
@@ -670,7 +631,6 @@
               loadbalanceId: balanceId
             }
           }).then(response => {
-
             if (response.status == 200 && response.data.status == 1) {
               this.bindHostForm.vmOptions = response.data.result
             } else {
@@ -679,20 +639,17 @@
               })
             }
           })
-
         }
       },
       /* 负载均衡确定绑定虚拟机 */
       bindHost_ok () {
         this.showModal.bind = false
         this.balData.forEach(item => {
-
           if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
             item.status = 7
             item._disabled = true
           }
         })
-
         if (this.bindHostForm.vm.length != 0) {
           var url = ''
           var params = {}
@@ -701,18 +658,17 @@
             params = {
               VMIds: this.bindHostForm.vm,
               lbId: this.balanceSelection.lbid,
-              _t: new Date().toTimeString(),
+              _t: new Date().getTime(),
             }
           } else {
             url = 'loadbalance/assignToLoadBalancerRule.do'
             params = {
               VMIds: this.bindHostForm.vm,
               lbId: this.balanceSelection.loadbalanceroleid,
-              _t: new Date().toTimeString(),
+              _t: new Date().getTime(),
             }
           }
           this.$http.get(url, {params}).then(response => {
-
             if (response.status == 200 && response.data.status == 1) {
               this.refresh()
               this.$Message.success({
@@ -743,7 +699,6 @@
               loadbalanceType: loadbalanceType
             }
           }).then(response => {
-
             if (response.status == 200 && response.data.status == 1) {
               this.unbindForm.hostList = response.data.result
             } else {
@@ -763,7 +718,6 @@
             item._disabled = true
           }
         })
-
         if (this.unbindForm.vm.length != 0) {
           var url = ''
           var params = {}
@@ -808,11 +762,13 @@
               var url = ''
               if (this.balanceSelection._internal) {
                 url = 'loadbalance/deleteInternalLB.do'
-              } else {
+              }
+              else {
                 url = 'loadbalance/deleteLoadBalancerRule.do'
               }
               this.balData.forEach(item => {
-                if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
+                if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid
+                ) {
                   item.status = 5
                   item._disabled = true
                 }

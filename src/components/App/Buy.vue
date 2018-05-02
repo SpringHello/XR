@@ -92,7 +92,7 @@
                           </div>
                           <Dropdown-menu slot="list">
                             <Dropdown-item v-for="system in item.systemList" :key="system.ostypeid"
-                                           :name="`${system.ostypename}#${system.systemtemplateid}#${index}`"
+                                           :name="`${system.templatename}#${system.systemtemplateid}#${index}`"
                                            style="white-space: pre-wrap;display:block;">
                               <span>{{system.templatename}}</span>
                             </Dropdown-item>
@@ -210,10 +210,8 @@
                     <div>
                       <p class="item-title">镜像类型</p>
                       <p class="item-title" style="margin-top: 40px;">镜像系统</p>
-
                     </div>
                     <div>
-
                       <div v-for="item in PecsInfo.mirrorType" class="zoneItem"
                            :class="{zoneSelect:PecsInfo.currentType==item.value}"
                            @click="PecsInfo.currentType=item.value">{{item.label}}
@@ -535,7 +533,7 @@
                     <div>
                       <p class="item-title" style="margin-top: 8px">系统用户名</p>
                     </div>
-                    <span style="padding:10px 0;font-size: 14px;color: #999999;">{{ systemUsername }}</span>
+                    <span style="padding:10px 0;font-size: 14px;color: #666666;">{{ systemUsername }}</span>
                   </div>
                 </div>
                 <div class="item-wrapper">
@@ -543,7 +541,7 @@
                     <div>
                       <p class="item-title" style="margin-top: 8px">登录密码</p>
                     </div>
-                    <span style="padding:10px 0;font-size: 14px;color: #999999;">默认密码 创建成功后通过短信和站内信查看</span>
+                    <span style="padding:10px 0;font-size: 14px;color: #666666;">默认密码 创建成功后通过短信和站内信查看</span>
                   </div>
                 </div>
               </div>
@@ -560,6 +558,14 @@
                     <span style="line-height: 32px;color:red;margin-left:10px">{{PecsInfo.computerNameWarning}}</span>
                   </div>
                   <p class="item-desc">当购买数量大于1台之时，主机命名规则为主机名称加随机数字。</p>
+                </div>
+                <div class="item-wrapper">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title" style="margin-top: 8px">系统用户名</p>
+                    </div>
+                    <span style="padding:10px 0;font-size: 14px;color: #666666;">{{ systemUsername }}</span>
+                  </div>
                 </div>
                 <div class="item-wrapper">
                   <div style="display: flex">
@@ -1001,6 +1007,14 @@
                   <span class="hidden">#</span>
                   <span
                     style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.dataDiskCost.toFixed(2)}}元</span>
+                <ul style="float: right;font-size: 14px;user-select: none">
+                  <span class="numberAdd" v-if="prod.count == 1">-</span>
+                  <span class="numberAdd" style="cursor: pointer"
+                        @click="prod.count -= 1,prod.customCost = totalCost * prod.count" v-else>-</span>
+                  <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
+                  <span class="numberMinus" v-if="prod.count == 5">+</span>
+                  <span class="numberMinus" style="cursor: pointer"
+                        @click="prod.count += 1,prod.customCost = totalCost * prod.count" v-else>+</span></ul>
                 </p>
               </div>
 
@@ -1105,6 +1119,7 @@
   import {mapState} from 'vuex'
   import regExp from '../../util/regExp'
   import uuid from 'uuid'
+
   var messageMap = {
     loginname: {
       placeholder: '登录邮箱/手机号',
@@ -1842,7 +1857,7 @@
           } else {
             this.PecsInfo.customMirror = this.$route.query.mirror || {}
             var str = this.$route.query.mirror.ostypename.substr(0, 1)
-            if (str === 'W') {
+            if (str === 'W'|| str === 'w') {
               this.systemUsername = 'administrator'
             } else {
               this.systemUsername = 'root'
@@ -1862,7 +1877,7 @@
         }
         // 根据镜像名称第一个字符确定系统用户名是admin还是root
         var str = this.PecsInfo.system.systemName.substr(0, 1)
-        if (str === 'W') {
+        if (str === 'W'|| str === 'w') {
           this.systemUsername = 'administrator'
         } else {
           this.systemUsername = 'root'
@@ -1870,10 +1885,10 @@
         this.PecsInfo.publicList[arg[2]].selectSystem = arg[0]
       },
       // 根据选择自定义镜像判断登录名是admin还是root
-      setOwnTemplate (item) {
+      setOwnTemplate(item) {
         this.PecsInfo.customMirror = item
         var str = item.ostypename.substr(0, 1)
-        if (str === 'W') {
+        if (str === 'W'|| str === 'w') {
           this.systemUsername = 'administrator'
         } else {
           this.systemUsername = 'root'
@@ -2172,6 +2187,10 @@
         window.scrollTo(0, 170)
       },
       buyHost() {
+        if (this.userInfo == null) {
+          this.showModal.login = true
+          return
+        }
         if (this.PecsInfo.currentType == 'app' && this.PecsInfo.currentApp.templatename == undefined) {
           this.$message.info({
             content: '请选择一个镜像'
@@ -2230,6 +2249,7 @@
             params.bandWidth = prod.publicIP ? prod.currentSystem.bandWidth : 0
             params.rootDiskType = prod.currentSystem.diskType
             params.networkId = 'no'
+            params.vpcId = 'no'
             if (params.bandWidth != 0) {
               ipCount++
             }
@@ -2239,6 +2259,7 @@
             params.bandWidth = prod.IPConfig.publicIP ? prod.IPConfig.bandWidth : 0
             params.rootDiskType = prod.vmConfig.diskType
             params.networkId = prod.network
+            params.vpcId = prod.vpc
             var diskType = '', diskSize = ''
             diskCount += prod.dataDiskList.length
             if (params.bandWidth != 0) {
@@ -2266,7 +2287,13 @@
         }
         if (this._checkCount(hostCount, diskCount, ipCount)) {
           axios.get('information/deployVirtualMachine.do', {params}).then(response => {
-            this.$router.push('order')
+            if (response.status == 200 && response.data.status == 1) {
+              this.$router.push('order')
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
           })
         }
       },
@@ -2290,6 +2317,10 @@
         window.scrollTo(0, 170)
       },
       buyDisk() {
+        if (this.userInfo == null) {
+          this.showModal.login = true
+          return
+        }
         var obj = JSON.parse(JSON.stringify(this.PdiskInfo))
         var prod = Object.assign({typeName: '云硬盘', zone: this.PdiskInfo.zone, type: 'Pdisk', count: 1}, obj)
         let diskCount = 0
@@ -2312,7 +2343,13 @@
               isAutorenew: prod.autoRenewal ? '1' : '0',
             }
             axios.get('Disk/createVolume.do', {params}).then(response => {
-              this.$router.push('order')
+              if (response.status == 200 && response.data.status == 1) {
+                this.$router.push('order')
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
             })
           }
         }
@@ -2331,6 +2368,10 @@
         window.scrollTo(0, 170)
       },
       buyIP() {
+        if (this.userInfo == null) {
+          this.showModal.login = true
+          return
+        }
         var obj = JSON.parse(JSON.stringify(this.PeipInfo))
         var prod = Object.assign({typeName: '公网IP', zone: this.PeipInfo.zone, type: 'Peip', count: 1}, obj)
         if (this._checkCount(0, 0, 1)) {
@@ -2343,8 +2384,15 @@
             brandWith: prod.bandWidth,
             vpcId: prod.vpc
           }
-          axios.get('network/createPublicIp.do', {params}).then(
-            this.$router.push('order')
+          axios.get('network/createPublicIp.do', {params}).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$router.push('order')
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            }
           )
         }
       },
@@ -2371,7 +2419,6 @@
             currentRow++
             for (let j = 1; j < contentArray.length; j++) {
               data[currentRow] = new Array(2)
-              console.log(contentArray[j])
               data[currentRow][0] = contentArray[j].split('#')[0].trim()
               data[currentRow][1] = contentArray[j].split('#')[1].trim()
               currentRow++
@@ -2424,6 +2471,7 @@
               params.bandWidth = prod.publicIP ? prod.currentSystem.bandWidth : 0
               params.rootDiskType = prod.currentSystem.diskType
               params.networkId = 'no'
+              params.vpcId = 'no'
               if (params.bandWidth != 0) {
                 ipCount++
               }
@@ -2433,6 +2481,7 @@
               params.bandWidth = prod.IPConfig.publicIP ? prod.IPConfig.bandWidth : 0
               params.rootDiskType = prod.vmConfig.diskType
               params.networkId = prod.network
+              params.vpcId = prod.vpc
               var diskType = '', diskSize = ''
               diskCount += prod.dataDiskList.length
               if (params.bandWidth != 0) {
@@ -2462,13 +2511,17 @@
             diskCount += prod.dataDiskList.length
             var diskSize = ''
             var diskType = ''
-            prod.dataDiskList.forEach(item => {
-              diskSize += `${item.size},`
-              diskType += `${item.type},`
-            })
+            var count = prod.count
+            // 多个磁盘订单
+            for (var i = 0; i< count; i++) {
+              prod.dataDiskList.forEach(item => {
+                diskSize += `${item.size},`
+                diskType += `${item.type},`
+              })
+            }
             var params = {
               zoneId: prod.zone.zoneid,
-              diskSize,
+              diskSize: diskSize,
               diskName: prod.diskName,
               diskOfferingId: diskType,
               timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
@@ -2495,11 +2548,19 @@
         if (this._checkCount(hostCount, diskCount, ipCount)) {
           sessionStorage.removeItem('cart')
           Promise.all(PromiseList).then(responseList => {
-            this.$router.push({
-              path: 'order', query: {
-                countOrder
-              }
-            })
+            if (responseList.every(item => {
+              return item.status == 200 && item.data.status == 1
+            })) {
+              this.$router.push({
+                path: 'order', query: {
+                  countOrder
+                }
+              })
+            } else {
+              this.$message.info({
+                content: responseList[0].data.message
+              })
+            }
           })
         }
       },
@@ -2661,25 +2722,46 @@
           this.ownMirrorList()
           this.queryRemainCount()
           // 区域的主机配额不同 初始化相关主机配置核心数，内存
-          this.PecsInfo.RAMList = [
-            {label: '1G', value: 1},
-            {label: '2G', value: 2},
-            {label: '4G', value: 4},
-            {label: '8G', value: 8}
-          ]
-          this.PecsInfo.vmConfig = {
-            diskType: 'sas',
-            kernel: 1,
-            RAM: 1,
-            diskSize: 40,
-            cost: 0,
-            coupon: 0
+          if (this.PecsInfo.createType != 'fast') {
+            this.PecsInfo.RAMList = [
+              {label: '1G', value: 1},
+              {label: '2G', value: 2},
+              {label: '4G', value: 4},
+              {label: '8G', value: 8}
+            ]
+            this.PecsInfo.vmConfig = {
+              diskType: 'sas',
+              kernel: 1,
+              RAM: 1,
+              diskSize: 40,
+              cost: 0,
+              coupon: 0
+            }
+          } else {
+            this.queryQuick()
           }
         }
         ,
         deep: true
       }
       ,
+      // 配置变化
+      'PecsInfo.createType': {
+        handler: function () {
+          if (this.PecsInfo.createType == 'fast') {
+            this.queryQuick()
+          } else{
+            // 查询自定义配置主机价格
+            this.queryCustomVM()
+            // 查询数据盘价格
+            this.queryDiskPrice()
+            // 查询公网IP价格
+            this.queryIPPrice()
+          }
+        }
+        ,
+        deep: true
+      },
       // 观测到计费方式变化
       'PecsInfo.timeForm': {
         handler: function () {

@@ -747,7 +747,8 @@
       // 获取vpc数据
       var vpcResponse = axios.get('network/listVpc.do', {
         params: {
-          zoneId: zoneId
+          zoneId: zoneId,
+          _t: new Date().getTime()
         }
       })
       // 获取NAT网关数据
@@ -774,7 +775,8 @@
         // 获取vpc数据
         var vpcResponse = axios.get('network/listVpc.do', {
           params: {
-            zoneId: zoneId
+            zoneId: zoneId,
+            _t: new Date().getTime()
           }
         })
         // 获取NAT网关数据
@@ -797,7 +799,8 @@
       getVpcData(){
         axios.get('network/listVpc.do', {
           params: {
-            zoneId: $store.state.zone.zoneid
+            zoneId: $store.state.zone.zoneid,
+            _t: new Date().getTime()
           }
         }).then(response => {
           if (response.status == 200) {
