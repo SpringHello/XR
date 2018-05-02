@@ -8,7 +8,7 @@
         <h3>备案信息验证</h3>
         <Form ref="filingInformation" :model="filingInformation" :rules="filingInformationRuleValidate"
               :label-width="120">
-          <FormItem label="当前备案主体" prop="mainRecord" v-if="filingInformation.mainRecord !== ''">
+          <FormItem label="当前备案主体" v-if="filingInformation.mainRecord !== ''">
             <RadioGroup v-model="filingInformation.mainRecord">
               <Radio label="our">
                 <span>已在新睿云备案</span>
@@ -18,19 +18,23 @@
               </Radio>
             </RadioGroup>
           </FormItem>
-          <FormItem label="主体单位所属区域" prop="area">
-            <Select v-model="filingInformation.province" style="width:157px;margin-right: 10px" placeholder="请选择省">
-              <Option v-for="item in filingInformation.provinceList" :value="item.name" :key="item.name">{{ item.name
+          <FormItem label="主体单位所属区域" prop="district">
+            <Select v-model="filingInformation.province" style="width:157px;margin-right: 10px" placeholder="请选择省"
+                    @on-change="changeProvince">
+              <Option v-for="item in filingInformation.provinceList" :value="item.name" :key="item.name">{{
+                item.name
                 }}
               </Option>
             </Select>
-            <Select v-model="filingInformation.city" style="width:157px;margin-right: 10px" placeholder="请选择市">
-              <Option v-for="item in filingInformation.cityList" :value="item.value" :key="item.value">{{ item.label
+            <Select v-model="filingInformation.city" style="width:157px;margin-right: 10px" placeholder="请选择市"
+                    @on-change="changeCity">
+              <Option v-for="item in filingInformation.cityList" :value="item.name" :key="item.name">{{ item.name
                 }}
               </Option>
             </Select>
-            <Select v-model="filingInformation.district" style="width:157px" placeholder="请选择区">
-              <Option v-for="item in filingInformation.districtList" :value="item.value" :key="item.value">{{ item.label
+            <Select v-model="filingInformation.district" style="width:157px" placeholder="请选择区"
+                    @on-change="changeDistrict">
+              <Option v-for="item in filingInformation.districtList" :value="item" :key="item">{{ item
                 }}
               </Option>
             </Select>
@@ -43,12 +47,14 @@
           </FormItem>
           <FormItem label="ICP备案密码" prop="IPCPassword">
             <Input v-model="filingInformation.IPCPassword" placeholder="请输入ICP备案密码" style="width: 500px"></Input>
+          </FormItem>
+          <FormItem label="">
             <p class="formP">备案号与密码为管局下发，若您忘记可通过管局官网找回</p>
           </FormItem>
         </Form>
       </div>
       <div class="content-footer">
-        <button>下一步，填写主体信息</button>
+        <button @click="next">下一步，填写主体信息</button>
       </div>
     </div>
   </div>
@@ -57,11 +63,30 @@
 <script type="text/ecmascript-6">
   import step from './step.vue'
   import area from '@/options/area.json'
+  import regExp from '../../../util/regExp'
   export default {
     components: {
       step
     },
     data() {
+
+      // 校验地区
+      const validateArea = (rule, value, callback) => {
+        if (this.filingInformation.province == '' || this.filingInformation.city == '' || this.filingInformation.district == '') {
+          return callback(new Error('请选择所属区域'))
+        } else {
+          callback()
+        }
+      }
+
+      // 校验域名
+      const validateDomain = (rule, value, callback) => {
+        if (!regExp.validaDomain(value)) {
+          return callback(new Error('请输入合法域名'))
+        } else {
+          callback()
+        }
+      }
       return {
         // 备案区域
         area: '',
@@ -90,7 +115,21 @@
           IPCPassword: '',
         },
         // 备案信息验证
-        filingInformationRuleValidate: {}
+        filingInformationRuleValidate: {
+          district: [
+            {required: true, validator: validateArea, trigger: 'blur'}
+          ],
+          websiteDomain: [
+            {required: true, message: '请输入网站域名', trigger: 'blur'},
+            {validator: validateDomain, trigger: 'blur'}
+          ],
+          websiteRecordNumber: [
+            {required: true, message: '请输入网站备案号', trigger: 'blur'}
+          ],
+          IPCPassword: [
+            {required: true, message: '请输入ICP备案密码', trigger: 'blur'}
+          ]
+        }
       }
     },
     methods: {
@@ -108,6 +147,36 @@
             this.filingInformation.mainRecord = 'other'
             break
         }
+      },
+      // 重新选择省份
+      changeProvince(val){
+        this.filingInformation.city = ''
+        area.forEach(item => {
+          if (item.name == val) {
+            this.filingInformation.cityList = item.city
+          }
+        })
+      },
+      // 重新选择市
+      changeCity(val){
+        this.filingInformation.district = ''
+        this.filingInformation.cityList.forEach(item => {
+          if (item.name == val) {
+            this.filingInformation.districtList = item.area
+          }
+        })
+      },
+      // 重新选择区，重新校验
+      changeDistrict(){
+        this.$refs.filingInformation.validateField('district', (valid) => {
+        })
+      },
+      // 下一步
+      next(){
+        this.$refs.filingInformation.validate((valid) => {
+          if (valid) {
+          }
+        })
       }
     },
     beforeRouteEnter(to, from, next) {
