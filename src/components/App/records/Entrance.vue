@@ -143,7 +143,7 @@
         // 根据选择的备案类型决定跳入哪个起始页面
         switch (this.type) {
           case 1:
-            this.$router.push('newRecord')
+            this.$router.push('newRecordStepOne')
             break
           case 2:
             this.$router.push('newAccess')

@@ -33,7 +33,9 @@ const active_1 = () => import('@/components/App/active/active_1')
 const Records = () => import('@/components/App/Records')
 const Entrance = () => import('@/components/App/records/Entrance')
 const NewAccess = () => import('@/components/App/records/NewAccess')
-const NewRecord = () => import('@/components/App/records/NewRecord')
+const NewRecordStepOne = () => import('@/components/App/records/NewRecordStepOne')
+const NewRecordStepTwo = () => import('@/components/App/records/NewRecordStepTwo')
+const NewRecordStepThree = () => import('@/components/App/records/NewRecordStepThree')
 
 /* 产品页面路由 */
 const Pecs = () => import('@/components/App/product/ECS.vue')
@@ -206,9 +208,19 @@ var router = new Router({
               component: NewAccess
             },
             {
-              path: 'newRecord',
-              name: 'newRecord',
-              component: NewRecord
+              path: 'newRecordStepOne',
+              name: 'newRecordStepOne',
+              component: NewRecordStepOne
+            },
+            {
+              path: 'newRecordStepTwo',
+              name: 'newRecordStepTwo',
+              component: NewRecordStepTwo
+            },
+            {
+              path: 'newRecordStepThree',
+              name: 'newRecordStepThree',
+              component: NewRecordStepThree
             }
           ]
         },
