@@ -240,7 +240,6 @@
     created () {
       this.zoneList = $store.state.zoneList
       this.zone = $store.state.zoneList[0].zoneid
-      console.log($store.state.zoneList)
       if ($store.state.userInfo) {
         this.userInfo = $store.state.userInfo
         this.getDiskLimit()
@@ -421,7 +420,6 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.diskLimit = response.data.result[3].items[0].total - response.data.result[3].items[0].used
-            console.log(this.diskLimit)
           }
         })
       },

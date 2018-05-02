@@ -665,7 +665,6 @@
                 case -1:
                   value = '其他原因失败'
               }
-              console.log(value)
               return h('span', value)
             }
           },
@@ -1033,12 +1032,10 @@
         this.showModal.reload = false
         this.reloadhintForm.input = ''
         this.reloadButton = '正在重装...'
-        this.$http.get('information/restoreVirtualMachine.do', {
-          params: {
-            VMId: this.computerInfo.computerId,
-            templateId: this.reloadForm.system,
-            adminPassword: this.reloadForm.password
-          }
+        this.$http.post('information/restoreVirtualMachine.do', {
+          VMId: this.computerInfo.computerId,
+          templateId: this.reloadForm.system,
+          adminPassword: this.reloadForm.password
         }).then(response => {
           this.reloadButton = '确认重装'
           if (response.status == 200 && response.data.status == 1) {

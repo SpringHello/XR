@@ -772,7 +772,6 @@
       },
       publicImage(item) {
         this.osId = item.systemtemplateid
-        console.log(this.osId)
       },
       buyImmediately() {
         if (this.userInfo == null) {
