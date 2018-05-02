@@ -927,7 +927,6 @@
     components: {},
     methods: {
       post() {
-        console.log(this.active)
       },
       freeReceive(item) {
         if (this.$store.state.userInfo == null) {

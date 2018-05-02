@@ -286,12 +286,15 @@
         this.$refs.qq.style.width = '0px'
       },
       notice(){
-        this.$http.get(`user/getEventNotifyList.do`)
-          .then(response => {
-            if (response.status == 200) {
-              this.$store.commit('setMsg', Number.parseInt(response.data.noReadTotal))
-            }
-          })
+        this.$http.get('user/getEventNum.do', {
+          params: {
+            isRead: '0'
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$store.commit('setMsg', Number.parseInt(response.data.number))
+          }
+        })
       },
       // 进入二级栏
       ME: debounce(200, function (event, type) {

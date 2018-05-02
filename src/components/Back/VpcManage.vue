@@ -656,7 +656,7 @@
             params:{
               networkId:this.addHostForm.ipsegmentid,
               VMId:this.addHostForm.vm,
-              _t:new Date().toTimeString()
+              _t:new Date().getTime()
             }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -935,7 +935,6 @@
                 }
               }
             }
-            console.log(this.data.ipsList)
             this.$http.get('network/updateDefaultNicForVirtualMachine.do', {
               params: {
                 networkId,
