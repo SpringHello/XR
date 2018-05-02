@@ -190,12 +190,34 @@
             <h3 style="margin-top: 40px">网站负责人基本信息</h3>
             <div style="display: flex">
               <h3 style="margin-top: 20px">选择负责人</h3>
-              <RadioGroup v-model="basicInformation.personInCharge" class="records-radio-person">
+              <RadioGroup v-model="basicInformation.personInCharge" class="records-radio-person" style="padding: 20px">
                 <Radio label="已填写主体单位负责人姓名">
                 </Radio>
                 <Radio label="新建负责人">
                 </Radio>
               </RadioGroup>
+            </div>
+            <div v-if="basicInformation.personInCharge === '新建负责人'">
+              <FormItem label="姓名" prop="principalName">
+                <Input v-model="basicInformation.principalName" placeholder="请填写负责人姓名" style="width: 500px"></Input>
+              </FormItem>
+              <FormItem label="有效证件类型" prop="certificateType">
+                <Select v-model="basicInformation.certificateType" style="width:500px;" placeholder="请选择证件类型">
+                  <Option v-for="item in basicInformation.certificateTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+              <FormItem label="有效证件号码" prop="certificateNumber">
+                <Input v-model="basicInformation.certificateNumber" placeholder="请输入主体单位证件号码" style="width: 500px"></Input>
+              </FormItem>
+              <FormItem label="办公室电话" prop="officePhone">
+                <span>+86</span><Input v-model="basicInformation.officePhone" placeholder="请输入办公室电话" style="width: 468px;margin-left: 10px"></Input>
+              </FormItem>
+              <FormItem label="手机号码" prop="phoneNumber">
+                <Input v-model="basicInformation.phoneNumber" placeholder="请输入手机号码" style="width: 500px"></Input>
+              </FormItem>
+              <FormItem label="电子邮箱地址" prop="emailAddress">
+                <Input v-model="basicInformation.emailAddress" placeholder="请输入电子邮箱地址" style="width: 500px"></Input>
+              </FormItem>
             </div>
           </Form>
         </div>
@@ -411,8 +433,35 @@
           contentsType: ['新闻'],
           // 备注
           remark: '',
-          // 网站负责人
+          // 网站负责人未填写/已填写
           personInCharge: '新建负责人',
+          // 网站负责人姓名
+          principalName: '',
+          // 网站负责人证件类型
+          certificateType: '',
+          certificateTypeList: [
+            {
+              label: '身份证',
+              value: '1'
+            }, {
+              label: '护照',
+              value: '2'
+            }, {
+              label: '军官证',
+              value: '3'
+            }, {
+              label: '台胞证',
+              value: '4'
+            }
+          ],
+          // 网站负责人证件号码
+          certificateNumber: '',
+          // 办公室电话
+          officePhone: '',
+          // 手机号码
+          phoneNumber: '',
+          // 电子邮箱地址
+          emailAddress: '',
         },
         // 网站基本信息表单验证
         basicInformationRuleValidate: {}

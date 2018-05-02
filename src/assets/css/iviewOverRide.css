@@ -280,18 +280,26 @@ div.modal-header-border {
   top: 3px;
   margin-right: 10px;
 }
+
 /* 备案单选 */
 .records-radio .ivu-radio-wrapper {
   width: 190px;
 }
+
 /* 备案多选 */
 .records-checkbox .ivu-checkbox-wrapper {
   width: 190px;
 }
+
 /* 备案负责人单选 */
-records-radio-person .ivu-radio-wrapper{
-  font-size:18px;
-  font-family:MicrosoftYaHei;
-  color:rgba(51,51,51,1);
-  line-height:24px;
+.records-radio-person .ivu-radio-wrapper {
+  font-size: 18px;
+  font-family: MicrosoftYaHei;
+  color: rgba(51, 51, 51, 1);
+  line-height: 24px;
 }
+
+.records-radio-person .ivu-radio-inner {
+  top: -1px;
+}
+
