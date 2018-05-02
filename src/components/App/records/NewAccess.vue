@@ -6,7 +6,8 @@
         <h2>备案区域</h2>
         <p class="recordsArea-but"><img src="../../../assets/img/records/records-icon7.png"/> {{ area }}</p>
         <h3>备案信息验证</h3>
-        <Form ref="filingInformation" :model="filingInformation" :rules="filingInformationRuleValidate" :label-width="120">
+        <Form ref="filingInformation" :model="filingInformation" :rules="filingInformationRuleValidate"
+              :label-width="120">
           <FormItem label="当前备案主体" prop="mainRecord" v-if="filingInformation.mainRecord !== ''">
             <RadioGroup v-model="filingInformation.mainRecord">
               <Radio label="our">
@@ -19,13 +20,19 @@
           </FormItem>
           <FormItem label="主体单位所属区域" prop="area">
             <Select v-model="filingInformation.province" style="width:157px;margin-right: 10px" placeholder="请选择省">
-              <Option v-for="item in filingInformation.provinceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              <Option v-for="item in filingInformation.provinceList" :value="item.name" :key="item.name">{{ item.name
+                }}
+              </Option>
             </Select>
             <Select v-model="filingInformation.city" style="width:157px;margin-right: 10px" placeholder="请选择市">
-              <Option v-for="item in filingInformation.cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              <Option v-for="item in filingInformation.cityList" :value="item.value" :key="item.value">{{ item.label
+                }}
+              </Option>
             </Select>
             <Select v-model="filingInformation.district" style="width:157px" placeholder="请选择区">
-              <Option v-for="item in filingInformation.districtList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              <Option v-for="item in filingInformation.districtList" :value="item.value" :key="item.value">{{ item.label
+                }}
+              </Option>
             </Select>
           </FormItem>
           <FormItem label="网站域名" prop="websiteDomain">
@@ -49,7 +56,7 @@
 
 <script type="text/ecmascript-6">
   import step from './step.vue'
-
+  import area from '@/options/area.json'
   export default {
     components: {
       step
@@ -67,33 +74,7 @@
           // 备案主体
           mainRecord: '',
           // 省
-          provinceList: [
-            {
-              label: '北京市',
-              value: 'bj',
-              city: [
-                {
-                  label: '',
-                  value: ''
-                }
-              ]
-            }, {
-              label: '上海市',
-              value: 'sh'
-            },
-            {
-              label: '广东省',
-              value: 'gd'
-            },
-            {
-              label: '湖北省',
-              value: 'hb'
-            },
-            {
-              label: '辽宁省',
-              value: 'ln'
-            },
-          ],
+          provinceList: area,
           province: '',
           // 市
           city: '',
