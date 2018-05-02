@@ -328,7 +328,7 @@
             src:'/ruicloud/newNodes_1'
           },
           {
-            title:'北京二区（沈阳）盛大开服',
+            title:'北方二区（沈阳）盛大开服',
             text:'春暖花开，活动绽放，3折优惠起',
             src:'/ruicloud/newNodes_2'
           }

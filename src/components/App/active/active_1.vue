@@ -5,7 +5,7 @@
         <div>
           <div>
             <p>
-              <img src="../../../assets/img/active/active_1/ziti.png">
+              <img src="../../../assets/img/active/active_1/ziti1.png">
             </p>
           </div>
           <transition name="list">
