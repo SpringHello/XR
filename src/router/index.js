@@ -259,11 +259,8 @@ var router = new Router({
         {path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
         {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},
         {path: 'active_1', name: 'active_1', component: active_1},
-<<<<<<< HEAD
-        //{path: 'entrance', name: 'entrance', component: Entrance},
-=======
+        {path: 'entrance', name: 'entrance', component: Entrance},
         {path: 'active_2', name: 'active_2', component: active_2},
->>>>>>> fc893a2ba84cf9fb98abda2332240b91623c9705
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
         {path: 'Pecss', component: Pecss},
