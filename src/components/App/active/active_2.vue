@@ -75,7 +75,7 @@
                   <Radio :label="system.label" v-for="(system,index) in systemList" :key="index">{{system.text}}</Radio>
                 </RadioGroup>
               </div>
-              
+
               <div class="timer">
                   <div class="">
                     <p  class="title">距离5月3号{{ item.timerText}}点场还剩</p>
@@ -85,7 +85,7 @@
                       <span>{{ item.s1 }}{{ item.s2 }}</span>
                     </p>
                   </div>
-                  
+
                   <button v-if="item.timerTime === 0&&!item.remainder">已领完</button>
                   <button v-if="item.timerTime === 0 && item.remainder" :class="{canGet: true}" @click="freeReceive(item)">立即领取</button>
                   <button v-if="item.timerTime > 0">立即领取</button>
@@ -97,7 +97,7 @@
             </div>
           </div>
         </div>
-        
+
       </div>
       <div class="recommend-product">
         <div class="center">
@@ -115,7 +115,7 @@
         </div>
       </div>
     </div>
-   
+
     <Modal v-model="loginModal" width="420" class="login-modal" ::scrollable="true">
       <p slot="header" style="color:#5F5F5F;text-align:center;height: 30px;padding-top: 5px;">
         <span style="font-family: PingFangSC-Regular;font-size: 26px;">登录</span>
@@ -187,7 +187,7 @@
               <h3>1.活动时间：</h3>
                <p>2018年4月29日开始，数量有限，送完为止。</p>
               <h3>2.活动对象：</h3>
-                  <p>新注册且已通过个人／企业认证，且未领取和购买过本平台资源的用户。</p>
+                  <p>新注册且已通过个人／企业认证，且未领取和购买过平台资源及参加过其他免费活动的用户。</p>
                 <h3>3.活动内容： </h3>
                   <p>符合条件的用户在每天10点、12点、15点、17点抢购免费主机。抢购成功即可使用。活动期间每人限领一次。 </p>
                 <h3>4.资格详细规则： </h3>
@@ -315,7 +315,7 @@
         remainder:true,
           }
         ],
-    
+
         recommendData:[
           {
             title:'0元购主机，注册领现金',
@@ -423,7 +423,7 @@
     },
     components: {},
     methods: {
-     
+
       // 免费领取主机
       freeReceive(item) {
         if (this.$store.state.userInfo == null) {
@@ -556,7 +556,7 @@
       },
       setServerTime(serviceTime,remainder) {
         let hours = [10, 12, 15, 17].map(function (hour) {
-          let h = new Date(2018,4,3); 
+          let h = new Date(2018,4,3);
           h.setHours(hour,0,0)
           // h.setMinutes(0)
           // h.setSeconds(0)
@@ -587,10 +587,10 @@
             }
           })
 
-        
+
         var setTime =  setInterval(() => {
           serviceTime += 1000
-         
+
           hours.forEach((hour, index) => {
             let reduce = hour.time - serviceTime
             if (reduce > 0) {
@@ -609,7 +609,7 @@
             }
           })
         }, 1000)
-        
+
         // console.log('aimeeeeeee')
         // console.log(resultarry)
         // console.log(this.productData[3].h2)
@@ -732,7 +732,7 @@
       margin: 0 auto;
       // width:293px;
       width: 384px;
-      height:165px; 
+      height:165px;
       font-size:14px;
       font-family:PingFangSC-Medium;
       color:rgba(255,255,255,1);
@@ -760,7 +760,7 @@
           display: flex;
           margin-bottom: 20px;
           width:1200px;
-          border-radius:4px; 
+          border-radius:4px;
           // height: 250px;
           // overflow: hidden;
           background:rgba(255,255,255,1);
@@ -829,7 +829,7 @@
                   display: inline-block;
                   padding:5px 10px;
                   background:rgba(243,123,114,1);
-                  border-radius: 4px ; 
+                  border-radius: 4px ;
                   line-height:60px;
                   color:rgba(255,255,255,1);
                 }
@@ -860,7 +860,7 @@
           }
         }
       }
-      
+
     }
     .center{
       width: 1200px;
@@ -870,13 +870,13 @@
         background: url("../../../assets/img/active/active_2/bg-bottom.png") no-repeat;
         height: 400px;
         .head{
-          padding-top:100px; 
+          padding-top:100px;
           margin-bottom: 24px;
           font-size:18px;
           span{
             display: inline-block;
             width:109px;
-            height:32px; 
+            height:32px;
             line-height: 32px;
             background: url("../../../assets/img/active/active_2/bg-headtitle.png");
             color: #fff;
@@ -892,7 +892,7 @@
             background: #fff;
             h4{
               font-size: 18px;
-              margin-bottom:15px; 
+              margin-bottom:15px;
             }
           }
         }
@@ -900,7 +900,7 @@
   }
 
   .head {
- 
+
     .head-banner {
       background:url("../../../assets/img/active/active_2/bg.png") no-repeat 0 70px;
       > div {
@@ -965,7 +965,7 @@
         }
       }
     }
-   
+
   }
  .process {
    padding: 50px 0;
