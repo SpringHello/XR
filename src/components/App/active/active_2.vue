@@ -170,7 +170,7 @@
         <div style="text-align:center" class="gethost-success">
             <h2 class="head-title" style="padding-bottom:0">Sorry</h2>
             <div class="content" style="background:none;color:#000">
-              <h3 style="text-align: left">{{messageError}}</h3>
+              <h3 style="text-align: left" v-html="messageError"></h3>
               <p v-html="messageErrorText"></p>
             </div>
         </div>
