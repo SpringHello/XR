@@ -78,7 +78,7 @@
 
               <div class="timer">
                   <div class="">
-                    <p  class="title">距离5月3号{{ item.timerText}}点场还剩</p>
+                    <p  class="title">距离{{ item.timerText}}点场还剩</p>
                     <p  class="time">
                       <span>{{ item.h1 }}{{ item.h2}}</span>:
                       <span>{{ item.m1 }}{{ item.m2 }}</span>:
@@ -89,10 +89,6 @@
                   <button v-if="item.timerTime === 0&&!item.remainder">已领完</button>
                   <button v-if="item.timerTime === 0 && item.remainder" :class="{canGet: true}" @click="freeReceive(item)">立即领取</button>
                   <button v-if="item.timerTime > 0">立即领取</button>
-
-
-                  <!-- <button v-if="item.timerTime !== 0" :class="{canGet: true}" @click="freeReceive(item)" >立即领取</button>
-                  <button v-if="item.timerTime === 0">立即领取</button> -->
               </div>
             </div>
           </div>
@@ -165,15 +161,17 @@
             </div>
         </div>
         <div slot="footer" style="text-align:center">
-            <Button type="primary" size="large" style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;margin:20px 0;">立即查看</Button>
+            <Button type="primary" size="large" style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;margin:20px 0;">
+             <router-link to='/ruicloud/host' style="color:#fff"> 立即查看</router-link>
+            </Button>
         </div>
     </Modal>
     <Modal v-model="modal3" width="550" :scrollable="true">
         <div style="text-align:center" class="gethost-success">
             <h2 class="head-title" style="padding:0">sorry</h2>
             <div class="content" style="background:none;color:#000">
-              <h3>已经被抢光了</h3>
-              <p>您可以等待下一场活动或者移步隔壁活动专区，<a href="/ruicloud/active_1">38元无门槛券</a>等您拿！</p>
+              <h3>{{messageError}}</h3>
+              <!-- <p>您可以等待下一场活动或者移步隔壁活动专区，<a href="/ruicloud/active_1">38元无门槛券</a>等您拿！</p> -->
             </div>
         </div>
         <div slot="footer">
@@ -185,7 +183,7 @@
             <h2 class="head-title">活动规则</h2>
             <div class="content" >
               <h3>1.活动时间：</h3>
-               <p>2018年4月29日开始，数量有限，送完为止。</p>
+               <p>2018年5月3日开始，数量有限，送完为止。</p>
               <h3>2.活动对象：</h3>
                   <p>新注册且已通过个人／企业认证，且未领取和购买过平台资源及参加过其他免费活动的用户。</p>
                 <h3>3.活动内容： </h3>
@@ -227,7 +225,8 @@
   export default {
     data() {
       return {
-        messageSuccess:'1核CPU、1G内存、1M宽带、40GSSD高效云盘。试用时间1个月 ，请进珍惜尽快使用哦！',
+        messageSuccess:'',
+        messageError:'',
         personalauth: 1,
         companyauth: 1,
         isLogin: 0,
@@ -319,7 +318,7 @@
         recommendData:[
           {
             title:'0元购主机，注册领现金',
-            text:'198元现金大礼包免费领',
+            text:'196元现金大礼包免费领',
             src:'/ruicloud/active_1'
           },
           {
@@ -394,8 +393,6 @@
       }
     },
     created() {
-      // this.setServerTime(this.mocktime)
-      // console.log(this.mocktime)
      if (this.$store.state.userInfo != null) {
         this.isLogin = 1
         this.userInfo = this.$store.state.userInfo
@@ -439,33 +436,13 @@
               params
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              // this.$Modal.success({
-              //   title: "领取主机成功",
-              //   content: response.data.message,
-              //   scrollable: true
-              // });
               this.messageSuccess=response.data.message
               this.modal2=true
             } else{
-              // this.$Modal.warning({
-              //   title: "系统提示",
-              //   content: response.data.message,
-              //   scrollable: true
-              // });
+              this.messageError=response.data.message
               this.modal3=true
             }
           })
-      },
-      // 领取成功后需要刷新剩余现金券数量
-      getResidue() {
-        var url = 'network/isCanGetFreeVm.do'
-        var tickets = []
-        axios.get(url).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            tickets = response.data.data
-            this.setTicket(tickets)
-          }
-        })
       },
       // 设置数据
       setData(values) {
@@ -556,10 +533,9 @@
       },
       setServerTime(serviceTime,remainder) {
         let hours = [10, 12, 15, 17].map(function (hour) {
-          let h = new Date(2018,4,3);
+          let h = new Date(serviceTime);
           h.setHours(hour,0,0)
-          // h.setMinutes(0)
-          // h.setSeconds(0)
+         
           return {time:h.getTime(),timerText:hour}
         })
 
@@ -609,36 +585,10 @@
             }
           })
         }, 1000)
-
-        // console.log('aimeeeeeee')
-        // console.log(resultarry)
-        // console.log(this.productData[3].h2)
-        // console.log(this.productData[3].m1)
-        // console.log(this.productData[3].m2)
         if (this.productData[3].timerTime === 0) {
           clearInterval(setTime)
         }
-      },
-      getTicket() {
-        if (this.$store.state.userInfo == null) {
-          this.loginModal = true
-          return
-        }
-        var url = `ticket/takeTicket.do`
-        axios.get(url).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$message.info({
-              content: response.data.message
-            })
-            this.getResidue()
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
-            this.getResidue()
-          }
-        })
-      },
+      }
     },
     computed: {
       getUserInfo() {
