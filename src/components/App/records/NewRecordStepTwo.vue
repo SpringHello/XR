@@ -8,28 +8,28 @@
         <div class="main-info">
           <h2>主体信息</h2>
           <transition name="list">
-          <div v-if="mainInfoShow">
-            <ul>
-              <li>主体单位所属区域：最多显示长度为20字站位站位站位站位站</li>
-              <li>主体单位证件类型：我是证件类型</li>
-              <li>主体单位性质：我是单位性质</li>
-              <li>主体单位证件号码：我是证件号码</li>
-              <li>主体单位名称：最多显示长度为20字站位站位站位站位站</li>
-            </ul>
-            <ul>
-              <li>主体单位证件住所：我是证件类型</li>
-              <li>主体单位通信地址：我是单位性质</li>
-              <li>投资人或主管单位姓名：我是证件号码</li>
-              <li>法人姓名：我是法人姓名</li>
-              <li>法人证件类型：我是证件类型</li>
-            </ul>
-            <ul>
-              <li>法人证件号码：我是单位性质</li>
-              <li>办公室电话：我是证件号码</li>
-              <li>手机号码：我是证件号码</li>
-              <li>电子邮箱地址：我是证件号码</li>
-            </ul>
-          </div>
+            <div v-if="mainInfoShow">
+              <ul>
+                <li>主体单位所属区域：最多显示长度为20字站位站位站位站位站</li>
+                <li>主体单位证件类型：我是证件类型</li>
+                <li>主体单位性质：我是单位性质</li>
+                <li>主体单位证件号码：我是证件号码</li>
+                <li>主体单位名称：最多显示长度为20字站位站位站位站位站</li>
+              </ul>
+              <ul>
+                <li>主体单位证件住所：我是证件类型</li>
+                <li>主体单位通信地址：我是单位性质</li>
+                <li>投资人或主管单位姓名：我是证件号码</li>
+                <li>法人姓名：我是法人姓名</li>
+                <li>法人证件类型：我是证件类型</li>
+              </ul>
+              <ul>
+                <li>法人证件号码：我是单位性质</li>
+                <li>办公室电话：我是证件号码</li>
+                <li>手机号码：我是证件号码</li>
+                <li>电子邮箱地址：我是证件号码</li>
+              </ul>
+            </div>
           </transition>
           <h3>网站基本信息</h3>
           <Form ref="basicInformation" :model="basicInformation" :rules="basicInformationRuleValidate" :label-width="145">
@@ -37,13 +37,15 @@
               <Input v-model="basicInformation.siteName" placeholder="请输入网站名称" style="width: 500px"></Input>
             </FormItem>
             <FormItem label="网站域名" prop="websiteDomain">
-              <div v-for="(item, index) in basicInformation.websiteDomainList">
-                <Input v-model="basicInformation.websiteDomain[index]" placeholder="请输入网站域名"
-                       style="width: 500px;margin-bottom: 24px;"></Input>
-                <span v-if="index!==0" style="color: #377dff;margin-left: 20px;cursor: pointer;font-size: 14px">删除</span>
-              </div>
-              <p class="form-p" @click="addWebsiteDomain"><img src="../../../assets/img/records/records-icon19.png"/> 新增网站域名</p>
+              <Input v-model="basicInformation.websiteDomain" placeholder="请输入网站域名" style="width: 500px;"></Input>
             </FormItem>
+            <FormItem v-for="(item, index) in basicInformation.newWebsiteDomainList" :key="index" label="新增网站域名" prop="websiteDomain">
+              <div style="display: flex">
+                <Input v-model="basicInformation.newWebsiteDomain[index]" placeholder="请输入新增网站域名" style="width: 500px;"></Input>
+                <p style="cursor: pointer; color: #377dff;font-size: 14px;margin-left: 15px;line-height: 28px" @click="deleteWebsiteDomain(index)">删除</p>
+              </div>
+            </FormItem>
+            <p class="form-p" @click="addWebsiteDomain"><img src="../../../assets/img/records/records-icon19.png"/> 新增网站域名</p>
             <FormItem label="网站首页URL" prop="websiteHomepage">
               <Input v-model="basicInformation.websiteHomepage" placeholder="请输入网站首页URL" style="width: 500px"></Input>
             </FormItem>
@@ -189,7 +191,7 @@
         </div>
       </div>
       <div class="content-footer">
-        <button @click="$router.go(-1)">上一步，填写主体信息</button>
+        <button @click="$router.push('newRecordStepOne')">上一步，填写主体信息</button>
         <button style="margin-left: 20px" @click="$router.push('newRecordStepThree')">下一步，上传资料</button>
       </div>
     </div>
@@ -208,6 +210,7 @@
       var recordsType = sessionStorage.getItem('recordsType')
       next(vm => {
         vm.setData(area, recordsType)
+        window.scroll(0,525)
       })
     },
     data() {
@@ -224,10 +227,10 @@
           // 网站名称
           siteName: '',
           // 网站域名
-          websiteDomain: [],
-          websiteDomainList: [
-            {}
-          ],
+          websiteDomain: '',
+          // 新增网站域名
+          newWebsiteDomainList: [],
+          newWebsiteDomain: [],
           // 网站首页URL
           websiteHomepage: '',
           // 网站服务内容
@@ -294,8 +297,12 @@
       },
       // 新增网站域名
       addWebsiteDomain() {
-        this.basicInformation.websiteDomainList.push({})
-        console.log(this.basicInformation.websiteDomain)
+        this.basicInformation.newWebsiteDomainList.push({})
+      },
+      // 删除新增的网站域名
+      deleteWebsiteDomain(index) {
+        this.basicInformation.newWebsiteDomainList.splice(index, 1)
+        this.basicInformation.newWebsiteDomain.splice(index, 1)
       }
     },
     mounted() {
@@ -360,12 +367,14 @@
     color: rgba(55, 125, 255, 1);
     cursor: pointer;
     font-size: 14px;
+    padding: 0 0 21px 145px;
     img {
       margin-right: 5px;
       position: relative;
       top: 2px;
     }
   }
+
   .list-enter-active, .list-leave-active {
     transition: all 1s;
   }

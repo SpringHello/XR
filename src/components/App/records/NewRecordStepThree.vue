@@ -155,7 +155,7 @@
           </div>
         </div>
         <h2>请上传其他资料</h2>
-        <p class="titleDescription">如前置审批材料，法人授权委托书等材料（点击下载法人授权委托书）</p>
+        <p class="titleDescription">如前置审批材料，法人授权委托书等材料（点击<span style="color: #377dff">下载法人授权委托书</span>）</p>
         <div class="upload">
           <div class="uploadTitle">
             <p>其他文件</p>
@@ -177,10 +177,38 @@
             </div>
           </div>
         </div>
+        <h2>请上传网站备案信息真实性核验单</h2>
+        <p class="titleDescription">1、点击<span style="color: #377dff">下载《网站备案信息真实性核验单》</span>。2、查看核验单样例图，填写以下载的核验单，不得涂改。3、请您保存3份签字的核验单原件以备后续环节使用。</p>
+        <div class="upload">
+          <div class="uploadTitle">
+            <p>其他文件</p>
+            <div class="item">
+              <div class="item-content">
+                <div style="width:100%;">
+                  <Upload
+                    type="drag"
+                    :show-upload-list="false"
+                    :with-credentials="true"
+                    action="file/upFile.do">
+                    <div class="item-content-text">
+                      点击选择文件
+                    </div>
+                    <button>上传</button>
+                  </Upload>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="uploadTitle" style="margin: 34px 0 10px 20px;">
+            <div class="item" style="text-align: center">
+              <img style="height: 203px" src="../../../assets/img/records/records-img4.png"/>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="content-footer">
         <button @click="$router.push('newRecordStepTwo')">上一步，填写网站信息</button>
-        <button style="margin-left: 20px">下一步，提交初审</button>
+        <button style="margin-left: 20px" @click="$router.push('waitFirstTrial')">下一步，提交初审</button>
       </div>
     </div>
   </div>
@@ -198,6 +226,7 @@
       var recordsType = sessionStorage.getItem('recordsType')
       next(vm => {
         vm.setData(area, recordsType)
+        window.scroll(0,700)
       })
     },
     data() {

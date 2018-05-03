@@ -88,6 +88,7 @@
       var recordsType = sessionStorage.getItem('recordsType')
       next(vm => {
         vm.setData(area, recordsType)
+        window.scroll(0,525)
       })
     },
     data() {
