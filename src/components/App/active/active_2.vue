@@ -78,7 +78,7 @@
 
               <div class="timer">
                   <div class="">
-                    <p  class="title">距离5月3号{{ item.timerText}}点场还剩</p>
+                    <p  class="title">距离{{ item.timerText}}点场还剩</p>
                     <p  class="time">
                       <span>{{ item.h1 }}{{ item.h2}}</span>:
                       <span>{{ item.m1 }}{{ item.m2 }}</span>:
@@ -535,7 +535,7 @@
       },
       setServerTime(serviceTime,remainder) {
         let hours = [10, 12, 15, 17].map(function (hour) {
-          let h = new Date(2018,4,3);
+          let h = new Date(serviceTime);
           h.setHours(hour,0,0)
          
           return {time:h.getTime(),timerText:hour}
