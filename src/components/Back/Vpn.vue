@@ -1322,14 +1322,13 @@
           })
           return
         }else(
-          this.$Modal.confirm({
-            content: '<p style="font-size: 16px;color: #333;">提示</p><p style="font-size: 14px;color: #333;line-height: 21px;margin-top: 5px;">确认重启连接？</p>',
-            scrollable: true,
+          this.$message.confirm({
+            content: '确认重启连接？',
             onOk: () => {
               this.$http.get('network/resetVpnConnection.do',{
                   params:{
                     zoneId: $store.state.zone.zoneid,
-                    vpnconId: this.currentTunnel.sourcevpnId
+                    vpnConnectionId: this.currentTunnel.sourcevpnId
                   }
               }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
