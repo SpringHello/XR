@@ -1205,24 +1205,30 @@
           })
           return
         } else {
-          this.$http.get('network/deleteVpnConnection.do', {
-            params: {
-              zoneId: $store.state.zone.zoneid,
-              id: this.currentTunnel.sourcevpnconId
-            }
-          }).then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.$Message.success({
-                content: response.data.message
+            if(this.currentTunnel.sourcestatus == 1){
+              this.$http.get('network/deleteVpnConnection.do', {
+                params: {
+                  zoneId: $store.state.zone.zoneid,
+                  id: this.currentTunnel.sourcevpnconId
+                }
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success({
+                    content: response.data.message
+                  })
+                  this.refresh()
+                } else {
+                  this.$message.info({
+                    content: response.data.message
+                  })
+                  this.refresh()
+                }
               })
-              this.refresh()
-            } else {
-              this.$message.info({
-                content: response.data.message
+            }else{
+              this.$Message.info({
+                content: '请先连接在断开'
               })
-              this.refresh()
             }
-          })
         }
       },
       // vpn 修改配置
@@ -1234,7 +1240,7 @@
           })
           return
         } else {
-            if(this.currentTunnel.sourcestatus != 2){
+            if(this.currentTunnel.sourcestatus != 1){
               this.$http.get('network/updateVpnCustomerGateway.do', {
                 params: {
                   zoneId: $store.state.zone.zoneid,
@@ -1281,7 +1287,7 @@
           })
           return
         }else{
-          if(this.currentTunnel.sourcestatus != 2){
+          if(this.currentTunnel.sourcestatus != 1){
              this.$http.get('network/updateVpnConnection.do',{
                params:{
                  zoneId: $store.state.zone.zoneid,
