@@ -7,42 +7,62 @@
         <p class="recordsArea-but"><img src="../../../assets/img/records/records-icon7.png"/> {{ area }}</p>
         <div>
           <h3>主体单位信息</h3>
-          <Form ref="mainUnitInformation" :model="mainUnitInformation" :rules="mainUnitInformationRuleValidate" :label-width="135">
-            <FormItem label="主体单位所属区域" prop="area">
-              <Select v-model="mainUnitInformation.province" style="width:157px;margin-right: 10px" placeholder="请选择省">
-                <Option v-for="item in mainUnitInformation.provinceList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          <Form ref="mainUnitInformation" :model="mainUnitInformation" :rules="mainUnitInformationRuleValidate"
+                :label-width="135">
+            <FormItem label="主体单位所属区域" prop="district">
+              <Select v-model="mainUnitInformation.province" style="width:157px;margin-right: 10px" placeholder="请选择省"
+                      @on-change="changeProvince">
+                <Option v-for="item in mainUnitInformation.provinceList" :value="item.name" :key="item.name">{{
+                  item.name
+                  }}
+                </Option>
               </Select>
-              <Select v-model="mainUnitInformation.city" style="width:157px;margin-right: 10px" placeholder="请选择市">
-                <Option v-for="item in mainUnitInformation.cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              <Select v-model="mainUnitInformation.city" style="width:157px;margin-right: 10px" placeholder="请选择市"
+                      @on-change="changeCity">
+                <Option v-for="item in mainUnitInformation.cityList" :value="item.name" :key="item.name">{{ item.name
+                  }}
+                </Option>
               </Select>
-              <Select v-model="mainUnitInformation.district" style="width:157px" placeholder="请选择区">
-                <Option v-for="item in mainUnitInformation.districtList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              <Select v-model="mainUnitInformation.district" style="width:157px" placeholder="请选择区"
+                      @on-change="changeDistrict">
+                <Option v-for="item in mainUnitInformation.districtList" :value="item" :key="item">{{ item
+                  }}
+                </Option>
               </Select>
             </FormItem>
             <FormItem label="主体单位性质" prop="unitProperties">
-              <Select v-model="mainUnitInformation.unitProperties" style="width:500px;" placeholder="请选择单位性质" @on-change="changeUnitProperties">
-                <Option v-for="item in mainUnitInformation.unitPropertiesList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              <Select v-model="mainUnitInformation.unitProperties" style="width:500px;" placeholder="请选择单位性质"
+                      @on-change="changeUnitProperties">
+                <Option v-for="item in mainUnitInformation.unitPropertiesList" :value="item.value" :key="item.value">{{
+                  item.label }}
+                </Option>
               </Select>
             </FormItem>
             <FormItem label="主体单位证件类型" prop="certificateType">
               <Select v-model="mainUnitInformation.certificateType" style="width:500px;" placeholder="请选择证件类型">
-                <Option v-for="item in mainUnitInformation.certificateTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                <Option v-for="item in mainUnitInformation.certificateTypeList" :value="item.value" :key="item.value">{{
+                  item.label }}
+                </Option>
               </Select>
             </FormItem>
             <FormItem label="主体单位证件号码" prop="certificateNumber">
-              <Input v-model="mainUnitInformation.certificateNumber" placeholder="请输入主体单位证件号码" style="width: 500px"></Input>
+              <Input v-model="mainUnitInformation.certificateNumber" placeholder="请输入主体单位证件号码"
+                     style="width: 500px"></Input>
             </FormItem>
             <FormItem label="主体单位名称" prop="unitName">
               <Input v-model="mainUnitInformation.unitName" placeholder="请输入主体单位名称" style="width: 500px"></Input>
             </FormItem>
             <FormItem label="主体单位证件住所" prop="certificatesResidence">
-              <Input v-model="mainUnitInformation.certificatesResidence" placeholder="请输入主体单位证件住所" style="width: 500px"></Input>
+              <Input v-model="mainUnitInformation.certificatesResidence" placeholder="请输入主体单位证件住所"
+                     style="width: 500px"></Input>
             </FormItem>
             <FormItem label="主体单位通信地址" prop="mailingAddress">
-              <Input v-model="mainUnitInformation.mailingAddress" placeholder="请输入主体单位通信地址" style="width: 500px"></Input>
+              <Input v-model="mainUnitInformation.mailingAddress" placeholder="请输入主体单位通信地址"
+                     style="width: 500px"></Input>
             </FormItem>
             <FormItem label="投资人或主管单位姓名" prop="investorName">
-              <Input v-model="mainUnitInformation.investorName" placeholder="请输入投资人或主管单位姓名" style="width: 500px"></Input>
+              <Input v-model="mainUnitInformation.investorName" placeholder="请输入投资人或主管单位姓名"
+                     style="width: 500px"></Input>
             </FormItem>
             <div style="height:2px;width: 100%;background: #D9D9D9;margin-top: 60px"></div>
             <h3 style="margin-top: 40px">主体单位负责人信息</h3>
@@ -50,15 +70,20 @@
               <Input v-model="mainUnitInformation.legalPersonName" placeholder="请输入法人姓名" style="width: 500px"></Input>
             </FormItem>
             <FormItem label="法人证件类型" prop="legalPersonCertificateType">
-              <Select v-model="mainUnitInformation.legalPersonCertificateType" style="width:500px;" placeholder="请选择证件类型">
-                <Option v-for="item in mainUnitInformation.legalPersonCertificateTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              <Select v-model="mainUnitInformation.legalPersonCertificateType" style="width:500px;"
+                      placeholder="请选择证件类型">
+                <Option v-for="item in mainUnitInformation.legalPersonCertificateTypeList" :value="item.value"
+                        :key="item.value">{{ item.label }}
+                </Option>
               </Select>
             </FormItem>
             <FormItem label="法人证件号码" prop="legalPersonIDNumber">
-              <Input v-model="mainUnitInformation.legalPersonIDNumber" placeholder="请输入法人证件号码" style="width: 500px"></Input>
+              <Input v-model="mainUnitInformation.legalPersonIDNumber" placeholder="请输入法人证件号码"
+                     style="width: 500px"></Input>
             </FormItem>
             <FormItem label="办公室电话" prop="officePhone">
-              <span>+86</span><Input v-model="mainUnitInformation.officePhone" placeholder="请输入办公室电话" style="width: 468px;margin-left: 10px"></Input>
+              <span>+86</span><Input v-model="mainUnitInformation.officePhone" placeholder="请输入办公室电话"
+                                     style="width: 468px;margin-left: 10px"></Input>
             </FormItem>
             <FormItem label="手机号码" prop="phoneNumber">
               <Input v-model="mainUnitInformation.phoneNumber" placeholder="请输入手机号码" style="width: 500px"></Input>
@@ -78,7 +103,7 @@
 
 <script type="text/ecmascript-6">
   import step from './step.vue'
-
+  import area from '@/options/area'
   export default {
     components: {
       step
@@ -92,6 +117,14 @@
       })
     },
     data() {
+      // 校验地区
+      const validateArea = (rule, value, callback) => {
+        if (this.mainUnitInformation.province == '' || this.mainUnitInformation.city == '' || this.mainUnitInformation.district == '') {
+          return callback(new Error('请选择所属区域'))
+        } else {
+          callback()
+        }
+      }
       return {
         // 备案区域
         area: '',
@@ -102,33 +135,7 @@
         // 主体单位信息表单
         mainUnitInformation: {
           // 省
-          provinceList: [
-            {
-              label: '北京市',
-              value: 'bj',
-              city: [
-                {
-                  label: '',
-                  value: ''
-                }
-              ]
-            }, {
-              label: '上海市',
-              value: 'sh'
-            },
-            {
-              label: '广东省',
-              value: 'gd'
-            },
-            {
-              label: '湖北省',
-              value: 'hb'
-            },
-            {
-              label: '辽宁省',
-              value: 'ln'
-            },
-          ],
+          provinceList: area,
           province: '',
           // 市
           city: '',
@@ -260,7 +267,11 @@
           emailAddress: '',
         },
         // 主体单位表单验证信息
-        mainUnitInformationRuleValidate: {}
+        mainUnitInformationRuleValidate: {
+          district: [
+            {required: true, validator: validateArea, trigger: 'blur'}
+          ],
+        }
       }
     },
     methods: {
@@ -273,6 +284,30 @@
             break
         }
       },
+      // 重新选择省份
+      changeProvince(val){
+        this.mainUnitInformation.city = ''
+        area.forEach(item => {
+          if (item.name == val) {
+            this.mainUnitInformation.cityList = item.city
+          }
+        })
+      },
+      // 重新选择市
+      changeCity(val){
+        this.mainUnitInformation.district = ''
+        this.mainUnitInformation.cityList.forEach(item => {
+          if (item.name == val) {
+            this.mainUnitInformation.districtList = item.area
+          }
+        })
+      },
+      // 重新选择区，重新校验
+      changeDistrict(){
+        this.$refs.mainUnitInformation.validateField('district', (valid) => {
+        })
+      },
+
       // 切换主体单位性质时级联单位证件
       changeUnitProperties(val) {
         this.mainUnitInformation.certificateTypeList = this.mainUnitInformation.unitPropertiesList[val].certificate
