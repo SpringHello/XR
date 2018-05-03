@@ -334,10 +334,39 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button @click="showModal.FixVPN = false">取消</Button>
+        <Button type="primary" @click="showModal.FixVPN1 = true;showModal.FixVPN = false">下一步</Button>
+      </div>
+    </Modal>
+    <Modal v-model="showModal.FixVPN1" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">修改配置</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="newTunnelVpnForm" :rules="newTunnelVpnFormValidate" ref="newTunnelVpnFormValidate">
+          <FormItem label="连接方式" prop="password">
+            <Select v-model="newTunnelVpnForm.connType">
+              <Option v-for="item in newTunnelVpnForm.connTypeOptions" :value="item.key" :key="item.key">
+                {{item.label}}
+              </Option>
+            </Select>
+          </FormItem>
+          <Poptip trigger="hover" style="float: right;position: relative;right: 250px;top: 40px;">
+            <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
+            <div slot="content">
+              <div>
+                <p style="line-height: 20px;">注意在选择连接方式的时候:</p>
+                <p style="line-height: 18px;">本端连接方式选择的是主动,对端的连接方式必须是被动。</p>
+                <p style="line-height: 18px;">本端连接方式选择的是被动,对端的连接方式必须是主动。</p>
+              </div>
+            </div>
+          </Poptip>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button @click="showModal.FixVPN1 = false;showModal.FixVPN = true">上一步</Button>
         <Button type="primary" @click="fixConfig">确认</Button>
       </div>
     </Modal>
-
     <!--修改连接方式-->
     <Modal v-model="showModal.FixVPNContent" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
@@ -365,7 +394,7 @@
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button @click="showModal.FixVPN = false">取消</Button>
+        <Button @click="showModal.FixVPNContent = false">取消</Button>
         <Button type="primary" @click="modifyConnection">确认</Button>
       </div>
     </Modal>
@@ -465,6 +494,7 @@
           newTunnelVpn: false,
           // vpn 修改
           FixVPN: false,
+          FixVPN1: false,
           FixVPNContent: false,
           // 接入点用户管理
           userManage: false
@@ -909,8 +939,8 @@
                   },
                   on: {
                     click: () => {
-                      this.$Modal.confirm({
-                        content: '<p style="font-size: 16px;color: #333;">提示</p><p style="font-size: 14px;color: #333;line-height: 21px;margin-top: 5px;">确认断开连接？</p>',
+                      this.$message.confirm({
+                        content: '确认删除连接？',
                         scrollable: true,
                         onOk: () => {
                           this.disconnect()
@@ -919,7 +949,7 @@
                       })
                     }
                   }
-                }, '断开连接'),
+                }, '删除连接'),
                 h('Dropdown', {
                   props: {
                     trigger: 'hover'
@@ -1197,11 +1227,11 @@
           })
         }
       },
-      //vpn 断开连接
+      //vpn 删除连接
       disconnect(){
         if (this.currentTunnel == null) {
           this.$Message.info({
-            content: '请选择要断开连接的隧道VPN'
+            content: '请选择要删除连接的隧道VPN'
           })
           return
         } else {
@@ -1226,17 +1256,17 @@
               })
             }else{
               this.$Message.info({
-                content: '请先连接在断开'
+                content: '请先连接在删除'
               })
             }
         }
       },
       // vpn 修改配置
       fixConfig(){
-        this.showModal.FixVPN = false
+        this.showModal.FixVPN1 = false
         if (this.currentTunnel == null) {
           this.$Message.info({
-            content: '请选择要断开连接的隧道VPN'
+            content: '请选择要修改的隧道VPN'
           })
           return
         } else {
@@ -1259,6 +1289,7 @@
                   esplifetime: this.newTunnelVpnForm.esplifetime,
                   failureDetection: this.newTunnelVpnForm.checkGroup1,
                   forceUdpEspPackets: this.newTunnelVpnForm.checkGroup2,
+                  passive: this.newTunnelVpnForm.connType,
                 }
               }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
@@ -1274,7 +1305,7 @@
                 }
               })
             }else{ this.$Message.info({
-              content: '请先断开连接在修改配置'
+              content: '请先删除连接在修改配置'
             })}
         }
       },
@@ -1283,11 +1314,10 @@
           this.showModal.FixVPNContent = false
         if (this.currentTunnel == null) {
           this.$Message.info({
-            content: '请选择要断开连接的隧道VPN'
+            content: '请选择要修改的隧道VPN'
           })
           return
         }else{
-          if(this.currentTunnel.sourcestatus != 1){
              this.$http.get('network/updateVpnConnection.do',{
                params:{
                  zoneId: $store.state.zone.zoneid,
@@ -1307,11 +1337,6 @@
                  this.refresh()
                }
              })
-          }else{
-            this.$Message.info({
-              content: '请先断开连接在修改连接方式'
-            })
-          }
         }
       },
       // 重启VPN
@@ -1325,24 +1350,29 @@
           this.$message.confirm({
             content: '确认重启连接？',
             onOk: () => {
-              this.$http.get('network/resetVpnConnection.do',{
-                  params:{
-                    zoneId: $store.state.zone.zoneid,
-                    vpnConnectionId: this.currentTunnel.sourcevpnId
-                  }
-              }).then(response => {
-                if (response.status == 200 && response.data.status == 1) {
-                  this.$Message.success({
-                    content: response.data.message
-                  })
-                  this.refresh()
-                } else {
-                  this.$message.info({
-                    content: response.data.message
-                  })
-                  this.refresh()
-                }
-              })
+             if(this.currentTunnel.sourcestatus == 1){
+                 this.$http.get('network/resetVpnConnection.do',{
+               params:{
+                 zoneId: $store.state.zone.zoneid,
+                 vpnConnectionId: this.currentTunnel.sourcevpnId
+               }
+             }).then(response => {
+               if (response.status == 200 && response.data.status == 1) {
+                 this.$Message.success({
+                   content: response.data.message
+                 })
+                 this.refresh()
+               } else {
+                 this.$message.info({
+                   content: response.data.message
+                 })
+                 this.refresh()
+               }
+             })}else{
+               this.$Message.info({
+                 content: '请先连接在重启隧道'
+               })
+             }
             }
 
           })
