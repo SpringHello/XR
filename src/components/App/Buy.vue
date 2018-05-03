@@ -210,10 +210,8 @@
                     <div>
                       <p class="item-title">镜像类型</p>
                       <p class="item-title" style="margin-top: 40px;">镜像系统</p>
-
                     </div>
                     <div>
-
                       <div v-for="item in PecsInfo.mirrorType" class="zoneItem"
                            :class="{zoneSelect:PecsInfo.currentType==item.value}"
                            @click="PecsInfo.currentType=item.value">{{item.label}}
@@ -535,7 +533,7 @@
                     <div>
                       <p class="item-title" style="margin-top: 8px">系统用户名</p>
                     </div>
-                    <span style="padding:10px 0;font-size: 14px;color: #999999;">{{ systemUsername }}</span>
+                    <span style="padding:10px 0;font-size: 14px;color: #666666;">{{ systemUsername }}</span>
                   </div>
                 </div>
                 <div class="item-wrapper">
@@ -543,7 +541,7 @@
                     <div>
                       <p class="item-title" style="margin-top: 8px">登录密码</p>
                     </div>
-                    <span style="padding:10px 0;font-size: 14px;color: #999999;">默认密码 创建成功后通过短信和站内信查看</span>
+                    <span style="padding:10px 0;font-size: 14px;color: #666666;">默认密码 创建成功后通过短信和站内信查看</span>
                   </div>
                 </div>
               </div>
@@ -566,7 +564,7 @@
                     <div>
                       <p class="item-title" style="margin-top: 8px">系统用户名</p>
                     </div>
-                    <span style="padding:10px 0;font-size: 14px;color: #999999;">{{ systemUsername }}</span>
+                    <span style="padding:10px 0;font-size: 14px;color: #666666;">{{ systemUsername }}</span>
                   </div>
                 </div>
                 <div class="item-wrapper">
@@ -1009,6 +1007,14 @@
                   <span class="hidden">#</span>
                   <span
                     style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.dataDiskCost.toFixed(2)}}元</span>
+                <ul style="float: right;font-size: 14px;user-select: none">
+                  <span class="numberAdd" v-if="prod.count == 1">-</span>
+                  <span class="numberAdd" style="cursor: pointer"
+                        @click="prod.count -= 1,prod.customCost = totalCost * prod.count" v-else>-</span>
+                  <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
+                  <span class="numberMinus" v-if="prod.count == 5">+</span>
+                  <span class="numberMinus" style="cursor: pointer"
+                        @click="prod.count += 1,prod.customCost = totalCost * prod.count" v-else>+</span></ul>
                 </p>
               </div>
 
@@ -1851,7 +1857,7 @@
           } else {
             this.PecsInfo.customMirror = this.$route.query.mirror || {}
             var str = this.$route.query.mirror.ostypename.substr(0, 1)
-            if (str === 'W') {
+            if (str === 'W'|| str === 'w') {
               this.systemUsername = 'administrator'
             } else {
               this.systemUsername = 'root'
@@ -1871,7 +1877,7 @@
         }
         // 根据镜像名称第一个字符确定系统用户名是admin还是root
         var str = this.PecsInfo.system.systemName.substr(0, 1)
-        if (str === 'W') {
+        if (str === 'W'|| str === 'w') {
           this.systemUsername = 'administrator'
         } else {
           this.systemUsername = 'root'
@@ -1882,7 +1888,7 @@
       setOwnTemplate(item) {
         this.PecsInfo.customMirror = item
         var str = item.ostypename.substr(0, 1)
-        if (str === 'W') {
+        if (str === 'W'|| str === 'w') {
           this.systemUsername = 'administrator'
         } else {
           this.systemUsername = 'root'
@@ -2505,13 +2511,17 @@
             diskCount += prod.dataDiskList.length
             var diskSize = ''
             var diskType = ''
-            prod.dataDiskList.forEach(item => {
-              diskSize += `${item.size},`
-              diskType += `${item.type},`
-            })
+            var count = prod.count
+            // 多个磁盘订单
+            for (var i = 0; i< count; i++) {
+              prod.dataDiskList.forEach(item => {
+                diskSize += `${item.size},`
+                diskType += `${item.type},`
+              })
+            }
             var params = {
               zoneId: prod.zone.zoneid,
-              diskSize,
+              diskSize: diskSize,
               diskName: prod.diskName,
               diskOfferingId: diskType,
               timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
