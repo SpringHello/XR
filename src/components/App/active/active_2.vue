@@ -26,8 +26,7 @@
                 </dd>
               </dl>
               <dl>
-                <dt v-if="companyauth==0||personalauth==0"><img
-                  src="../../../assets/img/active/active_2/icon-process-2.png">
+                <dt v-if="companyauth==0||personalauth==0"><img src="../../../assets/img/active/active_2/icon-process-2.png">
                 </dt>
                 <dt v-else><img src="../../../assets/img/active/active_2/icon-process-22.png"></dt>
                 <dd :class="{select:companyauth==0||personalauth==0}">② 完成实名认证<i
@@ -54,8 +53,7 @@
           <a @click="modal4=true">活动规则></a>
         </p>
         <div class="free-product">
-          <div v-for="(item,index) in productData" :key="index" class="item"
-               v-if="index>=startIndex&&index<=startIndex+1">
+          <div v-for="(item,index) in productData" :key="index" class="item" v-if="index>=startIndex&&index<=startIndex+1">
             <div class="left">
               <h4>{{item.title}}</h4>
               <p>{{item.desc}}</p>
@@ -80,8 +78,8 @@
 
               <div class="timer">
                 <div class="">
-                  <p class="title">距离{{ item.timerText}}点场还剩</p>
-                  <p class="time">
+                  <p  class="title">距离{{ item.timerText}}点场还剩</p>
+                  <p  class="time">
                     <span>{{ item.h1 }}{{ item.h2}}</span>:
                     <span>{{ item.m1 }}{{ item.m2 }}</span>:
                     <span>{{ item.s1 }}{{ item.s2 }}</span>
@@ -89,9 +87,7 @@
                 </div>
 
                 <button v-if="item.timerTime === 0&&!item.remainder">已领完</button>
-                <button v-if="item.timerTime === 0 && item.remainder" :class="{canGet: true}"
-                        @click="freeReceive(item)">立即领取
-                </button>
+                <button v-if="item.timerTime === 0 && item.remainder" :class="{canGet: true}" @click="freeReceive(item)">立即领取</button>
                 <button v-if="item.timerTime > 0">立即领取</button>
               </div>
             </div>
@@ -165,8 +161,7 @@
         </div>
       </div>
       <div slot="footer" style="text-align:center">
-        <Button type="primary" size="large"
-                style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;margin:20px 0;">
+        <Button type="primary" size="large" style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;margin:20px 0;">
           <router-link to='/ruicloud/host' style="color:#fff"> 立即查看</router-link>
         </Button>
       </div>
@@ -186,7 +181,7 @@
     <Modal v-model="modal4" width="700" :scrollable="true">
       <div style="text-align:center" class="rules-modal">
         <h2 class="head-title">活动规则</h2>
-        <div class="content">
+        <div class="content" >
           <h3>1.活动时间：</h3>
           <p>2018年5月3日开始，数量有限，送完为止。</p>
           <h3>2.活动对象：</h3>
@@ -205,10 +200,7 @@
         </div>
       </div>
       <div slot="footer" style="text-align:center">
-        <Button type="primary" size="large"
-                style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;"
-                @click="modal4=false">知道了
-        </Button>
+        <Button type="primary" size="large" style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;" @click="modal4=false">知道了</Button>
       </div>
     </Modal>
   </div>
@@ -233,38 +225,38 @@
   export default {
     data() {
       return {
-        messageSuccess: '',
-        messageError: '',
+        messageSuccess:'',
+        messageError:'',
         personalauth: 1,
         companyauth: 1,
         isLogin: 0,
         // 是否领取主机 0未领取
         isReceive: 0,
         userInfo: null,
-        mocktime: 1524794400379,
-        modal2: false,
-        modal3: false,
-        modal4: false,
-        processData: [
+        mocktime:1524794400379,
+        modal2:false,
+        modal3:false,
+        modal4:false,
+        processData:[
           {
-            img: require('../../../assets/img/active/active_2/icon-process-11.png'),
-            text: '新用户注册登录'
+            img:require('../../../assets/img/active/active_2/icon-process-11.png'),
+            text:'新用户注册登录'
           },
           {
-            img: require('../../../assets/img/active/active_2/icon-process-22.png'),
-            text: '完成实名认证'
+            img:require('../../../assets/img/active/active_2/icon-process-22.png'),
+            text:'完成实名认证'
           },
           {
-            img: require('../../../assets/img/active/active_2/icon-process-33.png'),
-            text: '免费领取企业云主机'
+            img:require('../../../assets/img/active/active_2/icon-process-33.png'),
+            text:'免费领取企业云主机'
           }
         ],
-        productData: [
+        productData:[
           {
-            title: '弹性云服务器',
-            desc: '适用于个人建站或者初创公司宣传网站，轻量级应用',
+            title:'弹性云服务器',
+            desc:'适用于个人建站或者初创公司宣传网站，轻量级应用',
             system: 'windows',
-            selectedConfig: 31,
+            selectedConfig:31,
             h1: 0,
             h2: 0,
             m1: 0,
@@ -274,13 +266,13 @@
             // 剩余时间
             timerTime: 1,
             // 是否有剩余
-            remainder: true,
+            remainder:true,
           },
           {
-            title: '弹性云服务器',
-            desc: '适用于个人建站或者初创公司宣传网站，轻量级应用',
+            title:'弹性云服务器',
+            desc:'适用于个人建站或者初创公司宣传网站，轻量级应用',
             system: 'windows',
-            selectedConfig: 31,
+            selectedConfig:31,
             h1: 0,
             h2: 0,
             m1: 0,
@@ -289,13 +281,13 @@
             s2: 0,
             timerTime: 1,
             // 是否有剩余
-            remainder: true,
+            remainder:true,
           },
           {
-            title: '弹性云服务器',
-            desc: '适用于个人建站或者初创公司宣传网站，轻量级应用',
+            title:'弹性云服务器',
+            desc:'适用于个人建站或者初创公司宣传网站，轻量级应用',
             system: 'windows',
-            selectedConfig: 31,
+            selectedConfig:31,
             h1: 0,
             h2: 0,
             m1: 0,
@@ -304,13 +296,13 @@
             s2: 0,
             timerTime: 1,
             // 是否有剩余
-            remainder: true,
+            remainder:true,
           },
           {
-            title: '弹性云服务器',
-            desc: '适用于个人建站或者初创公司宣传网站，轻量级应用',
+            title:'弹性云服务器',
+            desc:'适用于个人建站或者初创公司宣传网站，轻量级应用',
             system: 'windows',
-            selectedConfig: 31,
+            selectedConfig:31,
             h1: 0,
             h2: 0,
             m1: 0,
@@ -319,25 +311,25 @@
             s2: 0,
             timerTime: 1,
             // 是否有剩余
-            remainder: true,
+            remainder:true,
           }
         ],
 
-        recommendData: [
+        recommendData:[
           {
-            title: '0元购主机，注册领现金',
-            text: '196元现金大礼包免费领',
-            src: '/ruicloud/active_1'
+            title:'0元购主机，注册领现金',
+            text:'196元现金大礼包免费领',
+            src:'/ruicloud/active_1'
           },
           {
-            title: '北京一区盛大开服',
-            text: '布局首都，新购特惠，限时抢购',
-            src: '/ruicloud/newNodes_1'
+            title:'北京一区盛大开服',
+            text:'布局首都，新购特惠，限时抢购',
+            src:'/ruicloud/newNodes_1'
           },
           {
-            title: '北方二区（沈阳）盛大开服',
-            text: '春暖花开，活动绽放，3折优惠起',
-            src: '/ruicloud/newNodes_2'
+            title:'北方二区（沈阳）盛大开服',
+            text:'春暖花开，活动绽放，3折优惠起',
+            src:'/ruicloud/newNodes_2'
           }
         ],
         img: false,
@@ -368,9 +360,9 @@
         serviceTime: 0,
         paramsList: [
           {
-            time: '60天',
+            time:'60天',
             label: 31,
-            item: [
+            item:[
               {num: '1核', unit: 'CPU'},
               {num: '1G', unit: '内存'},
               {num: '1mb/s', unit: '带宽'},
@@ -378,9 +370,9 @@
             ]
           },
           {
-            time: '30天',
-            label: 32,
-            item: [
+            time:'30天',
+            label:32,
+            item:[
               {num: '2核', unit: 'CPU'},
               {num: '4G', unit: '内存'},
               {num: '5mb/s', unit: '带宽'},
@@ -406,7 +398,7 @@
         this.userInfo = this.$store.state.userInfo
         this.companyauth = this.userInfo.companyauth
         this.personalauth = this.userInfo.personalauth
-        if (this.userInfo.activityInfo[13].companytype === 1) {
+        if (this.userInfo.activityInfo[13].companytype === 1 ) {
           this.isReceive = 1
         } else {
           this.isReceive = 0
@@ -435,32 +427,28 @@
           this.loginModal = true
           return
         }
-        var params = {
-          vmConfigId: item.selectedConfig,
-          osType: item.system,
-          defzoneid: '39a6af0b-6624-4194-b9d5-0c552d903858'
+        var params={
+          vmConfigId:item.selectedConfig,
+          osType:item.system,
+          defzoneid:'39a6af0b-6624-4194-b9d5-0c552d903858'
         }
-        axios.get('information/getFreeMv.do', {
+        axios.get('information/getFreeMv.do',{
           params
-        }).then(response = > {
-          if (response.status == 200 && response.data.status == 1
-      )
-        {
-          this.messageSuccess = response.data.message
-          this.modal2 = true
-        }
-      else
-        {
-          this.messageError = response.data.message
-          this.modal3 = true
-        }
-      })
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.messageSuccess=response.data.message
+            this.modal2=true
+          } else{
+            this.messageError=response.data.message
+            this.modal3=true
+          }
+        })
       },
       // 设置数据
       setData(values) {
-        let serviceTime = values[0].status == 200 && values[0].data.status == 1 ? values[0].data.result : new Date().getTime
+        let serviceTime = values[0].status==200&&values[0].data.status==1?values[0].data.result:new Date().getTime
         let remainder = values[1].data.result
-        this.setServerTime(serviceTime, remainder)
+        this.setServerTime(serviceTime,remainder)
       },
       vail(field) {
         var text = this.form[field];
@@ -543,66 +531,60 @@
         )
         ;
       },
-      setServerTime(serviceTime, remainder) {
+      setServerTime(serviceTime,remainder) {
         let hours = [10, 12, 15, 17].map(function (hour) {
           let h = new Date(serviceTime);
-          h.setHours(hour, 0, 0)
+          h.setHours(hour,0,0)
 
-          return {time: h.getTime(), timerText: hour}
+          return {time:h.getTime(),timerText:hour}
         })
 
         var minSecondInMinute = 1000 * 60
         var minSecondInHour = minSecondInMinute * 60
 
-        hours.forEach((hour, index) = > {
+        hours.forEach((hour, index) => {
           let reduce = hour.time - serviceTime
-          this.$set(this.productData[index], 'timerText', hour.timerText)
-        if (reduce > 0) {
-          let hourRemainder = parseInt(reduce / minSecondInHour)
-          let minRemainder = parseInt((reduce % minSecondInHour) / minSecondInMinute)
-          let secRemainder = parseInt((reduce % minSecondInMinute) / 1000)
-          this.productData[index].h1 = parseInt(hourRemainder / 10)
-          this.productData[index].h2 = parseInt(hourRemainder % 10)
-          this.productData[index].m1 = parseInt(minRemainder / 10)
-          this.productData[index].m2 = parseInt(minRemainder % 10)
-          this.productData[index].s1 = parseInt(secRemainder / 10)
-          this.productData[index].s2 = parseInt(secRemainder % 10)
-          this.productData[index].timerTime = reduce
-          this.productData[index].remainder = true
-        } else {
-          this.productData[index].timerTime = 0
-          this.productData[index].remainder = remainder
-        }
-      })
+          this.$set(this.productData[index],'timerText',hour.timerText)
+          if (reduce > 0) {
+            let hourRemainder = parseInt(reduce / minSecondInHour)
+            let minRemainder = parseInt((reduce % minSecondInHour) / minSecondInMinute)
+            let secRemainder = parseInt((reduce % minSecondInMinute) / 1000)
+            this.productData[index].h1 = parseInt(hourRemainder / 10)
+            this.productData[index].h2 = parseInt(hourRemainder % 10)
+            this.productData[index].m1 = parseInt(minRemainder / 10)
+            this.productData[index].m2 = parseInt(minRemainder % 10)
+            this.productData[index].s1 = parseInt(secRemainder / 10)
+            this.productData[index].s2 = parseInt(secRemainder % 10)
+            this.productData[index].timerTime = reduce
+            this.productData[index].remainder = true
+          } else {
+            this.productData[index].timerTime = 0
+            this.productData[index].remainder = remainder
+          }
+        })
 
 
-        var setTime = setInterval(() = > {
+        var setTime =  setInterval(() => {
           serviceTime += 1000
 
-        hours.forEach((hour, index) = > {
-          let reduce = hour.time - serviceTime
-          if (reduce > 0
-      )
-        {
-          let hourRemainder = parseInt(reduce / minSecondInHour)
-          let minRemainder = parseInt((reduce % minSecondInHour) / minSecondInMinute)
-          let secRemainder = parseInt((reduce % minSecondInMinute) / 1000)
-          this.productData[index].h1 = parseInt(hourRemainder / 10)
-          this.productData[index].h2 = parseInt(hourRemainder % 10)
-          this.productData[index].m1 = parseInt(minRemainder / 10)
-          this.productData[index].m2 = parseInt(minRemainder % 10)
-          this.productData[index].s1 = parseInt(secRemainder / 10)
-          this.productData[index].s2 = parseInt(secRemainder % 10)
-          this.productData[index].timerTime = reduce
-        }
-      else
-        {
-          this.productData[index].timerTime = 0
-        }
-      })
-      },
-        1000
-      )
+          hours.forEach((hour, index) => {
+            let reduce = hour.time - serviceTime
+            if (reduce > 0) {
+              let hourRemainder = parseInt(reduce / minSecondInHour)
+              let minRemainder = parseInt((reduce % minSecondInHour) / minSecondInMinute)
+              let secRemainder = parseInt((reduce % minSecondInMinute) / 1000)
+              this.productData[index].h1 = parseInt(hourRemainder / 10)
+              this.productData[index].h2 = parseInt(hourRemainder % 10)
+              this.productData[index].m1 = parseInt(minRemainder / 10)
+              this.productData[index].m2 = parseInt(minRemainder % 10)
+              this.productData[index].s1 = parseInt(secRemainder / 10)
+              this.productData[index].s2 = parseInt(secRemainder % 10)
+              this.productData[index].timerTime = reduce
+            } else {
+              this.productData[index].timerTime = 0
+            }
+          })
+        }, 1000)
         if (this.productData[3].timerTime === 0) {
           clearInterval(setTime)
         }
@@ -632,11 +614,11 @@
       },
       startIndex(){
         let startIndex = 2
-        for (let i = 0; i < this.productData.length - 1; i++) {
-          if (this.productData[i].timerTime > 0) {
+        for(let i=0;i<this.productData.length-1;i++){
+          if(this.productData[i].timerTime>0){
             startIndex = i
             break;
-          } else if (this.productData[i].timerTime <= 0 && this.productData[i + 1].timerTime > 0) {
+          }else if(this.productData[i].timerTime<=0&&this.productData[i+1].timerTime>0){
             startIndex = i
             break;
           }
@@ -662,55 +644,53 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-  .rules-modal {
-    padding: 40px;
+  .rules-modal{
+    padding:40px;
     text-align: left;
-    .head-title {
-      font-size: 24px;
+    .head-title{
+      font-size:24px;
       text-align: left;
       margin-bottom: 20px;
     }
-    .content {
+    .content{
       text-align: left;
-      font-size: 14px;
-      h3 {
+      font-size:14px;
+      h3{
         line-height: 28px;
       }
-      p {
+      p{
         line-height: 28px;
         color: #999999;
       }
     }
   }
-
-  .gethost-success {
-    .head-title {
+  .gethost-success{
+    .head-title{
       padding: 40px 0 40px;
-      font-size: 36px;
-      color: rgba(243, 123, 114, 1);
+      font-size:36px;
+      color:rgba(243,123,114,1);
     }
-    .content {
-      padding: 0 40px;
-      h3 {
+    .content{
+      padding:0 40px;
+      h3{
         padding: 30px 0;
       }
-      p {
-        line-height: 28px;
+      p{
+        line-height:28px;
         text-align: left;
       }
       margin: 0 auto;
       // width:293px;
       width: 384px;
-      height: 165px;
-      font-size: 14px;
-      font-family: PingFangSC-Medium;
-      color: rgba(255, 255, 255, 1);
-      background: url("../../../assets/img/active/active_2/bg-success-geted.png") no-repeat;
+      height:165px;
+      font-size:14px;
+      font-family:PingFangSC-Medium;
+      color:rgba(255,255,255,1);
+      background:url("../../../assets/img/active/active_2/bg-success-geted.png") no-repeat;
     }
   }
-
   .body {
-    background: rgba(249, 175, 128, 1);
+    background:  rgba(249, 175, 128, 1);
     padding-top: 110px;
     // padding-bottom: 100px;
     .content {
@@ -724,42 +704,42 @@
         text-align: center;
         margin-bottom: 15px;
       }
-      .free-product {
-        font-family: PingFangSC-Medium;
-        .item {
+      .free-product{
+        font-family:PingFangSC-Medium;
+        .item{
           display: flex;
           margin-bottom: 20px;
-          width: 1200px;
-          border-radius: 4px;
+          width:1200px;
+          border-radius:4px;
           // height: 250px;
           // overflow: hidden;
-          background: rgba(255, 255, 255, 1);
-          box-shadow: 0px 2px 31px -11px rgba(255, 103, 2, 0.7);
-          .left {
-            width: 264px;
+          background:rgba(255,255,255,1);
+          box-shadow: 0px 2px 31px -11px rgba(255,103,2,0.7);
+          .left{
+            width:264px;
             padding: 40px;
-            background: url("../../../assets/img/active/active_2/bg-product-item.png") no-repeat;
-            background-size: 100% 100%;
+            background:url("../../../assets/img/active/active_2/bg-product-item.png") no-repeat;
+            background-size:100% 100%;
             color: #fff;
-            font-family: PingFangSC-Medium;
-            h4 {
+            font-family:PingFangSC-Medium;
+            h4{
               margin-bottom: 20px;
-              font-size: 24px;
-              color: rgba(255, 255, 255, 1);
-              line-height: 24px;
+              font-size:24px;
+              color:rgba(255,255,255,1);
+              line-height:24px;
             }
-            p {
-              font-size: 18px;
-              line-height: 36px;
+            p{
+              font-size:18px;
+              line-height:36px;
             }
           }
-          .right {
+          .right{
             // width: 550px;
             width: 940px;
             padding: 40px;
             display: flex;
             justify-content: space-between;
-            .params {
+            .params{
               margin-top: 30px;
               .section {
                 margin-bottom: 22px;
@@ -774,34 +754,34 @@
                     font-style: normal;
                   }
                 }
-                span:last-child {
-                  color: #F37B72
+                span:last-child{
+                  color:#F37B72
                 }
               }
-              .section:nth-of-type(2) {
+              .section:nth-of-type(2){
                 margin-bottom: 40px;
               }
             }
-            .timer {
+            .timer{
               text-align: center;
-              .title {
-                font-size: 24px;
-                color: rgba(243, 123, 114, 1);
-                line-height: 33px;
+              .title{
+                font-size:24px;
+                color:rgba(243,123,114,1);
+                line-height:33px;
               }
-              .time {
+              .time{
                 margin: 20px 0;
                 font-size: 36px;
                 color: #F4766F;
-                font-family: Arial-BoldMT;
-                span {
+                font-family:Arial-BoldMT;
+                span{
                   margin: 0 10px;
                   display: inline-block;
-                  padding: 5px 10px;
-                  background: rgba(243, 123, 114, 1);
-                  border-radius: 4px;
-                  line-height: 60px;
-                  color: rgba(255, 255, 255, 1);
+                  padding:5px 10px;
+                  background:rgba(243,123,114,1);
+                  border-radius: 4px ;
+                  line-height:60px;
+                  color:rgba(255,255,255,1);
                 }
               }
               button {
@@ -832,37 +812,37 @@
       }
 
     }
-    .center {
+    .center{
       width: 1200px;
       margin: 0 auto;
     }
-    .recommend-product {
+    .recommend-product{
       background: url("../../../assets/img/active/active_2/bg-bottom.png") no-repeat;
       height: 400px;
-      .head {
-        padding-top: 100px;
+      .head{
+        padding-top:100px;
         margin-bottom: 24px;
-        font-size: 18px;
-        span {
+        font-size:18px;
+        span{
           display: inline-block;
-          width: 109px;
-          height: 32px;
+          width:109px;
+          height:32px;
           line-height: 32px;
           background: url("../../../assets/img/active/active_2/bg-headtitle.png");
           color: #fff;
           text-align: center;
         }
       }
-      .content {
+      .content{
         display: flex;
         justify-content: space-between;
-        div {
+        div{
           padding: 40px;
           width: 390px;
           background: #fff;
-          h4 {
+          h4{
             font-size: 18px;
-            margin-bottom: 15px;
+            margin-bottom:15px;
           }
         }
       }
@@ -872,7 +852,7 @@
   .head {
 
     .head-banner {
-      background: url("../../../assets/img/active/active_2/bg.png") no-repeat 0 70px;
+      background:url("../../../assets/img/active/active_2/bg.png") no-repeat 0 70px;
       > div {
         width: 1200px;
         margin: 0 auto;
@@ -937,13 +917,12 @@
     }
 
   }
-
   .process {
     padding: 50px 0;
     text-align: center;
-    h2 {
-      color: rgba(51, 51, 51, 1);
-      line-height: 36px;
+    h2{
+      color:rgba(51,51,51,1);
+      line-height:36px;
       font-size: 36px;
     }
     .items {
@@ -977,7 +956,7 @@
           // &.select{
           //   color:#377dff;
           // }
-          i {
+          i{
             display: inline-block;
             width: 11px;
             height: 11px;
@@ -1001,7 +980,6 @@
       }
     }
   }
-
   .modal-body {
     height: 55%;
     form {
@@ -1149,11 +1127,10 @@
       display: inline-block;
       position: absolute;
       z-index: -1;
-      left: 0;
-      top: -16px;
+      left:0;
+      top:-16px;
     }
   }
-
   .head-headline-process {
     font-size: 36px;
     text-align: center;
@@ -1167,11 +1144,10 @@
       display: inline-block;
       position: absolute;
       z-index: -1;
-      left: 0;
-      top: -16px;
+      left:0;
+      top:-16px;
     }
   }
-
   .activity-rule {
     background: #fff8f6 url(../../../assets/img/active/active_1/bg-rules.png) no-repeat center;
     .center {
@@ -1199,8 +1175,7 @@
   }
 
   .list-enter, .list-leave-to
-    /* .list-leave-active for below version 2.1.8 */
-  {
+    /* .list-leave-active for below version 2.1.8 */ {
     opacity: 0;
     transform: translateY(300px);
   }

@@ -2,8 +2,6 @@
   <div id="home">
     <!-- banner 轮播图 -->
     <div class="banner">
-
-
       <my-carousel :interval=5000 effect="fade" class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
           <div @click="push('active_2')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
@@ -11,7 +9,7 @@
               <div>
                 <div>
                   <p>
-                    <img style="padding-top: 0" src="../../assets/img/active/active_2/ziti.png" style="width:65%">
+                    <img style="padding-top: 0" src="../../assets/img/active/active_2/ziti.png" style="width:65%;padding-top: 0px">
                   </p>
                   <button>立即领取</button>
                 </div>
@@ -69,22 +67,6 @@
             </div>
           </div>
         </my-carousel-item>
-        <!--<my-carousel-item class="carousel-item">
-          <div @click="push('active')" style="cursor: pointer;background-image:linear-gradient(90deg,#E7F0FD,#ACCBEE)">
-            <div style="width:1200px;height:560px;margin:0px auto;position:relative">
-              <img src="../../assets/img/home/carousel-2-1.png" style="position:absolute;right:0px;top:20px;">
-              <div style="position: relative; top: 30%">
-                <p style="font-size: 48px;color: #5692fe;margin-bottom: 20px;">新睿云盛大上线</p>
-                <p style="font-size: 20px;color: #5692fe;margin-bottom: 20px;">全品类折扣优惠 礼包零门槛领取</p>
-                <p style="font-size: 24px;color:#5692fe">最高省500元</p>
-                <button
-                  style="width: 170px;height: 55px;font-family: Microsoft YaHei;font-size: 24px;color: #4481eb;background: #fefe00;margin-top: 20px;border: none;">
-                  立即领取
-                </button>
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>-->
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->
