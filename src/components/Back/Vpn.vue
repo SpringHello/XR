@@ -1370,7 +1370,7 @@
                }
              })}else{
                this.$Message.info({
-                 content: '请先连接在重启隧道'
+                 content: '请先连接在重启连接'
                })
              }
             }
