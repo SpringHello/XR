@@ -161,7 +161,9 @@
             </div>
         </div>
         <div slot="footer" style="text-align:center">
-            <Button type="primary" size="large" style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;margin:20px 0;">立即查看</Button>
+            <Button type="primary" size="large" style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;margin:20px 0;">
+             <router-link to='/ruicloud/host' style="color:#fff"> 立即查看</router-link>
+            </Button>
         </div>
     </Modal>
     <Modal v-model="modal3" width="550" :scrollable="true">
