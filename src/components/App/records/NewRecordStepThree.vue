@@ -57,45 +57,122 @@
             </div>
           </transition>
         </div>
-        <h2 style="margin-top: 60px">请上传主办单位负责人相关资料</h2>
-        <div class="uploadIDCard">
-          <div class="item">
-            <div class="item-content">
-              <div style="width:130px;">
-                <Upload
-                  type="drag"
-                  :show-upload-list="false"
-                  :with-credentials="true"
-                  action="file/upFile.do">
-                  <div class="item-content-text">
-                    暂无图片
-                  </div>
-                  <Button type="primary">上传</Button>
-                </Upload>
-              </div>
-              <div class="item-img">
-                <img src="../../../assets/img/usercenter/card-font.png">
-                <p>示例图</p>
+        <h2>请上传主办单位负责人相关资料</h2>
+        <div class="upload">
+          <div class="uploadTitle">
+            <p>身份证人像面</p>
+            <div class="item">
+              <div class="item-content">
+                <div style="width:50%;">
+                  <Upload
+                    type="drag"
+                    :show-upload-list="false"
+                    :with-credentials="true"
+                    action="file/upFile.do">
+                    <div class="item-content-text">
+                      暂无图片
+                    </div>
+                    <button>上传</button>
+                  </Upload>
+                </div>
+                <div class="item-img">
+                  <img src="../../../assets/img/records/records-img1.png">
+                  <p>示例图</p>
+                </div>
               </div>
             </div>
           </div>
-          <div class="item" style="margin-left: 20px">
-            <div class="item-content">
-              <div style="width:130px;">
-                <Upload
-                  type="drag"
-                  :show-upload-list="false"
-                  :with-credentials="true"
-                  action="file/upFile.do">
-                  <div class="item-content-text">
-                    暂无图片
-                  </div>
-                  <Button type="primary">上传</Button>
-                </Upload>
+          <div class="uploadTitle">
+            <p style="margin-left: 20px">身份证国徽面</p>
+            <div class="item" style="margin-left: 20px">
+              <div class="item-content">
+                <div style="width:50%;">
+                  <Upload
+                    type="drag"
+                    :show-upload-list="false"
+                    :with-credentials="true"
+                    action="file/upFile.do">
+                    <div class="item-content-text">
+                      暂无图片
+                    </div>
+                    <button>上传</button>
+                  </Upload>
+                </div>
+                <div class="item-img">
+                  <img src="../../../assets/img/records/records-img2.png">
+                  <p>示例图</p>
+                </div>
               </div>
-              <div class="item-img">
-                <img src="../../../assets/img/usercenter/card-back.png">
-                <p>示例图</p>
+            </div>
+          </div>
+        </div>
+        <h2>请上传主办单位相关资料</h2>
+        <div class="upload">
+          <div class="uploadTitle">
+            <p>执照扫描件</p>
+            <div class="item">
+              <div class="item-content">
+                <div style="width:50%;">
+                  <Upload
+                    type="drag"
+                    :show-upload-list="false"
+                    :with-credentials="true"
+                    action="file/upFile.do">
+                    <div class="item-content-text">
+                      暂无图片
+                    </div>
+                    <button>上传</button>
+                  </Upload>
+                </div>
+                <div class="item-img">
+                  <img src="../../../assets/img/records/records-img3.png">
+                  <p>示例图</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <h2>请上传域名证书</h2>
+        <div class="upload">
+          <div class="uploadTitle">
+            <p>执照扫描件</p>
+            <div class="item">
+              <div class="item-content">
+                <div style="width:100%;">
+                  <Upload
+                    type="drag"
+                    :show-upload-list="false"
+                    :with-credentials="true"
+                    action="file/upFile.do">
+                    <div class="item-content-text">
+                      点击选择文件
+                    </div>
+                    <button>上传</button>
+                  </Upload>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <h2>请上传其他资料</h2>
+        <p class="titleDescription">如前置审批材料，法人授权委托书等材料（点击下载法人授权委托书）</p>
+        <div class="upload">
+          <div class="uploadTitle">
+            <p>其他文件</p>
+            <div class="item">
+              <div class="item-content">
+                <div style="width:100%;">
+                  <Upload
+                    type="drag"
+                    :show-upload-list="false"
+                    :with-credentials="true"
+                    action="file/upFile.do">
+                    <div class="item-content-text">
+                      点击选择文件
+                    </div>
+                    <button>上传</button>
+                  </Upload>
+                </div>
               </div>
             </div>
           </div>
@@ -166,6 +243,7 @@
     color: rgba(51, 51, 51, 1);
     line-height: 24px;
     font-weight: normal;
+    margin-top: 60px;
   }
 
   // 定义h3公用样式
@@ -179,7 +257,7 @@
 
   .body-bottom {
     .content {
-      padding: 60px 0 36px;
+      padding: 0 0 36px;
       border-bottom: 2px solid #D9D9D9;
       .center();
       h2 {
@@ -199,40 +277,60 @@
         margin-bottom: 20px;
         margin-top: 60px;
       }
-      .uploadIDCard {
+      .upload {
         display: flex;
-        .item {
-          width: 450px;
-          padding: 20px;
-          border-radius: 4px;
-          border: 1px solid #d8d8d8;
-          margin-top: 20px;
-          .item-content {
-            display: flex;
-            padding: 20px;
-            background-color: #f7f7f7;
-            .item-content-text {
-              padding: 20px 0px;
-              margin-bottom: 20px;
-              border: 1px solid #ffffff;
-              background-color: #ffffff;
-              color: #999;
-            }
+        .uploadTitle {
+          margin: 20px 0 10px;
+          > p {
+            font-size: 14px;
+            font-family: MicrosoftYaHei;
+            color: rgba(102, 102, 102, 1);
           }
-          .item-img {
-            width: 130px;
-            margin-left: 20px;
-            > img {
-              width: 130px;
-              height: 74px;
-              margin-bottom: 20px;
+          .item {
+            width: 450px;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #d8d8d8;
+            margin-top: 20px;
+            .item-content {
+              display: flex;
+              padding: 20px;
+              background-color: #f7f7f7;
+              .item-content-text {
+                padding: 50px 0px;
+                margin-bottom: 20px;
+                border: 1px solid #ffffff;
+                background-color: #ffffff;
+                color: #999;
+              }
+              button {
+                outline: none;
+                cursor: pointer;
+                border: none;
+                background: rgba(255, 231, 119, 1);
+                padding: 5px 15px;
+              }
             }
-            > p {
-              line-height: 32px;
-              text-align: center;
+            .item-img {
+              width: 130px;
+              margin-left: 20px;
+              > img {
+                margin-bottom: 20px;
+                width: 164px;
+                height: 120px;
+              }
+              > p {
+                text-align: center;
+              }
             }
           }
         }
+      }
+      .titleDescription {
+        font-size: 14px;
+        font-family: PingFangSC-Medium;
+        color: rgba(153, 153, 153, 1);
+        margin-top: 10px;
       }
     }
   }
