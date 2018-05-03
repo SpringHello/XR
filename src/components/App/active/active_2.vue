@@ -319,7 +319,7 @@
         recommendData:[
           {
             title:'0元购主机，注册领现金',
-            text:'198元现金大礼包免费领',
+            text:'196元现金大礼包免费领',
             src:'/ruicloud/active_1'
           },
           {
