@@ -215,21 +215,18 @@ export default {
   },
   data() {
     //校验网站域名
-    // const validWebsiteDomain = (rule, value, callback) => {
-    //   var reg = /^([a-zA-Z\d][a-zA-Z\d-_]+\.)+[a-zA-Z\d-_][^ ]*$/;
-    //   for (let i = 0; i < value.length; i++) {
-    //     console.log(this.basicInformation.web);
-    //     // console.log(value[i]+22222222);
-    //     if (value.length == 0 || value[i] == "") {
-    //       return callback(new Error("请输入网站域名"));
-    //     } else if (!reg.test(value[i]) && value[i] !== "") {
-    //       console.log(value[i] + 111);
-    //       return callback(new Error("域名不正确"));
-    //     } else {
-    //       callback();
-    //     }
-    //   }
-    // };
+    const validWebsiteDomain = (rule, value, callback) => {
+      var reg = /^([a-zA-Z\d][a-zA-Z\d-_]+\.)+[a-zA-Z\d-_][^ ]*$/;
+      
+        if (value == "") {
+          return callback(new Error("请输入网站域名"));
+        } else if (!reg.test(value[i]) && value[i] !== "") {
+          console.log(value[i] + 111);
+          return callback(new Error("域名不正确"));
+        } else {
+          callback();
+        }
+    };
     //校验网站负责人证件号码
     const validCertificateNumber = (rule, value, callback) => {
       if (value == "") {
