@@ -39,9 +39,9 @@
             <FormItem label="网站域名" prop="websiteDomain">
               <Input v-model="basicInformation.websiteDomain" placeholder="请输入网站域名" style="width: 500px;"></Input>
             </FormItem>
-            <FormItem v-for="(item, index) in basicInformation.newWebsiteDomainList" :key="index" label="新增网站域名">
+            <FormItem v-for="(item, index) in basicInformation.newWebsiteDomainList" prop="newWebsiteDomain"  :key="index" label="新增网站域名">
               <div style="display: flex">
-                <Input v-model="basicInformation.newWebsiteDomain[index]" placeholder="请输入新增网站域名" style="width: 500px;"></Input>
+                <Input v-model="basicInformation.newWebsiteDomain[index]"  placeholder="请输入新增网站域名" style="width: 500px;"></Input>
                 <p style="cursor: pointer; color: #377dff;font-size: 14px;margin-left: 15px;line-height: 28px" @click="deleteWebsiteDomain(index)">删除</p>
               </div>
             </FormItem>
@@ -217,15 +217,13 @@ export default {
     //校验网站域名
     const validWebsiteDomain = (rule, value, callback) => {
       var reg = /^([a-zA-Z\d][a-zA-Z\d-_]+\.)+[a-zA-Z\d-_][^ ]*$/;
-      
-        if (value == "") {
-          return callback(new Error("请输入网站域名"));
-        } else if (!reg.test(value[i]) && value[i] !== "") {
-          console.log(value[i] + 111);
-          return callback(new Error("域名不正确"));
-        } else {
-          callback();
-        }
+      if (value == "") {
+        return callback(new Error("请输入网站域名"));
+      } else if (!reg.test(value)) {
+        return callback(new Error("域名不正确"));
+      } else {
+        callback();
+      }
     };
     //校验网站负责人证件号码
     const validCertificateNumber = (rule, value, callback) => {
@@ -269,7 +267,21 @@ export default {
         callback();
       }
     };
-
+    //校验新增域名
+    const validNewWebsiteDomain = (rule, value, callback) => {
+      let reg = /^([a-zA-Z\d][a-zA-Z\d-_]+\.)+[a-zA-Z\d-_][^ ]*$/;
+      console.log(value);
+      for (let i = 0; i < value.length; i++) {
+        if (value.length == 0 || value[i] == "") {
+          return callback(new Error("请输入网站域名"));
+        } else if(!reg.test(value[i]) && value[i] !== ""){
+          // console.log(value[i]);
+         return callback(new Error("请输入正确的网站域名"));
+        }else{
+          callback();
+        }
+      }
+    };
     return {
       index: 0,
       //网站域名index
@@ -285,10 +297,10 @@ export default {
         // 网站名称
         siteName: "",
         // 网站域名
-        websiteDomain: [],
+        websiteDomain: "",
         websiteDomainList: [{}],
-        newWebsiteDomainList:[],
-        newWebsiteDomain:[],
+        newWebsiteDomainList: [],
+        newWebsiteDomain: [],
         // 网站首页URL
         websiteHomepage: "",
         // 网站服务内容
@@ -350,9 +362,12 @@ export default {
         siteName: [
           { required: true, message: "请输入网站名称", trigger: "blur" }
         ],
-        // websiteDomain: [
-        //   { required: true, validator: validWebsiteDomain, trigger: "blur" }
-        // ],
+        websiteDomain: [
+          { required: true, validator: validWebsiteDomain, trigger: "blur" }
+        ],
+        newWebsiteDomain: [
+          { required: true, validator: validNewWebsiteDomain, trigger: "blur" }
+        ],
         contentsLanguage: [
           {
             required: true,
@@ -495,17 +510,17 @@ export default {
 }
 
 .form-p {
-    font-family: MicrosoftYaHei;
-    color: rgba(55, 125, 255, 1);
-    cursor: pointer;
-    font-size: 14px;
-    padding: 0 0 21px 145px;
-    img {
-      margin-right: 5px;
-      position: relative;
-      top: 2px;
-    }
+  font-family: MicrosoftYaHei;
+  color: rgba(55, 125, 255, 1);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 0 21px 145px;
+  img {
+    margin-right: 5px;
+    position: relative;
+    top: 2px;
   }
+}
 .list-enter-active,
 .list-leave-active {
   transition: all 1s;
