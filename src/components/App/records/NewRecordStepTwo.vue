@@ -36,14 +36,16 @@
             <FormItem label="网站名称" prop="siteName">
               <Input v-model="basicInformation.siteName" placeholder="请输入网站名称" style="width: 500px"></Input>
             </FormItem>
-            <FormItem label="网站域名" prop="websiteDomain" >
-              <div v-for="(item, index) in basicInformation.websiteDomainList" :key="index">
-                <Input v-model="basicInformation.websiteDomain[index]" placeholder="请输入网站域名"
-                       style="width: 500px;margin-bottom: 24px;"></Input>
-                <span v-if="index!==0" @click="deleteWebsiteDomain(index)" style="color: #377dff;margin-left: 20px;cursor: pointer;font-size: 14px">删除</span>
-              </div>
-              <p class="form-p" @click="addWebsiteDomain()"><img src="../../../assets/img/records/records-icon19.png"/> 新增网站域名</p>
+            <FormItem label="网站域名" prop="websiteDomain">
+              <Input v-model="basicInformation.websiteDomain" placeholder="请输入网站域名" style="width: 500px;"></Input>
             </FormItem>
+            <FormItem v-for="(item, index) in basicInformation.newWebsiteDomainList" :key="index" label="新增网站域名">
+              <div style="display: flex">
+                <Input v-model="basicInformation.newWebsiteDomain[index]" placeholder="请输入新增网站域名" style="width: 500px;"></Input>
+                <p style="cursor: pointer; color: #377dff;font-size: 14px;margin-left: 15px;line-height: 28px" @click="deleteWebsiteDomain(index)">删除</p>
+              </div>
+            </FormItem>
+            <p class="form-p" @click="addWebsiteDomain"><img src="../../../assets/img/records/records-icon19.png"/> 新增网站域名</p>
             <FormItem label="网站首页URL" prop="websiteHomepage">
               <Input v-model="basicInformation.websiteHomepage" placeholder="请输入网站首页URL" style="width: 500px"></Input>
             </FormItem>
@@ -213,53 +215,64 @@ export default {
   },
   data() {
     //校验网站域名
-    const validWebsiteDomain = (rule, value, callback) => {
-      var reg = /^([a-zA-Z\d][a-zA-Z\d-_]+\.)+[a-zA-Z\d-_][^ ]*$/;
-      for (let i = 0; i < value.length; i++) {
-        // console.log(this.basicInformation.web);
-        // console.log(value[i]+22222222);
-        if (value.length == 0 || value[i] == "") {
-          return callback(new Error("请输入网站域名"));
-        } else if (!reg.test(value[i]) && value[i] !== "") {
-        console.log(value[i]+111);
-          return callback(new Error("域名不正确"));
-        } else {
-          callback();
-        }
-      }
-    };
+    // const validWebsiteDomain = (rule, value, callback) => {
+    //   var reg = /^([a-zA-Z\d][a-zA-Z\d-_]+\.)+[a-zA-Z\d-_][^ ]*$/;
+    //   for (let i = 0; i < value.length; i++) {
+    //     console.log(this.basicInformation.web);
+    //     // console.log(value[i]+22222222);
+    //     if (value.length == 0 || value[i] == "") {
+    //       return callback(new Error("请输入网站域名"));
+    //     } else if (!reg.test(value[i]) && value[i] !== "") {
+    //       console.log(value[i] + 111);
+    //       return callback(new Error("域名不正确"));
+    //     } else {
+    //       callback();
+    //     }
+    //   }
+    // };
     //校验网站负责人证件号码
     const validCertificateNumber = (rule, value, callback) => {
-        if (value == "") {
-          return callback(new Error("请输入网站负责人证件号码"));
-        } else if (!this.basicInformation.certificateTypeList[this.basicInformation.certificateType-1].reg.test(value)) {
-          console.log(this.basicInformation.certificateType);
-         return callback(new Error("请输入正确的"+this.basicInformation.certificateTypeList[this.basicInformation.certificateType-1].label));
-        }else{
-          callback();
-        }
-    };
-    //校验办公室电话号码
-    const validOfficePhone = (rule,value,callback) =>{
-      let reg = /^0\d{2,3}-?\d{7,8}$/
-      if(value ==""){
-        return callback(new Error("请输入办公室电话"));
-      }else if(!reg.test(value)){
-        return callback(new Error("请输入正确的办公室电话"));
-      }else{
+      if (value == "") {
+        return callback(new Error("请输入网站负责人证件号码"));
+      } else if (
+        !this.basicInformation.certificateTypeList[
+          this.basicInformation.certificateType - 1
+        ].reg.test(value)
+      ) {
+        console.log(this.basicInformation.certificateType);
+        return callback(
+          new Error(
+            "请输入正确的" +
+              this.basicInformation.certificateTypeList[
+                this.basicInformation.certificateType - 1
+              ].label
+          )
+        );
+      } else {
         callback();
       }
-    }
+    };
+    //校验办公室电话号码
+    const validOfficePhone = (rule, value, callback) => {
+      let reg = /^0\d{2,3}-?\d{7,8}$/;
+      if (value == "") {
+        return callback(new Error("请输入办公室电话"));
+      } else if (!reg.test(value)) {
+        return callback(new Error("请输入正确的办公室电话"));
+      } else {
+        callback();
+      }
+    };
     //校验手机号码
-    const validPhoneNumber = (rule,value,callback) =>{
-       let reg = /^1[3|5|8|9|6|7]\d{9}$/;
+    const validPhoneNumber = (rule, value, callback) => {
+      let reg = /^1[3|5|8|9|6|7]\d{9}$/;
       if (!reg.test(value)) {
         return callback(new Error("请输入正确的手机号码"));
       } else {
         callback();
       }
-    }
-    
+    };
+
     return {
       index: 0,
       //网站域名index
@@ -277,6 +290,8 @@ export default {
         // 网站域名
         websiteDomain: [],
         websiteDomainList: [{}],
+        newWebsiteDomainList:[],
+        newWebsiteDomain:[],
         // 网站首页URL
         websiteHomepage: "",
         // 网站服务内容
@@ -338,9 +353,9 @@ export default {
         siteName: [
           { required: true, message: "请输入网站名称", trigger: "blur" }
         ],
-        websiteDomain: [
-          { required: true, validator: validWebsiteDomain, trigger: "blur" }
-        ],
+        // websiteDomain: [
+        //   { required: true, validator: validWebsiteDomain, trigger: "blur" }
+        // ],
         contentsLanguage: [
           {
             required: true,
@@ -369,15 +384,15 @@ export default {
         certificateNumber: [
           { required: true, validator: validCertificateNumber, trigger: "blur" }
         ],
-        officePhone:[
-          {required:true,validator:validOfficePhone,trigger:"blur"}
+        officePhone: [
+          { required: true, validator: validOfficePhone, trigger: "blur" }
         ],
-        phoneNumber:[
-          {required:true,validator:validPhoneNumber,trigger:"blur"}
+        phoneNumber: [
+          { required: true, validator: validPhoneNumber, trigger: "blur" }
         ],
-        emailAddress:[
-          {required:true,message:"请输入邮箱地址",trigger:"blur"},
-          {type:'email',message:"请输入正确的邮箱地址",trigger:"blur"}
+        emailAddress: [
+          { required: true, message: "请输入邮箱地址", trigger: "blur" },
+          { type: "email", message: "请输入正确的邮箱地址", trigger: "blur" }
         ]
       },
       //主体信息List
@@ -396,30 +411,33 @@ export default {
     },
     // 新增网站域名
     addWebsiteDomain() {
-      this.basicInformation.websiteDomainList.push({});
+      this.basicInformation.newWebsiteDomainList.push({});
       // console.log(this.basicInformation.websiteDomain);
     },
     //删除网站域名
     deleteWebsiteDomain(index) {
-      this.basicInformation.websiteDomainList.splice(index, 1);
-      this.basicInformation.websiteDomain.splice(index, 1);
+      this.basicInformation.newWebsiteDomainList.splice(index, 1);
+      this.basicInformation.newWebsiteDomain.splice(index, 1);
     },
     //切换证件类型重新验证
-    changeCertificate(){
-      this.$refs.basicInformation.validateField( "certificateNumber",vaild =>{})
+    changeCertificate() {
+      this.$refs.basicInformation.validateField(
+        "certificateNumber",
+        vaild => {}
+      );
       this.basicInformation.certificateNumber = "";
     },
     //进入下一步
-    nextStep(name){
+    nextStep(name) {
       this.$refs[name].validate(valid => {
-        if(valid){
+        if (valid) {
           this.$router.push({
-            path:'/NewRecordStepThree'
-          })
-        }else{
+            path: "/NewRecordStepThree"
+          });
+        } else {
           return;
         }
-      })
+      });
     }
   },
   mounted() {
@@ -480,16 +498,17 @@ export default {
 }
 
 .form-p {
-  font-family: MicrosoftYaHei;
-  color: rgba(55, 125, 255, 1);
-  cursor: pointer;
-  font-size: 14px;
-  img {
-    margin-right: 5px;
-    position: relative;
-    top: 2px;
+    font-family: MicrosoftYaHei;
+    color: rgba(55, 125, 255, 1);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0 0 21px 145px;
+    img {
+      margin-right: 5px;
+      position: relative;
+      top: 2px;
+    }
   }
-}
 .list-enter-active,
 .list-leave-active {
   transition: all 1s;
