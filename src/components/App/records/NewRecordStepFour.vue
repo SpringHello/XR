@@ -36,10 +36,29 @@
         <div v-if="photograph === 2 && nextStep === true">
           <div class="description">
             <p>收件地址</p>
-
+            <Form ref="receiveForm" :model="receiveForm" :rules="receiveFormRuleValidate"
+                  :label-width="70">
+              <FormItem label="地址" prop="address">
+                <Input v-model="receiveForm.address" placeholder="请输入地址"
+                       style="width: 500px" :readonly="canUpdate"></Input>
+                <span style="cursor: pointer;color: #377dff;margin-left: 10px;font-size: 14px" @click="updateReceiveForm">使用新地址</span>
+              </FormItem>
+              <FormItem label="收件人" prop="person">
+                <Input v-model="receiveForm.person" placeholder="请输入收件人"
+                       style="width: 500px" :readonly="canUpdate"></Input>
+              </FormItem>
+              <FormItem label="联系方式" prop="phone">
+                <Input v-model="receiveForm.phone" placeholder="请输入联系方式"
+                       style="width: 500px" :readonly="canUpdate"></Input>
+              </FormItem>
+              <FormItem v-if="canUpdate === false">
+                <Button type="primary" @click="submitNewAddress('receiveForm')" style="margin-left: 420px">确认提交</Button>
+              </FormItem>
+            </Form>
           </div>
-          <div class="footer">
+          <div class="footer" style="padding-top: 0">
             <button>提交幕布申请</button>
+            <button @click="showModal.logistics = true">查看物流</button>
           </div>
         </div>
       </div>
@@ -80,6 +99,20 @@
     <div class="content-footer" v-show="photograph === 2 && nextStep === true">
       <button @click="$router.push('waitSecondTrial')">提交管局审核</button>
     </div>
+    <Modal v-model="showModal.logistics" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">物流信息</span>
+      </p>
+      <div class="logistics">
+        <p>物流公司：<span>顺丰速递</span></p>
+        <p>物流单号：<span style="color: #377dff">827397239823</span></p>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary"
+                @click="showModal.logistics = false">确认
+        </Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -110,6 +143,15 @@
           address: '这是地址',
           person: '这是姓名',
           phone: '这是联系方式'
+        },
+        // 判断收件人信息是否可以修改
+        canUpdate: true,
+        // 收件地址校检
+        receiveFormRuleValidate: {},
+        // 模态框
+        showModal: {
+          // 物流
+          logistics: false,
         }
       }
     },
@@ -120,7 +162,16 @@
         closable: true
       })
     },
-    methods: {},
+    methods: {
+      // 使用新地址
+      updateReceiveForm() {
+        this.canUpdate = false
+      },
+      // 提交修改的新地址
+      submitNewAddress(name) {
+        this.canUpdate = true
+      }
+    },
   }
 </script>
 
@@ -216,7 +267,7 @@
         }
       }
       .description {
-        padding: 17px 0 40px 20px;
+        padding: 17px 0 0 20px;
         > p {
           font-size: 14px;
           font-family: PingFangSC-Medium;
@@ -229,7 +280,7 @@
         }
       }
       .footer {
-        padding: 0 0 40px 20px;
+        padding: 40px 0 40px 20px;
         > button {
           font-size: 14px;
           font-family: PingFangSC-Medium;
@@ -330,4 +381,18 @@
       }
     }
   }
+
+  .logistics {
+    > p {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      color: rgba(51, 51, 51, 1);
+      line-height: 28px;
+      > span {
+        font-size: 12px;
+        color: #999;
+      }
+    }
+  }
+
 </style>
