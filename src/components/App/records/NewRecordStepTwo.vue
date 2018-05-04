@@ -288,7 +288,7 @@ export default {
         // 网站名称
         siteName: "",
         // 网站域名
-        websiteDomain: [],
+        websiteDomain: '',
         websiteDomainList: [{}],
         newWebsiteDomainList:[],
         newWebsiteDomain:[],
