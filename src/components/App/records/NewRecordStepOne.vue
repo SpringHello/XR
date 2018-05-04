@@ -101,6 +101,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+<<<<<<< HEAD
 import step from "./step.vue";
 import area from "@/options/area";
 export default {
@@ -125,6 +126,30 @@ export default {
         return callback(new Error("请选择所属区域"));
       } else {
         callback();
+=======
+  import step from './step.vue'
+  import area from '@/options/area'
+  export default {
+    components: {
+      step
+    },
+    beforeRouteEnter(to, from, next) {
+      var area = sessionStorage.getItem('zone')
+      var recordsType = sessionStorage.getItem('recordsType')
+      next(vm => {
+        vm.setData(area, recordsType)
+        window.scroll(0,525)
+      })
+    },
+    data() {
+      // 校验地区
+      const validateArea = (rule, value, callback) => {
+        if (this.mainUnitInformation.province == '' || this.mainUnitInformation.city == '' || this.mainUnitInformation.district == '') {
+          return callback(new Error('请选择所属区域'))
+        } else {
+          callback()
+        }
+>>>>>>> df9966efb9677ba5a1bf7480ad3ded94b67ef89d
       }
     };
     //校验座机号码

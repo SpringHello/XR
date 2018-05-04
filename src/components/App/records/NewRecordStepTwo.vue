@@ -216,8 +216,8 @@ export default {
     const validWebsiteDomain = (rule, value, callback) => {
       var reg = /^([a-zA-Z\d][a-zA-Z\d-_]+\.)+[a-zA-Z\d-_][^ ]*$/;
       for (let i = 0; i < value.length; i++) {
-        console.log(this.basicInformation.websiteDomainList);
-        console.log(value[i]+22222222);
+        // console.log(this.basicInformation.web);
+        // console.log(value[i]+22222222);
         if (value.length == 0 || value[i] == "") {
           return callback(new Error("请输入网站域名"));
         } else if (!reg.test(value[i]) && value[i] !== "") {
