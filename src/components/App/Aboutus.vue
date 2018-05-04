@@ -61,43 +61,6 @@
         </div>
       </section>
 
-      <!-- <section>
-        <div class="section-wrap">
-          <div class="head-info">
-            <h1 class="title">助理运营商全面实现敏捷业务生产</h1>
-            <p class="desc" style="width:500px"><span>紧随市场需求 数据驱动业务</span><span>IB 业务集成总线</span><span>BPM工作流引擎</span></p>
-          </div>
-          <div class="section-content business">
-            <div v-for="(item,index) in business" :key="index" @mouseenter="item.me=true" @mouseleave="item.me=false"
-                :class="{hover:item.me}">
-              <p>{{item.title}}</p>
-              <div class="imgbox" v-show="!item.me">
-                <img :src="item.img"/>
-              </div>
-              <div class="imgbox" v-show="item.me">
-                <img :src="item.hoverImg">
-              </div>
-              <span>{{item.desc}}</span>
-            </div>
-          </div>
-        </div>
-      </section> -->
-
-      <!-- <section>
-        <div class="section-wrap">
-          <div class="head-info">
-            <h1 class="title">敏捷业务生产工厂的核心价值</h1>
-          </div>
-          <div class="section-content corevalue">
-            <div v-for="(item,index) in corevalue" :key="index">
-              <p>{{item.title}}</p>
-              <img :src="item.img"/>
-              <span>{{item.desc}}</span>
-            </div>
-          </div>
-        </div>
-      </section> -->
-
       <section>
         <div class="section-wrap">
           <div class="head-info">
