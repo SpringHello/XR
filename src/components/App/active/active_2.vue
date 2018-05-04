@@ -5,7 +5,7 @@
         <div>
           <div>
             <p>
-              <img src="../../../assets/img/active/active_2/ziti.png" style="width:65%">
+              <img src="../../../assets/img/active/active_2/ziti.png" style="width:400px;height:270px;">
             </p>
           </div>
           <transition name="list">
@@ -157,7 +157,7 @@
         <h2 class="head-title">抢到啦！</h2>
         <div class="content">
           <h3>恭喜你获得</h3>
-          <p>{{messageSuccess}}</p>
+          <p style=" height:165px;">{{messageSuccess}}</p>
         </div>
       </div>
       <div slot="footer" style="text-align:center">
@@ -168,10 +168,10 @@
     </Modal>
     <Modal v-model="modal3" width="550" :scrollable="true">
       <div style="text-align:center" class="gethost-success">
-        <h2 class="head-title" style="padding:0">sorry</h2>
+        <h2 class="head-title" style="padding-bottom:0">Sorry</h2>
         <div class="content" style="background:none;color:#000">
-          <h3>{{messageError}}</h3>
-          <!-- <p>您可以等待下一场活动或者移步隔壁活动专区，<a href="/ruicloud/active_1">38元无门槛券</a>等您拿！</p> -->
+          <h3 style="text-align: left" v-html="messageError"></h3>
+          <p v-html="messageErrorText"></p>
         </div>
       </div>
       <div slot="footer">
@@ -227,6 +227,7 @@
       return {
         messageSuccess:'',
         messageError:'',
+        messageErrorText:'',
         personalauth: 1,
         companyauth: 1,
         isLogin: 0,
@@ -440,6 +441,7 @@
             this.modal2=true
           } else{
             this.messageError=response.data.message
+            this.messageErrorText=response.data.message2
             this.modal3=true
           }
         })
@@ -680,9 +682,8 @@
         text-align: left;
       }
       margin: 0 auto;
-      // width:293px;
       width: 384px;
-      height:165px;
+
       font-size:14px;
       font-family:PingFangSC-Medium;
       color:rgba(255,255,255,1);

@@ -9,7 +9,7 @@
               <div>
                 <div>
                   <p>
-                    <img style="padding-top: 0" src="../../assets/img/active/active_2/ziti.png" style="width:65%;padding-top: 0px">
+                    <img src="../../assets/img/active/active_2/ziti.png" style="width:400px;height:200px;padding-top: 0px">
                   </p>
                   <button>立即领取</button>
                 </div>

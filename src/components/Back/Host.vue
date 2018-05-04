@@ -151,7 +151,7 @@
                                 :class="{btnnormal:auth,_hover:auth}">管理
                         </Button>
                         <Button v-if="!auth" :disabled="!auth">连接主机</Button>
-                        <Button v-else class="btnnormal _hover" @click="link">连接主机
+                        <Button v-else class="btnnormal _hover" @click="link(item)">连接主机
                         </Button>
                         <!--<a v-else :href="item.connecturl" target="_blank"
                            style="line-height: 30px;border: 1px solid;border-radius: 4px;width: 76px;" class="_hover">连接主机</a>-->
@@ -542,6 +542,21 @@
           提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：028-23242423</p>
       </div>
     </Modal>
+
+    <!--远程连接密码提示框-->
+    <Modal v-model="showModal.linkPassword" width="360" :scrollable="true">
+      <p slot="header">
+        <span>远程连接密码</span>
+      </p>
+      <div>
+        <p style="font-size: 20px;margin-bottom: 15px;">您的远程连接密码是：{{linkPassword}}</p>
+        <p style="padding:5px;font-size: 12px;line-height: 20px;border:1px solid #cccccc;border-radius: 4px;">警告!
+          远程连接密码只出现一次，您以后每次远程连接登录时都需要输入该密码，请做好记录存档工作。</p>
+      </div>
+      <div slot="footer">
+        <Button type="primary" size="large" @click="confirmLink">登录</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -591,7 +606,8 @@
           rename: false,
           Renew: false,
           selectAuthType: false,
-          balance: false
+          balance: false,
+          linkPassword: false
         },
         renameForm: {
           hostName: ''
@@ -660,7 +676,8 @@
         RenewForm: {
           cost: 0,
           id: ''
-        }
+        },
+        linkPassword: '111'
       }
     },
     created() {
@@ -1273,10 +1290,19 @@
         this.$router.push('/ruicloud/usercenter')
       },
       // 连接主机动作
-      link(){
-          this.$message.confirm({
-              content:'请输入'
-          })
+      link(item){
+        this.$http.get('information/connectVm.do', {
+          params: {
+            VMId: item.computerid
+          }
+        }).then(response => {
+          if (response.data.connectCode == '') {
+            this.showModal.linkPassword = true
+          } else {
+            this.linkPassword = response.data.result
+            this.showModal.linkPassword = true
+          }
+        })
       }
     },
     computed: {
