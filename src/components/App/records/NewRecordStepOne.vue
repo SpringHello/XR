@@ -337,7 +337,7 @@
         ],
         unitName: [
           { required: true, message: "请输入主体单位名称", trigger: "blur" },
-          {type:String,max:20,message:"最多只能输入20个字"}
+          {type:"string",max:20,message:"最多只能输入20个字"}
         ],
         certificatesResidence: [
           { required: true, message: "请输入主体单位证件住所", trigger: "blur" }
