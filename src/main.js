@@ -36,6 +36,7 @@ Vue.config.productionTip = false
 
 //axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud'
 axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud'
+
 axios.defaults.withCredentials = true
 //axios.defaults.baseURL = 'http://192.168.3.124:8082/ruicloud'
 //axios.defaults.withCredentials = true
@@ -134,6 +135,9 @@ Date.prototype.format = function (fmt) {
 var vm = new Vue({
   router,
   store,
+  data:{
+    Bus:new Vue()
+  },
   render: h => h(Main)
 })
 

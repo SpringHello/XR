@@ -37,6 +37,9 @@ const NewAccess = () => import('@/components/App/records/NewAccess')
 const NewRecordStepOne = () => import('@/components/App/records/NewRecordStepOne')
 const NewRecordStepTwo = () => import('@/components/App/records/NewRecordStepTwo')
 const NewRecordStepThree = () => import('@/components/App/records/NewRecordStepThree')
+const NewRecordStepFour = () => import('@/components/App/records/NewRecordStepFour')
+const WaitFirstTrial = () => import('@/components/App/records/WaitFirstTrial')
+const WaitSecondTrial = () => import('@/components/App/records/WaitSecondTrial')
 
 /* 产品页面路由 */
 const Pecs = () => import('@/components/App/product/ECS.vue')
@@ -99,6 +102,7 @@ const Recycle = () => import('@/components/Back/Recycle')
 const Wxpay = () => import('@/components/Back/Wxpay')
 const WorkOrder = () => import('@/components/Back/WorkOrder')
 const BRecords = () => import('@/components/Back/Records')
+const RecordSystem = () => import('@/components/Back/RecordSystem')
 
 // 帮助文档路由
 const computed = () => import('@/components/App/doc/computed')
@@ -223,7 +227,22 @@ var router = new Router({
               path: 'newRecordStepThree',
               name: 'newRecordStepThree',
               component: NewRecordStepThree
-            }
+            },
+            {
+              path: 'waitFirstTrial',
+              name: 'waitFirstTrial',
+              component: WaitFirstTrial
+            },
+            {
+              path: 'newRecordStepFour',
+              name: 'newRecordStepFour',
+              component: NewRecordStepFour
+            },
+            {
+              path: 'waitSecondTrial',
+              name: 'waitSecondTrial',
+              component: WaitSecondTrial
+            },
           ]
         },
         //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
@@ -670,6 +689,7 @@ var router = new Router({
         {path: 'wxpay', name: 'wxpay', component: Wxpay},
         {path: 'workOrder', name: 'workOrder', component: WorkOrder},
         {path: 'BRecords', name: 'BRecords', component: BRecords},
+        {path: 'recordSystem', name: 'recordSystem', component: RecordSystem}
       ]
     },
     {

@@ -10,7 +10,7 @@
           <transition name="list">
           <div v-if="mainInfoShow">
             <ul>
-              <li>主体单位所属区域：最多显示长度为20字站位站位站位站位站</li>
+              <li>主体单位所属区域：{{mainUnitInformation.province}}</li>
               <li>主体单位证件类型：我是证件类型</li>
               <li>主体单位性质：我是单位性质</li>
               <li>主体单位证件号码：我是证件号码</li>
@@ -32,20 +32,58 @@
           </div>
           </transition>
           <h3>网站基本信息</h3>
-          <Form ref="basicInformation" :model="basicInformation" :rules="basicInformationRuleValidate" :label-width="145">
-            <FormItem label="网站名称" prop="legalPersonName">
-              <Input v-model="basicInformation.siteName" placeholder="请输入网站名称" style="width: 500px"></Input>
+          <Form ref="basicInformation" :model="basicInformation" :rules="basicInformationRuleValidate" :label-width="155">
+            <FormItem label="网站名称" prop="siteName">
+              <Input @on-focus="toolShow('siteName')" @on-blur="toolHide()" v-model="basicInformation.siteName" placeholder="请输入网站名称" style="width: 500px"></Input>
+              <transition name="fade">
+              <div class="tooltip-popper"   style="top:-81px;" v-if="isToolHide == 1">
+                       <div class="tooltip-center" >
+                         <div class="tooltip-arrow"></div>
+                           <div class="tooltip">1. 网站名称不能以纯数字或纯英文命名，不能包含：域名、特殊符号、敏感词语（反腐、赌博、廉政、色情等）。
+2. 非国家级单位，不得以中国、中华、中央、人民、人大、国家等字头命名。
+3. 单位网站名称必须与主办单位名称之间有关联性。
+4. 个人备案的网站名称要尽量体现个人网站的主要内容，不能使用姓名、地名、成语，不能包含公司、组织等企业性质的词语。</div>
+                       </div>
+                </div> 
+                </transition>
             </FormItem>
             <FormItem label="网站域名" prop="websiteDomain">
-              <div v-for="(item, index) in basicInformation.websiteDomainList">
-                <Input v-model="basicInformation.websiteDomain[index]" placeholder="请输入网站域名"
-                       style="width: 500px;margin-bottom: 24px;"></Input>
-                <span v-if="index!==0" style="color: #377dff;margin-left: 20px;cursor: pointer;font-size: 14px">删除</span>
-              </div>
-              <p class="form-p" @click="addWebsiteDomain"><img src="../../../assets/img/records/records-icon19.png"/> 新增网站域名</p>
+              <Input @on-focus="toolShow('websiteDomain')" @on-blur="toolHide()" v-model="basicInformation.websiteDomain" placeholder="请输入网站域名" style="width: 500px;"></Input>
+                <transition name="fade">
+               <div class="tooltip-popper"  v-if="isToolHide == 2">
+                       <div class="tooltip-center" >
+                         <div class="tooltip-arrow"></div>
+                           <div class="tooltip">域名不要加www.格式如xrcloud.net</div>
+                       </div>
+                </div> 
+                </transition>
             </FormItem>
+            <FormItem v-for="(item, index) in basicInformation.newWebsiteDomainList" prop="newWebsiteDomain"  :key="index" label="新增网站域名">
+              <div style="display: flex">
+                <Input @on-focus="toolShow('newWebsiteDomain'+index)" @on-blur="toolHide()" v-model="basicInformation.newWebsiteDomain[index]"  placeholder="请输入新增网站域名" style="width: 500px;"></Input>
+                <p style="cursor: pointer; color: #377dff;font-size: 14px;margin-left: 15px;line-height: 28px" @click="deleteWebsiteDomain(index)">删除</p>
+                  <transition name="fade">
+                <div class="tooltip-popper"  v-if="isToolHide == 3">
+                       <div class="tooltip-center" >
+                         <div class="tooltip-arrow"></div>
+                           <div class="tooltip">域名不要加www.格式如xrcloud.net</div>
+                       </div>
+                </div> 
+                  </transition>
+              </div>
+            </FormItem>
+            <p class="form-p" @click="addWebsiteDomain"><img src="../../../assets/img/records/records-icon19.png"/> 新增网站域名</p>
             <FormItem label="网站首页URL" prop="websiteHomepage">
-              <Input v-model="basicInformation.websiteHomepage" placeholder="请输入网站首页URL" style="width: 500px"></Input>
+              <Input  @on-focus="toolShow('websiteHomepage')" @on-blur="toolHide()" v-model="basicInformation.websiteHomepage" placeholder="请输入网站首页URL" style="width: 500px"></Input>
+                <transition name="fade">
+              <div class="tooltip-popper" style="top:-8px;"  v-if="isToolHide == 4">
+                       <div class="tooltip-center" >
+                         <div class="tooltip-arrow"></div>
+                           <div class="tooltip">1. 首页URL应该包含填写的域名列表中的任意一个。
+2. 首页URL不要加"http://"。</div>
+                       </div>
+                </div>
+                </transition>
             </FormItem>
             <FormItem label="网站服务内容" prop="serviceContent">
               <RadioGroup v-model="basicInformation.serviceContent" style="width: 650px;" class="records-radio">
@@ -141,7 +179,7 @@
                 <Input v-model="basicInformation.principalName" placeholder="请填写负责人姓名" style="width: 500px"></Input>
               </FormItem>
               <FormItem label="有效证件类型" prop="certificateType">
-                <Select v-model="basicInformation.certificateType" style="width:500px;" placeholder="请选择证件类型">
+                <Select v-model="basicInformation.certificateType" style="width:500px;" placeholder="请选择证件类型" @on-change="changeCertificate">
                   <Option v-for="item in basicInformation.certificateTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
               </FormItem>
@@ -149,10 +187,29 @@
                 <Input v-model="basicInformation.certificateNumber" placeholder="请输入主体单位证件号码" style="width: 500px"></Input>
               </FormItem>
               <FormItem label="办公室电话" prop="officePhone">
-                <span>+86</span><Input v-model="basicInformation.officePhone" placeholder="请输入办公室电话" style="width: 468px;margin-left: 10px"></Input>
+                <span>+86</span><Input @on-focus="toolShow('officePhone')" @on-blur="toolHide()" v-model="basicInformation.officePhone" placeholder="请输入办公室电话" style="width: 468px;margin-left: 10px"></Input>
+                 <transition name="fade">
+                  <div class="tooltip-popper"  style="top:-36px" v-if="isToolHide == 5">
+                       <div class="tooltip-center" >
+                         <div class="tooltip-arrow"></div>
+                           <div class="tooltip">1. 请您确保填写的电话畅通并可直接联系到本人，否则可能导致您的备案失败。
+2. 该电话在备案成功后需保持畅通，以备核查。
+3. 电话格式：086-010-87654321-007（可以不带分机号）。</div>
+                       </div>
+                </div>
+                 </transition>
               </FormItem>
               <FormItem label="手机号码" prop="phoneNumber">
-                <Input v-model="basicInformation.phoneNumber" placeholder="请输入手机号码" style="width: 500px"></Input>
+                <Input @on-focus="toolShow('phoneNumber')" @on-blur="toolHide()" v-model="basicInformation.phoneNumber" placeholder="请输入手机号码" style="width: 500px"></Input>
+                  <transition name="fade">
+                <div class="tooltip-popper"  style="top:-27px" v-if="isToolHide == 6">
+                       <div class="tooltip-center" >
+                         <div class="tooltip-arrow"></div>
+                           <div class="tooltip">1. 请您确保填写的电话畅通并可直接联系到本人，否则可能导致您的备案失败。
+2. 该电话在备案成功后需保持畅通，以备核查。</div>
+                       </div>
+                </div>
+                  </transition> 
               </FormItem>
               <FormItem label="电子邮箱地址" prop="emailAddress">
                 <Input v-model="basicInformation.emailAddress" placeholder="请输入电子邮箱地址" style="width: 500px"></Input>
@@ -190,189 +247,432 @@
       </div>
       <div class="content-footer">
         <button @click="$router.go(-1)">上一步，填写主体信息</button>
-        <button style="margin-left: 20px" @click="$router.push('newRecordStepThree')">下一步，上传资料</button>
+        <button style="margin-left: 20px" @click="nextStep('basicInformation')">下一步，上传资料</button>
       </div>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import step from './step.vue'
+import step from "./step.vue";
+import regExp from "../../../util/regExp";
 
-  export default {
-    components: {
-      step
-    },
-    beforeRouteEnter(to, from, next) {
-      var area = sessionStorage.getItem('zone')
-      var recordsType = sessionStorage.getItem('recordsType')
-      next(vm => {
-        vm.setData(area, recordsType)
-      })
-    },
-    data() {
-      return {
-        mainInfoShow: false,
-        // 备案区域
-        area: '',
-        // 备案类型
-        recordsType: '新增备案',
-        // 备案类型描述
-        recordsTypeDesc: '域名未备案，备案主体证件无备案号，需要备案。',
-        // 网站基本信息表单
-        basicInformation: {
-          // 网站名称
-          siteName: '',
-          // 网站域名
-          websiteDomain: [],
-          websiteDomainList: [
-            {}
-          ],
-          // 网站首页URL
-          websiteHomepage: '',
-          // 网站服务内容
-          serviceContent: '网络借贷信息中介',
-          // 网站语言
-          contentsLanguage: ['中文简体'],
-          // 前置或专项审批内容类型
-          contentsType: ['新闻'],
-          // 备注
-          remark: '',
-          // 网站负责人未填写/已填写
-          personInCharge: '新建负责人',
-          // 网站负责人姓名
-          principalName: '',
-          // 网站负责人证件类型
-          certificateType: '',
-          certificateTypeList: [
-            {
-              label: '身份证',
-              value: '1'
-            }, {
-              label: '护照',
-              value: '2'
-            }, {
-              label: '军官证',
-              value: '3'
-            }, {
-              label: '台胞证',
-              value: '4'
-            }
-          ],
-          // 网站负责人证件号码
-          certificateNumber: '',
-          // 办公室电话
-          officePhone: '',
-          // 手机号码
-          phoneNumber: '',
-          // 电子邮箱地址
-          emailAddress: '',
-          // ISP名称
-          ISPName: '北京允睿讯通科技有公司',
-          // 网站IP地址（接口获取）
-          IPAddressList: [],
-          IPAddress: [],
-          // 网站接入方式
-          accessWay: '专线',
-          // 服务器放置区域（接口获取）
-          serverPutAreaList: [],
-          serverPutArea: '',
-        },
-        // 网站基本信息表单验证信息
-        basicInformationRuleValidate: {}
+export default {
+  components: {
+    step
+  },
+  beforeRouteEnter(to, from, next) {
+    var area = sessionStorage.getItem("zone");
+    var recordsType = sessionStorage.getItem("recordsType");
+    next(vm => {
+      vm.setData(area, recordsType);
+    });
+  },
+  data() {
+    //校验网站域名
+    const validWebsiteDomain = (rule, value, callback) => {
+      var reg =/^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+      if (value == "") {
+        return callback(new Error("请输入网站域名"));
+      } else if (!reg.test(value)) {
+        return callback(new Error("域名不正确"));
+      } else {
+        callback();
       }
-    },
-    methods: {
-      setData(area, recordsType) {
-        this.area = area
-        switch (recordsType) {
-          case '2':
-            break
-          case '3':
-            break
+    };
+    //校验网站负责人证件号码
+    const validCertificateNumber = (rule, value, callback) => {
+      if (value == "") {
+        return callback(new Error("请输入网站负责人证件号码"));
+      } else if (
+        !this.basicInformation.certificateTypeList[
+          this.basicInformation.certificateType - 1
+        ].reg.test(value)
+      ) {
+        return callback(
+          new Error(
+            "请输入正确的" +
+              this.basicInformation.certificateTypeList[
+                this.basicInformation.certificateType - 1
+              ].label
+          )
+        );
+      } else {
+        callback();
+      }
+    };
+    //校验办公室电话号码
+    const validOfficePhone = (rule, value, callback) => {
+      let reg = /^0\d{2,3}-?\d{7,8}$/;
+      if (value == "") {
+        return callback(new Error("请输入办公室电话"));
+      } else if (!reg.test(value)) {
+        return callback(new Error("请输入正确的办公室电话"));
+      } else {
+        callback();
+      }
+    };
+    //校验手机号码
+    const validPhoneNumber = (rule, value, callback) => {
+      let reg = /^1[3|5|8|9|6|7]\d{9}$/;
+      if (!reg.test(value)) {
+        return callback(new Error("请输入正确的手机号码"));
+      } else {
+        callback();
+      }
+    };
+    //校验新增域名
+    const validNewWebsiteDomain = (rule, value, callback) => { 
+      let reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+      console.log(value);
+      for (let i = 0; i <= value.length; i++) {
+        if (value.length == 0 || value[i] == "") {
+          return callback(new Error("请输入网站域名"));
+        } else if(!reg.test(value[i]) && value[i] !== ""){
+          // console.log(value[i]);
+         return callback(new Error("请输入正确的网站域名"));
+        }else{
+          callback();
         }
+      }
+    };
+    //校验网站首页URL
+    const validWebsiteHomepage = (rule, value, callback) => {
+      let reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+      if(value == ""){
+        return callback(new Error("请输入网站首页URL"));
+      }else if(!reg.test(value)){
+        return callback(new Error("请输入正确的网站首页URL"));
+      }else{
+        callback();
+      }
+    }
+    return {
+       //网址index
+      index:0,
+     //隐藏文字提示
+     isToolHide:0,
+     //接受第一页的信息
+     mainUnitInformation:{},
+      mainInfoShow: false,
+      // 备案区域
+      area: "",
+      // 备案类型
+      recordsType: "新增备案",
+      // 备案类型描述
+      recordsTypeDesc: "域名未备案，备案主体证件无备案号，需要备案。",
+      // 网站基本信息表单
+      basicInformation: {
+        // 网站名称
+        siteName: "",
+        // 网站域名
+        websiteDomain: "",
+        websiteDomainList: [{}],
+        newWebsiteDomainList: [],
+        newWebsiteDomain: [],
+        // 网站首页URL
+        websiteHomepage: "",
+        // 网站服务内容
+        serviceContent: "网络借贷信息中介",
+        // 网站语言
+        contentsLanguage: ["中文简体"],
+        // 前置或专项审批内容类型
+        contentsType: ["新闻"],
+        // 备注
+        remark: "",
+        // 网站负责人未填写/已填写
+        personInCharge: "新建负责人",
+        // 网站负责人姓名
+        principalName: "",
+        // 网站负责人证件类型
+        certificateType: "",
+        certificateTypeList: [
+          {
+            label: "身份证",
+            value: "1",
+            reg: /(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)/
+          },
+          {
+            label: "护照",
+            value: "2",
+            reg: /^((14)|(15)[0-9]{7})|(G|S|D[0-9]{8})|((P.)|(S.)[0-9]{7})$/
+          },
+          {
+            label: "军官证",
+            value: "3",
+            reg: /^[\u4E00-\u9FA5]{1}\\d{7}$/
+          },
+          {
+            label: "台胞证",
+            value: "4"
+          }
+        ],
+        // 网站负责人证件号码
+        certificateNumber: "",
+        // 办公室电话
+        officePhone: "",
+        // 手机号码
+        phoneNumber: "",
+        // 电子邮箱地址
+        emailAddress: "",
+        // ISP名称
+        ISPName: "北京允睿讯通科技有公司",
+        // 网站IP地址（接口获取）
+        IPAddressList: [],
+        IPAddress: [],
+        // 网站接入方式
+        accessWay: "专线",
+        // 服务器放置区域（接口获取）
+        serverPutAreaList: [],
+        serverPutArea: ""
       },
-      // 新增网站域名
-      addWebsiteDomain() {
-        this.basicInformation.websiteDomainList.push({})
-        console.log(this.basicInformation.websiteDomain)
+      // 网站基本信息表单验证信息
+      basicInformationRuleValidate: {
+        siteName: [
+          { required: true, message: "请输入网站名称", trigger: "blur" }
+        ],
+        websiteDomain: [
+          { required: true, validator: validWebsiteDomain, trigger: "blur" }
+        ],
+        newWebsiteDomain: [
+          { required: true, validator: validNewWebsiteDomain, trigger: "blur" }
+        ],
+        contentsLanguage: [
+          {
+            required: true,
+            type: "array",
+            min: 1,
+            message: "请至少选择一个网站语言",
+            trigger: "change"
+          }
+        ],
+        contentsType: [
+          {
+            required: true,
+            type: "array",
+            min: 1,
+            message: "请至少选择一个内容类型",
+            trigger: "change"
+          }
+        ],
+        remark: [{ type: "string", max: 50, message: "最多输入五十个字" }],
+        principalName: [
+          { required: true, message: "请输入负责人姓名", trigger: "blur" }
+        ],
+        certificateType: [
+          { required: true, message: "请选择证件类型", trigger: "change" }
+        ],
+        certificateNumber: [
+          { required: true, validator: validCertificateNumber, trigger: "blur" }
+        ],
+        officePhone: [
+          { required: true, validator: validOfficePhone, trigger: "blur" }
+        ],
+        phoneNumber: [
+          { required: true, validator: validPhoneNumber, trigger: "blur" }
+        ],
+        emailAddress: [
+          { required: true, message: "请输入邮箱地址", trigger: "blur" },
+          { type: "email", message: "请输入正确的邮箱地址", trigger: "blur" }
+        ]
+      },
+      //主体信息List
+      information: []
+    };
+  },
+  methods: {
+    setData(area, recordsType) {
+      this.area = area;
+      switch (recordsType) {
+        case "2":
+          break;
+        case "3":
+          break;
       }
     },
-    mounted() {
-      this.mainInfoShow = true
+    // 新增网站域名
+    addWebsiteDomain() {
+      this.basicInformation.newWebsiteDomainList.push({});
+      // console.log(this.basicInformation.websiteDomain);
+    },
+    //删除网站域名
+    deleteWebsiteDomain(index) {
+      this.basicInformation.newWebsiteDomainList.splice(index, 1);
+      this.basicInformation.newWebsiteDomain.splice(index, 1);
+    },
+    //切换证件类型重新验证
+    changeCertificate() {
+      this.$refs.basicInformation.validateField(
+        "certificateNumber",
+        vaild => {}
+      );
+      this.basicInformation.certificateNumber = "";
+    },
+    //进入下一步
+    nextStep(name) {
+      this.$refs[name].validate(valid => {
+        if (valid) {
+          this.$router.push({
+            path: "/NewRecordStepThree"
+          });
+        } else {
+          return;
+        }
+      });
+    },
+    //显示提示文字文本框
+    toolShow(value){
+    switch (value){
+        case "siteName":
+        this.isToolHide = 1;
+        break;
+        case "websiteDomain":
+        this.isToolHide = 2;
+        break;
+        case "newWebsiteDomain":
+        this.isToolHide = 3;
+        break;
+        case "websiteHomepage":
+        this.isToolHide = 4;
+        break;
+        case "officePhone":
+        this.isToolHide = 5;
+        break;
+        case "phoneNumber":
+        this.isToolHide = 6;
+        break;
+      }
+    },
+    //隐藏提示文字文本框
+    toolHide(){
+      this.isToolHide = 0;
     }
+  },
+  mounted() {
+    this.mainInfoShow = true;
+  },
+  created(){
+    var self = this;
+    this.$root.Bus.$on('send',function(val){
+      self.mainUnitInformation = val;
+    })
   }
+};
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-  // 定义center公用样式
-  .center() {
-    width: 1200px;
-    margin: 0 auto;
+// 定义center公用样式
+.center() {
+  width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+// 定义h2公用样式
+.h2() {
+  font-size: 24px;
+  font-family: PingFangSC-Medium;
+  color: rgba(51, 51, 51, 1);
+  line-height: 24px;
+  font-weight: normal;
+}
+
+// 定义h3公用样式
+.h3() {
+  font-size: 18px;
+  font-family: MicrosoftYaHei;
+  color: rgba(51, 51, 51, 1);
+  line-height: 24px;
+  font-weight: normal;
+}
+
+.body-bottom {
+  .content {
+    padding: 60px 0 36px;
+    border-bottom: 2px solid #d9d9d9;
+    .center();
+    h2 {
+      .h2();
+      &:before {
+        content: "";
+        width: 8px;
+        height: 28px;
+        background: rgba(55, 125, 255, 1);
+        display: inline-block;
+        margin-right: 10px;
+        transform: translate(0, 6px);
+      }
+    }
+    h3 {
+      .h3();
+      margin-bottom: 20px;
+      margin-top: 60px;
+    }
+  }
+}
+
+.form-p {
+  font-family: MicrosoftYaHei;
+  color: rgba(55, 125, 255, 1);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 0 21px 145px;
+  img {
+    margin-right: 5px;
     position: relative;
+    top: 2px;
   }
+}
+.list-enter-active,
+.list-leave-active {
+  transition: all 1s;
+}
 
-  // 定义h2公用样式
-  .h2() {
-    font-size: 24px;
-    font-family: PingFangSC-Medium;
-    color: rgba(51, 51, 51, 1);
-    line-height: 24px;
-    font-weight: normal;
-  }
-
-  // 定义h3公用样式
-  .h3() {
-    font-size: 18px;
-    font-family: MicrosoftYaHei;
-    color: rgba(51, 51, 51, 1);
-    line-height: 24px;
-    font-weight: normal;
-  }
-
-  .body-bottom {
-    .content {
-      padding: 60px 0 36px;
-      border-bottom: 2px solid #D9D9D9;
-      .center();
-      h2 {
-        .h2();
-        &:before {
-          content: '';
-          width: 8px;
-          height: 28px;
-          background: rgba(55, 125, 255, 1);
-          display: inline-block;
-          margin-right: 10px;
-          transform: translate(0, 6px);
-        }
-      }
-      h3 {
-        .h3();
-        margin-bottom: 20px;
-        margin-top: 60px;
-      }
-    }
-  }
-
-  .form-p {
-    font-family: MicrosoftYaHei;
-    color: rgba(55, 125, 255, 1);
-    cursor: pointer;
-    font-size: 14px;
-    img {
-      margin-right: 5px;
-      position: relative;
-      top: 2px;
-    }
-  }
-  .list-enter-active, .list-leave-active {
-    transition: all 1s;
-  }
-
-  .list-enter, .list-leave-to
-    /* .list-leave-active for below version 2.1.8 */ {
-    opacity: 0;
-    transform: translateY(100px);
-  }
+.list-enter,
+.list-leave-to {
+  opacity: 0;
+  transform: translateY(100px);
+}
+//定义隐藏信息提示框样式
+.tooltip {
+  max-width: 250px;
+  min-height: 34px;
+  padding: 8px 12px;
+  color: #fff;
+  text-align: left;
+  text-decoration: none;
+  background-color: rgba(70, 76, 91, 0.9);
+  border-radius: 4px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+}
+.tooltip-popper {
+  position: absolute;
+  top: -1px;
+  left: 500px;
+  will-change: top, left;
+  display: block;
+  visibility: visible;
+  font-size: 12px;
+  line-height: 1.5;
+  z-index: 1060;
+  padding: 0 5px 0 8px;
+}
+.tooltip-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  top: 50%;
+  margin-top: -5px;
+  left: 3px;
+  border-width: 5px 5px 5px 0;
+  border-right-color: rgba(70, 76, 91, 0.9);
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
 </style>
