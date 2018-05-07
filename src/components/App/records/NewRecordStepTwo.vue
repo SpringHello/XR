@@ -10,7 +10,7 @@
           <transition name="list">
           <div v-if="mainInfoShow">
             <ul>
-              <li>主体单位所属区域：最多显示长度为20字站位站位站位站位站</li>
+              <li>主体单位所属区域：{{mainUnitInformation.province}}</li>
               <li>主体单位证件类型：我是证件类型</li>
               <li>主体单位性质：我是单位性质</li>
               <li>主体单位证件号码：我是证件号码</li>
@@ -34,20 +34,56 @@
           <h3>网站基本信息</h3>
           <Form ref="basicInformation" :model="basicInformation" :rules="basicInformationRuleValidate" :label-width="145">
             <FormItem label="网站名称" prop="siteName">
-              <Input v-model="basicInformation.siteName" placeholder="请输入网站名称" style="width: 500px"></Input>
+              <Input @on-focus="toolShow('siteName')" @on-blur="toolHide()" v-model="basicInformation.siteName" placeholder="请输入网站名称" style="width: 500px"></Input>
+              <transition name="fade">
+              <div class="tooltip-popper"   style="top:-81px;" v-if="isToolHide == 1">
+                       <div class="tooltip-center" >
+                         <div class="tooltip-arrow"></div>
+                           <div class="tooltip">1. 网站名称不能以纯数字或纯英文命名，不能包含：域名、特殊符号、敏感词语（反腐、赌博、廉政、色情等）。
+2. 非国家级单位，不得以中国、中华、中央、人民、人大、国家等字头命名。
+3. 单位网站名称必须与主办单位名称之间有关联性。
+4. 个人备案的网站名称要尽量体现个人网站的主要内容，不能使用姓名、地名、成语，不能包含公司、组织等企业性质的词语。</div>
+                       </div>
+                </div> 
+                </transition>
             </FormItem>
             <FormItem label="网站域名" prop="websiteDomain">
-              <Input v-model="basicInformation.websiteDomain" placeholder="请输入网站域名" style="width: 500px;"></Input>
+              <Input @on-focus="toolShow('websiteDomain')" @on-blur="toolHide()" v-model="basicInformation.websiteDomain" placeholder="请输入网站域名" style="width: 500px;"></Input>
+                <transition name="fade">
+               <div class="tooltip-popper"  v-if="isToolHide == 2">
+                       <div class="tooltip-center" >
+                         <div class="tooltip-arrow"></div>
+                           <div class="tooltip">域名不要加www.格式如xrcloud.net</div>
+                       </div>
+                </div> 
+                </transition>
             </FormItem>
             <FormItem v-for="(item, index) in basicInformation.newWebsiteDomainList" prop="newWebsiteDomain"  :key="index" label="新增网站域名">
               <div style="display: flex">
-                <Input v-model="basicInformation.newWebsiteDomain[index]"  placeholder="请输入新增网站域名" style="width: 500px;"></Input>
+                <Input @on-focus="toolShow('newWebsiteDomain'+index)" @on-blur="toolHide()" v-model="basicInformation.newWebsiteDomain[index]"  placeholder="请输入新增网站域名" style="width: 500px;"></Input>
                 <p style="cursor: pointer; color: #377dff;font-size: 14px;margin-left: 15px;line-height: 28px" @click="deleteWebsiteDomain(index)">删除</p>
+                  <transition name="fade">
+                <div class="tooltip-popper"  v-if="isToolHide == 3">
+                       <div class="tooltip-center" >
+                         <div class="tooltip-arrow"></div>
+                           <div class="tooltip">域名不要加www.格式如xrcloud.net</div>
+                       </div>
+                </div> 
+                  </transition>
               </div>
             </FormItem>
             <p class="form-p" @click="addWebsiteDomain"><img src="../../../assets/img/records/records-icon19.png"/> 新增网站域名</p>
             <FormItem label="网站首页URL" prop="websiteHomepage">
-              <Input v-model="basicInformation.websiteHomepage" placeholder="请输入网站首页URL" style="width: 500px"></Input>
+              <Input  @on-focus="toolShow('websiteHomepage')" @on-blur="toolHide()" v-model="basicInformation.websiteHomepage" placeholder="请输入网站首页URL" style="width: 500px"></Input>
+                <transition name="fade">
+              <div class="tooltip-popper" style="top:-8px;"  v-if="isToolHide == 4">
+                       <div class="tooltip-center" >
+                         <div class="tooltip-arrow"></div>
+                           <div class="tooltip">1. 首页URL应该包含填写的域名列表中的任意一个。
+2. 首页URL不要加"http://"。</div>
+                       </div>
+                </div>
+                </transition>
             </FormItem>
             <FormItem label="网站服务内容" prop="serviceContent">
               <RadioGroup v-model="basicInformation.serviceContent" style="width: 650px;" class="records-radio">
@@ -151,10 +187,29 @@
                 <Input v-model="basicInformation.certificateNumber" placeholder="请输入主体单位证件号码" style="width: 500px"></Input>
               </FormItem>
               <FormItem label="办公室电话" prop="officePhone">
-                <span>+86</span><Input v-model="basicInformation.officePhone" placeholder="请输入办公室电话" style="width: 468px;margin-left: 10px"></Input>
+                <span>+86</span><Input @on-focus="toolShow('officePhone')" @on-blur="toolHide()" v-model="basicInformation.officePhone" placeholder="请输入办公室电话" style="width: 468px;margin-left: 10px"></Input>
+                 <transition name="fade">
+                  <div class="tooltip-popper"  style="top:-36px" v-if="isToolHide == 5">
+                       <div class="tooltip-center" >
+                         <div class="tooltip-arrow"></div>
+                           <div class="tooltip">1. 请您确保填写的电话畅通并可直接联系到本人，否则可能导致您的备案失败。
+2. 该电话在备案成功后需保持畅通，以备核查。
+3. 电话格式：086-010-87654321-007（可以不带分机号）。</div>
+                       </div>
+                </div>
+                 </transition>
               </FormItem>
               <FormItem label="手机号码" prop="phoneNumber">
-                <Input v-model="basicInformation.phoneNumber" placeholder="请输入手机号码" style="width: 500px"></Input>
+                <Input @on-focus="toolShow('phoneNumber')" @on-blur="toolHide()" v-model="basicInformation.phoneNumber" placeholder="请输入手机号码" style="width: 500px"></Input>
+                  <transition name="fade">
+                <div class="tooltip-popper"  style="top:-27px" v-if="isToolHide == 6">
+                       <div class="tooltip-center" >
+                         <div class="tooltip-arrow"></div>
+                           <div class="tooltip">1. 请您确保填写的电话畅通并可直接联系到本人，否则可能导致您的备案失败。
+2. 该电话在备案成功后需保持畅通，以备核查。</div>
+                       </div>
+                </div>
+                  </transition> 
               </FormItem>
               <FormItem label="电子邮箱地址" prop="emailAddress">
                 <Input v-model="basicInformation.emailAddress" placeholder="请输入电子邮箱地址" style="width: 500px"></Input>
@@ -216,7 +271,7 @@ export default {
   data() {
     //校验网站域名
     const validWebsiteDomain = (rule, value, callback) => {
-      var reg = /^([a-zA-Z\d][a-zA-Z\d-_]+\.)+[a-zA-Z\d-_][^ ]*$/;
+      var reg =/^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
       if (value == "") {
         return callback(new Error("请输入网站域名"));
       } else if (!reg.test(value)) {
@@ -234,7 +289,6 @@ export default {
           this.basicInformation.certificateType - 1
         ].reg.test(value)
       ) {
-        console.log(this.basicInformation.certificateType);
         return callback(
           new Error(
             "请输入正确的" +
@@ -268,10 +322,10 @@ export default {
       }
     };
     //校验新增域名
-    const validNewWebsiteDomain = (rule, value, callback) => {
-      let reg = /^([a-zA-Z\d][a-zA-Z\d-_]+\.)+[a-zA-Z\d-_][^ ]*$/;
+    const validNewWebsiteDomain = (rule, value, callback) => { 
+      let reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
       console.log(value);
-      for (let i = 0; i < value.length; i++) {
+      for (let i = 0; i <= value.length; i++) {
         if (value.length == 0 || value[i] == "") {
           return callback(new Error("请输入网站域名"));
         } else if(!reg.test(value[i]) && value[i] !== ""){
@@ -282,9 +336,24 @@ export default {
         }
       }
     };
+    //校验网站首页URL
+    const validWebsiteHomepage = (rule, value, callback) => {
+      let reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+      if(value == ""){
+        return callback(new Error("请输入网站首页URL"));
+      }else if(!reg.test(value)){
+        return callback(new Error("请输入正确的网站首页URL"));
+      }else{
+        callback();
+      }
+    }
     return {
-      index: 0,
-      //网站域名index
+       //网址index
+      index:0,
+     //隐藏文字提示
+     isToolHide:0,
+     //接受第一页的信息
+     mainUnitInformation:{},
       mainInfoShow: false,
       // 备案区域
       area: "",
@@ -450,10 +519,43 @@ export default {
           return;
         }
       });
+    },
+    //显示提示文字文本框
+    toolShow(value){
+    switch (value){
+        case "siteName":
+        this.isToolHide = 1;
+        break;
+        case "websiteDomain":
+        this.isToolHide = 2;
+        break;
+        case "newWebsiteDomain":
+        this.isToolHide = 3;
+        break;
+        case "websiteHomepage":
+        this.isToolHide = 4;
+        break;
+        case "officePhone":
+        this.isToolHide = 5;
+        break;
+        case "phoneNumber":
+        this.isToolHide = 6;
+        break;
+      }
+    },
+    //隐藏提示文字文本框
+    toolHide(){
+      this.isToolHide = 0;
     }
   },
   mounted() {
     this.mainInfoShow = true;
+  },
+  created(){
+    var self = this;
+    this.$root.Bus.$on('send',function(val){
+      self.mainUnitInformation = val;
+    })
   }
 };
 </script>
@@ -530,5 +632,47 @@ export default {
 .list-leave-to {
   opacity: 0;
   transform: translateY(100px);
+}
+//定义隐藏信息提示框样式
+.tooltip {
+  max-width: 250px;
+  min-height: 34px;
+  padding: 8px 12px;
+  color: #fff;
+  text-align: left;
+  text-decoration: none;
+  background-color: rgba(70, 76, 91, 0.9);
+  border-radius: 4px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+}
+.tooltip-popper {
+  position: absolute;
+  top: -1px;
+  left: 500px;
+  will-change: top, left;
+  display: block;
+  visibility: visible;
+  font-size: 12px;
+  line-height: 1.5;
+  z-index: 1060;
+  padding: 0 5px 0 8px;
+}
+.tooltip-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  top: 50%;
+  margin-top: -5px;
+  left: 3px;
+  border-width: 5px 5px 5px 0;
+  border-right-color: rgba(70, 76, 91, 0.9);
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
 }
 </style>
