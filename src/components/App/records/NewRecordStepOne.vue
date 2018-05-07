@@ -45,10 +45,12 @@
                 </Option>
               </Select>
             </FormItem>
+             <Tooltip content="1.必须输入与主体单位证件上完全一致的名称" placement="right">
             <FormItem label="主体单位证件号码" prop="certificateNumber">
               <Input v-model="mainUnitInformation.certificateNumber" placeholder="请输入主体单位证件号码"
                      style="width: 500px"></Input>
             </FormItem>
+            </Tooltip>
             <FormItem label="主体单位名称" prop="unitName">
               <Input v-model="mainUnitInformation.unitName" placeholder="请输入主体单位名称" style="width: 500px"></Input>
             </FormItem>
@@ -463,6 +465,7 @@
   line-height: 24px;
   font-weight: normal;
 }
+
 
 .body-bottom {
   .content {
