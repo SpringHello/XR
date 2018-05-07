@@ -101,6 +101,7 @@ const NATManage = () => import('@/components/Back/NATManage')
 const Recycle = () => import('@/components/Back/Recycle')
 const Wxpay = () => import('@/components/Back/Wxpay')
 const WorkOrder = () => import('@/components/Back/WorkOrder')
+const BRecords = () => import('@/components/Back/Records')
 const RecordSystem = () => import('@/components/Back/RecordSystem')
 
 // 帮助文档路由
@@ -687,6 +688,7 @@ var router = new Router({
         {path: 'recycle', name: 'recycle', component: Recycle},
         {path: 'wxpay', name: 'wxpay', component: Wxpay},
         {path: 'workOrder', name: 'workOrder', component: WorkOrder},
+        {path: 'BRecords', name: 'BRecords', component: BRecords},
         {path: 'recordSystem', name: 'recordSystem', component: RecordSystem}
       ]
     },
