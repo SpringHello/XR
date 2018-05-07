@@ -32,7 +32,7 @@
           </div>
           </transition>
           <h3>网站基本信息</h3>
-          <Form ref="basicInformation" :model="basicInformation" :rules="basicInformationRuleValidate" :label-width="145">
+          <Form ref="basicInformation" :model="basicInformation" :rules="basicInformationRuleValidate" :label-width="155">
             <FormItem label="网站名称" prop="siteName">
               <Input @on-focus="toolShow('siteName')" @on-blur="toolHide()" v-model="basicInformation.siteName" placeholder="请输入网站名称" style="width: 500px"></Input>
               <transition name="fade">
