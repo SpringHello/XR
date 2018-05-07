@@ -10,7 +10,7 @@
           <transition name="list">
           <div v-if="mainInfoShow">
             <ul>
-              <li>主体单位所属区域：{{mainUnitInformation.province}}</li>
+              <li>主体单位所属区域：我是主体单位所属区域</li>
               <li>主体单位证件类型：我是证件类型</li>
               <li>主体单位性质：我是单位性质</li>
               <li>主体单位证件号码：我是证件号码</li>
@@ -60,10 +60,10 @@
             </FormItem>
             <FormItem v-for="(item, index) in basicInformation.newWebsiteDomainList" prop="newWebsiteDomain"  :key="index" label="新增网站域名">
               <div style="display: flex">
-                <Input @on-focus="toolShow('newWebsiteDomain'+index)" @on-blur="toolHide()" v-model="basicInformation.newWebsiteDomain[index]"  placeholder="请输入新增网站域名" style="width: 500px;"></Input>
+                <Input @on-focus="toolShow('newWebsiteDomain'+index,index)" @on-blur="toolHide()" v-model="basicInformation.newWebsiteDomain[index]"  placeholder="请输入新增网站域名" style="width: 500px;"></Input>
                 <p style="cursor: pointer; color: #377dff;font-size: 14px;margin-left: 15px;line-height: 28px" @click="deleteWebsiteDomain(index)">删除</p>
                   <transition name="fade">
-                <div class="tooltip-popper"  v-if="isToolHide == 3">
+                <div class="tooltip-popper"  v-if="isToolHide == count">
                        <div class="tooltip-center" >
                          <div class="tooltip-arrow"></div>
                            <div class="tooltip">域名不要加www.格式如xrcloud.net</div>
@@ -184,7 +184,7 @@
                 </Select>
               </FormItem>
               <FormItem label="有效证件号码" prop="certificateNumber">
-                <Input v-model="basicInformation.certificateNumber" placeholder="请输入主体单位证件号码" style="width: 500px"></Input>
+                <Input v-model="basicInformation.certificateNumber" placeholder="请输入主体单位证件号码" style="width: 500px"/>
               </FormItem>
               <FormItem label="办公室电话" prop="officePhone">
                 <span>+86</span><Input @on-focus="toolShow('officePhone')" @on-blur="toolHide()" v-model="basicInformation.officePhone" placeholder="请输入办公室电话" style="width: 468px;margin-left: 10px"></Input>
@@ -200,7 +200,7 @@
                  </transition>
               </FormItem>
               <FormItem label="手机号码" prop="phoneNumber">
-                <Input @on-focus="toolShow('phoneNumber')" @on-blur="toolHide()" v-model="basicInformation.phoneNumber" placeholder="请输入手机号码" style="width: 500px"></Input>
+                <Input @on-focus="toolShow('phoneNumber')" @on-blur="toolHide()" v-model="basicInformation.phoneNumber" placeholder="请输入手机号码" style="width: 500px"/> 
                   <transition name="fade">
                 <div class="tooltip-popper"  style="top:-27px" v-if="isToolHide == 6">
                        <div class="tooltip-center" >
@@ -271,7 +271,7 @@ export default {
   data() {
     //校验网站域名
     const validWebsiteDomain = (rule, value, callback) => {
-      var reg =/^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+      var reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
       if (value == "") {
         return callback(new Error("请输入网站域名"));
       } else if (!reg.test(value)) {
@@ -322,16 +322,15 @@ export default {
       }
     };
     //校验新增域名
-    const validNewWebsiteDomain = (rule, value, callback) => { 
+    const validNewWebsiteDomain = (rule, value, callback) => {
       let reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
-      console.log(value);
       for (let i = 0; i <= value.length; i++) {
         if (value.length == 0 || value[i] == "") {
           return callback(new Error("请输入网站域名"));
-        } else if(!reg.test(value[i]) && value[i] !== ""){
+        } else if (!reg.test(value[i]) && value[i] !== "") {
           // console.log(value[i]);
-         return callback(new Error("请输入正确的网站域名"));
-        }else{
+          return callback(new Error("请输入正确的网站域名"));
+        } else {
           callback();
         }
       }
@@ -339,21 +338,20 @@ export default {
     //校验网站首页URL
     const validWebsiteHomepage = (rule, value, callback) => {
       let reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
-      if(value == ""){
+      if (value == "") {
         return callback(new Error("请输入网站首页URL"));
-      }else if(!reg.test(value)){
+      } else if (!reg.test(value)) {
         return callback(new Error("请输入正确的网站首页URL"));
-      }else{
+      } else {
         callback();
       }
-    }
+    };
     return {
-       //网址index
-      index:0,
-     //隐藏文字提示
-     isToolHide:0,
-     //接受第一页的信息
-     mainUnitInformation:{},
+      //网址index
+      index: 0,
+      count: 0,
+      //隐藏文字提示
+      isToolHide: 0,
       mainInfoShow: false,
       // 备案区域
       area: "",
@@ -474,6 +472,9 @@ export default {
         emailAddress: [
           { required: true, message: "请输入邮箱地址", trigger: "blur" },
           { type: "email", message: "请输入正确的邮箱地址", trigger: "blur" }
+        ],
+        websiteHomepage: [
+          { required: true, validator: validWebsiteHomepage, trigger: "blur" }
         ]
       },
       //主体信息List
@@ -492,8 +493,11 @@ export default {
     },
     // 新增网站域名
     addWebsiteDomain() {
-      this.basicInformation.newWebsiteDomainList.push({});
-      // console.log(this.basicInformation.websiteDomain);
+      this.basicInformation.newWebsiteDomainList.push({
+        name: "newWebsiteDomain" + this.index,
+        count: this.index
+      });
+      // console.log(this.basicInformation.newWebsiteDomainList);
     },
     //删除网站域名
     deleteWebsiteDomain(index) {
@@ -521,41 +525,46 @@ export default {
       });
     },
     //显示提示文字文本框
-    toolShow(value){
-    switch (value){
+    toolShow(value, index) {
+      switch (value) {
         case "siteName":
-        this.isToolHide = 1;
-        break;
+          this.isToolHide = 1;
+          break;
         case "websiteDomain":
-        this.isToolHide = 2;
-        break;
-        case "newWebsiteDomain":
-        this.isToolHide = 3;
-        break;
+          this.isToolHide = 2;
+          break;
         case "websiteHomepage":
-        this.isToolHide = 4;
-        break;
+          this.isToolHide = 4;
+          break;
         case "officePhone":
-        this.isToolHide = 5;
-        break;
+          this.isToolHide = 5;
+          break;
         case "phoneNumber":
-        this.isToolHide = 6;
-        break;
+          this.isToolHide = 6;
+          break;
+      }
+
+      var list = this.basicInformation.newWebsiteDomainList;
+      if ( list[index].name == undefined && list[index].name =="undefined") {
+        return;
+      } else {
+        for (let i = 0; i <= list.length; i++) {
+          this.index = i;
+        }
+        var name = list[index].name;
+        this.count = list[index].count + 20;
+        if (value == name) {
+          this.isToolHide = this.count;
+        }
       }
     },
     //隐藏提示文字文本框
-    toolHide(){
+    toolHide() {
       this.isToolHide = 0;
     }
   },
   mounted() {
     this.mainInfoShow = true;
-  },
-  created(){
-    var self = this;
-    this.$root.Bus.$on('send',function(val){
-      self.mainUnitInformation = val;
-    })
   }
 };
 </script>
@@ -669,10 +678,12 @@ export default {
   border-width: 5px 5px 5px 0;
   border-right-color: rgba(70, 76, 91, 0.9);
 }
-.fade-enter-active, .fade-leave-active {
-  transition: opacity .5s;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 </style>

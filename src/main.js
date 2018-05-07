@@ -132,9 +132,6 @@ Date.prototype.format = function (fmt) {
 var vm = new Vue({
   router,
   store,
-  data:{
-    Bus:new Vue()
-  },
   render: h => h(Main)
 })
 

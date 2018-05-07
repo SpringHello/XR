@@ -493,7 +493,7 @@ export default {
         }
       });
     },
-    //input输入框鼠标离开事件
+    //input输入框获取焦点显示文字提示
     toolShow(value) {
       switch (value) {
         case "certificateNumber":
@@ -519,11 +519,9 @@ export default {
           break;
       }
     },
+    //input焦点离开隐藏文字提示
     toolHide() {
       this.isToolHide = 0;
-    },
-    setMsg(){
-      this.$root.Bus.$emit('send',this.mainUnitInformation);
     }
   }
 };
