@@ -32,7 +32,7 @@
           </div>
           </transition>
           <h3>网站基本信息</h3>
-          <Form ref="basicInformation" :model="basicInformation" :rules="basicInformationRuleValidate" :label-width="145">
+          <Form ref="basicInformation" :model="basicInformation" :rules="basicInformationRuleValidate" :label-width="155">
             <FormItem label="网站名称" prop="siteName">
               <Input v-model="basicInformation.siteName" placeholder="请输入网站名称" style="width: 500px"></Input>
             </FormItem>
@@ -217,7 +217,7 @@ export default {
     //校验网站域名
     const validWebsiteDomain = (rule, value, callback) => {
       var reg = /^([a-zA-Z\d][a-zA-Z\d-_]+\.)+[a-zA-Z\d-_][^ ]*$/;
-      
+
         if (value == "") {
           return callback(new Error("请输入网站域名"));
         } else if (!reg.test(value[i]) && value[i] !== "") {
