@@ -36,14 +36,13 @@
             <FormItem label="网站名称" prop="siteName">
               <Input @on-focus="toolShow('siteName')" @on-blur="toolHide()" v-model="basicInformation.siteName" placeholder="请输入网站名称" style="width: 500px"></Input>
               <transition name="fade">
-                <div class="tooltip-popper" style="top:-81px;" v-if="isToolHide == 1">
-                  <div class="tooltip-center">
+                <div class="tooltip-popper"   style="top:-81px;" v-if="isToolHide == 1">
+                  <div class="tooltip-center" >
                     <div class="tooltip-arrow"></div>
                     <div class="tooltip">1. 网站名称不能以纯数字或纯英文命名，不能包含：域名、特殊符号、敏感词语（反腐、赌博、廉政、色情等）。
                       2. 非国家级单位，不得以中国、中华、中央、人民、人大、国家等字头命名。
                       3. 单位网站名称必须与主办单位名称之间有关联性。
-                      4. 个人备案的网站名称要尽量体现个人网站的主要内容，不能使用姓名、地名、成语，不能包含公司、组织等企业性质的词语。
-                    </div>
+                      4. 个人备案的网站名称要尽量体现个人网站的主要内容，不能使用姓名、地名、成语，不能包含公司、组织等企业性质的词语。</div>
                   </div>
                 </div>
               </transition>
@@ -51,22 +50,21 @@
             <FormItem label="网站域名" prop="websiteDomain">
               <Input @on-focus="toolShow('websiteDomain')" @on-blur="toolHide()" v-model="basicInformation.websiteDomain" placeholder="请输入网站域名" style="width: 500px;"></Input>
               <transition name="fade">
-                <div class="tooltip-popper" v-if="isToolHide == 2">
-                  <div class="tooltip-center">
+                <div class="tooltip-popper"  v-if="isToolHide == 2">
+                  <div class="tooltip-center" >
                     <div class="tooltip-arrow"></div>
                     <div class="tooltip">域名不要加www.格式如xrcloud.net</div>
                   </div>
                 </div>
               </transition>
             </FormItem>
-            <FormItem v-for="(item, index) in basicInformation.newWebsiteDomainList" prop="newWebsiteDomain" :key="index" label="新增网站域名">
+            <FormItem v-for="(item, index) in basicInformation.newWebsiteDomainList" prop="newWebsiteDomain"  :key="index" label="新增网站域名">
               <div style="display: flex">
-                <Input @on-focus="toolShow('newWebsiteDomain'+index)" @on-blur="toolHide()" v-model="basicInformation.newWebsiteDomain[index]" placeholder="请输入新增网站域名"
-                       style="width: 500px;"></Input>
+                <Input @on-focus="toolShow('newWebsiteDomain'+index,index)" @on-blur="toolHide()" v-model="basicInformation.newWebsiteDomain[index]"  placeholder="请输入新增网站域名" style="width: 500px;"></Input>
                 <p style="cursor: pointer; color: #377dff;font-size: 14px;margin-left: 15px;line-height: 28px" @click="deleteWebsiteDomain(index)">删除</p>
                 <transition name="fade">
-                  <div class="tooltip-popper" v-if="isToolHide == 3">
-                    <div class="tooltip-center">
+                  <div class="tooltip-popper"  v-if="isToolHide == count">
+                    <div class="tooltip-center" >
                       <div class="tooltip-arrow"></div>
                       <div class="tooltip">域名不要加www.格式如xrcloud.net</div>
                     </div>
@@ -76,14 +74,13 @@
             </FormItem>
             <p class="form-p" @click="addWebsiteDomain"><img src="../../../assets/img/records/records-icon19.png"/> 新增网站域名</p>
             <FormItem label="网站首页URL" prop="websiteHomepage">
-              <Input @on-focus="toolShow('websiteHomepage')" @on-blur="toolHide()" v-model="basicInformation.websiteHomepage" placeholder="请输入网站首页URL" style="width: 500px"></Input>
+              <Input  @on-focus="toolShow('websiteHomepage')" @on-blur="toolHide()" v-model="basicInformation.websiteHomepage" placeholder="请输入网站首页URL" style="width: 500px"></Input>
               <transition name="fade">
-                <div class="tooltip-popper" style="top:-8px;" v-if="isToolHide == 4">
-                  <div class="tooltip-center">
+                <div class="tooltip-popper" style="top:-8px;"  v-if="isToolHide == 4">
+                  <div class="tooltip-center" >
                     <div class="tooltip-arrow"></div>
                     <div class="tooltip">1. 首页URL应该包含填写的域名列表中的任意一个。
-                      2. 首页URL不要加"http://"。
-                    </div>
+                      2. 首页URL不要加"http://"。</div>
                   </div>
                 </div>
               </transition>
@@ -171,7 +168,7 @@
             <div style="display: flex">
               <h3 style="margin-top: 20px">选择负责人</h3>
               <RadioGroup v-model="basicInformation.personInCharge" class="records-radio-person" style="padding: 20px 0 20px 55px">
-                <Radio label="已填写主体单位负责人信息">
+                <Radio label="已填写主体单位负责人姓名">
                 </Radio>
                 <Radio label="新建负责人">
                 </Radio>
@@ -187,32 +184,29 @@
                 </Select>
               </FormItem>
               <FormItem label="有效证件号码" prop="certificateNumber">
-                <Input v-model="basicInformation.certificateNumber" placeholder="请输入主体单位证件号码" style="width: 500px"></Input>
+                <Input v-model="basicInformation.certificateNumber" placeholder="请输入主体单位证件号码" style="width: 500px"/>
               </FormItem>
               <FormItem label="办公室电话" prop="officePhone">
-                <span>+86</span><Input @on-focus="toolShow('officePhone')" @on-blur="toolHide()" v-model="basicInformation.officePhone" placeholder="请输入办公室电话"
-                                       style="width: 468px;margin-left: 10px"></Input>
+                <span>+86</span><Input @on-focus="toolShow('officePhone')" @on-blur="toolHide()" v-model="basicInformation.officePhone" placeholder="请输入办公室电话" style="width: 468px;margin-left: 10px"></Input>
                 <transition name="fade">
-                  <div class="tooltip-popper" style="top:-36px" v-if="isToolHide == 5">
-                    <div class="tooltip-center">
+                  <div class="tooltip-popper"  style="top:-36px" v-if="isToolHide == 5">
+                    <div class="tooltip-center" >
                       <div class="tooltip-arrow"></div>
                       <div class="tooltip">1. 请您确保填写的电话畅通并可直接联系到本人，否则可能导致您的备案失败。
                         2. 该电话在备案成功后需保持畅通，以备核查。
-                        3. 电话格式：086-010-87654321-007（可以不带分机号）。
-                      </div>
+                        3. 电话格式：086-010-87654321-007（可以不带分机号）。</div>
                     </div>
                   </div>
                 </transition>
               </FormItem>
               <FormItem label="手机号码" prop="phoneNumber">
-                <Input @on-focus="toolShow('phoneNumber')" @on-blur="toolHide()" v-model="basicInformation.phoneNumber" placeholder="请输入手机号码" style="width: 500px"></Input>
+                <Input @on-focus="toolShow('phoneNumber')" @on-blur="toolHide()" v-model="basicInformation.phoneNumber" placeholder="请输入手机号码" style="width: 500px"/>
                 <transition name="fade">
-                  <div class="tooltip-popper" style="top:-27px" v-if="isToolHide == 6">
-                    <div class="tooltip-center">
+                  <div class="tooltip-popper"  style="top:-27px" v-if="isToolHide == 6">
+                    <div class="tooltip-center" >
                       <div class="tooltip-arrow"></div>
                       <div class="tooltip">1. 请您确保填写的电话畅通并可直接联系到本人，否则可能导致您的备案失败。
-                        2. 该电话在备案成功后需保持畅通，以备核查。
-                      </div>
+                        2. 该电话在备案成功后需保持畅通，以备核查。</div>
                     </div>
                   </div>
                 </transition>
@@ -262,7 +256,6 @@
 <script type="text/ecmascript-6">
   import step from "./step.vue";
   import regExp from "../../../util/regExp";
-
   export default {
     components: {
       step
@@ -272,7 +265,7 @@
       var recordsType = sessionStorage.getItem("recordsType");
       var mainUnitInformationStr = sessionStorage.getItem('mainUnitInformationStr')
       next(vm => {
-        vm.setData(area, recordsType, mainUnitInformationStr);
+        vm.setData(area, recordsType,mainUnitInformationStr);
       });
     },
     data() {
@@ -335,6 +328,7 @@
           if (value.length == 0 || value[i] == "") {
             return callback(new Error("请输入网站域名"));
           } else if (!reg.test(value[i]) && value[i] !== "") {
+            // console.log(value[i]);
             return callback(new Error("请输入正确的网站域名"));
           } else {
             callback();
@@ -351,14 +345,15 @@
         } else {
           callback();
         }
-      }
+      };
       return {
         //网址index
         index: 0,
-        //隐藏文字提示
-        isToolHide: 0,
+        count: 0,
         //接受第一页的信息
         mainUnitInformation: {},
+        //隐藏文字提示
+        isToolHide: 0,
         mainInfoShow: false,
         // 备案区域
         area: "",
@@ -434,13 +429,13 @@
         // 网站基本信息表单验证信息
         basicInformationRuleValidate: {
           siteName: [
-            {required: true, message: "请输入网站名称", trigger: "blur"}
+            { required: true, message: "请输入网站名称", trigger: "blur" }
           ],
           websiteDomain: [
-            {required: true, validator: validWebsiteDomain, trigger: "blur"}
+            { required: true, validator: validWebsiteDomain, trigger: "blur" }
           ],
           newWebsiteDomain: [
-            {required: true, validator: validNewWebsiteDomain, trigger: "blur"}
+            { required: true, validator: validNewWebsiteDomain, trigger: "blur" }
           ],
           contentsLanguage: [
             {
@@ -460,25 +455,28 @@
               trigger: "change"
             }
           ],
-          remark: [{type: "string", max: 50, message: "最多输入五十个字", trigger: "blur"}],
+          remark: [{ type: "string", max: 50, message: "最多输入五十个字" }],
           principalName: [
-            {required: true, message: "请输入负责人姓名", trigger: "blur"}
+            { required: true, message: "请输入负责人姓名", trigger: "blur" }
           ],
           certificateType: [
-            {required: true, message: "请选择证件类型", trigger: "change"}
+            { required: true, message: "请选择证件类型", trigger: "change" }
           ],
           certificateNumber: [
-            {required: true, validator: validCertificateNumber, trigger: "blur"}
+            { required: true, validator: validCertificateNumber, trigger: "blur" }
           ],
           officePhone: [
-            {required: true, validator: validOfficePhone, trigger: "blur"}
+            { required: true, validator: validOfficePhone, trigger: "blur" }
           ],
           phoneNumber: [
-            {required: true, validator: validPhoneNumber, trigger: "blur"}
+            { required: true, validator: validPhoneNumber, trigger: "blur" }
           ],
           emailAddress: [
-            {required: true, message: "请输入邮箱地址", trigger: "blur"},
-            {type: "email", message: "请输入正确的邮箱地址", trigger: "blur"}
+            { required: true, message: "请输入邮箱地址", trigger: "blur" },
+            { type: "email", message: "请输入正确的邮箱地址", trigger: "blur" }
+          ],
+          websiteHomepage: [
+            { required: true, validator: validWebsiteHomepage, trigger: "blur" }
           ]
         },
         //主体信息List
@@ -486,7 +484,7 @@
       };
     },
     methods: {
-      setData(area, recordsType, mainUnitInformationStr) {
+      setData(area, recordsType,mainUnitInformationStr) {
         this.area = area;
         this.mainUnitInformation = JSON.parse(mainUnitInformationStr)
         switch (recordsType) {
@@ -498,8 +496,11 @@
       },
       // 新增网站域名
       addWebsiteDomain() {
-        this.basicInformation.newWebsiteDomainList.push({});
-        // console.log(this.basicInformation.websiteDomain);
+        this.basicInformation.newWebsiteDomainList.push({
+          name: "newWebsiteDomain" + this.index,
+          count: this.index
+        });
+        // console.log(this.basicInformation.newWebsiteDomainList);
       },
       //删除网站域名
       deleteWebsiteDomain(index) {
@@ -510,8 +511,7 @@
       changeCertificate() {
         this.$refs.basicInformation.validateField(
           "certificateNumber",
-          vaild => {
-          }
+          vaild => {}
         );
         this.basicInformation.certificateNumber = "";
       },
@@ -528,16 +528,13 @@
         });
       },
       //显示提示文字文本框
-      toolShow(value) {
+      toolShow(value, index) {
         switch (value) {
           case "siteName":
             this.isToolHide = 1;
             break;
           case "websiteDomain":
             this.isToolHide = 2;
-            break;
-          case "newWebsiteDomain":
-            this.isToolHide = 3;
             break;
           case "websiteHomepage":
             this.isToolHide = 4;
@@ -549,6 +546,19 @@
             this.isToolHide = 6;
             break;
         }
+        var list = this.basicInformation.newWebsiteDomainList;
+        if ( list[index].name == undefined && list[index].name =="undefined") {
+          return;
+        } else {
+          for (let i = 0; i <= list.length; i++) {
+            this.index = i;
+          }
+          var name = list[index].name;
+          this.count = list[index].count + 20;
+          if (value == name) {
+            this.isToolHide = this.count;
+          }
+        }
       },
       //隐藏提示文字文本框
       toolHide() {
@@ -557,8 +567,6 @@
     },
     mounted() {
       this.mainInfoShow = true;
-    },
-    created() {
     },
     computed: {
       certificateType() {
@@ -674,7 +682,6 @@
     margin: 0 auto;
     position: relative;
   }
-
   // 定义h2公用样式
   .h2() {
     font-size: 24px;
@@ -683,7 +690,6 @@
     line-height: 24px;
     font-weight: normal;
   }
-
   // 定义h3公用样式
   .h3() {
     font-size: 18px;
@@ -692,7 +698,6 @@
     line-height: 24px;
     font-weight: normal;
   }
-
   .body-bottom {
     .content {
       padding: 60px 0 36px;
@@ -717,7 +722,6 @@
       }
     }
   }
-
   .form-p {
     font-family: MicrosoftYaHei;
     color: rgba(55, 125, 255, 1);
@@ -730,18 +734,15 @@
       top: 2px;
     }
   }
-
   .list-enter-active,
   .list-leave-active {
     transition: all 1s;
   }
-
   .list-enter,
   .list-leave-to {
     opacity: 0;
     transform: translateY(100px);
   }
-
   //定义隐藏信息提示框样式
   .tooltip {
     max-width: 250px;
@@ -754,7 +755,6 @@
     border-radius: 4px;
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
   }
-
   .tooltip-popper {
     position: absolute;
     top: -1px;
@@ -767,7 +767,6 @@
     z-index: 1060;
     padding: 0 5px 0 8px;
   }
-
   .tooltip-arrow {
     position: absolute;
     width: 0;
@@ -780,12 +779,12 @@
     border-width: 5px 5px 5px 0;
     border-right-color: rgba(70, 76, 91, 0.9);
   }
-
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s;
   }
-
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  .fade-enter,
+  .fade-leave-to {
     opacity: 0;
   }
 </style>
