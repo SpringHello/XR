@@ -26,14 +26,28 @@
       <div class="content">
         <h2>备案区域选择</h2>
         <div class="area">
-          <button v-for="item in areaList" :key="item.zoneId" :class="{select: item.text === area }" @click="changeArea(item)"><img :src="item.src"/> {{ item.text }}</button>
+          <button v-for="item in areaList" :key="item.zoneId" :class="{select: item.zoneId === area }" @click="changeArea(item)"><img :src="item.src"/> {{ item.text }}</button>
         </div>
         <button @click="putOnRecord">立即备案</button>
       </div>
     </div>
+    <Modal v-model="showModal.recordInfo" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示信息</strong>
+          <p class="lh24">您选择的区域未查询到符合要求的公网IP与云服务器，请先购买该资源然后在进行备案。<span style="color: #377dff;cursor: pointer;" @click="$router.push('/ruicloud/buy')">立即购买</span></p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button type="primary" @click="showModal.recordInfo = false">确认</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 <script type="text/ecmascript-6">
+  import axios from 'axios'
+
   export default {
     data() {
       return {
@@ -100,32 +114,43 @@
           {
             text: '北京一区',
             src: require('../../../assets/img/records/records-icon7.png'),
-            zoneId: '1'
+            zoneId: '39a6af0b-6624-4194-b9d5-0c552d903858'
           }, {
             text: '北方一区',
             src: require('../../../assets/img/records/records-icon8.png'),
-            zoneId: '2'
+            zoneId: 'a0a7df65-dec3-48da-82cb-cff9a55a4b6d'
           }, {
-            text: '北方二区',
+            text: '北方二区（沈阳）',
             src: require('../../../assets/img/records/records-icon8.png'),
-            zoneId: '3'
+            zoneId: '1ce0d0b9-a964-432f-8078-a61100789e30'
           }, {
-            text: '华北一区',
+            text: '华中一区',
             src: require('../../../assets/img/records/records-icon8.png'),
-            zoneId: '4'
+            zoneId: '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c'
           }, {
-            text: '华北二区',
+            text: '华中二区',
             src: require('../../../assets/img/records/records-icon8.png'),
-            zoneId: '5'
+            zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2'
           }
         ],
-        area: '北京一区',
+        area: '39a6af0b-6624-4194-b9d5-0c552d903858',
+        areaText: '北京一区',
         // 区域切换时icon变化
         selectImg: require('../../../assets/img/records/records-icon7.png'),
-        unSelectImg: require('../../../assets/img/records/records-icon8.png')
+        unSelectImg: require('../../../assets/img/records/records-icon8.png'),
+        // 用户能否备案状态
+        canRecord: false,
+        showModal: {
+          recordInfo: false
+        }
       }
     },
     created() {
+      if (this.$store.state.userInfo == null) {
+        this.$router.push('/ruicloud/login')
+        return
+      }
+      this.getHostStatus()
     },
     methods: {
       // 切换区域
@@ -133,28 +158,51 @@
         this.areaList.forEach(area => {
           area.src = this.unSelectImg
         })
-        this.area = item.text
+        this.area = item.zoneId
+        this.areaText = item.text
         item.src = this.selectImg
+        this.getHostStatus()
+      },
+      // 查询该区域用户是否有主机
+      getHostStatus() {
+        let url = 'recode/existMainOrWeb.do'
+        axios.get(url, {
+          params: {
+            zoneId: this.area
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.canRecord = response.data.result
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
       },
       // 立即备案
-      putOnRecord () {
-        sessionStorage.setItem('zone', this.area)
-        sessionStorage.setItem('recordsType',this.type + '')
-        // 根据选择的备案类型决定跳入哪个起始页面
-        switch (this.type) {
-          case 1:
-            this.$router.push('newRecordStepOne')
-            break
-          case 2:
-            this.$router.push('newAccess')
-            break;
-          case 3:
-            this.$router.push('newAccess')
-            break
-          case 4:
-            break
+      putOnRecord() {
+        if (!this.canRecord) {
+          sessionStorage.setItem('zone', this.areaText)
+          sessionStorage.setItem('recordsType', this.type + '')
+          // 根据选择的备案类型决定跳入哪个起始页面
+          switch (this.type) {
+            case 1:
+              this.$router.push('newRecordStepOne')
+              break
+            case 2:
+              this.$router.push('newAccess')
+              break;
+            case 3:
+              this.$router.push('newAccess')
+              break
+            case 4:
+              break
+          }
+        } else {
+          this.showModal.recordInfo = true
         }
-      }
+      },
     },
     computed: {},
     watch: {}
@@ -260,7 +308,7 @@
       padding: 80px 0 60px;
       position: relative;
       .center();
-      >img{
+      > img {
         position: absolute;
         top: -22px;
         left: 135px;
