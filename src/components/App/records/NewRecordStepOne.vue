@@ -126,7 +126,7 @@
           callback()
         }
       }
-    
+
     //校验座机号码
     const validOfficePhone = (rule, value, callback) => {
       let reg = /^0\d{2,3}-?\d{7,8}$/;
@@ -159,7 +159,7 @@
     // const validUnitProperties = (rule, value, callback) => {
     //   let regCord = /(^\d{15}$) |(^\d{18}$) |(^\d{17}(\d|X|x)$)/;
     //   console.log(this.mainUnitInformation.certificateTypeList);
-        
+
     //       if (!regCord.test(this.mainUnitInformation.certificateNumber)) {
     //           return callback(new Error("请输入正确的"+this.mainUnitInformation.certificateTypeList.label)
     //         } else {
@@ -189,43 +189,43 @@
         unitPropertiesList: [
           {
             label: "企业",
-            value: 0,
+            value: "0",
             certificate: [
               {
                 label: "工商营业执照",
                 value: "1"
-              
+
               },
               {
                 label: "组织机构代码证",
                 value: "2"
-            
+
               }
             ]
           },
           {
             label: "个人",
-            value: 1,
+            value: "1",
             certificate: [
               {
                 label: "身份证",
                 value: "1"
-             
+
               },
               {
                 label: "护照",
                 value: "2"
-              
+
               },
               {
                 label: "军官证",
                 value: "3"
-             
+
               },
               {
                 label: "台胞证",
                 value: "4"
-              
+
               }
             ]
           },
@@ -328,7 +328,7 @@
           { required: true, validator: validateArea, trigger: "blur" }
         ],
         unitProperties: [
-          { required: true, message: "请选择单位性质", trigger: "blur" }
+          { required: true, message: "请选择单位性质", trigger: "change" }
         ],
         certificateType: [
           { required: true, message: "请选择证件类型", trigger: "change" }
@@ -418,9 +418,7 @@
 
     // 切换主体单位性质时级联单位证件
     changeUnitProperties(val) {
-      this.mainUnitInformation.certificateTypeList = this.mainUnitInformation.unitPropertiesList[
-        val
-      ].certificate;
+      this.mainUnitInformation.certificateTypeList = this.mainUnitInformation.unitPropertiesList[val].certificate;
       this.mainUnitInformation.certificateType = "";
     },
     //进入下一步网站信息填写
@@ -428,6 +426,8 @@
       // var list = [];
       this.$refs[name].validate(valid => {
         if (valid) {
+          let mainUnitInformationStr = JSON.stringify(this.mainUnitInformation)
+          sessionStorage.setItem( 'mainUnitInformationStr', mainUnitInformationStr)
           this.$router.push({
             path: "/NewRecordStepTwo"
           });
