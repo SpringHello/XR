@@ -543,7 +543,6 @@ export default {
           this.isToolHide = 6;
           break;
       }
-
       var list = this.basicInformation.newWebsiteDomainList;
       if ( list[index].name == undefined && list[index].name =="undefined") {
         return;
