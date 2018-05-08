@@ -8,7 +8,8 @@
         <ul v-for="item in flowList" :key="item.step">
           <img v-if="item.step > onStep" :src="item.src"/>
           <img v-else :src="item.onSrc"/>
-          <p :class="{onStep: item.step <= onStep}">{{ item.title }}</p>
+          <p v-if="recordsType === '新增备案'" :class="{onStep: item.step <= onStep}">{{ item.title }}</p>
+          <p v-else :class="{onStep: item.step <= onStep}">{{ item.title1 }}</p>
           <p :class="{onStep: item.step <= onStep}">{{ item.step }}</p>
           <div class="left-line" :class="{onStep: item.step <= onStep}"></div>
           <div class="right-line" :class="{onStep: item.step < onStep}"></div>
@@ -28,6 +29,7 @@
             src: require('../../../assets/img/records/records-icon10.png'),
             onSrc:require('../../../assets/img/records/records-icon10.png'),
             title: '填写备案信息',
+            title1: '验证备案信息',
             step: 1
           },
           {
