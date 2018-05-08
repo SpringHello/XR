@@ -60,10 +60,10 @@
             </FormItem>
             <FormItem v-for="(item, index) in basicInformation.newWebsiteDomainList" prop="newWebsiteDomain"  :key="index" label="新增网站域名">
               <div style="display: flex">
-                <Input @on-focus="toolShow('newWebsiteDomain'+index,index)" @on-blur="toolHide()" v-model="basicInformation.newWebsiteDomain[index]"  placeholder="请输入新增网站域名" style="width: 500px;"></Input>
+                <Input @on-focus="toolShow('newWebsiteDomain',index)" @on-blur="toolHide()" v-model="basicInformation.newWebsiteDomain[index]"  placeholder="请输入新增网站域名" style="width: 500px;"></Input>
                 <p style="cursor: pointer; color: #377dff;font-size: 14px;margin-left: 15px;line-height: 28px" @click="deleteWebsiteDomain(index)">删除</p>
                 <transition name="fade">
-                  <div class="tooltip-popper"  v-if="isToolHide == count">
+                  <div class="tooltip-popper"  v-if="index == count">
                     <div class="tooltip-center" >
                       <div class="tooltip-arrow"></div>
                       <div class="tooltip">域名不要加www.格式如xrcloud.net</div>
@@ -347,8 +347,6 @@
         }
       };
       return {
-        //网址index
-        index: 0,
         count: 0,
         //接受第一页的信息
         mainUnitInformation: {},
@@ -497,7 +495,6 @@
       // 新增网站域名
       addWebsiteDomain() {
         this.basicInformation.newWebsiteDomainList.push({
-          name: "newWebsiteDomain" + this.index,
           count: this.index
         });
         // console.log(this.basicInformation.newWebsiteDomainList);
@@ -546,19 +543,8 @@
             this.isToolHide = 6;
             break;
         }
-        var list = this.basicInformation.newWebsiteDomainList;
-        if ( list[index].name == undefined && list[index].name =="undefined") {
-          return;
-        } else {
-          for (let i = 0; i <= list.length; i++) {
-            this.index = i;
-          }
-          var name = list[index].name;
-          this.count = list[index].count + 20;
-          if (value == name) {
-            this.isToolHide = this.count;
-          }
-        }
+        this.count = index
+
       },
       //隐藏提示文字文本框
       toolHide() {
