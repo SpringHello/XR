@@ -102,6 +102,7 @@ const Recycle = () => import('@/components/Back/Recycle')
 const Wxpay = () => import('@/components/Back/Wxpay')
 const WorkOrder = () => import('@/components/Back/WorkOrder')
 const BRecords = () => import('@/components/Back/Records')
+const RecordDetails = () => import('@/components/Back/RecordDetails')
 
 
 // 帮助文档路由
@@ -187,12 +188,12 @@ var router = new Router({
       name: App.name,
       component: App,
       children: [
-        {path: '', name: 'home', component: Home},
-        {path: 'home', name: 'home', component: Home},
-        {path: 'ecs', name: 'ecs', component: Ecs},
-        {path: 'about', name: 'about', component: Aboutus},
-        {path: 'document', name: 'document', component: Document},
-        {path: 'dynamic', name: 'dynamic', component: Dynamic},
+        { path: '', name: 'home', component: Home },
+        { path: 'home', name: 'home', component: Home },
+        { path: 'ecs', name: 'ecs', component: Ecs },
+        { path: 'about', name: 'about', component: Aboutus },
+        { path: 'document', name: 'document', component: Document },
+        { path: 'dynamic', name: 'dynamic', component: Dynamic },
         {
           path: 'records',
           name: 'records',
@@ -273,27 +274,27 @@ var router = new Router({
             }
           ]
         },*/
-        {path: 'buy', name: 'buy', component: Buy},
-        {path: 'active', name: 'active', component: Active},
-        {path: 'vps', name: 'vps', component: Vps},
-        {path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
-        {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},
-        {path: 'active_1', name: 'active_1', component: active_1},
-        {path: 'entrance', name: 'entrance', component: Entrance},
-        {path: 'active_2', name: 'active_2', component: active_2},
-        {path: 'Pecs', component: Pecs},
-        {path: 'Phost', component: Phost},
-        {path: 'Pecss', component: Pecss},
-        {path: 'Pvpc', component: Pvpc},
-        {path: 'Peip', component: Peip},
-        {path: 'Pbalance', component: Pbalance},
-        {path: 'Pnat', component: Pnat},
-        {path: 'Pvirvpn', component: Pvirvpn},
-        {path: 'Pdisk', component: Pdisk},
-        {path: 'Pbackupdisk', component: Pbackupdisk},
-        {path: 'Pfirewall', component: Pfirewall},
-        {path: 'Pddos', component: Pddos},
-        {path: 'Pmonitor', component: Pmonitor},
+        { path: 'buy', name: 'buy', component: Buy },
+        { path: 'active', name: 'active', component: Active },
+        { path: 'vps', name: 'vps', component: Vps },
+        { path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1 },
+        { path: 'newNodes_2', name: 'newNodes', component: NewNodes_2 },
+        { path: 'active_1', name: 'active_1', component: active_1 },
+        { path: 'entrance', name: 'entrance', component: Entrance },
+        { path: 'active_2', name: 'active_2', component: active_2 },
+        { path: 'Pecs', component: Pecs },
+        { path: 'Phost', component: Phost },
+        { path: 'Pecss', component: Pecss },
+        { path: 'Pvpc', component: Pvpc },
+        { path: 'Peip', component: Peip },
+        { path: 'Pbalance', component: Pbalance },
+        { path: 'Pnat', component: Pnat },
+        { path: 'Pvirvpn', component: Pvirvpn },
+        { path: 'Pdisk', component: Pdisk },
+        { path: 'Pbackupdisk', component: Pbackupdisk },
+        { path: 'Pfirewall', component: Pfirewall },
+        { path: 'Pddos', component: Pddos },
+        { path: 'Pmonitor', component: Pmonitor },
         {
           path: 'computed', component: computed,
           children: [
@@ -655,40 +656,41 @@ var router = new Router({
       // 后台页面必须登录
       // meta: {requiresAuth: true},
       children: [
-        {path: 'overview', name: 'overview', component: Overview},
-        {path: 'work', name: 'work', component: Work},
-        {path: 'renew', name: 'renew', component: Renew},
-        {path: 'recharge', name: 'recharge', component: Recharge},
-        {path: 'balance', name: 'balance', component: Balance},
-        {path: 'balanceParticulars', name: 'balanceParticulars', component: BalanceParticulars},
-        {path: 'disk', name: 'disk', component: Disk},
-        {path: 'diskBackup', name: 'diskBackup', component: DiskBackup},
-        {path: 'diskParticulars', name: 'diskParticulars', component: DiskParticulars},
-        {path: 'snapshot', name: 'snapshot', component: Snapshot},
-        {path: 'firewall', name: 'firewall', component: Firewall},
-        {path: 'new', name: 'new', component: New},
-        {path: 'host', name: 'host', component: Host},
-        {path: 'mirror', name: 'mirror', component: Mirror},
-        {path: 'vpc', name: 'vpc', component: Vpc},
-        {path: 'vpn', name: 'vpn', component: Vpn},
-        {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
-        {path: 'ip', name: 'ip', component: Ip},
+        { path: 'overview', name: 'overview', component: Overview },
+        { path: 'work', name: 'work', component: Work },
+        { path: 'renew', name: 'renew', component: Renew },
+        { path: 'recharge', name: 'recharge', component: Recharge },
+        { path: 'balance', name: 'balance', component: Balance },
+        { path: 'balanceParticulars', name: 'balanceParticulars', component: BalanceParticulars },
+        { path: 'disk', name: 'disk', component: Disk },
+        { path: 'diskBackup', name: 'diskBackup', component: DiskBackup },
+        { path: 'diskParticulars', name: 'diskParticulars', component: DiskParticulars },
+        { path: 'snapshot', name: 'snapshot', component: Snapshot },
+        { path: 'firewall', name: 'firewall', component: Firewall },
+        { path: 'new', name: 'new', component: New },
+        { path: 'host', name: 'host', component: Host },
+        { path: 'mirror', name: 'mirror', component: Mirror },
+        { path: 'vpc', name: 'vpc', component: Vpc },
+        { path: 'vpn', name: 'vpn', component: Vpn },
+        { path: 'vpcManage', name: 'vpcManage', component: VpcManage },
+        { path: 'ip', name: 'ip', component: Ip },
         /*{path: 'order', name: 'order', component: Order},*/
-        {path: 'order', name: 'order', component: Order1},
-        {path: 'payResult', name: 'payResult', component: PayResult},
-        {path: 'result', name: 'result', component: Result},
-        {path: 'expenses', name: 'expenses', component: Expenses},
-        {path: 'userCenter', name: 'userCenter', component: UserCenter},
-        {path: 'operationLog', name: 'operationLog', component: OperationLog},
-        {path: 'msgCenter', name: 'msgCenter', component: MsgCenter},
-        {path: 'manage', name: 'manage', component: Manage},
-        {path: 'upgrade', name: 'upgrade', component: Upgrade},
-        {path: 'firewallManage', name: 'firewallManage', component: FirewallManage},
-        {path: 'NATManage', name: 'NATManage', component: NATManage},
-        {path: 'recycle', name: 'recycle', component: Recycle},
-        {path: 'wxpay', name: 'wxpay', component: Wxpay},
-        {path: 'workOrder', name: 'workOrder', component: WorkOrder},
-        {path: 'BRecords', name: 'BRecords', component: BRecords},
+        { path: 'order', name: 'order', component: Order1 },
+        { path: 'payResult', name: 'payResult', component: PayResult },
+        { path: 'result', name: 'result', component: Result },
+        { path: 'expenses', name: 'expenses', component: Expenses },
+        { path: 'userCenter', name: 'userCenter', component: UserCenter },
+        { path: 'operationLog', name: 'operationLog', component: OperationLog },
+        { path: 'msgCenter', name: 'msgCenter', component: MsgCenter },
+        { path: 'manage', name: 'manage', component: Manage },
+        { path: 'upgrade', name: 'upgrade', component: Upgrade },
+        { path: 'firewallManage', name: 'firewallManage', component: FirewallManage },
+        { path: 'NATManage', name: 'NATManage', component: NATManage },
+        { path: 'recycle', name: 'recycle', component: Recycle },
+        { path: 'wxpay', name: 'wxpay', component: Wxpay },
+        { path: 'workOrder', name: 'workOrder', component: WorkOrder },
+        { path: 'BRecords', name: 'BRecords', component: BRecords },
+        { path: 'RecordDetails', name: 'RecordDetails', component: RecordDetails }
       ]
     },
     {
@@ -696,13 +698,13 @@ var router = new Router({
       name: LR.name,
       component: LR,
       children: [
-        {path: 'login', name: 'login', component: Login},
-        {path: 'register', name: 'register', component: Register},
-        {path: 'reset', name: 'reset', component: Reset},
-        {path: 'registerSuccess', name: 'registerSuccess', component: RegisterSuccess}
+        { path: 'login', name: 'login', component: Login },
+        { path: 'register', name: 'register', component: Register },
+        { path: 'reset', name: 'reset', component: Reset },
+        { path: 'registerSuccess', name: 'registerSuccess', component: RegisterSuccess }
       ]
     },
-    {path: '/*', name: '404', component: notFindPage}
+    { path: '/*', name: '404', component: notFindPage }
   ]
 })
 
