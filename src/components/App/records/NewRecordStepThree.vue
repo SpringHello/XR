@@ -9,24 +9,24 @@
           <h2>主体信息</h2>
           <div>
             <ul>
-              <li>主体单位所属区域：最多显示长度为20字站位站位站位站位站</li>
-              <li>主体单位证件类型：我是证件类型</li>
-              <li>主体单位性质：我是单位性质</li>
-              <li>主体单位证件号码：我是证件号码</li>
-              <li>主体单位名称：最多显示长度为20字站位站位站位站位站</li>
+              <li>主体单位所属区域：{{mainUnitInformation.province}}/{{ mainUnitInformation.city }}/{{ mainUnitInformation.district }}</li>
+              <li>主体单位证件类型：{{ certificateType}}</li>
+              <li>主体单位性质：{{ unitProperties}}</li>
+              <li>主体单位证件号码：{{ mainUnitInformation.certificateNumber}}</li>
+              <li>主体单位名称：{{ mainUnitInformation.unitName }}</li>
             </ul>
             <ul>
-              <li>主体单位证件住所：我是证件类型</li>
-              <li>主体单位通信地址：我是单位性质</li>
-              <li>投资人或主管单位姓名：我是证件号码</li>
-              <li>法人姓名：我是法人姓名</li>
-              <li>法人证件类型：我是证件类型</li>
+              <li>主体单位证件住所：{{mainUnitInformation.certificatesResidence }}</li>
+              <li>主体单位通信地址：{{mainUnitInformation.mailingAddress }}</li>
+              <li>投资人或主管单位姓名：{{ mainUnitInformation.investorName }}</li>
+              <li>法人姓名：{{ mainUnitInformation.legalPersonName}}</li>
+              <li>法人证件类型：{{ legalPersonCertificateType }}</li>
             </ul>
             <ul>
-              <li>法人证件号码：我是单位性质</li>
-              <li>办公室电话：我是证件号码</li>
-              <li>手机号码：我是证件号码</li>
-              <li>电子邮箱地址：我是证件号码</li>
+              <li>法人证件号码：{{ mainUnitInformation.legalPersonIDNumber}}</li>
+              <li>办公室电话：{{ mainUnitInformation.officePhone }}</li>
+              <li>手机号码：{{ mainUnitInformation.phoneNumber}}</li>
+              <li>电子邮箱地址：{{ mainUnitInformation.emailAddress}}</li>
             </ul>
           </div>
         </div>
@@ -224,14 +224,17 @@
     beforeRouteEnter(to, from, next) {
       var area = sessionStorage.getItem('zone')
       var recordsType = sessionStorage.getItem('recordsType')
+      var mainUnitInformationStr = sessionStorage.getItem('mainUnitInformationStr')
       next(vm => {
-        vm.setData(area, recordsType)
-        window.scroll(0,700)
+        vm.setData(area, recordsType, mainUnitInformationStr)
+        window.scroll(0, 700)
       })
     },
     data() {
       return {
         siteInfoShow: false,
+        //接受第一页的信息
+        mainUnitInformation: {},
         // 备案区域
         area: '',
         // 备案类型
@@ -241,8 +244,9 @@
       }
     },
     methods: {
-      setData(area, recordsType) {
+      setData(area, recordsType, mainUnitInformationStr) {
         this.area = area
+        this.mainUnitInformation = JSON.parse(mainUnitInformationStr)
         switch (recordsType) {
           case '2':
             break
@@ -253,6 +257,110 @@
     },
     mounted() {
       this.siteInfoShow = true
+    },
+    computed: {
+      certificateType() {
+        switch (this.mainUnitInformation.unitProperties) {
+          case '0':
+            switch (this.mainUnitInformation.certificateType) {
+              case '1':
+                return '工商营业执照'
+                break
+              case '2':
+                return '组织机构代码证'
+                break
+            }
+            break
+          case '1':
+            switch (this.mainUnitInformation.certificateType) {
+              case '1':
+                return '身份证'
+                break
+              case '2':
+                return '护照'
+                break
+              case '3':
+                return '军官证'
+                break
+              case '4':
+                return '台胞证'
+                break
+            }
+            break
+          case '2':
+            switch (this.mainUnitInformation.certificateType) {
+              case '1':
+                return '军队代号'
+                break
+            }
+            break
+          case '3':
+            switch (this.mainUnitInformation.certificateType) {
+              case '1':
+                return '组织机构代码证'
+                break
+            }
+            break
+          case '4':
+            switch (this.mainUnitInformation.certificateType) {
+              case '1':
+                return '组织机构代码证'
+                break
+              case '2':
+                return '事业法人证'
+                break
+            }
+            break
+          case '5':
+            switch (this.mainUnitInformation.certificateType) {
+              case '1':
+                return '社团法人证书'
+                break
+              case '2':
+                return '组织机构代码证'
+                break
+            }
+            break
+        }
+      },
+      unitProperties() {
+        switch (this.mainUnitInformation.unitProperties) {
+          case '0':
+            return '企业'
+            break
+          case '1':
+            return '个人'
+            break
+          case '2':
+            return '军队'
+            break
+          case '3':
+            return '政府机关'
+            break
+          case '4':
+            return '事业单位'
+            break
+          case '5':
+            return '社会团体'
+            break
+        }
+      },
+      legalPersonCertificateType() {
+        switch (this.mainUnitInformation.legalPersonCertificateType) {
+          case '1':
+            return '身份证'
+            break
+          case '2':
+            return '护照'
+            break
+          case '3':
+            return '军官证'
+            break
+          case '4':
+            return '台胞证'
+            break
+        }
+      }
     }
   }
 </script>

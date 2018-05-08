@@ -45,12 +45,12 @@
                 </Option>
               </Select>
             </FormItem>
-            
+
             <FormItem label="主体单位证件号码" prop="certificateNumber">
                   <Input  v-model="mainUnitInformation.certificateNumber" placeholder="请输入主体单位证件号码"
                      style="width: 500px"></Input>
             </FormItem>
-         
+
             <FormItem label="主体单位名称" prop="unitName">
               <Input @on-focus="toolShow('unitName')" @on-blur="toolHide()" v-model="mainUnitInformation.unitName" placeholder="请输入主体单位名称" style="width: 500px"></Input>
               <transition name="fade">
@@ -65,19 +65,19 @@
             <FormItem label="主体单位证件住所" prop="certificatesResidence">
               <Input @on-focus="toolShow('certificatesResidence')" @on-blur="toolHide()" v-model="mainUnitInformation.certificatesResidence" placeholder="请输入主体单位证件住所"
                      style="width: 500px"></Input>
-              <transition name="fade">       
+              <transition name="fade">
                <div class="tooltip-popper"  v-if="isToolHide == 3">
                        <div class="tooltip-center">
                          <div class="tooltip-arrow"></div>
                            <div class="tooltip">必须输入与主体单位上完全一致的地址</div>
                        </div>
-                </div>   
-              </transition>      
+                </div>
+              </transition>
             </FormItem>
             <FormItem label="主体单位通信地址" prop="mailingAddress">
               <Input @on-focus="toolShow('mailingAddress')" @on-blur="toolHide()" v-model="mainUnitInformation.mailingAddress" placeholder="请输入主体单位通信地址"
                      style="width: 500px"></Input>
-                  <transition name="fade">        
+                  <transition name="fade">
                  <div class="tooltip-popper"  style="top:-46px" v-if="isToolHide == 4">
                        <div class="tooltip-center" >
                          <div class="tooltip-arrow"></div>
@@ -85,19 +85,19 @@
 2. 通信地址不能包含任何符号，必须写成如下格式：北京市海淀区中关村东路13号金融小区2号楼8单元612室
 3. 通信地址的省、市、区信息需要和主体单位所属区域的选项保持一致。</div>
                        </div>
-                </div>   
-                  </transition>     
+                </div>
+                  </transition>
             </FormItem>
             <FormItem label="投资人或主管单位姓名" prop="investorName" >
               <Input @on-focus="toolShow('investorName')" @on-blur="toolHide()" v-model="mainUnitInformation.investorName" placeholder="请输入投资人或主管单位姓名"
                      style="width: 500px;"></Input>
-                  <transition name="fade">        
+                  <transition name="fade">
                  <div class="tooltip-popper"  style="top:-8px" v-if="isToolHide == 5">
                        <div class="tooltip-center" >
                          <div class="tooltip-arrow"></div>
                            <div class="tooltip">1. 单位用户建议填写法人姓名或主办单位全称。2. 个人用户填写本人姓名。</div>
                        </div>
-                </div>  
+                </div>
                   </transition>
             </FormItem>
             <div style="height:2px;width: 100%;background: #D9D9D9;margin-top: 60px"></div>
@@ -119,7 +119,7 @@
             <FormItem label="办公室电话" prop="officePhone">
               <span>+86</span><Input @on-focus="toolShow('officePhone')" @on-blur="toolHide()"  v-model="mainUnitInformation.officePhone" placeholder="请输入办公室电话"
                                      style="width: 468px;margin-left: 10px"></Input>
-                 <transition name="fade">                         
+                 <transition name="fade">
               <div class="tooltip-popper"  style="top:-36px" v-if="isToolHide == 6">
                        <div class="tooltip-center" >
                          <div class="tooltip-arrow"></div>
@@ -127,19 +127,19 @@
 2. 该电话在备案成功后需保持畅通，以备核查。
 3. 电话格式：086-010-87654321-007（可以不带分机号）。</div>
                        </div>
-                </div> 
-                 </transition>                        
+                </div>
+                 </transition>
             </FormItem>
             <FormItem label="手机号码" prop="phoneNumber">
               <Input @on-focus="toolShow('phoneNumber')" @on-blur="toolHide()" v-model="mainUnitInformation.phoneNumber" placeholder="请输入手机号码" style="width: 500px"></Input>
-                <transition name="fade">   
+                <transition name="fade">
                 <div class="tooltip-popper"  style="top:-27px" v-if="isToolHide == 7">
                        <div class="tooltip-center" >
                          <div class="tooltip-arrow"></div>
                            <div class="tooltip">1. 请您确保填写的电话畅通并可直接联系到本人，否则可能导致您的备案失败。
 2. 该电话在备案成功后需保持畅通，以备核查。</div>
                        </div>
-                </div> 
+                </div>
                 </transition>
             </FormItem>
             <FormItem label="电子邮箱地址" prop="emailAddress">
@@ -183,7 +183,6 @@ export default {
         callback();
       }
     };
-
     //校验座机号码
     const validOfficePhone = (rule, value, callback) => {
       let reg = /^0\d{2,3}-?\d{7,8}$/;
@@ -213,6 +212,16 @@ export default {
       }
     };
     //校验证件类型
+    // const validUnitProperties = (rule, value, callback) => {
+    //   let regCord = /(^\d{15}$) |(^\d{18}$) |(^\d{17}(\d|X|x)$)/;
+    //   console.log(this.mainUnitInformation.certificateTypeList);
+
+    //       if (!regCord.test(this.mainUnitInformation.certificateNumber)) {
+    //           return callback(new Error("请输入正确的"+this.mainUnitInformation.certificateTypeList.label)
+    //         } else {
+    //           callback();
+    //         }
+    // };
     const validUnitProperties = (rule, value, callback) => {
       let regCord = /(^\d{15}$) |(^\d{18}$) |(^\d{17}(\d|X|x)$)/;
       console.log(this.mainUnitInformation.certificateTypeList);
@@ -252,7 +261,7 @@ export default {
         unitPropertiesList: [
           {
             label: "企业",
-            value: 0,
+            value: "0",
             certificate: [
               {
                 label: "工商营业执照",
@@ -266,7 +275,7 @@ export default {
           },
           {
             label: "个人",
-            value: 1,
+            value: "1",
             certificate: [
               {
                 label: "身份证",
@@ -288,7 +297,7 @@ export default {
           },
           {
             label: "军队",
-            value: 2,
+            value: "2",
             certificate: [
               {
                 label: "军队代号",
@@ -298,7 +307,7 @@ export default {
           },
           {
             label: "政府机关",
-            value: 3,
+            value: "3",
             certificate: [
               {
                 label: "组织机构代码证",
@@ -308,7 +317,7 @@ export default {
           },
           {
             label: "事业单位",
-            value: 4,
+            value: "4",
             certificate: [
               {
                 label: "组织机构代码证",
@@ -322,7 +331,7 @@ export default {
           },
           {
             label: "社会团体",
-            value: 5,
+            value: "5",
             certificate: [
               {
                 label: "社团法人证书",
@@ -385,7 +394,7 @@ export default {
           { required: true, validator: validateArea, trigger: "blur" }
         ],
         unitProperties: [
-          { required: true, message: "请选择单位性质", trigger: "blur" }
+          { required: true, message: "请选择单位性质", trigger: "change" }
         ],
         certificateType: [
           { required: true, message: "请选择证件类型", trigger: "change" }
@@ -475,9 +484,7 @@ export default {
 
     // 切换主体单位性质时级联单位证件
     changeUnitProperties(val) {
-      this.mainUnitInformation.certificateTypeList = this.mainUnitInformation.unitPropertiesList[
-        val
-      ].certificate;
+      this.mainUnitInformation.certificateTypeList = this.mainUnitInformation.unitPropertiesList[val].certificate;
       this.mainUnitInformation.certificateType = "";
     },
     //进入下一步网站信息填写
@@ -485,8 +492,10 @@ export default {
       // var list = [];
       this.$refs[name].validate(valid => {
         if (valid) {
+          let mainUnitInformationStr = JSON.stringify(this.mainUnitInformation)
+          sessionStorage.setItem( 'mainUnitInformationStr', mainUnitInformationStr)
           this.$router.push({
-            path: "/NewRecordStepTwo"
+            path: "NewRecordStepTwo"
           });
         } else {
           return;

@@ -187,7 +187,7 @@
           this.loginModal = true
           return
         }
-        this.$router.push('/ruicloud/recordSystem')
+        this.$router.push('/ruicloud/BRecords')
       }
     },
     computed: {

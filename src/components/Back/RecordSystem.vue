@@ -35,7 +35,15 @@
             </div>
           </TabPane>
           <TabPane label="已完成备案" name="recordFinished">
-
+            <div class="content">
+              <span>备案类型</span>
+              <Select v-model="recordFinishType" style="width:200px;margin: 0 20px 0 10px" placeholder="请选择备案类型" @on-change="searchRecordFinishByRecordType">
+                <Option v-for="item in recordTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+            </div>
+            <div class="recordScheduleData">
+              <Table :columns="recordFinishColumns" :data="recordFinishData"></Table>
+            </div>
           </TabPane>
         </Tabs>
       </div>
@@ -145,7 +153,7 @@
                   cursor: 'pointer'
                 },
                 on: {
-                  click: ()=>{
+                  click: () => {
                     alert('111')
                   }
                 }
@@ -156,7 +164,50 @@
         recordScheduleData: [
           {},
           {}
-        ]
+        ],
+        // 已完成备案类型
+        recordFinishType: '',
+        // 已完成备案表格
+        recordFinishColumns: [
+          {
+            title: '备案服务ID',
+            key: '1',
+            ellipsis: 'true'
+          },
+          {
+            title: '关联域名',
+            key: '2',
+          },
+          {
+            title: '备案类型',
+            key: '3',
+          },
+          {
+            title: '备案主体',
+            key: '4',
+          },
+          {
+            title: '备案完成时间',
+            key: '5'
+          },
+          {
+            title: '操作',
+            render(h, params) {
+              return h('span', {
+                style: {
+                  color: '#377DFF',
+                  cursor: 'pointer'
+                },
+                on: {
+                  click: () => {
+                    alert('111')
+                  }
+                }
+              }, '查看详情')
+            }
+          },
+        ],
+        recordFinishData: [{}, {}]
       }
     },
     beforeRouteEnter(to, from, next) {
@@ -179,13 +230,17 @@
       /* 区域变更刷新数据 */
       refresh() {
       },
-      /* 切换备案类型时查询数据 */
+      /* 切换未完成备案类型时查询数据 */
       searchByRecordType(value) {
         console.log(value)
       },
-      /* 切换备案状态时查询数据 */
+      /* 切换备案进度状态时查询数据 */
       searchByRecordStatus(value) {
         console.log(value)
+      },
+      /* 切换已完成备案类型时查询数据 */
+      searchRecordFinishByRecordType() {
+
       }
     },
     watch: {

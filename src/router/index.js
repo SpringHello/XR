@@ -102,7 +102,7 @@ const Recycle = () => import('@/components/Back/Recycle')
 const Wxpay = () => import('@/components/Back/Wxpay')
 const WorkOrder = () => import('@/components/Back/WorkOrder')
 const BRecords = () => import('@/components/Back/Records')
-const RecordSystem = () => import('@/components/Back/RecordSystem')
+
 
 // 帮助文档路由
 const computed = () => import('@/components/App/doc/computed')
@@ -689,7 +689,6 @@ var router = new Router({
         {path: 'wxpay', name: 'wxpay', component: Wxpay},
         {path: 'workOrder', name: 'workOrder', component: WorkOrder},
         {path: 'BRecords', name: 'BRecords', component: BRecords},
-        {path: 'recordSystem', name: 'recordSystem', component: RecordSystem}
       ]
     },
     {
