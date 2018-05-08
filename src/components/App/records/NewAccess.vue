@@ -54,7 +54,8 @@
         </Form>
       </div>
       <div class="content-footer">
-        <button @click="next">下一步，填写主体信息</button>
+        <button v-if="filingInformation.mainRecord === 'our'" @click="nextSite">下一步，填写网站信息</button>
+        <button v-else @click="nextMain">下一步，填写主体信息</button>
       </div>
     </div>
   </div>
@@ -171,13 +172,22 @@
         this.$refs.filingInformation.validateField('district', (valid) => {
         })
       },
-      // 下一步
-      next(){
+      // 下一步（填写主体信息）
+      nextMain(){
         this.$refs.filingInformation.validate((valid) => {
           if (valid) {
+            this.$router.push('newRecordStepOne')
           }
         })
-      }
+      },
+      // 下一步（填写网站信息）
+      nextSite(){
+        this.$refs.filingInformation.validate((valid) => {
+          if (valid) {
+            this.$router.push('newRecordStepTwo')
+          }
+        })
+      },
     },
     beforeRouteEnter(to, from, next) {
       var area = sessionStorage.getItem('zone')

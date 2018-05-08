@@ -68,10 +68,12 @@
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
-                    action="file/upFile.do">
-                    <div class="item-content-text">
+                    action="file/upFile.do"
+                    :on-success="IDCardFront">
+                    <div class="item-content-text" v-if="uploadForm.IDCardFront==''">
                       暂无图片
                     </div>
+                    <img v-else :src="uploadForm.IDCardFront">
                     <button>上传</button>
                   </Upload>
                 </div>
@@ -91,10 +93,12 @@
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
-                    action="file/upFile.do">
-                    <div class="item-content-text">
+                    action="file/upFile.do"
+                    :on-success="IDCardBack">
+                    <div class="item-content-text" v-if="uploadForm.IDCardBack==''">
                       暂无图片
                     </div>
+                    <img v-else :src="uploadForm.IDCardBack">
                     <button>上传</button>
                   </Upload>
                 </div>
@@ -163,6 +167,7 @@
               <div class="item-content">
                 <div style="width:100%;">
                   <Upload
+                    multiple
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
@@ -241,6 +246,13 @@
         recordsType: '新增备案',
         // 备案类型描述
         recordsTypeDesc: '域名未备案，备案主体证件无备案号，需要备案。',
+        // 上传资料标记表单
+        uploadForm: {
+          // 身份证正面
+          IDCardFront: '',
+          // 身份证反面
+          IDCardBack: '',
+        }
       }
     },
     methods: {
@@ -252,6 +264,23 @@
             break
           case '3':
             break
+        }
+      },
+      /* 图片上传成功回调，设置图片。每张图片上传都有一个method。
+ 暂时没有找到更好的方法解决图片标记问题 */
+      IDCardFront(response) {
+        if (response.status == 1) {
+          this.uploadForm.IDCardFront = response.result
+        }
+      },
+      IDCardBack(response) {
+        if (response.status == 1) {
+          this.uploadForm.IDCardBack = response.result
+        }
+      },
+      IDCardPerson(response) {
+        if (response.status == 1) {
+          this.uploadForm.IDCardPerson = response.result
         }
       },
     },
