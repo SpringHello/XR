@@ -2,14 +2,16 @@
   <div id="home">
     <!-- banner 轮播图 -->
     <div class="banner">
-      <my-carousel :interval=5000 effect="fade" class="carousel" @on-change="change">
+      <my-carousel :interval=5000000 effect="fade" class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
-          <div @click="push('active_2')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
+          <div @click="push('active_2')"
+               style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
               <div>
                 <div>
                   <p>
-                    <img src="../../assets/img/active/active_2/ziti.png" style="width:400px;height:200px;padding-top: 0px">
+                    <img src="../../assets/img/active/active_2/ziti.png"
+                         style="width:400px;height:200px;padding-top: 0px">
                   </p>
                   <button>立即领取</button>
                 </div>
@@ -19,7 +21,16 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('active_1')" style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
+          <div @click="push('active_2')" class="xf" style="position: relative;cursor: pointer">
+            <div style="width:1200px;margin: 0px auto">
+              <img src="../../assets/img/active/active_xf_text.png"
+                   style="position: absolute;top:50%;transform: translateY(-50%);">
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
+          <div @click="push('active_1')"
+               style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
               <div>
                 <div>
@@ -41,7 +52,8 @@
                 <img style="position: absolute;top: 10%;left: -20%;z-index: 2"
                      src="../../assets/img/active/newNodes/circle_1.png">
                 <p>北京一区盛大开服
-                  <img style="position: absolute;left: -2%;top: 28%;z-index: 1" src="../../assets/img/active/newNodes/text.png"/></p>
+                  <img style="position: absolute;left: -2%;top: 28%;z-index: 1"
+                       src="../../assets/img/active/newNodes/text.png"/></p>
                 <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">布局首都，新购特惠，限时抢购</p>
                 <button>立即体验</button>
                 <img style="position:absolute;left: 45%; top: 13%;z-index: -2;"
@@ -57,7 +69,8 @@
               <img style="position: absolute;z-index: 1" src="../../assets/img/active/newNodes/circle.png">
               <div style="width:1200px;margin:0px auto;padding-top: 7%;position: relative;z-index: 1">
                 <p>北方二区（沈阳）盛大开服
-                  <img style="position: absolute;left: 0;top: 30%;z-index: 1" src="../../assets/img/active/newNodes/text1.png"/></p>
+                  <img style="position: absolute;left: 0;top: 30%;z-index: 1"
+                       src="../../assets/img/active/newNodes/text1.png"/></p>
                 <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">春暖花开，活动绽放</p>
                 <p>3折优惠<span style="font-size: 24px">起</span></p>
                 <button>立即体验</button>
@@ -71,7 +84,7 @@
     </div>
     <!-- 功能介绍区域 -->
     <div class="box-container"
-         :class="{one:this.activeBanner==3,two: this.activeBanner==4, three:this.activeBanner==1,four:this.activeBanner==2}">
+         :class="{one:this.activeBanner==4,two: this.activeBanner==5, three:this.activeBanner==1,four:this.activeBanner==3||this.activeBanner==2}">
       <div class="container">
         <div v-for="(item,index) in boxContainer" :key="index" class="container-item">
           <i class="iconfont" :class="item.img" style="font-size:60px;color:#fff;line-height:1"></i>
@@ -736,6 +749,9 @@
             height: 560px;
             background-size: cover;
           }
+          > .xf {
+            background: url('../../assets/img/active/active_xf_bg.png') no-repeat center;
+          }
         }
       }
     }
@@ -747,7 +763,7 @@
       &.one {
         background-color: #F9AF80;
       }
-      &.two{
+      &.two {
         background-color: #135BFF;
       }
       &.three {
@@ -1278,17 +1294,18 @@
       outline: none;
       border: none;
       padding: 15px 40px;
-      font-size:24px;
-      font-family:PingFangSC-Regular;
-      color:rgba(255,255,255,1);
+      font-size: 24px;
+      font-family: PingFangSC-Regular;
+      color: rgba(255, 255, 255, 1);
       line-height: 24px;
-      background:linear-gradient(90deg,rgba(248,174,127,1),rgba(242,123,114,1));
+      background: linear-gradient(90deg, rgba(248, 174, 127, 1), rgba(242, 123, 114, 1));
       margin-top: 80px;
-      box-shadow: 0px 15px 31px -13px rgba(128,25,22,0.55);
-      border-radius:38px;
+      box-shadow: 0px 15px 31px -13px rgba(128, 25, 22, 0.55);
+      border-radius: 38px;
       cursor: pointer;
     }
   }
+
   .newNodes_2 {
     position: relative;
     height: 750px;
@@ -1306,17 +1323,18 @@
       outline: none;
       border: none;
       padding: 15px 40px;
-      font-size:24px;
-      font-family:PingFangSC-Regular;
-      color:rgba(255,255,255,1);
+      font-size: 24px;
+      font-family: PingFangSC-Regular;
+      color: rgba(255, 255, 255, 1);
       line-height: 24px;
-      background:#1F5FFF;
+      background: #1F5FFF;
       margin-top: 40px;
-      box-shadow: 0px 15px 31px -13px rgba(79,140,255,0.5);
-      border-radius:38px;
+      box-shadow: 0px 15px 31px -13px rgba(79, 140, 255, 0.5);
+      border-radius: 38px;
       cursor: pointer;
     }
   }
+
   .head-banner {
     background: linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));
     > div {

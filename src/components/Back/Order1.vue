@@ -22,6 +22,7 @@
               </Radio>
             </RadioGroup>
             <span style="display: block;color:#2d8cf0;cursor:pointer;margin-bottom: 20px;"> + 获取优惠券</span>
+            <router-link :to="{ path: 'dynamic', query: { id: '6' }}">全民普惠，3折减单，最高减免7000元！</router-link>
           </div>
           <p style="text-align: right;font-size:14px;color:rgba(102,102,102,1);line-height:19px;margin-bottom: 20px;">
             原价：{{couponInfo.originCost}}元<span

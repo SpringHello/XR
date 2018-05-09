@@ -85,7 +85,7 @@
             </Select>
           </Form-item>
           <Form-item label="优先级（数字越小优先级越高）">
-            <InputNumber v-model="newRuleForm.itemid" :max="10" :min="0"></InputNumber>
+            <InputNumber v-model="newRuleForm.itemid" :max="10" :min="1"></InputNumber>
           </Form-item>
           <Form-item label="起始端口" v-show="newRuleForm.protocol != 'ICMP' && newRuleForm.protocol != 'ALL'">
             <InputNumber v-model="newRuleForm.startPort" :max="65535" :min="0"></InputNumber>

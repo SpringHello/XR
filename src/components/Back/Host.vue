@@ -33,7 +33,9 @@
               <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
               <!-- 续费 -->
               <Dropdown-item name="renewal" v-if="status=='欠费'||status=='异常'" :disabled=true>主机续费</Dropdown-item>
-              <Dropdown-item name="renewal" v-else>主机续费</Dropdown-item>
+              <Dropdown-item name="renewal" v-else>主机续费<span
+                style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>
+              </Dropdown-item>
               <!-- 备份 -->
               <Dropdown-item name="backup" v-if="status!='开启'&&status!='关机'" :disabled=true>
                 <Tooltip content="异常、欠费状态，快照不可用" placement="top">
@@ -475,6 +477,8 @@
               </Option>
             </Select>
           </FormItem>
+          <router-link :to="{ path: 'dynamic', query: { id: '6' }}" style="margin-bottom:10px;">全民普惠，3折减单，最高减免7000元！
+          </router-link>
         </Form>
         <div style="font-size:16px;">
           应付费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{cost}}
