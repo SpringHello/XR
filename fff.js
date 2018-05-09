@@ -75,10 +75,17 @@ function quick(arr, start = 0, end = arr.length - 1) {
  console.log(arr)*/
 
 function tree(arr) {
-  function node(v) {
-    this.value = v
-    this.left = null
-    this.right = null
+  class node {
+    constructor(v) {
+      this.value = v
+      this.left = null
+      this.right = null
+    }
+
+    say() {
+      console.log(this.value)
+    }
+
   }
 
   let root = new node(arr[0])
