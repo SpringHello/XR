@@ -136,12 +136,12 @@
           </div>
         </div>
       </span>
-      <Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px" class="online">
+      <!--<Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px" class="online">
       <span class="service">
        <a :href="kfURL"
           target="_blank"></a>
        </span>
-      </Poptip>
+      </Poptip>-->
       <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
         <span class="phone"></span>
       </Poptip>
