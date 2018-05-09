@@ -1,5 +1,6 @@
 <template>
   <div>
+    <records></records>
     <div class="body-top">
       <div class="content">
         <h2>备案类型选择</h2>
@@ -36,7 +37,7 @@
         <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
           <strong>提示信息</strong>
-          <p class="lh24">您选择的区域未查询到符合要求的公网IP与云服务器，请先购买该资源然后在进行备案。<span style="color: #377dff;cursor: pointer;" @click="$router.push('/ruicloud/buy')">立即购买</span></p>
+          <p class="lh24">您选择的区域未查询到符合要求的公网IP与云服务器，请先购买该资源然后在进行备案。<span style="color: #377dff;cursor: pointer;" @click="$router.push('buy')">立即购买</span></p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
@@ -47,8 +48,12 @@
 </template>
 <script type="text/ecmascript-6">
   import axios from 'axios'
+  import records from './../Records'
 
   export default {
+    components: {
+      records
+    },
     data() {
       return {
         // 备案类型列表
@@ -147,7 +152,7 @@
     },
     created() {
       if (this.$store.state.userInfo == null) {
-        this.$router.push('/ruicloud/login')
+        this.$router.push('login')
         return
       }
       this.getHostStatus()
@@ -165,7 +170,7 @@
       },
       // 查询该区域用户是否有主机
       getHostStatus() {
-        let url = '/ruicloud/recode/existMainOrWeb.do'
+        let url = 'recode/existMainOrWeb.do'
         axios.get(url, {
           params: {
             zoneId: this.area
@@ -184,7 +189,7 @@
       putOnRecord() {
         if (!this.canRecord) {
           sessionStorage.setItem('zone', this.areaText)
-          sessionStorage.setItem('zoneId',this.area)
+          sessionStorage.setItem('zoneId', this.area)
           sessionStorage.setItem('recordsType', this.type + '')
           // 根据选择的备案类型决定跳入哪个起始页面
           switch (this.type) {

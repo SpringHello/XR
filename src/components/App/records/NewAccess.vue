@@ -1,5 +1,6 @@
 <template>
   <div>
+    <records></records>
     <step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc"></step>
     <div class="body-bottom">
       <div class="content">
@@ -73,9 +74,10 @@
   import step from './step.vue'
   import area from '@/options/area.json'
   import regExp from '../../../util/regExp'
+  import records from './../Records'
   export default {
     components: {
-      step
+      step,records
     },
     data() {
 

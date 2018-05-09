@@ -1,5 +1,6 @@
 <template>
   <div>
+    <records></records>
     <step :onStep="4" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc"></step>
     <div class="body">
       <img src="../../../assets/img/records/records-img5.png"/>
@@ -11,10 +12,11 @@
 
 <script type="text/ecmascript-6">
   import step from './step.vue'
+  import records from './../Records'
 
   export default {
     components: {
-      step
+      step, records
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
@@ -64,13 +66,13 @@
     text-align: center;
     .center();
     > p {
-      font-size:18px;
-      font-family:PingFangSC-Medium;
-      color:rgba(102,102,102,1);
-      line-height:18px;
+      font-size: 18px;
+      font-family: PingFangSC-Medium;
+      color: rgba(102, 102, 102, 1);
+      line-height: 18px;
       margin-top: 30px;
     }
-    button{
+    button {
       border: none;
       outline: none;
       cursor: pointer;

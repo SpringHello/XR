@@ -1,5 +1,6 @@
 <template>
   <div>
+    <records></records>
     <step :onStep="3" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc"></step>
     <div class="body">
       <div class="content">
@@ -118,10 +119,11 @@
 
 <script type="text/ecmascript-6">
   import step from './step.vue'
+  import records from './../Records'
 
   export default {
     components: {
-      step
+      step, records
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {

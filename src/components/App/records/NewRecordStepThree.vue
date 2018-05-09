@@ -1,5 +1,6 @@
 <template>
   <div>
+    <records></records>
     <step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc"></step>
     <div class="body-bottom">
       <div class="content">
@@ -57,7 +58,8 @@
             </div>
           </transition>
         </div>
-        <h2>请上传主办单位负责人相关资料</h2>
+        <h2>请上传网站负责人相关资料</h2>
+        <p class="titleDescription">温馨提示：如网站负责人和主体负责人不是同一人，请上传法人授权委托书</p>
         <div class="upload">
           <div class="uploadTitle">
             <p>身份证人像面</p>
@@ -68,7 +70,7 @@
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
-                    action="/ruicloud/file/upFile.do"
+                    action="file/upFile.do"
                     :on-success="IDCardFront">
                     <div class="item-content-text" v-if="uploadForm.IDCardFront==''">
                       暂无图片
@@ -93,7 +95,7 @@
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
-                    action="/ruicloud/file/upFile.do"
+                    action="file/upFile.do"
                     :on-success="IDCardBack">
                     <div class="item-content-text" v-if="uploadForm.IDCardBack==''">
                       暂无图片
@@ -121,7 +123,7 @@
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
-                    action="/ruicloud/file/upFile.do"
+                    action="file/upFile.do"
                     :on-success="combine">
                     <div class="item-content-text" v-if="uploadForm.combine==''">
                       暂无图片
@@ -149,7 +151,7 @@
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
-                    action="/ruicloud/file/upFile.do"
+                    action="file/upFile.do"
                     :on-success="certifiedDomainNoCertification">
                     <div class="item-content-text" v-if="uploadForm.certifiedDomainNoCertification==''">
                       点击选择文件
@@ -178,7 +180,7 @@
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
-                    action="/ruicloud/file/upFile.do"
+                    action="file/upFile.do"
                     :on-success="otherFile">
                     <div class="item-content-text" v-if="uploadForm.otherFile==''">
                       点击选择文件
@@ -206,7 +208,7 @@
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
-                    action="/ruicloud/file/upFile.do"
+                    action="file/upFile.do"
                     :on-success="CheckList">
                     <div class="item-content-text" v-if="uploadForm.CheckList==''">
                       点击选择文件
@@ -239,10 +241,11 @@
 <script type="text/ecmascript-6">
   import step from './step.vue'
   import axios from 'axios'
+  import records from './../Records'
 
   export default {
     components: {
-      step
+      step, records
     },
     beforeRouteEnter(to, from, next) {
       var area = sessionStorage.getItem('zone')
@@ -376,7 +379,7 @@
           })
           return
         }
-        let addMainCompany = axios.get('/ruicloud/recode/addMainCompany.do', {
+        let addMainCompany = axios.get('recode/addMainCompany.do', {
           params: {
             mainCompanyArea: this.mainUnitInformation.province + '-' + this.mainUnitInformation.city + '-' + this.mainUnitInformation.district,
             mainCompanyCertificatesType: this.mainUnitInformation.certificateType,
@@ -401,7 +404,7 @@
             webRecordAuthenticityUrl: this.uploadForm.CheckList,
           }
         })
-        let addMainWeb = axios.get('/ruicloud/recode/addMainWeb.do', {
+        let addMainWeb = axios.get('recode/addMainWeb.do', {
           params: {
             webResponsibilityLinkName: this.basicInformation.principalName,
             webResponsibilityCertificatesType: this.basicInformation.certificateType,
