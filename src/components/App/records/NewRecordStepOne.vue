@@ -240,9 +240,9 @@ export default {
       // 备案区域
       area: "",
       // 备案类型
-      recordsType: "新增备案",
+      recordsType: "",
       // 备案类型描述
-      recordsTypeDesc: "域名未备案，备案主体证件无备案号，需要备案。",
+      recordsTypeDesc: "",
       //隐藏显示文字提示
       isToolHide: 0,
       // 主体单位信息表单
@@ -453,10 +453,17 @@ export default {
     setData(area, recordsType) {
       this.area = area;
       switch (recordsType) {
-        case "2":
-          break;
-        case "3":
-          break;
+        case '1':
+          this.recordsType = '新增备案'
+          this.recordsTypeDesc = '域名未备案，备案主体证件无备案号，需要备案。'
+        case '2':
+          this.recordsType = '新增接入'
+          this.recordsTypeDesc = '域名已在其他平台备案过，需要变更接入商。'
+          break
+        case '3':
+          this.recordsType = '新增网站'
+          this.recordsTypeDesc = '主体已经备案过，需要再给其他网站备案。'
+          break
       }
     },
     // 重新选择省份

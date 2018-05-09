@@ -45,14 +45,14 @@
                 <li>网站负责人姓名：{{ basicInformation.principalName}}</li>
                 <li>有效证件类型：{{ basicInformationCertificateType}}</li>
                 <li>有效证件号码：{{ basicInformation.certificateNumber}}</li>
-                <li>办公室电话：{{ basicInformation.officePhone}}</li>
+                <li>手机号码：{{ basicInformation.phoneNumber}}</li>
                 <li>电子邮箱地址：{{ basicInformation.emailAddress}}</li>
               </ul>
               <ul>
                 <li>ISP名称：{{ basicInformation.ISPName}}</li>
                 <li>网站IP地址：{{ basicInformationIPAddress}}</li>
                 <li>网站接入方式：{{ basicInformation.accessWay}}</li>
-                <li>服务器放置地：{{ basicInformationServerPutArea}}</li>
+                <li>服务器放置地：{{ basicInformation.serverPutArea}}</li>
               </ul>
             </div>
           </transition>
@@ -68,12 +68,12 @@
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
-                    action="file/upFile.do"
+                    action="/ruicloud/file/upFile.do"
                     :on-success="IDCardFront">
                     <div class="item-content-text" v-if="uploadForm.IDCardFront==''">
                       暂无图片
                     </div>
-                    <img v-else :src="uploadForm.IDCardFront">
+                    <img v-else :src="uploadForm.IDCardFront" style="height: 120px;width:164px">
                     <button>上传</button>
                   </Upload>
                 </div>
@@ -93,12 +93,12 @@
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
-                    action="file/upFile.do"
+                    action="/ruicloud/file/upFile.do"
                     :on-success="IDCardBack">
                     <div class="item-content-text" v-if="uploadForm.IDCardBack==''">
                       暂无图片
                     </div>
-                    <img v-else :src="uploadForm.IDCardBack">
+                    <img v-else :src="uploadForm.IDCardBack" style="height: 120px;width:164px">
                     <button>上传</button>
                   </Upload>
                 </div>
@@ -121,12 +121,12 @@
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
-                    action="file/upFile.do"
+                    action="/ruicloud/file/upFile.do"
                     :on-success="combine">
                     <div class="item-content-text" v-if="uploadForm.combine==''">
                       暂无图片
                     </div>
-                    <img v-else :src="uploadForm.combine">
+                    <img v-else :src="uploadForm.combine" style="height: 120px;width:164px">
                     <button>上传</button>
                   </Upload>
                 </div>
@@ -149,9 +149,13 @@
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
-                    action="file/upFile.do"
+                    action="/ruicloud/file/upFile.do"
                     :on-success="certifiedDomainNoCertification">
                     <div class="item-content-text" v-if="uploadForm.certifiedDomainNoCertification==''">
+                      点击选择文件
+                    </div>
+                    <div class="item-content-text" v-else>
+                      <p>{{uploadForm.certifiedDomainNoCertification}}</p>
                       点击选择文件
                     </div>
                     <button>上传</button>
@@ -174,8 +178,13 @@
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
-                    action="file/upFile.do">
-                    <div class="item-content-text">
+                    action="/ruicloud/file/upFile.do"
+                    :on-success="otherFile">
+                    <div class="item-content-text" v-if="uploadForm.otherFile==''">
+                      点击选择文件
+                    </div>
+                    <div class="item-content-text" v-else>
+                      <p>{{uploadForm.otherFile}}</p>
                       点击选择文件
                     </div>
                     <button>上传</button>
@@ -197,8 +206,13 @@
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
-                    action="file/upFile.do">
-                    <div class="item-content-text">
+                    action="/ruicloud/file/upFile.do"
+                    :on-success="CheckList">
+                    <div class="item-content-text" v-if="uploadForm.CheckList==''">
+                      点击选择文件
+                    </div>
+                    <div class="item-content-text" v-else>
+                      <p>{{uploadForm.CheckList}}</p>
                       点击选择文件
                     </div>
                     <button>上传</button>
@@ -216,7 +230,7 @@
       </div>
       <div class="content-footer">
         <button @click="$router.push('newRecordStepTwo')">上一步，填写网站信息</button>
-        <button style="margin-left: 20px" @click="$router.push('waitFirstTrial')">下一步，提交初审</button>
+        <button style="margin-left: 20px" @click="netStep()">下一步，提交初审</button>
       </div>
     </div>
   </div>
@@ -224,6 +238,7 @@
 
 <script type="text/ecmascript-6">
   import step from './step.vue'
+  import axios from 'axios'
 
   export default {
     components: {
@@ -231,11 +246,12 @@
     },
     beforeRouteEnter(to, from, next) {
       var area = sessionStorage.getItem('zone')
+      var zoneId = sessionStorage.getItem('zoneId')
       var recordsType = sessionStorage.getItem('recordsType')
       var mainUnitInformationStr = sessionStorage.getItem('mainUnitInformationStr')
       var basicInformationStr = sessionStorage.getItem('basicInformationStr')
       next(vm => {
-        vm.setData(area, recordsType, mainUnitInformationStr, basicInformationStr)
+        vm.setData(area, zoneId, recordsType, mainUnitInformationStr, basicInformationStr)
         window.scroll(0, 700)
       })
     },
@@ -248,10 +264,11 @@
         basicInformation: {},
         // 备案区域
         area: '',
+        zoneId: '',
         // 备案类型
-        recordsType: '新增备案',
+        recordsType: '',
         // 备案类型描述
-        recordsTypeDesc: '域名未备案，备案主体证件无备案号，需要备案。',
+        recordsTypeDesc: '',
         // 上传资料标记表单
         uploadForm: {
           // 身份证正面
@@ -261,19 +278,31 @@
           // 相关资料
           combine: '',
           // 域名证书
-          certifiedDomainNoCertification: ''
+          certifiedDomainNoCertification: '',
+          // 其他文件
+          otherFile: '',
+          // 核验单
+          CheckList: '',
         }
       }
     },
     methods: {
-      setData(area, recordsType, mainUnitInformationStr, basicInformationStr) {
+      setData(area, zoneId, recordsType, mainUnitInformationStr, basicInformationStr) {
         this.area = area
+        this.zoneId = zoneId
         this.mainUnitInformation = JSON.parse(mainUnitInformationStr)
         this.basicInformation = JSON.parse(basicInformationStr)
         switch (recordsType) {
+          case '1':
+            this.recordsType = '新增备案'
+            this.recordsTypeDesc = '域名未备案，备案主体证件无备案号，需要备案。'
           case '2':
+            this.recordsType = '新增接入'
+            this.recordsTypeDesc = '域名已在其他平台备案过，需要变更接入商。'
             break
           case '3':
+            this.recordsType = '新增网站'
+            this.recordsTypeDesc = '主体已经备案过，需要再给其他网站备案。'
             break
         }
       },
@@ -298,7 +327,111 @@
         if (response.status == 1) {
           this.uploadForm.certifiedDomainNoCertification = response.result
         }
-      }
+      },
+      otherFile(response) {
+        if (response.status == 1) {
+          this.uploadForm.otherFile = response.result
+        }
+      },
+      CheckList(response) {
+        if (response.status == 1) {
+          this.uploadForm.CheckList = response.result
+        }
+      },
+      // 提交资料
+      netStep() {
+        if (this.uploadForm.IDCardFront === '') {
+          this.$Message.info({
+            content: '请上传身份证正面照'
+          })
+          return
+        }
+        if (this.uploadForm.IDCardBack === '') {
+          this.$Message.info({
+            content: '请上传身份证反面照'
+          })
+          return
+        }
+        if (this.uploadForm.combine === '') {
+          this.$Message.info({
+            content: '请上传公司资质照'
+          })
+          return
+        }
+        if (this.uploadForm.certifiedDomainNoCertification === '') {
+          this.$Message.info({
+            content: '请上传域名证书'
+          })
+          return
+        }
+        if (this.uploadForm.CheckList === '') {
+          this.$Message.info({
+            content: '请上传其他文件'
+          })
+          return
+        }
+        if (this.uploadForm.IDCardFront === '') {
+          this.$Message.info({
+            content: '请上传核验单'
+          })
+          return
+        }
+        let addMainCompany = axios.get('/ruicloud/recode/addMainCompany.do', {
+          params: {
+            mainCompanyArea: this.mainUnitInformation.province + '-' + this.mainUnitInformation.city + '-' + this.mainUnitInformation.district,
+            mainCompanyCertificatesType: this.mainUnitInformation.certificateType,
+            mainCompanyNature: this.mainUnitInformation.unitProperties,
+            mainCompanyNumber: this.mainUnitInformation.certificateNumber,
+            mainCompanyName: this.mainUnitInformation.unitName,
+            mainCompanyCertificatesLoaction: this.mainUnitInformation.certificatesResidence,
+            mainCompanyCommunicatLocation: this.mainUnitInformation.mailingAddress,
+            InvestorName: this.mainUnitInformation.investorName,
+            legalName: this.mainUnitInformation.legalPersonName,
+            legalCertificatesType: this.mainUnitInformation.legalPersonCertificateType,
+            legalCertificatesNumber: this.mainUnitInformation.legalPersonIDNumber,
+            officeNumber: this.mainUnitInformation.officePhone,
+            phone: this.mainUnitInformation.phoneNumber,
+            email: this.mainUnitInformation.emailAddress,
+            zoneId: this.zoneId,
+            companyResponsibilityUrlPositive: this.uploadForm.IDCardFront,
+            companyResponsibilityUrlBack: this.uploadForm.IDCardBack,
+            hostCompanyUrl: this.uploadForm.combine,
+            domainCertificateUrl: this.uploadForm.certifiedDomainNoCertification,
+            otherDataUrl: this.uploadForm.otherFile,
+            webRecordAuthenticityUrl: this.uploadForm.CheckList,
+          }
+        })
+        let addMainWeb = axios.get('/ruicloud/recode/addMainWeb.do', {
+          params: {
+            webResponsibilityLinkName: this.basicInformation.principalName,
+            webResponsibilityCertificatesType: this.basicInformation.certificateType,
+            webResponsibilityCertificatesNumber: this.basicInformation.certificateNumber,
+            offaceNumber: this.basicInformation.officePhone,
+            phone: this.basicInformation.phoneNumber,
+            email: this.basicInformation.emailAddress,
+            ISPName: this.basicInformation.ISPName,
+            webIp: this.basicInformation.IPAddress,
+            webAccessType: this.basicInformation.accessWay,
+            webServerAddress: this.basicInformation.serverPutArea,
+            zoneId: this.zoneId,
+            recordType: this.recordsType,
+            webDomian: this.basicInformation.websiteDomain + ',' + this.basicInformation.newWebsiteDomain,
+            webMessage: this.basicInformation.contentsLanguage + '',
+            webName: this.basicInformation.siteName,
+            webServerContent: this.basicInformation.serviceContent,
+            webUrl: this.basicInformation.websiteHomepage,
+          }
+        })
+        Promise.all([addMainCompany, addMainWeb]).then(response => {
+          if ((response[0].status == 200 && response[0].data.status == 1) && (response[1].status == 200 && response[1].data.status == 1)) {
+            this.$router.push('waitFirstTrial')
+          } else {
+            this.$message.info({
+              content: response[0].data.message
+            })
+          }
+        })
+      },
     },
     mounted() {
       this.siteInfoShow = true
@@ -434,14 +567,6 @@
         /* this.basicInformation.IPAddress可能不是数组，会报警告 */
         try {
           return this.basicInformation.IPAddress.map(item => {
-            return item.split('#')[1]
-          }) + ''
-        } catch (e) {
-        }
-      },
-      basicInformationServerPutArea() {
-        try {
-          return this.basicInformation.serverPutArea.map(item => {
             return item.split('#')[1]
           }) + ''
         } catch (e) {

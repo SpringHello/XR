@@ -236,9 +236,7 @@
               </RadioGroup>
             </FormItem>
             <FormItem label="服务器放置地" prop="serverPutArea">
-              <Select v-model="basicInformation.serverPutArea" style="width:500px;" placeholder="请选择区域" multiple>
-                <Option v-for="item in basicInformation.serverPutAreaList" :value="`${item.value}#${item.label}`" :key="item.value">{{ item.label }}</Option>
-              </Select>
+              <Input v-model="basicInformation.serverPutArea" style="width: 500px" :readonly="true"></Input>
             </FormItem>
           </Form>
         </div>
@@ -354,9 +352,9 @@
         // 备案区域
         area: "",
         // 备案类型
-        recordsType: "新增备案",
+        recordsType: "",
         // 备案类型描述
-        recordsTypeDesc: "域名未备案，备案主体证件无备案号，需要备案。",
+        recordsTypeDesc: "",
         // 网站基本信息表单
         basicInformation: {
           // 网站名称
@@ -412,7 +410,7 @@
           // 电子邮箱地址
           emailAddress: "",
           // ISP名称
-          ISPName: "北京允睿讯通科技有公司",
+          ISPName: "北京允睿讯通科技有公司 备案部",
           // 网站IP地址（接口获取）
           IPAddressList: [
             {
@@ -427,18 +425,8 @@
           IPAddress: [],
           // 网站接入方式
           accessWay: "专线",
-          // 服务器放置区域（接口获取）
-          serverPutAreaList: [
-            {
-              label: '北京',
-              value: '1'
-            },
-            {
-              label: '上海',
-              value: '2'
-            }
-          ],
-          serverPutArea: []
+          // 服务器放置区域
+          serverPutArea: '',
         },
         // 网站基本信息表单验证信息
         basicInformationRuleValidate: {
@@ -500,16 +488,7 @@
               message: "请至少选择一个ip地址",
               trigger: "change"
             }
-          ],
-          serverPutArea: [
-            {
-              required: true,
-              type: "array",
-              min: 1,
-              message: "请至少选择一个服务器放置地",
-              trigger: "change"
-            }
-          ],
+          ]
         },
         //主体信息List
         information: []
@@ -518,12 +497,20 @@
     methods: {
       setData(area, recordsType,mainUnitInformationStr) {
         this.area = area;
+        this.basicInformation.serverPutArea = area
         this.mainUnitInformation = JSON.parse(mainUnitInformationStr)
         switch (recordsType) {
-          case "2":
-            break;
-          case "3":
-            break;
+          case '1':
+            this.recordsType = '新增备案'
+            this.recordsTypeDesc = '域名未备案，备案主体证件无备案号，需要备案。'
+          case '2':
+            this.recordsType = '新增接入'
+            this.recordsTypeDesc = '域名已在其他平台备案过，需要变更接入商。'
+            break
+          case '3':
+            this.recordsType = '新增网站'
+            this.recordsTypeDesc = '主体已经备案过，需要再给其他网站备案。'
+            break
         }
       },
       // 新增网站域名
@@ -544,11 +531,24 @@
           "certificateNumber",
           vaild => {}
         );
-        this.basicInformation.certificateNumber = "";
+        //this.basicInformation.certificateNumber = "";
       },
       // 选择新建负责人或已有的
       changePersonInCharge(val) {
         if (val === '已填写主体单位负责人姓名') {
+          this.basicInformation.principalName = this.mainUnitInformation.legalPersonName
+          this.basicInformation.certificateType = this.mainUnitInformation.legalPersonCertificateType
+          this.basicInformation.certificateNumber = this.mainUnitInformation.legalPersonIDNumber
+          this.basicInformation.officePhone = this.mainUnitInformation.officePhone
+          this.basicInformation.phoneNumber = this.mainUnitInformation.phoneNumber
+          this.basicInformation.emailAddress = this.mainUnitInformation.emailAddress
+        } else {
+          this.basicInformation.principalName = ''
+          this.basicInformation.certificateType = ''
+          this.basicInformation.certificateNumber = ''
+            this.basicInformation.officePhone = ''
+          this.basicInformation.phoneNumber = ''
+          this.basicInformation.emailAddress = ''
         }
       },
       //进入下一步

@@ -165,7 +165,7 @@
       },
       // 查询该区域用户是否有主机
       getHostStatus() {
-        let url = 'recode/existMainOrWeb.do'
+        let url = '/ruicloud/recode/existMainOrWeb.do'
         axios.get(url, {
           params: {
             zoneId: this.area
@@ -184,6 +184,7 @@
       putOnRecord() {
         if (!this.canRecord) {
           sessionStorage.setItem('zone', this.areaText)
+          sessionStorage.setItem('zoneId',this.area)
           sessionStorage.setItem('recordsType', this.type + '')
           // 根据选择的备案类型决定跳入哪个起始页面
           switch (this.type) {
