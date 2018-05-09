@@ -83,8 +83,8 @@ export default {
           label: "Paris"
         },
         {
-          value: "Canberra",
-          label: "Canberra"
+          value: "Canberras",
+          label: "Canberras"
         }
       ],
       //备案类型Select值
@@ -112,15 +112,15 @@ export default {
           label: "管局审核中"
         },
         {
-          value: "Canberra",
+          value: "Canberras",
           label: "管局审核拒绝"
         },
         {
-          value: "Canberra",
+          value: "Canberrad",
           label: "审核完成"
         },
         {
-          value: "Canberra",
+          value: "Canberraa",
           label: "备案完成"
         }
       ],
@@ -165,9 +165,9 @@ export default {
           key: "waitOperation",
           render: (h, params) => {
             const color =
-              params.row.currentSate.label === 1
+              params.row.currentSate.label === 1 || params.row.currentSate.label === 4
                 ? "#2A99F2"
-                : params.row.currentSate.label === 2 ? "" : "#000000";
+                : params.row.currentSate.label === 2 ? "#666666" : params.row.currentSate.label === 3 ?"#D0021B":"";
             return (
               "div",
               [
@@ -179,7 +179,7 @@ export default {
                       cursor: "pointer"
                     }
                   },
-                  params.row.waitOperation
+                  params.row.waitOperation = params.row.currentSate.label === 1?"上传拍照/邮寄资料" : params.row.currentSate.label === 2 ? "暂无":params.row.currentSate.label === 3 ?"重新上传资料":params.row.currentSate.label === 4 ? "短信核验":""
                 )
               ]
             );
@@ -201,11 +201,10 @@ export default {
                     },
                     on: {
                       click: () => {
-                        this.$router.push({ path: "/RecordDetails" });
+                        this.$router.push({ path: "RecordDetails" });
                       }
                     }
                   },
-
                   params.row.operation
                 )
               ]
@@ -235,8 +234,8 @@ export default {
           recordSubject: "北京允睿讯通",
           updateTime: "2016-09-21 08:50:08",
           currentSate: {
-            label: 1,
-            value: "初审中"
+            label: 3,
+            value: "初审拒绝"
           },
           waitOperation: "上传拍照/邮寄资料",
           operation: "查看详情"
@@ -261,14 +260,34 @@ export default {
           recordSubject: "百度科技",
           updateTime: "2016-09-21 08:50:08",
           currentSate: {
-            label: 2,
-            value: "管局审核中"
+            label: 4,
+            value: "审核完成"
           },
           waitOperation: "暂无",
           operation: "查看详情"
         }
       ]
     };
+  },
+  methods:{
+    //备案进度表格
+    listMainWeb(){
+      let userList = this.$store.state.userInfo;
+      if(userList != null){
+        this.$http.get('recode/listMainWeb.do',{
+          params:{
+            id:userList.companyid
+          }
+        }).then(res =>{
+          if(res.status == 200){
+              console.log(res);
+          }
+        })
+      }
+    }
+  },
+  mounted(){
+    this.listMainWeb();
   }
 };
 </script>
@@ -276,7 +295,7 @@ export default {
 <style rel="stylesheet/less" lang="less" scoped>
 .background {
   background-color: #f5f5f5;
-  @diff: 101px;
+  @diff: 104px;
   min-height: calc(~"100% - @{diff}");
   width: 100%;
   .wrapper {
@@ -308,7 +327,5 @@ export default {
     }
   }
 }
-.ivu-select .ivu-select-single .ivu-select-selection {
-  height: 28px;
-}
+
 </style>
