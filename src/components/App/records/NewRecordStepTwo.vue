@@ -167,14 +167,13 @@
             <h3 style="margin-top: 40px">网站负责人基本信息</h3>
             <div style="display: flex">
               <h3 style="margin-top: 20px">选择负责人</h3>
-              <RadioGroup v-model="basicInformation.personInCharge" class="records-radio-person" style="padding: 20px 0 20px 55px">
+              <RadioGroup v-model="basicInformation.personInCharge" class="records-radio-person" style="padding: 20px 0 20px 55px" @on-change="changePersonInCharge">
                 <Radio label="已填写主体单位负责人姓名">
                 </Radio>
                 <Radio label="新建负责人">
                 </Radio>
               </RadioGroup>
             </div>
-            <div v-if="basicInformation.personInCharge === '新建负责人'">
               <FormItem label="姓名" prop="principalName">
                 <Input v-model="basicInformation.principalName" placeholder="请填写负责人姓名" style="width: 500px"></Input>
               </FormItem>
@@ -215,14 +214,13 @@
                 <Input v-model="basicInformation.emailAddress" placeholder="请输入电子邮箱地址" style="width: 500px"></Input>
               </FormItem>
               <div style="height: 2px;background: #D9D9D9;width: 100%"></div>
-            </div>
             <h3 style="margin-top: 40px">ICP备案网站接入信息</h3>
             <FormItem label="ISP名称" prop="ISPName">
               <Input v-model="basicInformation.ISPName" style="width: 500px" :readonly="true"></Input>
             </FormItem>
             <FormItem label="网站IP地址" prop="IPAddress">
               <Select v-model="basicInformation.IPAddress" style="width:500px;" placeholder="请选择网站IP地址" multiple>
-                <Option v-for="item in basicInformation.IPAddressList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                <Option v-for="item in basicInformation.IPAddressList" :value="`${item.value}#${item.label}`" :key="item.value">{{ item.label }}</Option>
               </Select>
             </FormItem>
             <FormItem label="网站接入方式" prop="accessWay">
@@ -239,7 +237,7 @@
             </FormItem>
             <FormItem label="服务器放置地" prop="serverPutArea">
               <Select v-model="basicInformation.serverPutArea" style="width:500px;" placeholder="请选择区域" multiple>
-                <Option v-for="item in basicInformation.serverPutAreaList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                <Option v-for="item in basicInformation.serverPutAreaList" :value="`${item.value}#${item.label}`" :key="item.value">{{ item.label }}</Option>
               </Select>
             </FormItem>
           </Form>
@@ -388,7 +386,7 @@
             {
               label: "身份证",
               value: "1",
-              reg: /(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)/
+              reg: /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
             },
             {
               label: "护照",
@@ -416,13 +414,31 @@
           // ISP名称
           ISPName: "北京允睿讯通科技有公司",
           // 网站IP地址（接口获取）
-          IPAddressList: [],
+          IPAddressList: [
+            {
+              label: '12581',
+              value: '1'
+            },
+            {
+              label: '12582',
+              value: '2'
+            },
+          ],
           IPAddress: [],
           // 网站接入方式
           accessWay: "专线",
           // 服务器放置区域（接口获取）
-          serverPutAreaList: [],
-          serverPutArea: ""
+          serverPutAreaList: [
+            {
+              label: '北京',
+              value: '1'
+            },
+            {
+              label: '上海',
+              value: '2'
+            }
+          ],
+          serverPutArea: []
         },
         // 网站基本信息表单验证信息
         basicInformationRuleValidate: {
@@ -475,7 +491,25 @@
           ],
           websiteHomepage: [
             { required: true, validator: validWebsiteHomepage, trigger: "blur" }
-          ]
+          ],
+          IPAddress: [
+            {
+              required: true,
+              type: "array",
+              min: 1,
+              message: "请至少选择一个ip地址",
+              trigger: "change"
+            }
+          ],
+          serverPutArea: [
+            {
+              required: true,
+              type: "array",
+              min: 1,
+              message: "请至少选择一个服务器放置地",
+              trigger: "change"
+            }
+          ],
         },
         //主体信息List
         information: []
@@ -512,12 +546,19 @@
         );
         this.basicInformation.certificateNumber = "";
       },
+      // 选择新建负责人或已有的
+      changePersonInCharge(val) {
+        if (val === '已填写主体单位负责人姓名') {
+        }
+      },
       //进入下一步
       nextStep(name) {
         this.$refs[name].validate(valid => {
           if (valid) {
+            let basicInformationStr = JSON.stringify(this.basicInformation)
+            sessionStorage.setItem('basicInformationStr', basicInformationStr)
             this.$router.push({
-              path: "/NewRecordStepThree"
+              path: "NewRecordStepThree"
             });
           } else {
             return;

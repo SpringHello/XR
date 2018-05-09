@@ -36,30 +36,35 @@
             src: require('../../../assets/img/records/records-icon11.png'),
             onSrc:require('../../../assets/img/records/records-icon16.png'),
             title: '等待初审',
+            title1: '等待初审',
             step: 2
           },
           {
             src: require('../../../assets/img/records/records-icon12.png'),
             onSrc:require('../../../assets/img/records/records-icon17.png'),
             title: '上传资料/办理拍照',
+            title1: '上传资料/办理拍照',
             step: 3
           },
           {
             src: require('../../../assets/img/records/records-icon13.png'),
             onSrc:require('../../../assets/img/records/records-icon18.png'),
             title: '提交管局审批',
+            title1: '提交管局审批',
             step: 4
           },
           {
             src: require('../../../assets/img/records/records-icon14.png'),
             onSrc: require('../../../assets/img/records/records-icon14.png'),
             title: '备案短信核验',
+            title1: '备案短信核验',
             step: 5
           },
           {
             src: require('../../../assets/img/records/records-icon15.png'),
             onSrc: require('../../../assets/img/records/records-icon15.png'),
             title: '备案成功',
+            title1: '备案成功',
             step: 6
           }
         ]

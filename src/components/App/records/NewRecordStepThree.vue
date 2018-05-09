@@ -35,24 +35,24 @@
           <transition name="list">
             <div v-if="siteInfoShow">
               <ul>
-                <li>网站名称：最多显示长度为20字站位站位站位站位站</li>
-                <li>网站域名：我是证件类型</li>
-                <li>网站首页URL：我是单位性质</li>
-                <li>网站服务内容：我是证件号码</li>
-                <li>网站语言：最多显示长度为20字站位站位站位站位站</li>
+                <li>网站名称：{{ basicInformation.siteName}}</li>
+                <li>网站域名：{{ basicInformation.websiteDomain}},{{ basicInformationNewWebsiteDomain }}</li>
+                <li>网站首页URL：{{ basicInformation.websiteHomepage}}</li>
+                <li>网站服务内容：{{ basicInformation.serviceContent}}</li>
+                <li>网站语言：{{ basicInformationContentsLanguage}}</li>
               </ul>
               <ul>
-                <li>网站负责人姓名：我是证件类型</li>
-                <li>有效证件类型：我是单位性质</li>
-                <li>有效证件号码：我是证件号码</li>
-                <li>办公室电话：我是法人姓名</li>
-                <li>电子邮箱地址：我是证件类型</li>
+                <li>网站负责人姓名：{{ basicInformation.principalName}}</li>
+                <li>有效证件类型：{{ basicInformationCertificateType}}</li>
+                <li>有效证件号码：{{ basicInformation.certificateNumber}}</li>
+                <li>办公室电话：{{ basicInformation.officePhone}}</li>
+                <li>电子邮箱地址：{{ basicInformation.emailAddress}}</li>
               </ul>
               <ul>
-                <li>ISP名称：我是单位性质</li>
-                <li>网站IP地址：我是证件号码</li>
-                <li>网站接入方式：我是证件号码</li>
-                <li>服务器放置地：我是证件号码</li>
+                <li>ISP名称：{{ basicInformation.ISPName}}</li>
+                <li>网站IP地址：{{ basicInformationIPAddress}}</li>
+                <li>网站接入方式：{{ basicInformation.accessWay}}</li>
+                <li>服务器放置地：{{ basicInformationServerPutArea}}</li>
               </ul>
             </div>
           </transition>
@@ -121,10 +121,12 @@
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
-                    action="file/upFile.do">
-                    <div class="item-content-text">
+                    action="file/upFile.do"
+                    :on-success="combine">
+                    <div class="item-content-text" v-if="uploadForm.combine==''">
                       暂无图片
                     </div>
+                    <img v-else :src="uploadForm.combine">
                     <button>上传</button>
                   </Upload>
                 </div>
@@ -147,8 +149,9 @@
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
-                    action="file/upFile.do">
-                    <div class="item-content-text">
+                    action="file/upFile.do"
+                    :on-success="certifiedDomainNoCertification">
+                    <div class="item-content-text" v-if="uploadForm.certifiedDomainNoCertification==''">
                       点击选择文件
                     </div>
                     <button>上传</button>
@@ -230,8 +233,9 @@
       var area = sessionStorage.getItem('zone')
       var recordsType = sessionStorage.getItem('recordsType')
       var mainUnitInformationStr = sessionStorage.getItem('mainUnitInformationStr')
+      var basicInformationStr = sessionStorage.getItem('basicInformationStr')
       next(vm => {
-        vm.setData(area, recordsType, mainUnitInformationStr)
+        vm.setData(area, recordsType, mainUnitInformationStr, basicInformationStr)
         window.scroll(0, 700)
       })
     },
@@ -240,6 +244,8 @@
         siteInfoShow: false,
         //接受第一页的信息
         mainUnitInformation: {},
+        // 接收前一页的主体信息
+        basicInformation: {},
         // 备案区域
         area: '',
         // 备案类型
@@ -252,13 +258,18 @@
           IDCardFront: '',
           // 身份证反面
           IDCardBack: '',
+          // 相关资料
+          combine: '',
+          // 域名证书
+          certifiedDomainNoCertification: ''
         }
       }
     },
     methods: {
-      setData(area, recordsType, mainUnitInformationStr) {
+      setData(area, recordsType, mainUnitInformationStr, basicInformationStr) {
         this.area = area
         this.mainUnitInformation = JSON.parse(mainUnitInformationStr)
+        this.basicInformation = JSON.parse(basicInformationStr)
         switch (recordsType) {
           case '2':
             break
@@ -278,11 +289,16 @@
           this.uploadForm.IDCardBack = response.result
         }
       },
-      IDCardPerson(response) {
+      combine(response) {
         if (response.status == 1) {
-          this.uploadForm.IDCardPerson = response.result
+          this.uploadForm.combine = response.result
         }
       },
+      certifiedDomainNoCertification(response) {
+        if (response.status == 1) {
+          this.uploadForm.certifiedDomainNoCertification = response.result
+        }
+      }
     },
     mounted() {
       this.siteInfoShow = true
@@ -388,6 +404,47 @@
           case '4':
             return '台胞证'
             break
+        }
+      },
+      // 有效证件类型
+      basicInformationCertificateType() {
+        switch (this.basicInformation.certificateType) {
+          case '1':
+            return '身份证'
+            break
+          case '2':
+            return '护照'
+            break
+          case '3':
+            return '军官证'
+            break
+          case '4':
+            return '台胞证'
+            break
+        }
+      },
+      // 网站语言
+      basicInformationContentsLanguage() {
+        return this.basicInformation.contentsLanguage + ''
+      },
+      basicInformationNewWebsiteDomain() {
+        return this.basicInformation.newWebsiteDomain + ''
+      },
+      basicInformationIPAddress() {
+        /* this.basicInformation.IPAddress可能不是数组，会报警告 */
+        try {
+          return this.basicInformation.IPAddress.map(item => {
+            return item.split('#')[1]
+          }) + ''
+        } catch (e) {
+        }
+      },
+      basicInformationServerPutArea() {
+        try {
+          return this.basicInformation.serverPutArea.map(item => {
+            return item.split('#')[1]
+          }) + ''
+        } catch (e) {
         }
       }
     }

@@ -40,7 +40,15 @@
             </Select>
           </FormItem>
           <FormItem label="网站域名" prop="websiteDomain">
-            <Input v-model="filingInformation.websiteDomain" placeholder="请输入网站域名" style="width: 500px"></Input>
+            <Input @on-focus="isToolHide = 1" @on-blur="isToolHide = 0"  v-model="filingInformation.websiteDomain" placeholder="请输入网站域名" style="width: 500px"></Input>
+            <transition name="fade">
+              <div class="tooltip-popper"  v-if="isToolHide == 1">
+                <div class="tooltip-center" >
+                  <div class="tooltip-arrow"></div>
+                  <div class="tooltip">域名不要加www.格式如xrcloud.net</div>
+                </div>
+              </div>
+            </transition>
           </FormItem>
           <FormItem label="主体备案号" prop="websiteRecordNumber">
             <Input v-model="filingInformation.websiteRecordNumber" placeholder="请输入网站备案号" style="width: 500px"></Input>
@@ -89,6 +97,7 @@
         }
       }
       return {
+        isToolHide: 0,
         // 备案区域
         area: '',
         // 备案类型
@@ -250,5 +259,49 @@
         margin-top: 10px;
       }
     }
+  }
+  //定义隐藏信息提示框样式
+  .tooltip {
+    max-width: 250px;
+    min-height: 34px;
+    padding: 8px 12px;
+    color: #fff;
+    text-align: left;
+    text-decoration: none;
+    background-color: rgba(70, 76, 91, 0.9);
+    border-radius: 4px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+  }
+  .tooltip-popper {
+    position: absolute;
+    top: -1px;
+    left: 500px;
+    will-change: top, left;
+    display: block;
+    visibility: visible;
+    font-size: 12px;
+    line-height: 1.5;
+    z-index: 1060;
+    padding: 0 5px 0 8px;
+  }
+  .tooltip-arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    top: 50%;
+    margin-top: -5px;
+    left: 3px;
+    border-width: 5px 5px 5px 0;
+    border-right-color: rgba(70, 76, 91, 0.9);
+  }
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s;
+  }
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
   }
 </style>
