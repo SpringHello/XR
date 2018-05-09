@@ -106,4 +106,9 @@ function tree(arr) {
   return root
 }
 
-console.log(JSON.stringify(tree([5, 1, 2, 3, 12, 4, 7])))
+class Avl {
+  constructor() {
+
+  }
+}
+//console.log(JSON.stringify(tree([5, 1, 2, 3, 12, 4, 7])))
