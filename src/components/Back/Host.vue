@@ -32,7 +32,10 @@
               <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
               <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
               <!-- 续费 -->
-              <Dropdown-item name="renewal" v-if="status=='欠费'||status=='异常'" :disabled=true>主机续费</Dropdown-item>
+              <Dropdown-item name="renewal" v-if="status=='欠费'||status=='异常'" :disabled=true>主机续费
+                <span
+                  style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>
+              </Dropdown-item>
               <Dropdown-item name="renewal" v-else>主机续费<span
                 style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>
               </Dropdown-item>
@@ -53,11 +56,13 @@
               <!-- 升级主机 -->
               <Dropdown-item name="upgrade" v-if="status!='关机'" :disabled=true>
                 <Tooltip content="升级主机前您必须关闭主机" placement="top">
-                  主机升级
+                  主机升级<span
+                    style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>
                 </Tooltip>
               </Dropdown-item>
               <Dropdown-item name="upgrade" v-else>
-                主机升级
+                主机升级<span
+                  style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>
               </Dropdown-item>
 
               <!-- 重启主机 -->

@@ -6,22 +6,34 @@
           <Menu style="width: 300px;" :open-names="openNames" :active-name="selectAnnouncement" @on-select="show">
             <Submenu name="ann">
               <template slot="title">
-                <img src="../../assets/img/product/dynamic-2.png" alt="" style="margin-right:8px;">
-                <span style="font-size: 18px;color:#333333;font-family: Microsoft YaHei;">产品公告</span>
+                <img v-if="openNames.indexOf('ann')>-1" src="../../assets/img/product/dynamic-2.png" alt=""
+                     style="margin-right:8px;vertical-align: middle">
+                <img v-else src="../../assets/img/product/dynamic-2-1.png" alt=""
+                     style="margin-right:8px;vertical-align: middle">
+                <span
+                  style="font-size: 18px;color:#333333;font-family: Microsoft YaHei;vertical-align: middle">产品公告</span>
               </template>
               <MenuItem :name="item.id" v-for="(item,index) in announcementArray" :key="index">{{item.title}}</MenuItem>
             </Submenu>
             <Submenu name="active">
               <template slot="title">
-                <img src="../../assets/img/product/dynamic-2.png" alt="" style="margin-right:8px;">
-                <span style="font-size: 18px;color:#333333;font-family: Microsoft YaHei;">最新活动</span>
+                <img v-if="openNames.indexOf('active')>-1" src="../../assets/img/product/dynamic-3.png" alt=""
+                     style="margin-right:8px;vertical-align: middle">
+                <img v-else src="../../assets/img/product/dynamic-3-1.png" alt=""
+                     style="margin-right:8px;vertical-align: middle">
+                <span
+                  style="font-size: 18px;color:#333333;font-family: Microsoft YaHei;vertical-align: middle">最新活动</span>
               </template>
               <MenuItem :name="item.id" v-for="(item,index) in activeArray" :key="index">{{item.title}}</MenuItem>
             </Submenu>
             <Submenu name="news">
               <template slot="title">
-                <img src="../../assets/img/product/dynamic-2.png" alt="" style="margin-right:8px;">
-                <span style="font-size: 18px;color:#333333;font-family: Microsoft YaHei;">新闻动态</span>
+                <img v-if="openNames.indexOf('news')>-1" src="../../assets/img/product/dynamic-4.png" alt=""
+                     style="margin-right:8px;vertical-align: middle">
+                <img v-else src="../../assets/img/product/dynamic-4-1.png" alt=""
+                     style="margin-right:8px;vertical-align: middle">
+                <span
+                  style="font-size: 18px;color:#333333;font-family: Microsoft YaHei;vertical-align: middle">新闻动态</span>
               </template>
               <MenuItem :name="item.id" v-for="(item,index) in newsArray" :key="index">{{item.title}}</MenuItem>
             </Submenu>

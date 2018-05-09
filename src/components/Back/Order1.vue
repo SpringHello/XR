@@ -25,7 +25,7 @@
             <router-link :to="{ path: 'dynamic', query: { id: '6' }}">全民普惠，3折减单，最高减免7000元！</router-link>
           </div>
           <p style="text-align: right;font-size:14px;color:rgba(102,102,102,1);line-height:19px;margin-bottom: 20px;">
-            原价：{{couponInfo.originCost}}元<span
+            原价：<span :class="{cross:couponInfo.originCost!=couponInfo.totalCost}">{{couponInfo.originCost}}元</span><span
             style="font-size:18px;color:rgba(0,0,0,0.65);margin-left: 20px;">总计支付：{{couponInfo.totalCost}}元</span>
           </p>
           <Button type="primary" style="float:right" @click="pay">支付</Button>
@@ -313,6 +313,9 @@
               width: 250px;
               line-height: 19px;
             }
+          }
+          .cross {
+            text-decoration: line-through red;
           }
         }
       }
