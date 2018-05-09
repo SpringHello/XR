@@ -554,7 +554,7 @@
           远程连接密码只出现一次，您以后每次远程连接登录时都需要输入该密码，请做好记录存档工作。</p>
       </div>
       <div slot="footer">
-        <Button type="primary" size="large" @click="confirmLink">登录</Button>
+        <Button type="primary" size="large">登录</Button>
       </div>
     </Modal>
   </div>
@@ -1298,7 +1298,10 @@
         }).then(response => {
           if (response.data.connectCode == '') {
             // 不是第一次连接，直接跳转
-            this.showModal.linkPassword = true
+            sessionStorage.setItem('linkURL', item.connecturl)
+            sessionStorage.setItem('vmid', item.computerid)
+            sessionStorage.setItem('zoneid', item.zoneid)
+            window.open('/ruicloud/link')
           } else {
             // 是第一次连接，弹出模态框
             this.linkPassword = response.data.result

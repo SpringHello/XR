@@ -90,6 +90,7 @@ const NATManage = () => import('@/components/Back/NATManage')
 const Recycle = () => import('@/components/Back/Recycle')
 const Wxpay = () => import('@/components/Back/Wxpay')
 const WorkOrder = () => import('@/components/Back/WorkOrder')
+const Link = () => import('@/components/Link')
 
 // 帮助文档路由
 const computed = () => import('@/components/App/doc/computed')
@@ -635,7 +636,8 @@ var router = new Router({
         {path: 'registerSuccess', name: 'registerSuccess', component: RegisterSuccess}
       ]
     },
-    {path: '/*', name: '404', component: notFindPage}
+    {path: '/ruicloud/link', name: 'link', component: Link},
+    {path: '/*', name: '404', component: notFindPage},
   ]
 })
 
