@@ -482,7 +482,7 @@
               </Option>
             </Select>
           </FormItem>
-          <router-link :to="{ path: 'dynamic', query: { id: '6' }}" style="margin-bottom:10px;">全民普惠，3折减单，最高减免7000元！
+          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:10px;">全民普惠，3折减单，最高减免7000元！
           </router-link>
         </Form>
         <div style="font-size:16px;">

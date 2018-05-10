@@ -21,12 +21,14 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div @click="push('active_2')" class="xf" style="position: relative;cursor: pointer">
-            <div style="width:1200px;margin: 0px auto">
-              <img src="../../assets/img/active/active_xf_text.png"
-                   style="position: absolute;top:50%;transform: translateY(-50%);">
+          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="display:block;width:100%;height:100%">
+            <div class="xf" style="position: relative;cursor: pointer">
+              <div style="width:1200px;margin: 0px auto">
+                <img src="../../assets/img/active/active_xf_text.png"
+                     style="position: absolute;top:50%;transform: translateY(-50%);">
+              </div>
             </div>
-          </div>
+          </router-link>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
           <div @click="push('active_1')"
@@ -749,7 +751,8 @@
             height: 560px;
             background-size: cover;
           }
-          > .xf {
+          .xf {
+            height:100%;
             background: url('../../assets/img/active/active_xf_bg.png') no-repeat center;
           }
         }
