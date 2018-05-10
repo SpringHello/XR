@@ -158,10 +158,10 @@
                                 :class="{btnnormal:auth,_hover:auth}">管理
                         </Button>
                         <Button v-if="!auth" :disabled="!auth">连接主机</Button>
-                        <!--<Button v-else class="btnnormal _hover" @click="link(item)">连接主机
-                        </Button>-->
-                        <a v-else :href="item.connecturl" target="_blank"
-                           style="line-height: 30px;border: 1px solid;border-radius: 4px;width: 76px;" class="_hover">连接主机</a>
+                        <Button v-else class="btnnormal _hover" @click="link(item)">连接主机
+                        </Button>
+                        <!-- <a v-else :href="item.connecturl" target="_blank"
+                            style="line-height: 30px;border: 1px solid;border-radius: 4px;width: 76px;" class="_hover">连接主机</a>-->
                       </div>
                     </div>
                   </Card>
@@ -563,7 +563,7 @@
           远程连接密码只出现一次，您以后每次远程连接登录时都需要输入该密码，请做好记录存档工作。</p>
       </div>
       <div slot="footer">
-        <Button type="primary" size="large" @click="confirmLink">登录</Button>
+        <Button type="primary" size="large">登录</Button>
       </div>
     </Modal>
   </div>
@@ -1306,8 +1306,13 @@
           }
         }).then(response => {
           if (response.data.connectCode == '') {
-            this.showModal.linkPassword = true
+            // 不是第一次连接，直接跳转
+            sessionStorage.setItem('linkURL', item.connecturl)
+            sessionStorage.setItem('vmid', item.computerid)
+            sessionStorage.setItem('zoneid', item.zoneid)
+            window.open('/ruicloud/link')
           } else {
+            // 是第一次连接，弹出模态框
             this.linkPassword = response.data.result
             this.showModal.linkPassword = true
           }
