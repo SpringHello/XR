@@ -5,7 +5,7 @@
         <div>
           <div>
             <p>
-              <img src="../../../assets/img/active/active_1/ziti.png">
+              <img src="../../../assets/img/active/active_1/ziti1.png">
             </p>
           </div>
           <transition name="list">
@@ -64,7 +64,7 @@
             <div class="right">
               <p><span>￥</span>38<span>现金券</span></p>
               <button v-if="item.time !== 0">立即领取</button>
-              <button v-if="item.time === 0 && item.ticket !== 0" :class="{canGet: true}" @click="getTicket">剩余{{ item.ticket}}%</button>
+              <button v-if="item.time === 0 && item.ticket !== 0" :class="{canGet: true}" @click="getTicket">立即领取</button>
               <button v-if="item.time === 0 && item.ticket === 0">本场结束</button>
             </div>
           </ul>
