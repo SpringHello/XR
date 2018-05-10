@@ -57,12 +57,12 @@
               <Dropdown-item name="upgrade" v-if="status!='关机'" :disabled=true>
                 <Tooltip content="升级主机前您必须关闭主机" placement="top">
                   主机升级<span
-                    style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>
+                  style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>
                 </Tooltip>
               </Dropdown-item>
               <Dropdown-item name="upgrade" v-else>
                 主机升级<span
-                  style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>
+                style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>
               </Dropdown-item>
 
               <!-- 重启主机 -->
@@ -1307,9 +1307,11 @@
         }).then(response => {
           if (response.data.connectCode == '') {
             // 不是第一次连接，直接跳转
+            sessionStorage.setItem('linkPhone', this.$store.state.authInfo.phone)
             sessionStorage.setItem('linkURL', item.connecturl)
             sessionStorage.setItem('vmid', item.computerid)
             sessionStorage.setItem('zoneid', item.zoneid)
+            sessionStorage.setItem('companyid', item.companyid)
             window.open('/ruicloud/link')
           } else {
             // 是第一次连接，弹出模态框
