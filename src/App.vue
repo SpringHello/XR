@@ -153,16 +153,59 @@
       <span class="qq" @mouseenter="QME" @mouseleave="QML">
         <div ref="qq" style="overflow: hidden">
           <div class="wrapper">
-            <div v-for="(qq,index) of QQInfo" :key="index">
+            <div>
+              <span>人工客服</span>
+              <div class="info-wrapper">
+                <div v-for="(qq,index) of QQInfo" :key="index">
               <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
                 <a target="_blank"
                    :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
                    style="color:rgb(73, 80, 96)">
-                <img src="./assets/img/app/QQ.png">
+                <img src="./assets/img/app/qq-blue.png" v-if="qq.qqstatus">
+                  <img src="./assets/img/app/qq-gray.png" v-else>
+                <span style="width: 56px;display: inline-block;">{{qq.servicename}}</span>
+                </a>
+              </Tooltip>
+            </div>
+              </div>
+            </div>
+          </div>
+          <div class="wrapper">
+            <div>
+              <span>售前咨询</span>
+              <div class="info-wrapper">
+                <div v-for="(qq,index) of xiaoshouInfo" :key="index">
+              <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
+                <a target="_blank"
+                   :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
+                   style="color:rgb(73, 80, 96)">
+                 <img src="./assets/img/app/qq-red.png" v-if="qq.qqstatus">
+                  <img src="./assets/img/app/qq-gray.png" v-else>
                 <span style="width: 56px;display: inline-block;">{{qq.servicename}}</span>
                 <i :class="{inline:qq.qqstatus}"></i>
                 </a>
               </Tooltip>
+            </div>
+              </div>
+            </div>
+          </div>
+          <div class="wrapper">
+            <div>
+              <span>技术支持</span>
+              <div class="info-wrapper">
+                <div v-for="(qq,index) of yunweiInfo" :key="index">
+              <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
+                <a target="_blank"
+                   :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
+                   style="color:rgb(73, 80, 96)">
+                 <img src="./assets/img/app/qq-blue.png" v-if="qq.qqstatus">
+                  <img src="./assets/img/app/qq-gray.png" v-else>
+                <span style="width: 56px;display: inline-block;">{{qq.servicename}}</span>
+                <i :class="{inline:qq.qqstatus}"></i>
+                </a>
+              </Tooltip>
+            </div>
+              </div>
             </div>
           </div>
         </div>
@@ -175,8 +218,8 @@
       <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
         <span class="phone"></span>
       </Poptip>
-      <BackTop :bottom="61" :right="50" :duration="0" :height="1600">
-        <Icon type="chevron-up" class="backtop"></Icon>
+      <BackTop :bottom="161" :right="50" :duration="0" :height="1600">
+        <span class="topLink"></span>
       </BackTop>
     </div>
   </div>
@@ -335,7 +378,9 @@
           }
         ], // footer-bottom
         kfURL: '',  // 客服url地址
-        QQInfo: []  // QQ客服在线情况
+        QQInfo: [],  // QQ客服在线情况
+        xiaoshouInfo: [],  // QQ销售在线情况
+        yunweiInfo: []  // QQ运维在线情况
       }
     },
 
@@ -365,7 +410,9 @@
       })
       // QQ客服在线情况
       this.$http.get('network/getQQCustomerServiceStatus.do').then(response => {
-        this.QQInfo = response.data.result
+        this.QQInfo = response.data.kefu
+        this.xiaoshouInfo = response.data.xiaoshou
+        this.yunweiInfo = response.data.yunwei
         /*for (let key in response.data.result) {
          this.QQInfo.push({
          key,
@@ -388,7 +435,7 @@
         }
       }),
       QME(){
-        this.$refs.qq.style.width = '116px'
+        this.$refs.qq.style.width = '231px'
       },
       QML(){
         this.$refs.qq.style.width = '0px'
@@ -431,6 +478,7 @@
 
 <style rel="stylesheet/less" lang="less">
   @import './assets/css/frontend.css';
+
   #front {
     header {
       width: 100%;
@@ -725,7 +773,7 @@
     .affix {
       position: fixed;
       right: 50px;
-      bottom: 100px;
+      bottom: 200px;
       z-index: 100;
       display: flex;
       flex-direction: column;
@@ -736,24 +784,25 @@
         padding: 10px;
         background: #E1E1E1 no-repeat center;
       }
-      .registerImg{
+      .registerImg {
         height: 201px;
         width: 48px;
         background: url("./assets/img/app/regiterTag.png") no-repeat;
         margin-bottom: 10px;
         cursor: pointer;
         padding: 154px 10px 9px;
-        >p{
-          font-size:14px;
-          font-family:MicrosoftYaHei;
-          color:rgba(55,125,255,1);
-          line-height:19px;
+        > p {
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          color: rgba(55, 125, 255, 1);
+          line-height: 19px;
         }
       }
       .qq {
-        background-image: url('./assets/img/app/QQ-gray.png');
+        position: relative;
+        background-image: url('./assets/img/app/qq.png');
         &:hover {
-          background: #2A99F2 url('./assets/img/app/QQ-white.png') no-repeat center;
+          background: #2A99F2 url('./assets/img/app/qq-hover.png') no-repeat center;
         }
         > div {
           position: absolute;
@@ -769,26 +818,29 @@
           display: block;
         }
         .wrapper {
-          width: 116px;
+          width: 231px;
           right: 0px;
           top: 0px;
           > div {
-            height: 48px;
-            padding: 16px 10px;
-            cursor: pointer;
-            img, span {
-              vertical-align: middle;
+            padding: 10px;
+            > span {
+              font-size: 12px;
+              font-family: MicrosoftYaHei;
+              color: rgba(102, 102, 102, 1);
+              line-height: 16px;
             }
-            i {
-              width: 10px;
-              height: 10px;
-              background: #E1E1E1;
-              display: inline-block;
-              vertical-align: middle;
-              border-radius: 50%;
-              margin-left: 8px;
-              &.inline {
-                background: #17C786;
+            .info-wrapper {
+              margin-top: 10px;
+              > div {
+                margin-bottom: 5px;
+                width: 50%;
+                display: inline-block;
+                img {
+                  vertical-align: middle;
+                }
+                span {
+                  vertical-align: middle;
+                }
               }
             }
           }
@@ -823,12 +875,21 @@
         background: #E1E1E1;
         background-repeat: no-repeat;
         background-position: center;
-        background-image: url('./assets/img/app/phone-gray.png');
+        background-image: url('./assets/img/app/phone.png');
         &:hover {
           background: #2A99F2;
           background-repeat: no-repeat;
           background-position: center;
-          background-image: url('./assets/img/app/phone-white.png');
+          background-image: url('./assets/img/app/phone-hover.png');
+        }
+      }
+      .topLink {
+        display: block;
+        width:48px;
+        height:48px;
+        background-image: url('./assets/img/app/top.png');
+        &:hover {
+          background: #2A99F2 url('./assets/img/app/top-hover.png') no-repeat center;
         }
       }
     }
