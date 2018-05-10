@@ -161,9 +161,9 @@
                 <a target="_blank"
                    :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
                    style="color:rgb(73, 80, 96)">
-                <img src="./assets/img/app/QQ.png">
+                <img src="./assets/img/app/qq-blue.png" v-if="qq.qqstatus">
+                  <img src="./assets/img/app/qq-gray.png" v-else>
                 <span style="width: 56px;display: inline-block;">{{qq.servicename}}</span>
-                <i :class="{inline:qq.qqstatus}"></i>
                 </a>
               </Tooltip>
             </div>
@@ -179,7 +179,8 @@
                 <a target="_blank"
                    :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
                    style="color:rgb(73, 80, 96)">
-                <img src="./assets/img/app/QQ.png">
+                 <img src="./assets/img/app/qq-red.png" v-if="qq.qqstatus">
+                  <img src="./assets/img/app/qq-gray.png" v-else>
                 <span style="width: 56px;display: inline-block;">{{qq.servicename}}</span>
                 <i :class="{inline:qq.qqstatus}"></i>
                 </a>
@@ -197,7 +198,8 @@
                 <a target="_blank"
                    :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
                    style="color:rgb(73, 80, 96)">
-                <img src="./assets/img/app/QQ.png">
+                 <img src="./assets/img/app/qq-blue.png" v-if="qq.qqstatus">
+                  <img src="./assets/img/app/qq-gray.png" v-else>
                 <span style="width: 56px;display: inline-block;">{{qq.servicename}}</span>
                 <i :class="{inline:qq.qqstatus}"></i>
                 </a>
@@ -208,16 +210,16 @@
           </div>
         </div>
       </span>
-      <Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px" class="online">
+      <!--<Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px" class="online">
       <span class="service"><a
         :href="kfURL"
         target="_blank"></a></span>
-      </Poptip>
+      </Poptip>-->
       <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
         <span class="phone"></span>
       </Poptip>
-      <BackTop :bottom="61" :right="50" :duration="0" :height="1600">
-        <Icon type="chevron-up" class="backtop"></Icon>
+      <BackTop :bottom="161" :right="50" :duration="0" :height="1600">
+        <span class="topLink"></span>
       </BackTop>
     </div>
   </div>
@@ -767,7 +769,7 @@
     .affix {
       position: fixed;
       right: 50px;
-      bottom: 100px;
+      bottom: 200px;
       z-index: 100;
       display: flex;
       flex-direction: column;
@@ -794,9 +796,9 @@
       }
       .qq {
         position: relative;
-        background-image: url('./assets/img/app/QQ-gray.png');
+        background-image: url('./assets/img/app/qq.png');
         &:hover {
-          background: #2A99F2 url('./assets/img/app/QQ-white.png') no-repeat center;
+          background: #2A99F2 url('./assets/img/app/qq-hover.png') no-repeat center;
         }
         > div {
           position: absolute;
@@ -824,8 +826,9 @@
               line-height: 16px;
             }
             .info-wrapper {
-              margin: 10px 0px;
+              margin-top: 10px;
               > div {
+                margin-bottom: 5px;
                 width: 50%;
                 display: inline-block;
                 img {
@@ -868,12 +871,21 @@
         background: #E1E1E1;
         background-repeat: no-repeat;
         background-position: center;
-        background-image: url('./assets/img/app/phone-gray.png');
+        background-image: url('./assets/img/app/phone.png');
         &:hover {
           background: #2A99F2;
           background-repeat: no-repeat;
           background-position: center;
-          background-image: url('./assets/img/app/phone-white.png');
+          background-image: url('./assets/img/app/phone-hover.png');
+        }
+      }
+      .topLink {
+        display: block;
+        width:48px;
+        height:48px;
+        background-image: url('./assets/img/app/top.png');
+        &:hover {
+          background: #2A99F2 url('./assets/img/app/top-hover.png') no-repeat center;
         }
       }
     }
