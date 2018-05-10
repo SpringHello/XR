@@ -14,40 +14,34 @@
             <p>VPN业务用于在远端用户和VPC之间建立一条安全加密的通信隧道，使远端用户通过VPN使用VPC中的业务资源。</p>
           </div>
           <Tabs type="card" :animated='false'>
-            <TabPane label="我的备案进度">
+            <TabPane :label="tabValueCom">
               <div style="margin-bottom:20px"> 
                <div style="display:inline-block">
                    <span style="display:inline-block">备案类型 </span>
-                <Select v-model="recordType"  size="small" style="width:231px;">
+                <Select v-model="recordType"  size="small" style="width:231px;" @on-change="listMainWeb()">
                   <Option v-for="item in recordTypeCityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                </Select>
               </div>
               <div style="display:inline-block;margin-left:20px">
                 <span>当前状态</span>
-                <Select v-model="currentState" size="small"  style="width:231px;">
+                <Select v-model="currentState" size="small"  style="width:231px;" @on-change="listMainWeb()">
                     <Option v-for="item in currentStateList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
               </div>
             </div>
-                <Table  ref="selection" :columns="recordTypeList" :data="recordTypeData"></Table>  
+                <Table  ref="selection" :columns="recordTypeList" :data="recordProgressList"></Table>  
             </TabPane>
         
-            <TabPane label="已完成备案">
+            <TabPane  :label="tabValue"> 
                <div style="margin-bottom:20px"> 
                <div style="display:inline-block">
                    <span style="display:inline-block">备案类型 </span>
-                <Select v-model="recordType" size="small" style="width:231px;">
+                <Select v-model="completeRecordType" size="small" style="width:231px;" @on-change="completeClick">
                   <Option v-for="item in recordTypeCityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                </Select>
               </div>
-              <div style="display:inline-block;margin-left:20px">
-                <span>当前状态</span>
-                <Select v-model="currentState" size="small"  style="width:231px;">
-                    <Option v-for="item in currentStateList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
-              </div>
             </div>
-                <Table  ref="selection" :columns="recordTypeList" :data="recordTypeData"></Table> 
+                <Table  ref="selection" :columns="completeRecordTypeList" :data="recordTypeData"></Table> 
             </TabPane>
           </Tabs>
         </div>
@@ -60,11 +54,43 @@
 export default {
   data() {
     return {
+      //我的备案进度标签值
+      tabValueCom: h =>{
+        return h('div',[
+          h('span',{
+            on:{
+              click:() =>{
+                this.listMainWeb();
+              }
+            }
+          },'我的备案进度')
+        ])
+      },
+      //完成备案的备案类型
+      completeRecordType: "",
+      //已完成备案标签页的值
+      tabValue: h => {
+        return h("div", [
+          h(
+            "span",
+            {
+              on: {
+                click: () => {
+                  this.completeClick();
+                }
+              }
+            },
+            "已完成备案"
+          )
+        ]);
+      },
+      //备案进度
+      recordProgressList: [],
       //备案类型下拉列表数据
       recordTypeCityList: [
         {
-          value: "New York",
-          label: "New York"
+          value: "首次备案",
+          label: "首次备案"
         },
         {
           value: "London",
@@ -92,35 +118,35 @@ export default {
       //当前状态下拉列表数据
       currentStateList: [
         {
-          value: "New York",
+          value: "全部",
           label: "全部"
         },
         {
-          value: "London",
+          value: "初审中",
           label: "初审中"
         },
         {
-          value: "Sydney",
+          value: "初审拒绝",
           label: "初审拒绝"
         },
         {
-          value: "Ottawa",
+          value: "未提交复审",
           label: "未提交复审"
         },
         {
-          value: "Paris",
+          value: "管局审核中",
           label: "管局审核中"
         },
         {
-          value: "Canberras",
+          value: "管局审核拒绝",
           label: "管局审核拒绝"
         },
         {
-          value: "Canberrad",
+          value: "审核完成",
           label: "审核完成"
         },
         {
-          value: "Canberraa",
+          value: "备案完成",
           label: "备案完成"
         }
       ],
@@ -129,45 +155,42 @@ export default {
       //备案类型表格表头
       recordTypeList: [
         {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
           title: "备案服务ID",
-          key: "recordServiceID"
+          key: "recordserviceid"
         },
         {
           title: "关联域名",
-          key: "relatedDomainName"
+          key: "webdomian"
         },
         {
           title: "备案类型",
-          key: "recordType"
+          key: "recordtype"
         },
         {
           title: "备案主体",
-          key: "recordSubject"
+          key: "webname"
         },
         {
           title: "最近更新时间",
-          key: "updateTime"
+          key: "lastupdatetime"
         },
         {
           title: "当前状态",
-          key: "currentSate",
+          key: "status",
           render: (h, params) => {
-            return h("div", params.row.currentSate.value);
+            return h("div", params.row.status);
           }
         },
         {
           title: "等待操作",
-          key: "waitOperation",
+          key: "operation",
           render: (h, params) => {
             const color =
-              params.row.currentSate.label === 1 || params.row.currentSate.label === 4
+              params.row.status === "初审中" || params.row.status === "审核完成"
                 ? "#2A99F2"
-                : params.row.currentSate.label === 2 ? "#666666" : params.row.currentSate.label === 3 ?"#D0021B":"";
+                : params.row.status === "管局审核中"
+                  ? "#666666"
+                  : params.row.status === "初审拒绝" ? "#D0021B" : "";
             return (
               "div",
               [
@@ -179,7 +202,7 @@ export default {
                       cursor: "pointer"
                     }
                   },
-                  params.row.waitOperation = params.row.currentSate.label === 1?"上传拍照/邮寄资料" : params.row.currentSate.label === 2 ? "暂无":params.row.currentSate.label === 3 ?"重新上传资料":params.row.currentSate.label === 4 ? "短信核验":""
+                  params.row.operation
                 )
               ]
             );
@@ -187,7 +210,96 @@ export default {
         },
         {
           title: "操作",
+          key: "waitOperation",
+          render: (h, params) => {
+            return (
+              "div",
+              [
+                h(
+                  "span",
+                  {
+                    style: {
+                      color: "#2A99F2",
+                      cursor: "pointer"
+                    },
+                    on: {
+                      click: () => {
+                        this.$router.push({ path: "RecordDetails" });
+                        sessionStorage.setItem('progress',this.recordProgressList);
+                      }
+                    }
+                  },
+                  params.row.waitOperation
+                )
+              ]
+            );
+          }
+        }
+      ],
+      //已完成备案数据
+      completeRecordTypeList: [
+        {
+          type: "selection",
+          width: 60,
+          align: "center"
+        },
+        {
+          title: "备案服务ID",
+          key: "recordserviceid"
+        },
+        {
+          title: "关联域名",
+          key: "webdomian"
+        },
+        {
+          title: "备案类型",
+          key: "recordtype"
+        },
+        {
+          title: "备案主体",
+          key: "webname"
+        },
+        {
+          title: "最近更新时间",
+          key: "lastupdatetime"
+        },
+        {
+          title: "当前状态",
+          key: "status",
+          render: (h, params) => {
+            return h("div", params.row.status);
+          }
+        },
+        {
+          title: "等待操作",
           key: "operation",
+          render: (h, params) => {
+            const color =
+              params.row.status === "初审中" || params.row.status === "审核完成"
+                ? "#2A99F2"
+                : params.row.status === "管局审核中"
+                  ? "#666666"
+                  : params.row.status === "初审拒绝" ? "#D0021B" : "";
+            return (
+              "div",
+              [
+                h(
+                  "span",
+                  {
+                    style: {
+                      color: color,
+                      cursor: "pointer"
+                    }
+                  },
+                  params.row.operation
+                )
+              ]
+            );
+          }
+        },
+        {
+          title: "操作",
+          key: "waitOperation",
           render: (h, params) => {
             return (
               "div",
@@ -205,88 +317,67 @@ export default {
                       }
                     }
                   },
-                  params.row.operation
+                  params.row.waitOperation
                 )
               ]
             );
           }
         }
       ],
-      //备案类型表格数据
-      recordTypeData: [
-        {
-          recordServiceID: "TradeCode21",
-          relatedDomainName: "xrcloud.net",
-          recordType: "首次备案",
-          recordSubject: "北京允睿讯通",
-          updateTime: "2016-09-21 08:50:08",
-          currentSate: {
-            label: 1,
-            value: "初审中"
-          },
-          waitOperation: "上传拍照/邮寄资料",
-          operation: "查看详情"
-        },
-        {
-          recordServiceID: "TradeCode22",
-          relatedDomainName: "xrcloud.net",
-          recordType: "首次备案",
-          recordSubject: "北京允睿讯通",
-          updateTime: "2016-09-21 08:50:08",
-          currentSate: {
-            label: 3,
-            value: "初审拒绝"
-          },
-          waitOperation: "上传拍照/邮寄资料",
-          operation: "查看详情"
-        },
-        {
-          recordServiceID: "TradeCode23",
-          relatedDomainName: "xrcloud.net",
-          recordType: "新增接入",
-          recordSubject: "百度科技",
-          updateTime: "2016-09-21 08:50:08",
-          currentSate: {
-            label: 2,
-            value: "管局审核中"
-          },
-          waitOperation: "暂无",
-          operation: "查看详情"
-        },
-        {
-          recordServiceID: "TradeCode24",
-          relatedDomainName: "xrcloud.net",
-          recordType: "新增接入",
-          recordSubject: "百度科技",
-          updateTime: "2016-09-21 08:50:08",
-          currentSate: {
-            label: 4,
-            value: "审核完成"
-          },
-          waitOperation: "暂无",
-          operation: "查看详情"
-        }
-      ]
+      //已完成备案表格数据
+      recordTypeData: []
     };
   },
-  methods:{
+  methods: {
     //备案进度表格
-    listMainWeb(){
+    listMainWeb() {
       let userList = this.$store.state.userInfo;
-      if(userList != null){
-        this.$http.get('recode/listMainWeb.do',{
-          params:{
-            id:userList.companyid
-          }
-        }).then(res =>{
-          if(res.status == 200){
-              console.log(res);
-          }
-        })
+      if (this.currentState == "全部") {
+        this.currentState = "";
+      }
+      if (userList != null) {
+        this.$http
+          .get("recode/listMainWeb.do", {
+            params: {
+              recordtype: this.recordType,
+              status: this.currentState
+            }
+          })
+          .then(res => {
+            if (res.data.status == 1) {
+              this.recordProgressList = res.data.result;
+              for(let i = 0;i<this.recordProgressList.length; i++){
+                this.recordProgressList[i].waitOperation = "查看详情";
+              }
+            } else {
+              console.log("出错了");
+            }
+          });
+      }
+    },
+    //已完成备案数据获取点击事件
+    completeClick() {
+      let userList = this.$store.state.userInfo;
+      if (userList != null) {
+        this.$http
+          .get("recode/listMainWeb.do", {
+            params: {
+              recordtype: this.completeRecordType,
+              status: '已完成备案'
+            }
+          })
+          .then(res => {
+            if (res.data.status == 1) {
+              this.recordTypeData = res.data.result;
+              for(let i = 0; i<this.recordTypeData.length; i++){
+                this.recordTypeData[i].waitOperation = '查看详情';
+              }
+            }
+          });
       }
     }
   },
-  mounted(){
+  mounted() {
     this.listMainWeb();
   }
 };
@@ -312,6 +403,7 @@ export default {
     .content {
       background-color: white;
       padding: 20px;
+      height: 844px;
       > .header {
         > .title {
           line-height: 40px;
@@ -327,5 +419,4 @@ export default {
     }
   }
 }
-
 </style>
