@@ -19,9 +19,8 @@
   import axios from '@/util/axiosInterceptor'
   export default{
     data(){
-      let linkURL = sessionStorage.getItem('linkURL')
       return {
-        linkURL,
+        linkURL: '',
         confirm: true,
         password: ''
       }
@@ -41,9 +40,10 @@
         }
         axios.get('information/judgeConnectCode.do', {
           params: {
-            VMId: sessionStorage.getItem('vmid'),
+            companyid: sessionStorage.getItem('link-companyid'),
+            VMId: sessionStorage.getItem('link-vmid'),
             code: this.password,
-            zoneId: sessionStorage.getItem('zoneid')
+            zoneId: sessionStorage.getItem('link-zoneid')
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
