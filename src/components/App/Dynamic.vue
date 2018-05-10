@@ -2,18 +2,40 @@
   <div id="dynamic">
     <div>
       <div class="content">
-        <div class="left" style="padding:15px;">
-          <img src="../../assets/img/product/dynamic-1.png" style="width: 16px; height: 16px;">
-        </div>
-
         <div class="content-detail">
-          <Menu style="width: 300px;" :open-names="['1']" active-name="selectAnnouncement" @on-select="show">
-            <Submenu name="1">
+          <Menu style="width: 300px;" :open-names="openNames" :active-name="selectAnnouncement" @on-select="show">
+            <Submenu name="ann">
               <template slot="title">
-                <img src="../../assets/img/product/dynamic-2.png" alt="" style="margin-right:8px;">
-                <span style="font-size: 18px;color:#333333;font-family: Microsoft YaHei;">产品公告</span>
+                <img v-if="openNames.indexOf('ann')>-1" src="../../assets/img/product/dynamic-2.png" alt=""
+                     style="margin-right:8px;vertical-align: middle">
+                <img v-else src="../../assets/img/product/dynamic-2-1.png" alt=""
+                     style="margin-right:8px;vertical-align: middle">
+                <span
+                  style="font-size: 18px;color:#333333;font-family: Microsoft YaHei;vertical-align: middle">产品公告</span>
               </template>
               <MenuItem :name="item.id" v-for="(item,index) in announcementArray" :key="index">{{item.title}}</MenuItem>
+            </Submenu>
+            <Submenu name="active">
+              <template slot="title">
+                <img v-if="openNames.indexOf('active')>-1" src="../../assets/img/product/dynamic-3.png" alt=""
+                     style="margin-right:8px;vertical-align: middle">
+                <img v-else src="../../assets/img/product/dynamic-3-1.png" alt=""
+                     style="margin-right:8px;vertical-align: middle">
+                <span
+                  style="font-size: 18px;color:#333333;font-family: Microsoft YaHei;vertical-align: middle">最新活动</span>
+              </template>
+              <MenuItem :name="item.id" v-for="(item,index) in activeArray" :key="index">{{item.title}}</MenuItem>
+            </Submenu>
+            <Submenu name="news">
+              <template slot="title">
+                <img v-if="openNames.indexOf('news')>-1" src="../../assets/img/product/dynamic-4.png" alt=""
+                     style="margin-right:8px;vertical-align: middle">
+                <img v-else src="../../assets/img/product/dynamic-4-1.png" alt=""
+                     style="margin-right:8px;vertical-align: middle">
+                <span
+                  style="font-size: 18px;color:#333333;font-family: Microsoft YaHei;vertical-align: middle">新闻动态</span>
+              </template>
+              <MenuItem :name="item.id" v-for="(item,index) in newsArray" :key="index">{{item.title}}</MenuItem>
             </Submenu>
           </Menu>
         </div>
@@ -36,32 +58,42 @@
   export  default {
     data () {
       return {
-        selectAnnouncement: null,
+        openNames: ['ann'],
+        selectAnnouncement: 6,
+        // 公告列表
         announcementArray: [],
+        // 活动列表
+        activeArray: [],
+        // 新闻列表
+        newsArray: [],
+
         announcement: null,
       }
     },
     beforeRouteEnter(to, from, next){
-      var id = sessionStorage.getItem('announcementId')
-      sessionStorage.removeItem('announcementId')
-      var title = axios.get('user/getAnnouncement.do', {
+      let query = []
+      let type = 'ann'
+      // 获取所有公告、活动、新闻的标题
+      query.push(axios.get('user/getAnnouncement.do', {
         params: {
           listAll: -1,
         }
-      })
-      let params = {
-        needContent: 1
+      }))
+
+      if (to.query.id) {
+        query.push(axios.get('user/getAnnouncementById.do', {
+          params: {
+            announcementId: to.query.id,
+            needContent: '1'
+          }
+        }))
       }
-      params = id ? {
-          ...params,
-          announcementId: id
-        } : params
-      var content = axios.get('user/getAnnouncement.do', {
-        params
-      })
-      Promise.all([title, content]).then(values => {
+      if (to.query.type) {
+        type = to.query.type
+      }
+      Promise.all(query).then(values => {
         next(vm => {
-          vm.setData(values)
+          vm.setData(values, type)
         })
       }, values => {
         next(vm => {
@@ -70,32 +102,11 @@
       })
     },
     created() {
-      /*// 获取公告title
-       axios.get('user/getAnnouncement.do', {
-       params: {
-       listAll: -1,
-       }
-       }).then(response => {
-       if (response.status == 200 && response.data.status == 1) {
-       this.announcementArray = response.data.result.announcement
-       }
-       })
-       // 获取公告content
-       axios.get('user/getAnnouncement.do', {
-       params: {
-       announcementId: this.$route.query.id,
-       needContent: 1
-       }
-       }).then(response => {
-       if (response.status == 200 && response.data.status == 1) {
-       this.announcement = response.data.result.announcement[0]
-       }
-       })*/
     },
     methods: {
       show(name){
-        this.selectAnnouncement = name
-        axios.get('user/getAnnouncement.do', {
+        this.selectAnnouncement = '6'
+        axios.get('user/getAnnouncementById.do', {
           params: {
             announcementId: name,
             needContent: 1
@@ -107,14 +118,20 @@
         })
       },
       // 获取数据
-      setData(values) {
+      setData(values, type) {
         var response = values[0]
         if (response.status == 200 && response.data.status == 1) {
-          this.announcementArray = response.data.result.announcement
+          this.announcementArray = response.data.result.announcement_list
+          this.activeArray = response.data.result.activity_list
+          this.newsArray = response.data.result.news_list
         }
         var response = values[1]
-        if (response.status == 200 && response.data.status == 1) {
-          this.announcement = response.data.result.announcement[0]
+        if (response) {
+          if (response.status == 200 && response.data.status == 1) {
+            this.announcement = response.data.result.announcement[0]
+          }
+        } else {
+          this.announcement = this.announcementArray[0]
         }
       },
     },

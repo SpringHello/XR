@@ -28,7 +28,7 @@
 
                 <div class="all">
                   <Alert style="border: solid 1px #2A99F2;border-radius: 4px;width:100%">
-                    在余额充足的情况下，如开启自动续费，系统将在资源即将到期时为其续费。如关闭自动续费，系统将不做任何续费操作，且过期后资源进入欠费状态。
+                    自上线之日起，到2018/06/06，升级与续费本平台任意资源，即可享满减优惠，满20减6元，满300减180，最多可减7000元！
                   </Alert>
                   <div v-for="(item,index) in hostList" :key="index" v-bind:class="{select:item.select}"
                        @click="toggle(item)" style="margin-bottom: 20px">

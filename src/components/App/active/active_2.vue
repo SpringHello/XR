@@ -5,7 +5,7 @@
         <div>
           <div>
             <p>
-              <img src="../../../assets/img/active/active_2/ziti.png">
+              <img src="../../../assets/img/active/active_2/ziti.png" style="width:400px;height:270px;">
             </p>
           </div>
           <transition name="list">
@@ -77,18 +77,18 @@
               </div>
 
               <div class="timer">
-                  <div class="">
-                    <p  class="title">距离{{ item.timerText}}点场还剩</p>
-                    <p  class="time">
-                      <span>{{ item.h1 }}{{ item.h2}}</span>:
-                      <span>{{ item.m1 }}{{ item.m2 }}</span>:
-                      <span>{{ item.s1 }}{{ item.s2 }}</span>
-                    </p>
-                  </div>
+                <div class="">
+                  <p  class="title">距离{{ item.timerText}}点场还剩</p>
+                  <p  class="time">
+                    <span>{{ item.h1 }}{{ item.h2}}</span>:
+                    <span>{{ item.m1 }}{{ item.m2 }}</span>:
+                    <span>{{ item.s1 }}{{ item.s2 }}</span>
+                  </p>
+                </div>
 
-                  <button v-if="item.timerTime === 0&&!item.remainder">已领完</button>
-                  <button v-if="item.timerTime === 0 && item.remainder" :class="{canGet: true}" @click="freeReceive(item)">立即领取</button>
-                  <button v-if="item.timerTime > 0">立即领取</button>
+                <button v-if="item.timerTime === 0&&!item.remainder">已领完</button>
+                <button v-if="item.timerTime === 0 && item.remainder" :class="{canGet: true}" @click="freeReceive(item)">立即领取</button>
+                <button v-if="item.timerTime > 0">立即领取</button>
               </div>
             </div>
           </div>
@@ -153,55 +153,55 @@
       </div>
     </Modal>
     <Modal v-model="modal2" width="550" :scrollable="true">
-        <div style="text-align:center" class="gethost-success">
-            <h2 class="head-title">抢到啦！</h2>
-            <div class="content">
-              <h3>恭喜你获得</h3>
-              <p style=" height:165px;">{{messageSuccess}}</p>
-            </div>
+      <div style="text-align:center" class="gethost-success">
+        <h2 class="head-title">抢到啦！</h2>
+        <div class="content">
+          <h3>恭喜你获得</h3>
+          <p style=" height:165px;">{{messageSuccess}}</p>
         </div>
-        <div slot="footer" style="text-align:center">
-            <Button type="primary" size="large" style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;margin:20px 0;">
-             <router-link to='/ruicloud/host' style="color:#fff"> 立即查看</router-link>
-            </Button>
-        </div>
+      </div>
+      <div slot="footer" style="text-align:center">
+        <Button type="primary" size="large" style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;margin:20px 0;">
+          <router-link to='/ruicloud/host' style="color:#fff"> 立即查看</router-link>
+        </Button>
+      </div>
     </Modal>
     <Modal v-model="modal3" width="550" :scrollable="true">
-        <div style="text-align:center" class="gethost-success">
-            <h2 class="head-title" style="padding-bottom:0">Sorry</h2>
-            <div class="content" style="background:none;color:#000">
-              <h3 style="text-align: left" v-html="messageError"></h3>
-              <p v-html="messageErrorText"></p>
-            </div>
+      <div style="text-align:center" class="gethost-success">
+        <h2 class="head-title" style="padding-bottom:0">Sorry</h2>
+        <div class="content" style="background:none;color:#000">
+          <h3 style="text-align: left" v-html="messageError"></h3>
+          <p v-html="messageErrorText"></p>
         </div>
-        <div slot="footer">
-            <!-- <Button type="primary" size="large" style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;margin:20px 0;">立即查看</Button> -->
-        </div>
+      </div>
+      <div slot="footer">
+        <!-- <Button type="primary" size="large" style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;margin:20px 0;">立即查看</Button> -->
+      </div>
     </Modal>
     <Modal v-model="modal4" width="700" :scrollable="true">
-        <div style="text-align:center" class="rules-modal">
-            <h2 class="head-title">活动规则</h2>
-            <div class="content" >
-              <h3>1.活动时间：</h3>
-               <p>2018年5月3日开始，数量有限，送完为止。</p>
-              <h3>2.活动对象：</h3>
-                  <p>新注册且已通过个人／企业认证，且未领取和购买过平台资源及参加过其他免费活动的用户。</p>
-                <h3>3.活动内容： </h3>
-                  <p>符合条件的用户在每天10点、12点、15点、17点抢购免费主机。抢购成功即可使用。活动期间每人限领一次。 </p>
-                <h3>4.资格详细规则： </h3>
-                <p>1） 用户如果已购买、已体验过对应的产品，不能再次申请； </p>
-                <p>2） 同一手机号对应的多个账号只能申请一次；</p>
-                <p>3） 同一个实名认证用户，仅可申请一次，同一个账号只能领取一次。</p>
-                <h3> 5.领取免费产品规则：</h3>
-                  <p>1） 免费产品中的资源可随时进行升级，升级费用按新睿云标准收费进行收取； </p>
-                  <p>2） 在各产品免费使用期间，若对免费资源进行了销毁，则视为放弃免费使用权。 </p>
-                  <h3>6.为保证活动的公平公正，新睿云有权对恶意刷抢（如通过程序等技术手段）活动资源，领取后7天内未使用资源、利用资源从事违法违规行为的用户收回免费套餐使用资格。</h3>
-                    <h3>7.活动最终解释权在法律范围内归新睿云所有。 </h3>
-            </div>
+      <div style="text-align:center" class="rules-modal">
+        <h2 class="head-title">活动规则</h2>
+        <div class="content" >
+          <h3>1.活动时间：</h3>
+          <p>2018年5月3日开始，数量有限，送完为止。</p>
+          <h3>2.活动对象：</h3>
+          <p>新注册且已通过个人／企业认证，且未领取和购买过平台资源及参加过其他免费活动的用户。</p>
+          <h3>3.活动内容： </h3>
+          <p>符合条件的用户在每天10点、12点、15点、17点抢购免费主机。抢购成功即可使用。活动期间每人限领一次。 </p>
+          <h3>4.资格详细规则： </h3>
+          <p>1） 用户如果已购买、已体验过对应的产品，不能再次申请； </p>
+          <p>2） 同一手机号对应的多个账号只能申请一次；</p>
+          <p>3） 同一个实名认证用户，仅可申请一次，同一个账号只能领取一次。</p>
+          <h3> 5.领取免费产品规则：</h3>
+          <p>1） 免费产品中的资源可随时进行升级，升级费用按新睿云标准收费进行收取； </p>
+          <p>2） 在各产品免费使用期间，若对免费资源进行了销毁，则视为放弃免费使用权。 </p>
+          <h3>6.为保证活动的公平公正，新睿云有权对恶意刷抢（如通过程序等技术手段）活动资源，领取后7天内未使用资源、利用资源从事违法违规行为的用户收回免费套餐使用资格。</h3>
+          <h3>7.活动最终解释权在法律范围内归新睿云所有。 </h3>
         </div>
-        <div slot="footer" style="text-align:center">
-            <Button type="primary" size="large" style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;" @click="modal4=false">知道了</Button>
-        </div>
+      </div>
+      <div slot="footer" style="text-align:center">
+        <Button type="primary" size="large" style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;" @click="modal4=false">知道了</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -266,38 +266,8 @@
             s2: 0,
             // 剩余时间
             timerTime: 1,
-      // 是否有剩余
-        remainder:true,
-          },
-          {
-            title:'弹性云服务器',
-            desc:'适用于个人建站或者初创公司宣传网站，轻量级应用',
-            system: 'windows',
-            selectedConfig:31,
-            h1: 0,
-            h2: 0,
-            m1: 0,
-            m2: 0,
-            s1: 0,
-            s2: 0,
-            timerTime: 1,
-       // 是否有剩余
-        remainder:true,
-          },
-          {
-            title:'弹性云服务器',
-            desc:'适用于个人建站或者初创公司宣传网站，轻量级应用',
-            system: 'windows',
-            selectedConfig:31,
-            h1: 0,
-            h2: 0,
-            m1: 0,
-            m2: 0,
-            s1: 0,
-            s2: 0,
-            timerTime: 1,
-       // 是否有剩余
-        remainder:true,
+            // 是否有剩余
+            remainder:true,
           },
           {
             title:'弹性云服务器',
@@ -312,7 +282,37 @@
             s2: 0,
             timerTime: 1,
             // 是否有剩余
-        remainder:true,
+            remainder:true,
+          },
+          {
+            title:'弹性云服务器',
+            desc:'适用于个人建站或者初创公司宣传网站，轻量级应用',
+            system: 'windows',
+            selectedConfig:31,
+            h1: 0,
+            h2: 0,
+            m1: 0,
+            m2: 0,
+            s1: 0,
+            s2: 0,
+            timerTime: 1,
+            // 是否有剩余
+            remainder:true,
+          },
+          {
+            title:'弹性云服务器',
+            desc:'适用于个人建站或者初创公司宣传网站，轻量级应用',
+            system: 'windows',
+            selectedConfig:31,
+            h1: 0,
+            h2: 0,
+            m1: 0,
+            m2: 0,
+            s1: 0,
+            s2: 0,
+            timerTime: 1,
+            // 是否有剩余
+            remainder:true,
           }
         ],
 
@@ -360,27 +360,27 @@
         imgSrc: 'user/getKaptchaImage.do',
         serviceTime: 0,
         paramsList: [
-               {
-                 time:'60天',
-                 label: 31,
-                 item:[
-                  {num: '1核', unit: 'CPU'},
-                  {num: '1G', unit: '内存'},
-                  {num: '1mb/s', unit: '带宽'},
-                  {num: '40G', unit: '磁盘'}
-                ]
-               },
-               {
-                 time:'30天',
-                 label:32,
-                 item:[
-                  {num: '2核', unit: 'CPU'},
-                  {num: '4G', unit: '内存'},
-                  {num: '5mb/s', unit: '带宽'},
-                  {num: '40G', unit: '磁盘'}
-                ]
-               }
-            ],
+          {
+            time:'60天',
+            label: 31,
+            item:[
+              {num: '1核', unit: 'CPU'},
+              {num: '1G', unit: '内存'},
+              {num: '1mb/s', unit: '带宽'},
+              {num: '40G', unit: '磁盘'}
+            ]
+          },
+          {
+            time:'30天',
+            label:32,
+            item:[
+              {num: '2核', unit: 'CPU'},
+              {num: '4G', unit: '内存'},
+              {num: '5mb/s', unit: '带宽'},
+              {num: '40G', unit: '磁盘'}
+            ]
+          }
+        ],
         systemList: [
           {
             label: 'windows',
@@ -394,7 +394,7 @@
       }
     },
     created() {
-     if (this.$store.state.userInfo != null) {
+      if (this.$store.state.userInfo != null) {
         this.isLogin = 1
         this.userInfo = this.$store.state.userInfo
         this.companyauth = this.userInfo.companyauth
@@ -428,23 +428,23 @@
           this.loginModal = true
           return
         }
-         var params={
-            vmConfigId:item.selectedConfig,
-            osType:item.system,
-            defzoneid:'39a6af0b-6624-4194-b9d5-0c552d903858'
+        var params={
+          vmConfigId:item.selectedConfig,
+          osType:item.system,
+          defzoneid:'39a6af0b-6624-4194-b9d5-0c552d903858'
+        }
+        axios.get('information/getFreeMv.do',{
+          params
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.messageSuccess=response.data.message
+            this.modal2=true
+          } else{
+            this.messageError=response.data.message
+            this.messageErrorText=response.data.message2
+            this.modal3=true
           }
-          axios.get('information/getFreeMv.do',{
-              params
-          }).then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.messageSuccess=response.data.message
-              this.modal2=true
-            } else{
-              this.messageError=response.data.message
-              this.messageErrorText=response.data.message2
-              this.modal3=true
-            }
-          })
+        })
       },
       // 设置数据
       setData(values) {
@@ -537,7 +537,7 @@
         let hours = [10, 12, 15, 17].map(function (hour) {
           let h = new Date(serviceTime);
           h.setHours(hour,0,0)
-         
+
           return {time:h.getTime(),timerText:hour}
         })
 
@@ -545,25 +545,25 @@
         var minSecondInHour = minSecondInMinute * 60
 
         hours.forEach((hour, index) => {
-            let reduce = hour.time - serviceTime
-            this.$set(this.productData[index],'timerText',hour.timerText)
-            if (reduce > 0) {
-              let hourRemainder = parseInt(reduce / minSecondInHour)
-              let minRemainder = parseInt((reduce % minSecondInHour) / minSecondInMinute)
-              let secRemainder = parseInt((reduce % minSecondInMinute) / 1000)
-              this.productData[index].h1 = parseInt(hourRemainder / 10)
-              this.productData[index].h2 = parseInt(hourRemainder % 10)
-              this.productData[index].m1 = parseInt(minRemainder / 10)
-              this.productData[index].m2 = parseInt(minRemainder % 10)
-              this.productData[index].s1 = parseInt(secRemainder / 10)
-              this.productData[index].s2 = parseInt(secRemainder % 10)
-              this.productData[index].timerTime = reduce
-              this.productData[index].remainder = true
-            } else {
-              this.productData[index].timerTime = 0
-              this.productData[index].remainder = remainder
-            }
-          })
+          let reduce = hour.time - serviceTime
+          this.$set(this.productData[index],'timerText',hour.timerText)
+          if (reduce > 0) {
+            let hourRemainder = parseInt(reduce / minSecondInHour)
+            let minRemainder = parseInt((reduce % minSecondInHour) / minSecondInMinute)
+            let secRemainder = parseInt((reduce % minSecondInMinute) / 1000)
+            this.productData[index].h1 = parseInt(hourRemainder / 10)
+            this.productData[index].h2 = parseInt(hourRemainder % 10)
+            this.productData[index].m1 = parseInt(minRemainder / 10)
+            this.productData[index].m2 = parseInt(minRemainder % 10)
+            this.productData[index].s1 = parseInt(secRemainder / 10)
+            this.productData[index].s2 = parseInt(secRemainder % 10)
+            this.productData[index].timerTime = reduce
+            this.productData[index].remainder = true
+          } else {
+            this.productData[index].timerTime = 0
+            this.productData[index].remainder = remainder
+          }
+        })
 
 
         var setTime =  setInterval(() => {
@@ -632,16 +632,16 @@
     mounted() {
       this.img = true
     },
-     getUserInfo(val) {
-        this.userInfo = val
-        this.companyauth = this.userInfo.companyauth
-        this.personalauth = this.userInfo.personalauth
-        if (this.userInfo.activityInfo[13].companytype === 1) {
-          this.isReceive = 1
-        } else {
-          this.isReceive = 0
-        }
+    getUserInfo(val) {
+      this.userInfo = val
+      this.companyauth = this.userInfo.companyauth
+      this.personalauth = this.userInfo.personalauth
+      if (this.userInfo.activityInfo[13].companytype === 1) {
+        this.isReceive = 1
+      } else {
+        this.isReceive = 0
       }
+    }
   }
 </script>
 
@@ -678,18 +678,18 @@
         padding: 30px 0;
       }
       p{
-      line-height:28px;
-      text-align: left;
+        line-height:28px;
+        text-align: left;
       }
       margin: 0 auto;
       width: 384px;
-     
+
       font-size:14px;
       font-family:PingFangSC-Medium;
       color:rgba(255,255,255,1);
       background:url("../../../assets/img/active/active_2/bg-success-geted.png") no-repeat;
-      }
     }
+  }
   .body {
     background:  rgba(249, 175, 128, 1);
     padding-top: 110px;
@@ -818,36 +818,36 @@
       margin: 0 auto;
     }
     .recommend-product{
-        background: url("../../../assets/img/active/active_2/bg-bottom.png") no-repeat;
-        height: 400px;
-        .head{
-          padding-top:100px;
-          margin-bottom: 24px;
-          font-size:18px;
-          span{
-            display: inline-block;
-            width:109px;
-            height:32px;
-            line-height: 32px;
-            background: url("../../../assets/img/active/active_2/bg-headtitle.png");
-            color: #fff;
-            text-align: center;
-          }
+      background: url("../../../assets/img/active/active_2/bg-bottom.png") no-repeat;
+      height: 400px;
+      .head{
+        padding-top:100px;
+        margin-bottom: 24px;
+        font-size:18px;
+        span{
+          display: inline-block;
+          width:109px;
+          height:32px;
+          line-height: 32px;
+          background: url("../../../assets/img/active/active_2/bg-headtitle.png");
+          color: #fff;
+          text-align: center;
         }
-        .content{
-          display: flex;
-          justify-content: space-between;
-          div{
-            padding: 40px;
-            width: 390px;
-            background: #fff;
-            h4{
-              font-size: 18px;
-              margin-bottom:15px;
-            }
+      }
+      .content{
+        display: flex;
+        justify-content: space-between;
+        div{
+          padding: 40px;
+          width: 390px;
+          background: #fff;
+          h4{
+            font-size: 18px;
+            margin-bottom:15px;
           }
         }
       }
+    }
   }
 
   .head {
@@ -918,68 +918,68 @@
     }
 
   }
- .process {
-   padding: 50px 0;
-   text-align: center;
+  .process {
+    padding: 50px 0;
+    text-align: center;
     h2{
       color:rgba(51,51,51,1);
       line-height:36px;
       font-size: 36px;
     }
     .items {
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      text-align: center;
+      width: 655px;
+      dl {
+        width: 270px;
+        dt {
           margin: 0 auto;
-          display: flex;
-          justify-content: space-between;
-          text-align: center;
-          width: 655px;
-          dl {
-            width: 270px;
-            dt {
-              margin: 0 auto;
-              width: 100px;
-              height: 100px;
-              background-size: cover;
-              color: #ccc;
-              line-height: 100px;
-              span {
-                text-align: center;
-                font-size: 45px;
-              }
-              img {
-                vertical-align: middle;
-              }
-            }
-            dd {
-              margin-top: 20px;
-              font-family: PingFangSC-Regular;
-              font-size: 16px;
-              color: #999999;
-              // &.select{
-              //   color:#377dff;
-              // }
-              i{
-                display: inline-block;
-                width: 11px;
-                height: 11px;
-                border-right: 1px solid #999999;
-                border-bottom: 1px solid #999999;
-                transform: translateY(3px) rotate(311deg);
-                float: right;
-                top: 21px;
-                // &.select{
-                //   border-right: 1px solid #377dff;
-                //   border-bottom: 1px solid #377dff;
-                // }
-              }
-            }
+          width: 100px;
+          height: 100px;
+          background-size: cover;
+          color: #ccc;
+          line-height: 100px;
+          span {
+            text-align: center;
+            font-size: 45px;
           }
-          dl.spacer {
-            width: 200px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+          img {
+            vertical-align: middle;
           }
         }
+        dd {
+          margin-top: 20px;
+          font-family: PingFangSC-Regular;
+          font-size: 16px;
+          color: #999999;
+          // &.select{
+          //   color:#377dff;
+          // }
+          i{
+            display: inline-block;
+            width: 11px;
+            height: 11px;
+            border-right: 1px solid #999999;
+            border-bottom: 1px solid #999999;
+            transform: translateY(3px) rotate(311deg);
+            float: right;
+            top: 21px;
+            // &.select{
+            //   border-right: 1px solid #377dff;
+            //   border-bottom: 1px solid #377dff;
+            // }
+          }
+        }
+      }
+      dl.spacer {
+        width: 200px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
   }
   .modal-body {
     height: 55%;
