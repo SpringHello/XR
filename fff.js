@@ -113,9 +113,15 @@ function tree(arr) {
   return root
 }
 
+
 class Avl {
   constructor() {
+    this.root = null
+  }
+
+  insert(val) {
 
   }
+
 }
 //console.log(JSON.stringify(tree([5, 1, 2, 3, 12, 4, 7])))
