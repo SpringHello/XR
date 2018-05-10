@@ -763,7 +763,6 @@
       // 打开绑定IP到云主机模态框
       openBindIPModal(type, row, id){
         this.operatingId = id
-        console.log(id)
         this.bindForHostForm.hostOptions = []
         if (type == 'host') {
           this.bindForHostForm.row = row

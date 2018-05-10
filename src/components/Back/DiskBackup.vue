@@ -1060,8 +1060,8 @@
             strategyName: this.backupsForm.backupsName,
             keepCount: this.backupsForm.keepNumber,
             keepInterval: this.backupsForm.timeType,
-            autoBackUpTime: this.backupsForm.timeValue,
-            diskIds: this.backupsForm.strategyForDisk
+            autoBackUpTime: this.backupsForm.timeValue[0],
+            diskIds: this.backupsForm.strategyForDisk.join(',')
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {

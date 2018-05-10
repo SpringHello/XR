@@ -215,7 +215,7 @@
                             }
                           })
                         })
-                        this.$http.get('network/deletePortForwardingRule.do',{
+                        this.$http.get('network/deletePortForwardingRule.do', {
                           params: {
                             id: object.row.id
                           }
@@ -298,11 +298,9 @@
           this.ipId = sessionStorage.getItem('ipId').split(',')
         }
         // 列出子网
-        this.$http.get('network/listNetwork.do', {
-          params: {
-            vpcId: this.vpnInfo.vpcid,
-            noInnerLoadbalance: 1
-          }
+        this.$http.post('network/listNetwork.do', {
+          vpcId: this.vpnInfo.vpcid,
+          noInnerLoadbalance: 1
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.createDNATForm.subNetworkOptions = response.data.result

@@ -29,6 +29,7 @@ const Vps = () => import('@/components/App/active/vps')
 const NewNodes_1 = () => import('@/components/App/active/newNodes_1')
 const NewNodes_2 = () => import('@/components/App/active/newNodes_2')
 const active_1 = () => import('@/components/App/active/active_1')
+const active_2 = () => import('@/components/App/active/active_2')
 
 /* 产品页面路由 */
 const Pecs = () => import('@/components/App/product/ECS.vue')
@@ -215,6 +216,7 @@ var router = new Router({
         {path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
         {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},
         {path: 'active_1', name: 'active_1', component: active_1},
+        {path: 'active_2', name: 'active_2', component: active_2},
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
         {path: 'Pecss', component: Pecss},
