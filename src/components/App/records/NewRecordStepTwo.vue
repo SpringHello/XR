@@ -9,7 +9,7 @@
         <div class="main-info">
           <h2>主体信息</h2>
           <transition name="list">
-            <div v-if="mainInfoShow">
+            <div class="main-ul" v-if="mainInfoShow">
               <ul>
                 <li>主体单位所属区域：{{mainUnitInformation.province}}/{{ mainUnitInformation.city }}/{{ mainUnitInformation.district }}</li>
                 <li>主体单位证件类型：{{ certificateType}}</li>
@@ -32,225 +32,235 @@
               </ul>
             </div>
           </transition>
-          <h3>网站基本信息</h3>
-          <Form ref="basicInformation" :model="basicInformation" :rules="basicInformationRuleValidate" :label-width="155">
-            <FormItem label="网站名称" prop="siteName">
-              <Input @on-focus="toolShow('siteName')" @on-blur="toolHide()" v-model="basicInformation.siteName" placeholder="请输入网站名称" style="width: 500px"></Input>
-              <transition name="fade">
-                <div class="tooltip-popper" style="top:-81px;" v-if="isToolHide == 1">
-                  <div class="tooltip-center">
-                    <div class="tooltip-arrow"></div>
-                    <div class="tooltip">1. 网站名称不能以纯数字或纯英文命名，不能包含：域名、特殊符号、敏感词语（反腐、赌博、廉政、色情等）。
-                      2. 非国家级单位，不得以中国、中华、中央、人民、人大、国家等字头命名。
-                      3. 单位网站名称必须与主办单位名称之间有关联性。
-                      4. 个人备案的网站名称要尽量体现个人网站的主要内容，不能使用姓名、地名、成语，不能包含公司、组织等企业性质的词语。
+          <div v-for="(site,upIndex) in siteList">
+            <h3 style="margin-bottom: -40px;">网站{{ upIndex + 1 }}</h3>
+            <h3>网站基本信息</h3>
+            <Form :ref="site.name" :model="site.basicInformation" :rules="basicInformationRuleValidate" :label-width="155">
+              <FormItem label="网站名称" prop="siteName">
+                <Input @on-focus="toolShow('siteName',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.siteName" placeholder="请输入网站名称"
+                       style="width: 500px"></Input>
+                <transition name="fade">
+                  <div class="tooltip-popper" style="top:-81px;" v-if="site.isToolHide == 1">
+                    <div class="tooltip-center">
+                      <div class="tooltip-arrow"></div>
+                      <div class="tooltip">1. 网站名称不能以纯数字或纯英文命名，不能包含：域名、特殊符号、敏感词语（反腐、赌博、廉政、色情等）。
+                        2. 非国家级单位，不得以中国、中华、中央、人民、人大、国家等字头命名。
+                        3. 单位网站名称必须与主办单位名称之间有关联性。
+                        4. 个人备案的网站名称要尽量体现个人网站的主要内容，不能使用姓名、地名、成语，不能包含公司、组织等企业性质的词语。
+                      </div>
                     </div>
                   </div>
-                </div>
-              </transition>
-            </FormItem>
-            <FormItem label="网站域名" prop="websiteDomain">
-              <Input @on-focus="toolShow('websiteDomain')" @on-blur="toolHide()" v-model="basicInformation.websiteDomain" placeholder="请输入网站域名" style="width: 500px;"></Input>
-              <transition name="fade">
-                <div class="tooltip-popper" v-if="isToolHide == 2">
-                  <div class="tooltip-center">
-                    <div class="tooltip-arrow"></div>
-                    <div class="tooltip">域名不要加www.格式如xrcloud.net</div>
-                  </div>
-                </div>
-              </transition>
-            </FormItem>
-            <FormItem v-for="(item, index) in basicInformation.newWebsiteDomainList" prop="newWebsiteDomain" :key="index" label="新增网站域名">
-              <div style="display: flex">
-                <Input @on-focus="toolShow('newWebsiteDomain',index)" @on-blur="toolHide()" v-model="basicInformation.newWebsiteDomain[index]" placeholder="请输入新增网站域名"
+                </transition>
+              </FormItem>
+              <FormItem label="网站域名" prop="websiteDomain">
+                <Input @on-focus="toolShow('websiteDomain',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.websiteDomain" placeholder="请输入网站域名"
                        style="width: 500px;"></Input>
-                <p style="cursor: pointer; color: #377dff;font-size: 14px;margin-left: 15px;line-height: 28px" @click="deleteWebsiteDomain(index)">删除</p>
                 <transition name="fade">
-                  <div class="tooltip-popper" v-if="index == count">
+                  <div class="tooltip-popper" v-if="site.isToolHide == 2">
                     <div class="tooltip-center">
                       <div class="tooltip-arrow"></div>
                       <div class="tooltip">域名不要加www.格式如xrcloud.net</div>
                     </div>
                   </div>
                 </transition>
+              </FormItem>
+              <FormItem v-for="(item, index) in site.basicInformation.newWebsiteDomainList" prop="newWebsiteDomain" :key="index" label="新增网站域名">
+                <div style="display: flex">
+                  <Input @on-focus="toolShow('newWebsiteDomain',upIndex,index)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.newWebsiteDomain[index]"
+                         placeholder="请输入新增网站域名"
+                         style="width: 500px;"></Input>
+                  <p style="cursor: pointer; color: #377dff;font-size: 14px;margin-left: 15px;line-height: 28px" @click="deleteWebsiteDomain(upIndex,index)">删除</p>
+                  <transition name="fade">
+                    <div class="tooltip-popper" v-if="index == site.count">
+                      <div class="tooltip-center">
+                        <div class="tooltip-arrow"></div>
+                        <div class="tooltip">域名不要加www.格式如xrcloud.net</div>
+                      </div>
+                    </div>
+                  </transition>
+                </div>
+              </FormItem>
+              <p class="form-p" @click="addWebsiteDomain(upIndex)"><img src="../../../assets/img/records/records-icon19.png"/> 新增网站域名</p>
+              <FormItem label="网站首页URL" prop="websiteHomepage">
+                <Input @on-focus="toolShow('websiteHomepage',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.websiteHomepage" placeholder="请输入网站首页URL"
+                       style="width: 500px"></Input>
+                <transition name="fade">
+                  <div class="tooltip-popper" style="top:-8px;" v-if="site.isToolHide == 4">
+                    <div class="tooltip-center">
+                      <div class="tooltip-arrow"></div>
+                      <div class="tooltip">1. 首页URL应该包含填写的域名列表中的任意一个。
+                        2. 首页URL不要加"http://"。
+                      </div>
+                    </div>
+                  </div>
+                </transition>
+              </FormItem>
+              <FormItem label="网站服务内容" prop="serviceContent">
+                <RadioGroup v-model="site.basicInformation.serviceContent" style="width: 650px;" class="records-radio">
+                  <Radio label="网络借贷信息中介"></Radio>
+                  <Radio label="网上邮局"></Radio>
+                  <Radio label="网络新闻"></Radio>
+                  <Radio label="综合门户"></Radio>
+                  <Radio label="网络广告/信息"></Radio>
+                  <Radio label="单位门户网站"></Radio>
+                  <Radio label="博客个人空间"></Radio>
+                  <Radio label="网上支付"></Radio>
+                  <Radio label="网上银行"></Radio>
+                  <Radio label="网络购物"></Radio>
+                  <Radio label="网络游戏"></Radio>
+                  <Radio label="网络音乐"></Radio>
+                  <Radio label="网上炒股/股票基金"></Radio>
+                  <Radio label="网络图片"></Radio>
+                  <Radio label="网络软件/下载"></Radio>
+                  <Radio label="网络影视"></Radio>
+                  <Radio label="网上交友/婚介"></Radio>
+                  <Radio label="网上房产"></Radio>
+                  <Radio label="网上求职"></Radio>
+                  <Radio label="网站建设"></Radio>
+                  <Radio label="网上招聘"></Radio>
+                  <Radio label="网络教育"></Radio>
+                  <Radio label="基础应用"></Radio>
+                  <Radio label="WAP"></Radio>
+                  <Radio label="电子政务、电子商务"></Radio>
+                  <Radio label="数字娱乐"></Radio>
+                  <Radio label="网络媒体"></Radio>
+                  <Radio label="互联网股权融资"></Radio>
+                  <Radio label="互联网跨界金融及资产管理"></Radio>
+                  <Radio label="APP"></Radio>
+                  <Radio label="互联网保险"></Radio>
+                  <Radio label="网上非银支付"></Radio>
+                  <Radio label="移动应用"></Radio>
+                  <Radio label="即时通信"></Radio>
+                  <Radio label="搜索引擎"></Radio>
+                  <Radio label="其他"></Radio>
+                </RadioGroup>
+              </FormItem>
+              <FormItem label="网站语言" prop="contentsLanguage">
+                <CheckboxGroup v-model="site.basicInformation.contentsLanguage" style="width: 650px;" class="records-checkbox">
+                  <Checkbox label="中文简体"></Checkbox>
+                  <Checkbox label="蒙古语"></Checkbox>
+                  <Checkbox label="苗语"></Checkbox>
+                  <Checkbox label="中文繁体"></Checkbox>
+                  <Checkbox label="藏语"></Checkbox>
+                  <Checkbox label="英语"></Checkbox>
+                  <Checkbox label="维吾尔语"></Checkbox>
+                  <Checkbox label="壮语"></Checkbox>
+                  <Checkbox label="日语"></Checkbox>
+                  <Checkbox label="哈萨克语"></Checkbox>
+                  <Checkbox label="朝鲜语"></Checkbox>
+                  <Checkbox label="法语"></Checkbox>
+                  <Checkbox label="柯尔克孜语"></Checkbox>
+                  <Checkbox label="彝语"></Checkbox>
+                  <Checkbox label="俄罗斯语"></Checkbox>
+                  <Checkbox label="西班牙语"></Checkbox>
+                  <Checkbox label="阿拉伯语"></Checkbox>
+                </CheckboxGroup>
+              </FormItem>
+              <FormItem label="前置或专项审批内容类型" prop="contentsType">
+                <CheckboxGroup v-model="site.basicInformation.contentsType" style="width: 650px;" class="records-checkbox">
+                  <Checkbox label="新闻"></Checkbox>
+                  <Checkbox label="出版"></Checkbox>
+                  <Checkbox label="教育"></Checkbox>
+                  <Checkbox label="医疗保健"></Checkbox>
+                  <Checkbox label="药品和医疗器械"></Checkbox>
+                  <Checkbox label="电子公告服务"></Checkbox>
+                  <Checkbox label="博客"></Checkbox>
+                  <Checkbox label="WAP网站"></Checkbox>
+                  <Checkbox label="文化"></Checkbox>
+                  <Checkbox label="广播电影电视节目"></Checkbox>
+                </CheckboxGroup>
+              </FormItem>
+              <FormItem label="备注" prop="remark">
+                <Input v-model="site.basicInformation.remark" placeholder="请填写备注信息" style="width: 500px"></Input>
+              </FormItem>
+              <div style="height: 2px;background: #D9D9D9;width: 100%"></div>
+              <h3 style="margin-top: 40px">网站负责人基本信息</h3>
+              <div style="display: flex">
+                <h3 style="margin-top: 20px">选择负责人</h3>
+                <RadioGroup v-model="site.basicInformation.personInCharge" class="records-radio-person" style="padding: 20px 0 20px 55px"
+                            @on-change="changePersonInCharge(upIndex)">
+                  <Radio label="已填写主体单位负责人姓名">
+                  </Radio>
+                  <Radio label="新建负责人">
+                  </Radio>
+                </RadioGroup>
               </div>
-            </FormItem>
-            <p class="form-p" @click="addWebsiteDomain"><img src="../../../assets/img/records/records-icon19.png"/> 新增网站域名</p>
-            <FormItem label="网站首页URL" prop="websiteHomepage">
-              <Input @on-focus="toolShow('websiteHomepage')" @on-blur="toolHide()" v-model="basicInformation.websiteHomepage" placeholder="请输入网站首页URL" style="width: 500px"></Input>
-              <transition name="fade">
-                <div class="tooltip-popper" style="top:-8px;" v-if="isToolHide == 4">
-                  <div class="tooltip-center">
-                    <div class="tooltip-arrow"></div>
-                    <div class="tooltip">1. 首页URL应该包含填写的域名列表中的任意一个。
-                      2. 首页URL不要加"http://"。
+              <FormItem label="姓名" prop="principalName">
+                <Input v-model="site.basicInformation.principalName" placeholder="请填写负责人姓名" style="width: 500px"></Input>
+              </FormItem>
+              <FormItem label="有效证件类型" prop="certificateType">
+                <Select v-model="site.basicInformation.certificateType" style="width:500px;" placeholder="请选择证件类型" @on-change="changeCertificate(upIndex)">
+                  <Option v-for="item in site.basicInformation.certificateTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+              <FormItem label="有效证件号码" prop="certificateNumber">
+                <Input v-model="site.basicInformation.certificateNumber" placeholder="请输入主体单位证件号码" style="width: 500px"/>
+              </FormItem>
+              <FormItem label="办公室电话" prop="officePhone">
+                <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.officePhone" placeholder="请输入办公室电话"
+                                       style="width: 468px;margin-left: 10px"></Input>
+                <transition name="fade">
+                  <div class="tooltip-popper" style="top:-36px" v-if="site.isToolHide == 5">
+                    <div class="tooltip-center">
+                      <div class="tooltip-arrow"></div>
+                      <div class="tooltip">1. 请您确保填写的电话畅通并可直接联系到本人，否则可能导致您的备案失败。
+                        2. 该电话在备案成功后需保持畅通，以备核查。
+                        3. 电话格式：086-010-87654321-007（可以不带分机号）。
+                      </div>
                     </div>
                   </div>
-                </div>
-              </transition>
-            </FormItem>
-            <FormItem label="网站服务内容" prop="serviceContent">
-              <RadioGroup v-model="basicInformation.serviceContent" style="width: 650px;" class="records-radio">
-                <Radio label="网络借贷信息中介"></Radio>
-                <Radio label="网上邮局"></Radio>
-                <Radio label="网络新闻"></Radio>
-                <Radio label="综合门户"></Radio>
-                <Radio label="网络广告/信息"></Radio>
-                <Radio label="单位门户网站"></Radio>
-                <Radio label="博客个人空间"></Radio>
-                <Radio label="网上支付"></Radio>
-                <Radio label="网上银行"></Radio>
-                <Radio label="网络购物"></Radio>
-                <Radio label="网络游戏"></Radio>
-                <Radio label="网络音乐"></Radio>
-                <Radio label="网上炒股/股票基金"></Radio>
-                <Radio label="网络图片"></Radio>
-                <Radio label="网络软件/下载"></Radio>
-                <Radio label="网络影视"></Radio>
-                <Radio label="网上交友/婚介"></Radio>
-                <Radio label="网上房产"></Radio>
-                <Radio label="网上求职"></Radio>
-                <Radio label="网站建设"></Radio>
-                <Radio label="网上招聘"></Radio>
-                <Radio label="网络教育"></Radio>
-                <Radio label="基础应用"></Radio>
-                <Radio label="WAP"></Radio>
-                <Radio label="电子政务、电子商务"></Radio>
-                <Radio label="数字娱乐"></Radio>
-                <Radio label="网络媒体"></Radio>
-                <Radio label="互联网股权融资"></Radio>
-                <Radio label="互联网跨界金融及资产管理"></Radio>
-                <Radio label="APP"></Radio>
-                <Radio label="互联网保险"></Radio>
-                <Radio label="网上非银支付"></Radio>
-                <Radio label="移动应用"></Radio>
-                <Radio label="即时通信"></Radio>
-                <Radio label="搜索引擎"></Radio>
-                <Radio label="其他"></Radio>
-              </RadioGroup>
-            </FormItem>
-            <FormItem label="网站语言" prop="contentsLanguage">
-              <CheckboxGroup v-model="basicInformation.contentsLanguage" style="width: 650px;" class="records-checkbox">
-                <Checkbox label="中文简体"></Checkbox>
-                <Checkbox label="蒙古语"></Checkbox>
-                <Checkbox label="苗语"></Checkbox>
-                <Checkbox label="中文繁体"></Checkbox>
-                <Checkbox label="藏语"></Checkbox>
-                <Checkbox label="英语"></Checkbox>
-                <Checkbox label="维吾尔语"></Checkbox>
-                <Checkbox label="壮语"></Checkbox>
-                <Checkbox label="日语"></Checkbox>
-                <Checkbox label="哈萨克语"></Checkbox>
-                <Checkbox label="朝鲜语"></Checkbox>
-                <Checkbox label="法语"></Checkbox>
-                <Checkbox label="柯尔克孜语"></Checkbox>
-                <Checkbox label="彝语"></Checkbox>
-                <Checkbox label="俄罗斯语"></Checkbox>
-                <Checkbox label="西班牙语"></Checkbox>
-                <Checkbox label="阿拉伯语"></Checkbox>
-              </CheckboxGroup>
-            </FormItem>
-            <FormItem label="前置或专项审批内容类型" prop="contentsType">
-              <CheckboxGroup v-model="basicInformation.contentsType" style="width: 650px;" class="records-checkbox">
-                <Checkbox label="新闻"></Checkbox>
-                <Checkbox label="出版"></Checkbox>
-                <Checkbox label="教育"></Checkbox>
-                <Checkbox label="医疗保健"></Checkbox>
-                <Checkbox label="药品和医疗器械"></Checkbox>
-                <Checkbox label="电子公告服务"></Checkbox>
-                <Checkbox label="博客"></Checkbox>
-                <Checkbox label="WAP网站"></Checkbox>
-                <Checkbox label="文化"></Checkbox>
-                <Checkbox label="广播电影电视节目"></Checkbox>
-              </CheckboxGroup>
-            </FormItem>
-            <FormItem label="备注" prop="remark">
-              <Input v-model="basicInformation.remark" placeholder="请填写备注信息" style="width: 500px"></Input>
-            </FormItem>
-            <div style="height: 2px;background: #D9D9D9;width: 100%"></div>
-            <h3 style="margin-top: 40px">网站负责人基本信息</h3>
-            <div style="display: flex">
-              <h3 style="margin-top: 20px">选择负责人</h3>
-              <RadioGroup v-model="basicInformation.personInCharge" class="records-radio-person" style="padding: 20px 0 20px 55px" @on-change="changePersonInCharge">
-                <Radio label="已填写主体单位负责人姓名">
-                </Radio>
-                <Radio label="新建负责人">
-                </Radio>
-              </RadioGroup>
-            </div>
-            <FormItem label="姓名" prop="principalName">
-              <Input v-model="basicInformation.principalName" placeholder="请填写负责人姓名" style="width: 500px"></Input>
-            </FormItem>
-            <FormItem label="有效证件类型" prop="certificateType">
-              <Select v-model="basicInformation.certificateType" style="width:500px;" placeholder="请选择证件类型" @on-change="changeCertificate">
-                <Option v-for="item in basicInformation.certificateTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-            </FormItem>
-            <FormItem label="有效证件号码" prop="certificateNumber">
-              <Input v-model="basicInformation.certificateNumber" placeholder="请输入主体单位证件号码" style="width: 500px"/>
-            </FormItem>
-            <FormItem label="办公室电话" prop="officePhone">
-              <span>+86</span><Input @on-focus="toolShow('officePhone')" @on-blur="toolHide()" v-model="basicInformation.officePhone" placeholder="请输入办公室电话"
-                                     style="width: 468px;margin-left: 10px"></Input>
-              <transition name="fade">
-                <div class="tooltip-popper" style="top:-36px" v-if="isToolHide == 5">
-                  <div class="tooltip-center">
-                    <div class="tooltip-arrow"></div>
-                    <div class="tooltip">1. 请您确保填写的电话畅通并可直接联系到本人，否则可能导致您的备案失败。
-                      2. 该电话在备案成功后需保持畅通，以备核查。
-                      3. 电话格式：086-010-87654321-007（可以不带分机号）。
+                </transition>
+              </FormItem>
+              <FormItem label="手机号码" prop="phoneNumber">
+                <Input @on-focus="toolShow('phoneNumber',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.phoneNumber" placeholder="请输入手机号码"
+                       style="width: 500px"/>
+                <transition name="fade">
+                  <div class="tooltip-popper" style="top:-27px" v-if="site.isToolHide == 6">
+                    <div class="tooltip-center">
+                      <div class="tooltip-arrow"></div>
+                      <div class="tooltip">1. 请您确保填写的电话畅通并可直接联系到本人，否则可能导致您的备案失败。
+                        2. 该电话在备案成功后需保持畅通，以备核查。
+                      </div>
                     </div>
                   </div>
-                </div>
-              </transition>
-            </FormItem>
-            <FormItem label="手机号码" prop="phoneNumber">
-              <Input @on-focus="toolShow('phoneNumber')" @on-blur="toolHide()" v-model="basicInformation.phoneNumber" placeholder="请输入手机号码" style="width: 500px"/>
-              <transition name="fade">
-                <div class="tooltip-popper" style="top:-27px" v-if="isToolHide == 6">
-                  <div class="tooltip-center">
-                    <div class="tooltip-arrow"></div>
-                    <div class="tooltip">1. 请您确保填写的电话畅通并可直接联系到本人，否则可能导致您的备案失败。
-                      2. 该电话在备案成功后需保持畅通，以备核查。
-                    </div>
-                  </div>
-                </div>
-              </transition>
-            </FormItem>
-            <FormItem label="电子邮箱地址" prop="emailAddress">
-              <Input v-model="basicInformation.emailAddress" placeholder="请输入电子邮箱地址" style="width: 500px"></Input>
-            </FormItem>
-            <div style="height: 2px;background: #D9D9D9;width: 100%"></div>
-            <h3 style="margin-top: 40px">ICP备案网站接入信息</h3>
-            <FormItem label="ISP名称" prop="ISPName">
-              <Input v-model="basicInformation.ISPName" style="width: 500px" :readonly="true"></Input>
-            </FormItem>
-            <FormItem label="网站IP地址" prop="IPAddress">
-              <Select v-model="basicInformation.IPAddress" style="width:500px;" placeholder="请选择网站IP地址" multiple>
-                <Option v-for="item in basicInformation.IPAddressList" :value="`${item.value}#${item.label}`" :key="item.value">{{ item.label }}</Option>
-              </Select>
-            </FormItem>
-            <FormItem label="网站接入方式" prop="accessWay">
-              <RadioGroup v-model="basicInformation.accessWay">
-                <Radio label="专线">
-                </Radio>
-                <Radio label="主机托管">
-                </Radio>
-                <Radio label="虚拟主机">
-                </Radio>
-                <Radio label="其他">
-                </Radio>
-              </RadioGroup>
-            </FormItem>
-            <FormItem label="服务器放置地" prop="serverPutArea">
-              <Input v-model="basicInformation.serverPutArea" style="width: 500px" :readonly="true"></Input>
-            </FormItem>
-          </Form>
+                </transition>
+              </FormItem>
+              <FormItem label="电子邮箱地址" prop="emailAddress">
+                <Input v-model="site.basicInformation.emailAddress" placeholder="请输入电子邮箱地址" style="width: 500px"></Input>
+              </FormItem>
+              <div style="height: 2px;background: #D9D9D9;width: 100%"></div>
+              <h3 style="margin-top: 40px">ICP备案网站接入信息</h3>
+              <FormItem label="ISP名称" prop="ISPName">
+                <Input v-model="site.basicInformation.ISPName" style="width: 500px" :readonly="true"></Input>
+              </FormItem>
+              <FormItem label="网站IP地址" prop="IPAddress">
+                <Select v-model="site.basicInformation.IPAddress" style="width:500px;" placeholder="请选择网站IP地址" multiple>
+                  <Option v-for="item in site.basicInformation.IPAddressList" :value="item.label" :key="item.value">{{ item.label }}</Option>
+                </Select>
+              </FormItem>
+              <FormItem label="网站接入方式" prop="accessWay">
+                <RadioGroup v-model="site.basicInformation.accessWay">
+                  <Radio label="专线">
+                  </Radio>
+                  <Radio label="主机托管">
+                  </Radio>
+                  <Radio label="虚拟主机">
+                  </Radio>
+                  <Radio label="其他">
+                  </Radio>
+                </RadioGroup>
+              </FormItem>
+              <FormItem label="服务器放置地" prop="serverPutArea">
+                <Input v-model="site.basicInformation.serverPutArea" style="width: 500px" :readonly="true"></Input>
+              </FormItem>
+            </Form>
+          </div>
         </div>
       </div>
+      <p style="width: 1200px; margin: 20px auto 0 auto;font-size: 18px;color: #377dff;cursor: pointer;" @click="addSite">添加网站</p>
       <div class="content-footer">
         <button @click="$router.go(-1)">上一步，填写主体信息</button>
-        <button style="margin-left: 20px" @click="nextStep('basicInformation')">下一步，上传资料</button>
+        <button style="margin-left: 20px" @click="nextStep">下一步，上传资料</button>
       </div>
     </div>
   </div>
@@ -271,6 +281,7 @@
       var mainUnitInformationStr = sessionStorage.getItem('mainUnitInformationStr')
       next(vm => {
         vm.setData(area, recordsType, mainUnitInformationStr);
+        window.scroll(0, 600)
       });
     },
     data() {
@@ -289,20 +300,20 @@
       const validCertificateNumber = (rule, value, callback) => {
         if (value == "") {
           return callback(new Error("请输入网站负责人证件号码"));
-        } else if (
-          !this.basicInformation.certificateTypeList[
-          this.basicInformation.certificateType - 1
+        } /*else if (
+          !this.siteList[0].basicInformation.certificateTypeList[
+          this.siteList[0].basicInformation.certificateType - 1
             ].reg.test(value)
         ) {
           return callback(
             new Error(
               "请输入正确的" +
-              this.basicInformation.certificateTypeList[
-              this.basicInformation.certificateType - 1
+              this.siteList[0].basicInformation.certificateTypeList[
+              this.siteList[0].basicInformation.certificateType - 1
                 ].label
             )
           );
-        } else {
+        }*/ else {
           callback();
         }
       };
@@ -352,11 +363,8 @@
         }
       };
       return {
-        count: 0,
         //接受第一页的信息
         mainUnitInformation: {},
-        //隐藏文字提示
-        isToolHide: 0,
         mainInfoShow: false,
         // 备案区域
         area: "",
@@ -364,79 +372,6 @@
         recordsType: "",
         // 备案类型描述
         recordsTypeDesc: "",
-        // 网站基本信息表单
-        basicInformation: {
-          // 网站名称
-          siteName: "",
-          // 网站域名
-          websiteDomain: "",
-          websiteDomainList: [{}],
-          newWebsiteDomainList: [],
-          newWebsiteDomain: [],
-          // 网站首页URL
-          websiteHomepage: "",
-          // 网站服务内容
-          serviceContent: "网络借贷信息中介",
-          // 网站语言
-          contentsLanguage: ["中文简体"],
-          // 前置或专项审批内容类型
-          contentsType: ["新闻"],
-          // 备注
-          remark: "",
-          // 网站负责人未填写/已填写
-          personInCharge: "新建负责人",
-          // 网站负责人姓名
-          principalName: "",
-          // 网站负责人证件类型
-          certificateType: "",
-          certificateTypeList: [
-            {
-              label: "身份证",
-              value: "1",
-              reg: /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
-            },
-            {
-              label: "护照",
-              value: "2",
-              reg: /^((14)|(15)[0-9]{7})|(G|S|D[0-9]{8})|((P.)|(S.)[0-9]{7})$/
-            },
-            {
-              label: "军官证",
-              value: "3",
-              reg: /^[\u4E00-\u9FA5]{1}\\d{7}$/
-            },
-            {
-              label: "台胞证",
-              value: "4"
-            }
-          ],
-          // 网站负责人证件号码
-          certificateNumber: "",
-          // 办公室电话
-          officePhone: "",
-          // 手机号码
-          phoneNumber: "",
-          // 电子邮箱地址
-          emailAddress: "",
-          // ISP名称
-          ISPName: "北京允睿讯通科技有公司 备案部",
-          // 网站IP地址（接口获取）
-          IPAddressList: [
-            {
-              label: '12581',
-              value: '1'
-            },
-            {
-              label: '12582',
-              value: '2'
-            },
-          ],
-          IPAddress: [],
-          // 网站接入方式
-          accessWay: "专线",
-          // 服务器放置区域
-          serverPutArea: '',
-        },
         // 网站基本信息表单验证信息
         basicInformationRuleValidate: {
           siteName: [
@@ -499,6 +434,86 @@
             }
           ]
         },
+        siteList: [{
+          // 网站基本信息表单
+          basicInformation: {
+            // 网站名称
+            siteName: "",
+            // 网站域名
+            websiteDomain: "",
+            websiteDomainList: [{}],
+            newWebsiteDomainList: [],
+            newWebsiteDomain: [],
+            // 网站首页URL
+            websiteHomepage: "",
+            // 网站服务内容
+            serviceContent: "网络借贷信息中介",
+            // 网站语言
+            contentsLanguage: ["中文简体"],
+            // 前置或专项审批内容类型
+            contentsType: ["新闻"],
+            // 备注
+            remark: "",
+            // 网站负责人未填写/已填写
+            personInCharge: "新建负责人",
+            // 网站负责人姓名
+            principalName: "",
+            // 网站负责人证件类型
+            certificateType: "",
+            certificateTypeList: [
+              {
+                label: "身份证",
+                value: "1",
+                reg: /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+              },
+              {
+                label: "护照",
+                value: "2",
+                reg: /^((14)|(15)[0-9]{7})|(G|S|D[0-9]{8})|((P.)|(S.)[0-9]{7})$/
+              },
+              {
+                label: "军官证",
+                value: "3",
+                reg: /^[\u4E00-\u9FA5]{1}\\d{7}$/
+              },
+              {
+                label: "台胞证",
+                value: "4"
+              }
+            ],
+            // 网站负责人证件号码
+            certificateNumber: "",
+            // 办公室电话
+            officePhone: "",
+            // 手机号码
+            phoneNumber: "",
+            // 电子邮箱地址
+            emailAddress: "",
+            // ISP名称
+            ISPName: "北京允睿讯通科技有公司 备案部",
+            // 网站IP地址（接口获取）
+            IPAddressList: [
+              {
+                label: '12581',
+                value: '1'
+              },
+              {
+                label: '12582',
+                value: '2'
+              },
+            ],
+            IPAddress: [],
+            // 网站接入方式
+            accessWay: "专线",
+            // 服务器放置区域
+            serverPutArea: '',
+          },
+          //隐藏文字提示
+          isToolHide: 0,
+          count: 0,
+          // 网站名称（用与refs）
+          name: 'basicInformation0'
+        }],
         //主体信息List
         information: []
       };
@@ -506,7 +521,7 @@
     methods: {
       setData(area, recordsType, mainUnitInformationStr) {
         this.area = area;
-        this.basicInformation.serverPutArea = area
+        this.siteList[0].basicInformation.serverPutArea = area
         this.mainUnitInformation = JSON.parse(mainUnitInformationStr)
         switch (recordsType) {
           case '1':
@@ -523,83 +538,176 @@
         }
       },
       // 新增网站域名
-      addWebsiteDomain() {
-        this.basicInformation.newWebsiteDomainList.push({
-          count: this.index
+      addWebsiteDomain(upIndex) {
+        this.siteList[upIndex].basicInformation.newWebsiteDomainList.push({
+          count: 0
         });
         // console.log(this.basicInformation.newWebsiteDomainList);
       },
       //删除网站域名
-      deleteWebsiteDomain(index) {
-        this.basicInformation.newWebsiteDomainList.splice(index, 1);
-        this.basicInformation.newWebsiteDomain.splice(index, 1);
+      deleteWebsiteDomain(upIndex, index) {
+        this.siteList[upIndex].basicInformation.newWebsiteDomainList.splice(index, 1);
+        this.siteList[upIndex].basicInformation.newWebsiteDomain.splice(index, 1);
       },
       //切换证件类型重新验证
-      changeCertificate() {
-        this.$refs.basicInformation.validateField(
-          "certificateNumber",
-          vaild => {
-          }
-        );
-        //this.basicInformation.certificateNumber = "";
+      changeCertificate(upIndex) {
+        /*       let name = 'basicInformation' + upIndex
+               console.log(name)
+               console.log(this.$refs[name])
+               this.$refs[name].validateField("certificateNumber", vaild => {
+                 })
+               this.basicInformation.certificateNumber = "";*/
       },
       // 选择新建负责人或已有的
-      changePersonInCharge(val) {
-        if (val === '已填写主体单位负责人姓名') {
-          this.basicInformation.principalName = this.mainUnitInformation.legalPersonName
-          this.basicInformation.certificateType = this.mainUnitInformation.legalPersonCertificateType
-          this.basicInformation.certificateNumber = this.mainUnitInformation.legalPersonIDNumber
-          this.basicInformation.officePhone = this.mainUnitInformation.officePhone
-          this.basicInformation.phoneNumber = this.mainUnitInformation.phoneNumber
-          this.basicInformation.emailAddress = this.mainUnitInformation.emailAddress
+      changePersonInCharge(upIndex) {
+        if (this.siteList[upIndex].basicInformation.personInCharge === '已填写主体单位负责人姓名') {
+          this.siteList[upIndex].basicInformation.principalName = this.mainUnitInformation.legalPersonName
+          this.siteList[upIndex].basicInformation.certificateType = this.mainUnitInformation.legalPersonCertificateType
+          this.siteList[upIndex].basicInformation.certificateNumber = this.mainUnitInformation.legalPersonIDNumber
+          this.siteList[upIndex].basicInformation.officePhone = this.mainUnitInformation.officePhone
+          this.siteList[upIndex].basicInformation.phoneNumber = this.mainUnitInformation.phoneNumber
+          this.siteList[upIndex].basicInformation.emailAddress = this.mainUnitInformation.emailAddress
         } else {
-          this.basicInformation.principalName = ''
-          this.basicInformation.certificateType = ''
-          this.basicInformation.certificateNumber = ''
-          this.basicInformation.officePhone = ''
-          this.basicInformation.phoneNumber = ''
-          this.basicInformation.emailAddress = ''
+          this.siteList[upIndex].basicInformation.principalName = ''
+          this.siteList[upIndex].basicInformation.certificateType = ''
+          this.siteList[upIndex].basicInformation.certificateNumber = ''
+          this.siteList[upIndex].basicInformation.officePhone = ''
+          this.siteList[upIndex].basicInformation.phoneNumber = ''
+          this.siteList[upIndex].basicInformation.emailAddress = ''
         }
+      },
+      // 添加新网站
+      addSite() {
+        let param = {
+          // 网站基本信息表单
+          basicInformation: {
+            // 网站名称
+            siteName: "",
+            // 网站域名
+            websiteDomain: "",
+            websiteDomainList: [{}],
+            newWebsiteDomainList: [],
+            newWebsiteDomain: [],
+            // 网站首页URL
+            websiteHomepage: "",
+            // 网站服务内容
+            serviceContent: "网络借贷信息中介",
+            // 网站语言
+            contentsLanguage: ["中文简体"],
+            // 前置或专项审批内容类型
+            contentsType: ["新闻"],
+            // 备注
+            remark: "",
+            // 网站负责人未填写/已填写
+            personInCharge: "新建负责人",
+            // 网站负责人姓名
+            principalName: "",
+            // 网站负责人证件类型
+            certificateType: "",
+            certificateTypeList: [
+              {
+                label: "身份证",
+                value: "1",
+                reg: /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+              },
+              {
+                label: "护照",
+                value: "2",
+                reg: /^((14)|(15)[0-9]{7})|(G|S|D[0-9]{8})|((P.)|(S.)[0-9]{7})$/
+              },
+              {
+                label: "军官证",
+                value: "3",
+                reg: /^[\u4E00-\u9FA5]{1}\\d{7}$/
+              },
+              {
+                label: "台胞证",
+                value: "4"
+              }
+            ],
+            // 网站负责人证件号码
+            certificateNumber: "",
+            // 办公室电话
+            officePhone: "",
+            // 手机号码
+            phoneNumber: "",
+            // 电子邮箱地址
+            emailAddress: "",
+            // ISP名称
+            ISPName: "北京允睿讯通科技有公司 备案部",
+            // 网站IP地址（接口获取）
+            IPAddressList: [
+              {
+                label: '12581',
+                value: '1'
+              },
+              {
+                label: '12582',
+                value: '2'
+              },
+            ],
+            IPAddress: [],
+            // 网站接入方式
+            accessWay: "专线",
+            // 服务器放置区域
+            serverPutArea: '',
+          },
+          //隐藏文字提示
+          isToolHide: 0,
+          count: 0,
+        }
+        let index = this.siteList.length
+        param.name = 'basicInformation' + index
+        param.basicInformation.serverPutArea = this.area
+        this.siteList.push(param)
       },
       //进入下一步
-      nextStep(name) {
-        this.$refs[name].validate(valid => {
-          if (valid) {
-            let basicInformationStr = JSON.stringify(this.basicInformation)
-            sessionStorage.setItem('basicInformationStr', basicInformationStr)
-            this.$router.push({
-              path: "NewRecordStepThree"
-            });
-          } else {
-            return;
-          }
-        });
+      nextStep() {
+        let array = []
+        this.siteList.forEach((item, index) => {
+          this.$refs[`basicInformation${index}`][0].validate((val) => {
+            array.push(val)
+          })
+        })
+        let flag = array.some(item => {
+          return item === false
+        })
+        if (!flag) {
+          let siteListStr = JSON.stringify(this.siteList)
+          sessionStorage.setItem('siteListStr', siteListStr)
+          this.$router.push({
+            path: "NewRecordStepThree"
+          });
+        } else {
+          return
+        }
       },
       //显示提示文字文本框
-      toolShow(value, index) {
+      toolShow(value, upIndex, index) {
         switch (value) {
           case "siteName":
-            this.isToolHide = 1;
+            this.siteList[upIndex].isToolHide = 1;
             break;
           case "websiteDomain":
-            this.isToolHide = 2;
+            this.siteList[upIndex].isToolHide = 2;
             break;
           case "websiteHomepage":
-            this.isToolHide = 4;
+            this.siteList[upIndex].isToolHide = 4;
             break;
           case "officePhone":
-            this.isToolHide = 5;
+            this.siteList[upIndex].isToolHide = 5;
             break;
           case "phoneNumber":
-            this.isToolHide = 6;
+            this.siteList[upIndex].isToolHide = 6;
             break;
         }
-        this.count = index
+        this.siteList[upIndex].count = index
 
-      },
+      }
+      ,
       //隐藏提示文字文本框
-      toolHide() {
-        this.isToolHide = 0;
+      toolHide(upIndex) {
+        this.siteList[upIndex].isToolHide = 0;
       }
     },
     mounted() {

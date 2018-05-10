@@ -8,7 +8,7 @@
         <p class="recordsArea-but"><img src="../../../assets/img/records/records-icon7.png"/> {{ area }}</p>
         <div class="main-info">
           <h2>主体信息</h2>
-          <div>
+          <div class="main-ul">
             <ul>
               <li>主体单位所属区域：{{mainUnitInformation.province}}/{{ mainUnitInformation.city }}/{{ mainUnitInformation.district }}</li>
               <li>主体单位证件类型：{{ certificateType}}</li>
@@ -31,36 +31,38 @@
             </ul>
           </div>
         </div>
-        <div class="main-info">
+        <div class="main-info" v-for="item in siteListStr">
           <h2>网站信息</h2>
           <transition name="list">
-            <div v-if="siteInfoShow">
+            <div class="main-ul" v-if="siteInfoShow">
               <ul>
-                <li>网站名称：{{ basicInformation.siteName}}</li>
-                <li>网站域名：{{ basicInformation.websiteDomain}},{{ basicInformationNewWebsiteDomain }}</li>
-                <li>网站首页URL：{{ basicInformation.websiteHomepage}}</li>
-                <li>网站服务内容：{{ basicInformation.serviceContent}}</li>
-                <li>网站语言：{{ basicInformationContentsLanguage}}</li>
+                <li>网站名称：{{ item.basicInformation.siteName}}</li>
+                <li>网站域名：{{ item.basicInformation.websiteDomain}},{{ item.basicInformation.newWebsiteDomain + '' }}</li>
+                <li>网站首页URL：{{ item.basicInformation.websiteHomepage}}</li>
+                <li>网站服务内容：{{ item.basicInformation.serviceContent}}</li>
+                <li>网站语言：{{ item.basicInformation.contentsLanguage + ''}}</li>
               </ul>
               <ul>
-                <li>网站负责人姓名：{{ basicInformation.principalName}}</li>
-                <li>有效证件类型：{{ basicInformationCertificateType}}</li>
-                <li>有效证件号码：{{ basicInformation.certificateNumber}}</li>
-                <li>手机号码：{{ basicInformation.phoneNumber}}</li>
-                <li>电子邮箱地址：{{ basicInformation.emailAddress}}</li>
+                <li>网站负责人姓名：{{ item.basicInformation.principalName}}</li>
+                <li>有效证件类型：{{ item.basicInformation.certificateType =='1'? '身份证':item.basicInformation.certificateType =='2'?'护照':item.basicInformation.certificateType
+                  =='3'?'军官证':'台胞证'}}
+                </li>
+                <li>有效证件号码：{{ item.basicInformation.certificateNumber}}</li>
+                <li>手机号码：{{ item.basicInformation.phoneNumber}}</li>
+                <li>电子邮箱地址：{{ item.basicInformation.emailAddress}}</li>
               </ul>
               <ul>
-                <li>ISP名称：{{ basicInformation.ISPName}}</li>
-                <li>网站IP地址：{{ basicInformationIPAddress}}</li>
-                <li>网站接入方式：{{ basicInformation.accessWay}}</li>
-                <li>服务器放置地：{{ basicInformation.serverPutArea}}</li>
+                <li>ISP名称：{{ item.basicInformation.ISPName}}</li>
+                <li>网站IP地址：{{ item.basicInformation.IPAddress + ''}}</li>
+                <li>网站接入方式：{{ item.basicInformation.accessWay}}</li>
+                <li>服务器放置地：{{ item.basicInformation.serverPutArea}}</li>
               </ul>
             </div>
           </transition>
         </div>
         <h2>请上传网站负责人相关资料</h2>
-        <p class="titleDescription">温馨提示：如网站负责人和主体负责人不是同一人，请上传法人授权委托书</p>
-        <div class="upload">
+        <p class="titleDescription">温馨提示：如网站负责人和主体负责人不是同一人，请在其他资料中上传法人授权委托书</p>
+        <div class="upload" v-for="(item,index) in uploadForm.IDPhotoList">
           <div class="uploadTitle">
             <p>身份证人像面</p>
             <div class="item">
@@ -71,11 +73,11 @@
                     :show-upload-list="false"
                     :with-credentials="true"
                     action="file/upFile.do"
-                    :on-success="IDCardFront">
-                    <div class="item-content-text" v-if="uploadForm.IDCardFront==''">
+                    :on-success="IDCardFront(index)">
+                    <div class="item-content-text" v-if="item.IDCardFront==''">
                       暂无图片
                     </div>
-                    <img v-else :src="uploadForm.IDCardFront" style="height: 120px;width:164px">
+                    <img v-else :src="item.IDCardFront" style="height: 120px;width:164px">
                     <button>上传</button>
                   </Upload>
                 </div>
@@ -97,10 +99,10 @@
                     :with-credentials="true"
                     action="file/upFile.do"
                     :on-success="IDCardBack">
-                    <div class="item-content-text" v-if="uploadForm.IDCardBack==''">
+                    <div class="item-content-text" v-if="item.IDCardBack==''">
                       暂无图片
                     </div>
-                    <img v-else :src="uploadForm.IDCardBack" style="height: 120px;width:164px">
+                    <img v-else :src="item.IDCardBack" style="height: 120px;width:164px">
                     <button>上传</button>
                   </Upload>
                 </div>
@@ -112,6 +114,7 @@
             </div>
           </div>
         </div>
+        <p @click="addIDPhoto">添加新负责人证件照</p>
         <h2>请上传主办单位相关资料</h2>
         <div class="upload">
           <div class="uploadTitle">
@@ -252,9 +255,9 @@
       var zoneId = sessionStorage.getItem('zoneId')
       var recordsType = sessionStorage.getItem('recordsType')
       var mainUnitInformationStr = sessionStorage.getItem('mainUnitInformationStr')
-      var basicInformationStr = sessionStorage.getItem('basicInformationStr')
+      var siteListStr = sessionStorage.getItem('siteListStr')
       next(vm => {
-        vm.setData(area, zoneId, recordsType, mainUnitInformationStr, basicInformationStr)
+        vm.setData(area, zoneId, recordsType, mainUnitInformationStr, siteListStr)
         window.scroll(0, 700)
       })
     },
@@ -264,7 +267,7 @@
         //接受第一页的信息
         mainUnitInformation: {},
         // 接收前一页的主体信息
-        basicInformation: {},
+        siteListStr: [],
         // 备案区域
         area: '',
         zoneId: '',
@@ -274,10 +277,12 @@
         recordsTypeDesc: '',
         // 上传资料标记表单
         uploadForm: {
-          // 身份证正面
-          IDCardFront: '',
-          // 身份证反面
-          IDCardBack: '',
+          IDPhotoList: [{
+            // 身份证正面
+            IDCardFront: '',
+            // 身份证反面
+            IDCardBack: '',
+          }],
           // 相关资料
           combine: '',
           // 域名证书
@@ -290,11 +295,11 @@
       }
     },
     methods: {
-      setData(area, zoneId, recordsType, mainUnitInformationStr, basicInformationStr) {
+      setData(area, zoneId, recordsType, mainUnitInformationStr, siteListStr) {
         this.area = area
         this.zoneId = zoneId
         this.mainUnitInformation = JSON.parse(mainUnitInformationStr)
-        this.basicInformation = JSON.parse(basicInformationStr)
+        this.siteListStr = JSON.parse(siteListStr)
         switch (recordsType) {
           case '1':
             this.recordsType = '新增备案'
@@ -309,16 +314,26 @@
             break
         }
       },
+      // 添加新的证件照
+      addIDPhoto() {
+        let param = {
+          // 身份证正面
+          IDCardFront: '',
+          // 身份证反面
+          IDCardBack: '',
+        }
+        this.uploadForm.IDPhotoList.push(param)
+      },
       /* 图片上传成功回调，设置图片。每张图片上传都有一个method。
  暂时没有找到更好的方法解决图片标记问题 */
       IDCardFront(response) {
         if (response.status == 1) {
-          this.uploadForm.IDCardFront = response.result
+          this.uploadForm.IDPhotoList[0].IDCardFront = response.result
         }
       },
       IDCardBack(response) {
         if (response.status == 1) {
-          this.uploadForm.IDCardBack = response.result
+          this.uploadForm.IDPhotoList[0].IDCardBack = response.result
         }
       },
       combine(response) {
@@ -379,6 +394,31 @@
           })
           return
         }
+        let paramsList = this.siteListStr.map(item => {
+          let param = {
+            webResponsibilityLinkName: item.basicInformation.principalName,
+            webResponsibilityCertificatesType: item.basicInformation.certificateType,
+            webResponsibilityCertificatesNumber: item.basicInformation.certificateNumber,
+            offaceNumber: item.basicInformation.officePhone,
+            phone: item.basicInformation.phoneNumber,
+            email: item.basicInformation.emailAddress,
+            ISPName: item.basicInformation.ISPName,
+            webIp: item.basicInformation.IPAddress + '',
+            webAccessType: item.basicInformation.accessWay,
+            webServerAddress: item.basicInformation.serverPutArea,
+            zoneId: this.zoneId,
+            recordType: this.recordsType,
+            webDomian: item.basicInformation.websiteDomain + ',' + item.basicInformation.newWebsiteDomain,
+            webMessage: item.basicInformation.contentsLanguage + '',
+            webName: item.basicInformation.siteName,
+            webServerContent: item.basicInformation.serviceContent,
+            webUrl: item.basicInformation.websiteHomepage,
+          }
+          return param
+        })
+        let params = {
+          list_web_message: JSON.stringify(paramsList)
+        }
         let addMainCompany = axios.get('recode/addMainCompany.do', {
           params: {
             mainCompanyArea: this.mainUnitInformation.province + '-' + this.mainUnitInformation.city + '-' + this.mainUnitInformation.district,
@@ -404,27 +444,7 @@
             webRecordAuthenticityUrl: this.uploadForm.CheckList,
           }
         })
-        let addMainWeb = axios.get('recode/addMainWeb.do', {
-          params: {
-            webResponsibilityLinkName: this.basicInformation.principalName,
-            webResponsibilityCertificatesType: this.basicInformation.certificateType,
-            webResponsibilityCertificatesNumber: this.basicInformation.certificateNumber,
-            offaceNumber: this.basicInformation.officePhone,
-            phone: this.basicInformation.phoneNumber,
-            email: this.basicInformation.emailAddress,
-            ISPName: this.basicInformation.ISPName,
-            webIp: this.basicInformation.IPAddress,
-            webAccessType: this.basicInformation.accessWay,
-            webServerAddress: this.basicInformation.serverPutArea,
-            zoneId: this.zoneId,
-            recordType: this.recordsType,
-            webDomian: this.basicInformation.websiteDomain + ',' + this.basicInformation.newWebsiteDomain,
-            webMessage: this.basicInformation.contentsLanguage + '',
-            webName: this.basicInformation.siteName,
-            webServerContent: this.basicInformation.serviceContent,
-            webUrl: this.basicInformation.websiteHomepage,
-          }
-        })
+        let addMainWeb = axios.post('recode/addMainWeb.do', params)
         Promise.all([addMainCompany, addMainWeb]).then(response => {
           if ((response[0].status == 200 && response[0].data.status == 1) && (response[1].status == 200 && response[1].data.status == 1)) {
             this.$router.push('waitFirstTrial')
@@ -448,6 +468,7 @@
                 return '工商营业执照'
                 break
               case '2':
+
                 return '组织机构代码证'
                 break
             }
@@ -542,39 +563,6 @@
             break
         }
       },
-      // 有效证件类型
-      basicInformationCertificateType() {
-        switch (this.basicInformation.certificateType) {
-          case '1':
-            return '身份证'
-            break
-          case '2':
-            return '护照'
-            break
-          case '3':
-            return '军官证'
-            break
-          case '4':
-            return '台胞证'
-            break
-        }
-      },
-      // 网站语言
-      basicInformationContentsLanguage() {
-        return this.basicInformation.contentsLanguage + ''
-      },
-      basicInformationNewWebsiteDomain() {
-        return this.basicInformation.newWebsiteDomain + ''
-      },
-      basicInformationIPAddress() {
-        /* this.basicInformation.IPAddress可能不是数组，会报警告 */
-        try {
-          return this.basicInformation.IPAddress.map(item => {
-            return item.split('#')[1]
-          }) + ''
-        } catch (e) {
-        }
-      }
     }
   }
 </script>
