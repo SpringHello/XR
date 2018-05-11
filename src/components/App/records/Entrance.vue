@@ -187,7 +187,7 @@
       },
       // 立即备案
       putOnRecord() {
-        if (!this.canRecord) {
+        if (this.canRecord) {
           sessionStorage.setItem('zone', this.areaText)
           sessionStorage.setItem('zoneId', this.area)
           sessionStorage.setItem('recordsType', this.type + '')

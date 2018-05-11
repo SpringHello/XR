@@ -235,7 +235,7 @@
               </FormItem>
               <FormItem label="网站IP地址" prop="IPAddress">
                 <Select v-model="site.basicInformation.IPAddress" style="width:500px;" placeholder="请选择网站IP地址" multiple>
-                  <Option v-for="item in site.basicInformation.IPAddressList" :value="item.label" :key="item.value">{{ item.label }}</Option>
+                  <Option v-for="item in site.basicInformation.IPAddressList" :value="item.publicip" :key="item.publicipid">{{ item.publicip }}</Option>
                 </Select>
               </FormItem>
               <FormItem label="网站接入方式" prop="accessWay">
@@ -257,7 +257,7 @@
           </div>
         </div>
       </div>
-      <p style="width: 1200px; margin: 20px auto 0 auto;font-size: 18px;color: #377dff;cursor: pointer;" @click="addSite">添加网站</p>
+      <p style="width: 1200px; margin: 20px auto 0 auto;font-size: 18px;color: #377dff;cursor: pointer;" @click="addSite" v-if="siteList.length<3">添加网站</p>
       <div class="content-footer">
         <button @click="$router.go(-1)">上一步，填写主体信息</button>
         <button style="margin-left: 20px" @click="nextStep">下一步，上传资料</button>
@@ -269,7 +269,7 @@
 <script type="text/ecmascript-6">
   import step from "./step.vue";
   import records from './../Records'
-  import regExp from "../../../util/regExp";
+  import axios from 'axios'
 
   export default {
     components: {
@@ -493,14 +493,6 @@
             ISPName: "北京允睿讯通科技有公司 备案部",
             // 网站IP地址（接口获取）
             IPAddressList: [
-              {
-                label: '12581',
-                value: '1'
-              },
-              {
-                label: '12582',
-                value: '2'
-              },
             ],
             IPAddress: [],
             // 网站接入方式
@@ -515,8 +507,13 @@
           name: 'basicInformation0'
         }],
         //主体信息List
-        information: []
+        information: [],
+        // 公网IP信息
+        publicIPList: []
       };
+    },
+    created() {
+      this.getPublicIP()
     },
     methods: {
       setData(area, recordsType, mainUnitInformationStr) {
@@ -536,6 +533,21 @@
             this.recordsTypeDesc = '主体已经备案过，需要再给其他网站备案。'
             break
         }
+      },
+      // 获取公网IP
+      getPublicIP() {
+        let zoneId = sessionStorage.getItem('zoneId');
+        let url = 'network/listPublicIp.do'
+        axios.get(url, {
+          params: {
+            zoneId: zoneId
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.publicIPList = response.data.result
+            this.siteList[0].basicInformation.IPAddressList = response.data.result
+          }
+        })
       },
       // 新增网站域名
       addWebsiteDomain(upIndex) {
@@ -637,14 +649,6 @@
             ISPName: "北京允睿讯通科技有公司 备案部",
             // 网站IP地址（接口获取）
             IPAddressList: [
-              {
-                label: '12581',
-                value: '1'
-              },
-              {
-                label: '12582',
-                value: '2'
-              },
             ],
             IPAddress: [],
             // 网站接入方式
@@ -659,6 +663,7 @@
         let index = this.siteList.length
         param.name = 'basicInformation' + index
         param.basicInformation.serverPutArea = this.area
+        param.basicInformation.IPAddressList = this.publicIPList
         this.siteList.push(param)
       },
       //进入下一步
