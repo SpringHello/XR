@@ -42,7 +42,7 @@ Vue.config.productionTip = false
 
 
 
-//axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true
 //axios.defaults.baseURL = 'http://192.168.3.124:8082/ruicloud'
 //axios.defaults.withCredentials = true
 
