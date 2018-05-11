@@ -73,11 +73,12 @@
                     :show-upload-list="false"
                     :with-credentials="true"
                     action="file/upFile.do"
-                    :on-success="IDCardFront(index)">
+                    :on-success="IDCardFront"
+                    :before-upload="mark(index)">
                     <div class="item-content-text" v-if="item.IDCardFront==''">
                       暂无图片
                     </div>
-                    <img v-else :src="item.IDCardFront" style="height: 120px;width:164px">
+                    <img v-else :src="item.IDCardFront" style="height: 120px;width:164px;margin-bottom: 20px">
                     <button>上传</button>
                   </Upload>
                 </div>
@@ -98,11 +99,12 @@
                     :show-upload-list="false"
                     :with-credentials="true"
                     action="file/upFile.do"
-                    :on-success="IDCardBack">
+                    :on-success="IDCardBack"
+                    :before-upload="mark1(index)">
                     <div class="item-content-text" v-if="item.IDCardBack==''">
                       暂无图片
                     </div>
-                    <img v-else :src="item.IDCardBack" style="height: 120px;width:164px">
+                    <img v-else :src="item.IDCardBack" style="height: 120px;width:164px;margin-bottom: 20px">
                     <button>上传</button>
                   </Upload>
                 </div>
@@ -131,7 +133,7 @@
                     <div class="item-content-text" v-if="uploadForm.combine==''">
                       暂无图片
                     </div>
-                    <img v-else :src="uploadForm.combine" style="height: 120px;width:164px">
+                    <img v-else :src="uploadForm.combine" style="height: 120px;width:164px;margin-bottom: 20px">
                     <button>上传</button>
                   </Upload>
                 </div>
@@ -151,6 +153,7 @@
               <div class="item-content">
                 <div style="width:100%;">
                   <Upload
+                    multiple
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
@@ -263,6 +266,9 @@
     },
     data() {
       return {
+        // 用与标记正在操作的身份证件照
+        index: '',
+        index1: '',
         siteInfoShow: false,
         //接受第一页的信息
         mainUnitInformation: {},
@@ -295,6 +301,12 @@
       }
     },
     methods: {
+      mark(index) {
+        this.index = index
+      },
+      mark1(index) {
+        this.index1 = index
+      },
       setData(area, zoneId, recordsType, mainUnitInformationStr, siteListStr) {
         this.area = area
         this.zoneId = zoneId
@@ -328,12 +340,12 @@
  暂时没有找到更好的方法解决图片标记问题 */
       IDCardFront(response) {
         if (response.status == 1) {
-          this.uploadForm.IDPhotoList[0].IDCardFront = response.result
+          this.uploadForm.IDPhotoList[this.index].IDCardFront = response.result
         }
       },
       IDCardBack(response) {
         if (response.status == 1) {
-          this.uploadForm.IDPhotoList[0].IDCardBack = response.result
+          this.uploadForm.IDPhotoList[this.index1].IDCardBack = response.result
         }
       },
       combine(response) {
@@ -358,15 +370,21 @@
       },
       // 提交资料
       netStep() {
-        if (this.uploadForm.IDCardFront === '') {
+        let flag = this.uploadForm.IDPhotoList.some(item => {
+          return item.IDCardFront === ''
+        })
+        if (flag) {
           this.$Message.info({
-            content: '请上传身份证正面照'
+            content: '请上传相关身份证正面照'
           })
           return
         }
-        if (this.uploadForm.IDCardBack === '') {
+        let flag1 = this.uploadForm.IDPhotoList.some(item => {
+          return item.IDCardBack === ''
+        })
+        if (flag1) {
           this.$Message.info({
-            content: '请上传身份证反面照'
+            content: '请上传相关身份证反面照'
           })
           return
         }
@@ -416,9 +434,16 @@
           }
           return param
         })
+        // 添加网站信息参数
         let params = {
           list_web_message: JSON.stringify(paramsList)
         }
+        let companyResponsibilityUrlPositive = this.uploadForm.IDPhotoList.map(item => {
+          return item.IDCardFront
+        })
+        let companyResponsibilityUrlBack = this.uploadForm.IDPhotoList.map(item => {
+          return item.IDCardBack
+        })
         let addMainCompany = axios.get('recode/addMainCompany.do', {
           params: {
             mainCompanyArea: this.mainUnitInformation.province + '-' + this.mainUnitInformation.city + '-' + this.mainUnitInformation.district,
@@ -436,8 +461,8 @@
             phone: this.mainUnitInformation.phoneNumber,
             email: this.mainUnitInformation.emailAddress,
             zoneId: this.zoneId,
-            companyResponsibilityUrlPositive: this.uploadForm.IDCardFront,
-            companyResponsibilityUrlBack: this.uploadForm.IDCardBack,
+            companyResponsibilityUrlPositive: companyResponsibilityUrlPositive + '',
+            companyResponsibilityUrlBack: companyResponsibilityUrlBack + '',
             hostCompanyUrl: this.uploadForm.combine,
             domainCertificateUrl: this.uploadForm.certifiedDomainNoCertification,
             otherDataUrl: this.uploadForm.otherFile,
@@ -450,7 +475,7 @@
             this.$router.push('waitFirstTrial')
           } else {
             this.$message.info({
-              content: response[0].data.message
+              content: '平台开小差了，请稍候再试'
             })
           }
         })
@@ -631,6 +656,7 @@
             border-radius: 4px;
             border: 1px solid #d8d8d8;
             margin-top: 20px;
+            height: 230px;
             .item-content {
               display: flex;
               padding: 20px;

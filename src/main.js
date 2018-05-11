@@ -29,15 +29,15 @@ import md5 from 'md5'
 Vue.prototype.$message = message
 Vue.config.productionTip = false
 
-//axios.defaults.baseURL = '/ruicloud'
+axios.defaults.baseURL = '/ruicloud'
 
 //axios.defaults.baseURL = 'http://192.168.3.124:8082/ruicloud'
 //axios.defaults.baseURL = 'http://192.168.3.204:8081/ruicloud'
 
-//axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud/'
+axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud/'
 // axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud'
 
-axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud/'
+//axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud/'
 // axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
 
 
