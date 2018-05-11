@@ -1307,9 +1307,16 @@
         }).then(response => {
           if (response.data.connectCode == '') {
             // 不是第一次连接，直接跳转
-            sessionStorage.setItem('link-companyid', item.computerid)
+
+            sessionStorage.setItem('link-companyid', item.companyid)
             sessionStorage.setItem('link-vmid', item.computerid)
             sessionStorage.setItem('link-zoneid', item.zoneid)
+
+            sessionStorage.setItem('link-phone', this.$store.state.authInfo.phone)
+            /*sessionStorage.setItem('linkURL', item.connecturl)
+            sessionStorage.setItem('vmid', item.computerid)
+            sessionStorage.setItem('zoneid', item.zoneid)
+            sessionStorage.setItem('companyid', item.companyid)*/
             window.open('/ruicloud/link')
           } else {
             // 是第一次连接，弹出模态框
