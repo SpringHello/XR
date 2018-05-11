@@ -722,7 +722,7 @@
     }
     .content{
       width: 580px;
-      max-height: 700px;
+      max-height: 560px;
       overflow-y: auto;
       text-align: left;
       font-size:14px;
