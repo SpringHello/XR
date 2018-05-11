@@ -20,7 +20,7 @@
         <Button type="primary" @click="link">连接</Button>
       </div>
     </Modal>
-    修改远程连接密码
+    <!--修改远程连接密码-->
     <Modal v-model="contentPassword" width="360" scrollable>
       <p slot="header" style="border-bottom: 1px solid #999;padding-bottom: 35px;">
         <span>修改远程连接密码</span>
