@@ -20,7 +20,7 @@
         <Button type="primary" @click="link">连接</Button>
       </div>
     </Modal>
-    <!--修改远程连接密码-->
+    修改远程连接密码
     <Modal v-model="contentPassword" width="360" scrollable>
       <p slot="header" style="border-bottom: 1px solid #999;padding-bottom: 35px;">
         <span>修改远程连接密码</span>
@@ -122,6 +122,7 @@
           this.$Message.info('请输入正确的验证码')
           return
         }
+        this.codePlaceholder = '发送中'
         axios.get('user/code.do', {
           params: {
             type: '0',
@@ -129,20 +130,19 @@
             vailCode: this.formInline.code,
           }
         }).then(response => {
+          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+          // 发送倒计时
+          let countdown = 60
+          this.codePlaceholder = '60s'
+          var inter = setInterval(() => {
+            countdown--
+            this.codePlaceholder = countdown + 's'
+            if (countdown == 0) {
+              clearInterval(inter)
+              this.codePlaceholder = '获取验证码'
+            }
+          }, 1000)
           if (response.status == 200 && response.data.status == 1) {
-            this.codePlaceholder = '发送中'
-            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-            // 发送倒计时
-            let countdown = 60
-            this.codePlaceholder = '60s'
-            var inter = setInterval(() => {
-              countdown--
-              this.codePlaceholder = countdown + 's'
-              if (countdown == 0) {
-                clearInterval(inter)
-                this.codePlaceholder = '发送验证码'
-              }
-            }, 1000)
             this.$Message.success({
               content: '验证码发送成功',
               duration: 5
