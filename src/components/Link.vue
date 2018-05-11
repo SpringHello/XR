@@ -8,20 +8,20 @@
       </div>
     </div>
     <iframe :src="linkURL" style="width:100%;height:100%"></iframe>
-    <Modal v-model="confirm" width="360" :mask-closable="false" :closable="false">
-      <p slot="header">
-        <span>输入远程连接密码</span>
-      </p>
-      <div style="text-align:center">
-        <Input v-model="password" placeholder="请输入远程连接密码" :maxlength="15"></Input>
-      </div>
-      <div slot="footer">
-        <Button @click="confirm=false">取消</Button>
-        <Button type="primary" @click="link">连接</Button>
-      </div>
-    </Modal>
+    <Modal v-model="confirm" width="360" :mask-closable="false" :closable="false" scrollable>
+    <p slot="header">
+      <span>输入远程连接密码</span>
+    </p>
+    <div style="text-align:center">
+      <Input v-model="password" placeholder="请输入远程连接密码" :maxlength="15"></Input>
+    </div>
+    <div slot="footer">
+      <Button @click="confirm=false">取消</Button>
+      <Button type="primary" @click="link">连接</Button>
+    </div>
+  </Modal>
     <!--修改远程连接密码-->
-    <Modal v-model="contentPassword" width="360" scrollable>
+    <Modal v-model="contentPassword" width="360" scrollable :closable="false">
       <p slot="header" style="border-bottom: 1px solid #999;padding-bottom: 35px;">
         <span>修改远程连接密码</span>
       </p>
@@ -194,7 +194,7 @@
       margin: 5px 10px 5px 0;
       p {
         display: inline-block;
-        color: #ccc;
+        color: #999;
         margin-right: 10px;
       }
       button {
