@@ -100,7 +100,7 @@
                     :with-credentials="true"
                     action="file/upFile.do"
                     :on-success="IDCardBack"
-                    :before-upload="mark1(index)">
+                    :before-upload="mark(index)">
                     <div class="item-content-text" v-if="item.IDCardBack==''">
                       暂无图片
                     </div>
@@ -116,8 +116,8 @@
             </div>
           </div>
         </div>
-        <p @click="addIDPhoto">添加新负责人证件照</p>
-        <h2>请上传主办单位相关资料</h2>
+        <p @click="addIDPhoto" style="cursor: pointer;color: #377dff; font-size: 14px; margin-top: 10px;" v-if="uploadForm.IDPhotoList.length<3">添加新负责人证件照</p>
+        <h2>请上传主体单位相关资料</h2>
         <div class="upload">
           <div class="uploadTitle">
             <p>执照扫描件</p>
@@ -237,7 +237,7 @@
         </div>
       </div>
       <div class="content-footer">
-        <button @click="$router.push('newRecordStepTwo')">上一步，填写网站信息</button>
+        <button @click="$router.go(-1)">上一步，填写网站信息</button>
         <button style="margin-left: 20px" @click="netStep()">下一步，提交初审</button>
       </div>
     </div>
@@ -268,7 +268,6 @@
       return {
         // 用与标记正在操作的身份证件照
         index: '',
-        index1: '',
         siteInfoShow: false,
         //接受第一页的信息
         mainUnitInformation: {},
@@ -302,10 +301,10 @@
     },
     methods: {
       mark(index) {
-        this.index = index
-      },
-      mark1(index) {
-        this.index1 = index
+        //this. this.index = index
+        return () => {
+          this.index = index
+        }
       },
       setData(area, zoneId, recordsType, mainUnitInformationStr, siteListStr) {
         this.area = area
@@ -316,6 +315,7 @@
           case '1':
             this.recordsType = '新增备案'
             this.recordsTypeDesc = '域名未备案，备案主体证件无备案号，需要备案。'
+            break
           case '2':
             this.recordsType = '新增接入'
             this.recordsTypeDesc = '域名已在其他平台备案过，需要变更接入商。'
@@ -345,7 +345,7 @@
       },
       IDCardBack(response) {
         if (response.status == 1) {
-          this.uploadForm.IDPhotoList[this.index1].IDCardBack = response.result
+          this.uploadForm.IDPhotoList[this.index].IDCardBack = response.result
         }
       },
       combine(response) {
@@ -662,6 +662,7 @@
               padding: 20px;
               background-color: #f7f7f7;
               .item-content-text {
+                height: 125px;
                 padding: 50px 0px;
                 margin-bottom: 20px;
                 border: 1px solid #ffffff;

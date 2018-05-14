@@ -5,7 +5,7 @@
       <div class="content">
         <h2>备案类型选择</h2>
         <div class="recordsType">
-          <ul v-for="item in typeList" :class="{ select: type === item.value }" @click="type = item.value" :key="item.value">
+          <ul v-for="item in typeList" :class="{ select: type === item.value }" @click="changeType(item)" :key="item.value">
             <p>{{ item.title }}</p>
             <p>{{ item.descript }}</p>
           </ul>
@@ -90,6 +90,7 @@
   import axios from 'axios'
   import records from './../Records'
   import regExp from '../../../util/regExp'
+
   var messageMap = {
     loginname: {
       placeholder: '登录邮箱/手机号',
@@ -229,6 +230,15 @@
     created() {
     },
     methods: {
+      // 切换备案类型
+      changeType (item) {
+        this.type = item.value
+        if (this.type !== 1) {
+          this.flowList[0].title = '验证备案信息'
+        } else{
+          this.flowList[0].title = '填写备案信息'
+        }
+      },
       // 切换区域
       changeArea(item) {
         this.areaList.forEach(area => {
@@ -237,14 +247,9 @@
         this.area = item.zoneId
         this.areaText = item.text
         item.src = this.selectImg
-        this.getHostStatus()
       },
       // 查询该区域用户是否有主机
       getHostStatus() {
-        if (this.$store.state.userInfo == null) {
-          this.loginModal = true
-          return
-        }
         let url = 'recode/existMainOrWeb.do'
         axios.get(url, {
           params: {
@@ -253,15 +258,19 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.canRecord = response.data.result
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
           }
         })
       },
       // 立即备案
       putOnRecord() {
+        if (this.$store.state.userInfo == null) {
+          this.loginModal = true
+          return
+        }
+        if (this.type == 4) {
+          this.$router.push('BRecords')
+          return
+        }
         this.getHostStatus()
         if (this.canRecord) {
           sessionStorage.setItem('zone', this.areaText)
@@ -277,8 +286,6 @@
               break;
             case 3:
               this.$router.push('newAccess')
-              break
-            case 4:
               break
           }
         } else {
@@ -377,8 +384,7 @@
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
       },
     },
-    watch: {
-    }
+    watch: {}
   }
 </script>
 <style rel="stylesheet/less" lang="less" scoped>
@@ -568,6 +574,7 @@
       }
     }
   }
+
   .modal-body {
     height: 55%;
     form {
