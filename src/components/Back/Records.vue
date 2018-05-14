@@ -31,7 +31,7 @@
                   </Select>
                 </div>
               </div>
-              <Table ref="selection" :columns="recordTypeList" :data="recordProgressList"></Table>
+              <Table height="800" ref="selection" :columns="recordTypeList" :data="recordProgressList"></Table>
             </TabPane>
 
             <TabPane :label="tabValue">
@@ -44,7 +44,7 @@
                   </Select>
                 </div>
               </div>
-              <Table ref="selection" :columns="completeRecordTypeList" :data="recordTypeData"></Table>
+              <Table height="800" ref="selection" :columns="completeRecordTypeList" :data="recordTypeData"></Table>
             </TabPane>
           </Tabs>
         </div>
@@ -96,8 +96,8 @@
             label: "首次备案"
           },
           {
-            value: "London",
-            label: "London"
+            value: "新增接入",
+            label: "新增接入"
           },
           {
             value: "Sydney",

@@ -41,10 +41,10 @@
                 <li class="nav_item">主体单位证件号码</li>
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">{{hostUnitList[0].maincompanyarea}}</li>
-                <li class="nav_item">{{hostUnitList[0].maincompanycertificatestype}}</li>
-                <li class="nav_item">{{hostUnitList[0].maincompanynature}}</li>
-                <li class="nav_item">2019xxxxxxxxxx222</li>
+                <li class="nav_item"><input type="text" :value="hostUnitList[0].maincompanyarea"/><span style="color:#2A99F2;cursor: pointer;" @click="modal1 = true">重新输入</span></li>
+                <li class="nav_item"><input type="text" :value="hostUnitList[0].maincompanycertificatestype"/><span style="color:#2A99F2">重新输入</span></li>
+                <li class="nav_item"><input type="text" :value="hostUnitList[0].maincompanynature"/><span style="color:#2A99F2">重新输入</span></li>
+                <li class="nav_item"><input type="text" :value="hostUnitList[0].maincompanynumber"/><span style="color:#2A99F2">重新输入</span></li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">主体单位名称</li>
@@ -53,10 +53,10 @@
                 <li class="nav_item">投资人或主管单位姓名</li>
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">我是单位名称</li>
-                <li class="nav_item">我是住所</li>
-                <li class="nav_item">我是通信地址</li>
-                <li class="nav_item">我是姓名</li>
+                <li class="nav_item"><input type="text" :value="hostUnitList[0].maincompanyname"/><span style="color:#2A99F2">重新输入</span></li>
+                <li class="nav_item"><input type="text" :value="hostUnitList[0].maincompanycertificatesloaction"/><span style="color:#2A99F2">重新输入</span></li>
+                <li class="nav_item"><input type="text" :value="hostUnitList[0].maincompanycommunicatlocation"/><span style="color:#2A99F2">重新输入</span></li>
+                <li class="nav_item"><input type="text" :value="hostUnitList[0].investorname"/><span style="color:#2A99F2">重新输入</span></li>
               </ul>
             </div>
           </div>
@@ -76,22 +76,22 @@
                 <li class="nav_item">办公室电话</li>
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">最多显示长度为20个字符站位站位站位站站</li>
-                <li class="nav_item">我是证件类型</li>
-                <li class="nav_item">我是单位性质</li>
-                <li class="nav_item">2019xxxxxxxxxx222</li>
+                <li class="nav_item">{{hostUnitList[0].legalname}}</li>
+                <li class="nav_item">{{hostUnitList[0].legalcertificatestype}}</li>
+                <li class="nav_item">{{hostUnitList[0].legalcertificatesnumber}}</li>
+                <li class="nav_item">+86  {{hostUnitList[0].officenumber}}</li>
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">主体单位名称</li>
-                <li class="nav_item">主体单位证件住所</li>
-                <li class="nav_item">主体单位通信地址</li>
-                <li class="nav_item">投资人或主管单位姓名</li>
+                <li class="nav_item">手机号码</li>
+                <li class="nav_item">电子邮箱地址</li>
+                <li class="nav_item"></li>
+                <li class="nav_item"></li>
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">我是单位名称</li>
-                <li class="nav_item">我是住所</li>
-                <li class="nav_item">我是通信地址</li>
-                <li class="nav_item">我是姓名</li>
+                <li class="nav_item">{{hostUnitList[0].phone}}</li>
+                <li class="nav_item">{{hostUnitList[0].email}}</li>
+                <li class="nav_item"></li>
+                <li class="nav_item"></li>
               </ul>
             </div>
           </div>
@@ -110,9 +110,9 @@
                 <li class="nav_item">网站首页URL</li>
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">最多显示长度为20个字符站位站位站位站站</li>
-                <li class="nav_item">我是证件类型</li>
-                <li class="nav_item">我是单位性质</li>
+                <li class="nav_item">{{hostUnitList[0].webname}}</li>
+                <li class="nav_item">{{hostUnitList[0].webdomain}}</li>
+                <li class="nav_item">{{hostUnitList[0].weburl}}</li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">网站服务内容</li>
@@ -121,8 +121,8 @@
                 <li class="nav_item"></li>
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">我是单位名称</li>
-                <li class="nav_item">我是住所</li>
+                <li class="nav_item">{{hostUnitList[0].webservercontent}}</li>
+                <li class="nav_item">{{hostUnitList[0].webmessage}}</li>
                 <li class="nav_item"></li>
                 <li class="nav_item"></li>
               </ul>
@@ -144,9 +144,9 @@
            
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">最多显示长度为20个字符站位站位站位站站</li>
-                <li class="nav_item">我是证件类型</li>
-                <li class="nav_item">我是单位性质</li>
+                <li class="nav_item">{{hostUnitList[0].webresponsibilitylinkname}}</li>
+                <li class="nav_item">{{hostUnitList[0].webresponsibilitycertificatestype}}</li>
+                <li class="nav_item">{{hostUnitList[0].webresponsibilitycertificatesnumber}}</li>
                 
               </ul>
               <ul class="nav_list">
@@ -156,9 +156,9 @@
                 
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">我是单位名称</li>
-                <li class="nav_item">我是住所</li>
-                <li class="nav_item">我是通信地址</li>
+                <li class="nav_item">+86  {{hostUnitList[0].offacenumber}}</li>
+                <li class="nav_item">{{hostUnitList[0].companyphone}}</li>
+                <li class="nav_item">{{hostUnitList[0].companyemail}}</li>
                 
               </ul>
             </div>
@@ -178,9 +178,9 @@
                 <li class="nav_item">网站接入方式</li>
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">最多显示长度为20个字符站位站位站位站站</li>
-                <li class="nav_item">我是证件类型</li>
-                <li class="nav_item">我是单位性质</li>
+                <li class="nav_item">{{hostUnitList[0].ispname}}</li>
+                <li class="nav_item">{{hostUnitList[0].webip}}</li>
+                <li class="nav_item">{{hostUnitList[0].webaccesstype}}</li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">服务器放置地</li>
@@ -188,7 +188,7 @@
                 <li class="nav_item"></li>
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">我是单位名称</li>
+                <li class="nav_item">{{hostUnitList[0].webserveraddress}}</li>
                 <li class="nav_item"></li>
                 <li class="nav_item"></li>
               </ul>
@@ -204,9 +204,9 @@
               <div class="tables">
                 <ul class="tab_list">
                   <li class="tab_item">主办单位负责人照片</li>
-                  <li class="tab_item">点击查看</li>
+                  <li class="tab_item" @click="sponsorPhoto = true">点击查看</li>
                   <li class="tab_item">主办单位照片</li>
-                  <li class="tab_item">位置</li>
+                  <li class="tab_item" @click="organizerPhoto = true">点击查看</li>
                 </ul>
               </div>
             </div>
@@ -219,9 +219,9 @@
               <div class="tables">
                 <ul class="tab_list">
                   <li class="tab_item">域名证书</li>
-                  <li class="tab_item">点击查看</li>
+                  <li class="tab_item" @click="domainNameCertificate = true">点击查看</li>
                   <li class="tab_item">网站核验单</li>
-                  <li class="tab_item" @click="checkList = true">位置</li>
+                  <li class="tab_item" @click="checkList = true">点击查看</li>
                 </ul>
               </div>
             </div>
@@ -234,7 +234,7 @@
               <div class="tables">
                 <ul class="tab_list">
                   <li class="tab_item">其他资料</li>
-                  <li class="tab_item">点击查看</li>
+                  <li class="tab_item" @click="otherInfo = true">点击查看</li>
                   <li class="tab_item"></li>
                   <li class="tab_item"></li>
                 </ul>
@@ -244,17 +244,208 @@
         </div>
       </div>
     </div>
+    <!-- 网站核验单 -->
      <Modal
         v-model="checkList"
         title="重新上传网站备案信息真实性核验单信息"
-        @on-ok="ok"
         >
-        <p>1、点击下载《网站备案信息真实性核验单》</p>
-        <p>2、查看核验单样例图，填写以下载的核验单，不得涂改</p>
+        <p style="margin-bottom:5px">1、点击下载<span style="color:#2A99F2;">《网站备案信息真实性核验单》</span></p>
+        <p style="margin-bottom:5px">2、查看核验单样例图，填写以下载的核验单，不得涂改</p>
         <p>3、请您保存3份签字的核验单原件以备后续环节试用</p>
-        <div style="width:490px;height:351px;margin-top:10px;border:1px solid #D8D8D8;">
-            
+        <div class="updatePhoto">
+          <div class="updates">
+            <div style="width:50%;height:309px;">
+                <Upload
+                    multiple
+                    type="drag"
+                    :show-upload-list="false"
+                    :with-credentials="true"
+                    action="file/upFile.do"
+                    :on-success="otherFile">
+                    <div class="item-content-text" v-if="uploadForm.otherFile==''">
+                      点击选择文件
+                    </div>
+                    <div class="item-content-text" v-else>
+                      <p>{{uploadForm.otherFile}}</p>
+                      点击选择文件
+                    </div>
+                    <button>上传</button>
+                  </Upload>
+            </div>
+            <div style="width:50%;height:309px;">
+              <div  style="text-align: center">
+              <img style="height:222px;margin-bottom:25px" src="../../assets/img/records/records-img4.png"/>
+              <p>示例图</p>
+            </div>
+            </div>
+          </div>
         </div>
+    </Modal>
+    <!-- 主办单位负责人照片 -->
+       <Modal
+        v-model="sponsorPhoto"
+        title="重新上传身份证信息"
+        >
+        <p>身份证人像面</p>
+        <div class="updatePhoto" >
+          <div class="updates">
+            <div style="width:50%;height:203px;">
+                <Upload
+                    multiple
+                    type="drag"
+                    :show-upload-list="false"
+                    :with-credentials="true"
+                    action="file/upFile.do"
+                    :on-success="otherFile">
+                    <div class="sponsor-text" v-if="uploadForm.otherFile==''">
+                      暂无图片
+                    </div>
+                    <div class="sponsor-text" v-else>
+                      <p>{{uploadForm.otherFile}}</p>
+                      点击选择文件
+                    </div>
+                    <button>上传</button>
+                  </Upload>
+            </div>
+            <div style="width:50%;height:203px;">
+              <div  style="text-align: center">
+              <img style="height:144px;margin-bottom:20px" src="../../assets/img/records/records-img1.png"/>
+              <p>示例图</p>
+            </div>
+            </div>
+          </div>
+        </div>
+          <p style="margin-top:10px;">身份证国徽面</p>
+        <div class="updatePhoto" >
+          <div class="updates">
+            <div style="width:50%;height:203px;">
+                <Upload
+                    multiple
+                    type="drag"
+                    :show-upload-list="false"
+                    :with-credentials="true"
+                    action="file/upFile.do"
+                    :on-success="otherFile">
+                    <div class="sponsor-text" v-if="uploadForm.otherFile==''">
+                      暂无图片
+                    </div>
+                    <div class="sponsor-text" v-else>
+                      <p>{{uploadForm.otherFile}}</p>
+                      点击选择文件
+                    </div>
+                    <button>上传</button>
+                  </Upload>
+            </div>
+            <div style="width:50%;height:203px;">
+              <div  style="text-align: center">
+              <img style="height:144px;margin-bottom:20px" src="../../assets/img/records/records-img2.png"/>
+              <p>示例图</p>
+            </div>
+            </div>
+          </div>
+        </div>
+    </Modal>
+    <!-- 主办单位照片 -->
+       <Modal
+        v-model="organizerPhoto"
+        title="重新上传营业执照信息"
+        >
+        <p>执照扫描件</p>
+        
+        <div class="updatePhoto" >
+          <div class="updates">
+            <div style="width:50%;height:309px;">
+                <Upload
+                    multiple
+                    type="drag"
+                    :show-upload-list="false"
+                    :with-credentials="true"
+                    action="file/upFile.do"
+                    :on-success="otherFile">
+                    <div class="item-content-text" v-if="uploadForm.otherFile==''">
+                      暂无图片
+                    </div>
+                    <div class="item-content-text" v-else>
+                      <p>{{uploadForm.otherFile}}</p>
+                      点击选择文件
+                    </div>
+                    <button>上传</button>
+                  </Upload>
+            </div>
+            <div style="width:50%;height:309px;">
+              <div  style="text-align: center">
+              <img style="height:222px" src="../../assets/img/records/records-img3.png"/>
+            </div>
+            </div>
+          </div>
+        </div>
+    </Modal>
+    <!-- 域名证书 -->
+       <Modal
+        v-model="domainNameCertificate"
+        title="重新上传域名证书信息"
+        >
+        <p>执照扫描件</p>
+        <div class="updatePhoto" >
+          <div class="updates">
+            <div style="width:100%;height:309px;">
+                <Upload
+                    multiple
+                    type="drag"
+                    :show-upload-list="false"
+                    :with-credentials="true"
+                    action="file/upFile.do"
+                    :on-success="otherFile">
+                    <div class="item-content" v-if="uploadForm.otherFile==''">
+                      点击选择文件
+                    </div>
+                    <div class="item-content" v-else>
+                      <p>{{uploadForm.otherFile}}</p>
+                      点击选择文件
+                    </div>
+                    <button>上传</button>
+                  </Upload>
+            </div>
+          </div>
+        </div>
+    </Modal>
+    <!-- 其他资料 -->
+       <Modal
+        v-model="otherInfo"
+        title="重新上传其他文件信息"
+        >
+        <p>如前置审批材料，法人授权委托书等材料（点击下载<span style="color:#2A99F2;">法人委托书</span>）</p>
+        <div class="updatePhoto">
+          <div class="updates">
+            <div style="width:100%;height:309px;">
+                <Upload
+                    multiple
+                    type="drag"
+                    :show-upload-list="false"
+                    :with-credentials="true"
+                    action="file/upFile.do"
+                    :on-success="otherFile">
+                    <div class="item-content" v-if="uploadForm.otherFile==''">
+                      点击选择文件
+                    </div>
+                    <div class="item-content" v-else>
+                      <p>{{uploadForm.otherFile}}</p>
+                      点击选择文件
+                    </div>
+                    <button>上传</button>
+                  </Upload>
+            </div>
+          </div>
+        </div>
+    </Modal>
+     <Modal
+        v-model="modal1"
+        title="主办单位信息"
+        @on-ok="ok"
+        @on-cancel="cancel">
+      <Input type="text" v-model="hostUnitList[0].maincompanyarea"></Input>
+      <Input type="text" v-model="hostUnitList[0].maincompanyarea"></Input>
+      <Input type="text" v-model="hostUnitList[0].maincompanyarea"></Input>
     </Modal>
   </div>
 </template>
@@ -263,21 +454,50 @@
 export default {
   data() {
     return {
+      modal1:false,
       //图标切换
       isIcon: true,
-      //主办单位信息隐藏与否
+      //主办单位信息详情隐藏与否
       isIconSon: true,
-      //主办单位负责人隐藏与否
+      //主办单位负责人详情隐藏与否
       isIconPerson: true,
-      //网站基本信息
+      //网站基本信息详情隐藏与否
       isIconInfo: true,
-      //网站负责人基本信息
+      //网站负责人基本信息详情隐藏与否
       isIconWebPerson: true,
-      //ISP备案网站接入信息
+      //ISP备案网站接入详情隐藏与否
       isIconISP: true,
       //网站核验单
       checkList: false,
-      hostUnitList: []
+      //主板单位负责人照片
+      sponsorPhoto: false,
+      //主办单位照片
+      organizerPhoto: false,
+      //域名证书
+      domainNameCertificate: false,
+      //其他资料
+      otherInfo: false,
+      //备案详情数据
+      hostUnitList: [],
+      // 上传资料标记表单
+      uploadForm: {
+        IDPhotoList: [
+          {
+            // 身份证正面
+            IDCardFront: "",
+            // 身份证反面
+            IDCardBack: ""
+          }
+        ],
+        // 相关资料
+        combine: "",
+        // 域名证书
+        certifiedDomainNoCertification: "",
+        // 其他文件
+        otherFile: "",
+        // 核验单
+        CheckList: ""
+      }
     };
   },
   methods: {
@@ -310,13 +530,22 @@ export default {
           }
         })
         .then(res => {
-          if(res.data.status == 1){
-             this.hostUnitList = res.data.result;
-            
-          }else{
-            console.log('出错了');
+          if (res.data.status == 1) {
+            this.hostUnitList = res.data.result;
+          } else {
+            console.log("出错了");
           }
         });
+    },
+    CheckList(response) {
+      if (response.status == 1) {
+        this.uploadForm.CheckList = response.result;
+      }
+    },
+    otherFile(response) {
+      if (response.status == 1) {
+        this.uploadForm.otherFile = response.result;
+      }
     }
   },
   mounted() {
@@ -326,11 +555,68 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.updatePhoto {
+  width: 490px;
+  height: 351px;
+  margin-top: 10px;
+  border: 1px solid #d8d8d8;
+  padding: 5px 20px;
+  background-color: #ffffff;
+  .updates {
+    display: flex;
+    background: #f7f7f7;
+    padding: 15px 10px;
+    font-family: MicrosoftYaHei;
+    .item-content{
+      padding: 50px 0px;
+      margin-bottom: 20px;
+      border: 1px solid #ffffff;
+      background-color: #ffffff;
+      color: #999;
+      line-height: 156px;
+    }
+    .item-content-text {
+      width: 186px;
+      height: 222px;
+      padding: 50px 0px;
+      margin-bottom: 20px;
+      border: 1px solid #ffffff;
+      background-color: #ffffff;
+      color: #999;
+      line-height: 156px;
+    }
+    button {
+      outline: none;
+      cursor: pointer;
+      border: none;
+      background: rgba(255, 231, 119, 1);
+      padding: 5px 15px;
+      border-radius: 4px;
+    }
+    .sponsor-text {
+      width: 186px;
+      height: 140px;
+      padding: 50px 0px;
+      margin-bottom: 20px;
+      border: 1px solid #ffffff;
+      background-color: #ffffff;
+      color: #999;
+      line-height: 42px;
+    }
+  }
+}
+
 .background {
   background-color: #f5f5f5;
   width: 100%;
   // height: 100%;
   font-family: MicrosoftYaHei;
+  input{
+    border: none;
+    background: rgba(225, 225, 225, 0.1);
+    width: 195px;
+    margin-right: 5px;
+  }
   //图标箭头向下样式
   .click_icon.icons {
     width: 13px !important;
@@ -451,7 +737,7 @@ export default {
           border-bottom: 1px solid #e9e9e9;
         }
         .nav_item:nth-child(odd) {
-          background-color: #d9d9d9;
+          background-color: #F7F7F7;
         }
       }
       .tab_list {
