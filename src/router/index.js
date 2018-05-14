@@ -31,6 +31,17 @@ const NewNodes_2 = () => import('@/components/App/active/newNodes_2')
 const active_1 = () => import('@/components/App/active/active_1')
 const active_2 = () => import('@/components/App/active/active_2')
 
+// 备案系统页面路由
+const Records = () => import('@/components/App/Records')
+const Entrance = () => import('@/components/App/records/Entrance')
+const NewAccess = () => import('@/components/App/records/NewAccess')
+const NewRecordStepOne = () => import('@/components/App/records/NewRecordStepOne')
+const NewRecordStepTwo = () => import('@/components/App/records/NewRecordStepTwo')
+const NewRecordStepThree = () => import('@/components/App/records/NewRecordStepThree')
+const NewRecordStepFour = () => import('@/components/App/records/NewRecordStepFour')
+const WaitFirstTrial = () => import('@/components/App/records/WaitFirstTrial')
+const WaitSecondTrial = () => import('@/components/App/records/WaitSecondTrial')
+
 /* 产品页面路由 */
 const Pecs = () => import('@/components/App/product/ECS.vue')
 const Phost = () => import('@/components/App/product/Host.vue')
@@ -92,6 +103,8 @@ const Recycle = () => import('@/components/Back/Recycle')
 const Wxpay = () => import('@/components/Back/Wxpay')
 const WorkOrder = () => import('@/components/Back/WorkOrder')
 const Link = () => import('@/components/Link')
+const BRecords = () => import('@/components/Back/Records')
+const RecordDetails = () => import('@/components/Back/RecordDetails')
 
 // 帮助文档路由
 const computed = () => import('@/components/App/doc/computed')
@@ -184,6 +197,47 @@ var router = new Router({
         {path: 'dynamic', name: 'dynamic', component: Dynamic},
         {path: 'Record', name: 'Record', component: Record},
       //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
+        {
+          path: 'entrance',
+          name: 'entrance',
+          component: Entrance
+        },
+        {
+          path: 'newAccess',
+          name: 'newAccess',
+          component: NewAccess
+        },
+        {
+          path: 'newRecordStepOne',
+          name: 'newRecordStepOne',
+          component: NewRecordStepOne
+        },
+        {
+          path: 'newRecordStepTwo',
+          name: 'newRecordStepTwo',
+          component: NewRecordStepTwo
+        },
+        {
+          path: 'newRecordStepThree',
+          name: 'newRecordStepThree',
+          component: NewRecordStepThree
+        },
+        {
+          path: 'waitFirstTrial',
+          name: 'waitFirstTrial',
+          component: WaitFirstTrial
+        },
+        {
+          path: 'newRecordStepFour',
+          name: 'newRecordStepFour',
+          component: NewRecordStepFour
+        },
+        {
+          path: 'waitSecondTrial',
+          name: 'waitSecondTrial',
+          component: WaitSecondTrial
+        },
+        //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
         /*{
           path: 'price',
           name: 'price',
@@ -217,6 +271,7 @@ var router = new Router({
         {path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
         {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},
         {path: 'active_1', name: 'active_1', component: active_1},
+        {path: 'entrance', name: 'entrance', component: Entrance},
         {path: 'active_2', name: 'active_2', component: active_2},
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
@@ -624,7 +679,9 @@ var router = new Router({
         {path: 'NATManage', name: 'NATManage', component: NATManage},
         {path: 'recycle', name: 'recycle', component: Recycle},
         {path: 'wxpay', name: 'wxpay', component: Wxpay},
-        {path: 'workOrder', name: 'workOrder', component: WorkOrder}
+        {path: 'workOrder', name: 'workOrder', component: WorkOrder},
+        {path: 'BRecords', name: 'BRecords', component: BRecords},
+        {path: 'RecordDetails', name: 'RecordDetails', component: RecordDetails}
       ]
     },
     {
@@ -644,7 +701,9 @@ var router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(route => { return route.meta.requiresAuth })) {
+  if (to.matched.some(route => {
+    return route.meta.requiresAuth
+  })) {
     if (!localStorage.getItem('authToken')) {
       next({
         path: '/ruicloud/login'
