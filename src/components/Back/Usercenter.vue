@@ -44,6 +44,7 @@
                   <span class="stepNum">{{i+1}}</span>{{step}}
                   <span class="line" v-if="i!=authType.step.length-1"></span>
                 </div>
+                <span style="float: right;line-height: 1.5;">{{ authType.disc}}</span>
               </div>
             </div>
             <!--身份证照片认证-->
@@ -1111,14 +1112,16 @@
 
           authTypes: [
             {
-              title: '通过身份证照片验证',
-              step: ['填写个人资料', '平台审核', '认证完成'],
-              go: 2
+              title: '快速验证（推荐）',
+              step: ['填写个人资料', '提交审核', '认证完成'],
+              go: 3,
+              disc: '实时审核，无需等待'
             },
             {
-              title: '快速验证',
-              step: ['填写个人资料', '填写个人身份资料', '认证完成'],
-              go: 3
+              title: '通过身份证照片验证',
+              step: ['填写个人资料', '上传身份证照片、平台审核', '认证完成'],
+              go: 2,
+              disc: '24小时内完成审核'
             }
           ],
           // 快速认证表单
@@ -2362,7 +2365,7 @@
             }
           }
           .authType-flow {
-            background-color: #d9d9d9;
+            background-color: #f5f5f5;
             font-size: 14px;
             color: #666666;
             padding: 10px 20px;
@@ -2375,6 +2378,7 @@
               color: #ffffff;
               line-height: 18px;
               background-color: #2A99F2;
+              margin-right: 5px;
             }
             .line {
               display: inline-block;
