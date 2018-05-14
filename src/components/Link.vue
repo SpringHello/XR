@@ -95,7 +95,6 @@
         }
         axios.get('information/judgeConnectCode.do', {
           params: {
-            companyid: sessionStorage.getItem('link-companyid'),
             VMId: sessionStorage.getItem('link-vmid'),
             code: this.password,
             zoneId: sessionStorage.getItem('link-zoneid')

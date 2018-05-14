@@ -28,6 +28,13 @@
             原价：<span :class="{cross:couponInfo.originCost!=couponInfo.totalCost}">{{couponInfo.originCost}}元</span><span
             style="font-size:18px;color:rgba(0,0,0,0.65);margin-left: 20px;">总计支付：{{couponInfo.totalCost}}元</span>
           </p>
+          <div style="text-align: right;margin: 10px 0;">
+            <ul>
+              <li v-for="(item,index) in showFree"
+                  style="font-size: 12px;color:rgba(102,102,102,1);" :key="item.index">{{item}}
+              </li>
+            </ul>
+          </div>
           <Button type="primary" style="float:right" @click="pay">支付</Button>
           <div style="clear: both"></div>
         </div>
@@ -129,6 +136,7 @@
           },
         ],
         orderData: [],
+        showFree: [],
         couponInfo: {
           isUse: true,
           couponList: [],
@@ -173,6 +181,8 @@
             data._checked = true
             return data
           })
+          this.showFree = JSON.parse(response.data.result.data[0].discountmessage)
+          console.log(JSON.parse(response.data.result.data[0].discountmessage))
         }
         this.$http.get('ticket/getUserTicket.do', {
           params: {
