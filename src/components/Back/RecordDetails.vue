@@ -12,10 +12,10 @@
             <div style="width:100%;">
               <ul>
                 <li class="list_item">备案ID:rtr-589jg294</li>
-                <li class="list_item">备案类型:{{hostUnitList[0].recordtype}}</li>
-                <li class="list_item">备案主体:{{hostUnitList[0].webname}}</li>
-                <li class="list_item">当前状态:{{hostUnitList[0].status}}</li>
-                <li class="list_item">最近更新时间:{{hostUnitList[0].lastupdatetime}}</li>
+                <li class="list_item">备案类型:{{hostUnitList.recordtype}}</li>
+                <li class="list_item">备案主体:{{hostUnitList.webname}}</li>
+                <li class="list_item">当前状态:{{hostUnitList.status}}</li>
+                <li class="list_item">最近更新时间:{{hostUnitList.lastupdatetime}}</li>
               </ul>
             </div>
           </div>
@@ -41,10 +41,10 @@
                 <li class="nav_item">主体单位证件号码</li>
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">{{hostUnitList[0].maincompanyarea}}<span  @click="modal1 = true">重新输入</span></li>
-                <li class="nav_item">{{hostUnitList[0].maincompanycertificatestype}}<span >重新输入</span></li>
-                <li class="nav_item">{{hostUnitList[0].maincompanynature}}<span>重新输入</span></li>
-                <li class="nav_item">{{hostUnitList[0].maincompanynumber}}<span>重新输入</span></li>
+                <li class="nav_item">{{hostUnitList.maincompanyarea}}<div v-if="isShow == 'maincompanyarea'" class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="host = true">重新输入</span></div></li>
+                <li class="nav_item">{{hostUnitList.maincompanycertificatestype}}<div v-if="isShow == 'maincompanycertificatestype'" class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="host = true">重新输入</span></div></li>
+                <li class="nav_item">{{hostUnitList.maincompanynature}}<div v-if="isShow == 'maincompanynature'" class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="host = true">重新输入</span></div></li>
+                <li class="nav_item">{{hostUnitList.maincompanynumber}}<div v-if="isShow == 'maincompanynumber'" class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="host = true">重新输入</span></div></li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">主体单位名称</li>
@@ -53,19 +53,19 @@
                 <li class="nav_item">投资人或主管单位姓名</li>
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">{{hostUnitList[0].maincompanyname}}<span >重新输入</span></li>
-                <li class="nav_item">{{hostUnitList[0].maincompanycertificatesloaction}}<span>重新输入</span></li>
-                <li class="nav_item">{{hostUnitList[0].maincompanycommunicatlocation}}<span>重新输入</span></li>
-                <li class="nav_item">{{hostUnitList[0].investorname}}<span >重新输入</span></li>
+                <li class="nav_item">{{hostUnitList.maincompanyname}}<div v-if="isShow == 'maincompanyname'" class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="host = true">重新输入</span></div></li>
+                <li class="nav_item">{{hostUnitList.maincompanycertificatesloaction}}<div v-if="isShow == 'maincompanycertificatesloaction'" class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="host = true">重新输入</span></div></li>
+                <li class="nav_item">{{hostUnitList.maincompanycommunicatlocation}}<div  v-if="isShow == 'maincompanycommunicatlocation'" class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="host = true">重新输入</span></div></li>
+                <li class="nav_item">{{hostUnitList.investorname}}<div v-if="isShow == 'investorname'" class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="host = true">重新输入</span></div></li>
               </ul>
             </div>
           </div>
-          <!--主办单位负责人信息-->
+          <!--主体单位负责人信息-->
           <div class="info_box">
             <div style="margin-bottom:10px;display:flex">
               <div class="click_icon icons" :class="{hide_icon:!isIconPerson}" @click="infoBoxShow('personInfo')"></div>
               <div style="margin-left:5px;">
-                <span>主办单位负责人信息</span>
+                <span>主体单位负责人信息</span>
               </div>
             </div>
             <div class="tables" v-show="isIconPerson">
@@ -76,10 +76,10 @@
                 <li class="nav_item">办公室电话</li>
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">{{hostUnitList[0].legalname}}</li>
-                <li class="nav_item">{{hostUnitList[0].legalcertificatestype}}</li>
-                <li class="nav_item">{{hostUnitList[0].legalcertificatesnumber}}</li>
-                <li class="nav_item">+86  {{hostUnitList[0].officenumber}}<span style="color:red">信息有误</span><span @click="modal2Show">重新输入</span></li>
+                <li class="nav_item">{{hostUnitList.legalname}} <div v-if="isShow == 'legalname'" class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="legal = true">重新输入</span></div></li>
+                <li class="nav_item">{{hostUnitList.legalcertificatestype}} <div v-if="isShow == 'legalcertificatestype'" class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="legal = true">重新输入</span></div></li>
+                <li class="nav_item">{{hostUnitList.legalcertificatesnumber}} <div v-if="isShow == 'legalcertificatesnumber'" class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="legal = true">重新输入</span></div></li>
+                <li class="nav_item">+86  {{hostUnitList.officenumber}}<div v-if="isShow == 'officenumber'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="legal = true">重新输入</span></div></li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">手机号码</li>
@@ -88,8 +88,8 @@
                 <li class="nav_item"></li>
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">{{hostUnitList[0].phone}}</li>
-                <li class="nav_item">{{hostUnitList[0].email}}</li>
+                <li class="nav_item">{{hostUnitList.phone}}<div v-if="isShow == 'phone'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="legal = true">重新输入</span></div></li>
+                <li class="nav_item">{{hostUnitList.email}}<div v-if="isShow == 'email'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="legal = true">重新输入</span></div></li>
                 <li class="nav_item"></li>
                 <li class="nav_item"></li>
               </ul>
@@ -110,9 +110,9 @@
                 <li class="nav_item">网站首页URL</li>
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">{{hostUnitList[0].webname}}</li>
-                <li class="nav_item">{{hostUnitList[0].webdomian}}</li>
-                <li class="nav_item">{{hostUnitList[0].weburl}}</li>
+                <li class="nav_item">{{hostUnitList.webname}} <div v-if="isShow == 'webname'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="website = true">重新输入</span></div></li>
+                <li class="nav_item">{{hostUnitList.webdomian}} <div v-if="isShow == 'webdomian'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="website = true">重新输入</span></div></li>
+                <li class="nav_item">{{hostUnitList.weburl}} <div v-if="isShow == 'weburl'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="website = true">重新输入</span></div></li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">网站服务内容</li>
@@ -121,8 +121,8 @@
                
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">{{hostUnitList[0].webservercontent}}</li>
-                <li class="nav_item">{{hostUnitList[0].webmessage}}</li>
+                <li class="nav_item">{{hostUnitList.webservercontent}} <div v-if="isShow == 'webservercontent'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="website = true">重新输入</span></div></li>
+                <li class="nav_item">{{hostUnitList.webmessage}} <div v-if="isShow == 'webmessage'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click=" website = true">重新输入</span></div></li>
                 <li class="nav_item"></li>
               </ul>
             </div>
@@ -143,9 +143,9 @@
            
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">{{hostUnitList[0].webresponsibilitylinkname}}</li>
-                <li class="nav_item">{{hostUnitList[0].webresponsibilitycertificatestype}}</li>
-                <li class="nav_item">{{hostUnitList[0].webresponsibilitycertificatesnumber}}</li>
+                <li class="nav_item">{{hostUnitList.webresponsibilitylinkname}} <div v-if="isShow == 'webresponsibilitylinkname'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div></li>
+                <li class="nav_item">{{hostUnitList.webresponsibilitycertificatestype}} <div v-if="isShow == 'webresponsibilitycertificatestype'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div></li>
+                <li class="nav_item">{{hostUnitList.webresponsibilitycertificatesnumber}}<div v-if="isShow == 'webresponsibilitycertificatesnumber'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div></li>
                 
               </ul>
               <ul class="nav_list">
@@ -155,9 +155,9 @@
                 
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">+86  {{hostUnitList[0].offacenumber}}</li>
-                <li class="nav_item">{{hostUnitList[0].companyphone}}</li>
-                <li class="nav_item">{{hostUnitList[0].companyemail}}</li>
+                <li class="nav_item">+86  {{hostUnitList.offacenumber}}<div v-if="isShow == 'offacenumber'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div></li>
+                <li class="nav_item">{{hostUnitList.companyphone}}<div v-if="isShow == 'companyphone'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div></li>
+                <li class="nav_item">{{hostUnitList.companyemail}}<div v-if="isShow == 'companyemail'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div></li>
                 
               </ul>
             </div>
@@ -177,9 +177,9 @@
                 <li class="nav_item">网站接入方式</li>
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">{{hostUnitList[0].ispname}}</li>
-                <li class="nav_item">{{hostUnitList[0].webip}}</li>
-                <li class="nav_item">{{hostUnitList[0].webaccesstype}}</li>
+                <li class="nav_item">{{hostUnitList.ispname}}<div v-if="isShow == 'ispname'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="webIsp = true">重新输入</span></div></li>
+                <li class="nav_item">{{hostUnitList.webip}}<div v-if="isShow == 'webip'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="webIsp = true">重新输入</span></div></li>
+                <li class="nav_item">{{hostUnitList.webaccesstype}}<div v-if="isShow =='webaccesstype'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="webIsp = true">重新输入</span></div></li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">服务器放置地</li>
@@ -187,7 +187,7 @@
                 <li class="nav_item"></li>
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">{{hostUnitList[0].webserveraddress}}</li>
+                <li class="nav_item">{{hostUnitList.webserveraddress}}<div v-if="isShow =='webserveraddress'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click="webIsp = true">重新输入</span></div></li>
                 <li class="nav_item"></li>
                 <li class="nav_item"></li>
               </ul>
@@ -304,7 +304,7 @@
                     </div>
                     <div style="height:203px;" v-else>
                        <div  style="text-align: center">
-                         <img style="height:144px;" :src="hostUnitList[0].companyresponsibilityurlpositive">
+                         <img style="height:144px;" :src="hostUnitList.companyresponsibilityurlpositive">
                           <p style="">点击选择文件</p>
                        </div>
                     </div>   
@@ -330,12 +330,12 @@
                     :with-credentials="true"
                     action="file/upFile.do"
                     :on-success="otherFile">
-                    <div class="sponsor-text" v-if="hostUnitList[0].companyresponsibilityurlback==''">
+                    <div class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlback==''">
                       暂无图片
                     </div>
                     <div style="height:203px;" v-else>
                        <div  style="text-align: center">
-                      <img style="height:144px;" :src="hostUnitList[0].companyresponsibilityurlback">
+                      <img style="height:144px;" :src="hostUnitList.companyresponsibilityurlback">
                       <p style="">点击选择文件</p>
                        </div>
                     </div>
@@ -357,7 +357,6 @@
         title="重新上传营业执照信息"
         >
         <p>执照扫描件</p>
-        
         <div class="updatePhoto" >
           <div class="updates">
             <div style="width:50%;height:203px;">
@@ -447,50 +446,210 @@
     </Modal>
     <!-- 修改主办单位信息 -->
      <Modal
-        v-model="modal1"
+        v-model="host"
         title="主办单位信息"
         @on-ok="updateHostunit"
        >
-       <p style="margin:10px">主板单位所需区域</p>
-      <Input type="text" v-model="updateHostUnitList.maincompanyarea"/>
-      <p style="margin:10px">主体单位证件类型</p>
-      <Input type="text" v-model="updateHostUnitList.maincompanycertificatestype"/>
-       <p style="margin:10px">主体单位性质</p>
-      <Input type="text" v-model="updateHostUnitList.maincompanynature"/>
-       <p style="margin:10px">主板单位证件号码</p>
-      <Input type="text" v-model="updateHostUnitList.maincompanynumber"/>
-       <p style="margin:10px">主体单位名称</p>
-      <Input type="text" v-model="updateHostUnitList.maincompanyname"/>
+       <Form  ref="updateHostUnitList" :model="updateHostUnitList"  :rules="updateHostUnitListValidate"  :label-width="0">
+          <FormItem prop="province">
+              <p style="margin:10px">主办单位所属区域</p>
+               <Select v-model="province"  style="width:170px">
+                <Option v-for="item in provinceList" :value="item.name" :key="item.name">{{ item.name }}</Option>
+              </Select>
+            <Select v-model="city" style="width:140px">
+                <Option v-for="item in cityList" :value="item.name" :key="item.name">{{ item.name }}</Option>
+            </Select>
+            <Select v-model="district" style="width:100px">
+                <Option v-for="item in districtList" :value="item.name" :key="item.name">{{ item.name }}</Option>
+            </Select>
+           </FormItem>
+          <FormItem prop="maincompanycertificatestype">
+              <p style="margin:10px">主体单位证件类型</p>
+               <Select v-model="updateHostUnitList.maincompanycertificatestype"  style="width:170px">
+                <Option v-for="item in updateHostUnitList.maincompanycertificatestypeList" :value="item.name" :key="item.name">{{ item.name }}</Option>
+              </Select>
+          </FormItem>
+          <FormItem prop="maincompanynature">
+              <p style="margin:10px">主体单位性质</p>
+              <Input type="text" v-model="updateHostUnitList.maincompanynature"/> 
+          </FormItem>
+          <FormItem prop="maincompanynumber">
+              <p style="margin:10px">主办单位证件号码</p>
+              <Input type="text" v-model="updateHostUnitList.maincompanynumber"/>
+          </FormItem>
+          <FormItem prop="maincompanyname">
+            <p style="margin:10px">主体单位名称</p>
+            <Input type="text" v-model="updateHostUnitList.maincompanyname"/>
+          </FormItem>
+           <FormItem prop="maincompanycertificatesloaction">
+            <p style="margin:10px">主体单位证件住所</p>
+            <Input type="text" v-model="updateHostUnitList.maincompanycertificatesloaction"/>
+          </FormItem>
+           <FormItem prop="maincompanycommunicatlocation">
+            <p style="margin:10px">主体单位通信地址</p>
+            <Input type="text" v-model="updateHostUnitList.maincompanycommunicatlocation"/>
+          </FormItem>
+           <FormItem prop="investorname">
+            <p style="margin:10px">投资人或主管姓名</p>
+            <Input type="text" v-model="updateHostUnitList.investorname"/>
+          </FormItem>
+       </Form>
     </Modal>
     <!-- 修改主体单位负责人信息 -->
     <Modal
-        v-model="modal2"
-        title="主办单位负责人信息"
+        v-model="legal"
+        title="主体单位负责人信息"
+        @on-ok="updateHostunitLegal"
+       >
+        <Form  ref="updateHostUnitList" :model="updateHostUnitList"  :rules="updateHostUnitListValidate"  :label-width="0">
+          <FormItem  prop="legalname">
+                <p style="margin:10px">法人姓名</p>
+                 <Input type="text" v-model="updateHostUnitList.legalname"/>
+           </FormItem>
+          <FormItem prop="legalcertificatestype">
+             <p style="margin:10px">法人证件类型</p>
+              <Input type="text" v-model="updateHostUnitList.legalcertificatestype"/>
+          </FormItem>
+          <FormItem prop="legalcertificatesnumber">
+              <p style="margin:10px">法人证件号码</p>
+              <Input type="text" v-model="updateHostUnitList.legalcertificatesnumber"/>
+          </FormItem>
+          <FormItem prop="officenumber">
+              <p style="margin:10px">办公室电话</p>
+              <Input type="text" v-model="updateHostUnitList.officenumber"/>
+          </FormItem>
+          <FormItem prop="phone">
+              <p style="margin:10px">手机号码</p>
+              <Input type="text" v-model="updateHostUnitList.companyphone"/>
+          </FormItem>
+          <FormItem prop="email">
+               <p style="margin:10px">电子邮箱地址</p>
+              <Input type="text" v-model="updateHostUnitList.companyemail"/>
+          </FormItem>
+       </Form>
+    </Modal>
+        <!-- 修改网站基本信息信息 -->
+    <Modal
+        v-model="website"
+        title="网站基本信息"
+        @on-ok="updateWebSite"
+       >
+        <Form  ref="updateHostUnitList" :model="updateHostUnitList"  :rules="updateHostUnitListValidate"  :label-width="0">
+          <FormItem  prop="webname">
+                <p style="margin:10px">网站名称</p>
+                 <Input type="text" v-model="updateHostUnitList.webname"/>
+           </FormItem>
+          <FormItem prop="webdomian">
+             <p style="margin:10px">网站域名</p>
+              <Input type="text" v-model="updateHostUnitList.webdomian"/>
+          </FormItem>
+          <FormItem prop="weburl">
+              <p style="margin:10px">网站首页URL</p>
+              <Input type="text" v-model="updateHostUnitList.weburl"/>
+          </FormItem>
+          <FormItem prop="webservercontent">
+              <p style="margin:10px">网站服务内容</p>
+             <Input type="text" v-model="updateHostUnitList.webservercontent"/>
+          </FormItem>
+          <FormItem prop="webmessage">
+              <p style="margin:10px">网站语言</p>
+               <Input type="text" v-model="updateHostUnitList.webmessage"/>
+          </FormItem>
+       </Form>
+    </Modal>
+      <!-- 修改网站负责人基本信息 -->
+    <Modal
+        v-model="websitePerson"
+        title="网站负责人基本信息"
+        @on-ok="updateWebsitePerson"
+       >
+        <Form  ref="updateHostUnitList" :model="updateHostUnitList"  :rules="updateHostUnitListValidate"  :label-width="0">
+          <FormItem  prop="webname">
+                <p style="margin:10px">姓名</p>
+                 <Input type="text" v-model="updateHostUnitList.webresponsibilitylinkname"/>
+           </FormItem>
+          <FormItem prop="webresponsibilitycertificatestype">
+             <p style="margin:10px">有效证件类型</p>
+              <Input type="text" v-model="updateHostUnitList.webresponsibilitycertificatestype"/>
+          </FormItem>
+          <FormItem prop="webresponsibilitycertificatesnumber">
+              <p style="margin:10px">有效证件号码</p>
+              <Input type="text" v-model="updateHostUnitList.webresponsibilitycertificatesnumber"/>
+          </FormItem>
+          <FormItem prop="offacenumber">
+              <p style="margin:10px">办公室电话号码</p>
+              <Input type="text" v-model="updateHostUnitList.offacenumber"/>
+          </FormItem>
+          <FormItem prop="companyphone">
+              <p style="margin:10px">移动电话号码</p>
+             <Input type="text" v-model="updateHostUnitList.phone"/>
+          </FormItem>
+          <FormItem prop="companyemail">
+              <p style="margin:10px">电子邮箱地址</p>
+             <Input type="text" v-model="updateHostUnitList.email"/>
+          </FormItem>
+       </Form>
+    </Modal>
+     <!-- 修改ISP信息信息 -->
+    <Modal
+        v-model="webIsp"
+        title="ISP备案网站接入信息"
         @on-ok="updateHostunit"
        >
-       <p style="margin:10px">法人姓名</p>
-      <Input type="text" v-model="updateHostUnitList.legalname"/>
-      <p style="margin:10px">法人证件类型</p>
-      <Input type="text" v-model="hostUnitList[0].legalcertificatestype"/>
-       <p style="margin:10px">法人证件号码</p>
-      <Input type="text" v-model="updateHostUnitList.webResponsibilityCertificatesType"/>
-       <p style="margin:10px">办公室电话</p>
-      <Input type="text" v-model="updateHostUnitList.offaceNumber"/>
-       <p style="margin:10px">手机号码</p>
-      <Input type="text" v-model="hostUnitList[0].phone"/>
-       <p style="margin:10px">电子邮箱地址</p>
-      <Input type="text" v-model="hostUnitList[0].email"/>
+        <Form  ref="updateHostUnitList" :model="updateHostUnitList"  :rules="updateHostUnitListValidate"  :label-width="0">
+          <FormItem  prop="ispname">
+                <p style="margin:10px">ISP名称</p>
+                 <Input type="text" v-model="updateHostUnitList.ispname"/>
+           </FormItem>
+          <FormItem prop="webip">
+             <p style="margin:10px">网站IP地址</p>
+              <Input type="text" v-model="updateHostUnitList.webip"/>
+          </FormItem>
+          <FormItem prop="webaccesstype">
+              <p style="margin:10px">网站接入方式</p>
+              <Input type="text" v-model="updateHostUnitList.webaccesstype"/>
+          </FormItem>
+          <FormItem prop="webserveraddress">
+              <p style="margin:10px">服务器放置地</p>
+               <Input type="text" v-model="updateHostUnitList.webserveraddress"/>
+          </FormItem>
+       </Form>
     </Modal>
   </div>
 </template>
 
 <script>
+  import area from "../../options/area.json";
+  //备案ID
+     const id = sessionStorage.getItem("id");
+     const webcompany_Id = sessionStorage.getItem('webcompany_Id');
 export default {
+   beforeRouteEnter(to, from, next) {
+      var area = sessionStorage.getItem("zone");
+      var recordsType = sessionStorage.getItem("recordsType");
+      next(vm => {
+        vm.setData(area, recordsType);
+        window.scroll(0, 525);
+      });
+    },
   data() {
-     
     return {
-      modal1: false,
-      modal2:false,
+      //是否显示重新输入
+      isShow:null,
+      //主办单位弹窗
+      host: false,
+      //主体单位负责人弹窗 
+      legal : false,
+      //网站基本信息弹窗
+      website:false,
+      //网站负责人弹窗
+      websitePerson:false,
+      //ISP备案网站接入信息弹窗
+      webIsp:false,
+      //备案区域
+        area:"",
+        // 备案类型
+        recordsType: "",
       //图标切换
       isIcon: true,
       //主办单位信息详情隐藏与否
@@ -514,7 +673,9 @@ export default {
       //其他资料
       otherInfo: false,
       //备案详情数据
-      hostUnitList: [],
+      hostUnitList: {},
+      //主体单位证件类型选项
+      maincompanycertificatestypeList:[],
       // 上传资料标记表单
       uploadForm: {
         IDPhotoList: [
@@ -532,53 +693,40 @@ export default {
         // 其他文件
         otherFile: "",
         // 核验单
-        CheckList: "",
+        CheckList: ""
       },
+       // 省
+          provinceList: area,
+          province: "",
+          // 市
+          city: "",
+          cityList: [],
+          // 区
+          district: "",
+          districtList: [],
       //接收修改的数据
-      updateHostUnitList:{
-        webResponsibilityLinkName:'',
-        webResponsibilityCertificatesType:'',
-        webResponsibilityCertificatesNumber:'',
-        maincompanycertificatestype:'',
-        //网站基本负责人办公室电话
-        offaceNumber:'',
-        phone :'',
-        email:'',
-        ISPName:'',
-        webIp:'',
-        webAccessType:'',
-        webServerAddress:'',
-        webName:'',
-        webDomian:'',
-        webUrl:'',
-        webServerContent:'',
-        webMessage:'',
-        //主办单位负责人办公室电话号码
-        officenumber:'', 
-        maincompanyarea:'',
-        maincompanynature:'',
-        maincompanynumber:'',
-        maincompanyname:'',
-        //主体单位证件住所
-        maincompanycertificatesloaction:'',
-        //主办单位主体单位通信地址
-        maincompanycommunicatlocation:'',
-        //主办单位投资人或主管单位姓名
-        investorname:'',
-        //主体单位法人姓名
-        legalname:'',
-        //法人证件类型
-        legalcertificatestype:'',
-        //法人证件号码
-        legalcertificatesnumber:'',
-        //网站基本负责人移动电话号码
-        companyphone:'',
-        //网站基本负责人电子邮箱
-        companyemail:''
-      }
+      updateHostUnitList: {},
+      updateHostUnitListValidate:{}
     };
   },
   methods: {
+     setData(area, recordsType) {
+        this.area = area;
+        switch (recordsType) {
+          case '1':
+            this.recordsType = '新增备案'
+            this.recordsTypeDesc = '域名未备案，备案主体证件无备案号，需要备案。'
+            break
+          case '2':
+            this.recordsType = '新增接入'
+            this.recordsTypeDesc = '域名已在其他平台备案过，需要变更接入商。'
+            break
+          case '3':
+            this.recordsType = '新增网站'
+            this.recordsTypeDesc = '主体已经备案过，需要再给其他网站备案。'
+            break
+        }
+      },
     //图标切换方法
     toolShow(isIcon) {
       this.isIcon = !isIcon;
@@ -593,21 +741,9 @@ export default {
             : value == "webPersonInfo"
               ? (this.isIconWebPerson = !this.isIconWebPerson)
               : value == "inforISP" ? (this.isIconISP = !this.isIconISP) : "";
-      // if (value == "information") {
-      //   this.isIconSon = !this.isIconSon;
-      // } else if (value == "personInfo") {
-      //   this.isIconPerson = !this.isIconPerson;
-      // } else if (value == "webInfo") {
-      //   this.isIconInfo = !this.isIconInfo;
-      // } else if (value == "webPersonInfo") {
-      //   this.isIconWebPerson = !this.isIconWebPerson;
-      // } else if (value == "inforISP") {
-      //   this.isIconISP = !this.isIconISP;
-      // }
     },
     //查看备案详情
     details() {
-      const id = sessionStorage.getItem("id");
       this.$http
         .get("recode/listMainWeb.do", {
           params: {
@@ -618,67 +754,146 @@ export default {
         })
         .then(res => {
           if (res.data.status == 1) {
-            this.hostUnitList = res.data.result;
-            let list = this.hostUnitList[0].errorMessage;
-            Array.prototype.contains = function(element) {
-              for (let i = 0; i < list.length; i++) {
-                if (list[i] === element) {
-                  return true;
-                }
+            this.hostUnitList = res.data.result[0];
+            this.updateHostUnitList = res.data.result[0];
+              for(let item of this.hostUnitList.errorMessage){
+                console.log(item);
+                item == 'offaceNumber' ? this.isShow = 'offacenumber' : null;
+                item == 'webResponsibilityCertificatesType' ? this.isShow = 'webresponsibilitycertificatestype' : null;
               }
-              return false;
-            };
-            var arr = new Array();
-            if (arr.contains("offaceNumber") == true) {
-             
-              console.log(this.hostUnitList[0].offacenumber);
-            }
+            // Array.prototype.contains = function(element) {
+            //   for (let i = 0; i < list.length; i++) {
+            //     if (list[i] === element) {
+            //       return true;
+            //     }
+            //   }
+            //   return false;
+            // };
+            // var arr = new Array(['pffaceNumber']);
+            // if (arr.contains("offaceNumber") == true) {
+            //   console.log(this.hostUnitList[0].offacenumber);
+            // }
           } else {
             console.log("出错了");
           }
+        });
+    },
+    //修改主办单位信息表单
+    updateHostunit() {
+      this.$http
+        .get("recode/addMainCompany.do", {
+          params: {
+            id:webcompany_Id,
+            mainCompanyCertificatesType:this.updateHostUnitList.maincompanycertificatestype,
+            mainCompanyNature:this.updateHostUnitList.maincompanynature,
+            mainCompanyName :this.updateHostUnitList.maincompanyname,
+            mainCompanyNumber:this.updateHostUnitList.maincompanynumber,
+            mainCompanyCertificatesLoaction:this.updateHostUnitList.maincompanycertificatesloaction,
+            mainCompanyCommunicatLocation:this.updateHostUnitList.maincompanycommunicatlocation,
+            InvestorName:this.updateHostUnitList.investorname
+          }
         })
-        
+        .then(res => {
+          if (res.data.status == 1) {
+            this.$Message.success("修改成功");
+          } else {
+            this.$Message.error(res.data.message);
+          }
+        });
     },
-    //修改备案信息表单
-    updateHostunit(){
-       const id = sessionStorage.getItem("id");
+    //修改法人信息
+    updateHostunitLegal(){
+        this.$http.get('recode/addMainCompany.do',{
+          params:{
+            id:webcompany_Id,
+            legalName:this.updateHostUnitList.legalname,
+            companyPhone:this.updateHostUnitList.companyphone,
+            companyEmail:this.updateHostUnitList.companyemail,
+            officeNumber: this.updateHostUnitList.officenumber,
+           legalCertificatesType:this.updateHostUnitList.legalcertificatestype,
+           legalCertificatesNumber:this.updateHostUnitList.legalcertificatesnumber
+          }
+        }).then(res => {
+          if(res.data.status == 1){
+            this.$Message.success('修改成功');
+          }else{
+            this.$Message.error(res.data.message);
+          }
+        })
+    },
+    //修改网站基本信息
+    updateWebSite(){
       this.$http.get('recode/updateMainWeb.do',{
-        params:{
-             id:id,
-              
-              webResponsibilityCertificatesType:this.updateHostUnitList.webResponsibilityCertificatesType,
-            
-              offaceNumber:this.updateHostUnitList.offaceNumber,
-            
-        }
-      }
-      ).then(res => {
-        if(res.data.status == 1){
-          this.$Message.success("修改成功");
-        }else{
-          this.$Message.error(res.data.message);
-        }
-      })
-    },
-    otherFile(res,file){
-       const id = sessionStorage.getItem("id");
-      console.log(res);
-      console.log(file);
-      this.$http.post('recode/addMainCompany.do',{
-        id:id,
-        companyresponsibilityurlback:this.hostUnitList[0].companyresponsibilityurlback
+          params:{
+            id:id,
+            webName:this.updateHostUnitList.webname,
+            webDomian:this.updateHostUnitList.webdomian,
+            webUrl:updateHostUnitList.weburl,
+            webServerContent:this.updateHostUnitList.webservercontent,
+            webMessage:this.updateHostUnitList.webmessage
+          }
       }).then(res => {
         if(res.data.status == 1){
-          this.$Message.success("上传图片成功")
+          this.$Message.success('修改成功');
         }else{
           this.$Message.error(res.data.message);
         }
       })
     },
-    modal2Show(){
-      this.modal2 = true;
-      this.updateHostUnitList.offaceNumber = this.hostUnitList[0].offacenumber;
-      this.updateHostUnitList.webResponsibilityCertificatesType = this.hostUnitList[0].webresponsibilitycertificatestype
+    //修改网站负责人信息
+    updateWebsitePerson(){
+      this.$http.get('recode/updateMainWeb.do',{
+        params:{
+          id:id,
+          webResponsibilitylinkName:this.updateHostUnitList.webresponsibilitylinkname,
+          webResponsibilityCertificatesType:this.updateHostUnitList.webresponsibilitycertificatestype,
+          webResponsibilityCertificatesNumber:this.updateHostUnitList.webresponsibilitycertificatesnumber,
+          offaceNumber:this.updateHostUnitList.offacenumber,
+          phone:this.updateHostUnitList.phone,
+          email:this.updateHostUnitList.email
+        }
+      }).then(res => {
+        if(res.data.status == 1){
+          this.$Message.success('修改成功');
+        }else{
+          this.$Message.error(res.data.message);
+        }
+      })
+    },
+    //修改ISP备案网站接入信息
+    updateWebIsp(){
+      this.$http.get('recode/updateMainWeb.do',{
+        params:{
+          id:id,
+          ISPName:this.updateHostUnitList.ispname,
+          webIp:this.updateHostUnitList.webip,
+          webAccessType:this.updateHostUnitList.webaccesstype,
+          webServerAddress:this.updateHostUnitList.webserveraddress
+        }
+      }).then(res => {
+        if(res.data.status == 1){
+          this.$Message.success('修改成功');
+        }else{
+          this.$Message.error(res.data.message);
+        }
+      })
+    },
+    otherFile(res, file) {
+      console.log(res);
+      console.log(file);
+      this.$http
+        .post("recode/addMainCompany.do", {
+          id: id,
+          companyresponsibilityurlback: this.hostUnitList
+            .companyresponsibilityurlback
+        })
+        .then(res => {
+          if (res.data.status == 1) {
+            this.$Message.success("上传图片成功");
+          } else {
+            this.$Message.error(res.data.message);
+          }
+        });
     }
   },
   mounted() {
@@ -688,6 +903,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.ivu-form-item{
+  margin-bottom: 5px;
+}
 .updatePhoto {
   width: 490px;
   height: 351px;
@@ -796,7 +1014,7 @@ export default {
     .center {
       width: 1200px;
       background: #ffffff;
-      // height: 900px;
+      height: 1529px;
       padding: 10px 20px;
       .center_title {
         border-bottom: 1px solid #d8d8d8;
@@ -864,11 +1082,9 @@ export default {
       }
       .nav_list {
         width: 280px;
-        span {
-          color: #2a99f2;
-          cursor: pointer;
+        .text_block{
+          width: 100px;
           float: right;
-          margin-top: 5px;
         }
         .nav_item {
           padding: 5px 10px 5px 10px;
