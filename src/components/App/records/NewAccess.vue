@@ -1,7 +1,7 @@
 <template>
   <div>
     <records></records>
-    <step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc"></step>
+    <o-Step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc"></o-Step>
     <div class="body-bottom">
       <div class="content">
         <h2>备案区域</h2>
@@ -71,13 +71,13 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import step from './step.vue'
+  import oStep from './ostep.vue'
   import area from '@/options/area.json'
   import regExp from '../../../util/regExp'
   import records from './../Records'
   export default {
     components: {
-      step,records
+      records,oStep
     },
     data() {
 

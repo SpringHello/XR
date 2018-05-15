@@ -1,7 +1,8 @@
 <template>
   <div>
     <records></records>
-    <step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc"></step>
+    <o-step :onStep="2" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
+    <step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
     <div class="body-bottom">
       <div class="content">
         <h2>备案区域</h2>
@@ -268,17 +269,21 @@
 
 <script type="text/ecmascript-6">
   import step from "./step.vue";
+  import oStep from "./ostep.vue";
   import records from './../Records'
   import axios from 'axios'
 
   export default {
     components: {
-      step, records
+      step, records, oStep
     },
     beforeRouteEnter(to, from, next) {
       var area = sessionStorage.getItem("zone");
       var recordsType = sessionStorage.getItem("recordsType");
-      var mainUnitInformationStr = sessionStorage.getItem('mainUnitInformationStr')
+      var mainUnitInformationStr = ''
+      if (sessionStorage.getItem('mainUnitInformationStr')) {
+        mainUnitInformationStr = sessionStorage.getItem('mainUnitInformationStr')
+      }
       next(vm => {
         vm.setData(area, recordsType, mainUnitInformationStr);
         window.scroll(0, 600)
@@ -492,8 +497,7 @@
             // ISP名称
             ISPName: "北京允睿讯通科技有公司 备案部",
             // 网站IP地址（接口获取）
-            IPAddressList: [
-            ],
+            IPAddressList: [],
             IPAddress: [],
             // 网站接入方式
             accessWay: "专线",
@@ -520,6 +524,7 @@
         this.area = area;
         this.siteList[0].basicInformation.serverPutArea = area
         this.mainUnitInformation = JSON.parse(mainUnitInformationStr)
+        sessionStorage.removeItem('mainUnitInformationStr')
         switch (recordsType) {
           case '1':
             this.recordsType = '新增备案'
@@ -648,8 +653,7 @@
             // ISP名称
             ISPName: "北京允睿讯通科技有公司 备案部",
             // 网站IP地址（接口获取）
-            IPAddressList: [
-            ],
+            IPAddressList: [],
             IPAddress: [],
             // 网站接入方式
             accessWay: "专线",
@@ -678,8 +682,10 @@
           return item === false
         })
         if (!flag) {
+          let mainUnitInformationStr = JSON.stringify(this.mainUnitInformation)
           let siteListStr = JSON.stringify(this.siteList)
           sessionStorage.setItem('siteListStr', siteListStr)
+          sessionStorage.setItem('mainUnitInformationStr', mainUnitInformationStr)
           this.$router.push({
             path: "NewRecordStepThree"
           });

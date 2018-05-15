@@ -135,7 +135,8 @@
         // 备案类型： 1：新增备案；2：新增接入；3：新增网站；4：变更备案
         type: 1,
         // 备案流程列表
-        flowList: [
+        flowList: [],
+        flowList_1: [
           {
             src: require('../../../assets/img/records/records-icon1.png'),
             title: '填写备案信息',
@@ -165,6 +166,43 @@
             src: require('../../../assets/img/records/records-icon6.png'),
             title: '备案成功',
             step: 6
+          }
+        ],
+        flowList_2: [
+          {
+            src: require('../../../assets/img/records/records-icon20.png'),
+            title: '验证备案信息',
+            step: 1
+          },
+          {
+            src: require('../../../assets/img/records/records-icon1.png'),
+            title: '填写备案信息',
+            step: 2
+          },
+          {
+            src: require('../../../assets/img/records/records-icon2.png'),
+            title: '等待初审',
+            step: 3
+          },
+          {
+            src: require('../../../assets/img/records/records-icon3.png'),
+            title: '上传资料/办理拍照',
+            step: 4
+          },
+          {
+            src: require('../../../assets/img/records/records-icon4.png'),
+            title: '提交管局审批',
+            step: 5
+          },
+          {
+            src: require('../../../assets/img/records/records-icon5.png'),
+            title: '备案短信核验',
+            step: 6
+          },
+          {
+            src: require('../../../assets/img/records/records-icon6.png'),
+            title: '备案成功',
+            step: 7
           }
         ],
         // 区域选择列表
@@ -228,15 +266,17 @@
       }
     },
     created() {
+      this.flowList = this.flowList_1
+      this.getHostStatus()
     },
     methods: {
       // 切换备案类型
       changeType (item) {
         this.type = item.value
-        if (this.type !== 1) {
-          this.flowList[0].title = '验证备案信息'
-        } else{
-          this.flowList[0].title = '填写备案信息'
+        if (this.type!= 1) {
+          this.flowList = this.flowList_2
+        } else {
+          this.flowList = this.flowList_1
         }
       },
       // 切换区域
@@ -247,6 +287,7 @@
         this.area = item.zoneId
         this.areaText = item.text
         item.src = this.selectImg
+        this.getHostStatus()
       },
       // 查询该区域用户是否有主机
       getHostStatus() {
@@ -271,7 +312,6 @@
           this.$router.push('BRecords')
           return
         }
-        this.getHostStatus()
         if (this.canRecord) {
           sessionStorage.setItem('zone', this.areaText)
           sessionStorage.setItem('zoneId', this.area)
@@ -525,7 +565,7 @@
           z-index: -1;
         }
       }
-      ul:nth-child(4) {
+/*      ul:nth-child(4) {
         img {
           padding-top: 6px;
         }
@@ -534,7 +574,7 @@
         img {
           padding-top: 8px;
         }
-      }
+      }*/
     }
   }
 
