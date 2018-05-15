@@ -1,7 +1,8 @@
 <template>
   <div>
     <records></records>
-    <step :onStep="2" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc"></step>
+    <o-step :onStep="3" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
+    <step :onStep="2" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
     <div class="body">
       <img src="../../../assets/img/records/records-img5.png"/>
       <p>恭喜您资料提交成功，我们已将您的资料提交管局审核，审核通过后会通过短信提示您，请保持电话畅通。</p>
@@ -12,26 +13,46 @@
 
 <script type="text/ecmascript-6">
   import step from './step.vue'
+  import oStep from "./ostep.vue";
   import records from './../Records'
 
   export default {
     components: {
-      step, records
+      step, records,oStep
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
+        var recordsType = sessionStorage.getItem('recordsType')
+        vm.setData(recordsType)
         window.scroll(0, 525)
       })
     },
     data() {
       return {
         // 备案类型
-        recordsType: '新增备案',
+        recordsType: '',
         // 备案类型描述
-        recordsTypeDesc: '域名未备案，备案主体证件无备案号，需要备案。',
+        recordsTypeDesc: '',
       }
     },
-    methods: {},
+    methods: {
+      setData( recordsType) {
+        switch (recordsType) {
+          case '1':
+            this.recordsType = '新增备案'
+            this.recordsTypeDesc = '域名未备案，备案主体证件无备案号，需要备案。'
+            break
+          case '2':
+            this.recordsType = '新增接入'
+            this.recordsTypeDesc = '域名已在其他平台备案过，需要变更接入商。'
+            break
+          case '3':
+            this.recordsType = '新增网站'
+            this.recordsTypeDesc = '主体已经备案过，需要再给其他网站备案。'
+            break
+        }
+      },
+    },
   }
 </script>
 

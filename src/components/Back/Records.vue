@@ -31,7 +31,11 @@
                   </Select>
                 </div>
               </div>
-              <Table height="800" ref="selection" :columns="recordTypeList" :data="recordProgressList"></Table>
+              <router-link to="entrance">
+                <Button style="margin-bottom:10px;" type="primary">新增备案</Button>
+              </router-link>
+              
+              <Table  ref="selection" :columns="recordTypeList" :data="recordProgressList"></Table>
             </TabPane>
 
             <TabPane :label="tabValue">
@@ -44,7 +48,7 @@
                   </Select>
                 </div>
               </div>
-              <Table height="800" ref="selection" :columns="completeRecordTypeList" :data="recordTypeData"></Table>
+              <Table  ref="selection" :columns="completeRecordTypeList" :data="recordTypeData"></Table>
             </TabPane>
           </Tabs>
         </div>
@@ -217,6 +221,7 @@ export default {
                       click: () => {
                         this.$router.push({ path: "RecordDetails" });
                         sessionStorage.setItem("id", params.row.id);
+                        sessionStorage.setItem('webcompany_Id',params.row.webcompany_Id);
                       }
                     }
                   },
@@ -378,7 +383,7 @@ export default {
 .background {
   background-color: #f5f5f5;
   @diff: 104px;
-  min-height: calc(~"100% - @{diff}");
+  // min-height: calc(~"100% - @{diff}");
   width: 100%;
   .wrapper {
     width: 1200px;

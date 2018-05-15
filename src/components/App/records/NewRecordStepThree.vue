@@ -1,7 +1,8 @@
 <template>
   <div>
     <records></records>
-    <step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc"></step>
+    <o-step :onStep="2" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
+    <step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
     <div class="body-bottom">
       <div class="content">
         <h2>备案区域</h2>
@@ -73,6 +74,8 @@
                     :show-upload-list="false"
                     :with-credentials="true"
                     action="file/upFile.do"
+                    :format="['jpg','jpeg','png']"
+                    :max-size="2048"
                     :on-success="IDCardFront"
                     :before-upload="mark(index)">
                     <div class="item-content-text" v-if="item.IDCardFront==''">
@@ -99,6 +102,8 @@
                     :show-upload-list="false"
                     :with-credentials="true"
                     action="file/upFile.do"
+                    :format="['jpg','jpeg','png']"
+                    :max-size="2048"
                     :on-success="IDCardBack"
                     :before-upload="mark(index)">
                     <div class="item-content-text" v-if="item.IDCardBack==''">
@@ -150,23 +155,21 @@
           <div class="uploadTitle">
             <p>执照扫描件</p>
             <div class="item">
-              <div class="item-content">
-                <div style="width:100%;">
-                  <Upload
-                    multiple
-                    type="drag"
-                    :show-upload-list="false"
-                    :with-credentials="true"
-                    action="file/upFile.do"
-                    :on-success="certifiedDomainNoCertification">
-                    <div class="item-content-text" v-if="uploadForm.certifiedDomainNoCertification==''">
-                      点击选择文件
-                    </div>
-                    <div class="item-content-text" v-else>
-                      <p>{{uploadForm.certifiedDomainNoCertification}}</p>
-                      点击选择文件
-                    </div>
-                    <button>上传</button>
+              <div class="item-content" style="height: 100%">
+                <div style="width:100%;background: #FFF;padding-top: 20px">
+                  <p v-for="(file,index) in uploadForm.certifiedDomainNoCertificationDefaultList" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
+                    {{ file.name }}
+                    <Icon type="ios-trash-outline" style="cursor: pointer;margin-left: 10px" @click.native="handleRemove('1',index)"></Icon>
+                  </p>
+                  <Upload class="my-upload"
+                          type="drag"
+                          :default-file-list="uploadForm.certifiedDomainNoCertificationDefaultList"
+                          :show-upload-list="false"
+                          :with-credentials="true"
+                          action="file/upFile.do"
+                          :before-upload="handleBeforeUpload_1"
+                          :on-success="certifiedDomainNoCertification">
+                    <span style="font-size: 14px">点击选择文件</span>
                   </Upload>
                 </div>
               </div>
@@ -179,23 +182,21 @@
           <div class="uploadTitle">
             <p>其他文件</p>
             <div class="item">
-              <div class="item-content">
-                <div style="width:100%;">
-                  <Upload
-                    multiple
-                    type="drag"
-                    :show-upload-list="false"
-                    :with-credentials="true"
-                    action="file/upFile.do"
-                    :on-success="otherFile">
-                    <div class="item-content-text" v-if="uploadForm.otherFile==''">
-                      点击选择文件
-                    </div>
-                    <div class="item-content-text" v-else>
-                      <p>{{uploadForm.otherFile}}</p>
-                      点击选择文件
-                    </div>
-                    <button>上传</button>
+              <div class="item-content" style="height: 100%">
+                <div style="width:100%;background: #FFF;padding-top: 20px">
+                  <p v-for="(file,index) in uploadForm.otherFile" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
+                    {{ file.name }}
+                    <Icon type="ios-trash-outline" style="cursor: pointer;margin-left: 10px" @click.native="handleRemove('2',index)"></Icon>
+                  </p>
+                  <Upload class="my-upload"
+                          type="drag"
+                          :default-file-list="uploadForm.otherFile"
+                          :show-upload-list="false"
+                          :with-credentials="true"
+                          action="file/upFile.do"
+                          :before-upload="handleBeforeUpload_2"
+                          :on-success="otherFile">
+                    <span style="font-size: 14px">点击选择文件</span>
                   </Upload>
                 </div>
               </div>
@@ -208,22 +209,21 @@
           <div class="uploadTitle">
             <p>其他文件</p>
             <div class="item">
-              <div class="item-content">
-                <div style="width:100%;">
-                  <Upload
-                    type="drag"
-                    :show-upload-list="false"
-                    :with-credentials="true"
-                    action="file/upFile.do"
-                    :on-success="CheckList">
-                    <div class="item-content-text" v-if="uploadForm.CheckList==''">
-                      点击选择文件
-                    </div>
-                    <div class="item-content-text" v-else>
-                      <p>{{uploadForm.CheckList}}</p>
-                      点击选择文件
-                    </div>
-                    <button>上传</button>
+              <div class="item-content" style="height: 100%">
+                <div style="width:100%;background: #FFF;padding-top: 20px">
+                  <p v-for="(file,index) in uploadForm.CheckList" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
+                    {{ file.name }}
+                    <Icon type="ios-trash-outline" style="cursor: pointer;margin-left: 10px" @click.native="handleRemove('3',index)"></Icon>
+                  </p>
+                  <Upload class="my-upload"
+                          type="drag"
+                          :default-file-list="uploadForm.CheckList"
+                          :show-upload-list="false"
+                          :with-credentials="true"
+                          action="file/upFile.do"
+                          :before-upload="handleBeforeUpload_3"
+                          :on-success="CheckList">
+                    <span style="font-size: 14px">点击选择文件</span>
                   </Upload>
                 </div>
               </div>
@@ -246,12 +246,13 @@
 
 <script type="text/ecmascript-6">
   import step from './step.vue'
+  import oStep from "./ostep.vue";
   import axios from 'axios'
   import records from './../Records'
 
   export default {
     components: {
-      step, records
+      step, records,oStep
     },
     beforeRouteEnter(to, from, next) {
       var area = sessionStorage.getItem('zone')
@@ -291,11 +292,11 @@
           // 相关资料
           combine: '',
           // 域名证书
-          certifiedDomainNoCertification: '',
+          certifiedDomainNoCertificationDefaultList: [],
           // 其他文件
-          otherFile: '',
+          otherFile: [],
           // 核验单
-          CheckList: '',
+          CheckList: [],
         }
       }
     },
@@ -336,6 +337,48 @@
         }
         this.uploadForm.IDPhotoList.push(param)
       },
+      // 删除上传文件
+      handleRemove(value, index) {
+        switch (value) {
+          case '1':
+            this.uploadForm.certifiedDomainNoCertificationDefaultList.splice(index, 1)
+            break
+          case '2':
+            this.uploadForm.otherFile.splice(index, 1)
+            break
+          case '3':
+            this.uploadForm.CheckList.splice(index, 1)
+            break
+        }
+
+      },
+      handleBeforeUpload_1() {
+        const check = this.uploadForm.certifiedDomainNoCertificationDefaultList.length < 3;
+        if (!check) {
+          this.$Message.info({
+            content: '上传文件不能超过3个'
+          })
+        }
+        return check
+      },
+      handleBeforeUpload_2() {
+        const check = this.uploadForm.otherFile.length < 4;
+        if (!check) {
+          this.$Message.info({
+            content: '上传文件不能超过4个'
+          })
+        }
+        return check
+      },
+      handleBeforeUpload_3() {
+        const check = this.uploadForm.CheckList.length < 3;
+        if (!check) {
+          this.$Message.info({
+            content: '上传文件不能超过3个'
+          })
+        }
+        return check
+      },
       /* 图片上传成功回调，设置图片。每张图片上传都有一个method。
  暂时没有找到更好的方法解决图片标记问题 */
       IDCardFront(response) {
@@ -355,17 +398,35 @@
       },
       certifiedDomainNoCertification(response) {
         if (response.status == 1) {
-          this.uploadForm.certifiedDomainNoCertification = response.result
+          let array = response.result.split('/')
+          let index = array.length - 1
+          let param = {
+            name: array[index],
+            url: response.result
+          }
+          this.uploadForm.certifiedDomainNoCertificationDefaultList.push(param)
         }
       },
       otherFile(response) {
         if (response.status == 1) {
-          this.uploadForm.otherFile = response.result
+          let array = response.result.split('/')
+          let index = array.length - 1
+          let param = {
+            name: array[index],
+            url: response.result
+          }
+          this.uploadForm.otherFile.push(param)
         }
       },
       CheckList(response) {
         if (response.status == 1) {
-          this.uploadForm.CheckList = response.result
+          let array = response.result.split('/')
+          let index = array.length - 1
+          let param = {
+            name: array[index],
+            url: response.result
+          }
+          this.uploadForm.CheckList.push(param)
         }
       },
       // 提交资料
@@ -394,19 +455,19 @@
           })
           return
         }
-        if (this.uploadForm.certifiedDomainNoCertification === '') {
+        if (this.uploadForm.certifiedDomainNoCertificationDefaultList.length == 0) {
           this.$Message.info({
             content: '请上传域名证书'
           })
           return
         }
-        if (this.uploadForm.CheckList === '') {
+        if (this.uploadForm.otherFile.length == 0) {
           this.$Message.info({
             content: '请上传其他文件'
           })
           return
         }
-        if (this.uploadForm.IDCardFront === '') {
+        if (this.uploadForm.CheckList.length == 0) {
           this.$Message.info({
             content: '请上传核验单'
           })
@@ -444,6 +505,15 @@
         let companyResponsibilityUrlBack = this.uploadForm.IDPhotoList.map(item => {
           return item.IDCardBack
         })
+        let certifiedDomainNoCertificationDefaultList = this.uploadForm.certifiedDomainNoCertificationDefaultList.map(item => {
+          return item.url
+        })
+        let otherFile = this.uploadForm.otherFile.map(item => {
+          return item.url
+        })
+        let CheckList = this.uploadForm.CheckList.map(item => {
+          return item.url
+        })
         let addMainCompany = axios.get('recode/addMainCompany.do', {
           params: {
             mainCompanyArea: this.mainUnitInformation.province + '-' + this.mainUnitInformation.city + '-' + this.mainUnitInformation.district,
@@ -464,9 +534,9 @@
             companyResponsibilityUrlPositive: companyResponsibilityUrlPositive + '',
             companyResponsibilityUrlBack: companyResponsibilityUrlBack + '',
             hostCompanyUrl: this.uploadForm.combine,
-            domainCertificateUrl: this.uploadForm.certifiedDomainNoCertification,
-            otherDataUrl: this.uploadForm.otherFile,
-            webRecordAuthenticityUrl: this.uploadForm.CheckList,
+            domainCertificateUrl: certifiedDomainNoCertificationDefaultList + '',
+            otherDataUrl: otherFile + '',
+            webRecordAuthenticityUrl: CheckList + '',
           }
         })
         let addMainWeb = axios.post('recode/addMainWeb.do', params)
