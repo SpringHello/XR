@@ -61,6 +61,7 @@
     background: #F4F4F4;
     width: 100%;
     padding-top: 110px;
+    padding-bottom:120px; 
     font-family:PingFangSC-Regular;
     text-align: center;
     .wrapper {

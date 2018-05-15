@@ -2,10 +2,10 @@
   <div class="aboutus">
     <!-- banner -->
     <div class="banner">
-      <div class="text">
+      <!-- <div class="text">
         <p>高性能主机明智之选</p>
-        <router-link to="active_2">免费试用</router-link>
-      </div>
+        <router-link to="vps">免费试用</router-link>
+      </div> -->
 
     </div>
     <!-- tabs标签 -->
@@ -399,20 +399,20 @@
 
   // banner样式
   .banner {
-    height: 560px;
+    height: 400px;
     position: relative;
-    background: linear-gradient(90deg, #fff 20%, #9ce3f3 100%);
+    background: url(../../assets/img/aboutus/bg-a.jpg) no-repeat top right;
     overflow: hidden;
-    &::before {
-      content: "";
-      width: 866px;
-      height: 560px;
-      background: url(../../assets/img/aboutus/banner-host.png) no-repeat top right;
-      background-size: 90%;
-      position: absolute;
-      top: 0;
-      left: 50%;
-    }
+    // &::before {
+    //   content: "";
+    //   width: 866px;
+    //   height: 560px;
+    //   background: url(../../assets/img/aboutus/banner-host.png) no-repeat top right;
+    //   background-size: 90%;
+    //   position: absolute;
+    //   top: 0;
+    //   left: 50%;
+    // }
     .text {
       width: 1200px;
       margin: 0 auto;
