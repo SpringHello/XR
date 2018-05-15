@@ -74,54 +74,54 @@ function quick(arr, start = 0, end = arr.length - 1) {
  quick(arr)
  console.log(arr)*/
 
-function tree(arr) {
-  class node {
+function BST() {
+  class Node {
     constructor(v) {
       this.value = v
-      this.left = null
-      this.right = null
+      this.left = undefined
+      this.right = undefined
     }
-
-    say() {
-      console.log(this.value)
-    }
-
   }
+  this.root = undefined
 
-  let root = new node(arr[0])
-  for (let i = 1; i < arr.length; i++) {
-    let n = new node(arr[i])
-    let parent = root
-    while (true) {
-      if (parent.value < arr[i]) {
-        if (parent.right == null) {
-          parent.right = n
-          break
-        } else {
-          parent = parent.right
-        }
-      } else if (parent.value > arr[i]) {
-        if (parent.left == null) {
-          parent.left = n
-          break
-        } else {
-          parent = parent.left
-        }
+  this.insert = function (e) {
+    function _insert(root, e) {
+      if (root === undefined) {
+        root = new Node(e)
+      } else if (root.value > e) {
+        _insert(root.left, e)
+      } else {
+        _insert(root.right, e)
       }
     }
+    _insert(this.root, e)
   }
-  return root
 }
 
+var bst = new BST();
+[5, 1, 2, 3, 12, 4, 7].forEach(e => {
+  bst.insert(e)
+})
 
-class Avl {
-  constructor() {
-    this.root = null
-  }
-
-  insert(val) {
-
-  }
-
-}
+console.log(JSON.stringify(bst))
 //console.log(JSON.stringify(tree([5, 1, 2, 3, 12, 4, 7])))
+
+/*function Avl() {
+ class Node {
+ constructor() {
+ this.val = undefined
+ this.left = null
+ this.right = null
+ this.height = 0
+ }
+ }
+
+ this.root = new Node()
+ this.LL = function () {
+
+ }
+ this.push = function (e) {
+
+ }
+ }*/
+
