@@ -80,21 +80,53 @@ function BST() {
       this.value = v
       this.left = undefined
       this.right = undefined
+      this.parent = undefined
     }
   }
   this.root = undefined
 
   this.insert = function (e) {
-    function _insert(root, e) {
-      if (root === undefined) {
-        root = new Node(e)
-      } else if (root.value > e) {
-        _insert(root.left, e)
+    let parent = this.root
+    while (true) {
+      if (parent == undefined) {
+        this.root = new Node(e)
+        break
+      }
+      if (parent.value > e) {
+        if (parent.left) {
+          parent = parent.left
+        } else {
+          parent.left = new Node(e)
+          parent.left.parent = parent
+          break
+        }
       } else {
-        _insert(root.right, e)
+        if (parent.right) {
+          parent = parent.right
+        } else {
+          parent.right = new Node(e)
+          parent.right.parent = parent
+          break
+        }
       }
     }
-    _insert(this.root, e)
+  }
+
+  this.delete = function (e) {
+    if (this.root == undefined) {
+      return
+    }
+    let parent = undefined
+    let current = this.root
+    while (true) {
+      if (current.value == e) {
+
+      }
+    }
+    // 查找current旁边的节点
+    function searchNext(current){
+
+    }
   }
 }
 
@@ -103,7 +135,7 @@ var bst = new BST();
   bst.insert(e)
 })
 
-console.log(JSON.stringify(bst))
+console.log(bst)
 //console.log(JSON.stringify(tree([5, 1, 2, 3, 12, 4, 7])))
 
 /*function Avl() {
