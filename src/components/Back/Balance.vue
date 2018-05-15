@@ -489,6 +489,29 @@
           }
         })
       },
+      changeVPC(){
+        // 获取可以挂载的所有弹性IP
+        this.$http.get('network/listPublicIp.do', {
+          params: {
+            vpcId: this.creatbalancemodal.formInline.vpc,
+            useType: '0,2',
+            status: '1'
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.creatbalancemodal.formInline.PublicIpList = response.data.result
+          }
+        })
+        /*列出vpc下所有公网子网*/
+        this.$http.post('network/listNetwork.do', {
+          vpcId: this.creatbalancemodal.formInline.vpc,
+          publicLoadbalance: '1'
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.creatbalancemodal.formInline.subnetList = response.data.result
+          }
+        })
+      },
       /* 列出公网ip */
       listPublicIp () {
         // 获取可以挂载的所有弹性IP

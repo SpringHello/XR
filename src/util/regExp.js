@@ -5,7 +5,7 @@ const passwordLengthRegExp = /^\w{8,}$/
 // 登录密码 必须且只能包含数字大小写字母
 const passwordRegExp = /(?:\d[a-zA-Z])|(?:[a-zA-Z]\d)/
 // 注册密码 长度不小于8位，必须包含至少一个大写字母一个小写字母和一个数字
-const registerpPasswordRegExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{8,}$/
+const registerpPasswordRegExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\_()\-+=^&*|{};:\',\\/<>?@.]{8,}$/
 // 重置主机密码
 const hostPassword = /(?!^([\da-z]+|[\dA-Z]+|[a-zA-Z]+)$)^[\w]{6,}$/
 // 身份证号码验证
