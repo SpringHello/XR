@@ -53,7 +53,7 @@
                        style="width: 500px" :readonly="canUpdate"></Input>
               </FormItem>
               <FormItem v-if="canUpdate === false">
-                <Button type="primary" @click="submitNewAddress('receiveForm')" style="margin-left: 420px">确认提交</Button>
+                <Button type="primary" @click="submitNewAddress" style="margin-left: 420px">确认提交</Button>
               </FormItem>
             </Form>
           </div>
@@ -79,11 +79,13 @@
                   type="drag"
                   :show-upload-list="false"
                   :with-credentials="true"
-                  action="file/upFile.do">
-                  <div class="item-content-text">
+                  action="file/upFile.do"
+                  :on-success="photoImg">
+                  <div class="item-content-text" v-if="upload.photo===''">
                     点击选择文件
                   </div>
-                  <Button type="primary">上传</Button>
+                  <img v-else :src="upload.photo" style="height: 165px;width:270px;">
+                  <Button type="primary" v-if="upload.photo===''">上传</Button>
                 </Upload>
               </div>
             </div>
@@ -118,6 +120,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from 'axios'
   import step from './step.vue'
   import records from './../Records'
 
@@ -131,6 +134,15 @@
       })
     },
     data() {
+      //校验手机号码
+      const validPhoneNumber = (rule, value, callback) => {
+        let reg = /^1[3|5|8|9|6|7]\d{9}$/;
+        if (!reg.test(this.receiveForm.phone)) {
+          return callback(new Error("请输入正确的手机号码"));
+        } else {
+          callback();
+        }
+      };
       return {
         // 备案类型
         recordsType: '新增备案',
@@ -142,18 +154,32 @@
         nextStep: false,
         // 收件信息表单
         receiveForm: {
-          address: '这是地址',
-          person: '这是姓名',
-          phone: '这是联系方式'
+          address: '',
+          person: '',
+          phone: ''
         },
         // 判断收件人信息是否可以修改
         canUpdate: true,
         // 收件地址校检
-        receiveFormRuleValidate: {},
+        receiveFormRuleValidate: {
+          address: [
+            {required: true, message: "请输入邮寄地址", trigger: "blur"}
+          ],
+          person: [
+            {required: true, message: "请输入收件人姓名", trigger: "blur"}
+          ],
+          phone: [
+            {required: true, message: "请输入收件人电话", trigger: "blur"},
+            {validator: validPhoneNumber, trigger: "blur"}
+          ],
+        },
         // 模态框
         showModal: {
           // 物流
           logistics: false,
+        },
+        upload: {
+          photo: ''
         }
       }
     },
@@ -163,15 +189,48 @@
         duration: 5,
         closable: true
       })
+      this.getPersonInfo()
     },
     methods: {
+      // 获取当前备案网站负责人信息
+      getPersonInfo() {
+        let id = sessionStorage.getItem('id')
+        let url = 'recode/listMainWeb.do'
+        axios.get(url, {
+          params: {
+            id: id
+          }
+        }).then(response => {
+          if (response.data.status === 1) {
+            this.receiveForm.address = response.data.result[0].maincompanycommunicatlocation
+            this.receiveForm.person = response.data.result[0].legalname
+            this.receiveForm.phone = response.data.result[0].companyphone
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
       // 使用新地址
       updateReceiveForm() {
         this.canUpdate = false
       },
       // 提交修改的新地址
-      submitNewAddress(name) {
-        this.canUpdate = true
+      submitNewAddress() {
+        this.$refs.receiveForm.validate((val) => {
+          if (val) {
+            alert('修改成功')
+            this.canUpdate = true
+          } else {
+            return
+          }
+        })
+      },
+      photoImg(res) {
+        if (res.status == 1) {
+          this.upload.photo = res.result
+        }
       }
     },
   }
@@ -355,6 +414,7 @@
           border-radius: 4px;
           border: 1px solid #d8d8d8;
           margin-top: 20px;
+          height: 230px;
           .item-content {
             display: flex;
             padding: 20px;

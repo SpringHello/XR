@@ -156,150 +156,151 @@
         </div>
       </div>
       <div class="content-footer">
-        <button @click="nextStep('mainUnitInformation')">下一步，填写网站信息</button>
+        <button @click="$router.go(-1)">上一步，选择备案类型</button>
+        <button @click="nextStep('mainUnitInformation')" style="margin-left: 20px">下一步，填写网站信息</button>
       </div>
     </div>
     <Modal v-model="modalrule" width="710" :scrollable="true">
       <div style="text-align:center" class="rules-modal">
-          <h2 class="head-title">备案规则详解</h2>
-          <div class="content">
-              <div v-show="ruledetail.all">
-                <p v-for="(item,index) in ruledetail.all" :key="index"><span>{{index+1}}、</span>{{item}}</p>
-              </div>
-              <div v-show="!ruledetail.all">
-                <h3>单位用户：</h3>
-                <table border="1" cellspacing="0">
-                  <thead>
-                    <tr>
-                      <th>要求</th>
-                      <th>详情</th>
-                    </tr>
-                  </thead>
-                  <tr v-show="ruledetail.umaterial">
-                    <td class="td-head">资料准备要求</td>
-                    <td>
-                      <p v-for="(item,index) in ruledetail.umaterial" :key="index"><span>{{index+1}}、</span>{{item}}</p>
-                    </td>
-                  </tr>
-                  <tr v-show="ruledetail.uinformation">
-                    <td class="td-head">信息填写要求</td>
-                    <td>
-                      <p v-for="(item,index) in ruledetail.uinformation" :key="index"><span>{{index+1}}、</span>{{item}}</p>
-                    </td>
-                  </tr>
-                  <tr v-show="ruledetail.ucareful">
-                    <td class="td-head">接入客户需注意</td>
-                    <td>
-                      <p v-for="(item,index) in ruledetail.ucareful" :key="index"><span>{{index+1}}、</span>{{item}}</p>
-                    </td>
-                  </tr>
-                  <tr v-show="ruledetail.unetcontent">
-                    <td class="td-head">网站内容要求</td>
-                    <td>
-                      <p v-for="(item,index) in ruledetail.unetcontent" :key="index"><span>{{index+1}}、</span>{{item}}</p>
-                    </td>
-                  </tr>
-                  <tr v-show="ruledetail.uapprove">
-                    <td class="td-head">前置审批</td>
-                    <td>
-                      <p v-for="(item,index) in ruledetail.uapprove" :key="index"><span>{{index+1}}、</span>{{item}}</p>
-                    </td>
-                  </tr>
-                  <tr v-show="ruledetail.uphoto">
-                    <td class="td-head">拍照、邮寄</td>
-                    <td>
-                      <p v-for="(item,index) in ruledetail.uphoto" :key="index"><span>{{index+1}}、</span>{{item}}</p>
-                    </td>
-                  </tr>
-                  <tr v-show="ruledetail.urecord">
-                    <td class="td-head">变更备案</td>
-                    <td>
-                      <p v-for="(item,index) in ruledetail.urecord" :key="index"><span>{{index+1}}、</span>{{item}}</p>
-                    </td>
-                  </tr>
-                  <tr v-show="ruledetail.udomain">
-                    <td class="td-head">备案的域名</td>
-                    <td>
-                      <p v-for="(item,index) in ruledetail.udomain" :key="index"><span>{{index+1}}、</span>{{item}}</p>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              <div v-show="!ruledetail.all">
-                <h3>个人用户：</h3>
-                <table border="1" cellspacing="0">
-                  <thead>
-                    <tr>
-                      <th>要求</th>
-                      <th>详情</th>
-                    </tr>
-                  </thead>
-                  <tr v-show="ruledetail.pmaterial">
-                    <td class="td-head">资料准备要求</td>
-                    <td>
-                      <p v-for="(item,index) in ruledetail.pmaterial" :key="index"><span>{{index+1}}、</span>{{item}}</p>
-                    </td>
-                  </tr>
-                  <tr v-show="ruledetail.pnetname">
-                    <td class="td-head">网站名称要求</td>
-                    <td>
-                      <p v-for="(item,index) in ruledetail.pnetname" :key="index"><span>{{index+1}}、</span>{{item}}</p>
-                    </td>
-                  </tr>
-                  <tr v-show="ruledetail.pinformation">
-                    <td class="td-head">信息填写要求</td>
-                    <td>
-                      <p v-for="(item,index) in ruledetail.pinformation" :key="index"><span>{{index+1}}、</span>{{item}}</p>
-                    </td>
-                  </tr>
-                  <tr v-show="ruledetail.pcareful">
-                    <td class="td-head">接入客户需注意</td>
-                    <td>
-                      <p v-for="(item,index) in ruledetail.pcareful" :key="index"><span>{{index+1}}、</span>{{item}}</p>
-                    </td>
-                  </tr>
-                  <tr v-show="ruledetail.pnetcontent">
-                    <td class="td-head">网站内容要求</td>
-                    <td>
-                      <p v-for="(item,index) in ruledetail.pnetcontent" :key="index"><span>{{index+1}}、</span>{{item}}</p>
-                    </td>
-                  </tr>
-                  <tr v-show="ruledetail.pphoto">
-                    <td class="td-head">拍照、邮寄</td>
-                    <td>
-                      <p v-for="(item,index) in ruledetail.pphoto" :key="index"><span>{{index+1}}、</span>{{item}}</p>
-                    </td>
-                  </tr>
-                  <tr v-show="ruledetail.precord">
-                    <td class="td-head">变更备案</td>
-                    <td>
-                      <p v-for="(item,index) in ruledetail.precord" :key="index"><span>{{index+1}}、</span>{{item}}</p>
-                    </td>
-                  </tr>
-                  <tr v-show="ruledetail.pdomain">
-                    <td class="td-head">备案的域名</td>
-                    <td>
-                      <p v-for="(item,index) in ruledetail.pdomain" :key="index"><span>{{index+1}}、</span>{{item}}</p>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              <div v-show="ruledetail.credentials">
-                <h3>证件资质： </h3>
-                <p v-for="(item,index) in ruledetail.credentials" :key="index">{{item}}</p>
-              </div>
-              <div>
-                <h3>纸质材料： </h3>
-                <p>核验单（原件一式三份）</p>
-              </div>
-              <div v-show="ruledetail.other">
-                <h3>其他特殊要求</h3>  
-                <p v-for="(item,index) in ruledetail.other" :key="index">{{item}}</p>
-              </div>
+        <h2 class="head-title">备案规则详解</h2>
+        <div class="content">
+          <div v-show="ruledetail.all">
+            <p v-for="(item,index) in ruledetail.all" :key="index"><span>{{index+1}}、</span>{{item}}</p>
           </div>
+          <div v-show="!ruledetail.all">
+            <h3>单位用户：</h3>
+            <table border="1" cellspacing="0">
+              <thead>
+              <tr>
+                <th>要求</th>
+                <th>详情</th>
+              </tr>
+              </thead>
+              <tr v-show="ruledetail.umaterial">
+                <td class="td-head">资料准备要求</td>
+                <td>
+                  <p v-for="(item,index) in ruledetail.umaterial" :key="index"><span>{{index+1}}、</span>{{item}}</p>
+                </td>
+              </tr>
+              <tr v-show="ruledetail.uinformation">
+                <td class="td-head">信息填写要求</td>
+                <td>
+                  <p v-for="(item,index) in ruledetail.uinformation" :key="index"><span>{{index+1}}、</span>{{item}}</p>
+                </td>
+              </tr>
+              <tr v-show="ruledetail.ucareful">
+                <td class="td-head">接入客户需注意</td>
+                <td>
+                  <p v-for="(item,index) in ruledetail.ucareful" :key="index"><span>{{index+1}}、</span>{{item}}</p>
+                </td>
+              </tr>
+              <tr v-show="ruledetail.unetcontent">
+                <td class="td-head">网站内容要求</td>
+                <td>
+                  <p v-for="(item,index) in ruledetail.unetcontent" :key="index"><span>{{index+1}}、</span>{{item}}</p>
+                </td>
+              </tr>
+              <tr v-show="ruledetail.uapprove">
+                <td class="td-head">前置审批</td>
+                <td>
+                  <p v-for="(item,index) in ruledetail.uapprove" :key="index"><span>{{index+1}}、</span>{{item}}</p>
+                </td>
+              </tr>
+              <tr v-show="ruledetail.uphoto">
+                <td class="td-head">拍照、邮寄</td>
+                <td>
+                  <p v-for="(item,index) in ruledetail.uphoto" :key="index"><span>{{index+1}}、</span>{{item}}</p>
+                </td>
+              </tr>
+              <tr v-show="ruledetail.urecord">
+                <td class="td-head">变更备案</td>
+                <td>
+                  <p v-for="(item,index) in ruledetail.urecord" :key="index"><span>{{index+1}}、</span>{{item}}</p>
+                </td>
+              </tr>
+              <tr v-show="ruledetail.udomain">
+                <td class="td-head">备案的域名</td>
+                <td>
+                  <p v-for="(item,index) in ruledetail.udomain" :key="index"><span>{{index+1}}、</span>{{item}}</p>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div v-show="!ruledetail.all">
+            <h3>个人用户：</h3>
+            <table border="1" cellspacing="0">
+              <thead>
+              <tr>
+                <th>要求</th>
+                <th>详情</th>
+              </tr>
+              </thead>
+              <tr v-show="ruledetail.pmaterial">
+                <td class="td-head">资料准备要求</td>
+                <td>
+                  <p v-for="(item,index) in ruledetail.pmaterial" :key="index"><span>{{index+1}}、</span>{{item}}</p>
+                </td>
+              </tr>
+              <tr v-show="ruledetail.pnetname">
+                <td class="td-head">网站名称要求</td>
+                <td>
+                  <p v-for="(item,index) in ruledetail.pnetname" :key="index"><span>{{index+1}}、</span>{{item}}</p>
+                </td>
+              </tr>
+              <tr v-show="ruledetail.pinformation">
+                <td class="td-head">信息填写要求</td>
+                <td>
+                  <p v-for="(item,index) in ruledetail.pinformation" :key="index"><span>{{index+1}}、</span>{{item}}</p>
+                </td>
+              </tr>
+              <tr v-show="ruledetail.pcareful">
+                <td class="td-head">接入客户需注意</td>
+                <td>
+                  <p v-for="(item,index) in ruledetail.pcareful" :key="index"><span>{{index+1}}、</span>{{item}}</p>
+                </td>
+              </tr>
+              <tr v-show="ruledetail.pnetcontent">
+                <td class="td-head">网站内容要求</td>
+                <td>
+                  <p v-for="(item,index) in ruledetail.pnetcontent" :key="index"><span>{{index+1}}、</span>{{item}}</p>
+                </td>
+              </tr>
+              <tr v-show="ruledetail.pphoto">
+                <td class="td-head">拍照、邮寄</td>
+                <td>
+                  <p v-for="(item,index) in ruledetail.pphoto" :key="index"><span>{{index+1}}、</span>{{item}}</p>
+                </td>
+              </tr>
+              <tr v-show="ruledetail.precord">
+                <td class="td-head">变更备案</td>
+                <td>
+                  <p v-for="(item,index) in ruledetail.precord" :key="index"><span>{{index+1}}、</span>{{item}}</p>
+                </td>
+              </tr>
+              <tr v-show="ruledetail.pdomain">
+                <td class="td-head">备案的域名</td>
+                <td>
+                  <p v-for="(item,index) in ruledetail.pdomain" :key="index"><span>{{index+1}}、</span>{{item}}</p>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div v-show="ruledetail.credentials">
+            <h3>证件资质： </h3>
+            <p v-for="(item,index) in ruledetail.credentials" :key="index">{{item}}</p>
+          </div>
+          <div>
+            <h3>纸质材料： </h3>
+            <p>核验单（原件一式三份）</p>
+          </div>
+          <div v-show="ruledetail.other">
+            <h3>其他特殊要求</h3>
+            <p v-for="(item,index) in ruledetail.other" :key="index">{{item}}</p>
+          </div>
+        </div>
       </div>
       <div slot="footer" style="text-align:center">
-          <Button type="primary" size="large" style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;" @click="modalrule=false">知道了</Button>
+        <Button type="primary" size="large" style="border-radius:20px;background:#F37B72;border:none;width:154px;height:38px;" @click="modalrule=false">知道了</Button>
       </div>
     </Modal>
   </div>
@@ -359,7 +360,7 @@
       const validLegalPersonName = (rule, value, callback) => {
         let regNumber = /^[0-9]+$/;
         if (regNumber.test(this.mainUnitInformation.legalPersonName)) {
-          return callback(new Error("姓名不能输入汉字"));
+          return callback(new Error("姓名不能输入数字"));
         } else {
           callback();
         }
@@ -613,6 +614,7 @@
           case '1':
             this.recordsType = '新增备案'
             this.recordsTypeDesc = '域名未备案，备案主体证件无备案号，需要备案。'
+            break
           case '2':
             this.recordsType = '新增接入'
             this.recordsTypeDesc = '域名已在其他平台备案过，需要变更接入商。'
@@ -624,10 +626,10 @@
         }
       },
       // 查看管局规则
-      lookrule(){
+      lookrule() {
         this.modalrule = true
         this.administationRuleList.map(item => {
-          if (this.mainUnitInformation.province == item.name){
+          if (this.mainUnitInformation.province == item.name) {
             this.ruledetail = item
           }
         })
@@ -711,43 +713,44 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-.rules-modal{
-    padding:40px;
+  .rules-modal {
+    padding: 40px;
     padding-bottom: 0px;
     text-align: left;
-    .head-title{
-      font-size:24px;
+    .head-title {
+      font-size: 24px;
       text-align: left;
       margin-bottom: 20px;
     }
-    .content{
+    .content {
       width: 580px;
-      max-height: 700px;
+      max-height: 560px;
       overflow-y: auto;
       text-align: left;
-      font-size:14px;
+      font-size: 14px;
       table {
-        .td-head{
+        .td-head {
           min-width: 60px;
         }
-      
-        thead{
+
+        thead {
           text-align: center;
-          th{
-            padding:2px; 
+          th {
+            padding: 2px;
           }
         }
       }
-      h3{
+      h3 {
         line-height: 28px;
         margin: 4px 2px 0;
       }
-      p{
+      p {
         line-height: 28px;
         color: #999999;
       }
     }
   }
+
   // 定义center公用样式
   .center() {
     width: 1200px;
