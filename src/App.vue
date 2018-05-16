@@ -249,6 +249,10 @@
             title: '文档',
             path: '/ruicloud/document'
           },
+           {
+            title: '活动中心',
+            path: '/ruicloud/ActiveCenter'
+          },
           {
             title: '关于我们',
             path: '/ruicloud/about'
@@ -473,7 +477,7 @@
               line-height: 70px;
               display: inline-block;
               font-size: 14px;
-              &:nth-child(4) {
+              &:nth-child(5) {
                 span {
                   border-right: 1px solid #939393;
                   display: inline-block;

@@ -19,6 +19,7 @@ const Document = () => import('@/components/App/Document')
 //const diskPrice = () => import('@/components/App/Price/Disk')
 //const elasticIPPrice = () => import('@/components/App/Price/ElasticIP')
 const Aboutus = () => import('@/components/App/Aboutus')
+const ActiveCenter = () => import('@/components/App/ActiveCenter')
 const Dynamic = () => import('@/components/App/Dynamic')
 // const ProductBulletin = () => import('@/components/App/ProductBulletin')
 
@@ -178,6 +179,7 @@ var router = new Router({
         {path: 'home', name: 'home', component: Home},
         {path: 'ecs', name: 'ecs', component: Ecs},
         {path: 'about', name: 'about', component: Aboutus},
+        {path: 'ActiveCenter', name: 'ActiveCenter', component: ActiveCenter},
         {path: 'document', name: 'document', component: Document},
         {path: 'dynamic', name: 'dynamic', component: Dynamic},
       //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
