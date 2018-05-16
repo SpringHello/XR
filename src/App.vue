@@ -237,6 +237,10 @@
       return {
         titleItem: [
           {
+            title: '活动中心',
+            path: '/ruicloud/ActiveCenter'
+          },
+          {
             title: '首页',
             path: '/ruicloud/home'
           },
@@ -292,10 +296,6 @@
             title: '文档',
             path: '/ruicloud/document'
           },
-           {
-            title: '活动中心',
-            path: '/ruicloud/ActiveCenter'
-          },
           {
             title: '关于我们',
             path: '/ruicloud/about'
@@ -314,7 +314,8 @@
         support: [
           {img: 'icon-duoqudaofuwuyuzhichi', title: '7*24', subTitle: '多渠道服务与支持'},
           {img: 'icon-fankuiyutousujianyiA', title: '意见', subTitle: '反馈与投诉建议'},
-          {img: 'icon-zhuanxiangfuwu', title: '1V1', subTitle: '专项服务'}
+          {img: 'icon-zhuanxiangfuwu', title: '1V1', subTitle: '专项服务'},
+          // {img: 'icon-tianwuliyoutuihuo', title: '退款', subTitle: '7天无理由退款'}
         ],
         description: [
           {
@@ -540,7 +541,7 @@
               .menu-dropdown {
                 .menu-dropdown-rel {
                   a {
-                    color: #939393;
+                    color: #fff;
                     transition: all .3s;
                     cursor: pointer;
                     display: block;
@@ -549,7 +550,7 @@
                       padding: 0px 30px;
                     }
                     &:hover {
-                      color: #ffffff;
+                      color: #2d8cf0;
                     }
                   }
                 }
