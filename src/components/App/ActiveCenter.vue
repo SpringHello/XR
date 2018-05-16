@@ -5,7 +5,7 @@
         <div class="content">
           <div class="left">
             <img src="../../assets/img/activecenter/text-banner.png" alt="">
-            <router-link to="dynamic"><img src="../../assets/img/activecenter/text-button.png" alt=""></router-link>
+            <router-link to="dynamic">立即续费</router-link>
           </div>
           <div class="right">
             <img src="../../assets/img/activecenter/banner.png" alt="">
@@ -27,7 +27,8 @@
             </div>
             <div class="box-right"> 
               <div class="title">
-                <h3 v-html="item.title">
+                <h3>
+                  {{item.title}}
                 </h3>
                 <img :src="item.iconImg" alt="">
               </div>
@@ -39,7 +40,7 @@
         </div>
       </div>
     </div>
-    <div class="bottom-coming box-g">
+    <!-- <div class="bottom-coming box-g">
        <div class="wrap">
         <div class="content">
           <div class="head">
@@ -64,7 +65,7 @@
          </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -75,7 +76,7 @@ export default {
       activedata: [
         {
           img: require('../../assets/img/activecenter/icon-down.png'),
-          title: '<span style="color:#D0021B">全民普惠 三折减单</span>',
+          title: '全民普惠 三折减单',
           desc: '百款产品满额减免 最高可减<span style="color:#D0021B">7000</span>元',
           time: '活动时间 2018.5.7-2018.7.6',
           url: ''
@@ -115,7 +116,7 @@ export default {
           title: '武汉一区盛大开服',
           desc: '布局首都，新购特惠，限时抢购',
           time: '活动长期有效',
-          url: 'active_1'
+          url: ''
         }
       ],
       comingdata: [
@@ -177,7 +178,15 @@ export default {
     .left {
       a {
         margin-top: 30px;
+        padding: 8px;
+        width: 112px;
         display: block;
+        text-align: center;
+        border-radius: 50px;
+        background: #f16766;
+        color: #fff;
+        font-size: 18px;
+        box-shadow: 0px 2px 5px 0px rgba(241, 103, 102, 1);
       }
     }
   }
@@ -211,6 +220,7 @@ export default {
         border: solid #e6e6e6 1px;
         display: flex;
         cursor: pointer;
+        background: #fff;
         .box-left {
           text-align: center;
         }
@@ -256,6 +266,9 @@ export default {
     }
     &:hover {
       box-shadow: 0px 0px 13px 0px rgba(255, 170, 150, 1);
+    }
+    &:hover .box-right h3 {
+      color: #d0021b;
     }
   }
 }
