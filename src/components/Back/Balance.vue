@@ -515,7 +515,7 @@
         } else {
           this.$http.post('network/listNetwork.do', {
             vpcId: this.creatbalancemodal.formInline.vpc,
-            publicLoadbalance: '1'
+            innerLoadbalance: '1'
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.creatbalancemodal.formInline.subnetList = response.data.result
@@ -574,8 +574,9 @@
       },
       /* 创建负载均衡切换公网和私网时给子网列表赋值 */
       changeNet () {
-        this.creatbalancemodal.formInline.VPCList = []
         this.creatbalancemodal.formInline.vpc = ''
+        this.creatbalancemodal.formInline.PublicIpList = []
+        this.creatbalancemodal.formInline.publicIp = ''
         this.creatbalancemodal.formInline.subnetList = []
         this.creatbalancemodal.formInline.subnet = ''
         switch (this.creatbalancemodal.formInline.radio) {
