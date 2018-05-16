@@ -21,19 +21,38 @@
       step, records,oStep
     },
     beforeRouteEnter(to, from, next) {
+      let recordsType = sessionStorage.getItem('recordsType')
       next(vm => {
         window.scroll(0, 525)
+        vm.setData(recordsType)
       })
     },
     data() {
       return {
         // 备案类型
-        recordsType: '新增备案',
+        recordsType: '',
         // 备案类型描述
-        recordsTypeDesc: '域名未备案，备案主体证件无备案号，需要备案。',
+        recordsTypeDesc: '',
       }
     },
-    methods: {},
+    methods: {
+      setData(recordsType){
+        switch (recordsType) {
+          case '新增备案':
+            this.recordsTypeDesc = '域名未备案，备案主体证件无备案号，需要备案。'
+            break
+          case '新增接入':
+            this.recordsTypeDesc = '域名已在其他平台备案过，需要变更接入商。'
+            break
+          case '新增网站':
+            this.recordsTypeDesc = '主体已经备案过，需要再给其他网站备案。'
+            break
+          case '变更备案':
+            this.recordsTypeDesc = '已有备案号，需要修改之前备案的中内容。'
+            break
+        }
+      }
+    },
   }
 </script>
 
