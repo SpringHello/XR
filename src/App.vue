@@ -292,6 +292,10 @@
             title: '文档',
             path: '/ruicloud/document'
           },
+           {
+            title: '活动中心',
+            path: '/ruicloud/ActiveCenter'
+          },
           {
             title: '关于我们',
             path: '/ruicloud/about'
