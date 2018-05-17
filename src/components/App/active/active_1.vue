@@ -180,6 +180,7 @@
   }
   export default {
     data() {
+      window.scrollTo( 0, 0 );
       return {
         img: false,
         loginModal: false,
