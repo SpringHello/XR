@@ -278,6 +278,7 @@
         } else {
           this.flowList = this.flowList_1
         }
+        window.scroll(0, 525)
       },
       // 切换区域
       changeArea(item) {

@@ -34,7 +34,7 @@
               <router-link to="entrance">
                 <Button style="margin-bottom:10px;" type="primary">新增备案</Button>
               </router-link>
-              
+
               <Table  ref="selection" :columns="recordTypeList" :data="recordProgressList"></Table>
             </TabPane>
 
