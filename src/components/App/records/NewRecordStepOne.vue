@@ -1,7 +1,8 @@
 <template>
   <div>
     <records></records>
-    <step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc"></step>
+    <o-step :onStep="2" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
+    <step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
     <div class="body-bottom">
       <div class="content">
         <h2>备案区域</h2>
@@ -308,13 +309,14 @@
 
 <script type="text/ecmascript-6">
   import step from "./step.vue";
+  import oStep from "./ostep.vue";
   import area from "@/options/area";
   import administationRule from "@/options/rule_administation";
   import records from './../Records'
 
   export default {
     components: {
-      step, records
+      step, records,oStep
     },
     beforeRouteEnter(to, from, next) {
       var area = sessionStorage.getItem("zone");

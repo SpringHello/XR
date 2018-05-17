@@ -25,40 +25,46 @@
         // 备案流程列表
         flowList: [
           {
+            src: require('../../../assets/img/records/records-icon22.png'),
+            onSrc: require('../../../assets/img/records/records-icon21.png'),
+            title: '验证备案信息',
+            step: 1
+          },
+          {
             src: require('../../../assets/img/records/records-icon23.png'),
             onSrc: require('../../../assets/img/records/records-icon10.png'),
             title: '填写备案信息',
-            step: 1
+            step: 2
           },
           {
             src: require('../../../assets/img/records/records-icon11.png'),
             onSrc: require('../../../assets/img/records/records-icon16.png'),
             title: '等待初审',
-            step: 2
+            step: 3
           },
           {
             src: require('../../../assets/img/records/records-icon12.png'),
             onSrc: require('../../../assets/img/records/records-icon17.png'),
             title: '上传资料/办理拍照',
-            step: 3
+            step: 4
           },
           {
             src: require('../../../assets/img/records/records-icon13.png'),
             onSrc: require('../../../assets/img/records/records-icon18.png'),
             title: '提交管局审批',
-            step: 4
+            step: 5
           },
           {
             src: require('../../../assets/img/records/records-icon14.png'),
             onSrc: require('../../../assets/img/records/records-icon14.png'),
             title: '备案短信核验',
-            step: 5
+            step: 6
           },
           {
             src: require('../../../assets/img/records/records-icon15.png'),
             onSrc: require('../../../assets/img/records/records-icon15.png'),
             title: '备案成功',
-            step: 6
+            step: 7
           }
         ],
       }

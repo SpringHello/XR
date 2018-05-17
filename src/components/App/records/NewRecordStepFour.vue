@@ -1,7 +1,8 @@
 <template>
   <div>
     <records></records>
-    <step :onStep="3" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc"></step>
+    <o-step :onStep="4" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
+    <step :onStep="3" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
     <div class="body">
       <div class="content">
         <h2>请选择核验方式</h2>
@@ -122,11 +123,12 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import step from './step.vue'
+  import oStep from "./ostep.vue";
   import records from './../Records'
 
   export default {
     components: {
-      step, records
+      step, records,oStep
     },
     beforeRouteEnter(to, from, next) {
       next(vm => {
