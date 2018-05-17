@@ -11,7 +11,7 @@
             <li v-for="(item,index) in titleItem" :key="index" @mouseenter="ME(index,$event)">
               <div class="menu-dropdown">
                 <div class="menu-dropdown-rel">
-                  <router-link :to="item.path"><span>{{item.title}}</span></router-link>
+                  <router-link :to="item.path"><span>{{item.title}}<sup class="circle-dot" v-if="item.title=='活动中心'"></sup></span></router-link>
                 </div>
                 <div class="menu-dropdown-list">
                   <div class="content-dropdown">
@@ -842,7 +842,13 @@
         background: #2A99F2;
         color: #fff;
       }
-
     }
+  }
+  .circle-dot {
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background-color: rgb(237, 63, 20, 0.5);
   }
 </style>
