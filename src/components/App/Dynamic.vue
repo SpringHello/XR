@@ -57,6 +57,7 @@
   import axios from '@/util/axiosInterceptor'
   export  default {
     data () {
+      window.scrollTo( 0, 0 );
       return {
         openNames: ['ann'],
         selectAnnouncement: 6,

@@ -25,7 +25,7 @@
             <div class="box-left">
               <img :src="item.img"/>
             </div>
-            <div class="box-right"> 
+            <div class="box-right">
               <div class="title">
                 <h3>
                   {{item.title}}
@@ -79,7 +79,7 @@ export default {
           title: '全民普惠 三折减单',
           desc: '百款产品满额减免 最高可减<span style="color:#D0021B">7000</span>元',
           time: '活动时间 2018.5.7-2018.7.6',
-          url: 'dynamic'
+          url: 'dynamic?id=14'
         },
         {
           img: require('../../assets/img/activecenter/icon-cash.png'),
