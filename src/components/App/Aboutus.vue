@@ -401,7 +401,7 @@
   .banner {
     height: 400px;
     position: relative;
-    background: url(../../assets/img/aboutus/bg-a.jpg) no-repeat top right;
+    background:#90b4f0 url(../../assets/img/aboutus/bg-a.jpg) no-repeat top center;
     overflow: hidden;
     // &::before {
     //   content: "";

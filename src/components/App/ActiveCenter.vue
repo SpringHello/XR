@@ -79,7 +79,7 @@ export default {
           title: '全民普惠 三折减单',
           desc: '百款产品满额减免 最高可减<span style="color:#D0021B">7000</span>元',
           time: '活动时间 2018.5.7-2018.7.6',
-          url: ''
+          url: 'dynamic'
         },
         {
           img: require('../../assets/img/activecenter/icon-cash.png'),
@@ -111,13 +111,13 @@ export default {
           time: '活动时间 2018.4.16-2018.5.16',
           url: 'newNodes_2'
         },
-        {
-          img: require('../../assets/img/activecenter/icon-host.png'),
-          title: '武汉一区盛大开服',
-          desc: '布局首都，新购特惠，限时抢购',
-          time: '活动长期有效',
-          url: ''
-        }
+        // {
+        //   img: require('../../assets/img/activecenter/icon-host.png'),
+        //   title: '武汉一区盛大开服',
+        //   desc: '布局首都，新购特惠，限时抢购',
+        //   time: '活动长期有效',
+        //   url: ''
+        // }
       ],
       comingdata: [
         {
