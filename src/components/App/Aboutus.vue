@@ -4,9 +4,12 @@
     <div class="banner">
       <!-- <div class="text">
         <p>高性能主机明智之选</p>
+
+        <router-link to="active_2">免费试用</router-link>
+      </div>
+
         <router-link to="vps">免费试用</router-link>
       </div> -->
-
     </div>
     <!-- tabs标签 -->
     <div class="tabs">
