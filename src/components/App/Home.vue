@@ -302,6 +302,7 @@
   import polar from '@/echarts/home'
   import echarts from 'echarts'
   import china from '@/echarts/china.json'
+  import debounce from 'throttle-debounce/debounce'
 
   export default {
     data() {
@@ -621,7 +622,7 @@
       this.myChart = echarts.init(document.getElementById('echarts'))
       this.myChart.setOption(polar)
       // 待优化
-      this.scrollFn = () => {
+      debounce(300,this.scrollFn = () => {
         if ((document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.cloudContentFade) {
           this.cloudContentFade = true
         }
@@ -637,7 +638,11 @@
         if ((document.body.clientHeight - this.$refs.authorityFade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.authorityFade) {
           this.authorityFade = true
         }
-      }
+        // 如果都显示了  移除监听事件
+        if (this.cloudContentFade == true && this.fade == true && this.consoleFade == true && this.partnerFade == true && this.authorityFade == true) {
+          window.removeEventListener('scroll', this.scrollFn)
+        }
+      })
       this.scrollFn()
       window.addEventListener('scroll', this.scrollFn)
     },
@@ -719,7 +724,7 @@
         this.activeBanner = activeIndex + 1
       }
     },
-    beforeRouteLeave(to, from, next){
+    beforeRouteLeave(to, from, next) {
       window.removeEventListener('scroll', this.scrollFn)
       next()
     }
@@ -752,7 +757,7 @@
             background-size: cover;
           }
           .xf {
-            height:100%;
+            height: 100%;
             background: url('../../assets/img/active/active_xf_bg.png') no-repeat center;
           }
         }
@@ -890,8 +895,7 @@
             .fade-enter-active, .fade-leave-active {
               transition: opacity .2s
             }
-            .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */
-            {
+            .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
               display: none;
             }
             .arrow {
