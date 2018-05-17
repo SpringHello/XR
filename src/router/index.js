@@ -82,6 +82,7 @@ const Firewall = () => import('@/components/Back/Firewall')
 const Disk = () => import('@/components/Back/Disk')
 const DiskBackup = () => import('@/components/Back/DiskBackup')
 const DiskParticulars = () => import('@/components/Back/DiskParticulars')
+const ObjectStorage = () => import('@/components/Back/ObjectStorage')
 const Vpc = () => import('@/components/Back/Vpc')
 const VpcManage = () => import('@/components/Back/VpcManage')
 const Vpn = () => import('@/components/Back/Vpn')
@@ -653,6 +654,7 @@ var router = new Router({
         {path: 'disk', name: 'disk', component: Disk},
         {path: 'diskBackup', name: 'diskBackup', component: DiskBackup},
         {path: 'diskParticulars', name: 'diskParticulars', component: DiskParticulars},
+        {path:'objectStorage',name:'objectStorage',component:ObjectStorage},
         {path: 'snapshot', name: 'snapshot', component: Snapshot},
         {path: 'firewall', name: 'firewall', component: Firewall},
         {path: 'new', name: 'new', component: New},
