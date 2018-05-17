@@ -665,7 +665,6 @@
                 case -1:
                   value = '其他原因失败'
               }
-              console.log(value)
               return h('span', value)
             }
           },
@@ -937,7 +936,7 @@
         this.$http.get('log/queryLog.do', {
           params: {
             pageSize: this.pageSize,
-            currentPage: his.currentPage,
+            currentPage: this.currentPage,
             target: this.target,
             queryTime: this.logTime,
             targetId: this.$route.query.id
@@ -1033,12 +1032,10 @@
         this.showModal.reload = false
         this.reloadhintForm.input = ''
         this.reloadButton = '正在重装...'
-        this.$http.get('information/restoreVirtualMachine.do', {
-          params: {
-            VMId: this.computerInfo.computerId,
-            templateId: this.reloadForm.system,
-            adminPassword: this.reloadForm.password
-          }
+        this.$http.post('information/restoreVirtualMachine.do', {
+          VMId: this.computerInfo.computerId,
+          templateId: this.reloadForm.system,
+          adminPassword: this.reloadForm.password
         }).then(response => {
           this.reloadButton = '确认重装'
           if (response.status == 200 && response.data.status == 1) {
@@ -1215,19 +1212,37 @@
         var url = this[type].type == '今天' ? urlList.dayURL : urlList.otherURL
         var queryType = type == 'flow' ? 'network' : 'core'
         var dateType = this[type].type == '最近7天' ? 'week' : 'month'
-        this.$http.get(`${url}?vmname=${this.$route.query.instancename}&type=${queryType}&datetype=${dateType}`)
-          .then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              if (type == 'flow') {
-                this.ipPolar.xAxis.data = response.data.result.xaxis
-                this.ipPolar.series[0].data = response.data.result.networkIn
-                this.ipPolar.series[1].data = response.data.result.networkOut
-              } else {
-                this[type + 'Polar'].xAxis.data = response.data.result.xaxis
-                this[type + 'Polar'].series[0].data = response.data.result[type + 'Use']
-              }
+        this.$http.get(url, {
+          params: {
+            vmname: this.$route.query.instancename,
+            type: queryType,
+            datetype: dateType
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            if (type == 'flow') {
+              this.ipPolar.xAxis.data = response.data.result.xaxis
+              this.ipPolar.series[0].data = response.data.result.networkIn
+              this.ipPolar.series[1].data = response.data.result.networkOut
+            } else {
+              this[type + 'Polar'].xAxis.data = response.data.result.xaxis
+              this[type + 'Polar'].series[0].data = response.data.result[type + 'Use']
             }
-          })
+          }
+        })
+        /*this.$http.get(`${url}?vmname=${this.$route.query.instancename}&type=${queryType}&datetype=${dateType}`)
+         .then(response => {
+         if (response.status == 200 && response.data.status == 1) {
+         if (type == 'flow') {
+         this.ipPolar.xAxis.data = response.data.result.xaxis
+         this.ipPolar.series[0].data = response.data.result.networkIn
+         this.ipPolar.series[1].data = response.data.result.networkOut
+         } else {
+         this[type + 'Polar'].xAxis.data = response.data.result.xaxis
+         this[type + 'Polar'].series[0].data = response.data.result[type + 'Use']
+         }
+         }
+         })*/
       },
       resetConfirm(name) {
         this.$refs[name].validate((valid) => {

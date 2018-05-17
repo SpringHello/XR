@@ -130,13 +130,13 @@
                         if (this.balanceInfo._internal) {
                           url = 'loadbalance/removeFromInternalLoadBalancerRule.do'
                           params = {
-                            VMIds: object.row.computerid, 
+                            VMIds: object.row.computerid,
                             lbId: this.balanceInfo.lbid
                           }
                         } else {
                           url = 'loadbalance/removeFromLoadBalancerRule.do'
                           params = {
-                            VMIds: object.row.computerid, 
+                            VMIds: object.row.computerid,
                             roleId: this.balanceInfo.loadbalanceroleid
                           }
                         }
@@ -145,7 +145,7 @@
                             this.$set(item, '_status', 2)
                           }
                         })
-                        this.$http.get(url,{params}).then(response => {
+                        this.$http.get(url, {params}).then(response => {
                           if (response.status == 200 && response.data.status == 1) {
                             this.$Message.success({
                               content: response.data.message
@@ -186,7 +186,7 @@
       listHostByBalance () {
         var loadbalanceType = this.balanceInfo._internal ? '' : '1'
         var roleId = this.balanceInfo.loadbalanceroleid || this.balanceInfo.lbid
-        this.$http.get('loadbalance/listVmByRoleId.do',{
+        this.$http.get('loadbalance/listVmByRoleId.do', {
           params: {
             roleId: roleId,
             loadbalanceType: loadbalanceType
@@ -205,7 +205,7 @@
       bind(loadbalanceId){
         var internalLoadbalance = this.balanceInfo._internal ? '1' : ''
         this.showModal.bind = true
-        this.$http.get('network/showLoadBalanceVM.do',{
+        this.$http.get('network/showLoadBalanceVM.do', {
           params: {
             netwrokId: this.balanceInfo.networkid,
             internalLoadbalance: internalLoadbalance,
@@ -231,14 +231,14 @@
             params = {
               VMIds: this.bindHostForm.vm,
               lbId: this.balanceInfo.lbid,
-              _t: new Date().toTimeString()
+              _t: new Date().getTime()
             }
           } else {
             url = 'loadbalance/assignToLoadBalancerRule.do'
             params = {
               VMIds: this.bindHostForm.vm,
               roleId: this.balanceInfo.loadbalanceroleid,
-              _t: new Date().toTimeString()
+              _t: new Date().getTime()
             }
           }
           this.showModal.bind = false
@@ -248,7 +248,7 @@
             computerid: this.bindHostForm.vm,
             _status: 1
           })
-          this.$http.get(url,{params}).then(response => {
+          this.$http.get(url, {params}).then(response => {
             this.listHostByBalance()
             if (response.status == 200 && response.data.status == 1) {
               this.$Message.success({

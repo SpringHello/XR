@@ -151,7 +151,6 @@
   }
   export default{
     beforeRouteEnter(to, from, next){
-      console.log(to)
       to.name
       next(vm => {
         vm.product = to.name
@@ -427,7 +426,6 @@
                   diskType: diskType.substring(1),
                   diskSize: diskSize.substring(1)
                 }
-                console.log(params)
                 this.createCustomHostOrder(params)
                 break
               case 'ip':
@@ -518,7 +516,6 @@
             data[i] = new Array(2)
             data[i][0] = '订单' + '：'
             data[i][1] = this.$refs.detailed[i].innerText.replace(/[\r\n'删除']/g, ' ')
-            console.log(data[i][1])
           }
         }
         // covert json to sheet

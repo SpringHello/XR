@@ -2,11 +2,14 @@
   <div class="aboutus">
     <!-- banner -->
     <div class="banner">
-      <div class="text">
+      <!-- <div class="text">
         <p>高性能主机明智之选</p>
-        <router-link to="vps">免费试用</router-link>
+
+        <router-link to="active_2">免费试用</router-link>
       </div>
 
+        <router-link to="vps">免费试用</router-link>
+      </div> -->
     </div>
     <!-- tabs标签 -->
     <div class="tabs">
@@ -60,43 +63,6 @@
           </div>
         </div>
       </section>
-
-      <!-- <section>
-        <div class="section-wrap">
-          <div class="head-info">
-            <h1 class="title">助理运营商全面实现敏捷业务生产</h1>
-            <p class="desc" style="width:500px"><span>紧随市场需求 数据驱动业务</span><span>IB 业务集成总线</span><span>BPM工作流引擎</span></p>
-          </div>
-          <div class="section-content business">
-            <div v-for="(item,index) in business" :key="index" @mouseenter="item.me=true" @mouseleave="item.me=false"
-                :class="{hover:item.me}">
-              <p>{{item.title}}</p>
-              <div class="imgbox" v-show="!item.me">
-                <img :src="item.img"/>
-              </div>
-              <div class="imgbox" v-show="item.me">
-                <img :src="item.hoverImg">
-              </div>
-              <span>{{item.desc}}</span>
-            </div>
-          </div>
-        </div>
-      </section> -->
-
-      <!-- <section>
-        <div class="section-wrap">
-          <div class="head-info">
-            <h1 class="title">敏捷业务生产工厂的核心价值</h1>
-          </div>
-          <div class="section-content corevalue">
-            <div v-for="(item,index) in corevalue" :key="index">
-              <p>{{item.title}}</p>
-              <img :src="item.img"/>
-              <span>{{item.desc}}</span>
-            </div>
-          </div>
-        </div>
-      </section> -->
 
       <section>
         <div class="section-wrap">
@@ -303,61 +269,46 @@
           {
             year: '17',
             month: '03',
-            text: ['中关村高新技术企业', '中国高新技术企业', '自研eSDP及睿云产品正式发布']
+            text: ['eSDP解决方案发布', 'XRCloud公有云发布', '通过ISO27001认证']
           },
           {
             year: '16',
-            text: ['武汉分公司成立', '持续申请12项软件著作权', '为云管理网络业务MSP']
+            text: ['YRCloud云平台解决方案发布', '成为华为云管理网络ISV合作伙伴','并获最佳解决方案奖']
           },
           {
             year: '15',
             month: '08',
-            text: ['重庆分公司成立', '持续申请4项软件著作权', '无线业务接入网关建设']
+            text: ['承建大连广电云平台', '公司无线业务解决方案eWlan 2.0发布']
           },
           {
             year: '14',
             month: '02',
-            text: ['重庆研发中心成立', '华为全产品线分销伙伴', '自研eSDP及睿云产品正式发布']
+            text: ['承建北方广电云平台']
           },
           {
             year: '13',
             month: '01',
-            text: ['北京研发中心成立']
+            text: ['承建辽宁电视台新媒体融合业务云平台']
           },
           {
             year: '12',
             month: '01',
-            text: ['北京允睿讯通成立', '通过ISO27001质量管理体系认证', '推出无线业务运营平台']
-          },
-          {
-            year: '11',
-            month: '03',
-            text: ['华为全产品线金牌代理']
+            text: ['无线业务运营平台解决方案发布', '通过ISO9001质量体系认证']
           },
           {
             year: '10',
             month: '03',
-            text: ['承建北方联合三网融合试点项目']
-          },
-          {
-            year: '09',
-            month: '06',
-            text: ['重庆研发中心成立', '华为全产品线分销伙伴', '自研eSDP及睿云产品正式发布']
+            text: ['承担辽宁广电三网融合试点项目']
           },
           {
             year: '08',
             month: '08',
-            text: ['北京研发中心成立']
-          },
-          {
-            year: '07',
-            month: '03',
-            text: ['北京允睿讯通成立', '通过ISO9001质量管理体系认证', '推出无线业务运营平台']
+            text: ['承建沈阳广电干线传输项目']
           },
           {
             year: '06',
             month: '08',
-            text: ['华为全产品线金牌代理']
+            text: ['允睿讯通公司成立','服务于辽宁广电']
           }
         ],
 
@@ -451,20 +402,20 @@
 
   // banner样式
   .banner {
-    height: 560px;
+    height: 400px;
     position: relative;
-    background: linear-gradient(90deg, #fff 20%, #9ce3f3 100%);
+    background:#90b4f0 url(../../assets/img/aboutus/bg-a.jpg) no-repeat top center;
     overflow: hidden;
-    &::before {
-      content: "";
-      width: 866px;
-      height: 560px;
-      background: url(../../assets/img/aboutus/banner-host.png) no-repeat top right;
-      background-size: 90%;
-      position: absolute;
-      top: 0;
-      left: 50%;
-    }
+    // &::before {
+    //   content: "";
+    //   width: 866px;
+    //   height: 560px;
+    //   background: url(../../assets/img/aboutus/banner-host.png) no-repeat top right;
+    //   background-size: 90%;
+    //   position: absolute;
+    //   top: 0;
+    //   left: 50%;
+    // }
     .text {
       width: 1200px;
       margin: 0 auto;
@@ -736,17 +687,17 @@
       .circle4 {
         width: 100px;
         height: 100px;
-        top: 1600px;
+        top: 1500px;
         left: 600px;
 
       }
       .vertical-axis {
-        width: 8px;
+        width: 6px;
         height: 3000px;
         background: @m-color;
         position: absolute;
         top: 20px;
-        left: 496px;
+        left: 497px;
         z-index: 5;
       }
       .lastspot {

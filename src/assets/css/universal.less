@@ -608,3 +608,75 @@
 .ivu-upload-drag:hover {
   border: none;
 }
+.my-upload .ivu-upload-drag{
+  background-color: #FFFFFF;
+  margin-top: 20px;
+}
+// 备案系统区域按钮样式
+.recordsArea-but {
+  width: 224px;
+  height: 50px;
+  background: rgba(55, 125, 255, 0.8);
+  box-shadow: 0px 2px 19px -8px rgba(55, 125, 255, 0.67);
+  border-radius: 4px;
+  font-size: 18px;
+  font-family: PingFangSC-Medium;
+  color: rgba(255, 255, 255, 1);
+  line-height: 50px;
+  margin-top: 32px;
+  text-align: center;
+  img {
+    position: relative;
+    top: 3px;
+  }
+}
+
+// 备案系统下一步骤按钮样式
+.content-footer {
+  width: 1200px;
+  margin: 0 auto;
+  padding: 40px 0 60px;
+  button {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 12px 18px;
+    background: rgba(255, 231, 119, 1);
+    box-shadow: 0px 2px 21px -6px rgba(253, 236, 155, 1);
+    font-size: 18px;
+    font-family: PingFangSC-Medium;
+    color: rgba(51, 51, 51, 1);
+    line-height: 25px;
+  }
+}
+
+// 备案系统主体信息公用css
+.main-info {
+  margin-top: 60px;
+  .main-ul {
+    margin-top: 30px;
+    height: 180px;
+    background: rgba(55, 125, 255, 0.05);
+    padding: 20px 40px;
+    display: flex;
+    ul {
+      height: 100%;
+      > li {
+        font-size: 14px;
+        font-family: PingFangSC-Medium;
+        color: rgba(102, 102, 102, 1);
+        line-height: 28px;
+      }
+    }
+    ul:nth-child(1) {
+      width: 45%;
+    }
+    ul:nth-child(2) {
+      width: 30%;
+    }
+    ul:nth-child(3) {
+      width: 25%;
+    }
+  }
+
+}

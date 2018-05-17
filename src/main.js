@@ -11,6 +11,7 @@ import 'iview/dist/styles/iview.css'
 import '@/assets/css/iviewOverRide.css'
 import '@/assets/css/reset.css'
 import '@/assets/css/universal.less'
+
 // import ECharts from 'vue-echarts/components/ECharts.vue'
 
 import ECharts from 'vue-echarts/components/ECharts'
@@ -34,14 +35,10 @@ Vue.config.productionTip = false
 //axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud'
 // axios.defaults.baseURL = 'http://192.168.3.204:8081/ruicloud'
 // axios.defaults.withCredentials = true
-axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud'
-axios.defaults.withCredentials = true
 
-
-//axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud'
-// axios.defaults.baseURL = 'http://192.168.3.204:8081/ruicloud'
-// axios.defaults.withCredentials = true
-
+//axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud/'
+//axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
+//axios.defaults.withCredentials = true
 
 // axios挂载到Vue原型
 Vue.prototype.$http = axios.create({

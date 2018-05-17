@@ -3,7 +3,7 @@
     <div class="wrapper">
       <div class="wrapper-form">
         <div class="banner">
-          <img src="../../assets/img/login/banner-text.png"  width="42%" style="margin-top:80px;"/>
+          <img src="../../assets/img/login/banner-text.png" width="42%" style="margin-top:80px;"/>
         </div>
         <div class="login-form">
           <div class="head">
@@ -18,8 +18,8 @@
               </div>
               <div>
                 <span :class="{warning:vailForm.password.warning}">{{vailForm.password.message}}</span>
-                <input type="password" autocomplete="off" v-model="form.password" ref="password"
-                       :placeholder="form.passwordPlaceholder"
+                <input type="text" autocomplete="off" v-model="form.password" ref="password"
+                       :placeholder="form.passwordPlaceholder" onfocus="this.type='password'"
                        @blur="vail('password')" @focus="focus('password')" @input="isCorrect('password')"
                        v-on:keyup.enter="submit">
               </div>
@@ -175,6 +175,9 @@
          this.vailForm.loginname.warning = true
          return
          } */
+        if (this.form.loginname == '' || this.form.password == '' || this.form.vailCode == '') {
+          return
+        }
         this.$refs.password.blur()
         this.$refs.vailCode.blur()
         axios.get('user/login.do', {
@@ -184,7 +187,8 @@
             vailCode: this.form.vailCode
           }
         }).then((response) => {
-          if (response.status == 200 && response.statusText == 'OK') {
+          if (response.status == 200 && response.statusText == 'OK'
+          ) {
             if (response.data.status == 1) {
               localStorage.setItem('authToken', response.data.message)
               this.$router.push({path: 'overview'})
@@ -256,7 +260,7 @@
       }
     }
     .banner {
-      background:url(../../assets/img/login/login-banner.jpg) no-repeat center;
+      background: url(../../assets/img/login/login-banner.jpg) no-repeat center;
       height: 493px;
       width: 730px;
       text-align: center;
