@@ -5,7 +5,7 @@
         <div class="content">
           <div class="left">
             <img src="../../assets/img/activecenter/text-banner.png" alt="">
-            <router-link to="dynamic">立即续费</router-link>
+            <router-link to="dynamic?id=14">立即续费</router-link>
           </div>
           <div class="right">
             <img src="../../assets/img/activecenter/banner.png" alt="">
