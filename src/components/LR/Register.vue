@@ -337,8 +337,10 @@
 </template>
 
 <script type="text/ecmascript-6">
-   import axios from '@/util/axiosInterceptor'
+  import axios from '@/util/axiosInterceptor'
   import regExp from '@/util/regExp'
+  //import debounce from 'throttle-debounce/debounce'
+  import throttle  from 'throttle-debounce/throttle'
   var messageMap = {
     loginname: {
       placeholder: '登录 邮箱/手机号',
@@ -420,7 +422,7 @@
             this.vailForm.loginname.info = messageMap.loginname.placeholder
           }
           if (field == 'loginname') {
-             axios.get('user/isRegister.do', {
+            axios.get('user/isRegister.do', {
               params: {
                 username: this.form.loginname
               }
@@ -485,20 +487,20 @@
               duration: 3
             });
             this.$router.push('registerSuccess');
-            } else {
+          } else {
             this.$Message.error({
               content: response.data.message
             })
           }
         })
       },
-      sendCode(){
+      sendCode: throttle(5000, function () {
         if (!regExp.emailVail(this.form.loginname)) {
           this.$Message.info('请输入正确的邮箱/手机号')
           return
         }
-        if (this.vailForm.loginname.message.length>0 ) {
-         return
+        if (this.vailForm.loginname.message.length > 0) {
+          return
         }
         if (!regExp.registerPasswordVail(this.form.password)) {
           this.$Message.info('密码必须包含数字和字母大小写')
@@ -522,26 +524,27 @@
         }).then(response => {
           this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
           // 发送倒计时
-          let countdown = 60
-          this.codePlaceholder = '60s'
-          var inter = setInterval(() => {
-            countdown--
-            this.codePlaceholder = countdown + 's'
-            if (countdown == 0) {
-              clearInterval(inter)
-              this.codePlaceholder = '发送验证码'
-            }
-          }, 1000)
           if (response.status == 200 && response.data.status == 1) {
+            let countdown = 60
+            this.codePlaceholder = '60s'
+            var inter = setInterval(() => {
+              countdown--
+              this.codePlaceholder = countdown + 's'
+              if (countdown == 0) {
+                clearInterval(inter)
+                this.codePlaceholder = '发送验证码'
+              }
+            }, 1000)
             this.$Message.success({
               content: '验证码发送成功',
               duration: 5
             })
           } else {
+            this.codePlaceholder = '发送验证码'
             this.$Message.error(response.data.message)
           }
         })
-      },
+      }),
       showRules(){
         this.loginShow = false;
         this.rulesShow = true;

@@ -72,6 +72,7 @@
 <script type="text/ecmascript-6">
   import regExp from '../../util/regExp'
   import axios from '@/util/axiosInterceptor'
+  import throttle  from 'throttle-debounce/throttle'
   var messageMap = {
     loginname: {
       placeholder: '登录邮箱/手机号',
@@ -92,6 +93,7 @@
     }
   }
   export default{
+
     data(){
       return {
         imgSrc: 'user/getKaptchaImage.do',
@@ -202,7 +204,7 @@
           }
         }
       },
-      sendCode(){
+      sendCode: throttle(5000, function () {
         if (!regExp.emailVail(this.form.loginname)) {
           this.$Message.info('请输入正确手机号')
           return
@@ -225,17 +227,17 @@
             vailCode: this.form.code
           }
         }).then(response => {
-          let countdown = 60
-          this.codePlaceholder = '60s'
-          var inter = setInterval(() => {
-            countdown--
-            this.codePlaceholder = countdown + 's'
-            if (countdown == 0) {
-              clearInterval(inter)
-              this.codePlaceholder = '发送验证码'
-            }
-          }, 1000)
           if (response.status == 200 && response.data.status == 1) {
+            let countdown = 60
+            this.codePlaceholder = '60s'
+            var inter = setInterval(() => {
+              countdown--
+              this.codePlaceholder = countdown + 's'
+              if (countdown == 0) {
+                clearInterval(inter)
+                this.codePlaceholder = '发送验证码'
+              }
+            }, 1000)
             this.$Message.success({
               content: response.data.message,
               duration: 5
@@ -247,7 +249,7 @@
             })
           }
         })
-      },
+      }),
       submit(){
         axios.get('user/findPassword.do', {
           params: {

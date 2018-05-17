@@ -315,7 +315,7 @@
           {img: 'icon-duoqudaofuwuyuzhichi', title: '7*24', subTitle: '多渠道服务与支持'},
           {img: 'icon-fankuiyutousujianyiA', title: '意见', subTitle: '反馈与投诉建议'},
           {img: 'icon-zhuanxiangfuwu', title: '1V1', subTitle: '专项服务'},
-          // {img: 'icon-tianwuliyoutuihuo', title: '退款', subTitle: '7天无理由退款'}
+          {img: 'icon-tianwuliyoutuihuo', title: '退款', subTitle: '7天无理由退款'}
         ],
         description: [
           {
@@ -483,7 +483,7 @@
 
 <style rel="stylesheet/less" lang="less">
   @import './assets/css/frontend.css';
-
+  @import './assets/css/iconfont.css';
   #front {
     header {
       width: 100%;
