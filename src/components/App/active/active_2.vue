@@ -116,7 +116,7 @@
       </div>
     </div>
 
-    <Modal v-model="loginModal" width="420" class="login-modal" ::scrollable="true">
+    <Modal v-model="loginModal" width="420" class="login-modal" :scrollable="true">
       <p slot="header" style="color:#5F5F5F;text-align:center;height: 30px;padding-top: 5px;">
         <span style="font-family: PingFangSC-Regular;font-size: 26px;">登录</span>
       </p>
@@ -129,9 +129,9 @@
           </div>
           <div>
             <span :class="{warning:vailForm.password.warning}">{{vailForm.password.message}}</span>
-            <input type="password" autocomplete="off" v-model="form.password" :placeholder="form.passwordPlaceholder"
+            <input type="text" autocomplete="off" v-model="form.password" :placeholder="form.passwordPlaceholder"
                    @blur="vail('password')" @focus="focus('password')" @input="isCorrect('password')"
-                   v-on:keyup.enter="submit">
+                   v-on:keyup.enter="submit" onfocus="this.type='password'">
           </div>
           <div style="position:relative">
             <span>{{vailForm.vailCode.message}}</span>

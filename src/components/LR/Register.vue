@@ -20,12 +20,12 @@
               </div>
               <div style="position:relative">
                 <span>{{vailForm.password.info}}</span>
-                <input v-show="form.showPassword==false" type="password" autocomplete="off" v-model="form.password"
+                <input v-show="form.showPassword==false" type="text" autocomplete="off" v-model="form.password"
                        :placeholder="form.passwordPlaceholder" @blur="vail('password')" @focus="focus('password')"
-                       @input="isCorrect('password')">
+                       @input="isCorrect('password')" onfocus="this.type='password'">
                 <input v-show="form.showPassword==true" type="text" autocomplete="off" v-model="form.password"
                        :placeholder="form.passwordPlaceholder" @blur="vail('password')" @focus="focus('password')"
-                       @input="isCorrect('password')">
+                       @input="isCorrect('password')" onfocus="this.type='password'">
                 <label :class="{close:form.showPassword}" @click="form.showPassword=!form.showPassword"></label>
               </div>
               <div style="position:relative">

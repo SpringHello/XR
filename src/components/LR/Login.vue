@@ -18,8 +18,8 @@
               </div>
               <div>
                 <span :class="{warning:vailForm.password.warning}">{{vailForm.password.message}}</span>
-                <input type="password" autocomplete="off" v-model="form.password" ref="password"
-                       :placeholder="form.passwordPlaceholder"
+                <input type="text" autocomplete="off" v-model="form.password" ref="password"
+                       :placeholder="form.passwordPlaceholder" onfocus="this.type='password'"
                        @blur="vail('password')" @focus="focus('password')" @input="isCorrect('password')"
                        v-on:keyup.enter="submit">
               </div>
