@@ -139,25 +139,25 @@
                 <li class="nav_item">姓名</li>
                 <li class="nav_item">有效证件类型</li>
                 <li class="nav_item">有效证件号码</li>
-           
+
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">{{hostUnitList.webresponsibilitylinkname}} <div v-if="webResponsibilityLinkNameHide == 'webResponsibilityLinkName'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div></li>
                 <li class="nav_item">{{hostUnitList.webresponsibilitycertificatestype}} <div v-if="webResponsibilityCertificatesTypeHide == 'webResponsibilityCertificatesType'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div></li>
                 <li class="nav_item">{{hostUnitList.webresponsibilitycertificatesnumber}}<div v-if="webResponsibilityCertificatesNumberHide == 'webResponsibilityCertificatesNumber'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div></li>
-                
+
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">办公室电话号码</li>
                 <li class="nav_item">移动电话号码</li>
                 <li class="nav_item">电子邮箱地址</li>
-                
+
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">+86  {{hostUnitList.offacenumber}}<div v-if="offaceNumberHide == 'offaceNumber'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div></li>
                 <li class="nav_item">{{hostUnitList.companyphone}}<div v-if="companyPhoneHide == 'companyPhone'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div></li>
                 <li class="nav_item">{{hostUnitList.companyemail}}<div v-if="companyEmailHide == 'companyEmail'"  class="text_block"><span style="color:red">信息有误</span>  <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div></li>
-                
+
               </ul>
             </div>
           </div>
@@ -306,7 +306,7 @@
                          <img style="height:144px;" :src="hostUnitList.companyresponsibilityurlpositive">
                           <p style="">点击选择文件</p>
                        </div>
-                    </div>   
+                    </div>
                     <button>上传</button>
                   </Upload>
             </div>
@@ -452,7 +452,7 @@
         @on-ok="updateHostunit"  :scrollable="true"
        >
        <Form  ref="updateHostUnitList" :model="updateHostUnitList"  :rules="updateHostUnitListValidate"  :label-width="0">
-          <FormItem prop="province">
+          <FormItem prop="district">
               <p style="margin:10px">主办单位所属区域</p>
                <Select v-model="province"  style="width:170px" @on-change="changeProvince">
                 <Option v-for="item in provinceList" :value="item.name" :key="item.name">{{ item.name }}</Option>
@@ -502,7 +502,7 @@
     <Modal
         v-model="legal"
         title="主体单位负责人信息"
-        @on-ok="updateHostunitLegal" 
+        @on-ok="updateHostunitLegal"
         :scrollable="true"
        >
         <Form  ref="updateHostUnitList" :model="updateHostUnitList"  :rules="updateHostUnitListValidate"  :label-width="0">
@@ -524,7 +524,7 @@
               <p style="margin:10px">办公室电话</p>
               <Input type="text" v-model="updateHostUnitList.officenumber"/>
           </FormItem>
-          <FormItem prop="phone">
+          <FormItem prop="companyphone">
               <p style="margin:10px">手机号码</p>
               <Input type="text" v-model="updateHostUnitList.companyphone"/>
           </FormItem>
@@ -572,7 +572,7 @@
         :scrollable="true"
        >
         <Form  ref="updateHostUnitList" :model="updateHostUnitList"  :rules="updateHostUnitListValidate"  :label-width="0">
-          <FormItem  prop="webname">
+          <FormItem  prop="webresponsibilitylinkname">
                 <p style="margin:10px">姓名</p>
                  <Input type="text" v-model="updateHostUnitList.webresponsibilitylinkname"/>
            </FormItem>
@@ -590,7 +590,7 @@
               <p style="margin:10px">办公室电话号码</p>
               <Input type="text" v-model="updateHostUnitList.offacenumber"/>
           </FormItem>
-          <FormItem prop="companyphone">
+          <FormItem prop="phone">
               <p style="margin:10px">移动电话号码</p>
              <Input type="text" v-model="updateHostUnitList.phone"/>
           </FormItem>
@@ -610,19 +610,19 @@
         <Form  ref="updateHostUnitList" :model="updateHostUnitList"  :rules="updateHostUnitListValidate"  :label-width="0">
           <FormItem  prop="ispname">
                 <p style="margin:10px">ISP名称</p>
-                 <Input type="text" v-model="updateHostUnitList.ispname"/>
+                 <Input type="text"  :readonly="true" v-model="updateHostUnitList.ispname"/>
            </FormItem>
           <FormItem prop="webip">
              <p style="margin:10px">网站IP地址</p>
-              <Input type="text" v-model="updateHostUnitList.webip"/>
+              <Input :readonly="true" type="text" v-model="updateHostUnitList.webip"/>
           </FormItem>
           <FormItem prop="webaccesstype">
               <p style="margin:10px">网站接入方式</p>
-              <Input type="text" v-model="updateHostUnitList.webaccesstype"/>
+              <Input  :readonly="true" type="text" v-model="updateHostUnitList.webaccesstype"/>
           </FormItem>
           <FormItem prop="webserveraddress">
               <p style="margin:10px">服务器放置地</p>
-               <Input type="text" v-model="updateHostUnitList.webserveraddress"/>
+               <Input :readonly="true" type="text" v-model="updateHostUnitList.webserveraddress"/>
           </FormItem>
        </Form>
     </Modal>
@@ -637,14 +637,124 @@ const id = sessionStorage.getItem("id");
 const webcompany_Id = sessionStorage.getItem("webcompany_Id");
 export default {
   beforeRouteEnter(to, from, next) {
-    var area = sessionStorage.getItem("zone");
-    var recordsType = sessionStorage.getItem("recordsType");
     next(vm => {
-      vm.setData(area, recordsType);
-      window.scroll(0, 525);
     });
   },
   data() {
+    // 校验地区
+    const validateArea = (rule, value, callback) => {
+      if (
+        this.province == "" ||
+        this.city == "" ||
+        this.district == ""
+      ) {
+        return callback(new Error("请选择所属区域"));
+      } else {
+        callback();
+      }
+    };
+    //校验座机号码
+    const validOfficePhone = (rule, value, callback) => {
+      let reg = /^0\d{2,3}-?\d{7,8}$/;
+      let regNumber = /^[0-9]+$/;
+      if (!reg.test(this.updateHostUnitList.officenumber)) {
+        return callback(new Error("请输入正确的座机号码"));
+      } else {
+        callback();
+      }
+    };
+    const validOffacePhone = (rule, value, callback) => {
+      let reg = /^0\d{2,3}-?\d{7,8}$/;
+      let regNumber = /^[0-9]+$/;
+      if (!reg.test(this.updateHostUnitList.offacenumber)) {
+        return callback(new Error("请输入正确的座机号码"));
+      } else {
+        callback();
+      }
+    };
+    //校验手机号码
+    const validPhoneNumber = (rule, value, callback) => {
+      let reg = /^1[3|5|8|9|6|7]\d{9}$/;
+      if (!reg.test(this.updateHostUnitList.phone)) {
+        return callback(new Error("请输入正确的手机号码"));
+      } else {
+        callback();
+      }
+    };
+    const validCompanyPhoneNumber = (rule, value, callback) => {
+      let reg = /^1[3|5|8|9|6|7]\d{9}$/;
+      if (!reg.test(this.updateHostUnitList.companyphone)) {
+        return callback(new Error("请输入正确的手机号码"));
+      } else {
+        callback();
+      }
+    };
+    //校验不能为数字
+    const validLegalPersonName = (rule, value, callback) => {
+      let regNumber = /^[0-9]+$/;
+      if (regNumber.test(this.updateHostUnitList.legalname)) {
+        return callback(new Error("姓名不能输入数字"));
+      } else {
+        callback();
+      }
+    };
+    //校验网站域名
+    const validWebsiteDomain = (rule, value, callback) => {
+      var reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+      if (value == "") {
+        return callback(new Error("请输入网站域名"));
+      } else if (!reg.test(value)) {
+        return callback(new Error("域名不正确"));
+      } else {
+        callback();
+      }
+    };
+    //校验网站负责人证件号码
+    const validCertificateNumber = (rule, value, callback) => {
+      if (value == "") {
+        return callback(new Error("请输入网站负责人证件号码"));
+      } /*else if (
+          !this.siteList[0].basicInformation.certificateTypeList[
+          this.siteList[0].basicInformation.certificateType - 1
+            ].reg.test(value)
+        ) {
+          return callback(
+            new Error(
+              "请输入正确的" +
+              this.siteList[0].basicInformation.certificateTypeList[
+              this.siteList[0].basicInformation.certificateType - 1
+                ].label
+            )
+          );
+        }*/ else {
+        callback();
+      }
+    };
+    //校验新增域名
+    const validNewWebsiteDomain = (rule, value, callback) => {
+      let reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+      for (let i = 0; i <= value.length; i++) {
+        if (value.length == 0 || value[i] == "") {
+          return callback(new Error("请输入网站域名"));
+        } else if (!reg.test(value[i]) && value[i] !== "") {
+          // console.log(value[i]);
+          return callback(new Error("请输入正确的网站域名"));
+        } else {
+          callback();
+        }
+      }
+    };
+    //校验网站首页URL
+    const validWebsiteHomepage = (rule, value, callback) => {
+      let reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+      if (value == "") {
+        return callback(new Error("请输入网站首页URL"));
+      } else if (!reg.test(value)) {
+        return callback(new Error("请输入正确的网站首页URL"));
+      } else {
+        callback();
+      }
+    };
     return {
       //是否显示重新输入
       mainCompanyAreaHide: null,
@@ -754,27 +864,106 @@ export default {
       //法人证件类型
       legalPersonCertificateTypeList: ["身份证", "护照", "军官证", "台胞证"],
       //弹窗验证
-      updateHostUnitListValidate: {}
+      updateHostUnitListValidate: {
+        district: [
+          {required: true, validator: validateArea, trigger: "blur"}
+        ],
+        maincompanynature: [
+          {required: true, message: "请选择单位性质", trigger: "change"}
+        ],
+        maincompanycertificatestype: [
+          {required: true, message: "请选择证件类型", trigger: "change"}
+        ],
+        maincompanynumber: [
+          {required: true, message: "请输入单位证件号码", trigger: "blur"}
+          // { validator: validUnitProperties, trigger: "blur" }
+        ],
+        maincompanyname: [
+          {required: true, message: "请输入主体单位名称", trigger: "blur"},
+          {type: "string", max: 20, message: "最多只能输入20个字"}
+        ],
+        maincompanycertificatesloaction: [
+          {required: true, message: "请输入主体单位证件住所", trigger: "blur"}
+        ],
+        maincompanycommunicatlocation: [
+          {required: true, message: "请输入主体单位通信地址", trigger: "blur"}
+        ],
+        investorname: [
+          {
+            required: true,
+            message: "请输入投资人或主管单位姓名",
+            trigger: "blur"
+          }
+        ],
+        legalname: [
+          {required: true, message: "请输入法人姓名", trigger: "blur"},
+          {validator: validLegalPersonName, trigger: "blur"}
+        ],
+        legalcertificatestype: [
+          {required: true, message: "请选择法人证件类型", trigger: "change"}
+        ],
+        legalcertificatesnumber: [
+          {required: true, message: "请输入法人证件号码", trigger: "blur"}
+        ],
+        officenumber: [
+          {required: true, message: "请输入办公室电话", trigger: "blur"},
+          {validator: validOfficePhone, trigger: "blur"}
+        ],
+        phone: [
+          {required: true, message: "请输入手机号码", trigger: "blur"},
+          {validator: validPhoneNumber, tirgger: "blur"}
+        ],
+        email: [
+          {required: true, message: "请输入电子邮箱地址", trigger: "blur"},
+          {
+            type: "email",
+            message: "请输入正确的电子邮箱地址",
+            tirgger: "blur"
+          }
+        ],
+        webname: [
+          {required: true, message: "请输入网站名称", trigger: "blur"}
+        ],
+        webdomian: [
+          {required: true, validator: validWebsiteDomain, trigger: "blur"}
+        ],
+        newWebsiteDomain: [
+          {required: true, validator: validNewWebsiteDomain, trigger: "blur"}
+        ],
+        webservercontent: [
+          {required: true, message: "请输入网站服务内容", trigger: "blur"}
+        ],
+        webmessage: [
+          {required: true, message: "请输入网站语言", trigger: "blur"}
+        ],
+        remark: [{type: "string", max: 50, message: "最多输入五十个字"}],
+        webresponsibilitylinkname: [
+          {required: true, message: "请输入负责人姓名", trigger: "blur"}
+        ],
+        webresponsibilitycertificatestype: [
+          {required: true, message: "请选择证件类型", trigger: "change"}
+        ],
+        webresponsibilitycertificatesnumber: [
+          {required: true, validator: validCertificateNumber, trigger: "blur"}
+        ],
+        offacenumber: [
+          {required: true, validator: validOffacePhone, trigger: "blur"}
+        ],
+        companyphone: [
+          {required: true, message: "请输入手机号码", trigger: "blur"},
+          {required: true, validator: validCompanyPhoneNumber, trigger: "blur"}
+        ],
+        companyemail: [
+          {required: true, message: "请输入邮箱地址", trigger: "blur"},
+          {type: "email", message: "请输入正确的邮箱地址", trigger: "blur"}
+        ],
+        weburl: [
+          {required: true, validator: validWebsiteHomepage, trigger: "blur"}
+        ],
+      }
     };
   },
   methods: {
-    setData(area, recordsType) {
-      this.area = area;
-      switch (recordsType) {
-        case "1":
-          this.recordsType = "新增备案";
-          this.recordsTypeDesc = "域名未备案，备案主体证件无备案号，需要备案。";
-          break;
-        case "2":
-          this.recordsType = "新增接入";
-          this.recordsTypeDesc = "域名已在其他平台备案过，需要变更接入商。";
-          break;
-        case "3":
-          this.recordsType = "新增网站";
-          this.recordsTypeDesc = "主体已经备案过，需要再给其他网站备案。";
-          break;
-      }
-    },
     //图标切换方法
     toolShow(isIcon) {
       this.isIcon = !isIcon;
@@ -1091,13 +1280,13 @@ export default {
   },
   mounted() {
     this.details();
-  }
+  },
 };
 </script>
 
 <style lang="less" scoped>
 .ivu-form-item {
-  margin-bottom: 5px;
+  margin-bottom: 15px;
 }
 .updatePhoto {
   width: 490px;
