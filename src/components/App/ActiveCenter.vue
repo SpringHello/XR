@@ -78,7 +78,7 @@ export default {
           img: require('../../assets/img/activecenter/icon-down.png'),
           title: '全民普惠 三折减单',
           desc: '百款产品满额减免 最高可减<span style="color:#D0021B">7000</span>元',
-          time: '活动时间 2018.5.7-2018.7.6',
+          time: '活动时间 2018.5.24-2018.7.31',
           url: 'dynamic?id=14'
         },
         {
