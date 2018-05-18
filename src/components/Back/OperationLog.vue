@@ -209,12 +209,13 @@
         this.dateRange = time;
       },
       search(){
+        let queryTime = this.dateRange === ''? '' : this.dateRange.join(',')
         this.$http.get('log/queryLog.do', {
           params: {
             pageSize: this.pageSize,
             currentPage: this.currentPage,
             target: this.target == 'all' ? '' : this.target,
-            queryTime: this.dateRange.join(',')
+            queryTime: queryTime
           }
         }).then(response => {
           this.total = response.data.total;
