@@ -302,7 +302,7 @@
   import polar from '@/echarts/home'
   import echarts from 'echarts'
   import china from '@/echarts/china.json'
-  import debounce from 'throttle-debounce/debounce'
+  import throttle from 'throttle-debounce/throttle'
 
   export default {
     data() {
@@ -622,7 +622,7 @@
       this.myChart = echarts.init(document.getElementById('echarts'))
       this.myChart.setOption(polar)
       // 待优化
-      debounce(300,this.scrollFn = () => {
+      this.scrollFn = throttle(200, () => {
         if ((document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.cloudContentFade) {
           this.cloudContentFade = true
         }
