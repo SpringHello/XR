@@ -28,6 +28,14 @@ export default {
       // throttleMode
       if (debounceMode == undefined && elapsed > delay) {
         exec()
+      } else if (noTrailing !== true) {
+        // 包含尾巴
+        timeoutID = setTimeout(debounceMode ? exec : clear, debounceMode ? delay : elapsed)
+      }
+
+
+      function clear() {
+        timeoutID = undefined
       }
 
       function exec() {

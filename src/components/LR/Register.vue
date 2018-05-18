@@ -12,8 +12,8 @@
           <div class="body">
             <form>
               <div>
-                <span v-if="vailForm.loginname.message.length>0"
-                      class="warning">{{vailForm.loginname.message[0]}}</span>
+                <span v-if="vailForm.loginname.message.length>0" class="warning"
+                      v-html="vailForm.loginname.message[0]"></span>
                 <span v-else>{{vailForm.loginname.info}}</span>
                 <input type="text" autocomplete="off" v-model="form.loginname" :placeholder="form.loginnamePlaceholder"
                        @blur="vail('loginname')" @focus="focus('loginname')" @input="isCorrect('loginname')">
@@ -349,7 +349,7 @@
     },
     password: {
       placeholder: '请输入至少8位包含大小写字母与数字的密码',
-      errorMessage: '密码必须包含数字和字母大小写',
+      errorMessage: '密码必须包含数字和字母大小写<p>特殊字符仅支持 `~!#$%_()^*,<>?@.</p>',
     },
     vailCode: {
       placeholder: '请输入您收到的验证码',
@@ -503,7 +503,7 @@
           return
         }
         if (!regExp.registerPasswordVail(this.form.password)) {
-          this.$Message.info('密码必须包含数字和字母大小写')
+          this.$Message.info('密码必须包含数字和字母大小写和`~!#$%_()^*,<>?@.')
           return
         }
         if (this.form.code.length != 4) {
