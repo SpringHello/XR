@@ -104,6 +104,7 @@ const Wxpay = () => import('@/components/Back/Wxpay')
 const WorkOrder = () => import('@/components/Back/WorkOrder')
 const BRecords = () => import('@/components/Back/Records')
 const RecordDetails = () => import('@/components/Back/RecordDetails')
+const SpaceDetails = () => import('@/components/Back/SpaceDetails')
 
 
 // 帮助文档路由
@@ -680,7 +681,8 @@ var router = new Router({
         {path: 'wxpay', name: 'wxpay', component: Wxpay},
         {path: 'workOrder', name: 'workOrder', component: WorkOrder},
         {path: 'BRecords', name: 'BRecords', component: BRecords},
-        {path: 'RecordDetails', name: 'RecordDetails', component: RecordDetails}
+        {path: 'RecordDetails', name: 'RecordDetails', component: RecordDetails},
+        {path: 'SpaceDetails',name:'SpaceDetails',component:SpaceDetails}
       ]
     },
     {

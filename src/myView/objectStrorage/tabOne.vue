@@ -100,6 +100,11 @@ export default {
                   style: {
                     color: "#2A99F2",
                      cursor:'pointer'
+                  },
+                  on:{
+                      click:() =>{
+                          this.$router.push({path:'SpaceDetails'})
+                      }
                   }
                 },
                 "查看详情"
