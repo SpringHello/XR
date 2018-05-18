@@ -56,7 +56,7 @@
             </form>
           </div>
           <div class="foot">
-            <button :class="{disabled:disabled}" :disabled="disabled==true" @click="submit">确认</button>
+            <button @click="submit">确认</button>
             <div>
               <router-link to="register" style="color:#0EB4FA;cursor:pointer;float:left;font-size: 14px">
                 立即注册
