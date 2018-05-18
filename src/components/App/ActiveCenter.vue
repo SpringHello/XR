@@ -4,8 +4,8 @@
        <div class="wrap">
         <div class="content">
           <div class="left">
-            <img src="../../assets/img/activecenter/text-banner.png" alt="">
-            <router-link to="dynamic?id=14">立即续费</router-link>
+            <img src="../../assets/img/activecenter/banner-left.jpg" alt="" @click="$router.push({path:'dynamic',query:{id:'14'}})">
+            <!--<router-link to="dynamic?id=14">立即续费</router-link>-->
           </div>
           <div class="right">
             <img src="../../assets/img/activecenter/banner.png" alt="">
@@ -176,18 +176,19 @@ export default {
     justify-content: space-between;
     align-items: center;
     .left {
-      a {
-        margin-top: 30px;
-        padding: 8px;
-        width: 112px;
-        display: block;
-        text-align: center;
-        border-radius: 50px;
-        background: #f16766;
-        color: #fff;
-        font-size: 18px;
-        box-shadow: 0px 2px 5px 0px rgba(241, 103, 102, 1);
-      }
+      cursor: pointer;
+      /*a {*/
+        /*margin-top: 30px;*/
+        /*padding: 8px;*/
+        /*width: 112px;*/
+        /*display: block;*/
+        /*text-align: center;*/
+        /*border-radius: 50px;*/
+        /*background: #f16766;*/
+        /*color: #fff;*/
+        /*font-size: 18px;*/
+        /*box-shadow: 0px 2px 5px 0px rgba(241, 103, 102, 1);*/
+      /*}*/
     }
   }
 }
