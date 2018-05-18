@@ -90,6 +90,7 @@
   import axios from 'axios'
   import records from './../Records'
   import regExp from '../../../util/regExp'
+  import $ from 'jquery'
 
   var messageMap = {
     loginname: {
@@ -278,7 +279,7 @@
         } else {
           this.flowList = this.flowList_1
         }
-        window.scroll(0, 525)
+        $('html, body').animate({scrollTop: 550}, 300)
       },
       // 切换区域
       changeArea(item) {
