@@ -1,5 +1,5 @@
 <template>
-    <div class="centerBox">
+     <div class="centerBox">
         <div class="objectBox">
              <span class="text">云存储/云硬盘</span>
              <div class="center">
@@ -92,15 +92,15 @@
 
 <script>
 import diskOptions from "@/echarts/objectStroage";
-import tabOne from "../../myView/objectStrorage/tabOne"
-import tabTwo from "../../myView/objectStrorage/tabTwo"
-import tabThree from "../../myView/objectStrorage/tabThree"
+import tabOne from "../../myView/objectStrorage/tabOne";
+import tabTwo from "../../myView/objectStrorage/tabTwo";
+import tabThree from "../../myView/objectStrorage/tabThree";
 const disk = JSON.stringify(diskOptions);
-    
-function deferLoad (component, time = 0) {
-    return (resolve) => {
-        window.setTimeout(() => resolve(component), time)
-    };
+
+function deferLoad(component, time = 0) {
+  return resolve => {
+    window.setTimeout(() => resolve(component), time);
+  };
 }
 export default {
   data() {
@@ -108,10 +108,10 @@ export default {
       rwPolar: JSON.parse(disk)
     };
   },
-  components:{
-      tabOne:deferLoad(tabOne,100),
-      tabTwo:deferLoad(tabTwo,100),
-      tabThree:deferLoad(tabThree,100)
+  components: {
+    tabOne: deferLoad(tabOne, 100),
+    tabTwo: deferLoad(tabTwo, 100),
+    tabThree: deferLoad(tabThree, 100)
   }
 };
 </script>
@@ -189,19 +189,19 @@ export default {
       }
       .center_chart {
         margin-top: 19px;
-         span {
-            padding: 5px 16px;
-            border: 1px solid #D9D9D9;
-            display: inline-block;
-            margin-right: -4px;
-            cursor: pointer;
-            border-radius: 4px  0px  0px  4px;
-          }
-          span:hover{
-              color: #2A99F2;
-              border:1px solid #2A99F2;
-                cursor: pointer;
-          }
+        span {
+          padding: 5px 16px;
+          border: 1px solid #d9d9d9;
+          display: inline-block;
+          margin-right: -4px;
+          cursor: pointer;
+          border-radius: 4px  0px  0px  4px;
+        }
+        span:hover {
+          color: #2a99f2;
+          border: 1px solid #2a99f2;
+          cursor: pointer;
+        }
         .chart-text {
           width: 273px;
           display: inline-block;
