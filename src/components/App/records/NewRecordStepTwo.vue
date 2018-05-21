@@ -10,11 +10,15 @@
         <div class="main-info">
           <h2>主体信息</h2>
           <transition name="list">
-            <div class="main-ul" v-if="mainInfoShow">
+            <div class="main-ul">
               <ul>
-                <li>主体单位所属区域：{{mainUnitInformation.province}}/{{ mainUnitInformation.city }}/{{ mainUnitInformation.district }}</li>
-                <li>主体单位证件类型：{{ certificateType}}</li>
-                <li>主体单位性质：{{ unitProperties}}</li>
+                <li v-if="mainInfoShow && sessionStatus">主体单位所属区域：{{mainUnitInformation.province}}/{{ mainUnitInformation.city }}/{{ mainUnitInformation.district }}</li>
+                <li v-if="mainInfoShow && (!sessionStatus)">主体单位所属区域：{{ mainUnitInformation.maincompanyarea}}</li>
+                <li v-if="mainInfoShow && sessionStatus">主体单位证件类型：{{ certificateType}}</li>
+                <li v-if="mainInfoShow && (!sessionStatus)">主体单位证件类型：{{ mainUnitInformation.certificatetype}}</li>
+                <li>主体单位性质：{{ mainUnitInformation.unitProperties== '0'?'企业': mainUnitInformation.unitProperties== '1'?'个人':mainUnitInformation.unitProperties==
+                  '2'?'军队':mainUnitInformation.unitProperties== '3'?'政府机关':mainUnitInformation.unitProperties== '4'?'事业单位': '社会团体'}}
+                </li>
                 <li>主体单位证件号码：{{ mainUnitInformation.certificateNumber}}</li>
                 <li>主体单位名称：{{ mainUnitInformation.unitName }}</li>
               </ul>
@@ -23,7 +27,9 @@
                 <li>主体单位通信地址：{{mainUnitInformation.mailingAddress }}</li>
                 <li>投资人或主管单位姓名：{{ mainUnitInformation.investorName }}</li>
                 <li>法人姓名：{{ mainUnitInformation.legalPersonName}}</li>
-                <li>法人证件类型：{{ legalPersonCertificateType }}</li>
+                <li>法人证件类型：{{ mainUnitInformation.legalPersonCertificateType == '1'? '身份证':mainUnitInformation.legalPersonCertificateType == '2'?
+                  '护照':mainUnitInformation.legalPersonCertificateType == '3'?'军官证': '台胞证' }}
+                </li>
               </ul>
               <ul>
                 <li>法人证件号码：{{ mainUnitInformation.legalPersonIDNumber}}</li>
@@ -283,11 +289,22 @@
       var mainUnitInformationStr = ''
       if (sessionStorage.getItem('mainUnitInformationStr')) {
         mainUnitInformationStr = sessionStorage.getItem('mainUnitInformationStr')
+        next(vm => {
+          vm.setData(area, recordsType, mainUnitInformationStr);
+          window.scroll(0, 600)
+        })
+      } else {
+        let response = axios.get('recode/listMainWeb.do')
+        Promise.all([response]).then((res) => {
+          if (res[0].data.status === 1) {
+            mainUnitInformationStr = JSON.stringify(res[0].data.result[0])
+            next(vm => {
+              vm.setData(area, recordsType, mainUnitInformationStr);
+              window.scroll(0, 600)
+            })
+          }
+        })
       }
-      next(vm => {
-        vm.setData(area, recordsType, mainUnitInformationStr);
-        window.scroll(0, 600)
-      });
     },
     data() {
       //校验网站域名
@@ -513,7 +530,9 @@
         //主体信息List
         information: [],
         // 公网IP信息
-        publicIPList: []
+        publicIPList: [],
+        // 决定主体信息从接口获取还是sessionStorage获取
+        sessionStatus: false,
       };
     },
     created() {
@@ -523,8 +542,29 @@
       setData(area, recordsType, mainUnitInformationStr) {
         this.area = area;
         this.siteList[0].basicInformation.serverPutArea = area
-        this.mainUnitInformation = JSON.parse(mainUnitInformationStr)
-        sessionStorage.removeItem('mainUnitInformationStr')
+        if (sessionStorage.getItem('mainUnitInformationStr')) {
+          this.mainUnitInformation = JSON.parse(mainUnitInformationStr)
+          this.sessionStatus = true
+          sessionStorage.removeItem('mainUnitInformationStr')
+        } else {
+          this.sessionStatus = false
+          var mainUnitInformation = JSON.parse(mainUnitInformationStr)
+          this.mainUnitInformation.maincompanyarea = mainUnitInformation.maincompanyarea
+          this.mainUnitInformation.certificateType = mainUnitInformation.maincompanycertificatestype
+          this.mainUnitInformation.unitProperties = mainUnitInformation.maincompanynature
+          this.mainUnitInformation.certificateNumber = mainUnitInformation.maincompanynumber
+          this.mainUnitInformation.unitName = mainUnitInformation.maincompanyname
+          this.mainUnitInformation.certificatesResidence = mainUnitInformation.maincompanycertificatesloaction
+          this.mainUnitInformation.mailingAddress = mainUnitInformation.maincompanycommunicatlocation
+          this.mainUnitInformation.investorName = mainUnitInformation.investorname
+          this.mainUnitInformation.legalPersonName = mainUnitInformation.legalname
+          this.mainUnitInformation.legalPersonCertificateType = mainUnitInformation.legalcertificatestype
+          this.mainUnitInformation.legalPersonIDNumber = mainUnitInformation.legalcertificatesnumber
+          this.mainUnitInformation.officePhone = mainUnitInformation.officenumber
+          this.mainUnitInformation.phoneNumber = mainUnitInformation.phone
+          this.mainUnitInformation.emailAddress = mainUnitInformation.email
+          this.mainUnitInformation.certificatetype = this.getCertificatetype()
+        }
         switch (recordsType) {
           case '1':
             this.recordsType = '新增备案'
@@ -719,6 +759,70 @@
       //隐藏提示文字文本框
       toolHide(upIndex) {
         this.siteList[upIndex].isToolHide = 0;
+      },
+      getCertificatetype (){
+        switch (this.mainUnitInformation.unitProperties) {
+          case '0':
+            switch (this.mainUnitInformation.certificateType) {
+              case '1':
+                return '工商营业执照'
+                break
+              case '2':
+                return '组织机构代码证'
+                break
+            }
+            break
+          case '1':
+            switch (this.mainUnitInformation.certificateType) {
+              case '1':
+                return '身份证'
+                break
+              case '2':
+                return '护照'
+                break
+              case '3':
+                return '军官证'
+                break
+              case '4':
+                return '台胞证'
+                break
+            }
+            break
+          case '2':
+            switch (this.mainUnitInformation.certificateType) {
+              case '1':
+                return '军队代号'
+                break
+            }
+            break
+          case '3':
+            switch (this.mainUnitInformation.certificateType) {
+              case '1':
+                return '组织机构代码证'
+                break
+            }
+            break
+          case '4':
+            switch (this.mainUnitInformation.certificateType) {
+              case '1':
+                return '组织机构代码证'
+                break
+              case '2':
+                return '事业法人证'
+                break
+            }
+            break
+          case '5':
+            switch (this.mainUnitInformation.certificateType) {
+              case '1':
+                return '社团法人证书'
+                break
+              case '2':
+                return '组织机构代码证'
+                break
+            }
+            break
+        }
       }
     },
     mounted() {
@@ -789,44 +893,6 @@
             break
         }
       },
-      unitProperties() {
-        switch (this.mainUnitInformation.unitProperties) {
-          case '0':
-            return '企业'
-            break
-          case '1':
-            return '个人'
-            break
-          case '2':
-            return '军队'
-            break
-          case '3':
-            return '政府机关'
-            break
-          case '4':
-            return '事业单位'
-            break
-          case '5':
-            return '社会团体'
-            break
-        }
-      },
-      legalPersonCertificateType() {
-        switch (this.mainUnitInformation.legalPersonCertificateType) {
-          case '1':
-            return '身份证'
-            break
-          case '2':
-            return '护照'
-            break
-          case '3':
-            return '军官证'
-            break
-          case '4':
-            return '台胞证'
-            break
-        }
-      }
     }
   };
 </script>

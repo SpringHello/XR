@@ -11,9 +11,13 @@
           <h2>主体信息</h2>
           <div class="main-ul">
             <ul>
-              <li>主体单位所属区域：{{mainUnitInformation.province}}/{{ mainUnitInformation.city }}/{{ mainUnitInformation.district }}</li>
-              <li>主体单位证件类型：{{ certificateType}}</li>
-              <li>主体单位性质：{{ unitProperties}}</li>
+              <li v-if="!(mainUnitInformation.maincompanyarea)">主体单位所属区域：{{mainUnitInformation.province}}/{{ mainUnitInformation.city }}/{{ mainUnitInformation.district }}</li>
+              <li v-else>主体单位所属区域：{{ mainUnitInformation.maincompanyarea}}</li>
+              <li v-if="!(mainUnitInformation.certificatetype)">主体单位证件类型：{{ certificateType}}</li>
+              <li v-else>主体单位证件类型：{{ mainUnitInformation.certificatetype}}</li>
+              <li>主体单位性质：{{ mainUnitInformation.unitProperties== '0'?'企业': mainUnitInformation.unitProperties== '1'?'个人':mainUnitInformation.unitProperties==
+                '2'?'军队':mainUnitInformation.unitProperties== '3'?'政府机关':mainUnitInformation.unitProperties== '4'?'事业单位': '社会团体'}}
+              </li>
               <li>主体单位证件号码：{{ mainUnitInformation.certificateNumber}}</li>
               <li>主体单位名称：{{ mainUnitInformation.unitName }}</li>
             </ul>
@@ -22,7 +26,9 @@
               <li>主体单位通信地址：{{mainUnitInformation.mailingAddress }}</li>
               <li>投资人或主管单位姓名：{{ mainUnitInformation.investorName }}</li>
               <li>法人姓名：{{ mainUnitInformation.legalPersonName}}</li>
-              <li>法人证件类型：{{ legalPersonCertificateType }}</li>
+              <li>法人证件类型：{{ mainUnitInformation.legalPersonCertificateType == '1'? '身份证':mainUnitInformation.legalPersonCertificateType == '2'?
+                '护照':mainUnitInformation.legalPersonCertificateType == '3'?'军官证': '台胞证' }}
+              </li>
             </ul>
             <ul>
               <li>法人证件号码：{{ mainUnitInformation.legalPersonIDNumber}}</li>
@@ -514,9 +520,10 @@
         let CheckList = this.uploadForm.CheckList.map(item => {
           return item.url
         })
+        let mainCompanyArea = this.mainUnitInformation.maincompanyarea? this.mainUnitInformation.maincompanyarea : (this.mainUnitInformation.province + '-' + this.mainUnitInformation.city + '-' + this.mainUnitInformation.district)
         let addMainCompany = axios.get('recode/addMainCompany.do', {
           params: {
-            mainCompanyArea: this.mainUnitInformation.province + '-' + this.mainUnitInformation.city + '-' + this.mainUnitInformation.district,
+            mainCompanyArea: mainCompanyArea,
             mainCompanyCertificatesType: this.mainUnitInformation.certificateType,
             mainCompanyNature: this.mainUnitInformation.unitProperties,
             mainCompanyNumber: this.mainUnitInformation.certificateNumber,
@@ -617,44 +624,6 @@
                 return '组织机构代码证'
                 break
             }
-            break
-        }
-      },
-      unitProperties() {
-        switch (this.mainUnitInformation.unitProperties) {
-          case '0':
-            return '企业'
-            break
-          case '1':
-            return '个人'
-            break
-          case '2':
-            return '军队'
-            break
-          case '3':
-            return '政府机关'
-            break
-          case '4':
-            return '事业单位'
-            break
-          case '5':
-            return '社会团体'
-            break
-        }
-      },
-      legalPersonCertificateType() {
-        switch (this.mainUnitInformation.legalPersonCertificateType) {
-          case '1':
-            return '身份证'
-            break
-          case '2':
-            return '护照'
-            break
-          case '3':
-            return '军官证'
-            break
-          case '4':
-            return '台胞证'
             break
         }
       },
