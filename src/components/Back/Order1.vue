@@ -84,9 +84,16 @@
                   break
               }
               for (var index in params.row['资源']) {
+                let parr = []
                 for (var key in params.row['资源'][index]) {
-                  arr.push(h('p', {style: {lineHeight: '1.5'}}, `${key}:${params.row['资源'][index][key]}`))
+                  parr.push(h('p', {style: {lineHeight: '1.5'}}, `${key}:${params.row['资源'][index][key]}`))
                 }
+                arr.push(h('div', {
+                  style: {
+                    borderBottom: index == params.row['资源'].length - 1 ? 'none' : '1px solid rgb(233, 234, 236)',
+                    padding: '10px'
+                  }
+                }, parr))
               }
               return h('div', {
                 style: {

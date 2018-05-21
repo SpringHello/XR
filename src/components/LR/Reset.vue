@@ -259,6 +259,7 @@
             code: this.form.vailCode
           }
         }).then((response) => {
+          this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
           if (response.status == 200 && response.statusText == 'OK') {
             if (response.data.status == 1) {
               this.$Message.success(response.data.message)

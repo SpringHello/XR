@@ -232,7 +232,7 @@
   }
   export default {
     data() {
-      window.scrollTo( 0, 0 );
+      window.scrollTo(0, 0);
       return {
         messageSuccess: '',
         messageError: '',
@@ -607,6 +607,7 @@
               this.productData[index].s2 = parseInt(secRemainder % 10)
               this.productData[index].timerTime = reduce
             } else {
+              this.productData[index].s2 = 0
               this.productData[index].timerTime = 0
             }
           })
