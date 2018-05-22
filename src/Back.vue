@@ -63,63 +63,71 @@
         </div>
       </div>
     </header>
-    <div class="sec-header">
-      <div class="wrapper">
-        <div class="zoneList">
-          <Dropdown @on-click="toggleZone">
-            <div style="height:30px;">
-              <div
-                style="display: inline-block;background: #2A99F2;border-radius: 4px;height: 30px;padding: 4px 0px;cursor:pointer">
-                <img src="./assets/img/back/zoneIcon.png" style="vertical-align: middle;margin:0px 10px;"></img><span
-                style="font-size: 14px;color: #FFFFFF;line-height: 21px;vertical-align: middle;margin-right:10px;">{{zone.zonename}}</span>
-              </div>
-            </div>
-            <DropdownMenu slot="list">
-              <DropdownItem :name="zone.zoneid" v-for="(zone,index) in zoneList" :key="index">
-                {{zone.zonename}}
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        </div>
-        <div class="operate" ref="operate">
-          <ul @mouseleave="ML">
-            <li class="sec-nav" v-for="(item,index) in main" :key="index" @mouseenter="ME($event,item.type)"
-                :ref="item.type"
-                :class="{hover:item.type==pageInfo.hoverItem}">
-              <a>{{item.mainName}}</a>
-            </li>
-            <div class="line" :style="lineStyle" ref="line"></div>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div class="thr-header" @mouseenter="handME" @mouseleave="handML" :class="thrShow">
-      <div class="wrapper">
-        <div class="operate" v-for="(parentItem,pIndex) in main" :key="pIndex" v-if="parentItem.subItem"
-             :style="menuStyle(parentItem.type)">
-          <ul :ref="`${parentItem.type}-sub`" :class="{show:parentItem.type==pageInfo.hoverItem}">
-            <li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"
-                @click="push(parentItem.type,subItem.type)" :class="{hover:subItem.type==pageInfo.sType}">
-              <Dropdown v-if="subItem.thrItem" @on-click="pane">
-                <a href="javascript:void(0)">
-                  {{subItem.subName}}
-                </a>
-                <DropdownMenu slot="list">
-                  <DropdownItem v-for="(thrItem,index) in subItem.thrItem" :key="index"
-                                :name="`${thrItem.pane}#${subItem.subName}`">
-                    <a>{{thrItem.thrName}}</a>
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-              <a v-else>
-                {{subItem.subName}}
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div style="clear:right"></div>
-      </div>
-    </div>
+    <!--<div class="sec-header">-->
+      <!--<div class="wrapper">-->
+        <!--<div class="zoneList">-->
+          <!--<Dropdown @on-click="toggleZone">-->
+            <!--<div style="height:30px;">-->
+              <!--<div-->
+                <!--style="display: inline-block;background: #2A99F2;border-radius: 4px;height: 30px;padding: 4px 0px;cursor:pointer">-->
+                <!--<img src="./assets/img/back/zoneIcon.png" style="vertical-align: middle;margin:0px 10px;"></img><span-->
+                <!--style="font-size: 14px;color: #FFFFFF;line-height: 21px;vertical-align: middle;margin-right:10px;">{{zone.zonename}}</span>-->
+              <!--</div>-->
+            <!--</div>-->
+            <!--<DropdownMenu slot="list">-->
+              <!--<DropdownItem :name="zone.zoneid" v-for="(zone,index) in zoneList" :key="index">-->
+                <!--{{zone.zonename}}-->
+              <!--</DropdownItem>-->
+            <!--</DropdownMenu>-->
+          <!--</Dropdown>-->
+        <!--</div>-->
+        <!--<div class="operate" ref="operate">-->
+          <!--<ul @mouseleave="ML">-->
+            <!--<li class="sec-nav" v-for="(item,index) in main" :key="index" @mouseenter="ME($event,item.type)"-->
+                <!--:ref="item.type"-->
+                <!--:class="{hover:item.type==pageInfo.hoverItem}">-->
+              <!--<a>{{item.mainName}}</a>-->
+            <!--</li>-->
+            <!--<div class="line" :style="lineStyle" ref="line"></div>-->
+          <!--</ul>-->
+        <!--</div>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<div class="thr-header" @mouseenter="handME" @mouseleave="handML" :class="thrShow">-->
+      <!--<div class="wrapper">-->
+        <!--<div class="operate" v-for="(parentItem,pIndex) in main" :key="pIndex" v-if="parentItem.subItem"-->
+             <!--:style="menuStyle(parentItem.type)">-->
+          <!--<ul :ref="`${parentItem.type}-sub`" :class="{show:parentItem.type==pageInfo.hoverItem}">-->
+            <!--<li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"-->
+                <!--@click="push(parentItem.type,subItem.type)" :class="{hover:subItem.type==pageInfo.sType}">-->
+              <!--<Dropdown v-if="subItem.thrItem" @on-click="pane">-->
+                <!--<a href="javascript:void(0)">-->
+                  <!--{{subItem.subName}}-->
+                <!--</a>-->
+                <!--<DropdownMenu slot="list">-->
+                  <!--<DropdownItem v-for="(thrItem,index) in subItem.thrItem" :key="index"-->
+                                <!--:name="`${thrItem.pane}#${subItem.subName}`">-->
+                    <!--<a>{{thrItem.thrName}}</a>-->
+                  <!--</DropdownItem>-->
+                <!--</DropdownMenu>-->
+              <!--</Dropdown>-->
+              <!--<a v-else>-->
+                <!--{{subItem.subName}}-->
+              <!--</a>-->
+            <!--</li>-->
+          <!--</ul>-->
+        <!--</div>-->
+        <!--<div style="clear:right"></div>-->
+      <!--</div>-->
+    <!--</div>-->
+    <!--<Menu :theme="theme" active-name="1-1" :open-names="['1']" style="position: fixed;left: 0">-->
+      <!--<Submenu :name="index+1" v-for="(item,index) in main" :key="index">-->
+        <!--<template slot="title">{{item.mainName}}</template>-->
+        <!--<MenuGroup>-->
+          <!--<MenuItem :name="(index+1)-(index+1)" v-for="(subItem,index) in item.subItem">{{.subItem.subName}}</MenuItem>-->
+        <!--</MenuGroup>-->
+      <!--</Submenu>-->
+    <!--</Menu>-->
     <!-- 客服浮动块 -->
     <div class="affix">
       <span class="qq" @mouseenter="QME" @mouseleave="QML">
