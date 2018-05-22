@@ -14,10 +14,8 @@
               <ul>
                 <li v-if="mainInfoShow && sessionStatus">主体单位所属区域：{{mainUnitInformation.province}}/{{ mainUnitInformation.city }}/{{ mainUnitInformation.district }}</li>
                 <li v-if="mainInfoShow && (!sessionStatus)">主体单位所属区域：{{ mainUnitInformation.maincompanyarea}}</li>
-                <li v-if="mainInfoShow && sessionStatus">主体单位证件类型：{{ certificateType}}</li>
-                <li v-if="mainInfoShow && (!sessionStatus)">主体单位证件类型：{{ mainUnitInformation.certificatetype}}</li>
-                <li>主体单位性质：{{ mainUnitInformation.unitProperties== '0'?'企业': mainUnitInformation.unitProperties== '1'?'个人':mainUnitInformation.unitProperties==
-                  '2'?'军队':mainUnitInformation.unitProperties== '3'?'政府机关':mainUnitInformation.unitProperties== '4'?'事业单位': '社会团体'}}
+                <li>主体单位证件类型：{{ mainUnitInformation.certificateType}}</li>
+                <li>主体单位性质：{{ mainUnitInformation.unitProperties}}
                 </li>
                 <li>主体单位证件号码：{{ mainUnitInformation.certificateNumber}}</li>
                 <li>主体单位名称：{{ mainUnitInformation.unitName }}</li>
@@ -27,8 +25,7 @@
                 <li>主体单位通信地址：{{mainUnitInformation.mailingAddress }}</li>
                 <li>投资人或主管单位姓名：{{ mainUnitInformation.investorName }}</li>
                 <li>法人姓名：{{ mainUnitInformation.legalPersonName}}</li>
-                <li>法人证件类型：{{ mainUnitInformation.legalPersonCertificateType == '1'? '身份证':mainUnitInformation.legalPersonCertificateType == '2'?
-                  '护照':mainUnitInformation.legalPersonCertificateType == '3'?'军官证': '台胞证' }}
+                <li>法人证件类型：{{ mainUnitInformation.legalPersonCertificateType }}
                 </li>
               </ul>
               <ul>
@@ -197,7 +194,7 @@
               </FormItem>
               <FormItem label="有效证件类型" prop="certificateType">
                 <Select v-model="site.basicInformation.certificateType" style="width:500px;" placeholder="请选择证件类型" @on-change="changeCertificate(upIndex)">
-                  <Option v-for="item in site.basicInformation.certificateTypeList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                  <Option v-for="item in site.basicInformation.certificateTypeList" :value="item.label" :key="item.value">{{ item.label }}</Option>
                 </Select>
               </FormItem>
               <FormItem label="有效证件号码" prop="certificateNumber">
@@ -545,7 +542,6 @@
         if (sessionStorage.getItem('mainUnitInformationStr')) {
           this.mainUnitInformation = JSON.parse(mainUnitInformationStr)
           this.sessionStatus = true
-          sessionStorage.removeItem('mainUnitInformationStr')
         } else {
           this.sessionStatus = false
           var mainUnitInformation = JSON.parse(mainUnitInformationStr)
@@ -563,7 +559,6 @@
           this.mainUnitInformation.officePhone = mainUnitInformation.officenumber
           this.mainUnitInformation.phoneNumber = mainUnitInformation.phone
           this.mainUnitInformation.emailAddress = mainUnitInformation.email
-          this.mainUnitInformation.certificatetype = this.getCertificatetype()
         }
         switch (recordsType) {
           case '1':
@@ -760,139 +755,11 @@
       toolHide(upIndex) {
         this.siteList[upIndex].isToolHide = 0;
       },
-      getCertificatetype (){
-        switch (this.mainUnitInformation.unitProperties) {
-          case '0':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '工商营业执照'
-                break
-              case '2':
-                return '组织机构代码证'
-                break
-            }
-            break
-          case '1':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '身份证'
-                break
-              case '2':
-                return '护照'
-                break
-              case '3':
-                return '军官证'
-                break
-              case '4':
-                return '台胞证'
-                break
-            }
-            break
-          case '2':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '军队代号'
-                break
-            }
-            break
-          case '3':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '组织机构代码证'
-                break
-            }
-            break
-          case '4':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '组织机构代码证'
-                break
-              case '2':
-                return '事业法人证'
-                break
-            }
-            break
-          case '5':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '社团法人证书'
-                break
-              case '2':
-                return '组织机构代码证'
-                break
-            }
-            break
-        }
-      }
     },
     mounted() {
       this.mainInfoShow = true;
     },
     computed: {
-      certificateType() {
-        switch (this.mainUnitInformation.unitProperties) {
-          case '0':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '工商营业执照'
-                break
-              case '2':
-                return '组织机构代码证'
-                break
-            }
-            break
-          case '1':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '身份证'
-                break
-              case '2':
-                return '护照'
-                break
-              case '3':
-                return '军官证'
-                break
-              case '4':
-                return '台胞证'
-                break
-            }
-            break
-          case '2':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '军队代号'
-                break
-            }
-            break
-          case '3':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '组织机构代码证'
-                break
-            }
-            break
-          case '4':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '组织机构代码证'
-                break
-              case '2':
-                return '事业法人证'
-                break
-            }
-            break
-          case '5':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '社团法人证书'
-                break
-              case '2':
-                return '组织机构代码证'
-                break
-            }
-            break
-        }
-      },
     }
   };
 </script>
