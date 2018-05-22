@@ -152,7 +152,7 @@
       <!--<img src="./assets/img/app/regiterTag.png"/>-->
       <span class="qq" @mouseenter="QME" @mouseleave="QML">
         <div ref="qq" style="overflow: hidden">
-          <div class="wrapper">
+          <div class="wrapper" v-if="QQInfo.length>0">
             <div>
               <span>人工客服</span>
               <div class="info-wrapper">
@@ -170,7 +170,7 @@
               </div>
             </div>
           </div>
-          <div class="wrapper">
+          <div class="wrapper" v-if="xiaoshouInfo.length>0">
             <div>
               <span>售前咨询</span>
               <div class="info-wrapper">
@@ -189,7 +189,7 @@
               </div>
             </div>
           </div>
-          <div class="wrapper">
+          <div class="wrapper" v-if="yunweiInfo.length>0">
             <div>
               <span>技术支持</span>
               <div class="info-wrapper">
@@ -300,10 +300,10 @@
             title: '关于我们',
             path: '/ruicloud/about'
           }/*,
-          {
-            title: '备案',
-            path: '/ruicloud/entrance'
-          }*/
+           {
+           title: '备案',
+           path: '/ruicloud/entrance'
+           }*/
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
         lineStyle: {
@@ -484,6 +484,7 @@
 <style rel="stylesheet/less" lang="less">
   @import './assets/css/frontend.css';
   @import './assets/css/iconfont.css';
+
   #front {
     header {
       width: 100%;
@@ -890,8 +891,8 @@
       }
       .topLink {
         display: block;
-        width:48px;
-        height:48px;
+        width: 48px;
+        height: 48px;
         background-image: url('./assets/img/app/top.png');
         &:hover {
           background: #2A99F2 url('./assets/img/app/top-hover.png') no-repeat center;

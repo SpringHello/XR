@@ -124,7 +124,7 @@
     <div class="affix">
       <span class="qq" @mouseenter="QME" @mouseleave="QML">
         <div ref="qq" style="overflow: hidden">
-          <div class="wrapper">
+          <div class="wrapper" v-if="QQInfo.length>0">
             <div>
               <span>人工客服</span>
               <div class="info-wrapper">
@@ -142,7 +142,7 @@
               </div>
             </div>
           </div>
-          <div class="wrapper">
+          <div class="wrapper" v-if="xiaoshouInfo.length>0">
             <div>
               <span>售前咨询</span>
               <div class="info-wrapper">
@@ -161,7 +161,7 @@
               </div>
             </div>
           </div>
-          <div class="wrapper">
+          <div class="wrapper" v-if="yunweiInfo.length>0">
             <div>
               <span>技术支持</span>
               <div class="info-wrapper">

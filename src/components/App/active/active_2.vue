@@ -192,7 +192,7 @@
           <h3>2.活动对象：</h3>
           <p>新注册且已通过个人／企业认证，且未领取和购买过平台资源及参加过其他免费活动的用户。</p>
           <h3>3.活动内容： </h3>
-          <p>符合条件的用户在每天10点、12点、15点、17点抢购免费主机。抢购成功即可使用。活动期间每人限领一次。 </p>
+          <p>符合条件的用户在每天10点、12点、15点、17点、20点抢购免费主机。抢购成功即可使用。活动期间每人限领一次。 </p>
           <h3>4.资格详细规则： </h3>
           <p>1） 用户如果已购买、已体验过对应的产品，不能再次申请； </p>
           <p>2） 同一手机号对应的多个账号只能申请一次；</p>
@@ -561,7 +561,6 @@
         let hours = [10, 12, 15, 17, 20].map(function (hour) {
           let h = new Date(serviceTime);
           h.setHours(hour, 0, 0)
-
           return {time: h.getTime(), timerText: hour}
         })
 
@@ -607,7 +606,7 @@
               this.productData[index].s2 = parseInt(secRemainder % 10)
               this.productData[index].timerTime = reduce
             } else {
-              this.productData[index].s2 = 0
+              //this.productData[index].s2 = 0
               this.productData[index].timerTime = 0
             }
           })
@@ -640,7 +639,7 @@
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
       },
       startIndex(){
-        let startIndex = 2
+        let startIndex = 3
         for (let i = 0; i < this.productData.length - 1; i++) {
           if (this.productData[i].timerTime > 0) {
             startIndex = i
