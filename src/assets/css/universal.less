@@ -121,10 +121,11 @@
 #background {
   background-color: #f5f5f5;
   width: 100%;
-  @diff: 146px;
+  @diff: 0px;
+  padding: 20px;
   min-height: calc(~"100% - @{diff}");
   #wrapper {
-    width: 1200px;
+    //width: 1200px;
     margin: 0px auto;
     .title {
       span {
@@ -608,10 +609,12 @@
 .ivu-upload-drag:hover {
   border: none;
 }
-.my-upload .ivu-upload-drag{
+
+.my-upload .ivu-upload-drag {
   background-color: #FFFFFF;
   margin-top: 20px;
 }
+
 // 备案系统区域按钮样式
 .recordsArea-but {
   width: 224px;
