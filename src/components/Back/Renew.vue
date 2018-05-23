@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 100%;">
     <div class="background">
       <Spin fix v-show="loading">
         <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
@@ -533,7 +533,6 @@
     background-color: #f5f5f5;
     @diff: 101px;
     min-height: calc(~"100% - @{diff}");
-    width: 100%;
     .wrapper {
       //width: 1200px;
       margin: 0px auto;

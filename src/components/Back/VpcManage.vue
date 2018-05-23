@@ -1179,6 +1179,7 @@
   }
 
   .vpc-manage {
+    width: 100%;
     background-color: #f5f5f5;
     /*
         less 处理css计算属性calc有bug
