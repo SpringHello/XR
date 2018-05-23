@@ -63,9 +63,9 @@
         </div>
       </div>
     </header>
-    <div style="display: flex">
-      <div>
-        <Menu :active-name="activeName" :open-names="openName" @on-select="push" accordion=true>
+    <div style="display: flex;">
+      <div class="titleFont">
+        <Menu :active-name="activeName" :open-names="openName" @on-select="push" :accordion=true :theme="theme">
           <Submenu name="service">
             <template slot="title">
               <Icon type="ios-analytics"></Icon>
@@ -75,7 +75,7 @@
             <MenuItem name="snapshot">云主机快照</MenuItem>
             <MenuItem name="mirror">快照</MenuItem>
           </Submenu>
-          <Submenu name="2">
+          <Submenu name="save">
             <template slot="title">
               <Icon type="ios-filing"></Icon>
               云存储
@@ -83,7 +83,7 @@
             <MenuItem name="disk">云硬盘</MenuItem>
             <MenuItem name="diskBackup">云硬盘备份</MenuItem>
           </Submenu>
-          <Submenu name="2">
+          <Submenu name="network">
             <template slot="title">
               <Icon type="ios-filing"></Icon>
               云网络
@@ -93,14 +93,14 @@
             <MenuItem name="balance">负载均衡</MenuItem>
             <MenuItem name="vpn">虚拟专网VPN</MenuItem>
           </Submenu>
-          <Submenu name="2">
+          <Submenu name="safe">
             <template slot="title">
               <Icon type="ios-filing"></Icon>
               云安全
             </template>
             <MenuItem name="firewall">防火墙</MenuItem>
           </Submenu>
-          <Submenu name="2">
+          <Submenu name="recycle">
             <template slot="title">
               <Icon type="ios-filing"></Icon>
               回收站
@@ -199,9 +199,21 @@
   export default {
     name: 'back',
     data(){
+      /*var map = {
+       host: 'service',
+       snapshot: 'service',
+       mirror: 'service',
+       host: 'service',
+       host: 'service',
+       host: 'service'
+       }
+       var openName = [map[this.activeName]]
+       console.log(this.activeName)
+       console.log(openName)*/
       return {
+        theme:'dark', //左侧菜单背景
         activeName: 'overview',
-        openName: [],
+        openName: ['service'],
         main: [
           {
             mainName: '云服务器',
@@ -260,7 +272,6 @@
       }
     },
     beforeRouteEnter(to, from, next){
-
       // 获取所有后台需要的基本信息
       // 获取用户信息
       var userInfo = axios.get('user/GetUserInfo.do')
@@ -335,9 +346,22 @@
     computed: mapState({
       userInfo: state => state.userInfo,
       zone: state => state.zone,
-      zoneList: state => state.zoneList
+      zoneList: state => state.zoneList,
     }),
-    watch: {}
+    watch: {
+      activeName(){
+        var map = {
+          host: 'service',
+          snapshot: 'service',
+          mirror: 'service',
+          host: 'service',
+          host: 'service',
+          host: 'service'
+        }
+        this.openName.push(map[this.activeName])
+        console.log(this.openName)
+      }
+    }
   }
 </script>
 
@@ -452,6 +476,41 @@
       // vertical-align: -0.15em;
       fill: currentColor;
       overflow: hidden;
+    }
+
+    .titleFont{
+      background:rgba(63,63,63,1);
+      ul li{
+        font-size:14px;
+        line-height:14px;
+        .ivu-menu-item{
+          &::before{
+            content: '';
+            display: inline-block;
+            width:6px;
+            height:6px;
+            background:rgba(255,255,255,1);
+            position: relative;
+            right: 15px;
+            bottom: 1px;
+          }
+        }
+        .ivu-menu-item-active{
+          background: none !important;
+          color: #2A99F2;
+          &::before{
+            content: '';
+            display: inline-block;
+            width:6px;
+            height:6px;
+            background:rgba(42,153,242,1);
+            position: relative;
+            right: 15px;
+            bottom: 1px;
+          }
+
+        }
+      }
     }
   }
 
