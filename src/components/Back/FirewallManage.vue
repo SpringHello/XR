@@ -537,12 +537,13 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   .background {
+    padding: 20px;
     background-color: #f5f5f5;
     width: 100%;
     @diff: 146px;
     min-height: calc(~'100% - @{diff}');
     .wrapper {
-      width: 1200px;
+      //width: 1200px;
       margin: 0px auto;
       margin-bottom: 25px;
       & > span {

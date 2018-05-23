@@ -1,5 +1,6 @@
 <template>
-  <div>我是新建页面</div>
+  <div>我是新建页面
+  </div>
 </template>
 
 <script type="text/ecmascript-6">

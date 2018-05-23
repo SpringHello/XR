@@ -421,6 +421,7 @@
   }
 
   #overview {
+    padding: 20px;
     background-color: #f5f5f5;
     /*
         less 处理css计算属性calc有bug
@@ -429,7 +430,7 @@
     @diff: 101px;
     min-height: calc(~"100% - @{diff}");
     #wrapper {
-      width: 1200px;
+      //width: 1200px;
       margin: 0px auto;
       #title {
         font-size: 12px;

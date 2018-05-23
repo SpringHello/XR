@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 100%;">
     <div class="background">
       <Spin fix v-show="loading">
         <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
@@ -28,7 +28,7 @@
 
                 <div class="all">
                   <Alert style="border: solid 1px #2A99F2;border-radius: 4px;width:100%">
-                    自2018/05/18日起，到2018/07/18。升级与续费本平台任意资源，即可享满减优惠，满20减6元，满300减180，最多可减7000元！
+                    自2018/05/22日起，到2018/07/31。升级与续费本平台任意资源，即可享满减优惠，满20减6元，满300减120，最多可减7000元！
                   </Alert>
                   <div v-for="(item,index) in hostList" :key="index" v-bind:class="{select:item.select}"
                        @click="toggle(item)" style="margin-bottom: 20px">
@@ -529,12 +529,12 @@
   }
 
   .background {
+    padding: 20px;
     background-color: #f5f5f5;
     @diff: 101px;
     min-height: calc(~"100% - @{diff}");
-    width: 100%;
     .wrapper {
-      width: 1200px;
+      //width: 1200px;
       margin: 0px auto;
       & > span {
         font-family: Microsoft Yahei, 微软雅黑;
