@@ -351,7 +351,7 @@
       position: relative;
       background-color: #3f3f3f;
       .wrapper {
-        width: 1200px;
+        //width: 1200px;
         margin: 0px auto;
         .logo {
           width: 140px;
