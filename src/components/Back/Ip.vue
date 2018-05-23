@@ -30,6 +30,7 @@
             <Dropdown-menu slot="list">
               <Dropdown-item name="adjust">调整带宽</Dropdown-item>
               <Dropdown-item name="charges">资费变更</Dropdown-item>
+              <Dropdown-item name="renewIP">续费IP</Dropdown-item>
             </Dropdown-menu>
           </Dropdown>
         </div>
@@ -244,7 +245,7 @@
       </div>
       <div slot="footer" style="" class="modal-footer-border">
         <Button class="button cancel" @click="showModal.renew=false">取消</Button>
-        <Button class="button ok" @click="renewOk">确认续费</Button>
+        <Button class="button ok" @click="renewOk" :disabled="renewalCost=='--'">确认续费</Button>
       </div>
     </Modal>
   </div>
@@ -973,6 +974,10 @@
             this.charges()
             break
           }
+          case 'renewIP':{
+            this.renewIP()
+            break
+          }
         }
       },
       adjust(){
@@ -1043,6 +1048,18 @@
           }
         )
       },
+      renewIP () {
+        if (this.select == null) {
+          this.$Message.info('请选择需要续费的IP')
+          return false
+        }
+        if (this.select.caseType === 3) {
+          this.$Message.info('请选择包年或包月的IP进行续费')
+          return false
+        }
+        this.currentIp = this.select.id
+        this.showModal.renew = true
+      },
       queryAdjustPrice: debounce(500, function () {
         this.$http.get('continue/countMoneyByUpPublicBandwith.do',{
           params: {
@@ -1079,8 +1096,12 @@
         )
       },
       renewOk(){
+        var list = [{
+          type: 2,
+          id: this.currentIp
+        }]
         this.$http.post('continue/continueOrder.do', {
-          list: [{type: 2, id: this.currentIp}],
+          list: JSON.stringify(list),
           timeType: this.renewalType,
           timeValue: this.renewalTime + ''
         }).then(response => {
