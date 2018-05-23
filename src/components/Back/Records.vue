@@ -34,7 +34,7 @@
               <router-link to="entrance">
                 <Button style="margin-bottom:10px;" type="primary">新增备案</Button>
               </router-link>
-              
+
               <Table  ref="selection" :columns="recordTypeList" :data="recordProgressList"></Table>
             </TabPane>
 
@@ -386,7 +386,7 @@ export default {
   // min-height: calc(~"100% - @{diff}");
   width: 100%;
   .wrapper {
-    width: 1200px;
+    //width: 1200px;
     margin: 0px auto;
     & > span {
       font-family: Microsoft Yahei, 微软雅黑;

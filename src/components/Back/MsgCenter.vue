@@ -325,7 +325,7 @@
     @diff: 101px;
     min-height: calc(~"100% - @{diff}");
     .wrapper {
-      width: 1200px;
+      //width: 1200px;
       margin: 0px auto;
       & > span {
         font-family: PingFangSC-Regular;

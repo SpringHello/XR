@@ -1147,7 +1147,7 @@
     @diff: 146px;
     min-height: calc(~'100% - @{diff}');
     #wrapper {
-      width: 1200px;
+      //width: 1200px;
       margin: 0px auto;
       #title {
         font-size: 12px;

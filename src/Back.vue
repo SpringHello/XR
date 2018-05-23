@@ -63,7 +63,7 @@
         </div>
       </div>
     </header>
-    <div style="display: flex;">
+    <div style="display: flex;min-height: calc(100% - 56px)">
       <div class="titleFont">
         <Menu :active-name="activeName" :open-names="openName" @on-select="push" :accordion=true :theme="theme">
           <Submenu name="service">
@@ -211,7 +211,7 @@
        console.log(this.activeName)
        console.log(openName)*/
       return {
-        theme:'dark', //左侧菜单背景
+        theme: 'dark', //左侧菜单背景
         activeName: 'overview',
         openName: ['service'],
         main: [
@@ -479,32 +479,32 @@
       overflow: hidden;
     }
 
-    .titleFont{
-      background:rgba(63,63,63,1);
-      ul li{
-        font-size:14px;
-        line-height:14px;
-        .ivu-menu-item{
-          &::before{
+    .titleFont {
+      background: rgba(63, 63, 63, 1);
+      ul li {
+        font-size: 14px;
+        line-height: 14px;
+        .ivu-menu-item {
+          &::before {
             content: '';
             display: inline-block;
-            width:6px;
-            height:6px;
-            background:rgba(255,255,255,1);
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 1);
             position: relative;
             right: 15px;
             bottom: 1px;
           }
         }
-        .ivu-menu-item-active{
+        .ivu-menu-item-active {
           background: none !important;
           color: #2A99F2;
-          &::before{
+          &::before {
             content: '';
             display: inline-block;
-            width:6px;
-            height:6px;
-            background:rgba(42,153,242,1);
+            width: 6px;
+            height: 6px;
+            background: rgba(42, 153, 242, 1);
             position: relative;
             right: 15px;
             bottom: 1px;
