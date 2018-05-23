@@ -529,6 +529,7 @@
   }
 
   .background {
+    padding: 20px;
     background-color: #f5f5f5;
     @diff: 101px;
     min-height: calc(~"100% - @{diff}");

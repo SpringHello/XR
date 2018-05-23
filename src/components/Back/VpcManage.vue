@@ -1187,6 +1187,7 @@
     @diff: 101px;
     min-height: calc(~"100% - @{diff}");
     .wrapper {
+      padding: 20px;
       //width: 1200px;
       margin: 0px auto;
       .title {
