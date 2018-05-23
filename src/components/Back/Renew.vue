@@ -1,20 +1,16 @@
 <template>
   <div>
     <div class="background">
-      <Spin fix v-show="loading">
-        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-        <div>{{loadingMessage}}</div>
-      </Spin>
       <div class="wrapper">
-        <span style="background-color: #f5f5f5;"><router-link to="overview"
-                                                              style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 一键续费</span>
+        <span style="background-color: #f5f5f5;">
+          <router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 一键续费</span>
         <div class="content">
           <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-yijianxufei"></use>
           </svg>
           <span style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">一键续费</span>
           <div style="margin-top:20px;position:relative">
-            <div class="operate">
+            <!--<div class="operate">
               <div class="button" @click="selectAll"><span>全选</span></div>
               <div class="button" @click="renewalAll"><span>一键续费</span></div>
               <div style="width:218px;">
@@ -22,173 +18,28 @@
                   <Option v-for="item in allType" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
               </div>
-            </div>
+            </div>-->
             <Tabs type="card" :animated="false" v-model="tabLabel" @on-click="clear">
               <Tab-pane label="全部" name="全部">
-
-                <div class="all">
+                <div>
                   <Alert style="border: solid 1px #2A99F2;border-radius: 4px;width:100%">
                     自2018/05/22日起，到2018/07/31。升级与续费本平台任意资源，即可享满减优惠，满20减6元，满300减120，最多可减7000元！
                   </Alert>
-                  <div v-for="(item,index) in hostList" :key="index" v-bind:class="{select:item.select}"
-                       @click="toggle(item)" style="margin-bottom: 20px">
-                    <Card style="width:375px">
-                      <div style="text-align:center">
-                        <div class="head">
-                          <div class="icon host" v-if="item.type=='host'"></div>
-                          <div class="icon ip" v-if="item.type=='ip'"></div>
-                          <div class="icon disk" v-if="item.type=='disk'"></div>
-                          <div class="icon nat" v-if="item.type=='nat'"></div>
-                          <div class="info">
-                            <h1>{{item.resourcesName}}</h1>
-                            <span>
-                              过期时间：{{item.deadline}}
-                            </span>
-                            <span>
-                              剩余时长：{{item.remainingDay}}天{{item.remainingHour}}时{{item.remainingMinute}}分
-                            </span>
-                          </div>
-                        </div>
-                        <div class="foot">
-                          <div class="switch">
-                            <i-switch v-model="item.isAuto" @on-change="toggleStatus(item)">
-                              <span slot="open">开</span>
-                              <span slot="close">关</span>
-                            </i-switch>
-                            <span>自动续费</span></div>
-                          <div class="renewal-button" @click.stop="renewalOne(item)">续费</div>
-                        </div>
-                      </div>
-                    </Card>
-                  </div>
-                  <div class="logo" v-if="hostList.length==0">
-                    <span>暂无需要续费资源</span>
-                  </div>
+                  <Button type="primary">全选</Button>
+                  <Button type="primary">一键续费</Button>
+                </div>
+                <div>
+                  <Table :columns="columns" :data="hostList"></Table>
                 </div>
               </Tab-pane>
               <Tab-pane label="24小时之内" name="24小时之内">
-                <div class="all">
-                  <Alert style="border: solid 1px #2A99F2;border-radius: 4px;width:100%">
-                    在余额充足的情况下，如开启自动续费，系统将在资源即将到期时为其续费。如关闭自动续费，系统将不做任何续费操作，且过期后资源进入欠费状态。
-                  </Alert>
-                  <div v-for="(item,index) in hostList" :key="index" v-bind:class="{select:item.select}"
-                       v-if="item.remainingDay==0" @click="toggle(item)" style="margin-bottom: 20px">
-                    <Card style="width:375px">
-                      <div style="text-align:center">
-                        <div class="head">
-                          <div class="icon host" v-if="item.type=='host'"></div>
-                          <div class="icon ip" v-if="item.type=='ip'"></div>
-                          <div class="icon disk" v-if="item.type=='disk'"></div>
-                          <div class="icon nat" v-if="item.type=='nat'"></div>
-                          <div class="info">
-                            <h1>{{item.resourcesName}}</h1>
-                            <span>
-                              过期时间：{{item.deadline}}
-                            </span>
-                            <span>
-                              剩余时长：{{item.remainingDay}}天{{item.remainingHour}}时{{item.remainingMinute}}分
-                            </span>
-                          </div>
-                        </div>
-                        <div class="foot">
-                          <div class="switch">
-                            <i-switch v-model="item.isAuto" @on-change="toggleStatus(item)">
-                              <span slot="open">开</span>
-                              <span slot="close">关</span>
-                            </i-switch>
-                            <span>自动续费</span></div>
-                          <div class="renewal-button" @click.stop="renewalOne(item)">续费</div>
-                        </div>
-                      </div>
-                    </Card>
-                  </div>
-                  <div class="logo" v-if="hostList.every(item=>{return item.remainingDay!=0})">
-                    <span>暂无需要续费资源</span>
-                  </div>
-                </div>
+
               </Tab-pane>
               <Tab-pane label="7天内" name="7天内">
-                <div class="all">
-                  <Alert style="border: solid 1px #2A99F2;border-radius: 4px;width:100%">
-                    在余额充足的情况下，如开启自动续费，系统将在资源即将到期时为其续费。如关闭自动续费，系统将不做任何续费操作，且过期后资源进入欠费状态。
-                  </Alert>
-                  <div v-for="(item,index) in hostList" :key="index" v-bind:class="{select:item.select}"
-                       v-if="-1<item.remainingDay&&item.remainingDay<7" @click="toggle(item)"
-                       style="margin-bottom: 20px">
-                    <Card style="width:375px">
-                      <div style="text-align:center">
-                        <div class="head">
-                          <div class="icon host" v-if="item.type=='host'"></div>
-                          <div class="icon ip" v-if="item.type=='ip'"></div>
-                          <div class="icon disk" v-if="item.type=='disk'"></div>
-                          <div class="icon nat" v-if="item.type=='nat'"></div>
-                          <div class="info">
-                            <h1>{{item.resourcesName}}</h1>
-                            <span>
-                              过期时间：{{item.deadline}}
-                            </span>
-                            <span>
-                              剩余时长：{{item.remainingDay}}天{{item.remainingHour}}时{{item.remainingMinute}}分
-                            </span>
-                          </div>
-                        </div>
-                        <div class="foot">
-                          <div class="switch">
-                            <i-switch v-model="item.isAuto" @on-change="toggleStatus(item)">
-                              <span slot="open">开</span>
-                              <span slot="close">关</span>
-                            </i-switch>
-                            <span>自动续费</span></div>
-                          <div class="renewal-button" @click.stop="renewalOne(item)">续费</div>
-                        </div>
-                      </div>
-                    </Card>
-                  </div>
-                  <div class="logo" v-if="hostList.every(item=>{return item.remainingDay>=7||item.remainingDay<=-1})">
-                    <span>暂无需要续费资源</span>
-                  </div>
-                </div>
+
               </Tab-pane>
               <Tab-pane label="已过期" name="已过期">
-                <div class="all">
-                  <Alert style="border: solid 1px #2A99F2;border-radius: 4px;width:100%">
-                    在余额充足的情况下，如开启自动续费，系统将在资源即将到期时为其续费。如关闭自动续费，系统将不做任何续费操作，且过期后资源进入欠费状态。
-                  </Alert>
-                  <div v-for="(item,index) in hostList" :key="index" v-bind:class="{select:item.select}"
-                       v-if="item.remainingDay<0" @click="toggle(item)" style="margin-bottom: 20px">
-                    <Card style="width:375px">
-                      <div style="text-align:center">
-                        <div class="head">
-                          <div class="icon host" v-if="item.type=='host'"></div>
-                          <div class="icon ip" v-if="item.type=='ip'"></div>
-                          <div class="icon disk" v-if="item.type=='disk'"></div>
-                          <div class="icon nat" v-if="item.type=='nat'"></div>
-                          <div class="info">
-                            <h1>{{item.resourcesName}}</h1>
-                            <span>
-                              过期时间：{{item.deadline}}
-                            </span>
-                            <span>
-                              剩余时长：{{item.remainingDay}}天{{item.remainingHour}}时{{item.remainingMinute}}分
-                            </span>
-                          </div>
-                        </div>
-                        <div class="foot">
-                          <div class="switch">
-                            <i-switch v-model="item.isAuto" @on-change="toggleStatus(item)">
-                              <span slot="open">开</span>
-                              <span slot="close">关</span>
-                            </i-switch>
-                            <span>自动续费</span></div>
-                          <div class="renewal-button" @click.stop="renewalOne(item)">续费</div>
-                        </div>
-                      </div>
-                    </Card>
-                  </div>
-                  <div class="logo" v-if="hostList.every(item=>{return item.remainingDay>=0})">
-                    <span>暂无需要续费资源</span>
-                  </div>
-                </div>
+
               </Tab-pane>
             </Tabs>
           </div>
@@ -237,11 +88,35 @@
   export default{
     data(){
       return {
+        columns: [
+          {
+            type: 'selection',
+            width: 60,
+            align: 'center'
+          },
+          {
+            title: '资源名称',
+            key: 'name'
+          },
+          {
+            title: '创建时间',
+            key: 'age'
+          },
+          {
+            title: '剩余时长',
+            key: 'address'
+          },
+          {
+            title: '过期时间',
+            key: 'address'
+          },
+          {
+            title: '操作',
+            key: 'address'
+          }
+        ],
+
         hostList: [],
-        allType: [{value: '', label: '全部'}, {value: 'host', label: '云主机'}, {value: 'ip', label: '弹性IP'}, {
-          value: 'disk',
-          label: '硬盘'
-        }, {value: 'nat', label: 'NAT网关'}],
         selectType: '',
         modal: false,
 
@@ -297,33 +172,26 @@
         })
       },
       search(){
-        var url = 'information/listRenew.do'
-        let params = {}
-        if (this.selectType) {
-          params.type = this.selectType
-        }
-        this.$http.get(url, {
-          params
+        this.$http.get('information/listRenew.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            var mSecInDay = 1000 * 60 * 60 * 24
+            var mSecInHour = 1000 * 60 * 60
+            var mSecInMinute = 1000 * 60
+            var nowTime = new Date().getTime()
+            response.data.result.forEach((item) => {
+              item.select = false
+              item.isAuto = item.isAuto == 1
+              item.remainingTime = item.deadline - nowTime
+              item.remainingDay = Math.floor(item.remainingTime / mSecInDay)
+              item.remainingHour = Math.floor((item.remainingTime % mSecInDay) / mSecInHour)
+              item.remainingMinute = Math.floor((item.remainingTime % mSecInHour) / mSecInMinute)
+              item.deadline = new Date(item.deadline).format('yyyy年MM月dd日 hh:mm:ss')
+              item.createTime = new Date(item.createTime).format('yyyy年MM月dd日 hh:mm:ss')
+            })
+            this.hostList = response.data.result
+            console.log(this.hostList)
+          }
         })
-          .then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              var mSecInDay = 1000 * 60 * 60 * 24
-              var mSecInHour = 1000 * 60 * 60
-              var mSecInMinute = 1000 * 60
-              var nowTime = new Date().getTime()
-              response.data.result.forEach((item) => {
-                item.select = false
-                item.isAuto = item.isAuto == 1
-                item.remainingTime = item.deadline - nowTime
-                item.remainingDay = Math.floor(item.remainingTime / mSecInDay)
-                item.remainingHour = Math.floor((item.remainingTime % mSecInDay) / mSecInHour)
-                item.remainingMinute = Math.floor((item.remainingTime % mSecInHour) / mSecInMinute)
-                item.deadline = new Date(item.deadline).format('yyyy年MM月dd日 hh:mm:ss')
-                item.createTime = new Date(item.createTime).format('yyyy年MM月dd日 hh:mm:ss')
-              })
-              this.hostList = response.data.result
-            }
-          })
       },
       renewalAll(){
         if (this.selectArray.length == 0) {
