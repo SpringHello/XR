@@ -56,7 +56,7 @@
   var info = [
     {
       zoneId: '39a6af0b-6624-4194-b9d5-0c552d903858',
-      zoneName: '北京一区',
+      zoneName: '北京一区（测试）',
       kernelList: [
         {
           label: '1核',

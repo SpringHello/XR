@@ -27,8 +27,8 @@ const Dynamic = () => import('@/components/App/Dynamic')
 // 前台活动页面路由
 const Active = () => import('@/components/App/active/active')
 const Vps = () => import('@/components/App/active/vps')
-const NewNodes_1 = () => import('@/components/App/active/newNodes_1')
-const NewNodes_2 = () => import('@/components/App/active/newNodes_2')
+/*const NewNodes_1 = () => import('@/components/App/active/newNodes_1')
+const NewNodes_2 = () => import('@/components/App/active/newNodes_2')*/
 const active_1 = () => import('@/components/App/active/active_1')
 const active_2 = () => import('@/components/App/active/active_2')
 
@@ -270,8 +270,8 @@ var router = new Router({
         {path: 'buy', name: 'buy', component: Buy},
         {path: 'active', name: 'active', component: Active},
         {path: 'vps', name: 'vps', component: Vps},
-        {path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
-        {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},
+        /*{path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
+        {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},*/
         {path: 'active_1', name: 'active_1', component: active_1},
         {path: 'entrance', name: 'entrance', component: Entrance},
         {path: 'active_2', name: 'active_2', component: active_2},

@@ -37,7 +37,7 @@
           {
             type: '区域选择',
             allyear: '选择vpc所属区域',
-            hour: '北京一区'
+            hour: '北京一区（测试）'
           },
           {
             type: 'VPC名称',

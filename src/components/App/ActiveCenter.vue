@@ -98,7 +98,7 @@
             time: '活动时间 2018.5.1-2018.6.30',
             url: 'active_2'
           },
-          {
+          /*{
             img: require('../../assets/img/activecenter/icon-host.png'),
             title: '北京一区盛大开服',
             desc: '布局首都，新购特惠，限时抢购',
@@ -111,7 +111,7 @@
             desc: '春暖花开，活动绽放，<span style="color:#D0021B">3折</span>优惠起',
             time: '活动时间 2018.4.16-2018.5.16',
             url: 'newNodes_2'
-          },
+          },*/
           // {
           //   img: require('../../assets/img/activecenter/icon-host.png'),
           //   title: '武汉一区盛大开服',

@@ -99,9 +99,9 @@
         </div>
 
       </div>
-      <div class="recommend-product">
+      <!--<div class="recommend-product">
         <div class="center">
-          <div class="head">
+          &lt;!&ndash;<div class="head">
             <span>推荐</span><i style="font-style: normal;padding-left:10px;">您还可以参加</i>
           </div>
           <div class="content">
@@ -111,9 +111,9 @@
                 <span>{{item.text}}</span><a style="float:right" :href="item.src">前往参加></a>
               </p>
             </div>
-          </div>
+          </div>&ndash;&gt;
         </div>
-      </div>
+      </div>-->
     </div>
 
     <Modal v-model="loginModal" width="420" class="login-modal" :scrollable="true">
@@ -733,6 +733,7 @@
       }
       .free-product {
         font-family: PingFangSC-Medium;
+        padding-bottom: 40px;
         .item {
           display: flex;
           margin-bottom: 20px;

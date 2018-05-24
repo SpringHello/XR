@@ -208,7 +208,7 @@
         // 区域选择列表
         areaList: [
           {
-            text: '北京一区',
+            text: '北京一区（测试）',
             src: require('../../../assets/img/records/records-icon7.png'),
             zoneId: '39a6af0b-6624-4194-b9d5-0c552d903858'
           }, {
@@ -230,7 +230,7 @@
           }
         ],
         area: '39a6af0b-6624-4194-b9d5-0c552d903858',
-        areaText: '北京一区',
+        areaText: '北京一区（测试）',
         // 区域切换时icon变化
         selectImg: require('../../../assets/img/records/records-icon7.png'),
         unSelectImg: require('../../../assets/img/records/records-icon8.png'),
