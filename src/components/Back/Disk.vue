@@ -386,6 +386,40 @@
                     marginRight: '10px'
                   }
                 }), h('span', {}, text)])
+              } else if (row.status == 0 && params.row.caseType == 3) {
+                return h('div', {}, [h('span', {}, text), h('span', {
+                  style: {
+                    cursor: 'pointer',
+                    color: '#2A99F2',
+                    marginLeft: '10px'
+                  },
+                  on: {
+                    click: () => {
+                      this.$message.confirm({
+                        content: '确认续费该磁盘一小时？',
+                        onOk: () => {
+                          this.$http.get('information/getResCost.do', {
+                            params: {
+                              type: 'disk',
+                              id: row.id
+                            }
+                          }).then(response => {
+                            if (response.status == 200 && response.data.status == 1) {
+                              this.$Message.info({
+                                content: '续费成功'
+                              })
+                              this.refresh()
+                            } else {
+                              this.$message.info({
+                                content: response.data.message
+                              })
+                            }
+                          })
+                        }
+                      })
+                    }
+                  }
+                }, "续费")]);
               } else {
                 return h('span', text)
               }
