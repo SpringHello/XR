@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height:100%;">
     <div class="background">
       <div class="wrapper">
         <span style="background-color: #f5f5f5;">
@@ -25,7 +25,7 @@
                   <Alert style="border:1px solid #2A99F2;border-radius: 4px;width:100%">
                     自2018/05/22日起，到2018/07/31。升级与续费本平台任意资源，即可享满减优惠，满20减6元，满300减120，最多可减7000元！
                   </Alert>
-                  <Button type="primary">全选</Button>
+                  <Button type="primary" @click="selectAll">全选</Button>
                   <Button type="primary" @click="renewalAll">一键续费</Button>
                   <div style="float:right">
                     <span>关联选择</span>
@@ -35,22 +35,22 @@
                 <div class="item-wrapper">
                   <p>云主机（{{hostList.length}}）<span :class="{opened:hostOpened}" @click="hostOpened=!hostOpened">{{hostOpened?'收起':'展开'}}</span>
                   </p>
-                  <Table :columns="columns" :data="hostList" @on-selection-change="select"></Table>
+                  <Table :columns="columns" :data="hostList" @on-selection-change="select" v-show="hostOpened"></Table>
                 </div>
                 <div class="item-wrapper">
                   <p>弹性IP（{{ipList.length}}）<span :class="{opened:ipOpened}" @click="ipOpened=!ipOpened">{{ipOpened?'收起':'展开'}}</span>
                   </p>
-                  <Table :columns="columns" :data="ipList" @on-selection-change="select"></Table>
+                  <Table :columns="columns" :data="ipList" @on-selection-change="select" v-show="ipOpened"></Table>
                 </div>
                 <div class="item-wrapper">
                   <p>云硬盘（{{diskList.length}}）<span :class="{opened:diskOpened}" @click="diskOpened=!diskOpened">{{diskOpened?'收起':'展开'}}</span>
                   </p>
-                  <Table :columns="columns" :data="diskList" @on-selection-change="select"></Table>
+                  <Table :columns="columns" :data="diskList" @on-selection-change="select" v-show="diskOpened"></Table>
                 </div>
                 <div class="item-wrapper">
                   <p>NAT网关（{{natList.length}}）<span :class="{opened:natOpened}" @click="natOpened=!natOpened">{{natOpened?'收起':'展开'}}</span>
                   </p>
-                  <Table :columns="columns" :data="natList" @on-selection-change="select"></Table>
+                  <Table :columns="columns" :data="natList" @on-selection-change="select" v-show="natOpened"></Table>
                 </div>
               </Tab-pane>
               <!--<Tab-pane label="24小时之内" name="24小时之内">
@@ -137,10 +137,21 @@
               return h('div', {}, [
                 h('span', {
                   style: {
-                    marginRight: '10px'
+                    marginRight: '10px',
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      this.renewalOne(obj.row)
+                    }
                   }
                 }, '续费'),
-                h('span', '自动续费'),
+                h('span', {
+                  style: {
+                    color: '#2A99F2'
+                  },
+                }, '自动续费'),
                 h('i-Switch', {
                   attrs: {
                     //size: 'small'
@@ -151,8 +162,7 @@
                   },
                   on: {
                     input: () => {
-                      console.log(this)
-                      console.log(arguments)
+                      this.toggleStatus(obj.row)
                     }
                   }
                 })
@@ -162,14 +172,13 @@
         ],
 
         hostList: [],
-        hostOpened: false,
+        hostOpened: true,
         ipList: [],
         ipOpened: true,
         diskList: [],
         diskOpened: true,
         natList: [],
         natOpened: true,
-        groupList: [],
 
         linkRenew: true,
         selectType: '',
@@ -214,58 +223,61 @@
     methods: {
       select(select, notSelection){
         if (this.linkRenew) {
-          for (let item of notSelection) {
-            if (this.groupList.indexOf(item._groupId) > -1) {
-              this.groupList.splice(this.groupList.indexOf(item._groupId), 1)
+
+          let groupList = []
+          select.forEach(item => {
+            if (groupList.indexOf(item._groupId) == -1) {
+              groupList.push(item._groupId)
             }
-          }
-          for (let item of select) {
-            if (this.groupList.indexOf(item._groupId) == -1) {
-              this.groupList.push(item._groupId)
+          });
+
+          let notGroupList = []
+          notSelection.forEach(item => {
+            if (notGroupList.indexOf(item._groupId) == -1) {
+              notGroupList.push(item._groupId)
             }
-          }
+          });
           ['host', 'ip', 'disk', 'nat'].forEach(i => {
             this[`${i}List`].forEach(item => {
-              if (this.groupList.indexOf(item._groupId) > -1) {
+              if (groupList.indexOf(item._groupId) != -1) {
                 this.$set(item, '_checked', true)
-              } else {
+              } else if (notGroupList.indexOf(item._groupId) != -1) {
                 this.$set(item, '_checked', false)
               }
             })
-          })
+          });
         } else {
           ['host', 'ip', 'disk', 'nat'].forEach(i => {
             this[`${i}List`].forEach(item => {
               select.forEach(s => {
                 if (item.type == s.type && item.id == s.id) {
                   this.$set(item, '_checked', true)
-                } else {
+                }
+              })
+
+              notSelection.forEach(s => {
+                if (item.type == s.type && item.id == s.id) {
                   this.$set(item, '_checked', false)
                 }
               })
             })
           })
         }
-
       },
       // 改变关联续费模式
-      change(status){
-        if (status) {
-          // 如果开启关联续费，必须要检查所有资源是否关联
-          this.groupList = [];
+      change(){
+        if (this.linkRenew) {
+          let groupList = [];
           ['host', 'ip', 'disk', 'nat'].forEach(i => {
             this[`${i}List`].forEach(item => {
-              console.log(item._checked, item._groupId)
-              if (this.groupList.indexOf(item._groupId) == -1 && item._checked) {
-                this.groupList.push(item._groupId)
+              if (item._checked) {
+                groupList.push(item._groupId)
               }
             })
           });
-          console.log(this.groupList);
           ['host', 'ip', 'disk', 'nat'].forEach(i => {
             this[`${i}List`].forEach(item => {
-              if (this.groupList.indexOf(item._groupId) > -1) {
-                console.log('_checked')
+              if (groupList.indexOf(item._groupId) > -1) {
                 this.$set(item, '_checked', true)
               }
             })
@@ -273,7 +285,7 @@
         }
       },
       toggleStatus(item){
-        var flag = item.isAuto ? 1 : 0
+        var flag = item.isAuto ? 0 : 1
         var url = 'information/setAutoRenew.do'
         this.$http.get(url, {
           params: {
@@ -283,8 +295,15 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+
           } else {
-            item.isAuto = !item.isAuto
+            ['host', 'ip', 'disk', 'nat'].forEach(i => {
+              this[`${i}List`].forEach(s => {
+                if (s.type == item.type && s.id == item.id) {
+                  this.$set(s, 'isAuto', !item.isAuto)
+                }
+              })
+            });
           }
         })
       },
@@ -338,91 +357,34 @@
         })
       },
       renewalAll(){
-        if (this.groupList.length == 0) {
+        let isEmpty = true;
+        ['host', 'ip', 'disk', 'nat'].forEach(i => {
+          this.requestParam[`${i}Array`] = []
+          this[`${i}List`].forEach(item => {
+            if (item._checked) {
+              isEmpty = false
+              this.requestParam[`${i}Array`].push(item.id)
+            }
+          })
+        })
+        if (isEmpty) {
           this.$Message.warning('至少选择一个资源进行续费!')
           return
         }
         this.renewal = false
         this.renewalType = ''
         this.renewalTime = '';
-        ['host', 'ip', 'disk', 'nat'].forEach(i => {
-          this.requestParam[`${i}Array`] = []
-          this[`${i}List`].forEach(item => {
-            if (item._checked) {
-              this.requestParam[`${i}Array`].push(item.id)
-            }
-          })
-        })
         this.modal = true
       },
-      /*selectAll(){
-       this.selectArray = []
-       var isselectAll = this.hostList.some((item) => {
-       return item.select == true
-       })
-       if (this.tabLabel == '全部') {
-       if (isselectAll) {
-       this.hostList.forEach((item) => {
-       item.select = false
-       this.selectArray.push(item)
-       })
-       } else {
-       this.hostList.forEach((item) => {
-       item.select = true
-       this.selectArray.push(item)
-       })
-       }
-       } else if (this.tabLabel == '24小时之内') {
-       if (isselectAll) {
-       this.hostList.forEach((item) => {
-       if (item.remainingDay == 0) {
-       item.select = false
-       this.selectArray.push(item)
-       }
-       })
-       } else {
-       this.hostList.forEach((item) => {
-       if (item.remainingDay == 0) {
-       item.select = true
-       this.selectArray.push(item)
-       }
-       })
-       }
-       } else if (this.tabLabel == '7天内') {
-       if (isselectAll) {
-       this.hostList.forEach((item) => {
-       if (item.remainingDay > -1 && item.remainingDay < 7) {
-       item.select = false
-       this.selectArray.push(item)
-       }
-       })
-       } else {
-       this.hostList.forEach((item) => {
-       if (item.remainingDay > -1 && item.remainingDay < 7) {
-       item.select = true
-       this.selectArray.push(item)
-       }
-       })
-       }
-       } else if (this.tabLabel == '已过期') {
-       if (isselectAll) {
-       this.hostList.forEach((item) => {
-       if (item.remainingDay < 0) {
-       item.select = false
-       this.selectArray.push(item)
-       }
-       })
-       } else {
-       this.hostList.forEach((item) => {
-       if (item.remainingDay < 0) {
-       item.select = true
-       this.selectArray.push(item)
-       }
-       })
-       }
-       }
-       },*/
-      toggle(item){
+      selectAll(){
+        ['host', 'ip', 'disk', 'nat'].forEach(i => {
+          this[`${i}List`].forEach(item => {
+            this.$set(item, '_checked', true)
+          })
+        });
+      },
+      toggle(item)
+      {
         if (!item.select) {
           item.select = true
           this.selectArray.push(item)
@@ -432,18 +394,22 @@
         this.selectArray.splice(index, 1)
         item.select = false
       },
-      renewalOne(item){
+      renewalOne(item)
+      {
         this.modal = true
         this.renewalType = ''
         this.renewalTime = ''
         this.requestParam.ipArray = []
         this.requestParam.hostArray = []
         this.requestParam.diskArray = []
+        this.requestParam.natArray = []
         this.renewal = true
         this.renewalItem = item
         this.requestParam[`${item.type}Array`].push(item.id)
-      },
-      ok(){
+      }
+      ,
+      ok()
+      {
         let list = [];
         ['host', 'ip', 'disk', 'nat'].forEach(i => {
           this[`${i}List`].forEach(item => {
@@ -480,8 +446,10 @@
             this.$router.push({path: 'order'})
           }
         })
-      },
-      clear(){
+      }
+      ,
+      clear()
+      {
         this.selectArray = []
         this.hostList.forEach(item => {
           item.select = false
