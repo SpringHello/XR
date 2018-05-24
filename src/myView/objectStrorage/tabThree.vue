@@ -1,7 +1,7 @@
 <template>
     <div>
         <p style="font-size:16px;color:#000000;margin-bottom:10px;">操作日志</p>
-        <div style="margin-top:10px;height:40px;">
+        <div style="height:40px;display:flex;">
             <div class="journal">
                 <span>近一天</span>
                 <span>近一周</span>
@@ -25,12 +25,13 @@ export default {
 
 <style lang="less" scoped>
     .journal{
-        display: inline-block;
+       width: 50%;
         span{
             padding: 6px 16px;
             border:1px solid #D9D9D9;
            margin-right: -2px;
            cursor:pointer;
+           display: inline-block;
         }
         span:first-of-type{
              border-top-left-radius: 4px;
@@ -46,8 +47,8 @@ export default {
         }
     }
     .journal_right{
-        display: inline-block;
-        float:right;
+      width: 50%;
+      text-align: right;
     }
 </style>
 

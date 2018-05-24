@@ -39,13 +39,21 @@
          <Modal
         v-model="modal6"
         title="新建空间"
+         @on-ok="bucketClick('bucketInline')"
         :scrollable='true'>
-        <p class="modal-p">空间名称</p>
-        <Input type="text" placeholder="请输入少于20位的数字与字母名称" style="width:240px;"></Input>
-         <p class="modal-p" style="margin-top:10px;">访问权限</p>
-         <Select v-model="visit" style="width:240px">
-            <Option v-for="item in visitList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
+       
+        <Form ref="bucketInline" :model="bucketInline" :rules="bucketRule">
+          <FormItem prop="bucketName">
+             <p class="modal-p" >空间名称</p>
+             <Input type="text" v-model="bucketInline.bucketName" placeholder="请输入少于20位的数字与字母名称" style="width:240px;"></Input>
+          </FormItem>
+          <FormItem prop="visit">
+             <p class="modal-p" style="margin-top:10px;">访问权限</p>
+            <Select v-model="bucketInline.visit" style="width:240px">
+                <Option v-for="item in visitList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+          </FormItem>
+        </Form>
         <div class="modal_text">
             <p>1.私有读写：对文件的所有访问操作由文件的所有者授权的操作人完成。</p>
             <p>2.公有读私有写：任何人都可以读取文件，对文件的写入、删除等操作仍需要由文件的所有者授权的操作人完成 </p>
@@ -56,32 +64,63 @@
    
 </template>
 
-<script>
+<script >
 export default {
-  props: {
-    columns1: [],
-    data1: {}
-  },
   data() {
     return {
+      //创建空间
+      bucketInline: {
+        //空间名字
+        bucketName: "",
+        //访问权限
+        visit: ""
+      },
+      bucketRule: {
+        bucketName: [
+          { required: true, message: "空间名字不能为空", trigger: "blur" },
+          {
+            type: "string",
+            min: 3,
+            message: "空间名字不能少于三个字符",
+            trigger: "blur"
+          },
+          {
+            type: "string",
+            max: 20,
+            message: "空间名字不能大于20个字符",
+            trigger: "blur"
+          }
+        ],
+        visit: [{ required: true, message: "请选择权限", trigger: "change" }]
+      },
       //空间管理数据表格表头
       spaceColumns: [
         {
-          key: "spaceName",
+          key: "name",
           title: "空间名称"
         },
         {
-          key: "jurisdiction",
-          title: "权限"
+          key: "accessrights",
+          title: "权限",
+          render: (h, parasm) => {
+            return h("div", [
+              h(
+                "span",
+                {},
+                parasm.row.accessrights == 1 ? "私有读写" : "公有读私有写"
+              )
+            ]);
+          }
         },
         {
-          key: "createTime",
+          key: "createtime",
           title: "创建时间"
         },
         {
           key: "operation",
           title: "操作",
           render: (h, parasm) => {
+            var self = this;
             return h("div", [
               h(
                 "span",
@@ -89,7 +128,12 @@ export default {
                   style: {
                     color: "#2A99F2",
                     marginRight: "20px",
-                    cursor:'pointer',
+                    cursor: "pointer"
+                  },
+                  on: {
+                    click() {
+                      self.bucketDelete(parasm.row.name);
+                    }
                   }
                 },
                 "删除"
@@ -99,12 +143,13 @@ export default {
                 {
                   style: {
                     color: "#2A99F2",
-                     cursor:'pointer'
+                    cursor: "pointer"
                   },
-                  on:{
-                      click:() =>{
-                          this.$router.push({path:'SpaceDetails'})
-                      }
+                  on: {
+                    click: () => {
+                      sessionStorage.setItem("bucketName", parasm.row.name);
+                      this.$router.push({ path: "SpaceDetails" });
+                    }
                   }
                 },
                 "查看详情"
@@ -114,35 +159,82 @@ export default {
         }
       ],
       //空间管理表格数据
-      spaceData: [
-        {
-          spaceName: "空间名字",
-          jurisdiction: "私有读写",
-          createTime: "2017-5-21"
-        },
-        {
-          spaceName: "空间名字",
-          jurisdiction: "私有读写",
-          createTime: "2017-5-21"
-        }
-      ],
+      spaceData: [],
       modal6: false,
       //访问权限
-      visit: "",
       visitList: [
         {
           label: "私有读写",
-          value: "私有读写"
+          value: "1"
+        },
+        {
+          label: "公有读私有写",
+          value: "2"
         }
       ]
     };
+  },
+  methods: {
+    //获取空间列表
+    getBuckets() {
+      this.$http
+        .post("http://192.168.3.109:8083/ruirados/bucket/getBuckets.do", {})
+        .then(res => {
+          if (res.data.status == "1") {
+            this.spaceData = res.data.data.bucket;
+          } else {
+            this.spaceData = res.data.data.bucket;
+            console.log(this.spaceData);
+            this.$Message.error(res.data.msg);
+          }
+        });
+    },
+    //创建空间
+    bucketClick(name) {
+      this.$refs[name].validate(valid => {
+        if (valid) {
+          this.$http
+            .post("http://192.168.3.109:8083/ruirados/bucket/createBucket.do", {
+              bucketName: this.bucketName,
+              accessrights: this.visit
+            })
+            .then(res => {
+              if (res.data.status == "1") {
+                this.$Message.success("创建成功");
+                this.getBuckets();
+              } else {
+                this.$Message.error(res.data.msg);
+              }
+            });
+        } 
+      });
+    },
+    //删除空间
+    bucketDelete(name) {
+      this.$http
+        .post(
+          "http://192.168.3.109:8083/ruirados/bucket/deleteByBucketName.do",
+          {
+            bucketName: name
+          }
+        )
+        .then(res => {
+          if (res.data.status == "1") {
+            this.$Message.success("删除成功");
+            this.getBuckets();
+          } else {
+            this.$Message.error(res.data.msg);
+          }
+        });
+    }
+  },
+  mounted() {
+    this.getBuckets();
   }
 };
 </script>
 
 <style lang="less" scoped>
-
-
 .modal-p {
   margin-bottom: 10px;
   font-size: 14px;
@@ -153,6 +245,9 @@ export default {
   margin-top: 20px;
   font-size: 14px;
   color: #999999;
+  p {
+    line-height: 18px;
+  }
 }
 .boxs {
   font-family: MicrosoftYaHei;

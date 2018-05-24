@@ -1252,6 +1252,7 @@ export default {
     // 重新选择省份
     changeProvince(val) {
       area.forEach(item => {
+        console.log(item.name ==val);
         if (item.name == val) {
           this.cityList = item.city;
         }
