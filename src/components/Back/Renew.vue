@@ -53,15 +53,123 @@
                   <Table :columns="columns" :data="natList" @on-selection-change="select" v-show="natOpened"></Table>
                 </div>
               </Tab-pane>
-              <!--<Tab-pane label="24小时之内" name="24小时之内">
-
+              <Tab-pane label="24小时之内" name="24小时之内">
+                <div style="margin-bottom: 20px;">
+                  <Alert style="border:1px solid #2A99F2;border-radius: 4px;width:100%">
+                    自2018/05/22日起，到2018/07/31。升级与续费本平台任意资源，即可享满减优惠，满20减6元，满300减120，最多可减7000元！
+                  </Alert>
+                  <Button type="primary" @click="selectAll">全选</Button>
+                  <Button type="primary" @click="renewalAll">一键续费</Button>
+                  <div style="float:right">
+                    <span>关联选择</span>
+                    <i-Switch v-model="linkRenew" @on-change="change"></i-Switch>
+                  </div>
+                </div>
+                <div class="item-wrapper">
+                  <p>云主机（{{hostList.length}}）<span :class="{opened:hostOpened}" @click="hostOpened=!hostOpened">{{hostOpened?'收起':'展开'}}</span>
+                  </p>
+                  <Table :columns="columns" :data="hourHostList" @on-selection-change="select"
+                         v-show="hostOpened"></Table>
+                </div>
+                <div class="item-wrapper">
+                  <p>弹性IP（{{ipList.length}}）<span :class="{opened:ipOpened}" @click="ipOpened=!ipOpened">{{ipOpened?'收起':'展开'}}</span>
+                  </p>
+                  <Table :columns="columns" :data="hourIpList" @on-selection-change="select" v-show="ipOpened"></Table>
+                </div>
+                <div class="item-wrapper">
+                  <p>云硬盘（{{diskList.length}}）<span :class="{opened:diskOpened}" @click="diskOpened=!diskOpened">{{diskOpened?'收起':'展开'}}</span>
+                  </p>
+                  <Table :columns="columns" :data="hourDiskList" @on-selection-change="select"
+                         v-show="diskOpened"></Table>
+                </div>
+                <div class="item-wrapper">
+                  <p>NAT网关（{{natList.length}}）<span :class="{opened:natOpened}" @click="natOpened=!natOpened">{{natOpened?'收起':'展开'}}</span>
+                  </p>
+                  <Table :columns="columns" :data="hourNatList" @on-selection-change="select"
+                         v-show="natOpened"></Table>
+                </div>
               </Tab-pane>
               <Tab-pane label="7天内" name="7天内">
-
+                <div style="margin-bottom: 20px;">
+                  <Alert style="border:1px solid #2A99F2;border-radius: 4px;width:100%">
+                    自2018/05/22日起，到2018/07/31。升级与续费本平台任意资源，即可享满减优惠，满20减6元，满300减120，最多可减7000元！
+                  </Alert>
+                  <Button type="primary" @click="selectAll">全选</Button>
+                  <Button type="primary" @click="renewalAll">一键续费</Button>
+                  <div style="float:right">
+                    <span>关联选择</span>
+                    <i-Switch v-model="linkRenew" @on-change="change"></i-Switch>
+                  </div>
+                </div>
+                <div class="item-wrapper">
+                  <p>云主机（{{hostList.length}}）<span :class="{opened:weekHostOpened}"
+                                                   @click="weekHostOpened=!weekHostOpened">{{weekHostOpened?'收起':'展开'}}</span>
+                  </p>
+                  <Table :columns="columns" :data="weekHostList" @on-selection-change="select"
+                         v-show="weekHostOpened"></Table>
+                </div>
+                <div class="item-wrapper">
+                  <p>弹性IP（{{ipList.length}}）<span :class="{opened:weekIpOpened}" @click="weekIpOpened=!weekIpOpened">{{weekIpOpened?'收起':'展开'}}</span>
+                  </p>
+                  <Table :columns="columns" :data="weekIpList" @on-selection-change="select"
+                         v-show="weekIpOpened"></Table>
+                </div>
+                <div class="item-wrapper">
+                  <p>云硬盘（{{diskList.length}}）<span :class="{opened:weekDiskOpened}"
+                                                   @click="weekDiskOpened=!weekDiskOpened">{{weekDiskOpened?'收起':'展开'}}</span>
+                  </p>
+                  <Table :columns="columns" :data="weekDiskList" @on-selection-change="select"
+                         v-show="weekDiskOpened"></Table>
+                </div>
+                <div class="item-wrapper">
+                  <p>NAT网关（{{natList.length}}）<span :class="{opened:weekNatOpened}"
+                                                    @click="weekNatOpened=!weekNatOpened">{{weekNatOpened?'收起':'展开'}}</span>
+                  </p>
+                  <Table :columns="columns" :data="weekNatList" @on-selection-change="select"
+                         v-show="weekNatOpened"></Table>
+                </div>
               </Tab-pane>
               <Tab-pane label="已过期" name="已过期">
-
-              </Tab-pane>-->
+                <div style="margin-bottom: 20px;">
+                  <Alert style="border:1px solid #2A99F2;border-radius: 4px;width:100%">
+                    自2018/05/22日起，到2018/07/31。升级与续费本平台任意资源，即可享满减优惠，满20减6元，满300减120，最多可减7000元！
+                  </Alert>
+                  <Button type="primary" @click="selectAll">全选</Button>
+                  <Button type="primary" @click="renewalAll">一键续费</Button>
+                  <div style="float:right">
+                    <span>关联选择</span>
+                    <i-Switch v-model="linkRenew" @on-change="change"></i-Switch>
+                  </div>
+                </div>
+                <div class="item-wrapper">
+                  <p>云主机（{{hostList.length}}）<span :class="{opened:expiredHostOpened}"
+                                                   @click="expiredHostOpened=!expiredHostOpened">{{expiredHostOpened?'收起':'展开'}}</span>
+                  </p>
+                  <Table :columns="columns" :data="expiredHostList" @on-selection-change="select"
+                         v-show="expiredHostOpened"></Table>
+                </div>
+                <div class="item-wrapper">
+                  <p>弹性IP（{{ipList.length}}）<span :class="{opened:expiredIpOpened}"
+                                                  @click="expiredIpOpened=!expiredIpOpened">{{expiredIpOpened?'收起':'展开'}}</span>
+                  </p>
+                  <Table :columns="columns" :data="expiredIpList" @on-selection-change="select"
+                         v-show="expiredIpOpened"></Table>
+                </div>
+                <div class="item-wrapper">
+                  <p>云硬盘（{{diskList.length}}）<span :class="{opened:expiredDiskOpened}"
+                                                   @click="expiredDiskOpened=!expiredDiskOpened">{{expiredDiskOpened?'收起':'展开'}}</span>
+                  </p>
+                  <Table :columns="columns" :data="expiredDiskList" @on-selection-change="select"
+                         v-show="expiredDiskOpened"></Table>
+                </div>
+                <div class="item-wrapper">
+                  <p>NAT网关（{{natList.length}}）<span :class="{opened:expiredNatOpened}"
+                                                    @click="expiredNatOpened=!expiredNatOpened">{{expiredNatOpened?'收起':'展开'}}</span>
+                  </p>
+                  <Table :columns="columns" :data="expiredNatList" @on-selection-change="select"
+                         v-show="expiredNatOpened"></Table>
+                </div>
+              </Tab-pane>
             </Tabs>
           </div>
         </div>
@@ -125,7 +233,9 @@
           },
           {
             title: '剩余时长',
-            key: 'remainingDay'
+            render: (h, obj) => {
+              return h('span', `${obj.row.remainingDay}天${obj.row.remainingHour}时${obj.row.remainingMinute}分`)
+            }
           },
           {
             title: '过期时间',
@@ -171,6 +281,7 @@
           }
         ],
 
+        // 全部
         hostList: [],
         hostOpened: true,
         ipList: [],
@@ -179,8 +290,41 @@
         diskOpened: true,
         natList: [],
         natOpened: true,
-
         linkRenew: true,
+
+        // 24 Hours
+        hourHostList: [],
+        hourHostOpened: true,
+        hourIpList: [],
+        hourIpOpened: true,
+        hourDiskList: [],
+        hourDiskOpened: true,
+        hourNatList: [],
+        hourNatOpened: true,
+        //linkRenew: true,
+
+        // week
+        weekHostList: [],
+        weekHostOpened: true,
+        weekIpList: [],
+        weekIpOpened: true,
+        weekDiskList: [],
+        weekDiskOpened: true,
+        weekNatList: [],
+        weekNatOpened: true,
+        //linkRenew: true,
+
+        // expired
+        expiredHostList: [],
+        expiredHostOpened: true,
+        expiredIpList: [],
+        expiredIpOpened: true,
+        expiredDiskList: [],
+        expiredDiskOpened: true,
+        expiredNatList: [],
+        expiredNatOpened: true,
+        //linkRenew: true,
+
         selectType: '',
         modal: false,
 
@@ -197,6 +341,13 @@
             label: '8月',
             value: 8
           }, {label: '9月', value: 9}, {label: '10月', value: 10}]
+        },
+
+        map: {
+          '全部': ['host', 'ip', 'disk', 'nat'],
+          '24小时之内': ['hourHost', 'hourIp', 'hourDisk', 'hourNat'],
+          '7天内': ['weekHost', 'weekIp', 'weekDisk', 'weekNat'],
+          '已过期': ['expiredHost', 'expiredIp', 'expiredDisk', 'expiredNat']
         },
 
         selectArray: [],
@@ -223,7 +374,6 @@
     methods: {
       select(select, notSelection){
         if (this.linkRenew) {
-
           let groupList = []
           select.forEach(item => {
             if (groupList.indexOf(item._groupId) == -1) {
@@ -237,7 +387,8 @@
               notGroupList.push(item._groupId)
             }
           });
-          ['host', 'ip', 'disk', 'nat'].forEach(i => {
+          console.log(this.tabLabel)
+          this.map[this.tabLabel].forEach(i => {
             this[`${i}List`].forEach(item => {
               if (groupList.indexOf(item._groupId) != -1) {
                 this.$set(item, '_checked', true)
@@ -247,7 +398,7 @@
             })
           });
         } else {
-          ['host', 'ip', 'disk', 'nat'].forEach(i => {
+          this.map[this.tabLabel].forEach(i => {
             this[`${i}List`].forEach(item => {
               select.forEach(s => {
                 if (item.type == s.type && item.id == s.id) {
@@ -268,14 +419,14 @@
       change(){
         if (this.linkRenew) {
           let groupList = [];
-          ['host', 'ip', 'disk', 'nat'].forEach(i => {
+          this.map[this.tabLabel].forEach(i => {
             this[`${i}List`].forEach(item => {
               if (item._checked) {
                 groupList.push(item._groupId)
               }
             })
           });
-          ['host', 'ip', 'disk', 'nat'].forEach(i => {
+          this.map[this.tabLabel].forEach(i => {
             this[`${i}List`].forEach(item => {
               if (groupList.indexOf(item._groupId) > -1) {
                 this.$set(item, '_checked', true)
@@ -308,6 +459,30 @@
         })
       },
       search(){
+        function deepCopy(data) {
+          const t = typeof data;
+          let o;
+
+          if (t === 'array') {
+            o = [];
+          } else if (t === 'object') {
+            o = {};
+          } else {
+            return data;
+          }
+
+          if (t === 'array') {
+            for (let i = 0; i < data.length; i++) {
+              o.push(deepCopy(data[i]));
+            }
+          } else if (t === 'object') {
+            for (let i in data) {
+              o[i] = deepCopy(data[i]);
+            }
+          }
+          return o;
+        }
+
         this.$http.get('information/listRenew.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             var mSecInDay = 1000 * 60 * 60 * 24
@@ -341,15 +516,47 @@
               switch (item.type) {
                 case 'host':
                   this.hostList.push(item)
+                  if (item.remainingDay < 0) {
+                    this.expiredHostList.push(deepCopy(item))
+                  } else if (item.remainingDay == 0) {
+                    this.hourHostList.push(deepCopy(item))
+                    this.weekHostList.push(deepCopy(item))
+                  } else if (item.remainingDay < 7) {
+                    this.weekHostList.push(deepCopy(item))
+                  }
                   break;
                 case 'ip':
                   this.ipList.push(item)
+                  if (item.remainingDay < 0) {
+                    this.expiredIpList.push(deepCopy(item))
+                  } else if (item.remainingDay == 0) {
+                    this.hourIpList.push(deepCopy(item))
+                    this.weekIpList.push(deepCopy(item))
+                  } else if (item.remainingDay < 7) {
+                    this.weekIpList.push(deepCopy(item))
+                  }
                   break;
                 case 'disk':
                   this.diskList.push(item)
+                  if (item.remainingDay < 0) {
+                    this.expiredDiskList.push(deepCopy(item))
+                  } else if (item.remainingDay == 0) {
+                    this.hourDiskList.push(deepCopy(item))
+                    this.weekDiskList.push(deepCopy(item))
+                  } else if (item.remainingDay < 7) {
+                    this.weekDiskList.push(deepCopy(item))
+                  }
                   break;
                 case 'nat':
                   this.natList.push(item)
+                  if (item.remainingDay < 0) {
+                    this.expiredNatList.push(deepCopy(item))
+                  } else if (item.remainingDay == 0) {
+                    this.hourNatList.push(deepCopy(item))
+                    this.weekNatList.push(deepCopy(item))
+                  } else if (item.remainingDay < 7) {
+                    this.weekNatList.push(deepCopy(item))
+                  }
                   break;
               }
             })
@@ -358,12 +565,15 @@
       },
       renewalAll(){
         let isEmpty = true;
-        ['host', 'ip', 'disk', 'nat'].forEach(i => {
-          this.requestParam[`${i}Array`] = []
+        this.requestParam.ipArray = []
+        this.requestParam.hostArray = []
+        this.requestParam.diskArray = []
+        this.requestParam.natArray = []
+        this.map[this.tabLabel].forEach(i => {
           this[`${i}List`].forEach(item => {
             if (item._checked) {
               isEmpty = false
-              this.requestParam[`${i}Array`].push(item.id)
+              this.requestParam[`${item.type}Array`].push(item.id)
             }
           })
         })
@@ -377,14 +587,13 @@
         this.modal = true
       },
       selectAll(){
-        ['host', 'ip', 'disk', 'nat'].forEach(i => {
+        this.map[this.tabLabel].forEach(i => {
           this[`${i}List`].forEach(item => {
             this.$set(item, '_checked', true)
           })
         });
       },
-      toggle(item)
-      {
+      toggle(item){
         if (!item.select) {
           item.select = true
           this.selectArray.push(item)
@@ -406,10 +615,8 @@
         this.renewal = true
         this.renewalItem = item
         this.requestParam[`${item.type}Array`].push(item.id)
-      }
-      ,
-      ok()
-      {
+      },
+      ok(){
         let list = [];
         ['host', 'ip', 'disk', 'nat'].forEach(i => {
           this[`${i}List`].forEach(item => {
@@ -446,10 +653,8 @@
             this.$router.push({path: 'order'})
           }
         })
-      }
-      ,
-      clear()
-      {
+      },
+      clear(){
         this.selectArray = []
         this.hostList.forEach(item => {
           item.select = false
