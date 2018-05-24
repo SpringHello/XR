@@ -1007,9 +1007,6 @@ export default {
                     "webResponsibilityCertificatesType")
                 : null;
             }
-            this.legalcertificatestype();
-            this.maincompanynature();
-            this.webresponsibilitycertificatestype();
           } else {
             console.log("出错了");
           }
@@ -1132,8 +1129,6 @@ export default {
         });
     },
     otherFile(res, file) {
-      console.log(res);
-      console.log(file);
       this.$http
         .post("recode/addMainCompany.do", {
           id: id,
@@ -1147,107 +1142,6 @@ export default {
             this.$Message.error(res.data.message);
           }
         });
-    },
-    legalcertificatestype() {
-      switch (this.hostUnitList.legalcertificatestype) {
-        case "1":
-          return (this.hostUnitList.legalcertificatestype = "身份证");
-          break;
-        case "2":
-          return (this.hostUnitList.legalcertificatestype = "护照");
-          break;
-        case "3":
-          return (this.hostUnitList.legalcertificatestype = "军官证");
-          break;
-        case "4":
-          return (this.hostUnitList.legalcertificatestype = "台胞证");
-          break;
-      }
-    },
-    maincompanynature() {
-      switch (this.hostUnitList.maincompanynature) {
-        case "0":
-          this.hostUnitList.maincompanynature = "企业";
-          switch (this.hostUnitList.maincompanycertificatestype) {
-            case "1":
-              this.hostUnitList.maincompanycertificatestype = "工商营业执照";
-              break;
-            case "2":
-              this.hostUnitList.maincompanycertificatestype = "组织机构代码证";
-              break;
-          }
-          break;
-        case "1":
-          this.hostUnitList.maincompanynature = "个人";
-          switch (this.hostUnitList.maincompanycertificatestype) {
-            case "1":
-              this.hostUnitList.maincompanycertificatestype = "身份证";
-              break;
-            case "2":
-              this.hostUnitList.maincompanycertificatestype = "护照";
-              break;
-            case "3":
-              this.hostUnitList.maincompanycertificatestype = "军官证";
-              break;
-            case "4":
-              this.hostUnitList.maincompanycertificatestype = "台胞证";
-              break;
-          }
-          break;
-        case "2":
-          this.hostUnitList.maincompanynature = "军队";
-          switch (this.hostUnitList.maincompanycertificatestype) {
-            case "1":
-              this.hostUnitList.maincompanycertificatestype = "军队代号";
-              break;
-          }
-          break;
-        case "3":
-          this.hostUnitList.maincompanynature = "政府机关";
-          switch (this.hostUnitList.maincompanycertificatestype) {
-            case "1":
-              this.hostUnitList.maincompanycertificatestype = "组织机构代码证";
-              break;
-          }
-          break;
-        case "4":
-          this.hostUnitList.maincompanynature = "事业单位";
-          switch (this.hostUnitList.maincompanycertificatestype) {
-            case "1":
-              this.hostUnitList.maincompanycertificatestype = "组织机构代码证";
-              break;
-            case "2":
-              return "事业法人证";
-              break;
-          }
-          break;
-        case "5":
-          switch (this.hostUnitList.maincompanycertificatestype) {
-            case "1":
-              this.hostUnitList.maincompanycertificatestype = "社团法人证书";
-              break;
-            case "2":
-              this.hostUnitList.maincompanycertificatestype = "组织机构代码证";
-              break;
-          }
-          break;
-      }
-    },
-    webresponsibilitycertificatestype(){
-       switch (this.hostUnitList.webresponsibilitycertificatestype) {
-        case "1":
-          return (this.hostUnitList.webresponsibilitycertificatestype = "身份证");
-          break;
-        case "2":
-          return (this.hostUnitList.webresponsibilitycertificatestype = "护照");
-          break;
-        case "3":
-          return (this.hostUnitList.webresponsibilitycertificatestype = "军官证");
-          break;
-        case "4":
-          return (this.hostUnitList.webresponsibilitycertificatestype = "台胞证");
-          break;
-      }
     },
     // 重新选择省份
     changeProvince(val) {
