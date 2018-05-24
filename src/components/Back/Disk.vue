@@ -21,6 +21,7 @@
           <Button type="primary" @click="newDisk">创建云硬盘</Button>
           <Button type="primary" @click="deleteDisk">删除云硬盘</Button>
           <Button type="primary" @click="renewDisk">续费云硬盘</Button>
+          <Button type="primary" @click="ratesChange">资费变更</Button>
         </div>
         <div style="margin-top:20px">
           <Table :columns="diskColumns" :data="diskData" @radio-change="selectDisk"></Table>
@@ -281,6 +282,39 @@
         <Button class="button ok" @click="renewDisk_ok" :disabled="renewalCost=='--'">确认续费</Button>
       </div>
     </Modal>
+    <!-- 资费变更弹出框 -->
+    <Modal v-model="showModal.ratesChange" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">变更资费选择（资费变更适用于按需收费转包月/年）</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form>
+          <FormItem label="变更类型 :">
+            <Select v-model="ratesChangeType">
+              <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="变更时长 :">
+            <Select v-model="ratesChangeTime">
+              <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+        </Form>
+        <div style="font-size:16px;">
+          应付费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{ratesChangeCost}}
+          <span v-if="ratesChangeTime != ''">/</span>
+          <span style="font-size: 15px;">{{ratesChangeTime}}<span v-if="ratesChangeType == 'year' && ratesChangeTime != ''">年</span>
+          <span v-if="ratesChangeType == 'month' && ratesChangeTime != ''">月</span></span>
+        </span>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button class="button cancel" @click="showModal.ratesChange=false">取消</Button>
+        <Button class="button ok" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -493,7 +527,9 @@
           // 错误提示框
           error: false,
           // 续费模态框
-          renewDisk: false
+          renewDisk: false,
+          // 资费变更
+          ratesChange: false,
           /*
 
            mountDisk: false,
@@ -592,6 +628,10 @@
         renewalCost: '--',
         renewalType: '',
         renewalTime: '',
+        // 变更资费所需
+        ratesChangeCost: '--',
+        ratesChangeType: '',
+        ratesChangeTime: '',
         timeOptions: {
           renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
           renewalTime: [],
@@ -921,6 +961,34 @@
           }
         })
       },
+      // 资费变更
+      ratesChange() {
+        if (this.diskSelection == null) {
+          this.$Message.info('请选择需要变更资费的磁盘')
+          return false
+        }
+        if (this.diskSelection.caseType !== 3) {
+          this.$Message.info('请选择实时计费的磁盘进行资费变更')
+          return false
+        }
+        this.showModal.ratesChange = true
+      },
+      // 确认变更资费
+      ratesChange_ok() {
+        let url = 'continue/changeMoney.do'
+        this.$http.get(url, {
+          params: {
+            id: this.diskSelection.id,
+            timeType: this.ratesChangeType,
+            timeValue: this.ratesChangeTime,
+            type: 1
+          }
+        }).then(response => {
+          if (response.data.status == 1) {
+            this.$router.push({path: 'order'})
+          }
+        })
+      },
       // 检测是否选中一项数据
       checkSelect() {
         if (this.diskSelection == null) {
@@ -1086,6 +1154,7 @@
       }
     },
     watch: {
+      // 续费时间变化
       renewalType(type) {
         this.renewalTime = ''
         this.timeOptions.renewalTime = this.timeOptions[type]
@@ -1104,7 +1173,31 @@
           })
             .then((response) => {
               if (response.status == 200 && response.data.status == 1) {
-                this.renewalCost = response.data.result
+                this.renewalCost = response.data.result.toFixed(2)
+              }
+            })
+        }
+      },
+      // 资费变更
+      ratesChangeType(type) {
+        this.ratesChangeTime = ''
+        this.timeOptions.renewalTime = this.timeOptions[type]
+      },
+      ratesChangeTime(time) {
+        if (time == '') {
+          this.ratesChangeCost = '--'
+        } else {
+          let url = 'information/getYjPrice.do'
+          this.$http.get(url, {
+            params: {
+              timeValue: this.ratesChangeTime,
+              timeType: this.ratesChangeType,
+              diskArr: this.diskSelection.id
+            }
+          })
+            .then((response) => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.ratesChangeCost = response.data.result.toFixed(2)
               }
             })
         }
