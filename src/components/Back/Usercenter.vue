@@ -571,7 +571,7 @@
           </Tab-pane>
           <!-- Access Key -->
           <Tab-pane label="Access Key" @click="getBuckets">
-              <Button style="margin-bottom:15px;" type="primary">创建Access Key</Button>
+              <Button style="margin-bottom:15px;" @click="accessIsHide = true" type="primary">创建Access Key</Button>
               <Table :columns="accessList" :data="accessData"></Table>
           </Tab-pane>
           <!--用于企业认证的pane-->
@@ -1011,12 +1011,13 @@
       <div slot="footer">
       </div>
     </Modal>
+    
     <!-- 用户中心AccessKey发送验证 -->
-    <!-- <Modal  width="550" v-model="accessIsHide" :scrollable="true">
-        <p>为保障您的账户安全，请进行手机验证：</p>
-        <p>手机号码：{{linkManData.telphone}}</p>
-        <span>验证码</span><Input type="text" style="width:132px;">
-    </Modal>   -->
+    <Modal title="提示"  width="550" v-model="accessIsHide" :scrollable="true">
+        <p style="color:#666666;font-size:14px;">为保障您的账户安全，请进行手机验证：</p>
+        <p style="color:#666666;font-size:14px;margin:10px 0;">手机号码：{{linkManData[0].telphone}}</p>
+        <span>验证码</span><Input type="text" style="width:132px;margin:10px 10px;" placeholder="请输入验证码"/><Button type="primary">获取验证码</Button>
+    </Modal>  
   </div>
 
 </template>
@@ -1890,6 +1891,10 @@ export default {
             }
           });
       }
+    },
+    //创建accesskey获取用户验证码
+    accessSendCode(){
+
     },
     // 个人认证
     // 身份证照片认证

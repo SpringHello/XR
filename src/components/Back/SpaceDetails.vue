@@ -52,11 +52,11 @@
                                     <Button type="primary" @click="floder = true">新建文件夹</Button>
                                 </div>
                                   <div style="width:50%;text-align:right;">
-                                   <Input type="text" placeholder="请输入搜索名称" style="width:231px;"/>
-                                    <Button type="primary">查询</Button>
+                                   <Input v-model="filename" type="text" placeholder="请输入搜索名称" style="width:231px;"/>
+                                    <Button type="primary" @click="filesList">查询</Button>
                                 </div>
                             </div>
-                            <Table></Table>
+                            <Table :columns='fileList' :data="fileData"></Table>
                         </TabPane>
                         <TabPane label="空间设置">
                             <div>
@@ -92,15 +92,18 @@
         </div>
          <Upload
         ref="upload"
-        :show-upload-list="false"
+        :show-upload-list="true"
         :on-success="handleSuccess"
-        :max-size="1024"
+        :max-size="1048576"
         :on-format-error="handleFormatError"
         :on-exceeded-size="handleMaxSize"
         :before-upload="handleBeforeUpload"
+        :on-error="handleError"
         multiple
+        name="uploadFile"
+        :data="fileUpdata"
         type="drag"
-        action="//jsonplaceholder.typicode.com/posts/"
+        action="http://192.168.3.187:8083/ruirados/object/uploadObject.do"
         class="upload_model" 
        >
         <div class="upload_text">
@@ -109,29 +112,50 @@
         </div>
     </Upload>
     </Modal>
+    <!-- 新建文件夹 -->
        <Modal
         v-model="floder"
         title="新建文件夹"
         :scrollable='true'
+        @on-ok="createFlies()"
        >
        <div class="space_folder">
             <p style="font-size:14px;color:#666666;">文件夹名称</p>
-            <Input type="text" style="width:317px;"/>
+            <Input type="text" style="width:317px;" v-model="flies"/>
             <p style="color:#999999;">1.文件夹名称全称不超过24个字符</p>
             <p style="color:#999999;">2.名称仅能由字母，数字，中文，下划线，短横线和小数点组成</p>
        </div>
-      
-       </Modal>
+      </Modal>
+      <!-- 查看外链 -->
+           <Modal
+        v-model="outerChain"
+        title="查看外链"
+        :scrollable='true'
+       >
+       <div class="space_folder">
+            <p style="font-size:14px;color:#666666;">文件名称</p><span></span>
+            <span>外链</span><Input type="text" style="width:317px;" v-model="flies"/>
+            <br>
+            <span>有效期</span>
+       </div>
+      </Modal>
     </div>
-    
 </template>
 
 <script>
+import $store from "@/vuex";
+const name = sessionStorage.getItem("bucketName");
+const zoneId = $store.state.zone.zoneid;
 export default {
   data() {
     return {
+      //是否隐藏查看外链弹窗
+      outerChain:false,
+      //是否隐藏上传文件弹窗
       modal1: false,
+      //是否隐藏新建文件夹弹窗
       floder: false,
+      //权限列表
       navList: [
         {
           name: "私有读写",
@@ -154,39 +178,208 @@ export default {
       ],
       //权限文字
       ptext: "",
-      indexs:0,
+      //权限列表index
+      indexs: 0,
       //权限样式
-      iSstyle: ""
+      //文件夹名称
+      flies: "",
+      iSstyle: "",
+      //文件名
+      filename:null,
+      //文件列表数据
+      fileData: [],
+      //文件列表表头
+      fileList: [
+        {
+          key: "filename",
+          title: "文件名称",
+          render: (h,params) =>{
+            let self = this;
+            self.fileUpdata.bucketName = name
+            self.fileUpdata.zoneId = zoneId
+            self.isfile = params.row.isfile;
+            return h('div',[
+              h("Icon",{
+                props:{
+                  type:'ios-folder-outline'
+                },
+                style:{
+                   color:'#2A99F2',
+                  display:params.row.isfile == 1?'inline-block':'none',
+                }
+              }),
+               h('span',{
+                 style:{
+                    color:'#2A99F2',
+                    cursor:'pointer',
+                    marginLeft:'5px'
+                 },
+                 on:{
+                   click(){
+                     self.filesList(params.row.id,params.row.isfile);//文件标识
+                   }
+                 }
+               },params.row.filename)
+            ])
+          }
+        },
+        {
+          key: "filesize",
+          title: "大小",
+          render:(h,params)=>{
+            return h('div',[
+              h('span',{
+              },params.row.filesize /1024 >1 ? ((params.row.filesize/1024).toFixed(2) + "MB") : (params.row.filesize  + "KB"))//换算文件大小单位
+            ])
+          }
+        },
+        {
+          key: "lasttime",
+          title: "最后修改时间"
+        },
+        {
+          key: "createtime",
+          title: "创建时间"
+        },
+        {
+            key:'cap',
+            title:'操作',
+            render:(h,params)=>{
+              let _self = this;
+                return h('div',[
+                  h('span',{
+                    style:{
+                      color:"#2A99F2",
+                      marginRight:'20px',
+                      display:params.row.isfile ==1?'none':'inline-block',
+                      cursor:'pointer'
+                    },
+                    on:{
+                      click(){
+                        _self.outerChain = true;
+                      }
+                    }
+                  },"查看外链"),
+                    h('span',{
+                        style:{
+                            color:"#2A99F2",
+                            cursor:'pointer'
+                        },
+                        on:{
+                          click(){
+                            _self.deleteFile(params.row.dirId,params.row.filename);//传入文件Id和文件名称删除
+                          }
+                        }
+                    },"删除")
+                ])
+            }
+        }
+      ],
+      //文件上传参数
+      fileUpdata:{},
+      isfile:1
     };
   },
   methods: {
-    handleFormatError() {},
-    handleMaxSize() {},
-    handleBeforeUpload() {},
-    handleSuccess() {},
+    //上传文件格式错误的方法
+    handleFormatError(file) {
+      this.$Message.error('格式错误');
+    },
+    //上传文件最大限制方法
+    handleMaxSize() {
+      this.$Message.error('单文件最大只能上传1GB');
+    },
+    //上传文件之前应用的方法
+    handleBeforeUpload(file) {
+      let reg = /^[\u4e00-\u9fa5\w\d@\.\-_]{1,20}$/i
+     if(!reg.test(file.name)){
+       this.$Message.error('文件名不能超过20个');
+       return false;
+     }
+    },
+    //上传文件成功的方法
+    handleSuccess() {
+      this.$Message.success('成功');
+    },
+    //文件上传失败
+    handleError(error){
+      this.$Message.error('失败');
+      console.log(error);
+    },
+    //权限切换
     navlists(val) {
       this.indexs = val;
       this.ptext = this.navList[val].city;
     },
-    //获取空间详情
-    bucketDetails() {
-        const name =sessionStorage.getItem('bucketName');
+    //列出文件夹列表
+    filesList(id,isfile) {
+      this.fileUpdata.dirId = id == undefined ? 'null' : id;
       this.$http
-        .post(
-          "http://192.168.3.109:8083/ruirados/bucket/selectByBucketName.do",
-          {
-            bucketName:name
-          }
-        )
+        .post("http://192.168.3.187:8083/ruirados/object/listObject.do", {
+          bucketName: name,
+          dirId: id,
+          fileName:this.filename
+        })
         .then(res => {
           if (res.data.status == "1") {
+            if(isfile == 1 || this.isfile == 1){
+              this.fileData = res.data.data.data;
+            }else{
+              return;
+            }
           }
         });
     },
+    //创建文件夹
+    createFlies() {
+      this.$http
+        .post("http://192.168.3.187:8083/ruirados/object/createObject.do", {
+          bucketName: name,
+          fileName: this.flies,
+          dirId: this.fileUpdata.dirId
+        })
+        .then(res => {
+          if (res.data.status == "1") {
+            this.$Message.success("新建成功");
+            this.filesList();
+          }
+        });
+    },
+    //删除文件
+    deleteFile(id,filename){
+      this.$http.post('http://192.168.187:8083/ruirados/object/deleteFile.do',{
+        bucketName:name,
+        fileName:filename,
+        dirId:id
+      }).then(res =>{
+        if(res.data.status == "1"){
+          this.$Message.success('删除成功');
+        }else{
+          this.$Message.error(res.data.msg);
+        }
+      })
+    },
+    //获取空间详情
+    // bucketDetails() {
+    //
+    //   this.$http
+    //     .post(
+    //       "http://192.168.3.109:8083/ruirados/bucket/selectByBucketName.do",
+    //       {
+    //         bucketName:name
+    //       }
+    //     )
+    //     .then(res => {
+    //       if (res.data.status == "1") {
+    //       }
+    //     });
+    // },
     //
   },
   mounted() {
-    this.ptext = this.navList[0].city;
+    this.ptext = this.navList[0].city; //权限列表默认显示第一个
+    this.filesList();
+    console.log(this.fileUpdata);
   }
 };
 </script>

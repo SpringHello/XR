@@ -4,7 +4,7 @@
             <Button type="primary" @click="modal6 = true">新建空间</Button>
         </div> 
         <div style="margin-top:10px;">
-             <Table :columns="spaceColumns" :data="spaceData" no-data-text="您还没有创建Bucket（存储空间）,点击新建空间"></Table>
+             <Table :columns="spaceColumns" :data="spaceData" no-data-text="您还没有创建Bucket（存储空间）,请点击新建空间"></Table>
         </div> 
         <div style="margin-top:36px;">
             <Card style="width:373px;">
@@ -41,7 +41,6 @@
         title="新建空间"
          @on-ok="bucketClick('bucketInline')"
         :scrollable='true'>
-       
         <Form ref="bucketInline" :model="bucketInline" :rules="bucketRule">
           <FormItem prop="bucketName">
              <p class="modal-p" >空间名称</p>
@@ -178,7 +177,7 @@ export default {
     //获取空间列表
     getBuckets() {
       this.$http
-        .post("http://192.168.3.109:8083/ruirados/bucket/getBuckets.do", {})
+        .post("http://192.168.3.187:8083/ruirados/bucket/getBuckets.do", {})
         .then(res => {
           if (res.data.status == "1") {
             this.spaceData = res.data.data.bucket;
@@ -194,9 +193,9 @@ export default {
       this.$refs[name].validate(valid => {
         if (valid) {
           this.$http
-            .post("http://192.168.3.109:8083/ruirados/bucket/createBucket.do", {
-              bucketName: this.bucketName,
-              accessrights: this.visit
+            .post("http://192.168.3.187:8083/ruirados/bucket/createBucket.do", {
+              bucketName: this.bucketInline.bucketName,
+              accessrights: this.bucketInline.visit
             })
             .then(res => {
               if (res.data.status == "1") {
@@ -213,9 +212,10 @@ export default {
     bucketDelete(name) {
       this.$http
         .post(
-          "http://192.168.3.109:8083/ruirados/bucket/deleteByBucketName.do",
+          "http://192.168.3.187:8083/ruirados/bucket/deleteByBucketName.do",
           {
-            bucketName: name
+            bucketName: name,
+
           }
         )
         .then(res => {
