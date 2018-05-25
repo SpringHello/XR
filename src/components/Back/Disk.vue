@@ -268,11 +268,12 @@
               </Option>
             </Select>
           </FormItem>
-          <p style="font-size: 14px">是否同时续费绑定主机和IP</p>
-          <CheckboxGroup v-model="renewalOther">
-            <Checkbox label="续费关联云主机"></Checkbox>
-            <Checkbox label="续费关联IP"></Checkbox>
-          </CheckboxGroup>
+          <FormItem label="是否同时续费绑定主机:" style="width: 80%;margin-bottom: 0" v-if="renewalHost">
+            <CheckboxGroup v-model="renewalOther">
+              <Checkbox label="续费关联云主机" v-if="renewalHost"></Checkbox>
+            </CheckboxGroup>
+          </FormItem>
+          <p style="font-size: 14px;cursor: pointer;color: #377dff;margin-top: 10px" @click="$router.push('ActiveCenter')">全民普惠，三折减单，最高减免7000元</p>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -284,7 +285,7 @@
         </span>
         </div>
         <Button class="button cancel" @click="showModal.renewDisk=false">取消</Button>
-        <Button class="button ok" @click="renewDisk_ok" :disabled="renewalTotalCost=='--'">确认续费</Button>
+        <Button class="button ok" @click="renewDisk_ok" :disabled="renewalTime==''">确认续费</Button>
       </div>
     </Modal>
     <!-- 资费变更弹出框 -->
@@ -657,11 +658,12 @@
         mountHostList: [],
         diskSizeExpenses: 0,
         // 续费所需费用
-        renewalDiskCost: 0,
-        renewalConnectionsCost: 0,
+        renewalTotalCost: 0,
         renewalType: '',
         renewalTime: '',
         renewalOther: [],
+        renewalHost: false,
+        renewalConnectionsHost: '',
         // 变更资费所需
         ratesChangeCost: '--',
         ratesChangeType: '',
@@ -976,14 +978,43 @@
           this.$Message.info('请选择包年或包月的磁盘进行续费')
           return false
         }
-        this.showModal.renewDisk = true
+        this.renewalType = ''
+        this.renewalTime = ''
+        this.renewalOther = []
+        let url = 'Disk/listDiskById.do'
+        this.$http.get(url, {
+          params: {
+            diskId: this.diskSelection.diskid
+          }
+        }).then(response => {
+          if (response.data.status === 1) {
+            if (response.data.result[0].attachComputer.length === 0) {
+              this.renewalHost = false
+            } else {
+              this.renewalHost = true
+              this.renewalConnectionsHost = response.data.result[0].attachComputer[0].id
+            }
+            this.showModal.renewDisk = true
+          }
+        })
       },
       // 确认续费
       renewDisk_ok() {
-        var list = [{
-          type: 1,
-          id: this.diskSelection.id
-        }]
+        let list = []
+        if(this.renewalOther[0]=='续费关联云主机' ) {
+          list = [{
+            type: 1,
+            id: this.diskSelection.id
+          },{
+            type: 0,
+            id: this.renewalConnectionsHost
+          }]
+        } else {
+          list = [{
+            type: 1,
+            id: this.diskSelection.id
+          }]
+        }
         var params = {
           timeType: this.renewalType,
           timeValue: this.renewalTime + '',
@@ -1174,10 +1205,6 @@
       }
     },
     computed: {
-      // 续费总价格
-      renewalTotalCost() {
-        return this.renewalDiskCost + this.renewalConnectionsCost
-      },
       // 该计算属性用于解决观测对象时currentValue与oldValue指向同一对象的问题，没有其他用处
       copyDiskForm() {
         var obj = {}
@@ -1199,21 +1226,58 @@
       },
       renewalTime(time) {
         if (time == '') {
-          this.renewalCost = '--'
+          this.renewalTotalCost = 0
         } else {
           let url = 'information/getYjPrice.do'
-          this.$http.get(url, {
-            params: {
-              timeValue: this.renewalTime,
-              timeType: this.renewalType,
-              diskArr: this.diskSelection.id
-            }
-          })
-            .then((response) => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.renewalCost = response.data.result.toFixed(2)
+          let hostArr = this.renewalOther[0] == '续费关联云主机' ? this.renewalConnectionsHost: ''
+            this.$http.get(url, {
+              params: {
+                timeValue: this.renewalTime,
+                timeType: this.renewalType,
+                diskArr: this.diskSelection.id,
+                hostIdArr: hostArr
               }
             })
+              .then((response) => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.renewalTotalCost = response.data.result.toFixed(2)
+                }
+              })
+        }
+      },
+      // 续费关联主机
+      renewalOther() {
+        if (this.renewalTime != '') {
+          if (this.renewalOther[0] == '续费关联云主机') {
+            let url = 'information/getYjPrice.do'
+            this.$http.get(url, {
+              params: {
+                timeValue: this.renewalTime,
+                timeType: this.renewalType,
+                diskArr: this.diskSelection.id,
+                hostIdArr: this.renewalConnectionsHost
+              }
+            })
+              .then((response) => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.renewalTotalCost = response.data.result.toFixed(2)
+                }
+              })
+          } else {
+            let url = 'information/getYjPrice.do'
+            this.$http.get(url, {
+              params: {
+                timeValue: this.renewalTime,
+                timeType: this.renewalType,
+                diskArr: this.diskSelection.id
+              }
+            })
+              .then((response) => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.renewalTotalCost = response.data.result.toFixed(2)
+                }
+              })
+          }
         }
       },
       // 资费变更
