@@ -1001,11 +1001,11 @@
       // 确认续费
       renewDisk_ok() {
         let list = []
-        if(this.renewalOther[0]=='续费关联云主机' ) {
+        if (this.renewalOther[0] == '续费关联云主机') {
           list = [{
             type: 1,
             id: this.diskSelection.id
-          },{
+          }, {
             type: 0,
             id: this.renewalConnectionsHost
           }]
@@ -1023,6 +1023,10 @@
         this.$http.post('continue/continueOrder.do', params).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({path: 'order'})
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
           }
         })
       },
@@ -1051,6 +1055,10 @@
         }).then(response => {
           if (response.data.status == 1) {
             this.$router.push({path: 'order'})
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
           }
         })
       },
@@ -1229,20 +1237,20 @@
           this.renewalTotalCost = 0
         } else {
           let url = 'information/getYjPrice.do'
-          let hostArr = this.renewalOther[0] == '续费关联云主机' ? this.renewalConnectionsHost: ''
-            this.$http.get(url, {
-              params: {
-                timeValue: this.renewalTime,
-                timeType: this.renewalType,
-                diskArr: this.diskSelection.id,
-                hostIdArr: hostArr
+          let hostArr = this.renewalOther[0] == '续费关联云主机' ? this.renewalConnectionsHost : ''
+          this.$http.get(url, {
+            params: {
+              timeValue: this.renewalTime,
+              timeType: this.renewalType,
+              diskArr: this.diskSelection.id,
+              hostIdArr: hostArr
+            }
+          })
+            .then((response) => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.renewalTotalCost = response.data.result.toFixed(2)
               }
             })
-              .then((response) => {
-                if (response.status == 200 && response.data.status == 1) {
-                  this.renewalTotalCost = response.data.result.toFixed(2)
-                }
-              })
         }
       },
       // 续费关联主机
