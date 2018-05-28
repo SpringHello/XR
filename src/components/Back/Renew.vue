@@ -20,7 +20,7 @@
               </div>
             </div>-->
             <Tabs type="card" :animated="false" v-model="tabLabel" @on-click="clear">
-              <Tab-pane label="全部" name="全部">
+              <Tab-pane label="全部" name="全部" style="min-height: 600px;position: relative">
                 <div style="margin-bottom: 20px;">
                   <Alert style="border:1px solid #2A99F2;border-radius: 4px;width:100%">
                     自2018/05/22日起，到2018/07/31。升级与续费本平台任意资源，即可享满减优惠，满20减6元，满300减120，最多可减7000元！
@@ -32,28 +32,90 @@
                     <i-Switch v-model="linkRenew" @on-change="change"></i-Switch>
                   </div>
                 </div>
-                <div class="item-wrapper">
-                  <p>云主机（{{hostList.length}}）<span :class="{opened:hostOpened}" @click="hostOpened=!hostOpened">{{hostOpened?'收起':'展开'}}</span>
-                  </p>
-                  <Table :columns="columns" :data="hostList" @on-selection-change="select" v-show="hostOpened"></Table>
+                <div v-if="allShow.all">
+                  <div class="item-wrapper">
+                    <p>云主机（{{hostList.length}}）<span :class="{opened:hostOpened}" @click="hostOpened=!hostOpened">{{hostOpened?'收起':'展开'}}</span>
+                    </p>
+                    <Table :columns="columns" :data="hostList" @on-selection-change="select"
+                           v-show="hostOpened"></Table>
+                  </div>
+                  <div class="item-wrapper">
+                    <p>弹性IP（{{ipList.length}}）<span :class="{opened:ipOpened}" @click="ipOpened=!ipOpened">{{ipOpened?'收起':'展开'}}</span>
+                    </p>
+                    <Table :columns="columns" :data="ipList" @on-selection-change="select" v-show="ipOpened"></Table>
+                  </div>
+                  <div class="item-wrapper">
+                    <p>云硬盘（{{diskList.length}}）<span :class="{opened:diskOpened}" @click="diskOpened=!diskOpened">{{diskOpened?'收起':'展开'}}</span>
+                    </p>
+                    <Table :columns="columns" :data="diskList" @on-selection-change="select"
+                           v-show="diskOpened"></Table>
+                  </div>
+                  <div class="item-wrapper">
+                    <p>NAT网关（{{natList.length}}）<span :class="{opened:natOpened}" @click="natOpened=!natOpened">{{natOpened?'收起':'展开'}}</span>
+                    </p>
+                    <Table :columns="columns" :data="natList" @on-selection-change="select" v-show="natOpened"></Table>
+                  </div>
                 </div>
-                <div class="item-wrapper">
-                  <p>弹性IP（{{ipList.length}}）<span :class="{opened:ipOpened}" @click="ipOpened=!ipOpened">{{ipOpened?'收起':'展开'}}</span>
-                  </p>
-                  <Table :columns="columns" :data="ipList" @on-selection-change="select" v-show="ipOpened"></Table>
+                <div v-else class="no-resource">
+                  <div>
+                    <p>没有可续费资源</p>
+                    <p>1.您还未购买过任何产品，点击
+                      <router-link to="buy">购买主机</router-link>
+                    </p>
+                    <p>2.您的资源都为实时计费资源，无需手动续费。</p>
+                  </div>
                 </div>
-                <div class="item-wrapper">
-                  <p>云硬盘（{{diskList.length}}）<span :class="{opened:diskOpened}" @click="diskOpened=!diskOpened">{{diskOpened?'收起':'展开'}}</span>
-                  </p>
-                  <Table :columns="columns" :data="diskList" @on-selection-change="select" v-show="diskOpened"></Table>
+
+              </Tab-pane>
+              <Tab-pane label="24小时之内" name="24小时之内" style="min-height: 600px;position: relative">
+                <div style="margin-bottom: 20px;">
+                  <Alert style="border:1px solid #2A99F2;border-radius: 4px;width:100%">
+                    自2018/05/22日起，到2018/07/31。升级与续费本平台任意资源，即可享满减优惠，满20减6元，满300减120，最多可减7000元！
+                  </Alert>
+                  <Button type="primary" @click="selectAll">全选</Button>
+                  <Button type="primary" @click="renewalAll">一键续费</Button>
+                  <div style="float:right">
+                    <span>关联选择</span>
+                    <i-Switch v-model="linkRenew" @on-change="change"></i-Switch>
+                  </div>
                 </div>
-                <div class="item-wrapper">
-                  <p>NAT网关（{{natList.length}}）<span :class="{opened:natOpened}" @click="natOpened=!natOpened">{{natOpened?'收起':'展开'}}</span>
-                  </p>
-                  <Table :columns="columns" :data="natList" @on-selection-change="select" v-show="natOpened"></Table>
+                <div v-if="allShow.hour">
+                  <div class="item-wrapper">
+                    <p>云主机（{{hostList.length}}）<span :class="{opened:hostOpened}" @click="hostOpened=!hostOpened">{{hostOpened?'收起':'展开'}}</span>
+                    </p>
+                    <Table :columns="columns" :data="hourHostList" @on-selection-change="select"
+                           v-show="hostOpened"></Table>
+                  </div>
+                  <div class="item-wrapper">
+                    <p>弹性IP（{{ipList.length}}）<span :class="{opened:ipOpened}" @click="ipOpened=!ipOpened">{{ipOpened?'收起':'展开'}}</span>
+                    </p>
+                    <Table :columns="columns" :data="hourIpList" @on-selection-change="select"
+                           v-show="ipOpened"></Table>
+                  </div>
+                  <div class="item-wrapper">
+                    <p>云硬盘（{{diskList.length}}）<span :class="{opened:diskOpened}" @click="diskOpened=!diskOpened">{{diskOpened?'收起':'展开'}}</span>
+                    </p>
+                    <Table :columns="columns" :data="hourDiskList" @on-selection-change="select"
+                           v-show="diskOpened"></Table>
+                  </div>
+                  <div class="item-wrapper">
+                    <p>NAT网关（{{natList.length}}）<span :class="{opened:natOpened}" @click="natOpened=!natOpened">{{natOpened?'收起':'展开'}}</span>
+                    </p>
+                    <Table :columns="columns" :data="hourNatList" @on-selection-change="select"
+                           v-show="natOpened"></Table>
+                  </div>
+                </div>
+                <div v-else class="no-resource">
+                  <div>
+                    <p>没有可续费资源</p>
+                    <p>1.您还未购买过任何产品，点击
+                      <router-link to="buy">购买主机</router-link>
+                    </p>
+                    <p>2.您的资源都为实时计费资源，无需手动续费。</p>
+                  </div>
                 </div>
               </Tab-pane>
-              <Tab-pane label="24小时之内" name="24小时之内">
+              <Tab-pane label="7天内" name="7天内" style="min-height: 600px;position: relative">
                 <div style="margin-bottom: 20px;">
                   <Alert style="border:1px solid #2A99F2;border-radius: 4px;width:100%">
                     自2018/05/22日起，到2018/07/31。升级与续费本平台任意资源，即可享满减优惠，满20减6元，满300减120，最多可减7000元！
@@ -65,31 +127,46 @@
                     <i-Switch v-model="linkRenew" @on-change="change"></i-Switch>
                   </div>
                 </div>
-                <div class="item-wrapper">
-                  <p>云主机（{{hostList.length}}）<span :class="{opened:hostOpened}" @click="hostOpened=!hostOpened">{{hostOpened?'收起':'展开'}}</span>
-                  </p>
-                  <Table :columns="columns" :data="hourHostList" @on-selection-change="select"
-                         v-show="hostOpened"></Table>
+                <div v-if="allShow.day">
+                  <div class="item-wrapper">
+                    <p>云主机（{{hostList.length}}）<span :class="{opened:weekHostOpened}"
+                                                     @click="weekHostOpened=!weekHostOpened">{{weekHostOpened?'收起':'展开'}}</span>
+                    </p>
+                    <Table :columns="columns" :data="weekHostList" @on-selection-change="select"
+                           v-show="weekHostOpened"></Table>
+                  </div>
+                  <div class="item-wrapper">
+                    <p>弹性IP（{{ipList.length}}）<span :class="{opened:weekIpOpened}" @click="weekIpOpened=!weekIpOpened">{{weekIpOpened?'收起':'展开'}}</span>
+                    </p>
+                    <Table :columns="columns" :data="weekIpList" @on-selection-change="select"
+                           v-show="weekIpOpened"></Table>
+                  </div>
+                  <div class="item-wrapper">
+                    <p>云硬盘（{{diskList.length}}）<span :class="{opened:weekDiskOpened}"
+                                                     @click="weekDiskOpened=!weekDiskOpened">{{weekDiskOpened?'收起':'展开'}}</span>
+                    </p>
+                    <Table :columns="columns" :data="weekDiskList" @on-selection-change="select"
+                           v-show="weekDiskOpened"></Table>
+                  </div>
+                  <div class="item-wrapper">
+                    <p>NAT网关（{{natList.length}}）<span :class="{opened:weekNatOpened}"
+                                                      @click="weekNatOpened=!weekNatOpened">{{weekNatOpened?'收起':'展开'}}</span>
+                    </p>
+                    <Table :columns="columns" :data="weekNatList" @on-selection-change="select"
+                           v-show="weekNatOpened"></Table>
+                  </div>
                 </div>
-                <div class="item-wrapper">
-                  <p>弹性IP（{{ipList.length}}）<span :class="{opened:ipOpened}" @click="ipOpened=!ipOpened">{{ipOpened?'收起':'展开'}}</span>
-                  </p>
-                  <Table :columns="columns" :data="hourIpList" @on-selection-change="select" v-show="ipOpened"></Table>
-                </div>
-                <div class="item-wrapper">
-                  <p>云硬盘（{{diskList.length}}）<span :class="{opened:diskOpened}" @click="diskOpened=!diskOpened">{{diskOpened?'收起':'展开'}}</span>
-                  </p>
-                  <Table :columns="columns" :data="hourDiskList" @on-selection-change="select"
-                         v-show="diskOpened"></Table>
-                </div>
-                <div class="item-wrapper">
-                  <p>NAT网关（{{natList.length}}）<span :class="{opened:natOpened}" @click="natOpened=!natOpened">{{natOpened?'收起':'展开'}}</span>
-                  </p>
-                  <Table :columns="columns" :data="hourNatList" @on-selection-change="select"
-                         v-show="natOpened"></Table>
+                <div v-else class="no-resource">
+                  <div>
+                    <p>没有可续费资源</p>
+                    <p>1.您还未购买过任何产品，点击
+                      <router-link to="buy">购买主机</router-link>
+                    </p>
+                    <p>2.您的资源都为实时计费资源，无需手动续费。</p>
+                  </div>
                 </div>
               </Tab-pane>
-              <Tab-pane label="7天内" name="7天内">
+              <Tab-pane label="已过期" name="已过期" style="min-height: 600px;position: relative">
                 <div style="margin-bottom: 20px;">
                   <Alert style="border:1px solid #2A99F2;border-radius: 4px;width:100%">
                     自2018/05/22日起，到2018/07/31。升级与续费本平台任意资源，即可享满减优惠，满20减6元，满300减120，最多可减7000元！
@@ -101,73 +178,44 @@
                     <i-Switch v-model="linkRenew" @on-change="change"></i-Switch>
                   </div>
                 </div>
-                <div class="item-wrapper">
-                  <p>云主机（{{hostList.length}}）<span :class="{opened:weekHostOpened}"
-                                                   @click="weekHostOpened=!weekHostOpened">{{weekHostOpened?'收起':'展开'}}</span>
-                  </p>
-                  <Table :columns="columns" :data="weekHostList" @on-selection-change="select"
-                         v-show="weekHostOpened"></Table>
-                </div>
-                <div class="item-wrapper">
-                  <p>弹性IP（{{ipList.length}}）<span :class="{opened:weekIpOpened}" @click="weekIpOpened=!weekIpOpened">{{weekIpOpened?'收起':'展开'}}</span>
-                  </p>
-                  <Table :columns="columns" :data="weekIpList" @on-selection-change="select"
-                         v-show="weekIpOpened"></Table>
-                </div>
-                <div class="item-wrapper">
-                  <p>云硬盘（{{diskList.length}}）<span :class="{opened:weekDiskOpened}"
-                                                   @click="weekDiskOpened=!weekDiskOpened">{{weekDiskOpened?'收起':'展开'}}</span>
-                  </p>
-                  <Table :columns="columns" :data="weekDiskList" @on-selection-change="select"
-                         v-show="weekDiskOpened"></Table>
-                </div>
-                <div class="item-wrapper">
-                  <p>NAT网关（{{natList.length}}）<span :class="{opened:weekNatOpened}"
-                                                    @click="weekNatOpened=!weekNatOpened">{{weekNatOpened?'收起':'展开'}}</span>
-                  </p>
-                  <Table :columns="columns" :data="weekNatList" @on-selection-change="select"
-                         v-show="weekNatOpened"></Table>
-                </div>
-              </Tab-pane>
-              <Tab-pane label="已过期" name="已过期">
-                <div style="margin-bottom: 20px;">
-                  <Alert style="border:1px solid #2A99F2;border-radius: 4px;width:100%">
-                    自2018/05/22日起，到2018/07/31。升级与续费本平台任意资源，即可享满减优惠，满20减6元，满300减120，最多可减7000元！
-                  </Alert>
-                  <Button type="primary" @click="selectAll">全选</Button>
-                  <Button type="primary" @click="renewalAll">一键续费</Button>
-                  <div style="float:right">
-                    <span>关联选择</span>
-                    <i-Switch v-model="linkRenew" @on-change="change"></i-Switch>
+                <div v-if="allShow.expired">
+                  <div class="item-wrapper">
+                    <p>云主机（{{hostList.length}}）<span :class="{opened:expiredHostOpened}"
+                                                     @click="expiredHostOpened=!expiredHostOpened">{{expiredHostOpened?'收起':'展开'}}</span>
+                    </p>
+                    <Table :columns="columns" :data="expiredHostList" @on-selection-change="select"
+                           v-show="expiredHostOpened"></Table>
+                  </div>
+                  <div class="item-wrapper">
+                    <p>弹性IP（{{ipList.length}}）<span :class="{opened:expiredIpOpened}"
+                                                    @click="expiredIpOpened=!expiredIpOpened">{{expiredIpOpened?'收起':'展开'}}</span>
+                    </p>
+                    <Table :columns="columns" :data="expiredIpList" @on-selection-change="select"
+                           v-show="expiredIpOpened"></Table>
+                  </div>
+                  <div class="item-wrapper">
+                    <p>云硬盘（{{diskList.length}}）<span :class="{opened:expiredDiskOpened}"
+                                                     @click="expiredDiskOpened=!expiredDiskOpened">{{expiredDiskOpened?'收起':'展开'}}</span>
+                    </p>
+                    <Table :columns="columns" :data="expiredDiskList" @on-selection-change="select"
+                           v-show="expiredDiskOpened"></Table>
+                  </div>
+                  <div class="item-wrapper">
+                    <p>NAT网关（{{natList.length}}）<span :class="{opened:expiredNatOpened}"
+                                                      @click="expiredNatOpened=!expiredNatOpened">{{expiredNatOpened?'收起':'展开'}}</span>
+                    </p>
+                    <Table :columns="columns" :data="expiredNatList" @on-selection-change="select"
+                           v-show="expiredNatOpened"></Table>
                   </div>
                 </div>
-                <div class="item-wrapper">
-                  <p>云主机（{{hostList.length}}）<span :class="{opened:expiredHostOpened}"
-                                                   @click="expiredHostOpened=!expiredHostOpened">{{expiredHostOpened?'收起':'展开'}}</span>
-                  </p>
-                  <Table :columns="columns" :data="expiredHostList" @on-selection-change="select"
-                         v-show="expiredHostOpened"></Table>
-                </div>
-                <div class="item-wrapper">
-                  <p>弹性IP（{{ipList.length}}）<span :class="{opened:expiredIpOpened}"
-                                                  @click="expiredIpOpened=!expiredIpOpened">{{expiredIpOpened?'收起':'展开'}}</span>
-                  </p>
-                  <Table :columns="columns" :data="expiredIpList" @on-selection-change="select"
-                         v-show="expiredIpOpened"></Table>
-                </div>
-                <div class="item-wrapper">
-                  <p>云硬盘（{{diskList.length}}）<span :class="{opened:expiredDiskOpened}"
-                                                   @click="expiredDiskOpened=!expiredDiskOpened">{{expiredDiskOpened?'收起':'展开'}}</span>
-                  </p>
-                  <Table :columns="columns" :data="expiredDiskList" @on-selection-change="select"
-                         v-show="expiredDiskOpened"></Table>
-                </div>
-                <div class="item-wrapper">
-                  <p>NAT网关（{{natList.length}}）<span :class="{opened:expiredNatOpened}"
-                                                    @click="expiredNatOpened=!expiredNatOpened">{{expiredNatOpened?'收起':'展开'}}</span>
-                  </p>
-                  <Table :columns="columns" :data="expiredNatList" @on-selection-change="select"
-                         v-show="expiredNatOpened"></Table>
+                <div v-else class="no-resource">
+                  <div>
+                    <p>没有可续费资源</p>
+                    <p>1.您还未购买过任何产品，点击
+                      <router-link to="buy">购买主机</router-link>
+                    </p>
+                    <p>2.您的资源都为实时计费资源，无需手动续费。</p>
+                  </div>
                 </div>
               </Tab-pane>
             </Tabs>
@@ -380,17 +428,16 @@
               groupList.push(item._groupId)
             }
           });
-
           let notGroupList = []
           notSelection.forEach(item => {
             if (notGroupList.indexOf(item._groupId) == -1) {
               notGroupList.push(item._groupId)
             }
           });
-          console.log(this.tabLabel)
           this.map[this.tabLabel].forEach(i => {
             this[`${i}List`].forEach(item => {
               if (groupList.indexOf(item._groupId) != -1) {
+                this[`${i}Opened`] = true
                 this.$set(item, '_checked', true)
               } else if (notGroupList.indexOf(item._groupId) != -1) {
                 this.$set(item, '_checked', false)
@@ -446,12 +493,18 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-
-          } else {
             ['host', 'ip', 'disk', 'nat'].forEach(i => {
               this[`${i}List`].forEach(s => {
                 if (s.type == item.type && s.id == item.id) {
                   this.$set(s, 'isAuto', !item.isAuto)
+                }
+              })
+            });
+          } else {
+            ['host', 'ip', 'disk', 'nat'].forEach(i => {
+              this[`${i}List`].forEach(s => {
+                if (s.type == item.type && s.id == item.id) {
+                  this.$set(s, 'isAuto', item.isAuto)
                 }
               })
             });
@@ -603,8 +656,7 @@
         this.selectArray.splice(index, 1)
         item.select = false
       },
-      renewalOne(item)
-      {
+      renewalOne(item){
         this.modal = true
         this.renewalType = ''
         this.renewalTime = ''
@@ -618,26 +670,9 @@
       },
       ok(){
         let list = [];
-        ['host', 'ip', 'disk', 'nat'].forEach(i => {
-          this[`${i}List`].forEach(item => {
-            if (item._checked) {
-              let type
-              switch (item.type) {
-                case 'host':
-                  type = 0
-                  break
-                case 'ip':
-                  type = 2
-                  break
-                case 'disk':
-                  type = 1
-                  break
-                case 'nat':
-                  type = 4
-                  break
-              }
-              list.push({type: type, id: item.id})
-            }
+        [{type: 'ip', id: 2}, {type: 'host', id: 0}, {type: 'disk', id: 1}, {type: 'nat', id: 4}].forEach(i => {
+          this.requestParam[`${i.type}Array`].forEach(item => {
+            list.push({type: i.id, id: item})
           })
         })
         var params = {
@@ -645,10 +680,7 @@
           timeValue: this.renewalTime + '',
           list: JSON.stringify(list)
         }
-        //this.loadingMessage = '创建订单中'
-        //this.loading = true
         this.$http.post('continue/continueOrder.do', params).then(response => {
-          //this.loading = false
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({path: 'order'})
           }
@@ -695,7 +727,16 @@
         deep: true
       }
     },
-    computed: {}
+    computed: {
+      allShow(){
+        return {
+          all: this.hostList.length + this.ipList.length + this.diskList.length + this.natList.length,
+          hour: this.hourHostList.length + this.hourIpList.length + this.hourDiskList.length + this.hourNatList.length,
+          day: this.weekHostList.length + this.weekIpList.length + this.weekDiskList.length + this.weekNatList.length,
+          expired: this.expiredHostList.length + this.expiredIpList.length + this.expiredDiskList.length + this.expiredNatList.length,
+        }
+      }
+    }
   }
 </script>
 
@@ -779,6 +820,19 @@
                 transform: translate(-5px, -3px) rotate(-45deg);
               }
             }
+          }
+        }
+        .no-resource {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          padding: 40px;
+          background-color: rgba(245, 245, 245, 1);
+          p {
+            line-height: 20px;
+            font-size: 14px;
+            color: rgba(102, 102, 102, 1);
           }
         }
       }

@@ -30,6 +30,7 @@
             <Dropdown-menu slot="list">
               <Dropdown-item name="adjust">调整带宽</Dropdown-item>
               <Dropdown-item name="charges">资费变更</Dropdown-item>
+              <Dropdown-item name="renewIP">续费IP</Dropdown-item>
             </Dropdown-menu>
           </Dropdown>
         </div>
@@ -244,7 +245,7 @@
       </div>
       <div slot="footer" style="" class="modal-footer-border">
         <Button class="button cancel" @click="showModal.renew=false">取消</Button>
-        <Button class="button ok" @click="renewOk">确认续费</Button>
+        <Button class="button ok" @click="renewOk" :disabled="renewalCost=='--'">确认续费</Button>
       </div>
     </Modal>
   </div>
@@ -650,26 +651,26 @@
       // 释放弹性IP
       resetIP(){
         if (this.select != null) {
-            this.$http.get('network/delPublic.do',{
-              params: {
-                id: this.select.id
-              }
-            }).then(response => {
-              if (response.status != 200 || response.data.status != 1) {
-                this.$message.info({
-                  content: response.data.message
-                })
-              } else{
-                this.$message.confirm({
-                  content: '您正将“'+this.select.publicip+'”移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。',
-                  onOk: () => {
-                    this.$Message.success(response.data.message)
-                    this.refresh()
-                  }
-                })
-              }
-            })
-          }else {
+          this.$http.get('network/delPublic.do',{
+            params: {
+              id: this.select.id
+            }
+          }).then(response => {
+            if (response.status != 200 || response.data.status != 1) {
+              this.$message.info({
+                content: response.data.message
+              })
+            } else{
+              this.$message.confirm({
+                content: '您正将“'+this.select.publicip+'”移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。',
+                onOk: () => {
+                  this.$Message.success(response.data.message)
+                  this.refresh()
+                }
+              })
+            }
+          })
+        }else {
           this.$Message.info({
             content: '请先选择一个弹性IP'
           })
@@ -973,6 +974,10 @@
             this.charges()
             break
           }
+          case 'renewIP':{
+            this.renewIP()
+            break
+          }
         }
       },
       adjust(){
@@ -1043,6 +1048,18 @@
           }
         )
       },
+      renewIP () {
+        if (this.select == null) {
+          this.$Message.info('请选择需要续费的IP')
+          return false
+        }
+        if (this.select.caseType === 3) {
+          this.$Message.info('请选择包年或包月的IP进行续费')
+          return false
+        }
+        this.currentIp = this.select.id
+        this.showModal.renew = true
+      },
       queryAdjustPrice: debounce(500, function () {
         this.$http.get('continue/countMoneyByUpPublicBandwith.do',{
           params: {
@@ -1079,8 +1096,12 @@
         )
       },
       renewOk(){
+        var list = [{
+          type: 2,
+          id: this.currentIp
+        }]
         this.$http.post('continue/continueOrder.do', {
-          list: [{type: 2, id: this.currentIp}],
+          list: JSON.stringify(list),
           timeType: this.renewalType,
           timeValue: this.renewalTime + ''
         }).then(response => {
@@ -1147,7 +1168,7 @@
     @diff: 146px;
     min-height: calc(~'100% - @{diff}');
     #wrapper {
-      width: 1200px;
+      //width: 1200px;
       margin: 0px auto;
       #title {
         font-size: 12px;
