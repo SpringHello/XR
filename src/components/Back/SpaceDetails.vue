@@ -8,8 +8,8 @@
                          <span class="title">空间详情</span>
                      </div>
                     <div style="width:50%;text-align:right;">
-                        <Button>返回</Button>
-                        <Button type="primary">刷新</Button>
+                        <Button @click="$router.push({path:'objectStorage'})">返回</Button>
+                        <Button @click="filesList" type="primary">刷新</Button>
                     </div>
                  </div>
                    <p style="margin:20px 0;">空间名称</p>
@@ -99,6 +99,7 @@
         :on-exceeded-size="handleMaxSize"
         :before-upload="handleBeforeUpload"
         :on-error="handleError"
+        :on-progress="handleUpload"
         multiple
         name="uploadFile"
         :data="fileUpdata"
@@ -135,8 +136,10 @@
        <div class="space_folder">
             <p style="font-size:14px;color:#666666;">文件名称</p><span></span>
             <span>外链</span><Input type="text" style="width:317px;" v-model="flies"/>
-            <br>
-            <span>有效期</span>
+            <br><br>
+            <span>有效期</span><Select v-model="term" style="width:240px;">
+              <Option v-for="item in termList" :value="item.term" :key="item.index">{{item.label}}</Option>
+            </Select>
        </div>
       </Modal>
     </div>
@@ -180,9 +183,25 @@ export default {
       ptext: "",
       //权限列表index
       indexs: 0,
-      //权限样式
+      //权限期限
+      term:'',
+      termList:[
+        {
+           term:'永久有效',
+           label:'永久有效'
+        },
+        {
+           term:'7天',
+           label:'7天'
+        },
+        {
+           term:'1天',
+           label:'1天'
+        }
+      ],
       //文件夹名称
       flies: "",
+        //权限样式
       iSstyle: "",
       //文件名
       filename:null,
@@ -194,10 +213,10 @@ export default {
           key: "filename",
           title: "文件名称",
           render: (h,params) =>{
-            let self = this;
-            self.fileUpdata.bucketName = name
-            self.fileUpdata.zoneId = zoneId
-            self.isfile = params.row.isfile;
+            let _self = this;
+            _self.fileUpdata.bucketName = name
+            _self.fileUpdata.zoneId = zoneId
+            _self.isfile = params.row.isfile;
             return h('div',[
               h("Icon",{
                 props:{
@@ -216,7 +235,7 @@ export default {
                  },
                  on:{
                    click(){
-                     self.filesList(params.row.id,params.row.isfile);//文件标识
+                     _self.filesList(params.row.id,params.row.isfile);//文件标识
                    }
                  }
                },params.row.filename)
@@ -267,8 +286,8 @@ export default {
                         },
                         on:{
                           click(){
-                            _self.deleteFile(params.row.dirId,params.row.filename);//传入文件Id和文件名称删除
-                          }
+                            _self.deleteFile(params.row.id,params.row.filename);//传入文件Id和文件名称删除
+                           }
                         }
                     },"删除")
                 ])
@@ -277,34 +296,42 @@ export default {
       ],
       //文件上传参数
       fileUpdata:{},
+      //判断是否是文件夹——1为文件夹——0为文件
       isfile:1
     };
   },
   methods: {
     //上传文件格式错误的方法
     handleFormatError(file) {
-      this.$Message.error('格式错误');
+      this.$Message.error('格式错误[○･｀Д´･ ○]');
     },
     //上传文件最大限制方法
     handleMaxSize() {
-      this.$Message.error('单文件最大只能上传1GB');
+      this.$Message.error('单文件最大只能上传1GB哦~( ˘•ω•˘ )');
     },
     //上传文件之前应用的方法
     handleBeforeUpload(file) {
       let reg = /^[\u4e00-\u9fa5\w\d@\.\-_]{1,20}$/i
      if(!reg.test(file.name)){
-       this.$Message.error('文件名不能超过20个');
+       this.$Message.error('文件名不能超过20个字符');
        return false;
      }
     },
     //上传文件成功的方法
     handleSuccess() {
-      this.$Message.success('成功');
+      this.$Message.success('上传成功ˊ_>ˋ');
+      this.filesList();
     },
     //文件上传失败
     handleError(error){
-      this.$Message.error('失败');
-      console.log(error);
+      this.$Message.error('上传失败_(:3」∠)_');
+    },
+    //上传文件过程的方法
+    handleUpload(file,event){
+      // let time = new Date().getTime();
+      
+        console.log(event);
+         console.log(file);
     },
     //权限切换
     navlists(val) {
@@ -323,7 +350,9 @@ export default {
         .then(res => {
           if (res.data.status == "1") {
             if(isfile == 1 || this.isfile == 1){
+              alert(11111);
               this.fileData = res.data.data.data;
+              console.log(this.fileData);
             }else{
               return;
             }
@@ -347,13 +376,15 @@ export default {
     },
     //删除文件
     deleteFile(id,filename){
-      this.$http.post('http://192.168.187:8083/ruirados/object/deleteFile.do',{
+      console.log(id);
+      this.$http.post('http://192.168.3.187:8083/ruirados/object/deleteObject.do',{
         bucketName:name,
         fileName:filename,
         dirId:id
       }).then(res =>{
         if(res.data.status == "1"){
           this.$Message.success('删除成功');
+          this.filesList();
         }else{
           this.$Message.error(res.data.msg);
         }

@@ -96,7 +96,7 @@ import tabOne from "../../myView/objectStrorage/tabOne";
 import tabTwo from "../../myView/objectStrorage/tabTwo";
 import tabThree from "../../myView/objectStrorage/tabThree";
 const disk = JSON.stringify(diskOptions);
-
+//延迟加载子组件
 function deferLoad(component, time = 0) {
   return resolve => {
     window.setTimeout(() => resolve(component), time);
