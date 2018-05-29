@@ -78,7 +78,7 @@
 
               <div class="timer">
                   <div class="">
-                    <p  class="title">距离5月3号{{ item.timerText}}点场还剩</p>
+                    <p  class="title">距离{{ item.timerText}}点场还剩</p>
                     <p  class="time">
                       <span>{{ item.h1 }}{{ item.h2}}</span>:
                       <span>{{ item.m1 }}{{ item.m2 }}</span>:
@@ -157,7 +157,7 @@
             <h2 class="head-title">抢到啦！</h2>
             <div class="content">
               <h3>恭喜你获得</h3>
-              <p>{{messageSuccess}}</p>
+              <p style=" height:165px;">{{messageSuccess}}</p>
             </div>
         </div>
         <div slot="footer" style="text-align:center">
@@ -168,10 +168,10 @@
     </Modal>
     <Modal v-model="modal3" width="550" :scrollable="true">
         <div style="text-align:center" class="gethost-success">
-            <h2 class="head-title" style="padding:0">sorry</h2>
+            <h2 class="head-title" style="padding-bottom:0">Sorry</h2>
             <div class="content" style="background:none;color:#000">
-              <h3>{{messageError}}</h3>
-              <p>您可以等待下一场活动或者移步隔壁活动专区，<a href="/ruicloud/active_1">38元无门槛券</a>等您拿！</p>
+              <h3 style="text-align: left" v-html="messageError"></h3>
+              <p v-html="messageErrorText"></p>
             </div>
         </div>
         <div slot="footer">
@@ -225,8 +225,9 @@
   export default {
     data() {
       return {
-        messageSuccess:'1核CPU、1G内存、1M宽带、40GSSD高效云盘。试用时间1个月 ，请进珍惜尽快使用哦！',
-        messageError:'抢光了',
+        messageSuccess:'',
+        messageError:'',
+        messageErrorText:'',
         personalauth: 1,
         companyauth: 1,
         isLogin: 0,
@@ -436,12 +437,11 @@
               params
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              
               this.messageSuccess=response.data.message
               this.modal2=true
             } else{
-            
               this.messageError=response.data.message
+              this.messageErrorText=response.data.message2
               this.modal3=true
             }
           })
@@ -535,7 +535,7 @@
       },
       setServerTime(serviceTime,remainder) {
         let hours = [10, 12, 15, 17].map(function (hour) {
-          let h = new Date(2018,4,3);
+          let h = new Date(serviceTime);
           h.setHours(hour,0,0)
          
           return {time:h.getTime(),timerText:hour}
@@ -682,9 +682,8 @@
       text-align: left;
       }
       margin: 0 auto;
-      // width:293px;
       width: 384px;
-      height:165px;
+     
       font-size:14px;
       font-family:PingFangSC-Medium;
       color:rgba(255,255,255,1);
