@@ -121,9 +121,10 @@
                 </div>
               </div>
             </div>
+            <p style="color: #377dff;cursor: pointer;margin-top: 10px;text-align: right" v-if="index>0" @click="deleteIDPhoto(index)">删除新负责人证件照</p>
           </div>
         </div>
-        <p @click="addIDPhoto" style="cursor: pointer;color: #377dff; font-size: 14px; margin-top: 10px;" v-if="uploadForm.IDPhotoList.length<3">添加新负责人证件照</p>
+        <p @click="addIDPhoto" style="cursor: pointer;color: #377dff; font-size: 14px;" v-if="uploadForm.IDPhotoList.length<3">添加新负责人证件照</p>
         <h2>请上传主体单位相关资料</h2>
         <div class="upload">
           <div class="uploadTitle">
@@ -338,6 +339,9 @@
           IDCardBack: '',
         }
         this.uploadForm.IDPhotoList.push(param)
+      },
+      deleteIDPhoto(index){
+        this.uploadForm.IDPhotoList.splice(index,1)
       },
       // 删除上传文件
       handleRemove(value, index) {

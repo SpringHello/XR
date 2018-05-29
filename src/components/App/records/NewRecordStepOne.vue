@@ -36,7 +36,7 @@
               </span>
             </FormItem>
             <FormItem label="主体单位性质" prop="unitProperties">
-              <Select v-model="mainUnitInformation.unitProperties"  style="width:500px;" placeholder="请选择单位性质"
+              <Select v-model="mainUnitInformation.unitProperties" style="width:500px;" placeholder="请选择单位性质"
                       @on-change="changeUnitProperties">
                 <Option v-for="item in mainUnitInformation.unitPropertiesList" :value="item.name" :key="item.name">{{
                   item.name }}
@@ -44,7 +44,7 @@
               </Select>
             </FormItem>
             <FormItem label="主体单位证件类型" prop="certificateType">
-              <Select v-model="mainUnitInformation.certificateType"  style="width:500px;" placeholder="请选择证件类型">
+              <Select v-model="mainUnitInformation.certificateType" style="width:500px;" placeholder="请选择证件类型">
                 <Option v-for="item in mainUnitInformation.certificateTypeList" :value="item" :key="item">{{
                   item }}
                 </Option>
@@ -317,7 +317,7 @@
 
   export default {
     components: {
-      step, records,oStep
+      step, records, oStep
     },
     beforeRouteEnter(to, from, next) {
       var area = sessionStorage.getItem("zone");
@@ -368,6 +368,14 @@
           callback();
         }
       };
+      const validInvestorNameName = (rule, value, callback) => {
+        let regNumber = /^[0-9]+$/;
+        if (regNumber.test(this.mainUnitInformation.investorName)) {
+          return callback(new Error("姓名不能输入数字"));
+        } else {
+          callback();
+        }
+      };
       //校验证件类型
       // const validUnitProperties = (rule, value, callback) => {
       //   let regCord = /(^\d{15}$) |(^\d{18}$) |(^\d{17}(\d|X|x)$)/;
@@ -381,8 +389,6 @@
       // };
       const validUnitProperties = (rule, value, callback) => {
         let regCord = /(^\d{15}$) |(^\d{18}$) |(^\d{17}(\d|X|x)$)/;
-        console.log(this.mainUnitInformation.certificateTypeList);
-
         if (!regCord.test(this.mainUnitInformation.certificateNumber)) {
           return callback(
             new Error(
@@ -437,7 +443,7 @@
           legalPersonName: "",
           // 法人证件类型
           legalPersonCertificateType: "",
-          legalPersonCertificateTypeList: [ '身份证','护照','军官证','台胞证'],
+          legalPersonCertificateTypeList: ['身份证', '护照', '军官证', '台胞证'],
           // 法人证件号码
           legalPersonIDNumber: "",
           // 办公室电话
@@ -477,7 +483,8 @@
               required: true,
               message: "请输入投资人或主管单位姓名",
               trigger: "blur"
-            }
+            },
+            {validator: validInvestorNameName, trigger: "blur"}
           ],
           legalPersonName: [
             {required: true, message: "请输入法人姓名", trigger: "blur"},
@@ -507,6 +514,13 @@
           ]
         }
       };
+    },
+    created() {
+      let mainUnitInformationStr = sessionStorage.getItem('mainUnitInformationStr')
+      if (mainUnitInformationStr) {
+        let mainUnitInformation = JSON.parse(mainUnitInformationStr)
+        this.mainUnitInformation = mainUnitInformation
+      }
     },
     methods: {
       setData(area, recordsType) {

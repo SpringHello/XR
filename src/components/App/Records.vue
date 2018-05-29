@@ -5,9 +5,9 @@
         <img src="../../assets/img/records/records-banner1.png"/>
         <div class="enter">
           <button @click="enterSystem">进入备案系统</button>
-          <button>公共查询</button>
-          <a>修改备案密码</a>
-          <a>找回备案密码</a>
+          <button @click="publicQuery">公共查询</button>
+          <a href="http://www.miitbeian.gov.cn/" target="_blank">修改备案密码</a>
+          <a  href="http://www.miitbeian.gov.cn/" target="_blank">找回备案密码</a>
           <p>客服热线：400-0505-565</p>
         </div>
       </div>
@@ -187,6 +187,9 @@
         )
         ;
       },
+      publicQuery(){
+        window.open('http://www.miitbeian.gov.cn/', '')
+      }
     },
     computed: {
       getUserInfo() {
