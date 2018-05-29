@@ -11,9 +11,11 @@
           <h2>主体信息</h2>
           <div class="main-ul">
             <ul>
-              <li>主体单位所属区域：{{mainUnitInformation.province}}/{{ mainUnitInformation.city }}/{{ mainUnitInformation.district }}</li>
-              <li>主体单位证件类型：{{ certificateType}}</li>
-              <li>主体单位性质：{{ unitProperties}}</li>
+              <li v-if="!(mainUnitInformation.maincompanyarea)">主体单位所属区域：{{mainUnitInformation.province}}/{{ mainUnitInformation.city }}/{{ mainUnitInformation.district }}</li>
+              <li v-else>主体单位所属区域：{{ mainUnitInformation.maincompanyarea}}</li>
+              <li>主体单位证件类型：{{ mainUnitInformation.certificateType}}</li>
+              <li>主体单位性质：{{ mainUnitInformation.unitProperties}}
+              </li>
               <li>主体单位证件号码：{{ mainUnitInformation.certificateNumber}}</li>
               <li>主体单位名称：{{ mainUnitInformation.unitName }}</li>
             </ul>
@@ -22,7 +24,8 @@
               <li>主体单位通信地址：{{mainUnitInformation.mailingAddress }}</li>
               <li>投资人或主管单位姓名：{{ mainUnitInformation.investorName }}</li>
               <li>法人姓名：{{ mainUnitInformation.legalPersonName}}</li>
-              <li>法人证件类型：{{ legalPersonCertificateType }}</li>
+              <li>法人证件类型：{{ mainUnitInformation.legalPersonCertificateType}}
+              </li>
             </ul>
             <ul>
               <li>法人证件号码：{{ mainUnitInformation.legalPersonIDNumber}}</li>
@@ -45,8 +48,7 @@
               </ul>
               <ul>
                 <li>网站负责人姓名：{{ item.basicInformation.principalName}}</li>
-                <li>有效证件类型：{{ item.basicInformation.certificateType =='1'? '身份证':item.basicInformation.certificateType =='2'?'护照':item.basicInformation.certificateType
-                  =='3'?'军官证':'台胞证'}}
+                <li>有效证件类型：{{ item.basicInformation.certificateType}}
                 </li>
                 <li>有效证件号码：{{ item.basicInformation.certificateNumber}}</li>
                 <li>手机号码：{{ item.basicInformation.phoneNumber}}</li>
@@ -514,9 +516,10 @@
         let CheckList = this.uploadForm.CheckList.map(item => {
           return item.url
         })
+        let mainCompanyArea = this.mainUnitInformation.maincompanyarea? this.mainUnitInformation.maincompanyarea : (this.mainUnitInformation.province + '-' + this.mainUnitInformation.city + '-' + this.mainUnitInformation.district)
         let addMainCompany = axios.get('recode/addMainCompany.do', {
           params: {
-            mainCompanyArea: this.mainUnitInformation.province + '-' + this.mainUnitInformation.city + '-' + this.mainUnitInformation.district,
+            mainCompanyArea: mainCompanyArea,
             mainCompanyCertificatesType: this.mainUnitInformation.certificateType,
             mainCompanyNature: this.mainUnitInformation.unitProperties,
             mainCompanyNumber: this.mainUnitInformation.certificateNumber,
@@ -543,6 +546,7 @@
         Promise.all([addMainCompany, addMainWeb]).then(response => {
           if ((response[0].status == 200 && response[0].data.status == 1) && (response[1].status == 200 && response[1].data.status == 1)) {
             this.$router.push('waitFirstTrial')
+            sessionStorage.clear()
           } else {
             this.$message.info({
               content: '平台开小差了，请稍候再试'
@@ -555,109 +559,6 @@
       this.siteInfoShow = true
     },
     computed: {
-      certificateType() {
-        switch (this.mainUnitInformation.unitProperties) {
-          case '0':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '工商营业执照'
-                break
-              case '2':
-
-                return '组织机构代码证'
-                break
-            }
-            break
-          case '1':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '身份证'
-                break
-              case '2':
-                return '护照'
-                break
-              case '3':
-                return '军官证'
-                break
-              case '4':
-                return '台胞证'
-                break
-            }
-            break
-          case '2':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '军队代号'
-                break
-            }
-            break
-          case '3':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '组织机构代码证'
-                break
-            }
-            break
-          case '4':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '组织机构代码证'
-                break
-              case '2':
-                return '事业法人证'
-                break
-            }
-            break
-          case '5':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '社团法人证书'
-                break
-              case '2':
-                return '组织机构代码证'
-                break
-            }
-            break
-        }
-      },
-      unitProperties() {
-        switch (this.mainUnitInformation.unitProperties) {
-          case '0':
-            return '企业'
-            break
-          case '1':
-            return '个人'
-            break
-          case '2':
-            return '军队'
-            break
-          case '3':
-            return '政府机关'
-            break
-          case '4':
-            return '事业单位'
-            break
-          case '5':
-            return '社会团体'
-            break
-        }
-      },
-      legalPersonCertificateType() {
-        switch (this.mainUnitInformation.legalPersonCertificateType) {
-          case '1':
-            return '身份证'
-            break
-          case '2':
-            return '护照'
-            break
-          case '3':
-            return '军官证'
-            break
-          case '4':
-            return '台胞证'
-            break
-        }
-      },
     }
   }
 </script>

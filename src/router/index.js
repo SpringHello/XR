@@ -84,6 +84,7 @@ const Firewall = () => import('@/components/Back/Firewall')
 const Disk = () => import('@/components/Back/Disk')
 const DiskBackup = () => import('@/components/Back/DiskBackup')
 const DiskParticulars = () => import('@/components/Back/DiskParticulars')
+const ObjectStorage = () => import('@/components/Back/ObjectStorage')
 const Vpc = () => import('@/components/Back/Vpc')
 const VpcManage = () => import('@/components/Back/VpcManage')
 const Vpn = () => import('@/components/Back/Vpn')
@@ -106,6 +107,7 @@ const WorkOrder = () => import('@/components/Back/WorkOrder')
 const Link = () => import('@/components/Link')
 const BRecords = () => import('@/components/Back/Records')
 const RecordDetails = () => import('@/components/Back/RecordDetails')
+const SpaceDetails = () => import('@/components/Back/SpaceDetails')
 
 // 帮助文档路由
 const computed = () => import('@/components/App/doc/computed')
@@ -658,6 +660,7 @@ var router = new Router({
         {path: 'disk', name: 'disk', component: Disk},
         {path: 'diskBackup', name: 'diskBackup', component: DiskBackup},
         {path: 'diskParticulars', name: 'diskParticulars', component: DiskParticulars},
+        {path:'objectStorage',name:'objectStorage',component:ObjectStorage},
         {path: 'snapshot', name: 'snapshot', component: Snapshot},
         {path: 'firewall', name: 'firewall', component: Firewall},
         {path: 'new', name: 'new', component: New},
@@ -683,7 +686,8 @@ var router = new Router({
         {path: 'wxpay', name: 'wxpay', component: Wxpay},
         {path: 'workOrder', name: 'workOrder', component: WorkOrder},
         {path: 'BRecords', name: 'BRecords', component: BRecords},
-        {path: 'RecordDetails', name: 'RecordDetails', component: RecordDetails}
+        {path: 'RecordDetails', name: 'RecordDetails', component: RecordDetails},
+        {path: 'SpaceDetails',name:'SpaceDetails',component:SpaceDetails}
       ]
     },
     {
