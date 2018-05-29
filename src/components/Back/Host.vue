@@ -482,9 +482,15 @@
               </Option>
             </Select>
           </FormItem>
-          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:10px;">全民普惠，3折减单，最高减免7000元！
-          </router-link>
+          <FormItem label="是否同时续费绑定IP与磁盘" v-if="isDisks||isIps">
+            <CheckboxGroup @on-change="bindRenewal" v-model="bindRenewalVal">
+                <Checkbox label="ip"  v-if="isIps">续费绑定IP</Checkbox>
+                <Checkbox label="disk" v-if="isDisks">续费磁盘</Checkbox>
+            </CheckboxGroup>
+          </FormItem>
         </Form>
+        <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:24px;display:block">全民普惠，3折减单，最高减免7000元！
+        </router-link>
         <div style="font-size:16px;">
           应付费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{cost}}
           <span v-if="renewalTime != ''">/</span>
@@ -661,6 +667,9 @@
           ]
         },
         publicIPList: [],
+        bindRenewalVal: [],
+        isDisks: '',
+        isIps: '',
         renewalType: '',
         renewalTime: '',
         timeOptions: {
@@ -704,6 +713,37 @@
       }, 5 * 1000)
     },
     methods: {
+      bindRenewal(){
+      if (this.cost != '--'){
+        var selectIp = ''
+        var selectDisk = ''
+        for (var i = 0; i < this.bindRenewalVal.length; i++) {
+          if (this.bindRenewalVal[i] == 'ip') {
+            selectIp = this.isIps
+          }
+          if (this.bindRenewalVal[i] == 'disk') {
+            selectDisk = this.isDisks
+          }
+        }
+        this.$http.get('information/getYjPrice.do', {
+            params: {
+              timeValue: this.renewalTime,
+              timeType: this.renewalType,
+              hostIdArr: this.currentHost[0].id,
+              ipIdArr: selectIp,
+              diskArr: selectDisk
+            }
+          }).then((response) => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.cost = response.data.result
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+         }
+      },
       checkRenameForm(){
         this.$refs.renameForm.validate((valid) => {
           if (valid) {
@@ -1064,6 +1104,32 @@
         this.$store.commit('setSelect', 'new')
         this.$router.push('buy')
       },
+      // 查询续费主机下是否有ip或磁盘
+      renewType() {
+        axios.get('information/listVirtualMachinesById.do', {
+            params: {
+              VMId: this.currentHost[0].computerid,
+              zoneId: this.currentHost[0].zoneid
+            }
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              var diskarr = response.data.result[0].attachDisk.map(item => {
+                return item.id
+              })
+              this.isDisks = diskarr.join()
+              var iparr = response.data.result[0].attachPublicIp.map(item => {
+                return item.id
+              })
+              this.isIps = iparr.join()
+              // 清空续费弹窗数据
+              this.bindRenewalVal = []
+              this.cost = '--'
+              this.renewalType = ''
+              this.renewalTime = ''
+              this.showModal.renewal = true
+            }
+          })
+      },
       hideEvent(name) {
         switch (name) {
           case 'delhost':
@@ -1079,7 +1145,7 @@
             break
           case 'renewal':
             if (this.checkSelect()) {
-              this.showModal.renewal = true
+              this.renewType()
             }
             break
           case 'backup':
@@ -1198,11 +1264,33 @@
       },
       // 包年/月主机续费
       renewalok() {
-        var list = [
+        var selectIp = ''
+        var selectDisk = ''
+        for (var i = 0; i < this.bindRenewalVal.length; i++) {
+          if (this.bindRenewalVal[i] == 'ip') {
+            selectIp = this.isIps
+          }
+          if (this.bindRenewalVal[i] == 'disk') {
+            selectDisk = this.isDisks
+          }
+        }
+        var iplist = []
+        if (selectIp != ''){
+          iplist = selectIp.split(',').map(item => {
+            return {type: 2, id: parseInt(item)}
+          })
+        }
+        var disklist = []
+        if (selectDisk != ''){
+          disklist = selectDisk.split(',').map(item => {
+            return {type: 1, id: parseInt(item)}
+          })
+        }
+        var host = [
           {type: 0, id: this.currentHost[0].id}
         ]
+        var list = host.concat(iplist, disklist)
         list = JSON.stringify(list)
-
         this.$http.post('continue/continueOrder.do', {
           list: list,
           timeType: this.renewalType,
@@ -1340,14 +1428,25 @@
         if (time == '') {
           this.cost = '--'
         } else {
-          this.$http.get('information/getYjPrice.do', {
+          var selectIp = ''
+          var selectDisk = ''
+          for (var i = 0; i < this.bindRenewalVal.length; i++) {
+          if (this.bindRenewalVal[i] == 'ip') {
+            selectIp = this.isIps
+          }
+          if (this.bindRenewalVal[i] == 'disk') {
+            selectDisk = this.isDisks
+          }
+        }
+        this.$http.get('information/getYjPrice.do', {
             params: {
               timeValue: this.renewalTime,
               timeType: this.renewalType,
-              hostIdArr: this.currentHost[0].id
+              hostIdArr: this.currentHost[0].id,
+              ipIdArr: selectIp,
+              diskArr: selectDisk
             }
-          })
-            .then((response) => {
+          }).then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.cost = response.data.result
               } else {
