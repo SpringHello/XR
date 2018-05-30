@@ -477,17 +477,17 @@
             </Select>
           </FormItem>
         </Form>
-        <div style="font-size:16px;">
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <div style="font-size:16px;float: left">
           应付费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{cost}}
           <span v-if="renewalTime != ''">/</span>
           <span style="font-size: 15px;">{{renewalTime}}<span v-if="renewalType == 'year' && renewalTime != ''">年</span>
           <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span>
         </span>
         </div>
-      </div>
-      <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.renewal = false">取消</Button>
-        <Button type="primary" @click="renewalok">确认续费</Button>
+        <Button type="primary" @click="renewalok" :disabled="cost=='--'">确认续费</Button>
       </div>
     </Modal>
     <!-- 资费变更弹出框 -->
@@ -519,8 +519,8 @@
           <span v-if="ratesChangeType == 'month' && ratesChangeTime != ''">月</span></span>
         </span>
         </div>
-        <Button class="button cancel" @click="showModal.ratesChange=false">取消</Button>
-        <Button class="button ok" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
+        <Button type="ghost"  @click="showModal.ratesChange=false">取消</Button>
+        <Button type="primary" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
       </div>
     </Modal>
     <!-- 欠费tab页，续费弹窗 -->
