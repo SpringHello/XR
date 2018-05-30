@@ -250,8 +250,6 @@
         // 区域切换时icon变化
         selectImg: require('../../../assets/img/records/records-icon7.png'),
         unSelectImg: require('../../../assets/img/records/records-icon8.png'),
-        // 用户能否备案状态
-        canRecord: false,
         // 用户备案信息
         recordInfo: [],
         showModal: {
@@ -286,7 +284,6 @@
     },
     created() {
       this.flowList = this.flowList_1
-      this.getHostStatus()
       this.getRecordInfo()
     },
     methods: {
@@ -306,7 +303,6 @@
         } else {
           this.flowList = this.flowList_1
         }
-        this.getHostStatus()
         $('html, body').animate({scrollTop: 550}, 300)
       },
       // 切换区域
@@ -317,20 +313,6 @@
         this.area = item.zoneId
         this.areaText = item.text
         item.src = this.selectImg
-        this.getHostStatus()
-      },
-      // 查询该区域用户是否有主机
-      getHostStatus() {
-        let url = 'recode/existMainOrWeb.do'
-        axios.get(url, {
-          params: {
-            zoneId: this.area
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.canRecord = response.data.result
-          }
-        })
       },
       // 立即备案
       putOnRecord() {
@@ -346,25 +328,34 @@
           //this.showModal.hint = true
           //return
         }
-        if (this.canRecord) {
-          sessionStorage.setItem('zone', this.areaText)
-          sessionStorage.setItem('zoneId', this.area)
-          sessionStorage.setItem('recordsType', this.type + '')
-          // 根据选择的备案类型决定跳入哪个起始页面
-          switch (this.type) {
-            case 1:
-              this.$router.push('newRecordStepOne')
-              break
-            case 2:
-              this.$router.push('newAccess')
-              break;
-            case 3:
-              this.$router.push('newAccess')
-              break
+        let url = 'recode/existMainOrWeb.do'
+        axios.get(url, {
+          params: {
+            zoneId: this.area
           }
-        } else {
-          this.showModal.recordInfo = true
-        }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            if (response.data.result) {
+              sessionStorage.setItem('zone', this.areaText)
+              sessionStorage.setItem('zoneId', this.area)
+              sessionStorage.setItem('recordsType', this.type + '')
+              // 根据选择的备案类型决定跳入哪个起始页面
+              switch (this.type) {
+                case 1:
+                  this.$router.push('newRecordStepOne')
+                  break
+                case 2:
+                  this.$router.push('newAccess')
+                  break;
+                case 3:
+                  this.$router.push('newAccess')
+                  break
+              }
+            } else {
+              this.showModal.recordInfo = true
+            }
+          }
+        })
       },
       vail(field) {
         var text = this.form[field];
