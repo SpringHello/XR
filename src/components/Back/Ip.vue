@@ -30,6 +30,7 @@
             <Dropdown-menu slot="list">
               <Dropdown-item name="adjust">调整带宽</Dropdown-item>
               <Dropdown-item name="charges">资费变更</Dropdown-item>
+              <Dropdown-item name="renewIP">续费IP</Dropdown-item>
             </Dropdown-menu>
           </Dropdown>
         </div>
@@ -233,18 +234,25 @@
               </Option>
             </Select>
           </FormItem>
+          <FormItem label="是否同时续费绑定主机与NAT网关:" style="width: 80%;margin-bottom: 0" v-if="renewalHost || renewalNAT">
+            <CheckboxGroup v-model="renewalOther">
+              <Checkbox label="续费关联云主机" v-if="renewalHost"></Checkbox>
+              <Checkbox label="续费关联NAT网关" v-if="renewalNAT"></Checkbox>
+            </CheckboxGroup>
+          </FormItem>
+          <p style="font-size: 14px;cursor: pointer;color: #377dff;margin-top: 10px" @click="$router.push('ActiveCenter')">全民普惠，三折减单，最高减免7000元</p>
         </Form>
-        <div style="font-size:16px;">
+      </div>
+      <div slot="footer" style="" class="modal-footer-border">
+        <div style="font-size:16px;float: left">
           应付费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{renewalCost}}
           <span v-if="renewalTime != ''">/</span>
           <span style="font-size: 15px;">{{renewalTime}}<span v-if="renewalType == 'year' && renewalTime != ''">年</span>
           <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span>
         </span>
         </div>
-      </div>
-      <div slot="footer" style="" class="modal-footer-border">
         <Button class="button cancel" @click="showModal.renew=false">取消</Button>
-        <Button class="button ok" @click="renewOk">确认续费</Button>
+        <Button class="button ok" @click="renewOk" :disabled="renewalCost==0">确认续费</Button>
       </div>
     </Modal>
   </div>
@@ -255,11 +263,12 @@
   import axios from '@/util/axiosInterceptor'
   import {customTimeOptions} from '../../options'
   import $store from '@/vuex'
-  export default{
+
+  export default {
     name: 'ip',
     beforeRouteEnter(to, from, next) {
       // 获取ip数据
-      axios.get('network/listPublicIp.do',{
+      axios.get('network/listPublicIp.do', {
         params: {
           page: 1,
           pageSize: 10,
@@ -271,7 +280,7 @@
         })
       })
     },
-    data(){
+    data() {
       return {
         // 释放弹性IP
         resetip: false,
@@ -279,7 +288,12 @@
         // IP续费
         renewalType: '',
         renewalTime: '',
-        renewalCost: '--',
+        renewalHost: false,
+        renewalNAT: false,
+        renewalHostID: '',
+        renewalNATID: '',
+        renewalCost: 0,
+        renewalOther: [],
         timeOptions: {
           renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
           renewalTime: [],
@@ -433,7 +447,28 @@
                         this.currentIp = obj.row.id
                         this.renewalType = ''
                         this.renewalTime = ''
-                        this.showModal.renew = true
+                        this.renewalOther = []
+                        this.renewalHost = false
+                        this.renewalNAT = false
+                        this.currentIp = this.select.id
+                        let url = 'network/listPublicIpById.do'
+                        this.$http.get(url, {
+                          params: {
+                            ipId: this.select.publicipid
+                          }
+                        }).then(response => {
+                          if (response.data.status === 1) {
+                            if (response.data.result[0].attachComputer.length !== 0) {
+                              this.renewalHostID = response.data.result[0].attachComputer[0].id
+                              this.renewalHost = true
+                            }
+                            if (response.data.result[0].attachNat.length !== 0) {
+                              this.renewalNATID = response.data.result[0].attachNat[0].id
+                              this.renewalNAT = true
+                            }
+                            this.showModal.renew = true
+                          }
+                        })
                       }
                     }
                   }, "续费")]);
@@ -502,7 +537,7 @@
               }
             ],
             filterMultiple: false,
-            filterMethod (value, row) {
+            filterMethod(value, row) {
               if (value === 1) {
                 return row.caseType == 1;
               } else if (value === 2) {
@@ -511,7 +546,7 @@
                 return row.caseType == 3;
               }
             },
-            render(h, obj){
+            render(h, obj) {
               let value = ''
               switch (obj.row.caseType) {
                 case 1:
@@ -528,7 +563,7 @@
           },
           {
             title: '带宽',
-            render(h, obj){
+            render(h, obj) {
               return h('span', `${obj.row.bandwith}M`)
             }
           },
@@ -648,37 +683,37 @@
     },
     methods: {
       // 释放弹性IP
-      resetIP(){
+      resetIP() {
         if (this.select != null) {
-            this.$http.get('network/delPublic.do',{
-              params: {
-                id: this.select.id
-              }
-            }).then(response => {
-              if (response.status != 200 || response.data.status != 1) {
-                this.$message.info({
-                  content: response.data.message
-                })
-              } else{
-                this.$message.confirm({
-                  content: '您正将“'+this.select.publicip+'”移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。',
-                  onOk: () => {
-                    this.$Message.success(response.data.message)
-                    this.refresh()
-                  }
-                })
-              }
-            })
-          }else {
+          this.$http.get('network/delPublic.do', {
+            params: {
+              id: this.select.id
+            }
+          }).then(response => {
+            if (response.status != 200 || response.data.status != 1) {
+              this.$message.info({
+                content: response.data.message
+              })
+            } else {
+              this.$message.confirm({
+                content: '您正将“' + this.select.publicip + '”移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。',
+                onOk: () => {
+                  this.$Message.success(response.data.message)
+                  this.refresh()
+                }
+              })
+            }
+          })
+        } else {
           this.$Message.info({
             content: '请先选择一个弹性IP'
           })
         }
       },
-      refresh () {
+      refresh() {
         // 获取ip数据
-        axios.get('network/listPublicIp.do',{
-          params:{
+        axios.get('network/listPublicIp.do', {
+          params: {
             page: 1,
             pageSize: 10,
             zoneId: $store.state.zone.zoneid
@@ -687,19 +722,19 @@
           this.setData(response)
         })
       },
-      setData(response){
+      setData(response) {
         if (response.status == 200 && response.data.status == 1) {
           this.ipData = response.data.result.data
         }
       },
       // 选中当前项
-      selectIp(current){
+      selectIp(current) {
         this.select = current
       },
       // 打开新建IP模态框
-      openNewIPModal(){
+      openNewIPModal() {
         this.showModal.newIPModal = true
-        axios.get('network/listVpc.do',{
+        axios.get('network/listVpc.do', {
           params: {
             zoneId: $store.state.zone.zoneid
           }
@@ -708,12 +743,12 @@
         })
       },
       // 改变购买方式触发函数
-      changeTimeType(){
+      changeTimeType() {
         this.newIPForm.timeValue = ''
         this.queryNewIPPrice()
       },
       // 判断是否发起查询新建IP价格
-      queryNewIPPrice(){
+      queryNewIPPrice() {
         if (this.newIPForm.timeType == 'current' || this.newIPForm.timeValue != '') {
           this.queryFunction()
         }
@@ -734,7 +769,7 @@
         })
       }),
       // 新建IP提交订单
-      handleNewIPSubmit(){
+      handleNewIPSubmit() {
         this.$refs.newIPFormValidate.validate(validate => {
           if (validate) {
             axios.get('network/createPublicIp.do', {
@@ -761,14 +796,14 @@
         })
       },
       // 打开绑定IP到云主机模态框
-      openBindIPModal(type, row, id){
+      openBindIPModal(type, row, id) {
         this.operatingId = id
         this.bindForHostForm.hostOptions = []
         if (type == 'host') {
           this.bindForHostForm.row = row
           this.showModal.bindIPForHost = true
           // 获取所有能绑定弹性IP的云主机
-          this.$http.get('information/listVirtualMachines.do',{
+          this.$http.get('information/listVirtualMachines.do', {
             params: {
               vpcId: row.vpcid,
               num: 0
@@ -808,7 +843,7 @@
         }
       },
       // 绑定弹性IP到云主机
-      bindHostSubmit(){
+      bindHostSubmit() {
         this.$refs.bindForHostFormValidate.validate(validate => {
           if (validate) {
             this.showModal.bindIPForHost = false
@@ -818,7 +853,7 @@
                 item.status = 3
               }
             })
-            this.$http.get('network/enableStaticNat.do',{
+            this.$http.get('network/enableStaticNat.do', {
               params: {
                 ipId: this.bindForHostForm.row.publicipid,
                 VMId: this.bindForHostForm.host
@@ -841,7 +876,7 @@
         this.$refs.bindForHostFormValidate.resetFields();
       },
       // 绑定弹性IP到NAT
-      bindNATSubmit(){
+      bindNATSubmit() {
         this.$refs.bindForNATFormValidate.validate(validate => {
           if (validate) {
             this.ipData.forEach(item => {
@@ -850,7 +885,7 @@
                 item.status = 3
               }
             })
-            this.$http.get('network/bindingElasticIP.do',{
+            this.$http.get('network/bindingElasticIP.do', {
               params: {
                 publicIp: this.bindForNATForm.row.publicip,
                 natGatewayId: this.bindForNATForm.NAT
@@ -874,7 +909,7 @@
         this.$refs.bindForNATFormValidate.resetFields();
       },
       // 解绑资源
-      unbundle(row){
+      unbundle(row) {
         this.$Modal.confirm({
           render: (h) => {
             return h('p', {
@@ -923,7 +958,7 @@
                 item.status = 4
               }
             })
-            this.$http.get(url,{params}).then(response => {
+            this.$http.get(url, {params}).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success({
                   content: response.data.message
@@ -942,13 +977,13 @@
         })
       },
       // 删除弹性ip
-      delElasticIP(){
+      delElasticIP() {
         this.resetip = false
         if (this.select == null) {
           this.$Message.warning('请选择1个弹性IP')
           return false
         }
-        this.$http.get('network/delPublic.do',{
+        this.$http.get('network/delPublic.do', {
           params: {
             id: this.select.id
           }
@@ -963,7 +998,7 @@
           }
         })
       },
-      hideEvent(type){
+      hideEvent(type) {
         switch (type) {
           case 'adjust': {
             this.adjust()
@@ -973,9 +1008,13 @@
             this.charges()
             break
           }
+          case 'renewIP': {
+            this.renewIP()
+            break
+          }
         }
       },
-      adjust(){
+      adjust() {
         if (this.select) {
           this.adjustForm.minBrand = this.select.bandwith
           this.adjustForm.brand = this.select.bandwith
@@ -996,9 +1035,9 @@
           return false
         }
       },
-      adjustOK(){
+      adjustOK() {
         this.showModal.adjust = false
-        this.$http.get('continue/UpPublicBnadwith.do',{
+        this.$http.get('continue/UpPublicBnadwith.do', {
           params: {
             bandwith: this.adjustForm.brand,
             publicIpId: this.select.id
@@ -1014,7 +1053,7 @@
           }
         )
       },
-      charges(){
+      charges() {
         if (this.select) {
           if (this.select.caseType != 3) {
             this.$Message.info("实时计费才能变更资费")
@@ -1027,9 +1066,9 @@
           return false
         }
       },
-      chargesOK(){
+      chargesOK() {
         this.showModal.charges = false
-        this.$http.get('continue/changeMoney.do',{
+        this.$http.get('continue/changeMoney.do', {
           params: {
             id: this.select.id,
             timeType: this.chargesForm.timeType,
@@ -1039,12 +1078,50 @@
         }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$router.push({path: 'order'})
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
             }
           }
         )
       },
+      renewIP() {
+        if (this.select == null) {
+          this.$Message.info('请选择需要续费的IP')
+          return false
+        }
+        if (this.select.caseType === 3) {
+          this.$Message.info('请选择包年或包月的IP进行续费')
+          return false
+        }
+        this.renewalType = ''
+        this.renewalTime = ''
+        this.renewalOther = []
+        this.renewalHost = false
+        this.renewalNAT = false
+        this.currentIp = this.select.id
+        let url = 'network/listPublicIpById.do'
+        this.$http.get(url, {
+          params: {
+            ipId: this.select.publicipid
+          }
+        }).then(response => {
+          if (response.data.status === 1) {
+            if (response.data.result[0].attachComputer.length !== 0) {
+              this.renewalHostID = response.data.result[0].attachComputer[0].id
+              this.renewalHost = true
+            }
+            if (response.data.result[0].attachNat.length !== 0) {
+              this.renewalNATID = response.data.result[0].attachNat[0].id
+              this.renewalNAT = true
+            }
+            this.showModal.renew = true
+          }
+        })
+      },
       queryAdjustPrice: debounce(500, function () {
-        this.$http.get('continue/countMoneyByUpPublicBandwith.do',{
+        this.$http.get('continue/countMoneyByUpPublicBandwith.do', {
           params: {
             brandwith: this.adjustForm.brand,
             publicIpId: this.select.id
@@ -1058,7 +1135,7 @@
           }
         )
       }),
-      queryChargePrice(){
+      queryChargePrice() {
         this.$http.post('device/queryIpPrice.do', {
           brand: this.select.bandwith + '',
           timeType: this.chargesForm.timeType,
@@ -1078,42 +1155,121 @@
           }
         )
       },
-      renewOk(){
+      renewOk() {
+        let list = []
+        if (this.renewalOther[0] == '续费关联云主机') {
+          list = [{
+            type: 2,
+            id: this.currentIp
+          }, {
+            type: 0,
+            id: this.renewalHostID
+          }]
+        } else if (this.renewalOther[0] == '续费关联NAT网关') {
+          list = [{
+            type: 2,
+            id: this.currentIp
+          }, {
+            type: 4,
+            id: this.renewalNATID
+          }]
+        } else {
+          list = [{
+            type: 2,
+            id: this.currentIp
+          }]
+        }
         this.$http.post('continue/continueOrder.do', {
-          list: [{type: 2, id: this.currentIp}],
+          list: JSON.stringify(list),
           timeType: this.renewalType,
           timeValue: this.renewalTime + ''
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({path: 'order'})
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
           }
         })
       }
     },
     watch: {
       // 监听计费模式变化
-      renewalType(type){
+      renewalType(type) {
         this.renewalTime = ''
         this.timeOptions.renewalTime = this.timeOptions[type]
       },
-      renewalTime(time){
+      renewalTime(time) {
         if (time == '') {
-          this.renewalCost = '--'
+          this.renewalCost = 0
         } else {
+          let hostArr = this.renewalOther[0] == '续费关联云主机' ? this.renewalHostID : ''
+          let natArr = this.renewalOther[0] == '续费关联NAT网关' ? this.renewalNATID : ''
           this.$http.get('information/getYjPrice.do', {
             params: {
               timeValue: this.renewalTime,
               timeType: this.renewalType,
               ipIdArr: this.currentIp,
-              hostIdArr: '',
-              diskArr: ''
+              hostIdArr: hostArr,
+              natArr: natArr
             }
           })
             .then((response) => {
               if (response.status == 200 && response.data.status == 1) {
-                this.renewalCost = response.data.result
+                this.renewalCost = response.data.result.toFixed(2)
               }
             })
+        }
+      },
+      // 监听续费关联
+      renewalOther() {
+        if (this.renewalTime != '') {
+          if (this.renewalOther[0] == '续费关联云主机') {
+            let url = 'information/getYjPrice.do'
+            this.$http.get(url, {
+              params: {
+                timeValue: this.renewalTime,
+                timeType: this.renewalType,
+                ipIdArr: this.currentIp,
+                hostIdArr: this.renewalHostID
+              }
+            })
+              .then((response) => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.renewalCost = response.data.result.toFixed(2)
+                }
+              })
+          } else if (this.renewalOther[0] == '续费关联NAT网关') {
+            let url = 'information/getYjPrice.do'
+            this.$http.get(url, {
+              params: {
+                timeValue: this.renewalTime,
+                timeType: this.renewalType,
+                ipIdArr: this.currentIp,
+                natArr: this.renewalNATID
+              }
+            })
+              .then((response) => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.renewalCost = response.data.result.toFixed(2)
+                }
+              })
+          } else {
+            let url = 'information/getYjPrice.do'
+            this.$http.get(url, {
+              params: {
+                timeValue: this.renewalTime,
+                timeType: this.renewalType,
+                ipIdArr: this.currentIp,
+              }
+            })
+              .then((response) => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.renewalCost = response.data.result.toFixed(2)
+                }
+              })
+          }
         }
       },
       // 监听区域变换
@@ -1123,13 +1279,13 @@
         },
         deep: true
       },
-      'adjustForm.brand'(value, oldValue){
+      'adjustForm.brand'(value, oldValue) {
         this.adjustForm.cost = '正在计算'
         this.queryAdjustPrice()
       }
     },
     computed: {
-      auth(){
+      auth() {
         return this.$store.state.authInfo != null
 
       }
@@ -1147,7 +1303,7 @@
     @diff: 146px;
     min-height: calc(~'100% - @{diff}');
     #wrapper {
-      width: 1200px;
+      //width: 1200px;
       margin: 0px auto;
       #title {
         font-size: 12px;
