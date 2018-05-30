@@ -217,6 +217,7 @@ export default {
             _self.fileUpdata.bucketName = name
             _self.fileUpdata.zoneId = zoneId
             _self.isfile = params.row.isfile;
+             
             return h('div',[
               h("Icon",{
                 props:{
@@ -318,9 +319,15 @@ export default {
      }
     },
     //上传文件成功的方法
-    handleSuccess() {
-      this.$Message.success('上传成功ˊ_>ˋ');
-      this.filesList();
+    handleSuccess(response) {
+      if(response.status == '1'){
+         this.$Message.success('上传成功ˊ_>ˋ');
+        this.filesList();
+      }else{
+         this.$Message.error('上传失败ˊ_>ˋ');
+      }
+     
+        console.log(this.fileUpdata);
     },
     //文件上传失败
     handleError(error){
@@ -340,7 +347,7 @@ export default {
     },
     //列出文件夹列表
     filesList(id,isfile) {
-      this.fileUpdata.dirId = id == undefined ? 'null' : id;
+     this.fileUpdata.dirId = id == undefined ? null :id;
       this.$http
         .post("http://192.168.3.187:8083/ruirados/object/listObject.do", {
           bucketName: name,
@@ -350,9 +357,8 @@ export default {
         .then(res => {
           if (res.data.status == "1") {
             if(isfile == 1 || this.isfile == 1){
-              alert(11111);
               this.fileData = res.data.data.data;
-              console.log(this.fileData);
+              
             }else{
               return;
             }
@@ -371,12 +377,14 @@ export default {
           if (res.data.status == "1") {
             this.$Message.success("新建成功");
             this.filesList();
+          }else{
+            this.$Message.error(res.data.msg);
           }
         });
     },
     //删除文件
     deleteFile(id,filename){
-      console.log(id);
+      // console.log(id);
       this.$http.post('http://192.168.3.187:8083/ruirados/object/deleteObject.do',{
         bucketName:name,
         fileName:filename,
@@ -410,7 +418,7 @@ export default {
   mounted() {
     this.ptext = this.navList[0].city; //权限列表默认显示第一个
     this.filesList();
-    console.log(this.fileUpdata);
+  
   }
 };
 </script>

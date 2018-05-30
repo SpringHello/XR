@@ -7,7 +7,7 @@
           <div style="width:1020px;">
             <div style="display:flex">
               <span style="font-size:16px;color:#2A99F2;">备案域名</span>
-              <div class="click_icon icons" @click="toolShow(isIcon)" :class="{hide_icon:!isIcon}"></div>
+              <!-- <div class="click_icon icons" @click="toolShow(isIcon)" :class="{hide_icon:!isIcon}"></div> -->
             </div>
             <div style="width:100%;">
               <ul>
@@ -25,7 +25,7 @@
           </div>
         </div>
         <!--主办单位信息-->
-        <div v-show="isIcon">
+        <div >
           <div class="info_box" >
             <div style="margin-bottom:10px;display:flex;display:-webkit-flex;width:100%;">
               <div class="click_icon icons" :class="{hide_icon:!isIconSon}" @click="infoBoxShow('information')"></div>
@@ -246,6 +246,7 @@
      <Modal
         v-model="checkList"
         title="重新上传网站备案信息真实性核验单信息"
+         :scrollable="true"
         >
         <p style="margin-bottom:5px">1、点击下载<span style="color:#2A99F2;">《网站备案信息真实性核验单》</span></p>
         <p style="margin-bottom:5px">2、查看核验单样例图，填写以下载的核验单，不得涂改</p>
@@ -261,11 +262,11 @@
                     action="file/upFile.do"
                     :format="['jpg','jpeg','png']"
                     :on-success="otherFile">
-                    <div class="item-content-text" v-if="uploadForm.otherFile==''">
+                    <div class="item-content-text" v-if="hostUnitList.webrecorduthenticityurl==''">
                       点击选择文件
                     </div>
                     <div class="item-content-text" v-else>
-                      <p>{{uploadForm.otherFile}}</p>
+                       <img style="height:222px;margin-bottom:25px" :src="hostUnitList.webrecorduthenticityurl"/>
                       点击选择文件
                     </div>
                     <button>上传</button>
@@ -284,6 +285,7 @@
        <Modal
         v-model="sponsorPhoto"
         title="重新上传身份证信息"
+         :scrollable="true"
         >
         <p>身份证人像面</p>
         <div class="updatePhoto" >
@@ -298,7 +300,7 @@
                     :format="['jpg','jpeg','png']"
                     :on-success="otherFile"
                     >
-                    <div class="sponsor-text" v-if="uploadForm.companyresponsibilityurlback==''">
+                    <div class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlback==''">
                       暂无图片
                     </div>
                     <div style="height:203px;" v-else>
@@ -354,6 +356,7 @@
        <Modal
         v-model="organizerPhoto"
         title="重新上传营业执照信息"
+         :scrollable="true"
         >
         <p>执照扫描件</p>
         <div class="updatePhoto" >
@@ -366,12 +369,12 @@
                     :with-credentials="true"
                     action="file/upFile.do"
                     :on-success="otherFile">
-                       <div class="sponsor-text" v-if="hostUnitList.hostCompanyUrl==''">
+                       <div class="sponsor-text" v-if="hostUnitList.hostcompanyurl==''">
                       暂无图片
                     </div>
                     <div style="height:203px;" v-else>
                        <div  style="text-align: center">
-                      <img style="height:144px;" :src="hostUnitList.hostCompanyUrl">
+                      <img style="height:144px;" :src="hostUnitList.hostcompanyurl">
                       <p style="">点击选择文件</p>
                        </div>
                     </div>
@@ -391,6 +394,7 @@
        <Modal
         v-model="domainNameCertificate"
         title="重新上传域名证书信息"
+         :scrollable="true"
         >
         <p>执照扫描件</p>
         <div class="updatePhoto" >
@@ -403,11 +407,11 @@
                     :with-credentials="true"
                     action="file/upFile.do"
                     :on-success="otherFile">
-                     <div class="sponsor-text" v-if="hostUnitList.domainCertificateUrl==''">
+                     <div class="sponsor-text" v-if="hostUnitList.domaincertificateurl==''">
                       点击选择文件
                     </div>
                     <div class="item-content" v-else>
-                      <p>{{hostUnitList.domainCertificateUrl}}</p>
+                      <p>{{hostUnitList.domaincertificateurl}}</p>
                       点击选择文件
                     </div>
                     <button>上传</button>
@@ -420,6 +424,7 @@
        <Modal
         v-model="otherInfo"
         title="重新上传其他文件信息"
+         :scrollable="true"
         >
         <p>如前置审批材料，法人授权委托书等材料（点击下载<span style="color:#2A99F2;">法人委托书</span>）</p>
         <div class="updatePhoto">
@@ -432,11 +437,11 @@
                     :with-credentials="true"
                     action="file/upFile.do"
                     :on-success="otherFile">
-                    <div class="item-content" v-if="hostUnitList.otherDataUrl ==''">
+                    <div class="item-content" v-if="hostUnitList.otherdataurl ==''">
                       点击选择文件
                     </div>
                     <div class="item-content" v-else>
-                      <p>{{hostUnitList.otherDataUrl}}</p>
+                      <p>{{hostUnitList.otherdataurl}}</p>
                       点击选择文件
                     </div>
                     <button>上传</button>
@@ -801,7 +806,7 @@ export default {
       // 备案类型
       recordsType: "",
       //图标切换
-      isIcon: true,
+      // isIcon: true,
       //主办单位信息详情隐藏与否
       isIconSon: true,
       //主办单位负责人详情隐藏与否
@@ -965,9 +970,9 @@ export default {
   },
   methods: {
     //图标切换方法
-    toolShow(isIcon) {
-      this.isIcon = !isIcon;
-    },
+    // toolShow(isIcon) {
+    //   this.isIcon = !isIcon;
+    // },
     infoBoxShow(value) {
       value == "information"
         ? (this.isIconSon = !this.isIconSon)
@@ -998,6 +1003,8 @@ export default {
             this.province = arr[0];
             this.city = arr[1];
             this.district = arr[2];
+            console.log(this.hostUnitList);
+            //查询错误的备案信息然后显示出来重新输入
             for (let item of this.hostUnitList.errorMessage) {
               item == "offaceNumber"
                 ? (this.offaceNumberHide = "offaceNumber")
@@ -1006,6 +1013,33 @@ export default {
                 ? (this.webResponsibilityCertificatesTypeHide =
                     "webResponsibilityCertificatesType")
                 : null;
+                item == "mainCompanyArea" ? (this.mainCompanyAreaHide = "mainCompanyArea") : null;
+                item == "mainCompanyCertificatesType" ? (this.mainCompanyCertificatesTypeHide = "mainCompanyCertificatesType") : null;
+                item == "mainCompanyNature" ? (this.mainCompanyNatureHide = "mainCompanyNature") : null;
+                item == "mainCompanyNumber" ? (this.mainCompanyNumberHide = "mainCompanyNumber") :null;
+                item == 'mainCompanyName' ? (this.mainCompanyNameHide = 'mainCompanyName') : null;
+                item == 'mainCompanyCertificatesLoaction' ? (this.mainCompanyCertificatesLoactionHide = "mainCompanyCertificatesLoaction") : null;
+                item == "investorName" ? (this.investorNameHide = "investorName") : null;
+                item == "legalName" ? (this.legalNameHide = "legalName") :null;
+                item == "legalCertificatesType" ? (this.legalCertificatesTypeHide = 'legalCertificatesType') : null;
+                item == "legalCertificatesNumber" ? (this.legalCertificatesNumberHide = "legalCertificatesNumber") : null;
+                item == "officeNumber" ? (this.officeNumberHide = "officeNumber") : null;
+                item == "phone" ? (this.phoneHide = 'phone') : null;
+                item == "email" ? (this.emailHide = 'email') : null;
+                item == "webName" ? (this.webNameHide = 'webName') : null;
+                item == "webDomian" ? (this.webDomianHide = 'webDomian') : null;
+                item == "webUrl" ? (this.webUrlHide = 'webUrl') : null;
+                item == "webServerContent" ? (this.webServerContentHide = 'webServerContent') : null;
+                item == "webMessage" ? (this.webMessageHide = 'webMessage') : null;
+                item == 'webResponsibilityLinkName' ? (this.webResponsibilityLinkNameHide = 'webResponsibilityLinkName') :null;
+                item == 'webResponsibilityCertificatesNumber' ? (this.webResponsibilityCertificatesNumberHide = 'webResponsibilityCertificatesNumber') : null;
+                item == 'offaceNumber' ? (this.offaceNumberHide = 'offaceNumber') : null;
+                item == 'companyPhone' ? (this.companyPhoneHide = 'companyPhone') : null;
+                item == 'companyEmail' ? (this.companyEmailHide = 'companyEmail') : null;
+                item == 'ISPName' ? (this.ISPNameHide = 'ISPName') : null;
+                item == 'webIp' ? (this.webIpHide = 'webIp') : null;
+                item == 'webAccessType' ? (this.webAccessTypeHide = 'webAccessType') : null;
+                item == 'webServerAddress' ? (this.webServerAddressHide = 'webServerAddress') : null;
             }
           } else {
             console.log("出错了");
@@ -1146,7 +1180,6 @@ export default {
     // 重新选择省份
     changeProvince(val) {
       area.forEach(item => {
-        console.log(item.name ==val);
         if (item.name == val) {
           this.cityList = item.city;
         }
@@ -1291,7 +1324,7 @@ export default {
       width: 1200px;
       background: #ffffff;
       height: 1529px;
-      padding: 10px 20px;
+      padding: 20px 20px;
       .center_title {
         border-bottom: 1px solid #d8d8d8;
         height: 64px;

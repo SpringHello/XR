@@ -208,6 +208,8 @@ export default {
                           this.$router.push({path:"newRecordStepFour"});
                         } else if (row.status == "初审拒绝") {
                            this.jumpRecord(row.id,row.webcompany_Id);
+                        } else if( row.status == "重新提交资料"){
+                            this.jumpRecord(row.id,row.webcompany_Id);
                         }
                       }
                     }
