@@ -20,6 +20,8 @@
         <div class="operator-bar">
           <Button type="primary" @click="newDisk">创建云硬盘</Button>
           <Button type="primary" @click="deleteDisk">删除云硬盘</Button>
+          <Button type="primary" @click="renewDisk">续费云硬盘</Button>
+          <Button type="primary" @click="ratesChange">资费变更</Button>
         </div>
         <div style="margin-top:20px">
           <Table :columns="diskColumns" :data="diskData" @radio-change="selectDisk"></Table>
@@ -162,7 +164,7 @@
         </Button>
       </div>
     </Modal>
-    
+
     <!-- 错误弹出框 -->
     <Modal v-model="showModal.error" :scrollable="true" :closable="false" :width="350">
       <p class="modal-content-s">
@@ -247,7 +249,71 @@
         </Button>
       </div>
     </Modal>
-
+    <!-- 续费弹出框-->
+    <Modal v-model="showModal.renewDisk" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">续费选择</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form>
+          <FormItem label="付费类型 :">
+            <Select v-model="renewalType">
+              <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="付费时长 :">
+            <Select v-model="renewalTime">
+              <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="是否同时续费绑定主机:" style="width: 80%;margin-bottom: 0" v-if="renewalHost">
+            <CheckboxGroup v-model="renewalOther">
+              <Checkbox label="续费关联云主机" v-if="renewalHost"></Checkbox>
+            </CheckboxGroup>
+          </FormItem>
+          <p style="font-size: 14px;cursor: pointer;color: #377dff;margin-top: 10px" @click="$router.push('ActiveCenter')">全民普惠，三折减单，最高减免7000元</p>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <div style="font-size:16px;float:left">
+          资费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{renewalTotalCost}}
+          <span v-if="renewalTime != ''">/</span>
+          <span style="font-size: 15px;">{{renewalTime}}<span v-if="renewalType == 'year' && renewalTime != ''">年</span>
+          <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span>
+        </span>
+        </div>
+        <Button class="button cancel" @click="showModal.renewDisk=false">取消</Button>
+        <Button class="button ok" @click="renewDisk_ok" :disabled="renewalTime==''">确认续费</Button>
+      </div>
+    </Modal>
+    <!-- 资费变更弹出框 -->
+    <Modal v-model="showModal.ratesChange" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">变更资费选择（资费变更适用于按需收费转包月/年）</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form>
+          <FormItem label="变更类型 :">
+            <Select v-model="ratesChangeType">
+              <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="变更时长 :">
+            <Select v-model="ratesChangeTime">
+              <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button class="button cancel" @click="showModal.ratesChange=false">取消</Button>
+        <Button class="button ok" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -256,8 +322,9 @@
   import debounce from 'throttle-debounce/debounce'
   import axios from '@/util/axiosInterceptor'
   import regExp from '../../util/regExp'
-  export default{
-    data(){
+
+  export default {
+    data() {
       const validaRegisteredName = regExp.validaRegisteredName
       return {
         dilatationDiskCaseType: '',
@@ -310,14 +377,48 @@
             ellipsis: true,
             render: (h, params) => {
               const row = params.row
-              const text = row.status === 0 ? '欠费' : (row.status === 1 && !row.mounton && !row.mountonname) ? '可挂载' : (row.status === 1 && row.mounton && row.mountonname) ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '异常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '卸载中' : row.status === 5 ? '挂载中' :row.status === 6 ? '备份中': ''
-              if (row.status == 2 || row.status == 3 || row.status == 4 || row.status == 5|| row.status == 6) {
+              const text = row.status === 0 ? '欠费' : (row.status === 1 && !row.mounton && !row.mountonname) ? '可挂载' : (row.status === 1 && row.mounton && row.mountonname) ? '已启用（' + row.mountonname + ')' : row.status === -1 ? '异常' : row.status === 2 ? '创建中' : row.status === 3 ? '删除中' : row.status === 4 ? '卸载中' : row.status === 5 ? '挂载中' : row.status === 6 ? '备份中' : ''
+              if (row.status == 2 || row.status == 3 || row.status == 4 || row.status == 5 || row.status == 6) {
                 return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block',
                     marginRight: '10px'
                   }
                 }), h('span', {}, text)])
+              } else if (row.status == 0 && params.row.caseType == 3) {
+                return h('div', {}, [h('span', {}, text), h('span', {
+                  style: {
+                    cursor: 'pointer',
+                    color: '#2A99F2',
+                    marginLeft: '10px'
+                  },
+                  on: {
+                    click: () => {
+                      this.$message.confirm({
+                        content: '确认续费该磁盘一小时？',
+                        onOk: () => {
+                          this.$http.get('information/getResCost.do', {
+                            params: {
+                              type: 'disk',
+                              id: row.id
+                            }
+                          }).then(response => {
+                            if (response.status == 200 && response.data.status == 1) {
+                              this.$Message.info({
+                                content: '续费成功'
+                              })
+                              this.refresh()
+                            } else {
+                              this.$message.info({
+                                content: response.data.message
+                              })
+                            }
+                          })
+                        }
+                      })
+                    }
+                  }
+                }, "续费")]);
               } else {
                 return h('span', text)
               }
@@ -344,7 +445,7 @@
           {
             title: '创建时间',
             ellipsis: true,
-            width:160,
+            width: 160,
             key: 'createtime',
           },
           {
@@ -457,7 +558,11 @@
           // 创建磁盘备份模态框
           createDiskBackup: false,
           // 错误提示框
-          error: false
+          error: false,
+          // 续费模态框
+          renewDisk: false,
+          // 资费变更
+          ratesChange: false,
           /*
 
            mountDisk: false,
@@ -551,25 +656,48 @@
         },
         // 可挂载主机列表
         mountHostList: [],
-        diskSizeExpenses: 0
+        diskSizeExpenses: 0,
+        // 续费所需费用
+        renewalTotalCost: 0,
+        renewalType: '',
+        renewalTime: '',
+        renewalOther: [],
+        renewalHost: false,
+        renewalConnectionsHost: '',
+        // 变更资费所需
+        ratesChangeCost: '--',
+        ratesChangeType: '',
+        ratesChangeTime: '',
+        timeOptions: {
+          renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
+          renewalTime: [],
+          year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}],
+          month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '3月', value: 3}, {
+            label: '4月',
+            value: 4
+          }, {label: '5月', value: 5}, {label: '6月', value: 6}, {label: '7月', value: 7}, {
+            label: '8月',
+            value: 8
+          }, {label: '9月', value: 9}, {label: '10月', value: 10}]
+        },
       }
     },
-    created(){
+    created() {
       this.diskAreaList = this.$store.state.zoneList
       this.listDisk()
     },
     methods: {
       /* 刷新页面 */
-      refreshPage () {
+      refreshPage() {
         this.$router.go(0)
         this.listDisk()
       },
-      refresh () {
+      refresh() {
         this.diskAreaList = this.$store.state.zoneList
         this.listDisk()
       },
       // 验证新建磁盘的表单
-      _checkNewForm(){
+      _checkNewForm() {
         this.$refs.newDisk.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用创建磁盘方法
@@ -578,7 +706,7 @@
         })
       },
       // 验证挂载磁盘的表单
-      _checkMountForm () {
+      _checkMountForm() {
         this.$refs.mountDisk.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用挂载磁盘方法
@@ -587,7 +715,7 @@
         })
       },
       // 验证新建备份表单
-      _checkCreateBackupsForm(){
+      _checkCreateBackupsForm() {
         this.$refs.createBackups.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用创建备份策略方法
@@ -596,7 +724,7 @@
         })
       },
       // 验证修改磁盘表单
-      _checkModificationDiskForm(){
+      _checkModificationDiskForm() {
         this.$refs.modificationDisk.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用创建备份策略方法
@@ -604,14 +732,14 @@
           }
         })
       },
-      listDisk(){
+      listDisk() {
         this.$http.get('Disk/listDisk.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-     /*       response.data.result.forEach((item) => {
-              if (item.status != 1) {
-                item._disabled = true
-              }
-            })*/
+            /*       response.data.result.forEach((item) => {
+                     if (item.status != 1) {
+                       item._disabled = true
+                     }
+                   })*/
             this.diskData = response.data.result
             this.diskSelection = null
           } else {
@@ -622,16 +750,16 @@
         })
       },
       // 弹出新建磁盘模态框
-      newDisk(){
+      newDisk() {
         this.showModal.newDisk = true
       },
       // 挂载磁盘到主机
-      mount(data){
+      mount(data) {
         if (!data.mounton && !data.mountonname && data.status == 1) {
           this.operand = data
           this.showModal.mountDisk = true
-          this.$http.get('Disk/listAttachComputer.do',{
-            params:{
+          this.$http.get('Disk/listAttachComputer.do', {
+            params: {
               diskId: data.diskid
             }
           }).then(response => {
@@ -646,9 +774,9 @@
         }
       },
       // 从主机中卸载磁盘
-      unload(data){
+      unload(data) {
         this.operand = data
-        if (this.operand.mounton  && this.operand.mountonname  && this.operand.status == 1) {
+        if (this.operand.mounton && this.operand.mountonname && this.operand.status == 1) {
           this.showModal.diskUnload = true
           this.diskName = this.operand.diskname
           this.hostName = this.operand.mountonname
@@ -662,16 +790,16 @@
       queryDiskPrice: debounce(500, function () {
         var diskType = ''
         var diskSize = ''
-        if (this.diskForm.quantity === 1){
+        if (this.diskForm.quantity === 1) {
           diskType = this.diskForm.diskType
           diskSize = this.diskForm.diskSize + ''
         } else {
-          for(var i = 0; i< this.diskForm.quantity; i++){
+          for (var i = 0; i < this.diskForm.quantity; i++) {
             diskType += this.diskForm.diskType + ','
             diskSize += this.diskForm.diskSize + ','
           }
-          diskType = diskType.substring(0,diskType.length - 1)
-          diskSize = diskSize.substring(0,diskSize.length - 1)
+          diskType = diskType.substring(0, diskType.length - 1)
+          diskSize = diskSize.substring(0, diskSize.length - 1)
         }
         this.$http.post('device/QueryBillingPrice.do', {
           cpuNum: 0 + '',
@@ -698,7 +826,7 @@
       }),
       // 磁盘扩容价格查询
       queryDiskCost: debounce(500, function () {
-        axios.get('Disk/UpDiskConfigCost.do',{
+        axios.get('Disk/UpDiskConfigCost.do', {
           params: {
             diskId: this.operand.diskid,
             diskSize: this.dilatationForm.diskSize,
@@ -715,22 +843,22 @@
         })
       }),
       // 确认创建磁盘
-      newDisk_ok(){
+      newDisk_ok() {
         var diskType = ''
         var diskSize = ''
-        if (this.diskForm.quantity === 1){
+        if (this.diskForm.quantity === 1) {
           diskType = this.diskForm.diskType
           diskSize = this.diskForm.diskSize + ''
         } else {
-          for(var i = 0; i< this.diskForm.quantity; i++){
+          for (var i = 0; i < this.diskForm.quantity; i++) {
             diskType += this.diskForm.diskType + ','
             diskSize += this.diskForm.diskSize + ','
           }
-          diskType = diskType.substring(0,diskType.length - 1)
-          diskSize = diskSize.substring(0,diskSize.length - 1)
+          diskType = diskType.substring(0, diskType.length - 1)
+          diskSize = diskSize.substring(0, diskSize.length - 1)
         }
         // 默认zoneList第一个元素为当前选中区域，以后会修改
-        this.$http.get('Disk/createVolume.do',{
+        this.$http.get('Disk/createVolume.do', {
           params: {
             diskSize: diskSize,
             diskName: this.diskForm.diskName,
@@ -750,26 +878,26 @@
         })
       },
       // 选中表中的一项
-      selectDisk(currentRow){
+      selectDisk(currentRow) {
         this.diskSelection = currentRow
       },
       // 打开扩容模态框
-      dilatationDisk(data){
+      dilatationDisk(data) {
         if (data.status == 1) {
           this.operand = data
           this.dilatationForm.diskSize = this.operand.disksize
           this.dilatationForm.minDiskSize = this.dilatationForm.diskSize
-          switch(this.operand.caseType) {
+          switch (this.operand.caseType) {
             case 1:
-             this.dilatationDiskCaseType = '年'
-                  break;
+              this.dilatationDiskCaseType = '年'
+              break;
             case 2:
               this.dilatationDiskCaseType = '月'
               break;
             case 3:
               this.dilatationDiskCaseType = '时'
               break;
-         }
+          }
 
           this.showModal.dilatationDisk = true
         } else {
@@ -779,7 +907,7 @@
         }
       },
       // 修改磁盘名称弹出模态框
-      modificationDisk(data){
+      modificationDisk(data) {
         if (data.status == 1) {
           this.operand = data
           this.showModal.modificationDisk = true
@@ -791,7 +919,7 @@
         }
       },
       // 删除跳转到卸载模态框
-      beforeDelete(){
+      beforeDelete() {
         this.showModal.beforeDelete = false
         this.operand = this.diskSelection
         this.diskName = this.operand.diskname
@@ -799,49 +927,143 @@
         this.showModal.diskUnload = true
       },
       // 删除磁盘
-      deleteDisk(){
+      deleteDisk() {
         if (this.checkSelect() == true) {
-          if (this.diskSelection.status == 1 && this.diskSelection.mounton  && this.diskSelection.mountonname ) {
+          if (this.diskSelection.status == 1 && this.diskSelection.mounton && this.diskSelection.mountonname) {
             // 该磁盘已挂载主机，无法删除。弹出确认卸载框，点击卸载
             this.showModal.beforeDelete = true
           } else if (this.diskSelection.caseType != 1 && this.diskSelection.caseType != 2) {
             // 弹出删除框
             this.diskName = this.diskSelection.diskname
             this.$message.confirm({
-                        content: `${this.diskName}云硬盘删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。`,
-                          onOk: () => {
-                            this.diskData.forEach(item => {
-                              if (item.diskid == this.diskSelection.diskid) {
-                                item.status = 3
-                              }
-                            })
-                            this.$http.get('Disk/delDisk.do',{
-                              params: {
-                                id: this.diskSelection.id + ''
-                              }
-                            }).then(response => {
-                              if (response.status == 200 && response.data.status == 1) {
-                                this.$Message.info({
-                                  content: response.data.message
-                                  })
-                                this.listDisk()
-                              } else {
-                                this.$message.info({
-                                  content: response.data.message
-                                })
-                              }
-                            })
-                          }
-                      })
-              } else {
-                this.$message.info({
-                  content: '包年包月资费资源无法删除'
+              content: `${this.diskName}云硬盘删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。`,
+              onOk: () => {
+                this.diskData.forEach(item => {
+                  if (item.diskid == this.diskSelection.diskid) {
+                    item.status = 3
+                  }
+                })
+                this.$http.get('Disk/delDisk.do', {
+                  params: {
+                    id: this.diskSelection.id + ''
+                  }
+                }).then(response => {
+                  if (response.status == 200 && response.data.status == 1) {
+                    this.$Message.info({
+                      content: response.data.message
+                    })
+                    this.listDisk()
+                  } else {
+                    this.$message.info({
+                      content: response.data.message
+                    })
+                  }
                 })
               }
+            })
+          } else {
+            this.$message.info({
+              content: '包年包月资费资源无法删除'
+            })
+          }
         }
       },
+      // 续费磁盘
+      renewDisk() {
+        if (this.diskSelection == null) {
+          this.$Message.info('请选择需要续费的磁盘')
+          return false
+        }
+        if (this.diskSelection.caseType === 3) {
+          this.$Message.info('请选择包年或包月的磁盘进行续费')
+          return false
+        }
+        this.renewalType = ''
+        this.renewalTime = ''
+        this.renewalOther = []
+        let url = 'Disk/listDiskById.do'
+        this.$http.get(url, {
+          params: {
+            diskId: this.diskSelection.diskid
+          }
+        }).then(response => {
+          if (response.data.status === 1) {
+            if (response.data.result[0].attachComputer.length === 0) {
+              this.renewalHost = false
+            } else {
+              this.renewalHost = true
+              this.renewalConnectionsHost = response.data.result[0].attachComputer[0].id
+            }
+            this.showModal.renewDisk = true
+          }
+        })
+      },
+      // 确认续费
+      renewDisk_ok() {
+        let list = []
+        if (this.renewalOther[0] == '续费关联云主机') {
+          list = [{
+            type: 1,
+            id: this.diskSelection.id
+          }, {
+            type: 0,
+            id: this.renewalConnectionsHost
+          }]
+        } else {
+          list = [{
+            type: 1,
+            id: this.diskSelection.id
+          }]
+        }
+        var params = {
+          timeType: this.renewalType,
+          timeValue: this.renewalTime + '',
+          list: JSON.stringify(list)
+        }
+        this.$http.post('continue/continueOrder.do', params).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push({path: 'order'})
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
+      // 资费变更
+      ratesChange() {
+        if (this.diskSelection == null) {
+          this.$Message.info('请选择需要变更资费的磁盘')
+          return false
+        }
+        if (this.diskSelection.caseType !== 3) {
+          this.$Message.info('请选择实时计费的磁盘进行资费变更')
+          return false
+        }
+        this.showModal.ratesChange = true
+      },
+      // 确认变更资费
+      ratesChange_ok() {
+        let url = 'continue/changeMoney.do'
+        this.$http.get(url, {
+          params: {
+            id: this.diskSelection.id,
+            timeType: this.ratesChangeType,
+            timeValue: this.ratesChangeTime,
+            type: 1
+          }
+        }).then(response => {
+          if (response.data.status == 1) {
+            this.$router.push({path: 'order'})
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
       // 检测是否选中一项数据
-      checkSelect(){
+      checkSelect() {
         if (this.diskSelection == null) {
           this.$Message.info('请选择需要删除的磁盘')
           return false
@@ -849,14 +1071,14 @@
         return true
       },
       /* 确认卸载磁盘 */
-      diskUnload_ok(){
+      diskUnload_ok() {
         this.showModal.diskUnload = false
         this.diskData.forEach(item => {
           if (item.diskid == this.operand.diskid) {
             item.status = 4
           }
         })
-        axios.get('Disk/detachVolume.do',{
+        axios.get('Disk/detachVolume.do', {
           params: {
             zoneId: this.operand.zoneid,
             diskId: this.operand.diskid,
@@ -876,8 +1098,8 @@
         })
       },
       /* 确认修改磁盘名称 */
-      modificationDisk_ok(){
-        this.$http.get('Disk/updateDisk.do',{
+      modificationDisk_ok() {
+        this.$http.get('Disk/updateDisk.do', {
           params: {
             diskId: this.operand.diskid,
             diskName: this.modificationDiskForm.diskName
@@ -897,14 +1119,14 @@
         })
       },
       /* 确认挂载磁盘 */
-      mountDisk_ok(){
+      mountDisk_ok() {
         this.showModal.mountDisk = false
         this.diskData.forEach(item => {
           if (item.diskid == this.operand.diskid) {
             item.status = 5
           }
         })
-        this.$http.get('Disk/attachVolume.do',{
+        this.$http.get('Disk/attachVolume.do', {
           params: {
             diskId: this.operand.diskid,
             VMId: this.diskMountForm.mountHost
@@ -923,8 +1145,8 @@
         })
       },
       /* 确认扩容磁盘 */
-      adjustDisk_ok(){
-        this.$http.get('Disk/UpDiskConfig.do',{
+      adjustDisk_ok() {
+        this.$http.get('Disk/UpDiskConfig.do', {
           params: {
             diskId: this.operand.diskid,
             diskSize: this.dilatationForm.diskSize
@@ -960,7 +1182,7 @@
             item.status = 6
           }
         })
-        axios.get('Snapshot/createDiskSnapshot.do',{
+        axios.get('Snapshot/createDiskSnapshot.do', {
           params: {
             diskId: this.operand.diskid,
             name: this.createBackupsForm.backupsName,
@@ -979,7 +1201,7 @@
         })
       },
       /* 购买数量操作 */
-      reduce () {
+      reduce() {
         this.diskForm.quantity -= 1
         switch (this.diskForm.quantity) {
           case 0:
@@ -992,19 +1214,104 @@
     },
     computed: {
       // 该计算属性用于解决观测对象时currentValue与oldValue指向同一对象的问题，没有其他用处
-      copyDiskForm(){
+      copyDiskForm() {
         var obj = {}
         for (var i in this.diskForm) {
           obj[i] = this.diskForm[i]
         }
         return obj
       },
-      auth(){
+      auth() {
         return this.$store.state.authInfo != null
 
       }
     },
     watch: {
+      // 续费时间变化
+      renewalType(type) {
+        this.renewalTime = ''
+        this.timeOptions.renewalTime = this.timeOptions[type]
+      },
+      renewalTime(time) {
+        if (time == '') {
+          this.renewalTotalCost = 0
+        } else {
+          let url = 'information/getYjPrice.do'
+          let hostArr = this.renewalOther[0] == '续费关联云主机' ? this.renewalConnectionsHost : ''
+          this.$http.get(url, {
+            params: {
+              timeValue: this.renewalTime,
+              timeType: this.renewalType,
+              diskArr: this.diskSelection.id,
+              hostIdArr: hostArr
+            }
+          })
+            .then((response) => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.renewalTotalCost = response.data.result.toFixed(2)
+              }
+            })
+        }
+      },
+      // 续费关联主机
+      renewalOther() {
+        if (this.renewalTime != '') {
+          if (this.renewalOther[0] == '续费关联云主机') {
+            let url = 'information/getYjPrice.do'
+            this.$http.get(url, {
+              params: {
+                timeValue: this.renewalTime,
+                timeType: this.renewalType,
+                diskArr: this.diskSelection.id,
+                hostIdArr: this.renewalConnectionsHost
+              }
+            })
+              .then((response) => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.renewalTotalCost = response.data.result.toFixed(2)
+                }
+              })
+          } else {
+            let url = 'information/getYjPrice.do'
+            this.$http.get(url, {
+              params: {
+                timeValue: this.renewalTime,
+                timeType: this.renewalType,
+                diskArr: this.diskSelection.id
+              }
+            })
+              .then((response) => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.renewalTotalCost = response.data.result.toFixed(2)
+                }
+              })
+          }
+        }
+      },
+      // 资费变更
+      ratesChangeType(type) {
+        this.ratesChangeTime = ''
+        this.timeOptions.renewalTime = this.timeOptions[type]
+      },
+      ratesChangeTime(time) {
+        if (time == '') {
+          this.ratesChangeCost = '--'
+        } else {
+          let url = 'information/getYjPrice.do'
+          this.$http.get(url, {
+            params: {
+              timeValue: this.ratesChangeTime,
+              timeType: this.ratesChangeType,
+              diskArr: this.diskSelection.id
+            }
+          })
+            .then((response) => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.ratesChangeCost = response.data.result.toFixed(2)
+              }
+            })
+        }
+      },
       // 观测计算属性变化，如果不是名称的变化则必须重新计算价格
       // 新建磁盘价格计算
       'copyDiskForm': {
@@ -1020,7 +1327,7 @@
         deep: true
       },
       // 磁盘扩容价格计算
-      'dilatationForm.diskSize'(){
+      'dilatationForm.diskSize'() {
         this.diskSizeExpenses = '正在计算'
         this.queryDiskCost()
       },
