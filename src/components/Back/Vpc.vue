@@ -79,6 +79,7 @@
             <div class="operator-bar">
               <Button type="primary" @click="openAddNatModal">添加NAT网关</Button>
               <Button type="primary" @click="openDeleteNatModal">删除NAT网关</Button>
+              <Button type="primary" @click="natbindIps">续费</Button>
             </div>
             <Table :columns="natColumns" :data="natData" @radio-change="selectNAT"></Table>
           </TabPane>
@@ -338,7 +339,51 @@
         <Button type="primary" @click="handlebindTargetIPSubmit">确认绑定</Button>
       </div>
     </Modal>
+    <!-- nat网关续费弹窗 -->
+    <Modal
+      v-model="showModal.natRenewal"
+      width="590"
+      :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">续费选择</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form>
+          <FormItem label="付费类型 :">
+            <Select v-model="renewalType">
+              <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="付费时长 :">
+            <Select v-model="renewalTime">
+              <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="是否同时续费绑定IP" v-if="isIps">
+            <CheckboxGroup @on-change="bindRenewal" v-model="bindRenewalIp">
+                <Checkbox label="ip">续费绑定IP</Checkbox>
+            </CheckboxGroup>
+          </FormItem>
+        </Form>
+        <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:24px;display:block">全民普惠，3折减单，最高减免7000元！
+        </router-link>
+        <div style="font-size:16px;">
+          应付费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{cost}}
+          <span v-if="renewalTime != ''">/</span>
+          <span style="font-size: 15px;">{{renewalTime}}<span v-if="renewalType == 'year' && renewalTime != ''">年</span>
+          <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span>
+        </span>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.natRenewal = false">取消</Button>
+        <Button type="primary" @click="renewalok">确认续费</Button>
+      </div>
+    </Modal>
   </div>
+  
 </template>
 
 <script type="text/ecmascript-6">
@@ -359,6 +404,23 @@
         callback()
       }
       return {
+        bindRenewalIp: [],
+        isIps: '',
+        cost: '--',
+        renewalType: '',
+        renewalTime: '',
+        timeOptions: {
+          renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
+          renewalTime: [],
+          year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}],
+          month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '3月', value: 3}, {
+            label: '4月',
+            value: 4
+          }, {label: '5月', value: 5}, {label: '6月', value: 6}, {label: '7月', value: 7}, {
+            label: '8月',
+            value: 8
+          }, {label: '9月', value: 9}, {label: '10月', value: 10}]
+        },
         loadingMessage: '',
         loading: false,
         // vpc列表数据
@@ -610,6 +672,7 @@
           bindTargetIP: false,
           // 解绑弹性IP模态框
           unbindIP: false,
+          natRenewal: false,
         },
         // 新建vpc表单数据
         newForm: {
@@ -821,6 +884,85 @@
           })
           this.netData = response.data.result
         }
+      },
+      bindRenewal() {
+        if (this.cost != '--'){
+        var selectIp = ''
+        if (this.bindRenewalIp.indexOf('ip') > -1){
+          selectIp = this.isIps
+        }
+        this.$http.get('information/getYjPrice.do', {
+            params: {
+              timeValue: this.renewalTime,
+              timeType: this.renewalType,
+              natArr: this.select[0].id,
+              ipIdArr: selectIp
+            }
+          }).then((response) => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.cost = response.data.result
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+         }
+      },
+      // 查询nat网关下的ip
+      natbindIps() {
+        if (this.select != null) {
+          axios.get('network/listNatGatewayById.do', {
+            params: {
+              natGatewayId: this.select[0].id,
+              zoneId: $store.state.zone.zoneid
+            }
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              var iparr = response.data.result[0].attachPublicIp.map(item => {
+                return item.id
+              })
+              this.isIps = iparr.join()
+              // 清空续费弹窗数据
+              this.bindRenewalIp = []
+              this.cost = '--'
+              this.renewalType = ''
+              this.renewalTime = ''
+              this.showModal.natRenewal = true
+            }
+          })
+        } else {
+          this.$Message.info({
+            content: '请先选择一个网关',
+          })
+        }
+      },
+      // nat网关确认续费
+      renewalok() {
+        var selectIp = ''
+        if (this.bindRenewalIp.indexOf('ip') > -1){
+          selectIp = this.isIps
+        }
+        var iplist = []
+        if (selectIp != ''){
+          iplist = selectIp.split(',').map(item => {
+            return {type: 2, id: parseInt(item)}
+          })
+        }
+        var nat = [
+          {type: 4, id: this.select[0].id}
+        ]
+        var list = nat.concat(iplist)
+        list = JSON.stringify(list)
+        this.$http.post('continue/continueOrder.do', {
+          list: list,
+          timeType: this.renewalType,
+          timeValue: this.renewalTime + ''
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push({path: 'order'})
+          }
+        })
       },
       // 设置查询NAT数据的值，保留原NAT选中状态
       setNatData(response){
@@ -1194,6 +1336,36 @@
       }
     }),
     watch: {
+      renewalType(type) {
+        this.renewalTime = ''
+        this.timeOptions.renewalTime = this.timeOptions[type]
+      },
+      renewalTime(time) {
+        if (time == '') {
+          this.cost = '--'
+        } else {
+          var selectIp = ''
+          if (this.bindRenewalIp.indexOf('ip') > -1){
+            selectIp = this.isIps
+          }
+        this.$http.get('information/getYjPrice.do', {
+            params: {
+              timeValue: this.renewalTime,
+              timeType: this.renewalType,
+              natArr: this.select[0].id,
+              ipIdArr: selectIp,
+            }
+          }).then((response) => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.cost = response.data.result
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+        }
+      },
       // 检测到新建VPC购买方式发生变化，重新查询价格
       'newForm.timeValue'()
       {
