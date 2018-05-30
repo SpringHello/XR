@@ -20,8 +20,6 @@
         <div class="operator-bar">
           <Button type="primary" @click="newDisk">创建云硬盘</Button>
           <Button type="primary" @click="deleteDisk">删除云硬盘</Button>
-          <Button type="primary" @click="renewDisk">续费云硬盘</Button>
-          <Button type="primary" @click="ratesChange">资费变更</Button>
         </div>
         <div style="margin-top:20px">
           <Table :columns="diskColumns" :data="diskData" @radio-change="selectDisk"></Table>
@@ -284,8 +282,8 @@
           <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span>
         </span>
         </div>
-        <Button class="button cancel" @click="showModal.renewDisk=false">取消</Button>
-        <Button class="button ok" @click="renewDisk_ok" :disabled="renewalTime==''">确认续费</Button>
+        <Button type="ghost" @click="showModal.renewDisk=false">取消</Button>
+        <Button type="primary" @click="renewDisk_ok" :disabled="renewalTime==''">确认续费</Button>
       </div>
     </Modal>
     <!-- 资费变更弹出框 -->
@@ -310,8 +308,15 @@
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button class="button cancel" @click="showModal.ratesChange=false">取消</Button>
-        <Button class="button ok" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
+        <div style="font-size:16px;float:left">
+          资费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{ratesChangeCost}}
+          <span v-if="ratesChangeTime != ''">/</span>
+          <span style="font-size: 15px;">{{ratesChangeTime}}<span v-if="ratesChangeType == 'year' && ratesChangeTime != ''">年</span>
+          <span v-if="ratesChangeType == 'month' && ratesChangeTime != ''">月</span></span>
+        </span>
+        </div>
+        <Button type="ghost" @click="showModal.ratesChange=false">取消</Button>
+        <Button type="primary" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
       </div>
     </Modal>
   </div>
@@ -512,7 +517,25 @@
                         this.modificationDisk(params.row)
                       }
                     }
-                  }, '修改资料')])
+                  }, '修改资料'), h('DropdownItem', {
+                    nativeOn: {
+                      click: () => {
+                        if (params.row.caseType == 3) {
+                          this.ratesChange(params.row)
+                        } else {
+                          this.$Message.info({
+                            content: '请选择实时计费的磁盘进行变更'
+                          })
+                        }
+                      }
+                    }
+                  }, '变更资费'), h('DropdownItem', {
+                    nativeOn: {
+                      click: () => {
+                        this.renewDisk(params.row)
+                      }
+                    }
+                  }, '磁盘续费')])
                   ])])
               } else {
                 return h('div', {}, [
@@ -969,15 +992,8 @@
         }
       },
       // 续费磁盘
-      renewDisk() {
-        if (this.diskSelection == null) {
-          this.$Message.info('请选择需要续费的磁盘')
-          return false
-        }
-        if (this.diskSelection.caseType === 3) {
-          this.$Message.info('请选择包年或包月的磁盘进行续费')
-          return false
-        }
+      renewDisk(item) {
+        this.diskSelection = item
         this.renewalType = ''
         this.renewalTime = ''
         this.renewalOther = []
@@ -1031,15 +1047,10 @@
         })
       },
       // 资费变更
-      ratesChange() {
-        if (this.diskSelection == null) {
-          this.$Message.info('请选择需要变更资费的磁盘')
-          return false
-        }
-        if (this.diskSelection.caseType !== 3) {
-          this.$Message.info('请选择实时计费的磁盘进行资费变更')
-          return false
-        }
+      ratesChange(item) {
+        this.diskSelection = item
+        this.ratesChangeType = ''
+        this.ratesChangeTime = ''
         this.showModal.ratesChange = true
       },
       // 确认变更资费
