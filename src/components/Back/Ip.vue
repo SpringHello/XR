@@ -240,19 +240,17 @@
               <Checkbox label="续费关联NAT网关" v-if="renewalNAT"></Checkbox>
             </CheckboxGroup>
           </FormItem>
-          <p style="font-size: 14px;cursor: pointer;color: #377dff;margin-top: 10px" @click="$router.push('ActiveCenter')">全民普惠，三折减单，最高减免7000元</p>
+          <div style="font-size:16px;">
+            资费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:16px;">现价
+            <span style="font-size: 24px">￥{{renewalTotalCost}}/<span style="text-decoration: line-through;color: #666666;font-size: 16px">原价{{ renewalOriginalCost }}</span></span>
+        </span>
+          </div>
         </Form>
       </div>
       <div slot="footer" style="" class="modal-footer-border">
-        <div style="font-size:16px;float: left">
-          应付费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{renewalCost}}
-          <span v-if="renewalTime != ''">/</span>
-          <span style="font-size: 15px;">{{renewalTime}}<span v-if="renewalType == 'year' && renewalTime != ''">年</span>
-          <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span>
-        </span>
-        </div>
-        <Button class="button cancel" @click="showModal.renew=false">取消</Button>
-        <Button class="button ok" @click="renewOk" :disabled="renewalCost==0">确认续费</Button>
+        <p style="font-size: 14px;text-align: left;cursor: pointer;color: #377dff;" @click="$router.push('ActiveCenter')">全民普惠，三折减单，最高减免7000元</p>
+        <Button type="ghost" @click="showModal.renew=false">取消</Button>
+        <Button  type="primary" @click="renewOk" :disabled="renewalTime==''">确认续费</Button>
       </div>
     </Modal>
   </div>
@@ -292,7 +290,8 @@
         renewalNAT: false,
         renewalHostID: '',
         renewalNATID: '',
-        renewalCost: 0,
+        renewalTotalCost: '--',
+        renewalOriginalCost: '--',
         renewalOther: [],
         timeOptions: {
           renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
@@ -1202,7 +1201,8 @@
       },
       renewalTime(time) {
         if (time == '') {
-          this.renewalCost = 0
+          this.renewalTotalCost = '--'
+          this.renewalOriginalCost = '--'
         } else {
           let hostArr = this.renewalOther[0] == '续费关联云主机' ? this.renewalHostID : ''
           let natArr = this.renewalOther[0] == '续费关联NAT网关' ? this.renewalNATID : ''
@@ -1217,7 +1217,14 @@
           })
             .then((response) => {
               if (response.status == 200 && response.data.status == 1) {
-                this.renewalCost = response.data.result.toFixed(2)
+                this.renewalTotalCost = response.data.result.toFixed(2)
+                this.renewalOriginalCost = response.data.result
+                if(response.data.cuspon) {
+                  this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
+                }
+                if(response.data.continueDiscount) {
+                  this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
+                }
               }
             })
         }
@@ -1237,7 +1244,14 @@
             })
               .then((response) => {
                 if (response.status == 200 && response.data.status == 1) {
-                  this.renewalCost = response.data.result.toFixed(2)
+                  this.renewalTotalCost = response.data.result.toFixed(2)
+                  this.renewalOriginalCost = response.data.result
+                  if(response.data.cuspon) {
+                    this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
+                  }
+                  if(response.data.continueDiscount) {
+                    this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
+                  }
                 }
               })
           } else if (this.renewalOther[0] == '续费关联NAT网关') {
@@ -1252,7 +1266,14 @@
             })
               .then((response) => {
                 if (response.status == 200 && response.data.status == 1) {
-                  this.renewalCost = response.data.result.toFixed(2)
+                  this.renewalTotalCost = response.data.result.toFixed(2)
+                  this.renewalOriginalCost = response.data.result
+                  if(response.data.cuspon) {
+                    this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
+                  }
+                  if(response.data.continueDiscount) {
+                    this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
+                  }
                 }
               })
           } else {
@@ -1266,7 +1287,7 @@
             })
               .then((response) => {
                 if (response.status == 200 && response.data.status == 1) {
-                  this.renewalCost = response.data.result.toFixed(2)
+                  this.renewalTotalCost = response.data.result.toFixed(2)
                 }
               })
           }
