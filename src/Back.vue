@@ -32,7 +32,7 @@
               <router-link to="recharge" :class="{active:pageInfo.path=='recharge'}"><span>充值</span></router-link>
             </li>
             <li>
-              <Dropdown @on-click="go">
+              <!--<Dropdown @on-click="go">
                 <a href="javascript:void(0)" style="position:relative">
                   {{userInfo.realname}}
                   <sup class="circle-dot" v-if="this.$store.state.Msg>0"></sup>
@@ -53,11 +53,11 @@
                     <router-link to="operationLog">操作日志</router-link>
                   </DropdownItem>
                   <DropdownItem divided name="exit">
-                    <!-- <router-link to="">退出</router-link> -->
+                    &lt;!&ndash; <router-link to="">退出</router-link> &ndash;&gt;
                     <span style="color:#666;">退出</span>
                   </DropdownItem>
                 </DropdownMenu>
-              </Dropdown>
+              </Dropdown>-->
             </li>
           </ul>
         </div>
@@ -71,7 +71,7 @@
               <div
                 style="display: inline-block;background: #2A99F2;border-radius: 4px;height: 30px;padding: 4px 0px;cursor:pointer">
                 <img src="./assets/img/back/zoneIcon.png" style="vertical-align: middle;margin:0px 10px;"></img><span
-                style="font-size: 14px;color: #FFFFFF;line-height: 21px;vertical-align: middle;margin-right:10px;">{{zone.zonename}}</span>
+                style="font-size: 14px;color: #FFFFFF;line-height: 21px;vertical-align: middle;margin-right:10px;"><!--{{zone.zonename}}--></span>
               </div>
             </div>
             <DropdownMenu slot="list">
@@ -121,7 +121,7 @@
       </div>
     </div>
     <!-- 客服浮动块 -->
-    <div class="affix">
+    <!--<div class="affix">
       <span class="qq" @mouseenter="QME" @mouseleave="QML">
         <div ref="qq" style="overflow: hidden">
           <div class="wrapper" v-if="QQInfo.length>0">
@@ -182,19 +182,19 @@
           </div>
         </div>
       </span>
-      <!--<Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px" class="online">
+      &lt;!&ndash;<Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px" class="online">
       <span class="service">
        <a :href="kfURL"
           target="_blank"></a>
        </span>
-      </Poptip>-->
+      </Poptip>&ndash;&gt;
       <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
         <span class="phone"></span>
       </Poptip>
       <BackTop :bottom="61" :right="50" :duration="0" :height="1600">
         <Icon type="chevron-up" class="backtop"></Icon>
       </BackTop>
-    </div>
+    </div>-->
     <router-view/>
   </div>
 </template>
@@ -239,7 +239,7 @@
             mainName: '云存储',
             type: 'storage',
             subItem: [
-              {subName:'对象存储',type:'objectStorage'},
+              {subName: '对象存储', type: 'objectStorage'},
               {subName: '云硬盘', type: 'disk'},
               {subName: '云硬盘备份', type: 'diskBackup'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
@@ -287,20 +287,23 @@
     beforeRouteEnter(to, from, next){
       // 获取所有后台需要的基本信息
       // 获取用户信息
-      var userInfo = axios.get('user/GetUserInfo.do')
+      //var userInfo = axios.get('user/GetUserInfo.do')
       // 获取zone信息
-      var zoneList = axios.get('information/zone.do')
-      Promise.all([userInfo, zoneList]).then(values => {
-        $store.commit('setZoneList', values[1].data.result)
-        if (values[0].status == 200 && values[0].data.status == 1) {
-          $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
-        } else {
-          next(vm => {
-            vm.$router.push({path: '/ruicloud/login'})
-          })
-        }
+      var zoneList = axios.get('zone/zoneList.do').then(response => {
+        $store.commit('setZoneList', response.data.data.zoneList)
         next()
       })
+      /*\\Promise.all([userInfo, zoneList]).then(values => {
+       $store.commit('setZoneList', values[1].data.result)
+       if (values[0].status == 200 && values[0].data.status == 1) {
+       $store.commit('setAuthInfo', {authInfo: values[0].data.authInfo, userInfo: values[0].data.result})
+       } else {
+       next(vm => {
+       vm.$router.push({path: '/ruicloud/login'})
+       })
+       }
+       next()
+       })*/
     },
     created(){
       this.$http.get('user/getKfAdd.do').then(response => {
@@ -379,7 +382,9 @@
           this.pageInfo.hoverItem = ''
         }
       }),
-
+      setData(response){
+        console.log(response)
+      },
       // 进入三级路由，记录二级路由入口
       push(pType, sType){
         this.pageInfo.static = true

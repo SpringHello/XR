@@ -12,8 +12,15 @@ import '@/assets/css/iviewOverRide.css'
 import '@/assets/css/reset.css'
 import '@/assets/css/universal.less'
 
+
+import ECharts from 'vue-echarts/components/ECharts'
+// import ECharts modules manually to reduce bundle size
+import 'echarts/lib/chart/bar'
+import 'echarts/lib/chart/line'
+import 'echarts/lib/component/tooltip'
+
 import md5 from 'md5'
-Vue.prototype.$message = message
+//Vue.prototype.$message = message
 Vue.config.productionTip = false
 
 //axios.defaults.baseURL = '/ruicloud'
@@ -22,9 +29,9 @@ Vue.config.productionTip = false
 // axios.defaults.baseURL = 'http://192.168.3.204:8081/ruicloud'
 // axios.defaults.withCredentials = true
 
-//axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud/'
+axios.defaults.baseURL = 'http://192.168.3.187:8083/ruirados/'
 //axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
-//axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true
 
 // axios挂载到Vue原型
 Vue.prototype.$http = axios.create({
@@ -80,7 +87,7 @@ Vue.prototype.$http.interceptors.request.use(requestIntercept)
 
 // 使用iview库
 Vue.use(iview)
-
+Vue.component('chart', ECharts)
 
 /* eslint-disable no-new */
 var vm = new Vue({
@@ -89,8 +96,8 @@ var vm = new Vue({
   render: h => h(Main)
 })
 
-vm.$Message.config({
+/*vm.$Message.config({
   top: 61,
   duration: 5
-})
+})*/
 vm.$mount('#app')

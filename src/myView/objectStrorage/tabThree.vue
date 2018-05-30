@@ -19,13 +19,17 @@
 
 <script>
 export default {
-  
+  data(){
+      return{
+          data1:[{},{}]
+      }
+  }
 }
 </script>
 
 <style lang="less" scoped>
     .journal{
-       width: 50%;
+      width: 50%;
         span{
             padding: 6px 16px;
             border:1px solid #D9D9D9;

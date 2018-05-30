@@ -37,6 +37,7 @@ const store = new Vuex.Store({
       state.userInfo = userInfo
     },
     setZoneList (state, zoneList) {
+      console.log(zoneList)
       state.zoneList = zoneList
       // 设置当前默认区域
       for (var zone of zoneList) {
