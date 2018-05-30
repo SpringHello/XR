@@ -214,8 +214,7 @@ export default {
         .post(
           "http://192.168.3.187:8083/ruirados/bucket/deleteByBucketName.do",
           {
-            bucketName: name,
-
+            bucketName: name
           }
         )
         .then(res => {

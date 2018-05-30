@@ -13,43 +13,71 @@
                 <Button type="primary" size="small">查询</Button>
             </div>
         </div>
-        <Table :columns="columns1" :data="data1" ></Table>
+        <Table :columns="journalList" :data="journalData" ></Table>
     </div>
 </template>
 
 <script>
 export default {
-  
-}
+  data() {
+    return {
+      //操作日志表头
+      journalList: [
+        {
+          key: "caozuo",
+          title: "操作"
+        },
+        {
+          key: "jieguo",
+          title: "结果"
+        },
+        {
+          key: "shijian",
+          title: "操作时间"
+        }
+      ],
+      //操作日志数据
+      journalData: [
+        {
+          caozuo: '添加云主机"yunrui"的"1cpu/1024M内存/0G数据盘"套餐,按需',
+          jieguo: "成功",
+          shijian: "2017-5-21"
+        }
+      ]
+    };
+  },
+  methods: {},
+  mounted() {}
+};
 </script>
 
 <style lang="less" scoped>
-    .journal{
-       width: 50%;
-        span{
-            padding: 6px 16px;
-            border:1px solid #D9D9D9;
-           margin-right: -2px;
-           cursor:pointer;
-           display: inline-block;
-        }
-        span:first-of-type{
-             border-top-left-radius: 4px;
-            border-bottom-left-radius: 4px;
-        }
-        span:last-of-type{
-            border-top-right-radius: 4px;
-            border-bottom-right-radius: 4px;
-        }
-        span:hover{
-            border: 1px solid #2A99F2;
-            color: #2A99F2;
-        }
-    }
-    .journal_right{
-      width: 50%;
-      text-align: right;
-    }
+.journal {
+  width: 50%;
+  span {
+    padding: 6px 16px;
+    border: 1px solid #d9d9d9;
+    margin-right: -2px;
+    cursor: pointer;
+    display: inline-block;
+  }
+  span:first-of-type {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+  span:last-of-type {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+  span:hover {
+    border: 1px solid #2a99f2;
+    color: #2a99f2;
+  }
+}
+.journal_right {
+  width: 50%;
+  text-align: right;
+}
 </style>
 
 
