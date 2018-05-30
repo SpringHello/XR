@@ -502,7 +502,7 @@
               item._checked = false
               if (item._groupId === undefined) {
                 item._groupId = groupId
-                if (item.relation.length != 0) {
+                if (item.relation && item.relation.length != 0) {
                   for (let it of item.relation) {
                     for (let i = index; i < arr.length; i++) {
                       if (arr[i].type == it.type && arr[i].id == it.value) {
