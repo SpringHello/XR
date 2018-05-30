@@ -223,20 +223,21 @@
       },
       /* 负载均衡确定绑定虚拟机 */
       bindHost_ok () {
+        //console.log(this.bindHostForm.vm.join(','))
         if (this.bindHostForm.vm.length != 0) {
           var url = ''
           var params = {}
           if (this.balanceInfo._internal) {
             url = 'loadbalance/assignToInternalLoadBalancerRule.do'
             params = {
-              VMIds: this.bindHostForm.vm,
+              VMIds: this.bindHostForm.vm.join(','),
               lbId: this.balanceInfo.lbid,
               _t: new Date().getTime()
             }
           } else {
             url = 'loadbalance/assignToLoadBalancerRule.do'
             params = {
-              VMIds: this.bindHostForm.vm,
+              VMIds: this.bindHostForm.vm.join(','),
               roleId: this.balanceInfo.loadbalanceroleid,
               _t: new Date().getTime()
             }

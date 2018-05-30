@@ -682,6 +682,7 @@
       },
       /* 负载均衡确定绑定虚拟机 */
       bindHost_ok () {
+        //console.log(this.bindHostForm.vm.join(','))
         this.showModal.bind = false
         this.balData.forEach(item => {
           if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
@@ -695,15 +696,15 @@
           if (this.balanceSelection._internal) {
             url = 'loadbalance/assignToInternalLoadBalancerRule.do'
             params = {
-              VMIds: this.bindHostForm.vm,
+              VMIds: this.bindHostForm.vm.join(','),
               lbId: this.balanceSelection.lbid,
               _t: new Date().getTime(),
             }
           } else {
             url = 'loadbalance/assignToLoadBalancerRule.do'
             params = {
-              VMIds: this.bindHostForm.vm,
-              lbId: this.balanceSelection.loadbalanceroleid,
+              VMIds: this.bindHostForm.vm.join(','),
+              roleId: this.balanceSelection.loadbalanceroleid,
               _t: new Date().getTime(),
             }
           }
