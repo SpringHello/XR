@@ -310,6 +310,13 @@
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
+        <div style="font-size:16px;float:left">
+          资费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{ratesChangeCost}}
+          <span v-if="ratesChangeTime != ''">/</span>
+          <span style="font-size: 15px;">{{ratesChangeTime}}<span v-if="ratesChangeType == 'year' && ratesChangeTime != ''">年</span>
+          <span v-if="ratesChangeType == 'month' && ratesChangeTime != ''">月</span></span>
+        </span>
+        </div>
         <Button class="button cancel" @click="showModal.ratesChange=false">取消</Button>
         <Button class="button ok" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
       </div>

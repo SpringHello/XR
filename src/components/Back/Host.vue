@@ -31,6 +31,7 @@
               <!-- 重命名 -->
               <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
               <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
+              <Dropdown-item name="ratesChange" :disabled="status=='欠费'||status=='异常'">资费变更</Dropdown-item>
               <!-- 续费 -->
               <Dropdown-item name="renewal" v-if="status=='欠费'||status=='异常'" :disabled=true>主机续费</Dropdown-item>
               <Dropdown-item name="renewal" v-else>主机续费</Dropdown-item>
@@ -489,6 +490,39 @@
         <Button type="primary" @click="renewalok">确认续费</Button>
       </div>
     </Modal>
+    <!-- 资费变更弹出框 -->
+    <Modal v-model="showModal.ratesChange" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">变更资费选择（资费变更适用于按需收费转包月/年）</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form>
+          <FormItem label="变更类型 :">
+            <Select v-model="ratesChangeType">
+              <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="变更时长 :">
+            <Select v-model="ratesChangeTime">
+              <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <div style="font-size:16px;float:left">
+          资费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{ratesChangeCost}}
+          <span v-if="ratesChangeTime != ''">/</span>
+          <span style="font-size: 15px;">{{ratesChangeTime}}<span v-if="ratesChangeType == 'year' && ratesChangeTime != ''">年</span>
+          <span v-if="ratesChangeType == 'month' && ratesChangeTime != ''">月</span></span>
+        </span>
+        </div>
+        <Button class="button cancel" @click="showModal.ratesChange=false">取消</Button>
+        <Button class="button ok" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
+      </div>
+    </Modal>
     <!-- 欠费tab页，续费弹窗 -->
     <Modal v-model="showModal.Renew" width="550" :scrollable="true">
       <div slot="header" class="modal-header-border">
@@ -552,6 +586,7 @@
   import axios from '@/util/axiosInterceptor'
   import Vue from 'vue'
   import regExp from '../../util/regExp'
+
   export default {
     data() {
       const validaRegisteredName = regExp.validaRegisteredName
@@ -591,8 +626,12 @@
           rename: false,
           Renew: false,
           selectAuthType: false,
-          balance: false
+          balance: false,
+          ratesChange: false
         },
+        ratesChangeType: '',
+        ratesChangeTime: '',
+        ratesChangeCost: '--',
         renameForm: {
           hostName: ''
         },
@@ -678,7 +717,7 @@
       }, 5 * 1000)
     },
     methods: {
-      checkRenameForm(){
+      checkRenameForm() {
         this.$refs.renameForm.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用重命名的方法
@@ -890,8 +929,8 @@
             break
           case '关机':
             if (this.closeHost.every(item => {
-                return item.select == false
-              })) {
+              return item.select == false
+            })) {
               this.$Message.warning('请选择主机')
               return
             }
@@ -923,7 +962,7 @@
             break
         }
       },
-      stop(item){
+      stop(item) {
         this.loadingMessage = '正在停止主机'
         this.loading = true
         item.select = false
@@ -944,7 +983,7 @@
             }
           })
       },
-      start(item){
+      start(item) {
         this.loadingMessage = '正在启动主机'
         this.loading = true
         item.select = false
@@ -1051,8 +1090,21 @@
               this.showModal.rename = true
             }
             break
+          case 'ratesChange':
+            if (this.checkSelect()) {
+              if(this.currentHost[0].caseType ==3) {
+                this.ratesChangeType = ''
+                this.ratesChangeTime = ''
+                this.showModal.ratesChange = true
+              } else{
+                this.$Message.info('请选择实时计费的云主机进行资费变更')
+              }
+            }
+            break
           case 'renewal':
             if (this.checkSelect()) {
+              this.renewalType = ''
+              this.renewalTime = ''
               this.showModal.renewal = true
             }
             break
@@ -1187,6 +1239,26 @@
           }
         })
       },
+      // 确认变更资费
+      ratesChange_ok() {
+        let url = 'continue/changeMoney.do'
+        this.$http.get(url, {
+          params: {
+            id: this.currentHost[0].id,
+            timeType: this.ratesChangeType,
+            timeValue: this.ratesChangeTime,
+            type: 0
+          }
+        }).then(response => {
+          if (response.data.status == 1) {
+            this.$router.push({path: 'order'})
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
       // 创建主机镜像
       mirrorSubmit(name) {
         this.$refs[name].validate((valid) => {
@@ -1274,7 +1346,7 @@
       },
     },
     computed: {
-      auth(){
+      auth() {
         return this.$store.state.authInfo != null
       }
     },
@@ -1301,6 +1373,30 @@
                 this.$message.info({
                   content: response.data.message
                 })
+              }
+            })
+        }
+      },
+      // 资费变更
+      ratesChangeType(type) {
+        this.ratesChangeTime = ''
+        this.timeOptions.renewalTime = this.timeOptions[type]
+      },
+      ratesChangeTime(time) {
+        if (time == '') {
+          this.ratesChangeCost = '--'
+        } else {
+          let url = 'information/getYjPrice.do'
+          this.$http.get(url, {
+            params: {
+              timeValue: this.ratesChangeTime,
+              timeType: this.ratesChangeType,
+              hostIdArr: this.currentHost[0].id
+            }
+          })
+            .then((response) => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.ratesChangeCost = response.data.result.toFixed(2)
               }
             })
         }
