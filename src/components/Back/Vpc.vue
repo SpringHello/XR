@@ -895,7 +895,7 @@
             params: {
               timeValue: this.renewalTime,
               timeType: this.renewalType,
-              natArr: this.select[0].id,
+              natArr: this.select.id,
               ipIdArr: selectIp
             }
           }).then((response) => {
@@ -914,7 +914,7 @@
         if (this.select != null) {
           axios.get('network/listNatGatewayById.do', {
             params: {
-              natGatewayId: this.select[0].id,
+              natGatewayId: this.select.id,
               zoneId: $store.state.zone.zoneid
             }
           }).then(response => {
@@ -950,7 +950,7 @@
           })
         }
         var nat = [
-          {type: 4, id: this.select[0].id}
+          {type: 4, id: this.select.id}
         ]
         var list = nat.concat(iplist)
         list = JSON.stringify(list)
@@ -1352,7 +1352,7 @@
             params: {
               timeValue: this.renewalTime,
               timeType: this.renewalType,
-              natArr: this.select[0].id,
+              natArr: this.select.id,
               ipIdArr: selectIp,
             }
           }).then((response) => {
