@@ -14,7 +14,7 @@
     </div>
     <div class="body-center">
       <div class="content">
-        <img src="../../../assets/img/records/records-icon9.png"/>
+     <!--   <img src="../../../assets/img/records/records-icon9.png"/>-->
         <ul v-for="item in flowList" :key="item.step">
           <img :src="item.src"/>
           <p>{{ item.title }}</p>
@@ -83,6 +83,21 @@
           </router-link>
         </div>
       </div>
+    </Modal>
+    <!-- 用户已备案提示框 -->
+    <Modal v-model="showModal.hint" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24">您已在新睿云备过案，请选择新增网站进行备案
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.hint = false">取消</Button>
+        <Button type="primary">确认</Button>
+      </p>
     </Modal>
   </div>
 </template>
@@ -237,8 +252,11 @@
         unSelectImg: require('../../../assets/img/records/records-icon8.png'),
         // 用户能否备案状态
         canRecord: false,
+        // 用户备案信息
+        recordInfo: [],
         showModal: {
-          recordInfo: false
+          recordInfo: false,
+          hint: false
         },
         loginModal: false,
         form: {
@@ -269,16 +287,26 @@
     created() {
       this.flowList = this.flowList_1
       this.getHostStatus()
+      this.getRecordInfo()
     },
     methods: {
+      // 获取备案信息
+      getRecordInfo() {
+        this.$http.get('recode/listMainWeb.do').then(res => {
+          if (res.data.status == 1) {
+            this.recordInfo = res.data.result
+          }
+        })
+      },
       // 切换备案类型
-      changeType (item) {
+      changeType(item) {
         this.type = item.value
-        if (this.type!= 1) {
+        if (this.type != 1) {
           this.flowList = this.flowList_2
         } else {
           this.flowList = this.flowList_1
         }
+        this.getHostStatus()
         $('html, body').animate({scrollTop: 550}, 300)
       },
       // 切换区域
@@ -313,6 +341,10 @@
         if (this.type == 4) {
           this.$router.push('BRecords')
           return
+        }
+        if ((this.type == 1 && this.recordInfo.length !== 0) || (this.type == 2 && this.recordInfo.length !== 0)) {
+          //this.showModal.hint = true
+          //return
         }
         if (this.canRecord) {
           sessionStorage.setItem('zone', this.areaText)
@@ -567,16 +599,16 @@
           z-index: -1;
         }
       }
-/*      ul:nth-child(4) {
-        img {
-          padding-top: 6px;
-        }
-      }
-      ul:nth-child(6) {
-        img {
-          padding-top: 8px;
-        }
-      }*/
+      /*      ul:nth-child(4) {
+              img {
+                padding-top: 6px;
+              }
+            }
+            ul:nth-child(6) {
+              img {
+                padding-top: 8px;
+              }
+            }*/
     }
   }
 

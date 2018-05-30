@@ -37,7 +37,7 @@
             </div>
           </transition>
           <div v-for="(site,upIndex) in siteList">
-            <h3 style="margin-bottom: -40px;">网站{{ upIndex + 1 }}</h3>
+            <h3 style="margin-bottom: -40px;">网站{{ upIndex + 1 }} <span v-if="upIndex >0" style="margin-left:47.5%;cursor: pointer;color: #2a99f2;" @click="deleteSite(upIndex)">删除</span></h3>
             <h3>网站基本信息</h3>
             <Form :ref="site.name" :model="site.basicInformation" :rules="basicInformationRuleValidate" :label-width="155">
               <FormItem label="网站名称" prop="siteName">
@@ -411,7 +411,7 @@
               trigger: "change"
             }
           ],
-          contentsType: [
+/*          contentsType: [
             {
               required: true,
               type: "array",
@@ -419,7 +419,7 @@
               message: "请至少选择一个内容类型",
               trigger: "change"
             }
-          ],
+          ],*/
           remark: [{type: "string", max: 50, message: "最多输入五十个字"}],
           principalName: [
             {required: true, message: "请输入负责人姓名", trigger: "blur"}
@@ -534,6 +534,11 @@
     },
     created() {
       this.getPublicIP()
+      let siteListStr = sessionStorage.getItem('siteListStr')
+      if (siteListStr) {
+        let siteList = JSON.parse(siteListStr)
+        this.siteList = siteList
+      }
     },
     methods: {
       setData(area, recordsType, mainUnitInformationStr) {
@@ -564,6 +569,7 @@
           case '1':
             this.recordsType = '新增备案'
             this.recordsTypeDesc = '域名未备案，备案主体证件无备案号，需要备案。'
+            break
           case '2':
             this.recordsType = '新增接入'
             this.recordsTypeDesc = '域名已在其他平台备案过，需要变更接入商。'
@@ -580,7 +586,8 @@
         let url = 'network/listPublicIp.do'
         axios.get(url, {
           params: {
-            zoneId: zoneId
+            zoneId: zoneId,
+            status: 1
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -705,6 +712,10 @@
         param.basicInformation.IPAddressList = this.publicIPList
         this.siteList.push(param)
       },
+      // 删除新网站
+      deleteSite(index) {
+        this.siteList.splice(index,1)
+      },
       //进入下一步
       nextStep() {
         let array = []
@@ -719,6 +730,7 @@
         if (!flag) {
           let mainUnitInformationStr = JSON.stringify(this.mainUnitInformation)
           let siteListStr = JSON.stringify(this.siteList)
+          sessionStorage.removeItem('mainUnitInformationStr')
           sessionStorage.setItem('siteListStr', siteListStr)
           sessionStorage.setItem('mainUnitInformationStr', mainUnitInformationStr)
           this.$router.push({
@@ -759,8 +771,7 @@
     mounted() {
       this.mainInfoShow = true;
     },
-    computed: {
-    }
+    computed: {}
   };
 </script>
 
