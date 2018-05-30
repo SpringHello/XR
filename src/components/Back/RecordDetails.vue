@@ -240,7 +240,12 @@
             </div>
           </div>
         </div>
+         <div  style="text-align:center;margin-top:20px;">
+          <Button type="primary" >重新提交</Button>
+          </div>
       </div>
+     
+    
     </div>
     <!-- 网站核验单 -->
      <Modal

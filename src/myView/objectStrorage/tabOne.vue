@@ -147,6 +147,7 @@ export default {
                   on: {
                     click: () => {
                       sessionStorage.setItem("bucketName", parasm.row.name);
+                      sessionStorage.setItem('bucketId',parasm.row.id);
                       this.$router.push({ path: "SpaceDetails" });
                     }
                   }

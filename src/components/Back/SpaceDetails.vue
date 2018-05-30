@@ -61,17 +61,32 @@
                         <TabPane label="空间设置">
                             <div>
                                 <p style="font-size:18px;color:#333333;margin:0 0 20px 0;">权限设置</p>
-                                <div style="height:187px;border:1px solid #e9e9e9;">
+                                <div style="border:1px solid #e9e9e9;">
                                   <ul class="space_list">
                                     <li :class="indexs == index? 'space_items':'space_item'" v-for="(item,index) in navList" :key="index" @click="navlists(index)">{{item.name}}</li>
                                   </ul>
-                                  <p style="margin:17px 0 0 24px;color:#666666;font-size:14px;width:950px;">{{ptext}}</p>
+                                  <div style="padding:24px">
+                                   <p style="color:#666666;font-size:14px;width:950px;">{{ptext}}</p>
+                                  <Button v-if="indexs != 3" type="primary" style="margin:40px 0 0 0;">确定</Button>
+                                  </div>
                                   <div class="custom" v-if="indexs == 3">
-                                      <Button type="primary">添加自定义权限</Button>
+                                      <Button type="primary" @click="jurisdiction = true">添加自定义权限</Button>
                                       <Button type="primary">自定义权限编辑器</Button>
-                                      <Table></Table>
+                                      <Table style="margin-top:20px;"></Table>
                                   </div>
                                 </div>
+                            </div>
+                            <br><br>
+                            <div class="setting">
+                              <div  style="display:flex;">
+                                  <div style="width:97%;font-size:18px;color:#333333;">跨域访问设置</div>
+                                <div style="color:#2A99F2;">收起</div>
+                              </div>
+                              <div style="margin:10px 0 20px 0;">
+                                <Button type="primary">CORS规则配置</Button>
+                                <Button type="primary">CORS规则编辑器</Button>
+                              </div>
+                                <Table></Table>
                             </div>
                         </TabPane>
                     </Tabs>    
@@ -142,6 +157,60 @@
             </Select>
        </div>
       </Modal>
+      <!-- 自定义权限 -->
+         <Modal
+        v-model="jurisdiction"
+        title="添加自定义权限"
+        :scrollable='true'
+        width="550px"
+        @on-ok="jurisdictionClick"
+       >
+       <div class="jurisd">
+         <div>Bucket名称：{{bucketName}}</div>
+          <div style="margin-left:20px;">存储区域：华中二区</div>
+       </div>
+       <div style="margin-top:20px;">
+          <span>用户授权</span>
+            <RadioGroup v-model="users" @on-change="usersClick">
+              <Radio label='0'>全部用户</Radio>
+              <Radio label='1'>自定义用户</Radio>
+        </RadioGroup>
+        <Input :disabled='grant' v-model="grantValue" style="width:420px;" :rows="4" type="textarea"/><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+       </div>
+       <br>
+       <div style="width:366px;display:flex;">
+         <div style="width:115px;font-size:14px;color:#333333;">密码接收渠道</div>
+         <div style="width:300px;">
+            <CheckboxGroup v-model="channel">
+                <Checkbox label="0">PutObject</Checkbox>
+                <Checkbox label="1">GetObject</Checkbox>
+                <Checkbox label="2">DeleteObject</Checkbox>
+                 <Checkbox label="3">ListObject</Checkbox>
+                <Checkbox label="4">DeleteBucket</Checkbox>
+            </CheckboxGroup>
+         </div>
+         </div>
+        <div style="margin-top:20px;">
+          <span>影响资源</span>
+            <RadioGroup v-model="sources" @on-change="sourcesClick">
+              <Radio label='0'>不可操作</Radio>
+              <Radio label='1'>可操作</Radio>
+        </RadioGroup>
+        <Input  v-model="influenceValue"  style="width:420px;" :rows="4" type="textarea"/><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+       </div>
+       <br>
+       <div style="width:366px;display:flex;">
+         <div style="width:115px;font-size:14px;color:#333333;">Referer白名单</div>
+         <div style="width:300px;">
+            <CheckboxGroup v-model="referer">
+                <Checkbox label="0">设置</Checkbox>
+                <Checkbox label="1">允许白名单为空</Checkbox>
+            </CheckboxGroup>
+         </div>
+         </div>
+         <br>
+           <Input :disabled='whiteList' v-model="whiteListValue" style="width:420px;" :rows="4" type="textarea"/><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+      </Modal>
     </div>
 </template>
 
@@ -149,15 +218,32 @@
 import $store from "@/vuex";
 const name = sessionStorage.getItem("bucketName");
 const zoneId = $store.state.zone.zoneid;
+const bucketId = sessionStorage.getItem('bucketId');
 export default {
   data() {
     return {
+      //空间名称
+      bucketName:'',
+      //用户授权输入框是否禁用
+      grant:true,
+      //影响资源输入框是否禁用
+      influence:true,
+      //refere白名单输入框是否禁用
+      whiteList:false,
+      //是否隐藏自定义弹窗
+      jurisdiction:false,
       //是否隐藏查看外链弹窗
       outerChain:false,
       //是否隐藏上传文件弹窗
       modal1: false,
       //是否隐藏新建文件夹弹窗
       floder: false,
+      //用户授权输入框的值
+      grantValue:'*',
+      //影响资源输入框的值
+      influenceValue:'',
+      //referer白名单输入框的值
+      whiteListValue:'',
       //权限列表
       navList: [
         {
@@ -217,7 +303,6 @@ export default {
             _self.fileUpdata.bucketName = name
             _self.fileUpdata.zoneId = zoneId
             _self.isfile = params.row.isfile;
-             
             return h('div',[
               h("Icon",{
                 props:{
@@ -298,7 +383,15 @@ export default {
       //文件上传参数
       fileUpdata:{},
       //判断是否是文件夹——1为文件夹——0为文件
-      isfile:1
+      isfile:1,
+      //用户授权
+      users:'0',    
+      //影响资源
+      sources:'0',
+      //密码接收渠道
+      channel:['0'],
+      //白名单
+      referer:['0']
     };
   },
   methods: {
@@ -358,7 +451,6 @@ export default {
           if (res.data.status == "1") {
             if(isfile == 1 || this.isfile == 1){
               this.fileData = res.data.data.data;
-              
             }else{
               return;
             }
@@ -398,6 +490,35 @@ export default {
         }
       })
     },
+    //用户授权radio切换
+    usersClick(){
+      if(this.users == '0'){
+        this.grant = true;
+        this.grantValue = '*'
+      }else{
+        this.grant = false;
+        this.grantValue = '';
+      }
+    },
+    //添加自定义权限
+    jurisdictionClick(){
+      this.$http.post('http://192.168.3.109:8083/ruirados/bucketAcl/createCustomAcl.do',{
+        bucketName:name,
+        bucketId:bucketId,
+        objectNames:this.influenceValue,
+        isOperation:this.sources,
+        customPermission:this.channel,
+        isReferer:'1',
+        refereIp:this.whiteListValue,
+        userAuths:this.grantValue
+      }).then(res => {
+        if(res.data.status == '1'){
+          this.$Message.success('添加自定义权限成功');
+        }else{
+          this.$Message.error(res.data.msg);
+        }
+      })
+    }
     //获取空间详情
     // bucketDetails() {
     //
@@ -418,7 +539,7 @@ export default {
   mounted() {
     this.ptext = this.navList[0].city; //权限列表默认显示第一个
     this.filesList();
-  
+    this.bucketName = name;
   }
 };
 </script>
@@ -559,5 +680,13 @@ export default {
   margin-top: 21px;
   min-height: 192px;
   border-bottom: 1px solid #e9e9e9;
+}
+.jurisd{
+  display: flex;
+}
+.setting{
+  padding: 14px 0 40px 0;
+  border-top: 1px solid #D8D8D8;
+  border-bottom:1px solid #D8D8D8;
 }
 </style>

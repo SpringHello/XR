@@ -36,7 +36,7 @@ export default {
     },
     series: [
         {
-            name: '下载流量',
+            name: '请求次数',
             type: 'line',
             stack: '总量',
             itemStyle: {
