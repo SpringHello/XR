@@ -80,6 +80,7 @@
               <Button type="primary" @click="openAddNatModal">添加NAT网关</Button>
               <Button type="primary" @click="openDeleteNatModal">删除NAT网关</Button>
               <Button type="primary" @click="natbindIps">续费</Button>
+              <Button type="primary" @click="ratesChange">资费变更</Button>
             </div>
             <Table :columns="natColumns" :data="natData" @radio-change="selectNAT"></Table>
           </TabPane>
@@ -379,7 +380,41 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.natRenewal = false">取消</Button>
-        <Button type="primary" @click="renewalok">确认续费</Button>
+        <Button type="primary" @click="renewalok" :disabled="cost=='--'">确认续费</Button>
+      </div>
+    </Modal>
+    <!-- 资费变更弹出框 -->
+    <Modal v-model="showModal.ratesChange" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">变更资费选择（资费变更适用于按需收费转包月/年）</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form>
+          <FormItem label="变更类型 :">
+            <Select v-model="ratesChangeType">
+              <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="变更时长 :">
+            <Select v-model="ratesChangeTime">
+              <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+        </Form>
+        <div style="font-size:16px;">
+          应付费:
+          <span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{ratesChangeCost}}
+            <span v-if="ratesChangeTime != ''">/</span>
+            <span style="font-size: 15px;">{{ratesChangeTime}}<span v-if="ratesChangeType == 'year' && ratesChangeTime != ''">年</span>
+            <span v-if="ratesChangeType == 'month' && ratesChangeTime != ''">月</span></span>
+          </span>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.ratesChange=false">取消</Button>
+        <Button type="primary" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
       </div>
     </Modal>
   </div>
@@ -409,6 +444,10 @@
         cost: '--',
         renewalType: '',
         renewalTime: '',
+        // 变更资费所需
+        ratesChangeCost: '--',
+        ratesChangeType: '',
+        ratesChangeTime: '',
         timeOptions: {
           renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
           renewalTime: [],
@@ -441,6 +480,13 @@
             render: (h, params) => {
               var status = params.row.status == 1 ? '正常' : '异常'
               return h('span', {}, status)
+            }
+          },
+           {
+            title: '计费类型',
+            key: 'caseType',
+            render: (h, params) => {
+              return h('span', params.row.caseType == 1 ? '包年' : params.row.caseType == 2 ? '包月' : '实时计费')
             }
           },
           {
@@ -673,6 +719,7 @@
           // 解绑弹性IP模态框
           unbindIP: false,
           natRenewal: false,
+          ratesChange: false
         },
         // 新建vpc表单数据
         newForm: {
@@ -884,6 +931,42 @@
           })
           this.netData = response.data.result
         }
+      },
+      // 资费变更
+      ratesChange() {
+        if (this.select == null) {
+          this.$Message.info('请选择需要变更资费的磁盘')
+          return false
+        }
+        // caseTyp 3是实时计费
+        if (this.select.caseType !== 3) {
+          this.$Message.info('请选择实时计费的磁盘进行资费变更')
+          return false
+        }
+        this.ratesChangeCost = '--'
+        this.ratesChangeType = ''
+        this.ratesChangeTime = ''
+        this.showModal.ratesChange = true
+      },
+      // 确认变更资费
+      ratesChange_ok() {
+        let url = 'continue/changeMoney.do'
+        this.$http.get(url, {
+          params: {
+            id: this.select.id,
+            timeType: this.ratesChangeType,
+            timeValue: this.ratesChangeTime,
+            type: 4
+          }
+        }).then(response => {
+          if (response.data.status == 1) {
+            this.$router.push({path: 'order'})
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
       },
       bindRenewal() {
         if (this.cost != '--'){
@@ -1362,6 +1445,30 @@
                 this.$message.info({
                   content: response.data.message
                 })
+              }
+            })
+        }
+      },
+      // 资费变更
+      ratesChangeType(type) {
+        this.ratesChangeTime = ''
+        this.timeOptions.renewalTime = this.timeOptions[type]
+      },
+      ratesChangeTime(time) {
+        if (time == '') {
+          this.ratesChangeCost = '--'
+        } else {
+          let url = 'information/getYjPrice.do'
+          this.$http.get(url, {
+            params: {
+              timeValue: this.ratesChangeTime,
+              timeType: this.ratesChangeType,
+              natArr: this.select.id
+            }
+          })
+            .then((response) => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.ratesChangeCost = response.data.result.toFixed(2)
               }
             })
         }
