@@ -37,7 +37,8 @@
             </div>
           </transition>
           <div v-for="(site,upIndex) in siteList">
-            <h3 style="margin-bottom: -40px;">网站{{ upIndex + 1 }} <span v-if="upIndex >0" style="margin-left:47.5%;cursor: pointer;color: #2a99f2;" @click="deleteSite(upIndex)">删除</span></h3>
+            <h3 style="margin-bottom: -40px;">网站{{ upIndex + 1 }} <span v-if="upIndex >0" style="margin-left:47.5%;cursor: pointer;color: #2a99f2;"
+                                                                        @click="deleteSite(upIndex)">删除</span></h3>
             <h3>网站基本信息</h3>
             <Form :ref="site.name" :model="site.basicInformation" :rules="basicInformationRuleValidate" :label-width="155">
               <FormItem label="网站名称" prop="siteName">
@@ -411,15 +412,15 @@
               trigger: "change"
             }
           ],
-/*          contentsType: [
-            {
-              required: true,
-              type: "array",
-              min: 1,
-              message: "请至少选择一个内容类型",
-              trigger: "change"
-            }
-          ],*/
+          /*          contentsType: [
+                      {
+                        required: true,
+                        type: "array",
+                        min: 1,
+                        message: "请至少选择一个内容类型",
+                        trigger: "change"
+                      }
+                    ],*/
           remark: [{type: "string", max: 50, message: "最多输入五十个字"}],
           principalName: [
             {required: true, message: "请输入负责人姓名", trigger: "blur"}
@@ -714,7 +715,7 @@
       },
       // 删除新网站
       deleteSite(index) {
-        this.siteList.splice(index,1)
+        this.siteList.splice(index, 1)
       },
       //进入下一步
       nextStep() {
@@ -728,6 +729,10 @@
           return item === false
         })
         if (!flag) {
+          let arr = this.mainUnitInformation.maincompanyarea.split('-')
+          this.mainUnitInformation.province = arr[0]
+          this.mainUnitInformation.city = arr[1]
+          this.mainUnitInformation.district = arr[2]
           let mainUnitInformationStr = JSON.stringify(this.mainUnitInformation)
           let siteListStr = JSON.stringify(this.siteList)
           sessionStorage.removeItem('mainUnitInformationStr')
