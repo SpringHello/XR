@@ -682,7 +682,7 @@
             height: 230px;
             >img{
               height: 203px;
-              cursor: pointer;
+              cursor: zoom-in;
               transition: all 0.6s;
               &:hover{
                 transform: scale(1.6);
