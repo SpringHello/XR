@@ -48,14 +48,16 @@
       <div class="universal-modal-content-flex">
         <Form :model="portModifyForm" :rules="portModifyRuleValidate" ref="portModifyForm">
           <Form-item label="当前端口">
+            <Input v-model="portModifyForm.currentPorts" readonly></Input>
           </Form-item>
-          <Form-item label="修改端口">
+          <Form-item label="修改端口" prop="newPorts">
+            <Input v-model="portModifyForm.newPorts"></Input>
           </Form-item>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.portModify = false">取消</Button>
-        <Button type="primary" @click="portModify_ok">确认挂载</Button>
+        <Button type="primary" @click="portModify_ok('portModifyForm')">确认</Button>
       </div>
     </Modal>
   </div>
@@ -80,6 +82,17 @@
        })
      },*/
     data() {
+      const validateNewport = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入修改后的端口号'))
+                } else {
+                  if (/^[\d]+$/.test(value)){
+                    callback()
+                  } else {
+                    callback(new Error('只能输入数字'))
+                  }
+                }
+            }
       return {
         databaseColumns: [
           {
@@ -104,7 +117,7 @@
           }, {
             title: '数据库端口',
             ellipsis: true,
-            render(h, params) {
+            render: (h, params) => {
               return h('div', {}, [h('span', {}, params.row.dk), h('span', {
                 style: {
                   color: '#2A99F2',
@@ -113,7 +126,8 @@
                 },
                 on: {
                   click: () => {
-                    console.log(this)
+                    this.showModal.beforePortModify = true
+                    this.portModifyForm.currentPorts = params.row.dk
                   }
                 }
               }, '修改端口')])
@@ -124,7 +138,7 @@
             ellipsis: true,
           }, {
             title: '操作',
-            render(h, params) {
+            render: (h, params) => {
               return h('div', {}, [h('span', {
                 style: {
                   color: '#2A99F2',
@@ -192,7 +206,11 @@
           currentPorts: '',
           newPorts: ''
         },
-        portModifyRuleValidate: {},
+        portModifyRuleValidate: {
+          newPorts: [
+            { validator: validateNewport, trigger: 'change' }
+          ]
+        }
       }
     },
     created() {
@@ -204,10 +222,16 @@
           }
         },*/
       beforePortModify() {
-        alert('11')
+        this.showModal.beforePortModify = false
+        this.showModal.portModify = true
       },
-      portModify_ok() {
-
+      portModify_ok(name) {
+        this.$refs[name].validate((valid) => {
+            if (valid) {
+                console.log(this.portModifyForm.currentPorts)
+                console.log(this.portModifyForm.newPorts)
+            }
+        })
       },
     },
     computed: {
