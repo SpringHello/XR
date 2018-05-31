@@ -44,7 +44,7 @@
                                 <li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>
                               </ul>
                                 <div class="chart-rig">
-                                    <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button> -->
+                                    <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button>
                                   <ul class="objectList">
                                     <li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>
                                   </ul>
@@ -375,7 +375,7 @@ export default {
       margin-top:10px;display:flex;height:30px;
     }
     .chart-rig{
-      width:23%;text-align:right;height:30px;
+      width:23%;height:30px;display: flex;
     }
 .echarts {
   width: 100%;
