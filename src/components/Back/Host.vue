@@ -490,16 +490,18 @@
             </CheckboxGroup>
           </FormItem>
         </Form>
-        <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:24px;display:block">全民普惠，3折减单，最高减免7000元！
-        </router-link>
+        <div style="font-size:16px;">
+          资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{cost}}/</span></span>
+          <!-- <span v-if="renewalTime != ''">/</span>
+          <span style="font-size: 15px;">{{renewalTime}}<span v-if="renewalType == 'year' && renewalTime != ''">年</span>
+          <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span> -->
+          <span style="text-decoration: line-through">原价{{originCost}}</span>
+        </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <div style="font-size:16px;float: left">
-          应付费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{cost}}
-          <span v-if="renewalTime != ''">/</span>
-          <span style="font-size: 15px;">{{renewalTime}}<span v-if="renewalType == 'year' && renewalTime != ''">年</span>
-          <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span>
-        </span>
+        <div style="text-align:left">
+          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:24px;">全民普惠，3折减单，最高减免7000元！
+          </router-link>
         </div>
         <Button type="ghost" @click="showModal.renewal = false">取消</Button>
         <Button type="primary" @click="renewalok" :disabled="cost=='--'">确认续费</Button>
@@ -638,6 +640,7 @@
         sessionStorage.removeItem('pane')
       }
       return {
+        originCost: '--',
         cost: '--',
         listLoadBalanceRole: [],
         openHost: [],
@@ -775,6 +778,11 @@
           }).then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.cost = response.data.result
+               if (response.data.cuspon) {
+                  this.originCost = response.data.result + response.data.cuspon + response.data.continueDiscount
+                } else {
+                  this.originCost = response.data.result + response.data.continueDiscount
+                }
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -1163,6 +1171,7 @@
               // 清空续费弹窗数据
               this.bindRenewalVal = []
               this.cost = '--'
+              this.originCost = '--'
               this.renewalType = ''
               this.renewalTime = ''
               this.showModal.renewal = true
@@ -1522,6 +1531,11 @@
           }).then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.cost = response.data.result
+                if (response.data.cuspon) {
+                  this.originCost = response.data.result + response.data.cuspon + response.data.continueDiscount
+                } else {
+                  this.originCost = response.data.result + response.data.continueDiscount
+                }
               } else {
                 this.$message.info({
                   content: response.data.message

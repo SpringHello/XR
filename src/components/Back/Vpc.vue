@@ -368,13 +368,12 @@
             </CheckboxGroup>
           </FormItem>
         </Form>
-        
         <div style="font-size:16px;">
-          资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">现价<span>￥{{cost}}/</span></span>
+          资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{cost}}/</span></span>
           <!-- <span v-if="renewalTime != ''">/</span>
           <span style="font-size: 15px;">{{renewalTime}}<span v-if="renewalType == 'year' && renewalTime != ''">年</span>
           <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span> -->
-          <span style="text-decoration: line-through">现价</span>
+          <span style="text-decoration: line-through">原价{{originCost}}</span>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
@@ -406,16 +405,16 @@
             </Select>
           </FormItem>
         </Form>
-        <div style="font-size:16px;">
-          应付费:
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <div style="font-size:16px;float:left">
+          资费:
           <span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{ratesChangeCost}}
             <span v-if="ratesChangeTime != ''">/</span>
             <span style="font-size: 15px;">{{ratesChangeTime}}<span v-if="ratesChangeType == 'year' && ratesChangeTime != ''">年</span>
             <span v-if="ratesChangeType == 'month' && ratesChangeTime != ''">月</span></span>
           </span>
         </div>
-      </div>
-      <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.ratesChange=false">取消</Button>
         <Button type="primary" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
       </div>
@@ -444,6 +443,7 @@
       return {
         bindRenewalIp: [],
         isIps: '',
+        originCost: '--',
         cost: '--',
         renewalType: '',
         renewalTime: '',
@@ -987,6 +987,11 @@
           }).then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.cost = response.data.result
+                if (response.data.cuspon) {
+                  this.originCost = response.data.result + response.data.cuspon + response.data.continueDiscount
+                } else {
+                  this.originCost = response.data.result + response.data.continueDiscount
+                }
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -996,7 +1001,7 @@
          }
       },
       // 查询nat网关下的ip
-      natbindIps() {
+      natbindIps() { 
         if (this.select != null) {
           axios.get('network/listNatGatewayById.do', {
             params: {
@@ -1005,12 +1010,17 @@
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              var iparr = response.data.result[0].attachPublicIp.map(item => {
+              if (response.data.result[0].attachPublicIp){
+                var iparr = response.data.result[0].attachPublicIp.map(item => {
                 return item.id
               })
               this.isIps = iparr.join()
+              } else {
+                this.isIps = ''
+              }
               // 清空续费弹窗数据
               this.bindRenewalIp = []
+              this.originCost = '--'
               this.cost = '--'
               this.renewalType = ''
               this.renewalTime = ''
@@ -1444,6 +1454,11 @@
           }).then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.cost = response.data.result
+                if (response.data.cuspon) {
+                  this.originCost = response.data.result + response.data.cuspon + response.data.continueDiscount
+                } else {
+                  this.originCost = response.data.result + response.data.continueDiscount
+                }
               } else {
                 this.$message.info({
                   content: response.data.message
