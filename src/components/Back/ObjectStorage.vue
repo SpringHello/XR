@@ -39,14 +39,15 @@
                                 <div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>
                                 <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
                             </div>
-                            <div style="margin-top:10px;display:flex;">
+                            <div class="chart">
                               <ul class="objectList">
                                 <li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>
                               </ul>
-                                <div style="width:48%;text-align:right;">
-                                    <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button>
-                                     <span style="padding:5px 16px;">折线</span>
-                                    <span style="padding:5px 16px;">柱状图</span>
+                                <div class="chart-rig">
+                                    <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button> -->
+                                  <ul class="objectList">
+                                    <li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>
+                                  </ul>
                                 </div>
                             </div>
                             <chart class="echarts" :options="rwPolar" ></chart>
@@ -56,14 +57,15 @@
                                 <div style="width:50%;font-size:16px;color:#333333;">请求次数</div>
                                 <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
                             </div>
-                            <div style="margin-top:10px;display:flex;">
+                            <div class="chart" >
                                  <ul class="objectList">
                                   <li :class="requestIndex == item.label? 'objectItems':'objectItem'" v-for="item in requestList" :key="item.label" @click="requestClick(item.label)">{{item.value}}</li>
                                 </ul>
-                                <div style="width:48%;text-align:right;">
-                                    <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button>
-                                     <span style="padding:5px 16px;">折线</span>
-                                    <span style="padding:5px 16px;">柱状图</span>
+                                <div class="chart-rig">
+                                    <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button> -->
+                                   <ul class="objectList">
+                                    <li :class="chartTwoIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartTwotList" :key="index" @click="chartTwoClick(index)">{{item.value}}</li>
+                                  </ul>
                                 </div>
                             </div>
                             <chart class="echarts" :options="rwNumber"></chart>
@@ -161,7 +163,36 @@ export default {
           day:['04/01','04/02','04/03','04/04','04/05','04/06','04/07','04/08','04/09','04/10','04/11','04/12','04/13','04/14','04/15','04/16','04/17','04/18','04/19','04/20','04/21','04/22','04/23','04/24','04/25','04/26','04/27','04/28','04/29','04/30'],
           label:3
         }
-      ]
+      ],
+      //下载流量切换统计图
+      chartList:[
+        {
+          value:'折线',
+          type:'line',
+          boundaryGap:false
+        },
+        {
+          value:'柱状图',
+          type:'bar',
+          boundaryGap:true
+        }
+      ],
+      //下载流量切换统计图
+      chartIndex:0,
+      //请求次数切换统计图
+      chartTwotList:[
+            {
+          value:'折线',
+          type:'line',
+          boundaryGap:false
+        },
+        {
+          value:'柱状图',
+          type:'bar',
+          boundaryGap:true
+        }
+      ],
+      chartTwoIndex:0,
     }
   },
   components: {
@@ -191,6 +222,18 @@ export default {
         pixelRatio:2,
         backgroundColor:'#ffffff'
       })
+    },
+    //下载流量切换统计图
+    chartClick(val){
+      this.chartIndex = val;
+      this.rwPolar.series[0].type = this.chartList[val].type;
+      this.rwPolar.xAxis.boundaryGap = this.chartList[val].boundaryGap;
+    },
+    //请求次数切换统计图
+    chartTwoClick(val){
+        this.chartTwoIndex = val;
+        this.rwNumber.series[0].type = this.chartTwotList[val].type;
+        this.rwNumber.xAxis.boundaryGap = this.chartTwotList[val].boundaryGap;
     }
   },
   mounted(){
@@ -296,7 +339,7 @@ export default {
   }
 }
  .objectList {
-      width:50%;
+      width:165%;
       font-family: PingFangSC;
       display: flex;
       li:first-child{
@@ -327,6 +370,12 @@ export default {
         border:1px solid #2a99f2;
         cursor: pointer;
       }
+    }
+    .chart{
+      margin-top:10px;display:flex;height:30px;
+    }
+    .chart-rig{
+      width:23%;text-align:right;height:30px;
     }
 .echarts {
   width: 100%;
