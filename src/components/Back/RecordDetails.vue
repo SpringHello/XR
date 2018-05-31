@@ -277,14 +277,21 @@
                     <button>上传</button>
                   </Upload>
             </div>
+            <div>
+              <p>{{hostUnitList.webrecorduthenticityurl}}</p>
+            </div>
             <div style="width:50%;height:309px;">
               <div  style="text-align: center">
-              <img style="height:222px;margin-bottom:25px" src="../../assets/img/records/records-img4.png"/>
+              <img @click="visible = true"  style="height:222px;margin-bottom:25px;cursor:pointer;" src="../../assets/img/records/records-img4.png"/>
               <p>示例图</p>
             </div>
             </div>
           </div>
         </div>
+    </Modal>
+    <!-- 网站核验单样例图大图 -->
+     <Modal title="示例图" v-model="visible">
+        <img src="../../assets/img/records/records-img4.png" style="width: 100%">
     </Modal>
     <!-- 主办单位负责人照片 -->
        <Modal
@@ -295,7 +302,7 @@
         <p>身份证人像面</p>
         <div class="updatePhoto" >
           <div class="updates">
-            <div style="width:50%;height:203px;">
+            <div style="width:50%;height:203px;" v-if="hostUnitList.status =='初审拒绝'||hostUnitList.status =='管局审核拒绝'">
                 <Upload
                     multiple
                     type="drag"
@@ -317,6 +324,12 @@
                     <button>上传</button>
                   </Upload>
             </div>
+            <div style="width:50%;height:203px;" v-else>
+               <div class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlback==''">
+                      暂无图片
+                </div>
+              <img style="height:144px;width:189px;" v-else :src='hostUnitList.companyresponsibilityurlpositive'>
+            </div>
             <div style="width:50%;height:203px;">
               <div  style="text-align: center">
               <img style="height:144px;margin-bottom:20px" src="../../assets/img/records/records-img1.png"/>
@@ -328,7 +341,7 @@
           <p style="margin-top:10px;">身份证国徽面</p>
         <div class="updatePhoto" >
           <div class="updates">
-            <div style="width:50%;height:203px;">
+            <div style="width:50%;height:203px;"  v-if="hostUnitList.status =='初审拒绝'||hostUnitList.status =='管局审核拒绝'">
                 <Upload
                     multiple
                     type="drag"
@@ -348,6 +361,12 @@
                     <button>上传</button>
                   </Upload>
             </div>
+             <div style="width:50%;height:203px;" v-else>
+               <div class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlback==''">
+                      暂无图片
+                </div>
+              <img style="height:144px;width:189px;" v-else :src='hostUnitList.companyresponsibilityurlpositive'>
+            </div>
             <div style="width:50%;height:203px;">
               <div  style="text-align: center">
                 <img style="height:144px;margin-bottom:20px" src="../../assets/img/records/records-img2.png"/>
@@ -366,7 +385,7 @@
         <p>执照扫描件</p>
         <div class="updatePhoto" >
           <div class="updates">
-            <div style="width:50%;height:203px;">
+            <div style="width:50%;">
                 <Upload
                     multiple
                     type="drag"
@@ -377,7 +396,7 @@
                        <div class="sponsor-text" v-if="hostUnitList.hostcompanyurl==''">
                       暂无图片
                     </div>
-                    <div style="height:203px;" v-else>
+                    <div style="height:186px;" v-else>
                        <div  style="text-align: center">
                       <img style="height:144px;" :src="hostUnitList.hostcompanyurl">
                       <p style="">点击选择文件</p>
@@ -386,14 +405,18 @@
                     <button>上传</button>
                   </Upload>
             </div>
-             <div style="width:50%;height:203px;">
+             <div style="width:50%;">
               <div  style="text-align: center">
-                <img style="height:144px;margin-bottom:20px" src="../../assets/img/records/records-img3.png"/>
+                <img @click="visibleOrganizer = true" style="height:144px;margin-bottom:20px;cursor:pointer;" src="../../assets/img/records/records-img3.png"/>
                 <p>示例图</p>
               </div>
             </div>
           </div>
         </div>
+    </Modal>
+    <!-- 主办单位示例图大图 -->
+     <Modal title="示例图" v-model="visibleOrganizer">
+        <img src="../../assets/img/records/records-img3.png" style="width: 100%">
     </Modal>
     <!-- 域名证书 -->
        <Modal
@@ -404,7 +427,7 @@
         <p>执照扫描件</p>
         <div class="updatePhoto" >
           <div class="updates">
-            <div style="width:100%;height:309px;">
+            <div style="width:100%;height:204px;">
                 <Upload
                     multiple
                     type="drag"
@@ -437,7 +460,7 @@
             <div class="item-content">
 
             </div>
-            <div style="width:100%;height:309px;">
+            <div style="width:100%;height:198px;">
                 <Upload
                     multiple
                     type="drag"
@@ -769,6 +792,10 @@ export default {
       }
     };
     return {
+      //查看网站核验单示例图大图
+      visible:false,
+      //查看主办单位示例图大图
+      visibleOrganizer:false,
       //是否显示重新输入
       mainCompanyAreaHide: null,
       mainCompanyCertificatesTypeHide: null,
@@ -1207,6 +1234,10 @@ export default {
           this.certificateTypeList = item.certificate;
         }
       });
+    },
+    //提交全部表单
+    allUpdate(){
+
     }
     // 重新选择区，重新校验
     // changeDistrict() {
@@ -1226,7 +1257,7 @@ export default {
 }
 .updatePhoto {
   width: 490px;
-  height: 351px;
+  height: 323px;
   margin-top: 10px;
   border: 1px solid #d8d8d8;
   padding: 5px 20px;
@@ -1242,7 +1273,7 @@ export default {
       border: 1px solid #ffffff;
       background-color: #ffffff;
       color: #999;
-      line-height: 138px;
+      line-height: 38px;
     }
     .item-content-text {
       width: 186px;
