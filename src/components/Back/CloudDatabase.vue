@@ -63,13 +63,13 @@
      <!-- 云数据库备份弹窗 -->
     <Modal v-model="showModal.backups" width="550" :scrollable="true" class="create-snas-modal">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">制作快照</span>
+        <span class="universal-modal-title">云数据库备份</span>
       </p>
       <div class="universal-modal-content-flex">
-        <p class="mb20">您正为<span class="bluetext">{{currentHostname}}</span>制作快照</p>
-        <Form ref="backupForm" :model="backupForm" :rules="backupFormRule">
-          <FormItem label="快照名称" prop="name">
-            <Input v-model="backupForm.name" placeholder="请输入2-4094范围内任意数字" :maxlength="15"></Input>
+        <p class="mb20">您正为<span class="bluetext">{{currentHostname}}</span>创建备份</p>
+        <Form ref="backupsForm" :model="backupsForm" :rules="backupsFormRule">
+          <FormItem label="备份名称" prop="name">
+            <Input v-model="backupsForm.name" placeholder="请输入2-4094范围内任意数字" :maxlength="15"></Input>
           </FormItem>
           <div style="padding-top: 11px;margin-right: 100px;">
             <div style="font-size: 14px;color:#495060;margin-bottom: 15px">是否保存内存信息
@@ -84,7 +84,7 @@
                 </div>
               </Poptip>
             </div>
-            <RadioGroup v-model="backupForm.memory">
+            <RadioGroup v-model="backupsForm.memory">
               <Radio label="1">保存</Radio>
               <Radio label="0">不保存</Radio>
             </RadioGroup>
@@ -95,15 +95,39 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.backups=false">取消</Button>
-        <Button type="primary" @click="backupSubmit('backupForm')">制作快照</Button>
+        <Button type="primary" @click="backupSubmit('backupsForm')">创建备份</Button>
       </div>
     </Modal>
+    <!-- 云数据库镜像弹窗 -->
+    <Modal v-model="showModal.mirror" width="590" :scrollable="true">
+      <div slot="header" class="modal-header-border">
+        <span class="universal-modal-title">制作镜像</span>
+      </div>
+      <div class="universal-modal-content-flex">
+        <Form :model="mirrorForm" ref="mirrorForm" :rules="mirrorFormRule">
+          <Form-item label="镜像名称" prop="name">
+            <Input v-model="mirrorForm.name" placeholder="小于20位数字或字母"></Input>
+          </Form-item>
+          <Form-item label="备注">
+            <Input v-model="mirrorForm.description" type="textarea" :autosize="{minRows: 2,maxRows: 2}"
+                   placeholder="小于20个字（选填)"></Input>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.mirror = false">取消</Button>
+        <Button type="primary" @click="mirrorSubmit('mirrorForm')">确定
+        </Button>
+      </div>
+    </Modal>
+    
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
   import axios from 'axios'
+  import regExp from '../../util/regExp'
 
   export default {
     /* beforeRouteEnter(to, from, next) {
@@ -120,6 +144,7 @@
        })
      },*/
     data() {
+      const validaRegisteredName = regExp.validaRegisteredName
       const validateNewport = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请输入修改后的端口号'))
@@ -196,12 +221,17 @@
               }, [h('DropdownItem', {
                 nativeOn: {
                   click: () => {
+                    this.backupsForm.name = ''
+                    this.backupsForm.memory = 1
+                    this.showModal.backups = true
                   }
                 }
               }, '数据库备份'), h('DropdownItem', {
                 nativeOn: {
                   click: () => {
-
+                    this.mirrorForm.name = ''
+                    this.mirrorForm.description = ''
+                    this.showModal.mirror = true
                   }
                 }
               }, '数据库镜像'), h('DropdownItem', {
@@ -256,15 +286,23 @@
           ]
         },
         currentHostname: '',
-        backupForm: {
+        backupsForm: {
           name: '',
           memory: '1'
         },
-        backupFormRule: {
+        backupsFormRule: {
           name: [
-            // {required: true, validator: validaRegisteredName, trigger: 'blur'}
-            {required: true, trigger: 'blur'}
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
           ]
+        },
+        mirrorForm: {
+          name: '',
+          description: ''
+        },
+        mirrorFormRule: {
+          name: [
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
+          ],
         },
       }
     },
@@ -286,6 +324,52 @@
                 console.log(this.portModifyForm.currentPorts)
                 console.log(this.portModifyForm.newPorts)
             }
+        })
+      },
+      // 云数据库备份
+      backupSubmit(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.showModal.backups = false
+            // axios.get('Snapshot/createVMSnapshot.do', {
+            //   params: {
+            //     VMId: this.currentHost[0].computerid,
+            //     snapshotName: this.backupForm.name,
+            //     memoryStatus: this.backupForm.memory,
+            //     zoneId: this.currentHost[0].zoneid
+            //   }
+            // }).then(response => {
+            //   if (response.status == 200 && response.data.status == 1) {
+            //     this.$Message.success(response.data.message)
+            //   } else {
+            //     this.$message.info({
+            //       content: response.data.message
+            //     })
+            //   }
+            // })
+          }
+        })
+      },
+      // 云数据库镜像
+      mirrorSubmit(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.showModal.mirror = false
+            // axios.get('Snapshot/createTemplate.do', {
+            //   rootDiskId: this.currentHost[0].rootdiskid,
+            //   templateName: this.mirrorForm.name,
+            //   descript: this.mirrorForm.description,
+            //   zoneId: this.currentHost[0].zoneid
+            // }).then(response => {
+            //   this.loading = false
+            //   if (response.status == 200 && response.data.status == 1) {
+            //     this.$Message.success({
+            //       content: '请求成功，镜像正在创建中，您可以到<span style="color: #0db4fa;cursor: pointer;"@click="toMirror">镜像列表</span>查看该镜像。',
+            //       duration: 5
+            //     })
+            //   }
+            // })
+          }
         })
       },
     },
