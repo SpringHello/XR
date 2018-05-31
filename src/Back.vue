@@ -191,8 +191,8 @@
           },
           {
             mainName: '云数据库',
-            type: 'cloudDatabase',
-            subItem: [{subName: '云数据库', type: 'database'}, {subName: '云数据库备份', type: 'snapshot'}, {
+            type: 'database',
+            subItem: [{subName: '云数据库', type: 'host'}, {subName: '云数据库备份', type: 'cloudDataBackup'}, {
               subName: '云数据库镜像',
               type: 'mirror'
             }]
