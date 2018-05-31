@@ -178,7 +178,7 @@ export default {
     //获取空间列表
     getBuckets() {
       this.$http
-        .post("http://192.168.3.187:8083/ruirados/bucket/getBuckets.do", {})
+        .post("bucket/getBuckets.do", {})
         .then(res => {
           if (res.data.status == "1") {
             this.spaceData = res.data.data.bucket;
@@ -194,7 +194,7 @@ export default {
       this.$refs[name].validate(valid => {
         if (valid) {
           this.$http
-            .post("http://192.168.3.187:8083/ruirados/bucket/createBucket.do", {
+            .post("bucket/createBucket.do", {
               bucketName: this.bucketInline.bucketName,
               accessrights: this.bucketInline.visit
             })
@@ -213,7 +213,7 @@ export default {
     bucketDelete(name) {
       this.$http
         .post(
-          "http://192.168.3.187:8083/ruirados/bucket/deleteByBucketName.do",
+          "bucket/deleteByBucketName.do",
           {
             bucketName: name
           }

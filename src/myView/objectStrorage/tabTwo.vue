@@ -24,50 +24,53 @@
                                 <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
                             </div>
                             <div class="chart" >
-                                <div class="chart-text">
-                                    <span >今天</span>
-                                    <span >昨天</span>
-                                    <span >最近7天</span>
-                                    <span >最近30天</span>
-                                </div>
+                                <ul class="objectList">
+                                        <li :class="getIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in getList" :key="index" @click="getClick(index)">{{item.value}}</li>
+                                    </ul>
                                 <div class="chart-rig">
-                                    <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;">导出</Button>
-                                     <span style="">折线</span>
-                                    <span >柱状图</span>
+                                    <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;">导出</Button> -->
+                                     <ul class="objectList">
+                                        <li :class="getChartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in getChartList" :key="index" @click="getChartClick(index)">{{item.value}}</li>
+                                    </ul>
                                 </div>
                             </div>
-                            <chart class="echarts" :options="rwPolar"></chart>
+                            <chart class="echarts" :options="rwNumber"></chart>
                         </div>    
                         <div class="center_chart">
                             <div style="display:flex;border-bottom:1px solid #E9E9E9;padding-bottom:5px;margin-top:50px;">
                                 <div style="width:50%;font-size:16px;color:#333333;">Put请求情况</div>
                                 <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
                             </div>
-                            <div style="margin-top:10px;">
-                                <div class="chart-text">
-                                    <span >今天</span>
-                                    <span >昨天</span>
-                                    <span >最近7天</span>
-                                    <span >最近30天</span>
-                                </div>
-                                <div style="float:right">
-                                    <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;">导出</Button>
-                                     <span style="">折线</span>
-                                    <span >柱状图</span>
+                            <div class="chart">
+                                 <ul class="objectList">
+                                        <li :class="putIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in putList" :key="index" @click="putClick(index)">{{item.value}}</li>
+                                    </ul>
+                                <div class="chart-rig">
+                                    <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;">导出</Button> -->
+                                    <ul class="objectList">
+                                        <li :class="putChartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in putChartList" :key="index" @click="putChartClick(index)">{{item.value}}</li>
+                                    </ul>
                                 </div>
                             </div>
-                            <chart class="echarts" :options="rwPolar"></chart>
+                            <chart class="echarts" :options="rwPut"></chart>
                         </div>      
   </div>
 </template>
 
 <script>
 import diskOptions from "@/echarts/objectStroage";
+import objectNumbers from "@/echarts/numberRequests"
+import put from "@/echarts/putList"
 const disk = JSON.stringify(diskOptions);
+const numbers = JSON.stringify(objectNumbers);
+const putList = JSON.stringify(put);
 export default {
     data(){
         return{
             rwPolar: JSON.parse(disk),
+             rwNumber: JSON.parse(numbers),
+             rwPut :JSON.parse(putList),
+            //下载流量统计图数据
               dayList:[
                     {
                     value:'今天',
@@ -77,7 +80,7 @@ export default {
                     },
                     {
                     value:'昨天',
-                    data:[20,30,40,50,60],
+                    data:[20,30,40,50,60,90],
                     day:['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
                     label:1
                     },
@@ -94,12 +97,7 @@ export default {
                     label:3
                     }
               ],
-                //下载流量切换统计图数据
-            chartClick(val){
-                this.chartIndex = val;
-                this.rwPolar.series[0].type = this.chartList[val].type;
-                this.rwPolar.xAxis.boundaryGap = this.chartList[val].boundaryGap;
-            },
+         
             //下载流量切换数据
             indexs:0,
             //下载流量切换统计图
@@ -117,21 +115,96 @@ export default {
             ],
             //下载流量切换统计图
             chartIndex:0,
+            //get请求统计图数据
+            getList:[
+                    {
+                    value:'今天',
+                    data:[20,30,40,50,60],
+                    day:['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
+                    label:0
+                    },
+                    {
+                    value:'昨天',
+                    data:[20,30,40,50,60,90],
+                    day:['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
+                    label:1
+                    },
+                    {
+                    value:'最近七天',
+                    data:[20,30,40,50,60,22,100],
+                    day:['02/18','02/18','02/18','02/18','02/18','02/18','02/18'],
+                    label:2
+                    },
+                    {
+                    value:'最近三十天',
+                    data:[20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,100,33,28,90,55],
+                    day:['04/01','04/02','04/03','04/04','04/05','04/06','04/07','04/08','04/09','04/10','04/11','04/12','04/13','04/14','04/15','04/16','04/17','04/18','04/19','04/20','04/21','04/22','04/23','04/24','04/25','04/26','04/27','04/28','04/29','04/30'],
+                    label:3
+                    }
+              ],
+            // get请求切换数据
+            getIndex:0 ,
+            //get请求切换统计图
+            getChartList:[],
+            getChartIndex:0,
+            //put请求数据
+            putList:[],
+            //put请求切换数据
+            putIndex:0,
+            //put请求切换统计图
+            putChartIndex:0,
+            //put请求统计图类型
+            putChartList:[]
         }
     },
     methods:{
          //下载流量点击切换数据
             dayClick(val){
-            console.log(val);
             this.indexs = val;
             this.rwPolar.xAxis.data = this.dayList[val].day;
             this.rwPolar.series[0].data = this.dayList[val].data;
-            console.log(this.rwPolar);
+            },
+                   //下载流量切换统计图类型
+            chartClick(val){
+                this.chartIndex = val;
+                this.rwPolar.series[0].type = this.chartList[val].type;
+                this.rwPolar.xAxis.boundaryGap = this.chartList[val].boundaryGap;
+            },
+            //get请求切换数据
+            getClick(val){
+                this.getIndex = val;
+                 this.rwNumber.xAxis.data = this.getList[val].day;
+                 this.rwNumber.series[0].data = this.getList[val].data;
+            },
+            //get请求切换统计图
+            getChartClick(val){
+                this.getChartIndex = val;
+                this.rwNumber.series[0].type = this.getChartList[val].type;
+                this.rwNumber.xAxis.boundaryGap = this.getChartList[val].boundaryGap;
+            },
+            //put请求切换数据
+            putClick(val){
+                this.putIndex = val;
+                this.rwPut.xAxis.data = this.putList[val].day;
+                this.rwPut.series[0].data = this.putList[val].data;
+            },
+            //put请求切换统计图
+            putChartClick(val){
+                this.putChartIndex = val;
+                this.rwPut.series[0].type = this.putChartList[val].type;
+                this.rwPut.xAxis.boundaryGap = this.putChartList[val].boundaryGap;
             }
     },
     mounted(){
           this.rwPolar.xAxis.data = this.dayList[0].day;
          this.rwPolar.series[0].data = this.dayList[0].data;
+         this.getChartList = this.chartList;
+         this.putList = this.getList;
+         this.putChartList = this.chartList;
+         this.rwNumber.xAxis.data = this.getList[0].day;
+         this.rwNumber.series[0].data = this.getList[0].data;
+       this.rwPut.xAxis.data = this.putList[0].day;
+        this.rwPut.series[0].data = this.putList[0].data;
     }
 }
 </script>

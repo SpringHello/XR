@@ -39,12 +39,11 @@ const store = new Vuex.Store({
     setZoneList (state, zoneList) {
       console.log(zoneList)
       state.zoneList = zoneList
-      // 设置当前默认区域
-      for (var zone of zoneList) {
-        if (zone.isdefault == 1) {
-          state.zone = zone
-        }
-      }
+    },
+    setZone(state,zone){
+      console.log(zone)
+      state.zone = zone
+
     },
     setMsg(state, Msg){
       state.Msg = Msg

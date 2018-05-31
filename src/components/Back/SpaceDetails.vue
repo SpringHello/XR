@@ -67,7 +67,7 @@
                 </ul>
                 <div style="padding:24px">
                   <p style="color:#666666;font-size:14px;width:950px;">{{ptext}}</p>
-                  <Button v-if="indexs != 3" type="primary" style="margin:40px 0 0 0;">确定</Button>
+                  <Button v-if="indexs != 3" type="primary" style="margin:40px 0 0 0;" @click="checkAcl">确定</Button>
                 </div>
                 <div class="custom" v-if="indexs == 3">
                   <Button type="primary" @click="jurisdiction = true">添加自定义权限</Button>
@@ -229,6 +229,7 @@
   import $store from "@/vuex";
   const name = sessionStorage.getItem("bucketName");
   const zoneId = $store.state.zone.zoneid;
+  const zoneName = $store.state.zone.zoneName
   const bucketId = sessionStorage.getItem('bucketId');
   export default {
     data() {
@@ -460,11 +461,11 @@
       },
       //列出文件夹列表
       filesList(id,isfile) {
-        this.fileUpdata.dirId = id == undefined ? null :id;
+        this.fileUpdata.dirId = (id == undefined ? null :id);
         this.$http
-          .post("http://192.168.3.187:8083/ruirados/object/listObject.do", {
+          .post("object/listObject.do", {
             bucketName: name,
-            dirId: id,
+            dirId: this.fileUpdata.dirId,
             fileName:this.filename
           })
           .then(res => {
@@ -480,7 +481,7 @@
       //创建文件夹
       createFlies() {
         this.$http
-          .post("http://192.168.3.187:8083/ruirados/object/createObject.do", {
+          .post("object/createObject.do", {
             bucketName: name,
             fileName: this.flies,
             dirId: this.fileUpdata.dirId
@@ -497,7 +498,7 @@
       //删除文件
       deleteFile(id,filename){
         // console.log(id);
-        this.$http.post('http://192.168.3.187:8083/ruirados/object/deleteObject.do',{
+        this.$http.post('object/deleteObject.do',{
           bucketName:name,
           fileName:filename,
           dirId:id
@@ -522,7 +523,7 @@
       },
       //添加自定义权限
       jurisdictionClick(){
-        this.$http.post('http://192.168.3.109:8083/ruirados/bucketAcl/createCustomAcl.do',{
+        this.$http.post('bucketAcl/createCustomAcl.do',{
           bucketName:name,
           bucketId:bucketId,
           objectNames:this.influenceValue,
@@ -541,12 +542,26 @@
       },
       //获取权限列表
       selectAclAll(){
-        this.$http.post('http://192.168.3.109:8083/ruirados/bucketAcl/selectAclAll.do',{
+        this.$http.post('bucketAcl/selectAclAll.do',{
           bucketName:name,
           bucketId:bucketId
         }).then(res =>{
           if(res.data.status == "1"){
             console.log(res.data.data.list);
+          }
+        })
+      },
+      //切换权限
+      checkAcl(){
+        this.$http.post('bucketAcl/aclCut.do',{
+          accessrights:this.indexs.toString(),
+          bucketId:bucketId,
+          bucketName:name
+        }).then(res =>{
+          if(res.data.status =='1'){
+            this.$Message.success('权限切换成功');
+          }else{
+            this.$Message.error('切换权限失败');
           }
         })
       }

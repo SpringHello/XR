@@ -289,8 +289,26 @@
       // 获取用户信息
       //var userInfo = axios.get('user/GetUserInfo.do')
       // 获取zone信息
-      var zoneList = axios.get('zone/zoneList.do').then(response => {
+      var zoneList = axios.get('zone/zoneList.do')
+        /*.then(response => {
         $store.commit('setZoneList', response.data.data.zoneList)
+        next()
+      })*/
+
+      var zone =  axios.get('zone/defaultZone.do')
+      //   .then(response =>{
+      //   $store.commit('setZone', response.data.data.zoneList)
+      // })
+      Promise.all([zoneList,zone]).then(values =>{
+        $store.commit('setZoneList',values[0].data.data.zoneList);
+        console.log(values);
+        if(values[1].status == 200 && values[1].data.status == "1"){
+          $store.commit('setZone',values[1].data.data.zoneList);
+        }else{
+          next(vm =>{
+            vm.$router.push({path:'/ruirados/login'});
+          })
+        }
         next()
       })
       /*\\Promise.all([userInfo, zoneList]).then(values => {
