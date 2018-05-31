@@ -72,7 +72,7 @@
                 <div class="custom" v-if="indexs == 3">
                   <Button type="primary" @click="jurisdiction = true">添加自定义权限</Button>
                   <Button type="primary">自定义权限编辑器</Button>
-                  <Table style="margin-top:20px;"></Table>
+                  <Table style="margin-top:20px;" :columns="rightList" :data="aclData"></Table>
                 </div>
               </div>
             </div>
@@ -86,7 +86,7 @@
                 <Button type="primary">CORS规则配置</Button>
                 <Button type="primary">CORS规则编辑器</Button>
               </div>
-              <Table ></Table>
+              <Table></Table>
             </div>
             <br>
             <div>
@@ -130,7 +130,7 @@
         name="uploadFile"
         :data="fileUpdata"
         type="drag"
-        action="http://192.168.3.187:8083/ruirados/object/uploadObject.do"
+        action="object/uploadObject.do"
         class="upload_model"
       >
         <div class="upload_text">
@@ -140,6 +140,7 @@
       </Upload>
     </Modal>
     <!-- 新建文件夹 -->
+
     <Modal
       v-model="floder"
       title="新建文件夹"
@@ -222,18 +223,73 @@
       <br>
       <Input :disabled='whiteList' v-model="whiteListValue" style="width:420px;" :rows="4" type="textarea"/><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
     </Modal>
+
+    <!--修改自定义权限-->
+    <Modal
+      v-model="updateDiction"
+      title="修改自定义权限"
+      :scrollable='true'
+      width="550px"
+      @on-ok="jurisdictionClick"
+    >
+      <div class="jurisd">
+        <div>Bucket名称：{{bucketName}}</div>
+        <div style="margin-left:20px;">存储区域：华中二区</div>
+      </div>
+      <div style="margin-top:20px;">
+        <span>用户授权</span>
+        <RadioGroup v-model="updateUsers" @on-change="usersClick">
+          <Radio label="0">全部用户</Radio>
+          <Radio label="1">自定义用户</Radio>
+        </RadioGroup>
+        <Input :disabled='grant' v-model="updateGrantValue" style="width:420px;" :rows="4" type="textarea"></Input><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+      </div>
+      <br>
+      <div style="width:366px;display:flex;">
+        <div style="width:115px;font-size:14px;color:#333333;">密码接收渠道</div>
+        <div style="width:300px;">
+          <CheckboxGroup v-model="updateChannel">
+            <Checkbox label="putobject">PutObject</Checkbox>
+            <Checkbox label="getobject">GetObject</Checkbox>
+            <Checkbox label="deleteobject">DeleteObject</Checkbox>
+            <Checkbox label="listbucket">ListObject</Checkbox>
+            <Checkbox label="deletebucket">DeleteBucket</Checkbox>
+          </CheckboxGroup>
+        </div>
+      </div>
+      <div style="margin-top:20px;">
+        <span>影响资源</span>
+        <RadioGroup v-model="updateSources">
+          <Radio label="0">不可操作</Radio>
+          <Radio label="1">可操作</Radio>
+        </RadioGroup>
+        <Input  v-model="updateInfluenceValue"  style="width:420px;" :rows="4" type="textarea"></Input><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+      </div>
+      <br>
+      <div style="width:366px;display:flex;">
+        <div style="width:115px;font-size:14px;color:#333333;">Referer白名单</div>
+        <div style="width:300px;">
+          <CheckboxGroup v-model="updateReferer">
+            <Checkbox label="0">设置</Checkbox>
+            <Checkbox label="1">允许白名单为空</Checkbox>
+          </CheckboxGroup>
+        </div>
+      </div>
+      <br>
+      <Input :disabled='whiteList' v-model="updateWhiteListValue" style="width:420px;" :rows="4" type="textarea"></Input><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+    </Modal>
   </div>
 </template>
 
 <script>
   import $store from "@/vuex";
   const name = sessionStorage.getItem("bucketName");
-  const zoneId = $store.state.zone.zoneid;
-  const zoneName = $store.state.zone.zoneName
   const bucketId = sessionStorage.getItem('bucketId');
   export default {
     data() {
       return {
+        //显示修改自定义权限弹窗
+        updateDiction:false,
         //空间名称
         bucketName:'',
         //用户授权输入框是否禁用
@@ -313,7 +369,7 @@
             render: (h,params) =>{
               let _self = this;
               _self.fileUpdata.bucketName = name
-              _self.fileUpdata.zoneId = zoneId
+              _self.fileUpdata.zoneId = $store.state.zone.zoneid
               _self.isfile = params.row.isfile;
               return h('div',[
                 h("Icon",{
@@ -401,7 +457,7 @@
         //影响资源
         sources:'0',
         //密码接收渠道
-        channel:['0'],
+        channel:['PutObject'],
         //白名单
         referer:['0'],
         //权限表格表头
@@ -411,9 +467,80 @@
             title:'授权用户ID'
           },
           {
-            key:''
-          }
-        ]
+            key:'resource',
+            title:'相关资源'
+          },
+          {
+            title:'操作权限',
+            render:(h,obj)=>{
+              return h('span',obj.row.iseffectres == 1?'可操作':'不可操作')
+            }
+          },
+          {
+            title:'涉及操作',
+            render:(h,obj)=>{
+              let str = '';
+              ['putobject','getobject','deleteobject','listbucket','deletebucket'].forEach(name=>{
+                if(obj.row[name]==1){
+                  str += name
+                }
+              })
+              return h('span',str)
+            }
+          },
+          {
+            key:'refererip',
+            title:'Referer'
+          },
+          {
+            title:'操作',
+            render:(h,obj)=>{
+
+              return h('div',[h('span',{style:{
+                marginRight:'20px',
+                  color:'rgb(42, 153, 242)',
+                  cursor:'pointer'
+                },
+                on:{
+                click:()=>{
+                  this.updateDiction = true;
+                  obj.row.userauthorization == '*' ? (this.updateUsers = '0') : (this.updateUsers = '1');
+                  this.updateReferer = obj.row.refererip;
+                  this.updateInfluenceValue = obj.row.resource;
+                  this.updateSources = obj.row.iseffectres;
+                  let str = '';
+                  ['putobject','getobject','deleteobject','listbucket','deletebucket'].forEach(name=>{
+                    if(obj.row[name]==1){
+                      str += name
+                    }
+                  })
+                  this.updateChannel.push(str);
+                    this.updateGrantValue = obj.row.userauthorization;
+
+                }
+                }},'修改'),h('span',{
+                  style:{
+                    color:'rgb(42, 153, 242)',
+                    cursor:'pointer'
+                  },
+                on:{
+                    click:()=>{
+
+                    }
+                }
+              },'删除')])
+            }
+          },
+        ],
+        aclData:[],
+        //修改自定义权限
+        updateWhiteListValue:'',
+        updateReferer:'',
+        updateInfluenceValue:'',
+        updateSources:'',
+        updateChannel:'',
+        updateGrantValue:'',
+        updateUsers:''
       };
     },
     methods: {
@@ -547,7 +674,7 @@
           bucketId:bucketId
         }).then(res =>{
           if(res.data.status == "1"){
-            console.log(res.data.data.list);
+            this.aclData = res.data.data.list
           }
         })
       },

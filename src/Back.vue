@@ -324,7 +324,7 @@
        })*/
     },
     created(){
-      this.$http.get('user/getKfAdd.do').then(response => {
+      /*this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result
       })
       // QQ客服在线情况
@@ -333,7 +333,7 @@
         this.xiaoshouInfo = response.data.xiaoshou
         this.yunweiInfo = response.data.yunwei
       })
-      this.notice()
+      this.notice()*/
     },
     mounted(){
       // mounted时期根据路径修改选中的menu
