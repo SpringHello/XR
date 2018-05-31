@@ -146,7 +146,7 @@
                   </Upload>
                 </div>
                 <div class="item-img">
-                  <img src="../../../assets/img/records/records-img3.png">
+                  <img class="amplification"  src="../../../assets/img/records/records-img3.png">
                   <p>示例图</p>
                 </div>
               </div>
@@ -704,6 +704,13 @@
                 margin-bottom: 20px;
                 width: 164px;
                 height: 120px;
+              }
+              .amplification{
+                cursor: zoom-in;
+                transition: all 0.6s;
+                &:hover{
+                  transform: scale(1.6);
+                }
               }
               > p {
                 text-align: center;

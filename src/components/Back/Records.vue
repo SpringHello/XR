@@ -188,8 +188,7 @@ export default {
             return (
               "div",
               [
-                h(
-                  "span",
+                h("span",
                   {
                     style: {
                       color: color,
