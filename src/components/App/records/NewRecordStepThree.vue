@@ -146,7 +146,7 @@
                   </Upload>
                 </div>
                 <div class="item-img">
-                  <img src="../../../assets/img/records/records-img3.png">
+                  <img class="amplification"  src="../../../assets/img/records/records-img3.png">
                   <p>示例图</p>
                 </div>
               </div>
@@ -191,7 +191,7 @@
           </div>
         </div>
         <h2>请上传其他资料</h2>
-        <p class="titleDescription">如前置审批材料，法人授权委托书等材料（点击<span style="color: #377dff">下载法人授权委托书</span>）</p>
+        <p class="titleDescription">如前置审批材料，法人授权委托书等材料（点击<a href="keepOnRecord/attorney.doc">下载法人授权委托书</a>）</p>
         <div class="upload">
           <div class="uploadTitle">
             <p>其他文件</p>
@@ -229,7 +229,7 @@
           </div>
         </div>
         <h2>请上传网站备案信息真实性核验单</h2>
-        <p class="titleDescription">1、点击<span style="color: #377dff">下载《网站备案信息真实性核验单》</span>。2、查看核验单样例图，填写以下载的核验单，不得涂改。3、请您保存3份签字的核验单原件以备后续环节使用。</p>
+        <p class="titleDescription">1、点击<a href="keepOnRecord/check.doc">下载《网站备案信息真实性核验单》</a>。2、查看核验单样例图，填写以下载的核验单，不得涂改。3、请您保存3份签字的核验单原件以备后续环节使用。</p>
         <div class="upload">
           <div class="uploadTitle">
             <p>其他文件</p>
@@ -391,33 +391,6 @@
         }
 
       },
-      /*  handleBeforeUpload_1() {
-          const check = this.uploadForm.certifiedDomainNoCertificationDefaultList.length < 3;
-          if (!check) {
-            this.$Message.info({
-              content: '上传文件不能超过3个'
-            })
-          }
-          return check
-        },
-        handleBeforeUpload_2() {
-          const check = this.uploadForm.otherFile.length < 3;
-          if (!check) {
-            this.$Message.info({
-              content: '上传文件不能超过3个'
-            })
-          }
-          return check
-        },
-        handleBeforeUpload_3() {
-          const check = this.uploadForm.CheckList.length < 3;
-          if (!check) {
-            this.$Message.info({
-              content: '上传文件不能超过3个'
-            })
-          }
-          return check
-        },*/
       /* 图片上传成功回调，设置图片。每张图片上传都有一个method。
  暂时没有找到更好的方法解决图片标记问题 */
       IDCardFront(response) {
@@ -731,6 +704,13 @@
                 margin-bottom: 20px;
                 width: 164px;
                 height: 120px;
+              }
+              .amplification{
+                cursor: zoom-in;
+                transition: all 0.6s;
+                &:hover{
+                  transform: scale(1.6);
+                }
               }
               > p {
                 text-align: center;
