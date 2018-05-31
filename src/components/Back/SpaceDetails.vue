@@ -86,7 +86,18 @@
                                 <Button type="primary">CORS规则配置</Button>
                                 <Button type="primary">CORS规则编辑器</Button>
                               </div>
-                                <Table></Table>
+                                <Table ></Table>
+                            </div>
+                            <br>
+                            <div>
+                               <div  style="display:flex;">
+                                  <div style="width:97%;font-size:18px;color:#333333;">跨域访问设置</div>
+                                <div style="color:#2A99F2;">收起</div>
+                              </div>
+                              <div class="text-boy">
+                                新睿云对象存储支持将自己的存储空间配置成静态网站托管模式，启动静态网站托管模式后，请通过XXXXX（域名）或您绑定的自定义域名进行访问。
+                              </div>
+                              <p style="color:#999999;font-size:14px;">提示：静态网站托管的默认index页配置在具有公有读取权限的Bucket下生效，自定义错误页和访问重定向在全部权限的Bucket下生效。</p>
                             </div>
                         </TabPane>
                     </Tabs>    
@@ -192,7 +203,7 @@
          </div>
         <div style="margin-top:20px;">
           <span>影响资源</span>
-            <RadioGroup v-model="sources" @on-change="sourcesClick">
+            <RadioGroup v-model="sources">
               <Radio label='0'>不可操作</Radio>
               <Radio label='1'>可操作</Radio>
         </RadioGroup>
@@ -391,7 +402,17 @@ export default {
       //密码接收渠道
       channel:['0'],
       //白名单
-      referer:['0']
+      referer:['0'],
+      //权限表格表头
+      rightList:[
+        {
+          key:'userauthorization',
+          title:'授权用户ID'
+        },
+        {
+          key:''
+        }
+      ]
     };
   },
   methods: {
@@ -419,7 +440,6 @@ export default {
       }else{
          this.$Message.error('上传失败ˊ_>ˋ');
       }
-     
         console.log(this.fileUpdata);
     },
     //文件上传失败
@@ -518,7 +538,18 @@ export default {
           this.$Message.error(res.data.msg);
         }
       })
-    }
+    },
+    //获取权限列表
+    selectAclAll(){
+      this.$http.post('http://192.168.3.109:8083/ruirados/bucketAcl/selectAclAll.do',{
+          bucketName:name,
+          bucketId:bucketId
+      }).then(res =>{
+          if(res.data.status == "1"){
+              console.log(res.data.data.list);
+          }
+      })
+    }  
     //获取空间详情
     // bucketDetails() {
     //
@@ -539,6 +570,7 @@ export default {
   mounted() {
     this.ptext = this.navList[0].city; //权限列表默认显示第一个
     this.filesList();
+    this.selectAclAll();
     this.bucketName = name;
   }
 };
@@ -688,5 +720,11 @@ export default {
   padding: 14px 0 40px 0;
   border-top: 1px solid #D8D8D8;
   border-bottom:1px solid #D8D8D8;
+}
+.text-boy{
+  padding:7px 0 6px 10px;font-size:14px;background-color:#E9F4FD;
+  border:1px solid #2A99F2;
+  border-radius:4px;
+  margin:20px 0 10px 0;
 }
 </style>

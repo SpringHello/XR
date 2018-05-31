@@ -241,7 +241,7 @@
           </div>
         </div>
          <div  style="text-align:center;margin-top:20px;">
-          <Button type="primary" >重新提交</Button>
+          <Button type="primary" @click="allUpdate">重新提交</Button>
           </div>
       </div>
      
@@ -434,6 +434,9 @@
         <p>如前置审批材料，法人授权委托书等材料（点击下载<span style="color:#2A99F2;">法人委托书</span>）</p>
         <div class="updatePhoto">
           <div class="updates">
+            <div class="item-content">
+
+            </div>
             <div style="width:100%;height:309px;">
                 <Upload
                     multiple
@@ -1239,7 +1242,7 @@ export default {
       border: 1px solid #ffffff;
       background-color: #ffffff;
       color: #999;
-      line-height: 156px;
+      line-height: 138px;
     }
     .item-content-text {
       width: 186px;

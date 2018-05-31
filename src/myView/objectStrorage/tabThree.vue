@@ -1,12 +1,10 @@
 <template>
     <div>
         <p style="font-size:16px;color:#000000;margin-bottom:10px;">操作日志</p>
-        <div style="height:40px;display:flex;">
-            <div class="journal">
-                <span>近一天</span>
-                <span>近一周</span>
-                <span>近一月</span>
-            </div>
+        <div style="height:31px;display:flex;margin-bottom:20px;">
+           <ul class="objectList">
+                 <li :class="indexs == index? 'objectItems':'objectItem'" v-for="(item,index) in dayList" :key="index" @click="dayClick(index)">{{item.value}}</li>
+             </ul>
             <div class="journal_right">
                 <span>开始结束时间</span>
                  <DatePicker type="date" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
@@ -43,11 +41,29 @@ export default {
           jieguo: "成功",
           shijian: "2017-5-21"
         }
-      ]
+      ],
+      dayList:[
+          {
+              value:'近一天'
+          },
+          {
+              value:'近一周'
+          },
+          {
+              value:'近一月'
+          }
+      ],
+    indexs:0
     };
   },
-  methods: {},
-  mounted() {}
+  methods: {
+      dayClick(val){
+          this.indexs = val;
+      }
+  },
+  mounted() {
+      
+  }
 };
 </script>
 
@@ -78,6 +94,39 @@ export default {
   width: 50%;
   text-align: right;
 }
+ .objectList {
+      width:50%;
+      font-family: PingFangSC;
+      display: flex;
+      li:first-child{
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+      }
+      li:last-child{
+        border-top-right-radius:4px;
+        border-bottom-right-radius: 4px;
+      }
+      .objectItem {
+        display: inline-block;
+        padding: 5px 16px;
+        text-align: center;
+        border: 1px solid #D9D9D9;
+        color: #2a99f2;
+        cursor: pointer;
+      }
+      .objectItems {
+        display: inline-block;
+        padding: 5px 16px;
+        text-align: center;
+        border: 1px solid #2a99f2;
+        color: #2a99f2;
+        cursor: pointer;
+      }
+      .objectItem:hover {
+        border:1px solid #2a99f2;
+        cursor: pointer;
+      }
+    }
 </style>
 
 
