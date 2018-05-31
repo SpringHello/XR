@@ -272,14 +272,16 @@
             </CheckboxGroup>
           </FormItem>
           <div style="font-size:16px;">
-            资费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:16px;">现价
-            <span style="font-size: 24px">￥{{renewalTotalCost}}/<span style="text-decoration: line-through;color: #666666;font-size: 16px">原价{{ renewalOriginalCost }}</span></span>
-        </span>
+            资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{renewalTotalCost}}/</span></span>
+              <span style="text-decoration: line-through">原价{{renewalOriginalCost}}</span>
           </div>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <p style="font-size: 14px;text-align: left;cursor: pointer;color: #377dff;" @click="$router.push('ActiveCenter')">全民普惠，三折减单，最高减免7000元</p>
+        <div style="text-align:left">
+          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:24px;">全民普惠，3折减单，最高减免7000元！
+          </router-link>
+        </div>
         <Button type="ghost" @click="showModal.renewDisk=false">取消</Button>
         <Button type="primary" @click="renewDisk_ok" :disabled="renewalTime==''">确认续费</Button>
       </div>
@@ -530,7 +532,13 @@
                   }, '变更资费'), h('DropdownItem', {
                     nativeOn: {
                       click: () => {
-                        this.renewDisk(params.row)
+                        if (params.row.caseType !== 3) {
+                          this.renewDisk(params.row)
+                        } else {
+                          this.$Message.info({
+                            content: '请选择包年包月计费的磁盘进行续费'
+                          })
+                        }
                       }
                     }
                   }, '磁盘续费')])

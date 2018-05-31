@@ -938,12 +938,12 @@
       // 资费变更
       ratesChange() {
         if (this.select == null) {
-          this.$Message.info('请选择需要变更资费的磁盘')
+          this.$Message.info('请先选择一个网关')
           return false
         }
         // caseTyp 3是实时计费
         if (this.select.caseType !== 3) {
-          this.$Message.info('请选择实时计费的磁盘进行资费变更')
+          this.$Message.info('请选择实时计费的NAT网关进行资费变更')
           return false
         }
         this.ratesChangeCost = '--'
@@ -987,10 +987,12 @@
           }).then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.cost = response.data.result
+                this.originCost = response.data.result
                 if (response.data.cuspon) {
-                  this.originCost = response.data.result + response.data.cuspon + response.data.continueDiscount
-                } else {
-                  this.originCost = response.data.result + response.data.continueDiscount
+                  this.originCost += response.data.cuspon
+                }
+                if (response.data.continueDiscount) {
+                  this.originCost += response.data.continueDiscount
                 }
               } else {
                 this.$message.info({
@@ -1002,7 +1004,15 @@
       },
       // 查询nat网关下的ip
       natbindIps() { 
-        if (this.select != null) {
+        if (this.select == null) {
+          this.$Message.info('请先选择一个网关')
+          return false
+        }
+        // caseTyp 3是实时计费
+        if (this.select.caseType == 3) {
+          this.$Message.info('请选择包年包月的NAT网关进行续费')
+          return false
+        }
           axios.get('network/listNatGatewayById.do', {
             params: {
               natGatewayId: this.select.id,
@@ -1027,11 +1037,6 @@
               this.showModal.natRenewal = true
             }
           })
-        } else {
-          this.$Message.info({
-            content: '请先选择一个网关',
-          })
-        }
       },
       // nat网关确认续费
       renewalok() {
@@ -1454,10 +1459,12 @@
           }).then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.cost = response.data.result
+                this.originCost = response.data.result
                 if (response.data.cuspon) {
-                  this.originCost = response.data.result + response.data.cuspon + response.data.continueDiscount
-                } else {
-                  this.originCost = response.data.result + response.data.continueDiscount
+                  this.originCost += response.data.cuspon
+                }
+                if (response.data.continueDiscount) {
+                  this.originCost += response.data.continueDiscount
                 }
               } else {
                 this.$message.info({

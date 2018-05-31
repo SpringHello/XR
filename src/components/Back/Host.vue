@@ -778,10 +778,12 @@
           }).then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.cost = response.data.result
-               if (response.data.cuspon) {
-                  this.originCost = response.data.result + response.data.cuspon + response.data.continueDiscount
-                } else {
-                  this.originCost = response.data.result + response.data.continueDiscount
+                this.originCost = response.data.result
+                if (response.data.cuspon) {
+                  this.originCost += response.data.cuspon
+                }
+                if (response.data.continueDiscount) {
+                  this.originCost += response.data.continueDiscount
                 }
               } else {
                 this.$message.info({
@@ -1193,21 +1195,22 @@
             break
           case 'ratesChange':
             if (this.checkSelect()) {
-              if(this.currentHost[0].caseType ==3) {
+              if (this.currentHost[0].caseType == 3) {
                 this.ratesChangeType = ''
                 this.ratesChangeTime = ''
                 this.showModal.ratesChange = true
-              } else{
+              } else {
                 this.$Message.info('请选择实时计费的云主机进行资费变更')
               }
             }
             break
           case 'renewal':
             if (this.checkSelect()) {
-              this.renewType()
-              this.renewalType = ''
-              this.renewalTime = ''
-              this.showModal.renewal = true
+              if (this.currentHost[0].caseType !== 3) {
+                this.renewType()
+              } else {
+                this.$Message.info('请选择包年包月的云主机进行资费变更')
+              }
             }
             break
           case 'backup':
@@ -1531,10 +1534,12 @@
           }).then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.cost = response.data.result
+                this.originCost = response.data.result
                 if (response.data.cuspon) {
-                  this.originCost = response.data.result + response.data.cuspon + response.data.continueDiscount
-                } else {
-                  this.originCost = response.data.result + response.data.continueDiscount
+                  this.originCost += response.data.cuspon
+                }
+                if (response.data.continueDiscount) {
+                  this.originCost += response.data.continueDiscount
                 }
               } else {
                 this.$message.info({
