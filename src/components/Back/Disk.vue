@@ -266,22 +266,20 @@
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="是否同时续费绑定主机:" style="width: 80%;margin-bottom: 0" v-if="renewalHost">
+          <FormItem label="是否同时续费绑定主机:" style="width: 100%;margin-bottom: 0" v-if="renewalHost">
             <CheckboxGroup v-model="renewalOther">
               <Checkbox label="续费关联云主机" v-if="renewalHost"></Checkbox>
             </CheckboxGroup>
           </FormItem>
-          <p style="font-size: 14px;cursor: pointer;color: #377dff;margin-top: 10px" @click="$router.push('ActiveCenter')">全民普惠，三折减单，最高减免7000元</p>
+          <div style="font-size:16px;">
+            资费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:16px;">现价
+            <span style="font-size: 24px">￥{{renewalTotalCost}}/<span style="text-decoration: line-through;color: #666666;font-size: 16px">原价{{ renewalOriginalCost }}</span></span>
+        </span>
+          </div>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <div style="font-size:16px;float:left">
-          资费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{renewalTotalCost}}
-          <span v-if="renewalTime != ''">/</span>
-          <span style="font-size: 15px;">{{renewalTime}}<span v-if="renewalType == 'year' && renewalTime != ''">年</span>
-          <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span>
-        </span>
-        </div>
+        <p style="font-size: 14px;text-align: left;cursor: pointer;color: #377dff;" @click="$router.push('ActiveCenter')">全民普惠，三折减单，最高减免7000元</p>
         <Button type="ghost" @click="showModal.renewDisk=false">取消</Button>
         <Button type="primary" @click="renewDisk_ok" :disabled="renewalTime==''">确认续费</Button>
       </div>
@@ -681,7 +679,8 @@
         mountHostList: [],
         diskSizeExpenses: 0,
         // 续费所需费用
-        renewalTotalCost: 0,
+        renewalTotalCost: '--',
+        renewalOriginalCost: '--',
         renewalType: '',
         renewalTime: '',
         renewalOther: [],
@@ -1245,7 +1244,8 @@
       },
       renewalTime(time) {
         if (time == '') {
-          this.renewalTotalCost = 0
+          this.renewalTotalCost = '--'
+          this.renewalOriginalCost = '--'
         } else {
           let url = 'information/getYjPrice.do'
           let hostArr = this.renewalOther[0] == '续费关联云主机' ? this.renewalConnectionsHost : ''
@@ -1260,6 +1260,13 @@
             .then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.renewalTotalCost = response.data.result.toFixed(2)
+                this.renewalOriginalCost = response.data.result
+                if(response.data.cuspon) {
+                  this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
+                }
+                if(response.data.continueDiscount) {
+                  this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
+                }
               }
             })
         }
@@ -1280,6 +1287,13 @@
               .then((response) => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.renewalTotalCost = response.data.result.toFixed(2)
+                  this.renewalOriginalCost = response.data.result
+                  if(response.data.cuspon) {
+                    this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
+                  }
+                  if(response.data.continueDiscount) {
+                    this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
+                  }
                 }
               })
           } else {
@@ -1294,6 +1308,13 @@
               .then((response) => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.renewalTotalCost = response.data.result.toFixed(2)
+                  this.renewalOriginalCost = response.data.result
+                  if(response.data.cuspon) {
+                    this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
+                  }
+                  if(response.data.continueDiscount) {
+                    this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
+                  }
                 }
               })
           }
