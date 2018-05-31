@@ -169,7 +169,7 @@
               </Select>
             </div>
           </Form-item>
-          <Form-item label="资费" style="width: 80%">
+          <!-- <Form-item label="资费" style="width: 80%">
             <span style="font-family: Microsoft YaHei;font-size: 24px;color: #2A99F2;line-height: 43px;">￥{{chargesForm.cost}}
               <span v-if="chargesForm.timeValue!=''">/</span>
               <span v-if="chargesForm.timeType == 'year' && chargesForm.timeValue !=''" style="font-size: 16px;">{{chargesForm.timeValue}}年</span>
@@ -177,10 +177,18 @@
             </span>
             <span style="font-family: Microsoft YaHei;font-size: 16px;color: #2A99F2;line-height: 43px;display: block;"
                   v-if="chargesForm.discounts">（已优惠￥{{chargesForm.discounts}} /元）</span>
-          </Form-item>
+          </Form-item> -->
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
+        <div style="font-size:16px;float:left">
+          资费:
+          <span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{chargesForm.cost}}
+            <span v-if="chargesForm.timeValue != ''">/</span>
+            <span style="font-size: 15px;">{{chargesForm.timeValue}}<span v-if="chargesForm.timeType == 'year' && chargesForm.timeValue != ''">年</span>
+            <span v-if="chargesForm.timeType == 'month' && chargesForm.timeValue != ''">月</span></span>
+          </span>
+        </div>
         <Button type="ghost" @click="showModal.charges = false">取消</Button>
         <Button type="primary" :disabled="chargesForm.timeValue==''" @click="chargesOK">确定
         </Button>
@@ -240,19 +248,19 @@
               <Checkbox label="续费关联NAT网关" v-if="renewalNAT"></Checkbox>
             </CheckboxGroup>
           </FormItem>
-          <p style="font-size: 14px;cursor: pointer;color: #377dff;margin-top: 10px" @click="$router.push('ActiveCenter')">全民普惠，三折减单，最高减免7000元</p>
+          <div style="font-size:16px;">
+          资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{renewalTotalCost}}/</span></span>
+          <span style="text-decoration: line-through">原价{{renewalOriginalCost}}</span>
+          </div>
         </Form>
       </div>
       <div slot="footer" style="" class="modal-footer-border">
-        <div style="font-size:16px;float: left">
-          应付费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{renewalCost}}
-          <span v-if="renewalTime != ''">/</span>
-          <span style="font-size: 15px;">{{renewalTime}}<span v-if="renewalType == 'year' && renewalTime != ''">年</span>
-          <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span>
-        </span>
+        <div style="text-align:left">
+          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:24px;">全民普惠，3折减单，最高减免7000元！
+          </router-link>
         </div>
-        <Button class="button cancel" @click="showModal.renew=false">取消</Button>
-        <Button class="button ok" @click="renewOk" :disabled="renewalCost==0">确认续费</Button>
+        <Button type="ghost" @click="showModal.renew=false">取消</Button>
+        <Button  type="primary" @click="renewOk" :disabled="renewalTime==''">确认续费</Button>
       </div>
     </Modal>
   </div>
@@ -292,7 +300,8 @@
         renewalNAT: false,
         renewalHostID: '',
         renewalNATID: '',
-        renewalCost: 0,
+        renewalTotalCost: '--',
+        renewalOriginalCost: '--',
         renewalOther: [],
         timeOptions: {
           renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
@@ -1060,6 +1069,9 @@
             return
           }
           this.chargesForm.discounts = null
+          this.chargesForm.timeType = ''
+          this.chargesForm.timeValue = ''
+          this.chargesForm.cost = ''
           this.showModal.charges = true
         } else {
           this.$Message.warning('请选择1个弹性IP')
@@ -1202,7 +1214,8 @@
       },
       renewalTime(time) {
         if (time == '') {
-          this.renewalCost = 0
+          this.renewalTotalCost = '--'
+          this.renewalOriginalCost = '--'
         } else {
           let hostArr = this.renewalOther[0] == '续费关联云主机' ? this.renewalHostID : ''
           let natArr = this.renewalOther[0] == '续费关联NAT网关' ? this.renewalNATID : ''
@@ -1217,7 +1230,14 @@
           })
             .then((response) => {
               if (response.status == 200 && response.data.status == 1) {
-                this.renewalCost = response.data.result.toFixed(2)
+                this.renewalTotalCost = response.data.result.toFixed(2)
+                this.renewalOriginalCost = response.data.result
+                if(response.data.cuspon) {
+                  this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
+                }
+                if(response.data.continueDiscount) {
+                  this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
+                }
               }
             })
         }
@@ -1237,7 +1257,14 @@
             })
               .then((response) => {
                 if (response.status == 200 && response.data.status == 1) {
-                  this.renewalCost = response.data.result.toFixed(2)
+                  this.renewalTotalCost = response.data.result.toFixed(2)
+                  this.renewalOriginalCost = response.data.result
+                  if(response.data.cuspon) {
+                    this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
+                  }
+                  if(response.data.continueDiscount) {
+                    this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
+                  }
                 }
               })
           } else if (this.renewalOther[0] == '续费关联NAT网关') {
@@ -1252,7 +1279,14 @@
             })
               .then((response) => {
                 if (response.status == 200 && response.data.status == 1) {
-                  this.renewalCost = response.data.result.toFixed(2)
+                  this.renewalTotalCost = response.data.result.toFixed(2)
+                  this.renewalOriginalCost = response.data.result
+                  if(response.data.cuspon) {
+                    this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
+                  }
+                  if(response.data.continueDiscount) {
+                    this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
+                  }
                 }
               })
           } else {
@@ -1266,7 +1300,7 @@
             })
               .then((response) => {
                 if (response.status == 200 && response.data.status == 1) {
-                  this.renewalCost = response.data.result.toFixed(2)
+                  this.renewalTotalCost = response.data.result.toFixed(2)
                 }
               })
           }

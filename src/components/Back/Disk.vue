@@ -20,8 +20,6 @@
         <div class="operator-bar">
           <Button type="primary" @click="newDisk">创建云硬盘</Button>
           <Button type="primary" @click="deleteDisk">删除云硬盘</Button>
-          <Button type="primary" @click="renewDisk">续费云硬盘</Button>
-          <Button type="primary" @click="ratesChange">资费变更</Button>
         </div>
         <div style="margin-top:20px">
           <Table :columns="diskColumns" :data="diskData" @radio-change="selectDisk"></Table>
@@ -268,24 +266,24 @@
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="是否同时续费绑定主机:" style="width: 80%;margin-bottom: 0" v-if="renewalHost">
+          <FormItem label="是否同时续费绑定主机:" style="width: 100%;margin-bottom: 0" v-if="renewalHost">
             <CheckboxGroup v-model="renewalOther">
               <Checkbox label="续费关联云主机" v-if="renewalHost"></Checkbox>
             </CheckboxGroup>
           </FormItem>
-          <p style="font-size: 14px;cursor: pointer;color: #377dff;margin-top: 10px" @click="$router.push('ActiveCenter')">全民普惠，三折减单，最高减免7000元</p>
+          <div style="font-size:16px;">
+            资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{renewalTotalCost}}/</span></span>
+              <span style="text-decoration: line-through">原价{{renewalOriginalCost}}</span>
+          </div>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <div style="font-size:16px;float:left">
-          资费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{renewalTotalCost}}
-          <span v-if="renewalTime != ''">/</span>
-          <span style="font-size: 15px;">{{renewalTime}}<span v-if="renewalType == 'year' && renewalTime != ''">年</span>
-          <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span>
-        </span>
+        <div style="text-align:left">
+          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:24px;">全民普惠，3折减单，最高减免7000元！
+          </router-link>
         </div>
-        <Button class="button cancel" @click="showModal.renewDisk=false">取消</Button>
-        <Button class="button ok" @click="renewDisk_ok" :disabled="renewalTime==''">确认续费</Button>
+        <Button type="ghost" @click="showModal.renewDisk=false">取消</Button>
+        <Button type="primary" @click="renewDisk_ok" :disabled="renewalTime==''">确认续费</Button>
       </div>
     </Modal>
     <!-- 资费变更弹出框 -->
@@ -310,8 +308,15 @@
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button class="button cancel" @click="showModal.ratesChange=false">取消</Button>
-        <Button class="button ok" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
+        <div style="font-size:16px;float:left">
+          资费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{ratesChangeCost}}
+          <span v-if="ratesChangeTime != ''">/</span>
+          <span style="font-size: 15px;">{{ratesChangeTime}}<span v-if="ratesChangeType == 'year' && ratesChangeTime != ''">年</span>
+          <span v-if="ratesChangeType == 'month' && ratesChangeTime != ''">月</span></span>
+        </span>
+        </div>
+        <Button type="ghost" @click="showModal.ratesChange=false">取消</Button>
+        <Button type="primary" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
       </div>
     </Modal>
   </div>
@@ -512,7 +517,31 @@
                         this.modificationDisk(params.row)
                       }
                     }
-                  }, '修改资料')])
+                  }, '修改资料'), h('DropdownItem', {
+                    nativeOn: {
+                      click: () => {
+                        if (params.row.caseType == 3) {
+                          this.ratesChange(params.row)
+                        } else {
+                          this.$Message.info({
+                            content: '请选择实时计费的磁盘进行变更'
+                          })
+                        }
+                      }
+                    }
+                  }, '变更资费'), h('DropdownItem', {
+                    nativeOn: {
+                      click: () => {
+                        if (params.row.caseType !== 3) {
+                          this.renewDisk(params.row)
+                        } else {
+                          this.$Message.info({
+                            content: '请选择包年包月计费的磁盘进行续费'
+                          })
+                        }
+                      }
+                    }
+                  }, '磁盘续费')])
                   ])])
               } else {
                 return h('div', {}, [
@@ -658,7 +687,8 @@
         mountHostList: [],
         diskSizeExpenses: 0,
         // 续费所需费用
-        renewalTotalCost: 0,
+        renewalTotalCost: '--',
+        renewalOriginalCost: '--',
         renewalType: '',
         renewalTime: '',
         renewalOther: [],
@@ -969,15 +999,8 @@
         }
       },
       // 续费磁盘
-      renewDisk() {
-        if (this.diskSelection == null) {
-          this.$Message.info('请选择需要续费的磁盘')
-          return false
-        }
-        if (this.diskSelection.caseType === 3) {
-          this.$Message.info('请选择包年或包月的磁盘进行续费')
-          return false
-        }
+      renewDisk(item) {
+        this.diskSelection = item
         this.renewalType = ''
         this.renewalTime = ''
         this.renewalOther = []
@@ -1031,15 +1054,10 @@
         })
       },
       // 资费变更
-      ratesChange() {
-        if (this.diskSelection == null) {
-          this.$Message.info('请选择需要变更资费的磁盘')
-          return false
-        }
-        if (this.diskSelection.caseType !== 3) {
-          this.$Message.info('请选择实时计费的磁盘进行资费变更')
-          return false
-        }
+      ratesChange(item) {
+        this.diskSelection = item
+        this.ratesChangeType = ''
+        this.ratesChangeTime = ''
         this.showModal.ratesChange = true
       },
       // 确认变更资费
@@ -1234,7 +1252,8 @@
       },
       renewalTime(time) {
         if (time == '') {
-          this.renewalTotalCost = 0
+          this.renewalTotalCost = '--'
+          this.renewalOriginalCost = '--'
         } else {
           let url = 'information/getYjPrice.do'
           let hostArr = this.renewalOther[0] == '续费关联云主机' ? this.renewalConnectionsHost : ''
@@ -1249,6 +1268,13 @@
             .then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.renewalTotalCost = response.data.result.toFixed(2)
+                this.renewalOriginalCost = response.data.result
+                if(response.data.cuspon) {
+                  this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
+                }
+                if(response.data.continueDiscount) {
+                  this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
+                }
               }
             })
         }
@@ -1269,6 +1295,13 @@
               .then((response) => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.renewalTotalCost = response.data.result.toFixed(2)
+                  this.renewalOriginalCost = response.data.result
+                  if(response.data.cuspon) {
+                    this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
+                  }
+                  if(response.data.continueDiscount) {
+                    this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
+                  }
                 }
               })
           } else {
@@ -1283,6 +1316,13 @@
               .then((response) => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.renewalTotalCost = response.data.result.toFixed(2)
+                  this.renewalOriginalCost = response.data.result
+                  if(response.data.cuspon) {
+                    this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
+                  }
+                  if(response.data.continueDiscount) {
+                    this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
+                  }
                 }
               })
           }

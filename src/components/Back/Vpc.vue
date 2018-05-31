@@ -80,6 +80,7 @@
               <Button type="primary" @click="openAddNatModal">添加NAT网关</Button>
               <Button type="primary" @click="openDeleteNatModal">删除NAT网关</Button>
               <Button type="primary" @click="natbindIps">续费</Button>
+              <Button type="primary" @click="ratesChange">资费变更</Button>
             </div>
             <Table :columns="natColumns" :data="natData" @radio-change="selectNAT"></Table>
           </TabPane>
@@ -367,19 +368,55 @@
             </CheckboxGroup>
           </FormItem>
         </Form>
-        <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:24px;display:block">全民普惠，3折减单，最高减免7000元！
-        </router-link>
         <div style="font-size:16px;">
-          应付费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{cost}}
-          <span v-if="renewalTime != ''">/</span>
+          资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{cost}}/</span></span>
+          <!-- <span v-if="renewalTime != ''">/</span>
           <span style="font-size: 15px;">{{renewalTime}}<span v-if="renewalType == 'year' && renewalTime != ''">年</span>
-          <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span>
-        </span>
+          <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span> -->
+          <span style="text-decoration: line-through">原价{{originCost}}</span>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
+        <div style="text-align:left">
+          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:24px;">全民普惠，3折减单，最高减免7000元！
+          </router-link>
+        </div>
         <Button type="ghost" @click="showModal.natRenewal = false">取消</Button>
-        <Button type="primary" @click="renewalok">确认续费</Button>
+        <Button type="primary" @click="renewalok" :disabled="cost=='--'">确认续费</Button>
+      </div>
+    </Modal>
+    <!-- 资费变更弹出框 -->
+    <Modal v-model="showModal.ratesChange" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">变更资费选择（资费变更适用于按需收费转包月/年）</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form>
+          <FormItem label="变更类型 :">
+            <Select v-model="ratesChangeType">
+              <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="变更时长 :">
+            <Select v-model="ratesChangeTime">
+              <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <div style="font-size:16px;float:left">
+          资费:
+          <span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{ratesChangeCost}}
+            <span v-if="ratesChangeTime != ''">/</span>
+            <span style="font-size: 15px;">{{ratesChangeTime}}<span v-if="ratesChangeType == 'year' && ratesChangeTime != ''">年</span>
+            <span v-if="ratesChangeType == 'month' && ratesChangeTime != ''">月</span></span>
+          </span>
+        </div>
+        <Button type="ghost" @click="showModal.ratesChange=false">取消</Button>
+        <Button type="primary" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
       </div>
     </Modal>
   </div>
@@ -406,9 +443,14 @@
       return {
         bindRenewalIp: [],
         isIps: '',
+        originCost: '--',
         cost: '--',
         renewalType: '',
         renewalTime: '',
+        // 变更资费所需
+        ratesChangeCost: '--',
+        ratesChangeType: '',
+        ratesChangeTime: '',
         timeOptions: {
           renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
           renewalTime: [],
@@ -441,6 +483,13 @@
             render: (h, params) => {
               var status = params.row.status == 1 ? '正常' : '异常'
               return h('span', {}, status)
+            }
+          },
+           {
+            title: '计费类型',
+            key: 'caseType',
+            render: (h, params) => {
+              return h('span', params.row.caseType == 1 ? '包年' : params.row.caseType == 2 ? '包月' : '实时计费')
             }
           },
           {
@@ -673,6 +722,7 @@
           // 解绑弹性IP模态框
           unbindIP: false,
           natRenewal: false,
+          ratesChange: false
         },
         // 新建vpc表单数据
         newForm: {
@@ -885,6 +935,42 @@
           this.netData = response.data.result
         }
       },
+      // 资费变更
+      ratesChange() {
+        if (this.select == null) {
+          this.$Message.info('请先选择一个网关')
+          return false
+        }
+        // caseTyp 3是实时计费
+        if (this.select.caseType !== 3) {
+          this.$Message.info('请选择实时计费的NAT网关进行资费变更')
+          return false
+        }
+        this.ratesChangeCost = '--'
+        this.ratesChangeType = ''
+        this.ratesChangeTime = ''
+        this.showModal.ratesChange = true
+      },
+      // 确认变更资费
+      ratesChange_ok() {
+        let url = 'continue/changeMoney.do'
+        this.$http.get(url, {
+          params: {
+            id: this.select.id,
+            timeType: this.ratesChangeType,
+            timeValue: this.ratesChangeTime,
+            type: 4
+          }
+        }).then(response => {
+          if (response.data.status == 1) {
+            this.$router.push({path: 'order'})
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
       bindRenewal() {
         if (this.cost != '--'){
         var selectIp = ''
@@ -895,12 +981,19 @@
             params: {
               timeValue: this.renewalTime,
               timeType: this.renewalType,
-              natArr: this.select[0].id,
+              natArr: this.select.id,
               ipIdArr: selectIp
             }
           }).then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.cost = response.data.result
+                this.originCost = response.data.result
+                if (response.data.cuspon) {
+                  this.originCost += response.data.cuspon
+                }
+                if (response.data.continueDiscount) {
+                  this.originCost += response.data.continueDiscount
+                }
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -910,32 +1003,40 @@
          }
       },
       // 查询nat网关下的ip
-      natbindIps() {
-        if (this.select != null) {
+      natbindIps() { 
+        if (this.select == null) {
+          this.$Message.info('请先选择一个网关')
+          return false
+        }
+        // caseTyp 3是实时计费
+        if (this.select.caseType == 3) {
+          this.$Message.info('请选择包年包月的NAT网关进行续费')
+          return false
+        }
           axios.get('network/listNatGatewayById.do', {
             params: {
-              natGatewayId: this.select[0].id,
+              natGatewayId: this.select.id,
               zoneId: $store.state.zone.zoneid
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              var iparr = response.data.result[0].attachPublicIp.map(item => {
+              if (response.data.result[0].attachPublicIp){
+                var iparr = response.data.result[0].attachPublicIp.map(item => {
                 return item.id
               })
               this.isIps = iparr.join()
+              } else {
+                this.isIps = ''
+              }
               // 清空续费弹窗数据
               this.bindRenewalIp = []
+              this.originCost = '--'
               this.cost = '--'
               this.renewalType = ''
               this.renewalTime = ''
               this.showModal.natRenewal = true
             }
           })
-        } else {
-          this.$Message.info({
-            content: '请先选择一个网关',
-          })
-        }
       },
       // nat网关确认续费
       renewalok() {
@@ -950,7 +1051,7 @@
           })
         }
         var nat = [
-          {type: 4, id: this.select[0].id}
+          {type: 4, id: this.select.id}
         ]
         var list = nat.concat(iplist)
         list = JSON.stringify(list)
@@ -1352,16 +1453,47 @@
             params: {
               timeValue: this.renewalTime,
               timeType: this.renewalType,
-              natArr: this.select[0].id,
+              natArr: this.select.id,
               ipIdArr: selectIp,
             }
           }).then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.cost = response.data.result
+                this.originCost = response.data.result
+                if (response.data.cuspon) {
+                  this.originCost += response.data.cuspon
+                }
+                if (response.data.continueDiscount) {
+                  this.originCost += response.data.continueDiscount
+                }
               } else {
                 this.$message.info({
                   content: response.data.message
                 })
+              }
+            })
+        }
+      },
+      // 资费变更
+      ratesChangeType(type) {
+        this.ratesChangeTime = ''
+        this.timeOptions.renewalTime = this.timeOptions[type]
+      },
+      ratesChangeTime(time) {
+        if (time == '') {
+          this.ratesChangeCost = '--'
+        } else {
+          let url = 'information/getYjPrice.do'
+          this.$http.get(url, {
+            params: {
+              timeValue: this.ratesChangeTime,
+              timeType: this.ratesChangeType,
+              natArr: this.select.id
+            }
+          })
+            .then((response) => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.ratesChangeCost = response.data.result.toFixed(2)
               }
             })
         }
