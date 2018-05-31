@@ -17,7 +17,7 @@ var router = new Router({
   mode: 'history',
   routes: [
     {
-      path: '/ruicloud',
+      path: '/ruirados',
       name: Back.name,
       component: Back,
       // 后台页面必须登录
