@@ -244,8 +244,8 @@
           <Button type="primary" >重新提交</Button>
           </div>
       </div>
-     
-    
+
+
     </div>
     <!-- 网站核验单 -->
      <Modal
@@ -271,7 +271,7 @@
                       点击选择文件
                     </div>
                     <div class="item-content-text" v-else>
-                       <img style="height:222px;margin-bottom:25px" :src="hostUnitList.webrecorduthenticityurl"/>
+                       <img style="height:222px;margin-bottom:25px" :src="hostUnitList.webrecordauthenticityurl"/>
                       点击选择文件
                     </div>
                     <button>上传</button>
