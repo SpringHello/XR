@@ -14,7 +14,7 @@
     </div>
     <div class="body-center">
       <div class="content">
-        <img src="../../../assets/img/records/records-icon9.png"/>
+     <!--   <img src="../../../assets/img/records/records-icon9.png"/>-->
         <ul v-for="item in flowList" :key="item.step">
           <img :src="item.src"/>
           <p>{{ item.title }}</p>
@@ -84,12 +84,28 @@
         </div>
       </div>
     </Modal>
+    <!-- 用户已备案提示框 -->
+    <Modal v-model="showModal.hint" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24">您已在新睿云备过案，请选择新增网站进行备案
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.hint = false">取消</Button>
+        <Button type="primary">确认</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 <script type="text/ecmascript-6">
   import axios from 'axios'
   import records from './../Records'
   import regExp from '../../../util/regExp'
+  import $ from 'jquery'
 
   var messageMap = {
     loginname: {
@@ -234,10 +250,11 @@
         // 区域切换时icon变化
         selectImg: require('../../../assets/img/records/records-icon7.png'),
         unSelectImg: require('../../../assets/img/records/records-icon8.png'),
-        // 用户能否备案状态
-        canRecord: false,
+        // 用户备案信息
+        recordInfo: [],
         showModal: {
-          recordInfo: false
+          recordInfo: false,
+          hint: false
         },
         loginModal: false,
         form: {
@@ -267,17 +284,26 @@
     },
     created() {
       this.flowList = this.flowList_1
-      this.getHostStatus()
+      this.getRecordInfo()
     },
     methods: {
+      // 获取备案信息
+      getRecordInfo() {
+        this.$http.get('recode/listMainWeb.do').then(res => {
+          if (res.data.status == 1) {
+            this.recordInfo = res.data.result
+          }
+        })
+      },
       // 切换备案类型
-      changeType (item) {
+      changeType(item) {
         this.type = item.value
-        if (this.type!= 1) {
+        if (this.type != 1) {
           this.flowList = this.flowList_2
         } else {
           this.flowList = this.flowList_1
         }
+        $('html, body').animate({scrollTop: 550}, 300)
       },
       // 切换区域
       changeArea(item) {
@@ -287,20 +313,6 @@
         this.area = item.zoneId
         this.areaText = item.text
         item.src = this.selectImg
-        this.getHostStatus()
-      },
-      // 查询该区域用户是否有主机
-      getHostStatus() {
-        let url = 'recode/existMainOrWeb.do'
-        axios.get(url, {
-          params: {
-            zoneId: this.area
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.canRecord = response.data.result
-          }
-        })
       },
       // 立即备案
       putOnRecord() {
@@ -312,25 +324,38 @@
           this.$router.push('BRecords')
           return
         }
-        if (this.canRecord) {
-          sessionStorage.setItem('zone', this.areaText)
-          sessionStorage.setItem('zoneId', this.area)
-          sessionStorage.setItem('recordsType', this.type + '')
-          // 根据选择的备案类型决定跳入哪个起始页面
-          switch (this.type) {
-            case 1:
-              this.$router.push('newRecordStepOne')
-              break
-            case 2:
-              this.$router.push('newAccess')
-              break;
-            case 3:
-              this.$router.push('newAccess')
-              break
-          }
-        } else {
-          this.showModal.recordInfo = true
+        if ((this.type == 1 && this.recordInfo.length !== 0) || (this.type == 2 && this.recordInfo.length !== 0)) {
+          //this.showModal.hint = true
+          //return
         }
+        let url = 'recode/existMainOrWeb.do'
+        axios.get(url, {
+          params: {
+            zoneId: this.area
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            if (response.data.result) {
+              sessionStorage.setItem('zone', this.areaText)
+              sessionStorage.setItem('zoneId', this.area)
+              sessionStorage.setItem('recordsType', this.type + '')
+              // 根据选择的备案类型决定跳入哪个起始页面
+              switch (this.type) {
+                case 1:
+                  this.$router.push('newRecordStepOne')
+                  break
+                case 2:
+                  this.$router.push('newAccess')
+                  break;
+                case 3:
+                  this.$router.push('newAccess')
+                  break
+              }
+            } else {
+              this.showModal.recordInfo = true
+            }
+          }
+        })
       },
       vail(field) {
         var text = this.form[field];
@@ -565,16 +590,16 @@
           z-index: -1;
         }
       }
-/*      ul:nth-child(4) {
-        img {
-          padding-top: 6px;
-        }
-      }
-      ul:nth-child(6) {
-        img {
-          padding-top: 8px;
-        }
-      }*/
+      /*      ul:nth-child(4) {
+              img {
+                padding-top: 6px;
+              }
+            }
+            ul:nth-child(6) {
+              img {
+                padding-top: 8px;
+              }
+            }*/
     }
   }
 
