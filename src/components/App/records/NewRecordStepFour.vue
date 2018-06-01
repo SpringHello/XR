@@ -1,12 +1,12 @@
 <template>
   <div>
     <records></records>
-    <o-step :onStep="4" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
-    <step :onStep="3" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
+    <o-step :onStep="3" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
+    <step :onStep="2" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
     <div class="body">
       <div class="content">
         <h2>请选择核验方式</h2>
-        <p>备案ID：{{ recordserviceid }} | 当前状态： <span>复审中</span></p>
+        <p>当前状态： <span>提价资料</span></p>
       </div>
       <p>您所在北京市地区可选择核验方式：</p>
       <div class="selectWay">
@@ -133,7 +133,7 @@
       step, records, oStep
     },
     beforeRouteEnter(to, from, next) {
-      let id = sessionStorage.getItem('id')
+      let id  = sessionStorage.getItem('id')
       let url = 'recode/listMainWeb.do'
       axios.get(url, {
         params: {
@@ -329,7 +329,7 @@
               content: '信息提交成功'
             })
             sessionStorage.setItem('recordsType', this.recordsType)
-            this.$router.push('waitSecondTrial')
+            this.$router.push('waitFirstTrial')
           } else {
             this.$message.info({
               content: '平台开小差了，请稍候再试'

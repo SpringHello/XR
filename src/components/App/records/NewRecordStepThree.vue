@@ -580,7 +580,7 @@
         let addMainWeb = axios.post('recode/addMainWeb.do', params)
         Promise.all([addMainCompany, addMainWeb]).then(response => {
           if ((response[0].status == 200 && response[0].data.status == 1) && (response[1].status == 200 && response[1].data.status == 1)) {
-            this.$router.push('waitFirstTrial')
+            this.$router.push('newRecordStepFour')
             sessionStorage.clear()
           } else {
             this.$message.info({
