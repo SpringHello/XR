@@ -729,10 +729,12 @@
           return item === false
         })
         if (!flag) {
-          let arr = this.mainUnitInformation.maincompanyarea.split('-')
-          this.mainUnitInformation.province = arr[0]
-          this.mainUnitInformation.city = arr[1]
-          this.mainUnitInformation.district = arr[2]
+          if(this.mainUnitInformation.maincompanyarea){
+            let arr = this.mainUnitInformation.maincompanyarea.split('-')
+            this.mainUnitInformation.province = arr[0]
+            this.mainUnitInformation.city = arr[1]
+            this.mainUnitInformation.district = arr[2]
+          }
           let mainUnitInformationStr = JSON.stringify(this.mainUnitInformation)
           let siteListStr = JSON.stringify(this.siteList)
           sessionStorage.removeItem('mainUnitInformationStr')
