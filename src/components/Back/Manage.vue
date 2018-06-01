@@ -936,7 +936,7 @@
         this.$http.get('log/queryLog.do', {
           params: {
             pageSize: this.pageSize,
-            currentPage: his.currentPage,
+            currentPage: this.currentPage,
             target: this.target,
             queryTime: this.logTime,
             targetId: this.$route.query.id

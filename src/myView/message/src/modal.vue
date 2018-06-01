@@ -9,7 +9,7 @@
           <div class="header">
             <p>
               <Icon type="close-circled" class="icon error-icon" v-if="type==='error'"></Icon>
-              <Icon type="help-circled" class="icon warning-icon" v-if="type==='confirm'"></Icon>
+              <Icon type="ios-information" class="icon warning-icon" v-if="type==='confirm'"></Icon>
               <Icon type="information-circled" class="icon info-icon" v-if="type==='info'"></Icon>
               <span style="vertical-align: middle">{{title}}</span>
             </p>
@@ -162,7 +162,7 @@
           color: #2d8cf0
         }
         .warning-icon {
-          color: #F56A00;
+          color: #FFBF00;
         }
         .error-icon {
 
@@ -177,10 +177,7 @@
       .modal-body {
         padding: 10px 30px 0px;
         font-size: 14px;
-        color: rgba(17, 17, 17, 0.65);
-        p {
-          line-height: 25px;
-        }
+        color: #666666;
       }
       .modal-foot {
         padding: 20px 30px;

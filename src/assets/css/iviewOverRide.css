@@ -279,3 +279,8 @@ div.modal-header-border {
   top: 3px;
   margin-right: 10px;
 }
+
+/* 公共comfirm弹窗行高设置 */
+.modal-wrapper .modal .modal-body p {
+  line-height: 25px;
+}
