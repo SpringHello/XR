@@ -440,10 +440,9 @@
             key: "filename",
             title: "文件名称",
             render: (h,params) =>{
-              let _self = this;
-              _self.fileUpdata.bucketName = name
-              _self.fileUpdata.zoneId = $store.state.zone.zoneid
-              _self.isfile = params.row.isfile;
+              this.fileUpdata.bucketName = name
+              this.fileUpdata.zoneId = $store.state.zone.zoneid
+              this.isfile = params.row.isfile;
               return h('div',[
                 h("Icon",{
                   props:{
@@ -461,8 +460,8 @@
                     marginLeft:'5px'
                   },
                   on:{
-                    click(){
-                      _self.filesList(params.row.id,params.row.isfile);//文件标识
+                    click:()=>{
+                      this.filesList(params.row.id,params.row.isfile);//文件标识
                     }
                   }
                 },params.row.filename)
@@ -491,7 +490,7 @@
             key:'cap',
             title:'操作',
             render:(h,params)=>{
-              let _self = this;
+
               return h('div',[
                 h('span',{
                   style:{
@@ -512,8 +511,8 @@
                     cursor:'pointer'
                   },
                   on:{
-                    click(){
-                      _self.deleteFile(params.row.id,params.row.filename);//传入文件Id和文件名称删除
+                    click:()=>{
+                      this.deleteFile(params.row.id,params.row.filename);//传入文件Id和文件名称删除
                     }
                   }
                 },"删除")

@@ -83,6 +83,10 @@
         </Tabs>
       </div>
     </div>
+    <Modal v-model="screte" title="提示" :scrollable='true' width="390px" @on-ok="$router.push({path:'SpaceDetails'})"
+    >
+    <p>尊敬的用户您好，系统检测到您当前没有可用的Access Key，请您到<span style="color:#2A99F2;">Access Key管理</span>去创建Access Key。</p>
+    </Modal>
   </div>
 </template>
 
@@ -92,6 +96,7 @@
   import tabOne from "../../myView/objectStrorage/tabOne";
   import tabTwo from "../../myView/objectStrorage/tabTwo";
   import tabThree from "../../myView/objectStrorage/tabThree";
+  import  axios from 'axios'
   const disk = JSON.stringify(diskOptions);
   const numbers = JSON.stringify(objectNumbers);
   //延迟加载子组件
@@ -193,6 +198,8 @@
           }
         ],
         chartTwoIndex:0,
+        //检测access
+        screte:false
       }
     },
     components: {
@@ -234,6 +241,16 @@
         this.chartTwoIndex = val;
         this.rwNumber.series[0].type = this.chartTwotList[val].type;
         this.rwNumber.xAxis.boundaryGap = this.chartTwotList[val].boundaryGap;
+      },
+      //检测access
+      showUserAcessAll(){
+        axios.get('user/showUserAcessAll.do',{
+        }).then(res => {
+          if(res.data.status == '1'){
+          }else {
+            this.screte = true;
+          }
+        })
       }
     },
     mounted(){
@@ -241,11 +258,15 @@
       this.rwPolar.series[0].data = this.dayList[0].data;
       this.rwNumber.xAxis.data = this.requestList[0].day;
       this.rwNumber.series[0].data = this.requestList[0].data;
+      this.showUserAcessAll();
     }
   };
 </script>
 
 <style lang="less" rel="stylesheet/less" scoped>
+  p{
+    line-height: 20px;
+  }
   .centerBox {
     background-color: #f5f5f5;
     width: 100%;
