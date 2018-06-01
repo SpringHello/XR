@@ -4,7 +4,7 @@
              <span class="text">云存储/云硬盘</span>
              <div class="center">
                  <div class="center_top">
-                     <div style="width:50%"> 
+                     <div style="width:50%">
                           <svg class="icon" aria-hidden="true">
                             <use xlink:href="#icon-yijianxufei"></use>
                         </svg>
@@ -44,7 +44,7 @@
                                 <li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>
                               </ul>
                                 <div class="chart-rig">
-                                    <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button>
+                                    <!--<Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button>-->
                                   <ul class="objectList">
                                     <li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>
                                   </ul>
@@ -83,6 +83,9 @@
                 </Tabs>
              </div>
         </div>
+       <Modal title="提示" v-model="screte" :scrollable="true" width="390px">
+         <p>尊敬的用户您好，系统检测到您当前没有可用的Access Key，请您到Access Key管理去创建Access Key。</p>
+       </Modal>
     </div>
 </template>
 
@@ -92,6 +95,7 @@ import objectNumbers from "@/echarts/numberRequests"
 import tabOne from "../../myView/objectStrorage/tabOne";
 import tabTwo from "../../myView/objectStrorage/tabTwo";
 import tabThree from "../../myView/objectStrorage/tabThree";
+import  axios from 'axios'
 const disk = JSON.stringify(diskOptions);
 const numbers = JSON.stringify(objectNumbers);
 //延迟加载子组件
@@ -193,6 +197,8 @@ export default {
         }
       ],
       chartTwoIndex:0,
+      //显示access提示框
+      screte:false
     }
   },
   components: {
@@ -234,6 +240,17 @@ export default {
         this.chartTwoIndex = val;
         this.rwNumber.series[0].type = this.chartTwotList[val].type;
         this.rwNumber.xAxis.boundaryGap = this.chartTwotList[val].boundaryGap;
+    },
+    //检测是否有Access key
+    showUserAcessAll(){
+      axios.get('http://42.56.89.236:8080/ruirados/user/showUserAcessAll.do',{
+      }).then(res =>{
+        if(res.data.status == '1'){
+          if(res.data.data == null){
+            this.screte = true;
+          }
+        }
+      })
     }
   },
   mounted(){
@@ -241,6 +258,9 @@ export default {
       this.rwPolar.series[0].data = this.dayList[0].data;
         this.rwNumber.xAxis.data = this.requestList[0].day;
       this.rwNumber.series[0].data = this.requestList[0].data;
+  },
+  created(){
+    this.showUserAcessAll();
   }
 };
 </script>
