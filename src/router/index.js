@@ -90,9 +90,10 @@ const NATManage = () => import('@/components/Back/NATManage')
 const Recycle = () => import('@/components/Back/Recycle')
 const Wxpay = () => import('@/components/Back/Wxpay')
 const WorkOrder = () => import('@/components/Back/WorkOrder')
-const CloudDataBackup = () => import('@/components/Back/CloudDataBackup')
+const CloudDatabaseBackup = () => import('@/components/Back/CloudDatabaseBackup')
 const CloudDatabase = () => import('@/components/Back/CloudDatabase')
 const CloudDataManage = () => import('@/components/Back/CloudDataManage')
+const CloudDatabaseMirror = () => import('@/components/Back/CloudDatabaseMirror')
 // 帮助文档路由
 const computed = () => import('@/components/App/doc/computed')
 const computed1 = () => import('@/components/App/doc/computed1')
@@ -624,9 +625,10 @@ var router = new Router({
         {path: 'recycle', name: 'recycle', component: Recycle},
         {path: 'wxpay', name: 'wxpay', component: Wxpay},
         {path: 'workOrder', name: 'workOrder', component: WorkOrder},
-        {path: 'cloudDataBackup', name: 'cloudDataBackup', component: CloudDataBackup},
-        {path: 'cloudDatabase', name: 'cloudDatabase', component: CloudDatabase},
-        {path: 'cloudDataManage', name: 'cloudDataManage', component: CloudDataManage}
+        {path: 'cloudDataManage', name: 'cloudDataManage', component: CloudDataManage},
+        {path: 'cloudDatabaseBackup', name: 'cloudDatabaseBackup', component: CloudDatabaseBackup},
+        {path: 'cloudDatabaseMirror', name: 'cloudDatabaseMirror', component: CloudDatabaseMirror},
+        {path: 'cloudDatabase', name: 'cloudDatabase', component: CloudDatabase}
       ]
     },
     {
