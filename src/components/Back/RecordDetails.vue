@@ -379,13 +379,19 @@
           </div>
           <div style="width:50%;height:309px;">
             <div style="text-align: center">
-              <img style="height:222px;margin-bottom:25px" src="../../assets/img/records/records-img4.png"/>
+              <img @click="visibleWeb = true" style="height:222px;margin-bottom:25px;cursor: pointer;" src="../../assets/img/records/records-img4.png"/>
               <p>示例图</p>
             </div>
           </div>
         </div>
       </div>
     </Modal>
+
+    <!--网站核验单示例图大图-->
+    <Modal title="营业执照示例图" v-model="visibleWeb">
+      <img :src="hostUnitList.hostcompanyurl" v-if="visible" style="width: 100%">
+    </Modal>
+
     <!-- 主办单位负责人照片 -->
     <Modal
       v-model="sponsorPhoto"
@@ -395,7 +401,7 @@
       <p>身份证人像面</p>
       <div class="updatePhoto">
         <div class="updates">
-          <div style="width:50%;height:203px;">
+          <div style="width:50%;height:203px;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝' ">
             <Upload
               multiple
               type="drag"
@@ -405,17 +411,21 @@
               :format="['jpg','jpeg','png']"
               :on-success="otherFile"
             >
-              <div class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlback==''">
+              <div class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlpositive==''">
                 暂无图片
               </div>
               <div style="height:203px;" v-else>
                 <div style="text-align: center">
                   <img style="height:144px;" :src="hostUnitList.companyresponsibilityurlpositive">
-                  <p style="">点击选择文件</p>
+                  <p>点击选择文件</p>
                 </div>
               </div>
               <button>上传</button>
             </Upload>
+          </div>
+          <div v-else>
+            <p v-if="hostUnitList.companyresponsibilityurlpositive==''">暂无图片</p>
+            <img style="height:144px;" :src="hostUnitList.companyresponsibilityurlpositive" v-else>
           </div>
           <div style="width:50%;height:203px;">
             <div style="text-align: center">
@@ -428,13 +438,14 @@
       <p style="margin-top:10px;">身份证国徽面</p>
       <div class="updatePhoto">
         <div class="updates">
-          <div style="width:50%;height:203px;">
+          <div style="width:50%;height:203px;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'">
             <Upload
               multiple
               type="drag"
               :show-upload-list="false"
               :with-credentials="true"
               action="file/upFile.do"
+              :format="['jpg','jpeg','png']"
               :on-success="otherFile">
               <div class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlback==''">
                 暂无图片
@@ -447,6 +458,10 @@
               </div>
               <button>上传</button>
             </Upload>
+          </div>
+          <div v-else>
+            <p v-if="hostUnitList.companyresponsibilityurlback==''">暂无图片</p>
+            <img style="height:144px;" :src="hostUnitList.companyresponsibilityurlback" v-else>
           </div>
           <div style="width:50%;height:203px;">
             <div style="text-align: center">
@@ -466,13 +481,14 @@
       <p>执照扫描件</p>
       <div class="updatePhoto">
         <div class="updates">
-          <div style="width:50%;height:203px;">
+          <div style="width:50%;height:203px;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'">
             <Upload
               multiple
               type="drag"
               :show-upload-list="false"
               :with-credentials="true"
               action="file/upFile.do"
+              :format="['jpg','jpeg','png']"
               :on-success="otherFile">
               <div class="sponsor-text" v-if="hostUnitList.hostcompanyurl==''">
                 暂无图片
@@ -486,14 +502,22 @@
               <button>上传</button>
             </Upload>
           </div>
+          <div v-else>
+            <p v-if="hostUnitList.hostcompanyurl==''">暂无图片</p>
+            <img style="height:144px;" :src="hostUnitList.hostcompanyurl" v-else>
+          </div>
           <div style="width:50%;height:203px;">
             <div style="text-align: center">
-              <img style="height:144px;margin-bottom:20px" src="../../assets/img/records/records-img3.png"/>
+              <img @click="visible = true" style="height:144px;margin-bottom:20px;cursor: pointer;" src="../../assets/img/records/records-img3.png"/>
               <p>示例图</p>
             </div>
           </div>
         </div>
       </div>
+    </Modal>
+    <!--营业执照示例图大图-->
+    <Modal title="营业执照示例图" v-model="visible">
+      <img :src="hostUnitList.hostcompanyurl" v-if="visible" style="width: 100%">
     </Modal>
     <!-- 域名证书 -->
     <Modal
@@ -504,7 +528,7 @@
       <p>执照扫描件</p>
       <div class="updatePhoto">
         <div class="updates">
-          <div style="width:100%;height:309px;">
+          <div style="width:100%;height:309px;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'">
             <Upload
               multiple
               type="drag"
@@ -522,6 +546,10 @@
               <button>上传</button>
             </Upload>
           </div>
+          <div v-else>
+            <p v-if="hostUnitList.domaincertificateurl==''">暂无执照扫描件</p>
+            <p v-else>hostUnitList.domaincertificateurl</p>
+          </div>
         </div>
       </div>
     </Modal>
@@ -534,10 +562,7 @@
       <p>如前置审批材料，法人授权委托书等材料（点击下载<span style="color:#2A99F2;">法人委托书</span>）</p>
       <div class="updatePhoto">
         <div class="updates">
-          <div class="item-content">
-
-          </div>
-          <div style="width:100%;height:309px;">
+          <div style="width:100%;height:309px;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'">
             <Upload
               multiple
               type="drag"
@@ -555,9 +580,14 @@
               <button>上传</button>
             </Upload>
           </div>
+          <div v-else>
+            <p v-if="hostUnitList.otherdataurl==''">暂无执照扫描件</p>
+            <p v-else>hostUnitList.otherdataurl</p>
+          </div>
         </div>
       </div>
     </Modal>
+
     <!-- 修改主办单位信息 -->
     <Modal
       v-model="host"
@@ -591,23 +621,23 @@
         </FormItem>
         <FormItem prop="maincompanynumber">
           <p style="margin:10px">主办单位证件号码</p>
-          <Input type="text" v-model="updateHostUnitList.maincompanynumber"/>
+          <Input type="text" v-model="updateHostUnitList.maincompanynumber"></Input>
         </FormItem>
         <FormItem prop="maincompanyname">
           <p style="margin:10px">主体单位名称</p>
-          <Input type="text" v-model="updateHostUnitList.maincompanyname"/>
+          <Input type="text" v-model="updateHostUnitList.maincompanyname"></Input>
         </FormItem>
         <FormItem prop="maincompanycertificatesloaction">
           <p style="margin:10px">主体单位证件住所</p>
-          <Input type="text" v-model="updateHostUnitList.maincompanycertificatesloaction"/>
+          <Input type="text" v-model="updateHostUnitList.maincompanycertificatesloaction"></Input>
         </FormItem>
         <FormItem prop="maincompanycommunicatlocation">
           <p style="margin:10px">主体单位通信地址</p>
-          <Input type="text" v-model="updateHostUnitList.maincompanycommunicatlocation"/>
+          <Input type="text" v-model="updateHostUnitList.maincompanycommunicatlocation"></Input>
         </FormItem>
         <FormItem prop="investorname">
           <p style="margin:10px">投资人或主管姓名</p>
-          <Input type="text" v-model="updateHostUnitList.investorname"/>
+          <Input type="text" v-model="updateHostUnitList.investorname"></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -621,7 +651,7 @@
       <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="legalname">
           <p style="margin:10px">法人姓名</p>
-          <Input type="text" v-model="updateHostUnitList.legalname"/>
+          <Input type="text" v-model="updateHostUnitList.legalname"></Input>
         </FormItem>
         <FormItem prop="legalcertificatestype">
           <p style="margin:10px">法人证件类型</p>
@@ -631,19 +661,19 @@
         </FormItem>
         <FormItem prop="legalcertificatesnumber">
           <p style="margin:10px">法人证件号码</p>
-          <Input type="text" v-model="updateHostUnitList.legalcertificatesnumber"/>
+          <Input type="text" v-model="updateHostUnitList.legalcertificatesnumber"></Input>
         </FormItem>
         <FormItem prop="officenumber">
           <p style="margin:10px">办公室电话</p>
-          <Input type="text" v-model="updateHostUnitList.officenumber"/>
+          <Input type="text" v-model="updateHostUnitList.officenumber"></Input>
         </FormItem>
         <FormItem prop="companyphone">
           <p style="margin:10px">手机号码</p>
-          <Input type="text" v-model="updateHostUnitList.companyphone"/>
+          <Input type="text" v-model="updateHostUnitList.companyphone"></Input>
         </FormItem>
         <FormItem prop="email">
           <p style="margin:10px">电子邮箱地址</p>
-          <Input type="text" v-model="updateHostUnitList.companyemail"/>
+          <Input type="text" v-model="updateHostUnitList.companyemail"></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -657,23 +687,23 @@
       <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="webname">
           <p style="margin:10px">网站名称</p>
-          <Input type="text" v-model="updateHostUnitList.webname"/>
+          <Input type="text" v-model="updateHostUnitList.webname"></Input>
         </FormItem>
         <FormItem prop="webdomian">
           <p style="margin:10px">网站域名</p>
-          <Input type="text" v-model="updateHostUnitList.webdomian"/>
+          <Input type="text" v-model="updateHostUnitList.webdomian"></Input>
         </FormItem>
         <FormItem prop="weburl">
           <p style="margin:10px">网站首页URL</p>
-          <Input type="text" v-model="updateHostUnitList.weburl"/>
+          <Input type="text" v-model="updateHostUnitList.weburl"></Input>
         </FormItem>
         <FormItem prop="webservercontent">
           <p style="margin:10px">网站服务内容</p>
-          <Input type="text" v-model="updateHostUnitList.webservercontent"/>
+          <Input type="text" v-model="updateHostUnitList.webservercontent"></Input>
         </FormItem>
         <FormItem prop="webmessage">
           <p style="margin:10px">网站语言</p>
-          <Input type="text" v-model="updateHostUnitList.webmessage"/>
+          <Input type="text" v-model="updateHostUnitList.webmessage"></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -687,7 +717,7 @@
       <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="webresponsibilitylinkname">
           <p style="margin:10px">姓名</p>
-          <Input type="text" v-model="updateHostUnitList.webresponsibilitylinkname"/>
+          <Input type="text" v-model="updateHostUnitList.webresponsibilitylinkname"></Input>
         </FormItem>
         <FormItem prop="webresponsibilitycertificatestype">
           <p style="margin:10px">有效证件类型</p>
@@ -697,19 +727,19 @@
         </FormItem>
         <FormItem prop="webresponsibilitycertificatesnumber">
           <p style="margin:10px">有效证件号码</p>
-          <Input type="text" v-model="updateHostUnitList.webresponsibilitycertificatesnumber"/>
+          <Input type="text" v-model="updateHostUnitList.webresponsibilitycertificatesnumber"></Input>
         </FormItem>
         <FormItem prop="offacenumber">
           <p style="margin:10px">办公室电话号码</p>
-          <Input type="text" v-model="updateHostUnitList.offacenumber"/>
+          <Input type="text" v-model="updateHostUnitList.offacenumber"></Input>
         </FormItem>
         <FormItem prop="phone">
           <p style="margin:10px">移动电话号码</p>
-          <Input type="text" v-model="updateHostUnitList.phone"/>
+          <Input type="text" v-model="updateHostUnitList.phone"></Input>
         </FormItem>
         <FormItem prop="companyemail">
           <p style="margin:10px">电子邮箱地址</p>
-          <Input type="text" v-model="updateHostUnitList.email"/>
+          <Input type="text" v-model="updateHostUnitList.email"></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -723,19 +753,19 @@
       <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="ispname">
           <p style="margin:10px">ISP名称</p>
-          <Input type="text" :readonly="true" v-model="updateHostUnitList.ispname"/>
+          <Input type="text" :readonly="true" v-model="updateHostUnitList.ispname"></Input>
         </FormItem>
         <FormItem prop="webip">
           <p style="margin:10px">网站IP地址</p>
-          <Input :readonly="true" type="text" v-model="updateHostUnitList.webip"/>
+          <Input :readonly="true" type="text" v-model="updateHostUnitList.webip"></Input>
         </FormItem>
         <FormItem prop="webaccesstype">
           <p style="margin:10px">网站接入方式</p>
-          <Input :readonly="true" type="text" v-model="updateHostUnitList.webaccesstype"/>
+          <Input :readonly="true" type="text" v-model="updateHostUnitList.webaccesstype"></Input>
         </FormItem>
         <FormItem prop="webserveraddress">
           <p style="margin:10px">服务器放置地</p>
-          <Input :readonly="true" type="text" v-model="updateHostUnitList.webserveraddress"/>
+          <Input :readonly="true" type="text" v-model="updateHostUnitList.webserveraddress"></Input>
         </FormItem>
       </Form>
     </Modal>
@@ -869,6 +899,10 @@
         }
       };
       return {
+        //网站核验单大图
+        visibleWeb:false,
+        //营业执照大图
+        visible:false,
         //是否显示重新输入
         mainCompanyAreaHide: null,
         mainCompanyCertificatesTypeHide: null,
@@ -1112,6 +1146,7 @@
               this.city = arr[1];
               this.district = arr[2];
               console.log(this.hostUnitList);
+              this.hostUnitList.webrecorduthenticityurl.slice(",");
               //查询错误的备案信息然后显示出来重新输入
               for (let item of this.hostUnitList.errorMessage) {
                 item == "offaceNumber"
@@ -1307,7 +1342,8 @@
             this.certificateTypeList = item.certificate;
           }
         });
-      }
+      },
+
       // 重新选择区，重新校验
       // changeDistrict() {
       //   this.$refs.mainUnitInformation.validateField("district", valid => {

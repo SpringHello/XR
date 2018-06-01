@@ -83,7 +83,7 @@
                 <div style="color:#2A99F2;">收起</div>
               </div>
               <div style="margin:10px 0 20px 0;">
-                <Button type="primary">CORS规则配置</Button>
+                <Button type="primary" @click="cors = true">CORS规则配置</Button>
                 <Button type="primary">CORS规则编辑器</Button>
               </div>
               <Table></Table>
@@ -98,6 +98,25 @@
                 新睿云对象存储支持将自己的存储空间配置成静态网站托管模式，启动静态网站托管模式后，请通过XXXXX（域名）或您绑定的自定义域名进行访问。
               </div>
               <p style="color:#999999;font-size:14px;">提示：静态网站托管的默认index页配置在具有公有读取权限的Bucket下生效，自定义错误页和访问重定向在全部权限的Bucket下生效。</p>
+                <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
+                  <FormItem label="自定义">
+                    <Input v-model="formValidate.name" placeholder="Enter your name"></Input>
+                    <p>请输入浏览器能够识别的文件作为自定义index页的文件名，为空则不启用自定义index页设置，不允许输入/.</p>
+                  </FormItem>
+                  <FormItem label="自定义错误页">
+                    <Input v-model="formValidate.name" placeholder="Enter your name"></Input>
+                    <p>请输入浏览器能够识别的文件作为自定义错误页的文件名，为空则不启用自定义错误页设置</p>
+                  </FormItem>
+                  <FormItem label="访问重定向配置">
+                    <div>
+                        400<Input v-model="formValidate.name" placeholder="Enter your name"></Input>
+                        403<Input v-model="formValidate.name" placeholder="Enter your name"></Input>
+                        404<Input v-model="formValidate.name" placeholder="Enter your name"></Input>
+                    </div>
+                    <p>请输入遇到4XX错误时需要重定向到的完整目标域（支持域名或IP格式，可带端口号），为空则不启用重定向设置</p>
+                  </FormItem>
+                </Form>
+              <Button type="primary">保存设置</Button>
             </div>
           </TabPane>
         </Tabs>
@@ -108,7 +127,7 @@
       title="上传文件"
       :scrollable='true'
     >
-      <p style="font-size:14px;color:#999999;">控制台上传单个文件大小不超过1GB，如需上传更大的文件请使用新睿云对象存储提供的<span style="color:#2A9AF3;cursor:pointer;">API</span></p>
+      <p style="font-size:14px;color:#999999;line-height: 20px;">控制台上传单个文件大小不超过1GB，如需上传更大的文件请使用新睿云对象存储提供的<span style="color:#2A9AF3;cursor:pointer;">API</span></p>
       <p style="font-size:14px;color:#666666;margin:10px 0;">上传路径  文件名称/</p>
       <div class="upload_div">
         <span>待上传文件</span>
@@ -162,7 +181,7 @@
     >
       <div class="space_folder">
         <p style="font-size:14px;color:#666666;">文件名称</p><span></span>
-        <span>外链</span><Input type="text" style="width:317px;" v-model="flies"/>
+        <span>外链</span><Input type="text" style="width:317px;" v-model="flies"></Input>
         <br><br>
         <span>有效期</span><Select v-model="term" style="width:240px;">
         <Option v-for="item in termList" :value="item.term" :key="item.index">{{item.label}}</Option>
@@ -224,6 +243,19 @@
       <Input :disabled='whiteList' v-model="whiteListValue" style="width:420px;" :rows="4" type="textarea"/><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
     </Modal>
 
+    <!--自定义权限编辑-->
+    <Modal
+      v-model="jurisdiction"
+      title="添加自定义权限"
+      :scrollable='true'
+      width="550px"
+      @on-ok="jurisdictionClick"
+    >
+     <pre style="background-color:#FDF6E3;">
+       <code></code>
+     </pre>
+    </Modal>
+
     <!--修改自定义权限-->
     <Modal
       v-model="updateDiction"
@@ -277,6 +309,47 @@
       </div>
       <br>
       <Input :disabled='whiteList' v-model="updateWhiteListValue" style="width:420px;" :rows="4" type="textarea"></Input><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+    </Modal>
+
+
+    <!--跨域访问CRORS添加规则-->
+    <Modal
+      v-model="cors"
+      title="跨域访问CRORS添加规则"
+      :scrollable='true'
+      width="550px"
+      @on-ok="jurisdictionClick"
+    >
+      <div>
+        <p>来源Origin</p>
+        <Input :disabled='grant' v-model="updateGrantValue" style="width:420px;" :rows="4" type="textarea" placeholder="例如：http://10.100.100.100:8001 https://www.xrcloud.net"></Input><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+        <p style="color: #999999;">来源可设置多个，每行一个，以回车间隔，每行最多能有一个通配符(*)</p>
+      </div>
+      <br>
+      <div style="width:366px;display:flex;">
+        <div style="width:115px;font-size:14px;color:#333333;">操作Methods</div>
+        <div style="width:300px;">
+          <CheckboxGroup v-model="updateChannel">
+            <Checkbox label="put">Put</Checkbox>
+            <Checkbox label="get">Get</Checkbox>
+            <Checkbox label="post">Post</Checkbox>
+            <Checkbox label="head">Head</Checkbox>
+            <Checkbox label="delete">Delete</Checkbox>
+          </CheckboxGroup>
+        </div>
+        <p>来源可设置多个，每行一个，以回车间隔。</p>
+      </div>
+
+      <div style="width:366px;display:flex;">
+        <div style="width:115px;font-size:14px;color:#333333;">Expose-Headers</div>
+        <br>
+        <Input :disabled='whiteList' v-model="updateWhiteListValue" style="width:420px;" :rows="4" type="textarea"></Input><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+      </div>
+
+      <div>
+        <p>缓存Max Age</p>
+        <Input type="text" style="width:317px" placeholder="请输入0-999999999的正整数"></Input>
+      </div>
     </Modal>
   </div>
 </template>
@@ -540,7 +613,9 @@
         updateSources:'',
         updateChannel:'',
         updateGrantValue:'',
-        updateUsers:''
+        updateUsers:'',
+        //cors弹窗
+        cors:false
       };
     },
     methods: {
