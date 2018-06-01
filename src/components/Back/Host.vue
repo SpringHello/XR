@@ -1173,7 +1173,7 @@
               })
               this.isIps = iparr.join()
               // 清空续费弹窗数据
-              this.bindRenewalVal = []
+              this.bindRenewalVal = ['ip', 'disk']
               this.cost = '--'
               this.originCost = '--'
               this.renewalType = ''

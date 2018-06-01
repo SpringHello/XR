@@ -1031,7 +1031,7 @@
                 this.isIps = ''
               }
               // 清空续费弹窗数据
-              this.bindRenewalIp = []
+              this.bindRenewalIp = ['ip']
               this.originCost = '--'
               this.cost = '--'
               this.renewalType = ''
