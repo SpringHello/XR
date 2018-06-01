@@ -16,7 +16,7 @@
         </div>
         <div v-if="photograph === 1">
           <div class="description">
-            <p>1.下载填写完成<span>《网站备案信息真实性核验单》</span>，按要求填写完成并盖章。</p>
+            <p>1.下载填写完成<a href="keepOnRecord/check.doc">《网站备案信息真实性核验单》</a>，按要求填写完成并盖章。</p>
             <p>2.携带核验单至指定位置，提交核验单并完成拍现场拍照。</p>
           </div>
           <div class="footer">
@@ -27,7 +27,7 @@
         </div>
         <div v-if="photograph === 2 && nextStep === false">
           <div class="description">
-            <p>1.下载填写完成<span>《网站备案信息真实性核验单》</span>，按要求填写完成并盖章，将填写完成核验单邮寄至新睿云。</p>
+            <p>1.下载填写完成<a href="keepOnRecord/check.doc">《网站备案信息真实性核验单》</a>，按要求填写完成并盖章，将填写完成核验单邮寄至新睿云。</p>
             <p>2.由新睿云为您邮寄免费幕布，收到后根据实例要求自行拍照上传。</p>
           </div>
           <div class="footer">
@@ -39,7 +39,7 @@
           <div class="description">
             <p>收件地址</p>
             <Form ref="receiveForm" :model="receiveForm" :rules="receiveFormRuleValidate"
-                  :label-width="70">
+                  :label-width="90">
               <FormItem label="地址" prop="address">
                 <Input v-model="receiveForm.address" placeholder="请输入地址"
                        style="width: 500px" :readonly="canUpdate"></Input>
@@ -81,6 +81,8 @@
                   :show-upload-list="false"
                   :with-credentials="true"
                   action="file/upFile.do"
+                  :format="['jpg','jpeg','png']"
+                  :on-format-error="handleFormatJpg"
                   :on-success="photoImg">
                   <div class="item-content-text" v-if="upload.photo===''">
                     点击选择文件
@@ -334,7 +336,12 @@
             })
           }
         })
-      }
+      },
+      handleFormatJpg() {
+        this.$Message.info({
+          content: '请选择jpg、png、jpeg类型的文件进行上传'
+        });
+      },
     },
   }
 </script>

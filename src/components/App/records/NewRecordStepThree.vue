@@ -77,6 +77,7 @@
                     :with-credentials="true"
                     action="file/upFile.do"
                     :format="['jpg','jpeg','png']"
+                    :on-format-error="handleFormatJpg"
                     :max-size="2048"
                     :on-success="IDCardFront"
                     :before-upload="mark(index)">
@@ -105,6 +106,7 @@
                     :with-credentials="true"
                     action="file/upFile.do"
                     :format="['jpg','jpeg','png']"
+                    :on-format-error="handleFormatJpg"
                     :max-size="2048"
                     :on-success="IDCardBack"
                     :before-upload="mark(index)">
@@ -136,6 +138,8 @@
                     type="drag"
                     :show-upload-list="false"
                     :with-credentials="true"
+                    :format="['jpg','jpeg','png']"
+                    :on-format-error="handleFormatJpg"
                     action="file/upFile.do"
                     :on-success="combine">
                     <div class="item-content-text" v-if="uploadForm.combine==''">
@@ -455,6 +459,11 @@
       handleFormatError() {
         this.$Message.info({
           content: '请选择jpg、png、jpeg、doc、docx、pdf类型的文件进行上传'
+        });
+      },
+      handleFormatJpg() {
+        this.$Message.info({
+          content: '请选择jpg、png、jpeg类型的文件进行上传'
         });
       },
       // 提交资料
