@@ -305,15 +305,16 @@
               </Option>
             </Select>
           </FormItem>
+          <div style="font-size:16px;">
+            资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{ratesChangeCost}}/</span></span>
+            <span style="text-decoration: line-through">原价{{ratesChangeOriginalCost}}</span>
+          </div>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <div style="font-size:16px;float:left">
-          资费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{ratesChangeCost}}
-          <span v-if="ratesChangeTime != ''">/</span>
-          <span style="font-size: 15px;">{{ratesChangeTime}}<span v-if="ratesChangeType == 'year' && ratesChangeTime != ''">年</span>
-          <span v-if="ratesChangeType == 'month' && ratesChangeTime != ''">月</span></span>
-        </span>
+        <div style="text-align:left">
+          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:24px;">全民普惠，3折减单，最高减免7000元！
+          </router-link>
         </div>
         <Button type="ghost" @click="showModal.ratesChange=false">取消</Button>
         <Button type="primary" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
@@ -696,6 +697,7 @@
         renewalConnectionsHost: '',
         // 变更资费所需
         ratesChangeCost: '--',
+        ratesChangeOriginalCost: '--',
         ratesChangeType: '',
         ratesChangeTime: '',
         timeOptions: {
@@ -1336,6 +1338,7 @@
       ratesChangeTime(time) {
         if (time == '') {
           this.ratesChangeCost = '--'
+          this.ratesChangeOriginalCost = '--'
         } else {
           let url = 'information/getYjPrice.do'
           this.$http.get(url, {
@@ -1348,6 +1351,13 @@
             .then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.ratesChangeCost = response.data.result.toFixed(2)
+                this.ratesChangeOriginalCost = response.data.result
+                if(response.data.cuspon) {
+                  this.ratesChangeOriginalCost = Number((this.ratesChangeOriginalCost + response.data.cuspon).toFixed(2))
+                }
+                if(response.data.continueDiscount) {
+                  this.ratesChangeOriginalCost = (this.ratesChangeOriginalCost + response.data.continueDiscount).toFixed(2)
+                }
               }
             })
         }
