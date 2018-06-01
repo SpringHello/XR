@@ -39,6 +39,11 @@ axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud/'
 
  // axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
 
+// axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud/'
+
+//axios.defaults.baseURL = 'http://42.56.89.236:8080/ruirados/'
+  // axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
+
 // axios.defaults.baseURL = 'http://192.168.3.187:8080/ruirados/'
 
 
