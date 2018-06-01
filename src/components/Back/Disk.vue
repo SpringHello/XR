@@ -1017,6 +1017,7 @@
               this.renewalHost = false
             } else {
               this.renewalHost = true
+              this.renewalOther = ['续费关联云主机']
               this.renewalConnectionsHost = response.data.result[0].attachComputer[0].id
             }
             this.showModal.renewDisk = true

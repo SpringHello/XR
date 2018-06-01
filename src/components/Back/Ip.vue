@@ -1125,10 +1125,12 @@
             if (response.data.result[0].attachComputer.length !== 0) {
               this.renewalHostID = response.data.result[0].attachComputer[0].id
               this.renewalHost = true
+              this.renewalOther = ['续费关联云主机']
             }
             if (response.data.result[0].attachNat.length !== 0) {
               this.renewalNATID = response.data.result[0].attachNat[0].id
               this.renewalNAT = true
+              this.renewalOther = ['续费关联NAT网关']
             }
             this.showModal.renew = true
           }
