@@ -18,10 +18,17 @@
           <p>专业的云数据库服务，支持Mysql、SQL Server、PostgreSQL、MangoDB引擎，提供简易方便的Web界面管理、可靠的数据备份和恢复、完备的安全管理、完善的监控等功能。</p>
         </div>
         <div class="operator-bar">
-          <Button type="primary">创建云数据库</Button>
+          <Button type="primary" @click="listmirror">
+            <!-- <router-link to="/ruicloud/buy" style="color:#fff">创建云数据库</router-link> -->
+            列出云数据库镜像
+          </Button>
+          <Button type="primary" @click="createOrder">
+            <!-- <router-link to="/ruicloud/buy" style="color:#fff">创建云数据库</router-link> -->
+            创建云数据库
+          </Button>
         </div>
         <div class="databases">
-          <Table :columns="databaseColumns" :data="databaseData"></Table>
+          <Table :columns="databaseColumns" :data="dataBaseData"></Table>
           <p>点击查看<span>如何连接数据库？</span></p>
         </div>
       </div>
@@ -166,19 +173,6 @@ import axios from 'axios'
 import regExp from '../../util/regExp'
 
 export default {
-  /* beforeRouteEnter(to, from, next) {
-     // 获取云数据库列表数据
-     let dataBaseResponse = axios.get('database/listDB.do', {
-       params: {
-         zoneId: $store.state.zone.zoneid
-       }
-     })
-     Promise.all([dataBaseResponse]).then((ResponseValue) => {
-       next(vm => {
-         vm.setDataBases(ResponseValue[0])
-       })
-     })
-   },*/
   data () {
     const validaRegisteredName = regExp.validaRegisteredName
     const validateNewport = (rule, value, callback) => {
@@ -193,10 +187,10 @@ export default {
       }
     }
     return {
+      templateid: '',
       databaseColumns: [
         {
           title: '数据库名称',
-          key: 'name',
           ellipsis: true,
           render: (h, params) => {
             return h('div', {
@@ -209,34 +203,43 @@ export default {
                   this.$router.push({
                     path: 'cloudDataManage',
                     query: {
-                      computername: params.row.name,
-                      zoneid: params.row.name,
-                      vmid: params.row.name,
-                      instancename: params.row.name,
-                      connecturl: params.row.name,
-                      id: params.row.name
+                      // computername: params.row.name,
+                      // zoneid: params.row.name,
+                      // vmid: params.row.name,
+                      // instancename: params.row.name,
+                      // connecturl: params.row.name,
+                      // id: params.row.name
                     }
                   })
                 }
               }
-            }, params.row.name)
+            }, params.row.computername)
           }
-        }, {
+        },
+        {
           title: '系统',
-          key: 'system',
+          key: 'templatename',
           ellipsis: true,
-        }, {
+        },
+        {
           title: '配置规格',
-          key: 'config',
+          key: 'serviceoffername',
           ellipsis: true,
-        }, {
+        },
+        {
           title: '状态',
           key: 'status',
-        }, {
+          render: (h, params) => {
+           var text = params.row.status == -1 ? '异常' : '正常'
+            return h('span', {}, text)
+          }
+        },
+        {
           title: '内网地址',
-          key: 'innerIP',
+          key: 'privateip',
           ellipsis: true,
-        }, {
+        },
+        {
           title: '数据库端口',
           ellipsis: true,
           render: (h, params) => {
@@ -254,11 +257,13 @@ export default {
               }
             }, '修改端口')])
           }
-        }, {
+        },
+        {
           title: '创建时间',
-          key: 'time',
+          key: 'createtime',
           ellipsis: true,
-        }, {
+        },
+        {
           title: '操作',
           render: (h, params) => {
             return h('div', {}, [h('span', {
@@ -266,6 +271,30 @@ export default {
                 color: '#2A99F2',
                 marginRight: '20px',
                 cursor: 'pointer',
+              },
+              on: {
+                click: () => {
+                  this.$message.confirm({
+                    title: '删除数据库',
+                    content: `数据库删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。`,
+                    onOk: () => {
+                      this.$http.get('information/deleteVM.do', {
+                        params: {
+                          id: this.currentHost[0].id
+                        }
+                      }).then(response => {
+                        if (response.status == 200 && response.data.status == 1) {
+                          this.$Message.success(response.data.message)
+                          this.getData()
+                        } else {
+                          this.$message.info({
+                            content: response.data.message
+                          })
+                        }
+                      })
+                    }
+                  })
+                }
               }
             }, '删除'), h('Dropdown', {
               props: {
@@ -314,26 +343,7 @@ export default {
             }, '数据库续费'), h('DropdownItem', {
               nativeOn: {
                 click: () => {
-                  this.$message.confirm({
-                    title: '删除数据库',
-                    content: `数据库删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。`,
-                    onOk: () => {
-                      this.$http.get('information/deleteVM.do', {
-                        params: {
-                          id: this.currentHost[0].id
-                        }
-                      }).then(response => {
-                        if (response.status == 200 && response.data.status == 1) {
-                          this.$Message.success(response.data.message)
-                          this.getData()
-                        } else {
-                          this.$message.info({
-                            content: response.data.message
-                          })
-                        }
-                      })
-                    }
-                  })
+                  
                 }
               }
             }, '删除数据库')])
@@ -341,15 +351,7 @@ export default {
           }
         },
       ],
-      databaseData: [{
-        name: '测试数据库',
-        system: '测试系统',
-        config: '测试配置',
-        status: '正常',
-        innerIP: '192.168.3.105',
-        dk: '80',
-        time: '2018-5-28',
-      }],
+      dataBaseData: [],
       showModal: {
         beforePortModify: false,
         portModify: false,
@@ -403,14 +405,74 @@ export default {
       },
     }
   },
+  beforeRouteEnter (to, from, next) {
+    // 获取云数据库列表数据
+    let dataBaseResponse = axios.get('database/listDB.do', {
+      params: {
+        zoneId: $store.state.zone.zoneid
+      }
+    })
+    Promise.all([dataBaseResponse]).then((ResponseValue) => {
+      next(vm => {
+        vm.listmirror()
+        vm.setDataBases(ResponseValue[0])
+      })
+    })
+  },
   created () {
   },
   methods: {
-    /*  setDataBases(res) {
-        if (res.data.status == 1) {
-          this.dataBaseData = res.data.result
+    setDataBases (response) {
+      if (response.status == 200 && response.data.status == 1) {
+        this.dataBaseData = response.data.result
+        console.log(this.dataBaseData)
+      }
+    },
+    listmirror () {
+      var params = {
+        zoneId: $store.state.zone.zoneid,
+      }
+      axios.get('database/listDbTemplates.do', { params }).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          var mirrorlist = []
+          mirrorlist = response.data.result.map(item => {
+            return item.systemtemplateid
+          })
+          this.templateid = mirrorlist.join()
+          // console.log(mirrorlist)
+          // this.$router.push('order')
+        } else {
+          this.$message.info({
+            content: response.data.message
+          })
         }
-      },*/
+      })
+    },
+    createOrder () {
+      var params = {
+        zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
+        templateId: this.templateid,
+        bandWidth: 2,
+        timeType: 'year',
+        timeValue: 1,
+        isAutoRenew: 0,
+        count: 1,
+        cpuNum: 1,
+        memory: 1,
+        networkId: 'no',
+        rootDiskType: 'sas',
+        vpcId: 'no',
+      }
+      axios.get('database/createDB.do', { params }).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.$router.push('order')
+        } else {
+          this.$message.info({
+            content: response.data.message
+          })
+        }
+      })
+    },
     beforePortModify () {
       this.showModal.beforePortModify = false
       this.showModal.portModify = true
