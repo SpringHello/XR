@@ -57,13 +57,13 @@
       <p class="main">1.活动时间： 即日起活动长期有效，数量有限，送完为止</p>
       <p class="main">2.活动对象： 新注册并已通过个人／企业认证，且未使用过本平台任何资源的用户。每个用户仅限领取一次，不可重复试用</p>
       <p class="main">3.资格详细规则：</p>
-      <p>1） 用户如果已购买、已体验过对应的产品，不能再次申请</p>
-      <p>2） 同一手机号对应的多个账号只能申请一次本活动的续费优惠</p>
-      <p>3） 同一个实名认证用户、同一个账号，仅可申请一次本活动的续费优惠</p>
+      <p class="tiny">1） 用户如果已购买、已体验过对应的产品，不能再次申请</p>
+      <p class="tiny">2） 同一手机号对应的多个账号只能申请一次本活动的续费优惠</p>
+      <p class="tiny">3） 同一个实名认证用户、同一个账号，仅可申请一次本活动的续费优惠</p>
       <p class="main">4.活动产品规则：</p>
-      <p>1） 免费产品中的资源可随时进行升级，升级价格以当前控制台价格为准</p>
-      <p>2） 在各产品免费使用期间，若对免费资源进行了销毁，则视为放弃免费使用权</p>
-      <p>3） 此活动中的续费优惠券有效期30天，仅限包年／月续费使用，且不可与其他优惠券、现金券相互叠加，具体优惠价格以实际订单为准；</p>
+      <p class="tiny">1） 免费产品中的资源可随时进行升级，升级价格以当前控制台价格为准</p>
+      <p class="tiny">2） 在各产品免费使用期间，若对免费资源进行了销毁，则视为放弃免费使用权</p>
+      <p class="tiny">3） 此活动中的续费优惠券有效期30天，仅限包年／月续费使用，且不可与其他优惠券、现金券相互叠加，具体优惠价格以实际订单为准；</p>
       <p class="main">5.为保证活动的公平公正，新睿云有权对恶意刷抢（如通过程序等技术手段）活动资源、领取后3天内未使用资源、及利用资源从事违法违规行为的用户收回免费套餐使用及5折优惠续费资格</p>
       <p class="main">6.活动最终解释权在法律范围内归新睿云所有</p>
     </div>
@@ -160,6 +160,18 @@
     },
     created() {
     },
+    beforeRouteEnter(to, from, next){
+      axios.get('', {
+        params: {
+          url: to.query.url
+        }
+      }).then(response => {
+        next(vm => {
+          vm.setData(response.data.result)
+        })
+      })
+
+    },
     components: {},
     methods: {
       vail(field) {
@@ -248,6 +260,9 @@
           this.loginModal = true
           return
         }
+      },
+      setData(result){
+
       }
     },
     computed: {},
@@ -343,9 +358,24 @@
         font-size: 18px;
         color: rgba(51, 51, 51, 1);
         line-height: 18px;
+        margin-bottom: 20px;
+        &::before {
+          content: '';
+          display: inline-block;
+          width: 5px;
+          height: 18px;
+          margin-right: 10px;
+          background-color: #E45543;
+          vertical-align: bottom;
+        }
       }
-      .main{
+      .main {
         font-size: 18px;
+        color: rgba(51, 51, 51, 1);
+        line-height: 28px;
+      }
+      .tiny {
+        font-size: 12px;
         color: rgba(51, 51, 51, 1);
         line-height: 18px;
       }
