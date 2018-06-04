@@ -150,7 +150,7 @@
                   </Upload>
                 </div>
                 <div class="item-img">
-                  <img class="amplification"  src="../../../assets/img/records/records-img3.png">
+                  <img class="amplification" src="../../../assets/img/records/records-img3.png">
                   <p>示例图</p>
                 </div>
               </div>
@@ -278,7 +278,7 @@
       </div>
       <div class="content-footer">
         <button @click="$router.go(-1)">上一步，填写网站信息</button>
-        <button style="margin-left: 20px" @click="netStep()">下一步，提交初审</button>
+        <button style="margin-left: 20px" @click="netStep()">下一步，办理拍照/上传资料</button>
       </div>
     </div>
   </div>
@@ -432,7 +432,6 @@
           let index = array.length - 1
           let len = array[index].length
           let suffix = array[index].substring(len - 3)
-          console.log(suffix)
           let param = {
             name: array[index],
             url: response.result,
@@ -510,6 +509,22 @@
           })
           return
         }
+        let companyResponsibilityUrlPositive = this.uploadForm.IDPhotoList.map(item => {
+          return item.IDCardFront
+        })
+        let companyResponsibilityUrlBack = this.uploadForm.IDPhotoList.map(item => {
+          return item.IDCardBack
+        })
+        let certifiedDomainNoCertificationDefaultList = this.uploadForm.certifiedDomainNoCertificationDefaultList.map(item => {
+          return item.url
+        })
+        let otherFile = this.uploadForm.otherFile.map(item => {
+          return item.url
+        })
+        let CheckList = this.uploadForm.CheckList.map(item => {
+          return item.url
+        })
+        let mainCompanyArea = this.mainUnitInformation.maincompanyarea ? this.mainUnitInformation.maincompanyarea : (this.mainUnitInformation.province + '-' + this.mainUnitInformation.city + '-' + this.mainUnitInformation.district)
         let paramsList = this.siteListStr.map(item => {
           let param = {
             webResponsibilityLinkName: item.basicInformation.principalName,
@@ -532,62 +547,37 @@
           }
           return param
         })
-        // 添加网站信息参数
-        let params = {
+        //  添加网站信息参数
+        let siteParams = {
           list_web_message: JSON.stringify(paramsList)
         }
-        let companyResponsibilityUrlPositive = this.uploadForm.IDPhotoList.map(item => {
-          return item.IDCardFront
-        })
-        let companyResponsibilityUrlBack = this.uploadForm.IDPhotoList.map(item => {
-          return item.IDCardBack
-        })
-        let certifiedDomainNoCertificationDefaultList = this.uploadForm.certifiedDomainNoCertificationDefaultList.map(item => {
-          return item.url
-        })
-        let otherFile = this.uploadForm.otherFile.map(item => {
-          return item.url
-        })
-        let CheckList = this.uploadForm.CheckList.map(item => {
-          return item.url
-        })
-        let mainCompanyArea = this.mainUnitInformation.maincompanyarea ? this.mainUnitInformation.maincompanyarea : (this.mainUnitInformation.province + '-' + this.mainUnitInformation.city + '-' + this.mainUnitInformation.district)
-        let addMainCompany = axios.get('recode/addMainCompany.do', {
-          params: {
-            mainCompanyArea: mainCompanyArea,
-            mainCompanyCertificatesType: this.mainUnitInformation.certificateType,
-            mainCompanyNature: this.mainUnitInformation.unitProperties,
-            mainCompanyNumber: this.mainUnitInformation.certificateNumber,
-            mainCompanyName: this.mainUnitInformation.unitName,
-            mainCompanyCertificatesLoaction: this.mainUnitInformation.certificatesResidence,
-            mainCompanyCommunicatLocation: this.mainUnitInformation.mailingAddress,
-            InvestorName: this.mainUnitInformation.investorName,
-            legalName: this.mainUnitInformation.legalPersonName,
-            legalCertificatesType: this.mainUnitInformation.legalPersonCertificateType,
-            legalCertificatesNumber: this.mainUnitInformation.legalPersonIDNumber,
-            officeNumber: this.mainUnitInformation.officePhone,
-            phone: this.mainUnitInformation.phoneNumber,
-            email: this.mainUnitInformation.emailAddress,
-            zoneId: this.zoneId,
-            companyResponsibilityUrlPositive: companyResponsibilityUrlPositive + '',
-            companyResponsibilityUrlBack: companyResponsibilityUrlBack + '',
-            hostCompanyUrl: this.uploadForm.combine,
-            domainCertificateUrl: certifiedDomainNoCertificationDefaultList + '',
-            otherDataUrl: otherFile + '',
-            webRecordAuthenticityUrl: CheckList + '',
-          }
-        })
-        let addMainWeb = axios.post('recode/addMainWeb.do', params)
-        Promise.all([addMainCompany, addMainWeb]).then(response => {
-          if ((response[0].status == 200 && response[0].data.status == 1) && (response[1].status == 200 && response[1].data.status == 1)) {
-            this.$router.push('newRecordStepFour')
-            sessionStorage.clear()
-          } else {
-            this.$message.info({
-              content: '平台开小差了，请稍候再试'
-            })
-          }
-        })
+        //  主体信息参数
+        let mainParams = {
+          mainCompanyArea: mainCompanyArea,
+          mainCompanyCertificatesType: this.mainUnitInformation.certificateType,
+          mainCompanyNature: this.mainUnitInformation.unitProperties,
+          mainCompanyNumber: this.mainUnitInformation.certificateNumber,
+          mainCompanyName: this.mainUnitInformation.unitName,
+          mainCompanyCertificatesLoaction: this.mainUnitInformation.certificatesResidence,
+          mainCompanyCommunicatLocation: this.mainUnitInformation.mailingAddress,
+          InvestorName: this.mainUnitInformation.investorName,
+          legalName: this.mainUnitInformation.legalPersonName,
+          legalCertificatesType: this.mainUnitInformation.legalPersonCertificateType,
+          legalCertificatesNumber: this.mainUnitInformation.legalPersonIDNumber,
+          officeNumber: this.mainUnitInformation.officePhone,
+          phone: this.mainUnitInformation.phoneNumber,
+          email: this.mainUnitInformation.emailAddress,
+          zoneId: this.zoneId,
+          companyResponsibilityUrlPositive: companyResponsibilityUrlPositive + '',
+          companyResponsibilityUrlBack: companyResponsibilityUrlBack + '',
+          hostCompanyUrl: this.uploadForm.combine,
+          domainCertificateUrl: certifiedDomainNoCertificationDefaultList + '',
+          otherDataUrl: otherFile + '',
+          webRecordAuthenticityUrl: CheckList + '',
+        }
+        sessionStorage.setItem('mainParamsStr',JSON.stringify(mainParams))
+        sessionStorage.setItem('siteParamsStr',JSON.stringify(siteParams))
+        this.$router.push('NewRecordStepFour')
       },
     },
     mounted() {
@@ -662,11 +652,11 @@
             border: 1px solid #d8d8d8;
             margin-top: 20px;
             height: 230px;
-            >img{
+            > img {
               height: 203px;
               cursor: zoom-in;
               transition: all 0.6s;
-              &:hover{
+              &:hover {
                 transform: scale(1.6);
               }
             }
@@ -714,10 +704,10 @@
                 width: 164px;
                 height: 120px;
               }
-              .amplification{
+              .amplification {
                 cursor: zoom-in;
                 transition: all 0.6s;
-                &:hover{
+                &:hover {
                   transform: scale(1.6);
                 }
               }
