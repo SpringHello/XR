@@ -31,15 +31,15 @@
             step: 1
           },
           {
-            src: require('../../../assets/img/records/records-icon11.png'),
-            onSrc: require('../../../assets/img/records/records-icon16.png'),
-            title: '等待初审',
-            step: 2
-          },
-          {
             src: require('../../../assets/img/records/records-icon12.png'),
             onSrc: require('../../../assets/img/records/records-icon17.png'),
             title: '上传资料/办理拍照',
+            step: 2
+          },
+          {
+            src: require('../../../assets/img/records/records-icon11.png'),
+            onSrc: require('../../../assets/img/records/records-icon16.png'),
+            title: '等待初审',
             step: 3
           },
           {
