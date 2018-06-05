@@ -20,7 +20,7 @@ export default {
     },
     toolbox: {
         feature: {
-            saveAsImage: {}
+            saveAsImage: {pixelRatio: 2}
         }
     },
     xAxis: {

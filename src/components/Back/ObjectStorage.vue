@@ -44,7 +44,7 @@
                   <li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>
                 </ul>
                 <div class="chart-rig">
-                  <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button> -->
+                   <!--<Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button>-->
                   <ul class="objectList">
                     <li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>
                   </ul>
@@ -71,7 +71,7 @@
               <chart class="echarts" :options="rwNumber"></chart>
             </div>
           </TabPane>
-          <TabPane label="空间管理" >
+          <TabPane label="空间管理">
             <tabOne></tabOne>
           </TabPane>
           <TabPane label="用量监控">
@@ -225,7 +225,7 @@
       //下载统计图
       dowloda(){
         var img = new Image();
-        img.src = this.rwPolar.getDataURL({
+        img.src = disk.getDataURL({
           pixelRatio:2,
           backgroundColor:'#ffffff'
         })

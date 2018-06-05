@@ -80,13 +80,16 @@
             <div class="setting">
               <div  style="display:flex;">
                 <div style="width:97%;font-size:18px;color:#333333;">跨域访问设置</div>
-                <div style="color:#2A99F2;">收起</div>
+                  <div>
+                    <div class="down"></div>
+                    <span style="color: #2A99F2">收起</span>
+                  </div>
               </div>
               <div style="margin:10px 0 20px 0;">
                 <Button type="primary" @click="cors = true">CORS规则配置</Button>
                 <Button type="primary">CORS规则编辑器</Button>
               </div>
-              <Table></Table>
+              <Table :columns="corstList" :data="corsData"></Table>
             </div>
             <br>
             <div>
@@ -180,12 +183,14 @@
       :scrollable='true'
     >
       <div class="space_folder">
-        <p style="font-size:14px;color:#666666;">文件名称</p><span></span>
-        <span>外链</span><Input type="text" style="width:317px;" v-model="flies"></Input>
+        <p style="font-size:14px;color:#666666;">文件名称</p>
+        <span>有效期</span>
+        <Select v-model="term" style="width:240px;">
+          <Option v-for="item in termList" :value="item.term" :key="item.index">{{item.label}}</Option>
+        </Select>
+        <Button type="primary" @click="geturl">获取</Button>
         <br><br>
-        <span>有效期</span><Select v-model="term" style="width:240px;">
-        <Option v-for="item in termList" :value="item.term" :key="item.index">{{item.label}}</Option>
-      </Select>
+        <span>外链</span><Input type="text" style="width:317px;" v-model="flies"  disabled="true"></Input>
       </div>
     </Modal>
     <!-- 自定义权限 -->
@@ -614,17 +619,59 @@
         updateGrantValue:'',
         updateUsers:'',
         //cors弹窗
-        cors:false
-      };
+        cors:false,
+        //cors访问规则表头
+        corstList:[
+          {
+            key:'origin',
+            title:'来源Allowed Origin'
+          },
+          {
+            key:'methods',
+            title:'Allowed Methods'
+          },
+          {
+            key:'headers',
+            title:'Allowed Headers'
+          },
+          {
+            key:'exposed',
+            title:'Exposed Headers'
+          },
+          {
+            key:'age',
+            title:'缓存Max Age'
+          },
+          {
+            title:'操作',
+            render : (h,params)=>{
+              return h('div',[
+                h('span',{
+                  style:{
+                    color:'#2A99F2',
+                    marginRight:'10px'
+                  }
+                },'修改'),
+                h('span',{
+                  style:{
+                    color:'#2A99F2'
+                  }
+                },'删除')
+              ])
+            }
+          }
+        ],
+        corsData:[]
+      }
     },
     methods: {
       //上传文件格式错误的方法
       handleFormatError(file) {
-        this.$Message.error('格式错误[○･｀Д´･ ○]');
+        this.$Message.error('格式错误');
       },
       //上传文件最大限制方法
       handleMaxSize() {
-        this.$Message.error('单文件最大只能上传1GB哦~( ˘•ω•˘ )');
+        this.$Message.error('单文件最大只能上传1GB哦');
       },
       //上传文件之前应用的方法
       handleBeforeUpload(file) {
@@ -637,16 +684,16 @@
       //上传文件成功的方法
       handleSuccess(response) {
         if(response.status == '1'){
-          this.$Message.success('上传成功ˊ_>ˋ');
+          this.$Message.success('上传成功');
           this.filesList();
         }else{
-          this.$Message.error('上传失败ˊ_>ˋ');
+          this.$Message.error('上传失败');
         }
         console.log(this.fileUpdata);
       },
       //文件上传失败
       handleError(error){
-        this.$Message.error('上传失败_(:3」∠)_');
+        this.$Message.error('上传失败');
       },
       //上传文件过程的方法
       handleUpload(file,event){
@@ -765,8 +812,24 @@
             this.$Message.error('切换权限失败');
           }
         })
-      }
-      //获取空间详情
+      },
+    /**
+     *获取外链
+     */
+      geturl(){
+        this.$http.post('object/geturl.do',{
+          bucketName:name,
+          timelimit:this.term,
+
+        }).then(res => {
+          if(res.data.status == '1'){
+            this.flies = res.data.data.data;
+          }else{
+            this.$Message.error(res.data.msg);
+          }
+        })
+     }
+    //获取空间详情
       // bucketDetails() {
       //
       //   this.$http
@@ -942,5 +1005,32 @@
     border:1px solid #2A99F2;
     border-radius:4px;
     margin:20px 0 10px 0;
+  }
+  .down{
+    color:#2A99F2;
+    width: 17px;
+    height: 9px;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transition: all 0.3s;
+    cursor:pointer;
+  }
+  .down::before{
+    content:'';
+    position: absolute;
+    top: 0;
+    width: 17px;
+    height: 9px;
+    border: 1px solid #2A99F2;
+    border-top-style:none ;
+    border-right-style: none;
+  }
+  .downlower{
+    transform: rotate(-225deg);
+    -webkit-transform: rotate(-225deg);
+    -moz-transform: rotate(-225deg);
+    -ms-transform: rotate(-225deg);
   }
 </style>
