@@ -1,6 +1,6 @@
 <template>
   <div>
-    <records></records>
+  <!--  <records></records>-->
     <o-step :onStep="4" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
     <step :onStep="3" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
     <div class="body">
@@ -24,7 +24,6 @@
       next(vm => {
         var recordsType = sessionStorage.getItem('recordsType')
         vm.setData(recordsType)
-        window.scroll(0, 525)
       })
     },
     data() {
