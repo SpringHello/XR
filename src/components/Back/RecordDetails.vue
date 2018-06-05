@@ -419,7 +419,7 @@
           </div>
           <div style="width:50%;">
             <div style="text-align: center">
-              <img @click="visibleWeb = true" style="height:222px;margin-bottom:25px;cursor: pointer;" :src="examples"/>
+              <img @click="visibleWeb = true" style="height:222px;margin-bottom:25px;cursor:zoom-in;" :src="examples"/>
               <p>示例图</p>
             </div>
           </div>
@@ -428,9 +428,12 @@
     </Modal>
 
     <!--网站核验单示例图大图-->
-    <Modal title="营业执照示例图" v-model="visibleWeb" :scrollable="true">
-      <img :src="examples" v-if="visibleWeb" style="width: 100%">
-    </Modal>
+    <div class="outImg is_activ" v-if="visibleWeb" @click="visibleWeb = false">
+      <div class="bigImg">
+        <img :src="examples" style=" transform: translate(-50%,-50%);-webkit-transform: translate(-50%,-50%);width: 100%;cursor:zoom-out;" @click="visibleWeb = false">
+      </div>
+    </div>
+
 
     <!-- 主办单位负责人照片 -->
     <Modal
@@ -554,17 +557,20 @@
           </div>
           <div style="width:50%;height:203px;">
             <div style="text-align: center">
-              <img @click="visible = true" style="height:144px;margin-bottom:20px;cursor: pointer;" src="../../assets/img/records/records-img3.png"/>
+              <img @click="visible = true" style="height:144px;margin-bottom:20px;cursor: zoom-in;" src="../../assets/img/records/records-img3.png"/>
               <p>示例图</p>
             </div>
           </div>
         </div>
       </div>
     </Modal>
+
     <!--营业执照示例图大图-->
-    <Modal title="营业执照示例图" v-model="visible" :scrollable="true">
-      <img src="../../assets/img/records/records-img3.png" v-if="visible" style="width: 100%">
-    </Modal>
+    <div class="outImg is_activ" v-if="visible" @click="visible = false">
+      <div class="bigImg">
+        <img src="../../assets/img/records/records-img3.png" @click="visible = false"  style="transform: translate(-50%,-50%);-webkit-transform: translate(-50%,-50%);width: 100%;cursor:zoom-out;cursor:zoom-out;">
+      </div>
+    </div>
     <!-- 域名证书 -->
     <Modal
       v-model="domainNameCertificate"
@@ -1869,6 +1875,27 @@
       }
 
     }
+  }
+  .outImg{
+    position: fixed;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: background-color .3s ease-in-out;
+    z-index: 9999;
+  }
+  .bigImg{
+    position:fixed;
+    top:50%;
+    left: 50%;
+
+    transition: transform .3s ease-in-out;
+    width:627px;
+    height: 866px;
+  }
+  .is_activ{
+    background-color: rgba(55,55,55,.6);
   }
 </style>
 
