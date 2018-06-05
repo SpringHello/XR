@@ -419,7 +419,7 @@
           </div>
           <div style="width:50%;">
             <div style="text-align: center">
-              <img @click="visibleWeb = true" style="height:222px;margin-bottom:25px;cursor: pointer;" src="../../assets/img/records/records-img4.png"/>
+              <img @click="visibleWeb = true" style="height:222px;margin-bottom:25px;cursor: pointer;" :src="examples"/>
               <p>示例图</p>
             </div>
           </div>
@@ -429,7 +429,7 @@
 
     <!--网站核验单示例图大图-->
     <Modal title="营业执照示例图" v-model="visibleWeb" :scrollable="true">
-      <img src="../../assets/img/records/records-img4.png" v-if="visibleWeb" style="width: 100%">
+      <img :src="examples" v-if="visibleWeb" style="width: 100%">
     </Modal>
 
     <!-- 主办单位负责人照片 -->
@@ -1184,7 +1184,9 @@
         //委托书路径
         keep:'',
         //网站核验单路径
-        single:''
+        single:'',
+        //网站核验单示例图路径
+        examples:''
       };
     },
     methods: {
@@ -1244,6 +1246,11 @@
               }else {
                 this.single = 'keepOnRecord/check.doc';
               }
+              //网站核验单示例图
+              const gd = require('../../assets/img/records/records-check1.jpg');
+              const qt = require('../../assets/img/records/records-check2.jpg');
+              region == '广东省' ? (this.examples = gd) :(this.examples = qt);
+
 
               //分割图片路径取出后缀名显示响应的文件类型图片
               let addy  = this.hostUnitList.domaincertificateurl.split(",");
