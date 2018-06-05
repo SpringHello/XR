@@ -382,7 +382,7 @@
       title="重新上传网站备案信息真实性核验单信息"
       :scrollable="true"
     >
-      <p style="margin-bottom:5px">1、点击下载<span style="color:#2A99F2;">《网站备案信息真实性核验单》</span></p>
+      <p style="margin-bottom:5px">1、点击下载<a :href="single" style="color:#2A99F2;">《网站备案信息真实性核验单》</a></p>
       <p style="margin-bottom:5px">2、查看核验单样例图，填写以下载的核验单，不得涂改</p>
       <p>3、请您保存3份签字的核验单原件以备后续环节试用</p>
       <div class="updatePhoto">
@@ -419,7 +419,7 @@
           </div>
           <div style="width:50%;">
             <div style="text-align: center">
-              <img @click="visibleWeb = true" style="height:222px;margin-bottom:25px;cursor: pointer;" src="../../assets/img/records/records-img4.png"/>
+              <img @click="visibleWeb = true" style="height:222px;margin-bottom:25px;cursor:zoom-in;" :src="examples"/>
               <p>示例图</p>
             </div>
           </div>
@@ -428,9 +428,12 @@
     </Modal>
 
     <!--网站核验单示例图大图-->
-    <Modal title="营业执照示例图" v-model="visibleWeb" :scrollable="true">
-      <img src="../../assets/img/records/records-img4.png" v-if="visibleWeb" style="width: 100%">
-    </Modal>
+    <div class="outImg is_activ" v-if="visibleWeb" @click="visibleWeb = false">
+      <div class="bigImg">
+        <img :src="examples" style=" transform: translate(-50%,-50%);-webkit-transform: translate(-50%,-50%);width: 100%;cursor:zoom-out;" @click="visibleWeb = false">
+      </div>
+    </div>
+
 
     <!-- 主办单位负责人照片 -->
     <Modal
@@ -554,17 +557,20 @@
           </div>
           <div style="width:50%;height:203px;">
             <div style="text-align: center">
-              <img @click="visible = true" style="height:144px;margin-bottom:20px;cursor: pointer;" src="../../assets/img/records/records-img3.png"/>
+              <img @click="visible = true" style="height:144px;margin-bottom:20px;cursor: zoom-in;" src="../../assets/img/records/records-img3.png"/>
               <p>示例图</p>
             </div>
           </div>
         </div>
       </div>
     </Modal>
+
     <!--营业执照示例图大图-->
-    <Modal title="营业执照示例图" v-model="visible" :scrollable="true">
-      <img src="../../assets/img/records/records-img3.png" v-if="visible" style="width: 100%">
-    </Modal>
+    <div class="outImg is_activ" v-if="visible" @click="visible = false">
+      <div class="bigImg">
+        <img src="../../assets/img/records/records-img3.png" @click="visible = false"  style="transform: translate(-50%,-50%);-webkit-transform: translate(-50%,-50%);width: 100%;cursor:zoom-out;cursor:zoom-out;">
+      </div>
+    </div>
     <!-- 域名证书 -->
     <Modal
       v-model="domainNameCertificate"
@@ -615,7 +621,7 @@
       :scrollable="true"
       :format="['jpg','jpeg','png','doc','docx','pdf']"
     >
-      <p>如前置审批材料，法人授权委托书等材料（点击下载<span style="color:#2A99F2;">法人委托书</span>）</p>
+      <p>如前置审批材料，法人授权委托书等材料（点击下载<a :href="keep" style="color:#2A99F2;">法人委托书</a>）</p>
       <div class="updatePhoto">
         <div class="updates">
           <div style="width:100%;height:309px;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'">
@@ -1180,7 +1186,13 @@
         otherData:[],
         //获取网站核验单
         webRecordData:[],
-        isAllUpate:true
+        isAllUpate:true,
+        //委托书路径
+        keep:'',
+        //网站核验单路径
+        single:'',
+        //网站核验单示例图路径
+        examples:''
       };
     },
     methods: {
@@ -1218,6 +1230,33 @@
               this.province = arr[0];
               this.city = arr[1];
               this.district = arr[2];
+              //委托书路径
+              let region   = this.hostUnitList.maincompanyarea.substring(0,this.hostUnitList.maincompanyarea.indexOf('-'));
+
+              if(region == '湖北省'){
+                this.keep = 'keepOnRecord/attorney_hubei.doc';
+              }else if(region == '湖南省'){
+                this.keep = 'keepOnRecord/attorney_hunan.doc';
+              }else if(region =='上海市'){
+                this.keep = 'keepOnRecord/attorney_shanghai.doc';
+              }else{
+                this.keep = 'keepOnRecord/attorney.doc';
+              }
+              //核验单路径
+              if(region == '广东省' && this.hostUnitList.maincompanynature =='个人'){
+                this.single = 'keepOnRecord/hyd_for_gd_business.doc';
+              }else if(region =='广东省' && this.hostUnitList.maincompanynature =='企业'){
+                this.single = 'keepOnRecord/hyd_for_gd_person.doc';
+              }else if(region =='浙江省'){
+                this.single = 'keepOnRecord/hyd_for_zj.doc';
+              }else {
+                this.single = 'keepOnRecord/check.doc';
+              }
+              //网站核验单示例图
+              const gd = require('../../assets/img/records/records-check1.jpg');
+              const qt = require('../../assets/img/records/records-check2.jpg');
+              region == '广东省' ? (this.examples = gd) :(this.examples = qt);
+
 
               //分割图片路径取出后缀名显示响应的文件类型图片
               let addy  = this.hostUnitList.domaincertificateurl.split(",");
@@ -1537,7 +1576,7 @@
           }
         });
       },
-
+      //
       // 重新选择区，重新校验
       // changeDistrict() {
       //   this.$refs.mainUnitInformation.validateField("district", valid => {
@@ -1626,6 +1665,7 @@
         background-color: #ffffff;
         color: #999;
         line-height: 138px;
+        text-align: center;
       }
       .item-content-text {
         width: 186px;
@@ -1835,6 +1875,27 @@
       }
 
     }
+  }
+  .outImg{
+    position: fixed;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transition: background-color .3s ease-in-out;
+    z-index: 9999;
+  }
+  .bigImg{
+    position:fixed;
+    top:50%;
+    left: 50%;
+
+    transition: transform .3s ease-in-out;
+    width:627px;
+    height: 866px;
+  }
+  .is_activ{
+    background-color: rgba(55,55,55,.6);
   }
 </style>
 
