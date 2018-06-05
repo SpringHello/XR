@@ -1,43 +1,51 @@
 <template>
   <div style="height:100%">
     <div class="top">
+      <div class="tleft">
+        <Select v-model="operating" style="width:200px" placeholder="发送远程指令" @on-change="change">
+          <Option v-for="(item,index) in operatingList" :value="index" :key="item">{{ item }}</Option>
+        </Select>
+      </div>
       <div class="tright">
         <p>提示：如果出现持续黑屏，说明系统处于休眠状态，按任意键可以激活。</p>
         <Button @click="confirm=true" style="margin-right: 10px;">重新连接</Button>
         <Button @click="showContact">修改远程连接密码</Button>
       </div>
     </div>
-    <iframe :src="linkURL" style="width:100%;height:100%"></iframe>
-    <Modal v-model="confirm" width="360" :mask-closable="false" :closable="false" scrollable>
-    <p slot="header">
-      <span>输入远程连接密码</span>
-    </p>
-    <div style="text-align:center">
-      <Input v-model="password" placeholder="请输入远程连接密码" :maxlength="15"></Input>
-    </div>
-    <div slot="footer">
-      <Button @click="confirm=false">取消</Button>
-      <Button type="primary" @click="link">连接</Button>
-    </div>
-  </Modal>
-    <!--修改远程连接密码-->
-    <Modal v-model="contentPassword" width="360" scrollable :closable="false">
-      <p slot="header" style="border-bottom: 1px solid #999;padding-bottom: 35px;">
-        <span>修改远程连接密码</span>
+    <iframe :src="linkURL" style="width:100%;height:100%" name="ifr"></iframe>
+    <Modal v-model="confirm" width="550" scrollable>
+      <p slot="header" class="modal-header-border">
+        <span style="font-size: 16px;">输入远程连接密码</span>
       </p>
-      <div style="border-bottom: 1px solid #999;padding-bottom: 30px;">
-        <Form ref="formInline" :model="formInline" :rules="ruleInline">
-          <FormItem prop="userPhone" label="手机号">
-            <span style="margin-left: 34px;">{{formInline.userPhone}}</span>
+      <div class="universal-modal-content-flex">
+        <Form :model="loginForm" :rules="loginRuleValidate" ref="loginForm">
+          <FormItem label="远程登录密码" prop="password">
+            <Input v-model="loginForm.password" placeholder="请输入远程连接密码" type="password"></Input>
           </FormItem>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button @click="confirm=false">取消</Button>
+        <Button type="primary" @click="link">连接</Button>
+      </div>
+    </Modal>
+
+    <!--修改远程连接密码-->
+    <Modal v-model="contentPassword" width="550" scrollable :mask-closable="false">
+      <p slot="header" class="modal-header-border">
+        <span style="font-size: 16px;">重置远程接入密码</span>
+      </p>
+      <p style="font-size: 14px;margin-bottom: 20px">我们将把新密码发送至您的认证手机号：{{formInline.userPhone}}</p>
+      <div class="universal-modal-content-flex">
+        <Form ref="formInline" :model="formInline" :rules="ruleInline">
           <FormItem label="验证码" prop="code">
             <Input type="text" autocomplete="off" v-model="formInline.code"
-                   placeholder="请输入验证码" style="width: 120px;margin-right:15px;margin-left: 25px;"></Input>
+                   placeholder="请输入验证码" style="width: 120px;"></Input>
             <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </FormItem>
           <FormItem prop="PhoneCode" label="手机验证码">
             <Input v-model="formInline.PhoneCode" placeholder="请输入手机验证码"
-                   style="width: 120px;margin-right:15px;"></Input>
+                   style="width: 120px"></Input>
             <Button type="primary" @click="sendCode">{{codePlaceholder}}</Button>
             </Input>
           </FormItem>
@@ -58,7 +66,15 @@
       return {
         linkURL: '',
         confirm: true,
-        password: '',
+        loginForm: {
+          password: ''
+        },
+        loginRuleValidate: {
+          password: [
+            {required: true, message: '请输入登录密码', trigger: 'blur'},
+            {type: 'string', min: 6, max: 6, message: '密码必须6位', trigger: 'blur'}
+          ]
+        },
         // 修改密码弹窗
         imgSrc: 'user/getKaptchaImage.do',
         contentPassword: false,
@@ -77,7 +93,21 @@
           code: [
             {required: true, message: '请输入验证码', trigger: 'blur'},
           ]
-        }
+        },
+        operating: '',
+        operatingList: [
+          'CTRL+ALT+Del',
+          'CTRL+ALT+F1',
+          'CTRL+ALT+F2',
+          'CTRL+ALT+F3',
+          'CTRL+ALT+F4',
+          'CTRL+ALT+F5',
+          'CTRL+ALT+F6',
+          'CTRL+ALT+F7',
+          'CTRL+ALT+F8',
+          'CTRL+ALT+F9',
+          'CTRL+ALT+F10'
+        ]
       }
     },
     created(){
@@ -87,26 +117,25 @@
     },
     methods: {
       link(){
-        if (this.password == '') {
-          this.$Message.info({
-            content: '请输入远程连接密码'
-          })
-          return
-        }
-        axios.get('information/judgeConnectCode.do', {
-          params: {
-            VMId: sessionStorage.getItem('link-vmid'),
-            code: this.password,
-            zoneId: sessionStorage.getItem('link-zoneid')
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.confirm = false
-            this.linkURL = response.data.url
-          } else {
-            this.password = ''
-            this.$message.info({
-              content: response.data.message
+        this.$refs.loginForm.validate((valid) => {
+          if (valid) {
+            // 表单验证通过，调用创建备份策略方法
+            axios.get('information/judgeConnectCode.do', {
+              params: {
+                VMId: sessionStorage.getItem('link-vmid'),
+                code: this.loginForm.password,
+                zoneId: sessionStorage.getItem('link-zoneid')
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.confirm = false
+                this.linkURL = response.data.url
+              } else {
+                this.loginForm.password = ''
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
             })
           }
         })
@@ -130,23 +159,24 @@
           }
         }).then(response => {
           this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-          // 发送倒计时
-          let countdown = 60
-          this.codePlaceholder = '60s'
-          var inter = setInterval(() => {
-            countdown--
-            this.codePlaceholder = countdown + 's'
-            if (countdown == 0) {
-              clearInterval(inter)
-              this.codePlaceholder = '获取验证码'
-            }
-          }, 1000)
           if (response.status == 200 && response.data.status == 1) {
+            // 发送倒计时
+            let countdown = 60
+            this.codePlaceholder = '60s'
+            var inter = setInterval(() => {
+              countdown--
+              this.codePlaceholder = countdown + 's'
+              if (countdown == 0) {
+                clearInterval(inter)
+                this.codePlaceholder = '获取验证码'
+              }
+            }, 1000)
             this.$Message.success({
               content: '验证码发送成功',
               duration: 5
             })
           } else {
+            this.codePlaceholder = '获取验证码'
             this.$Message.error(response.data.message)
           }
         })
@@ -174,10 +204,22 @@
                 this.$Message.error(response.data.message)
               }
             })
-          } else {
-            this.$Message.error('Fail!');
           }
         })
+      },
+      change(index){
+        /*if (exec_obj === undefined) {*/
+        var exec_obj = document.createElement('iframe');
+        exec_obj.name = 'tmp_frame';
+        exec_obj.src = `http://116.207.129.194:8080/guacamole-0.8.3/excute${index}.html`;
+        exec_obj.style.display = 'none';
+        document.body.appendChild(exec_obj);
+        /*} else {
+         exec_obj.src = 'http://116.207.129.194:8080/guacamole-0.8.3/test111.html?' + Math.random();
+         }*/
+        //window.ifr.CombinationKeyEvent(1)
+        //this.$refs.ifr.window.CombinationKeyEvent(1)
+        //this.$refs.ifr.contentWindow.CombinationKeyEvent(1)
       }
     }
   }
@@ -186,11 +228,12 @@
 <style rel="stylesheet/less" lang="less" scoped>
   .top {
     width: 100%;
-    height: 35px;
+    //height: 35px;
     background-color: rgb(255, 255, 255, 1);
+    padding: 5px 10px 5px 0;
     .tright {
-      text-align: right;
-      margin: 5px 10px 5px 0;
+      float: right;
+
       p {
         display: inline-block;
         color: #999;
@@ -199,6 +242,10 @@
       button {
         color: #999;
       }
+    }
+    .tleft {
+      display: inline-block;
+      margin-left: 20px;
     }
   }
 </style>
