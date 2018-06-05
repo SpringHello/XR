@@ -73,8 +73,8 @@
       },
       recordsTypeDesc: {
         type: String
-      }
-    }
+      },
+    },
   }
 </script>
 

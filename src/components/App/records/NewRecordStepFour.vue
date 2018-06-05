@@ -6,7 +6,7 @@
     <div class="body">
       <div class="content">
         <h2>请选择核验方式</h2>
-        <p>备案ID：XXXXXXXXXXXX | 当前状态： <span>复审中</span></p>
+        <p>备案ID：{{ recordserviceid }} | 当前状态： <span>复审中</span></p>
       </div>
       <p>您所在北京市地区可选择核验方式：</p>
       <div class="selectWay">
@@ -59,8 +59,8 @@
             </Form>
           </div>
           <div class="footer" style="padding-top: 0">
-            <button>提交幕布申请</button>
-            <button @click="showModal.logistics = true">查看物流</button>
+            <button @click="showModal.logistics = true" v-if="curtainStatus">查看物流</button>
+            <button v-else @click="applyCurtain">提交幕布申请</button>
           </div>
         </div>
       </div>
@@ -101,7 +101,7 @@
       <div style="margin-top: 60px;height: 2px;background: #d9d9d9"></div>
     </div>
     <div class="content-footer" v-show="photograph === 2 && nextStep === true">
-      <button @click="$router.push('waitSecondTrial')">提交管局审核</button>
+      <button @click="sumbitApproval">提交管局审核</button>
     </div>
     <Modal v-model="showModal.logistics" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
@@ -128,11 +128,20 @@
 
   export default {
     components: {
-      step, records,oStep
+      step, records, oStep
     },
     beforeRouteEnter(to, from, next) {
-      next(vm => {
-        window.scroll(0, 525)
+      let id = sessionStorage.getItem('id')
+      let url = 'recode/listMainWeb.do'
+      axios.get(url, {
+        params: {
+          id: id
+        }
+      }).then(response => {
+        next(vm => {
+          window.scroll(0, 525)
+          vm.getPersonInfo(response)
+        })
       })
     },
     data() {
@@ -146,10 +155,14 @@
         }
       };
       return {
+        // 备案ID
+        recordserviceid: '',
+        // 备案数据库id
+        id: '',
         // 备案类型
-        recordsType: '新增备案',
+        recordsType: '',
         // 备案类型描述
-        recordsTypeDesc: '域名未备案，备案主体证件无备案号，需要备案。',
+        recordsTypeDesc: '',
         // 拍照类型 1:现场拍照 2: 邮寄幕布
         photograph: 1,
         // 邮寄下一步
@@ -182,7 +195,9 @@
         },
         upload: {
           photo: ''
-        }
+        },
+        // 是否申请幕布
+        curtainStatus: false
       }
     },
     created() {
@@ -191,28 +206,45 @@
         duration: 5,
         closable: true
       })
-      this.getPersonInfo()
+      let id = sessionStorage.getItem('id')
+      this.id = id
     },
     methods: {
       // 获取当前备案网站负责人信息
-      getPersonInfo() {
-        let id = sessionStorage.getItem('id')
-        let url = 'recode/listMainWeb.do'
-        axios.get(url, {
-          params: {
-            id: id
+      getPersonInfo(response) {
+        if (response.data.status === 1) {
+          this.recordserviceid = response.data.result[0].recordserviceid
+          this.recordsType = response.data.result[0].recordtype
+          switch (this.recordsType) {
+            case '新增备案':
+              this.recordsTypeDesc = '域名未备案，备案主体证件无备案号，需要备案。'
+              break
+            case '新增接入':
+              this.recordsTypeDesc = '域名已在其他平台备案过，需要变更接入商。'
+              break
+            case '新增网站':
+              this.recordsTypeDesc = '主体已经备案过，需要再给其他网站备案。'
+              break
+            case '变更备案':
+              this.recordsTypeDesc = '已有备案号，需要修改之前备案的中内容。'
+              break
           }
-        }).then(response => {
-          if (response.data.status === 1) {
+          // 判断是否申请幕布
+          if (response.data.result[0].mark3 != '' && typeof(response.data.result[0].mark3) != "undefined") {
+            this.curtainStatus = true
+            this.receiveForm.address = response.data.result[0].mark2
+            this.receiveForm.person = response.data.result[0].mark3
+            this.receiveForm.phone = response.data.result[0].mark4
+          } else {
             this.receiveForm.address = response.data.result[0].maincompanycommunicatlocation
             this.receiveForm.person = response.data.result[0].legalname
             this.receiveForm.phone = response.data.result[0].companyphone
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
           }
-        })
+        } else {
+          this.$message.info({
+            content: response.data.message
+          })
+        }
       },
       // 使用新地址
       updateReceiveForm() {
@@ -222,7 +254,26 @@
       submitNewAddress() {
         this.$refs.receiveForm.validate((val) => {
           if (val) {
-            alert('修改成功')
+            let url = 'recode/updateMainWeb.do'
+            axios.get(url, {
+              params: {
+                id: this.id,
+                backgroundAddress: this.receiveForm.address,
+                backgroundName: this.receiveForm.person,
+                backgroundPhone: this.receiveForm.phone,
+              }
+            }).then(res => {
+              if (res.data.status === 1) {
+                this.curtainStatus = false
+                this.$Message.success({
+                  content: '邮寄地址修改成功'
+                })
+              } else {
+                this.$message.info({
+                  content: '平台开小差了，请稍候再试'
+                })
+              }
+            })
             this.canUpdate = true
           } else {
             return
@@ -233,6 +284,56 @@
         if (res.status == 1) {
           this.upload.photo = res.result
         }
+      },
+      // 提交幕布申请
+      applyCurtain() {
+        let url = 'recode/updateMainWeb.do'
+        axios.get(url, {
+          params: {
+            id: this.id,
+            backgroundAddress: this.receiveForm.address,
+            backgroundName: this.receiveForm.person,
+            backgroundPhone: this.receiveForm.phone,
+          }
+        }).then(res => {
+          if (res.data.status === 1) {
+            this.curtainStatus = true
+            this.$Message.success({
+              content: '幕布申请成功'
+            })
+          } else {
+            this.$message.info({
+              content: '平台开小差了，请稍候再试'
+            })
+          }
+        })
+      },
+      // 提交管局审批
+      sumbitApproval() {
+        if (this.upload.photo === '') {
+          this.$Message.info('请上传相关幕布背景照片')
+          return
+        }
+        let url = 'recode/updateMainWeb.do'
+        axios.get(url, {
+          params: {
+            id: this.id,
+            backgroundUrl: this.upload.photo
+          }
+        }).then(res => {
+          if (res.data.status === 1) {
+            this.curtainStatus = false
+            this.$Message.success({
+              content: '信息提交成功'
+            })
+            sessionStorage.setItem('recordsType', this.recordsType)
+            this.$router.push('waitSecondTrial')
+          } else {
+            this.$message.info({
+              content: '平台开小差了，请稍候再试'
+            })
+          }
+        })
       }
     },
   }

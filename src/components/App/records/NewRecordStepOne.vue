@@ -38,15 +38,15 @@
             <FormItem label="主体单位性质" prop="unitProperties">
               <Select v-model="mainUnitInformation.unitProperties" style="width:500px;" placeholder="请选择单位性质"
                       @on-change="changeUnitProperties">
-                <Option v-for="item in mainUnitInformation.unitPropertiesList" :value="item.value" :key="item.value">{{
-                  item.label }}
+                <Option v-for="item in mainUnitInformation.unitPropertiesList" :value="item.name" :key="item.name">{{
+                  item.name }}
                 </Option>
               </Select>
             </FormItem>
             <FormItem label="主体单位证件类型" prop="certificateType">
               <Select v-model="mainUnitInformation.certificateType" style="width:500px;" placeholder="请选择证件类型">
-                <Option v-for="item in mainUnitInformation.certificateTypeList" :value="item.value" :key="item.value">{{
-                  item.label }}
+                <Option v-for="item in mainUnitInformation.certificateTypeList" :value="item" :key="item">{{
+                  item }}
                 </Option>
               </Select>
             </FormItem>
@@ -114,8 +114,8 @@
             <FormItem label="法人证件类型" prop="legalPersonCertificateType">
               <Select v-model="mainUnitInformation.legalPersonCertificateType" style="width:500px;"
                       placeholder="请选择证件类型">
-                <Option v-for="item in mainUnitInformation.legalPersonCertificateTypeList" :value="item.value"
-                        :key="item.value">{{ item.label }}
+                <Option v-for="item in mainUnitInformation.legalPersonCertificateTypeList" :value="item"
+                        :key="item">{{ item }}
                 </Option>
               </Select>
             </FormItem>
@@ -311,12 +311,13 @@
   import step from "./step.vue";
   import oStep from "./ostep.vue";
   import area from "@/options/area";
+  import certificates from "@/options/certificates"
   import administationRule from "@/options/rule_administation";
   import records from './../Records'
 
   export default {
     components: {
-      step, records,oStep
+      step, records, oStep
     },
     beforeRouteEnter(to, from, next) {
       var area = sessionStorage.getItem("zone");
@@ -367,6 +368,14 @@
           callback();
         }
       };
+      const validInvestorNameName = (rule, value, callback) => {
+        let regNumber = /^[0-9]+$/;
+        if (regNumber.test(this.mainUnitInformation.investorName)) {
+          return callback(new Error("姓名不能输入数字"));
+        } else {
+          callback();
+        }
+      };
       //校验证件类型
       // const validUnitProperties = (rule, value, callback) => {
       //   let regCord = /(^\d{15}$) |(^\d{18}$) |(^\d{17}(\d|X|x)$)/;
@@ -380,8 +389,6 @@
       // };
       const validUnitProperties = (rule, value, callback) => {
         let regCord = /(^\d{15}$) |(^\d{18}$) |(^\d{17}(\d|X|x)$)/;
-        console.log(this.mainUnitInformation.certificateTypeList);
-
         if (!regCord.test(this.mainUnitInformation.certificateNumber)) {
           return callback(
             new Error(
@@ -418,92 +425,7 @@
           districtList: [],
           // 单位性质
           unitProperties: "",
-          unitPropertiesList: [
-            {
-              label: "企业",
-              value: "0",
-              certificate: [
-                {
-                  label: "工商营业执照",
-                  value: "1"
-                },
-                {
-                  label: "组织机构代码证",
-                  value: "2"
-                }
-              ]
-            },
-            {
-              label: "个人",
-              value: "1",
-              certificate: [
-                {
-                  label: "身份证",
-                  value: "1"
-                },
-                {
-                  label: "护照",
-                  value: "2"
-                },
-                {
-                  label: "军官证",
-                  value: "3"
-                },
-                {
-                  label: "台胞证",
-                  value: "4"
-                }
-              ]
-            },
-            {
-              label: "军队",
-              value: "2",
-              certificate: [
-                {
-                  label: "军队代号",
-                  value: "1"
-                }
-              ]
-            },
-            {
-              label: "政府机关",
-              value: "3",
-              certificate: [
-                {
-                  label: "组织机构代码证",
-                  value: "1"
-                }
-              ]
-            },
-            {
-              label: "事业单位",
-              value: "4",
-              certificate: [
-                {
-                  label: "组织机构代码证",
-                  value: "1"
-                },
-                {
-                  label: "事业法人证",
-                  value: "2"
-                }
-              ]
-            },
-            {
-              label: "社会团体",
-              value: "5",
-              certificate: [
-                {
-                  label: "社团法人证书",
-                  value: "1"
-                },
-                {
-                  label: "组织机构代码证",
-                  value: "2"
-                }
-              ]
-            }
-          ],
+          unitPropertiesList: certificates,
           // 证件类型
           certificateType: "",
           certificateTypeList: [],
@@ -521,24 +443,7 @@
           legalPersonName: "",
           // 法人证件类型
           legalPersonCertificateType: "",
-          legalPersonCertificateTypeList: [
-            {
-              label: "身份证",
-              value: "1"
-            },
-            {
-              label: "护照",
-              value: "2"
-            },
-            {
-              label: "军官证",
-              value: "3"
-            },
-            {
-              label: "台胞证",
-              value: "4"
-            }
-          ],
+          legalPersonCertificateTypeList: ['身份证', '护照', '军官证', '台胞证'],
           // 法人证件号码
           legalPersonIDNumber: "",
           // 办公室电话
@@ -578,7 +483,8 @@
               required: true,
               message: "请输入投资人或主管单位姓名",
               trigger: "blur"
-            }
+            },
+            {validator: validInvestorNameName, trigger: "blur"}
           ],
           legalPersonName: [
             {required: true, message: "请输入法人姓名", trigger: "blur"},
@@ -608,6 +514,13 @@
           ]
         }
       };
+    },
+    created() {
+      let mainUnitInformationStr = sessionStorage.getItem('mainUnitInformationStr')
+      if (mainUnitInformationStr) {
+        let mainUnitInformation = JSON.parse(mainUnitInformationStr)
+        this.mainUnitInformation = mainUnitInformation
+      }
     },
     methods: {
       setData(area, recordsType) {
@@ -662,8 +575,12 @@
 
       // 切换主体单位性质时级联单位证件
       changeUnitProperties(val) {
-        this.mainUnitInformation.certificateTypeList = this.mainUnitInformation.unitPropertiesList[val].certificate;
-        this.mainUnitInformation.certificateType = "";
+        certificates.forEach(item => {
+          if (item.name == val) {
+            this.mainUnitInformation.certificateTypeList = item.certificate;
+            this.mainUnitInformation.certificateType = "";
+          }
+        })
       },
       //进入下一步网站信息填写
       nextStep(name) {

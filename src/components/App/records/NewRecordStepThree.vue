@@ -11,9 +11,11 @@
           <h2>主体信息</h2>
           <div class="main-ul">
             <ul>
-              <li>主体单位所属区域：{{mainUnitInformation.province}}/{{ mainUnitInformation.city }}/{{ mainUnitInformation.district }}</li>
-              <li>主体单位证件类型：{{ certificateType}}</li>
-              <li>主体单位性质：{{ unitProperties}}</li>
+              <li v-if="!(mainUnitInformation.maincompanyarea)">主体单位所属区域：{{mainUnitInformation.province}}/{{ mainUnitInformation.city }}/{{ mainUnitInformation.district }}</li>
+              <li v-else>主体单位所属区域：{{ mainUnitInformation.maincompanyarea}}</li>
+              <li>主体单位证件类型：{{ mainUnitInformation.certificateType}}</li>
+              <li>主体单位性质：{{ mainUnitInformation.unitProperties}}
+              </li>
               <li>主体单位证件号码：{{ mainUnitInformation.certificateNumber}}</li>
               <li>主体单位名称：{{ mainUnitInformation.unitName }}</li>
             </ul>
@@ -22,7 +24,8 @@
               <li>主体单位通信地址：{{mainUnitInformation.mailingAddress }}</li>
               <li>投资人或主管单位姓名：{{ mainUnitInformation.investorName }}</li>
               <li>法人姓名：{{ mainUnitInformation.legalPersonName}}</li>
-              <li>法人证件类型：{{ legalPersonCertificateType }}</li>
+              <li>法人证件类型：{{ mainUnitInformation.legalPersonCertificateType}}
+              </li>
             </ul>
             <ul>
               <li>法人证件号码：{{ mainUnitInformation.legalPersonIDNumber}}</li>
@@ -45,8 +48,7 @@
               </ul>
               <ul>
                 <li>网站负责人姓名：{{ item.basicInformation.principalName}}</li>
-                <li>有效证件类型：{{ item.basicInformation.certificateType =='1'? '身份证':item.basicInformation.certificateType =='2'?'护照':item.basicInformation.certificateType
-                  =='3'?'军官证':'台胞证'}}
+                <li>有效证件类型：{{ item.basicInformation.certificateType}}
                 </li>
                 <li>有效证件号码：{{ item.basicInformation.certificateNumber}}</li>
                 <li>手机号码：{{ item.basicInformation.phoneNumber}}</li>
@@ -119,9 +121,10 @@
                 </div>
               </div>
             </div>
+            <p style="color: #377dff;cursor: pointer;margin-top: 10px;text-align: right" v-if="index>0" @click="deleteIDPhoto(index)">删除新负责人证件照</p>
           </div>
         </div>
-        <p @click="addIDPhoto" style="cursor: pointer;color: #377dff; font-size: 14px; margin-top: 10px;" v-if="uploadForm.IDPhotoList.length<3">添加新负责人证件照</p>
+        <p @click="addIDPhoto" style="cursor: pointer;color: #377dff; font-size: 14px;" v-if="uploadForm.IDPhotoList.length<3">添加新负责人证件照</p>
         <h2>请上传主体单位相关资料</h2>
         <div class="upload">
           <div class="uploadTitle">
@@ -143,7 +146,7 @@
                   </Upload>
                 </div>
                 <div class="item-img">
-                  <img src="../../../assets/img/records/records-img3.png">
+                  <img class="amplification"  src="../../../assets/img/records/records-img3.png">
                   <p>示例图</p>
                 </div>
               </div>
@@ -156,18 +159,29 @@
             <p>执照扫描件</p>
             <div class="item">
               <div class="item-content" style="height: 100%">
-                <div style="width:100%;background: #FFF;padding-top: 20px">
+                <div style="width:100%;background: #FFF;padding-top: 12px">
                   <p v-for="(file,index) in uploadForm.certifiedDomainNoCertificationDefaultList" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
+                    <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')"
+                         :class="{one:uploadForm.certifiedDomainNoCertificationDefaultList.length==1,two:uploadForm.certifiedDomainNoCertificationDefaultList.length==2,three:uploadForm.certifiedDomainNoCertificationDefaultList.length==3}"
+                         src="../../../assets/img/records/records-img.png"/>
+                    <img v-if="file.suffix == 'doc'"
+                         :class="{one:uploadForm.certifiedDomainNoCertificationDefaultList.length==1,two:uploadForm.certifiedDomainNoCertificationDefaultList.length==2,three:uploadForm.certifiedDomainNoCertificationDefaultList.length==3}"
+                         src="../../../assets/img/records/records-doc.png"/>
+                    <img v-if="file.suffix == 'pdf'"
+                         :class="{one:uploadForm.certifiedDomainNoCertificationDefaultList.length==1,two:uploadForm.certifiedDomainNoCertificationDefaultList.length==2,three:uploadForm.certifiedDomainNoCertificationDefaultList.length==3}"
+                         src="../../../assets/img/records/records-pdf.png"/>
                     {{ file.name }}
                     <Icon type="ios-trash-outline" style="cursor: pointer;margin-left: 10px" @click.native="handleRemove('1',index)"></Icon>
                   </p>
-                  <Upload class="my-upload"
+                  <Upload v-if="uploadForm.certifiedDomainNoCertificationDefaultList.length<3"
+                          class="my-upload"
                           type="drag"
+                          :format="['jpg','jpeg','png','doc','pdf','docx']"
+                          :on-format-error="handleFormatError"
                           :default-file-list="uploadForm.certifiedDomainNoCertificationDefaultList"
                           :show-upload-list="false"
                           :with-credentials="true"
                           action="file/upFile.do"
-                          :before-upload="handleBeforeUpload_1"
                           :on-success="certifiedDomainNoCertification">
                     <span style="font-size: 14px">点击选择文件</span>
                   </Upload>
@@ -177,24 +191,35 @@
           </div>
         </div>
         <h2>请上传其他资料</h2>
-        <p class="titleDescription">如前置审批材料，法人授权委托书等材料（点击<span style="color: #377dff">下载法人授权委托书</span>）</p>
+        <p class="titleDescription">如前置审批材料，法人授权委托书等材料（点击<a href="keepOnRecord/attorney.doc">下载法人授权委托书</a>）</p>
         <div class="upload">
           <div class="uploadTitle">
             <p>其他文件</p>
             <div class="item">
               <div class="item-content" style="height: 100%">
-                <div style="width:100%;background: #FFF;padding-top: 20px">
-                  <p v-for="(file,index) in uploadForm.otherFile" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
+                <div style="width:100%;background: #FFF;padding-top: 12px">
+                  <p v-for="(file,index) in uploadForm.otherFile" style="text-align: center;font-size: 14px;margin-bottom:5px;line-height: 1.5;">
+                    <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')"
+                         :class="{one:uploadForm.otherFile.length==1,two:uploadForm.otherFile.length==2,three:uploadForm.otherFile.length==3}"
+                         src="../../../assets/img/records/records-img.png"/>
+                    <img v-if="file.suffix == 'doc'"
+                         :class="{one:uploadForm.otherFile.length==1,two:uploadForm.otherFile.length==2,three:uploadForm.otherFile.length==3}"
+                         src="../../../assets/img/records/records-doc.png"/>
+                    <img v-if="file.suffix == 'pdf'"
+                         :class="{one:uploadForm.otherFile.length==1,two:uploadForm.otherFile.length==2,three:uploadForm.otherFile.length==3}"
+                         src="../../../assets/img/records/records-pdf.png"/>
                     {{ file.name }}
                     <Icon type="ios-trash-outline" style="cursor: pointer;margin-left: 10px" @click.native="handleRemove('2',index)"></Icon>
                   </p>
-                  <Upload class="my-upload"
+                  <Upload v-if="uploadForm.otherFile.length<3"
+                          class="my-upload"
                           type="drag"
                           :default-file-list="uploadForm.otherFile"
+                          :format="['jpg','jpeg','png','doc','pdf','docx']"
+                          :on-format-error="handleFormatError"
                           :show-upload-list="false"
                           :with-credentials="true"
                           action="file/upFile.do"
-                          :before-upload="handleBeforeUpload_2"
                           :on-success="otherFile">
                     <span style="font-size: 14px">点击选择文件</span>
                   </Upload>
@@ -204,24 +229,35 @@
           </div>
         </div>
         <h2>请上传网站备案信息真实性核验单</h2>
-        <p class="titleDescription">1、点击<span style="color: #377dff">下载《网站备案信息真实性核验单》</span>。2、查看核验单样例图，填写以下载的核验单，不得涂改。3、请您保存3份签字的核验单原件以备后续环节使用。</p>
+        <p class="titleDescription">1、点击<a href="keepOnRecord/check.doc">下载《网站备案信息真实性核验单》</a>。2、查看核验单样例图，填写以下载的核验单，不得涂改。3、请您保存3份签字的核验单原件以备后续环节使用。</p>
         <div class="upload">
           <div class="uploadTitle">
             <p>其他文件</p>
             <div class="item">
               <div class="item-content" style="height: 100%">
-                <div style="width:100%;background: #FFF;padding-top: 20px">
+                <div style="width:100%;background: #FFF;padding-top: 12px">
                   <p v-for="(file,index) in uploadForm.CheckList" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
+                    <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')"
+                         :class="{one:uploadForm.CheckList.length==1,two:uploadForm.CheckList.length==2,three:uploadForm.CheckList.length==3}"
+                         src="../../../assets/img/records/records-img.png"/>
+                    <img v-if="file.suffix == 'doc'"
+                         :class="{one:uploadForm.CheckList.length==1,two:uploadForm.CheckList.length==2,three:uploadForm.CheckList.length==3}"
+                         src="../../../assets/img/records/records-doc.png"/>
+                    <img v-if="file.suffix == 'pdf'"
+                         :class="{one:uploadForm.CheckList.length==1,two:uploadForm.CheckList.length==2,three:uploadForm.CheckList.length==3}"
+                         src="../../../assets/img/records/records-pdf.png"/>
                     {{ file.name }}
                     <Icon type="ios-trash-outline" style="cursor: pointer;margin-left: 10px" @click.native="handleRemove('3',index)"></Icon>
                   </p>
-                  <Upload class="my-upload"
+                  <Upload v-if="uploadForm.CheckList.length<3"
+                          class="my-upload"
                           type="drag"
                           :default-file-list="uploadForm.CheckList"
                           :show-upload-list="false"
+                          :format="['jpg','jpeg','png','doc','pdf','docx']"
+                          :on-format-error="handleFormatError"
                           :with-credentials="true"
                           action="file/upFile.do"
-                          :before-upload="handleBeforeUpload_3"
                           :on-success="CheckList">
                     <span style="font-size: 14px">点击选择文件</span>
                   </Upload>
@@ -230,8 +266,8 @@
             </div>
           </div>
           <div class="uploadTitle" style="margin: 34px 0 10px 20px;">
-            <div class="item" style="text-align: center">
-              <img style="height: 203px" src="../../../assets/img/records/records-img4.png"/>
+            <div class="item" style="text-align: center;position: relative">
+              <img src="../../../assets/img/records/records-img4.png"/>
             </div>
           </div>
         </div>
@@ -252,7 +288,7 @@
 
   export default {
     components: {
-      step, records,oStep
+      step, records, oStep
     },
     beforeRouteEnter(to, from, next) {
       var area = sessionStorage.getItem('zone')
@@ -337,6 +373,9 @@
         }
         this.uploadForm.IDPhotoList.push(param)
       },
+      deleteIDPhoto(index) {
+        this.uploadForm.IDPhotoList.splice(index, 1)
+      },
       // 删除上传文件
       handleRemove(value, index) {
         switch (value) {
@@ -351,33 +390,6 @@
             break
         }
 
-      },
-      handleBeforeUpload_1() {
-        const check = this.uploadForm.certifiedDomainNoCertificationDefaultList.length < 3;
-        if (!check) {
-          this.$Message.info({
-            content: '上传文件不能超过3个'
-          })
-        }
-        return check
-      },
-      handleBeforeUpload_2() {
-        const check = this.uploadForm.otherFile.length < 4;
-        if (!check) {
-          this.$Message.info({
-            content: '上传文件不能超过4个'
-          })
-        }
-        return check
-      },
-      handleBeforeUpload_3() {
-        const check = this.uploadForm.CheckList.length < 3;
-        if (!check) {
-          this.$Message.info({
-            content: '上传文件不能超过3个'
-          })
-        }
-        return check
       },
       /* 图片上传成功回调，设置图片。每张图片上传都有一个method。
  暂时没有找到更好的方法解决图片标记问题 */
@@ -400,9 +412,12 @@
         if (response.status == 1) {
           let array = response.result.split('/')
           let index = array.length - 1
+          let len = array[index].length
+          let suffix = array[index].substring(len - 3)
           let param = {
             name: array[index],
-            url: response.result
+            url: response.result,
+            suffix: suffix
           }
           this.uploadForm.certifiedDomainNoCertificationDefaultList.push(param)
         }
@@ -411,9 +426,13 @@
         if (response.status == 1) {
           let array = response.result.split('/')
           let index = array.length - 1
+          let len = array[index].length
+          let suffix = array[index].substring(len - 3)
+          console.log(suffix)
           let param = {
             name: array[index],
-            url: response.result
+            url: response.result,
+            suffix: suffix
           }
           this.uploadForm.otherFile.push(param)
         }
@@ -422,12 +441,21 @@
         if (response.status == 1) {
           let array = response.result.split('/')
           let index = array.length - 1
+          let len = array[index].length
+          let suffix = array[index].substring(len - 3)
           let param = {
             name: array[index],
-            url: response.result
+            url: response.result,
+            suffix: suffix
           }
           this.uploadForm.CheckList.push(param)
         }
+      },
+      // 校验用户上传的文件类型
+      handleFormatError() {
+        this.$Message.info({
+          content: '请选择jpg、png、jpeg、doc、docx、pdf类型的文件进行上传'
+        });
       },
       // 提交资料
       netStep() {
@@ -514,9 +542,10 @@
         let CheckList = this.uploadForm.CheckList.map(item => {
           return item.url
         })
+        let mainCompanyArea = this.mainUnitInformation.maincompanyarea ? this.mainUnitInformation.maincompanyarea : (this.mainUnitInformation.province + '-' + this.mainUnitInformation.city + '-' + this.mainUnitInformation.district)
         let addMainCompany = axios.get('recode/addMainCompany.do', {
           params: {
-            mainCompanyArea: this.mainUnitInformation.province + '-' + this.mainUnitInformation.city + '-' + this.mainUnitInformation.district,
+            mainCompanyArea: mainCompanyArea,
             mainCompanyCertificatesType: this.mainUnitInformation.certificateType,
             mainCompanyNature: this.mainUnitInformation.unitProperties,
             mainCompanyNumber: this.mainUnitInformation.certificateNumber,
@@ -543,6 +572,7 @@
         Promise.all([addMainCompany, addMainWeb]).then(response => {
           if ((response[0].status == 200 && response[0].data.status == 1) && (response[1].status == 200 && response[1].data.status == 1)) {
             this.$router.push('waitFirstTrial')
+            sessionStorage.clear()
           } else {
             this.$message.info({
               content: '平台开小差了，请稍候再试'
@@ -554,111 +584,7 @@
     mounted() {
       this.siteInfoShow = true
     },
-    computed: {
-      certificateType() {
-        switch (this.mainUnitInformation.unitProperties) {
-          case '0':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '工商营业执照'
-                break
-              case '2':
-
-                return '组织机构代码证'
-                break
-            }
-            break
-          case '1':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '身份证'
-                break
-              case '2':
-                return '护照'
-                break
-              case '3':
-                return '军官证'
-                break
-              case '4':
-                return '台胞证'
-                break
-            }
-            break
-          case '2':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '军队代号'
-                break
-            }
-            break
-          case '3':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '组织机构代码证'
-                break
-            }
-            break
-          case '4':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '组织机构代码证'
-                break
-              case '2':
-                return '事业法人证'
-                break
-            }
-            break
-          case '5':
-            switch (this.mainUnitInformation.certificateType) {
-              case '1':
-                return '社团法人证书'
-                break
-              case '2':
-                return '组织机构代码证'
-                break
-            }
-            break
-        }
-      },
-      unitProperties() {
-        switch (this.mainUnitInformation.unitProperties) {
-          case '0':
-            return '企业'
-            break
-          case '1':
-            return '个人'
-            break
-          case '2':
-            return '军队'
-            break
-          case '3':
-            return '政府机关'
-            break
-          case '4':
-            return '事业单位'
-            break
-          case '5':
-            return '社会团体'
-            break
-        }
-      },
-      legalPersonCertificateType() {
-        switch (this.mainUnitInformation.legalPersonCertificateType) {
-          case '1':
-            return '身份证'
-            break
-          case '2':
-            return '护照'
-            break
-          case '3':
-            return '军官证'
-            break
-          case '4':
-            return '台胞证'
-            break
-        }
-      },
-    }
+    computed: {}
   }
 </script>
 
@@ -727,6 +653,14 @@
             border: 1px solid #d8d8d8;
             margin-top: 20px;
             height: 230px;
+            >img{
+              height: 203px;
+              cursor: zoom-in;
+              transition: all 0.6s;
+              &:hover{
+                transform: scale(1.6);
+              }
+            }
             .item-content {
               display: flex;
               padding: 20px;
@@ -738,6 +672,22 @@
                 border: 1px solid #ffffff;
                 background-color: #ffffff;
                 color: #999;
+              }
+              img {
+                display: block;
+                margin: 0 auto;
+                &.one {
+                  height: 48px;
+                  width: 36px;
+                }
+                &.two {
+                  height: 36px;
+                  width: 28px;
+                }
+                &.three {
+                  height: 24px;
+                  width: 20px;
+                }
               }
               button {
                 outline: none;
@@ -754,6 +704,13 @@
                 margin-bottom: 20px;
                 width: 164px;
                 height: 120px;
+              }
+              .amplification{
+                cursor: zoom-in;
+                transition: all 0.6s;
+                &:hover{
+                  transform: scale(1.6);
+                }
               }
               > p {
                 text-align: center;

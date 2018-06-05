@@ -17,14 +17,14 @@
             <TabPane :label="tabValueCom">
               <div style="margin-bottom:20px">
                 <div style="display:inline-block">
-                  <span style="display:inline-block">备案类型 </span>
+                  <span style="display:inline-block;margin-right:10px;">备案类型 </span>
                   <Select v-model="recordType" size="small" style="width:231px;" @on-change="listMainWeb()">
                     <Option v-for="item in recordTypeCityList" :value="item.value" :key="item.value">{{ item.label }}
                     </Option>
                   </Select>
                 </div>
                 <div style="display:inline-block;margin-left:20px">
-                  <span>当前状态</span>
+                  <span style="display:inline-block;margin-right:10px;">当前状态</span>
                   <Select v-model="currentState" size="small" style="width:231px;" @on-change="listMainWeb()">
                     <Option v-for="item in currentStateList" :value="item.value" :key="item.value">{{ item.label }}
                     </Option>
@@ -34,20 +34,23 @@
               <router-link to="entrance">
                 <Button style="margin-bottom:10px;" type="primary">新增备案</Button>
               </router-link>
-              
+
               <Table  ref="selection" :columns="recordTypeList" :data="recordProgressList"></Table>
             </TabPane>
 
             <TabPane :label="tabValue">
               <div style="margin-bottom:20px">
                 <div style="display:inline-block">
-                  <span style="display:inline-block">备案类型 </span>
+                  <span style="display:inline-block;margin-right:10px;">备案类型 </span>
                   <Select v-model="completeRecordType" size="small" style="width:231px;" @on-change="completeClick">
                     <Option v-for="item in recordTypeCityList" :value="item.value" :key="item.value">{{ item.label }}
                     </Option>
                   </Select>
                 </div>
               </div>
+                <router-link to="entrance">
+                <Button style="margin-bottom:10px;" type="primary">新增备案</Button>
+              </router-link>
               <Table  ref="selection" :columns="completeRecordTypeList" :data="recordTypeData"></Table>
             </TabPane>
           </Tabs>
@@ -180,24 +183,37 @@ export default {
           title: "等待操作",
           key: "operation",
           render: (h, params) => {
-            const color =
-              params.row.status === "初审中" || params.row.status === "审核完成"
-                ? "#2A99F2"
-                : params.row.status === "管局审核中"
-                  ? "#666666"
-                  : params.row.status === "初审拒绝" ? "#D0021B" : "";
+            const row = params.row;
+            const color =  row.operation == ""? "":"#2A99F2";
             return (
               "div",
               [
-                h(
-                  "span",
+                h("span",
                   {
                     style: {
                       color: color,
                       cursor: "pointer"
+                    },
+                    on: {
+                      click: () => {
+                        if (row.operation == "上传拍照/邮寄资料") {
+                          sessionStorage.setItem("newId", row.id);
+                          sessionStorage.setItem(
+                            "newRecordtype",
+                            row.recordType
+                          );
+                          this.$router.push({path:"newRecordStepFour"});
+                        } else if (row.status == "管局审核拒绝") {
+                          this.$router.push({path:"newRecordStepFour"});
+                        } else if (row.status == "初审拒绝") {
+                           this.jumpRecord(row.id,row.webcompany_Id);
+                        } else if( row.status == "重新提交资料"){
+                            this.jumpRecord(row.id,row.webcompany_Id);
+                        }
+                      }
                     }
                   },
-                  params.row.operation == "" ? "暂无" : params.row.operation
+                 row.operation == "" ? "暂无" : row.operation
                 )
               ]
             );
@@ -219,9 +235,7 @@ export default {
                     },
                     on: {
                       click: () => {
-                        this.$router.push({ path: "RecordDetails" });
-                        sessionStorage.setItem("id", params.row.id);
-                        sessionStorage.setItem('webcompany_Id',params.row.webcompany_Id);
+                        this.jumpRecord(params.row.id,params.row.webcompany_Id);
                       }
                     }
                   },
@@ -270,12 +284,15 @@ export default {
           title: "等待操作",
           key: "operation",
           render: (h, params) => {
-            const color = params.row.operation === "暂无" ? '#666666':
-              params.row.status === "初审中" || params.row.status === "审核完成"
-                ? "#2A99F2"
-                : params.row.status === "管局审核中"
-                  ? "#666666"
-                  : params.row.status === "初审拒绝" ? "#D0021B" : '';
+            const color =
+              params.row.operation === "暂无"
+                ? "#666666"
+                : params.row.status === "初审中" ||
+                  params.row.status === "审核完成"
+                  ? "#2A99F2"
+                  : params.row.status === "管局审核中"
+                    ? "#666666"
+                    : params.row.status === "初审拒绝" ? "#D0021B" : "";
             return (
               "div",
               [
@@ -371,6 +388,12 @@ export default {
             }
           });
       }
+    },
+    //跳转详情页面
+    jumpRecord(id,webcompany_Id) {
+      this.$router.push({ path: "RecordDetails"});
+      sessionStorage.setItem("id",id);
+      sessionStorage.setItem("webcompany_Id", webcompany_Id);
     }
   },
   mounted() {
