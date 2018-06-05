@@ -1,4 +1,3 @@
-<!--
 <template>
   <div class="background">
     <div class="card">
@@ -8,7 +7,7 @@
           <div style="width:1020px;">
             <div style="display:flex">
               <span style="font-size:16px;color:#2A99F2;">备案域名</span>
-              &lt;!&ndash; <div class="click_icon icons" @click="toolShow(isIcon)" :class="{hide_icon:!isIcon}"></div> &ndash;&gt;
+              <!-- <div class="click_icon icons" @click="toolShow(isIcon)" :class="{hide_icon:!isIcon}"></div> -->
             </div>
             <div style="width:100%;">
               <ul>
@@ -25,7 +24,7 @@
             <div class="refresh_button" @click="details"><span>刷新</span></div>
           </div>
         </div>
-        &lt;!&ndash;主办单位信息&ndash;&gt;
+        <!--主办单位信息-->
         <div>
           <div class="info_box">
             <div style="margin-bottom:10px;display:flex;display:-webkit-flex;width:100%;">
@@ -98,7 +97,7 @@
               </ul>
             </div>
           </div>
-          &lt;!&ndash;主体单位负责人信息&ndash;&gt;
+          <!--主体单位负责人信息-->
           <div class="info_box">
             <div style="margin-bottom:10px;display:flex">
               <div class="click_icon icons" :class="{hide_icon:!isIconPerson}" @click="infoBoxShow('personInfo')"></div>
@@ -159,7 +158,7 @@
               </ul>
             </div>
           </div>
-          &lt;!&ndash;网站基本信息&ndash;&gt;
+          <!--网站基本信息-->
           <div class="info_box">
             <div style="margin-bottom:10px;display:flex">
               <div class="click_icon icons" :class="{hide_icon:!isIconInfo}" @click="infoBoxShow('webInfo')"></div>
@@ -211,7 +210,7 @@
               </ul>
             </div>
           </div>
-          &lt;!&ndash;网站负责人基本信息&ndash;&gt;
+          <!--网站负责人基本信息-->
           <div class="info_box">
             <div style="margin-bottom:10px;display:flex">
               <div class="click_icon icons" :class="{hide_icon:!isIconWebPerson}"
@@ -274,7 +273,7 @@
               </ul>
             </div>
           </div>
-          &lt;!&ndash;ISP备案网站接入信息&ndash;&gt;
+          <!--ISP备案网站接入信息-->
           <div class="info_box">
             <div style="margin-bottom:10px;display:flex">
               <div class="click_icon icons" :class="{hide_icon:!isIconISP}" @click="infoBoxShow('inforISP')"></div>
@@ -377,7 +376,7 @@
 
 
     </div>
-    &lt;!&ndash; 网站核验单 &ndash;&gt;
+    <!-- 网站核验单 -->
     <Modal
       v-model="checkList"
       title="重新上传网站备案信息真实性核验单信息"
@@ -428,12 +427,12 @@
       </div>
     </Modal>
 
-    &lt;!&ndash;网站核验单示例图大图&ndash;&gt;
+    <!--网站核验单示例图大图-->
     <Modal title="营业执照示例图" v-model="visibleWeb" :scrollable="true">
       <img src="../../assets/img/records/records-img4.png" v-if="visibleWeb" style="width: 100%">
     </Modal>
 
-    &lt;!&ndash; 主办单位负责人照片 &ndash;&gt;
+    <!-- 主办单位负责人照片 -->
     <Modal
       v-model="sponsorPhoto"
       title="重新上传身份证信息"
@@ -517,7 +516,7 @@
         </div>
       </div>
     </Modal>
-    &lt;!&ndash; 主办单位照片 &ndash;&gt;
+    <!-- 主办单位照片 -->
     <Modal
       v-model="organizerPhoto"
       title="重新上传营业执照信息"
@@ -562,11 +561,11 @@
         </div>
       </div>
     </Modal>
-    &lt;!&ndash;营业执照示例图大图&ndash;&gt;
+    <!--营业执照示例图大图-->
     <Modal title="营业执照示例图" v-model="visible" :scrollable="true">
       <img src="../../assets/img/records/records-img3.png" v-if="visible" style="width: 100%">
     </Modal>
-    &lt;!&ndash; 域名证书 &ndash;&gt;
+    <!-- 域名证书 -->
     <Modal
       v-model="domainNameCertificate"
       title="重新上传域名证书信息"
@@ -609,7 +608,7 @@
         </div>
       </div>
     </Modal>
-    &lt;!&ndash; 其他资料 &ndash;&gt;
+    <!-- 其他资料 -->
     <Modal
       v-model="otherInfo"
       title="重新上传其他文件信息"
@@ -652,7 +651,7 @@
       </div>
     </Modal>
 
-    &lt;!&ndash; 修改主办单位信息 &ndash;&gt;
+    <!-- 修改主办单位信息 -->
     <Modal
       v-model="host"
       title="主办单位信息"
@@ -705,7 +704,7 @@
         </FormItem>
       </Form>
     </Modal>
-    &lt;!&ndash; 修改主体单位负责人信息 &ndash;&gt;
+    <!-- 修改主体单位负责人信息 -->
     <Modal
       v-model="legal"
       title="主体单位负责人信息"
@@ -741,7 +740,7 @@
         </FormItem>
       </Form>
     </Modal>
-    &lt;!&ndash; 修改网站基本信息信息 &ndash;&gt;
+    <!-- 修改网站基本信息信息 -->
     <Modal
       v-model="website"
       title="网站基本信息"
@@ -771,7 +770,7 @@
         </FormItem>
       </Form>
     </Modal>
-    &lt;!&ndash; 修改网站负责人基本信息 &ndash;&gt;
+    <!-- 修改网站负责人基本信息 -->
     <Modal
       v-model="websitePerson"
       title="网站负责人基本信息"
@@ -807,7 +806,7 @@
         </FormItem>
       </Form>
     </Modal>
-    &lt;!&ndash; 修改ISP信息信息 &ndash;&gt;
+    <!-- 修改ISP信息信息 -->
     <Modal
       v-model="webIsp"
       title="ISP备案网站接入信息"
@@ -1839,4 +1838,3 @@
   }
 </style>
 
--->

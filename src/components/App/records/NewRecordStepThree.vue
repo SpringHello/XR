@@ -271,7 +271,7 @@
           </div>
           <div class="uploadTitle" style="margin: 34px 0 10px 20px;">
             <div class="item" style="text-align: center;position: relative">
-              <img @click="imageViewShow = true" src="../../../assets/img/records/records-img4.jpg"/>
+              <img @click="imageViewShow = true" src="../../../assets/img/records/records-check2.jpg"/>
             </div>
           </div>
         </div>
