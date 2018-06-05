@@ -31,7 +31,6 @@
               <!-- 重命名 -->
               <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
               <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
-              <Dropdown-item name="ratesChange" :disabled="status=='欠费'||status=='异常'">资费变更</Dropdown-item>
               <!-- 续费 -->
               <Dropdown-item name="renewal" v-if="status=='欠费'||status=='异常'" :disabled=true>主机续费
                 <span
@@ -159,10 +158,10 @@
                                 :class="{btnnormal:auth,_hover:auth}">管理
                         </Button>
                         <Button v-if="!auth" :disabled="!auth">连接主机</Button>
-                        <!--<Button v-else class="btnnormal _hover" @click="link(item)">连接主机
-                        </Button>-->
-                         <a v-else :href="item.connecturl" target="_blank"
-                            style="line-height: 30px;border: 1px solid;border-radius: 4px;width: 76px;" class="_hover">连接主机</a>
+                        <Button v-else class="btnnormal _hover" @click="link(item)">连接主机
+                        </Button>
+                        <!--<a v-else :href="item.connecturl" target="_blank"
+                           style="line-height: 30px;border: 1px solid;border-radius: 4px;width: 76px;" class="_hover">连接主机</a>-->
                       </div>
                     </div>
                   </Card>
@@ -483,62 +482,20 @@
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="是否同时续费绑定IP与磁盘" v-if="isDisks||isIps">
-            <CheckboxGroup @on-change="bindRenewal" v-model="bindRenewalVal">
-                <Checkbox label="ip"  v-if="isIps">续费绑定IP</Checkbox>
-                <Checkbox label="disk" v-if="isDisks">续费磁盘</Checkbox>
-            </CheckboxGroup>
-          </FormItem>
+          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:10px;">全民普惠，3折减单，最高减免7000元！
+          </router-link>
         </Form>
         <div style="font-size:16px;">
-          资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{cost}}/</span></span>
-          <!-- <span v-if="renewalTime != ''">/</span>
+          应付费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{cost}}
+          <span v-if="renewalTime != ''">/</span>
           <span style="font-size: 15px;">{{renewalTime}}<span v-if="renewalType == 'year' && renewalTime != ''">年</span>
-          <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span> -->
-          <span style="text-decoration: line-through">原价{{originCost}}</span>
+          <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span>
+        </span>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <div style="text-align:left">
-          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:24px;">全民普惠，3折减单，最高减免7000元！
-          </router-link>
-        </div>
         <Button type="ghost" @click="showModal.renewal = false">取消</Button>
-        <Button type="primary" @click="renewalok" :disabled="cost=='--'">确认续费</Button>
-      </div>
-    </Modal>
-    <!-- 资费变更弹出框 -->
-    <Modal v-model="showModal.ratesChange" width="550" :scrollable="true">
-      <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">变更资费选择（资费变更适用于按需收费转包月/年）</span>
-      </p>
-      <div class="universal-modal-content-flex">
-        <Form>
-          <FormItem label="变更类型 :">
-            <Select v-model="ratesChangeType">
-              <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}
-              </Option>
-            </Select>
-          </FormItem>
-          <FormItem label="变更时长 :">
-            <Select v-model="ratesChangeTime">
-              <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
-              </Option>
-            </Select>
-          </FormItem>
-        </Form>
-        <div style="font-size:16px;">
-          资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{ratesChangeCost}}/</span></span>
-          <span style="text-decoration: line-through">原价{{originRatesChangeCost}}</span>
-        </div>
-      </div>
-      <div slot="footer" class="modal-footer-border">
-        <div style="text-align:left">
-          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:24px;">全民普惠，3折减单，最高减免7000元！
-          </router-link>
-        </div>
-        <Button type="ghost"  @click="showModal.ratesChange=false">取消</Button>
-        <Button type="primary" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
+        <Button type="primary" @click="renewalok">确认续费</Button>
       </div>
     </Modal>
     <!-- 欠费tab页，续费弹窗 -->
@@ -619,7 +576,6 @@
   import axios from '@/util/axiosInterceptor'
   import Vue from 'vue'
   import regExp from '../../util/regExp'
-
   export default {
     data() {
       const validaRegisteredName = regExp.validaRegisteredName
@@ -641,7 +597,6 @@
         sessionStorage.removeItem('pane')
       }
       return {
-        originCost: '--',
         cost: '--',
         listLoadBalanceRole: [],
         openHost: [],
@@ -661,13 +616,8 @@
           Renew: false,
           selectAuthType: false,
           balance: false,
-          linkPassword: false,
-          ratesChange: false
+          linkPassword: false
         },
-        ratesChangeType: '',
-        ratesChangeTime: '',
-        originRatesChangeCost: '--',
-        ratesChangeCost: '--',
         renameForm: {
           hostName: ''
         },
@@ -711,9 +661,6 @@
           ]
         },
         publicIPList: [],
-        bindRenewalVal: [],
-        isDisks: '',
-        isIps: '',
         renewalType: '',
         renewalTime: '',
         timeOptions: {
@@ -757,45 +704,7 @@
       }, 5 * 1000)
     },
     methods: {
-      bindRenewal(){
-      if (this.cost != '--'){
-        var selectIp = ''
-        var selectDisk = ''
-        for (var i = 0; i < this.bindRenewalVal.length; i++) {
-          if (this.bindRenewalVal[i] == 'ip') {
-            selectIp = this.isIps
-          }
-          if (this.bindRenewalVal[i] == 'disk') {
-            selectDisk = this.isDisks
-          }
-        }
-        this.$http.get('information/getYjPrice.do', {
-            params: {
-              timeValue: this.renewalTime,
-              timeType: this.renewalType,
-              hostIdArr: this.currentHost[0].id,
-              ipIdArr: selectIp,
-              diskArr: selectDisk
-            }
-          }).then((response) => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.cost = response.data.result.toFixed(2)
-                this.originCost = response.data.result
-                if (response.data.cuspon) {
-                  this.originCost = Number((this.originCost + response.data.cuspon).toFixed(2))
-                }
-                if (response.data.continueDiscount) {
-                  this.originCost = (this.originCost + response.data.continueDiscount).toFixed(2)
-                }
-              } else {
-                this.$message.info({
-                  content: response.data.message
-                })
-              }
-            })
-         }
-      },
-      checkRenameForm() {
+      checkRenameForm(){
         this.$refs.renameForm.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用重命名的方法
@@ -1007,8 +916,8 @@
             break
           case '关机':
             if (this.closeHost.every(item => {
-              return item.select == false
-            })) {
+                return item.select == false
+              })) {
               this.$Message.warning('请选择主机')
               return
             }
@@ -1040,7 +949,7 @@
             break
         }
       },
-      stop(item) {
+      stop(item){
         this.loadingMessage = '正在停止主机'
         this.loading = true
         item.select = false
@@ -1061,7 +970,7 @@
             }
           })
       },
-      start(item) {
+      start(item){
         this.loadingMessage = '正在启动主机'
         this.loading = true
         item.select = false
@@ -1155,33 +1064,6 @@
         this.$store.commit('setSelect', 'new')
         this.$router.push('buy')
       },
-      // 查询续费主机下是否有ip或磁盘
-      renewType() {
-        axios.get('information/listVirtualMachinesById.do', {
-            params: {
-              VMId: this.currentHost[0].computerid,
-              zoneId: this.currentHost[0].zoneid
-            }
-          }).then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              var diskarr = response.data.result[0].attachDisk.map(item => {
-                return item.id
-              })
-              this.isDisks = diskarr.join()
-              var iparr = response.data.result[0].attachPublicIp.map(item => {
-                return item.id
-              })
-              this.isIps = iparr.join()
-              // 清空续费弹窗数据
-              this.bindRenewalVal = ['ip', 'disk']
-              this.cost = '--'
-              this.originCost = '--'
-              this.renewalType = ''
-              this.renewalTime = ''
-              this.showModal.renewal = true
-            }
-          })
-      },
       hideEvent(name) {
         switch (name) {
           case 'delhost':
@@ -1195,26 +1077,9 @@
               this.showModal.rename = true
             }
             break
-          case 'ratesChange':
-            if (this.checkSelect()) {
-              if (this.currentHost[0].caseType == 3) {
-                this.ratesChangeType = ''
-                this.ratesChangeTime = ''
-                this.ratesChangeCost = '--'
-                this.originRatesChangeCost = '--'
-                this.showModal.ratesChange = true
-              } else {
-                this.$Message.info('请选择实时计费的云主机进行资费变更')
-              }
-            }
-            break
           case 'renewal':
             if (this.checkSelect()) {
-              if (this.currentHost[0].caseType !== 3) {
-                this.renewType()
-              } else {
-                this.$Message.info('请选择包年包月的云主机进行资费变更')
-              }
+              this.showModal.renewal = true
             }
             break
           case 'backup':
@@ -1333,33 +1198,11 @@
       },
       // 包年/月主机续费
       renewalok() {
-        var selectIp = ''
-        var selectDisk = ''
-        for (var i = 0; i < this.bindRenewalVal.length; i++) {
-          if (this.bindRenewalVal[i] == 'ip') {
-            selectIp = this.isIps
-          }
-          if (this.bindRenewalVal[i] == 'disk') {
-            selectDisk = this.isDisks
-          }
-        }
-        var iplist = []
-        if (selectIp != ''){
-          iplist = selectIp.split(',').map(item => {
-            return {type: 2, id: parseInt(item)}
-          })
-        }
-        var disklist = []
-        if (selectDisk != ''){
-          disklist = selectDisk.split(',').map(item => {
-            return {type: 1, id: parseInt(item)}
-          })
-        }
-        var host = [
+        var list = [
           {type: 0, id: this.currentHost[0].id}
         ]
-        var list = host.concat(iplist, disklist)
         list = JSON.stringify(list)
+
         this.$http.post('continue/continueOrder.do', {
           list: list,
           timeType: this.renewalType,
@@ -1367,26 +1210,6 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({path: 'order'})
-          }
-        })
-      },
-      // 确认变更资费
-      ratesChange_ok() {
-        let url = 'continue/changeMoney.do'
-        this.$http.get(url, {
-          params: {
-            id: this.currentHost[0].id,
-            timeType: this.ratesChangeType,
-            timeValue: this.ratesChangeTime,
-            type: 0
-          }
-        }).then(response => {
-          if (response.data.status == 1) {
-            this.$router.push({path: 'order'})
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
           }
         })
       },
@@ -1504,7 +1327,7 @@
       }
     },
     computed: {
-      auth() {
+      auth(){
         return this.$store.state.authInfo != null
       }
     },
@@ -1517,69 +1340,20 @@
         if (time == '') {
           this.cost = '--'
         } else {
-          var selectIp = ''
-          var selectDisk = ''
-          for (var i = 0; i < this.bindRenewalVal.length; i++) {
-          if (this.bindRenewalVal[i] == 'ip') {
-            selectIp = this.isIps
-          }
-          if (this.bindRenewalVal[i] == 'disk') {
-            selectDisk = this.isDisks
-          }
-        }
-        this.$http.get('information/getYjPrice.do', {
+          this.$http.get('information/getYjPrice.do', {
             params: {
               timeValue: this.renewalTime,
               timeType: this.renewalType,
-              hostIdArr: this.currentHost[0].id,
-              ipIdArr: selectIp,
-              diskArr: selectDisk
-            }
-          }).then((response) => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.cost = response.data.result.toFixed(2)
-                this.originCost = response.data.result
-                if (response.data.cuspon) {
-                  this.originCost = Number((this.originCost + response.data.cuspon).toFixed(2))
-                }
-                if (response.data.continueDiscount) {
-                  this.originCost = (this.originCost + response.data.continueDiscount).toFixed(2)
-                }
-              } else {
-                this.$message.info({
-                  content: response.data.message
-                })
-              }
-            })
-        }
-      },
-      // 资费变更
-      ratesChangeType(type) {
-        this.ratesChangeTime = ''
-        this.timeOptions.renewalTime = this.timeOptions[type]
-      },
-      ratesChangeTime(time) {
-        if (time == '') {
-          this.ratesChangeCost = '--'
-        } else {
-          let url = 'information/getYjPrice.do'
-          this.$http.get(url, {
-            params: {
-              timeValue: this.ratesChangeTime,
-              timeType: this.ratesChangeType,
               hostIdArr: this.currentHost[0].id
             }
           })
             .then((response) => {
               if (response.status == 200 && response.data.status == 1) {
-                this.ratesChangeCost = response.data.result.toFixed(2)
-                this.originRatesChangeCost = response.data.result
-                if (response.data.cuspon) {
-                  this.originRatesChangeCost = Number((this.originRatesChangeCost + response.data.cuspon).toFixed(2))
-                }
-                if (response.data.continueDiscount) {
-                  this.originRatesChangeCost = (this.originRatesChangeCost + response.data.continueDiscount).toFixed(2)
-                }
+                this.cost = response.data.result
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
               }
             })
         }
