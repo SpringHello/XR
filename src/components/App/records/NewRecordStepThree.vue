@@ -195,7 +195,7 @@
           </div>
         </div>
         <h2>请上传其他资料</h2>
-        <p class="titleDescription">如前置审批材料，法人授权委托书等材料（点击<a href="keepOnRecord/attorney.doc">下载法人授权委托书</a>）</p>
+        <p class="titleDescription">如前置审批材料，法人授权委托书等材料（点击<a :href="mandateAddress">下载法人授权委托书</a>）</p>
         <div class="upload">
           <div class="uploadTitle">
             <p>其他文件</p>
@@ -233,7 +233,7 @@
           </div>
         </div>
         <h2>请上传网站备案信息真实性核验单</h2>
-        <p class="titleDescription">1、点击<a href="keepOnRecord/check.doc">下载《网站备案信息真实性核验单》</a>。2、查看核验单样例图，填写以下载的核验单，不得涂改。3、请您保存3份签字的核验单原件以备后续环节使用。</p>
+        <p class="titleDescription">1、点击<a :href="checkListAddress">下载《网站备案信息真实性核验单》</a>。2、点击查看核验单样例图，填写以下载的核验单，不得涂改。3、请您保存3份签字的核验单原件以备后续环节使用。</p>
         <div class="upload">
           <div class="uploadTitle">
             <p>其他文件</p>
@@ -271,7 +271,7 @@
           </div>
           <div class="uploadTitle" style="margin: 34px 0 10px 20px;">
             <div class="item" style="text-align: center;position: relative">
-              <img src="../../../assets/img/records/records-img4.png"/>
+              <img @click="imageViewShow = true" src="../../../assets/img/records/records-img4.jpg"/>
             </div>
           </div>
         </div>
@@ -279,6 +279,12 @@
       <div class="content-footer">
         <button @click="$router.go(-1)">上一步，填写网站信息</button>
         <button style="margin-left: 20px" @click="netStep()">下一步，办理拍照/上传资料</button>
+      </div>
+    </div>
+    <div class="ImageView is-active" style="padding-bottom: 10px;" v-show="imageViewShow" @click="imageViewShow=false">
+      <div class="ImageView-inner" style="overflow: auto;">
+        <img src="../../../assets/img/records/records-check2.jpg" class="ImageView-img" alt="preview"
+             style="width: 497.986px; transform: translate3d(140%, 15%, 0) scale3d(1.00003, 1.00003, 1); opacity: 1;">
       </div>
     </div>
   </div>
@@ -337,8 +343,15 @@
           otherFile: [],
           // 核验单
           CheckList: [],
-        }
+          mandateAddress: '',
+          checkListAddress: ''
+        },
+        imageViewShow: false
       }
+    },
+    created() {
+      this.getMandate()
+      this.getCheckList()
     },
     methods: {
       mark(index) {
@@ -575,10 +588,40 @@
           otherDataUrl: otherFile + '',
           webRecordAuthenticityUrl: CheckList + '',
         }
-        sessionStorage.setItem('mainParamsStr',JSON.stringify(mainParams))
-        sessionStorage.setItem('siteParamsStr',JSON.stringify(siteParams))
+        sessionStorage.setItem('mainParamsStr', JSON.stringify(mainParams))
+        sessionStorage.setItem('siteParamsStr', JSON.stringify(siteParams))
         this.$router.push('NewRecordStepFour')
       },
+      getMandate() {
+        let province = JSON.parse(sessionStorage.getItem('mainUnitInformationStr')).province
+        switch (province) {
+          case '湖北省':
+            this.mandateAddress = 'keepOnRecord/attorney_hubei.doc'
+            break
+          case '湖南省':
+            this.mandateAddress = 'keepOnRecord/attorney_hunan.doc'
+            break
+          case '上海市':
+            this.mandateAddress = 'keepOnRecord/attorney_shanghai.doc'
+            break
+          default:
+            this.mandateAddress = 'keepOnRecord/attorney.doc'
+            break
+        }
+      },
+      getCheckList() {
+        let province = JSON.parse(sessionStorage.getItem('mainUnitInformationStr')).province
+        let mainUnit = JSON.parse(sessionStorage.getItem('mainUnitInformationStr')).unitProperties
+        if (province == '浙江省') {
+          this.checkListAddress = 'keepOnRecord/hyd_for_zj.doc'
+        } else if (mainUnit == '企业' && province == '广东省') {
+          this.checkListAddress = 'keepOnRecord/hyd_for_gd_person.doc'
+        } else if (mainUnit == '个人' && province == '广东省') {
+          this.checkListAddress = 'keepOnRecord/hyd_for_gd_business.doc'
+        } else {
+          this.checkListAddress = 'keepOnRecord/check.doc'
+        }
+      }
     },
     mounted() {
       this.siteInfoShow = true
@@ -655,10 +698,6 @@
             > img {
               height: 203px;
               cursor: zoom-in;
-              transition: all 0.6s;
-              &:hover {
-                transform: scale(1.6);
-              }
             }
             .item-content {
               display: flex;
@@ -737,4 +776,30 @@
     transform: translateY(100px);
   }
 
+  .ImageView.is-active {
+    background-color: rgba(26, 26, 26, .65);
+  }
+
+  .ImageView {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 101;
+    overflow: hidden;
+    transition: background-color .2s ease-in-out;
+  }
+
+  .ImageView-inner {
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .ImageView-img {
+    cursor: zoom-out;
+    transition: -webkit-transform .3s ease-in-out;
+    transition: transform .3s ease-in-out;
+    transition: transform .3s ease-in-out, -webkit-transform .3s ease-in-out;
+  }
 </style>
