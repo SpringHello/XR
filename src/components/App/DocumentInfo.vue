@@ -2,7 +2,7 @@
   <div id="documentInfo">
     <div id="left">
       <div id="head">
-        <p>产品文档<img src="../../assets/img/document/menu.png" style="float:right"></p>
+        <p>产品文档<img src="../../assets/img/document/menu.png" style="float:right" @click="mainOpen=!mainOpen"></p>
       </div>
       <div id="menu">
         <p>云主机</p>

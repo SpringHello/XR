@@ -33,6 +33,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from '@/util/axiosInterceptor'
   export default {
     data () {
       return {
@@ -47,11 +48,11 @@
             list: [
               {
                 title: '云主机',
-                type: 'host',
+                type: 'haTGID9Jk',
               },
               {
                 title: '镜像服务',
-                type: false,
+                type: '',
               },
               {
                 title: 'ECS快照',
@@ -128,7 +129,18 @@
         ]
       }
     },
-    methods: {}
+    beforeRouteEnter(to, from, next){
+      axios.get('document/getFirstTitle.do').then(response => {
+        next(vm => {
+          vm.setData(response)
+        })
+      })
+    },
+    methods: {
+        setData(response){
+            this.contentList
+        }
+    }
   }
 </script>
 
