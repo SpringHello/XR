@@ -988,13 +988,13 @@
             }
           }).then((response) => {
               if (response.status == 200 && response.data.status == 1) {
-                this.cost = response.data.result
+                this.cost = response.data.result.toFixed(2)
                 this.originCost = response.data.result
                 if (response.data.cuspon) {
-                  this.originCost += response.data.cuspon
+                  this.originCost = Number((this.originCost + response.data.cuspon).toFixed(2))
                 }
                 if (response.data.continueDiscount) {
-                  this.originCost += response.data.continueDiscount
+                  this.originCost = (this.originCost + response.data.continueDiscount).toFixed(2)
                 }
               } else {
                 this.$message.info({
@@ -1460,13 +1460,13 @@
             }
           }).then((response) => {
               if (response.status == 200 && response.data.status == 1) {
-                this.cost = response.data.result
+                this.cost = response.data.result.toFixed(2)
                 this.originCost = response.data.result
                 if (response.data.cuspon) {
-                  this.originCost += response.data.cuspon
+                  this.originCost = Number((this.originCost + response.data.cuspon).toFixed(2))
                 }
                 if (response.data.continueDiscount) {
-                  this.originCost += response.data.continueDiscount
+                  this.originCost = (this.originCost + response.data.continueDiscount).toFixed(2)
                 }
               } else {
                 this.$message.info({
@@ -1495,13 +1495,13 @@
           })
             .then((response) => {
               if (response.status == 200 && response.data.status == 1) {
-                this.ratesChangeCost = response.data.result
+                this.ratesChangeCost = response.data.result.toFixed(2)
                 this.originRatesChangeCost = response.data.result
                 if (response.data.cuspon) {
-                  this.originRatesChangeCost += response.data.cuspon
+                  this.originRatesChangeCost = Number((this.originRatesChangeCost + response.data.cuspon).toFixed(2))
                 }
                 if (response.data.continueDiscount) {
-                  this.originRatesChangeCost += response.data.continueDiscount
+                  this.originRatesChangeCost = (this.originRatesChangeCost + response.data.continueDiscount).toFixed(2)
                 }
               }
             })
