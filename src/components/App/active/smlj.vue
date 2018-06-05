@@ -42,7 +42,7 @@
             <div class="foot">
               <button>立即试用</button>
               <p><span>30天</span>免费</p>
-              <p style="font-size:14px;color:rgba(102,102,102,1);margin-top: 10px;">原价：￥85.72起</p>
+              <p style="font-size:14px;color:rgba(102,102,102,1);margin-top: 10px;">原价：￥{{computerInfo.cost}}起</p>
             </div>
           </div>
           <div class="right">
@@ -155,7 +155,16 @@
         },
         zone: '',
         system: '',
-        imgSrc: 'user/getKaptchaImage.do'
+        imgSrc: 'user/getKaptchaImage.do',
+        computerInfo: {
+          cost: '',
+          cpu: '',
+          memory: '',
+          brand: '',
+          disk: '',
+          zone: '',
+          zoneId: ''
+        }
       }
     },
     created() {
@@ -167,7 +176,7 @@
         }
       }).then(response => {
         next(vm => {
-          vm.setData(response.data.result)
+          vm.setData(response)
         })
       })
 
@@ -262,7 +271,10 @@
         }
       },
       setData(result){
-
+        this.computerInfo.cost = result.data.cost;
+        this.computerInfo.cost = result.data.cost;
+        this.computerInfo.cost = result.data.cost;
+        this.computerInfo.cost = result.data.cost;
       }
     },
     computed: {},
