@@ -161,9 +161,9 @@
     created() {
     },
     beforeRouteEnter(to, from, next){
-      axios.get('', {
+      axios.get('activity/listSaleMv.do', {
         params: {
-          url: to.query.url
+          token: to.query.token
         }
       }).then(response => {
         next(vm => {
