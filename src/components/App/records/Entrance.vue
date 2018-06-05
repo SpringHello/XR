@@ -325,8 +325,8 @@
           return
         }
         if ((this.type == 1 && this.recordInfo.length !== 0) || (this.type == 2 && this.recordInfo.length !== 0)) {
-          //this.showModal.hint = true
-          //return
+          this.showModal.hint = true
+          return
         }
         let url = 'recode/existMainOrWeb.do'
         axios.get(url, {

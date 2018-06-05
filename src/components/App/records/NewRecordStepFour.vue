@@ -6,13 +6,13 @@
     <div class="body">
       <div class="content">
         <h2>请选择核验方式</h2>
-        <p>当前状态： <span>提价资料</span></p>
+        <p>当前状态： <span>提交资料</span></p>
       </div>
       <p>您所在北京市地区可选择核验方式：</p>
       <div class="selectWay">
         <div class="title">
-          <p :class="{select: photograph === 1}" @click="photograph = 1">现场拍照核验</p>
           <p :class="{select: photograph === 2}" @click="photograph = 2">邮寄幕布拍照核验</p>
+          <p :class="{select: photograph === 1}" @click="photograph = 1">现场拍照核验</p>
         </div>
         <div v-if="photograph === 1">
           <div class="description">
@@ -43,7 +43,7 @@
               <FormItem label="地址" prop="address">
                 <Input v-model="receiveForm.address" placeholder="请输入地址"
                        style="width: 500px" :readonly="canUpdate"></Input>
-                <span style="cursor: pointer;color: #377dff;margin-left: 10px;font-size: 14px" @click="updateReceiveForm">使用新地址</span>
+                <span style="cursor: pointer;color: #377dff;margin-left: 10px;font-size: 14px" @click="updateReceiveForm" v-if="!curtainStatus">使用新地址</span>
               </FormItem>
               <FormItem label="收件人" prop="person">
                 <Input v-model="receiveForm.person" placeholder="请输入收件人"
@@ -59,8 +59,9 @@
             </Form>
           </div>
           <div class="footer" style="padding-top: 0">
+            <button @click="$router.go(-1)" style="margin-right: 10px">上一步</button>
             <button @click="showModal.logistics = true" v-if="curtainStatus">查看物流</button>
-            <button v-else @click="applyCurtain">提交幕布申请</button>
+            <button v-else @click="applyCurtain">提交初审并申请幕布</button>
           </div>
         </div>
       </div>
@@ -133,18 +134,30 @@
       step, records, oStep
     },
     beforeRouteEnter(to, from, next) {
-      let id  = sessionStorage.getItem('id')
-      let url = 'recode/listMainWeb.do'
-      axios.get(url, {
-        params: {
-          id: id
-        }
-      }).then(response => {
+      if (sessionStorage.getItem('mainParamsStr')) {
+        let mainParamsStr = sessionStorage.getItem('mainParamsStr')
+        let siteParamsStr = sessionStorage.getItem('siteParamsStr')
+        let area = sessionStorage.getItem('zone')
+        let zoneId = sessionStorage.getItem('zoneId')
+        let recordsType = sessionStorage.getItem('recordsType')
         next(vm => {
           window.scroll(0, 525)
-          vm.getPersonInfo(response)
+          vm.setData(area, zoneId, recordsType, mainParamsStr, siteParamsStr)
         })
-      })
+      } else {
+        let id = sessionStorage.getItem('id')
+        let url = 'recode/listMainWeb.do'
+        axios.get(url, {
+          params: {
+            id: id
+          }
+        }).then(response => {
+          next(vm => {
+            window.scroll(0, 525)
+            vm.getPersonInfo(response)
+          })
+        })
+      }
     },
     data() {
       //校验手机号码
@@ -157,8 +170,6 @@
         }
       };
       return {
-        // 备案ID
-        recordserviceid: '',
         // 备案数据库id
         id: '',
         // 备案类型
@@ -166,7 +177,7 @@
         // 备案类型描述
         recordsTypeDesc: '',
         // 拍照类型 1:现场拍照 2: 邮寄幕布
-        photograph: 1,
+        photograph: 2,
         // 邮寄下一步
         nextStep: false,
         // 收件信息表单
@@ -199,23 +210,45 @@
           photo: ''
         },
         // 是否申请幕布
-        curtainStatus: false
+        curtainStatus: false,
+        //主体信息参数
+        mainParams: {},
+        // 网站信息参数
+        siteParams: {},
+        // 用户备案信息
+        recordInfo: false,
       }
     },
     created() {
-      this.$Message.success({
-        content: '恭喜您顺利通过备案初审！请尽快提交资料，办理拍照',
-        duration: 5,
-        closable: true
-      })
-      let id = sessionStorage.getItem('id')
-      this.id = id
+      this.getRecordInfo()
     },
     methods: {
+      setData(area, zoneId, recordsType, mainParamsStr, siteParamsStr) {
+        this.area = area
+        this.zoneId = zoneId
+        this.mainParams = JSON.parse(mainParamsStr)
+        this.siteParams = JSON.parse(siteParamsStr)
+        this.receiveForm.address = this.mainParams.mainCompanyCommunicatLocation
+        this.receiveForm.person = this.mainParams.legalName
+        this.receiveForm.phone = this.mainParams.phone
+        switch (recordsType) {
+          case '1':
+            this.recordsType = '新增备案'
+            this.recordsTypeDesc = '域名未备案，备案主体证件无备案号，需要备案。'
+            break
+          case '2':
+            this.recordsType = '新增接入'
+            this.recordsTypeDesc = '域名已在其他平台备案过，需要变更接入商。'
+            break
+          case '3':
+            this.recordsType = '新增网站'
+            this.recordsTypeDesc = '主体已经备案过，需要再给其他网站备案。'
+            break
+        }
+      },
       // 获取当前备案网站负责人信息
       getPersonInfo(response) {
         if (response.data.status === 1) {
-          this.recordserviceid = response.data.result[0].recordserviceid
           this.recordsType = response.data.result[0].recordtype
           switch (this.recordsType) {
             case '新增备案':
@@ -248,6 +281,14 @@
           })
         }
       },
+      // 获取备案信息
+      getRecordInfo() {
+        this.$http.get('recode/listMainWeb.do').then(res => {
+          if (res.data.status == 1) {
+            this.recordInfo = res.data.result.length == 0 ? false : true
+          }
+        })
+      },
       // 使用新地址
       updateReceiveForm() {
         this.canUpdate = false
@@ -256,25 +297,9 @@
       submitNewAddress() {
         this.$refs.receiveForm.validate((val) => {
           if (val) {
-            let url = 'recode/updateMainWeb.do'
-            axios.get(url, {
-              params: {
-                id: this.id,
-                backgroundAddress: this.receiveForm.address,
-                backgroundName: this.receiveForm.person,
-                backgroundPhone: this.receiveForm.phone,
-              }
-            }).then(res => {
-              if (res.data.status === 1) {
-                this.curtainStatus = false
-                this.$Message.success({
-                  content: '邮寄地址修改成功'
-                })
-              } else {
-                this.$message.info({
-                  content: '平台开小差了，请稍候再试'
-                })
-              }
+            this.curtainStatus = false
+            this.$Message.success({
+              content: '邮寄地址修改成功'
             })
             this.canUpdate = true
           } else {
@@ -289,26 +314,59 @@
       },
       // 提交幕布申请
       applyCurtain() {
-        let url = 'recode/updateMainWeb.do'
-        axios.get(url, {
-          params: {
-            id: this.id,
-            backgroundAddress: this.receiveForm.address,
-            backgroundName: this.receiveForm.person,
-            backgroundPhone: this.receiveForm.phone,
-          }
-        }).then(res => {
-          if (res.data.status === 1) {
-            this.curtainStatus = true
-            this.$Message.success({
-              content: '幕布申请成功'
-            })
-          } else {
-            this.$message.info({
-              content: '平台开小差了，请稍候再试'
-            })
-          }
-        })
+        this.siteParams.backgroundAddress =  this.receiveForm.address
+        this.siteParams.backgroundName =  this.receiveForm.person
+        this.siteParams.backgroundPhone =  this.receiveForm.phone
+        let addMainWeb = axios.post('recode/addMainWeb.do', this.siteParams)
+        // 有主体信息发送一个请求，没有发送两个请求
+        if (this.recordInfo == true) {
+          Promise.all([addMainWeb]).then(response => {
+            if (response[0].status == 200 && response[0].data.status == 1) {
+              this.$router.push('waitFirstTrial')
+              sessionStorage.clear()
+            } else {
+              this.$message.info({
+                content: '平台开小差了，请稍候再试'
+              })
+            }
+          })
+        } else {
+          let addMainCompany = axios.get('recode/addMainCompany.do', {
+            params: {
+              mainCompanyArea: this.mainParams.mainCompanyArea,
+              mainCompanyCertificatesType: this.mainParams.mainCompanyCertificatesType,
+              mainCompanyNature: this.mainParams.mainCompanyNature,
+              mainCompanyNumber: this.mainParams.mainCompanyNumber,
+              mainCompanyName: this.mainParams.mainCompanyName,
+              mainCompanyCertificatesLoaction: this.mainParams.mainCompanyCertificatesLoaction,
+              mainCompanyCommunicatLocation: this.mainParams.mainCompanyCommunicatLocation,
+              InvestorName: this.mainParams.InvestorName,
+              legalName: this.mainParams.legalName,
+              legalCertificatesType: this.mainParams.legalCertificatesType,
+              legalCertificatesNumber: this.mainParams.legalCertificatesNumber,
+              officeNumber: this.mainParams.officeNumber,
+              phone: this.mainParams.phone,
+              email: this.mainParams.email,
+              zoneId: this.zoneId,
+              companyResponsibilityUrlPositive: this.mainParams.companyResponsibilityUrlPositive,
+              companyResponsibilityUrlBack: this.mainParams.companyResponsibilityUrlBack,
+              hostCompanyUrl: this.mainParams.hostCompanyUrl,
+              domainCertificateUrl: this.mainParams.domainCertificateUrl,
+              otherDataUrl: this.mainParams.otherDataUrl,
+              webRecordAuthenticityUrl: this.mainParams.webRecordAuthenticityUrl
+            }
+          })
+          Promise.all([addMainCompany, addMainWeb]).then(response => {
+            if ((response[0].status == 200 && response[0].data.status == 1) && (response[1].status == 200 && response[1].data.status == 1)) {
+              this.$router.push('waitFirstTrial')
+              sessionStorage.clear()
+            } else {
+              this.$message.info({
+                content: '平台开小差了，请稍候再试'
+              })
+            }
+          })
+        }
       },
       // 提交管局审批
       sumbitApproval() {
@@ -329,7 +387,7 @@
               content: '信息提交成功'
             })
             sessionStorage.setItem('recordsType', this.recordsType)
-            this.$router.push('waitFirstTrial')
+            this.$router.push('waitSecondTrial')
           } else {
             this.$message.info({
               content: '平台开小差了，请稍候再试'
