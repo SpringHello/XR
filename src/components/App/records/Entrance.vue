@@ -96,7 +96,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.hint = false">取消</Button>
-        <Button type="primary">确认</Button>
+        <Button type="primary" @click="newSite">确认</Button>
       </p>
     </Modal>
   </div>
@@ -313,6 +313,14 @@
         this.area = item.zoneId
         this.areaText = item.text
         item.src = this.selectImg
+      },
+      newSite() {
+        this.showModal.hint = false
+        this.type = 3
+        sessionStorage.setItem('zone', this.areaText)
+        sessionStorage.setItem('zoneId', this.area)
+        sessionStorage.setItem('recordsType', this.type + '')
+        this.$router.push('newAccess')
       },
       // 立即备案
       putOnRecord() {

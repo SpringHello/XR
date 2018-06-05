@@ -148,6 +148,7 @@
     },
     created() {
       this.getRecordInfo()
+      window.scroll(0, 525);
     },
     methods: {
       setData(area, recordsType) {
