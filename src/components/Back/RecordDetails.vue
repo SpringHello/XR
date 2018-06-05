@@ -382,7 +382,7 @@
       title="重新上传网站备案信息真实性核验单信息"
       :scrollable="true"
     >
-      <p style="margin-bottom:5px">1、点击下载<span style="color:#2A99F2;">《网站备案信息真实性核验单》</span></p>
+      <p style="margin-bottom:5px">1、点击下载<a :href="single" style="color:#2A99F2;">《网站备案信息真实性核验单》</a></p>
       <p style="margin-bottom:5px">2、查看核验单样例图，填写以下载的核验单，不得涂改</p>
       <p>3、请您保存3份签字的核验单原件以备后续环节试用</p>
       <div class="updatePhoto">
@@ -615,7 +615,7 @@
       :scrollable="true"
       :format="['jpg','jpeg','png','doc','docx','pdf']"
     >
-      <p>如前置审批材料，法人授权委托书等材料（点击下载<span style="color:#2A99F2;">法人委托书</span>）</p>
+      <p>如前置审批材料，法人授权委托书等材料（点击下载<a :href="keep" style="color:#2A99F2;">法人委托书</a>）</p>
       <div class="updatePhoto">
         <div class="updates">
           <div style="width:100%;height:309px;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'">
@@ -1180,7 +1180,11 @@
         otherData:[],
         //获取网站核验单
         webRecordData:[],
-        isAllUpate:true
+        isAllUpate:true,
+        //委托书路径
+        keep:'',
+        //网站核验单路径
+        single:''
       };
     },
     methods: {
@@ -1218,6 +1222,28 @@
               this.province = arr[0];
               this.city = arr[1];
               this.district = arr[2];
+              //委托书路径
+              let region   = this.hostUnitList.maincompanyarea.substring(0,this.hostUnitList.maincompanyarea.indexOf('-'));
+
+              if(region == '湖北省'){
+                this.keep = 'keepOnRecord/attorney_hubei.doc';
+              }else if(region == '湖南省'){
+                this.keep = 'keepOnRecord/attorney_hunan.doc';
+              }else if(region =='上海市'){
+                this.keep = 'keepOnRecord/attorney_shanghai.doc';
+              }else{
+                this.keep = 'keepOnRecord/attorney.doc';
+              }
+              //核验单路径
+              if(region == '广东省' && this.hostUnitList.maincompanynature =='个人'){
+                this.single = 'keepOnRecord/hyd_for_gd_business.doc';
+              }else if(region =='广东省' && this.hostUnitList.maincompanynature =='企业'){
+                this.single = 'keepOnRecord/hyd_for_gd_person.doc';
+              }else if(region =='浙江省'){
+                this.single = 'keepOnRecord/hyd_for_zj.doc';
+              }else {
+                this.single = 'keepOnRecord/check.doc';
+              }
 
               //分割图片路径取出后缀名显示响应的文件类型图片
               let addy  = this.hostUnitList.domaincertificateurl.split(",");
@@ -1537,7 +1563,7 @@
           }
         });
       },
-
+      //
       // 重新选择区，重新校验
       // changeDistrict() {
       //   this.$refs.mainUnitInformation.validateField("district", valid => {
@@ -1626,6 +1652,7 @@
         background-color: #ffffff;
         color: #999;
         line-height: 138px;
+        text-align: center;
       }
       .item-content-text {
         width: 186px;
