@@ -10,32 +10,19 @@
         <div class="body">
           <div class="left">
             <div class="wrapper">
-              <p>1核 <span>cpu</span></p>
-              <p>1G <span>内存</span></p>
-              <p>1M <span>带宽</span></p>
-              <p>40G <span>磁盘</span></p>
+              <p>{{computerInfo.cpu}}核 <span>cpu</span></p>
+              <p>{{computerInfo.memory}}G <span>内存</span></p>
+              <p>{{computerInfo.brand}}M <span>带宽</span></p>
+              <p>{{computerInfo.disk}}G <span>磁盘</span></p>
             </div>
             <div>
               <div class="info">
                 <p>数据中心</p>
-                <RadioGroup v-model="zone">
-                  <Radio label="apple">
-                    <span>北方一区</span>
-                  </Radio>
-                  <Radio label="android">
-                    <span>华中一区</span>
-                  </Radio>
-                  <Radio label="windows">
-                    <span>北京一区</span>
-                  </Radio>
-                </RadioGroup>
+                <span>{{computerInfo.zone}}</span>
               </div>
               <div class="info">
                 <p>操作系统</p>
-                <RadioGroup v-model="system">
-                  <Radio label="Centos"></Radio>
-                  <Radio label="Windows"></Radio>
-                </RadioGroup>
+                <span>{{computerInfo.osname}}</span>
               </div>
 
             </div>
@@ -162,6 +149,7 @@
           memory: '',
           brand: '',
           disk: '',
+          osname: '',
           zone: '',
           zoneId: ''
         }
@@ -272,9 +260,13 @@
       },
       setData(result){
         this.computerInfo.cost = result.data.cost;
-        this.computerInfo.cost = result.data.cost;
-        this.computerInfo.cost = result.data.cost;
-        this.computerInfo.cost = result.data.cost;
+        this.computerInfo.cpu = result.data.result[0].cpu;
+        this.computerInfo.memory = result.data.result[0].mem;
+        this.computerInfo.brand = result.data.result[0].bandwith;
+        this.computerInfo.disk = result.data.result[0].disksize;
+        this.computerInfo.zone = result.data.result[0].zonename;
+        this.computerInfo.osname = result.data.result[0].osname;
+        this.computerInfo.zoneId = result.data.result[0].zoneid;
       }
     },
     computed: {},
@@ -324,6 +316,17 @@
               line-height: 19px;
               margin-right: 20px;
             }
+            span {
+              font-size: 18px;
+              &:before {
+                vertical-align: bottom;
+                content: '';
+                display: inline-block;
+                width: 18px;
+                height: 18px;
+                background-color: #00c1de;
+              }
+            }
           }
           .foot {
             p {
@@ -370,6 +373,7 @@
         font-size: 18px;
         color: rgba(51, 51, 51, 1);
         line-height: 18px;
+        font-weight: 600;
         margin-bottom: 20px;
         &::before {
           content: '';
@@ -382,14 +386,15 @@
         }
       }
       .main {
-        font-size: 18px;
+        font-weight: 600;
+        font-size: 14px;
         color: rgba(51, 51, 51, 1);
         line-height: 28px;
       }
       .tiny {
-        font-size: 12px;
+        font-size: 14px;
         color: rgba(51, 51, 51, 1);
-        line-height: 18px;
+        line-height: 28px;
       }
     }
   }
