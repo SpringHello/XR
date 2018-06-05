@@ -186,11 +186,11 @@
         <p style="font-size:14px;color:#666666;">文件名称</p>
         <span>有效期</span>
         <Select v-model="term" style="width:240px;">
-          <Option v-for="item in termList" :value="item.term" :key="item.index">{{item.label}}</Option>
+          <Option v-for="item in termList" :value="item.value" :key="item.value">{{item.label}}</Option>
         </Select>
         <Button type="primary" @click="geturl">获取</Button>
         <br><br>
-        <span>外链</span><Input type="text" style="width:317px;" v-model="flies"  disabled="true"></Input>
+        <span>外链</span><Input type="text" style="width:317px;" v-model="flies"  :disabled="true"></Input>
       </div>
     </Modal>
     <!-- 自定义权限 -->
@@ -249,17 +249,17 @@
     </Modal>
 
     <!--自定义权限编辑-->
-    <Modal
-      v-model="jurisdiction"
-      title="添加自定义权限"
-      :scrollable='true'
-      width="550px"
-      @on-ok="jurisdictionClick"
-    >
-     <pre style="background-color:#FDF6E3;">
-       <code></code>
-     </pre>
-    </Modal>
+    <!--<Modal-->
+      <!--v-model="jurisdiction"-->
+      <!--title="添加自定义权限"-->
+      <!--:scrollable='true'-->
+      <!--width="550px"-->
+      <!--@on-ok="jurisdictionClick"-->
+    <!--&gt;-->
+     <!--<pre style="background-color:#FDF6E3;">-->
+       <!--<code></code>-->
+     <!--</pre>-->
+    <!--</Modal>-->
 
     <!--修改自定义权限-->
     <Modal
@@ -318,44 +318,44 @@
 
 
     <!--跨域访问CRORS添加规则-->
-    <Modal
-      v-model="cors"
-      title="跨域访问CRORS添加规则"
-      :scrollable='true'
-      width="550px"
-      @on-ok="jurisdictionClick"
-    >
-      <div>
-        <p>来源Origin</p>
-        <Input :disabled='grant' v-model="updateGrantValue" style="width:420px;" :rows="4" type="textarea" placeholder="例如：http://10.100.100.100:8001 https://www.xrcloud.net"></Input><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
-        <p style="color: #999999;">来源可设置多个，每行一个，以回车间隔，每行最多能有一个通配符(*)</p>
-      </div>
-      <br>
-      <div style="width:366px;display:flex;">
-        <div style="width:115px;font-size:14px;color:#333333;">操作Methods</div>
-        <div style="width:300px;">
-          <CheckboxGroup v-model="updateChannel">
-            <Checkbox label="put">Put</Checkbox>
-            <Checkbox label="get">Get</Checkbox>
-            <Checkbox label="post">Post</Checkbox>
-            <Checkbox label="head">Head</Checkbox>
-            <Checkbox label="delete">Delete</Checkbox>
-          </CheckboxGroup>
-        </div>
-        <p>来源可设置多个，每行一个，以回车间隔。</p>
-      </div>
+    <!--<Modal-->
+      <!--v-model="cors"-->
+      <!--title="跨域访问CRORS添加规则"-->
+      <!--:scrollable='true'-->
+      <!--width="550px"-->
+      <!--@on-ok="jurisdictionClick"-->
+    <!--&gt;-->
+      <!--<div>-->
+        <!--<p>来源Origin</p>-->
+        <!--<Input :disabled='grant' v-model="updateGrantValue" style="width:420px;" :rows="4" type="textarea" placeholder="例如：http://10.100.100.100:8001 https://www.xrcloud.net"></Input><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>-->
+        <!--<p style="color: #999999;">来源可设置多个，每行一个，以回车间隔，每行最多能有一个通配符(*)</p>-->
+      <!--</div>-->
+      <!--<br>-->
+      <!--<div style="width:366px;display:flex;">-->
+        <!--<div style="width:115px;font-size:14px;color:#333333;">操作Methods</div>-->
+        <!--<div style="width:300px;">-->
+          <!--<CheckboxGroup v-model="updateChannel">-->
+            <!--<Checkbox label="put">Put</Checkbox>-->
+            <!--<Checkbox label="get">Get</Checkbox>-->
+            <!--<Checkbox label="post">Post</Checkbox>-->
+            <!--<Checkbox label="head">Head</Checkbox>-->
+            <!--<Checkbox label="delete">Delete</Checkbox>-->
+          <!--</CheckboxGroup>-->
+        <!--</div>-->
+        <!--<p>来源可设置多个，每行一个，以回车间隔。</p>-->
+      <!--</div>-->
 
-      <div style="width:366px;display:flex;">
-        <div style="width:115px;font-size:14px;color:#333333;">Expose-Headers</div>
-        <br>
-        <Input :disabled='whiteList' v-model="updateWhiteListValue" style="width:420px;" :rows="4" type="textarea"></Input><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
-      </div>
+      <!--<div style="width:366px;display:flex;">-->
+        <!--<div style="width:115px;font-size:14px;color:#333333;">Expose-Headers</div>-->
+        <!--<br>-->
+        <!--<Input :disabled='whiteList' v-model="updateWhiteListValue" style="width:420px;" :rows="4" type="textarea"></Input><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>-->
+      <!--</div>-->
 
-      <div>
-        <p>缓存Max Age</p>
-        <Input type="text" style="width:317px" placeholder="请输入0-999999999的正整数"></Input>
-      </div>
-    </Modal>
+      <!--<div>-->
+        <!--<p>缓存Max Age</p>-->
+        <!--<Input type="text" style="width:317px" placeholder="请输入0-999999999的正整数"></Input>-->
+      <!--</div>-->
+    <!--</Modal>-->
   </div>
 </template>
 
@@ -419,15 +419,15 @@
         term:'',
         termList:[
           {
-            term:'永久有效',
+            value:'3',
             label:'永久有效'
           },
           {
-            term:'7天',
+            value:'2',
             label:'7天'
           },
           {
-            term:'1天',
+            value:'1',
             label:'1天'
           }
         ],
@@ -572,7 +572,6 @@
           {
             title:'操作',
             render:(h,obj)=>{
-
               return h('div',[h('span',{style:{
                 marginRight:'20px',
                   color:'rgb(42, 153, 242)',
@@ -593,7 +592,8 @@
                   })
                   this.updateChannel.push(str);
                     this.updateGrantValue = obj.row.userauthorization;
-
+                    this.updateWhiteListValue = obj.row.refererip;
+                  console.log(obj.row);
                 }
                 }},'修改'),h('span',{
                   style:{
@@ -609,13 +609,20 @@
             }
           },
         ],
+        //权限列表
         aclData:[],
+        //跨域访问规则表单
+        formValidate:{
+          name:''
+        },
+        ruleValidate:{},
+
         //修改自定义权限
         updateWhiteListValue:'',
         updateReferer:'',
         updateInfluenceValue:'',
         updateSources:'',
-        updateChannel:'',
+        updateChannel:[],
         updateGrantValue:'',
         updateUsers:'',
         //cors弹窗
@@ -662,6 +669,7 @@
           }
         ],
         corsData:[]
+
       }
     },
     methods: {
@@ -763,10 +771,12 @@
       usersClick(){
         if(this.users == '0'){
           this.grant = true;
-          this.grantValue = '*'
+          this.grantValue = '*';
+          this.updateGrantValue = '*';
         }else{
           this.grant = false;
           this.grantValue = '';
+          this.updateGrantValue = '';
         }
       },
       //添加自定义权限
@@ -1008,8 +1018,8 @@
   }
   .down{
     color:#2A99F2;
-    width: 17px;
-    height: 9px;
+    width: 14px;
+    height:12px;
     transform: rotate(-45deg);
     -webkit-transform: rotate(-45deg);
     -moz-transform: rotate(-45deg);
@@ -1021,8 +1031,8 @@
     content:'';
     position: absolute;
     top: 0;
-    width: 17px;
-    height: 9px;
+    width: 14px;
+    height: 12px;
     border: 1px solid #2A99F2;
     border-top-style:none ;
     border-right-style: none;
