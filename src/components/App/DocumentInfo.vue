@@ -11,7 +11,6 @@
                     </template>
                     <MenuItem v-for="(secitem,index) in item.secNav" :key="index" :name="secitem.url">{{secitem.name}}</MenuItem>
                 </Submenu>
-               
             </Menu>
         </Col>
        <col span="18" id="right">
@@ -22,7 +21,6 @@
 </template>
 
 <script type="text/ecmascript-6">
-import componentTest from './componentTest'
 export default {
     data () {
         return {
@@ -73,7 +71,6 @@ export default {
     //   }
     },
     components: {
-        componentTest
     }
 }
 </script>
