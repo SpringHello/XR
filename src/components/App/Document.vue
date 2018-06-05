@@ -8,22 +8,19 @@
         <span :class="{select:selectPro}" @click="selectDoc = false,selectPro = true">常见问题</span>
       </div>
       <div class="content" v-if="selectDoc">
-        <div v-for="(item,index) in contentList" :class="{active:item.active}" @mouseenter="ME(item)"
-             @mouseleave="ML(item)" :key="index">
+        <div v-for="(item,index) in contentList" :key="index">
           <div class="header">
             <i class="iconfont" :class="item.img" style="font-size:30px;color:#fff;line-height:1"></i>
             <p>{{item.title}}</p>
           </div>
           <div class="body">
-            <ul v-for="(item,index) in item.list" :key="index">
-              <div>
-                <p class="title" @click="item.open = !item.open" :class="{open:item.open}">{{item.title}}</p>
-                <!--<li v-if="item.open" v-for="(subItem,subIndex) in item.desc" :key="subIndex" >-->
-                <!--<router-link :to="subItem.url" :class="{notAllow:subItem.url === ''}">{{subItem.subTitle}}-->
-                <!--</router-link>-->
-                <!--</li>-->
-              </div>
-            </ul>
+            <div v-for="(item,index) in item.list" :key="index" class="wrapper">
+              <router-link :to="`documentInfo?type=${item.type}`" class="title">{{item.title}}</router-link>
+              <!--<li v-if="item.open" v-for="(subItem,subIndex) in item.desc" :key="subIndex" >-->
+              <!--<router-link :to="subItem.url" :class="{notAllow:subItem.url === ''}">{{subItem.subTitle}}-->
+              <!--</router-link>-->
+              <!--</li>-->
+            </div>
           </div>
         </div>
       </div>
@@ -50,18 +47,15 @@
             list: [
               {
                 title: '云主机',
-                open: false,
-//                desc: [{subTitle: '产品描述', url: 'computed/1-1'}, {subTitle: '操作说明', url: 'computed/4-1'}]
+                type: 'host',
               },
               {
                 title: '镜像服务',
-                /* 第一版暂无操作说明 */
-                open: false,
-//                desc: [{subTitle: '产品描述', url: 'computed/7-1'}] /* {subTitle: '操作说明', url: 'documentInfo/3'} */
+                type: false,
               },
               {
-                title: 'ECS快照', open: false
-//                desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]
+                title: 'ECS快照',
+                type: false
               }
             ],
             active: false
@@ -72,24 +66,19 @@
             list: [
               {
                 title: '弹性IP',
-                open: false,
-//                desc: [{subTitle: '产品描述', url: 'networks/4-1'}, {subTitle: '操作说明', url: 'networks/6-1'}]
+                type: false,
               },
               {
-                title: '私有网络 ', open: false,
-//                desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]
+                title: '私有网络 ', type: false,
               },
               {
-                title: '负载均衡', open: false,
-//                desc: [{subTitle: '产品描述', url: 'networks/1-1'}, {subTitle: '操作说明', url: 'networks/2-1'}]
+                title: '负载均衡', type: false,
               },
               {
-                title: 'N虚拟专网VPN', open: false,
-//                desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]
+                title: 'N虚拟专网VPN', type: false,
               },
               {
-                title: 'NAT网关', open: false,
-//                desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]
+                title: 'NAT网关', type: false,
               }
             ],
             active: false
@@ -99,16 +88,13 @@
             title: '云安全',
             list: [
               {
-                title: '虚拟防火墙', open: false,
-//                desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]
+                title: '虚拟防火墙', type: false,
               },
               {
-                title: 'DDOS防护', open: false,
-//                desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]
+                title: 'DDOS防护', type: false,
               },
               {
-                title: 'SSH秘钥', open: false,
-//                desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]
+                title: 'SSH秘钥', type: false,
               }
             ],
             active: false
@@ -118,12 +104,10 @@
             title: '云存储',
             list: [
               {
-                title: '云硬盘', open: false,
-//                desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]
+                title: '云硬盘', type: false,
               },
               {
-                title: '云硬盘快照', open: false,
-//                desc: [{subTitle: '产品描述', url: ''}, {subTitle: '操作说明', url: ''}]
+                title: '云硬盘快照', type: false,
               }
             ],
             active: false
@@ -132,28 +116,19 @@
             img: 'icon-zhanghuyucaiwu',
             title: '账户与财务',
             list: [
-              {title: '登录/注册', open: false, url: 'uaf/3-1'},
-              {title: '账户安全', open: false, url: 'uaf/3-1'},
-              {title: '个人/企业认证', open: false, url: 'uaf/3-1'},
-//              {title: '产品定价', open: false, url: 'uaf/4-1'},
-              {title: '计费说明', open: false, url: ''},
-              {title: '代金券', open: false, url: 'uaf/6-1'},
-//              {title: '充值', open: false, url: 'uaf/7-1'},
-              {title: '发票申请', open: false, url: 'uaf/8-1'}
+              {title: '登录/注册', type: false},
+              {title: '账户安全', type: false},
+              {title: '个人/企业认证', type: false},
+              {title: '计费说明', type: false},
+              {title: '代金券', type: false},
+              {title: '发票申请', type: false}
             ],
             active: false
           }
         ]
       }
     },
-    methods: {
-      ME(item){
-        item.active = true
-      },
-      ML(item){
-        item.active = false
-      }
-    }
+    methods: {}
   }
 </script>
 
@@ -173,7 +148,7 @@
         color: #333;
         margin-left: 40px;
         padding-bottom: 15px;
-        &:first-of-type{
+        &:first-of-type {
           margin-left: 67px;
         }
       }
@@ -214,11 +189,13 @@
           }
         }
         > .body {
-          ul {
+          .wrapper {
+            margin: 20px;
             .title {
               font-size: 14px;
               color: #111;
-              padding: 20px 20px 0 20px;
+              cursor: pointer;
+              user-select: none;
               &::after {
                 content: '';
                 display: inline-block;
@@ -226,45 +203,19 @@
                 height: 10px;
                 border-right: 1px solid #333;
                 border-bottom: 1px solid #333;
-                transform: translateY(.5px) rotate(311deg);
+                transform: translateY(3px) rotate(311deg);
                 float: right;
               }
               &:hover {
                 color: #377DFF;
                 &::after {
-                  content: '';
-                  display: inline-block;
-                  width: 10px;
-                  height: 10px;
                   border-right: 1px solid #377DFF;
                   border-bottom: 1px solid #377DFF;
-                  transform: translateY(.5px) rotate(311deg);
-                  float: right;
                 }
               }
             }
-            /*li {*/
-            /*padding: 0 0 5px 20px;*/
-            /*cursor: pointer;*/
-            /*&:hover {*/
-            /*color: #377DFF;*/
-            /*}*/
-            /*font-size: 12px;*/
-            /*color: #999;*/
-            /*a {*/
-            /*color: #999;*/
-            /*&.notAllow {*/
-            /*cursor: auto;*/
-            /*&:hover {*/
-            /*color: #999;*/
-            /*}*/
-            /*}*/
-            /*&:hover {*/
-            /*color: #377DFF;*/
-            /*}*/
-            /*}*/
-            /*}*/
           }
+
         }
       }
     }
