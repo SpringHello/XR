@@ -178,16 +178,16 @@
             <span style="font-family: Microsoft YaHei;font-size: 16px;color: #2A99F2;line-height: 43px;display: block;"
                   v-if="chargesForm.discounts">（已优惠￥{{chargesForm.discounts}} /元）</span>
           </Form-item> -->
+          <div style="font-size:16px;">
+            资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{chargesForm.cost}}/</span></span>
+            <span style="text-decoration: line-through">原价{{chargesForm.ratesChangeOriginalCost}}</span>
+          </div>
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <div style="font-size:16px;float:left">
-          资费:
-          <span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{chargesForm.cost}}
-            <span v-if="chargesForm.timeValue != ''">/</span>
-            <span style="font-size: 15px;">{{chargesForm.timeValue}}<span v-if="chargesForm.timeType == 'year' && chargesForm.timeValue != ''">年</span>
-            <span v-if="chargesForm.timeType == 'month' && chargesForm.timeValue != ''">月</span></span>
-          </span>
+        <div style="text-align:left">
+          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:24px;">全民普惠，3折减单，最高减免7000元！
+          </router-link>
         </div>
         <Button type="ghost" @click="showModal.charges = false">取消</Button>
         <Button type="primary" :disabled="chargesForm.timeValue==''" @click="chargesOK">确定
@@ -249,8 +249,8 @@
             </CheckboxGroup>
           </FormItem>
           <div style="font-size:16px;">
-          资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{renewalTotalCost}}/</span></span>
-          <span style="text-decoration: line-through">原价{{renewalOriginalCost}}</span>
+            资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{renewalTotalCost}}/</span></span>
+            <span style="text-decoration: line-through">原价{{renewalOriginalCost}}</span>
           </div>
         </Form>
       </div>
@@ -260,7 +260,7 @@
           </router-link>
         </div>
         <Button type="ghost" @click="showModal.renew=false">取消</Button>
-        <Button  type="primary" @click="renewOk" :disabled="renewalTime==''">确认续费</Button>
+        <Button type="primary" @click="renewOk" :disabled="renewalTime==''">确认续费</Button>
       </div>
     </Modal>
   </div>
@@ -330,7 +330,8 @@
         chargesForm: {
           timeType: '',
           timeValue: '',
-          cost: '0',
+          cost: '--',
+          ratesChangeOriginalCost: '--',
           discounts: null,
         },
         adjustForm: {
@@ -1071,7 +1072,8 @@
           this.chargesForm.discounts = null
           this.chargesForm.timeType = ''
           this.chargesForm.timeValue = ''
-          this.chargesForm.cost = ''
+          this.chargesForm.cost = '--'
+          this.chargesForm.ratesChangeOriginalCost = '--'
           this.showModal.charges = true
         } else {
           this.$Message.warning('请选择1个弹性IP')
@@ -1123,10 +1125,12 @@
             if (response.data.result[0].attachComputer.length !== 0) {
               this.renewalHostID = response.data.result[0].attachComputer[0].id
               this.renewalHost = true
+              this.renewalOther = ['续费关联云主机']
             }
             if (response.data.result[0].attachNat.length !== 0) {
               this.renewalNATID = response.data.result[0].attachNat[0].id
               this.renewalNAT = true
+              this.renewalOther = ['续费关联NAT网关']
             }
             this.showModal.renew = true
           }
@@ -1148,21 +1152,25 @@
         )
       }),
       queryChargePrice() {
-        this.$http.post('device/queryIpPrice.do', {
-          brand: this.select.bandwith + '',
-          timeType: this.chargesForm.timeType,
-          timeValue: this.chargesForm.timeValue + '',
-          zoneId: this.select.zoneid
+        this.$http.get('information/getYjPrice.do', {
+          params: {
+            timeValue: this.chargesForm.timeValue,
+            timeType: this.chargesForm.timeType,
+            ipIdArr: this.select.id,
+          }
         }).then(response => {
             if (response.status == 200) {
-              this.chargesForm.cost = response.data.cost
-              if (response.data.coupon) {
-                this.chargesForm.discounts = response.data.coupon
-              } else {
-                this.chargesForm.discounts = null;
+              this.chargesForm.cost = response.data.result
+              this.chargesForm.ratesChangeOriginalCost = response.data.result
+              if (response.data.cuspon) {
+                this.chargesForm.ratesChangeOriginalCost = Number((this.chargesForm.ratesChangeOriginalCost + response.data.cuspon).toFixed(2))
+              }
+              if (response.data.continueDiscount) {
+                this.chargesForm.ratesChangeOriginalCost = (this.chargesForm.ratesChangeOriginalCost + response.data.continueDiscount).toFixed(2)
               }
             } else {
-              this.chargesForm.cost = '正在计算'
+              this.chargesForm.cost = '--'
+              this.chargesForm.ratesChangeOriginalCost = '--'
             }
           }
         )
@@ -1232,10 +1240,10 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.renewalTotalCost = response.data.result.toFixed(2)
                 this.renewalOriginalCost = response.data.result
-                if(response.data.cuspon) {
+                if (response.data.cuspon) {
                   this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
                 }
-                if(response.data.continueDiscount) {
+                if (response.data.continueDiscount) {
                   this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
                 }
               }
@@ -1259,10 +1267,10 @@
                 if (response.status == 200 && response.data.status == 1) {
                   this.renewalTotalCost = response.data.result.toFixed(2)
                   this.renewalOriginalCost = response.data.result
-                  if(response.data.cuspon) {
+                  if (response.data.cuspon) {
                     this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
                   }
-                  if(response.data.continueDiscount) {
+                  if (response.data.continueDiscount) {
                     this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
                   }
                 }
@@ -1281,10 +1289,10 @@
                 if (response.status == 200 && response.data.status == 1) {
                   this.renewalTotalCost = response.data.result.toFixed(2)
                   this.renewalOriginalCost = response.data.result
-                  if(response.data.cuspon) {
+                  if (response.data.cuspon) {
                     this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
                   }
-                  if(response.data.continueDiscount) {
+                  if (response.data.continueDiscount) {
                     this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
                   }
                 }
@@ -1301,6 +1309,13 @@
               .then((response) => {
                 if (response.status == 200 && response.data.status == 1) {
                   this.renewalTotalCost = response.data.result.toFixed(2)
+                  this.renewalOriginalCost = response.data.result
+                  if (response.data.cuspon) {
+                    this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
+                  }
+                  if (response.data.continueDiscount) {
+                    this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
+                  }
                 }
               })
           }
