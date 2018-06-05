@@ -274,43 +274,6 @@ export default {
           key: "lastupdatetime"
         },
         {
-          title: "当前状态",
-          key: "status",
-          render: (h, params) => {
-            return h("div", params.row.status);
-          }
-        },
-        {
-          title: "等待操作",
-          key: "operation",
-          render: (h, params) => {
-            const color =
-              params.row.operation === "暂无"
-                ? "#666666"
-                : params.row.status === "初审中" ||
-                  params.row.status === "审核完成"
-                  ? "#2A99F2"
-                  : params.row.status === "管局审核中"
-                    ? "#666666"
-                    : params.row.status === "初审拒绝" ? "#D0021B" : "";
-            return (
-              "div",
-              [
-                h(
-                  "span",
-                  {
-                    style: {
-                      color: color,
-                      cursor: "pointer"
-                    }
-                  },
-                  params.row.operation
-                )
-              ]
-            );
-          }
-        },
-        {
           title: "操作",
           key: "waitOperation",
           render: (h, params) => {
@@ -326,7 +289,9 @@ export default {
                     },
                     on: {
                       click: () => {
-                        this.$router.push({ path: "RecordDetails" });
+                        sessionStorage.setItem("id",params.row.id);
+                        sessionStorage.setItem("webcompany_Id", params.row.webcompany_Id);
+                        this.$router.push({ path: "completedFilingDetails" });
                       }
                     }
                   },
