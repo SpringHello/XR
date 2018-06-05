@@ -376,12 +376,11 @@
         }
         let url = 'recode/updateMainWeb.do'
         let id = sessionStorage.getItem('id')
-        axios.get(url, {
-          params: {
-            id: id,
-            backgroundUrl: this.upload.photo
-          }
-        }).then(res => {
+        let params = {
+          id: id,
+          backgroundUrl: this.upload.photo
+        }
+        axios.post(url,params).then(res => {
           if (res.data.status === 1) {
             this.curtainStatus = false
             this.$Message.success({
