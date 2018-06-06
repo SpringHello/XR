@@ -36,21 +36,67 @@ export default {
       ],
       //操作日志数据
       journalData: [
-        {
-          caozuo: '添加云主机"yunrui"的"1cpu/1024M内存/0G数据盘"套餐,按需',
-          jieguo: "成功",
-          shijian: "2017-5-21"
-        }
       ],
       dayList:[
           {
-              value:'近一天'
+              value:'近一天',
+              data:[
+                {
+                  caozuo: '添加云主机"yunrui"的"1cpu/1024M内存/0G数据盘"套餐,按需',
+                  jieguo: "成功",
+                  shijian: "2017-5-21"
+                },
+                {
+                  caozuo: '添加云主机"yunrui"的"1cpu/1024M内存/0G数据盘"套餐,按需',
+                  jieguo: "成功",
+                  shijian: "2017-5-21"
+                }
+              ]
           },
           {
-              value:'近一周'
+              value:'近一周',
+            data:[
+              {
+                caozuo: '添加云主机"yunrui"的"1cpu/1024M内存/0G数据盘"套餐,按需',
+                jieguo: "成功",
+                shijian: "2017-5-21"
+              },
+              {
+                caozuo: '添加云主机"yunrui"的"1cpu/1024M内存/0G数据盘"套餐,按需',
+                jieguo: "成功",
+                shijian: "2017-5-21"
+              },
+              {
+                caozuo: '添加云主机"yunrui"的"1cpu/1024M内存/0G数据盘"套餐,按需',
+                jieguo: "成功",
+                shijian: "2017-5-21"
+              }
+            ]
           },
           {
-              value:'近一月'
+              value:'近一月',
+            data:[
+              {
+                caozuo: '添加云主机"yunrui"的"1cpu/1024M内存/0G数据盘"套餐,按需',
+                jieguo: "成功",
+                shijian: "2017-5-21"
+              },
+              {
+                caozuo: '添加云主机"yunrui"的"1cpu/1024M内存/0G数据盘"套餐,按需',
+                jieguo: "成功",
+                shijian: "2017-5-21"
+              },
+              {
+                caozuo: '添加云主机"yunrui"的"1cpu/1024M内存/0G数据盘"套餐,按需',
+                jieguo: "成功",
+                shijian: "2017-5-21"
+              },
+              {
+                caozuo: '添加云主机"yunrui"的"1cpu/1024M内存/0G数据盘"套餐,按需',
+                jieguo: "成功",
+                shijian: "2017-5-21"
+              }
+            ]
           }
       ],
     indexs:0
@@ -59,10 +105,11 @@ export default {
   methods: {
       dayClick(val){
           this.indexs = val;
+          this.journalData = this.dayList[val].data;
       }
   },
   mounted() {
-
+    this.journalData = this.dayList[0].data;
   }
 };
 </script>

@@ -8,7 +8,7 @@
             <span class="title">空间详情</span>
           </div>
           <div style="width:50%;text-align:right;">
-            <Button @click="$router.push({path:'objectStorage'})">返回</Button>
+            <Button @click="$router.push({path:'objectStorage'})" style="margin-right: 10px;">返回</Button>
             <Button @click="filesList" type="primary">刷新</Button>
           </div>
         </div>
@@ -48,7 +48,7 @@
           <TabPane label="Object管理">
             <div style="display:flex;margin-bottom:15px;">
               <div style="width:50%">
-                <Button type="primary" style="margin-right:10px;" @click="modal1 = true">上传</Button>
+                <Button type="primary" style="margin-right:10px;" @click="modal1 = true" >上传</Button>
                 <Button type="primary" @click="floder = true">新建文件夹</Button>
               </div>
               <div style="width:50%;text-align:right;">
@@ -70,8 +70,8 @@
                   <Button v-if="indexs != 3" type="primary" style="margin:40px 0 0 0;" @click="checkAcl">确定</Button>
                 </div>
                 <div class="custom" v-if="indexs == 3">
-                  <Button type="primary" @click="jurisdiction = true">添加自定义权限</Button>
-                  <Button type="primary">自定义权限编辑器</Button>
+                  <Button type="primary" @click="jurisdiction = true" style="margin-right: 10px;">添加自定义权限</Button>
+                  <Button type="primary" @click="edit = true">自定义权限编辑器</Button>
                   <Table style="margin-top:20px;" :columns="rightList" :data="aclData"></Table>
                 </div>
               </div>
@@ -80,14 +80,14 @@
             <div class="setting">
               <div  style="display:flex;">
                 <div style="width:97%;font-size:18px;color:#333333;">跨域访问设置</div>
-                  <div>
+                  <div style="width: 65px;">
                     <div class="down"></div>
-                    <span style="color: #2A99F2">收起</span>
+                    <span style="color: #2A99F2;display: inline-block;">收起</span>
                   </div>
               </div>
               <div style="margin:10px 0 20px 0;">
-                <Button type="primary" @click="cors = true">CORS规则配置</Button>
-                <Button type="primary">CORS规则编辑器</Button>
+                <Button type="primary" @click="cors = true" style="margin-right: 10px;">CORS规则配置</Button>
+                <Button type="primary" @click="corsedit = true">CORS规则编辑器</Button>
               </div>
               <Table :columns="corstList" :data="corsData"></Table>
             </div>
@@ -103,23 +103,29 @@
               <p style="color:#999999;font-size:14px;">提示：静态网站托管的默认index页配置在具有公有读取权限的Bucket下生效，自定义错误页和访问重定向在全部权限的Bucket下生效。</p>
                 <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
                   <FormItem label="自定义">
-                    <Input v-model="formValidate.name" placeholder="Enter your name"></Input>
+                    <Input style="width:317px;" v-model="formValidate.name" ></Input>
                     <p>请输入浏览器能够识别的文件作为自定义index页的文件名，为空则不启用自定义index页设置，不允许输入/.</p>
                   </FormItem>
                   <FormItem label="自定义错误页">
-                    <Input v-model="formValidate.name" placeholder="Enter your name"></Input>
+                    <Input style="width:317px;" v-model="formValidate.name"></Input>
                     <p>请输入浏览器能够识别的文件作为自定义错误页的文件名，为空则不启用自定义错误页设置</p>
                   </FormItem>
                   <FormItem label="访问重定向配置">
-                    <div>
-                        400<Input v-model="formValidate.name" placeholder="Enter your name"></Input>
-                        403<Input v-model="formValidate.name" placeholder="Enter your name"></Input>
-                        404<Input v-model="formValidate.name" placeholder="Enter your name"></Input>
+                    <div style="background-color:#F7F7F7;width:317px;height: 144px;padding:20px 13px">
+                        <div>
+                          400<Input style="width:260px;" v-model="formValidate.name" ></Input>
+                        </div>
+                         <div>
+                           403<Input style="width:260px;" v-model="formValidate.name" ></Input>
+                         </div>
+                          <div>
+                            404<Input style="width:260px;" v-model="formValidate.name" ></Input>
+                          </div>
                     </div>
                     <p>请输入遇到4XX错误时需要重定向到的完整目标域（支持域名或IP格式，可带端口号），为空则不启用重定向设置</p>
                   </FormItem>
                 </Form>
-              <Button type="primary">保存设置</Button>
+              <Button type="primary" style="margin:20px  0 0 102px;">保存设置</Button>
             </div>
           </TabPane>
         </Tabs>
@@ -203,7 +209,7 @@
     >
       <div class="jurisd">
         <div>Bucket名称：{{bucketName}}</div>
-        <div style="margin-left:20px;">存储区域：华中二区</div>
+        <div style="margin-left:20px;">存储区域：{{zonename}}</div>
       </div>
       <div style="margin-top:20px;">
         <span>用户授权</span>
@@ -218,11 +224,11 @@
         <div style="width:115px;font-size:14px;color:#333333;">密码接收渠道</div>
         <div style="width:300px;">
           <CheckboxGroup v-model="channel">
-            <Checkbox label="0">PutObject</Checkbox>
-            <Checkbox label="1">GetObject</Checkbox>
-            <Checkbox label="2">DeleteObject</Checkbox>
-            <Checkbox label="3">ListObject</Checkbox>
-            <Checkbox label="4">DeleteBucket</Checkbox>
+            <Checkbox label="putobject">PutObject</Checkbox>
+            <Checkbox label="getobject">GetObject</Checkbox>
+            <Checkbox label="deleteobject">DeleteObject</Checkbox>
+            <Checkbox label="listbucket">ListObject</Checkbox>
+            <Checkbox label="deletebucket">DeleteBucket</Checkbox>
           </CheckboxGroup>
         </div>
       </div>
@@ -249,17 +255,17 @@
     </Modal>
 
     <!--自定义权限编辑-->
-    <!--<Modal-->
-      <!--v-model="jurisdiction"-->
-      <!--title="添加自定义权限"-->
-      <!--:scrollable='true'-->
-      <!--width="550px"-->
-      <!--@on-ok="jurisdictionClick"-->
-    <!--&gt;-->
-     <!--<pre style="background-color:#FDF6E3;">-->
-       <!--<code></code>-->
-     <!--</pre>-->
-    <!--</Modal>-->
+    <Modal
+      v-model="edit"
+      title="添加自定义权限"
+      :scrollable='true'
+      width="550px"
+      @on-ok="jurisdictionClick"
+    >
+     <pre style="background-color:#FDF6E3;">
+       <code></code>
+     </pre>
+    </Modal>
 
     <!--修改自定义权限-->
     <Modal
@@ -271,7 +277,7 @@
     >
       <div class="jurisd">
         <div>Bucket名称：{{bucketName}}</div>
-        <div style="margin-left:20px;">存储区域：华中二区</div>
+        <div style="margin-left:20px;">存储区域：{{zonename}}</div>
       </div>
       <div style="margin-top:20px;">
         <span>用户授权</span>
@@ -279,7 +285,7 @@
           <Radio label="0">全部用户</Radio>
           <Radio label="1">自定义用户</Radio>
         </RadioGroup>
-        <Input :disabled='grant' v-model="updateGrantValue" style="width:420px;" :rows="4" type="textarea"></Input><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+        <Input :disabled='updategrant' v-model="updateGrantValue" style="width:420px;" :rows="4" type="textarea"></Input><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
       </div>
       <br>
       <div style="width:366px;display:flex;">
@@ -318,49 +324,62 @@
 
 
     <!--跨域访问CRORS添加规则-->
-    <!--<Modal-->
-      <!--v-model="cors"-->
-      <!--title="跨域访问CRORS添加规则"-->
-      <!--:scrollable='true'-->
-      <!--width="550px"-->
-      <!--@on-ok="jurisdictionClick"-->
-    <!--&gt;-->
-      <!--<div>-->
-        <!--<p>来源Origin</p>-->
-        <!--<Input :disabled='grant' v-model="updateGrantValue" style="width:420px;" :rows="4" type="textarea" placeholder="例如：http://10.100.100.100:8001 https://www.xrcloud.net"></Input><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>-->
-        <!--<p style="color: #999999;">来源可设置多个，每行一个，以回车间隔，每行最多能有一个通配符(*)</p>-->
-      <!--</div>-->
-      <!--<br>-->
-      <!--<div style="width:366px;display:flex;">-->
-        <!--<div style="width:115px;font-size:14px;color:#333333;">操作Methods</div>-->
-        <!--<div style="width:300px;">-->
-          <!--<CheckboxGroup v-model="updateChannel">-->
-            <!--<Checkbox label="put">Put</Checkbox>-->
-            <!--<Checkbox label="get">Get</Checkbox>-->
-            <!--<Checkbox label="post">Post</Checkbox>-->
-            <!--<Checkbox label="head">Head</Checkbox>-->
-            <!--<Checkbox label="delete">Delete</Checkbox>-->
-          <!--</CheckboxGroup>-->
-        <!--</div>-->
-        <!--<p>来源可设置多个，每行一个，以回车间隔。</p>-->
-      <!--</div>-->
+    <Modal
+      v-model="cors"
+      title="跨域访问CRORS添加规则"
+      :scrollable='true'
+      width="550px"
+      @on-ok="jurisdictionClick"
+    >
+      <div>
+        <p>来源Origin</p>
+        <Input :disabled='grant' v-model="updateGrantValue" style="width:420px;" :rows="4" type="textarea" placeholder="例如：http://10.100.100.100:8001 https://www.xrcloud.net"></Input><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+        <p style="color: #999999;">来源可设置多个，每行一个，以回车间隔，每行最多能有一个通配符(*)</p>
+      </div>
+      <br>
+      <div style="width:366px;display:flex;">
+        <div style="width:115px;font-size:14px;color:#333333;">操作Methods</div>
+        <div style="width:300px;">
+          <CheckboxGroup v-model="updateChannel">
+            <Checkbox label="put">Put</Checkbox>
+            <Checkbox label="get">Get</Checkbox>
+            <Checkbox label="post">Post</Checkbox>
+            <Checkbox label="head">Head</Checkbox>
+            <Checkbox label="delete">Delete</Checkbox>
+          </CheckboxGroup>
+        </div>
+        <p>来源可设置多个，每行一个，以回车间隔。</p>
+      </div>
 
-      <!--<div style="width:366px;display:flex;">-->
-        <!--<div style="width:115px;font-size:14px;color:#333333;">Expose-Headers</div>-->
-        <!--<br>-->
-        <!--<Input :disabled='whiteList' v-model="updateWhiteListValue" style="width:420px;" :rows="4" type="textarea"></Input><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>-->
-      <!--</div>-->
+      <div style="width:366px;display:flex;">
+        <div style="width:115px;font-size:14px;color:#333333;">Expose-Headers</div>
+        <br>
+        <Input :disabled='whiteList' v-model="updateWhiteListValue" style="width:420px;" :rows="4" type="textarea"></Input><Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+      </div>
 
-      <!--<div>-->
-        <!--<p>缓存Max Age</p>-->
-        <!--<Input type="text" style="width:317px" placeholder="请输入0-999999999的正整数"></Input>-->
-      <!--</div>-->
-    <!--</Modal>-->
+      <div>
+        <p>缓存Max Age</p>
+        <Input type="text" style="width:317px" placeholder="请输入0-999999999的正整数"></Input>
+      </div>
+    </Modal>
+    <!--cors规则编辑器-->
+    <Modal
+      v-model="corsedit"
+      title="添加自定义权限"
+      :scrollable='true'
+      width="550px"
+      @on-ok="jurisdictionClick"
+    >
+     <pre style="background-color:#FDF6E3;">
+       <code></code>
+     </pre>
+    </Modal>
   </div>
 </template>
 
 <script>
   import $store from "@/vuex";
+  import axios from 'axios'
   const name = sessionStorage.getItem("bucketName");
   const bucketId = sessionStorage.getItem('bucketId');
   export default {
@@ -581,7 +600,8 @@
                 click:()=>{
                   this.updateDiction = true;
                   obj.row.userauthorization == '*' ? (this.updateUsers = '0') : (this.updateUsers = '1');
-                  this.updateReferer = obj.row.refererip;
+
+                  this.updateReferer.push(obj.row.refererip);
                   this.updateInfluenceValue = obj.row.resource;
                   this.updateSources = obj.row.iseffectres;
                   let str = '';
@@ -593,7 +613,7 @@
                   this.updateChannel.push(str);
                     this.updateGrantValue = obj.row.userauthorization;
                     this.updateWhiteListValue = obj.row.refererip;
-                  console.log(obj.row);
+                  this.usersClick();
                 }
                 }},'修改'),h('span',{
                   style:{
@@ -602,7 +622,7 @@
                   },
                 on:{
                     click:()=>{
-
+                      this.deleteFromBucketId(obj.row.code);
                     }
                 }
               },'删除')])
@@ -616,10 +636,9 @@
           name:''
         },
         ruleValidate:{},
-
         //修改自定义权限
         updateWhiteListValue:'',
-        updateReferer:'',
+        updateReferer:[],
         updateInfluenceValue:'',
         updateSources:'',
         updateChannel:[],
@@ -668,8 +687,14 @@
             }
           }
         ],
-        corsData:[]
-
+        corsData:[],
+        //自定义权限编辑弹窗
+        edit:false,
+        zonename:$store.state.zone.zonename,
+        //修改自定义权限是否禁用用后授权
+        updategrant:false,
+        //规则编辑器弹窗
+        corsedit:false
       }
     },
     methods: {
@@ -717,7 +742,7 @@
       },
       //列出文件夹列表
       filesList(id,isfile) {
-        this.fileUpdata.dirId = (id == undefined ? null :id);
+        this.fileUpdata.dirId = (id == undefined ? null :id.toString());
         this.$http
           .post("object/listObject.do", {
             bucketName: name,
@@ -728,6 +753,7 @@
             if (res.data.status == "1") {
               if(isfile == 1 || this.isfile == 1){
                 this.fileData = res.data.data.data;
+
               }else{
                 return;
               }
@@ -769,14 +795,20 @@
       },
       //用户授权radio切换
       usersClick(){
+        if(this.updateUsers == '0'){
+          this.updategrant = true;
+          this.updateGrantValue = '*';
+        }else{
+          this.updategrant = false;
+          this.updateGrantValue = '';
+        }
         if(this.users == '0'){
           this.grant = true;
           this.grantValue = '*';
-          this.updateGrantValue = '*';
         }else{
           this.grant = false;
           this.grantValue = '';
-          this.updateGrantValue = '';
+
         }
       },
       //添加自定义权限
@@ -793,6 +825,7 @@
         }).then(res => {
           if(res.data.status == '1'){
             this.$Message.success('添加自定义权限成功');
+            this.selectAclAll();
           }else{
             this.$Message.error(res.data.msg);
           }
@@ -805,7 +838,7 @@
           bucketId:bucketId
         }).then(res =>{
           if(res.data.status == "1"){
-            this.aclData = res.data.data.list
+            this.aclData = res.data.data.list;
           }
         })
       },
@@ -838,7 +871,23 @@
             this.$Message.error(res.data.msg);
           }
         })
-     }
+     },
+      /**
+       * 删除权限
+       */
+      deleteFromBucketId(code){
+        axios.post('bucketAcl/deleteFromBucketId.do',{
+          bucketName:name,
+          code:code
+        }).then(res =>{
+          if(res.data.status == '1'){
+            this.$Message.success('删除成功');
+            this.selectAclAll();
+          }else{
+            this.$Message.error(res.data.msg);
+          }
+        })
+      }
     //获取空间详情
       // bucketDetails() {
       //
@@ -861,6 +910,7 @@
       this.filesList();
       this.selectAclAll();
       this.bucketName = name;
+
     }
   };
 </script>
@@ -877,7 +927,6 @@
         width: inherit;
         padding: 20px;
         background-color: #ffffff;
-        height: 1411px;
         .space_top {
           display: flex;
           height: 58px;
@@ -1026,21 +1075,27 @@
     -ms-transform: rotate(-45deg);
     transition: all 0.3s;
     cursor:pointer;
+    display: inline-block;
   }
   .down::before{
     content:'';
     position: absolute;
-    top: 0;
+    top: 2px;
+    left: 3px;
     width: 14px;
     height: 12px;
     border: 1px solid #2A99F2;
     border-top-style:none ;
     border-right-style: none;
+
   }
   .downlower{
     transform: rotate(-225deg);
     -webkit-transform: rotate(-225deg);
     -moz-transform: rotate(-225deg);
     -ms-transform: rotate(-225deg);
+  }
+  p{
+    line-height:20px;
   }
 </style>
