@@ -625,7 +625,7 @@
       v-model="otherInfo"
       title="重新上传其他文件信息"
       :scrollable="true"
-      :format="['jpg','jpeg','png','doc','docx','pdf']"
+
     >
       <p>如前置审批材料，法人授权委托书等材料（点击下载<a :href="keep" style="color:#2A99F2;">法人委托书</a>）</p>
       <div class="updatePhoto">

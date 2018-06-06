@@ -27,13 +27,13 @@
         <!--主办单位信息-->
         <div>
           <div class="info_box">
-            <div style="margin-bottom:10px;display:flex;display:-webkit-flex;width:100%;">
+            <div style="margin-bottom:20px;display:flex;display:-webkit-flex;width:100%;">
               <div class="click_icon icons" :class="{hide_icon:!isIconSon}" @click="infoBoxShow('information')"></div>
-              <div style="margin-left:5px;">
+              <div style="margin-left:5px;width: 80px;">
                 <span>主办单位信息</span>
               </div>
-              <div>
-                <Button type="primary">变更主体</Button>
+              <div style="width:92%;text-align: right;">
+                <Button type="primary" style="margin-right: 10px;">变更主体</Button>
                 <Button >注销主体</Button>
               </div>
             </div>
@@ -129,14 +129,14 @@
           </div>
           <!--网站基本信息-->
           <div class="info_box">
-            <div style="margin-bottom:10px;display:flex">
+            <div style="margin-bottom:20px;display:flex">
               <div class="click_icon icons" :class="{hide_icon:!isIconInfo}" @click="infoBoxShow('webInfo')"></div>
-              <div style="margin-left:5px;">
+              <div style="margin-left:5px;width:80px;">
                 <span>网站基本信息</span>
               </div>
-              <div>
-                <Button type="primary">取消接入</Button>
-                <Button type="primary">变更接入</Button>
+              <div style="width:92%;text-align: right;">
+                <Button type="primary" @click="cancel = true">取消接入</Button>
+                <Button type="primary" style="margin: 0 10px;">变更接入</Button>
                 <Button>注销网站</Button>
               </div>
             </div>
@@ -309,8 +309,6 @@
           </div>
         </div>
       </div>
-
-
     </div>
     <!-- 网站核验单 -->
     <Modal
@@ -446,7 +444,6 @@
       v-model="otherInfo"
       title="重新上传其他文件信息"
       :scrollable="true"
-      :format="['jpg','jpeg','png','doc','docx','pdf']"
     >
       <div class="updatePhoto">
         <div class="updates">
@@ -463,7 +460,28 @@
       </div>
     </Modal>
 
-
+    <!--取消接入-->
+    <Modal v-model="cancel"  title="取消接入" :scrollable="true">
+      <div class="cancel">
+        <p>确定要取消此备案接入信息？</p>
+        <p>取消接入后，如果您的备案信息没有对应接入商，管局可能会注销您的备案号，导致您的域名不能访问。申请提交到通信管理局后，不可撤回。</p>
+        <ul>
+          <li>  网站名称：我是网站名称</li>
+          <li>  网站首页：我是网站首页</li>
+        </ul>
+      </div>
+    </Modal>
+    <!--取消接入-->
+    <Modal v-model="cancel"  title="取消接入" :scrollable="true">
+      <div class="cancel">
+        <p>确定要取消此备案接入信息？</p>
+        <p>取消接入后，如果您的备案信息没有对应接入商，管局可能会注销您的备案号，导致您的域名不能访问。申请提交到通信管理局后，不可撤回。</p>
+        <ul>
+          <li>  网站名称：我是网站名称</li>
+          <li>  网站首页：我是网站首页</li>
+        </ul>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -577,7 +595,9 @@
         //网站核验单路径
         single: '',
         //网站核验单示例图路径
-        examples: ''
+        examples: '',
+        //取消接入弹窗
+        cancel:false
       };
     },
     methods: {
@@ -951,7 +971,6 @@
     transition: background-color .3s ease-in-out;
     z-index: 9999;
   }
-
   .bigImg {
     position: fixed;
     top: 50%;
@@ -961,9 +980,33 @@
     width: 627px;
     height: 866px;
   }
-
   .is_activ {
     background-color: rgba(55, 55, 55, .6);
   }
+  .cancel{
+    p{
+      line-height: 20px;
+    }
+    font-family: 'MicrosoftYaHei';
+     p:nth-child(1){
+       color:#333333;
+       font-size:14px;
+       margin-bottom: 10px;
+       font-weight: Bold;
+     }
+    p:nth-child(2){
+      color:#666666;
+      font-size:14px;
+      margin-bottom: 10px;
+    }
+    ul li{
+      margin-left: 25px;
+      color:#333333;
+      font-size: 14px;
+      list-style: disc;
+    }
+
+  }
+
 </style>
 

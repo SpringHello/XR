@@ -14,7 +14,7 @@
             <p>VPN业务用于在远端用户和VPC之间建立一条安全加密的通信隧道，使远端用户通过VPN使用VPC中的业务资源。</p>
           </div>
           <Tabs type="card" :animated='false'>
-            <TabPane :label="tabValueCom">
+            <TabPane :label="tabValueCom" style="min-height: 300px;">
               <div style="margin-bottom:20px">
                 <div style="display:inline-block">
                   <span style="display:inline-block;margin-right:10px;">备案类型 </span>
@@ -38,8 +38,8 @@
               <Table  ref="selection" :columns="recordTypeList" :data="recordProgressList"></Table>
             </TabPane>
 
-            <TabPane :label="tabValue">
-              <div style="margin-bottom:20px">
+            <TabPane :label="tabValue" style="min-height: 300px;">
+              <div style="margin-bottom:20px;">
                 <div style="display:inline-block">
                   <span style="display:inline-block;margin-right:10px;">备案类型 </span>
                   <Select v-model="completeRecordType" size="small" style="width:231px;" @on-change="completeClick">
@@ -285,6 +285,46 @@ export default {
           key: "status",
           render: (h, params) => {
             return h("div", params.row.status);
+          }
+        },
+        {
+          title: "等待操作",
+          key: "operation",
+          render: (h, params) => {
+            const row = params.row;
+            const color =  row.operation == ""? "":"#2A99F2";
+            return (
+              "div",
+                [
+                  h("span",
+                    {
+                      style: {
+                        color: color,
+                        cursor: "pointer"
+                      },
+                      on: {
+                        click: () => {
+                          if (row.operation == "上传拍照/邮寄资料") {
+                            sessionStorage.setItem("newId", row.id);
+                            sessionStorage.setItem(
+                              "newRecordtype",
+                              row.recordType
+                            );
+                            this.$router.push({path:"newRecordStepFour"});
+                          } else if (row.status == "管局审核拒绝") {
+                            this.$router.push({path:"newRecordStepFour"});
+                          } else if (row.status == "初审拒绝") {
+                            this.jumpRecord(row.id,row.webcompany_Id);
+                          } else if( row.status == "重新提交资料"){
+                            this.jumpRecord(row.id,row.webcompany_Id);
+                          }
+                        }
+                      }
+                    },
+                    row.operation == "" ? "暂无" : row.operation
+                  )
+                ]
+            );
           }
         },
         {
