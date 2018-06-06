@@ -387,7 +387,7 @@
       <p>3、请您保存3份签字的核验单原件以备后续环节试用</p>
       <div class="updatePhoto">
         <div class="updates">
-          <div style="width:50%;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝' ">
+          <div style="width:53%;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝' ">
             <Upload
               multiple
               type="drag"
@@ -400,8 +400,14 @@
               <div class="item-content-text" v-if="hostUnitList.webrecordauthenticityurl==''">
                 点击选择文件
               </div>
-              <div class="item-content-text" v-else>
-                <p>{{hostUnitList.webrecordauthenticityurl}}</p>
+              <div style="min-height: 197px;" v-else>
+                <div style="text-align: center;margin-top:10px;" v-for="(item,index) in webRecordData">
+                  <img style="width: 38px;height: 42px;" :src="item.img">
+                  <p style="line-height: 20px;" >
+                    <span>{{item.name}}</span>
+                    <Icon v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'" type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
+                  </p>
+                </div>
                 点击选择文件
               </div>
               <button>上传</button>
@@ -459,7 +465,7 @@
               <div class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlpositive==''">
                 暂无图片
               </div>
-              <div style="height:203px;" v-else>
+              <div style="min-height:203px;" v-else>
                 <div style="text-align: center">
                   <img style="width:198px;height:144px;" :src="hostUnitList.companyresponsibilityurlpositive">
                   <p>点击选择文件</p>
@@ -497,7 +503,7 @@
               <div class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlback==''">
                 暂无图片
               </div>
-              <div style="height:203px;" v-else>
+              <div style="min-height:203px;" v-else>
                 <div style="text-align: center">
                   <img style="height:144px;" :src="hostUnitList.companyresponsibilityurlback">
                   <p style="">点击选择文件</p>
@@ -542,7 +548,7 @@
               <div class="sponsor-text" v-if="hostUnitList.hostcompanyurl==''">
                 暂无图片
               </div>
-              <div style="height:203px;" v-else>
+              <div style="min-height:203px;" v-else>
                 <div style="text-align: center">
                   <img style="height:144px;" :src="hostUnitList.hostcompanyurl">
                   <p style="">点击选择文件</p>
@@ -555,7 +561,7 @@
             <p class="hide-text" v-if="hostUnitList.hostcompanyurl==''">暂无图片</p>
             <img style="width:198px;height:144px;" :src="hostUnitList.hostcompanyurl" v-else>
           </div>
-          <div style="width:50%;height:203px;">
+          <div style="width:50%;min-height:203px;">
             <div style="text-align: center">
               <img @click="visible = true" style="height:144px;margin-bottom:20px;cursor: zoom-in;" src="../../assets/img/records/records-img3.png"/>
               <p>示例图</p>
