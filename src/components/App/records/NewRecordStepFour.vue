@@ -1,6 +1,6 @@
 <template>
   <div>
-    <records></records>
+<!--    <records></records>-->
     <o-step :onStep="3" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
     <step :onStep="2" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
     <div class="body">
@@ -16,7 +16,7 @@
         </div>
         <div v-if="photograph === 1">
           <div class="description">
-            <p>1.下载填写完成<a href="keepOnRecord/check.doc">《网站备案信息真实性核验单》</a>，按要求填写完成并盖章。</p>
+            <p>1.下载填写完成<a :href="checkListAddress">《网站备案信息真实性核验单》</a>，按要求填写完成并盖章。</p>
             <p>2.携带核验单至指定位置，提交核验单并完成拍现场拍照。</p>
           </div>
           <div class="footer">
@@ -66,7 +66,7 @@
         </div>
       </div>
     </div>
-    <div class="footer" v-show="photograph === 2 && nextStep === true ">
+    <div class="footer" v-show="photograph === 2 && nextStep  && curtainStatus ">
       <div class="content">
         <h2>收到幕布后请按照要求拍照上传</h2>
         <p>请仔细阅读拍照要求，以幕布为背景，拍摄网站负责人的上半身免冠照片。请保持光线充足，照片效果清晰</p>
@@ -97,13 +97,19 @@
         </div>
         <div class="uploadTitle" style="margin: 34px 0 10px 20px;">
           <div class="item" style="text-align: center">
-            <img style="height: 203px" src="../../../assets/img/records/records-img6.png"/>
+            <img @click="imageViewShow=true" style="height: 203px;cursor: zoom-in" src="../../../assets/img/records/records-img6.png"/>
           </div>
         </div>
       </div>
       <div style="margin-top: 60px;height: 2px;background: #d9d9d9"></div>
     </div>
-    <div class="content-footer" v-show="photograph === 2 && nextStep === true">
+    <div class="ImageView is-active" style="padding-bottom: 10px;" v-show="imageViewShow" @click="imageViewShow=false">
+      <div class="ImageView-inner" style="overflow: auto;">
+        <img src="../../../assets/img/records/records-img6.png" class="ImageView-img" alt="preview"
+             style="width: 520px; transform: translate3d(140%, 25%, 0) scale3d(1.00003, 1.00003, 1); opacity: 1;">
+      </div>
+    </div>
+    <div class="content-footer" v-show="photograph === 2 && nextStep  && curtainStatus">
       <button @click="sumbitApproval">提交管局审核</button>
     </div>
     <Modal v-model="showModal.logistics" width="550" :scrollable="true">
@@ -141,8 +147,8 @@
         let zoneId = sessionStorage.getItem('zoneId')
         let recordsType = sessionStorage.getItem('recordsType')
         next(vm => {
-          window.scroll(0, 525)
           vm.setData(area, zoneId, recordsType, mainParamsStr, siteParamsStr)
+          vm.getCheckList()
         })
       } else {
         let id = sessionStorage.getItem('id')
@@ -153,8 +159,8 @@
           }
         }).then(response => {
           next(vm => {
-            window.scroll(0, 525)
             vm.getPersonInfo(response)
+            vm.getCheckList()
           })
         })
       }
@@ -170,8 +176,6 @@
         }
       };
       return {
-        // 备案数据库id
-        id: '',
         // 备案类型
         recordsType: '',
         // 备案类型描述
@@ -216,11 +220,13 @@
         // 网站信息参数
         siteParams: {},
         // 用户备案信息
-        recordInfo: false,
+        recordInfo: {},
+        isRecord: false,
+        checkListAddress: '',
+        imageViewShow: false
       }
     },
     created() {
-      this.getRecordInfo()
     },
     methods: {
       setData(area, zoneId, recordsType, mainParamsStr, siteParamsStr) {
@@ -250,6 +256,8 @@
       getPersonInfo(response) {
         if (response.data.status === 1) {
           this.recordsType = response.data.result[0].recordtype
+          this.isRecord =  true
+          this.recordInfo = response.data.result[0]
           switch (this.recordsType) {
             case '新增备案':
               this.recordsTypeDesc = '域名未备案，备案主体证件无备案号，需要备案。'
@@ -281,14 +289,6 @@
           })
         }
       },
-      // 获取备案信息
-      getRecordInfo() {
-        this.$http.get('recode/listMainWeb.do').then(res => {
-          if (res.data.status == 1) {
-            this.recordInfo = res.data.result.length == 0 ? false : true
-          }
-        })
-      },
       // 使用新地址
       updateReceiveForm() {
         this.canUpdate = false
@@ -314,12 +314,12 @@
       },
       // 提交幕布申请
       applyCurtain() {
-        this.siteParams.backgroundAddress =  this.receiveForm.address
-        this.siteParams.backgroundName =  this.receiveForm.person
-        this.siteParams.backgroundPhone =  this.receiveForm.phone
+        this.siteParams.backgroundAddress = this.receiveForm.address
+        this.siteParams.backgroundName = this.receiveForm.person
+        this.siteParams.backgroundPhone = this.receiveForm.phone
         let addMainWeb = axios.post('recode/addMainWeb.do', this.siteParams)
         // 有主体信息发送一个请求，没有发送两个请求
-        if (this.recordInfo == true) {
+        if (this.isRecord == true) {
           Promise.all([addMainWeb]).then(response => {
             if (response[0].status == 200 && response[0].data.status == 1) {
               this.$router.push('waitFirstTrial')
@@ -375,12 +375,12 @@
           return
         }
         let url = 'recode/updateMainWeb.do'
-        axios.get(url, {
-          params: {
-            id: this.id,
-            backgroundUrl: this.upload.photo
-          }
-        }).then(res => {
+        let id = sessionStorage.getItem('id')
+        let params = {
+          id: id,
+          backgroundUrl: this.upload.photo
+        }
+        axios.post(url,params).then(res => {
           if (res.data.status === 1) {
             this.curtainStatus = false
             this.$Message.success({
@@ -399,6 +399,19 @@
         this.$Message.info({
           content: '请选择jpg、png、jpeg类型的文件进行上传'
         });
+      },
+      getCheckList() {
+        let province = this.mainParams.mainCompanyArea ? this.mainParams.mainCompanyArea.split('-')[0] : this.recordInfo.maincompanyarea.split('-')[0]
+        let mainUnit = this.mainParams.mainCompanyNature || this.recordInfo.maincompanynature
+        if (province == '浙江省') {
+          this.checkListAddress = 'keepOnRecord/hyd_for_zj.doc'
+        } else if (mainUnit == '企业' && province == '广东省') {
+          this.checkListAddress = 'keepOnRecord/hyd_for_gd_person.doc'
+        } else if (mainUnit == '个人' && province == '广东省') {
+          this.checkListAddress = 'keepOnRecord/hyd_for_gd_business.doc'
+        } else {
+          this.checkListAddress = 'keepOnRecord/check.doc'
+        }
       },
     },
   }
@@ -530,7 +543,29 @@
       }
     }
   }
+  .ImageView.is-active {
+    background-color: rgba(26, 26, 26, .65);
+  }
 
+  .ImageView {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 101;
+    overflow: hidden;
+    transition: background-color .2s ease-in-out;
+  }
+
+  .ImageView-inner {
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .ImageView-img {
+    cursor: zoom-out;
+  }
   .footer {
     .center();
     .content {

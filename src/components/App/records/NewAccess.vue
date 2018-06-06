@@ -1,6 +1,6 @@
 <template>
   <div>
-    <records></records>
+   <!-- <records></records>-->
     <o-Step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc"></o-Step>
     <div class="body-bottom">
       <div class="content">

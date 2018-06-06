@@ -1,6 +1,6 @@
 <template>
   <div>
-    <records></records>
+ <!--   <records></records>-->
     <o-step :onStep="2" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
     <step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
     <div class="body-bottom">
@@ -150,7 +150,7 @@
                   </Upload>
                 </div>
                 <div class="item-img">
-                  <img class="amplification" src="../../../assets/img/records/records-img3.png">
+                  <img class="enter" src="../../../assets/img/records/records-img3.png">
                   <p>示例图</p>
                 </div>
               </div>
@@ -271,7 +271,7 @@
           </div>
           <div class="uploadTitle" style="margin: 34px 0 10px 20px;">
             <div class="item" style="text-align: center;position: relative">
-              <img @click="imageViewShow = true" src="../../../assets/img/records/records-check2.jpg"/>
+              <img @click="imageViewShow = true" :src="checkSrc"/>
             </div>
           </div>
         </div>
@@ -283,8 +283,8 @@
     </div>
     <div class="ImageView is-active" style="padding-bottom: 10px;" v-show="imageViewShow" @click="imageViewShow=false">
       <div class="ImageView-inner" style="overflow: auto;">
-        <img src="../../../assets/img/records/records-check2.jpg" class="ImageView-img" alt="preview"
-             style="width: 497.986px; transform: translate3d(140%, 15%, 0) scale3d(1.00003, 1.00003, 1); opacity: 1;">
+        <img :src="checkSrc" class="ImageView-img" alt="preview"
+             style="width: 520px; transform: translate3d(140%, 15%, 0) scale3d(1.00003, 1.00003, 1); opacity: 1;">
       </div>
     </div>
   </div>
@@ -346,12 +346,14 @@
           mandateAddress: '',
           checkListAddress: ''
         },
-        imageViewShow: false
+        imageViewShow: false,
+        checkSrc: ''
       }
     },
     created() {
       this.getMandate()
       this.getCheckList()
+      this.getCheckSrc()
     },
     methods: {
       mark(index) {
@@ -621,6 +623,14 @@
         } else {
           this.checkListAddress = 'keepOnRecord/check.doc'
         }
+      },
+      getCheckSrc() {
+        let province = JSON.parse(sessionStorage.getItem('mainUnitInformationStr')).province
+        if (province == '广东省') {
+          this.checkSrc = require('../../../assets/img/records/records-check1.jpg')
+        } else {
+          this.checkSrc = require('../../../assets/img/records/records-check2.jpg')
+        }
       }
     },
     mounted() {
@@ -743,11 +753,11 @@
                 width: 164px;
                 height: 120px;
               }
-              .amplification {
+              .enter {
                 cursor: zoom-in;
                 transition: all 0.6s;
                 &:hover {
-                  transform: scale(1.6);
+                  transform: scale(1.5);
                 }
               }
               > p {
@@ -798,8 +808,5 @@
 
   .ImageView-img {
     cursor: zoom-out;
-    transition: -webkit-transform .3s ease-in-out;
-    transition: transform .3s ease-in-out;
-    transition: transform .3s ease-in-out, -webkit-transform .3s ease-in-out;
   }
 </style>
