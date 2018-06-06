@@ -18,10 +18,6 @@
           <p>专业的云数据库服务，支持Mysql、SQL Server、PostgreSQL、MangoDB引擎，提供简易方便的Web界面管理、可靠的数据备份和恢复、完备的安全管理、完善的监控等功能。</p>
         </div>
         <div class="operator-bar">
-          <Button type="primary" @click="listmirror">
-            <!-- <router-link to="/ruicloud/buy" style="color:#fff">创建云数据库</router-link> -->
-            列出云数据库镜像
-          </Button>
           <Button type="primary" @click="createOrder">
             <!-- <router-link to="/ruicloud/buy" style="color:#fff">创建云数据库</router-link> -->
             创建云数据库
@@ -280,12 +276,12 @@ export default {
                     onOk: () => {
                       this.$http.get('information/deleteVM.do', {
                         params: {
-                          id: this.currentHost[0].id
+                          id: params.row.id
                         }
                       }).then(response => {
                         if (response.status == 200 && response.data.status == 1) {
                           this.$Message.success(response.data.message)
-                          this.getData()
+                          // this.getData()
                         } else {
                           this.$message.info({
                             content: response.data.message
@@ -340,13 +336,7 @@ export default {
                   this.showModal.renewal = true
                 }
               }
-            }, '数据库续费'), h('DropdownItem', {
-              nativeOn: {
-                click: () => {
-                  
-                }
-              }
-            }, '删除数据库')])
+            }, '数据库续费'), ])
               ])])
           }
         },
@@ -453,7 +443,7 @@ export default {
         zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
         templateId: this.templateid,
         bandWidth: 2,
-        timeType: 'year',
+        timeType: 'current',
         timeValue: 1,
         isAutoRenew: 0,
         count: 1,
