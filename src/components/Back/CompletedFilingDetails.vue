@@ -32,6 +32,10 @@
               <div style="margin-left:5px;">
                 <span>主办单位信息</span>
               </div>
+              <div>
+                <Button type="primary">变更主体</Button>
+                <Button >注销主体</Button>
+              </div>
             </div>
             <div class="tables" v-show="isIconSon">
               <ul class="nav_list">
@@ -129,6 +133,11 @@
               <div class="click_icon icons" :class="{hide_icon:!isIconInfo}" @click="infoBoxShow('webInfo')"></div>
               <div style="margin-left:5px;">
                 <span>网站基本信息</span>
+              </div>
+              <div>
+                <Button type="primary">取消接入</Button>
+                <Button type="primary">变更接入</Button>
+                <Button>注销网站</Button>
               </div>
             </div>
             <div class="tables" v-show="isIconInfo">
@@ -459,6 +468,8 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import area from "../../options/area.json";
+  import certificates from "../../options/certificates.json";
   //备案ID
   const id = sessionStorage.getItem("id");
   const webcompany_Id = sessionStorage.getItem("webcompany_Id");
@@ -687,7 +698,7 @@
               console.log("出错了");
             }
           });
-      },
+      }
     },
     mounted() {
       this.details();

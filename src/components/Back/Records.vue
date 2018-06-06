@@ -47,10 +47,14 @@
                     </Option>
                   </Select>
                 </div>
+                <div style="display:inline-block;margin-left:20px">
+                  <span style="display:inline-block;margin-right:10px;">当前状态</span>
+                  <Select v-model="currentState" size="small" style="width:231px;" @on-change="listMainWeb()">
+                    <Option v-for="item in currentStateList" :value="item.value" :key="item.value">{{ item.label }}
+                    </Option>
+                  </Select>
+                </div>
               </div>
-                <router-link to="entrance">
-                <Button style="margin-bottom:10px;" type="primary">新增备案</Button>
-              </router-link>
               <Table  ref="selection" :columns="completeRecordTypeList" :data="recordTypeData"></Table>
             </TabPane>
           </Tabs>
@@ -109,6 +113,14 @@ export default {
         {
           value: "新增接入",
           label: "新增接入"
+        },
+        {
+          value: "取消接入",
+          label: "取消接入"
+        },
+        {
+          value: "变更备案",
+          label: "变更备案"
         }
       ],
       //备案类型Select值
@@ -249,11 +261,6 @@ export default {
       //已完成备案数据
       completeRecordTypeList: [
         {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
           title: "备案服务ID",
           key: "recordserviceid"
         },
@@ -272,6 +279,13 @@ export default {
         {
           title: "最近更新时间",
           key: "lastupdatetime"
+        },
+        {
+          title: "当前状态",
+          key: "status",
+          render: (h, params) => {
+            return h("div", params.row.status);
+          }
         },
         {
           title: "操作",
