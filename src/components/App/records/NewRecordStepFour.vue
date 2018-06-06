@@ -1,6 +1,6 @@
 <template>
   <div>
-<!--    <records></records>-->
+    <!--    <records></records>-->
     <o-step :onStep="3" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
     <step :onStep="2" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
     <div class="body">
@@ -146,9 +146,12 @@
         let area = sessionStorage.getItem('zone')
         let zoneId = sessionStorage.getItem('zoneId')
         let recordsType = sessionStorage.getItem('recordsType')
-        next(vm => {
-          vm.setData(area, zoneId, recordsType, mainParamsStr, siteParamsStr)
-          vm.getCheckList()
+        let url = 'recode/listMainWeb.do'
+        axios.get(url).then(response => {
+          next(vm => {
+            vm.setData(area, zoneId, recordsType, mainParamsStr, siteParamsStr, response)
+            vm.getCheckList()
+          })
         })
       } else {
         let id = sessionStorage.getItem('id')
@@ -229,7 +232,7 @@
     created() {
     },
     methods: {
-      setData(area, zoneId, recordsType, mainParamsStr, siteParamsStr) {
+      setData(area, zoneId, recordsType, mainParamsStr, siteParamsStr, response) {
         this.area = area
         this.zoneId = zoneId
         this.mainParams = JSON.parse(mainParamsStr)
@@ -251,12 +254,19 @@
             this.recordsTypeDesc = '主体已经备案过，需要再给其他网站备案。'
             break
         }
+        if (response.data.status === 1) {
+          if (response.data.result.length == 0) {
+            this.isRecord = false
+          } else {
+            this.isRecord = true
+          }
+        }
       },
       // 获取当前备案网站负责人信息
       getPersonInfo(response) {
         if (response.data.status === 1) {
           this.recordsType = response.data.result[0].recordtype
-          this.isRecord =  true
+          this.isRecord = true
           this.recordInfo = response.data.result[0]
           switch (this.recordsType) {
             case '新增备案':
@@ -348,12 +358,7 @@
               phone: this.mainParams.phone,
               email: this.mainParams.email,
               zoneId: this.zoneId,
-              companyResponsibilityUrlPositive: this.mainParams.companyResponsibilityUrlPositive,
-              companyResponsibilityUrlBack: this.mainParams.companyResponsibilityUrlBack,
               hostCompanyUrl: this.mainParams.hostCompanyUrl,
-              domainCertificateUrl: this.mainParams.domainCertificateUrl,
-              otherDataUrl: this.mainParams.otherDataUrl,
-              webRecordAuthenticityUrl: this.mainParams.webRecordAuthenticityUrl
             }
           })
           Promise.all([addMainCompany, addMainWeb]).then(response => {
@@ -380,7 +385,7 @@
           id: id,
           backgroundUrl: this.upload.photo
         }
-        axios.post(url,params).then(res => {
+        axios.post(url, params).then(res => {
           if (res.data.status === 1) {
             this.curtainStatus = false
             this.$Message.success({
@@ -543,6 +548,7 @@
       }
     }
   }
+
   .ImageView.is-active {
     background-color: rgba(26, 26, 26, .65);
   }
@@ -566,6 +572,7 @@
   .ImageView-img {
     cursor: zoom-out;
   }
+
   .footer {
     .center();
     .content {

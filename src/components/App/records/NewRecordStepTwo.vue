@@ -720,8 +720,8 @@
       //进入下一步
       nextStep() {
         let array = []
-        this.siteList.forEach((item, index) => {
-          this.$refs[`basicInformation${index}`][0].validate((val) => {
+        this.siteList.forEach((item) => {
+          this.$refs[item.name][0].validate((val) => {
             array.push(val)
           })
         })

@@ -1,6 +1,6 @@
 <template>
   <div>
- <!--   <records></records>-->
+    <!--   <records></records>-->
     <o-step :onStep="2" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
     <step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
     <div class="body-bottom">
@@ -35,8 +35,8 @@
             </ul>
           </div>
         </div>
-        <div class="main-info" v-for="item in siteListStr">
-          <h2>网站信息</h2>
+        <div class="main-info" v-for="(item,index) in siteListStr">
+          <h2>网站信息 {{ index + 1}} </h2>
           <transition name="list">
             <div class="main-ul" v-if="siteInfoShow">
               <ul>
@@ -67,7 +67,7 @@
         <p class="titleDescription">温馨提示：如网站负责人和主体负责人不是同一人，请在其他资料中上传法人授权委托书</p>
         <div class="upload" v-for="(item,index) in uploadForm.IDPhotoList">
           <div class="uploadTitle">
-            <p>身份证人像面</p>
+            <p>证件人像面 ( 证件号：{{ item.IDNumber }})</p>
             <div class="item">
               <div class="item-content">
                 <div style="width:50%;">
@@ -80,7 +80,7 @@
                     :on-format-error="handleFormatJpg"
                     :max-size="2048"
                     :on-success="IDCardFront"
-                    :before-upload="mark(index)">
+                    :before-upload="markIDCard(index)">
                     <div class="item-content-text" v-if="item.IDCardFront==''">
                       暂无图片
                     </div>
@@ -96,7 +96,7 @@
             </div>
           </div>
           <div class="uploadTitle">
-            <p style="margin-left: 20px">身份证国徽面</p>
+            <p style="margin-left: 20px">证件国徽面 ( 证件号：{{ item.IDNumber }})</p>
             <div class="item" style="margin-left: 20px">
               <div class="item-content">
                 <div style="width:50%;">
@@ -109,7 +109,7 @@
                     :on-format-error="handleFormatJpg"
                     :max-size="2048"
                     :on-success="IDCardBack"
-                    :before-upload="mark(index)">
+                    :before-upload="markIDCard(index)">
                     <div class="item-content-text" v-if="item.IDCardBack==''">
                       暂无图片
                     </div>
@@ -123,10 +123,10 @@
                 </div>
               </div>
             </div>
-            <p style="color: #377dff;cursor: pointer;margin-top: 10px;text-align: right" v-if="index>0" @click="deleteIDPhoto(index)">删除新负责人证件照</p>
+            <!--<p style="color: #377dff;cursor: pointer;margin-top: 10px;text-align: right" v-if="index>0" @click="deleteIDPhoto(index)">删除新负责人证件照</p>-->
           </div>
         </div>
-        <p @click="addIDPhoto" style="cursor: pointer;color: #377dff; font-size: 14px;" v-if="uploadForm.IDPhotoList.length<3">添加新负责人证件照</p>
+        <!--  <p @click="addIDPhoto" style="cursor: pointer;color: #377dff; font-size: 14px;" v-if="uploadForm.IDPhotoList.length<principalNumber">添加新负责人证件照</p>-->
         <h2>请上传主体单位相关资料</h2>
         <div class="upload">
           <div class="uploadTitle">
@@ -158,37 +158,39 @@
           </div>
         </div>
         <h2>请上传域名证书</h2>
-        <div class="upload">
-          <div class="uploadTitle">
-            <p>执照扫描件</p>
-            <div class="item">
-              <div class="item-content" style="height: 100%">
-                <div style="width:100%;background: #FFF;padding-top: 12px">
-                  <p v-for="(file,index) in uploadForm.certifiedDomainNoCertificationDefaultList" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
-                    <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')"
-                         :class="{one:uploadForm.certifiedDomainNoCertificationDefaultList.length==1,two:uploadForm.certifiedDomainNoCertificationDefaultList.length==2,three:uploadForm.certifiedDomainNoCertificationDefaultList.length==3}"
-                         src="../../../assets/img/records/records-img.png"/>
-                    <img v-if="file.suffix == 'doc'"
-                         :class="{one:uploadForm.certifiedDomainNoCertificationDefaultList.length==1,two:uploadForm.certifiedDomainNoCertificationDefaultList.length==2,three:uploadForm.certifiedDomainNoCertificationDefaultList.length==3}"
-                         src="../../../assets/img/records/records-doc.png"/>
-                    <img v-if="file.suffix == 'pdf'"
-                         :class="{one:uploadForm.certifiedDomainNoCertificationDefaultList.length==1,two:uploadForm.certifiedDomainNoCertificationDefaultList.length==2,three:uploadForm.certifiedDomainNoCertificationDefaultList.length==3}"
-                         src="../../../assets/img/records/records-pdf.png"/>
-                    {{ file.name }}
-                    <Icon type="ios-trash-outline" style="cursor: pointer;margin-left: 10px" @click.native="handleRemove('1',index)"></Icon>
-                  </p>
-                  <Upload v-if="uploadForm.certifiedDomainNoCertificationDefaultList.length<3"
-                          class="my-upload"
-                          type="drag"
-                          :format="['jpg','jpeg','png','doc','pdf','docx']"
-                          :on-format-error="handleFormatError"
-                          :default-file-list="uploadForm.certifiedDomainNoCertificationDefaultList"
-                          :show-upload-list="false"
-                          :with-credentials="true"
-                          action="file/upFile.do"
-                          :on-success="certifiedDomainNoCertification">
-                    <span style="font-size: 14px">点击选择文件</span>
-                  </Upload>
+        <div v-for="(item,upIndex) in uploadForm.certifiedDomainNoCertificationDefault">
+          <div class="upload">
+            <div class="uploadTitle">
+              <p>执照扫描件 (网站{{ upIndex + 1 }})</p>
+              <div class="item">
+                <div class="item-content" style="height: 100%">
+                  <div style="width:100%;background: #FFF;padding-top: 12px">
+                    <p v-for="(file,index) in item.certifiedDomainNoCertificationDefaultList" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
+                      <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')"
+                           :class="{one:item.certifiedDomainNoCertificationDefaultList.length==1,two:item.certifiedDomainNoCertificationDefaultList.length==2,three:item.certifiedDomainNoCertificationDefaultList.length==3}"
+                           src="../../../assets/img/records/records-img.png"/>
+                      <img v-if="file.suffix == 'doc'"
+                           :class="{one:item.certifiedDomainNoCertificationDefaultList.length==1,two:item.certifiedDomainNoCertificationDefaultList.length==2,three:item.certifiedDomainNoCertificationDefaultList.length==3}"
+                           src="../../../assets/img/records/records-doc.png"/>
+                      <img v-if="file.suffix == 'pdf'"
+                           :class="{one:item.certifiedDomainNoCertificationDefaultList.length==1,two:item.certifiedDomainNoCertificationDefaultList.length==2,three:item.certifiedDomainNoCertificationDefaultList.length==3}"
+                           src="../../../assets/img/records/records-pdf.png"/>
+                      {{ file.name }}
+                      <Icon type="ios-trash-outline" style="cursor: pointer;margin-left: 10px" @click.native="removeSSL(upIndex,index)"></Icon>
+                    </p>
+                    <Upload v-if="item.certifiedDomainNoCertificationDefaultList.length<3"
+                            class="my-upload"
+                            type="drag"
+                            :format="['jpg','jpeg','png','doc','pdf','docx']"
+                            :on-format-error="handleFormatError"
+                            :show-upload-list="false"
+                            :with-credentials="true"
+                            action="file/upFile.do"
+                            :before-upload="markCertifiedDomainNoCertification(upIndex)"
+                            :on-success="certifiedDomainNoCertification">
+                      <span style="font-size: 14px">点击选择文件</span>
+                    </Upload>
+                  </div>
                 </div>
               </div>
             </div>
@@ -196,37 +198,39 @@
         </div>
         <h2>请上传其他资料</h2>
         <p class="titleDescription">如前置审批材料，法人授权委托书等材料（点击<a :href="mandateAddress">下载法人授权委托书</a>）</p>
-        <div class="upload">
-          <div class="uploadTitle">
-            <p>其他文件</p>
-            <div class="item">
-              <div class="item-content" style="height: 100%">
-                <div style="width:100%;background: #FFF;padding-top: 12px">
-                  <p v-for="(file,index) in uploadForm.otherFile" style="text-align: center;font-size: 14px;margin-bottom:5px;line-height: 1.5;">
-                    <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')"
-                         :class="{one:uploadForm.otherFile.length==1,two:uploadForm.otherFile.length==2,three:uploadForm.otherFile.length==3}"
-                         src="../../../assets/img/records/records-img.png"/>
-                    <img v-if="file.suffix == 'doc'"
-                         :class="{one:uploadForm.otherFile.length==1,two:uploadForm.otherFile.length==2,three:uploadForm.otherFile.length==3}"
-                         src="../../../assets/img/records/records-doc.png"/>
-                    <img v-if="file.suffix == 'pdf'"
-                         :class="{one:uploadForm.otherFile.length==1,two:uploadForm.otherFile.length==2,three:uploadForm.otherFile.length==3}"
-                         src="../../../assets/img/records/records-pdf.png"/>
-                    {{ file.name }}
-                    <Icon type="ios-trash-outline" style="cursor: pointer;margin-left: 10px" @click.native="handleRemove('2',index)"></Icon>
-                  </p>
-                  <Upload v-if="uploadForm.otherFile.length<3"
-                          class="my-upload"
-                          type="drag"
-                          :default-file-list="uploadForm.otherFile"
-                          :format="['jpg','jpeg','png','doc','pdf','docx']"
-                          :on-format-error="handleFormatError"
-                          :show-upload-list="false"
-                          :with-credentials="true"
-                          action="file/upFile.do"
-                          :on-success="otherFile">
-                    <span style="font-size: 14px">点击选择文件</span>
-                  </Upload>
+        <div v-for="(item, upIndex) in  uploadForm.otherFileGroup">
+          <div class="upload">
+            <div class="uploadTitle">
+              <p>其他文件 (网站{{ upIndex + 1 }})</p>
+              <div class="item">
+                <div class="item-content" style="height: 100%">
+                  <div style="width:100%;background: #FFF;padding-top: 12px">
+                    <p v-for="(file,index) in item.otherFile" style="text-align: center;font-size: 14px;margin-bottom:5px;line-height: 1.5;">
+                      <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')"
+                           :class="{one:item.otherFile.length==1,two:item.otherFile.length==2,three:item.otherFile.length==3}"
+                           src="../../../assets/img/records/records-img.png"/>
+                      <img v-if="file.suffix == 'doc'"
+                           :class="{one:item.otherFile.length==1,two:item.otherFile.length==2,three:item.otherFile.length==3}"
+                           src="../../../assets/img/records/records-doc.png"/>
+                      <img v-if="file.suffix == 'pdf'"
+                           :class="{one:item.otherFile.length==1,two:item.otherFile.length==2,three:item.otherFile.length==3}"
+                           src="../../../assets/img/records/records-pdf.png"/>
+                      {{ file.name }}
+                      <Icon type="ios-trash-outline" style="cursor: pointer;margin-left: 10px" @click.native="removeOtherFile(upIndex,index)"></Icon>
+                    </p>
+                    <Upload v-if="item.otherFile.length<3"
+                            class="my-upload"
+                            type="drag"
+                            :format="['jpg','jpeg','png','doc','pdf','docx']"
+                            :on-format-error="handleFormatError"
+                            :show-upload-list="false"
+                            :with-credentials="true"
+                            action="file/upFile.do"
+                            :before-upload="markOtherFile(upIndex)"
+                            :on-success="otherFile">
+                      <span style="font-size: 14px">点击选择文件</span>
+                    </Upload>
+                  </div>
                 </div>
               </div>
             </div>
@@ -234,35 +238,35 @@
         </div>
         <h2>请上传网站备案信息真实性核验单</h2>
         <p class="titleDescription">1、点击<a :href="checkListAddress">下载《网站备案信息真实性核验单》</a>。2、点击查看核验单样例图，填写以下载的核验单，不得涂改。3、请您保存3份签字的核验单原件以备后续环节使用。</p>
-        <div class="upload">
+        <div class="upload" v-for="(item,upIndex) in uploadForm.checkGroup">
           <div class="uploadTitle">
-            <p>其他文件</p>
+            <p>其他文件 (网站{{ upIndex + 1 }})</p>
             <div class="item">
               <div class="item-content" style="height: 100%">
                 <div style="width:100%;background: #FFF;padding-top: 12px">
-                  <p v-for="(file,index) in uploadForm.CheckList" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
+                  <p v-for="(file,index) in item.checkList" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
                     <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')"
-                         :class="{one:uploadForm.CheckList.length==1,two:uploadForm.CheckList.length==2,three:uploadForm.CheckList.length==3}"
+                         :class="{one:item.checkList.length==1}"
                          src="../../../assets/img/records/records-img.png"/>
                     <img v-if="file.suffix == 'doc'"
-                         :class="{one:uploadForm.CheckList.length==1,two:uploadForm.CheckList.length==2,three:uploadForm.CheckList.length==3}"
+                         :class="{one:item.checkList.length==1}"
                          src="../../../assets/img/records/records-doc.png"/>
                     <img v-if="file.suffix == 'pdf'"
-                         :class="{one:uploadForm.CheckList.length==1,two:uploadForm.CheckList.length==2,three:uploadForm.CheckList.length==3}"
+                         :class="{one:item.checkList.length==1}"
                          src="../../../assets/img/records/records-pdf.png"/>
                     {{ file.name }}
-                    <Icon type="ios-trash-outline" style="cursor: pointer;margin-left: 10px" @click.native="handleRemove('3',index)"></Icon>
+                    <Icon type="ios-trash-outline" style="cursor: pointer;margin-left: 10px" @click.native="removeCheckList(upIndex,index)"></Icon>
                   </p>
-                  <Upload v-if="uploadForm.CheckList.length<3"
+                  <Upload v-if="item.checkList.length<1"
                           class="my-upload"
                           type="drag"
-                          :default-file-list="uploadForm.CheckList"
                           :show-upload-list="false"
                           :format="['jpg','jpeg','png','doc','pdf','docx']"
                           :on-format-error="handleFormatError"
                           :with-credentials="true"
                           action="file/upFile.do"
-                          :on-success="CheckList">
+                          :before-upload="markCheckList(upIndex)"
+                          :on-success="checkList">
                     <span style="font-size: 14px">点击选择文件</span>
                   </Upload>
                 </div>
@@ -314,12 +318,20 @@
     data() {
       return {
         // 用与标记正在操作的身份证件照
-        index: '',
+        IDCardIndex: '',
+        // 标记正在操作的域名证书
+        certifiedDomainNoCertificationIndex: '',
+        // 标记正在操作的其他资料
+        otherFileIndex: '',
+        // 标记正在操作的核验单
+        checkListIndex: '',
         siteInfoShow: false,
-        //接受第一页的信息
+        //接受第一页主体信息
         mainUnitInformation: {},
-        // 接收前一页的主体信息
+        // 接收前一页网站信息
         siteListStr: [],
+        // 网站负责人数量
+        principalNumber: 0,
         // 备案区域
         area: '',
         zoneId: '',
@@ -329,20 +341,15 @@
         recordsTypeDesc: '',
         // 上传资料标记表单
         uploadForm: {
-          IDPhotoList: [{
-            // 身份证正面
-            IDCardFront: '',
-            // 身份证反面
-            IDCardBack: '',
-          }],
+          IDPhotoList: [],
           // 相关资料
           combine: '',
           // 域名证书
-          certifiedDomainNoCertificationDefaultList: [],
-          // 其他文件
-          otherFile: [],
+          certifiedDomainNoCertificationDefault: [],
+          // 其他资料
+          otherFileGroup: [],
           // 核验单
-          CheckList: [],
+          checkGroup: [],
           mandateAddress: '',
           checkListAddress: ''
         },
@@ -356,10 +363,24 @@
       this.getCheckSrc()
     },
     methods: {
-      mark(index) {
-        //this. this.index = index
+      markIDCard(index) {
         return () => {
-          this.index = index
+          this.IDCardIndex = index
+        }
+      },
+      markCertifiedDomainNoCertification(index) {
+        return () => {
+          this.certifiedDomainNoCertificationIndex = index
+        }
+      },
+      markOtherFile(index) {
+        return () => {
+          this.otherFileIndex = index
+        }
+      },
+      markCheckList(index) {
+        return () => {
+          this.checkListIndex = index
         }
       },
       setData(area, zoneId, recordsType, mainUnitInformationStr, siteListStr) {
@@ -381,45 +402,80 @@
             this.recordsTypeDesc = '主体已经备案过，需要再给其他网站备案。'
             break
         }
-      },
-      // 添加新的证件照
-      addIDPhoto() {
-        let param = {
-          // 身份证正面
-          IDCardFront: '',
-          // 身份证反面
-          IDCardBack: '',
+        // 获取网站负责人数量
+        let principals = []
+        this.siteListStr.forEach(item => {
+          principals.push(item.basicInformation.certificateNumber)
+        })
+        // es6 数组去重
+        //let arr = Array.from(new Set(principals))
+        let arr = [...new Set(principals)]
+        this.principalNumber = arr.length
+        // 初始化身份证上传框 （根据负责人判断）
+        for (let i = 0; i < this.principalNumber; i++) {
+          let IDCard = {
+            // 身份证正面
+            IDCardFront: '',
+            // 身份证反面
+            IDCardBack: '',
+            IDNumber: arr[i]
+          }
+          this.uploadForm.IDPhotoList.push(IDCard)
         }
-        this.uploadForm.IDPhotoList.push(param)
-      },
-      deleteIDPhoto(index) {
-        this.uploadForm.IDPhotoList.splice(index, 1)
-      },
-      // 删除上传文件
-      handleRemove(value, index) {
-        switch (value) {
-          case '1':
-            this.uploadForm.certifiedDomainNoCertificationDefaultList.splice(index, 1)
-            break
-          case '2':
-            this.uploadForm.otherFile.splice(index, 1)
-            break
-          case '3':
-            this.uploadForm.CheckList.splice(index, 1)
-            break
+        // 初始化其他资料上传框 （根据网站数量判断）
+        for (let i = 0, len = this.siteListStr.length; i < len; i++) {
+          // 初始化域名证书上传框
+          let certifiedDomainNoCertificationDefault = {
+            certifiedDomainNoCertificationDefaultList: []
+          }
+          this.uploadForm.certifiedDomainNoCertificationDefault.push(certifiedDomainNoCertificationDefault)
+          // 初始化其他资料上传框
+          let otherFile = {
+            otherFile: []
+          }
+          this.uploadForm.otherFileGroup.push(otherFile)
+          // 初始化核验单上传框
+          let checkList = {
+            checkList: []
+          }
+          this.uploadForm.checkGroup.push(checkList)
         }
-
+      },
+      /*      // 添加新的证件照
+            addIDPhoto() {
+              let param = {
+                // 身份证正面
+                IDCardFront: '',
+                // 身份证反面
+                IDCardBack: '',
+              }
+              this.uploadForm.IDPhotoList.push(param)
+            },*/
+      /*     deleteIDPhoto(index) {
+             this.uploadForm.IDPhotoList.splice(index, 1)
+           },*/
+      // 移除上传的域名证书
+      removeSSL(index1, index2) {
+        this.uploadForm.certifiedDomainNoCertificationDefault[index1].certifiedDomainNoCertificationDefaultList.splice(index2, 1)
+      },
+      // 移除上传的其他资料
+      removeOtherFile(index1, index2) {
+        this.uploadForm.otherFileGroup[index1].otherFile.splice(index2, 1)
+      },
+      // 移除上传的核验单
+      removeCheckList(index1, index2) {
+        this.uploadForm.checkGroup[index1].checkList.splice(index2, 1)
       },
       /* 图片上传成功回调，设置图片。每张图片上传都有一个method。
  暂时没有找到更好的方法解决图片标记问题 */
       IDCardFront(response) {
         if (response.status == 1) {
-          this.uploadForm.IDPhotoList[this.index].IDCardFront = response.result
+          this.uploadForm.IDPhotoList[this.IDCardIndex].IDCardFront = response.result
         }
       },
       IDCardBack(response) {
         if (response.status == 1) {
-          this.uploadForm.IDPhotoList[this.index].IDCardBack = response.result
+          this.uploadForm.IDPhotoList[this.IDCardIndex].IDCardBack = response.result
         }
       },
       combine(response) {
@@ -438,7 +494,7 @@
             url: response.result,
             suffix: suffix
           }
-          this.uploadForm.certifiedDomainNoCertificationDefaultList.push(param)
+          this.uploadForm.certifiedDomainNoCertificationDefault[this.certifiedDomainNoCertificationIndex].certifiedDomainNoCertificationDefaultList.push(param)
         }
       },
       otherFile(response) {
@@ -452,10 +508,10 @@
             url: response.result,
             suffix: suffix
           }
-          this.uploadForm.otherFile.push(param)
+          this.uploadForm.otherFileGroup[this.otherFileIndex].otherFile.push(param)
         }
       },
-      CheckList(response) {
+      checkList(response) {
         if (response.status == 1) {
           let array = response.result.split('/')
           let index = array.length - 1
@@ -466,7 +522,7 @@
             url: response.result,
             suffix: suffix
           }
-          this.uploadForm.CheckList.push(param)
+          this.uploadForm.checkGroup[this.checkListIndex].checkList.push(param)
         }
       },
       // 校验用户上传的文件类型
@@ -506,41 +562,35 @@
           })
           return
         }
-        if (this.uploadForm.certifiedDomainNoCertificationDefaultList.length == 0) {
+        let flag2 = this.uploadForm.certifiedDomainNoCertificationDefault.some(item => {
+          return item.certifiedDomainNoCertificationDefaultList.length === 0
+        })
+        if (flag2) {
           this.$Message.info({
-            content: '请上传域名证书'
+            content: '请上传相关域名证书'
           })
           return
         }
-        if (this.uploadForm.otherFile.length == 0) {
+        let flag3 = this.uploadForm.otherFileGroup.some(item => {
+          return item.otherFile.length === 0
+        })
+        if (flag3) {
           this.$Message.info({
-            content: '请上传其他文件'
+            content: '请上传其他资料（委托书等）'
           })
           return
         }
-        if (this.uploadForm.CheckList.length == 0) {
+        let flag4 = this.uploadForm.checkGroup.some(item => {
+          return item.checkList.length === 0
+        })
+        if (flag4) {
           this.$Message.info({
-            content: '请上传核验单'
+            content: '请上传相关网站核验单'
           })
           return
         }
-        let companyResponsibilityUrlPositive = this.uploadForm.IDPhotoList.map(item => {
-          return item.IDCardFront
-        })
-        let companyResponsibilityUrlBack = this.uploadForm.IDPhotoList.map(item => {
-          return item.IDCardBack
-        })
-        let certifiedDomainNoCertificationDefaultList = this.uploadForm.certifiedDomainNoCertificationDefaultList.map(item => {
-          return item.url
-        })
-        let otherFile = this.uploadForm.otherFile.map(item => {
-          return item.url
-        })
-        let CheckList = this.uploadForm.CheckList.map(item => {
-          return item.url
-        })
         let mainCompanyArea = this.mainUnitInformation.maincompanyarea ? this.mainUnitInformation.maincompanyarea : (this.mainUnitInformation.province + '-' + this.mainUnitInformation.city + '-' + this.mainUnitInformation.district)
-        let paramsList = this.siteListStr.map(item => {
+        let list_web_message = this.siteListStr.map(item => {
           let param = {
             webResponsibilityLinkName: item.basicInformation.principalName,
             webResponsibilityCertificatesType: item.basicInformation.certificateType,
@@ -562,9 +612,41 @@
           }
           return param
         })
+        let list_web_picture_message = this.siteListStr.map((item, index) => {
+          let idNumber = ''
+          let webResponsibilityUrlPositive = ''
+          let webResponsibilityUrlBack = ''
+          for (let i = 0, len = this.uploadForm.IDPhotoList.length; i < len; i++) {
+            if (item.certificateNumber = this.uploadForm.IDPhotoList[i].IDNumber) {
+              idNumber = this.uploadForm.IDPhotoList[i].IDNumber
+              webResponsibilityUrlPositive = this.uploadForm.IDPhotoList[i].IDCardFront
+              webResponsibilityUrlBack = this.uploadForm.IDPhotoList[i].IDCardBack
+              break
+            }
+          }
+          let domainCertificateUrl = this.uploadForm.certifiedDomainNoCertificationDefault[index].certifiedDomainNoCertificationDefaultList.map(val => {
+            return val.url
+          })
+          let otherDataUrl = this.uploadForm.otherFileGroup[index].otherFile.map(val => {
+            return val.url
+          })
+          let webRecordAuthenticityUrl = this.uploadForm.checkGroup[index].checkList.map(val => {
+            return val.url
+          })
+          let params = {
+            idNumber: idNumber,
+            webResponsibilityUrlPositive: webResponsibilityUrlPositive,
+            webResponsibilityUrlBack: webResponsibilityUrlBack,
+            domainCertificateUrl: domainCertificateUrl + '',
+            otherDataUrl: otherDataUrl + '',
+            webRecordAuthenticityUrl: webRecordAuthenticityUrl + ''
+          }
+          return params
+        })
         //  添加网站信息参数
         let siteParams = {
-          list_web_message: JSON.stringify(paramsList)
+          list_web_message: JSON.stringify(list_web_message),
+          list_web_picture_message: JSON.stringify(list_web_picture_message)
         }
         //  主体信息参数
         let mainParams = {
@@ -583,12 +665,7 @@
           phone: this.mainUnitInformation.phoneNumber,
           email: this.mainUnitInformation.emailAddress,
           zoneId: this.zoneId,
-          companyResponsibilityUrlPositive: companyResponsibilityUrlPositive + '',
-          companyResponsibilityUrlBack: companyResponsibilityUrlBack + '',
-          hostCompanyUrl: this.uploadForm.combine,
-          domainCertificateUrl: certifiedDomainNoCertificationDefaultList + '',
-          otherDataUrl: otherFile + '',
-          webRecordAuthenticityUrl: CheckList + '',
+          hostCompanyUrl: this.uploadForm.combine
         }
         sessionStorage.setItem('mainParamsStr', JSON.stringify(mainParams))
         sessionStorage.setItem('siteParamsStr', JSON.stringify(siteParams))
