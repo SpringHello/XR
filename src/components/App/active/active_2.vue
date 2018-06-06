@@ -5,7 +5,7 @@
         <div>
           <div>
             <p>
-              <img src="../../../assets/img/active/active_2/ziti.png" style="width:400px;height:270px;">
+              <img src="../../../assets/img/active/active_2/ziti.png" style="width:400px;">
             </p>
           </div>
           <transition name="list">
@@ -880,7 +880,8 @@
   .head {
 
     .head-banner {
-      background: url("../../../assets/img/active/active_2/bg.png") no-repeat 0 70px;
+      background: url("../../../assets/img/active/active_2/bg.png") no-repeat;
+      background-size: cover;
       > div {
         width: 1200px;
         margin: 0 auto;

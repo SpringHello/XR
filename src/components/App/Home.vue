@@ -11,7 +11,7 @@
                 <div>
                   <p>
                     <img src="../../assets/img/active/active_2/ziti.png"
-                         style="width:400px;height:200px;padding-top: 0px">
+                         style="width:400px;padding-top: 0px">
                   </p>
                   <button>立即领取</button>
                 </div>

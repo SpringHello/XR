@@ -92,10 +92,10 @@
           },
           {
             img: require('../../assets/img/activecenter/icon-down.png'),
-            title: '五一假日嗨翻天 免费主机抢不停',
+            title: '新手上云 一律免费',
             iconImg: require('../../assets/img/activecenter/icon-hot.png'),
-            desc: '畅享试用<span style="color:#D0021B">60</span>天，续费折扣享不停',
-            time: '活动时间 2018.5.1-2018.6.30',
+            desc: '云服务器免费使用<span style="color:#D0021B">60</span>天，带你体验飞一般的感觉',
+            time: '活动时间 2018.5.3开始，数量有限、送完为止',
             url: 'active_2'
           },
           /*{
