@@ -485,7 +485,7 @@
           </FormItem>
           <FormItem label="是否同时续费绑定IP与磁盘" v-if="isDisks||isIps">
             <CheckboxGroup @on-change="bindRenewal" v-model="bindRenewalVal">
-              <Checkbox label="ip"  v-if="isIps">续费绑定IP</Checkbox>
+              <Checkbox label="ip" v-if="isIps">续费绑定IP</Checkbox>
               <Checkbox label="disk" v-if="isDisks">续费磁盘</Checkbox>
             </CheckboxGroup>
           </FormItem>
@@ -537,7 +537,7 @@
           <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:24px;">全民普惠，3折减单，最高减免7000元！
           </router-link>
         </div>
-        <Button type="ghost"  @click="showModal.ratesChange=false">取消</Button>
+        <Button type="ghost" @click="showModal.ratesChange=false">取消</Button>
         <Button type="primary" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
       </div>
     </Modal>
@@ -606,7 +606,7 @@
           远程连接密码只出现一次，您以后每次远程连接登录时都需要输入该密码，请做好记录存档工作。</p>
       </div>
       <div slot="footer">
-        <Button type="primary" size="large">登录</Button>
+        <Button type="primary" size="large" @click="open">登录</Button>
       </div>
     </Modal>
   </div>
@@ -758,7 +758,7 @@
     },
     methods: {
       bindRenewal(){
-        if (this.cost != '--'){
+        if (this.cost != '--') {
           var selectIp = ''
           var selectDisk = ''
           for (var i = 0; i < this.bindRenewalVal.length; i++) {
@@ -1344,13 +1344,13 @@
           }
         }
         var iplist = []
-        if (selectIp != ''){
+        if (selectIp != '') {
           iplist = selectIp.split(',').map(item => {
             return {type: 2, id: parseInt(item)}
           })
         }
         var disklist = []
-        if (selectDisk != ''){
+        if (selectDisk != '') {
           disklist = selectDisk.split(',').map(item => {
             return {type: 1, id: parseInt(item)}
           })
@@ -1477,30 +1477,26 @@
       },
       // 连接主机动作
       link(item){
+        sessionStorage.setItem('link-companyid', item.companyid)
+        sessionStorage.setItem('link-vmid', item.computerid)
+        sessionStorage.setItem('link-zoneid', item.zoneid)
+        sessionStorage.setItem('link-phone', this.$store.state.authInfo.phone)
         this.$http.get('information/connectVm.do', {
           params: {
             VMId: item.computerid
           }
         }).then(response => {
           if (response.data.connectCode == '') {
-            // 不是第一次连接，直接跳转
-
-            sessionStorage.setItem('link-companyid', item.companyid)
-            sessionStorage.setItem('link-vmid', item.computerid)
-            sessionStorage.setItem('link-zoneid', item.zoneid)
-
-            sessionStorage.setItem('link-phone', this.$store.state.authInfo.phone)
-            /*sessionStorage.setItem('linkURL', item.connecturl)
-             sessionStorage.setItem('vmid', item.computerid)
-             sessionStorage.setItem('zoneid', item.zoneid)
-             sessionStorage.setItem('companyid', item.companyid)*/
             window.open('/ruicloud/link')
           } else {
             // 是第一次连接，弹出模态框
-            this.linkPassword = response.data.result
+            this.linkPassword = response.data.connectCode
             this.showModal.linkPassword = true
           }
         })
+      },
+      open(){
+        window.open('/ruicloud/link')
       }
     },
     computed: {
