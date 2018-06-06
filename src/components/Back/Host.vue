@@ -563,7 +563,7 @@
           远程连接密码只出现一次，您以后每次远程连接登录时都需要输入该密码，请做好记录存档工作。</p>
       </div>
       <div slot="footer">
-        <Button type="primary" size="large">登录</Button>
+        <Button type="primary" size="large" @click="open">登录</Button>
       </div>
     </Modal>
   </div>
@@ -686,7 +686,7 @@
           cost: 0,
           id: ''
         },
-        linkPassword: '111'
+        linkPassword: ''
       }
     },
     created() {
@@ -1300,30 +1300,26 @@
       },
       // 连接主机动作
       link(item){
+        sessionStorage.setItem('link-companyid', item.companyid)
+        sessionStorage.setItem('link-vmid', item.computerid)
+        sessionStorage.setItem('link-zoneid', item.zoneid)
+        sessionStorage.setItem('link-phone', this.$store.state.authInfo.phone)
         this.$http.get('information/connectVm.do', {
           params: {
             VMId: item.computerid
           }
         }).then(response => {
           if (response.data.connectCode == '') {
-            // 不是第一次连接，直接跳转
-
-            sessionStorage.setItem('link-companyid', item.companyid)
-            sessionStorage.setItem('link-vmid', item.computerid)
-            sessionStorage.setItem('link-zoneid', item.zoneid)
-
-            sessionStorage.setItem('link-phone', this.$store.state.authInfo.phone)
-            /*sessionStorage.setItem('linkURL', item.connecturl)
-             sessionStorage.setItem('vmid', item.computerid)
-             sessionStorage.setItem('zoneid', item.zoneid)
-             sessionStorage.setItem('companyid', item.companyid)*/
             window.open('/ruicloud/link')
           } else {
             // 是第一次连接，弹出模态框
-            this.linkPassword = response.data.result
+            this.linkPassword = response.data.connectCode
             this.showModal.linkPassword = true
           }
         })
+      },
+      open(){
+        window.open('/ruicloud/link')
       }
     },
     computed: {

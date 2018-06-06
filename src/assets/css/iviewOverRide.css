@@ -303,3 +303,6 @@ div.modal-header-border {
   top: -1px;
 }
 
+#renew .ivu-tooltip-inner {
+  white-space: normal !important;
+}
