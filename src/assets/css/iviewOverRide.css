@@ -303,3 +303,7 @@ div.modal-header-border {
   top: -1px;
 }
 
+.smlj-bag .ivu-modal-content{
+   background: url('../../assets/img/active/smlj/modal-bg.png');
+}
+
