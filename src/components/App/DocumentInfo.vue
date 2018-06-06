@@ -2,18 +2,18 @@
   <div id="documentInfo">
     <div id="left">
       <div id="head">
-        <p>产品文档<img src="../../assets/img/document/menu.png" style="float:right" @click="mainOpen=!mainOpen"></p>
+        <p>产品文档<img src="../../assets/img/document/menu.png" style="float:right" ref="toggle"></p>
       </div>
       <div id="menu">
         <p>云主机</p>
         <div v-for="item in menuList" class="menu-item">
           <ul v-if="item.subMenu">
             <p :class="{active:item.open}" @click="item.open=!item.open">{{item.title}}</p>
-            <li v-for="i in item.subMenu" v-show="item.open">
-              {{i.title}}
+            <li v-for="i in item.subMenu" v-show="item.open" @click="getContent(i.id)">
+              {{i.name}}
             </li>
           </ul>
-          <router-link v-else to="host">{{item.title}}</router-link>
+          <p v-else @click="getContent(i.parentId)">{{item.title}}</p>
         </div>
 
       </div>
@@ -22,7 +22,7 @@
           <div v-for="item in mainMenu">
             <span>{{item.firstTitle}}</span>
             <ul>
-              <li v-for="i in item.secondTitle">
+              <li v-for="i in item.secondTitle" @click="toggle(i)">
                 {{i.name}}
               </li>
             </ul>
@@ -31,7 +31,6 @@
       </transition>
     </div>
     <div id="right">
-      right
     </div>
   </div>
 </template>
@@ -69,9 +68,43 @@
         })
       })
     },
+    mounted(){
+      this.$refs.toggle
+      document.addEventListener('click', event => {
+        if (event.target != this.$refs.toggle) {
+          this.mainOpen = false
+        } else {
+          this.mainOpen = !this.mainOpen
+        }
+      })
+    },
     methods: {
       setData(response){
         this.mainMenu = response.data.result
+      },
+      // 切换分类
+      toggle(i){
+        axios.get('/document/getThirdTitle.do', {
+          params: {
+            id: i.id
+          }
+        }).then(response => {
+          response.data.result.forEach(item => {
+            if (item.subMenu) {
+              item.open = true
+            }
+          })
+          this.menuList = response.data.result
+        })
+      },
+      getContent(parentId){
+        axios.get('document/listInformation.do', {
+          params: {
+            id: parentId
+          }
+        }).then(response => {
+          console.log(response.data.result)
+        })
       }
     }
   }
