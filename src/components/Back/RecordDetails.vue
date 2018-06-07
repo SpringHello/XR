@@ -462,12 +462,12 @@
               :on-format-error="cardFormatError"
 
             >
-              <div class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlpositive==''">
+              <div class="sponsor-text" v-if="hostUnitList.webresponsibilityurlpositive==''">
                 暂无图片
               </div>
               <div style="min-height:203px;" v-else>
                 <div style="text-align: center">
-                  <img style="width:198px;height:144px;" :src="hostUnitList.companyresponsibilityurlpositive">
+                  <img style="width:198px;height:144px;" :src="hostUnitList.webresponsibilityurlpositive">
                   <p>点击选择文件</p>
                 </div>
               </div>
@@ -476,7 +476,7 @@
           </div>
           <div style="width:50%;" v-else>
             <p class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlpositive==''">暂无图片</p>
-            <img style="width:198px;height:144px;" :src="hostUnitList.companyresponsibilityurlpositive" v-else>
+            <img style="width:198px;height:144px;" :src="hostUnitList.webresponsibilityurlpositive" v-else>
           </div>
           <div style="width:50%;height:203px;">
             <div style="text-align: center">
@@ -500,12 +500,12 @@
               :on-success="cardBackSuccess"
               :on-format-error="cardBackFormatError"
             >
-              <div class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlback==''">
+              <div class="sponsor-text" v-if="hostUnitList.webresponsibilityurlback==''">
                 暂无图片
               </div>
               <div style="min-height:203px;" v-else>
                 <div style="text-align: center">
-                  <img style="height:144px;" :src="hostUnitList.companyresponsibilityurlback">
+                  <img style="height:144px;" :src="hostUnitList.webresponsibilityurlback">
                   <p style="">点击选择文件</p>
                 </div>
               </div>
@@ -513,8 +513,8 @@
             </Upload>
           </div>
           <div style="width:50%;" v-else>
-            <p class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlback==''">暂无图片</p>
-            <img style="width:198px;height:144px;" :src="hostUnitList.companyresponsibilityurlback" v-else>
+            <p class="sponsor-text" v-if="hostUnitList.webresponsibilityurlback==''">暂无图片</p>
+            <img style="width:198px;height:144px;" :src="hostUnitList.webresponsibilityurlback" v-else>
           </div>
           <div style="width:50%;height:203px;">
             <div style="text-align: center">

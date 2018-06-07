@@ -67,7 +67,7 @@
         <p class="titleDescription">温馨提示：如网站负责人和主体负责人不是同一人，请在其他资料中上传法人授权委托书</p>
         <div class="upload" v-for="(item,index) in uploadForm.IDPhotoList">
           <div class="uploadTitle">
-            <p>证件人像面 ( 证件号：{{ item.IDNumber }})</p>
+            <p>证件人像面 ( 证件号：{{ item.IDNumber.substring(0,3) + '*****' + item.IDNumber.substring(item.IDNumber.length-4,item.IDNumber.length) }})</p>
             <div class="item">
               <div class="item-content">
                 <div style="width:50%;">
@@ -96,7 +96,7 @@
             </div>
           </div>
           <div class="uploadTitle">
-            <p style="margin-left: 20px">证件国徽面 ( 证件号：{{ item.IDNumber }})</p>
+            <p style="margin-left: 20px">证件国徽面 ( 证件号：{{ item.IDNumber.substring(0,3) + '*****' + item.IDNumber.substring(item.IDNumber.length-4,item.IDNumber.length) }})</p>
             <div class="item" style="margin-left: 20px">
               <div class="item-content">
                 <div style="width:50%;">
@@ -441,19 +441,6 @@
           this.uploadForm.checkGroup.push(checkList)
         }
       },
-      /*      // 添加新的证件照
-            addIDPhoto() {
-              let param = {
-                // 身份证正面
-                IDCardFront: '',
-                // 身份证反面
-                IDCardBack: '',
-              }
-              this.uploadForm.IDPhotoList.push(param)
-            },*/
-      /*     deleteIDPhoto(index) {
-             this.uploadForm.IDPhotoList.splice(index, 1)
-           },*/
       // 移除上传的域名证书
       removeSSL(index1, index2) {
         this.uploadForm.certifiedDomainNoCertificationDefault[index1].certifiedDomainNoCertificationDefaultList.splice(index2, 1)
@@ -613,17 +600,21 @@
           return param
         })
         let list_web_picture_message = this.siteListStr.map((item, index) => {
-          let idNumber = ''
-          let webResponsibilityUrlPositive = ''
-          let webResponsibilityUrlBack = ''
-          for (let i = 0, len = this.uploadForm.IDPhotoList.length; i < len; i++) {
-            if (item.certificateNumber = this.uploadForm.IDPhotoList[i].IDNumber) {
-              idNumber = this.uploadForm.IDPhotoList[i].IDNumber
-              webResponsibilityUrlPositive = this.uploadForm.IDPhotoList[i].IDCardFront
-              webResponsibilityUrlBack = this.uploadForm.IDPhotoList[i].IDCardBack
-              break
+          let idNumber = this.uploadForm.IDPhotoList.forEach(idNumber => {
+            if (item.certificateNumber == idNumber.IDNumber) {
+              return idNumber.IDNumber
             }
-          }
+          })
+          let webResponsibilityUrlPositive = this.uploadForm.IDPhotoList.forEach(idNumber => {
+            if (item.certificateNumber == idNumber.IDNumber) {
+              return idNumber.IDCardFront
+            }
+          })
+          let webResponsibilityUrlBack = this.uploadForm.IDPhotoList.forEach(idNumber => {
+            if (item.certificateNumber == idNumber.IDNumber) {
+              return idNumber.IDCardBack
+            }
+          })
           let domainCertificateUrl = this.uploadForm.certifiedDomainNoCertificationDefault[index].certifiedDomainNoCertificationDefaultList.map(val => {
             return val.url
           })
