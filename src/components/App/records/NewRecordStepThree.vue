@@ -169,7 +169,7 @@
                       <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')"
                            :class="{one:item.certifiedDomainNoCertificationDefaultList.length==1,two:item.certifiedDomainNoCertificationDefaultList.length==2,three:item.certifiedDomainNoCertificationDefaultList.length==3}"
                            src="../../../assets/img/records/records-img.png"/>
-                      <img v-if="file.suffix == 'doc'"
+                      <img v-if="file.suffix == 'doc'||file.suffix == 'ocx'"
                            :class="{one:item.certifiedDomainNoCertificationDefaultList.length==1,two:item.certifiedDomainNoCertificationDefaultList.length==2,three:item.certifiedDomainNoCertificationDefaultList.length==3}"
                            src="../../../assets/img/records/records-doc.png"/>
                       <img v-if="file.suffix == 'pdf'"
@@ -209,7 +209,7 @@
                       <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')"
                            :class="{one:item.otherFile.length==1,two:item.otherFile.length==2,three:item.otherFile.length==3}"
                            src="../../../assets/img/records/records-img.png"/>
-                      <img v-if="file.suffix == 'doc'"
+                      <img v-if="file.suffix == 'doc'||file.suffix == 'ocx'"
                            :class="{one:item.otherFile.length==1,two:item.otherFile.length==2,three:item.otherFile.length==3}"
                            src="../../../assets/img/records/records-doc.png"/>
                       <img v-if="file.suffix == 'pdf'"
@@ -248,7 +248,7 @@
                     <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')"
                          :class="{one:item.checkList.length==1}"
                          src="../../../assets/img/records/records-img.png"/>
-                    <img v-if="file.suffix == 'doc'"
+                    <img v-if="file.suffix == 'doc'||file.suffix == 'ocx'"
                          :class="{one:item.checkList.length==1}"
                          src="../../../assets/img/records/records-doc.png"/>
                     <img v-if="file.suffix == 'pdf'"
@@ -600,21 +600,17 @@
           return param
         })
         let list_web_picture_message = this.siteListStr.map((item, index) => {
-          let idNumber = this.uploadForm.IDPhotoList.forEach(idNumber => {
-            if (item.certificateNumber == idNumber.IDNumber) {
-              return idNumber.IDNumber
+          let idNumber = ''
+          let webResponsibilityUrlPositive = ''
+          let webResponsibilityUrlBack = ''
+          for (let i = 0, len = this.uploadForm.IDPhotoList.length; i < len; i++) {
+            if (this.uploadForm.IDPhotoList[i].IDNumber == item.basicInformation.certificateNumber) {
+              idNumber = this.uploadForm.IDPhotoList[i].IDNumber
+              webResponsibilityUrlPositive = this.uploadForm.IDPhotoList[i].IDCardFront
+              webResponsibilityUrlBack = this.uploadForm.IDPhotoList[i].IDCardBack
+              break
             }
-          })
-          let webResponsibilityUrlPositive = this.uploadForm.IDPhotoList.forEach(idNumber => {
-            if (item.certificateNumber == idNumber.IDNumber) {
-              return idNumber.IDCardFront
-            }
-          })
-          let webResponsibilityUrlBack = this.uploadForm.IDPhotoList.forEach(idNumber => {
-            if (item.certificateNumber == idNumber.IDNumber) {
-              return idNumber.IDCardBack
-            }
-          })
+          }
           let domainCertificateUrl = this.uploadForm.certifiedDomainNoCertificationDefault[index].certifiedDomainNoCertificationDefaultList.map(val => {
             return val.url
           })
