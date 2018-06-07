@@ -6,36 +6,7 @@
         <div style="margin-top:10px;">
              <Table :columns="spaceColumns" :data="spaceData" no-data-text="您还没有创建Bucket（存储空间）,请点击新建空间"></Table>
         </div>
-        <div style="margin-top:36px;">
-            <Card style="width:373px;">
-                <div>
-                    <span style="font-size:18px;color:#666666;">空间名称</span>
-                    <a slot="extra" style="float:right;">
-                         <Icon type="android-close"></Icon>
-                        删除
-                    </a>
-                    <p style="margin-top:10px;font-size:12px;color:#666666;">权限:私有读写</p>
-                </div>
-                <div class="card-center">
-                    <div>
-                        <p class="p_text">存储空间容量</p>
-                        <p class="p_textf">25mb</p>
-                    </div>
-                    <div>
-                        <p class="p_text">流量</p>
-                        <p class="p_textf">25mb</p>
-                    </div>
-                    <div>
-                        <p class="p_text">HTTP请求次数</p>
-                        <p class="p_textf">5次</p>
-                    </div>
-                </div>
-                <div class="card-bottom">
-                    <div>创建时间：2017-06-06 12:00:00</div>
-                    <Button>管理</Button>
-                </div>
-            </Card>
-        </div>
+
          <Modal
         v-model="modal6"
         title="新建空间"
@@ -106,7 +77,7 @@ export default {
               h(
                 "span",
                 {},
-                parasm.row.accessrights == 1 ? "私有读写" : "公有读私有写"
+                parasm.row.accessrights == 1 ? "私有读写" : parasm.row.accessrights ==2 ? "公有读私有写" : parasm.row.accessrights = 3 ?"公有读写" : '自定义权限'
               )
             ]);
           }
@@ -148,6 +119,7 @@ export default {
                     click: () => {
                       sessionStorage.setItem("bucketName", parasm.row.name);
                       sessionStorage.setItem('bucketId',parasm.row.id);
+                      sessionStorage.setItem('accessrights',parasm.row.accessrights)
                       this.$router.push({ path: "SpaceDetails" });
                     }
                   }
@@ -170,6 +142,10 @@ export default {
         {
           label: "公有读私有写",
           value: "2"
+        },
+        {
+          label:'公有读写',
+          value:'3'
         }
       ]
     };
@@ -183,8 +159,7 @@ export default {
           if (res.data.status == "1") {
             this.spaceData = res.data.data.bucket;
           } else {
-            this.spaceData = res.data.data.bucket;
-
+            this.spaceData = [];
             this.$Message.error(res.data.msg);
           }
         });

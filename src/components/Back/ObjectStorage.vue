@@ -23,61 +23,62 @@
             <div class="center_space">
               <div class="space_one">
                 <p>存储空间容量</p>
-                <div style="font-size:36px;color:#333333;margin-top:10px;">20KB</div>
+                <div style="font-size:36px;color:#333333;margin-top:10px;">{{size}}</div>
               </div>
               <div class="space_one">
                 <p>流量</p>
-                <div style="font-size:36px;color:#333333;margin-top:10px;">20KB</div>
+                <div style="font-size:36px;color:#333333;margin-top:10px;">0KB</div>
               </div>
               <div class="space_one">
                 <p>http请求次数</p>
-                <div style="font-size:36px;color:#333333;margin-top:10px;">3次</div>
+                <div style="font-size:36px;color:#333333;margin-top:10px;">0次</div>
               </div>
             </div>
-            <div class="center_chart">
-              <div style="display:flex;padding-bottom:5px;">
-                <div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>
-                <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
-              </div>
-              <div class="chart">
-                <ul class="objectList">
-                  <li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>
-                </ul>
-                <div class="chart-rig">
-                   <!--<Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button>-->
-                  <ul class="objectList">
-                    <li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>
-                  </ul>
-                </div>
-              </div>
-              <chart class="echarts" :options="rwPolar" ></chart>
-            </div>
-            <div class="center_chart">
-              <div style="display:flex;padding-bottom:5px;margin-top:50px;">
-                <div style="width:50%;font-size:16px;color:#333333;">请求次数</div>
-                <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
-              </div>
-              <div class="chart" >
-                <ul class="objectList">
-                  <li :class="requestIndex == item.label? 'objectItems':'objectItem'" v-for="item in requestList" :key="item.label" @click="requestClick(item.label)">{{item.value}}</li>
-                </ul>
-                <div class="chart-rig">
-                  <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button> -->
-                  <ul class="objectList">
-                    <li :class="chartTwoIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartTwotList" :key="index" @click="chartTwoClick(index)">{{item.value}}</li>
-                  </ul>
-                </div>
-              </div>
-              <chart class="echarts" :options="rwNumber"></chart>
-            </div>
+            <!--<div class="center_chart">-->
+              <!--<div style="display:flex;padding-bottom:5px;">-->
+                <!--<div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>-->
+                <!--<div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>-->
+              <!--</div>-->
+              <!--<div class="chart">-->
+                <!--<ul class="objectList">-->
+                  <!--<li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>-->
+                <!--</ul>-->
+                <!--<div class="chart-rig">-->
+                   <!--&lt;!&ndash;<Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button>&ndash;&gt;-->
+                  <!--<ul class="objectList">-->
+                    <!--<li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>-->
+                  <!--</ul>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<chart class="echarts" :options="rwPolar" ></chart>-->
+            <!--</div>-->
+            <!--<div class="center_chart">-->
+              <!--<div style="display:flex;padding-bottom:5px;margin-top:50px;">-->
+                <!--<div style="width:50%;font-size:16px;color:#333333;">请求次数</div>-->
+                <!--<div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>-->
+              <!--</div>-->
+              <!--<div class="chart" >-->
+                <!--<ul class="objectList">-->
+                  <!--<li :class="requestIndex == item.label? 'objectItems':'objectItem'" v-for="item in requestList" :key="item.label" @click="requestClick(item.label)">{{item.value}}</li>-->
+                <!--</ul>-->
+                <!--<div class="chart-rig">-->
+                  <!--&lt;!&ndash; <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button> &ndash;&gt;-->
+                  <!--<ul class="objectList">-->
+                    <!--<li :class="chartTwoIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartTwotList" :key="index" @click="chartTwoClick(index)">{{item.value}}</li>-->
+                  <!--</ul>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<chart class="echarts" :options="rwNumber"></chart>-->
+            <!--</div>-->
           </TabPane>
           <TabPane label="空间管理">
             <tabOne></tabOne>
           </TabPane>
           <TabPane label="用量监控">
-            <tabTwo></tabTwo>
+            <div style="text-align: center;">暂无数据</div>
+            <!--<tabTwo></tabTwo>-->
           </TabPane>
-          <TabPane label="操作日志">
+          <TabPane label="操作日志" style="min-height: 300px;">
             <tabThree></tabThree>
           </TabPane>
         </Tabs>
@@ -96,7 +97,6 @@
   import tabOne from "../../myView/objectStrorage/tabOne";
   import tabTwo from "../../myView/objectStrorage/tabTwo";
   import tabThree from "../../myView/objectStrorage/tabThree";
-  import  axios from 'axios'
   const disk = JSON.stringify(diskOptions);
   const numbers = JSON.stringify(objectNumbers);
   //延迟加载子组件
@@ -199,7 +199,9 @@
         ],
         chartTwoIndex:0,
         //检测access
-        screte:false
+        screte:false,
+        //存储空间容量
+        size:''
       }
     },
     components: {
@@ -243,13 +245,30 @@
         this.rwNumber.xAxis.boundaryGap = this.chartTwotList[val].boundaryGap;
       },
       //检测access
-      showUserAcessAll(){
-        axios.get('user/showUserAcessAll.do',{
-        }).then(res => {
+      // showUserAcessAll(){
+      //   axios.get('user/showUserAcessAll.do',{
+      //   }).then(res => {
+      //     if(res.data.status == '1'){
+      //     }else {
+      //       this.screte = true;
+      //     }
+      //   })
+      // },
+      //获取存储空间容量
+      getAllsize(){
+        this.$http.post('object/getAllSize.do',{
+        }).then(res =>{
           if(res.data.status == '1'){
-          }else {
-            this.screte = true;
+           this.size =  res.data.data.data / 1024 > 1 ?  (res.data.data.data / 1024).toFixed(2) + 'MB' :res.data.data.data + 'KB';
+
+          }else{
+            this.size = "0KB";
+            this.$Message.error('出错了');
           }
+          sessionStorage.setItem('size',this.size);
+        }).catch(error =>{
+          this.$Message.error('网络连接出错');
+          this.size = "0KB"
         })
       }
     },
@@ -258,7 +277,8 @@
       this.rwPolar.series[0].data = this.dayList[0].data;
       this.rwNumber.xAxis.data = this.requestList[0].day;
       this.rwNumber.series[0].data = this.requestList[0].data;
-      this.showUserAcessAll();
+      // this.showUserAcessAll();
+      this.getAllsize();
     }
   };
 </script>
@@ -285,7 +305,6 @@
       .center {
         width: inherit;
         background-color: #ffffff;
-        min-height: 1625px;
         padding: 20px;
         .center_top {
           display: flex;

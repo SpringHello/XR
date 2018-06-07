@@ -67,15 +67,15 @@
       <div class="wrapper">
         <div class="zoneList">
           <Dropdown @on-click="toggleZone">
-            <div style="height:30px;">
+            <div style="height:30px;min-width: 102px;">
               <div
                 style="display: inline-block;background: #2A99F2;border-radius: 4px;height: 30px;padding: 4px 0px;cursor:pointer">
                 <img src="./assets/img/back/zoneIcon.png" style="vertical-align: middle;margin:0px 10px;"></img><span
-                style="font-size: 14px;color: #FFFFFF;line-height: 21px;vertical-align: middle;margin-right:10px;"><!--{{zone.zonename}}--></span>
+                style="font-size: 14px;color: #FFFFFF;line-height: 21px;vertical-align: middle;margin-right:10px;">{{zone.zonename}}</span>
               </div>
             </div>
             <DropdownMenu slot="list">
-              <DropdownItem :name="zone.zoneid" v-for="(zone,index) in zoneList" :key="index">
+              <DropdownItem :name="zone.zoneid" v-for="(zone,index) in zoneList" :key="index" >
                 {{zone.zonename}}
               </DropdownItem>
             </DropdownMenu>
