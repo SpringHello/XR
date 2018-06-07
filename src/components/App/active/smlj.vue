@@ -204,7 +204,6 @@
       })
 
     },
-    components: {},
     methods: {
       vail(field) {
         var text = this.form[field];
