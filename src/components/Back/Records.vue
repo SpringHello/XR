@@ -343,7 +343,6 @@ export default {
                     },
                     on: {
                       click: () => {
-                        sessionStorage.clear()
                         sessionStorage.setItem("id",params.row.id);
                         sessionStorage.setItem("webcompany_Id", params.row.webcompany_Id);
                         this.$router.push({ path: "completedFilingDetails" });
@@ -411,7 +410,6 @@ export default {
     },
     //跳转详情页面
     jumpRecord(id,webcompany_Id) {
-      sessionStorage.clear()
       this.$router.push({ path: "RecordDetails"});
       sessionStorage.setItem("id",id);
       sessionStorage.setItem("webcompany_Id", webcompany_Id);
