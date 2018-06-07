@@ -4,8 +4,8 @@
       <img src="../../../assets/img/active/smlj/text.png" style="width:438px;position: absolute;left:0px;top:25%;">
       <img src="../../../assets/img/active/smlj/img.png" style="width:700px;position: absolute;right:0px">
     </div>
-    <div class="active-body">
-      <div>
+    <div class="active-body" :class="{error:ljError,ended:ljEnded,over:ljOverded}">
+      <div v-if="ljOK" class="ok">
         <img src="../../../assets/img/active/smlj/header.png" style="width:1200px;display: block">
         <div class="body">
           <div class="left">
@@ -87,7 +87,7 @@
         </form>
       </div>
       <div slot="footer" class="modal-foot">
-        <button :class="{disabled:disabled}" :disabled="disabled==true" @click="submit">登录</button>
+        <button @click="submit">登录</button>
         <div>
           <!--span class="checkBox" :class="{agree:agree}" @click="toggle"></span>&nbsp;<span>我已阅读并同意</span><span
           style="color:#0EB4FA;cursor:pointer;" @click="showRules">《睿云用户使用协议》</span-->
@@ -146,6 +146,11 @@
     data() {
       window.scrollTo(0, 0);
       return {
+         //私密链接状态
+        ljOK:false,
+        ljError:false,
+        ljEnded:false,
+        ljOverded:false,
         // 一键领取弹窗
         sucessMsg:'',
         failMsg:'',
@@ -286,12 +291,6 @@
         )
         ;
       },
-//      buyNow_one(item, index) {
-//        if (this.userInfo == null) {
-//          this.loginModal = true
-//          return
-//        }
-//      },
       // 一键领取主机
       receive(){
         if (this.$store.state.userInfo == null) {
@@ -312,15 +311,27 @@
           }
         })
       },
-      setData(result){
-        this.computerInfo.cost = result.data.cost;
-        this.computerInfo.cpu = result.data.result[0].cpu;
-        this.computerInfo.memory = result.data.result[0].mem;
-        this.computerInfo.brand = result.data.result[0].bandwith;
-        this.computerInfo.disk = result.data.result[0].disksize;
-        this.computerInfo.zone = result.data.result[0].zonename;
-        this.computerInfo.osname = result.data.result[0].osname;
-        this.computerInfo.zoneId = result.data.result[0].zoneid;
+      setData(response){
+        if (response.status == 200 && response.data.status == 1){
+          this.ljOK=true
+          this.computerInfo.cost = response.data.cost;
+          this.computerInfo.cpu = response.data.result[0].cpu;
+          this.computerInfo.memory = response.data.result[0].mem;
+          this.computerInfo.brand = response.data.result[0].bandwith;
+          this.computerInfo.disk = response.data.result[0].disksize;
+          this.computerInfo.zone = response.data.result[0].zonename;
+          this.computerInfo.osname = response.data.result[0].osname;
+          this.computerInfo.zoneId = response.data.result[0].zoneid;
+        }
+        if (response.status == 200 && response.data.status == 2){
+            this.ljError=true
+        }
+        if (response.status == 200 && response.data.status == 3){
+          this.ljEnded=true
+        }
+        if (response.status == 200 && response.data.status == 4){
+          this.ljOverded=true
+        }
       }
     },
     computed: {},
@@ -336,114 +347,128 @@
     .active-body {
       width: 1200px;
       margin: 0px auto;
-      box-shadow: 0px 2px 50px 0px rgba(245, 127, 114, 0.48);
-      background-color: #fff;
-      .body {
-        padding: 60px 100px 20px 100px;
-        display: flex;
-        .left {
-          width: 60%;
-          padding: 20px 10% 20px 0px;
-          border-right: 2px dashed #979797;
+      .ok{
+        box-shadow: 0px 2px 50px 0px rgba(245, 127, 114, 0.48);
+        background-color: #fff;
+        .body {
+          padding: 60px 100px 20px 100px;
+          display: flex;
+          .left {
+            width: 60%;
+            padding: 20px 10% 20px 0px;
+            border-right: 2px dashed #979797;
 
-          .wrapper {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 40px;
-            p {
-              font-size: 24px;
-              color: rgba(51, 51, 51, 1);
-              line-height: 24px;
+            .wrapper {
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 40px;
+              p {
+                font-size: 24px;
+                color: rgba(51, 51, 51, 1);
+                line-height: 24px;
+                span {
+                  font-size: 14px;
+                  color: rgba(153, 153, 153, 1);
+                  line-height: 14px;
+                }
+              }
+            }
+            .info {
+              display: flex;
+              margin-bottom: 20px;
+              p {
+                font-size: 18px;
+                color: rgba(51, 51, 51, 1);
+                line-height: 19px;
+                margin-right: 20px;
+              }
               span {
-                font-size: 14px;
-                color: rgba(153, 153, 153, 1);
-                line-height: 14px;
+                font-size: 18px;
+                &:before {
+                  vertical-align: bottom;
+                  content: '';
+                  display: inline-block;
+                  width: 15px;
+                  height: 15px;
+                  background-color: #F26667;
+                  margin-right: 10px;
+                }
+              }
+            }
+            .foot {
+              p {
+                font-size: 18px;
+                span {
+                  color: #E45543
+                }
               }
             }
           }
-          .info {
-            display: flex;
-            margin-bottom: 20px;
+          .right {
+            padding: 20px 0px 20px 0px;
+            width: 30%;
+            margin-left: 10%;
             p {
               font-size: 18px;
-              color: rgba(51, 51, 51, 1);
-              line-height: 19px;
-              margin-right: 20px;
+              text-align: center;
+              color: rgba(228, 85, 67, 1);
+              line-height: 18px;
             }
-            span {
-              font-size: 18px;
-              &:before {
-                vertical-align: bottom;
-                content: '';
-                display: inline-block;
-                width: 15px;
-                height: 15px;
-                background-color: #F26667;
-                margin-right: 10px;
+            .free{
+              background: url('../../../assets/img/active/smlj/free.png') no-repeat center;
+              margin-top: 20px;
+              text-align: center;
+              p{
+                position: relative;
+                left: 28px;
+                font-size:50px;
+                color:rgba(255,255,255,1);
+                line-height:70px;
               }
-            }
-          }
-          .foot {
-            p {
-              font-size: 18px;
-              span {
-                color: #E45543
+              span{
+                position: relative;
+                left: 28px;
+                font-size:18px;
+                color:rgba(255,255,255,1);
+                line-height:38px;
               }
             }
           }
         }
-        .right {
-          padding: 20px 0px 20px 0px;
-          width: 30%;
-          margin-left: 10%;
-          p {
-            font-size: 18px;
-            text-align: center;
-            color: rgba(228, 85, 67, 1);
-            line-height: 18px;
+        .btn{
+          width: 1000px;
+          margin: 0 auto;
+          text-align: center;
+          border-top:2px solid rgba(153,153,153,0.3);
+          padding: 18px 0;
+          button{
+            width:260px;
+            height:42px;
+            background:rgba(228,85,67,1);
+            border-radius:21px;
+            font-size:18px;
+            font-family:PingFangSC-Regular;
+            color:rgba(255,255,255,1);
+            line-height:18px;
+            border: none;
+            outline: none;
+            cursor: pointer;
           }
-          .free{
-            background: url('../../../assets/img/active/smlj/free.png') no-repeat center;
-            margin-top: 20px;
-            text-align: center;
-            p{
-              position: relative;
-              left: 28px;
-              font-size:50px;
-              color:rgba(255,255,255,1);
-              line-height:70px;
-            }
-            span{
-              position: relative;
-              left: 28px;
-              font-size:18px;
-              color:rgba(255,255,255,1);
-              line-height:38px;
-            }
-          }
-        }
-      }
-      .btn{
-        width: 1000px;
-        margin: 0 auto;
-        text-align: center;
-        border-top:2px solid rgba(153,153,153,0.3);
-        padding: 18px 0;
-        button{
-          width:260px;
-          height:42px;
-          background:rgba(228,85,67,1);
-          border-radius:21px;
-          font-size:18px;
-          font-family:PingFangSC-Regular;
-          color:rgba(255,255,255,1);
-          line-height:18px;
-          border: none;
-          outline: none;
-          cursor: pointer;
         }
       }
     }
+    .error{
+      height: 290px;
+      background: url('../../../assets/img/active/smlj/error.png') no-repeat center;
+    }  //连接输入错误
+    .ended{
+      height: 290px;
+      background: url('../../../assets/img/active/smlj/ended.png') no-repeat center;
+    }  //连接已被领取
+    .over{
+      height: 290px;
+      background: url('../../../assets/img/active/smlj/overed.png') no-repeat center;
+    }   //连接过期
     .active-desc {
       width: 1200px;
       margin: 0px auto;
