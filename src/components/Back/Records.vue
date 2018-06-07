@@ -410,9 +410,9 @@ export default {
     },
     //跳转详情页面
     jumpRecord(id,webcompany_Id) {
-      this.$router.push({ path: "RecordDetails"});
       sessionStorage.setItem("id",id);
       sessionStorage.setItem("webcompany_Id", webcompany_Id);
+      this.$router.push({ path: "RecordDetails"});
     }
   },
   mounted() {

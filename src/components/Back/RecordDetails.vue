@@ -850,8 +850,6 @@
   import area from "../../options/area.json";
   import certificates from "../../options/certificates.json";
   //备案ID
-  const id = sessionStorage.getItem("id");
-  const webcompany_Id = sessionStorage.getItem("webcompany_Id");
   const imgPdf = require('../../assets/img/records/records-pdf.png');
   const imgJpg = require('../../assets/img/records/records-img.png');
   const imgDoc = require('../../assets/img/records/records-doc.png');
@@ -976,6 +974,7 @@
         }
       };
       return {
+        id: '',
         //网站核验单大图
         visibleWeb:false,
         //营业执照大图
@@ -1201,6 +1200,9 @@
         examples:''
       };
     },
+    created() {
+      this.id = sessionStorage.getItem("id");
+    },
     methods: {
       //图标切换方法
       // toolShow(isIcon) {
@@ -1222,7 +1224,7 @@
         this.$http
           .get("recode/listMainWeb.do", {
             params: {
-              id: id,
+              id: this.id,
               recordtype: "",
               status: ""
             }
@@ -1592,7 +1594,7 @@
         this.$http
           .get("recode/updateMainWeb.do", {
             params: {
-              id: id,
+              id: this.id,
               ISPName: this.updateHostUnitList.ispname,
               webIp: this.updateHostUnitList.webip,
               webAccessType: this.updateHostUnitList.webaccesstype,
