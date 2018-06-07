@@ -11,11 +11,11 @@
         <div v-for="(item,index) in contentList" :key="index">
           <div class="header">
             <i class="iconfont" :class="item.img" style="font-size:30px;color:#fff;line-height:1"></i>
-            <p>{{item.title}}</p>
+            <p>{{item.firstTitle}}</p>
           </div>
           <div class="body">
-            <div v-for="(item,index) in item.list" :key="index" class="wrapper">
-              <router-link :to="`documentInfo?type=${item.type}`" class="title">{{item.title}}</router-link>
+            <div v-for="(item,index) in item.secondTitle" :key="index" class="wrapper">
+              <span class="title" @click="goInfo(item.id)">{{item.name}}</span>
               <!--<li v-if="item.open" v-for="(subItem,subIndex) in item.desc" :key="subIndex" >-->
               <!--<router-link :to="subItem.url" :class="{notAllow:subItem.url === ''}">{{subItem.subTitle}}-->
               <!--</router-link>-->
@@ -137,9 +137,14 @@
       })
     },
     methods: {
-        setData(response){
-            this.contentList
-        }
+      setData(response){
+        this.contentList = response.data.result
+      },
+      goInfo(id){
+        sessionStorage.setItem('document-main', id)
+        sessionStorage.removeItem('document-minor')
+        this.$router.push('documentInfo')
+      }
     }
   }
 </script>

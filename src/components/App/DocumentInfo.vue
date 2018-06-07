@@ -2,10 +2,10 @@
   <div id="documentInfo">
     <div id="left">
       <div id="head">
-        <p>产品文档<img src="../../assets/img/document/menu.png" style="float:right" ref="toggle"></p>
+        <p>产品文档<img src="../../assets/img/document/menu.png" style="float:right;cursor:pointer" ref="toggle"></p>
       </div>
       <div id="menu">
-        <p>云主机</p>
+        <p>{{title}}</p>
         <div v-for="item in menuList" class="menu-item">
           <ul v-if="item.subMenu">
             <p :class="{active:item.open}" @click="item.open=!item.open">{{item.title}}</p>
@@ -13,7 +13,7 @@
               {{i.name}}
             </li>
           </ul>
-          <p v-else @click="getContent(i.parentId)">{{item.title}}</p>
+          <p v-else @click="getContent(item.parentId)">{{item.title}}</p>
         </div>
 
       </div>
@@ -22,7 +22,7 @@
           <div v-for="item in mainMenu">
             <span>{{item.firstTitle}}</span>
             <ul>
-              <li v-for="i in item.secondTitle" @click="toggle(i)">
+              <li v-for="i in item.secondTitle" @click="toggle(i.id);title=i.name">
                 {{i.name}}
               </li>
             </ul>
@@ -30,7 +30,7 @@
         </div>
       </transition>
     </div>
-    <div id="right">
+    <div id="right" v-html="content">
     </div>
   </div>
 </template>
@@ -40,28 +40,17 @@
   export default{
     data(){
       return {
+        title: '',
         // 主导航
         mainMenu: [],
         // 左侧导航
-        menuList: [
-          {title: '云主机描述', id: ''},
-          {
-            title: '快速入门', open: true, subMenu: [
-            {title: 'windows主机快速入门', id: ''},
-            {title: 'Linux主机快速入门', id: ''},
-          ]
-          },
-          {title: '购买指南', path: ''},
-          {title: '控制台使用说明', path: ''},
-          {title: '常见问题', path: ''},
-          {title: '接口参考', path: ''},
-        ],
+        menuList: [],
         // 主导航开关
-        mainOpen: false
+        mainOpen: false,
+        content: ''
       }
     },
     beforeRouteEnter(to, from, next){
-      let path = to.query.type || 'host'
       axios.get('document/getFirstTitle.do').then(response => {
         next(vm => {
           vm.setData(response)
@@ -69,7 +58,6 @@
       })
     },
     mounted(){
-      this.$refs.toggle
       document.addEventListener('click', event => {
         if (event.target != this.$refs.toggle) {
           this.mainOpen = false
@@ -80,21 +68,37 @@
     },
     methods: {
       setData(response){
+        let main = sessionStorage.getItem('document-main')
+        let minor = sessionStorage.getItem('document-minor')
         this.mainMenu = response.data.result
+        this.toggle(main, minor)
       },
       // 切换分类
-      toggle(i){
+      toggle(id, minor){
+        // 保存主分类Id
+        sessionStorage.setItem('document-main', id)
         axios.get('/document/getThirdTitle.do', {
           params: {
-            id: i.id
+            id
           }
         }).then(response => {
           response.data.result.forEach(item => {
             if (item.subMenu) {
-              item.open = true
+              item.open = false
             }
           })
           this.menuList = response.data.result
+          if (!minor) {
+            if (this.menuList[0].subMenu) {
+              minor = this.menuList[0].subMenu[0].id
+            } else {
+              minor = this.menuList[0].parentId
+            }
+          }
+
+          // 重置具体文档Id
+          sessionStorage.setItem('document-minor', minor)
+          this.getContent(id)
         })
       },
       getContent(parentId){
@@ -103,7 +107,7 @@
             id: parentId
           }
         }).then(response => {
-          console.log(response.data.result)
+          this.content = response.data.result[0].content.replace(/<img src="/g, '<img src="http://jk.xrcloud.net/')
         })
       }
     }
@@ -195,6 +199,18 @@
               margin-top: 10px;
             }
           }
+        }
+      }
+    }
+    #right {
+      width: 900px;
+      padding: 20px;
+    }
+    #main {
+      li {
+        cursor: pointer;
+        &:hover {
+          color: #2d8cf0;
         }
       }
     }
