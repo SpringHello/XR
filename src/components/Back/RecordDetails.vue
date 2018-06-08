@@ -475,7 +475,7 @@
             </Upload>
           </div>
           <div style="width:50%;" v-else>
-            <p class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlpositive==''">暂无图片</p>
+            <p class="sponsor-text" v-if="hostUnitList.webresponsibilityurlpositive==''">暂无图片</p>
             <img style="width:198px;height:144px;" :src="hostUnitList.webresponsibilityurlpositive" v-else>
           </div>
           <div style="width:50%;height:203px;">
@@ -746,7 +746,7 @@
           <p style="margin:10px">手机号码</p>
           <Input type="text" v-model="updateHostUnitList.companyphone"></Input>
         </FormItem>
-        <FormItem prop="email">
+        <FormItem prop="companyemail">
           <p style="margin:10px">电子邮箱地址</p>
           <Input type="text" v-model="updateHostUnitList.companyemail"></Input>
         </FormItem>
@@ -812,7 +812,7 @@
           <p style="margin:10px">移动电话号码</p>
           <Input type="text" v-model="updateHostUnitList.phone"></Input>
         </FormItem>
-        <FormItem prop="companyemail">
+        <FormItem prop="email">
           <p style="margin:10px">电子邮箱地址</p>
           <Input type="text" v-model="updateHostUnitList.email"></Input>
         </FormItem>
@@ -1610,7 +1610,7 @@
               email: this.updateHostUnitList.email,
               webName: this.updateHostUnitList.webname,
               webDomian: this.updateHostUnitList.webdomian,
-              webUrl: updateHostUnitList.weburl,
+              webUrl: this.updateHostUnitList.weburl,
               webServerContent: this.updateHostUnitList.webservercontent,
               webMessage: this.updateHostUnitList.webmessage,
               legalName: this.updateHostUnitList.legalname,

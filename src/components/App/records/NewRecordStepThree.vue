@@ -246,13 +246,13 @@
                 <div style="width:100%;background: #FFF;padding-top: 12px">
                   <p v-for="(file,index) in item.checkList" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
                     <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')"
-                         :class="{one:item.checkList.length==1}"
+                         :class="{one:item.checkList.length==1,two:item.checkList.length==2}"
                          src="../../../assets/img/records/records-img.png"/>
                     <img v-if="file.suffix == 'doc'||file.suffix == 'ocx'"
-                         :class="{one:item.checkList.length==1}"
+                         :class="{one:item.checkList.length==1,two:item.checkList.length==2}"
                          src="../../../assets/img/records/records-doc.png"/>
                     <img v-if="file.suffix == 'pdf'"
-                         :class="{one:item.checkList.length==1}"
+                         :class="{one:item.checkList.length==1,two:item.checkList.length==2}"
                          src="../../../assets/img/records/records-pdf.png"/>
                     {{ file.name }}
                     <Icon type="ios-trash-outline" style="cursor: pointer;margin-left: 10px" @click.native="removeCheckList(upIndex,index)"></Icon>
