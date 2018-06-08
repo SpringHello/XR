@@ -144,12 +144,12 @@
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">
-                  <p>{{hostUnitList.companyPhone}}</p>
+                  <p>{{hostUnitList.companyphone}}</p>
                   <div v-if="companyPhoneHide == 'companyPhone'" class="text_block"><span style="color:red">信息有误</span> <span
                     style="color:#2a99f2;cursor:pointer;" @click="legal = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
-                  <p>{{hostUnitList.companyEmail}}</p>
+                  <p>{{hostUnitList.companyemail}}</p>
                   <div v-if="companyEmailHide == 'companyEmail'"  class="text_block"><span style="color:red">信息有误</span> <span
                     style="color:#2a99f2;cursor:pointer;" @click="legal = true">重新输入</span></div>
                 </li>
@@ -462,12 +462,12 @@
               :on-format-error="cardFormatError"
 
             >
-              <div class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlpositive==''">
+              <div class="sponsor-text" v-if="hostUnitList.webresponsibilityurlpositive==''">
                 暂无图片
               </div>
               <div style="min-height:203px;" v-else>
                 <div style="text-align: center">
-                  <img style="width:198px;height:144px;" :src="hostUnitList.companyresponsibilityurlpositive">
+                  <img style="width:198px;height:144px;" :src="hostUnitList.webresponsibilityurlpositive">
                   <p>点击选择文件</p>
                 </div>
               </div>
@@ -475,8 +475,8 @@
             </Upload>
           </div>
           <div style="width:50%;" v-else>
-            <p class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlpositive==''">暂无图片</p>
-            <img style="width:198px;height:144px;" :src="hostUnitList.companyresponsibilityurlpositive" v-else>
+            <p class="sponsor-text" v-if="hostUnitList.webresponsibilityurlpositive==''">暂无图片</p>
+            <img style="width:198px;height:144px;" :src="hostUnitList.webresponsibilityurlpositive" v-else>
           </div>
           <div style="width:50%;height:203px;">
             <div style="text-align: center">
@@ -500,12 +500,12 @@
               :on-success="cardBackSuccess"
               :on-format-error="cardBackFormatError"
             >
-              <div class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlback==''">
+              <div class="sponsor-text" v-if="hostUnitList.webresponsibilityurlback==''">
                 暂无图片
               </div>
               <div style="min-height:203px;" v-else>
                 <div style="text-align: center">
-                  <img style="height:144px;" :src="hostUnitList.companyresponsibilityurlback">
+                  <img style="height:144px;" :src="hostUnitList.webresponsibilityurlback">
                   <p style="">点击选择文件</p>
                 </div>
               </div>
@@ -513,8 +513,8 @@
             </Upload>
           </div>
           <div style="width:50%;" v-else>
-            <p class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlback==''">暂无图片</p>
-            <img style="width:198px;height:144px;" :src="hostUnitList.companyresponsibilityurlback" v-else>
+            <p class="sponsor-text" v-if="hostUnitList.webresponsibilityurlback==''">暂无图片</p>
+            <img style="width:198px;height:144px;" :src="hostUnitList.webresponsibilityurlback" v-else>
           </div>
           <div style="width:50%;height:203px;">
             <div style="text-align: center">
@@ -850,8 +850,6 @@
   import area from "../../options/area.json";
   import certificates from "../../options/certificates.json";
   //备案ID
-  const id = sessionStorage.getItem("id");
-  const webcompany_Id = sessionStorage.getItem("webcompany_Id");
   const imgPdf = require('../../assets/img/records/records-pdf.png');
   const imgJpg = require('../../assets/img/records/records-img.png');
   const imgDoc = require('../../assets/img/records/records-doc.png');
@@ -976,6 +974,7 @@
         }
       };
       return {
+        id: '',
         //网站核验单大图
         visibleWeb:false,
         //营业执照大图
@@ -1201,6 +1200,9 @@
         examples:''
       };
     },
+    created() {
+      this.id = sessionStorage.getItem("id");
+    },
     methods: {
       //图标切换方法
       // toolShow(isIcon) {
@@ -1222,7 +1224,7 @@
         this.$http
           .get("recode/listMainWeb.do", {
             params: {
-              id: id,
+              id: this.id,
               recordtype: "",
               status: ""
             }
@@ -1590,9 +1592,9 @@
       // },
       allUpdate(){
         this.$http
-          .get("recode/updateMainWeb.do", {
-            params: {
-              id: id,
+          .post("recode/updateMainWeb.do", {
+
+              id: this.id,
               ISPName: this.updateHostUnitList.ispname,
               webIp: this.updateHostUnitList.webip,
               webAccessType: this.updateHostUnitList.webaccesstype,
@@ -1608,7 +1610,7 @@
               email: this.updateHostUnitList.email,
               webName: this.updateHostUnitList.webname,
               webDomian: this.updateHostUnitList.webdomian,
-              webUrl: updateHostUnitList.weburl,
+              webUrl: this.updateHostUnitList.weburl,
               webServerContent: this.updateHostUnitList.webservercontent,
               webMessage: this.updateHostUnitList.webmessage,
               legalName: this.updateHostUnitList.legalname,
@@ -1629,7 +1631,7 @@
               mainCompanyCommunicatLocation: this.updateHostUnitList
                 .maincompanycommunicatlocation,
               InvestorName: this.updateHostUnitList.investorname
-            }
+
           })
           .then(res => {
             if (res.data.status == 1) {

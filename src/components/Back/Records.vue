@@ -66,7 +66,7 @@
 
 <script type="text/ecmascript-6">
 export default {
-  data: function() {
+  data() {
     return {
       //我的备案进度标签值
       tabValueCom: h => {
@@ -161,7 +161,7 @@ export default {
         }
       ],
       //当前状态Select值
-      currentState: "",
+      currentState: "no已完成备案",
       //备案类型表格表头
       recordTypeList: [
         {
@@ -365,7 +365,7 @@ export default {
     listMainWeb() {
       let userList = this.$store.state.userInfo;
       if (this.currentState == "全部") {
-        this.currentState = "";
+        this.currentState = "no已完成备案";
       }
       if (userList != null) {
         this.$http
@@ -410,9 +410,9 @@ export default {
     },
     //跳转详情页面
     jumpRecord(id,webcompany_Id) {
-      this.$router.push({ path: "RecordDetails"});
       sessionStorage.setItem("id",id);
       sessionStorage.setItem("webcompany_Id", webcompany_Id);
+      this.$router.push({ path: "RecordDetails"});
     }
   },
   mounted() {

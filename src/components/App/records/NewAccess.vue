@@ -11,7 +11,7 @@
               :label-width="120">
           <FormItem label="当前备案主体" v-if="filingInformation.mainRecord !== ''">
             <RadioGroup v-model="filingInformation.mainRecord">
-              <Radio label="our">
+              <Radio label="our" :disabled="!recordInfo">
                 <span>已在新睿云备案</span>
               </Radio>
               <Radio label="other" :disabled="recordInfo">

@@ -32,9 +32,11 @@
               <div style="margin-left:5px;width: 80px;">
                 <span>主办单位信息</span>
               </div>
-              <div style="width:92%;text-align: right;">
-                <Button type="primary" style="margin-right: 10px;" >变更主体</Button>
-                <Button >注销主体</Button>
+
+              <div style="width:90%;text-align: right;">
+                <Button type="primary" style="margin-right: 10px;" @click="isCompile = true">变更备案</Button>
+                <Button @click="domain = true">注销主体</Button>
+                <Button type="primary" style="margin-left: 10px" v-show="isCompile" @click="host = true">修改主体</Button>
               </div>
             </div>
             <div class="tables" v-show="isIconSon">
@@ -87,6 +89,9 @@
               <div style="margin-left:5px;">
                 <span>主体单位负责人信息</span>
               </div>
+              <div style="width:87.5%;text-align: right;" v-show="isCompile">
+                <Button type="primary" @click="legal = true">修改主体负责人</Button>
+              </div>
             </div>
             <div class="tables" v-show="isIconPerson">
               <ul class="nav_list">
@@ -134,10 +139,11 @@
               <div style="margin-left:5px;width:80px;">
                 <span>网站基本信息</span>
               </div>
-              <div style="width:92%;text-align: right;">
-                <Button type="primary" @click="cancel = true" >取消接入</Button>
-                <Button type="primary" style="margin: 0 10px;">变更接入</Button>
-                <Button @click="cancellation = true">注销网站</Button>
+
+              <div style="width:90%;text-align: right;">
+                <Button type="primary" @click="cancel = true">取消接入</Button>
+                <Button @click="cancellation = true" style="margin-left: 10px">注销网站</Button>
+                <Button type="primary" style="margin-left: 10px" v-show="isCompile" @click="website= true">修改网站</Button>
               </div>
             </div>
             <div class="tables" v-show="isIconInfo">
@@ -180,6 +186,9 @@
                    @click="infoBoxShow('webPersonInfo')"></div>
               <div style="margin-left:5px;">
                 <span>网站负责人基本信息</span>
+              </div>
+              <div style="width:87.5%;text-align: right;" v-show="isCompile">
+                <Button type="primary" @click="websitePerson = true">修改网站负责人</Button>
               </div>
             </div>
             <div class="tables" v-show="isIconWebPerson">
@@ -227,6 +236,8 @@
               <div class="click_icon icons" :class="{hide_icon:!isIconISP}" @click="infoBoxShow('inforISP')"></div>
               <div style="margin-left:5px;">
                 <span>ISP备案网站接入信息</span>
+              </div>
+              <div style="width:87%;text-align: right;" v-show="isCompile">
               </div>
             </div>
             <div class="tables" v-show="isIconISP">
@@ -308,6 +319,9 @@
             </div>
           </div>
         </div>
+        <div style="text-align:center;margin:20px 0 80px 0;" v-show="isCompile">
+          <Button type="primary" @click="allUpdate">重新提交</Button>
+        </div>
       </div>
     </div>
     <!-- 网站核验单 -->
@@ -359,8 +373,8 @@
       <div class="updatePhoto">
         <div class="updates">
           <div style="width:50%;">
-            <p class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlpositive==''">暂无图片</p>
-            <img style="width:198px;height:144px;" :src="hostUnitList.companyresponsibilityurlpositive" v-else>
+            <p class="sponsor-text" v-if="hostUnitList.webresponsibilityurlpositive==''">暂无图片</p>
+            <img style="width:198px;height:144px;" :src="hostUnitList.webresponsibilityurlpositive" v-else>
           </div>
           <div style="width:50%;height:203px;">
             <div style="text-align: center">
@@ -374,8 +388,8 @@
       <div class="updatePhoto">
         <div class="updates">
           <div style="width:50%;">
-            <p class="sponsor-text" v-if="hostUnitList.companyresponsibilityurlback==''">暂无图片</p>
-            <img style="width:198px;height:144px;" :src="hostUnitList.companyresponsibilityurlback" v-else>
+            <p class="sponsor-text" v-if="hostUnitList.webresponsibilityurlback==''">暂无图片</p>
+            <img style="width:198px;height:144px;" :src="hostUnitList.webresponsibilityurlback" v-else>
           </div>
           <div style="width:50%;height:203px;">
             <div style="text-align: center">
@@ -391,7 +405,6 @@
       v-model="organizerPhoto"
       title="重新上传营业执照信息"
       :scrollable="true"
-
     >
       <p>执照扫描件</p>
       <div class="updatePhoto">
@@ -409,7 +422,6 @@
         </div>
       </div>
     </Modal>
-
     <!--营业执照示例图大图-->
     <div class="outImg is_activ" v-if="visible" @click="visible = false">
       <div class="bigImg">
@@ -459,17 +471,161 @@
         </div>
       </div>
     </Modal>
+    <!-- 修改主办单位信息 -->
+    <Modal
+      v-model="host"
+      title="主办单位信息"
+      :scrollable="true"
+    >
+      <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+        <FormItem prop="district">
+          <p style="margin:10px">主办单位所属区域</p>
+          <Select v-model="province" style="width:170px" @on-change="changeProvince">
+            <Option v-for="item in provinceList" :value="item.name" :key="item.name">{{ item.name }}</Option>
+          </Select>
+          <Select v-model="city" style="width:140px" @on-change="changeCity">
+            <Option v-for="item in cityList" :value="item.name" :key="item.name">{{ item.name }}</Option>
+          </Select>
+          <Select v-model="district" style="width:100px">
+            <Option v-for="item in districtList" :value="item" :key="item">{{ item }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem prop="maincompanynature">
+          <p style="margin:10px">主体单位性质</p>
+          <Select v-model="updateHostUnitList.maincompanynature" @on-change="changeUnitProperties">
+            <Option v-for="item in unitPropertiesList" :value="item.name" :key="item.name">{{ item.name }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem prop="maincompanycertificatestype">
+          <p style="margin:10px">主体单位证件类型</p>
+          <Select v-model="updateHostUnitList.maincompanycertificatestype">
+            <Option v-for="item in certificateTypeList" :value="item" :key="item">{{ item }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem prop="maincompanynumber">
+          <p style="margin:10px">主办单位证件号码</p>
+          <Input type="text" v-model="updateHostUnitList.maincompanynumber"></Input>
+        </FormItem>
+        <FormItem prop="maincompanyname">
+          <p style="margin:10px">主体单位名称</p>
+          <Input type="text" v-model="updateHostUnitList.maincompanyname"></Input>
+        </FormItem>
+        <FormItem prop="maincompanycertificatesloaction">
+          <p style="margin:10px">主体单位证件住所</p>
+          <Input type="text" v-model="updateHostUnitList.maincompanycertificatesloaction"></Input>
+        </FormItem>
+        <FormItem prop="maincompanycommunicatlocation">
+          <p style="margin:10px">主体单位通信地址</p>
+          <Input type="text" v-model="updateHostUnitList.maincompanycommunicatlocation"></Input>
+        </FormItem>
+        <FormItem prop="investorname">
+          <p style="margin:10px">投资人或主管姓名</p>
+          <Input type="text" v-model="updateHostUnitList.investorname"></Input>
+        </FormItem>
+      </Form>
+    </Modal>
+    <!-- 修改主体单位负责人信息 -->
+    <Modal
+      v-model="legal"
+      title="主体单位负责人信息"
 
-    <!--取消接入-->
-    <Modal v-model="cancel"  title="取消接入" :scrollable="true" @on-ok="instance">
-      <div class="cancel">
-        <p>确定要取消此备案接入信息？</p>
-        <p>取消接入后，如果您的备案信息没有对应接入商，管局可能会注销您的备案号，导致您的域名不能访问。申请提交到通信管理局后，不可撤回。</p>
-        <ul>
-          <li>  网站名称：我是网站名称</li>
-          <li>  网站首页：我是网站首页</li>
-        </ul>
-      </div>
+      :scrollable="true"
+    >
+      <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+        <FormItem prop="legalname">
+          <p style="margin:10px">法人姓名</p>
+          <Input type="text" v-model="updateHostUnitList.legalname"></Input>
+        </FormItem>
+        <FormItem prop="legalcertificatestype">
+          <p style="margin:10px">法人证件类型</p>
+          <Select v-model="updateHostUnitList.legalcertificatestype">
+            <Option v-for="item in legalPersonCertificateTypeList" :value="item" :key="item">{{ item }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem prop="legalcertificatesnumber">
+          <p style="margin:10px">法人证件号码</p>
+          <Input type="text" v-model="updateHostUnitList.legalcertificatesnumber"></Input>
+        </FormItem>
+        <FormItem prop="officenumber">
+          <p style="margin:10px">办公室电话</p>
+          <Input type="text" v-model="updateHostUnitList.officenumber"></Input>
+        </FormItem>
+        <FormItem prop="companyphone">
+          <p style="margin:10px">手机号码</p>
+          <Input type="text" v-model="updateHostUnitList.companyphone"></Input>
+        </FormItem>
+        <FormItem prop="companyemail">
+          <p style="margin:10px">电子邮箱地址</p>
+          <Input type="text" v-model="updateHostUnitList.companyemail"></Input>
+        </FormItem>
+      </Form>
+    </Modal>
+    <!-- 修改网站基本信息信息 -->
+    <Modal
+      v-model="website"
+      title="网站基本信息"
+
+      :scrollable="true"
+    >
+      <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+        <FormItem prop="webname">
+          <p style="margin:10px">网站名称</p>
+          <Input type="text" v-model="updateHostUnitList.webname"></Input>
+        </FormItem>
+        <FormItem prop="webdomian">
+          <p style="margin:10px">网站域名</p>
+          <Input type="text" v-model="updateHostUnitList.webdomian"></Input>
+        </FormItem>
+        <FormItem prop="weburl">
+          <p style="margin:10px">网站首页URL</p>
+          <Input type="text" v-model="updateHostUnitList.weburl"></Input>
+        </FormItem>
+        <FormItem prop="webservercontent">
+          <p style="margin:10px">网站服务内容</p>
+          <Input type="text" v-model="updateHostUnitList.webservercontent"></Input>
+        </FormItem>
+        <FormItem prop="webmessage">
+          <p style="margin:10px">网站语言</p>
+          <Input type="text" v-model="updateHostUnitList.webmessage"></Input>
+        </FormItem>
+      </Form>
+    </Modal>
+    <!-- 修改网站负责人基本信息 -->
+    <Modal
+      v-model="websitePerson"
+      title="网站负责人基本信息"
+
+      :scrollable="true"
+    >
+      <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+        <FormItem prop="webresponsibilitylinkname">
+          <p style="margin:10px">姓名</p>
+          <Input type="text" v-model="updateHostUnitList.webresponsibilitylinkname"></Input>
+        </FormItem>
+        <FormItem prop="webresponsibilitycertificatestype">
+          <p style="margin:10px">有效证件类型</p>
+          <Select v-model="updateHostUnitList.webresponsibilitycertificatestype">
+            <Option v-for="item in legalPersonCertificateTypeList" :value="item" :key="item">{{ item }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem prop="webresponsibilitycertificatesnumber">
+          <p style="margin:10px">有效证件号码</p>
+          <Input type="text" v-model="updateHostUnitList.webresponsibilitycertificatesnumber"></Input>
+        </FormItem>
+        <FormItem prop="offacenumber">
+          <p style="margin:10px">办公室电话号码</p>
+          <Input type="text" v-model="updateHostUnitList.offacenumber"></Input>
+        </FormItem>
+        <FormItem prop="phone">
+          <p style="margin:10px">移动电话号码</p>
+          <Input type="text" v-model="updateHostUnitList.phone"></Input>
+        </FormItem>
+        <FormItem prop="email">
+          <p style="margin:10px">电子邮箱地址</p>
+          <Input type="text" v-model="updateHostUnitList.email"></Input>
+        </FormItem>
+      </Form>
+
     </Modal>
     <!--取消接入-->
     <Modal v-model="cancel"  title="取消接入" :scrollable="true" @on-ok="delMainWeb('取消接入中')">
@@ -493,14 +649,36 @@
         </ul>
       </div>
     </Modal>
+    <!--注销主体-->
+    <Modal ref="footer" v-model="domain"  title="注销主体" :scrollable="true" >
+      <div class="cancel">
+        <p>验证备案号码</p>
+        <!--<div style="display: flex;">-->
+          <Form ref="domainList"  :model="domainList" :rules="domainListValiot" label-position="top">
+            <FormItem label="主体备案号">
+              <Input  type="text" v-model="hostUnitList.recordserviceid" :readonly="true"></Input>
+            </FormItem>
+            <FormItem label="主体备案密码" prop="password">
+              <Input type="text" v-model="domainList.password"  placeholder="小于20位数字或字母"></Input>
+            </FormItem>
+          </Form>
+        <!--</div>-->
+
+      </div>
+      <div slot="footer" >
+        <Button type="primary" @click="delMainWeb('注销主体中')">下一步，提交审核</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import area from "../../options/area.json";
   import certificates from "../../options/certificates.json";
+
   import axios from "axios"
   //备案ID
+
 
   const imgPdf = require('../../assets/img/records/records-pdf.png');
   const imgJpg = require('../../assets/img/records/records-img.png');
@@ -511,6 +689,120 @@
       });
     },
     data() {
+      // 校验地区
+      const validateArea = (rule, value, callback) => {
+        if (
+          this.province == "" ||
+          this.city == "" ||
+          this.district == ""
+        ) {
+          return callback(new Error("请选择所属区域"));
+        } else {
+          callback();
+        }
+      };
+      //校验座机号码
+      const validOfficePhone = (rule, value, callback) => {
+        let reg = /^0\d{2,3}-?\d{7,8}$/;
+        let regNumber = /^[0-9]+$/;
+        if (!reg.test(this.updateHostUnitList.officenumber)) {
+          return callback(new Error("请输入正确的座机号码"));
+        } else {
+          callback();
+        }
+      };
+      const validOffacePhone = (rule, value, callback) => {
+        let reg = /^0\d{2,3}-?\d{7,8}$/;
+        let regNumber = /^[0-9]+$/;
+        if (!reg.test(this.updateHostUnitList.offacenumber)) {
+          return callback(new Error("请输入正确的座机号码"));
+        } else {
+          callback();
+        }
+      };
+      //校验手机号码
+      const validPhoneNumber = (rule, value, callback) => {
+        let reg = /^1[3|5|8|9|6|7]\d{9}$/;
+        if (!reg.test(this.updateHostUnitList.phone)) {
+          return callback(new Error("请输入正确的手机号码"));
+        } else {
+          callback();
+        }
+      };
+      const validCompanyPhoneNumber = (rule, value, callback) => {
+        let reg = /^1[3|5|8|9|6|7]\d{9}$/;
+        if (!reg.test(this.updateHostUnitList.companyphone)) {
+          return callback(new Error("请输入正确的手机号码"));
+        } else {
+          callback();
+        }
+      };
+      //校验不能为数字
+      const validLegalPersonName = (rule, value, callback) => {
+        let regNumber = /^[0-9]+$/;
+        if (regNumber.test(this.updateHostUnitList.legalname)) {
+          return callback(new Error("姓名不能输入数字"));
+        } else {
+          callback();
+        }
+      };
+      //校验网站域名
+      const validWebsiteDomain = (rule, value, callback) => {
+        var reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+        if (value == "") {
+          return callback(new Error("请输入网站域名"));
+        } else if (!reg.test(value)) {
+          return callback(new Error("域名不正确"));
+        } else {
+          callback();
+        }
+      };
+      //校验网站负责人证件号码
+      const validCertificateNumber = (rule, value, callback) => {
+        if (value == "") {
+          return callback(new Error("请输入网站负责人证件号码"));
+        } /*else if (
+         !this.siteList[0].basicInformation.certificateTypeList[
+         this.siteList[0].basicInformation.certificateType - 1
+         ].reg.test(value)
+         ) {
+         return callback(
+         new Error(
+         "请输入正确的" +
+         this.siteList[0].basicInformation.certificateTypeList[
+         this.siteList[0].basicInformation.certificateType - 1
+         ].label
+         )
+         );
+         }*/ else {
+          callback();
+        }
+      };
+      //校验新增域名
+      const validNewWebsiteDomain = (rule, value, callback) => {
+        let reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+        for (let i = 0; i <= value.length; i++) {
+          if (value.length == 0 || value[i] == "") {
+            return callback(new Error("请输入网站域名"));
+          } else if (!reg.test(value[i]) && value[i] !== "") {
+            // console.log(value[i]);
+            return callback(new Error("请输入正确的网站域名"));
+          } else {
+            callback();
+          }
+        }
+      };
+      //校验网站首页URL
+      const validWebsiteHomepage = (rule, value, callback) => {
+        let reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+        if (value == "") {
+          return callback(new Error("请输入网站首页URL"));
+        } else if (!reg.test(value)) {
+          return callback(new Error("请输入正确的网站首页URL"));
+        } else {
+          callback();
+        }
+      };
       return {
         //网站核验单大图
         visibleWeb: false,
@@ -528,8 +820,6 @@
         webIsp: false,
         //备案区域
         area: "",
-        // 备案类型
-        recordsType: "",
         //图标切换
         // isIcon: true,
         //主办单位信息详情隐藏与否
@@ -593,6 +883,104 @@
         certificateTypeList: [],
         //法人证件类型
         legalPersonCertificateTypeList: ["身份证", "护照", "军官证", "台胞证"],
+        //弹窗验证
+        updateHostUnitListValidate: {
+          district: [
+            {required: true, validator: validateArea, trigger: "blur"}
+          ],
+          maincompanynature: [
+            {required: true, message: "请选择单位性质", trigger: "change"}
+          ],
+          maincompanycertificatestype: [
+            {required: true, message: "请选择证件类型", trigger: "change"}
+          ],
+          maincompanynumber: [
+            {required: true, message: "请输入单位证件号码", trigger: "blur"}
+            // { validator: validUnitProperties, trigger: "blur" }
+          ],
+          maincompanyname: [
+            {required: true, message: "请输入主体单位名称", trigger: "blur"},
+            {type: "string", max: 20, message: "最多只能输入20个字"}
+          ],
+          maincompanycertificatesloaction: [
+            {required: true, message: "请输入主体单位证件住所", trigger: "blur"}
+          ],
+          maincompanycommunicatlocation: [
+            {required: true, message: "请输入主体单位通信地址", trigger: "blur"}
+          ],
+          investorname: [
+            {
+              required: true,
+              message: "请输入投资人或主管单位姓名",
+              trigger: "blur"
+            }
+          ],
+          legalname: [
+            {required: true, message: "请输入法人姓名", trigger: "blur"},
+            {validator: validLegalPersonName, trigger: "blur"}
+          ],
+          legalcertificatestype: [
+            {required: true, message: "请选择法人证件类型", trigger: "change"}
+          ],
+          legalcertificatesnumber: [
+            {required: true, message: "请输入法人证件号码", trigger: "blur"}
+          ],
+          officenumber: [
+            {required: true, message: "请输入办公室电话", trigger: "blur"},
+            {validator: validOfficePhone, trigger: "blur"}
+          ],
+          phone: [
+            {required: true, message: "请输入手机号码", trigger: "blur"},
+            {validator: validPhoneNumber, tirgger: "blur"}
+          ],
+          email: [
+            {required: true, message: "请输入电子邮箱地址", trigger: "blur"},
+            {
+              type: "email",
+              message: "请输入正确的电子邮箱地址",
+              tirgger: "blur"
+            }
+          ],
+          webname: [
+            {required: true, message: "请输入网站名称", trigger: "blur"}
+          ],
+          webdomian: [
+            {required: true, validator: validWebsiteDomain, trigger: "blur"}
+          ],
+          newWebsiteDomain: [
+            {required: true, validator: validNewWebsiteDomain, trigger: "blur"}
+          ],
+          webservercontent: [
+            {required: true, message: "请输入网站服务内容", trigger: "blur"}
+          ],
+          webmessage: [
+            {required: true, message: "请输入网站语言", trigger: "blur"}
+          ],
+          remark: [{type: "string", max: 50, message: "最多输入五十个字"}],
+          webresponsibilitylinkname: [
+            {required: true, message: "请输入负责人姓名", trigger: "blur"}
+          ],
+          webresponsibilitycertificatestype: [
+            {required: true, message: "请选择证件类型", trigger: "change"}
+          ],
+          webresponsibilitycertificatesnumber: [
+            {required: true, validator: validCertificateNumber, trigger: "blur"}
+          ],
+          offacenumber: [
+            {required: true, validator: validOffacePhone, trigger: "blur"}
+          ],
+          companyphone: [
+            {required: true, message: "请输入手机号码", trigger: "blur"},
+            {required: true, validator: validCompanyPhoneNumber, trigger: "blur"}
+          ],
+          companyemail: [
+            {required: true, message: "请输入邮箱地址", trigger: "blur"},
+            {type: "email", message: "请输入正确的邮箱地址", trigger: "blur"}
+          ],
+          weburl: [
+            {required: true, validator: validWebsiteHomepage, trigger: "blur"}
+          ]
+        },
         //获取域名证书文件
         addy: [],
         imgUrl: '',
@@ -607,11 +995,30 @@
         single: '',
         //网站核验单示例图路径
         examples: '',
-        //取消接入弹窗
-        cancel:false,
         //注销网站弹窗
-        cancellation:false
+        cancellation:false,
+        //取消接入弹窗
+        cancel: false,
+        id: '',
+        isCompile: false,
+        //注销主体
+        domainList:{
+          //备案密码
+          password:'',
+        },
+        domainListValiot:{
+          password:[
+              {required:true,message:'请输入主体备案密码',trigger:'blur'},
+              {max:20,trigger:'blur'}
+            ]
+        },
+        //注销主体弹窗
+        domain:false
       };
+    },
+    created() {
+      //备案ID
+      this.id = sessionStorage.getItem("id");
     },
     methods: {
       infoBoxShow(value) {
@@ -631,7 +1038,7 @@
         this.$http
           .get("recode/listMainWeb.do", {
             params: {
-              id: id,
+              id: this.id,
             }
           })
           .then(res => {
@@ -735,24 +1142,101 @@
       },
       //取消接入
       delMainWeb(status){
-        axios.get('recode/updateMainWeb.do',{
-          params:{
+        this.domain = false;
+        axios.post('recode/updateMainWeb.do',{
             id:this.id,
             status:status
+        }).then(res =>{
+          if(res.data.status ==1){
+            this.details();
+            this.$Message.success('提交成功');
+          }else {
+            this.$Message.error(res.data.message)
           }
-        }),
+        })
           this.$Modal.confirm({
             render: (h) => {
               return h('div', [
                 h('p',{style:{color:'#333333',fontSize:'14px'}},'申请已提交'),
                 h('p',{style:{color:'#666666',fontSize:'14px'}},'新睿云将在1个工作日内将您的申请提交至通信管理局。')
               ])
-              prop:{
-                okText:'知道了'
-                scrollable:true
-              }
+
             }
           })
+      },
+      // 重新选择省份
+      changeProvince(val) {
+        area.forEach(item => {
+          if (item.name == val) {
+            this.cityList = item.city;
+          }
+        });
+      },
+      // 重新选择市
+      changeCity(val) {
+        this.cityList.forEach(item => {
+          if (item.name == val) {
+            this.districtList = item.area;
+          }
+        });
+      },
+      changeUnitProperties(val) {
+        this.unitPropertiesList.forEach(item => {
+          if (item.name == val) {
+            this.certificateTypeList = item.certificate;
+          }
+        });
+      },
+      allUpdate(){
+        this.$http
+          .get("recode/updateMainWeb.do", {
+            params: {
+              id: this.id,
+              ISPName: this.updateHostUnitList.ispname,
+              webIp: this.updateHostUnitList.webip,
+              webAccessType: this.updateHostUnitList.webaccesstype,
+              webServerAddress: this.updateHostUnitList.webserveraddress,
+              webResponsibilitylinkName: this.updateHostUnitList
+                .webresponsibilitylinkname,
+              webResponsibilityCertificatesType: this.updateHostUnitList
+                .webresponsibilitycertificatestype,
+              webResponsibilityCertificatesNumber: this.updateHostUnitList
+                .webresponsibilitycertificatesnumber,
+              offaceNumber: this.updateHostUnitList.offacenumber,
+              phone: this.updateHostUnitList.phone,
+              email: this.updateHostUnitList.email,
+              webName: this.updateHostUnitList.webname,
+              webDomian: this.updateHostUnitList.webdomian,
+              webUrl: this.updateHostUnitList.weburl,
+              webServerContent: this.updateHostUnitList.webservercontent,
+              webMessage: this.updateHostUnitList.webmessage,
+              legalName: this.updateHostUnitList.legalname,
+              companyPhone: this.updateHostUnitList.companyphone,
+              companyEmail: this.updateHostUnitList.companyemail,
+              officeNumber: this.updateHostUnitList.officenumber,
+              legalCertificatesType: this.updateHostUnitList
+                .legalcertificatestype,
+              legalCertificatesNumber: this.updateHostUnitList
+                .legalcertificatesnumber,
+              mainCompanyCertificatesType: this.updateHostUnitList
+                .maincompanycertificatestype,
+              mainCompanyNature: this.updateHostUnitList.maincompanynature,
+              mainCompanyName: this.updateHostUnitList.maincompanyname,
+              mainCompanyNumber: this.updateHostUnitList.maincompanynumber,
+              mainCompanyCertificatesLoaction: this.updateHostUnitList
+                .maincompanycertificatesloaction,
+              mainCompanyCommunicatLocation: this.updateHostUnitList
+                .maincompanycommunicatlocation,
+              InvestorName: this.updateHostUnitList.investorname
+            }
+          })
+          .then(res => {
+            if (res.data.status == 1) {
+              this.$Message.success("修改成功");
+            } else {
+              this.$Message.error(res.data.message);
+            }
+          });
       }
     },
     mounted() {
@@ -958,7 +1442,7 @@
             float: right;
           }
           .nav_item {
-            padding: 5px 10px 5px 10px;
+            padding: 10px 10px 5px 10px;
             height: 38px;
             border-right: 1px solid #e9e9e9;
             border-bottom: 1px solid #e9e9e9;
@@ -1006,6 +1490,7 @@
     transition: background-color .3s ease-in-out;
     z-index: 9999;
   }
+
   .bigImg {
     position: fixed;
     top: 50%;
@@ -1015,33 +1500,34 @@
     width: 627px;
     height: 866px;
   }
+
   .is_activ {
     background-color: rgba(55, 55, 55, .6);
   }
-  .cancel{
-    p{
+
+  .cancel {
+    p {
       line-height: 20px;
     }
     font-family: 'MicrosoftYaHei';
-     p:nth-child(1){
-       color:#333333;
-       font-size:14px;
-       margin-bottom: 10px;
-       font-weight: Bold;
-     }
-    p:nth-child(2){
-      color:#666666;
-      font-size:14px;
+    p:nth-child(1) {
+      color: #333333;
+      font-size: 14px;
+      margin-bottom: 10px;
+      font-weight: Bold;
+    }
+    p:nth-child(2) {
+      color: #666666;
+      font-size: 14px;
       margin-bottom: 10px;
     }
-    ul li{
+    ul li {
       margin-left: 25px;
-      color:#333333;
+      color: #333333;
       font-size: 14px;
       list-style: disc;
     }
 
   }
-
 </style>
 
