@@ -76,7 +76,7 @@ export default {
             {
               on: {
                 click: () => {
-                  this.listMainWeb();
+                  this.listMainWeb(1);
                 }
               }
             },
@@ -94,7 +94,7 @@ export default {
             {
               on: {
                 click: () => {
-                  this.completeClick();
+                  this.completeClick(0);
                 }
               }
             },
@@ -362,7 +362,7 @@ export default {
   },
   methods: {
     //备案进度表格
-    listMainWeb() {
+    listMainWeb(overType) {
       let userList = this.$store.state.userInfo;
       if (this.currentState == "全部") {
         this.currentState = "no已完成备案";
@@ -371,6 +371,7 @@ export default {
         this.$http
           .get("recode/listMainWeb.do", {
             params: {
+
               recordtype: this.recordType,
               status: this.currentState
             }
@@ -388,13 +389,14 @@ export default {
       }
     },
     //已完成备案数据获取点击事件
-    completeClick() {
+    completeClick(overType) {
       let userList = this.$store.state.userInfo;
       if (userList != null) {
         this.$http
           .get("recode/listMainWeb.do", {
             params: {
               recordtype: this.completeRecordType,
+              overType:overType,
               status: "已完成备案"
             }
           })

@@ -341,7 +341,7 @@
               <img style="width: 38px;height: 42px;" :src="item.img">
               <p style="line-height: 20px;">
                 <span>{{item.name}}</span>
-                <Icon v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'" type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
+                <Icon  type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
               </p>
             </div>
           </div>
@@ -457,13 +457,32 @@
       title="重新上传其他文件信息"
       :scrollable="true"
     >
-      <div class="updatePhoto">
+      <div class="updatePhoto" >
         <div class="updates">
-          <div style="width:100%;min-height: 197px;">
-            <p class="item-content" v-if="otherData.length==0">暂无执照扫描件</p>
-            <div style="text-align: center;margin-top:10px;" v-else v-for="(item,index) in otherData">
+          <div style="width:100%;min-height:200px;" v-if="isCompile">
+            <div style="text-align: center;margin-top:10px;"  v-for="(item,index) in otherData">
               <img style="width: 38px;height: 42px;" :src="item.img">
               <p style="line-height: 20px;">
+                <span>{{item.name}}</span>
+                <Icon v-if="isCompile" type="ios-trash-outline" @click.native="deletePhoto('onhter',index)"></Icon>
+              </p>
+            </div>
+            <Upload
+              multiple
+              type="drag"
+              :show-upload-list="false"
+              :with-credentials="true"
+              action="file/upFile.do"
+              :on-success="otherFileSuccess"
+              :on-format-error="otherFormatError">
+              <span style="font-size: 14px">点击选择文件</span>
+            </Upload>
+          </div>
+          <div style="width:100%;min-height: 197px;" v-else>
+            <p class="item-content" v-if="otherData.length==0">暂无执照扫描件</p>
+            <div style="text-align: center;margin-top:10px;" v-else  v-for="(item,index) in otherData">
+              <img style="width: 38px;height: 42px;" :src="item.img">
+              <p style="line-height: 20px;" >
                 <span>{{item.name}}</span>
               </p>
             </div>
@@ -1237,7 +1256,17 @@
               this.$Message.error(res.data.message);
             }
           });
-      }
+      },
+      //删除上传文件
+      deletePhoto(val,index){
+        if(val == 'aunthen'){
+          this.addy.splice(index,1);
+        }else if(val == 'web'){
+          this.webRecordData.splice(index,1);
+        }else if(val == 'onther'){
+          this.otherData.splice(index,1);
+        }
+      },
     },
     mounted() {
       this.details();
