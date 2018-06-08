@@ -31,6 +31,7 @@ const Vps = () => import('@/components/App/active/vps')
 const NewNodes_2 = () => import('@/components/App/active/newNodes_2')*/
 const active_1 = () => import('@/components/App/active/active_1')
 const active_2 = () => import('@/components/App/active/active_2')
+const smlj = () => import('@/components/App/active/smlj')
 
 // 备案系统页面路由
 const Records = () => import('@/components/App/Records')
@@ -278,6 +279,7 @@ var router = new Router({
         {path: 'active_1', name: 'active_1', component: active_1},
         {path: 'entrance', name: 'entrance', component: Entrance},
         {path: 'active_2', name: 'active_2', component: active_2},
+        {path: 'smlj', name: 'smlj', component: smlj},
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
         {path: 'Pecss', component: Pecss},

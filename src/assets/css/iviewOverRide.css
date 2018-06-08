@@ -306,3 +306,8 @@ div.modal-header-border {
 #renew .ivu-tooltip-inner {
   white-space: normal !important;
 }
+
+.smlj-bag .ivu-modal-content {
+  background: url('../../assets/img/active/smlj/modal-bg.png');
+}
+
