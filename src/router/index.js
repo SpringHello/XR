@@ -179,6 +179,7 @@ const uaf4 = () => import('@/components/App/doc/userandfinace/uaf7-1')
 const uaf5 = () => import('@/components/App/doc/userandfinace/uaf8-1')
 const uaf6 = () => import('@/components/App/doc/userandfinace/uaf8-2')
 
+const documentInfo = () => import('@/components/App/DocumentInfo')
 // 404
 const notFindPage = () => import('@/components/404')
 
@@ -642,6 +643,8 @@ var router = new Router({
             },
           ]
         },
+        {path: 'documentInfo', component: documentInfo},
+
       ]
     },
     {
