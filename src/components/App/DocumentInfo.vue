@@ -8,12 +8,12 @@
         <p>{{title}}</p>
         <div v-for="item in menuList" class="menu-item">
           <ul v-if="item.subMenu">
-            <p :class="{active:item.open}" @click="item.open=!item.open">{{item.title}}</p>
-            <li v-for="i in item.subMenu" v-show="item.open" @click="getContent(i.id)">
+            <p :class="{active:item.active,open:item.open}" @click="item.open=!item.open">{{item.title}}</p>
+            <li v-for="i in item.subMenu" v-show="item.open" :class="{active:i.id == minor}" @click="getContent(i.id)">
               {{i.name}}
             </li>
           </ul>
-          <p v-else @click="getContent(item.parentId)">{{item.title}}</p>
+          <p v-else @click="getContent(item.parentId)" :class="{active:item.parentId == minor}">{{item.title}}</p>
         </div>
 
       </div>
@@ -22,7 +22,7 @@
           <div v-for="item in mainMenu">
             <span>{{item.firstTitle}}</span>
             <ul>
-              <li v-for="i in item.secondTitle" @click="toggle(i.id);title=i.name">
+              <li v-for="i in item.secondTitle" @click="toggle(i.id)">
                 {{i.name}}
               </li>
             </ul>
@@ -39,6 +39,8 @@
   import axios from '@/util/axiosInterceptor'
   export default{
     data(){
+      var main = sessionStorage.getItem('document-main')
+      var minor = sessionStorage.getItem('document-minor')
       return {
         title: '',
         // 主导航
@@ -47,7 +49,11 @@
         menuList: [],
         // 主导航开关
         mainOpen: false,
-        content: ''
+        // 文本内容
+        content: '',
+        // 选中id
+        main,
+        minor
       }
     },
     beforeRouteEnter(to, from, next){
@@ -68,47 +74,79 @@
     },
     methods: {
       setData(response){
-        let main = sessionStorage.getItem('document-main')
-        let minor = sessionStorage.getItem('document-minor')
         this.mainMenu = response.data.result
-        this.toggle(main, minor)
+        if (this.main == '') {
+          this.main = this.mainMenu[0].secondTitle[0].parentid
+        }
+        this.search()
       },
       // 切换分类
-      toggle(id, minor){
-        // 保存主分类Id
-        sessionStorage.setItem('document-main', id)
+      toggle(id){
+        this.main = id
+        this.minor = ''
+        this.search()
+      },
+      search(){
         axios.get('/document/getThirdTitle.do', {
           params: {
-            id
+            id: this.main
           }
         }).then(response => {
           response.data.result.forEach(item => {
+            item.active = false
             if (item.subMenu) {
               item.open = false
+              if (this.minor) {
+                if (item.subMenu.some((i) => {
+                    return i.id == this.minor
+                  })) {
+                  item.open = true
+                  item.active = true
+                }
+              }
+            } else if (this.minor) {
+              if (item.parentId == this.minor) {
+                item.active = true
+              }
             }
           })
           this.menuList = response.data.result
-          if (!minor) {
-            if (this.menuList[0].subMenu) {
-              minor = this.menuList[0].subMenu[0].id
-            } else {
-              minor = this.menuList[0].parentId
-            }
-          }
-
+          this.title = response.data.title
           // 重置具体文档Id
-          sessionStorage.setItem('document-minor', minor)
-          this.getContent(id)
+          this.getContent()
         })
       },
-      getContent(parentId){
+      getContent(id){
+        this.minor = id || this.minor
+        this.refresh()
         axios.get('document/listInformation.do', {
           params: {
-            id: parentId
+            id: this.minor
           }
         }).then(response => {
           this.content = response.data.result[0].content.replace(/<img src="/g, '<img src="http://jk.xrcloud.net/')
         })
+      },
+      refresh(){
+        this.menuList.forEach(item => {
+          if (item.subMenu) {
+            if (item.subMenu.some((i) => {
+                return i.id == this.minor
+              })) {
+              item.active = true
+            } else {
+              item.active = false
+            }
+          }
+        })
+      }
+    },
+    watch: {
+      main(){
+        sessionStorage.setItem('document-main', this.main)
+      },
+      minor(){
+        sessionStorage.setItem('document-minor', this.minor)
       }
     }
   }
@@ -140,6 +178,9 @@
         .menu-item {
           margin-bottom: 20px;
           font-size: 14px;
+          .active {
+            color: #2d8cf0;
+          }
           * {
             color: rgba(17, 17, 17, 0.82);
             cursor: pointer;
@@ -151,10 +192,13 @@
           ul {
             p {
               font-size: 14px;
-              &.active {
+              &.open {
                 &::after {
                   transform: rotate(-45deg) translateY(-3px);
                 }
+              }
+              &.active {
+                color: #2d8cf0
               }
               &::after {
                 content: '';
