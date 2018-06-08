@@ -84,9 +84,9 @@
               </Option>
             </Select>
           </Form-item>
-          <Form-item label="优先级（数字越小优先级越高）">
+          <!--<Form-item label="优先级（数字越小优先级越高）">
             <InputNumber v-model="newRuleForm.itemid" :max="10" :min="1"></InputNumber>
-          </Form-item>
+          </Form-item>-->
           <Form-item label="起始端口" v-show="newRuleForm.protocol != 'ICMP' && newRuleForm.protocol != 'ALL'">
             <InputNumber v-model="newRuleForm.startPort" :max="65535" :min="0"></InputNumber>
           </Form-item>
@@ -267,10 +267,10 @@
             title: '名称',
             key: 'acllistitemname'
           },
-          {
+          /*{
             title: '优先级',
             key: 'itemid'
-          },
+          },*/
           {
             title: '协议',
             key: 'agreement'
@@ -420,7 +420,7 @@
               this.showModal.createRule = false
               let data = {
                 acllistitemname: this.newRuleForm.name,
-                itemid: this.newRuleForm.itemid,
+                //itemid: this.newRuleForm.itemid,
                 agreement: this.newRuleForm.protocol,
                 operation: this.newRuleForm.access == 'Allow' ? '接受' : '拒绝',
                 _status: 1
@@ -437,7 +437,7 @@
                   name: this.newRuleForm.name,
                   way: this.newRuleForm.way,
                   protocol: this.newRuleForm.protocol,
-                  itemid: this.newRuleForm.itemid,
+                  //itemid: this.newRuleForm.itemid,
                   cdir: this.newRuleForm.cidr,
                   startport: this.newRuleForm.startPort,
                   endport: this.newRuleForm.endPort,
