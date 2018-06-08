@@ -371,7 +371,7 @@ export default {
         this.$http
           .get("recode/listMainWeb.do", {
             params: {
-
+              // overType:overType,
               recordtype: this.recordType,
               status: this.currentState
             }
