@@ -33,7 +33,7 @@
                 <span>主办单位信息</span>
               </div>
               <div style="width:92%;text-align: right;">
-                <Button type="primary" style="margin-right: 10px;">变更主体</Button>
+                <Button type="primary" style="margin-right: 10px;" >变更主体</Button>
                 <Button >注销主体</Button>
               </div>
             </div>
@@ -117,10 +117,10 @@
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">
-                  <p>{{hostUnitList.phone}}</p>
+                  <p>{{hostUnitList.companyphone}}</p>
                 </li>
                 <li class="nav_item">
-                  <p>{{hostUnitList.email}}</p>
+                  <p>{{hostUnitList.companyemail}}</p>
                 </li>
                 <li class="nav_item"></li>
                 <li class="nav_item"></li>
@@ -135,9 +135,9 @@
                 <span>网站基本信息</span>
               </div>
               <div style="width:92%;text-align: right;">
-                <Button type="primary" @click="cancel = true">取消接入</Button>
+                <Button type="primary" @click="cancel = true" >取消接入</Button>
                 <Button type="primary" style="margin: 0 10px;">变更接入</Button>
-                <Button>注销网站</Button>
+                <Button @click="cancellation = true">注销网站</Button>
               </div>
             </div>
             <div class="tables" v-show="isIconInfo">
@@ -212,10 +212,10 @@
                   <p>+86 {{hostUnitList.offacenumber}}</p>
                 </li>
                 <li class="nav_item">
-                  <p>{{hostUnitList.companyphone}}</p>
+                  <p>{{hostUnitList.phone}}</p>
                 </li>
                 <li class="nav_item">
-                  <p>{{hostUnitList.companyemail}}</p>
+                  <p>{{hostUnitList.email}}</p>
                 </li>
 
               </ul>
@@ -461,7 +461,7 @@
     </Modal>
 
     <!--取消接入-->
-    <Modal v-model="cancel"  title="取消接入" :scrollable="true">
+    <Modal v-model="cancel"  title="取消接入" :scrollable="true" @on-ok="instance">
       <div class="cancel">
         <p>确定要取消此备案接入信息？</p>
         <p>取消接入后，如果您的备案信息没有对应接入商，管局可能会注销您的备案号，导致您的域名不能访问。申请提交到通信管理局后，不可撤回。</p>
@@ -472,13 +472,24 @@
       </div>
     </Modal>
     <!--取消接入-->
-    <Modal v-model="cancel"  title="取消接入" :scrollable="true">
+    <Modal v-model="cancel"  title="取消接入" :scrollable="true" @on-ok="delMainWeb('取消接入中')">
       <div class="cancel">
         <p>确定要取消此备案接入信息？</p>
         <p>取消接入后，如果您的备案信息没有对应接入商，管局可能会注销您的备案号，导致您的域名不能访问。申请提交到通信管理局后，不可撤回。</p>
         <ul>
-          <li>  网站名称：我是网站名称</li>
-          <li>  网站首页：我是网站首页</li>
+          <li>  网站名称：{{hostUnitList.webname}}</li>
+          <li>  网站首页：{{hostUnitList.weburl}}</li>
+        </ul>
+      </div>
+    </Modal>
+    <!--注销网站-->
+    <Modal v-model="cancellation"  title="注销网站" :scrollable="true" @on-ok="delMainWeb('注销网站中')">
+      <div class="cancel">
+        <p>确定要注销网站？</p>
+        <p>取消接入后，如果您的备案信息没有对应接入商，管局可能会注销您的备案号，导致您的域名不能访问。申请提交到通信管理局后，不可撤回。</p>
+        <ul>
+          <li>  网站名称：{{hostUnitList.webname}}</li>
+          <li>  网站首页：{{hostUnitList.weburl}}</li>
         </ul>
       </div>
     </Modal>
@@ -488,9 +499,9 @@
 <script type="text/ecmascript-6">
   import area from "../../options/area.json";
   import certificates from "../../options/certificates.json";
+  import axios from "axios"
   //备案ID
-  const id = sessionStorage.getItem("id");
-  const webcompany_Id = sessionStorage.getItem("webcompany_Id");
+
   const imgPdf = require('../../assets/img/records/records-pdf.png');
   const imgJpg = require('../../assets/img/records/records-img.png');
   const imgDoc = require('../../assets/img/records/records-doc.png');
@@ -597,7 +608,9 @@
         //网站核验单示例图路径
         examples: '',
         //取消接入弹窗
-        cancel:false
+        cancel:false,
+        //注销网站弹窗
+        cancellation:false
       };
     },
     methods: {
@@ -614,6 +627,7 @@
       },
       //查看备案详情
       details() {
+        var id = sessionStorage.getItem("id");
         this.$http
           .get("recode/listMainWeb.do", {
             params: {
@@ -718,6 +732,27 @@
               console.log("出错了");
             }
           });
+      },
+      //取消接入
+      delMainWeb(status){
+        axios.get('recode/updateMainWeb.do',{
+          params:{
+            id:this.id,
+            status:status
+          }
+        }),
+          this.$Modal.confirm({
+            render: (h) => {
+              return h('div', [
+                h('p',{style:{color:'#333333',fontSize:'14px'}},'申请已提交'),
+                h('p',{style:{color:'#666666',fontSize:'14px'}},'新睿云将在1个工作日内将您的申请提交至通信管理局。')
+              ])
+              prop:{
+                okText:'知道了'
+                scrollable:true
+              }
+            }
+          })
       }
     },
     mounted() {

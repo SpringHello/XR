@@ -144,13 +144,13 @@
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">
-                  <p>{{hostUnitList.phone}}</p>
-                  <div v-if="phoneHide == 'phone'" class="text_block"><span style="color:red">信息有误</span> <span
+                  <p>{{hostUnitList.companyPhone}}</p>
+                  <div v-if="companyPhoneHide == 'companyPhone'" class="text_block"><span style="color:red">信息有误</span> <span
                     style="color:#2a99f2;cursor:pointer;" @click="legal = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
-                  <p>{{hostUnitList.email}}</p>
-                  <div v-if="emailHide == 'email'" class="text_block"><span style="color:red">信息有误</span> <span
+                  <p>{{hostUnitList.companyEmail}}</p>
+                  <div v-if="companyEmailHide == 'companyEmail'"  class="text_block"><span style="color:red">信息有误</span> <span
                     style="color:#2a99f2;cursor:pointer;" @click="legal = true">重新输入</span></div>
                 </li>
                 <li class="nav_item"></li>
@@ -260,13 +260,13 @@
                     <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
-                  <p>{{hostUnitList.companyphone}}</p>
-                  <div v-if="companyPhoneHide == 'companyPhone'" class="text_block"><span style="color:red">信息有误</span>
+                  <p>{{hostUnitList.phone}}</p>
+                  <div v-if="phoneHide == 'phone'" class="text_block"><span style="color:red">信息有误</span>
                     <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
-                  <p>{{hostUnitList.companyemail}}</p>
-                  <div v-if="companyEmailHide == 'companyEmail'" class="text_block"><span style="color:red">信息有误</span>
+                  <p>{{hostUnitList.email}}</p>
+                  <div v-if="emailHide == 'email'"  class="text_block"><span style="color:red">信息有误</span>
                     <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div>
                 </li>
 
@@ -746,7 +746,7 @@
           <p style="margin:10px">手机号码</p>
           <Input type="text" v-model="updateHostUnitList.companyphone"></Input>
         </FormItem>
-        <FormItem prop="email">
+        <FormItem prop="companyemail">
           <p style="margin:10px">电子邮箱地址</p>
           <Input type="text" v-model="updateHostUnitList.companyemail"></Input>
         </FormItem>
@@ -812,7 +812,7 @@
           <p style="margin:10px">移动电话号码</p>
           <Input type="text" v-model="updateHostUnitList.phone"></Input>
         </FormItem>
-        <FormItem prop="companyemail">
+        <FormItem prop="email">
           <p style="margin:10px">电子邮箱地址</p>
           <Input type="text" v-model="updateHostUnitList.email"></Input>
         </FormItem>
