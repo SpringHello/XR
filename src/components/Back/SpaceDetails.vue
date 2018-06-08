@@ -646,12 +646,10 @@
                 },
                 on:{
                 click:()=>{
-
                   this.updateDiction = true;
                   obj.row.userauthorization == '*' ? (this.updateJurisd.updateUsers = '0') : (this.updateJurisd.updateUsers = '1');
                   this.updateJurisd.updateReferer = obj.row.refererip == '1' ? true : obj.row.refererip =='0' ? false :'';
                   this.updateJurisd.updateInfluenceValue = obj.row.resource;
-                  console.log(this.updateJurisd.updateReferer = true);
                   this.updateJurisd.updateSources = obj.row.iseffectres;
                   let str = '';
                   ['putobject','getobject','deleteobject','listbucket','deletebucket'].forEach(name=>{
@@ -819,10 +817,10 @@
         this.ptext = this.navList[val].city;
       },
       //列出文件夹列表
-      filesList(id) {
+      filesList(id,isfile) {
         var name = sessionStorage.getItem("bucketName");
         this.fileUpdata.dirId = (id == undefined ? null :id.toString());
-      this.$http
+        this.$http
           .post("object/listObject.do", {
             bucketName: name,
             dirId: this.fileUpdata.dirId,
@@ -830,23 +828,22 @@
           })
           .then(res => {
             if (res.data.status == "1") {
-              // if(isfile == 1 || this.isfile == 1){
+              if(isfile == 1 || this.isfile == 1){
                 this.fileData = res.data.data.data;
-              // }else{
-              //   return;
-              // }
+              }else{
+                return;
+              }
             }
           });
       },
       //创建文件夹
       createFlies() {
         var name = sessionStorage.getItem("bucketName");
-
         this.$http
           .post("object/createObject.do", {
             bucketName: name,
             fileName: this.flies,
-            dirId: this.fileUpdata.dirId
+            dirId: this.fileUpdata.dirI
           })
           .then(res => {
             if (res.data.status == "1") {
