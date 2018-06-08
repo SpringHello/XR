@@ -87,7 +87,7 @@
         this.search()
       },
       search(){
-        axios.get('/document/getThirdTitle.do', {
+        axios.get('document/getThirdTitle.do', {
           params: {
             id: this.main
           }
@@ -117,7 +117,7 @@
         })
       },
       getContent(id){
-        this.minor = id || this.minor
+        this.minor = id || this.minor || this.menuList[0].parentId
         this.refresh()
         axios.get('document/listInformation.do', {
           params: {
