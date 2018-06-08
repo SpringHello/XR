@@ -59,6 +59,11 @@
                 <Button type="primary" @click="filesList">查询</Button>
               </div>
             </div>
+
+              <ul style="margin: 0 0 9px 20px;">
+                <li style="display: inline-block;color: #2A99F2;cursor:pointer;" @click="selectFileSrc(item.id,index)" v-for="(item,index) in fileObject" :key="index">{{item.name+'/'}}</li>
+              </ul>
+
             <Table :columns='fileList' :data="fileData"></Table>
           </TabPane>
           <TabPane label="空间设置">
@@ -489,7 +494,6 @@
             title: "文件名称",
             render: (h,params) =>{
               this.fileUpdata.bucketName = buckname;
-              console.log(this.fileUpdata.bucketName);
               this.fileUpdata.zoneId = $store.state.zone.zoneid
               this.isfile = params.row.isfile;
               return h('div',[
@@ -510,6 +514,19 @@
                   },
                   on:{
                     click:()=>{
+                      var object = new Object();
+                      object.id = params.row.id,
+                        object.name = params.row.filename;
+                      this.fileObject.push(object);
+
+                     console.log(this.fileObject);
+
+                      // if(this.fileObject.length >1){
+                      //   this.fileObject.splice(params.index,1);
+                      // }else {
+                      //   this.fileObject.push(object);
+                      // }
+                      // console.log(this.fileObject[0].name);
                       this.filesList(params.row.id,params.row.isfile);//文件标识
                     }
                   }
@@ -769,7 +786,10 @@
         size:'',
         //获取外链文件路径
         flieSrc:'',
-        code:''
+        //修改权限需要的code
+        code:'',
+        //文件路径
+        fileObject:[]
       }
     },
     methods: {
@@ -830,6 +850,7 @@
             if (res.data.status == "1") {
               if(isfile == 1 || this.isfile == 1){
                 this.fileData = res.data.data.data;
+                console.log(this.fileData);
               }else{
                 return;
               }
@@ -843,7 +864,7 @@
           .post("object/createObject.do", {
             bucketName: name,
             fileName: this.flies,
-            dirId: this.fileUpdata.dirI
+            dirId: this.fileUpdata.dirId
           })
           .then(res => {
             if (res.data.status == "1") {
@@ -1024,6 +1045,15 @@
           this.$Message.error('网络连接出错');
           this.size = "0KB"
         })
+      },
+      //获取文件路径返回
+      selectFileSrc(id,index){
+        this.fileData.id = id;
+          console.log(index);
+        let number = this.fileObject.length - (index+1);
+        this.fileObject.splice(index+1,number);
+        this.filesList(this.fileData.id)
+
       }
     //获取空间详情
       // bucketDetails() {

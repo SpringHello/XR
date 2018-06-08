@@ -12,7 +12,7 @@
             </div>
         </div>
         <Table :columns="journalList" :data="journalData" ></Table>
-         <!--<Page :total="100" style="margin-top: 20px;"></Page>-->
+         <Page :total="total" :current="current" style="margin-top: 20px;"></Page>
     </div>
 </template>
 
@@ -21,6 +21,10 @@
 export default {
   data() {
     return {
+      //当前页码
+      current:1,
+      //总条数
+      total:0,
       //操作日志表头
       journalList: [
         {
