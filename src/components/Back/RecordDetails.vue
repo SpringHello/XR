@@ -405,7 +405,7 @@
                   <img style="width: 38px;height: 42px;" :src="item.img">
                   <p style="line-height: 20px;" >
                     <span>{{item.name}}</span>
-                    <Icon v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'" type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
+                    <Icon v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'" type="ios-trash-outline" @click.native="deletePhoto('web',index)"></Icon>
                   </p>
                 </div>
                 点击选择文件
@@ -419,7 +419,7 @@
               <img style="width: 38px;height: 42px;" :src="item.img">
               <p style="line-height: 20px;" >
                 <span>{{item.name}}</span>
-                <Icon v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'" type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
+
               </p>
             </div>
           </div>
@@ -582,12 +582,12 @@
       v-model="domainNameCertificate"
       title="重新上传域名证书信息"
       :scrollable="true"
-
     >
       <p>执照扫描件</p>
       <div class="updatePhoto">
         <div class="updates">
           <div style="width:100%;min-height: 197px;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'">
+
             <Upload
               multiple
               type="drag"
@@ -604,7 +604,6 @@
                 <p v-for="item in addy">{{item}}</p>
                 点击选择文件
               </div>
-              <button>上传</button>
             </Upload>
           </div>
           <div style="width:100%;min-height: 197px;" v-else>
@@ -613,7 +612,7 @@
                 <img style="width: 38px;height: 42px;" :src="item.img">
                 <p style="line-height: 20px;" >
                   <span>{{item.name}}</span>
-                  <Icon v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'" type="ios-trash-outline" @click.native="deletePhoto('web',index)"></Icon>
+                  <Icon v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'" type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
                 </p>
               </div>
           </div>
@@ -631,6 +630,13 @@
       <div class="updatePhoto">
         <div class="updates">
           <div style="width:100%;height:309px;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'">
+            <div style="text-align: center;margin-top:10px;"  v-for="(item,index) in otherData">
+              <img style="width: 38px;height: 42px;" :src="item.img">
+              <p style="line-height: 20px;">
+                <span>{{item.name}}</span>
+                <Icon v-if="isCompile" type="ios-trash-outline" @click.native="deletePhoto('onther',index)"></Icon>
+              </p>
+            </div>
             <Upload
               multiple
               type="drag"
@@ -639,23 +645,15 @@
               action="file/upFile.do"
               :on-success="otherFileSuccess"
               :on-format-error="otherFormatError">
-              <div class="item-content" v-if="hostUnitList.otherdataurl ==''">
-                点击选择文件
-              </div>
-              <div class="item-content" v-else>
-                <p>{{hostUnitList.otherdataurl}}</p>
-                点击选择文件
-              </div>
-              <button>上传</button>
+                <span class="item-content-text">点击选择文件</span>
             </Upload>
           </div>
           <div style="width:100%;min-height: 197px;" v-else>
             <p class="item-content" v-if="otherData.length==0">暂无执照扫描件</p>
-            <div style="text-align: center;margin-top:10px;" v-else  v-for="(item,index) in otherData">
+            <div style="text-align: center;margin-top:10px;" v-else  v-for="item in otherData">
               <img style="width: 38px;height: 42px;" :src="item.img">
               <p style="line-height: 20px;" >
                 <span>{{item.name}}</span>
-                <Icon v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'" type="ios-trash-outline" @click.native="deletePhoto('onhter',index)"></Icon>
               </p>
             </div>
           </div>
@@ -669,7 +667,7 @@
       title="主办单位信息"
      :scrollable="true"
     >
-      <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+      <Form ref="hostUpdate" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="district">
           <p style="margin:10px">主办单位所属区域</p>
           <Select v-model="province" style="width:170px" @on-change="changeProvince">
@@ -715,6 +713,10 @@
           <Input type="text" v-model="updateHostUnitList.investorname"></Input>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button @click="host = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('hostUpdate')">确定</Button>
+      </div>
     </Modal>
     <!-- 修改主体单位负责人信息 -->
     <Modal
@@ -723,7 +725,7 @@
 
       :scrollable="true"
     >
-      <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+      <Form ref="legal" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="legalname">
           <p style="margin:10px">法人姓名</p>
           <Input type="text" v-model="updateHostUnitList.legalname"></Input>
@@ -751,6 +753,10 @@
           <Input type="text" v-model="updateHostUnitList.companyemail"></Input>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button @click="host = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('legal')">确定</Button>
+      </div>
     </Modal>
     <!-- 修改网站基本信息信息 -->
     <Modal
@@ -759,7 +765,7 @@
 
       :scrollable="true"
     >
-      <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+      <Form ref="website" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="webname">
           <p style="margin:10px">网站名称</p>
           <Input type="text" v-model="updateHostUnitList.webname"></Input>
@@ -781,15 +787,18 @@
           <Input type="text" v-model="updateHostUnitList.webmessage"></Input>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button @click="website = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('website')">确定</Button>
+      </div>
     </Modal>
     <!-- 修改网站负责人基本信息 -->
     <Modal
       v-model="websitePerson"
       title="网站负责人基本信息"
-
       :scrollable="true"
     >
-      <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+      <Form ref="websitePerson" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="webresponsibilitylinkname">
           <p style="margin:10px">姓名</p>
           <Input type="text" v-model="updateHostUnitList.webresponsibilitylinkname"></Input>
@@ -817,6 +826,10 @@
           <Input type="text" v-model="updateHostUnitList.email"></Input>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button @click="websitePerson = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('websitePerson')">确定</Button>
+      </div>
     </Modal>
     <!-- 修改ISP信息信息 -->
     <Modal
@@ -824,7 +837,7 @@
       title="ISP备案网站接入信息"
       :scrollable="true"
     >
-      <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+      <Form ref="webIsp" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="ispname">
           <p style="margin:10px">ISP名称</p>
           <Input type="text" :readonly="true" v-model="updateHostUnitList.ispname"></Input>
@@ -842,6 +855,10 @@
           <Input :readonly="true" type="text" v-model="updateHostUnitList.webserveraddress"></Input>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button @click="webIsp = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('webIsp')">确定</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -1584,6 +1601,18 @@
           }
         });
       },
+      hostUpdate(name){
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.host = false;
+            this.legal = false;
+            this.website = false;
+            this.websitePerson = false;
+          } else {
+            return;
+          }
+        })
+      },
       //
       // 重新选择区，重新校验
       // changeDistrict() {
@@ -1676,14 +1705,9 @@
         text-align: center;
       }
       .item-content-text {
-        width: 186px;
-        height: 222px;
-        padding: 50px 0px;
-        margin-bottom: 20px;
-        border: 1px solid #ffffff;
-        background-color: #ffffff;
-        color: #999;
-        line-height: 156px;
+        font-size: 14px;
+        line-height: 20px;
+        color:#999;
       }
       button {
         outline: none;

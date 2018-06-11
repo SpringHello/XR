@@ -18,14 +18,14 @@
               <div style="margin-bottom:20px">
                 <div style="display:inline-block">
                   <span style="display:inline-block;margin-right:10px;">备案类型 </span>
-                  <Select v-model="recordType" size="small" style="width:231px;" @on-change="listMainWeb()">
+                  <Select v-model="recordType" size="small" style="width:231px;" @on-change="listMainWeb(0)">
                     <Option v-for="item in recordTypeCityList" :value="item.value" :key="item.value">{{ item.label }}
                     </Option>
                   </Select>
                 </div>
                 <div style="display:inline-block;margin-left:20px">
                   <span style="display:inline-block;margin-right:10px;">当前状态</span>
-                  <Select v-model="currentState" size="small" style="width:231px;" @on-change="listMainWeb()">
+                  <Select v-model="currentState" size="small" style="width:231px;" @on-change="listMainWeb(0)">
                     <Option v-for="item in currentStateList" :value="item.value" :key="item.value">{{ item.label }}
                     </Option>
                   </Select>
@@ -42,15 +42,15 @@
               <div style="margin-bottom:20px;">
                 <div style="display:inline-block">
                   <span style="display:inline-block;margin-right:10px;">备案类型 </span>
-                  <Select v-model="completeRecordType" size="small" style="width:231px;" @on-change="completeClick">
-                    <Option v-for="item in recordTypeCityList" :value="item.value" :key="item.value">{{ item.label }}
+                  <Select v-model="completeRecordType" size="small" style="width:231px;" @on-change="completeClick(1)">
+                    <Option v-for="item in completeTypeCityList" :value="item.value" :key="item.value">{{ item.label }}
                     </Option>
                   </Select>
                 </div>
                 <div style="display:inline-block;margin-left:20px">
                   <span style="display:inline-block;margin-right:10px;">当前状态</span>
-                  <Select v-model="currentState" size="small" style="width:231px;" @on-change="listMainWeb()">
-                    <Option v-for="item in currentStateList" :value="item.value" :key="item.value">{{ item.label }}
+                  <Select v-model="completeState" size="small" style="width:231px;" @on-change="completeClick(1)">
+                    <Option v-for="item in completeStateList" :value="item.value" :key="item.value">{{ item.label }}
                     </Option>
                   </Select>
                 </div>
@@ -107,8 +107,8 @@ export default {
       //备案类型下拉列表数据
       recordTypeCityList: [
         {
-          value: "首次备案",
-          label: "首次备案"
+          value: "新增备案",
+          label: "新增备案"
         },
         {
           value: "新增接入",
@@ -160,6 +160,62 @@ export default {
           label: "备案完成"
         }
       ],
+      //已备案完成当前状态
+      completeStateList: [
+        {
+          value: "全部",
+          label: "全部"
+        },
+        {
+          value: "初审中",
+          label: "初审中"
+        },
+        {
+          value: "初审拒绝",
+          label: "初审拒绝"
+        },
+        {
+          value: "未提交复审",
+          label: "未提交复审"
+        },
+        {
+          value: "管局审核中",
+          label: "管局审核中"
+        },
+        {
+          value: "管局审核拒绝",
+          label: "管局审核拒绝"
+        },
+        {
+          value: "审核完成",
+          label: "审核完成"
+        },
+        {
+          value: "备案完成",
+          label: "备案完成"
+        }
+      ],
+      //已完成备案备案类型
+      completeTypeCityList:[
+        {
+          value: "新增备案",
+          label: "新增备案"
+        },
+        {
+          value: "新增接入",
+          label: "新增接入"
+        },
+        {
+          value: "取消接入",
+          label: "取消接入"
+        },
+        {
+          value: "变更备案",
+          label: "变更备案"
+        }
+      ],
+      //已完成备案
+      completeState:'',
       //当前状态Select值
       currentState: "no已完成备案",
       //备案类型表格表头
@@ -371,7 +427,7 @@ export default {
         this.$http
           .get("recode/listMainWeb.do", {
             params: {
-              // overType:overType,
+              overType:overType,
               recordtype: this.recordType,
               status: this.currentState
             }
@@ -391,6 +447,9 @@ export default {
     //已完成备案数据获取点击事件
     completeClick(overType) {
       let userList = this.$store.state.userInfo;
+      if (this.completeState == "全部") {
+        this.completeState = "已完成备案";
+      }
       if (userList != null) {
         this.$http
           .get("recode/listMainWeb.do", {
@@ -401,8 +460,10 @@ export default {
             }
           })
           .then(res => {
+            this.recordTypeData = [];
             if (res.data.status == 1) {
               this.recordTypeData = res.data.result;
+              console.log(res.data.result);
               for (let i = 0; i < this.recordTypeData.length; i++) {
                 this.recordTypeData[i].waitOperation = "查看详情";
               }
@@ -418,7 +479,7 @@ export default {
     }
   },
   mounted() {
-    this.listMainWeb();
+    this.listMainWeb(1);
   }
 };
 </script>
