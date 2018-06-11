@@ -259,7 +259,7 @@
     name: 'ip',
     beforeRouteEnter(to, from, next) {
       // 获取ip数据
-      axios.get('network/listPublicIp.do',{
+      axios.get('network/listPublicIp.do', {
         params: {
           page: 1,
           pageSize: 10,
@@ -385,6 +385,9 @@
                   break
                 case 5:
                   value = '升级中'
+                  break
+                case 6:
+                  value = '已冻结'
                   break
               }
               if (obj.row.status == 0) {
@@ -561,6 +564,9 @@
                     display: 'inline-block'
                   }
                 }), h('span', {}, '解绑中')])
+              } else if (object.row.status == 6) {
+                // 已冻结
+                return h('div', {}, h('span', {}, '已冻结'))
               } else if (object.row.usetype == 0) {
                 return h('Dropdown', {
                   on: {
@@ -650,26 +656,26 @@
       // 释放弹性IP
       resetIP(){
         if (this.select != null) {
-            this.$http.get('network/delPublic.do',{
-              params: {
-                id: this.select.id
-              }
-            }).then(response => {
-              if (response.status != 200 || response.data.status != 1) {
-                this.$message.info({
-                  content: response.data.message
-                })
-              } else{
-                this.$message.confirm({
-                  content: '您正将“'+this.select.publicip+'”移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。',
-                  onOk: () => {
-                    this.$Message.success(response.data.message)
-                    this.refresh()
-                  }
-                })
-              }
-            })
-          }else {
+          this.$http.get('network/delPublic.do', {
+            params: {
+              id: this.select.id
+            }
+          }).then(response => {
+            if (response.status != 200 || response.data.status != 1) {
+              this.$message.info({
+                content: response.data.message
+              })
+            } else {
+              this.$message.confirm({
+                content: '您正将“' + this.select.publicip + '”移入回收站，移入回收站之后我们将为您保留两个小时，两小时后我们将自动清空回收站中实时计费资源。',
+                onOk: () => {
+                  this.$Message.success(response.data.message)
+                  this.refresh()
+                }
+              })
+            }
+          })
+        } else {
           this.$Message.info({
             content: '请先选择一个弹性IP'
           })
@@ -677,8 +683,8 @@
       },
       refresh () {
         // 获取ip数据
-        axios.get('network/listPublicIp.do',{
-          params:{
+        axios.get('network/listPublicIp.do', {
+          params: {
             page: 1,
             pageSize: 10,
             zoneId: $store.state.zone.zoneid
@@ -699,7 +705,7 @@
       // 打开新建IP模态框
       openNewIPModal(){
         this.showModal.newIPModal = true
-        axios.get('network/listVpc.do',{
+        axios.get('network/listVpc.do', {
           params: {
             zoneId: $store.state.zone.zoneid
           }
@@ -768,7 +774,7 @@
           this.bindForHostForm.row = row
           this.showModal.bindIPForHost = true
           // 获取所有能绑定弹性IP的云主机
-          this.$http.get('information/listVirtualMachines.do',{
+          this.$http.get('information/listVirtualMachines.do', {
             params: {
               vpcId: row.vpcid,
               num: 0
@@ -818,7 +824,7 @@
                 item.status = 3
               }
             })
-            this.$http.get('network/enableStaticNat.do',{
+            this.$http.get('network/enableStaticNat.do', {
               params: {
                 ipId: this.bindForHostForm.row.publicipid,
                 VMId: this.bindForHostForm.host
@@ -850,7 +856,7 @@
                 item.status = 3
               }
             })
-            this.$http.get('network/bindingElasticIP.do',{
+            this.$http.get('network/bindingElasticIP.do', {
               params: {
                 publicIp: this.bindForNATForm.row.publicip,
                 natGatewayId: this.bindForNATForm.NAT
@@ -923,7 +929,7 @@
                 item.status = 4
               }
             })
-            this.$http.get(url,{params}).then(response => {
+            this.$http.get(url, {params}).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.$Message.success({
                   content: response.data.message
@@ -948,7 +954,7 @@
           this.$Message.warning('请选择1个弹性IP')
           return false
         }
-        this.$http.get('network/delPublic.do',{
+        this.$http.get('network/delPublic.do', {
           params: {
             id: this.select.id
           }
@@ -998,7 +1004,7 @@
       },
       adjustOK(){
         this.showModal.adjust = false
-        this.$http.get('continue/UpPublicBnadwith.do',{
+        this.$http.get('continue/UpPublicBnadwith.do', {
           params: {
             bandwith: this.adjustForm.brand,
             publicIpId: this.select.id
@@ -1029,7 +1035,7 @@
       },
       chargesOK(){
         this.showModal.charges = false
-        this.$http.get('continue/changeMoney.do',{
+        this.$http.get('continue/changeMoney.do', {
           params: {
             id: this.select.id,
             timeType: this.chargesForm.timeType,
@@ -1044,7 +1050,7 @@
         )
       },
       queryAdjustPrice: debounce(500, function () {
-        this.$http.get('continue/countMoneyByUpPublicBandwith.do',{
+        this.$http.get('continue/countMoneyByUpPublicBandwith.do', {
           params: {
             brandwith: this.adjustForm.brand,
             publicIpId: this.select.id
