@@ -569,6 +569,7 @@
               </div>
             </div>
           </Tab-pane>
+
           <!--用于企业认证的pane-->
           <TabPane label="企业信息" name="companyInfo" v-if="showCompanyPane">
             <p class="info-title">企业基本信息</p>
@@ -734,6 +735,11 @@
               </div>
             </Form>
           </TabPane>
+
+          <!--access key pane-->
+          <Tab-pane label="Access Key" name="key">
+
+          </Tab-pane>
         </Tabs>
       </div>
     </div>
