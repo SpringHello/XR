@@ -405,7 +405,7 @@
                   <img style="width: 38px;height: 42px;" :src="item.img">
                   <p style="line-height: 20px;" >
                     <span>{{item.name}}</span>
-                    <Icon v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'" type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
+                    <Icon v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'" type="ios-trash-outline" @click.native="deletePhoto('web',index)"></Icon>
                   </p>
                 </div>
                 点击选择文件
@@ -419,7 +419,7 @@
               <img style="width: 38px;height: 42px;" :src="item.img">
               <p style="line-height: 20px;" >
                 <span>{{item.name}}</span>
-                <Icon v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'" type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
+
               </p>
             </div>
           </div>
@@ -582,12 +582,12 @@
       v-model="domainNameCertificate"
       title="重新上传域名证书信息"
       :scrollable="true"
-
     >
       <p>执照扫描件</p>
       <div class="updatePhoto">
         <div class="updates">
           <div style="width:100%;min-height: 197px;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'">
+
             <Upload
               multiple
               type="drag"
@@ -604,7 +604,6 @@
                 <p v-for="item in addy">{{item}}</p>
                 点击选择文件
               </div>
-              <button>上传</button>
             </Upload>
           </div>
           <div style="width:100%;min-height: 197px;" v-else>
@@ -613,7 +612,7 @@
                 <img style="width: 38px;height: 42px;" :src="item.img">
                 <p style="line-height: 20px;" >
                   <span>{{item.name}}</span>
-                  <Icon v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'" type="ios-trash-outline" @click.native="deletePhoto('web',index)"></Icon>
+                  <Icon v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'" type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
                 </p>
               </div>
           </div>
@@ -631,6 +630,13 @@
       <div class="updatePhoto">
         <div class="updates">
           <div style="width:100%;height:309px;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'">
+            <div style="text-align: center;margin-top:10px;"  v-for="(item,index) in otherData">
+              <img style="width: 38px;height: 42px;" :src="item.img">
+              <p style="line-height: 20px;">
+                <span>{{item.name}}</span>
+                <Icon v-if="isCompile" type="ios-trash-outline" @click.native="deletePhoto('onther',index)"></Icon>
+              </p>
+            </div>
             <Upload
               multiple
               type="drag"
@@ -639,23 +645,15 @@
               action="file/upFile.do"
               :on-success="otherFileSuccess"
               :on-format-error="otherFormatError">
-              <div class="item-content" v-if="hostUnitList.otherdataurl ==''">
-                点击选择文件
-              </div>
-              <div class="item-content" v-else>
-                <p>{{hostUnitList.otherdataurl}}</p>
-                点击选择文件
-              </div>
-              <button>上传</button>
+                <span class="item-content-text">点击选择文件</span>
             </Upload>
           </div>
           <div style="width:100%;min-height: 197px;" v-else>
             <p class="item-content" v-if="otherData.length==0">暂无执照扫描件</p>
-            <div style="text-align: center;margin-top:10px;" v-else  v-for="(item,index) in otherData">
+            <div style="text-align: center;margin-top:10px;" v-else  v-for="item in otherData">
               <img style="width: 38px;height: 42px;" :src="item.img">
               <p style="line-height: 20px;" >
                 <span>{{item.name}}</span>
-                <Icon v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'" type="ios-trash-outline" @click.native="deletePhoto('onhter',index)"></Icon>
               </p>
             </div>
           </div>
@@ -669,7 +667,7 @@
       title="主办单位信息"
      :scrollable="true"
     >
-      <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+      <Form ref="hostUpdate" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="district">
           <p style="margin:10px">主办单位所属区域</p>
           <Select v-model="province" style="width:170px" @on-change="changeProvince">
@@ -715,15 +713,18 @@
           <Input type="text" v-model="updateHostUnitList.investorname"></Input>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button @click="host = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('hostUpdate')">确定</Button>
+      </div>
     </Modal>
     <!-- 修改主体单位负责人信息 -->
     <Modal
       v-model="legal"
       title="主体单位负责人信息"
-
       :scrollable="true"
     >
-      <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+      <Form ref="legal" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="legalname">
           <p style="margin:10px">法人姓名</p>
           <Input type="text" v-model="updateHostUnitList.legalname"></Input>
@@ -751,6 +752,10 @@
           <Input type="text" v-model="updateHostUnitList.companyemail"></Input>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button @click="host = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('legal')">确定</Button>
+      </div>
     </Modal>
     <!-- 修改网站基本信息信息 -->
     <Modal
@@ -759,7 +764,7 @@
 
       :scrollable="true"
     >
-      <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+      <Form ref="website" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="webname">
           <p style="margin:10px">网站名称</p>
           <Input type="text" v-model="updateHostUnitList.webname"></Input>
@@ -781,15 +786,18 @@
           <Input type="text" v-model="updateHostUnitList.webmessage"></Input>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button @click="website = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('website')">确定</Button>
+      </div>
     </Modal>
     <!-- 修改网站负责人基本信息 -->
     <Modal
       v-model="websitePerson"
       title="网站负责人基本信息"
-
       :scrollable="true"
     >
-      <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+      <Form ref="websitePerson" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="webresponsibilitylinkname">
           <p style="margin:10px">姓名</p>
           <Input type="text" v-model="updateHostUnitList.webresponsibilitylinkname"></Input>
@@ -817,6 +825,10 @@
           <Input type="text" v-model="updateHostUnitList.email"></Input>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button @click="websitePerson = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('websitePerson')">确定</Button>
+      </div>
     </Modal>
     <!-- 修改ISP信息信息 -->
     <Modal
@@ -824,7 +836,7 @@
       title="ISP备案网站接入信息"
       :scrollable="true"
     >
-      <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+      <Form ref="webIsp" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="ispname">
           <p style="margin:10px">ISP名称</p>
           <Input type="text" :readonly="true" v-model="updateHostUnitList.ispname"></Input>
@@ -842,6 +854,10 @@
           <Input :readonly="true" type="text" v-model="updateHostUnitList.webserveraddress"></Input>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button @click="webIsp = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('webIsp')">确定</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -1366,130 +1382,20 @@
             }
           });
       },
-      //修改主办单位信息表单
-      // updateHostunit() {
-      //   this.$http
-      //     .get("recode/addMainCompany.do", {
-      //       params: {
-      //         id: webcompany_Id,
-      //         mainCompanyCertificatesType: this.updateHostUnitList
-      //           .maincompanycertificatestype,
-      //         mainCompanyNature: this.updateHostUnitList.maincompanynature,
-      //         mainCompanyName: this.updateHostUnitList.maincompanyname,
-      //         mainCompanyNumber: this.updateHostUnitList.maincompanynumber,
-      //         mainCompanyCertificatesLoaction: this.updateHostUnitList
-      //           .maincompanycertificatesloaction,
-      //         mainCompanyCommunicatLocation: this.updateHostUnitList
-      //           .maincompanycommunicatlocation,
-      //         InvestorName: this.updateHostUnitList.investorname
-      //       }
-      //     })
-      //     .then(res => {
-      //       if (res.data.status == 1) {
-      //         this.$Message.success("修改成功");
-      //       } else {
-      //         this.$Message.error(res.data.message);
-      //       }
-      //     });
-      // },
-      //修改法人信息
-      // updateHostunitLegal() {
-      //   this.$http
-      //     .get("recode/addMainCompany.do", {
-      //       params: {
-      //         id: webcompany_Id,
-      //         legalName: this.updateHostUnitList.legalname,
-      //         companyPhone: this.updateHostUnitList.companyphone,
-      //         companyEmail: this.updateHostUnitList.companyemail,
-      //         officeNumber: this.updateHostUnitList.officenumber,
-      //         legalCertificatesType: this.updateHostUnitList
-      //           .legalcertificatestype,
-      //         legalCertificatesNumber: this.updateHostUnitList
-      //           .legalcertificatesnumber
-      //       }
-      //     })
-      //     .then(res => {
-      //       if (res.data.status == 1) {
-      //         this.$Message.success("修改成功");
-      //       } else {
-      //         this.$Message.error(res.data.message);
-      //       }
-      //     });
-      // },
-      //修改网站基本信息
-      // updateWebSite() {
-      //   this.$http
-      //     .get("recode/updateMainWeb.do", {
-      //       params: {
-      //         id: id,
-      //         webName: this.updateHostUnitList.webname,
-      //         webDomian: this.updateHostUnitList.webdomian,
-      //         webUrl: updateHostUnitList.weburl,
-      //         webServerContent: this.updateHostUnitList.webservercontent,
-      //         webMessage: this.updateHostUnitList.webmessage
-      //       }
-      //     })
-      //     .then(res => {
-      //       if (res.data.status == 1) {
-      //         this.$Message.success("修改成功");
-      //       } else {
-      //         this.$Message.error(res.data.message);
-      //       }
-      //     });
-      // },
-      //修改网站负责人信息
-      // updateWebsitePerson() {
-      //   this.$http
-      //     .get("recode/updateMainWeb.do", {
-      //       params: {
-      //         id: id,
-      //         webResponsibilitylinkName: this.updateHostUnitList
-      //           .webresponsibilitylinkname,
-      //         webResponsibilityCertificatesType: this.updateHostUnitList
-      //           .webresponsibilitycertificatestype,
-      //         webResponsibilityCertificatesNumber: this.updateHostUnitList
-      //           .webresponsibilitycertificatesnumber,
-      //         offaceNumber: this.updateHostUnitList.offacenumber,
-      //         phone: this.updateHostUnitList.phone,
-      //         email: this.updateHostUnitList.email
-      //       }
-      //     })
-      //     .then(res => {
-      //       if (res.data.status == 1) {
-      //         this.$Message.success("修改成功");
-      //       } else {
-      //         this.$Message.error(res.data.message);
-      //       }
-      //     });
-      // },
-      //修改ISP备案网站接入信息
-      // updateWebIsp() {
-      //   this.$http
-      //     .get("recode/updateMainWeb.do", {
-      //       params: {
-      //         id: id,
-      //         ISPName: this.updateHostUnitList.ispname,
-      //         webIp: this.updateHostUnitList.webip,
-      //         webAccessType: this.updateHostUnitList.webaccesstype,
-      //         webServerAddress: this.updateHostUnitList.webserveraddress
-      //       }
-      //     })
-      //     .then(res => {
-      //       if (res.data.status == 1) {
-      //         this.$Message.success("修改成功");
-      //       } else {
-      //         this.$Message.error(res.data.message);
-      //       }
-      //     });
-      // },
-      //网站核验单上传文件错误
       webRecordFormatError(){
         this.$Message.error('网站核验单只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
       //网站核验单上传成功
       webRecordSuccess(response){
         if(response.data.status == 1){
-          this.$Message.success('上传成功');
+          axios.post('recode/updateMainWeb.do',{
+            id:this.id,
+            webrecordauthenticityurl:response.result
+          }).then(res =>{
+            if(res.data.status == 1){
+              this.$Message.success('上传成功');
+            }
+          })
         }else {
           this.$Message.error('上传失败');
         }
@@ -1501,7 +1407,14 @@
       //身份证正面上传成功
       cardSuccess(response){
         if(response.data.status == 1){
-          this.$Message.success('上传成功');
+          axios.post('recode/updateMainWeb.do',{
+            id:this.id,
+            webresponsibilityurlpositive:response.result
+          }).then(res =>{
+            if(res.data.status == 1){
+              this.$Message.success('上传成功');
+            }
+          })
         }else {
           this.$Message.error('上传失败');
         }
@@ -1512,7 +1425,14 @@
       },
       cardBackSuccess(response){
         if(response.data.status == 1){
-          this.$Message.success('上传成功');
+          axios.post('recode/updateMainWeb.do',{
+            id:this.id,
+            webresponsibilityurlback:response.result
+          }).then(res =>{
+            if(res.data.status == 1){
+              this.$Message.success('上传成功');
+            }
+          })
         }else {
           this.$Message.error('上传失败');
         }
@@ -1523,7 +1443,14 @@
       },
       organizerSuccess(response){
         if(response.status == 1){
-          this.$Message.success("上传成功");
+          axios.post('recode/updateMainWeb.do',{
+            id:this.id,
+            hostcompanyurl:response.result
+          }).then(res =>{
+            if(res.data.status == 1){
+              this.$Message.success('上传成功');
+            }
+          })
         }else{
           this.$Message.error('上传失败');
         }
@@ -1534,10 +1461,35 @@
       },
       domainNameSuccess(response){
         if(response.status ==1){
-          this.$Message.success('上传成功');
+          axios.post('recode/updateMainWeb.do',{
+            id:this.id,
+            domaincertificateurl:response.result
+          }).then(res =>{
+            if(res.data.status == 1){
+              this.$Message.success('上传成功');
+            }
+          })
         }else {
           this.$Message.error('上传失败');
         }
+      },
+      //其他文件上传格式错误
+      otherFileSuccess(response){
+        if(response.status ==1){
+          axios.post('recode/updateMainWeb.do',{
+            id:this.id,
+            otherdataurl:response.result
+          }).then(res =>{
+            if(res.data.status == 1){
+              this.$Message.success('上传成功');
+            }
+          })
+        }else{
+          this.$Message.error('上传失败');
+        }
+      },
+      otherFormatError(){
+        this.$Message.error('其他资料只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
       //删除上传文件
       deletePhoto(val,index){
@@ -1549,17 +1501,6 @@
           this.otherData.splice(index,1);
         }
 
-      },
-      //其他文件上传格式错误
-      otherFileSuccess(response){
-        if(response.status ==1){
-          this.$Message.success('上传成功');
-        }else{
-          this.$Message.error('上传失败');
-        }
-      },
-      otherFormatError(){
-        this.$Message.error('其他资料只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
       // 重新选择省份
       changeProvince(val) {
@@ -1584,6 +1525,18 @@
           }
         });
       },
+      hostUpdate(name){
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.host = false;
+            this.legal = false;
+            this.website = false;
+            this.websitePerson = false;
+          } else {
+            return;
+          }
+        })
+      },
       //
       // 重新选择区，重新校验
       // changeDistrict() {
@@ -1593,7 +1546,6 @@
       allUpdate(){
         this.$http
           .post("recode/updateMainWeb.do", {
-
               id: this.id,
               ISPName: this.updateHostUnitList.ispname,
               webIp: this.updateHostUnitList.webip,
@@ -1676,14 +1628,9 @@
         text-align: center;
       }
       .item-content-text {
-        width: 186px;
-        height: 222px;
-        padding: 50px 0px;
-        margin-bottom: 20px;
-        border: 1px solid #ffffff;
-        background-color: #ffffff;
-        color: #999;
-        line-height: 156px;
+        font-size: 14px;
+        line-height: 20px;
+        color:#999;
       }
       button {
         outline: none;
