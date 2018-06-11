@@ -12,7 +12,7 @@
             </div>
         </div>
         <Table :columns="journalList" :data="journalData" ></Table>
-         <Page :total="total" :current="current" style="margin-top: 20px;"></Page>
+        <!--<Page :total="total" @on-change="selectLogs(current)" :current="current" style="margin-top: 20px;"></Page>-->
     </div>
 </template>
 
@@ -165,9 +165,9 @@ export default {
       },
     //获取操作日志
     selectLogs(){
-
       this.$http.post('operatelog/selectLogs.do',{
-
+        // pageSum:10,
+        // pageNum:current
       }).then(res =>{
         if(res.data.status == '1'){
           if(typeof(res.data.data.logs) === "string")

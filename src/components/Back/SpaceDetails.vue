@@ -519,8 +519,6 @@
                         object.name = params.row.filename;
                       this.fileObject.push(object);
 
-                     console.log(this.fileObject);
-
                       // if(this.fileObject.length >1){
                       //   this.fileObject.splice(params.index,1);
                       // }else {
