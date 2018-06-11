@@ -738,7 +738,8 @@
 
           <!--access key pane-->
           <Tab-pane label="Access Key" name="key">
-
+            <Button type="primary" @click="showModal.keyPhoneVal=true" style="margin-bottom:10px">创建Access Key</Button>
+            <Table :columns="keyColumns" :data="keyData"></Table>
           </Tab-pane>
         </Tabs>
       </div>
@@ -1012,6 +1013,24 @@
       <div slot="footer">
       </div>
     </Modal>
+    <!--密钥手机验证-->
+    <Modal width="550" v-model="showModal.keyPhoneVal" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
+        提示
+      </div>
+      <div class="keyPhoneVal" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
+        <p>为保障您的账户安全，请进行手机验证：</p>
+        <p>手机号码： <span>15123278316</span></p> 
+        <p> 验证码 <Input v-model="value" placeholder="请输入验证码" style="width: 132px;margin:0 20px;"></Input><Button type="primary">获取验证码</Button></p>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.keyPhoneVal=false">取消</Button>
+        <Button type="primary" @click="createKey">
+          确定
+        </Button>
+      </div>
+    </Modal>
   </div>
 
 </template>
@@ -1101,7 +1120,8 @@
           authByEmail: false,
           modifyPassword: false,
           showPicture: false,
-          updateLinkman: false
+          updateLinkman: false,
+          keyPhoneVal: false
         },
         imgSrc: 'user/getKaptchaImage.do',
         // 此对象存储所有未认证时页面的状态
@@ -1630,7 +1650,129 @@
             {required: true, message: '请输入新密码', trigger: 'blur'},
             {validator: validaRegisteredPassWordTwo, trigger: 'blur'}
           ],
-        }
+        },
+        keyColumns: [
+                    {
+                        title: 'Access Key ID',
+                        key: 'accesskeyid'
+                    },
+                    {
+                        title: 'Access Key Secret',
+                        render: (h, params) => {
+                          var text = params.row.isdisplay == 1 ? '查看' : '隐藏'
+                          if (params.row.isdisplay == 1){
+                            return h('div', [
+                                h('span', {
+                                    style: {
+                                        marginRight: '5px',
+                                        color: '#2A99F2',
+                                        cursor: 'pointer'
+                                    },
+                                    on: {
+                                        click: () => {
+                                        }
+                                    }
+                                }, text)
+                                ]);
+                          } else if (params.row.isdisplay == 0){
+                            return h('div', [
+                               h('span', {
+                                    style: {
+                                        marginRight: '5px',
+                                    }
+                                }, params.row.accesskeysecret),
+                                h('span', {
+                                    style: {
+                                        color: '#2A99F2',
+                                        cursor: 'pointer'
+                                    },
+                                    on: {
+                                        click: () => {
+                                        }
+                                    }
+                                }, text)
+                                ]);
+                          }
+                        }
+                    },
+                    {
+                        title: '状态',
+                        render: (h, params) => {
+                          let text = params.row.status == 1 ? '启动' : '禁用'
+                          return h('span', {}, text)
+                        }
+                    },
+                    {
+                        title: '创建时间',
+                        key: 'createtime'
+                    },
+                    {
+                        title: '操作',
+                        render: (h, params) => {
+                          return h('div', [
+                                h('span', {
+                                    style: {
+                                        marginRight: '5px',
+                                        color: '#2A99F2',
+                                        cursor: 'pointer'
+                                    },
+                                    on: {
+                                        click: () => {
+                                        }
+                                    }
+                                }, '禁用'),
+                                h('span', {
+                                    style: {
+                                        color: '#2A99F2',
+                                        cursor: 'pointer'
+                                    },
+                                    on: {
+                                        click: () => {
+                                        }
+                                    }
+                                }, '删除')
+                                ]);
+                        }
+                    }
+                ],
+                keyData: [
+                    {
+                        id: '1',
+                        accesskeyid: 'sgdhsgdhxgdnsfdg',
+                        age: 18,
+                        status: 0,
+                        createtime: '2016-10-03',
+                        accesskeysecret: 'ssh',
+                        isdisplay: 1
+                    },
+                    {
+                        id: '1',
+                        accesskeyid: 'sgdhsgdhxgdnsfdg124',
+                        age: 24,
+                        status: 1,
+                        createtime: '2016-10-01',
+                        accesskeysecret: 'ssh',
+                        isdisplay: 0
+                    },
+                    {
+                        id: '1',
+                        accesskeyid: 'sgdhsgdhxgdnsfdg23242',
+                        age: 30,
+                        status: 0,
+                        createtime: '2016-10-02',
+                        accesskeysecret: 'ssh',
+                        isdisplay: 1
+                    },
+                    {
+                        id: '1',
+                        accesskeyid: 'sgdhsgdhxgdnsfdg1111',
+                        age: 26,
+                        status: 1,
+                        createtime: '2016-10-04',
+                        accesskeysecret: 'ssh',
+                        isdisplay: 0
+                    }
+                ]
       }
     },
     created() {
@@ -2306,6 +2448,25 @@
         }).then(response => {
           this.init()
         })
+      },
+      listKey() {
+        axios.get('/showUserAcessAll').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+             this.keyData = response.data
+          }
+        })
+      },
+      createKey() {
+         axios.post('user/createUserAcess.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            // 获取用户信息
+            this.listKey()
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
       }
     },
     computed: mapState({
@@ -2581,6 +2742,16 @@
       color: rgba(17, 17, 17, 0.65);
       line-height: 23.42px;
       margin: 12px 0px;
+    }
+  }
+  .keyPhoneVal {
+    p {
+      color:rgba(102,102,102,1);
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    p:nth-child(2) {
+      margin-bottom: 20px;
     }
   }
 </style>
