@@ -722,7 +722,6 @@
     <Modal
       v-model="legal"
       title="主体单位负责人信息"
-
       :scrollable="true"
     >
       <Form ref="legal" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
@@ -1383,130 +1382,20 @@
             }
           });
       },
-      //修改主办单位信息表单
-      // updateHostunit() {
-      //   this.$http
-      //     .get("recode/addMainCompany.do", {
-      //       params: {
-      //         id: webcompany_Id,
-      //         mainCompanyCertificatesType: this.updateHostUnitList
-      //           .maincompanycertificatestype,
-      //         mainCompanyNature: this.updateHostUnitList.maincompanynature,
-      //         mainCompanyName: this.updateHostUnitList.maincompanyname,
-      //         mainCompanyNumber: this.updateHostUnitList.maincompanynumber,
-      //         mainCompanyCertificatesLoaction: this.updateHostUnitList
-      //           .maincompanycertificatesloaction,
-      //         mainCompanyCommunicatLocation: this.updateHostUnitList
-      //           .maincompanycommunicatlocation,
-      //         InvestorName: this.updateHostUnitList.investorname
-      //       }
-      //     })
-      //     .then(res => {
-      //       if (res.data.status == 1) {
-      //         this.$Message.success("修改成功");
-      //       } else {
-      //         this.$Message.error(res.data.message);
-      //       }
-      //     });
-      // },
-      //修改法人信息
-      // updateHostunitLegal() {
-      //   this.$http
-      //     .get("recode/addMainCompany.do", {
-      //       params: {
-      //         id: webcompany_Id,
-      //         legalName: this.updateHostUnitList.legalname,
-      //         companyPhone: this.updateHostUnitList.companyphone,
-      //         companyEmail: this.updateHostUnitList.companyemail,
-      //         officeNumber: this.updateHostUnitList.officenumber,
-      //         legalCertificatesType: this.updateHostUnitList
-      //           .legalcertificatestype,
-      //         legalCertificatesNumber: this.updateHostUnitList
-      //           .legalcertificatesnumber
-      //       }
-      //     })
-      //     .then(res => {
-      //       if (res.data.status == 1) {
-      //         this.$Message.success("修改成功");
-      //       } else {
-      //         this.$Message.error(res.data.message);
-      //       }
-      //     });
-      // },
-      //修改网站基本信息
-      // updateWebSite() {
-      //   this.$http
-      //     .get("recode/updateMainWeb.do", {
-      //       params: {
-      //         id: id,
-      //         webName: this.updateHostUnitList.webname,
-      //         webDomian: this.updateHostUnitList.webdomian,
-      //         webUrl: updateHostUnitList.weburl,
-      //         webServerContent: this.updateHostUnitList.webservercontent,
-      //         webMessage: this.updateHostUnitList.webmessage
-      //       }
-      //     })
-      //     .then(res => {
-      //       if (res.data.status == 1) {
-      //         this.$Message.success("修改成功");
-      //       } else {
-      //         this.$Message.error(res.data.message);
-      //       }
-      //     });
-      // },
-      //修改网站负责人信息
-      // updateWebsitePerson() {
-      //   this.$http
-      //     .get("recode/updateMainWeb.do", {
-      //       params: {
-      //         id: id,
-      //         webResponsibilitylinkName: this.updateHostUnitList
-      //           .webresponsibilitylinkname,
-      //         webResponsibilityCertificatesType: this.updateHostUnitList
-      //           .webresponsibilitycertificatestype,
-      //         webResponsibilityCertificatesNumber: this.updateHostUnitList
-      //           .webresponsibilitycertificatesnumber,
-      //         offaceNumber: this.updateHostUnitList.offacenumber,
-      //         phone: this.updateHostUnitList.phone,
-      //         email: this.updateHostUnitList.email
-      //       }
-      //     })
-      //     .then(res => {
-      //       if (res.data.status == 1) {
-      //         this.$Message.success("修改成功");
-      //       } else {
-      //         this.$Message.error(res.data.message);
-      //       }
-      //     });
-      // },
-      //修改ISP备案网站接入信息
-      // updateWebIsp() {
-      //   this.$http
-      //     .get("recode/updateMainWeb.do", {
-      //       params: {
-      //         id: id,
-      //         ISPName: this.updateHostUnitList.ispname,
-      //         webIp: this.updateHostUnitList.webip,
-      //         webAccessType: this.updateHostUnitList.webaccesstype,
-      //         webServerAddress: this.updateHostUnitList.webserveraddress
-      //       }
-      //     })
-      //     .then(res => {
-      //       if (res.data.status == 1) {
-      //         this.$Message.success("修改成功");
-      //       } else {
-      //         this.$Message.error(res.data.message);
-      //       }
-      //     });
-      // },
-      //网站核验单上传文件错误
       webRecordFormatError(){
         this.$Message.error('网站核验单只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
       //网站核验单上传成功
       webRecordSuccess(response){
         if(response.data.status == 1){
-          this.$Message.success('上传成功');
+          axios.post('recode/updateMainWeb.do',{
+            id:this.id,
+            webrecordauthenticityurl:response.result
+          }).then(res =>{
+            if(res.data.status == 1){
+              this.$Message.success('上传成功');
+            }
+          })
         }else {
           this.$Message.error('上传失败');
         }
@@ -1518,7 +1407,14 @@
       //身份证正面上传成功
       cardSuccess(response){
         if(response.data.status == 1){
-          this.$Message.success('上传成功');
+          axios.post('recode/updateMainWeb.do',{
+            id:this.id,
+            webresponsibilityurlpositive:response.result
+          }).then(res =>{
+            if(res.data.status == 1){
+              this.$Message.success('上传成功');
+            }
+          })
         }else {
           this.$Message.error('上传失败');
         }
@@ -1529,7 +1425,14 @@
       },
       cardBackSuccess(response){
         if(response.data.status == 1){
-          this.$Message.success('上传成功');
+          axios.post('recode/updateMainWeb.do',{
+            id:this.id,
+            webresponsibilityurlback:response.result
+          }).then(res =>{
+            if(res.data.status == 1){
+              this.$Message.success('上传成功');
+            }
+          })
         }else {
           this.$Message.error('上传失败');
         }
@@ -1540,7 +1443,14 @@
       },
       organizerSuccess(response){
         if(response.status == 1){
-          this.$Message.success("上传成功");
+          axios.post('recode/updateMainWeb.do',{
+            id:this.id,
+            hostcompanyurl:response.result
+          }).then(res =>{
+            if(res.data.status == 1){
+              this.$Message.success('上传成功');
+            }
+          })
         }else{
           this.$Message.error('上传失败');
         }
@@ -1551,10 +1461,35 @@
       },
       domainNameSuccess(response){
         if(response.status ==1){
-          this.$Message.success('上传成功');
+          axios.post('recode/updateMainWeb.do',{
+            id:this.id,
+            domaincertificateurl:response.result
+          }).then(res =>{
+            if(res.data.status == 1){
+              this.$Message.success('上传成功');
+            }
+          })
         }else {
           this.$Message.error('上传失败');
         }
+      },
+      //其他文件上传格式错误
+      otherFileSuccess(response){
+        if(response.status ==1){
+          axios.post('recode/updateMainWeb.do',{
+            id:this.id,
+            otherdataurl:response.result
+          }).then(res =>{
+            if(res.data.status == 1){
+              this.$Message.success('上传成功');
+            }
+          })
+        }else{
+          this.$Message.error('上传失败');
+        }
+      },
+      otherFormatError(){
+        this.$Message.error('其他资料只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
       //删除上传文件
       deletePhoto(val,index){
@@ -1566,17 +1501,6 @@
           this.otherData.splice(index,1);
         }
 
-      },
-      //其他文件上传格式错误
-      otherFileSuccess(response){
-        if(response.status ==1){
-          this.$Message.success('上传成功');
-        }else{
-          this.$Message.error('上传失败');
-        }
-      },
-      otherFormatError(){
-        this.$Message.error('其他资料只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
       // 重新选择省份
       changeProvince(val) {
@@ -1622,7 +1546,6 @@
       allUpdate(){
         this.$http
           .post("recode/updateMainWeb.do", {
-
               id: this.id,
               ISPName: this.updateHostUnitList.ispname,
               webIp: this.updateHostUnitList.webip,

@@ -585,6 +585,8 @@
               :show-upload-list="false"
               :with-credentials="true"
               action="file/upFile.do"
+              :on-success="otherFileSuccess"
+              :on-format-error="otherFormatError"
               >
               <span class="item-content-text">点击选择文件</span>
             </Upload>
@@ -1441,7 +1443,14 @@
       //网站核验单上传成功
       webRecordSuccess(response){
         if(response.data.status == 1){
-          this.$Message.success('上传成功');
+          axios.post('recode/updateMainWeb.do',{
+            id:this.id,
+            webrecordauthenticityurl:response.result
+          }).then(res =>{
+              if(res.data.status == 1){
+                this.$Message.success('上传成功');
+              }
+          })
         }else {
           this.$Message.error('上传失败');
         }
@@ -1453,7 +1462,14 @@
       //身份证正面上传成功
       cardSuccess(response){
         if(response.data.status == 1){
-          this.$Message.success('上传成功');
+            axios.post('recode/updateMainWeb.do',{
+              id:this.id,
+              webresponsibilityurlpositive:response.result
+            }).then(res =>{
+              if(res.data.status == 1){
+                this.$Message.success('上传成功');
+              }
+            })
         }else {
           this.$Message.error('上传失败');
         }
@@ -1464,7 +1480,14 @@
       },
       cardBackSuccess(response){
         if(response.data.status == 1){
-          this.$Message.success('上传成功');
+          axios.post('recode/updateMainWeb.do',{
+            id:this.id,
+            webresponsibilityurlback:response.result
+          }).then(res =>{
+            if(res.data.status == 1){
+              this.$Message.success('上传成功');
+            }
+          })
         }else {
           this.$Message.error('上传失败');
         }
@@ -1475,7 +1498,14 @@
       },
       organizerSuccess(response){
         if(response.status == 1){
-          this.$Message.success("上传成功");
+          axios.post('recode/updateMainWeb.do',{
+            id:this.id,
+            hostcompanyurl:response.result
+          }).then(res =>{
+            if(res.data.status == 1){
+              this.$Message.success('上传成功');
+            }
+          })
         }else{
           this.$Message.error('上传失败');
         }
@@ -1486,10 +1516,35 @@
       },
       domainNameSuccess(response){
         if(response.status ==1){
-          this.$Message.success('上传成功');
+          axios.post('recode/updateMainWeb.do',{
+            id:this.id,
+            domaincertificateurl:response.result
+          }).then(res =>{
+            if(res.data.status == 1){
+              this.$Message.success('上传成功');
+            }
+          })
         }else {
           this.$Message.error('上传失败');
         }
+      },
+      //其他文件上传格式错误
+      otherFileSuccess(response){
+        if(response.status ==1){
+          axios.post('recode/updateMainWeb.do',{
+            id:this.id,
+            otherdataurl:response.result
+          }).then(res =>{
+            if(res.data.status == 1){
+              this.$Message.success('上传成功');
+            }
+          })
+        }else{
+          this.$Message.error('上传失败');
+        }
+      },
+      otherFormatError(){
+        this.$Message.error('其他资料只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
     },
     mounted() {
