@@ -1,22 +1,22 @@
 <template>
   <div>
-    <records></records>
-    <o-step :onStep="4" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
-    <step :onStep="3" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
+    <!--    <records></records>-->
+    <o-step :onStep="3" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
+    <step :onStep="2" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
     <div class="body">
       <div class="content">
         <h2>请选择核验方式</h2>
-        <p>备案ID：{{ recordserviceid }} | 当前状态： <span>复审中</span></p>
+        <p>当前状态： <span>提交资料</span></p>
       </div>
       <p>您所在北京市地区可选择核验方式：</p>
       <div class="selectWay">
         <div class="title">
-          <p :class="{select: photograph === 1}" @click="photograph = 1">现场拍照核验</p>
           <p :class="{select: photograph === 2}" @click="photograph = 2">邮寄幕布拍照核验</p>
+          <p :class="{select: photograph === 1}" @click="photograph = 1">现场拍照核验</p>
         </div>
         <div v-if="photograph === 1">
           <div class="description">
-            <p>1.下载填写完成<span>《网站备案信息真实性核验单》</span>，按要求填写完成并盖章。</p>
+            <p>1.下载填写完成<a :href="checkListAddress">《网站备案信息真实性核验单》</a>，按要求填写完成并盖章。</p>
             <p>2.携带核验单至指定位置，提交核验单并完成拍现场拍照。</p>
           </div>
           <div class="footer">
@@ -27,7 +27,7 @@
         </div>
         <div v-if="photograph === 2 && nextStep === false">
           <div class="description">
-            <p>1.下载填写完成<span>《网站备案信息真实性核验单》</span>，按要求填写完成并盖章，将填写完成核验单邮寄至新睿云。</p>
+            <p>1.下载填写完成<a href="keepOnRecord/check.doc">《网站备案信息真实性核验单》</a>，按要求填写完成并盖章，将填写完成核验单邮寄至新睿云。</p>
             <p>2.由新睿云为您邮寄免费幕布，收到后根据实例要求自行拍照上传。</p>
           </div>
           <div class="footer">
@@ -39,11 +39,11 @@
           <div class="description">
             <p>收件地址</p>
             <Form ref="receiveForm" :model="receiveForm" :rules="receiveFormRuleValidate"
-                  :label-width="70">
+                  :label-width="90">
               <FormItem label="地址" prop="address">
                 <Input v-model="receiveForm.address" placeholder="请输入地址"
                        style="width: 500px" :readonly="canUpdate"></Input>
-                <span style="cursor: pointer;color: #377dff;margin-left: 10px;font-size: 14px" @click="updateReceiveForm">使用新地址</span>
+                <span style="cursor: pointer;color: #377dff;margin-left: 10px;font-size: 14px" @click="updateReceiveForm" v-if="!curtainStatus">使用新地址</span>
               </FormItem>
               <FormItem label="收件人" prop="person">
                 <Input v-model="receiveForm.person" placeholder="请输入收件人"
@@ -59,13 +59,14 @@
             </Form>
           </div>
           <div class="footer" style="padding-top: 0">
+            <button @click="$router.go(-1)" style="margin-right: 10px">上一步</button>
             <button @click="showModal.logistics = true" v-if="curtainStatus">查看物流</button>
-            <button v-else @click="applyCurtain">提交幕布申请</button>
+            <button v-else @click="applyCurtain">提交初审并申请幕布</button>
           </div>
         </div>
       </div>
     </div>
-    <div class="footer" v-show="photograph === 2 && nextStep === true ">
+    <div class="footer" v-show="photograph === 2 && nextStep  && curtainStatus ">
       <div class="content">
         <h2>收到幕布后请按照要求拍照上传</h2>
         <p>请仔细阅读拍照要求，以幕布为背景，拍摄网站负责人的上半身免冠照片。请保持光线充足，照片效果清晰</p>
@@ -81,6 +82,8 @@
                   :show-upload-list="false"
                   :with-credentials="true"
                   action="file/upFile.do"
+                  :format="['jpg','jpeg','png']"
+                  :on-format-error="handleFormatJpg"
                   :on-success="photoImg">
                   <div class="item-content-text" v-if="upload.photo===''">
                     点击选择文件
@@ -94,13 +97,19 @@
         </div>
         <div class="uploadTitle" style="margin: 34px 0 10px 20px;">
           <div class="item" style="text-align: center">
-            <img style="height: 203px" src="../../../assets/img/records/records-img6.png"/>
+            <img @click="imageViewShow=true" style="height: 203px;cursor: zoom-in" src="../../../assets/img/records/records-img6.png"/>
           </div>
         </div>
       </div>
       <div style="margin-top: 60px;height: 2px;background: #d9d9d9"></div>
     </div>
-    <div class="content-footer" v-show="photograph === 2 && nextStep === true">
+    <div class="ImageView is-active" style="padding-bottom: 10px;" v-show="imageViewShow" @click="imageViewShow=false">
+      <div class="ImageView-inner" style="overflow: auto;">
+        <img src="../../../assets/img/records/records-img6.png" class="ImageView-img" alt="preview"
+             style="width: 520px; transform: translate3d(140%, 25%, 0) scale3d(1.00003, 1.00003, 1); opacity: 1;">
+      </div>
+    </div>
+    <div class="content-footer" v-show="photograph === 2 && nextStep  && curtainStatus">
       <button @click="sumbitApproval">提交管局审核</button>
     </div>
     <Modal v-model="showModal.logistics" width="550" :scrollable="true">
@@ -131,18 +140,33 @@
       step, records, oStep
     },
     beforeRouteEnter(to, from, next) {
-      let id = sessionStorage.getItem('id')
-      let url = 'recode/listMainWeb.do'
-      axios.get(url, {
-        params: {
-          id: id
-        }
-      }).then(response => {
-        next(vm => {
-          window.scroll(0, 525)
-          vm.getPersonInfo(response)
+      if (sessionStorage.getItem('mainParamsStr')) {
+        let mainParamsStr = sessionStorage.getItem('mainParamsStr')
+        let siteParamsStr = sessionStorage.getItem('siteParamsStr')
+        let area = sessionStorage.getItem('zone')
+        let zoneId = sessionStorage.getItem('zoneId')
+        let recordsType = sessionStorage.getItem('recordsType')
+        let url = 'recode/listMainWeb.do'
+        axios.get(url).then(response => {
+          next(vm => {
+            vm.setData(area, zoneId, recordsType, mainParamsStr, siteParamsStr, response)
+            vm.getCheckList()
+          })
         })
-      })
+      } else {
+        let id = sessionStorage.getItem('id')
+        let url = 'recode/listMainWeb.do'
+        axios.get(url, {
+          params: {
+            id: id
+          }
+        }).then(response => {
+          next(vm => {
+            vm.getPersonInfo(response)
+            vm.getCheckList()
+          })
+        })
+      }
     },
     data() {
       //校验手机号码
@@ -155,16 +179,12 @@
         }
       };
       return {
-        // 备案ID
-        recordserviceid: '',
-        // 备案数据库id
-        id: '',
         // 备案类型
         recordsType: '',
         // 备案类型描述
         recordsTypeDesc: '',
         // 拍照类型 1:现场拍照 2: 邮寄幕布
-        photograph: 1,
+        photograph: 2,
         // 邮寄下一步
         nextStep: false,
         // 收件信息表单
@@ -197,24 +217,57 @@
           photo: ''
         },
         // 是否申请幕布
-        curtainStatus: false
+        curtainStatus: false,
+        //主体信息参数
+        mainParams: {},
+        // 网站信息参数
+        siteParams: {},
+        // 用户备案信息
+        recordInfo: {},
+        isRecord: false,
+        checkListAddress: '',
+        imageViewShow: false
       }
     },
     created() {
-      this.$Message.success({
-        content: '恭喜您顺利通过备案初审！请尽快提交资料，办理拍照',
-        duration: 5,
-        closable: true
-      })
-      let id = sessionStorage.getItem('id')
-      this.id = id
     },
     methods: {
+      setData(area, zoneId, recordsType, mainParamsStr, siteParamsStr, response) {
+        this.area = area
+        this.zoneId = zoneId
+        this.mainParams = JSON.parse(mainParamsStr)
+        this.siteParams = JSON.parse(siteParamsStr)
+        this.receiveForm.address = this.mainParams.mainCompanyCommunicatLocation
+        this.receiveForm.person = this.mainParams.legalName
+        this.receiveForm.phone = this.mainParams.phone
+        switch (recordsType) {
+          case '1':
+            this.recordsType = '新增备案'
+            this.recordsTypeDesc = '域名未备案，备案主体证件无备案号，需要备案。'
+            break
+          case '2':
+            this.recordsType = '新增接入'
+            this.recordsTypeDesc = '域名已在其他平台备案过，需要变更接入商。'
+            break
+          case '3':
+            this.recordsType = '新增网站'
+            this.recordsTypeDesc = '主体已经备案过，需要再给其他网站备案。'
+            break
+        }
+        if (response.data.status === 1) {
+          if (response.data.result.length == 0) {
+            this.isRecord = false
+          } else {
+            this.isRecord = true
+          }
+        }
+      },
       // 获取当前备案网站负责人信息
       getPersonInfo(response) {
         if (response.data.status === 1) {
-          this.recordserviceid = response.data.result[0].recordserviceid
           this.recordsType = response.data.result[0].recordtype
+          this.isRecord = true
+          this.recordInfo = response.data.result[0]
           switch (this.recordsType) {
             case '新增备案':
               this.recordsTypeDesc = '域名未备案，备案主体证件无备案号，需要备案。'
@@ -254,25 +307,9 @@
       submitNewAddress() {
         this.$refs.receiveForm.validate((val) => {
           if (val) {
-            let url = 'recode/updateMainWeb.do'
-            axios.get(url, {
-              params: {
-                id: this.id,
-                backgroundAddress: this.receiveForm.address,
-                backgroundName: this.receiveForm.person,
-                backgroundPhone: this.receiveForm.phone,
-              }
-            }).then(res => {
-              if (res.data.status === 1) {
-                this.curtainStatus = false
-                this.$Message.success({
-                  content: '邮寄地址修改成功'
-                })
-              } else {
-                this.$message.info({
-                  content: '平台开小差了，请稍候再试'
-                })
-              }
+            this.curtainStatus = false
+            this.$Message.success({
+              content: '邮寄地址修改成功'
             })
             this.canUpdate = true
           } else {
@@ -287,26 +324,54 @@
       },
       // 提交幕布申请
       applyCurtain() {
-        let url = 'recode/updateMainWeb.do'
-        axios.get(url, {
-          params: {
-            id: this.id,
-            backgroundAddress: this.receiveForm.address,
-            backgroundName: this.receiveForm.person,
-            backgroundPhone: this.receiveForm.phone,
-          }
-        }).then(res => {
-          if (res.data.status === 1) {
-            this.curtainStatus = true
-            this.$Message.success({
-              content: '幕布申请成功'
-            })
-          } else {
-            this.$message.info({
-              content: '平台开小差了，请稍候再试'
-            })
-          }
-        })
+        this.siteParams.backgroundAddress = this.receiveForm.address
+        this.siteParams.backgroundName = this.receiveForm.person
+        this.siteParams.backgroundPhone = this.receiveForm.phone
+        let addMainWeb = axios.post('recode/addMainWeb.do', this.siteParams)
+        // 有主体信息发送一个请求，没有发送两个请求
+        if (this.isRecord == true) {
+          Promise.all([addMainWeb]).then(response => {
+            if (response[0].status == 200 && response[0].data.status == 1) {
+              this.$router.push('waitFirstTrial')
+              sessionStorage.clear()
+            } else {
+              this.$message.info({
+                content: '平台开小差了，请稍候再试'
+              })
+            }
+          })
+        } else {
+          let addMainCompany = axios.get('recode/addMainCompany.do', {
+            params: {
+              mainCompanyArea: this.mainParams.mainCompanyArea,
+              mainCompanyCertificatesType: this.mainParams.mainCompanyCertificatesType,
+              mainCompanyNature: this.mainParams.mainCompanyNature,
+              mainCompanyNumber: this.mainParams.mainCompanyNumber,
+              mainCompanyName: this.mainParams.mainCompanyName,
+              mainCompanyCertificatesLoaction: this.mainParams.mainCompanyCertificatesLoaction,
+              mainCompanyCommunicatLocation: this.mainParams.mainCompanyCommunicatLocation,
+              InvestorName: this.mainParams.InvestorName,
+              legalName: this.mainParams.legalName,
+              legalCertificatesType: this.mainParams.legalCertificatesType,
+              legalCertificatesNumber: this.mainParams.legalCertificatesNumber,
+              officeNumber: this.mainParams.officeNumber,
+              phone: this.mainParams.phone,
+              email: this.mainParams.email,
+              zoneId: this.zoneId,
+              hostCompanyUrl: this.mainParams.hostCompanyUrl,
+            }
+          })
+          Promise.all([addMainCompany, addMainWeb]).then(response => {
+            if ((response[0].status == 200 && response[0].data.status == 1) && (response[1].status == 200 && response[1].data.status == 1)) {
+              this.$router.push('waitFirstTrial')
+              sessionStorage.clear()
+            } else {
+              this.$message.info({
+                content: '平台开小差了，请稍候再试'
+              })
+            }
+          })
+        }
       },
       // 提交管局审批
       sumbitApproval() {
@@ -315,12 +380,12 @@
           return
         }
         let url = 'recode/updateMainWeb.do'
-        axios.get(url, {
-          params: {
-            id: this.id,
-            backgroundUrl: this.upload.photo
-          }
-        }).then(res => {
+        let id = sessionStorage.getItem('id')
+        let params = {
+          id: id,
+          backgroundUrl: this.upload.photo
+        }
+        axios.post(url, params).then(res => {
           if (res.data.status === 1) {
             this.curtainStatus = false
             this.$Message.success({
@@ -334,7 +399,25 @@
             })
           }
         })
-      }
+      },
+      handleFormatJpg() {
+        this.$Message.info({
+          content: '请选择jpg、png、jpeg类型的文件进行上传'
+        });
+      },
+      getCheckList() {
+        let province = this.mainParams.mainCompanyArea ? this.mainParams.mainCompanyArea.split('-')[0] : this.recordInfo.maincompanyarea.split('-')[0]
+        let mainUnit = this.mainParams.mainCompanyNature || this.recordInfo.maincompanynature
+        if (province == '浙江省') {
+          this.checkListAddress = 'keepOnRecord/hyd_for_zj.doc'
+        } else if (mainUnit == '企业' && province == '广东省') {
+          this.checkListAddress = 'keepOnRecord/hyd_for_gd_person.doc'
+        } else if (mainUnit == '个人' && province == '广东省') {
+          this.checkListAddress = 'keepOnRecord/hyd_for_gd_business.doc'
+        } else {
+          this.checkListAddress = 'keepOnRecord/check.doc'
+        }
+      },
     },
   }
 </script>
@@ -464,6 +547,30 @@
         }
       }
     }
+  }
+
+  .ImageView.is-active {
+    background-color: rgba(26, 26, 26, .65);
+  }
+
+  .ImageView {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 101;
+    overflow: hidden;
+    transition: background-color .2s ease-in-out;
+  }
+
+  .ImageView-inner {
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .ImageView-img {
+    cursor: zoom-out;
   }
 
   .footer {

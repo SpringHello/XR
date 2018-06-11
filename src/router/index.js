@@ -108,6 +108,7 @@ const WorkOrder = () => import('@/components/Back/WorkOrder')
 const Link = () => import('@/components/Link')
 const BRecords = () => import('@/components/Back/Records')
 const RecordDetails = () => import('@/components/Back/RecordDetails')
+const CompletedFilingDetails = () => import('@/components/Back/CompletedFilingDetails')
 const SpaceDetails = () => import('@/components/Back/SpaceDetails')
 
 // 帮助文档路由
@@ -692,7 +693,8 @@ var router = new Router({
         {path: 'workOrder', name: 'workOrder', component: WorkOrder},
         {path: 'BRecords', name: 'BRecords', component: BRecords},
         {path: 'RecordDetails', name: 'RecordDetails', component: RecordDetails},
-        {path: 'SpaceDetails',name:'SpaceDetails',component:SpaceDetails}
+        {path: 'SpaceDetails',name:'SpaceDetails',component:SpaceDetails},
+        {path: 'completedFilingDetails',name:'completedFilingDetails',component:CompletedFilingDetails}
       ]
     },
     {

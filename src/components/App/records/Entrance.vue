@@ -96,7 +96,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.hint = false">取消</Button>
-        <Button type="primary">确认</Button>
+        <Button type="primary" @click="newSite">确认</Button>
       </p>
     </Modal>
   </div>
@@ -159,13 +159,13 @@
             step: 1
           },
           {
-            src: require('../../../assets/img/records/records-icon2.png'),
-            title: '等待初审',
+            src: require('../../../assets/img/records/records-icon3.png'),
+            title: '上传资料/办理拍照',
             step: 2
           },
           {
-            src: require('../../../assets/img/records/records-icon3.png'),
-            title: '上传资料/办理拍照',
+            src: require('../../../assets/img/records/records-icon2.png'),
+            title: '等待初审',
             step: 3
           },
           {
@@ -196,13 +196,13 @@
             step: 2
           },
           {
-            src: require('../../../assets/img/records/records-icon2.png'),
-            title: '等待初审',
+            src: require('../../../assets/img/records/records-icon3.png'),
+            title: '上传资料/办理拍照',
             step: 3
           },
           {
-            src: require('../../../assets/img/records/records-icon3.png'),
-            title: '上传资料/办理拍照',
+            src: require('../../../assets/img/records/records-icon2.png'),
+            title: '等待初审',
             step: 4
           },
           {
@@ -314,6 +314,14 @@
         this.areaText = item.text
         item.src = this.selectImg
       },
+      newSite() {
+        this.showModal.hint = false
+        this.type = 3
+        sessionStorage.setItem('zone', this.areaText)
+        sessionStorage.setItem('zoneId', this.area)
+        sessionStorage.setItem('recordsType', this.type + '')
+        this.$router.push('newAccess')
+      },
       // 立即备案
       putOnRecord() {
         if (this.$store.state.userInfo == null) {
@@ -325,8 +333,8 @@
           return
         }
         if ((this.type == 1 && this.recordInfo.length !== 0) || (this.type == 2 && this.recordInfo.length !== 0)) {
-          //this.showModal.hint = true
-          //return
+          this.showModal.hint = true
+          return
         }
         let url = 'recode/existMainOrWeb.do'
         axios.get(url, {

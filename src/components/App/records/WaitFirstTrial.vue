@@ -1,8 +1,8 @@
 <template>
   <div>
-    <records></records>
-    <o-step :onStep="3" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
-    <step :onStep="2" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
+  <!--  <records></records>-->
+    <o-step :onStep="4" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
+    <step :onStep="3" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
     <div class="body">
       <img src="../../../assets/img/records/records-img5.png"/>
       <p>恭喜您资料提交成功，我们已将您的资料提交管局审核，审核通过后会通过短信提示您，请保持电话畅通。</p>
@@ -24,7 +24,6 @@
       next(vm => {
         var recordsType = sessionStorage.getItem('recordsType')
         vm.setData(recordsType)
-        window.scroll(0, 525)
       })
     },
     data() {

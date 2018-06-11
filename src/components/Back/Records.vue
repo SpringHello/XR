@@ -14,7 +14,7 @@
             <p>VPN业务用于在远端用户和VPC之间建立一条安全加密的通信隧道，使远端用户通过VPN使用VPC中的业务资源。</p>
           </div>
           <Tabs type="card" :animated='false'>
-            <TabPane :label="tabValueCom">
+            <TabPane :label="tabValueCom" style="min-height: 300px;">
               <div style="margin-bottom:20px">
                 <div style="display:inline-block">
                   <span style="display:inline-block;margin-right:10px;">备案类型 </span>
@@ -38,8 +38,8 @@
               <Table  ref="selection" :columns="recordTypeList" :data="recordProgressList"></Table>
             </TabPane>
 
-            <TabPane :label="tabValue">
-              <div style="margin-bottom:20px">
+            <TabPane :label="tabValue" style="min-height: 300px;">
+              <div style="margin-bottom:20px;">
                 <div style="display:inline-block">
                   <span style="display:inline-block;margin-right:10px;">备案类型 </span>
                   <Select v-model="completeRecordType" size="small" style="width:231px;" @on-change="completeClick">
@@ -47,10 +47,14 @@
                     </Option>
                   </Select>
                 </div>
+                <div style="display:inline-block;margin-left:20px">
+                  <span style="display:inline-block;margin-right:10px;">当前状态</span>
+                  <Select v-model="currentState" size="small" style="width:231px;" @on-change="listMainWeb()">
+                    <Option v-for="item in currentStateList" :value="item.value" :key="item.value">{{ item.label }}
+                    </Option>
+                  </Select>
+                </div>
               </div>
-                <router-link to="entrance">
-                <Button style="margin-bottom:10px;" type="primary">新增备案</Button>
-              </router-link>
               <Table  ref="selection" :columns="completeRecordTypeList" :data="recordTypeData"></Table>
             </TabPane>
           </Tabs>
@@ -62,7 +66,7 @@
 
 <script type="text/ecmascript-6">
 export default {
-  data: function() {
+  data() {
     return {
       //我的备案进度标签值
       tabValueCom: h => {
@@ -72,7 +76,7 @@ export default {
             {
               on: {
                 click: () => {
-                  this.listMainWeb();
+                  this.listMainWeb(1);
                 }
               }
             },
@@ -90,7 +94,7 @@ export default {
             {
               on: {
                 click: () => {
-                  this.completeClick();
+                  this.completeClick(0);
                 }
               }
             },
@@ -109,6 +113,14 @@ export default {
         {
           value: "新增接入",
           label: "新增接入"
+        },
+        {
+          value: "取消接入",
+          label: "取消接入"
+        },
+        {
+          value: "变更备案",
+          label: "变更备案"
         }
       ],
       //备案类型Select值
@@ -149,7 +161,7 @@ export default {
         }
       ],
       //当前状态Select值
-      currentState: "",
+      currentState: "no已完成备案",
       //备案类型表格表头
       recordTypeList: [
         {
@@ -249,11 +261,6 @@ export default {
       //已完成备案数据
       completeRecordTypeList: [
         {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
-        {
           title: "备案服务ID",
           key: "recordserviceid"
         },
@@ -284,29 +291,39 @@ export default {
           title: "等待操作",
           key: "operation",
           render: (h, params) => {
-            const color =
-              params.row.operation === "暂无"
-                ? "#666666"
-                : params.row.status === "初审中" ||
-                  params.row.status === "审核完成"
-                  ? "#2A99F2"
-                  : params.row.status === "管局审核中"
-                    ? "#666666"
-                    : params.row.status === "初审拒绝" ? "#D0021B" : "";
+            const row = params.row;
+            const color =  row.operation == ""? "":"#2A99F2";
             return (
               "div",
-              [
-                h(
-                  "span",
-                  {
-                    style: {
-                      color: color,
-                      cursor: "pointer"
-                    }
-                  },
-                  params.row.operation
-                )
-              ]
+                [
+                  h("span",
+                    {
+                      style: {
+                        color: color,
+                        cursor: "pointer"
+                      },
+                      on: {
+                        click: () => {
+                          if (row.operation == "上传拍照/邮寄资料") {
+                            sessionStorage.setItem("newId", row.id);
+                            sessionStorage.setItem(
+                              "newRecordtype",
+                              row.recordType
+                            );
+                            this.$router.push({path:"newRecordStepFour"});
+                          } else if (row.status == "管局审核拒绝") {
+                            this.$router.push({path:"newRecordStepFour"});
+                          } else if (row.status == "初审拒绝") {
+                            this.jumpRecord(row.id,row.webcompany_Id);
+                          } else if( row.status == "重新提交资料"){
+                            this.jumpRecord(row.id,row.webcompany_Id);
+                          }
+                        }
+                      }
+                    },
+                    row.operation == "" ? "暂无" : row.operation
+                  )
+                ]
             );
           }
         },
@@ -326,7 +343,9 @@ export default {
                     },
                     on: {
                       click: () => {
-                        this.$router.push({ path: "RecordDetails" });
+                        sessionStorage.setItem("id",params.row.id);
+                        sessionStorage.setItem("webcompany_Id", params.row.webcompany_Id);
+                        this.$router.push({ path: "completedFilingDetails" });
                       }
                     }
                   },
@@ -343,15 +362,16 @@ export default {
   },
   methods: {
     //备案进度表格
-    listMainWeb() {
+    listMainWeb(overType) {
       let userList = this.$store.state.userInfo;
       if (this.currentState == "全部") {
-        this.currentState = "";
+        this.currentState = "no已完成备案";
       }
       if (userList != null) {
         this.$http
           .get("recode/listMainWeb.do", {
             params: {
+
               recordtype: this.recordType,
               status: this.currentState
             }
@@ -369,13 +389,14 @@ export default {
       }
     },
     //已完成备案数据获取点击事件
-    completeClick() {
+    completeClick(overType) {
       let userList = this.$store.state.userInfo;
       if (userList != null) {
         this.$http
           .get("recode/listMainWeb.do", {
             params: {
               recordtype: this.completeRecordType,
+              overType:overType,
               status: "已完成备案"
             }
           })
@@ -391,9 +412,9 @@ export default {
     },
     //跳转详情页面
     jumpRecord(id,webcompany_Id) {
-      this.$router.push({ path: "RecordDetails"});
       sessionStorage.setItem("id",id);
       sessionStorage.setItem("webcompany_Id", webcompany_Id);
+      this.$router.push({ path: "RecordDetails"});
     }
   },
   mounted() {

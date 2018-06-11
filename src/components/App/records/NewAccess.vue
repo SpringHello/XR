@@ -1,6 +1,6 @@
 <template>
   <div>
-    <records></records>
+   <!-- <records></records>-->
     <o-Step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc"></o-Step>
     <div class="body-bottom">
       <div class="content">
@@ -11,10 +11,10 @@
               :label-width="120">
           <FormItem label="当前备案主体" v-if="filingInformation.mainRecord !== ''">
             <RadioGroup v-model="filingInformation.mainRecord">
-              <Radio label="our">
+              <Radio label="our" :disabled="!recordInfo">
                 <span>已在新睿云备案</span>
               </Radio>
-              <Radio label="other">
+              <Radio label="other" :disabled="recordInfo">
                 <span>在其他接入商备案</span>
               </Radio>
             </RadioGroup>
@@ -141,8 +141,14 @@
           IPCPassword: [
             {required: true, message: '请输入ICP备案密码', trigger: 'blur'}
           ]
-        }
+        },
+        // 是否备过案
+        recordInfo: false
       }
+    },
+    created() {
+      this.getRecordInfo()
+      window.scroll(0, 525);
     },
     methods: {
       setData(area, recordsType) {
@@ -156,9 +162,17 @@
           case '3':
             this.recordsType = '新增网站'
             this.recordsTypeDesc = '主体已经备案过，需要再给其他网站备案。'
-            this.filingInformation.mainRecord = 'other'
+            this.filingInformation.mainRecord = 'our'
             break
         }
+      },
+      // 获取备案信息
+      getRecordInfo() {
+        this.$http.get('recode/listMainWeb.do').then(res => {
+          if (res.data.status == 1) {
+            this.recordInfo = res.data.result.length == 0 ? false : true
+          }
+        })
       },
       // 重新选择省份
       changeProvince(val){

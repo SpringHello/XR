@@ -1,6 +1,6 @@
 <template>
   <div>
-    <records></records>
+    <!--  <records></records>-->
     <o-step :onStep="2" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
     <step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
     <div class="body-bottom">
@@ -69,7 +69,8 @@
                   </div>
                 </transition>
               </FormItem>
-              <FormItem v-for="(item, index) in site.basicInformation.newWebsiteDomainList" prop="newWebsiteDomain" :key="index" label="新增网站域名">
+              <FormItem v-for="(item, index) in site.basicInformation.newWebsiteDomainList" prop="newWebsiteDomain"
+                        :key="index" label="新增网站域名">
                 <div style="display: flex">
                   <Input @on-focus="toolShow('newWebsiteDomain',upIndex,index)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.newWebsiteDomain[index]"
                          placeholder="请输入新增网站域名"
@@ -85,7 +86,7 @@
                   </transition>
                 </div>
               </FormItem>
-              <p class="form-p" @click="addWebsiteDomain(upIndex)"><img src="../../../assets/img/records/records-icon19.png"/> 新增网站域名</p>
+              <p v-if="site.basicInformation.newWebsiteDomainList.length<10"  class="form-p" @click="addWebsiteDomain(upIndex)"><img src="../../../assets/img/records/records-icon19.png"/> 新增网站域名</p>
               <FormItem label="网站首页URL" prop="websiteHomepage">
                 <Input @on-focus="toolShow('websiteHomepage',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.websiteHomepage" placeholder="请输入网站首页URL"
                        style="width: 500px"></Input>
@@ -720,8 +721,8 @@
       //进入下一步
       nextStep() {
         let array = []
-        this.siteList.forEach((item, index) => {
-          this.$refs[`basicInformation${index}`][0].validate((val) => {
+        this.siteList.forEach((item) => {
+          this.$refs[item.name][0].validate((val) => {
             array.push(val)
           })
         })
@@ -729,10 +730,12 @@
           return item === false
         })
         if (!flag) {
-          let arr = this.mainUnitInformation.maincompanyarea.split('-')
-          this.mainUnitInformation.province = arr[0]
-          this.mainUnitInformation.city = arr[1]
-          this.mainUnitInformation.district = arr[2]
+          if (this.mainUnitInformation.maincompanyarea) {
+            let arr = this.mainUnitInformation.maincompanyarea.split('-')
+            this.mainUnitInformation.province = arr[0]
+            this.mainUnitInformation.city = arr[1]
+            this.mainUnitInformation.district = arr[2]
+          }
           let mainUnitInformationStr = JSON.stringify(this.mainUnitInformation)
           let siteListStr = JSON.stringify(this.siteList)
           sessionStorage.removeItem('mainUnitInformationStr')
