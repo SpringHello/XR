@@ -1,5 +1,5 @@
 <template>
-  <div id="document">
+  <div id="document" style="background:rgba(249,249,249,1);">
     <!--帮助文档-->
     <div class="document">
       <div class="dotitle">
@@ -179,6 +179,7 @@
       justify-content: space-between;
       flex-wrap: wrap;
       > div {
+        background: #FFF;
         width: 208px;
         height: 380px;
         border: 1px solid #d8d8d8;
