@@ -558,7 +558,7 @@
           })
           return
         }
-        let flag3 = this.uploadForm.otherFileGroup.some(item => {
+        /*let flag3 = this.uploadForm.otherFileGroup.some(item => {
           return item.otherFile.length === 0
         })
         if (flag3) {
@@ -566,7 +566,7 @@
             content: '请上传其他资料（委托书等）'
           })
           return
-        }
+        }*/
         let flag4 = this.uploadForm.checkGroup.some(item => {
           return item.checkList.length === 0
         })
