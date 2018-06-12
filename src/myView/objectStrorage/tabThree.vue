@@ -129,7 +129,6 @@
             m='0'+m;
           }
               this.dayList[val].startDate = time.toString();
-
               this.dayList[2].endDate = y+'-'+m+'-'+d;
               this.dayList[1].endDate = week;
               this.dayList[0].endDate = dayTime;
