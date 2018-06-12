@@ -16,16 +16,20 @@
           <div class="body">
             <div v-for="(item,index) in item.secondTitle" :key="index" class="wrapper">
               <span class="title" @click="goInfo(item.id)">{{item.name}}</span>
-              <!--<li v-if="item.open" v-for="(subItem,subIndex) in item.desc" :key="subIndex" >-->
-              <!--<router-link :to="subItem.url" :class="{notAllow:subItem.url === ''}">{{subItem.subTitle}}-->
-              <!--</router-link>-->
-              <!--</li>-->
             </div>
           </div>
         </div>
       </div>
       <div class="problem" v-if="selectPro">
-        热门问题
+        <p class="problem-title">热门问题</p>
+        <div class="problem-desc">
+          <div v-for="(item,index) in problems" :key="index">
+            <p>{{item.title}}</p>
+            <ul>
+              <li v-for="(subTitle,subIndex) in item.problem">{{subTitle.name}}</li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -41,91 +45,36 @@
         selectDoc: true,
         selectPro: false,
         // 帮助文档
-        contentList: [
-          {
-            img: 'icon-yunjisuan1',
-            title: '云计算',
-            list: [
-              {
-                title: '云主机',
-                type: 'haTGID9Jk',
-              },
-              {
-                title: '镜像服务',
-                type: '',
-              },
-              {
-                title: 'ECS快照',
-                type: false
-              }
-            ],
-            active: false
-          },
-          {
-            img: 'icon-yunwangluo1',
-            title: '云网络',
-            list: [
-              {
-                title: '弹性IP',
-                type: false,
-              },
-              {
-                title: '私有网络 ', type: false,
-              },
-              {
-                title: '负载均衡', type: false,
-              },
-              {
-                title: 'N虚拟专网VPN', type: false,
-              },
-              {
-                title: 'NAT网关', type: false,
-              }
-            ],
-            active: false
-          },
-          {
-            img: 'icon-yunanquan1',
-            title: '云安全',
-            list: [
-              {
-                title: '虚拟防火墙', type: false,
-              },
-              {
-                title: 'DDOS防护', type: false,
-              },
-              {
-                title: 'SSH秘钥', type: false,
-              }
-            ],
-            active: false
-          },
-          {
-            img: 'icon-yuncunchu1',
-            title: '云存储',
-            list: [
-              {
-                title: '云硬盘', type: false,
-              },
-              {
-                title: '云硬盘快照', type: false,
-              }
-            ],
-            active: false
-          },
-          {
-            img: 'icon-zhanghuyucaiwu',
-            title: '账户与财务',
-            list: [
-              {title: '登录/注册', type: false},
-              {title: '账户安全', type: false},
-              {title: '个人/企业认证', type: false},
-              {title: '计费说明', type: false},
-              {title: '代金券', type: false},
-              {title: '发票申请', type: false}
-            ],
-            active: false
-          }
+        contentList: [],
+        // 常见问题
+        problems:[
+          {title:'云主机',problem:[
+            {name:"系统默认端口号是？"},
+            {name:"常用登录名、密码是？"},
+            {name:"部署主机业务无法访问？"},
+            {name:"如何增加删除防火墙规则？"}
+          ]},
+          {title:'镜像与快照',problem:[
+            {name:"如何选择新睿云镜像？"},
+            {name:"什么是快照？"}
+          ]},
+          {title:'私有网络VPC',problem:[
+            {name:"VPC是否收费？"},
+            {name:"VPC、子网、虚拟机之间是什么关系？"},
+            {name:"一个用户可创建多少个VPC？"},
+            {name:"一个VPC下可创建多少个子网？"},
+            {name:"VPC中有哪些可用网段？"}
+          ]},
+          {title:'NAT网关',problem:[
+            {name:"NAT网关都可以有哪些用途？"},
+            {name:"NAT网关好处是什么？"}
+          ]},
+          {title:'负载均衡',problem:[
+            {name:"什么是负载均衡？"},
+            {name:"负载均衡IP是否要购买？"},
+            {name:"负载均衡支持哪些方式？"},
+            {name:"单个用户支持多少个负载均衡规则？"}
+          ]},
         ]
       }
     },
@@ -155,7 +104,6 @@
     margin: 0 auto;
     padding: 60px 0px 80px;
     .dotitle {
-      margin-bottom: 40px;
       font-size: 28px;
       color: #333;
       padding-bottom: .5rem;
@@ -175,6 +123,7 @@
       }
     }
     .content {
+      margin-top: 40px;
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
@@ -238,8 +187,49 @@
       }
     }
     .problem {
-      font-size: 18px;
-      color: #333;
+      margin-top: 20px;
+      .problem-title{
+        font-size: 18px;
+        color: #333;
+      }
+      .problem-desc{
+        margin-top: 20px;
+        color: #FFF;
+        height: 273px;
+        display: flex;
+        justify-content: space-between;
+        box-sizing: border-box;
+        padding: 20px 0 0 20px;
+        >div{
+          width: 19.5%;
+          p{
+            font-size: 14px;
+            color: #377DFF;
+          }
+          ul{
+            height: 180px;
+            margin-top: 20px;
+            border-right: 1px solid #D8D8D8;
+            li{
+              list-style: none;
+              font-size: 14px;
+              color: #333;
+              margin-bottom: 10px;
+              line-height: 22px;
+              &:hover{
+                color: #377DFF;
+                cursor: pointer;
+              }
+            }
+
+          }
+          &:last-of-type{
+            ul{
+              border-right: none;
+            }
+          }
+        }
+      }
     }
   }
 </style>
