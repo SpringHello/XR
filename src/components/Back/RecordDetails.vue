@@ -1302,6 +1302,23 @@
                       break;
                   }
                 }
+              } else {
+                let addy = this.hostUnitList.domaincertificateurl;
+                  let object = new Object();
+                  addy.substring(addy.lastIndexOf('/') + 1);
+                  object.name = (addy.substring(addy.lastIndexOf('/') + 1));
+                  this.addy.push(object);
+                  switch (this.addy[0].name.substring(this.addy[0].name.length - 3)) {
+                    case 'pdf' :
+                      this.addy[0].img = imgPdf;
+                      break;
+                    case 'jpg' :
+                      this.addy[0].img = imgJpg;
+                      break;
+                    case 'doc' :
+                      this.addy[0].img = imgDoc;
+                      break;
+                  }
               }
               if (this.hostUnitList.otherdataurl.indexOf(',') > 0) {
                 let onther = this.hostUnitList.otherdataurl.split(",");
@@ -1322,6 +1339,23 @@
                       break;
                   }
                 }
+              } else {
+                let onther = this.hostUnitList.otherdataurl
+                  let obj = new Object();
+                  onther.substring(onther.lastIndexOf('/') + 1);
+                  obj.name = (onther.substring(onther.lastIndexOf('/') + 1));
+                  this.otherData.push(obj);
+                  switch (this.otherData[0].name.substring(this.otherData[0].name.length - 3)) {
+                    case 'pdf' :
+                      this.otherData[0].img = imgPdf;
+                      break;
+                    case 'jpg' :
+                      this.otherData[0].img = imgJpg;
+                      break;
+                    case 'doc' :
+                      this.otherData[0].img = imgDoc;
+                      break;
+                  }
               }
               if (this.hostUnitList.webrecordauthenticityurl.indexOf(',') > 0) {
                 let webRecord = this.hostUnitList.webrecordauthenticityurl.split(",");
@@ -1341,6 +1375,23 @@
                       this.webRecordData[j].img = imgDoc;
                       break;
                   }
+                }
+              } else {
+                let webRecord = this.hostUnitList.webrecordauthenticityurl
+                  let objc = new Object();
+                  webRecord.substring(webRecord.lastIndexOf('/') + 1);
+                  objc.name = (webRecord.substring(webRecord.lastIndexOf('/') + 1));
+                  this.webRecordData.push(objc);
+                  switch (this.webRecordData[0].name.substring(this.webRecordData[0].name.length - 3)) {
+                    case 'pdf' :
+                      this.webRecordData[0].img = imgPdf;
+                      break;
+                    case 'jpg' :
+                      this.webRecordData[0].img = imgJpg;
+                      break;
+                    case 'doc' :
+                      this.webRecordData[0].img = imgDoc;
+                      break;
                 }
               }
               //查询错误的备案信息然后显示出来重新输入
