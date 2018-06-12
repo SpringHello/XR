@@ -256,7 +256,7 @@ export default {
                     },
                     on: {
                       click: () => {
-                        if (row.operation == "上传拍照/邮寄资料") {
+                        if (row.status == "初审中") {
                           sessionStorage.setItem("newId", row.id);
                           sessionStorage.setItem(
                             "newRecordtype",
