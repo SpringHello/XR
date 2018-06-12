@@ -1,6 +1,6 @@
 <template>
   <div>
-   <!-- <records></records>-->
+    <!-- <records></records>-->
     <o-Step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc"></o-Step>
     <div class="body-bottom">
       <div class="content">
@@ -41,10 +41,10 @@
             </Select>
           </FormItem>
           <FormItem label="网站域名" prop="websiteDomain">
-            <Input @on-focus="isToolHide = 1" @on-blur="isToolHide = 0"  v-model="filingInformation.websiteDomain" placeholder="请输入网站域名" style="width: 500px"></Input>
+            <Input @on-focus="isToolHide = 1" @on-blur="isToolHide = 0" v-model="filingInformation.websiteDomain" placeholder="请输入网站域名" style="width: 500px"></Input>
             <transition name="fade">
-              <div class="tooltip-popper"  v-if="isToolHide == 1">
-                <div class="tooltip-center" >
+              <div class="tooltip-popper" v-if="isToolHide == 1">
+                <div class="tooltip-center">
                   <div class="tooltip-arrow"></div>
                   <div class="tooltip">域名不要加www.格式如xrcloud.net</div>
                 </div>
@@ -55,7 +55,10 @@
             <Input v-model="filingInformation.websiteRecordNumber" placeholder="请输入网站备案号" style="width: 500px"></Input>
           </FormItem>
           <FormItem label="ICP备案密码" prop="IPCPassword">
-            <Input v-model="filingInformation.IPCPassword" placeholder="请输入ICP备案密码" style="width: 500px"></Input>
+            <Input v-model="filingInformation.IPCPassword" placeholder="请输入ICP备案密码" style="width: 500px;position: relative" :type="inputType"
+                   @on-focus="inputType='password'"></Input>
+            <img v-show="inputType=='password'" @click="inputType='text'" src="../../../assets/img/reset/closeEye.png" class="eyeIcon" style="position: absolute;top: 26%;left: 43%;">
+            <img v-show="inputType=='text'"  @click="inputType='password'"  src="../../../assets/img/reset/eye.png" class="eyeIcon" style="position: absolute;top: 26%;left: 43%;">
           </FormItem>
           <FormItem label="">
             <p class="formP">备案号与密码为管局下发，若您忘记可通过管局官网找回</p>
@@ -75,9 +78,10 @@
   import area from '@/options/area.json'
   import regExp from '../../../util/regExp'
   import records from './../Records'
+
   export default {
     components: {
-      records,oStep
+      records, oStep
     },
     data() {
 
@@ -143,7 +147,8 @@
           ]
         },
         // 是否备过案
-        recordInfo: false
+        recordInfo: false,
+        inputType: 'text'
       }
     },
     created() {
@@ -175,7 +180,7 @@
         })
       },
       // 重新选择省份
-      changeProvince(val){
+      changeProvince(val) {
         this.filingInformation.city = ''
         area.forEach(item => {
           if (item.name == val) {
@@ -184,7 +189,7 @@
         })
       },
       // 重新选择市
-      changeCity(val){
+      changeCity(val) {
         this.filingInformation.district = ''
         this.filingInformation.cityList.forEach(item => {
           if (item.name == val) {
@@ -193,12 +198,12 @@
         })
       },
       // 重新选择区，重新校验
-      changeDistrict(){
+      changeDistrict() {
         this.$refs.filingInformation.validateField('district', (valid) => {
         })
       },
       // 下一步（填写主体信息）
-      nextMain(){
+      nextMain() {
         this.$refs.filingInformation.validate((valid) => {
           if (valid) {
             this.$router.push('newRecordStepOne')
@@ -206,7 +211,7 @@
         })
       },
       // 下一步（填写网站信息）
-      nextSite(){
+      nextSite() {
         this.$refs.filingInformation.validate((valid) => {
           if (valid) {
             this.$router.push('newRecordStepTwo')
@@ -276,6 +281,7 @@
       }
     }
   }
+
   //定义隐藏信息提示框样式
   .tooltip {
     max-width: 250px;
@@ -288,6 +294,7 @@
     border-radius: 4px;
     box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
   }
+
   .tooltip-popper {
     position: absolute;
     top: -1px;
@@ -300,6 +307,7 @@
     z-index: 1060;
     padding: 0 5px 0 8px;
   }
+
   .tooltip-arrow {
     position: absolute;
     width: 0;
@@ -312,10 +320,12 @@
     border-width: 5px 5px 5px 0;
     border-right-color: rgba(70, 76, 91, 0.9);
   }
+
   .fade-enter-active,
   .fade-leave-active {
     transition: opacity 0.5s;
   }
+
   .fade-enter,
   .fade-leave-to {
     opacity: 0;
