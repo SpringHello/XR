@@ -398,6 +398,9 @@ export default {
       recordTypeData: []
     };
   },
+  created() {
+    this.listMainWeb(0);
+  },
   methods: {
     //备案进度表格
     listMainWeb(overType) {
@@ -460,9 +463,6 @@ export default {
       this.$router.push({ path: "RecordDetails"});
     }
   },
-  mounted() {
-    this.listMainWeb(1);
-  }
 };
 </script>
 
