@@ -177,7 +177,7 @@
         name="uploadFile"
         :data="fileUpdata"
         type="drag"
-        action="object/uploadObject.do"
+        action="http://192.168.3.109:8080/ruirados/object/uploadObject.do"
         class="upload_model"
       >
         <div class="upload_text">
@@ -276,7 +276,7 @@
           <div style="width:366px;display:flex;">
             <div style="width:115px;font-size:14px;color:#333333;">Referer白名单</div>
             <div style="width:300px;">
-              <Checkbox true-value="1" false-value="0" v-model="jurisdValidate.referer">允许白名单为空</Checkbox>
+              <Checkbox @on-change="disble" true-value="1" false-value="0" v-model="jurisdValidate.referer">允许白名单为空</Checkbox>
             </div>
           </div>
         </FormItem>
@@ -354,7 +354,7 @@
           <div style="width:366px;display:flex;">
             <div style="width:115px;font-size:14px;color:#333333;">Referer白名单</div>
             <div style="width:300px;">
-              <Checkbox v-model="updateJurisd.updateReferer">允许白名单为空</Checkbox>
+              <Checkbox @on-change="disbleUpdate" v-model="updateJurisd.updateReferer">允许白名单为空</Checkbox>
             </div>
           </div>
         </FormItem>
@@ -524,8 +524,8 @@
             key: "filename",
             title: "文件名称",
             render: (h, params) => {
-              this.fileUpdata.bucketName = buckname;
-              this.fileUpdata.zoneId = $store.state.zone.zoneid
+
+
               this.isfile = params.row.isfile;
               if (params.row.isfile == 1) {
                 return h('div', [
@@ -697,6 +697,11 @@
                     this.updateDiction = true;
                     obj.row.userauthorization == '*' ? (this.updateJurisd.updateUsers = '0') : (this.updateJurisd.updateUsers = '1');
                     this.updateJurisd.updateReferer = obj.row.refererip == '1' ? true : obj.row.refererip == '0' ? false : '';
+                    if(obj.row.refereip == '1'){
+                      this.whiteList = true
+                    }else {
+                      this.whiteList = false;
+                    }
                     this.updateJurisd.updateInfluenceValue = obj.row.resource;
                     this.updateJurisd.updateSources = obj.row.iseffectres;
                     let str = '';
@@ -706,7 +711,6 @@
                       }
                     })
                     this.updateJurisd.updateChannel.push(str);
-                    console.log(this.updateJurisd.updateChannel);
                     this.updateJurisd.updateGrantValue = obj.row.userauthorization;
                     this.updateJurisd.updateWhiteListValue = obj.row.refererip;
                     this.code = obj.row.code;
@@ -822,7 +826,9 @@
         code: '',
         //文件路径
         fileObject: [],
-        int:0
+        int:0,
+        //修改权限白名单是否禁用
+        whiteListUpdate:false
       }
     },
     components:{
@@ -874,10 +880,10 @@
       },
       //列出文件夹列表
       filesList(id,object) {
-
         this.tabLoading = true;
         var name = sessionStorage.getItem("bucketName");
-        console.log(id);
+        this.fileUpdata.bucketName = name;
+        this.fileUpdata.zoneId = $store.state.zone.zoneid;
         this.fileUpdata.dirId = (id == undefined ? null : id.toString());
         this.$http
           .post("object/listObject.do", {
@@ -958,6 +964,7 @@
       jurisdictionClick() {
         var name = sessionStorage.getItem("bucketName");
         var bucketId = sessionStorage.getItem('bucketId');
+
         this.$http.post('bucketAcl/createCustomAcl.do', {
           bucketName: name,
           bucketId: bucketId,
@@ -1107,6 +1114,22 @@
         this.filesList(this.fileData.id)
 
       },
+      disble(val){
+        if(val == '0'){
+          this.whiteList = true;
+          this.jurisdValidate.whiteListValue = '';
+        }else{
+          this.whiteList = false
+        }
+      },
+      disbleUpdate(val){
+          if(!val){
+            this.whiteListUpdate = true;
+            this.jurisdValidate.whiteListValue = '';
+          }else {
+            this.whiteListUpdate = false;
+          }
+      },
       //获取空间详情
       // bucketDetails() {
       //
@@ -1147,6 +1170,7 @@
       this.selectAclAll();
       this.getAllsize();
       this.getSize();
+      this.disble('0')
       this.kjName = sessionStorage.getItem('bucketName');
       this.kjaccessrights = sessionStorage.getItem('accessrights') == 1 ? '私有读写' : sessionStorage.getItem('accessrights') == 2 ? '公有读私有写' : sessionStorage.getItem('accessrights') == 3 ? '公有读写' : '自定义权限';
     }
