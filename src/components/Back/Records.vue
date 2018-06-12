@@ -148,8 +148,8 @@ export default {
           label: "管局审核拒绝"
         },
         {
-          value: "管局审核成功",
-          label: "管局审核成功"
+          value: "管局审核通过",
+          label: "管局审核通过"
         }
       ],
       //已备案完成当前状态
@@ -348,7 +348,7 @@ export default {
                       },
                       on: {
                         click: () => {
-                          if (row.operation == "放弃") {
+                          if (row.status == "确认中") {
                             sessionStorage.setItem("newId", row.id);
                             sessionStorage.setItem(
                               "newRecordtype",

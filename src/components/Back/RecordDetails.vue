@@ -411,7 +411,6 @@
                 </div>
                 点击选择文件
               </div>
-              <button>上传</button>
             </Upload>
           </div>
           <div style="width:50%;min-height: 197px;" v-else>
@@ -472,7 +471,6 @@
                   <p>点击选择文件</p>
                 </div>
               </div>
-              <button>上传</button>
             </Upload>
           </div>
           <div style="width:50%;" v-else>
@@ -510,7 +508,6 @@
                   <p style="">点击选择文件</p>
                 </div>
               </div>
-              <button>上传</button>
             </Upload>
           </div>
           <div style="width:50%;" v-else>
@@ -1347,39 +1344,103 @@
                 }
               }
               //查询错误的备案信息然后显示出来重新输入
-              if (this.hostUnitList.errorMessage != undefined) {
+              if (typeof (this.hostUnitList.errorMessage) != 'undefined') {
                 this.isIconInfo = false;
                 this.isAllUpate = false;
-                for (let item of this.hostUnitList.errorMessage) {
-                  item == "offacenumber" ? (this.offaceNumberHide = "offaceNumber") : null;
-                  item == "webresponsibilitycertificatestype" ? (this.webResponsibilityCertificatesTypeHide = "webResponsibilityCertificatesType") : null;
-                  item == "maincompanyarea" ? (this.mainCompanyAreaHide = "mainCompanyArea") : null;
-                  item == "maincompanycertificatestype" ? (this.mainCompanyCertificatesTypeHide = "mainCompanyCertificatesType") : null;
-                  item == "maincompanynature" ? (this.mainCompanyNatureHide = "mainCompanyNature") : null;
-                  item == "maincompanynumber" ? (this.mainCompanyNumberHide = "mainCompanyNumber") : null;
-                  item == 'maincompanyname' ? (this.mainCompanyNameHide = 'mainCompanyName') : null;
-                  item == 'maincompanycertificatesloaction' ? (this.mainCompanyCertificatesLoactionHide = "mainCompanyCertificatesLoaction") : null;
-                  item == "investorname" ? (this.investorNameHide = "investorName") : null;
-                  item == "legalname" ? (this.legalNameHide = "legalName") : null;
-                  item == "legalcertificatestype" ? (this.legalCertificatesTypeHide = 'legalCertificatesType') : null;
-                  item == "legalcertificatesnumber" ? (this.legalCertificatesNumberHide = "legalCertificatesNumber") : null;
-                  item == "officenumber" ? (this.officeNumberHide = "officeNumber") : null;
-                  item == "phone" ? (this.phoneHide = 'phone') : null;
-                  item == "email" ? (this.emailHide = 'email') : null;
-                  item == "webname" ? (this.webNameHide = 'webName') : null;
-                  item == "webdomian" ? (this.webDomianHide = 'webDomian') : null;
-                  item == "weburl" ? (this.webUrlHide = 'webUrl') : null;
-                  item == "webservercontent" ? (this.webServerContentHide = 'webServerContent') : null;
-                  item == "webmessage" ? (this.webMessageHide = 'webMessage') : null;
-                  item == 'webresponsibilitylinkname' ? (this.webResponsibilityLinkNameHide = 'webResponsibilityLinkName') : null;
-                  item == 'webresponsibilitycertificatesnumber' ? (this.webResponsibilityCertificatesNumberHide = 'webResponsibilityCertificatesNumber') : null;
-                  item == 'companyphone' ? (this.companyPhoneHide = 'companyPhone') : null;
-                  item == 'companyemail' ? (this.companyEmailHide = 'companyEmail') : null;
-                  item == 'ispname' ? (this.ISPNameHide = 'ISPName') : null;
-                  item == 'webip' ? (this.webIpHide = 'webIp') : null;
-                  item == 'webaccesstype' ? (this.webAccessTypeHide = 'webAccessType') : null;
-                  item == 'webserveraddress' ? (this.webServerAddressHide = 'webServerAddress') : null;
-                }
+                this.hostUnitList.errorMessage.forEach(item => {
+                  switch (item) {
+                    case 'webresponsibilitylinkname':
+                      this.webResponsibilityLinkNameHide = 'webResponsibilityLinkName'
+                      break
+                    case 'phone':
+                      this.phoneHide = 'phone'
+                      break
+                    case 'offacenumber':
+                      this.offaceNumberHide = 'offaceNumber'
+                      break
+                    case 'webresponsibilitycertificatestype':
+                      this.webResponsibilityCertificatesTypeHide = 'webResponsibilityCertificatesType'
+                      break
+                    case 'maincompanyarea':
+                      this.mainCompanyAreaHide = 'mainCompanyArea'
+                      break
+                    case 'maincompanycertificatestype':
+                      this.mainCompanyCertificatesTypeHide = 'mainCompanyCertificatesType'
+                      break
+                    case 'maincompanynature':
+                      this.mainCompanyNatureHide = 'mainCompanyNature'
+                      break
+                    case 'maincompanynumber':
+                      this.mainCompanyNumberHide = 'mainCompanyNumber'
+                      break
+                    case 'maincompanyname':
+                      this.mainCompanyNameHide = 'mainCompanyName'
+                      break
+                    case 'maincompanycertificatesloaction':
+                      this.mainCompanyCertificatesLoactionHide = 'mainCompanyCertificatesLoaction'
+                      break
+                    case 'investorname':
+                      this.investorNameHide = 'investorName'
+                      break
+                    case 'legalname':
+                      this.legalNameHide = 'legalName'
+                      break
+                    case 'legalcertificatestype':
+                      this.legalCertificatesTypeHide = 'legalCertificatesType'
+                      break
+                    case 'legalcertificatesnumber':
+                      this.legalCertificatesNumberHide = 'legalCertificatesNumber'
+                      break
+                    case 'officenumber':
+                      this.officeNumberHide = 'officeNumber'
+                      break
+                    case 'phone':
+                      this.phoneHide = 'phone'
+                      break
+                    case 'email':
+                      this.emailHide = 'email'
+                      break
+                    case 'webname':
+                      this.webNameHide = 'webName'
+                      break
+                    case 'webdomian':
+                      this.webDomianHide = 'webDomian'
+                      break
+                    case 'weburl':
+                      this.webUrlHide = 'webUrl'
+                      break
+                    case 'webservercontent':
+                      this.webServerContentHide = 'webServerContent'
+                      break
+                    case 'webmessage':
+                      this.webMessageHide = 'webMessage'
+                      break
+                    case 'webresponsibilitycertificatesnumber':
+                      this.webResponsibilityCertificatesNumberHide = 'webResponsibilityCertificatesNumber'
+                      break
+                    case 'companyemail':
+                      this.companyEmailHide = 'companyEmail'
+                      break
+                    case 'companyphone':
+                      this.companyPhoneHide = 'companyPhone'
+                      break
+                    case 'ispname':
+                      this.ISPNameHide = 'ISPName'
+                      break
+                    case 'webip':
+                      this.webIpHide = 'webIp'
+                      break
+                    case 'webaccesstype':
+                      this.webAccessTypeHide = 'webAccessType'
+                      break
+                    case 'webserveraddress':
+                      this.webServerAddressHide = 'webServerAddress'
+                      break
+                    case 'maincompanycommunicatlocation':
+                      this.mainCompanyCommunicatLocationHide = 'mainCompanyCommunicatLocation'
+                      break
+                  }
+                })
               } else {
                 this.isAllUpate = true;
               }

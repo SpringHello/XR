@@ -867,7 +867,7 @@
       </div>
     </Modal>
     <!--取消接入-->
-    <Modal v-model="cancel"  title="取消接入" :scrollable="true" @on-ok="delMainWeb('取消接入中')">
+    <Modal v-model="cancel"  title="取消接入" :scrollable="true" @on-ok="delMainWeb('确认中')">
       <div class="cancel">
         <p>确定要取消此备案接入信息？</p>
         <p>取消接入后，如果您的备案信息没有对应接入商，管局可能会注销您的备案号，导致您的域名不能访问。申请提交到通信管理局后，不可撤回。</p>
@@ -878,7 +878,7 @@
       </div>
     </Modal>
     <!--注销网站-->
-    <Modal v-model="cancellation"  title="注销网站" :scrollable="true" @on-ok="delMainWeb('注销网站中')">
+    <Modal v-model="cancellation"  title="注销网站" :scrollable="true" @on-ok="delMainWeb('确认中')">
       <div class="cancel">
         <p>确定要注销网站？</p>
         <p>取消接入后，如果您的备案信息没有对应接入商，管局可能会注销您的备案号，导致您的域名不能访问。申请提交到通信管理局后，不可撤回。</p>
@@ -905,7 +905,7 @@
 
       </div>
       <div slot="footer" >
-        <Button type="primary" @click="delMainWeb('注销主体中')">下一步，提交审核</Button>
+        <Button type="primary" @click="delMainWeb('确认中')">下一步，提交审核</Button>
       </div>
     </Modal>
   </div>

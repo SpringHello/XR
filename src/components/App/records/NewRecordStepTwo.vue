@@ -86,7 +86,8 @@
                   </transition>
                 </div>
               </FormItem>
-              <p v-if="site.basicInformation.newWebsiteDomainList.length<10"  class="form-p" @click="addWebsiteDomain(upIndex)"><img src="../../../assets/img/records/records-icon19.png"/> 新增网站域名</p>
+              <p v-if="site.basicInformation.newWebsiteDomainList.length<10" class="form-p" @click="addWebsiteDomain(upIndex)"><img
+                src="../../../assets/img/records/records-icon19.png"/> 新增网站域名</p>
               <FormItem label="网站首页URL" prop="websiteHomepage">
                 <Input @on-focus="toolShow('websiteHomepage',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.websiteHomepage" placeholder="请输入网站首页URL"
                        style="width: 500px"></Input>
@@ -202,7 +203,22 @@
               <FormItem label="有效证件号码" prop="certificateNumber">
                 <Input v-model="site.basicInformation.certificateNumber" placeholder="请输入主体单位证件号码" style="width: 500px"/>
               </FormItem>
-              <FormItem label="办公室电话" prop="officePhone">
+              <FormItem label="办公室电话" prop="officePhone" v-if="!isPersonage">
+                <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.officePhone" placeholder="请输入办公室电话"
+                                       style="width: 468px;margin-left: 10px"></Input>
+                <transition name="fade">
+                  <div class="tooltip-popper" style="top:-36px" v-if="site.isToolHide == 5">
+                    <div class="tooltip-center">
+                      <div class="tooltip-arrow"></div>
+                      <div class="tooltip">1. 请您确保填写的电话畅通并可直接联系到本人，否则可能导致您的备案失败。
+                        2. 该电话在备案成功后需保持畅通，以备核查。
+                        3. 电话格式：086-010-87654321-007（可以不带分机号）。
+                      </div>
+                    </div>
+                  </div>
+                </transition>
+              </FormItem>
+              <FormItem label="办公室电话"  v-else>
                 <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.officePhone" placeholder="请输入办公室电话"
                                        style="width: 468px;margin-left: 10px"></Input>
                 <transition name="fade">
@@ -374,10 +390,11 @@
       };
       //校验网站首页URL
       const validWebsiteHomepage = (rule, value, callback) => {
-        let reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+        let reg =/^((https|http|ftp|rtsp|mms){0,1}(:\/\/){0,1})www\.(([A-Za-z0-9-~]+)\.)+([A-Za-z0-9-~\/])+$/
+        let reg1 = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
         if (value == "") {
           return callback(new Error("请输入网站首页URL"));
-        } else if (!reg.test(value)) {
+        } else if (!(reg.test(value)||reg1.test(value))) {
           return callback(new Error("请输入正确的网站首页URL"));
         } else {
           callback();
@@ -472,11 +489,11 @@
             // 网站语言
             contentsLanguage: ["中文简体"],
             // 前置或专项审批内容类型
-            contentsType: ["新闻"],
+            contentsType: [],
             // 备注
             remark: "",
             // 网站负责人未填写/已填写
-            personInCharge: "新建负责人",
+            personInCharge: "已填写主体单位负责人姓名",
             // 网站负责人姓名
             principalName: "",
             // 网站负责人证件类型
@@ -532,6 +549,7 @@
         publicIPList: [],
         // 决定主体信息从接口获取还是sessionStorage获取
         sessionStatus: false,
+        isPersonage: false
       };
     },
     created() {
@@ -548,10 +566,22 @@
         this.siteList[0].basicInformation.serverPutArea = area
         if (sessionStorage.getItem('mainUnitInformationStr')) {
           this.mainUnitInformation = JSON.parse(mainUnitInformationStr)
+          this.siteList[0].basicInformation.principalName = this.mainUnitInformation.legalPersonName
+          this.siteList[0].basicInformation.certificateType = this.mainUnitInformation.legalPersonCertificateType
+          this.siteList[0].basicInformation.certificateNumber = this.mainUnitInformation.legalPersonIDNumber
+          this.siteList[0].basicInformation.officePhone = this.mainUnitInformation.officePhone
+          this.siteList[0].basicInformation.phoneNumber = this.mainUnitInformation.phoneNumber
+          this.siteList[0].basicInformation.emailAddress = this.mainUnitInformation.emailAddress
           this.sessionStatus = true
         } else {
           this.sessionStatus = false
           var mainUnitInformation = JSON.parse(mainUnitInformationStr)
+          this.siteList[0].basicInformation.principalName = mainUnitInformation.legalname
+          this.siteList[0].basicInformation.certificateType = mainUnitInformation.legalcertificatestype
+          this.siteList[0].basicInformation.certificateNumber = mainUnitInformation.legalcertificatesnumber
+          this.siteList[0].basicInformation.officePhone = mainUnitInformation.officenumber
+          this.siteList[0].basicInformation.phoneNumber = mainUnitInformation.phone
+          this.siteList[0].basicInformation.emailAddress = mainUnitInformation.email
           this.mainUnitInformation.maincompanyarea = mainUnitInformation.maincompanyarea
           this.mainUnitInformation.certificateType = mainUnitInformation.maincompanycertificatestype
           this.mainUnitInformation.unitProperties = mainUnitInformation.maincompanynature
@@ -566,6 +596,12 @@
           this.mainUnitInformation.officePhone = mainUnitInformation.officenumber
           this.mainUnitInformation.phoneNumber = mainUnitInformation.phone
           this.mainUnitInformation.emailAddress = mainUnitInformation.email
+        }
+        // 初始化座机号码框
+        if(this.mainUnitInformation.unitProperties == '个人'){
+          this.isPersonage = true
+        } else{
+          this.isPersonage = false
         }
         switch (recordsType) {
           case '1':
@@ -656,15 +692,15 @@
             // 网站语言
             contentsLanguage: ["中文简体"],
             // 前置或专项审批内容类型
-            contentsType: ["新闻"],
+            contentsType: [],
             // 备注
             remark: "",
             // 网站负责人未填写/已填写
-            personInCharge: "新建负责人",
+            personInCharge: "已填写主体单位负责人姓名",
             // 网站负责人姓名
-            principalName: "",
+            principalName: this.mainUnitInformation.legalPersonName,
             // 网站负责人证件类型
-            certificateType: "",
+            certificateType: this.mainUnitInformation.legalPersonCertificateType,
             certificateTypeList: [
               {
                 label: "身份证",
@@ -687,13 +723,13 @@
               }
             ],
             // 网站负责人证件号码
-            certificateNumber: "",
+            certificateNumber: this.mainUnitInformation.legalPersonIDNumber,
             // 办公室电话
-            officePhone: "",
+            officePhone: this.mainUnitInformation.officePhone,
             // 手机号码
-            phoneNumber: "",
+            phoneNumber: this.mainUnitInformation.phoneNumber,
             // 电子邮箱地址
-            emailAddress: "",
+            emailAddress: this.mainUnitInformation.emailAddress,
             // ISP名称
             ISPName: "北京允睿讯通科技有公司 备案部",
             // 网站IP地址（接口获取）
