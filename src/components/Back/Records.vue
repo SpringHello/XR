@@ -18,14 +18,14 @@
               <div style="margin-bottom:20px">
                 <div style="display:inline-block">
                   <span style="display:inline-block;margin-right:10px;">备案类型 </span>
-                  <Select v-model="recordType" size="small" style="width:231px;" @on-change="listMainWeb(0)">
+                  <Select v-model="recordType" size="small" style="width:231px;" @on-change="listMainWeb(1)">
                     <Option v-for="item in recordTypeCityList" :value="item.value" :key="item.value">{{ item.label }}
                     </Option>
                   </Select>
                 </div>
                 <div style="display:inline-block;margin-left:20px">
                   <span style="display:inline-block;margin-right:10px;">当前状态</span>
-                  <Select v-model="currentState" size="small" style="width:231px;" @on-change="listMainWeb(0)">
+                  <Select v-model="currentState" size="small" style="width:231px;" @on-change="listMainWeb(1)">
                     <Option v-for="item in currentStateList" :value="item.value" :key="item.value">{{ item.label }}
                     </Option>
                   </Select>
@@ -42,14 +42,14 @@
               <div style="margin-bottom:20px;">
                 <div style="display:inline-block">
                   <span style="display:inline-block;margin-right:10px;">备案类型 </span>
-                  <Select v-model="completeRecordType" size="small" style="width:231px;" @on-change="completeClick(1)">
+                  <Select v-model="completeRecordType" size="small" style="width:231px;" @on-change="completeClick(0)">
                     <Option v-for="item in completeTypeCityList" :value="item.value" :key="item.value">{{ item.label }}
                     </Option>
                   </Select>
                 </div>
                 <div style="display:inline-block;margin-left:20px">
                   <span style="display:inline-block;margin-right:10px;">当前状态</span>
-                  <Select v-model="completeState" size="small" style="width:231px;" @on-change="completeClick(1)">
+                  <Select v-model="completeState" size="small" style="width:231px;" @on-change="completeClick(0)">
                     <Option v-for="item in completeStateList" :value="item.value" :key="item.value">{{ item.label }}
                     </Option>
                   </Select>
@@ -76,7 +76,7 @@ export default {
             {
               on: {
                 click: () => {
-                  this.listMainWeb(1);
+                  this.listMainWeb(0);
                 }
               }
             },
@@ -94,7 +94,7 @@ export default {
             {
               on: {
                 click: () => {
-                  this.completeClick(0);
+                  this.completeClick(1);
                 }
               }
             },
@@ -132,16 +132,12 @@ export default {
           label: "全部"
         },
         {
-          value: "初审中",
+          value: "待审核",
           label: "初审中"
         },
         {
           value: "初审拒绝",
           label: "初审拒绝"
-        },
-        {
-          value: "未提交复审",
-          label: "未提交复审"
         },
         {
           value: "管局审核中",
@@ -152,12 +148,8 @@ export default {
           label: "管局审核拒绝"
         },
         {
-          value: "审核完成",
-          label: "审核完成"
-        },
-        {
-          value: "备案完成",
-          label: "备案完成"
+          value: "管局审核成功",
+          label: "管局审核成功"
         }
       ],
       //已备案完成当前状态
@@ -171,14 +163,6 @@ export default {
           label: "初审中"
         },
         {
-          value: "初审拒绝",
-          label: "初审拒绝"
-        },
-        {
-          value: "未提交复审",
-          label: "未提交复审"
-        },
-        {
           value: "管局审核中",
           label: "管局审核中"
         },
@@ -187,13 +171,21 @@ export default {
           label: "管局审核拒绝"
         },
         {
-          value: "审核完成",
-          label: "审核完成"
+          value: "管局审核成功",
+          label: "管局审核成功"
         },
         {
-          value: "备案完成",
-          label: "备案完成"
-        }
+          value: "取消接入成功",
+          label: "取消接入成功"
+        },
+        {
+          value: "注销网站成功",
+          label: "注销网站成功"
+        },
+        {
+          value: "变更备案成功",
+          label: "变更备案成功"
+        },
       ],
       //已完成备案备案类型
       completeTypeCityList:[
@@ -271,12 +263,8 @@ export default {
                             row.recordType
                           );
                           this.$router.push({path:"newRecordStepFour"});
-                        } else if (row.status == "管局审核拒绝") {
-                          this.$router.push({path:"newRecordStepFour"});
-                        } else if (row.status == "初审拒绝") {
-                           this.jumpRecord(row.id,row.webcompany_Id);
-                        } else if( row.status == "重新提交资料"){
-                            this.jumpRecord(row.id,row.webcompany_Id);
+                        } else if (row.status == "管局审核拒绝" || row.status == "初审拒绝") {
+                          this.jumpRecord(row.id,row.webcompany_Id);
                         }
                       }
                     }
@@ -360,19 +348,13 @@ export default {
                       },
                       on: {
                         click: () => {
-                          if (row.operation == "上传拍照/邮寄资料") {
+                          if (row.operation == "放弃") {
                             sessionStorage.setItem("newId", row.id);
                             sessionStorage.setItem(
                               "newRecordtype",
                               row.recordType
                             );
-                            this.$router.push({path:"newRecordStepFour"});
-                          } else if (row.status == "管局审核拒绝") {
-                            this.$router.push({path:"newRecordStepFour"});
-                          } else if (row.status == "初审拒绝") {
-                            this.jumpRecord(row.id,row.webcompany_Id);
-                          } else if( row.status == "重新提交资料"){
-                            this.jumpRecord(row.id,row.webcompany_Id);
+                            this.$router.push({path:"CompletedFilingDetails"});
                           }
                         }
                       }

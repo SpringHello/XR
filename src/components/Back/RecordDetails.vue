@@ -301,7 +301,8 @@
                 <li class="nav_item">
                   <p>{{hostUnitList.webaccesstype}}</p>
                   <div v-if="webAccessTypeHide =='webAccessType'" class="text_block"><span style="color:red">信息有误</span>
-                    <span style="color:#2a99f2;cursor:pointer;" @click="webIsp = true">重新输入</span></div>
+                    <span style="color:#2a99f2;cursor:pointer;" @click="webIsp = true">重新输入</span>
+                  </div>
                 </li>
               </ul>
               <ul class="nav_list">
@@ -1207,6 +1208,7 @@
         otherData:[],
         //获取网站核验单
         webRecordData:[],
+        //重新提交按钮是否禁用
         isAllUpate:true,
         //委托书路径
         keep:'',
@@ -1366,7 +1368,6 @@
                   item == "webmessage" ? (this.webMessageHide = 'webMessage') : null;
                   item == 'webresponsibilitylinkname' ? (this.webResponsibilityLinkNameHide = 'webResponsibilityLinkName') : null;
                   item == 'webresponsibilitycertificatesnumber' ? (this.webResponsibilityCertificatesNumberHide = 'webResponsibilityCertificatesNumber') : null;
-                  item == 'offacenumber' ? (this.offaceNumberHide = 'offaceNumber') : null;
                   item == 'companyphone' ? (this.companyPhoneHide = 'companyPhone') : null;
                   item == 'companyemail' ? (this.companyEmailHide = 'companyEmail') : null;
                   item == 'ispname' ? (this.ISPNameHide = 'ISPName') : null;
@@ -1388,14 +1389,8 @@
       //网站核验单上传成功
       webRecordSuccess(response){
         if(response.data.status == 1){
-          axios.post('recode/updateMainWeb.do',{
-            id:this.id,
-            webrecordauthenticityurl:response.result
-          }).then(res =>{
-            if(res.data.status == 1){
-              this.$Message.success('上传成功');
-            }
-          })
+          this.updateHostUnitList.webrecordauthenticityurl=response.result;
+          this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
         }
@@ -1407,14 +1402,8 @@
       //身份证正面上传成功
       cardSuccess(response){
         if(response.data.status == 1){
-          axios.post('recode/updateMainWeb.do',{
-            id:this.id,
-            webresponsibilityurlpositive:response.result
-          }).then(res =>{
-            if(res.data.status == 1){
-              this.$Message.success('上传成功');
-            }
-          })
+          this.updateHostUnitList.webresponsibilityurlpositive=response.result;
+          this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
         }
@@ -1425,14 +1414,8 @@
       },
       cardBackSuccess(response){
         if(response.data.status == 1){
-          axios.post('recode/updateMainWeb.do',{
-            id:this.id,
-            webresponsibilityurlback:response.result
-          }).then(res =>{
-            if(res.data.status == 1){
-              this.$Message.success('上传成功');
-            }
-          })
+          this.updateHostUnitList.webresponsibilityurlback=response.result;
+          this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
         }
@@ -1443,14 +1426,8 @@
       },
       organizerSuccess(response){
         if(response.status == 1){
-          axios.post('recode/updateMainWeb.do',{
-            id:this.id,
-            hostcompanyurl:response.result
-          }).then(res =>{
-            if(res.data.status == 1){
-              this.$Message.success('上传成功');
-            }
-          })
+          this.updateHostUnitList.hostcompanyurl=response.result;
+          this.$Message.success('上传成功');
         }else{
           this.$Message.error('上传失败');
         }
@@ -1461,14 +1438,8 @@
       },
       domainNameSuccess(response){
         if(response.status ==1){
-          axios.post('recode/updateMainWeb.do',{
-            id:this.id,
-            domaincertificateurl:response.result
-          }).then(res =>{
-            if(res.data.status == 1){
-              this.$Message.success('上传成功');
-            }
-          })
+          this.updateHostUnitList.domaincertificateurl=response.result;
+          this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
         }
@@ -1476,14 +1447,10 @@
       //其他文件上传格式错误
       otherFileSuccess(response){
         if(response.status ==1){
-          axios.post('recode/updateMainWeb.do',{
-            id:this.id,
-            otherdataurl:response.result
-          }).then(res =>{
-            if(res.data.status == 1){
-              this.$Message.success('上传成功');
-            }
-          })
+
+          this.updateHostUnitList.otherdataurl=response.result;
+          this.$Message.success('上传成功');
+
         }else{
           this.$Message.error('上传失败');
         }
@@ -1544,47 +1511,48 @@
       //   });
       // },
       allUpdate(){
+        this.updateHostUnitList.id = this.id;
         this.$http
-          .post("recode/updateMainWeb.do", {
-              id: this.id,
-              ISPName: this.updateHostUnitList.ispname,
-              webIp: this.updateHostUnitList.webip,
-              webAccessType: this.updateHostUnitList.webaccesstype,
-              webServerAddress: this.updateHostUnitList.webserveraddress,
-              webResponsibilitylinkName: this.updateHostUnitList
-                .webresponsibilitylinkname,
-              webResponsibilityCertificatesType: this.updateHostUnitList
-                .webresponsibilitycertificatestype,
-              webResponsibilityCertificatesNumber: this.updateHostUnitList
-                .webresponsibilitycertificatesnumber,
-              offaceNumber: this.updateHostUnitList.offacenumber,
-              phone: this.updateHostUnitList.phone,
-              email: this.updateHostUnitList.email,
-              webName: this.updateHostUnitList.webname,
-              webDomian: this.updateHostUnitList.webdomian,
-              webUrl: this.updateHostUnitList.weburl,
-              webServerContent: this.updateHostUnitList.webservercontent,
-              webMessage: this.updateHostUnitList.webmessage,
-              legalName: this.updateHostUnitList.legalname,
-              companyPhone: this.updateHostUnitList.companyphone,
-              companyEmail: this.updateHostUnitList.companyemail,
-              officeNumber: this.updateHostUnitList.officenumber,
-              legalCertificatesType: this.updateHostUnitList
-                .legalcertificatestype,
-              legalCertificatesNumber: this.updateHostUnitList
-                .legalcertificatesnumber,
-              mainCompanyCertificatesType: this.updateHostUnitList
-                .maincompanycertificatestype,
-              mainCompanyNature: this.updateHostUnitList.maincompanynature,
-              mainCompanyName: this.updateHostUnitList.maincompanyname,
-              mainCompanyNumber: this.updateHostUnitList.maincompanynumber,
-              mainCompanyCertificatesLoaction: this.updateHostUnitList
-                .maincompanycertificatesloaction,
-              mainCompanyCommunicatLocation: this.updateHostUnitList
-                .maincompanycommunicatlocation,
-              InvestorName: this.updateHostUnitList.investorname
-
-          })
+          .post("recode/updateMainWeb.do",
+              this.updateHostUnitList
+              // id: this.id,
+              // ISPName: this.updateHostUnitList.ispname,
+              // webIp: this.updateHostUnitList.webip,
+              // webAccessType: this.updateHostUnitList.webaccesstype,
+              // webServerAddress: this.updateHostUnitList.webserveraddress,
+              // webResponsibilitylinkName: this.updateHostUnitList
+              //   .webresponsibilitylinkname,
+              // webResponsibilityCertificatesType: this.updateHostUnitList
+              //   .webresponsibilitycertificatestype,
+              // webResponsibilityCertificatesNumber: this.updateHostUnitList
+              //   .webresponsibilitycertificatesnumber,
+              // offaceNumber: this.updateHostUnitList.offacenumber,
+              // phone: this.updateHostUnitList.phone,
+              // email: this.updateHostUnitList.email,
+              // webName: this.updateHostUnitList.webname,
+              // webDomian: this.updateHostUnitList.webdomian,
+              // webUrl: this.updateHostUnitList.weburl,
+              // webServerContent: this.updateHostUnitList.webservercontent,
+              // webMessage: this.updateHostUnitList.webmessage,
+              // legalName: this.updateHostUnitList.legalname,
+              // companyPhone: this.updateHostUnitList.companyphone,
+              // companyEmail: this.updateHostUnitList.companyemail,
+              // officeNumber: this.updateHostUnitList.officenumber,
+              // legalCertificatesType: this.updateHostUnitList
+              //   .legalcertificatestype,
+              // legalCertificatesNumber: this.updateHostUnitList
+              //   .legalcertificatesnumber,
+              // mainCompanyCertificatesType: this.updateHostUnitList
+              //   .maincompanycertificatestype,
+              // mainCompanyNature: this.updateHostUnitList.maincompanynature,
+              // mainCompanyName: this.updateHostUnitList.maincompanyname,
+              // mainCompanyNumber: this.updateHostUnitList.maincompanynumber,
+              // mainCompanyCertificatesLoaction: this.updateHostUnitList
+              //   .maincompanycertificatesloaction,
+              // mainCompanyCommunicatLocation: this.updateHostUnitList
+              //   .maincompanycommunicatlocation,
+              // InvestorName: this.updateHostUnitList.investorname
+          )
           .then(res => {
             if (res.data.status == 1) {
               this.$Message.success("修改成功");
