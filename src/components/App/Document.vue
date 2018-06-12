@@ -201,7 +201,7 @@
         box-sizing: border-box;
         padding: 20px 0 0 20px;
         >div{
-          width: 19.5%;
+          width: 18.5%;
           p{
             font-size: 14px;
             color: #377DFF;
