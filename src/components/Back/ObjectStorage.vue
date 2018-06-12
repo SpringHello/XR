@@ -11,14 +11,14 @@
             <span class="title">对象存储</span>
           </div>
           <div style="width:50%;text-align:right;line-height:4;">
-            <Button>刷新</Button>
+            <Button @click="name = 'name1'">刷新</Button>
           </div>
         </div>
         <div class="center_p">
           <p>虚拟私有云，通过逻辑方式进行网络隔离，提供安全、隔离的网络环境。VPC为您提供与传统网络无差别的虚拟网络，同时还可以为您提供弹性IP、安全组、VPN等高级网络服务。</p>
         </div>
-        <Tabs type="card">
-          <TabPane label="概览">
+        <Tabs type="card" :value="name">
+          <TabPane label="概览" name="name1">
             <p>当月用量 2018/04/28-2018</p>
             <div class="center_space">
               <div class="space_one">
@@ -71,14 +71,14 @@
               <!--<chart class="echarts" :options="rwNumber"></chart>-->
             <!--</div>-->
           </TabPane>
-          <TabPane label="空间管理">
+          <TabPane :label="bucketMange" name="name2">
             <tabOne></tabOne>
           </TabPane>
-          <TabPane label="用量监控">
+          <TabPane label="用量监控" name="name3">
             <div style="text-align: center;">暂无数据</div>
             <!--<tabTwo></tabTwo>-->
           </TabPane>
-          <TabPane label="操作日志" style="min-height: 300px;">
+          <TabPane label="操作日志" name="name4" style="min-height: 300px;">
             <tabThree></tabThree>
           </TabPane>
         </Tabs>
@@ -108,6 +108,18 @@
   export default {
     data() {
       return {
+        name:'',
+        bucketMange:h=>{
+          return h('div',[
+            h('span',{
+              on:{
+                click:()=>{
+
+                }
+              }
+            },'空间管理')
+          ])
+        },
         //下载流量统计图
         rwPolar: JSON.parse(disk),
         //请求次数统计图
@@ -270,6 +282,25 @@
           this.$Message.error('网络连接出错');
           this.size = "0KB"
         })
+      },
+      handleSpinCustom () {
+        this.$Spin.show({
+          render: (h) => {
+            return h('div', [
+              h('Icon', {
+                'class': 'demo-spin-icon-load',
+                props: {
+                  type: 'load-c',
+                  size: 18
+                }
+              }),
+              h('div', 'Loading')
+            ])
+          }
+        });
+        setTimeout(() => {
+          this.$Spin.hide();
+        }, 3000);
       }
     },
     mounted(){

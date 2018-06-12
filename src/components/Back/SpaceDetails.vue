@@ -9,7 +9,7 @@
           </div>
           <div style="width:50%;text-align:right;">
             <Button @click="$router.push({path:'objectStorage'})" style="margin-right: 10px;">返回</Button>
-            <Button @click="filesList" type="primary">刷新</Button>
+            <Button @click="filesList(undefined)" type="primary">刷新</Button>
           </div>
         </div>
         <p style="margin:20px 0;color:#333333;font-size:16px;">{{kjName}}</p>
@@ -36,7 +36,9 @@
         <div class="center_space">
           <div class="space_Two">
             <p>存储空间容量</p>
-            <div class="space_text">{{size}}</div>
+            <div class="space_text">
+             {{size}}
+            </div>
           </div>
           <div class="space_one">
             <p>流量</p>
@@ -56,17 +58,17 @@
               </div>
               <div style="width:50%;text-align:right;">
                 <Input v-model="filename" type="text" placeholder="请输入搜索名称" style="width:231px;"/>
-                <Button type="primary" @click="filesList">查询</Button>
+                <Button type="primary" @click="filesList(undefined)">查询</Button>
               </div>
             </div>
 
             <ul style="margin: 0 0 9px 20px;">
-              <li style="display: inline-block;color: #2A99F2;cursor:pointer;" @click="selectFileSrc(item.id,index)" v-for="(item,index) in fileObject" :key="index">
+              <li class="fileObject" @click="selectFileSrc(item.id,index)" v-for="(item,index) in fileObject" :key="index">
                 {{item.name+'/'}}
               </li>
             </ul>
 
-            <Table :columns='fileList' :data="fileData"></Table>
+            <Table :columns='fileList' :loading="tabLoading" :data="fileData"></Table>
           </TabPane>
           <TabPane label="空间设置">
             <div>
@@ -82,7 +84,7 @@
                 <div class="custom" v-if="indexs == 3">
                   <Button type="primary" @click="jurisdiction = true" style="margin-right: 10px;">添加自定义权限</Button>
                   <Button type="primary" @click="edit = true">自定义权限编辑器</Button>
-                  <Table style="margin-top:20px;" :columns="rightList" :data="aclData"></Table>
+                  <Table :loading="jurisdLoading" style="margin-top:20px;" :columns="rightList" :data="aclData"></Table>
                 </div>
               </div>
             </div>
@@ -217,8 +219,8 @@
           <Select v-model="term" style="width:240px;margin: 10px 0;">
             <Option v-for="item in termList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
-          <Button type="primary" @click="geturl">获取外链</Button>
-          <Input type="text" style="width:317px;" v-model="flies" :readonly="true"></Input>
+          <Button type="primary" :loading="tremLoading" @click="geturl">获取外链</Button>
+          <Input type="text" style="width:317px;" v-model="fliesTerm" :readonly="true"></Input>
         </div>
       </div>
     </Modal>
@@ -421,12 +423,30 @@
 
 <script>
   import $store from "@/vuex";
+  import ICountUp from 'vue-countup-v2';
 
   var buckname = sessionStorage.getItem('bucketName');
 
   export default {
     data() {
       return {
+        //自定义权限表格加载
+        jurisdLoading:false,
+          isClass:true,
+        //数字渐变动画
+        options: {
+          useEasing: true,
+          useGrouping: true,
+          separator: ',',
+          decimal: '.',
+          prefix: '',
+          suffix: ''
+        },
+        //查看外链
+        tremLoading:false,
+        fliesTerm:'',
+        //新建文件夹table加载动画
+        tabLoading:false,
         //收起cors
         corsHide: true,
         staticHide: true,
@@ -529,16 +549,7 @@
                         var object = new Object();
                         object.id = params.row.id;
                         object.name = params.row.filename;
-
-                      this.fileObject.push(object);
-
-                      // if(this.fileObject.length >1){
-                      //   this.fileObject.splice(params.index,1);
-                      // }else {
-                      //   this.fileObject.push(object);
-                      // }
-                      // console.log(this.fileObject[0].name);
-
+                         this.fileObject.push(object);
                         this.filesList(params.row.id,object);//文件标识
                       }
 
@@ -804,14 +815,18 @@
         //访问权限
         kjaccessrights: '',
         //存储空间大小
-        size: '',
+        size:'',
         //获取外链文件路径
         flieSrc: '',
         //修改权限需要的code
         code: '',
         //文件路径
-        fileObject: []
+        fileObject: [],
+        int:0
       }
+    },
+    components:{
+      ICountUp
     },
     methods: {
       //上传文件格式错误的方法
@@ -859,7 +874,10 @@
       },
       //列出文件夹列表
       filesList(id,object) {
+
+        this.tabLoading = true;
         var name = sessionStorage.getItem("bucketName");
+        console.log(id);
         this.fileUpdata.dirId = (id == undefined ? null : id.toString());
         this.$http
           .post("object/listObject.do", {
@@ -872,11 +890,15 @@
               this.fileData = res.data.data.data;
               if (typeof(object) != "undefined") {
                 this.fileObject.push(object);
+                this.tabLoading = false;
               } else {
-                return;
+                this.tabLoading = false;
+                return ;
               }
             }
-          });
+          }).catch(error =>{
+          this.tabLoading = false;
+        });
       },
       //创建文件夹
       createFlies() {
@@ -958,16 +980,20 @@
       selectAclAll() {
         var name = sessionStorage.getItem("bucketName");
         var bucketId = sessionStorage.getItem('bucketId');
+        this.jurisdLoading = true;
         this.$http.post('bucketAcl/selectAclAll.do', {
           bucketName: name,
           bucketId: bucketId
         }).then(res => {
           if (res.data.status == "1") {
             this.aclData = res.data.data.list;
+            this.jurisdLoading = false;
           } else if (res.data.status == '16') {
             this.aclData = [];
+            this.jurisdLoading = false;
           } else {
             this.$Message.error(res.data.msg);
+            this.jurisdLoading = false;
           }
         })
       },
@@ -991,6 +1017,7 @@
        *获取外链
        */
       geturl(filesrc) {
+        this.tremLoading = true;
         var name = sessionStorage.getItem("bucketName");
         this.$http.post('object/geturl.do', {
           bucketName: name,
@@ -998,7 +1025,9 @@
           fileSrc: this.flieSrc
         }).then(res => {
           if (res.data.status == '1') {
-            this.flies = res.data.data.data;
+            this.fliesTerm = res.data.data.data;
+            this.tremLoading = false;
+            this.$Message.success('获取成功');
           } else {
             this.$Message.error(res.data.msg);
           }
@@ -1051,30 +1080,33 @@
         val == 'cors' ? (this.corsHide = !this.corsHide) : val == 'static' ? (this.staticHide = !this.staticHide) : ''
       },
       //获取存储空间容量
-      getAllsize() {
+      getAllsize(instance) {
+        this.handleSpinCustom();
         this.$http.post('object/getAllSize.do', {}).then(res => {
           if (res.data.status == '1') {
             this.size = res.data.data.data / 1024 > 1 ? (res.data.data.data / 1024).toFixed(2) + 'MB' : res.data.data.data + 'KB';
 
+            this.$Spin.hide();
           } else {
             this.size = "0KB";
+            this.$Spin.hide();
             this.$Message.error('出错了');
           }
           sessionStorage.setItem('size', this.size);
-        }).catch(error => {
-          this.$Message.error('网络连接出错');
-          this.size = "0KB"
         })
+      },
+      getSize(){
+        console.log(this.size);
       },
       //获取文件路径返回
       selectFileSrc(id, index) {
         this.fileData.id = id;
-        console.log(index);
+
         let number = this.fileObject.length - (index + 1);
         this.fileObject.splice(index + 1, number);
         this.filesList(this.fileData.id)
 
-      }
+      },
       //获取空间详情
       // bucketDetails() {
       //
@@ -1091,6 +1123,22 @@
       //     });
       // },
       //
+      handleSpinCustom () {
+        this.$Spin.show({
+          render: (h) => {
+            return h('div', [
+              h('Icon', {
+                'class': 'demo-spin-icon-load',
+                props: {
+                  type: 'load-c',
+                  size: 18
+                }
+              }),
+              h('div', 'loading...')
+            ])
+          }
+        });
+      }
     },
     mounted() {
       this.bucketName = sessionStorage.getItem('bucketName');
@@ -1098,6 +1146,7 @@
       this.filesList();
       this.selectAclAll();
       this.getAllsize();
+      this.getSize();
       this.kjName = sessionStorage.getItem('bucketName');
       this.kjaccessrights = sessionStorage.getItem('accessrights') == 1 ? '私有读写' : sessionStorage.getItem('accessrights') == 2 ? '公有读私有写' : sessionStorage.getItem('accessrights') == 3 ? '公有读写' : '自定义权限';
     }
@@ -1158,6 +1207,7 @@
           background-color: #2a99f2;
           color: #ffffff;
           cursor: pointer;
+          transition: ease-in-out .3s;
         }
         .space_item:hover {
           background-color: #2a99f2;
@@ -1201,6 +1251,17 @@
         }
       }
     }
+  }
+  .fileObject{
+    display: inline-block;
+    color: #2A99F2;
+    cursor:pointer;
+  }
+  .fileShow{
+    display: inline-block;
+    color: #2A99F2;
+    cursor:pointer;
+    transition:all .3s ease-in-out;
   }
 
   .custom {

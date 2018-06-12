@@ -1,0 +1,18 @@
+<template>
+
+</template>
+
+<script>
+  import CountUp from 'countup';
+  export default {
+    name:'countUp',
+    data(){
+      return{
+
+      }
+    },
+    props:{
+      endVal:0,
+    }
+  }
+</script>

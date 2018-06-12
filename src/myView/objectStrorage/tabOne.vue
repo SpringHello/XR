@@ -4,7 +4,7 @@
             <Button type="primary" @click="modal6 = true">新建空间</Button>
         </div>
         <div style="margin-top:10px;">
-             <Table :columns="spaceColumns" :data="spaceData" no-data-text="您还没有创建Bucket（存储空间）,请点击新建空间"></Table>
+             <Table :loading="buckLoading" :columns="spaceColumns" :data="spaceData" no-data-text="您还没有创建Bucket（存储空间）,请点击新建空间"></Table>
         </div>
 
          <Modal
@@ -147,19 +147,23 @@ export default {
           label:'公有读写',
           value:'3'
         }
-      ]
+      ],
+      buckLoading:false
     };
   },
   methods: {
     //获取空间列表
     getBuckets() {
+      this.buckLoading = true;
       this.$http
         .post("bucket/getBuckets.do", {})
         .then(res => {
           if (res.data.status == "1") {
             this.spaceData = res.data.data.bucket;
+            this.buckLoading = false;
           } else {
             this.spaceData = [];
+            this.buckLoading = false;
             this.$Message.error(res.data.msg);
           }
         });
