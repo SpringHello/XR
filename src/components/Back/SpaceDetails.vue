@@ -633,7 +633,7 @@
           //影响资源
           sources: '0',
           //密码接收渠道
-          channel: ['PutObject'],
+          channel: ['putobject'],
           //白名单
           referer: '',
         },
@@ -673,7 +673,7 @@
               let str = '';
               ['putobject', 'getobject', 'deleteobject', 'listbucket', 'deletebucket'].forEach(name => {
                 if (obj.row[name] == 1) {
-                  str += name
+                  str += name+' '
                 }
               })
               return h('span', str)
