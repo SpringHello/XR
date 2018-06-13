@@ -49,9 +49,9 @@
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.maincompanycertificatestype}}</p>
-                  <div v-if="mainCompanyCertificatesTypeHide == 'mainCompanyCertificatesType'" class="text_block"><span
-                    style="color:red">信息有误</span> <span style="color:#2a99f2;cursor:pointer;"
-                                                        @click="host = true">重新输入</span></div>
+                  <div v-if="mainCompanyCertificatesTypeHide == 'mainCompanyCertificatesType'" class="text_block">
+                    <span style="color:red">信息有误</span> <span style="color:#2a99f2;cursor:pointer;" @click="host = true">重新输入</span>
+                  </div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.maincompanynature}}</p>
@@ -409,6 +409,16 @@
       <div class="updatePhoto">
         <div class="updates">
           <div style="width:53%;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝' ">
+            <div style="min-height: 197px;">
+              <p class="hide-text" v-if="addy.webRecordData==0">暂无网站备案信息核验单</p>
+              <div style="text-align: center;margin-top:10px;" v-for="(item,index) in webRecordData">
+                <img style="width: 38px;height: 42px;" :src="item.img">
+                 <p style="line-height: 20px;">
+                  <span>{{item.name}}</span>
+                  <Icon  type="ios-trash-outline" @click.native="deletePhoto('web',index)"></Icon>
+                </p>
+              </div>
+            </div>
             <Upload
               multiple
               type="drag"
@@ -417,29 +427,20 @@
               action="file/upFile.do"
               :format="['jpg','jpeg','png','doc','docx','pdf']"
               :on-success="webRecordSuccess"
-              :on-format-error="webRecordFormatError">
-              <div class="item-content-text" v-if="hostUnitList.webrecordauthenticityurl==''">
-                点击选择文件
-              </div>
-              <div style="min-height: 197px;" v-else>
-                <div style="text-align: center;margin-top:10px;" v-for="(item,index) in webRecordData">
-                  <img style="width: 38px;height: 42px;" :src="item.img">
-                  <p style="line-height: 20px;">
-                    <span>{{item.name}}</span>
-                    <Icon v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'" type="ios-trash-outline" @click.native="deletePhoto('web',index)"></Icon>
-                  </p>
-                </div>
+              :on-format-error="webRecordFormatError"
+              :before-upload="webRecordBeforeUpload"
+            >
+              <div class="item-content-text">
                 点击选择文件
               </div>
             </Upload>
           </div>
           <div style="width:50%;min-height: 197px;" v-else>
             <p class="hide-text" v-if="webRecordData.length==0">暂无执照扫描件</p>
-            <div style="text-align: center;margin-top:10px;" v-else v-for="(item,index) in webRecordData">
+            <div style="text-align: center;margin-top:10px;" v-else v-for="item in webRecordData">
               <img style="width: 38px;height: 42px;" :src="item.img">
               <p style="line-height: 20px;">
                 <span>{{item.name}}</span>
-
               </p>
             </div>
           </div>
@@ -466,8 +467,6 @@
       v-model="sponsorPhoto"
       title="重新上传身份证信息"
       :scrollable="true"
-      :closable="false"
-      :mask-closable="false"
     >
       <p>身份证人像面</p>
       <div class="updatePhoto">
@@ -482,7 +481,6 @@
               :format="['jpg','jpeg','png']"
               :on-success="cardSuccess"
               :on-format-error="cardFormatError"
-
             >
               <div class="sponsor-text" v-if="hostUnitList.webresponsibilityurlpositive==''">
                 暂无图片
@@ -550,8 +548,6 @@
       v-model="organizerPhoto"
       title="重新上传营业执照信息"
       :scrollable="true"
-      :closable="false"
-      :mask-closable="false"
     >
       <p>执照扫描件</p>
       <div class="updatePhoto">
@@ -565,7 +561,8 @@
               action="file/upFile.do"
               :format="['jpg','jpeg','png']"
               :on-success="organizerSuccess"
-              :on-format-error="organizerFormatError">
+              :on-format-error="organizerFormatError"
+              >
               <div class="sponsor-text" v-if="hostUnitList.hostcompanyurl==''">
                 暂无图片
               </div>
@@ -575,7 +572,6 @@
                   <p style="">点击选择文件</p>
                 </div>
               </div>
-              <button>上传</button>
             </Upload>
           </div>
           <div style="width:50%;text-align: center;" v-else>
@@ -604,14 +600,19 @@
       v-model="domainNameCertificate"
       title="重新上传域名证书信息"
       :scrollable="true"
-      :closable="false"
-      :mask-closable="false"
     >
       <p>执照扫描件</p>
       <div class="updatePhoto">
         <div class="updates">
           <div style="width:100%;min-height: 197px;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'">
-
+            <p class="hide-text" v-if="addy.length==0">暂无执照扫描件</p>
+            <div style="text-align: center;margin-top:10px;" v-for="(item,index) in addy">
+              <img style="width: 38px;height: 42px;" :src="item.img">
+              <p style="line-height: 20px;">
+                <span>{{item.name}}</span>
+                <Icon  type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
+              </p>
+            </div>
             <Upload
               multiple
               type="drag"
@@ -621,13 +622,7 @@
               :on-success="domainNameSuccess"
               :on-format-error="domainNameFormatError"
               :format="['jpg','jpeg','png','doc','docx','pdf']">
-              <div class="sponsor-text" v-if="hostUnitList.domaincertificateurl==''">
-                点击选择文件
-              </div>
-              <div class="item-content" v-else>
-                <p v-for="item in addy">{{item}}</p>
-                点击选择文件
-              </div>
+                <span class="item-content-text">点击选择文件</span>
             </Upload>
           </div>
           <div style="width:100%;min-height: 197px;" v-else>
@@ -648,18 +643,17 @@
       v-model="otherInfo"
       title="重新上传其他文件信息"
       :scrollable="true"
-      :closable="false"
-      :mask-closable="false"
     >
       <p>如前置审批材料，法人授权委托书等材料（点击下载<a :href="keep" style="color:#2A99F2;">法人委托书</a>）</p>
       <div class="updatePhoto">
         <div class="updates">
-          <div style="width:100%;height:309px;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'">
-            <div style="text-align: center;margin-top:10px;" v-for="(item,index) in otherData">
+          <div style="width:100%;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'">
+            <p class="hide-text" v-if="otherData.length==0">暂无其他文件信息</p>
+            <div style="text-align: center;margin-top:10px;min-height: 197px;" v-for="(item,index) in otherData">
               <img style="width: 38px;height: 42px;" :src="item.img">
               <p style="line-height: 20px;">
                 <span>{{item.name}}</span>
-                <Icon v-if="isCompile" type="ios-trash-outline" @click.native="deletePhoto('onther',index)"></Icon>
+                <Icon type="ios-trash-outline" @click.native="deletePhoto('onther',index)"></Icon>
               </p>
             </div>
             <Upload
@@ -669,12 +663,13 @@
               :with-credentials="true"
               action="file/upFile.do"
               :on-success="otherFileSuccess"
-              :on-format-error="otherFormatError">
+              :on-format-error="otherFormatError"
+              :before-upload="otherBeforeUpload">
               <span class="item-content-text">点击选择文件</span>
             </Upload>
           </div>
           <div style="width:100%;min-height: 197px;" v-else>
-            <p class="item-content" v-if="otherData.length==0">暂无执照扫描件</p>
+            <p class="item-content" v-if="otherData.length==0">暂无其他文件信息</p>
             <div style="text-align: center;margin-top:10px;" v-else v-for="item in otherData">
               <img style="width: 38px;height: 42px;" :src="item.img">
               <p style="line-height: 20px;">
@@ -691,8 +686,6 @@
       v-model="host"
       title="主办单位信息"
       :scrollable="true"
-      :closable="false"
-      :mask-closable="false"
     >
       <Form ref="hostUpdate" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="district">
@@ -750,8 +743,6 @@
       v-model="legal"
       title="主体单位负责人信息"
       :scrollable="true"
-      :closable="false"
-      :mask-closable="false"
     >
       <Form ref="legal" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="legalname">
@@ -791,8 +782,6 @@
       v-model="website"
       title="网站基本信息"
       :scrollable="true"
-      :closable="false"
-      :mask-closable="false"
     >
       <Form ref="website" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="webname">
@@ -826,8 +815,6 @@
       v-model="websitePerson"
       title="网站负责人基本信息"
       :scrollable="true"
-      :closable="false"
-      :mask-closable="false"
     >
       <Form ref="websitePerson" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="webresponsibilitylinkname">
@@ -867,8 +854,6 @@
       v-model="webIsp"
       title="ISP备案网站接入信息"
       :scrollable="true"
-      :closable="false"
-      :mask-closable="false"
     >
       <Form ref="webIsp" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="ispname">
@@ -1544,12 +1529,35 @@
         this.$Message.error('网站核验单只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
       //网站核验单上传成功
-      webRecordSuccess(response) {
-        if (response.data.status == 1) {
-          this.updateHostUnitList.webrecordauthenticityurl = response.result;
+      webRecordSuccess(response){
+        if(response.status == 1){
+          this.updateHostUnitList.webrecordauthenticityurl=response.result;
+          let other = response.result.slice('/');
+          let data = new Array();
+          let index = data.length -1;
+          data.push(other);
+          let otherUrl = other.substring(data[index].length -3);
+          if(otherUrl == 'pdf'){
+            otherUrl = imgPdf;
+          }else if(otherUrl == 'jpg'){
+            otherUrl = imgJpg;
+          }else if(otherUrl == 'doc'){
+            otherUrl = imgDoc;
+          }
+          let params = {
+            name:data[index],
+            img:otherUrl
+          }
+          this.webRecordData.push(params);
+          this.updateHostUnitList.webrecordauthenticityurl=response.result;
           this.$Message.success('上传成功');
-        } else {
+        }else {
           this.$Message.error('上传失败');
+        }
+      },
+      webRecordBeforeUpload(){
+        if(this.webRecordData.length >3){
+          this.$Message.error('网站核验单最多只能上传三个');
         }
       },
       //身份证正面上传格式错误
@@ -1558,7 +1566,7 @@
       },
       //身份证正面上传成功
       cardSuccess(response) {
-        if (response.data.status == 1) {
+        if (response.status == 1) {
           this.updateHostUnitList.webresponsibilityurlpositive = response.result;
           this.$Message.success('上传成功');
         } else {
@@ -1593,23 +1601,66 @@
       domainNameFormatError() {
         this.$Message.error('域名证书只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
-      domainNameSuccess(response) {
-        if (response.status == 1) {
-          this.updateHostUnitList.domaincertificateurl = response.result;
+      domainNameSuccess(response){
+        if(response.status ==1){
+          this.updateHostUnitList.domaincertificateurl=response.result;
+          let other = response.result.slice('/');
+          let data = new Array();
+          let index = data.length -1;
+          data.push(other);
+          let otherUrl = other.substring(data[index].length -3);
+          if(otherUrl == 'pdf'){
+            otherUrl = imgPdf;
+          }else if(otherUrl == 'jpg'){
+            otherUrl = imgJpg;
+          }else if(otherUrl == 'doc'){
+            otherUrl = imgDoc;
+          }
+          let params = {
+            name:data[index],
+            img:otherUrl
+          }
+          this.addy.push(params);
+          this.updateHostUnitList.domaincertificateurl=response.result;
           this.$Message.success('上传成功');
-        } else {
+        }else {
           this.$Message.error('上传失败');
         }
       },
+      domainNameBeforeUpload(){
+        if(this.addy.length >3){
+          this.$Message.error('只能上传三个域名证书信息');
+        }
+      },
       //其他文件上传格式错误
-      otherFileSuccess(response) {
-        if (response.status == 1) {
-
-          this.updateHostUnitList.otherdataurl = response.result;
+      otherFileSuccess(response){
+        if(response.status ==1){
+          this.updateHostUnitList.otherdataurl=response.result;
+          let other = response.result.slice('/');
+          let data = new Array();
+          let index = data.length -1;
+          data.push(other);
+          let otherUrl = other.substring(data[index].length -3);
+          if(otherUrl == 'pdf'){
+            otherUrl = imgPdf;
+          }else if(otherUrl == 'jpg'){
+            otherUrl = imgJpg;
+          }else if(otherUrl == 'doc'){
+            otherUrl = imgDoc;
+          }
+          let params = {
+            name:data[index],
+            img:otherUrl
+          }
+          this.otherData.push(params);
           this.$Message.success('上传成功');
-
-        } else {
+        }else{
           this.$Message.error('上传失败');
+        }
+      },
+      otherBeforeUpload(){
+        if(this.otherData.length >3){
+          this.$Message.error('只能上传三个其他文件信息');
         }
       },
       otherFormatError() {
