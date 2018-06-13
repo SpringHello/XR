@@ -236,7 +236,7 @@ export default {
           title: "当前状态",
           key: "status",
           render: (h, params) => {
-            return h("div", params.row.status);
+            return h("div", params.row.status== '待审核'?'初审中' : params.row.status== '管局审核中' ? '初审成功': params.row.status);
           }
         },
         {
@@ -244,7 +244,7 @@ export default {
           key: "operation",
           render: (h, params) => {
             const row = params.row;
-            const color =  row.operation == ""? "":"#2A99F2";
+            const color =  row.status == "初审成功"? "":"#2A99F2";
             return (
               "div",
               [
@@ -256,7 +256,7 @@ export default {
                     },
                     on: {
                       click: () => {
-                        if (row.status == "初审中") {
+                        if (row.status == "待审核") {
                           sessionStorage.setItem("newId", row.id);
                           sessionStorage.setItem(
                             "newRecordtype",
@@ -269,7 +269,7 @@ export default {
                       }
                     }
                   },
-                 row.operation == "" ? "暂无" : row.operation
+                  row.status == "待审核" ? "上传拍照邮/寄资料" : row.status == '初审拒绝' ||  row.status == '管局审核拒绝' ? "重新提交资料" : row.status == '初审成功' ? "暂无" : row.status == '管局审核成功'?'短信核验(特殊区域)' :'暂无'
                 )
               ]
             );
@@ -279,6 +279,7 @@ export default {
           title: "操作",
           key: "waitOperation",
           render: (h, params) => {
+            const hide = params.row.status =='待审核' || params.row.status == '初审拒绝' ? 'none' :'block'
             return (
               "div",
               [
@@ -295,14 +296,30 @@ export default {
                       }
                     }
                   },
-                  params.row.waitOperation
+                  '查看详情'
+                ),
+                h(
+                  "span",
+                  {
+                    style: {
+                      color: "#2A99F2",
+                      cursor: "pointer",
+                      display:hide
+                    },
+                    on: {
+                      click: () => {
+
+                      }
+                    }
+                  },
+                 '撤销备案'
                 )
               ]
             );
           }
         }
       ],
-      //已完成备案数据
+      //已完成备案表格
       completeRecordTypeList: [
         {
           title: "备案服务ID",
@@ -328,7 +345,7 @@ export default {
           title: "当前状态",
           key: "status",
           render: (h, params) => {
-            return h("div", params.row.status);
+            return h("div", params.row.status == "待审核" ? "确认中" :params.row.status =="取消接入确认" || params.row.status =="注销主体" ||params.row.status =="网站确认" ||params.row.status =="变更确认" ?"管局审核中": params.row.status);
           }
         },
         {
@@ -336,7 +353,7 @@ export default {
           key: "operation",
           render: (h, params) => {
             const row = params.row;
-            const color =  row.operation == ""? "":"#2A99F2";
+            const color =  row.status == "待审核" || row.status == "管局审核失败"? "#2A99F2":"";
             return (
               "div",
                 [
@@ -359,7 +376,7 @@ export default {
                         }
                       }
                     },
-                    row.operation == "" ? "暂无" : row.operation
+                    row.status == "待审核" ? "放弃" : row.status == "管局审核失败" ? "联系客服(变更备案错误项目)" :'暂无'
                   )
                 ]
             );
@@ -387,7 +404,7 @@ export default {
                       }
                     }
                   },
-                  params.row.waitOperation
+                 "查看详情"
                 )
               ]
             );

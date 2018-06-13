@@ -441,7 +441,9 @@
                 action="file/upFile.do"
                 :format="['jpg','jpeg','png','doc','docx','pdf']"
                 :on-success="webRecordSuccess"
-                :on-format-error="webRecordFormatError">
+                :on-format-error="webRecordFormatError"
+                :before-upload="webRecordBeforeUpload"
+                >
                 <div class="sponsor-text" v-if="hostUnitList.webrecordauthenticityurl==''">
                   暂无文件
                 </div>
@@ -573,16 +575,21 @@
                 <div style="width:50%;text-align: center;">
                   <p class="hide-text" v-if="hostUnitList.hostcompanyurl==''">暂无图片</p>
                   <img style="width:198px;height:144px;" :src="hostUnitList.hostcompanyurl" v-else>
+                  <div v-for="item in fileList">
+                    <Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>
+                  </div>
                  </div>
                 <Upload
                   multiple
+                  ref="uploadHost"
                   type="drag"
                   :show-upload-list="false"
                   :with-credentials="true"
                   action="file/upFile.do"
                   :format="['jpg','jpeg','png']"
                   :on-success="organizerSuccess"
-                  :on-format-error="organizerFormatError">
+                  :on-format-error="organizerFormatError"
+                  >
                   <div>
                     <div style="text-align: center">
                       <p class="hide-text">点击选择文件</p>
@@ -594,6 +601,7 @@
                 <p class="hide-text" v-if="hostUnitList.hostcompanyurl==''">暂无图片</p>
                 <img style="width:198px;height:144px;" :src="hostUnitList.hostcompanyurl" v-else>
               </div>
+
             </div>
           <div style="width:50%;height:203px;">
             <div style="text-align: center">
@@ -628,15 +636,20 @@
                   <span>{{item.name}}</span>
                   <Icon v-if="isCompile" type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
                 </p>
+                <div v-for="item in fileList">
+                  <Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>
+                </div>
               </div>
               <Upload
                 multiple
+                ref="uploadDomain"
                 type="drag"
                 :show-upload-list="false"
                 :with-credentials="true"
                 action="file/upFile.do"
                 :on-success="domainNameSuccess"
                 :on-format-error="domainNameFormatError"
+                :before-upload="domainNameBeforeUpload"
                 :format="['jpg','jpeg','png','doc','docx','pdf']">
                 <span class="item-content-text">点击选择文件</span>
               </Upload>
@@ -677,13 +690,14 @@
               action="file/upFile.do"
               :on-success="otherFileSuccess"
               :on-format-error="otherFormatError"
-              >
+              :before-upload="otherBeforeUpload"
+            >
               <span class="item-content-text">点击选择文件</span>
             </Upload>
           </div>
           <div style="width:100%;min-height: 197px;" v-else>
             <p class="hide-text" v-if="otherData.length==0">暂无执照扫描件</p>
-            <div style="text-align: center;margin-top:10px;" v-else  v-for="(item,index) in otherData">
+            <div style="text-align: center;margin-top:10px;" v-else  v-for="item in otherData">
               <img style="width: 38px;height: 42px;" :src="item.img">
               <p style="line-height: 20px;" >
                 <span>{{item.name}}</span>
@@ -1309,7 +1323,10 @@
             ]
         },
         //注销主体弹窗
-        domain:false
+        domain:false,
+        //获取上传文件
+        uploadHost:[],
+        uploadDomain:[]
       };
     },
     created() {
@@ -1432,7 +1449,6 @@
                 }
               }
 
-              //查询错误的备案信息然后显示出来重新输入
               //查询错误的备案信息然后显示出来重新输入
               if (typeof (this.hostUnitList.errorMessage) != 'undefined') {
                 this.isIconInfo = false;
@@ -1559,7 +1575,6 @@
                 h('p',{style:{color:'#333333',fontSize:'14px'}},'申请已提交'),
                 h('p',{style:{color:'#666666',fontSize:'14px'}},'新睿云将在1个工作日内将您的申请提交至通信管理局。')
               ])
-
             }
           })
       },
@@ -1675,11 +1690,34 @@
       },
       //网站核验单上传成功
       webRecordSuccess(response){
-        if(response.data.status == 1){
+        if(response.status == 1){
+          this.updateHostUnitList.webrecordauthenticityurl=response.result;
+          let other = response.result.slice('/');
+          let data = new Array();
+          let index = data.length -1;
+          data.push(other);
+          let otherUrl = other.substring(data[index].length -3);
+          if(otherUrl == 'pdf'){
+            otherUrl = imgPdf;
+          }else if(otherUrl == 'jpg'){
+            otherUrl = imgJpg;
+          }else if(otherUrl == 'doc'){
+            otherUrl = imgDoc;
+          }
+          let params = {
+            name:data[index],
+            img:otherUrl
+          }
+          this.webRecordData.push(params);
            this.updateHostUnitList.webrecordauthenticityurl=response.result;
           this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
+        }
+      },
+      webRecordBeforeUpload(){
+        if(this.webRecordData.length >3){
+          this.$Message.error('网站核验单最多只能上传三个');
         }
       },
       //身份证正面上传格式错误
@@ -1688,7 +1726,7 @@
       },
       //身份证正面上传成功
       cardSuccess(response){
-        if(response.data.status == 1){
+        if(response.status == 1){
           this.updateHostUnitList.webresponsibilityurlpositive=response.result;
           this.$Message.success('上传成功');
         }else {
@@ -1700,8 +1738,8 @@
         this.$Message.error('身份证背面只能上传jpg,jpeg,png类型的文件');
       },
       cardBackSuccess(response){
-        if(response.data.status == 1){
-            this.updateHostUnitList.webresponsibilityurlback=response.result;
+        if(response.status == 1){
+          domaincertificateurl.domaincertificateurl
             this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
@@ -1725,19 +1763,64 @@
       },
       domainNameSuccess(response){
         if(response.status ==1){
+          this.updateHostUnitList.domaincertificateurl=response.result;
+          let other = response.result.slice('/');
+          let data = new Array();
+          let index = data.length -1;
+          data.push(other);
+          let otherUrl = other.substring(data[index].length -3);
+          if(otherUrl == 'pdf'){
+            otherUrl = imgPdf;
+          }else if(otherUrl == 'jpg'){
+            otherUrl = imgJpg;
+          }else if(otherUrl == 'doc'){
+            otherUrl = imgDoc;
+          }
+          let params = {
+            name:data[index],
+            img:otherUrl
+          }
+          this.addy.push(params);
             this.updateHostUnitList.domaincertificateurl=response.result;
-              this.$Message.success('上传成功');
+          this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
+        }
+      },
+      domainNameBeforeUpload(){
+        if(this.addy.length >3){
+          this.$Message.error('只能上传三个域名证书信息');
         }
       },
       //其他文件上传格式错误
       otherFileSuccess(response){
         if(response.status ==1){
             this.updateHostUnitList.otherdataurl=response.result;
+            let other = response.result.slice('/');
+            let data = new Array();
+            let index = data.length -1;
+            data.push(other);
+            let otherUrl = other.substring(data[index].length -3);
+            if(otherUrl == 'pdf'){
+              otherUrl = imgPdf;
+            }else if(otherUrl == 'jpg'){
+              otherUrl = imgJpg;
+            }else if(otherUrl == 'doc'){
+              otherUrl = imgDoc;
+            }
+            let params = {
+              name:data[index],
+              img:otherUrl
+            }
+            this.otherData.push(params);
               this.$Message.success('上传成功');
         }else{
           this.$Message.error('上传失败');
+        }
+      },
+      otherBeforeUpload(){
+        if(this.otherData.length >3){
+          this.$Message.error('只能上传三个其他文件信息');
         }
       },
       otherFormatError(){
@@ -1746,6 +1829,8 @@
     },
     mounted() {
       this.details();
+      this.uploadHost = this.$ref.uploadHost.fileList;
+      this.uploadDomain = this.$ref.uploadDomain.fileList;
     },
   };
 </script>
