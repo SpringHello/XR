@@ -180,7 +180,7 @@
                 <Button type="primary" style="margin-left: 10px" v-show="isCompile" @click="website= true">修改网站</Button>
               </div>
             </div>
-            <div class="tables" v-show="isIconInfo">
+            <div class="tables" v-show="!isIconInfo">
               <ul class="nav_list">
                 <li class="nav_item">网站名称</li>
                 <li class="nav_item">网站域名</li>
@@ -295,7 +295,7 @@
               <div style="margin-left:5px;">
                 <span>ISP备案网站接入信息</span>
               </div>
-              <div style="width:87.5%;text-align: right;" v-show="isCompile">
+              <div style="width:86.5%;text-align: right;" v-show="isCompile">
                 <Button type="primary" @click="webIsp = true">修改ISP信息</Button>
               </div>
             </div>
@@ -408,7 +408,7 @@
             </div>
           </div>
         </div>
-        <div style="text-align:center;margin:20px 0 80px 0;" v-show="isCompile">
+        <div style="text-align:center;margin:20px 0 80px 0;"  v-if="hostUnitList.errorMessage != null || isCompile">
           <Button type="primary" @click="allUpdate">重新提交</Button>
         </div>
       </div>
@@ -575,7 +575,7 @@
                 <div style="width:50%;text-align: center;">
                   <p class="hide-text" v-if="hostUnitList.hostcompanyurl==''">暂无图片</p>
                   <img style="width:198px;height:144px;" :src="hostUnitList.hostcompanyurl" v-else>
-                  <div v-for="item in fileList">
+                  <div v-for="item in uploadHost">
                     <Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>
                   </div>
                  </div>
@@ -636,7 +636,7 @@
                   <span>{{item.name}}</span>
                   <Icon v-if="isCompile" type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
                 </p>
-                <div v-for="item in fileList">
+                <div v-for="item in uploadDomain">
                   <Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>
                 </div>
               </div>
@@ -880,19 +880,21 @@
       <Form ref="webIsp" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="ispname">
           <p style="margin:10px">ISP名称</p>
-          <Input type="text" :readonly="true" v-model="updateHostUnitList.ispname"></Input>
+          <Input type="text" v-model="updateHostUnitList.ispname"></Input>
         </FormItem>
         <FormItem prop="webip">
           <p style="margin:10px">网站IP地址</p>
-          <Input :readonly="true" type="text" v-model="updateHostUnitList.webip"></Input>
+          <Select v-model="webip" multiple>
+            <Option v-for="(item,index) in webipList" :value="item" :key="index">{{ item }}</Option>
+          </Select>
         </FormItem>
         <FormItem prop="webaccesstype">
           <p style="margin:10px">网站接入方式</p>
-          <Input :readonly="true" type="text" v-model="updateHostUnitList.webaccesstype"></Input>
+          <Input  type="text" v-model="updateHostUnitList.webaccesstype"></Input>
         </FormItem>
         <FormItem prop="webserveraddress">
           <p style="margin:10px">服务器放置地</p>
-          <Input :readonly="true" type="text" v-model="updateHostUnitList.webserveraddress"></Input>
+          <Input  type="text" v-model="updateHostUnitList.webserveraddress"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -1326,7 +1328,10 @@
         domain:false,
         //获取上传文件
         uploadHost:[],
-        uploadDomain:[]
+        uploadDomain:[],
+        //ISP网站ip
+        webip:[],
+        webipList:[]
       };
     },
     created() {
@@ -1357,7 +1362,9 @@
           .then(res => {
             if (res.data.status == 1) {
               this.hostUnitList = res.data.result[0];
-              this.updateHostUnitList = res.data.result[0];
+              //JSON对象深拷贝，只能用在可以转换为JSon对象的上面
+              this.updateHostUnitList = JSON.parse(JSON.stringify(res.data.result[0]));
+              this.webip.push(this.updateHostUnitList.webip.slice(','));
               let arr = new Array();
               arr = this.updateHostUnitList.maincompanyarea.split("-");
               this.province = arr[0];
@@ -1555,6 +1562,22 @@
             }
           });
       },
+      //获取公网ip
+      getPublicIP() {
+        let url = 'network/listPublicIp.do'
+        this.$http.get(url, {
+          params: {
+            status: 1
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            for(let i =0; i<response.data.result.length; i++){
+
+              this.webipList.push(response.data.result[i].publicip);
+            }
+          }
+        })
+      },
       //取消接入
       delMainWeb(status){
         this.domain = false;
@@ -1672,18 +1695,18 @@
       hostUpdate(name){
         this.$refs[name].validate((valid) => {
           if (valid) {
-            this.host = false;
-            this.legal = false;
-            this.website = false;
-            this.websitePerson = false;
-            this.webIsp = false;
+            name == 'hostUpdate' ? this.host = false :
+              name == 'legal' ? this.legal = false :
+                name == 'website' ? this.website = false :
+                  name == 'websitePerson' ? this.websitePerson = false :
+                    name == 'webIsp'? this.webIsp = false :'';
+            this.hostUnitList = this.updateHostUnitList;
+            this.hostUnitList.maincompanyarea = this.province +'-'+this.city +'-'+this.district;
+            this.hostUnitList.webip = this.webip.splice(' ');
           } else {
             return;
           }
         })
-
-
-
       },
       webRecordFormatError(){
         this.$Message.error('网站核验单只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
@@ -1694,8 +1717,8 @@
           this.updateHostUnitList.webrecordauthenticityurl=response.result;
           let other = response.result.slice('/');
           let data = new Array();
-          let index = data.length -1;
           data.push(other);
+          let index = data.length -1;
           let otherUrl = other.substring(data[index].length -3);
           if(otherUrl == 'pdf'){
             otherUrl = imgPdf;
@@ -1739,7 +1762,7 @@
       },
       cardBackSuccess(response){
         if(response.status == 1){
-          domaincertificateurl.domaincertificateurl
+          domaincertificateurl.domaincertificateurl=response.result;
             this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
@@ -1766,8 +1789,8 @@
           this.updateHostUnitList.domaincertificateurl=response.result;
           let other = response.result.slice('/');
           let data = new Array();
-          let index = data.length -1;
           data.push(other);
+          let index = data.length -1;
           let otherUrl = other.substring(data[index].length -3);
           if(otherUrl == 'pdf'){
             otherUrl = imgPdf;
@@ -1798,8 +1821,8 @@
             this.updateHostUnitList.otherdataurl=response.result;
             let other = response.result.slice('/');
             let data = new Array();
-            let index = data.length -1;
             data.push(other);
+            let index = data.length -1;
             let otherUrl = other.substring(data[index].length -3);
             if(otherUrl == 'pdf'){
               otherUrl = imgPdf;
@@ -1829,8 +1852,10 @@
     },
     mounted() {
       this.details();
-      this.uploadHost = this.$ref.uploadHost.fileList;
-      this.uploadDomain = this.$ref.uploadDomain.fileList;
+      this.getPublicIP();
+      console.log( this.$refs.uploadHost);
+      this.uploadHost = this.$refs.uploadHost.fileList;
+      // this.uploadDomain = this.$refs.uploadDomain.fileList;
     },
   };
 </script>

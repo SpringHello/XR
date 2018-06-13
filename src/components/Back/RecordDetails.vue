@@ -166,7 +166,7 @@
                 <span>网站基本信息</span>
               </div>
             </div>
-            <div class="tables" v-show="isIconInfo">
+            <div class="tables" v-show="!isIconInfo">
               <ul class="nav_list">
                 <li class="nav_item">网站名称</li>
                 <li class="nav_item">网站域名</li>
@@ -773,7 +773,7 @@
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button @click="host = false">取消</Button>
+        <Button @click="legal = false">取消</Button>
         <Button type="primary" @click="hostUpdate('legal')">确定</Button>
       </div>
     </Modal>
@@ -858,19 +858,21 @@
       <Form ref="webIsp" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="ispname">
           <p style="margin:10px">ISP名称</p>
-          <Input type="text" :readonly="true" v-model="updateHostUnitList.ispname"></Input>
+          <Input type="text"  v-model="updateHostUnitList.ispname"></Input>
         </FormItem>
         <FormItem prop="webip">
           <p style="margin:10px">网站IP地址</p>
-          <Input :readonly="true" type="text" v-model="updateHostUnitList.webip"></Input>
+          <Select v-model="webip" multiple>
+            <Option v-for="(item,index) in webipList" :value="item" :key="index">{{ item }}</Option>
+          </Select>
         </FormItem>
         <FormItem prop="webaccesstype">
           <p style="margin:10px">网站接入方式</p>
-          <Input :readonly="true" type="text" v-model="updateHostUnitList.webaccesstype"></Input>
+          <Input  type="text" v-model="updateHostUnitList.webaccesstype"></Input>
         </FormItem>
         <FormItem prop="webserveraddress">
           <p style="margin:10px">服务器放置地</p>
-          <Input :readonly="true" type="text" v-model="updateHostUnitList.webserveraddress"></Input>
+          <Input  type="text" v-model="updateHostUnitList.webserveraddress"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -1222,7 +1224,11 @@
           ],
           weburl: [
             {required: true, validator: validWebsiteHomepage, trigger: "blur"}
-          ]
+          ],
+          ispname:[
+            {required: true, message: "请输入ISP名称", trigger: "blur"}
+          ],
+
         },
         //获取域名证书文件
         addy: [],
@@ -1238,7 +1244,10 @@
         //网站核验单路径
         single: '',
         //网站核验单示例图路径
-        examples: ''
+        examples: '',
+        //ISP网站ip
+        webip:[],
+        webipList:[]
       };
     },
     created() {
@@ -1273,7 +1282,9 @@
           .then(res => {
             if (res.data.status == 1) {
               this.hostUnitList = res.data.result[0];
-              this.updateHostUnitList = res.data.result[0];
+                //JSON对象深拷贝，只能用在可以转换为JSon对象的上面
+                this.updateHostUnitList = JSON.parse(JSON.stringify(res.data.result[0]));
+                this.webip.push(this.updateHostUnitList.webip.slice(','));
               let arr = new Array();
               arr = this.updateHostUnitList.maincompanyarea.split("-");
               this.province = arr[0];
@@ -1525,6 +1536,22 @@
             }
           });
       },
+      //获取公网ip
+      getPublicIP() {
+        let url = 'network/listPublicIp.do'
+        this.$http.get(url, {
+          params: {
+            status: 1
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            for(let i =0; i<response.data.result.length; i++){
+
+              this.webipList.push(response.data.result[i].publicip);
+            }
+          }
+        })
+      },
       webRecordFormatError() {
         this.$Message.error('网站核验单只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
@@ -1534,8 +1561,8 @@
           this.updateHostUnitList.webrecordauthenticityurl=response.result;
           let other = response.result.slice('/');
           let data = new Array();
-          let index = data.length -1;
           data.push(other);
+          let index = data.length -1;
           let otherUrl = other.substring(data[index].length -3);
           if(otherUrl == 'pdf'){
             otherUrl = imgPdf;
@@ -1549,7 +1576,7 @@
             img:otherUrl
           }
           this.webRecordData.push(params);
-          this.updateHostUnitList.webrecordauthenticityurl=response.result;
+          this.updateHostUnitList.webrecordauthenticityurl = response.result;
           this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
@@ -1578,7 +1605,7 @@
         this.$Message.error('身份证背面只能上传jpg,jpeg,png类型的文件');
       },
       cardBackSuccess(response) {
-        if (response.data.status == 1) {
+        if (response.status == 1) {
           this.updateHostUnitList.webresponsibilityurlback = response.result;
           this.$Message.success('上传成功');
         } else {
@@ -1606,8 +1633,8 @@
           this.updateHostUnitList.domaincertificateurl=response.result;
           let other = response.result.slice('/');
           let data = new Array();
-          let index = data.length -1;
           data.push(other);
+          let index = data.length -1;
           let otherUrl = other.substring(data[index].length -3);
           if(otherUrl == 'pdf'){
             otherUrl = imgPdf;
@@ -1638,8 +1665,8 @@
           this.updateHostUnitList.otherdataurl=response.result;
           let other = response.result.slice('/');
           let data = new Array();
-          let index = data.length -1;
           data.push(other);
+          let index = data.length -1;
           let otherUrl = other.substring(data[index].length -3);
           if(otherUrl == 'pdf'){
             otherUrl = imgPdf;
@@ -1703,12 +1730,17 @@
       hostUpdate(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
-            this.host = false;
-            this.legal = false;
-            this.website = false;
-            this.websitePerson = false;
+            name == 'hostUpdate' ? this.host = false :
+              name == 'legal' ? this.legal = false :
+                name == 'website' ? this.website = false :
+                  name == 'websitePerson' ? this.websitePerson = false :
+                    name == 'webIsp'? this.webIsp = false :'';
+            this.hostUnitList = this.updateHostUnitList;
+            this.hostUnitList.maincompanyarea = this.province +'-'+this.city +'-'+this.district;
+            this.hostUnitList.webip = this.webip.splice(' ');
+            console.log(this.hostUnitList);
           } else {
-            return;
+           return;
           }
         })
       },
@@ -1773,6 +1805,7 @@
     },
     mounted() {
       this.details();
+      this.getPublicIP();
     },
   };
 </script>

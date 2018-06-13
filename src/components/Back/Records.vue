@@ -188,7 +188,7 @@
           },
         ],
         //已完成备案备案类型
-        completeTypeCityList:[
+        completeTypeCityList: [
           {
             value: "新增备案",
             label: "新增备案"
@@ -207,7 +207,7 @@
           }
         ],
         //已完成备案
-        completeState:'',
+        completeState: '',
         //当前状态Select值
         currentState: "no已完成备案",
         //备案类型表格表头
@@ -236,7 +236,7 @@
             title: "当前状态",
             key: "status",
             render: (h, params) => {
-              return h("div", params.row.status== '待审核'?'初审中' : params.row.status== '管局审核中' ? '初审成功': params.row.status);
+              return h("div", params.row.status == '待审核' ? '初审中' : params.row.status == '管局审核中' ? '初审成功' : params.row.status);
             }
           },
           {
@@ -244,7 +244,7 @@
             key: "operation",
             render: (h, params) => {
               const row = params.row;
-              const color =  row.status == "初审成功"? "":"#2A99F2";
+              const color = row.status == "初审成功" ? "" : "#2A99F2";
               return (
                 "div",
                   [
@@ -262,9 +262,9 @@
                                 "newRecordtype",
                                 row.recordType
                               );
-                              this.$router.push({path:"newRecordStepFour"});
+                              this.$router.push({path: "newRecordStepFour"});
                             } else if (row.status == "管局审核拒绝" || row.status == "初审拒绝") {
-                              this.jumpRecord(row.id,row.webcompany_Id);
+                              this.jumpRecord(row.id, row.webcompany_Id);
                             }
                           }
                         }
@@ -279,7 +279,7 @@
             title: "操作",
             key: "waitOperation",
             render: (h, params) => {
-              const hide = params.row.status =='待审核' || params.row.status == '初审拒绝' ? 'none' :'block'
+              const hide = params.row.status == '待审核' || params.row.status == '初审拒绝' ? 'none' : 'block'
               return (
                 "div",
                   [
@@ -292,7 +292,7 @@
                         },
                         on: {
                           click: () => {
-                            this.jumpRecord(params.row.id,params.row.webcompany_Id);
+                            this.jumpRecord(params.row.id, params.row.webcompany_Id);
                           }
                         }
                       },
@@ -304,7 +304,7 @@
                         style: {
                           color: "#2A99F2",
                           cursor: "pointer",
-                          display:hide
+                          display: hide
                         },
                         on: {
                           click: () => {
@@ -345,7 +345,7 @@
             title: "当前状态",
             key: "status",
             render: (h, params) => {
-              return h("div", params.row.status == "待审核" ? "确认中" :params.row.status =="取消接入确认" || params.row.status =="注销主体" ||params.row.status =="网站确认" ||params.row.status =="变更确认" ?"管局审核中": params.row.status);
+              return h("div", params.row.status == "待审核" ? "确认中" : params.row.status == "取消接入确认" || params.row.status == "注销主体" || params.row.status == "网站确认" || params.row.status == "变更确认" ? "管局审核中" : params.row.status);
             }
           },
           {
@@ -353,7 +353,7 @@
             key: "operation",
             render: (h, params) => {
               const row = params.row;
-              const color =  row.status == "待审核" || row.status == "管局审核失败"? "#2A99F2":"";
+              const color = row.status == "待审核" || row.status == "管局审核失败" ? "#2A99F2" : "";
               return (
                 "div",
                   [
@@ -371,12 +371,12 @@
                                 "newRecordtype",
                                 row.recordType
                               );
-                              this.$router.push({path:"CompletedFilingDetails"});
+                              this.$router.push({path: "CompletedFilingDetails"});
                             }
                           }
                         }
                       },
-                      row.status == "待审核" ? "放弃" : row.status == "管局审核失败" ? "联系客服(变更备案错误项目)" :'暂无'
+                      row.status == "待审核" ? "放弃" : row.status == "管局审核失败" ? "联系客服(变更备案错误项目)" : '暂无'
                     )
                   ]
               );
@@ -398,9 +398,9 @@
                         },
                         on: {
                           click: () => {
-                            sessionStorage.setItem("id",params.row.id);
+                            sessionStorage.setItem("id", params.row.id);
                             sessionStorage.setItem("webcompany_Id", params.row.webcompany_Id);
-                            this.$router.push({ path: "completedFilingDetails" });
+                            this.$router.push({path: "completedFilingDetails"});
                           }
                         }
                       },
@@ -413,7 +413,7 @@
         ],
         //已完成备案表格数据
         recordTypeData: []
-      };
+      }
     },
     created() {
       this.listMainWeb(0);
@@ -429,7 +429,7 @@
           this.$http
             .get("recode/listMainWeb.do", {
               params: {
-                overType:overType,
+                overType: overType,
                 recordtype: this.recordType,
                 status: this.currentState
               }
@@ -457,7 +457,7 @@
             .get("recode/listMainWeb.do", {
               params: {
                 recordtype: this.completeRecordType,
-                overType:overType,
+                overType: overType,
                 status: "已完成备案"
               }
             })
@@ -474,13 +474,35 @@
         }
       },
       //跳转详情页面
-      jumpRecord(id,webcompany_Id) {
-        sessionStorage.setItem("id",id);
+      jumpRecord(id, webcompany_Id) {
+        sessionStorage.setItem("id", id);
         sessionStorage.setItem("webcompany_Id", webcompany_Id);
-        this.$router.push({ path: "RecordDetails"});
+        this.$router.push({path: "RecordDetails"});
       }
     },
-  };
+
+    custom(id) {
+      this.$Modal.confirm({
+        title: '是否撤销备案',
+        content: '<p>撤销备案此条备案信息会被删除</p>',
+        okText: '确定',
+        cancelText: '取消',
+        onOk: {
+          click: () => {
+            axios.post('recode/delMainWeb.do', {
+              id: id
+            }).then(res => {
+              if (res.data.status == 1) {
+                this.$Message.success('撤销成功');
+              }
+            })
+          }
+        }
+      });
+
+    }
+  }
+
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
