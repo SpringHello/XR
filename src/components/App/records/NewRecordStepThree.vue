@@ -220,6 +220,7 @@
                     <Upload v-if="item.otherFile.length<3"
                             class="my-upload"
                             type="drag"
+                            :show-upload-list="false"
                             :format="['jpg','jpeg','png','doc','pdf','docx','gif']"
                             :on-format-error="handleFormatError"
                             :with-credentials="true"

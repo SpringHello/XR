@@ -446,6 +446,8 @@
       v-model="sponsorPhoto"
       title="重新上传身份证信息"
       :scrollable="true"
+      :closable="false"
+      :mask-closable="false"
     >
       <p>身份证人像面</p>
       <div class="updatePhoto">
@@ -528,7 +530,8 @@
       v-model="organizerPhoto"
       title="重新上传营业执照信息"
       :scrollable="true"
-
+      :closable="false"
+      :mask-closable="false"
     >
       <p>执照扫描件</p>
       <div class="updatePhoto">
@@ -581,6 +584,8 @@
       v-model="domainNameCertificate"
       title="重新上传域名证书信息"
       :scrollable="true"
+      :closable="false"
+      :mask-closable="false"
     >
       <p>执照扫描件</p>
       <div class="updatePhoto">
@@ -623,7 +628,8 @@
       v-model="otherInfo"
       title="重新上传其他文件信息"
       :scrollable="true"
-
+      :closable="false"
+      :mask-closable="false"
     >
       <p>如前置审批材料，法人授权委托书等材料（点击下载<a :href="keep" style="color:#2A99F2;">法人委托书</a>）</p>
       <div class="updatePhoto">
@@ -665,6 +671,8 @@
       v-model="host"
       title="主办单位信息"
       :scrollable="true"
+      :closable="false"
+      :mask-closable="false"
     >
       <Form ref="hostUpdate" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="district">
@@ -722,6 +730,8 @@
       v-model="legal"
       title="主体单位负责人信息"
       :scrollable="true"
+      :closable="false"
+      :mask-closable="false"
     >
       <Form ref="legal" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="legalname">
@@ -760,8 +770,9 @@
     <Modal
       v-model="website"
       title="网站基本信息"
-
       :scrollable="true"
+      :closable="false"
+      :mask-closable="false"
     >
       <Form ref="website" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="webname">
@@ -795,6 +806,8 @@
       v-model="websitePerson"
       title="网站负责人基本信息"
       :scrollable="true"
+      :closable="false"
+      :mask-closable="false"
     >
       <Form ref="websitePerson" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="webresponsibilitylinkname">
@@ -834,6 +847,8 @@
       v-model="webIsp"
       title="ISP备案网站接入信息"
       :scrollable="true"
+      :closable="false"
+      :mask-closable="false"
     >
       <Form ref="webIsp" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="ispname">
