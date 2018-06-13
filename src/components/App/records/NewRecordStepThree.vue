@@ -220,6 +220,7 @@
                     <Upload v-if="item.otherFile.length<3"
                             class="my-upload"
                             type="drag"
+                            :show-upload-list="false"
                             :format="['jpg','jpeg','png','doc','pdf','docx','gif']"
                             :on-format-error="handleFormatError"
                             :with-credentials="true"
@@ -390,7 +391,6 @@
         this.zoneId = zoneId
         this.mainUnitInformation = JSON.parse(mainUnitInformationStr)
         this.siteListStr = JSON.parse(siteListStr)
-       // console.log(sessionStorage.getItem('siteParamsStr').list_web_picture_message)
         if (this.mainUnitInformation.unitProperties == '个人') {
           this.isPersonage = true
         } else {
@@ -419,35 +419,110 @@
         //let arr = Array.from(new Set(principals))
         let arr = [...new Set(principals)]
         this.principalNumber = arr.length
-        // 初始化身份证上传框 （根据负责人判断）
-        for (let i = 0; i < this.principalNumber; i++) {
-          let IDCard = {
-            // 身份证正面
-            IDCardFront: '',
-            // 身份证反面
-            IDCardBack: '',
-            IDNumber: arr[i]
+        if (sessionStorage.getItem('siteParamsStr')) {
+          let pictures = JSON.parse(JSON.parse(sessionStorage.getItem('siteParamsStr')).list_web_picture_message)
+          // 初始化身份证上传信息（已上传过回显）
+          let IDCard = pictures.map(item => {
+            let param = {
+              IDCardFront: item.webResponsibilityUrlPositive,
+              IDCardBack: item.webResponsibilityUrlBack,
+              IDNumber: item.idNumber
+            }
+            return param
+          })
+          this.uploadForm.IDPhotoList = this.arrayUnique2(IDCard, 'IDNumber')
+          // 初始化其他资料
+          for (let i = 0, len = pictures.length; i < len; i++) {
+            let domain = []
+            let otherFile = []
+            let checkList = []
+            if (pictures[i].domainCertificateUrl.indexOf(',') !== -1) {
+              domain = pictures[i].domainCertificateUrl.split(',')
+            } else {
+              domain[0] = pictures[i].domainCertificateUrl
+            }
+            if (pictures[i].otherDataUrl.indexOf(',') !== -1) {
+              otherFile = pictures[i].otherDataUrl.split(',')
+            } else {
+              otherFile[0] = pictures[i].otherDataUrl
+            }
+            if (pictures[i].webRecordAuthenticityUrl.indexOf(',') !== -1) {
+              checkList = pictures[i].webRecordAuthenticityUrl.split(',')
+            } else {
+              checkList[0] = pictures[i].webRecordAuthenticityUrl
+            }
+            let domains = domain.map(item => {
+              let array = item.split('/')
+              let index = array.length - 1
+              let len = array[index].length
+              let suffix = array[index].substring(len - 3)
+              let param = {
+                name: array[index],
+                url: item,
+                suffix: suffix
+              }
+              return param
+            })
+            let otherFiles = otherFile.map(item => {
+              let array = item.split('/')
+              let index = array.length - 1
+              let len = array[index].length
+              let suffix = array[index].substring(len - 3)
+              let param = {
+                name: array[index],
+                url: item,
+                suffix: suffix
+              }
+              return param
+            })
+            let checkLists = checkList.map(item => {
+              let array = item.split('/')
+              let index = array.length - 1
+              let len = array[index].length
+              let suffix = array[index].substring(len - 3)
+              let param = {
+                name: array[index],
+                url: item,
+                suffix: suffix
+              }
+              return param
+            })
+            this.uploadForm.certifiedDomainNoCertificationDefault.push({certifiedDomainNoCertificationDefaultList: domains})
+            this.uploadForm.otherFileGroup.push({otherFile: otherFiles})
+            this.uploadForm.checkGroup.push({checkList: checkLists})
           }
-          this.uploadForm.IDPhotoList.push(IDCard)
+        } else {
+          // 初始化身份证上传框 （根据负责人判断）
+          for (let i = 0; i < this.principalNumber; i++) {
+            let IDCard = {
+              // 身份证正面
+              IDCardFront: '',
+              // 身份证反面
+              IDCardBack: '',
+              IDNumber: arr[i]
+            }
+            this.uploadForm.IDPhotoList.push(IDCard)
+          }
+          // 初始化其他资料上传框 （根据网站数量判断）
+          for (let i = 0, len = this.siteListStr.length; i < len; i++) {
+            // 初始化域名证书上传框
+            let certifiedDomainNoCertificationDefault = {
+              certifiedDomainNoCertificationDefaultList: []
+            }
+            this.uploadForm.certifiedDomainNoCertificationDefault.push(certifiedDomainNoCertificationDefault)
+            // 初始化其他资料上传框
+            let otherFile = {
+              otherFile: []
+            }
+            this.uploadForm.otherFileGroup.push(otherFile)
+            // 初始化核验单上传框
+            let checkList = {
+              checkList: []
+            }
+            this.uploadForm.checkGroup.push(checkList)
+          }
         }
-        // 初始化其他资料上传框 （根据网站数量判断）
-        for (let i = 0, len = this.siteListStr.length; i < len; i++) {
-          // 初始化域名证书上传框
-          let certifiedDomainNoCertificationDefault = {
-            certifiedDomainNoCertificationDefaultList: []
-          }
-          this.uploadForm.certifiedDomainNoCertificationDefault.push(certifiedDomainNoCertificationDefault)
-          // 初始化其他资料上传框
-          let otherFile = {
-            otherFile: []
-          }
-          this.uploadForm.otherFileGroup.push(otherFile)
-          // 初始化核验单上传框
-          let checkList = {
-            checkList: []
-          }
-          this.uploadForm.checkGroup.push(checkList)
-        }
+        sessionStorage.removeItem('siteParamsStr')
       },
       // 移除上传的域名证书
       removeSSL(index1, index2) {
@@ -531,7 +606,7 @@
           content: '请选择jpg、png、gif类型的文件进行上传'
         });
       },
-      handleMaxSize () {
+      handleMaxSize() {
         this.$Message.info({
           content: '请选择大小小于2M的文件进行上传'
         });
@@ -710,6 +785,13 @@
         } else {
           this.checkSrc = require('../../../assets/img/records/records-check2.jpg')
         }
+      },
+      arrayUnique2(arr, name) {
+        let hash = {};
+        return arr.reduce(function (item, next) {
+          hash[next[name]] ? '' : hash[next[name]] = true && item.push(next);
+          return item;
+        }, []);
       }
     },
     mounted() {
