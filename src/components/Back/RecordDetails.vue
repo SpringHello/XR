@@ -606,7 +606,14 @@
       <div class="updatePhoto">
         <div class="updates">
           <div style="width:100%;min-height: 197px;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'">
-
+            <p class="hide-text" v-if="addy.length==0">暂无执照扫描件</p>
+            <div style="text-align: center;margin-top:10px;" v-for="(item,index) in addy">
+              <img style="width: 38px;height: 42px;" :src="item.img">
+              <p style="line-height: 20px;">
+                <span>{{item.name}}</span>
+                <Icon v-if="isCompile" type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
+              </p>
+            </div>
             <Upload
               multiple
               type="drag"
@@ -616,13 +623,7 @@
               :on-success="domainNameSuccess"
               :on-format-error="domainNameFormatError"
               :format="['jpg','jpeg','png','doc','docx','pdf']">
-              <div class="sponsor-text" v-if="hostUnitList.domaincertificateurl==''">
-                点击选择文件
-              </div>
-              <div class="item-content" v-else>
-                <p v-for="item in addy">{{item}}</p>
-                点击选择文件
-              </div>
+                <span class="item-content-text">点击选择文件</span>
             </Upload>
           </div>
           <div style="width:100%;min-height: 197px;" v-else>
@@ -1530,7 +1531,7 @@
       },
       //网站核验单上传成功
       webRecordSuccess(response) {
-        if (response.data.status == 1) {
+        if (response.status == 1) {
           this.updateHostUnitList.webrecordauthenticityurl = response.result;
           this.$Message.success('上传成功');
         } else {
@@ -1543,7 +1544,7 @@
       },
       //身份证正面上传成功
       cardSuccess(response) {
-        if (response.data.status == 1) {
+        if (response.status == 1) {
           this.updateHostUnitList.webresponsibilityurlpositive = response.result;
           this.$Message.success('上传成功');
         } else {
