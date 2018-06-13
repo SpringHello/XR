@@ -175,7 +175,6 @@
     selectLogs(page){
         this.pageLoading = true;
       this.$http.post('operatelog/selectLogs.do',{
-
         pageSum:10,
         pageNum:page
       }).then(res =>{
@@ -189,6 +188,7 @@
             this.total = res.data.data.page.sumCount;
           }
         }else{
+          this.pageLoading = false;
           this.$Message.error(res.data.msg);
         }
       })
