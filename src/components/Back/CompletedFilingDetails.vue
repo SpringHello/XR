@@ -350,9 +350,17 @@
               <div class="tables">
                 <ul class="tab_list">
                   <li class="tab_item">主办单位负责人照片</li>
-                  <li class="tab_item" @click="sponsorPhoto = true">点击查看</li>
+                  <li class="tab_item" @click="sponsorPhoto = true">点击查看
+                    <div v-if="sponsorPhotoHide =='sponsorPhoto'" class="text_block"><span style="color:red">信息有误</span>
+                      <span style="color:#2a99f2;cursor:pointer;" @click="sponsorPhoto = true">重新输入</span>
+                    </div>
+                  </li>
                   <li class="tab_item">主办单位照片</li>
-                  <li class="tab_item" @click="organizerPhoto = true">点击查看</li>
+                  <li class="tab_item" @click="organizerPhoto = true">点击查看
+                    <div v-if="organizerPhotoHide =='organizerPhoto'" class="text_block"><span style="color:red">信息有误</span>
+                      <span style="color:#2a99f2;cursor:pointer;" @click="organizerPhoto = true">重新输入</span>
+                    </div>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -365,9 +373,17 @@
               <div class="tables">
                 <ul class="tab_list">
                   <li class="tab_item">域名证书</li>
-                  <li class="tab_item" @click="domainNameCertificate = true">点击查看</li>
+                  <li class="tab_item" @click="domainNameCertificate = true">点击查看
+                    <div v-if="domainNameCertificateHide =='domainNameCertificate'" class="text_block"><span style="color:red">信息有误</span>
+                      <span style="color:#2a99f2;cursor:pointer;" @click="domainNameCertificate = true">重新输入</span>
+                    </div>
+                  </li>
                   <li class="tab_item">网站核验单</li>
-                  <li class="tab_item" @click="checkList = true">点击查看</li>
+                  <li class="tab_item" @click="checkList = true">点击查看
+                    <div v-if="checkListHide =='checkList'" class="text_block"><span style="color:red">信息有误</span>
+                      <span style="color:#2a99f2;cursor:pointer;" @click="checkList = true">重新输入</span>
+                    </div>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -380,7 +396,11 @@
               <div class="tables">
                 <ul class="tab_list">
                   <li class="tab_item">其他资料</li>
-                  <li class="tab_item" @click="otherInfo = true">点击查看</li>
+                  <li class="tab_item" @click="otherInfo = true">点击查看
+                    <div v-if="otherInfoHide =='otherInfo'" class="text_block"><span style="color:red">信息有误</span>
+                      <span style="color:#2a99f2;cursor:pointer;" @click="otherInfo = true">重新输入</span>
+                    </div>
+                  </li>
                   <li class="tab_item"></li>
                   <li class="tab_item"></li>
                 </ul>
@@ -1073,6 +1093,11 @@
         webIpHide: null,
         webAccessTypeHide: null,
         webServerAddressHide: null,
+        domainNameCertificateHide:null,
+        checkListHide:null,
+        sponsorPhotoHide:null,
+        organizerPhotoHide:null,
+        otherInfoHide:null,
         //网站核验单大图
         visibleWeb: false,
         //营业执照大图
