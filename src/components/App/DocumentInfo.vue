@@ -57,6 +57,7 @@
       }
     },
     beforeRouteEnter(to, from, next){
+      console.log(to)
       axios.get('document/getFirstTitle.do').then(response => {
         next(vm => {
           vm.setData(response)
