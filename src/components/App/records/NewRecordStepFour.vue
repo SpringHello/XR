@@ -137,7 +137,7 @@
   import step from './step.vue'
   import oStep from "./ostep.vue";
   import records from './../Records'
-
+  import $ from 'jquery'
   export default {
     components: {
       step, records, oStep
@@ -271,6 +271,8 @@
           this.recordsType = response.data.result[0].recordtype
           this.isRecord = true
           this.recordInfo = response.data.result[0]
+          this.nextStep = true
+          $('html, body').animate({scrollTop: 800}, 300)
           switch (this.recordsType) {
             case '新增备案':
               this.recordsTypeDesc = '域名未备案，备案主体证件无备案号，需要备案。'
