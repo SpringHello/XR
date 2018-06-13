@@ -73,19 +73,18 @@
                 <div style="width:50%;">
                   <Upload
                     type="drag"
-                    :show-upload-list="false"
                     :with-credentials="true"
                     action="file/upFile.do"
-                    :format="['jpg','jpeg','png']"
+                    :format="['jpg','gif','png']"
                     :on-format-error="handleFormatJpg"
                     :max-size="2048"
+                    :on-exceeded-size="handleMaxSize"
                     :on-success="IDCardFront"
                     :before-upload="markIDCard(index)">
                     <div class="item-content-text" v-if="item.IDCardFront==''">
-                      暂无图片
+                      点击上传图片
                     </div>
-                    <img v-else :src="item.IDCardFront" style="height: 120px;width:164px;margin-bottom: 20px">
-                    <button>上传</button>
+                    <img v-else :src="item.IDCardFront" style="height: 120px;width:164px;">
                   </Upload>
                 </div>
                 <div class="item-img">
@@ -102,19 +101,18 @@
                 <div style="width:50%;">
                   <Upload
                     type="drag"
-                    :show-upload-list="false"
                     :with-credentials="true"
                     action="file/upFile.do"
-                    :format="['jpg','jpeg','png']"
+                    :format="['jpg','gif','png']"
                     :on-format-error="handleFormatJpg"
                     :max-size="2048"
+                    :on-exceeded-size="handleMaxSize"
                     :on-success="IDCardBack"
                     :before-upload="markIDCard(index)">
                     <div class="item-content-text" v-if="item.IDCardBack==''">
-                      暂无图片
+                      点击上传图片
                     </div>
-                    <img v-else :src="item.IDCardBack" style="height: 120px;width:164px;margin-bottom: 20px">
-                    <button>上传</button>
+                    <img v-else :src="item.IDCardBack" style="height: 120px;width:164px;">
                   </Upload>
                 </div>
                 <div class="item-img">
@@ -127,8 +125,8 @@
           </div>
         </div>
         <!--  <p @click="addIDPhoto" style="cursor: pointer;color: #377dff; font-size: 14px;" v-if="uploadForm.IDPhotoList.length<principalNumber">添加新负责人证件照</p>-->
-        <h2>请上传主体单位相关资料</h2>
-        <div class="upload">
+        <h2 v-show="!isPersonage">请上传主体单位相关资料</h2>
+        <div v-show="!isPersonage" class="upload">
           <div class="uploadTitle">
             <p>执照扫描件</p>
             <div class="item">
@@ -136,17 +134,17 @@
                 <div style="width:50%;">
                   <Upload
                     type="drag"
-                    :show-upload-list="false"
                     :with-credentials="true"
                     :format="['jpg','jpeg','png']"
                     :on-format-error="handleFormatJpg"
                     action="file/upFile.do"
+                    :max-size="2048"
+                    :on-exceeded-size="handleMaxSize"
                     :on-success="combine">
                     <div class="item-content-text" v-if="uploadForm.combine==''">
-                      暂无图片
+                      点击上传图片
                     </div>
-                    <img v-else :src="uploadForm.combine" style="height: 120px;width:164px;margin-bottom: 20px">
-                    <button>上传</button>
+                    <img v-else :src="uploadForm.combine" style="height: 120px;width:164px;">
                   </Upload>
                 </div>
                 <div class="item-img">
@@ -166,7 +164,7 @@
                 <div class="item-content" style="height: 100%">
                   <div style="width:100%;background: #FFF;padding-top: 12px">
                     <p v-for="(file,index) in item.certifiedDomainNoCertificationDefaultList" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
-                      <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')"
+                      <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')||(file.suffix == 'gif')"
                            :class="{one:item.certifiedDomainNoCertificationDefaultList.length==1,two:item.certifiedDomainNoCertificationDefaultList.length==2,three:item.certifiedDomainNoCertificationDefaultList.length==3}"
                            src="../../../assets/img/records/records-img.png"/>
                       <img v-if="file.suffix == 'doc'||file.suffix == 'ocx'"
@@ -181,10 +179,11 @@
                     <Upload v-if="item.certifiedDomainNoCertificationDefaultList.length<3"
                             class="my-upload"
                             type="drag"
-                            :format="['jpg','jpeg','png','doc','pdf','docx']"
+                            :format="['jpg','jpeg','png','doc','pdf','docx','gif']"
                             :on-format-error="handleFormatError"
-                            :show-upload-list="false"
                             :with-credentials="true"
+                            :max-size="2048"
+                            :on-exceeded-size="handleMaxSize"
                             action="file/upFile.do"
                             :before-upload="markCertifiedDomainNoCertification(upIndex)"
                             :on-success="certifiedDomainNoCertification">
@@ -206,7 +205,7 @@
                 <div class="item-content" style="height: 100%">
                   <div style="width:100%;background: #FFF;padding-top: 12px">
                     <p v-for="(file,index) in item.otherFile" style="text-align: center;font-size: 14px;margin-bottom:5px;line-height: 1.5;">
-                      <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')"
+                      <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')||(file.suffix == 'gif')"
                            :class="{one:item.otherFile.length==1,two:item.otherFile.length==2,three:item.otherFile.length==3}"
                            src="../../../assets/img/records/records-img.png"/>
                       <img v-if="file.suffix == 'doc'||file.suffix == 'ocx'"
@@ -221,11 +220,12 @@
                     <Upload v-if="item.otherFile.length<3"
                             class="my-upload"
                             type="drag"
-                            :format="['jpg','jpeg','png','doc','pdf','docx']"
+                            :format="['jpg','jpeg','png','doc','pdf','docx','gif']"
                             :on-format-error="handleFormatError"
-                            :show-upload-list="false"
                             :with-credentials="true"
                             action="file/upFile.do"
+                            :max-size="2048"
+                            :on-exceeded-size="handleMaxSize"
                             :before-upload="markOtherFile(upIndex)"
                             :on-success="otherFile">
                       <span style="font-size: 14px">点击选择文件</span>
@@ -245,7 +245,7 @@
               <div class="item-content" style="height: 100%">
                 <div style="width:100%;background: #FFF;padding-top: 12px">
                   <p v-for="(file,index) in item.checkList" style="margin-bottom: 5px;text-align: center;font-size: 14px;line-height: 1.5;">
-                    <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')"
+                    <img v-if="(file.suffix == 'jpg')||(file.suffix == 'png')||(file.suffix == 'gif')"
                          :class="{one:item.checkList.length==1,two:item.checkList.length==2}"
                          src="../../../assets/img/records/records-img.png"/>
                     <img v-if="file.suffix == 'doc'||file.suffix == 'ocx'"
@@ -260,10 +260,11 @@
                   <Upload v-if="item.checkList.length<1"
                           class="my-upload"
                           type="drag"
-                          :show-upload-list="false"
-                          :format="['jpg','jpeg','png','doc','pdf','docx']"
+                          :format="['jpg','jpeg','png','doc','pdf','docx','gif']"
                           :on-format-error="handleFormatError"
                           :with-credentials="true"
+                          :max-size="2048"
+                          :on-exceeded-size="handleMaxSize"
                           action="file/upFile.do"
                           :before-upload="markCheckList(upIndex)"
                           :on-success="checkList">
@@ -354,7 +355,8 @@
           checkListAddress: ''
         },
         imageViewShow: false,
-        checkSrc: ''
+        checkSrc: '',
+        isPersonage: false
       }
     },
     created() {
@@ -388,6 +390,12 @@
         this.zoneId = zoneId
         this.mainUnitInformation = JSON.parse(mainUnitInformationStr)
         this.siteListStr = JSON.parse(siteListStr)
+       // console.log(sessionStorage.getItem('siteParamsStr').list_web_picture_message)
+        if (this.mainUnitInformation.unitProperties == '个人') {
+          this.isPersonage = true
+        } else {
+          this.isPersonage = false
+        }
         switch (recordsType) {
           case '1':
             this.recordsType = '新增备案'
@@ -515,12 +523,17 @@
       // 校验用户上传的文件类型
       handleFormatError() {
         this.$Message.info({
-          content: '请选择jpg、png、jpeg、doc、docx、pdf类型的文件进行上传'
+          content: '请选择jpg、png、jpeg、doc、pdf类型的文件进行上传'
         });
       },
       handleFormatJpg() {
         this.$Message.info({
-          content: '请选择jpg、png、jpeg类型的文件进行上传'
+          content: '请选择jpg、png、gif类型的文件进行上传'
+        });
+      },
+      handleMaxSize () {
+        this.$Message.info({
+          content: '请选择大小小于2M的文件进行上传'
         });
       },
       // 提交资料
@@ -543,11 +556,13 @@
           })
           return
         }
-        if (this.uploadForm.combine === '') {
-          this.$Message.info({
-            content: '请上传公司资质照'
-          })
-          return
+        if (!this.isPersonage) {
+          if (this.uploadForm.combine === '') {
+            this.$Message.info({
+              content: '请上传公司资质照'
+            })
+            return
+          }
         }
         let flag2 = this.uploadForm.certifiedDomainNoCertificationDefault.some(item => {
           return item.certifiedDomainNoCertificationDefaultList.length === 0
@@ -558,7 +573,7 @@
           })
           return
         }
-        let flag3 = this.uploadForm.otherFileGroup.some(item => {
+        /*let flag3 = this.uploadForm.otherFileGroup.some(item => {
           return item.otherFile.length === 0
         })
         if (flag3) {
@@ -566,7 +581,7 @@
             content: '请上传其他资料（委托书等）'
           })
           return
-        }
+        }*/
         let flag4 = this.uploadForm.checkGroup.some(item => {
           return item.checkList.length === 0
         })

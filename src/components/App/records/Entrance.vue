@@ -534,6 +534,9 @@
             color: rgba(102, 102, 102, 1);
             line-height: 33px;
           }
+          &:hover{
+          border: 1px solid rgba(55, 125, 255, 1);
+          }
           &.select {
             background: rgba(55, 125, 255, 0.8);
             box-shadow: 0px 0px 24px -9px rgba(55, 125, 255, 0.71);

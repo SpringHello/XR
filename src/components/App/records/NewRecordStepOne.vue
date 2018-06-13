@@ -1,6 +1,6 @@
 <template>
   <div>
-  <!--  <records></records>-->
+    <!--  <records></records>-->
     <o-step :onStep="2" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
     <step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
     <div class="body-bottom">
@@ -122,7 +122,22 @@
             <FormItem label="法人证件号码" prop="legalPersonIDNumber">
               <Input v-model="mainUnitInformation.legalPersonIDNumber" placeholder="请输入法人证件号码" style="width: 500px"></Input>
             </FormItem>
-            <FormItem label="办公室电话" prop="officePhone">
+            <FormItem label="办公室电话" prop="officePhone" v-if="!isPersonage">
+              <span>+86</span><Input @on-focus="toolShow('officePhone')" @on-blur="toolHide()" v-model="mainUnitInformation.officePhone" placeholder="请输入办公室电话"
+                                     style="width: 468px;margin-left: 10px"></Input>
+              <transition name="fade">
+                <div class="tooltip-popper" style="top:-36px" v-if="isToolHide == 6">
+                  <div class="tooltip-center">
+                    <div class="tooltip-arrow"></div>
+                    <div class="tooltip">1. 请您确保填写的电话畅通并可直接联系到本人，否则可能导致您的备案失败。
+                      2. 该电话在备案成功后需保持畅通，以备核查。
+                      3. 电话格式：086-010-87654321-007（可以不带分机号）。
+                    </div>
+                  </div>
+                </div>
+              </transition>
+            </FormItem>
+            <FormItem label="办公室电话" v-else>
               <span>+86</span><Input @on-focus="toolShow('officePhone')" @on-blur="toolHide()" v-model="mainUnitInformation.officePhone" placeholder="请输入办公室电话"
                                      style="width: 468px;margin-left: 10px"></Input>
               <transition name="fade">
@@ -512,7 +527,8 @@
               tirgger: "blur"
             }
           ]
-        }
+        },
+        isPersonage: false
       };
     },
     created() {
@@ -579,6 +595,11 @@
           if (item.name == val) {
             this.mainUnitInformation.certificateTypeList = item.certificate;
             this.mainUnitInformation.certificateType = "";
+            if (this.mainUnitInformation.unitProperties == '个人') {
+              this.isPersonage = true
+            } else {
+              this.isPersonage = false
+            }
           }
         })
       },
@@ -627,7 +648,8 @@
       toolHide() {
         this.isToolHide = 0;
       }
-    }
+    },
+    computed: {}
   };
 </script>
 

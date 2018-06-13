@@ -17,7 +17,7 @@
         <div v-if="photograph === 1">
           <div class="description">
             <p>1.下载填写完成<a :href="checkListAddress">《网站备案信息真实性核验单》</a>，按要求填写完成并盖章。</p>
-            <p>2.携带核验单至指定位置，提交核验单并完成拍现场拍照。</p>
+            <p>2.携带核验单、身份证复印件、营业执照复印件、域名证书复印件、网站授权书等文件至指定位置，提交核验单与其他资料并完成现场拍照</p>
           </div>
           <div class="footer">
             <button>查看拍照地址</button>
@@ -27,12 +27,13 @@
         </div>
         <div v-if="photograph === 2 && nextStep === false">
           <div class="description">
-            <p>1.下载填写完成<a href="keepOnRecord/check.doc">《网站备案信息真实性核验单》</a>，按要求填写完成并盖章，将填写完成核验单邮寄至新睿云。</p>
-            <p>2.由新睿云为您邮寄免费幕布，收到后根据实例要求自行拍照上传。</p>
+            <p>1.有由新睿云为您邮寄幕布，收到后根据要求自行拍照上传</p>
+            <p>2.将核验单、身份证复印件、营业执照复印件、域名证书复印件、网站授权书等文件邮寄至新睿云，邮寄地址：北京市海淀区东升大厦AB座611、612  收件人：新睿云备案部  联系电话：010-82527988）</p>
           </div>
           <div class="footer">
+            <button @click="$router.go(-1)" style="margin-right: 10px">上一步</button>
             <button @click="nextStep = true">下一步</button>
-            <p>足不出户，需等待2-4天。</p>
+            <p>足不出户，需等待2-5天,偏远地区另行计算</p>
           </div>
         </div>
         <div v-if="photograph === 2 && nextStep === true">
@@ -59,7 +60,7 @@
             </Form>
           </div>
           <div class="footer" style="padding-top: 0">
-            <button @click="$router.go(-1)" style="margin-right: 10px">上一步</button>
+            <button @click="nextStep = false" style="margin-right: 10px">上一步</button>
             <button @click="showModal.logistics = true" v-if="curtainStatus">查看物流</button>
             <button v-else @click="applyCurtain">提交初审并申请幕布</button>
           </div>
@@ -83,6 +84,8 @@
                   :with-credentials="true"
                   action="file/upFile.do"
                   :format="['jpg','jpeg','png']"
+                  :max-size="2048"
+                  :on-exceeded-size="handleMaxSize"
                   :on-format-error="handleFormatJpg"
                   :on-success="photoImg">
                   <div class="item-content-text" v-if="upload.photo===''">
@@ -403,6 +406,11 @@
       handleFormatJpg() {
         this.$Message.info({
           content: '请选择jpg、png、jpeg类型的文件进行上传'
+        });
+      },
+      handleMaxSize () {
+        this.$Message.info({
+          content: '请选择大小小于2M的文件进行上传'
         });
       },
       getCheckList() {

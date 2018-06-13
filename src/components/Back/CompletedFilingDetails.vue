@@ -32,7 +32,6 @@
               <div style="margin-left:5px;width: 80px;">
                 <span>主办单位信息</span>
               </div>
-
               <div style="width:90%;text-align: right;">
                 <Button type="primary" style="margin-right: 10px;" @click="isCompile = true">变更备案</Button>
                 <Button @click="domain = true">注销主体</Button>
@@ -49,15 +48,25 @@
               <ul class="nav_list">
                 <li class="nav_item">
                   <p>{{hostUnitList.maincompanyarea}}</p>
+                  <div v-if="mainCompanyAreaHide == 'mainCompanyArea'" class="text_block"><span
+                    style="color:red">信息有误</span> <span style="color:#2a99f2;cursor:pointer;"
+                                                        @click="host = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.maincompanycertificatestype}}</p>
+                  <div v-if="mainCompanyCertificatesTypeHide == 'mainCompanyCertificatesType'" class="text_block"><span
+                    style="color:red">信息有误</span> <span style="color:#2a99f2;cursor:pointer;"
+                                                        @click="host = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.maincompanynature}}</p>
+                  <div v-if="mainCompanyNatureHide == 'mainCompanyNature'" class="text_block"><span style="color:red">信息有误</span>
+                    <span style="color:#2a99f2;cursor:pointer;" @click="host = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.maincompanynumber}}</p>
+                  <div v-if="mainCompanyNumberHide == 'mainCompanyNumber'" class="text_block"><span style="color:red">信息有误</span>
+                    <span style="color:#2a99f2;cursor:pointer;" @click="host = true">重新输入</span></div>
                 </li>
               </ul>
               <ul class="nav_list">
@@ -69,15 +78,26 @@
               <ul class="nav_list">
                 <li class="nav_item">
                   <p>{{hostUnitList.maincompanyname}}</p>
+                  <div v-if="mainCompanyNameHide == 'mainCompanyName'" class="text_block"><span
+                    style="color:red">信息有误</span> <span style="color:#2a99f2;cursor:pointer;"
+                                                        @click="host = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.maincompanycertificatesloaction}}</p>
+                  <div v-if="mainCompanyCertificatesLoactionHide == 'mainCompanyCertificatesLoaction'"
+                       class="text_block"><span style="color:red">信息有误</span> <span
+                    style="color:#2a99f2;cursor:pointer;" @click="host = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.maincompanycommunicatlocation}}</p>
+                  <div v-if="mainCompanyCommunicatLocationHide == 'mainCompanyCommunicatLocation'" class="text_block">
+                    <span style="color:red">信息有误</span> <span style="color:#2a99f2;cursor:pointer;"
+                                                              @click="host = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.investorname}}</p>
+                  <div v-if="investorNameHide == 'investorName'" class="text_block"><span style="color:red">信息有误</span>
+                    <span style="color:#2a99f2;cursor:pointer;" @click="host = true">重新输入</span></div>
                 </li>
               </ul>
             </div>
@@ -103,15 +123,25 @@
               <ul class="nav_list">
                 <li class="nav_item">
                   <p>{{hostUnitList.legalname}}</p>
+                  <div v-if="legalNameHide == 'legalName'" class="text_block"><span style="color:red">信息有误</span> <span
+                    style="color:#2a99f2;cursor:pointer;" @click="legal = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.legalcertificatestype}}</p>
+                  <div v-if="legalCertificatesTypeHide == 'legalCertificatesType'" class="text_block"><span
+                    style="color:red">信息有误</span> <span style="color:#2a99f2;cursor:pointer;"
+                                                        @click="legal = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.legalcertificatesnumber}}</p>
+                  <div v-if="legalCertificatesNumberHide == 'legalCertificatesNumber'" class="text_block"><span
+                    style="color:red">信息有误</span> <span style="color:#2a99f2;cursor:pointer;"
+                                                        @click="legal = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
                   <p>+86 {{hostUnitList.officenumber}}</p>
+                  <div v-if="officeNumberHide == 'officeNumber'" class="text_block"><span style="color:red">信息有误</span>
+                    <span style="color:#2a99f2;cursor:pointer;" @click="legal = true">重新输入</span></div>
                 </li>
               </ul>
               <ul class="nav_list">
@@ -123,9 +153,13 @@
               <ul class="nav_list">
                 <li class="nav_item">
                   <p>{{hostUnitList.companyphone}}</p>
+                  <div v-if="companyPhoneHide == 'companyPhone'" class="text_block"><span style="color:red">信息有误</span> <span
+                    style="color:#2a99f2;cursor:pointer;" @click="legal = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.companyemail}}</p>
+                  <div v-if="companyEmailHide == 'companyEmail'"  class="text_block"><span style="color:red">信息有误</span> <span
+                    style="color:#2a99f2;cursor:pointer;" @click="legal = true">重新输入</span></div>
                 </li>
                 <li class="nav_item"></li>
                 <li class="nav_item"></li>
@@ -155,12 +189,18 @@
               <ul class="nav_list">
                 <li class="nav_item">
                   <p>{{hostUnitList.webname}}</p>
+                  <div v-if="webNameHide == 'webName'" class="text_block"><span style="color:red">信息有误</span> <span
+                    style="color:#2a99f2;cursor:pointer;" @click="website = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.webdomian}}</p>
+                  <div v-if="webDomianHide == 'webDomian'" class="text_block"><span style="color:red">信息有误</span> <span
+                    style="color:#2a99f2;cursor:pointer;" @click="website = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.weburl}}</p>
+                  <div v-if="webUrlHide == 'webUrl'" class="text_block"><span style="color:red">信息有误</span> <span
+                    style="color:#2a99f2;cursor:pointer;" @click="website = true">重新输入</span></div>
                 </li>
               </ul>
               <ul class="nav_list">
@@ -171,9 +211,14 @@
               <ul class="nav_list">
                 <li class="nav_item">
                   <p>{{hostUnitList.webservercontent}}</p>
+                  <div v-if="webServerContentHide == 'webservercontent'" class="text_block"><span
+                    style="color:red">信息有误</span> <span style="color:#2a99f2;cursor:pointer;" @click="website = true">重新输入</span>
+                  </div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.webmessage}}</p>
+                  <div v-if="webMessageHide == 'webmessage'" class="text_block"><span style="color:red">信息有误</span>
+                    <span style="color:#2a99f2;cursor:pointer;" @click=" website = true">重新输入</span></div>
                 </li>
                 <li class="nav_item"></li>
               </ul>
@@ -196,17 +241,26 @@
                 <li class="nav_item">姓名</li>
                 <li class="nav_item">有效证件类型</li>
                 <li class="nav_item">有效证件号码</li>
-
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">
                   <p>{{hostUnitList.webresponsibilitylinkname}}</p>
+                  <div v-if="webResponsibilityLinkNameHide == 'webResponsibilityLinkName'" class="text_block"><span
+                    style="color:red">信息有误</span> <span style="color:#2a99f2;cursor:pointer;"
+                                                        @click=" websitePerson = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.webresponsibilitycertificatestype}}</p>
+                  <div v-if="webResponsibilityCertificatesTypeHide == 'webResponsibilityCertificatesType'"
+                       class="text_block"><span style="color:red">信息有误</span>
+                    <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span>
+                  </div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.webresponsibilitycertificatesnumber}}</p>
+                  <div v-if="webResponsibilityCertificatesNumberHide == 'webResponsibilityCertificatesNumber'"
+                       class="text_block"><span style="color:red">信息有误</span> <span
+                    style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div>
                 </li>
 
               </ul>
@@ -214,19 +268,23 @@
                 <li class="nav_item">办公室电话号码</li>
                 <li class="nav_item">移动电话号码</li>
                 <li class="nav_item">电子邮箱地址</li>
-
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">
                   <p>+86 {{hostUnitList.offacenumber}}</p>
+                  <div v-if="offaceNumberHide == 'offaceNumber'" class="text_block"><span style="color:red">信息有误</span>
+                    <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.phone}}</p>
+                  <div v-if="phoneHide == 'phone'" class="text_block"><span style="color:red">信息有误</span>
+                    <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.email}}</p>
+                  <div v-if="emailHide == 'email'"  class="text_block"><span style="color:red">信息有误</span>
+                    <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div>
                 </li>
-
               </ul>
             </div>
           </div>
@@ -237,7 +295,8 @@
               <div style="margin-left:5px;">
                 <span>ISP备案网站接入信息</span>
               </div>
-              <div style="width:87%;text-align: right;" v-show="isCompile">
+              <div style="width:87.5%;text-align: right;" v-show="isCompile">
+                <Button type="primary" @click="webIsp = true">修改ISP信息</Button>
               </div>
             </div>
             <div class="tables" v-show="isIconISP">
@@ -249,12 +308,19 @@
               <ul class="nav_list">
                 <li class="nav_item">
                   <p>{{hostUnitList.ispname}}</p>
+                  <div v-if="ISPNameHide == 'ISPName'" class="text_block"><span style="color:red">信息有误</span> <span
+                    style="color:#2a99f2;cursor:pointer;" @click="webIsp = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.webip}}</p>
+                  <div v-if="webIpHide == 'webIp'" class="text_block"><span style="color:red">信息有误</span> <span
+                    style="color:#2a99f2;cursor:pointer;" @click="webIsp = true">重新输入</span></div>
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.webaccesstype}}</p>
+                  <div v-if="webAccessTypeHide =='webAccessType'" class="text_block"><span style="color:red">信息有误</span>
+                    <span style="color:#2a99f2;cursor:pointer;" @click="webIsp = true">重新输入</span>
+                  </div>
                 </li>
               </ul>
               <ul class="nav_list">
@@ -265,6 +331,9 @@
               <ul class="nav_list">
                 <li class="nav_item">
                   <p>{{hostUnitList.webserveraddress}}</p>
+                  <div v-if="webServerAddressHide =='webServerAddress'" class="text_block"><span
+                    style="color:red">信息有误</span> <span style="color:#2a99f2;cursor:pointer;" @click="webIsp = true">重新输入</span>
+                  </div>
                 </li>
                 <li class="nav_item"></li>
                 <li class="nav_item"></li>
@@ -281,9 +350,17 @@
               <div class="tables">
                 <ul class="tab_list">
                   <li class="tab_item">主办单位负责人照片</li>
-                  <li class="tab_item" @click="sponsorPhoto = true">点击查看</li>
+                  <li class="tab_item" @click="sponsorPhoto = true">点击查看
+                    <div v-if="sponsorPhotoHide =='sponsorPhoto'" class="text_block"><span style="color:red">信息有误</span>
+                      <span style="color:#2a99f2;cursor:pointer;" @click="sponsorPhoto = true">重新输入</span>
+                    </div>
+                  </li>
                   <li class="tab_item">主办单位照片</li>
-                  <li class="tab_item" @click="organizerPhoto = true">点击查看</li>
+                  <li class="tab_item" @click="organizerPhoto = true">点击查看
+                    <div v-if="organizerPhotoHide =='organizerPhoto'" class="text_block"><span style="color:red">信息有误</span>
+                      <span style="color:#2a99f2;cursor:pointer;" @click="organizerPhoto = true">重新输入</span>
+                    </div>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -296,9 +373,17 @@
               <div class="tables">
                 <ul class="tab_list">
                   <li class="tab_item">域名证书</li>
-                  <li class="tab_item" @click="domainNameCertificate = true">点击查看</li>
+                  <li class="tab_item" @click="domainNameCertificate = true">点击查看
+                    <div v-if="domainNameCertificateHide =='domainNameCertificate'" class="text_block"><span style="color:red">信息有误</span>
+                      <span style="color:#2a99f2;cursor:pointer;" @click="domainNameCertificate = true">重新输入</span>
+                    </div>
+                  </li>
                   <li class="tab_item">网站核验单</li>
-                  <li class="tab_item" @click="checkList = true">点击查看</li>
+                  <li class="tab_item" @click="checkList = true">点击查看
+                    <div v-if="checkListHide =='checkList'" class="text_block"><span style="color:red">信息有误</span>
+                      <span style="color:#2a99f2;cursor:pointer;" @click="checkList = true">重新输入</span>
+                    </div>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -311,7 +396,11 @@
               <div class="tables">
                 <ul class="tab_list">
                   <li class="tab_item">其他资料</li>
-                  <li class="tab_item" @click="otherInfo = true">点击查看</li>
+                  <li class="tab_item" @click="otherInfo = true">点击查看
+                    <div v-if="otherInfoHide =='otherInfo'" class="text_block"><span style="color:red">信息有误</span>
+                      <span style="color:#2a99f2;cursor:pointer;" @click="otherInfo = true">重新输入</span>
+                    </div>
+                  </li>
                   <li class="tab_item"></li>
                   <li class="tab_item"></li>
                 </ul>
@@ -336,13 +425,39 @@
       <div class="updatePhoto">
         <div class="updates">
           <div style="width:50%;min-height: 197px;">
-            <p class="hide-text" v-if="webRecordData.length==0">暂无执照扫描件</p>
-            <div style="text-align: center;margin-top:10px;" v-else v-for="(item,index) in webRecordData">
-              <img style="width: 38px;height: 42px;" :src="item.img">
-              <p style="line-height: 20px;">
-                <span>{{item.name}}</span>
-                <Icon  type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
-              </p>
+            <div v-if="isCompile">
+              <div style="text-align: center;margin-top:10px;"   v-for="(item,index) in webRecordData">
+                  <img style="width: 38px;height: 42px;" :src="item.img">
+                  <p style="line-height: 20px;">
+                    <span>{{item.name}}</span>
+                    <Icon  type="ios-trash-outline" @click.native="deletePhoto('web',index)"></Icon>
+                  </p>
+              </div>
+              <Upload
+                multiple
+                type="drag"
+                :show-upload-list="false"
+                :with-credentials="true"
+                action="file/upFile.do"
+                :format="['jpg','jpeg','png','doc','docx','pdf']"
+                :on-success="webRecordSuccess"
+                :on-format-error="webRecordFormatError">
+                <div class="sponsor-text" v-if="hostUnitList.webrecordauthenticityurl==''">
+                  暂无文件
+                </div>
+               <span class="item-content-text">
+                   点击选择文件
+               </span>
+              </Upload>
+            </div>
+            <div v-else>
+              <p class="hide-text" v-if="webRecordData.length==0">暂无执照扫描件</p>
+              <div style="text-align: center;margin-top:10px;" v-else v-for="item in webRecordData">
+                <img style="width: 38px;height: 42px;" :src="item.img">
+                <p style="line-height: 20px;">
+                  <span>{{item.name}}</span>
+                </p>
+              </div>
             </div>
           </div>
           <div style="width:50%;">
@@ -372,7 +487,29 @@
       <p>身份证人像面</p>
       <div class="updatePhoto">
         <div class="updates">
-          <div style="width:50%;">
+          <div v-if="isCompile">
+            <div style="width:50%;">
+              <p class="sponsor-text" v-if="hostUnitList.webresponsibilityurlpositive==''">暂无图片</p>
+              <img style="width:198px;height:144px;" :src="hostUnitList.webresponsibilityurlpositive" v-else>
+            </div>
+            <Upload
+              multiple
+              type="drag"
+              :show-upload-list="false"
+              :with-credentials="true"
+              action="file/upFile.do"
+              :format="['jpg','jpeg','png']"
+              :on-success="cardSuccess"
+              :on-format-error="cardFormatError">
+              <div class="sponsor-text" v-if="hostUnitList.webresponsibilityurlpositive==''">
+                暂无图片
+              </div>
+              <span class="item-content-text">
+                   点击选择文件
+               </span>
+            </Upload>
+          </div>
+          <div style="width:50%;" v-else>
             <p class="sponsor-text" v-if="hostUnitList.webresponsibilityurlpositive==''">暂无图片</p>
             <img style="width:198px;height:144px;" :src="hostUnitList.webresponsibilityurlpositive" v-else>
           </div>
@@ -387,10 +524,32 @@
       <p style="margin-top:10px;">身份证国徽面</p>
       <div class="updatePhoto">
         <div class="updates">
-          <div style="width:50%;">
-            <p class="sponsor-text" v-if="hostUnitList.webresponsibilityurlback==''">暂无图片</p>
-            <img style="width:198px;height:144px;" :src="hostUnitList.webresponsibilityurlback" v-else>
+          <div v-if="isCompile">
+            <div style="width:50%;">
+              <p class="sponsor-text" v-if="hostUnitList.webresponsibilityurlback==''">暂无图片</p>
+              <img style="width:198px;height:144px;" :src="hostUnitList.webresponsibilityurlback" v-else>
+            </div>
+            <Upload
+              multiple
+              type="drag"
+              :show-upload-list="false"
+              :with-credentials="true"
+              action="file/upFile.do"
+              :format="['jpg','jpeg','png']"
+              :on-success="cardBackSuccess"
+              :on-format-error="cardBackFormatError">
+              <div class="sponsor-text" v-if="hostUnitList.webresponsibilityurlback==''">
+                暂无图片
+              </div>
+              <span class="item-content-text">
+                   点击选择文件
+               </span>
+            </Upload>
           </div>
+            <div style="width:50%;" v-else>
+              <p class="sponsor-text" v-if="hostUnitList.webresponsibilityurlback==''">暂无图片</p>
+              <img style="width:198px;height:144px;" :src="hostUnitList.webresponsibilityurlback" v-else>
+            </div>
           <div style="width:50%;height:203px;">
             <div style="text-align: center">
               <img style="height:144px;margin-bottom:20px" src="../../assets/img/records/records-img2.png"/>
@@ -409,10 +568,33 @@
       <p>执照扫描件</p>
       <div class="updatePhoto">
         <div class="updates">
-          <div style="width:50%;text-align: center;">
-            <p class="hide-text" v-if="hostUnitList.hostcompanyurl==''">暂无图片</p>
-            <img style="width:198px;height:144px;" :src="hostUnitList.hostcompanyurl" v-else>
-          </div>
+            <div style="width:50%;height:203px;">
+              <div v-if="isCompile">
+                <div style="width:50%;text-align: center;">
+                  <p class="hide-text" v-if="hostUnitList.hostcompanyurl==''">暂无图片</p>
+                  <img style="width:198px;height:144px;" :src="hostUnitList.hostcompanyurl" v-else>
+                 </div>
+                <Upload
+                  multiple
+                  type="drag"
+                  :show-upload-list="false"
+                  :with-credentials="true"
+                  action="file/upFile.do"
+                  :format="['jpg','jpeg','png']"
+                  :on-success="organizerSuccess"
+                  :on-format-error="organizerFormatError">
+                  <div>
+                    <div style="text-align: center">
+                      <p class="hide-text">点击选择文件</p>
+                    </div>
+                  </div>
+                </Upload>
+              </div>
+              <div style="width:50%;text-align: center;" v-else>
+                <p class="hide-text" v-if="hostUnitList.hostcompanyurl==''">暂无图片</p>
+                <img style="width:198px;height:144px;" :src="hostUnitList.hostcompanyurl" v-else>
+              </div>
+            </div>
           <div style="width:50%;height:203px;">
             <div style="text-align: center">
               <img @click="visible = true" style="height:144px;margin-bottom:20px;cursor: zoom-in;" src="../../assets/img/records/records-img3.png"/>
@@ -434,14 +616,34 @@
       v-model="domainNameCertificate"
       title="重新上传域名证书信息"
       :scrollable="true"
-
     >
       <p>执照扫描件</p>
       <div class="updatePhoto">
         <div class="updates">
-          <div style="width:100%;min-height: 197px;">
+            <div style="width:100%;min-height: 197px;" v-if="isCompile">
+              <p class="hide-text" v-if="addy.length==0">暂无执照扫描件</p>
+              <div style="text-align: center;margin-top:10px;" v-for="(item,index) in addy">
+                <img style="width: 38px;height: 42px;" :src="item.img">
+                <p style="line-height: 20px;">
+                  <span>{{item.name}}</span>
+                  <Icon v-if="isCompile" type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
+                </p>
+              </div>
+              <Upload
+                multiple
+                type="drag"
+                :show-upload-list="false"
+                :with-credentials="true"
+                action="file/upFile.do"
+                :on-success="domainNameSuccess"
+                :on-format-error="domainNameFormatError"
+                :format="['jpg','jpeg','png','doc','docx','pdf']">
+                <span class="item-content-text">点击选择文件</span>
+              </Upload>
+            </div>
+          <div style="width:100%;min-height: 197px;" v-else>
             <p class="hide-text" v-if="addy.length==0">暂无执照扫描件</p>
-            <div style="text-align: center;margin-top:10px;" v-for="(item,index) in addy">
+            <div style="text-align: center;margin-top:10px;" v-for="item in addy">
               <img style="width: 38px;height: 42px;" :src="item.img">
               <p style="line-height: 20px;">
                 <span>{{item.name}}</span>
@@ -464,7 +666,7 @@
               <img style="width: 38px;height: 42px;" :src="item.img">
               <p style="line-height: 20px;">
                 <span>{{item.name}}</span>
-                <Icon v-if="isCompile" type="ios-trash-outline" @click.native="deletePhoto('onhter',index)"></Icon>
+                <Icon v-if="isCompile" type="ios-trash-outline" @click.native="deletePhoto('onther',index)"></Icon>
               </p>
             </div>
             <Upload
@@ -474,12 +676,13 @@
               :with-credentials="true"
               action="file/upFile.do"
               :on-success="otherFileSuccess"
-              :on-format-error="otherFormatError">
-              <span style="font-size: 14px">点击选择文件</span>
+              :on-format-error="otherFormatError"
+              >
+              <span class="item-content-text">点击选择文件</span>
             </Upload>
           </div>
           <div style="width:100%;min-height: 197px;" v-else>
-            <p class="item-content" v-if="otherData.length==0">暂无执照扫描件</p>
+            <p class="hide-text" v-if="otherData.length==0">暂无执照扫描件</p>
             <div style="text-align: center;margin-top:10px;" v-else  v-for="(item,index) in otherData">
               <img style="width: 38px;height: 42px;" :src="item.img">
               <p style="line-height: 20px;" >
@@ -491,12 +694,8 @@
       </div>
     </Modal>
     <!-- 修改主办单位信息 -->
-    <Modal
-      v-model="host"
-      title="主办单位信息"
-      :scrollable="true"
-    >
-      <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+    <Modal  v-model="host"  title="主办单位信息" :scrollable="true"   >
+      <Form ref="hostUpdate" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="district">
           <p style="margin:10px">主办单位所属区域</p>
           <Select v-model="province" style="width:170px" @on-change="changeProvince">
@@ -542,15 +741,18 @@
           <Input type="text" v-model="updateHostUnitList.investorname"></Input>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button @click="host = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('hostUpdate')">确定</Button>
+      </div>
     </Modal>
     <!-- 修改主体单位负责人信息 -->
     <Modal
       v-model="legal"
       title="主体单位负责人信息"
-
       :scrollable="true"
     >
-      <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+      <Form ref="legalUpdate" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="legalname">
           <p style="margin:10px">法人姓名</p>
           <Input type="text" v-model="updateHostUnitList.legalname"></Input>
@@ -578,15 +780,18 @@
           <Input type="text" v-model="updateHostUnitList.companyemail"></Input>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button @click="legal = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('legalUpdate')">确定</Button>
+      </div>
     </Modal>
     <!-- 修改网站基本信息信息 -->
     <Modal
       v-model="website"
       title="网站基本信息"
-
       :scrollable="true"
     >
-      <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+      <Form ref="website" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="webname">
           <p style="margin:10px">网站名称</p>
           <Input type="text" v-model="updateHostUnitList.webname"></Input>
@@ -608,15 +813,18 @@
           <Input type="text" v-model="updateHostUnitList.webmessage"></Input>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button @click="website = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('website')">确定</Button>
+      </div>
     </Modal>
     <!-- 修改网站负责人基本信息 -->
     <Modal
       v-model="websitePerson"
       title="网站负责人基本信息"
-
       :scrollable="true"
     >
-      <Form ref="updateHostUnitList" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+      <Form ref="websitePerson" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="webresponsibilitylinkname">
           <p style="margin:10px">姓名</p>
           <Input type="text" v-model="updateHostUnitList.webresponsibilitylinkname"></Input>
@@ -644,10 +852,42 @@
           <Input type="text" v-model="updateHostUnitList.email"></Input>
         </FormItem>
       </Form>
-
+      <div slot="footer">
+        <Button @click="websitePerson = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('websitePerson')">确定</Button>
+      </div>
+    </Modal>
+    <!-- 修改ISP信息信息 -->
+    <Modal
+      v-model="webIsp"
+      title="ISP备案网站接入信息"
+      :scrollable="true"
+    >
+      <Form ref="webIsp" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+        <FormItem prop="ispname">
+          <p style="margin:10px">ISP名称</p>
+          <Input type="text" :readonly="true" v-model="updateHostUnitList.ispname"></Input>
+        </FormItem>
+        <FormItem prop="webip">
+          <p style="margin:10px">网站IP地址</p>
+          <Input :readonly="true" type="text" v-model="updateHostUnitList.webip"></Input>
+        </FormItem>
+        <FormItem prop="webaccesstype">
+          <p style="margin:10px">网站接入方式</p>
+          <Input :readonly="true" type="text" v-model="updateHostUnitList.webaccesstype"></Input>
+        </FormItem>
+        <FormItem prop="webserveraddress">
+          <p style="margin:10px">服务器放置地</p>
+          <Input :readonly="true" type="text" v-model="updateHostUnitList.webserveraddress"></Input>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button @click="webIsp = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('webIsp')">确定</Button>
+      </div>
     </Modal>
     <!--取消接入-->
-    <Modal v-model="cancel"  title="取消接入" :scrollable="true" @on-ok="delMainWeb('取消接入中')">
+    <Modal v-model="cancel"  title="取消接入" :scrollable="true" @on-ok="delMainWeb('确认中')">
       <div class="cancel">
         <p>确定要取消此备案接入信息？</p>
         <p>取消接入后，如果您的备案信息没有对应接入商，管局可能会注销您的备案号，导致您的域名不能访问。申请提交到通信管理局后，不可撤回。</p>
@@ -658,7 +898,7 @@
       </div>
     </Modal>
     <!--注销网站-->
-    <Modal v-model="cancellation"  title="注销网站" :scrollable="true" @on-ok="delMainWeb('注销网站中')">
+    <Modal v-model="cancellation"  title="注销网站" :scrollable="true" @on-ok="delMainWeb('确认中')">
       <div class="cancel">
         <p>确定要注销网站？</p>
         <p>取消接入后，如果您的备案信息没有对应接入商，管局可能会注销您的备案号，导致您的域名不能访问。申请提交到通信管理局后，不可撤回。</p>
@@ -669,7 +909,7 @@
       </div>
     </Modal>
     <!--注销主体-->
-    <Modal ref="footer" v-model="domain"  title="注销主体" :scrollable="true" >
+    <Modal  v-model="domain"  title="注销主体" :scrollable="true" >
       <div class="cancel">
         <p>验证备案号码</p>
         <!--<div style="display: flex;">-->
@@ -685,7 +925,7 @@
 
       </div>
       <div slot="footer" >
-        <Button type="primary" @click="delMainWeb('注销主体中')">下一步，提交审核</Button>
+        <Button type="primary" @click="delMainWeb('确认中')">下一步，提交审核</Button>
       </div>
     </Modal>
   </div>
@@ -823,6 +1063,41 @@
         }
       };
       return {
+        //是否显示重新输入
+        mainCompanyAreaHide: null,
+        mainCompanyCertificatesTypeHide: null,
+        mainCompanyNatureHide: null,
+        mainCompanyNumberHide: null,
+        mainCompanyNameHide: null,
+        mainCompanyCertificatesLoactionHide: null,
+        mainCompanyCommunicatLocationHide: null,
+        investorNameHide: null,
+        legalNameHide: null,
+        legalCertificatesTypeHide: null,
+        legalCertificatesNumberHide: null,
+        officeNumberHide: null,
+        phoneHide: null,
+        emailHide: null,
+        webNameHide: null,
+        webDomianHide: null,
+        webUrlHide: null,
+        webServerContentHide: null,
+        webMessageHide: null,
+        webResponsibilityLinkNameHide: null,
+        webResponsibilityCertificatesTypeHide: null,
+        webResponsibilityCertificatesNumberHide: null,
+        offaceNumberHide: null,
+        companyPhoneHide: null,
+        companyEmailHide: null,
+        ISPNameHide: null,
+        webIpHide: null,
+        webAccessTypeHide: null,
+        webServerAddressHide: null,
+        domainNameCertificateHide:null,
+        checkListHide:null,
+        sponsorPhotoHide:null,
+        organizerPhotoHide:null,
+        otherInfoHide:null,
         //网站核验单大图
         visibleWeb: false,
         //营业执照大图
@@ -894,7 +1169,9 @@
         district: "",
         districtList: [],
         //接收修改的数据
-        updateHostUnitList: {},
+        updateHostUnitList: {
+
+        },
         //主体单位性质
         unitProperties: "",
         unitPropertiesList: certificates,
@@ -1154,6 +1431,109 @@
                     break;
                 }
               }
+
+              //查询错误的备案信息然后显示出来重新输入
+              //查询错误的备案信息然后显示出来重新输入
+              if (typeof (this.hostUnitList.errorMessage) != 'undefined') {
+                this.isIconInfo = false;
+                this.isAllUpate = false;
+                this.hostUnitList.errorMessage.forEach(item => {
+                  switch (item) {
+                    case 'webresponsibilitylinkname':
+                      this.webResponsibilityLinkNameHide = 'webResponsibilityLinkName'
+                      break
+                    case 'phone':
+                      this.phoneHide = 'phone'
+                      break
+                    case 'offacenumber':
+                      this.offaceNumberHide = 'offaceNumber'
+                      break
+                    case 'webresponsibilitycertificatestype':
+                      this.webResponsibilityCertificatesTypeHide = 'webResponsibilityCertificatesType'
+                      break
+                    case 'maincompanyarea':
+                      this.mainCompanyAreaHide = 'mainCompanyArea'
+                      break
+                    case 'maincompanycertificatestype':
+                      this.mainCompanyCertificatesTypeHide = 'mainCompanyCertificatesType'
+                      break
+                    case 'maincompanynature':
+                      this.mainCompanyNatureHide = 'mainCompanyNature'
+                      break
+                    case 'maincompanynumber':
+                      this.mainCompanyNumberHide = 'mainCompanyNumber'
+                      break
+                    case 'maincompanyname':
+                      this.mainCompanyNameHide = 'mainCompanyName'
+                      break
+                    case 'maincompanycertificatesloaction':
+                      this.mainCompanyCertificatesLoactionHide = 'mainCompanyCertificatesLoaction'
+                      break
+                    case 'investorname':
+                      this.investorNameHide = 'investorName'
+                      break
+                    case 'legalname':
+                      this.legalNameHide = 'legalName'
+                      break
+                    case 'legalcertificatestype':
+                      this.legalCertificatesTypeHide = 'legalCertificatesType'
+                      break
+                    case 'legalcertificatesnumber':
+                      this.legalCertificatesNumberHide = 'legalCertificatesNumber'
+                      break
+                    case 'officenumber':
+                      this.officeNumberHide = 'officeNumber'
+                      break
+                    case 'phone':
+                      this.phoneHide = 'phone'
+                      break
+                    case 'email':
+                      this.emailHide = 'email'
+                      break
+                    case 'webname':
+                      this.webNameHide = 'webName'
+                      break
+                    case 'webdomian':
+                      this.webDomianHide = 'webDomian'
+                      break
+                    case 'weburl':
+                      this.webUrlHide = 'webUrl'
+                      break
+                    case 'webservercontent':
+                      this.webServerContentHide = 'webServerContent'
+                      break
+                    case 'webmessage':
+                      this.webMessageHide = 'webMessage'
+                      break
+                    case 'webresponsibilitycertificatesnumber':
+                      this.webResponsibilityCertificatesNumberHide = 'webResponsibilityCertificatesNumber'
+                      break
+                    case 'companyemail':
+                      this.companyEmailHide = 'companyEmail'
+                      break
+                    case 'companyphone':
+                      this.companyPhoneHide = 'companyPhone'
+                      break
+                    case 'ispname':
+                      this.ISPNameHide = 'ISPName'
+                      break
+                    case 'webip':
+                      this.webIpHide = 'webIp'
+                      break
+                    case 'webaccesstype':
+                      this.webAccessTypeHide = 'webAccessType'
+                      break
+                    case 'webserveraddress':
+                      this.webServerAddressHide = 'webServerAddress'
+                      break
+                    case 'maincompanycommunicatlocation':
+                      this.mainCompanyCommunicatLocationHide = 'mainCompanyCommunicatLocation'
+                      break
+                  }
+                })
+              } else{
+                this.isAllUpate = true;
+              }
             } else {
               console.log("出错了");
             }
@@ -1207,48 +1587,53 @@
         });
       },
       allUpdate(){
+        this.updateHostUnitList.id = this.id;
         this.$http
-          .get("recode/updateMainWeb.do", {
-            params: {
-              id: this.id,
-              ISPName: this.updateHostUnitList.ispname,
-              webIp: this.updateHostUnitList.webip,
-              webAccessType: this.updateHostUnitList.webaccesstype,
-              webServerAddress: this.updateHostUnitList.webserveraddress,
-              webResponsibilitylinkName: this.updateHostUnitList
-                .webresponsibilitylinkname,
-              webResponsibilityCertificatesType: this.updateHostUnitList
-                .webresponsibilitycertificatestype,
-              webResponsibilityCertificatesNumber: this.updateHostUnitList
-                .webresponsibilitycertificatesnumber,
-              offaceNumber: this.updateHostUnitList.offacenumber,
-              phone: this.updateHostUnitList.phone,
-              email: this.updateHostUnitList.email,
-              webName: this.updateHostUnitList.webname,
-              webDomian: this.updateHostUnitList.webdomian,
-              webUrl: this.updateHostUnitList.weburl,
-              webServerContent: this.updateHostUnitList.webservercontent,
-              webMessage: this.updateHostUnitList.webmessage,
-              legalName: this.updateHostUnitList.legalname,
-              companyPhone: this.updateHostUnitList.companyphone,
-              companyEmail: this.updateHostUnitList.companyemail,
-              officeNumber: this.updateHostUnitList.officenumber,
-              legalCertificatesType: this.updateHostUnitList
-                .legalcertificatestype,
-              legalCertificatesNumber: this.updateHostUnitList
-                .legalcertificatesnumber,
-              mainCompanyCertificatesType: this.updateHostUnitList
-                .maincompanycertificatestype,
-              mainCompanyNature: this.updateHostUnitList.maincompanynature,
-              mainCompanyName: this.updateHostUnitList.maincompanyname,
-              mainCompanyNumber: this.updateHostUnitList.maincompanynumber,
-              mainCompanyCertificatesLoaction: this.updateHostUnitList
-                .maincompanycertificatesloaction,
-              mainCompanyCommunicatLocation: this.updateHostUnitList
-                .maincompanycommunicatlocation,
-              InvestorName: this.updateHostUnitList.investorname
-            }
-          })
+          .post("recode/updateMainWeb.do",
+            this.updateHostUnitList
+            // params: {
+            //   id: this.id,
+            //   ISPName: this.updateHostUnitList.ispname,
+            //   webIp: this.updateHostUnitList.webip,
+            //   webAccessType: this.updateHostUnitList.webaccesstype,
+            //   webServerAddress: this.updateHostUnitList.webserveraddress,
+            //   webResponsibilitylinkName: this.updateHostUnitList
+            //     .webresponsibilitylinkname,
+            //   webResponsibilityCertificatesType: this.updateHostUnitList
+            //     .webresponsibilitycertificatestype,
+            //   webResponsibilityCertificatesNumber: this.updateHostUnitList
+            //     .webresponsibilitycertificatesnumber,
+            //   offaceNumber: this.updateHostUnitList.offacenumber,
+            //   phone: this.updateHostUnitList.phone,
+            //   email: this.updateHostUnitList.email,
+            //   webName: this.updateHostUnitList.webname,
+            //   webDomian: this.updateHostUnitList.webdomian,
+            //   webUrl: this.updateHostUnitList.weburl,
+            //   webServerContent: this.updateHostUnitList.webservercontent,
+            //   webMessage: this.updateHostUnitList.webmessage,
+            //   legalName: this.updateHostUnitList.legalname,
+            //   companyPhone: this.updateHostUnitList.companyphone,
+            //   companyEmail: this.updateHostUnitList.companyemail,
+            //   officeNumber: this.updateHostUnitList.officenumber,
+            //   legalCertificatesType: this.updateHostUnitList
+            //     .legalcertificatestype,
+            //   legalCertificatesNumber: this.updateHostUnitList
+            //     .legalcertificatesnumber,
+            //   mainCompanyCertificatesType: this.updateHostUnitList
+            //     .maincompanycertificatestype,
+            //   mainCompanyNature: this.updateHostUnitList.maincompanynature,
+            //   mainCompanyName: this.updateHostUnitList.maincompanyname,
+            //   mainCompanyNumber: this.updateHostUnitList.maincompanynumber,
+            //   mainCompanyCertificatesLoaction: this.updateHostUnitList
+            //     .maincompanycertificatesloaction,
+            //   mainCompanyCommunicatLocation: this.updateHostUnitList
+            //     .maincompanycommunicatlocation,
+            //   InvestorName: this.updateHostUnitList.investorname,
+            //   webRecordauthenticityurl:this.updateHostUnitList.webrecordauthenticityurl,
+            //   webresponsibilityurlpositive:this.updateHostUnitList.webresponsibilityurlpositive,
+            //   webresponsibilityurlback:this.updateHostUnitList.webresponsibilityurlback
+            // }
+          )
           .then(res => {
             if (res.data.status == 1) {
               this.$Message.success("修改成功");
@@ -1259,6 +1644,7 @@
       },
       //删除上传文件
       deletePhoto(val,index){
+        console.log(val == 'aunthen')
         if(val == 'aunthen'){
           this.addy.splice(index,1);
         }else if(val == 'web'){
@@ -1266,6 +1652,96 @@
         }else if(val == 'onther'){
           this.otherData.splice(index,1);
         }
+      },
+      //主体表单修改验证
+      hostUpdate(name){
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.host = false;
+            this.legal = false;
+            this.website = false;
+            this.websitePerson = false;
+            this.webIsp = false;
+          } else {
+            return;
+          }
+        })
+
+
+
+      },
+      webRecordFormatError(){
+        this.$Message.error('网站核验单只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
+      },
+      //网站核验单上传成功
+      webRecordSuccess(response){
+        if(response.data.status == 1){
+           this.updateHostUnitList.webrecordauthenticityurl=response.result;
+          this.$Message.success('上传成功');
+        }else {
+          this.$Message.error('上传失败');
+        }
+      },
+      //身份证正面上传格式错误
+      cardFormatError(){
+        this.$Message.error('身份证正面只能上传jpg,jpeg,png类型的文件');
+      },
+      //身份证正面上传成功
+      cardSuccess(response){
+        if(response.data.status == 1){
+          this.updateHostUnitList.webresponsibilityurlpositive=response.result;
+          this.$Message.success('上传成功');
+        }else {
+          this.$Message.error('上传失败');
+        }
+      },
+      //身份证背面上传格式错误
+      cardBackFormatError(){
+        this.$Message.error('身份证背面只能上传jpg,jpeg,png类型的文件');
+      },
+      cardBackSuccess(response){
+        if(response.data.status == 1){
+            this.updateHostUnitList.webresponsibilityurlback=response.result;
+            this.$Message.success('上传成功');
+        }else {
+          this.$Message.error('上传失败');
+        }
+      },
+      //营业执照上传格式错误
+      organizerFormatError(){
+        this.$Message.error('营业执照只能上传jpg,jpeg,png类型的文件');
+      },
+      organizerSuccess(response){
+        if(response.status == 1){
+            this.updateHostUnitList.hostcompanyurl=response.result;
+            this.$Message.success('上传成功');
+        }else{
+          this.$Message.error('上传失败');
+        }
+      },
+      //上传域名证书格式错误
+      domainNameFormatError(){
+        this.$Message.error('域名证书只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
+      },
+      domainNameSuccess(response){
+        if(response.status ==1){
+            this.updateHostUnitList.domaincertificateurl=response.result;
+              this.$Message.success('上传成功');
+        }else {
+          this.$Message.error('上传失败');
+        }
+      },
+      //其他文件上传格式错误
+      otherFileSuccess(response){
+        if(response.status ==1){
+            this.updateHostUnitList.otherdataurl=response.result;
+              this.$Message.success('上传成功');
+        }else{
+          this.$Message.error('上传失败');
+        }
+      },
+      otherFormatError(){
+        this.$Message.error('其他资料只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
     },
     mounted() {
@@ -1301,14 +1777,9 @@
         text-align: center;
       }
       .item-content-text {
-        width: 186px;
-        height: 222px;
-        padding: 50px 0px;
-        margin-bottom: 20px;
-        border: 1px solid #ffffff;
-        background-color: #ffffff;
-        color: #999;
-        line-height: 156px;
+        font-size: 14px;
+        line-height: 20px;
+        color:#999;
       }
       button {
         outline: none;
