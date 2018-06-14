@@ -191,7 +191,7 @@ export default {
     bucketClick(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          let obj = {name:'创建中',hide:1,createtime:'————',operation:'————',accessrights:'4'};
+          let obj = {name:'创建中',hide:1,createtime:'————',operation:'————',accessrights:'————'};
           this.spaceData.push(obj);
           this.$http
             .post("bucket/createBucket.do", {

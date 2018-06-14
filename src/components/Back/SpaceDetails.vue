@@ -63,6 +63,7 @@
             </div>
 
             <ul style="margin: 0 0 9px 20px;">
+              <li class="fileObject" style="margin-right: 10px;" v-if="this.fileObject.length !=0" @click="backPage"> 返回</li>
               <li class="fileObject" @click="selectFileSrc(item.id,index)" v-for="(item,index) in fileObject" :key="index">
                 {{item.name+'/'}}
               </li>
@@ -240,7 +241,7 @@
         <FormItem prop="grantValue">
           <div style="margin-top:20px;">
             <span>用户授权</span>
-            <RadioGroup v-model="jurisdValidate.users" @on-change="usersClick">
+            <RadioGroup v-model="jurisdValidate.users" @on-change="usersClick()">
               <Radio label='0'>全部用户</Radio>
               <Radio label='1'>自定义用户</Radio>
             </RadioGroup>
@@ -568,7 +569,7 @@
             title: "大小",
             render: (h, params) => {
               return h('div', [
-                h('span', {}, params.row.filesize / 1024 > 1 ? ((params.row.filesize / 1024).toFixed(2) + "MB") : (params.row.filesize + "KB"))//换算文件大小单位
+                h('span', {},  params.row.filesize > 1000 || params.row.filesize / 1024 > 1  ? ((params.row.filesize / 1024).toFixed(2) + "MB") : (params.row.filesize + "KB"))//换算文件大小单位
               ])
             }
           },
@@ -693,7 +694,9 @@
                 on: {
                   click: () => {
                     this.updateDiction = true;
-                    obj.row.userauthorization == '*' ? (this.updateJurisd.updateUsers = '0') : (this.updateJurisd.updateUsers = '1');
+                    obj.row.userauthorization == '*' ? this.updateJurisd.updateUsers = '0' : this.updateJurisd.updateUsers = '1';
+                    this.updateJurisd.updateGrantValue = obj.row.userauthorization;
+                    this.inputValue = obj.row.userauthorization;
                     this.updateJurisd.updateReferer = obj.row.refererip == '1' ? true : obj.row.refererip == '0' ? false : '';
                     if(obj.row.refereip == '1'){
                       this.whiteList = true
@@ -705,15 +708,11 @@
                     let str = '';
                     ['putobject', 'getobject', 'deleteobject', 'listbucket', 'deletebucket'].forEach(name => {
                       if (obj.row[name] == 1) {
-                        str += name
+                        this.updateJurisd.updateChannel.push(name);
                       }
                     })
-                    this.updateJurisd.updateChannel.push(str);
-                    console.log(str);
-                    this.updateJurisd.updateGrantValue = obj.row.userauthorization;
                     this.updateJurisd.updateWhiteListValue = obj.row.refererip;
                     this.code = obj.row.code;
-
                     this.usersClick();
                   }
                 }
@@ -828,7 +827,8 @@
         fileObject: [],
         int:0,
         //修改权限白名单是否禁用
-        whiteListUpdate:false
+        whiteListUpdate:false,
+        inputValue:''
       }
     },
     components:{
@@ -895,7 +895,6 @@
             if (res.data.status == "1") {
               this.fileData = res.data.data.data;
               if (typeof(object) != "undefined") {
-                this.fileObject.push(object);
                 this.tabLoading = false;
               } else {
                 this.tabLoading = false;
@@ -918,7 +917,8 @@
           .then(res => {
             if (res.data.status == "1") {
               this.$Message.success("新建成功");
-              this.filesList();
+              let id = res.data.data.dirList[0].dirId;
+              this.filesList(id);
             } else {
               this.$Message.error(res.data.msg);
             }
@@ -949,7 +949,7 @@
           this.updateJurisd.updateGrantValue = '*';
         } else {
           this.updategrant = false;
-          this.updateJurisd.updateGrantValue = '';
+          this.updateJurisd.updateGrantValue = this.inputValue;
         }
         if (this.jurisdValidate.users == '0') {
           this.grant = true;
@@ -1091,15 +1091,14 @@
       },
       //获取存储空间容量
       getAllsize(instance) {
-        this.handleSpinCustom();
+        // this.handleSpinCustom();
         this.$http.post('object/getAllSize.do', {}).then(res => {
           if (res.data.status == '1') {
-            this.size = res.data.data.data / 1024 > 1 ? (res.data.data.data / 1024).toFixed(2) + 'MB' : res.data.data.data + 'KB';
-
-            this.$Spin.hide();
+            this.size = res.data.data.data / 1024 > 1 || res.data.data.data >1000 ? (res.data.data.data / 1024).toFixed(2) + 'MB' : res.data.data.data + 'KB';
+            // this.$Spin.hide();
           } else {
             this.size = "0KB";
-            this.$Spin.hide();
+            // this.$Spin.hide();
             this.$Message.error('出错了');
           }
           sessionStorage.setItem('size', this.size);
@@ -1164,6 +1163,11 @@
             ])
           }
         });
+      },
+      //返回根路径
+      backPage(){
+        this.fileObject.pop();
+        this.filesList(null);
       }
     },
     mounted() {
