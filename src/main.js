@@ -37,8 +37,8 @@ Vue.config.productionTip = false
 // axios.defaults.withCredentials = true
 
 //axios.defaults.baseURL = 'http://192.168.3.29:8082/ruicloud/'
-//axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
-//axios.defaults.withCredentials = true
+axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
+axios.defaults.withCredentials = true
 
 // axios挂载到Vue原型
 Vue.prototype.$http = axios.create({
@@ -80,7 +80,7 @@ function appendMD5(params, type) {
       str = encodeURI(str)
     }
     str = md5(str)
-
+    count = count % 10
     var mac = str.substr(0, count) + count + str.substr(count)
     return {
       ...params,
