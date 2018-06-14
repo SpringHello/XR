@@ -335,24 +335,17 @@
       };
       //校验网站负责人证件号码
       const validCertificateNumber = (rule, value, callback) => {
-        if (value == "") {
-          return callback(new Error("请输入网站负责人证件号码"));
-        } /*else if (
-          !this.siteList[0].basicInformation.certificateTypeList[
-          this.siteList[0].basicInformation.certificateType - 1
-            ].reg.test(value)
-        ) {
-          return callback(
-            new Error(
-              "请输入正确的" +
-              this.siteList[0].basicInformation.certificateTypeList[
-              this.siteList[0].basicInformation.certificateType - 1
-                ].label
-            )
-          );
-        }*/ else {
-          callback();
-        }
+        let regCord = /^[0-9]*$/;
+        this.siteList.forEach(item => {
+          if (value == "") {
+            return callback(new Error("请输入网站负责人证件号码"));
+          }
+          if (!regCord.test(value)) {
+            return callback(new Error("请输入正确的证件号码"));
+          }else {
+            callback();
+          }
+        })
       };
       //校验办公室电话号码
       const validOfficePhone = (rule, value, callback) => {
