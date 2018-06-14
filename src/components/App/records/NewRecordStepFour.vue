@@ -27,8 +27,8 @@
         </div>
         <div v-if="photograph === 2 && nextStep === false">
           <div class="description">
-            <p>1.有由新睿云为您邮寄幕布，收到后根据要求自行拍照上传</p>
-            <p>2.将核验单、身份证复印件、营业执照复印件、域名证书复印件、网站授权书等文件邮寄至新睿云，邮寄地址：北京市海淀区东升大厦AB座611、612  收件人：新睿云备案部  联系电话：010-82527988）</p>
+            <p>1.由新睿云为您邮寄幕布，收到后根据要求自行拍照上传</p>
+            <p>2.将核验单、身份证复印件、营业执照复印件、域名证书复印件、网站授权书等文件邮寄至新睿云，邮寄地址：北京市海淀区东升大厦AB座611、612  收件人：新睿云备案部  联系电话：010-82527988</p>
           </div>
           <div class="footer">
             <button @click="$router.go(-1)" style="margin-right: 10px">上一步</button>
@@ -137,7 +137,7 @@
   import step from './step.vue'
   import oStep from "./ostep.vue";
   import records from './../Records'
-
+  import $ from 'jquery'
   export default {
     components: {
       step, records, oStep
@@ -157,7 +157,7 @@
           })
         })
       } else {
-        let id = sessionStorage.getItem('id')
+        let id = sessionStorage.getItem('newId')
         let url = 'recode/listMainWeb.do'
         axios.get(url, {
           params: {
@@ -271,6 +271,8 @@
           this.recordsType = response.data.result[0].recordtype
           this.isRecord = true
           this.recordInfo = response.data.result[0]
+          this.nextStep = true
+          $('html, body').animate({scrollTop: 800}, 300)
           switch (this.recordsType) {
             case '新增备案':
               this.recordsTypeDesc = '域名未备案，备案主体证件无备案号，需要备案。'
@@ -383,7 +385,7 @@
           return
         }
         let url = 'recode/updateMainWeb.do'
-        let id = sessionStorage.getItem('id')
+        let id = sessionStorage.getItem('newId')
         let params = {
           id: id,
           backgroundUrl: this.upload.photo

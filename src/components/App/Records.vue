@@ -4,11 +4,11 @@
       <div class="content">
         <img src="../../assets/img/records/records-banner1.png"/>
         <div class="enter">
-          <button @click="enterSystem">进入备案系统</button>
+          <button @click="enterSystem">查看备案进度</button>
           <button @click="publicQuery">公共查询</button>
           <a href="http://www.miitbeian.gov.cn/" target="_blank">修改备案密码</a>
           <a  href="http://www.miitbeian.gov.cn/" target="_blank">找回备案密码</a>
-          <p>客服热线：400-0505-565</p>
+          <p>客服热线：400-0505-565 <span style="float: right">备案帮助</span></p>
         </div>
       </div>
     </div>

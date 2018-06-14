@@ -201,7 +201,7 @@
                 </Select>
               </FormItem>
               <FormItem label="有效证件号码" prop="certificateNumber">
-                <Input v-model="site.basicInformation.certificateNumber" placeholder="请输入主体单位证件号码" style="width: 500px"/>
+                <Input v-model="site.basicInformation.certificateNumber" maxlength="20" placeholder="请输入主体单位证件号码" style="width: 500px"/>
               </FormItem>
               <FormItem label="办公室电话" prop="officePhone" v-if="!isPersonage">
                 <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.officePhone" placeholder="请输入办公室电话"
@@ -218,7 +218,7 @@
                   </div>
                 </transition>
               </FormItem>
-              <FormItem label="办公室电话"  v-else>
+              <FormItem label="办公室电话" v-else>
                 <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.officePhone" placeholder="请输入办公室电话"
                                        style="width: 468px;margin-left: 10px"></Input>
                 <transition name="fade">
@@ -390,11 +390,10 @@
       };
       //校验网站首页URL
       const validWebsiteHomepage = (rule, value, callback) => {
-        let reg =/^((https|http|ftp|rtsp|mms){0,1}(:\/\/){0,1})www\.(([A-Za-z0-9-~]+)\.)+([A-Za-z0-9-~\/])+$/
-        let reg1 = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+        let reg = /((https|http|ftp|rtsp|mms):\/\/)?(([0-9a-z_!~*'().&=+$%-]+:)?[0-9a-z_!~*'().&=+$%-]+@)?(([0-9]{1,3}\.){3}[0-9]{1,3}|([0-9a-z_!~*'()-]+\.)*([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6})(:[0-9]{1,4})?((\/?)|(\/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+\/?)/g;
         if (value == "") {
           return callback(new Error("请输入网站首页URL"));
-        } else if (!(reg.test(value)||reg1.test(value))) {
+        } else if (!reg.test(value)) {
           return callback(new Error("请输入正确的网站首页URL"));
         } else {
           callback();
@@ -598,9 +597,9 @@
           this.mainUnitInformation.emailAddress = mainUnitInformation.email
         }
         // 初始化座机号码框
-        if(this.mainUnitInformation.unitProperties == '个人'){
+        if (this.mainUnitInformation.unitProperties == '个人') {
           this.isPersonage = true
-        } else{
+        } else {
           this.isPersonage = false
         }
         switch (recordsType) {

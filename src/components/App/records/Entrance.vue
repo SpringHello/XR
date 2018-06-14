@@ -285,6 +285,9 @@
     created() {
       this.flowList = this.flowList_1
       this.getRecordInfo()
+      if(sessionStorage.getItem('back')) {
+        $('html, body').animate({scrollTop: 550}, 300)
+      }
     },
     methods: {
       // 获取备案信息

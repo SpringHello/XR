@@ -180,7 +180,7 @@
                 <Button type="primary" style="margin-left: 10px" v-show="isCompile" @click="website= true">修改网站</Button>
               </div>
             </div>
-            <div class="tables" v-show="isIconInfo">
+            <div class="tables" v-show="!isIconInfo">
               <ul class="nav_list">
                 <li class="nav_item">网站名称</li>
                 <li class="nav_item">网站域名</li>
@@ -295,7 +295,7 @@
               <div style="margin-left:5px;">
                 <span>ISP备案网站接入信息</span>
               </div>
-              <div style="width:87.5%;text-align: right;" v-show="isCompile">
+              <div style="width:86.5%;text-align: right;" v-show="isCompile">
                 <Button type="primary" @click="webIsp = true">修改ISP信息</Button>
               </div>
             </div>
@@ -408,7 +408,7 @@
             </div>
           </div>
         </div>
-        <div style="text-align:center;margin:20px 0 80px 0;" v-show="isCompile">
+        <div style="text-align:center;margin:20px 0 80px 0;"  v-if="hostUnitList.errorMessage != null || isCompile">
           <Button type="primary" @click="allUpdate">重新提交</Button>
         </div>
       </div>
@@ -441,7 +441,9 @@
                 action="file/upFile.do"
                 :format="['jpg','jpeg','png','doc','docx','pdf']"
                 :on-success="webRecordSuccess"
-                :on-format-error="webRecordFormatError">
+                :on-format-error="webRecordFormatError"
+                :before-upload="webRecordBeforeUpload"
+                >
                 <div class="sponsor-text" v-if="hostUnitList.webrecordauthenticityurl==''">
                   暂无文件
                 </div>
@@ -573,16 +575,21 @@
                 <div style="width:50%;text-align: center;">
                   <p class="hide-text" v-if="hostUnitList.hostcompanyurl==''">暂无图片</p>
                   <img style="width:198px;height:144px;" :src="hostUnitList.hostcompanyurl" v-else>
+                  <div v-for="item in uploadHost">
+                    <Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>
+                  </div>
                  </div>
                 <Upload
                   multiple
+                  ref="uploadHost"
                   type="drag"
                   :show-upload-list="false"
                   :with-credentials="true"
                   action="file/upFile.do"
                   :format="['jpg','jpeg','png']"
                   :on-success="organizerSuccess"
-                  :on-format-error="organizerFormatError">
+                  :on-format-error="organizerFormatError"
+                  >
                   <div>
                     <div style="text-align: center">
                       <p class="hide-text">点击选择文件</p>
@@ -594,6 +601,7 @@
                 <p class="hide-text" v-if="hostUnitList.hostcompanyurl==''">暂无图片</p>
                 <img style="width:198px;height:144px;" :src="hostUnitList.hostcompanyurl" v-else>
               </div>
+
             </div>
           <div style="width:50%;height:203px;">
             <div style="text-align: center">
@@ -628,15 +636,20 @@
                   <span>{{item.name}}</span>
                   <Icon v-if="isCompile" type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
                 </p>
+                <div v-for="item in uploadDomain">
+                  <Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>
+                </div>
               </div>
               <Upload
                 multiple
+                ref="uploadDomain"
                 type="drag"
                 :show-upload-list="false"
                 :with-credentials="true"
                 action="file/upFile.do"
                 :on-success="domainNameSuccess"
                 :on-format-error="domainNameFormatError"
+                :before-upload="domainNameBeforeUpload"
                 :format="['jpg','jpeg','png','doc','docx','pdf']">
                 <span class="item-content-text">点击选择文件</span>
               </Upload>
@@ -677,13 +690,14 @@
               action="file/upFile.do"
               :on-success="otherFileSuccess"
               :on-format-error="otherFormatError"
-              >
+              :before-upload="otherBeforeUpload"
+            >
               <span class="item-content-text">点击选择文件</span>
             </Upload>
           </div>
           <div style="width:100%;min-height: 197px;" v-else>
             <p class="hide-text" v-if="otherData.length==0">暂无执照扫描件</p>
-            <div style="text-align: center;margin-top:10px;" v-else  v-for="(item,index) in otherData">
+            <div style="text-align: center;margin-top:10px;" v-else  v-for="item in otherData">
               <img style="width: 38px;height: 42px;" :src="item.img">
               <p style="line-height: 20px;" >
                 <span>{{item.name}}</span>
@@ -866,19 +880,21 @@
       <Form ref="webIsp" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="ispname">
           <p style="margin:10px">ISP名称</p>
-          <Input type="text" :readonly="true" v-model="updateHostUnitList.ispname"></Input>
+          <Input type="text" v-model="updateHostUnitList.ispname"></Input>
         </FormItem>
         <FormItem prop="webip">
           <p style="margin:10px">网站IP地址</p>
-          <Input :readonly="true" type="text" v-model="updateHostUnitList.webip"></Input>
+          <Select v-model="webip" multiple>
+            <Option v-for="(item,index) in webipList" :value="item" :key="index">{{ item }}</Option>
+          </Select>
         </FormItem>
         <FormItem prop="webaccesstype">
           <p style="margin:10px">网站接入方式</p>
-          <Input :readonly="true" type="text" v-model="updateHostUnitList.webaccesstype"></Input>
+          <Input  type="text" v-model="updateHostUnitList.webaccesstype"></Input>
         </FormItem>
         <FormItem prop="webserveraddress">
           <p style="margin:10px">服务器放置地</p>
-          <Input :readonly="true" type="text" v-model="updateHostUnitList.webserveraddress"></Input>
+          <Input  type="text" v-model="updateHostUnitList.webserveraddress"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -1309,7 +1325,13 @@
             ]
         },
         //注销主体弹窗
-        domain:false
+        domain:false,
+        //获取上传文件
+        uploadHost:[],
+        uploadDomain:[],
+        //ISP网站ip
+        webip:[],
+        webipList:[]
       };
     },
     created() {
@@ -1340,7 +1362,9 @@
           .then(res => {
             if (res.data.status == 1) {
               this.hostUnitList = res.data.result[0];
-              this.updateHostUnitList = res.data.result[0];
+              //JSON对象深拷贝，只能用在可以转换为JSon对象的上面
+              this.updateHostUnitList = JSON.parse(JSON.stringify(res.data.result[0]));
+              this.webip.push(this.updateHostUnitList.webip.slice(','));
               let arr = new Array();
               arr = this.updateHostUnitList.maincompanyarea.split("-");
               this.province = arr[0];
@@ -1375,44 +1399,83 @@
 
 
               //分割图片路径取出后缀名显示响应的文件类型图片
-              let addy = this.hostUnitList.domaincertificateurl.split(",");
-              for (let i = 0; i < addy.length; i++) {
+              if (this.hostUnitList.domaincertificateurl.indexOf(',') > 0) {
+                let addy = this.hostUnitList.domaincertificateurl.split(",");
+                for (let i = 0; i < addy.length; i++) {
+                  let object = new Object();
+                  addy[i].substring(addy[i].lastIndexOf('/') + 1);
+                  object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
+                  this.addy.push(object);
+                  switch (this.addy[i].name.substring(this.addy[i].name.length - 3)) {
+                    case 'pdf' :
+                      this.addy[i].img = imgPdf;
+                      break;
+                    case 'jpg' :
+                      this.addy[i].img = imgJpg;
+                      break;
+                    case 'doc' :
+                      this.addy[i].img = imgDoc;
+                      break;
+                  }
+                }
+              } else {
+                let addy = this.hostUnitList.domaincertificateurl;
                 let object = new Object();
-                addy[i].substring(addy[i].lastIndexOf('/') + 1);
-                object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
+                addy.substring(addy.lastIndexOf('/') + 1);
+                object.name = (addy.substring(addy.lastIndexOf('/') + 1));
                 this.addy.push(object);
-                switch (this.addy[i].name.substring(this.addy[i].name.length - 3)) {
+                switch (this.addy[0].name.substring(this.addy[0].name.length - 3)) {
                   case 'pdf' :
-                    this.addy[i].img = imgPdf;
+                    this.addy[0].img = imgPdf;
                     break;
                   case 'jpg' :
-                    this.addy[i].img = imgJpg;
+                    this.addy[0].img = imgJpg;
                     break;
                   case 'doc' :
-                    this.addy[i].img = imgDoc;
+                    this.addy[0].img = imgDoc;
                     break;
                 }
               }
 
-              let onther = this.hostUnitList.otherdataurl.split(",");
-              for (let j = 0; j < onther.length; j++) {
+              if (this.hostUnitList.otherdataurl.indexOf(',') > 0) {
+                let onther = this.hostUnitList.otherdataurl.split(",");
+                for (let j = 0; j < onther.length; j++) {
+                  let obj = new Object();
+                  onther[j].substring(onther[j].lastIndexOf('/') + 1);
+                  obj.name = (onther[j].substring(onther[j].lastIndexOf('/') + 1));
+                  this.otherData.push(obj);
+                  switch (this.otherData[j].name.substring(this.otherData[j].name.length - 3)) {
+                    case 'pdf' :
+                      this.otherData[j].img = imgPdf;
+                      break;
+                    case 'jpg' :
+                      this.otherData[j].img = imgJpg;
+                      break;
+                    case 'doc' :
+                      this.otherData[j].img = imgDoc;
+                      break;
+                  }
+                }
+              } else {
+                let onther = this.hostUnitList.otherdataurl
                 let obj = new Object();
-                onther[j].substring(onther[j].lastIndexOf('/') + 1);
-                obj.name = (onther[j].substring(onther[j].lastIndexOf('/') + 1));
+                onther.substring(onther.lastIndexOf('/') + 1);
+                obj.name = (onther.substring(onther.lastIndexOf('/') + 1));
                 this.otherData.push(obj);
-                switch (this.otherData[j].name.substring(this.otherData[j].name.length - 3)) {
+                switch (this.otherData[0].name.substring(this.otherData[0].name.length - 3)) {
                   case 'pdf' :
-                    this.otherData[j].img = imgPdf;
+                    this.otherData[0].img = imgPdf;
                     break;
                   case 'jpg' :
-                    this.otherData[j].img = imgJpg;
+                    this.otherData[0].img = imgJpg;
                     break;
                   case 'doc' :
-                    this.otherData[j].img = imgDoc;
+                    this.otherData[0].img = imgDoc;
                     break;
                 }
               }
               // console.log(this.hostUnitList);
+              if (this.hostUnitList.webrecordauthenticityurl.indexOf(',') > 0) {
               let webRecord = this.hostUnitList.webrecordauthenticityurl.split(",");
               for (let j = 0; j < onther.length; j++) {
                 let objc = new Object();
@@ -1431,8 +1494,24 @@
                     break;
                 }
               }
-
-              //查询错误的备案信息然后显示出来重新输入
+              }else{
+                let webRecord = this.hostUnitList.webrecordauthenticityurl
+                let obj = new Object();
+                webRecord.substring(webRecord.lastIndexOf('/') + 1);
+                obj.name = (webRecord.substring(webRecord.lastIndexOf('/') + 1));
+                this.webRecordData.push(obj);
+                switch (this.webRecordData[0].name.substring(this.webRecordData[0].name.length - 3)) {
+                  case 'pdf' :
+                    this.webRecordData[0].img = imgPdf;
+                    break;
+                  case 'jpg' :
+                    this.webRecordData[0].img = imgJpg;
+                    break;
+                  case 'doc' :
+                    this.webRecordData[0].img = imgDoc;
+                    break;
+                }
+              }
               //查询错误的备案信息然后显示出来重新输入
               if (typeof (this.hostUnitList.errorMessage) != 'undefined') {
                 this.isIconInfo = false;
@@ -1539,6 +1618,22 @@
             }
           });
       },
+      //获取公网ip
+      getPublicIP() {
+        let url = 'network/listPublicIp.do'
+        this.$http.get(url, {
+          params: {
+            status: 1
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            for(let i =0; i<response.data.result.length; i++){
+
+              this.webipList.push(response.data.result[i].publicip);
+            }
+          }
+        })
+      },
       //取消接入
       delMainWeb(status){
         this.domain = false;
@@ -1559,7 +1654,6 @@
                 h('p',{style:{color:'#333333',fontSize:'14px'}},'申请已提交'),
                 h('p',{style:{color:'#666666',fontSize:'14px'}},'新睿云将在1个工作日内将您的申请提交至通信管理局。')
               ])
-
             }
           })
       },
@@ -1590,49 +1684,55 @@
         this.updateHostUnitList.id = this.id;
         this.$http
           .post("recode/updateMainWeb.do",
-            this.updateHostUnitList
-            // params: {
-            //   id: this.id,
-            //   ISPName: this.updateHostUnitList.ispname,
-            //   webIp: this.updateHostUnitList.webip,
-            //   webAccessType: this.updateHostUnitList.webaccesstype,
-            //   webServerAddress: this.updateHostUnitList.webserveraddress,
-            //   webResponsibilitylinkName: this.updateHostUnitList
-            //     .webresponsibilitylinkname,
-            //   webResponsibilityCertificatesType: this.updateHostUnitList
-            //     .webresponsibilitycertificatestype,
-            //   webResponsibilityCertificatesNumber: this.updateHostUnitList
-            //     .webresponsibilitycertificatesnumber,
-            //   offaceNumber: this.updateHostUnitList.offacenumber,
-            //   phone: this.updateHostUnitList.phone,
-            //   email: this.updateHostUnitList.email,
-            //   webName: this.updateHostUnitList.webname,
-            //   webDomian: this.updateHostUnitList.webdomian,
-            //   webUrl: this.updateHostUnitList.weburl,
-            //   webServerContent: this.updateHostUnitList.webservercontent,
-            //   webMessage: this.updateHostUnitList.webmessage,
-            //   legalName: this.updateHostUnitList.legalname,
-            //   companyPhone: this.updateHostUnitList.companyphone,
-            //   companyEmail: this.updateHostUnitList.companyemail,
-            //   officeNumber: this.updateHostUnitList.officenumber,
-            //   legalCertificatesType: this.updateHostUnitList
-            //     .legalcertificatestype,
-            //   legalCertificatesNumber: this.updateHostUnitList
-            //     .legalcertificatesnumber,
-            //   mainCompanyCertificatesType: this.updateHostUnitList
-            //     .maincompanycertificatestype,
-            //   mainCompanyNature: this.updateHostUnitList.maincompanynature,
-            //   mainCompanyName: this.updateHostUnitList.maincompanyname,
-            //   mainCompanyNumber: this.updateHostUnitList.maincompanynumber,
-            //   mainCompanyCertificatesLoaction: this.updateHostUnitList
-            //     .maincompanycertificatesloaction,
-            //   mainCompanyCommunicatLocation: this.updateHostUnitList
-            //     .maincompanycommunicatlocation,
-            //   InvestorName: this.updateHostUnitList.investorname,
-            //   webRecordauthenticityurl:this.updateHostUnitList.webrecordauthenticityurl,
-            //   webresponsibilityurlpositive:this.updateHostUnitList.webresponsibilityurlpositive,
-            //   webresponsibilityurlback:this.updateHostUnitList.webresponsibilityurlback
-            // }
+            {
+              id: this.id,
+              ISPName: this.updateHostUnitList.ispname,
+              webIp: this.updateHostUnitList.webip,
+              webAccessType: this.updateHostUnitList.webaccesstype,
+              webServerAddress: this.updateHostUnitList.webserveraddress,
+              webResponsibilitylinkName: this.updateHostUnitList
+                .webresponsibilitylinkname,
+              webResponsibilityCertificatesType: this.updateHostUnitList
+                .webresponsibilitycertificatestype,
+              webResponsibilityCertificatesNumber: this.updateHostUnitList
+                .webresponsibilitycertificatesnumber,
+              offaceNumber: this.updateHostUnitList.offacenumber,
+              phone: this.updateHostUnitList.phone,
+              email: this.updateHostUnitList.email,
+              webName: this.updateHostUnitList.webname,
+              webDomian: this.updateHostUnitList.webdomian,
+              webUrl: this.updateHostUnitList.weburl,
+              webServerContent: this.updateHostUnitList.webservercontent,
+              webMessage: this.updateHostUnitList.webmessage,
+              legalName: this.updateHostUnitList.legalname,
+              companyPhone: this.updateHostUnitList.companyphone,
+              companyEmail: this.updateHostUnitList.companyemail,
+              officeNumber: this.updateHostUnitList.officenumber,
+              legalCertificatesType: this.updateHostUnitList
+                .legalcertificatestype,
+              legalCertificatesNumber: this.updateHostUnitList
+                .legalcertificatesnumber,
+              mainCompanyCertificatesType: this.updateHostUnitList
+                .maincompanycertificatestype,
+              mainCompanyNature: this.updateHostUnitList.maincompanynature,
+              mainCompanyName: this.updateHostUnitList.maincompanyname,
+              mainCompanyNumber: this.updateHostUnitList.maincompanynumber,
+              mainCompanyCertificatesLoaction: this.updateHostUnitList
+                .maincompanycertificatesloaction,
+              mainCompanyCommunicatLocation: this.updateHostUnitList
+                .maincompanycommunicatlocation,
+              InvestorName: this.updateHostUnitList.investorname,
+              /*
+
+                照片
+              */
+              webRecordauthenticityurl: this.updateHostUnitList.webrecordauthenticityurl,
+              webresponsibilityurlpositive: this.updateHostUnitList.webresponsibilityurlpositive,
+              webresponsibilityurlback: this.updateHostUnitList.webresponsibilityurlback,
+              domaincertificateurl:this.updateHostUnitList.domaincertificateurl,
+              otherdataurl:this.updateHostUnitList.otherdataurl,
+              hostcompanyurl:this.updateHostUnitList.hostcompanyurl
+            }
           )
           .then(res => {
             if (res.data.status == 1) {
@@ -1657,29 +1757,71 @@
       hostUpdate(name){
         this.$refs[name].validate((valid) => {
           if (valid) {
-            this.host = false;
-            this.legal = false;
-            this.website = false;
-            this.websitePerson = false;
-            this.webIsp = false;
+            name == 'hostUpdate' ? this.host = false :
+              name == 'legal' ? this.legal = false :
+                name == 'website' ? this.website = false :
+                  name == 'websitePerson' ? this.websitePerson = false :
+                    name == 'webIsp'? this.webIsp = false :'';
+            this.hostUnitList = this.updateHostUnitList;
+            this.hostUnitList.maincompanyarea = this.province +'-'+this.city +'-'+this.district;
+            this.hostUnitList.webip = this.webip.join(' ');
           } else {
             return;
           }
         })
-
-
-
       },
       webRecordFormatError(){
         this.$Message.error('网站核验单只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
       //网站核验单上传成功
       webRecordSuccess(response){
-        if(response.data.status == 1){
-           this.updateHostUnitList.webrecordauthenticityurl=response.result;
+        if(response.status == 1){
+          this.updateHostUnitList.webrecordauthenticityurl=response.result;
+          if (this.updateHostUnitList.webrecordauthenticityurl.indexOf(',') > 0) {
+            let webRecord = this.updateHostUnitList.webrecordauthenticityurl.split(",");
+            for (let j = 0; j < onther.length; j++) {
+              let objc = new Object();
+              webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1);
+              objc.name = (webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1));
+              this.webRecordData.push(objc);
+              switch (this.webRecordData[j].name.substring(this.webRecordData[j].name.length - 3)) {
+                case 'pdf' :
+                  this.webRecordData[j].img = imgPdf;
+                  break;
+                case 'jpg' :
+                  this.webRecordData[j].img = imgJpg;
+                  break;
+                case 'doc' :
+                  this.webRecordData[j].img = imgDoc;
+                  break;
+              }
+            }
+          }else{
+            let webRecord = this.updateHostUnitList.webrecordauthenticityurl
+            let obj = new Object();
+            webRecord.substring(webRecord.lastIndexOf('/') + 1);
+            obj.name = (webRecord.substring(webRecord.lastIndexOf('/') + 1));
+            this.webRecordData.push(obj);
+            switch (this.webRecordData[0].name.substring(this.webRecordData[0].name.length - 3)) {
+              case 'pdf' :
+                this.webRecordData[0].img = imgPdf;
+                break;
+              case 'jpg' :
+                this.webRecordData[0].img = imgJpg;
+                break;
+              case 'doc' :
+                this.webRecordData[0].img = imgDoc;
+                break;
+            }
+          }
           this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
+        }
+      },
+      webRecordBeforeUpload(){
+        if(this.webRecordData.length >3){
+          this.$Message.error('网站核验单最多只能上传三个');
         }
       },
       //身份证正面上传格式错误
@@ -1688,7 +1830,7 @@
       },
       //身份证正面上传成功
       cardSuccess(response){
-        if(response.data.status == 1){
+        if(response.status == 1){
           this.updateHostUnitList.webresponsibilityurlpositive=response.result;
           this.$Message.success('上传成功');
         }else {
@@ -1700,8 +1842,8 @@
         this.$Message.error('身份证背面只能上传jpg,jpeg,png类型的文件');
       },
       cardBackSuccess(response){
-        if(response.data.status == 1){
-            this.updateHostUnitList.webresponsibilityurlback=response.result;
+        if(response.status == 1){
+          domaincertificateurl.domaincertificateurl=response.result;
             this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
@@ -1725,19 +1867,103 @@
       },
       domainNameSuccess(response){
         if(response.status ==1){
-            this.updateHostUnitList.domaincertificateurl=response.result;
-              this.$Message.success('上传成功');
+          this.updateHostUnitList.domaincertificateurl=response.result;
+          if (this.updateHostUnitList.domaincertificateurl.indexOf(',') > 0) {
+            let addy = this.updateHostUnitList.domaincertificateurl.split(",");
+            for (let i = 0; i < addy.length; i++) {
+              let object = new Object();
+              addy[i].substring(addy[i].lastIndexOf('/') + 1);
+              object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
+              this.addy.push(object);
+              switch (this.addy[i].name.substring(this.addy[i].name.length - 3)) {
+                case 'pdf' :
+                  this.addy[i].img = imgPdf;
+                  break;
+                case 'jpg' :
+                  this.addy[i].img = imgJpg;
+                  break;
+                case 'doc' :
+                  this.addy[i].img = imgDoc;
+                  break;
+              }
+            }
+          } else {
+            let addy = this.updateHostUnitList.domaincertificateurl;
+            let object = new Object();
+            addy.substring(addy.lastIndexOf('/') + 1);
+            object.name = (addy.substring(addy.lastIndexOf('/') + 1));
+            this.addy.push(object);
+            switch (this.addy[0].name.substring(this.addy[0].name.length - 3)) {
+              case 'pdf' :
+                this.addy[0].img = imgPdf;
+                break;
+              case 'jpg' :
+                this.addy[0].img = imgJpg;
+                break;
+              case 'doc' :
+                this.addy[0].img = imgDoc;
+                break;
+            }
+          }
+          this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
+        }
+      },
+      domainNameBeforeUpload(){
+        if(this.addy.length >3){
+          this.$Message.error('只能上传三个域名证书信息');
         }
       },
       //其他文件上传格式错误
       otherFileSuccess(response){
         if(response.status ==1){
             this.updateHostUnitList.otherdataurl=response.result;
+          if (this.updateHostUnitList.otherdataurl.indexOf(',') > 0) {
+            let onther = this.updateHostUnitList.otherdataurl.split(",");
+            for (let j = 0; j < onther.length; j++) {
+              let obj = new Object();
+              onther[j].substring(onther[j].lastIndexOf('/') + 1);
+              obj.name = (onther[j].substring(onther[j].lastIndexOf('/') + 1));
+              this.otherData.push(obj);
+              switch (this.otherData[j].name.substring(this.otherData[j].name.length - 3)) {
+                case 'pdf' :
+                  this.otherData[j].img = imgPdf;
+                  break;
+                case 'jpg' :
+                  this.otherData[j].img = imgJpg;
+                  break;
+                case 'doc' :
+                  this.otherData[j].img = imgDoc;
+                  break;
+              }
+            }
+          } else {
+            let onther = this.updateHostUnitList.otherdataurl
+            let obj = new Object();
+            onther.substring(onther.lastIndexOf('/') + 1);
+            obj.name = (onther.substring(onther.lastIndexOf('/') + 1));
+            this.otherData.push(obj);
+            switch (this.otherData[0].name.substring(this.otherData[0].name.length - 3)) {
+              case 'pdf' :
+                this.otherData[0].img = imgPdf;
+                break;
+              case 'jpg' :
+                this.otherData[0].img = imgJpg;
+                break;
+              case 'doc' :
+                this.otherData[0].img = imgDoc;
+                break;
+            }
+          }
               this.$Message.success('上传成功');
         }else{
           this.$Message.error('上传失败');
+        }
+      },
+      otherBeforeUpload(){
+        if(this.otherData.length >3){
+          this.$Message.error('只能上传三个其他文件信息');
         }
       },
       otherFormatError(){
@@ -1746,6 +1972,10 @@
     },
     mounted() {
       this.details();
+      this.getPublicIP();
+      console.log( this.$refs.uploadHost);
+      this.uploadHost = this.$refs.uploadHost.fileList;
+      // this.uploadDomain = this.$refs.uploadDomain.fileList;
     },
   };
 </script>
