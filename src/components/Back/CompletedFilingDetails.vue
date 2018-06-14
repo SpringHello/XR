@@ -33,8 +33,9 @@
                 <span>主办单位信息</span>
               </div>
               <div style="width:90%;text-align: right;">
-                <Button type="primary" style="margin-right: 10px;" @click="isCompile = true">变更备案</Button>
-                <Button @click="domain = true">注销主体</Button>
+                <Button type="primary" style="margin-right: 10px;" @click="changeCompile('isChange')" v-show="!isCompile">变更备案</Button>
+                <Button type="primary" style="margin-right: 10px;" @click="changeCompile('isCanl')" v-show="isCompile">取消变更</Button>
+                <Button @click="domain = true" v-show="!isCompile">注销主体</Button>
                 <Button type="primary" style="margin-left: 10px" v-show="isCompile" @click="host = true">修改主体</Button>
               </div>
             </div>
@@ -175,8 +176,8 @@
               </div>
 
               <div style="width:90%;text-align: right;">
-                <Button type="primary" @click="cancel = true">取消接入</Button>
-                <Button @click="cancellation = true" style="margin-left: 10px">注销网站</Button>
+                <Button type="primary" @click="cancel = true" v-show="!isCompile">取消接入</Button>
+                <Button @click="cancellation = true" style="margin-left: 10px" v-show="!isCompile">注销网站</Button>
                 <Button type="primary" style="margin-left: 10px" v-show="isCompile" @click="website= true">修改网站</Button>
               </div>
             </div>
@@ -1726,7 +1727,7 @@
 
                 照片
               */
-              webRecordauthenticityurl: this.updateHostUnitList.webrecordauthenticityurl,
+              webrecordauthenticityurl: this.updateHostUnitList.webrecordauthenticityurl,
               webresponsibilityurlpositive: this.updateHostUnitList.webresponsibilityurlpositive,
               webresponsibilityurlback: this.updateHostUnitList.webresponsibilityurlback,
               domaincertificateurl:this.updateHostUnitList.domaincertificateurl,
@@ -1969,6 +1970,15 @@
       otherFormatError(){
         this.$Message.error('其他资料只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
+      //改变变更备案
+      changeCompile(val){
+        if(val == 'isChange'){
+          this.isCompile = true;
+        }else{
+          this.isCompile = false;
+        }
+
+      }
     },
     mounted() {
       this.details();

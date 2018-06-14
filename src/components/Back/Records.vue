@@ -18,14 +18,14 @@
               <div style="margin-bottom:20px">
                 <div style="display:inline-block">
                   <span style="display:inline-block;margin-right:10px;">备案类型 </span>
-                  <Select v-model="recordType" size="small" style="width:231px;" @on-change="listMainWeb(1)">
+                  <Select v-model="recordType" size="small" style="width:231px;" @on-change="listMainWeb(0)">
                     <Option v-for="item in recordTypeCityList" :value="item.value" :key="item.value">{{ item.label }}
                     </Option>
                   </Select>
                 </div>
                 <div style="display:inline-block;margin-left:20px">
                   <span style="display:inline-block;margin-right:10px;">当前状态</span>
-                  <Select v-model="currentState" size="small" style="width:231px;" @on-change="listMainWeb(1)">
+                  <Select v-model="currentState" size="small" style="width:231px;" @on-change="listMainWeb(0)">
                     <Option v-for="item in currentStateList" :value="item.value" :key="item.value">{{ item.label }}
                     </Option>
                   </Select>
@@ -42,14 +42,14 @@
               <div style="margin-bottom:20px;">
                 <div style="display:inline-block">
                   <span style="display:inline-block;margin-right:10px;">备案类型 </span>
-                  <Select v-model="completeRecordType" size="small" style="width:231px;" @on-change="completeClick(0)">
+                  <Select v-model="completeRecordType" size="small" style="width:231px;" @on-change="completeClick(1)">
                     <Option v-for="item in completeTypeCityList" :value="item.value" :key="item.value">{{ item.label }}
                     </Option>
                   </Select>
                 </div>
                 <div style="display:inline-block;margin-left:20px">
                   <span style="display:inline-block;margin-right:10px;">当前状态</span>
-                  <Select v-model="completeState" size="small" style="width:231px;" @on-change="completeClick(0)">
+                  <Select v-model="completeState" size="small" style="width:231px;" @on-change="completeClick(1)">
                     <Option v-for="item in completeStateList" :value="item.value" :key="item.value">{{ item.label }}
                     </Option>
                   </Select>
@@ -132,7 +132,7 @@
             label: "全部"
           },
           {
-            value: "待审核",
+            value: "初审中",
             label: "初审中"
           },
           {
@@ -458,7 +458,7 @@
               params: {
                 recordtype: this.completeRecordType,
                 overType: overType,
-                status: "已完成备案"
+                status: this.completeState
               }
             })
             .then(res => {
