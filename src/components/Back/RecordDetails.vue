@@ -1817,7 +1817,7 @@
             webIp: this.updateHostUnitList.webip,
             webAccessType: this.updateHostUnitList.webaccesstype,
             webServerAddress: this.updateHostUnitList.webserveraddress,
-            webResponsibilitylinkName: this.updateHostUnitList
+            webResponsibilityLinkName: this.updateHostUnitList
               .webresponsibilitylinkname,
             webResponsibilityCertificatesType: this.updateHostUnitList
               .webresponsibilitycertificatestype,

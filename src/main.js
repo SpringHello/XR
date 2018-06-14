@@ -26,6 +26,7 @@ import slider from './myView/slider'
 // 引入错误提示框组件
 import message from './myView/message'
 import md5 from 'md5'
+
 Vue.prototype.$message = message
 Vue.config.productionTip = false
 
@@ -36,11 +37,11 @@ Vue.config.productionTip = false
 
 //axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud/'
 
- // axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
+// axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
 
 axios.defaults.baseURL = 'http://localhost:8082/ruicloud/'
 
-  // axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
+// axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
 
 // axios.defaults.baseURL = 'http://192.168.3.187:8080/ruirados/'
 
@@ -52,6 +53,7 @@ axios.defaults.withCredentials = true
 Vue.prototype.$http = axios.create({
   params: {}
 })
+
 /* axios ajax请求拦截 需要zoneid的接口都使用this.$http的形式调用 */
 function requestIntercept(config) {
   if (config.method == 'get') {
@@ -88,7 +90,7 @@ function appendMD5(params, type) {
       str = encodeURI(str)
     }
     str = md5(str)
-
+    count = count % 10
     var mac = str.substr(0, count) + count + str.substr(count)
     return {
       ...params,
