@@ -252,11 +252,11 @@
           <div style="width:366px;display:flex;">
             <div style="width:300px;">
               <CheckboxGroup v-model="jurisdValidate.channel">
-                <Checkbox label="putobject">PutObject</Checkbox>
-                <Checkbox label="getobject">GetObject</Checkbox>
-                <Checkbox label="deleteobject">DeleteObject</Checkbox>
-                <Checkbox label="listbucket">ListObject</Checkbox>
-                <Checkbox label="deletebucket">DeleteBucket</Checkbox>
+                <Checkbox label="PutObject">PutObject</Checkbox>
+                <Checkbox label="GetObject">GetObject</Checkbox>
+                <Checkbox label="DeleteObject">DeleteObject</Checkbox>
+                <Checkbox label="ListBucket">ListObject</Checkbox>
+                <Checkbox label="DeleteBucket">DeleteBucket</Checkbox>
               </CheckboxGroup>
             </div>
           </div>
@@ -524,8 +524,6 @@
             key: "filename",
             title: "文件名称",
             render: (h, params) => {
-
-
               this.isfile = params.row.isfile;
               if (params.row.isfile == 1) {
                 return h('div', [
@@ -633,9 +631,9 @@
           //影响资源
           sources: '0',
           //密码接收渠道
-          channel: ['putobject'],
+          channel: ['PutObject'],
           //白名单
-          referer: '',
+          referer: '0',
         },
         //添加自定义权限表单验证
         jurisdRuleValidate: {
@@ -711,6 +709,7 @@
                       }
                     })
                     this.updateJurisd.updateChannel.push(str);
+                    console.log(str);
                     this.updateJurisd.updateGrantValue = obj.row.userauthorization;
                     this.updateJurisd.updateWhiteListValue = obj.row.refererip;
                     this.code = obj.row.code;
@@ -718,7 +717,8 @@
                     this.usersClick();
                   }
                 }
-              }, '修改'), h('span', {
+              }, '修改'),
+                h('span', {
                 style: {
                   color: 'rgb(42, 153, 242)',
                   cursor: 'pointer'
@@ -962,6 +962,7 @@
       },
       //添加自定义权限
       jurisdictionClick() {
+        alert(this.jurisdValidate.referer);
         var name = sessionStorage.getItem("bucketName");
         var bucketId = sessionStorage.getItem('bucketId');
 
@@ -1008,8 +1009,9 @@
       checkAcl() {
         var name = sessionStorage.getItem("bucketName");
         var bucketId = sessionStorage.getItem('bucketId');
+        let index = this.indexs+1;
         this.$http.post('bucketAcl/aclCut.do', {
-          accessrights: this.indexs.toString(),
+          accessrights: index.toString(),
           bucketId: bucketId,
           bucketName: name
         }).then(res => {
@@ -1059,6 +1061,7 @@
       },
       //修改自定义权限
       jurisdUpdateClick(code) {
+
         var name = sessionStorage.getItem("bucketName");
         this.$http.post('bucketAcl/updateFromCode.do', {
           bucketName: name,

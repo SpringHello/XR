@@ -36,7 +36,7 @@ Vue.config.productionTip = false
 
 
 axios.defaults.baseURL = 'http://192.168.3.109:8080/ruirados/'
-
+axios.withcredentials = true
 
 // //axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
 
