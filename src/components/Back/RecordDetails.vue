@@ -868,7 +868,9 @@
         </FormItem>
         <FormItem prop="webaccesstype">
           <p style="margin:10px">网站接入方式</p>
-          <Input  type="text" v-model="updateHostUnitList.webaccesstype"></Input>
+          <Select v-model="updateHostUnitList.webaccesstype">
+            <Option v-for="item in webaccessList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
         </FormItem>
         <FormItem prop="webserveraddress">
           <p style="margin:10px">服务器放置地</p>
@@ -1225,10 +1227,12 @@
           weburl: [
             {required: true, validator: validWebsiteHomepage, trigger: "blur"}
           ],
-          ispname:[
-            {required: true, message: "请输入ISP名称", trigger: "blur"}
+          webaccesstype:[
+            {required:true,message:"请选网站接入方式",trigger:'blur'}
           ],
-
+          webip:[
+            {required:true,message:"请选择网站ip",trigger:"blur"}
+          ]
         },
         //获取域名证书文件
         addy: [],
@@ -1247,7 +1251,26 @@
         examples: '',
         //ISP网站ip
         webip:[],
-        webipList:[]
+        webipList:[],
+        //ISP服务器接入方式
+        webaccessList:[
+          {
+            label:'专线',
+            value:'专线'
+          },
+          {
+            label:'主机托管',
+            value:'主机托管'
+          },
+          {
+            label:'虚拟主机',
+            value:'虚拟主机'
+          },
+          {
+            label:'其他',
+            value:'其他'
+          }
+        ]
       };
     },
     created() {
