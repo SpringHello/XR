@@ -738,7 +738,7 @@
 
           <!--access key pane-->
           <Tab-pane label="Access Key" name="key">
-            <Button type="primary" @click="showModal.keyPhoneVal=true" style="margin-bottom:10px">创建Access Key</Button>
+            <Button type="primary" @click="createKey" style="margin-bottom:10px">创建Access Key</Button>
             <Table :columns="keyColumns" :data="keyData"></Table>
           </Tab-pane>
         </Tabs>
@@ -1105,7 +1105,7 @@
         }
       }
       return {
-
+        token: '',
         phoneVerCode: '获取验证码',
         emailVerCode: '获取验证码',
         authType,
@@ -1670,8 +1670,18 @@
                                     },
                                     on: {
                                         click: () => {
+                                         axios.post('/user/showUserAcess.do', {
+                                            accessKeyID: params.row.accesskeyid,
+                                            token: this.token
+                                          }).then(response => {
+                                            if (response.status == 200 && response.data.status == 1) {
+                                              this.keyData[params.index].isdisplay = 0
+                                            } else {
+                                              this.$Message.error(response.data.message)
+                                            }
+                                          })
                                         }
-                                    }
+                                      }
                                 }, text)
                                 ]);
                           } else if (params.row.isdisplay == 0){
@@ -1688,6 +1698,7 @@
                                     },
                                     on: {
                                         click: () => {
+                                          this.keyData[params.index].isdisplay = 1
                                         }
                                     }
                                 }, text)
@@ -1709,6 +1720,7 @@
                     {
                         title: '操作',
                         render: (h, params) => {
+                          let text = params.row.status == 1 ? '启动' : '禁用'
                           return h('div', [
                                 h('span', {
                                     style: {
@@ -1718,9 +1730,21 @@
                                     },
                                     on: {
                                         click: () => {
+                                          axios.post('/user/stateUserAcess.do', {
+                                            accessKeyID: params.row.accesskeyid,
+                                            status: params.row.status,
+                                            zoneId: $store.state.zone.zoneid,
+                                            token: this.token
+                                          }).then(response => {
+                                            if (response.status == 200 && response.data.status == 1) {
+                                              params.row.status ? this.keyData[params.index].status = 0 : this.keyData[params.index].status = 1
+                                            } else {
+                                              this.$Message.error(response.data.message)
+                                            }
+                                          })
                                         }
                                     }
-                                }, '禁用'),
+                                }, text),
                                 h('span', {
                                     style: {
                                         color: '#2A99F2',
@@ -1728,6 +1752,17 @@
                                     },
                                     on: {
                                         click: () => {
+                                          axios.post('/user/deleteUserAcess.do', {
+                                            accessKeyID: params.row.accesskeyid,
+                                            zoneId: $store.state.zone.zoneid,
+                                            token: this.token
+                                          }).then(response => {
+                                            if (response.status == 200 && response.data.status == 1) {
+                                              this.keyData.splice(params.index, 1);
+                                            } else {
+                                              this.$Message.error(response.data.message)
+                                            }
+                                          })
                                         }
                                     }
                                 }, '删除')
@@ -1735,44 +1770,7 @@
                         }
                     }
                 ],
-                keyData: [
-                    {
-                        id: '1',
-                        accesskeyid: 'sgdhsgdhxgdnsfdg',
-                        age: 18,
-                        status: 0,
-                        createtime: '2016-10-03',
-                        accesskeysecret: 'ssh',
-                        isdisplay: 1
-                    },
-                    {
-                        id: '1',
-                        accesskeyid: 'sgdhsgdhxgdnsfdg124',
-                        age: 24,
-                        status: 1,
-                        createtime: '2016-10-01',
-                        accesskeysecret: 'ssh',
-                        isdisplay: 0
-                    },
-                    {
-                        id: '1',
-                        accesskeyid: 'sgdhsgdhxgdnsfdg23242',
-                        age: 30,
-                        status: 0,
-                        createtime: '2016-10-02',
-                        accesskeysecret: 'ssh',
-                        isdisplay: 1
-                    },
-                    {
-                        id: '1',
-                        accesskeyid: 'sgdhsgdhxgdnsfdg1111',
-                        age: 26,
-                        status: 1,
-                        createtime: '2016-10-04',
-                        accesskeysecret: 'ssh',
-                        isdisplay: 0
-                    }
-                ]
+                keyData: []
       }
     },
     created() {
@@ -1783,6 +1781,25 @@
           this.showModal.selectAuthType = true
         }
       }
+      axios.post('/user/getRuiRadosApiacess.do', {
+        zoneId: $store.state.zone.zoneid,
+        companyId: $store.state.authInfo.companyid
+      }).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+            var radosApIaccessKey = response.data.data.data
+            axios.get('http://192.168.3.229:8080/ruirados/user/getToken.json', {
+              params: {
+                companyId: $store.state.authInfo.companyid,
+                secret: radosApIaccessKey
+              }
+            }).then(response => {
+              if (response.status == 200) {
+                this.token = response.data.token
+                this.listKey()
+              }
+            })
+          }
+      })
       this.listNotice()
       this.getContacts()
     },
@@ -2450,16 +2467,22 @@
         })
       },
       listKey() {
-        axios.get('/showUserAcessAll').then(response => {
+        axios.get('/user/showUserAcessAll.do', {
+          params: {
+            token: this.token
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-             this.keyData = response.data
+             this.keyData = response.data.data.UserAccess
           }
         })
       },
       createKey() {
-         axios.post('user/createUserAcess.do').then(response => {
+         axios.post('/user/createUserAcess.do', {
+             zoneId: $store.state.zone.zoneid,
+             token: this.token
+         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            // 获取用户信息
             this.listKey()
           } else {
             this.$message.info({
