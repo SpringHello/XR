@@ -74,6 +74,7 @@
                   <Upload
                     type="drag"
                     :with-credentials="true"
+                    :show-upload-list="false"
                     action="file/upFile.do"
                     :format="['jpg','gif','png']"
                     :on-format-error="handleFormatJpg"
@@ -102,6 +103,7 @@
                   <Upload
                     type="drag"
                     :with-credentials="true"
+                    :show-upload-list="false"
                     action="file/upFile.do"
                     :format="['jpg','gif','png']"
                     :on-format-error="handleFormatJpg"
@@ -135,6 +137,7 @@
                   <Upload
                     type="drag"
                     :with-credentials="true"
+                    :show-upload-list="false"
                     :format="['jpg','jpeg','png']"
                     :on-format-error="handleFormatJpg"
                     action="file/upFile.do"
@@ -182,6 +185,7 @@
                             :format="['jpg','jpeg','png','doc','pdf','docx','gif']"
                             :on-format-error="handleFormatError"
                             :with-credentials="true"
+                            :show-upload-list="false"
                             :max-size="2048"
                             :on-exceeded-size="handleMaxSize"
                             action="file/upFile.do"
@@ -264,6 +268,7 @@
                           :format="['jpg','jpeg','png','doc','pdf','docx','gif']"
                           :on-format-error="handleFormatError"
                           :with-credentials="true"
+                          :show-upload-list="false"
                           :max-size="2048"
                           :on-exceeded-size="handleMaxSize"
                           action="file/upFile.do"
