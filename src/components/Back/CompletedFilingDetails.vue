@@ -1294,6 +1294,12 @@
           ],
           weburl: [
             {required: true, validator: validWebsiteHomepage, trigger: "blur"}
+          ],
+          webaccesstype:[
+            {required:true,message:"请选网站接入方式",trigger:'blur'}
+          ],
+          webip:[
+            {required:true,message:"请选择网站ip",trigger:"blur"}
           ]
         },
         //获取域名证书文件
