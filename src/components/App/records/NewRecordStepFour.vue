@@ -157,7 +157,7 @@
           })
         })
       } else {
-        let id = sessionStorage.getItem('id')
+        let id = sessionStorage.getItem('newId')
         let url = 'recode/listMainWeb.do'
         axios.get(url, {
           params: {
@@ -385,7 +385,7 @@
           return
         }
         let url = 'recode/updateMainWeb.do'
-        let id = sessionStorage.getItem('id')
+        let id = sessionStorage.getItem('newId')
         let params = {
           id: id,
           backgroundUrl: this.upload.photo
