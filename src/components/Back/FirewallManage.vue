@@ -74,6 +74,15 @@
           <Form-item label="CIDR" prop="cidr">
             <Input v-model="newRuleForm.cidr" placeholder="请输入IP地址..."></Input>
           </Form-item>
+          <!--<Form-item label="优先级（数字越小优先级越高）">
+            <InputNumber v-model="newRuleForm.itemid" :max="10" :min="1"></InputNumber>
+          </Form-item>-->
+          <Form-item label="起始端口" v-show="newRuleForm.protocol != 'ICMP' && newRuleForm.protocol != 'ALL'">
+            <InputNumber v-model="newRuleForm.startPort" :max="65535" :min="0"></InputNumber>
+          </Form-item>
+          <Form-item label="结束端口" v-show="newRuleForm.protocol != 'ICMP' && newRuleForm.protocol != 'ALL'">
+            <InputNumber v-model="newRuleForm.endPort" :max="65535" :min="0"></InputNumber>
+          </Form-item>
           <Form-item label="行为" prop="access">
             <Select v-model="newRuleForm.access" placeholder="请选择">
               <Option value="Allow">
@@ -83,15 +92,6 @@
                 拒绝
               </Option>
             </Select>
-          </Form-item>
-          <!--<Form-item label="优先级（数字越小优先级越高）">
-            <InputNumber v-model="newRuleForm.itemid" :max="10" :min="1"></InputNumber>
-          </Form-item>-->
-          <Form-item label="起始端口" v-show="newRuleForm.protocol != 'ICMP' && newRuleForm.protocol != 'ALL'">
-            <InputNumber v-model="newRuleForm.startPort" :max="65535" :min="0"></InputNumber>
-          </Form-item>
-          <Form-item label="结束端口" v-show="newRuleForm.protocol != 'ICMP' && newRuleForm.protocol != 'ALL'">
-            <InputNumber v-model="newRuleForm.endPort" :max="65535" :min="0"></InputNumber>
           </Form-item>
         </Form>
       </div>
@@ -268,9 +268,9 @@
             key: 'acllistitemname'
           },
           /*{
-            title: '优先级',
-            key: 'itemid'
-          },*/
+           title: '优先级',
+           key: 'itemid'
+           },*/
           {
             title: '协议',
             key: 'agreement'
@@ -571,10 +571,10 @@
           color: #2a99f2;
         }
         .btn {
-          border-color: #2A99F2 ;
+          border-color: #2A99F2;
           color: #2A99F2;
           background: #FFFFFF;
-          &:first-of-type{
+          &:first-of-type {
             margin-right: 10px;
           }
           &:hover {
