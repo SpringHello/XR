@@ -129,7 +129,7 @@
             label: "全部"
           },
           {
-            value: "初审中",
+            value: "待审核",
             label: "初审中"
           },
           {
@@ -206,7 +206,7 @@
         //已完成备案
         completeState: '',
         //当前状态Select值
-        currentState: "no已完成备案",
+        currentState: "",
         //备案类型表格表头
         recordTypeList: [
           {
@@ -421,7 +421,7 @@
       listMainWeb(overType) {
         let userList = this.$store.state.userInfo;
         if (this.currentState == "全部") {
-          this.currentState = "no已完成备案";
+          this.currentState = "";
         }
         if (userList != null) {
           this.$http
@@ -448,7 +448,7 @@
       completeClick(overType) {
         let userList = this.$store.state.userInfo;
         if (this.completeState == "全部") {
-          this.completeState = "已完成备案";
+          this.completeState = "";
         }
         if (userList != null) {
           this.$http
