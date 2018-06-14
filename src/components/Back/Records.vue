@@ -441,7 +441,7 @@
                   this.recordProgressList[i].waitOperation = "查看详情";
                 }
               } else {
-                console.log("出错了");
+               this.$Message.error(res.data.message);
               }
             });
         }
@@ -480,7 +480,6 @@
         this.$router.push({path: "RecordDetails"});
       }
     },
-
     custom(id) {
       this.$Modal.confirm({
         title: '是否撤销备案',
