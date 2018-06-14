@@ -15,7 +15,9 @@
           </div>
           <div class="body">
             <div v-for="(item,index) in item.secondTitle" :key="index" class="wrapper">
-              <span class="title" @click="goInfo(item.id)">{{item.name}}</span>
+              <router-link :to="item.url" class="title">
+                {{item.name}}
+              </router-link>
             </div>
           </div>
         </div>
@@ -24,9 +26,13 @@
         <p class="problem-title">热门问题</p>
         <div class="problem-desc">
           <div v-for="(item,index) in problems" :key="index">
-            <p>{{item.title}}</p>
+            <p>{{item.key.name}}</p>
             <ul>
-              <li v-for="(subTitle,subIndex) in item.problem">{{subTitle.name}}</li>
+              <li v-for="(subTitle,subIndex) in item.value">
+                <router-link :to="subTitle.url" target="_blank" class="quest-item">
+                  {{subTitle.name}}
+                </router-link>
+              </li>
             </ul>
           </div>
         </div>
@@ -47,35 +53,7 @@
         // 帮助文档
         contentList: [],
         // 常见问题
-        problems:[
-          {title:'云主机',problem:[
-            {name:"系统默认端口号是？"},
-            {name:"常用登录名、密码是？"},
-            {name:"部署主机业务无法访问？"},
-            {name:"如何增加删除防火墙规则？"}
-          ]},
-          {title:'镜像与快照',problem:[
-            {name:"如何选择新睿云镜像？"},
-            {name:"什么是快照？"}
-          ]},
-          {title:'私有网络VPC',problem:[
-            {name:"VPC是否收费？"},
-            {name:"VPC、子网、虚拟机之间是什么关系？"},
-            {name:"一个用户可创建多少个VPC？"},
-            {name:"一个VPC下可创建多少个子网？"},
-            {name:"VPC中有哪些可用网段？"}
-          ]},
-          {title:'NAT网关',problem:[
-            {name:"NAT网关都可以有哪些用途？"},
-            {name:"NAT网关好处是什么？"}
-          ]},
-          {title:'负载均衡',problem:[
-            {name:"什么是负载均衡？"},
-            {name:"负载均衡IP是否要购买？"},
-            {name:"负载均衡支持哪些方式？"},
-            {name:"单个用户支持多少个负载均衡规则？"}
-          ]},
-        ]
+        problems: []
       }
     },
     beforeRouteEnter(to, from, next){
@@ -83,6 +61,11 @@
         next(vm => {
           vm.setData(response)
         })
+      })
+    },
+    created(){
+      axios.get('document/listHotQuestion.do').then(response => {
+        this.problems = response.data.result
       })
     },
     methods: {
@@ -109,6 +92,7 @@
       padding-bottom: .5rem;
       border-bottom: 1px solid #D8D8D8;
       span {
+        cursor: pointer;
         font-size: 14px;
         color: #333;
         margin-left: 40px;
@@ -188,11 +172,11 @@
     }
     .problem {
       margin-top: 20px;
-      .problem-title{
+      .problem-title {
         font-size: 18px;
         color: #333;
       }
-      .problem-desc{
+      .problem-desc {
         margin-top: 20px;
         color: #FFF;
         height: 273px;
@@ -200,33 +184,39 @@
         justify-content: space-between;
         box-sizing: border-box;
         padding: 20px 0 0 20px;
-        >div{
+        > div {
           width: 18.5%;
-          p{
+          p {
             font-size: 14px;
             color: #377DFF;
           }
-          ul{
+          ul {
             height: 180px;
             margin-top: 20px;
             border-right: 1px solid #D8D8D8;
-            li{
+            li {
               list-style: none;
               font-size: 14px;
               color: #333;
               margin-bottom: 10px;
               line-height: 22px;
-              &:hover{
+              &:hover {
                 color: #377DFF;
                 cursor: pointer;
               }
             }
 
           }
-          &:last-of-type{
-            ul{
+          &:last-of-type {
+            ul {
               border-right: none;
             }
+          }
+        }
+        .quest-item {
+          color: rgba(17, 17, 17, 0.82);
+          &:hover {
+            color: #2d8cf0
           }
         }
       }

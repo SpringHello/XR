@@ -641,7 +641,7 @@ var router = new Router({
             },
           ]
         },
-        {path: 'documentInfo/*', component: documentInfo},
+        {path: 'documentInfo/:parentId/:id', component: documentInfo},
 
       ]
     },

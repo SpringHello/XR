@@ -10,20 +10,25 @@
           <ul v-if="item.subMenu">
             <p :class="{active:item.active,open:item.open}" @click="item.open=!item.open">{{item.title}}</p>
             <li v-for="i in item.subMenu" v-show="item.open" :class="{active:i.id == minor}" @click="getContent(i.id)">
-              {{i.name}}
+              <router-link :to="`/ruicloud/documentInfo/${$router.currentRoute.params.parentId}/${i.id}`">{{i.name}}
+              </router-link>
             </li>
           </ul>
-          <p v-else @click="getContent(item.parentId)" :class="{active:item.parentId == minor}">{{item.title}}</p>
+          <router-link v-else :to="`/ruicloud/documentInfo/${$router.currentRoute.params.parentId}/${item.parentId}`"
+                       :class="{active:item.active}">
+            {{item.title}}
+          </router-link>
         </div>
-
       </div>
       <transition name="fade">
         <div id="main" v-if="mainOpen">
           <div v-for="item in mainMenu">
             <span>{{item.firstTitle}}</span>
             <ul>
-              <li v-for="i in item.secondTitle" @click="toggle(i.id)">
-                {{i.name}}
+              <li v-for="(i,index) in item.secondTitle" :key="index">
+                <router-link :to="i.url">
+                  {{i.name}}
+                </router-link>
               </li>
             </ul>
           </div>
@@ -37,6 +42,19 @@
 
 <script type="text/ecmascript-6">
   import axios from '@/util/axiosInterceptor'
+  function fetchData(parentId, id) {
+    var third = axios.get('document/getThirdTitle.do', {
+      params: {
+        id: parentId
+      }
+    })
+
+    var info = axios.get('document/listInformation.do', {
+      params: {
+        id: id
+      }
+    })
+  }
   export default{
     data(){
       var main = sessionStorage.getItem('document-main')
@@ -57,12 +75,58 @@
       }
     },
     beforeRouteEnter(to, from, next){
-      console.log(to)
-      axios.get('document/getFirstTitle.do').then(response => {
+      var first = axios.get('document/getFirstTitle.do')
+      var third = axios.get('document/getThirdTitle.do', {
+        params: {
+          id: to.params.parentId
+        }
+      })
+
+      var info = axios.get('document/listInformation.do', {
+        params: {
+          id: to.params.id
+        }
+      })
+      Promise.all([first, third, info]).then(value => {
         next(vm => {
-          vm.setData(response)
+          vm.setData(value)
         })
       })
+    },
+    beforeRouteUpdate(to, from, next){
+      var third = axios.get('document/getThirdTitle.do', {
+        params: {
+          id: to.params.parentId
+        }
+      })
+
+      var info = axios.get('document/listInformation.do', {
+        params: {
+          id: to.params.id
+        }
+      })
+      Promise.all([third, info]).then(value => {
+        value[0].data.result.forEach(item => {
+          item.active = false
+          if (item.subMenu) {
+            item.open = false
+            if (item.subMenu.some((i) => {
+                return i.id == this.$router.currentRoute.params.id
+              })) {
+              item.open = true
+              item.active = true
+            }
+          } else {
+            if (item.parentId == this.$router.currentRoute.params.id) {
+              item.active = true
+            }
+          }
+        })
+        this.menuList = value[0].data.result
+        this.title = value[0].data.title
+        this.content = value[1].data.result[0].content.replace(/<img src="/g, '<img src="http://jk.xrcloud.net/')
+      })
+      next()
     },
     mounted(){
       document.addEventListener('click', event => {
@@ -74,48 +138,29 @@
       })
     },
     methods: {
-      setData(response){
-        this.mainMenu = response.data.result
-        if (this.main == '') {
-          this.main = this.mainMenu[0].secondTitle[0].parentid
-        }
-        this.search()
-      },
-      // 切换分类
-      toggle(id){
-        this.main = id
-        this.minor = ''
-        this.search()
-      },
-      search(){
-        axios.get('/document/getThirdTitle.do', {
-          params: {
-            id: this.main
-          }
-        }).then(response => {
-          response.data.result.forEach(item => {
-            item.active = false
-            if (item.subMenu) {
-              item.open = false
-              if (this.minor) {
-                if (item.subMenu.some((i) => {
-                    return i.id == this.minor
-                  })) {
-                  item.open = true
-                  item.active = true
-                }
-              }
-            } else if (this.minor) {
-              if (item.parentId == this.minor) {
-                item.active = true
-              }
+      setData(value){
+        console.log(this.$router.currentRoute.params.parentId)
+        console.log(this.$router.currentRoute.params.id)
+        this.mainMenu = value[0].data.result
+        value[1].data.result.forEach(item => {
+          item.active = false
+          if (item.subMenu) {
+            item.open = false
+            if (item.subMenu.some((i) => {
+                return i.id == this.$router.currentRoute.params.id
+              })) {
+              item.open = true
+              item.active = true
             }
-          })
-          this.menuList = response.data.result
-          this.title = response.data.title
-          // 重置具体文档Id
-          this.getContent()
+          } else {
+            if (item.parentId == this.$router.currentRoute.params.id) {
+              item.active = true
+            }
+          }
         })
+        this.menuList = value[1].data.result
+        this.title = value[1].data.title
+        this.content = value[2].data.result[0].content.replace(/<img src="/g, '<img src="http://jk.xrcloud.net/')
       },
       getContent(id){
         this.minor = id || this.minor
@@ -182,6 +227,9 @@
           .active {
             color: #2d8cf0;
           }
+          > a {
+            color: rgba(17, 17, 17, 0.82);
+          }
           * {
             color: rgba(17, 17, 17, 0.82);
             cursor: pointer;
@@ -215,6 +263,11 @@
             li {
               margin-top: 10px;
               margin-left: 20px;
+              &.active {
+                a {
+                  color: #2d8cf0
+                }
+              }
             }
           }
         }
@@ -242,6 +295,12 @@
             font-size: 14px;
             li {
               margin-top: 10px;
+              a {
+                color: #333333;
+                &:hover {
+                  color: #2d8cf0;
+                }
+              }
             }
           }
         }
