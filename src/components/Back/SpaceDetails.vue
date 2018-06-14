@@ -178,7 +178,7 @@
         name="uploadFile"
         :data="fileUpdata"
         type="drag"
-        action="http://192.168.3.229:8080/ruirados/object/uploadObject.do"
+        action="object/uploadObject.do"
         class="upload_model"
       >
         <div class="upload_text">
