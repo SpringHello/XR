@@ -576,9 +576,9 @@
                 <div style="width:50%;text-align: center;">
                   <p class="hide-text" v-if="hostUnitList.hostcompanyurl==''">暂无图片</p>
                   <img style="width:198px;height:144px;" :src="hostUnitList.hostcompanyurl" v-else>
-                  <div v-for="item in uploadHost">
-                    <Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>
-                  </div>
+                  <!--<div v-for="item in uploadHost">-->
+                    <!--<Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>-->
+                  <!--</div>-->
                  </div>
                 <Upload
                   multiple
@@ -637,9 +637,9 @@
                   <span>{{item.name}}</span>
                   <Icon v-if="isCompile" type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
                 </p>
-                <div v-for="item in uploadDomain">
-                  <Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>
-                </div>
+                <!--<div v-for="item in uploadDomain">-->
+                  <!--<Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>-->
+                <!--</div>-->
               </div>
               <Upload
                 multiple
@@ -1983,8 +1983,8 @@
     mounted() {
       this.details();
       this.getPublicIP();
-      console.log( this.$refs.uploadHost);
-      this.uploadHost = this.$refs.uploadHost.fileList;
+      // console.log( this.$refs.uploadHost);
+      // this.uploadHost = this.$refs.uploadHost.fileList;
       // this.uploadDomain = this.$refs.uploadDomain.fileList;
     },
   };
