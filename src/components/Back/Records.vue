@@ -31,11 +31,8 @@
                   </Select>
                 </div>
               </div>
-              <router-link to="entrance">
-                <Button style="margin-bottom:10px;" type="primary">新增备案</Button>
-              </router-link>
-
-              <Table  ref="selection" :columns="recordTypeList" :data="recordProgressList"></Table>
+              <Button style="margin-bottom:10px;" @click="toEntrance" type="primary">新增备案</Button>
+              <Table ref="selection" :columns="recordTypeList" :data="recordProgressList"></Table>
             </TabPane>
 
             <TabPane :label="tabValue" style="min-height: 300px;">
@@ -55,7 +52,7 @@
                   </Select>
                 </div>
               </div>
-              <Table  ref="selection" :columns="completeRecordTypeList" :data="recordTypeData"></Table>
+              <Table ref="selection" :columns="completeRecordTypeList" :data="recordTypeData"></Table>
             </TabPane>
           </Tabs>
         </div>
@@ -269,7 +266,7 @@
                           }
                         }
                       },
-                      row.status == "待审核" ? "上传拍照/邮寄资料" : row.status == '初审拒绝' ||  row.status == '管局审核拒绝' ? "重新提交资料" : row.status == '初审成功' ? "暂无" : row.status == '管局审核成功'?'短信核验(特殊区域)' :'暂无'
+                      row.status == "待审核" ? "上传拍照/邮寄资料" : row.status == '初审拒绝' || row.status == '管局审核拒绝' ? "重新提交资料" : row.status == '初审成功' ? "暂无" : row.status == '管局审核成功' ? '短信核验(特殊区域)' : '暂无'
                     )
                   ]
               );
@@ -279,7 +276,7 @@
             title: "操作",
             key: "waitOperation",
             render: (h, params) => {
-              const hide = params.row.status == '待审核' || params.row.status == '初审拒绝' ? 'none' : 'block'
+              const hide = params.row.status == '待审核' || params.row.status == '初审拒绝' ? '' : 'none'
               return (
                 "div",
                   [
@@ -304,11 +301,12 @@
                         style: {
                           color: "#2A99F2",
                           cursor: "pointer",
-                          display: hide
+                          display: hide,
+                          marginLeft: '5px'
                         },
                         on: {
                           click: () => {
-
+                            this.custom(params.row.id);
                           }
                         }
                       },
@@ -441,7 +439,7 @@
                   this.recordProgressList[i].waitOperation = "查看详情";
                 }
               } else {
-               this.$Message.error(res.data.message);
+                this.$Message.error(res.data.message);
               }
             });
         }
@@ -478,28 +476,32 @@
         sessionStorage.setItem("id", id);
         sessionStorage.setItem("webcompany_Id", webcompany_Id);
         this.$router.push({path: "RecordDetails"});
+      },
+      custom(id) {
+        this.$Modal.confirm({
+          title: '是否撤销备案',
+          content: '<p>撤销备案此条备案信息会被删除</p>',
+          okText: '确定',
+          cancelText: '取消',
+          onOk: {
+            click: () => {
+              axios.post('recode/delMainWeb.do', {
+                id: id
+              }).then(res => {
+                if (res.data.status == 1) {
+                  this.$Message.success('撤销成功');
+                }
+              })
+            }
+          }
+        });
+      },
+      toEntrance() {
+        sessionStorage.setItem('back','back')
+        this.$router.push('entrance')
       }
     },
-    custom(id) {
-      this.$Modal.confirm({
-        title: '是否撤销备案',
-        content: '<p>撤销备案此条备案信息会被删除</p>',
-        okText: '确定',
-        cancelText: '取消',
-        onOk: {
-          click: () => {
-            axios.post('recode/delMainWeb.do', {
-              id: id
-            }).then(res => {
-              if (res.data.status == 1) {
-                this.$Message.success('撤销成功');
-              }
-            })
-          }
-        }
-      });
 
-    }
   }
 
 </script>
