@@ -1839,70 +1839,73 @@
       //   this.$refs.mainUnitInformation.validateField("district", valid => {
       //   });
       // },
-      allUpdate() {
+      allUpdate(){
+        let webcompany_Id = sessionStorage.getItem('webcompany_Id');
         this.updateHostUnitList.id = this.id;
-       let update =  this.$http.post("recode/updateMainWeb.do", {
-            id: this.id,
-            ISPName: this.updateHostUnitList.ispname,
-            webIp: this.updateHostUnitList.webip,
-            webAccessType: this.updateHostUnitList.webaccesstype,
-            webServerAddress: this.updateHostUnitList.webserveraddress,
-            webResponsibilityLinkName: this.updateHostUnitList
-              .webresponsibilitylinkname,
-            webResponsibilityCertificatesType: this.updateHostUnitList
-              .webresponsibilitycertificatestype,
-            webResponsibilityCertificatesNumber: this.updateHostUnitList
-              .webresponsibilitycertificatesnumber,
-            offaceNumber: this.updateHostUnitList.offacenumber,
-            webName: this.updateHostUnitList.webname,
-            webDomian: this.updateHostUnitList.webdomian,
-            webUrl: this.updateHostUnitList.weburl,
-            webServerContent: this.updateHostUnitList.webservercontent,
-            webMessage: this.updateHostUnitList.webmessage,
-            phone: this.updateHostUnitList.phone,
-            email: this.updateHostUnitList.email,
+        let web = {id: webcompany_Id,
+          ISPName: this.updateHostUnitList.ispname,
+          webIp: this.updateHostUnitList.webip,
+          webAccessType: this.updateHostUnitList.webaccesstype,
+          webServerAddress: this.updateHostUnitList.webserveraddress,
+          webResponsibilityLinkName: this.updateHostUnitList
+            .webresponsibilitylinkname,
+          webResponsibilityCertificatesType: this.updateHostUnitList
+            .webresponsibilitycertificatestype,
+          webResponsibilityCertificatesNumber: this.updateHostUnitList
+            .webresponsibilitycertificatesnumber,
+          offaceNumber: this.updateHostUnitList.offacenumber,
+          webName: this.updateHostUnitList.webname,
+          webDomian: this.updateHostUnitList.webdomian,
+          webUrl: this.updateHostUnitList.weburl,
+          webServerContent: this.updateHostUnitList.webservercontent,
+          webMessage: this.updateHostUnitList.webmessage,
+          phone: this.updateHostUnitList.phone,
+          email: this.updateHostUnitList.email,
+          webRecordAuthenticityUrl: this.updateHostUnitList.webrecordauthenticityurl,
+          companyResponsibilityUrlPositive: this.updateHostUnitList.webresponsibilityurlpositive,
+          companyResponsibilityUrlBack: this.updateHostUnitList.webresponsibilityurlback,
+          domainCertificateUrl:this.updateHostUnitList.domaincertificateurl,
+          otherDataUrl:this.updateHostUnitList.otherdataurl}
+        let update =  this.$http.post("recode/updateMainWeb.do", web);
+        let main = {
+          id: webcompany_Id,
+          phone: this.updateHostUnitList.companyphone,
+          email: this.updateHostUnitList.companyemail,
+          legalName: this.updateHostUnitList.legalname,
+          legalCertificatesType: this.updateHostUnitList
+            .legalcertificatestype,
+          legalCertificatesNumber: this.updateHostUnitList
+            .legalcertificatesnumber,
+          mainCompanyCertificatesType: this.updateHostUnitList
+            .maincompanycertificatestype,
+          mainCompanyNature: this.updateHostUnitList.maincompanynature,
+          mainCompanyName: this.updateHostUnitList.maincompanyname,
+          mainCompanyNumber: this.updateHostUnitList.maincompanynumber,
+          mainCompanyCertificatesLoaction: this.updateHostUnitList
+            .maincompanycertificatesloaction,
+          mainCompanyCommunicatLocation: this.updateHostUnitList
+            .maincompanycommunicatlocation,
+          InvestorName: this.updateHostUnitList.investorname,
+          /*
 
-            }
-          )
-       let addMian =  this.$http.post('recode/addMainCompany.do ',{
-         id: this.id,
-         phone: this.updateHostUnitList.companyphone,
-         email: this.updateHostUnitList.officenumber,
-         legalName: this.updateHostUnitList.legalname,
-         legalCertificatesType: this.updateHostUnitList
-           .legalcertificatestype,
-         legalCertificatesNumber: this.updateHostUnitList
-           .legalcertificatesnumber,
-         mainCompanyCertificatesType: this.updateHostUnitList
-           .maincompanycertificatestype,
-         mainCompanyNature: this.updateHostUnitList.maincompanynature,
-         mainCompanyName: this.updateHostUnitList.maincompanyname,
-         mainCompanyNumber: this.updateHostUnitList.maincompanynumber,
-         mainCompanyCertificatesLoaction: this.updateHostUnitList
-           .maincompanycertificatesloaction,
-         mainCompanyCommunicatLocation: this.updateHostUnitList
-           .maincompanycommunicatlocation,
-         InvestorName: this.updateHostUnitList.investorname,
-         officeNumber: this.updateHostUnitList.officenumber,
-         /*
-
-         照片
-       */
-         webRecordAuthenticityUrl: this.updateHostUnitList.webrecordauthenticityurl,
-         companyResponsibilityUrlPositive: this.updateHostUnitList.webresponsibilityurlpositive,
-         companyResponsibilityUrlBack: this.updateHostUnitList.webresponsibilityurlback,
-         domainCertificateUrl:this.updateHostUnitList.domaincertificateurl,
-         otherDataUrl:this.updateHostUnitList.otherdataurl,
-         hostCompanyUrl:this.updateHostUnitList.hostcompanyurl
-        })
-        Promise.all([update,addMian]).then(res =>{
-          if (res.data.status == 1) {
+          照片
+        */
+          hostCompanyUrl:this.updateHostUnitList.hostcompanyurl,
+          officeNumber: this.updateHostUnitList.officenumber,
+          mainCompanyArea:this.updateHostUnitList.maincompanyarea
+        }
+        let addMian =  this.$http.get('recode/addMainCompany.do', {params:main})
+        axios.all([update,addMian]).then(res =>{
+          console.log(res);
+          if (res[0].data.status == 1 && res[1].data.status == 1) {
+            this.$router.push({path:'BRecords'});
             this.$Message.success("修改成功");
           } else {
+            alert(111111);
             this.$Message.error(res.data.message);
           }
         })
-      }
+      },
     },
     mounted() {
       this.details();

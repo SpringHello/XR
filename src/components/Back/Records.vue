@@ -133,7 +133,7 @@
             label: "全部"
           },
           {
-            value: "待审核",
+            value: "初审中",
             label: "初审中"
           },
           {
@@ -160,7 +160,7 @@
             label: "全部"
           },
           {
-            value: "初审中",
+            value: "待审核",
             label: "初审中"
           },
           {
@@ -241,7 +241,7 @@
             title: "当前状态",
             key: "status",
             render: (h, params) => {
-              return h("div", params.row.status == '待审核' ? '初审中' : params.row.status == '管局审核中' ? '初审成功' : params.row.status);
+              return h("div", params.row.status == '管局审核中' ? '初审成功' : params.row.status);
             }
           },
           {
@@ -261,7 +261,7 @@
                         },
                         on: {
                           click: () => {
-                            if (row.status == "待审核") {
+                            if (row.status == "初审中") {
                               sessionStorage.setItem("newId", row.id);
                               sessionStorage.setItem(
                                 "newRecordtype",
@@ -274,7 +274,7 @@
                           }
                         }
                       },
-                      row.status == "待审核" ? "上传拍照/邮寄资料" : row.status == '初审拒绝' || row.status == '管局审核拒绝' ? "重新提交资料" : row.status == '初审成功' ? "暂无" : row.status == '管局审核成功' ? '短信核验(特殊区域)' : '暂无'
+                      row.status == "初审中" ? "上传拍照/邮寄资料" : row.status == '初审拒绝' || row.status == '管局审核拒绝' ? "重新提交资料" : row.status == '初审成功' ? "暂无" : row.status == '管局审核成功' ? '短信核验(特殊区域)' : '暂无'
                     )
                   ]
               );
@@ -284,7 +284,7 @@
             title: "操作",
             key: "waitOperation",
             render: (h, params) => {
-              const hide = params.row.status == '待审核' || params.row.status == '初审拒绝' ? '' : 'none'
+              const hide = params.row.status == '初审中' || params.row.status == '初审拒绝' ? '' : 'none'
               return (
                 "div",
                   [

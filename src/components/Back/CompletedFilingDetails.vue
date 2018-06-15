@@ -881,7 +881,7 @@
       <Form ref="webIsp" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="ispname">
           <p style="margin:10px">ISP名称</p>
-          <Input :readonly="true" type="text" v-model="updateHostUnitList.ispname"></Input>
+          <Input  type="text" v-model="updateHostUnitList.ispname"></Input>
         </FormItem>
         <FormItem prop="webip">
           <p style="margin:10px">网站IP地址</p>
@@ -1656,7 +1656,6 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             for(let i =0; i<response.data.result.length; i++){
-
               this.webipList.push(response.data.result[i].publicip);
             }
           }
@@ -1709,34 +1708,37 @@
         });
       },
       allUpdate(){
+        let webcompany_Id = sessionStorage.getItem('webcompany_Id');
         this.updateHostUnitList.id = this.id;
-        let update =  this.$http.post("recode/updateMainWeb.do", {
-            id: this.id,
-            ISPName: this.updateHostUnitList.ispname,
-            webIp: this.updateHostUnitList.webip,
-            webAccessType: this.updateHostUnitList.webaccesstype,
-            webServerAddress: this.updateHostUnitList.webserveraddress,
-            webResponsibilityLinkName: this.updateHostUnitList
-              .webresponsibilitylinkname,
-            webResponsibilityCertificatesType: this.updateHostUnitList
-              .webresponsibilitycertificatestype,
-            webResponsibilityCertificatesNumber: this.updateHostUnitList
-              .webresponsibilitycertificatesnumber,
-            offaceNumber: this.updateHostUnitList.offacenumber,
-            webName: this.updateHostUnitList.webname,
-            webDomian: this.updateHostUnitList.webdomian,
-            webUrl: this.updateHostUnitList.weburl,
-            webServerContent: this.updateHostUnitList.webservercontent,
-            webMessage: this.updateHostUnitList.webmessage,
-            phone: this.updateHostUnitList.phone,
-            email: this.updateHostUnitList.email,
-
-          }
-        )
-        let addMian =  this.$http.post('recode/addMainCompany.do ',{
-          id: this.id,
+        let web = {id: webcompany_Id,
+          ISPName: this.updateHostUnitList.ispname,
+          webIp: this.updateHostUnitList.webip,
+          webAccessType: this.updateHostUnitList.webaccesstype,
+          webServerAddress: this.updateHostUnitList.webserveraddress,
+          webResponsibilityLinkName: this.updateHostUnitList
+            .webresponsibilitylinkname,
+          webResponsibilityCertificatesType: this.updateHostUnitList
+            .webresponsibilitycertificatestype,
+          webResponsibilityCertificatesNumber: this.updateHostUnitList
+            .webresponsibilitycertificatesnumber,
+          offaceNumber: this.updateHostUnitList.offacenumber,
+          webName: this.updateHostUnitList.webname,
+          webDomian: this.updateHostUnitList.webdomian,
+          webUrl: this.updateHostUnitList.weburl,
+          webServerContent: this.updateHostUnitList.webservercontent,
+          webMessage: this.updateHostUnitList.webmessage,
+          phone: this.updateHostUnitList.phone,
+          email: this.updateHostUnitList.email,
+          webRecordAuthenticityUrl: this.updateHostUnitList.webrecordauthenticityurl,
+          companyResponsibilityUrlPositive: this.updateHostUnitList.webresponsibilityurlpositive,
+          companyResponsibilityUrlBack: this.updateHostUnitList.webresponsibilityurlback,
+          domainCertificateUrl:this.updateHostUnitList.domaincertificateurl,
+          otherDataUrl:this.updateHostUnitList.otherdataurl}
+        let update =  this.$http.post("recode/updateMainWeb.do", web);
+        let main = {
+          id: webcompany_Id,
           phone: this.updateHostUnitList.companyphone,
-          email: this.updateHostUnitList.officenumber,
+          email: this.updateHostUnitList.companyemail,
           legalName: this.updateHostUnitList.legalname,
           legalCertificatesType: this.updateHostUnitList
             .legalcertificatestype,
@@ -1756,18 +1758,18 @@
 
           照片
         */
-          webRecordAuthenticityUrl: this.updateHostUnitList.webrecordauthenticityurl,
-          companyResponsibilityUrlPositive: this.updateHostUnitList.webresponsibilityurlpositive,
-          companyResponsibilityUrlBack: this.updateHostUnitList.webresponsibilityurlback,
-          domainCertificateUrl:this.updateHostUnitList.domaincertificateurl,
-          otherDataUrl:this.updateHostUnitList.otherdataurl,
           hostCompanyUrl:this.updateHostUnitList.hostcompanyurl,
           officeNumber: this.updateHostUnitList.officenumber,
-        })
-        Promise.all([update,addMian]).then(res =>{
-          if (res.data.status == 1) {
+          mainCompanyArea:this.updateHostUnitList.maincompanyarea
+        }
+        let addMian =  this.$http.get('recode/addMainCompany.do', {params:main})
+        axios.all([update,addMian]).then(res =>{
+          console.log(res);
+          if (res[0].data.status == 1 && res[1].data.status == 1) {
+            this.$router.push({path:'BRecords'});
             this.$Message.success("修改成功");
           } else {
+            alert(111111);
             this.$Message.error(res.data.message);
           }
         })
@@ -1788,7 +1790,7 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             name == 'hostUpdate' ? this.host = false :
-              name == 'legal' ? this.legal = false :
+              name == 'legalUpdate' ? this.legal = false :
                 name == 'website' ? this.website = false :
                   name == 'websitePerson' ? this.websitePerson = false :
                     name == 'webIsp'? this.webIsp = false :'';
