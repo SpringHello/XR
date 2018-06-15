@@ -33,8 +33,9 @@
                 <span>主办单位信息</span>
               </div>
               <div style="width:90%;text-align: right;">
-                <Button type="primary" style="margin-right: 10px;" @click="isCompile = true">变更备案</Button>
-                <Button @click="domain = true">注销主体</Button>
+                <Button type="primary" style="margin-right: 10px;" @click="changeCompile('isChange')" v-show="!isCompile">变更备案</Button>
+                <Button type="primary" style="margin-right: 10px;" @click="changeCompile('isCanl')" v-show="isCompile">取消变更</Button>
+                <Button @click="domain = true" v-show="!isCompile">注销主体</Button>
                 <Button type="primary" style="margin-left: 10px" v-show="isCompile" @click="host = true">修改主体</Button>
               </div>
             </div>
@@ -175,8 +176,8 @@
               </div>
 
               <div style="width:90%;text-align: right;">
-                <Button type="primary" @click="cancel = true">取消接入</Button>
-                <Button @click="cancellation = true" style="margin-left: 10px">注销网站</Button>
+                <Button type="primary" @click="cancel = true" v-show="!isCompile">取消接入</Button>
+                <Button @click="cancellation = true" style="margin-left: 10px" v-show="!isCompile">注销网站</Button>
                 <Button type="primary" style="margin-left: 10px" v-show="isCompile" @click="website= true">修改网站</Button>
               </div>
             </div>
@@ -575,9 +576,9 @@
                 <div style="width:50%;text-align: center;">
                   <p class="hide-text" v-if="hostUnitList.hostcompanyurl==''">暂无图片</p>
                   <img style="width:198px;height:144px;" :src="hostUnitList.hostcompanyurl" v-else>
-                  <div v-for="item in uploadHost">
-                    <Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>
-                  </div>
+                  <!--<div v-for="item in uploadHost">-->
+                    <!--<Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>-->
+                  <!--</div>-->
                  </div>
                 <Upload
                   multiple
@@ -636,9 +637,9 @@
                   <span>{{item.name}}</span>
                   <Icon v-if="isCompile" type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
                 </p>
-                <div v-for="item in uploadDomain">
-                  <Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>
-                </div>
+                <!--<div v-for="item in uploadDomain">-->
+                  <!--<Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>-->
+                <!--</div>-->
               </div>
               <Upload
                 multiple
@@ -880,7 +881,7 @@
       <Form ref="webIsp" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="ispname">
           <p style="margin:10px">ISP名称</p>
-          <Input type="text" v-model="updateHostUnitList.ispname"></Input>
+          <Input readonly="true" type="text" v-model="updateHostUnitList.ispname"></Input>
         </FormItem>
         <FormItem prop="webip">
           <p style="margin:10px">网站IP地址</p>
@@ -890,11 +891,13 @@
         </FormItem>
         <FormItem prop="webaccesstype">
           <p style="margin:10px">网站接入方式</p>
-          <Input  type="text" v-model="updateHostUnitList.webaccesstype"></Input>
+          <Select v-model="updateHostUnitList.webaccesstype">
+            <Option v-for="item in webaccessList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
         </FormItem>
         <FormItem prop="webserveraddress">
           <p style="margin:10px">服务器放置地</p>
-          <Input  type="text" v-model="updateHostUnitList.webserveraddress"></Input>
+          <Input readonly="true" type="text" v-model="updateHostUnitList.webserveraddress"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -1291,6 +1294,12 @@
           ],
           weburl: [
             {required: true, validator: validWebsiteHomepage, trigger: "blur"}
+          ],
+          webaccesstype:[
+            {required:true,message:"请选网站接入方式",trigger:'blur'}
+          ],
+          webip:[
+            {required:true,message:"请选择网站ip",trigger:"blur"}
           ]
         },
         //获取域名证书文件
@@ -1331,7 +1340,26 @@
         uploadDomain:[],
         //ISP网站ip
         webip:[],
-        webipList:[]
+        webipList:[],
+        //ISP服务器接入方式
+        webaccessList:[
+          {
+            label:'专线',
+          value:'专线'
+          },
+          {
+            label:'主机托管',
+            value:'主机托管'
+          },
+          {
+            label:'虚拟主机',
+            value:'虚拟主机'
+          },
+          {
+            label:'其他',
+            value:'其他'
+          }
+        ]
       };
     },
     created() {
@@ -1682,65 +1710,66 @@
       },
       allUpdate(){
         this.updateHostUnitList.id = this.id;
-        this.$http
-          .post("recode/updateMainWeb.do",
-            {
-              id: this.id,
-              ISPName: this.updateHostUnitList.ispname,
-              webIp: this.updateHostUnitList.webip,
-              webAccessType: this.updateHostUnitList.webaccesstype,
-              webServerAddress: this.updateHostUnitList.webserveraddress,
-              webResponsibilitylinkName: this.updateHostUnitList
-                .webresponsibilitylinkname,
-              webResponsibilityCertificatesType: this.updateHostUnitList
-                .webresponsibilitycertificatestype,
-              webResponsibilityCertificatesNumber: this.updateHostUnitList
-                .webresponsibilitycertificatesnumber,
-              offaceNumber: this.updateHostUnitList.offacenumber,
-              phone: this.updateHostUnitList.phone,
-              email: this.updateHostUnitList.email,
-              webName: this.updateHostUnitList.webname,
-              webDomian: this.updateHostUnitList.webdomian,
-              webUrl: this.updateHostUnitList.weburl,
-              webServerContent: this.updateHostUnitList.webservercontent,
-              webMessage: this.updateHostUnitList.webmessage,
-              legalName: this.updateHostUnitList.legalname,
-              companyPhone: this.updateHostUnitList.companyphone,
-              companyEmail: this.updateHostUnitList.companyemail,
-              officeNumber: this.updateHostUnitList.officenumber,
-              legalCertificatesType: this.updateHostUnitList
-                .legalcertificatestype,
-              legalCertificatesNumber: this.updateHostUnitList
-                .legalcertificatesnumber,
-              mainCompanyCertificatesType: this.updateHostUnitList
-                .maincompanycertificatestype,
-              mainCompanyNature: this.updateHostUnitList.maincompanynature,
-              mainCompanyName: this.updateHostUnitList.maincompanyname,
-              mainCompanyNumber: this.updateHostUnitList.maincompanynumber,
-              mainCompanyCertificatesLoaction: this.updateHostUnitList
-                .maincompanycertificatesloaction,
-              mainCompanyCommunicatLocation: this.updateHostUnitList
-                .maincompanycommunicatlocation,
-              InvestorName: this.updateHostUnitList.investorname,
-              /*
+        let update =  this.$http.post("recode/updateMainWeb.do", {
+            id: this.id,
+            ISPName: this.updateHostUnitList.ispname,
+            webIp: this.updateHostUnitList.webip,
+            webAccessType: this.updateHostUnitList.webaccesstype,
+            webServerAddress: this.updateHostUnitList.webserveraddress,
+            webResponsibilityLinkName: this.updateHostUnitList
+              .webresponsibilitylinkname,
+            webResponsibilityCertificatesType: this.updateHostUnitList
+              .webresponsibilitycertificatestype,
+            webResponsibilityCertificatesNumber: this.updateHostUnitList
+              .webresponsibilitycertificatesnumber,
+            offaceNumber: this.updateHostUnitList.offacenumber,
+            webName: this.updateHostUnitList.webname,
+            webDomian: this.updateHostUnitList.webdomian,
+            webUrl: this.updateHostUnitList.weburl,
+            webServerContent: this.updateHostUnitList.webservercontent,
+            webMessage: this.updateHostUnitList.webmessage,
+            phone: this.updateHostUnitList.phone,
+            email: this.updateHostUnitList.email,
+            officeNumber: this.updateHostUnitList.officenumber,
+          }
+        )
+        let addMian =  this.$http.post('/recode/addMainCompany.do ',{
+          id: this.id,
+          phone: this.updateHostUnitList.companyphone,
+          email: this.updateHostUnitList.officenumber,
+          legalName: this.updateHostUnitList.legalname,
+          legalCertificatesType: this.updateHostUnitList
+            .legalcertificatestype,
+          legalCertificatesNumber: this.updateHostUnitList
+            .legalcertificatesnumber,
+          mainCompanyCertificatesType: this.updateHostUnitList
+            .maincompanycertificatestype,
+          mainCompanyNature: this.updateHostUnitList.maincompanynature,
+          mainCompanyName: this.updateHostUnitList.maincompanyname,
+          mainCompanyNumber: this.updateHostUnitList.maincompanynumber,
+          mainCompanyCertificatesLoaction: this.updateHostUnitList
+            .maincompanycertificatesloaction,
+          mainCompanyCommunicatLocation: this.updateHostUnitList
+            .maincompanycommunicatlocation,
+          InvestorName: this.updateHostUnitList.investorname,
+          /*
 
-                照片
-              */
-              webRecordauthenticityurl: this.updateHostUnitList.webrecordauthenticityurl,
-              webresponsibilityurlpositive: this.updateHostUnitList.webresponsibilityurlpositive,
-              webresponsibilityurlback: this.updateHostUnitList.webresponsibilityurlback,
-              domaincertificateurl:this.updateHostUnitList.domaincertificateurl,
-              otherdataurl:this.updateHostUnitList.otherdataurl,
-              hostcompanyurl:this.updateHostUnitList.hostcompanyurl
-            }
-          )
-          .then(res => {
-            if (res.data.status == 1) {
-              this.$Message.success("修改成功");
-            } else {
-              this.$Message.error(res.data.message);
-            }
-          });
+          照片
+        */
+          webRecordAuthenticityUrl: this.updateHostUnitList.webrecordauthenticityurl,
+          companyResponsibilityUrlPositive: this.updateHostUnitList.webresponsibilityurlpositive,
+          companyResponsibilityUrlBack: this.updateHostUnitList.webresponsibilityurlback,
+          domainCertificateUrl:this.updateHostUnitList.domaincertificateurl,
+          otherDataUrl:this.updateHostUnitList.otherdataurl,
+          hostCompanyUrl:this.updateHostUnitList.hostcompanyurl
+        })
+        Promise.all([update,addMian]).then(res =>{
+          if (res.data.status == 1) {
+            this.$Message.success("修改成功");
+          } else {
+            this.$Message.error(res.data.message);
+          }
+        })
       },
       //删除上传文件
       deletePhoto(val,index){
@@ -1969,12 +1998,21 @@
       otherFormatError(){
         this.$Message.error('其他资料只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
+      //改变变更备案
+      changeCompile(val){
+        if(val == 'isChange'){
+          this.isCompile = true;
+        }else{
+          this.isCompile = false;
+        }
+
+      }
     },
     mounted() {
       this.details();
       this.getPublicIP();
-      console.log( this.$refs.uploadHost);
-      this.uploadHost = this.$refs.uploadHost.fileList;
+      // console.log( this.$refs.uploadHost);
+      // this.uploadHost = this.$refs.uploadHost.fileList;
       // this.uploadDomain = this.$refs.uploadDomain.fileList;
     },
   };

@@ -27,6 +27,7 @@ import slider from './myView/slider'
 // 引入错误提示框组件
 import message from './myView/message'
 import md5 from 'md5'
+
 Vue.prototype.$message = message
 Vue.config.productionTip = false
 
@@ -37,13 +38,14 @@ Vue.config.productionTip = false
 // axios.defaults.withCredentials = true
 
 //axios.defaults.baseURL = 'http://192.168.3.29:8082/ruicloud/'
-axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
-axios.defaults.withCredentials = true
+//axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
+//axios.defaults.withCredentials = true
 
 // axios挂载到Vue原型
 Vue.prototype.$http = axios.create({
   params: {}
 })
+
 /* axios ajax请求拦截 需要zoneid的接口都使用this.$http的形式调用 */
 function requestIntercept(config) {
   if (config.method == 'get') {

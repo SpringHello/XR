@@ -868,7 +868,9 @@
         </FormItem>
         <FormItem prop="webaccesstype">
           <p style="margin:10px">网站接入方式</p>
-          <Input  type="text" v-model="updateHostUnitList.webaccesstype"></Input>
+          <Select v-model="updateHostUnitList.webaccesstype">
+            <Option v-for="item in webaccessList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
         </FormItem>
         <FormItem prop="webserveraddress">
           <p style="margin:10px">服务器放置地</p>
@@ -1225,10 +1227,12 @@
           weburl: [
             {required: true, validator: validWebsiteHomepage, trigger: "blur"}
           ],
-          ispname:[
-            {required: true, message: "请输入ISP名称", trigger: "blur"}
+          webaccesstype:[
+            {required:true,message:"请选网站接入方式",trigger:'blur'}
           ],
-
+          webip:[
+            {required:true,message:"请选择网站ip",trigger:"blur"}
+          ]
         },
         //获取域名证书文件
         addy: [],
@@ -1247,7 +1251,26 @@
         examples: '',
         //ISP网站ip
         webip:[],
-        webipList:[]
+        webipList:[],
+        //ISP服务器接入方式
+        webaccessList:[
+          {
+            label:'专线',
+            value:'专线'
+          },
+          {
+            label:'主机托管',
+            value:'主机托管'
+          },
+          {
+            label:'虚拟主机',
+            value:'虚拟主机'
+          },
+          {
+            label:'其他',
+            value:'其他'
+          }
+        ]
       };
     },
     created() {
@@ -1810,66 +1833,67 @@
       // },
       allUpdate() {
         this.updateHostUnitList.id = this.id;
-        this.$http
-          .post("recode/updateMainWeb.do", {
+       let update =  this.$http.post("recode/updateMainWeb.do", {
             id: this.id,
             ISPName: this.updateHostUnitList.ispname,
             webIp: this.updateHostUnitList.webip,
             webAccessType: this.updateHostUnitList.webaccesstype,
             webServerAddress: this.updateHostUnitList.webserveraddress,
-            webResponsibilitylinkName: this.updateHostUnitList
+            webResponsibilityLinkName: this.updateHostUnitList
               .webresponsibilitylinkname,
             webResponsibilityCertificatesType: this.updateHostUnitList
               .webresponsibilitycertificatestype,
             webResponsibilityCertificatesNumber: this.updateHostUnitList
               .webresponsibilitycertificatesnumber,
             offaceNumber: this.updateHostUnitList.offacenumber,
-            phone: this.updateHostUnitList.phone,
-            email: this.updateHostUnitList.email,
             webName: this.updateHostUnitList.webname,
             webDomian: this.updateHostUnitList.webdomian,
             webUrl: this.updateHostUnitList.weburl,
             webServerContent: this.updateHostUnitList.webservercontent,
             webMessage: this.updateHostUnitList.webmessage,
-            legalName: this.updateHostUnitList.legalname,
-            companyPhone: this.updateHostUnitList.companyphone,
-            companyEmail: this.updateHostUnitList.companyemail,
+            phone: this.updateHostUnitList.phone,
+            email: this.updateHostUnitList.email,
             officeNumber: this.updateHostUnitList.officenumber,
-            legalCertificatesType: this.updateHostUnitList
-              .legalcertificatestype,
-            legalCertificatesNumber: this.updateHostUnitList
-              .legalcertificatesnumber,
-            mainCompanyCertificatesType: this.updateHostUnitList
-              .maincompanycertificatestype,
-            mainCompanyNature: this.updateHostUnitList.maincompanynature,
-            mainCompanyName: this.updateHostUnitList.maincompanyname,
-            mainCompanyNumber: this.updateHostUnitList.maincompanynumber,
-            mainCompanyCertificatesLoaction: this.updateHostUnitList
-              .maincompanycertificatesloaction,
-            mainCompanyCommunicatLocation: this.updateHostUnitList
-              .maincompanycommunicatlocation,
-            InvestorName: this.updateHostUnitList.investorname,
-            /*
-
-            照片
-          */
-            webRecordauthenticityurl: this.updateHostUnitList.webrecordauthenticityurl,
-            webresponsibilityurlpositive: this.updateHostUnitList.webresponsibilityurlpositive,
-            webresponsibilityurlback: this.updateHostUnitList.webresponsibilityurlback,
-            domaincertificateurl:this.updateHostUnitList.domaincertificateurl,
-            otherdataurl:this.updateHostUnitList.otherdataurl,
-            hostcompanyurl:this.updateHostUnitList.hostcompanyurl
             }
           )
-          .then(res => {
-            if (res.data.status == 1) {
-              this.$Message.success("修改成功");
-            } else {
-              this.$Message.error(res.data.message);
-            }
-          });
-      },
+       let addMian =  this.$http.post('/recode/addMainCompany.do ',{
+         id: this.id,
+         phone: this.updateHostUnitList.companyphone,
+         email: this.updateHostUnitList.officenumber,
+         legalName: this.updateHostUnitList.legalname,
+         legalCertificatesType: this.updateHostUnitList
+           .legalcertificatestype,
+         legalCertificatesNumber: this.updateHostUnitList
+           .legalcertificatesnumber,
+         mainCompanyCertificatesType: this.updateHostUnitList
+           .maincompanycertificatestype,
+         mainCompanyNature: this.updateHostUnitList.maincompanynature,
+         mainCompanyName: this.updateHostUnitList.maincompanyname,
+         mainCompanyNumber: this.updateHostUnitList.maincompanynumber,
+         mainCompanyCertificatesLoaction: this.updateHostUnitList
+           .maincompanycertificatesloaction,
+         mainCompanyCommunicatLocation: this.updateHostUnitList
+           .maincompanycommunicatlocation,
+         InvestorName: this.updateHostUnitList.investorname,
+         /*
 
+         照片
+       */
+         webRecordAuthenticityUrl: this.updateHostUnitList.webrecordauthenticityurl,
+         companyResponsibilityUrlPositive: this.updateHostUnitList.webresponsibilityurlpositive,
+         companyResponsibilityUrlBack: this.updateHostUnitList.webresponsibilityurlback,
+         domainCertificateUrl:this.updateHostUnitList.domaincertificateurl,
+         otherDataUrl:this.updateHostUnitList.otherdataurl,
+         hostCompanyUrl:this.updateHostUnitList.hostcompanyurl
+        })
+        Promise.all([update,addMian]).then(res =>{
+          if (res.data.status == 1) {
+            this.$Message.success("修改成功");
+          } else {
+            this.$Message.error(res.data.message);
+          }
+        })
+      }
     },
     mounted() {
       this.details();

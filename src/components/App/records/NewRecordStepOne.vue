@@ -391,25 +391,10 @@
           callback();
         }
       };
-      //校验证件类型
-      // const validUnitProperties = (rule, value, callback) => {
-      //   let regCord = /(^\d{15}$) |(^\d{18}$) |(^\d{17}(\d|X|x)$)/;
-      //   console.log(this.mainUnitInformation.certificateTypeList);
-
-      //       if (!regCord.test(this.mainUnitInformation.certificateNumber)) {
-      //           return callback(new Error("请输入正确的"+this.mainUnitInformation.certificateTypeList.label)
-      //         } else {
-      //           callback();
-      //         }
-      // };
       const validUnitProperties = (rule, value, callback) => {
-        let regCord = /(^\d{15}$) |(^\d{18}$) |(^\d{17}(\d|X|x)$)/;
-        if (!regCord.test(this.mainUnitInformation.certificateNumber)) {
-          return callback(
-            new Error(
-              "请输入正确的" + this.mainUnitInformation.certificateTypeList.label
-            )
-          );
+        let regCord = /^[0-9]*$/;
+        if (!regCord.test(value)) {
+          return callback(new Error("请输入正确的证件号码"));
         } else {
           callback();
         }
@@ -480,8 +465,8 @@
             {required: true, message: "请选择证件类型", trigger: "change"}
           ],
           certificateNumber: [
-            {required: true, message: "请输入单位证件号码", trigger: "blur"}
-            // { validator: validUnitProperties, trigger: "blur" }
+            {required: true, message: "请输入单位证件号码", trigger: "blur"},
+             { validator: validUnitProperties, trigger: "blur" }
           ],
           unitName: [
             {required: true, message: "请输入主体单位名称", trigger: "blur"},
