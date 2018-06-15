@@ -858,7 +858,7 @@
       <Form ref="webIsp" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="ispname">
           <p style="margin:10px">ISP名称</p>
-          <Input type="text"  v-model="updateHostUnitList.ispname"></Input>
+          <Input :readonly="true" type="text"  v-model="updateHostUnitList.ispname"></Input>
         </FormItem>
         <FormItem prop="webip">
           <p style="margin:10px">网站IP地址</p>
@@ -874,7 +874,7 @@
         </FormItem>
         <FormItem prop="webserveraddress">
           <p style="margin:10px">服务器放置地</p>
-          <Input  type="text" v-model="updateHostUnitList.webserveraddress"></Input>
+          <Input  :readonly="true" type="text" v-model="updateHostUnitList.webserveraddress"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -1569,7 +1569,6 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             for(let i =0; i<response.data.result.length; i++){
-
               this.webipList.push(response.data.result[i].publicip);
             }
           }
@@ -1607,17 +1606,20 @@
             webRecord.substring(webRecord.lastIndexOf('/') + 1);
             objc.name = (webRecord.substring(webRecord.lastIndexOf('/') + 1));
             this.webRecordData.push(objc);
-            switch (this.webRecordData[0].name.substring(this.webRecordData[0].name.length - 3)) {
-              case 'pdf' :
-                this.webRecordData[0].img = imgPdf;
-                break;
-              case 'jpg' :
-                this.webRecordData[0].img = imgJpg;
-                break;
-              case 'doc' :
-                this.webRecordData[0].img = imgDoc;
-                break;
+            for(let i = 0;i<this.webRecordData.length; i++){
+              switch (this.webRecordData[i].name.substring(this.webRecordData[0].name.length - 3)) {
+                case 'pdf' :
+                  this.webRecordData[i].img = imgPdf;
+                  break;
+                case 'jpg' :
+                  this.webRecordData[i].img = imgJpg;
+                  break;
+                case 'doc' :
+                  this.webRecordData[i].img = imgDoc;
+                  break;
+              }
             }
+
           }
           this.$Message.success('上传成功');
         }else {
@@ -1636,7 +1638,8 @@
       //身份证正面上传成功
       cardSuccess(response) {
         if (response.status == 1) {
-          this.updateHostUnitList.webresponsibilityurlpositive = response.result;
+          this.hostUnitList.webresponsibilityurlpositive = response.result;
+          console.log(this.updateHostUnitList.webresponsibilityurlpositive);
           this.$Message.success('上传成功');
         } else {
           this.$Message.error('上传失败');
@@ -1648,7 +1651,7 @@
       },
       cardBackSuccess(response) {
         if (response.status == 1) {
-          this.updateHostUnitList.webresponsibilityurlback = response.result;
+          this.hostUnitList.webresponsibilityurlback = response.result;
           this.$Message.success('上传成功');
         } else {
           this.$Message.error('上传失败');
@@ -1660,7 +1663,7 @@
       },
       organizerSuccess(response) {
         if (response.status == 1) {
-          this.updateHostUnitList.hostcompanyurl = response.result;
+          this.hostUnitList.hostcompanyurl = response.result;
           this.$Message.success('上传成功');
         } else {
           this.$Message.error('上传失败');
@@ -1698,18 +1701,21 @@
             addy.substring(addy.lastIndexOf('/') + 1);
             object.name = (addy.substring(addy.lastIndexOf('/') + 1));
             this.addy.push(object);
-            switch (this.addy[0].name.substring(this.addy[0].name.length - 3)) {
-              case 'pdf' :
-                this.addy[0].img = imgPdf;
-                break;
-              case 'jpg' :
-                this.addy[0].img = imgJpg;
-                break;
-              case 'doc' :
-                this.addy[0].img = imgDoc;
-                break;
+            for(let i = 0;i<this.addy.length; i++){
+              switch (this.addy[i].name.substring(this.addy[0].name.length - 3)) {
+                case 'pdf' :
+                  this.addy[i].img = imgPdf;
+                  break;
+                case 'jpg' :
+                  this.addy[i].img = imgJpg;
+                  break;
+                case 'doc' :
+                  this.addy[i].img = imgDoc;
+                  break;
+              }
             }
           }
+          console.log(this.addy);
           this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
@@ -1730,7 +1736,7 @@
               let object = new Object();
               addy[i].substring(addy[i].lastIndexOf('/') + 1);
               object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
-              this.addy.push(object);
+              this.otherData.push(object);
               switch (this.addy[i].name.substring(this.addy[i].name.length - 3)) {
                 case 'pdf' :
                   this.addy[i].img = imgPdf;
@@ -1748,17 +1754,19 @@
             let object = new Object();
             addy.substring(addy.lastIndexOf('/') + 1);
             object.name = (addy.substring(addy.lastIndexOf('/') + 1));
-            this.addy.push(object);
-            switch (this.addy[0].name.substring(this.addy[0].name.length - 3)) {
-              case 'pdf' :
-                this.addy[0].img = imgPdf;
-                break;
-              case 'jpg' :
-                this.addy[0].img = imgJpg;
-                break;
-              case 'doc' :
-                this.addy[0].img = imgDoc;
-                break;
+            this.otherData.push(object);
+            for(let i = 0;i<otherData.otherData.length;i++){
+              switch (this.addy[i].name.substring(this.addy[0].name.length - 3)) {
+                case 'pdf' :
+                  this.otherData[i].img = imgPdf;
+                  break;
+                case 'jpg' :
+                  this.otherData[i].img = imgJpg;
+                  break;
+                case 'doc' :
+                  this.otherData[i].img = imgDoc;
+                  break;
+              }
             }
           }
           this.$Message.success('上传成功');
@@ -1853,10 +1861,10 @@
             webMessage: this.updateHostUnitList.webmessage,
             phone: this.updateHostUnitList.phone,
             email: this.updateHostUnitList.email,
-            officeNumber: this.updateHostUnitList.officenumber,
+
             }
           )
-       let addMian =  this.$http.post('/recode/addMainCompany.do ',{
+       let addMian =  this.$http.post('recode/addMainCompany.do ',{
          id: this.id,
          phone: this.updateHostUnitList.companyphone,
          email: this.updateHostUnitList.officenumber,
@@ -1875,6 +1883,7 @@
          mainCompanyCommunicatLocation: this.updateHostUnitList
            .maincompanycommunicatlocation,
          InvestorName: this.updateHostUnitList.investorname,
+         officeNumber: this.updateHostUnitList.officenumber,
          /*
 
          照片

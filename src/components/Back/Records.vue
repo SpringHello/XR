@@ -104,6 +104,10 @@
         //备案类型下拉列表数据
         recordTypeCityList: [
           {
+            value: "全部",
+            label: "全部"
+          },
+          {
             value: "新增备案",
             label: "新增备案"
           },
@@ -186,6 +190,10 @@
         ],
         //已完成备案备案类型
         completeTypeCityList: [
+          {
+            value: "全部",
+            label: "全部"
+          },
           {
             value: "新增备案",
             label: "新增备案"
@@ -423,12 +431,15 @@
         if (this.currentState == "全部") {
           this.currentState = "";
         }
+        if(this.recordType == '全部'){
+          this.recordType = "";
+        }
         if (userList != null) {
           this.$http
             .get("recode/listMainWeb.do", {
               params: {
                 overType: overType,
-                recordtype: this.recordType,
+                recordType: this.recordType,
                 status: this.currentState
               }
             })
@@ -450,11 +461,12 @@
         if (this.completeState == "全部") {
           this.completeState = "";
         }
+        this.completeRecordType == "全部" ? "" :this.completeRecordType;
         if (userList != null) {
           this.$http
             .get("recode/listMainWeb.do", {
               params: {
-                recordtype: this.completeRecordType,
+                recordType: this.completeRecordType,
                 overType: overType,
                 status: this.completeState
               }
@@ -481,18 +493,19 @@
         this.$Modal.confirm({
           title: '是否撤销备案',
           content: '<p>撤销备案此条备案信息会被删除</p>',
-          okText: '确定',
-          cancelText: '取消',
-          onOk: {
-            click: () => {
-              axios.post('recode/delMainWeb.do', {
-                id: id
-              }).then(res => {
-                if (res.data.status == 1) {
-                  this.$Message.success('撤销成功');
-                }
-              })
-            }
+          onOk: () => {
+           this.$http.get('recode/delMainWeb.do', {
+             params:{
+               id: id
+             }
+            }).then(res => {
+              if (res.data.status == 1) {
+                this.$Message.success('撤销成功');
+                this.listMainWeb(0);
+              }else{
+                this.$Message.error(res.data.message);
+              }
+            })
           }
         });
       },

@@ -181,7 +181,7 @@
                 <Button type="primary" style="margin-left: 10px" v-show="isCompile" @click="website= true">修改网站</Button>
               </div>
             </div>
-            <div class="tables" v-show="!isIconInfo">
+            <div class="tables" v-show="isIconInfo">
               <ul class="nav_list">
                 <li class="nav_item">网站名称</li>
                 <li class="nav_item">网站域名</li>
@@ -881,7 +881,7 @@
       <Form ref="webIsp" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="ispname">
           <p style="margin:10px">ISP名称</p>
-          <Input readonly="true" type="text" v-model="updateHostUnitList.ispname"></Input>
+          <Input :readonly="true" type="text" v-model="updateHostUnitList.ispname"></Input>
         </FormItem>
         <FormItem prop="webip">
           <p style="margin:10px">网站IP地址</p>
@@ -897,7 +897,7 @@
         </FormItem>
         <FormItem prop="webserveraddress">
           <p style="margin:10px">服务器放置地</p>
-          <Input readonly="true" type="text" v-model="updateHostUnitList.webserveraddress"></Input>
+          <Input :readonly="true" type="text" v-model="updateHostUnitList.webserveraddress"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -1542,7 +1542,7 @@
               }
               //查询错误的备案信息然后显示出来重新输入
               if (typeof (this.hostUnitList.errorMessage) != 'undefined') {
-                this.isIconInfo = false;
+
                 this.isAllUpate = false;
                 this.hostUnitList.errorMessage.forEach(item => {
                   switch (item) {
@@ -1730,10 +1730,10 @@
             webMessage: this.updateHostUnitList.webmessage,
             phone: this.updateHostUnitList.phone,
             email: this.updateHostUnitList.email,
-            officeNumber: this.updateHostUnitList.officenumber,
+
           }
         )
-        let addMian =  this.$http.post('/recode/addMainCompany.do ',{
+        let addMian =  this.$http.post('recode/addMainCompany.do ',{
           id: this.id,
           phone: this.updateHostUnitList.companyphone,
           email: this.updateHostUnitList.officenumber,
@@ -1761,7 +1761,8 @@
           companyResponsibilityUrlBack: this.updateHostUnitList.webresponsibilityurlback,
           domainCertificateUrl:this.updateHostUnitList.domaincertificateurl,
           otherDataUrl:this.updateHostUnitList.otherdataurl,
-          hostCompanyUrl:this.updateHostUnitList.hostcompanyurl
+          hostCompanyUrl:this.updateHostUnitList.hostcompanyurl,
+          officeNumber: this.updateHostUnitList.officenumber,
         })
         Promise.all([update,addMian]).then(res =>{
           if (res.data.status == 1) {
@@ -1825,23 +1826,26 @@
                   break;
               }
             }
-          }else{
-            let webRecord = this.updateHostUnitList.webrecordauthenticityurl
-            let obj = new Object();
+          } else {
+            let webRecord = this.updateHostUnitList.webrecordauthenticityurl;
+            let objc = new Object();
             webRecord.substring(webRecord.lastIndexOf('/') + 1);
-            obj.name = (webRecord.substring(webRecord.lastIndexOf('/') + 1));
-            this.webRecordData.push(obj);
-            switch (this.webRecordData[0].name.substring(this.webRecordData[0].name.length - 3)) {
-              case 'pdf' :
-                this.webRecordData[0].img = imgPdf;
-                break;
-              case 'jpg' :
-                this.webRecordData[0].img = imgJpg;
-                break;
-              case 'doc' :
-                this.webRecordData[0].img = imgDoc;
-                break;
+            objc.name = (webRecord.substring(webRecord.lastIndexOf('/') + 1));
+            this.webRecordData.push(objc);
+            for(let i = 0;i<this.webRecordData.length; i++){
+              switch (this.webRecordData[i].name.substring(this.webRecordData[0].name.length - 3)) {
+                case 'pdf' :
+                  this.webRecordData[i].img = imgPdf;
+                  break;
+                case 'jpg' :
+                  this.webRecordData[i].img = imgJpg;
+                  break;
+                case 'doc' :
+                  this.webRecordData[i].img = imgDoc;
+                  break;
+              }
             }
+
           }
           this.$Message.success('上传成功');
         }else {
@@ -1860,7 +1864,7 @@
       //身份证正面上传成功
       cardSuccess(response){
         if(response.status == 1){
-          this.updateHostUnitList.webresponsibilityurlpositive=response.result;
+          this.hostUnitList.webresponsibilityurlpositive=response.result;
           this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
@@ -1872,7 +1876,7 @@
       },
       cardBackSuccess(response){
         if(response.status == 1){
-          domaincertificateurl.domaincertificateurl=response.result;
+          this.hostUnitList.webresponsibilityurlback=response.result;
             this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
@@ -1884,7 +1888,7 @@
       },
       organizerSuccess(response){
         if(response.status == 1){
-            this.updateHostUnitList.hostcompanyurl=response.result;
+            this.hostUnitList.hostcompanyurl=response.result;
             this.$Message.success('上传成功');
         }else{
           this.$Message.error('上传失败');
@@ -1922,18 +1926,21 @@
             addy.substring(addy.lastIndexOf('/') + 1);
             object.name = (addy.substring(addy.lastIndexOf('/') + 1));
             this.addy.push(object);
-            switch (this.addy[0].name.substring(this.addy[0].name.length - 3)) {
-              case 'pdf' :
-                this.addy[0].img = imgPdf;
-                break;
-              case 'jpg' :
-                this.addy[0].img = imgJpg;
-                break;
-              case 'doc' :
-                this.addy[0].img = imgDoc;
-                break;
+            for(let i = 0;i<this.addy.length; i++){
+              switch (this.addy[i].name.substring(this.addy[0].name.length - 3)) {
+                case 'pdf' :
+                  this.addy[i].img = imgPdf;
+                  break;
+                case 'jpg' :
+                  this.addy[i].img = imgJpg;
+                  break;
+                case 'doc' :
+                  this.addy[i].img = imgDoc;
+                  break;
+              }
             }
           }
+          console.log(this.addy);
           this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
@@ -1947,45 +1954,47 @@
       //其他文件上传格式错误
       otherFileSuccess(response){
         if(response.status ==1){
-            this.updateHostUnitList.otherdataurl=response.result;
+          this.updateHostUnitList.otherdataurl=response.result;
           if (this.updateHostUnitList.otherdataurl.indexOf(',') > 0) {
-            let onther = this.updateHostUnitList.otherdataurl.split(",");
-            for (let j = 0; j < onther.length; j++) {
-              let obj = new Object();
-              onther[j].substring(onther[j].lastIndexOf('/') + 1);
-              obj.name = (onther[j].substring(onther[j].lastIndexOf('/') + 1));
-              this.otherData.push(obj);
-              switch (this.otherData[j].name.substring(this.otherData[j].name.length - 3)) {
+            let addy =  this.updateHostUnitList.otherdataurl.split(",");
+            for (let i = 0; i < addy.length; i++) {
+              let object = new Object();
+              addy[i].substring(addy[i].lastIndexOf('/') + 1);
+              object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
+              this.otherData.push(object);
+              switch (this.addy[i].name.substring(this.addy[i].name.length - 3)) {
                 case 'pdf' :
-                  this.otherData[j].img = imgPdf;
+                  this.addy[i].img = imgPdf;
                   break;
                 case 'jpg' :
-                  this.otherData[j].img = imgJpg;
+                  this.addy[i].img = imgJpg;
                   break;
                 case 'doc' :
-                  this.otherData[j].img = imgDoc;
+                  this.addy[i].img = imgDoc;
                   break;
               }
             }
           } else {
-            let onther = this.updateHostUnitList.otherdataurl
-            let obj = new Object();
-            onther.substring(onther.lastIndexOf('/') + 1);
-            obj.name = (onther.substring(onther.lastIndexOf('/') + 1));
-            this.otherData.push(obj);
-            switch (this.otherData[0].name.substring(this.otherData[0].name.length - 3)) {
-              case 'pdf' :
-                this.otherData[0].img = imgPdf;
-                break;
-              case 'jpg' :
-                this.otherData[0].img = imgJpg;
-                break;
-              case 'doc' :
-                this.otherData[0].img = imgDoc;
-                break;
+            let addy =  this.updateHostUnitList.otherdataurl;
+            let object = new Object();
+            addy.substring(addy.lastIndexOf('/') + 1);
+            object.name = (addy.substring(addy.lastIndexOf('/') + 1));
+            this.otherData.push(object);
+            for(let i = 0;i<otherData.otherData.length;i++){
+              switch (this.addy[i].name.substring(this.addy[0].name.length - 3)) {
+                case 'pdf' :
+                  this.otherData[i].img = imgPdf;
+                  break;
+                case 'jpg' :
+                  this.otherData[i].img = imgJpg;
+                  break;
+                case 'doc' :
+                  this.otherData[i].img = imgDoc;
+                  break;
+              }
             }
           }
-              this.$Message.success('上传成功');
+          this.$Message.success('上传成功');
         }else{
           this.$Message.error('上传失败');
         }
