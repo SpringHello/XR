@@ -139,7 +139,7 @@
             startTime: this.startDate,
             endTime: this.oneDay,
             pageSum:10,
-            pageNum:page
+            pageNum:page == undefined ? 1 : page
           }).then(res => {
              if(res.data.status =='1'){
               if(typeof(res.data.data.logs) === "string")

@@ -1038,6 +1038,7 @@
             this.tremLoading = false;
             this.$Message.success('获取成功');
           } else {
+            this.tremLoading = false;
             this.$Message.error(res.data.msg);
           }
         })
