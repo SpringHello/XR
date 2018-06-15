@@ -218,7 +218,7 @@
                   </div>
                 </transition>
               </FormItem>
-              <FormItem label="办公室电话" v-else>
+              <FormItem label="办公室电话" v-if="isPersonage">
                 <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.officePhone" placeholder="请输入办公室电话"
                                        style="width: 468px;margin-left: 10px"></Input>
                 <transition name="fade">

@@ -84,6 +84,7 @@
                     :before-upload="markIDCard(index)">
                     <div class="item-content-text" v-if="item.IDCardFront==''">
                       点击上传图片
+                     <!-- <Progress v-if="FilePercent!=0" :percent="FilePercent"></Progress>-->
                     </div>
                     <img v-else :src="item.IDCardFront" style="height: 120px;width:164px;">
                   </Upload>
@@ -362,7 +363,8 @@
         },
         imageViewShow: false,
         checkSrc: '',
-        isPersonage: false
+        isPersonage: false,
+        percent: 0
       }
     },
     created() {
@@ -802,7 +804,11 @@
     mounted() {
       this.siteInfoShow = true
     },
-    computed: {}
+    computed: {
+      FilePercent() {
+        return this.percent + 100
+      }
+    }
   }
 </script>
 
