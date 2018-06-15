@@ -104,6 +104,10 @@
         //备案类型下拉列表数据
         recordTypeCityList: [
           {
+            value: "全部",
+            label: "全部"
+          },
+          {
             value: "新增备案",
             label: "新增备案"
           },
@@ -129,7 +133,7 @@
             label: "全部"
           },
           {
-            value: "待审核",
+            value: "初审中",
             label: "初审中"
           },
           {
@@ -156,7 +160,7 @@
             label: "全部"
           },
           {
-            value: "初审中",
+            value: "待审核",
             label: "初审中"
           },
           {
@@ -186,6 +190,10 @@
         ],
         //已完成备案备案类型
         completeTypeCityList: [
+          {
+            value: "全部",
+            label: "全部"
+          },
           {
             value: "新增备案",
             label: "新增备案"
@@ -233,7 +241,7 @@
             title: "当前状态",
             key: "status",
             render: (h, params) => {
-              return h("div", params.row.status == '待审核' ? '初审中' : params.row.status == '管局审核中' ? '初审成功' : params.row.status);
+              return h("div", params.row.status == '管局审核中' ? '初审成功' : params.row.status);
             }
           },
           {
@@ -253,7 +261,7 @@
                         },
                         on: {
                           click: () => {
-                            if (row.status == "待审核") {
+                            if (row.status == "初审中") {
                               sessionStorage.setItem("newId", row.id);
                               sessionStorage.setItem(
                                 "newRecordtype",
@@ -266,7 +274,7 @@
                           }
                         }
                       },
-                      row.status == "待审核" ? "上传拍照/邮寄资料" : row.status == '初审拒绝' || row.status == '管局审核拒绝' ? "重新提交资料" : row.status == '初审成功' ? "暂无" : row.status == '管局审核成功' ? '短信核验(特殊区域)' : '暂无'
+                      row.status == "初审中" ? "上传拍照/邮寄资料" : row.status == '初审拒绝' || row.status == '管局审核拒绝' ? "重新提交资料" : row.status == '初审成功' ? "暂无" : row.status == '管局审核成功' ? '短信核验(特殊区域)' : '暂无'
                     )
                   ]
               );
@@ -276,7 +284,7 @@
             title: "操作",
             key: "waitOperation",
             render: (h, params) => {
-              const hide = params.row.status == '待审核' || params.row.status == '初审拒绝' ? '' : 'none'
+              const hide = params.row.status == '初审中' || params.row.status == '初审拒绝' ? '' : 'none'
               return (
                 "div",
                   [
@@ -423,12 +431,15 @@
         if (this.currentState == "全部") {
           this.currentState = "";
         }
+        if(this.recordType == '全部'){
+          this.recordType = "";
+        }
         if (userList != null) {
           this.$http
             .get("recode/listMainWeb.do", {
               params: {
                 overType: overType,
-                recordtype: this.recordType,
+                recordType: this.recordType,
                 status: this.currentState
               }
             })
@@ -450,11 +461,12 @@
         if (this.completeState == "全部") {
           this.completeState = "";
         }
+        this.completeRecordType == "全部" ? "" :this.completeRecordType;
         if (userList != null) {
           this.$http
             .get("recode/listMainWeb.do", {
               params: {
-                recordtype: this.completeRecordType,
+                recordType: this.completeRecordType,
                 overType: overType,
                 status: this.completeState
               }
@@ -481,18 +493,19 @@
         this.$Modal.confirm({
           title: '是否撤销备案',
           content: '<p>撤销备案此条备案信息会被删除</p>',
-          okText: '确定',
-          cancelText: '取消',
-          onOk: {
-            click: () => {
-              axios.post('recode/delMainWeb.do', {
-                id: id
-              }).then(res => {
-                if (res.data.status == 1) {
-                  this.$Message.success('撤销成功');
-                }
-              })
-            }
+          onOk: () => {
+           this.$http.get('recode/delMainWeb.do', {
+             params:{
+               id: id
+             }
+            }).then(res => {
+              if (res.data.status == 1) {
+                this.$Message.success('撤销成功');
+                this.listMainWeb(0);
+              }else{
+                this.$Message.error(res.data.message);
+              }
+            })
           }
         });
       },

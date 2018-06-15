@@ -181,7 +181,7 @@
                 <Button type="primary" style="margin-left: 10px" v-show="isCompile" @click="website= true">修改网站</Button>
               </div>
             </div>
-            <div class="tables" v-show="!isIconInfo">
+            <div class="tables" v-show="isIconInfo">
               <ul class="nav_list">
                 <li class="nav_item">网站名称</li>
                 <li class="nav_item">网站域名</li>
@@ -881,7 +881,7 @@
       <Form ref="webIsp" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="ispname">
           <p style="margin:10px">ISP名称</p>
-          <Input readonly="true" type="text" v-model="updateHostUnitList.ispname"></Input>
+          <Input  type="text" v-model="updateHostUnitList.ispname"></Input>
         </FormItem>
         <FormItem prop="webip">
           <p style="margin:10px">网站IP地址</p>
@@ -897,7 +897,7 @@
         </FormItem>
         <FormItem prop="webserveraddress">
           <p style="margin:10px">服务器放置地</p>
-          <Input readonly="true" type="text" v-model="updateHostUnitList.webserveraddress"></Input>
+          <Input :readonly="true" type="text" v-model="updateHostUnitList.webserveraddress"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -1542,7 +1542,7 @@
               }
               //查询错误的备案信息然后显示出来重新输入
               if (typeof (this.hostUnitList.errorMessage) != 'undefined') {
-                this.isIconInfo = false;
+
                 this.isAllUpate = false;
                 this.hostUnitList.errorMessage.forEach(item => {
                   switch (item) {
@@ -1656,7 +1656,6 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             for(let i =0; i<response.data.result.length; i++){
-
               this.webipList.push(response.data.result[i].publicip);
             }
           }
@@ -1709,66 +1708,71 @@
         });
       },
       allUpdate(){
+        let webcompany_Id = sessionStorage.getItem('webcompany_Id');
         this.updateHostUnitList.id = this.id;
-        this.$http
-          .post("recode/updateMainWeb.do",
-            {
-              id: this.id,
-              ISPName: this.updateHostUnitList.ispname,
-              webIp: this.updateHostUnitList.webip,
-              webAccessType: this.updateHostUnitList.webaccesstype,
-              webServerAddress: this.updateHostUnitList.webserveraddress,
-              webResponsibilitylinkName: this.updateHostUnitList
-                .webresponsibilitylinkname,
-              webResponsibilityCertificatesType: this.updateHostUnitList
-                .webresponsibilitycertificatestype,
-              webResponsibilityCertificatesNumber: this.updateHostUnitList
-                .webresponsibilitycertificatesnumber,
-              offaceNumber: this.updateHostUnitList.offacenumber,
-              phone: this.updateHostUnitList.phone,
-              email: this.updateHostUnitList.email,
-              webName: this.updateHostUnitList.webname,
-              webDomian: this.updateHostUnitList.webdomian,
-              webUrl: this.updateHostUnitList.weburl,
-              webServerContent: this.updateHostUnitList.webservercontent,
-              webMessage: this.updateHostUnitList.webmessage,
-              legalName: this.updateHostUnitList.legalname,
-              companyPhone: this.updateHostUnitList.companyphone,
-              companyEmail: this.updateHostUnitList.companyemail,
-              officeNumber: this.updateHostUnitList.officenumber,
-              legalCertificatesType: this.updateHostUnitList
-                .legalcertificatestype,
-              legalCertificatesNumber: this.updateHostUnitList
-                .legalcertificatesnumber,
-              mainCompanyCertificatesType: this.updateHostUnitList
-                .maincompanycertificatestype,
-              mainCompanyNature: this.updateHostUnitList.maincompanynature,
-              mainCompanyName: this.updateHostUnitList.maincompanyname,
-              mainCompanyNumber: this.updateHostUnitList.maincompanynumber,
-              mainCompanyCertificatesLoaction: this.updateHostUnitList
-                .maincompanycertificatesloaction,
-              mainCompanyCommunicatLocation: this.updateHostUnitList
-                .maincompanycommunicatlocation,
-              InvestorName: this.updateHostUnitList.investorname,
-              /*
+        let web = {id: webcompany_Id,
+          ISPName: this.updateHostUnitList.ispname,
+          webIp: this.updateHostUnitList.webip,
+          webAccessType: this.updateHostUnitList.webaccesstype,
+          webServerAddress: this.updateHostUnitList.webserveraddress,
+          webResponsibilityLinkName: this.updateHostUnitList
+            .webresponsibilitylinkname,
+          webResponsibilityCertificatesType: this.updateHostUnitList
+            .webresponsibilitycertificatestype,
+          webResponsibilityCertificatesNumber: this.updateHostUnitList
+            .webresponsibilitycertificatesnumber,
+          offaceNumber: this.updateHostUnitList.offacenumber,
+          webName: this.updateHostUnitList.webname,
+          webDomian: this.updateHostUnitList.webdomian,
+          webUrl: this.updateHostUnitList.weburl,
+          webServerContent: this.updateHostUnitList.webservercontent,
+          webMessage: this.updateHostUnitList.webmessage,
+          phone: this.updateHostUnitList.phone,
+          email: this.updateHostUnitList.email,
+          webRecordAuthenticityUrl: this.updateHostUnitList.webrecordauthenticityurl,
+          companyResponsibilityUrlPositive: this.updateHostUnitList.webresponsibilityurlpositive,
+          companyResponsibilityUrlBack: this.updateHostUnitList.webresponsibilityurlback,
+          domainCertificateUrl:this.updateHostUnitList.domaincertificateurl,
+          otherDataUrl:this.updateHostUnitList.otherdataurl}
+        let update =  this.$http.post("recode/updateMainWeb.do", web);
+        let main = {
+          id: webcompany_Id,
+          phone: this.updateHostUnitList.companyphone,
+          email: this.updateHostUnitList.companyemail,
+          legalName: this.updateHostUnitList.legalname,
+          legalCertificatesType: this.updateHostUnitList
+            .legalcertificatestype,
+          legalCertificatesNumber: this.updateHostUnitList
+            .legalcertificatesnumber,
+          mainCompanyCertificatesType: this.updateHostUnitList
+            .maincompanycertificatestype,
+          mainCompanyNature: this.updateHostUnitList.maincompanynature,
+          mainCompanyName: this.updateHostUnitList.maincompanyname,
+          mainCompanyNumber: this.updateHostUnitList.maincompanynumber,
+          mainCompanyCertificatesLoaction: this.updateHostUnitList
+            .maincompanycertificatesloaction,
+          mainCompanyCommunicatLocation: this.updateHostUnitList
+            .maincompanycommunicatlocation,
+          InvestorName: this.updateHostUnitList.investorname,
+          /*
 
-                照片
-              */
-              webrecordauthenticityurl: this.updateHostUnitList.webrecordauthenticityurl,
-              webresponsibilityurlpositive: this.updateHostUnitList.webresponsibilityurlpositive,
-              webresponsibilityurlback: this.updateHostUnitList.webresponsibilityurlback,
-              domaincertificateurl:this.updateHostUnitList.domaincertificateurl,
-              otherdataurl:this.updateHostUnitList.otherdataurl,
-              hostcompanyurl:this.updateHostUnitList.hostcompanyurl
-            }
-          )
-          .then(res => {
-            if (res.data.status == 1) {
-              this.$Message.success("修改成功");
-            } else {
-              this.$Message.error(res.data.message);
-            }
-          });
+          照片
+        */
+          hostCompanyUrl:this.updateHostUnitList.hostcompanyurl,
+          officeNumber: this.updateHostUnitList.officenumber,
+          mainCompanyArea:this.updateHostUnitList.maincompanyarea
+        }
+        let addMian =  this.$http.get('recode/addMainCompany.do', {params:main})
+        axios.all([update,addMian]).then(res =>{
+          console.log(res);
+          if (res[0].data.status == 1 && res[1].data.status == 1) {
+            this.$router.push({path:'BRecords'});
+            this.$Message.success("修改成功");
+          } else {
+            alert(111111);
+            this.$Message.error(res.data.message);
+          }
+        })
       },
       //删除上传文件
       deletePhoto(val,index){
@@ -1786,7 +1790,7 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             name == 'hostUpdate' ? this.host = false :
-              name == 'legal' ? this.legal = false :
+              name == 'legalUpdate' ? this.legal = false :
                 name == 'website' ? this.website = false :
                   name == 'websitePerson' ? this.websitePerson = false :
                     name == 'webIsp'? this.webIsp = false :'';
@@ -1824,23 +1828,26 @@
                   break;
               }
             }
-          }else{
-            let webRecord = this.updateHostUnitList.webrecordauthenticityurl
-            let obj = new Object();
+          } else {
+            let webRecord = this.updateHostUnitList.webrecordauthenticityurl;
+            let objc = new Object();
             webRecord.substring(webRecord.lastIndexOf('/') + 1);
-            obj.name = (webRecord.substring(webRecord.lastIndexOf('/') + 1));
-            this.webRecordData.push(obj);
-            switch (this.webRecordData[0].name.substring(this.webRecordData[0].name.length - 3)) {
-              case 'pdf' :
-                this.webRecordData[0].img = imgPdf;
-                break;
-              case 'jpg' :
-                this.webRecordData[0].img = imgJpg;
-                break;
-              case 'doc' :
-                this.webRecordData[0].img = imgDoc;
-                break;
+            objc.name = (webRecord.substring(webRecord.lastIndexOf('/') + 1));
+            this.webRecordData.push(objc);
+            for(let i = 0;i<this.webRecordData.length; i++){
+              switch (this.webRecordData[i].name.substring(this.webRecordData[0].name.length - 3)) {
+                case 'pdf' :
+                  this.webRecordData[i].img = imgPdf;
+                  break;
+                case 'jpg' :
+                  this.webRecordData[i].img = imgJpg;
+                  break;
+                case 'doc' :
+                  this.webRecordData[i].img = imgDoc;
+                  break;
+              }
             }
+
           }
           this.$Message.success('上传成功');
         }else {
@@ -1859,7 +1866,7 @@
       //身份证正面上传成功
       cardSuccess(response){
         if(response.status == 1){
-          this.updateHostUnitList.webresponsibilityurlpositive=response.result;
+          this.hostUnitList.webresponsibilityurlpositive=response.result;
           this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
@@ -1871,7 +1878,7 @@
       },
       cardBackSuccess(response){
         if(response.status == 1){
-          domaincertificateurl.domaincertificateurl=response.result;
+          this.hostUnitList.webresponsibilityurlback=response.result;
             this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
@@ -1883,7 +1890,7 @@
       },
       organizerSuccess(response){
         if(response.status == 1){
-            this.updateHostUnitList.hostcompanyurl=response.result;
+            this.hostUnitList.hostcompanyurl=response.result;
             this.$Message.success('上传成功');
         }else{
           this.$Message.error('上传失败');
@@ -1921,18 +1928,21 @@
             addy.substring(addy.lastIndexOf('/') + 1);
             object.name = (addy.substring(addy.lastIndexOf('/') + 1));
             this.addy.push(object);
-            switch (this.addy[0].name.substring(this.addy[0].name.length - 3)) {
-              case 'pdf' :
-                this.addy[0].img = imgPdf;
-                break;
-              case 'jpg' :
-                this.addy[0].img = imgJpg;
-                break;
-              case 'doc' :
-                this.addy[0].img = imgDoc;
-                break;
+            for(let i = 0;i<this.addy.length; i++){
+              switch (this.addy[i].name.substring(this.addy[0].name.length - 3)) {
+                case 'pdf' :
+                  this.addy[i].img = imgPdf;
+                  break;
+                case 'jpg' :
+                  this.addy[i].img = imgJpg;
+                  break;
+                case 'doc' :
+                  this.addy[i].img = imgDoc;
+                  break;
+              }
             }
           }
+          console.log(this.addy);
           this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
@@ -1946,45 +1956,47 @@
       //其他文件上传格式错误
       otherFileSuccess(response){
         if(response.status ==1){
-            this.updateHostUnitList.otherdataurl=response.result;
+          this.updateHostUnitList.otherdataurl=response.result;
           if (this.updateHostUnitList.otherdataurl.indexOf(',') > 0) {
-            let onther = this.updateHostUnitList.otherdataurl.split(",");
-            for (let j = 0; j < onther.length; j++) {
-              let obj = new Object();
-              onther[j].substring(onther[j].lastIndexOf('/') + 1);
-              obj.name = (onther[j].substring(onther[j].lastIndexOf('/') + 1));
-              this.otherData.push(obj);
-              switch (this.otherData[j].name.substring(this.otherData[j].name.length - 3)) {
+            let addy =  this.updateHostUnitList.otherdataurl.split(",");
+            for (let i = 0; i < addy.length; i++) {
+              let object = new Object();
+              addy[i].substring(addy[i].lastIndexOf('/') + 1);
+              object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
+              this.otherData.push(object);
+              switch (this.addy[i].name.substring(this.addy[i].name.length - 3)) {
                 case 'pdf' :
-                  this.otherData[j].img = imgPdf;
+                  this.addy[i].img = imgPdf;
                   break;
                 case 'jpg' :
-                  this.otherData[j].img = imgJpg;
+                  this.addy[i].img = imgJpg;
                   break;
                 case 'doc' :
-                  this.otherData[j].img = imgDoc;
+                  this.addy[i].img = imgDoc;
                   break;
               }
             }
           } else {
-            let onther = this.updateHostUnitList.otherdataurl
-            let obj = new Object();
-            onther.substring(onther.lastIndexOf('/') + 1);
-            obj.name = (onther.substring(onther.lastIndexOf('/') + 1));
-            this.otherData.push(obj);
-            switch (this.otherData[0].name.substring(this.otherData[0].name.length - 3)) {
-              case 'pdf' :
-                this.otherData[0].img = imgPdf;
-                break;
-              case 'jpg' :
-                this.otherData[0].img = imgJpg;
-                break;
-              case 'doc' :
-                this.otherData[0].img = imgDoc;
-                break;
+            let addy =  this.updateHostUnitList.otherdataurl;
+            let object = new Object();
+            addy.substring(addy.lastIndexOf('/') + 1);
+            object.name = (addy.substring(addy.lastIndexOf('/') + 1));
+            this.otherData.push(object);
+            for(let i = 0;i<otherData.otherData.length;i++){
+              switch (this.addy[i].name.substring(this.addy[0].name.length - 3)) {
+                case 'pdf' :
+                  this.otherData[i].img = imgPdf;
+                  break;
+                case 'jpg' :
+                  this.otherData[i].img = imgJpg;
+                  break;
+                case 'doc' :
+                  this.otherData[i].img = imgDoc;
+                  break;
+              }
             }
           }
-              this.$Message.success('上传成功');
+          this.$Message.success('上传成功');
         }else{
           this.$Message.error('上传失败');
         }
