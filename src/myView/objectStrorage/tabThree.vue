@@ -50,8 +50,7 @@
         }
       ],
       //操作日志数据
-      journalData: [
-      ],
+      journalData: [],
       dayList:[
           {
               value:'近一天',
