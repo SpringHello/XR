@@ -862,7 +862,26 @@
     },
     methods: {
       _checkNewCros(){
-        this.$refs.newCros
+        this.$refs.newCros.validate((valid) => {
+          if (valid) {
+            // 表单验证通过，调用创建磁盘方法
+            this.addCors()
+          }
+        })
+      },
+      // 添加Cors
+      addCors(){
+        this.$http.post('cors/addCors.do', {
+          bucketid: sessionStorage.getItem('bucketId'),
+          bucketName: sessionStorage.getItem('bucketName'),
+          orgins: this.addCorsForm.orgins,
+          methods: this.addCorsForm.methods,
+          allowsHeaders: this.addCorsForm.allowsHeaders,
+          ExposeHeaders: this.addCorsForm.ExposeHeaders,
+          maxAge: this.addCorsForm.maxAge + ''
+        }).then(response => {
+          console.log(response)
+        })
       },
       //上传文件格式错误的方法
       handleFormatError(file) {
@@ -1124,20 +1143,7 @@
           console.log(response)
         })
       },
-      // 添加Cors
-      addCors(){
-        this.$http.post('cors/addCors.do', {
-          bucketid: sessionStorage.getItem('bucketid'),
-          bucketName: sessionStorage.getItem('bucketName'),
-          orgins: '',
-          methods: '',
-          allowsHeaders: '',
-          ExposeHeaders: '',
-          maxAge: ''
-        }).then(response => {
 
-        })
-      }
       //获取空间详情
       // bucketDetails() {
       //
