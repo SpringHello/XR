@@ -738,7 +738,7 @@
 
           <!--access key pane-->
           <Tab-pane label="Access Key" name="key">
-            <Button type="primary" @click="createKey" style="margin-bottom:10px">创建Access Key</Button>
+            <Button type="primary" @click="keymodal" style="margin-bottom:10px">创建Access Key</Button>
             <Table :columns="keyColumns" :data="keyData"></Table>
           </Tab-pane>
         </Tabs>
@@ -1021,12 +1021,21 @@
       </div>
       <div class="keyPhoneVal" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
         <p>为保障您的账户安全，请进行手机验证：</p>
-        <p>手机号码： <span>15123278316</span></p> 
-        <p> 验证码 <Input v-model="value" placeholder="请输入验证码" style="width: 132px;margin:0 20px;"></Input><Button type="primary">获取验证码</Button></p>
+        <p>手机号码： <span>{{keyForm.phone}}</span></p> 
+        <p> 图形验证码 
+          <Input v-model="keyForm.imgCode" placeholder="请输入验证码" style="width: 132px;margin:0 20px;"></Input>
+          <img :src="imgSrc" style="width:80px;height:30px;vertical-align: middle" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+        </p>
+        <p> 验证码 
+          <Input v-model="keyForm.code" placeholder="请输入验证码" style="width: 132px;margin:0 20px;"></Input>
+          <Button type="primary" :class="{codeDisabled:keycodePlaceholder!='获取验证码'}" @click.prevent="keysendCode"
+                  :disabled="keycodePlaceholder!='获取验证码'">{{keycodePlaceholder}}
+          </Button>
+        </p>
       </div>
       <div slot="footer">
         <Button type="ghost" @click="showModal.keyPhoneVal=false">取消</Button>
-        <Button type="primary" @click="createKey">
+        <Button type="primary" @click="createKey" :disabled="keyForm.imgCode==''||keyForm.code==''">
           确定
         </Button>
       </div>
@@ -1105,7 +1114,14 @@
         }
       }
       return {
+        keyWeight: '',
+        keycodePlaceholder: '获取验证码',
         token: '',
+        keyForm: {
+          phone: '',
+          imgCode: '',
+          code: ''
+        },
         phoneVerCode: '获取验证码',
         emailVerCode: '获取验证码',
         authType,
@@ -1670,7 +1686,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                         axios.post('/user/showUserAcess.do', {
+                                         axios.post('user/showUserAcess.do', {
                                             accessKeyID: params.row.accesskeyid,
                                             token: this.token
                                           }).then(response => {
@@ -1730,7 +1746,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                          axios.post('/user/stateUserAcess.do', {
+                                          axios.post('user/stateUserAcess.do', {
                                             accessKeyID: params.row.accesskeyid,
                                             status: params.row.status,
                                             zoneId: $store.state.zone.zoneid,
@@ -1752,7 +1768,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                          axios.post('/user/deleteUserAcess.do', {
+                                          axios.post('user/deleteUserAcess.do', {
                                             accessKeyID: params.row.accesskeyid,
                                             zoneId: $store.state.zone.zoneid,
                                             token: this.token
@@ -1781,13 +1797,22 @@
           this.showModal.selectAuthType = true
         }
       }
-      axios.post('/user/getRuiRadosApiacess.do', {
+      axios.post('user/getPhone.do', {
+        companyId: $store.state.authInfo.companyid
+      }).then(response => {
+        if (response.status == 200 && response.data.status == 1){
+          this.keyForm.phone = response.data.data.phone
+        } else {
+          this.$Message.error(response.data.msg)
+        }
+      })
+      axios.post('user/getRuiRadosApiacess.do', {
         zoneId: $store.state.zone.zoneid,
         companyId: $store.state.authInfo.companyid
       }).then(response => {
         if (response.status == 200 && response.data.status == 1) {
             var radosApIaccessKey = response.data.data.data
-            axios.get('http://192.168.3.229:8080/ruirados/user/getToken.json', {
+            axios.get('user/getRadosToken.do', {
               params: {
                 companyId: $store.state.authInfo.companyid,
                 secret: radosApIaccessKey
@@ -2467,27 +2492,93 @@
         })
       },
       listKey() {
-        axios.get('/user/showUserAcessAll.do', {
+        axios.get('user/showUserAcessAll.do', {
           params: {
             token: this.token
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
              this.keyData = response.data.data.UserAccess
+          } else {
+            this.$Message.error(response.data.msg)
+          }
+        })
+      },
+      keymodal() {
+        axios.post('user/createUserAcess.do', {
+                zoneId: $store.state.zone.zoneid,
+                token: this.token
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.listKey()
+              } else if (response.status == 200 && response.data.status == 20){
+                this.keyForm.imgCode = ''
+                this.keyForm.code = ''
+                this.showModal.keyPhoneVal = true
+                this.keyWeight =  response.data.data.weight                                                                                
+              } else {
+                this.$Message.error(response.data.msg)
+              }
+            })
+      },
+      keysendCode() {
+        if (this.keyForm.imgCode == '') {
+          this.$Message.info('图像验证码不能为空')
+          return false
+        }
+        axios.get('user/code.do', {
+          params: {
+            aim: this.keyForm.phone,
+            isemail: 0,
+            vailCode: this.keyForm.imgCode
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            let countdown = 60
+            this.keycodePlaceholder = '60s'
+            var inter = setInterval(() => {
+              countdown--
+              this.keycodePlaceholder = countdown + 's'
+              if (countdown == 0) {
+                clearInterval(inter)
+                this.keycodePlaceholder = '获取验证码'
+              }
+            }, 1000)
+            this.$Message.success({
+              content: '验证码发送成功',
+              duration: 5
+            })
+          } else {
+            this.keycodePlaceholder = '获取验证码'
+            this.$Message.error(response.data.message)
           }
         })
       },
       createKey() {
-         axios.post('/user/createUserAcess.do', {
-             zoneId: $store.state.zone.zoneid,
-             token: this.token
-         }).then(response => {
+        this.showModal.keyPhoneVal = false
+        axios.get('user/judgeCode.do', {
+          params: {
+            aim: this.keyForm.phone,
+            isemail: 0,
+            code: this.keyForm.code,
+            weight: this.keyWeight
+          }
+        }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.listKey()
-          } else {
-            this.$message.info({
-              content: response.data.message
+                axios.post('user/createUserAcess.do', {
+                zoneId: $store.state.zone.zoneid,
+                token: this.token
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.listKey()
+              } else {
+                this.$message.info({
+                  content: response.data.msg
+                })
+              }
             })
+          } else {
+            this.$Message.error(response.data.msg)
           }
         })
       }
