@@ -43,6 +43,22 @@
         <Button type="primary" @click="beforePortModify">确定</Button>
       </p>
     </Modal>
+
+    <!-- 数据库重启提示框 -->
+    <Modal v-model="showModal.restart" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>重启数据库</strong>
+          <p class="lh24">确认是否重启数据库</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.restart = false">取消</Button>
+        <Button type="primary" @click="restart">确定</Button>
+      </p>
+    </Modal>
+
     <!-- 修改端口模态框 -->
     <Modal v-model="showModal.portModify" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
@@ -51,10 +67,10 @@
       <div class="universal-modal-content-flex">
         <Form :model="portModifyForm" :rules="portModifyRuleValidate" ref="portModifyForm">
           <Form-item label="当前端口">
-            <Input v-model="portModifyForm.currentPorts" readonly></Input>
+            <InputNumber v-model="portModifyForm.currentPorts" readonly></InputNumber>
           </Form-item>
           <Form-item label="修改端口" prop="newPorts">
-            <Input v-model="portModifyForm.newPorts"></Input>
+            <InputNumber :max="65535" :min="1" v-model="portModifyForm.newPorts"></InputNumber>
           </Form-item>
         </Form>
       </div>
@@ -63,7 +79,7 @@
         <Button type="primary" @click="portModify_ok('portModifyForm')">确认</Button>
       </div>
     </Modal>
-     <!-- 云数据库备份弹窗 -->
+    <!-- 云数据库备份弹窗 -->
     <Modal v-model="showModal.backups" width="550" :scrollable="true" class="create-snas-modal">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">云数据库备份</span>
@@ -123,7 +139,7 @@
         </Button>
       </div>
     </Modal>
-     <!-- 云数据库续费弹窗 -->
+    <!-- 云数据库续费弹窗 -->
     <Modal
       v-model="showModal.renewal"
       width="590"
@@ -164,434 +180,453 @@
 </template>
 
 <script type="text/ecmascript-6">
-import $store from '@/vuex'
-import axios from 'axios'
-import regExp from '../../util/regExp'
+  import $store from '@/vuex'
+  import axios from 'axios'
+  import regExp from '../../util/regExp'
 
-export default {
-  data () {
-    const validaRegisteredName = regExp.validaRegisteredName
-    const validateNewport = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入修改后的端口号'))
-      } else {
-        if (/^[\d]+$/.test(value)) {
-          callback()
+  export default {
+    data () {
+      const validaRegisteredName = regExp.validaRegisteredName
+      const validateNewport = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入修改后的端口号'))
         } else {
-          callback(new Error('只能输入数字'))
+          if (/^[\d]+$/.test(value)) {
+            callback()
+          } else {
+            callback(new Error('只能输入数字'))
+          }
         }
       }
-    }
-    return {
-      templateid: '',
-      databaseColumns: [
-        {
-          title: '数据库名称',
-          ellipsis: true,
-          render: (h, params) => {
-            return h('div', {
-              style: {
-                color: '#2A99F2',
-                cursor: 'pointer'
-              },
-              on: {
-                click: () => {
-                  this.$router.push({
-                    path: 'cloudDataManage',
-                    query: {
-                      // computername: params.row.name,
-                      // zoneid: params.row.name,
-                      // vmid: params.row.name,
-                      // instancename: params.row.name,
-                      // connecturl: params.row.name,
-                      // id: params.row.name
-                    }
-                  })
+      return {
+        templateid: '',
+        databaseColumns: [
+          {
+            title: '数据库名称',
+            ellipsis: true,
+            render: (h, params) => {
+              return h('div', {
+                style: {
+                  color: '#2A99F2',
+                  cursor: 'pointer'
+                },
+                on: {
+                  click: () => {
+                    this.$router.push({
+                      path: 'cloudDataManage',
+                      query: {
+                        // computername: params.row.name,
+                        // zoneid: params.row.name,
+                        // vmid: params.row.name,
+                        // instancename: params.row.name,
+                        // connecturl: params.row.name,
+                        // id: params.row.name
+                      }
+                    })
+                  }
                 }
-              }
-            }, params.row.computername)
-          }
-        },
-        {
-          title: '系统',
-          key: 'templatename',
-          ellipsis: true,
-        },
-        {
-          title: '配置规格',
-          key: 'serviceoffername',
-          ellipsis: true,
-        },
-        {
-          title: '状态',
-          key: 'status',
-          render: (h, params) => {
-           var text = params.row.status == -1 ? '异常' : '正常'
-            return h('span', {}, text)
-          }
-        },
-        {
-          title: '内网地址',
-          key: 'privateip',
-          ellipsis: true,
-        },
-        {
-          title: '数据库端口',
-          ellipsis: true,
-          render: (h, params) => {
-            return h('div', {}, [h('span', {}, params.row.dk), h('span', {
-              style: {
-                color: '#2A99F2',
-                marginLeft: '10px',
-                cursor: 'pointer'
-              },
-              on: {
-                click: () => {
-                  this.showModal.beforePortModify = true
-                  this.portModifyForm.currentPorts = params.row.dk
+              }, params.row.computername)
+            }
+          },
+          {
+            title: '系统',
+            key: 'templatename',
+            ellipsis: true,
+          },
+          {
+            title: '配置规格',
+            key: 'serviceoffername',
+            ellipsis: true,
+          },
+          {
+            title: '状态',
+            key: 'status',
+            render: (h, params) => {
+              var text = params.row.status == -1 ? '异常' : '正常'
+              return h('span', {}, text)
+            }
+          },
+          {
+            title: '内网地址',
+            key: 'privateip',
+            ellipsis: true,
+          },
+          {
+            title: '数据库端口',
+            ellipsis: true,
+            render: (h, params) => {
+              return h('div', {}, [h('span', {}, params.row.dbPort), h('span', {
+                style: {
+                  color: '#2A99F2',
+                  marginLeft: '10px',
+                  cursor: 'pointer'
+                },
+                on: {
+                  click: () => {
+                    this.current = params.row
+                    this.showModal.beforePortModify = true
+                    this.portModifyForm.currentPorts = params.row.dbPort
+                  }
                 }
-              }
-            }, '修改端口')])
-          }
-        },
-        {
-          title: '创建时间',
-          key: 'createtime',
-          ellipsis: true,
-        },
-        {
-          title: '操作',
-          render: (h, params) => {
-            return h('div', {}, [h('span', {
-              style: {
-                color: '#2A99F2',
-                marginRight: '20px',
-                cursor: 'pointer',
-              },
-              on: {
-                click: () => {
-                  this.$message.confirm({
-                    title: '删除数据库',
-                    content: `数据库删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。`,
-                    onOk: () => {
-                      this.$http.get('information/deleteVM.do', {
-                        params: {
-                          id: params.row.id
-                        }
-                      }).then(response => {
-                        if (response.status == 200 && response.data.status == 1) {
-                          this.$Message.success(response.data.message)
-                          // this.getData()
-                        } else {
-                          this.$message.info({
-                            content: response.data.message
-                          })
-                        }
-                      })
-                    }
-                  })
+              }, '修改端口')])
+            }
+          },
+          {
+            title: '创建时间',
+            key: 'createtime',
+            ellipsis: true,
+          },
+          {
+            title: '操作',
+            render: (h, params) => {
+              return h('div', {}, [h('span', {
+                style: {
+                  color: '#2A99F2',
+                  marginRight: '20px',
+                  cursor: 'pointer',
+                },
+                on: {
+                  click: () => {
+                    this.$message.confirm({
+                      title: '删除数据库',
+                      content: `数据库删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。`,
+                      onOk: () => {
+                        this.$http.get('information/deleteVM.do', {
+                          params: {
+                            id: params.row.id
+                          }
+                        }).then(response => {
+                          if (response.status == 200 && response.data.status == 1) {
+                            this.$Message.success(response.data.message)
+                            this.dataBaseData = this.dataBaseData.filter(database => {
+                              return database.id != params.row.id
+                            })
+                          } else {
+                            this.$message.info({
+                              content: response.data.message
+                            })
+                          }
+                        })
+                      }
+                    })
+                  }
                 }
-              }
-            }, '删除'), h('Dropdown', {
-              props: {
-                trigger: 'click'
-              }
-            }, [h('a', {
-              attrs: {
-                href: 'javascript:void(0)'
-              }
-            }, '更多操作'), h('DropdownMenu', {
-              slot: 'list'
-            }, [h('DropdownItem', {
-              nativeOn: {
-                click: () => {
-                  this.backupsForm.name = ''
-                  this.backupsForm.memory = 1
-                  this.showModal.backups = true
+              }, '删除'), h('Dropdown', {
+                props: {
+                  trigger: 'click'
                 }
-              }
-            }, '数据库备份'), h('DropdownItem', {
-              nativeOn: {
-                click: () => {
-                  this.mirrorForm.name = ''
-                  this.mirrorForm.description = ''
-                  this.showModal.mirror = true
+              }, [h('a', {
+                attrs: {
+                  href: 'javascript:void(0)'
                 }
-              }
-            }, '数据库镜像'), h('DropdownItem', {
-              nativeOn: {
-                click: () => {
+              }, '更多操作'), h('DropdownMenu', {
+                slot: 'list'
+              }, [/*h('DropdownItem', {
+               nativeOn: {
+               click: () => {
+               this.backupsForm.name = ''
+               this.backupsForm.memory = 1
+               this.showModal.backups = true
+               }
+               }
+               }, '数据库备份'),*//* h('DropdownItem', {
+               nativeOn: {
+               click: () => {
+               this.mirrorForm.name = ''
+               this.mirrorForm.description = ''
+               this.current = params.row
+               this.showModal.mirror = true
+               }
+               }
+               }, '数据库镜像'),*/ h('DropdownItem', {
+                nativeOn: {
+                  click: () => {
 
+                  }
                 }
-              }
-            }, '数据库升级'), h('DropdownItem', {
-              nativeOn: {
-                click: () => {
-
+              }, '数据库扩容'), h('DropdownItem', {
+                nativeOn: {
+                  click: () => {
+                    this.current = params.row
+                    this.showModal.restart = true
+                  }
                 }
-              }
-            }, '重启数据库'), h('DropdownItem', {
-              nativeOn: {
-                click: () => {
-                  this.showModal.renewal = true
+              }, '重启数据库'), h('DropdownItem', {
+                nativeOn: {
+                  click: () => {
+                    this.showModal.restart = true
+                  }
                 }
-              }
-            }, '数据库续费'), ])
+              }, '数据库续费'),])
               ])])
-          }
-        },
-      ],
-      dataBaseData: [],
-      showModal: {
-        beforePortModify: false,
-        portModify: false,
-        backups: false,
-        mirror: false,
-        renewal: false,
-      },
-      portModifyForm: {
-        currentPorts: '',
-        newPorts: ''
-      },
-      portModifyRuleValidate: {
-        newPorts: [
-          { validator: validateNewport, trigger: 'change' }
-        ]
-      },
-      currentHostname: '',
-      backupsForm: {
-        name: '',
-        memory: '1'
-      },
-      backupsFormRule: {
-        name: [
-          { required: true, validator: validaRegisteredName, trigger: 'blur' }
-        ]
-      },
-      mirrorForm: {
-        name: '',
-        description: ''
-      },
-      mirrorFormRule: {
-        name: [
-          { required: true, validator: validaRegisteredName, trigger: 'blur' }
+            }
+          },
         ],
+        dataBaseData: [],
+        showModal: {
+          beforePortModify: false,
+          portModify: false,
+          backups: false,
+          mirror: false,
+          renewal: false,
+          restart: false
+        },
+        portModifyForm: {
+          currentPorts: '',
+          newPorts: ''
+        },
+        portModifyRuleValidate: {
+          newPorts: [
+            {validator: validateNewport, trigger: 'change'}
+          ]
+        },
+        currentHostname: '',
+        backupsForm: {
+          name: '',
+          memory: '1'
+        },
+        backupsFormRule: {
+          name: [
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
+          ]
+        },
+        mirrorForm: {
+          name: '',
+          description: ''
+        },
+        mirrorFormRule: {
+          name: [
+            {required: true, validator: validaRegisteredName, trigger: 'blur'}
+          ],
+        },
+        originCost: '--',
+        cost: '--',
+        renewalType: '',
+        renewalTime: '',
+        timeOptions: {
+          renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
+          renewalTime: [],
+          year: [{label: '1年', value: 1}, {label: '2年', value: 2}, {label: '3年', value: 3}],
+          month: [{label: '1月', value: 1}, {label: '2月', value: 2}, {label: '3月', value: 3}, {
+            label: '4月',
+            value: 4
+          }, {label: '5月', value: 5}, {label: '6月', value: 6}, {label: '7月', value: 7}, {
+            label: '8月',
+            value: 8
+          }, {label: '9月', value: 9}, {label: '10月', value: 10}]
+        },
+        // 当前操作的数据库
+        current: null,
+      }
+    },
+    beforeRouteEnter (to, from, next) {
+      // 获取云数据库列表数据
+      let dataBaseResponse = axios.get('database/listDB.do', {
+        params: {
+          zoneId: $store.state.zone.zoneid
+        }
+      })
+      Promise.all([dataBaseResponse]).then((ResponseValue) => {
+        next(vm => {
+          vm.listmirror()
+          vm.setDataBases(ResponseValue[0])
+        })
+      })
+    },
+    created () {
+    },
+    methods: {
+      // 重启数据库
+      restart(){
+        this.$http.get('information/rebootVirtualMachine.do', {
+          params: {
+            VMId: this.current.computerid
+          }
+        }).then(response => {
+          this.showModal.restart = false
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+          } else {
+            this.$Message.info(response.data.message)
+          }
+        })
       },
-      originCost: '--',
-      cost: '--',
-      renewalType: '',
-      renewalTime: '',
-      timeOptions: {
-        renewalType: [{ label: '包年', value: 'year' }, { label: '包月', value: 'month' }],
-        renewalTime: [],
-        year: [{ label: '1年', value: 1 }, { label: '2年', value: 2 }, { label: '3年', value: 3 }],
-        month: [{ label: '1月', value: 1 }, { label: '2月', value: 2 }, { label: '3月', value: 3 }, {
-          label: '4月',
-          value: 4
-        }, { label: '5月', value: 5 }, { label: '6月', value: 6 }, { label: '7月', value: 7 }, {
-          label: '8月',
-          value: 8
-        }, { label: '9月', value: 9 }, { label: '10月', value: 10 }]
+      setDataBases (response) {
+        if (response.status == 200 && response.data.status == 1) {
+          this.dataBaseData = response.data.result
+          console.log(this.dataBaseData)
+        }
+      },
+      listmirror () {
+        var params = {
+          zoneId: $store.state.zone.zoneid,
+        }
+        axios.get('database/listDbTemplates.do', {params}).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            var mirrorlist = []
+            mirrorlist = response.data.result.map(item => {
+              return item.systemtemplateid
+            })
+            this.templateid = mirrorlist.join()
+            // console.log(mirrorlist)
+            // this.$router.push('order')
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
+      createOrder () {
+        var params = {
+          zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
+          templateId: this.templateid,
+          bandWidth: 2,
+          timeType: 'current',
+          timeValue: 1,
+          isAutoRenew: 0,
+          count: 1,
+          cpuNum: 1,
+          memory: 1,
+          networkId: 'd5155543-1859-40ff-ac1f-21f4829493d7',
+          rootDiskType: 'sas',
+          vpcId: 'e0d7bef1-3b81-4afb-a36c-ee3aff28baf7',
+        }
+        axios.get('database/createDB.do', {params}).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push('order')
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
+      beforePortModify () {
+        this.showModal.beforePortModify = false
+        this.showModal.portModify = true
+      },
+      portModify_ok (name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.$http.get('database/updateDBPort.do', {
+              params: {
+                DBId: this.current.computerid,//(数据库的UUID),
+                port: this.portModifyForm.newPorts//(需要更改的端口)
+              }
+            })
+          }
+        })
+      },
+      // 云数据库备份
+      backupSubmit (name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.showModal.backups = false
+            this.$http.get('Snapshot/createDbSnapshot.do', {
+              params: {
+                VMId: this.current,//（数据库的uuid）,
+                snapshotName: this.backupsForm.name,//（备份名称）,
+                memoryStatus: this.backupsForm.memory//（内存状态）
+              }
+            }).then(response => {
+              console.log(response)
+            })
+          }
+        })
+      },
+      // 云数据库镜像
+      mirrorSubmit (name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.showModal.mirror = false
+            this.$http.get('database/createTemplateDB.do', {
+              params: {
+                DBName: this.mirrorForm.name,//(数据库镜像名),
+                descript: this.mirrorForm.description,//(描述 非必传),
+                rootDiskId: this.current.rootdiskid//(系统盘id)
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+              } else {
+                this.$Message.info(response.data.message)
+              }
+            })
+          }
+        })
+      },
+      renewalok () {
+        var host = [
+          {type: 0, id: this.currentHost[0].id}
+        ]
+        list = JSON.stringify(host)
+        // this.$http.post('continue/continueOrder.do', {
+        //   list: list,
+        //   timeType: this.renewalType,
+        //   timeValue: this.renewalTime + ''
+        // }).then(response => {
+        //   if (response.status == 200 && response.data.status == 1) {
+        //     this.$router.push({path: 'order'})
+        //   }
+        // })
+      },
+    },
+    computed: {
+      auth () {
+        return this.$store.state.authInfo != null
+      },
+    },
+    watch: {
+      renewalType (type) {
+        this.renewalTime = ''
+        this.timeOptions.renewalTime = this.timeOptions[type]
+      },
+      renewalTime (time) {
+        if (time == '') {
+          this.cost = '--'
+        } else {
+          // this.$http.get('information/getYjPrice.do', {
+          //     params: {
+          //       timeValue: this.renewalTime,
+          //       timeType: this.renewalType,
+          //       hostIdArr: this.currentHost[0].id,
+          //       ipIdArr: '',
+          //       diskArr: ''
+          //     }
+          //   }).then((response) => {
+          //       if (response.status == 200 && response.data.status == 1) {
+          //         this.cost = response.data.result
+          //         this.originCost = response.data.result
+          //         if (response.data.cuspon) {
+          //           this.originCost += response.data.cuspon
+          //         }
+          //         if (response.data.continueDiscount) {
+          //           this.originCost += response.data.continueDiscount
+          //         }
+          //       } else {
+          //         this.$message.info({
+          //           content: response.data.message
+          //         })
+          //       }
+          //     })
+        }
       },
     }
-  },
-  beforeRouteEnter (to, from, next) {
-    // 获取云数据库列表数据
-    let dataBaseResponse = axios.get('database/listDB.do', {
-      params: {
-        zoneId: $store.state.zone.zoneid
-      }
-    })
-    Promise.all([dataBaseResponse]).then((ResponseValue) => {
-      next(vm => {
-        vm.listmirror()
-        vm.setDataBases(ResponseValue[0])
-      })
-    })
-  },
-  created () {
-  },
-  methods: {
-    setDataBases (response) {
-      if (response.status == 200 && response.data.status == 1) {
-        this.dataBaseData = response.data.result
-        console.log(this.dataBaseData)
-      }
-    },
-    listmirror () {
-      var params = {
-        zoneId: $store.state.zone.zoneid,
-      }
-      axios.get('database/listDbTemplates.do', { params }).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          var mirrorlist = []
-          mirrorlist = response.data.result.map(item => {
-            return item.systemtemplateid
-          })
-          this.templateid = mirrorlist.join()
-          // console.log(mirrorlist)
-          // this.$router.push('order')
-        } else {
-          this.$message.info({
-            content: response.data.message
-          })
-        }
-      })
-    },
-    createOrder () {
-      var params = {
-        zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
-        templateId: this.templateid,
-        bandWidth: 2,
-        timeType: 'current',
-        timeValue: 1,
-        isAutoRenew: 0,
-        count: 1,
-        cpuNum: 1,
-        memory: 1,
-        networkId: 'no',
-        rootDiskType: 'sas',
-        vpcId: 'no',
-      }
-      axios.get('database/createDB.do', { params }).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.$router.push('order')
-        } else {
-          this.$message.info({
-            content: response.data.message
-          })
-        }
-      })
-    },
-    beforePortModify () {
-      this.showModal.beforePortModify = false
-      this.showModal.portModify = true
-    },
-    portModify_ok (name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          console.log(this.portModifyForm.currentPorts)
-          console.log(this.portModifyForm.newPorts)
-        }
-      })
-    },
-    // 云数据库备份
-    backupSubmit (name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          this.showModal.backups = false
-          // axios.get('Snapshot/createVMSnapshot.do', {
-          //   params: {
-          //     VMId: this.currentHost[0].computerid,
-          //     snapshotName: this.backupForm.name,
-          //     memoryStatus: this.backupForm.memory,
-          //     zoneId: this.currentHost[0].zoneid
-          //   }
-          // }).then(response => {
-          //   if (response.status == 200 && response.data.status == 1) {
-          //     this.$Message.success(response.data.message)
-          //   } else {
-          //     this.$message.info({
-          //       content: response.data.message
-          //     })
-          //   }
-          // })
-        }
-      })
-    },
-    // 云数据库镜像
-    mirrorSubmit (name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          this.showModal.mirror = false
-          // axios.get('Snapshot/createTemplate.do', {
-          //   rootDiskId: this.currentHost[0].rootdiskid,
-          //   templateName: this.mirrorForm.name,
-          //   descript: this.mirrorForm.description,
-          //   zoneId: this.currentHost[0].zoneid
-          // }).then(response => {
-          //   this.loading = false
-          //   if (response.status == 200 && response.data.status == 1) {
-          //     this.$Message.success({
-          //       content: '请求成功，镜像正在创建中，您可以到<span style="color: #0db4fa;cursor: pointer;"@click="toMirror">镜像列表</span>查看该镜像。',
-          //       duration: 5
-          //     })
-          //   }
-          // })
-        }
-      })
-    },
-    renewalok () {
-      var host = [
-        { type: 0, id: this.currentHost[0].id }
-      ]
-      list = JSON.stringify(host)
-      // this.$http.post('continue/continueOrder.do', {
-      //   list: list,
-      //   timeType: this.renewalType,
-      //   timeValue: this.renewalTime + ''
-      // }).then(response => {
-      //   if (response.status == 200 && response.data.status == 1) {
-      //     this.$router.push({path: 'order'})
-      //   }
-      // })
-    },
-  },
-  computed: {
-    auth () {
-      return this.$store.state.authInfo != null
-    },
-  },
-  watch: {
-    renewalType (type) {
-      this.renewalTime = ''
-      this.timeOptions.renewalTime = this.timeOptions[type]
-    },
-    renewalTime (time) {
-      if (time == '') {
-        this.cost = '--'
-      } else {
-        // this.$http.get('information/getYjPrice.do', {
-        //     params: {
-        //       timeValue: this.renewalTime,
-        //       timeType: this.renewalType,
-        //       hostIdArr: this.currentHost[0].id,
-        //       ipIdArr: '',
-        //       diskArr: ''
-        //     }
-        //   }).then((response) => {
-        //       if (response.status == 200 && response.data.status == 1) {
-        //         this.cost = response.data.result
-        //         this.originCost = response.data.result
-        //         if (response.data.cuspon) {
-        //           this.originCost += response.data.cuspon
-        //         }
-        //         if (response.data.continueDiscount) {
-        //           this.originCost += response.data.continueDiscount
-        //         }
-        //       } else {
-        //         this.$message.info({
-        //           content: response.data.message
-        //         })
-        //       }
-        //     })
-      }
-    },
   }
-}
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-.databases {
-  p {
-    font-size: 12px;
-    font-family: MicrosoftYaHei;
-    color: rgba(102, 102, 102, 1);
-    margin-top: 10px;
-    span {
-      color: #2a99f2;
-      cursor: pointer;
+  .databases {
+    p {
+      font-size: 12px;
+      font-family: MicrosoftYaHei;
+      color: rgba(102, 102, 102, 1);
+      margin-top: 10px;
+      span {
+        color: #2a99f2;
+        cursor: pointer;
+      }
     }
   }
-}
 </style>
