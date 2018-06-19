@@ -84,9 +84,9 @@
                     :before-upload="markIDCard(index)">
                     <div class="item-content-text" v-if="item.IDCardFront==''">
                       点击上传图片
-                     <!-- <Progress v-if="FilePercent!=0" :percent="FilePercent"></Progress>-->
                     </div>
                     <img v-else :src="item.IDCardFront" style="height: 120px;width:164px;">
+                    <Progress v-show="percent>0&&percent<=100" :percent="percent"></Progress>
                   </Upload>
                 </div>
                 <div class="item-img">
@@ -116,6 +116,7 @@
                       点击上传图片
                     </div>
                     <img v-else :src="item.IDCardBack" style="height: 120px;width:164px;">
+                    <Progress v-show="percentBack>0&&percentBack<=100" :percent="percentBack"></Progress>
                   </Upload>
                 </div>
                 <div class="item-img">
@@ -149,6 +150,7 @@
                       点击上传图片
                     </div>
                     <img v-else :src="uploadForm.combine" style="height: 120px;width:164px;">
+                    <Progress v-show="percentCombine>0&&percentCombine<=100" :percent="percentCombine"></Progress>
                   </Upload>
                 </div>
                 <div class="item-img">
@@ -192,7 +194,8 @@
                             action="file/upFile.do"
                             :before-upload="markCertifiedDomainNoCertification(upIndex)"
                             :on-success="certifiedDomainNoCertification">
-                      <span style="font-size: 14px">点击选择文件</span>
+                      <Progress v-show="percentCertification>0&&percentCertification<=100" :percent="percentCertification"></Progress>
+                      <span v-show="percentCertification == 0" style="font-size: 14px">点击选择文件</span>
                     </Upload>
                   </div>
                 </div>
@@ -234,7 +237,8 @@
                             :on-exceeded-size="handleMaxSize"
                             :before-upload="markOtherFile(upIndex)"
                             :on-success="otherFile">
-                      <span style="font-size: 14px">点击选择文件</span>
+                      <Progress v-show="percentOtherFile>0&&percentOtherFile<=100" :percent="percentOtherFile"></Progress>
+                      <span v-show="percentOtherFile == 0" style="font-size: 14px">点击选择文件</span>
                     </Upload>
                   </div>
                 </div>
@@ -275,7 +279,8 @@
                           action="file/upFile.do"
                           :before-upload="markCheckList(upIndex)"
                           :on-success="checkList">
-                    <span style="font-size: 14px">点击选择文件</span>
+                    <Progress v-show="percentCheckList>0&&percentCheckList<=100" :percent="percentCheckList"></Progress>
+                    <span v-show="percentCheckList == 0" style="font-size: 14px">点击选择文件</span>
                   </Upload>
                 </div>
               </div>
@@ -305,7 +310,6 @@
 <script type="text/ecmascript-6">
   import step from './step.vue'
   import oStep from "./ostep.vue";
-  import axios from 'axios'
   import records from './../Records'
 
   export default {
@@ -364,7 +368,12 @@
         imageViewShow: false,
         checkSrc: '',
         isPersonage: false,
-        percent: 0
+        percent: 0,
+        percentBack: 0,
+        percentCombine: 0,
+        percentCertification: 0,
+        percentOtherFile: 0,
+        percentCheckList: 0
       }
     },
     created() {
@@ -547,59 +556,107 @@
  暂时没有找到更好的方法解决图片标记问题 */
       IDCardFront(response) {
         if (response.status == 1) {
-          this.uploadForm.IDPhotoList[this.IDCardIndex].IDCardFront = response.result
+          let s = setInterval(() => {
+            this.percent++
+            if (this.percent > 100) {
+              window.clearInterval(s)
+              this.uploadForm.IDPhotoList[this.IDCardIndex].IDCardFront = response.result
+              this.percent = 0
+            }
+          }, 25)
         }
       },
       IDCardBack(response) {
         if (response.status == 1) {
-          this.uploadForm.IDPhotoList[this.IDCardIndex].IDCardBack = response.result
+          let s = setInterval(() => {
+            this.percentBack++
+            if (this.percentBack > 100) {
+              window.clearInterval(s)
+              this.uploadForm.IDPhotoList[this.IDCardIndex].IDCardBack = response.result
+              this.percentBack = 0
+            }
+          }, 25)
         }
       },
       combine(response) {
         if (response.status == 1) {
-          this.uploadForm.combine = response.result
+          let s = setInterval(() => {
+            this.percentCombine++
+            if (this.percentCombine > 100) {
+              window.clearInterval(s)
+              this.uploadForm.combine = response.result
+              this.percentCombine = 0
+            }
+          }, 25)
         }
       },
       certifiedDomainNoCertification(response) {
         if (response.status == 1) {
-          let array = response.result.split('/')
-          let index = array.length - 1
-          let len = array[index].length
-          let suffix = array[index].substring(len - 3)
-          let param = {
-            name: array[index],
-            url: response.result,
-            suffix: suffix
-          }
-          this.uploadForm.certifiedDomainNoCertificationDefault[this.certifiedDomainNoCertificationIndex].certifiedDomainNoCertificationDefaultList.push(param)
+          let s = setInterval(() => {
+            this.percentCertification++
+            if (this.percentCertification > 100) {
+              window.clearInterval(s)
+              let array = response.result.split('/')
+              let index = array.length - 1
+              let len = array[index].length
+              let suffix = array[index].substring(len - 3)
+              let param = {
+                name: array[index],
+                url: response.result,
+                suffix: suffix
+              }
+              if (this.uploadForm.certifiedDomainNoCertificationDefault[this.certifiedDomainNoCertificationIndex].certifiedDomainNoCertificationDefaultList.length < 3) {
+                this.uploadForm.certifiedDomainNoCertificationDefault[this.certifiedDomainNoCertificationIndex].certifiedDomainNoCertificationDefaultList.push(param)
+              }
+              this.percentCertification = 0
+            }
+          }, 25)
         }
       },
       otherFile(response) {
         if (response.status == 1) {
-          let array = response.result.split('/')
-          let index = array.length - 1
-          let len = array[index].length
-          let suffix = array[index].substring(len - 3)
-          let param = {
-            name: array[index],
-            url: response.result,
-            suffix: suffix
-          }
-          this.uploadForm.otherFileGroup[this.otherFileIndex].otherFile.push(param)
+          let s = setInterval(() => {
+            this.percentOtherFile++
+            if (this.percentOtherFile > 100) {
+              window.clearInterval(s)
+              let array = response.result.split('/')
+              let index = array.length - 1
+              let len = array[index].length
+              let suffix = array[index].substring(len - 3)
+              let param = {
+                name: array[index],
+                url: response.result,
+                suffix: suffix
+              }
+              if (this.uploadForm.otherFileGroup[this.otherFileIndex].otherFile.length < 3) {
+                this.uploadForm.otherFileGroup[this.otherFileIndex].otherFile.push(param)
+              }
+              this.percentOtherFile = 0
+            }
+          }, 25)
         }
       },
       checkList(response) {
         if (response.status == 1) {
-          let array = response.result.split('/')
-          let index = array.length - 1
-          let len = array[index].length
-          let suffix = array[index].substring(len - 3)
-          let param = {
-            name: array[index],
-            url: response.result,
-            suffix: suffix
-          }
-          this.uploadForm.checkGroup[this.checkListIndex].checkList.push(param)
+          let s = setInterval(() => {
+            this.percentCheckList++
+            if (this.percentCheckList > 100) {
+              window.clearInterval(s)
+              let array = response.result.split('/')
+              let index = array.length - 1
+              let len = array[index].length
+              let suffix = array[index].substring(len - 3)
+              let param = {
+                name: array[index],
+                url: response.result,
+                suffix: suffix
+              }
+              if (this.uploadForm.checkGroup[this.checkListIndex].checkList.length < 3) {
+                this.uploadForm.checkGroup[this.checkListIndex].checkList.push(param)
+              }
+              this.percentCheckList = 0
+            }
+          }, 25)
         }
       },
       // 校验用户上传的文件类型
@@ -804,11 +861,7 @@
     mounted() {
       this.siteInfoShow = true
     },
-    computed: {
-      FilePercent() {
-        return this.percent + 100
-      }
-    }
+    computed: {}
   }
 </script>
 
