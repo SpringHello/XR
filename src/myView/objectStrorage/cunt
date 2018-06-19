@@ -1,5 +1,9 @@
 <template>
-
+  <p :style="mainStyle" :class="mainClass">
+    <slot name="leftText"></slot>
+    <span :style="countStyle" :class="countClass"><span :id="countId">{{ initCount }}</span><span>{{ unitText }}</span></span>
+    <slot name="rightText"></slot>
+  </p>
 </template>
 
 <script>
@@ -8,11 +12,45 @@
     name:'countUp',
     data(){
       return{
-
+        unitText:'',
+        initCount:'',
+        countId:'count'+parseInt(main.random() * 10000)
       }
     },
     props:{
-      endVal:0,
+      minStyle:String,
+      minClass:String,
+      countStyle:{
+        type:object,
+        default: ()=>{
+          return{
+            fontSize:"18px",
+            fontWeight:500,
+            color:'#000'
+          }
+        }
+      },
+      endVal:{
+        type:Number,
+        default:0
+      },
+      startVal:{
+        type:Number,
+        default:0
+      },
+      unit:{
+        type:Array,
+        default:() =>{
+          return [[3,'KB'],[2,'MB'],[1,'GB']]
+        }
+      }
+    },
+    methods:{
+      tranfromVal(val){
+        let endVal = 0;
+        for(let i=0;i<this.unit.length;i++){}
+
+      }
     }
   }
 </script>

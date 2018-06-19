@@ -127,12 +127,14 @@
           {
             m='0'+m;
           }
-              this.dayList[val].startDate = time.toString();
-              this.dayList[2].endDate = y+'-'+m+'-'+d;
-              this.dayList[1].endDate = week;
-              this.dayList[0].endDate = dayTime;
-              this.oneDay = this.dayList[val].endDate;
-              this.startDate = this.dayList[val].startDate;
+          if(val != undefined){
+            this.dayList[val].startDate = time.toString();
+            this.dayList[2].endDate = y+'-'+m+'-'+d;
+            this.dayList[1].endDate = week;
+            this.dayList[0].endDate = dayTime;
+            this.oneDay = this.dayList[val].endDate;
+            this.startDate = this.dayList[val].startDate;
+          }
               console.log(page);
            this.$http.post('operatelog/selectLogFromTime.do',{
             startTime: this.startDate,
