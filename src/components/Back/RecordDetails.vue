@@ -391,7 +391,7 @@
           </div>
         </div>
         <div style="text-align:center;margin:20px 0 80px 0;">
-          <Button type="primary" @click="allUpdate" :disabled="isAllUpate">重新提交</Button>
+          <Button type="primary" @click="allUpdate" >重新提交</Button>
         </div>
       </div>
 
@@ -1639,7 +1639,6 @@
       cardSuccess(response) {
         if (response.status == 1) {
           this.hostUnitList.webresponsibilityurlpositive = response.result;
-          console.log(this.updateHostUnitList.webresponsibilityurlpositive);
           this.$Message.success('上传成功');
         } else {
           this.$Message.error('上传失败');
@@ -1715,7 +1714,6 @@
               }
             }
           }
-          console.log(this.addy);
           this.$Message.success('上传成功');
         }else {
           this.$Message.error('上传失败');
@@ -1827,7 +1825,6 @@
             this.hostUnitList = this.updateHostUnitList;
             this.hostUnitList.maincompanyarea = this.province +'-'+this.city +'-'+this.district;
             this.hostUnitList.webip = this.webip.join(' ');
-            console.log(this.hostUnitList);
           } else {
            return;
           }
@@ -1842,7 +1839,7 @@
       allUpdate(){
         let webcompany_Id = sessionStorage.getItem('webcompany_Id');
         this.updateHostUnitList.id = this.id;
-        let web = {id: webcompany_Id,
+        let web = {id: this.id,
           ISPName: this.updateHostUnitList.ispname,
           webIp: this.updateHostUnitList.webip,
           webAccessType: this.updateHostUnitList.webaccesstype,
@@ -1895,13 +1892,11 @@
           mainCompanyArea:this.updateHostUnitList.maincompanyarea
         }
         let addMian =  this.$http.get('recode/addMainCompany.do', {params:main})
-        axios.all([update,addMian]).then(res =>{
-          console.log(res);
+        Promise.all([update,addMian]).then(res =>{
           if (res[0].data.status == 1 && res[1].data.status == 1) {
             this.$router.push({path:'BRecords'});
             this.$Message.success("修改成功");
           } else {
-            alert(111111);
             this.$Message.error(res.data.message);
           }
         })
