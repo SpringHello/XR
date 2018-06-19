@@ -3,24 +3,28 @@
         <p style="font-size:16px;color:#000000;margin-bottom:10px;">操作日志</p>
         <div style="height:31px;display:flex;margin-bottom:20px;">
            <ul class="objectList">
-                 <li :class="indexs == index? 'objectItems':'objectItem'" v-for="(item,index) in dayList" :key="index" @click="dayClick(index)">{{item.value}}</li>
+                 <li :class="indexs == index? 'objectItems':'objectItem'" v-for="(item,index) in dayList" :key="index" @click="dayClick(1,index)">{{item.value}}</li>
              </ul>
             <div class="journal_right">
                 <span>开始结束时间</span>
-                 <DatePicker type="daterange" :options="options4" v-model="time"  placement="bottom-end" placeholder="Select date" style="width: 200px"></DatePicker>
+                 <DatePicker type="daterange" :options="options4" v-model="time"  placement="bottom-end" placeholder= "Select date" style="width: 200px"></DatePicker>
                 <Button type="primary"  @click="select">查询</Button>
             </div>
         </div>
-        <Table :columns="journalList" :data="journalData" ></Table>
-         <!--<Page :total="100" style="margin-top: 20px;"></Page>-->
+        <Table :loading="pageLoading" :columns="journalList" :data="journalData" ></Table>
+        <Page :total="total" @on-change="selectLogs"   style="margin-top: 20px;"></Page>
+      <!--<Page :total="total" @on-change="dayClick"   style="margin-top: 20px;"></Page>-->
     </div>
 </template>
 
 <script>
-
-export default {
+    export default {
   data() {
     return {
+      //日志加载动画
+      pageLoading:false,
+      //总条数
+      total:0,
       //操作日志表头
       journalList: [
         {
@@ -46,8 +50,7 @@ export default {
         }
       ],
       //操作日志数据
-      journalData: [
-      ],
+      journalData: [],
       dayList:[
           {
               value:'近一天',
@@ -65,19 +68,22 @@ export default {
               endDate:''
           }
       ],
-    indexs:-1,
+      indexs:-1,
       time:'',
       options4:{
         disabledDate (date) {
           return date && date.valueOf() > Date.now() - 6400000;
         }
-      }
+      },
+      //操作日志结束时间
+      oneDay:"",
+      //操作日志开始时间
+      startDate:""
     };
   },
   methods: {
-      dayClick(val){
+      dayClick(page,val){
           this.indexs = val;
-
           //获取前七天
           var weeks = new Date();
           var now = new Date(weeks.getTime() - 7 * 24 * 3600 * 1000);
@@ -85,9 +91,10 @@ export default {
           var weekMouth = now.getMonth()+1;
           var weekDay = now.getDate();
           var week = weekYear+"-"+(weekMouth<10?('0'+weekMouth):weekMouth)+"-"+(weekDay<10?('0'+weekDay):weekDay);
-         var date  = new Date();
+
+          var date  = new Date();
           //获取前一天
-          var dayOne = new Date(date.getTime() - 1 * 24 * 3600 * 1000);
+           var dayOne = new Date(date.getTime() - 1 * 24 * 3600 * 1000);
             var dayYear = dayOne.getFullYear();
             var dayMonth = dayOne.getMonth() +1;
             var dayD = dayOne.getDate();
@@ -120,21 +127,27 @@ export default {
           {
             m='0'+m;
           }
-
-         this.dayList[val].startDate = time.toString();
-          this.dayList[2].endDate = y+'-'+m+'-'+d;
-          this.dayList[1].endDate = week;
-          this.dayList[0].endDate = dayTime;
-        this.$http.post('operatelog/selectLogFromTime.do',{
-          startTime:this.dayList[val].startDate,
-          endTime:this.dayList[val].endDate
-        }).then(res => {
-          if(res.data.status =='1'){
-            if(typeof(res.data.data.logs) === "string")
-              return this.journalData = [];
-            this.journalData = res.data.data.logs;
+          if(val != undefined){
+            this.dayList[val].startDate = time.toString();
+            this.dayList[2].endDate = y+'-'+m+'-'+d;
+            this.dayList[1].endDate = week;
+            this.dayList[0].endDate = dayTime;
+            this.oneDay = this.dayList[val].endDate;
+            this.startDate = this.dayList[val].startDate;
           }
-        })
+              console.log(page);
+           this.$http.post('operatelog/selectLogFromTime.do',{
+            startTime: this.startDate,
+            endTime: this.oneDay,
+            pageSum:10,
+            pageNum:page == undefined ? 1 : page
+          }).then(res => {
+             if(res.data.status =='1'){
+              if(typeof(res.data.data.logs) === "string")
+                return this.journalData = [];
+              this.journalData = res.data.data.logs;
+            }
+          })
       },
     select(){
       this.indexs = -1;
@@ -160,21 +173,30 @@ export default {
         })
       },
     //获取操作日志
-    selectLogs(){
-
+    selectLogs(page){
+        this.pageLoading = true;
       this.$http.post('operatelog/selectLogs.do',{
-
+        pageSum:10,
+        pageNum:page
       }).then(res =>{
         if(res.data.status == '1'){
-          if(typeof(res.data.data.logs) === "string")
-            return this.journalData = [];
-          this.journalData = res.data.data.logs;
+          if(typeof(res.data.data.logs) === "string"){
+            this.journalData = [];
+            this.pageLoading = false;
+          }else {
+            this.pageLoading = false;
+            this.journalData = res.data.data.logs;
+            this.total = res.data.data.page.sumCount;
+          }
+        }else{
+          this.pageLoading = false;
+          this.$Message.error(res.data.msg);
         }
       })
     }
   },
   mounted() {
-   this.selectLogs();
+   this.selectLogs(1);
   }
 };
 </script>

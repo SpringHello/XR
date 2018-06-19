@@ -9,7 +9,7 @@
           </div>
           <div style="width:50%;text-align:right;">
             <Button @click="$router.push({path:'objectStorage'})" style="margin-right: 10px;">返回</Button>
-            <Button @click="filesList" type="primary">刷新</Button>
+            <Button @click="filesList(undefined)" type="primary">刷新</Button>
           </div>
         </div>
         <p style="margin:20px 0;color:#333333;font-size:16px;">{{kjName}}</p>
@@ -36,7 +36,9 @@
         <div class="center_space">
           <div class="space_Two">
             <p>存储空间容量</p>
-            <div class="space_text">{{size}}</div>
+            <div class="space_text">
+             {{size}}
+            </div>
           </div>
           <div class="space_one">
             <p>流量</p>
@@ -56,10 +58,18 @@
               </div>
               <div style="width:50%;text-align:right;">
                 <Input v-model="filename" type="text" placeholder="请输入搜索名称" style="width:231px;"/>
-                <Button type="primary" @click="filesList">查询</Button>
+                <Button type="primary" @click="filesList(undefined)">查询</Button>
               </div>
             </div>
-            <Table :columns='fileList' :data="fileData"></Table>
+
+            <ul style="margin: 0 0 9px 20px;">
+              <li class="fileObject" style="margin-right: 10px;" v-if="this.fileObject.length !=0" @click="backPage"> 返回</li>
+              <li class="fileObject" @click="selectFileSrc(item.id,index)" v-for="(item,index) in fileObject" :key="index">
+                {{item.name+'/'}}
+              </li>
+            </ul>
+
+            <Table :columns='fileList' :loading="tabLoading" :data="fileData"></Table>
           </TabPane>
           <TabPane label="空间设置">
             <div>
@@ -77,7 +87,7 @@
                 <div class="custom" v-if="indexs == 3">
                   <Button type="primary" @click="jurisdiction = true" style="margin-right: 10px;">添加自定义权限</Button>
                   <Button type="primary" @click="edit = true">自定义权限编辑器</Button>
-                  <Table style="margin-top:20px;" :columns="rightList" :data="aclData"></Table>
+                  <Table :loading="jurisdLoading" style="margin-top:20px;" :columns="rightList" :data="aclData"></Table>
                 </div>
               </div>
             </div>
@@ -213,8 +223,8 @@
           <Select v-model="term" style="width:240px;margin: 10px 0;">
             <Option v-for="item in termList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
-          <Button type="primary" @click="geturl">获取外链</Button>
-          <Input type="text" style="width:317px;" v-model="flies" :readonly="true"></Input>
+          <Button type="primary" :loading="tremLoading" @click="geturl">获取外链</Button>
+          <Input type="text" style="width:317px;" v-model="fliesTerm" :readonly="true"></Input>
         </div>
       </div>
     </Modal>
@@ -234,12 +244,11 @@
         <FormItem prop="grantValue">
           <div style="margin-top:20px;">
             <span>用户授权</span>
-            <RadioGroup v-model="jurisdValidate.users" @on-change="usersClick">
+            <RadioGroup v-model="jurisdValidate.users" @on-change="usersClick()">
               <Radio label='0'>全部用户</Radio>
               <Radio label='1'>自定义用户</Radio>
             </RadioGroup>
-            <Input :disabled='grant' v-model="jurisdValidate.grantValue" style="width:420px;" :rows="4"
-                   type="textarea"/>
+            <Input :disabled='grant' v-model="jurisdValidate.grantValue" style="width:420px;" :rows="4" type="textarea"/>
             <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
           </div>
         </FormItem>
@@ -271,13 +280,12 @@
           <div style="width:366px;display:flex;">
             <div style="width:115px;font-size:14px;color:#333333;">Referer白名单</div>
             <div style="width:300px;">
-              <Checkbox true-value="1" false-value="0" v-model="jurisdValidate.referer">允许白名单为空</Checkbox>
+              <Checkbox @on-change="disble" true-value="1" false-value="0" v-model="jurisdValidate.referer">允许白名单为空</Checkbox>
             </div>
           </div>
         </FormItem>
         <FormItem prop="whiteListValue">
-          <Input :disabled='whiteList' v-model="jurisdValidate.whiteListValue" style="width:420px;" :rows="4"
-                 type="textarea"/>
+          <Input :disabled='whiteList' v-model="jurisdValidate.whiteListValue" style="width:420px;" :rows="4" type="textarea"/>
           <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
         </FormItem>
       </Form>
@@ -317,8 +325,7 @@
               <Radio label="0">全部用户</Radio>
               <Radio label="1">自定义用户</Radio>
             </RadioGroup>
-            <Input :disabled='updategrant' v-model="updateJurisd.updateGrantValue" style="width:420px;" :rows="4"
-                   type="textarea"></Input>
+            <Input :disabled='updategrant' v-model="updateJurisd.updateGrantValue" style="width:420px;" :rows="4" type="textarea"></Input>
             <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
           </div>
         </FormItem>
@@ -351,13 +358,12 @@
           <div style="width:366px;display:flex;">
             <div style="width:115px;font-size:14px;color:#333333;">Referer白名单</div>
             <div style="width:300px;">
-              <Checkbox v-model="updateJurisd.updateReferer">允许白名单为空</Checkbox>
+              <Checkbox @on-change="disbleUpdate" v-model="updateJurisd.updateReferer">允许白名单为空</Checkbox>
             </div>
           </div>
         </FormItem>
         <FormItem>
-          <Input :disabled='whiteList' v-model="updateJurisd.updateWhiteListValue" style="width:420px;" :rows="4"
-                 type="textarea"></Input>
+          <Input :disabled='whiteList' v-model="updateJurisd.updateWhiteListValue" style="width:420px;" :rows="4" type="textarea"></Input>
           <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
         </FormItem>
       </Form>
@@ -413,18 +419,29 @@
       title="跨域访问CRORS添加规则"
       :scrollable='true'
       width="550px"
+<<<<<<< HEAD
       @on-ok="addCors">
       <div>
         <h2>来源Origin</h2>
         <Input style="width:420px;" :rows="4" type="textarea" v-model="addCorsForm.orgins"
                placeholder="例如：http://10.100.100.100:8001 https://www.xrcloud.net"></Input>
+=======
+    >
+      <div>
+        <p>来源Origin</p>
+        <Input :disabled='grant' style="width:420px;" :rows="4" type="textarea" placeholder="例如：http://10.100.100.100:8001 https://www.xrcloud.net"></Input>
+>>>>>>> e04ff23502fe00fb7f6c9014fef07401ab384a8e
         <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
         <p style="color: #999999;">来源可设置多个，每行一个，以回车间隔，每行最多能有一个通配符(*)</p>
       </div>
       <div style="width:366px;display:flex;">
         <div style="width:115px;font-size:14px;color:#333333;">操作Methods</div>
         <div style="width:300px;">
+<<<<<<< HEAD
           <CheckboxGroup v-model="addCorsForm.methods">
+=======
+          <CheckboxGroup>
+>>>>>>> e04ff23502fe00fb7f6c9014fef07401ab384a8e
             <Checkbox label="put">Put</Checkbox>
             <Checkbox label="get">Get</Checkbox>
             <Checkbox label="post">Post</Checkbox>
@@ -446,8 +463,12 @@
       <div style="width:366px;display:flex;">
         <div style="width:115px;font-size:14px;color:#333333;">Expose-Headers</div>
         <br>
+<<<<<<< HEAD
         <Input :disabled='whiteList' style="width:420px;" :rows="4" type="textarea"
                v-model="addCorsForm.ExposeHeaders"></Input>
+=======
+        <Input :disabled='whiteList' style="width:420px;" :rows="4" type="textarea"></Input>
+>>>>>>> e04ff23502fe00fb7f6c9014fef07401ab384a8e
         <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
       </div>
 
@@ -470,13 +491,31 @@
 </template>
 
 <script>
-  import $store from "@/vuex";
+  import $store from "@/vuex"
   import axios from 'axios'
+  import ICountUp from 'vue-countup-v2'
   var buckname = sessionStorage.getItem('bucketName');
 
   export default {
     data() {
       return {
+        //自定义权限表格加载
+        jurisdLoading:false,
+          isClass:true,
+        //数字渐变动画
+        options: {
+          useEasing: true,
+          useGrouping: true,
+          separator: ',',
+          decimal: '.',
+          prefix: '',
+          suffix: ''
+        },
+        //查看外链
+        tremLoading:false,
+        fliesTerm:'',
+        //新建文件夹table加载动画
+        tabLoading:false,
         //收起cors
         corsHide: true,
         staticHide: true,
@@ -552,33 +591,43 @@
             key: "filename",
             title: "文件名称",
             render: (h, params) => {
-              this.fileUpdata.bucketName = buckname;
-              console.log(this.fileUpdata.bucketName);
-              this.fileUpdata.zoneId = $store.state.zone.zoneid
               this.isfile = params.row.isfile;
-              return h('div', [
-                h("Icon", {
-                  props: {
-                    type: 'ios-folder-outline'
-                  },
-                  style: {
-                    color: '#2A99F2',
-                    display: params.row.isfile == 1 ? 'inline-block' : 'none',
-                  }
-                }),
-                h('span', {
-                  style: {
-                    color: '#2A99F2',
-                    cursor: 'pointer',
-                    marginLeft: '5px'
-                  },
-                  on: {
-                    click: () => {
-                      this.filesList(params.row.id, params.row.isfile);//文件标识
+              if (params.row.isfile == 1) {
+                return h('div', [
+                  h("Icon", {
+                    props: {
+                      type: 'ios-folder-outline'
+                    },
+                    style: {
+                      color: '#2A99F2',
+                      display: params.row.isfile == 1 ? 'inline-block' : 'none',
                     }
-                  }
+                  }),
+                  h('span', {
+                    style: {
+                      color: '#2A99F2',
+                      cursor: 'pointer',
+                      marginLeft: '5px'
+                    },
+                    on: {
+                      click: () => {
+                        var object = new Object();
+                        object.id = params.row.id;
+                        object.name = params.row.filename;
+                         this.fileObject.push(object);
+                        this.filesList(params.row.id,object);//文件标识
+                      }
+
+                    }
+                  }, params.row.filename)
+                ])
+              } else {
+                return h('span', {
+                  style: {
+                    color: '#2A99F2',
+                  },
                 }, params.row.filename)
-              ])
+              }
             }
           },
           {
@@ -586,7 +635,7 @@
             title: "大小",
             render: (h, params) => {
               return h('div', [
-                h('span', {}, params.row.filesize / 1024 > 1 ? ((params.row.filesize / 1024).toFixed(2) + "MB") : (params.row.filesize + "KB"))//换算文件大小单位
+                h('span', {},  params.row.filesize > 1000 || params.row.filesize / 1024 > 1  ? ((params.row.filesize / 1024).toFixed(2) + "MB") : (params.row.filesize + "KB"))//换算文件大小单位
               ])
             }
           },
@@ -651,7 +700,7 @@
           //密码接收渠道
           channel: ['PutObject'],
           //白名单
-          referer: '',
+          referer: '0',
         },
         //添加自定义权限表单验证
         jurisdRuleValidate: {
@@ -689,7 +738,7 @@
               let str = '';
               ['putobject', 'getobject', 'deleteobject', 'listbucket', 'deletebucket'].forEach(name => {
                 if (obj.row[name] == 1) {
-                  str += name
+                  str += name+' '
                 }
               })
               return h('span', str)
@@ -710,29 +759,31 @@
                 },
                 on: {
                   click: () => {
-
                     this.updateDiction = true;
-                    obj.row.userauthorization == '*' ? (this.updateJurisd.updateUsers = '0') : (this.updateJurisd.updateUsers = '1');
+                    obj.row.userauthorization == '*' ? this.updateJurisd.updateUsers = '0' : this.updateJurisd.updateUsers = '1';
+                    this.updateJurisd.updateGrantValue = obj.row.userauthorization;
+                    this.inputValue = obj.row.userauthorization;
                     this.updateJurisd.updateReferer = obj.row.refererip == '1' ? true : obj.row.refererip == '0' ? false : '';
+                    if(obj.row.refereip == '1'){
+                      this.whiteList = true
+                    }else {
+                      this.whiteList = false;
+                    }
                     this.updateJurisd.updateInfluenceValue = obj.row.resource;
-                    console.log(this.updateJurisd.updateReferer = true);
                     this.updateJurisd.updateSources = obj.row.iseffectres;
                     let str = '';
                     ['putobject', 'getobject', 'deleteobject', 'listbucket', 'deletebucket'].forEach(name => {
                       if (obj.row[name] == 1) {
-                        str += name
+                        this.updateJurisd.updateChannel.push(name);
                       }
                     })
-                    this.updateJurisd.updateChannel.push(str);
-                    console.log(this.updateJurisd.updateChannel);
-                    this.updateJurisd.updateGrantValue = obj.row.userauthorization;
                     this.updateJurisd.updateWhiteListValue = obj.row.refererip;
                     this.code = obj.row.code;
-
                     this.usersClick();
                   }
                 }
-              }, '修改'), h('span', {
+              }, '修改'),
+                h('span', {
                 style: {
                   color: 'rgb(42, 153, 242)',
                   cursor: 'pointer'
@@ -836,7 +887,6 @@
         size: '',
         //获取外链文件路径
         flieSrc: '',
-        code: '',
         addCorsForm: {
           orgins: '',
           methods: [],
@@ -857,8 +907,19 @@
           ExposeHeaders: [
             {required: true, message: '请填写ExposeHeaders'}
           ]
-        }
+        },
+        //修改权限需要的code
+        code: '',
+        //文件路径
+        fileObject: [],
+        int:0,
+        //修改权限白名单是否禁用
+        whiteListUpdate:false,
+        inputValue:''
       }
+    },
+    components:{
+      ICountUp
     },
     methods: {
       _checkNewCros(){
@@ -911,13 +972,12 @@
         console.log(this.fileUpdata);
       },
       //文件上传失败
-      handleError(error){
+      handleError(error) {
         this.$Message.error('上传失败');
       },
       //上传文件过程的方法
-      handleUpload(file, event){
+      handleUpload(file, event) {
         // let time = new Date().getTime();
-
         console.log(event);
         console.log(file);
       },
@@ -927,8 +987,12 @@
         this.ptext = this.navList[val].city;
       },
       //列出文件夹列表
-      filesList(id) {
+      filesList(id,object) {
+        this.tabLoading = true;
         var name = sessionStorage.getItem("bucketName");
+
+        this.fileUpdata.bucketName = name;
+        this.fileUpdata.zoneId = $store.state.zone.zoneid;
         this.fileUpdata.dirId = (id == undefined ? null : id.toString());
         this.$http
           .post("object/listObject.do", {
@@ -938,18 +1002,21 @@
           })
           .then(res => {
             if (res.data.status == "1") {
-              // if(isfile == 1 || this.isfile == 1){
               this.fileData = res.data.data.data;
-              // }else{
-              //   return;
-              // }
+              if (typeof(object) != "undefined") {
+                this.tabLoading = false;
+              } else {
+                this.tabLoading = false;
+                return ;
+              }
             }
-          });
+          }).catch(error =>{
+          this.tabLoading = false;
+        });
       },
       //创建文件夹
       createFlies() {
         var name = sessionStorage.getItem("bucketName");
-
         this.$http
           .post("object/createObject.do", {
             bucketName: name,
@@ -959,14 +1026,15 @@
           .then(res => {
             if (res.data.status == "1") {
               this.$Message.success("新建成功");
-              this.filesList();
+              let id = res.data.data.dirList[0].dirId;
+              this.filesList(id);
             } else {
               this.$Message.error(res.data.msg);
             }
           });
       },
       //删除文件
-      deleteFile(id, filename){
+      deleteFile(id, filename) {
         // console.log(id);
         var name = sessionStorage.getItem("bucketName");
         this.$http.post('object/deleteObject.do', {
@@ -984,13 +1052,13 @@
         })
       },
       //用户授权radio切换
-      usersClick(){
+      usersClick() {
         if (this.updateJurisd.updateUsers == '0') {
           this.updategrant = true;
           this.updateJurisd.updateGrantValue = '*';
         } else {
           this.updategrant = false;
-          this.updateJurisd.updateGrantValue = '';
+          this.updateJurisd.updateGrantValue = this.inputValue;
         }
         if (this.jurisdValidate.users == '0') {
           this.grant = true;
@@ -1002,7 +1070,8 @@
         }
       },
       //添加自定义权限
-      jurisdictionClick(){
+      jurisdictionClick() {
+        alert(this.jurisdValidate.referer);
         var name = sessionStorage.getItem("bucketName");
         var bucketId = sessionStorage.getItem('bucketId');
         this.$http.post('bucketAcl/createCustomAcl.do', {
@@ -1024,28 +1093,33 @@
         })
       },
       //获取权限列表
-      selectAclAll(){
+      selectAclAll() {
         var name = sessionStorage.getItem("bucketName");
         var bucketId = sessionStorage.getItem('bucketId');
+        this.jurisdLoading = true;
         this.$http.post('bucketAcl/selectAclAll.do', {
           bucketName: name,
           bucketId: bucketId
         }).then(res => {
           if (res.data.status == "1") {
             this.aclData = res.data.data.list;
+            this.jurisdLoading = false;
           } else if (res.data.status == '16') {
             this.aclData = [];
+            this.jurisdLoading = false;
           } else {
             this.$Message.error(res.data.msg);
+            this.jurisdLoading = false;
           }
         })
       },
       //切换权限
-      checkAcl(){
+      checkAcl() {
         var name = sessionStorage.getItem("bucketName");
         var bucketId = sessionStorage.getItem('bucketId');
+        let index = this.indexs+1;
         this.$http.post('bucketAcl/aclCut.do', {
-          accessrights: this.indexs.toString(),
+          accessrights: index.toString(),
           bucketId: bucketId,
           bucketName: name
         }).then(res => {
@@ -1059,7 +1133,8 @@
       /**
        *获取外链
        */
-      geturl(filesrc){
+      geturl(filesrc) {
+        this.tremLoading = true;
         var name = sessionStorage.getItem("bucketName");
         this.$http.post('object/geturl.do', {
           bucketName: name,
@@ -1067,8 +1142,11 @@
           fileSrc: this.flieSrc
         }).then(res => {
           if (res.data.status == '1') {
-            this.flies = res.data.data.data;
+            this.fliesTerm = res.data.data.data;
+            this.tremLoading = false;
+            this.$Message.success('获取成功');
           } else {
+            this.tremLoading = false;
             this.$Message.error(res.data.msg);
           }
         })
@@ -1076,7 +1154,7 @@
       /**
        * 删除权限
        */
-      deleteFromBucketId(code){
+      deleteFromBucketId(code) {
         var name = sessionStorage.getItem("bucketName");
         this.$http.post('bucketAcl/deleteFromBucketId.do', {
           bucketName: name,
@@ -1091,7 +1169,8 @@
         })
       },
       //修改自定义权限
-      jurisdUpdateClick(code){
+      jurisdUpdateClick(code) {
+
         var name = sessionStorage.getItem("bucketName");
         this.$http.post('bucketAcl/updateFromCode.do', {
           bucketName: name,
@@ -1111,39 +1190,60 @@
           }
         })
       },
-      up(){
+      up() {
         this.$Message.info('暂无操作');
         this.crossDomain = {};
       },
       //cors收起
-      corsLower(val){
+
+      corsLower(val) {
         val == 'cors' ? (this.corsHide = !this.corsHide) : val == 'static' ? (this.staticHide = !this.staticHide) : ''
       },
       //获取存储空间容量
-      getAllsize(){
+      getAllsize(instance) {
+        // this.handleSpinCustom();
         this.$http.post('object/getAllSize.do', {}).then(res => {
           if (res.data.status == '1') {
-            this.size = res.data.data.data / 1024 > 1 ? (res.data.data.data / 1024).toFixed(2) + 'MB' : res.data.data.data + 'KB';
+            this.size = res.data.data.data / 1024 > 1 || res.data.data.data >1000 ? (res.data.data.data / 1024).toFixed(2) + 'MB' : res.data.data.data + 'KB';
+            // this.$Spin.hide();
 
           } else {
             this.size = "0KB";
+            // this.$Spin.hide();
             this.$Message.error('出错了');
           }
           sessionStorage.setItem('size', this.size);
-        }).catch(error => {
-          this.$Message.error('网络连接出错');
-          this.size = "0KB"
-        })
-      },
-      // 查询Cors
-      selectCors(){
-        this.$http.post('cors/selectCorsAll.do', {
-          bucketId: sessionStorage.getItem('bucketId')
-        }).then(response => {
-          console.log(response)
-        })
-      },
 
+        })
+      },
+      getSize(){
+        console.log(this.size);
+      },
+      //获取文件路径返回
+      selectFileSrc(id, index) {
+        this.fileData.id = id;
+
+        let number = this.fileObject.length - (index + 1);
+        this.fileObject.splice(index + 1, number);
+        this.filesList(this.fileData.id)
+
+      },
+      disble(val){
+        if(val == '0'){
+          this.whiteList = true;
+          this.jurisdValidate.whiteListValue = '';
+        }else{
+          this.whiteList = false
+        }
+      },
+      disbleUpdate(val){
+          if(!val){
+            this.whiteListUpdate = true;
+            this.jurisdValidate.whiteListValue = '';
+          }else {
+            this.whiteListUpdate = false;
+          }
+      },
       //获取空间详情
       // bucketDetails() {
       //
@@ -1160,6 +1260,27 @@
       //     });
       // },
       //
+      handleSpinCustom () {
+        this.$Spin.show({
+          render: (h) => {
+            return h('div', [
+              h('Icon', {
+                'class': 'demo-spin-icon-load',
+                props: {
+                  type: 'load-c',
+                  size: 18
+                }
+              }),
+              h('div', 'loading...')
+            ])
+          }
+        });
+      },
+      //返回根路径
+      backPage(){
+        this.fileObject.pop();
+        this.filesList(null);
+      }
     },
     created(){
       this.bucketName = sessionStorage.getItem('bucketName');
@@ -1167,37 +1288,11 @@
       this.filesList();
       this.selectAclAll();
       this.getAllsize();
-      this.selectCors();
+      this.getSize();
+      this.disble('0')
       this.kjName = sessionStorage.getItem('bucketName');
       this.kjaccessrights = sessionStorage.getItem('accessrights') == 1 ? '私有读写' : sessionStorage.getItem('accessrights') == 2 ? '公有读私有写' : sessionStorage.getItem('accessrights') == 3 ? '公有读写' : '自定义权限';
-    },
-    /*beforeRouteEnter(to, from, next){
-     axios.post('object/getAllSize.do', {
-     zoneId: $store.state.zone.zoneid
-     }).then(res => {
-     let size = "0KB"
-     if (res.data.status == '1') {
-     size = res.data.data.data / 1024 > 1 ? (res.data.data.data / 1024).toFixed(2) + 'MB' : res.data.data.data + 'KB';
-     }
-     next(vm => {
-     vm.setSize(size)
-     })
-     sessionStorage.setItem('size', this.size);
-     }).catch(error => {
-     this.$Message.error('网络连接出错');
-     this.size = "0KB"
-     })
-     next()
-     },*/
-    /*mounted() {
-     this.bucketName = sessionStorage.getItem('bucketName');
-     this.ptext = this.navList[0].city; //权限列表默认显示第一个
-     this.filesList();
-     this.selectAclAll();
-     //this.getAllsize();
-     this.kjName = sessionStorage.getItem('bucketName');
-     this.kjaccessrights = sessionStorage.getItem('accessrights') == 1 ? '私有读写' : sessionStorage.getItem('accessrights') == 2 ? '公有读私有写' : sessionStorage.getItem('accessrights') == 3 ? '公有读写' : '自定义权限';
-     }*/
+    }
   };
 </script>
 
@@ -1255,6 +1350,7 @@
           background-color: #2a99f2;
           color: #ffffff;
           cursor: pointer;
+          transition: ease-in-out .3s;
         }
         .space_item:hover {
           background-color: #2a99f2;
@@ -1298,6 +1394,18 @@
         }
       }
     }
+  }
+
+  .fileObject{
+    display: inline-block;
+    color: #2A99F2;
+    cursor:pointer;
+  }
+  .fileShow{
+    display: inline-block;
+    color: #2A99F2;
+    cursor:pointer;
+    transition:all .3s ease-in-out;
   }
 
   .custom {
@@ -1385,6 +1493,7 @@
     border-left: 1px solid #2A99F2;
     transform: translateY(-2px) rotate(-135deg);
   }
+
 
   .downlower::before {
     transform: translateY(4px) rotate(45deg);

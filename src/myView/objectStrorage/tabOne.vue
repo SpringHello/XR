@@ -4,7 +4,7 @@
             <Button type="primary" @click="modal6 = true">新建空间</Button>
         </div>
         <div style="margin-top:10px;">
-             <Table :columns="spaceColumns" :data="spaceData" no-data-text="您还没有创建Bucket（存储空间）,请点击新建空间"></Table>
+             <Table  :columns="spaceColumns" :data="spaceData" no-data-text="您还没有创建Bucket（存储空间）,请点击新建空间"></Table>
         </div>
 
          <Modal
@@ -67,7 +67,25 @@ export default {
       spaceColumns: [
         {
           key: "name",
-          title: "空间名称"
+          title: "空间名称",
+          render: (h, parasm) => {
+            const hide = parasm.row.hide == 1 ?'inline-block':'none';
+            return h("div", [
+              h('Spin',{
+                prop:{
+                  size:'small'
+                },
+                style:{
+                  display:hide
+                }
+              }),
+              h(
+                "span",
+                {},
+                parasm.row.name
+              )
+            ]);
+          }
         },
         {
           key: "accessrights",
@@ -77,7 +95,7 @@ export default {
               h(
                 "span",
                 {},
-                parasm.row.accessrights == 1 ? "私有读写" : parasm.row.accessrights ==2 ? "公有读私有写" : parasm.row.accessrights = 3 ?"公有读写" : '自定义权限'
+                parasm.row.accessrights == 1 ? "私有读写" : parasm.row.accessrights ==2 ? "公有读私有写" : parasm.row.accessrights == 3 ?"公有读写" : parasm.row.accessrights == 4 ?'自定义权限':'————'
               )
             ]);
           }
@@ -147,19 +165,24 @@ export default {
           label:'公有读写',
           value:'3'
         }
-      ]
+      ],
+      buckLoading:false
     };
   },
   methods: {
     //获取空间列表
     getBuckets() {
+      this.buckLoading = true;
       this.$http
         .post("bucket/getBuckets.do", {})
         .then(res => {
           if (res.data.status == "1") {
             this.spaceData = res.data.data.bucket;
+
+            this.buckLoading = false;
           } else {
             this.spaceData = [];
+            this.buckLoading = false;
             this.$Message.error(res.data.msg);
           }
         });
@@ -168,6 +191,8 @@ export default {
     bucketClick(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
+          let obj = {name:'创建中',hide:1,createtime:'————',operation:'————',accessrights:'————'};
+          this.spaceData.push(obj);
           this.$http
             .post("bucket/createBucket.do", {
               bucketName: this.bucketInline.bucketName,
@@ -176,6 +201,7 @@ export default {
             .then(res => {
               if (res.data.status == "1") {
                 this.$Message.success("创建成功");
+                this.spaceData.pop();
                 this.getBuckets();
               } else {
                 this.$Message.error(res.data.msg);
