@@ -52,7 +52,7 @@
             </FormItem>
 
             <FormItem label="主体单位证件号码" prop="certificateNumber">
-              <Input v-model="mainUnitInformation.certificateNumber" maxlength="20" placeholder="请输入主体单位证件号码"
+              <Input v-model="mainUnitInformation.certificateNumber" :maxlength="20" placeholder="请输入主体单位证件号码"
                      style="width: 500px"></Input>
             </FormItem>
 
@@ -120,7 +120,7 @@
               </Select>
             </FormItem>
             <FormItem label="法人证件号码" prop="legalPersonIDNumber">
-              <Input v-model="mainUnitInformation.legalPersonIDNumber" maxlength="20" placeholder="请输入法人证件号码" style="width: 500px"></Input>
+              <Input v-model="mainUnitInformation.legalPersonIDNumber" :maxlength="20" placeholder="请输入法人证件号码" style="width: 500px"></Input>
             </FormItem>
             <FormItem label="办公室电话" prop="officePhone" v-if="!isPersonage">
               <span>+86</span><Input @on-focus="toolShow('officePhone')" @on-blur="toolHide()" v-model="mainUnitInformation.officePhone" placeholder="请输入办公室电话"

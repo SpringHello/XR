@@ -201,7 +201,7 @@
                 </Select>
               </FormItem>
               <FormItem label="有效证件号码" prop="certificateNumber">
-                <Input v-model="site.basicInformation.certificateNumber" maxlength="20" placeholder="请输入主体单位证件号码" style="width: 500px"/>
+                <Input v-model="site.basicInformation.certificateNumber" :maxlength="20" placeholder="请输入主体单位证件号码" style="width: 500px"/>
               </FormItem>
               <FormItem label="办公室电话" prop="officePhone" v-if="!isPersonage">
                 <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.officePhone" placeholder="请输入办公室电话"
