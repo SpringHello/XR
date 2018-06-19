@@ -66,7 +66,8 @@
     <div class="sec-header">
       <div class="wrapper">
         <div class="zoneList">
-          <Dropdown @on-click="toggleZone">
+          <!--<Dropdown @on-click="toggleZone">-->
+            <Dropdown>
             <div style="height:30px;min-width: 102px;">
               <div
                 style="display: inline-block;background: #2A99F2;border-radius: 4px;height: 30px;padding: 4px 0px;cursor:pointer">

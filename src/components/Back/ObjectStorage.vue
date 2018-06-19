@@ -17,7 +17,7 @@
         <div class="center_p">
           <p>虚拟私有云，通过逻辑方式进行网络隔离，提供安全、隔离的网络环境。VPC为您提供与传统网络无差别的虚拟网络，同时还可以为您提供弹性IP、安全组、VPN等高级网络服务。</p>
         </div>
-        <Tabs type="card">
+        <Tabs type="card" :animated="false">
           <TabPane label="概览">
             <p>当月用量 2018/04/28-2018</p>
             <div class="center_space">
@@ -35,40 +35,40 @@
               </div>
             </div>
             <!--<div class="center_chart">-->
-              <!--<div style="display:flex;padding-bottom:5px;">-->
-                <!--<div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>-->
-                <!--<div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>-->
-              <!--</div>-->
-              <!--<div class="chart">-->
-                <!--<ul class="objectList">-->
-                  <!--<li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>-->
-                <!--</ul>-->
-                <!--<div class="chart-rig">-->
-                   <!--&lt;!&ndash;<Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button>&ndash;&gt;-->
-                  <!--<ul class="objectList">-->
-                    <!--<li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>-->
-                  <!--</ul>-->
-                <!--</div>-->
-              <!--</div>-->
-              <!--<chart class="echarts" :options="rwPolar" ></chart>-->
+            <!--<div style="display:flex;padding-bottom:5px;">-->
+            <!--<div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>-->
+            <!--<div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>-->
+            <!--</div>-->
+            <!--<div class="chart">-->
+            <!--<ul class="objectList">-->
+            <!--<li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>-->
+            <!--</ul>-->
+            <!--<div class="chart-rig">-->
+            <!--&lt;!&ndash;<Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button>&ndash;&gt;-->
+            <!--<ul class="objectList">-->
+            <!--<li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>-->
+            <!--</ul>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<chart class="echarts" :options="rwPolar" ></chart>-->
             <!--</div>-->
             <!--<div class="center_chart">-->
-              <!--<div style="display:flex;padding-bottom:5px;margin-top:50px;">-->
-                <!--<div style="width:50%;font-size:16px;color:#333333;">请求次数</div>-->
-                <!--<div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>-->
-              <!--</div>-->
-              <!--<div class="chart" >-->
-                <!--<ul class="objectList">-->
-                  <!--<li :class="requestIndex == item.label? 'objectItems':'objectItem'" v-for="item in requestList" :key="item.label" @click="requestClick(item.label)">{{item.value}}</li>-->
-                <!--</ul>-->
-                <!--<div class="chart-rig">-->
-                  <!--&lt;!&ndash; <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button> &ndash;&gt;-->
-                  <!--<ul class="objectList">-->
-                    <!--<li :class="chartTwoIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartTwotList" :key="index" @click="chartTwoClick(index)">{{item.value}}</li>-->
-                  <!--</ul>-->
-                <!--</div>-->
-              <!--</div>-->
-              <!--<chart class="echarts" :options="rwNumber"></chart>-->
+            <!--<div style="display:flex;padding-bottom:5px;margin-top:50px;">-->
+            <!--<div style="width:50%;font-size:16px;color:#333333;">请求次数</div>-->
+            <!--<div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>-->
+            <!--</div>-->
+            <!--<div class="chart" >-->
+            <!--<ul class="objectList">-->
+            <!--<li :class="requestIndex == item.label? 'objectItems':'objectItem'" v-for="item in requestList" :key="item.label" @click="requestClick(item.label)">{{item.value}}</li>-->
+            <!--</ul>-->
+            <!--<div class="chart-rig">-->
+            <!--&lt;!&ndash; <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button> &ndash;&gt;-->
+            <!--<ul class="objectList">-->
+            <!--<li :class="chartTwoIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartTwotList" :key="index" @click="chartTwoClick(index)">{{item.value}}</li>-->
+            <!--</ul>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<chart class="echarts" :options="rwNumber"></chart>-->
             <!--</div>-->
           </TabPane>
           <TabPane label="空间管理">
@@ -86,7 +86,7 @@
     </div>
     <Modal v-model="screte" title="提示" :scrollable='true' width="390px" @on-ok="$router.push({path:'SpaceDetails'})"
     >
-    <p>尊敬的用户您好，系统检测到您当前没有可用的Access Key，请您到<span style="color:#2A99F2;">Access Key管理</span>去创建Access Key。</p>
+      <p>尊敬的用户您好，系统检测到您当前没有可用的Access Key，请您到<span style="color:#2A99F2;">Access Key管理</span>去创建Access Key。</p>
     </Modal>
   </div>
 </template>
@@ -111,97 +111,97 @@
         //下载流量统计图
         rwPolar: JSON.parse(disk),
         //请求次数统计图
-        rwNumber : JSON.parse(numbers),
+        rwNumber: JSON.parse(numbers),
         //下载流量统计图数据
-        dayList:[
+        dayList: [
           {
-            value:'今天',
-            data:[20,30,40,50,60],
-            day:['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
-            label:0
+            value: '今天',
+            data: [20, 30, 40, 50, 60],
+            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
+            label: 0
           },
           {
-            value:'昨天',
-            data:[20,30,40,50,60],
-            day:['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
-            label:1
+            value: '昨天',
+            data: [20, 30, 40, 50, 60],
+            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
+            label: 1
           },
           {
-            value:'最近七天',
-            data:[20,30,40,50,60,22,100],
-            day:['02/18','02/18','02/18','02/18','02/18','02/18','02/18'],
-            label:2
+            value: '最近七天',
+            data: [20, 30, 40, 50, 60, 22, 100],
+            day: ['02/18', '02/18', '02/18', '02/18', '02/18', '02/18', '02/18'],
+            label: 2
           },
           {
-            value:'最近三十天',
-            data:[20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,100,33,28,90,55],
-            day:['04/01','04/02','04/03','04/04','04/05','04/06','04/07','04/08','04/09','04/10','04/11','04/12','04/13','04/14','04/15','04/16','04/17','04/18','04/19','04/20','04/21','04/22','04/23','04/24','04/25','04/26','04/27','04/28','04/29','04/30'],
-            label:3
+            value: '最近三十天',
+            data: [20, 30, 40, 50, 60, 20, 30, 40, 50, 60, 20, 30, 40, 50, 60, 20, 30, 40, 50, 60, 20, 30, 40, 50, 60, 100, 33, 28, 90, 55],
+            day: ['04/01', '04/02', '04/03', '04/04', '04/05', '04/06', '04/07', '04/08', '04/09', '04/10', '04/11', '04/12', '04/13', '04/14', '04/15', '04/16', '04/17', '04/18', '04/19', '04/20', '04/21', '04/22', '04/23', '04/24', '04/25', '04/26', '04/27', '04/28', '04/29', '04/30'],
+            label: 3
           }
         ],
         //下载流量选择时间
-        indexs:0,
-        requestIndex:0,
+        indexs: 0,
+        requestIndex: 0,
         //请求次数统计图数据
-        requestList:[
+        requestList: [
           {
-            value:'今天',
-            data:[20,30,40,50,60],
-            day:['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
-            label:0
+            value: '今天',
+            data: [20, 30, 40, 50, 60],
+            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
+            label: 0
           },
           {
-            value:'昨天',
-            data:[20,30,40,50,60,90,70],
-            day:['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
-            label:1
+            value: '昨天',
+            data: [20, 30, 40, 50, 60, 90, 70],
+            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
+            label: 1
           },
           {
-            value:'最近七天',
-            data:[20,30,40,50,60,22,100],
-            day:['02/18','02/18','02/18','02/18','02/18','02/18','02/18'],
-            label:2
+            value: '最近七天',
+            data: [20, 30, 40, 50, 60, 22, 100],
+            day: ['02/18', '02/18', '02/18', '02/18', '02/18', '02/18', '02/18'],
+            label: 2
           },
           {
-            value:'最近三十天',
-            data:[20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,100,33,28,90,55],
-            day:['04/01','04/02','04/03','04/04','04/05','04/06','04/07','04/08','04/09','04/10','04/11','04/12','04/13','04/14','04/15','04/16','04/17','04/18','04/19','04/20','04/21','04/22','04/23','04/24','04/25','04/26','04/27','04/28','04/29','04/30'],
-            label:3
+            value: '最近三十天',
+            data: [20, 30, 40, 50, 60, 20, 30, 40, 50, 60, 20, 30, 40, 50, 60, 20, 30, 40, 50, 60, 20, 30, 40, 50, 60, 100, 33, 28, 90, 55],
+            day: ['04/01', '04/02', '04/03', '04/04', '04/05', '04/06', '04/07', '04/08', '04/09', '04/10', '04/11', '04/12', '04/13', '04/14', '04/15', '04/16', '04/17', '04/18', '04/19', '04/20', '04/21', '04/22', '04/23', '04/24', '04/25', '04/26', '04/27', '04/28', '04/29', '04/30'],
+            label: 3
           }
         ],
         //下载流量切换统计图
-        chartList:[
+        chartList: [
           {
-            value:'折线',
-            type:'line',
-            boundaryGap:false
+            value: '折线',
+            type: 'line',
+            boundaryGap: false
           },
           {
-            value:'柱状图',
-            type:'bar',
-            boundaryGap:true
+            value: '柱状图',
+            type: 'bar',
+            boundaryGap: true
           }
         ],
         //下载流量切换统计图
-        chartIndex:0,
+        chartIndex: 0,
         //请求次数切换统计图
-        chartTwotList:[
+        chartTwotList: [
           {
-            value:'折线',
-            type:'line',
-            boundaryGap:false
+            value: '折线',
+            type: 'line',
+            boundaryGap: false
           },
           {
-            value:'柱状图',
-            type:'bar',
-            boundaryGap:true
+            value: '柱状图',
+            type: 'bar',
+            boundaryGap: true
           }
         ],
-        chartTwoIndex:0,
+        chartTwoIndex: 0,
         //检测access
-        screte:false,
+        screte: false,
         //存储空间容量
-        size:''
+        size: ''
       }
     },
     components: {
@@ -209,7 +209,7 @@
       tabTwo: deferLoad(tabTwo, 100),
       tabThree: deferLoad(tabThree, 100)
     },
-    methods:{
+    methods: {
       //下载流量点击切换数据
       dayClick(val){
         console.log(val);
@@ -228,8 +228,8 @@
       dowloda(){
         var img = new Image();
         img.src = disk.getDataURL({
-          pixelRatio:2,
-          backgroundColor:'#ffffff'
+          pixelRatio: 2,
+          backgroundColor: '#ffffff'
         })
       },
       //下载流量切换统计图
@@ -256,17 +256,16 @@
       // },
       //获取存储空间容量
       getAllsize(){
-        this.$http.post('object/getAllSize.do',{
-        }).then(res =>{
-          if(res.data.status == '1'){
-           this.size =  res.data.data.data / 1024 > 1 ?  (res.data.data.data / 1024).toFixed(2) + 'MB' :res.data.data.data + 'KB';
+        this.$http.post('object/getAllSize.do', {}).then(res => {
+          if (res.data.status == '1') {
+            this.size = res.data.data.data / 1024 > 1 ? (res.data.data.data / 1024).toFixed(2) + 'MB' : res.data.data.data + 'KB';
 
-          }else{
+          } else {
             this.size = "0KB";
             this.$Message.error('出错了');
           }
-          sessionStorage.setItem('size',this.size);
-        }).catch(error =>{
+          sessionStorage.setItem('size', this.size);
+        }).catch(error => {
           this.$Message.error('网络连接出错');
           this.size = "0KB"
         })
@@ -284,9 +283,10 @@
 </script>
 
 <style lang="less" rel="stylesheet/less" scoped>
-  p{
+  p {
     line-height: 20px;
   }
+
   .centerBox {
     background-color: #f5f5f5;
     width: 100%;
@@ -364,7 +364,7 @@
             display: inline-block;
             margin-right: -4px;
             cursor: pointer;
-            border-radius: 4px  0px  0px  4px;
+            border-radius: 4 px  0px  0px  4px;
           }
           span:hover {
             color: #2a99f2;
@@ -378,16 +378,17 @@
       }
     }
   }
+
   .objectList {
-    width:165%;
+    width: 165%;
     font-family: PingFangSC;
     display: flex;
-    li:first-child{
+    li:first-child {
       border-top-left-radius: 4px;
       border-bottom-left-radius: 4px;
     }
-    li:last-child{
-      border-top-right-radius:4px;
+    li:last-child {
+      border-top-right-radius: 4px;
       border-bottom-right-radius: 4px;
     }
     .objectItem {
@@ -407,16 +408,23 @@
       cursor: pointer;
     }
     .objectItem:hover {
-      border:1px solid #2a99f2;
+      border: 1px solid #2a99f2;
       cursor: pointer;
     }
   }
-  .chart{
-    margin-top:10px;display:flex;height:30px;
+
+  .chart {
+    margin-top: 10px;
+    display: flex;
+    height: 30px;
   }
-  .chart-rig{
-    width:23%;text-align:right;height:30px;
+
+  .chart-rig {
+    width: 23%;
+    text-align: right;
+    height: 30px;
   }
+
   .echarts {
     width: 100%;
     height: 240px;
