@@ -881,7 +881,7 @@
       <Form ref="webIsp" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="ispname">
           <p style="margin:10px">ISP名称</p>
-          <Input  type="text" v-model="updateHostUnitList.ispname"></Input>
+          <Input  :readonly="true" type="text" v-model="updateHostUnitList.ispname"></Input>
         </FormItem>
         <FormItem prop="webip">
           <p style="margin:10px">网站IP地址</p>
@@ -1736,7 +1736,7 @@
           otherDataUrl:this.updateHostUnitList.otherdataurl}
         let update =  this.$http.post("recode/updateMainWeb.do", web);
         let main = {
-          id: webcompany_Id,
+          id: this.id,
           phone: this.updateHostUnitList.companyphone,
           email: this.updateHostUnitList.companyemail,
           legalName: this.updateHostUnitList.legalname,
@@ -1763,13 +1763,11 @@
           mainCompanyArea:this.updateHostUnitList.maincompanyarea
         }
         let addMian =  this.$http.get('recode/addMainCompany.do', {params:main})
-        axios.all([update,addMian]).then(res =>{
-          console.log(res);
+        Promise.all([update,addMian]).then(res =>{
           if (res[0].data.status == 1 && res[1].data.status == 1) {
             this.$router.push({path:'BRecords'});
             this.$Message.success("修改成功");
           } else {
-            alert(111111);
             this.$Message.error(res.data.message);
           }
         })
@@ -1794,7 +1792,7 @@
                 name == 'website' ? this.website = false :
                   name == 'websitePerson' ? this.websitePerson = false :
                     name == 'webIsp'? this.webIsp = false :'';
-            this.hostUnitList = this.updateHostUnitList;
+            this.hostUnitList =JSON.parse(JSON.stringify(this.updateHostUnitList));
             this.hostUnitList.maincompanyarea = this.province +'-'+this.city +'-'+this.district;
             this.hostUnitList.webip = this.webip.join(' ');
           } else {

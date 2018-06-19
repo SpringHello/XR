@@ -391,7 +391,7 @@
           </div>
         </div>
         <div style="text-align:center;margin:20px 0 80px 0;">
-          <Button type="primary" @click="allUpdate" >重新提交</Button>
+          <Button type="primary" @click="allUpdate" :disabled="isAllUpate">重新提交</Button>
         </div>
       </div>
 
@@ -1822,7 +1822,7 @@
                 name == 'website' ? this.website = false :
                   name == 'websitePerson' ? this.websitePerson = false :
                     name == 'webIsp'? this.webIsp = false :'';
-            this.hostUnitList = this.updateHostUnitList;
+            this.hostUnitList = JSON.parse(JSON.stringify(this.updateHostUnitList));
             this.hostUnitList.maincompanyarea = this.province +'-'+this.city +'-'+this.district;
             this.hostUnitList.webip = this.webip.join(' ');
           } else {
@@ -1839,7 +1839,9 @@
       allUpdate(){
         let webcompany_Id = sessionStorage.getItem('webcompany_Id');
         this.updateHostUnitList.id = this.id;
-        let web = {id: this.id,
+        let web = {
+          id: this.id,
+          status: '初审中',
           ISPName: this.updateHostUnitList.ispname,
           webIp: this.updateHostUnitList.webip,
           webAccessType: this.updateHostUnitList.webaccesstype,
