@@ -371,13 +371,13 @@
       </p>
       <div class="universal-modal-content-flex">
         <!--<Form :model="addCorsForm" :rules="newRuleValidate" ref="newDisk">-->
-        <Form :model="addCorsForm">
-          <Form-item label="来源Origin" prop="diskName">
+        <Form :model="addCorsForm" :rules="addCorsFormValidateL" ref="newCros">
+          <Form-item label="来源Origin" prop="orgins">
             <Input :rows="3" type="textarea" v-model="addCorsForm.orgins"
                    placeholder="例如：http://10.100.100.100:8001 https://www.xrcloud.net"></Input>
             <p>来源可设置多个，每行一个，以回车间隔，每行最多能有一个通配符(*)</p>
           </Form-item>
-          <Form-item label="操作" prop="diskName">
+          <Form-item label="操作" prop="methods">
             <CheckboxGroup v-model="addCorsForm.methods">
               <Checkbox label="put">Put</Checkbox>
               <Checkbox label="get">Get</Checkbox>
@@ -386,15 +386,15 @@
               <Checkbox label="delete">Delete</Checkbox>
             </CheckboxGroup>
           </Form-item>
-          <Form-item label="Allow-Headers" prop="diskName">
+          <Form-item label="Allow-Headers" prop="allowsHeaders">
             <Input style="width:420px;" :rows="3" type="textarea"
                    v-model="addCorsForm.allowsHeaders"></Input>
           </Form-item>
-          <Form-item label="Allow-Expose-Headers" prop="diskName">
+          <Form-item label="Allow-Expose-Headers" prop="ExposeHeaders">
             <Input style="width:420px;" :rows="3" type="textarea"
                    v-model="addCorsForm.ExposeHeaders"></Input>
           </Form-item>
-          <Form-item label="缓存Max Age" prop="diskName">
+          <Form-item label="缓存Max Age">
             <InputNumber :max="999999" :min="0" v-model="addCorsForm.maxAge" style="width:250px;"></InputNumber>
           </Form-item>
         </Form>
@@ -845,17 +845,24 @@
           maxAge: 100
         },
         addCorsFormValidateL: {
-          orgins: {},
-          methods: {},
-          allowsHeaders: {},
-          ExposeHeaders: {},
-          maxAge: {}
+          orgins: [
+            {required: true, message: '请填写来源Origin'}
+          ],
+          methods: [
+            {required: true, message: '请选择操作Method'}
+          ],
+          allowsHeaders: [
+            {required: true, message: '请填写allowsHeaders'}
+          ],
+          ExposeHeaders: [
+            {required: true, message: '请填写ExposeHeaders'}
+          ]
         }
       }
     },
     methods: {
       _checkNewCros(){
-
+        this.$refs.newCros
       },
       //上传文件格式错误的方法
       handleFormatError(file) {
