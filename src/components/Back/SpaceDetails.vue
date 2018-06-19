@@ -364,8 +364,51 @@
     </Modal>
 
 
+    <!-- 新建硬盘模态框 -->
+    <Modal v-model="cors" width="550" :scrollable="true" style="top:50px">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">跨域访问CRORS添加规则</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <!--<Form :model="addCorsForm" :rules="newRuleValidate" ref="newDisk">-->
+        <Form :model="addCorsForm">
+          <Form-item label="来源Origin" prop="diskName">
+            <Input :rows="3" type="textarea" v-model="addCorsForm.orgins"
+                   placeholder="例如：http://10.100.100.100:8001 https://www.xrcloud.net"></Input>
+            <p>来源可设置多个，每行一个，以回车间隔，每行最多能有一个通配符(*)</p>
+          </Form-item>
+          <Form-item label="操作" prop="diskName">
+            <CheckboxGroup v-model="addCorsForm.methods">
+              <Checkbox label="put">Put</Checkbox>
+              <Checkbox label="get">Get</Checkbox>
+              <Checkbox label="post">Post</Checkbox>
+              <Checkbox label="head">Head</Checkbox>
+              <Checkbox label="delete">Delete</Checkbox>
+            </CheckboxGroup>
+          </Form-item>
+          <Form-item label="Allow-Headers" prop="diskName">
+            <Input style="width:420px;" :rows="3" type="textarea"
+                   v-model="addCorsForm.allowsHeaders"></Input>
+          </Form-item>
+          <Form-item label="Allow-Expose-Headers" prop="diskName">
+            <Input style="width:420px;" :rows="3" type="textarea"
+                   v-model="addCorsForm.ExposeHeaders"></Input>
+          </Form-item>
+          <Form-item label="缓存Max Age" prop="diskName">
+            <InputNumber :max="999999" :min="0" v-model="addCorsForm.maxAge" style="width:250px;"></InputNumber>
+          </Form-item>
+        </Form>
+        <div style="clear: both"></div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="cors = false">取消</Button>
+        <Button type="primary" @click="_checkNewCros">确定新建</Button>
+      </div>
+    </Modal>
+
+
     <!--跨域访问CRORS添加规则-->
-    <Modal
+    <!--<Modal
       v-model="cors"
       title="跨域访问CRORS添加规则"
       :scrollable='true'
@@ -412,15 +455,13 @@
         <p>缓存Max Age</p>
         <Input type="text" style="width:317px" placeholder="请输入0-999999999的正整数" v-model="addCorsForm.maxAge"></Input>
       </div>
-    </Modal>
+    </Modal>-->
     <!--cors规则编辑器-->
     <Modal
       v-model="corsedit"
       title="添加自定义权限"
       :scrollable='true'
-      width="550px"
-
-    >
+      width="550px">
      <pre style="background-color:#FDF6E3;">
        <code></code>
      </pre>
@@ -799,13 +840,23 @@
         addCorsForm: {
           orgins: '',
           methods: [],
-          allowsHeaders: [],
-          ExposeHeaders: [],
+          allowsHeaders: '',
+          ExposeHeaders: '',
           maxAge: 100
+        },
+        addCorsFormValidateL: {
+          orgins: {},
+          methods: {},
+          allowsHeaders: {},
+          ExposeHeaders: {},
+          maxAge: {}
         }
       }
     },
     methods: {
+      _checkNewCros(){
+
+      },
       //上传文件格式错误的方法
       handleFormatError(file) {
         this.$Message.error('格式错误');
