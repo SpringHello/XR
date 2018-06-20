@@ -114,7 +114,7 @@
       </div>
     </div>
     <div class="content-footer" v-show="photograph === 2 && nextStep  && curtainStatus">
-      <button @click="sumbitApproval">提交管局审核</button>
+      <button @click="sumbitApproval">提交初审</button>
     </div>
     <Modal v-model="showModal.logistics" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
@@ -406,7 +406,7 @@
               content: '信息提交成功'
             })
             sessionStorage.setItem('recordsType', this.recordsType)
-            this.$router.push('waitSecondTrial')
+            this.$router.push('waitFirstTrial')
           } else {
             this.$message.info({
               content: '平台开小差了，请稍候再试'
