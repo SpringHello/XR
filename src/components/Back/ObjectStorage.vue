@@ -270,7 +270,7 @@
       getAllsize(){
         this.$http.post('object/getAllSize.do', {}).then(res => {
           if (res.data.status == '1') {
-            this.size = res.data.data.data / 1024 > 1 ? (res.data.data.data / 1024).toFixed(2) + 'MB' : res.data.data.data + 'KB';
+            this.size = res.data.data.data > 1000 || res.data.data.data / 1024 > 1 ? (res.data.data.data / 1024).toFixed(2) + 'MB' : res.data.data.data + 'KB';
           } else {
             this.size = "0KB";
             this.$Message.error('出错了');

@@ -10,15 +10,12 @@
          <Modal
         v-model="modal6"
         title="新建空间"
-         @on-ok="bucketClick('bucketInline')"
         :scrollable='true'>
-        <Form ref="bucketInline" :model="bucketInline" :rules="bucketRule">
-          <FormItem prop="bucketName">
-             <p class="modal-p" >空间名称</p>
+        <Form ref="bucketInline" :model="bucketInline" :rules="bucketRule" label-position="top">
+          <FormItem prop="bucketName" label="空间名称">
              <Input type="text" v-model="bucketInline.bucketName" placeholder="请输入少于20位的数字与字母名称" style="width:240px;"></Input>
           </FormItem>
-          <FormItem prop="visit">
-             <p class="modal-p" style="margin-top:10px;">访问权限</p>
+          <FormItem prop="visit" label="访问权限">
             <Select v-model="bucketInline.visit" style="width:240px">
                 <Option v-for="item in visitList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
@@ -29,6 +26,10 @@
             <p>2.公有读私有写：任何人都可以读取文件，对文件的写入、删除等操作仍需要由文件的所有者授权的操作人完成 </p>
             <p>3.公有读写：所有人均可读写Bucket内的Object，无需身份验证。该权限安全风险极高，为确保您的数据安全，请谨慎选择!</p>
         </div>
+           <div slot="footer" class="modal-footer-border">
+             <Button type="ghost" @click="modal6 = false">取消</Button>
+             <Button type="primary" @click="bucketClick">确定新建</Button>
+           </div>
     </Modal>
     </div>
 
@@ -178,18 +179,18 @@ export default {
         .then(res => {
           if (res.data.status == "1") {
             this.spaceData = res.data.data.bucket;
-
+            sessionStorage.setItem('http',res.data.data.protocol);
             this.buckLoading = false;
           } else {
             this.spaceData = [];
             this.buckLoading = false;
-            this.$Message.error(res.data.msg);
+            this.$Message.info(res.data.msg);
           }
         });
     },
     //创建空间
-    bucketClick(name) {
-      this.$refs[name].validate(valid => {
+    bucketClick() {
+      this.$refs.bucketInline.validate(valid => {
         if (valid) {
           let obj = {name:'创建中',hide:1,createtime:'————',operation:'————',accessrights:'————'};
           this.spaceData.push(obj);
@@ -201,7 +202,6 @@ export default {
             .then(res => {
               if (res.data.status == "1") {
                 this.$Message.success("创建成功");
-                this.spaceData.pop();
                 this.getBuckets();
               } else {
                 this.$Message.error(res.data.msg);

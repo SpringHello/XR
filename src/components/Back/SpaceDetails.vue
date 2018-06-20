@@ -24,10 +24,10 @@
           </div>
           <div style="display:flex;font-size:14px;">
             <div style="width:37%">
-              内网访问域名：<span style="color:#2A99F2">asd32.oss-internat.cn-north-1,xinrui.com</span>
+              默认访问域名：<span style="color:#2A99F2">{{defaultDomain}}</span>
             </div>
             <div style="width:50%;">
-              外网访问域名：<span style="color:#2A99F2">asd32.oss-internat.cn-north-1,xinruicloud.com</span>
+              自定义外网访问域名：<span style="color:#2A99F2">{{mainName == false?domain.route:custom}}</span><span style="color:#2A99F2;margin-left: 10px;cursor: pointer;" @click="mainName = true">修改</span>
             </div>
           </div>
         </div>
@@ -49,8 +49,8 @@
             <div class="space_text">0次</div>
           </div>
         </div>
-        <Tabs type="card" style="margin-top:21px;">
-          <TabPane label="Object管理">
+        <Tabs type="card" style="margin-top:21px;" value="objects" @on-click="checkTab" :animated="false">
+          <TabPane label="Object管理" name="objects">
             <div style="display:flex;margin-bottom:15px;">
               <div style="width:50%">
                 <Button type="primary" style="margin-right:10px;" @click="modal1 = true">上传</Button>
@@ -71,7 +71,7 @@
 
             <Table :columns='fileList' :loading="tabLoading" :data="fileData"></Table>
           </TabPane>
-          <TabPane label="空间设置">
+          <TabPane label="空间设置" name="space">
             <div>
               <p style="font-size:18px;color:#333333;margin:0 0 20px 0;">权限设置</p>
               <div style="border:1px solid #e9e9e9;">
@@ -93,13 +93,12 @@
             </div>
             <br><br>
             <div class="setting">
-              <div style="display:flex;">
-                <div style="width:97%;font-size:18px;color:#333333;">跨域访问设置</div>
-                <div style="width: 65px;">
-                  <div class="down" :class="{downlower:!corsHide}" @click="corsLower('cors')"></div>
-                  <span style="color: #2A99F2;display: inline-block;">收起</span>
+              <div>
+                <div style="font-size:18px;color:#333333;display: inline-block;">跨域访问设置</div>
+                  <span style="float:right;color: #2A99F2;" class="down" :class="{downlower:!corsHide}"  @click="corsLower('cors')">
+                    {{corsHide?'收起':'展开'}}
+                  </span>
                 </div>
-              </div>
               <div v-if="corsHide">
                 <div style="margin:10px 0 20px 0;">
                   <Button type="primary" @click="cors = true" style="margin-right: 10px;">CORS规则配置</Button>
@@ -109,6 +108,8 @@
               </div>
             </div>
             <br>
+
+
             <div>
               <div>
                 <div style="font-size:18px;color:#333333;display: inline-block">静态网站托管</div>
@@ -153,6 +154,24 @@
         </Tabs>
       </div>
     </div>
+
+    <!--自定义外网域名-->
+    <Modal
+      v-model="mainName"
+      title="自定义外网访问域名"
+      :scrollable='true'
+    >
+      <Form ref="domain" :model="domain" :rules="domainValiDate" label-position="top">
+        <FormItem label="自定义外网域名" prop="route" >
+          <Input type="text" style="width:317px;" v-model="domain.route"/>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button type="ghost" @click="mainName = false">取消</Button>
+        <Button type="primary" @click="updateCustom" :loading="domainLodaing">确定</Button>
+      </div>
+    </Modal>
+    <!--上传文件-->
     <Modal
       v-model="modal1"
       title="上传文件"
@@ -192,18 +211,23 @@
       </Upload>
     </Modal>
     <!-- 新建文件夹 -->
-
     <Modal
       v-model="floder"
       title="新建文件夹"
       :scrollable='true'
-      @on-ok="createFlies()"
     >
       <div class="space_folder">
-        <p style="font-size:14px;color:#666666;">文件夹名称</p>
-        <Input type="text" style="width:317px;" v-model="flies"/>
+        <Form ref="createF" :model="createFile" :rules="createFilesValiDate" label-position="top">
+          <FormItem label="文件夹名称" prop="flies" >
+            <Input type="text" style="width:317px;" v-model="createFile.flies"/>
+          </FormItem>
+        </Form>
         <p style="color:#999999;">1.文件夹名称全称不超过24个字符</p>
         <p style="color:#999999;">2.名称仅能由字母，数字，中文，下划线，短横线和小数点组成</p>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="floder = false">取消</Button>
+        <Button type="primary" @click="createFlies">确定</Button>
       </div>
     </Modal>
     <!-- 查看外链 -->
@@ -216,6 +240,7 @@
         <div style="text-align: right;">
           <p>文件名称</p>
           <p>有效期</p>
+          <p>使用HTTPS</p>
           <p>外链</p>
         </div>
         <div style="width: 77%;margin-left: 20px;">
@@ -223,12 +248,19 @@
           <Select v-model="term" style="width:240px;margin: 10px 0;">
             <Option v-for="item in termList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
-          <Button type="primary" :loading="tremLoading" @click="geturl">获取外链</Button>
-          <Input type="text" style="width:317px;" v-model="fliesTerm" :readonly="true"></Input>
+          <div>
+            <i-switch @on-change="geturl" v-model="http" true-value="https" false-value="http"></i-switch>
+          </div>
+          <br>
+          <!--<Button type="primary" :loading="tremLoading" @click="geturl">获取外链</Button>-->
+          <Input ref="copy" id="copy" v-model="fliesTerm"  type="textarea"  :autosize="true" :readonly="true"></Input>
+          <div class="copyClass">
+            <span>打开文件URL</span><span @click="copyUrl">复制文件URL</span>
+          </div>
         </div>
       </div>
     </Modal>
-    <!-- 自定义权限 -->
+    <!-- 添加自定义权限 -->
     <Modal
       v-model="jurisdiction"
       title="添加自定义权限"
@@ -289,6 +321,10 @@
           <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button type="ghost" @click="floder = false">取消</Button>
+        <Button type="primary" @click="jurisdictionClick">确定</Button>
+      </div>
     </Modal>
 
     <!--自定义权限编辑-->
@@ -297,7 +333,6 @@
       title="添加自定义权限"
       :scrollable='true'
       width="550px"
-      @on-ok="jurisdictionClick"
     >
      <pre style="background-color:#FDF6E3;">
        <code></code>
@@ -310,15 +345,13 @@
       title="修改自定义权限"
       :scrollable='true'
       width="550px"
-      @on-ok="jurisdUpdateClick"
     >
-
       <div class="jurisd">
         <div>Bucket名称：{{bucketName}}</div>
         <div style="margin-left:20px;">存储区域：{{zonename}}</div>
       </div>
-      <Form ref="updateJurisd" v-model="updateJurisd">
-        <FormItem>
+      <Form ref="updateJurisd" v-model="updateJurisd" :rules="updateJurisdValid">
+        <FormItem prop="updateGrantValue">
           <div style="margin-top:20px;">
             <span>用户授权</span>
             <RadioGroup v-model="updateJurisd.updateUsers" @on-change="usersClick">
@@ -329,7 +362,7 @@
             <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
           </div>
         </FormItem>
-        <FormItem>
+        <FormItem prop="updateChannel">
           <div style="width:366px;display:flex;">
             <div style="width:115px;font-size:14px;color:#333333;">密码接收渠道</div>
             <div style="width:300px;">
@@ -343,7 +376,7 @@
             </div>
           </div>
         </FormItem>
-        <FormItem>
+        <FormItem prop="updateInfluenceValue">
           <div style="margin-top:20px;">
             <span>影响资源</span>
             <RadioGroup v-model="updateJurisd.updateSources">
@@ -362,15 +395,19 @@
             </div>
           </div>
         </FormItem>
-        <FormItem>
+        <FormItem prop="updateWhiteListValue">
           <Input :disabled='whiteList' v-model="updateJurisd.updateWhiteListValue" style="width:420px;" :rows="4" type="textarea"></Input>
           <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
         </FormItem>
       </Form>
+      <div slot="footer">
+        <Button type="ghost" @click="floder = false">取消</Button>
+        <Button type="primary" @click="jurisdUpdateClick">确定</Button>
+      </div>
     </Modal>
 
 
-    <!-- 新建硬盘模态框 -->
+    <!-- Cros规则配置 -->
     <Modal v-model="cors" width="550" :scrollable="true" style="top:50px">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">跨域访问CRORS添加规则</span>
@@ -381,8 +418,8 @@
           <Form-item label="来源Origin" prop="orgins">
             <Input :rows="3" type="textarea" v-model="addCorsForm.orgins"
                    placeholder="例如：http://10.100.100.100:8001 https://www.xrcloud.net"></Input>
-            <p>来源可设置多个，每行一个，以回车间隔，每行最多能有一个通配符(*)</p>
           </Form-item>
+          <p style="color: #999999;">来源可设置多个，每行一个，以回车间隔，每行最多能有一个通配符(*)</p>
           <Form-item label="操作" prop="methods">
             <CheckboxGroup v-model="addCorsForm.methods">
               <Checkbox label="put">Put</Checkbox>
@@ -396,10 +433,12 @@
             <Input style="width:420px;" :rows="3" type="textarea"
                    v-model="addCorsForm.allowsHeaders"></Input>
           </Form-item>
+          <p style="color: #999999;">来源可设置多个，每行一个，以回车间隔。</p>
           <Form-item label="Allow-Expose-Headers" prop="ExposeHeaders">
             <Input style="width:420px;" :rows="3" type="textarea"
                    v-model="addCorsForm.ExposeHeaders"></Input>
           </Form-item>
+          <p style="color: #999999;">来源可设置多个，每行一个，以回车间隔，不允许通配符(*)</p>
           <Form-item label="缓存Max Age">
             <InputNumber :max="999999" :min="0" v-model="addCorsForm.maxAge" style="width:250px;"></InputNumber>
           </Form-item>
@@ -412,8 +451,48 @@
       </div>
     </Modal>
 
+    <!--修改CROS规则配置-->
+    <Modal v-model="updateCors" width="550" :scrollable="true" style="top:50px">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">跨域访问CRORS添加规则</span>
+      </p>
+      <div class="universal-modal-content-flex">
 
-    <!--跨域访问CRORS添加规则-->
+        <Form :model="updateCorsForm" :rules="updateCorsFormValidateL" ref="oldCros">
+          <Form-item label="来源Origin" prop="orgins">
+            <Input :rows="3" type="textarea" v-model="updateCorsForm.orgins"
+                   placeholder="例如：http://10.100.100.100:8001 https://www.xrcloud.net"></Input>
+          </Form-item>
+          <p style="color: #999999;">来源可设置多个，每行一个，以回车间隔，每行最多能有一个通配符(*)</p>
+          <Form-item label="操作" prop="methods">
+            <CheckboxGroup v-model="updateCorsForm.methods">
+              <Checkbox label="put">Put</Checkbox>
+              <Checkbox label="get">Get</Checkbox>
+              <Checkbox label="post">Post</Checkbox>
+              <Checkbox label="head">Head</Checkbox>
+              <Checkbox label="delete">Delete</Checkbox>
+            </CheckboxGroup>
+          </Form-item>
+          <Form-item label="Allow-Headers" prop="allowsheaders">
+            <Input style="width:420px;" :rows="3" type="textarea"
+                   v-model="updateCorsForm.allowsheaders"></Input>
+          </Form-item>
+          <Form-item label="Allow-Expose-Headers" prop="exposeheaders">
+            <Input style="width:420px;" :rows="3" type="textarea"
+                   v-model="updateCorsForm.exposeheaders"></Input>
+          </Form-item>
+          <Form-item label="缓存Max Age">
+            <InputNumber :max="999999" :min="0" v-model="updateCorsForm.maxage" style="width:250px;"></InputNumber>
+          </Form-item>
+        </Form>
+        <div style="clear: both"></div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="updateCors = false">取消</Button>
+        <Button type="primary" @click="updateCros">确定新建</Button>
+      </div>
+    </Modal>
+
     <!--<Modal
       v-model="cors"
       title="跨域访问CRORS添加规则"
@@ -495,13 +574,33 @@
   import axios from 'axios'
   import ICountUp from 'vue-countup-v2'
   var buckname = sessionStorage.getItem('bucketName');
-
+  const validRoute = (rule, value, callback) => {
+    let reg = /^[a-zA-Z]+(\.[a-zA-Z0-9]+)+(\.[a-zA-Z]+)$/;
+      if ( value == "") {
+        return callback(new Error("请输入网站域名"));
+      } else if (!reg.test(value)) {
+        return callback(new Error("请输入正确的网站域名"));
+      } else {
+        callback();
+      }
+  };
   export default {
     data() {
       return {
+        //自定义域名弹窗
+        mainName:false,
+        domain:{
+          route:''
+        },
+        domainValiDate:{
+          route:[
+            {required:true,validator:validRoute,trigger:'blur'}
+          ]
+        },
+        domainLodaing:false,
         //自定义权限表格加载
         jurisdLoading:false,
-          isClass:true,
+        isClass:true,
         //数字渐变动画
         options: {
           useEasing: true,
@@ -577,14 +676,14 @@
             label: '1天'
           }
         ],
-        //文件夹名称
-        flies: "",
         //权限样式
         iSstyle: "",
         //文件名
         filename: null,
         //文件列表数据
         fileData: [],
+        //文件外链是否为http
+        http:'',
         //文件列表表头
         fileList: [
           {
@@ -664,6 +763,9 @@
                       this.nameFile = params.row.filename;
                       this.outerChain = true;
                       this.flieSrc = params.row.filesrc;
+                      this.term = this.termList[1].value;
+                      this.http = sessionStorage.getItem('http');
+                      this.geturl(params.row.filesrc);
                     }
                   }
                 }, "查看外链"),
@@ -698,7 +800,7 @@
           //影响资源
           sources: '0',
           //密码接收渠道
-          channel: ['PutObject'],
+          channel: [],
           //白名单
           referer: '0',
         },
@@ -715,7 +817,18 @@
             {required: true, message: '请输入影响资源', trigger: 'blur'},
           ]
         },
-
+        updateJurisdValid:{
+          updateGrantValue: [
+            {required: true, message: '请输入自定义用户', trigger: 'blur'},
+            {max: 12, message: '自定义用户的名称只能输入12位'}
+          ],
+          updateChannel: [
+            {required: true, type: 'array', message: '请选择密码接受渠道', trigger: 'change'}
+          ],
+          updateInfluenceValue: [
+            {required: true, message: '请输入影响资源', trigger: 'blur'},
+          ]
+        },
         //权限表格表头
         rightList: [
           {
@@ -816,29 +929,43 @@
         },
         ruleValidate: {},
         //修改自定义权限
-
         //cors弹窗
         cors: false,
         //cors访问规则表头
         corstList: [
           {
-            key: 'origin',
-            title: '来源Allowed Origin'
+            title: '来源Allowed Origin',
+            render:(h,params) =>{
+              const hide = params.row.hide == 1 ?'inline-block':'none';
+              return h('div',[
+                h('Spin',{
+                  prop:{
+                    size:'small'
+                  },
+                  style:{
+                    display:hide
+                  }
+                }),
+                h('span',{
+
+                },params.row.orgins)
+              ])
+            }
           },
           {
             key: 'methods',
             title: 'Allowed Methods'
           },
           {
-            key: 'headers',
+            key: 'allowsheaders',
             title: 'Allowed Headers'
           },
           {
-            key: 'exposed',
+            key: 'exposeheaders',
             title: 'Exposed Headers'
           },
           {
-            key: 'age',
+            key: 'maxage',
             title: '缓存Max Age'
           },
           {
@@ -848,12 +975,28 @@
                 h('span', {
                   style: {
                     color: '#2A99F2',
-                    marginRight: '10px'
+                    marginRight: '10px',
+                    cursor:'pointer'
+                  },
+                  on:{
+                    click:()=>{
+                      this.updateCorsForm = JSON.parse(JSON.stringify(params.row));
+                      this.updateCorsForm.methods = params.row.methods.split(',');
+                      this.updateCors = true;
+                      this.corsIndex = params.row._index;
+                      this.corsid = params.row.corsid;
+                    }
                   }
                 }, '修改'),
                 h('span', {
                   style: {
-                    color: '#2A99F2'
+                    color: '#2A99F2',
+                    cursor:'pointer'
+                  },
+                  on:{
+                    click:()=>{
+                      this.deleteCros(params.row.corsid);
+                    }
                   }
                 }, '删除')
               ])
@@ -915,11 +1058,46 @@
         int:0,
         //修改权限白名单是否禁用
         whiteListUpdate:false,
-        inputValue:''
+        inputValue:'',
+        //新建文件
+        createFile:{
+          flies: ""
+        },
+        createFilesValiDate:{
+          flies:[
+            {required:"true",message:"请输入文件夹名称",trigger:"blur"}
+          ]
+        },
+        //修改CORS规则弹窗
+        updateCors:false,
+        updateCorsForm:{
+          orgins: '',
+          methods: [],
+          allowsheaders: '',
+          exposeheaders: '',
+          maxage: 100
+        },
+        updateCorsFormValidateL:{
+          orgins: [
+            {required: true, message: '请填写来源Origin'}
+          ],
+          methods: [
+            {required: true, message: '请选择操作Method'}
+          ],
+          allowsheaders: [
+            {required: true, message: '请填写allowsHeaders'}
+          ],
+          exposeheaders: [
+            {required: true, message: '请填写ExposeHeaders'}
+          ]
+        },
+        //获取表格当前要修改数据的index
+        corsIndex:0,
+        corsid:'',
+        //默认域名
+        defaultDomain:'',
+        custom:''
       }
-    },
-    components:{
-      ICountUp
     },
     methods: {
       _checkNewCros(){
@@ -930,8 +1108,10 @@
           }
         })
       },
-      // 添加Cors
+      // 添加Cros
       addCors(){
+        let corsObject = {orgins:'创建中',methods:'————',allowsheaders:'————',exposeheaders:'————',maxage:'————'}
+        this.corsData.push(corsObject);
         this.$http.post('cors/addCors.do', {
           bucketid: sessionStorage.getItem('bucketId'),
           bucketName: sessionStorage.getItem('bucketName'),
@@ -941,7 +1121,83 @@
           ExposeHeaders: this.addCorsForm.ExposeHeaders,
           maxAge: this.addCorsForm.maxAge + ''
         }).then(response => {
-          console.log(response)
+          if(response.status == 200 && response.data.status =="1"){
+            this.cors = false;
+            this.$Message.success('CROS规则配置成功');
+            this.selectCors();
+          }else{
+            this.$Message.error(response.data.msg);
+          }
+        })
+      },
+      //获取Cros列表
+      selectCors(){
+        this.$http.post('cors/selectCorsAll.do',{
+          bucketId:sessionStorage.getItem('bucketId')
+        }).then(response =>{
+          if(response.status == 200 && response.data.status == '1'){}
+            this.corsData = response.data.data.OssCors;
+        })
+      },
+      //修改CROS规则配置
+      updateCros(){
+        this.$refs.oldCros.validate((valid) =>{
+          if(valid){
+            //取名有点混乱，这个是修改cros的弹窗
+            this.updateCors = false;
+            let corsObject =  {orgins:'创建中',hide:1,methods:'————',allowsheaders:'————',exposeheaders:'————',maxage:'————'}
+            this.corsData[this.corsIndex] = corsObject;
+            console.log(this.corsData);
+            this.$http.post('cors/updateCors.do',{
+              bucketName:sessionStorage.getItem('bucketName'),
+              orgins:this.updateCorsForm.orgins,
+              methods:this.updateCorsForm.methods,
+              allowsHeaders:this.updateCorsForm.allowsheaders,
+              ExposeHeaders:this.updateCorsForm.exposeheaders,
+              maxAge:this.updateCorsForm.maxage+"",
+              corsid:this.corsid
+              }
+            ).then(response =>{
+              if(response.status == 200 && response.data.status == '1'){
+                this.$Message.success('修改成功');
+                this.selectCors();
+              }else {
+                this.$Message.error(response.data.msg);
+                this.selectCors();
+              }
+            })
+          }
+        })
+
+      },
+      //删除CROS规则配置
+      deleteCros(id){
+        let corsObject = {orgins:'删除中'}
+        this.corsData.push(corsObject);
+        this.$http.post('cors/deleteCors.do',{
+          corsid:id+"",
+          bucketName:sessionStorage.getItem('bucketName')
+        }).then(response =>{
+            if(response.status == 200 && response.data.status == '1'){
+              this.$Message.success('删除成功');
+              this.selectCors();
+            }
+        })
+      },
+      //自定义域名
+      updateCustom(){
+        this.domainLodaing = true;
+        this.$http.post('user/updateCustom.do',{
+          cephCustomDomain:this.domain.route
+        }).then(response => {
+          if(response.status == 200 && response.data.status == '1'){
+            this.$Message.success('自定义域名成功');
+            this.domainLodaing = false;
+            this.domainLodaing == false? this.mainName = false : this.mainName = true;
+          }else{
+            this.$Message.error(response.data.msg);
+            this.domainLodaing = false;
+          }
         })
       },
       //上传文件格式错误的方法
@@ -990,7 +1246,6 @@
       filesList(id,object) {
         this.tabLoading = true;
         var name = sessionStorage.getItem("bucketName");
-
         this.fileUpdata.bucketName = name;
         this.fileUpdata.zoneId = $store.state.zone.zoneid;
         this.fileUpdata.dirId = (id == undefined ? null : id.toString());
@@ -998,7 +1253,7 @@
           .post("object/listObject.do", {
             bucketName: name,
             dirId: this.fileUpdata.dirId,
-            fileName: this.filename
+            fileName: this.filename == "" ? null :this.filename
           })
           .then(res => {
             if (res.data.status == "1") {
@@ -1017,10 +1272,14 @@
       //创建文件夹
       createFlies() {
         var name = sessionStorage.getItem("bucketName");
+        let obj = {filename:'创建中'};
+        this.fileData.push(obj);
+        this.$refs.createF.validate((valid) => {
+          if (valid) {
         this.$http
           .post("object/createObject.do", {
             bucketName: name,
-            fileName: this.flies,
+            fileName: this.createFile.flies,
             dirId: this.fileUpdata.dirId
           })
           .then(res => {
@@ -1032,6 +1291,8 @@
               this.$Message.error(res.data.msg);
             }
           });
+          }
+        })
       },
       //删除文件
       deleteFile(id, filename) {
@@ -1071,26 +1332,30 @@
       },
       //添加自定义权限
       jurisdictionClick() {
-        alert(this.jurisdValidate.referer);
-        var name = sessionStorage.getItem("bucketName");
-        var bucketId = sessionStorage.getItem('bucketId');
-        this.$http.post('bucketAcl/createCustomAcl.do', {
-          bucketName: name,
-          bucketId: bucketId,
-          objectNames: this.jurisdValidate.influenceValue,
-          isOperation: this.jurisdValidate.sources.toString(),
-          customPermission: this.jurisdValidate.channel,
-          isReferer: this.jurisdValidate.referer,
-          refereIp: this.jurisdValidate.whiteListValue,
-          userAuths: this.jurisdValidate.grantValue
-        }).then(res => {
-          if (res.data.status == '1') {
-            this.$Message.success('添加自定义权限成功');
-            this.selectAclAll();
-          } else {
-            this.$Message.error(res.data.msg);
+        this.$refs.jurisdValidate.validate((valid) => {
+          if(valid){
+            var name = sessionStorage.getItem("bucketName");
+            var bucketId = sessionStorage.getItem('bucketId');
+            this.$http.post('bucketAcl/createCustomAcl.do', {
+              bucketName: name,
+              bucketId: bucketId,
+              objectNames: this.jurisdValidate.influenceValue,
+              isOperation: this.jurisdValidate.sources.toString(),
+              customPermission: this.jurisdValidate.channel,
+              isReferer: this.jurisdValidate.referer,
+              refereIp: this.jurisdValidate.whiteListValue,
+              userAuths: this.jurisdValidate.grantValue
+            }).then(res => {
+              if (res.data.status == '1') {
+                this.$Message.success('添加自定义权限成功');
+                this.selectAclAll();
+              } else {
+                this.$Message.error(res.data.msg);
+              }
+            })
           }
         })
+
       },
       //获取权限列表
       selectAclAll() {
@@ -1126,7 +1391,7 @@
           if (res.data.status == '1') {
             this.$Message.success('权限切换成功');
           } else {
-            this.$Message.error('切换权限失败');
+            this.$Message.info('切换权限失败');
           }
         })
       },
@@ -1138,8 +1403,9 @@
         var name = sessionStorage.getItem("bucketName");
         this.$http.post('object/geturl.do', {
           bucketName: name,
-          timelimit: this.term,
-          fileSrc: this.flieSrc
+          timelimit: this.term == ''? '2': this.term,
+          fileSrc: this.flieSrc,
+          protocol:this.http
         }).then(res => {
           if (res.data.status == '1') {
             this.fliesTerm = res.data.data.data;
@@ -1147,7 +1413,7 @@
             this.$Message.success('获取成功');
           } else {
             this.tremLoading = false;
-            this.$Message.error(res.data.msg);
+            this.$Message.info(res.data.msg);
           }
         })
       },
@@ -1164,60 +1430,65 @@
             this.$Message.success('删除成功');
             this.selectAclAll();
           } else {
-            this.$Message.error(res.data.msg);
+            this.$Message.info(res.data.msg);
           }
         })
       },
       //修改自定义权限
       jurisdUpdateClick(code) {
-
-        var name = sessionStorage.getItem("bucketName");
-        this.$http.post('bucketAcl/updateFromCode.do', {
-          bucketName: name,
-          code: this.code,
-          userAuths: this.updateJurisd.updateUsers,
-          customPermission: this.updateJurisd.updateChannel,
-          objectNames: this.updateJurisd.updateInfluenceValue,
-          isOperation: this.updateJurisd.updateSources.toString(),
-          isReferer: this.updateJurisd.updateReferer == true ? '1' : this.updateJurisd.updateReferer == false ? '0' : '',
-          refereIp: this.updateJurisd.updateWhiteListValue
-        }).then(res => {
-          if (res.data.status == '1') {
-            this.$Message.success('修改成功');
-            this.selectAclAll();
-          } else {
-            this.$Message.error(res.data.msg);
+        this.$refs.updateJurisd.validate((valid) => {
+          if(valid){
+            var name = sessionStorage.getItem("bucketName");
+            this.$http.post('bucketAcl/updateFromCode.do', {
+              bucketName: name,
+              code: this.code,
+              userAuths: this.updateJurisd.updateUsers,
+              customPermission: this.updateJurisd.updateChannel,
+              objectNames: this.updateJurisd.updateInfluenceValue,
+              isOperation: this.updateJurisd.updateSources.toString(),
+              isReferer: this.updateJurisd.updateReferer == true ? '1' : this.updateJurisd.updateReferer == false ? '0' : '',
+              refereIp: this.updateJurisd.updateWhiteListValue
+            }).then(res => {
+              if (res.data.status == '1') {
+                this.$Message.success('修改成功');
+                this.selectAclAll();
+              } else {
+                this.$Message.info(res.data.msg);
+              }
+            })
           }
         })
+
       },
       up() {
         this.$Message.info('暂无操作');
         this.crossDomain = {};
       },
       //cors收起
-
+      //切换tab请求相应的接口
+      checkTab(name){
+        if(name == 'objects'){
+          this.filesList();
+        }else if(name == 'space'){
+          this.selectAclAll();
+          this.selectCors();
+        }
+      },
       corsLower(val) {
         val == 'cors' ? (this.corsHide = !this.corsHide) : val == 'static' ? (this.staticHide = !this.staticHide) : ''
       },
       //获取存储空间容量
       getAllsize(instance) {
-        // this.handleSpinCustom();
         this.$http.post('object/getAllSize.do', {}).then(res => {
           if (res.data.status == '1') {
             this.size = res.data.data.data / 1024 > 1 || res.data.data.data >1000 ? (res.data.data.data / 1024).toFixed(2) + 'MB' : res.data.data.data + 'KB';
-            // this.$Spin.hide();
-
           } else {
             this.size = "0KB";
-            // this.$Spin.hide();
-            this.$Message.error('出错了');
+            this.$Message.info('出错了');
           }
           sessionStorage.setItem('size', this.size);
 
         })
-      },
-      getSize(){
-        console.log(this.size);
       },
       //获取文件路径返回
       selectFileSrc(id, index) {
@@ -1260,27 +1531,43 @@
       //     });
       // },
       //
-      handleSpinCustom () {
-        this.$Spin.show({
-          render: (h) => {
-            return h('div', [
-              h('Icon', {
-                'class': 'demo-spin-icon-load',
-                props: {
-                  type: 'load-c',
-                  size: 18
-                }
-              }),
-              h('div', 'loading...')
-            ])
-          }
-        });
-      },
       //返回根路径
       backPage(){
         this.fileObject.pop();
         this.filesList(null);
+      },
+      copyUrl(){
+        this.$refs.copy.focus();
+        // this.$refs.copy.select();
+        // this.fliesTerm
+        // this.$refs.copy.setSelectionRange(0,  this.$refs.copy.value.length)
+       console.log(this.$refs.copy);
+         document.execCommand('copy')
+        try {
+          if(document.execCommand('copy')){
+            this.$Message.success('复制成功');
+          }else {
+            this.$Message.info('不支持copy');
+          }
+        }catch (err) {
+          if(err){
+            this.$Message.info('不支持execCommand');
+          }
+        }
+      },
+      //获取默认域名
+      getCustom(){
+        this.$http.post('user/getCustom.do',{
+
+        }).then(response =>{
+          if(response.status == 200 && response.data.status == '1'){
+            this.defaultDomain = response.data.data.default;
+            this.custom = response.data.data.custom;
+            this.domain.route = response.data.data.custom;
+          }
+        })
       }
+
     },
     created(){
       this.bucketName = sessionStorage.getItem('bucketName');
@@ -1288,8 +1575,9 @@
       this.filesList();
       this.selectAclAll();
       this.getAllsize();
-      this.getSize();
-      this.disble('0')
+      this.disble('0');
+      this.selectCors();
+      this.getCustom();
       this.kjName = sessionStorage.getItem('bucketName');
       this.kjaccessrights = sessionStorage.getItem('accessrights') == 1 ? '私有读写' : sessionStorage.getItem('accessrights') == 2 ? '公有读私有写' : sessionStorage.getItem('accessrights') == 3 ? '公有读写' : '自定义权限';
     }
@@ -1307,6 +1595,7 @@
       .space_block {
         width: inherit;
         padding: 20px;
+        margin-bottom: 40px;
         background-color: #ffffff;
         .space_top {
           display: flex;
@@ -1448,7 +1737,10 @@
   .space_wailian {
     display: flex;
     p:nth-child(2) {
-      margin: 19px 0;
+      margin: 16px 0;
+    }
+    p:nth-child(3) {
+      margin: 20px 0;
     }
   }
 
@@ -1493,7 +1785,16 @@
     border-left: 1px solid #2A99F2;
     transform: translateY(-2px) rotate(-135deg);
   }
-
+  .copyClass{
+    margin-top: 5px;
+    span:nth-child(1){
+      color:#2A99F2;cursor: pointer;
+    }
+    span:nth-child(2){
+      color:#2A99F2;cursor: pointer;
+      margin-left: 5px;
+    }
+  }
 
   .downlower::before {
     transform: translateY(4px) rotate(45deg);
