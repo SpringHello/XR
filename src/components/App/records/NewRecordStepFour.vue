@@ -92,6 +92,7 @@
                     点击选择文件
                   </div>
                   <img v-else :src="upload.photo" style="height: 165px;width:270px;">
+                  <Progress v-show="percent>0&&percent<=100" :percent="percent"></Progress>
                   <Button type="primary" v-if="upload.photo===''">上传</Button>
                 </Upload>
               </div>
@@ -229,7 +230,8 @@
         recordInfo: {},
         isRecord: false,
         checkListAddress: '',
-        imageViewShow: false
+        imageViewShow: false,
+        percent: 0
       }
     },
     created() {
@@ -324,7 +326,14 @@
       },
       photoImg(res) {
         if (res.status == 1) {
-          this.upload.photo = res.result
+          let s = setInterval(() => {
+            this.percent++
+            if (this.percent > 100) {
+              window.clearInterval(s)
+              this.upload.photo = res.result
+              this.percent = 0
+            }
+          }, 20)
         }
       },
       // 提交幕布申请

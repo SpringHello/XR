@@ -201,9 +201,9 @@
                 </Select>
               </FormItem>
               <FormItem label="有效证件号码" prop="certificateNumber">
-                <Input v-model="site.basicInformation.certificateNumber" maxlength="20" placeholder="请输入主体单位证件号码" style="width: 500px"/>
+                <Input v-model="site.basicInformation.certificateNumber" :maxlength="20" placeholder="请输入主体单位证件号码" style="width: 500px"/>
               </FormItem>
-              <FormItem label="办公室电话" prop="officePhone" v-if="!isPersonage">
+              <FormItem v-if="!isPersonage" label="办公室电话" prop="officePhone">
                 <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.officePhone" placeholder="请输入办公室电话"
                                        style="width: 468px;margin-left: 10px"></Input>
                 <transition name="fade">
@@ -218,7 +218,7 @@
                   </div>
                 </transition>
               </FormItem>
-              <FormItem label="办公室电话" v-else>
+              <FormItem v-if="isPersonage" label="办公室电话">
                 <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.officePhone" placeholder="请输入办公室电话"
                                        style="width: 468px;margin-left: 10px"></Input>
                 <transition name="fade">
@@ -565,6 +565,12 @@
           this.siteList[0].basicInformation.phoneNumber = this.mainUnitInformation.phoneNumber
           this.siteList[0].basicInformation.emailAddress = this.mainUnitInformation.emailAddress
           this.sessionStatus = true
+          // 初始化座机号码框
+          if (this.mainUnitInformation.unitProperties == '个人') {
+            this.isPersonage = true
+          } else {
+            this.isPersonage = false
+          }
         } else {
           this.sessionStatus = false
           var mainUnitInformation = JSON.parse(mainUnitInformationStr)
@@ -588,12 +594,12 @@
           this.mainUnitInformation.officePhone = mainUnitInformation.officenumber
           this.mainUnitInformation.phoneNumber = mainUnitInformation.phone
           this.mainUnitInformation.emailAddress = mainUnitInformation.email
-        }
-        // 初始化座机号码框
-        if (this.mainUnitInformation.unitProperties == '个人') {
-          this.isPersonage = true
-        } else {
-          this.isPersonage = false
+          // 初始化座机号码框
+          if (this.mainUnitInformation.unitProperties == '个人') {
+            this.isPersonage = true
+          } else {
+            this.isPersonage = false
+          }
         }
         switch (recordsType) {
           case '1':

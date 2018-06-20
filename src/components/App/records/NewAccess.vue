@@ -102,6 +102,13 @@
           callback()
         }
       }
+      const validateWebsiteRecordNumber = (rule, value, callback) => {
+        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value))) {
+          return callback(new Error('请输入正确的备案号'))
+        } else {
+          callback()
+        }
+      }
       return {
         isToolHide: 0,
         // 备案区域
@@ -140,7 +147,8 @@
             {validator: validateDomain, trigger: 'blur'}
           ],
           websiteRecordNumber: [
-            {required: true, message: '请输入网站备案号', trigger: 'blur'}
+            {required: true, message: '请输入网站备案号', trigger: 'blur'},
+            {validator: validateWebsiteRecordNumber, trigger: 'blur'}
           ],
           IPCPassword: [
             {required: true, message: '请输入ICP备案密码', trigger: 'blur'}

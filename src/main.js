@@ -37,9 +37,23 @@ Vue.config.productionTip = false
 //axios.defaults.baseURL = 'http://192.168.3.204:8081/ruicloud'
 //axios.defaults.withCredentials = true
 
-//axios.defaults.baseURL = 'http://192.168.3.29:8082/ruicloud/'
-//axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
+//axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud/'
+
+// axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
+
+
+//axios.defaults.baseURL = 'http://localhost:8082/ruicloud/'
+
+//axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud/'
+
+
+// axios.defaults.baseURL = 'http://127.0.0.1:8085/ruicloud/'
+
+// axios.defaults.baseURL = 'http://192.168.3.187:8080/ruirados/'
+
+
 //axios.defaults.withCredentials = true
+//axios.defaults.baseURL = 'http://192.168.3.124:8082/ruicloud'
 
 //axios挂载到Vue原型
 Vue.prototype.$http = axios.create({
