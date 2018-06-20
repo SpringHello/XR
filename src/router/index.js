@@ -15,6 +15,7 @@ const Home = () => import('@/components/App/Home')
 const Buy = () => import('@/components/App/Buy')
 const Ecs = () => import('@/components/App/product/ECS')
 const Document = () => import('@/components/App/Document')
+const Document1 = () => import('@/components/App/Document1')
 const Record = () => import('@/components/App/Record')
 //const hostPrice = () => import('@/components/App/Price/Host')
 //const diskPrice = () => import('@/components/App/Price/Disk')
@@ -200,7 +201,7 @@ var router = new Router({
         {path: 'ecs', name: 'ecs', component: Ecs},
         {path: 'about', name: 'about', component: Aboutus},
         {path: 'ActiveCenter', name: 'ActiveCenter', component: ActiveCenter},
-        {path: 'document', name: 'document', component: Document},
+        {path: 'document', name: 'document', component: Document1},
         {path: 'dynamic', name: 'dynamic', component: Dynamic},
         {path: 'Record', name: 'Record', component: Record},
       //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
@@ -280,7 +281,7 @@ var router = new Router({
         {path: 'active_1', name: 'active_1', component: active_1},
         {path: 'entrance', name: 'entrance', component: Entrance},
         {path: 'active_2', name: 'active_2', component: active_2},
-        {path: 'smlj', name: 'smlj', component: smlj},
+        //{path: 'smlj', name: 'smlj', component: smlj},
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
         {path: 'Pecss', component: Pecss},

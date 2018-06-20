@@ -27,8 +27,9 @@
 
             </div>
             <div class="foot">
-              <p><span>30天</span>免费</p>
-              <p style="font-size:14px;color:rgba(102,102,102,1);margin-top: 10px;text-decoration: line-through;">原价：￥{{computerInfo.cost}}起</p>
+              <p><span>{{computerInfo.day}}天</span>免费</p>
+              <p style="font-size:14px;color:rgba(102,102,102,1);margin-top: 10px;text-decoration: line-through;">
+                原价：￥{{computerInfo.cost}}起</p>
             </div>
           </div>
           <div class="right">
@@ -55,7 +56,7 @@
       <p class="main">4.活动产品规则：</p>
       <p class="tiny">1） 免费产品中的资源可随时进行升级，升级价格以当前控制台价格为准</p>
       <p class="tiny">2） 在各产品免费使用期间，若对免费资源进行了销毁，则视为放弃免费使用权</p>
-      <p class="tiny">3） 此活动中的续费优惠券有效期30天，仅限包年／月续费使用，且不可与其他优惠券、现金券相互叠加，具体优惠价格以实际订单为准；</p>
+      <p class="tiny">3） 此活动中的续费优惠券有效期{{computerInfo.day}}天，仅限包年／月续费使用，且不可与其他优惠券、现金券相互叠加，具体优惠价格以实际订单为准；</p>
       <p class="main">5.为保证活动的公平公正，新睿云有权对恶意刷抢（如通过程序等技术手段）活动资源、领取后3天内未使用资源、及利用资源从事违法违规行为的用户收回免费套餐使用及5折优惠续费资格</p>
       <p class="main">6.活动最终解释权在法律范围内归新睿云所有</p>
     </div>
@@ -107,7 +108,7 @@
         <p style="font-size:18px;color:rgba(51,51,51,1);">{{failMsg}}</p>
       </div>
       <div slot="footer" style="text-align: center;margin: 40px 0 110px 0;">
-        <button  class="check" @click="modal2=false">
+        <button class="check" @click="modal2=false">
           知道了
         </button>
       </div>
@@ -119,9 +120,9 @@
         <p style="font-size:18px;color:rgba(51,51,51,1);">{{sucessMsg}}</p>
       </div>
       <div slot="footer" style="text-align: center;margin: 40px 0 110px 0;">
-        <button  class="check" @click="modal1=false">
+        <router-link to="host" class="check">
           立即查看
-        </button>
+        </router-link>
       </div>
     </Modal>
   </div>
@@ -146,16 +147,16 @@
     data() {
       window.scrollTo(0, 0);
       return {
-         //私密链接状态
-        ljOK:false,
-        ljError:false,
-        ljEnded:false,
-        ljOverded:false,
+        //私密链接状态
+        ljOK: false,
+        ljError: false,
+        ljEnded: false,
+        ljOverded: false,
         // 一键领取弹窗
-        sucessMsg:'',
-        failMsg:'',
-        modal1:false,
-        modal2:false,
+        sucessMsg: '',
+        failMsg: '',
+        modal1: false,
+        modal2: false,
 
         loginModal: false,
         form: {
@@ -191,7 +192,8 @@
           disk: '',
           osname: '',
           zone: '',
-          zoneId: ''
+          zoneId: '',
+          day:''
         }
       }
     },
@@ -207,7 +209,6 @@
           vm.setData(response)
         })
       })
-
     },
     methods: {
       vail(field) {
@@ -297,23 +298,23 @@
           this.loginModal = true
           return
         }
-        axios.get('activity/takeSaleMv.do',{
-            params:{
-              token:this.$route.query.token
-            }
-        }).then(response =>{
-          if (response.status == 200 && response.data.status == 1){
-              this.sucessMsg=response.data.message
-               this.modal1=true
-          }else{
-            this.failMsg=response.data.message
-            this.modal2=true
+        axios.get('activity/takeSaleMv.do', {
+          params: {
+            token: this.$route.query.token
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.sucessMsg = response.data.message
+            this.modal1 = true
+          } else {
+            this.failMsg = response.data.message
+            this.modal2 = true
           }
         })
       },
       setData(response){
-        if (response.status == 200 && response.data.status == 1){
-          this.ljOK=true
+        if (response.status == 200 && response.data.status == 1) {
+          this.ljOK = true
           this.computerInfo.cost = response.data.cost;
           this.computerInfo.cpu = response.data.result[0].cpu;
           this.computerInfo.memory = response.data.result[0].mem;
@@ -322,15 +323,16 @@
           this.computerInfo.zone = response.data.result[0].zonename;
           this.computerInfo.osname = response.data.result[0].osname;
           this.computerInfo.zoneId = response.data.result[0].zoneid;
+          this.computerInfo.day = response.data.result[0].days;
         }
-        if (response.status == 200 && response.data.status == 2){
-            this.ljError=true
+        if (response.status == 200 && response.data.status == 2) {
+          this.ljError = true
         }
-        if (response.status == 200 && response.data.status == 3){
-          this.ljEnded=true
+        if (response.status == 200 && response.data.status == 3) {
+          this.ljEnded = true
         }
-        if (response.status == 200 && response.data.status == 4){
-          this.ljOverded=true
+        if (response.status == 200 && response.data.status == 4) {
+          this.ljOverded = true
         }
       }
     },
@@ -347,7 +349,7 @@
     .active-body {
       width: 1200px;
       margin: 0px auto;
-      .ok{
+      .ok {
         box-shadow: 0px 2px 50px 0px rgba(245, 127, 114, 0.48);
         background-color: #fff;
         .body {
@@ -414,42 +416,42 @@
               color: rgba(228, 85, 67, 1);
               line-height: 18px;
             }
-            .free{
+            .free {
               background: url('../../../assets/img/active/smlj/free.png') no-repeat center;
               margin-top: 20px;
               text-align: center;
-              p{
+              p {
                 position: relative;
                 left: 28px;
-                font-size:50px;
-                color:rgba(255,255,255,1);
-                line-height:70px;
+                font-size: 50px;
+                color: rgba(255, 255, 255, 1);
+                line-height: 70px;
               }
-              span{
+              span {
                 position: relative;
                 left: 28px;
-                font-size:18px;
-                color:rgba(255,255,255,1);
-                line-height:38px;
+                font-size: 18px;
+                color: rgba(255, 255, 255, 1);
+                line-height: 38px;
               }
             }
           }
         }
-        .btn{
+        .btn {
           width: 1000px;
           margin: 0 auto;
           text-align: center;
-          border-top:2px solid rgba(153,153,153,0.3);
+          border-top: 2px solid rgba(153, 153, 153, 0.3);
           padding: 18px 0;
-          button{
-            width:260px;
-            height:42px;
-            background:rgba(228,85,67,1);
-            border-radius:21px;
-            font-size:18px;
-            font-family:PingFangSC-Regular;
-            color:rgba(255,255,255,1);
-            line-height:18px;
+          button {
+            width: 260px;
+            height: 42px;
+            background: rgba(228, 85, 67, 1);
+            border-radius: 21px;
+            font-size: 18px;
+            font-family: PingFangSC-Regular;
+            color: rgba(255, 255, 255, 1);
+            line-height: 18px;
             border: none;
             outline: none;
             cursor: pointer;
@@ -457,18 +459,21 @@
         }
       }
     }
-    .error{
+    .error {
       height: 290px;
       background: url('../../../assets/img/active/smlj/error.png') no-repeat center;
-    }  //连接输入错误
-    .ended{
+    }
+    //连接输入错误
+    .ended {
       height: 290px;
       background: url('../../../assets/img/active/smlj/ended.png') no-repeat center;
-    }  //连接已被领取
-    .over{
+    }
+    //连接已被领取
+    .over {
       height: 290px;
       background: url('../../../assets/img/active/smlj/overed.png') no-repeat center;
-    }   //连接过期
+    }
+    //连接过期
     .active-desc {
       width: 1200px;
       margin: 0px auto;
@@ -505,6 +510,7 @@
       }
     }
   }
+
   .modal-body {
     height: 55%;
     form {
@@ -607,6 +613,7 @@
       display: inline-block;
       border: 1px solid #ccc;
       cursor: pointer;
+
     }
     .agree {
       background-color: #2d8cf0;
@@ -639,16 +646,17 @@
     }
   }
 
-  .check{
-   width:115px;
-    height:38px;
-    font-size:18px;
-    background:rgba(228,85,67,1);
-    box-shadow:0px 7px 26px -10px rgba(242,102,103,1);
-    border-radius:19px;
-    color:#FFF;
-    border: none;
-    outline: none;
+  .check {
+    width: 115px;
+    height: 38px;
+    font-size: 18px;
+    background: rgba(228, 85, 67, 1);
+    box-shadow: 0px 7px 26px -10px rgba(242, 102, 103, 1);
+    border-radius: 19px;
+    color: #FFF;
+    display: block;
+    line-height: 38px;
+    margin: 0px auto;
   }
 </style>
 
