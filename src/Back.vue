@@ -20,7 +20,7 @@
           </ul>
           <ul class="right">
             <li>
-              <router-link to="BRecords" :class="{active:pageInfo.path=='BRecords'}"><span>备案</span></router-link>
+              <!--<router-link to="BRecords" :class="{active:pageInfo.path=='BRecords'}"><span>备案</span></router-link>-->
             </li>
             <li>
               <router-link to="buy" :class="{active:pageInfo.path=='buy'}"><span>创建主机</span></router-link>
