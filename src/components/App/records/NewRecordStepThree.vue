@@ -56,7 +56,7 @@
               </ul>
               <ul>
                 <li>ISP名称：{{ item.basicInformation.ISPName}}</li>
-                <li>网站IP地址：{{ item.basicInformation.IPAddress + ''}}</li>
+                <li style="overflow: hidden;text-overflow: ellipsis; white-space: nowrap;">网站IP地址：{{ item.basicInformation.IPAddress + ''}}</li>
                 <li>网站接入方式：{{ item.basicInformation.accessWay}}</li>
                 <li>服务器放置地：{{ item.basicInformation.serverPutArea}}</li>
               </ul>
@@ -157,7 +157,7 @@
                   <img class="enter" src="../../../assets/img/records/records-img3.png">
                   <p>示例图</p>
                 </div>
-              </div>
+              </div>git
             </div>
           </div>
         </div>
