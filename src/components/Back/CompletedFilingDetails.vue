@@ -1672,7 +1672,7 @@
             this.details();
             this.$Message.success('提交成功');
           }else {
-            this.$Message.error(res.data.message)
+            this.$Message.info(res.data.message)
           }
         })
           this.$Modal.confirm({
@@ -1768,7 +1768,7 @@
             this.$router.push({path:'BRecords'});
             this.$Message.success("修改成功");
           } else {
-            this.$Message.error(res.data.message);
+            this.$Message.info(res.data.message);
           }
         })
       },
@@ -1801,7 +1801,7 @@
         })
       },
       webRecordFormatError(){
-        this.$Message.error('网站核验单只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
+        this.$Message.info('网站核验单只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
       //网站核验单上传成功
       webRecordSuccess(response){
@@ -1849,17 +1849,18 @@
           }
           this.$Message.success('上传成功');
         }else {
-          this.$Message.error('上传失败');
+          this.$Message.info('上传失败');
         }
       },
       webRecordBeforeUpload(){
-        if(this.webRecordData.length >3){
-          this.$Message.error('网站核验单最多只能上传三个');
+        if(this.webRecordData.length >0){
+          this.$Message.info('网站核验单最多只能上传一张');
+          return false;
         }
       },
       //身份证正面上传格式错误
       cardFormatError(){
-        this.$Message.error('身份证正面只能上传jpg,jpeg,png类型的文件');
+        this.$Message.info('身份证正面只能上传jpg,jpeg,png类型的文件');
       },
       //身份证正面上传成功
       cardSuccess(response){
@@ -1867,36 +1868,36 @@
           this.hostUnitList.webresponsibilityurlpositive=response.result;
           this.$Message.success('上传成功');
         }else {
-          this.$Message.error('上传失败');
+          this.$Message.info('上传失败');
         }
       },
       //身份证背面上传格式错误
       cardBackFormatError(){
-        this.$Message.error('身份证背面只能上传jpg,jpeg,png类型的文件');
+        this.$Message.info('身份证背面只能上传jpg,jpeg,png类型的文件');
       },
       cardBackSuccess(response){
         if(response.status == 1){
           this.hostUnitList.webresponsibilityurlback=response.result;
             this.$Message.success('上传成功');
         }else {
-          this.$Message.error('上传失败');
+          this.$Message.info('上传失败');
         }
       },
       //营业执照上传格式错误
       organizerFormatError(){
-        this.$Message.error('营业执照只能上传jpg,jpeg,png类型的文件');
+        this.$Message.info('营业执照只能上传jpg,jpeg,png类型的文件');
       },
       organizerSuccess(response){
         if(response.status == 1){
             this.hostUnitList.hostcompanyurl=response.result;
             this.$Message.success('上传成功');
         }else{
-          this.$Message.error('上传失败');
+          this.$Message.info('上传失败');
         }
       },
       //上传域名证书格式错误
       domainNameFormatError(){
-        this.$Message.error('域名证书只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
+        this.$Message.info('域名证书只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
       domainNameSuccess(response){
         if(response.status ==1){
@@ -1940,15 +1941,15 @@
               }
             }
           }
-          console.log(this.addy);
           this.$Message.success('上传成功');
         }else {
-          this.$Message.error('上传失败');
+          this.$Message.info('上传失败');
         }
       },
       domainNameBeforeUpload(){
-        if(this.addy.length >3){
-          this.$Message.error('只能上传三个域名证书信息');
+        if(this.addy.length >2){
+          this.$Message.info('只能上传三个域名证书信息');
+          return false;
         }
       },
       //其他文件上传格式错误
@@ -1962,15 +1963,15 @@
               addy[i].substring(addy[i].lastIndexOf('/') + 1);
               object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
               this.otherData.push(object);
-              switch (this.addy[i].name.substring(this.addy[i].name.length - 3)) {
+              switch (this.otherData[i].name.substring(this.otherData[i].name.length - 3)) {
                 case 'pdf' :
-                  this.addy[i].img = imgPdf;
+                  this.otherData[i].img = imgPdf;
                   break;
                 case 'jpg' :
-                  this.addy[i].img = imgJpg;
+                  this.otherData[i].img = imgJpg;
                   break;
                 case 'doc' :
-                  this.addy[i].img = imgDoc;
+                  this.otherData[i].img = imgDoc;
                   break;
               }
             }
@@ -1980,8 +1981,8 @@
             addy.substring(addy.lastIndexOf('/') + 1);
             object.name = (addy.substring(addy.lastIndexOf('/') + 1));
             this.otherData.push(object);
-            for(let i = 0;i<otherData.otherData.length;i++){
-              switch (this.addy[i].name.substring(this.addy[0].name.length - 3)) {
+            for(let i = 0;i<this.otherData.length;i++){
+              switch (this.otherData[i].name.substring(this.otherData[0].name.length - 3)) {
                 case 'pdf' :
                   this.otherData[i].img = imgPdf;
                   break;
@@ -1996,16 +1997,17 @@
           }
           this.$Message.success('上传成功');
         }else{
-          this.$Message.error('上传失败');
+          this.$Message.info('上传失败');
         }
       },
       otherBeforeUpload(){
-        if(this.otherData.length >3){
-          this.$Message.error('只能上传三个其他文件信息');
+        if(this.otherData.length >2){
+          this.$Message.info('只能上传三个其他文件信息');
+          return false;
         }
       },
       otherFormatError(){
-        this.$Message.error('其他资料只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
+        this.$Message.info('其他资料只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
       //改变变更备案
       changeCompile(val){
@@ -2014,7 +2016,6 @@
         }else{
           this.isCompile = false;
         }
-
       }
     },
     mounted() {

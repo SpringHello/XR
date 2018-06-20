@@ -157,7 +157,7 @@
                   <img class="enter" src="../../../assets/img/records/records-img3.png">
                   <p>示例图</p>
                 </div>
-              </div>git
+              </div>
             </div>
           </div>
         </div>
@@ -651,7 +651,7 @@
                 url: response.result,
                 suffix: suffix
               }
-              if (this.uploadForm.checkGroup[this.checkListIndex].checkList.length < 3) {
+              if (this.uploadForm.checkGroup[this.checkListIndex].checkList.length < 1) {
                 this.uploadForm.checkGroup[this.checkListIndex].checkList.push(param)
               }
               this.percentCheckList = 0
