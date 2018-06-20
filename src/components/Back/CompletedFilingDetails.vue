@@ -159,7 +159,7 @@
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.companyemail}}</p>
-                  <div v-if="companyEmailHide == 'companyEmail'"  class="text_block"><span style="color:red">信息有误</span> <span
+                  <div v-if="companyEmailHide == 'companyEmail'" class="text_block"><span style="color:red">信息有误</span> <span
                     style="color:#2a99f2;cursor:pointer;" @click="legal = true">重新输入</span></div>
                 </li>
                 <li class="nav_item"></li>
@@ -283,7 +283,7 @@
                 </li>
                 <li class="nav_item">
                   <p>{{hostUnitList.email}}</p>
-                  <div v-if="emailHide == 'email'"  class="text_block"><span style="color:red">信息有误</span>
+                  <div v-if="emailHide == 'email'" class="text_block"><span style="color:red">信息有误</span>
                     <span style="color:#2a99f2;cursor:pointer;" @click=" websitePerson = true">重新输入</span></div>
                 </li>
               </ul>
@@ -409,7 +409,7 @@
             </div>
           </div>
         </div>
-        <div style="text-align:center;margin:20px 0 80px 0;"  v-if="hostUnitList.errorMessage != null || isCompile">
+        <div style="text-align:center;margin:20px 0 80px 0;" v-if="hostUnitList.errorMessage != null || isCompile">
           <Button type="primary" @click="allUpdate">重新提交</Button>
         </div>
       </div>
@@ -427,12 +427,12 @@
         <div class="updates">
           <div style="width:50%;min-height: 197px;">
             <div v-if="isCompile">
-              <div style="text-align: center;margin-top:10px;"   v-for="(item,index) in webRecordData">
-                  <img style="width: 38px;height: 42px;" :src="item.img">
-                  <p style="line-height: 20px;">
-                    <span>{{item.name}}</span>
-                    <Icon  type="ios-trash-outline" @click.native="deletePhoto('web',index)"></Icon>
-                  </p>
+              <div style="text-align: center;margin-top:10px;" v-for="(item,index) in webRecordData">
+                <img style="width: 38px;height: 42px;" :src="item.img">
+                <p style="line-height: 20px;">
+                  <span>{{item.name}}</span>
+                  <Icon type="ios-trash-outline" @click.native="deletePhoto('web',index)"></Icon>
+                </p>
               </div>
               <Upload
                 multiple
@@ -444,11 +444,12 @@
                 :on-success="webRecordSuccess"
                 :on-format-error="webRecordFormatError"
                 :before-upload="webRecordBeforeUpload"
-                >
+              >
                 <div class="sponsor-text" v-if="hostUnitList.webrecordauthenticityurl==''">
                   暂无文件
                 </div>
-               <span class="item-content-text">
+                <Progress v-show="percentCheckList>0&&percentCheckList<=100" :percent="percentCheckList"></Progress>
+                <span class="item-content-text">
                    点击选择文件
                </span>
               </Upload>
@@ -507,6 +508,7 @@
               <div class="sponsor-text" v-if="hostUnitList.webresponsibilityurlpositive==''">
                 暂无图片
               </div>
+              <Progress v-show="percent>0&&percent<=100" :percent="percent"></Progress>
               <span class="item-content-text">
                    点击选择文件
                </span>
@@ -544,15 +546,16 @@
               <div class="sponsor-text" v-if="hostUnitList.webresponsibilityurlback==''">
                 暂无图片
               </div>
+              <Progress v-show="percentBack>0&&percentBack<=100" :percent="percentBack"></Progress>
               <span class="item-content-text">
                    点击选择文件
                </span>
             </Upload>
           </div>
-            <div style="width:50%;" v-else>
-              <p class="sponsor-text" v-if="hostUnitList.webresponsibilityurlback==''">暂无图片</p>
-              <img style="width:198px;height:144px;" :src="hostUnitList.webresponsibilityurlback" v-else>
-            </div>
+          <div style="width:50%;" v-else>
+            <p class="sponsor-text" v-if="hostUnitList.webresponsibilityurlback==''">暂无图片</p>
+            <img style="width:198px;height:144px;" :src="hostUnitList.webresponsibilityurlback" v-else>
+          </div>
           <div style="width:50%;height:203px;">
             <div style="text-align: center">
               <img style="height:144px;margin-bottom:20px" src="../../assets/img/records/records-img2.png"/>
@@ -571,39 +574,40 @@
       <p>执照扫描件</p>
       <div class="updatePhoto">
         <div class="updates">
-            <div style="width:50%;height:203px;">
-              <div v-if="isCompile">
-                <div style="width:50%;text-align: center;">
-                  <p class="hide-text" v-if="hostUnitList.hostcompanyurl==''">暂无图片</p>
-                  <img style="width:198px;height:144px;" :src="hostUnitList.hostcompanyurl" v-else>
-                  <!--<div v-for="item in uploadHost">-->
-                    <!--<Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>-->
-                  <!--</div>-->
-                 </div>
-                <Upload
-                  multiple
-                  ref="uploadHost"
-                  type="drag"
-                  :show-upload-list="false"
-                  :with-credentials="true"
-                  action="file/upFile.do"
-                  :format="['jpg','jpeg','png']"
-                  :on-success="organizerSuccess"
-                  :on-format-error="organizerFormatError"
-                  >
-                  <div>
-                    <div style="text-align: center">
-                      <p class="hide-text">点击选择文件</p>
-                    </div>
-                  </div>
-                </Upload>
-              </div>
-              <div style="width:50%;text-align: center;" v-else>
+          <div style="width:50%;height:203px;">
+            <div v-if="isCompile">
+              <div style="width:50%;text-align: center;">
                 <p class="hide-text" v-if="hostUnitList.hostcompanyurl==''">暂无图片</p>
                 <img style="width:198px;height:144px;" :src="hostUnitList.hostcompanyurl" v-else>
+                <!--<div v-for="item in uploadHost">-->
+                <!--<Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>-->
+                <!--</div>-->
               </div>
-
+              <Upload
+                multiple
+                ref="uploadHost"
+                type="drag"
+                :show-upload-list="false"
+                :with-credentials="true"
+                action="file/upFile.do"
+                :format="['jpg','jpeg','png']"
+                :on-success="organizerSuccess"
+                :on-format-error="organizerFormatError"
+              >
+                <div>
+                  <div style="text-align: center">
+                    <Progress v-show="percentCombine>0&&percentCombine<=100" :percent="percentCombine"></Progress>
+                    <p class="hide-text">点击选择文件</p>
+                  </div>
+                </div>
+              </Upload>
             </div>
+            <div style="width:50%;text-align: center;" v-else>
+              <p class="hide-text" v-if="hostUnitList.hostcompanyurl==''">暂无图片</p>
+              <img style="width:198px;height:144px;" :src="hostUnitList.hostcompanyurl" v-else>
+            </div>
+
+          </div>
           <div style="width:50%;height:203px;">
             <div style="text-align: center">
               <img @click="visible = true" style="height:144px;margin-bottom:20px;cursor: zoom-in;" src="../../assets/img/records/records-img3.png"/>
@@ -629,32 +633,33 @@
       <p>执照扫描件</p>
       <div class="updatePhoto">
         <div class="updates">
-            <div style="width:100%;min-height: 197px;" v-if="isCompile">
-              <p class="hide-text" v-if="addy.length==0">暂无执照扫描件</p>
-              <div style="text-align: center;margin-top:10px;" v-for="(item,index) in addy">
-                <img style="width: 38px;height: 42px;" :src="item.img">
-                <p style="line-height: 20px;">
-                  <span>{{item.name}}</span>
-                  <Icon v-if="isCompile" type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
-                </p>
-                <!--<div v-for="item in uploadDomain">-->
-                  <!--<Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>-->
-                <!--</div>-->
-              </div>
-              <Upload
-                multiple
-                ref="uploadDomain"
-                type="drag"
-                :show-upload-list="false"
-                :with-credentials="true"
-                action="file/upFile.do"
-                :on-success="domainNameSuccess"
-                :on-format-error="domainNameFormatError"
-                :before-upload="domainNameBeforeUpload"
-                :format="['jpg','jpeg','png','doc','docx','pdf']">
-                <span class="item-content-text">点击选择文件</span>
-              </Upload>
+          <div style="width:100%;min-height: 197px;" v-if="isCompile">
+            <p class="hide-text" v-if="addy.length==0">暂无执照扫描件</p>
+            <div style="text-align: center;margin-top:10px;" v-for="(item,index) in addy">
+              <img style="width: 38px;height: 42px;" :src="item.img">
+              <p style="line-height: 20px;">
+                <span>{{item.name}}</span>
+                <Icon v-if="isCompile" type="ios-trash-outline" @click.native="deletePhoto('aunthen',index)"></Icon>
+              </p>
+              <!--<div v-for="item in uploadDomain">-->
+              <!--<Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>-->
+              <!--</div>-->
             </div>
+            <Upload
+              multiple
+              ref="uploadDomain"
+              type="drag"
+              :show-upload-list="false"
+              :with-credentials="true"
+              action="file/upFile.do"
+              :on-success="domainNameSuccess"
+              :on-format-error="domainNameFormatError"
+              :before-upload="domainNameBeforeUpload"
+              :format="['jpg','jpeg','png','doc','docx','pdf']">
+              <Progress v-show="percentCertification>0&&percentCertification<=100" :percent="percentCertification"></Progress>
+              <span class="item-content-text">点击选择文件</span>
+            </Upload>
+          </div>
           <div style="width:100%;min-height: 197px;" v-else>
             <p class="hide-text" v-if="addy.length==0">暂无执照扫描件</p>
             <div style="text-align: center;margin-top:10px;" v-for="item in addy">
@@ -673,10 +678,10 @@
       title="重新上传其他文件信息"
       :scrollable="true"
     >
-      <div class="updatePhoto" >
+      <div class="updatePhoto">
         <div class="updates">
           <div style="width:100%;min-height:200px;" v-if="isCompile">
-            <div style="text-align: center;margin-top:10px;"  v-for="(item,index) in otherData">
+            <div style="text-align: center;margin-top:10px;" v-for="(item,index) in otherData">
               <img style="width: 38px;height: 42px;" :src="item.img">
               <p style="line-height: 20px;">
                 <span>{{item.name}}</span>
@@ -693,14 +698,15 @@
               :on-format-error="otherFormatError"
               :before-upload="otherBeforeUpload"
             >
+              <Progress v-show="percentOtherFile>0&&percentOtherFile<=100" :percent="percentOtherFile"></Progress>
               <span class="item-content-text">点击选择文件</span>
             </Upload>
           </div>
           <div style="width:100%;min-height: 197px;" v-else>
             <p class="hide-text" v-if="otherData.length==0">暂无执照扫描件</p>
-            <div style="text-align: center;margin-top:10px;" v-else  v-for="item in otherData">
+            <div style="text-align: center;margin-top:10px;" v-else v-for="item in otherData">
               <img style="width: 38px;height: 42px;" :src="item.img">
-              <p style="line-height: 20px;" >
+              <p style="line-height: 20px;">
                 <span>{{item.name}}</span>
               </p>
             </div>
@@ -709,7 +715,7 @@
       </div>
     </Modal>
     <!-- 修改主办单位信息 -->
-    <Modal  v-model="host"  title="主办单位信息" :scrollable="true"   >
+    <Modal v-model="host" title="主办单位信息" :scrollable="true">
       <Form ref="hostUpdate" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="district">
           <p style="margin:10px">主办单位所属区域</p>
@@ -881,7 +887,7 @@
       <Form ref="webIsp" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
         <FormItem prop="ispname">
           <p style="margin:10px">ISP名称</p>
-          <Input  :readonly="true" type="text" v-model="updateHostUnitList.ispname"></Input>
+          <Input :readonly="true" type="text" v-model="updateHostUnitList.ispname"></Input>
         </FormItem>
         <FormItem prop="webip">
           <p style="margin:10px">网站IP地址</p>
@@ -906,44 +912,44 @@
       </div>
     </Modal>
     <!--取消接入-->
-    <Modal v-model="cancel"  title="取消接入" :scrollable="true" @on-ok="delMainWeb('确认中')">
+    <Modal v-model="cancel" title="取消接入" :scrollable="true" @on-ok="delMainWeb('确认中')">
       <div class="cancel">
         <p>确定要取消此备案接入信息？</p>
         <p>取消接入后，如果您的备案信息没有对应接入商，管局可能会注销您的备案号，导致您的域名不能访问。申请提交到通信管理局后，不可撤回。</p>
         <ul>
-          <li>  网站名称：{{hostUnitList.webname}}</li>
-          <li>  网站首页：{{hostUnitList.weburl}}</li>
+          <li> 网站名称：{{hostUnitList.webname}}</li>
+          <li> 网站首页：{{hostUnitList.weburl}}</li>
         </ul>
       </div>
     </Modal>
     <!--注销网站-->
-    <Modal v-model="cancellation"  title="注销网站" :scrollable="true" @on-ok="delMainWeb('确认中')">
+    <Modal v-model="cancellation" title="注销网站" :scrollable="true" @on-ok="delMainWeb('确认中')">
       <div class="cancel">
         <p>确定要注销网站？</p>
         <p>取消接入后，如果您的备案信息没有对应接入商，管局可能会注销您的备案号，导致您的域名不能访问。申请提交到通信管理局后，不可撤回。</p>
         <ul>
-          <li>  网站名称：{{hostUnitList.webname}}</li>
-          <li>  网站首页：{{hostUnitList.weburl}}</li>
+          <li> 网站名称：{{hostUnitList.webname}}</li>
+          <li> 网站首页：{{hostUnitList.weburl}}</li>
         </ul>
       </div>
     </Modal>
     <!--注销主体-->
-    <Modal  v-model="domain"  title="注销主体" :scrollable="true" >
+    <Modal v-model="domain" title="注销主体" :scrollable="true">
       <div class="cancel">
         <p>验证备案号码</p>
         <!--<div style="display: flex;">-->
-          <Form ref="domainList"  :model="domainList" :rules="domainListValiot" label-position="top">
-            <FormItem label="主体备案号">
-              <Input  type="text" v-model="hostUnitList.recordserviceid" :readonly="true"></Input>
-            </FormItem>
-            <FormItem label="主体备案密码" prop="password">
-              <Input type="text" v-model="domainList.password"  placeholder="小于20位数字或字母"></Input>
-            </FormItem>
-          </Form>
+        <Form ref="domainList" :model="domainList" :rules="domainListValiot" label-position="top">
+          <FormItem label="主体备案号">
+            <Input type="text" v-model="hostUnitList.recordserviceid" :readonly="true"></Input>
+          </FormItem>
+          <FormItem label="主体备案密码" prop="password">
+            <Input type="text" v-model="domainList.password" placeholder="小于20位数字或字母"></Input>
+          </FormItem>
+        </Form>
         <!--</div>-->
 
       </div>
-      <div slot="footer" >
+      <div slot="footer">
         <Button type="primary" @click="delMainWeb('确认中')">下一步，提交审核</Button>
       </div>
     </Modal>
@@ -1037,22 +1043,13 @@
       };
       //校验网站负责人证件号码
       const validCertificateNumber = (rule, value, callback) => {
+        let regCord = /^[0-9]*$/;
         if (value == "") {
-          return callback(new Error("请输入网站负责人证件号码"));
-        } /*else if (
-         !this.siteList[0].basicInformation.certificateTypeList[
-         this.siteList[0].basicInformation.certificateType - 1
-         ].reg.test(value)
-         ) {
-         return callback(
-         new Error(
-         "请输入正确的" +
-         this.siteList[0].basicInformation.certificateTypeList[
-         this.siteList[0].basicInformation.certificateType - 1
-         ].label
-         )
-         );
-         }*/ else {
+          return callback(new Error("请输入证件号码"));
+        }
+        if (!regCord.test(value)) {
+          return callback(new Error("请输入正确的证件号码"));
+        } else {
           callback();
         }
       };
@@ -1112,11 +1109,11 @@
         webIpHide: null,
         webAccessTypeHide: null,
         webServerAddressHide: null,
-        domainNameCertificateHide:null,
-        checkListHide:null,
-        sponsorPhotoHide:null,
-        organizerPhotoHide:null,
-        otherInfoHide:null,
+        domainNameCertificateHide: null,
+        checkListHide: null,
+        sponsorPhotoHide: null,
+        organizerPhotoHide: null,
+        otherInfoHide: null,
         //网站核验单大图
         visibleWeb: false,
         //营业执照大图
@@ -1188,9 +1185,7 @@
         district: "",
         districtList: [],
         //接收修改的数据
-        updateHostUnitList: {
-
-        },
+        updateHostUnitList: {},
         //主体单位性质
         unitProperties: "",
         unitPropertiesList: certificates,
@@ -1210,8 +1205,8 @@
             {required: true, message: "请选择证件类型", trigger: "change"}
           ],
           maincompanynumber: [
-            {required: true, message: "请输入单位证件号码", trigger: "blur"}
-            // { validator: validUnitProperties, trigger: "blur" }
+            {required: true, message: "请输入单位证件号码", trigger: "blur"},
+            {validator: validCertificateNumber, trigger: "blur"}
           ],
           maincompanyname: [
             {required: true, message: "请输入主体单位名称", trigger: "blur"},
@@ -1238,7 +1233,7 @@
             {required: true, message: "请选择法人证件类型", trigger: "change"}
           ],
           legalcertificatesnumber: [
-            {required: true, message: "请输入法人证件号码", trigger: "blur"}
+            {required: true, validator: validCertificateNumber, trigger: "blur"}
           ],
           officenumber: [
             {required: true, message: "请输入办公室电话", trigger: "blur"},
@@ -1295,11 +1290,11 @@
           weburl: [
             {required: true, validator: validWebsiteHomepage, trigger: "blur"}
           ],
-          webaccesstype:[
-            {required:true,message:"请选网站接入方式",trigger:'blur'}
+          webaccesstype: [
+            {required: true, message: "请选网站接入方式", trigger: 'blur'}
           ],
-          webip:[
-            {required:true,message:"请选择网站ip",trigger:"blur"}
+          webip: [
+            {required: true, message: "请选择网站ip", trigger: "blur"}
           ]
         },
         //获取域名证书文件
@@ -1317,49 +1312,55 @@
         //网站核验单示例图路径
         examples: '',
         //注销网站弹窗
-        cancellation:false,
+        cancellation: false,
         //取消接入弹窗
         cancel: false,
         id: '',
         isCompile: false,
         //注销主体
-        domainList:{
+        domainList: {
           //备案密码
-          password:'',
+          password: '',
         },
-        domainListValiot:{
-          password:[
-              {required:true,message:'请输入主体备案密码',trigger:'blur'},
-              {max:20,trigger:'blur'}
-            ]
+        domainListValiot: {
+          password: [
+            {required: true, message: '请输入主体备案密码', trigger: 'blur'},
+            {max: 20, trigger: 'blur'}
+          ]
         },
         //注销主体弹窗
-        domain:false,
+        domain: false,
         //获取上传文件
-        uploadHost:[],
-        uploadDomain:[],
+        uploadHost: [],
+        uploadDomain: [],
         //ISP网站ip
-        webip:[],
-        webipList:[],
+        webip: [],
+        webipList: [],
         //ISP服务器接入方式
-        webaccessList:[
+        webaccessList: [
           {
-            label:'专线',
-          value:'专线'
+            label: '专线',
+            value: '专线'
           },
           {
-            label:'主机托管',
-            value:'主机托管'
+            label: '主机托管',
+            value: '主机托管'
           },
           {
-            label:'虚拟主机',
-            value:'虚拟主机'
+            label: '虚拟主机',
+            value: '虚拟主机'
           },
           {
-            label:'其他',
-            value:'其他'
+            label: '其他',
+            value: '其他'
           }
-        ]
+        ],
+        percent: 0,
+        percentBack: 0,
+        percentCombine: 0,
+        percentCertification: 0,
+        percentOtherFile: 0,
+        percentCheckList: 0
       };
     },
     created() {
@@ -1504,25 +1505,25 @@
               }
               // console.log(this.hostUnitList);
               if (this.hostUnitList.webrecordauthenticityurl.indexOf(',') > 0) {
-              let webRecord = this.hostUnitList.webrecordauthenticityurl.split(",");
-              for (let j = 0; j < onther.length; j++) {
-                let objc = new Object();
-                webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1);
-                objc.name = (webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1));
-                this.webRecordData.push(objc);
-                switch (this.webRecordData[j].name.substring(this.webRecordData[j].name.length - 3)) {
-                  case 'pdf' :
-                    this.webRecordData[j].img = imgPdf;
-                    break;
-                  case 'jpg' :
-                    this.webRecordData[j].img = imgJpg;
-                    break;
-                  case 'doc' :
-                    this.webRecordData[j].img = imgDoc;
-                    break;
+                let webRecord = this.hostUnitList.webrecordauthenticityurl.split(",");
+                for (let j = 0; j < onther.length; j++) {
+                  let objc = new Object();
+                  webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1);
+                  objc.name = (webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1));
+                  this.webRecordData.push(objc);
+                  switch (this.webRecordData[j].name.substring(this.webRecordData[j].name.length - 3)) {
+                    case 'pdf' :
+                      this.webRecordData[j].img = imgPdf;
+                      break;
+                    case 'jpg' :
+                      this.webRecordData[j].img = imgJpg;
+                      break;
+                    case 'doc' :
+                      this.webRecordData[j].img = imgDoc;
+                      break;
+                  }
                 }
-              }
-              }else{
+              } else {
                 let webRecord = this.hostUnitList.webrecordauthenticityurl
                 let obj = new Object();
                 webRecord.substring(webRecord.lastIndexOf('/') + 1);
@@ -1638,7 +1639,7 @@
                       break
                   }
                 })
-              } else{
+              } else {
                 this.isAllUpate = true;
               }
             } else {
@@ -1655,34 +1656,34 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            for(let i =0; i<response.data.result.length; i++){
+            for (let i = 0; i < response.data.result.length; i++) {
               this.webipList.push(response.data.result[i].publicip);
             }
           }
         })
       },
       //取消接入
-      delMainWeb(status){
+      delMainWeb(status) {
         this.domain = false;
-        axios.post('recode/updateMainWeb.do',{
-            id:this.id,
-            status:status
-        }).then(res =>{
-          if(res.data.status ==1){
+        axios.post('recode/updateMainWeb.do', {
+          id: this.id,
+          status: status
+        }).then(res => {
+          if (res.data.status == 1) {
             this.details();
             this.$Message.success('提交成功');
-          }else {
+          } else {
             this.$Message.info(res.data.message)
           }
         })
-          this.$Modal.confirm({
-            render: (h) => {
-              return h('div', [
-                h('p',{style:{color:'#333333',fontSize:'14px'}},'申请已提交'),
-                h('p',{style:{color:'#666666',fontSize:'14px'}},'新睿云将在1个工作日内将您的申请提交至通信管理局。')
-              ])
-            }
-          })
+        this.$Modal.confirm({
+          render: (h) => {
+            return h('div', [
+              h('p', {style: {color: '#333333', fontSize: '14px'}}, '申请已提交'),
+              h('p', {style: {color: '#666666', fontSize: '14px'}}, '新睿云将在1个工作日内将您的申请提交至通信管理局。')
+            ])
+          }
+        })
       },
       // 重新选择省份
       changeProvince(val) {
@@ -1707,10 +1708,11 @@
           }
         });
       },
-      allUpdate(){
+      allUpdate() {
         let webcompany_Id = sessionStorage.getItem('webcompany_Id');
         this.updateHostUnitList.id = this.id;
-        let web = {id: webcompany_Id,
+        let web = {
+          id: webcompany_Id,
           ISPName: this.updateHostUnitList.ispname,
           webIp: this.updateHostUnitList.webip,
           webAccessType: this.updateHostUnitList.webaccesstype,
@@ -1732,9 +1734,10 @@
           webRecordAuthenticityUrl: this.updateHostUnitList.webrecordauthenticityurl,
           companyResponsibilityUrlPositive: this.updateHostUnitList.webresponsibilityurlpositive,
           companyResponsibilityUrlBack: this.updateHostUnitList.webresponsibilityurlback,
-          domainCertificateUrl:this.updateHostUnitList.domaincertificateurl,
-          otherDataUrl:this.updateHostUnitList.otherdataurl}
-        let update =  this.$http.post("recode/updateMainWeb.do", web);
+          domainCertificateUrl: this.updateHostUnitList.domaincertificateurl,
+          otherDataUrl: this.updateHostUnitList.otherdataurl
+        }
+        let update = this.$http.post("recode/updateMainWeb.do", web);
         let main = {
           id: this.id,
           phone: this.updateHostUnitList.companyphone,
@@ -1758,14 +1761,14 @@
 
           照片
         */
-          hostCompanyUrl:this.updateHostUnitList.hostcompanyurl,
+          hostCompanyUrl: this.updateHostUnitList.hostcompanyurl,
           officeNumber: this.updateHostUnitList.officenumber,
-          mainCompanyArea:this.updateHostUnitList.maincompanyarea
+          mainCompanyArea: this.updateHostUnitList.maincompanyarea
         }
-        let addMian =  this.$http.get('recode/addMainCompany.do', {params:main})
-        Promise.all([update,addMian]).then(res =>{
+        let addMian = this.$http.get('recode/addMainCompany.do', {params: main})
+        Promise.all([update, addMian]).then(res => {
           if (res[0].data.status == 1 && res[1].data.status == 1) {
-            this.$router.push({path:'BRecords'});
+            this.$router.push({path: 'BRecords'});
             this.$Message.success("修改成功");
           } else {
             this.$Message.info(res.data.message);
@@ -1773,247 +1776,288 @@
         })
       },
       //删除上传文件
-      deletePhoto(val,index){
+      deletePhoto(val, index) {
         console.log(val == 'aunthen')
-        if(val == 'aunthen'){
-          this.addy.splice(index,1);
-        }else if(val == 'web'){
-          this.webRecordData.splice(index,1);
-        }else if(val == 'onther'){
-          this.otherData.splice(index,1);
+        if (val == 'aunthen') {
+          this.addy.splice(index, 1);
+        } else if (val == 'web') {
+          this.webRecordData.splice(index, 1);
+        } else if (val == 'onther') {
+          this.otherData.splice(index, 1);
         }
       },
       //主体表单修改验证
-      hostUpdate(name){
+      hostUpdate(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
             name == 'hostUpdate' ? this.host = false :
               name == 'legalUpdate' ? this.legal = false :
                 name == 'website' ? this.website = false :
                   name == 'websitePerson' ? this.websitePerson = false :
-                    name == 'webIsp'? this.webIsp = false :'';
-            this.hostUnitList =JSON.parse(JSON.stringify(this.updateHostUnitList));
-            this.hostUnitList.maincompanyarea = this.province +'-'+this.city +'-'+this.district;
+                    name == 'webIsp' ? this.webIsp = false : '';
+            this.hostUnitList = JSON.parse(JSON.stringify(this.updateHostUnitList));
+            this.hostUnitList.maincompanyarea = this.province + '-' + this.city + '-' + this.district;
             this.hostUnitList.webip = this.webip.join(' ');
           } else {
             return;
           }
         })
       },
-      webRecordFormatError(){
+      webRecordFormatError() {
         this.$Message.info('网站核验单只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
       //网站核验单上传成功
-      webRecordSuccess(response){
-        if(response.status == 1){
-          this.updateHostUnitList.webrecordauthenticityurl=response.result;
-          if (this.updateHostUnitList.webrecordauthenticityurl.indexOf(',') > 0) {
-            let webRecord = this.updateHostUnitList.webrecordauthenticityurl.split(",");
-            for (let j = 0; j < onther.length; j++) {
-              let objc = new Object();
-              webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1);
-              objc.name = (webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1));
-              this.webRecordData.push(objc);
-              switch (this.webRecordData[j].name.substring(this.webRecordData[j].name.length - 3)) {
-                case 'pdf' :
-                  this.webRecordData[j].img = imgPdf;
-                  break;
-                case 'jpg' :
-                  this.webRecordData[j].img = imgJpg;
-                  break;
-                case 'doc' :
-                  this.webRecordData[j].img = imgDoc;
-                  break;
+      webRecordSuccess(response) {
+        if (response.status == 1) {
+          let s = setInterval(() => {
+            this.percentCheckList++
+            if (this.percentCheckList > 100) {
+              window.clearInterval(s)
+              this.updateHostUnitList.webrecordauthenticityurl = response.result;
+              if (this.updateHostUnitList.webrecordauthenticityurl.indexOf(',') > 0) {
+                let webRecord = this.updateHostUnitList.webrecordauthenticityurl.split(",");
+                for (let j = 0; j < onther.length; j++) {
+                  let objc = new Object();
+                  webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1);
+                  objc.name = (webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1));
+                  this.webRecordData.push(objc);
+                  switch (this.webRecordData[j].name.substring(this.webRecordData[j].name.length - 3)) {
+                    case 'pdf' :
+                      this.webRecordData[j].img = imgPdf;
+                      break;
+                    case 'jpg' :
+                      this.webRecordData[j].img = imgJpg;
+                      break;
+                    case 'doc' :
+                      this.webRecordData[j].img = imgDoc;
+                      break;
+                  }
+                }
+              } else {
+                let webRecord = this.updateHostUnitList.webrecordauthenticityurl;
+                let objc = new Object();
+                webRecord.substring(webRecord.lastIndexOf('/') + 1);
+                objc.name = (webRecord.substring(webRecord.lastIndexOf('/') + 1));
+                this.webRecordData.push(objc);
+                for (let i = 0; i < this.webRecordData.length; i++) {
+                  switch (this.webRecordData[i].name.substring(this.webRecordData[0].name.length - 3)) {
+                    case 'pdf' :
+                      this.webRecordData[i].img = imgPdf;
+                      break;
+                    case 'jpg' :
+                      this.webRecordData[i].img = imgJpg;
+                      break;
+                    case 'doc' :
+                      this.webRecordData[i].img = imgDoc;
+                      break;
+                  }
+                }
               }
+              this.$Message.success('上传成功');
+              this.percentCheckList = 0
             }
-          } else {
-            let webRecord = this.updateHostUnitList.webrecordauthenticityurl;
-            let objc = new Object();
-            webRecord.substring(webRecord.lastIndexOf('/') + 1);
-            objc.name = (webRecord.substring(webRecord.lastIndexOf('/') + 1));
-            this.webRecordData.push(objc);
-            for(let i = 0;i<this.webRecordData.length; i++){
-              switch (this.webRecordData[i].name.substring(this.webRecordData[0].name.length - 3)) {
-                case 'pdf' :
-                  this.webRecordData[i].img = imgPdf;
-                  break;
-                case 'jpg' :
-                  this.webRecordData[i].img = imgJpg;
-                  break;
-                case 'doc' :
-                  this.webRecordData[i].img = imgDoc;
-                  break;
-              }
-            }
-
-          }
-          this.$Message.success('上传成功');
-        }else {
+          }, 25)
+        } else {
           this.$Message.info('上传失败');
         }
       },
-      webRecordBeforeUpload(){
-        if(this.webRecordData.length >0){
+      webRecordBeforeUpload() {
+        if (this.webRecordData.length > 0) {
           this.$Message.info('网站核验单最多只能上传一张');
           return false;
         }
       },
       //身份证正面上传格式错误
-      cardFormatError(){
+      cardFormatError() {
         this.$Message.info('身份证正面只能上传jpg,jpeg,png类型的文件');
       },
       //身份证正面上传成功
-      cardSuccess(response){
-        if(response.status == 1){
-          this.hostUnitList.webresponsibilityurlpositive=response.result;
-          this.$Message.success('上传成功');
-        }else {
+      cardSuccess(response) {
+        if (response.status == 1) {
+          let s = setInterval(() => {
+            this.percent++
+            if (this.percent > 100) {
+              window.clearInterval(s)
+              this.hostUnitList.webresponsibilityurlpositive = response.result;
+              this.$Message.success('上传成功');
+              this.percent = 0
+            }
+          }, 25)
+        } else {
           this.$Message.info('上传失败');
         }
       },
       //身份证背面上传格式错误
-      cardBackFormatError(){
+      cardBackFormatError() {
         this.$Message.info('身份证背面只能上传jpg,jpeg,png类型的文件');
       },
-      cardBackSuccess(response){
-        if(response.status == 1){
-          this.hostUnitList.webresponsibilityurlback=response.result;
-            this.$Message.success('上传成功');
-        }else {
+      cardBackSuccess(response) {
+        if (response.status == 1) {
+          let s = setInterval(() => {
+            this.percentBack++
+            if (this.percentBack > 100) {
+              window.clearInterval(s)
+              this.hostUnitList.webresponsibilityurlback = response.result;
+              this.$Message.success('上传成功');
+              this.percentBack = 0
+            }
+          }, 25)
+        } else {
           this.$Message.info('上传失败');
         }
       },
       //营业执照上传格式错误
-      organizerFormatError(){
+      organizerFormatError() {
         this.$Message.info('营业执照只能上传jpg,jpeg,png类型的文件');
       },
-      organizerSuccess(response){
-        if(response.status == 1){
-            this.hostUnitList.hostcompanyurl=response.result;
-            this.$Message.success('上传成功');
-        }else{
+      organizerSuccess(response) {
+        if (response.status == 1) {
+          let s = setInterval(() => {
+            this.percentCombine++
+            if (this.percentCombine > 100) {
+              window.clearInterval(s)
+              this.hostUnitList.hostcompanyurl = response.result;
+              this.$Message.success('上传成功');
+              this.percentCombine = 0
+            }
+          }, 25)
+        } else {
           this.$Message.info('上传失败');
         }
       },
       //上传域名证书格式错误
-      domainNameFormatError(){
+      domainNameFormatError() {
         this.$Message.info('域名证书只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
-      domainNameSuccess(response){
-        if(response.status ==1){
-          this.updateHostUnitList.domaincertificateurl=response.result;
-          if (this.updateHostUnitList.domaincertificateurl.indexOf(',') > 0) {
-            let addy = this.updateHostUnitList.domaincertificateurl.split(",");
-            for (let i = 0; i < addy.length; i++) {
-              let object = new Object();
-              addy[i].substring(addy[i].lastIndexOf('/') + 1);
-              object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
-              this.addy.push(object);
-              switch (this.addy[i].name.substring(this.addy[i].name.length - 3)) {
-                case 'pdf' :
-                  this.addy[i].img = imgPdf;
-                  break;
-                case 'jpg' :
-                  this.addy[i].img = imgJpg;
-                  break;
-                case 'doc' :
-                  this.addy[i].img = imgDoc;
-                  break;
+      domainNameSuccess(response) {
+        if (response.status == 1) {
+          let s = setInterval(() => {
+            this.percentCertification++
+            if (this.percentCertification > 100) {
+              window.clearInterval(s)
+              this.updateHostUnitList.domaincertificateurl = response.result;
+              if (this.updateHostUnitList.domaincertificateurl.indexOf(',') > 0) {
+                let addy = this.updateHostUnitList.domaincertificateurl.split(",");
+                for (let i = 0; i < addy.length; i++) {
+                  let object = new Object();
+                  addy[i].substring(addy[i].lastIndexOf('/') + 1);
+                  object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
+                  this.addy.push(object);
+                  switch (this.addy[i].name.substring(this.addy[i].name.length - 3)) {
+                    case 'pdf' :
+                      this.addy[i].img = imgPdf;
+                      break;
+                    case 'jpg' :
+                      this.addy[i].img = imgJpg;
+                      break;
+                    case 'doc' :
+                      this.addy[i].img = imgDoc;
+                      break;
+                  }
+                }
+              } else {
+                let addy = this.updateHostUnitList.domaincertificateurl;
+                let object = new Object();
+                addy.substring(addy.lastIndexOf('/') + 1);
+                object.name = (addy.substring(addy.lastIndexOf('/') + 1));
+                this.addy.push(object);
+                for (let i = 0; i < this.addy.length; i++) {
+                  switch (this.addy[i].name.substring(this.addy[0].name.length - 3)) {
+                    case 'pdf' :
+                      this.addy[i].img = imgPdf;
+                      break;
+                    case 'jpg' :
+                      this.addy[i].img = imgJpg;
+                      break;
+                    case 'doc' :
+                      this.addy[i].img = imgDoc;
+                      break;
+                  }
+                }
               }
+              this.$Message.success('上传成功');
+              this.percentCertification = 0
             }
-          } else {
-            let addy = this.updateHostUnitList.domaincertificateurl;
-            let object = new Object();
-            addy.substring(addy.lastIndexOf('/') + 1);
-            object.name = (addy.substring(addy.lastIndexOf('/') + 1));
-            this.addy.push(object);
-            for(let i = 0;i<this.addy.length; i++){
-              switch (this.addy[i].name.substring(this.addy[0].name.length - 3)) {
-                case 'pdf' :
-                  this.addy[i].img = imgPdf;
-                  break;
-                case 'jpg' :
-                  this.addy[i].img = imgJpg;
-                  break;
-                case 'doc' :
-                  this.addy[i].img = imgDoc;
-                  break;
-              }
-            }
-          }
-          this.$Message.success('上传成功');
-        }else {
+          }, 25)
+        } else {
           this.$Message.info('上传失败');
         }
       },
-      domainNameBeforeUpload(){
-        if(this.addy.length >2){
+      domainNameBeforeUpload() {
+        if (this.addy.length > 2) {
           this.$Message.info('只能上传三个域名证书信息');
           return false;
         }
       },
       //其他文件上传格式错误
-      otherFileSuccess(response){
-        if(response.status ==1){
-          this.updateHostUnitList.otherdataurl=response.result;
-          if (this.updateHostUnitList.otherdataurl.indexOf(',') > 0) {
-            let addy =  this.updateHostUnitList.otherdataurl.split(",");
-            for (let i = 0; i < addy.length; i++) {
-              let object = new Object();
-              addy[i].substring(addy[i].lastIndexOf('/') + 1);
-              object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
-              this.otherData.push(object);
-              switch (this.otherData[i].name.substring(this.otherData[i].name.length - 3)) {
-                case 'pdf' :
-                  this.otherData[i].img = imgPdf;
-                  break;
-                case 'jpg' :
-                  this.otherData[i].img = imgJpg;
-                  break;
-                case 'doc' :
-                  this.otherData[i].img = imgDoc;
-                  break;
+      otherFileSuccess(response) {
+        if (response.status == 1) {
+          let s = setInterval(() => {
+            this.percentOtherFile++
+            if (this.percentOtherFile > 100) {
+              window.clearInterval(s)
+              this.updateHostUnitList.otherdataurl = response.result;
+              if (this.updateHostUnitList.otherdataurl.indexOf(',') > 0) {
+                let addy = this.updateHostUnitList.otherdataurl.split(",");
+                for (let i = 0; i < addy.length; i++) {
+                  let object = new Object();
+                  addy[i].substring(addy[i].lastIndexOf('/') + 1);
+                  object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
+                  this.otherData.push(object);
+                  switch (this.otherData[i].name.substring(this.otherData[i].name.length - 3)) {
+                    case 'pdf' :
+                      this.otherData[i].img = imgPdf;
+                      break;
+                    case 'jpg' :
+                      this.otherData[i].img = imgJpg;
+                      break;
+                    case 'doc' :
+                      this.otherData[i].img = imgDoc;
+                      break;
+                  }
+                }
+              } else {
+                let addy = this.updateHostUnitList.otherdataurl;
+                let object = new Object();
+                addy.substring(addy.lastIndexOf('/') + 1);
+                object.name = (addy.substring(addy.lastIndexOf('/') + 1));
+                this.otherData.push(object);
+                for (let i = 0; i < this.otherData.length; i++) {
+                  switch (this.otherData[i].name.substring(this.otherData[0].name.length - 3)) {
+                    case 'pdf' :
+                      this.otherData[i].img = imgPdf;
+                      break;
+                    case 'jpg' :
+                      this.otherData[i].img = imgJpg;
+                      break;
+                    case 'doc' :
+                      this.otherData[i].img = imgDoc;
+                      break;
+                  }
+                }
               }
+              this.$Message.success('上传成功');
+              this.percentOtherFile = 0
             }
-          } else {
-            let addy =  this.updateHostUnitList.otherdataurl;
-            let object = new Object();
-            addy.substring(addy.lastIndexOf('/') + 1);
-            object.name = (addy.substring(addy.lastIndexOf('/') + 1));
-            this.otherData.push(object);
-            for(let i = 0;i<this.otherData.length;i++){
-              switch (this.otherData[i].name.substring(this.otherData[0].name.length - 3)) {
-                case 'pdf' :
-                  this.otherData[i].img = imgPdf;
-                  break;
-                case 'jpg' :
-                  this.otherData[i].img = imgJpg;
-                  break;
-                case 'doc' :
-                  this.otherData[i].img = imgDoc;
-                  break;
-              }
-            }
-          }
-          this.$Message.success('上传成功');
-        }else{
+          }, 25)
+        } else {
           this.$Message.info('上传失败');
         }
       },
-      otherBeforeUpload(){
-        if(this.otherData.length >2){
+      otherBeforeUpload() {
+        if (this.otherData.length > 2) {
           this.$Message.info('只能上传三个其他文件信息');
           return false;
         }
       },
-      otherFormatError(){
+      otherFormatError() {
         this.$Message.info('其他资料只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
       //改变变更备案
-      changeCompile(val){
-        if(val == 'isChange'){
+      changeCompile(val) {
+        if (val == 'isChange') {
           this.isCompile = true;
-        }else{
+        } else {
           this.isCompile = false;
         }
       }
@@ -2057,7 +2101,7 @@
       .item-content-text {
         font-size: 14px;
         line-height: 20px;
-        color:#999;
+        color: #999;
       }
       button {
         outline: none;

@@ -561,9 +561,12 @@
             if (this.percent > 100) {
               window.clearInterval(s)
               this.uploadForm.IDPhotoList[this.IDCardIndex].IDCardFront = response.result
+              this.$Message.info('上传成功');
               this.percent = 0
             }
           }, 25)
+        } else {
+          this.$Message.info('上传失败');
         }
       },
       IDCardBack(response) {
@@ -573,9 +576,12 @@
             if (this.percentBack > 100) {
               window.clearInterval(s)
               this.uploadForm.IDPhotoList[this.IDCardIndex].IDCardBack = response.result
+              this.$Message.info('上传成功');
               this.percentBack = 0
             }
           }, 25)
+        } else {
+          this.$Message.info('上传失败');
         }
       },
       combine(response) {
@@ -585,9 +591,12 @@
             if (this.percentCombine > 100) {
               window.clearInterval(s)
               this.uploadForm.combine = response.result
+              this.$Message.info('上传成功');
               this.percentCombine = 0
             }
           }, 25)
+        } else {
+          this.$Message.info('上传失败');
         }
       },
       certifiedDomainNoCertification(response) {
@@ -608,9 +617,12 @@
               if (this.uploadForm.certifiedDomainNoCertificationDefault[this.certifiedDomainNoCertificationIndex].certifiedDomainNoCertificationDefaultList.length < 3) {
                 this.uploadForm.certifiedDomainNoCertificationDefault[this.certifiedDomainNoCertificationIndex].certifiedDomainNoCertificationDefaultList.push(param)
               }
+              this.$Message.info('上传成功');
               this.percentCertification = 0
             }
           }, 25)
+        } else {
+          this.$Message.info('上传失败');
         }
       },
       otherFile(response) {
@@ -631,9 +643,12 @@
               if (this.uploadForm.otherFileGroup[this.otherFileIndex].otherFile.length < 3) {
                 this.uploadForm.otherFileGroup[this.otherFileIndex].otherFile.push(param)
               }
+              this.$Message.info('上传成功');
               this.percentOtherFile = 0
             }
           }, 25)
+        } else {
+          this.$Message.info('上传失败');
         }
       },
       checkList(response) {
@@ -654,9 +669,12 @@
               if (this.uploadForm.checkGroup[this.checkListIndex].checkList.length < 1) {
                 this.uploadForm.checkGroup[this.checkListIndex].checkList.push(param)
               }
+              this.$Message.info('上传成功');
               this.percentCheckList = 0
             }
           }, 25)
+        } else {
+          this.$Message.info('上传失败');
         }
       },
       // 校验用户上传的文件类型
