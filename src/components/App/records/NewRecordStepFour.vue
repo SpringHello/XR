@@ -387,7 +387,7 @@
           })
         }
       },
-      // 提交管局审批
+      // 提交幕布
       sumbitApproval() {
         if (this.upload.photo === '') {
           this.$Message.info('请上传相关幕布背景照片')

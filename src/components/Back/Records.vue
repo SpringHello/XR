@@ -242,7 +242,7 @@
             title: "当前状态",
             key: "status",
             render: (h, params) => {
-              return h("div", params.row.status == '管局审核中' ? '初审成功' : params.row.status);
+              return h("div", params.row.status == '初审成功' ? '管局审核中' : params.row.status);
             }
           },
           {
@@ -352,7 +352,7 @@
             title: "当前状态",
             key: "status",
             render: (h, params) => {
-              return h("div", params.row.status == "待审核" ? "确认中" : params.row.status == "取消接入确认" || params.row.status == "注销主体" || params.row.status == "网站确认" || params.row.status == "变更确认" ? "管局审核中" : params.row.status);
+              return h("div", params.row.status == "待审核" ? "确认中" : params.row.status == "取消接入确认" || params.row.status == "注销主体确认" || params.row.status == "注销网站确认" || params.row.status == "变更确认" ? "管局审核中" : params.row.status);
             }
           },
           {
