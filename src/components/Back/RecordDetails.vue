@@ -10,7 +10,7 @@
               <!-- <div class="click_icon icons" @click="toolShow(isIcon)" :class="{hide_icon:!isIcon}"></div> -->
             </div>
             <div style="width:100%;">
-              <ul>
+              <ul style="display: flex">
                 <li class="list_item">备案ID:{{hostUnitList.recordserviceid}}</li>
                 <li class="list_item">备案类型:{{hostUnitList.recordtype}}</li>
                 <li class="list_item">备案主体:{{hostUnitList.webname}}</li>
@@ -1837,7 +1837,6 @@
         } else if (val == 'onther') {
           this.otherData.splice(index, 1);
         }
-
       },
       // 重新选择省份
       changeProvince(val) {
@@ -1887,6 +1886,30 @@
       allUpdate() {
         let webcompany_Id = sessionStorage.getItem('webcompany_Id');
         this.updateHostUnitList.id = this.id;
+        if(this.addy.length == 0){
+          this.$Message.info('请上传相关域名证书')
+          return
+        }
+        if(this.webRecordData.length == 0){
+          this.$Message.info('请上传相关网站核验单')
+          return
+        }
+        if(this.otherData.length == 0){
+          this.$Message.info('请上传委托书等其他相关资料')
+          return
+        }
+        let domaincertificateurl = this.addy.map(item => {
+          return item.name
+        })
+        this.updateHostUnitList.domaincertificateurl = domaincertificateurl + ''
+        let webrecordauthenticityurl = this.webRecordData.map(item => {
+          return item.name
+        })
+        this.updateHostUnitList.webrecordauthenticityurl = webrecordauthenticityurl + '';
+        let otherdataurl = this.otherData.map(item => {
+          return item.name
+        })
+        this.updateHostUnitList.otherdataurl = otherdataurl + '';
         let web = {
           id: this.id,
           status: '初审中',
@@ -2121,13 +2144,16 @@
         list-style: none;
       }
       .list_item {
-        display: inline;
+        display: inline-block;
         line-height: 40px;
         margin-right: 24px;
         font-size: 14px;
+      }
+      .list_item:nth-child(1) {
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap
+        white-space: nowrap;
+        width: 180px;
       }
 
       .info_box {
