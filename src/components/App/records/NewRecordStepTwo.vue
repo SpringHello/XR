@@ -204,7 +204,7 @@
                 <Input v-model="site.basicInformation.certificateNumber" :maxlength="20" placeholder="请输入主体单位证件号码" style="width: 500px"/>
               </FormItem>
               <FormItem v-if="!isPersonage" label="办公室电话" prop="officePhone">
-                <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.officePhone" placeholder="请输入办公室电话"
+                <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" :maxlength="15" v-model="site.basicInformation.officePhone" placeholder="请输入办公室电话"
                                        style="width: 468px;margin-left: 10px"></Input>
                 <transition name="fade">
                   <div class="tooltip-popper" style="top:-36px" v-if="site.isToolHide == 5">
@@ -219,7 +219,7 @@
                 </transition>
               </FormItem>
               <FormItem v-if="isPersonage" label="办公室电话">
-                <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.officePhone" placeholder="请输入办公室电话"
+                <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" :maxlength="15" v-model="site.basicInformation.officePhone" placeholder="请输入办公室电话"
                                        style="width: 468px;margin-left: 10px"></Input>
                 <transition name="fade">
                   <div class="tooltip-popper" style="top:-36px" v-if="site.isToolHide == 5">
@@ -459,7 +459,7 @@
             {required: true, validator: validCertificateNumber, trigger: "blur"}
           ],
           officePhone: [
-            {required: true, validator: validOfficePhone, trigger: "blur"}
+            {validator: validOfficePhone, trigger: "blur"}
           ],
           phoneNumber: [
             {required: true, validator: validPhoneNumber, trigger: "blur"}
