@@ -455,7 +455,7 @@
         var params = {
           vmConfigId: item.selectedConfig,
           osType: item.system,
-          defzoneid: '39a6af0b-6624-4194-b9d5-0c552d903858'
+          defzoneid: 'a0a7df65-dec3-48da-82cb-cff9a55a4b6d'
         }
         axios.get('information/getFreeMv.do', {
           params
