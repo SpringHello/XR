@@ -14,7 +14,7 @@
     </div>
     <div class="body-center">
       <div class="content">
-     <!--   <img src="../../../assets/img/records/records-icon9.png"/>-->
+        <!--   <img src="../../../assets/img/records/records-icon9.png"/>-->
         <ul v-for="item in flowList" :key="item.step">
           <img :src="item.src"/>
           <p>{{ item.title }}</p>
@@ -106,6 +106,7 @@
   import records from './../Records'
   import regExp from '../../../util/regExp'
   import $ from 'jquery'
+  import $store from '../../../vuex'
 
   var messageMap = {
     loginname: {
@@ -122,6 +123,14 @@
   export default {
     components: {
       records
+    },
+    beforeRouteEnter(to, from, next) {
+      if ($store.state.userInfo && $store.state.userInfo.recordFlag) {
+        next({path: '/ruicloud/waitSecondTrial'})
+      } else {
+        next()
+      }
+
     },
     data() {
       return {
@@ -285,7 +294,7 @@
     created() {
       this.flowList = this.flowList_1
       this.getRecordInfo()
-      if(sessionStorage.getItem('back')) {
+      if (sessionStorage.getItem('back')) {
         $('html, body').animate({scrollTop: 550}, 300)
       }
     },
@@ -436,29 +445,20 @@
             vailCode: this.form.vailCode
           }
         }).then((response) => {
-            if (response.status == 200 && response.statusText == 'OK') {
-              if (response.data.status == 1) {
-                this.$router.go(0)
-              } else {
-                this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-                this.vailForm.loginname.message = response.data.message
-                this.vailForm.loginname.warning = true
-              }
-            }
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.go(0)
+          } else {
+            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
+            this.vailForm.loginname.message = response.data.message
+            this.vailForm.loginname.warning = true
           }
-        )
-        ;
+        });
       },
     },
     computed: {
-      getUserInfo() {
-        if (this.$store.state.userInfo != null) {
-          return this.$store.state.userInfo
-        }
-      },
       disabled() {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
-      },
+      }
     },
     watch: {}
   }
@@ -537,8 +537,8 @@
             color: rgba(102, 102, 102, 1);
             line-height: 33px;
           }
-          &:hover{
-          border: 1px solid rgba(55, 125, 255, 1);
+          &:hover {
+            border: 1px solid rgba(55, 125, 255, 1);
           }
           &.select {
             background: rgba(55, 125, 255, 0.8);

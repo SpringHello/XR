@@ -31,7 +31,7 @@
                   </Select>
                 </div>
               </div>
-              <Button style="margin-bottom:10px;" @click="toEntrance" type="primary">新增备案</Button>
+              <Button style="margin-bottom:10px;" @click="toEntrance" type="primary" :disabled="recordFlag">新增备案</Button>
               <Table ref="selection" :columns="recordTypeList" :data="recordProgressList"></Table>
             </TabPane>
 
@@ -62,6 +62,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import $store from '../../vuex'
   export default {
     data() {
       return {
@@ -514,7 +515,11 @@
         this.$router.push('entrance')
       }
     },
-
+    computed: {
+      recordFlag() {
+        return $store.state.userInfo.recordFlag
+      }
+    }
   }
 
 </script>

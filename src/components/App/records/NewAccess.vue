@@ -103,7 +103,7 @@
         }
       }
       const validateWebsiteRecordNumber = (rule, value, callback) => {
-        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value))) {
+        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || !(/[\u2E80-\u9FFF]+\d+/.test(value))) {
           return callback(new Error('请输入正确的备案号'))
         } else {
           callback()
