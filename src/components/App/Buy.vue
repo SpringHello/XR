@@ -281,7 +281,7 @@
                     <div v-for="item in PecsInfo.info" v-if="item.zoneId === PecsInfo.zone.zoneid">
                       <div v-for="cpu in item.kernelList" :key="cpu.value" class="zoneItem"
                            :class="{zoneSelect:PecsInfo.vmConfig.kernel==cpu.value}"
-                           @click="changeKernel(cpu)">{{cpu.label}}
+                           @click="changeKernel(cpu,'PecsInfo')">{{cpu.label}}
                       </div>
                     </div>
                   </div>
@@ -461,7 +461,7 @@
                       <p class="item-title"></p>
                     </div>
                     <div>
-                      <p><span style="color:#2A99F2;cursor:pointer" @click="pushDisk">添加数据盘</span>
+                      <p><span style="color:#2A99F2;cursor:pointer" @click="pushDisk('PecsInfo')">添加数据盘</span>
                         您还可以添加{{remainDisk}}块数据盘</p>
                     </div>
                   </div>
@@ -862,139 +862,380 @@
         </div>
 
         <!--数据库div-->
-        <div id="PdataBase" style="padding: 30px 40px 40px 40px;" v-show="product.currentProduct=='PdataBase'">
-          <!--两种配置方式公共页面-->
-          <!--区域选择-->
-          <div style="border-bottom: 1px solid #EDEDED;">
-            <h2>区域选择</h2>
-            <div class="item-wrapper">
-              <div v-for="item in zoneList" :key="item.zoneid" class="zoneItem"
-                   :class="{zoneSelect:PdiskInfo.zone.zoneid==item.zoneid}"
-                   @click="PdiskInfo.zone=item">{{item.zonename}}
-              </div>
-            </div>
-            <p style="margin-top: 10px;margin-bottom: 20px;font-size: 12px;color: #999999;line-height: 25px;">
-              不同区域的资源内网互不相通；请选择与您相近的区域，可降低网络时延、提高您客户的访问速度。</p>
-          </div>
-          <!--计费方式选择-->
-          <div style="border-bottom: 1px solid #EDEDED;margin-top: 20px">
-            <h2>计费方式选择</h2>
-            <div class="item-wrapper">
-              <div v-for="item in PecsInfo.timeType" :key="item.value" class="zoneItem"
-                   :class="{zoneSelect:PdiskInfo.timeForm.currentTimeType==item.value}"
-                   @click="PdiskInfo.timeForm.currentTimeType=item.value">{{item.label}}
-              </div>
-            </div>
-            <div class="item-wrapper" v-if="PdiskInfo.timeForm.currentTimeType=='annual'">
-              <div v-for="item in PecsInfo.timeValue" :key="item.value" class="timeType"
-                   :class="{zoneSelect:PdiskInfo.timeForm.currentTimeValue.label==item.label}"
-                   @click="PdiskInfo.timeForm.currentTimeValue=item"
-                   style="margin:0px;border-right:none;width:55px">
-                {{item.label}}
-                <span v-if="item.type=='year'" class="discount-icon">惠</span>
-              </div>
-            </div>
-            <p style="margin-top: 10px;margin-bottom: 20px;font-size: 12px;color: #999999;line-height: 25px;">
-              满一年打8.3折，满两年打7折，满3年6折</p>
-          </div>
-          <!--云硬盘-->
-          <div style="margin-top:20px;border-bottom: 1px solid #D9D9D9;padding-bottom: 20px;">
-            <h2>云硬盘</h2>
-            <div class="item-wrapper">
-              <div style="display: flex">
-                <div>
-                  <p class="item-title" style="margin-top: 7px;">磁盘名称</p>
-                </div>
-                <div>
-                  <Input v-model="PdiskInfo.diskName" placeholder="请输入磁盘名" style="width: 300px"></Input>
-                </div>
-              </div>
-            </div>
-            <!--虚拟私有云-->
-            <div v-for="(disk,index) in PdiskInfo.dataDiskList" :key="index">
+        <div id="Pdata" v-show="product.currentProduct=='Pdata'">
+          <div style="padding:40px;">
+            <!--两种配置方式公共页面-->
+            <!--区域选择-->
+            <div style="border-bottom: 1px solid #D9D9D9;">
+              <h2>区域选择</h2>
               <div class="item-wrapper">
-                <div style="display: flex">
-                  <div>
-                    <p class="item-title" style="margin-top: 7px;">类型</p>
-                  </div>
-                  <div>
-                    <div v-for="(item,index) in PdiskInfo.dataDiskType" :key="item.value" class="zoneItem"
-                         :class="{zoneSelect:disk.type==item.value}"
-                         @click="disk.type=item.value;disk.label=item.label">{{item.label}}
+                <div v-for="item in zoneList" :key="item.zoneid" class="zoneItem"
+                     :class="{zoneSelect:PecsInfo.zone.zoneid==item.zoneid}"
+                     @click="PecsInfo.zone=item">{{item.zonename}}
+                </div>
+              </div>
+              <p style="margin-top: 10px;margin-bottom: 20px;font-size: 12px;color: #999999;line-height: 25px;">
+                不同区域的资源内网互不相通；请选择与您相近的区域，可降低网络时延、提高您客户的访问速度。</p>
+            </div>
+
+            <!--计费方式选择-->
+            <div style="border-bottom: 1px solid #D9D9D9;margin-top: 20px">
+              <h2>计费方式选择</h2>
+              <div class="item-wrapper">
+                <div v-for="item in PecsInfo.timeType" :key="item.value" class="zoneItem"
+                     :class="{zoneSelect:PdataInfo.timeForm.currentTimeType==item.value}"
+                     @click="PdataInfo.timeForm.currentTimeType=item.value">{{item.label}}
+                </div>
+              </div>
+              <div class="item-wrapper" v-if="PdataInfo.timeForm.currentTimeType=='annual'">
+                <div v-for="item in PecsInfo.timeValue" :key="item.value" class="timeType"
+                     :class="{zoneSelect:PdataInfo.timeForm.currentTimeValue.label==item.label}"
+                     @click="PdataInfo.timeForm.currentTimeValue=item"
+                     style="margin:0px;width:55px">
+                  {{item.label}}
+                  <span v-if="item.type=='year'" class="discount-icon">惠</span>
+                </div>
+              </div>
+              <p style="margin-top: 10px;margin-bottom: 20px;font-size: 12px;color: #999999;line-height: 25px;">
+                满一年打8.3折，满两年打7折，满3年6折</p>
+            </div>
+
+            <!--自定义配置主体页面-->
+            <div>
+              <!--主机规格选择-->
+              <div style="padding-bottom: 20px;border-bottom: 1px solid #EDEDED;margin-top: 20px">
+                <h2>数据库版本类型</h2>
+                <!--镜像选择-->
+                <div class="item-wrapper">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title">镜像系统</p>
+                    </div>
+                    <div>
+                      <!--自定义镜像 列表-->
+                      <div>
+                        <div v-for="item in PdataInfo.customList" :key="item.value" class="zoneItem"
+                             :class="{zoneSelect:PecsInfo.customMirror.id==item.id}"
+                             @click="setOwnTemplate(item)" style="margin-top: 20px;">{{item.templatename}}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <img src="../../assets/img/buy/across.png" @click="removeDisk(index)"
-                       v-show="PdiskInfo.dataDiskList.length>1"
-                       style="cursor: pointer;height:11px;">
+                </div>
+                <!-- 核心数选择 -->
+                <div class="item-wrapper">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title">核心数</p>
+                    </div>
+                    <div v-for="item in PecsInfo.info" v-if="item.zoneId === PecsInfo.zone.zoneid">
+                      <div v-for="cpu in item.kernelList" :key="cpu.value" class="zoneItem"
+                           :class="{zoneSelect:PdataInfo.vmConfig.kernel==cpu.value}"
+                           @click="changeKernel(cpu,'PdataInfo')">{{cpu.label}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 内存选择-->
+                <div class="item-wrapper">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title">内存</p>
+                    </div>
+                    <div>
+                      <div v-for="item in PdataInfo.RAMList" :key="item.value" class="zoneItem"
+                           :class="{zoneSelect:PdataInfo.vmConfig.RAM==item.value}"
+                           @click="PdataInfo.vmConfig.RAM=item.value">{{item.label}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--自定义主机价格-->
+                <div class="item-wrapper" style="margin-top: 28px;">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title" style="margin-top:0px;">价格</p>
+                    </div>
+                    <div>
+                      <p style="font-size: 16px;color: #F85E1D;">{{PdataInfo.vmConfig.cost.toFixed(2)}}元</p>
+                    </div>
+                  </div>
                 </div>
               </div>
+
+              <!--主机网络与带宽-->
+              <div style="margin-top:20px; border-bottom: 1px solid #D9D9D9;padding-bottom: 20px;">
+                <h2>网络与带宽</h2>
+                <!--虚拟私有云-->
+                <div class="item-wrapper">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title" style="margin-top: 7px;">虚拟私有云</p>
+                    </div>
+                    <div>
+                      <Select v-model="PdataInfo.vpc" style="width:200px">
+                        <Option v-for="item in PecsInfo.vpcList" :key="item.vpcid" :value="item.vpcid">
+                          {{item.vpcname}}
+                        </Option>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+                <p style="font-size: 14px;color: #999999;line-height: 20px;margin: 10px 0 10px 90px;">
+                  如需使用其他虚拟私有云（VPC），请选择已有虚拟私有云（VPC），也可以自行到<span style="color: rgb(42, 153, 242);cursor: pointer"
+                                                               @click="$router.push('vpc')">控制台新建。</span></p>
+                <!--网卡选择-->
+                <div class="item-wrapper">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title">网卡</p>
+                    </div>
+                    <div>
+                      <Select v-model="PdataInfo.network" style="width:200px">
+                        <Option v-for="item in PecsInfo.networkList" :key="item.ipsegmentid" :value="item.ipsegmentid">
+                          {{item.name}}
+                        </Option>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+
+                <!--是否需要公网IP-->
+                <div class="item-wrapper">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title" style="margin-top: 6px;">公网IP</p>
+                    </div>
+                    <div style="margin-top: 4px;">
+                      <Checkbox v-model="PdataInfo.IPConfig.publicIP" size="large">购买公网IP</Checkbox>
+                    </div>
+                  </div>
+                </div>
+                <!--如果需要公网IP，请选择公网IP带宽-->
+                <div class="item-wrapper" v-show="PdataInfo.IPConfig.publicIP">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title">带宽</p>
+                    </div>
+                    <div style="width:500px;display: flex;align-items:center">
+                      <i-slider
+                        v-model="PdataInfo.IPConfig.bandWidth"
+                        unit="MB"
+                        :min=1
+                        :max=100
+                        :step=1
+                        :points="[20,50]"
+                        style="margin-right:30px;vertical-align: middle;">
+                      </i-slider>
+                      <InputNumber :max="100" :min="1" v-model="PdataInfo.IPConfig.bandWidth"
+                                   size="large"></InputNumber>
+                    </div>
+                  </div>
+                </div>
+                <!-- 防火墙选择 -->
+                <div class="item-wrapper">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title">防火墙</p>
+                    </div>
+                    <div>
+                      <p
+                        style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(102,102,102,1);line-height:25px; border: 1px solid #D9D9D9;padding: 5px 25px;">
+                        默认设置
+                      </p>
+                    </div>
+                  </div>
+                  <p
+                    style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-top: 10px;margin-left: 90px;line-height: 1.5;">
+                    默认防火墙仅打开22、3389、443、80端口，您可以在创建之后再控制台自定义防火墙规则。<span style="color: #377DFF;cursor: pointer"
+                                                                        @click="$router.push('firewall')">如何修改</span>
+                  </p>
+                </div>
+                <!--公网IP价格-->
+                <div class="item-wrapper" style="margin-top: 28px;" v-show="PdataInfo.IPConfig.publicIP">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title" style="margin-top:0px;">价格</p>
+                    </div>
+                    <div>
+                      <p style="font-size: 16px;color: #F85E1D;">{{PdataInfo.IPConfig.cost.toFixed(2)}}元</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!--云硬盘-->
+              <div style="margin-top:20px; border-bottom: 1px solid #D9D9D9;padding-bottom: 20px;">
+                <h2>云硬盘</h2>
+                <!--虚拟私有云-->
+                <div v-for="(disk,index) in PdataInfo.dataDiskList">
+                  <div class="item-wrapper">
+                    <div style="display: flex">
+                      <div>
+                        <p class="item-title" style="margin-top: 7px;">类型</p>
+                      </div>
+                      <div>
+                        <div v-for="item in PdataInfo.dataDiskType" :key="item.value" class="zoneItem"
+                             :class="{zoneSelect:disk.type==item.value}"
+                             @click="disk.type=item.value">{{item.label}}
+                        </div>
+                      </div>
+                      <img src="../../assets/img/buy/across.png" @click="removeHostDisk(index)"
+                           style="cursor: pointer;height:11px;">
+                    </div>
+                  </div>
+                  <div class="item-wrapper">
+                    <div style="display: flex">
+                      <div>
+                        <p class="item-title" style="">容量</p>
+                      </div>
+                      <div style="width:500px;display: flex;align-items:center">
+                        <i-slider
+                          v-model="disk.size"
+                          unit="GB"
+                          :min=20
+                          :max=1000
+                          :step=10
+                          :points="[500,800]"
+                          style="margin-right:30px;vertical-align: middle;">
+                        </i-slider>
+                        <InputNumber :max="1000" :min="20" v-model="disk.size" size="large" :step=10
+                                     @on-blur="changeDiskSize(index,disk.size)"
+                                     @on-focus="changeDiskSize(index,disk.size)"></InputNumber>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="item-wrapper" v-if="remainDisk>0" style="margin-top: 10px;">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title"></p>
+                    </div>
+                    <div>
+                      <p><span style="color:#2A99F2;cursor:pointer" @click="pushDisk('PdataInfo')">添加数据盘</span>
+                        您还可以添加{{remainDiskData}}块数据盘</p>
+                    </div>
+                  </div>
+                </div>
+                <!--数据盘价格-->
+                <div class="item-wrapper" style="margin-top: 28px;">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title" style="margin-top:0px;">价格</p>
+                    </div>
+                    <div>
+                      <p style="font-size: 16px;color: #F85E1D;">{{PdataInfo.dataDiskCost.toFixed(2)}}元</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--登录设置-->
+            <div style="margin-top: 20px;border-bottom: 1px solid #D9D9D9;padding-bottom: 20px">
+              <h2>登录设置</h2>
               <div class="item-wrapper">
                 <div style="display: flex">
                   <div>
-                    <p class="item-title" style="">容量</p>
+                    <p class="item-title">主机信息</p>
                   </div>
-                  <div style="width:500px;display: flex;align-items:center">
-                    <i-slider
-                      v-model="disk.size"
-                      unit="GB"
-                      :min=20
-                      :max=1000
-                      :step=10
-                      :points="[500,800]"
-                      style="margin-right:30px;vertical-align: middle;">
-                    </i-slider>
-                    <InputNumber :max="500" :min="20" v-model="disk.size" size="large" :step=10
-                                 @on-blur="change_DiskSize(index,disk.size)"
-                                 @on-focus="change_DiskSize(index,disk.size)"></InputNumber>
+                  <div v-for="item in PecsInfo.loginType" :key="item.type" class="zoneItem"
+                       :class="{zoneSelect:PecsInfo.currentLoginType==item.type}"
+                       @click="PecsInfo.currentLoginType=item.type">{{item.label}}
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="item-wrapper" v-if="remainDiskInDisk>0">
-              <div style="display: flex">
-                <div>
-                  <p class="item-title"></p>
-                </div>
-                <div>
-                  <p><span style="color:#2A99F2;cursor:pointer" @click="pushDiskInDisk">添加数据盘</span>
-                    您还可以添加{{remainDiskInDisk}}块数据盘</p>
-                </div>
 
-              </div>
-            </div>
-            <!--是否自动续费-->
-            <div class="item-wrapper">
-              <div style="display: flex">
-                <div>
-                  <p class="item-title" style="margin-top: 4px">自动续费</p>
+              <!--默认设置显示的设置-->
+              <div v-if="PecsInfo.currentLoginType=='default'">
+                <!--安全组选择-->
+                <div class="item-wrapper">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title" style="margin-top: 8px">系统用户名</p>
+                    </div>
+                    <span style="padding:10px 0;font-size: 14px;color: #666666;">{{ systemUsername }}</span>
+                  </div>
                 </div>
-                <i-switch v-model="PdiskInfo.autoRenewal">
-                  <span slot="open">开</span>
-                  <span slot="close">关</span>
-                </i-switch>
-                <p style="padding:6px;font-size: 14px;color: #999999;">开启后，资源到期会自动续费，请确保账户内有足够的余额。</p>
+                <div class="item-wrapper">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title" style="margin-top: 8px">登录密码</p>
+                    </div>
+                    <span style="padding:10px 0;font-size: 14px;color: #666666;">默认密码 创建成功后通过短信和站内信查看</span>
+                  </div>
+                </div>
+              </div>
+
+              <!--自定义设置显示的设置-->
+              <div v-if="PecsInfo.currentLoginType=='custom'">
+                <div class="item-wrapper">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title" style="margin-top: 8px">主机名称</p>
+                    </div>
+                    <Input v-model="PecsInfo.computerName" placeholder="请输入主机名" style="width: 300px"
+                           @on-change="PecsInfo.computerNameWarning=''"></Input>
+                    <span style="line-height: 32px;color:red;margin-left:10px">{{PecsInfo.computerNameWarning}}</span>
+                  </div>
+                  <p class="item-desc">当购买数量大于1台之时，主机命名规则为主机名称加随机数字。</p>
+                </div>
+                <div class="item-wrapper">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title" style="margin-top: 8px">系统用户名</p>
+                    </div>
+                    <span style="padding:10px 0;font-size: 14px;color: #666666;">{{ systemUsername }}</span>
+                  </div>
+                </div>
+                <div class="item-wrapper">
+                  <div style="display: flex">
+                    <div>
+                      <p class="item-title" style="margin-top: 8px">登录密码</p>
+                    </div>
+                    <Input v-model="PecsInfo.password" placeholder="请输入至少6位包含大小写与数字的密码"
+                           style="width: 300px" @on-change="PecsInfo.passwordWarning=''"></Input>
+                    <span style="line-height: 32px;color:red;margin-left:10px">{{PecsInfo.passwordWarning}}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!--是否自动续费-->
+              <div class="item-wrapper">
+                <div style="display: flex">
+                  <div>
+                    <p class="item-title" style="margin-top: 4px">自动续费</p>
+                  </div>
+                  <i-switch v-model="PecsInfo.autoRenewal">
+                    <span slot="open">开</span>
+                    <span slot="close">关</span>
+                  </i-switch>
+                  <p style="padding:6px;font-size: 14px;color: #999999;">开启后，资源到期会自动续费，请确保账户内有足够的余额。</p>
+                </div>
               </div>
             </div>
-          </div>
-          <!--数据盘价格-->
-          <div style="margin-top: 20px">
-            <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
-               @click="$router.push('document')">查看计价详情</p>
-            <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
-              费用：<span style="font-size: 24px;color: #EE6723;">{{PdiskInfo.dataDiskCost.toFixed(2)}}元</span><span
-              v-show="PdiskInfo.timeForm.currentTimeType == 'current'">/小时</span>
-            </p>
-            <p style="text-align: right;font-size: 14px;color: #666666;" v-if="PdiskInfo.coupon!=0">优惠费用：<span
-              style="font-size: 14px;color: #EE6723;">{{PdiskInfo.coupon.toFixed(2)}}元</span></p>
-            <div style="text-align: right;margin-top: 20px;">
-              <Button size="large"
-                      class="btn" @click="addDiskCart">
-                加入预算清单
-              </Button>
-              <Button @click="buyDisk" type="primary"
-                      style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377DFF;">
-                立即购买
-              </Button>
+            <!--费用、以及加入预算清单-->
+            <div style="margin-top: 20px">
+              <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
+                 @click="$router.push('document')">查看计价详情</p>
+              <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
+                费用：<span
+                style="font-size: 24px;color: #EE6723;">{{totalDataCost.toFixed(2)}}元</span><span
+                v-show="PdataInfo.timeForm.currentTimeType == 'current'">/小时</span>
+              </p>
+              <p v-if="totalDataCoupon!=0" style="text-align: right;font-size: 14px;color: #666666;">
+                优惠费用：<span
+                style="font-size: 14px;color: #EE6723;">{{totalDataCoupon.toFixed(2)}}元</span></p>
+              <div style="text-align: right;margin-top: 20px;">
+                <Button size="large"
+                        class="btn" @click="addDataCart">
+                  加入预算清单
+                </Button>
+                <Button @click="buyData" type="primary"
+                        style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377DFF;">
+                  立即购买
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -1330,7 +1571,7 @@
           productList: [{label: '云主机', value: 'Pecs'}, {label: '云硬盘', value: 'Pdisk'}, {
             label: '公网IP',
             value: 'Peip'
-          }, {label: '数据库', value: 'PdataBase'}]
+          }, {label: '数据库', value: 'Pdata'}]
         },
         // 云主机信息对象
         PecsInfo: {
@@ -1854,6 +2095,99 @@
           cost: 0,
           coupon: 0
         },
+        // 数据库
+        PdataInfo: {
+          zone,
+          // 计费方式
+          timeForm: {
+            currentTimeType: 'annual',
+            currentTimeValue: {label: '1月', value: '1', type: 'month'}
+          },
+          // 数据库镜像列表
+          dataList: [
+            {system: 'Mysql', systemList: [], selectSystem: ''},
+            {system: 'SqlServer', systemList: [], selectSystem: ''},
+            {system: 'MangoDB', systemList: [], selectSystem: ''},
+            {system: 'PostGres', systemList: [], selectSystem: ''}
+          ],
+          vmConfig: {
+            diskType: 'sas',
+            kernel: 1,
+            RAM: 1,
+            diskSize: 40,
+            cost: 0,
+            coupon: 0
+          },
+          RAMList: [
+            {label: '1G', value: 1},
+            {label: '2G', value: 2},
+            {label: '4G', value: 4},
+            {label: '8G', value: 8}
+          ],
+          // 自定义镜像 列表
+          customList: [],
+          customMirror: {},
+          // 选中的镜像
+          system: {},
+
+          // 快速创建主机是否需要公网IP
+          publicIP: true,
+
+          // 两种登录设置  默认设置/自定义设置
+          loginType: [{type: 'default', label: '默认设置'}, {type: 'custom', label: '自定义设置'}],
+          currentLoginType: 'default',
+
+          safe: 'default',
+
+          autoRenewal: false,
+          // 主机名称
+          computerName: '',
+          // 主机名称提示信息
+          computerNameWarning: '',
+          // 登录密码
+          password: '',
+          // 登录密码提示信息
+          passwordWarning: '',
+
+          // 系统磁盘类型选择
+          diskTypeList: [
+            {label: 'SAS存储', value: 'sas'},
+            {label: 'SSD存储', value: 'ssd'}
+          ],
+          // 虚拟私有云列表
+          vpcList: [],
+          vpc: '',
+          // vpc下所有子网
+          networkList: [],
+          network: '',
+          // 自定义公网IP配置
+          IPConfig: {
+            // 是否需要公网IP
+            publicIP: true,
+            // 带宽大小
+            bandWidth: 1,
+            cost: 0,
+            coupon: 0
+          },
+
+          // 云硬盘（数据盘）
+          dataDiskType: [
+            {label: 'SATA存储', value: 'sata'},
+            {label: 'SAS存储', value: 'sas'},
+            {label: 'SSD存储', value: 'ssd'}
+          ],
+          // 添加购买的数据盘
+          dataDiskList: [
+            {type: 'ssd', size: 20, label: 'SSD存储'}
+          ],
+          dataDiskCost: 0,
+          // 磁盘优惠价
+          coupon: 0,
+          // 快速创建价格计算花费
+          cost: 0,
+          // 快速创建优惠价格
+          fastCoupon: 0
+        },
         // 系统用户名
         systemUsername: '',
         // 购物车
@@ -1894,8 +2228,12 @@
       this.queryVpc()
       this.queryIPVpc()
       this.setTemplate()
+      this.listDbTemplates()
       this.ownMirrorList()
       this.queryIPPriceInIP()
+      this.queryIPPriceInData()
+      this.queryDiskPriceInData()
+      this.queryCustomVMInData()
       /* 自定义镜像生成主机 页面跳转  页面赋值 */
       if (this.$route.query.mirror) {
         this.PecsInfo.zone.zoneid = this.$route.query.zoneid
@@ -1948,6 +2286,15 @@
             this.PecsInfo.publicList[3].systemList = response.data.result.debian
             this.PecsInfo.system = {}
           }
+        })
+      },
+      listDbTemplates(){
+        axios.get('database/listDbTemplates.do', {
+          params: {
+            zoneId: this.PdataInfo.zone.zoneid
+          }
+        }).then(response => {
+          console.log(response)
         })
       },
       // 设置自有镜像
@@ -2094,6 +2441,29 @@
           }
         })
       },
+      queryCustomVMInData(){
+        var params = {
+          cpuNum: this.PdataInfo.vmConfig.kernel.toString(),
+          // 数据库系统盘默认40G、ssd磁盘
+          diskSize: '40',
+          diskType: 'ssd',
+          memory: this.PdataInfo.vmConfig.RAM.toString(),
+          timeType: this.PdataInfo.timeForm.currentTimeValue.type,
+          timeValue: this.PdataInfo.timeForm.currentTimeValue.value,
+          zoneId: this.PdataInfo.zone.zoneid
+        }
+        if (this.PdataInfo.timeForm.currentTimeType === 'current') {
+          params.timeType = 'current'
+        }
+        axios.post('device/QueryBillingPrice.do', params).then(response => {
+          this.PdataInfo.vmConfig.cost = response.data.cost
+          if (response.data.coupon) {
+            this.PdataInfo.vmConfig.coupon = response.data.coupon
+          } else {
+            this.PdataInfo.vmConfig.coupon = 0
+          }
+        })
+      },
       // 三种推荐配置切换
       changeType(type) {
         this.PecsInfo.vmType = type
@@ -2116,10 +2486,10 @@
         }
       },
       // 切换核心数
-      changeKernel(cpu) {
-        this.PecsInfo.vmConfig.kernel = cpu.value
-        this.PecsInfo.RAMList = cpu.RAMList
-        this.PecsInfo.vmConfig.RAM = this.PecsInfo.RAMList[0].value
+      changeKernel(cpu, type) {
+        this[type].vmConfig.kernel = cpu.value
+        this[type].RAMList = cpu.RAMList
+        this[type].vmConfig.RAM = this[type].RAMList[0].value
       },
       // 查看主机IP价格
       queryIPPrice: debounce(500, function () {
@@ -2161,9 +2531,29 @@
           }
         })
       }),
+      // 查询数据库IP价格
+      queryIPPriceInData: debounce(500, function () {
+        var params = {
+          brand: this.PdataInfo.IPConfig.bandWidth,
+          timeType: this.PdataInfo.timeForm.currentTimeValue.type,
+          timeValue: this.PdataInfo.timeForm.currentTimeValue.value,
+          zoneId: this.PdataInfo.zone.zoneid
+        }
+        if (this.PdataInfo.timeForm.currentTimeType === 'current') {
+          params.timeType = 'current'
+        }
+        axios.post('device/queryIpPrice.do', params).then(response => {
+          this.PdataInfo.IPConfig.cost = response.data.cost
+          if (response.data.coupon) {
+            this.PdataInfo.IPConfig.coupon = response.data.coupon
+          } else {
+            this.PdataInfo.IPConfig.coupon = 0
+          }
+        })
+      }),
       // 添加主机数据盘
-      pushDisk() {
-        this.PecsInfo.dataDiskList.push({type: 'ssd', size: 20, label: 'SSD存储'})
+      pushDisk(type) {
+        this[type].dataDiskList.push({type: 'ssd', size: 20, label: 'SSD存储'})
       },
       /* 改变自定义主机页面磁盘容量，查询价格 */
       changeDiskSize(index, value) {
@@ -2218,6 +2608,36 @@
           }
         })
       }),
+
+      // 查询数据盘价格(数据库页面)
+      /*queryDiskPriceInData: debounce(500, function () {
+       var diskSize = ''
+       var diskType = ''
+       for (var disk of this.PdataInfo.dataDiskList) {
+       diskSize += `${disk.size},`
+       diskType += `${disk.type},`
+       }
+       var params = {
+       cpuNum: '0',
+       diskSize,
+       diskType,
+       memory: '0',
+       timeType: this.PdataInfo.timeForm.currentTimeValue.type,
+       timeValue: this.PdataInfo.timeForm.currentTimeValue.value,
+       zoneId: this.PdataInfo.zone.zoneid
+       }
+       if (this.PdataInfo.timeForm.currentTimeType === 'current') {
+       params.timeType = 'current'
+       }
+       axios.post('device/QueryBillingPrice.do', params).then(response => {
+       this.PdataInfo.dataDiskCost = response.data.cost
+       if (response.data.coupon) {
+       this.PdataInfo.coupon = response.data.coupon
+       } else {
+       this.PdataInfo.coupon = 0
+       }
+       })
+       }),*/
       // 磁盘页面数据盘价格
       queryDiskPriceInDisk: debounce(500, function () {
         var diskSize = ''
@@ -2247,6 +2667,37 @@
           }
         })
       }),
+
+      // 数据库页面数据盘价格
+      queryDiskPriceInData: debounce(500, function () {
+        var diskSize = ''
+        var diskType = ''
+        for (var disk of this.PdataInfo.dataDiskList) {
+          diskSize += `${disk.size},`
+          diskType += `${disk.type},`
+        }
+        var params = {
+          cpuNum: '0',
+          diskSize,
+          diskType,
+          memory: '0',
+          timeType: this.PdataInfo.timeForm.currentTimeValue.type,
+          timeValue: this.PdataInfo.timeForm.currentTimeValue.value,
+          zoneId: this.PdataInfo.zone.zoneid
+        }
+        if (this.PdataInfo.timeForm.currentTimeType === 'current') {
+          params.timeType = 'current'
+        }
+        axios.post('device/QueryBillingPrice.do', params).then(response => {
+          this.PdataInfo.dataDiskCost = response.data.cost
+          if (response.data.coupon) {
+            this.PdataInfo.coupon = response.data.coupon
+          } else {
+            this.PdataInfo.coupon = 0
+          }
+        })
+      }),
+
       pushDiskInDisk() {
         this.PdiskInfo.dataDiskList.push({type: 'ssd', size: 20, label: 'SSD存储'})
       },
@@ -2505,6 +2956,130 @@
               }
             }
           )
+        }
+      },
+      // 数据库加入购物车
+      addDataCart(){
+        if (this.cart.length > 4) {
+          this.$message.info({
+            content: '购物车已满'
+          })
+        }
+        var obj = JSON.parse(JSON.stringify(this.PdataInfo))
+        var prod = Object.assign({typeName: '数据库', zone: this.PdataInfo.zone, type: 'Pdata', count: 1}, obj)
+        this.cart.push(prod)
+        this.store()
+        window.scrollTo(0, 170)
+      },
+      buyData() {
+        if (this.userInfo == null) {
+          this.showModal.login = true
+          return
+        }
+        if (this.PecsInfo.currentType == 'app' && this.PecsInfo.currentApp.templatename == undefined) {
+          this.$message.info({
+            content: '请选择一个镜像'
+          })
+          return
+        }
+        if (this.PecsInfo.currentType == 'public' && this.PecsInfo.system.systemName == undefined) {
+          this.$message.info({
+            content: '请选择一个镜像'
+          })
+          return
+        }
+        if (this.PecsInfo.currentType == 'custom' && this.PecsInfo.customMirror.templatename == undefined) {
+          this.$message.info({
+            content: '请选择一个镜像'
+          })
+          return
+        }
+
+        if (this.PecsInfo.currentLoginType == 'custom') {
+          if (this.PecsInfo.computerName.trim() == '') {
+            this.PecsInfo.computerNameWarning = '请输入主机名称'
+            return
+          }
+          if (!regExp.hostPassword(this.PecsInfo.password)) {
+            this.PecsInfo.passwordWarning = '请输入至少6位包含大小写与数字的密码'
+            return
+          }
+        }
+
+        var obj = JSON.parse(JSON.stringify(this.PecsInfo))
+        var prod = Object.assign({
+          typeName: '云主机',
+          zone: this.PecsInfo.zone,
+          type: 'Pecs',
+          customCost: this.totalCost,
+          count: 1
+        }, obj)
+
+        var hostCount = 0, ipCount = 0, diskCount = 0
+
+        if (prod.type == 'Pecs') {
+          hostCount++
+          var params = {
+            zoneId: prod.zone.zoneid,
+            timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
+            timeValue: prod.timeForm.currentTimeValue.value,
+            templateId: prod.currentType == 'app' ? prod.currentApp.systemtemplateid : prod.currentType == 'public' ? prod.system.systemtemplateid : prod.customMirror.systemtemplateid,
+            isAutoRenew: prod.autoRenewal ? '1' : '0',
+            count: prod.count
+          }
+          // 快速创建主机
+          if (prod.createType == 'fast') {
+            params.cpuNum = prod.currentSystem.kernel
+            params.memory = prod.currentSystem.RAM
+            params.bandWidth = prod.publicIP ? prod.currentSystem.bandWidth : 0
+            params.rootDiskType = prod.currentSystem.diskType
+            params.networkId = 'no'
+            params.vpcId = 'no'
+            if (params.bandWidth != 0) {
+              ipCount++
+            }
+          } else {
+            params.cpuNum = prod.vmConfig.kernel
+            params.memory = prod.vmConfig.RAM
+            params.bandWidth = prod.IPConfig.publicIP ? prod.IPConfig.bandWidth : 0
+            params.rootDiskType = prod.vmConfig.diskType
+            params.networkId = prod.network
+            params.vpcId = prod.vpc
+            var diskType = '', diskSize = ''
+            diskCount += prod.dataDiskList.length
+            if (params.bandWidth != 0) {
+              ipCount++
+            }
+            for (let disk of prod.dataDiskList) {
+              diskType += `${disk.type},`
+              diskSize += `${disk.size},`
+            }
+            params.diskType = diskType
+            params.diskSize = diskSize
+          }
+          // 设置了主机名和密码
+          if (prod.currentLoginType == 'custom') {
+            params.VMName = prod.computerName
+            params.password = prod.password
+          }
+          if (prod.currentType === 'app') {
+            params.templateId = prod.currentApp.templateid
+          } else if (prod.currentType === 'public') {
+            params.templateId = prod.system.systemId
+          } else {
+            params.templateId = prod.customMirror.systemtemplateid
+          }
+        }
+        if (this._checkCount(hostCount, diskCount, ipCount)) {
+          axios.get('information/deployVirtualMachine.do', {params}).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$router.push('order')
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          })
         }
       },
       /* 删除一条购买清单 */
@@ -2785,12 +3360,30 @@
           return this.PecsInfo.vmConfig.cost + this.PecsInfo.dataDiskCost
         }
       },
+      totalDataCost(){
+        if (this.PdataInfo.IPConfig.publicIP) {
+          return this.PdataInfo.vmConfig.cost + this.PdataInfo.IPConfig.cost + this.PdataInfo.dataDiskCost
+        } else {
+          return this.PdataInfo.vmConfig.cost + this.PdataInfo.dataDiskCost
+        }
+      },
+      totalDataCoupon(){
+        if (this.PdataInfo.IPConfig.publicIP) {
+          return this.PdataInfo.vmConfig.coupon + this.PdataInfo.IPConfig.coupon + this.PdataInfo.coupon
+        } else {
+          return this.PdataInfo.vmConfig.coupon + this.PdataInfo.coupon
+        }
+      },
       totalCoupon() {
         return this.PecsInfo.vmConfig.coupon + this.PecsInfo.IPConfig.coupon + this.PecsInfo.coupon
       },
       // 剩余添加磁盘数量
       remainDisk() {
         return 5 - this.PecsInfo.dataDiskList.length
+      },
+      // 剩余添加磁盘数量（数据库页面）
+      remainDiskData() {
+        return 5 - this.PdataInfo.dataDiskList.length
       },
       // 商品清单总价
       billListCost() {
@@ -2944,6 +3537,10 @@
       // 公网IP带宽变化
       'PecsInfo.IPConfig.bandWidth'() {
         this.queryIPPrice()
+      },
+      // 数据库IP带宽变化
+      'PdataInfo.IPConfig.bandWidth'() {
+        this.queryIPPriceInData()
       }
       ,
       // 磁盘变化，重新计算价格
@@ -2953,14 +3550,27 @@
         },
         deep: true
       },
-
+      // 磁盘变化，重新计算价格
+      'PdataInfo.dataDiskList': {
+        handler: function () {
+          this.queryDiskPriceInData()
+        },
+        deep: true
+      },
+      // 观测到数据库配置变化
+      'PdataInfo.vmConfig': {
+        handler: function () {
+          // 查询自定义配置价格
+          this.queryCustomVMInData()
+        },
+        deep: true
+      },
       /*磁盘页面需要价格计算的变化*/
       'PdiskInfo.timeForm': {
         handler: function () {
           // 查询数据盘价格
           this.queryDiskPriceInDisk()
-        }
-        ,
+        },
         deep: true
       }
       ,
@@ -2968,12 +3578,10 @@
       'PdiskInfo.dataDiskList': {
         handler: function () {
           this.queryDiskPriceInDisk()
-        }
-        ,
+        },
         deep: true
       }
       ,
-
       // 公网IP选择区域发生变化
       'PeipInfo.zone': {
         handler: function () {
@@ -2981,8 +3589,7 @@
           this.queryIPVpc()
           // 查询当前区域的剩余资源
           this.queryRemainCount()
-        }
-        ,
+        },
         deep: true
       },
 
@@ -2991,8 +3598,7 @@
         handler: function () {
           // 查询当前区域的剩余资源
           this.queryRemainCount()
-        }
-        ,
+        },
         deep: true
       },
       /*公网IP页面需要价格计算的变化*/
@@ -3000,20 +3606,28 @@
         handler: function () {
           // 查询公网IP价格
           this.queryIPPriceInIP()
-        }
-        ,
+        },
         deep: true
-      }
-      ,
+      },
       // 公网IP变化，重新计算价格
       'PeipInfo.bandWidth': {
         handler: function () {
           this.queryIPPriceInIP()
-        }
-        ,
+        },
         deep: true
-      }
-      ,
+      },
+      /*数据库页面需要价格计算的变化*/
+      'PdataInfo.timeForm': {
+        handler: function () {
+          // 查询数据库IP价格
+          this.queryIPPriceInData()
+          // 查询数据库磁盘价格
+          this.queryDiskPriceInData()
+          // 查询数据库自身价格
+          //this.queryCustomVMInData()
+        },
+        deep: true
+      },
     },
     destroyed() {
       window.removeEventListener('scroll', this.scrollFun)
