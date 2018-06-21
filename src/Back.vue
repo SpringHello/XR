@@ -302,7 +302,6 @@
       // })
       Promise.all([zoneList,zone]).then(values =>{
         $store.commit('setZoneList',values[0].data.data.zoneList);
-        console.log(values);
         if(values[1].status == 200 && values[1].data.status == "1"){
           $store.commit('setZone',values[1].data.data.zoneList);
         }else{

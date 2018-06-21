@@ -18,7 +18,7 @@
           <p>虚拟私有云，通过逻辑方式进行网络隔离，提供安全、隔离的网络环境。VPC为您提供与传统网络无差别的虚拟网络，同时还可以为您提供弹性IP、安全组、VPN等高级网络服务。</p>
         </div>
         <Tabs type="card" :value="name" :animated="false">
-          <TabPane label="概览" name="name1">
+          <TabPane label="概览" name="name1" style="height:650px">
             <p>当月用量 2018/04/28-2018</p>
             <div class="center_space">
               <div class="space_one">
@@ -71,10 +71,10 @@
             <!--<chart class="echarts" :options="rwNumber"></chart>-->
             <!--</div>-->
           </TabPane>
-          <TabPane :label="bucketMange" name="name2">
+          <TabPane :label="bucketMange" name="name2" style="height:650px">
             <tabOne></tabOne>
           </TabPane>
-          <TabPane label="用量监控" name="name3">
+          <TabPane label="用量监控" name="name3" style="height:650px">
             <div style="text-align: center;">暂无数据</div>
             <!--<tabTwo></tabTwo>-->
           </TabPane>
@@ -280,25 +280,6 @@
           this.$Message.error('网络连接出错');
           this.size = "0KB"
         })
-      },
-      handleSpinCustom () {
-        this.$Spin.show({
-          render: (h) => {
-            return h('div', [
-              h('Icon', {
-                'class': 'demo-spin-icon-load',
-                props: {
-                  type: 'load-c',
-                  size: 18
-                }
-              }),
-              h('div', 'Loading')
-            ])
-          }
-        });
-        setTimeout(() => {
-          this.$Spin.hide();
-        }, 3000);
       }
     },
     mounted(){

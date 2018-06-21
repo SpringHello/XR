@@ -19,7 +19,7 @@
               <span class="title_one">访问权限：{{kjaccessrights}}</span>
             </div>
             <div style="width:50%;">
-              创建时间：2016-9-21 08:50:08
+              创建时间：{{createtime}}
             </div>
           </div>
           <div style="display:flex;font-size:14px;">
@@ -27,7 +27,7 @@
               默认访问域名：<span style="color:#2A99F2">{{defaultDomain}}</span>
             </div>
             <div style="width:50%;">
-              自定义外网访问域名：<span style="color:#2A99F2">{{mainName == false?domain.route:custom}}</span><span style="color:#2A99F2;margin-left: 10px;cursor: pointer;" @click="mainName = true">修改</span>
+              自定义外网访问域名：<span style="color:#2A99F2">{{custom}}</span><span style="color:#2A99F2;margin-left: 10px;cursor: pointer;" @click="mainName = true">修改</span>
             </div>
           </div>
         </div>
@@ -54,7 +54,7 @@
             <div style="display:flex;margin-bottom:15px;">
               <div style="width:50%">
                 <Button type="primary" style="margin-right:10px;" @click="modal1 = true">上传</Button>
-                <Button type="primary" @click="floder = true">新建文件夹</Button>
+                <Button type="primary" @click="floderCLick">新建文件夹</Button>
               </div>
               <div style="width:50%;text-align:right;">
                 <Input v-model="filename" type="text" placeholder="请输入搜索名称" style="width:231px;"/>
@@ -85,7 +85,7 @@
                   <Button v-if="indexs != 3" type="primary" style="margin:40px 0 0 0;" @click="checkAcl">确定</Button>
                 </div>
                 <div class="custom" v-if="indexs == 3">
-                  <Button type="primary" @click="jurisdiction = true" style="margin-right: 10px;">添加自定义权限</Button>
+                  <Button type="primary" @click="openJurisdiction" style="margin-right: 10px;">添加自定义权限</Button>
                   <Button type="primary" @click="edit = true">自定义权限编辑器</Button>
                   <Table :loading="jurisdLoading" style="margin-top:20px;" :columns="rightList" :data="aclData"></Table>
                 </div>
@@ -101,7 +101,7 @@
                 </div>
               <div v-if="corsHide">
                 <div style="margin:10px 0 20px 0;">
-                  <Button type="primary" @click="cors = true" style="margin-right: 10px;">CORS规则配置</Button>
+                  <Button type="primary" @click="openCros" style="margin-right: 10px;">CORS规则配置</Button>
                   <Button type="primary" @click="corsedit = true">CORS规则编辑器</Button>
                 </div>
                 <Table :columns="corstList" :data="corsData"></Table>
@@ -255,7 +255,7 @@
           <!--<Button type="primary" :loading="tremLoading" @click="geturl">获取外链</Button>-->
           <Input ref="copy" id="copy" v-model="fliesTerm"  type="textarea"  :autosize="true" :readonly="true"></Input>
           <div class="copyClass">
-            <span>打开文件URL</span><span @click="copyUrl">复制文件URL</span>
+            <span @click="openUrl">打开文件URL</span><span @click="copyUrl">复制文件URL</span>
           </div>
         </div>
       </div>
@@ -266,16 +266,14 @@
       title="添加自定义权限"
       :scrollable='true'
       width="550px"
-      @on-ok="jurisdictionClick"
     >
       <div class="jurisd">
         <div>Bucket名称：{{bucketName}}</div>
         <div style="margin-left:20px;">存储区域：{{zonename}}</div>
       </div>
       <Form ref="jurisdValidate" :model="jurisdValidate" :rules="jurisdRuleValidate">
-        <FormItem prop="grantValue">
-          <div style="margin-top:20px;">
-            <span>用户授权</span>
+        <FormItem prop="grantValue" label="用户授权">
+          <div >
             <RadioGroup v-model="jurisdValidate.users" @on-change="usersClick()">
               <Radio label='0'>全部用户</Radio>
               <Radio label='1'>自定义用户</Radio>
@@ -297,9 +295,8 @@
             </div>
           </div>
         </FormItem>
-        <FormItem prop="influenceValue">
-          <div style="margin-top:20px;">
-            <span>影响资源</span>
+        <FormItem prop="influenceValue" label="影响资源">
+          <div>
             <RadioGroup v-model="jurisdValidate.sources">
               <Radio label='0'>不可操作</Radio>
               <Radio label='1'>可操作</Radio>
@@ -312,17 +309,17 @@
           <div style="width:366px;display:flex;">
             <div style="width:115px;font-size:14px;color:#333333;">Referer白名单</div>
             <div style="width:300px;">
-              <Checkbox @on-change="disble" true-value="1" false-value="0" v-model="jurisdValidate.referer">允许白名单为空</Checkbox>
+              <Checkbox true-value="1" false-value="0" v-model="jurisdValidate.referer">允许白名单为空</Checkbox>
             </div>
           </div>
         </FormItem>
         <FormItem prop="whiteListValue">
-          <Input :disabled='whiteList' v-model="jurisdValidate.whiteListValue" style="width:420px;" :rows="4" type="textarea"/>
+          <Input  v-model="jurisdValidate.whiteListValue" style="width:420px;" :rows="4" type="textarea"/>
           <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button type="ghost" @click="floder = false">取消</Button>
+        <Button type="ghost" @click="jurisdiction = false">取消</Button>
         <Button type="primary" @click="jurisdictionClick">确定</Button>
       </div>
     </Modal>
@@ -350,10 +347,9 @@
         <div>Bucket名称：{{bucketName}}</div>
         <div style="margin-left:20px;">存储区域：{{zonename}}</div>
       </div>
-      <Form ref="updateJurisd" v-model="updateJurisd" :rules="updateJurisdValid">
-        <FormItem prop="updateGrantValue">
-          <div style="margin-top:20px;">
-            <span>用户授权</span>
+      <Form ref="updateJurisds" v-model="updateJurisd" :rules="updateJurisdValid">
+        <FormItem prop="updateGrantValue" label="用户授权">
+          <div>
             <RadioGroup v-model="updateJurisd.updateUsers" @on-change="usersClick">
               <Radio label="0">全部用户</Radio>
               <Radio label="1">自定义用户</Radio>
@@ -366,7 +362,7 @@
           <div style="width:366px;display:flex;">
             <div style="width:115px;font-size:14px;color:#333333;">密码接收渠道</div>
             <div style="width:300px;">
-              <CheckboxGroup v-model="updateJurisd.updateChannel">
+              <CheckboxGroup v-model="updateJurisd.updateChannel" @on-change="changes">
                 <Checkbox label="putobject">PutObject</Checkbox>
                 <Checkbox label="getobject">GetObject</Checkbox>
                 <Checkbox label="deleteobject">DeleteObject</Checkbox>
@@ -376,9 +372,8 @@
             </div>
           </div>
         </FormItem>
-        <FormItem prop="updateInfluenceValue">
-          <div style="margin-top:20px;">
-            <span>影响资源</span>
+        <FormItem prop="updateInfluenceValue" label="影响资源">
+          <div>
             <RadioGroup v-model="updateJurisd.updateSources">
               <Radio label="0">不可操作</Radio>
               <Radio label="1">可操作</Radio>
@@ -391,17 +386,17 @@
           <div style="width:366px;display:flex;">
             <div style="width:115px;font-size:14px;color:#333333;">Referer白名单</div>
             <div style="width:300px;">
-              <Checkbox @on-change="disbleUpdate" v-model="updateJurisd.updateReferer">允许白名单为空</Checkbox>
+              <Checkbox  v-model="updateJurisd.updateReferer" true-value="1" false-value="0">允许白名单为空</Checkbox>
             </div>
           </div>
         </FormItem>
         <FormItem prop="updateWhiteListValue">
-          <Input :disabled='whiteList' v-model="updateJurisd.updateWhiteListValue" style="width:420px;" :rows="4" type="textarea"></Input>
+          <Input  v-model="updateJurisd.updateWhiteListValue" style="width:420px;" :rows="4" type="textarea"></Input>
           <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button type="ghost" @click="floder = false">取消</Button>
+        <Button type="ghost" @click="updateDiction = false">取消</Button>
         <Button type="primary" @click="jurisdUpdateClick">确定</Button>
       </div>
     </Modal>
@@ -627,8 +622,6 @@
         grant: true,
         //影响资源输入框是否禁用
         influence: true,
-        //refere白名单输入框是否禁用
-        whiteList: false,
         //是否隐藏自定义弹窗
         jurisdiction: false,
         //是否隐藏查看外链弹窗
@@ -691,8 +684,17 @@
             title: "文件名称",
             render: (h, params) => {
               this.isfile = params.row.isfile;
+              const hide = params.row.hide == 1 ?'inline-block':'none';
               if (params.row.isfile == 1) {
                 return h('div', [
+                  h('Spin',{
+                    prop:{
+                      size:'small'
+                    },
+                    style:{
+                      display:hide
+                    }
+                  }),
                   h("Icon", {
                     props: {
                       type: 'ios-folder-outline'
@@ -721,11 +723,21 @@
                   }, params.row.filename)
                 ])
               } else {
-                return h('span', {
+                return h('div', [
+                  h('Spin',{
+                    prop:{
+                      size:'small'
+                    },
+                    style:{
+                      display:hide
+                    }
+                  }),
+                  h('span',{
                   style: {
                     color: '#2A99F2',
                   },
-                }, params.row.filename)
+                },params.row.filename)
+                ])
               }
             }
           },
@@ -776,7 +788,7 @@
                   },
                   on: {
                     click: () => {
-                      this.deleteFile(params.row.id, params.row.filename);//传入文件Id和文件名称删除
+                      this.deleteFile(params.row.id, params.row.filename,params.row._index);//传入文件Id和文件名称删除
                     }
                   }
                 }, "删除")
@@ -803,6 +815,16 @@
           channel: [],
           //白名单
           referer: '0',
+        },
+        //修改自定义数据
+        updateJurisd: {
+          updateWhiteListValue: '',
+          updateReferer: '0',
+          updateInfluenceValue: '',
+          updateSources: '',
+          updateChannel: [],
+          updateGrantValue: '',
+          updateUsers: '',
         },
         //添加自定义权限表单验证
         jurisdRuleValidate: {
@@ -833,7 +855,21 @@
         rightList: [
           {
             key: 'userauthorization',
-            title: '授权用户ID'
+            title: '授权用户ID',
+            render:(h,params) =>{
+              const hide = params.row.hide == 1 ?'inline-block':'none';
+                return h('div',[
+                  h('Spin',{
+                    prop:{
+                      size:'small'
+                    },
+                    style:{
+                      display:hide
+                    }
+                  }),
+                  h('span',{},params.row.userauthorization)
+                ])
+            }
           },
           {
             key: 'resource',
@@ -876,20 +912,20 @@
                     obj.row.userauthorization == '*' ? this.updateJurisd.updateUsers = '0' : this.updateJurisd.updateUsers = '1';
                     this.updateJurisd.updateGrantValue = obj.row.userauthorization;
                     this.inputValue = obj.row.userauthorization;
-                    this.updateJurisd.updateReferer = obj.row.refererip == '1' ? true : obj.row.refererip == '0' ? false : '';
-                    if(obj.row.refereip == '1'){
-                      this.whiteList = true
-                    }else {
-                      this.whiteList = false;
-                    }
+                    //允许白名单是否为空
+                    this.updateJurisd.updateReferer = obj.row.iseffectrefip;
+                    //影响资源
                     this.updateJurisd.updateInfluenceValue = obj.row.resource;
+                    //影响资源操作
                     this.updateJurisd.updateSources = obj.row.iseffectres;
+                    this.updateJurisd.updateChannel = [];
                     let str = '';
                     ['putobject', 'getobject', 'deleteobject', 'listbucket', 'deletebucket'].forEach(name => {
                       if (obj.row[name] == 1) {
                         this.updateJurisd.updateChannel.push(name);
                       }
                     })
+                    console.log( this.updateJurisd.updateChannel);
                     this.updateJurisd.updateWhiteListValue = obj.row.refererip;
                     this.code = obj.row.code;
                     this.usersClick();
@@ -903,25 +939,15 @@
                 },
                 on: {
                   click: () => {
-
-                    this.deleteFromBucketId(obj.row.code);
+                    this.deleteFromBucketId(obj.row.code,obj.row._index);
                   }
                 }
               }, '删除')])
             }
           },
         ],
-        //修改自定义数据
-        updateJurisd: {
-          updateWhiteListValue: '',
-          updateReferer: '0',
-          updateInfluenceValue: '',
-          updateSources: '',
-          updateChannel: [],
-          updateGrantValue: '',
-          updateUsers: '',
-        },
-        //权限列表
+
+        //权限表格数据
         aclData: [],
         //跨域访问规则表单
         formValidate: {
@@ -1022,6 +1048,8 @@
           redirectTwo: '',
           redirectThree: ''
         },
+        //创建时间
+        createtime:'',
         //空间名字
         kjName: '',
         //访问权限
@@ -1035,7 +1063,7 @@
           methods: [],
           allowsHeaders: '',
           ExposeHeaders: '',
-          maxAge: 100
+          maxAge: 0
         },
         addCorsFormValidateL: {
           orgins: [
@@ -1096,7 +1124,8 @@
         corsid:'',
         //默认域名
         defaultDomain:'',
-        custom:''
+        custom:'',
+
       }
     },
     methods: {
@@ -1272,7 +1301,8 @@
       //创建文件夹
       createFlies() {
         var name = sessionStorage.getItem("bucketName");
-        let obj = {filename:'创建中'};
+        this.floder = false;
+        let obj = {filename:'创建中',filesize:'0',hide:1};
         this.fileData.push(obj);
         this.$refs.createF.validate((valid) => {
           if (valid) {
@@ -1285,19 +1315,24 @@
           .then(res => {
             if (res.data.status == "1") {
               this.$Message.success("新建成功");
-              let id = res.data.data.dirList[0].dirId;
+              let id = res.data.data.currentDir.dirId;
+              // this.floder = false;
               this.filesList(id);
             } else {
-              this.$Message.error(res.data.msg);
+              this.$Message.info('平台开小差了');
+              this.filesList();
             }
           });
           }
         })
       },
       //删除文件
-      deleteFile(id, filename) {
+      deleteFile(id, filename,index) {
         // console.log(id);
         var name = sessionStorage.getItem("bucketName");
+        let obj = {filename:'删除中',filesize:'0',hide:1};
+        this.fileData.splice(index,1);
+        this.fileData.splice(index,1,obj);
         this.$http.post('object/deleteObject.do', {
           bucketName: name,
           fileName: filename,
@@ -1309,6 +1344,7 @@
             this.getAllsize();
           } else {
             this.$Message.error(res.data.msg);
+            this.filesList();
           }
         })
       },
@@ -1319,7 +1355,7 @@
           this.updateJurisd.updateGrantValue = '*';
         } else {
           this.updategrant = false;
-          this.updateJurisd.updateGrantValue = this.inputValue;
+          this.updateJurisd.updateGrantValue = this.inputValue == "*" ?'' : this.inputValue;
         }
         if (this.jurisdValidate.users == '0') {
           this.grant = true;
@@ -1334,8 +1370,11 @@
       jurisdictionClick() {
         this.$refs.jurisdValidate.validate((valid) => {
           if(valid){
+            this.jurisdiction = false;
             var name = sessionStorage.getItem("bucketName");
             var bucketId = sessionStorage.getItem('bucketId');
+            let obj = {userauthorization:'创建中',hide:1};
+            this.aclData.push(obj);
             this.$http.post('bucketAcl/createCustomAcl.do', {
               bucketName: name,
               bucketId: bucketId,
@@ -1355,7 +1394,6 @@
             })
           }
         })
-
       },
       //获取权限列表
       selectAclAll() {
@@ -1420,8 +1458,11 @@
       /**
        * 删除权限
        */
-      deleteFromBucketId(code) {
+      deleteFromBucketId(code,index) {
         var name = sessionStorage.getItem("bucketName");
+        let obj = {userauthorization:'删除中',hide:1};
+        this.aclData.splice(index,1);
+        this.aclData.splice(index,1,obj);
         this.$http.post('bucketAcl/deleteFromBucketId.do', {
           bucketName: name,
           code: code
@@ -1435,10 +1476,14 @@
         })
       },
       //修改自定义权限
-      jurisdUpdateClick(code) {
-        this.$refs.updateJurisd.validate((valid) => {
+      jurisdUpdateClick() {
+        this.$refs.updateJurisds.validate((valid) => {
+          console.log(valid);
           if(valid){
+            this.updateDiction = false;
             var name = sessionStorage.getItem("bucketName");
+            let obj = {userauthorization:'修改中',hide:1};
+            this.aclData.push(obj);
             this.$http.post('bucketAcl/updateFromCode.do', {
               bucketName: name,
               code: this.code,
@@ -1499,22 +1544,6 @@
         this.filesList(this.fileData.id)
 
       },
-      disble(val){
-        if(val == '0'){
-          this.whiteList = true;
-          this.jurisdValidate.whiteListValue = '';
-        }else{
-          this.whiteList = false
-        }
-      },
-      disbleUpdate(val){
-          if(!val){
-            this.whiteListUpdate = true;
-            this.jurisdValidate.whiteListValue = '';
-          }else {
-            this.whiteListUpdate = false;
-          }
-      },
       //获取空间详情
       // bucketDetails() {
       //
@@ -1536,11 +1565,9 @@
         this.fileObject.pop();
         this.filesList(null);
       },
+      //复制文件外链路径
       copyUrl(){
         this.$refs.copy.focus();
-        // this.$refs.copy.select();
-        // this.fliesTerm
-        // this.$refs.copy.setSelectionRange(0,  this.$refs.copy.value.length)
        console.log(this.$refs.copy);
          document.execCommand('copy')
         try {
@@ -1555,6 +1582,10 @@
           }
         }
       },
+      //打开文件外链路径
+      openUrl(){
+        window.open(this.fliesTerm);
+      },
       //获取默认域名
       getCustom(){
         this.$http.post('user/getCustom.do',{
@@ -1566,8 +1597,45 @@
             this.domain.route = response.data.data.custom;
           }
         })
+      },
+      //累赘三号号函数：打开新建文件夹弹窗，清空值
+      floderCLick(){
+        this.floder = true;
+        this.createFile.flies = '';
+      },
+      //累赘一号函数：打开添加自定义权限弹窗，清空值
+      openJurisdiction(){
+        this.jurisdiction = true;
+        this.jurisdValidate = {
+          grantValue: '*',
+            //影响资源输入框的值
+            influenceValue: '',
+            //referer白名单输入框的值
+            whiteListValue: '',
+            //用户授权
+            users: '0',
+            //影响资源
+            sources: '0',
+            //密码接收渠道
+            channel: [],
+            //白名单
+            referer: '0',
+        }
+      },
+      //累赘二号函数：打开CROS规则配置弹窗，清空值
+      openCros(){
+        this.cors = true;
+        this.addCorsForm= {
+          orgins: '',
+            methods: [],
+            allowsHeaders: '',
+            ExposeHeaders: '',
+            maxAge: 0
+        }
+      },
+      changes(){
+        console.log(this.updateJurisd.updateChannel);
       }
-
     },
     created(){
       this.bucketName = sessionStorage.getItem('bucketName');
@@ -1575,9 +1643,9 @@
       this.filesList();
       this.selectAclAll();
       this.getAllsize();
-      this.disble('0');
       this.selectCors();
       this.getCustom();
+      this.createtime = sessionStorage.getItem('createtime');
       this.kjName = sessionStorage.getItem('bucketName');
       this.kjaccessrights = sessionStorage.getItem('accessrights') == 1 ? '私有读写' : sessionStorage.getItem('accessrights') == 2 ? '公有读私有写' : sessionStorage.getItem('accessrights') == 3 ? '公有读写' : '自定义权限';
     }

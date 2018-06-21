@@ -121,7 +121,7 @@ export default {
                   },
                   on: {
                     click() {
-                      self.bucketDelete(parasm.row.name);
+                      self.bucketDelete(parasm.row.name,parasm.row._index);
                     }
                   }
                 },
@@ -139,6 +139,7 @@ export default {
                       sessionStorage.setItem("bucketName", parasm.row.name);
                       sessionStorage.setItem('bucketId',parasm.row.id);
                       sessionStorage.setItem('accessrights',parasm.row.accessrights)
+                      sessionStorage.setItem('createtime',parasm.row.createtime);
                       this.$router.push({ path: "SpaceDetails" });
                     }
                   }
@@ -211,7 +212,10 @@ export default {
       });
     },
     //删除空间
-    bucketDelete(name) {
+    bucketDelete(name,index) {
+      let object = {name:'删除中',hide:1,createtime:'————',operation:'————',accessrights:'————'};
+      this.spaceData.splice(index,1);
+      this.spaceData.push(object);
       this.$http
         .post(
           "bucket/deleteByBucketName.do",
@@ -221,8 +225,8 @@ export default {
         )
         .then(res => {
           if (res.data.status == "1") {
-            this.$Message.success("删除成功");
             this.getBuckets();
+            this.$Message.success("删除成功");
           } else {
             this.$Message.error(res.data.msg);
           }
