@@ -18,7 +18,7 @@
           <p>专业的云数据库服务，支持Mysql、SQL Server、PostgreSQL、MangoDB引擎，提供简易方便的Web界面管理、可靠的数据备份和恢复、完备的安全管理、完善的监控等功能。</p>
         </div>
         <div class="operator-bar">
-          <Button type="primary" @click="createOrder">
+          <Button type="primary" @click="createDatabase">
             <!-- <router-link to="/ruicloud/buy" style="color:#fff">创建云数据库</router-link> -->
             创建云数据库
           </Button>
@@ -185,12 +185,27 @@
         <span class="universal-modal-title">调整容量</span>
       </p>
       <div class="universal-modal-content-flex">
-
-
+        <Form :model="dilatationForm">
+          <Form-item label="扩容后容量" style="width:100%;user-select: none">
+            <i-slider
+              v-model="dilatationForm.databaseSize"
+              unit="G"
+              :min="dilatationForm.minDatabaseSize"
+              :max=1000
+              :step=10
+              :points="[250,500]"
+              style="width:300px;vertical-align: middle;">
+            </i-slider>
+            <InputNumber :max="1000" :min="dilatationForm.minDatabaseSize" v-model="dilatationForm.databaseSize" :step=10
+                         :editable="false"
+                         style="margin-left: 20px"></InputNumber>
+            <span style="margin-left: 10px">GB</span>
+          </Form-item>
+        </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <div style="font-size:16px;">
-          资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{dilatationCost}}/</span></span>
+        <div style="font-size:16px;float:left">
+          资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;"><span style="font-size:24px;">￥{{dilatationCost}}</span></span>
         </div>
         <Button type="ghost" @click="showModal.dilatation = false">取消</Button>
         <Button type="primary" @click="dilatationok" :disabled="dilatationCost=='--'">确认调整</Button>
@@ -232,6 +247,7 @@
                 },
                 on: {
                   click: () => {
+                    sessionStorage.setItem('databaseID', params.row.computerid)
                     this.$router.push({
                       path: 'cloudDataManage',
                       query: {
@@ -395,7 +411,11 @@
                 }, '重启数据库'), h('DropdownItem', {
                   nativeOn: {
                     click: () => {
-                      this.showModal.renewal = true
+                      if (params.row.caseType == 3) {
+                        this.$Message.info('请选择包年包月的云数据库进行续费')
+                      } else {
+                        this.showModal.renewal = true
+                      }
                     }
                   }
                 }, '数据库续费'),])
@@ -451,6 +471,10 @@
         originCost: '--',
         cost: '--',
         dilatationCost: '--',
+        dilatationForm: {
+          databaseSize: 0,
+          minDatabaseSize: 0
+        },
         renewalType: '',
         renewalTime: '',
         timeOptions: {
@@ -478,7 +502,7 @@
       })
       Promise.all([dataBaseResponse]).then((ResponseValue) => {
         next(vm => {
-          vm.listMirror()
+          // vm.listMirror()
           vm.setDataBases(ResponseValue[0])
         })
       })
@@ -515,6 +539,10 @@
           this.dataBaseData = response.data.result
         }
       },
+      createDatabase() {
+        sessionStorage.setItem('pane', 'Pdatabase')
+        this.$router.push('buy')
+      },
       listDatabase() {
         this.$http.get('database/listDB.do').then(res => {
           if (res.status == 200 && res.data.status == 1) {
@@ -522,51 +550,51 @@
           }
         })
       },
-      listMirror() {
-        var params = {
-          zoneId: $store.state.zone.zoneid,
-        }
-        axios.get('database/listDbTemplates.do', {params}).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            var mirrorlist = []
-            mirrorlist = response.data.result.map(item => {
-              return item.systemtemplateid
-            })
-            this.templateid = mirrorlist.join()
-            // console.log(mirrorlist)
-            // this.$router.push('order')
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
-      },
-      createOrder() {
-        var params = {
-          zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
-          templateId: this.templateid,
-          bandWidth: 2,
-          timeType: 'current',
-          timeValue: 1,
-          isAutoRenew: 0,
-          count: 1,
-          cpuNum: 1,
-          memory: 1,
-          networkId: 'd5155543-1859-40ff-ac1f-21f4829493d7',
-          rootDiskType: 'sas',
-          vpcId: 'e0d7bef1-3b81-4afb-a36c-ee3aff28baf7',
-        }
-        axios.get('database/createDB.do', {params}).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('order')
-          } else {
-            this.$message.info({
-              content: response.data.message
-            })
-          }
-        })
-      },
+      /*      listMirror() {
+              var params = {
+                zoneId: $store.state.zone.zoneid,
+              }
+              axios.get('database/listDbTemplates.do', {params}).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  var mirrorlist = []
+                  mirrorlist = response.data.result.map(item => {
+                    return item.systemtemplateid
+                  })
+                  this.templateid = mirrorlist.join()
+                  // console.log(mirrorlist)
+                  // this.$router.push('order')
+                } else {
+                  this.$message.info({
+                    content: response.data.message
+                  })
+                }
+              })
+            },
+            createOrder() {
+              var params = {
+                zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
+                templateId: this.templateid,
+                bandWidth: 2,
+                timeType: 'current',
+                timeValue: 1,
+                isAutoRenew: 0,
+                count: 1,
+                cpuNum: 1,
+                memory: 1,
+                networkId: 'd5155543-1859-40ff-ac1f-21f4829493d7',
+                rootDiskType: 'sas',
+                vpcId: 'e0d7bef1-3b81-4afb-a36c-ee3aff28baf7',
+              }
+              axios.get('database/createDB.do', {params}).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$router.push('order')
+                } else {
+                  this.$message.info({
+                    content: response.data.message
+                  })
+                }
+              })
+            },*/
       beforePortModify() {
         this.showModal.beforePortModify = false
         this.showModal.portModify = true
