@@ -362,23 +362,23 @@
                 }, '更多操作'), h('DropdownMenu', {
                   slot: 'list'
                 }, [/*h('DropdownItem', {
-               nativeOn: {
-               click: () => {
-               this.backupsForm.name = ''
-               this.backupsForm.memory = 1
-               this.showModal.backups = true
-               }
-               }
-               }, '数据库备份'),*//* h('DropdownItem', {
-               nativeOn: {
-               click: () => {
-               this.mirrorForm.name = ''
-               this.mirrorForm.description = ''
-               this.current = params.row
-               this.showModal.mirror = true
-               }
-               }
-               }, '数据库镜像'),*/ h('DropdownItem', {
+                 nativeOn: {
+                 click: () => {
+                 this.backupsForm.name = ''
+                 this.backupsForm.memory = 1
+                 this.showModal.backups = true
+                 }
+                 }
+                 }, '数据库备份'),*//* h('DropdownItem', {
+                 nativeOn: {
+                 click: () => {
+                 this.mirrorForm.name = ''
+                 this.mirrorForm.description = ''
+                 this.current = params.row
+                 this.showModal.mirror = true
+                 }
+                 }
+                 }, '数据库镜像'),*/ h('DropdownItem', {
                   nativeOn: {
                     click: () => {
 

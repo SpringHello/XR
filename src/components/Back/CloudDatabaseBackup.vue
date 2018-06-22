@@ -21,10 +21,6 @@
               <Button type="primary" @click="showModal.newSnapshot = true">制作备份</Button>
               <Button type="primary" @click="deleteBackup" style="margin-left: 10px">删除备份</Button>
               <Table style="margin-top:10px;" :columns="backupColumns" :data="backupData"></Table>
-              <div style="width:629px;margin-top: 20px">
-                <p>开发备注：用户在开机状态下制作的备份文件默认保存内存信息，只能在开机状态下回滚。若用户在关机状态下进行回滚操作，需要提示用户：</p>
-                <p>您所选的快照文件包含内存状态，只能在主机开机状态下回滚，请开启主机之后重试。 </p>
-              </div>
             </Tab-pane>
             <Tab-pane label="云数据库备份策略" name="Strategy">
               <Button type="primary" @click="showModal.newStrategy = true">创建备份策略</Button>
@@ -212,6 +208,7 @@
 <script type="text/ecmascript-6">
   import regExp from '../../util/regExp'
   import $store from '@/vuex'
+  import axios from '../../util/axiosInterceptor'
   export default {
     data() {
       return {

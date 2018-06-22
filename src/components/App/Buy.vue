@@ -1519,6 +1519,9 @@
             case 'Peip':
               vm.product.currentProduct = 'Peip'
               break
+            case 'Pdatabase':
+              vm.product.currentProduct = 'Pdata'
+              break
           }
           sessionStorage.removeItem('pane')
         }
