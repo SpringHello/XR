@@ -145,14 +145,14 @@
                 </div>
               </div>
             </Tab-pane>
-            <TabPane label="快照管理" name="name2">
+            <TabPane label="备份管理" name="name2">
               <div class="body">
                 <Button type="primary" @click="delSnapshot" style="margin-bottom:10px">删除快照</Button>
                 <Table ref="selection" :columns="snapshotCol" :data="snapshotData"
                        @radio-change="changeSelection"></Table>
               </div>
             </TabPane>
-            <Tab-pane label="主机设置">
+            <Tab-pane label="修改密码">
               <div class="body">
                 <label>重置密码</label>
                 <Form ref="resetPasswordForm" :model="resetPasswordForm" label-position="left" :label-width="100"
@@ -174,48 +174,6 @@
                     <Button type="primary" size="small" @click="resetConfirm('resetPasswordForm')">
                       {{resetPasswordForm.buttonMessage}}
                     </Button>
-                  </Form-item>
-                </Form>
-                <label>重装系统</label>
-                <Form :model="reloadForm" :label-width="100" label-position="left" style="margin-top:20px;width:350px;">
-                  <Form-item label="选择镜像">
-                    <Select v-model="reloadForm.system">
-                      <OptionGroup label="ubuntu" v-show="osOptions.ubuntu.length>0">
-                        <Option v-for="(item,index) in osOptions.ubuntu" :key="index" :value="item.systemtemplateid">
-                          {{item.templatename}}
-                        </Option>
-                      </OptionGroup>
-                      <OptionGroup label="window" v-show="osOptions.window.length>0">
-                        <Option v-for="(item,index) in osOptions.window" :key="index" :value="item.systemtemplateid">
-                          {{item.templatename}}
-                        </Option>
-                      </OptionGroup>
-                      <OptionGroup label="centos" v-show="osOptions.centos.length>0">
-                        <Option v-for="(item,index) in osOptions.centos" :key="index" :value="item.systemtemplateid">
-                          {{item.templatename}}
-                        </Option>
-                      </OptionGroup>
-                      <OptionGroup label="debian" v-show="osOptions.debian.length>0">
-                        <Option v-for="(item,index) in osOptions.debian" :key="index" :value="item.systemtemplateid">
-                          {{item.templatename}}
-                        </Option>
-                      </OptionGroup>
-                    </Select>
-                  </Form-item>
-                  <Form-item label="账号密码">
-                    <Input v-model="reloadForm.password" placeholder="请输入平台账号密码" type="password"></Input>
-                    <input type="text" style="display:none">
-                  </Form-item>
-                  <p
-                    style="font-size: 14px;color: rgba(-2147483648,-2147483648,-2147483648,0.43);line-height: 18px;margin-bottom:15px;">
-                    *提示：重装主机后，将无法找回系统盘数据， 数据盘需要重新挂载。请按照
-                    <router-link to="overview">帮助中心</router-link>
-                    中的指导说明进行。
-                  </p>
-                  <Form-item>
-                    <Button v-if="reloadButton=='确认重装'" type="primary" size="small" @click="reload">{{reloadButton}}
-                    </Button>
-                    <Button v-else type="primary" size="small" disabled>{{reloadButton}}</Button>
                   </Form-item>
                 </Form>
               </div>
@@ -247,26 +205,6 @@
                 </div>
               </div>
             </Tab-pane>
-            <!-- <Tab-pane label="网卡设置">
-              <div class="body">
-                <label style="border-bottom:none">网卡设置</label>
-                <div>
-                  <button>绑定网卡</button>
-                  <button>解绑网卡</button>
-                  <button>修改内网IP</button>
-                  <button>删除</button>
-                  <div style="float:right">
-                    <span
-                      style="font-size: 16px;vertical-align: middle;color: rgba(0,0,0,0.65);">开始结束时间&nbsp;&nbsp;</span>
-                    <Date-picker :value="searchDate" format="yyyy-MM-dd" type="daterange" placement="bottom-end"
-                                 placeholder="选择日期" style="width: 200px"></Date-picker>
-                    <button>查询</button>
-                  </div>
-                </div>
-
-                <Table :columns="columns" :data="tableData"></Table>
-              </div>
-            </Tab-pane> -->
           </Tabs>
         </div>
       </div>
@@ -365,23 +303,6 @@
           <Button type="primary" @click="rollbackSubmit">确定</Button>
         </p>
       </Modal>
-      <!-- 确认系统重装弹窗 -->
-      <Modal v-model="showModal.reload" :scrollable="true" :closable="false" :width="390">
-        <div class="modal-content-s">
-          <Icon type="android-alert" class="yellow f24 mr10"></Icon>
-          <div>
-            <strong>警告</strong>
-            <p class="lh24">为了数据安全，系统重装之前主机会自动关闭。重装结束后，主机会自动开机。</p>
-            <p>请输入“confirm”</p>
-            <Input v-model="reloadhintForm.input" placeholder="请输入“confirm”"
-                   style="width: 300px;margin-top: 10px;"></Input>
-          </div>
-        </div>
-        <p slot="footer" class="modal-footer-s">
-          <Button @click="showModal.reload=false">取消</Button>
-          <Button type="primary" @click="reloadSubm" :disabled="reloadhintForm.input!='confirm'">确定</Button>
-        </p>
-      </Modal>
       <!-- 删除快照弹窗 -->
       <Modal v-model="showModal.delsnaps" :scrollable="true" :closable="false" :width="390">
         <div class="modal-content-s">
@@ -471,10 +392,10 @@ export default {
       hostName: '',
       hostCreatetime: '',
       cursnapshot: null,
-      CPUTime: '',
-      diskTime: '',
-      memoryTime: '',
-      IPTime: '',
+      CPUTime: this.getCurrentDate(),
+      diskTime: this.getCurrentDate(),
+      memoryTime: this.getCurrentDate(),
+      IPTime: this.getCurrentDate(),
       showPassword: false,
       computerInfo: null,
       reloadhintForm: {
@@ -584,7 +505,7 @@ export default {
       log: {
         type: '近一天'
       },
-      logTime: '',
+      logTime: this.getCurrentDate() + ',' + this.getTomorrow(),
       target: 'host',
       currentPage: 1,
       pageSize: 10,
@@ -819,80 +740,6 @@ export default {
     }
   },
   created () {
-    // if (sessionStorage.getItem('oneHostinfo')) {
-    //   this.computerInfo = JSON.parse(sessionStorage.getItem('oneHostinfo'))
-    // }
-    this.snapsId = this.$route.query.vmid
-    axios.get('information/listVMByComputerId.do', {
-      params: {
-        VMId: this.$route.query.vmid,
-        zoneId: this.$route.query.zoneid
-      }
-    })
-      .then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.computerInfo = response.data.result
-          axios.get('information/listTemplates.do', {
-            params: {
-              //osType: this.computerInfo.computerOsType,
-              zoneId: this.$route.query.zoneid
-            }
-          })
-            .then((response) => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.osOptions = response.data.result
-              }
-            })
-        }
-      })
-    this.$http.get('alarm/getVmAlarmByHour.do', {
-      params: {
-        vmname: this.$route.query.instancename,
-        type: 'core'
-      }
-    })
-      .then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          // this.cpuPolar.series[0].data = response.data.result.cpuUse
-          // this.diskPolar.series[0].data = response.data.result.diskUse
-          // this.memoryPolar.series[0].data = response.data.result.memoryUse
-          this.cpuPolar.series[0].data = [0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 0, 0, 70, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          this.diskPolar.series[0].data = [0, 0, 0, 70, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          this.memoryPolar.series[0].data = [0, 0, 0, 0, 0, 0, 80, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          this.cpuPolar.xAxis.data = response.data.result.xaxis
-          this.diskPolar.xAxis.data = response.data.result.xaxis
-          this.memoryPolar.xAxis.data = response.data.result.xaxis
-        }
-      })
-    // var url2 = `network/listNetworkByVM.do?vmid=${this.$route.query.vmid}`
-    // this.$http.get(url2)
-    //   .then(response => {
-    //     if (response.status == 200 && response.data.status == 1) {
-    //       this.tableData = response.data.result
-    //     }
-    //   })
-    this.$http.get('alarm/getVmAlarmByHour.do', {
-      params: {
-        vmname: this.$route.query.instancename,
-        type: 'network'
-      }
-    })
-      .then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          // this.ipPolar.series[0].data = response.data.result.networkIn
-          this.ipPolar.series[0].data = [0, 0, 0, 70, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-          this.ipPolar.series[1].data = response.data.result.networkOut
-          this.ipPolar.xAxis.data = response.data.result.xaxis
-        }
-      })
-    this.CPUTime = this.getCurrentDate()
-    this.diskTime = this.getCurrentDate()
-    this.memoryTime = this.getCurrentDate()
-    this.IPTime = this.getCurrentDate()
-    this.logTime = this.getCurrentDate() + ',' + this.getTomorrow()
-    this.getsnapsList()
-    // this.inter()
-    this.search()
   },
   methods: {
     inter () {
