@@ -32,7 +32,7 @@
           </div>
         </div>
 
-        <p style="margin-top:20px;">当月用量 2018/04/28-2018</p>
+        <!--<p style="margin-top:20px;">当月用量 2018/04/28-2018</p>-->
         <div class="center_space">
           <div class="space_Two">
             <p>存储空间容量</p>
@@ -106,47 +106,47 @@
                 <Table :columns="corstList" :data="corsData"></Table>
               </div>
             </div>
-            <br>
-            <div>
-              <div>
-                <div style="font-size:18px;color:#333333;display: inline-block">静态网站托管</div>
-                <span style="float:right" class="down" :class="{downlower:staticHide}" @click="corsLower('static')">
-                  {{staticHide?'收起':'展开'}}
-                </span>
-              </div>
-              <div v-if="staticHide">
-                <div class="text-boy">
-                  新睿云对象存储支持将自己的存储空间配置成静态网站托管模式，启动静态网站托管模式后，请通过XXXXX（域名）或您绑定的自定义域名进行访问。
-                </div>
-                <p style="color:#999999;font-size:14px;">
-                  提示：静态网站托管的默认index页配置在具有公有读取权限的Bucket下生效，自定义错误页和访问重定向在全部权限的Bucket下生效。</p>
-                <Form ref="crossDomain" :model="crossDomain" :label-width="100">
-                  <FormItem label="自定义">
-                    <Input style="width:317px;" v-model="crossDomain.custom"></Input>
-                    <p>请输入浏览器能够识别的文件作为自定义index页的文件名，为空则不启用自定义index页设置，不允许输入/.</p>
-                  </FormItem>
-                  <FormItem label="自定义错误页">
-                    <Input style="width:317px;" v-model="crossDomain.errorPage"></Input>
-                    <p>请输入浏览器能够识别的文件作为自定义错误页的文件名，为空则不启用自定义错误页设置</p>
-                  </FormItem>
-                  <FormItem label="访问重定向配置">
-                    <div style="background-color:#F7F7F7;width:317px;height: 144px;padding:20px 13px">
-                      <div>
-                        400<Input style="width:260px;" v-model="crossDomain.redirectOne"></Input>
-                      </div>
-                      <div>
-                        403<Input style="width:260px;" v-model="crossDomain.redirectTwo"></Input>
-                      </div>
-                      <div>
-                        404<Input style="width:260px;" v-model="crossDomain.redirectThree"></Input>
-                      </div>
-                    </div>
-                    <p>请输入遇到4XX错误时需要重定向到的完整目标域（支持域名或IP格式，可带端口号），为空则不启用重定向设置</p>
-                  </FormItem>
-                </Form>
-                <Button type="primary" style="margin:20px  0 0 102px;" @click="up">保存设置</Button>
-              </div>
-            </div>
+            <!--<br>-->
+            <!--<div>-->
+              <!--<div>-->
+                <!--<div style="font-size:18px;color:#333333;display: inline-block">静态网站托管</div>-->
+                <!--<span style="float:right" class="down" :class="{downlower:staticHide}" @click="corsLower('static')">-->
+                  <!--{{staticHide?'收起':'展开'}}-->
+                <!--</span>-->
+              <!--</div>-->
+              <!--<div v-if="staticHide">-->
+                <!--<div class="text-boy">-->
+                  <!--新睿云对象存储支持将自己的存储空间配置成静态网站托管模式，启动静态网站托管模式后，请通过XXXXX（域名）或您绑定的自定义域名进行访问。-->
+                <!--</div>-->
+                <!--<p style="color:#999999;font-size:14px;">-->
+                  <!--提示：静态网站托管的默认index页配置在具有公有读取权限的Bucket下生效，自定义错误页和访问重定向在全部权限的Bucket下生效。</p>-->
+                <!--<Form ref="crossDomain" :model="crossDomain" :label-width="100">-->
+                  <!--<FormItem label="自定义">-->
+                    <!--<Input style="width:317px;" v-model="crossDomain.custom"></Input>-->
+                    <!--<p>请输入浏览器能够识别的文件作为自定义index页的文件名，为空则不启用自定义index页设置，不允许输入/.</p>-->
+                  <!--</FormItem>-->
+                  <!--<FormItem label="自定义错误页">-->
+                    <!--<Input style="width:317px;" v-model="crossDomain.errorPage"></Input>-->
+                    <!--<p>请输入浏览器能够识别的文件作为自定义错误页的文件名，为空则不启用自定义错误页设置</p>-->
+                  <!--</FormItem>-->
+                  <!--<FormItem label="访问重定向配置">-->
+                    <!--<div style="background-color:#F7F7F7;width:317px;height: 144px;padding:20px 13px">-->
+                      <!--<div>-->
+                        <!--400<Input style="width:260px;" v-model="crossDomain.redirectOne"></Input>-->
+                      <!--</div>-->
+                      <!--<div>-->
+                        <!--403<Input style="width:260px;" v-model="crossDomain.redirectTwo"></Input>-->
+                      <!--</div>-->
+                      <!--<div>-->
+                        <!--404<Input style="width:260px;" v-model="crossDomain.redirectThree"></Input>-->
+                      <!--</div>-->
+                    <!--</div>-->
+                    <!--<p>请输入遇到4XX错误时需要重定向到的完整目标域（支持域名或IP格式，可带端口号），为空则不启用重定向设置</p>-->
+                  <!--</FormItem>-->
+                <!--</Form>-->
+                <!--<Button type="primary" style="margin:20px  0 0 102px;" @click="up">保存设置</Button>-->
+              <!--</div>-->
+            <!--</div>-->
           </TabPane>
         </Tabs>
       </div>
@@ -157,6 +157,7 @@
       v-model="mainName"
       title="自定义外网访问域名"
       :scrollable='true'
+      :mask-closable="false"
     >
       <Form ref="domain" :model="domain" :rules="domainValiDate" label-position="top">
         <FormItem label="自定义外网域名" prop="route" >
@@ -173,6 +174,7 @@
       v-model="modal1"
       title="上传文件"
       :scrollable='true'
+      :mask-closable="false"
     >
       <p style="font-size:14px;color:#999999;line-height: 20px;">控制台上传单个文件大小不超过1GB，如需上传更大的文件请使用新睿云对象存储提供的<span
         style="color:#2A9AF3;cursor:pointer;">API</span></p>
@@ -197,13 +199,13 @@
         name="uploadFile"
         :data="fileUpdata"
         type="drag"
-        action="object/uploadObject.do"
+        action="http://192.168.3.109:8080/ruirados/object/uploadObject.do"
         class="upload_model"
       >
         <div class="upload_text">
           <Icon type="ios-upload-outline"></Icon>
           <span>选择文件</span>
-          <p style="margin-top:10px;color:#999999;">批量上传单词最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>
+          <p style="margin-top:10px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>
         </div>
       </Upload>
     </Modal>
@@ -212,6 +214,7 @@
       v-model="floder"
       title="新建文件夹"
       :scrollable='true'
+      :mask-closable="false"
     >
       <div class="space_folder">
         <Form ref="createF" :model="createFile" :rules="createFilesValiDate" label-position="top">
@@ -232,6 +235,7 @@
       v-model="outerChain"
       title="查看外链"
       :scrollable='true'
+      :mask-closable="false"
     >
       <div class="space_wailian">
         <div style="text-align: right;">
@@ -263,6 +267,7 @@
       title="添加自定义权限"
       :scrollable='true'
       width="550px"
+      :mask-closable="false"
     >
       <div class="jurisd">
         <div>Bucket名称：{{bucketName}}</div>
@@ -302,15 +307,13 @@
             <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
           </div>
         </FormItem>
-        <FormItem>
-          <div style="width:366px;display:flex;">
+        <FormItem prop="whiteListValue">
+          <div style="width:366px;display:flex;" >
             <div style="width:115px;font-size:14px;color:#333333;">Referer白名单</div>
             <div style="width:300px;">
-              <Checkbox true-value="1" false-value="0" v-model="jurisdValidate.referer">允许白名单为空</Checkbox>
+              <Checkbox @on-change="changes" true-value="1" false-value="0" v-model="jurisdValidate.referer">允许白名单为空</Checkbox>
             </div>
           </div>
-        </FormItem>
-        <FormItem prop="whiteListValue">
           <Input  v-model="jurisdValidate.whiteListValue" style="width:420px;" :rows="4" type="textarea"/>
           <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
         </FormItem>
@@ -327,6 +330,7 @@
       title="添加自定义权限"
       :scrollable='true'
       width="550px"
+      :mask-closable="false"
     >
      <pre style="background-color:#FDF6E3;">
        <code></code>
@@ -339,6 +343,7 @@
       title="修改自定义权限"
       :scrollable='true'
       width="550px"
+      :mask-closable="false"
     >
       <div class="jurisd">
         <div>Bucket名称：{{bucketName}}</div>
@@ -400,7 +405,7 @@
 
 
     <!-- Cros规则配置 -->
-    <Modal v-model="cors" width="550" :scrollable="true" style="top:50px">
+    <Modal v-model="cors" width="550" :scrollable="true" style="top:50px"  :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">跨域访问CRORS添加规则</span>
       </p>
@@ -444,7 +449,7 @@
     </Modal>
 
     <!--修改CROS规则配置-->
-    <Modal v-model="updateCors" width="550" :scrollable="true" style="top:50px">
+    <Modal v-model="updateCors" width="550" :scrollable="true" style="top:50px"  :mask-closable="false">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">跨域访问CRORS添加规则</span>
       </p>
@@ -490,7 +495,8 @@
       v-model="corsedit"
       title="添加自定义权限"
       :scrollable='true'
-      width="550px">
+      width="550px"
+      :mask-closable="false">
      <pre style="background-color:#FDF6E3;">
        <code></code>
      </pre>
@@ -511,6 +517,18 @@
         callback();
       }
   };
+  const validRed = (rule,value,callback)=>{
+    console.log(rule);
+   if(rule.field == 'whiteListValue'){
+     if (value == '') {
+       return callback(new Error("请输入白名单"));
+     }else{
+       callback();
+     }
+   }else{
+     callback();
+   }
+  }
   export default {
     data() {
       return {
@@ -520,9 +538,7 @@
           route:''
         },
         domainValiDate:{
-          route:[
-            {required:true,validator:validRoute,trigger:'blur'}
-          ]
+
         },
         domainLodaing:false,
         //自定义权限表格加载
@@ -771,6 +787,9 @@
           ],
           influenceValue: [
             {required: true, message: '请输入影响资源', trigger: 'blur'},
+          ],
+          whiteListValue:[
+            {required: true,validator:validRed, trigger: 'blur'},
           ]
         },
         updateJurisdValid:{
@@ -1063,7 +1082,6 @@
         //默认域名
         defaultDomain:'',
         custom:'',
-
       }
     },
     methods: {
@@ -1187,14 +1205,14 @@
       },
       //上传文件成功的方法
       handleSuccess(response) {
+        console.log(response);
         if (response.status == '1') {
           this.$Message.success('上传成功');
-          this.filesList();
+          this.filesList(this.fileUpdata.dirId);
           this.getAllsize();
         } else {
           this.$Message.info(response.msg);
         }
-        console.log(this.fileUpdata);
       },
       //文件上传失败
       handleError(error) {
@@ -1268,7 +1286,6 @@
       },
       //删除文件
       deleteFile(id, filename,index) {
-        // console.log(id);
         var name = sessionStorage.getItem("bucketName");
         let obj = {filename:'删除中',filesize:'0',hide:1};
         this.fileData.splice(index,1);
@@ -1280,11 +1297,11 @@
         }).then(res => {
           if (res.data.status == "1") {
             this.$Message.success('删除成功');
-            this.filesList();
+            this.filesList(this.fileUpdata.dirId);
             this.getAllsize();
           } else {
             this.$Message.info(res.data.msg);
-            this.filesList();
+            this.filesList(this.fileUpdata.dirId);
           }
         })
       },
@@ -1310,29 +1327,30 @@
       jurisdictionClick() {
         this.$refs.jurisdValidate.validate((valid) => {
           if(valid){
-            this.jurisdiction = false;
-            var name = sessionStorage.getItem("bucketName");
-            var bucketId = sessionStorage.getItem('bucketId');
-            let obj = {userauthorization:'创建中',hide:1};
-            this.aclData.push(obj);
-            this.$http.post('bucketAcl/createCustomAcl.do', {
-              bucketName: name,
-              bucketId: bucketId,
-              objectNames: this.jurisdValidate.influenceValue,
-              isOperation: this.jurisdValidate.sources.toString(),
-              customPermission: this.jurisdValidate.channel,
-              isReferer: this.jurisdValidate.referer,
-              refereIp: this.jurisdValidate.whiteListValue,
-              userAuths: this.jurisdValidate.grantValue
-            }).then(res => {
-              if (res.data.status == '1') {
-                this.$Message.success('添加自定义权限成功');
-                this.selectAclAll();
-              } else {
-                this.$Message.info('平台出小差了');
-              }
-            })
-          }
+            // console.log(this.jurisdValidate);
+              this.jurisdiction = false;
+              var name = sessionStorage.getItem("bucketName");
+              var bucketId = sessionStorage.getItem('bucketId');
+              let obj = {userauthorization:'创建中',hide:1};
+              this.aclData.push(obj);
+              this.$http.post('bucketAcl/createCustomAcl.do', {
+                bucketName: name,
+                bucketId: bucketId,
+                objectNames: this.jurisdValidate.influenceValue,
+                isOperation: this.jurisdValidate.sources.toString(),
+                customPermission: this.jurisdValidate.channel,
+                isReferer: this.jurisdValidate.referer,
+                refereIp: this.jurisdValidate.whiteListValue,
+                userAuths: this.jurisdValidate.grantValue
+              }).then(res => {
+                if (res.data.status == '1') {
+                  this.$Message.success('添加自定义权限成功');
+                  this.selectAclAll();
+                } else {
+                  this.$Message.info('平台出小差了');
+                }
+              })
+            }
         })
       },
       //获取权限列表
@@ -1478,7 +1496,6 @@
       //获取文件路径返回
       selectFileSrc(id, index) {
         this.fileData.id = id;
-
         let number = this.fileObject.length - (index + 1);
         this.fileObject.splice(index + 1, number);
         this.filesList(this.fileData.id)
@@ -1502,7 +1519,7 @@
       //
       //返回根路径
       backPage(){
-        this.fileObject.pop();
+        this.fileObject = [];
         this.filesList(null);
       },
       //复制文件外链路径
@@ -1551,7 +1568,7 @@
             //影响资源输入框的值
             influenceValue: '',
             //referer白名单输入框的值
-            whiteListValue: '',
+            whiteListValue:'',
             //用户授权
             users: '0',
             //影响资源
@@ -1573,6 +1590,9 @@
             maxAge: 0
         }
       },
+      changes(){
+        console.log(this.jurisdValidate.referer);
+      }
     },
     created(){
       this.bucketName = sessionStorage.getItem('bucketName');
@@ -1754,6 +1774,25 @@
     margin-top: 21px;
     min-height: 192px;
     border-bottom: 1px solid #e9e9e9;
+
+  }
+  .ivu-upload>.ivu-upload-list{
+    overflow: hidden;
+    height: 20px;
+  }
+  .ivu-upload-list::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 10px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+  }
+  .ivu-upload-list::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: #535353;
+  }
+  .ivu-upload-list::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    background: #EDEDED;
   }
 
   .jurisd {
@@ -1824,5 +1863,8 @@
     cursor: text;
     transition: border .2s ease-in-out,background .2s ease-in-out,box-shadow .2s ease-in-out;
     overflow-x:visible;overflow-y:visible;
+  }
+  .red{
+    border:1px solid #ed3f14;
   }
 </style>

@@ -18,7 +18,7 @@
           <p>虚拟私有云，通过逻辑方式进行网络隔离，提供安全、隔离的网络环境。VPC为您提供与传统网络无差别的虚拟网络，同时还可以为您提供弹性IP、安全组、VPN等高级网络服务。</p>
         </div>
         <Tabs type="card" :value="name" :animated="false">
-          <TabPane label="概览" name="name1" style="height:650px">
+          <TabPane label="概览" name="name1">
             <!--<p>当月用量 2018/04/28-2018</p>-->
             <div class="center_space">
               <div class="space_one">
@@ -34,50 +34,50 @@
                 <div style="font-size:36px;color:#333333;margin-top:10px;">0次</div>
               </div>
             </div>
-            <!--<div class="center_chart">-->
-            <!--<div style="display:flex;padding-bottom:5px;">-->
-            <!--<div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>-->
+            <div class="center_chart">
+            <div style="display:flex;padding-bottom:5px;">
+            <div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>
             <!--<div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>-->
-            <!--</div>-->
-            <!--<div class="chart">-->
-            <!--<ul class="objectList">-->
-            <!--<li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>-->
-            <!--</ul>-->
-            <!--<div class="chart-rig">-->
-            <!--&lt;!&ndash;<Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button>&ndash;&gt;-->
-            <!--<ul class="objectList">-->
-            <!--<li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>-->
-            <!--</ul>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<chart class="echarts" :options="rwPolar" ></chart>-->
-            <!--</div>-->
-            <!--<div class="center_chart">-->
-            <!--<div style="display:flex;padding-bottom:5px;margin-top:50px;">-->
-            <!--<div style="width:50%;font-size:16px;color:#333333;">请求次数</div>-->
+            </div>
+            <div class="chart">
+            <ul class="objectList">
+            <li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>
+            </ul>
+            <div class="chart-rig">
+            <!--<Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button>-->
+            <ul class="objectList">
+            <li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>
+            </ul>
+            </div>
+            </div>
+            <chart class="echarts" :options="rwPolar" ></chart>
+            </div>
+            <div class="center_chart">
+            <div style="display:flex;padding-bottom:5px;margin-top:50px;">
+            <div style="width:50%;font-size:16px;color:#333333;">请求次数</div>
             <!--<div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>-->
-            <!--</div>-->
-            <!--<div class="chart" >-->
-            <!--<ul class="objectList">-->
-            <!--<li :class="requestIndex == item.label? 'objectItems':'objectItem'" v-for="item in requestList" :key="item.label" @click="requestClick(item.label)">{{item.value}}</li>-->
-            <!--</ul>-->
-            <!--<div class="chart-rig">-->
-            <!--&lt;!&ndash; <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button> &ndash;&gt;-->
-            <!--<ul class="objectList">-->
-            <!--<li :class="chartTwoIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartTwotList" :key="index" @click="chartTwoClick(index)">{{item.value}}</li>-->
-            <!--</ul>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<chart class="echarts" :options="rwNumber"></chart>-->
-            <!--</div>-->
+            </div>
+            <div class="chart" >
+            <ul class="objectList">
+            <li :class="requestIndex == item.label? 'objectItems':'objectItem'" v-for="item in requestList" :key="item.label" @click="requestClick(item.label)">{{item.value}}</li>
+            </ul>
+            <div class="chart-rig">
+            <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button> -->
+            <ul class="objectList">
+            <li :class="chartTwoIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartTwotList" :key="index" @click="chartTwoClick(index)">{{item.value}}</li>
+            </ul>
+            </div>
+            </div>
+            <chart class="echarts" :options="rwNumber"></chart>
+            </div>
           </TabPane>
           <TabPane :label="bucketMange" name="name2" style="height:650px">
             <tabOne></tabOne>
           </TabPane>
-          <TabPane label="用量监控" name="name3" style="height:650px">
-            <div style="text-align: center;">暂无数据</div>
-            <!--<tabTwo></tabTwo>-->
-          </TabPane>
+          <!--<TabPane label="用量监控" name="name3" style="height:650px">-->
+            <!--<div style="text-align: center;">暂无数据</div>-->
+            <!--&lt;!&ndash;<tabTwo></tabTwo>&ndash;&gt;-->
+          <!--</TabPane>-->
           <TabPane label="操作日志" name="name4" style="min-height: 300px;">
             <tabThree></tabThree>
           </TabPane>
@@ -128,26 +128,26 @@
         dayList: [
           {
             value: '今天',
-            data: [20, 30, 40, 50, 60],
+            data: [0, 0, 0, 0, 0],
             day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
             label: 0
           },
           {
             value: '昨天',
-            data: [20, 30, 40, 50, 60],
+            data: [0, 0, 0, 0, 0, 0, 0],
             day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
             label: 1
           },
           {
             value: '最近七天',
-            data: [20, 30, 40, 50, 60, 22, 100],
-            day: ['02/18', '02/18', '02/18', '02/18', '02/18', '02/18', '02/18'],
+            data: [0, 0, 0, 0, 0, 0, 0],
+            day: ['---', '---', '---', '---', '---', '---', '---'],
             label: 2
           },
           {
             value: '最近三十天',
-            data: [20, 30, 40, 50, 60, 20, 30, 40, 50, 60, 20, 30, 40, 50, 60, 20, 30, 40, 50, 60, 20, 30, 40, 50, 60, 100, 33, 28, 90, 55],
-            day: ['04/01', '04/02', '04/03', '04/04', '04/05', '04/06', '04/07', '04/08', '04/09', '04/10', '04/11', '04/12', '04/13', '04/14', '04/15', '04/16', '04/17', '04/18', '04/19', '04/20', '04/21', '04/22', '04/23', '04/24', '04/25', '04/26', '04/27', '04/28', '04/29', '04/30'],
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            day: ['---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---'],
             label: 3
           }
         ],
@@ -158,26 +158,26 @@
         requestList: [
           {
             value: '今天',
-            data: [20, 30, 40, 50, 60],
+            data: [0, 0, 0, 0, 0],
             day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
             label: 0
           },
           {
             value: '昨天',
-            data: [20, 30, 40, 50, 60, 90, 70],
+            data: [0, 0, 0, 0, 0, 0, 0],
             day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
             label: 1
           },
           {
             value: '最近七天',
-            data: [20, 30, 40, 50, 60, 22, 100],
-            day: ['02/18', '02/18', '02/18', '02/18', '02/18', '02/18', '02/18'],
+            data: [0, 0, 0, 0, 0, 0, 0],
+            day: ['---', '---', '---', '---', '---', '---', '---'],
             label: 2
           },
           {
             value: '最近三十天',
-            data: [20, 30, 40, 50, 60, 20, 30, 40, 50, 60, 20, 30, 40, 50, 60, 20, 30, 40, 50, 60, 20, 30, 40, 50, 60, 100, 33, 28, 90, 55],
-            day: ['04/01', '04/02', '04/03', '04/04', '04/05', '04/06', '04/07', '04/08', '04/09', '04/10', '04/11', '04/12', '04/13', '04/14', '04/15', '04/16', '04/17', '04/18', '04/19', '04/20', '04/21', '04/22', '04/23', '04/24', '04/25', '04/26', '04/27', '04/28', '04/29', '04/30'],
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            day: ['---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---'],
             label: 3
           }
         ],

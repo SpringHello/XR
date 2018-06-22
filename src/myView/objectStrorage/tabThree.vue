@@ -7,7 +7,7 @@
              </ul>
             <div class="journal_right">
                 <span>开始结束时间</span>
-                 <DatePicker type="daterange" :options="options4" v-model="time"  placement="bottom-end" placeholder= "Select date" style="width: 200px"></DatePicker>
+                 <DatePicker type="daterange" :options="options4" v-model="time"  placement="bottom-end" placeholder= "请选择时间" style="width: 200px"></DatePicker>
                 <Button type="primary"  @click="select">查询</Button>
             </div>
         </div>

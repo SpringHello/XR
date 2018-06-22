@@ -35,7 +35,7 @@
                   <!--<Dropdown @on-click="go">-->
                     <Dropdown >
                     <a href="javascript:void(0)" style="position:relative">
-                      {{userInfo.name == undefined?'重庆房地产':userInfo.name}}
+                      {{userInfo}}
                       <sup class="circle-dot" v-if="this.$store.state.Msg>0"></sup>
                       <Icon type="arrow-down-b"></Icon>
                     </a>
@@ -54,7 +54,7 @@
                         <a href="https://pan.xrcloud.net/ruicloud/operationLog">操作日志</a>
                       </DropdownItem>
                       <DropdownItem divided name="exit">
-                      <router-link to="">退出</router-link>
+                      <span @click="backOut">退出</span>
                       </DropdownItem>
                     </DropdownMenu>
                   </Dropdown>
@@ -99,10 +99,10 @@
         <div class="operate" v-for="(parentItem,pIndex) in main" :key="pIndex" v-if="parentItem.subItem"
              :style="menuStyle(parentItem.type)">
           <ul :ref="`${parentItem.type}-sub`" :class="{show:parentItem.type==pageInfo.hoverItem}">
-            <!--<li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"-->
-                <!--@click="push(parentItem.type,subItem.type)" :class="{hover:subItem.type==pageInfo.sType}">-->
             <li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"
-               :class="{hover:subItem.type==pageInfo.sType}">
+                @click="push(parentItem.type,subItem.type)" :class="{hover:subItem.type==pageInfo.sType}">
+            <!--<li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"-->
+               <!--:class="{hover:subItem.type==pageInfo.sType}">-->
               <!--<Dropdown v-if="subItem.thrItem" @on-click="pane">-->
                 <Dropdown v-if="subItem.thrItem">
                 <a :href="subItem.href">
@@ -290,7 +290,7 @@
         QQInfo: [],  // QQ客服在线情况
         xiaoshouInfo: [],
         yunweiInfo: [],
-        userInfo:{}
+        userInfo:''
       }
     },
     beforeRouteEnter(to, from, next){
@@ -366,9 +366,20 @@
 
         }).then(res => {
           if(res.data.result.status == 1){
-            this.userInfo = res.data.result.authInfo;
+            this.userInfo = res.data.result.realname;
           }
         })
+      },
+      backOut(){
+          this.$http.get('user/logout.do',{
+          }).then(res =>{
+            if(res.data.status == 1){
+              this.$Message.success('退出成功');
+              window.open('https://pan.xrcloud.net/ruicloud/login','_self')
+            }else{
+              this.$Message.info('平台出小差了');
+            }
+          })
       },
       QME(){
         this.$refs.qq.style.width = '231px'
@@ -423,19 +434,19 @@
         console.log(response)
       },
       // 进入三级路由，记录二级路由入口
-      // push(pType, sType){
-      //   this.pageInfo.static = true
-      //   this.pageInfo.selectItem = pType
-      //   this.pageInfo.sType = sType
-      //   this.$router.push(sType)
-      // },
-      // go(path){
-      //   if (path == 'exit') {
-      //     this.exit()
-      //     return
-      //   }
-      //   this.$router.push(path)
-      // },
+      push(pType, sType){
+        this.pageInfo.static = true
+        this.pageInfo.selectItem = pType
+        this.pageInfo.sType = sType
+        this.$router.push(sType)
+      },
+      go(path){
+        if (path == 'exit') {
+          this.exit()
+          return
+        }
+        this.$router.push(path)
+      },
       pane(pane){
         var paneStatue = {
           vpc: 'VPC',
@@ -512,31 +523,31 @@
       zone: state => state.zone,
       zoneList: state => state.zoneList
     }),
-    // watch: {
-    //   '$route'(to, from){
-    //     // 对路由变化作出响应...
-    //     this.pageInfo.hoverItem = this.pageInfo.selectItem = this.sType = ''
-    //     this.pageInfo.static = false
-    //     this.pageInfo.path = to.name
-    //     for (var item of this.main) {
-    //       if (item.subItem) {
-    //         for (var sItem of item.subItem) {
-    //           if (sItem.type == this.pageInfo.path) {
-    //             this.pageInfo.hoverItem = this.pageInfo.selectItem = item.type
-    //             this.pageInfo.sType = sItem.type
-    //             this.pageInfo.static = true
-    //           }
-    //         }
-    //       }
-    //     }
-    //   },
-    //   '$store.state.zone': {
-    //     handler: function () {
-    //       this.notice()
-    //     },
-    //     deep: true
-    //   }
-    // }
+    watch: {
+      '$route'(to, from){
+        // 对路由变化作出响应...
+        this.pageInfo.hoverItem = this.pageInfo.selectItem = this.sType = ''
+        this.pageInfo.static = false
+        this.pageInfo.path = to.name
+        for (var item of this.main) {
+          if (item.subItem) {
+            for (var sItem of item.subItem) {
+              if (sItem.type == this.pageInfo.path) {
+                this.pageInfo.hoverItem = this.pageInfo.selectItem = item.type
+                this.pageInfo.sType = sItem.type
+                this.pageInfo.static = true
+              }
+            }
+          }
+        }
+      },
+      '$store.state.zone': {
+        handler: function () {
+          this.notice()
+        },
+        deep: true
+      }
+    }
   }
 </script>
 

@@ -4,7 +4,7 @@
             <Button type="primary" @click="modal6 = true">新建空间</Button>
         </div>
         <div style="margin-top:10px;">
-             <Table  :columns="spaceColumns" :data="spaceData" no-data-text="您还没有创建Bucket（存储空间）,请点击新建空间"></Table>
+             <Table @on-row-click="bucketDetails"  :columns="spaceColumns" :data="spaceData" no-data-text="您还没有创建Bucket（存储空间）,请点击新建空间"></Table>
         </div>
 
          <Modal
@@ -77,12 +77,17 @@ export default {
                   size:'small'
                 },
                 style:{
-                  display:hide
+                  display:hide,
                 }
               }),
               h(
                 "span",
-                {},
+                {
+                  style:{
+                    cursor:'pointer',
+                    color:'#2A99F2'
+                  }
+                },
                 parasm.row.name
               )
             ]);
@@ -127,25 +132,6 @@ export default {
                     }
                   },
                   "删除"
-                ),
-                h(
-                  "span",
-                  {
-                    style: {
-                      color: "#2A99F2",
-                      cursor: "pointer"
-                    },
-                    on: {
-                      click: () => {
-                        sessionStorage.setItem("bucketName", parasm.row.name);
-                        sessionStorage.setItem('bucketId', parasm.row.id);
-                        sessionStorage.setItem('accessrights', parasm.row.accessrights)
-                        sessionStorage.setItem('createtime', parasm.row.createtime);
-                        this.$router.push({path: "SpaceDetails"});
-                      }
-                    }
-                  },
-                  "查看详情"
                 )
               ])
             }
@@ -233,6 +219,13 @@ export default {
             this.$Message.info('平台出小差了');
           }
         });
+    },
+    bucketDetails(row){
+      sessionStorage.setItem("bucketName", row.name);
+      sessionStorage.setItem('bucketId', row.id);
+      sessionStorage.setItem('accessrights', row.accessrights)
+      sessionStorage.setItem('createtime', row.createtime);
+      this.$router.push({path: "SpaceDetails"});
     }
   },
   mounted() {
