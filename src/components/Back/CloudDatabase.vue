@@ -381,7 +381,7 @@
                }, '数据库镜像'),*/ h('DropdownItem', {
                   nativeOn: {
                     click: () => {
-
+                      this.showModal.dilatation = true
                     }
                   }
                 }, '数据库扩容'), h('DropdownItem', {
