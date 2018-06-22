@@ -67,10 +67,10 @@
       <div class="universal-modal-content-flex">
         <Form :model="portModifyForm" :rules="portModifyRuleValidate" ref="portModifyForm">
           <Form-item label="当前端口">
-            <InputNumber v-model="portModifyForm.currentPorts" readonly></InputNumber>
+            <Input v-model="portModifyForm.currentPorts" :readonly="true"></Input>
           </Form-item>
           <Form-item label="修改端口" prop="newPorts">
-            <InputNumber :max="65535" :min="1" v-model="portModifyForm.newPorts"></InputNumber>
+            <Input v-model="portModifyForm.newPorts" :maxlength="8"></Input>
           </Form-item>
         </Form>
       </div>
@@ -176,6 +176,26 @@
         <Button type="primary" @click="renewalok" :disabled="cost=='--'">确认续费</Button>
       </div>
     </Modal>
+    <!-- 云数据库扩容弹窗 -->
+    <Modal
+      v-model="showModal.dilatation"
+      width="590"
+      :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">调整容量</span>
+      </p>
+      <div class="universal-modal-content-flex">
+
+
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <div style="font-size:16px;">
+          资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{dilatationCost}}/</span></span>
+        </div>
+        <Button type="ghost" @click="showModal.dilatation = false">取消</Button>
+        <Button type="primary" @click="dilatationok" :disabled="dilatationCost=='--'">确认调整</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -185,16 +205,16 @@
   import regExp from '../../util/regExp'
 
   export default {
-    data () {
+    data() {
       const validaRegisteredName = regExp.validaRegisteredName
       const validateNewport = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入修改后的端口号'))
         } else {
-          if (/^[\d]+$/.test(value)) {
+          if (/^[\d]+$/.test(value) && value < 65536 && value > 0) {
             callback()
           } else {
-            callback(new Error('只能输入数字'))
+            callback(new Error('请输入正确的端口号'))
           }
         }
       }
@@ -242,8 +262,18 @@
             title: '状态',
             key: 'status',
             render: (h, params) => {
-              var text = params.row.status == -1 ? '异常' : '正常'
-              return h('span', {}, text)
+              const row = params.row
+              const text = row.status == -1 ? '异常' : row.status == 1 ? '正常' : row.status == 0 ? '欠费' : row.status == 2 ? '创建中' : row.status == 3 ? '重启中' : '删除中'
+              if (row.status == 2 || row.status == 3 || row.status == 4) {
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', {}, text)])
+              } else {
+                return h('span', text)
+              }
             }
           },
           {
@@ -255,20 +285,24 @@
             title: '数据库端口',
             ellipsis: true,
             render: (h, params) => {
-              return h('div', {}, [h('span', {}, params.row.dbPort), h('span', {
-                style: {
-                  color: '#2A99F2',
-                  marginLeft: '10px',
-                  cursor: 'pointer'
-                },
-                on: {
-                  click: () => {
-                    this.current = params.row
-                    this.showModal.beforePortModify = true
-                    this.portModifyForm.currentPorts = params.row.dbPort
+              if (params.row.status == 1) {
+                return h('div', {}, [h('span', {}, params.row.dbPort), h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    marginLeft: '10px',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      this.current = params.row
+                      this.showModal.beforePortModify = true
+                      this.portModifyForm.currentPorts = params.row.dbPort
+                    }
                   }
-                }
-              }, '修改端口')])
+                }, '修改端口')])
+              } else {
+                return h('span', {}, params.row.dbPort)
+              }
             }
           },
           {
@@ -279,49 +313,55 @@
           {
             title: '操作',
             render: (h, params) => {
-              return h('div', {}, [h('span', {
-                style: {
-                  color: '#2A99F2',
-                  marginRight: '20px',
-                  cursor: 'pointer',
-                },
-                on: {
-                  click: () => {
-                    this.$message.confirm({
-                      title: '删除数据库',
-                      content: `数据库删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。`,
-                      onOk: () => {
-                        this.$http.get('information/deleteVM.do', {
-                          params: {
-                            id: params.row.id
-                          }
-                        }).then(response => {
-                          if (response.status == 200 && response.data.status == 1) {
-                            this.$Message.success(response.data.message)
-                            this.dataBaseData = this.dataBaseData.filter(database => {
-                              return database.id != params.row.id
-                            })
-                          } else {
-                            this.$message.info({
-                              content: response.data.message
-                            })
-                          }
-                        })
-                      }
-                    })
+              if (params.row.status == 1) {
+                return h('div', {}, [h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    marginRight: '20px',
+                    cursor: 'pointer',
+                  },
+                  on: {
+                    click: () => {
+                      this.$message.confirm({
+                        title: '删除数据库',
+                        content: `数据库删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。`,
+                        onOk: () => {
+                          this.dataBaseData.forEach(item => {
+                            if (item.computerid == params.row.computerid) {
+                              item.status = 4
+                            }
+                          })
+                          this.$http.get('information/deleteVM.do', {
+                            params: {
+                              id: params.row.id
+                            }
+                          }).then(response => {
+                            if (response.status == 200 && response.data.status == 1) {
+                              this.$Message.success(response.data.message)
+                              this.dataBaseData = this.dataBaseData.filter(database => {
+                                return database.id != params.row.id
+                              })
+                            } else {
+                              this.$message.info({
+                                content: response.data.message
+                              })
+                            }
+                          })
+                        }
+                      })
+                    }
                   }
-                }
-              }, '删除'), h('Dropdown', {
-                props: {
-                  trigger: 'click'
-                }
-              }, [h('a', {
-                attrs: {
-                  href: 'javascript:void(0)'
-                }
-              }, '更多操作'), h('DropdownMenu', {
-                slot: 'list'
-              }, [/*h('DropdownItem', {
+                }, '删除'), h('Dropdown', {
+                  props: {
+                    trigger: 'click'
+                  }
+                }, [h('a', {
+                  attrs: {
+                    href: 'javascript:void(0)'
+                  }
+                }, '更多操作'), h('DropdownMenu', {
+                  slot: 'list'
+                }, [/*h('DropdownItem', {
                nativeOn: {
                click: () => {
                this.backupsForm.name = ''
@@ -339,26 +379,33 @@
                }
                }
                }, '数据库镜像'),*/ h('DropdownItem', {
-                nativeOn: {
-                  click: () => {
+                  nativeOn: {
+                    click: () => {
 
+                    }
                   }
-                }
-              }, '数据库扩容'), h('DropdownItem', {
-                nativeOn: {
-                  click: () => {
-                    this.current = params.row
-                    this.showModal.restart = true
+                }, '数据库扩容'), h('DropdownItem', {
+                  nativeOn: {
+                    click: () => {
+                      this.current = params.row
+                      this.showModal.restart = true
+                    }
                   }
-                }
-              }, '重启数据库'), h('DropdownItem', {
-                nativeOn: {
-                  click: () => {
-                    this.showModal.restart = true
+                }, '重启数据库'), h('DropdownItem', {
+                  nativeOn: {
+                    click: () => {
+                      this.showModal.renewal = true
+                    }
                   }
-                }
-              }, '数据库续费'),])
-              ])])
+                }, '数据库续费'),])
+                ])])
+              } else {
+                return h('div', {}, [h('span', {
+                  style: {
+                    marginRight: '20px',
+                  },
+                }, '删除'), h('span', {}, '更多操作')])
+              }
             }
           },
         ],
@@ -369,7 +416,8 @@
           backups: false,
           mirror: false,
           renewal: false,
-          restart: false
+          restart: false,
+          dilatation: false
         },
         portModifyForm: {
           currentPorts: '',
@@ -401,6 +449,7 @@
         },
         originCost: '--',
         cost: '--',
+        dilatationCost: '--',
         renewalType: '',
         renewalTime: '',
         timeOptions: {
@@ -419,7 +468,7 @@
         current: null,
       }
     },
-    beforeRouteEnter (to, from, next) {
+    beforeRouteEnter(to, from, next) {
       // 获取云数据库列表数据
       let dataBaseResponse = axios.get('database/listDB.do', {
         params: {
@@ -428,36 +477,51 @@
       })
       Promise.all([dataBaseResponse]).then((ResponseValue) => {
         next(vm => {
-          vm.listmirror()
+          vm.listMirror()
           vm.setDataBases(ResponseValue[0])
         })
       })
     },
-    created () {
+    created() {
     },
     methods: {
       // 重启数据库
-      restart(){
-        this.$http.get('information/rebootVirtualMachine.do', {
+      restart() {
+        this.showModal.restart = false
+        this.dataBaseData.forEach(item => {
+          if (item.computerid == this.current.computerid) {
+            item.status = 3
+          }
+        })
+        this.$http.get('database/rebooteDB.do', {
           params: {
-            VMId: this.current.computerid
+            DBId: this.current.computerid
           }
         }).then(response => {
-          this.showModal.restart = false
           if (response.status == 200 && response.data.status == 1) {
             this.$Message.success(response.data.message)
+            this.listDatabase()
           } else {
-            this.$Message.info(response.data.message)
+            this.listDatabase()
+            this.$message.info({
+              content: response.data.message
+            })
           }
         })
       },
-      setDataBases (response) {
+      setDataBases(response) {
         if (response.status == 200 && response.data.status == 1) {
           this.dataBaseData = response.data.result
-          console.log(this.dataBaseData)
         }
       },
-      listmirror () {
+      listDatabase() {
+        this.$http.get('database/listDB.do').then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.dataBaseData = res.data.result
+          }
+        })
+      },
+      listMirror() {
         var params = {
           zoneId: $store.state.zone.zoneid,
         }
@@ -477,7 +541,7 @@
           }
         })
       },
-      createOrder () {
+      createOrder() {
         var params = {
           zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
           templateId: this.templateid,
@@ -502,11 +566,11 @@
           }
         })
       },
-      beforePortModify () {
+      beforePortModify() {
         this.showModal.beforePortModify = false
         this.showModal.portModify = true
       },
-      portModify_ok (name) {
+      portModify_ok(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.$http.get('database/updateDBPort.do', {
@@ -514,12 +578,21 @@
                 DBId: this.current.computerid,//(数据库的UUID),
                 port: this.portModifyForm.newPorts//(需要更改的端口)
               }
+            }).then(res => {
+              if (res.status === 200 && res.data.status === 1) {
+                this.$Message.success(res.data.message)
+                this.listDatabase()
+              } else {
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
             })
           }
         })
       },
       // 云数据库备份
-      backupSubmit (name) {
+      backupSubmit(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.showModal.backups = false
@@ -536,7 +609,7 @@
         })
       },
       // 云数据库镜像
-      mirrorSubmit (name) {
+      mirrorSubmit(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.showModal.mirror = false
@@ -556,7 +629,7 @@
           }
         })
       },
-      renewalok () {
+      renewalok() {
         var host = [
           {type: 0, id: this.currentHost[0].id}
         ]
@@ -571,18 +644,21 @@
         //   }
         // })
       },
+      dilatationok() {
+
+      }
     },
     computed: {
-      auth () {
+      auth() {
         return this.$store.state.authInfo != null
       },
     },
     watch: {
-      renewalType (type) {
+      renewalType(type) {
         this.renewalTime = ''
         this.timeOptions.renewalTime = this.timeOptions[type]
       },
-      renewalTime (time) {
+      renewalTime(time) {
         if (time == '') {
           this.cost = '--'
         } else {
