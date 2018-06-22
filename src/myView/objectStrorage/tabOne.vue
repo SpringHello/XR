@@ -110,43 +110,45 @@ export default {
           title: "操作",
           render: (h, parasm) => {
             var self = this;
-            return h("div", [
-              h(
-                "span",
-                {
-                  style: {
-                    color: "#2A99F2",
-                    marginRight: "20px",
-                    cursor: "pointer"
-                  },
-                  on: {
-                    click() {
-                      self.bucketDelete(parasm.row.name,parasm.row._index);
+            if(parasm.row.hide != 1) {
+              return h("div", [
+                h(
+                  "span",
+                  {
+                    style: {
+                      color: "#2A99F2",
+                      marginRight: "20px",
+                      cursor: "pointer"
+                    },
+                    on: {
+                      click() {
+                        self.bucketDelete(parasm.row.name, parasm.row._index);
+                      }
                     }
-                  }
-                },
-                "删除"
-              ),
-              h(
-                "span",
-                {
-                  style: {
-                    color: "#2A99F2",
-                    cursor: "pointer"
                   },
-                  on: {
-                    click: () => {
-                      sessionStorage.setItem("bucketName", parasm.row.name);
-                      sessionStorage.setItem('bucketId',parasm.row.id);
-                      sessionStorage.setItem('accessrights',parasm.row.accessrights)
-                      sessionStorage.setItem('createtime',parasm.row.createtime);
-                      this.$router.push({ path: "SpaceDetails" });
+                  "删除"
+                ),
+                h(
+                  "span",
+                  {
+                    style: {
+                      color: "#2A99F2",
+                      cursor: "pointer"
+                    },
+                    on: {
+                      click: () => {
+                        sessionStorage.setItem("bucketName", parasm.row.name);
+                        sessionStorage.setItem('bucketId', parasm.row.id);
+                        sessionStorage.setItem('accessrights', parasm.row.accessrights)
+                        sessionStorage.setItem('createtime', parasm.row.createtime);
+                        this.$router.push({path: "SpaceDetails"});
+                      }
                     }
-                  }
-                },
-                "查看详情"
-              )
-            ]);
+                  },
+                  "查看详情"
+                )
+              ])
+            }
           }
         }
       ],
@@ -205,7 +207,7 @@ export default {
                 this.$Message.success("创建成功");
                 this.getBuckets();
               } else {
-                this.$Message.error(res.data.msg);
+                this.$Message.info('平台出小差了');
               }
             });
         }
@@ -228,7 +230,7 @@ export default {
             this.getBuckets();
             this.$Message.success("删除成功");
           } else {
-            this.$Message.error(res.data.msg);
+            this.$Message.info('平台出小差了');
           }
         });
     }

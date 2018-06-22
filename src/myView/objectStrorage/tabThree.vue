@@ -29,7 +29,7 @@
       journalList: [
         {
           key: "operatetarget",
-          title: "操作"
+          title: "操作对象"
         },
         {
           key: "operatestatus",
@@ -43,6 +43,14 @@
               },params.row.operatestatus==1 ?'成功':'失败')
             ])
           }
+        },
+        {
+          key:'operatetype',
+          title:'行为描述'
+        },
+        {
+          key:'operatorip',
+          title:'操作IP地址'
         },
         {
           key: "operatortime",
@@ -190,7 +198,7 @@
           }
         }else{
           this.pageLoading = false;
-          this.$Message.error(res.data.msg);
+          this.$Message.info('平台出小差了');
         }
       })
     }

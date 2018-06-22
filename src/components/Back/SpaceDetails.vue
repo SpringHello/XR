@@ -68,7 +68,6 @@
                 {{item.name+'/'}}
               </li>
             </ul>
-
             <Table :columns='fileList' :loading="tabLoading" :data="fileData"></Table>
           </TabPane>
           <TabPane label="空间设置" name="space">
@@ -108,8 +107,6 @@
               </div>
             </div>
             <br>
-
-
             <div>
               <div>
                 <div style="font-size:18px;color:#333333;display: inline-block">静态网站托管</div>
@@ -253,7 +250,7 @@
           </div>
           <br>
           <!--<Button type="primary" :loading="tremLoading" @click="geturl">获取外链</Button>-->
-          <Input ref="copy" id="copy" v-model="fliesTerm"  type="textarea"  :autosize="true" :readonly="true"></Input>
+          <textarea  ref="copy" id="copy" v-model="fliesTerm"  type="textarea" rows="5"   readonly="true" wrap="hard"></textarea >
           <div class="copyClass">
             <span @click="openUrl">打开文件URL</span><span @click="copyUrl">复制文件URL</span>
           </div>
@@ -347,7 +344,7 @@
         <div>Bucket名称：{{bucketName}}</div>
         <div style="margin-left:20px;">存储区域：{{zonename}}</div>
       </div>
-      <Form ref="updateJurisds" v-model="updateJurisd" :rules="updateJurisdValid">
+      <Form ref="updateJurisds" :model="updateJurisd" :rules="updateJurisdValid">
         <FormItem prop="updateGrantValue" label="用户授权">
           <div>
             <RadioGroup v-model="updateJurisd.updateUsers" @on-change="usersClick">
@@ -362,7 +359,7 @@
           <div style="width:366px;display:flex;">
             <div style="width:115px;font-size:14px;color:#333333;">密码接收渠道</div>
             <div style="width:300px;">
-              <CheckboxGroup v-model="updateJurisd.updateChannel" @on-change="changes">
+              <CheckboxGroup v-model="updateJurisd.updateChannel">
                 <Checkbox label="putobject">PutObject</Checkbox>
                 <Checkbox label="getobject">GetObject</Checkbox>
                 <Checkbox label="deleteobject">DeleteObject</Checkbox>
@@ -488,69 +485,6 @@
       </div>
     </Modal>
 
-    <!--<Modal
-      v-model="cors"
-      title="跨域访问CRORS添加规则"
-      :scrollable='true'
-      width="550px"
-<<<<<<< HEAD
-      @on-ok="addCors">
-      <div>
-        <h2>来源Origin</h2>
-        <Input style="width:420px;" :rows="4" type="textarea" v-model="addCorsForm.orgins"
-               placeholder="例如：http://10.100.100.100:8001 https://www.xrcloud.net"></Input>
-=======
-    >
-      <div>
-        <p>来源Origin</p>
-        <Input :disabled='grant' style="width:420px;" :rows="4" type="textarea" placeholder="例如：http://10.100.100.100:8001 https://www.xrcloud.net"></Input>
->>>>>>> e04ff23502fe00fb7f6c9014fef07401ab384a8e
-        <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
-        <p style="color: #999999;">来源可设置多个，每行一个，以回车间隔，每行最多能有一个通配符(*)</p>
-      </div>
-      <div style="width:366px;display:flex;">
-        <div style="width:115px;font-size:14px;color:#333333;">操作Methods</div>
-        <div style="width:300px;">
-<<<<<<< HEAD
-          <CheckboxGroup v-model="addCorsForm.methods">
-=======
-          <CheckboxGroup>
->>>>>>> e04ff23502fe00fb7f6c9014fef07401ab384a8e
-            <Checkbox label="put">Put</Checkbox>
-            <Checkbox label="get">Get</Checkbox>
-            <Checkbox label="post">Post</Checkbox>
-            <Checkbox label="head">Head</Checkbox>
-            <Checkbox label="delete">Delete</Checkbox>
-          </CheckboxGroup>
-        </div>
-        <p>来源可设置多个，每行一个，以回车间隔。</p>
-      </div>
-
-      <div style="width:366px;display:flex;">
-        <div style="width:115px;font-size:14px;color:#333333;">Allow-Headers</div>
-        <br>
-        <Input :disabled='whiteList' style="width:420px;" :rows="4" type="textarea"
-               v-model="addCorsForm.allowsHeaders"></Input>
-        <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
-      </div>
-
-      <div style="width:366px;display:flex;">
-        <div style="width:115px;font-size:14px;color:#333333;">Expose-Headers</div>
-        <br>
-<<<<<<< HEAD
-        <Input :disabled='whiteList' style="width:420px;" :rows="4" type="textarea"
-               v-model="addCorsForm.ExposeHeaders"></Input>
-=======
-        <Input :disabled='whiteList' style="width:420px;" :rows="4" type="textarea"></Input>
->>>>>>> e04ff23502fe00fb7f6c9014fef07401ab384a8e
-        <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
-      </div>
-
-      <div>
-        <p>缓存Max Age</p>
-        <Input type="text" style="width:317px" placeholder="请输入0-999999999的正整数" v-model="addCorsForm.maxAge"></Input>
-      </div>
-    </Modal>-->
     <!--cors规则编辑器-->
     <Modal
       v-model="corsedit"
@@ -566,8 +500,6 @@
 
 <script>
   import $store from "@/vuex"
-  import axios from 'axios'
-  import ICountUp from 'vue-countup-v2'
   var buckname = sessionStorage.getItem('bucketName');
   const validRoute = (rule, value, callback) => {
     let reg = /^[a-zA-Z]+(\.[a-zA-Z0-9]+)+(\.[a-zA-Z]+)$/;
@@ -762,37 +694,39 @@
             key: 'cap',
             title: '操作',
             render: (h, params) => {
-              return h('div', [
-                h('span', {
-                  style: {
-                    color: "#2A99F2",
-                    marginRight: '20px',
-                    display: params.row.isfile == 1 ? 'none' : 'inline-block',
-                    cursor: 'pointer'
-                  },
-                  on: {
-                    click: () => {
-                      this.nameFile = params.row.filename;
-                      this.outerChain = true;
-                      this.flieSrc = params.row.filesrc;
-                      this.term = this.termList[1].value;
-                      this.http = sessionStorage.getItem('http');
-                      this.geturl(params.row.filesrc);
+              if(params.row.hide != 1){
+                return h('div', [
+                  h('span', {
+                    style: {
+                      color: "#2A99F2",
+                      marginRight: '20px',
+                      display: params.row.isfile == 1 ? 'none' : 'inline-block',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        this.nameFile = params.row.filename;
+                        this.outerChain = true;
+                        this.flieSrc = params.row.filesrc;
+                        this.term = this.termList[1].value;
+                        this.http = sessionStorage.getItem('http');
+                        this.geturl(params.row.filesrc);
+                      }
                     }
-                  }
-                }, "查看外链"),
-                h('span', {
-                  style: {
-                    color: "#2A99F2",
-                    cursor: 'pointer'
-                  },
-                  on: {
-                    click: () => {
-                      this.deleteFile(params.row.id, params.row.filename,params.row._index);//传入文件Id和文件名称删除
+                  }, "查看外链"),
+                  h('span', {
+                    style: {
+                      color: "#2A99F2",
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        this.deleteFile(params.row.id, params.row.filename,params.row._index);//传入文件Id和文件名称删除
+                      }
                     }
-                  }
-                }, "删除")
-              ])
+                  }, "删除")
+                ])
+              }
             }
           }
         ],
@@ -900,53 +834,55 @@
           {
             title: '操作',
             render: (h, obj) => {
-              return h('div', [h('span', {
-                style: {
-                  marginRight: '20px',
-                  color: 'rgb(42, 153, 242)',
-                  cursor: 'pointer'
-                },
-                on: {
-                  click: () => {
-                    this.updateDiction = true;
-                    obj.row.userauthorization == '*' ? this.updateJurisd.updateUsers = '0' : this.updateJurisd.updateUsers = '1';
-                    this.updateJurisd.updateGrantValue = obj.row.userauthorization;
-                    this.inputValue = obj.row.userauthorization;
-                    //允许白名单是否为空
-                    this.updateJurisd.updateReferer = obj.row.iseffectrefip;
-                    //影响资源
-                    this.updateJurisd.updateInfluenceValue = obj.row.resource;
-                    //影响资源操作
-                    this.updateJurisd.updateSources = obj.row.iseffectres;
-                    this.updateJurisd.updateChannel = [];
-                    let str = '';
-                    ['putobject', 'getobject', 'deleteobject', 'listbucket', 'deletebucket'].forEach(name => {
-                      if (obj.row[name] == 1) {
-                        this.updateJurisd.updateChannel.push(name);
+              if(obj.row.hide != 1) {
+                return h('div', [h('span', {
+                  style: {
+                    marginRight: '20px',
+                    color: 'rgb(42, 153, 242)',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      this.updateDiction = true;
+                      obj.row.userauthorization == '*' ? this.updateJurisd.updateUsers = '0' : this.updateJurisd.updateUsers = '1';
+                      this.updateJurisd.updateGrantValue = obj.row.userauthorization;
+                      this.inputValue = obj.row.userauthorization;
+                      //允许白名单是否为空
+                      this.updateJurisd.updateReferer = obj.row.iseffectrefip + '';
+                      //影响资源
+                      this.updateJurisd.updateInfluenceValue = obj.row.resource;
+                      //影响资源操作
+                      this.updateJurisd.updateSources = obj.row.iseffectres;
+                      this.updateJurisd.updateChannel = [];
+                      let str = '';
+                      ['putobject', 'getobject', 'deleteobject', 'listbucket', 'deletebucket'].forEach(name => {
+                        if (obj.row[name] == 1) {
+                          this.updateJurisd.updateChannel.push(name);
+                        }
+                      })
+                      console.log(this.updateJurisd.updateChannel);
+                      this.updateJurisd.updateWhiteListValue = obj.row.refererip;
+                      this.code = obj.row.code;
+                      this.usersClick();
+                    }
+                  }
+                }, '修改'),
+                  h('span', {
+                    style: {
+                      color: 'rgb(42, 153, 242)',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        this.deleteFromBucketId(obj.row.code, obj.row._index);
                       }
-                    })
-                    console.log( this.updateJurisd.updateChannel);
-                    this.updateJurisd.updateWhiteListValue = obj.row.refererip;
-                    this.code = obj.row.code;
-                    this.usersClick();
-                  }
-                }
-              }, '修改'),
-                h('span', {
-                style: {
-                  color: 'rgb(42, 153, 242)',
-                  cursor: 'pointer'
-                },
-                on: {
-                  click: () => {
-                    this.deleteFromBucketId(obj.row.code,obj.row._index);
-                  }
-                }
-              }, '删除')])
+                    }
+                  }, '删除')
+                ])
+              }
             }
           },
         ],
-
         //权限表格数据
         aclData: [],
         //跨域访问规则表单
@@ -997,35 +933,37 @@
           {
             title: '操作',
             render: (h, params) => {
-              return h('div', [
-                h('span', {
-                  style: {
-                    color: '#2A99F2',
-                    marginRight: '10px',
-                    cursor:'pointer'
-                  },
-                  on:{
-                    click:()=>{
-                      this.updateCorsForm = JSON.parse(JSON.stringify(params.row));
-                      this.updateCorsForm.methods = params.row.methods.split(',');
-                      this.updateCors = true;
-                      this.corsIndex = params.row._index;
-                      this.corsid = params.row.corsid;
+              if(params.row.hide != 1) {
+                return h('div', [
+                  h('span', {
+                    style: {
+                      color: '#2A99F2',
+                      marginRight: '10px',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        this.updateCorsForm = JSON.parse(JSON.stringify(params.row));
+                        this.updateCorsForm.methods = params.row.methods.split(',');
+                        this.updateCors = true;
+                        this.corsIndex = params.row._index;
+                        this.corsid = params.row.corsid;
+                      }
                     }
-                  }
-                }, '修改'),
-                h('span', {
-                  style: {
-                    color: '#2A99F2',
-                    cursor:'pointer'
-                  },
-                  on:{
-                    click:()=>{
-                      this.deleteCros(params.row.corsid);
+                  }, '修改'),
+                  h('span', {
+                    style: {
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        this.deleteCros(params.row.corsid, params.row._index);
+                      }
                     }
-                  }
-                }, '删除')
-              ])
+                  }, '删除')
+                ])
+              }
             }
           }
         ],
@@ -1155,7 +1093,7 @@
             this.$Message.success('CROS规则配置成功');
             this.selectCors();
           }else{
-            this.$Message.error(response.data.msg);
+            this.$Message.info(response.data.msg);
           }
         })
       },
@@ -1191,7 +1129,7 @@
                 this.$Message.success('修改成功');
                 this.selectCors();
               }else {
-                this.$Message.error(response.data.msg);
+                this.$Message.info(response.data.msg);
                 this.selectCors();
               }
             })
@@ -1200,9 +1138,10 @@
 
       },
       //删除CROS规则配置
-      deleteCros(id){
+      deleteCros(id,index){
         let corsObject = {orgins:'删除中'}
-        this.corsData.push(corsObject);
+        this.corsData.splice(index,1)
+        this.corsData.splice(index,1,corsObject);
         this.$http.post('cors/deleteCors.do',{
           corsid:id+"",
           bucketName:sessionStorage.getItem('bucketName')
@@ -1220,28 +1159,29 @@
           cephCustomDomain:this.domain.route
         }).then(response => {
           if(response.status == 200 && response.data.status == '1'){
+            this.getCustom();
             this.$Message.success('自定义域名成功');
             this.domainLodaing = false;
             this.domainLodaing == false? this.mainName = false : this.mainName = true;
           }else{
-            this.$Message.error(response.data.msg);
+            this.$Message.info('平台出小差了');
             this.domainLodaing = false;
           }
         })
       },
       //上传文件格式错误的方法
       handleFormatError(file) {
-        this.$Message.error('格式错误');
+        this.$Message.info('格式错误');
       },
       //上传文件最大限制方法
       handleMaxSize() {
-        this.$Message.error('单文件最大只能上传1GB哦');
+        this.$Message.info('单文件最大只能上传1GB哦');
       },
       //上传文件之前应用的方法
       handleBeforeUpload(file) {
         let reg = /^[\u4e00-\u9fa5\w\d@\.\-_]{1,20}$/i
         if (!reg.test(file.name)) {
-          this.$Message.error('文件名不能超过20个字符');
+          this.$Message.info('文件名不能超过20个字符');
           return false;
         }
       },
@@ -1252,13 +1192,13 @@
           this.filesList();
           this.getAllsize();
         } else {
-          this.$Message.error(response.msg);
+          this.$Message.info(response.msg);
         }
         console.log(this.fileUpdata);
       },
       //文件上传失败
       handleError(error) {
-        this.$Message.error('上传失败');
+        this.$Message.info('上传失败');
       },
       //上传文件过程的方法
       handleUpload(file, event) {
@@ -1343,7 +1283,7 @@
             this.filesList();
             this.getAllsize();
           } else {
-            this.$Message.error(res.data.msg);
+            this.$Message.info(res.data.msg);
             this.filesList();
           }
         })
@@ -1389,7 +1329,7 @@
                 this.$Message.success('添加自定义权限成功');
                 this.selectAclAll();
               } else {
-                this.$Message.error(res.data.msg);
+                this.$Message.info('平台出小差了');
               }
             })
           }
@@ -1411,7 +1351,7 @@
             this.aclData = [];
             this.jurisdLoading = false;
           } else {
-            this.$Message.error(res.data.msg);
+            this.$Message.info('平台出小差了');
             this.jurisdLoading = false;
           }
         })
@@ -1568,17 +1508,17 @@
       //复制文件外链路径
       copyUrl(){
         this.$refs.copy.focus();
-       console.log(this.$refs.copy);
+        this.$refs.copy.select();
          document.execCommand('copy')
         try {
           if(document.execCommand('copy')){
             this.$Message.success('复制成功');
           }else {
-            this.$Message.info('不支持copy');
+            this.$Message.info('平台出小差了');
           }
         }catch (err) {
           if(err){
-            this.$Message.info('不支持execCommand');
+            this.$Message.info('该浏览器暂不支持复制');
           }
         }
       },
@@ -1633,9 +1573,6 @@
             maxAge: 0
         }
       },
-      changes(){
-        console.log(this.updateJurisd.updateChannel);
-      }
     },
     created(){
       this.bucketName = sessionStorage.getItem('bucketName');
@@ -1870,5 +1807,22 @@
 
   p {
     line-height: 20px;
+  }
+  #copy{
+    display: inline-block;
+    width: 100%;
+    height: auto;
+    line-height: 1.5;
+    padding: 4px 7px;
+    font-size: 12px;
+    border: 1px solid #dddee1;
+    border-radius: 4px;
+    color: #495060;
+    background-color: #fff;
+    background-image: none;
+    position: relative;
+    cursor: text;
+    transition: border .2s ease-in-out,background .2s ease-in-out,box-shadow .2s ease-in-out;
+    overflow-x:visible;overflow-y:visible;
   }
 </style>

@@ -2,19 +2,19 @@
   <div id="back">
     <header>
       <div class="wrapper">
-        <router-link to="/ruicloud/home" class="logo">
+        <a href="https://pan.xrcloud.net/ruicloud/home" class="logo">
           <div></div>
-        </router-link>
+        </a>
         <div class="operate">
           <ul>
             <li>
-              <router-link to="overview" :class="{active:pageInfo.path=='overview'}"><span>总览</span></router-link>
+              <a href="https://pan.xrcloud.net/ruicloud/overview" :class="{active:pageInfo.path=='overview'}"><span>总览</span></a>
             </li>
             <li>
-              <router-link to="work" :class="{active:pageInfo.path=='work'}"><span>工单</span></router-link>
+              <a href="https://pan.xrcloud.net/ruicloud/work"  :class="{active:pageInfo.path=='work'}"><span>工单</span></a>
             </li>
             <li>
-              <router-link to="renew" :class="{active:pageInfo.path=='renew'}"><span>一键续费</span></router-link>
+              <a  href="https://pan.xrcloud.net/ruicloud/renew" :class="{active:pageInfo.path=='renew'}"><span>一键续费</span></a>
             </li>
 
           </ul>
@@ -23,41 +23,41 @@
               <router-link to="BRecords" :class="{active:pageInfo.path=='BRecords'}"><span>备案</span></router-link>
             </li>-->
             <li>
-              <router-link to="buy" :class="{active:pageInfo.path=='buy'}"><span>创建主机</span></router-link>
+              <a href="https://pan.xrcloud.net/ruicloud/buy" :class="{active:pageInfo.path=='buy'}"><span>创建主机</span></a>
             </li>
             <li>
-              <router-link to="document" :class="{active:pageInfo.path=='document'}"><span>帮助文档</span></router-link>
+              <a href="https://pan.xrcloud.net/ruicloud/document" :class="{active:pageInfo.path=='document'}"><span>帮助文档</span></a>
             </li>
             <li>
-              <router-link to="recharge" :class="{active:pageInfo.path=='recharge'}"><span>充值</span></router-link>
+              <a href="https://pan.xrcloud.net/ruicloud/recharge" :class="{active:pageInfo.path=='recharge'}"><span>充值</span></a>
             </li>
             <li>
-              <!--<Dropdown @on-click="go">
-                <a href="javascript:void(0)" style="position:relative">
-                  {{userInfo.realname}}
-                  <sup class="circle-dot" v-if="this.$store.state.Msg>0"></sup>
-                  <Icon type="arrow-down-b"></Icon>
-                </a>
-                <DropdownMenu slot="list">
-                  <DropdownItem name="userCenter">
-                    <router-link to="userCenter">用户中心</router-link>
-                  </DropdownItem>
-                  <DropdownItem name="expenses">
-                    <router-link to="expenses">费用中心</router-link>
-                  </DropdownItem>
-                  <DropdownItem name="msgCenter" style="position:relative">
-                    <router-link to="msgCenter">消息中心<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup>
-                    </router-link>
-                  </DropdownItem>
-                  <DropdownItem name="operationLog">
-                    <router-link to="operationLog">操作日志</router-link>
-                  </DropdownItem>
-                  <DropdownItem divided name="exit">
-                    &lt;!&ndash; <router-link to="">退出</router-link> &ndash;&gt;
-                    <span style="color:#666;">退出</span>
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>-->
+                  <!--<Dropdown @on-click="go">-->
+                    <Dropdown >
+                    <a href="javascript:void(0)" style="position:relative">
+                      {{userInfo.name == undefined?'重庆房地产':userInfo.name}}
+                      <sup class="circle-dot" v-if="this.$store.state.Msg>0"></sup>
+                      <Icon type="arrow-down-b"></Icon>
+                    </a>
+                    <DropdownMenu slot="list">
+                      <DropdownItem name="userCenter">
+                        <a href="https://pan.xrcloud.net/ruicloud/userCenter">用户中心</a>
+                      </DropdownItem>
+                      <DropdownItem name="expenses">
+                        <a href="https://pan.xrcloud.net/ruicloud/expenses">费用中心</a>
+                      </DropdownItem>
+                      <DropdownItem name="msgCenter" style="position:relative">
+                        <a href="https://pan.xrcloud.net/ruicloud/msgCenter">消息中心<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup>
+                        </a>
+                      </DropdownItem>
+                      <DropdownItem name="operationLog">
+                        <a href="https://pan.xrcloud.net/ruicloud/operationLog">操作日志</a>
+                      </DropdownItem>
+                      <DropdownItem divided name="exit">
+                      <router-link to="">退出</router-link>
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
             </li>
           </ul>
         </div>
@@ -99,20 +99,24 @@
         <div class="operate" v-for="(parentItem,pIndex) in main" :key="pIndex" v-if="parentItem.subItem"
              :style="menuStyle(parentItem.type)">
           <ul :ref="`${parentItem.type}-sub`" :class="{show:parentItem.type==pageInfo.hoverItem}">
+            <!--<li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"-->
+                <!--@click="push(parentItem.type,subItem.type)" :class="{hover:subItem.type==pageInfo.sType}">-->
             <li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"
-                @click="push(parentItem.type,subItem.type)" :class="{hover:subItem.type==pageInfo.sType}">
-              <Dropdown v-if="subItem.thrItem" @on-click="pane">
-                <a href="javascript:void(0)">
+               :class="{hover:subItem.type==pageInfo.sType}">
+              <!--<Dropdown v-if="subItem.thrItem" @on-click="pane">-->
+                <Dropdown v-if="subItem.thrItem">
+                <a :href="subItem.href">
                   {{subItem.subName}}
                 </a>
                 <DropdownMenu slot="list">
-                  <DropdownItem v-for="(thrItem,index) in subItem.thrItem" :key="index"
-                                :name="`${thrItem.pane}#${subItem.subName}`">
-                    <a>{{thrItem.thrName}}</a>
+                  <!--<DropdownItem v-for="(thrItem,index) in subItem.thrItem" :key="index"-->
+                                <!--:name="`${thrItem.pane}#${subItem.subName}`">-->
+                    <DropdownItem v-for="(thrItem,index) in subItem.thrItem" :key="index">
+                    <a :href="thrItem.href">{{thrItem.thrName}}</a>
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
-              <a v-else>
+              <a v-else :href="subItem.href">
                 {{subItem.subName}}
               </a>
             </li>
@@ -231,9 +235,10 @@
           {
             mainName: '云服务器',
             type: 'server',
-            subItem: [{subName: '云主机', type: 'host'}, {subName: '云主机快照', type: 'snapshot'}, {
+            subItem: [{subName: '云主机', type: 'host',href:'https://pan.xrcloud.net/ruicloud/host'}, {subName: '云主机快照', type: 'snapshot',href:'https://pan.xrcloud.net/ruicloud/snapshot'}, {
               subName: '镜像',
-              type: 'mirror'
+              type: 'mirror',
+              href:'https://pan.xrcloud.net/ruicloud/mirror'
             }]
           },
           {
@@ -241,8 +246,8 @@
             type: 'storage',
             subItem: [
               {subName: '对象存储', type: 'objectStorage'},
-              {subName: '云硬盘', type: 'disk'},
-              {subName: '云硬盘备份', type: 'diskBackup'}
+              {subName: '云硬盘', type: 'disk',href:'https://pan.xrcloud.net/ruicloud/disk'},
+              {subName: '云硬盘备份', type: 'diskBackup',href:'https://pan.xrcloud.net/ruicloud/diskBackup'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
             ]
           },
@@ -253,14 +258,16 @@
               {
                 subName: '虚拟私有云VPC',
                 type: 'vpc',
-                thrItem: [{thrName: '虚拟私有云VPC', pane: 'VPC'}, {thrName: 'NAT网关', pane: 'NAT'}]
+                href:'https://pan.xrcloud.net/ruicloud/vpc',
+                thrItem: [{thrName: '虚拟私有云VPC', pane: 'VPC',href:'https://pan.xrcloud.net/ruicloud/vpc'}, {thrName: 'NAT网关', pane: 'NAT',href:'https://pan.xrcloud.net/ruicloud/vpc'}]
               },
-              {subName: '弹性IP', type: 'ip'},
-              {subName: '负载均衡', type: 'balance'},
+              {subName: '弹性IP', type: 'ip',href:'https://pan.xrcloud.net/ruicloud/ip'},
+              {subName: '负载均衡', type: 'balance',href:'https://pan.xrcloud.net/ruicloud/balance'},
               {
                 subName: '虚拟专网VPN',
                 type: 'vpn',
-                thrItem: [{thrName: '远程接入', pane: 'remote'}, {thrName: '隧道VPN', pane: 'VPN'}]
+                href:'https://pan.xrcloud.net/ruicloud/vpn',
+                thrItem: [{thrName: '远程接入', pane: 'remote',href:'https://pan.xrcloud.net/ruicloud/vpn'}, {thrName: '隧道VPN', pane: 'VPN',href:'https://pan.xrcloud.net/ruicloud/vpn'}]
               }
             ]
           },
@@ -268,21 +275,22 @@
             mainName: '云安全',
             type: 'security',
             subItem: [
-              {subName: '防火墙', type: 'firewall'}
+              {subName: '防火墙', type: 'firewall',href:'https://pan.xrcloud.net/ruicloud/firewall'}
             ]
           },
           {
             mainName: '回收站',
             type: 'recycle',
             subItem: [
-              {subName: '回收站', type: 'recycle'}
+              {subName: '回收站', type: 'recycle',href:'https://pan.xrcloud.net/ruicloud/recycle'}
             ]
           }
         ],
         kfURL: '',  // 客服url地址
         QQInfo: [],  // QQ客服在线情况
         xiaoshouInfo: [],
-        yunweiInfo: []
+        yunweiInfo: [],
+        userInfo:{}
       }
     },
     beforeRouteEnter(to, from, next){
@@ -324,6 +332,7 @@
        })*/
     },
     created(){
+      this.getUserInfo();
       /*this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result
       })
@@ -351,6 +360,16 @@
       }
     },
     methods: {
+      //获取用户信息
+      getUserInfo(){
+        this.$http.get('user/getUserInfo.do',{
+
+        }).then(res => {
+          if(res.data.result.status == 1){
+            this.userInfo = res.data.result.authInfo;
+          }
+        })
+      },
       QME(){
         this.$refs.qq.style.width = '231px'
       },
@@ -404,19 +423,19 @@
         console.log(response)
       },
       // 进入三级路由，记录二级路由入口
-      push(pType, sType){
-        this.pageInfo.static = true
-        this.pageInfo.selectItem = pType
-        this.pageInfo.sType = sType
-        this.$router.push(sType)
-      },
-      go(path){
-        if (path == 'exit') {
-          this.exit()
-          return
-        }
-        this.$router.push(path)
-      },
+      // push(pType, sType){
+      //   this.pageInfo.static = true
+      //   this.pageInfo.selectItem = pType
+      //   this.pageInfo.sType = sType
+      //   this.$router.push(sType)
+      // },
+      // go(path){
+      //   if (path == 'exit') {
+      //     this.exit()
+      //     return
+      //   }
+      //   this.$router.push(path)
+      // },
       pane(pane){
         var paneStatue = {
           vpc: 'VPC',
@@ -493,31 +512,31 @@
       zone: state => state.zone,
       zoneList: state => state.zoneList
     }),
-    watch: {
-      '$route'(to, from){
-        // 对路由变化作出响应...
-        this.pageInfo.hoverItem = this.pageInfo.selectItem = this.sType = ''
-        this.pageInfo.static = false
-        this.pageInfo.path = to.name
-        for (var item of this.main) {
-          if (item.subItem) {
-            for (var sItem of item.subItem) {
-              if (sItem.type == this.pageInfo.path) {
-                this.pageInfo.hoverItem = this.pageInfo.selectItem = item.type
-                this.pageInfo.sType = sItem.type
-                this.pageInfo.static = true
-              }
-            }
-          }
-        }
-      },
-      '$store.state.zone': {
-        handler: function () {
-          this.notice()
-        },
-        deep: true
-      }
-    }
+    // watch: {
+    //   '$route'(to, from){
+    //     // 对路由变化作出响应...
+    //     this.pageInfo.hoverItem = this.pageInfo.selectItem = this.sType = ''
+    //     this.pageInfo.static = false
+    //     this.pageInfo.path = to.name
+    //     for (var item of this.main) {
+    //       if (item.subItem) {
+    //         for (var sItem of item.subItem) {
+    //           if (sItem.type == this.pageInfo.path) {
+    //             this.pageInfo.hoverItem = this.pageInfo.selectItem = item.type
+    //             this.pageInfo.sType = sItem.type
+    //             this.pageInfo.static = true
+    //           }
+    //         }
+    //       }
+    //     }
+    //   },
+    //   '$store.state.zone': {
+    //     handler: function () {
+    //       this.notice()
+    //     },
+    //     deep: true
+    //   }
+    // }
   }
 </script>
 

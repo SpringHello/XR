@@ -19,7 +19,7 @@
         </div>
         <Tabs type="card" :value="name" :animated="false">
           <TabPane label="概览" name="name1" style="height:650px">
-            <p>当月用量 2018/04/28-2018</p>
+            <!--<p>当月用量 2018/04/28-2018</p>-->
             <div class="center_space">
               <div class="space_one">
                 <p>存储空间容量</p>
@@ -273,11 +273,11 @@
             this.size = res.data.data.data > 1000 || res.data.data.data / 1024 > 1 ? (res.data.data.data / 1024).toFixed(2) + 'MB' : res.data.data.data + 'KB';
           } else {
             this.size = "0KB";
-            this.$Message.error('出错了');
+            this.$Message.inof('平台出小差了');
           }
           sessionStorage.setItem('size', this.size);
         }).catch(error => {
-          this.$Message.error('网络连接出错');
+          this.$Message.info('平台出小差了');
           this.size = "0KB"
         })
       }
