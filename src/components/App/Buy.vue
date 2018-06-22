@@ -914,10 +914,21 @@
                     <div>
                       <!--自定义镜像 列表-->
                       <div>
-                        <div v-for="item in PdataInfo.customList" :key="item.value" class="zoneItem"
-                             :class="{zoneSelect:PecsInfo.customMirror.id==item.id}"
-                             @click="setOwnTemplate(item)" style="margin-top: 20px;">{{item.templatename}}
-                        </div>
+                        <Dropdown v-for="(item,index) in PdataInfo.publicList"
+                                  style="margin-right:10px;margin-bottom:20px;"
+                                  @on-click="setDataOS" :key="item.templateid">
+                          <div
+                            style="width:184px;text-align: center;height:35px;border: 1px solid #D9D9D9;line-height: 35px;">
+                            {{item.selectSystem||item.system}}
+                          </div>
+                          <Dropdown-menu slot="list">
+                            <Dropdown-item v-for="system in item.systemList" :key="system.ostypeid"
+                                           :name="`${system.dbname}#${system.systemtemplateid}#${index}`"
+                                           style="white-space: pre-wrap;display:block;">
+                              <span>{{system.dbname}}</span>
+                            </Dropdown-item>
+                          </Dropdown-menu>
+                        </Dropdown>
                       </div>
                     </div>
                   </div>
@@ -1137,66 +1148,20 @@
               <div class="item-wrapper">
                 <div style="display: flex">
                   <div>
-                    <p class="item-title">主机信息</p>
+                    <p class="item-title">数据库账号</p>
                   </div>
-                  <div v-for="item in PecsInfo.loginType" :key="item.type" class="zoneItem"
-                       :class="{zoneSelect:PecsInfo.currentLoginType==item.type}"
-                       @click="PecsInfo.currentLoginType=item.type">{{item.label}}
-                  </div>
+                  <span style="padding: 10px 0px; font-size: 14px; color: rgb(102, 102, 102);">root</span>
                 </div>
               </div>
 
-              <!--默认设置显示的设置-->
-              <div v-if="PecsInfo.currentLoginType=='default'">
-                <!--安全组选择-->
-                <div class="item-wrapper">
-                  <div style="display: flex">
-                    <div>
-                      <p class="item-title" style="margin-top: 8px">系统用户名</p>
-                    </div>
-                    <span style="padding:10px 0;font-size: 14px;color: #666666;">{{ systemUsername }}</span>
+              <div class="item-wrapper">
+                <div style="display: flex">
+                  <div>
+                    <p class="item-title" style="margin-top: 8px">数据库密码</p>
                   </div>
-                </div>
-                <div class="item-wrapper">
-                  <div style="display: flex">
-                    <div>
-                      <p class="item-title" style="margin-top: 8px">登录密码</p>
-                    </div>
-                    <span style="padding:10px 0;font-size: 14px;color: #666666;">默认密码 创建成功后通过短信和站内信查看</span>
-                  </div>
-                </div>
-              </div>
-
-              <!--自定义设置显示的设置-->
-              <div v-if="PecsInfo.currentLoginType=='custom'">
-                <div class="item-wrapper">
-                  <div style="display: flex">
-                    <div>
-                      <p class="item-title" style="margin-top: 8px">主机名称</p>
-                    </div>
-                    <Input v-model="PecsInfo.computerName" placeholder="请输入主机名" style="width: 300px"
-                           @on-change="PecsInfo.computerNameWarning=''"></Input>
-                    <span style="line-height: 32px;color:red;margin-left:10px">{{PecsInfo.computerNameWarning}}</span>
-                  </div>
-                  <p class="item-desc">当购买数量大于1台之时，主机命名规则为主机名称加随机数字。</p>
-                </div>
-                <div class="item-wrapper">
-                  <div style="display: flex">
-                    <div>
-                      <p class="item-title" style="margin-top: 8px">系统用户名</p>
-                    </div>
-                    <span style="padding:10px 0;font-size: 14px;color: #666666;">{{ systemUsername }}</span>
-                  </div>
-                </div>
-                <div class="item-wrapper">
-                  <div style="display: flex">
-                    <div>
-                      <p class="item-title" style="margin-top: 8px">登录密码</p>
-                    </div>
-                    <Input v-model="PecsInfo.password" placeholder="请输入至少6位包含大小写与数字的密码"
-                           style="width: 300px" @on-change="PecsInfo.passwordWarning=''"></Input>
-                    <span style="line-height: 32px;color:red;margin-left:10px">{{PecsInfo.passwordWarning}}</span>
-                  </div>
+                  <Input v-model="PdataInfo.password" placeholder="请输入至少6位仅包含字母大小写与数字的密码" style="width: 300px"
+                         @on-change="PdataInfo.passwordWarning=''"></Input>
+                  <span style="line-height: 32px;color:red;margin-left:10px">{{PdataInfo.passwordWarning}}</span>
                 </div>
               </div>
 
@@ -1206,7 +1171,7 @@
                   <div>
                     <p class="item-title" style="margin-top: 4px">自动续费</p>
                   </div>
-                  <i-switch v-model="PecsInfo.autoRenewal">
+                  <i-switch v-model="PdataInfo.autoRenewal">
                     <span slot="open">开</span>
                     <span slot="close">关</span>
                   </i-switch>
@@ -1394,6 +1359,44 @@
                   <span class="numberMinus" v-if="prod.count == 5">+</span>
                   <span class="numberMinus" style="cursor: pointer"
                         @click="prod.count += 1,prod.cost = PeipInfo.cost * prod.count" v-else>+</span></ul>
+                </p>
+              </div>
+
+              <!--磁盘清单字段-->
+              <div v-if="prod.type=='Pdata'" style="border-bottom:1px solid #ccc;padding:20px 0px;">
+                <p class="item"><span class="hidden">$</span><span class="title">区域</span><span class="hidden">#</span>{{prod.zone.zonename}}
+                </p>
+                <p class="item">
+                  <span class="hidden">$</span><span class="title">计费模式</span><span class="hidden">#</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
+                </p>
+                <p class="item"><span class="hidden">$</span><span class="title">购买时长</span><span
+                  class="hidden">#</span>{{prod.timeForm.currentTimeValue.label}}
+                </p>
+                <p class="item">
+                  <span class="hidden">$</span><span class="title">镜像</span><span
+                  class="hidden">#</span>{{prod.system.systemName}}
+                </p>
+                <p class="item" v-if="prod.IPConfig.publicIP">
+                  <span class="hidden">$</span>
+                  <span class="title">带宽</span><span class="hidden">#</span>{{prod.IPConfig.bandWidth}}
+                </p>
+                <p class="item" v-for="disk in prod.dataDiskList">
+                  <span class="hidden">$</span>
+                  <span class="title">硬盘</span><span class="hidden">#</span>{{disk.size}}G{{disk.label}}
+                </p>
+                <p class="item" style="margin-top: 10px"><span class="hidden">$</span><span class="title"
+                                                                                            style="vertical-align: middle">价格</span>
+                  <span class="hidden">#</span>
+                  <span
+                    style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.dataDiskCost.toFixed(2)}}元</span>
+                <ul style="float: right;font-size: 14px;user-select: none">
+                  <span class="numberAdd" v-if="prod.count == 1">-</span>
+                  <span class="numberAdd" style="cursor: pointer"
+                        @click="prod.count -= 1,prod.customCost = totalCost * prod.count" v-else>-</span>
+                  <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
+                  <span class="numberMinus" v-if="prod.count == 5">+</span>
+                  <span class="numberMinus" style="cursor: pointer"
+                        @click="prod.count += 1,prod.customCost = totalCost * prod.count" v-else>+</span></ul>
                 </p>
               </div>
             </div>
@@ -2124,9 +2127,15 @@
             {label: '4G', value: 4},
             {label: '8G', value: 8}
           ],
-          // 自定义镜像 列表
-          customList: [],
-          customMirror: {},
+
+          // 公共镜像 列表
+          publicList: [
+            {system: 'mongo', systemList: [], selectSystem: ''},
+            {system: 'mysql', systemList: [], selectSystem: ''},
+            {system: 'postgresql', systemList: [], selectSystem: ''},
+            {system: 'redis', systemList: [], selectSystem: ''}
+          ],
+
           // 选中的镜像
           system: {},
 
@@ -2141,12 +2150,8 @@
 
           autoRenewal: false,
           // 主机名称
-          computerName: '',
-          // 主机名称提示信息
-          computerNameWarning: '',
-          // 登录密码
           password: '',
-          // 登录密码提示信息
+          // 主机名称提示信息
           passwordWarning: '',
 
           // 系统磁盘类型选择
@@ -2294,7 +2299,13 @@
             zoneId: this.PdataInfo.zone.zoneid
           }
         }).then(response => {
-          console.log(response)
+          if (response.status == 200 && response.data.status == 1) {
+            this.PdataInfo.publicList[0].systemList = response.data.result.mongo
+            this.PdataInfo.publicList[1].systemList = response.data.result.mysql
+            this.PdataInfo.publicList[2].systemList = response.data.result.postgresql
+            this.PdataInfo.publicList[3].systemList = response.data.result.redis
+            this.PdataInfo.system = {}
+          }
         })
       },
       // 设置自有镜像
@@ -2342,6 +2353,17 @@
         }
         this.PecsInfo.publicList[arg[2]].selectSystem = arg[0]
       },
+      setDataOS(name){
+        var arg = name.split('#')
+        for (var item of this.PdataInfo.publicList) {
+          item.selectSystem = ''
+        }
+        this.PdataInfo.system = {
+          systemName: arg[0],
+          systemId: arg[1]
+        }
+        this.PdataInfo.publicList[arg[2]].selectSystem = arg[0]
+      },
       // 根据选择自定义镜像判断登录名是admin还是root
       setOwnTemplate(item) {
         this.PecsInfo.customMirror = item
@@ -2372,6 +2394,7 @@
         }).then(response => {
           this.PecsInfo.vpcList = response.data.result
           this.PecsInfo.vpc = this.PecsInfo.vpcList[0].vpcid
+          this.PdataInfo.vpc = this.PecsInfo.vpcList[0].vpcid
         })
       },
       // 重新查询vpc所属的子网
@@ -2384,6 +2407,7 @@
         }).then(response => {
           this.PecsInfo.networkList = response.data.result
           this.PecsInfo.network = this.PecsInfo.networkList[0].ipsegmentid
+          this.PdataInfo.network = this.PecsInfo.networkList[0].ipsegmentid
         })
       },
       // 查询云主机快速配置价格
@@ -2965,6 +2989,20 @@
             content: '购物车已满'
           })
         }
+        if (this.PdataInfo.system.systemName == undefined) {
+          this.$message.info({
+            content: '请选择一个镜像'
+          })
+          return
+        }
+        if (this.PdataInfo.password.trim() == '') {
+          this.PdataInfo.passwordWarning = '请输入主机名称'
+          return
+          if (!regExp.hostPassword(this.PdataInfo.password)) {
+            this.PdataInfo.passwordWarning = '请输入至少6位包含大小写与数字的密码'
+            return
+          }
+        }
         var obj = JSON.parse(JSON.stringify(this.PdataInfo))
         var prod = Object.assign({typeName: '数据库', zone: this.PdataInfo.zone, type: 'Pdata', count: 1}, obj)
         this.cart.push(prod)
@@ -2976,32 +3014,17 @@
           this.showModal.login = true
           return
         }
-        if (this.PecsInfo.currentType == 'app' && this.PecsInfo.currentApp.templatename == undefined) {
+        if (this.PdataInfo.system.systemName == undefined) {
           this.$message.info({
             content: '请选择一个镜像'
           })
           return
         }
-        if (this.PecsInfo.currentType == 'public' && this.PecsInfo.system.systemName == undefined) {
-          this.$message.info({
-            content: '请选择一个镜像'
-          })
+        if (this.PdataInfo.password.trim() == '') {
+          this.PdataInfo.passwordWarning = '请输入主机名称'
           return
-        }
-        if (this.PecsInfo.currentType == 'custom' && this.PecsInfo.customMirror.templatename == undefined) {
-          this.$message.info({
-            content: '请选择一个镜像'
-          })
-          return
-        }
-
-        if (this.PecsInfo.currentLoginType == 'custom') {
-          if (this.PecsInfo.computerName.trim() == '') {
-            this.PecsInfo.computerNameWarning = '请输入主机名称'
-            return
-          }
-          if (!regExp.hostPassword(this.PecsInfo.password)) {
-            this.PecsInfo.passwordWarning = '请输入至少6位包含大小写与数字的密码'
+          if (!regExp.hostPassword(this.PdataInfo.password)) {
+            this.PdataInfo.passwordWarning = '请输入至少6位包含大小写与数字的密码'
             return
           }
         }
@@ -3229,6 +3252,17 @@
               countOrder
             }
             PromiseList.push(axios.get('network/createPublicIp.do', {params}))
+          } else if (prod.type == 'Pdata') {
+            var params = {
+              zoneId: prod.zone.zoneid,
+              timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
+              timeValue: prod.timeForm.currentTimeValue.value,
+              count: prod.count,
+              isAutorenew: prod.autoRenewal ? '1' : '0',
+              brandWith: prod.bandWidth,
+              vpcId: prod.vpc,
+              countOrder
+            }
           }
         }
         if (this._checkCount(hostCount, diskCount, ipCount)) {
