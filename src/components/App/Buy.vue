@@ -3152,6 +3152,9 @@
           })
           return
         }
+        for (var prod of this.cart) {
+          console.log(prod)
+        }
         if (this.userInfo == null) {
           this.showModal.login = true
           return
@@ -3253,16 +3256,30 @@
             }
             PromiseList.push(axios.get('network/createPublicIp.do', {params}))
           } else if (prod.type == 'Pdata') {
+            console.log(prod)
+            for (var i = 0; i < count; i++) {
+              prod.dataDiskList.forEach(item => {
+                diskSize += `${item.size},`
+                diskType += `${item.type},`
+              })
+            }
             var params = {
               zoneId: prod.zone.zoneid,
+              templateId: prod.system.systemId,
+              bandWidth: prod.IPConfig.publicIP ? prod.IPConfig.bandWidth : 0,
               timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
               timeValue: prod.timeForm.currentTimeValue.value,
+              isAutoRenew: prod.autoRenewal ? '1' : '0',
               count: prod.count,
-              isAutorenew: prod.autoRenewal ? '1' : '0',
-              brandWith: prod.bandWidth,
+              cpuNum: prod.vmConfig.kernel,
+              memory: prod.vmConfig.RAM,
+              networkId: prod.network,
+              rootDiskType: 'ssd',
               vpcId: prod.vpc,
-              countOrder
+              diskSize,
+              diskType,
             }
+            PromiseList.push(axios.get('database/createDB', {params}))
           }
         }
         if (this._checkCount(hostCount, diskCount, ipCount)) {
