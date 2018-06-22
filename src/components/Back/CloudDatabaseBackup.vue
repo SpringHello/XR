@@ -211,7 +211,7 @@
 
 <script type="text/ecmascript-6">
   import regExp from '../../util/regExp'
-
+  import $store from '@/vuex'
   export default {
     data() {
       return {
@@ -539,11 +539,25 @@
         resourceDatabase: [],
       };
     },
+    beforeRouteEnter(to, from, next) {
+      // 获取云数据库备份列表数据
+      let DbSnapshotResponse = axios.get('Snapshot/listDbSnapshot.do', {
+        params: {
+          zoneId: $store.state.zone.zoneid
+        }
+      })
+      Promise.all([DbSnapshotResponse]).then((ResponseValue) => {
+        next(vm => {
+          vm.setDataBasesBackup(ResponseValue[0])
+        })
+      })
+    },
     created() {
       this.getMonthConfigDate()
       this.getWeekTimeData()
     },
     methods: {
+      setDataBasesBackup() {},
       rollback_ok() {
 
       },
