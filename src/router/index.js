@@ -281,7 +281,7 @@ var router = new Router({
         {path: 'active_1', name: 'active_1', component: active_1},
         {path: 'entrance', name: 'entrance', component: Entrance},
         {path: 'active_2', name: 'active_2', component: active_2},
-        //{path: 'smlj', name: 'smlj', component: smlj},
+        {path: 'smlj', name: 'smlj', component: smlj},
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
         {path: 'Pecss', component: Pecss},
