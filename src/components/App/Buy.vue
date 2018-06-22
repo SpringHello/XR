@@ -3278,8 +3278,9 @@
               vpcId: prod.vpc,
               diskSize,
               diskType,
+              countOrder,
             }
-            PromiseList.push(axios.get('database/createDB', {params}))
+            PromiseList.push(axios.get('database/createDB.do', {params}))
           }
         }
         if (this._checkCount(hostCount, diskCount, ipCount)) {
