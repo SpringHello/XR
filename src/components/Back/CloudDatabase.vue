@@ -279,8 +279,8 @@
             key: 'status',
             render: (h, params) => {
               const row = params.row
-              const text = row.status == -1 ? '异常' : row.status == 1 ? '正常' : row.status == 0 ? '欠费' : row.status == 2 ? '创建中' : row.status == 3 ? '重启中' : '删除中'
-              if (row.status == 2 || row.status == 3 || row.status == 4) {
+              const text = row.status == -1 ? '异常' : row.status == 1 ? '正常' : row.status == 0 ? '欠费' : row.status == 2 ? '创建中' : row.status == 3 ? '重启中' : row.status == 4 ? '删除中' : row.status == 5 ? '开启中' : '关闭中'
+              if (row.status == 2 || row.status == 3 || row.status == 4 || row.status == 5 || row.status == 6) {
                 return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block',
@@ -397,7 +397,6 @@
                }, '数据库镜像'),*/ h('DropdownItem', {
                   nativeOn: {
                     click: () => {
-
                       this.showModal.dilatation = true
                     }
                   }
@@ -411,6 +410,7 @@
                 }, '重启数据库'), h('DropdownItem', {
                   nativeOn: {
                     click: () => {
+                      this.current = params.row
                       if (params.row.caseType == 3) {
                         this.$Message.info('请选择包年包月的云数据库进行续费')
                       } else {
@@ -418,7 +418,67 @@
                       }
                     }
                   }
-                }, '数据库续费'),])
+                }, '数据库续费'), h('DropdownItem', {
+                  nativeOn: {
+                    click: () => {
+                      if (params.row.dbStatus == '1') {
+                        this.$Message.info('数据库已处于开启状态')
+                      } else {
+                        this.dataBaseData.forEach(item => {
+                          if (item.computerid == params.row.computerid) {
+                            item.status = 5
+                          }
+                        })
+                        let url = 'database/startDB.do'
+                        this.$http.get(url, {
+                          params: {
+                            DBId: params.row.computerid
+                          }
+                        }).then(res => {
+                          if (res.status == 200 && res.data.status == 1) {
+                            this.$Message.success(res.data.message)
+                            this.listDatabase()
+                          } else {
+                            this.$message.info({
+                              content: res.data.message
+                            })
+                            this.listDatabase()
+                          }
+                        })
+                      }
+                    }
+                  }
+                }, '开启数据库'), h('DropdownItem', {
+                  nativeOn: {
+                    click: () => {
+                      if (params.row.dbStatus == '0') {
+                        this.$Message.info('数据库已处于关闭状态')
+                      } else {
+                        this.dataBaseData.forEach(item => {
+                          if (item.computerid == params.row.computerid) {
+                            item.status = 6
+                          }
+                        })
+                        let url = 'database/stopDB.do'
+                        this.$http.get(url, {
+                          params: {
+                            DBId: params.row.computerid
+                          }
+                        }).then(res => {
+                          if (res.status == 200 && res.data.status == 1) {
+                            this.$Message.success(res.data.message)
+                            this.listDatabase()
+                          } else {
+                            this.$message.info({
+                              content: res.data.message
+                            })
+                            this.listDatabase()
+                          }
+                        })
+                      }
+                    }
+                  }
+                }, '关闭数据库')])
                 ])])
               } else {
                 return h('div', {}, [h('span', {
@@ -659,19 +719,19 @@
         })
       },
       renewalok() {
-        var host = [
-          {type: 0, id: this.currentHost[0].id}
+        var database = [
+          {type: 5, id: this.current.id}
         ]
-        list = JSON.stringify(host)
-        // this.$http.post('continue/continueOrder.do', {
-        //   list: list,
-        //   timeType: this.renewalType,
-        //   timeValue: this.renewalTime + ''
-        // }).then(response => {
-        //   if (response.status == 200 && response.data.status == 1) {
-        //     this.$router.push({path: 'order'})
-        //   }
-        // })
+        list = JSON.stringify(database)
+        this.$http.post('continue/continueOrder.do', {
+          list: list,
+          timeType: this.renewalType,
+          timeValue: this.renewalTime + ''
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push({path: 'order'})
+          }
+        })
       },
       dilatationok() {
 
@@ -691,30 +751,28 @@
         if (time == '') {
           this.cost = '--'
         } else {
-          // this.$http.get('information/getYjPrice.do', {
-          //     params: {
-          //       timeValue: this.renewalTime,
-          //       timeType: this.renewalType,
-          //       hostIdArr: this.currentHost[0].id,
-          //       ipIdArr: '',
-          //       diskArr: ''
-          //     }
-          //   }).then((response) => {
-          //       if (response.status == 200 && response.data.status == 1) {
-          //         this.cost = response.data.result
-          //         this.originCost = response.data.result
-          //         if (response.data.cuspon) {
-          //           this.originCost += response.data.cuspon
-          //         }
-          //         if (response.data.continueDiscount) {
-          //           this.originCost += response.data.continueDiscount
-          //         }
-          //       } else {
-          //         this.$message.info({
-          //           content: response.data.message
-          //         })
-          //       }
-          //     })
+          this.$http.get('information/getYjPrice.do', {
+            params: {
+              timeValue: this.renewalTime,
+              timeType: this.renewalType,
+              dbArr: this.current.id,
+            }
+          }).then((response) => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.cost = response.data.result
+              this.originCost = response.data.result
+              if (response.data.cuspon) {
+                this.originCost += response.data.cuspon
+              }
+              if (response.data.continueDiscount) {
+                this.originCost += response.data.continueDiscount
+              }
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          })
         }
       },
     }
