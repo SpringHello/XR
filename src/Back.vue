@@ -35,7 +35,7 @@
                   <!--<Dropdown @on-click="go">-->
                     <Dropdown >
                     <a href="javascript:void(0)" style="position:relative">
-                      {{userInfo}}
+                      {{userName}}
                       <sup class="circle-dot" v-if="this.$store.state.Msg>0"></sup>
                       <Icon type="arrow-down-b"></Icon>
                     </a>
@@ -290,7 +290,7 @@
         QQInfo: [],  // QQ客服在线情况
         xiaoshouInfo: [],
         yunweiInfo: [],
-        userInfo:''
+        userName:''
       }
     },
     beforeRouteEnter(to, from, next){
@@ -365,8 +365,8 @@
         this.$http.get('user/getUserInfo.do',{
 
         }).then(res => {
-          if(res.data.result.status == 1){
-            this.userInfo = res.data.result.realname;
+          if(res.data.status == 1){
+              this.userName = res.data.result.realname;
           }
         })
       },

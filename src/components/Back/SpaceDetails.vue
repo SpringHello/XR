@@ -161,7 +161,8 @@
     >
       <Form ref="domain" :model="domain" :rules="domainValiDate" label-position="top">
         <FormItem label="自定义外网域名" prop="route" >
-          <Input type="text" style="width:317px;" v-model="domain.route"/>
+          <Input type="text" style="width:317px;" v-model="domain.route" placeholder=""/>
+          <p style="color: #999999;margin-top: 10px;">绑定自定义域名前，请先再域名管理平台将当前域名解析到{{zoneName}}</p>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -199,7 +200,7 @@
         name="uploadFile"
         :data="fileUpdata"
         type="drag"
-        action="http://192.168.3.109:8080/ruirados/object/uploadObject.do"
+        action="object/uploadObject.do"
         class="upload_model"
       >
         <div class="upload_text">
@@ -246,7 +247,7 @@
         </div>
         <div style="width: 77%;margin-left: 20px;">
           <p>{{nameFile}}</p>
-          <Select v-model="term" style="width:240px;margin: 10px 0;">
+          <Select v-model="term" style="width:240px;margin: 10px 0;" @on-change="geturl">
             <Option v-for="item in termList" :value="item.value" :key="item.value">{{item.label}}</Option>
           </Select>
           <div>
@@ -307,14 +308,20 @@
             <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
           </div>
         </FormItem>
-        <FormItem prop="whiteListValue">
+        <FormItem>
           <div style="width:366px;display:flex;" >
             <div style="width:115px;font-size:14px;color:#333333;">Referer白名单</div>
             <div style="width:300px;">
               <Checkbox @on-change="changes" true-value="1" false-value="0" v-model="jurisdValidate.referer">允许白名单为空</Checkbox>
             </div>
           </div>
-          <Input  v-model="jurisdValidate.whiteListValue" style="width:420px;" :rows="4" type="textarea"/>
+        </FormItem>
+        <FormItem v-show="jurisdValidate.referer == '1'">
+          <Input   v-model="jurisdValidate.whiteListValue" style="width:420px;" :rows="4" type="textarea"/>
+          <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+        </FormItem>
+        <FormItem prop="whiteListFlaseValue" v-show="jurisdValidate.referer =='0'">
+          <Input  v-model="jurisdValidate.whiteListFlaseValue" style="width:420px;" :rows="4" type="textarea"/>
           <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
         </FormItem>
       </Form>
@@ -388,12 +395,16 @@
           <div style="width:366px;display:flex;">
             <div style="width:115px;font-size:14px;color:#333333;">Referer白名单</div>
             <div style="width:300px;">
-              <Checkbox  v-model="updateJurisd.updateReferer" true-value="1" false-value="0">允许白名单为空</Checkbox>
+              <Checkbox @on-change="changes"  v-model="updateJurisd.updateReferer" true-value="1" false-value="0">允许白名单为空</Checkbox>
             </div>
           </div>
         </FormItem>
-        <FormItem prop="updateWhiteListValue">
+        <FormItem v-show="updateJurisd.updateReferer =='1'">
           <Input  v-model="updateJurisd.updateWhiteListValue" style="width:420px;" :rows="4" type="textarea"></Input>
+          <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+        </FormItem>
+        <FormItem prop="updateWhiteListFalseValue" v-show="updateJurisd.updateReferer =='0'">
+          <Input  v-model="updateJurisd.updateWhiteListFalseValue" style="width:420px;" :rows="4" type="textarea"></Input>
           <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
         </FormItem>
       </Form>
@@ -517,18 +528,7 @@
         callback();
       }
   };
-  const validRed = (rule,value,callback)=>{
-    console.log(rule);
-   if(rule.field == 'whiteListValue'){
-     if (value == '') {
-       return callback(new Error("请输入白名单"));
-     }else{
-       callback();
-     }
-   }else{
-     callback();
-   }
-  }
+
   export default {
     data() {
       return {
@@ -538,7 +538,9 @@
           route:''
         },
         domainValiDate:{
-
+          route:[
+            {required:true,validator:validRoute,trigger:'blur'}
+          ]
         },
         domainLodaing:false,
         //自定义权限表格加载
@@ -660,9 +662,11 @@
                     },
                     on: {
                       click: () => {
+                        this.filename = "";
                         var object = new Object();
                         object.id = params.row.id;
                         object.name = params.row.filename;
+                        object.fId = params.row.fId;
                          this.fileObject.push(object);
                         this.filesList(params.row.id,object);//文件标识
                       }
@@ -757,6 +761,7 @@
           influenceValue: '',
           //referer白名单输入框的值
           whiteListValue: '',
+          whiteListFlaseValue:'',
           //用户授权
           users: '0',
           //影响资源
@@ -775,6 +780,7 @@
           updateChannel: [],
           updateGrantValue: '',
           updateUsers: '',
+          updateWhiteListFalseValue:''
         },
         //添加自定义权限表单验证
         jurisdRuleValidate: {
@@ -788,8 +794,8 @@
           influenceValue: [
             {required: true, message: '请输入影响资源', trigger: 'blur'},
           ],
-          whiteListValue:[
-            {required: true,validator:validRed, trigger: 'blur'},
+          whiteListFlaseValue:[
+            {required: true,message:'请输入白名单', trigger: 'blur'},
           ]
         },
         updateJurisdValid:{
@@ -802,6 +808,9 @@
           ],
           updateInfluenceValue: [
             {required: true, message: '请输入影响资源', trigger: 'blur'},
+          ],
+          updateWhiteListFalseValue:[
+            {required:true, message:'请输入白名单', trigger:'blur'}
           ]
         },
         //权限表格表头
@@ -1082,6 +1091,8 @@
         //默认域名
         defaultDomain:'',
         custom:'',
+        //接受ceph服务器域名
+        zoneName:''
       }
     },
     methods: {
@@ -1158,7 +1169,6 @@
       //删除CROS规则配置
       deleteCros(id,index){
         let corsObject = {orgins:'删除中'}
-        this.corsData.splice(index,1)
         this.corsData.splice(index,1,corsObject);
         this.$http.post('cors/deleteCors.do',{
           corsid:id+"",
@@ -1173,19 +1183,26 @@
       //自定义域名
       updateCustom(){
         this.domainLodaing = true;
-        this.$http.post('user/updateCustom.do',{
-          cephCustomDomain:this.domain.route
-        }).then(response => {
-          if(response.status == 200 && response.data.status == '1'){
-            this.getCustom();
-            this.$Message.success('自定义域名成功');
-            this.domainLodaing = false;
-            this.domainLodaing == false? this.mainName = false : this.mainName = true;
-          }else{
-            this.$Message.info('平台出小差了');
+        this.$refs.domain.validate((valid)=>{
+          if(valid){
+            this.$http.post('user/updateCustom.do',{
+              cephCustomDomain:this.domain.route
+            }).then(response => {
+              if(response.status == 200 && response.data.status == '1'){
+                this.getCustom();
+                this.$Message.success('自定义域名成功');
+                this.domainLodaing = false;
+                this.domainLodaing == false? this.mainName = false : this.mainName = true;
+              }else{
+                this.$Message.info(response.data.msg);
+                this.domainLodaing = false;
+              }
+            })
+          }else {
             this.domainLodaing = false;
           }
         })
+
       },
       //上传文件格式错误的方法
       handleFormatError(file) {
@@ -1197,7 +1214,7 @@
       },
       //上传文件之前应用的方法
       handleBeforeUpload(file) {
-        let reg = /^[\u4e00-\u9fa5\w\d@\.\-_]{1,20}$/i
+        let reg = /^[\a-z\A-Z\0-9\u4e00-\u9fa5\w\d]{1,20}$/
         if (!reg.test(file.name)) {
           this.$Message.info('文件名不能超过20个字符');
           return false;
@@ -1277,7 +1294,7 @@
               // this.floder = false;
               this.filesList(id);
             } else {
-              this.$Message.info('平台开小差了');
+              this.$Message.info(res.data.msg);
               this.filesList();
             }
           });
@@ -1288,7 +1305,6 @@
       deleteFile(id, filename,index) {
         var name = sessionStorage.getItem("bucketName");
         let obj = {filename:'删除中',filesize:'0',hide:1};
-        this.fileData.splice(index,1);
         this.fileData.splice(index,1,obj);
         this.$http.post('object/deleteObject.do', {
           bucketName: name,
@@ -1340,7 +1356,7 @@
                 isOperation: this.jurisdValidate.sources.toString(),
                 customPermission: this.jurisdValidate.channel,
                 isReferer: this.jurisdValidate.referer,
-                refereIp: this.jurisdValidate.whiteListValue,
+                refereIp: this.jurisdValidate.referer == '1' ? this.jurisdValidate.whiteListValue : this.jurisdValidate.whiteListFlaseValue,
                 userAuths: this.jurisdValidate.grantValue
               }).then(res => {
                 if (res.data.status == '1') {
@@ -1419,7 +1435,6 @@
       deleteFromBucketId(code,index) {
         var name = sessionStorage.getItem("bucketName");
         let obj = {userauthorization:'删除中',hide:1};
-        this.aclData.splice(index,1);
         this.aclData.splice(index,1,obj);
         this.$http.post('bucketAcl/deleteFromBucketId.do', {
           bucketName: name,
@@ -1481,7 +1496,7 @@
         val == 'cors' ? (this.corsHide = !this.corsHide) : val == 'static' ? (this.staticHide = !this.staticHide) : ''
       },
       //获取存储空间容量
-      getAllsize(instance) {
+      getAllsize() {
         this.$http.post('object/getAllSize.do', {}).then(res => {
           if (res.data.status == '1') {
             this.size = res.data.data.data / 1024 > 1 || res.data.data.data >1000 ? (res.data.data.data / 1024).toFixed(2) + 'MB' : res.data.data.data + 'KB';
@@ -1499,7 +1514,6 @@
         let number = this.fileObject.length - (index + 1);
         this.fileObject.splice(index + 1, number);
         this.filesList(this.fileData.id)
-
       },
       //获取空间详情
       // bucketDetails() {
@@ -1519,8 +1533,12 @@
       //
       //返回根路径
       backPage(){
-        this.fileObject = [];
-        this.filesList(null);
+        this.fileObject.pop();
+        if(this.fileObject[this.fileObject.length-1] == undefined || this.fileObject[this.fileObject.length-1]== 'undefined'){
+          this.filesList(null);
+        }else{
+          this.filesList(this.fileObject[this.fileObject.length-1].id);
+        }
       },
       //复制文件外链路径
       copyUrl(){
@@ -1591,7 +1609,18 @@
         }
       },
       changes(){
+        this.jurisdValidate.whiteListFlaseValue = this.jurisdValidate.whiteListValue;
+        this.updateJurisdValid.updateWhiteListFalseValue = this.updateJurisdValid.updateWhiteListValue;
         console.log(this.jurisdValidate.referer);
+      },
+      //获取ceph服务器域名
+      getZoneDomain(){
+        this.$http.get('zone/getZoneDomain.do',{
+          zonename:$store.state.zone.zonename
+        }).then(res => {
+          this.zoneName = res.data.data.zoneDomain;
+        })
+
       }
     },
     created(){
@@ -1602,6 +1631,7 @@
       this.getAllsize();
       this.selectCors();
       this.getCustom();
+      this.getZoneDomain();
       this.createtime = sessionStorage.getItem('createtime');
       this.kjName = sessionStorage.getItem('bucketName');
       this.kjaccessrights = sessionStorage.getItem('accessrights') == 1 ? '私有读写' : sessionStorage.getItem('accessrights') == 2 ? '公有读私有写' : sessionStorage.getItem('accessrights') == 3 ? '公有读写' : '自定义权限';

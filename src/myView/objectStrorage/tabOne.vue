@@ -4,7 +4,7 @@
             <Button type="primary" @click="modal6 = true">新建空间</Button>
         </div>
         <div style="margin-top:10px;">
-             <Table @on-row-click="bucketDetails"  :columns="spaceColumns" :data="spaceData" no-data-text="您还没有创建Bucket（存储空间）,请点击新建空间"></Table>
+             <Table   :columns="spaceColumns" :data="spaceData" no-data-text="您还没有创建Bucket（存储空间）,请点击新建空间"></Table>
         </div>
 
          <Modal
@@ -86,6 +86,15 @@ export default {
                   style:{
                     cursor:'pointer',
                     color:'#2A99F2'
+                  },
+                  on:{
+                    click:()=>{
+                      sessionStorage.setItem("bucketName", parasm.row.name);
+                      sessionStorage.setItem('bucketId', parasm.row.id);
+                      sessionStorage.setItem('accessrights', parasm.row.accessrights)
+                      sessionStorage.setItem('createtime', parasm.row.createtime);
+                      this.$router.push({path: "SpaceDetails"});
+                    }
                   }
                 },
                 parasm.row.name
@@ -202,8 +211,7 @@ export default {
     //删除空间
     bucketDelete(name,index) {
       let object = {name:'删除中',hide:1,createtime:'————',operation:'————',accessrights:'————'};
-      this.spaceData.splice(index,1);
-      this.spaceData.push(object);
+      this.spaceData.splice(index,1,object);
       this.$http
         .post(
           "bucket/deleteByBucketName.do",
@@ -220,13 +228,6 @@ export default {
           }
         });
     },
-    bucketDetails(row){
-      sessionStorage.setItem("bucketName", row.name);
-      sessionStorage.setItem('bucketId', row.id);
-      sessionStorage.setItem('accessrights', row.accessrights)
-      sessionStorage.setItem('createtime', row.createtime);
-      this.$router.push({path: "SpaceDetails"});
-    }
   },
   mounted() {
     this.getBuckets();

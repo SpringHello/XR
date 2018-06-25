@@ -3,17 +3,18 @@
         <p style="font-size:16px;color:#000000;margin-bottom:10px;">操作日志</p>
         <div style="height:31px;display:flex;margin-bottom:20px;">
            <ul class="objectList">
-                 <li :class="indexs == index? 'objectItems':'objectItem'" v-for="(item,index) in dayList" :key="index" @click="dayClick(1,index)">{{item.value}}</li>
+                 <li :class="indexs == index? 'objectItems':'objectItem'" v-for="(item,index) in dayList" :key="index" @click="dayClick('1',index)">{{item.value}}</li>
              </ul>
             <div class="journal_right">
                 <span>开始结束时间</span>
                  <DatePicker type="daterange" :options="options4" v-model="time"  placement="bottom-end" placeholder= "请选择时间" style="width: 200px"></DatePicker>
-                <Button type="primary"  @click="select">查询</Button>
+                <Button type="primary"  @click="select(1)">查询</Button>
             </div>
         </div>
         <Table :loading="pageLoading" :columns="journalList" :data="journalData" ></Table>
-        <Page :total="total" @on-change="selectLogs"   style="margin-top: 20px;"></Page>
-      <!--<Page :total="total" @on-change="dayClick"   style="margin-top: 20px;"></Page>-->
+        <Page v-if="dateCheck == 1" :total="total" :current="page" @on-change="selectLogs" :page-size="10"  style="margin-top: 20px;"></Page>
+        <Page v-if="dateCheck == 2" :total="total" :current="page" @on-change="select" :page-size="10"  style="margin-top: 20px;"></Page>
+         <Page v-if="dateCheck == 3" :total="total" :current="page" @on-change="dayClick" :page-size="10"  style="margin-top: 20px;"></Page>
     </div>
 </template>
 
@@ -86,12 +87,23 @@
       //操作日志结束时间
       oneDay:"",
       //操作日志开始时间
-      startDate:""
+      startDate:"",
+      dateCheck:1,
+      page:0
     };
   },
   methods: {
       dayClick(page,val){
-          this.indexs = val;
+        this.dateCheck = 3;
+        this.page = 1;
+        //proxy拦截数据PS:用得还是太辣鸡了
+      // var lets = new Proxy({},{
+      //     get : function(){
+      //       return  val;
+      //     }
+      //   })
+
+     this.indexs = val;
           //获取前七天
           var weeks = new Date();
           var now = new Date(weeks.getTime() - 7 * 24 * 3600 * 1000);
@@ -143,22 +155,29 @@
             this.oneDay = this.dayList[val].endDate;
             this.startDate = this.dayList[val].startDate;
           }
-              console.log(page);
            this.$http.post('operatelog/selectLogFromTime.do',{
             startTime: this.startDate,
             endTime: this.oneDay,
-            pageSum:10,
-            pageNum:page == undefined ? 1 : page
+            pageSum:'10',
+            pageNum:page == undefined ? '1' : page+''
           }).then(res => {
              if(res.data.status =='1'){
-              if(typeof(res.data.data.logs) === "string")
+              if(typeof(res.data.data.logs) === "string"){
                 return this.journalData = [];
-              this.journalData = res.data.data.logs;
+              }
+                this.journalData = res.data.data.logs;
+                this.total = res.data.data.page.sumCount;
+
             }
           })
       },
-    select(){
+    select(page){
+        this.dateCheck = 2;
+      this.page = page;
       this.indexs = -1;
+      if(this.time[1] == null && this.time[0] == null){
+       return this.selectLogs(1);
+      }
         var year = this.time[1].getFullYear();
         var month = this.time[1].getMonth()+1;
         var day = this.time[1].getDate();
@@ -171,21 +190,27 @@
         var end =year1+"-"+(month1<10?('0'+month1):month1)+"-"+(day1<10?('0'+day1):day1);
         this.$http.post('operatelog/selectLogFromTime.do',{
           startTime:star.toString(),
-          endTime:end.toString()
+          endTime:end.toString(),
+          pageSum:'10',
+          pageNum:page+''
         }).then(res => {
           if(res.data.status =='1'){
-            if(typeof(res.data.data.logs) === "string")
-              return this.journalData = [];
-            this.journalData = res.data.data.logs;
+            if(typeof(res.data.data.logs) === "string"){
+               return this.journalData = [];
+            }
+              this.journalData = res.data.data.logs;
+              this.total = res.data.data.page.sumCount;
           }
         })
       },
     //获取操作日志
     selectLogs(page){
+        this.indexs = -1;
+      this.page = page;
         this.pageLoading = true;
       this.$http.post('operatelog/selectLogs.do',{
-        pageSum:10,
-        pageNum:page
+        pageSum:'10',
+        pageNum:page+''
       }).then(res =>{
         if(res.data.status == '1'){
           if(typeof(res.data.data.logs) === "string"){
