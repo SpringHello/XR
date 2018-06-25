@@ -393,7 +393,11 @@
         this.pageInfo.static = true
         this.pageInfo.selectItem = pType
         this.pageInfo.sType = sType
-        this.$router.push(sType)
+        if (sType.indexOf('http') > -1) {
+          window.open(sType)
+        } else {
+          this.$router.push(sType)
+        }
       },
       go(path){
         if (path == 'exit') {
