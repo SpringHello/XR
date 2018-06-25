@@ -106,11 +106,18 @@ const NATManage = () => import('@/components/Back/NATManage')
 const Recycle = () => import('@/components/Back/Recycle')
 const Wxpay = () => import('@/components/Back/Wxpay')
 const WorkOrder = () => import('@/components/Back/WorkOrder')
+
 const Link = () => import('@/components/Link')
 const BRecords = () => import('@/components/Back/Records')
 const RecordDetails = () => import('@/components/Back/RecordDetails')
 const CompletedFilingDetails = () => import('@/components/Back/CompletedFilingDetails')
 const SpaceDetails = () => import('@/components/Back/SpaceDetails')
+
+
+const CloudDatabaseBackup = () => import('@/components/Back/CloudDatabaseBackup')
+const CloudDatabase = () => import('@/components/Back/CloudDatabase')
+const CloudDataManage = () => import('@/components/Back/CloudDataManage')
+const CloudDatabaseMirror = () => import('@/components/Back/CloudDatabaseMirror')
 
 // 帮助文档路由
 const computed = () => import('@/components/App/doc/computed')
@@ -695,7 +702,11 @@ var router = new Router({
         {path: 'BRecords', name: 'BRecords', component: BRecords},
         {path: 'RecordDetails', name: 'RecordDetails', component: RecordDetails},
         {path: 'SpaceDetails',name:'SpaceDetails',component:SpaceDetails},
-        {path: 'completedFilingDetails',name:'completedFilingDetails',component:CompletedFilingDetails}
+        {path: 'completedFilingDetails',name:'completedFilingDetails',component:CompletedFilingDetails},
+        {path: 'cloudDataManage', name: 'cloudDataManage', component: CloudDataManage},
+        {path: 'cloudDatabaseBackup', name: 'cloudDatabaseBackup', component: CloudDatabaseBackup},
+        {path: 'cloudDatabaseMirror', name: 'cloudDatabaseMirror', component: CloudDatabaseMirror},
+        {path: 'cloudDatabase', name: 'cloudDatabase', component: CloudDatabase}
       ]
     },
     {
