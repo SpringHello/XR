@@ -32,32 +32,32 @@
               <a href="https://pan.xrcloud.net/ruicloud/recharge" :class="{active:pageInfo.path=='recharge'}"><span>充值</span></a>
             </li>
             <li>
-                  <!--<Dropdown @on-click="go">-->
-                    <Dropdown >
-                    <a href="javascript:void(0)" style="position:relative">
-                      {{userInfo}}
-                      <sup class="circle-dot" v-if="this.$store.state.Msg>0"></sup>
-                      <Icon type="arrow-down-b"></Icon>
+              <!--<Dropdown @on-click="go">-->
+              <Dropdown >
+                <a href="javascript:void(0)" style="position:relative">
+                  {{userInfo}}
+                  <sup class="circle-dot" v-if="this.$store.state.Msg>0"></sup>
+                  <Icon type="arrow-down-b"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem name="userCenter">
+                    <a href="https://pan.xrcloud.net/ruicloud/userCenter">用户中心</a>
+                  </DropdownItem>
+                  <DropdownItem name="expenses">
+                    <a href="https://pan.xrcloud.net/ruicloud/expenses">费用中心</a>
+                  </DropdownItem>
+                  <DropdownItem name="msgCenter" style="position:relative">
+                    <a href="https://pan.xrcloud.net/ruicloud/msgCenter">消息中心<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup>
                     </a>
-                    <DropdownMenu slot="list">
-                      <DropdownItem name="userCenter">
-                        <a href="https://pan.xrcloud.net/ruicloud/userCenter">用户中心</a>
-                      </DropdownItem>
-                      <DropdownItem name="expenses">
-                        <a href="https://pan.xrcloud.net/ruicloud/expenses">费用中心</a>
-                      </DropdownItem>
-                      <DropdownItem name="msgCenter" style="position:relative">
-                        <a href="https://pan.xrcloud.net/ruicloud/msgCenter">消息中心<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup>
-                        </a>
-                      </DropdownItem>
-                      <DropdownItem name="operationLog">
-                        <a href="https://pan.xrcloud.net/ruicloud/operationLog">操作日志</a>
-                      </DropdownItem>
-                      <DropdownItem divided name="exit">
-                      <span @click="backOut">退出</span>
-                      </DropdownItem>
-                    </DropdownMenu>
-                  </Dropdown>
+                  </DropdownItem>
+                  <DropdownItem name="operationLog">
+                    <a href="https://pan.xrcloud.net/ruicloud/operationLog">操作日志</a>
+                  </DropdownItem>
+                  <DropdownItem divided name="exit">
+                    <span @click="backOut">退出</span>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </li>
           </ul>
         </div>
@@ -67,7 +67,7 @@
       <div class="wrapper">
         <div class="zoneList">
           <!--<Dropdown @on-click="toggleZone">-->
-            <Dropdown>
+          <Dropdown>
             <div style="height:30px;min-width: 102px;">
               <div
                 style="display: inline-block;background: #2A99F2;border-radius: 4px;height: 30px;padding: 4px 0px;cursor:pointer">
@@ -101,17 +101,17 @@
           <ul :ref="`${parentItem.type}-sub`" :class="{show:parentItem.type==pageInfo.hoverItem}">
             <li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"
                 @click="push(parentItem.type,subItem.type)" :class="{hover:subItem.type==pageInfo.sType}">
-            <!--<li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"-->
-               <!--:class="{hover:subItem.type==pageInfo.sType}">-->
+              <!--<li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"-->
+              <!--:class="{hover:subItem.type==pageInfo.sType}">-->
               <!--<Dropdown v-if="subItem.thrItem" @on-click="pane">-->
-                <Dropdown v-if="subItem.thrItem">
+              <Dropdown v-if="subItem.thrItem">
                 <a :href="subItem.href">
                   {{subItem.subName}}
                 </a>
                 <DropdownMenu slot="list">
                   <!--<DropdownItem v-for="(thrItem,index) in subItem.thrItem" :key="index"-->
-                                <!--:name="`${thrItem.pane}#${subItem.subName}`">-->
-                    <DropdownItem v-for="(thrItem,index) in subItem.thrItem" :key="index">
+                  <!--:name="`${thrItem.pane}#${subItem.subName}`">-->
+                  <DropdownItem v-for="(thrItem,index) in subItem.thrItem" :key="index">
                     <a :href="thrItem.href">{{thrItem.thrName}}</a>
                   </DropdownItem>
                 </DropdownMenu>
@@ -299,10 +299,10 @@
       //var userInfo = axios.get('user/GetUserInfo.do')
       // 获取zone信息
       var zoneList = axios.get('zone/zoneList.do')
-        /*.then(response => {
-        $store.commit('setZoneList', response.data.data.zoneList)
-        next()
-      })*/
+      /*.then(response => {
+       $store.commit('setZoneList', response.data.data.zoneList)
+       next()
+       })*/
 
       var zone =  axios.get('zone/defaultZone.do')
       //   .then(response =>{
@@ -334,15 +334,15 @@
     created(){
       this.getUserInfo();
       /*this.$http.get('user/getKfAdd.do').then(response => {
-        this.kfURL = response.data.result
-      })
-      // QQ客服在线情况
-      this.$http.get('network/getQQCustomerServiceStatus.do').then(response => {
-        this.QQInfo = response.data.kefu
-        this.xiaoshouInfo = response.data.xiaoshou
-        this.yunweiInfo = response.data.yunwei
-      })
-      this.notice()*/
+       this.kfURL = response.data.result
+       })
+       // QQ客服在线情况
+       this.$http.get('network/getQQCustomerServiceStatus.do').then(response => {
+       this.QQInfo = response.data.kefu
+       this.xiaoshouInfo = response.data.xiaoshou
+       this.yunweiInfo = response.data.yunwei
+       })
+       this.notice()*/
     },
     mounted(){
       // mounted时期根据路径修改选中的menu
@@ -371,15 +371,15 @@
         })
       },
       backOut(){
-          this.$http.get('user/logout.do',{
-          }).then(res =>{
-            if(res.data.status == 1){
-              this.$Message.success('退出成功');
-              window.open('https://pan.xrcloud.net/ruicloud/login','_self')
-            }else{
-              this.$Message.info('平台出小差了');
-            }
-          })
+        this.$http.get('user/logout.do',{
+        }).then(res =>{
+          if(res.data.status == 1){
+            this.$Message.success('退出成功');
+            window.open('https://pan.xrcloud.net/ruicloud/login','_self')
+          }else{
+            this.$Message.info('平台出小差了');
+          }
+        })
       },
       QME(){
         this.$refs.qq.style.width = '231px'
