@@ -315,3 +315,16 @@ div.modal-header-border {
 .modal-wrapper .modal .modal-body p {
   line-height: 25px;
 }
+
+/* 拼团活动radio框 */
+.groupBooking-radio .ivu-radio-wrapper {
+  font-size: 16px;
+}
+
+.groupBooking-radio .ivu-radio-checked .ivu-radio-inner {
+  border-color: #F26667;
+}
+
+.groupBooking-radio .ivu-radio-inner:after {
+  background-color: #F26667;
+}

@@ -33,6 +33,8 @@ const NewNodes_2 = () => import('@/components/App/active/newNodes_2')*/
 const active_1 = () => import('@/components/App/active/active_1')
 const active_2 = () => import('@/components/App/active/active_2')
 const smlj = () => import('@/components/App/active/smlj')
+const GroupBooking = () => import('@/components/App/groupbooking/homePage')
+
 
 // 备案系统页面路由
 const Records = () => import('@/components/App/Records')
@@ -280,6 +282,7 @@ var router = new Router({
             }
           ]
         },*/
+        {path: 'groupBooking', name: 'groupBooking', component: GroupBooking},
         {path: 'buy', name: 'buy', component: Buy},
         {path: 'active', name: 'active', component: Active},
         {path: 'vps', name: 'vps', component: Vps},
