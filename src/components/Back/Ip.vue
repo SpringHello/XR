@@ -410,6 +410,9 @@
                 case 5:
                   value = '升级中'
                   break
+                case 6:
+                  value = '已冻结'
+                  break
               }
               if (obj.row.status == 0) {
                 // 实时计费的续费模态框
@@ -606,6 +609,9 @@
                     display: 'inline-block'
                   }
                 }), h('span', {}, '解绑中')])
+              } else if (object.row.status == 6) {
+                // 已冻结
+                return h('div', {}, h('span', {}, '已冻结'))
               } else if (object.row.usetype == 0) {
                 return h('Dropdown', {
                   on: {

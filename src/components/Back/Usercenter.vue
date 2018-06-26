@@ -569,11 +569,6 @@
               </div>
             </div>
           </Tab-pane>
-          <!-- Access Key -->
-          <Tab-pane label="Access Key" @click="getBuckets">
-              <Button style="margin-bottom:15px;" @click="accessIsHide = true" type="primary">创建Access Key</Button>
-              <Table :columns="accessList" :data="accessData"></Table>
-          </Tab-pane>
           <!--用于企业认证的pane-->
           <TabPane label="企业信息" name="companyInfo" v-if="showCompanyPane">
             <p class="info-title">企业基本信息</p>
@@ -739,6 +734,12 @@
               </div>
             </Form>
           </TabPane>
+
+          <!--access key pane-->
+          <Tab-pane label="Access Key" name="key">
+            <Button type="primary" @click="keymodal" style="margin-bottom:10px">创建Access Key</Button>
+            <Table :columns="keyColumns" :data="keyData"></Table>
+          </Tab-pane>
         </Tabs>
       </div>
     </div>
@@ -1011,128 +1012,133 @@
       <div slot="footer">
       </div>
     </Modal>
-
-    <!-- 用户中心AccessKey发送验证 -->
-    <Modal title="提示"  width="550" v-model="accessIsHide" :scrollable="true">
-        <p style="color:#666666;font-size:14px;">为保障您的账户安全，请进行手机验证：</p>
-        <p style="color:#666666;font-size:14px;margin:10px 0;">手机号码：{{linkManData[0].telphone}}</p>
-        <span>验证码</span><Input type="text" style="width:132px;margin:10px 10px;" placeholder="请输入验证码"/><Button type="primary">获取验证码</Button>
+    <!--密钥手机验证-->
+    <Modal width="550" v-model="showModal.keyPhoneVal" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
+        提示
+      </div>
+      <div class="keyPhoneVal" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
+        <p>为保障您的账户安全，请进行手机验证：</p>
+        <p>手机号码： <span>{{keyForm.phone}}</span></p>
+        <p> 图形验证码
+          <Input v-model="keyForm.imgCode" placeholder="请输入验证码" style="width: 132px;margin:0 20px;"></Input>
+          <img :src="imgSrc" style="width:80px;height:30px;vertical-align: middle"
+               @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+        </p>
+        <p> 验证码
+          <Input v-model="keyForm.code" placeholder="请输入验证码" style="width: 132px;margin:0 20px;"></Input>
+          <Button type="primary" :class="{codeDisabled:keycodePlaceholder!='获取验证码'}" @click.prevent="keysendCode"
+                  :disabled="keycodePlaceholder!='获取验证码'">{{keycodePlaceholder}}
+          </Button>
+        </p>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.keyPhoneVal=false">取消</Button>
+        <Button type="primary" @click="createKey" :disabled="keyForm.imgCode==''||keyForm.code==''">
+          确定
+        </Button>
+      </div>
     </Modal>
   </div>
 
 </template>
 
 <script type="text/ecmascript-6">
-import { mapState } from "vuex";
-import axios from "@/util/axiosInterceptor";
-import $store from "@/vuex";
-import reg from "../../util/regExp";
+  import {mapState} from "vuex";
+  import axios from "@/util/axiosInterceptor";
+  import $store from "@/vuex";
+  import reg from "../../util/regExp";
 
-export default {
-  data() {
-    var authType = sessionStorage.getItem("pane");
-    var currentTab = "";
-    if (authType == "company") {
-      currentTab = "companyInfo";
-    } else if (authType == "person") {
-      currentTab = "";
-    } else {
-      currentTab = authType;
-    }
-    sessionStorage.removeItem("pane");
-    const validaRegisteredPhone = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error("联系电话不能为空"));
-      }
-      if (
-        !/^1(3|4|5|7|8|9)\d{9}$/.test(value) &&
-        !/^0\d{2,3}-?\d{7,8}$/.test(value)
-      ) {
-        callback(new Error("请输入正确的电话号码"));
+  export default {
+    data() {
+      var authType = sessionStorage.getItem("pane");
+      var currentTab = "";
+      if (authType == "company") {
+        currentTab = "companyInfo";
+      } else if (authType == "person") {
+        currentTab = "";
       } else {
-        callback();
+        currentTab = authType;
       }
-    };
-    const validaRegisteredID = (rule, value, callback) => {
-      if (!reg.IDCardVail(value)) {
-        callback(new Error("请输入正确的身份证号码"));
-      } else {
-        callback();
+      sessionStorage.removeItem("pane");
+      const validaRegisteredPhone = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error("联系电话不能为空"));
+        }
+        if (
+          !/^1(3|4|5|7|8|9)\d{9}$/.test(value) && !/^0\d{2,3}-?\d{7,8}$/.test(value)
+        ) {
+          callback(new Error("请输入正确的电话号码"));
+        } else {
+          callback();
+        }
+      };
+      const validaRegisteredID = (rule, value, callback) => {
+        if (!reg.IDCardVail(value)) {
+          callback(new Error("请输入正确的身份证号码"));
+        } else {
+          callback();
+        }
+      };
+      const validaRegisteredPassWord = (rule, value, callback) => {
+        if (!reg.registerPasswordVail(value)) {
+          callback(new Error("密码必须包含数字和字母大小写"));
+        } else {
+          callback();
+        }
+      };
+      const validaRegisteredPassWordTwo = (rule, value, callback) => {
+        if (this.resetPasswordForm.newPassword != value) {
+          callback(new Error("两次输入的密码不一致"));
+        } else {
+          callback();
+        }
+      };
+      const validaRegisteredEmail = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error("联系邮箱不能为空"));
+        }
+        if (
+          !/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(
+            value
+          )
+        ) {
+          callback(new Error("请输入正确的邮箱"));
+        } else {
+          callback();
+        }
+      };
+      const validaRegisteredName = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error("联系人不能为空"));
+        }
       }
-    };
-    const validaRegisteredPassWord = (rule, value, callback) => {
-      if (!reg.registerPasswordVail(value)) {
-        callback(new Error("密码必须包含数字和字母大小写"));
-      } else {
-        callback();
-      }
-    };
-    const validaRegisteredPassWordTwo = (rule, value, callback) => {
-      if (this.resetPasswordForm.newPassword != value) {
-        callback(new Error("两次输入的密码不一致"));
-      } else {
-        callback();
-      }
-    };
-    const validaRegisteredEmail = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error("联系邮箱不能为空"));
-      }
-      if (
-        !/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(
-          value
-        )
-      ) {
-        callback(new Error("请输入正确的邮箱"));
-      } else {
-        callback();
-      }
-    };
-    const validaRegisteredName = (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error("联系人不能为空"));
-      }
-      if (
-        /[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value) ||
-        /[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value) ||
-        /\s+/.test(value) ||
-        /^[0-9]*$/.test(value)
-      ) {
-        callback(new Error("输入姓名不能包含特殊字符、空格或是纯数字"));
-      } else {
-        callback();
-      }
-    };
-    return {
-      phoneVerCode: "获取验证码",
-      emailVerCode: "获取验证码",
-      authType,
-      // 当前选中的tab页
-      currentTab,
-      emailVerCodeText: "获取验证码",
-      showModal: {
-        selectAuthType: false,
-        addLinkman: false,
-        modifyPhone: false,
-        authByPhone: false,
-        authByEmail: false,
-        modifyPassword: false,
-        showPicture: false,
-        updateLinkman: false
-      },
-      //accessKey弹窗是否显示
-      accessIsHide:false,
-      imgSrc: "user/getKaptchaImage.do",
-      // 此对象存储所有未认证时页面的状态
-      notAuth: {
-        currentStep: 1,
-        allStep: {
-          // 选择认证方式
-          selectAuthType: 1,
-          // 通过身份证照片认证
-          IDAuth: 2,
-          // 快速认证
-          quicklyAuth: 3
+      return {
+        keyWeight: '',
+        keycodePlaceholder: '获取验证码',
+        token: '',
+        keyForm: {
+          phone: '',
+          imgCode: '',
+          code: ''
+        },
+        phoneVerCode: '获取验证码',
+        emailVerCode: '获取验证码',
+        authType,
+        // 当前选中的tab页
+        currentTab,
+        emailVerCodeText: '获取验证码',
+        showModal: {
+          selectAuthType: false,
+          addLinkman: false,
+          modifyPhone: false,
+          authByPhone: false,
+          authByEmail: false,
+          modifyPassword: false,
+          showPicture: false,
+          updateLinkman: false,
+          keyPhoneVal: false
         },
 
         authTypes: [
@@ -1161,19 +1167,19 @@ export default {
         // 快速认证表单验证
         quicklyAuthFormValidate: {
           name: [
-            { required: true, message: "请输入姓名" },
-            { validator: validaRegisteredName }
+            {required: true, message: "请输入姓名"},
+            {validator: validaRegisteredName}
           ],
           IDCard: [
-            { required: true, message: "请输入身份证号" },
-            { validator: validaRegisteredID }
+            {required: true, message: "请输入身份证号"},
+            {validator: validaRegisteredID}
           ],
-          pictureCode: [{ required: true, message: "请输入图片验证码" }],
+          pictureCode: [{required: true, message: "请输入图片验证码"}],
           phone: [
-            { required: true, message: "请输入以该身份证开户的手机号码" },
-            { validator: validaRegisteredPhone }
+            {required: true, message: "请输入以该身份证开户的手机号码"},
+            {validator: validaRegisteredPhone}
           ],
-          validateCode: [{ required: true, message: "请输入验证码" }]
+          validateCode: [{required: true, message: "请输入验证码"}]
         },
         // 身份证认证表单
         cardAuthForm: {
@@ -1190,31 +1196,31 @@ export default {
         // 身份证认证表单验证
         cardAuthFormValidate: {
           name: [
-            { required: true, message: "请输入姓名" },
-            { validator: validaRegisteredName }
+            {required: true, message: "请输入姓名"},
+            {validator: validaRegisteredName}
           ],
           IDCard: [
-            { required: true, message: "请输入身份证号" },
-            { validator: validaRegisteredID }
+            {required: true, message: "请输入身份证号"},
+            {validator: validaRegisteredID}
           ],
           tel: [
-            { required: true, message: "请输入手机号码" },
-            { validator: validaRegisteredPhone }
+            {required: true, message: "请输入手机号码"},
+            {validator: validaRegisteredPhone}
           ],
-          imgCode: [{ required: true, message: "请输入图形验证码" }],
-          verificationCode: [{ required: true, message: "请输入验证码" }]
+          imgCode: [{required: true, message: "请输入图形验证码"}],
+          verificationCode: [{required: true, message: "请输入验证码"}]
         },
         // 企业认证表单
         companyAuthForm: {
           name: "",
           industry: "",
           industryOptions: [
-            { label: "计算机软件", key: "1" },
-            { label: "互联网/电子商务", key: "2" },
-            { label: "通信/电信运营、增值服务", key: "3" },
-            { label: "计算机服务(系统、数据服务)", key: "4" },
-            { label: "金融/投资/证券", key: "5" },
-            { label: "其他", key: "6" }
+            {label: "计算机软件", key: "1"},
+            {label: "互联网/电子商务", key: "2"},
+            {label: "通信/电信运营、增值服务", key: "3"},
+            {label: "计算机服务(系统、数据服务)", key: "4"},
+            {label: "金融/投资/证券", key: "5"},
+            {label: "其他", key: "6"}
           ],
           contact: "",
           contactPerson: "",
@@ -1234,8 +1240,8 @@ export default {
           codePlaceholder: "发送验证码",
           certificateType: "1",
           certificateTypeOptions: [
-            { label: "三证合一", key: "1" },
-            { label: "非三证合一", key: "2" }
+            {label: "三证合一", key: "1"},
+            {label: "非三证合一", key: "2"}
           ],
           // 三证合一
           combine: "",
@@ -1248,603 +1254,723 @@ export default {
         },
         // 企业认证表单验证
         companyAuthFormValidate: {
-          name: [{ required: true, message: "请输入公司名称" }],
+          name: [{required: true, message: "请输入公司名称"}],
           industry: [
-            { required: true, message: "请输入选择所属行业" }
+            {required: true, message: "请输入选择所属行业"}
             /*{validator: validaRegisteredID}*/
           ],
           contact: [
-            { required: true, message: "请输入公司联系方式" },
-            { validator: validaRegisteredPhone }
+            {required: true, message: "请输入公司联系方式"},
+            {validator: validaRegisteredPhone}
           ],
           contactPerson: [
-            { required: true, message: "请输入联系人姓名" },
-            { validator: validaRegisteredName }
+            {required: true, message: "请输入联系人姓名"},
+            {validator: validaRegisteredName}
           ],
-          certificateType: [{ required: true, message: "请选择证件类型" }],
+          certificateType: [{required: true, message: "请选择证件类型"}],
           linkManName: [
-            { required: true, message: "请输入联系人姓名" },
-            { validator: validaRegisteredName }
+            {required: true, message: "请输入联系人姓名"},
+            {validator: validaRegisteredName}
           ],
           linkManNameID: [
-            { required: true, message: "请输入身份证号码" },
-            { validator: validaRegisteredID }
+            {required: true, message: "请输入身份证号码"},
+            {validator: validaRegisteredID}
           ],
-          imgCode: [{ required: true, message: "请输入图形验证码" }],
+          imgCode: [{required: true, message: "请输入图形验证码"}],
           linkManPhone: [
-            { required: true, message: "请输入联系方式" },
-            { validator: validaRegisteredPhone }
+            {required: true, message: "请输入联系方式"},
+            {validator: validaRegisteredPhone}
           ],
           verificationCode: [
-            { required: true, message: "请输入收到的手机验证码" }
+            {required: true, message: "请输入收到的手机验证码"}
           ]
-        }
-      },
-      // 联系人表格
-      linkManColumns: [
-        {
-          title: "姓名",
-          align: "left",
-          key: "username"
         },
-        {
-          title: "手机",
-          align: "left",
-          render: (h, params) => {
-            if (params.row.phoneauth == 0 && params.row.telphone != "") {
-              return h("div", [
-                h(
-                  "span",
-                  {
-                    style: {
-                      verticalAlign: "text-top"
-                    }
-                  },
-                  params.row.telphone
-                ),
-                h(
-                  "Tooltip",
-                  {
-                    props: {
-                      placement: "right"
-                    },
-                    class: {
-                      myTooltip: true
-                    }
-                  },
-                  [
-                    h(
-                      "Icon",
-                      {
-                        props: {
-                          type: "ios-information",
-                          color: "#FFC439",
-                          size: "16px"
-                        },
-                        style: {
-                          fontSize: "20px",
-                          marginLeft: "10px"
-                        }
-                      },
-                      ""
-                    ),
-                    h(
-                      "div",
-                      {
-                        style: {
-                          display: "flex"
-                        },
-                        slot: "content"
-                      },
-                      [
-                        h(
-                          "p",
-                          {
-                            style: {
-                              lineHeight: "24px"
-                            }
-                          },
-                          "手机未验证，不能接收消息"
-                        ),
-                        h(
-                          "Button",
-                          {
-                            style: {
-                              cursor: this.recertifyPoiner,
-                              color: this.recertifyColor
-                            },
-                            props: {
-                              type: "text",
-                              disabled: this.unPhone,
-                              size: "small"
-                            },
-                            on: {
-                              click: () => {
-                                this.sendPhone(params.row.telphone);
-                                this.recertifyPoiner = "";
-                                this.recertifyColor = "#FFF";
-                                this.recertify = "验证码已发送（60s）";
-                                this.unPhone = true;
-                                var inter = setInterval(() => {
-                                  this.countdown--;
-                                  this.recertify =
-                                    "验证码已发送(" + this.countdown + "s)";
-                                  if (this.countdown == 0) {
-                                    clearInterval(inter);
-                                    this.countdown = 60;
-                                    this.recertify = "重发验证";
-                                    this.recertifyPoiner = "pointer";
-                                    this.recertifyColor = "#2A99F2";
-                                    this.unPhone = false;
-                                  }
-                                }, 1000);
-                              }
-                            }
-                          },
-                          this.recertify
-                        )
-                      ]
-                    )
-                  ]
-                )
-              ]);
-            } else {
-              return h("div", [h("span", {}, params.row.telphone)]);
-            }
-          }
-        },
-        {
-          title: "邮箱",
-          align: "left",
-          render: (h, params) => {
-            if (params.row.emailauth == 0 && params.row.email != "") {
-              return h("div", [
-                h(
-                  "span",
-                  {
-                    style: {
-                      verticalAlign: "text-top"
-                    }
-                  },
-                  params.row.email
-                ),
-                h(
-                  "Tooltip",
-                  {
-                    props: {
-                      placement: "right"
-                    },
-                    class: {
-                      myTooltip: true
-                    }
-                  },
-                  [
-                    h(
-                      "Icon",
-                      {
-                        props: {
-                          type: "ios-information",
-                          color: "#FFC439",
-                          size: "16px"
-                        },
-                        style: {
-                          fontSize: "20px",
-                          marginLeft: "10px"
-                        }
-                      },
-                      ""
-                    ),
-                    h(
-                      "div",
-                      {
-                        style: {
-                          display: "flex"
-                        },
-                        slot: "content"
-                      },
-                      [
-                        h(
-                          "p",
-                          {
-                            style: {
-                              lineHeight: "24px"
-                            }
-                          },
-                          "邮箱未验证，不能接收消息"
-                        ),
-                        h(
-                          "Button",
-                          {
-                            style: {
-                              cursor: this.recertifyPoinerEmail,
-                              color: this.recertifyColorEmail
-                            },
-                            props: {
-                              type: "text",
-                              disabled: this.unEmail,
-                              size: "small"
-                            },
-                            on: {
-                              click: () => {
-                                this.sendEmail(params.row.email);
-                                this.recertifyEmail = "验证码已发送（60s）";
-                                this.recertifyPoinerEmail = "";
-                                this.recertifyColorEmail = "#FFF";
-                                this.unEmail = true;
-                                var inter = setInterval(() => {
-                                  this.countdownEmail--;
-                                  this.recertifyEmail =
-                                    "验证码已发送(" +
-                                    this.countdownEmail +
-                                    "s)";
-                                  if (this.countdownEmail == 0) {
-                                    clearInterval(inter);
-                                    this.countdownEmail = 60;
-                                    this.recertifyPoinerEmail = "pointer";
-                                    this.recertifyColorEmail = "#2A99F2";
-                                    this.recertifyEmail = "重发验证";
-                                    this.unEmail = false;
-                                  }
-                                }, 1000);
-                              }
-                            }
-                          },
-                          this.recertifyEmail
-                        )
-                      ]
-                    )
-                  ]
-                )
-              ]);
-            } else {
-              return h("div", [h("span", {}, params.row.email)]);
-            }
-          }
-        },
-        {
-          title: "添加时间",
-          align: "left",
-          key: "createTime"
-        },
-        {
-          title: "操作",
-          align: "left",
-          width: 180,
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "span",
-                {
-                  style: {
-                    cursor: "pointer",
-                    color: " #2A99F2"
-                  },
-                  on: {
-                    click: () => {
-                      this.updateContacts(params.row);
-                    }
-                  }
-                },
-                "修改"
-              ),
-              h(
-                "Poptip",
-                {
-                  props: {
-                    title: "您确认删除该联系人吗？",
-                    width: 208,
-                    confirm: true
-                  },
-                  on: {
-                    "on-ok": () => {
-                      this.delContacts(params.row.id);
-                    }
-                  }
-                },
-                [
+        // 联系人表格
+        linkManColumns: [
+          {
+            title: "姓名",
+            align: "left",
+            key: "username"
+          },
+          {
+            title: "手机",
+            align: "left",
+            render: (h, params) => {
+              if (params.row.phoneauth == 0 && params.row.telphone != "") {
+                return h("div", [
                   h(
                     "span",
                     {
                       style: {
-                        cursor: "pointer",
-                        color: "#2A99F2",
-                        marginLeft: "20px"
+                        verticalAlign: "text-top"
                       }
                     },
-                    "删除"
+                    params.row.telphone
+                  ),
+                  h(
+                    "Tooltip",
+                    {
+                      props: {
+                        placement: "right"
+                      },
+                      class: {
+                        myTooltip: true
+                      }
+                    },
+                    [
+                      h(
+                        "Icon",
+                        {
+                          props: {
+                            type: "ios-information",
+                            color: "#FFC439",
+                            size: "16px"
+                          },
+                          style: {
+                            fontSize: "20px",
+                            marginLeft: "10px"
+                          }
+                        },
+                        ""
+                      ),
+                      h(
+                        "div",
+                        {
+                          style: {
+                            display: "flex"
+                          },
+                          slot: "content"
+                        },
+                        [
+                          h(
+                            "p",
+                            {
+                              style: {
+                                lineHeight: "24px"
+                              }
+                            },
+                            "手机未验证，不能接收消息"
+                          ),
+                          h(
+                            "Button",
+                            {
+                              style: {
+                                cursor: this.recertifyPoiner,
+                                color: this.recertifyColor
+                              },
+                              props: {
+                                type: "text",
+                                disabled: this.unPhone,
+                                size: "small"
+                              },
+                              on: {
+                                click: () => {
+                                  this.sendPhone(params.row.telphone);
+                                  this.recertifyPoiner = "";
+                                  this.recertifyColor = "#FFF";
+                                  this.recertify = "验证码已发送（60s）";
+                                  this.unPhone = true;
+                                  var inter = setInterval(() => {
+                                    this.countdown--;
+                                    this.recertify =
+                                      "验证码已发送(" + this.countdown + "s)";
+                                    if (this.countdown == 0) {
+                                      clearInterval(inter);
+                                      this.countdown = 60;
+                                      this.recertify = "重发验证";
+                                      this.recertifyPoiner = "pointer";
+                                      this.recertifyColor = "#2A99F2";
+                                      this.unPhone = false;
+                                    }
+                                  }, 1000);
+                                }
+                              }
+                            },
+                            this.recertify
+                          )
+                        ]
+                      )
+                    ]
                   )
-                ]
-              )
-            ]);
-          }
-        }
-      ],
-      // 联系人表格render需要
-      recertify: "重发验证",
-      recertifyColor: "#2A99F2",
-      recertifyPoiner: "pointer",
-      recertifyPoinerEmail: "pointer",
-      recertifyColorEmail: "#2A99F2",
-      countdownEmail: 60,
-      countdown: 60,
-      recertifyEmail: "重发验证",
-      unPhone: false,
-      unEmail: false,
-      //获取联系人手机号码
-      linkPhone:'',
-      linkManData: [],
-      // 添加联系人表单
-      addLinkmanForm: {
-        phone: "",
-        email: "",
-        name: ""
-      },
-      addLinkmanFormValidate: {
-        phone: [
-          { required: true, validator: validaRegisteredPhone, trigger: "blur" }
-        ],
-        email: [
-          { required: true, validator: validaRegisteredEmail, trigger: "blur" }
-        ],
-        name: [
-          { required: true, validator: validaRegisteredName, trigger: "blur" }
-        ]
-      },
-      // 修改联系人表单
-      updateLinkmanForm: {
-        phone: "",
-        email: "",
-        name: "",
-        id: ""
-      },
-      ruleValidate: {
-        phone: [
-          { required: true, validator: validaRegisteredPhone, trigger: "blur" }
-        ],
-        email: [
-          { required: true, validator: validaRegisteredEmail, trigger: "blur" }
-        ],
-        name: [
-          { required: true, validator: validaRegisteredName, trigger: "blur" }
-        ]
-      },
-      // 通知信息表格
-      setColumns: [
-        {
-          title: "事件项",
-          key: "companyid"
-        },
-        {
-          title: "站内信",
-          align: "center",
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "Checkbox",
-                {
-                  props: {
-                    value: params.row.isLetter == 1
-                  },
-                  on: {
-                    "on-change": () => {
-                      this.changeStatus(params.row, "isLetter");
+                ]);
+              } else {
+                return h("div", [h("span", {}, params.row.telphone)]);
+              }
+            }
+          },
+          {
+            title: "邮箱",
+            align: "left",
+            render: (h, params) => {
+              if (params.row.emailauth == 0 && params.row.email != "") {
+                return h("div", [
+                  h(
+                    "span",
+                    {
+                      style: {
+                        verticalAlign: "text-top"
+                      }
+                    },
+                    params.row.email
+                  ),
+                  h(
+                    "Tooltip",
+                    {
+                      props: {
+                        placement: "right"
+                      },
+                      class: {
+                        myTooltip: true
+                      }
+                    },
+                    [
+                      h(
+                        "Icon",
+                        {
+                          props: {
+                            type: "ios-information",
+                            color: "#FFC439",
+                            size: "16px"
+                          },
+                          style: {
+                            fontSize: "20px",
+                            marginLeft: "10px"
+                          }
+                        },
+                        ""
+                      ),
+                      h(
+                        "div",
+                        {
+                          style: {
+                            display: "flex"
+                          },
+                          slot: "content"
+                        },
+                        [
+                          h(
+                            "p",
+                            {
+                              style: {
+                                lineHeight: "24px"
+                              }
+                            },
+                            "邮箱未验证，不能接收消息"
+                          ),
+                          h(
+                            "Button",
+                            {
+                              style: {
+                                cursor: this.recertifyPoinerEmail,
+                                color: this.recertifyColorEmail
+                              },
+                              props: {
+                                type: "text",
+                                disabled: this.unEmail,
+                                size: "small"
+                              },
+                              on: {
+                                click: () => {
+                                  this.sendEmail(params.row.email);
+                                  this.recertifyEmail = "验证码已发送（60s）";
+                                  this.recertifyPoinerEmail = "";
+                                  this.recertifyColorEmail = "#FFF";
+                                  this.unEmail = true;
+                                  var inter = setInterval(() => {
+                                    this.countdownEmail--;
+                                    this.recertifyEmail =
+                                      "验证码已发送(" +
+                                      this.countdownEmail +
+                                      "s)";
+                                    if (this.countdownEmail == 0) {
+                                      clearInterval(inter);
+                                      this.countdownEmail = 60;
+                                      this.recertifyPoinerEmail = "pointer";
+                                      this.recertifyColorEmail = "#2A99F2";
+                                      this.recertifyEmail = "重发验证";
+                                      this.unEmail = false;
+                                    }
+                                  }, 1000);
+                                }
+                              }
+                            },
+                            this.recertifyEmail
+                          )
+                        ]
+                      )
+                    ]
+                  )
+                ]);
+              } else {
+                return h("div", [h("span", {}, params.row.email)]);
+              }
+            }
+          },
+          {
+            title: "添加时间",
+            align: "left",
+            key: "createTime"
+          },
+          {
+            title: "操作",
+            align: "left",
+            width: 180,
+            render: (h, params) => {
+              return h("div", [
+                h(
+                  "span",
+                  {
+                    style: {
+                      cursor: "pointer",
+                      color: " #2A99F2"
+                    },
+                    on: {
+                      click: () => {
+                        this.updateContacts(params.row);
+                      }
                     }
-                  }
-                },
-                ""
-              )
-            ]);
-          }
-        },
-        {
-          title: "邮件",
-          align: "center",
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "Checkbox",
-                {
-                  props: {
-                    value: params.row.isEmail == 1
                   },
-                  on: {
-                    "on-change": () => {
-                      this.changeStatus(params.row, "isEmail");
+                  "修改"
+                ),
+                h(
+                  "Poptip",
+                  {
+                    props: {
+                      title: "您确认删除该联系人吗？",
+                      width: 208,
+                      confirm: true
+                    },
+                    on: {
+                      "on-ok": () => {
+                        this.delContacts(params.row.id);
+                      }
                     }
-                  }
-                },
-                ""
-              )
-            ]);
-          }
-        },
-        {
-          title: "短信",
-          align: "center",
-          render: (h, params) => {
-            return h("div", [
-              h(
-                "Checkbox",
-                {
-                  props: {
-                    value: params.row.isTel == 1
                   },
-                  on: {
-                    "on-change": () => {
-                      this.changeStatus(params.row, "isTel");
-                    }
-                  }
-                },
-                ""
-              )
-            ]);
+                  [
+                    h(
+                      "span",
+                      {
+                        style: {
+                          cursor: "pointer",
+                          color: "#2A99F2",
+                          marginLeft: "20px"
+                        }
+                      },
+                      "删除"
+                    )
+                  ]
+                )
+              ]);
+            }
           }
-        }
-      ],
-      setData: [],
-      // 修改手机号时表单
-      code: "",
-      newPhoneForm: {
-        oldPhoneCode: "",
-        // 随机验证码
+        ],
+        // 联系人表格render需要
+        recertify: "重发验证",
+        recertifyColor: "#2A99F2",
+        recertifyPoiner: "pointer",
+        recertifyPoinerEmail: "pointer",
+        recertifyColorEmail: "#2A99F2",
+        countdownEmail: 60,
+        countdown: 60,
+        recertifyEmail: "重发验证",
+        unPhone: false,
+        unEmail: false,
+        //获取联系人手机号码
+        linkPhone: '',
+        linkManData: [],
+        // 添加联系人表单
+        addLinkmanForm: {
+          phone: "",
+          email: "",
+          name: ""
+        },
+        addLinkmanFormValidate: {
+          phone: [
+            {required: true, validator: validaRegisteredPhone, trigger: "blur"}
+          ],
+          email: [
+            {required: true, validator: validaRegisteredEmail, trigger: "blur"}
+          ],
+          name: [
+            {required: true, validator: validaRegisteredName, trigger: "blur"}
+          ]
+        },
+        // 修改联系人表单
+        updateLinkmanForm: {
+          phone: "",
+          email: "",
+          name: "",
+          id: ""
+        },
+        ruleValidate: {
+          phone: [
+            {required: true, validator: validaRegisteredPhone, trigger: "blur"}
+          ],
+          email: [
+            {required: true, validator: validaRegisteredEmail, trigger: "blur"}
+          ],
+          name: [
+            {required: true, validator: validaRegisteredName, trigger: "blur"}
+          ]
+        },
+        // 通知信息表格
+        setColumns: [
+          {
+            title: "事件项",
+            key: "companyid"
+          },
+          {
+            title: "站内信",
+            align: "center",
+            render: (h, params) => {
+              return h("div", [
+                h(
+                  "Checkbox",
+                  {
+                    props: {
+                      value: params.row.isLetter == 1
+                    },
+                    on: {
+                      "on-change": () => {
+                        this.changeStatus(params.row, "isLetter");
+                      }
+                    }
+                  },
+                  ""
+                )
+              ]);
+            }
+          },
+          {
+            title: "邮件",
+            align: "center",
+            render: (h, params) => {
+              return h("div", [
+                h(
+                  "Checkbox",
+                  {
+                    props: {
+                      value: params.row.isEmail == 1
+                    },
+                    on: {
+                      "on-change": () => {
+                        this.changeStatus(params.row, "isEmail");
+                      }
+                    }
+                  },
+                  ""
+                )
+              ]);
+            }
+          },
+          {
+            title: "短信",
+            align: "center",
+            render: (h, params) => {
+              return h("div", [
+                h(
+                  "Checkbox",
+                  {
+                    props: {
+                      value: params.row.isTel == 1
+                    },
+                    on: {
+                      "on-change": () => {
+                        this.changeStatus(params.row, "isTel");
+                      }
+                    }
+                  },
+                  ""
+                )
+              ]);
+            }
+          }
+        ],
+        setData: [],
+        // 修改手机号时表单
         code: "",
-        newPhone: "",
-        verCode: "",
-        phoneVerCodeText: "获取验证码"
-      },
-      // 重值密码表单
-      resetPasswordForm: {
-        oldPassword: "",
-        newPassword: "",
-        confirmPassword: ""
-      },
-      resetPasswordruleValidate: {
-        oldPassword: [
-          { required: true, message: "请输入旧密码", trigger: "blur" }
-        ],
-        newPassword: [
-          { required: true, message: "请输入新密码", trigger: "blur" },
-          { validator: validaRegisteredPassWord, trigger: "blur" }
-        ],
-        confirmPassword: [
-          { required: true, message: "请输入新密码", trigger: "blur" },
-          { validator: validaRegisteredPassWordTwo, trigger: "blur" }
-        ]
-      },
-      accessList: [
-        {
+        newPhoneForm: {
+          oldPhoneCode: "",
+          // 随机验证码
+          code: "",
+          newPhone: "",
+          verCode: "",
+          phoneVerCodeText: "获取验证码"
+        },
+        // 重值密码表单
+        resetPasswordForm: {
+          oldPassword: "",
+          newPassword: "",
+          confirmPassword: ""
+        },
+        resetPasswordruleValidate: {
+          oldPassword: [
+            {required: true, message: "请输入旧密码", trigger: "blur"}
+          ],
+          newPassword: [
+            {required: true, message: "请输入新密码", trigger: "blur"},
+            {validator: validaRegisteredPassWord, trigger: "blur"}
+          ],
+          confirmPassword: [
+            {required: true, message: "请输入新密码", trigger: "blur"},
+            {validator: validaRegisteredPassWordTwo, trigger: "blur"}
+          ]
+        },
+        accessList: {
           key: "accesskeyid",
           title: "Access Key ID"
         },
-        {
-          key: "accesskeysecret",
-          title: "Access Key Secret",
-          render: (h, params) => {
-            var self = this;
-            var index = params.row._index;
-            return h("div", [
-              h(
-                "span",
-                {
-                  on: {
-                    click() {
-                      if(index == params.row._index){
-                        console.log(self.accesskey+index+'++++++++++++++++++++++++++++')
-                          self.accesskey[index] = 1;
+        resetPasswordruleValidate: {
+          oldPassword: [
+            {required: true, message: '请输入旧密码', trigger: 'blur'},
+          ],
+          newPassword: [
+            {required: true, message: '请输入新密码', trigger: 'blur'},
+            {validator: validaRegisteredPassWord, trigger: 'blur'}
+          ],
+          confirmPassword: [
+            {required: true, message: '请输入新密码', trigger: 'blur'},
+            {validator: validaRegisteredPassWordTwo, trigger: 'blur'}
+          ],
+        },
+        keyColumns: [
+          {
+            title: 'Access Key ID',
+            key: 'accesskeyid'
+          },
+          {
+            title: 'Access Key Secret',
+            render: (h, params) => {
+              var text = params.row.isdisplay == 1 ? '查看' : '隐藏'
+              if (params.row.isdisplay == 1) {
+                return h('div', [
+                  h('span', {
+                    style: {
+                      marginRight: '5px',
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        axios.post('user/showUserAcess.do', {
+                          accessKeyID: params.row.accesskeyid,
+                          token: this.token
+                        }).then(response => {
+                          if (response.status == 200 && response.data.status == 1) {
+                            this.keyData[params.index].isdisplay = 0
+                          } else {
+                            this.$Message.error(response.data.message)
+                          }
+                        })
                       }
                     }
-                  },
-                  style: {
-                    color: "#2A99F2",
-                    cursor: "pointer",
-                    marginRight: "10px",
-                    display: self.accesskey[index] == 1 ? "none" : "inline-block"
-                  },
-                },
-                "查看"
-              ),
-              h(
-                "span",
-                {
-                  style: {
-                    display: self.accesskey[index] == 2 ? "none" : "inline-block"
-                  }
-                },
-                params.row.accesskeysecret
-              ),
-              h(
-                "span",
-                {
-                  on: {
-                    click() {
-                      if(index == params.row._index){
-                        console.log(self.accesskey+index+'=======================')
-                          self.accesskey[index] = 2;
+                  }, text)
+                ]);
+              } else if (params.row.isdisplay == 0) {
+                return h('div', [
+                  h('span', {
+                    style: {
+                      marginRight: '5px',
+                    }
+                  }, params.row.accesskeysecret),
+                  h('span', {
+                    style: {
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        this.keyData[params.index].isdisplay = 1
                       }
                     }
-                  },
+                  }, text)
+                ]);
+              }
+            }
+          },
+          {
+            title: '状态',
+            render: (h, params) => {
+              let text = params.row.status == 1 ? '启动' : '禁用'
+              return h('span', {}, text)
+            }
+          },
+          {
+            title: '创建时间',
+            key: 'createtime'
+          },
+          {
+            title: '操作',
+            render: (h, params) => {
+              let text = params.row.status == 1 ? '启动' : '禁用'
+              return h('div', [
+                h('span', {
                   style: {
-                    color: "#2A99F2",
-                    cursor: "pointer",
-                    marginLeft: "10px",
-                    display: self.accesskey[index] == 2 ? "none" : "inline-block"
+                    marginRight: '5px',
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      axios.post('user/stateUserAcess.do', {
+                        accessKeyID: params.row.accesskeyid,
+                        status: params.row.status,
+                        zoneId: $store.state.zone.zoneid,
+                        token: this.token
+                      }).then(response => {
+                        if (response.status == 200 && response.data.status == 1) {
+                          params.row.status ? this.keyData[params.index].status = 0 : this.keyData[params.index].status = 1
+                        } else {
+                          this.$Message.error(response.data.message)
+                        }
+                      })
+                    }
                   }
-                },
-                "隐藏"
-              )
-            ]);
+                }, text),
+                h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      axios.post('user/deleteUserAcess.do', {
+                        accessKeyID: params.row.accesskeyid,
+                        zoneId: $store.state.zone.zoneid,
+                        token: this.token
+                      }).then(response => {
+                        if (response.status == 200 && response.data.status == 1) {
+                          this.keyData.splice(params.index, 1);
+                        } else {
+                          this.$Message.error(response.data.message)
+                        }
+                      })
+                    }
+                  }
+                }, '删除')
+              ]);
+            }
           }
-        },
-        {
-          key: "status",
-          title: "状态"
-        },
-        {
-          key: "createtime",
-          title: "创建时间"
-        }
-      ],
-      accessData: [],
-      accesskey:[2]
-    };
-  },
-  created() {
-    if (this.authType == "person" || this.authType == "company") {
-      this.showModal.selectAuthType = false;
-    } else {
-      if (this.$store.state.authInfo == null) {
-        this.showModal.selectAuthType = true;
+        ],
+        keyData: []
       }
-    }
-    this.listNotice();
-    this.getContacts();
-    this.getBuckets();
-  },
-  methods: {
-    clickAccess() {
-      console.log("====================");
     },
-    init() {
-      axios.get("user/GetUserInfo.do").then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          $store.commit("setAuthInfo", {
-            authInfo: response.data.authInfo,
-            userInfo: response.data.result
-          });
-        }
-      });
+    created(){
+      this.listNotice();
+      this.getContacts();
+      this.getBuckets();
     },
-    // 重置表单
-    reset() {
-      this.notAuth.quicklyAuthForm.name = "";
-      this.notAuth.quicklyAuthForm.IDCard = "";
-      this.notAuth.quicklyAuthForm.pictureCode = "";
-      this.notAuth.quicklyAuthForm.phone = "";
-      this.notAuth.quicklyAuthForm.validateCode = "";
-    },
-    // 快速认证时发送验证码
-    sendCode() {
-      this.$refs.sendCode.validate(validate => {
-        if (validate) {
+    methods: {
+      init() {
+        axios.get("user/GetUserInfo.do").then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            $store.commit("setAuthInfo", {
+              authInfo: response.data.authInfo,
+              userInfo: response.data.result
+            });
+          }
+        })
+        axios.post('user/getPhone.do', {
+          companyId: $store.state.authInfo.companyid
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.keyForm.phone = response.data.data.phone
+          } else {
+            this.$Message.error(response.data.msg)
+          }
+        })
+        axios.post('user/getRuiRadosApiacess.do', {
+          zoneId: $store.state.zone.zoneid,
+          companyId: $store.state.authInfo.companyid
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            var radosApIaccessKey = response.data.data.data
+            axios.get('user/getRadosToken.do', {
+              params: {
+                companyId: $store.state.authInfo.companyid,
+                secret: radosApIaccessKey
+              }
+            }).then(response => {
+              if (response.status == 200) {
+                this.token = response.data.token
+                this.listKey()
+              }
+            })
+          }
+        })
+        this.listNotice()
+        this.getContacts()
+      },
+      // 重置表单
+      reset() {
+        this.notAuth.quicklyAuthForm.name = "";
+        this.notAuth.quicklyAuthForm.IDCard = "";
+        this.notAuth.quicklyAuthForm.pictureCode = "";
+        this.notAuth.quicklyAuthForm.phone = "";
+        this.notAuth.quicklyAuthForm.validateCode = "";
+      },
+      // 快速认证时发送验证码
+      sendCode() {
+        this.$refs.sendCode.validate(validate => {
+          if (validate) {
+            axios
+              .get("user/code.do", {
+                params: {
+                  aim: this.notAuth.quicklyAuthForm.phone,
+                  isemail: 0,
+                  vailCode: this.notAuth.quicklyAuthForm.pictureCode
+                }
+              })
+              .then(response => {
+                // 发送成功，进入倒计时
+                if (response.status == 200 && response.data.status == 1) {
+                  var countdown = 60;
+                  this.notAuth.quicklyAuthForm.sendCodeText = `${countdown}S`;
+                  var Interval = setInterval(() => {
+                    countdown--;
+                    this.notAuth.quicklyAuthForm.sendCodeText = `${countdown}S`;
+                    if (countdown == 0) {
+                      clearInterval(Interval);
+                      this.notAuth.quicklyAuthForm.sendCodeText = "获取验证码";
+                    }
+                  }, 1000);
+                } else {
+                  this.$Message.error(response.data.message);
+                }
+              });
+          }
+        });
+      },
+      // 个人认证，发送验证码
+      sendCodePersonal() {
+        var validataTel = null;
+        var validataImgcode = null;
+        this.$refs.cardAuth.validateField("tel", function (text) {
+          validataTel = text == "";
+        });
+        this.$refs.cardAuth.validateField("imgCode", function (text) {
+          validataImgcode = text == "";
+        });
+        if (validataTel && validataImgcode) {
           axios
             .get("user/code.do", {
               params: {
-                aim: this.notAuth.quicklyAuthForm.phone,
+                aim: this.notAuth.cardAuthForm.tel,
                 isemail: 0,
-                vailCode: this.notAuth.quicklyAuthForm.pictureCode
+                vailCode: this.notAuth.cardAuthForm.imgCode
               }
             })
             .then(response => {
               // 发送成功，进入倒计时
               if (response.status == 200 && response.data.status == 1) {
                 var countdown = 60;
-                this.notAuth.quicklyAuthForm.sendCodeText = `${countdown}S`;
+                this.notAuth.cardAuthForm.sendCodeText = `${countdown}S`;
                 var Interval = setInterval(() => {
                   countdown--;
-                  this.notAuth.quicklyAuthForm.sendCodeText = `${countdown}S`;
+                  this.notAuth.cardAuthForm.sendCodeText = `${countdown}S`;
                   if (countdown == 0) {
                     clearInterval(Interval);
-                    this.notAuth.quicklyAuthForm.sendCodeText = "获取验证码";
+                    this.notAuth.cardAuthForm.sendCodeText = "获取验证码";
                   }
                 }, 1000);
               } else {
@@ -1852,973 +1978,1000 @@ export default {
               }
             });
         }
-      });
-    },
-    // 个人认证，发送验证码
-    sendCodePersonal() {
-      var validataTel = null;
-      var validataImgcode = null;
-      this.$refs.cardAuth.validateField("tel", function(text) {
-        validataTel = text == "";
-      });
-      this.$refs.cardAuth.validateField("imgCode", function(text) {
-        validataImgcode = text == "";
-      });
-      if (validataTel && validataImgcode) {
-        axios
-          .get("user/code.do", {
+      },
+      //创建accesskey获取用户验证码
+      accessSendCode(){
+
+      },
+      // 个人认证
+      // 身份证照片认证
+      personalAttest() {
+        this.$refs.cardAuth.validate(validate => {
+          if (validate) {
+            if (
+              !this.notAuth.cardAuthForm.IDCardFront || !this.notAuth.cardAuthForm.IDCardBack || !this.notAuth.cardAuthForm.IDCardPerson
+            ) {
+              this.$Message.warning("请上传证件图片");
+              return;
+            }
+            axios
+              .post("user/personalAttest.do", {
+                cardID: this.notAuth.cardAuthForm.IDCard,
+                name: this.notAuth.cardAuthForm.name,
+                cardFrontURL: this.notAuth.cardAuthForm.IDCardFront,
+                cardBakURL: this.notAuth.cardAuthForm.IDCardBack,
+                companyCardURL: this.notAuth.cardAuthForm.IDCardPerson,
+                phone: this.notAuth.cardAuthForm.tel,
+                phoneCode: this.notAuth.cardAuthForm.verificationCode,
+                type: "1"
+              })
+              .then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  // 获取用户信息
+                  axios.get("user/GetUserInfo.do").then(response => {
+                    this.$store.commit("setAuthInfo", {
+                      authInfo: response.data.authInfo,
+                      userInfo: response.data.result
+                    });
+                  });
+                } else {
+                  this.$message.info({
+                    content: response.data.message
+                  });
+                }
+              });
+          }
+        });
+      },
+      // 快速认证
+      quicklyAuth() {
+        var quicklyAuth = this.$refs.quicklyAuth.validate(validate => {
+          return Promise.resolve(validate);
+        });
+        var sendCode = this.$refs.sendCode.validate(validate => {
+          return Promise.resolve(validate);
+        });
+        Promise.all([quicklyAuth, sendCode]).then(results => {
+          if (results[0] === true && results[1] === true) {
+            axios
+              .post("user/personalAttest.do", {
+                cardID: this.notAuth.quicklyAuthForm.IDCard,
+                name: this.notAuth.quicklyAuthForm.name,
+                phone: this.notAuth.quicklyAuthForm.phone,
+                phoneCode: this.notAuth.quicklyAuthForm.validateCode,
+                type: "0"
+              })
+              .then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  // 获取用户信息
+                  axios.get("user/GetUserInfo.do").then(response => {
+                    this.$store.commit("setAuthInfo", {
+                      authInfo: response.data.authInfo,
+                      userInfo: response.data.result
+                    });
+                  });
+                } else {
+                  this.$message.info({
+                    content: response.data.message
+                  });
+                }
+              });
+          }
+        });
+      },
+      // 企业认证
+      enterpriseAttest() {
+        this.$refs.companyAuth.validate(validate => {
+          if (validate) {
+            var params = {
+              authType: this.notAuth.companyAuthForm.certificateType,
+              name: this.notAuth.companyAuthForm.name,
+              linkmanName: this.notAuth.companyAuthForm.contactPerson,
+              trade: this.notAuth.companyAuthForm.industry,
+              phone: this.notAuth.companyAuthForm.contact,
+              idCard: this.notAuth.companyAuthForm.linkManNameID,
+              contectPhone: this.notAuth.companyAuthForm.linkManPhone,
+              phoneCode: this.notAuth.companyAuthForm.verificationCode
+            };
+            if (params.authType == 1) {
+              if (this.notAuth.companyAuthForm.combine == "") {
+                this.$Message.warning("请上传三证合一");
+                return;
+              }
+              params.companyCardURL = this.notAuth.companyAuthForm.combine;
+            } else {
+              if (this.notAuth.companyAuthForm.license == "") {
+                this.$Message.warning("请上传营业执照");
+                return;
+              }
+              if (this.notAuth.companyAuthForm.tax == "") {
+                this.$Message.warning("请上传税务登记证");
+                return;
+              }
+              if (this.notAuth.companyAuthForm.organization == "") {
+                this.$Message.warning("请上传组织机构代码");
+                return;
+              }
+              params.businessLicense = this.notAuth.companyAuthForm.license;
+              params.organizationCode = this.notAuth.companyAuthForm.organization;
+              params.taxRegister = this.notAuth.companyAuthForm.tax;
+            }
+            axios.post("user/enterpriseAttest.do", params).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                // 获取用户信息
+                axios.get("user/GetUserInfo.do").then(response => {
+                  this.$store.commit("setAuthInfo", {
+                    authInfo: response.data.authInfo,
+                    userInfo: response.data.result
+                  });
+                  this.currentTab = "";
+                });
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                });
+              }
+            });
+          }
+        });
+      },
+      /* 企业认证发送验证码 */
+      sendCompanyCode() {
+        var regPhone = false;
+        var regCode = false;
+        this.$refs.companyAuth.validateField("linkManPhone", text => {
+          if (text === "") {
+            regPhone = true;
+          }
+        });
+        this.$refs.companyAuth.validateField("imgCode", text => {
+          if (text !== "") {
+            regCode = true;
+          }
+        });
+        if (regPhone && regPhone) {
+          this.notAuth.companyAuthForm.codePlaceholder = "验证码发送中";
+          axios
+            .get("user/code.do", {
+              params: {
+                aim: this.notAuth.companyAuthForm.linkManPhone,
+                isemail: "0",
+                vailCode: this.notAuth.companyAuthForm.imgCode
+              }
+            })
+            .then(response => {
+              this.notAuth.companyAuthForm.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
+              // 发送倒计时
+              let countdown = 60;
+              this.notAuth.companyAuthForm.codePlaceholder = "60s";
+              var inter = setInterval(() => {
+                countdown--;
+                this.notAuth.companyAuthForm.codePlaceholder = countdown + "s";
+                if (countdown == 0) {
+                  clearInterval(inter);
+                  this.notAuth.companyAuthForm.codePlaceholder = "发送验证码";
+                }
+              }, 1000);
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success({
+                  content: "验证码发送成功",
+                  duration: 5
+                });
+              } else {
+                this.$Message.error(response.data.message);
+              }
+            });
+        }
+      },
+      // 列出通知信息
+      listNotice() {
+        var url = `user/listNotice.do`;
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.setData = response.data.result;
+            this.inform = response.data.result;
+          }
+        });
+      },
+      // 列出联系人
+      getContacts() {
+        var url = `user/getcontacts.do`;
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.linkManData = response.data.result;
+
+          }
+        });
+      },
+      // 添加联系人
+      addLinkman() {
+        this.showModal.addLinkman = true;
+      },
+      addLinkmanOk(name) {
+        this.$refs[name].validate(valid => {
+          if (valid) {
+            this.showModal.addLinkman = false;
+            var url = "user/addcontacts.do";
+            this.$http
+              .get(url, {
+                params: {
+                  username: this.addLinkmanForm.name,
+                  phone: this.addLinkmanForm.phone,
+                  email: this.addLinkmanForm.email
+                }
+              })
+              .then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success(response.data.message);
+                  this.getContacts();
+                } else {
+                  this.$message.info({
+                    content: response.data.message
+                  });
+                  this.getContacts();
+                }
+              });
+          }
+        });
+      },
+      /* 修改联系人 */
+      updateContacts(item) {
+        this.showModal.updateLinkman = true;
+        this.updateLinkmanForm.name = item.username;
+        this.updateLinkmanForm.phone = item.telphone;
+        this.updateLinkmanForm.email = item.email;
+        this.updateLinkmanForm.id = item.id;
+      },
+      updateLinkmanOk(name) {
+        this.$refs[name].validate(valid => {
+          if (valid) {
+            this.showModal.updateLinkman = false;
+            var url = "user/updateContacts.do";
+            this.$http
+              .get(url, {
+                params: {
+                  id: this.updateLinkmanForm.id,
+                  username: this.updateLinkmanForm.name,
+                  phone: this.updateLinkmanForm.phone,
+                  email: this.updateLinkmanForm.email
+                }
+              })
+              .then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success(response.data.message);
+                  this.getContacts();
+                } else {
+                  this.getContacts();
+                }
+              });
+          }
+        });
+      },
+      /* 删除联系人 */
+      delContacts(id) {
+        var url = "user/delContacts.do";
+        this.$http
+          .get(url, {
             params: {
-              aim: this.notAuth.cardAuthForm.tel,
-              isemail: 0,
-              vailCode: this.notAuth.cardAuthForm.imgCode
+              id: id
             }
           })
           .then(response => {
-            // 发送成功，进入倒计时
             if (response.status == 200 && response.data.status == 1) {
-              var countdown = 60;
-              this.notAuth.cardAuthForm.sendCodeText = `${countdown}S`;
-              var Interval = setInterval(() => {
-                countdown--;
-                this.notAuth.cardAuthForm.sendCodeText = `${countdown}S`;
-                if (countdown == 0) {
-                  clearInterval(Interval);
-                  this.notAuth.cardAuthForm.sendCodeText = "获取验证码";
-                }
-              }, 1000);
+              this.$Message.success(response.data.message);
+              this.getContacts();
+            } else {
+              this.getContacts();
+            }
+          });
+      },
+      // 更新通知配置
+      updateNotice() {
+        this.updateInform = [];
+        for (var i = 0; i < this.inform.length; i++) {
+          if (
+            this.inform[i].isLetter == 0 &&
+            this.inform[i].isEmail == 0 &&
+            this.inform[i].isTel == 0
+          ) {
+          } else {
+            this.updateInform.push(this.inform[i]);
+          }
+        }
+        var updateValue = JSON.stringify(this.updateInform);
+        this.$http
+          .post("user/updateNotice.do", {
+            list: updateValue
+          })
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.success(response.data.message);
+              this.listNotice();
+            } else {
+              this.$message.info({
+                content: response.data.message
+              });
+              this.listNotice();
+            }
+          });
+      },
+      // 恢复通知默认配置
+      recoverNotice() {
+        var url = `user/recoverNotice.do`;
+        this.$http.get(url).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message);
+            this.listNotice();
+          } else {
+            this.listNotice();
+          }
+        });
+      },
+      changeStatus(item, type) {
+        this.inform.forEach(it => {
+          if (it.tempCode == item.tempCode) {
+            if (it[type] == 1) {
+              it[type] = 0;
+            } else {
+              it[type] = 1;
+            }
+          }
+        });
+      },
+      // 更换验证方式
+      changWay1() {
+        this.showModal.authByPhone = false;
+        this.showModal.modifyPhone = true;
+      },
+      changWay2() {
+        this.showModal.authByEmail = false;
+        this.showModal.modifyPhone = true;
+      },
+      // 通过手机验证
+      authByPhone() {
+        this.showModal.modifyPhone = false;
+        this.newPhoneForm.oldPhoneCode = "";
+        this.showModal.authByPhone = true;
+      },
+      // 通过邮箱验证
+      authByEmail() {
+        this.showModal.modifyPhone = false;
+        this.newPhoneForm.oldPhoneCode = "";
+        this.showModal.authByEmail = true;
+      },
+      // 获取验证码下一步
+      next(type) {
+        var aim = type == "phone" ? this.userInfo.phone : this.userInfo.loginname;
+        var isemail = type == "phone" ? 0 : 1;
+        var url = "user/judgeCode.do";
+        this.$http
+          .get(url, {
+            params: {
+              aim: aim,
+              code: this.newPhoneForm.oldPhoneCode,
+              isemail: isemail
+            }
+          })
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.showModal.authByPhone = false;
+              this.showModal.authByEmail = false;
+              if (this.type == "phone") {
+                this.showModal.authNewPhone = true;
+              } else {
+                this.showModal.authNewEmail = true;
+              }
             } else {
               this.$Message.error(response.data.message);
             }
           });
-      }
-    },
-    //创建accesskey获取用户验证码
-    accessSendCode(){
-
-    },
-    // 个人认证
-    // 身份证照片认证
-    personalAttest() {
-      this.$refs.cardAuth.validate(validate => {
-        if (validate) {
-          if (
-            !this.notAuth.cardAuthForm.IDCardFront ||
-            !this.notAuth.cardAuthForm.IDCardBack ||
-            !this.notAuth.cardAuthForm.IDCardPerson
-          ) {
-            this.$Message.warning("请上传证件图片");
-            return;
+      },
+      // 验证重置密码表单
+      _checkResetPasswordForm() {
+        this.$refs.resetPassword.validate(valid => {
+          if (valid) {
+            // 表单验证通过，调用挂载磁盘方法
+            this.resetPassword_ok();
           }
-          axios
-            .post("user/personalAttest.do", {
-              cardID: this.notAuth.cardAuthForm.IDCard,
-              name: this.notAuth.cardAuthForm.name,
-              cardFrontURL: this.notAuth.cardAuthForm.IDCardFront,
-              cardBakURL: this.notAuth.cardAuthForm.IDCardBack,
-              companyCardURL: this.notAuth.cardAuthForm.IDCardPerson,
-              phone: this.notAuth.cardAuthForm.tel,
-              phoneCode: this.notAuth.cardAuthForm.verificationCode,
-              type: "1"
-            })
-            .then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                // 获取用户信息
-                axios.get("user/GetUserInfo.do").then(response => {
-                  this.$store.commit("setAuthInfo", {
-                    authInfo: response.data.authInfo,
-                    userInfo: response.data.result
-                  });
-                });
-              } else {
-                this.$message.info({
-                  content: response.data.message
-                });
-              }
-            });
-        }
-      });
-    },
-    // 快速认证
-    quicklyAuth() {
-      var quicklyAuth = this.$refs.quicklyAuth.validate(validate => {
-        return Promise.resolve(validate);
-      });
-      var sendCode = this.$refs.sendCode.validate(validate => {
-        return Promise.resolve(validate);
-      });
-      Promise.all([quicklyAuth, sendCode]).then(results => {
-        if (results[0] === true && results[1] === true) {
-          axios
-            .post("user/personalAttest.do", {
-              cardID: this.notAuth.quicklyAuthForm.IDCard,
-              name: this.notAuth.quicklyAuthForm.name,
-              phone: this.notAuth.quicklyAuthForm.phone,
-              phoneCode: this.notAuth.quicklyAuthForm.validateCode,
-              type: "0"
-            })
-            .then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                // 获取用户信息
-                axios.get("user/GetUserInfo.do").then(response => {
-                  this.$store.commit("setAuthInfo", {
-                    authInfo: response.data.authInfo,
-                    userInfo: response.data.result
-                  });
-                });
-              } else {
-                this.$message.info({
-                  content: response.data.message
-                });
-              }
-            });
-        }
-      });
-    },
-    // 企业认证
-    enterpriseAttest() {
-      this.$refs.companyAuth.validate(validate => {
-        if (validate) {
-          var params = {
-            authType: this.notAuth.companyAuthForm.certificateType,
-            name: this.notAuth.companyAuthForm.name,
-            linkmanName: this.notAuth.companyAuthForm.contactPerson,
-            trade: this.notAuth.companyAuthForm.industry,
-            phone: this.notAuth.companyAuthForm.contact,
-            idCard: this.notAuth.companyAuthForm.linkManNameID,
-            contectPhone: this.notAuth.companyAuthForm.linkManPhone,
-            phoneCode: this.notAuth.companyAuthForm.verificationCode
-          };
-          if (params.authType == 1) {
-            if (this.notAuth.companyAuthForm.combine == "") {
-              this.$Message.warning("请上传三证合一");
-              return;
+        });
+      },
+      // 重置密码
+      resetPassword_ok() {
+        this.$http
+          .get("user/updatePassword.do", {
+            params: {
+              password: this.resetPasswordForm.newPassword,
+              oldpassword: this.resetPasswordForm.oldPassword
             }
-            params.companyCardURL = this.notAuth.companyAuthForm.combine;
-          } else {
-            if (this.notAuth.companyAuthForm.license == "") {
-              this.$Message.warning("请上传营业执照");
-              return;
-            }
-            if (this.notAuth.companyAuthForm.tax == "") {
-              this.$Message.warning("请上传税务登记证");
-              return;
-            }
-            if (this.notAuth.companyAuthForm.organization == "") {
-              this.$Message.warning("请上传组织机构代码");
-              return;
-            }
-            params.businessLicense = this.notAuth.companyAuthForm.license;
-            params.organizationCode = this.notAuth.companyAuthForm.organization;
-            params.taxRegister = this.notAuth.companyAuthForm.tax;
-          }
-          axios.post("user/enterpriseAttest.do", params).then(response => {
+          })
+          .then(response => {
             if (response.status == 200 && response.data.status == 1) {
-              // 获取用户信息
-              axios.get("user/GetUserInfo.do").then(response => {
-                this.$store.commit("setAuthInfo", {
-                  authInfo: response.data.authInfo,
-                  userInfo: response.data.result
-                });
-                this.currentTab = "";
+              this.showModal.modifyPassword = false;
+              this.$Message.success(response.data.message);
+            } else {
+              this.$message.info({content: response.data.message});
+            }
+          });
+      },
+      // 获取验证码
+      getVerCode(type) {
+        var isemail = type == "email" ? 1 : 0;
+        var aim = type == "email" ? this.userInfo.loginname : this.userInfo.phone;
+        var url = "user/code.do";
+        this.$http
+          .get(url, {
+            params: {
+              vailCode: this.code,
+              type: 0,
+              isemail: isemail,
+              aim: aim
+            }
+          })
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.success(response.data.message);
+              var timeOut = 60;
+              this.newPhoneForm[`${type}VerCodeText`] = "60s";
+              var interval = setInterval(
+                function () {
+                  timeOut--;
+                  if (timeOut == 0) {
+                    this.newPhoneForm[`${type}VerCodeText`] = "获取验证码";
+                    clearInterval(interval);
+                    return;
+                  }
+                  this.newPhoneForm[`${type}VerCodeText`] = timeOut + "s";
+                }.bind(this),
+                1000
+              );
+            } else {
+              this.$Message.error(response.data.message);
+            }
+          });
+      },
+      /* 图片上传成功回调，设置图片。每张图片上传都有一个method。
+       暂时没有找到更好的方法解决图片标记问题 */
+      IDCardFront(response) {
+        if (response.status == 1) {
+          this.notAuth.cardAuthForm.IDCardFront = response.result;
+        }
+      },
+      IDCardBack(response) {
+        if (response.status == 1) {
+          this.notAuth.cardAuthForm.IDCardBack = response.result;
+        }
+      },
+      IDCardPerson(response) {
+        if (response.status == 1) {
+          this.notAuth.cardAuthForm.IDCardPerson = response.result;
+        }
+      },
+      combine(response) {
+        if (response.status == 1) {
+          this.notAuth.companyAuthForm.combine = response.result;
+        }
+      },
+      // 营业执照
+      license(response) {
+        if (response.status == 1) {
+          this.notAuth.companyAuthForm.license = response.result;
+        }
+      },
+      // 税务登记证
+      tax(response) {
+        if (response.status == 1) {
+          this.notAuth.companyAuthForm.tax = response.result;
+        }
+      },
+      // 组织机构代码
+      organization(response) {
+        if (response.status == 1) {
+          this.notAuth.companyAuthForm.organization = response.result;
+        }
+      },
+
+      // 更新手机号
+      confirmPhone() {
+        var url = "user/updatePhone.do";
+        this.$http
+          .get(url, {
+            params: {
+              code: this.newPhoneForm.verCode,
+              phone: this.newPhoneForm.newPhone
+            }
+          })
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.success(response.data.message);
+              this.init();
+            }
+            this.showModal.authNewPhone = false;
+          });
+      },
+      // 更新email
+      confirmEmail() {
+        this.showModal.authNewEmail = false;
+        var url = "user/updateUserInfo.do";
+        this.$http
+          .get(url, {
+            params: {
+              code: this.newPhoneForm.verCode,
+              email: this.newPhoneForm.newPhone
+            }
+          })
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.success(response.data.message);
+              this.init();
+            } else {
+              this.$message.info({
+                content: response.data.message
               });
+            }
+            this.showModal.authNewPhone = false;
+          });
+      },
+      // 获取新手机验证码
+      getNewPhoneVerCode(type) {
+        if (
+          type == "phone" &&
+          this.userInfo.phone == this.newPhoneForm.newPhone
+        ) {
+          this.$Message.info("新手机号不能与旧手机号相同");
+          return;
+        }
+        if (
+          type == "email" &&
+          this.userInfo.loginname == this.newPhoneForm.newPhone
+        ) {
+          this.$Message.info("新邮箱不能与旧邮箱相同");
+          return;
+        }
+        if (type == "phone" && this.newPhoneForm.code.length != 4) {
+          this.$Message.error("请输入正确的随机验证码");
+          return;
+        }
+        //发送获取验证码ajax
+        var url = "user/code.do";
+        let params = {
+          type: 1
+        };
+        if (type == "phone") {
+          (params.isemail = 0),
+            (params.aim = this.newPhoneForm.newPhone),
+            (params.vailCode = this.newPhoneForm.code);
+        } else {
+          (params.isemail = 1), (params.aim = this.newPhoneForm.newPhone);
+        }
+        this.$http
+          .get(url, {
+            params
+          })
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              //60秒倒计时
+              var timeOut = 60;
+              this[`${type}VerCode`] = "60s";
+              var interval = setInterval(
+                function () {
+                  timeOut--;
+                  if (timeOut == 0) {
+                    this[`${type}VerCode`] = "获取验证码";
+                    clearInterval(interval);
+                    return;
+                  }
+                  this[`${type}VerCode`] = timeOut + "s";
+                }.bind(this),
+                1000
+              );
+              this.$Message.success(response.data.message);
+            } else {
+              this.$Message.error(response.data.message);
+            }
+          });
+      },
+      //显示三证合一原图
+      showPicture() {
+        this.showModal.showPicture = true;
+      },
+      sendPhone(value) {
+        var url = "user/reSendMessage.do";
+        this.$http
+          .get(url, {
+            params: {
+              phone: value
+            }
+          })
+          .then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.success(response.data.message);
             } else {
               this.$message.info({
                 content: response.data.message
               });
             }
           });
-        }
-      });
-    },
-    /* 企业认证发送验证码 */
-    sendCompanyCode() {
-      var regPhone = false;
-      var regCode = false;
-      this.$refs.companyAuth.validateField("linkManPhone", text => {
-        if (text === "") {
-          regPhone = true;
-        }
-      });
-      this.$refs.companyAuth.validateField("imgCode", text => {
-        if (text !== "") {
-          regCode = true;
-        }
-      });
-      if (regPhone && regPhone) {
-        this.notAuth.companyAuthForm.codePlaceholder = "验证码发送中";
-        axios
-          .get("user/code.do", {
-            params: {
-              aim: this.notAuth.companyAuthForm.linkManPhone,
-              isemail: "0",
-              vailCode: this.notAuth.companyAuthForm.imgCode
+      },
+      sendEmail(value) {
+        var url = "user/reSendMessage.do";
+        this.$http
+          .get(url, {
+            parms: {
+              email: value
             }
           })
           .then(response => {
-            this.notAuth.companyAuthForm.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`;
-            // 发送倒计时
-            let countdown = 60;
-            this.notAuth.companyAuthForm.codePlaceholder = "60s";
-            var inter = setInterval(() => {
-              countdown--;
-              this.notAuth.companyAuthForm.codePlaceholder = countdown + "s";
-              if (countdown == 0) {
-                clearInterval(inter);
-                this.notAuth.companyAuthForm.codePlaceholder = "发送验证码";
-              }
-            }, 1000);
             if (response.status == 200 && response.data.status == 1) {
-              this.$Message.success({
-                content: "验证码发送成功",
-                duration: 5
-              });
+              this.$Message.success(response.data.message);
             } else {
-              this.$Message.error(response.data.message);
+              this.$message.info({
+                content: response.data.message
+              });
+            }
+          });
+      },
+      // 重新认证
+      reAuthenticate(type) {
+        axios
+          .get("user/rAttest.do", {
+            params: {
+              authType: type
+            }
+          })
+      },
+      listKey() {
+        axios.get('user/showUserAcessAll.do', {
+          params: {
+            token: this.token
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.keyData = response.data.data.UserAccess
+          } else {
+            this.$Message.error(response.data.msg)
+          }
+        })
+      },
+      keymodal() {
+        axios.post('user/createUserAcess.do', {
+          zoneId: $store.state.zone.zoneid,
+          token: this.token
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.listKey()
+          } else if (response.status == 200 && response.data.status == 20) {
+            this.keyForm.imgCode = ''
+            this.keyForm.code = ''
+            this.showModal.keyPhoneVal = true
+            this.keyWeight = response.data.data.weight
+          } else {
+            this.$Message.error(response.data.msg)
+          }
+        })
+      },
+      keysendCode() {
+        if (this.keyForm.imgCode == '') {
+          this.$Message.info('图像验证码不能为空')
+          return false
+        }
+        axios.get('user/code.do', {
+          params: {
+            aim: this.keyForm.phone,
+            isemail: 0,
+            vailCode: this.keyForm.imgCode
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            let countdown = 60
+            this.keycodePlaceholder = '60s'
+            var inter = setInterval(() => {
+              countdown--
+              this.keycodePlaceholder = countdown + 's'
+              if (countdown == 0) {
+                clearInterval(inter)
+                this.keycodePlaceholder = '获取验证码'
+              }
+            }, 1000)
+            this.$Message.success({
+              content: '验证码发送成功',
+              duration: 5
+            })
+          } else {
+            this.keycodePlaceholder = '获取验证码'
+            this.$Message.error(response.data.message)
+          }
+        })
+      },
+      createKey() {
+        this.showModal.keyPhoneVal = false
+        axios.get('user/judgeCode.do', {
+          params: {
+            aim: this.keyForm.phone,
+            isemail: 0,
+            code: this.keyForm.code,
+            weight: this.keyWeight
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            axios.post('user/createUserAcess.do', {
+              zoneId: $store.state.zone.zoneid,
+              token: this.token
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.listKey()
+              } else {
+                this.$message.info({
+                  content: response.data.msg
+                })
+              }
+            })
+          } else {
+            this.$Message.error(response.data.msg)
+          }
+        })
+      }
+      //获取Access Key
+      getBuckets() {
+        this.$http
+          .get("http://192.168.3.187:8083/ruirados/user/showUserAcessAll.do", {})
+          .then(res => {
+            if (res.data.status == "1") {
+              this.accessData = res.data.data.UserAccess;
             }
           });
       }
     },
-    // 列出通知信息
-    listNotice() {
-      var url = `user/listNotice.do`;
-      this.$http.get(url).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.setData = response.data.result;
-          this.inform = response.data.result;
-        }
-      });
-    },
-    // 列出联系人
-    getContacts() {
-      var url = `user/getcontacts.do`;
-      this.$http.get(url).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.linkManData = response.data.result;
 
-        }
-      });
-    },
-    // 添加联系人
-    addLinkman() {
-      this.showModal.addLinkman = true;
-    },
-    addLinkmanOk(name) {
-      this.$refs[name].validate(valid => {
-        if (valid) {
-          this.showModal.addLinkman = false;
-          var url = "user/addcontacts.do";
-          this.$http
-            .get(url, {
-              params: {
-                username: this.addLinkmanForm.name,
-                phone: this.addLinkmanForm.phone,
-                email: this.addLinkmanForm.email
-              }
-            })
-            .then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.$Message.success(response.data.message);
-                this.getContacts();
-              } else {
-                this.$message.info({
-                  content: response.data.message
-                });
-                this.getContacts();
-              }
-            });
-        }
-      });
-    },
-    /* 修改联系人 */
-    updateContacts(item) {
-      this.showModal.updateLinkman = true;
-      this.updateLinkmanForm.name = item.username;
-      this.updateLinkmanForm.phone = item.telphone;
-      this.updateLinkmanForm.email = item.email;
-      this.updateLinkmanForm.id = item.id;
-    },
-    updateLinkmanOk(name) {
-      this.$refs[name].validate(valid => {
-        if (valid) {
-          this.showModal.updateLinkman = false;
-          var url = "user/updateContacts.do";
-          this.$http
-            .get(url, {
-              params: {
-                id: this.updateLinkmanForm.id,
-                username: this.updateLinkmanForm.name,
-                phone: this.updateLinkmanForm.phone,
-                email: this.updateLinkmanForm.email
-              }
-            })
-            .then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.$Message.success(response.data.message);
-                this.getContacts();
-              } else {
-                this.getContacts();
-              }
-            });
-        }
-      });
-    },
-    /* 删除联系人 */
-    delContacts(id) {
-      var url = "user/delContacts.do";
-      this.$http
-        .get(url, {
-          params: {
-            id: id
-          }
-        })
-        .then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message);
-            this.getContacts();
-          } else {
-            this.getContacts();
-          }
-        });
-    },
-    // 更新通知配置
-    updateNotice() {
-      this.updateInform = [];
-      for (var i = 0; i < this.inform.length; i++) {
-        if (
-          this.inform[i].isLetter == 0 &&
-          this.inform[i].isEmail == 0 &&
-          this.inform[i].isTel == 0
-        ) {
-        } else {
-          this.updateInform.push(this.inform[i]);
-        }
+    computed: mapState({
+      // 传字符串参数 'count' 等同于 `
+      userInfo: "userInfo",
+      authInfo: "authInfo",
+      // 剩余联系人个数
+      remainLinkMan() {
+        return 5 - this.linkManData.length;
+      },
+      showCompanyPane() {
+        return this.authInfo == null || this.authInfo.authtype == 0;
       }
-      var updateValue = JSON.stringify(this.updateInform);
-      this.$http
-        .post("user/updateNotice.do", {
-          list: updateValue
-        })
-        .then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message);
-            this.listNotice();
-          } else {
-            this.$message.info({
-              content: response.data.message
-            });
-            this.listNotice();
-          }
-        });
-    },
-    // 恢复通知默认配置
-    recoverNotice() {
-      var url = `user/recoverNotice.do`;
-      this.$http.get(url).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.$Message.success(response.data.message);
-          this.listNotice();
-        } else {
-          this.listNotice();
-        }
-      });
-    },
-    changeStatus(item, type) {
-      this.inform.forEach(it => {
-        if (it.tempCode == item.tempCode) {
-          if (it[type] == 1) {
-            it[type] = 0;
-          } else {
-            it[type] = 1;
-          }
-        }
-      });
-    },
-    // 更换验证方式
-    changWay1() {
-      this.showModal.authByPhone = false;
-      this.showModal.modifyPhone = true;
-    },
-    changWay2() {
-      this.showModal.authByEmail = false;
-      this.showModal.modifyPhone = true;
-    },
-    // 通过手机验证
-    authByPhone() {
-      this.showModal.modifyPhone = false;
-      this.newPhoneForm.oldPhoneCode = "";
-      this.showModal.authByPhone = true;
-    },
-    // 通过邮箱验证
-    authByEmail() {
-      this.showModal.modifyPhone = false;
-      this.newPhoneForm.oldPhoneCode = "";
-      this.showModal.authByEmail = true;
-    },
-    // 获取验证码下一步
-    next(type) {
-      var aim = type == "phone" ? this.userInfo.phone : this.userInfo.loginname;
-      var isemail = type == "phone" ? 0 : 1;
-      var url = "user/judgeCode.do";
-      this.$http
-        .get(url, {
-          params: {
-            aim: aim,
-            code: this.newPhoneForm.oldPhoneCode,
-            isemail: isemail
-          }
-        })
-        .then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.showModal.authByPhone = false;
-            this.showModal.authByEmail = false;
-            if (this.type == "phone") {
-              this.showModal.authNewPhone = true;
-            } else {
-              this.showModal.authNewEmail = true;
-            }
-          } else {
-            this.$Message.error(response.data.message);
-          }
-        });
-    },
-    // 验证重置密码表单
-    _checkResetPasswordForm() {
-      this.$refs.resetPassword.validate(valid => {
-        if (valid) {
-          // 表单验证通过，调用挂载磁盘方法
-          this.resetPassword_ok();
-        }
-      });
-    },
-    // 重置密码
-    resetPassword_ok() {
-      this.$http
-        .get("user/updatePassword.do", {
-          params: {
-            password: this.resetPasswordForm.newPassword,
-            oldpassword: this.resetPasswordForm.oldPassword
-          }
-        })
-        .then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.showModal.modifyPassword = false;
-            this.$Message.success(response.data.message);
-          } else {
-            this.$message.info({ content: response.data.message });
-          }
-        });
-    },
-    // 获取验证码
-    getVerCode(type) {
-      var isemail = type == "email" ? 1 : 0;
-      var aim = type == "email" ? this.userInfo.loginname : this.userInfo.phone;
-      var url = "user/code.do";
-      this.$http
-        .get(url, {
-          params: {
-            vailCode: this.code,
-            type: 0,
-            isemail: isemail,
-            aim: aim
-          }
-        })
-        .then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message);
-            var timeOut = 60;
-            this.newPhoneForm[`${type}VerCodeText`] = "60s";
-            var interval = setInterval(
-              function() {
-                timeOut--;
-                if (timeOut == 0) {
-                  this.newPhoneForm[`${type}VerCodeText`] = "获取验证码";
-                  clearInterval(interval);
-                  return;
-                }
-                this.newPhoneForm[`${type}VerCodeText`] = timeOut + "s";
-              }.bind(this),
-              1000
-            );
-          } else {
-            this.$Message.error(response.data.message);
-          }
-        });
-    },
-    /* 图片上传成功回调，设置图片。每张图片上传都有一个method。
-       暂时没有找到更好的方法解决图片标记问题 */
-    IDCardFront(response) {
-      if (response.status == 1) {
-        this.notAuth.cardAuthForm.IDCardFront = response.result;
-      }
-    },
-    IDCardBack(response) {
-      if (response.status == 1) {
-        this.notAuth.cardAuthForm.IDCardBack = response.result;
-      }
-    },
-    IDCardPerson(response) {
-      if (response.status == 1) {
-        this.notAuth.cardAuthForm.IDCardPerson = response.result;
-      }
-    },
-    combine(response) {
-      if (response.status == 1) {
-        this.notAuth.companyAuthForm.combine = response.result;
-      }
-    },
-    // 营业执照
-    license(response) {
-      if (response.status == 1) {
-        this.notAuth.companyAuthForm.license = response.result;
-      }
-    },
-    // 税务登记证
-    tax(response) {
-      if (response.status == 1) {
-        this.notAuth.companyAuthForm.tax = response.result;
-      }
-    },
-    // 组织机构代码
-    organization(response) {
-      if (response.status == 1) {
-        this.notAuth.companyAuthForm.organization = response.result;
-      }
-    },
-
-    // 更新手机号
-    confirmPhone() {
-      var url = "user/updatePhone.do";
-      this.$http
-        .get(url, {
-          params: {
-            code: this.newPhoneForm.verCode,
-            phone: this.newPhoneForm.newPhone
-          }
-        })
-        .then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message);
-            this.init();
-          }
-          this.showModal.authNewPhone = false;
-        });
-    },
-    // 更新email
-    confirmEmail() {
-      this.showModal.authNewEmail = false;
-      var url = "user/updateUserInfo.do";
-      this.$http
-        .get(url, {
-          params: {
-            code: this.newPhoneForm.verCode,
-            email: this.newPhoneForm.newPhone
-          }
-        })
-        .then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message);
-            this.init();
-          } else {
-            this.$message.info({
-              content: response.data.message
-            });
-          }
-          this.showModal.authNewPhone = false;
-        });
-    },
-    // 获取新手机验证码
-    getNewPhoneVerCode(type) {
-      if (
-        type == "phone" &&
-        this.userInfo.phone == this.newPhoneForm.newPhone
-      ) {
-        this.$Message.info("新手机号不能与旧手机号相同");
-        return;
-      }
-      if (
-        type == "email" &&
-        this.userInfo.loginname == this.newPhoneForm.newPhone
-      ) {
-        this.$Message.info("新邮箱不能与旧邮箱相同");
-        return;
-      }
-      if (type == "phone" && this.newPhoneForm.code.length != 4) {
-        this.$Message.error("请输入正确的随机验证码");
-        return;
-      }
-      //发送获取验证码ajax
-      var url = "user/code.do";
-      let params = {
-        type: 1
-      };
-      if (type == "phone") {
-        (params.isemail = 0),
-          (params.aim = this.newPhoneForm.newPhone),
-          (params.vailCode = this.newPhoneForm.code);
-      } else {
-        (params.isemail = 1), (params.aim = this.newPhoneForm.newPhone);
-      }
-      this.$http
-        .get(url, {
-          params
-        })
-        .then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            //60秒倒计时
-            var timeOut = 60;
-            this[`${type}VerCode`] = "60s";
-            var interval = setInterval(
-              function() {
-                timeOut--;
-                if (timeOut == 0) {
-                  this[`${type}VerCode`] = "获取验证码";
-                  clearInterval(interval);
-                  return;
-                }
-                this[`${type}VerCode`] = timeOut + "s";
-              }.bind(this),
-              1000
-            );
-            this.$Message.success(response.data.message);
-          } else {
-            this.$Message.error(response.data.message);
-          }
-        });
-    },
-    //显示三证合一原图
-    showPicture() {
-      this.showModal.showPicture = true;
-    },
-    sendPhone(value) {
-      var url = "user/reSendMessage.do";
-      this.$http
-        .get(url, {
-          params: {
-            phone: value
-          }
-        })
-        .then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message);
-          } else {
-            this.$message.info({
-              content: response.data.message
-            });
-          }
-        });
-    },
-    sendEmail(value) {
-      var url = "user/reSendMessage.do";
-      this.$http
-        .get(url, {
-          parms: {
-            email: value
-          }
-        })
-        .then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.$Message.success(response.data.message);
-          } else {
-            this.$message.info({
-              content: response.data.message
-            });
-          }
-        });
-    },
-    // 重新认证
-    reAuthenticate(type) {
-      axios
-        .get("user/rAttest.do", {
-          params: {
-            authType: type
-          }
-        })
-        .then(response => {
-          this.init();
-        });
-    },
-    //获取Access Key
-    getBuckets() {
-      this.$http
-        .get("http://192.168.3.187:8083/ruirados/user/showUserAcessAll.do", {})
-        .then(res => {
-          if (res.data.status == "1") {
-            this.accessData = res.data.data.UserAccess;
-          }
-        });
-    }
+    })
   },
-  computed: mapState({
-    // 传字符串参数 'count' 等同于 `
-    userInfo: "userInfo",
-    authInfo: "authInfo",
-    // 剩余联系人个数
-    remainLinkMan() {
-      return 5 - this.linkManData.length;
-    },
-    showCompanyPane() {
-      return this.authInfo == null || this.authInfo.authtype == 0;
-    }
-  })
-};
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-#background {
-  background-color: #f5f5f5;
-  width: 100%;
-  /*
-        less 处理css计算属性calc有bug
-        申明变量diff，可正常使用
-      */
-  @diff: 101px;
-  min-height: calc(~"100% - @{diff}");
-  #wrapper {
-    #content {
-      > .title {
-        font-size: 24px;
-        color: rgba(17, 17, 17, 0.75);
-        margin-bottom: 20px;
-      }
-      .info-title {
-        font-size: 18px;
-        color: rgba(17, 17, 17, 0.75);
-        letter-spacing: 1.31px;
-        margin: 20px 0px;
-      }
-      .info-border {
-        padding-bottom: 20px;
-        border-bottom: 1px solid rgb(233, 233, 233);
-      }
-      .user-info {
-        display: flex;
-        margin-bottom: 50px;
-      }
-      .authType {
-        border: 1px solid #d9d9d9;
-        border-radius: 4px;
-        margin-bottom: 20px;
-        .authType-wrapper {
+  #background {
+    background-color: #f5f5f5;
+    width: 100%;
+    /*
+          less 处理css计算属性calc有bug
+          申明变量diff，可正常使用
+        */
+    @diff: 101px;
+    min-height: calc(~"100% - @{diff}");
+    #wrapper {
+      #content {
+        > .title {
+          font-size: 24px;
+          color: rgba(17, 17, 17, 0.75);
+          margin-bottom: 20px;
+        }
+        .info-title {
+          font-size: 18px;
+          color: rgba(17, 17, 17, 0.75);
+          letter-spacing: 1.31px;
+          margin: 20px 0px;
+        }
+        .info-border {
+          padding-bottom: 20px;
+          border-bottom: 1px solid rgb(233, 233, 233);
+        }
+        .user-info {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 15px 20px;
-          > p {
-            display: inline-flex;
+          margin-bottom: 50px;
+        }
+        .authType {
+          border: 1px solid #d9d9d9;
+          border-radius: 4px;
+          margin-bottom: 20px;
+          .authType-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            > p {
+              display: inline-flex;
+              font-size: 14px;
+              color: #666666;
+            }
+          }
+          .authType-flow {
+            background-color: #f5f5f5;
             font-size: 14px;
             color: #666666;
-          }
-        }
-        .authType-flow {
-          background-color: #f5f5f5;
-          font-size: 14px;
-          color: #666666;
-          padding: 10px 20px;
-          .stepNum {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            text-align: center;
-            color: #ffffff;
-            line-height: 18px;
-            background-color: #2a99f2;
-            margin-right: 5px;
-          }
-          .line {
-            display: inline-block;
-            width: 50px;
-            height: 1px;
-            background-color: #2a99f2;
-            vertical-align: middle;
-            margin: 0px 5px;
-          }
-        }
-      }
-      // 个人认证的css
-      .personal {
-        .userInfo {
-          > p {
-            font-size: 14px;
-            color: rgba(17, 17, 17, 0.65);
-            letter-spacing: 0.83px;
-            margin-bottom: 20px;
-            > span {
-              margin: 0px 30px;
+            padding: 10px 20px;
+            .stepNum {
+              display: inline-block;
+              width: 18px;
+              height: 18px;
+              border-radius: 50%;
+              text-align: center;
+              color: #ffffff;
+              line-height: 18px;
+              background-color: #2a99f2;
+              margin-right: 5px;
+            }
+            .line {
+              display: inline-block;
+              width: 50px;
+              height: 1px;
+              background-color: #2a99f2;
+              vertical-align: middle;
+              margin: 0px 5px;
             }
           }
         }
-      }
+        // 个人认证的css
+        .personal {
+          .userInfo {
+            > p {
+              font-size: 14px;
+              color: rgba(17, 17, 17, 0.65);
+              letter-spacing: 0.83px;
+              margin-bottom: 20px;
+              > span {
+                margin: 0px 30px;
+              }
+            }
+          }
+        }
 
-      .IDCard {
-        width: 362px;
-        label {
-          float: unset;
+        .IDCard {
+          width: 362px;
+          label {
+            float: unset;
+          }
+          img {
+            width: 110px;
+            height: 74px;
+            display: block;
+            margin-bottom: 20px;
+          }
         }
-        img {
-          width: 110px;
-          height: 74px;
+        // 企业认证发送验证码的button
+        .sendCompanyCode {
+          width: 80px;
+          height: 30px;
+          position: absolute;
+          text-align: center;
+          line-height: 27px;
           display: block;
-          margin-bottom: 20px;
-        }
-      }
-      // 企业认证发送验证码的button
-      .sendCompanyCode {
-        width: 80px;
-        height: 30px;
-        position: absolute;
-        text-align: center;
-        line-height: 27px;
-        display: block;
-        bottom: 1px;
-        left: 320px;
-        cursor: pointer;
-        background: #4990e2;
-        border: 1px solid rgba(15, 179, 250, 0);
-        font-family: PingFangSC-Regular;
-        font-size: 11px;
-        color: #ffffff;
-        letter-spacing: 0.71px;
-        outline: none;
-        &.codeDisabled {
-          cursor: not-allowed;
+          bottom: 1px;
+          left: 320px;
+          cursor: pointer;
+          background: #4990e2;
+          border: 1px solid rgba(15, 179, 250, 0);
+          font-family: PingFangSC-Regular;
+          font-size: 11px;
+          color: #ffffff;
+          letter-spacing: 0.71px;
+          outline: none;
+          &.codeDisabled {
+            cursor: not-allowed;
+          }
         }
       }
     }
   }
-}
 
-.selectAuthType {
-  width: 50%;
-  h2 {
-    text-align: center;
-    font-size: 16px;
-    color: rgba(17, 17, 17, 0.75);
-    margin-bottom: 20px;
+  .selectAuthType {
+    width: 50%;
+    h2 {
+      text-align: center;
+      font-size: 16px;
+      color: rgba(17, 17, 17, 0.75);
+      margin-bottom: 20px;
+    }
+    p {
+      position: relative;
+      font-size: 14px;
+      color: rgba(17, 17, 17, 0.65);
+      margin-bottom: 10px;
+      padding-left: 40px;
+      i {
+        transform: rotate(-45deg);
+        position: absolute;
+        width: 7px;
+        height: 4px;
+        top: 5px;
+        left: 42px;
+        border-left: 1px solid #3dbd7d;
+        border-bottom: 1px solid #3dbd7d;
+        display: inline-block;
+      }
+      &::before {
+        margin-right: 7px;
+        content: "";
+        width: 12px;
+        height: 12px;
+        border: 1px solid #3dbd7d;
+        border-radius: 50%;
+        display: inline-block;
+        vertical-align: middle;
+      }
+    }
   }
-  p {
-    position: relative;
+
+  .infTop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 96px;
+    border-bottom: 1px solid #e9e9e9;
+    .inf {
+      font-family: Microsoft YaHei;
+      font-size: 16px;
+      color: rgba(17, 17, 17, 0.75);
+      letter-spacing: 0.95px;
+    }
+  }
+
+  .imgbox {
     font-size: 14px;
     color: rgba(17, 17, 17, 0.65);
-    margin-bottom: 10px;
-    padding-left: 40px;
-    i {
-      transform: rotate(-45deg);
-      position: absolute;
-      width: 7px;
-      height: 4px;
-      top: 5px;
-      left: 42px;
-      border-left: 1px solid #3dbd7d;
-      border-bottom: 1px solid #3dbd7d;
-      display: inline-block;
+    letter-spacing: 0.83px;
+    overflow: hidden;
+    img {
+      vertical-align: top;
     }
-    &::before {
-      margin-right: 7px;
-      content: "";
-      width: 12px;
-      height: 12px;
-      border: 1px solid #3dbd7d;
-      border-radius: 50%;
+    ul {
       display: inline-block;
-      vertical-align: middle;
+      li {
+        margin: 7px 0px;
+        margin-left: 23px;
+        line-height: 32px;
+        font-family: Microsoft Yahei, 微软雅黑;
+        font-size: 14px;
+        color: rgba(17, 17, 17, 0.65);
+        letter-spacing: 0.83px;
+      }
     }
   }
-}
 
-.infTop {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 96px;
-  border-bottom: 1px solid #e9e9e9;
-  .inf {
-    font-family: Microsoft YaHei;
-    font-size: 16px;
-    color: rgba(17, 17, 17, 0.75);
-    letter-spacing: 0.95px;
-  }
-}
-
-.imgbox {
-  font-size: 14px;
-  color: rgba(17, 17, 17, 0.65);
-  letter-spacing: 0.83px;
-  overflow: hidden;
-  img {
-    vertical-align: top;
-  }
-  ul {
-    display: inline-block;
-    li {
-      margin: 7px 0px;
-      margin-left: 23px;
-      line-height: 32px;
+  .safe {
+    padding-top: 9px;
+    p {
       font-family: Microsoft Yahei, 微软雅黑;
       font-size: 14px;
       color: rgba(17, 17, 17, 0.65);
       letter-spacing: 0.83px;
-    }
-  }
-}
-
-.safe {
-  padding-top: 9px;
-  p {
-    font-family: Microsoft Yahei, 微软雅黑;
-    font-size: 14px;
-    color: rgba(17, 17, 17, 0.65);
-    letter-spacing: 0.83px;
-    width: 84%;
-    display: inline-block;
-    padding: 11px 0px;
-    &::before {
-      content: "";
+      width: 84%;
       display: inline-block;
-      width: 14px;
-      height: 14px;
-      background: url("../../assets/img/usercenter/info-icon.png");
-      margin-right: 15px;
-      vertical-align: bottom;
+      padding: 11px 0px;
+      &::before {
+        content: "";
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        background: url("../../assets/img/usercenter/info-icon.png");
+        margin-right: 15px;
+        vertical-align: bottom;
+      }
+      &.info::before {
+        background-position: right;
+      }
+      span {
+        font-size: 16px;
+        color: rgba(17, 17, 17, 0.65);
+      }
     }
-    &.info::before {
-      background-position: right;
+    .keyPhoneVal {
+      p {
+        color: rgba(102, 102, 102, 1);
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+      p:nth-child(2) {
+        margin-bottom: 20px;
+      }
     }
-    span {
-      font-size: 16px;
-      color: rgba(17, 17, 17, 0.65);
-    }
   }
-  span {
-    color: #2a99f2;
-  }
-}
-
-.modal-wrapper {
-  background: #ffffff;
-  margin-bottom: 20px;
-  border: 1px solid #d9d9d9;
-  border-radius: 4px;
-  height: 60px;
-  width: 510px;
-  padding: 0px 20px 0px 10px;
-  span {
-    font-size: 14px;
-    color: #999999;
-    line-height: 60px;
-  }
-  button {
-    float: right;
-    margin-top: 20px;
-  }
-}
-
-.newPhone {
-  p {
-    font-size: 16px;
-    color: rgba(17, 17, 17, 0.65);
-    line-height: 23.42px;
-    margin: 12px 0px;
-  }
-}
 </style>
