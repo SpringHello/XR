@@ -3097,7 +3097,7 @@
           }
         }
         if (this._checkCount(hostCount, diskCount, ipCount)) {
-          axios.get('information/deployVirtualMachine.do', {params}).then(response => {
+          axios.get('database/createDB.do', {params}).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$router.push('order')
             } else {
@@ -3679,7 +3679,7 @@
           // 查询数据库磁盘价格
           this.queryDiskPriceInData()
           // 查询数据库自身价格
-          //this.queryCustomVMInData()
+          this.queryCustomVMInData()
         },
         deep: true
       },
