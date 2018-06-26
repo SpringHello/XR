@@ -3,7 +3,7 @@
         <p style="font-size:16px;color:#000000;margin-bottom:10px;">操作日志</p>
         <div style="height:31px;display:flex;margin-bottom:20px;">
            <ul class="objectList">
-                 <li :class="indexs == index? 'objectItems':'objectItem'" v-for="(item,index) in dayList" :key="index" @click="dayClick('1',index)">{{item.value}}</li>
+                 <li :class="indexs == index? 'objectItems':'objectItem'" v-for="(item,index) in dayList" :key="index" @click="cheoutDate(index)">{{item.value}}</li>
              </ul>
             <div class="journal_right">
                 <span>开始结束时间</span>
@@ -14,7 +14,7 @@
         <Table :loading="pageLoading" :columns="journalList" :data="journalData" ></Table>
         <Page v-if="dateCheck == 1" :total="total" :current="page" @on-change="selectLogs" :page-size="10"  style="margin-top: 20px;"></Page>
         <Page v-if="dateCheck == 2" :total="total" :current="page" @on-change="select" :page-size="10"  style="margin-top: 20px;"></Page>
-         <Page v-if="dateCheck == 3" :total="total" :current="page" @on-change="dayClick" :page-size="10"  style="margin-top: 20px;"></Page>
+        <Page v-if="dateCheck == 3" :total="total" :current="page" @on-change="dayClick" :page-size="10"  style="margin-top: 20px;"></Page>
     </div>
 </template>
 
@@ -93,6 +93,11 @@
     };
   },
   methods: {
+    //保持选择时间段的选中效果不会消失
+    cheoutDate(index){
+      this.indexs = index;
+      this.dayClick(1,index);
+    },
       dayClick(page,val){
         this.dateCheck = 3;
         this.page = 1;
@@ -102,8 +107,6 @@
       //       return  val;
       //     }
       //   })
-
-     this.indexs = val;
           //获取前七天
           var weeks = new Date();
           var now = new Date(weeks.getTime() - 7 * 24 * 3600 * 1000);
@@ -230,6 +233,7 @@
   },
   mounted() {
    this.selectLogs(1);
+
   }
 };
 </script>

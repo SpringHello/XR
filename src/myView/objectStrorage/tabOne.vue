@@ -6,7 +6,7 @@
         <div style="margin-top:10px;">
              <Table   :columns="spaceColumns" :data="spaceData" no-data-text="您还没有创建Bucket（存储空间）,请点击新建空间"></Table>
         </div>
-
+        <!--新建空间-->
          <Modal
         v-model="modal6"
         title="新建空间"
@@ -36,6 +36,14 @@
 </template>
 
 <script >
+  const bucketValid = (rule,value,callback)=>{
+      let reg =  /^[a-z]{3,20}$/;
+      if(value == ''){
+        return callback(new Error('请输入空间名称'));
+      }else if(!reg.test(value)){
+        return callback(new Error('空间名字只能为小写字母且长度不能小于3位大于20位'));
+      }
+  }
 export default {
   data() {
     return {
@@ -48,19 +56,7 @@ export default {
       },
       bucketRule: {
         bucketName: [
-          { required: true, message: "空间名字不能为空", trigger: "blur" },
-          {
-            type: "string",
-            min: 3,
-            message: "空间名字不能少于三个字符",
-            trigger: "blur"
-          },
-          {
-            type: "string",
-            max: 20,
-            message: "空间名字不能大于20个字符",
-            trigger: "blur"
-          }
+          { required: true,validator:bucketValid, trigger: "blur" },
         ],
         visit: [{ required: true, message: "请选择权限", trigger: "change" }]
       },
@@ -123,7 +119,6 @@ export default {
           key: "operation",
           title: "操作",
           render: (h, parasm) => {
-            var self = this;
             if(parasm.row.hide != 1) {
               return h("div", [
                 h(
@@ -135,8 +130,14 @@ export default {
                       cursor: "pointer"
                     },
                     on: {
-                      click() {
-                        self.bucketDelete(parasm.row.name, parasm.row._index);
+                      click:()=> {
+                        this.$Modal.confirm({
+                          title: '删除空间',
+                          content: '<p>是否删除该空间</p>',
+                          onOk: () => {
+                            this.bucketDelete(parasm.row.name, parasm.row._index);
+                          }
+                        });
                       }
                     }
                   },
@@ -188,6 +189,7 @@ export default {
     },
     //创建空间
     bucketClick() {
+      this.modal6 = false;
       this.$refs.bucketInline.validate(valid => {
         if (valid) {
           let obj = {name:'创建中',hide:1,createtime:'————',operation:'————',accessrights:'————'};
@@ -214,7 +216,7 @@ export default {
       this.spaceData.splice(index,1,object);
       this.$http
         .post(
-          "bucket/deleteByBucketName.do",
+          "bucket/forceDestroyBucket.do",
           {
             bucketName: name
           }

@@ -64,8 +64,8 @@
 
             <ul style="margin: 0 0 9px 20px;">
               <li class="fileObject" style="margin-right: 10px;" v-if="this.fileObject.length !=0" @click="backPage"> 返回</li>
-              <li class="fileObject" @click="selectFileSrc(item.id,index)" v-for="(item,index) in fileObject" :key="index">
-                {{item.name+'/'}}
+              <li class="fileObject" v-for="(item,index) in fileObject" @click="selectFileSrc(item.dirId,index)" :key="index">
+                {{item.src+'/'}}
               </li>
             </ul>
             <Table :columns='fileList' :loading="tabLoading" :data="fileData"></Table>
@@ -170,6 +170,7 @@
         <Button type="primary" @click="updateCustom" :loading="domainLodaing">确定</Button>
       </div>
     </Modal>
+
     <!--上传文件-->
     <Modal
       v-model="modal1"
@@ -177,9 +178,9 @@
       :scrollable='true'
       :mask-closable="false"
     >
-      <p style="font-size:14px;color:#999999;line-height: 20px;">控制台上传单个文件大小不超过1GB，如需上传更大的文件请使用新睿云对象存储提供的<span
+      <p style="font-size:14px;color:#999999;line-height: 20px;margin:10px 0;">控制台上传单个文件大小不超过1GB，如需上传更大的文件请使用新睿云对象存储提供的<span
         style="color:#2A9AF3;cursor:pointer;">API</span></p>
-      <p style="font-size:14px;color:#666666;margin:10px 0;">上传路径 文件名称/</p>
+      <!--<p style="font-size:14px;color:#666666;margin:10px 0;">上传路径 文件名称/</p>-->
       <div class="upload_div">
         <span>待上传文件</span>
         <span>大小</span>
@@ -200,7 +201,7 @@
         name="uploadFile"
         :data="fileUpdata"
         type="drag"
-        action="object/uploadObject.do"
+        action="http://192.168.3.109:8080/ruirados/object/uploadObject.do"
         class="upload_model"
       >
         <div class="upload_text">
@@ -210,6 +211,7 @@
         </div>
       </Upload>
     </Modal>
+
     <!-- 新建文件夹 -->
     <Modal
       v-model="floder"
@@ -231,6 +233,7 @@
         <Button type="primary" @click="createFlies">确定</Button>
       </div>
     </Modal>
+
     <!-- 查看外链 -->
     <Modal
       v-model="outerChain"
@@ -262,6 +265,7 @@
         </div>
       </div>
     </Modal>
+
     <!-- 添加自定义权限 -->
     <Modal
       v-model="jurisdiction"
@@ -316,12 +320,8 @@
             </div>
           </div>
         </FormItem>
-        <FormItem v-show="jurisdValidate.referer == '1'">
-          <Input   v-model="jurisdValidate.whiteListValue" style="width:420px;" :rows="4" type="textarea"/>
-          <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
-        </FormItem>
-        <FormItem prop="whiteListFlaseValue" v-show="jurisdValidate.referer =='0'">
-          <Input  v-model="jurisdValidate.whiteListFlaseValue" style="width:420px;" :rows="4" type="textarea"/>
+        <FormItem prop="whiteListValue" >
+          <Input :disabled="refererDisabled"  v-model="jurisdValidate.whiteListValue" style="width:420px;" :rows="4" type="textarea"/>
           <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
         </FormItem>
       </Form>
@@ -395,16 +395,12 @@
           <div style="width:366px;display:flex;">
             <div style="width:115px;font-size:14px;color:#333333;">Referer白名单</div>
             <div style="width:300px;">
-              <Checkbox @on-change="changes"  v-model="updateJurisd.updateReferer" true-value="1" false-value="0">允许白名单为空</Checkbox>
+              <Checkbox @on-change="changesUpdate"  v-model="updateJurisd.updateReferer" true-value="1" false-value="0">允许白名单为空</Checkbox>
             </div>
           </div>
         </FormItem>
-        <FormItem v-show="updateJurisd.updateReferer =='1'">
-          <Input  v-model="updateJurisd.updateWhiteListValue" style="width:420px;" :rows="4" type="textarea"></Input>
-          <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
-        </FormItem>
-        <FormItem prop="updateWhiteListFalseValue" v-show="updateJurisd.updateReferer =='0'">
-          <Input  v-model="updateJurisd.updateWhiteListFalseValue" style="width:420px;" :rows="4" type="textarea"></Input>
+        <FormItem prop="updateWhiteListValue">
+          <Input :disabled="refererUpdateDisabled" v-model="updateJurisd.updateWhiteListValue" style="width:420px;" :rows="4" type="textarea"></Input>
           <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
         </FormItem>
       </Form>
@@ -413,7 +409,6 @@
         <Button type="primary" @click="jurisdUpdateClick">确定</Button>
       </div>
     </Modal>
-
 
     <!-- Cros规则配置 -->
     <Modal v-model="cors" width="550" :scrollable="true" style="top:50px"  :mask-closable="false">
@@ -517,18 +512,16 @@
 
 <script>
   import $store from "@/vuex"
+  import message from "../../myView/message";
   var buckname = sessionStorage.getItem('bucketName');
   const validRoute = (rule, value, callback) => {
-    let reg = /^[a-zA-Z]+(\.[a-zA-Z0-9]+)+(\.[a-zA-Z]+)$/;
-      if ( value == "") {
-        return callback(new Error("请输入网站域名"));
-      } else if (!reg.test(value)) {
+    let reg = /^\s*$|[a-zA-Z]+(\.[a-zA-Z0-9]+)+(\.[a-zA-Z]+)$/;
+      if (!reg.test(value)) {
         return callback(new Error("请输入正确的网站域名"));
       } else {
         callback();
       }
   };
-
   export default {
     data() {
       return {
@@ -570,8 +563,9 @@
         bucketName: '',
         //用户授权输入框是否禁用
         grant: true,
-        //影响资源输入框是否禁用
-        influence: true,
+        //白名单输入框是否禁用
+        refererDisabled: false,
+        refererUpdateDisabled:false,
         //是否隐藏自定义弹窗
         jurisdiction: false,
         //是否隐藏查看外链弹窗
@@ -627,6 +621,10 @@
         fileData: [],
         //文件外链是否为http
         http:'',
+        //当前文件目录ID
+        currentId:'',
+        //后端返回的路径
+        readFileObject:[],
         //文件列表表头
         fileList: [
           {
@@ -662,11 +660,11 @@
                     },
                     on: {
                       click: () => {
+                        //清空搜索文件的名称
                         this.filename = "";
                         var object = new Object();
-                        object.id = params.row.id;
-                        object.name = params.row.filename;
-                        object.fId = params.row.fId;
+                        object.src = params.row.filename;
+                        object.dirId = params.row.id;
                          this.fileObject.push(object);
                         this.filesList(params.row.id,object);//文件标识
                       }
@@ -741,7 +739,14 @@
                     },
                     on: {
                       click: () => {
-                        this.deleteFile(params.row.id, params.row.filename,params.row._index);//传入文件Id和文件名称删除
+                        this.$Modal.confirm({
+                          title: '删除文件/文件夹',
+                          content: '<p>是否删除该文件/文件夹</p>',
+                          onOk: () => {
+                            this.deleteFile(params.row.id, params.row.filename,params.row._index);//传入文件Id和文件名称删除
+                          }
+                        });
+
                       }
                     }
                   }, "删除")
@@ -761,7 +766,6 @@
           influenceValue: '',
           //referer白名单输入框的值
           whiteListValue: '',
-          whiteListFlaseValue:'',
           //用户授权
           users: '0',
           //影响资源
@@ -779,8 +783,7 @@
           updateSources: '',
           updateChannel: [],
           updateGrantValue: '',
-          updateUsers: '',
-          updateWhiteListFalseValue:''
+          updateUsers: ''
         },
         //添加自定义权限表单验证
         jurisdRuleValidate: {
@@ -794,8 +797,8 @@
           influenceValue: [
             {required: true, message: '请输入影响资源', trigger: 'blur'},
           ],
-          whiteListFlaseValue:[
-            {required: true,message:'请输入白名单', trigger: 'blur'},
+          whiteListValue:[
+            {required:true,message:'请输入白名单', trigger: 'blur'},
           ]
         },
         updateJurisdValid:{
@@ -809,7 +812,7 @@
           updateInfluenceValue: [
             {required: true, message: '请输入影响资源', trigger: 'blur'},
           ],
-          updateWhiteListFalseValue:[
+          updateWhiteListValue:[
             {required:true, message:'请输入白名单', trigger:'blur'}
           ]
         },
@@ -902,7 +905,13 @@
                     },
                     on: {
                       click: () => {
-                        this.deleteFromBucketId(obj.row.code, obj.row._index);
+                        this.$Modal.confirm({
+                          title: '删除权限',
+                          content: '<p>是否删除该权限</p>',
+                          onOk: () => {
+                            this.deleteFromBucketId(obj.row.code, obj.row._index);
+                          }
+                        });
                       }
                     }
                   }, '删除')
@@ -986,7 +995,13 @@
                     },
                     on: {
                       click: () => {
-                        this.deleteCros(params.row.corsid, params.row._index);
+                        this.$Modal.confirm({
+                          title: '删除CROS配置',
+                          content: '<p>是否删除该CROS配置</p>',
+                          onOk: () => {
+                            this.deleteCros(params.row.corsid, params.row._index);
+                          }
+                        });
                       }
                     }
                   }, '删除')
@@ -1221,10 +1236,10 @@
         }
       },
       //上传文件成功的方法
-      handleSuccess(response) {
-        console.log(response);
+      handleSuccess(response,file) {
         if (response.status == '1') {
           this.$Message.success('上传成功');
+          this.modal1 = false;
           this.filesList(this.fileUpdata.dirId);
           this.getAllsize();
         } else {
@@ -1262,6 +1277,13 @@
           .then(res => {
             if (res.data.status == "1") {
               this.fileData = res.data.data.data;
+              // console.log(res.data.data.dirMeta); log输出的内容报错也会阻断代码运行
+              // console.log(res.data.data.dirMeta.dirList != []);
+              if( typeof(res.data.data.dirMeta) != "undefined" && res.data.data.dirMeta.dirList != [] ){
+                this.fileObject = res.data.data.dirMeta.dirList;
+              }else{
+                this.fileObject = [];
+              }
               if (typeof(object) != "undefined") {
                 this.tabLoading = false;
               } else {
@@ -1510,10 +1532,10 @@
       },
       //获取文件路径返回
       selectFileSrc(id, index) {
-        this.fileData.id = id;
+        console.log(id+'select');
         let number = this.fileObject.length - (index + 1);
         this.fileObject.splice(index + 1, number);
-        this.filesList(this.fileData.id)
+        this.filesList(id)
       },
       //获取空间详情
       // bucketDetails() {
@@ -1581,6 +1603,7 @@
       //累赘一号函数：打开添加自定义权限弹窗，清空值
       openJurisdiction(){
         this.jurisdiction = true;
+        this.refererDisabled = false;
         this.jurisdValidate = {
           grantValue: '*',
             //影响资源输入框的值
@@ -1609,9 +1632,23 @@
         }
       },
       changes(){
-        this.jurisdValidate.whiteListFlaseValue = this.jurisdValidate.whiteListValue;
-        this.updateJurisdValid.updateWhiteListFalseValue = this.updateJurisdValid.updateWhiteListValue;
-        console.log(this.jurisdValidate.referer);
+       if(this.jurisdValidate.referer == '1'){
+         this.refererDisabled = true;
+         this.jurisdValidate.whiteListValue = '';
+         this.$refs.jurisdValidate.validateField('whiteListValue',(valid)=>{
+           console.log(valid);
+           return ;
+         })
+       }else{
+         this.refererDisabled = false;
+       }
+      },
+      changesUpdate(){
+        if(this.updateJurisd.updateReferer == '1'){
+          this.refererUpdateDisabled = true;
+        }else{
+          this.refererUpdateDisabled = false;
+        }
       },
       //获取ceph服务器域名
       getZoneDomain(){
