@@ -204,7 +204,8 @@
                 <Input v-model="site.basicInformation.certificateNumber" :maxlength="20" placeholder="请输入主体单位证件号码" style="width: 500px"/>
               </FormItem>
               <FormItem v-if="!isPersonage" label="办公室电话" prop="officePhone">
-                <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" :maxlength="15" v-model="site.basicInformation.officePhone" placeholder="请输入办公室电话"
+                <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" :maxlength="15" v-model="site.basicInformation.officePhone"
+                                       placeholder="请输入办公室电话"
                                        style="width: 468px;margin-left: 10px"></Input>
                 <transition name="fade">
                   <div class="tooltip-popper" style="top:-36px" v-if="site.isToolHide == 5">
@@ -219,7 +220,8 @@
                 </transition>
               </FormItem>
               <FormItem v-if="isPersonage" label="办公室电话">
-                <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" :maxlength="15" v-model="site.basicInformation.officePhone" placeholder="请输入办公室电话"
+                <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" :maxlength="15" v-model="site.basicInformation.officePhone"
+                                       placeholder="请输入办公室电话"
                                        style="width: 468px;margin-left: 10px"></Input>
                 <transition name="fade">
                   <div class="tooltip-popper" style="top:-36px" v-if="site.isToolHide == 5">
@@ -324,19 +326,17 @@
     data() {
       // 校验网站名称
       const validWebsiteName = (rule, value, callback) => {
-        let reg = /[\u2E80-\u9FFF]+/;
+        let reg = /^[A-Za-z]+$/
+        let regNum = /^\d+$/
         let regEn = /[`~!@#$%^&*()_+<>?:"{},.\/;'[\] ·！#￥（——）：；“”‘、，|《。》？、【】]/im
         let keyWord = ['反腐', '赌博', '廉政', '色情', '中国', '中华', '中央', '人民', '人大', '国家']
-        for (let i = 0, len = keyWord.length; i < len; i++) {
-          if (value == "") {
-            return callback(new Error("请输入网站名称"));
-            break
-          } else if (!reg.test(value) || regEn.test(value) || value.indexOf(keyWord[i]) == -1) {
-            return callback(new Error("网站名称不符合规范"));
-            break
-          } else {
-            callback();
-          }
+        let isKeyWord = keyWord.some(item => {
+          return value.indexOf(item) !== -1
+        })
+        if (isKeyWord || regEn.test(value) || reg.test(value)|| regNum.test(value)) {
+          return callback(new Error("网站名称不符合规范"));
+        } else {
+          callback();
         }
       };
       //校验网站域名
@@ -422,7 +422,8 @@
         // 网站基本信息表单验证信息
         basicInformationRuleValidate: {
           siteName: [
-            {required: true, validator: validWebsiteName, trigger: "blur"}
+            {required: true, message: '请输入网站名称', trigger: "blur"},
+            {validator: validWebsiteName, trigger: "blur"}
           ],
           websiteDomain: [
             {required: true, validator: validWebsiteDomain, trigger: "blur"}

@@ -397,16 +397,17 @@
       },
       applyHint_ok() {
         this.showModal.applyHint = false
-        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
-          if (response.status == 200 && response.data.status == '1') {
-            this.balance = response.data.data.remainder
-            if (this.balance >= 50) {
-              this.showModal.freezeHint = true
-            } else {
-              this.showModal.shortageHint = true
-            }
-          }
-        })
+        /*        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
+                  if (response.status == 200 && response.data.status == '1') {
+                    this.balance = response.data.data.remainder
+                    if (this.balance >= 50) {
+                      this.showModal.freezeHint = true
+                    } else {
+                      this.showModal.shortageHint = true
+                    }
+                  }
+                })*/
+        this.showModal.freezeHint = true
       },
       freezeHint_ok() {
         this.showModal.freezeHint = false
