@@ -3031,82 +3031,38 @@
             return
           }
         }
+        var diskSize = '', diskType = ''
 
-        var obj = JSON.parse(JSON.stringify(this.PecsInfo))
-        var prod = Object.assign({
-          typeName: '云主机',
-          zone: this.PecsInfo.zone,
-          type: 'Pecs',
-          customCost: this.totalCost,
-          count: 1
-        }, obj)
+        this.PdataInfo.dataDiskList.forEach(item => {
+          diskSize += `${item.size},`
+          diskType += `${item.type},`
+        })
 
-        var hostCount = 0, ipCount = 0, diskCount = 0
-
-        if (prod.type == 'Pecs') {
-          hostCount++
-          var params = {
-            zoneId: prod.zone.zoneid,
-            timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
-            timeValue: prod.timeForm.currentTimeValue.value,
-            templateId: prod.currentType == 'app' ? prod.currentApp.systemtemplateid : prod.currentType == 'public' ? prod.system.systemtemplateid : prod.customMirror.systemtemplateid,
-            isAutoRenew: prod.autoRenewal ? '1' : '0',
-            count: prod.count
-          }
-          // 快速创建主机
-          if (prod.createType == 'fast') {
-            params.cpuNum = prod.currentSystem.kernel
-            params.memory = prod.currentSystem.RAM
-            params.bandWidth = prod.publicIP ? prod.currentSystem.bandWidth : 0
-            params.rootDiskType = prod.currentSystem.diskType
-            params.networkId = 'no'
-            params.vpcId = 'no'
-            if (params.bandWidth != 0) {
-              ipCount++
-            }
-          } else {
-            params.cpuNum = prod.vmConfig.kernel
-            params.memory = prod.vmConfig.RAM
-            params.bandWidth = prod.IPConfig.publicIP ? prod.IPConfig.bandWidth : 0
-            params.rootDiskType = prod.vmConfig.diskType
-            params.networkId = prod.network
-            params.vpcId = prod.vpc
-            var diskType = '', diskSize = ''
-            diskCount += prod.dataDiskList.length
-            if (params.bandWidth != 0) {
-              ipCount++
-            }
-            for (let disk of prod.dataDiskList) {
-              diskType += `${disk.type},`
-              diskSize += `${disk.size},`
-            }
-            params.diskType = diskType
-            params.diskSize = diskSize
-          }
-          // 设置了主机名和密码
-          if (prod.currentLoginType == 'custom') {
-            params.VMName = prod.computerName
-            params.password = prod.password
-          }
-          if (prod.currentType === 'app') {
-            params.templateId = prod.currentApp.templateid
-          } else if (prod.currentType === 'public') {
-            params.templateId = prod.system.systemId
-          } else {
-            params.templateId = prod.customMirror.systemtemplateid
-          }
+        var params = {
+          zoneId: this.PdataInfo.zone.zoneid,
+          templateId: this.PdataInfo.system.systemId,
+          bandWidth: this.PdataInfo.IPConfig.publicIP ? this.PdataInfo.IPConfig.bandWidth : 0,
+          timeType: this.PdataInfo.timeForm.currentTimeType == 'annual' ? this.PdataInfo.timeForm.currentTimeValue.type : 'current',
+          timeValue: this.PdataInfo.timeForm.currentTimeValue.value,
+          isAutoRenew: this.PdataInfo.autoRenewal ? '1' : '0',
+          cpuNum: this.PdataInfo.vmConfig.kernel,
+          memory: this.PdataInfo.vmConfig.RAM,
+          networkId: this.PdataInfo.network,
+          rootDiskType: 'ssd',
+          vpcId: this.PdataInfo.vpc,
+          diskSize,
+          diskType
         }
-        if (this._checkCount(hostCount, diskCount, ipCount)) {
-          axios.get('database/createDB.do', {params}).then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.$router.push('order')
-            } else {
-              this.$message.info({
-                content: response.data.message
-              })
-            }
-          })
-        }
+
+        axios.get('database/createDB.do', {params}).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push('order')
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
       },
       /* 删除一条购买清单 */
       delDetailed(index) {
@@ -3259,7 +3215,6 @@
             }
             PromiseList.push(axios.get('network/createPublicIp.do', {params}))
           } else if (prod.type == 'Pdata') {
-            console.log(prod)
             for (var i = 0; i < count; i++) {
               prod.dataDiskList.forEach(item => {
                 diskSize += `${item.size},`

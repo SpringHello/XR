@@ -570,10 +570,10 @@
             </div>
           </Tab-pane>
           <!-- Access Key -->
-          <!--<Tab-pane label="Access Key" @click="getBuckets">
+          <Tab-pane label="Access Key" @click="getBuckets">
               <Button style="margin-bottom:15px;" @click="accessIsHide = true" type="primary">创建Access Key</Button>
               <Table :columns="accessList" :data="accessData"></Table>
-          </Tab-pane>-->
+          </Tab-pane>
           <!--用于企业认证的pane-->
           <TabPane label="企业信息" name="companyInfo" v-if="showCompanyPane">
             <p class="info-title">企业基本信息</p>
