@@ -984,7 +984,7 @@
                       <p class="item-title" style="margin-top: 7px;">虚拟私有云</p>
                     </div>
                     <div>
-                      <Select v-model="PdataInfo.vpc" style="width:200px">
+                      <Select v-model="PecsInfo.vpc" style="width:200px">
                         <Option v-for="item in PecsInfo.vpcList" :key="item.vpcid" :value="item.vpcid">
                           {{item.vpcname}}
                         </Option>
@@ -1002,7 +1002,7 @@
                       <p class="item-title">网卡</p>
                     </div>
                     <div>
-                      <Select v-model="PdataInfo.network" style="width:200px">
+                      <Select v-model="PecsInfo.network" style="width:200px">
                         <Option v-for="item in PecsInfo.networkList" :key="item.ipsegmentid" :value="item.ipsegmentid">
                           {{item.name}}
                         </Option>
@@ -3049,7 +3049,7 @@
           memory: this.PdataInfo.vmConfig.RAM,
           networkId: this.PdataInfo.network,
           rootDiskType: 'ssd',
-          vpcId: this.PdataInfo.vpc,
+          vpcId: this.PecsInfo.vpc,
           diskSize,
           diskType
         }
