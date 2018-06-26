@@ -196,7 +196,7 @@
             mainName: '云存储',
             type: 'storage',
             subItem: [
-              {subName:'对象存储',type:'objectStorage'},
+              /*{subName:'对象存储',type:'objectStorage'},*/
               {subName: '云硬盘', type: 'disk'},
               {subName: '云硬盘备份', type: 'diskBackup'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
