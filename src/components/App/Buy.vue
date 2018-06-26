@@ -2396,8 +2396,8 @@
           }
         }).then(response => {
           this.PecsInfo.vpcList = response.data.result
-          this.PecsInfo.vpc = this.PecsInfo.vpcList[0].vpcid
-          this.PdataInfo.vpc = this.PecsInfo.vpcList[0].vpcid
+          /*this.PecsInfo.vpc = this.PecsInfo.vpcList[0].vpcid
+          this.PdataInfo.vpc = this.PecsInfo.vpcList[0].vpcid*/
         })
       },
       // 重新查询vpc所属的子网
@@ -2409,8 +2409,8 @@
           }
         }).then(response => {
           this.PecsInfo.networkList = response.data.result
-          this.PecsInfo.network = this.PecsInfo.networkList[0].ipsegmentid
-          this.PdataInfo.network = this.PecsInfo.networkList[0].ipsegmentid
+          /*this.PecsInfo.network = this.PecsInfo.networkList[0].ipsegmentid
+          this.PdataInfo.network = this.PecsInfo.networkList[0].ipsegmentid*/
         })
       },
       // 查询云主机快速配置价格
@@ -3047,7 +3047,7 @@
           isAutoRenew: this.PdataInfo.autoRenewal ? '1' : '0',
           cpuNum: this.PdataInfo.vmConfig.kernel,
           memory: this.PdataInfo.vmConfig.RAM,
-          networkId: this.PdataInfo.network,
+          networkId: this.PecsInfo.network,
           rootDiskType: 'ssd',
           vpcId: this.PecsInfo.vpc,
           diskSize,
