@@ -1216,6 +1216,7 @@
           if (response.status == 200 && response.data.status == '1') {
             this.balance = response.data.data.remainder
             this.voucher = response.data.data.voucher
+            this.freezeDeposit = response.data.data.frozenMoney
           }
         })
       },
