@@ -1,5 +1,5 @@
 <template>
-  <div id="document">
+  <div id="document" style="background:rgba(249,249,249,1);">
     <!--帮助文档-->
     <div class="document">
       <div class="dotitle">
@@ -15,17 +15,27 @@
           </div>
           <div class="body">
             <div v-for="(item,index) in item.secondTitle" :key="index" class="wrapper">
-              <span class="title" @click="goInfo(item.id)">{{item.name}}</span>
-              <!--<li v-if="item.open" v-for="(subItem,subIndex) in item.desc" :key="subIndex" >-->
-              <!--<router-link :to="subItem.url" :class="{notAllow:subItem.url === ''}">{{subItem.subTitle}}-->
-              <!--</router-link>-->
-              <!--</li>-->
+              <router-link :to="item.url" class="title">
+                {{item.name}}
+              </router-link>
             </div>
           </div>
         </div>
       </div>
       <div class="problem" v-if="selectPro">
-        热门问题
+        <p class="problem-title">热门问题</p>
+        <div class="problem-desc">
+          <div v-for="(item,index) in problems" :key="index">
+            <p>{{item.key.name}}</p>
+            <ul>
+              <li v-for="(subTitle,subIndex) in item.value">
+                <router-link :to="subTitle.url" target="_blank" class="quest-item">
+                  {{subTitle.name}}
+                </router-link>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -41,7 +51,9 @@
         selectDoc: true,
         selectPro: false,
         // 帮助文档
-        contentList: []
+        contentList: [],
+        // 常见问题
+        problems: []
       }
     },
     beforeRouteEnter(to, from, next){
@@ -49,6 +61,11 @@
         next(vm => {
           vm.setData(response)
         })
+      })
+    },
+    created(){
+      axios.get('document/listHotQuestion.do').then(response => {
+        this.problems = response.data.result
       })
     },
     methods: {
@@ -70,12 +87,12 @@
     margin: 0 auto;
     padding: 60px 0px 80px;
     .dotitle {
-      margin-bottom: 40px;
       font-size: 28px;
       color: #333;
       padding-bottom: .5rem;
       border-bottom: 1px solid #D8D8D8;
       span {
+        cursor: pointer;
         font-size: 14px;
         color: #333;
         margin-left: 40px;
@@ -90,10 +107,12 @@
       }
     }
     .content {
+      margin-top: 40px;
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
       > div {
+        background: #FFF;
         width: 208px;
         height: 380px;
         border: 1px solid #d8d8d8;
@@ -152,8 +171,55 @@
       }
     }
     .problem {
-      font-size: 18px;
-      color: #333;
+      margin-top: 20px;
+      .problem-title {
+        font-size: 18px;
+        color: #333;
+      }
+      .problem-desc {
+        margin-top: 20px;
+        color: #FFF;
+        height: 273px;
+        display: flex;
+        justify-content: space-between;
+        box-sizing: border-box;
+        padding: 20px 0 0 20px;
+        > div {
+          width: 18.5%;
+          p {
+            font-size: 14px;
+            color: #377DFF;
+          }
+          ul {
+            height: 180px;
+            margin-top: 20px;
+            border-right: 1px solid #D8D8D8;
+            li {
+              list-style: none;
+              font-size: 14px;
+              color: #333;
+              margin-bottom: 10px;
+              line-height: 22px;
+              &:hover {
+                color: #377DFF;
+                cursor: pointer;
+              }
+            }
+
+          }
+          &:last-of-type {
+            ul {
+              border-right: none;
+            }
+          }
+        }
+        .quest-item {
+          color: rgba(17, 17, 17, 0.82);
+          &:hover {
+            color: #2d8cf0
+          }
+        }
+      }
     }
   }
 </style>
