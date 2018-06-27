@@ -41,7 +41,7 @@ Vue.config.productionTip = false
 
 
 
-//axios.defaults.baseURL = 'http://localhost:8080/ruicloud/'
+axios.defaults.baseURL = 'http://localhost:8080/ruicloud/'
 
 //axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud/'
 
@@ -53,7 +53,7 @@ Vue.config.productionTip = false
 
 
 
-//axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true
 //axios.defaults.baseURL = 'http://192.168.3.124:8082/ruicloud'
 
 // axios挂载到Vue原型
