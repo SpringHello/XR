@@ -1152,7 +1152,7 @@
             }
           },
         ],
-        freezeParticularsData: [{}]
+        freezeParticularsData: []
       }
     },
     created() {
@@ -1207,6 +1207,7 @@
         this.$http.get('continue/showMoneyByMonth.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.billmonth = response.data.result
+            this.theCumulative = response.data.total_amount
           }
         })
       },
@@ -1685,7 +1686,17 @@
         this.clipCoupons()
       },
       freezeDetails() {
-        this.showModal.freezeParticulars = true
+        let url = 'user/depositDetails.do'
+        this.$http.get(url).then(res => {
+          if (res.data.status == 200) {
+            this.freezeParticularsData = res.data.result
+            this.showModal.freezeParticulars = true
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
       }
     },
     computed: {

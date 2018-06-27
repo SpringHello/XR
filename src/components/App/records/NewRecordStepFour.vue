@@ -411,7 +411,23 @@
       },
       freezeHint_ok() {
         this.showModal.freezeHint = false
-        this.nextStep = true
+        let url = 'user/getRemainderFrozen.do'
+        let params = {
+          eachFrozenMoney: '50',
+          describe: '幕布申请',
+          operationType: '幕布申请',
+          choose: '0'
+        }
+        this.$http.post(url, params).then(res => {
+          if(res.data.status == 1 ){
+            this.$Message.success('资金冻结成功')
+            this.nextStep = true
+          } else {
+            this.$message.info({
+              content: '平台开小差了，请稍候再试'
+            })
+          }
+        })
       },
       shortageHint_ok() {
         this.showModal.shortageHint = false
