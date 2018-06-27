@@ -71,11 +71,6 @@
     methods: {
       setData(response){
         this.contentList = response.data.result
-      },
-      goInfo(id){
-        sessionStorage.setItem('document-main', id)
-        sessionStorage.removeItem('document-minor')
-        this.$router.push('documentInfo')
       }
     }
   }
@@ -166,7 +161,6 @@
               }
             }
           }
-
         }
       }
     }
