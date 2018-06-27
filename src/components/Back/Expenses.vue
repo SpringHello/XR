@@ -334,7 +334,7 @@
         <Table :columns="freezeParticularsColumns" :data="freezeParticularsData"></Table>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary">确认
+        <Button type="primary" @click="showModal.freezeParticulars = false">确认
         </Button>
       </div>
     </Modal>
