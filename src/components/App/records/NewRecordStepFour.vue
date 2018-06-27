@@ -397,17 +397,17 @@
       },
       applyHint_ok() {
         this.showModal.applyHint = false
-        /*        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
-                  if (response.status == 200 && response.data.status == '1') {
-                    this.balance = response.data.data.remainder
-                    if (this.balance >= 50) {
-                      this.showModal.freezeHint = true
-                    } else {
-                      this.showModal.shortageHint = true
-                    }
-                  }
-                })*/
-        this.showModal.freezeHint = true
+        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
+          if (response.status == 200 && response.data.status == '1') {
+            this.balance = response.data.data.remainder
+            if (this.balance >= 50) {
+              this.showModal.freezeHint = true
+            } else {
+              this.showModal.shortageHint = true
+            }
+          }
+        })
+        // this.showModal.freezeHint = true
       },
       freezeHint_ok() {
         this.showModal.freezeHint = false
@@ -416,10 +416,10 @@
           eachFrozenMoney: '50',
           describe: '幕布申请',
           operationType: '幕布申请',
-          choose: '0'
+         //choose: '0'
         }
-        this.$http.post(url, params).then(res => {
-          if(res.data.status == 1 ){
+        axios.post(url, params).then(res => {
+          if (res.data.status == 1) {
             this.$Message.success('资金冻结成功')
             this.nextStep = true
           } else {
