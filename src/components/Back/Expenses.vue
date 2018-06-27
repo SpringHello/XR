@@ -364,7 +364,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.notUnfreeze = false">取消</Button>
-        <Button type="primary">确定</Button>
+        <Button type="primary" @click="showModal.notUnfreeze = false">确定</Button>
       </p>
     </Modal>
   </div>
@@ -1121,34 +1121,47 @@
         freezeParticularsColumns: [
           {
             title: '押金金额',
-            key: 'name'
+            key: 'eachfrozenmoney'
           }, {
             title: '押金事由',
-            key: 'name'
+            key: 'describes'
           }, {
             title: '冻结时间',
-            key: 'name'
+            key: 'createtime'
           }, {
             title: '解冻时间/事件',
-            key: 'name'
+            render: (h, params) => {
+              if (params.row.type == 1) {
+                return h('span', {}, params.row.updatetime)
+              } else {
+                return h('span', {}, '--')
+              }
+            }
           }, {
             title: '押金状态',
-            key: 'name'
+            render: (h, params) => {
+              const text = params.row.type == 1 ? '已解冻' : '冻结中'
+              return h('span', {}, text)
+            }
           }, {
             title: '操作',
             render: (h, params) => {
-              return h('span', {
-                style: {
-                  cursor: 'pointer',
-                  color: '#2A99F2'
-                },
-                on: {
-                  click: () => {
-                    //this.showModal.unfreeze = true
-                    this.showModal.notUnfreeze = true
+              if (params.row.type == 0 && params.row.describes != '幕布申请') {
+                return h('span', {
+                  style: {
+                    cursor: 'pointer',
+                    color: '#2A99F2'
+                  },
+                  on: {
+                    click: () => {
+                      //this.showModal.unfreeze = true
+                      this.showModal.notUnfreeze = true
+                    }
                   }
-                }
-              }, '申请解冻')
+                }, '申请解冻')
+              } else {
+                return h('span', {}, '无')
+              }
             }
           },
         ],
@@ -1689,7 +1702,7 @@
       freezeDetails() {
         let url = 'user/depositDetails.do'
         this.$http.get(url).then(res => {
-          if (res.data.status == 200) {
+          if (res.data.status == 1) {
             this.freezeParticularsData = res.data.result
             this.showModal.freezeParticulars = true
           } else {
