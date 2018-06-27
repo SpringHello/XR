@@ -406,6 +406,7 @@
                   nativeOn: {
                     click: () => {
                       this.current = params.row
+                      this.dilatationForm.minDatabaseSize = params.row.diskSize
                       this.showModal.restart = true
                     }
                   }
@@ -749,7 +750,7 @@
           }
         }).then(res => {
           if (res.data.status == 1) {
-            this.$router.push({path: 'order'})
+            this.dilatationCost = res.data.result
           } else {
             this.$message.info({
               content: res.data.message
@@ -766,7 +767,7 @@
           }
         }).then(res => {
           if (res.data.status == 1) {
-            this.dilatationCost = res.data.result
+            this.$router.push({path: 'order'})
           }
         })
       }
