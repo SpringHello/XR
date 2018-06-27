@@ -218,6 +218,7 @@
   import $store from '@/vuex'
   import axios from 'axios'
   import regExp from '../../util/regExp'
+  import debounce from 'throttle-debounce/debounce'
 
   export default {
     data() {
@@ -397,6 +398,7 @@
                }, '数据库镜像'),*/ h('DropdownItem', {
                   nativeOn: {
                     click: () => {
+                      this.current = params.row
                       this.showModal.dilatation = true
                     }
                   }
@@ -413,6 +415,7 @@
                       this.current = params.row
                       if (params.row.caseType == 3) {
                         this.$Message.info('请选择包年包月的云数据库进行续费')
+                        this.showModal.renewal = true
                       } else {
                         this.showModal.renewal = true
                       }
@@ -719,10 +722,10 @@
         })
       },
       renewalok() {
-        var database = [
+        let database = [
           {type: 5, id: this.current.id}
-        ]
-        list = JSON.stringify(database)
+        ];
+        let list = JSON.stringify(database);
         this.$http.post('continue/continueOrder.do', {
           list: list,
           timeType: this.renewalType,
@@ -730,11 +733,42 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({path: 'order'})
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
           }
         })
       },
+      queryDilatationPrice: debounce(500, function () {
+        let url = 'database/upDBCost.do'
+        this.$http.get(url, {
+          params: {
+            DBId: this.current.computerid,
+            diskSize: this.dilatationForm.databaseSize - this.dilatationForm.minDatabaseSize
+          }
+        }).then(res => {
+          if (res.data.status == 1) {
+            this.$router.push({path: 'order'})
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      }),
       dilatationok() {
-
+        let url = 'database/upDB.do'
+        this.$http.get(url, {
+          params: {
+            DBId: this.current.computerid,
+            diskSize: this.dilatationForm.databaseSize - this.dilatationForm.minDatabaseSize
+          }
+        }).then(res => {
+          if (res.data.status == 1) {
+            this.dilatationCost = res.data.result
+          }
+        })
       }
     },
     computed: {
@@ -774,6 +808,11 @@
             }
           })
         }
+      },
+      // 磁盘扩容价格计算
+      'dilatationForm.databaseSize'() {
+        this.dilatationCost = '--'
+        this.queryDilatationPrice()
       },
     }
   }
