@@ -196,7 +196,8 @@
               :points="[250,500]"
               style="width:300px;vertical-align: middle;">
             </i-slider>
-            <InputNumber :max="1000" :min="dilatationForm.minDatabaseSize" v-model="dilatationForm.databaseSize" :step=10
+            <InputNumber :max="1000" :min="dilatationForm.minDatabaseSize" v-model="dilatationForm.databaseSize"
+                         :step=10
                          :editable="false"
                          style="margin-left: 20px"></InputNumber>
             <span style="margin-left: 10px">GB</span>
@@ -265,22 +266,67 @@
             }
           },
           {
-            title: '系统',
+            title: '数据库版本',
             key: 'templatename',
             ellipsis: true,
           },
           {
-            title: '配置规格',
+            title: '内核配置',
             key: 'serviceoffername',
             ellipsis: true,
           },
           {
-            title: '状态',
+            title: '主机状态',
+            render: (h, params) => {
+              const row = params.row
+              let text = ''
+              switch (row.dbStatus) {
+                case '0':
+                  text = '关闭';
+                  break;
+                case '1':
+                  text = '开启';
+                  break;
+                case '2':
+                  text = '开启中';
+                  break;
+                case '3':
+                  text = '关闭中';
+                  break;
+                case '4':
+                  text = '重启中';
+                  break;
+              }
+              if (row.dbStatus == 2 || row.dbStatus == 3 || row.dbStatus == 4) {
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', text)])
+              } else {
+                return h('span', text)
+              }
+            }
+          },
+          {
+            title: '费用状态',
             key: 'status',
             render: (h, params) => {
               const row = params.row
-              const text = row.status == -1 ? '异常' : row.status == 1 ? '正常' : row.status == 0 ? '欠费' : row.status == 2 ? '创建中' : row.status == 3 ? '重启中' : row.status == 4 ? '删除中' : row.status == 5 ? '开启中' : '关闭中'
-              if (row.status == 2 || row.status == 3 || row.status == 4 || row.status == 5 || row.status == 6) {
+              let text = ''
+              switch (row.status) {
+                case 0:
+                  text = '欠费';
+                  break;
+                case 1:
+                  text = '正常';
+                  break;
+                case 2:
+                  text = '创建中';
+                  break;
+              }
+              if (row.status == 2) {
                 return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block',
@@ -296,6 +342,12 @@
             title: '内网地址',
             key: 'privateip',
             ellipsis: true,
+          },
+          {
+            title: '公网地址',
+            render: (h, params) => {
+              return h('span', params.row.publicip ? params.row.publicip : '')
+            }
           },
           {
             title: '数据库端口',
@@ -322,8 +374,8 @@
             }
           },
           {
-            title: '创建时间',
-            key: 'createtime',
+            title: '到期时间',
+            key: 'endtime',
             ellipsis: true,
           },
           {
@@ -611,50 +663,50 @@
         })
       },
       /*      listMirror() {
-              var params = {
-                zoneId: $store.state.zone.zoneid,
-              }
-              axios.get('database/listDbTemplates.do', {params}).then(response => {
-                if (response.status == 200 && response.data.status == 1) {
-                  var mirrorlist = []
-                  mirrorlist = response.data.result.map(item => {
-                    return item.systemtemplateid
-                  })
-                  this.templateid = mirrorlist.join()
-                  // console.log(mirrorlist)
-                  // this.$router.push('order')
-                } else {
-                  this.$message.info({
-                    content: response.data.message
-                  })
-                }
-              })
-            },
-            createOrder() {
-              var params = {
-                zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
-                templateId: this.templateid,
-                bandWidth: 2,
-                timeType: 'current',
-                timeValue: 1,
-                isAutoRenew: 0,
-                count: 1,
-                cpuNum: 1,
-                memory: 1,
-                networkId: 'd5155543-1859-40ff-ac1f-21f4829493d7',
-                rootDiskType: 'sas',
-                vpcId: 'e0d7bef1-3b81-4afb-a36c-ee3aff28baf7',
-              }
-              axios.get('database/createDB.do', {params}).then(response => {
-                if (response.status == 200 && response.data.status == 1) {
-                  this.$router.push('order')
-                } else {
-                  this.$message.info({
-                    content: response.data.message
-                  })
-                }
-              })
-            },*/
+       var params = {
+       zoneId: $store.state.zone.zoneid,
+       }
+       axios.get('database/listDbTemplates.do', {params}).then(response => {
+       if (response.status == 200 && response.data.status == 1) {
+       var mirrorlist = []
+       mirrorlist = response.data.result.map(item => {
+       return item.systemtemplateid
+       })
+       this.templateid = mirrorlist.join()
+       // console.log(mirrorlist)
+       // this.$router.push('order')
+       } else {
+       this.$message.info({
+       content: response.data.message
+       })
+       }
+       })
+       },
+       createOrder() {
+       var params = {
+       zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
+       templateId: this.templateid,
+       bandWidth: 2,
+       timeType: 'current',
+       timeValue: 1,
+       isAutoRenew: 0,
+       count: 1,
+       cpuNum: 1,
+       memory: 1,
+       networkId: 'd5155543-1859-40ff-ac1f-21f4829493d7',
+       rootDiskType: 'sas',
+       vpcId: 'e0d7bef1-3b81-4afb-a36c-ee3aff28baf7',
+       }
+       axios.get('database/createDB.do', {params}).then(response => {
+       if (response.status == 200 && response.data.status == 1) {
+       this.$router.push('order')
+       } else {
+       this.$message.info({
+       content: response.data.message
+       })
+       }
+       })
+       },*/
       beforePortModify() {
         this.showModal.beforePortModify = false
         this.showModal.portModify = true

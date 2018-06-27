@@ -923,7 +923,7 @@
                           </div>
                           <Dropdown-menu slot="list">
                             <Dropdown-item v-for="system in item.systemList" :key="system.ostypeid"
-                                           :name="`${system.dbname}#${system.systemtemplateid}#${index}`"
+                                           :name="`${system.dbname}#${system.systemtemplateid}#${index}#${system.dbloginname}`"
                                            style="white-space: pre-wrap;display:block;">
                               <span>{{system.dbname}}</span>
                             </Dropdown-item>
@@ -1150,7 +1150,8 @@
                   <div>
                     <p class="item-title">数据库账号</p>
                   </div>
-                  <span style="padding: 10px 0px; font-size: 14px; color: rgb(102, 102, 102);">root</span>
+                  <span
+                    style="padding: 10px 0px; font-size: 14px; color: rgb(102, 102, 102);">{{PdataInfo.account}}</span>
                 </div>
               </div>
 
@@ -2163,10 +2164,8 @@
             {label: 'SSD存储', value: 'ssd'}
           ],
           // 虚拟私有云列表
-          vpcList: [],
           vpc: '',
           // vpc下所有子网
-          networkList: [],
           network: '',
           // 自定义公网IP配置
           IPConfig: {
@@ -2194,7 +2193,9 @@
           // 快速创建价格计算花费
           cost: 0,
           // 快速创建优惠价格
-          fastCoupon: 0
+          fastCoupon: 0,
+          // 数据库帐号
+          account: ''
         },
         // 系统用户名
         systemUsername: '',
@@ -2365,6 +2366,7 @@
           systemName: arg[0],
           systemId: arg[1]
         }
+        this.PdataInfo.account = arg[3]
         this.PdataInfo.publicList[arg[2]].selectSystem = arg[0]
       },
       // 根据选择自定义镜像判断登录名是admin还是root
@@ -2397,7 +2399,7 @@
         }).then(response => {
           this.PecsInfo.vpcList = response.data.result
           /*this.PecsInfo.vpc = this.PecsInfo.vpcList[0].vpcid
-          this.PdataInfo.vpc = this.PecsInfo.vpcList[0].vpcid*/
+           this.PdataInfo.vpc = this.PecsInfo.vpcList[0].vpcid*/
         })
       },
       // 重新查询vpc所属的子网
@@ -2410,7 +2412,7 @@
         }).then(response => {
           this.PecsInfo.networkList = response.data.result
           /*this.PecsInfo.network = this.PecsInfo.networkList[0].ipsegmentid
-          this.PdataInfo.network = this.PecsInfo.networkList[0].ipsegmentid*/
+           this.PdataInfo.network = this.PecsInfo.networkList[0].ipsegmentid*/
         })
       },
       // 查询云主机快速配置价格
@@ -3007,7 +3009,14 @@
           }
         }
         var obj = JSON.parse(JSON.stringify(this.PdataInfo))
-        var prod = Object.assign({typeName: '数据库', zone: this.PdataInfo.zone, type: 'Pdata', count: 1}, obj)
+        var prod = Object.assign({
+          typeName: '数据库',
+          zone: this.PdataInfo.zone,
+          type: 'Pdata',
+          count: 1,
+          vpc: this.PecsInfo.vpc,
+          network: this.PecsInfo.vpc
+        }, obj)
         this.cart.push(prod)
         this.store()
         window.scrollTo(0, 170)

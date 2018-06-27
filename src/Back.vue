@@ -238,10 +238,10 @@
           {
             mainName: '云数据库',
             type: 'database',
-            subItem: [{subName: '云数据库', type: 'cloudDatabase'}, {subName: '云数据库备份', type: 'cloudDatabaseBackup'}, {
+            subItem: [{subName: '云数据库', type: 'cloudDatabase'}/*, {subName: '云数据库备份', type: 'cloudDatabaseBackup'}, {
               subName: '云数据库镜像',
               type: 'cloudDatabaseMirror'
-            }]
+            }*/]
           },
           {
             mainName: '云存储',

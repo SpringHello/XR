@@ -39,6 +39,8 @@ Vue.config.productionTip = false
 
 //axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud/'
 
+
+
 //axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
 
 

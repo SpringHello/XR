@@ -1477,6 +1477,7 @@
       },
       // 连接主机动作
       link(item){
+        var tempwindow = window.open('_blank');
         sessionStorage.setItem('link-companyid', item.companyid)
         sessionStorage.setItem('link-vmid', item.computerid)
         sessionStorage.setItem('link-zoneid', item.zoneid)
@@ -1487,8 +1488,18 @@
           }
         }).then(response => {
           if (response.data.connectCode == '') {
-            window.open('/ruicloud/link')
+            /*var form = document.createElement('form');
+             form.action = 'https://www.baidu.com';
+             form.target = '_blank';
+
+             form.method = 'POST';
+
+             document.body.appendChild(form);
+             form.submit();*/
+            //window.open('/ruicloud/link')
+            tempwindow.location = 'https://www.baidu.com';
           } else {
+            tempwindow.close()
             // 是第一次连接，弹出模态框
             this.linkPassword = response.data.connectCode
             this.showModal.linkPassword = true

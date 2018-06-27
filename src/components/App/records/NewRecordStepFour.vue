@@ -27,12 +27,12 @@
         </div>
         <div v-if="photograph === 2 && nextStep === false">
           <div class="description">
-            <p>1.由新睿云为您邮寄幕布，收到后根据要求自行拍照上传</p>
-            <p>2.将核验单、身份证复印件、营业执照复印件、域名证书复印件、网站授权书等文件邮寄至新睿云，邮寄地址：北京市海淀区东升大厦AB座611、612  收件人：新睿云备案部  联系电话：010-82527988</p>
+            <p>按要求填写完成《网站备案信息真实性核验单》并盖章，将填写完成核验单与其他资料打包邮寄至新睿云。由新睿云承担您的邮件到付费用。</p>
+            <p>由新睿云为您邮寄幕布，收到后根据实例要求自行拍照上传。幕布需50元押金，并由您承担到付邮件费用。</p>
           </div>
           <div class="footer">
             <button @click="$router.go(-1)" style="margin-right: 10px">上一步</button>
-            <button @click="nextStep = true">下一步</button>
+            <button @click="next">下一步</button>
             <p>足不出户，需等待2-5天,偏远地区另行计算</p>
           </div>
         </div>
@@ -130,6 +130,53 @@
         </Button>
       </div>
     </Modal>
+    <!-- 申请幕布提示 -->
+    <Modal v-model="showModal.applyHint" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24">由于背景幕布需回收并多次使用，寄送幕布需要从您的账户冻结50元押金，待我们确认回收幕布之后，押金即解冻。注意：冻结押金不可用于购买和续费。您可以在费用中心查看冻结押金详情。
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.applyHint = false">取消</Button>
+        <Button type="primary" @click="applyHint_ok">确定</Button>
+      </p>
+    </Modal>
+    <!-- 冻结资金提示 -->
+    <Modal v-model="showModal.freezeHint" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24">冻结金额：50元</p>
+          <p class="lh24">冻结事由：备案幕布申请</p>
+          <p class="lh24">冻结时间：2018/6/25-幕布回收确认日</p>
+          <p class="lh24">解冻操作：自动解冻</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.freezeHint = false">取消</Button>
+        <Button type="primary" @click="freezeHint_ok">确认冻结</Button>
+      </p>
+    </Modal>
+    <!-- 资金不足提示 -->
+    <Modal v-model="showModal.shortageHint" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24">您的账户余额小于50元，冻结资金不足。请先充值。
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.shortageHint = false">取消</Button>
+        <Button type="primary" @click="shortageHint_ok">确认充值</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -139,6 +186,7 @@
   import oStep from "./ostep.vue";
   import records from './../Records'
   import $ from 'jquery'
+
   export default {
     components: {
       step, records, oStep
@@ -216,6 +264,9 @@
         showModal: {
           // 物流
           logistics: false,
+          applyHint: false,
+          freezeHint: false,
+          shortageHint: false
         },
         upload: {
           photo: ''
@@ -231,7 +282,8 @@
         isRecord: false,
         checkListAddress: '',
         imageViewShow: false,
-        percent: 0
+        percent: 0,
+        balance: 0
       }
     },
     created() {
@@ -336,6 +388,38 @@
           }, 20)
         }
       },
+      next() {
+        if (this.curtainStatus === true) {
+          this.nextStep = true
+        } else {
+          this.showModal.applyHint = true
+        }
+      },
+      applyHint_ok() {
+        this.showModal.applyHint = false
+        /*        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
+                  if (response.status == 200 && response.data.status == '1') {
+                    this.balance = response.data.data.remainder
+                    if (this.balance >= 50) {
+                      this.showModal.freezeHint = true
+                    } else {
+                      this.showModal.shortageHint = true
+                    }
+                  }
+                })*/
+        this.showModal.freezeHint = true
+      },
+      freezeHint_ok() {
+        this.showModal.freezeHint = false
+        this.nextStep = true
+      },
+      shortageHint_ok() {
+        this.showModal.shortageHint = false
+        const {href} = this.$router.resolve({
+          name: 'recharge',
+        })
+        window.open(href, '_blank')
+      },
       // 提交幕布申请
       applyCurtain() {
         this.siteParams.backgroundAddress = this.receiveForm.address
@@ -419,7 +503,7 @@
           content: '请选择jpg、png、jpeg类型的文件进行上传'
         });
       },
-      handleMaxSize () {
+      handleMaxSize() {
         this.$Message.info({
           content: '请选择大小小于2M的文件进行上传'
         });
