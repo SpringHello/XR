@@ -5,6 +5,9 @@
     <div class="background">
       <div class="center">
         <gb-flow></gb-flow>
+        <gb-award></gb-award>
+        <gb-advantage></gb-advantage>
+        <gb-rule></gb-rule>
       </div>
     </div>
   </div>
@@ -14,10 +17,13 @@
   import gbHeader from './element/gb-header'
   import gbProduct from './element/gb-product'
   import gbFlow from './element/gb-flow'
+  import gbAward from './element/gb-award'
+  import gbAdvantage from './element/gb-advantage'
+  import gbRule from './element/gb-rule'
 
   export default {
     components: {
-      gbHeader, gbProduct, gbFlow
+      gbHeader, gbProduct, gbFlow, gbAward, gbAdvantage, gbRule
     },
     data() {
       return {}

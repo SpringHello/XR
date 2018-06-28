@@ -55,6 +55,7 @@
       line-height: 50px;
       text-align: center;
       font-weight: normal;
+      position: relative;
       &:before {
         display: inline-block;
         content: '';
@@ -62,9 +63,9 @@
         height: 28px;
         background: linear-gradient(133.1deg, rgba(254, 79, 74, 1), rgba(252, 169, 135, 1));
         border-radius: 20px;
-        position: relative;
-        bottom: 20px;
-        right: 9px;
+        position: absolute;
+        top: -10%;
+        left: 41%;
       }
     }
     ul {

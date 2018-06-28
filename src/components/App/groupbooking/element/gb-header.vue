@@ -4,7 +4,7 @@
       <img src="../../../../assets/img/active/group-booking/gb-banner1.png"/>
       <img src="../../../../assets/img/active/group-booking/gb-banner3.png"/>
       <p>云主机特惠计划</p>
-      <p>首月购买只需9.9元，邀请好友上云，每成功一位，即赠送一个月，最多可领12个月 </p>
+      <p>首月购买只需59元，邀请好友上云，每成功一位，即赠送一个月，最多可领12个月 </p>
       <p>特惠产品 你我共享</p>
     </div>
   </div>

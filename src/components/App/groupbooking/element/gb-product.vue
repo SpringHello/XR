@@ -78,7 +78,7 @@
             bandwidth: 1,
             disk: 40,
             system: 'Centos',
-            currentPrice: 9.9,
+            currentPrice: 59,
             originalCost: 118.72
           }, {
             cpu: 2,
@@ -86,8 +86,8 @@
             bandwidth: 5,
             disk: 40,
             system: 'Centos',
-            currentPrice: 19.9,
-            originalCost: 291.72
+            currentPrice: 98,
+            originalCost: 196.72
           }],
         loginModal: false,
         form: {
