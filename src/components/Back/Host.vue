@@ -1396,10 +1396,12 @@
           if (valid) {
             this.showModal.mirror = false
             axios.get('Snapshot/createTemplate.do', {
-              rootDiskId: this.currentHost[0].rootdiskid,
-              templateName: this.mirrorForm.mirrorName,
-              descript: this.mirrorForm.description,
-              zoneId: this.currentHost[0].zoneid
+              params: {
+                rootDiskId: this.currentHost[0].rootdiskid,
+                templateName: this.mirrorForm.mirrorName,
+                descript: this.mirrorForm.description,
+                zoneId: this.currentHost[0].zoneid
+              }
             }).then(response => {
               this.loading = false
               if (response.status == 200 && response.data.status == 1) {
