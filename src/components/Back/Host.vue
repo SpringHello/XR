@@ -1508,9 +1508,9 @@
           }
         })*/
       },
-      open(){
-        window.open('/ruicloud/link')
-      }
+      // open(){
+      //   window.open('/ruicloud/link')
+      // }
     },
     computed: {
       auth() {
