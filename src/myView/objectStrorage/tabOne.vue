@@ -42,6 +42,8 @@
         return callback(new Error('请输入空间名称'));
       }else if(!reg.test(value)){
         return callback(new Error('空间名字只能为小写字母且长度不能小于3位大于20位'));
+      }else {
+        callback();
       }
   }
 export default {
@@ -85,6 +87,7 @@ export default {
                   },
                   on:{
                     click:()=>{
+                      // eventBus.$emit('bucketName', parasm.row.name);
                       sessionStorage.setItem("bucketName", parasm.row.name);
                       sessionStorage.setItem('bucketId', parasm.row.id);
                       sessionStorage.setItem('accessrights', parasm.row.accessrights)

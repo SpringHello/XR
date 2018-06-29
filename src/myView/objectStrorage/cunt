@@ -1,55 +1,52 @@
 <template>
-  <p :style="mainStyle" :class="mainClass">
-    <slot name="leftText"></slot>
-    <span :style="countStyle" :class="countClass"><span :id="countId">{{ initCount }}</span><span>{{ unitText }}</span></span>
-    <slot name="rightText"></slot>
-  </p>
+  <div>
+    <div @click="upClick"
+         @drop.prevent="onDrop"
+         @dragover.prevent="dragOver = true"
+         @dragleave.prevent="dragOver = false">
+      <input @click="checkUp"  ref="input" type="file" multiple="multiple"/>
+      <slot></slot>
+    </div>
+
+  </div>
 </template>
 
 <script>
-  import CountUp from 'countup';
   export default {
     name:'countUp',
     data(){
       return{
-        unitText:'',
-        initCount:'',
-        countId:'count'+parseInt(main.random() * 10000)
+        dragOver:false
       }
     },
     props:{
-      minStyle:String,
-      minClass:String,
-      countStyle:{
-        type:object,
-        default: ()=>{
-          return{
-            fontSize:"18px",
-            fontWeight:500,
-            color:'#000'
-          }
-        }
-      },
-      endVal:{
-        type:Number,
-        default:0
-      },
-      startVal:{
-        type:Number,
-        default:0
-      },
-      unit:{
-        type:Array,
-        default:() =>{
-          return [[3,'KB'],[2,'MB'],[1,'GB']]
-        }
-      }
-    },
-    methods:{
-      tranfromVal(val){
-        let endVal = 0;
-        for(let i=0;i<this.unit.length;i++){}
 
+    },
+    methods: {
+      upClick(){
+       this.$refs.input.click();
+      },
+      checkUp(e){
+        const file = e.target.file;
+        if(!file){
+          return;
+        }
+        this.uploadFlie(file);
+        this.$refs.input.value = null;
+      },
+      uploadFlie(file){
+        for(let i =0;i<file.length;i++){
+
+        }
+        var xhr = new XMLHttpRequest();
+
+      },
+      clearFile(){
+
+      },
+      onDrop(e){
+        this.dragOver = false;
+        this.uploadFlie(e.dataTransfer.files);
       }
     }
   }

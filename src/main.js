@@ -7,6 +7,7 @@ import router from './router'
 import store from './vuex'
 import axios from 'axios'
 import iview from 'iview'
+import uploader from 'vue-simple-uploader'
 import 'iview/dist/styles/iview.css'
 import '@/assets/css/iviewOverRide.css'
 import '@/assets/css/reset.css'
@@ -20,6 +21,8 @@ import 'echarts/lib/chart/line'
 import 'echarts/lib/component/tooltip'
 
 import md5 from 'md5'
+
+Vue.use(uploader)
 //Vue.prototype.$message = message
 Vue.config.productionTip = false
 
@@ -38,6 +41,7 @@ axios.defaults.baseURL = 'http://192.168.3.109:8080/ruirados/'
 // axios.defaults.baseURL = 'http://192.168.3.229:8080/ruirados/'
 //axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
 axios.defaults.withCredentials = true
+// window.eventBus = new Vue();
 
 // axios挂载到Vue原型
 Vue.prototype.$http = axios.create({

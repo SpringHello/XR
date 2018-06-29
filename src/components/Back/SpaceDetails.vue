@@ -181,35 +181,67 @@
       <p style="font-size:14px;color:#999999;line-height: 20px;margin:10px 0;">控制台上传单个文件大小不超过1GB，如需上传更大的文件请使用新睿云对象存储提供的<span
         style="color:#2A9AF3;cursor:pointer;">API</span></p>
       <!--<p style="font-size:14px;color:#666666;margin:10px 0;">上传路径 文件名称/</p>-->
+      <p style="text-align: right;color: #999999;">{{uploadList.length}}/24</p>
       <div class="upload_div">
         <span>待上传文件</span>
         <span>大小</span>
         <span>状态</span>
         <span>操作</span>
       </div>
-      <Upload
-        ref="upload"
-        :show-upload-list="true"
-        :on-success="handleSuccess"
-        :max-size="1048576"
-        :on-format-error="handleFormatError"
-        :on-exceeded-size="handleMaxSize"
-        :before-upload="handleBeforeUpload"
-        :on-error="handleError"
-        :on-progress="handleUpload"
-        multiple
-        name="uploadFile"
-        :data="fileUpdata"
-        type="drag"
-        action="http://192.168.3.109:8080/ruirados/object/uploadObject.do"
-        class="upload_model"
-      >
-        <div class="upload_text">
-          <Icon type="ios-upload-outline"></Icon>
-          <span>选择文件</span>
-          <p style="margin-top:10px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>
-        </div>
-      </Upload>
+      <div class="upload_Box" >
+        <Upload
+          ref="upload"
+          :show-upload-list="true"
+          :on-success="handleSuccess"
+          :max-size="1048576"
+          :on-format-error="handleFormatError"
+          :on-exceeded-size="handleMaxSize"
+          :before-upload="handleBeforeUpload"
+          :on-error="handleError"
+          :on-progress="handleUpload"
+          multiple
+          name="uploadFile"
+          :data="fileUpdata"
+          type="drag"
+          action="http://192.168.3.109:8080/ruirados/object/uploadObject.do"
+          class="upload_model"
+        >
+          <div class="upload_text">
+            <Icon type="ios-upload-outline"></Icon>
+            <span>选择文件</span>
+            <p style="margin-top:10px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>
+          </div>
+        </Upload>
+        <!--<div class="upload_list" v-for="(item,index) in uploadList" v-if="item.status == 'uploading'">-->
+          <!--<div>-->
+            <!--<sapn>{{item.name}}</sapn>-->
+          <!--</div>-->
+          <!--<div>-->
+            <!--<template>{{item.size/1024 < 1000 ? (item.size /1024).toFixed(2)+'kb': item.size/1048576 < 1024 ? (item.size / 1048576).toFixed(2)+'Mb' : (item.size/1073741824).toFixed(2)+'Gb'  }}</template>-->
+          <!--</div>-->
+          <!--<div>-->
+            <!--<i-progress  :percent="item.percentage"  style="width: 90%;" :stroke-width="6" hide-info></i-progress>-->
+            <!--<div style="display: flex;height: 19px;width: 100%;">-->
+              <!--<span style="width: 55px;">{{fist}}{{unText}}</span><span style="width: 125px;color: #999999;font-size:12px;">剩余时间{{listTime}}</span>-->
+            <!--</div>-->
+          <!--</div>-->
+         <!--<div>-->
+           <!--<span style="margin-right: 20px;cursor: pointer;" @click="stop = 1">暂停</span>-->
+           <!--<span style="cursor: pointer;" @click="deleteUpload(index)">删除</span>-->
+         <!--</div>-->
+        <!--</div>-->
+        <!--<uploader :options="options" class="uploader-example">-->
+          <!--<uploader-unsupport></uploader-unsupport>-->
+          <!--<uploader-drop>-->
+            <!--<p>Drop files here to upload or</p>-->
+            <!--<uploader-btn>select files</uploader-btn>-->
+            <!--<uploader-btn :attrs="attrs">select images</uploader-btn>-->
+            <!--<uploader-btn :directory="true">select folder</uploader-btn>-->
+          <!--</uploader-drop>-->
+          <!--<uploader-list></uploader-list>-->
+        <!--</uploader>-->
+      </div>
+
     </Modal>
 
     <!-- 新建文件夹 -->
@@ -512,7 +544,6 @@
 
 <script>
   import $store from "@/vuex"
-  import message from "../../myView/message";
   var buckname = sessionStorage.getItem('bucketName');
   const validRoute = (rule, value, callback) => {
     let reg = /^\s*$|[a-zA-Z]+(\.[a-zA-Z0-9]+)+(\.[a-zA-Z]+)$/;
@@ -525,6 +556,19 @@
   export default {
     data() {
       return {
+        unText:'',
+        // 上传时间
+        time:'',
+        //上传耗时
+        listTime:'',
+        //上传速率
+        fist:'',
+        // 请求间隔时间
+        oldTime:0,
+        //请求间隔文件大小
+        oldSize:0,
+        // 上传文件列表
+        uploadList:'',
         //自定义域名弹窗
         mainName:false,
         domain:{
@@ -1237,12 +1281,15 @@
       },
       //上传文件成功的方法
       handleSuccess(response,file) {
+        const files = this.$refs.upload.fileList;
         if (response.status == '1') {
           this.$Message.success('上传成功');
           this.modal1 = false;
+          this.$refs.upload.fileList.splice(files.indexOf(file), 1);
           this.filesList(this.fileUpdata.dirId);
           this.getAllsize();
         } else {
+          this.$refs.upload.fileList.splice(files.indexOf(file), 1);
           this.$Message.info(response.msg);
         }
       },
@@ -1251,8 +1298,11 @@
         this.$Message.info('上传失败');
       },
       //上传文件过程的方法
-      handleUpload(file, event) {
-        // let time = new Date().getTime();
+      handleUpload(event, file) {
+
+        this.oldTime = new Date().getTime();
+        this.time =  event;
+        // console.log(event.total / event.timeStamp);
         console.log(event);
         console.log(file);
       },
@@ -1526,7 +1576,7 @@
             this.size = "0KB";
             this.$Message.info('出错了');
           }
-          sessionStorage.setItem('size', this.size);
+          localStorage.setItem('size', this.size);
 
         })
       },
@@ -1658,7 +1708,11 @@
           this.zoneName = res.data.data.zoneDomain;
         })
 
-      }
+      },
+      //删除上传文件
+      // deleteUpload(index){
+      //   this.uploadList.splice(index,1);
+      // }
     },
     created(){
       this.bucketName = sessionStorage.getItem('bucketName');
@@ -1672,7 +1726,38 @@
       this.createtime = sessionStorage.getItem('createtime');
       this.kjName = sessionStorage.getItem('bucketName');
       this.kjaccessrights = sessionStorage.getItem('accessrights') == 1 ? '私有读写' : sessionStorage.getItem('accessrights') == 2 ? '公有读私有写' : sessionStorage.getItem('accessrights') == 3 ? '公有读写' : '自定义权限';
-    }
+    },
+    mounted(){
+      this.uploadList = this.$refs.upload.fileList;
+    },
+    // watch: {
+    //   time: function () {
+    //     let newTime = new Date().getTime();
+    //
+    //     var pertTime = (newTime - this.oldTime) / 1000 <1 ?1 :(newTime - this.oldTime) / 1000;
+    //     this.oldTime = new Date().getTime();
+    //     /**
+    //      * 上传文件先传给后台，后台接收值，暂停停止给后台传输文件，继续再调用接口*/
+    //     var size = (this.time.loaded - this.oldSize) / pertTime;
+    //     // var size = this.time.loaded - this.oldSize
+    //     var sped = size;
+    //     this.oldSize = this.time.loaded;
+    //     if(size / 1024 >1 && size / 1024 < 1000) {
+    //       size = size / 1024 ;
+    //       this.unText="KB/s";
+    //     }else if(size / 1024 > 1000){
+    //       size = size / 1048576;
+    //       this.unText="MB/s";
+    //     }
+    //     this.fist = size.toFixed(1);
+    //     var listTime = ((this.time.total - this.time.loaded) / sped);
+    //     console.log(listTime);
+    //     var tina = (listTime / (60*60)).toFixed(0);
+    //     var mint = (listTime / 60).toFixed(0);
+    //     var secor = (listTime % 60).toFixed(0);
+    //     this.listTime = tina +':' +mint +':' +secor
+    //   }
+    // }
   };
 </script>
 
@@ -1777,6 +1862,28 @@
     }
   }
 
+  .uploader-example{
+    background-color: #FFFFFF;
+  }
+  .upload_Box{
+    height: 200px;
+    border-bottom:1px solid #E9E9E9;
+    overflow: auto;
+  }
+  .upload_Box::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 10px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 1px;
+  }
+  .upload_Box::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(144,144,144,0.2);
+    background: #999999;
+  }
+  .upload_Box::-webkit-scrollbar-track {/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    background: #EDEDED;
+  }
   .fileObject{
     display: inline-block;
     color: #2A99F2;
@@ -1793,11 +1900,57 @@
     margin: 10px 0 15px 20px;
   }
 
+  .upload_list{
+    display: flex;
+    height: 50px;
+    div:nth-child(1){
+      width: 26%;
+      height: 25px;
+      line-height: 25px;
+      color: #666666;
+    }
+    div:nth-child(2) {
+      width: 16%;
+      height: 25px;
+      line-height: 25px;
+      color: #666666;
+    }
+    div:nth-child(3) {
+      width: 33%;
+      height: 25px;
+      line-height: 25px;
+      color: #666666;
+    }
+    div:nth-child(4) {
+      width: 26%;
+      height: 25px;
+      line-height: 25px;
+      color: #2A99F2
+    }
+  }
   .upload_div {
     display: flex;
     background-color: #f5f5f5;
-    span {
-      width: 30%;
+    span:nth-child(1) {
+      width: 26%;
+      height: 25px;
+      line-height: 25px;
+      color: #666666;
+    }
+    span:nth-child(2) {
+      width: 16%;
+      height: 25px;
+      line-height: 25px;
+      color: #666666;
+    }
+    span:nth-child(3) {
+      width: 33%;
+      height: 25px;
+      line-height: 25px;
+      color: #666666;
+    }
+    span:nth-child(4) {
+      width: 26%;
       height: 25px;
       line-height: 25px;
       color: #666666;
@@ -1806,6 +1959,7 @@
 
   .upload_text {
     background-color: #ffffff;
+
     span {
       color: #2a9af3;
       font-size: 14px;
@@ -1839,27 +1993,6 @@
   .upload_model {
     background-color: #ffffff;
     margin-top: 21px;
-    min-height: 192px;
-    border-bottom: 1px solid #e9e9e9;
-
-  }
-  .ivu-upload>.ivu-upload-list{
-    overflow: hidden;
-    height: 20px;
-  }
-  .ivu-upload-list::-webkit-scrollbar {/*滚动条整体样式*/
-    width: 10px;     /*高宽分别对应横竖滚动条的尺寸*/
-    height: 1px;
-  }
-  .ivu-upload-list::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
-    border-radius: 10px;
-    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-    background: #535353;
-  }
-  .ivu-upload-list::-webkit-scrollbar-track {/*滚动条里面轨道*/
-    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-    border-radius: 10px;
-    background: #EDEDED;
   }
 
   .jurisd {

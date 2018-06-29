@@ -11,7 +11,7 @@
             <span class="title">对象存储</span>
           </div>
           <div style="width:50%;text-align:right;line-height:4;">
-            <Button @click="name = 'name1'">刷新</Button>
+            <Button @click="$router.history.go(0)">刷新</Button>
           </div>
         </div>
         <div class="center_p">
@@ -275,7 +275,7 @@
             this.size = "0KB";
             this.$Message.inof('平台出小差了');
           }
-          sessionStorage.setItem('size', this.size);
+          localStorage.setItem('size', this.size);
         }).catch(error => {
           this.$Message.info('平台出小差了');
           this.size = "0KB"
