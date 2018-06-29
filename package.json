@@ -15,6 +15,7 @@
   "dependencies": {
     "axios": "^0.17.1",
     "clipboard": "^1.7.1",
+    "countup.js": "^1.9.3",
     "deepclonejs": "^1.0.3",
     "echarts": "^3.8.5",
     "es6-promise-polyfill": "^1.2.0",
@@ -31,9 +32,9 @@
     "vue-echarts": "^2.6.0",
     "vue-qart": "^2.1.1",
     "vue-router": "^3.0.1",
+    "vue-simple-uploader": "^0.4.6",
     "vuex": "^3.0.1",
-    "xlsx": "^0.11.13",
-    "countup.js": "^1.9.3"
+    "xlsx": "^0.11.13"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
