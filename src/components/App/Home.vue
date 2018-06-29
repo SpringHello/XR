@@ -10,12 +10,12 @@
               <div>
                 <div>
                   <p>
-                    <img src="../../assets/img/active/active_2/ziti.png"
-                         style="width:400px;padding-top: 0px">
+                    <img src="../../assets/img/home/home-banner2.png"
+                         style="width:480px;height:200px;padding-top: 0px">
                   </p>
                   <button>立即领取</button>
                 </div>
-                <img src="../../assets/img/active/active_2/banner-aircraft.png">
+                <img src="../../assets/img/home/home-banner1.png">
               </div>
             </div>
           </div>
@@ -37,29 +37,29 @@
               <div>
                 <div>
                   <p>
-                    <img style="padding-top: 0" src="../../assets/img/active/active_1/ziti1.png">
+                    <img style="padding-top: 0" src="../../assets/img/home/home-banner3.png">
                   </p>
                   <button>立即领取</button>
                 </div>
-                <img src="../../assets/img/active/active_1/baner.png">
+                <img src="../../assets/img/home/home-banner4.png">
               </div>
             </div>
           </div>
         </my-carousel-item>
-        <!--<my-carousel-item class="carousel-item">
+        <my-carousel-item class="carousel-item">
           <div @click="push('newNodes_1')"
                style="cursor: pointer;background:linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="newNodes_1">
-              <div style="width:1200px;margin:0px auto;padding-top: 8%;position: relative;z-index: 1">
-                <img style="position: absolute;top: 10%;left: -20%;z-index: 2"
-                     src="../../assets/img/active/newNodes/circle_1.png">
+              <div style="width:1200px;margin:0px auto;padding-top: 4%;position: relative;z-index: 1">
+                <img style="position: absolute;top: -10%;left: -20%;z-index: 2"
+                     src="../../assets/img/home/home-banner5.png">
                 <p>北京一区盛大开服
-                  <img style="position: absolute;left: -2%;top: 28%;z-index: 1"
-                       src="../../assets/img/active/newNodes/text.png"/></p>
+                  <img style="position: absolute;left: -2%;top: 15%;z-index: 1"
+                       src="../../assets/img/home/home-banner6.png"/></p>
                 <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">布局首都，新购特惠，限时抢购</p>
                 <button>立即体验</button>
-                <img style="position:absolute;left: 45%; top: 13%;z-index: -2;"
-                     src="../../assets/img/active/newNodes/banner_4.png">
+                <img style="position:absolute;left: 45%; top: 12%;z-index: -2;"
+                     src="../../assets/img/home/home-banner7.png">
               </div>
             </div>
           </div>
@@ -68,28 +68,27 @@
           <div @click="push('newNodes_2')"
                style="cursor: pointer;background:#87B6FF">
             <div class="newNodes_2">
-              <img style="position: absolute;z-index: 1" src="../../assets/img/active/newNodes/circle.png">
-              <div style="width:1200px;margin:0px auto;padding-top: 7%;position: relative;z-index: 1">
+              <img style="position: absolute;z-index: 1" src="../../assets/img/home/home-banner9.png">
+              <div style="width:1200px;margin:0px auto;padding-top: 2%;position: relative;z-index: 1">
                 <p>北方二区（沈阳）盛大开服
-                  <img style="position: absolute;left: 0;top: 30%;z-index: 1"
+                  <img style="position: absolute;left: 0;top: 22%;z-index: 1"
                        src="../../assets/img/active/newNodes/text1.png"/></p>
                 <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">春暖花开，活动绽放</p>
                 <p>3折优惠<span style="font-size: 24px">起</span></p>
                 <button>立即体验</button>
-                <img style="position:absolute;left: 58%; top: 2%;z-index: -2;"
-                     src="../../assets/img/active/newNodes/banner_2.png">
+                <img style="position:absolute;left: 58%; top: 1%;z-index: -2;"
+                     src="../../assets/img/home/home-banner8.png">
               </div>
             </div>
           </div>
-        </my-carousel-item>-->
+        </my-carousel-item>
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->
-    <div class="box-container"
-         :class="{one:this.activeBanner==4,two: this.activeBanner==5, three:this.activeBanner==1,four:this.activeBanner==3||this.activeBanner==2}">
+    <div class="box-container">
       <div class="container">
         <div v-for="(item,index) in boxContainer" :key="index" class="container-item">
-          <i class="iconfont" :class="item.img" style="font-size:60px;color:#fff;line-height:1"></i>
+          <i class="iconfont" :class="item.img" style="font-size:60px;line-height:1"></i>
           <div>
             <p>{{item.title}}</p>
             <span>{{item.desc}}</span>
@@ -749,11 +748,10 @@
       overflow: hidden;
     }
     > .banner {
-      height: 560px;
+      height: 400px;
       .carousel {
         .carousel-item {
           > div {
-            height: 560px;
             background-size: cover;
           }
           .xf {
@@ -766,20 +764,7 @@
     > .box-container {
       height: 110px;
       width: 100%;
-      background-color: #5692fe;
-
-      &.one {
-        background-color: #F9AF80;
-      }
-      &.two {
-        background-color: #135BFF;
-      }
-      &.three {
-        background-color: #F36C69;
-      }
-      &.four {
-        background-color: #F36C69;
-      }
+      background-color: #FFF;
       .container {
         width: 1200px;
         margin: 0px auto;
@@ -790,25 +775,30 @@
           width: 20%;
           padding: 24px 22px;
           display: flex;
-          opacity: .7;
           border-right: 1px solid #ffffff;
           &:first-of-type {
             border-left: 1px solid #ffffff;
           }
           &:hover {
-            opacity: 1;
+            color: #387DFF;
+            p{
+              color: #387DFF;
+            }
+            span{
+              color: #387DFF;
+            }
           }
           > div {
             margin-left: 10px;
             > p {
               font-size: 16px;
-              color: #ffffff;
+              color: #333333;
               padding-bottom: 8px;
               border-bottom: 1px solid #ffffff;
             }
             > span {
               font-size: 12px;
-              color: #ffffff;
+              color: #666666;
               padding-top: 8px;
               display: inline-block;
             }
@@ -1351,7 +1341,7 @@
       justify-content: space-between;
       padding-bottom: 65px;
       div {
-        padding-top: 133px;
+        padding-top: 60px;
         button {
           width: 176px;
           height: 54px;
@@ -1360,14 +1350,14 @@
           font-size: 24px;
           color: #FFFFFF;
           line-height: 24px;
-          margin-top: 100px;
+          margin-top: 50px;
           outline: none;
           border: none;
           cursor: pointer;
         }
       }
-      img {
-        padding-top: 70px;
+      >img{
+        margin-top: 10px;
       }
     }
   }
