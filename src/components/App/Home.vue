@@ -4,6 +4,34 @@
     <div class="banner">
       <my-carousel :interval=5000000 effect="fade" class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
+          <router-link to="/ruicloud/groupBooking" style="display:block;width:100%;height:100%">
+            <div class="groupbooking" style="position: relative;cursor: pointer">
+              <!-- <div style="width:1200px;margin: 0px auto">
+                <img src="../../assets/img/active/active_xf_text.png"
+                     style="position: absolute;top:50%;transform: translateY(-50%);">
+              </div> -->
+            </div>
+          </router-link>
+          <div @click="push('groupBooking')"
+               style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
+            <div class="head-banner">
+              <div>
+                <div>
+                  <div>
+                    <!-- <img src="../../assets/img/active/active_2/ziti.png"
+                         style="width:400px;padding-top: 0px"> -->
+                         <h1>云主机特惠计划 </h1>
+                         <p>分享赚时长 一年只需<span>59</span>元</p>
+                         <p>59元首月开通，<span>0</span>元续费 ，便宜好用尽在新睿云</p>
+                  </div>
+                  <button>点击了解</button>
+                </div>
+                <img src="../../assets/img/active/active_2/banner-aircraft.png">
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
           <div @click="push('active_2')"
                style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
@@ -759,6 +787,11 @@
           .xf {
             height: 100%;
             background: url('../../assets/img/active/active_xf_bg.png') no-repeat center;
+          }
+          .groupbooking{
+            height: 100%;
+            background: url('../../assets/img/active/group-booking/home-banner.png') no-repeat center;
+            background-size:cover; 
           }
         }
       }
