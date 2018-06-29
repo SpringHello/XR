@@ -19,6 +19,7 @@ function appendMD5(params, type) {
       str = encodeURI(str)
     }
     str = md5(str)
+    count = count % 10
     var mac = str.substr(0, count) + count + str.substr(count)
     return {
       ...params,

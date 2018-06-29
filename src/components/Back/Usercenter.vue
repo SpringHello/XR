@@ -16,8 +16,8 @@
               <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
               <div style="  padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
-                  <span
-                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;color: #2A99F2;">添加认证信息</span>
+  <span
+    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;color: #2A99F2;">添加认证信息</span>
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
@@ -44,13 +44,14 @@
                   <span class="stepNum">{{i+1}}</span>{{step}}
                   <span class="line" v-if="i!=authType.step.length-1"></span>
                 </div>
+                <span style="float: right;line-height: 1.5;">{{ authType.disc}}</span>
               </div>
             </div>
             <!--身份证照片认证-->
             <div v-if="notAuth.currentStep == notAuth.allStep.IDAuth">
-              <span style="font-size: 14px;color: #666666;letter-spacing: 0.83px;">您选择了“通过身份证照片”方式，点击<span
-                style="color:#2A99F2;cursor: pointer"
-                @click="notAuth.currentStep=notAuth.allStep.selectAuthType">重新选择</span></span>
+  <span style="font-size: 14px;color: #666666;letter-spacing: 0.83px;">您选择了“通过身份证照片”方式，点击<span
+    style="color:#2A99F2;cursor: pointer"
+    @click="notAuth.currentStep=notAuth.allStep.selectAuthType">重新选择</span></span>
               <Form :model="notAuth.cardAuthForm" :label-width="100" ref="cardAuth"
                     :rules="notAuth.cardAuthFormValidate"
                     style="margin-top:20px;">
@@ -161,9 +162,9 @@
             </div>
             <!--快速认证页面-->
             <div v-if="notAuth.currentStep == notAuth.allStep.quicklyAuth">
-              <span style="font-size: 14px;color: #666666;letter-spacing: 0.83px;">您选择了“快速认证”方式，点击<span
-                style="color:#2A99F2;cursor: pointer"
-                @click="notAuth.currentStep=notAuth.allStep.selectAuthType">重新选择</span></span>
+  <span style="font-size: 14px;color: #666666;letter-spacing: 0.83px;">您选择了“快速认证”方式，点击<span
+    style="color:#2A99F2;cursor: pointer"
+    @click="notAuth.currentStep=notAuth.allStep.selectAuthType">重新选择</span></span>
               <Form :model="notAuth.quicklyAuthForm" :label-width="100" ref="quicklyAuth"
                     :rules="notAuth.quicklyAuthFormValidate"
                     style="width:450px;margin-top:20px;">
@@ -213,8 +214,8 @@
               <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
-                  <span
-                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
+  <span
+    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
@@ -308,8 +309,8 @@
               <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
-                  <span
-                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
+  <span
+    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
@@ -408,18 +409,18 @@
                 <div style="width: 200px">
                   <div
                     style="display: flex;padding-left: 20px;align-items: center;height: 39px;background:#F8F8F9 ">
-                        <span
-                          style="font-family: Microsoft YaHei;font-size: 12px;color: rgba(17,17,17,0.75);letter-spacing: 0.95px;font-weight: bolder">信息项</span>
+  <span
+    style="font-family: Microsoft YaHei;font-size: 12px;color: rgba(17,17,17,0.75);letter-spacing: 0.95px;font-weight: bolder">信息项</span>
                   </div>
                   <div class="infTop"
                        style="height: 241px;border-top:1px solid #E9E9E9; ">
-                        <span
-                          class="inf">账号信息</span>
+  <span
+    class="inf">账号信息</span>
                   </div>
                   <div
                     class="infTop">
-                        <span
-                          class="inf">告警信息</span>
+  <span
+    class="inf">告警信息</span>
                   </div>
                   <div
                     class="infTop">
@@ -443,8 +444,8 @@
               <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
-                  <span
-                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;color: #2A99F2;">添加认证信息</span>
+  <span
+    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;color: #2A99F2;">添加认证信息</span>
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
@@ -463,8 +464,8 @@
               <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
-                  <span
-                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
+  <span
+    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
@@ -529,8 +530,8 @@
               <img src="../../assets/img/usercenter/client.png" style="width: 84px;">
               <div style="padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
-                  <span
-                    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
+  <span
+    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;">认证中</span>
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
@@ -568,6 +569,7 @@
               </div>
             </div>
           </Tab-pane>
+
           <!--用于企业认证的pane-->
           <TabPane label="企业信息" name="companyInfo" v-if="showCompanyPane">
             <p class="info-title">企业基本信息</p>
@@ -616,13 +618,13 @@
                   <Input v-model="notAuth.companyAuthForm.verificationCode" placeholder="请输入收到的验证码"></Input>
                 </FormItem>
                 <!--<FormItem label="证件类型" prop="certificateType">
-                  <Select v-model="notAuth.companyAuthForm.certificateType">
-                    <Option v-for="(item,index) in notAuth.companyAuthForm.certificateTypeOptions" :key="item.key"
-                            :value="item.key">
-                      {{item.label}}
-                    </Option>
-                  </Select>
-                </FormItem>-->
+                <Select v-model="notAuth.companyAuthForm.certificateType">
+                <Option v-for="(item,index) in notAuth.companyAuthForm.certificateTypeOptions" :key="item.key"
+              :value="item.key">
+                {{item.label}}
+              </Option>
+              </Select>
+              </FormItem>-->
               </div>
               <!--三证合一图片上传-->
               <div class="IDCard" v-show="notAuth.companyAuthForm.certificateType==1" style="display: block">
@@ -733,14 +735,20 @@
               </div>
             </Form>
           </TabPane>
+
+          <!--access key pane-->
+          <Tab-pane label="Access Key" name="key">
+            <Button type="primary" @click="keymodal" style="margin-bottom:10px">创建Access Key</Button>
+            <Table :columns="keyColumns" :data="keyData"></Table>
+          </Tab-pane>
         </Tabs>
       </div>
     </div>
     <!--选择两种认证方式-->
     <Modal v-model="showModal.selectAuthType" width="550" :scrollable="true" style="top:172px">
       <!--<div slot="header"
-           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
-        选择认证方式
+    style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;">
+      选择认证方式
       </div>-->
       <div style="display: flex;margin-top: 20px;">
         <div class="selectAuthType" style="border-right: 1px solid #D9D9D9">
@@ -856,20 +864,20 @@
       </div>
       <div>
         <div style="margin: 15px 0;">
-          <span
-            style="display: block;margin: 10px 0px;font-size: 16px;color: #333333;width:80px;font-size: 14px;line-height: 14px;">手机号</span><span>{{userInfo.phone}}</span>
+  <span
+    style="display: block;margin: 10px 0px;font-size: 16px;color: #333333;width:80px;font-size: 14px;line-height: 14px;">手机号</span><span>{{userInfo.phone}}</span>
         </div>
         <div style="margin: 15px 0 20px 0;">
-          <span
-            style="font-size: 14px;color: #333333;line-height: 14px;vertical-align:sub;width:80px;display:block;margin: 10px 0px;">随机验证码</span>
+  <span
+    style="font-size: 14px;color: #333333;line-height: 14px;vertical-align:sub;width:80px;display:block;margin: 10px 0px;">随机验证码</span>
           <Input type="text" autocomplete="off" v-model="code" placeholder="请输入随机验证码"
                  style="width: 240px;margin-right: 20px;height: 28px;"></Input>
           <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
                style="height:32px;vertical-align: middle">
         </div>
         <div style="margin: 20px 0 10px 0;">
-          <span
-            style="font-size: 14px;line-height: 14px;color:#333333;vertical-align:sub;width:80px;display: block;margin: 10px 0px;">验证码</span>
+  <span
+    style="font-size: 14px;line-height: 14px;color:#333333;vertical-align:sub;width:80px;display: block;margin: 10px 0px;">验证码</span>
           <Input v-model="newPhoneForm.oldPhoneCode" placeholder="请输入手机验证码"
                  style="width: 240px;margin-right:20px;height: 28px;"></Input>
           <Button type="primary" :class="{codeDisabled:newPhoneForm.phoneVerCodeText!='获取验证码'}"
@@ -900,8 +908,8 @@
           style="display: block;margin: 10px 0px;font-size: 14px;color: #333333;line-height: 14px;width:80px;">邮箱</span><span>{{userInfo.loginname}}</span>
         </div>
         <div style="margin: 15px 0 20px 0;">
-          <span
-            style="font-size: 14px;color: #333333;line-height: 14px;vertical-align:sub;width:80px;display: block;margin: 10px 0px;">验证码</span><Input
+  <span
+    style="font-size: 14px;color: #333333;line-height: 14px;vertical-align:sub;width:80px;display: block;margin: 10px 0px;">验证码</span><Input
           v-model="newPhoneForm.oldPhoneCode" placeholder="请输入"
           style="width: 240px;margin-right:20px;height: 28px;"></Input>
           <Button type="primary" :class="{codeDisabled:emailVerCodeText!='获取验证码'}" :disabled="emailVerCodeText!='获取验证码'"
@@ -1005,8 +1013,34 @@
       <div slot="footer">
       </div>
     </Modal>
+    <!--密钥手机验证-->
+    <Modal width="550" v-model="showModal.keyPhoneVal" :scrollable="true">
+      <div slot="header"
+           style="color:#666666;font-family: Microsoft Yahei,微软雅黑;font-size: 16px;color: #666666;line-height: 24px;border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
+        提示
+      </div>
+      <div class="keyPhoneVal" style="border-bottom: 1px solid #D8D8D8;padding-bottom: 20px;">
+        <p>为保障您的账户安全，请进行手机验证：</p>
+        <p>手机号码： <span>{{keyForm.phone}}</span></p>
+        <p> 图形验证码
+          <Input v-model="keyForm.imgCode" placeholder="请输入验证码" style="width: 132px;margin:0 20px;"></Input>
+          <img :src="imgSrc" style="width:80px;height:30px;vertical-align: middle" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+        </p>
+        <p> 验证码
+          <Input v-model="keyForm.code" placeholder="请输入验证码" style="width: 132px;margin:0 20px;"></Input>
+          <Button type="primary" :class="{codeDisabled:keycodePlaceholder!='获取验证码'}" @click.prevent="keysendCode"
+                  :disabled="keycodePlaceholder!='获取验证码'">{{keycodePlaceholder}}
+          </Button>
+        </p>
+      </div>
+      <div slot="footer">
+        <Button type="ghost" @click="showModal.keyPhoneVal=false">取消</Button>
+        <Button type="primary" @click="createKey" :disabled="keyForm.imgCode==''||keyForm.code==''">
+          确定
+        </Button>
+      </div>
+    </Modal>
   </div>
-
 </template>
 
 <script type="text/ecmascript-6">
@@ -1079,7 +1113,14 @@
         }
       }
       return {
-
+        keyWeight: '',
+        keycodePlaceholder: '获取验证码',
+        token: '',
+        keyForm: {
+          phone: '',
+          imgCode: '',
+          code: ''
+        },
         phoneVerCode: '获取验证码',
         emailVerCode: '获取验证码',
         authType,
@@ -1094,7 +1135,8 @@
           authByEmail: false,
           modifyPassword: false,
           showPicture: false,
-          updateLinkman: false
+          updateLinkman: false,
+          keyPhoneVal: false
         },
         imgSrc: 'user/getKaptchaImage.do',
         // 此对象存储所有未认证时页面的状态
@@ -1111,14 +1153,16 @@
 
           authTypes: [
             {
-              title: '通过身份证照片验证',
-              step: ['填写个人资料', '平台审核', '认证完成'],
-              go: 2
+              title: '快速验证（推荐）',
+              step: ['填写个人资料', '提交审核', '认证完成'],
+              go: 3,
+              disc: '实时审核，无需等待'
             },
             {
-              title: '快速验证',
-              step: ['填写个人资料', '填写个人身份资料', '认证完成'],
-              go: 3
+              title: '通过身份证照片验证',
+              step: ['填写个人资料', '上传身份证照片','平台审核', '认证完成'],
+              go: 2,
+              disc: '24小时内完成审核'
             }
           ],
           // 快速认证表单
@@ -1621,7 +1665,127 @@
             {required: true, message: '请输入新密码', trigger: 'blur'},
             {validator: validaRegisteredPassWordTwo, trigger: 'blur'}
           ],
-        }
+        },
+        keyColumns: [
+          {
+            title: 'Access Key ID',
+            key: 'accesskeyid'
+          },
+          {
+            title: 'Access Key Secret',
+            render: (h, params) => {
+              var text = params.row.isdisplay == 1 ? '查看' : '隐藏'
+              if (params.row.isdisplay == 1){
+                return h('div', [
+                  h('span', {
+                    style: {
+                      marginRight: '5px',
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        axios.post('user/showUserAcess.do', {
+                          accessKeyID: params.row.accesskeyid,
+                          token: this.token
+                        }).then(response => {
+                          if (response.status == 200 && response.data.status == 1) {
+                            this.keyData[params.index].isdisplay = 0
+                          } else {
+                            this.$Message.error(response.data.message)
+                          }
+                        })
+                      }
+                    }
+                  }, text)
+                ]);
+              } else if (params.row.isdisplay == 0){
+                return h('div', [
+                  h('span', {
+                    style: {
+                      marginRight: '5px',
+                    }
+                  }, params.row.accesskeysecret),
+                  h('span', {
+                    style: {
+                      color: '#2A99F2',
+                      cursor: 'pointer'
+                    },
+                    on: {
+                      click: () => {
+                        this.keyData[params.index].isdisplay = 1
+                      }
+                    }
+                  }, text)
+                ]);
+              }
+            }
+          },
+          {
+            title: '状态',
+            render: (h, params) => {
+              let text = params.row.status == 1 ? '启动' : '禁用'
+              return h('span', {}, text)
+            }
+          },
+          {
+            title: '创建时间',
+            key: 'createtime'
+          },
+          {
+            title: '操作',
+            render: (h, params) => {
+              let text = params.row.status == 1 ? '启动' : '禁用'
+              return h('div', [
+                h('span', {
+                  style: {
+                    marginRight: '5px',
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      axios.post('user/stateUserAcess.do', {
+                        accessKeyID: params.row.accesskeyid,
+                        status: params.row.status,
+                        zoneId: $store.state.zone.zoneid,
+                        token: this.token
+                      }).then(response => {
+                        if (response.status == 200 && response.data.status == 1) {
+                          params.row.status ? this.keyData[params.index].status = 0 : this.keyData[params.index].status = 1
+                        } else {
+                          this.$Message.error(response.data.message)
+                        }
+                      })
+                    }
+                  }
+                }, text),
+                h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      axios.post('user/deleteUserAcess.do', {
+                        accessKeyID: params.row.accesskeyid,
+                        zoneId: $store.state.zone.zoneid,
+                        token: this.token
+                      }).then(response => {
+                        if (response.status == 200 && response.data.status == 1) {
+                          this.keyData.splice(params.index, 1);
+                        } else {
+                          this.$Message.error(response.data.message)
+                        }
+                      })
+                    }
+                  }
+                }, '删除')
+              ]);
+            }
+          }
+        ],
+        keyData: []
       }
     },
     created() {
@@ -1632,6 +1796,34 @@
           this.showModal.selectAuthType = true
         }
       }
+      axios.post('user/getPhone.do', {
+        companyId: $store.state.authInfo.companyid
+      }).then(response => {
+        if (response.status == 200 && response.data.status == 1){
+          this.keyForm.phone = response.data.data.phone
+        } else {
+          this.$Message.error(response.data.msg)
+        }
+      })
+      axios.post('user/getRuiRadosApiacess.do', {
+        zoneId: $store.state.zone.zoneid,
+        companyId: $store.state.authInfo.companyid
+      }).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          var radosApIaccessKey = response.data.data.data
+          axios.get('user/getRadosToken.do', {
+            params: {
+              companyId: $store.state.authInfo.companyid,
+              secret: radosApIaccessKey
+            }
+          }).then(response => {
+            if (response.status == 200) {
+              this.token = response.data.token
+              this.listKey()
+            }
+          })
+        }
+      })
       this.listNotice()
       this.getContacts()
     },
@@ -2297,6 +2489,97 @@
         }).then(response => {
           this.init()
         })
+      },
+      listKey() {
+        axios.get('user/showUserAcessAll.do', {
+          params: {
+            token: this.token
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.keyData = response.data.data.UserAccess
+          } else {
+            this.$Message.error(response.data.msg)
+          }
+        })
+      },
+      keymodal() {
+        axios.post('user/createUserAcess.do', {
+          zoneId: $store.state.zone.zoneid,
+          token: this.token
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.listKey()
+          } else if (response.status == 200 && response.data.status == 20){
+            this.keyForm.imgCode = ''
+            this.keyForm.code = ''
+            this.showModal.keyPhoneVal = true
+            this.keyWeight =  response.data.data.weight
+          } else {
+            this.$Message.error(response.data.msg)
+          }
+        })
+      },
+      keysendCode() {
+        if (this.keyForm.imgCode == '') {
+          this.$Message.info('图像验证码不能为空')
+          return false
+        }
+        axios.get('user/code.do', {
+          params: {
+            aim: this.keyForm.phone,
+            isemail: 0,
+            vailCode: this.keyForm.imgCode
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            let countdown = 60
+            this.keycodePlaceholder = '60s'
+            var inter = setInterval(() => {
+              countdown--
+              this.keycodePlaceholder = countdown + 's'
+              if (countdown == 0) {
+                clearInterval(inter)
+                this.keycodePlaceholder = '获取验证码'
+              }
+            }, 1000)
+            this.$Message.success({
+              content: '验证码发送成功',
+              duration: 5
+            })
+          } else {
+            this.keycodePlaceholder = '获取验证码'
+            this.$Message.error(response.data.message)
+          }
+        })
+      },
+      createKey() {
+        this.showModal.keyPhoneVal = false
+        axios.get('user/judgeCode.do', {
+          params: {
+            aim: this.keyForm.phone,
+            isemail: 0,
+            code: this.keyForm.code,
+            weight: this.keyWeight
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            axios.post('user/createUserAcess.do', {
+              zoneId: $store.state.zone.zoneid,
+              token: this.token
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.listKey()
+              } else {
+                this.$message.info({
+                  content: response.data.msg
+                })
+              }
+            })
+          } else {
+            this.$Message.error(response.data.msg)
+          }
+        })
       }
     },
     computed: mapState({
@@ -2320,9 +2603,9 @@
     background-color: #f5f5f5;
     width: 100%;
     /*
-        less 处理css计算属性calc有bug
-        申明变量diff，可正常使用
-      */
+     less 处理css计算属性calc有bug
+     申明变量diff，可正常使用
+     */
     @diff: 101px;
     min-height: calc(~"100% - @{diff}");
     #wrapper {
@@ -2362,7 +2645,7 @@
             }
           }
           .authType-flow {
-            background-color: #d9d9d9;
+            background-color: #f5f5f5;
             font-size: 14px;
             color: #666666;
             padding: 10px 20px;
@@ -2375,6 +2658,7 @@
               color: #ffffff;
               line-height: 18px;
               background-color: #2A99F2;
+              margin-right: 5px;
             }
             .line {
               display: inline-block;
@@ -2571,6 +2855,16 @@
       color: rgba(17, 17, 17, 0.65);
       line-height: 23.42px;
       margin: 12px 0px;
+    }
+  }
+  .keyPhoneVal {
+    p {
+      color:rgba(102,102,102,1);
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    p:nth-child(2) {
+      margin-bottom: 20px;
     }
   }
 </style>

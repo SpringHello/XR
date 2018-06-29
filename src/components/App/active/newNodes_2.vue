@@ -188,9 +188,9 @@
           </div>
           <div>
             <span :class="{warning:vailForm.password.warning}">{{vailForm.password.message}}</span>
-            <input type="password" autocomplete="off" v-model="form.password" :placeholder="form.passwordPlaceholder"
+            <input type="text" autocomplete="off" v-model="form.password" :placeholder="form.passwordPlaceholder"
                    @blur="vail('password')" @focus="focus('password')" @input="isCorrect('password')"
-                   v-on:keyup.enter="submit">
+                   v-on:keyup.enter="submit" onfocus="this.type='password'">
           </div>
           <div style="position:relative">
             <span>{{vailForm.vailCode.message}}</span>
@@ -787,6 +787,7 @@
   }
   export default {
     data() {
+      window.scrollTo( 0, 0 );
       return {
         img_1: false,
         company: false,

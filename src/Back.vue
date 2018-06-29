@@ -20,6 +20,9 @@
           </ul>
           <ul class="right">
             <li>
+              <router-link to="BRecords" :class="{active:pageInfo.path=='BRecords'}"><span>备案</span></router-link>
+            </li>
+            <li>
               <router-link to="buy" :class="{active:pageInfo.path=='buy'}"><span>创建主机</span></router-link>
             </li>
             <li>
@@ -121,27 +124,70 @@
     <div class="affix">
       <span class="qq" @mouseenter="QME" @mouseleave="QML">
         <div ref="qq" style="overflow: hidden">
-          <div class="wrapper">
-            <div v-for="(qq,index) of QQInfo">
+          <div class="wrapper" v-if="QQInfo.length>0">
+            <div>
+              <span>人工客服</span>
+              <div class="info-wrapper">
+                <div v-for="(qq,index) of QQInfo" :key="index">
               <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
                 <a target="_blank"
                    :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
                    style="color:rgb(73, 80, 96)">
-                <img src="./assets/img/app/QQ.png">
+                <img src="./assets/img/app/qq-blue.png" v-if="qq.qqstatus">
+                  <img src="./assets/img/app/qq-gray.png" v-else>
+                <span style="width: 56px;display: inline-block;">{{qq.servicename}}</span>
+                </a>
+              </Tooltip>
+            </div>
+              </div>
+            </div>
+          </div>
+          <div class="wrapper" v-if="xiaoshouInfo.length>0">
+            <div>
+              <span>售前咨询</span>
+              <div class="info-wrapper">
+                <div v-for="(qq,index) of xiaoshouInfo" :key="index">
+              <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
+                <a target="_blank"
+                   :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
+                   style="color:rgb(73, 80, 96)">
+                 <img src="./assets/img/app/qq-red.png" v-if="qq.qqstatus">
+                  <img src="./assets/img/app/qq-gray.png" v-else>
                 <span style="width: 56px;display: inline-block;">{{qq.servicename}}</span>
                 <i :class="{inline:qq.qqstatus}"></i>
                 </a>
               </Tooltip>
             </div>
+              </div>
+            </div>
+          </div>
+          <div class="wrapper" v-if="yunweiInfo.length>0">
+            <div>
+              <span>技术支持</span>
+              <div class="info-wrapper">
+                <div v-for="(qq,index) of yunweiInfo" :key="index">
+              <Tooltip :content="qq.qqstatus?'在线咨询':'请留言'" placement="top">
+                <a target="_blank"
+                   :href="`tencent://message/?uin=${qq.qqnumber}&amp;Site=www.cloudsoar.com&amp;Menu=yes`"
+                   style="color:rgb(73, 80, 96)">
+                 <img src="./assets/img/app/qq-blue.png" v-if="qq.qqstatus">
+                  <img src="./assets/img/app/qq-gray.png" v-else>
+                <span style="width: 56px;display: inline-block;">{{qq.servicename}}</span>
+                <i :class="{inline:qq.qqstatus}"></i>
+                </a>
+              </Tooltip>
+            </div>
+              </div>
+            </div>
           </div>
         </div>
       </span>
-      <Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px" class="online">
+      <!--<Poptip trigger="hover" content="在线客服" placement="left" style="height: 48px" class="online">
       <span class="service">
        <a :href="kfURL"
           target="_blank"></a>
        </span>
-      </Poptip>
+      </Poptip>-->
       <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
         <span class="phone"></span>
       </Poptip>
@@ -190,9 +236,18 @@
             }]
           },
           {
+            mainName: '云数据库',
+            type: 'database',
+            subItem: [{subName: '云数据库', type: 'cloudDatabase'}/*, {subName: '云数据库备份', type: 'cloudDatabaseBackup'}, {
+              subName: '云数据库镜像',
+              type: 'cloudDatabaseMirror'
+            }*/]
+          },
+          {
             mainName: '云存储',
             type: 'storage',
             subItem: [
+              {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
               {subName: '云硬盘', type: 'disk'},
               {subName: '云硬盘备份', type: 'diskBackup'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
@@ -232,7 +287,9 @@
           }
         ],
         kfURL: '',  // 客服url地址
-        QQInfo: []  // QQ客服在线情况
+        QQInfo: [],  // QQ客服在线情况
+        xiaoshouInfo: [],
+        yunweiInfo: []
       }
     },
     beforeRouteEnter(to, from, next){
@@ -259,7 +316,9 @@
       })
       // QQ客服在线情况
       this.$http.get('network/getQQCustomerServiceStatus.do').then(response => {
-        this.QQInfo = response.data.result
+        this.QQInfo = response.data.kefu
+        this.xiaoshouInfo = response.data.xiaoshou
+        this.yunweiInfo = response.data.yunwei
       })
       this.notice()
     },
@@ -280,7 +339,7 @@
     },
     methods: {
       QME(){
-        this.$refs.qq.style.width = '116px'
+        this.$refs.qq.style.width = '231px'
       },
       QML(){
         this.$refs.qq.style.width = '0px'
@@ -334,7 +393,11 @@
         this.pageInfo.static = true
         this.pageInfo.selectItem = pType
         this.pageInfo.sType = sType
-        this.$router.push(sType)
+        if (sType.indexOf('http') > -1) {
+          window.open(sType)
+        } else {
+          this.$router.push(sType)
+        }
       },
       go(path){
         if (path == 'exit') {
@@ -699,7 +762,7 @@
   .affix {
     position: fixed;
     right: 50px;
-    bottom: 100px;
+    bottom: 200px;
     z-index: 100;
     display: flex;
     flex-direction: column;
@@ -711,9 +774,10 @@
       background: #E1E1E1 no-repeat center;
     }
     .qq {
-      background-image: url('./assets/img/app/QQ-gray.png');
+      position: relative;
+      background-image: url('./assets/img/app/qq.png');
       &:hover {
-        background: #2A99F2 url('./assets/img/app/QQ-white.png') no-repeat center;
+        background: #2A99F2 url('./assets/img/app/qq-hover.png') no-repeat center;
       }
       > div {
         position: absolute;
@@ -729,26 +793,29 @@
         display: block;
       }
       .wrapper {
-        width: 116px;
+        width: 231px;
         right: 0px;
         top: 0px;
         > div {
-          height: 48px;
-          padding: 16px 10px;
-          cursor: pointer;
-          img, span {
-            vertical-align: middle;
+          padding: 10px;
+          > span {
+            font-size: 12px;
+            font-family: MicrosoftYaHei;
+            color: rgba(102, 102, 102, 1);
+            line-height: 16px;
           }
-          i {
-            width: 10px;
-            height: 10px;
-            background: #E1E1E1;
-            display: inline-block;
-            vertical-align: middle;
-            border-radius: 50%;
-            margin-left: 8px;
-            &.inline {
-              background: #17C786;
+          .info-wrapper {
+            margin-top: 10px;
+            > div {
+              margin-bottom: 5px;
+              width: 50%;
+              display: inline-block;
+              img {
+                vertical-align: middle;
+              }
+              span {
+                vertical-align: middle;
+              }
             }
           }
         }
@@ -783,12 +850,12 @@
       background: #E1E1E1;
       background-repeat: no-repeat;
       background-position: center;
-      background-image: url('./assets/img/app/phone-gray.png');
+      background-image: url('./assets/img/app/phone.png');
       &:hover {
         background: #2A99F2;
         background-repeat: no-repeat;
         background-position: center;
-        background-image: url('./assets/img/app/phone-white.png');
+        background-image: url('./assets/img/app/phone-hover.png');
       }
     }
   }

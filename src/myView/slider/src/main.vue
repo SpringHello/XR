@@ -139,7 +139,12 @@
     position: absolute;
     z-index: 100;
     right: 8px;
+    padding-left: 8px;
     line-height: 26px;
     font-size: 12px;
+  }
+
+  .last {
+    right: 8px;
   }
 </style>

@@ -30,6 +30,7 @@
             <span>主机名称 : {{hostname}}</span>
             <span>主机配置 : {{currentCPUNum}}核{{currentRAMSize}}G</span>
             <span>剩余时长 : {{endtime}}</span>
+            <router-link to="home" style="bottom:23px;position: absolute">全民普惠，3折减单，最高减免7000元！</router-link>
           </div>
           <div class="conf-wrapper">
             <h1>升级后配置</h1>
@@ -55,7 +56,7 @@
   var info = [
     {
       zoneId: '39a6af0b-6624-4194-b9d5-0c552d903858',
-      zoneName: '北京一区',
+      zoneName: '北京一区（测试）',
       kernelList: [
         {
           label: '1核',
@@ -524,6 +525,7 @@
         box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.20);
         border-radius: 4px;
         padding: 23px 19px;
+        position: relative;
         .money {
           font-size: 24px;
           color: #2A99F2;

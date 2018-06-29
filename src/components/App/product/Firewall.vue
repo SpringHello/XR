@@ -6,8 +6,7 @@
         <img :src="logo.img">
         <div class="info">
           <span class="title">{{logo.title}}</span>
-          <span class="desc" style="margin-bottom: 5px;">{{logo.desc}}</span>
-          <span class="desc">{{logo.desc1}}</span>
+          <span class="desc">{{logo.desc}}</span>
           <router-link :to="logo.linkRouter">立即体验</router-link>
         </div>
       </div>
@@ -121,7 +120,7 @@
           img: require('../../../assets/img/product/firewall-logo.png'),
           title: '虚拟防火墙',
           desc: '虚拟防火墙是VPC内部VLAN与VLAN之间的安全组策略，用户根据需要建立访问规则对端口和协议进行进/出站控制。',
-          desc1: '虚拟防火墙通过设置安全组规则对相应VPC下子网的访问进行控制，能够有效阻止非法的服务和进程入侵。云平台为每个VPC提供了独立的虚拟防火墙，用户可以灵活配置虚拟防火墙的规则，在子网上引用相应规则对进站、出站的流量进行匹配，实现子网的防护。虚拟防火墙也可部署在互联网出口，用于阻断互联网上非法的流量和行为，实现对外服务站点的防护。',
+          //desc1: '虚拟防火墙通过设置安全组规则对相应VPC下子网的访问进行控制，能够有效阻止非法的服务和进程入侵。云平台为每个VPC提供了独立的虚拟防火墙，用户可以灵活配置虚拟防火墙的规则，在子网上引用相应规则对进站、出站的流量进行匹配，实现子网的防护。虚拟防火墙也可部署在互联网出口，用于阻断互联网上非法的流量和行为，实现对外服务站点的防护。',
           linkRouter: $store.state.userInfo ? 'firewall' : 'login'
         },
         features: [

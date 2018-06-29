@@ -15,20 +15,35 @@ const Home = () => import('@/components/App/Home')
 const Buy = () => import('@/components/App/Buy')
 const Ecs = () => import('@/components/App/product/ECS')
 const Document = () => import('@/components/App/Document')
+const Document1 = () => import('@/components/App/Document1')
+const Record = () => import('@/components/App/Record')
 //const hostPrice = () => import('@/components/App/Price/Host')
 //const diskPrice = () => import('@/components/App/Price/Disk')
 //const elasticIPPrice = () => import('@/components/App/Price/ElasticIP')
 const Aboutus = () => import('@/components/App/Aboutus')
+const ActiveCenter = () => import('@/components/App/ActiveCenter')
 const Dynamic = () => import('@/components/App/Dynamic')
 // const ProductBulletin = () => import('@/components/App/ProductBulletin')
 
 // 前台活动页面路由
 const Active = () => import('@/components/App/active/active')
 const Vps = () => import('@/components/App/active/vps')
-const NewNodes_1 = () => import('@/components/App/active/newNodes_1')
-const NewNodes_2 = () => import('@/components/App/active/newNodes_2')
+/*const NewNodes_1 = () => import('@/components/App/active/newNodes_1')
+const NewNodes_2 = () => import('@/components/App/active/newNodes_2')*/
 const active_1 = () => import('@/components/App/active/active_1')
 const active_2 = () => import('@/components/App/active/active_2')
+const smlj = () => import('@/components/App/active/smlj')
+
+// 备案系统页面路由
+const Records = () => import('@/components/App/Records')
+const Entrance = () => import('@/components/App/records/Entrance')
+const NewAccess = () => import('@/components/App/records/NewAccess')
+const NewRecordStepOne = () => import('@/components/App/records/NewRecordStepOne')
+const NewRecordStepTwo = () => import('@/components/App/records/NewRecordStepTwo')
+const NewRecordStepThree = () => import('@/components/App/records/NewRecordStepThree')
+const NewRecordStepFour = () => import('@/components/App/records/NewRecordStepFour')
+const WaitFirstTrial = () => import('@/components/App/records/WaitFirstTrial')
+const WaitSecondTrial = () => import('@/components/App/records/WaitSecondTrial')
 
 /* 产品页面路由 */
 const Pecs = () => import('@/components/App/product/ECS.vue')
@@ -71,6 +86,7 @@ const Firewall = () => import('@/components/Back/Firewall')
 const Disk = () => import('@/components/Back/Disk')
 const DiskBackup = () => import('@/components/Back/DiskBackup')
 const DiskParticulars = () => import('@/components/Back/DiskParticulars')
+//const ObjectStorage = () => import('@/components/Back/ObjectStorage')
 const Vpc = () => import('@/components/Back/Vpc')
 const VpcManage = () => import('@/components/Back/VpcManage')
 const Vpn = () => import('@/components/Back/Vpn')
@@ -90,6 +106,18 @@ const NATManage = () => import('@/components/Back/NATManage')
 const Recycle = () => import('@/components/Back/Recycle')
 const Wxpay = () => import('@/components/Back/Wxpay')
 const WorkOrder = () => import('@/components/Back/WorkOrder')
+
+const Link = () => import('@/components/Link')
+const BRecords = () => import('@/components/Back/Records')
+const RecordDetails = () => import('@/components/Back/RecordDetails')
+const CompletedFilingDetails = () => import('@/components/Back/CompletedFilingDetails')
+const SpaceDetails = () => import('@/components/Back/SpaceDetails')
+
+
+const CloudDatabaseBackup = () => import('@/components/Back/CloudDatabaseBackup')
+const CloudDatabase = () => import('@/components/Back/CloudDatabase')
+const CloudDataManage = () => import('@/components/Back/CloudDataManage')
+const CloudDatabaseMirror = () => import('@/components/Back/CloudDatabaseMirror')
 
 // 帮助文档路由
 const computed = () => import('@/components/App/doc/computed')
@@ -161,6 +189,7 @@ const uaf4 = () => import('@/components/App/doc/userandfinace/uaf7-1')
 const uaf5 = () => import('@/components/App/doc/userandfinace/uaf8-1')
 const uaf6 = () => import('@/components/App/doc/userandfinace/uaf8-2')
 
+const documentInfo = () => import('@/components/App/DocumentInfo')
 // 404
 const notFindPage = () => import('@/components/404')
 
@@ -178,9 +207,52 @@ var router = new Router({
         {path: 'home', name: 'home', component: Home},
         {path: 'ecs', name: 'ecs', component: Ecs},
         {path: 'about', name: 'about', component: Aboutus},
+        {path: 'ActiveCenter', name: 'ActiveCenter', component: ActiveCenter},
         {path: 'document', name: 'document', component: Document},
         {path: 'dynamic', name: 'dynamic', component: Dynamic},
+        {path: 'Record', name: 'Record', component: Record},
       //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
+        {
+          path: 'entrance',
+          name: 'entrance',
+          component: Entrance
+        },
+        {
+          path: 'newAccess',
+          name: 'newAccess',
+          component: NewAccess
+        },
+        {
+          path: 'newRecordStepOne',
+          name: 'newRecordStepOne',
+          component: NewRecordStepOne
+        },
+        {
+          path: 'newRecordStepTwo',
+          name: 'newRecordStepTwo',
+          component: NewRecordStepTwo
+        },
+        {
+          path: 'newRecordStepThree',
+          name: 'newRecordStepThree',
+          component: NewRecordStepThree
+        },
+        {
+          path: 'waitFirstTrial',
+          name: 'waitFirstTrial',
+          component: WaitFirstTrial
+        },
+        {
+          path: 'newRecordStepFour',
+          name: 'newRecordStepFour',
+          component: NewRecordStepFour
+        },
+        {
+          path: 'waitSecondTrial',
+          name: 'waitSecondTrial',
+          component: WaitSecondTrial
+        },
+        //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
         /*{
           path: 'price',
           name: 'price',
@@ -211,10 +283,12 @@ var router = new Router({
         {path: 'buy', name: 'buy', component: Buy},
         {path: 'active', name: 'active', component: Active},
         {path: 'vps', name: 'vps', component: Vps},
-        {path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
-        {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},
+        /*{path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
+        {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},*/
         {path: 'active_1', name: 'active_1', component: active_1},
+        {path: 'entrance', name: 'entrance', component: Entrance},
         {path: 'active_2', name: 'active_2', component: active_2},
+        {path: 'smlj', name: 'smlj', component: smlj},
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
         {path: 'Pecss', component: Pecss},
@@ -580,6 +654,8 @@ var router = new Router({
             },
           ]
         },
+        {path: 'documentInfo/:parentId/:id', component: documentInfo},
+
       ]
     },
     {
@@ -598,6 +674,7 @@ var router = new Router({
         {path: 'disk', name: 'disk', component: Disk},
         {path: 'diskBackup', name: 'diskBackup', component: DiskBackup},
         {path: 'diskParticulars', name: 'diskParticulars', component: DiskParticulars},
+        //{path:'objectStorage',name:'objectStorage',component:ObjectStorage},
         {path: 'snapshot', name: 'snapshot', component: Snapshot},
         {path: 'firewall', name: 'firewall', component: Firewall},
         {path: 'new', name: 'new', component: New},
@@ -621,7 +698,15 @@ var router = new Router({
         {path: 'NATManage', name: 'NATManage', component: NATManage},
         {path: 'recycle', name: 'recycle', component: Recycle},
         {path: 'wxpay', name: 'wxpay', component: Wxpay},
-        {path: 'workOrder', name: 'workOrder', component: WorkOrder}
+        {path: 'workOrder', name: 'workOrder', component: WorkOrder},
+        {path: 'BRecords', name: 'BRecords', component: BRecords},
+        {path: 'RecordDetails', name: 'RecordDetails', component: RecordDetails},
+        {path: 'SpaceDetails',name:'SpaceDetails',component:SpaceDetails},
+        {path: 'completedFilingDetails',name:'completedFilingDetails',component:CompletedFilingDetails},
+        {path: 'cloudDataManage', name: 'cloudDataManage', component: CloudDataManage},
+        {path: 'cloudDatabaseBackup', name: 'cloudDatabaseBackup', component: CloudDatabaseBackup},
+        {path: 'cloudDatabaseMirror', name: 'cloudDatabaseMirror', component: CloudDatabaseMirror},
+        {path: 'cloudDatabase', name: 'cloudDatabase', component: CloudDatabase}
       ]
     },
     {
@@ -635,12 +720,15 @@ var router = new Router({
         {path: 'registerSuccess', name: 'registerSuccess', component: RegisterSuccess}
       ]
     },
-    {path: '/*', name: '404', component: notFindPage}
+    {path: '/ruicloud/link', name: 'link', component: Link},
+    {path: '/*', name: '404', component: notFindPage},
   ]
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(route => { return route.meta.requiresAuth })) {
+  if (to.matched.some(route => {
+    return route.meta.requiresAuth
+  })) {
     if (!localStorage.getItem('authToken')) {
       next({
         path: '/ruicloud/login'

@@ -2,11 +2,6 @@
   <div class="aboutus">
     <!-- banner -->
     <div class="banner">
-      <div class="text">
-        <p>高性能主机明智之选</p>
-        <router-link to="vps">免费试用</router-link>
-      </div>
-
     </div>
     <!-- tabs标签 -->
     <div class="tabs">
@@ -60,43 +55,6 @@
           </div>
         </div>
       </section>
-
-      <!-- <section>
-        <div class="section-wrap">
-          <div class="head-info">
-            <h1 class="title">助理运营商全面实现敏捷业务生产</h1>
-            <p class="desc" style="width:500px"><span>紧随市场需求 数据驱动业务</span><span>IB 业务集成总线</span><span>BPM工作流引擎</span></p>
-          </div>
-          <div class="section-content business">
-            <div v-for="(item,index) in business" :key="index" @mouseenter="item.me=true" @mouseleave="item.me=false"
-                :class="{hover:item.me}">
-              <p>{{item.title}}</p>
-              <div class="imgbox" v-show="!item.me">
-                <img :src="item.img"/>
-              </div>
-              <div class="imgbox" v-show="item.me">
-                <img :src="item.hoverImg">
-              </div>
-              <span>{{item.desc}}</span>
-            </div>
-          </div>
-        </div>
-      </section> -->
-
-      <!-- <section>
-        <div class="section-wrap">
-          <div class="head-info">
-            <h1 class="title">敏捷业务生产工厂的核心价值</h1>
-          </div>
-          <div class="section-content corevalue">
-            <div v-for="(item,index) in corevalue" :key="index">
-              <p>{{item.title}}</p>
-              <img :src="item.img"/>
-              <span>{{item.desc}}</span>
-            </div>
-          </div>
-        </div>
-      </section> -->
 
       <section>
         <div class="section-wrap">
@@ -436,20 +394,20 @@
 
   // banner样式
   .banner {
-    height: 560px;
+    height: 400px;
     position: relative;
-    background: linear-gradient(90deg, #fff 20%, #9ce3f3 100%);
+    background:#90b4f0 url(../../assets/img/aboutus/bg-a.jpg) no-repeat top center;
     overflow: hidden;
-    &::before {
-      content: "";
-      width: 866px;
-      height: 560px;
-      background: url(../../assets/img/aboutus/banner-host.png) no-repeat top right;
-      background-size: 90%;
-      position: absolute;
-      top: 0;
-      left: 50%;
-    }
+    // &::before {
+    //   content: "";
+    //   width: 866px;
+    //   height: 560px;
+    //   background: url(../../assets/img/aboutus/banner-host.png) no-repeat top right;
+    //   background-size: 90%;
+    //   position: absolute;
+    //   top: 0;
+    //   left: 50%;
+    // }
     .text {
       width: 1200px;
       margin: 0 auto;

@@ -137,19 +137,19 @@
                   </Input>
                 </FormItem>-->
               <FormItem label="内网端口" prop="frontPort" v-if="creatbalancemodal.formInline.radio=='public'">
-                <Input type="text" v-model="creatbalancemodal.formInline.frontPort" placeholder="请输入0-65535之间任意数字">
+                <Input type="text" v-model="creatbalancemodal.formInline.frontPort" placeholder="请输入1-65535之间任意数字">
                 </Input>
               </FormItem>
               <FormItem label="源端口" prop="frontPort" v-else>
-                <Input type="text" v-model="creatbalancemodal.formInline.frontPort" placeholder="请输入0-65535之间任意数字">
+                <Input type="text" v-model="creatbalancemodal.formInline.frontPort" placeholder="请输入1-65535之间任意数字">
                 </Input>
               </FormItem>
               <FormItem label="公网端口" prop="rearPort" v-if="creatbalancemodal.formInline.radio=='public'">
-                <Input type="text" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入0-65535之间任意数字">
+                <Input type="text" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入1-65535之间任意数字">
                 </Input>
               </FormItem>
               <FormItem label="实例端口" prop="rearPort" v-else>
-                <Input type="text" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入0-65535之间任意数字">
+                <Input type="text" v-model="creatbalancemodal.formInline.rearPort" placeholder="请输入1-65535之间任意数字">
                 </Input>
               </FormItem>
               <FormItem label="算法" prop="algorithm">
@@ -489,6 +489,42 @@
           }
         })
       },
+      changeVPC(){
+        // 获取可以挂载的所有弹性IP
+        this.$http.get('network/listPublicIp.do', {
+          params: {
+            vpcId: this.creatbalancemodal.formInline.vpc,
+            useType: '0,2',
+            status: '1'
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.creatbalancemodal.formInline.PublicIpList = response.data.result
+          }
+        })
+        if (this.creatbalancemodal.formInline.radio == 'public') {
+          /*列出vpc下所有公网子网*/
+          this.$http.post('network/listNetwork.do', {
+            vpcId: this.creatbalancemodal.formInline.vpc,
+            publicLoadbalance: '1'
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.creatbalancemodal.formInline.subnetList = response.data.result
+            }
+          })
+        } else {
+          this.$http.post('network/listNetwork.do', {
+            vpcId: this.creatbalancemodal.formInline.vpc,
+            innerLoadbalance: '1'
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.creatbalancemodal.formInline.subnetList = response.data.result
+            }
+          })
+        }
+
+
+      },
       /* 列出公网ip */
       listPublicIp () {
         // 获取可以挂载的所有弹性IP
@@ -538,14 +574,17 @@
       },
       /* 创建负载均衡切换公网和私网时给子网列表赋值 */
       changeNet () {
+        this.creatbalancemodal.formInline.vpc = ''
+        this.creatbalancemodal.formInline.PublicIpList = []
+        this.creatbalancemodal.formInline.publicIp = ''
+        this.creatbalancemodal.formInline.subnetList = []
+        this.creatbalancemodal.formInline.subnet = ''
         switch (this.creatbalancemodal.formInline.radio) {
           case 'public':
-            this.creatbalancemodal.formInline.subnetList = []
             this.creatbalancemodal.formInline.intranetIpNum = ''
             break
           case 'private':
-            this.creatbalancemodal.formInline.subnetList = []
-            this.listNetwork()
+            //this.listNetwork()
             break
         }
       },
@@ -643,6 +682,7 @@
       },
       /* 负载均衡确定绑定虚拟机 */
       bindHost_ok () {
+        //console.log(this.bindHostForm.vm.join(','))
         this.showModal.bind = false
         this.balData.forEach(item => {
           if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
@@ -656,15 +696,15 @@
           if (this.balanceSelection._internal) {
             url = 'loadbalance/assignToInternalLoadBalancerRule.do'
             params = {
-              VMIds: this.bindHostForm.vm,
+              VMIds: this.bindHostForm.vm.join(','),
               lbId: this.balanceSelection.lbid,
               _t: new Date().getTime(),
             }
           } else {
             url = 'loadbalance/assignToLoadBalancerRule.do'
             params = {
-              VMIds: this.bindHostForm.vm,
-              lbId: this.balanceSelection.loadbalanceroleid,
+              VMIds: this.bindHostForm.vm.join(','),
+              roleId: this.balanceSelection.loadbalanceroleid,
               _t: new Date().getTime(),
             }
           }

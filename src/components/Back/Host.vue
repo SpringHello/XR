@@ -31,9 +31,15 @@
               <!-- 重命名 -->
               <Dropdown-item name="rename" v-if="status=='欠费'||status=='异常'" :disabled=true>重命名</Dropdown-item>
               <Dropdown-item name="rename" v-else>重命名</Dropdown-item>
+              <Dropdown-item name="ratesChange" :disabled="status=='欠费'||status=='异常'">资费变更</Dropdown-item>
               <!-- 续费 -->
-              <Dropdown-item name="renewal" v-if="status=='欠费'||status=='异常'" :disabled=true>主机续费</Dropdown-item>
-              <Dropdown-item name="renewal" v-else>主机续费</Dropdown-item>
+              <Dropdown-item name="renewal" v-if="status=='欠费'||status=='异常'" :disabled=true>主机续费
+                <span
+                  style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>
+              </Dropdown-item>
+              <Dropdown-item name="renewal" v-else>主机续费<span
+                style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>
+              </Dropdown-item>
               <!-- 备份 -->
               <Dropdown-item name="backup" v-if="status!='开启'&&status!='关机'" :disabled=true>
                 <Tooltip content="异常、欠费状态，快照不可用" placement="top">
@@ -51,11 +57,13 @@
               <!-- 升级主机 -->
               <Dropdown-item name="upgrade" v-if="status!='关机'" :disabled=true>
                 <Tooltip content="升级主机前您必须关闭主机" placement="top">
-                  主机升级
+                  主机升级<span
+                  style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>
                 </Tooltip>
               </Dropdown-item>
               <Dropdown-item name="upgrade" v-else>
-                主机升级
+                主机升级<span
+                style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>
               </Dropdown-item>
 
               <!-- 重启主机 -->
@@ -151,7 +159,7 @@
                                 :class="{btnnormal:auth,_hover:auth}">管理
                         </Button>
                         <Button v-if="!auth" :disabled="!auth">连接主机</Button>
-                        <Button v-else class="btnnormal _hover" @click="link">连接主机
+                        <Button v-else class="btnnormal _hover" @click="link(item)">连接主机
                         </Button>
                         <!--<a v-else :href="item.connecturl" target="_blank"
                            style="line-height: 30px;border: 1px solid;border-radius: 4px;width: 76px;" class="_hover">连接主机</a>-->
@@ -475,18 +483,62 @@
               </Option>
             </Select>
           </FormItem>
+          <FormItem label="是否同时续费绑定IP与磁盘" v-if="isDisks||isIps">
+            <CheckboxGroup @on-change="bindRenewal" v-model="bindRenewalVal">
+              <Checkbox label="ip" v-if="isIps">续费绑定IP</Checkbox>
+              <Checkbox label="disk" v-if="isDisks">续费磁盘</Checkbox>
+            </CheckboxGroup>
+          </FormItem>
         </Form>
         <div style="font-size:16px;">
-          应付费:<span style="color: #2b85e4; text-indent:4px;display:inline-block;font-size:24px;">￥{{cost}}
-          <span v-if="renewalTime != ''">/</span>
+          资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{cost}}/</span></span>
+          <!-- <span v-if="renewalTime != ''">/</span>
           <span style="font-size: 15px;">{{renewalTime}}<span v-if="renewalType == 'year' && renewalTime != ''">年</span>
-          <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span>
-        </span>
+          <span v-if="renewalType == 'month' && renewalTime != ''">月</span></span> -->
+          <span style="text-decoration: line-through">原价{{originCost}}</span>
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
+        <div style="text-align:left">
+          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:24px;">全民普惠，3折减单，最高减免7000元！
+          </router-link>
+        </div>
         <Button type="ghost" @click="showModal.renewal = false">取消</Button>
-        <Button type="primary" @click="renewalok">确认续费</Button>
+        <Button type="primary" @click="renewalok" :disabled="cost=='--'">确认续费</Button>
+      </div>
+    </Modal>
+    <!-- 资费变更弹出框 -->
+    <Modal v-model="showModal.ratesChange" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">变更资费选择（资费变更适用于按需收费转包月/年）</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form>
+          <FormItem label="变更类型 :">
+            <Select v-model="ratesChangeType">
+              <Option v-for="(item,index) in timeOptions.renewalType" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+          <FormItem label="变更时长 :">
+            <Select v-model="ratesChangeTime">
+              <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
+              </Option>
+            </Select>
+          </FormItem>
+        </Form>
+        <div style="font-size:16px;">
+          资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{ratesChangeCost}}/</span></span>
+          <span style="text-decoration: line-through">原价{{originRatesChangeCost}}</span>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <div style="text-align:left">
+          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:24px;">全民普惠，3折减单，最高减免7000元！
+          </router-link>
+        </div>
+        <Button type="ghost" @click="showModal.ratesChange=false">取消</Button>
+        <Button type="primary" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
       </div>
     </Modal>
     <!-- 欠费tab页，续费弹窗 -->
@@ -542,6 +594,21 @@
           提示：个人用户账户可以升级为企业用户账户，但企业用户账户不能降级为个人用户账户。完成实名认证的用户才能享受上述资源建立额度与免费试用时长如需帮助请联系：028-23242423</p>
       </div>
     </Modal>
+
+    <!--远程连接密码提示框-->
+    <!--<Modal v-model="showModal.linkPassword" width="360" :scrollable="true">-->
+      <!--<p slot="header">-->
+        <!--<span>远程连接密码</span>-->
+      <!--</p>-->
+      <!--<div>-->
+        <!--<p style="font-size: 20px;margin-bottom: 15px;">您的远程连接密码是：{{linkPassword}}</p>-->
+        <!--<p style="padding:5px;font-size: 12px;line-height: 20px;border:1px solid #cccccc;border-radius: 4px;">警告!-->
+          <!--远程连接密码只出现一次，您以后每次远程连接登录时都需要输入该密码，请做好记录存档工作。</p>-->
+      <!--</div>-->
+      <!--<div slot="footer">-->
+        <!--<Button type="primary" size="large" @click="open">登录</Button>-->
+      <!--</div>-->
+    <!--</Modal>-->
   </div>
 </template>
 
@@ -552,6 +619,7 @@
   import axios from '@/util/axiosInterceptor'
   import Vue from 'vue'
   import regExp from '../../util/regExp'
+
   export default {
     data() {
       const validaRegisteredName = regExp.validaRegisteredName
@@ -573,6 +641,7 @@
         sessionStorage.removeItem('pane')
       }
       return {
+        originCost: '--',
         cost: '--',
         listLoadBalanceRole: [],
         openHost: [],
@@ -591,8 +660,14 @@
           rename: false,
           Renew: false,
           selectAuthType: false,
-          balance: false
+          balance: false,
+          linkPassword: false,
+          ratesChange: false
         },
+        ratesChangeType: '',
+        ratesChangeTime: '',
+        originRatesChangeCost: '--',
+        ratesChangeCost: '--',
         renameForm: {
           hostName: ''
         },
@@ -636,6 +711,9 @@
           ]
         },
         publicIPList: [],
+        bindRenewalVal: [],
+        isDisks: '',
+        isIps: '',
         renewalType: '',
         renewalTime: '',
         timeOptions: {
@@ -660,7 +738,8 @@
         RenewForm: {
           cost: 0,
           id: ''
-        }
+        },
+        linkPassword: '111'
       }
     },
     created() {
@@ -678,7 +757,45 @@
       }, 5 * 1000)
     },
     methods: {
-      checkRenameForm(){
+      bindRenewal(){
+        if (this.cost != '--') {
+          var selectIp = ''
+          var selectDisk = ''
+          for (var i = 0; i < this.bindRenewalVal.length; i++) {
+            if (this.bindRenewalVal[i] == 'ip') {
+              selectIp = this.isIps
+            }
+            if (this.bindRenewalVal[i] == 'disk') {
+              selectDisk = this.isDisks
+            }
+          }
+          this.$http.get('information/getYjPrice.do', {
+            params: {
+              timeValue: this.renewalTime,
+              timeType: this.renewalType,
+              hostIdArr: this.currentHost[0].id,
+              ipIdArr: selectIp,
+              diskArr: selectDisk
+            }
+          }).then((response) => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.cost = response.data.result.toFixed(2)
+              this.originCost = response.data.result
+              if (response.data.cuspon) {
+                this.originCost = Number((this.originCost + response.data.cuspon).toFixed(2))
+              }
+              if (response.data.continueDiscount) {
+                this.originCost = (this.originCost + response.data.continueDiscount).toFixed(2)
+              }
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          })
+        }
+      },
+      checkRenameForm() {
         this.$refs.renameForm.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用重命名的方法
@@ -923,7 +1040,7 @@
             break
         }
       },
-      stop(item){
+      stop(item) {
         this.loadingMessage = '正在停止主机'
         this.loading = true
         item.select = false
@@ -944,7 +1061,7 @@
             }
           })
       },
-      start(item){
+      start(item) {
         this.loadingMessage = '正在启动主机'
         this.loading = true
         item.select = false
@@ -1038,6 +1155,33 @@
         this.$store.commit('setSelect', 'new')
         this.$router.push('buy')
       },
+      // 查询续费主机下是否有ip或磁盘
+      renewType() {
+        axios.get('information/listVirtualMachinesById.do', {
+          params: {
+            VMId: this.currentHost[0].computerid,
+            zoneId: this.currentHost[0].zoneid
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            var diskarr = response.data.result[0].attachDisk.map(item => {
+              return item.id
+            })
+            this.isDisks = diskarr.join()
+            var iparr = response.data.result[0].attachPublicIp.map(item => {
+              return item.id
+            })
+            this.isIps = iparr.join()
+            // 清空续费弹窗数据
+            this.bindRenewalVal = ['ip', 'disk']
+            this.cost = '--'
+            this.originCost = '--'
+            this.renewalType = ''
+            this.renewalTime = ''
+            this.showModal.renewal = true
+          }
+        })
+      },
       hideEvent(name) {
         switch (name) {
           case 'delhost':
@@ -1051,9 +1195,26 @@
               this.showModal.rename = true
             }
             break
+          case 'ratesChange':
+            if (this.checkSelect()) {
+              if (this.currentHost[0].caseType == 3) {
+                this.ratesChangeType = ''
+                this.ratesChangeTime = ''
+                this.ratesChangeCost = '--'
+                this.originRatesChangeCost = '--'
+                this.showModal.ratesChange = true
+              } else {
+                this.$Message.info('请选择实时计费的云主机进行资费变更')
+              }
+            }
+            break
           case 'renewal':
             if (this.checkSelect()) {
-              this.showModal.renewal = true
+              if (this.currentHost[0].caseType !== 3) {
+                this.renewType()
+              } else {
+                this.$Message.info('请选择包年包月的云主机进行资费变更')
+              }
             }
             break
           case 'backup':
@@ -1172,11 +1333,33 @@
       },
       // 包年/月主机续费
       renewalok() {
-        var list = [
+        var selectIp = ''
+        var selectDisk = ''
+        for (var i = 0; i < this.bindRenewalVal.length; i++) {
+          if (this.bindRenewalVal[i] == 'ip') {
+            selectIp = this.isIps
+          }
+          if (this.bindRenewalVal[i] == 'disk') {
+            selectDisk = this.isDisks
+          }
+        }
+        var iplist = []
+        if (selectIp != '') {
+          iplist = selectIp.split(',').map(item => {
+            return {type: 2, id: parseInt(item)}
+          })
+        }
+        var disklist = []
+        if (selectDisk != '') {
+          disklist = selectDisk.split(',').map(item => {
+            return {type: 1, id: parseInt(item)}
+          })
+        }
+        var host = [
           {type: 0, id: this.currentHost[0].id}
         ]
+        var list = host.concat(iplist, disklist)
         list = JSON.stringify(list)
-
         this.$http.post('continue/continueOrder.do', {
           list: list,
           timeType: this.renewalType,
@@ -1187,16 +1370,38 @@
           }
         })
       },
+      // 确认变更资费
+      ratesChange_ok() {
+        let url = 'continue/changeMoney.do'
+        this.$http.get(url, {
+          params: {
+            id: this.currentHost[0].id,
+            timeType: this.ratesChangeType,
+            timeValue: this.ratesChangeTime,
+            type: 0
+          }
+        }).then(response => {
+          if (response.data.status == 1) {
+            this.$router.push({path: 'order'})
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
       // 创建主机镜像
       mirrorSubmit(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
             this.showModal.mirror = false
             axios.get('Snapshot/createTemplate.do', {
-              rootDiskId: this.currentHost[0].rootdiskid,
-              templateName: this.mirrorForm.mirrorName,
-              descript: this.mirrorForm.description,
-              zoneId: this.currentHost[0].zoneid
+              params: {
+                rootDiskId: this.currentHost[0].rootdiskid,
+                templateName: this.mirrorForm.mirrorName,
+                descript: this.mirrorForm.description,
+                zoneId: this.currentHost[0].zoneid
+              }
             }).then(response => {
               this.loading = false
               if (response.status == 200 && response.data.status == 1) {
@@ -1272,9 +1477,43 @@
         sessionStorage.setItem('pane', type)
         this.$router.push('/ruicloud/usercenter')
       },
+      // 连接主机动作
+      link(item){
+        sessionStorage.setItem('link-companyid', item.companyid)
+        sessionStorage.setItem('link-vmid', item.computerid)
+        sessionStorage.setItem('link-zoneid', item.zoneid)
+        sessionStorage.setItem('link-phone', this.$store.state.authInfo.phone)
+        this.$router.push('link')
+        /*this.$http.get('information/connectVm.do', {
+          params: {
+            VMId: item.computerid
+          }
+        }).then(response => {
+          if (response.data.connectCode == '') {
+            /!*var form = document.createElement('form');
+             form.action = 'https://www.baidu.com';
+             form.target = '_blank';
+
+             form.method = 'POST';
+
+             document.body.appendChild(form);
+             form.submit();*!/
+            //window.open('/ruicloud/link')
+            tempwindow.location = 'https://www.baidu.com';
+          } else {
+            tempwindow.close()
+            // 是第一次连接，弹出模态框
+            this.linkPassword = response.data.connectCode
+            this.showModal.linkPassword = true
+          }
+        })*/
+      },
+      open(){
+        window.open('/ruicloud/link')
+      }
     },
     computed: {
-      auth(){
+      auth() {
         return this.$store.state.authInfo != null
       }
     },
@@ -1287,20 +1526,69 @@
         if (time == '') {
           this.cost = '--'
         } else {
+          var selectIp = ''
+          var selectDisk = ''
+          for (var i = 0; i < this.bindRenewalVal.length; i++) {
+            if (this.bindRenewalVal[i] == 'ip') {
+              selectIp = this.isIps
+            }
+            if (this.bindRenewalVal[i] == 'disk') {
+              selectDisk = this.isDisks
+            }
+          }
           this.$http.get('information/getYjPrice.do', {
             params: {
               timeValue: this.renewalTime,
               timeType: this.renewalType,
+              hostIdArr: this.currentHost[0].id,
+              ipIdArr: selectIp,
+              diskArr: selectDisk
+            }
+          }).then((response) => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.cost = response.data.result.toFixed(2)
+              this.originCost = response.data.result
+              if (response.data.cuspon) {
+                this.originCost = Number((this.originCost + response.data.cuspon).toFixed(2))
+              }
+              if (response.data.continueDiscount) {
+                this.originCost = (this.originCost + response.data.continueDiscount).toFixed(2)
+              }
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          })
+        }
+      },
+      // 资费变更
+      ratesChangeType(type) {
+        this.ratesChangeTime = ''
+        this.timeOptions.renewalTime = this.timeOptions[type]
+      },
+      ratesChangeTime(time) {
+        if (time == '') {
+          this.ratesChangeCost = '--'
+        } else {
+          let url = 'information/getYjPrice.do'
+          this.$http.get(url, {
+            params: {
+              timeValue: this.ratesChangeTime,
+              timeType: this.ratesChangeType,
               hostIdArr: this.currentHost[0].id
             }
           })
             .then((response) => {
               if (response.status == 200 && response.data.status == 1) {
-                this.cost = response.data.result
-              } else {
-                this.$message.info({
-                  content: response.data.message
-                })
+                this.ratesChangeCost = response.data.result.toFixed(2)
+                this.originRatesChangeCost = response.data.result
+                if (response.data.cuspon) {
+                  this.originRatesChangeCost = Number((this.originRatesChangeCost + response.data.cuspon).toFixed(2))
+                }
+                if (response.data.continueDiscount) {
+                  this.originRatesChangeCost = (this.originRatesChangeCost + response.data.continueDiscount).toFixed(2)
+                }
               }
             })
         }

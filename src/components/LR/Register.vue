@@ -12,20 +12,20 @@
           <div class="body">
             <form>
               <div>
-                <span v-if="vailForm.loginname.message.length>0"
-                      class="warning">{{vailForm.loginname.message[0]}}</span>
+                <span v-if="vailForm.loginname.message.length>0" class="warning"
+                      v-html="vailForm.loginname.message[0]"></span>
                 <span v-else>{{vailForm.loginname.info}}</span>
                 <input type="text" autocomplete="off" v-model="form.loginname" :placeholder="form.loginnamePlaceholder"
                        @blur="vail('loginname')" @focus="focus('loginname')" @input="isCorrect('loginname')">
               </div>
               <div style="position:relative">
                 <span>{{vailForm.password.info}}</span>
-                <input v-show="form.showPassword==false" type="password" autocomplete="off" v-model="form.password"
+                <input v-show="form.showPassword==false" type="text" autocomplete="off" v-model="form.password"
                        :placeholder="form.passwordPlaceholder" @blur="vail('password')" @focus="focus('password')"
-                       @input="isCorrect('password')">
+                       @input="isCorrect('password')" onfocus="this.type='password'">
                 <input v-show="form.showPassword==true" type="text" autocomplete="off" v-model="form.password"
                        :placeholder="form.passwordPlaceholder" @blur="vail('password')" @focus="focus('password')"
-                       @input="isCorrect('password')">
+                       @input="isCorrect('password')" onfocus="this.type='password'">
                 <label :class="{close:form.showPassword}" @click="form.showPassword=!form.showPassword"></label>
               </div>
               <div style="position:relative">
@@ -337,8 +337,10 @@
 </template>
 
 <script type="text/ecmascript-6">
-   import axios from '@/util/axiosInterceptor'
+  import axios from '@/util/axiosInterceptor'
   import regExp from '@/util/regExp'
+  //import debounce from 'throttle-debounce/debounce'
+  import throttle  from 'throttle-debounce/throttle'
   var messageMap = {
     loginname: {
       placeholder: '登录 邮箱/手机号',
@@ -347,7 +349,7 @@
     },
     password: {
       placeholder: '请输入至少8位包含大小写字母与数字的密码',
-      errorMessage: '密码必须包含数字和字母大小写',
+      errorMessage: '密码必须包含数字和字母大小写<p>特殊字符仅支持 `~!#$%_()^*-,+<>?@.=</p>',
     },
     vailCode: {
       placeholder: '请输入您收到的验证码',
@@ -420,7 +422,7 @@
             this.vailForm.loginname.info = messageMap.loginname.placeholder
           }
           if (field == 'loginname') {
-             axios.get('user/isRegister.do', {
+            axios.get('user/isRegister.do', {
               params: {
                 username: this.form.loginname
               }
@@ -485,23 +487,23 @@
               duration: 3
             });
             this.$router.push('registerSuccess');
-            } else {
+          } else {
             this.$Message.error({
               content: response.data.message
             })
           }
         })
       },
-      sendCode(){
+      sendCode: throttle(5000, function () {
         if (!regExp.emailVail(this.form.loginname)) {
           this.$Message.info('请输入正确的邮箱/手机号')
           return
         }
-        if (this.vailForm.loginname.message.length>0 ) {
-         return
+        if (this.vailForm.loginname.message.length > 0) {
+          return
         }
         if (!regExp.registerPasswordVail(this.form.password)) {
-          this.$Message.info('密码必须包含数字和字母大小写')
+          this.$Message.info('密码必须包含数字和字母大小写和`~!#$%_()^*,<>?@.')
           return
         }
         if (this.form.code.length != 4) {
@@ -522,26 +524,27 @@
         }).then(response => {
           this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
           // 发送倒计时
-          let countdown = 60
-          this.codePlaceholder = '60s'
-          var inter = setInterval(() => {
-            countdown--
-            this.codePlaceholder = countdown + 's'
-            if (countdown == 0) {
-              clearInterval(inter)
-              this.codePlaceholder = '发送验证码'
-            }
-          }, 1000)
           if (response.status == 200 && response.data.status == 1) {
+            let countdown = 60
+            this.codePlaceholder = '60s'
+            var inter = setInterval(() => {
+              countdown--
+              this.codePlaceholder = countdown + 's'
+              if (countdown == 0) {
+                clearInterval(inter)
+                this.codePlaceholder = '发送验证码'
+              }
+            }, 1000)
             this.$Message.success({
               content: '验证码发送成功',
               duration: 5
             })
           } else {
+            this.codePlaceholder = '发送验证码'
             this.$Message.error(response.data.message)
           }
         })
-      },
+      }),
       showRules(){
         this.loginShow = false;
         this.rulesShow = true;
