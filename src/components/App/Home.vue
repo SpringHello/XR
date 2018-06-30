@@ -2,7 +2,7 @@
   <div id="home">
     <!-- banner 轮播图 -->
     <div class="banner">
-      <my-carousel :interval=5000000 effect="fade" class="carousel" @on-change="change">
+      <my-carousel :interval=5000 effect="fade" class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
           <div @click="push('active_2')"
                style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">

@@ -299,6 +299,10 @@
             path: '/ruicloud/document'
           },
           {
+            title: '资讯',
+            path: '/ruicloud/article/1'
+          },
+          {
             title: '关于我们',
             path: '/ruicloud/about'
           },
@@ -534,7 +538,7 @@
               line-height: 70px;
               display: inline-block;
               font-size: 14px;
-              &:nth-child(5) {
+              &:nth-child(7) {
                 span {
                   border-right: 1px solid #939393;
                   display: inline-block;
