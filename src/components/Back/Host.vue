@@ -596,19 +596,19 @@
     </Modal>
 
     <!--远程连接密码提示框-->
-    <Modal v-model="showModal.linkPassword" width="360" :scrollable="true">
-      <p slot="header">
-        <span>远程连接密码</span>
-      </p>
-      <div>
-        <p style="font-size: 20px;margin-bottom: 15px;">您的远程连接密码是：{{linkPassword}}</p>
-        <p style="padding:5px;font-size: 12px;line-height: 20px;border:1px solid #cccccc;border-radius: 4px;">警告!
-          远程连接密码只出现一次，您以后每次远程连接登录时都需要输入该密码，请做好记录存档工作。</p>
-      </div>
-      <div slot="footer">
-        <Button type="primary" size="large" @click="open">登录</Button>
-      </div>
-    </Modal>
+    <!--<Modal v-model="showModal.linkPassword" width="360" :scrollable="true">-->
+      <!--<p slot="header">-->
+        <!--<span>远程连接密码</span>-->
+      <!--</p>-->
+      <!--<div>-->
+        <!--<p style="font-size: 20px;margin-bottom: 15px;">您的远程连接密码是：{{linkPassword}}</p>-->
+        <!--<p style="padding:5px;font-size: 12px;line-height: 20px;border:1px solid #cccccc;border-radius: 4px;">警告!-->
+          <!--远程连接密码只出现一次，您以后每次远程连接登录时都需要输入该密码，请做好记录存档工作。</p>-->
+      <!--</div>-->
+      <!--<div slot="footer">-->
+        <!--<Button type="primary" size="large" @click="open">登录</Button>-->
+      <!--</div>-->
+    <!--</Modal>-->
   </div>
 </template>
 
@@ -1479,25 +1479,25 @@
       },
       // 连接主机动作
       link(item){
-        var tempwindow = window.open('_blank');
         sessionStorage.setItem('link-companyid', item.companyid)
         sessionStorage.setItem('link-vmid', item.computerid)
         sessionStorage.setItem('link-zoneid', item.zoneid)
         sessionStorage.setItem('link-phone', this.$store.state.authInfo.phone)
-        this.$http.get('information/connectVm.do', {
+        this.$router.push('link')
+        /*this.$http.get('information/connectVm.do', {
           params: {
             VMId: item.computerid
           }
         }).then(response => {
           if (response.data.connectCode == '') {
-            /*var form = document.createElement('form');
+            /!*var form = document.createElement('form');
              form.action = 'https://www.baidu.com';
              form.target = '_blank';
 
              form.method = 'POST';
 
              document.body.appendChild(form);
-             form.submit();*/
+             form.submit();*!/
             //window.open('/ruicloud/link')
             tempwindow.location = 'https://www.baidu.com';
           } else {
@@ -1506,11 +1506,11 @@
             this.linkPassword = response.data.connectCode
             this.showModal.linkPassword = true
           }
-        })
+        })*/
       },
-      open(){
-        window.open('/ruicloud/link')
-      }
+      // open(){
+      //   window.open('/ruicloud/link')
+      // }
     },
     computed: {
       auth() {

@@ -13,6 +13,20 @@
       </div>
     </div>
     <iframe :src="linkURL" style="width:100%;height:100%" name="ifr"></iframe>
+
+    <Modal v-model="linkPassword" width="360" :scrollable="true">
+      <p slot="header">
+        <span>远程连接密码</span>
+      </p>
+      <div>
+        <p style="font-size: 20px;margin-bottom: 15px;">您的远程连接密码是：{{linkCode}}</p>
+        <p style="padding:5px;font-size: 12px;line-height: 20px;border:1px solid #cccccc;border-radius: 4px;">警告!
+          远程连接密码只出现一次，您以后每次远程连接登录时都需要输入该密码，请做好记录存档工作。</p>
+      </div>
+      <div slot="footer">
+        <Button type="primary" size="large" @click="open">登录</Button>
+      </div>
+    </Modal>
     <Modal v-model="confirm" width="550" scrollable>
       <p slot="header" class="modal-header-border">
         <span style="font-size: 16px;">输入远程连接密码</span>
@@ -65,7 +79,9 @@
     data(){
       return {
         linkURL: '',
-        confirm: true,
+        confirm: false,
+        linkPassword:false,
+        linkCode:'',
         loginForm: {
           password: ''
         },
@@ -111,6 +127,7 @@
       }
     },
     created(){
+      this.connect()
     },
     beforeRouteEnter(to, from, next) {
       next()
@@ -220,6 +237,37 @@
         //window.ifr.CombinationKeyEvent(1)
         //this.$refs.ifr.window.CombinationKeyEvent(1)
         //this.$refs.ifr.contentWindow.CombinationKeyEvent(1)
+      },
+      connect() {
+        this.$http.get('information/connectVm.do', {
+          params: {
+            VMId: sessionStorage.getItem('link-vmid')
+          }
+        }).then(response => {
+          if (response.data.connectCode == '') {
+            this.linkPassword = false;
+            this.confirm = true;
+            // var form = document.createElement('form');
+            // form.action = 'https://www.baidu.com';
+            // form.target = '_blank';
+            //
+            // form.method = 'POST';
+            //
+            // document.body.appendChild(form);
+            // form.submit();
+            // //window.open('/ruicloud/link')
+            // tempwindow.location = 'https://www.baidu.com';
+          } else {
+            // tempwindow.close()
+            // 是第一次连接，弹出模态框
+            this.linkCode = response.data.connectCode;
+            this.linkPassword = true
+          }
+        })
+      },
+      open(){
+        this.linkPassword = false ;
+        this.confirm = true;
       }
     }
   }
