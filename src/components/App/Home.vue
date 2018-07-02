@@ -2,7 +2,7 @@
   <div id="home">
     <!-- banner 轮播图 -->
     <div class="banner">
-      <my-carousel :interval=5000000 effect="fade" class="carousel" @on-change="change">
+      <my-carousel :interval=5000 effect="fade" class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
           <div @click="push('active_2')"
                style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
@@ -155,7 +155,7 @@
                           <router-link :to="content.detailLink" target="_blank" style="border-right: 1px solid #cccccc">
                             {{content.detailText}}
                           </router-link>
-                          <router-link :to="content.useLink" target="_blank" v-if="content.useText=='立即使用'">
+                          <router-link :to="content.useLink" target="_blank" v-if="content.useText=='立即购买'">
                             {{content.useText}}
                           </router-link>
                           <router-link :to="content.useLink" v-else>
@@ -346,9 +346,9 @@
                 desc: '通用型、内存优化型、高IO型',
                 img: '#icon-danxingyunfuwuqiECS',
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '立即购买',
                 detailLink: 'Pecs',
-                useLink: $store.state.userInfo ? 'host' : 'login',
+                useLink: $store.state.userInfo ? 'host' : 'buy',
                 ME: true
               },
               {
@@ -356,9 +356,9 @@
                 desc: '公共镜像、功能镜像、自定义镜像',
                 img: '#icon-feiyongzhongxin',
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '立即购买',
                 detailLink: 'Phost',
-                useLink: $store.state.userInfo ? 'mirror' : 'login',
+                useLink: $store.state.userInfo ? 'mirror' : 'buy',
                 ME: false
               },
               {
@@ -366,9 +366,9 @@
                 desc: '稳定可靠、安全保障',
                 img: '#icon-ECSkuaizhao',
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '立即购买',
                 detailLink: 'Pecss',
-                useLink: $store.state.userInfo ? 'snapshot' : 'login',
+                useLink: $store.state.userInfo ? 'snapshot' : 'buy',
                 ME: false
               },
               {
@@ -406,9 +406,9 @@
                 desc: '网络隔离、分配子网',
                 img: '#icon-xunisiyouyunVPC',
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '立即购买',
                 detailLink: 'Pvpc',
-                useLink: $store.state.userInfo ? 'network' : 'login',
+                useLink: $store.state.userInfo ? 'network' : 'buy',
                 ME: true
               },
               {
@@ -416,9 +416,9 @@
                 desc: '绑定与解绑IP、扩容',
                 img: '#icon-danxingIP1',
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '立即购买',
                 detailLink: 'Peip',
-                useLink: $store.state.userInfo ? 'network' : 'login',
+                useLink: $store.state.userInfo ? 'network' : 'buy',
                 ME: false
               },
               {
@@ -426,9 +426,9 @@
                 desc: '源算法、轮询、最小连接数',
                 img: '#icon-fuzaijunheng2',
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '立即购买',
                 detailLink: 'Pbalance',
-                useLink: $store.state.userInfo ? 'bal' : 'login',
+                useLink: $store.state.userInfo ? 'bal' : 'buy',
                 ME: false
               },
               {
@@ -466,9 +466,9 @@
                 desc: '性能型、超高性能型、存储型',
                 img: '#icon-yunyingpan1',
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '立即购买',
                 detailLink: 'Pdisk',
-                useLink: $store.state.userInfo ? 'disk' : 'login',
+                useLink: $store.state.userInfo ? 'disk' : 'buy',
                 ME: true
               },
               {
@@ -496,9 +496,9 @@
                 desc: '自定义规则、协议、端口',
                 img: '#icon-fanghuoqiang',
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '立即购买',
                 detailLink: 'Pfirewall',
-                useLink: $store.state.userInfo ? 'firewall' : 'login',
+                useLink: $store.state.userInfo ? 'firewall' : 'buy',
                 ME: true
               },
               {
