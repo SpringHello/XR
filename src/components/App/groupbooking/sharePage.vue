@@ -23,7 +23,7 @@
           </div>
           <div class="link">
             <div>参团链接：<i>https://www.xrcloud.net/ruicloud/home</i></div>
-            <span>分享链接</span>
+            <span @click="linkModal=true" style="cursor:pointer">分享链接</span>
           </div>
         </div>
       </div>
@@ -31,41 +31,18 @@
         <gb-award></gb-award>
       </div>
     </div>
-    <Modal v-model="linkModal" width="420" class="link-modal" :scrollable="true">
-      <!-- <p slot="header" style="color:#5F5F5F;text-align:center;height: 30px;padding-top: 5px;">
-        <span style="font-family: PingFangSC-Regular;font-size: 26px;">登录</span>
-      </p> -->
+    <Modal v-model="linkModal" width="420" :scrollable="true">
       <div class="body">
-        <!-- <form>
-          <div>
-            <span :class="{warning:vailForm.loginname.warning}">{{vailForm.loginname.message}}</span>
-            <input type="text" autocomplete="off" v-model="form.loginname" :placeholder="form.loginnamePlaceholder"
-                   @blur="vail('loginname')" @focus="focus('loginname')" @input="isCorrect('loginname')">
-          </div>
-          <div>
-            <span :class="{warning:vailForm.password.warning}">{{vailForm.password.message}}</span>
-            <input type="text" autocomplete="off" v-model="form.password" :placeholder="form.passwordPlaceholder"
-                   @blur="vail('password')" @focus="focus('password')" @input="isCorrect('password')"
-                   v-on:keyup.enter="submit" onfocus="this.type='password'">
-          </div>
-          <div style="position:relative">
-            <span>{{vailForm.vailCode.message}}</span>
-            <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
-                   :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
-                   @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
-          </div>
-        </form> -->
         <p style="margin-top:60px;">赶快分享给你的小伙伴吧！</p>
         <ul style="display:flex;align-items:center;margin:24px 0;">
-          <li style="margin-right:40px;"><img src="../../../assets/img/active/group-booking/icon-qq.png"/><span >QQ</span></li>
-          <li style="margin-right:40px;"><img src="../../../assets/img/active/group-booking/icon-qq-zone.png"/><span >空间</span></li>
-          <li style="margin-right:40px;"><img src="../../../assets/img/active/group-booking/icon-blog.png"/><span >微博</span></li>
+          <li style="margin-right:40px;"><img src="../../../assets/img/active/group-booking/icon-qq.png" style="vertical-align:middle;margin-right:10px;"/><span >QQ</span></li>
+          <li style="margin-right:40px;"><img src="../../../assets/img/active/group-booking/icon-qq-zone.png" style="vertical-align:middle;margin-right:10px;"/><span >空间</span></li>
+          <li style="margin-right:40px;"><img src="../../../assets/img/active/group-booking/icon-blog.png" style="vertical-align:middle;margin-right:10px;"/><span >微博</span></li>
         </ul>
         <div style="padding：30px 0;">参团链接：<span style="color:#000">https://www.xrcloud.net/ruicloud/home</span></div>
       </div>
       <div slot="footer" class="foot">
-        <button :class="{disabled:disabled}" :disabled="disabled==true" @click="submit">复制链接</button>
+        <button  style="width:96px;height:32px;background:rgba(253,140,115,1);border:0;color:#fff">复制链接</button>
       </div>
     </Modal>
   </div>
@@ -73,12 +50,7 @@
 
 <script type="text/ecmascript-6">
 import gbHost from './element/gb-host'
-// import gbProduct from './element/gb-product'
-// import gbFlow from './element/gb-flow'
 import gbAward from './element/gb-award'
-// import gbAdvantage from './element/gb-advantage'
-// import gbRule from './element/gb-rule'
-
 export default {
   components: {
     gbHost,
@@ -86,7 +58,7 @@ export default {
   },
   data () {
     return {
-      linkModal: true
+      linkModal: false
     }
   },
   methods: {},
@@ -208,11 +180,6 @@ export default {
         border-radius: 2px;
         color: #fff;
       }
-    }
-  }
-  .link-modal{
-    .path{
-      display: flex;
     }
   }
 }
