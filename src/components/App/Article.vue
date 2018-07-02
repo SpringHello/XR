@@ -10,7 +10,7 @@
       <div class="body">
         <div class="body-left">
           <div class="item" v-for="item in articleList">
-            <router-link :to="`https://zschj.xrcloud.net/ruicloud/article/${item.code}.html`">
+            <router-link :to="`${item.code}.html`" target="_blank">
               <div class="item-left">
                 <img style="width:121px;height:75px;"
                      :src="item.coverUrl"/>
@@ -24,12 +24,15 @@
               </div>
             </router-link>
           </div>
+          <Page :total="pageInfo.total" :page-size="pageInfo.pageSize" style="float:right;margin-top: 20px;"
+                @on-change=""></Page>
         </div>
         <div class="body-right">
           <div class="hot-tags">
             <h3>热门标签</h3>
             <div class="tags">
-              <Button type="ghost" v-for="tag in tags" shape="circle" @click="update(tag.keywordsval)">{{
+              <Button type="ghost" v-for="(tag,index) in tags" :key="index" shape="circle"
+                      @click="update(tag.keywordsval)" :class="{active:keywordVal==tag.keywordsval}">{{
                 tag.keywordsval }}
               </Button>
             </div>
@@ -37,11 +40,12 @@
           <div class="hot-information">
             <h3>热门资讯</h3>
             <div v-for="h in hot" class="info">
-              <div class="hotInfo-title">
-                <p>{{h.title}}</p>
-                <span>{{h.createtime}}</span>
-              </div>
-              <p class="hotInfo-content" v-html="h.abstracts"></p>
+              <router-link :to="`${h.code}.html`" target="_blank">
+                <div class="hotInfo-title">
+                  <p><span class="htitle">{{h.title}}</span><span class="time">{{h.createtime}}</span></p>
+                </div>
+                <p class="hotInfo-content" v-html="h.abstracts"></p>
+              </router-link>
             </div>
           </div>
         </div>
@@ -56,12 +60,10 @@
     name: 'art',
     beforeRouteEnter (to, from, next) {
       let articleType = axios.get('article/getArticleType.do')
-      let moreArticle = axios.get('article/getMoreArticle.do', {
-        params: {
-          articletypeId: to.params.typeId,
-          page: '1',
-          pageSize: '5'
-        }
+      let moreArticle = axios.post('article/getMoreArticle.do', {
+        articleTypeId: to.params.typeId,
+        page: '1',
+        pageSize: '5'
       })
       let keywords = axios.get('article/getKeywords.do')
       let hot = axios.get('article/getHotInformation.do', {
@@ -80,18 +82,26 @@
         articleType: [],
         articleList: [],
         tags: [],
-        hot: []
+        hot: [],
+        pageInfo: {
+          currentPage: 1,
+          pageSize: 5,
+          total: 0
+        },
+        // 选中的标签
+        keywordVal: ''
       }
     },
     beforeRouteUpdate (to, from, next) {
-      axios.get('article/getMoreArticle.do', {
-        params: {
-          articletypeId: to.params.typeId,
-          page: '1',
-          pageSize: '5'
-        }
+      this.pageInfo.currentPage = '1'
+      axios.post('article/getMoreArticle.do', {
+        articleTypeId: to.params.typeId,
+        keywordVal: this.keywordVal,
+        page: this.pageInfo.currentPage,
+        pageSize: this.pageInfo.pageSize
       }).then(response => {
         this.articleList = response.data.result.data
+        this.pageInfo.total = response.data.result.total
       })
       next()
     },
@@ -102,8 +112,17 @@
         this.tags = values[2].data.result
         this.hot = values[3].data.result
       },
-      update(keywords){
-
+      update(keywordVal){
+        this.keywordVal = this.keywordVal == keywordVal ? '' : keywordVal
+        axios.post('article/getMoreArticle.do', {
+          articleTypeId: this.$route.params.typeId,
+          keywordVal: this.keywordVal,
+          page: this.pageInfo.currentPage,
+          pageSize: this.pageInfo.pageSize
+        }).then(response => {
+          this.articleList = response.data.result.data
+          this.pageInfo.total = response.data.result.total
+        })
       }
     }
   }
@@ -147,8 +166,10 @@
         border-right: 1px solid #D8D8D8;
         padding-right: 20px;
         .item {
-          display: flex;
           margin-top: 20px;
+          a {
+            display: flex;
+          }
           .item-left {
             margin-right: 20px;
           }
@@ -218,7 +239,14 @@
               font-size: 18px;
               font-family: MicrosoftYaHei;
               color: rgba(51, 51, 51, 1);
-              span {
+              .htitle{
+                width:250px;
+                display: inline-block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              }
+              .time{
                 font-size: 14px;
                 font-family: MicrosoftYaHei;
                 color: rgba(153, 153, 153, 1);

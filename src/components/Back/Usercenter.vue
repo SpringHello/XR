@@ -1024,7 +1024,8 @@
         <p>手机号码： <span>{{keyForm.phone}}</span></p>
         <p> 图形验证码
           <Input v-model="keyForm.imgCode" placeholder="请输入验证码" style="width: 132px;margin:0 20px;"></Input>
-          <img :src="imgSrc" style="width:80px;height:30px;vertical-align: middle" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+          <img :src="imgSrc" style="width:80px;height:30px;vertical-align: middle"
+               @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
         </p>
         <p> 验证码
           <Input v-model="keyForm.code" placeholder="请输入验证码" style="width: 132px;margin:0 20px;"></Input>
@@ -1160,7 +1161,7 @@
             },
             {
               title: '通过身份证照片验证',
-              step: ['填写个人资料', '上传身份证照片','平台审核', '认证完成'],
+              step: ['填写个人资料', '上传身份证照片', '平台审核', '认证完成'],
               go: 2,
               disc: '24小时内完成审核'
             }
@@ -1675,7 +1676,7 @@
             title: 'Access Key Secret',
             render: (h, params) => {
               var text = params.row.isdisplay == 1 ? '查看' : '隐藏'
-              if (params.row.isdisplay == 1){
+              if (params.row.isdisplay == 1) {
                 return h('div', [
                   h('span', {
                     style: {
@@ -1699,7 +1700,7 @@
                     }
                   }, text)
                 ]);
-              } else if (params.row.isdisplay == 0){
+              } else if (params.row.isdisplay == 0) {
                 return h('div', [
                   h('span', {
                     style: {
@@ -1799,7 +1800,7 @@
       axios.post('user/getPhone.do', {
         companyId: $store.state.authInfo.companyid
       }).then(response => {
-        if (response.status == 200 && response.data.status == 1){
+        if (response.status == 200 && response.data.status == 1) {
           this.keyForm.phone = response.data.data.phone
         } else {
           this.$Message.error(response.data.msg)
@@ -2289,7 +2290,8 @@
       // 获取验证码
       getVerCode(type) {
         var isemail = type == 'email' ? 1 : 0
-        var aim = type == 'email' ? this.userInfo.loginname : this.userInfo.phone
+        // aim 为空 由java重新设置aim
+        var aim = type == 'email' ? this.userInfo.loginname : ''
         var url = 'user/code.do'
         this.$http.get(url, {
           params: {
@@ -2510,11 +2512,11 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.listKey()
-          } else if (response.status == 200 && response.data.status == 20){
+          } else if (response.status == 200 && response.data.status == 20) {
             this.keyForm.imgCode = ''
             this.keyForm.code = ''
             this.showModal.keyPhoneVal = true
-            this.keyWeight =  response.data.data.weight
+            this.keyWeight = response.data.data.weight
           } else {
             this.$Message.error(response.data.msg)
           }
@@ -2857,9 +2859,10 @@
       margin: 12px 0px;
     }
   }
+
   .keyPhoneVal {
     p {
-      color:rgba(102,102,102,1);
+      color: rgba(102, 102, 102, 1);
       margin-bottom: 10px;
       font-size: 14px;
     }
