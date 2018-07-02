@@ -14,7 +14,7 @@
             <li>{{ item.disk}}G<span>SSD</span></li>
             <li>{{ item.bandwidth}}<span>区域</span></li>
             <li>{{ item.disk}}<span>操作系统</span></li>
-            <li>¥<i>{{item.currentPrice}}</i>/月<span>原价¥{{ item.originalCost}}月</span></li>
+            <li>¥<i>{{item.currentPrice}}</i><span>/月</span><span style="text-decoration:line-through">原价¥{{ item.originalCost}}月</span></li>
          </ul>
         </div>
       </div>
