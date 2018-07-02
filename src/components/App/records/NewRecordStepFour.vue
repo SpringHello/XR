@@ -575,6 +575,7 @@
   }
 
   .body {
+    background: #FFF;
     padding: 60px 0;
     .center();
     .content {

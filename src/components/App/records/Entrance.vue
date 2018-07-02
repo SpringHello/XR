@@ -618,6 +618,7 @@
   }
 
   .body-bottom {
+    background: #FFF;
     .content {
       padding: 60px 0 60px;
       .center();

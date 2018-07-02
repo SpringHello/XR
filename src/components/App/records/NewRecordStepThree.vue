@@ -929,6 +929,7 @@
   }
 
   .body-bottom {
+    background: #FFF;
     .content {
       padding: 0 0 36px;
       border-bottom: 2px solid #D9D9D9;
