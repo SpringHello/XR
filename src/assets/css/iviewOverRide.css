@@ -316,15 +316,15 @@ div.modal-header-border {
   line-height: 25px;
 }
 
-/* 拼团活动radio框 */
-.groupBooking-radio .ivu-radio-wrapper {
-  font-size: 16px;
+/* 拼团活动下拉框 */
+.groupBooking-select .ivu-select-selection {
+  border: 1px solid #FD8C73;
+  box-shadow: 0 0 0 2px rgba(253,140,115,.2);
+}
+.groupBooking-select .ivu-select-item-selected, .ivu-select-item-selected:hover{
+  background: #FD8C73;
+}
+.groupBooking-select .ivu-select-arrow{
+  color: #FD8C73;
 }
 
-.groupBooking-radio .ivu-radio-checked .ivu-radio-inner {
-  border-color: #F26667;
-}
-
-.groupBooking-radio .ivu-radio-inner:after {
-  background-color: #F26667;
-}

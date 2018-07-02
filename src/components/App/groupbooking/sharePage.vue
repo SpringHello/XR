@@ -16,7 +16,7 @@
         <gb-host></gb-host>
       </div>
       <div class="center">
-        <div class="cloud-member"> 
+        <div class="cloud-member">
           <div class="head-title">
             <h2>云朵成员</h2>
             <span>还差1人即可获得赠送资格，赶快分享吧。</span>
@@ -39,7 +39,7 @@
           <li style="margin-right:40px;"><img src="../../../assets/img/active/group-booking/icon-qq-zone.png" style="vertical-align:middle;margin-right:10px;"/><span >空间</span></li>
           <li style="margin-right:40px;"><img src="../../../assets/img/active/group-booking/icon-blog.png" style="vertical-align:middle;margin-right:10px;"/><span >微博</span></li>
         </ul>
-        <div style="padding：30px 0;">参团链接：<span style="color:#000">https://www.xrcloud.net/ruicloud/home</span></div>
+        <div style="padding:30px 0;">参团链接：<span style="color:#000">https://www.xrcloud.net/ruicloud/home</span></div>
       </div>
       <div slot="footer" class="foot">
         <button  style="width:96px;height:32px;background:rgba(253,140,115,1);border:0;color:#fff">复制链接</button>

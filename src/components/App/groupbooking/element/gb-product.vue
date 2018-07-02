@@ -11,13 +11,20 @@
           <li>{{ item.bandwidth}}M<span>宽带</span></li>
           <li>{{ item.disk}}G<span>SSD</span></li>
         </ul>
-        <div class="item-footer">
-          <span>操作系统：</span>
-          <RadioGroup v-model="item.system" class="groupBooking-radio">
-            <Radio label="Centos" style="margin-right: 40px"></Radio>
-            <Radio label="Windows"></Radio>
-          </RadioGroup>
+        <div class="item-content">
+          <div>
+            <span>区域选择：</span>
+            <Select v-model="item.area" class="groupBooking-select" style="width:150px;margin-right: 42px">
+              <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+            <span>系统选择：</span>
+            <Select v-model="item.system" class="groupBooking-select" style="width:150px">
+              <Option v-for="item in systemGroup" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+          </div>
           <p>¥{{item.currentPrice}}<span>/月</span><span>原价¥{{ item.originalCost}}/月</span></p>
+        </div>
+        <div class="item-footer">
           <button @click="buyNow(index)">立即购买</button>
         </div>
       </div>
@@ -77,18 +84,44 @@
             memory: 2,
             bandwidth: 1,
             disk: 40,
-            system: 'Centos',
+            system: 'linux',
             currentPrice: 59,
-            originalCost: 118.72
+            originalCost: 118.72,
+            area: 'bj'
           }, {
             cpu: 2,
             memory: 4,
             bandwidth: 5,
             disk: 40,
-            system: 'Centos',
+            system: 'linux',
             currentPrice: 98,
-            originalCost: 196.72
+            originalCost: 196.72,
+            area: 'bj'
           }],
+        areaGroup: [{
+          label: '北京一区',
+          value: 'bj'
+        }, {
+          label: '北方一区',
+          value: 'bfy'
+        }, {
+          label: '北方二区（沈阳）',
+          value: 'bfe'
+        }, {
+          label: '华中一区',
+          value: 'hzy'
+        }, {
+          label: '华中二区',
+          value: 'hze'
+        }
+        ],
+        systemGroup: [{
+          label: 'Windows',
+          value: 'windows'
+        }, {
+          label: 'Centos',
+          value: 'linux'
+        }],
         loginModal: false,
         form: {
           loginname: '',
@@ -261,10 +294,16 @@
             border-right: none;
           }
         }
-        .item-footer {
+        .item-content {
           text-align: center;
           padding-top: 20px;
-          padding-bottom: 30px;
+          padding-bottom: 27px;
+          border-bottom: 1px solid #DFE2F4;
+          > div {
+            > span {
+              margin-right: 10px;
+            }
+          }
           > span {
             font-size: 16px;
             font-family: PingFangSC-Regular;
@@ -294,6 +333,10 @@
               text-decoration: line-through;
             }
           }
+        }
+        .item-footer {
+          padding-bottom: 20px;
+          text-align: center;
           button {
             cursor: pointer;
             border: none;
