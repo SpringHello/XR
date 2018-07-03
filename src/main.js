@@ -7,7 +7,6 @@ import router from './router'
 import store from './vuex'
 import axios from 'axios'
 import iview from 'iview'
-import uploader from 'vue-simple-uploader'
 import 'iview/dist/styles/iview.css'
 import '@/assets/css/iviewOverRide.css'
 import '@/assets/css/reset.css'
@@ -22,7 +21,6 @@ import 'echarts/lib/component/tooltip'
 
 import md5 from 'md5'
 
-Vue.use(uploader)
 //Vue.prototype.$message = message
 Vue.config.productionTip = false
 

@@ -181,7 +181,7 @@
       <p style="font-size:14px;color:#999999;line-height: 20px;margin:10px 0;">控制台上传单个文件大小不超过1GB，如需上传更大的文件请使用新睿云对象存储提供的<span
         style="color:#2A9AF3;cursor:pointer;">API</span></p>
       <!--<p style="font-size:14px;color:#666666;margin:10px 0;">上传路径 文件名称/</p>-->
-      <p style="text-align: right;color: #999999;">{{uploadList.length}}/24</p>
+      <!--<p style="text-align: right;color: #999999;">{{uploadList.length}}/24</p>-->
       <div class="upload_div">
         <span>待上传文件</span>
         <span>大小</span>
@@ -189,6 +189,16 @@
         <span>操作</span>
       </div>
       <div class="upload_Box" >
+        <!--<cunt ref="upload"-->
+          <!--:on-success="handleUpload"-->
+          <!--:data="fileUpdata"-->
+          <!--action="http://192.168.3.109:8080/ruirados/object/uploadObject.do">-->
+          <!--<div class="upload_text">-->
+            <!--<Icon type="ios-upload-outline"></Icon>-->
+            <!--<span>选择文件</span>-->
+            <!--<p style="margin-top:5px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>-->
+          <!--</div>-->
+        <!--</cunt>-->
         <Upload
           ref="upload"
           :show-upload-list="true"
@@ -214,7 +224,7 @@
         </Upload>
         <!--<div class="upload_list" v-for="(item,index) in uploadList" v-if="item.status == 'uploading'">-->
           <!--<div>-->
-            <!--<sapn>{{item.name}}</sapn>-->
+            <!--<span>{{item.name}}</span>-->
           <!--</div>-->
           <!--<div>-->
             <!--<template>{{item.size/1024 < 1000 ? (item.size /1024).toFixed(2)+'kb': item.size/1048576 < 1024 ? (item.size / 1048576).toFixed(2)+'Mb' : (item.size/1073741824).toFixed(2)+'Gb'  }}</template>-->
@@ -230,16 +240,7 @@
            <!--<span style="cursor: pointer;" @click="deleteUpload(index)">删除</span>-->
          <!--</div>-->
         <!--</div>-->
-        <!--<uploader :options="options" class="uploader-example">-->
-          <!--<uploader-unsupport></uploader-unsupport>-->
-          <!--<uploader-drop>-->
-            <!--<p>Drop files here to upload or</p>-->
-            <!--<uploader-btn>select files</uploader-btn>-->
-            <!--<uploader-btn :attrs="attrs">select images</uploader-btn>-->
-            <!--<uploader-btn :directory="true">select folder</uploader-btn>-->
-          <!--</uploader-drop>-->
-          <!--<uploader-list></uploader-list>-->
-        <!--</uploader>-->
+
       </div>
 
     </Modal>
@@ -352,7 +353,7 @@
             </div>
           </div>
         </FormItem>
-        <FormItem prop="whiteListValue" >
+        <FormItem prop="whiteListValue">
           <Input :disabled="refererDisabled"  v-model="jurisdValidate.whiteListValue" style="width:420px;" :rows="4" type="textarea"/>
           <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
         </FormItem>
@@ -543,7 +544,8 @@
 </template>
 
 <script>
-  import $store from "@/vuex"
+  import $store from "@/vuex";
+  import cunt from '../../myView/objectStrorage/cunt.vue'
   var buckname = sessionStorage.getItem('bucketName');
   const validRoute = (rule, value, callback) => {
     let reg = /^\s*$|[a-zA-Z]+(\.[a-zA-Z0-9]+)+(\.[a-zA-Z]+)$/;
@@ -556,6 +558,10 @@
   export default {
     data() {
       return {
+        //修改白名单权限验证
+        validateUpdateField:'',
+        //添加白名单验证
+        validateField:'',
         unText:'',
         // 上传时间
         time:'',
@@ -1154,6 +1160,9 @@
         zoneName:''
       }
     },
+    components:{
+      cunt
+    },
     methods: {
       _checkNewCros(){
         this.$refs.newCros.validate((valid) => {
@@ -1299,7 +1308,6 @@
       },
       //上传文件过程的方法
       handleUpload(event, file) {
-
         this.oldTime = new Date().getTime();
         this.time =  event;
         // console.log(event.total / event.timeStamp);
@@ -1362,7 +1370,7 @@
           .then(res => {
             if (res.data.status == "1") {
               this.$Message.success("新建成功");
-              let id = res.data.data.currentDir.dirId;
+              let id = res.data.data.currentDir.dirId == '0' ? null : res.data.data.currentDir.dirId;
               // this.floder = false;
               this.filesList(id);
             } else {
@@ -1587,22 +1595,6 @@
         this.fileObject.splice(index + 1, number);
         this.filesList(id)
       },
-      //获取空间详情
-      // bucketDetails() {
-      //
-      //   this.$http
-      //     .post(
-      //       "http://192.168.3.109:8083/ruirados/bucket/selectByBucketName.do",
-      //       {
-      //         bucketName:name
-      //       }
-      //     )
-      //     .then(res => {
-      //       if (res.data.status == "1") {
-      //       }
-      //     });
-      // },
-      //
       //返回根路径
       backPage(){
         this.fileObject.pop();
@@ -1685,19 +1677,39 @@
        if(this.jurisdValidate.referer == '1'){
          this.refererDisabled = true;
          this.jurisdValidate.whiteListValue = '';
-         this.$refs.jurisdValidate.validateField('whiteListValue',(valid)=>{
-           console.log(valid);
-           return ;
-         })
+         this.validateField = (rule, value, callback) => {
+           if (value == '') {
+             callback();
+           }
+         };
        }else{
          this.refererDisabled = false;
+         this.validateField = (rule, value, callback) => {
+           if (value == '') {
+             return callback(new Error("请输入白名单"));
+           } else {
+             callback();
+           }
+         };
        }
       },
       changesUpdate(){
         if(this.updateJurisd.updateReferer == '1'){
           this.refererUpdateDisabled = true;
+          this.validateUpdateField = (rule, value, callback) => {
+            if (value == '') {
+              callback();
+            }
+          };
         }else{
           this.refererUpdateDisabled = false;
+          this.validateUpdateField = (rule, value, callback) => {
+            if (value == '') {
+              return callback(new Error("请输入白名单"));
+            } else {
+              callback();
+            }
+          };
         }
       },
       //获取ceph服务器域名
@@ -1729,6 +1741,7 @@
     },
     mounted(){
       this.uploadList = this.$refs.upload.fileList;
+      console.log(this.$refs.upload.fileList);
     },
     // watch: {
     //   time: function () {
@@ -1958,13 +1971,13 @@
   }
 
   .upload_text {
+    margin-top: 5px;
     background-color: #ffffff;
-
+    text-align: center;
     span {
       color: #2a9af3;
       font-size: 14px;
-      margin-left: 5px;
-      margin-bottom: 10px;
+      margin: 10px 5px 10px 0;
     }
   }
 
