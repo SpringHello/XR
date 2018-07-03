@@ -1294,6 +1294,7 @@
       },
       //查看备案详情
       details() {
+        this.$Loading.start();
         this.$http
           .get("recode/listMainWeb.do", {
             params: {
@@ -1305,6 +1306,7 @@
           .then(res => {
             if (res.data.status == 1) {
               this.hostUnitList = res.data.result[0];
+              this.$Loading.finish();
                 //JSON对象深拷贝，只能用在可以转换为JSon对象的上面
                 this.updateHostUnitList = JSON.parse(JSON.stringify(res.data.result[0]));
                 this.webip.push(this.updateHostUnitList.webip.slice(','));
@@ -1555,7 +1557,8 @@
                 this.isAllUpate = true;
               }
             } else {
-              console.log("出错了");
+              this.$Loading.finish();
+             this.$Message.info('平台出小差了');
             }
           });
       },

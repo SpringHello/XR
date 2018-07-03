@@ -1380,6 +1380,7 @@
       },
       //查看备案详情
       details() {
+        this.$Loading.start();
         var id = sessionStorage.getItem("id");
         this.$http
           .get("recode/listMainWeb.do", {
@@ -1389,6 +1390,7 @@
           })
           .then(res => {
             if (res.data.status == 1) {
+              this.$Loading.finish();
               this.hostUnitList = res.data.result[0];
               //JSON对象深拷贝，只能用在可以转换为JSon对象的上面
               this.updateHostUnitList = JSON.parse(JSON.stringify(res.data.result[0]));
@@ -1642,7 +1644,8 @@
                 this.isAllUpate = true;
               }
             } else {
-              console.log("出错了");
+              this.$Loading.finish();
+              this.$Message.info('平台出小差了');
             }
           });
       },
