@@ -59,9 +59,11 @@
   export default{
     name: 'art',
     beforeRouteEnter (to, from, next) {
+      let keywordVal = sessionStorage.getItem('keywords') || ''
       let articleType = axios.get('article/getArticleType.do')
       let moreArticle = axios.post('article/getMoreArticle.do', {
         articleTypeId: to.params.typeId,
+        keywordVal: keywordVal,
         page: '1',
         pageSize: '5'
       })
@@ -78,6 +80,8 @@
       })
     },
     data(){
+      let keywords = sessionStorage.getItem('keywords') || ''
+      sessionStorage.removeItem('keywords')
       return {
         articleType: [],
         articleList: [],
@@ -89,7 +93,7 @@
           total: 0
         },
         // 选中的标签
-        keywordVal: ''
+        keywordVal: keywords
       }
     },
     beforeRouteUpdate (to, from, next) {
@@ -239,14 +243,14 @@
               font-size: 18px;
               font-family: MicrosoftYaHei;
               color: rgba(51, 51, 51, 1);
-              .htitle{
-                width:250px;
+              .htitle {
+                width: 250px;
                 display: inline-block;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
               }
-              .time{
+              .time {
                 font-size: 14px;
                 font-family: MicrosoftYaHei;
                 color: rgba(153, 153, 153, 1);

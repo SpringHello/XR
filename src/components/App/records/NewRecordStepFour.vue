@@ -87,12 +87,13 @@
                   :max-size="2048"
                   :on-exceeded-size="handleMaxSize"
                   :on-format-error="handleFormatJpg"
+                  :on-progress="photoImgProgress"
                   :on-success="photoImg">
                   <div class="item-content-text" v-if="upload.photo===''">
                     点击选择文件
                   </div>
                   <img v-else :src="upload.photo" style="height: 165px;width:270px;">
-                  <Progress v-show="percent>0&&percent<=100" :percent="percent"></Progress>
+                  <Progress v-show="percent>0" :percent="percent"></Progress>
                   <Button type="primary" v-if="upload.photo===''">上传</Button>
                 </Upload>
               </div>
@@ -186,6 +187,7 @@
   import oStep from "./ostep.vue";
   import records from './../Records'
   import $ from 'jquery'
+  import throttle from 'throttle-debounce/debounce'
 
   export default {
     components: {
@@ -378,16 +380,21 @@
       },
       photoImg(res) {
         if (res.status == 1) {
-          let s = setInterval(() => {
-            this.percent++
-            if (this.percent > 100) {
-              window.clearInterval(s)
-              this.upload.photo = res.result
-              this.percent = 0
-            }
-          }, 20)
+          this.upload.photo = res.result
+          this.$Message.success('上传成功')
+        } else {
+          this.$Message.info('上传失败')
         }
       },
+      photoImgProgress: throttle(700, function ()  {
+        let s = setInterval(() => {
+          this.percent++
+          if (this.percent > 100) {
+            window.clearInterval(s)
+            this.percent = 0
+          }
+        }, 20)
+      }),
       next() {
         if (this.curtainStatus === true) {
           this.nextStep = true
@@ -397,21 +404,37 @@
       },
       applyHint_ok() {
         this.showModal.applyHint = false
-        /*        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
-                  if (response.status == 200 && response.data.status == '1') {
-                    this.balance = response.data.data.remainder
-                    if (this.balance >= 50) {
-                      this.showModal.freezeHint = true
-                    } else {
-                      this.showModal.shortageHint = true
-                    }
-                  }
-                })*/
-        this.showModal.freezeHint = true
+        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
+          if (response.status == 200 && response.data.status == '1') {
+            this.balance = response.data.data.remainder
+            if (this.balance >= 50) {
+              this.showModal.freezeHint = true
+            } else {
+              this.showModal.shortageHint = true
+            }
+          }
+        })
+        // this.showModal.freezeHint = true
       },
       freezeHint_ok() {
         this.showModal.freezeHint = false
-        this.nextStep = true
+        let url = 'user/getRemainderFrozen.do'
+        let params = {
+          eachFrozenMoney: '50',
+          describe: '幕布申请',
+          operationType: '幕布申请',
+          //choose: '0'
+        }
+        axios.post(url, params).then(res => {
+          if (res.data.status == 1) {
+            this.$Message.success('资金冻结成功')
+            this.nextStep = true
+          } else {
+            this.$message.info({
+              content: '平台开小差了，请稍候再试'
+            })
+          }
+        })
       },
       shortageHint_ok() {
         this.showModal.shortageHint = false
@@ -552,6 +575,7 @@
   }
 
   .body {
+    background: #FFF;
     padding: 60px 0;
     .center();
     .content {

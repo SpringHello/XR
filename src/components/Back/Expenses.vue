@@ -334,7 +334,7 @@
         <Table :columns="freezeParticularsColumns" :data="freezeParticularsData"></Table>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary">确认
+        <Button type="primary" @click="showModal.freezeParticulars = false">确认
         </Button>
       </div>
     </Modal>
@@ -364,7 +364,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.notUnfreeze = false">取消</Button>
-        <Button type="primary">确定</Button>
+        <Button type="primary" @click="showModal.notUnfreeze = false">确定</Button>
       </p>
     </Modal>
   </div>
@@ -1121,38 +1121,51 @@
         freezeParticularsColumns: [
           {
             title: '押金金额',
-            key: 'name'
+            key: 'eachfrozenmoney'
           }, {
             title: '押金事由',
-            key: 'name'
+            key: 'describes'
           }, {
             title: '冻结时间',
-            key: 'name'
+            key: 'createtime'
           }, {
             title: '解冻时间/事件',
-            key: 'name'
+            render: (h, params) => {
+              if (params.row.type == 1) {
+                return h('span', {}, params.row.updatetime)
+              } else {
+                return h('span', {}, '--')
+              }
+            }
           }, {
             title: '押金状态',
-            key: 'name'
+            render: (h, params) => {
+              const text = params.row.type == 1 ? '已解冻' : '冻结中'
+              return h('span', {}, text)
+            }
           }, {
             title: '操作',
             render: (h, params) => {
-              return h('span', {
-                style: {
-                  cursor: 'pointer',
-                  color: '#2A99F2'
-                },
-                on: {
-                  click: () => {
-                    //this.showModal.unfreeze = true
-                    this.showModal.notUnfreeze = true
+              if (params.row.type == 0 && params.row.describes != '幕布申请') {
+                return h('span', {
+                  style: {
+                    cursor: 'pointer',
+                    color: '#2A99F2'
+                  },
+                  on: {
+                    click: () => {
+                      //this.showModal.unfreeze = true
+                      this.showModal.notUnfreeze = true
+                    }
                   }
-                }
-              }, '申请解冻')
+                }, '申请解冻')
+              } else {
+                return h('span', {}, '无')
+              }
             }
           },
         ],
-        freezeParticularsData: [{}]
+        freezeParticularsData: []
       }
     },
     created() {
@@ -1207,6 +1220,7 @@
         this.$http.get('continue/showMoneyByMonth.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.billmonth = response.data.result
+            this.theCumulative = response.data.total_amount
           }
         })
       },
@@ -1215,6 +1229,7 @@
           if (response.status == 200 && response.data.status == '1') {
             this.balance = response.data.data.remainder
             this.voucher = response.data.data.voucher
+            this.freezeDeposit = response.data.data.frozenMoney
           }
         })
       },
@@ -1685,7 +1700,17 @@
         this.clipCoupons()
       },
       freezeDetails() {
-        this.showModal.freezeParticulars = true
+        let url = 'user/depositDetails.do'
+        this.$http.get(url).then(res => {
+          if (res.data.status == 1) {
+            this.freezeParticularsData = res.data.result
+            this.showModal.freezeParticulars = true
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
       }
     },
     computed: {

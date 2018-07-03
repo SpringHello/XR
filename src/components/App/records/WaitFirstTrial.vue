@@ -82,6 +82,7 @@
   }
 
   .body {
+    background: #FFF;
     padding: 60px 0;
     text-align: center;
     .center();
