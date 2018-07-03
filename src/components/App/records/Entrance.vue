@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background: #FFF">
     <records></records>
     <div class="body-top">
       <div class="content">
