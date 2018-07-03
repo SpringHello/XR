@@ -1,25 +1,34 @@
 <template>
-  <div class="share-page">
-    <gb-timelimit></gb-timelimit>
-    <gb-host :participationPersonColumns="participationPersonColumns" :participationPersonData="participationPersonData" :someoneParticipation="someoneParticipation"></gb-host>
+  <div class="activity-page">
+    <gb-header></gb-header>
+    <gb-product></gb-product>
+    <gb-member :participationPersonColumns="participationPersonColumns" :participationPersonData="participationPersonData" :someoneParticipation="someoneParticipation"></gb-member>
     <div class="center">
+      <gb-flow></gb-flow>
       <gb-award></gb-award>
+      <gb-advantage></gb-advantage>
       <gb-rule></gb-rule>
     </div>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import gbHost from './element/gb-host'
+  import gbHeader from './element/gb-header'
+  import gbProduct from './element/gb-product'
+  import gbMember from './element/gb-member'
+  import gbFlow from './element/gb-flow'
+  import gbAdvantage from './element/gb-advantage'
   import gbAward from './element/gb-award'
-  import gbTimelimit from './element/gb-timelimit'
   import gbRule from './element/gb-rule'
 
   export default {
     components: {
-      gbHost,
+      gbHeader,
+      gbProduct,
+      gbMember,
+      gbFlow,
+      gbAdvantage,
       gbAward,
-      gbTimelimit,
       gbRule
     },
     data() {
@@ -64,7 +73,7 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-  .share-page {
+  .activity-page {
     background: #FFF;
     .center {
       width: 1200px;

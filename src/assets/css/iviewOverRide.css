@@ -319,12 +319,17 @@ div.modal-header-border {
 /* 拼团活动下拉框 */
 .groupBooking-select .ivu-select-selection {
   border: 1px solid #FD8C73;
-  box-shadow: 0 0 0 2px rgba(253,140,115,.2);
+  box-shadow: 0 0 0 2px rgba(253, 140, 115, .2);
 }
-.groupBooking-select .ivu-select-item-selected, .ivu-select-item-selected:hover{
+
+.groupBooking-select .ivu-select-item-selected, .ivu-select-item-selected:hover {
   background: #FD8C73;
 }
-.groupBooking-select .ivu-select-arrow{
+
+.groupBooking-select .ivu-select-arrow {
   color: #FD8C73;
 }
 
+.groupBooking-table .ivu-table th {
+  background: #FFE3D8;
+}

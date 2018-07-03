@@ -17,24 +17,37 @@
         </ul>
       </div>
       <h2>云朵成员</h2>
-      <p>还差1人即可获得赠送资格，赶快分享吧。</p>
-      <div class="member">
-        <p>参团链接：<span>https://www.xrcloud.net/ruicloud/home</span></p>
-        <button @click="linkModal = true">分享链接</button>
+      <div class="participation" v-if="someoneParticipation">
+        <p>已满1人，分享成功。继续邀请好友享受福利吧！</p>
+        <div class="member">
+          <div class="title">
+            <p>您已获赠优惠时长：<span>{{ hostDuration }}</span>个月</p>
+            <p>参团链接：<span>{{ activeLink }}</span></p>
+            <button @click="linkModal = true">分享链接</button>
+          </div>
+          <Table class="groupBooking-table" :columns="participationPersonColumns" :data="participationPersonData" :disabled-hover="true"></Table>
+        </div>
+      </div>
+      <div class="participation" v-else>
+        <p>还差1人即可获得赠送资格，赶快分享吧。</p>
+        <div class="noMember">
+          <p>参团链接：<span>https://www.xrcloud.net/ruicloud/home</span></p>
+          <button @click="linkModal = true">分享链接</button>
+        </div>
       </div>
     </div>
     <Modal v-model="linkModal" width="500" :scrollable="true">
       <div class="modal-body">
         <p>赶快分享给你的小伙伴吧！</p>
         <ul>
-          <li><img src="../../../../assets/img/active/group-booking/icon-qq.png" /><span>QQ</span></li>
-          <li><img src="../../../../assets/img/active/group-booking/icon-qq-zone.png" /><span>空间</span></li>
-          <li><img src="../../../../assets/img/active/group-booking/icon-blog.png" /><span>微博</span></li>
+          <li v-for="item in shareGroup"><img :src="item.src"/><span>{{ item.text }}</span></li>
         </ul>
-        <div style="padding:30px 0; background:rgba(254,248,246,1);border-radius:2px;">活动链接：<span style="color:#000">https://www.xrcloud.net/ruicloud/home</span></div>
+        <div class="link">活动链接：<span>{{ activeLink }}</span></div>
       </div>
-      <div slot="footer" class="foot">
-        <button>复制链接</button>
+      <div slot="footer" class="modal-footer">
+        <button @click="linkModal = false">取消</button>
+        <button v-clipboard="activeLink" @success="onCopy" @error="onError">复制链接
+        </button>
       </div>
     </Modal>
   </div>
@@ -56,10 +69,47 @@
             zero: '北京一区(测试)'
           }
         ],
-        linkModal: false
+        linkModal: false,
+        shareGroup: [
+          {
+            src: require('../../../../assets/img/active/group-booking/icon-qq.png'),
+            text: 'QQ'
+          },
+          {
+            src: require('../../../../assets/img/active/group-booking/icon-qq-zone.png'),
+            text: '空间'
+          },
+          {
+            src: require('../../../../assets/img/active/group-booking/icon-blog.png'),
+            text: '微博'
+          }
+        ],
+        activeLink: 'https://www.xrcloud.net/ruicloud/home',
+        hostDuration: 5,
       }
     },
-    props: {},
+    props: {
+      participationPersonColumns: {
+        type: Array,
+        default: []
+      },
+      participationPersonData: {
+        type: Array,
+        default: []
+      },
+      someoneParticipation: {
+        type: Boolean,
+        default: false
+      }
+    },
+    methods: {
+      onCopy() {
+        this.$Message.success('复制成功')
+      },
+      onError() {
+        this.$Message.info('复制失败')
+      }
+    },
   }
 </script>
 
@@ -127,39 +177,80 @@
           }
         }
       }
-      > p {
-        font-size: 16px;
-        font-family: PingFangSC-Regular;
-        color: rgba(75, 19, 43, 1);
-        margin-top: 10px;
-      }
-      .member {
-        margin-top: 50px;
-        display: flex;
-        justify-content: center;
+      .participation {
         > p {
-          padding: 8px 9px;
-          background: rgba(255, 227, 216, 1);
-          border-radius: 2px;
-          width: 460px;
-          font-size: 14px;
+          font-size: 16px;
           font-family: PingFangSC-Regular;
-          color: rgba(153, 153, 153, 1);
-          line-height: 20px;
-          span {
-            color: #000000;
+          color: rgba(75, 19, 43, 1);
+          margin-top: 10px;
+        }
+        .noMember {
+          margin-top: 50px;
+          display: flex;
+          justify-content: center;
+          > p {
+            padding: 8px 9px;
+            background: rgba(255, 227, 216, 1);
+            border-radius: 2px;
+            width: 460px;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            color: rgba(153, 153, 153, 1);
+            line-height: 20px;
+            span {
+              color: #000000;
+            }
+          }
+          > button {
+            border: none;
+            outline: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            color: rgba(255, 255, 255, 1);
+            padding: 8px 17px;
+            background: #FD8C73;
+            margin-left: 20px;
           }
         }
-        > button {
-          border: none;
-          outline: none;
-          cursor: pointer;
-          font-size: 14px;
-          font-family: PingFangSC-Regular;
-          color: rgba(255, 255, 255, 1);
-          padding: 8px 17px;
-          background: #FD8C73;
-          margin-left: 20px;
+        .member {
+          background: #FFF;
+          box-shadow: 0px 2px 9px 0px rgba(214, 84, 86, 0.3);
+          margin-top: 50px;
+          .title {
+            display: flex;
+            padding: 19px 30px;
+            p {
+              font-size: 14px;
+              font-family: PingFangSC-Regular;
+              color: rgba(0, 0, 0, 1);
+              line-height: 32px;
+            }
+            p:nth-child(1) {
+              span {
+                color: #FA1713;
+              }
+            }
+            p:nth-child(2) {
+              color: #999999;
+              margin-left: 500px;
+              margin-right: 30px;
+              span {
+                color: rgba(0, 0, 0, 1);
+              }
+            }
+            button {
+              cursor: pointer;
+              border: none;
+              outline: none;
+              font-size: 14px;
+              font-family: PingFangSC-Regular;
+              padding: 6px 20px;
+              color: rgba(255, 255, 255, 1);
+              background: rgba(253, 140, 115, 1);
+              margin-left: 10px;
+            }
+          }
         }
       }
     }
@@ -167,10 +258,10 @@
 
   .modal-body {
     > p {
-      margin-top: 60px;
-      font-size:16px;
-      font-family:PingFangSC-Regular;
-      color:rgba(102,102,102,1);
+      margin-top: 40px;
+      font-size: 16px;
+      font-family: PingFangSC-Regular;
+      color: rgba(102, 102, 102, 1);
     }
     ul {
       display: flex;
@@ -178,11 +269,41 @@
       margin: 24px 0;
       li {
         margin-right: 40px;
+        cursor: pointer;
         img {
           vertical-align: middle;
           margin-right: 10px;
         }
       }
+    }
+    .link {
+      padding: 8px 9px;
+      background: rgba(254, 248, 246, 1);
+      border-radius: 2px;
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      color: rgba(153, 153, 153, 1);
+      span {
+        color: #000000;
+      }
+    }
+  }
+
+  .modal-footer {
+    button {
+      cursor: pointer;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      color: #666666;
+      padding: 6px 20px;
+      background: #FFF;
+    }
+    button:nth-child(2) {
+      color: rgba(255, 255, 255, 1);
+      background: rgba(253, 140, 115, 1);
+      margin-left: 10px;
     }
   }
 </style>

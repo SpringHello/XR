@@ -27,6 +27,8 @@ import slider from './myView/slider'
 // 引入错误提示框组件
 import message from './myView/message'
 import md5 from 'md5'
+// 引入复制粘贴组件
+import VueClipboards from 'vue-clipboards'
 
 Vue.prototype.$message = message
 Vue.config.productionTip = false
@@ -117,6 +119,7 @@ Vue.use(carouselItem)
 // 使用滑块组件
 Vue.use(slider)
 Vue.component('chart', ECharts)
+Vue.use(VueClipboards)
 
 // 日期原型对象拓展
 Date.prototype.format = function (fmt) {

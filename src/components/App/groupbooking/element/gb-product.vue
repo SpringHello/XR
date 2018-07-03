@@ -115,13 +115,15 @@
           value: 'hze'
         }
         ],
-        systemGroup: [{
-          label: 'Windows',
-          value: 'windows'
-        }, {
-          label: 'Centos',
-          value: 'linux'
-        }],
+        systemGroup: [
+          {
+            label: 'Centos',
+            value: 'linux'
+          },
+          {
+            label: 'Windows',
+            value: 'windows'
+          },],
         loginModal: false,
         form: {
           loginname: '',

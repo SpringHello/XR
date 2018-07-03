@@ -34,7 +34,8 @@ const active_1 = () => import('@/components/App/active/active_1')
 const active_2 = () => import('@/components/App/active/active_2')
 const smlj = () => import('@/components/App/active/smlj')
 const GroupBooking = () => import('@/components/App/groupbooking/homePage')
-const productShare = () => import('@/components/App/groupbooking/sharePage')
+const ProductShare = () => import('@/components/App/groupbooking/sharePage')
+const Activity = () => import('@/components/App/groupbooking/activityPage')
 
 
 // 备案系统页面路由
@@ -284,7 +285,8 @@ var router = new Router({
           ]
         },*/
         {path: 'groupBooking', name: 'groupBooking', component: GroupBooking},
-        {path: 'productShare', name: 'productShare', component: productShare},
+        {path: 'productShare', name: 'productShare', component: ProductShare},
+        {path: 'activity', name: 'activity', component: Activity},
         {path: 'buy', name: 'buy', component: Buy},
         {path: 'active', name: 'active', component: Active},
         {path: 'vps', name: 'vps', component: Vps},
