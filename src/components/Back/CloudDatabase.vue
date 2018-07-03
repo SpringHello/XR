@@ -395,14 +395,25 @@
                this.showModal.mirror = true
                }
                }
-               }, '数据库镜像'),*/ h('DropdownItem', {
+               }, '数据库镜像'),*/ 
+               h('DropdownItem', {
                   nativeOn: {
                     click: () => {
                       this.current = params.row
                       this.showModal.dilatation = true
                     }
                   }
-                }, '数据库扩容'), h('DropdownItem', {
+                }, '数据库扩容'), 
+                h('DropdownItem', {
+                  nativeOn: {
+                    click: () => {
+                      // this.current = params.row
+                      // this.showModal.dilatation = true
+                      this.$router.push('dataBaseUpgrade')
+                    }
+                  }
+                }, '数据库升级'), 
+                h('DropdownItem', {
                   nativeOn: {
                     click: () => {
                       this.current = params.row
@@ -410,7 +421,8 @@
                       this.showModal.restart = true
                     }
                   }
-                }, '重启数据库'), h('DropdownItem', {
+                }, '重启数据库'),
+                 h('DropdownItem', {
                   nativeOn: {
                     click: () => {
                       this.current = params.row
@@ -422,7 +434,8 @@
                       }
                     }
                   }
-                }, '数据库续费'), h('DropdownItem', {
+                }, '数据库续费'), 
+                h('DropdownItem', {
                   nativeOn: {
                     click: () => {
                       if (params.row.dbStatus == '1') {
@@ -452,7 +465,8 @@
                       }
                     }
                   }
-                }, '开启数据库'), h('DropdownItem', {
+                }, '开启数据库'), 
+                h('DropdownItem', {
                   nativeOn: {
                     click: () => {
                       if (params.row.dbStatus == '0') {
