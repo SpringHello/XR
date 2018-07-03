@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background: #FFF">
     <!--   <records></records>-->
     <o-step :onStep="2" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
     <step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>

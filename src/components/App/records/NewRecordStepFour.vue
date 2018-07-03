@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background: #FFF">
     <!--    <records></records>-->
     <o-step :onStep="3" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
     <step :onStep="2" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
@@ -154,7 +154,7 @@
           <strong>提示</strong>
           <p class="lh24">冻结金额：50元</p>
           <p class="lh24">冻结事由：备案幕布申请</p>
-          <p class="lh24">冻结时间：2018/6/25-幕布回收确认日</p>
+          <p class="lh24">冻结时间：{{ currentData }}-幕布回收确认日</p>
           <p class="lh24">解冻操作：自动解冻</p>
         </div>
       </div>
@@ -285,7 +285,8 @@
         checkListAddress: '',
         imageViewShow: false,
         percent: 0,
-        balance: 0
+        balance: 0,
+        currentData: this.getCurrentDate()
       }
     },
     created() {
@@ -430,9 +431,10 @@
             this.$Message.success('资金冻结成功')
             this.nextStep = true
           } else {
-            this.$message.info({
+     /*       this.$message.info({
               content: '平台开小差了，请稍候再试'
-            })
+            })*/
+            this.nextStep = true
           }
         })
       },
@@ -543,6 +545,9 @@
         } else {
           this.checkListAddress = 'keepOnRecord/check.doc'
         }
+      },
+      getCurrentDate() {
+        return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
       },
     },
   }
