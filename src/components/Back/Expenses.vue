@@ -16,28 +16,60 @@
               style="margin-top: 20px;min-height: 550px">
           <Tab-pane label="账户概览" name="accountSummary">
             <div class="money">
-              <div class="balance">
-                <span class="expenses_s1">账户余额</span>
-                <div class="expenses_s2_wrap">
-                  <span v-model="balance" class="expenses_s2">￥{{ balance }}</span>
-                  <Button type="warning" @click="torecharge">充值</Button>
+              <div class="item">
+                <span>余额</span>
+                <div>
+                  <ul style="width: 40%">
+                    <li>可用余额</li>
+                    <li>¥{{ balance }}</li>
+                  </ul>
+                  <ul style="width: 30%">
+                    <li>冻结押金
+                      <span @click="freezeDetails">
+                      <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;margin-left: 10px;cursor: pointer;"></Icon>
+                    </span>
+                    </li>
+                    <li>¥{{ freezeDeposit }}</li>
+                  </ul>
+                  <ul style="width: 30%;position: relative">
+                    <button @click="torecharge">充值</button>
+                  </ul>
                 </div>
               </div>
-              <div class="billmonth">
-                <span class="expenses_s3">本月账单金额</span>
-                <span v-model="billmonth" class="expenses_s4">￥{{ billmonth }}</span>
+              <div class="item">
+                <span>消费</span>
+                <div>
+                  <ul style="width: 50%">
+                    <li>本月账单金额</li>
+                    <li>¥{{ billmonth }}</li>
+                  </ul>
+                  <ul style="width: 50%">
+                    <li>累计消费金额</li>
+                    <li>¥{{ theCumulative }}</li>
+                  </ul>
+                </div>
               </div>
-              <div class="coupon">
-                <span class="expenses_s5">现金券额度</span>
-                <span class="expenses_s6">￥{{ voucher }}</span>
+              <div class="item">
+                <span>代金券</span>
+                <div>
+                  <ul style="width: 50%">
+                    <li>现金券额度</li>
+                    <li>¥{{ voucher }}</li>
+                  </ul>
+                  <ul style="width: 50%">
+                    <li>优惠券数量</li>
+                    <li>{{ couponNumber }}</li>
+                  </ul>
+                </div>
               </div>
             </div>
+            <h3>交易流水</h3>
             <div class="expenses_condition">
               <span>按交易时间</span>
               <Row style="display: inline-block;margin-left: 10px">
                 <Col span="12">
-                <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
-                             placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
+                  <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
+                               placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
                 </Col>
               </Row>
               <span style="margin-left: 20px">按交易类型</span>
@@ -75,8 +107,8 @@
               <span style="line-height: 30px;">～</span>
               <Row>
                 <Col span="12">
-                <Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start"
-                             placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
+                  <Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start"
+                               placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
                 </Col>
               </Row>
               <Button type="primary" style="margin-left: 197px" @click="orderPay" :disabled="payDisabled">支付</Button>
@@ -121,19 +153,15 @@
           <Tab-pane label="发票申请" name="applyInvoice">
             <div v-show="applyChange">
               <div class="invoiceType">
-                <span>实际可开金额发票：￥{{ invoice }}</span>
+                <div>
+                  <p>温馨提示：1.您选择的发票金额不能小于1000元，增值发票准票金额不能小于10000请累计之后一并申请。</p>
+                  <p style="margin-left: 5em">2.发票寄出时间：每月20号统一寄出，15号之前申请的发票将在当月20号寄出，15号之后申请的发票将在次月20号寄出。</p>
+                </div>
+                <p>实际可开金额发票：<span>￥{{ invoice }}</span></p>
               </div>
               <div class="invoiceInformation">
                 <Form ref="formInvoiceDate" :model="formInvoiceDate" :rules="ruleValidate" :label-width="100"
                       label-position="left">
-                  <Form-item label="温馨提示">
-                    <p
-                      style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);line-height: 18px;margin-top: 5px;">
-                      1.您选择的发票金额不能小于1000元，增值发票准票金额不能小于10000请累计之后一并申请。</p>
-                    <p
-                      style="font-family: Microsoft Yahei,微软雅黑;font-size: 12px;color: rgba(0,0,0,0.43);margin-bottom: -10px;line-height: 18px;">
-                      2.发票寄出时间：每月20号统一寄出，15号之前申请的发票将在当月20号寄出，15号之后申请的发票将在次月20号寄出。</p>
-                  </Form-item>
                   <Form-item label="开票金额" prop="invoiceAmount">
                     <Input :maxlength="10" v-model="formInvoiceDate.invoiceAmount" placeholder="请输入开票金额"
                            style="width: 317px"
@@ -156,20 +184,23 @@
                            style="width: 317px"></Input>
                   </Form-item>
                   <Form-item label="发票信息" v-show="authenticationShow">
-                    <span style="display: block;line-height:1.5">单位：{{ companyname }}</span>
-                    <span style="display: block;line-height:1.5">纳税人识别码：{{ identicode }}</span>
-                    <span style="display: block;line-height:1.5">注册电话：{{ phone }}</span>
-                    <span style="display: block;line-height:1.5">开户银行：{{ bankname }}</span>
-                    <span>银行账号：{{ banknum }}</span>
+                    <div class="invoiceInformationShow">
+                      <span>单位：{{ formAppreciationDate.companyName }}</span>
+                      <span>纳税人识别码：{{ formAppreciationDate.taxpayerID }}</span>
+                      <span>注册电话：{{ formAppreciationDate.registeredPhone }}</span>
+                      <span>开户银行：{{ formAppreciationDate.depositBank }}</span>
+                      <span>银行账号：{{ formAppreciationDate.bankAccount }}</span>
+                    </div>
                   </Form-item>
                   <Form-item label="发票信息" v-show="invoiceInformationShow">
-                    <p style="line-height: 2.5;">您需要通过<span style="color: dodgerblue;cursor:pointer;"
-                                                            @click="invoiceCertification">增票资质认证</span>才能开具增值税专用发票</p>
+                    <p v-if="certificateStatus" style="line-height: 2.5;">您需要通过<span style="color: dodgerblue;cursor:pointer;"
+                                                                                     @click="invoiceCertification">增票资质认证</span>才能开具增值税专用发票</p>
                     <Button type="primary" style="margin-left: 237px" @click="invoiceCertification"
-                            v-show="certificateStatus">点击认证
+                            v-if="certificateStatus">点击认证
                     </Button>
-                    <Button type="warning" style="margin-left: 245px" v-show="underReview">审核中</Button>
-                    <Button type="error" style="margin-left: 235px" v-show="failureAudit">审核失败</Button>
+                    <p v-if="underReview" style="line-height: 2.5;">您的增票资质正在<span style="color: #FF8B22;">审核中</span>，请耐心等待</p>
+                    <p v-if="failureAudit" style="line-height: 2.5;">您的增票资质<span style="color: #FF3366;">审核失败</span>，点击<span style="color: dodgerblue;cursor:pointer;"
+                                                                                                                             @click="invoiceCertification">增票资质认证</span>进行修改</p>
                   </Form-item>
                   <Form-item label="收件人" prop="recipients">
                     <Input :maxlength="10" v-model="formInvoiceDate.recipients" placeholder="请输入收件人姓名"
@@ -198,7 +229,7 @@
             </div>
             <div v-show="appreciation">
               <span class="appreciation_s1">增值资质认证</span>
-              <div style="margin-top: 20px">
+              <div style="margin-top: 15px;padding: 13px 11px;background: #F7FBFF">
                 <p class="appreciation_p">我们会在一个工作日内审核完成。</p>
                 <p class="appreciation_p">1、注意有效增值税发票开票资质仅为一个。</p>
                 <p class="appreciation_p">2、发票常见问题查看增票资质帮助。</p>
@@ -294,6 +325,48 @@
         <button class="ivu-btn ivu-btn-primary" @click="clipCoupons_ok"><span>确定</span></button>
       </div>
     </Modal>
+    <!-- 冻结押金详情 -->
+    <Modal v-model="showModal.freezeParticulars" width="690" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">押金详情</span>
+      </p>
+      <div>
+        <Table :columns="freezeParticularsColumns" :data="freezeParticularsData"></Table>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="showModal.freezeParticulars = false">确认
+        </Button>
+      </div>
+    </Modal>
+    <!-- 解冻提示框 -->
+    <Modal v-model="showModal.unfreeze" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>申请解冻</strong>
+          <p class="lh24">解冻条件以达到，可以解冻。
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.unfreeze = false">取消</Button>
+        <Button type="primary">确定解冻</Button>
+      </p>
+    </Modal>
+    <Modal v-model="showModal.notUnfreeze" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>申请解冻</strong>
+          <p class="lh24"><span style="color: #2A99F2">解冻条件</span>未达成，暂无法解冻，详情可咨询客服
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.notUnfreeze = false">取消</Button>
+        <Button type="primary" @click="showModal.notUnfreeze = false">确定</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -349,7 +422,7 @@
         if (!value) {
           return callback(new Error('收件人地址不能为空'))
         }
-         if ((/^[0-9a-zA-Z]+$/.test(value)) || (/\s+/.test(value))) {
+        if ((/^[0-9a-zA-Z]+$/.test(value)) || (/\s+/.test(value))) {
           callback(new Error('收件地址不能包含空格或是纯数字、英文'))
         } else {
           callback()
@@ -379,7 +452,7 @@
         if (!value) {
           return callback(new Error('纳税人识别码不能为空'))
         }
-         if (!(/^[0-9a-zA-Z]*$/.test(value))) {
+        if (!(/^[0-9a-zA-Z]*$/.test(value))) {
           return callback(new Error('请输入正确的纳税人识别码'))
         } else {
           callback()
@@ -547,7 +620,7 @@
             align: 'left',
             render: (h, params) => {
               const row = params.row
-              const color = row.status === 0 ? 'green' : row.status === 1 ? 'red' : row.status === 2 ? 'yellow' : 'blue'
+              const color = row.status === 0 ? '#14B278' : row.status === 1 ? 'red' : row.status === 2 ? '#F56B23' : '#4A90E2'
               const text = row.status === 0 ? '已签收' : row.status === 1 ? '已驳回' : row.status === 2 ? '审核中' : '物流中'
               return h('Tag', {
                 props: {
@@ -643,9 +716,12 @@
         currentPage: 1,
         order_currentPage: 1,
         pageSize: 10,
-        balance: 0,
-        voucher: 0,
-        billmonth: 0,
+        balance: '--',
+        freezeDeposit: '--',
+        theCumulative: '--',
+        voucher: '--',
+        couponNumber: '--',
+        billmonth: '--',
         types: '',
         value1: 0,
         value2: 10000,
@@ -993,17 +1069,15 @@
         underReview: false, // 审核中
         failureAudit: false, // 审核失败
         aptitudeStatus: '', // 增票资质状态
-        companyname: '', // 单位
-        identicode: '', // 纳税人识别码
-        phone: '', // 注册电话
-        bankname: '', // 开户银行
-        banknum: '', // 银行账号
         bank_account: '',
         totalCost: 0,
         actualDelivery: 0,
         cardSelection: null,
         showModal: {
-          clipCoupons: false
+          clipCoupons: false,
+          freezeParticulars: false,
+          unfreeze: false,
+          notUnfreeze: false
         },
         /* cardVolumeColumn:[
          {
@@ -1043,13 +1117,62 @@
         operatorid: '',
         card_pageSize: 5,
         costSeen: false,
-        activeIndex: null
+        activeIndex: null,
+        freezeParticularsColumns: [
+          {
+            title: '押金金额',
+            key: 'eachfrozenmoney'
+          }, {
+            title: '押金事由',
+            key: 'describes'
+          }, {
+            title: '冻结时间',
+            key: 'createtime'
+          }, {
+            title: '解冻时间/事件',
+            render: (h, params) => {
+              if (params.row.type == 1) {
+                return h('span', {}, params.row.updatetime)
+              } else {
+                return h('span', {}, '--')
+              }
+            }
+          }, {
+            title: '押金状态',
+            render: (h, params) => {
+              const text = params.row.type == 1 ? '已解冻' : '冻结中'
+              return h('span', {}, text)
+            }
+          }, {
+            title: '操作',
+            render: (h, params) => {
+              if (params.row.type == 0 && params.row.describes != '幕布申请') {
+                return h('span', {
+                  style: {
+                    cursor: 'pointer',
+                    color: '#2A99F2'
+                  },
+                  on: {
+                    click: () => {
+                      //this.showModal.unfreeze = true
+                      this.showModal.notUnfreeze = true
+                    }
+                  }
+                }, '申请解冻')
+              } else {
+                return h('span', {}, '无')
+              }
+            }
+          },
+        ],
+        freezeParticularsData: []
       }
     },
     created() {
       this.getBalance()
       this.showMoneyByMonth()
       this.search()
+      this.getTicketNumber()
     },
     methods: {
       selectChange(item, index) {
@@ -1097,6 +1220,7 @@
         this.$http.get('continue/showMoneyByMonth.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.billmonth = response.data.result
+            this.theCumulative = response.data.total_amount
           }
         })
       },
@@ -1105,6 +1229,15 @@
           if (response.status == 200 && response.data.status == '1') {
             this.balance = response.data.data.remainder
             this.voucher = response.data.data.voucher
+            this.freezeDeposit = response.data.data.frozenMoney
+          }
+        })
+      },
+      getTicketNumber() {
+        let url = 'user/getTicketNum.do'
+        this.$http.get(url).then(res => {
+          if (res.data.status == 1) {
+            this.couponNumber = res.data.result
           }
         })
       },
@@ -1398,13 +1531,14 @@
             this.$http.get('user/getExamine.do').then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 this.aptitudeStatus = response.data.result.result['status']
+                this.formAppreciationDate.companyName = response.data.result.result['companyname']
+                this.formAppreciationDate.registeredAddress = response.data.result.result['address']
+                this.formAppreciationDate.registeredPhone = response.data.result.result['phone']
+                this.formAppreciationDate.depositBank = response.data.result.result['bankname']
+                this.formAppreciationDate.bankAccount = response.data.result.result['banknum']
+                this.formAppreciationDate.taxpayerID = response.data.result.result['identicode']
                 if (this.aptitudeStatus == 0) {
                   this.authenticationShow = true
-                  this.companyname = response.data.result.result['companyname']
-                  this.identicode = response.data.result.result['identicode']
-                  this.phone = response.data.result.result['phone']
-                  this.bankname = response.data.result.result['bankname']
-                  this.banknum = response.data.result.result['banknum']
                 } else if (this.aptitudeStatus == 1) {
                   this.invoiceInformationShow = true
                   this.failureAudit = true
@@ -1524,6 +1658,7 @@
               content: '请选择未支付的订单'
             })
           }
+
           function checkPaymentStatus(orderNumber) {
             return orderNumber.paymentstatus == 1
           }
@@ -1563,26 +1698,40 @@
         this.operatorid = ''
         this.cardVolumeTableData = []
         this.clipCoupons()
+      },
+      freezeDetails() {
+        let url = 'user/depositDetails.do'
+        this.$http.get(url).then(res => {
+          if (res.data.status == 1) {
+            this.freezeParticularsData = res.data.result
+            this.showModal.freezeParticulars = true
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
       }
     },
     computed: {
-      payDisabled () {
+      payDisabled() {
         if (this.orderNumber.some(checkPaymentStatus) || this.orderNumber.length === 0) {
           return true
         } else {
           return false
         }
+
         function checkPaymentStatus(orderNumber) {
           return orderNumber.paymentstatus == 1
         }
       },
-      deleteDisabled () {
+      deleteDisabled() {
         if (this.orderNumber.length === 0) {
           return true
         } else {
           return false
         }
-      }
+      },
     }
   }
 </script>
@@ -1613,82 +1762,58 @@
           color: rgba(17, 17, 17, 0.75);
         }
         .money {
-          height: 166px;
-          border-bottom: 1px solid #D9D9D9;
           display: flex;
-          .balance {
-            width: 33.5%;
-            margin-top: 40.5px;
-            margin-bottom: 10.5px;
-            border-right: 1px solid #DFDFDF;
-            .expenses_s1 {
-              font-family: Microsoft Yahei, 微软雅黑;
-              font-size: 16px;
-              color: rgba(17, 17, 17, 0.65);
-              display: block;
-              margin-left: 10px;
+          justify-content: space-between;
+          padding: 0 5px;
+          .item {
+            width: 32%;
+            padding: 20px;
+            box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
+            > span {
+              font-size: 18px;
+              font-family: MicrosoftYaHei;
+              color: rgba(102, 102, 102, 1);
+              line-height: 24px;
             }
-            .expenses_s2_wrap {
+            > div {
+              display: flex;
               margin-top: 20px;
-              padding-right: 30px;
-              // overflow: hidden;
-              .expenses_s2 {
-                font-family: Microsoft Yahei, 微软雅黑;
-                font-size: 36px;
-                color: rgba(17, 17, 17, 0.65);
-                // float: left;
+              ul {
+                li {
+                  font-size: 16px;
+                  font-family: MicrosoftYaHei;
+                  color: rgba(102, 102, 102, 1);
+                }
+                li:nth-child(2) {
+                  margin-top: 10px;
+                  font-size: 24px;
+                }
+                > button {
+                  font-size: 12px;
+                  font-family: MicrosoftYaHei;
+                  color: rgba(255, 255, 255, 1);
+                  padding: 5px 14px;
+                  background: #2B99F2;
+                  cursor: pointer;
+                  outline: none;
+                  border: none;
+                  position: absolute;
+                  right: 0;
+                  bottom: 5px;
+                }
               }
-              button {
-                float: right;
-                vertical-align: middle;
-              }
-            }
-
-          }
-          .billmonth {
-            width: 33.5%;
-            margin-top: 40.5px;
-            margin-bottom: 10.5px;
-            border-right: 1px solid #DFDFDF;
-            .expenses_s3 {
-              font-family: Microsoft Yahei, 微软雅黑;
-              font-size: 16px;
-              color: rgba(17, 17, 17, 0.65);
-              display: block;
-              margin-left: 20px;
-            }
-            .expenses_s4 {
-              font-family: Microsoft Yahei, 微软雅黑;
-              font-size: 36px;
-              color: rgba(17, 17, 17, 0.43);
-              display: block;
-              margin-top: 20px;
-              margin-left: 13px;
-            }
-          }
-          .coupon {
-            width: 33%;
-            margin-top: 40.5px;
-            margin-bottom: 10.5px;
-            .expenses_s5 {
-              font-family: Microsoft Yahei, 微软雅黑;
-              font-size: 16px;
-              color: rgba(17, 17, 17, 0.65);
-              display: block;
-              margin-left: 20px;
-            }
-            .expenses_s6 {
-              font-family: Microsoft Yahei, 微软雅黑;
-              font-size: 36px;
-              color: rgba(17, 17, 17, 0.43);
-              display: block;
-              margin-top: 20px;
-              margin-left: 13px;
             }
           }
         }
+        h3 {
+          font-size: 22px;
+          font-family: MicrosoftYaHei;
+          color: rgba(51, 51, 51, 1);
+          margin-top: 40px;
+          font-weight: normal;
+        }
         .expenses_condition {
-          margin-top: 40.5px;
+          margin-top: 20px;
           height: 500px;
           & > span {
             font-family: Microsoft Yahei, 微软雅黑;
@@ -1727,16 +1852,36 @@
           }
         }
         .invoiceType {
-          margin-top: 30px;
-          span {
+          margin-top: 25px;
+          > div {
+            padding: 12px 20px;
+            background: #F7FBFF;
+            > p {
+              font-size: 12px;
+              font-family: PingFangSC-Regular;
+              color: rgba(0, 0, 0, 0.43);
+              line-height: 18px;
+            }
+          }
+          > p {
             font-family: Microsoft Yahei, 微软雅黑;
             font-size: 22px;
             color: rgba(17, 17, 17, 0.75);
             letter-spacing: 1.31px;
+            margin-top: 16px;
+            span {
+              color: #FF3366;
+            }
           }
         }
         .invoiceInformation {
           margin-top: 20px;
+          .invoiceInformationShow {
+            span {
+              display: block;
+              line-height: 2;
+            }
+          }
           .bill_s1 {
             font-family: Microsoft Yahei, 微软雅黑;
             font-size: 12px;

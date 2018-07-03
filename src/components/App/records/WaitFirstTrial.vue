@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background: #FFF">
   <!--  <records></records>-->
     <o-step :onStep="4" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
     <step :onStep="3" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
@@ -82,6 +82,7 @@
   }
 
   .body {
+    background: #FFF;
     padding: 60px 0;
     text-align: center;
     .center();

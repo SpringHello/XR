@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background: #FFF">
     <!--  <records></records>-->
     <o-step :onStep="2" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
     <step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
@@ -201,10 +201,11 @@
                 </Select>
               </FormItem>
               <FormItem label="有效证件号码" prop="certificateNumber">
-                <Input v-model="site.basicInformation.certificateNumber" maxlength="20" placeholder="请输入主体单位证件号码" style="width: 500px"/>
+                <Input v-model="site.basicInformation.certificateNumber" :maxlength="20" placeholder="请输入主体单位证件号码" style="width: 500px"/>
               </FormItem>
-              <FormItem label="办公室电话" prop="officePhone" v-if="!isPersonage">
-                <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.officePhone" placeholder="请输入办公室电话"
+              <FormItem v-if="!isPersonage" label="办公室电话" prop="officePhone">
+                <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" :maxlength="15" v-model="site.basicInformation.officePhone"
+                                       placeholder="请输入办公室电话"
                                        style="width: 468px;margin-left: 10px"></Input>
                 <transition name="fade">
                   <div class="tooltip-popper" style="top:-36px" v-if="site.isToolHide == 5">
@@ -218,8 +219,9 @@
                   </div>
                 </transition>
               </FormItem>
-              <FormItem label="办公室电话" v-else>
-                <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" v-model="site.basicInformation.officePhone" placeholder="请输入办公室电话"
+              <FormItem v-if="isPersonage" label="办公室电话">
+                <span>+86</span><Input @on-focus="toolShow('officePhone',upIndex)" @on-blur="toolHide(upIndex)" :maxlength="15" v-model="site.basicInformation.officePhone"
+                                       placeholder="请输入办公室电话"
                                        style="width: 468px;margin-left: 10px"></Input>
                 <transition name="fade">
                   <div class="tooltip-popper" style="top:-36px" v-if="site.isToolHide == 5">
@@ -322,6 +324,21 @@
       }
     },
     data() {
+      // 校验网站名称
+      const validWebsiteName = (rule, value, callback) => {
+        let reg = /^[A-Za-z]+$/
+        let regNum = /^\d+$/
+        let regEn = /[`~!@#$%^&*()_+<>?:"{},.\/;'[\] ·！#￥（——）：；“”‘、，|《。》？、【】]/im
+        let keyWord = ['反腐', '赌博', '廉政', '色情', '中国', '中华', '中央', '人民', '人大', '国家']
+        let isKeyWord = keyWord.some(item => {
+          return value.indexOf(item) !== -1
+        })
+        if (isKeyWord || regEn.test(value) || reg.test(value)|| regNum.test(value)) {
+          return callback(new Error("网站名称不符合规范"));
+        } else {
+          callback();
+        }
+      };
       //校验网站域名
       const validWebsiteDomain = (rule, value, callback) => {
         var reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
@@ -342,7 +359,7 @@
           }
           if (!regCord.test(value)) {
             return callback(new Error("请输入正确的证件号码"));
-          }else {
+          } else {
             callback();
           }
         })
@@ -405,7 +422,8 @@
         // 网站基本信息表单验证信息
         basicInformationRuleValidate: {
           siteName: [
-            {required: true, message: "请输入网站名称", trigger: "blur"}
+            {required: true, message: '请输入网站名称', trigger: "blur"},
+            {validator: validWebsiteName, trigger: "blur"}
           ],
           websiteDomain: [
             {required: true, validator: validWebsiteDomain, trigger: "blur"}
@@ -442,7 +460,7 @@
             {required: true, validator: validCertificateNumber, trigger: "blur"}
           ],
           officePhone: [
-            {required: true, validator: validOfficePhone, trigger: "blur"}
+            {validator: validOfficePhone, trigger: "blur"}
           ],
           phoneNumber: [
             {required: true, validator: validPhoneNumber, trigger: "blur"}
@@ -551,7 +569,8 @@
         let siteList = JSON.parse(siteListStr)
         this.siteList = siteList
       }
-    },
+    }
+    ,
     methods: {
       setData(area, recordsType, mainUnitInformationStr) {
         this.area = area;
@@ -565,6 +584,12 @@
           this.siteList[0].basicInformation.phoneNumber = this.mainUnitInformation.phoneNumber
           this.siteList[0].basicInformation.emailAddress = this.mainUnitInformation.emailAddress
           this.sessionStatus = true
+          // 初始化座机号码框
+          if (this.mainUnitInformation.unitProperties == '个人') {
+            this.isPersonage = true
+          } else {
+            this.isPersonage = false
+          }
         } else {
           this.sessionStatus = false
           var mainUnitInformation = JSON.parse(mainUnitInformationStr)
@@ -588,12 +613,12 @@
           this.mainUnitInformation.officePhone = mainUnitInformation.officenumber
           this.mainUnitInformation.phoneNumber = mainUnitInformation.phone
           this.mainUnitInformation.emailAddress = mainUnitInformation.email
-        }
-        // 初始化座机号码框
-        if (this.mainUnitInformation.unitProperties == '个人') {
-          this.isPersonage = true
-        } else {
-          this.isPersonage = false
+          // 初始化座机号码框
+          if (this.mainUnitInformation.unitProperties == '个人') {
+            this.isPersonage = true
+          } else {
+            this.isPersonage = false
+          }
         }
         switch (recordsType) {
           case '1':
@@ -609,7 +634,8 @@
             this.recordsTypeDesc = '主体已经备案过，需要再给其他网站备案。'
             break
         }
-      },
+      }
+      ,
       // 获取公网IP
       getPublicIP() {
         let zoneId = sessionStorage.getItem('zoneId');
@@ -625,19 +651,22 @@
             this.siteList[0].basicInformation.IPAddressList = response.data.result
           }
         })
-      },
+      }
+      ,
       // 新增网站域名
       addWebsiteDomain(upIndex) {
         this.siteList[upIndex].basicInformation.newWebsiteDomainList.push({
           count: 0
         });
         // console.log(this.basicInformation.newWebsiteDomainList);
-      },
+      }
+      ,
       //删除网站域名
       deleteWebsiteDomain(upIndex, index) {
         this.siteList[upIndex].basicInformation.newWebsiteDomainList.splice(index, 1);
         this.siteList[upIndex].basicInformation.newWebsiteDomain.splice(index, 1);
-      },
+      }
+      ,
       //切换证件类型重新验证
       changeCertificate(upIndex) {
         /*       let name = 'basicInformation' + upIndex
@@ -646,7 +675,8 @@
                this.$refs[name].validateField("certificateNumber", vaild => {
                  })
                this.basicInformation.certificateNumber = "";*/
-      },
+      }
+      ,
       // 选择新建负责人或已有的
       changePersonInCharge(upIndex) {
         if (this.siteList[upIndex].basicInformation.personInCharge === '已填写主体单位负责人姓名') {
@@ -664,7 +694,8 @@
           this.siteList[upIndex].basicInformation.phoneNumber = ''
           this.siteList[upIndex].basicInformation.emailAddress = ''
         }
-      },
+      }
+      ,
       // 添加新网站
       addSite() {
         let param = {
@@ -741,11 +772,13 @@
         param.basicInformation.serverPutArea = this.area
         param.basicInformation.IPAddressList = this.publicIPList
         this.siteList.push(param)
-      },
+      }
+      ,
       // 删除新网站
       deleteSite(index) {
         this.siteList.splice(index, 1)
-      },
+      }
+      ,
       //进入下一步
       nextStep() {
         let array = []
@@ -775,7 +808,8 @@
         } else {
           return
         }
-      },
+      }
+      ,
       //显示提示文字文本框
       toolShow(value, upIndex, index) {
         switch (value) {
@@ -802,13 +836,17 @@
       //隐藏提示文字文本框
       toolHide(upIndex) {
         this.siteList[upIndex].isToolHide = 0;
-      },
-    },
+      }
+      ,
+    }
+    ,
     mounted() {
       this.mainInfoShow = true;
-    },
+    }
+    ,
     computed: {}
-  };
+  }
+  ;
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
@@ -838,6 +876,7 @@
   }
 
   .body-bottom {
+    background: #FFF;
     .content {
       padding: 60px 0 36px;
       border-bottom: 2px solid #d9d9d9;

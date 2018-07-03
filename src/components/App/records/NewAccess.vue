@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background: FFF">
     <!-- <records></records>-->
     <o-Step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc"></o-Step>
     <div class="body-bottom">
@@ -102,6 +102,13 @@
           callback()
         }
       }
+      const validateWebsiteRecordNumber = (rule, value, callback) => {
+        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || !(/^[\u2E80-\u9FFF]+[A-Za-z]+[\u2E80-\u9FFF]+\d+/.test(value))) {
+          return callback(new Error('请输入正确的备案号'))
+        } else {
+          callback()
+        }
+      }
       return {
         isToolHide: 0,
         // 备案区域
@@ -140,7 +147,8 @@
             {validator: validateDomain, trigger: 'blur'}
           ],
           websiteRecordNumber: [
-            {required: true, message: '请输入网站备案号', trigger: 'blur'}
+            {required: true, message: '请输入网站备案号', trigger: 'blur'},
+            {validator: validateWebsiteRecordNumber, trigger: 'blur'}
           ],
           IPCPassword: [
             {required: true, message: '请输入ICP备案密码', trigger: 'blur'}
@@ -247,6 +255,7 @@
   }
 
   .body-bottom {
+    background: #FFF;
     .content {
       padding: 60px 0 36px;
       border-bottom: 2px solid #D9D9D9;
