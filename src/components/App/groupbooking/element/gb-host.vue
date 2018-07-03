@@ -18,20 +18,23 @@
       </div>
       <h2>云朵成员</h2>
       <p>还差1人即可获得赠送资格，赶快分享吧。</p>
+      <div class="member">
+        <p>参团链接：<span>https://www.xrcloud.net/ruicloud/home</span></p>
+        <button @click="linkModal = true">分享链接</button>
+      </div>
     </div>
-    <Modal v-model="linkModal" width="420" :scrollable="true">
-      <div class="body">
-        <p style="margin-top:60px;">赶快分享给你的小伙伴吧！</p>
-        <ul style="display:flex;align-items:center;margin:24px 0;">
-          <li style="margin-right:40px;"><img src="../../../../assets/img/active/group-booking/icon-qq.png" style="vertical-align:middle;margin-right:10px;"/><span>QQ</span></li>
-          <li style="margin-right:40px;"><img src="../../../../assets/img/active/group-booking/icon-qq-zone.png" style="vertical-align:middle;margin-right:10px;"/><span>空间</span>
-          </li>
-          <li style="margin-right:40px;"><img src="../../../../assets/img/active/group-booking/icon-blog.png" style="vertical-align:middle;margin-right:10px;"/><span>微博</span></li>
+    <Modal v-model="linkModal" width="500" :scrollable="true">
+      <div class="modal-body">
+        <p>赶快分享给你的小伙伴吧！</p>
+        <ul>
+          <li><img src="../../../../assets/img/active/group-booking/icon-qq.png" /><span>QQ</span></li>
+          <li><img src="../../../../assets/img/active/group-booking/icon-qq-zone.png" /><span>空间</span></li>
+          <li><img src="../../../../assets/img/active/group-booking/icon-blog.png" /><span>微博</span></li>
         </ul>
-        <div style="padding:30px 0;">参团链接：<span style="color:#000">https://www.xrcloud.net/ruicloud/home</span></div>
+        <div style="padding:30px 0; background:rgba(254,248,246,1);border-radius:2px;">活动链接：<span style="color:#000">https://www.xrcloud.net/ruicloud/home</span></div>
       </div>
       <div slot="footer" class="foot">
-        <button style="width:96px;height:32px;background:rgba(253,140,115,1);border:0;color:#fff">复制链接</button>
+        <button>复制链接</button>
       </div>
     </Modal>
   </div>
@@ -63,19 +66,19 @@
 <style rel="stylesheet/less" lang="less" scoped>
   .background {
     background: linear-gradient(180deg, rgba(254, 237, 228, 1), rgba(255, 255, 255, 1));
-    .center{
+    .center {
       width: 1200px;
       margin: 0 auto;
       padding: 30px 0 50px;
       text-align: center;
       h2 {
-        font-size:36px;
-        font-family:PingFangSC-Regular;
-        color:rgba(75,19,43,1);
+        font-size: 36px;
+        font-family: PingFangSC-Regular;
+        color: rgba(75, 19, 43, 1);
         font-weight: normal;
         text-align: center;
       }
-      h2:nth-of-type(2){
+      h2:nth-of-type(2) {
         position: relative;
         margin-top: 100px;
         &:before {
@@ -124,11 +127,61 @@
           }
         }
       }
-      >p{
-        font-size:16px;
-        font-family:PingFangSC-Regular;
-        color:rgba(75,19,43,1);
+      > p {
+        font-size: 16px;
+        font-family: PingFangSC-Regular;
+        color: rgba(75, 19, 43, 1);
         margin-top: 10px;
+      }
+      .member {
+        margin-top: 50px;
+        display: flex;
+        justify-content: center;
+        > p {
+          padding: 8px 9px;
+          background: rgba(255, 227, 216, 1);
+          border-radius: 2px;
+          width: 460px;
+          font-size: 14px;
+          font-family: PingFangSC-Regular;
+          color: rgba(153, 153, 153, 1);
+          line-height: 20px;
+          span {
+            color: #000000;
+          }
+        }
+        > button {
+          border: none;
+          outline: none;
+          cursor: pointer;
+          font-size: 14px;
+          font-family: PingFangSC-Regular;
+          color: rgba(255, 255, 255, 1);
+          padding: 8px 17px;
+          background: #FD8C73;
+          margin-left: 20px;
+        }
+      }
+    }
+  }
+
+  .modal-body {
+    > p {
+      margin-top: 60px;
+      font-size:16px;
+      font-family:PingFangSC-Regular;
+      color:rgba(102,102,102,1);
+    }
+    ul {
+      display: flex;
+      align-items: center;
+      margin: 24px 0;
+      li {
+        margin-right: 40px;
+        img {
+          vertical-align: middle;
+          margin-right: 10px;
+        }
       }
     }
   }

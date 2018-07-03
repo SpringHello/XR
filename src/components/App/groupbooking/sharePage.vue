@@ -1,9 +1,11 @@
 <template>
-    <div class="share-page">
-      <gb-timelimit></gb-timelimit>
-      <gb-host></gb-host>
-      <div class="center">
-      </div>
+  <div class="share-page">
+    <gb-timelimit></gb-timelimit>
+    <gb-host></gb-host>
+    <div class="center">
+      <gb-award></gb-award>
+      <gb-rule></gb-rule>
+    </div>
   </div>
 </template>
 
@@ -11,12 +13,14 @@
   import gbHost from './element/gb-host'
   import gbAward from './element/gb-award'
   import gbTimelimit from './element/gb-timelimit'
+  import gbRule from './element/gb-rule'
 
   export default {
     components: {
       gbHost,
       gbAward,
-      gbTimelimit
+      gbTimelimit,
+      gbRule
     },
     data() {
       return {
