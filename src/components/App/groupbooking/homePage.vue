@@ -1,7 +1,7 @@
 <template>
   <div>
     <gb-header></gb-header>
-    <gb-product></gb-product>
+    <gb-product :isCloud="false"></gb-product>
     <div class="background">
       <div class="center">
         <gb-flow></gb-flow>

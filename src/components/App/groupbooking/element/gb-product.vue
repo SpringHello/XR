@@ -1,5 +1,6 @@
 <template>
   <div class="background">
+    <p v-if="isCloud">我是小小新睿云云客，特惠云主机分享给你</p>
     <div class="center">
       <div class="item" v-for="(item,index) in productGroups">
         <div class="item-title">
@@ -150,7 +151,12 @@
         imgSrc: 'user/getKaptchaImage.do',
       }
     },
-    props: {},
+    props: {
+      isCloud: {
+        type: Boolean,
+        default: false
+      }
+    },
     methods: {
       buyNow(index) {
         if (this.$store.state.userInfo == null) {
@@ -251,9 +257,17 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   .background {
-    height: 504px;
     padding-top: 85px;
+    padding-bottom: 50px;
     background: linear-gradient(180deg, rgba(254, 239, 231, 1), rgba(255, 255, 255, 1));
+    > p {
+      font-size: 20px;
+      font-family: PingFangSC-Regular;
+      color: rgba(75, 19, 43, 1);
+      padding-bottom: 50px;
+      width: 100%;
+      text-align: center;
+    }
     .center {
       width: 1200px;
       margin: 0 auto;

@@ -1,7 +1,9 @@
 <template>
   <div class="activity-page">
-    <gb-header></gb-header>
-    <gb-product></gb-product>
+    <gb-join v-if="isJoin"></gb-join>
+    <gb-header v-else></gb-header>
+    <gb-product :isCloud="true"></gb-product>
+    <gb-myhost></gb-myhost>
     <gb-member :participationPersonColumns="participationPersonColumns" :participationPersonData="participationPersonData" :someoneParticipation="someoneParticipation"></gb-member>
     <div class="center">
       <gb-flow></gb-flow>
@@ -20,6 +22,8 @@
   import gbAdvantage from './element/gb-advantage'
   import gbAward from './element/gb-award'
   import gbRule from './element/gb-rule'
+  import gbJoin from './element/gb-joinHeader'
+  import gbMyhost from './element/gb-myhost'
 
   export default {
     components: {
@@ -29,10 +33,13 @@
       gbFlow,
       gbAdvantage,
       gbAward,
-      gbRule
+      gbRule,
+      gbJoin,
+      gbMyhost
     },
     data() {
       return {
+        isJoin: true,
         someoneParticipation: true,
         participationPersonColumns: [
           {

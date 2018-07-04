@@ -27,7 +27,7 @@
       height: 100%;
       margin: 0 auto;
       text-align: center;
-      padding-top: 34px;
+      padding-top: 30px;
       position: relative;
       img {
       }
@@ -45,7 +45,7 @@
         top: 16%;
         left: 39%;
         font-size: 32px;
-        line-height: 45px;
+        line-height: 32px;
       }
       p:nth-child(4) {
         font-size: 20px;

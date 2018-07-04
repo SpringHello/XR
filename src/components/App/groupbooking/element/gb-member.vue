@@ -6,7 +6,7 @@
       <div class="member">
         <div class="title">
           <p>云客：<span>188*******5 </span></p>
-          <p>参团链接：<span>{{ activeLink }}</span></p>
+          <p>创建时间：<span> 2018-06-07  </span></p>
         </div>
         <Table class="groupBooking-table" :columns="participationPersonColumns" :data="participationPersonData" :disabled-hover="true"></Table>
       </div>
@@ -63,33 +63,31 @@
           left: 56.5%;
         }
       }
-      >p{
+      > p {
         font-size: 16px;
         font-family: PingFangSC-Regular;
         color: rgba(75, 19, 43, 1);
         margin-top: 10px;
       }
-      .member{
+      .member {
         margin-top: 50px;
         background: #FFF;
         box-shadow: 0px 2px 9px 0px rgba(214, 84, 86, 0.3);
-        p {
-          font-size: 14px;
-          font-family: PingFangSC-Regular;
-          color: rgba(0, 0, 0, 1);
-          line-height: 32px;
-        }
-        p:nth-child(1) {
-          span {
-            color: #FA1713;
+        .title {
+          display: flex;
+          padding: 19px 30px;
+          p {
+            font-size: 14px;
+            font-family: PingFangSC-Regular;
+            color: #999999;
+            line-height: 32px;
+            span {
+              color: rgba(0, 0, 0, 1);
+            }
           }
-        }
-        p:nth-child(2) {
-          color: #999999;
-          margin-left: 500px;
-          margin-right: 30px;
-          span {
-            color: rgba(0, 0, 0, 1);
+          p:nth-child(2) {
+            margin-left: 53px;
+            margin-right: 30px;
           }
         }
       }
