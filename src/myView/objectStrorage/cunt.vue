@@ -88,6 +88,12 @@
       },
       maxSize:{
         type:Number
+      },
+      defaultFileList:{
+        type:Array,
+        default(){
+          return [];
+        }
       }
     },
     methods: {
@@ -109,35 +115,37 @@
         for(let i =0;i<file.length;i++){
           var  blob= file[i];
           var files = file[i];
+          //文件上传进度
+          this.uploadStart(files);
         }
-        //文件上传进度
-        this.uploadStart(files);
 
         //每块多大
         var chunk = 5*1024 *1024;
         if(this.count == 1){
           chunk = 0;
         }
+
         var formData = new FormData();
-        //循环文件，暂时不行
 
         //文件的总块数
         // var shardCount  = Math.ceil(blob.size / (5*1024*1024));
+
         //第几个分块
         var currentChunk = 0;
         var before = currentChunk * chunk,
             after = (currentChunk + 1) * chunk > blob.size ? blob.size : (currentChunk + 1) * chunk;
 
-
-        if(this.maxSize){
-          if(file.size>this.maxSize){
-            this.onExceededSize(file,this.fileList);
-            return false;
+          if(this.maxSize){
+            if(file.size>this.maxSize){
+              // this.onExceededSize(file,this.fileList);
+              return false;
+            }
           }
-        }
-          formData.append('slicesNum',currentChunk);
+
+          // formData.append('slicesNum',currentChunk);
           formData.append("uploadFile", blob.name);
-          formData.append("size",after);
+          // formData.append("size",after);
+
           //如果有data formData追加上传的参数
           if (this.data) {
             //获取对象的key
@@ -145,15 +153,17 @@
               formData.append(key, this.data[key]);
             });
           }
+
           var xhr = new XMLHttpRequest();
           xhr.open('post',this.action,true);
           xhr.send(formData);
-        //   xhr.upload.onprogress = function(e) {
-        //   if (e.lengthComputable) { //lengthComputable 是 progress 的一个属性，表示资源是否可计算字节流
-        //     progressBar.value = (e.loaded / e.total) * 100;
-        //     progressBar.textContent = progressBar.value; //有点浏览器不支持，这是后备选择
-        //   }
-        // }
+          xhr.upload.onprogress = function(e) {
+          if (e.lengthComputable) { //lengthComputable 是 progress 的一个属性，表示资源是否可计算字节流
+            e.percent = (e.loaded / e.total) * 100;
+            // progressBar.textContent = progressBar.value; //有点浏览器不支持，这是后备选择
+          }
+          console.log(e.percent);
+        }
       },
       // 拖拽上传
       onDrop(e){
@@ -167,7 +177,6 @@
       },
       //文件信息
       uploadStart(file){
-        // console.log(file);
       file.Uid =  Date.now() + this.timeIndex++;
         const _flie = {
           status :'uploading',
@@ -178,11 +187,24 @@
           showProgress: true
         };
         this.fileList.push(_flie);
+        console.log(this.fileList);
       },
-
       //删除文件
       deleteUpload(index){
         this.fileList.splice(index,1);
+      }
+    },
+    watch:{
+      defaultFileList: {
+        immediate: true,
+        handler(fileList) {
+          this.fileList = fileList.map(item => {
+            item.status = 'finished';
+            item.percentage = 100;
+            item.uid = Date.now() + this.tempIndex++;
+            return item;
+          });
+        }
       }
     }
   }

@@ -49,7 +49,8 @@
             <div class="space_text">0次</div>
           </div>
         </div>
-        <Tabs type="card" style="margin-top:21px;" value="objects" @on-click="checkTab" :animated="false">
+        <div class="monitor" :class="{monitors:!monitorHide}"  style="color: #2A99F2;">查看监控</div>
+        <Tabs type="card" style="margin-top:25px;" value="objects" @on-click="checkTab" :animated="false">
           <TabPane label="Object管理" name="objects">
             <div style="display:flex;margin-bottom:15px;">
               <div style="width:50%">
@@ -63,7 +64,7 @@
             </div>
 
             <ul style="margin: 0 0 9px 20px;">
-              <li class="fileObject" style="margin-right: 10px;" v-if="this.fileObject.length !=0" @click="backPage"> 返回</li>
+              <li class="fileObject" style="margin-right: 10px;" v-if="this.fileObject.length !=0" @click="backPage"><div class="leftArrow"></div>返回</li>
               <li class="fileObject" v-for="(item,index) in fileObject" @click="selectFileSrc(item.dirId,index)" :key="index">
                 {{item.src+'/'}}
               </li>
@@ -558,6 +559,8 @@
   export default {
     data() {
       return {
+        //是否隐藏查看监控
+        monitorHide:false,
         //修改白名单权限验证
         validateUpdateField:'',
         //添加白名单验证
@@ -632,11 +635,11 @@
           },
           {
             name: "公有读私有写",
-            city: "公有读私有写"
+            city: "任何人都可以读取文件，对文件的写入、删除等操作仍需要由文件的所有者授权的操作人完成"
           },
           {
             name: "公有读写",
-            city: "公有读写"
+            city: "所有人均可读写Bucket内的Object，无需身份验证。该权限安全风险极高，为确保您的数据安全，请谨慎选择"
           },
           {
             name: "自定义权限",
@@ -734,9 +737,25 @@
                   }),
                   h('span',{
                   style: {
-                    color: '#2A99F2',
+                    color: '#66666',
                   },
-                },params.row.filename)
+                },params.row.filename),
+                  h('span',{
+                    style:{
+                      color:'#2A99F2',
+                      marginLeft:'5px',
+                      cursor:'pointer'
+                    },
+                    on:{
+                      click:()=>{
+                        let downloadFile ={
+                          dirId:params.row.dirId,
+                          downloadfileSrc:params.row.filesrc
+                        };
+                        this.downloadObject(downloadFile);
+                      }
+                    }
+                  },'下载')
                 ])
               }
             }
@@ -1721,6 +1740,10 @@
         })
 
       },
+      //下载文件
+      downloadObject(){
+        geturl
+      }
       //删除上传文件
       // deleteUpload(index){
       //   this.uploadList.splice(index,1);
@@ -1799,9 +1822,10 @@
             line-height: 40px;
             display: inline-block;
             vertical-align: top;
-            font-size: 24px;
-            color: rgba(17, 17, 17, 0.75);
-            font-weight: bold;
+            color: #333333;
+            font-size: 18px;
+            font-weight: 600;
+            font-family: MicrosoftYaHei;
           }
         }
       }
@@ -1873,6 +1897,34 @@
         }
       }
     }
+  }
+  .leftArrow{
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border-top: 1px solid #2A99F2;
+    border-left: 1px solid #2A99F2;
+    transform: translateY(0px) rotate(-48deg);
+    margin-right: 6px;
+  }
+  .monitor{
+    width: 100px;
+    float: right;
+    margin-top: 5px;
+    cursor: pointer;
+  }
+  .monitor::before{
+    content: '';
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border-top: 1px solid #2A99F2;
+    border-left: 1px solid #2A99F2;
+    transform: translateY(4px) rotate(45deg);
+    margin-right: 6px;
+  }
+  .monitors::before{
+    transform: translateY(-2px) rotate(-138deg);
   }
 
   .uploader-example{

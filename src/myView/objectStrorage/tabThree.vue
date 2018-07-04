@@ -99,6 +99,7 @@
       this.dayClick(1,index);
     },
       dayClick(page,val){
+      this.pageLoading = true;
         this.dateCheck = 3;
         this.page = 1;
         //proxy拦截数据PS:用得还是太辣鸡了
@@ -165,12 +166,13 @@
             pageNum:page == undefined ? '1' : page+''
           }).then(res => {
              if(res.data.status =='1'){
+               this.pageLoading = false;
               if(typeof(res.data.data.logs) === "string"){
                 return this.journalData = [];
               }
                 this.journalData = res.data.data.logs;
                 this.total = res.data.data.page.sumCount;
-
+                this.pageLoading = false;
             }
           })
       },
@@ -178,6 +180,7 @@
         this.dateCheck = 2;
       this.page = page;
       this.indexs = -1;
+      this.pageLoading = true;
       if(this.time[1] == null && this.time[0] == null){
        return this.selectLogs(1);
       }
@@ -198,11 +201,13 @@
           pageNum:page+''
         }).then(res => {
           if(res.data.status =='1'){
+            this.pageLoading = false;
             if(typeof(res.data.data.logs) === "string"){
                return this.journalData = [];
             }
               this.journalData = res.data.data.logs;
               this.total = res.data.data.page.sumCount;
+              this.pageLoading = false;
           }
         })
       },

@@ -327,7 +327,6 @@
             vertical-align: top;
             font-size: 24px;
             color: rgba(17, 17, 17, 0.75);
-            font-weight: bold;
           }
         }
         .center_p {

@@ -11,6 +11,8 @@
         v-model="modal6"
         title="新建空间"
         :scrollable='true'>
+           <hr color="#D8D8D8" size=1/>
+           <br/>
         <Form ref="bucketInline" :model="bucketInline" :rules="bucketRule" label-position="top">
           <FormItem prop="bucketName" label="空间名称">
              <Input type="text" v-model="bucketInline.bucketName" placeholder="请输入少于20位的数字与字母名称" style="width:240px;"></Input>
