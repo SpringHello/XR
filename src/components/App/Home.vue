@@ -244,22 +244,9 @@
         </div>
       </div>
     </div>
+    <!-- 最新动态 -->
+    <div></div>
     <!-- 合作伙伴 -->
-    <!--<div class="partner-container">
-      <div>
-        <transition name="partner">
-          <div v-if="partnerFade">
-            <div class="container">
-              <h1>合作伙伴</h1>
-              <p>行业领先的生态合作伙伴，售前覆盖各省市地区，提供本地化咨询、销售、服务、安全等一体化企业级解决方案。</p>
-            </div>
-            <div class="partner">
-              <img v-for="(partner,index) in partners" :src="partner">
-            </div>
-          </div>
-        </transition>
-      </div>
-    </div>-->
     <div class="partner-container" ref="partnerFade">
       <div>
         <transition name="partner">
