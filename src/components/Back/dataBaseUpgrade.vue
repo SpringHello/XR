@@ -4,7 +4,7 @@
     <div id="wrapper">
         <span class="title">
           <router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> /
-          <router-link to="host" style="color:rgba(17, 17, 17, 0.43);">云主机</router-link> / <span>升级</span>
+          <router-link to="host" style="color:rgba(17, 17, 17, 0.43);">云数据库</router-link> / <span>升级</span>
         </span>
       <div id="content" class="upgrade">
         <div style="padding-bottom: 20px;border-bottom: 1px solid #E9E9E9;">
@@ -27,14 +27,14 @@
           </div>
           <div class="conf-wrapper">
             <h1>升级前配置</h1>
-            <span>主机名称 : {{hostname}}</span>
-            <span>主机配置 : {{currentCPUNum}}核{{currentRAMSize}}G</span>
+            <span>数据库名称 : {{hostname}}</span>
+            <span>数据库配置 : {{currentCPUNum}}核{{currentRAMSize}}G</span>
             <span>剩余时长 : {{endtime}}</span>
           </div>
           <div class="conf-wrapper">
             <h1>升级后配置</h1>
-            <span>主机名称 : {{hostname}}</span>
-            <span>主机配置 : {{CPUNum}}核{{RAMSize}}G</span>
+            <span>数据库名称 : {{hostname}}</span>
+            <span>数据库配置 : {{CPUNum}}核{{RAMSize}}G</span>
             <span>剩余时长 : {{endtime}}</span>
             <span style="line-height:24px;">应付差价 :
                  <i class="money">{{cost}}元</i>
@@ -381,9 +381,9 @@ export default {
     var confInfo = localStorage.serviceoffername.match(/\d+/g)
     var currentCPUNum = Number.parseInt(confInfo[0])
     var currentRAMSize = Number.parseInt(confInfo[2])
-    var hostname = sessionStorage.getItem('hostname')
+    var hostname = sessionStorage.getItem('databaseName')
     var endtime = sessionStorage.getItem('endtime')
-    sessionStorage.removeItem('hostname')
+    sessionStorage.removeItem('databaseName')
     sessionStorage.removeItem('endtime')
     var zoneInfo = null
     info.forEach(item => {
@@ -430,7 +430,7 @@ export default {
       this.calCost()
     },
     calCost () {
-      this.$http.get('information/UpVMConfigCost.do', {
+      this.$http.get('database/UpDBConfigCost.do', {
         params: {
           cpunum: this.CPUNum,
           memory: this.RAMSize,
@@ -448,7 +448,7 @@ export default {
       if (this.CPUNum + this.RAMSize == this.currentCPUNum + this.currentRAMSize) {
         return
       }
-      this.$http.get('information/UpVMConfig.do', {
+      this.$http.get('database/upDBConfig.do', {
         params: {
           cpunum: this.CPUNum,
           memory: this.RAMSize,

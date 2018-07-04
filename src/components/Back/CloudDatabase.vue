@@ -407,8 +407,11 @@
                 h('DropdownItem', {
                   nativeOn: {
                     click: () => {
-                      // this.current = params.row
-                      // this.showModal.dilatation = true
+                      localStorage.setItem('serviceoffername', params.row.serviceoffername)
+                      localStorage.setItem('zoneid', params.row.zoneid)
+                      localStorage.setItem('virtualMachineid', params.row.computerid)
+                      sessionStorage.setItem('databaseName', params.row.computername)
+                      sessionStorage.setItem('endtime', params.row.endtime)
                       this.$router.push('dataBaseUpgrade')
                     }
                   }
