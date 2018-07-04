@@ -257,19 +257,25 @@
               <dt>{{showNews.title}}</dt>
               <dd v-html="showNews.text">
               </dd>
-              <dd><Button style="border:solid 1px #387DFF;color:#387DFF;margin-top:40px;">查看详情</Button></dd>
+              <dd>
+                  <router-link :to="`article/${showNews.code}.html`" target="_blank" style="width:100px;height:38px;line-height:38px;border:1px solid rgba(56,125,255,1);color:#387DFF;display:block;text-align:center;margin-top:40px;">查看详情</router-link>
+              </dd>
             </dl>
           </div>
-          <div class="main-right"></div>
+          <div class="main-right">
+            <img :src="showNews.topUrl" style="width:100%;height:100%;"/>
+          </div>
         </div>
         <div class="link-list wrap">
           <dl v-for="(item,index) in linkList" :key="index">
-            <dt>{{item.title}}<span>more></span></dt>
+            <dt>{{item.typename}}<router-link :to="`article/${item.id}`">More></router-link></dt>
             <dd >
               <ul>
-                <li v-for="(secitem,index) in item.list" :key="index">
+                <li v-for="(secitem,i) in item.artile" :key="i">
+                  <router-link :to="`article/${secitem.code}.html`" target="_blank">
                   {{secitem.title}}
-                  <span>{{secitem.time}}</span>
+                  <span>{{secitem.createtime}}</span>
+                  </router-link>
                 </li>
               </ul>
             </dd>
@@ -342,68 +348,7 @@ import axios from 'axios';
     data() {
       return {
         showNews: {},
-        linkList: [
-          {
-            title: '行业资讯',
-            list: [
-              {
-                title: '标题',
-                time: '2018/04/25',
-                url: 'path'
-              },
-              {
-                title: '标题',
-                time: '2018/04/25',
-                url: 'path'
-              },
-              {
-                title: '标题',
-                time: '2018/04/25',
-                url: 'path'
-              }
-            ]
-          },
-          {
-            title: '行业资讯2',
-            list: [
-              {
-                title: '标题',
-                time: '2018/04/25',
-                url: 'path'
-              },
-              {
-                title: '标题',
-                time: '2018/04/25',
-                url: 'path'
-              },
-              {
-                title: '标题',
-                time: '2018/04/25',
-                url: 'path'
-              }
-            ]
-          },
-          {
-            title: '行业资讯3',
-            list: [
-              {
-                title: '标题',
-                time: '2018/04/25',
-                url: 'path'
-              },
-              {
-                title: '标题',
-                time: '2018/04/25',
-                url: 'path'
-              },
-              {
-                title: '标题',
-                time: '2018/04/25',
-                url: 'path'
-              }
-            ]
-          }
-        ],
+        linkList: [],
         white: {
           color: '#fff',
         },
@@ -745,12 +690,20 @@ import axios from 'axios';
     },
     created() {
       this.getnews()
+      this.getlinkList()
     },
     methods: {
       getnews() {
         axios.get('article/getTopArticle.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.showNews = response.data.result
+          }
+        })
+      },
+      getlinkList() {
+        axios.get('article/getArticleType.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.linkList = response.data.result.slice(0, 3)
           }
         })
       },
@@ -906,8 +859,10 @@ import axios from 'axios';
         margin-top: 100px;
         display: flex;
         justify-content: space-between;
+        flex-wrap:wrap;
         dl{
           width: 386px;
+          height: 242px;
           box-shadow:0px 13px 14px -6px rgba(216,216,216,0.41);
           dt{
             height: 58px;
@@ -916,23 +871,27 @@ import axios from 'axios';
             background: url('../../assets/img/home/news-linklist-bg.png') no-repeat;
             font-size:18px;
             color: #fff;
-            span{
+            a{
               float: right;
               cursor: pointer;
+              color: #fff;
             }
           }
           dd{
             ul{
               li{
-                padding: 20px;
-                font-size:14px;
-                color:rgba(102,102,102,1);
-                cursor: pointer;
-                &:hover{
-                  color: #377DFF;
-                }
-                span{
-                  float: right;
+                a{
+                  display: block;
+                  padding: 20px;
+                  font-size:14px;
+                  color:rgba(102,102,102,1);
+                  cursor: pointer;
+                  &:hover{
+                    color: #377DFF;
+                  }
+                  span{
+                    float: right;
+                  }
                 }
               }
             }
