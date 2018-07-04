@@ -356,41 +356,30 @@
             title: "当前状态",
             key: "status",
             render: (h, params) => {
-              return h("div", params.row.status == "确认中" ? "确认中" : params.row.status == "取消接入确认" || params.row.status == "注销主体确认" || params.row.status == "注销网站确认" || params.row.status == "变更确认" ? "管局审核中" : params.row.status);
+              return h("div", params.row.status == "取消接入确认" || params.row.status == "注销主体确认" || params.row.status == "注销网站确认" || params.row.status == "变更确认" ? "确认中" : params.row.status);
             }
           },
           {
             title: "等待操作",
             key: "operation",
             render: (h, params) => {
-              const row = params.row;
-              const color = row.status == "确认中" || row.status == "管局审核失败" ? "#2A99F2" : "";
-              return (
-                "div",
-                  [
-                    h("span",
-                      {
-                        style: {
-                          color: color,
-                          cursor: "pointer"
-                        },
-                        on: {
-                          click: () => {
-                            if (row.status == "确认中") {
-                              sessionStorage.setItem("newId", row.id);
-                              sessionStorage.setItem(
-                                "newRecordtype",
-                                row.recordType
-                              );
-                              this.$router.push({path: "CompletedFilingDetails"});
-                            }
-                          }
-                        }
-                      },
-                      row.status == "确认中" ? "放弃" : row.status == "管局审核失败" ? "联系客服(变更备案错误项目)" : '暂无'
-                    )
-                  ]
-              );
+              if (params.row.status == "取消接入确认" || params.row.status == "注销主体确认" || params.row.status == "注销网站确认" || params.row.status == "变更确认") {
+                return h('span', {
+                  style: {
+                    cursor: 'pointer',
+                    color: '2A99F2'
+                  },
+                  on: {
+                    click: () => {
+                      this.updateMainWeb(params.row.id, '备案成功')
+                    }
+                  }
+                }, '放弃')
+              } else if (params.row.status == '管局审核失败') {
+                return h('span', {}, '联系客服')
+              } else {
+                return h('span', {}, '暂无')
+              }
             }
           },
           {
@@ -516,7 +505,22 @@
       toEntrance() {
         sessionStorage.setItem('back', 'back')
         this.$router.push('entrance')
-      }
+      },
+      updateMainWeb(id, status) {
+        this.domain = false;
+        axios.post('recode/updateMainWeb.do', {
+          id: id,
+          status: status
+        }).then(res => {
+          if (res.data.status == 1) {
+            this.details();
+            this.$Message.success('提交成功');
+            this.$router.push({path: 'BRecords'});
+          } else {
+            this.$Message.info(res.data.message)
+          }
+        })
+      },
     },
     computed: {
       recordFlag() {

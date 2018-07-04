@@ -441,7 +441,6 @@
                 :with-credentials="true"
                 action="file/upFile.do"
                 :format="['jpg','jpeg','png','doc','docx','pdf']"
-                :on-progress="webRecordProgress"
                 :on-success="webRecordSuccess"
                 :on-format-error="webRecordFormatError"
                 :before-upload="webRecordBeforeUpload"
@@ -504,7 +503,6 @@
               :with-credentials="true"
               action="file/upFile.do"
               :format="['jpg','jpeg','png']"
-              :on-progress="cardSuccessProgress"
               :on-success="cardSuccess"
               :on-format-error="cardFormatError">
               <div class="sponsor-text" v-if="hostUnitList.webresponsibilityurlpositive==''">
@@ -543,7 +541,6 @@
               :with-credentials="true"
               action="file/upFile.do"
               :format="['jpg','jpeg','png']"
-              :on-progress="cardBackProgress"
               :on-success="cardBackSuccess"
               :on-format-error="cardBackFormatError">
               <div class="sponsor-text" v-if="hostUnitList.webresponsibilityurlback==''">
@@ -594,7 +591,6 @@
                 :with-credentials="true"
                 action="file/upFile.do"
                 :format="['jpg','jpeg','png']"
-                :on-progress="organizerSuccessProgress"
                 :on-success="organizerSuccess"
                 :on-format-error="organizerFormatError"
               >
@@ -656,7 +652,6 @@
               :show-upload-list="false"
               :with-credentials="true"
               action="file/upFile.do"
-              :on-progress="domainNameSuccessProgress"
               :on-success="domainNameSuccess"
               :on-format-error="domainNameFormatError"
               :before-upload="domainNameBeforeUpload"
@@ -699,7 +694,6 @@
               :show-upload-list="false"
               :with-credentials="true"
               action="file/upFile.do"
-              :on-progress="otherFileSuccessProgress"
               :on-success="otherFileSuccess"
               :on-format-error="otherFormatError"
               :before-upload="otherBeforeUpload"
@@ -918,7 +912,7 @@
       </div>
     </Modal>
     <!--取消接入-->
-    <Modal v-model="cancel" title="取消接入" :scrollable="true" @on-ok="delMainWeb('确认中')">
+    <Modal v-model="cancel" title="取消接入" :scrollable="true" @on-ok="delMainWeb('取消接入确认')">
       <div class="cancel">
         <p>确定要取消此备案接入信息？</p>
         <p>取消接入后，如果您的备案信息没有对应接入商，管局可能会注销您的备案号，导致您的域名不能访问。申请提交到通信管理局后，不可撤回。</p>
@@ -929,7 +923,7 @@
       </div>
     </Modal>
     <!--注销网站-->
-    <Modal v-model="cancellation" title="注销网站" :scrollable="true" @on-ok="delMainWeb('确认中')">
+    <Modal v-model="cancellation" title="注销网站" :scrollable="true" @on-ok="delMainWeb('注销网站确认')">
       <div class="cancel">
         <p>确定要注销网站？</p>
         <p>取消接入后，如果您的备案信息没有对应接入商，管局可能会注销您的备案号，导致您的域名不能访问。申请提交到通信管理局后，不可撤回。</p>
@@ -956,7 +950,7 @@
 
       </div>
       <div slot="footer">
-        <Button type="primary" @click="delMainWeb('确认中')">下一步，提交审核</Button>
+        <Button type="primary" @click="delMainWeb('注销主体确认')">下一步，提交审核</Button>
       </div>
     </Modal>
   </div>
@@ -965,7 +959,6 @@
 <script type="text/ecmascript-6">
   import area from "../../options/area.json";
   import certificates from "../../options/certificates.json";
-  import throttle from 'throttle-debounce/debounce'
 
   import axios from "axios"
   //备案ID
@@ -1682,6 +1675,7 @@
           if (res.data.status == 1) {
             this.details();
             this.$Message.success('提交成功');
+            this.$router.push({path: 'BRecords'});
           } else {
             this.$Message.info(res.data.message)
           }
@@ -1746,7 +1740,8 @@
         })
         this.updateHostUnitList.otherdataurl = otherdataurl + '';
         let web = {
-          id: webcompany_Id,
+          id: this.id,
+          status: '变更确认',
           ISPName: this.updateHostUnitList.ispname,
           webIp: this.updateHostUnitList.webip,
           webAccessType: this.updateHostUnitList.webaccesstype,
@@ -1773,7 +1768,7 @@
         }
         let update = this.$http.post("recode/updateMainWeb.do", web);
         let main = {
-          id: this.id,
+          id: webcompany_Id,
           phone: this.updateHostUnitList.companyphone,
           email: this.updateHostUnitList.companyemail,
           legalName: this.updateHostUnitList.legalname,
@@ -1839,59 +1834,57 @@
       webRecordFormatError() {
         this.$Message.info('网站核验单只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
-      webRecordProgress:throttle(700, function () {
-        let s = setInterval(() => {
-          this.percentCheckList++
-          if (this.percentCheckList > 100) {
-            window.clearInterval(s)
-            this.percentCheckList = 0
-          }
-        }, 20)
-      }),
       //网站核验单上传成功
       webRecordSuccess(response) {
         if (response.status == 1) {
-          this.updateHostUnitList.webrecordauthenticityurl = response.result;
-          if (this.updateHostUnitList.webrecordauthenticityurl.indexOf(',') > 0) {
-            let webRecord = this.updateHostUnitList.webrecordauthenticityurl.split(",");
-            for (let j = 0; j < onther.length; j++) {
-              let objc = new Object();
-              webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1);
-              objc.name = (webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1));
-              this.webRecordData.push(objc);
-              switch (this.webRecordData[j].name.substring(this.webRecordData[j].name.length - 3)) {
-                case 'pdf' :
-                  this.webRecordData[j].img = imgPdf;
-                  break;
-                case 'jpg' :
-                  this.webRecordData[j].img = imgJpg;
-                  break;
-                case 'doc' :
-                  this.webRecordData[j].img = imgDoc;
-                  break;
+          let s = setInterval(() => {
+            this.percentCheckList++
+            if (this.percentCheckList > 100) {
+              this.updateHostUnitList.webrecordauthenticityurl = response.result;
+              if (this.updateHostUnitList.webrecordauthenticityurl.indexOf(',') > 0) {
+                let webRecord = this.updateHostUnitList.webrecordauthenticityurl.split(",");
+                for (let j = 0; j < onther.length; j++) {
+                  let objc = new Object();
+                  webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1);
+                  objc.name = (webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1));
+                  this.webRecordData.push(objc);
+                  switch (this.webRecordData[j].name.substring(this.webRecordData[j].name.length - 3)) {
+                    case 'pdf' :
+                      this.webRecordData[j].img = imgPdf;
+                      break;
+                    case 'jpg' :
+                      this.webRecordData[j].img = imgJpg;
+                      break;
+                    case 'doc' :
+                      this.webRecordData[j].img = imgDoc;
+                      break;
+                  }
+                }
+              } else {
+                let webRecord = this.updateHostUnitList.webrecordauthenticityurl;
+                let objc = new Object();
+                webRecord.substring(webRecord.lastIndexOf('/') + 1);
+                objc.name = (webRecord.substring(webRecord.lastIndexOf('/') + 1));
+                this.webRecordData.push(objc);
+                for (let i = 0; i < this.webRecordData.length; i++) {
+                  switch (this.webRecordData[i].name.substring(this.webRecordData[0].name.length - 3)) {
+                    case 'pdf' :
+                      this.webRecordData[i].img = imgPdf;
+                      break;
+                    case 'jpg' :
+                      this.webRecordData[i].img = imgJpg;
+                      break;
+                    case 'doc' :
+                      this.webRecordData[i].img = imgDoc;
+                      break;
+                  }
+                }
               }
+              this.$Message.success('上传成功');
+              window.clearInterval(s)
+              this.percentCheckList = 0
             }
-          } else {
-            let webRecord = this.updateHostUnitList.webrecordauthenticityurl;
-            let objc = new Object();
-            webRecord.substring(webRecord.lastIndexOf('/') + 1);
-            objc.name = (webRecord.substring(webRecord.lastIndexOf('/') + 1));
-            this.webRecordData.push(objc);
-            for (let i = 0; i < this.webRecordData.length; i++) {
-              switch (this.webRecordData[i].name.substring(this.webRecordData[0].name.length - 3)) {
-                case 'pdf' :
-                  this.webRecordData[i].img = imgPdf;
-                  break;
-                case 'jpg' :
-                  this.webRecordData[i].img = imgJpg;
-                  break;
-                case 'doc' :
-                  this.webRecordData[i].img = imgDoc;
-                  break;
-              }
-            }
-          }
-          this.$Message.success('上传成功');
+          }, 20)
         } else {
           this.$Message.info('上传失败');
         }
@@ -1906,20 +1899,18 @@
       cardFormatError() {
         this.$Message.info('身份证正面只能上传jpg,jpeg,png类型的文件');
       },
-      cardSuccessProgress:throttle(700, function () {
-        let s = setInterval(() => {
-          this.percent++
-          if (this.percent > 100) {
-            window.clearInterval(s)
-            this.percent = 0
-          }
-        }, 20)
-      }),
       //身份证正面上传成功
       cardSuccess(response) {
         if (response.status == 1) {
-          this.hostUnitList.webresponsibilityurlpositive = response.result;
-          this.$Message.success('上传成功');
+          let s = setInterval(() => {
+            this.percent++
+            if (this.percent > 100) {
+              this.hostUnitList.webresponsibilityurlpositive = response.result;
+              this.$Message.success('上传成功');
+              window.clearInterval(s)
+              this.percent = 0
+            }
+          }, 20)
         } else {
           this.$Message.info('上传失败');
         }
@@ -1928,19 +1919,17 @@
       cardBackFormatError() {
         this.$Message.info('身份证背面只能上传jpg,jpeg,png类型的文件');
       },
-      cardBackProgress:throttle(700, function () {
-        let s = setInterval(() => {
-          this.percentBack++
-          if (this.percentBack > 100) {
-            window.clearInterval(s)
-            this.percentBack = 0
-          }
-        }, 20)
-      }),
       cardBackSuccess(response) {
         if (response.status == 1) {
-          this.hostUnitList.webresponsibilityurlback = response.result;
-          this.$Message.success('上传成功');
+          let s = setInterval(() => {
+            this.percentBack++
+            if (this.percentBack > 100) {
+              this.hostUnitList.webresponsibilityurlback = response.result;
+              this.$Message.success('上传成功');
+              window.clearInterval(s)
+              this.percentBack = 0
+            }
+          }, 20)
         } else {
           this.$Message.info('上传失败');
         }
@@ -1949,19 +1938,17 @@
       organizerFormatError() {
         this.$Message.info('营业执照只能上传jpg,jpeg,png类型的文件');
       },
-      organizerSuccessProgress:throttle(700, function () {
-        let s = setInterval(() => {
-          this.percentCombine++
-          if (this.percentCombine > 100) {
-            window.clearInterval(s)
-            this.percentCombine = 0
-          }
-        }, 20)
-      }),
       organizerSuccess(response) {
         if (response.status == 1) {
-          this.hostUnitList.hostcompanyurl = response.result;
-          this.$Message.success('上传成功');
+          let s = setInterval(() => {
+            this.percentCombine++
+            if (this.percentCombine > 100) {
+              this.hostUnitList.hostcompanyurl = response.result;
+              this.$Message.success('上传成功');
+              window.clearInterval(s)
+              this.percentCombine = 0
+            }
+          }, 20)
         } else {
           this.$Message.info('上传失败');
         }
@@ -1970,58 +1957,56 @@
       domainNameFormatError() {
         this.$Message.info('域名证书只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
       },
-      domainNameSuccessProgress:throttle(700, function () {
-        let s = setInterval(() => {
-          this.percentCertification++
-          if (this.percentCertification > 100) {
-            window.clearInterval(s)
-            this.percentCertification = 0
-          }
-        }, 20)
-      }),
       domainNameSuccess(response) {
         if (response.status == 1) {
-          this.updateHostUnitList.domaincertificateurl = response.result;
-          if (this.updateHostUnitList.domaincertificateurl.indexOf(',') > 0) {
-            let addy = this.updateHostUnitList.domaincertificateurl.split(",");
-            for (let i = 0; i < addy.length; i++) {
-              let object = new Object();
-              addy[i].substring(addy[i].lastIndexOf('/') + 1);
-              object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
-              this.addy.push(object);
-              switch (this.addy[i].name.substring(this.addy[i].name.length - 3)) {
-                case 'pdf' :
-                  this.addy[i].img = imgPdf;
-                  break;
-                case 'jpg' :
-                  this.addy[i].img = imgJpg;
-                  break;
-                case 'doc' :
-                  this.addy[i].img = imgDoc;
-                  break;
+          let s = setInterval(() => {
+            this.percentCertification++
+            if (this.percentCertification > 100) {
+              this.updateHostUnitList.domaincertificateurl = response.result;
+              if (this.updateHostUnitList.domaincertificateurl.indexOf(',') > 0) {
+                let addy = this.updateHostUnitList.domaincertificateurl.split(",");
+                for (let i = 0; i < addy.length; i++) {
+                  let object = new Object();
+                  addy[i].substring(addy[i].lastIndexOf('/') + 1);
+                  object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
+                  this.addy.push(object);
+                  switch (this.addy[i].name.substring(this.addy[i].name.length - 3)) {
+                    case 'pdf' :
+                      this.addy[i].img = imgPdf;
+                      break;
+                    case 'jpg' :
+                      this.addy[i].img = imgJpg;
+                      break;
+                    case 'doc' :
+                      this.addy[i].img = imgDoc;
+                      break;
+                  }
+                }
+              } else {
+                let addy = this.updateHostUnitList.domaincertificateurl;
+                let object = new Object();
+                addy.substring(addy.lastIndexOf('/') + 1);
+                object.name = (addy.substring(addy.lastIndexOf('/') + 1));
+                this.addy.push(object);
+                for (let i = 0; i < this.addy.length; i++) {
+                  switch (this.addy[i].name.substring(this.addy[0].name.length - 3)) {
+                    case 'pdf' :
+                      this.addy[i].img = imgPdf;
+                      break;
+                    case 'jpg' :
+                      this.addy[i].img = imgJpg;
+                      break;
+                    case 'doc' :
+                      this.addy[i].img = imgDoc;
+                      break;
+                  }
+                }
               }
+              this.$Message.success('上传成功');
+              window.clearInterval(s)
+              this.percentCertification = 0
             }
-          } else {
-            let addy = this.updateHostUnitList.domaincertificateurl;
-            let object = new Object();
-            addy.substring(addy.lastIndexOf('/') + 1);
-            object.name = (addy.substring(addy.lastIndexOf('/') + 1));
-            this.addy.push(object);
-            for (let i = 0; i < this.addy.length; i++) {
-              switch (this.addy[i].name.substring(this.addy[0].name.length - 3)) {
-                case 'pdf' :
-                  this.addy[i].img = imgPdf;
-                  break;
-                case 'jpg' :
-                  this.addy[i].img = imgJpg;
-                  break;
-                case 'doc' :
-                  this.addy[i].img = imgDoc;
-                  break;
-              }
-            }
-          }
-          this.$Message.success('上传成功');
+          }, 20)
         } else {
           this.$Message.info('上传失败');
         }
@@ -2032,59 +2017,57 @@
           return false;
         }
       },
-      otherFileSuccessProgress:throttle(700, function (){
-        let s = setInterval(() => {
-          this.percentOtherFile++
-          if (this.percentOtherFile > 100) {
-            window.clearInterval(s)
-            this.percentOtherFile = 0
-          }
-        }, 20)
-      }),
       //其他文件上传
       otherFileSuccess(response) {
         if (response.status == 1) {
-          this.updateHostUnitList.otherdataurl = response.result;
-          if (this.updateHostUnitList.otherdataurl.indexOf(',') > 0) {
-            let addy = this.updateHostUnitList.otherdataurl.split(",");
-            for (let i = 0; i < addy.length; i++) {
-              let object = new Object();
-              addy[i].substring(addy[i].lastIndexOf('/') + 1);
-              object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
-              this.otherData.push(object);
-              switch (this.otherData[i].name.substring(this.otherData[i].name.length - 3)) {
-                case 'pdf' :
-                  this.otherData[i].img = imgPdf;
-                  break;
-                case 'jpg' :
-                  this.otherData[i].img = imgJpg;
-                  break;
-                case 'doc' :
-                  this.otherData[i].img = imgDoc;
-                  break;
+          let s = setInterval(() => {
+            this.percentOtherFile++
+            if (this.percentOtherFile > 100) {
+              this.updateHostUnitList.otherdataurl = response.result;
+              if (this.updateHostUnitList.otherdataurl.indexOf(',') > 0) {
+                let addy = this.updateHostUnitList.otherdataurl.split(",");
+                for (let i = 0; i < addy.length; i++) {
+                  let object = new Object();
+                  addy[i].substring(addy[i].lastIndexOf('/') + 1);
+                  object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
+                  this.otherData.push(object);
+                  switch (this.otherData[i].name.substring(this.otherData[i].name.length - 3)) {
+                    case 'pdf' :
+                      this.otherData[i].img = imgPdf;
+                      break;
+                    case 'jpg' :
+                      this.otherData[i].img = imgJpg;
+                      break;
+                    case 'doc' :
+                      this.otherData[i].img = imgDoc;
+                      break;
+                  }
+                }
+              } else {
+                let addy = this.updateHostUnitList.otherdataurl;
+                let object = new Object();
+                addy.substring(addy.lastIndexOf('/') + 1);
+                object.name = (addy.substring(addy.lastIndexOf('/') + 1));
+                this.otherData.push(object);
+                for (let i = 0; i < this.otherData.length; i++) {
+                  switch (this.otherData[i].name.substring(this.otherData[0].name.length - 3)) {
+                    case 'pdf' :
+                      this.otherData[i].img = imgPdf;
+                      break;
+                    case 'jpg' :
+                      this.otherData[i].img = imgJpg;
+                      break;
+                    case 'doc' :
+                      this.otherData[i].img = imgDoc;
+                      break;
+                  }
+                }
               }
+              this.$Message.success('上传成功');
+              window.clearInterval(s)
+              this.percentOtherFile = 0
             }
-          } else {
-            let addy = this.updateHostUnitList.otherdataurl;
-            let object = new Object();
-            addy.substring(addy.lastIndexOf('/') + 1);
-            object.name = (addy.substring(addy.lastIndexOf('/') + 1));
-            this.otherData.push(object);
-            for (let i = 0; i < this.otherData.length; i++) {
-              switch (this.otherData[i].name.substring(this.otherData[0].name.length - 3)) {
-                case 'pdf' :
-                  this.otherData[i].img = imgPdf;
-                  break;
-                case 'jpg' :
-                  this.otherData[i].img = imgJpg;
-                  break;
-                case 'doc' :
-                  this.otherData[i].img = imgDoc;
-                  break;
-              }
-            }
-          }
-          this.$Message.success('上传成功');
+          }, 20)
         } else {
           this.$Message.info('上传失败');
         }
