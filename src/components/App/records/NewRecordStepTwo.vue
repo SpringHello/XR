@@ -103,44 +103,44 @@
                 </transition>
               </FormItem>
               <FormItem label="网站服务内容" prop="serviceContent">
-                <RadioGroup v-model="site.basicInformation.serviceContent" style="width: 650px;" class="records-radio">
-                  <Radio label="网络借贷信息中介"></Radio>
-                  <Radio label="网上邮局"></Radio>
-                  <Radio label="网络新闻"></Radio>
-                  <Radio label="综合门户"></Radio>
-                  <Radio label="网络广告/信息"></Radio>
-                  <Radio label="单位门户网站"></Radio>
-                  <Radio label="博客个人空间"></Radio>
-                  <Radio label="网上支付"></Radio>
-                  <Radio label="网上银行"></Radio>
-                  <Radio label="网络购物"></Radio>
-                  <Radio label="网络游戏"></Radio>
-                  <Radio label="网络音乐"></Radio>
-                  <Radio label="网上炒股/股票基金"></Radio>
-                  <Radio label="网络图片"></Radio>
-                  <Radio label="网络软件/下载"></Radio>
-                  <Radio label="网络影视"></Radio>
-                  <Radio label="网上交友/婚介"></Radio>
-                  <Radio label="网上房产"></Radio>
-                  <Radio label="网上求职"></Radio>
-                  <Radio label="网站建设"></Radio>
-                  <Radio label="网上招聘"></Radio>
-                  <Radio label="网络教育"></Radio>
-                  <Radio label="基础应用"></Radio>
-                  <Radio label="WAP"></Radio>
-                  <Radio label="电子政务、电子商务"></Radio>
-                  <Radio label="数字娱乐"></Radio>
-                  <Radio label="网络媒体"></Radio>
-                  <Radio label="互联网股权融资"></Radio>
-                  <Radio label="互联网跨界金融及资产管理"></Radio>
-                  <Radio label="APP"></Radio>
-                  <Radio label="互联网保险"></Radio>
-                  <Radio label="网上非银支付"></Radio>
-                  <Radio label="移动应用"></Radio>
-                  <Radio label="即时通信"></Radio>
-                  <Radio label="搜索引擎"></Radio>
-                  <Radio label="其他"></Radio>
-                </RadioGroup>
+                <CheckboxGroup v-model="site.basicInformation.serviceContent" style="width: 650px;" class="records-checkbox">
+                  <Checkbox label="网络借贷信息中介"></Checkbox>
+                  <Checkbox label="网上邮局"></Checkbox>
+                  <Checkbox label="网络新闻"></Checkbox>
+                  <Checkbox label="综合门户"></Checkbox>
+                  <Checkbox label="网络广告/信息"></Checkbox>
+                  <Checkbox label="单位门户网站"></Checkbox>
+                  <Checkbox label="博客个人空间"></Checkbox>
+                  <Checkbox label="网上支付"></Checkbox>
+                  <Checkbox label="网上银行"></Checkbox>
+                  <Checkbox label="网络购物"></Checkbox>
+                  <Checkbox label="网络游戏"></Checkbox>
+                  <Checkbox label="网络音乐"></Checkbox>
+                  <Checkbox label="网上炒股/股票基金"></Checkbox>
+                  <Checkbox label="网络图片"></Checkbox>
+                  <Checkbox label="网络软件/下载"></Checkbox>
+                  <Checkbox label="网络影视"></Checkbox>
+                  <Checkbox label="网上交友/婚介"></Checkbox>
+                  <Checkbox label="网上房产"></Checkbox>
+                  <Checkbox label="网上求职"></Checkbox>
+                  <Checkbox label="网站建设"></Checkbox>
+                  <Checkbox label="网上招聘"></Checkbox>
+                  <Checkbox label="网络教育"></Checkbox>
+                  <Checkbox label="基础应用"></Checkbox>
+                  <Checkbox label="WAP"></Checkbox>
+                  <Checkbox label="电子政务、电子商务"></Checkbox>
+                  <Checkbox label="数字娱乐"></Checkbox>
+                  <Checkbox label="网络媒体"></Checkbox>
+                  <Checkbox label="互联网股权融资"></Checkbox>
+                  <Checkbox label="互联网跨界金融及资产管理"></Checkbox>
+                  <Checkbox label="APP"></Checkbox>
+                  <Checkbox label="互联网保险"></Checkbox>
+                  <Checkbox label="网上非银支付"></Checkbox>
+                  <Checkbox label="移动应用"></Checkbox>
+                  <Checkbox label="即时通信"></Checkbox>
+                  <Checkbox label="搜索引擎"></Checkbox>
+                  <Checkbox label="其他"></Checkbox>
+                </CheckboxGroup>
               </FormItem>
               <FormItem label="网站语言" prop="contentsLanguage">
                 <CheckboxGroup v-model="site.basicInformation.contentsLanguage" style="width: 650px;" class="records-checkbox">
@@ -431,12 +431,21 @@
           newWebsiteDomain: [
             {required: true, validator: validNewWebsiteDomain, trigger: "blur"}
           ],
+          serviceContent: [
+            {
+              required: true,
+              type: "array",
+              min: 1,
+              message: "请至少选择一种网站服务类型",
+              trigger: "change"
+            }
+          ],
           contentsLanguage: [
             {
               required: true,
               type: "array",
               min: 1,
-              message: "请至少选择一个网站语言",
+              message: "请至少选择一种网站语言",
               trigger: "change"
             }
           ],
@@ -495,7 +504,7 @@
             // 网站首页URL
             websiteHomepage: "",
             // 网站服务内容
-            serviceContent: "网络借贷信息中介",
+            serviceContent: ["网络借贷信息中介"],
             // 网站语言
             contentsLanguage: ["中文简体"],
             // 前置或专项审批内容类型
@@ -711,7 +720,7 @@
             // 网站首页URL
             websiteHomepage: "",
             // 网站服务内容
-            serviceContent: "网络借贷信息中介",
+            serviceContent: ["网络借贷信息中介"],
             // 网站语言
             contentsLanguage: ["中文简体"],
             // 前置或专项审批内容类型

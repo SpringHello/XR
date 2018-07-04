@@ -43,7 +43,7 @@
                 <li>网站名称：{{ item.basicInformation.siteName}}</li>
                 <li>网站域名：{{ item.basicInformation.websiteDomain}},{{ item.basicInformation.newWebsiteDomain + '' }}</li>
                 <li>网站首页URL：{{ item.basicInformation.websiteHomepage}}</li>
-                <li>网站服务内容：{{ item.basicInformation.serviceContent}}</li>
+                <li>网站服务内容：{{ item.basicInformation.serviceContent + ''}}</li>
                 <li>网站语言：{{ item.basicInformation.contentsLanguage + ''}}</li>
               </ul>
               <ul>
@@ -784,7 +784,7 @@
             webDomian: item.basicInformation.websiteDomain + ',' + item.basicInformation.newWebsiteDomain,
             webMessage: item.basicInformation.contentsLanguage + '',
             webName: item.basicInformation.siteName,
-            webServerContent: item.basicInformation.serviceContent,
+            webServerContent: item.basicInformation.serviceContent + '',
             webUrl: item.basicInformation.websiteHomepage,
           }
           return param
