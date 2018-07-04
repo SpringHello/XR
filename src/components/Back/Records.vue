@@ -514,7 +514,6 @@
           status: status
         }).then(res => {
           if (res.data.status == 1) {
-            this.details();
             this.$Message.success('提交成功');
             this.$router.push({path: 'BRecords'});
           } else {
