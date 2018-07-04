@@ -17,7 +17,7 @@
               <div style="  padding:10px 0px;margin-left:20px;">
                 <div style="margin-bottom: 10px;">
   <span
-    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;color: #2A99F2;">添加认证信息</span>
+    style="font-size: 14px;letter-spacing: 0.83px;line-height: 14px;color:#2A99F2;">添加认证信息</span>
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
@@ -2883,7 +2883,7 @@
           font-size: 18px;
           color: rgba(17, 17, 17, 0.75);
           letter-spacing: 1.31px;
-          margin: 90px 0px 20px;
+          margin: 20px 0px 20px;
           position: relative;
         }
         .info-border {
