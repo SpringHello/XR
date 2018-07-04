@@ -2,8 +2,8 @@
   <div class="activity-page">
     <gb-join v-if="isJoin"></gb-join>
     <gb-header v-else></gb-header>
-    <gb-product :isCloud="true"></gb-product>
-    <gb-myhost></gb-myhost>
+    <gb-product :isCloud="true" v-if="!isBuy"></gb-product>
+    <gb-myhost v-else></gb-myhost>
     <gb-member :participationPersonColumns="participationPersonColumns" :participationPersonData="participationPersonData" :someoneParticipation="someoneParticipation"></gb-member>
     <div class="center">
       <gb-flow></gb-flow>
@@ -41,6 +41,7 @@
       return {
         isJoin: true,
         someoneParticipation: true,
+        isBuy: false,
         participationPersonColumns: [
           {
             title: '云朵',

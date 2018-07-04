@@ -47,8 +47,9 @@
           position: absolute;
           right: 46%;
           line-height: 48px;
+          cursor: pointer;
         }
-        >span{
+        >img{
           cursor: pointer;
         }
       }
