@@ -873,7 +873,7 @@
           <Input type="text" autocomplete="off" v-model="code" placeholder="请输入随机验证码"
                  style="width: 240px;margin-right: 20px;height: 28px;"></Input>
           <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
-               style="height:32px;vertical-align: middle">
+               style="height:32px;vertical-align: middle;cursor: pointer">
         </div>
         <div style="margin: 20px 0 10px 0;">
   <span
@@ -906,6 +906,14 @@
       <div>
         <div style="margin: 15px 0;"><span
           style="display: block;margin: 10px 0px;font-size: 14px;color: #333333;line-height: 14px;width:80px;">邮箱</span><span>{{userInfo.loginname}}</span>
+        </div>
+        <div style="margin: 15px 0 20px 0;">
+  <span
+    style="font-size: 14px;color: #333333;line-height: 14px;vertical-align:sub;width:80px;display:block;margin: 10px 0px;">随机验证码</span>
+          <Input type="text" autocomplete="off" v-model="code" placeholder="请输入随机验证码"
+                 style="width: 240px;margin-right: 20px;height: 28px;"></Input>
+          <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`"
+               style="height:32px;vertical-align: middle;cursor: pointer">
         </div>
         <div style="margin: 15px 0 20px 0;">
   <span
