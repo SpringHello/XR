@@ -2310,6 +2310,7 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
             this.$Message.success(response.data.message)
             var timeOut = 60
             this.newPhoneForm[`${type}VerCodeText`] = '60s'
