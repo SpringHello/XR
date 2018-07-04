@@ -576,12 +576,12 @@
             <Form :model="notAuth.companyAuthForm" :label-width="100" ref="companyAuth"
                   :rules="notAuth.companyAuthFormValidate"
                   style="margin-top:20px;">
-              <div style="width:500px">
+              <div>
                 <FormItem label="公司名称" prop="name">
-                  <Input v-model="notAuth.companyAuthForm.name" placeholder="请输入公司名称"></Input>
+                  <Input v-model="notAuth.companyAuthForm.name" placeholder="请输入公司名称" style="width: 300px;"></Input>
                 </FormItem>
                 <FormItem label="所属行业" prop="industry">
-                  <Select v-model="notAuth.companyAuthForm.industry">
+                  <Select v-model="notAuth.companyAuthForm.industry" style="width: 300px;">
                     <Option v-for="(item,index) in notAuth.companyAuthForm.industryOptions" :key="item.key"
                             :value="item.key">
                       {{item.label}}
@@ -589,23 +589,119 @@
                   </Select>
                 </FormItem>
                 <FormItem label="企业联系方式" prop="contact">
-                  <Input v-model="notAuth.companyAuthForm.contact" placeholder="请输入联系方式"></Input>
+                  <Input v-model="notAuth.companyAuthForm.contact" placeholder="请输入联系方式" style="width: 300px;"></Input>
                 </FormItem>
-                <p class="info-title">企业联系人信息</p>
-                <FormItem label="联系人姓名" prop="linkManName">
-                  <Input v-model="notAuth.companyAuthForm.linkManName" placeholder="请输入联系人姓名"></Input>
+                <FormItem label="营业执照号码" prop="businessLicenseNumber">
+                  <Input v-model="notAuth.companyAuthForm.businessLicenseNumber" :maxlength="20" placeholder="请输入营业执照号码" style="width: 300px;"></Input>
+                </FormItem>
+                <FormItem label="上传营业执照" prop="combine">
+                  <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px">
+                    <div style="width:130px;">
+                      <Upload
+                        multiple
+                        type="drag"
+                        :show-upload-list="false"
+                        :with-credentials="true"
+                        action="file/upFile.do"
+                        :format="['jpg','jpeg','png','gif']"
+                        :max-size="4096"
+                        :on-format-error="handleFormatError"
+                        :on-exceeded-size="handleMaxSize"
+                        :on-success="combine">
+                        <div v-if="notAuth.companyAuthForm.combine==''"
+                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                          暂无图片
+                        </div>
+                        <img style="height: 74px" v-else :src="notAuth.companyAuthForm.combine">
+                        <Button type="primary">上传</Button>
+                      </Upload>
+                    </div>
+                    <div style="width:130px;margin-left:20px;">
+                      <img src="../../assets/img/usercenter/combine.jpg"
+                           style="width:130px;height:74px;margin-bottom: 10px;cursor: zoom-in" @click="showPicture('combine')">
+                      <p style="line-height: 32px;text-align: center">三证合一执照</p>
+                    </div>
+                  </div>
+                </FormItem>
+                <p style="margin: 0px 0px 20px 100px;">提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
+                <p class="info-title">企业法人信息<span style="position:absolute;width:1160px;height:2px;border:0.5px solid rgba(217,217,217,1);bottom: 60px;left: 0;"></span></p>
+                <FormItem label="企业法人姓名" prop="linkManName">
+                  <Input v-model="notAuth.companyAuthForm.linkManName" placeholder="请输入法人姓名" style="width: 300px;"></Input>
                 </FormItem>
                 <FormItem label="身份证号码" prop="linkManNameID">
-                  <Input v-model="notAuth.companyAuthForm.linkManNameID" placeholder="请输入身份证号码"></Input>
+                  <Input v-model="notAuth.companyAuthForm.linkManNameID" placeholder="请输入法人身份证号码" style="width: 300px;"></Input>
+                </FormItem>
+                <FormItem label="上传法人证件" prop="legalPersonID">
+                  <div style="display: flex">
+                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px;margin-right: 20px">
+                      <div style="width:130px;">
+                        <Upload
+                          multiple
+                          type="drag"
+                          :show-upload-list="false"
+                          :with-credentials="true"
+                          action="file/upFile.do"
+                          :format="['jpg','jpeg','png','gif']"
+                          :max-size="4096"
+                          :on-format-error="handleFormatError"
+                          :on-exceeded-size="handleMaxSize"
+                          :on-success="legalPersonIDFront">
+                          <div v-if="notAuth.companyAuthForm.legalPersonIDFront==''"
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                            暂无图片
+                          </div>
+                          <img style="height: 74px" v-else :src="notAuth.companyAuthForm.legalPersonIDFront">
+                          <Button type="primary">上传</Button>
+                        </Upload>
+                      </div>
+                      <div style="width:130px;margin-left:20px;">
+                        <img src="../../assets/img/usercenter/card-font.png"
+                             style="width:130px;height:74px;margin-bottom: 10px;" >
+                        <p style="line-height: 32px;text-align: center">身份证人面像</p>
+                      </div>
+                    </div>
+                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px">
+                      <div style="width:130px;">
+                        <Upload
+                          multiple
+                          type="drag"
+                          :show-upload-list="false"
+                          :with-credentials="true"
+                          action="file/upFile.do"
+                          :format="['jpg','jpeg','png','gif']"
+                          :max-size="4096"
+                          :on-format-error="handleFormatError"
+                          :on-exceeded-size="handleMaxSize"
+                          :on-success="legalPersonIDBack">
+                          <div v-if="notAuth.companyAuthForm.legalPersonIDBack==''"
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                            暂无图片
+                          </div>
+                          <img style="height: 74px" v-else :src="notAuth.companyAuthForm.legalPersonIDBack">
+                          <Button type="primary">上传</Button>
+                        </Upload>
+                      </div>
+                      <div style="width:130px;margin-left:20px;">
+                        <img src="../../assets/img/usercenter/card-back.png"
+                             style="width:130px;height:74px;margin-bottom: 10px;">
+                        <p style="line-height: 32px;text-align: center">示例图</p>
+                      </div>
+                    </div>
+                  </div>
+                </FormItem>
+                <p style="margin: 0px 0px 20px 100px;">提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
+                <p class="info-title">经办人信息<span style="position:absolute;width:1160px;height:2px;border:0.5px solid rgba(217,217,217,1);bottom: 60px;left: 0;"></span></p>
+                <FormItem label="经办人姓名" prop="agentName">
+                  <Input v-model="notAuth.companyAuthForm.agentName" placeholder="请输入经办人姓名" style="width: 300px;"></Input>
                 </FormItem>
                 <FormItem label="图形验证码" prop="imgCode">
                   <Input v-model="notAuth.companyAuthForm.imgCode" placeholder="请输入图形验证码" style="width: 300px"></Input>
-                  <img style="position: absolute;right: 0px;bottom:0;cursor: pointer"
+                  <img style="position: absolute;right: 63%;bottom:0;cursor: pointer"
                        :src="notAuth.companyAuthForm.imgSrc"
                        @click="notAuth.companyAuthForm.imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
                 </FormItem>
                 <FormItem label="联系方式" prop="linkManPhone">
-                  <Input v-model="notAuth.companyAuthForm.linkManPhone" placeholder="请输入联系方式"
+                  <Input v-model="notAuth.companyAuthForm.linkManPhone" placeholder="请输入经办人联系方式"
                          style="width: 300px"></Input>
                   <button class="sendCompanyCode"
                           :class="{codeDisabled:notAuth.companyAuthForm.codePlaceholder!='发送验证码'}"
@@ -615,19 +711,108 @@
                   </button>
                 </FormItem>
                 <FormItem label="验证码" prop="verificationCode">
-                  <Input v-model="notAuth.companyAuthForm.verificationCode" placeholder="请输入收到的验证码"></Input>
+                  <Input v-model="notAuth.companyAuthForm.verificationCode" placeholder="请输入收到的验证码" style="width: 300px"></Input>
                 </FormItem>
+                <FormItem label="身份证号码" prop="agentManID">
+                  <Input v-model="notAuth.companyAuthForm.agentManID" placeholder="请输入经办人身份证号码" style="width: 300px;"></Input>
+                </FormItem>
+                <FormItem label="上传经办人证件" prop="agentID">
+                  <div style="display: flex;flex-wrap: wrap;">
+                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px;margin-right: 20px">
+                      <div style="width:130px;">
+                        <Upload
+                          multiple
+                          type="drag"
+                          :show-upload-list="false"
+                          :with-credentials="true"
+                          action="file/upFile.do"
+                          :format="['jpg','jpeg','png','gif']"
+                          :max-size="4096"
+                          :on-format-error="handleFormatError"
+                          :on-exceeded-size="handleMaxSize"
+                          :on-success="agentIDFront">
+                          <div v-if="notAuth.companyAuthForm.agentIDFront==''"
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                            暂无图片
+                          </div>
+                          <img style="height: 74px" v-else :src="notAuth.companyAuthForm.agentIDFront">
+                          <Button type="primary">上传</Button>
+                        </Upload>
+                      </div>
+                      <div style="width:130px;margin-left:20px;">
+                        <img src="../../assets/img/usercenter/card-font.png"
+                             style="width:130px;height:74px;margin-bottom: 10px;">
+                        <p style="line-height: 32px;text-align: center">身份证人面像</p>
+                      </div>
+                    </div>
+                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px">
+                      <div style="width:130px;">
+                        <Upload
+                          multiple
+                          type="drag"
+                          :show-upload-list="false"
+                          :with-credentials="true"
+                          action="file/upFile.do"
+                          :format="['jpg','jpeg','png','gif']"
+                          :max-size="4096"
+                          :on-format-error="handleFormatError"
+                          :on-exceeded-size="handleMaxSize"
+                          :on-success="agentIDBack">
+                          <div v-if="notAuth.companyAuthForm.agentIDBack==''"
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                            暂无图片
+                          </div>
+                          <img style="height: 74px" v-else :src="notAuth.companyAuthForm.agentIDBack">
+                          <Button type="primary">上传</Button>
+                        </Upload>
+                      </div>
+                      <div style="width:130px;margin-left:20px;">
+                        <img src="../../assets/img/usercenter/card-back.png"
+                             style="width:130px;height:74px;margin-bottom: 10px;">
+                        <p style="line-height: 32px;text-align: center">示例图</p>
+                      </div>
+                    </div>
+                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px;margin-top: 20px">
+                      <div style="width:130px;">
+                        <Upload
+                          multiple
+                          type="drag"
+                          :show-upload-list="false"
+                          :with-credentials="true"
+                          action="file/upFile.do"
+                          :format="['jpg','jpeg','png','gif']"
+                          :max-size="4096"
+                          :on-format-error="handleFormatError"
+                          :on-exceeded-size="handleMaxSize"
+                          :on-success="agentIDInHand">
+                          <div v-if="notAuth.companyAuthForm.agentIDInHand==''"
+                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                            暂无图片
+                          </div>
+                          <img style="height: 74px" v-else :src="notAuth.companyAuthForm.agentIDInHand">
+                          <Button type="primary">上传</Button>
+                        </Upload>
+                      </div>
+                      <div style="width:130px;margin-left:20px;">
+                        <img src="../../assets/img/usercenter/card-person.png"
+                             style="width:130px;height:74px;margin-bottom: 10px;">
+                        <p style="line-height: 32px;text-align: center">手持身份证人面照片</p>
+                      </div>
+                    </div>
+                  </div>
+                </FormItem>
+                <p style="margin: 0px 0px 20px 100px;">提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
                 <!--<FormItem label="证件类型" prop="certificateType">
-                <Select v-model="notAuth.companyAuthForm.certificateType">
-                <Option v-for="(item,index) in notAuth.companyAuthForm.certificateTypeOptions" :key="item.key"
-              :value="item.key">
-                {{item.label}}
-              </Option>
-              </Select>
-              </FormItem>-->
+                  <Select v-model="notAuth.companyAuthForm.certificateType">
+                    <Option v-for="(item,index) in notAuth.companyAuthForm.certificateTypeOptions" :key="item.key"
+                            :value="item.key">
+                      {{item.label}}
+                    </Option>
+                  </Select>
+                </FormItem>-->
               </div>
               <!--三证合一图片上传-->
-              <div class="IDCard" v-show="notAuth.companyAuthForm.certificateType==1" style="display: block">
+              <!--<div class="IDCard" v-show="notAuth.companyAuthForm.certificateType==1" style="display: block">
                 <FormItem label="三证合一">
                   <div style="display: flex;padding:20px;background-color: #f7f7f7">
                     <div style="width:130px;">
@@ -654,83 +839,83 @@
                   </div>
                 </FormItem>
                 <p style="margin: -15px 0px 20px;">提示：照片支持jpg、png、gif格式，图片最大不要超过200KB</p>
-              </div>
+              </div>-->
               <!--非三证合一图片上传-->
-              <div class="IDCard" v-show="notAuth.companyAuthForm.certificateType==2">
-                <FormItem label="营业执照">
-                  <div style="display: flex;padding:20px;background-color: #f7f7f7">
-                    <div style="width:130px;">
-                      <Upload
-                        multiple
-                        type="drag"
-                        :show-upload-list="false"
-                        :with-credentials="true"
-                        action="file/upFile.do"
-                        :on-success="license">
-                        <div v-if="notAuth.companyAuthForm.license==''"
-                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                          暂无图片
-                        </div>
-                        <img v-else :src="notAuth.companyAuthForm.license">
-                        <Button type="primary">上传</Button>
-                      </Upload>
-                    </div>
-                    <div style="width:130px;margin-left:20px;">
-                      <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
-                      <p style="line-height: 32px;text-align: center">示例图</p>
-                    </div>
-                  </div>
-                </FormItem>
-                <FormItem label="税务登记证">
-                  <div style="display: flex;padding:20px;background-color: #f7f7f7">
-                    <div style="width:130px;">
-                      <Upload
-                        multiple
-                        type="drag"
-                        :show-upload-list="false"
-                        :with-credentials="true"
-                        action="file/upFile.do"
-                        :on-success="tax">
-                        <div v-if="notAuth.companyAuthForm.tax==''"
-                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                          暂无图片
-                        </div>
-                        <img v-else :src="notAuth.companyAuthForm.tax">
-                        <Button type="primary">上传</Button>
-                      </Upload>
-                    </div>
-                    <div style="width:130px;margin-left:20px;">
-                      <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
-                      <p style="line-height: 32px;text-align: center">示例图</p>
-                    </div>
-                  </div>
-                </FormItem>
-                <FormItem label="组织机构代码证">
-                  <div style="display: flex;padding:20px;background-color: #f7f7f7">
-                    <div style="width:130px;">
-                      <Upload
-                        multiple
-                        type="drag"
-                        :show-upload-list="false"
-                        :with-credentials="true"
-                        action="file/upFile.do"
-                        :on-success="organization">
-                        <div v-if="notAuth.companyAuthForm.organization==''"
-                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                          暂无图片
-                        </div>
-                        <img v-else :src="notAuth.companyAuthForm.organization">
-                        <Button type="primary">上传</Button>
-                      </Upload>
-                    </div>
-                    <div style="width:130px;margin-left:20px;">
-                      <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
-                      <p style="line-height: 32px;text-align: center">示例图</p>
-                    </div>
-                  </div>
-                </FormItem>
-              </div>
-              <div style="text-align: right">
+              <!-- <div class="IDCard" v-show="notAuth.companyAuthForm.certificateType==2">
+                 <FormItem label="营业执照">
+                   <div style="display: flex;padding:20px;background-color: #f7f7f7">
+                     <div style="width:130px;">
+                       <Upload
+                         multiple
+                         type="drag"
+                         :show-upload-list="false"
+                         :with-credentials="true"
+                         action="file/upFile.do"
+                         :on-success="license">
+                         <div v-if="notAuth.companyAuthForm.license==''"
+                              style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                           暂无图片
+                         </div>
+                         <img v-else :src="notAuth.companyAuthForm.license">
+                         <Button type="primary">上传</Button>
+                       </Upload>
+                     </div>
+                     <div style="width:130px;margin-left:20px;">
+                       <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
+                       <p style="line-height: 32px;text-align: center">示例图</p>
+                     </div>
+                   </div>
+                 </FormItem>
+                 <FormItem label="税务登记证">
+                   <div style="display: flex;padding:20px;background-color: #f7f7f7">
+                     <div style="width:130px;">
+                       <Upload
+                         multiple
+                         type="drag"
+                         :show-upload-list="false"
+                         :with-credentials="true"
+                         action="file/upFile.do"
+                         :on-success="tax">
+                         <div v-if="notAuth.companyAuthForm.tax==''"
+                              style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                           暂无图片
+                         </div>
+                         <img v-else :src="notAuth.companyAuthForm.tax">
+                         <Button type="primary">上传</Button>
+                       </Upload>
+                     </div>
+                     <div style="width:130px;margin-left:20px;">
+                       <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
+                       <p style="line-height: 32px;text-align: center">示例图</p>
+                     </div>
+                   </div>
+                 </FormItem>
+                 <FormItem label="组织机构代码证">
+                   <div style="display: flex;padding:20px;background-color: #f7f7f7">
+                     <div style="width:130px;">
+                       <Upload
+                         multiple
+                         type="drag"
+                         :show-upload-list="false"
+                         :with-credentials="true"
+                         action="file/upFile.do"
+                         :on-success="organization">
+                         <div v-if="notAuth.companyAuthForm.organization==''"
+                              style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                           暂无图片
+                         </div>
+                         <img v-else :src="notAuth.companyAuthForm.organization">
+                         <Button type="primary">上传</Button>
+                       </Upload>
+                     </div>
+                     <div style="width:130px;margin-left:20px;">
+                       <img src="" style="width:130px;height:74px;margin-bottom: 20px;">
+                       <p style="line-height: 32px;text-align: center">示例图</p>
+                     </div>
+                   </div>
+                 </FormItem>
+               </div>-->
+              <div style="margin-left: 100px">
                 <Button type="primary" @click="enterpriseAttest" style="font-size: 12px;color: #FFFFFF;">确认提交</Button>
               </div>
             </Form>
@@ -1113,6 +1298,36 @@
           callback()
         }
       }
+      const validaRegisteredBusinessLicenseNumber = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('营业执照号码不能为空'));
+        }
+        if (!(/^[0-9]*$/.test(value))) {
+          callback(new Error('请输入正确的营业执照号码'));
+        } else {
+          callback()
+        }
+      }
+      const validaRegisteredLegalPersonID = (rule, value, callback) => {
+        if (this.notAuth.companyAuthForm.legalPersonIDFront == '') {
+          return callback(new Error('请上传公司法人身份证正面'));
+        } else if (this.notAuth.companyAuthForm.legalPersonIDBack == '') {
+          return callback(new Error('请上传公司法人身份证反面'));
+        } else {
+          callback()
+        }
+      }
+      const validaRegisteredAgentID = (rule, value, callback) => {
+        if (this.notAuth.companyAuthForm.agentIDFront == '') {
+          return callback(new Error('请上传经办人身份证正面'));
+        } else if (this.notAuth.companyAuthForm.agentIDBack == '') {
+          return callback(new Error('请上传经办人身份证反面'));
+        } else if (this.notAuth.companyAuthForm.agentIDInHand == '') {
+          return callback(new Error('请上传经办人手持身份证照'));
+        } else {
+          callback()
+        }
+      }
       return {
         keyWeight: '',
         keycodePlaceholder: '获取验证码',
@@ -1229,7 +1444,6 @@
               {required: true, message: '请输入验证码'},
             ]
           },
-          // 企业认证表单
           companyAuthForm: {
             name: '',
             industry: '',
@@ -1243,12 +1457,17 @@
             ],
             contact: '',
             contactPerson: '',
-            // 联系人姓名
+            // 法人人姓名
             linkManName: '',
-            // 联系人身份证号
+            // 法人身份证号
             linkManNameID: '',
             //  联系人电话
             linkManPhone: '',
+            // 经办人姓名
+            agentName: '',
+            // 经办人身份证
+            agentManID: '',
+            businessLicenseNumber: '',
             // 验证码
             verificationCode: '',
             // 企业认证时的图形验证码
@@ -1261,6 +1480,11 @@
             certificateTypeOptions: [{label: '三证合一', key: '1'}, {label: '非三证合一', key: '2'}],
             // 三证合一
             combine: '',
+            legalPersonIDFront: '',
+            legalPersonIDBack: '',
+            agentIDFront: '',
+            agentIDBack: '',
+            agentIDInHand: '',
             // 营业执照
             license: '',
             // 税务登记证
@@ -1281,6 +1505,19 @@
               {required: true, message: '请输入公司联系方式'},
               {validator: validaRegisteredPhone}
             ],
+            businessLicenseNumber: [
+              {required: true, message: '请输入公司营业执照号码'},
+              {validator: validaRegisteredBusinessLicenseNumber}
+            ],
+            combine: [
+              {required: true, message: '请上传公司营业执照'}
+            ],
+            legalPersonID: [
+              {validator: validaRegisteredLegalPersonID}
+            ],
+            agentID: [
+              {validator: validaRegisteredAgentID}
+            ],
             contactPerson: [
               {required: true, message: '请输入联系人姓名'},
               {validator: validaRegisteredName}
@@ -1289,18 +1526,26 @@
               {required: true, message: '请选择证件类型'}
             ],
             linkManName: [
-              {required: true, message: '请输入联系人姓名'},
+              {required: true, message: '请输入企业法人姓名'},
               {validator: validaRegisteredName}
             ],
             linkManNameID: [
-              {required: true, message: '请输入身份证号码'},
+              {required: true, message: '请输入法人身份证号码'},
+              {validator: validaRegisteredID}
+            ],
+            agentName: [
+              {required: true, message: '请输入经办人姓名'},
+              {validator: validaRegisteredName}
+            ],
+            agentManID: [
+              {required: true, message: '请输入经办人身份证号码'},
               {validator: validaRegisteredID}
             ],
             imgCode: [
               {required: true, message: '请输入图形验证码'},
             ],
             linkManPhone: [
-              {required: true, message: '请输入联系方式'},
+              {required: true, message: '请输入经办人联系方式'},
               {validator: validaRegisteredPhone}
             ],
             verificationCode: [
@@ -1988,29 +2233,14 @@
               idCard: this.notAuth.companyAuthForm.linkManNameID,
               contectPhone: this.notAuth.companyAuthForm.linkManPhone,
               phoneCode: this.notAuth.companyAuthForm.verificationCode,
-            }
-            if (params.authType == 1) {
-              if (this.notAuth.companyAuthForm.combine == '') {
-                this.$Message.warning('请上传三证合一')
-                return
-              }
-              params.companyCardURL = this.notAuth.companyAuthForm.combine
-            } else {
-              if (this.notAuth.companyAuthForm.license == '') {
-                this.$Message.warning('请上传营业执照')
-                return
-              }
-              if (this.notAuth.companyAuthForm.tax == '') {
-                this.$Message.warning('请上传税务登记证')
-                return
-              }
-              if (this.notAuth.companyAuthForm.organization == '') {
-                this.$Message.warning('请上传组织机构代码')
-                return
-              }
-              params.businessLicense = this.notAuth.companyAuthForm.license
-              params.organizationCode = this.notAuth.companyAuthForm.organization
-              params.taxRegister = this.notAuth.companyAuthForm.tax
+              businessLicenseNumber: this.notAuth.companyAuthForm.businessLicenseNumber,
+              companyLegalName: this.notAuth.companyAuthForm.linkManName,
+              companyLegalIdcardNumber: this.notAuth.companyAuthForm.linkManNameID,
+              companyLegalIdcardUrl: this.notAuth.companyAuthForm.legalPersonIDFront,
+              companyLegalIdcardBackUrl: this.notAuth.companyAuthForm.legalPersonIDBack,
+              operatorIdcardUrl: this.notAuth.companyAuthForm.agentIDFront,
+              operatorIdcardBackUrl: this.notAuth.companyAuthForm.agentIDBack,
+              operatorIdcardBackByHandUrl: this.notAuth.companyAuthForm.agentIDInHand
             }
             axios.post('user/enterpriseAttest.do', params).then(response => {
               if (response.status == 200 && response.data.status == 1) {
@@ -2029,7 +2259,7 @@
         })
       },
       /* 企业认证发送验证码 */
-      sendCompanyCode(){
+      sendCompanyCode() {
         var regPhone = false
         var regCode = false
         this.$refs.companyAuth.validateField('linkManPhone', (text) => {
@@ -2263,7 +2493,7 @@
         })
       },
       // 验证重置密码表单
-      _checkResetPasswordForm () {
+      _checkResetPasswordForm() {
         this.$refs.resetPassword.validate((valid) => {
           if (valid) {
             // 表单验证通过，调用挂载磁盘方法
@@ -2341,6 +2571,31 @@
           this.notAuth.companyAuthForm.combine = response.result
         }
       },
+      legalPersonIDFront(response) {
+        if (response.status == 1) {
+          this.notAuth.companyAuthForm.legalPersonIDFront = response.result
+        }
+      },
+      legalPersonIDBack(response) {
+        if (response.status == 1) {
+          this.notAuth.companyAuthForm.legalPersonIDBack = response.result
+        }
+      },
+      agentIDFront(response) {
+        if (response.status == 1) {
+          this.notAuth.companyAuthForm.agentIDFront = response.result
+        }
+      },
+      agentIDBack(response) {
+        if (response.status == 1) {
+          this.notAuth.companyAuthForm.agentIDBack = response.result
+        }
+      },
+      agentIDInHand(response) {
+        if (response.status == 1) {
+          this.notAuth.companyAuthForm.agentIDInHand = response.result
+        }
+      },
       // 营业执照
       license(response) {
         if (response.status == 1) {
@@ -2359,7 +2614,16 @@
           this.notAuth.companyAuthForm.organization = response.result
         }
       },
-
+      handleFormatError() {
+        this.$Message.info({
+          content: '仅支持jpg,jpeg,png,gif格式的文件上传'
+        })
+      },
+      handleMaxSize() {
+        this.$Message.info({
+          content: '上传的文件过大'
+        })
+      },
       // 更新手机号
       confirmPhone() {
         var url = 'user/updatePhone.do'
@@ -2623,7 +2887,8 @@
           font-size: 18px;
           color: rgba(17, 17, 17, 0.75);
           letter-spacing: 1.31px;
-          margin: 20px 0px;
+          margin: 90px 0px 20px;
+          position: relative;
         }
         .info-border {
           padding-bottom: 20px;
