@@ -2501,7 +2501,7 @@
           if (response.status == 200 && response.data.status == 1) {
             this.keyData = response.data.data.UserAccess
           } else {
-            this.$Message.error(response.data.msg)
+            //this.$Message.error(response.data.msg)
           }
         })
       },
