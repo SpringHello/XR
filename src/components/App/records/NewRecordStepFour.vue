@@ -431,10 +431,9 @@
             this.$Message.success('资金冻结成功')
             this.nextStep = true
           } else {
-     /*       this.$message.info({
+            this.$message.info({
               content: '平台开小差了，请稍候再试'
-            })*/
-            this.nextStep = true
+            })
           }
         })
       },
