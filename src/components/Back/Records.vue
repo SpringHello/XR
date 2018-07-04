@@ -63,6 +63,7 @@
 
 <script type="text/ecmascript-6">
   import $store from '../../vuex'
+  import axios from 'axios'
 
   export default {
     data() {
@@ -367,7 +368,7 @@
                 return h('span', {
                   style: {
                     cursor: 'pointer',
-                    color: '2A99F2'
+                    color: '#2A99F2'
                   },
                   on: {
                     click: () => {
