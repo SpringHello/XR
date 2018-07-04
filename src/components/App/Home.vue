@@ -244,6 +244,39 @@
         </div>
       </div>
     </div>
+    <!-- 新睿云最新动态 -->
+    <div class="news">
+      <div class="wrap">
+        <div class="header">
+          <p class="title-g">新睿云最新动态</p>
+          <p class="text-desc-g">为您提供行业资讯、活动公告、产品发布、以及汇聚前沿的云计算技术</p>
+        </div>
+        <div class="main">
+          <div class="main-left">
+            <dl>
+              <dt>{{showNews.title}}</dt>
+              <dd v-html="showNews.text">
+              </dd>
+              <dd><Button style="border:solid 1px #387DFF;color:#387DFF;margin-top:40px;">查看详情</Button></dd>
+            </dl>
+          </div>
+          <div class="main-right"></div>
+        </div>
+        <div class="link-list wrap">
+          <dl v-for="(item,index) in linkList" :key="index">
+            <dt>{{item.title}}<span>more></span></dt>
+            <dd >
+              <ul>
+                <li v-for="(secitem,index) in item.list" :key="index">
+                  {{secitem.title}}
+                  <span>{{secitem.time}}</span>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
     <!-- 合作伙伴 -->
     <!--<div class="partner-container">
       <div>
@@ -303,10 +336,74 @@
   import echarts from 'echarts'
   import china from '@/echarts/china.json'
   import throttle from 'throttle-debounce/throttle'
+import axios from 'axios';
 
   export default {
     data() {
       return {
+        showNews: {},
+        linkList: [
+          {
+            title: '行业资讯',
+            list: [
+              {
+                title: '标题',
+                time: '2018/04/25',
+                url: 'path'
+              },
+              {
+                title: '标题',
+                time: '2018/04/25',
+                url: 'path'
+              },
+              {
+                title: '标题',
+                time: '2018/04/25',
+                url: 'path'
+              }
+            ]
+          },
+          {
+            title: '行业资讯2',
+            list: [
+              {
+                title: '标题',
+                time: '2018/04/25',
+                url: 'path'
+              },
+              {
+                title: '标题',
+                time: '2018/04/25',
+                url: 'path'
+              },
+              {
+                title: '标题',
+                time: '2018/04/25',
+                url: 'path'
+              }
+            ]
+          },
+          {
+            title: '行业资讯3',
+            list: [
+              {
+                title: '标题',
+                time: '2018/04/25',
+                url: 'path'
+              },
+              {
+                title: '标题',
+                time: '2018/04/25',
+                url: 'path'
+              },
+              {
+                title: '标题',
+                time: '2018/04/25',
+                url: 'path'
+              }
+            ]
+          }
+        ],
         white: {
           color: '#fff',
         },
@@ -647,8 +744,16 @@
       window.addEventListener('scroll', this.scrollFn)
     },
     created() {
+      this.getnews()
     },
     methods: {
+      getnews() {
+        axios.get('article/getTopArticle.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.showNews = response.data.result
+          }
+        })
+      },
       // 切换云产品
       changeProduct(item, event) {
         document.getElementById('')
@@ -733,6 +838,109 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   #home {
+    .wrap{
+      width: 1200px;
+      margin: 0 auto;
+    }
+    .title-g{
+      text-align: center;
+      font-size: 28px;
+      color: #333333;
+      padding-bottom: 26px;
+    }
+    .text-desc-g{
+      text-align: center;
+      font-size: 14px;
+      color: #999999;
+    }
+    .news{
+      .header{
+        margin-top: 60px;
+      }
+      .main{
+        margin-top: 60px;
+        display: flex;
+        box-shadow:0px 13px 44px -16px rgba(216,216,216,0.79);
+        .main-left{
+          width: 670px;
+          padding: 40px 60px;
+        }
+        dl{
+          dt{
+            height: 60px;;
+            position: relative;
+            color: #387DFF;
+            font-size: 18px;
+            &::after{
+              content: '';
+              position: absolute;
+              left: 0;
+              bottom: 0;
+              display: inline-block;
+              width:50px;
+              height:4px;
+              background:rgba(55,125,255,1);
+            }
+          }
+          dd{
+            font-size:14px;
+            color:rgba(102,102,102,1);
+            line-height:28px;
+          }
+          dd:nth-of-type(1){
+            margin-top: 20px;
+            overflow : hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 7;
+            -webkit-box-orient: vertical;
+          }
+        }
+        .main-right{
+            width:533px;
+            height:432px;
+            background:rgba(231,231,231,1);
+        }
+      }
+      .link-list{
+        margin-top: 100px;
+        display: flex;
+        justify-content: space-between;
+        dl{
+          width: 386px;
+          box-shadow:0px 13px 14px -6px rgba(216,216,216,0.41);
+          dt{
+            height: 58px;
+            padding: 20px;
+            background: #7E7F80;
+            background: url('../../assets/img/home/news-linklist-bg.png') no-repeat;
+            font-size:18px;
+            color: #fff;
+            span{
+              float: right;
+              cursor: pointer;
+            }
+          }
+          dd{
+            ul{
+              li{
+                padding: 20px;
+                font-size:14px;
+                color:rgba(102,102,102,1);
+                cursor: pointer;
+                &:hover{
+                  color: #377DFF;
+                }
+                span{
+                  float: right;
+                }
+              }
+            }
+          }
+        }
+        
+      }
+    }
     .icon {
       width: 1em;
       height: 1em;
