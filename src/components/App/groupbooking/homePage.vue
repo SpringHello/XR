@@ -25,6 +25,13 @@
     components: {
       gbHeader, gbProduct, gbFlow, gbAward, gbAdvantage, gbRule
     },
+    beforeRouteEnter(to, from, next) {
+/*      if ($store.state.userInfo && $store.state.userInfo.recordFlag) {
+        next({path: '/ruicloud/waitSecondTrial'})
+      } else {
+        next()
+      }*/
+    },
     data() {
       return {}
     },
