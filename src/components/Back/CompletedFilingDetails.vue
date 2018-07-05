@@ -353,13 +353,11 @@
                   <li class="tab_item">主办单位负责人照片</li>
                   <li class="tab_item" @click="sponsorPhoto = true">点击查看
                     <div v-if="sponsorPhotoHide =='sponsorPhoto'" class="text_block"><span style="color:red">信息有误</span>
-                      <span style="color:#2a99f2;cursor:pointer;" @click="sponsorPhoto = true">重新输入</span>
                     </div>
                   </li>
                   <li class="tab_item">主办单位照片</li>
                   <li class="tab_item" @click="organizerPhoto = true">点击查看
                     <div v-if="organizerPhotoHide =='organizerPhoto'" class="text_block"><span style="color:red">信息有误</span>
-                      <span style="color:#2a99f2;cursor:pointer;" @click="organizerPhoto = true">重新输入</span>
                     </div>
                   </li>
                 </ul>
@@ -376,13 +374,11 @@
                   <li class="tab_item">域名证书</li>
                   <li class="tab_item" @click="domainNameCertificate = true">点击查看
                     <div v-if="domainNameCertificateHide =='domainNameCertificate'" class="text_block"><span style="color:red">信息有误</span>
-                      <span style="color:#2a99f2;cursor:pointer;" @click="domainNameCertificate = true">重新输入</span>
                     </div>
                   </li>
                   <li class="tab_item">网站核验单</li>
                   <li class="tab_item" @click="checkList = true">点击查看
                     <div v-if="checkListHide =='checkList'" class="text_block"><span style="color:red">信息有误</span>
-                      <span style="color:#2a99f2;cursor:pointer;" @click="checkList = true">重新输入</span>
                     </div>
                   </li>
                 </ul>
@@ -399,11 +395,13 @@
                   <li class="tab_item">其他资料</li>
                   <li class="tab_item" @click="otherInfo = true">点击查看
                     <div v-if="otherInfoHide =='otherInfo'" class="text_block"><span style="color:red">信息有误</span>
-                      <span style="color:#2a99f2;cursor:pointer;" @click="otherInfo = true">重新输入</span>
                     </div>
                   </li>
-                  <li class="tab_item"></li>
-                  <li class="tab_item"></li>
+                  <li class="tab_item">幕布照片</li>
+                  <li class="tab_item">点击查看
+                    <div v-if="curtainInfoHide =='curtainInfo'" class="text_block"><span style="color:red">信息有误</span>
+                    </div>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -611,6 +609,51 @@
           <div style="width:50%;height:203px;">
             <div style="text-align: center">
               <img @click="visible = true" style="height:144px;margin-bottom:20px;cursor: zoom-in;" src="../../assets/img/records/records-img3.png"/>
+              <p>示例图</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Modal>
+    <!-- 幕布照片 -->
+    <Modal
+      v-model="curtainInfo"
+      title="重新上传幕布信息"
+      :scrollable="true"
+    >
+      <p>执照扫描件</p>
+      <div class="updatePhoto">
+        <div class="updates">
+          <div style="width:50%;height:203px;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'">
+            <Upload
+              multiple
+              type="drag"
+              :show-upload-list="false"
+              :with-credentials="true"
+              action="file/upFile.do"
+              :format="['jpg','jpeg','png']"
+              :on-success="curtainSuccess"
+              :on-format-error="organizerFormatError"
+            >
+              <div class="sponsor-text" v-if="hostUnitList.mark5==''">
+
+              </div>
+              <div style="min-height:203px;" v-else>
+                <div style="text-align: center">
+                  <img style="height:144px;" :src="hostUnitList.mark5">
+                  <Progress v-show="percentCurtain>0&&percentCurtain<=100" :percent="percentCurtain"></Progress>
+                  <p style="">点击选择文件</p>
+                </div>
+              </div>
+            </Upload>
+          </div>
+          <div style="width:50%;text-align: center;" v-else>
+            <p class="hide-text" v-if="hostUnitList.mark5==''"></p>
+            <img style="width:198px;height:144px;" :src="hostUnitList.mark5" v-else>
+          </div>
+          <div style="width:50%;min-height:203px;">
+            <div style="text-align: center">
+              <img  style="height:144px;margin-bottom:20px;" src="../../assets/img/records/records-img6.png"/>
               <p>示例图</p>
             </div>
           </div>
@@ -1060,7 +1103,6 @@
           if (value.length == 0 || value[i] == "") {
             return callback(new Error("请输入网站域名"));
           } else if (!reg.test(value[i]) && value[i] !== "") {
-            // console.log(value[i]);
             return callback(new Error("请输入正确的网站域名"));
           } else {
             callback();
@@ -1114,6 +1156,8 @@
         sponsorPhotoHide: null,
         organizerPhotoHide: null,
         otherInfoHide: null,
+        curtainInfoHide: null,
+        curtainInfo: false,
         //网站核验单大图
         visibleWeb: false,
         //营业执照大图
@@ -1360,7 +1404,8 @@
         percentCombine: 0,
         percentCertification: 0,
         percentOtherFile: 0,
-        percentCheckList: 0
+        percentCheckList: 0,
+        percentCurtain: 0
       };
     },
     created() {
@@ -1505,7 +1550,6 @@
                     break;
                 }
               }
-              // console.log(this.hostUnitList);
               if (this.hostUnitList.webrecordauthenticityurl.indexOf(',') > 0) {
                 let webRecord = this.hostUnitList.webrecordauthenticityurl.split(",");
                 for (let j = 0; j < onther.length; j++) {
@@ -1544,7 +1588,7 @@
                 }
               }
               //查询错误的备案信息然后显示出来重新输入
-              if (typeof (this.hostUnitList.errorMessage) != 'undefined') {
+              if (typeof (this.hostUnitList.errorMessage) != 'undefined'&&(this.hostUnitList.status == '初审拒绝'||this.hostUnitList.status == '管局审核拒绝' )) {
 
                 this.isAllUpate = false;
                 this.hostUnitList.errorMessage.forEach(item => {
@@ -1638,6 +1682,27 @@
                       break
                     case 'maincompanycommunicatlocation':
                       this.mainCompanyCommunicatLocationHide = 'mainCompanyCommunicatLocation'
+                      break
+                    case 'webresponsibilityurlpositive':
+                      this.sponsorPhotoHide ='sponsorPhoto'
+                      break
+                    case 'webresponsibilityurlback':
+                      this.sponsorPhotoHide ='sponsorPhoto'
+                      break
+                    case 'hostcompanyurl':
+                      this.organizerPhotoHide ='organizerPhoto'
+                      break
+                    case 'domaincertificateurl':
+                      this.domainNameCertificateHide ='domainNameCertificate'
+                      break
+                    case 'otherdataurl':
+                      this.otherInfoHide ='otherInfo'
+                      break
+                    case 'webrecordauthenticityurl':
+                      this.checkListHide ='checkList'
+                      break
+                    case 'mark5':
+                      this.curtainInfoHide ='curtainInfo'
                       break
                   }
                 })
@@ -1764,7 +1829,8 @@
           companyResponsibilityUrlPositive: this.updateHostUnitList.webresponsibilityurlpositive,
           companyResponsibilityUrlBack: this.updateHostUnitList.webresponsibilityurlback,
           domainCertificateUrl: this.updateHostUnitList.domaincertificateurl,
-          otherDataUrl: this.updateHostUnitList.otherdataurl
+          otherDataUrl: this.updateHostUnitList.otherdataurl,
+          backgroundUrl: this.hostUnitList.mark5
         }
         let update = this.$http.post("recode/updateMainWeb.do", web);
         let main = {
@@ -1953,6 +2019,21 @@
           this.$Message.info('上传失败');
         }
       },
+      curtainSuccess(response) {
+        if (response.status == 1) {
+          let s = setInterval(() => {
+            this.percentCurtain++
+            if (this.percentCurtain > 100) {
+              this.hostUnitList.mark5 = response.result;
+              this.$Message.success('上传成功');
+              window.clearInterval(s)
+              this.percentCurtain = 0
+            }
+          }, 20)
+        } else {
+          this.$Message.info('上传失败');
+        }
+      },
       //上传域名证书格式错误
       domainNameFormatError() {
         this.$Message.info('域名证书只能上传jpg,jpeg,png,doc,docx,pdf类型的文件');
@@ -2093,9 +2174,6 @@
     mounted() {
       this.details();
       this.getPublicIP();
-      // console.log( this.$refs.uploadHost);
-      // this.uploadHost = this.$refs.uploadHost.fileList;
-      // this.uploadDomain = this.$refs.uploadDomain.fileList;
     },
   };
 </script>

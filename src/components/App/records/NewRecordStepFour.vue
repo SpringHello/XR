@@ -186,6 +186,7 @@
   import oStep from "./ostep.vue";
   import records from './../Records'
   import $ from 'jquery'
+  import throttle from 'throttle-debounce/throttle'
 
   export default {
     components: {
@@ -441,7 +442,7 @@
         window.open(href, '_blank')
       },
       // 提交幕布申请
-      applyCurtain() {
+      applyCurtain: throttle(2000, function (){
         this.siteParams.backgroundAddress = this.receiveForm.address
         this.siteParams.backgroundName = this.receiveForm.person
         this.siteParams.backgroundPhone = this.receiveForm.phone
@@ -490,7 +491,7 @@
             }
           })
         }
-      },
+      }),
       // 提交幕布
       sumbitApproval() {
         if (this.upload.photo === '') {
