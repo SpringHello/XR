@@ -391,7 +391,7 @@ import axios from 'axios';
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Pecs',
-                useLink: $store.state.userInfo ? 'host' : 'login',
+                useLink: $store.state.userInfo ? 'buy' : 'buy',
                 ME: true
               },
               {
@@ -401,7 +401,7 @@ import axios from 'axios';
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Phost',
-                useLink: $store.state.userInfo ? 'mirror' : 'login',
+                useLink: $store.state.userInfo ? 'buy' : 'buy',
                 ME: false
               },
               {
@@ -411,7 +411,7 @@ import axios from 'axios';
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Pecss',
-                useLink: $store.state.userInfo ? 'snapshot' : 'login',
+                useLink: $store.state.userInfo ? 'buy' : 'buy',
                 ME: false
               },
               {
@@ -451,7 +451,7 @@ import axios from 'axios';
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Pvpc',
-                useLink: $store.state.userInfo ? 'network' : 'login',
+                useLink: $store.state.userInfo ? 'buy' : 'buy',
                 ME: true
               },
               {
@@ -461,7 +461,7 @@ import axios from 'axios';
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Peip',
-                useLink: $store.state.userInfo ? 'network' : 'login',
+                useLink: $store.state.userInfo ? 'buy' : 'buy',
                 ME: false
               },
               {
@@ -471,7 +471,7 @@ import axios from 'axios';
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Pbalance',
-                useLink: $store.state.userInfo ? 'bal' : 'login',
+                useLink: $store.state.userInfo ? 'buy' : 'buy',
                 ME: false
               },
               {
@@ -511,7 +511,7 @@ import axios from 'axios';
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Pdisk',
-                useLink: $store.state.userInfo ? 'disk' : 'login',
+                useLink: $store.state.userInfo ? 'buy' : 'buy',
                 ME: true
               },
               {
@@ -541,7 +541,7 @@ import axios from 'axios';
                 detailText: '查看详情',
                 useText: '立即使用',
                 detailLink: 'Pfirewall',
-                useLink: $store.state.userInfo ? 'firewall' : 'login',
+                useLink: $store.state.userInfo ? 'buy' : 'buy',
                 ME: true
               },
               {
@@ -902,7 +902,7 @@ import axios from 'axios';
             }
           }
         }
-        
+
       }
     }
     .icon {
