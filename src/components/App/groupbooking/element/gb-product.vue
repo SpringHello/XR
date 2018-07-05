@@ -189,7 +189,10 @@
           }
         }).then(res => {
           if (res.data.status == 1) {
-            window.open('/ruicloud/order')
+            const {href} = this.$router.resolve({
+              name: 'order',
+            })
+            window.open(href, '_blank')
           } else {
             this.$message.info({
               content: res.data.message
