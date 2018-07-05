@@ -32,7 +32,7 @@
           </div>
         </div>
 
-        <!--<p style="margin-top:20px;">当月用量 2018/04/28-2018</p>-->
+        <p style="margin-top:20px;">当月用量 2018/04/28-2018/5/28</p>
         <div class="center_space">
           <div class="space_Two">
             <p>存储空间容量</p>
@@ -49,8 +49,8 @@
             <div class="space_text">0次</div>
           </div>
         </div>
-        <div class="monitor" :class="{monitors:!monitorHide}"  style="color: #2A99F2;">查看监控</div>
-        <Tabs type="card" style="margin-top:25px;" value="objects" @on-click="checkTab" :animated="false">
+        <div class="monitor" :class="{monitors:!monitorHide}" @click="monitorClick"  style="color: #2A99F2;">查看监控</div>
+        <Tabs type="card" style="margin-top:25px;" value="objects" @on-click="checkTab" :animated="false" v-if="monitorHide">
           <TabPane label="Object管理" name="objects">
             <div style="display:flex;margin-bottom:15px;">
               <div style="width:50%">
@@ -87,7 +87,7 @@
                 <div class="custom" v-if="indexs == 3">
                   <Button type="primary" @click="openJurisdiction" style="margin-right: 10px;">添加自定义权限</Button>
                   <Button type="primary" @click="edit = true">自定义权限编辑器</Button>
-                  <Table :loading="jurisdLoading" style="margin-top:20px;" :columns="rightList" :data="aclData"></Table>
+                  <Table :loading="jurisdLoading" style="margin-top:20px;" :columns="rightList" :data="aclData" ></Table>
                 </div>
               </div>
             </div>
@@ -193,6 +193,7 @@
         <!--<cunt ref="upload"-->
           <!--:on-success="handleUpload"-->
           <!--:data="fileUpdata"-->
+           <!--name="uploadFile"-->
           <!--action="http://192.168.3.109:8080/ruirados/object/uploadObject.do">-->
           <!--<div class="upload_text">-->
             <!--<Icon type="ios-upload-outline"></Icon>-->
@@ -317,10 +318,15 @@
           <div >
             <RadioGroup v-model="jurisdValidate.users" @on-change="usersClick()">
               <Radio label='0'>全部用户</Radio>
-              <Radio label='1'>自定义用户</Radio>
+              <!--<Radio label='1'>自定义用户</Radio>-->
             </RadioGroup>
             <Input :disabled='grant' v-model="jurisdValidate.grantValue" style="width:420px;" :rows="4" type="textarea"/>
-            <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+            <Tooltip   content="用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”" placement="right">
+             <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+              <div slot="content" class="right_tool">
+                <p>用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”</p>
+              </div>
+            </Tooltip>
           </div>
         </FormItem>
         <FormItem label="密码接收渠道" prop="channel">
@@ -343,7 +349,18 @@
               <Radio label='1'>可操作</Radio>
             </RadioGroup>
             <Input v-model="jurisdValidate.influenceValue" style="width:420px;" :rows="4" type="textarea"/>
+            <Tooltip   content="用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”" placement="right">
             <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+              <div slot="content" class="right_tool">
+                <p>资源留空等同于“Bucket名称”
+                  资源必须以Bucket名称开始
+                  资源如果只有1个斜杠，不能以斜杠结尾
+                  资源可以设置多个，每行1个；每行最多1个通配符
+                  （*），并且以通配符结尾。最多增加10条记录
+                  示例：myBucket,myBucket/*，
+                  　　　myBucket/myfolder/object*</p>
+              </div>
+            </Tooltip>
           </div>
         </FormItem>
         <FormItem>
@@ -356,7 +373,12 @@
         </FormItem>
         <FormItem prop="whiteListValue">
           <Input :disabled="refererDisabled"  v-model="jurisdValidate.whiteListValue" style="width:420px;" :rows="4" type="textarea"/>
+          <Tooltip   content="用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”" placement="right">
           <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+            <div slot="content" class="right_tool">
+              <p>白名单用于添加允许访问的来源地址</p>
+            </div>
+          </Tooltip>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -395,10 +417,15 @@
           <div>
             <RadioGroup v-model="updateJurisd.updateUsers" @on-change="usersClick">
               <Radio label="0">全部用户</Radio>
-              <Radio label="1">自定义用户</Radio>
+              <!--<Radio label="1">自定义用户</Radio>-->
             </RadioGroup>
             <Input :disabled='updategrant' v-model="updateJurisd.updateGrantValue" style="width:420px;" :rows="4" type="textarea"></Input>
-            <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+            <Tooltip   content="用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”" placement="right">
+              <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+              <div slot="content" class="right_tool">
+                <p>用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”</p>
+              </div>
+            </Tooltip>
           </div>
         </FormItem>
         <FormItem prop="updateChannel">
@@ -422,7 +449,18 @@
               <Radio label="1">可操作</Radio>
             </RadioGroup>
             <Input v-model="updateJurisd.updateInfluenceValue" style="width:420px;" :rows="4" type="textarea"></Input>
-            <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+            <Tooltip   content="用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”" placement="right">
+              <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+              <div slot="content" class="right_tool">
+                <p>资源留空等同于“Bucket名称”
+                  资源必须以Bucket名称开始
+                  资源如果只有1个斜杠，不能以斜杠结尾
+                  资源可以设置多个，每行1个；每行最多1个通配符
+                  （*），并且以通配符结尾。最多增加10条记录
+                  示例：myBucket,myBucket/*，
+                  　　　myBucket/myfolder/object*</p>
+              </div>
+            </Tooltip>
           </div>
         </FormItem>
         <FormItem>
@@ -435,7 +473,12 @@
         </FormItem>
         <FormItem prop="updateWhiteListValue">
           <Input :disabled="refererUpdateDisabled" v-model="updateJurisd.updateWhiteListValue" style="width:420px;" :rows="4" type="textarea"></Input>
-          <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+          <Tooltip   content="用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”" placement="right">
+            <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
+            <div slot="content" class="right_tool">
+              <p>白名单用于添加允许访问的来源地址</p>
+            </div>
+          </Tooltip>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -560,7 +603,7 @@
     data() {
       return {
         //是否隐藏查看监控
-        monitorHide:false,
+        monitorHide:true,
         //修改白名单权限验证
         validateUpdateField:'',
         //添加白名单验证
@@ -748,11 +791,7 @@
                     },
                     on:{
                       click:()=>{
-                        let downloadFile ={
-                          dirId:params.row.dirId,
-                          downloadfileSrc:params.row.filesrc
-                        };
-                        this.downloadObject(downloadFile);
+                        this.downloadObject(params.row.filesrc);
                       }
                     }
                   },'下载')
@@ -765,7 +804,7 @@
             title: "大小",
             render: (h, params) => {
               return h('div', [
-                h('span', {},  params.row.filesize > 1000 || params.row.filesize / 1024 > 1  ? ((params.row.filesize / 1024).toFixed(2) + "MB") : (params.row.filesize + "KB"))//换算文件大小单位
+                h('span', {},  params.row.filesize / 1048576 > 1   ? ((params.row.filesize / 1048576).toFixed(2) + "GB"): params.row.filesize > 1000 || params.row.filesize / 1024 > 1 ? ((params.row.filesize / 1024).toFixed(2) + "MB")   : (params.row.filesize + 'KB'))//换算文件大小单位
               ])
             }
           },
@@ -821,6 +860,18 @@
                   }, "删除")
                 ])
               }
+            }
+          },
+          {
+            key:'isfile',
+            sortType:'desc',
+            width:'50',
+            render:(h,params)=>{
+              return h('div',[
+                h('span',{
+
+                },params.row.isfile)
+              ])
             }
           }
         ],
@@ -988,6 +1039,7 @@
               }
             }
           },
+
         ],
         //权限表格数据
         aclData: [],
@@ -1594,11 +1646,14 @@
       corsLower(val) {
         val == 'cors' ? (this.corsHide = !this.corsHide) : val == 'static' ? (this.staticHide = !this.staticHide) : ''
       },
+      monitorClick(){
+        this.monitorHide = !this.monitorHide
+      },
       //获取存储空间容量
       getAllsize() {
         this.$http.post('object/getAllSize.do', {}).then(res => {
           if (res.data.status == '1') {
-            this.size = res.data.data.data / 1024 > 1 || res.data.data.data >1000 ? (res.data.data.data / 1024).toFixed(2) + 'MB' : res.data.data.data + 'KB';
+            this.size = res.data.data.data / 1048576>1 ? (res.data.data.data /1048576).toFixed(0) +'GB': res.data.data.data > 1000 || res.data.data.data / 1024 > 1 ? (res.data.data.data / 1024).toFixed(0) + 'MB' : (res.data.data.data/1024).toFixed(0) + 'KB';
           } else {
             this.size = "0KB";
             this.$Message.info('出错了');
@@ -1741,8 +1796,31 @@
 
       },
       //下载文件
-      downloadObject(){
-        geturl
+      downloadObject(filesrc){
+        // var _that = window;
+        this.$http.post('object/downloadsObject',{
+          bucketName:sessionStorage.getItem('bucketName')
+        }).then(res =>{
+          if(res.data.status =='1'){
+            alert(1111);
+          }
+        })
+        // this.$http.post('object/geturl.do', {
+        //   bucketName: sessionStorage.getItem('bucketName'),
+        //   timelimit: '2',
+        //   fileSrc: filesrc,
+        //   protocol:'http'
+        // }).then(res => {
+        //   if (res.data.status == '1') {
+        //     var eleLink = document.createElement('a');
+        //     eleLink.download = res.data.data;
+        //     eleLink.style.display = 'none';
+        //     console.log(eleLink);
+        //     eleLink.click();
+        //   } else {
+        //     this.$Message.info(res.data.msg);
+        //   }
+        // })
       }
       //删除上传文件
       // deleteUpload(index){
@@ -1810,6 +1888,7 @@
         padding: 20px;
         margin-bottom: 40px;
         background-color: #ffffff;
+        min-height:700px;
         .space_top {
           display: flex;
           height: 58px;
@@ -1887,7 +1966,7 @@
         }
         .space_one:after {
           content: "";
-          width: 2px;
+          width: 1px;
           height: 80px;
           position: relative;
           display: inline-block;
@@ -1897,6 +1976,9 @@
         }
       }
     }
+  }
+  .right_tool{
+    white-space: normal;
   }
   .leftArrow{
     width: 10px;
@@ -2067,7 +2149,7 @@
   .setting {
     padding: 14px 0 40px 0;
     border-top: 1px solid #D8D8D8;
-    border-bottom: 1px solid #D8D8D8;
+    /*border-bottom: 1px solid #D8D8D8;*/
   }
 
   .text-boy {

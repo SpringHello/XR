@@ -67,7 +67,7 @@
       <div class="wrapper">
         <div class="zoneList">
           <!--<Dropdown @on-click="toggleZone">-->
-            <Dropdown>
+            <Dropdown  @on-click="toggleZone">
             <div style="height:30px;min-width: 102px;">
               <div
                 style="display: inline-block;background: #2A99F2;border-radius: 4px;height: 30px;padding: 4px 0px;cursor:pointer">
@@ -242,6 +242,13 @@
             }]
           },
           {
+            mainName: '云数据库',
+            type: 'Database',
+            subItem: [
+              {subName: '云数据库', href:'https://pan.xrcloud.net/ruicloud/cloudDatabase'}
+            ]
+          },
+          {
             mainName: '云存储',
             type: 'storage',
             subItem: [
@@ -298,13 +305,13 @@
       // 获取用户信息
       //var userInfo = axios.get('user/GetUserInfo.do')
       // 获取zone信息
-      var zoneList = axios.get('zone/zoneList.do')
+      var zoneList = axios.get('zone/zoneList.do');
         /*.then(response => {
         $store.commit('setZoneList', response.data.data.zoneList)
         next()
       })*/
 
-      var zone =  axios.get('zone/defaultZone.do')
+      var zone =  axios.get('zone/defaultZone.do');
       //   .then(response =>{
       //   $store.commit('setZone', response.data.data.zoneList)
       // })
@@ -473,15 +480,24 @@
           }
         }
       },
-      toggleZone(zoneId){
+      toggleZone(zoneid){
+
         // 切换默认区域
-        axios.get('user/setDefaultZone.do', {params: {zoneId: zoneId}}).then(response => {
-        })
-        for (var zone of this.zoneList) {
-          if (zone.zoneid == zoneId) {
-            $store.commit('setZone', zone)
-          }
+        console.log(zoneid);
+        for(let i = 0; i<this.zoneList.length;i++){
+          if (this.zoneList[i].zoneid == zoneid) {
+                $store.commit('setZone', this.zoneList[i])
+              }
         }
+        // $store.commit('setZoneList',values[0].data.data.zoneList);
+        // $store.zoneList
+        // axios.get('zone/zoneList.do', {}).then(response => {
+        // })
+        // for (var zone of this.zoneList) {
+        //   if (zone.zoneid == zoneId) {
+        //     $store.commit('setZone', zone)
+        //   }
+        // }
       },
       exit(){
         axios.get('user/logout.do').then(response => {
@@ -543,7 +559,7 @@
       },
       '$store.state.zone': {
         handler: function () {
-          this.notice()
+          // this.notice()
         },
         deep: true
       }

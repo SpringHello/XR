@@ -19,7 +19,7 @@
         </div>
         <Tabs type="card" :value="name" :animated="false">
           <TabPane label="概览" name="name1">
-            <!--<p>当月用量 2018/04/28-2018</p>-->
+            <p>当月用量 2018/04/28-2018/5/28</p>
             <div class="center_space">
               <div class="space_one">
                 <p>存储空间容量</p>
@@ -270,7 +270,7 @@
       getAllsize(){
         this.$http.post('object/getAllSize.do', {}).then(res => {
           if (res.data.status == '1') {
-            this.size = res.data.data.data > 1000 || res.data.data.data / 1024 > 1 ? (res.data.data.data / 1024).toFixed(2) + 'MB' : res.data.data.data + 'KB';
+            this.size = res.data.data.data / 1048576>1 ? (res.data.data.data /1048576).toFixed(0) +'GB': res.data.data.data > 1000 || res.data.data.data / 1024 > 1 ? (res.data.data.data / 1024).toFixed(0) + 'MB' : (res.data.data.data/1024).toFixed(0) + 'KB';
           } else {
             this.size = "0KB";
             this.$Message.inof('平台出小差了');
@@ -357,7 +357,7 @@
           }
           .space_one:after {
             content: "";
-            width: 2px;
+            width: 1px;
             height: 80px;
             position: relative;
             display: inline-block;

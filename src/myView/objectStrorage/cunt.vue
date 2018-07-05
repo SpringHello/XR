@@ -1,9 +1,10 @@
 <template>
-  <div :class="[prefixCls]" style="cursor:pointer">
+  <div :class="[prefixCls]">
     <div @click="upClick"
          @drop.prevent="onDrop"
          @dragover.prevent="dragOver = true"
-         @dragleave.prevent="dragOver = false">
+         @dragleave.prevent="dragOver = false"
+         style="cursor:pointer">
       <input @change="checkUp"  ref="input" type="file"  :class="[prefixCls + '-input']"
              multiple="multiple"
              :accept="accept"/>
@@ -34,6 +35,7 @@
   const prefixCls = 'ivu-upload';
 
   export default {
+    name:'upload',
     data(){
       return{
         dragOver:false,
@@ -94,7 +96,11 @@
         default(){
           return [];
         }
-      }
+      },
+      name: {
+        type: String,
+        default: 'file'
+      },
     },
     methods: {
       // 选择文件触发input点击事件
@@ -143,9 +149,11 @@
           }
 
           // formData.append('slicesNum',currentChunk);
-          formData.append("uploadFile", blob.name);
           // formData.append("size",after);
 
+
+              formData.append(this.name,blob.name);
+              formData.append('filename',this.name);
           //如果有data formData追加上传的参数
           if (this.data) {
             //获取对象的key
@@ -161,8 +169,9 @@
           if (e.lengthComputable) { //lengthComputable 是 progress 的一个属性，表示资源是否可计算字节流
             e.percent = (e.loaded / e.total) * 100;
             // progressBar.textContent = progressBar.value; //有点浏览器不支持，这是后备选择
+            console.log(e.percent);
           }
-          console.log(e.percent);
+
         }
       },
       // 拖拽上传
@@ -187,7 +196,7 @@
           showProgress: true
         };
         this.fileList.push(_flie);
-        console.log(this.fileList);
+        // console.log(this.fileList);
       },
       //删除文件
       deleteUpload(index){
@@ -219,6 +228,9 @@
     height: 25px;
     line-height: 25px;
     color: #666666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow:ellipsis;
   }
   div:nth-child(2) {
     width: 16%;

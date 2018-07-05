@@ -138,7 +138,7 @@ export default {
                       click:()=> {
                         this.$Modal.confirm({
                           title: '删除空间',
-                          content: '<p>是否删除该空间</p>',
+                          content: "<p style='line-height: 16px'>当前空间内仍有资源，请确认已做好备份，删除之后空间内资源无法找回，请谨慎操作。</p>",
                           onOk: () => {
                             this.bucketDelete(parasm.row.name, parasm.row._index);
                           }
