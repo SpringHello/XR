@@ -1,5 +1,5 @@
 <template>
-  <div id="home">
+  <div id="home" style="background: #FFF">
     <!-- banner 轮播图 -->
     <div class="banner">
       <my-carousel :interval=5000 effect="fade" class="carousel" @on-change="change">
@@ -7,6 +7,7 @@
           <div @click="push('active_2')"
                style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
+              <img style="position: absolute;left: 2%;top: 5%;" src="../../assets/img/home/home-banner10.png" />
               <div>
                 <div>
                   <p>
@@ -39,14 +40,14 @@
                   <p>
                     <img style="padding-top: 0" src="../../assets/img/home/home-banner3.png">
                   </p>
-                  <button>立即领取</button>
+                  <button style="margin-top: 120px">立即领取</button>
                 </div>
                 <img src="../../assets/img/home/home-banner4.png">
               </div>
             </div>
           </div>
         </my-carousel-item>
-        <my-carousel-item class="carousel-item">
+      <!--  <my-carousel-item class="carousel-item">
           <div @click="push('newNodes_1')"
                style="cursor: pointer;background:linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="newNodes_1">
@@ -81,7 +82,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>
+        </my-carousel-item>-->
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->
@@ -920,10 +921,11 @@ import axios from 'axios';
     }
     > .box-container {
       background:rgba(255,255,255,1);
-      box-shadow:0px 12px 30px -25px rgba(151,151,151,0.4);
+      box-shadow:0px 12px 30px -25px rgba(151,151,151,1);
       border-radius:4px;
       height: 120px;
       width: 100%;
+      margin-bottom: 10px;
       .container {
         width: 1200px;
         margin: 0px auto;
@@ -1492,6 +1494,7 @@ import axios from 'axios';
 
   .head-banner {
     background: linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));
+    position: relative;
     > div {
       width: 1200px;
       margin: 0 auto;
@@ -1501,17 +1504,16 @@ import axios from 'axios';
       div {
         padding-top: 60px;
         button {
-          width: 176px;
-          height: 54px;
           background: #F26667;
           border-radius: 100px;
-          font-size: 24px;
+          font-size: 18px;
           color: #FFFFFF;
           line-height: 24px;
-          margin-top: 50px;
+          margin-top: 60px;
           outline: none;
           border: none;
           cursor: pointer;
+          padding: 10px 20px;
         }
       }
       >img{
