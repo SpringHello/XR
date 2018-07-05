@@ -4,7 +4,7 @@
     <div class="center">
       <div class="item" v-for="(item,index) in productGroups">
         <div class="item-title">
-          特惠专享（北京一区云服务器）
+          特惠专享
         </div>
         <ul>
           <li>{{ item.cpu}}核<span>cpu</span></li>
@@ -75,7 +75,23 @@
 
 <script type="text/ecmascript-6">
   import regExp from '../../../../util/regExp'
+  import axios from 'axios'
 
+  const messageMap = {
+    /* 登录名input tips */
+    loginname: {
+      placeholder: '登录邮箱/手机号',
+      errorMessage: '请输入正确的邮箱/手机号'
+    },
+    /* 登录密码input tips */
+    password: {
+      placeholder: '密码'
+    },
+    /* 验证码input tips */
+    vailCode: {
+      placeholder: '请输入验证码'
+    }
+  }
   export default {
     data() {
       return {
@@ -88,7 +104,7 @@
             system: 'linux',
             currentPrice: 59,
             originalCost: 118.72,
-            area: 'bj'
+            area: '39a6af0b-6624-4194-b9d5-0c552d903858'
           }, {
             cpu: 2,
             memory: 4,
@@ -97,23 +113,23 @@
             system: 'linux',
             currentPrice: 98,
             originalCost: 196.72,
-            area: 'bj'
+            area: '39a6af0b-6624-4194-b9d5-0c552d903858'
           }],
         areaGroup: [{
           label: '北京一区',
-          value: 'bj'
+          value: '39a6af0b-6624-4194-b9d5-0c552d903858'
         }, {
           label: '北方一区',
-          value: 'bfy'
+          value: 'a0a7df65-dec3-48da-82cb-cff9a55a4b6d'
         }, {
           label: '北方二区（沈阳）',
-          value: 'bfe'
+          value: '1ce0d0b9-a964-432f-8078-a61100789e30'
         }, {
           label: '华中一区',
-          value: 'hzy'
+          value: '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c'
         }, {
           label: '华中二区',
-          value: 'hze'
+          value: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2'
         }
         ],
         systemGroup: [
@@ -163,7 +179,23 @@
           this.loginModal = true
           return
         }
-        console.log(index)
+        let vmConfigId = index == 0 ? '33' : '34'
+        let url = 'information/getDiskcountMv.do'
+        axios.get(url, {
+          params: {
+            vmConfigId: vmConfigId,
+            osType: this.productGroups[index].system,
+            defzoneid: this.productGroups[index].area
+          }
+        }).then(res => {
+          if (res.data.status == 1) {
+            window.open('/ruicloud/order')
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
       },
       vail(field) {
         var text = this.form[field];
