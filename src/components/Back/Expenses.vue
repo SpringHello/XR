@@ -19,7 +19,7 @@
               <div class="item">
                 <span>余额</span>
                 <div>
-                  <ul style="width: 40%">
+                  <ul style="width: 50%">
                     <li>可用余额</li>
                     <li>¥{{ balance }}</li>
                   </ul>
@@ -29,9 +29,9 @@
                       <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;margin-left: 10px;cursor: pointer;"></Icon>
                     </span>
                     </li>
-                    <li>¥{{ freezeDeposit }}</li>
+                    <li style="cursor: pointer" @click="freezeDetails">¥{{ freezeDeposit }}</li>
                   </ul>
-                  <ul style="width: 30%;position: relative">
+                  <ul style="width: 20%;position: relative">
                     <button @click="torecharge">充值</button>
                   </ul>
                 </div>
@@ -620,12 +620,12 @@
             align: 'left',
             render: (h, params) => {
               const row = params.row
-              const color = row.status === 0 ? '#14B278' : row.status === 1 ? 'red' : row.status === 2 ? '#F56B23' : '#4A90E2'
+              const statusColor = row.status === 0 ? '#14B278' : row.status === 1 ? 'red' : row.status === 2 ? '#F56B23' : '#4A90E2'
               const text = row.status === 0 ? '已签收' : row.status === 1 ? '已驳回' : row.status === 2 ? '审核中' : '物流中'
               return h('Tag', {
                 props: {
                   type: 'dot',
-                  color: color
+                  color: statusColor
                 }
               }, text)
             }
@@ -1852,7 +1852,7 @@
           }
         }
         .invoiceType {
-          margin-top: 25px;
+          margin-top: 20px;
           > div {
             padding: 12px 20px;
             background: #F7FBFF;
@@ -1907,7 +1907,7 @@
           font-size: 22px;
           color: rgba(17, 17, 17, 0.75);
           letter-spacing: 1.31px;
-          margin-top: 40px;
+          margin-top: 20px;
           display: block;
         }
         .appreciation_p {

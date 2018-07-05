@@ -63,6 +63,8 @@
 
 <script type="text/ecmascript-6">
   import $store from '../../vuex'
+  import axios from 'axios'
+
   export default {
     data() {
       return {
@@ -251,6 +253,7 @@
             render: (h, params) => {
               const row = params.row;
               const color = row.status == "初审成功" ? "" : "#2A99F2";
+              const text = row.status == "初审中" ? "上传拍照/邮寄资料" : row.status == '初审拒绝' || row.status == '管局审核拒绝' ? "重新提交资料" : row.status == '初审成功' ? "暂无" : row.operation == '短信核验' ? '短信核验' : row.status == '管局审核成功' ? '暂无' : '暂无'
               return (
                 "div",
                   [
@@ -271,11 +274,13 @@
                               this.$router.push({path: "newRecordStepFour"});
                             } else if (row.status == "管局审核拒绝" || row.status == "初审拒绝") {
                               this.jumpRecord(row.id, row.webcompany_Id);
+                            } else if (row.operation == '短信核验') {
+                              window.open('https://zschj.xrcloud.net/ruicloud/documentInfo/qHwTxQKS7/qZhAC3dxb')
                             }
                           }
                         }
                       },
-                      row.status == "初审中" ? "上传拍照/邮寄资料" : row.status == '初审拒绝' || row.status == '管局审核拒绝' ? "重新提交资料" : row.status == '初审成功' ? "暂无" : row.status == '管局审核成功' ? '短信核验(特殊区域)' : '暂无'
+                      text
                     )
                   ]
               );
@@ -352,41 +357,30 @@
             title: "当前状态",
             key: "status",
             render: (h, params) => {
-              return h("div", params.row.status == "待审核" ? "确认中" : params.row.status == "取消接入确认" || params.row.status == "注销主体确认" || params.row.status == "注销网站确认" || params.row.status == "变更确认" ? "管局审核中" : params.row.status);
+              return h("div", params.row.status == "取消接入确认" || params.row.status == "注销主体确认" || params.row.status == "注销网站确认" || params.row.status == "变更确认" ? "确认中" : params.row.status);
             }
           },
           {
             title: "等待操作",
             key: "operation",
             render: (h, params) => {
-              const row = params.row;
-              const color = row.status == "待审核" || row.status == "管局审核失败" ? "#2A99F2" : "";
-              return (
-                "div",
-                  [
-                    h("span",
-                      {
-                        style: {
-                          color: color,
-                          cursor: "pointer"
-                        },
-                        on: {
-                          click: () => {
-                            if (row.status == "确认中") {
-                              sessionStorage.setItem("newId", row.id);
-                              sessionStorage.setItem(
-                                "newRecordtype",
-                                row.recordType
-                              );
-                              this.$router.push({path: "CompletedFilingDetails"});
-                            }
-                          }
-                        }
-                      },
-                      row.status == "待审核" ? "放弃" : row.status == "管局审核失败" ? "联系客服(变更备案错误项目)" : '暂无'
-                    )
-                  ]
-              );
+              if (params.row.status == "取消接入确认" || params.row.status == "注销主体确认" || params.row.status == "注销网站确认" || params.row.status == "变更确认") {
+                return h('span', {
+                  style: {
+                    cursor: 'pointer',
+                    color: '#2A99F2'
+                  },
+                  on: {
+                    click: () => {
+                      this.updateMainWeb(params.row.id, '备案成功')
+                    }
+                  }
+                }, '放弃')
+              } else if (params.row.status == '管局审核失败') {
+                return h('span', {}, '联系客服')
+              } else {
+                return h('span', {}, '暂无')
+              }
             }
           },
           {
@@ -432,7 +426,7 @@
         if (this.currentState == "全部") {
           this.currentState = "";
         }
-        if(this.recordType == '全部'){
+        if (this.recordType == '全部') {
           this.recordType = "";
         }
         if (userList != null) {
@@ -462,7 +456,7 @@
         if (this.completeState == "全部") {
           this.completeState = "";
         }
-        this.completeRecordType == "全部" ? "" :this.completeRecordType;
+        this.completeRecordType == "全部" ? "" : this.completeRecordType;
         if (userList != null) {
           this.$http
             .get("recode/listMainWeb.do", {
@@ -476,7 +470,6 @@
               this.recordTypeData = [];
               if (res.data.status == 1) {
                 this.recordTypeData = res.data.result;
-                console.log(res.data.result);
                 for (let i = 0; i < this.recordTypeData.length; i++) {
                   this.recordTypeData[i].waitOperation = "查看详情";
                 }
@@ -495,15 +488,15 @@
           title: '是否撤销备案',
           content: '<p>撤销备案此条备案信息会被删除</p>',
           onOk: () => {
-           this.$http.get('recode/delMainWeb.do', {
-             params:{
-               id: id
-             }
+            this.$http.get('recode/delMainWeb.do', {
+              params: {
+                id: id
+              }
             }).then(res => {
               if (res.data.status == 1) {
                 this.$Message.success('撤销成功');
                 this.listMainWeb(0);
-              }else{
+              } else {
                 this.$Message.error(res.data.message);
               }
             })
@@ -511,9 +504,23 @@
         });
       },
       toEntrance() {
-        sessionStorage.setItem('back','back')
+        sessionStorage.setItem('back', 'back')
         this.$router.push('entrance')
-      }
+      },
+      updateMainWeb(id, status) {
+        this.domain = false;
+        axios.post('recode/updateMainWeb.do', {
+          id: id,
+          status: status
+        }).then(res => {
+          if (res.data.status == 1) {
+            this.$Message.success('提交成功');
+            this.completeClick(1);
+          } else {
+            this.$Message.info(res.data.message)
+          }
+        })
+      },
     },
     computed: {
       recordFlag() {

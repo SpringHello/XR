@@ -87,7 +87,6 @@
                   :max-size="2048"
                   :on-exceeded-size="handleMaxSize"
                   :on-format-error="handleFormatJpg"
-                  :on-progress="photoImgProgress"
                   :on-success="photoImg">
                   <div class="item-content-text" v-if="upload.photo===''">
                     点击选择文件
@@ -187,7 +186,6 @@
   import oStep from "./ostep.vue";
   import records from './../Records'
   import $ from 'jquery'
-  import throttle from 'throttle-debounce/debounce'
 
   export default {
     components: {
@@ -381,21 +379,19 @@
       },
       photoImg(res) {
         if (res.status == 1) {
-          this.upload.photo = res.result
-          this.$Message.success('上传成功')
+          let s = setInterval(() => {
+            this.percent++
+            if (this.percent > 100) {
+              this.upload.photo = res.result
+              this.$Message.success('上传成功')
+              window.clearInterval(s)
+              this.percent = 0
+            }
+          }, 20)
         } else {
           this.$Message.info('上传失败')
         }
       },
-      photoImgProgress: throttle(700, function ()  {
-        let s = setInterval(() => {
-          this.percent++
-          if (this.percent > 100) {
-            window.clearInterval(s)
-            this.percent = 0
-          }
-        }, 20)
-      }),
       next() {
         if (this.curtainStatus === true) {
           this.nextStep = true
