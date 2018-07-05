@@ -45,7 +45,6 @@ axios.defaults.baseURL = 'http://zx.xrclouds.net/ruicloud'
 //axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
 
 
-//axios.defaults.baseURL = 'http://localhost:8080/ruicloud/'
 
 //axios.defaults.baseURL = 'https://zschj.xrcloud.net:8080/ruicloud/'
 
