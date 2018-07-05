@@ -4,8 +4,8 @@
       <img src="../../../assets/img/active/smlj/text.png" style="width:438px;position: absolute;left:0px;top:25%;">
       <img src="../../../assets/img/active/smlj/img.png" style="width:700px;position: absolute;right:0px">
     </div>
-    <div class="active-body" :class="{error:ljError,ended:ljEnded,over:ljOverded}">
-      <div v-if="ljOK" class="ok">
+    <div v-if="ljOK" class="active-body" :class="{error:ljError,ended:ljEnded,over:ljOverded}" style="width:1200px;">
+      <div class="ok">
         <img src="../../../assets/img/active/smlj/header.png" style="width:1200px;display: block">
         <div class="body">
           <div class="left">
@@ -44,6 +44,9 @@
           <button @click="receive">一键领取主机+优惠券</button>
         </div>
       </div>
+    </div>
+    <div v-else class="active-body" :class="{error:ljError,ended:ljEnded,over:ljOverded}">
+
     </div>
     <div class="active-desc">
       <p class="header">活动规则</p>
@@ -193,7 +196,7 @@
           osname: '',
           zone: '',
           zoneId: '',
-          day:''
+          day: ''
         }
       }
     },

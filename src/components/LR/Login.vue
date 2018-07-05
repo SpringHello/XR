@@ -72,9 +72,15 @@
     }
   }
   export default{
+    beforeRouteEnter(to, from, next){
+      next(vm => {
+        vm.from = from.fullPath
+      })
+    },
     data(){
       return {
-
+        // 跳转来源
+        from: '',
         /* 登录表单(包含placeHolder) */
         form: {
           loginname: '',
@@ -187,11 +193,14 @@
             vailCode: this.form.vailCode
           }
         }).then((response) => {
-          if (response.status == 200 && response.statusText == 'OK'
-          ) {
+          if (response.status == 200 && response.statusText == 'OK') {
             if (response.data.status == 1) {
               localStorage.setItem('authToken', response.data.message)
-              this.$router.push({path: 'overview'})
+              if (this.from.indexOf('/ruicloud/smlj') == 0) {
+                this.$router.push({path: this.from})
+              } else {
+                this.$router.push({path: 'overview'})
+              }
             } else {
               this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               this.vailForm.loginname.message = response.data.message
