@@ -2766,11 +2766,7 @@
         })
       },
       listKey() {
-        axios.get('user/showUserAcessAll.do', {
-          params: {
-            token: this.token
-          }
-        }).then(response => {
+        axios.get('user/showUserAcessAll.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.keyData = response.data.data.UserAccess
           } else {
