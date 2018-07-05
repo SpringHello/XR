@@ -273,7 +273,7 @@
               <ul>
                 <li v-for="(secitem,i) in item.artile" :key="i">
                   <router-link :to="`article/${secitem.code}.html`" target="_blank">
-                  {{secitem.title}}
+                  <span class="title">{{secitem.title}}</span>
                   <span>{{secitem.createtime}}</span>
                   </router-link>
                 </li>
@@ -863,6 +863,7 @@ import axios from 'axios';
         dl{
           width: 386px;
           height: 242px;
+          overflow: hidden;
           box-shadow:0px 13px 14px -6px rgba(216,216,216,0.41);
           dt{
             height: 58px;
@@ -883,15 +884,19 @@ import axios from 'axios';
                 a{
                   display: block;
                   padding: 20px;
-                  font-size:14px;
+                  font-size: 14px;
                   color:rgba(102,102,102,1);
                   cursor: pointer;
                   &:hover{
                     color: #377DFF;
                   }
-                  span{
-                    float: right;
-                  }
+                  .title{
+                    display: inline-block;
+                    width: 204px;
+                    overflow: hidden;
+                    text-overflow:ellipsis;
+                    white-space: nowrap;
+                  } 
                 }
               }
             }
