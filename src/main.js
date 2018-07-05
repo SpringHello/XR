@@ -38,14 +38,14 @@ Vue.config.productionTip = false
 //axios.defaults.baseURL = 'http://192.168.3.204:8081/ruicloud'
 //axios.defaults.withCredentials = true
 
-// axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
+//axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
 
 
 
 // axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
 
 
-//axios.defaults.baseURL = 'http://localhost:8082/ruicloud/'
+//axios.defaults.baseURL = 'http://qiurenliang.xrcloud.net:8080/ruicloud/'
 
 //axios.defaults.baseURL = 'https://zschj.xrcloud.net:8080/ruicloud/'
 
