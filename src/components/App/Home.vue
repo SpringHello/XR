@@ -11,7 +11,7 @@
                 <div>
                   <p>
                     <img src="../../assets/img/home/home-banner2.png"
-                         style="width:480px;height:200px;padding-top: 0px">
+                         style="width:480px;height:165px;padding-top: 0px">
                   </p>
                   <button>立即领取</button>
                 </div>
@@ -88,7 +88,7 @@
     <div class="box-container">
       <div class="container">
         <div v-for="(item,index) in boxContainer" :key="index" class="container-item">
-          <i class="iconfont" :class="item.img" style="font-size:60px;line-height:1"></i>
+          <i class="iconfont" :class="item.img" style="font-size:40px;line-height:1"></i>
           <div>
             <p>{{item.title}}</p>
             <span>{{item.desc}}</span>
@@ -749,18 +749,20 @@
       }
     }
     > .box-container {
-      height: 110px;
+      background:rgba(255,255,255,1);
+      box-shadow:0px 12px 30px -25px rgba(151,151,151,0.4);
+      border-radius:4px;
+      height: 120px;
       width: 100%;
-      background-color: #FFF;
       .container {
         width: 1200px;
         margin: 0px auto;
-        height: 110px;
+        height: 120px;
         display: flex;
         justify-content: space-between;
         .container-item {
           width: 20%;
-          padding: 24px 22px;
+          padding: 40px 22px;
           display: flex;
           border-right: 1px solid #ffffff;
           &:first-of-type {
@@ -786,7 +788,6 @@
             > span {
               font-size: 12px;
               color: #666666;
-              padding-top: 8px;
               display: inline-block;
             }
           }
