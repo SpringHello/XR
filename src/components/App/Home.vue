@@ -243,8 +243,45 @@
         </div>
       </div>
     </div>
-    <!-- 最新动态 -->
-    <div></div>
+    <!-- 新睿云最新动态 -->
+    <div class="news">
+      <div class="wrap">
+        <div class="header">
+          <p class="title-g">新睿云最新动态</p>
+          <p class="text-desc-g">为您提供行业资讯、活动公告、产品发布、以及汇聚前沿的云计算技术</p>
+        </div>
+        <div class="main">
+          <div class="main-left">
+            <dl>
+              <dt>{{showNews.title}}</dt>
+              <dd v-html="showNews.text">
+              </dd>
+              <dd>
+                  <router-link :to="`article/${showNews.code}.html`" target="_blank" style="width:100px;height:38px;line-height:38px;border:1px solid rgba(56,125,255,1);color:#387DFF;display:block;text-align:center;margin-top:40px;">查看详情</router-link>
+              </dd>
+            </dl>
+          </div>
+          <div class="main-right">
+            <img :src="showNews.topUrl" style="width:100%;height:100%;"/>
+          </div>
+        </div>
+        <div class="link-list wrap">
+          <dl v-for="(item,index) in linkList" :key="index">
+            <dt>{{item.typename}}<router-link :to="`article/${item.id}`">More></router-link></dt>
+            <dd >
+              <ul>
+                <li v-for="(secitem,i) in item.artile" :key="i">
+                  <router-link :to="`article/${secitem.code}.html`" target="_blank">
+                  {{secitem.title}}
+                  <span>{{secitem.createtime}}</span>
+                  </router-link>
+                </li>
+              </ul>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
     <!-- 合作伙伴 -->
     <div class="partner-container" ref="partnerFade">
       <div>
@@ -289,10 +326,13 @@
   import echarts from 'echarts'
   import china from '@/echarts/china.json'
   import throttle from 'throttle-debounce/throttle'
+import axios from 'axios';
 
   export default {
     data() {
       return {
+        showNews: {},
+        linkList: [],
         white: {
           color: '#fff',
         },
@@ -633,8 +673,24 @@
       window.addEventListener('scroll', this.scrollFn)
     },
     created() {
+      this.getnews()
+      this.getlinkList()
     },
     methods: {
+      getnews() {
+        axios.get('article/getTopArticle.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.showNews = response.data.result
+          }
+        })
+      },
+      getlinkList() {
+        axios.get('article/getArticleType.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.linkList = response.data.result.slice(0, 3)
+          }
+        })
+      },
       // 切换云产品
       changeProduct(item, event) {
         document.getElementById('')
@@ -719,6 +775,115 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   #home {
+    .wrap{
+      width: 1200px;
+      margin: 0 auto;
+    }
+    .title-g{
+      text-align: center;
+      font-size: 28px;
+      color: #333333;
+      padding-bottom: 26px;
+    }
+    .text-desc-g{
+      text-align: center;
+      font-size: 14px;
+      color: #999999;
+    }
+    .news{
+      .header{
+        margin-top: 60px;
+      }
+      .main{
+        margin-top: 60px;
+        display: flex;
+        box-shadow:0px 13px 44px -16px rgba(216,216,216,0.79);
+        .main-left{
+          width: 670px;
+          padding: 40px 60px;
+        }
+        dl{
+          dt{
+            height: 60px;;
+            position: relative;
+            color: #387DFF;
+            font-size: 18px;
+            &::after{
+              content: '';
+              position: absolute;
+              left: 0;
+              bottom: 0;
+              display: inline-block;
+              width:50px;
+              height:4px;
+              background:rgba(55,125,255,1);
+            }
+          }
+          dd{
+            font-size:14px;
+            color:rgba(102,102,102,1);
+            line-height:28px;
+          }
+          dd:nth-of-type(1){
+            margin-top: 20px;
+            overflow : hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 7;
+            -webkit-box-orient: vertical;
+          }
+        }
+        .main-right{
+            width:533px;
+            height:432px;
+            background:rgba(231,231,231,1);
+        }
+      }
+      .link-list{
+        margin-top: 100px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap:wrap;
+        dl{
+          width: 386px;
+          height: 242px;
+          box-shadow:0px 13px 14px -6px rgba(216,216,216,0.41);
+          dt{
+            height: 58px;
+            padding: 20px;
+            background: #7E7F80;
+            background: url('../../assets/img/home/news-linklist-bg.png') no-repeat;
+            font-size:18px;
+            color: #fff;
+            a{
+              float: right;
+              cursor: pointer;
+              color: #fff;
+            }
+          }
+          dd{
+            ul{
+              li{
+                a{
+                  display: block;
+                  padding: 20px;
+                  font-size:14px;
+                  color:rgba(102,102,102,1);
+                  cursor: pointer;
+                  &:hover{
+                    color: #377DFF;
+                  }
+                  span{
+                    float: right;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+      }
+    }
     .icon {
       width: 1em;
       height: 1em;
