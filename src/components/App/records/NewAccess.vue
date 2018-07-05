@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background: FFF">
     <!-- <records></records>-->
     <o-Step :onStep="1" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc"></o-Step>
     <div class="body-bottom">

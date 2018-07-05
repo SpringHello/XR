@@ -347,7 +347,7 @@
     background: url("../../../assets/img/active/smlj/smlj-background.png") no-repeat center;
     background-size: cover;
     .active-body {
-      width: 1200px;
+      width: 1294px;
       margin: 0px auto;
       .ok {
         box-shadow: 0px 2px 50px 0px rgba(245, 127, 114, 0.48);
@@ -460,17 +460,17 @@
       }
     }
     .error {
-      height: 290px;
+      height: 368px;
       background: url('../../../assets/img/active/smlj/error.png') no-repeat center;
     }
     //连接输入错误
     .ended {
-      height: 290px;
+      height: 368px;
       background: url('../../../assets/img/active/smlj/ended.png') no-repeat center;
     }
     //连接已被领取
     .over {
-      height: 290px;
+      height: 368px;
       background: url('../../../assets/img/active/smlj/overed.png') no-repeat center;
     }
     //连接过期
@@ -480,7 +480,7 @@
       padding: 40px 100px;
       background-color: #fff;
       box-shadow: 0px 2px 50px 0px rgba(245, 127, 114, 0.48);
-      margin-top: 40px;
+      margin-top: 20px;
       .header {
         font-size: 18px;
         color: rgba(51, 51, 51, 1);

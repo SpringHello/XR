@@ -194,7 +194,7 @@
         margin: 0px 2px;
       }
       .isActive {
-        background-color: #ffffff;
+        background-color: #F26667;
         opacity: 1;
       }
     }

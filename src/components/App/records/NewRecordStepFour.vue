@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background: #FFF">
     <!--    <records></records>-->
     <o-step :onStep="3" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-if="recordsType !=='新增备案'"></o-step>
     <step :onStep="2" :recordsType="recordsType" :recordsTypeDesc="recordsTypeDesc" v-else></step>
@@ -87,7 +87,6 @@
                   :max-size="2048"
                   :on-exceeded-size="handleMaxSize"
                   :on-format-error="handleFormatJpg"
-                  :on-progress="photoImgProgress"
                   :on-success="photoImg">
                   <div class="item-content-text" v-if="upload.photo===''">
                     点击选择文件
@@ -154,7 +153,7 @@
           <strong>提示</strong>
           <p class="lh24">冻结金额：50元</p>
           <p class="lh24">冻结事由：备案幕布申请</p>
-          <p class="lh24">冻结时间：2018/6/25-幕布回收确认日</p>
+          <p class="lh24">冻结时间：{{ currentData }}-幕布回收确认日</p>
           <p class="lh24">解冻操作：自动解冻</p>
         </div>
       </div>
@@ -187,7 +186,6 @@
   import oStep from "./ostep.vue";
   import records from './../Records'
   import $ from 'jquery'
-  import throttle from 'throttle-debounce/debounce'
 
   export default {
     components: {
@@ -285,7 +283,8 @@
         checkListAddress: '',
         imageViewShow: false,
         percent: 0,
-        balance: 0
+        balance: 0,
+        currentData: this.getCurrentDate()
       }
     },
     created() {
@@ -380,21 +379,19 @@
       },
       photoImg(res) {
         if (res.status == 1) {
-          this.upload.photo = res.result
-          this.$Message.success('上传成功')
+          let s = setInterval(() => {
+            this.percent++
+            if (this.percent > 100) {
+              this.upload.photo = res.result
+              this.$Message.success('上传成功')
+              window.clearInterval(s)
+              this.percent = 0
+            }
+          }, 20)
         } else {
           this.$Message.info('上传失败')
         }
       },
-      photoImgProgress: throttle(700, function ()  {
-        let s = setInterval(() => {
-          this.percent++
-          if (this.percent > 100) {
-            window.clearInterval(s)
-            this.percent = 0
-          }
-        }, 20)
-      }),
       next() {
         if (this.curtainStatus === true) {
           this.nextStep = true
@@ -543,6 +540,9 @@
         } else {
           this.checkListAddress = 'keepOnRecord/check.doc'
         }
+      },
+      getCurrentDate() {
+        return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
       },
     },
   }

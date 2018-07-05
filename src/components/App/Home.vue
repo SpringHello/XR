@@ -1,5 +1,5 @@
 <template>
-  <div id="home">
+  <div id="home" style="background: #FFF">
     <!-- banner 轮播图 -->
     <div class="banner">
       <my-carousel :interval=5000 effect="fade" class="carousel" @on-change="change">
@@ -7,15 +7,16 @@
           <div @click="push('active_2')"
                style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
+              <img style="position: absolute;left: 2%;top: 5%;" src="../../assets/img/home/home-banner10.png" />
               <div>
                 <div>
                   <p>
-                    <img src="../../assets/img/active/active_2/ziti.png"
-                         style="width:400px;padding-top: 0px">
+                    <img src="../../assets/img/home/home-banner2.png"
+                         style="width:480px;height:165px;padding-top: 0px">
                   </p>
                   <button>立即领取</button>
                 </div>
-                <img src="../../assets/img/active/active_2/banner-aircraft.png">
+                <img src="../../assets/img/home/home-banner1.png">
               </div>
             </div>
           </div>
@@ -37,29 +38,29 @@
               <div>
                 <div>
                   <p>
-                    <img style="padding-top: 0" src="../../assets/img/active/active_1/ziti1.png">
+                    <img style="padding-top: 0" src="../../assets/img/home/home-banner3.png">
                   </p>
-                  <button>立即领取</button>
+                  <button style="margin-top: 120px">立即领取</button>
                 </div>
-                <img src="../../assets/img/active/active_1/baner.png">
+                <img src="../../assets/img/home/home-banner4.png">
               </div>
             </div>
           </div>
         </my-carousel-item>
-        <!--<my-carousel-item class="carousel-item">
+      <!--  <my-carousel-item class="carousel-item">
           <div @click="push('newNodes_1')"
                style="cursor: pointer;background:linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="newNodes_1">
-              <div style="width:1200px;margin:0px auto;padding-top: 8%;position: relative;z-index: 1">
-                <img style="position: absolute;top: 10%;left: -20%;z-index: 2"
-                     src="../../assets/img/active/newNodes/circle_1.png">
+              <div style="width:1200px;margin:0px auto;padding-top: 4%;position: relative;z-index: 1">
+                <img style="position: absolute;top: -10%;left: -20%;z-index: 2"
+                     src="../../assets/img/home/home-banner5.png">
                 <p>北京一区盛大开服
-                  <img style="position: absolute;left: -2%;top: 28%;z-index: 1"
-                       src="../../assets/img/active/newNodes/text.png"/></p>
+                  <img style="position: absolute;left: -2%;top: 15%;z-index: 1"
+                       src="../../assets/img/home/home-banner6.png"/></p>
                 <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">布局首都，新购特惠，限时抢购</p>
                 <button>立即体验</button>
-                <img style="position:absolute;left: 45%; top: 13%;z-index: -2;"
-                     src="../../assets/img/active/newNodes/banner_4.png">
+                <img style="position:absolute;left: 45%; top: 12%;z-index: -2;"
+                     src="../../assets/img/home/home-banner7.png">
               </div>
             </div>
           </div>
@@ -68,16 +69,16 @@
           <div @click="push('newNodes_2')"
                style="cursor: pointer;background:#87B6FF">
             <div class="newNodes_2">
-              <img style="position: absolute;z-index: 1" src="../../assets/img/active/newNodes/circle.png">
-              <div style="width:1200px;margin:0px auto;padding-top: 7%;position: relative;z-index: 1">
+              <img style="position: absolute;z-index: 1" src="../../assets/img/home/home-banner9.png">
+              <div style="width:1200px;margin:0px auto;padding-top: 2%;position: relative;z-index: 1">
                 <p>北方二区（沈阳）盛大开服
-                  <img style="position: absolute;left: 0;top: 30%;z-index: 1"
+                  <img style="position: absolute;left: 0;top: 22%;z-index: 1"
                        src="../../assets/img/active/newNodes/text1.png"/></p>
                 <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">春暖花开，活动绽放</p>
                 <p>3折优惠<span style="font-size: 24px">起</span></p>
                 <button>立即体验</button>
-                <img style="position:absolute;left: 58%; top: 2%;z-index: -2;"
-                     src="../../assets/img/active/newNodes/banner_2.png">
+                <img style="position:absolute;left: 58%; top: 1%;z-index: -2;"
+                     src="../../assets/img/home/home-banner8.png">
               </div>
             </div>
           </div>
@@ -85,11 +86,10 @@
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->
-    <div class="box-container"
-         :class="{one:this.activeBanner==4,two: this.activeBanner==5, three:this.activeBanner==1,four:this.activeBanner==3||this.activeBanner==2}">
+    <div class="box-container">
       <div class="container">
         <div v-for="(item,index) in boxContainer" :key="index" class="container-item">
-          <i class="iconfont" :class="item.img" style="font-size:60px;color:#fff;line-height:1"></i>
+          <i class="iconfont" :class="item.img" style="font-size:40px;line-height:1"></i>
           <div>
             <p>{{item.title}}</p>
             <span>{{item.desc}}</span>
@@ -156,7 +156,7 @@
                           <router-link :to="content.detailLink" target="_blank" style="border-right: 1px solid #cccccc">
                             {{content.detailText}}
                           </router-link>
-                          <router-link :to="content.useLink" target="_blank" v-if="content.useText=='立即使用'">
+                          <router-link :to="content.useLink" target="_blank" v-if="content.useText=='立即购买'">
                             {{content.useText}}
                           </router-link>
                           <router-link :to="content.useLink" v-else>
@@ -284,21 +284,6 @@
       </div>
     </div>
     <!-- 合作伙伴 -->
-    <!--<div class="partner-container">
-      <div>
-        <transition name="partner">
-          <div v-if="partnerFade">
-            <div class="container">
-              <h1>合作伙伴</h1>
-              <p>行业领先的生态合作伙伴，售前覆盖各省市地区，提供本地化咨询、销售、服务、安全等一体化企业级解决方案。</p>
-            </div>
-            <div class="partner">
-              <img v-for="(partner,index) in partners" :src="partner">
-            </div>
-          </div>
-        </transition>
-      </div>
-    </div>-->
     <div class="partner-container" ref="partnerFade">
       <div>
         <transition name="partner">
@@ -389,7 +374,7 @@ import axios from 'axios';
                 desc: '通用型、内存优化型、高IO型',
                 img: '#icon-danxingyunfuwuqiECS',
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '立即购买',
                 detailLink: 'Pecs',
                 useLink: $store.state.userInfo ? 'buy' : 'buy',
                 ME: true
@@ -399,7 +384,7 @@ import axios from 'axios';
                 desc: '公共镜像、功能镜像、自定义镜像',
                 img: '#icon-feiyongzhongxin',
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '立即购买',
                 detailLink: 'Phost',
                 useLink: $store.state.userInfo ? 'buy' : 'buy',
                 ME: false
@@ -409,7 +394,7 @@ import axios from 'axios';
                 desc: '稳定可靠、安全保障',
                 img: '#icon-ECSkuaizhao',
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '立即购买',
                 detailLink: 'Pecss',
                 useLink: $store.state.userInfo ? 'buy' : 'buy',
                 ME: false
@@ -449,7 +434,7 @@ import axios from 'axios';
                 desc: '网络隔离、分配子网',
                 img: '#icon-xunisiyouyunVPC',
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '立即购买',
                 detailLink: 'Pvpc',
                 useLink: $store.state.userInfo ? 'buy' : 'buy',
                 ME: true
@@ -459,7 +444,7 @@ import axios from 'axios';
                 desc: '绑定与解绑IP、扩容',
                 img: '#icon-danxingIP1',
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '立即购买',
                 detailLink: 'Peip',
                 useLink: $store.state.userInfo ? 'buy' : 'buy',
                 ME: false
@@ -469,7 +454,7 @@ import axios from 'axios';
                 desc: '源算法、轮询、最小连接数',
                 img: '#icon-fuzaijunheng2',
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '立即购买',
                 detailLink: 'Pbalance',
                 useLink: $store.state.userInfo ? 'buy' : 'buy',
                 ME: false
@@ -509,7 +494,7 @@ import axios from 'axios';
                 desc: '性能型、超高性能型、存储型',
                 img: '#icon-yunyingpan1',
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '立即购买',
                 detailLink: 'Pdisk',
                 useLink: $store.state.userInfo ? 'buy' : 'buy',
                 ME: true
@@ -539,7 +524,7 @@ import axios from 'axios';
                 desc: '自定义规则、协议、端口',
                 img: '#icon-fanghuoqiang',
                 detailText: '查看详情',
-                useText: '立即使用',
+                useText: '立即购买',
                 detailLink: 'Pfirewall',
                 useLink: $store.state.userInfo ? 'buy' : 'buy',
                 ME: true
@@ -899,7 +884,7 @@ import axios from 'axios';
                     overflow: hidden;
                     text-overflow:ellipsis;
                     white-space: nowrap;
-                  } 
+                  }
                 }
               }
             }
@@ -924,11 +909,10 @@ import axios from 'axios';
       overflow: hidden;
     }
     > .banner {
-      height: 560px;
+      height: 400px;
       .carousel {
         .carousel-item {
           > div {
-            height: 560px;
             background-size: cover;
           }
           .xf {
@@ -939,52 +923,46 @@ import axios from 'axios';
       }
     }
     > .box-container {
-      height: 110px;
+      background:rgba(255,255,255,1);
+      box-shadow:0px 12px 30px -25px rgba(151,151,151,1);
+      border-radius:4px;
+      height: 120px;
       width: 100%;
-      background-color: #5692fe;
-
-      &.one {
-        background-color: #F9AF80;
-      }
-      &.two {
-        background-color: #135BFF;
-      }
-      &.three {
-        background-color: #F36C69;
-      }
-      &.four {
-        background-color: #F36C69;
-      }
+      margin-bottom: 10px;
       .container {
         width: 1200px;
         margin: 0px auto;
-        height: 110px;
+        height: 120px;
         display: flex;
         justify-content: space-between;
         .container-item {
           width: 20%;
-          padding: 24px 22px;
+          padding: 40px 22px;
           display: flex;
-          opacity: .7;
           border-right: 1px solid #ffffff;
           &:first-of-type {
             border-left: 1px solid #ffffff;
           }
           &:hover {
-            opacity: 1;
+            color: #387DFF;
+            p{
+              color: #387DFF;
+            }
+            span{
+              color: #387DFF;
+            }
           }
           > div {
             margin-left: 10px;
             > p {
               font-size: 16px;
-              color: #ffffff;
+              color: #333333;
               padding-bottom: 8px;
               border-bottom: 1px solid #ffffff;
             }
             > span {
               font-size: 12px;
-              color: #ffffff;
-              padding-top: 8px;
+              color: #666666;
               display: inline-block;
             }
           }
@@ -1519,6 +1497,7 @@ import axios from 'axios';
 
   .head-banner {
     background: linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));
+    position: relative;
     > div {
       width: 1200px;
       margin: 0 auto;
@@ -1526,23 +1505,22 @@ import axios from 'axios';
       justify-content: space-between;
       padding-bottom: 65px;
       div {
-        padding-top: 133px;
+        padding-top: 60px;
         button {
-          width: 176px;
-          height: 54px;
           background: #F26667;
           border-radius: 100px;
-          font-size: 24px;
+          font-size: 18px;
           color: #FFFFFF;
           line-height: 24px;
-          margin-top: 100px;
+          margin-top: 60px;
           outline: none;
           border: none;
           cursor: pointer;
+          padding: 10px 20px;
         }
       }
-      img {
-        padding-top: 70px;
+      >img{
+        margin-top: 10px;
       }
     }
   }
