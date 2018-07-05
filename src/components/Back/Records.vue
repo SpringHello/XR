@@ -515,7 +515,7 @@
         }).then(res => {
           if (res.data.status == 1) {
             this.$Message.success('提交成功');
-            this.$router.push({path: 'BRecords'});
+            this.completeClick(1);
           } else {
             this.$Message.info(res.data.message)
           }
