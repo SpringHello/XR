@@ -273,7 +273,7 @@
             this.size = res.data.data.allsize / 1048576>1 ? (res.data.data.allsize /1048576).toFixed(0) +'GB': res.data.data.allsize > 1000 || res.data.data.allsize / 1024 > 1 ? (res.data.data.allsize / 1024).toFixed(0) + 'MB' : (res.data.data.allsize / 1024).toFixed(0) + 'KB';
           } else {
             this.size = "0KB";
-            this.$Message.inof('平台出小差了');
+            this.$Message.info('平台出小差了');
           }
           localStorage.setItem('size', this.size);
         }).catch(error => {
