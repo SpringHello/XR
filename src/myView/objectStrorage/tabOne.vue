@@ -209,7 +209,8 @@ export default {
                 this.$Message.success("创建成功");
                 this.getBuckets();
               } else {
-                this.$Message.info('平台出小差了');
+                this.$Message.info(res.data.msg);
+                this.getBuckets();
               }
             });
         }
@@ -232,6 +233,7 @@ export default {
             this.$Message.success("删除成功");
           } else {
             this.$Message.info('平台出小差了');
+            this.getBuckets();
           }
         });
     },

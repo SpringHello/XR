@@ -590,7 +590,6 @@
 <script>
   import $store from "@/vuex";
   import cunt from '../../myView/objectStrorage/cunt.vue'
-  var buckname = sessionStorage.getItem('bucketName');
   const validRoute = (rule, value, callback) => {
     let reg = /^\s*$|[a-zA-Z]+(\.[a-zA-Z0-9]+)+(\.[a-zA-Z]+)$/;
       if (!reg.test(value)) {
@@ -791,7 +790,7 @@
                     },
                     on:{
                       click:()=>{
-                        this.downloadObject(params.row.filesrc);
+                        this.downloadObject(params.row.id);
                       }
                     }
                   },'下载')
@@ -865,13 +864,17 @@
           {
             key:'isfile',
             sortType:'desc',
-            width:'50',
+            width:'1',
+            className:'files',
+            renderHeader:(h,data)=>{
+              return h('div','')
+            },
             render:(h,params)=>{
-              return h('div',[
-                h('span',{
-
+              return h('span',{
+                  style:{
+                    display:'none'
+                  }
                 },params.row.isfile)
-              ])
             }
           }
         ],
@@ -1262,6 +1265,7 @@
             this.selectCors();
           }else{
             this.$Message.info(response.data.msg);
+            this.selectCors();
           }
         })
       },
@@ -1270,8 +1274,11 @@
         this.$http.post('cors/selectCorsAll.do',{
           bucketId:sessionStorage.getItem('bucketId')
         }).then(response =>{
-          if(response.status == 200 && response.data.status == '1'){}
+          if(response.status == 200 && response.data.status == '1'){
             this.corsData = response.data.data.OssCors;
+          }else{
+            this.$Message.info('平台出小差了');
+          }
         })
       },
       //修改CROS规则配置
@@ -1316,6 +1323,9 @@
             if(response.status == 200 && response.data.status == '1'){
               this.$Message.success('删除成功');
               this.selectCors();
+            }else{
+              this.$Message.info(res.data.msg);
+              this.selectCors();
             }
         })
       },
@@ -1335,6 +1345,7 @@
               }else{
                 this.$Message.info(response.data.msg);
                 this.domainLodaing = false;
+                this.getCustom();
               }
             })
           }else {
@@ -1514,7 +1525,8 @@
                   this.$Message.success('添加自定义权限成功');
                   this.selectAclAll();
                 } else {
-                  this.$Message.info('平台出小差了');
+                  this.$Message.info(res.data.msg);
+                  this.selectAclAll();
                 }
               })
             }
@@ -1596,6 +1608,7 @@
             this.selectAclAll();
           } else {
             this.$Message.info(res.data.msg);
+            this.selectAclAll();
           }
         })
       },
@@ -1623,6 +1636,7 @@
                 this.selectAclAll();
               } else {
                 this.$Message.info(res.data.msg);
+                this.selectAclAll();
               }
             })
           }
@@ -1653,13 +1667,12 @@
       getAllsize() {
         this.$http.post('object/getAllSize.do', {}).then(res => {
           if (res.data.status == '1') {
-            this.size = res.data.data.data / 1048576>1 ? (res.data.data.data /1048576).toFixed(0) +'GB': res.data.data.data > 1000 || res.data.data.data / 1024 > 1 ? (res.data.data.data / 1024).toFixed(0) + 'MB' : (res.data.data.data/1024).toFixed(0) + 'KB';
+            this.size = res.data.data.allsize / 1048576>1 ? (res.data.data.allsize /1048576).toFixed(0) +'GB': res.data.data.allsize > 1000 || res.data.data.allsize / 1024 > 1 ? (res.data.data.allsize / 1024).toFixed(0) + 'MB' : (res.data.data.allsize / 1024).toFixed(0) + 'KB';
           } else {
             this.size = "0KB";
             this.$Message.info('出错了');
           }
           localStorage.setItem('size', this.size);
-
         })
       },
       //获取文件路径返回
@@ -1796,31 +1809,26 @@
 
       },
       //下载文件
-      downloadObject(filesrc){
+      downloadObject(id){
         // var _that = window;
-        this.$http.post('object/downloadsObject',{
-          bucketName:sessionStorage.getItem('bucketName')
-        }).then(res =>{
-          if(res.data.status =='1'){
-            alert(1111);
-          }
+        this.$http.post('object/downloadsObject.do',{
+          bucketName:sessionStorage.getItem('bucketName'),
+          dirId:id
+        },{responseType:'blob'}).then(res =>{
+
+            console.log(res);
+            var eleLink = document.createElement('a');
+             var blob = new Blob([res.data]);
+            eleLink.download = 'zz.doc';
+            document.body.appendChild(eleLink);
+            eleLink.style.display = 'none';
+            // 字符内容转变成blob地址
+            eleLink.href = URL.createObjectURL(blob);
+            // 触发点击
+            eleLink.click();
+            // 然后移除
+            document.body.removeChild(eleLink);
         })
-        // this.$http.post('object/geturl.do', {
-        //   bucketName: sessionStorage.getItem('bucketName'),
-        //   timelimit: '2',
-        //   fileSrc: filesrc,
-        //   protocol:'http'
-        // }).then(res => {
-        //   if (res.data.status == '1') {
-        //     var eleLink = document.createElement('a');
-        //     eleLink.download = res.data.data;
-        //     eleLink.style.display = 'none';
-        //     console.log(eleLink);
-        //     eleLink.click();
-        //   } else {
-        //     this.$Message.info(res.data.msg);
-        //   }
-        // })
       }
       //删除上传文件
       // deleteUpload(index){
@@ -2103,7 +2111,9 @@
       color: #666666;
     }
   }
-
+  .ivu-table td.files{
+    display: none;
+  }
   .upload_text {
     margin-top: 5px;
     background-color: #ffffff;

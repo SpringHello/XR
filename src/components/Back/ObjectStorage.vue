@@ -10,7 +10,7 @@
             </svg>
             <span class="title">对象存储</span>
           </div>
-          <div style="width:50%;text-align:right;line-height:4;">
+          <div style="width:50%;text-align:right;line-height:2;">
             <Button @click="$router.history.go(0)">刷新</Button>
           </div>
         </div>
@@ -270,7 +270,7 @@
       getAllsize(){
         this.$http.post('object/getAllSize.do', {}).then(res => {
           if (res.data.status == '1') {
-            this.size = res.data.data.data / 1048576>1 ? (res.data.data.data /1048576).toFixed(0) +'GB': res.data.data.data > 1000 || res.data.data.data / 1024 > 1 ? (res.data.data.data / 1024).toFixed(0) + 'MB' : (res.data.data.data/1024).toFixed(0) + 'KB';
+            this.size = res.data.data.allsize / 1048576>1 ? (res.data.data.allsize /1048576).toFixed(0) +'GB': res.data.data.allsize > 1000 || res.data.data.allsize / 1024 > 1 ? (res.data.data.allsize / 1024).toFixed(0) + 'MB' : (res.data.data.allsize / 1024).toFixed(0) + 'KB';
           } else {
             this.size = "0KB";
             this.$Message.inof('平台出小差了');
@@ -330,8 +330,8 @@
           }
         }
         .center_p {
-          margin-top: 20px;
-          margin-bottom: 27px;
+          margin-top: 9px;
+          margin-bottom: 20px;
           width: 1160px;
           height: 32px;
           background-color: rgba(42, 153, 242, 0.1);
