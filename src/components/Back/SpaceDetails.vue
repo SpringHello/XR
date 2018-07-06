@@ -1573,7 +1573,7 @@
       /**
        *获取外链
        */
-      geturl(filesrc) {
+      geturl() {
         this.tremLoading = true;
         var name = sessionStorage.getItem("bucketName");
         this.$http.post('object/geturl.do', {
@@ -1811,14 +1811,16 @@
       //下载文件
       downloadObject(id){
         // var _that = window;
-        this.$http.post('object/downloadsObject.do',{
-          bucketName:sessionStorage.getItem('bucketName'),
-          dirId:id
+        this.$http.get('object/downloadsObject.do',{
+          params:{
+            bucketName:sessionStorage.getItem('bucketName'),
+            dirId:id
+          }
         },{responseType:'blob'}).then(res =>{
 
-            console.log(res);
             var eleLink = document.createElement('a');
              var blob = new Blob([res.data]);
+             //文件名字
             eleLink.download = 'zz.doc';
             document.body.appendChild(eleLink);
             eleLink.style.display = 'none';
