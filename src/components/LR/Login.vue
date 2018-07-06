@@ -30,7 +30,7 @@
                        ref="vailCode"
                        @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
                 <img :src="imgSrc"
-                     @click="imgSrc=`/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                     @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
               </div>
             </form>
           </div>
