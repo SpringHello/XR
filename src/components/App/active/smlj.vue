@@ -29,7 +29,7 @@
             <div class="foot">
               <p><span>{{computerInfo.day}}天</span>免费</p>
               <p style="font-size:14px;color:rgba(102,102,102,1);margin-top: 10px;text-decoration: line-through;">
-                原价：￥{{computerInfo.cost}}起</p>
+                原价：￥{{computerInfo.cost}}/月</p>
             </div>
           </div>
           <div class="right">

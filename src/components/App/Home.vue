@@ -2,7 +2,7 @@
   <div id="home" style="background: #FFF">
     <!-- banner 轮播图 -->
     <div class="banner">
-      <my-carousel :interval=5000 effect="fade" class="carousel" @on-change="change">
+      <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
           <div @click="push('active_2')"
                style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
@@ -229,7 +229,7 @@
       <div
         style="opacity:.8;width:100%;height:200px;position: absolute;bottom:0px;background-color: #ffffff;box-shadow: 0 -3px 8px 0 rgba(0,0,0,0.20);">
         <div style="width:1000px;height:200px;margin:0px auto;">
-          <my-carousel :interval=10000 class="carousel" @on-change="carChange">
+          <my-carousel :interval=10000 class="carousel" @on-change="carChange" :dots="false">
             <my-carousel-item class="carousel-item" v-for="(area,index) in areaInfo" style="padding:50px 100px"
                               :key="index">
               <div style="color:black;display: flex;align-items: center;justify-content: space-between">
@@ -245,7 +245,7 @@
       </div>
     </div>
     <!-- 新睿云最新动态 -->
-    <div class="news">
+    <!--<div class="news">
       <div class="wrap">
         <div class="header">
           <p class="title-g">新睿云最新动态</p>
@@ -282,7 +282,7 @@
           </dl>
         </div>
       </div>
-    </div>
+    </div>-->
     <!-- 合作伙伴 -->
     <div class="partner-container" ref="partnerFade">
       <div>
@@ -674,8 +674,8 @@ import axios from 'axios';
       window.addEventListener('scroll', this.scrollFn)
     },
     created() {
-      this.getnews()
-      this.getlinkList()
+      //this.getnews()
+      //this.getlinkList()
     },
     methods: {
       getnews() {

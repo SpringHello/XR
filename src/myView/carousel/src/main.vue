@@ -188,7 +188,7 @@
         cursor: pointer;
         width: 50px;
         height: 4px;
-        background-color: #ffffff;
+        background-color: #ADADAD;
         opacity: .5;
         display: inline-block;
         margin: 0px 2px;
