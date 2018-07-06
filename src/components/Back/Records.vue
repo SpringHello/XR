@@ -163,10 +163,6 @@
             label: "全部"
           },
           {
-            value: "待审核",
-            label: "初审中"
-          },
-          {
             value: "管局审核中",
             label: "管局审核中"
           },
@@ -488,13 +484,12 @@
           title: '是否撤销备案',
           content: '<p>撤销备案此条备案信息会被删除</p>',
           onOk: () => {
-            this.$http.get('recode/delMainWeb.do', {
-              params: {
-                id: id
-              }
+            axios.post('recode/updateMainWeb.do', {
+              id: id,
+              status: '撤销备案'
             }).then(res => {
               if (res.data.status == 1) {
-                this.$Message.success('撤销成功');
+                this.$Message.success('您的申请提交成功');
                 this.listMainWeb(0);
               } else {
                 this.$Message.error(res.data.message);
