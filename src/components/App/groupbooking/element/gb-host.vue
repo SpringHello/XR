@@ -40,7 +40,8 @@
       <div class="modal-body">
         <p>赶快分享给你的小伙伴吧！</p>
         <ul>
-          <li v-for="item in shareGroup"><img :src="item.src"/><span>{{ item.text }}</span></li>
+          <!-- <li v-for="item in shareGroup"><img :src="item.src"/><span>{{ item.text }}</span></li>-->
+          <share :config="config"></share>
         </ul>
         <div class="link">活动链接：<span>{{ activeLink }}</span></div>
       </div>
@@ -84,8 +85,19 @@
             text: '微博'
           }
         ],
-        activeLink: 'https://www.xrcloud.net/ruicloud/home',
+        activeLink: 'https://github.com/overtrue/share.js',
         hostDuration: 5,
+        config: {
+          url: '', // 网址，默认使用 window.location.href
+          source: '', // 来源（QQ空间会用到）, 默认读取head标签：<meta name="site" content="http://overtrue" />
+          title: '找到了实现分享功能的插件', // 标题，默认读取 document.title 或者 <meta name="title" content="share.js" />
+          description: 'go go go', // 描述, 默认读取head标签：<meta name="description" content="PHP弱类型的实现原理分析" />
+          image: 'http://qlogo3.store.qq.com/qzone/920149862/920149862/100?1513838155', // 图片, 默认取网页中第一个img标签
+          disabled: ['google', 'facebook', 'twitter', 'wechat', 'douban', 'tencent', 'linkedin', 'diandian'], // 禁用的站点
+          /*sites: ['qzone', 'qq', 'weibo', 'wechat', 'douban'], // 启用的站点
+          wechatQrcodeTitle: "微信扫一扫：分享", // 微信二维码提示文字
+          wechatQrcodeHelper: '<p>微信里点“发现”，扫一下</p><p>二维码便可将本文分享至朋友圈。</p>',*/
+        }
       }
     },
     props: {
@@ -101,6 +113,9 @@
         type: Boolean,
         default: false
       }
+    },
+    created(){
+      this.config.url = this.activeLink
     },
     methods: {
       onCopy() {
@@ -227,13 +242,15 @@
               line-height: 32px;
             }
             p:nth-child(1) {
+              width: 18%;
               span {
                 color: #FA1713;
               }
             }
             p:nth-child(2) {
               color: #999999;
-              margin-left: 500px;
+              width: 70%;
+              text-align: right;
               margin-right: 30px;
               span {
                 color: rgba(0, 0, 0, 1);
