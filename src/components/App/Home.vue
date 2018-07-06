@@ -792,8 +792,9 @@ import axios from 'axios';
       color: #999999;
     }
     .news{
+      margin-top: 40px;
       .header{
-        margin-top: 60px;
+        padding-top: 60px;
       }
       .main{
         margin-top: 60px;
@@ -842,10 +843,12 @@ import axios from 'axios';
       }
       .link-list{
         margin-top: 100px;
+        margin-bottom: 40px;
         display: flex;
         justify-content: space-between;
         flex-wrap:wrap;
         dl{
+          background:rgba(255,255,255,1);
           width: 386px;
           height: 242px;
           overflow: hidden;
