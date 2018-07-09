@@ -4,10 +4,10 @@
       <img src="../../../../assets/img/active/group-booking/gb-banner3.png"/>
       <p>分享赠时长进行中</p>
       <div class="timer">
-        剩余： <span>3</span>天
-        <span>00</span>时
-        <span>00</span>分
-        <span>00</span>秒
+        剩余： <span>{{ '' + d1 + d2 }}</span>天
+        <span>{{ '' + h1 + h2 }}</span>时
+        <span>{{ '' + m1 + m2 }}</span>分
+        <span>{{ '' + s1 + s2 }}</span>秒
       </div>
       <p class="p1">数量有限，赶快分享，优惠掌握在自己手中 </p>
       <p class="p1">（邀请第一人时长期限为3天，总可邀请时长期限为15天）</p>
@@ -18,7 +18,16 @@
 <script type="text/ecmascript-6">
   export default {
     data() {
-      return {}
+      return {
+        d1: 0,
+        d2: 3,
+        h1: 0,
+        h2: 0,
+        m1: 0,
+        m2: 0,
+        s1: 0,
+        s2: 0
+      }
     },
     props: {
       startTime: {
@@ -26,7 +35,12 @@
       }
     },
     mounted() {
-      console.log(this.startTime)
+      const FIFTEEN_DAY = 1296000000
+      const THREE_DAY = 259200000
+      let date = new Date(this.startTime.replace(/-/g, '/'))
+      let time = date.getTime();
+      console.log(time + THREE_DAY)
+
     }
   }
 </script>
