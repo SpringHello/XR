@@ -1,6 +1,6 @@
 <template>
   <div class="share-page">
-    <gb-timelimit></gb-timelimit>
+    <gb-timelimit :startTime="startTime"></gb-timelimit>
     <gb-host :participationPersonColumns="participationPersonColumns" :participationPersonData="participationPersonData" :someoneParticipation="someoneParticipation"></gb-host>
     <div class="center">
       <gb-award></gb-award>
@@ -21,6 +21,9 @@
       gbAward,
       gbTimelimit,
       gbRule
+    },
+    beforeRouteEnter(to, from, next) {
+      next()
     },
     data() {
       return {
@@ -55,7 +58,8 @@
             sj: '2018-5-8',
             zt: '正常'
           },
-        ]
+        ],
+        startTime: '2018-07-09 10:00:00'
       }
     },
     methods: {},

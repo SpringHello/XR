@@ -20,6 +20,14 @@
     data() {
       return {}
     },
+    props: {
+      startTime: {
+        type: String
+      }
+    },
+    mounted() {
+      console.log(this.startTime)
+    }
   }
 </script>
 
@@ -49,10 +57,10 @@
         font-size: 32px;
         line-height: 45px;
       }
-      .p1{
-        font-size:20px;
-        font-family:PingFangSC-Regular;
-        color:rgba(255,255,255,1);
+      .p1 {
+        font-size: 20px;
+        font-family: PingFangSC-Regular;
+        color: rgba(255, 255, 255, 1);
         line-height: 28px;
       }
       .timer {

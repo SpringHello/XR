@@ -14,6 +14,9 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from 'axios'
+  import $store from '../../../vuex'
+
   import gbHeader from './element/gb-header'
   import gbProduct from './element/gb-product'
   import gbFlow from './element/gb-flow'
@@ -26,16 +29,37 @@
       gbHeader, gbProduct, gbFlow, gbAward, gbAdvantage, gbRule
     },
     beforeRouteEnter(to, from, next) {
-/*      if ($store.state.userInfo && $store.state.userInfo.recordFlag) {
-        next({path: '/ruicloud/waitSecondTrial'})
+      if ($store.state.userInfo) {
+        let url = 'activity/boughtVM.do'
+        axios.get(url, {
+          params: {
+            activityNum: '21'
+          }
+        }).then(res => {
+          if (res.data.status == 1) {
+            next({path: '/ruicloud/prductShare'})
+          } else {
+            next()
+          }
+        })
       } else {
         next()
-      }*/
+      }
+
     },
     data() {
       return {}
     },
-    methods: {},
+    methods: {
+      isJoin() {
+        let url = 'activity/boughtVM.do'
+        axios.get(url).then(res => {
+          if (res.data.status == 1) {
+
+          }
+        })
+      }
+    },
     computed: {}
   }
 </script>
