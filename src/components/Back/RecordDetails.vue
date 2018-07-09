@@ -2007,6 +2007,7 @@
           return item.url
         })
         this.updateHostUnitList.otherdataurl = otherdataurl + '';
+        let backgroundUrl = typeof(this.hostUnitList.mark5) == 'undefined' ? '' : this.hostUnitList.mark5
         let web = {
           id: this.id,
           status: '初审中',
@@ -2033,7 +2034,7 @@
           companyResponsibilityUrlBack: this.updateHostUnitList.webresponsibilityurlback,
           domainCertificateUrl: this.updateHostUnitList.domaincertificateurl,
           otherDataUrl: this.updateHostUnitList.otherdataurl,
-          backgroundUrl: this.hostUnitList.mark5
+          backgroundUrl: backgroundUrl
         }
         let update = this.$http.post("recode/updateMainWeb.do", web);
         let main = {
