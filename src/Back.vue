@@ -64,7 +64,7 @@
       </div>
     </header>
     <div style="display: flex">
-      <my-menu :items="main" style="width:160px;"></my-menu>
+      <my-menu :items="main"></my-menu>
       <router-view/>
     </div>
 
@@ -631,60 +631,6 @@
             }
           }
 
-        }
-      }
-    }
-    .thr-header {
-      border-top: 1px solid #ccc;
-      overflow-y: hidden;
-      transition: all .3s;
-      height: 0px;
-      // position: absolute;
-      width: 100%;
-      background-color: #ffffff;
-      &.show {
-        border-bottom: 1px solid #ccc;
-        height: 45px;
-      }
-      &.static {
-        // position: static;
-        height: 45px;
-      }
-      .wrapper {
-        // position: relative;
-        text-align: center;
-        .operate {
-          position: absolute;
-          > ul {
-            height: 0px;
-            overflow-y: hidden;
-            transition: all .5s;
-            // position: absolute;
-            > li {
-              display: inline-block;
-              font-size: 14px;
-              color: #333333;
-              line-height: 45px;
-              padding: 0px 20px;
-              cursor: pointer;
-              a {
-                color: #333333;
-              }
-              &:hover {
-                a {
-                  color: #2A99F2;
-                }
-              }
-              &.hover {
-                a {
-                  color: #2A99F2;
-                }
-              }
-            }
-            &.show {
-              height: 45px;
-            }
-          }
         }
       }
     }

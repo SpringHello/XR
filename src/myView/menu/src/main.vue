@@ -1,25 +1,33 @@
 <template>
   <div style="display: flex">
-    <div>
+    <div style="width:160px;">
       <div style="height:38px;background-color: #1B2940"></div>
       <ul>
         <li v-for="item in items">
-          <div class="mainTitle">{{item.mainName}}</div>
-          <ul>
-            <li v-for="sub in item.subItem" class="subTitle">
+          <div class="mainTitle" @click="toggleMain(item)">{{item.mainName}}</div>
+          <ul v-if="openedMain.includes(item.type)">
+            <li v-for="sub in item.subItem" class="subTitle" @click="go(sub)">
               {{sub.subName}}
             </li>
           </ul>
         </li>
       </ul>
     </div>
-    <div>
-      <ul v-if="sub.thrItem" class="thr">
-        <li v-for="thr in sub.thrItem">
-          {{thr.thrName}}
-        </li>
-      </ul>
-    </div>
+
+    <transition name="slide">
+      <div class="thr-header" v-show="thrMenu">
+        <div class="wrapper">
+          <div class="operate">
+            <ul>
+              <li v-for="(thr,sIndex) in thrMenu" :key="sIndex">
+                {{thr.thrName}}
+              </li>
+            </ul>
+          </div>
+          <div style="clear:right"></div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -37,12 +45,34 @@
       }
     },
     data(){
-      return {}
+      return {
+        // 三级Menu列表
+        thrMenu: undefined,
+        // 已打开的Main
+        openedMain: []
+      }
     },
     mounted(){
 
     },
-    methods: {},
+    methods: {
+      // 切换Main状态
+      toggleMain(item){
+        if (this.accordion) {
+          this.openedMain = [item.type]
+        } else {
+          if (this.openedMain.indexOf(item.type) > -1) {
+            this.openedMain.splice(this.openedMain.indexOf(item.type), 1)
+          } else {
+            this.openedMain.push(item.type)
+          }
+        }
+
+      },
+      go(sub){
+        this.thrMenu = sub.thrItem || undefined
+      }
+    },
     watch: {}
   }
 
@@ -75,5 +105,30 @@
       top: 0px;
       right: 0px;
     }
+  }
+
+  .thr-header {
+    li {
+      color: rgba(163, 186, 204, 1);
+      padding: 14px 24px;
+      background-color: #262F38;
+      width: 160px;
+    }
+  }
+
+  .slide-enter-active {
+    transition: all .3s;
+  }
+
+  .slide-leave-active {
+    transition: all .3s;
+  }
+
+  .slide-enter {
+    width: 0px;
+  }
+
+  .slide-leave-to {
+    width: 0px;
   }
 </style>
