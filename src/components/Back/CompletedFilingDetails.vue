@@ -21,7 +21,7 @@
           </div>
           <div>
             <div class="back_button" @click="$router.go(-1)"><span>返回</span></div>
-            <div class="refresh_button" @click="details"><span>刷新</span></div>
+            <div class="refresh_button" @click="$router.go(0)"><span>刷新</span></div>
           </div>
         </div>
         <!--主办单位信息-->
@@ -398,7 +398,7 @@
                     </div>
                   </li>
                   <li class="tab_item">幕布照片</li>
-                  <li class="tab_item">点击查看
+                  <li class="tab_item" @click="curtainInfo = true">点击查看
                     <div v-if="curtainInfoHide =='curtainInfo'" class="text_block"><span style="color:red">信息有误</span>
                     </div>
                   </li>
@@ -653,7 +653,7 @@
           </div>
           <div style="width:50%;min-height:203px;">
             <div style="text-align: center">
-              <img  style="height:144px;margin-bottom:20px;" src="../../assets/img/records/records-img6.png"/>
+              <img style="height:144px;margin-bottom:20px;" src="../../assets/img/records/records-img6.png"/>
               <p>示例图</p>
             </div>
           </div>
@@ -1479,6 +1479,7 @@
                 let addy = this.hostUnitList.domaincertificateurl.split(",");
                 for (let i = 0; i < addy.length; i++) {
                   let object = new Object();
+                  object.url = addy[i]
                   addy[i].substring(addy[i].lastIndexOf('/') + 1);
                   object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
                   this.addy.push(object);
@@ -1497,6 +1498,7 @@
               } else {
                 let addy = this.hostUnitList.domaincertificateurl;
                 let object = new Object();
+                object.url = addy
                 addy.substring(addy.lastIndexOf('/') + 1);
                 object.name = (addy.substring(addy.lastIndexOf('/') + 1));
                 this.addy.push(object);
@@ -1517,6 +1519,7 @@
                 let onther = this.hostUnitList.otherdataurl.split(",");
                 for (let j = 0; j < onther.length; j++) {
                   let obj = new Object();
+                  obj.url = onther[j]
                   onther[j].substring(onther[j].lastIndexOf('/') + 1);
                   obj.name = (onther[j].substring(onther[j].lastIndexOf('/') + 1));
                   this.otherData.push(obj);
@@ -1535,6 +1538,7 @@
               } else {
                 let onther = this.hostUnitList.otherdataurl
                 let obj = new Object();
+                obj.url = onther
                 onther.substring(onther.lastIndexOf('/') + 1);
                 obj.name = (onther.substring(onther.lastIndexOf('/') + 1));
                 this.otherData.push(obj);
@@ -1554,6 +1558,7 @@
                 let webRecord = this.hostUnitList.webrecordauthenticityurl.split(",");
                 for (let j = 0; j < onther.length; j++) {
                   let objc = new Object();
+                  objc.url = webRecord[j]
                   webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1);
                   objc.name = (webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1));
                   this.webRecordData.push(objc);
@@ -1572,6 +1577,7 @@
               } else {
                 let webRecord = this.hostUnitList.webrecordauthenticityurl
                 let obj = new Object();
+                obj.url = webRecord
                 webRecord.substring(webRecord.lastIndexOf('/') + 1);
                 obj.name = (webRecord.substring(webRecord.lastIndexOf('/') + 1));
                 this.webRecordData.push(obj);
@@ -1588,7 +1594,7 @@
                 }
               }
               //查询错误的备案信息然后显示出来重新输入
-              if (typeof (this.hostUnitList.errorMessage) != 'undefined'&&(this.hostUnitList.status == '初审拒绝'||this.hostUnitList.status == '管局审核拒绝' )) {
+              if (typeof (this.hostUnitList.errorMessage) != 'undefined' && (this.hostUnitList.status == '初审拒绝' || this.hostUnitList.status == '管局审核拒绝')) {
 
                 this.isAllUpate = false;
                 this.hostUnitList.errorMessage.forEach(item => {
@@ -1684,25 +1690,25 @@
                       this.mainCompanyCommunicatLocationHide = 'mainCompanyCommunicatLocation'
                       break
                     case 'webresponsibilityurlpositive':
-                      this.sponsorPhotoHide ='sponsorPhoto'
+                      this.sponsorPhotoHide = 'sponsorPhoto'
                       break
                     case 'webresponsibilityurlback':
-                      this.sponsorPhotoHide ='sponsorPhoto'
+                      this.sponsorPhotoHide = 'sponsorPhoto'
                       break
                     case 'hostcompanyurl':
-                      this.organizerPhotoHide ='organizerPhoto'
+                      this.organizerPhotoHide = 'organizerPhoto'
                       break
                     case 'domaincertificateurl':
-                      this.domainNameCertificateHide ='domainNameCertificate'
+                      this.domainNameCertificateHide = 'domainNameCertificate'
                       break
                     case 'otherdataurl':
-                      this.otherInfoHide ='otherInfo'
+                      this.otherInfoHide = 'otherInfo'
                       break
                     case 'webrecordauthenticityurl':
-                      this.checkListHide ='checkList'
+                      this.checkListHide = 'checkList'
                       break
                     case 'mark5':
-                      this.curtainInfoHide ='curtainInfo'
+                      this.curtainInfoHide = 'curtainInfo'
                       break
                   }
                 })
@@ -1780,28 +1786,28 @@
       allUpdate() {
         let webcompany_Id = sessionStorage.getItem('webcompany_Id');
         this.updateHostUnitList.id = this.id;
-        if(this.addy.length == 0){
+        if (this.addy.length == 0) {
           this.$Message.info('请上传相关域名证书')
           return
         }
-        if(this.webRecordData.length == 0){
+        if (this.webRecordData.length == 0) {
           this.$Message.info('请上传相关网站核验单')
           return
         }
-        if(this.otherData.length == 0){
+        if (this.otherData.length == 0) {
           this.$Message.info('请上传委托书等其他相关资料')
           return
         }
         let domaincertificateurl = this.addy.map(item => {
-          return item.name
+          return item.url
         })
         this.updateHostUnitList.domaincertificateurl = domaincertificateurl + ''
         let webrecordauthenticityurl = this.webRecordData.map(item => {
-          return item.name
+          return item.url
         })
         this.updateHostUnitList.webrecordauthenticityurl = webrecordauthenticityurl + '';
         let otherdataurl = this.otherData.map(item => {
-          return item.name
+          return item.url
         })
         this.updateHostUnitList.otherdataurl = otherdataurl + '';
         let web = {
@@ -1911,6 +1917,7 @@
                 let webRecord = this.updateHostUnitList.webrecordauthenticityurl.split(",");
                 for (let j = 0; j < onther.length; j++) {
                   let objc = new Object();
+                  objc.url = webRecord[j]
                   webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1);
                   objc.name = (webRecord[j].substring(webRecord[j].lastIndexOf('/') + 1));
                   this.webRecordData.push(objc);
@@ -1929,6 +1936,7 @@
               } else {
                 let webRecord = this.updateHostUnitList.webrecordauthenticityurl;
                 let objc = new Object();
+                objc.url = webRecord
                 webRecord.substring(webRecord.lastIndexOf('/') + 1);
                 objc.name = (webRecord.substring(webRecord.lastIndexOf('/') + 1));
                 this.webRecordData.push(objc);
@@ -2048,6 +2056,7 @@
                 let addy = this.updateHostUnitList.domaincertificateurl.split(",");
                 for (let i = 0; i < addy.length; i++) {
                   let object = new Object();
+                  object.url  = addy[i]
                   addy[i].substring(addy[i].lastIndexOf('/') + 1);
                   object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
                   this.addy.push(object);
@@ -2066,6 +2075,7 @@
               } else {
                 let addy = this.updateHostUnitList.domaincertificateurl;
                 let object = new Object();
+                object.url = addy
                 addy.substring(addy.lastIndexOf('/') + 1);
                 object.name = (addy.substring(addy.lastIndexOf('/') + 1));
                 this.addy.push(object);
@@ -2109,6 +2119,7 @@
                 let addy = this.updateHostUnitList.otherdataurl.split(",");
                 for (let i = 0; i < addy.length; i++) {
                   let object = new Object();
+                  object.url = addy[i]
                   addy[i].substring(addy[i].lastIndexOf('/') + 1);
                   object.name = (addy[i].substring(addy[i].lastIndexOf('/') + 1));
                   this.otherData.push(object);
@@ -2127,6 +2138,7 @@
               } else {
                 let addy = this.updateHostUnitList.otherdataurl;
                 let object = new Object();
+                object.url = addy
                 addy.substring(addy.lastIndexOf('/') + 1);
                 object.name = (addy.substring(addy.lastIndexOf('/') + 1));
                 this.otherData.push(object);
@@ -2344,11 +2356,11 @@
         margin-right: 24px;
         font-size: 14px;
       }
-      .list_item:nth-child(1){
+      .list_item:nth-child(1) {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        width:180px;
+        width: 180px;
       }
 
       .info_box {
