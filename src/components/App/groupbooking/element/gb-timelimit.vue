@@ -4,10 +4,10 @@
       <img src="../../../../assets/img/active/group-booking/gb-banner3.png"/>
       <p>分享赠时长进行中</p>
       <div class="timer">
-        剩余： <span>{{ '' + d1 + d2 }}</span>天
-        <span>{{ '' + h1 + h2 }}</span>时
-        <span>{{ '' + m1 + m2 }}</span>分
-        <span>{{ '' + s1 + s2 }}</span>秒
+        剩余： <span>{{ d }}</span>天
+        <span>{{ h }}</span>时
+        <span>{{ m }}</span>分
+        <span>{{ s }}</span>秒
       </div>
       <p class="p1">数量有限，赶快分享，优惠掌握在自己手中 </p>
       <p class="p1">（邀请第一人时长期限为3天，总可邀请时长期限为15天）</p>
@@ -19,29 +19,52 @@
   export default {
     data() {
       return {
-        d1: 0,
-        d2: 3,
-        h1: 0,
-        h2: 0,
-        m1: 0,
-        m2: 0,
-        s1: 0,
-        s2: 0
+        d: 0,
+        h: 0,
+        m: 0,
+        s: 0,
+        limitTime: 0,
       }
     },
     props: {
-      startTime: {
-        type: String
+      time: {
+        type: Number
+      }
+    },
+    methods: {
+      setTime() {
+        this.limitTime = this.time
+        if (this.limitTime > 0) {
+          let s = setInterval(() => {
+            let days = parseInt(this.limitTime / 1000 / 60 / 60 / 24, 10); //计算剩余的天数
+            let hours = parseInt(this.limitTime / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
+            let minutes = parseInt(this.limitTime / 1000 / 60 % 60, 10);//计算剩余的分钟
+            let seconds = parseInt(this.limitTime / 1000 % 60, 10);//计算剩余的秒数
+            this.d = checkTime(days);
+            this.h = checkTime(hours);
+            this.m = checkTime(minutes);
+            this.s = checkTime(seconds);
+            this.limitTime -= 1000
+            if (this.limitTime <= 0) {
+              window.clearInterval(s)
+            }
+          }, 1000);
+        } else {
+          this.d = checkTime(0);
+          this.h = checkTime(0);
+          this.m = checkTime(0);
+          this.s = checkTime(0);
+        }
+        function checkTime(i) { //将0-9的数字前面加上0，例1变为01
+          if (i < 10) {
+            i = '0' + i;
+          }
+          return i;
+        }
       }
     },
     mounted() {
-      const FIFTEEN_DAY = 1296000000
-      const THREE_DAY = 259200000
-      let date = new Date(this.startTime.replace(/-/g, '/'))
-      let time = date.getTime();
-      console.log(time + THREE_DAY)
-
-    }
+    },
   }
 </script>
 

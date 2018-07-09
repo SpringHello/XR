@@ -193,6 +193,22 @@
               name: 'order',
             })
             window.open(href, '_blank')
+            let s = setInterval(() => {
+              let url = 'activity/boughtVM.do'
+              axios.get(url, {
+                params: {
+                  activityNum: '21'
+                }
+              }).then(res => {
+                if (res.data.status == 1) {
+                  if(res.data.result){
+                    window.clearInterval(s)
+                    sessionStorage.setItem('step','step-one')
+                    this.$router.push('productShare')
+                  }
+                }
+              })
+            }, 1000)
           } else {
             this.$message.info({
               content: res.data.message

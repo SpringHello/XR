@@ -37,7 +37,11 @@
           }
         }).then(res => {
           if (res.data.status == 1) {
-            next({path: '/ruicloud/prductShare'})
+            if(res.data.result){
+              next({path: '/ruicloud/productShare'})
+            } else{
+              next()
+            }
           } else {
             next()
           }
@@ -51,14 +55,6 @@
       return {}
     },
     methods: {
-      isJoin() {
-        let url = 'activity/boughtVM.do'
-        axios.get(url).then(res => {
-          if (res.data.status == 1) {
-
-          }
-        })
-      }
     },
     computed: {}
   }
