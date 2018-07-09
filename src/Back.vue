@@ -63,63 +63,11 @@
         </div>
       </div>
     </header>
-    <div class="sec-header">
-      <div class="wrapper">
-        <div class="zoneList">
-          <Dropdown @on-click="toggleZone">
-            <div style="height:30px;">
-              <div
-                style="display: inline-block;background: #2A99F2;border-radius: 4px;height: 30px;padding: 4px 0px;cursor:pointer">
-                <img src="./assets/img/back/zoneIcon.png" style="vertical-align: middle;margin:0px 10px;"></img><span
-                style="font-size: 14px;color: #FFFFFF;line-height: 21px;vertical-align: middle;margin-right:10px;">{{zone.zonename}}</span>
-              </div>
-            </div>
-            <DropdownMenu slot="list">
-              <DropdownItem :name="zone.zoneid" v-for="(zone,index) in zoneList" :key="index">
-                {{zone.zonename}}
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
-        </div>
-        <div class="operate" ref="operate">
-          <ul @mouseleave="ML">
-            <li class="sec-nav" v-for="(item,index) in main" :key="index" @mouseenter="ME($event,item.type)"
-                :ref="item.type"
-                :class="{hover:item.type==pageInfo.hoverItem}">
-              <a>{{item.mainName}}</a>
-            </li>
-            <div class="line" :style="lineStyle" ref="line"></div>
-          </ul>
-        </div>
-      </div>
+    <div style="display: flex">
+      <my-menu :items="main" style="width:160px;"></my-menu>
+      <router-view/>
     </div>
-    <div class="thr-header" @mouseenter="handME" @mouseleave="handML" :class="thrShow">
-      <div class="wrapper">
-        <div class="operate" v-for="(parentItem,pIndex) in main" :key="pIndex" v-if="parentItem.subItem"
-             :style="menuStyle(parentItem.type)">
-          <ul :ref="`${parentItem.type}-sub`" :class="{show:parentItem.type==pageInfo.hoverItem}">
-            <li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"
-                @click="push(parentItem.type,subItem.type)" :class="{hover:subItem.type==pageInfo.sType}">
-              <Dropdown v-if="subItem.thrItem" @on-click="pane">
-                <a href="javascript:void(0)">
-                  {{subItem.subName}}
-                </a>
-                <DropdownMenu slot="list">
-                  <DropdownItem v-for="(thrItem,index) in subItem.thrItem" :key="index"
-                                :name="`${thrItem.pane}#${subItem.subName}`">
-                    <a>{{thrItem.thrName}}</a>
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-              <a v-else>
-                {{subItem.subName}}
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div style="clear:right"></div>
-      </div>
-    </div>
+
     <!-- 客服浮动块 -->
     <div class="affix">
       <span class="qq" @mouseenter="QME" @mouseleave="QML">
@@ -195,7 +143,6 @@
         <Icon type="chevron-up" class="backtop"></Icon>
       </BackTop>
     </div>
-    <router-view/>
   </div>
 </template>
 
@@ -228,29 +175,20 @@
         },
         main: [
           {
-            mainName: '云服务器',
+            mainName: '云计算',
             type: 'server',
             subItem: [{subName: '云主机', type: 'host'}, {subName: '云主机快照', type: 'snapshot'}, {
               subName: '镜像',
               type: 'mirror'
             }]
           },
-          /*{
-            mainName: '云数据库',
-            type: 'database',
-            subItem: [{subName: '云数据库', type: 'cloudDatabase'}/!*, {subName: '云数据库备份', type: 'cloudDatabaseBackup'}, {
-             subName: '云数据库镜像',
-             type: 'cloudDatabaseMirror'
-             }*!/]
-          },*/
           {
-            mainName: '云存储',
+            mainName: '云网络',
             type: 'storage',
             subItem: [
               {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
               {subName: '云硬盘', type: 'disk'},
               {subName: '云硬盘备份', type: 'diskBackup'}
-              /* {subName: '硬盘快照', type: 'diskSnapshot'} */
             ]
           },
           {
@@ -399,18 +337,18 @@
         if (sType.indexOf('http') > -1) {
           axios.get('user/showUserAcessAll.do').then(response => {
             if (response.status == 200 && response.data.status == 1) {
-             let keyData = response.data.data.UserAccess;
-              if(keyData.length == 0){
+              let keyData = response.data.data.UserAccess;
+              if (keyData.length == 0) {
                 this.$Modal.confirm({
                   title: '提示',
                   content: '<p style="line-height: 6px;">尊敬的用户您好，系统检测到您当前没有可用的Access Key,请您到<span style="color: #2A99F2;">Access Key管理</span>去创建Access Key。</p>',
-                  onOk:{
-                    click:()=>{
-                      this.$router.push({path:'userCenter'});
+                  onOk: {
+                    click: () => {
+                      this.$router.push({path: 'userCenter'});
                     }
                   }
                 });
-              }else{
+              } else {
                 window.open(sType);
               }
             } else {

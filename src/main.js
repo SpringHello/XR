@@ -26,6 +26,9 @@ import carouselItem from './myView/carouselItem'
 import slider from './myView/slider'
 // 引入错误提示框组件
 import message from './myView/message'
+// 引入menu组件
+import menu from './myView/menu'
+
 import md5 from 'md5'
 
 Vue.prototype.$message = message
@@ -41,7 +44,7 @@ Vue.config.productionTip = false
 
 
 axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
-//axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true
 
 
 //axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
@@ -122,6 +125,10 @@ Vue.use(carousel)
 Vue.use(carouselItem)
 // 使用滑块组件
 Vue.use(slider)
+// 使用menu组件
+Vue.use(menu)
+
+
 Vue.component('chart', ECharts)
 
 // 日期原型对象拓展
