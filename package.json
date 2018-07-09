@@ -27,6 +27,7 @@
     "timeago.js": "^3.0.2",
     "underscore": "^1.8.3",
     "vue": "^2.5.2",
+    "vue-clipboards": "^1.2.4",
     "vue-echarts": "^2.6.0",
     "vue-qart": "^2.1.1",
     "vue-router": "^3.0.1",
