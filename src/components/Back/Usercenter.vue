@@ -922,10 +922,10 @@
           </TabPane>
 
           <!--access key pane-->
-          <!--<Tab-pane label="Access Key" name="key">
+          <Tab-pane label="Access Key" name="key">
             <Button type="primary" @click="keymodal" style="margin-bottom:10px">创建Access Key</Button>
             <Table :columns="keyColumns" :data="keyData"></Table>
-          </Tab-pane>-->
+          </Tab-pane>
         </Tabs>
       </div>
     </div>

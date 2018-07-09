@@ -128,8 +128,8 @@
                   </Card>
                 </div>
 
-
-                <div v-for="(item,index) in openHost" v-if="item.status==1" :key="index" :class="{select:item.select}"
+                <!--<div v-for="(item,index) in openHost" v-if="item.status==1" :key="index" :class="{select:item.select}"-->
+                <div v-for="(item,index) in openHost" :key="index" :class="{select:item.select}"
                      @click="toggle(item)"
                      style="margin-bottom: 20px;height:228px;">
                   <Card style="width:375px;height:228px;">
@@ -159,10 +159,10 @@
                                 :class="{btnnormal:auth,_hover:auth}">管理
                         </Button>
                         <Button v-if="!auth" :disabled="!auth">连接主机</Button>
-                        <!--<Button v-else class="btnnormal _hover" @click="link(item)">连接主机
-                        </Button>-->
-                        <a v-else :href="item.connecturl" target="_blank"
-                           style="line-height: 30px;border: 1px solid;border-radius: 4px;width: 76px;" class="_hover">连接主机</a>
+                        <Button v-else class="btnnormal _hover" @click="link(item)">连接主机
+                        </Button>
+                        <!--<a v-else :href="item.connecturl" target="_blank"
+                           style="line-height: 30px;border: 1px solid;border-radius: 4px;width: 76px;" class="_hover">连接主机</a>-->
                       </div>
                     </div>
                   </Card>
@@ -597,17 +597,17 @@
 
     <!--远程连接密码提示框-->
     <!--<Modal v-model="showModal.linkPassword" width="360" :scrollable="true">-->
-      <!--<p slot="header">-->
-        <!--<span>远程连接密码</span>-->
-      <!--</p>-->
-      <!--<div>-->
-        <!--<p style="font-size: 20px;margin-bottom: 15px;">您的远程连接密码是：{{linkPassword}}</p>-->
-        <!--<p style="padding:5px;font-size: 12px;line-height: 20px;border:1px solid #cccccc;border-radius: 4px;">警告!-->
-          <!--远程连接密码只出现一次，您以后每次远程连接登录时都需要输入该密码，请做好记录存档工作。</p>-->
-      <!--</div>-->
-      <!--<div slot="footer">-->
-        <!--<Button type="primary" size="large" @click="open">登录</Button>-->
-      <!--</div>-->
+    <!--<p slot="header">-->
+    <!--<span>远程连接密码</span>-->
+    <!--</p>-->
+    <!--<div>-->
+    <!--<p style="font-size: 20px;margin-bottom: 15px;">您的远程连接密码是：{{linkPassword}}</p>-->
+    <!--<p style="padding:5px;font-size: 12px;line-height: 20px;border:1px solid #cccccc;border-radius: 4px;">警告!-->
+    <!--远程连接密码只出现一次，您以后每次远程连接登录时都需要输入该密码，请做好记录存档工作。</p>-->
+    <!--</div>-->
+    <!--<div slot="footer">-->
+    <!--<Button type="primary" size="large" @click="open">登录</Button>-->
+    <!--</div>-->
     <!--</Modal>-->
   </div>
 </template>
@@ -1485,28 +1485,28 @@
         sessionStorage.setItem('link-phone', this.$store.state.authInfo.phone)
         this.$router.push('link')
         /*this.$http.get('information/connectVm.do', {
-          params: {
-            VMId: item.computerid
-          }
-        }).then(response => {
-          if (response.data.connectCode == '') {
-            /!*var form = document.createElement('form');
-             form.action = 'https://www.baidu.com';
-             form.target = '_blank';
+         params: {
+         VMId: item.computerid
+         }
+         }).then(response => {
+         if (response.data.connectCode == '') {
+         /!*var form = document.createElement('form');
+         form.action = 'https://www.baidu.com';
+         form.target = '_blank';
 
-             form.method = 'POST';
+         form.method = 'POST';
 
-             document.body.appendChild(form);
-             form.submit();*!/
-            //window.open('/ruicloud/link')
-            tempwindow.location = 'https://www.baidu.com';
-          } else {
-            tempwindow.close()
-            // 是第一次连接，弹出模态框
-            this.linkPassword = response.data.connectCode
-            this.showModal.linkPassword = true
-          }
-        })*/
+         document.body.appendChild(form);
+         form.submit();*!/
+         //window.open('/ruicloud/link')
+         tempwindow.location = 'https://www.baidu.com';
+         } else {
+         tempwindow.close()
+         // 是第一次连接，弹出模态框
+         this.linkPassword = response.data.connectCode
+         this.showModal.linkPassword = true
+         }
+         })*/
       },
       // open(){
       //   window.open('/ruicloud/link')

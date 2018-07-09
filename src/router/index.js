@@ -209,7 +209,7 @@ var router = new Router({
         {path: 'ecs', name: 'ecs', component: Ecs},
         {path: 'about', name: 'about', component: Aboutus},
         {path: 'ActiveCenter', name: 'ActiveCenter', component: ActiveCenter},
-        {path: 'document', name: 'document', component: Document1},
+        {path: 'document', name: 'document', component: Document},
         {path: 'article/:typeId', name: 'art', component: Art},
         {path: 'dynamic', name: 'dynamic', component: Dynamic},
         {path: 'Record', name: 'Record', component: Record},

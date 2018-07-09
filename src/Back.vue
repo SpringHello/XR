@@ -19,9 +19,9 @@
 
           </ul>
           <ul class="right">
-            <!--<li>
+            <li>
               <router-link to="BRecords" :class="{active:pageInfo.path=='BRecords'}"><span>备案</span></router-link>
-            </li>-->
+            </li>
             <li>
               <router-link to="buy" :class="{active:pageInfo.path=='buy'}"><span>创建主机</span></router-link>
             </li>
@@ -247,7 +247,7 @@
             mainName: '云存储',
             type: 'storage',
             subItem: [
-              /*{subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},*/
+              {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
               {subName: '云硬盘', type: 'disk'},
               {subName: '云硬盘备份', type: 'diskBackup'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
