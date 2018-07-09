@@ -399,6 +399,37 @@
           callback();
         }
       };
+      const validCertificateNumber = (rule, value, callback) => {
+        let reg1 = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+        let reg2 = /^((14)|(15)[0-9]{7})|(G|S|D[0-9]{8})|((P.)|(S.)[0-9]{7})$/
+        let reg3 = /^[\u4E00-\u9FA5]{1}\\d{7}$/
+        let regNum = /^\d+$/
+          if (this.mainUnitInformation.legalPersonCertificateType == '身份证') {
+            if (!reg1.test(value)) {
+              return callback(new Error("请输入正确的证件号码"));
+            } else {
+              callback();
+            }
+          } else if (this.mainUnitInformation.legalPersonCertificateType == '护照') {
+            if (!reg2.test(value)) {
+              return callback(new Error("请输入正确的证件号码"));
+            } else {
+              callback();
+            }
+          } else if (this.mainUnitInformation.legalPersonCertificateType == '军官证') {
+            if (!reg3.test(value)) {
+              return callback(new Error("请输入正确的证件号码"));
+            } else {
+              callback();
+            }
+          } else {
+            if (!regNum.test(value)) {
+              return callback(new Error("请输入正确的证件号码"));
+            } else {
+              callback();
+            }
+          }
+      };
       return {
         administationRuleList: administationRule,
         // 管制规则弹窗
@@ -494,7 +525,8 @@
             {required: true, message: "请选择法人证件类型", trigger: "change"}
           ],
           legalPersonIDNumber: [
-            {required: true, message: "请输入法人证件号码", trigger: "blur"}
+            {required: true, message: "请输入法人证件号码", trigger: "blur"},
+            {validator: validCertificateNumber, trigger: "blur"}
           ],
           officePhone: [
             {required: true, message: "请输入办公室电话", trigger: "blur"},

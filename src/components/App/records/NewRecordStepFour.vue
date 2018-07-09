@@ -452,7 +452,7 @@
           Promise.all([addMainWeb]).then(response => {
             if (response[0].status == 200 && response[0].data.status == 1) {
               this.$router.push('waitFirstTrial')
-              sessionStorage.clear()
+              //sessionStorage.clear()
             } else {
               this.$message.info({
                 content: '平台开小差了，请稍候再试'
@@ -483,7 +483,7 @@
           Promise.all([addMainCompany, addMainWeb]).then(response => {
             if ((response[0].status == 200 && response[0].data.status == 1) && (response[1].status == 200 && response[1].data.status == 1)) {
               this.$router.push('waitFirstTrial')
-              sessionStorage.clear()
+              //sessionStorage.clear()
             } else {
               this.$message.info({
                 content: '平台开小差了，请稍候再试'
