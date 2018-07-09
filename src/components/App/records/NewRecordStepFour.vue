@@ -354,10 +354,6 @@
             this.receiveForm.person = response.data.result[0].legalname
             this.receiveForm.phone = response.data.result[0].companyphone
           }
-        } else {
-          this.$message.info({
-            content: response.data.message
-          })
         }
       },
       // 使用新地址

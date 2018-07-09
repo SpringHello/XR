@@ -577,9 +577,6 @@
               <div style="width:50%;text-align: center;">
                 <p class="hide-text" v-if="hostUnitList.hostcompanyurl==''"></p>
                 <img style="width:198px;height:144px;" :src="hostUnitList.hostcompanyurl" v-else>
-                <!--<div v-for="item in uploadHost">-->
-                <!--<Progress v-if="item.showProgress" :percent="item.percentage" status="active"></Progress>-->
-                <!--</div>-->
               </div>
               <Upload
                 multiple
@@ -624,7 +621,7 @@
       <p>执照扫描件</p>
       <div class="updatePhoto">
         <div class="updates">
-          <div style="width:50%;height:203px;" v-if="hostUnitList.status =='初审拒绝'|| hostUnitList.status =='管局审核拒绝'">
+          <div style="width:50%;height:203px;" v-if="isCompile">
             <Upload
               multiple
               type="drag"
@@ -642,7 +639,7 @@
                 <div style="text-align: center">
                   <img style="height:144px;" :src="hostUnitList.mark5">
                   <Progress v-show="percentCurtain>0&&percentCurtain<=100" :percent="percentCurtain"></Progress>
-                  <p style="">点击选择文件</p>
+                  <p class="hide-text">点击选择文件</p>
                 </div>
               </div>
             </Upload>
