@@ -4,7 +4,10 @@
             <Button type="primary" @click="modal6 = true">新建空间</Button>
         </div>
         <div style="margin-top:10px;">
-             <Table   :columns="spaceColumns" :data="spaceData" no-data-text="您还没有创建Bucket（存储空间）,请点击新建空间"></Table>
+             <Table id="table"  :columns="spaceColumns" :data="spaceData" no-data-text="您还没有创建Bucket（存储空间）,请点击"></Table>
+          <div class="table" v-if="spaceData.length == 0" @click="modal6 = true">
+            新建空间
+          </div>
         </div>
         <!--新建空间-->
          <Modal
@@ -181,7 +184,7 @@ export default {
       this.$http
         .post("bucket/getBuckets.do", {})
         .then(res => {
-          if (res.data.status == "1") {
+          if (res.status == 200 && res.data.status == "1") {
             this.spaceData = res.data.data.bucket;
             sessionStorage.setItem('http',res.data.data.protocol);
             this.buckLoading = false;
@@ -284,6 +287,16 @@ export default {
         font-size: 18px;
       }
     }
+  }
+  .table{
+   position: relative;
+    top: -34px;
+    left: 59.6%;
+    width: 60px;
+    height: 16px;
+    font-size: 0.2rem;
+    cursor: pointer;
+    color: #2A99F2;
   }
   .card-bottom {
     margin-top: 14px;

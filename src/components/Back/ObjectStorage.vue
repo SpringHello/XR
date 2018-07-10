@@ -40,43 +40,42 @@
             <!--<div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>-->
             </div>
             <div class="chart">
-            <ul class="objectList">
-            <li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>
-            </ul>
-            <div class="chart-rig">
-            <!--<Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button>-->
-            <ul class="objectList">
-            <li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>
-            </ul>
-            </div>
+              <ul class="objectList">
+                <li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>
+              </ul>
+              <div class="chart-rig">
+              <!--<Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button>-->
+                <ul class="objectList">
+                  <li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>
+                </ul>
+              </div>
             </div>
             <chart class="echarts" :options="rwPolar" ></chart>
             </div>
             <div class="center_chart">
-            <div style="display:flex;padding-bottom:5px;margin-top:50px;">
-            <div style="width:50%;font-size:16px;color:#333333;">请求次数</div>
-            <!--<div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>-->
-            </div>
-            <div class="chart" >
-            <ul class="objectList">
-            <li :class="requestIndex == item.label? 'objectItems':'objectItem'" v-for="item in requestList" :key="item.label" @click="requestClick(item.label)">{{item.value}}</li>
-            </ul>
-            <div class="chart-rig">
-            <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button> -->
-            <ul class="objectList">
-            <li :class="chartTwoIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartTwotList" :key="index" @click="chartTwoClick(index)">{{item.value}}</li>
-            </ul>
-            </div>
-            </div>
-            <chart class="echarts" :options="rwNumber"></chart>
+              <div style="display:flex;padding-bottom:5px;margin-top:50px;">
+                <div style="width:50%;font-size:16px;color:#333333;">请求次数</div>
+                <!--<div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>-->
+              </div>
+              <div class="chart" >
+                <ul class="objectList">
+                  <li :class="requestIndex == item.label? 'objectItems':'objectItem'" v-for="item in requestList" :key="item.label" @click="requestClick(item.label)">{{item.value}}</li>
+                </ul>
+                <div class="chart-rig">
+                <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button> -->
+                  <ul class="objectList">
+                    <li :class="chartTwoIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartTwotList" :key="index" @click="chartTwoClick(index)">{{item.value}}</li>
+                  </ul>
+                </div>
+              </div>
+              <chart class="echarts" :options="rwNumber"></chart>
             </div>
           </TabPane>
           <TabPane :label="bucketMange" name="name2" style="height:650px">
             <tabOne></tabOne>
           </TabPane>
-          <!--<TabPane label="用量监控" name="name3" style="height:650px">-->
-            <!--<div style="text-align: center;">暂无数据</div>-->
-            <!--&lt;!&ndash;<tabTwo></tabTwo>&ndash;&gt;-->
+          <!--<TabPane label="用量监控" name="name3" >-->
+            <!--<tabTwo></tabTwo>-->
           <!--</TabPane>-->
           <TabPane label="操作日志" name="name4" style="min-height: 300px;">
             <tabThree></tabThree>
@@ -84,10 +83,6 @@
         </Tabs>
       </div>
     </div>
-    <Modal v-model="screte" title="提示" :scrollable='true' width="390px" @on-ok="$router.push({path:'SpaceDetails'})"
-    >
-      <p>尊敬的用户您好，系统检测到您当前没有可用的Access Key，请您到<span style="color:#2A99F2;">Access Key管理</span>去创建Access Key。</p>
-    </Modal>
   </div>
 </template>
 
@@ -210,8 +205,6 @@
           }
         ],
         chartTwoIndex: 0,
-        //检测access
-        screte: false,
         //存储空间容量
         size: ''
       }
@@ -256,16 +249,6 @@
         this.rwNumber.series[0].type = this.chartTwotList[val].type;
         this.rwNumber.xAxis.boundaryGap = this.chartTwotList[val].boundaryGap;
       },
-      //检测access
-      // showUserAcessAll(){
-      //   axios.get('user/showUserAcessAll.do',{
-      //   }).then(res => {
-      //     if(res.data.status == '1'){
-      //     }else {
-      //       this.screte = true;
-      //     }
-      //   })
-      // },
       //获取存储空间容量
       getAllsize(){
         this.$http.post('object/getAllSize.do', {}).then(res => {

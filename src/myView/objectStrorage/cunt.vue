@@ -41,7 +41,9 @@
         dragOver:false,
         prefixCls: prefixCls,
         timeIndex:1,
-        fileList:[]
+        fileList:[],
+        unText:'',
+        oldTime:0
       }
     },
     props:{
@@ -96,11 +98,7 @@
         default(){
           return [];
         }
-      },
-      name: {
-        type: String,
-        default: 'file'
-      },
+      }
     },
     methods: {
       // 选择文件触发input点击事件
@@ -110,50 +108,40 @@
       // input选择文件
       checkUp(e){
         const file = e.target.files;
+        var start = 0;
         if(!file){
           return;
         }
-        this.uploadFlie(file);
+        var chunk = 5*1024 *1024;
+        var chunks = [];
+        for(let i=0;i<file.length;i++){
+          for(let j = 0;j<Math.ceil(file[i].size / chunk);j++){
+            var end = start + chunk;
+            chunks[i] = file[i].slice(start,end);
+
+          }
+        }
+        //改变文件对象为数组类型(文件对象切割出来放在数组里面)
+        let postFile = Array.prototype.slice.call(file);
+        postFile.forEach(file=>{
+          this.uploadFlie(file);
+        })
         this.$refs.input.value = null;
       },
       // 上传文件
       uploadFlie(file){
-        for(let i =0;i<file.length;i++){
-          var  blob= file[i];
-          var files = file[i];
-          //文件上传进度
-          this.uploadStart(files);
-        }
-
-        //每块多大
-        var chunk = 5*1024 *1024;
-        if(this.count == 1){
-          chunk = 0;
-        }
-
         var formData = new FormData();
 
-        //文件的总块数
-        // var shardCount  = Math.ceil(blob.size / (5*1024*1024));
-
-        //第几个分块
-        var currentChunk = 0;
-        var before = currentChunk * chunk,
-            after = (currentChunk + 1) * chunk > blob.size ? blob.size : (currentChunk + 1) * chunk;
-
           if(this.maxSize){
-            if(file.size>this.maxSize){
+            if(file.size > this.maxSize){
               // this.onExceededSize(file,this.fileList);
               return false;
             }
           }
+          this.uploadStart(file);
 
-          // formData.append('slicesNum',currentChunk);
-          // formData.append("size",after);
-
-
-              formData.append(this.name,blob.name);
-              formData.append('filename',this.name);
+        formData.append('uploadFile',file);
+        // formData.append('chunks',chunks);
           //如果有data formData追加上传的参数
           if (this.data) {
             //获取对象的key
@@ -164,25 +152,36 @@
 
           var xhr = new XMLHttpRequest();
           xhr.open('post',this.action,true);
-          xhr.send(formData);
-          xhr.upload.onprogress = function(e) {
-          if (e.lengthComputable) { //lengthComputable 是 progress 的一个属性，表示资源是否可计算字节流
-            e.percent = (e.loaded / e.total) * 100;
-            // progressBar.textContent = progressBar.value; //有点浏览器不支持，这是后备选择
-            console.log(e.percent);
+          xhr.onreadystatechange = function (e){
+            if (xhr.readyState === 4) {
+              if (xhr.status === 200) {
+                var res = JSON.parse(xhr.responseText);
+                this.onSuccess = function(res){
+                  this.handleSuccess(res,file);
+                }
+                xhr.upload.onprogress = function(e) {
+                  if (e.lengthComputable) { //lengthComputable 是 progress 的一个属性，表示资源是否可计算字节流
+                    e.percent = (e.loaded / e.total) * 100;
+                    this.fileList.percentage = e.percent;
+                    this.oldTime = 0;
+                    // progressBar.textContent = progressBar.value; //有的浏览器不支持，这是后备选择
+                    console.log(e.percent);
+                  }
+                }
+              }
+            }
           }
-
-        }
+          xhr.send(formData);
       },
       // 拖拽上传
       onDrop(e){
         this.dragOver = false;
         this.uploadFlie(e.dataTransfer.files);
       },
-      uploadProeegs(e,file){
-        const _file = file;
-        this.onProgress(e, _file, this.fileList);
-        _file.percentage = e.percent || 0;
+      uploadProeegs(e){
+        // const _file = file;
+        // this.onFileProcess(e, _file, this.fileList);
+        this.fileList.percentage = e.percent || 0;
       },
       //文件信息
       uploadStart(file){
@@ -201,9 +200,21 @@
       //删除文件
       deleteUpload(index){
         this.fileList.splice(index,1);
-      }
+      },
+      //上传成功
+      handleSuccess(res,file){
+        const _file = file ;
+        if(_file){
+          _file.status = 'finished';
+          _file.response = res;
+          this.onSuccess(res, _file, this.fileList);
+          setTimeout(() => {
+            _file.showProgress = false;
+          }, 1000);
+        }
+      },
     },
-    watch:{
+    watch: {
       defaultFileList: {
         immediate: true,
         handler(fileList) {
@@ -214,8 +225,33 @@
             return item;
           });
         }
+      },
+      time: function (fileList) {
+        let newTime = new Date().getTime();
+        var pertTime = (newTime - this.oldTime) / 1000 ;
+        this.oldTime = new Date().getTime();
+
+        var size = (this.fileList.loaded - this.oldSize) / pertTime;
+        // var size = this.time.loaded - this.oldSize
+        var sped = size;
+        this.oldSize = this.fileList.loaded;
+        if(size / 1024 >1 && size / 1024 < 1000) {
+          size = size / 1024 ;
+          this.unText="KB/s";
+        }else if(size / 1024 > 1000){
+          size = size / 1048576;
+          this.unText="MB/s";
+        }
+        this.fist = size.toFixed(1);
+        var listTime = ((this.fileList.total - this.fileList.loaded) / sped);
+        console.log(listTime);
+        var tina = (listTime / (60*60)).toFixed(0);
+        var mint = (listTime / 60).toFixed(0);
+        var secor = (listTime % 60).toFixed(0);
+        this.listTime = tina +':' +mint +':' +secor
+        }
       }
-    }
+
   }
 </script>
 

@@ -1,59 +1,59 @@
 <template>
   <div>
-       <div class="center_chart">
-                            <div style="display:flex;border-bottom:1px solid #E9E9E9;padding-bottom:5px;">
-                                <div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>
-                                <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
-                            </div>
-                            <div class="chart" >
-                                <ul class="objectList">
-                                    <li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>
-                                </ul>
-                                <div class="chart-rig" >
-                                    <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;">导出</Button> -->
-                                    <ul class="objectList">
-                                        <li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <chart class="echarts" :options="rwPolar"></chart>
-                        </div>
-                         <div class="center_chart">
-                            <div style="display:flex;border-bottom:1px solid #E9E9E9;padding-bottom:5px;margin-top:50px;">
-                                <div style="width:50%;font-size:16px;color:#333333;">Get请求情况</div>
-                                <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
-                            </div>
-                            <div class="chart" >
-                                <ul class="objectList">
-                                        <li :class="getIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in getList" :key="index" @click="getClick(index)">{{item.value}}</li>
-                                    </ul>
-                                <div class="chart-rig">
-                                    <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;">导出</Button> -->
-                                     <ul class="objectList">
-                                        <li :class="getChartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in getChartList" :key="index" @click="getChartClick(index)">{{item.value}}</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <chart class="echarts" :options="rwNumber"></chart>
-                        </div>    
-                        <div class="center_chart">
-                            <div style="display:flex;border-bottom:1px solid #E9E9E9;padding-bottom:5px;margin-top:50px;">
-                                <div style="width:50%;font-size:16px;color:#333333;">Put请求情况</div>
-                                <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
-                            </div>
-                            <div class="chart">
-                                 <ul class="objectList">
-                                        <li :class="putIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in putList" :key="index" @click="putClick(index)">{{item.value}}</li>
-                                    </ul>
-                                <div class="chart-rig">
-                                    <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;">导出</Button> -->
-                                    <ul class="objectList">
-                                        <li :class="putChartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in putChartList" :key="index" @click="putChartClick(index)">{{item.value}}</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <chart class="echarts" :options="rwPut"></chart>
-                        </div>      
+    <div class="center_chart">
+      <div style="display:flex;border-bottom:1px solid #E9E9E9;padding-bottom:5px;">
+        <div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>
+        <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
+      </div>
+      <div class="chart" >
+        <ul class="objectList">
+          <li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>
+        </ul>
+        <div class="chart-rig" >
+          <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;">导出</Button> -->
+          <ul class="objectList">
+            <li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>
+          </ul>
+        </div>
+      </div>
+      <chart class="echarts" :options="rwPolar"></chart>
+    </div>
+    <div class="center_chart">
+      <div style="display:flex;border-bottom:1px solid #E9E9E9;padding-bottom:5px;margin-top:50px;">
+        <div style="width:50%;font-size:16px;color:#333333;">Get请求情况</div>
+        <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
+      </div>
+      <div class="chart" >
+        <ul class="objectList">
+          <li :class="getIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in getList" :key="index" @click="getClick(index)">{{item.value}}</li>
+        </ul>
+        <div class="chart-rig">
+          <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;">导出</Button> -->
+          <ul class="objectList">
+            <li :class="getChartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in getChartList" :key="index" @click="getChartClick(index)">{{item.value}}</li>
+          </ul>
+        </div>
+      </div>
+      <chart class="echarts" :options="rwNumber"></chart>
+    </div>
+    <div class="center_chart">
+      <div style="display:flex;border-bottom:1px solid #E9E9E9;padding-bottom:5px;margin-top:50px;">
+        <div style="width:50%;font-size:16px;color:#333333;">Put请求情况</div>
+        <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
+      </div>
+      <div class="chart">
+        <ul class="objectList">
+          <li :class="putIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in putList" :key="index" @click="putClick(index)">{{item.value}}</li>
+        </ul>
+        <div class="chart-rig">
+          <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;">导出</Button> -->
+          <ul class="objectList">
+            <li :class="putChartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in putChartList" :key="index" @click="putChartClick(index)">{{item.value}}</li>
+          </ul>
+        </div>
+      </div>
+      <chart class="echarts" :options="rwPut" ></chart>
+    </div>
   </div>
 </template>
 
@@ -97,7 +97,7 @@ export default {
                     label:3
                     }
               ],
-         
+
             //下载流量切换数据
             indexs:0,
             //下载流量切换统计图
@@ -228,7 +228,25 @@ export default {
   font-family: MicrosoftYaHei;
   width: 100%;
   height: 100%;
-
+  .center_chart {
+    margin-top: 19px;
+    span {
+      padding: 5px 16px;
+      border: 1px solid #d9d9d9;
+      display: inline-block;
+      margin-right: -4px;
+      cursor: pointer;
+      border-radius: 4px 0px 0px 4px;
+    }
+    span:hover {
+      color: #2a99f2;
+      border: 1px solid #2a99f2;
+      cursor: pointer;
+    }
+    .chart-text {
+      width: 50%;
+    }
+  }
   .card-center {
     display: flex;
     margin-top: 20px;
@@ -263,6 +281,10 @@ export default {
     }
   }
 }
+    .echarts {
+      width: 1160px;
+      height: 240px;
+    }
  .objectList {
       width:165%;
       font-family: PingFangSC;
@@ -302,9 +324,6 @@ export default {
     .chart-rig{
       width:23%;text-align:right;height:30px;
     }
-.echarts {
-  width: 100%;
-  height: 240px;
-}
+
 </style>
 

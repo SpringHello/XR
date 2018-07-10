@@ -49,8 +49,53 @@
             <div class="space_text">0次</div>
           </div>
         </div>
-        <div class="monitor" :class="{monitors:!monitorHide}" @click="monitorClick"  style="color: #2A99F2;">查看监控</div>
-        <Tabs type="card" style="margin-top:25px;" value="objects" @on-click="checkTab" :animated="false" v-if="monitorHide">
+        <div class="monitor" :class="{monitors:!monitorHide}" @click="monitorHide = !monitorHide"  style="color: #2A99F2;">{{monitorHide?'查看监控':'收起'}}</div>
+        <!--监控流量-->
+        <div style="display:flex;margin-top: 10px;" v-if="monitorHide">
+          <!--请求次数-->
+            <div style="width: 50%;">
+              <div class="center_chart">
+                <div style="display:flex;padding-bottom:5px;">
+                  <div style="width:50%;font-size:16px;color:#333333;">请求次数</div>
+                  <div style="width:48%;text-align:right;color:#666666;font-size: 14px;">2017.11.25</div>
+                </div>
+                <div class="chart">
+                  <ul class="objectList">
+                    <li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>
+                  </ul>
+                  <div class="chart-rig">
+                    <!--<Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button>-->
+                    <ul class="objectList">
+                      <li class="objectItems">折线</li>
+                    </ul>
+                  </div>
+                </div>
+                <chart class="echarts" :options="rwPolar" ></chart>
+              </div>
+            </div>
+          <!--下载流量情况-->
+            <div style="width: 50%;">
+            <div class="center_chart">
+              <div style="display:flex;padding-bottom:5px;">
+                <div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>
+                <div style="width:50%;text-align:right;color:#666666;font-size: 14px;">2017.11.25</div>
+              </div>
+              <div class="chart" >
+                <ul class="objectList">
+                  <li :class="requestIndex == item.label? 'objectItems':'objectItem'" v-for="item in requestList" :key="item.label" @click="requestClick(item.label)">{{item.value}}</li>
+                </ul>
+                <div class="chart-rig">
+                  <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button> -->
+                  <ul class="objectList">
+                    <li class="objectItems">折线</li>
+                  </ul>
+                </div>
+              </div>
+              <chart class="echarts" :options="rwNumber"></chart>
+            </div>
+          </div>
+        </div>
+        <Tabs type="card" style="margin-top:25px;" value="objects" @on-click="checkTab" :animated="false" >
           <TabPane label="Object管理" name="objects">
             <div style="display:flex;margin-bottom:15px;">
               <div style="width:50%">
@@ -64,7 +109,8 @@
             </div>
 
             <ul style="margin: 0 0 9px 20px;">
-              <li class="fileObject" style="margin-right: 10px;" v-if="this.fileObject.length !=0" @click="backPage"><div class="leftArrow"></div>返回</li>
+              <li class="fileObject" >根目录</li>
+              <li class="fileObject" style="margin-right: 10px;margin-left: 10px;" v-if="this.fileObject.length !=0" @click="backPage"><div class="leftArrow"></div>返回</li>
               <li class="fileObject" v-for="(item,index) in fileObject" @click="selectFileSrc(item.dirId,index)" :key="index">
                 {{item.src+'/'}}
               </li>
@@ -181,8 +227,8 @@
     >
       <p style="font-size:14px;color:#999999;line-height: 20px;margin:10px 0;">控制台上传单个文件大小不超过1GB，如需上传更大的文件请使用新睿云对象存储提供的<span
         style="color:#2A9AF3;cursor:pointer;">API</span></p>
-      <!--<p style="font-size:14px;color:#666666;margin:10px 0;">上传路径 文件名称/</p>-->
-      <!--<p style="text-align: right;color: #999999;">{{uploadList.length}}/24</p>-->
+      <!--<p style="font-size:14px;color:#666666;margin:10px 0;">上传路径 <span v-for="item in uploadList" :key="item.index">{{item.name}}/</span></p>-->
+      <p style="text-align: right;color: #999999;">{{uploadList.length}}/24</p>
       <div class="upload_div">
         <span>待上传文件</span>
         <span>大小</span>
@@ -191,10 +237,11 @@
       </div>
       <div class="upload_Box" >
         <!--<cunt ref="upload"-->
-          <!--:on-success="handleUpload"-->
+          <!--:on-success="handleSuccess"-->
+           <!--:onFileProcess="handleUpload"-->
+            <!--:max-size="1048576"-->
           <!--:data="fileUpdata"-->
-           <!--name="uploadFile"-->
-          <!--action="http://192.168.3.109:8080/ruirados/object/uploadObject.do">-->
+          <!--action="http://192.168.3.253:8080/ruirados/object/uploadObject.do">-->
           <!--<div class="upload_text">-->
             <!--<Icon type="ios-upload-outline"></Icon>-->
             <!--<span>选择文件</span>-->
@@ -254,6 +301,8 @@
       :scrollable='true'
       :mask-closable="false"
     >
+      <hr color="#D8D8D8" size=1/>
+      <br/>
       <div class="space_folder">
         <Form ref="createF" :model="createFile" :rules="createFilesValiDate" label-position="top">
           <FormItem label="文件夹名称" prop="flies" >
@@ -588,8 +637,13 @@
 </template>
 
 <script>
+  import diskOptions from "@/echarts/objectStroage";
+  import objectNumbers from "@/echarts/numberRequests"
   import $store from "@/vuex";
   import cunt from '../../myView/objectStrorage/cunt.vue'
+  const disk = JSON.stringify(diskOptions);
+  const numbers = JSON.stringify(objectNumbers);
+
   const validRoute = (rule, value, callback) => {
     let reg = /^\s*$|[a-zA-Z]+(\.[a-zA-Z0-9]+)+(\.[a-zA-Z]+)$/;
       if (!reg.test(value)) {
@@ -728,6 +782,7 @@
             render: (h, params) => {
               this.isfile = params.row.isfile;
               const hide = params.row.hide == 1 ?'inline-block':'none';
+              const hides = params.row.hides == 1 ?'none':'inline-block'
               if (params.row.isfile == 1) {
                 return h('div', [
                   h('Spin',{
@@ -786,11 +841,12 @@
                     style:{
                       color:'#2A99F2',
                       marginLeft:'5px',
-                      cursor:'pointer'
+                      cursor:'pointer',
+                      display:hides
                     },
                     on:{
                       click:()=>{
-                        this.downloadObject(params.row.id);
+                        this.downloadObject(params.row.filesrc);
                       }
                     }
                   },'下载')
@@ -842,7 +898,8 @@
                   h('span', {
                     style: {
                       color: "#2A99F2",
-                      cursor: 'pointer'
+                      cursor: 'pointer',
+
                     },
                     on: {
                       click: () => {
@@ -850,7 +907,7 @@
                           title: '删除文件/文件夹',
                           content: '<p>是否删除该文件/文件夹</p>',
                           onOk: () => {
-                            this.deleteFile(params.row.id, params.row.filename,params.row._index);//传入文件Id和文件名称删除
+                            this.deleteFile(params.row);//传入文件Id和文件名称删除
                           }
                         });
 
@@ -1231,7 +1288,68 @@
         defaultDomain:'',
         custom:'',
         //接受ceph服务器域名
-        zoneName:''
+        zoneName:'',
+        //下载流量统计图
+        rwPolar: JSON.parse(disk),
+        //请求次数统计图
+        rwNumber: JSON.parse(numbers),
+        //下载流量统计图数据
+        dayList: [
+          {
+            value: '今天',
+            data: [0, 0, 0, 0, 0],
+            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
+            label: 0
+          },
+          {
+            value: '昨天',
+            data: [0, 0, 0, 0, 0, 0, 0],
+            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
+            label: 1
+          },
+          {
+            value: '最近七天',
+            data: [0, 0, 0, 0, 0, 0, 0],
+            day: ['---', '---', '---', '---', '---', '---', '---'],
+            label: 2
+          },
+          {
+            value: '最近三十天',
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            day: ['---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---'],
+            label: 3
+          }
+        ],
+        //下载流量选择时间
+        indexs: 0,
+        requestIndex: 0,
+        //请求次数统计图数据
+        requestList: [
+          {
+            value: '今天',
+            data: [0, 0, 0, 0, 0],
+            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
+            label: 0
+          },
+          {
+            value: '昨天',
+            data: [0, 0, 0, 0, 0, 0, 0],
+            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
+            label: 1
+          },
+          {
+            value: '最近七天',
+            data: [0, 0, 0, 0, 0, 0, 0],
+            day: ['---', '---', '---', '---', '---', '---', '---'],
+            label: 2
+          },
+          {
+            value: '最近三十天',
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            day: ['---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---'],
+            label: 3
+          }
+        ],
       }
     },
     components:{
@@ -1375,7 +1493,6 @@
         const files = this.$refs.upload.fileList;
         if (response.status == '1') {
           this.$Message.success('上传成功');
-          this.modal1 = false;
           this.$refs.upload.fileList.splice(files.indexOf(file), 1);
           this.filesList(this.fileUpdata.dirId);
           this.getAllsize();
@@ -1439,7 +1556,7 @@
       createFlies() {
         var name = sessionStorage.getItem("bucketName");
         this.floder = false;
-        let obj = {filename:'创建中',filesize:'0',hide:1};
+        let obj = {filename:'创建中',filesize:'0',hide:1,isfile:'1'};
         this.fileData.push(obj);
         this.$refs.createF.validate((valid) => {
           if (valid) {
@@ -1464,14 +1581,15 @@
         })
       },
       //删除文件
-      deleteFile(id, filename,index) {
+      deleteFile(params) {
+        console.log(params);
         var name = sessionStorage.getItem("bucketName");
-        let obj = {filename:'删除中',filesize:'0',hide:1};
-        this.fileData.splice(index,1,obj);
+        let obj = {filename:'删除中',filesize:'0',hide:1,hides:1,isfile:params.isfile};
+        this.fileData.splice(params._index,1,obj);
         this.$http.post('object/deleteObject.do', {
           bucketName: name,
-          fileName: filename,
-          dirId: id.toString()
+          fileName: params.filename,
+          dirId: params.id.toString()
         }).then(res => {
           if (res.data.status == "1") {
             this.$Message.success('删除成功');
@@ -1660,9 +1778,6 @@
       corsLower(val) {
         val == 'cors' ? (this.corsHide = !this.corsHide) : val == 'static' ? (this.staticHide = !this.staticHide) : ''
       },
-      monitorClick(){
-        this.monitorHide = !this.monitorHide
-      },
       //获取存储空间容量
       getAllsize() {
         this.$http.post('object/getAllSize.do', {}).then(res => {
@@ -1685,10 +1800,10 @@
       //返回根路径
       backPage(){
         this.fileObject.pop();
-        if(this.fileObject[this.fileObject.length-1] == undefined || this.fileObject[this.fileObject.length-1]== 'undefined'){
+        if(!this.fileObject[this.fileObject.length-1]){
           this.filesList(null);
         }else{
-          this.filesList(this.fileObject[this.fileObject.length-1].id);
+          this.filesList(this.fileObject[this.fileObject.length-1].dirId);
         }
       },
       //复制文件外链路径
@@ -1809,33 +1924,49 @@
 
       },
       //下载文件
-      downloadObject(id){
-        // var _that = window;
-        this.$http.get('object/downloadsObject.do',{
-          params:{
-            bucketName:sessionStorage.getItem('bucketName'),
-            dirId:id
-          }
-        },{responseType:'blob'}).then(res =>{
-
-            var eleLink = document.createElement('a');
-             var blob = new Blob([res.data]);
-             //文件名字
-            eleLink.download = 'zz.doc';
-            document.body.appendChild(eleLink);
-            eleLink.style.display = 'none';
-            // 字符内容转变成blob地址
-            eleLink.href = URL.createObjectURL(blob);
-            // 触发点击
-            eleLink.click();
-            // 然后移除
-            document.body.removeChild(eleLink);
-        })
-      }
+      downloadObject(filesrc) {
+        if($store.state.zoneId == undefined || $store.state.zoneId == 'undefined'){
+          this.$http.post('object/geturl.do', {
+            bucketName: sessionStorage.getItem('bucketName'),
+            timelimit: '0',
+            fileSrc: filesrc,
+            protocol: 'http'
+          }).then(res => {
+            if (res.data.status == '1') {
+              let url = res.data.data.data;
+              this.$http.get(url,{}).then(res =>{if(res.status != 200)return this.$Message.info('下载失败请重试');});
+              var eleLink = document.createElement('a');
+              document.body.appendChild(eleLink);
+              eleLink.style.display = 'none';
+              eleLink.href =url;
+              eleLink.click();
+              document.body.removeChild(eleLink);
+            } else {
+              this.$Message.info('平台出小差了');
+            }
+          })
+        }else{
+          this.$Message.info('请先登录');
+        }
+      },
       //删除上传文件
-      // deleteUpload(index){
-      //   this.uploadList.splice(index,1);
-      // }
+      deleteUpload(index){
+        this.uploadList.splice(index,1);
+      },
+      //下载流量点击切换数据
+      dayClick(val){
+        console.log(val);
+        this.indexs = val;
+        this.rwPolar.xAxis.data = this.dayList[val].day;
+        this.rwPolar.series[0].data = this.dayList[val].data;
+        console.log(this.rwPolar);
+      },
+      //请求次数点击切换数据
+      requestClick(val){
+        this.requestIndex = val;
+        this.rwNumber.xAxis.data = this.requestList[val].day;
+        this.rwNumber.series[0].data = this.requestList[val].data;
+      },
     },
     created(){
       this.bucketName = sessionStorage.getItem('bucketName');
@@ -1852,7 +1983,7 @@
     },
     mounted(){
       this.uploadList = this.$refs.upload.fileList;
-      console.log(this.$refs.upload.fileList);
+      console.log(this.uploadList);
     },
     // watch: {
     //   time: function () {
@@ -1913,8 +2044,7 @@
             vertical-align: top;
             color: #333333;
             font-size: 18px;
-            font-weight: 600;
-            font-family: MicrosoftYaHei;
+            font-family:MicrosoftYaHei
           }
         }
       }
@@ -1987,6 +2117,77 @@
       }
     }
   }
+  .center_chart {
+    margin-top: 19px;
+    span {
+      padding: 5px 16px;
+      border: 1px solid #d9d9d9;
+      display: inline-block;
+      margin-right: -4px;
+      cursor: pointer;
+      border-radius: 4px 0px 0px 4px;
+    }
+    span:hover {
+      color: #2a99f2;
+      border: 1px solid #2a99f2;
+      cursor: pointer;
+    }
+    .chart-text {
+      width: 50%;
+    }
+  }
+  .objectList {
+    width: 165%;
+    font-family: PingFangSC;
+    display: flex;
+    li:first-child {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+    li:last-child {
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+    .objectItem {
+      display: inline-block;
+      padding: 3px 15px;
+      height: 26px;
+      text-align: center;
+      border: 1px solid #D9D9D9;
+      color: #2a99f2;
+      cursor: pointer;
+    }
+    .objectItems {
+      display: inline-block;
+      padding: 3px 15px;
+      height: 26px;
+      text-align: center;
+      border: 1px solid #2a99f2;
+      color: #2a99f2;
+      cursor: pointer;
+    }
+    .objectItem:hover {
+      border: 1px solid #2a99f2;
+      cursor: pointer;
+    }
+  }
+
+  .chart {
+    margin-top: 10px;
+    display: flex;
+    height: 30px;
+  }
+
+  .chart-rig {
+    width: 23%;
+    text-align: right;
+    height: 30px;
+  }
+
+  .echarts {
+    width: 100%;
+    height: 240px;
+  }
   .right_tool{
     white-space: normal;
   }
@@ -2000,8 +2201,8 @@
     margin-right: 6px;
   }
   .monitor{
-    width: 100px;
-    float: right;
+    width: 100%;
+    text-align: right;
     margin-top: 5px;
     cursor: pointer;
   }
