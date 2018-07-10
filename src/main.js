@@ -32,33 +32,30 @@ Vue.prototype.$message = message
 Vue.config.productionTip = false
 
 
-
 //axios.defaults.baseURL = '/ruicloud'
 
 //axios.defaults.baseURL = 'http://192.168.3.105:8082/ruicloud'
 //axios.defaults.baseURL = 'http://zx.xrclouds.net/ruicloud'
 
 
-
-axios.defaults.baseURL = 'http://zengxin.xrclouds.net/ruicloud/'
+axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
 //axios.defaults.withCredentials = true
 
 
-//axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
-
+//axios.defaults.baseURL = 'http://zengxin.xrclouds.net/ruicloud/'
 
 
 //axios.defaults.baseURL = 'https://zschj.xrcloud.net:8080/ruicloud/'
 
 
- //axios.defaults.baseURL = 'http://192.168.3.78:8080/ruicloud/'
+//axios.defaults.baseURL = 'http://192.168.3.78:8080/ruicloud/'
 
 // axios.defaults.baseURL = 'http://192.168.3.187:8080/ruirados/'
 
 
 // axios.defaults.withCredentials = true
 
- //axios.defaults.baseURL = 'http://qiurenliang.xrcloud.net:8080/ruicloud'
+//axios.defaults.baseURL = 'http://qiurenliang.xrcloud.net:8080/ruicloud'
 
 
 //axios挂载到Vue原型
@@ -93,6 +90,7 @@ function appendMD5(params, type) {
   }
   var str = '', count = 0
   for (let i in params) {
+    console.log(i)
     str += i.substr(0, 1) + params[i]
     count++
   }
@@ -101,7 +99,9 @@ function appendMD5(params, type) {
     if (type != 'post') {
       str = encodeURI(str)
     }
+    //console.log(str)
     str = md5(str)
+    //console.log(str)
     count = count % 10
     var mac = str.substr(0, count) + count + str.substr(count)
     return {
