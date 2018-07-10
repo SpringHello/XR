@@ -1578,7 +1578,7 @@
           productList: [{label: '云主机', value: 'Pecs'}, {label: '云硬盘', value: 'Pdisk'}, {
             label: '公网IP',
             value: 'Peip'
-          }, {label: '数据库', value: 'Pdata'}]
+          }, /*{label: '数据库', value: 'Pdata'}*/]
         },
         // 云主机信息对象
         PecsInfo: {
@@ -2398,8 +2398,8 @@
           }
         }).then(response => {
           this.PecsInfo.vpcList = response.data.result
-          /*this.PecsInfo.vpc = this.PecsInfo.vpcList[0].vpcid
-           this.PdataInfo.vpc = this.PecsInfo.vpcList[0].vpcid*/
+          this.PecsInfo.vpc = this.PecsInfo.vpcList[0].vpcid
+          this.PdataInfo.vpc = this.PecsInfo.vpcList[0].vpcid
         })
       },
       // 重新查询vpc所属的子网
@@ -2411,8 +2411,8 @@
           }
         }).then(response => {
           this.PecsInfo.networkList = response.data.result
-          /*this.PecsInfo.network = this.PecsInfo.networkList[0].ipsegmentid
-           this.PdataInfo.network = this.PecsInfo.networkList[0].ipsegmentid*/
+          this.PecsInfo.network = this.PecsInfo.networkList[0].ipsegmentid
+          this.PdataInfo.network = this.PecsInfo.networkList[0].ipsegmentid
         })
       },
       // 查询云主机快速配置价格
