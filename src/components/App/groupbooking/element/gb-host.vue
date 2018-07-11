@@ -8,12 +8,13 @@
       <div class="content">
         <ul v-for="(item,index) in productGroups" :key="index">
           <li>{{ item.cpu}}核<span>cpu</span></li>
-          <li>{{ item.memory}}G<span>内存</span></li>
-          <li>{{ item.bandwidth}}M<span>宽带</span></li>
-          <li>{{ item.disk}}G<span>SSD</span></li>
-          <li>{{ item.bandwidth}}<span>区域</span></li>
-          <li>{{ item.disk}}<span>操作系统</span></li>
-          <li>¥<i>{{item.currentPrice}}</i><span>/月</span><span style="text-decoration:line-through">原价¥{{ item.originalCost}}月</span></li>
+          <li>{{ item.mem}}G<span>内存</span></li>
+          <li>{{ item.bandwith}}M<span>宽带</span></li>
+          <li>{{ item.disksize}}G<span>SSD</span></li>
+          <li>{{ item.zonename}}<span>区域</span></li>
+          <li>{{ item.templatename}}<span>操作系统</span></li>
+          <li>¥<i>{{item.cost}}</i><span>/月</span>
+            <span style="text-decoration:line-through">原价¥{{ item.originalPrice}}月</span></li>
         </ul>
       </div>
       <h2>云朵成员</h2>
@@ -31,7 +32,7 @@
       <div class="participation" v-else>
         <p>还差1人即可获得赠送资格，赶快分享吧。</p>
         <div class="noMember">
-          <p>参团链接：<span>https://www.xrcloud.net/ruicloud/home</span></p>
+          <p>参团链接：<span>{{ activeLink }}</span></p>
           <button @click="linkModal = true">分享链接</button>
         </div>
       </div>
@@ -40,8 +41,7 @@
       <div class="modal-body">
         <p>赶快分享给你的小伙伴吧！</p>
         <ul>
-          <!-- <li v-for="item in shareGroup"><img :src="item.src"/><span>{{ item.text }}</span></li>-->
-          <share :config="config"></share>
+          <li v-for="(item,index) in shareGroup" @click="share(index)"><img :src="item.src"/><span>{{ item.text }}</span></li>
         </ul>
         <div class="link">活动链接：<span>{{ activeLink }}</span></div>
       </div>
@@ -55,21 +55,10 @@
 </template>
 
 <script type="text/ecmascript-6">
+
   export default {
     data() {
       return {
-        productGroups: [
-          {
-            cpu: 1,
-            memory: 2,
-            bandwidth: 1,
-            disk: 40,
-            system: 'Centos',
-            currentPrice: 59,
-            originalCost: 118.72,
-            zero: '北京一区(测试)'
-          }
-        ],
         linkModal: false,
         shareGroup: [
           {
@@ -85,37 +74,27 @@
             text: '微博'
           }
         ],
-        activeLink: 'https://github.com/overtrue/share.js',
-        hostDuration: 5,
-        config: {
-          url: '', // 网址，默认使用 window.location.href
-          source: '', // 来源（QQ空间会用到）, 默认读取head标签：<meta name="site" content="http://overtrue" />
-          title: '找到了实现分享功能的插件', // 标题，默认读取 document.title 或者 <meta name="title" content="share.js" />
-          description: 'go go go', // 描述, 默认读取head标签：<meta name="description" content="PHP弱类型的实现原理分析" />
-          image: 'http://qlogo3.store.qq.com/qzone/920149862/920149862/100?1513838155', // 图片, 默认取网页中第一个img标签
-          disabled: ['google', 'facebook', 'twitter', 'wechat', 'douban', 'tencent', 'linkedin', 'diandian'], // 禁用的站点
-          /*sites: ['qzone', 'qq', 'weibo', 'wechat', 'douban'], // 启用的站点
-          wechatQrcodeTitle: "微信扫一扫：分享", // 微信二维码提示文字
-          wechatQrcodeHelper: '<p>微信里点“发现”，扫一下</p><p>二维码便可将本文分享至朋友圈。</p>',*/
-        }
+        someoneParticipation: false,
       }
     },
     props: {
-      participationPersonColumns: {
-        type: Array,
-        default: []
+      productGroups: {
+        type: Array
+      },
+      activeLink: {
+        type: String
       },
       participationPersonData: {
-        type: Array,
-        default: []
+        type: Array
       },
-      someoneParticipation: {
-        type: Boolean,
-        default: false
+      participationPersonColumns:{
+        type: Array
+      },
+      hostDuration: {
+        type: Number
       }
     },
-    created(){
-      this.config.url = this.activeLink
+    created() {
     },
     methods: {
       onCopy() {
@@ -123,8 +102,33 @@
       },
       onError() {
         this.$Message.info('复制失败')
+      },
+      share(index) {
+        switch (index) {
+          case 0: {
+            window.open('https://connect.qq.com/widget/shareqq/index.html?url=' + this.activeLink + '&title=' + '测试分享' + '&source=' + '' + '&desc=' + '测试描述' + '&pics=' + '')
+            break
+          }
+          case 1: {
+            window.open('https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=' + this.activeLink + '&title=' + '测试分享' + '&desc=' + '测试描述' + '&summary=' + '测试描述' + '&site=' + '')
+            break;
+          }
+          case 2: {
+            window.open('http://service.weibo.com/share/share.php?url=' + this.activeLink + '&title=' + '测试分享' + '&pic=' + '' + '&searchPic=false')
+            break;
+          }
+        }
       }
     },
+    watch: {
+      participationPersonData() {
+        if (this.participationPersonData.length == 0) {
+          this.someoneParticipation = false
+        } else {
+          this.someoneParticipation = true
+        }
+      }
+    }
   }
 </script>
 
@@ -170,6 +174,7 @@
         margin-top: 50px;
       }
       .content {
+        background: #FFF;
         box-shadow: 0px 4px 9px 0px rgba(214, 84, 86, 0.3);
         ul {
           display: flex;
@@ -177,7 +182,7 @@
             font-size: 30px;
             color: rgba(0, 0, 0, 1);
             line-height: 42px;
-            padding: 40px;
+            padding: 30px;
             span {
               display: inline-block;
               font-size: 20px;
@@ -212,6 +217,9 @@
             font-family: PingFangSC-Regular;
             color: rgba(153, 153, 153, 1);
             line-height: 20px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
             span {
               color: #000000;
             }

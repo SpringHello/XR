@@ -37,10 +37,15 @@
           }
         }).then(res => {
           if (res.data.status == 1) {
-            if(res.data.result){
-              next({path: '/ruicloud/productShare'})
-            } else{
-              next()
+            switch (res.data.result) {
+              case 1:
+                next({path: '/ruicloud/productShare'})
+                break
+              case 2:
+                next({path: '/ruicloud/activity'})
+                break
+              default:
+                next()
             }
           } else {
             next()
@@ -54,8 +59,7 @@
     data() {
       return {}
     },
-    methods: {
-    },
+    methods: {},
     computed: {}
   }
 </script>

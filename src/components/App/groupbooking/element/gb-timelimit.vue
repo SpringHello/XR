@@ -3,7 +3,11 @@
     <div class="center">
       <img src="../../../../assets/img/active/group-booking/gb-banner3.png"/>
       <p>分享赠时长进行中</p>
-      <div class="timer">
+      <div class="banner-button" v-if="d=='00'&&h=='00'&&m=='00'&&s=='00'">
+        <img src="../../../../assets/img/active/group-booking/gb-banner5.png"/>
+        <span @click="toOpenGroup">重新开团</span>
+      </div>
+      <div class="timer" v-else>
         剩余： <span>{{ d }}</span>天
         <span>{{ h }}</span>时
         <span>{{ m }}</span>分
@@ -16,37 +20,47 @@
 </template>
 
 <script type="text/ecmascript-6">
+
   export default {
     data() {
       return {
-        d: 0,
-        h: 0,
-        m: 0,
-        s: 0,
-        limitTime: 0,
+        d: '--',
+        h: '--',
+        m: '--',
+        s: '--'
       }
     },
     props: {
-      time: {
+      timeEnd: {
+        type: Function
+      },
+      openGroup: {
+        type: Function
+      },
+      startTime: {
+        type: Number
+      },
+      endTime: {
         type: Number
       }
     },
     methods: {
       setTime() {
-        this.limitTime = this.time
-        if (this.limitTime > 0) {
+        let limitTime = this.endTime - this.startTime
+        if (limitTime > 0) {
           let s = setInterval(() => {
-            let days = parseInt(this.limitTime / 1000 / 60 / 60 / 24, 10); //计算剩余的天数
-            let hours = parseInt(this.limitTime / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
-            let minutes = parseInt(this.limitTime / 1000 / 60 % 60, 10);//计算剩余的分钟
-            let seconds = parseInt(this.limitTime / 1000 % 60, 10);//计算剩余的秒数
+            let days = parseInt(limitTime / 1000 / 60 / 60 / 24, 10); //计算剩余的天数
+            let hours = parseInt(limitTime / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
+            let minutes = parseInt(limitTime / 1000 / 60 % 60, 10);//计算剩余的分钟
+            let seconds = parseInt(limitTime / 1000 % 60, 10);//计算剩余的秒数
             this.d = checkTime(days);
             this.h = checkTime(hours);
             this.m = checkTime(minutes);
             this.s = checkTime(seconds);
-            this.limitTime -= 1000
-            if (this.limitTime <= 0) {
+            limitTime -= 1000
+            if (limitTime <= 0) {
               window.clearInterval(s)
+              this.$emit('time-end')
             }
           }, 1000);
         } else {
@@ -55,16 +69,23 @@
           this.m = checkTime(0);
           this.s = checkTime(0);
         }
+
         function checkTime(i) { //将0-9的数字前面加上0，例1变为01
           if (i < 10) {
             i = '0' + i;
           }
           return i;
         }
+      },
+      toOpenGroup() {
+        this.$emit('open-group')
       }
     },
-    mounted() {
-    },
+    watch: {
+      startTime() {
+        this.setTime()
+      }
+    }
   }
 </script>
 
@@ -117,6 +138,23 @@
           font-family: PingFangSC-Regular;
           color: rgba(254, 84, 77, 1);
           line-height: 72px;
+        }
+      }
+      .banner-button {
+        margin-top: 60px;
+        position: relative;
+        > span {
+          font-size: 24px;
+          font-family: PingFangSC-Regular;
+          color: rgba(255, 255, 255, 1);
+          position: absolute;
+          right: 46%;
+          line-height: 48px;
+          cursor: pointer;
+        }
+        > img {
+          cursor: pointer;
+          margin-bottom: 30px;
         }
       }
     }

@@ -1,7 +1,8 @@
 <template>
   <div class="share-page">
-    <gb-timelimit :time="limitTime"></gb-timelimit>
-    <gb-host :participationPersonColumns="participationPersonColumns" :participationPersonData="participationPersonData" :someoneParticipation="someoneParticipation"></gb-host>
+    <gb-timelimit @time-end="timeEnd" @open-group="openGroup" :start-time="startTime" :end-time="endTime"></gb-timelimit>
+    <gb-host :product-groups="productGroups" :active-link="activeLink" :participation-person-data="participationPersonData"
+             :host-duration="hostDuration" :participation-person-columns="participationPersonColumns"></gb-host>
     <div class="center">
       <gb-award></gb-award>
       <gb-rule></gb-rule>
@@ -33,72 +34,74 @@
       gbTimelimit,
       gbRule
     },
-/*    beforeRouteEnter(to, from, next) {
-      next(vm => {
-        vm.setTime()
+    beforeRouteEnter(to, from, next) {
+      let info = axios.get('activity/teamMemberList.do')
+      let start = axios.get('network/getTime.do')
+      Promise.all([info, start]).then((result) => {
+        next(vm => {
+          vm.setInfo(result)
+        })
+      }).catch((error) => {
+        console.log(error)
       })
-    },*/
+    },
     data() {
       return {
-        someoneParticipation: true,
+        paySuccess: false,
+        productGroups: [],
+        startTime: 0,
+        endTime: 0,
+        activeLink: '',
         participationPersonColumns: [
           {
             title: '云朵',
-            key: 'yd'
+            key: 'companyname'
           }, {
             title: '加入时间',
-            key: 'sj'
+            key: 'createtime'
           }, {
             title: '状态',
-            key: 'zt'
+            render: (h, params) => {
+              return h('span', {}, '已支付')
+            }
           }
         ],
-        participationPersonData: [
-          {
-            yd: '一号',
-            sj: '2018-5-8',
-            zt: '正常'
-          }, {
-            yd: '二号',
-            sj: '2018-5-8',
-            zt: '正常'
-          }, {
-            yd: '三号',
-            sj: '2018-5-8',
-            zt: '正常'
-          }, {
-            yd: '四号',
-            sj: '2018-5-8',
-            zt: '正常'
-          },
-        ],
-        endTime: '2018-07-10 10:00:00',
-        limitTime: 0,
-        paySuccess: false
+        participationPersonData: [],
+        hostDuration: 0,
       }
     },
-    created(){
+    created() {
       if (sessionStorage.getItem('step') == 'step-one') {
         this.paySuccess = true
         sessionStorage.removeItem('step')
       }
     },
     methods: {
-      setTime() {
-        let startTime = 0
-        let endTime = '2018-07-10 10:00:00'
-        let limitTime = 0
-        let date = new Date(endTime.replace(/-/g, '/'));
-        endTime = date.getTime();
-        let url = 'network/getTime.do'
-        axios.get(url).then(res => {
-          if (res.data.status == 1) {
-            startTime = res.data.result
-          } else {
-            startTime = new Date().getTime()
+      timeEnd() {
+        console.log('时间结束了')
+      },
+      setInfo(response) {
+        if (response[0].data.status == 1 && response[1].data.status == 1) {
+          this.startTime = response[1].data.result
+          let endTime = response[0].data.result.list_teamHeader.endtime;
+          let date = new Date(endTime.replace(/-/g, '/'));
+          this.endTime = date.getTime();
+          let params = response[0].data.result.freevmConfig
+          params.templatename = response[0].data.result.zonTem.templatename
+          if(response[0].data.result.zonTem.templatename.charAt(0).toLocaleUpperCase() == 'C') {
+            params.templatename = 'Centos'
+          }else{
+            params.templatename = 'Windows'
           }
-          limitTime = endTime - startTime;
-        })
+          params.zonename = response[0].data.result.zonTem.zonename
+          this.productGroups.push(params)
+          this.activeLink = response[0].data.result.list_teamHeader.url
+          this.participationPersonData = response[0].data.result.list_Members
+          this.hostDuration = response[0].data.result.list_teamHeader.receiveRecord
+        }
+      },
+      openGroup() {
+        alert('重新开团')
       }
     },
     computed: {}
@@ -113,6 +116,7 @@
       margin: 0 auto;
     }
   }
+
   .modal-body {
     text-align: center;
     > img {
@@ -126,6 +130,7 @@
       line-height: 20px;
     }
   }
+
   .modal-footer {
     text-align: center;
     margin-top: 40px;
@@ -133,12 +138,12 @@
       cursor: pointer;
       border: none;
       outline: none;
-      font-size:14px;
-      font-family:PingFangSC-Regular;
-      color:rgba(255,255,255,1);
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      color: rgba(255, 255, 255, 1);
       padding: 6px 27px;
-      background:rgba(253,140,115,1);
-      border-radius:16px;
+      background: rgba(253, 140, 115, 1);
+      border-radius: 16px;
     }
   }
 </style>

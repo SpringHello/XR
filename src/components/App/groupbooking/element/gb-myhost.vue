@@ -56,6 +56,7 @@
         text-align: center;
       }
       .content {
+        background: #FFF;
         box-shadow: 0px 4px 9px 0px rgba(214, 84, 86, 0.3);
         ul {
           display: flex;

@@ -5,8 +5,8 @@
       <p>您已获得云主机特惠活动购买资格，请点击购买即可。</p>
       <div class="member">
         <div class="title">
-          <p>云客：<span>188*******5 </span></p>
-          <p>创建时间：<span> 2018-06-07  </span></p>
+          <p>云客：<span>{{ commander }}</span></p>
+          <p>创建时间：<span>{{ createTime }} </span></p>
         </div>
         <Table class="groupBooking-table" :columns="participationPersonColumns" :data="participationPersonData" :disabled-hover="true"></Table>
       </div>
@@ -31,6 +31,12 @@
       someoneParticipation: {
         type: Boolean,
         default: false
+      },
+      createTime: {
+        type: String
+      },
+      commander: {
+        type: String
       }
     },
     methods: {},

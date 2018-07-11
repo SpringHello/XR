@@ -11,7 +11,6 @@ import 'iview/dist/styles/iview.css'
 import '@/assets/css/iviewOverRide.css'
 import '@/assets/css/reset.css'
 import '@/assets/css/universal.less'
-import '../node_modules/social-share.js/dist/css/share.min.css'
 
 // import ECharts from 'vue-echarts/components/ECharts.vue'
 
@@ -30,7 +29,6 @@ import message from './myView/message'
 import md5 from 'md5'
 // 引入复制粘贴组件
 import VueClipboards from 'vue-clipboards'
-import Share from 'vue-social-share'
 
 Vue.prototype.$message = message
 Vue.config.productionTip = false
@@ -122,7 +120,7 @@ Vue.use(carouselItem)
 Vue.use(slider)
 Vue.component('chart', ECharts)
 Vue.use(VueClipboards)
-Vue.use(Share)
+
 
 // 日期原型对象拓展
 Date.prototype.format = function (fmt) {

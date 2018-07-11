@@ -103,7 +103,7 @@
             disk: 40,
             system: 'linux',
             currentPrice: 59,
-            originalCost: 118.72,
+            originalCost: 101.72,
             area: '39a6af0b-6624-4194-b9d5-0c552d903858'
           }, {
             cpu: 2,
@@ -208,7 +208,7 @@
                   }
                 }
               })
-            }, 1000)
+            }, 2000)
           } else {
             this.$message.info({
               content: res.data.message
