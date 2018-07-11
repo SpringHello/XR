@@ -422,12 +422,12 @@
   var hostDiskHistogramstr = JSON.stringify(hostDiskHistogram)
   export default {
     data() {
-      var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,23}$/
+      var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,}$/
       const validateoldPassword = (rule, value, callback) => {
         if (!value) {
           callback(new Error('密码不能为空'));
         } else if (!regExp.test(value)) {
-          callback(new Error('密码由6位及以上23位以下的字母数字组成，必须包含大小写字母、数字'));
+          callback(new Error('密码由6位及以上的字母数字组成，必须包含大小写字母、数字'));
         } else {
           callback();
         }
@@ -436,7 +436,7 @@
         if (!value) {
           callback(new Error('密码不能为空'));
         } else if (!regExp.test(value)) {
-          callback(new Error('密码由6位及以上23位以下的字母数字组成，必须包含大小写字母、数字'));
+          callback(new Error('密码由6位及以上的字母数字组成，必须包含大小写字母、数字'));
         } else {
           if (regExp.test(value)) {
             this.$refs.resetPasswordForm.validateField('confirmPassword');

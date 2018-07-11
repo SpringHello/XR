@@ -24,8 +24,9 @@
               </div>
             </router-link>
           </div>
-          <Page :total="pageInfo.total" :page-size="pageInfo.pageSize" style="float:right;margin-top: 20px;"
-                @on-change=""></Page>
+          <Page :total="pageInfo.total" :page-size="pageInfo.pageSize" :current="pageInfo.currentPage"
+                style="float:right;margin-top: 20px;"
+                @on-change="pageUpdate"></Page>
         </div>
         <div class="body-right">
           <div class="hot-tags">
@@ -97,7 +98,7 @@
       }
     },
     beforeRouteUpdate (to, from, next) {
-      this.pageInfo.currentPage = '1'
+      this.pageInfo.currentPage = 1
       axios.post('article/getMoreArticle.do', {
         articleTypeId: to.params.typeId,
         keywordVal: this.keywordVal,
@@ -113,6 +114,7 @@
       setData(values){
         this.articleType = values[0].data.result
         this.articleList = values[1].data.result.data
+        this.pageInfo.total = values[1].data.result.total
         this.tags = values[2].data.result
         this.hot = values[3].data.result
       },
@@ -127,6 +129,10 @@
           this.articleList = response.data.result.data
           this.pageInfo.total = response.data.result.total
         })
+      },
+      pageUpdate(current){
+        this.pageInfo.currentPage = current
+        this.update('')
       }
     }
   }

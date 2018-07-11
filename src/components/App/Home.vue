@@ -255,7 +255,7 @@
           <div class="main-left">
             <dl>
               <dt>{{showNews.title}}</dt>
-              <dd v-html="showNews.text">
+              <dd v-html="showNews.abstracts">
               </dd>
               <dd>
                   <router-link :to="`article/${showNews.code}.html`" target="_blank" style="width:100px;height:38px;line-height:38px;border:1px solid rgba(56,125,255,1);color:#387DFF;display:block;text-align:center;margin-top:40px;">查看详情</router-link>
@@ -263,7 +263,7 @@
             </dl>
           </div>
           <div class="main-right">
-            <img :src="showNews.topUrl" style="width:100%;height:100%;"/>
+            <img :src="showNews.coverUrl" style="width:100%;height:100%;"/>
           </div>
         </div>
         <div class="link-list wrap">
@@ -674,8 +674,8 @@ import axios from 'axios';
       window.addEventListener('scroll', this.scrollFn)
     },
     created() {
-      //this.getnews()
-      //this.getlinkList()
+      this.getnews()
+      this.getlinkList()
     },
     methods: {
       getnews() {
