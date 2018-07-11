@@ -28,10 +28,6 @@
         type: Array,
         default: []
       },
-      someoneParticipation: {
-        type: Boolean,
-        default: false
-      },
       createTime: {
         type: String
       },

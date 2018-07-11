@@ -5,12 +5,13 @@
       <div class="content">
         <ul v-for="(item,index) in productGroups" :key="index">
           <li>{{ item.cpu}}核<span>cpu</span></li>
-          <li>{{ item.memory}}G<span>内存</span></li>
-          <li>{{ item.bandwidth}}M<span>宽带</span></li>
-          <li>{{ item.disk}}G<span>SSD</span></li>
-          <li>{{ item.bandwidth}}<span>区域</span></li>
-          <li>{{ item.disk}}<span>操作系统</span></li>
-          <li>¥<i>{{item.currentPrice}}</i><span>/月</span><span style="text-decoration:line-through">原价¥{{ item.originalCost}}月</span></li>
+          <li>{{ item.mem}}G<span>内存</span></li>
+          <li>{{ item.bandwith}}M<span>宽带</span></li>
+          <li>{{ item.disksize}}G<span>SSD</span></li>
+          <li>{{ item.zonename}}<span>区域</span></li>
+          <li>{{ item.templatename}}<span>操作系统</span></li>
+          <li>¥<i>{{item.cost}}</i><span>/月</span>
+            <span style="text-decoration:line-through">原价¥{{ item.originalPrice}}月</span></li>
         </ul>
       </div>
     </div>
@@ -21,21 +22,13 @@
   export default {
     data() {
       return {
-        productGroups: [
-          {
-            cpu: 1,
-            memory: 2,
-            bandwidth: 1,
-            disk: 40,
-            system: 'Centos',
-            currentPrice: 59,
-            originalCost: 118.72,
-            zero: '北京一区(测试)'
-          }
-        ],
       }
     },
-    props: {},
+    props: {
+      productGroups: {
+        type: Array
+      },
+    },
     methods: {},
   }
 </script>
@@ -64,7 +57,7 @@
             font-size: 30px;
             color: rgba(0, 0, 0, 1);
             line-height: 42px;
-            padding: 40px;
+            padding: 30px;
             span {
               display: inline-block;
               font-size: 20px;

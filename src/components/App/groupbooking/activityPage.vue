@@ -2,10 +2,10 @@
   <div class="activity-page">
     <gb-join v-if="isJoin"></gb-join>
     <gb-header v-else></gb-header>
-    <gb-product :isCloud="true" v-if="!isBuy"></gb-product>
-    <gb-myhost v-else></gb-myhost>
+    <gb-product :isCloud="true" v-if="!isBuy" :team-leader-company-id="teamLeaderCompanyId"></gb-product>
+    <gb-myhost v-else :product-groups="productGroups"></gb-myhost>
     <gb-member :participation-person-columns="participationPersonColumns" :participation-person-data="participationPersonData"
-               :create-time="createTime" :commander="commander" :someone-participation="someoneParticipation"></gb-member>
+               :create-time="createTime" :commander="commander"></gb-member>
     <div class="center">
       <gb-flow></gb-flow>
       <gb-award></gb-award>
@@ -54,6 +54,12 @@
               case 1:
                 next({path: '/ruicloud/productShare'})
                 break
+              case 2:
+                next(vm => {
+                  vm.setMember()
+                  vm.setInfo()
+                })
+                break
               default:
                 next(vm => {
                   vm.setInfo()
@@ -70,7 +76,6 @@
     data() {
       return {
         isJoin: false,
-        someoneParticipation: true,
         isBuy: false,
         participationPersonColumns: [
           {
@@ -88,19 +93,40 @@
         ],
         participationPersonData: [],
         createTime: '',
-        commander: ''
+        commander: '',
+        teamLeaderCompanyId: '',
+        productGroups: []
       }
     },
     methods: {
       setInfo() {
-        let companyID = location.href.match(/=(\S*)/)[1]
+        this.teamLeaderCompanyId = location.href.match(/=(\S*)/)[1]
         axios.get('activity/teamMemberList.do', {
           params: {
-            companyId: companyID
+            companyId: this.teamLeaderCompanyId
           }
         }).then(response => {
           if (response.data.status == 1) {
-
+            this.commander = response.data.result.teamActLeader[0].companyname
+            this.createTime = response.data.result.teamActLeader[0].createtime
+            this.participationPersonData = response.data.result.team_MemList
+          }
+        })
+      },
+      setMember() {
+        this.isJoin = true
+        this.isBuy = true
+        axios.get('activity/teamMemberList.do').then(response => {
+          if (response.data.status == 1 ) {
+            let params = response[0].data.result.freevmConfig
+            params.templatename = response[0].data.result.zonTem.templatename
+            if(response[0].data.result.zonTem.templatename.charAt(0).toLocaleUpperCase() == 'C') {
+              params.templatename = 'Centos'
+            }else{
+              params.templatename = 'Windows'
+            }
+            params.zonename = response[0].data.result.zonTem.zonename
+            this.productGroups.push(params)
           }
         })
       }

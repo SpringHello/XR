@@ -70,6 +70,16 @@
         </div>
       </div>
     </Modal>
+    <Modal v-model="oldModal" width="500" :scrollable="true">
+      <div class="modal-body">
+        <img src="../../../../assets/img/active/group-booking/gb-icon13.png" />
+        <p>您已经是新睿云的常客， </p>
+        <p>可59元直接购买云主机啦！点击<span @click="$router.push('groupBooking')">立即购买</span></p>
+      </div>
+      <div slot="footer" class="modal-footer">
+        <button @click="oldModal = false">知道了</button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -165,12 +175,17 @@
           },
         },
         imgSrc: 'user/getKaptchaImage.do',
+        oldModal: false
       }
     },
     props: {
       isCloud: {
         type: Boolean,
         default: false
+      },
+      teamLeaderCompanyId: {
+        type: String,
+        default: ''
       }
     },
     methods: {
@@ -180,41 +195,103 @@
           return
         }
         let vmConfigId = index == 0 ? '33' : '34'
-        let url = 'information/getDiskcountMv.do'
-        axios.get(url, {
-          params: {
-            vmConfigId: vmConfigId,
-            osType: this.productGroups[index].system,
-            defzoneid: this.productGroups[index].area
-          }
-        }).then(res => {
-          if (res.data.status == 1) {
-            const {href} = this.$router.resolve({
-              name: 'order',
-            })
-            window.open(href, '_blank')
-            let s = setInterval(() => {
-              let url = 'activity/boughtVM.do'
-              axios.get(url, {
-                params: {
-                  activityNum: '21'
-                }
-              }).then(res => {
-                if (res.data.status == 1) {
-                  if(res.data.result){
-                    window.clearInterval(s)
-                    sessionStorage.setItem('step','step-one')
-                    this.$router.push('productShare')
-                  }
-                }
+        if (this.teamLeaderCompanyId == '') {
+          let url = 'information/getDiskcountMv.do'
+          axios.get(url, {
+            params: {
+              vmConfigId: vmConfigId,
+              osType: this.productGroups[index].system,
+              defzoneid: this.productGroups[index].area,
+              teamLeaderCompanyId: this.teamLeaderCompanyId
+            }
+          }).then(res => {
+            if (res.data.status == 1) {
+              const {href} = this.$router.resolve({
+                name: 'order',
               })
-            }, 2000)
-          } else {
-            this.$message.info({
-              content: res.data.message
-            })
-          }
-        })
+              window.open(href, '_blank')
+              let s = setInterval(() => {
+                let url = 'activity/boughtVM.do'
+                axios.get(url, {
+                  params: {
+                    activityNum: '21'
+                  }
+                }).then(res => {
+                  if (res.data.status == 1) {
+                    if (res.data.result == 1) {
+                      window.clearInterval(s)
+                      sessionStorage.setItem('step', 'step-one')
+                      this.$router.push('productShare')
+                    } else if (res.data.result == 2) {
+                      window.clearInterval(s)
+                      if (this.teamLeaderCompanyId != '') {
+                        this.$router.go(0)
+                      }
+                    }
+                  }
+                })
+              }, 2000)
+            } else {
+              this.$message.info({
+                content: res.data.message
+              })
+            }
+          })
+        } else {
+          this.$http.get('activity/jdugeTeam.do').then(res => {
+            if (res.data.status == 1){
+              if(res.data.result){
+                let url = 'information/getDiskcountMv.do'
+                axios.get(url, {
+                  params: {
+                    vmConfigId: vmConfigId,
+                    osType: this.productGroups[index].system,
+                    defzoneid: this.productGroups[index].area,
+                    teamLeaderCompanyId: this.teamLeaderCompanyId
+                  }
+                }).then(res => {
+                  if (res.data.status == 1) {
+                    const {href} = this.$router.resolve({
+                      name: 'order',
+                    })
+                    window.open(href, '_blank')
+                    let s = setInterval(() => {
+                      let url = 'activity/boughtVM.do'
+                      axios.get(url, {
+                        params: {
+                          activityNum: '21'
+                        }
+                      }).then(res => {
+                        if (res.data.status == 1) {
+                          if (res.data.result == 1) {
+                            window.clearInterval(s)
+                            sessionStorage.setItem('step', 'step-one')
+                            this.$router.push('productShare')
+                          } else if (res.data.result == 2) {
+                            window.clearInterval(s)
+                            if (this.teamLeaderCompanyId != '') {
+                              this.$router.go(0)
+                            }
+                          }
+                        }
+                      })
+                    }, 2000)
+                  } else {
+                    this.$message.info({
+                      content: res.data.message
+                    })
+                  }
+                })
+              } else{
+                this.oldModal = true
+              }
+            } else{
+              this.$message.info({
+                content: res.data.message
+              })
+            }
+          })
+        }
       },
       vail(field) {
         var text = this.form[field];
@@ -552,6 +629,40 @@
       font-family: PingFangSC-Regular;
       font-size: 14px;
       letter-spacing: 0.83px;
+    }
+  }
+
+  .modal-body {
+    text-align: center;
+    > img {
+      margin-top: 80px;
+      margin-bottom: 20px;
+    }
+    > p {
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      color: rgba(102, 102, 102, 1);
+      line-height: 20px;
+      span{
+        color: #5893FF;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .modal-footer {
+    text-align: center;
+    margin-top: 40px;
+    button {
+      cursor: pointer;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      font-family: PingFangSC-Regular;
+      color: rgba(255, 255, 255, 1);
+      padding: 6px 27px;
+      background: rgba(253, 140, 115, 1);
+      border-radius: 16px;
     }
   }
 </style>

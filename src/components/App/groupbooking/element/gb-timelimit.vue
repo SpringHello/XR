@@ -60,7 +60,6 @@
             limitTime -= 1000
             if (limitTime <= 0) {
               window.clearInterval(s)
-              this.$emit('time-end')
             }
           }, 1000);
         } else {

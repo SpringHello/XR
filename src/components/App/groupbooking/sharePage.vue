@@ -1,6 +1,6 @@
 <template>
   <div class="share-page">
-    <gb-timelimit @time-end="timeEnd" @open-group="openGroup" :start-time="startTime" :end-time="endTime"></gb-timelimit>
+    <gb-timelimit :start-time="startTime" :end-time="endTime"></gb-timelimit>
     <gb-host :product-groups="productGroups" :active-link="activeLink" :participation-person-data="participationPersonData"
              :host-duration="hostDuration" :participation-person-columns="participationPersonColumns"></gb-host>
     <div class="center">
@@ -77,9 +77,6 @@
       }
     },
     methods: {
-      timeEnd() {
-        console.log('时间结束了')
-      },
       setInfo(response) {
         if (response[0].data.status == 1 && response[1].data.status == 1) {
           this.startTime = response[1].data.result
@@ -101,7 +98,16 @@
         }
       },
       openGroup() {
-        alert('重新开团')
+        this.$http.get('activity/createTeam').then(res => {
+          if(res.data.status == 1){
+            this.$Message.success('开团成功')
+            this.$router.go(0)
+          }else{
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
       }
     },
     computed: {}
