@@ -333,7 +333,7 @@
         let isKeyWord = keyWord.some(item => {
           return value.indexOf(item) !== -1
         })
-        if (isKeyWord || regEn.test(value) || reg.test(value)|| regNum.test(value)) {
+        if (isKeyWord || regEn.test(value) || reg.test(value) || regNum.test(value)) {
           return callback(new Error("网站名称不符合规范"));
         } else {
           callback();
@@ -352,15 +352,35 @@
       };
       //校验网站负责人证件号码
       const validCertificateNumber = (rule, value, callback) => {
-        let regCord = /^[0-9]*$/;
+        let reg1 = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
+        let reg2 = /^((14)|(15)[0-9]{7})|(G|S|D[0-9]{8})|((P.)|(S.)[0-9]{7})$/
+        let reg3 = /^[\u4E00-\u9FA5]{1}\\d{7}$/
+        let regNum = /^\d+$/
         this.siteList.forEach(item => {
-          if (value == "") {
-            return callback(new Error("请输入网站负责人证件号码"));
-          }
-          if (!regCord.test(value)) {
-            return callback(new Error("请输入正确的证件号码"));
+          if (item.basicInformation.certificateType == '身份证') {
+            if (!reg1.test(value)) {
+              return callback(new Error("请输入正确的证件号码"));
+            } else {
+              callback();
+            }
+          } else if (item.basicInformation.certificateType == '护照') {
+            if (!reg2.test(value)) {
+              return callback(new Error("请输入正确的证件号码"));
+            } else {
+              callback();
+            }
+          } else if (item.basicInformation.certificateType == '军官证') {
+            if (!reg3.test(value)) {
+              return callback(new Error("请输入正确的证件号码"));
+            } else {
+              callback();
+            }
           } else {
-            callback();
+            if (!regNum.test(value)) {
+              return callback(new Error("请输入正确的证件号码"));
+            } else {
+              callback();
+            }
           }
         })
       };
@@ -466,7 +486,8 @@
             {required: true, message: "请选择证件类型", trigger: "change"}
           ],
           certificateNumber: [
-            {required: true, validator: validCertificateNumber, trigger: "blur"}
+            {required: true, message: "请输入网站负责人证件号码", trigger: "blur"},
+            {validator: validCertificateNumber, trigger: "blur"}
           ],
           officePhone: [
             {validator: validOfficePhone, trigger: "blur"}

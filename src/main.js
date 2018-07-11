@@ -40,7 +40,7 @@ Vue.config.productionTip = false
 
 
 
-axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
+//axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
 //axios.defaults.withCredentials = true
 
 
@@ -56,9 +56,9 @@ axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
 // axios.defaults.baseURL = 'http://192.168.3.187:8080/ruirados/'
 
 
-axios.defaults.withCredentials = true
+//axios.defaults.withCredentials = true
 
- //axios.defaults.baseURL = 'http://qiurenliang.xrcloud.net:8080/ruicloud'
+//axios.defaults.baseURL = 'http://qiurenliang.xrcloud.net:8080/ruicloud'
 
 
 //axios挂载到Vue原型

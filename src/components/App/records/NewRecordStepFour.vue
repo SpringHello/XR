@@ -20,8 +20,8 @@
             <p>2.携带核验单、身份证复印件、营业执照复印件、域名证书复印件、网站授权书等文件至指定位置，提交核验单与其他资料并完成现场拍照</p>
           </div>
           <div class="footer">
-            <button>查看拍照地址</button>
-            <button style="margin-left: 20px">将地址发送至手机</button>
+            <button @click="toMap">查看拍照地址</button>
+            <button style="margin-left: 20px" @click="sendAddress">将地址发送至手机</button>
             <p>当天拍照完成，当天提交管局，速度较快。</p>
           </div>
         </div>
@@ -354,10 +354,6 @@
             this.receiveForm.person = response.data.result[0].legalname
             this.receiveForm.phone = response.data.result[0].companyphone
           }
-        } else {
-          this.$message.info({
-            content: response.data.message
-          })
         }
       },
       // 使用新地址
@@ -442,7 +438,7 @@
         window.open(href, '_blank')
       },
       // 提交幕布申请
-      applyCurtain: throttle(2000, function (){
+      applyCurtain: throttle(2000, function () {
         this.siteParams.backgroundAddress = this.receiveForm.address
         this.siteParams.backgroundName = this.receiveForm.person
         this.siteParams.backgroundPhone = this.receiveForm.phone
@@ -452,7 +448,7 @@
           Promise.all([addMainWeb]).then(response => {
             if (response[0].status == 200 && response[0].data.status == 1) {
               this.$router.push('waitFirstTrial')
-              sessionStorage.clear()
+              //sessionStorage.clear()
             } else {
               this.$message.info({
                 content: '平台开小差了，请稍候再试'
@@ -483,7 +479,7 @@
           Promise.all([addMainCompany, addMainWeb]).then(response => {
             if ((response[0].status == 200 && response[0].data.status == 1) && (response[1].status == 200 && response[1].data.status == 1)) {
               this.$router.push('waitFirstTrial')
-              sessionStorage.clear()
+              //sessionStorage.clear()
             } else {
               this.$message.info({
                 content: '平台开小差了，请稍候再试'
@@ -545,7 +541,20 @@
       getCurrentDate() {
         return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
       },
-    },
+      sendAddress: throttle(5000, function () {
+        let url = 'recode/sendAddress.do'
+        axios.get(url).then(res => {
+          if (res.data.status == 1) {
+            this.$Message.success('拍照地址已发送至认证手机号')
+          } else {
+            this.$Message.info('地址发送失败')
+          }
+        })
+      }),
+      toMap() {
+        window.open('https://map.baidu.com/')
+      }
+    }
   }
 </script>
 
