@@ -19,8 +19,9 @@ export default {
         containLabel: true
     },
     toolbox: {
+      show:true,
         feature: {
-            saveAsImage: {pixelRatio: 2}
+            saveAsImage: {show:true,pixelRatio: 2}
         }
     },
     xAxis: {

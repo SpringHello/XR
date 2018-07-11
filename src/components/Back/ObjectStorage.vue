@@ -263,6 +263,10 @@
           this.$Message.info('平台出小差了');
           this.size = "0KB"
         })
+      },
+      //概览统计情况
+      getOverview(){
+
       }
     },
     mounted(){
@@ -270,7 +274,6 @@
       this.rwPolar.series[0].data = this.dayList[0].data;
       this.rwNumber.xAxis.data = this.requestList[0].day;
       this.rwNumber.series[0].data = this.requestList[0].data;
-      // this.showUserAcessAll();
       this.getAllsize();
     }
   };

@@ -19,6 +19,7 @@ export default {
         containLabel: true
     },
     toolbox: {
+      show:true,
         feature: {
             saveAsImage: {pixelRatio: 2}
         }

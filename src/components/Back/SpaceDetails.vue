@@ -236,41 +236,41 @@
         <span>操作</span>
       </div>
       <div class="upload_Box" >
-        <!--<cunt ref="upload"-->
-          <!--:on-success="handleSuccess"-->
-           <!--:onFileProcess="handleUpload"-->
-            <!--:max-size="1048576"-->
-          <!--:data="fileUpdata"-->
-          <!--action="http://192.168.3.253:8080/ruirados/object/uploadObject.do">-->
-          <!--<div class="upload_text">-->
-            <!--<Icon type="ios-upload-outline"></Icon>-->
-            <!--<span>选择文件</span>-->
-            <!--<p style="margin-top:5px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>-->
-          <!--</div>-->
-        <!--</cunt>-->
-        <Upload
-          ref="upload"
-          :show-upload-list="true"
+        <cunt ref="upload"
           :on-success="handleSuccess"
-          :max-size="1048576"
-          :on-format-error="handleFormatError"
-          :on-exceeded-size="handleMaxSize"
-          :before-upload="handleBeforeUpload"
-          :on-error="handleError"
-          :on-progress="handleUpload"
-          multiple
-          name="uploadFile"
+           :onFileProcess="handleUpload"
+            :max-size="1048576"
           :data="fileUpdata"
-          type="drag"
-          action="http://192.168.3.109:8080/ruirados/object/uploadObject.do"
-          class="upload_model"
-        >
+          action="http://192.168.3.253:8080/ruirados/object/uploadObject.do">
           <div class="upload_text">
             <Icon type="ios-upload-outline"></Icon>
             <span>选择文件</span>
-            <p style="margin-top:10px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>
+            <p style="margin-top:5px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>
           </div>
-        </Upload>
+        </cunt>
+        <!--<Upload-->
+          <!--ref="upload"-->
+          <!--:show-upload-list="true"-->
+          <!--:on-success="handleSuccess"-->
+          <!--:max-size="1048576"-->
+          <!--:on-format-error="handleFormatError"-->
+          <!--:on-exceeded-size="handleMaxSize"-->
+          <!--:before-upload="handleBeforeUpload"-->
+          <!--:on-error="handleError"-->
+          <!--:on-progress="handleUpload"-->
+          <!--multiple-->
+          <!--name="uploadFile"-->
+          <!--:data="fileUpdata"-->
+          <!--type="drag"-->
+          <!--action="http://192.168.3.109:8080/ruirados/object/uploadObject.do"-->
+          <!--class="upload_model"-->
+        <!--&gt;-->
+          <!--<div class="upload_text">-->
+            <!--<Icon type="ios-upload-outline"></Icon>-->
+            <!--<span>选择文件</span>-->
+            <!--<p style="margin-top:10px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>-->
+          <!--</div>-->
+        <!--</Upload>-->
         <!--<div class="upload_list" v-for="(item,index) in uploadList" v-if="item.status == 'uploading'">-->
           <!--<div>-->
             <!--<span>{{item.name}}</span>-->
