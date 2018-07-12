@@ -72,7 +72,7 @@
     </Modal>
     <Modal v-model="oldModal" width="500" :scrollable="true">
       <div class="modal-body">
-        <img src="../../../../assets/img/active/group-booking/gb-icon13.png" />
+        <img src="../../../../assets/img/active/group-booking/gb-icon13.png"/>
         <p>您已经是新睿云的常客， </p>
         <p>可59元直接购买云主机啦！点击<span @click="$router.push('groupBooking')">立即购买</span></p>
       </div>
@@ -195,16 +195,17 @@
           return
         }
         let vmConfigId = index == 0 ? '33' : '34'
+        let params = {
+          vmConfigId: vmConfigId,
+          osType: this.productGroups[index].system,
+          defzoneid: this.productGroups[index].area,
+        }
+        if (this.teamLeaderCompanyId != '') {
+          params.teamLeaderCompanyId = this.teamLeaderCompanyId
+        }
         if (this.teamLeaderCompanyId == '') {
           let url = 'information/getDiskcountMv.do'
-          axios.get(url, {
-            params: {
-              vmConfigId: vmConfigId,
-              osType: this.productGroups[index].system,
-              defzoneid: this.productGroups[index].area,
-              teamLeaderCompanyId: this.teamLeaderCompanyId
-            }
-          }).then(res => {
+          axios.get(url, {params}).then(res => {
             if (res.data.status == 1) {
               const {href} = this.$router.resolve({
                 name: 'order',
@@ -239,8 +240,8 @@
           })
         } else {
           this.$http.get('activity/jdugeTeam.do').then(res => {
-            if (res.data.status == 1){
-              if(res.data.result){
+            if (res.data.status == 1) {
+              if (res.data.result) {
                 let url = 'information/getDiskcountMv.do'
                 axios.get(url, {
                   params: {
@@ -282,10 +283,10 @@
                     })
                   }
                 })
-              } else{
+              } else {
                 this.oldModal = true
               }
-            } else{
+            } else {
               this.$message.info({
                 content: res.data.message
               })
@@ -643,7 +644,7 @@
       font-family: PingFangSC-Regular;
       color: rgba(102, 102, 102, 1);
       line-height: 20px;
-      span{
+      span {
         color: #5893FF;
         cursor: pointer;
       }
