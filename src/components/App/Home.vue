@@ -7,13 +7,13 @@
           <div @click="push('groupBooking')"
                style="cursor: pointer;background: #FA846E;">
             <div class="groupBook">
-                <div>
-                  <img src="../../assets/img/active/group-booking/gb-banner7.png" />
-                  <p>云主机特惠计划</p>
-                  <p>分享赚时长 一年只需<span>59</span>元</p>
-                  <p>59元首月开通，<span>0</span>元续费 ，便宜好用尽在</p>
-                  <button>点击了解</button>
-                </div>
+              <div>
+                <img src="../../assets/img/active/group-booking/gb-banner7.png" />
+                <p>云主机特惠计划</p>
+                <p>分享赚时长 一年只需<span>59</span>元</p>
+                <p>59元首月开通，<span>0</span>元续费 ，便宜好用尽在</p>
+                <button>点击了解</button>
+              </div>
             </div>
           </div>
         </my-carousel-item>
@@ -259,7 +259,7 @@
       </div>
     </div>
     <!-- 新睿云最新动态 -->
-    <!--<div class="news">
+    <div class="news">
       <div class="wrap">
         <div class="header">
           <p class="title-g">新睿云最新动态</p>
@@ -269,26 +269,31 @@
           <div class="main-left">
             <dl>
               <dt>{{showNews.title}}</dt>
-              <dd v-html="showNews.text">
+              <dd v-html="showNews.abstracts">
               </dd>
               <dd>
-                  <router-link :to="`article/${showNews.code}.html`" target="_blank" style="width:100px;height:38px;line-height:38px;border:1px solid rgba(56,125,255,1);color:#387DFF;display:block;text-align:center;margin-top:40px;">查看详情</router-link>
+                <router-link :to="`article/${showNews.code}.html`" target="_blank"
+                             style="width:100px;height:38px;line-height:38px;border:1px solid rgba(56,125,255,1);color:#387DFF;display:block;text-align:center;margin-top:40px;">
+                  查看详情
+                </router-link>
               </dd>
             </dl>
           </div>
           <div class="main-right">
-            <img :src="showNews.topUrl" style="width:100%;height:100%;"/>
+            <img :src="showNews.coverUrl" style="width:100%;height:100%;"/>
           </div>
         </div>
         <div class="link-list wrap">
           <dl v-for="(item,index) in linkList" :key="index">
-            <dt>{{item.typename}}<router-link :to="`article/${item.id}`">More></router-link></dt>
-            <dd >
+            <dt>{{item.typename}}
+              <router-link :to="`article/${item.id}`">More></router-link>
+            </dt>
+            <dd>
               <ul>
                 <li v-for="(secitem,i) in item.artile" :key="i">
                   <router-link :to="`article/${secitem.code}.html`" target="_blank">
-                  <span class="title">{{secitem.title}}</span>
-                  <span>{{secitem.createtime}}</span>
+                    <span class="title">{{secitem.title}}</span>
+                    <span>{{secitem.createtime}}</span>
                   </router-link>
                 </li>
               </ul>
@@ -296,7 +301,7 @@
           </dl>
         </div>
       </div>
-    </div>-->
+    </div>
     <!-- 合作伙伴 -->
     <div class="partner-container" ref="partnerFade">
       <div>
@@ -688,8 +693,8 @@
       window.addEventListener('scroll', this.scrollFn)
     },
     created() {
-      //this.getnews()
-      //this.getlinkList()
+      this.getnews()
+      this.getlinkList()
     },
     methods: {
       getnews() {
@@ -1539,39 +1544,39 @@
     }
   }
 
-  .groupBook{
+  .groupBook {
     background: #FA846E url("../../assets/img/active/group-booking/gb-banner6.png") no-repeat;
     height: 400px;
     padding-top: 70px;
-    >div{
+    > div {
       width: 1200px;
       margin: 0 auto;
       position: relative;
-      img{
+      img {
         position: absolute;
         right: 0;
         top: -45px;
       }
-      p{
-        font-size:24px;
-        font-family:PingFangSC-Regular;
-        color:rgba(255,255,255,1);
+      p {
+        font-size: 24px;
+        font-family: PingFangSC-Regular;
+        color: rgba(255, 255, 255, 1);
         margin-bottom: 20px;
-        span{
+        span {
           color: #FFE177;
           font-size: 36px;
         }
       }
-      p:nth-child(2){
-        font-size:36px;
+      p:nth-child(2) {
+        font-size: 36px;
       }
-      button{
-        font-size:24px;
-        font-family:PingFangSC-Regular;
-        color:rgba(254,79,74,1);
+      button {
+        font-size: 24px;
+        font-family: PingFangSC-Regular;
+        color: rgba(254, 79, 74, 1);
         padding: 10px 40px;
-        background:rgba(255,255,255,1);
-        border-radius:27px;
+        background: rgba(255, 255, 255, 1);
+        border-radius: 27px;
         border: none;
         outline: none;
         cursor: pointer;
@@ -1579,6 +1584,7 @@
       }
     }
   }
+
   // 移入移出动画
   .fade-enter, .fade-leave-to {
     opacity: 0;
