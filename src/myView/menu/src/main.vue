@@ -1,33 +1,39 @@
 <template>
   <div style="display: flex">
-    <div style="width:160px;">
-      <div style="height:38px;background-color: #1B2940"></div>
+    <div style="width:160px;position: relative;background-color: #142133" :class="{close:!opened}">
+      <div style="height:38px;background-color: #1B2940" @click="toggleHidden"></div>
       <ul>
-        <li v-for="item in items">
-          <div class="mainTitle" @click="toggleMain(item)">{{item.mainName}}</div>
+        <li v-for="item in items" @mouseenter="go">
+          <div class="mainTitle" @click="toggleMain(item)">
+            <span :class="{act:openedMain.includes(item.type)}">{{opened?item.mainName:''}}</span>
+          </div>
           <ul v-if="openedMain.includes(item.type)">
-            <li v-for="sub in item.subItem" class="subTitle" @click="go(sub)">
-              {{sub.subName}}
+            <li v-for="sub in item.subItem" class="subTitle" @mouseenter="go(sub)" @mouseleave="leave(sub)">
+              <svg class="icon" aria-hidden="true" style="width:28px;height:28px;vertical-align: middle;">
+                <use :xlink:href="sub.icon"></use>
+              </svg>
+              <span v-show="opened" style="vertical-align: middle">{{sub.subName}}</span>
             </li>
           </ul>
         </li>
       </ul>
+      <transition name="slide">
+        <div class="thr-header" :class="{closeThr:!opened}" ref="thr" @mouseenter="static=true" @mouseleave="_leave">
+          <div class="wrapper">
+            <div class="operate">
+              <ul>
+                <li v-for="(thr,sIndex) in thrMenu" :key="sIndex">
+                  {{thr.thrName}}
+                </li>
+              </ul>
+            </div>
+            <div style="clear:right"></div>
+          </div>
+        </div>
+      </transition>
     </div>
 
-    <transition name="slide">
-      <div class="thr-header" v-show="thrMenu">
-        <div class="wrapper">
-          <div class="operate">
-            <ul>
-              <li v-for="(thr,sIndex) in thrMenu" :key="sIndex">
-                {{thr.thrName}}
-              </li>
-            </ul>
-          </div>
-          <div style="clear:right"></div>
-        </div>
-      </div>
-    </transition>
+
   </div>
 </template>
 
@@ -49,13 +55,19 @@
         // 三级Menu列表
         thrMenu: undefined,
         // 已打开的Main
-        openedMain: []
+        openedMain: [],
+        static: false,
+        // 主menu是否打开
+        opened: true
       }
     },
     mounted(){
 
     },
     methods: {
+      toggleHidden(){
+        this.opened = !this.opened
+      },
       // 切换Main状态
       toggleMain(item){
         if (this.accordion) {
@@ -67,10 +79,32 @@
             this.openedMain.push(item.type)
           }
         }
-
       },
       go(sub){
-        this.thrMenu = sub.thrItem || undefined
+        setTimeout(() => {
+          if (sub && sub.thrItem) {
+            this.thrMenu = sub.thrItem
+            this.$refs['thr'].style.width = '160px'
+          } else {
+            this.thrMenu = undefined
+            this.$refs['thr'].style.width = '0px'
+          }
+        }, 0)
+      },
+      leave(){
+        setTimeout(() => {
+          if (!this.static) {
+            this.thrMenu = undefined
+            this.$refs['thr'].style.width = '0px'
+          }
+        }, 0)
+      },
+      _leave(){
+        this.static = false
+        setTimeout(() => {
+          this.$refs['thr'].style.width = '0px'
+        }, 0)
+
       }
     },
     watch: {}
@@ -80,18 +114,34 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   .mainTitle {
-    padding: 14px 24px;
+    padding: 14px 20px;
     position: relative;
     cursor: pointer;
     background-color: #22344D;
     font-size: 14px;
     color: rgba(163, 186, 204, 1);
     line-height: 14px;
-
+    span {
+      &:before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-left: 1px solid #fff;
+        border-bottom: 1px solid #fff;
+        transform: translateY(-3px) rotate(-45deg);
+        margin-right: 12px;
+      }
+      &.act {
+        &:before {
+          transform: translateY(2px) rotate(135deg);
+        }
+      }
+    }
   }
 
   .subTitle {
-    padding: 14px 24px;
+    padding: 14px 10px;
     background-color: #142133;
     font-size: 14px;
     color: rgba(163, 186, 204, 1);
@@ -108,6 +158,14 @@
   }
 
   .thr-header {
+    position: absolute;
+    left: 160px;
+    top: 0px;
+    overflow: hidden;
+    transition: width .25s;
+    bottom: 0px;
+    background-color: #262F38;
+    z-index: 99999;
     li {
       color: rgba(163, 186, 204, 1);
       padding: 14px 24px;
@@ -116,19 +174,14 @@
     }
   }
 
-  .slide-enter-active {
-    transition: all .3s;
+  .closeThr {
+    left: 48px;
   }
 
-  .slide-leave-active {
-    transition: all .3s;
-  }
-
-  .slide-enter {
-    width: 0px;
-  }
-
-  .slide-leave-to {
-    width: 0px;
+  .close {
+    width: 48px !important;
+    .subTitle {
+      padding: 14px 10px;
+    }
   }
 </style>

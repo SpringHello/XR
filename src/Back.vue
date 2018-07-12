@@ -177,18 +177,27 @@
           {
             mainName: '云计算',
             type: 'server',
-            subItem: [{subName: '云主机', type: 'host'}, {subName: '云主机快照', type: 'snapshot'}, {
+            subItem: [{subName: '云主机', type: 'host', icon: '#icon-danxingyunfuwuqiECS'}, {
+              subName: '云主机快照',
+              type: 'snapshot',
+              icon: '#icon-danxingyunfuwuqiECS'
+            }, {
               subName: '镜像',
-              type: 'mirror'
+              type: 'mirror',
+              icon: '#icon-danxingyunfuwuqiECS'
             }]
           },
           {
             mainName: '云网络',
             type: 'storage',
             subItem: [
-              {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
-              {subName: '云硬盘', type: 'disk'},
-              {subName: '云硬盘备份', type: 'diskBackup'}
+              {
+                subName: '对象存储',
+                type: 'https://oss-console.xrcloud.net/ruirados/objectStorage',
+                icon: '#icon-danxingyunfuwuqiECS'
+              },
+              {subName: '云硬盘', type: 'disk', icon: '#icon-danxingyunfuwuqiECS'},
+              {subName: '云硬盘备份', type: 'diskBackup', icon: '#icon-danxingyunfuwuqiECS'}
             ]
           },
           {
@@ -196,15 +205,17 @@
             type: 'network',
             subItem: [
               {
-                subName: '虚拟私有云VPC',
+                subName: '私有网络VPC',
                 type: 'vpc',
-                thrItem: [{thrName: '虚拟私有云VPC', pane: 'VPC'}, {thrName: 'NAT网关', pane: 'NAT'}]
+                icon: '#icon-danxingyunfuwuqiECS',
+                thrItem: [{thrName: '私有网络VPC', pane: 'VPC'}, {thrName: 'NAT网关', pane: 'NAT'}]
               },
-              {subName: '弹性IP', type: 'ip'},
-              {subName: '负载均衡', type: 'balance'},
+              {subName: '弹性IP', type: 'ip', icon: '#icon-danxingyunfuwuqiECS'},
+              {subName: '负载均衡', type: 'balance', icon: '#icon-danxingyunfuwuqiECS'},
               {
                 subName: '虚拟专网VPN',
                 type: 'vpn',
+                icon: '#icon-danxingyunfuwuqiECS',
                 thrItem: [{thrName: '远程接入', pane: 'remote'}, {thrName: '隧道VPN', pane: 'VPN'}]
               }
             ]
@@ -213,14 +224,15 @@
             mainName: '云安全',
             type: 'security',
             subItem: [
-              {subName: '防火墙', type: 'firewall'}
+              {subName: '防火墙', type: 'firewall', icon: '#icon-danxingyunfuwuqiECS'}
             ]
           },
           {
             mainName: '回收站',
             type: 'recycle',
+            icon: '#icon-danxingyunfuwuqiECS',
             subItem: [
-              {subName: '回收站', type: 'recycle'}
+              {subName: '回收站', type: 'recycle', icon: '#icon-danxingyunfuwuqiECS'}
             ]
           }
         ],
