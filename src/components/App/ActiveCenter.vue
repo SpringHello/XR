@@ -22,26 +22,26 @@
             <p>惊喜不间断，优惠不停歇，多种活动任你选择</p>
           </div>
           <div class="box-wrap">
-            <div v-for="(item,index) in activedata" :key="index" class="box" @click="toactive(item.url)">
+            <router-link v-for="(item,index) in active" :key="index" class="box" :to="item.url">
               <div class="box-left">
-                <img :src="item.img"/>
+                <img :src="item.imgPath"/>
               </div>
               <div class="box-right">
                 <div class="title">
                   <h3>
-                    {{item.title}}
+                    {{item.name}}
                   </h3>
                   <img :src="item.iconImg" alt="">
                 </div>
-                <p v-html="item.desc"></p>
-                <span>{{item.time}}</span>
+                <p v-html="item.secSpan"></p>
+                <span>{{item.des}}</span>
               </div>
-            </div>
+            </router-link>
           </div>
         </div>
       </div>
     </div>
-    <!-- <div class="bottom-coming box-g">
+    <!--<div class="bottom-coming box-g">
        <div class="wrap">
         <div class="content">
           <div class="head">
@@ -66,14 +66,23 @@
          </div>
         </div>
       </div>
-    </div> -->
+    </div>-->
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from '@/util/axiosInterceptor'
   export default {
+    beforeRouteEnter(to, from, next){
+      axios.get('activity/getActivitys.do').then(response => {
+        next(vm => {
+          vm.setData(response)
+        })
+      })
+    },
     data () {
       return {
+        active: [],
         activedata: [
           {
             img: require('../../assets/img/activecenter/icon-down.png'),
@@ -98,27 +107,6 @@
             time: '活动时间 2018.5.3开始，数量有限、送完为止',
             url: 'active_2'
           },
-          /*{
-            img: require('../../assets/img/activecenter/icon-host.png'),
-            title: '北京一区盛大开服',
-            desc: '布局首都，新购特惠，限时抢购',
-            time: '活动时间 2018.4.16-2018.5.16',
-            url: 'newNodes_1'
-          },
-          {
-            img: require('../../assets/img/activecenter/icon-host.png'),
-            title: '北方二区（沈阳）盛大开服',
-            desc: '春暖花开，活动绽放，<span style="color:#D0021B">3折</span>优惠起',
-            time: '活动时间 2018.4.16-2018.5.16',
-            url: 'newNodes_2'
-          },*/
-          // {
-          //   img: require('../../assets/img/activecenter/icon-host.png'),
-          //   title: '武汉一区盛大开服',
-          //   desc: '布局首都，新购特惠，限时抢购',
-          //   time: '活动长期有效',
-          //   url: ''
-          // }
         ],
         comingdata: [
           {
@@ -136,17 +124,13 @@
         ]
       }
     },
-    created () {
-
-    },
-    mounted () {
-
-    },
     methods: {
       toactive (url) {
         this.$router.push(url)
+      },
+      setData(response){
+        this.active = response.data.result
       }
-
     },
     computed: {},
     watch: {},
@@ -229,6 +213,7 @@
           .title {
             overflow: hidden;
             h3 {
+              color: rgb(73, 80, 96);
               font-size: 26px;
               float: left;
               line-height: 48px;
@@ -268,7 +253,7 @@
         box-shadow: 0px 0px 13px 0px rgba(255, 170, 150, 1);
       }
       &:hover .box-right h3 {
-        color: #d0021b;
+        color: #d0021b !important;
       }
     }
   }
