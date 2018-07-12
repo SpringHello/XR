@@ -27,7 +27,8 @@ const store = new Vuex.Store({
     paneStatus: {
       vpc: 'VPC',
       vpn: 'remote'
-    }
+    },
+    accessKey:null
   },
   getters: {},
 
@@ -53,6 +54,9 @@ const store = new Vuex.Store({
     },
     setPane(state, paneStatus = {vpc: 'VPC', vpn: 'remote'}){
       state.paneStatus = paneStatus
+    },
+    setKey(state,key){
+      state.accessKey = key;
     }
   },
   actions: {
