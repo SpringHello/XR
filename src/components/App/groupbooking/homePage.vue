@@ -54,7 +54,6 @@
       } else {
         next()
       }
-
     },
     data() {
       return {}

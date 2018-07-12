@@ -5,7 +5,7 @@
       <p>分享赠时长进行中</p>
       <div class="banner-button" v-if="d=='00'&&h=='00'&&m=='00'&&s=='00'">
         <img src="../../../../assets/img/active/group-booking/gb-banner5.png"/>
-        <span @click="toOpenGroup">重新开团</span>
+        <span @click="openGroup">重新开团</span>
       </div>
       <div class="timer" v-else>
         剩余： <span>{{ d }}</span>天
@@ -32,9 +32,6 @@
     },
     props: {
       timeEnd: {
-        type: Function
-      },
-      openGroup: {
         type: Function
       },
       startTime: {
@@ -76,8 +73,17 @@
           return i;
         }
       },
-      toOpenGroup() {
-        this.$emit('open-group')
+      openGroup() {
+        this.$http.get('activity/createTeam.do').then(res => {
+          if(res.data.status == 1){
+            this.$Message.success('开团成功')
+            this.$router.go(0)
+          }else{
+            this.$message.info({
+              content: res.data.result.info
+            })
+          }
+        })
       }
     },
     watch: {

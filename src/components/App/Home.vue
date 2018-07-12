@@ -2,12 +2,13 @@
   <div id="home" style="background: #FFF">
     <!-- banner 轮播图 -->
     <div class="banner">
-      <my-carousel :interval=50000 class="carousel" @on-change="change">
+      <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
           <div @click="push('groupBooking')"
                style="cursor: pointer;background: #FA846E;">
             <div class="groupBook">
                 <div>
+                  <img src="../../assets/img/active/group-booking/gb-banner7.png" />
                   <p>云主机特惠计划</p>
                   <p>分享赚时长 一年只需<span>59</span>元</p>
                   <p>59元首月开通，<span>0</span>元续费 ，便宜好用尽在</p>
@@ -1545,6 +1546,12 @@
     >div{
       width: 1200px;
       margin: 0 auto;
+      position: relative;
+      img{
+        position: absolute;
+        right: 0;
+        top: -45px;
+      }
       p{
         font-size:24px;
         font-family:PingFangSC-Regular;
@@ -1555,7 +1562,7 @@
           font-size: 36px;
         }
       }
-      p:nth-child(1){
+      p:nth-child(2){
         font-size:36px;
       }
       button{

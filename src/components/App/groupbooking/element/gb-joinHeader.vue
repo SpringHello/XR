@@ -20,7 +20,7 @@
     },
     methods: {
       beCommander() {
-        this.$http.get('activity/createTeam').then(res => {
+        this.$http.get('activity/createTeam.do').then(res => {
           if(res.data.status == 1){
             this.$router.push('productShare')
             this.$Message.success('开团成功')

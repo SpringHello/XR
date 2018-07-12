@@ -122,7 +122,7 @@
             disk: 40,
             system: 'linux',
             currentPrice: 98,
-            originalCost: 196.72,
+            originalCost: 166.72,
             area: '39a6af0b-6624-4194-b9d5-0c552d903858'
           }],
         areaGroup: [{
@@ -241,16 +241,9 @@
         } else {
           this.$http.get('activity/jdugeTeam.do').then(res => {
             if (res.data.status == 1) {
-              if (res.data.result) {
+              if (res.data.result.flag) {
                 let url = 'information/getDiskcountMv.do'
-                axios.get(url, {
-                  params: {
-                    vmConfigId: vmConfigId,
-                    osType: this.productGroups[index].system,
-                    defzoneid: this.productGroups[index].area,
-                    teamLeaderCompanyId: this.teamLeaderCompanyId
-                  }
-                }).then(res => {
+                axios.get(url, {params}).then(res => {
                   if (res.data.status == 1) {
                     const {href} = this.$router.resolve({
                       name: 'order',

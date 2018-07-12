@@ -21,6 +21,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import $store from '../../../vuex'
   import gbHost from './element/gb-host'
   import gbAward from './element/gb-award'
   import gbTimelimit from './element/gb-timelimit'
@@ -35,15 +36,19 @@
       gbRule
     },
     beforeRouteEnter(to, from, next) {
-      let info = axios.get('activity/teamMemberList.do')
-      let start = axios.get('network/getTime.do')
-      Promise.all([info, start]).then((result) => {
-        next(vm => {
-          vm.setInfo(result)
+      if ($store.state.userInfo) {
+        let info = axios.get('activity/teamMemberList.do')
+        let start = axios.get('network/getTime.do')
+        Promise.all([info, start]).then((result) => {
+          next(vm => {
+            vm.setInfo(result)
+          })
+        }).catch((error) => {
+          console.log(error)
         })
-      }).catch((error) => {
-        console.log(error)
-      })
+      } else{
+        next({path: '/ruicloud/groupBooking'})
+      }
     },
     data() {
       return {
@@ -58,7 +63,7 @@
             key: 'companyname'
           }, {
             title: '加入时间',
-            key: 'createtime'
+            key: 'jointime'
           }, {
             title: '状态',
             render: (h, params) => {
@@ -80,7 +85,7 @@
       setInfo(response) {
         if (response[0].data.status == 1 && response[1].data.status == 1) {
           this.startTime = response[1].data.result
-          let endTime = response[0].data.result.list_teamHeader.endtime;
+          let endTime = response[0].data.result.list_teamHeader[0].endtime;
           let date = new Date(endTime.replace(/-/g, '/'));
           this.endTime = date.getTime();
           let params = response[0].data.result.freevmConfig
@@ -92,22 +97,10 @@
           }
           params.zonename = response[0].data.result.zonTem.zonename
           this.productGroups.push(params)
-          this.activeLink = response[0].data.result.list_teamHeader.url
+          this.activeLink = response[0].data.result.list_teamHeader[0].url
           this.participationPersonData = response[0].data.result.list_Members
-          this.hostDuration = response[0].data.result.list_teamHeader.receiveRecord
+          this.hostDuration = response[0].data.result.list_teamHeader[0].receiveRecord
         }
-      },
-      openGroup() {
-        this.$http.get('activity/createTeam').then(res => {
-          if(res.data.status == 1){
-            this.$Message.success('开团成功')
-            this.$router.go(0)
-          }else{
-            this.$message.info({
-              content: res.data.message
-            })
-          }
-        })
       }
     },
     computed: {}

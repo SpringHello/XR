@@ -71,6 +71,10 @@
             })
           }
         })
+      } else{
+        next(vm => {
+          vm.setInfo()
+        })
       }
     },
     data() {
@@ -83,7 +87,7 @@
             key: 'companyname'
           }, {
             title: '加入时间',
-            key: 'createtime'
+            key: 'jointime'
           }, {
             title: '状态',
             render: (h, params) => {
@@ -107,9 +111,9 @@
           }
         }).then(response => {
           if (response.data.status == 1) {
-            this.commander = response.data.result.teamActLeader[0].companyname
-            this.createTime = response.data.result.teamActLeader[0].createtime
-            this.participationPersonData = response.data.result.team_MemList
+            this.commander = response.data.result.list_teamHeader[0].companyname
+            this.createTime = response.data.result.list_teamHeader[0].createtime
+            this.participationPersonData = response.data.result.list_Members
           }
         })
       },
@@ -118,14 +122,14 @@
         this.isBuy = true
         axios.get('activity/teamMemberList.do').then(response => {
           if (response.data.status == 1 ) {
-            let params = response[0].data.result.freevmConfig
-            params.templatename = response[0].data.result.zonTem.templatename
-            if(response[0].data.result.zonTem.templatename.charAt(0).toLocaleUpperCase() == 'C') {
+            let params = response.data.result.freevmConfig
+            params.templatename = response.data.result.zonTem.templatename
+            if(response.data.result.zonTem.templatename.charAt(0).toLocaleUpperCase() == 'C') {
               params.templatename = 'Centos'
             }else{
               params.templatename = 'Windows'
             }
-            params.zonename = response[0].data.result.zonTem.zonename
+            params.zonename = response.data.result.zonTem.zonename
             this.productGroups.push(params)
           }
         })
