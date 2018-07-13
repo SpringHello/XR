@@ -2,8 +2,6 @@
   <div class="background">
     <p v-if="isCloud">我是小小新睿云云客，特惠云主机分享给你</p>
     <div class="center">
-      <!-- 用于支付新打开窗口，避免浏览器拦截 -->
-      <a v-if="false" ref="openLink" href="order" target="_blank">1111</a>
       <div class="item" v-for="(item,index) in productGroups">
         <div class="item-title">
           特惠专享
@@ -210,33 +208,8 @@
           let url = 'information/getDiskcountMv.do'
           axios.get(url, {params}).then(res => {
             if (res.data.status == 1) {
-              // const {href} = this.$router.resolve({
-              //   name: 'order',
-              // })
-              // window.open(href, '_blank')
-              let openLink = this.$refs.openLink
-              openLink.click();
-              let s = setInterval(() => {
-                let url = 'activity/boughtVM.do'
-                axios.get(url, {
-                  params: {
-                    activityNum: '21'
-                  }
-                }).then(res => {
-                  if (res.data.status == 1) {
-                    if (res.data.result == 1) {
-                      window.clearInterval(s)
-                      sessionStorage.setItem('step', 'step-one')
-                      this.$router.push('productShare')
-                    } else if (res.data.result == 2) {
-                      window.clearInterval(s)
-                      if (this.teamLeaderCompanyId != '') {
-                        this.$router.go(0)
-                      }
-                    }
-                  }
-                })
-              }, 2000)
+              sessionStorage.setItem('currentURL','groupBooking')
+              this.$router.push('order')
             } else {
               this.$message.info({
                 content: res.data.message
@@ -250,33 +223,9 @@
                 let url = 'information/getDiskcountMv.do'
                 axios.get(url, {params}).then(res => {
                   if (res.data.status == 1) {
-        /*            const {href} = this.$router.resolve({
-                      name: 'order',
-                    })
-                    window.open(href, '_blank')*/
-                    let openLink = this.$refs.openLink
-                    openLink.click();
-                    let s = setInterval(() => {
-                      let url = 'activity/boughtVM.do'
-                      axios.get(url, {
-                        params: {
-                          activityNum: '21'
-                        }
-                      }).then(res => {
-                        if (res.data.status == 1) {
-                          if (res.data.result == 1) {
-                            window.clearInterval(s)
-                            sessionStorage.setItem('step', 'step-one')
-                            this.$router.push('productShare')
-                          } else if (res.data.result == 2) {
-                            window.clearInterval(s)
-                            if (this.teamLeaderCompanyId != '') {
-                              this.$router.go(0)
-                            }
-                          }
-                        }
-                      })
-                    }, 2000)
+                    sessionStorage.setItem('currentURL','activity')
+                    sessionStorage.setItem('companyID',this.teamLeaderCompanyId)
+                    this.$router.push('order')
                   } else {
                     this.$message.info({
                       content: res.data.message
