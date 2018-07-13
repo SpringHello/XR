@@ -190,7 +190,6 @@
     },
     methods: {
       buyNow(index) {
-        /*window.open('order','_blank')*/
         if (this.$store.state.userInfo == null) {
           this.loginModal = true
           return
