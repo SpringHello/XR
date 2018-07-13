@@ -27,6 +27,8 @@ import slider from './myView/slider'
 // 引入错误提示框组件
 import message from './myView/message'
 import md5 from 'md5'
+// 引入复制粘贴组件
+import VueClipboards from 'vue-clipboards'
 
 Vue.prototype.$message = message
 Vue.config.productionTip = false
@@ -45,7 +47,7 @@ Vue.config.productionTip = false
 //axios.defaults.baseURL = 'http://zengxin.xrclouds.net/ruicloud/'
 
 
-axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
+axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
 
 
 //axios.defaults.baseURL = 'http://192.168.3.78:8080/ruicloud/'
@@ -53,10 +55,7 @@ axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
 // axios.defaults.baseURL = 'http://192.168.3.187:8080/ruirados/'
 
 
-axios.defaults.withCredentials = true
-
-//axios.defaults.baseURL = 'http://qiurenliang.xrcloud.net:8080/ruicloud'
-
+//axios.defaults.withCredentials = true
 
 //axios挂载到Vue原型
 Vue.prototype.$http = axios.create({
@@ -123,6 +122,8 @@ Vue.use(carouselItem)
 // 使用滑块组件
 Vue.use(slider)
 Vue.component('chart', ECharts)
+Vue.use(VueClipboards)
+
 
 // 日期原型对象拓展
 Date.prototype.format = function (fmt) {

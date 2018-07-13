@@ -3,11 +3,26 @@
     <!-- banner 轮播图 -->
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
+
+        <my-carousel-item class="carousel-item">
+          <div @click="push('groupBooking')"
+               style="cursor: pointer;background: #FA846E;">
+            <div class="groupBook">
+              <div>
+                <img src="../../assets/img/active/group-booking/gb-banner7.png"/>
+                <p>云主机特惠计划</p>
+                <p>分享赚时长 一年只需<span>59</span>元</p>
+                <p>59元首月开通，<span>0</span>元续费 ，便宜好用尽在</p>
+                <button>点击了解</button>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
         <my-carousel-item class="carousel-item">
           <div @click="push('active_2')"
                style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
-              <img style="position: absolute;left: 2%;top: 5%;" src="../../assets/img/home/home-banner10.png" />
+              <img style="position: absolute;left: 2%;top: 5%;" src="../../assets/img/home/home-banner10.png"/>
               <div>
                 <div>
                   <p>
@@ -47,42 +62,76 @@
             </div>
           </div>
         </my-carousel-item>
-      <!--  <my-carousel-item class="carousel-item">
-          <div @click="push('newNodes_1')"
-               style="cursor: pointer;background:linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
-            <div class="newNodes_1">
-              <div style="width:1200px;margin:0px auto;padding-top: 4%;position: relative;z-index: 1">
-                <img style="position: absolute;top: -10%;left: -20%;z-index: 2"
-                     src="../../assets/img/home/home-banner5.png">
-                <p>北京一区盛大开服
-                  <img style="position: absolute;left: -2%;top: 15%;z-index: 1"
-                       src="../../assets/img/home/home-banner6.png"/></p>
-                <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">布局首都，新购特惠，限时抢购</p>
-                <button>立即体验</button>
-                <img style="position:absolute;left: 45%; top: 12%;z-index: -2;"
-                     src="../../assets/img/home/home-banner7.png">
+        <!--  <my-carousel-item class="carousel-item">
+            <div @click="push('newNodes_1')"
+                 style="cursor: pointer;background:linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
+              <div class="newNodes_1">
+                <div style="width:1200px;margin:0px auto;padding-top: 4%;position: relative;z-index: 1">
+                  <img style="position: absolute;top: -10%;left: -20%;z-index: 2"
+                       src="../../assets/img/home/home-banner5.png">
+                  <p>北京一区盛大开服
+                    <img style="position: absolute;left: -2%;top: 15%;z-index: 1"
+                         src="../../assets/img/home/home-banner6.png"/></p>
+                  <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">布局首都，新购特惠，限时抢购</p>
+                  <button>立即体验</button>
+                  <img style="position:absolute;left: 45%; top: 12%;z-index: -2;"
+                       src="../../assets/img/home/home-banner7.png">
+                </div>
               </div>
             </div>
-          </div>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
-          <div @click="push('newNodes_2')"
-               style="cursor: pointer;background:#87B6FF">
-            <div class="newNodes_2">
-              <img style="position: absolute;z-index: 1" src="../../assets/img/home/home-banner9.png">
-              <div style="width:1200px;margin:0px auto;padding-top: 2%;position: relative;z-index: 1">
-                <p>北方二区（沈阳）盛大开服
-                  <img style="position: absolute;left: 0;top: 22%;z-index: 1"
-                       src="../../assets/img/active/newNodes/text1.png"/></p>
-                <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">春暖花开，活动绽放</p>
-                <p>3折优惠<span style="font-size: 24px">起</span></p>
-                <button>立即体验</button>
-                <img style="position:absolute;left: 58%; top: 1%;z-index: -2;"
-                     src="../../assets/img/home/home-banner8.png">
+          </my-carousel-item>
+          <my-carousel-item class="carousel-item">
+            <div @click="push('newNodes_2')"
+                 style="cursor: pointer;background:#87B6FF">
+              <div class="newNodes_2">
+                <img style="position: absolute;z-index: 1" src="../../assets/img/home/home-banner9.png">
+                <div style="width:1200px;margin:0px auto;padding-top: 2%;position: relative;z-index: 1">
+                  <p>北方二区（沈阳）盛大开服
+                    <img style="position: absolute;left: 0;top: 22%;z-index: 1"
+                         src="../../assets/img/active/newNodes/text1.png"/></p>
+                  <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">春暖花开，活动绽放</p>
+                  <p>3折优惠<span style="font-size: 24px">起</span></p>
+                  <button>立即体验</button>
+                  <img style="position:absolute;left: 58%; top: 1%;z-index: -2;"
+                       src="../../assets/img/home/home-banner8.png">
+  =======
+          <!--  <my-carousel-item class="carousel-item">
+              <div @click="push('newNodes_1')"
+                   style="cursor: pointer;background:linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
+                <div class="newNodes_1">
+                  <div style="width:1200px;margin:0px auto;padding-top: 4%;position: relative;z-index: 1">
+                    <img style="position: absolute;top: -10%;left: -20%;z-index: 2"
+                         src="../../assets/img/home/home-banner5.png">
+                    <p>北京一区盛大开服
+                      <img style="position: absolute;left: -2%;top: 15%;z-index: 1"
+                           src="../../assets/img/home/home-banner6.png"/></p>
+                    <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">布局首都，新购特惠，限时抢购</p>
+                    <button>立即体验</button>
+                    <img style="position:absolute;left: 45%; top: 12%;z-index: -2;"
+                         src="../../assets/img/home/home-banner7.png">
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </my-carousel-item>-->
+            </my-carousel-item>
+            <my-carousel-item class="carousel-item">
+              <div @click="push('newNodes_2')"
+                   style="cursor: pointer;background:#87B6FF">
+                <div class="newNodes_2">
+                  <img style="position: absolute;z-index: 1" src="../../assets/img/home/home-banner9.png">
+                  <div style="width:1200px;margin:0px auto;padding-top: 2%;position: relative;z-index: 1">
+                    <p>北方二区（沈阳）盛大开服
+                      <img style="position: absolute;left: 0;top: 22%;z-index: 1"
+                           src="../../assets/img/active/newNodes/text1.png"/></p>
+                    <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">春暖花开，活动绽放</p>
+                    <p>3折优惠<span style="font-size: 24px">起</span></p>
+                    <button>立即体验</button>
+                    <img style="position:absolute;left: 58%; top: 1%;z-index: -2;"
+                         src="../../assets/img/home/home-banner8.png">
+                  </div>
+  >>>>>>> groupBook
+                </div>
+              </div>
+            </my-carousel-item>-->
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->
@@ -258,7 +307,10 @@
               <dd v-html="showNews.abstracts">
               </dd>
               <dd>
-                  <router-link :to="`article/${showNews.code}.html`" target="_blank" style="width:100px;height:38px;line-height:38px;border:1px solid rgba(56,125,255,1);color:#387DFF;display:block;text-align:center;margin-top:40px;">查看详情</router-link>
+                <router-link :to="`article/${showNews.code}.html`" target="_blank"
+                             style="width:100px;height:38px;line-height:38px;border:1px solid rgba(56,125,255,1);color:#387DFF;display:block;text-align:center;margin-top:40px;">
+                  查看详情
+                </router-link>
               </dd>
             </dl>
           </div>
@@ -268,13 +320,15 @@
         </div>
         <div class="link-list wrap">
           <dl v-for="(item,index) in linkList" :key="index">
-            <dt>{{item.typename}}<router-link :to="`article/${item.id}`">More></router-link></dt>
-            <dd >
+            <dt>{{item.typename}}
+              <router-link :to="`article/${item.id}`">More></router-link>
+            </dt>
+            <dd>
               <ul>
                 <li v-for="(secitem,i) in item.artile" :key="i">
                   <router-link :to="`article/${secitem.code}.html`" target="_blank">
-                  <span class="title">{{secitem.title}}</span>
-                  <span>{{secitem.createtime}}</span>
+                    <span class="title">{{secitem.title}}</span>
+                    <span>{{secitem.createtime}}</span>
                   </router-link>
                 </li>
               </ul>
@@ -327,7 +381,8 @@
   import echarts from 'echarts'
   import china from '@/echarts/china.json'
   import throttle from 'throttle-debounce/throttle'
-import axios from 'axios';
+  import axios from 'axios';
+
 
   export default {
     data() {
@@ -776,113 +831,113 @@ import axios from 'axios';
 
 <style rel="stylesheet/less" lang="less" scoped>
   #home {
-    .wrap{
+    .wrap {
       width: 1200px;
       margin: 0 auto;
     }
-    .title-g{
+    .title-g {
       text-align: center;
       font-size: 28px;
       color: #333333;
       padding-bottom: 26px;
     }
-    .text-desc-g{
+    .text-desc-g {
       text-align: center;
       font-size: 14px;
       color: #999999;
     }
-    .news{
+    .news {
       margin-top: 40px;
-      .header{
+      .header {
         padding-top: 60px;
       }
-      .main{
+      .main {
         margin-top: 60px;
         display: flex;
-        box-shadow:0px 13px 44px -16px rgba(216,216,216,0.79);
-        .main-left{
+        box-shadow: 0px 13px 44px -16px rgba(216, 216, 216, 0.79);
+        .main-left {
           width: 670px;
           padding: 40px 60px;
         }
-        dl{
-          dt{
+        dl {
+          dt {
             height: 60px;;
             position: relative;
             color: #387DFF;
             font-size: 18px;
-            &::after{
+            &::after {
               content: '';
               position: absolute;
               left: 0;
               bottom: 0;
               display: inline-block;
-              width:50px;
-              height:4px;
-              background:rgba(55,125,255,1);
+              width: 50px;
+              height: 4px;
+              background: rgba(55, 125, 255, 1);
             }
           }
-          dd{
-            font-size:14px;
-            color:rgba(102,102,102,1);
-            line-height:28px;
+          dd {
+            font-size: 14px;
+            color: rgba(102, 102, 102, 1);
+            line-height: 28px;
           }
-          dd:nth-of-type(1){
+          dd:nth-of-type(1) {
             margin-top: 20px;
-            overflow : hidden;
+            overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
             -webkit-line-clamp: 7;
             -webkit-box-orient: vertical;
           }
         }
-        .main-right{
-            width:533px;
-            height:432px;
-            background:rgba(231,231,231,1);
+        .main-right {
+          width: 533px;
+          height: 432px;
+          background: rgba(231, 231, 231, 1);
         }
       }
-      .link-list{
+      .link-list {
         margin-top: 100px;
         margin-bottom: 40px;
         display: flex;
         justify-content: space-between;
-        flex-wrap:wrap;
-        dl{
-          background:rgba(255,255,255,1);
+        flex-wrap: wrap;
+        dl {
+          background: rgba(255, 255, 255, 1);
           width: 386px;
           height: 242px;
           overflow: hidden;
-          box-shadow:0px 13px 14px -6px rgba(216,216,216,0.41);
-          dt{
+          box-shadow: 0px 13px 14px -6px rgba(216, 216, 216, 0.41);
+          dt {
             height: 58px;
             padding: 20px;
             background: #7E7F80;
             background: url('../../assets/img/home/news-linklist-bg.png') no-repeat;
-            font-size:18px;
+            font-size: 18px;
             color: #fff;
-            a{
+            a {
               float: right;
               cursor: pointer;
               color: #fff;
             }
           }
-          dd{
-            ul{
-              li{
-                a{
+          dd {
+            ul {
+              li {
+                a {
                   display: block;
                   padding: 20px;
                   font-size: 14px;
-                  color:rgba(102,102,102,1);
+                  color: rgba(102, 102, 102, 1);
                   cursor: pointer;
-                  &:hover{
+                  &:hover {
                     color: #377DFF;
                   }
-                  .title{
+                  .title {
                     display: inline-block;
                     width: 204px;
                     overflow: hidden;
-                    text-overflow:ellipsis;
+                    text-overflow: ellipsis;
                     white-space: nowrap;
                   }
                 }
@@ -923,9 +978,9 @@ import axios from 'axios';
       }
     }
     > .box-container {
-      background:rgba(255,255,255,1);
-      box-shadow:0px 12px 30px -25px rgba(151,151,151,1);
-      border-radius:4px;
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0px 12px 30px -25px rgba(151, 151, 151, 1);
+      border-radius: 4px;
       height: 120px;
       width: 100%;
       margin-bottom: 10px;
@@ -945,10 +1000,10 @@ import axios from 'axios';
           }
           &:hover {
             color: #387DFF;
-            p{
+            p {
               color: #387DFF;
             }
-            span{
+            span {
               color: #387DFF;
             }
           }
@@ -1048,7 +1103,8 @@ import axios from 'axios';
             .fade-enter-active, .fade-leave-active {
               transition: opacity .2s
             }
-            .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */ {
+            .fade-enter, .fade-leave-to /* .fade-leave-active in below version 2.1.8 */
+            {
               display: none;
             }
             .arrow {
@@ -1519,8 +1575,49 @@ import axios from 'axios';
           padding: 10px 20px;
         }
       }
-      >img{
+      > img {
         margin-top: 10px;
+      }
+    }
+  }
+
+  .groupBook {
+    background: #FA846E url("../../assets/img/active/group-booking/gb-banner6.png") no-repeat;
+    height: 400px;
+    padding-top: 70px;
+    > div {
+      width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      img {
+        position: absolute;
+        right: 0;
+        top: -45px;
+      }
+      p {
+        font-size: 24px;
+        font-family: PingFangSC-Regular;
+        color: rgba(255, 255, 255, 1);
+        margin-bottom: 20px;
+        span {
+          color: #FFE177;
+          font-size: 36px;
+        }
+      }
+      p:nth-child(2) {
+        font-size: 36px;
+      }
+      button {
+        font-size: 24px;
+        font-family: PingFangSC-Regular;
+        color: rgba(254, 79, 74, 1);
+        padding: 10px 40px;
+        background: rgba(255, 255, 255, 1);
+        border-radius: 27px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        margin-top: 40px;
       }
     }
   }
