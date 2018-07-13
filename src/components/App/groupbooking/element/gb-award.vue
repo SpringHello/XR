@@ -54,7 +54,7 @@
     padding: 50px 0;
     h2 {
       font-size: 36px;
-      font-family: PingFangSC-Regular;
+      font-family: "Microsoft YaHei","微软雅黑";
       color: rgba(75, 19, 43, 1);
       line-height: 50px;
       text-align: center;
@@ -87,7 +87,7 @@
         .item-title {
           p {
             font-size: 24px;
-            font-family: PingFangSC-Regular;
+            font-family: "Microsoft YaHei","微软雅黑";
             color: rgba(51, 51, 51, 1);
             img {
               margin-right: 18px;
@@ -104,7 +104,7 @@
           padding-left: 60px;
           li{
             font-size:16px;
-            font-family:PingFangSC-Regular;
+            font-family:"Microsoft YaHei","微软雅黑";
             color:rgba(51,51,51,1);
             line-height:22px;
             margin-top: 10px;

@@ -124,7 +124,7 @@
     }
     > p {
       font-size: 14px;
-      font-family: PingFangSC-Regular;
+      font-family: "Microsoft YaHei","微软雅黑";
       color: rgba(102, 102, 102, 1);
       line-height: 20px;
     }
@@ -138,7 +138,7 @@
       border: none;
       outline: none;
       font-size: 14px;
-      font-family: PingFangSC-Regular;
+      font-family: "Microsoft YaHei","微软雅黑";
       color: rgba(255, 255, 255, 1);
       padding: 6px 27px;
       background: rgba(253, 140, 115, 1);

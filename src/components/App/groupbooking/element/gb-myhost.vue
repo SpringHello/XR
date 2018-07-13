@@ -45,7 +45,7 @@
       text-align: center;
       h2 {
         font-size: 36px;
-        font-family: PingFangSC-Regular;
+        font-family: "Microsoft YaHei","微软雅黑";
         color: rgba(75, 19, 43, 1);
         font-weight: normal;
         text-align: center;
