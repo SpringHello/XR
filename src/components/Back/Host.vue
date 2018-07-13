@@ -129,7 +129,7 @@
                 </div>
 
                 <!--<div v-for="(item,index) in openHost" v-if="item.status==1" :key="index" :class="{select:item.select}"-->
-                <div v-for="(item,index) in openHost" :key="index" :class="{select:item.select}"
+                <div v-for="(item,index) in openHost" v-if="item.status!=2" :key="index" :class="{select:item.select}"
                      @click="toggle(item)"
                      style="margin-bottom: 20px;height:228px;">
                   <Card style="width:375px;height:228px;">
@@ -1041,8 +1041,6 @@
         }
       },
       stop(item) {
-        this.loadingMessage = '正在停止主机'
-        this.loading = true
         item.select = false
         item.status = 2
         this.$http.get('information/stopVirtualMachine.do', {
@@ -1050,16 +1048,14 @@
             VMId: item.computerid,
             forced: true
           }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            item.status = 2
+            this.$Message.info(response.data.message)
+          } else {
+            item.status = 1
+          }
         })
-          .then(response => {
-            this.loading = false
-            if (response.status == 200 && response.data.status == 1) {
-              item.status = 2
-              this.$Message.info(response.data.message)
-            } else {
-              item.status = 1
-            }
-          })
       },
       start(item) {
         this.loadingMessage = '正在启动主机'

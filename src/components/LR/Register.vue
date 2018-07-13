@@ -541,7 +541,7 @@
             })
           } else {
             this.codePlaceholder = '发送验证码'
-            this.$Message.error('验证码校验错误，请点击获取图片验证码！')
+            this.$Message.error(response.data.message)
           }
         })
       }),

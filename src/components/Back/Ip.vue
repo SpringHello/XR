@@ -203,7 +203,7 @@
         <Form :model="adjustForm" label-position="left">
           <Form-item label="带宽" style="width: 80%">
             <div style="width:300px;display: inline-block;vertical-align: middle;margin-left: 11px">
-              <Slider v-model='adjustForm.brand' show-input :min='adjustForm.minBrand'></Slider>
+              <Slider v-model='adjustForm.brand' show-input :min='1'></Slider>
             </div>
             <span>Mbps</span>
           </Form-item>

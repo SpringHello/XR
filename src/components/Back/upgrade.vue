@@ -16,7 +16,7 @@
             <p class="content-title">CPU</p>
             <div class="cpu">
                 <span v-for="item in zoneInfo.kernelList"
-                      :class="{select:item.value==CPUNum,disabled:item.value<currentCPUNum}"
+                      :class="{select:item.value==CPUNum}"
                       @click="changeCPU(item.value)">{{item.value}}核</span>
             </div>
             <p class="content-title">内存</p>
@@ -410,10 +410,10 @@
     },
     methods: {
       changeCPU(cpu){
-        if (this.currentCPUNum > cpu) {
+        /*if (this.currentCPUNum > cpu) {
           this.$Message.info("无法选择更低的配置")
           return
-        }
+        }*/
         this.zoneInfo.kernelList.forEach(item => {
           if (item.value == cpu) {
             this.RAMSize = this.currentRAMSize > item.RAMList[0].value ? this.currentRAMSize : item.RAMList[0].value
@@ -423,10 +423,10 @@
         this.calCost()
       },
       changeCache(ram){
-        if (ram < this.currentRAMSize) {
+        /*if (ram < this.currentRAMSize) {
           this.$Message.info("无法选择更低的配置")
           return
-        }
+        }*/
         this.RAMSize = ram
         this.calCost()
       },
