@@ -1,7 +1,7 @@
 <template>
   <div class="background">
     <div class="wrapper">
-        <span><router-link to="expenses" style="color:rgba(17, 17, 17, 0.43);margin: 0 5px;">订单确认</router-link> /  <span style="margin-left: 5px;"> 支付</span></span>
+      <span><router-link to="expenses" style="color:rgba(17, 17, 17, 0.43);margin: 0 5px;">订单确认</router-link> /  <span style="margin-left: 5px;"> 支付</span></span>
       <div class="content">
         <span>支付</span>
         <div style="padding:40px 0px 140px;">
@@ -54,7 +54,7 @@
       if (this.payResult == undefined) {
         this.$router.replace('overview')
       }
-
+      this.back()
       this.$http.get('user/getKfAdd.do').then(response => {
         this.kfURL = response.data.result
         sessionStorage.setItem('kf', response.data.result)
@@ -68,6 +68,18 @@
       },
       kf() {
         window.open(this.kfURL)
+      },
+      back() {
+        let url = sessionStorage.getItem('currentURL')
+        let companyID  = sessionStorage.getItem('companyID')? sessionStorage.getItem('companyID') : ''
+        sessionStorage.removeItem('currentURL')
+        sessionStorage.removeItem('companyID')
+        if (url != null) {
+          setTimeout(() => {
+            this.$router.push({ name: url, params: { companyId: companyID }})
+          }, 1000)
+        } else {
+        }
       }
     },
   }

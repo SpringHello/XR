@@ -48,7 +48,7 @@
       text-align: center;
       h2 {
         font-size: 36px;
-        font-family: PingFangSC-Regular;
+        font-family: "Microsoft YaHei","微软雅黑";
         color: rgba(75, 19, 43, 1);
         line-height: 50px;
         position: relative;
@@ -67,7 +67,7 @@
       }
       > p {
         font-size: 16px;
-        font-family: PingFangSC-Regular;
+        font-family: "Microsoft YaHei","微软雅黑";
         color: rgba(75, 19, 43, 1);
         margin-top: 10px;
       }
@@ -80,7 +80,7 @@
           padding: 19px 30px;
           p {
             font-size: 14px;
-            font-family: PingFangSC-Regular;
+            font-family: "Microsoft YaHei","微软雅黑";
             color: #999999;
             line-height: 32px;
             span {

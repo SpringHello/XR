@@ -39,7 +39,7 @@ export default {
   padding-bottom: 50px;
   h2 {
     font-size: 36px;
-    font-family: PingFangSC-Regular;
+    font-family: "Microsoft YaHei","微软雅黑";
     color: rgba(75, 19, 43, 1);
     line-height: 50px;
     text-align: center;
@@ -69,13 +69,13 @@ export default {
   .container-text {
     .item {
       display: inline-flex;
-      margin-right:50px; 
+      margin-right:50px;
       margin-bottom: 24px;
       .index {
         width: 22px;
         line-height:20px;
         font-size: 14px;
-        font-family: JCHEadA;
+        font-family: "Microsoft YaHei","微软雅黑";
         color: rgba(252, 169, 135, 1);
         line-height: 14px;
         font-weight: 900
@@ -83,7 +83,7 @@ export default {
       p {
         width: 360px;
         font-size:14px;
-        font-family:PingFangSC-Regular;
+        font-family:"Microsoft YaHei","微软雅黑";
         color:rgba(102,102,102,1);
         line-height:20px;
       }

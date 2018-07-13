@@ -142,7 +142,7 @@
       text-align: center;
       h2 {
         font-size: 36px;
-        font-family: PingFangSC-Regular;
+        font-family: "Microsoft YaHei","微软雅黑";
         color: rgba(75, 19, 43, 1);
         font-weight: normal;
         text-align: center;
@@ -166,7 +166,7 @@
         padding-left: 30px;
         height: 60px;
         font-size: 20px;
-        font-family: PingFangSC-Regular;
+        font-family: "Microsoft YaHei","微软雅黑";
         color: #fff;
         line-height: 60px;
         text-align: left;
@@ -200,7 +200,7 @@
       .participation {
         > p {
           font-size: 16px;
-          font-family: PingFangSC-Regular;
+          font-family: "Microsoft YaHei","微软雅黑";
           color: rgba(75, 19, 43, 1);
           margin-top: 10px;
         }
@@ -214,7 +214,7 @@
             border-radius: 2px;
             width: 460px;
             font-size: 14px;
-            font-family: PingFangSC-Regular;
+            font-family: "Microsoft YaHei","微软雅黑";
             color: rgba(153, 153, 153, 1);
             line-height: 20px;
             text-overflow: ellipsis;
@@ -229,7 +229,7 @@
             outline: none;
             cursor: pointer;
             font-size: 14px;
-            font-family: PingFangSC-Regular;
+            font-family: "Microsoft YaHei","微软雅黑";
             color: rgba(255, 255, 255, 1);
             padding: 8px 17px;
             background: #FD8C73;
@@ -245,7 +245,7 @@
             padding: 19px 30px;
             p {
               font-size: 14px;
-              font-family: PingFangSC-Regular;
+              font-family: "Microsoft YaHei","微软雅黑";
               color: rgba(0, 0, 0, 1);
               line-height: 32px;
             }
@@ -269,7 +269,7 @@
               border: none;
               outline: none;
               font-size: 14px;
-              font-family: PingFangSC-Regular;
+              font-family: "Microsoft YaHei","微软雅黑";
               padding: 6px 20px;
               color: rgba(255, 255, 255, 1);
               background: rgba(253, 140, 115, 1);
@@ -285,7 +285,7 @@
     > p {
       margin-top: 40px;
       font-size: 16px;
-      font-family: PingFangSC-Regular;
+      font-family: "Microsoft YaHei","微软雅黑";
       color: rgba(102, 102, 102, 1);
     }
     ul {
@@ -306,7 +306,7 @@
       background: rgba(254, 248, 246, 1);
       border-radius: 2px;
       font-size: 14px;
-      font-family: PingFangSC-Regular;
+      font-family: "Microsoft YaHei","微软雅黑";
       color: rgba(153, 153, 153, 1);
       span {
         color: #000000;
@@ -320,7 +320,7 @@
       border: none;
       outline: none;
       font-size: 14px;
-      font-family: PingFangSC-Regular;
+      font-family: "Microsoft YaHei","微软雅黑";
       color: #666666;
       padding: 6px 20px;
       background: #FFF;

@@ -190,6 +190,7 @@
     },
     methods: {
       buyNow(index) {
+        /*window.open('order','_blank')*/
         if (this.$store.state.userInfo == null) {
           this.loginModal = true
           return
@@ -207,31 +208,8 @@
           let url = 'information/getDiskcountMv.do'
           axios.get(url, {params}).then(res => {
             if (res.data.status == 1) {
-              const {href} = this.$router.resolve({
-                name: 'order',
-              })
-              window.open(href, '_blank')
-              let s = setInterval(() => {
-                let url = 'activity/boughtVM.do'
-                axios.get(url, {
-                  params: {
-                    activityNum: '21'
-                  }
-                }).then(res => {
-                  if (res.data.status == 1) {
-                    if (res.data.result == 1) {
-                      window.clearInterval(s)
-                      sessionStorage.setItem('step', 'step-one')
-                      this.$router.push('productShare')
-                    } else if (res.data.result == 2) {
-                      window.clearInterval(s)
-                      if (this.teamLeaderCompanyId != '') {
-                        this.$router.go(0)
-                      }
-                    }
-                  }
-                })
-              }, 2000)
+              sessionStorage.setItem('currentURL','groupBooking')
+              this.$router.push('order')
             } else {
               this.$message.info({
                 content: res.data.message
@@ -245,31 +223,9 @@
                 let url = 'information/getDiskcountMv.do'
                 axios.get(url, {params}).then(res => {
                   if (res.data.status == 1) {
-                    const {href} = this.$router.resolve({
-                      name: 'order',
-                    })
-                    window.open(href, '_blank')
-                    let s = setInterval(() => {
-                      let url = 'activity/boughtVM.do'
-                      axios.get(url, {
-                        params: {
-                          activityNum: '21'
-                        }
-                      }).then(res => {
-                        if (res.data.status == 1) {
-                          if (res.data.result == 1) {
-                            window.clearInterval(s)
-                            sessionStorage.setItem('step', 'step-one')
-                            this.$router.push('productShare')
-                          } else if (res.data.result == 2) {
-                            window.clearInterval(s)
-                            if (this.teamLeaderCompanyId != '') {
-                              this.$router.go(0)
-                            }
-                          }
-                        }
-                      })
-                    }, 2000)
+                    sessionStorage.setItem('currentURL','activity')
+                    sessionStorage.setItem('companyID',this.teamLeaderCompanyId)
+                    this.$router.push('order')
                   } else {
                     this.$message.info({
                       content: res.data.message
@@ -384,7 +340,7 @@
     background: linear-gradient(180deg, rgba(254, 239, 231, 1), rgba(255, 255, 255, 1));
     > p {
       font-size: 20px;
-      font-family: PingFangSC-Regular;
+      font-family: "Microsoft YaHei", "微软雅黑";
       color: rgba(75, 19, 43, 1);
       padding-bottom: 50px;
       width: 100%;
@@ -403,7 +359,7 @@
           height: 60px;
           background: linear-gradient(90deg, rgba(254, 79, 74, 1), rgba(252, 169, 135, 1));
           font-size: 20px;
-          font-family: PingFangSC-Regular;
+          font-family: "Microsoft YaHei", "微软雅黑";
           color: rgba(255, 255, 255, 1);
           line-height: 28px;
           padding: 16px 30px;
@@ -415,7 +371,7 @@
           border-bottom: 1px solid #DFE2F4;
           li {
             font-size: 30px;
-            font-family: PingFangSC-Regular;
+            font-family: "Microsoft YaHei", "微软雅黑";
             color: rgba(0, 0, 0, 1);
             line-height: 42px;
             border-right: 1px solid #DFE2F4;
@@ -423,7 +379,7 @@
             text-align: center;
             span {
               font-size: 16px;
-              font-family: PingFangSC-Regular;
+              font-family: "Microsoft YaHei", "微软雅黑";
               color: rgba(102, 102, 102, 1);
               line-height: 22px;
             }
@@ -444,7 +400,7 @@
           }
           > span {
             font-size: 16px;
-            font-family: PingFangSC-Regular;
+            font-family: "Microsoft YaHei", "微软雅黑";
             color: rgba(102, 102, 102, 1);
             line-height: 22px;
             margin-right: 20px;
@@ -453,12 +409,12 @@
           }
           p {
             font-size: 36px;
-            font-family: PingFang-SC-Bold;
+            font-family: "Microsoft YaHei", "微软雅黑";
             color: rgba(254, 79, 74, 1);
             margin-top: 20px;
             > span {
               font-size: 24px;
-              font-family: PingFangSC-Regular;
+              font-family: "Microsoft YaHei", "微软雅黑";
               color: rgba(102, 102, 102, 1);
               line-height: 33px;
             }
@@ -482,7 +438,7 @@
             margin-top: 20px;
             background: rgba(254, 79, 74, 1);
             font-size: 20px;
-            font-family: PingFangSC-Regular;
+            font-family: "Microsoft YaHei", "微软雅黑";
             color: rgba(255, 255, 255, 1);
             line-height: 28px;
             padding: 10px 48px;
@@ -512,22 +468,22 @@
         -webkit-box-shadow: 0 0 0px 1000px white inset;
       }
       &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-        font-family: PingFangSC-Regular;
+        font-family: "Microsoft YaHei", "微软雅黑";
         font-size: 14px;
         color: #B6B6B6;
       }
       &::-moz-placeholder { /* Firefox 19+ */
-        font-family: PingFangSC-Regular;
+        font-family: "Microsoft YaHei", "微软雅黑";
         font-size: 14px;
         color: #B6B6B6;
       }
       &:-ms-input-placeholder { /* IE 10+ */
-        font-family: PingFangSC-Regular;
+        font-family: "Microsoft YaHei", "微软雅黑";
         font-size: 14px;
         color: #B6B6B6;
       }
       &:-moz-placeholder { /* Firefox 18- */
-        font-family: PingFangSC-Regular;
+        font-family: "Microsoft YaHei", "微软雅黑";
         font-size: 14px;
         color: #B6B6B6;
       }
@@ -536,8 +492,7 @@
       display: block;
       width: 80%;
       margin: 0px auto;
-      font-family: PingFangSC-Regular;
-      font-family: PingFangSC-Regular;
+      font-family: "Microsoft YaHei", "微软雅黑";
       font-size: 14px;
       color: #B6B6B6;
       font-size: 14px;
@@ -559,7 +514,7 @@
       //background: #4990E2;
       //border: 1px solid white;
       border-radius: 3px;
-      font-family: PingFangSC-Regular;
+      font-family: "Microsoft YaHei", "微软雅黑";
       font-size: 11px;
       color: #FFFFFF;
       letter-spacing: 0.71px;
@@ -577,7 +532,7 @@
       height: 45px;
       background-color: #4990E2;
       border: none;
-      font-family: PingFangSC-Medium;
+      font-family: "Microsoft YaHei", "微软雅黑";
       font-size: 14px;
       color: #FFFFFF;
       letter-spacing: 0.83px;
@@ -620,7 +575,7 @@
     }
     span {
       vertical-align: middle;
-      font-family: PingFangSC-Regular;
+      font-family: "Microsoft YaHei", "微软雅黑";
       font-size: 14px;
       letter-spacing: 0.83px;
     }
@@ -634,7 +589,7 @@
     }
     > p {
       font-size: 14px;
-      font-family: PingFangSC-Regular;
+      font-family: "Microsoft YaHei", "微软雅黑";
       color: rgba(102, 102, 102, 1);
       line-height: 20px;
       span {
@@ -652,7 +607,7 @@
       border: none;
       outline: none;
       font-size: 14px;
-      font-family: PingFangSC-Regular;
+      font-family: "Microsoft YaHei", "微软雅黑";
       color: rgba(255, 255, 255, 1);
       padding: 6px 27px;
       background: rgba(253, 140, 115, 1);

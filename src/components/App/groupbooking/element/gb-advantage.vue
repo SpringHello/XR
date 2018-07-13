@@ -45,7 +45,7 @@
     padding: 50px 0;
     h2 {
       font-size: 36px;
-      font-family: PingFangSC-Regular;
+      font-family: "Microsoft YaHei","微软雅黑";
       color: rgba(75, 19, 43, 1);
       line-height: 50px;
       text-align: center;
@@ -74,13 +74,13 @@
         }
         li:nth-child(2){
           font-size:24px;
-          font-family:PingFangSC-Semibold;
+          font-family:"Microsoft YaHei","微软雅黑";
           color:rgba(253,140,115,1);
           margin-top: 44px;
         }
         li:nth-child(3){
           font-size:14px;
-          font-family:PingFangSC-Regular;
+          font-family:"Microsoft YaHei","微软雅黑";
           color:rgba(102,102,102,1);
           margin-top: 21px;
         }

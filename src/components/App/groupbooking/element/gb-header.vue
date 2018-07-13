@@ -21,7 +21,8 @@
 <style rel="stylesheet/less" lang="less" scoped>
   .background {
     height: 360px;
-    background: #FFF url('../../../../assets/img/active/group-booking/gb-banner2.png') no-repeat;
+    width: 1920px;
+    background: #FA846E url('../../../../assets/img/active/group-booking/gb-banner2.png') no-repeat;
     .center {
       width: 1200px;
       height: 100%;
@@ -37,7 +38,7 @@
         top: 90%;
       }
       p {
-        font-family: PingFangSC-Regular;
+        font-family: "Microsoft YaHei","微软雅黑";
         color: rgba(255, 255, 255, 1);
       }
       p:nth-child(3) {

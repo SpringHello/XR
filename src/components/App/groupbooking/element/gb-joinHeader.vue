@@ -38,7 +38,8 @@
 <style rel="stylesheet/less" lang="less" scoped>
   .background {
     height: 360px;
-    background: #FFF url('../../../../assets/img/active/group-booking/gb-banner2.png') no-repeat;
+    width: 1920px;
+    background: #FA846E url('../../../../assets/img/active/group-booking/gb-banner2.png') no-repeat;
     .center {
       width: 1200px;
       height: 100%;
@@ -48,7 +49,7 @@
       position: relative;
       > p {
         font-size: 24px;
-        font-family: PingFangSC-Regular;
+        font-family: "Microsoft YaHei","微软雅黑";
         color: rgba(255, 255, 255, 1);
       }
       .banner-button {
@@ -56,7 +57,7 @@
         position: relative;
         > span {
           font-size: 24px;
-          font-family: PingFangSC-Regular;
+          font-family: "Microsoft YaHei","微软雅黑";
           color: rgba(255, 255, 255, 1);
           position: absolute;
           right: 46%;
