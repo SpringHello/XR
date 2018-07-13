@@ -408,7 +408,6 @@
                   nativeOn: {
                     click: () => {
                       localStorage.setItem('serviceoffername', params.row.serviceoffername)
-                      localStorage.setItem('zoneid', params.row.zoneid)
                       localStorage.setItem('virtualMachineid', params.row.computerid)
                       sessionStorage.setItem('databaseName', params.row.computername)
                       sessionStorage.setItem('endtime', params.row.endtime)
