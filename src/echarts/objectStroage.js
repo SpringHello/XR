@@ -30,11 +30,14 @@ export default {
     },
     yAxis: {
         axisLabel: {
-            formatter: '{value}%'
+            formatter: '{value}MB'
         },
         max: function(value) {
-          console.log(typeof(value.max));
-          return Number(value.max) + 20;
+          if(value/ 1024 >1){
+            return value / 1024;
+          }else {
+            return value;
+          }
         }
     },
     series: [

@@ -10,7 +10,8 @@ export default {
                 opacity: 0.5,
                 type: 'dashed'
             },
-        }
+        },
+      formatter: "{a} <br/>{b} : {c}次"
     },
     grid: {
         left: '3%',
@@ -24,11 +25,6 @@ export default {
             saveAsImage: {show:true,pixelRatio: 2}
         }
     },
-  legend:{
-    data:['流量1','流量2'],
-    align:'auto',
-    orient:'horizontal'
-  },
     xAxis: {
         type: 'category',
         boundaryGap: false,
@@ -36,9 +32,12 @@ export default {
     },
     yAxis: {
         axisLabel: {
-            formatter: '{value} %'
+            formatter: '{value}'
         },
-        max:'100'
+      max: function(value) {
+        console.log(typeof(value.max));
+        return Number(value.max) + 20;
+      }
     },
     series: [
         {

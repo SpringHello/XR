@@ -41,7 +41,7 @@
             <div class="center_chart">
             <div style="display:flex;padding-bottom:5px;">
             <div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>
-            <!--<div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>-->
+            <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
             </div>
             <div class="chart">
               <ul class="objectList">
@@ -59,7 +59,7 @@
             <div class="center_chart">
               <div style="display:flex;padding-bottom:5px;margin-top:50px;">
                 <div style="width:50%;font-size:16px;color:#333333;">请求次数</div>
-                <!--<div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>-->
+                <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
               </div>
               <div class="chart" >
                 <ul class="objectList">
@@ -294,7 +294,7 @@
       changeByte(val){
         let byte = [];
         val.forEach(item=>{
-          byte.push(item / 1073741824 > 1   ? ((item / 1073741824).toFixed(2) ):  item / 1048576 > 1 ? ((item / 1048576).toFixed(2))   : ((item /1024).toFixed(2) ))
+          byte.push(  item / 1048576 > 1 ? ((item / 1048576).toFixed(2))   : 0)
         })
        return byte;
       },

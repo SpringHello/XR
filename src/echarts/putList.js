@@ -10,7 +10,8 @@ export default {
                 opacity: 0.5,
                 type: 'dashed'
             },
-        }
+        },
+      formatter: "{a} <br/>{b} : {c}MB"
     },
     grid: {
         left: '3%',
@@ -18,11 +19,6 @@ export default {
         bottom: '3%',
         containLabel: true
     },
-  legend:{
-    data:['流量1','流量2'],
-    align:'auto',
-    orient:'horizontal'
-  },
     toolbox: {
       show:true,
         feature: {
@@ -36,9 +32,9 @@ export default {
     },
     yAxis: {
         axisLabel: {
-            formatter: '{value} %'
+            formatter: '{value} 次'
         },
-        max:'100'
+
     },
     series: [
         {

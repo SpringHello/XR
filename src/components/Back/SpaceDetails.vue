@@ -65,7 +65,7 @@
                 </div>
                 <div class="chart">
                   <ul class="objectList">
-                    <li :class="indexs == index? 'objectItems':'objectItem'" v-for="(item,index) in dayList" :key="index" @click="dayClick(index)">{{item.value}}</li>
+                    <li :class=" requestIndex== index? 'objectItems':'objectItem'" v-for="(item,index) in requestList" :key="index" @click="requestClick(index)">{{item.value}}</li>
                   </ul>
                   <div class="chart-rig">
                     <Button type="primary" size="small" style="padding:5px 15px;" @click="dowloda('rwPolar')">导出</Button>
@@ -74,7 +74,7 @@
                     </ul>
                   </div>
                 </div>
-                <chart ref="rwPolar" class="echarts" :options="rwPolar" ></chart>
+                <chart ref="rwNumber" class="echarts" :options="rwNumber"></chart>
               </div>
             </div>
           <!--下载流量情况-->
@@ -86,7 +86,7 @@
               </div>
               <div class="chart" >
                 <ul class="objectList">
-                  <li :class="requestIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in requestList" :key="index" @click="requestClick(index)">{{item.value}}</li>
+                  <li :class="indexs == index? 'objectItems':'objectItem'" v-for="(item,index) in dayList" :key="index" @click="dayClick(index)">{{item.value}}</li>
                 </ul>
                 <div class="chart-rig">
                    <Button type="primary" size="small" style="padding:5px 15px;" @click="dowloda('rwNumber')">导出</Button>
@@ -95,7 +95,7 @@
                   </ul>
                 </div>
               </div>
-              <chart ref="rwNumber" class="echarts" :options="rwNumber"></chart>
+              <chart ref="rwPolar" class="echarts" :options="rwPolar" ></chart>
             </div>
           </div>
         </div>
@@ -1961,7 +1961,7 @@
       changeByte(val){
         let byte = [];
         val.forEach(item=>{
-          byte.push(item / 1073741824 > 1   ? ((item / 1073741824).toFixed(2) ):  item / 1048576 > 1 ? ((item / 1048576).toFixed(2))   : ((item /1024).toFixed(2) ))
+          byte.push( item / 1048576 > 1 ? ((item / 1048576).toFixed(2))   : 0)
         })
         return byte;
       },
@@ -2019,7 +2019,7 @@
         });
         let a = document.createElement('a');
         document.body.appendChild(a);
-        var blob =this.checkImg(img);
+        let blob =this.checkImg(img);
         a.style.display = 'none';
         let url = URL.createObjectURL(blob);
         a.href = url;
