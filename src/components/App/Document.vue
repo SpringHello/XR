@@ -1,5 +1,5 @@
 <template>
-  <div id="document" style="background:rgba(249,249,249,1);">
+  <div id="document">
     <!--帮助文档-->
     <div class="document">
       <div class="dotitle">
@@ -77,6 +77,10 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  #document {
+    background-color: #fff;
+  }
+
   .document {
     width: 1200px;
     margin: 0 auto;
@@ -111,10 +115,8 @@
         width: 208px;
         height: 380px;
         border: 1px solid #d8d8d8;
-        box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
-        &.active {
-          box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.2);
-          transition: all .3s;
+        &:hover {
+          box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
         }
         > .header {
           height: 60px;

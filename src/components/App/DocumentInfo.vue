@@ -274,9 +274,6 @@
       }
       #main {
         position: absolute;
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
         top: 0px;
         left: 300px;
         width: 320px;
@@ -286,6 +283,10 @@
         > div {
           width: 140px;
           margin-bottom: 30px;
+          float: left;
+          &:nth-child(2n) {
+            float: right;
+          }
           > span {
             font-size: 18px;
             color: rgba(51, 51, 51, 1);
@@ -309,6 +310,11 @@
     #right {
       width: 900px;
       padding: 20px;
+      h1 {
+        span {
+          font-size: 20px !important;
+        }
+      }
     }
     #main {
       li {

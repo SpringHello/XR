@@ -298,10 +298,10 @@
             title: '文档',
             path: '/ruicloud/document'
           },
-          {
+          /*{
             title: '资讯',
             path: '/ruicloud/article/1'
-          },
+          },*/
           {
             title: '关于我们',
             path: '/ruicloud/about'
