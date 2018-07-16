@@ -103,11 +103,14 @@
         this.dateCheck = 3;
         this.page = 1;
         //proxy拦截数据PS:用得还是太辣鸡了
-      // var lets = new Proxy({},{
-      //     get : function(){
-      //       return  val;
-      //     }
-      //   })
+        // var lets = new Proxy({},{
+        //     get : function(){
+        //       return  val;
+        //     },
+        //         set: function(){
+        //
+        //         }
+        //   })
           //获取前七天
           var weeks = new Date();
           var now = new Date(weeks.getTime() - 7 * 24 * 3600 * 1000);

@@ -24,10 +24,15 @@ export default {
             saveAsImage: {show:true,pixelRatio: 2}
         }
     },
+  legend:{
+    data:['流量1','流量2'],
+    align:'auto',
+    orient:'horizontal'
+  },
     xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: ['04/28', '04/28', '04/28', '04/28', '04/28', '04/28', '04/28']
+        data: ['---', '---', '---', '---', '---', '---', '---']
     },
     yAxis: {
         axisLabel: {
@@ -52,7 +57,7 @@ export default {
                 offset: 1,
                 color: '#ffe'
             }])}},
-            data: [20, 25, 35, 45, 55, 65, 75]
+            data: [0, 0, 0, 0, 0, 0, 0]
         },
     ]
 }

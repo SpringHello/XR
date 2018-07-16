@@ -18,6 +18,11 @@ export default {
         bottom: '3%',
         containLabel: true
     },
+  legend:{
+    data:['流量1','流量2'],
+    align:'auto',
+    orient:'horizontal'
+  },
     toolbox: {
       show:true,
         feature: {
@@ -27,7 +32,7 @@ export default {
     xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: ['04/28', '04/28', '04/28', '04/28', '04/28', '04/28', '04/28']
+        data: ['---', '---', '---', '---', '---', '---', '---']
     },
     yAxis: {
         axisLabel: {
@@ -52,7 +57,7 @@ export default {
                 offset: 1,
                 color: '#ffe'
             }])}},
-            data: [20, 25, 35, 45, 55, 65, 75]
+            data: [0, 0, 0, 0, 0, 0, 0]
         },
     ]
 }

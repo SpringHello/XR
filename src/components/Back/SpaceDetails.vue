@@ -41,12 +41,16 @@
             </div>
           </div>
           <div class="space_one">
-            <p>流量</p>
-            <div class="space_text">0KB</div>
+            <div style="display: inline-block;width: 97%;margin-left:10px;">
+              <p>流量</p>
+              <div style="font-size:36px;color:#333333;margin-top:10px;">{{flow}}</div>
+            </div>
           </div>
           <div class="space_one">
-            <p>http请求次数</p>
-            <div class="space_text">0次</div>
+            <div style="display: inline-block;width: 97%;margin-left:10px;">
+              <p>http请求次数</p>
+              <div style="font-size:36px;color:#333333;margin-top:10px;">{{frequency}}次</div>
+            </div>
           </div>
         </div>
         <div class="monitor" :class="{monitors:!monitorHide}" @click="monitorHide = !monitorHide"  style="color: #2A99F2;">{{monitorHide?'查看监控':'收起'}}</div>
@@ -57,20 +61,20 @@
               <div class="center_chart">
                 <div style="display:flex;padding-bottom:5px;">
                   <div style="width:50%;font-size:16px;color:#333333;">请求次数</div>
-                  <div style="width:48%;text-align:right;color:#666666;font-size: 14px;">2017.11.25</div>
+                  <div style="width:46%;text-align:right;color:#666666;font-size: 14px;">2017.11.25</div>
                 </div>
                 <div class="chart">
                   <ul class="objectList">
-                    <li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>
+                    <li :class="indexs == index? 'objectItems':'objectItem'" v-for="(item,index) in dayList" :key="index" @click="dayClick(index)">{{item.value}}</li>
                   </ul>
                   <div class="chart-rig">
-                    <!--<Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button>-->
-                    <ul class="objectList">
+                    <Button type="primary" size="small" style="padding:5px 15px;" @click="dowloda('rwPolar')">导出</Button>
+                    <ul class="objectListT">
                       <li class="objectItems">折线</li>
                     </ul>
                   </div>
                 </div>
-                <chart class="echarts" :options="rwPolar" ></chart>
+                <chart ref="rwPolar" class="echarts" :options="rwPolar" ></chart>
               </div>
             </div>
           <!--下载流量情况-->
@@ -78,20 +82,20 @@
             <div class="center_chart">
               <div style="display:flex;padding-bottom:5px;">
                 <div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>
-                <div style="width:50%;text-align:right;color:#666666;font-size: 14px;">2017.11.25</div>
+                <div style="width:46%;text-align:right;color:#666666;font-size: 14px;">2017.11.25</div>
               </div>
               <div class="chart" >
                 <ul class="objectList">
-                  <li :class="requestIndex == item.label? 'objectItems':'objectItem'" v-for="item in requestList" :key="item.label" @click="requestClick(item.label)">{{item.value}}</li>
+                  <li :class="requestIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in requestList" :key="index" @click="requestClick(index)">{{item.value}}</li>
                 </ul>
                 <div class="chart-rig">
-                  <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button> -->
-                  <ul class="objectList">
+                   <Button type="primary" size="small" style="padding:5px 15px;" @click="dowloda('rwNumber')">导出</Button>
+                  <ul class="objectListT">
                     <li class="objectItems">折线</li>
                   </ul>
                 </div>
               </div>
-              <chart class="echarts" :options="rwNumber"></chart>
+              <chart ref="rwNumber" class="echarts" :options="rwNumber"></chart>
             </div>
           </div>
         </div>
@@ -236,41 +240,42 @@
         <span>操作</span>
       </div>
       <div class="upload_Box" >
-        <cunt ref="upload"
-          :on-success="handleSuccess"
-           :onFileProcess="handleUpload"
-            :max-size="1048576"
-          :data="fileUpdata"
-          action="http://192.168.3.253:8080/ruirados/object/uploadObject.do">
-          <div class="upload_text">
-            <Icon type="ios-upload-outline"></Icon>
-            <span>选择文件</span>
-            <p style="margin-top:5px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>
-          </div>
-        </cunt>
-        <!--<Upload-->
-          <!--ref="upload"-->
-          <!--:show-upload-list="true"-->
-          <!--:on-success="handleSuccess"-->
-          <!--:max-size="1048576"-->
-          <!--:on-format-error="handleFormatError"-->
-          <!--:on-exceeded-size="handleMaxSize"-->
-          <!--:before-upload="handleBeforeUpload"-->
-          <!--:on-error="handleError"-->
-          <!--:on-progress="handleUpload"-->
-          <!--multiple-->
-          <!--name="uploadFile"-->
+        <!--<cunt ref="upload"-->
+          <!--:onSuccess="handleSuccess"-->
+           <!--:onFileProcess="handleUpload"-->
+            <!--:maxSize="1048576"-->
+            <!--:onError="handleError"-->
           <!--:data="fileUpdata"-->
-          <!--type="drag"-->
-          <!--action="http://192.168.3.109:8080/ruirados/object/uploadObject.do"-->
-          <!--class="upload_model"-->
-        <!--&gt;-->
+          <!--action="http://192.168.3.253:8080/ruirados/object/uploadObject.do">-->
           <!--<div class="upload_text">-->
             <!--<Icon type="ios-upload-outline"></Icon>-->
             <!--<span>选择文件</span>-->
-            <!--<p style="margin-top:10px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>-->
+            <!--<p style="margin-top:5px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>-->
           <!--</div>-->
-        <!--</Upload>-->
+        <!--</cunt>-->
+        <Upload
+          ref="upload"
+          :show-upload-list="true"
+          :on-success="handleSuccess"
+          :max-size="1048576"
+          :on-format-error="handleFormatError"
+          :on-exceeded-size="handleMaxSize"
+          :before-upload="handleBeforeUpload"
+          :on-error="handleError"
+          :on-progress="handleUpload"
+          multiple
+          name="uploadFile"
+          :data="fileUpdata"
+          type="drag"
+          action="object/uploadObject.do"
+          class="upload_model"
+        >
+          <div class="upload_text">
+            <Icon type="ios-upload-outline"></Icon>
+            <span>选择文件</span>
+            <p style="margin-top:10px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>
+          </div>
+        </Upload>
         <!--<div class="upload_list" v-for="(item,index) in uploadList" v-if="item.status == 'uploading'">-->
           <!--<div>-->
             <!--<span>{{item.name}}</span>-->
@@ -1298,26 +1303,24 @@
           {
             value: '今天',
             data: [0, 0, 0, 0, 0],
-            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
-            label: 0
+            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00','19:00','20:00','21:00','22:00','23:00'],            label:'1'
           },
           {
             value: '昨天',
             data: [0, 0, 0, 0, 0, 0, 0],
-            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
-            label: 1
+            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00','19:00','20:00','21:00','22:00','23:00'],            label:'2'
           },
           {
             value: '最近七天',
             data: [0, 0, 0, 0, 0, 0, 0],
             day: ['---', '---', '---', '---', '---', '---', '---'],
-            label: 2
+            label: '3'
           },
           {
             value: '最近三十天',
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             day: ['---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---'],
-            label: 3
+            label: '30'
           }
         ],
         //下载流量选择时间
@@ -1328,28 +1331,29 @@
           {
             value: '今天',
             data: [0, 0, 0, 0, 0],
-            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
-            label: 0
+            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00','19:00','20:00','21:00','22:00','23:00'],            label: '1'
           },
           {
             value: '昨天',
             data: [0, 0, 0, 0, 0, 0, 0],
-            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
-            label: 1
+            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00','19:00','20:00','21:00','22:00','23:00'],
+            label: '2'
           },
           {
             value: '最近七天',
             data: [0, 0, 0, 0, 0, 0, 0],
             day: ['---', '---', '---', '---', '---', '---', '---'],
-            label: 2
+            label: '3'
           },
           {
             value: '最近三十天',
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             day: ['---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---'],
-            label: 3
+            label: '30'
           }
         ],
+        frequency:'',
+        flow:''
       }
     },
     components:{
@@ -1953,19 +1957,94 @@
       deleteUpload(index){
         this.uploadList.splice(index,1);
       },
+      //转换字节单位
+      changeByte(val){
+        let byte = [];
+        val.forEach(item=>{
+          byte.push(item / 1073741824 > 1   ? ((item / 1073741824).toFixed(2) ):  item / 1048576 > 1 ? ((item / 1048576).toFixed(2))   : ((item /1024).toFixed(2) ))
+        })
+        return byte;
+      },
       //下载流量点击切换数据
       dayClick(val){
-        console.log(val);
         this.indexs = val;
-        this.rwPolar.xAxis.data = this.dayList[val].day;
-        this.rwPolar.series[0].data = this.dayList[val].data;
-        console.log(this.rwPolar);
+        this.$http.post('monitor/getMonitorFlow.do',{
+          bucketName:sessionStorage.getItem('bucketName'),
+          times: this.dayList[val].label
+        }).then(res=>{
+          if(!res.data.data.dateList){
+            this.rwPolar.xAxis.data = this.dayList[val].day;
+            this.rwPolar.series[0].data =this.changeByte(res.data.data.getFlow);
+          }else {
+            this.rwPolar.xAxis.data = res.data.data.dateList;
+            this.rwPolar.series[0].data = this.changeByte(res.data.data.getFlow);
+          }
+        })
       },
       //请求次数点击切换数据
       requestClick(val){
         this.requestIndex = val;
-        this.rwNumber.xAxis.data = this.requestList[val].day;
-        this.rwNumber.series[0].data = this.requestList[val].data;
+        this.$http.post('monitor/getMonitorAllTimes.do',{
+          bucketName:'',
+          times: this.requestList[val].label
+        }).then(res=>{
+          if(!res.data.data.dateList){
+            this.rwNumber.xAxis.data = this.requestList[val].day;
+            this.rwNumber.series[0].data = res.data.data.allTimes;
+          }else {
+            this.rwNumber.xAxis.data = res.data.data.dateList;
+            this.rwNumber.series[0].data = res.data.data.allTimes;
+          }
+        })
+      },
+      //转换base64格式为blob
+      checkImg(code){
+        var parts = code.split(';base64,');
+        var contentType = parts[0].split(':')[1];
+        var raw = window.atob(parts[1]);
+        var rawLength = raw.length;
+        var uInt8Array = new Uint8Array(rawLength);
+        for (var i = 0; i < rawLength; ++i) {
+          uInt8Array[i] = raw.charCodeAt(i);
+        }
+        return new Blob([uInt8Array], {type: contentType});
+      },
+      //下载统计图
+      dowloda(name){
+        var img = new Image();
+        img = this.$refs[name].getConnectedDataURL({
+          pixelRatio: 2,
+          backgroundColor: '#ffffff',
+          type:'png'
+        });
+        let a = document.createElement('a');
+        document.body.appendChild(a);
+        var blob =this.checkImg(img);
+        a.style.display = 'none';
+        let url = URL.createObjectURL(blob);
+        a.href = url;
+        //添加了download属性才会是下载文件，不然就是跳转
+        a.download = 'echarts';
+        a.click();
+        document.body.removeChild(a);
+      },
+      //概览统计情况
+      getOverview(){
+        this.$http.post('monitor/allMonitorTimes.do',{
+          bucketName:sessionStorage.getItem('bucketName')
+        }).then(res =>{
+          if(res.data.status =='1'){
+            this.frequency = res.data.data.requesttimes;
+            this.flow = res.data.data.flowsize / 1073741824 > 1   ? ((res.data.data.flowsize / 1073741824).toFixed(2) +'GB' ):  res.data.data.flowsize / 1048576 > 1 ? ((res.data.data.flowsize / 1048576).toFixed(2) + 'MB')   : ((res.data.data.flowsize /1024).toFixed(2) + 'KB')
+          }else{
+            this.frequency = '0';
+            this.flow = '0KB';
+            this.$Message.info('平台出小差了');
+          }
+        }).catch(error =>{
+          this.frequency = '0';
+          this.flow = '0KB';
+        })
       },
     },
     created(){
@@ -1977,13 +2056,15 @@
       this.selectCors();
       this.getCustom();
       this.getZoneDomain();
+      this.getOverview();
+      this.dayClick(0);
+      this.requestClick(0);
       this.createtime = sessionStorage.getItem('createtime');
       this.kjName = sessionStorage.getItem('bucketName');
       this.kjaccessrights = sessionStorage.getItem('accessrights') == 1 ? '私有读写' : sessionStorage.getItem('accessrights') == 2 ? '公有读私有写' : sessionStorage.getItem('accessrights') == 3 ? '公有读写' : '自定义权限';
     },
     mounted(){
       this.uploadList = this.$refs.upload.fileList;
-      console.log(this.uploadList);
     },
     // watch: {
     //   time: function () {
@@ -2101,20 +2182,51 @@
           display: inline-block;
         }
         .space_one {
-          width: 40%;
-          display: inline-block;
+          width: 387px;
+          display: flex;
+          margin-left: 5px;
         }
-        .space_one:after {
+        .space_one:before {
           content: "";
           width: 1px;
           height: 80px;
-          position: relative;
           display: inline-block;
-          top: -82px;
-          right: 20px;
           background-color: #dfdfdf;
         }
       }
+    }
+  }
+  .objectListT{
+    width: 65px;
+    font-family: PingFangSC;
+    display: inline-block;
+    li:first-child {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+    li:last-child {
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+    .objectItem {
+      display: inline-block;
+      padding: 5px 16px;
+      text-align: center;
+      border: 1px solid #D9D9D9;
+      color: #2a99f2;
+      cursor: pointer;
+    }
+    .objectItems {
+      display: inline-block;
+      padding: 5px 16px;
+      text-align: center;
+      border: 1px solid #2a99f2;
+      color: #2a99f2;
+      cursor: pointer;
+    }
+    .objectItem:hover {
+      border: 1px solid #2a99f2;
+      cursor: pointer;
     }
   }
   .center_chart {
@@ -2137,7 +2249,7 @@
     }
   }
   .objectList {
-    width: 165%;
+    width: 75%;
     font-family: PingFangSC;
     display: flex;
     li:first-child {
@@ -2182,6 +2294,7 @@
     width: 23%;
     text-align: right;
     height: 30px;
+    display: inherit;
   }
 
   .echarts {

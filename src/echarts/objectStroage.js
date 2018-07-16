@@ -1,5 +1,6 @@
 
 var echarts = require('echarts/lib/echarts')
+require("echarts/lib/component/legend")
 export default {
     tooltip: {
         trigger: 'axis',
@@ -10,7 +11,8 @@ export default {
                 opacity: 0.5,
                 type: 'dashed'
             },
-        }
+        },
+      formatter: "{a} <br/>{b} : {c}MB"
     },
     grid: {
         left: '3%',
@@ -18,28 +20,29 @@ export default {
         bottom: '3%',
         containLabel: true
     },
-    toolbox: {
-      show:true,
-        feature: {
-            saveAsImage: {pixelRatio: 2}
-        }
-    },
     xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: ['04/28', '04/28', '04/28', '04/28', '04/28', '04/28', '04/28']
+        data: ['---', '---', '---', '---', '---', '---', '---'],
+        axisLabel: {
+          shadowColor: '#2791E5',
+        }
     },
     yAxis: {
         axisLabel: {
-            formatter: '{value} %'
+            formatter: '{value}%'
         },
-        max:'100'
+        max: function(value) {
+          console.log(typeof(value.max));
+          return Number(value.max) + 20;
+        }
     },
     series: [
         {
             name: '下载流量',
             type: 'line',
             stack: '总量',
+            clipOverflow:true,
             itemStyle: {
                 normal: {
                     color: '#2A99F2'
@@ -52,7 +55,7 @@ export default {
                 offset: 1,
                 color: '#ffe'
             }])}},
-            data: [20, 25, 35, 45, 55, 65, 75]
+            data: [0, 0, 0, 0, 0, 0, 0]
         },
     ]
 }

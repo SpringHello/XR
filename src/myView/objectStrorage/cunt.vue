@@ -108,17 +108,16 @@
       // input选择文件
       checkUp(e){
         const file = e.target.files;
-        var start = 0;
+        let start = 0;
         if(!file){
           return;
         }
-        var chunk = 5*1024 *1024;
-        var chunks = [];
+        let chunk = 5*1024 *1024;
+        let chunks = [];
         for(let i=0;i<file.length;i++){
           for(let j = 0;j<Math.ceil(file[i].size / chunk);j++){
-            var end = start + chunk;
+            let end = start + chunk;
             chunks[i] = file[i].slice(start,end);
-
           }
         }
         //改变文件对象为数组类型(文件对象切割出来放在数组里面)
@@ -130,8 +129,7 @@
       },
       // 上传文件
       uploadFlie(file){
-        var formData = new FormData();
-
+        let formData = new FormData();
           if(this.maxSize){
             if(file.size > this.maxSize){
               // this.onExceededSize(file,this.fileList);
@@ -139,8 +137,8 @@
             }
           }
           this.uploadStart(file);
-
         formData.append('uploadFile',file);
+        console.log(file);
         // formData.append('chunks',chunks);
           //如果有data formData追加上传的参数
           if (this.data) {
@@ -150,18 +148,18 @@
             });
           }
 
-          var xhr = new XMLHttpRequest();
+        let xhr = new XMLHttpRequest();
           xhr.open('post',this.action,true);
           xhr.onreadystatechange = function (e){
             if (xhr.readyState === 4) {
               if (xhr.status === 200) {
-                var res = JSON.parse(xhr.responseText);
-                this.onSuccess = function(res){
+                let res = JSON.parse(xhr.responseText);
+                  this.handleProgress(e,file);
                   this.handleSuccess(res,file);
-                }
+                  this.handleError(e,res,file);
                 xhr.upload.onprogress = function(e) {
                   if (e.lengthComputable) { //lengthComputable 是 progress 的一个属性，表示资源是否可计算字节流
-                    e.percent = (e.loaded / e.total) * 100;
+                    e.percent = e.loaded / e.total * 100;
                     this.fileList.percentage = e.percent;
                     this.oldTime = 0;
                     // progressBar.textContent = progressBar.value; //有的浏览器不支持，这是后备选择
@@ -207,12 +205,24 @@
         if(_file){
           _file.status = 'finished';
           _file.response = res;
-          this.onSuccess(res, _file, this.fileList);
-          setTimeout(() => {
-            _file.showProgress = false;
-          }, 1000);
+          if(_file.response.data.status == 1){
+            this.onSuccess(res, _file, this.fileList);
+            setTimeout(() => {
+              _file.showProgress = false;
+            }, 1000);
+          }
         }
       },
+      //文件上传过程
+      handleProgress (e, file) {
+        const _file = this.getFile(file);
+        this.onProgress(e, _file, this.fileList);
+        _file.percentage = e.percent || 0;
+      },
+      //文件上传失败
+      handleError(e,res,file){
+        this.onError(e,res,file);
+      }
     },
     watch: {
       defaultFileList: {
@@ -228,12 +238,12 @@
       },
       time: function (fileList) {
         let newTime = new Date().getTime();
-        var pertTime = (newTime - this.oldTime) / 1000 ;
+        let pertTime = (newTime - this.oldTime) / 1000 ;
         this.oldTime = new Date().getTime();
 
-        var size = (this.fileList.loaded - this.oldSize) / pertTime;
+        let size = (this.fileList.loaded - this.oldSize) / pertTime;
         // var size = this.time.loaded - this.oldSize
-        var sped = size;
+        let sped = size;
         this.oldSize = this.fileList.loaded;
         if(size / 1024 >1 && size / 1024 < 1000) {
           size = size / 1024 ;
@@ -243,11 +253,11 @@
           this.unText="MB/s";
         }
         this.fist = size.toFixed(1);
-        var listTime = ((this.fileList.total - this.fileList.loaded) / sped);
+        let listTime = ((this.fileList.total - this.fileList.loaded) / sped);
         console.log(listTime);
-        var tina = (listTime / (60*60)).toFixed(0);
-        var mint = (listTime / 60).toFixed(0);
-        var secor = (listTime % 60).toFixed(0);
+        let tina = (listTime / (60*60)).toFixed(0);
+        let mint = (listTime / 60).toFixed(0);
+        let secor = (listTime % 60).toFixed(0);
         this.listTime = tina +':' +mint +':' +secor
         }
       }

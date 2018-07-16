@@ -15,23 +15,27 @@
           </div>
         </div>
         <div class="center_p">
-          <p>虚拟私有云，通过逻辑方式进行网络隔离，提供安全、隔离的网络环境。VPC为您提供与传统网络无差别的虚拟网络，同时还可以为您提供弹性IP、安全组、VPN等高级网络服务。</p>
+          <p>对象存储是新睿云自主研发的大规模分布式对象存储服务，面向企业和个人开发者提供高可用、低成本、强安全的云端存储服务。</p>
         </div>
         <Tabs type="card" :value="name" :animated="false">
           <TabPane label="概览" name="name1">
             <p>当月用量 2018/04/28-2018/5/28</p>
             <div class="center_space">
-              <div class="space_one">
-                <p>存储空间容量</p>
-                <div style="font-size:36px;color:#333333;margin-top:10px;">{{size}}</div>
+              <div class="space_two">
+                  <p>存储空间容量</p>
+                  <div style="font-size:36px;color:#333333;margin-top:10px;">{{size}}</div>
               </div>
               <div class="space_one">
-                <p>流量</p>
-                <div style="font-size:36px;color:#333333;margin-top:10px;">0KB</div>
+                <div style="display: inline-block;width: 97%;margin-left:10px;">
+                  <p>流量</p>
+                  <div style="font-size:36px;color:#333333;margin-top:10px;">{{flow}}</div>
+                </div>
               </div>
               <div class="space_one">
-                <p>http请求次数</p>
-                <div style="font-size:36px;color:#333333;margin-top:10px;">0次</div>
+                <div style="display: inline-block;width: 97%;margin-left:10px;">
+                  <p>http请求次数</p>
+                  <div style="font-size:36px;color:#333333;margin-top:10px;">{{frequency}}次</div>
+                </div>
               </div>
             </div>
             <div class="center_chart">
@@ -41,16 +45,16 @@
             </div>
             <div class="chart">
               <ul class="objectList">
-                <li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>
+                <li :class="indexs == index? 'objectItems':'objectItem'" v-for="(item,index) in dayList" :key="index" @click="dayClick(index)">{{item.value}}</li>
               </ul>
               <div class="chart-rig">
-              <!--<Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda">导出</Button>-->
-                <ul class="objectList">
+              <Button type="primary" size="small" style="margin-top:-3px;padding:5px 15px;" @click="dowloda('rwPolar')">导出</Button>
+                <ul class="objectListT">
                   <li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>
                 </ul>
               </div>
             </div>
-            <chart class="echarts" :options="rwPolar" ></chart>
+            <chart ref="rwPolar" class="echarts" :options="rwPolar" ></chart>
             </div>
             <div class="center_chart">
               <div style="display:flex;padding-bottom:5px;margin-top:50px;">
@@ -59,24 +63,24 @@
               </div>
               <div class="chart" >
                 <ul class="objectList">
-                  <li :class="requestIndex == item.label? 'objectItems':'objectItem'" v-for="item in requestList" :key="item.label" @click="requestClick(item.label)">{{item.value}}</li>
+                  <li :class="requestIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in requestList" :key="index" @click="requestClick(index)">{{item.value}}</li>
                 </ul>
                 <div class="chart-rig">
-                <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button> -->
-                  <ul class="objectList">
+                 <Button type="primary" size="small" style="margin-top:-3px;padding:5px 15px;" @click="dowloda('rwNumber')">导出</Button>
+                  <ul class="objectListT">
                     <li :class="chartTwoIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartTwotList" :key="index" @click="chartTwoClick(index)">{{item.value}}</li>
                   </ul>
                 </div>
               </div>
-              <chart class="echarts" :options="rwNumber"></chart>
+              <chart ref="rwNumber" class="echarts" :options="rwNumber"></chart>
             </div>
           </TabPane>
           <TabPane :label="bucketMange" name="name2" style="height:650px">
             <tabOne></tabOne>
           </TabPane>
-          <!--<TabPane label="用量监控" name="name3" >-->
-            <!--<tabTwo></tabTwo>-->
-          <!--</TabPane>-->
+          <TabPane label="用量监控" name="name3" >
+            <tabTwo></tabTwo>
+          </TabPane>
           <TabPane label="操作日志" name="name4" style="min-height: 300px;">
             <tabThree></tabThree>
           </TabPane>
@@ -124,26 +128,26 @@
           {
             value: '今天',
             data: [0, 0, 0, 0, 0],
-            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
-            label: 0
+            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00','19:00','20:00','21:00','22:00','23:00'],
+            label: '1'
           },
           {
             value: '昨天',
             data: [0, 0, 0, 0, 0, 0, 0],
-            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
-            label: 1
+            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00','19:00','20:00','21:00','22:00','23:00'],
+            label: '2'
           },
           {
             value: '最近七天',
             data: [0, 0, 0, 0, 0, 0, 0],
             day: ['---', '---', '---', '---', '---', '---', '---'],
-            label: 2
+            label: '3'
           },
           {
             value: '最近三十天',
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             day: ['---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---'],
-            label: 3
+            label:'30'
           }
         ],
         //下载流量选择时间
@@ -154,26 +158,26 @@
           {
             value: '今天',
             data: [0, 0, 0, 0, 0],
-            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
-            label: 0
+            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00','19:00','20:00','21:00','22:00','23:00'],
+            label: '1'
           },
           {
             value: '昨天',
             data: [0, 0, 0, 0, 0, 0, 0],
-            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00'],
-            label: 1
+            day: ['0:00', '1:00', '2:00', '3:00', '4:00', '5:00', '6:00', '7:00', '8:00', '9:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00','19:00','20:00','21:00','22:00','23:00'],
+            label: '2'
           },
           {
             value: '最近七天',
             data: [0, 0, 0, 0, 0, 0, 0],
             day: ['---', '---', '---', '---', '---', '---', '---'],
-            label: 2
+            label: '3'
           },
           {
             value: '最近三十天',
             data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             day: ['---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---', '---'],
-            label: 3
+            label: '30'
           }
         ],
         //下载流量切换统计图
@@ -206,7 +210,11 @@
         ],
         chartTwoIndex: 0,
         //存储空间容量
-        size: ''
+        size: '',
+        //概览统计流量
+        flow:'',
+        //概览统计http请求次数
+        frequency:''
       }
     },
     components: {
@@ -214,28 +222,81 @@
       tabTwo: deferLoad(tabTwo, 100),
       tabThree: deferLoad(tabThree, 100)
     },
+    created(){
+      this.dayClick(0);
+      this.requestClick(0);
+    },
     methods: {
       //下载流量点击切换数据
       dayClick(val){
-        console.log(val);
         this.indexs = val;
-        this.rwPolar.xAxis.data = this.dayList[val].day;
-        this.rwPolar.series[0].data = this.dayList[val].data;
-        console.log(this.rwPolar);
+        this.$http.post('monitor/getMonitorFlow.do',{
+          bucketName:'',
+          times: this.dayList[val].label
+        }).then(res=>{
+          if(!res.data.data.dateList){
+            this.rwPolar.xAxis.data = this.dayList[val].day;
+            this.rwPolar.series[0].data =this.changeByte(res.data.data.getFlow);
+          }else {
+            this.rwPolar.xAxis.data = res.data.data.dateList;
+            this.rwPolar.series[0].data = this.changeByte(res.data.data.getFlow);
+          }
+        })
       },
       //请求次数点击切换数据
       requestClick(val){
         this.requestIndex = val;
-        this.rwNumber.xAxis.data = this.requestList[val].day;
-        this.rwNumber.series[0].data = this.requestList[val].data;
+        this.$http.post('monitor/getMonitorAllTimes.do',{
+          bucketName:'',
+          times: this.requestList[val].label
+        }).then(res=>{
+          if(!res.data.data.dateList){
+            this.rwNumber.xAxis.data = this.requestList[val].day;
+            this.rwNumber.series[0].data = res.data.data.allTimes;
+          }else {
+            this.rwNumber.xAxis.data = res.data.data.dateList;
+            this.rwNumber.series[0].data = res.data.data.allTimes;
+          }
+        })
+      },
+      //转换base64格式
+      checkImg(code){
+        var parts = code.split(';base64,');
+        var contentType = parts[0].split(':')[1];
+        var raw = window.atob(parts[1]);
+        var rawLength = raw.length;
+        var uInt8Array = new Uint8Array(rawLength);
+        for (var i = 0; i < rawLength; ++i) {
+          uInt8Array[i] = raw.charCodeAt(i);
+        }
+        return new Blob([uInt8Array], {type: contentType});
       },
       //下载统计图
-      dowloda(){
+      dowloda(name){
         var img = new Image();
-        img.src = disk.getDataURL({
+        img = this.$refs[name].getConnectedDataURL({
           pixelRatio: 2,
-          backgroundColor: '#ffffff'
+          backgroundColor: '#ffffff',
+          type:'png'
+        });
+        let a = document.createElement('a');
+        document.body.appendChild(a);
+        var blob =this.checkImg(img);
+        a.style.display = 'none';
+        let url = URL.createObjectURL(blob);
+        a.href = url;
+        //添加了download属性才会是下载文件，不然就是跳转
+        a.download = 'echarts';
+        a.click();
+        document.body.removeChild(a);
+      },
+      //转换字节单位
+      changeByte(val){
+        let byte = [];
+        val.forEach(item=>{
+          byte.push(item / 1073741824 > 1   ? ((item / 1073741824).toFixed(2) ):  item / 1048576 > 1 ? ((item / 1048576).toFixed(2))   : ((item /1024).toFixed(2) ))
         })
+       return byte;
       },
       //下载流量切换统计图
       chartClick(val){
@@ -266,15 +327,26 @@
       },
       //概览统计情况
       getOverview(){
-
-      }
+        this.$http.post('monitor/allMonitorTimes.do',{
+          bucketName:''
+        }).then(res =>{
+          if(res.data.status =='1'){
+            this.frequency = res.data.data.requesttimes;
+             this.flow = res.data.data.flowsize / 1073741824 > 1   ? ((res.data.data.flowsize / 1073741824).toFixed(2) +'GB' ):  res.data.data.flowsize / 1048576 > 1 ? ((res.data.data.flowsize / 1048576).toFixed(2) + 'MB')   : ((res.data.data.flowsize /1024).toFixed(2) + 'KB')
+          }else{
+            this.frequency = '0';
+            this.flow = '0KB';
+            this.$Message.info('平台出小差了');
+          }
+        }).catch(error =>{
+          this.frequency = '0';
+          this.flow = '0KB';
+        })
+      },
     },
     mounted(){
-      this.rwPolar.xAxis.data = this.dayList[0].day;
-      this.rwPolar.series[0].data = this.dayList[0].data;
-      this.rwNumber.xAxis.data = this.requestList[0].day;
-      this.rwNumber.series[0].data = this.requestList[0].data;
       this.getAllsize();
+      this.getOverview();
     }
   };
 </script>
@@ -337,18 +409,20 @@
             color: #666666;
             font-size: 16px;
           }
-          .space_one {
-            width: 40%;
+          .space_two{
+            width: 317px;
             display: inline-block;
           }
-          .space_one:after {
+          .space_one {
+            width: 387px;
+            display: flex;
+            margin-left: 5px;
+          }
+          .space_one:before {
             content: "";
             width: 1px;
             height: 80px;
-            position: relative;
             display: inline-block;
-            top: -82px;
-            right: 20px;
             background-color: #dfdfdf;
           }
         }
@@ -372,6 +446,39 @@
           }
         }
       }
+    }
+  }
+  .objectListT{
+    width: 150px;
+    font-family: PingFangSC;
+    display: inline-block;
+    li:first-child {
+      border-top-left-radius: 4px;
+      border-bottom-left-radius: 4px;
+    }
+    li:last-child {
+      border-top-right-radius: 4px;
+      border-bottom-right-radius: 4px;
+    }
+    .objectItem {
+      display: inline-block;
+      padding: 5px 16px;
+      text-align: center;
+      border: 1px solid #D9D9D9;
+      color: #2a99f2;
+      cursor: pointer;
+    }
+    .objectItems {
+      display: inline-block;
+      padding: 5px 16px;
+      text-align: center;
+      border: 1px solid #2a99f2;
+      color: #2a99f2;
+      cursor: pointer;
+    }
+    .objectItem:hover {
+      border: 1px solid #2a99f2;
+      cursor: pointer;
     }
   }
 
@@ -416,7 +523,7 @@
   }
 
   .chart-rig {
-    width: 23%;
+    width: 43%;
     text-align: right;
     height: 30px;
   }
