@@ -76,6 +76,7 @@
         sessionStorage.removeItem('companyID')
         if (url != null) {
           setTimeout(() => {
+            sessionStorage.setItem('step','step-one')
             this.$router.push({ name: url, query: { companyId: companyID }})
           }, 1000)
         } else {
