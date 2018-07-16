@@ -1,6 +1,7 @@
 <template>
   <div class="background">
     <p v-if="isCloud">我是小小新睿云云客，特惠云主机分享给你</p>
+    <h2 v-else>特惠产品 你我共享</h2>
     <div class="center">
       <div class="item" v-for="(item,index) in productGroups">
         <div class="item-title">
@@ -334,7 +335,7 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   .background {
-    padding-top: 85px;
+    padding-top: 50px;
     padding-bottom: 50px;
     background: linear-gradient(180deg, rgba(254, 239, 231, 1), rgba(255, 255, 255, 1));
     > p {
@@ -344,6 +345,15 @@
       padding-bottom: 50px;
       width: 100%;
       text-align: center;
+    }
+    >h2{
+      font-size:36px;
+      color:rgba(75,19,43,1);
+      font-family: "Microsoft YaHei", "微软雅黑";
+      padding-bottom: 50px;
+      width: 100%;
+      text-align: center;
+      font-weight: normal;
     }
     .center {
       width: 1200px;
@@ -368,6 +378,7 @@
           justify-content: space-around;
           padding: 20px;
           border-bottom: 1px solid #DFE2F4;
+          list-style: none;
           li {
             font-size: 30px;
             font-family: "Microsoft YaHei", "微软雅黑";

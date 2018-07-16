@@ -49,6 +49,7 @@ const NewRecordStepThree = () => import('@/components/App/records/NewRecordStepT
 const NewRecordStepFour = () => import('@/components/App/records/NewRecordStepFour')
 const WaitFirstTrial = () => import('@/components/App/records/WaitFirstTrial')
 const WaitSecondTrial = () => import('@/components/App/records/WaitSecondTrial')
+const Map = () => import('@/components/App/records/Map')
 
 /* 产品页面路由 */
 const Pecs = () => import('@/components/App/product/ECS.vue')
@@ -257,6 +258,11 @@ var router = new Router({
           path: 'waitSecondTrial',
           name: 'waitSecondTrial',
           component: WaitSecondTrial
+        },
+        {
+          path: 'map',
+          name: 'map',
+          component: Map
         },
         //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
         /*{

@@ -552,7 +552,7 @@
         })
       }),
       toMap() {
-        window.open('https://map.baidu.com/')
+        window.open('map')
       }
     }
   }
