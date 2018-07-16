@@ -2,7 +2,7 @@
   <div id="home" style="background: #FFF">
     <!-- banner 轮播图 -->
     <div class="banner">
-      <my-carousel :interval=5000 class="carousel" @on-change="change">
+      <my-carousel :interval=50000 class="carousel" @on-change="change">
 
         <my-carousel-item class="carousel-item">
           <div @click="push('groupBooking')"
@@ -1549,14 +1549,14 @@
   .groupBook {
     background: #FA846E url("../../assets/img/active/group-booking/gb-banner6.png") no-repeat;
     height: 400px;
-    padding-top: 70px;
+    padding-top: 80px;
     > div {
       width: 1200px;
       margin: 0 auto;
       position: relative;
       img {
         position: absolute;
-        right: 0;
+        right: 80px;
         top: -45px;
       }
       p {
@@ -1564,6 +1564,7 @@
         font-family: "Microsoft YaHei","微软雅黑";
         color: rgba(255, 255, 255, 1);
         margin-bottom: 20px;
+        margin-left: 200px;
         span {
           color: #FFE177;
           font-size: 36px;
@@ -1573,16 +1574,17 @@
         font-size: 36px;
       }
       button {
-        font-size: 24px;
+        font-size: 18px;
         font-family: "Microsoft YaHei","微软雅黑";
         color: rgba(254, 79, 74, 1);
-        padding: 10px 40px;
+        padding: 8px 30px;
         background: rgba(255, 255, 255, 1);
         border-radius: 27px;
         border: none;
         outline: none;
         cursor: pointer;
         margin-top: 40px;
+        margin-left: 220px;
       }
     }
   }
