@@ -111,19 +111,19 @@
             memory: 2,
             bandwidth: 1,
             disk: 40,
-            system: 'linux',
+            system: 'windows',
             currentPrice: 59,
             originalCost: 101.72,
-            area: '39a6af0b-6624-4194-b9d5-0c552d903858'
+            area: '1ce0d0b9-a964-432f-8078-a61100789e30'
           }, {
             cpu: 2,
             memory: 4,
             bandwidth: 5,
             disk: 40,
-            system: 'linux',
+            system: 'windows',
             currentPrice: 98,
             originalCost: 166.72,
-            area: '39a6af0b-6624-4194-b9d5-0c552d903858'
+            area: '1ce0d0b9-a964-432f-8078-a61100789e30'
           }],
         areaGroup: [{
           label: '北京一区',
