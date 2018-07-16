@@ -133,7 +133,7 @@
           label: '北方一区',
           value: 'a0a7df65-dec3-48da-82cb-cff9a55a4b6d'
         }, {
-          label: '北方二区（沈阳）',
+          label: '北方二区',
           value: '1ce0d0b9-a964-432f-8078-a61100789e30'
         }, {
           label: '华中一区',

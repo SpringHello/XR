@@ -106,15 +106,15 @@
       share(index) {
         switch (index) {
           case 0: {
-            window.open('https://connect.qq.com/widget/shareqq/index.html?url=' + this.activeLink + '&title=' + '分享加时长' + '&source=' + '' + '&desc=' + '分享加时长' + '&pics=' + '')
+            window.open('https://connect.qq.com/widget/shareqq/index.html?url=' + this.activeLink + '&title=' + '我有你也有，高品质云主机59元畅享一年，详情查看活动链接' + '&source=' + '' + '&desc=' + '我有你也有，高品质云主机59元畅享一年，详情查看活动链接' + '&pics=' + '')
             break
           }
           case 1: {
-            window.open('https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=' + this.activeLink + '&title=' + '分享加时长' + '&desc=' + '分享加时长' + '&summary=' + '分享加时长' + '&site=' + '')
+            window.open('https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=' + this.activeLink + '&title=' + '我有你也有，高品质云主机59元畅享一年，详情查看活动链接' + '&desc=' + '我有你也有，高品质云主机59元畅享一年，详情查看活动链接' + '&summary=' + '我有你也有，高品质云主机59元畅享一年，详情查看活动链接' + '&site=' + '')
             break;
           }
           case 2: {
-            window.open('http://service.weibo.com/share/share.php?url=' + this.activeLink + '&title=' + '分享加时长' + '&pic=' + '' + '&searchPic=false')
+            window.open('http://service.weibo.com/share/share.php?url=' + this.activeLink + '&title=' + '我有你也有，高品质云主机59元畅享一年，详情查看活动链接' + '&pic=' + '' + '&searchPic=false')
             break;
           }
         }
