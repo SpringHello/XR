@@ -220,7 +220,7 @@
       <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
         <span class="phone"></span>
       </Poptip>
-      <BackTop :bottom="161" :right="50" :duration="0" :height="1600">
+      <BackTop :bottom="20" :right="50" :duration="0" :height="1600">
         <span class="topLink"></span>
       </BackTop>
     </div>
