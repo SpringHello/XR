@@ -217,12 +217,14 @@
         :href="kfURL"
         target="_blank"></a></span>
       </Poptip>-->
-      <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left">
+      <Poptip trigger="hover" content="客服热线：400-050-5565" placement="left" style="height:48px;">
         <span class="phone"></span>
       </Poptip>
-      <BackTop :bottom="161" :right="50" :duration="0" :height="1600">
-        <span class="topLink"></span>
-      </BackTop>
+      <div>
+        <BackTop :bottom="161" :right="50" :duration="0" :height="1600" style="position: unset">
+          <span class="topLink"></span>
+        </BackTop>
+      </div>
     </div>
   </div>
 </template>
