@@ -4,7 +4,8 @@
     <gb-header v-else></gb-header>
     <gb-product :isCloud="true" v-if="!isBuy" :team-leader-company-id="teamLeaderCompanyId"></gb-product>
     <gb-myhost v-else :product-groups="productGroups"></gb-myhost>
-    <gb-member :participation-person-columns="participationPersonColumns" :participation-person-data="participationPersonData"
+    <gb-member :participation-person-columns="participationPersonColumns"
+               :participation-person-data="participationPersonData"
                :create-time="createTime" :commander="commander"></gb-member>
     <div class="center">
       <gb-flow></gb-flow>
@@ -42,8 +43,8 @@
       gbMyhost
     },
     beforeRouteEnter(to, from, next) {
-      let teamLeaderCompanyId = location.href.match(/=(\S*)/)[1]
-      sessionStorage.removeItem('teamLeaderCompanyId')
+      let teamLeaderCompanyId = location.href.match(/=(\S*)/) ? location.href.match(/=(\S*)/)[1] : sessionStorage.getItem('teamLeaderCompanyId')
+      //sessionStorage.removeItem('teamLeaderCompanyId')
       sessionStorage.setItem('teamLeaderCompanyId', teamLeaderCompanyId)
       if ($store.state.userInfo) {
         let url = 'activity/boughtVM.do'
@@ -107,11 +108,13 @@
     },
     methods: {
       setInfo() {
+        var params = {}
         this.teamLeaderCompanyId = sessionStorage.getItem('teamLeaderCompanyId')
+        if (this.teamLeaderCompanyId) {
+          params.companyId = this.teamLeaderCompanyId
+        }
         axios.get('activity/teamMemberList.do', {
-          params: {
-            companyId: this.teamLeaderCompanyId
-          }
+          params
         }).then(response => {
           if (response.data.status == 1) {
             this.commander = response.data.result.list_teamHeader[0].companyname
