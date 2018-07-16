@@ -8,7 +8,7 @@
           特惠专享
         </div>
         <ul>
-          <li>{{ item.cpu}}核<span>cpu</span></li>
+          <li>{{ item.cpu}}核<span>CPU</span></li>
           <li>{{ item.memory}}G<span>内存</span></li>
           <li>{{ item.bandwidth}}M<span>宽带</span></li>
           <li>{{ item.disk}}G<span>SSD</span></li>
@@ -119,7 +119,7 @@
           }, {
             cpu: 2,
             memory: 4,
-            bandwidth: 5,
+            bandwidth: 1,
             disk: 40,
             system: 'windows',
             currentPrice: 98,
