@@ -822,6 +822,7 @@
           width: 0px;
           background-color: #ffffff;
           right: 48px;
+          top: unset;
           transition: width .3s;
         }
         & > a {

@@ -259,7 +259,7 @@
       </div>
     </div>
     <!-- 新睿云最新动态 -->
-    <div class="news">
+    <!--<div class="news">
       <div class="wrap">
         <div class="header">
           <p class="title-g">新睿云最新动态</p>
@@ -301,7 +301,7 @@
           </dl>
         </div>
       </div>
-    </div>
+    </div>-->
     <!-- 合作伙伴 -->
     <div class="partner-container" ref="partnerFade">
       <div>
@@ -694,8 +694,8 @@
       window.addEventListener('scroll', this.scrollFn)
     },
     created() {
-      this.getnews()
-      this.getlinkList()
+      /*this.getnews()
+      this.getlinkList()*/
     },
     methods: {
       getnews() {

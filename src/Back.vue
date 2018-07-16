@@ -123,7 +123,7 @@
     <!-- 客服浮动块 -->
     <div class="affix">
       <span class="qq" @mouseenter="QME" @mouseleave="QML">
-        <div ref="qq" style="overflow: hidden">
+        <div ref="qq" style="overflow: hidden;bottom: -48px">
           <div class="wrapper" v-if="QQInfo.length>0">
             <div>
               <span>人工客服</span>
@@ -781,7 +781,7 @@
   .affix {
     position: fixed;
     right: 50px;
-    bottom: 200px;
+    bottom: 20px;
     z-index: 100;
     display: flex;
     flex-direction: column;
@@ -803,7 +803,7 @@
         width: 0px;
         background-color: #ffffff;
         right: 48px;
-        top: 0px;
+        top: unset;
         transition: width .3s;
       }
       & > a {
