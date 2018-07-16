@@ -42,6 +42,9 @@
       gbMyhost
     },
     beforeRouteEnter(to, from, next) {
+      let teamLeaderCompanyId = location.href.match(/=(\S*)/)[1]
+      sessionStorage.removeItem('teamLeaderCompanyId')
+      sessionStorage.setItem('teamLeaderCompanyId', teamLeaderCompanyId)
       if ($store.state.userInfo) {
         let url = 'activity/boughtVM.do'
         axios.get(url, {
@@ -71,7 +74,7 @@
             })
           }
         })
-      } else{
+      } else {
         next(vm => {
           vm.setInfo()
         })
@@ -104,7 +107,7 @@
     },
     methods: {
       setInfo() {
-        this.teamLeaderCompanyId = location.href.match(/=(\S*)/)[1]
+        this.teamLeaderCompanyId = sessionStorage.getItem('teamLeaderCompanyId')
         axios.get('activity/teamMemberList.do', {
           params: {
             companyId: this.teamLeaderCompanyId
@@ -121,12 +124,12 @@
         this.isJoin = true
         this.isBuy = true
         axios.get('activity/teamMemberList.do').then(response => {
-          if (response.data.status == 1 ) {
+          if (response.data.status == 1) {
             let params = response.data.result.freevmConfig
             params.templatename = response.data.result.zonTem.templatename
-            if(response.data.result.zonTem.templatename.charAt(0).toLocaleUpperCase() == 'C') {
+            if (response.data.result.zonTem.templatename.charAt(0).toLocaleUpperCase() == 'C') {
               params.templatename = 'Centos'
-            }else{
+            } else {
               params.templatename = 'Windows'
             }
             params.zonename = response.data.result.zonTem.zonename

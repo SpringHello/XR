@@ -76,7 +76,7 @@
         sessionStorage.removeItem('companyID')
         if (url != null) {
           setTimeout(() => {
-            this.$router.push({ name: url, params: { companyId: companyID }})
+            this.$router.push({ name: url, query: { companyId: companyID }})
           }, 1000)
         } else {
         }
