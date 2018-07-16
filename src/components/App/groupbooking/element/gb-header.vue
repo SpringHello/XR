@@ -19,8 +19,7 @@
 <style rel="stylesheet/less" lang="less" scoped>
   .background {
     height: 360px;
-    width: 1900px;
-    background: #FA846E url('../../../../assets/img/active/group-booking/gb-banner2.png') no-repeat;
+    background: #FA846E url('../../../../assets/img/active/group-booking/gb-banner2.png') no-repeat center;
     .center {
       width: 1200px;
       height: 100%;
