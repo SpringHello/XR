@@ -1,14 +1,15 @@
 <template>
-  <div style="display: flex">
+  <div style="display: flex;margin-right: 10px;">
     <div style="width:160px;position: relative;background-color: #142133" :class="{close:!opened}">
       <div style="height:38px;background-color: #1B2940" @click="toggleHidden"></div>
       <ul>
-        <li v-for="item in items" @mouseenter="go">
+        <li v-for="item in items" @mouseenter="go" class="house">
           <div class="mainTitle" @click="toggleMain(item)">
             <span :class="{act:openedMain.includes(item.type)}">{{opened?item.mainName:''}}</span>
           </div>
+        <div></div>
           <ul v-if="openedMain.includes(item.type)">
-            <li v-for="sub in item.subItem" class="subTitle" @mouseenter="go(sub)" @mouseleave="leave(sub)">
+            <li v-for="sub in item.subItem" @click="jump(sub.type)" class="subTitle" @mouseenter="go(sub)" @mouseleave="leave(sub)">
               <svg class="icon" aria-hidden="true" style="width:28px;height:28px;vertical-align: middle;">
                 <use :xlink:href="sub.icon"></use>
               </svg>
@@ -22,7 +23,7 @@
           <div class="wrapper">
             <div class="operate">
               <ul>
-                <li v-for="(thr,sIndex) in thrMenu" :key="sIndex">
+                <li v-for="(thr,sIndex) in thrMenu" :key="sIndex" style="cursor: pointer" >
                   {{thr.thrName}}
                 </li>
               </ul>
@@ -32,8 +33,6 @@
         </div>
       </transition>
     </div>
-
-
   </div>
 </template>
 
@@ -58,7 +57,7 @@
         openedMain: [],
         static: false,
         // 主menu是否打开
-        opened: true
+        opened: true,
       }
     },
     mounted(){
@@ -104,7 +103,12 @@
         setTimeout(() => {
           this.$refs['thr'].style.width = '0px'
         }, 0)
-
+      },
+      jump(src){
+        if(src.substring(0,5) === 'https')
+          window.open(src);
+        else
+        this.$router.push({path:src});
       }
     },
     watch: {}
@@ -113,6 +117,11 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .house{
+    &:hover{
+      color: #000;
+    }
+  }
   .mainTitle {
     padding: 14px 20px;
     position: relative;
@@ -137,9 +146,9 @@
           transform: translateY(2px) rotate(135deg);
         }
       }
+
     }
   }
-
   .subTitle {
     padding: 14px 10px;
     background-color: #142133;

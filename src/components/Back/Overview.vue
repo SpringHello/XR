@@ -140,7 +140,6 @@
           </div>
           <div>
             <Carousel v-model="currentCarouse">
-
               <CarouselItem v-for="(item,index) in ads" :key="index">
                 <a :href="item.url" target="_blank">
                   <img :src="item.pictureurl">
@@ -427,16 +426,17 @@
         申明变量diff，可正常使用
       */
     @diff: 101px;
+    margin: 0 auto;
     min-height: calc(~"100% - @{diff}");
     #wrapper {
       width: 1200px;
-      margin: 0px auto;
+      /*margin: 0px auto;*/
       #title {
         font-size: 12px;
         color: rgba(17, 17, 17, 0.43);
         line-height: 22px;
         display: inline-block;
-        margin: 10px 0px;
+        margin: 10px 10px;
       }
       #head-info {
         display: flex;
