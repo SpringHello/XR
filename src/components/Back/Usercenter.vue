@@ -922,10 +922,10 @@
           </TabPane>
 
           <!--access key pane-->
-          <!--<Tab-pane label="Access Key" name="key">
+          <Tab-pane label="Access Key" name="key">
             <Button type="primary" @click="keymodal" style="margin-bottom:10px">创建Access Key</Button>
             <Table :columns="keyColumns" :data="keyData"></Table>
-          </Tab-pane>-->
+          </Tab-pane>
         </Tabs>
       </div>
     </div>
@@ -2080,12 +2080,12 @@
       })
       this.listNotice()
       this.getContacts()
-      /*if(!$store.state.accessKey){
+      if(!$store.state.accessKey){
         this.$Modal.confirm({
           title: '提示',
           content: '<p style="line-height: 16px;">尊敬的用户您好，系统检测到您当前没有可用的Access Key,请您到<span style="color: #2A99F2;">Access Key管理</span>去创建Access Key。</p>',
         });
-      }*/
+      }
     },
     methods: {
       init() {

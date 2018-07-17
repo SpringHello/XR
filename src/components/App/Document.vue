@@ -78,7 +78,7 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   #document {
-    background-color: #fff;
+    background-color: #f9f9f9;
   }
 
   .document {
@@ -116,7 +116,7 @@
         height: 380px;
         border: 1px solid #d8d8d8;
         &:hover {
-          box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.2);
+          box-shadow:0px 0px 24px 0px rgba(0,0,0,0.2);
         }
         > .header {
           height: 60px;
