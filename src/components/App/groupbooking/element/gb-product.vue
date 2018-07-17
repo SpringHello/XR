@@ -16,7 +16,7 @@
         <div class="item-content">
           <div>
             <span>区域选择：</span>
-            <Select v-model="item.area" class="groupBooking-select" style="width:150px;margin-right: 42px">
+            <Select v-model="item.area" class="groupBooking-select" style="width:150px;margin-right: 42px" @on-change="getoriginalPrice(index)">
               <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
             <span>系统选择：</span>
@@ -242,6 +242,19 @@
             }
           })
         }
+      },
+      getoriginalPrice(index) {
+        let vmConfigId = index == 0 ? '33' : '34'
+        let url = 'activity/getOriginalPrice.do'
+        let params = {
+          vmConfigId: vmConfigId,
+          zoneName: this.productGroups[index].area
+        }
+        axios.get(url, params).then(res => {
+          if (res.data.status == 1) {
+            this.productGroups[index].originalCost = res.data.result.originalPrice
+          }
+        })
       },
       vail(field) {
         var text = this.form[field];
