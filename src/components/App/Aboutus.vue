@@ -20,7 +20,7 @@
       <section>
         <div class="section-wrap">
           <div class="head-info">
-            <h1 class="title">致力于“企业数字化转型”和“运营商用户数据红利挖掘”</h1>
+            <h1 class="title">致力于成为高品质云服务提供商，让云触手可及</h1>
             <p class="desc"><span>中关村高新技术企业</span><span>ISO9001华为云管理网络 ISV</span><span>华为全产品线金牌合作伙伴</span></p>
           </div>
           <div class="section-content develop">

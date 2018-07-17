@@ -322,7 +322,11 @@ div.modal-header-border {
   box-shadow: 0 0 0 2px rgba(253, 140, 115, .2);
 }
 
-.groupBooking-select .ivu-select-item-selected, .ivu-select-item-selected:hover {
+.groupBooking-select .ivu-select-item-selected:hover {
+  background: #FD8C73;
+}
+
+.groupBooking-select .ivu-select-item-selected {
   background: #FD8C73;
 }
 
@@ -333,9 +337,11 @@ div.modal-header-border {
 .groupBooking-table .ivu-table th {
   background: #FFE3D8;
 }
-.social-share .icon-weibo{
+
+.social-share .icon-weibo {
   margin-right: 50px;
 }
-.social-share .icon-qq{
+
+.social-share .icon-qq {
   margin-right: 50px;
 }

@@ -16,7 +16,7 @@
         <div class="item-content">
           <div>
             <span>区域选择：</span>
-            <Select v-model="item.area" class="groupBooking-select" style="width:150px;margin-right: 42px">
+            <Select v-model="item.area" class="groupBooking-select" style="width:150px;margin-right: 42px" @on-change="getoriginalPrice(index)">
               <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
             <span>系统选择：</span>
@@ -114,7 +114,7 @@
             disk: 40,
             system: 'windows',
             currentPrice: 59,
-            originalCost: 101.72,
+            originalCost: 98.72,
             area: '1ce0d0b9-a964-432f-8078-a61100789e30'
           }, {
             cpu: 2,
@@ -123,7 +123,7 @@
             disk: 40,
             system: 'windows',
             currentPrice: 98,
-            originalCost: 166.72,
+            originalCost: 176.72,
             area: '1ce0d0b9-a964-432f-8078-a61100789e30'
           }],
         areaGroup: [{
@@ -138,10 +138,10 @@
         }, {
           label: '华中一区',
           value: '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c'
-        }, {
+        }, /*{
           label: '华中二区',
           value: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2'
-        }
+        }*/
         ],
         systemGroup: [
           {
@@ -208,7 +208,7 @@
           let url = 'information/getDiskcountMv.do'
           axios.get(url, {params}).then(res => {
             if (res.data.status == 1) {
-              sessionStorage.setItem('currentURL','groupBooking')
+              sessionStorage.setItem('currentURL', 'groupBooking')
               this.$router.push('order')
             } else {
               this.$message.info({
@@ -223,8 +223,8 @@
                 let url = 'information/getDiskcountMv.do'
                 axios.get(url, {params}).then(res => {
                   if (res.data.status == 1) {
-                    sessionStorage.setItem('currentURL','activity')
-                    sessionStorage.setItem('companyID',this.teamLeaderCompanyId)
+                    sessionStorage.setItem('currentURL', 'activity')
+                    sessionStorage.setItem('companyID', this.teamLeaderCompanyId)
                     this.$router.push('order')
                   } else {
                     this.$message.info({
@@ -242,6 +242,19 @@
             }
           })
         }
+      },
+      getoriginalPrice(index) {
+        let vmConfigId = index == 0 ? '33' : '34'
+        let url = 'activity/getOriginalPrice.do'
+        let params = {
+          vmConfigId: vmConfigId,
+          zoneId: this.productGroups[index].area
+        }
+        axios.get(url, {params: params}).then(res => {
+          if (res.data.status == 1) {
+            this.productGroups[index].originalCost = res.data.result.originalPrice
+          }
+        })
       },
       vail(field) {
         var text = this.form[field];
@@ -346,9 +359,9 @@
       width: 100%;
       text-align: center;
     }
-    >h2{
-      font-size:36px;
-      color:rgba(75,19,43,1);
+    > h2 {
+      font-size: 36px;
+      color: rgba(75, 19, 43, 1);
       font-family: "Microsoft YaHei", "微软雅黑";
       padding-bottom: 50px;
       width: 100%;
