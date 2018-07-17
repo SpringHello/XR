@@ -114,7 +114,7 @@
             disk: 40,
             system: 'windows',
             currentPrice: 59,
-            originalCost: 101.72,
+            originalCost: 98.72,
             area: '1ce0d0b9-a964-432f-8078-a61100789e30'
           }, {
             cpu: 2,
@@ -123,7 +123,7 @@
             disk: 40,
             system: 'windows',
             currentPrice: 98,
-            originalCost: 166.72,
+            originalCost: 176.72,
             area: '1ce0d0b9-a964-432f-8078-a61100789e30'
           }],
         areaGroup: [{
@@ -208,7 +208,7 @@
           let url = 'information/getDiskcountMv.do'
           axios.get(url, {params}).then(res => {
             if (res.data.status == 1) {
-              sessionStorage.setItem('currentURL','groupBooking')
+              sessionStorage.setItem('currentURL', 'groupBooking')
               this.$router.push('order')
             } else {
               this.$message.info({
@@ -223,8 +223,8 @@
                 let url = 'information/getDiskcountMv.do'
                 axios.get(url, {params}).then(res => {
                   if (res.data.status == 1) {
-                    sessionStorage.setItem('currentURL','activity')
-                    sessionStorage.setItem('companyID',this.teamLeaderCompanyId)
+                    sessionStorage.setItem('currentURL', 'activity')
+                    sessionStorage.setItem('companyID', this.teamLeaderCompanyId)
                     this.$router.push('order')
                   } else {
                     this.$message.info({
@@ -248,9 +248,9 @@
         let url = 'activity/getOriginalPrice.do'
         let params = {
           vmConfigId: vmConfigId,
-          zoneName: this.productGroups[index].area
+          zoneId: this.productGroups[index].area
         }
-        axios.get(url, params).then(res => {
+        axios.get(url, {params: params}).then(res => {
           if (res.data.status == 1) {
             this.productGroups[index].originalCost = res.data.result.originalPrice
           }
@@ -359,9 +359,9 @@
       width: 100%;
       text-align: center;
     }
-    >h2{
-      font-size:36px;
-      color:rgba(75,19,43,1);
+    > h2 {
+      font-size: 36px;
+      color: rgba(75, 19, 43, 1);
       font-family: "Microsoft YaHei", "微软雅黑";
       padding-bottom: 50px;
       width: 100%;
