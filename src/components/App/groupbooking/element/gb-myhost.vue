@@ -2,6 +2,9 @@
   <div class="background">
     <div class="center">
       <h2>我的主机</h2>
+      <div class="item-title">
+        特惠专享
+      </div>
       <div class="content">
         <ul v-for="(item,index) in productGroups" :key="index">
           <li>{{ item.cpu}}核<span>cpu</span></li>
@@ -49,6 +52,17 @@
         color: rgba(75, 19, 43, 1);
         font-weight: normal;
         text-align: center;
+      }
+      .item-title {
+        padding-left: 30px;
+        height: 60px;
+        font-size: 20px;
+        font-family: "Microsoft YaHei","微软雅黑";
+        color: #fff;
+        line-height: 60px;
+        text-align: left;
+        background: linear-gradient(90deg, rgba(254, 79, 74, 1), rgba(252, 169, 135, 1));
+        margin-top: 50px;
       }
       .content {
         background: #FFF;
