@@ -138,10 +138,10 @@
         }, {
           label: '华中一区',
           value: '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c'
-        }, {
+        }, /*{
           label: '华中二区',
           value: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2'
-        }
+        }*/
         ],
         systemGroup: [
           {
