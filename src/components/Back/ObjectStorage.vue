@@ -41,7 +41,7 @@
             <div class="center_chart">
             <div style="display:flex;padding-bottom:5px;">
             <div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>
-            <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
+            <!--<div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>-->
             </div>
             <div class="chart">
               <ul class="objectList">
@@ -59,7 +59,7 @@
             <div class="center_chart">
               <div style="display:flex;padding-bottom:5px;margin-top:50px;">
                 <div style="width:50%;font-size:16px;color:#333333;">请求次数</div>
-                <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
+                <!--<div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>-->
               </div>
               <div class="chart" >
                 <ul class="objectList">
@@ -236,10 +236,12 @@
         }).then(res=>{
           if(!res.data.data.dateList){
             this.rwPolar.xAxis.data = this.dayList[val].day;
-            this.rwPolar.series[0].data =this.changeByte(res.data.data.getFlow);
+            this.rwPolar.series[0].data = this.changeByte(res.data.data.getFlow);
+            this.rwPolar.yAxis.axisLabel.formatter = this.changeByte(res.data.data.getFlow);
           }else {
             this.rwPolar.xAxis.data = res.data.data.dateList;
             this.rwPolar.series[0].data = this.changeByte(res.data.data.getFlow);
+            this.rwPolar.yAxis.axisLabel.formatter = this.changeByte(res.data.data.getFlow);
           }
         })
       },
@@ -294,7 +296,7 @@
       changeByte(val){
         let byte = [];
         val.forEach(item=>{
-          byte.push(  item / 1048576 > 1 ? ((item / 1048576).toFixed(2))   : 0)
+          byte.push(item / 1073741824 > 1 ? (item / 1073741824).toFixed(2) : item / 1048576 > 1 ? ((item / 1048576).toFixed(2))  : (item / 1024).toFixed(2))
         })
        return byte;
       },
@@ -314,7 +316,7 @@
       getAllsize(){
         this.$http.post('object/getAllSize.do', {}).then(res => {
           if (res.data.status == '1') {
-            this.size = res.data.data.allsize / 1048576>1 ? (res.data.data.allsize /1048576).toFixed(0) +'GB': res.data.data.allsize > 1000 || res.data.data.allsize / 1024 > 1 ? (res.data.data.allsize / 1024).toFixed(0) + 'MB' : (res.data.data.allsize / 1024).toFixed(0) + 'KB';
+            this.size = res.data.data.allsize / 1048576>1 ? (res.data.data.allsize / 1048576).toFixed(0) +'GB': res.data.data.allsize > 1000 || res.data.data.allsize / 1024 > 1 ? (res.data.data.allsize / 1024).toFixed(0) + 'MB' : (res.data.data.allsize / 1024).toFixed(0) + 'KB';
           } else {
             this.size = "0KB";
             this.$Message.info('平台出小差了');
@@ -343,10 +345,20 @@
           this.flow = '0KB';
         })
       },
+      //云储存服务开通提示框
+      buy(){
+        this.$Modal.confirm({
+          title: '提示',
+          content: '<p style="line-height: 16px">尊敬的用户您好，您尚未开通云存储服务，对象存储服务根据使用量后付费，收费项目包括：存储空间、源站流量等，详细信息请见<span>购买须知</span></p>',
+          okText:'确认开通'
+        });
+      },
     },
     mounted(){
       this.getAllsize();
       this.getOverview();
+      this.buy();
+
     }
   };
 </script>

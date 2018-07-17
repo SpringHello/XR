@@ -118,17 +118,18 @@
           for(let j = 0;j<Math.ceil(file[i].size / chunk);j++){
             let end = start + chunk;
             chunks[i] = file[i].slice(start,end);
+            start = end;
           }
         }
         //改变文件对象为数组类型(文件对象切割出来放在数组里面)
         let postFile = Array.prototype.slice.call(file);
         postFile.forEach(file=>{
-          this.uploadFlie(file);
+          this.uploadFlie(file,chunks);
         })
         this.$refs.input.value = null;
       },
       // 上传文件
-      uploadFlie(file){
+      uploadFlie(file,chunks){
         let formData = new FormData();
           if(this.maxSize){
             if(file.size > this.maxSize){
@@ -138,8 +139,8 @@
           }
           this.uploadStart(file);
         formData.append('uploadFile',file);
-        console.log(file);
-        // formData.append('chunks',chunks);
+
+        formData.append('chunks',chunks);
           //如果有data formData追加上传的参数
           if (this.data) {
             //获取对象的key

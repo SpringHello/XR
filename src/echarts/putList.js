@@ -11,7 +11,7 @@ export default {
                 type: 'dashed'
             },
         },
-      formatter: "{a} <br/>{b} : {c}MB"
+      formatter: "{a} <br/>{b} : {c}"
     },
     grid: {
         left: '3%',
@@ -34,7 +34,10 @@ export default {
         axisLabel: {
             formatter: '{value} 次'
         },
-
+      max:function(value){
+        console.log(value);
+        return value.max -20;
+      }
     },
     series: [
         {

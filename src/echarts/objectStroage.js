@@ -1,6 +1,5 @@
 
 var echarts = require('echarts/lib/echarts')
-require("echarts/lib/component/legend")
 export default {
     tooltip: {
         trigger: 'axis',
@@ -12,7 +11,7 @@ export default {
                 type: 'dashed'
             },
         },
-      formatter: "{a} <br/>{b} : {c}MB"
+      formatter: "{a}<br>{b} : {c}GB"
     },
     grid: {
         left: '3%',
@@ -30,15 +29,14 @@ export default {
     },
     yAxis: {
         axisLabel: {
-            formatter: '{value}MB'
-        },
-        max: function(value) {
-          if(value/ 1024 >1){
-            return value / 1024;
-          }else {
-            return value;
+          // formatter: '{value}MB'
+          formatter:function () {
+
           }
-        }
+        },
+      max:function(value){
+        return value.max +20;
+      }
     },
     series: [
         {

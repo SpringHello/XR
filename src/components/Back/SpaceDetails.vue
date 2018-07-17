@@ -1544,12 +1544,12 @@
                 this.fileObject = res.data.data.dirMeta.dirList;
               }else{
                 this.fileObject = [];
+                this.tabLoading = false;
               }
               if (typeof(object) != "undefined") {
                 this.tabLoading = false;
               } else {
                 this.tabLoading = false;
-                return ;
               }
             }
           }).catch(error =>{
