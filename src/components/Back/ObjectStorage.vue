@@ -296,7 +296,7 @@
       changeByte(val){
         let byte = [];
         val.forEach(item=>{
-          byte.push(item / 1073741824 > 1 ? (item / 1073741824).toFixed(2) : item / 1048576 > 1 ? ((item / 1048576).toFixed(2))  : (item / 1024).toFixed(2))
+          byte.push(item / 1073741824 > 1 ? (item / 1073741824).toFixed(2)+'gb' : item / 1048576 > 1 ? ((item / 1048576).toFixed(2))+'mb'  : (item / 1024).toFixed(2))+'kb'
         })
        return byte;
       },
