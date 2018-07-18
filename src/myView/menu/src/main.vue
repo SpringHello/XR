@@ -1,13 +1,20 @@
 <template>
   <div style="display: flex;margin-right: 10px;">
     <div style="width:160px;position: relative;background-color: #142133" :class="{close:!opened}">
+        <div class="regionTitle">
+          <span class="act">{{opened?zoneName:""}}</span>
+        </div>
+        <ul>
+          <li class="subTitle" v-show="!opened" v-for="item in zoneList">{{item.zonename}}</li>
+        </ul>
+
       <div style="height:38px;background-color: #1B2940" @click="toggleHidden"></div>
       <ul>
         <li v-for="item in items" @mouseenter="go" class="house">
-          <div class="mainTitle" @click="toggleMain(item)">
+          <div class="mainTitle" @click="toggleMain(item)" >
             <span :class="{act:openedMain.includes(item.type)}">{{opened?item.mainName:''}}</span>
           </div>
-        <div></div>
+
           <ul v-if="openedMain.includes(item.type)">
             <li v-for="sub in item.subItem" @click="jump(sub.type)" class="subTitle" @mouseenter="go(sub)" @mouseleave="leave(sub)">
               <svg class="icon" aria-hidden="true" style="width:28px;height:28px;vertical-align: middle;">
@@ -23,7 +30,7 @@
           <div class="wrapper">
             <div class="operate">
               <ul>
-                <li v-for="(thr,sIndex) in thrMenu" :key="sIndex" style="cursor: pointer" >
+                <li v-for="(thr,sIndex) in thrMenu" :key="sIndex" style="cursor: pointer" class="house">
                   {{thr.thrName}}
                 </li>
               </ul>
@@ -47,6 +54,9 @@
       accordion: {
         type: Boolean,
         default: true
+      },
+      changeRgion:{
+        type:Function
       }
     },
     data(){
@@ -58,11 +68,15 @@
         static: false,
         // 主menu是否打开
         opened: true,
+        zoneName:this.$store.state.zone.zonename,
+        zoneList:this.$store.state.zoneList
       }
     },
     mounted(){
-
-    },
+     // for(let i = 0;i<this.zoneList.length;i++){
+     //
+     // }
+   },
     methods: {
       toggleHidden(){
         this.opened = !this.opened
@@ -109,7 +123,7 @@
           window.open(src);
         else
         this.$router.push({path:src});
-      }
+      },
     },
     watch: {}
   }
@@ -117,9 +131,44 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
-  .house{
+  .house:hover{
+      color: #FFFFFF;
+  }
+  .regionTitle{
+    padding: 14px 20px;
+    position: relative;
+    cursor: pointer;
+    background-color: #22344D;
+    font-size: 14px;
+    color: rgba(163, 186, 204, 1);
+    line-height: 14px;
+    span {
+      &:before {
+        content: '';
+        display: inline-block;
+        width: 14px;
+        height: 19px;
+        background-image: url("../../../assets/img/back/zoneIcon.png");
+        margin-right: 12px;
+      }
+      &.after{
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-left: 1px solid #fff;
+        border-bottom: 1px solid #fff;
+        transform: translateY(-3px) rotate(-45deg);
+        margin-right: 12px;
+      }
+      &.act {
+        &:after {
+          transform: translateY(2px) rotate(135deg);
+        }
+      }
+    }
     &:hover{
-      color: #000;
+      color:#FFFFFF;
     }
   }
   .mainTitle {
@@ -146,9 +195,12 @@
           transform: translateY(2px) rotate(135deg);
         }
       }
-
     }
   }
+    .mainTitle:hover{
+      color: #FFFFFF;
+    }
+
   .subTitle {
     padding: 14px 10px;
     background-color: #142133;
