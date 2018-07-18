@@ -14,13 +14,14 @@
         <p>分享给好友获得免费赠送时长吧。</p>
       </div>
       <div slot="footer" class="modal-footer">
-        <button @click="paySuccess = false">知道了</button>
+        <button @click="iKnow">知道了</button>
       </div>
     </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import $ from 'jquery'
   import $store from '../../../vuex'
   import gbHost from './element/gb-host'
   import gbAward from './element/gb-award'
@@ -101,6 +102,10 @@
           this.participationPersonData = response[0].data.result.list_Members
           this.hostDuration = response[0].data.result.list_teamHeader[0].receiveRecord
         }
+      },
+      iKnow(){
+        this.paySuccess = false
+        $('html, body').animate({scrollTop: 550}, 300)
       }
     },
     computed: {}
