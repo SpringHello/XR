@@ -205,6 +205,7 @@
         flex-wrap: wrap;
         justify-content: space-between;
         .box {
+          height: 160px;
           width: 590px;
           margin-bottom: 20px;
           border: solid #e6e6e6 1px;
