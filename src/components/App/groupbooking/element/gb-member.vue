@@ -77,7 +77,7 @@
         box-shadow: 0px 2px 9px 0px rgba(214, 84, 86, 0.3);
         .title {
           display: flex;
-          padding: 19px 18px;
+          padding: 19px 40px;
           p {
             font-size: 14px;
             font-family: "Microsoft YaHei","微软雅黑";

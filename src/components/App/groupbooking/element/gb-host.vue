@@ -242,7 +242,7 @@
           margin-top: 50px;
           .title {
             display: flex;
-            padding: 19px 30px;
+            padding: 19px 40px;
             p {
               font-size: 14px;
               font-family: "Microsoft YaHei","微软雅黑";

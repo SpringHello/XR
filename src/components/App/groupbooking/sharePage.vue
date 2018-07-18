@@ -61,12 +61,17 @@
         participationPersonColumns: [
           {
             title: '云朵',
+            width: 100,
+            align: 'center',
             key: 'companyname'
           }, {
             title: '加入时间',
+            align: 'center',
             key: 'jointime'
           }, {
             title: '状态',
+            width: 100,
+            align: 'center',
             render: (h, params) => {
               return h('span', {}, '已支付')
             }
