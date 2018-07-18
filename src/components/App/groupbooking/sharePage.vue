@@ -60,9 +60,15 @@
         activeLink: '',
         participationPersonColumns: [
           {
-            title: '云朵',
+            type: 'index',
             width: 100,
+            align: 'center'
+          },
+          {
+            title: '云朵',
+            width: 300,
             align: 'center',
+            ellipsis: true,
             key: 'companyname'
           }, {
             title: '加入时间',

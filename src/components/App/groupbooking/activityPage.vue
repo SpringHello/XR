@@ -86,8 +86,13 @@
         isBuy: false,
         participationPersonColumns: [
           {
-            title: '云朵',
+            type: 'index',
             width: 100,
+            align: 'center'
+          },
+          {
+            title: '云朵',
+            width: 300,
             align: 'center',
             key: 'companyname'
           }, {
