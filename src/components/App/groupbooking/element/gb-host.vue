@@ -242,7 +242,7 @@
           margin-top: 50px;
           .title {
             display: flex;
-            padding: 19px 40px;
+            padding: 19px 12px;
             p {
               font-size: 14px;
               font-family: "Microsoft YaHei","微软雅黑";
@@ -265,6 +265,7 @@
               }
             }
             button {
+              float: right;
               cursor: pointer;
               border: none;
               outline: none;

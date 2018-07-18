@@ -141,12 +141,10 @@
               <span>+86</span><Input @on-focus="toolShow('officePhone')" @on-blur="toolHide()" v-model="mainUnitInformation.officePhone" placeholder="请输入办公室电话"
                                      style="width: 468px;margin-left: 10px"></Input>
               <transition name="fade">
-                <div class="tooltip-popper" style="top:-36px" v-if="isToolHide == 6">
+                <div class="tooltip-popper" style="top:0" v-if="isToolHide == 6">
                   <div class="tooltip-center">
                     <div class="tooltip-arrow"></div>
-                    <div class="tooltip">1. 请您确保填写的电话畅通并可直接联系到本人，否则可能导致您的备案失败。
-                      2. 该电话在备案成功后需保持畅通，以备核查。
-                      3. 电话格式：086-010-87654321-007（可以不带分机号）。
+                    <div class="tooltip">个人用户办公室电话选填
                     </div>
                   </div>
                 </div>
