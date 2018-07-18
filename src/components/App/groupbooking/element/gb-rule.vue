@@ -67,6 +67,7 @@ export default {
     justify-content: center;
   }
   .container-text {
+    width: 880px;
     .item {
       display: inline-flex;
       margin-right:50px;

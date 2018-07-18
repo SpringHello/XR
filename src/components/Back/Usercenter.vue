@@ -656,7 +656,7 @@
                       </div>
                       <div style="width:130px;margin-left:20px;">
                         <img src="../../assets/img/usercenter/card-font.png"
-                             style="width:130px;height:74px;margin-bottom: 10px;" >
+                             style="width:130px;height:74px;margin-bottom: 10px;">
                         <p style="line-height: 32px;text-align: center">身份证人面像</p>
                       </div>
                     </div>
@@ -1221,7 +1221,7 @@
                @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
         </p>
         <p> 验证码
-          <Input v-model="keyForm.code" placeholder="请输入验证码" style="width: 132px;margin:0 20px;"></Input>
+          <Input v-model="keyForm.code" placeholder="请输入验证码" style="width: 132px;margin-left: 48px;margin-right: 20px;"></Input>
           <Button type="primary" :class="{codeDisabled:keycodePlaceholder!='获取验证码'}" @click.prevent="keysendCode"
                   :disabled="keycodePlaceholder!='获取验证码'">{{keycodePlaceholder}}
           </Button>
@@ -1978,8 +1978,17 @@
           {
             title: '状态',
             render: (h, params) => {
-              let text = params.row.status == 1 ? '启动' : '禁用'
-              return h('span', {}, text)
+              const text = params.row.status == 1 ? '启动' : params.row.status == 0 ? '禁用' : '删除中'
+              if (params.row.status == 3) {
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', {}, text)])
+              } else {
+                return h('span', text)
+              }
             }
           },
           {
@@ -1989,7 +1998,7 @@
           {
             title: '操作',
             render: (h, params) => {
-              let text = params.row.status == 1 ? '启动' : '禁用'
+              let text = params.row.status == 1 ? '禁用' : '启动'
               return h('div', [
                 h('span', {
                   style: {
@@ -2021,12 +2030,14 @@
                   },
                   on: {
                     click: () => {
+                      this.keyData[params.index].status = 3
                       axios.post('user/deleteUserAcess.do', {
                         accessKeyID: params.row.accesskeyid,
                         zoneId: $store.state.zone.zoneid,
                         token: this.token
                       }).then(response => {
                         if (response.status == 200 && response.data.status == 1) {
+                          this.$Message.success('删除成功')
                           this.keyData.splice(params.index, 1);
                         } else {
                           this.$Message.error(response.data.message)
@@ -2059,33 +2070,42 @@
           this.$Message.error(response.data.msg)
         }
       })
-      axios.post('user/getRuiRadosApiacess.do', {
-        zoneId: $store.state.zone.zoneid,
-        companyId: $store.state.authInfo.companyid
-      }).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          var radosApIaccessKey = response.data.data.data
-          axios.get('user/getRadosToken.do', {
-            params: {
-              companyId: $store.state.authInfo.companyid,
-              secret: radosApIaccessKey
-            }
-          }).then(response => {
-            if (response.status == 200) {
-              this.token = response.data.token
-              this.listKey()
-            }
-          })
-        }
-      })
+      this.listKey()
+      if($store.state.authInfo.companyid){
+        axios.post('user/getRuiRadosApiacess.do', {
+          zoneId: $store.state.zone.zoneid,
+          companyId: $store.state.authInfo.companyid
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            var radosApIaccessKey = response.data.data.data
+            axios.get('user/getRadosToken.do', {
+              params: {
+                companyId: $store.state.authInfo.companyid,
+                secret: radosApIaccessKey
+              }
+            }).then(response => {
+              if (response.status == 200) {
+                this.token = response.data.token
+              }
+            })
+          }
+        })
+      }
       this.listNotice()
       this.getContacts()
+      /*if (!$store.state.accessKey) {
+      // console.log('access key')
+      // setTimeout(() => {
+      //   console.log($store.state.accessKey)
+      // }, 0);
+      // console.log($store.state)
+      // console.log($store.state.accessKey)
       if(!$store.state.accessKey){
         this.$Modal.confirm({
           title: '提示',
-          content: '<p style="line-height: 16px;">尊敬的用户您好，系统检测到您当前没有可用的Access Key,请您到<span style="color: #2A99F2;">Access Key管理</span>去创建Access Key。</p>',
+          content: '<p style="line-height: 16px;">尊敬的用户您好，系统检测到您当前没有可用的Access Key,请您到<span style="color: #2A99F2;cursor:pointer">Access Key管理</span>去创建Access Key。</p>',
         });
-      }
+      }*/
     },
     methods: {
       init() {
@@ -2781,21 +2801,29 @@
         })
       },
       keymodal() {
-        axios.post('user/createUserAcess.do', {
-          zoneId: $store.state.zone.zoneid,
-          token: this.token
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            this.listKey()
-          } else if (response.status == 200 && response.data.status == 20) {
-            this.keyForm.imgCode = ''
-            this.keyForm.code = ''
-            this.showModal.keyPhoneVal = true
-            this.keyWeight = response.data.data.weight
-          } else {
-            this.$Message.error(response.data.msg)
-          }
-        })
+        if(this.$store.state.authInfo){
+          axios.post('user/createUserAcess.do', {
+            zoneId: $store.state.zone.zoneid,
+            token: this.token
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$Message.success('创建成功')
+              this.listKey()
+            } else if (response.status == 200 && response.data.status == 20) {
+              this.keyForm.imgCode = ''
+              this.keyForm.code = ''
+              this.showModal.keyPhoneVal = true
+              this.keyWeight = response.data.data.weight
+            } else {
+              this.$Message.info(response.data.message)
+            }
+          })
+        } else{
+          this.$Modal.confirm({
+            title: '提示',
+            content: '<p style="line-height: 16px;">尊敬的用户您好，系统检测到您当前没有认证,请您到<span style="color: #2A99F2;">用户中心</span>去进行认证</p>',
+          });
+        }
       },
       keysendCode() {
         if (this.keyForm.imgCode == '') {
@@ -2841,12 +2869,12 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            console.log(this.token)
             axios.post('user/createUserAcess.do', {
               zoneId: $store.state.zone.zoneid,
               token: this.token
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success('创建成功')
                 this.listKey()
               } else {
                 this.$message.info({

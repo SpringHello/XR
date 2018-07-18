@@ -36,6 +36,7 @@
       content = content + "<tr><td> 电话：010-82527988</td></tr>";
       content += "</table>";
       var infowindow = new BMap.InfoWindow(content);
+      marker.openInfoWindow(infowindow);
       marker.addEventListener("click", function () {
         this.openInfoWindow(infowindow);
       });
