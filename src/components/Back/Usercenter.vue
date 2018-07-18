@@ -2002,7 +2002,7 @@
               return h('div', [
                 h('span', {
                   style: {
-                    marginRight: '5px',
+                    marginRight: '20px',
                     color: '#2A99F2',
                     cursor: 'pointer'
                   },
