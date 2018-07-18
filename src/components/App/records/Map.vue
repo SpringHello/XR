@@ -4,14 +4,12 @@
   </div>
 </template>
 <script type="text/ecmascript-6">
-  import BMap from 'BMap'
-
   export default {
     data() {
       return {}
     },
     mounted() {
-//创建Map实例
+      //创建Map实例
       var map = new BMap.Map("container");
       var point = new BMap.Point(116.340315, 39.999888);
       map.centerAndZoom(point, 17);
@@ -43,7 +41,7 @@
       });
       //点击地图，获取经纬度坐标
       map.addEventListener("click", function (e) {
-        document.getElementById("aa").innerHTML = "经度坐标：" + e.point.lng + " &nbsp;纬度坐标：" + e.point.lat;
+        //document.getElementById("aa").innerHTML = "经度坐标：" + e.point.lng + " &nbsp;纬度坐标：" + e.point.lat;
       });
     }
   }

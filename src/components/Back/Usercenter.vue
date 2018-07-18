@@ -2781,7 +2781,6 @@
         })
       },
       keymodal() {
-        console.log(this.token)
         axios.post('user/createUserAcess.do', {
           zoneId: $store.state.zone.zoneid,
           token: this.token

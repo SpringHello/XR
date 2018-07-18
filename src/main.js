@@ -12,6 +12,7 @@ import '@/assets/css/iviewOverRide.css'
 import '@/assets/css/reset.css'
 import '@/assets/css/universal.less'
 
+//import './util/BMap'
 // import ECharts from 'vue-echarts/components/ECharts.vue'
 
 import ECharts from 'vue-echarts/components/ECharts'
@@ -40,8 +41,8 @@ Vue.config.productionTip = false
 //axios.defaults.baseURL = 'http://zx.xrclouds.net/ruicloud'
 
 
-axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
-axios.defaults.withCredentials = true
+axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
+//axios.defaults.withCredentials = true
 
 
 //axios.defaults.baseURL = 'http://zengxin.xrclouds.net/ruicloud/'
