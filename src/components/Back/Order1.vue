@@ -195,7 +195,7 @@
           params: {
             ticketType: '',
             isuse: 0,
-            totalCost: this.couponInfo.originCost
+            totalCost: this.couponInfo.cost
           }
         }).then(response => {
           this.couponInfo.couponList = response.data.result
@@ -227,6 +227,15 @@
         } else {
           this.couponInfo.totalCost = 0
         }
+        this.$http.get('ticket/getUserTicket.do', {
+          params: {
+            ticketType: '',
+            isuse: 0,
+            totalCost: cost
+          }
+        }).then(response => {
+          this.couponInfo.couponList = response.data.result
+        })
       },
       // 是否使用优惠券开关
       changeCheckbox(bol){
@@ -242,6 +251,10 @@
             order += item.orderId + ','
           }
         })
+        if (order == '') {
+          this.$message.info('请选择需要支付的订单')
+          return
+        }
         axios.get('information/zfconfirm.do', {
           params: {
             order,

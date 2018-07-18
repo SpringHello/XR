@@ -49,7 +49,7 @@
             <button :class="{disabled:disabled}" :disabled="disabled==true" @click="submit">注册</button>
             <div style="margin-bottom: 10px;">
               <span class="checkBox" :class="{agree:agree}" @click="toggle"></span>&nbsp;<span>我已阅读并同意</span><span
-              style="color:#0EB4FA;cursor:pointer;" @click="showRules">《睿云用户使用协议》</span>
+              style="color:#0EB4FA;cursor:pointer;" @click="showRules">《新睿云用户使用协议》</span>
             </div>
             <div>
               <router-link to="login"><span style="color:#0EB4FA">已有帐号点击登录</span></router-link>
