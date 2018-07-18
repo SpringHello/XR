@@ -233,7 +233,7 @@
         // 区域选择列表
         areaList: [
           {
-            text: '北京一区（测试）',
+            text: '北京一区',
             src: require('../../../assets/img/records/records-icon7.png'),
             zoneId: '39a6af0b-6624-4194-b9d5-0c552d903858'
           }, {
@@ -241,7 +241,7 @@
             src: require('../../../assets/img/records/records-icon8.png'),
             zoneId: 'a0a7df65-dec3-48da-82cb-cff9a55a4b6d'
           }, {
-            text: '北方二区（沈阳）',
+            text: '北方二区',
             src: require('../../../assets/img/records/records-icon8.png'),
             zoneId: '1ce0d0b9-a964-432f-8078-a61100789e30'
           }, {
@@ -255,7 +255,7 @@
           }
         ],
         area: '39a6af0b-6624-4194-b9d5-0c552d903858',
-        areaText: '北京一区（测试）',
+        areaText: '北京一区',
         // 区域切换时icon变化
         selectImg: require('../../../assets/img/records/records-icon7.png'),
         unSelectImg: require('../../../assets/img/records/records-icon8.png'),
