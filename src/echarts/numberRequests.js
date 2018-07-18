@@ -1,5 +1,6 @@
 
 var echarts = require('echarts/lib/echarts')
+
 export default {
     tooltip: {
         trigger: 'axis',
@@ -34,10 +35,11 @@ export default {
         axisLabel: {
             formatter: '{value}'
         },
-      max: function(value) {
-        console.log(typeof(value.max));
-        return Number(value.max) + 20;
-      }
+      minInterval: 1
+      // max: function(value) {
+      //   console.log(typeof(value.max));
+      //   return Number(value.max) + 20;
+      // }
     },
     series: [
         {

@@ -237,11 +237,14 @@
           if(!res.data.data.dateList){
             this.rwPolar.xAxis.data = this.dayList[val].day;
             this.rwPolar.series[0].data = this.changeByte(res.data.data.getFlow);
-            this.rwPolar.yAxis.axisLabel.formatter = this.changeByte(res.data.data.getFlow);
+            // this.rwPolar.yAxis.axisLabel.formatter = this.changeByte2(res.data.data.getFlow);
+            // this.rwPolar.max = this.maxs(res.data.data.getFlow);
           }else {
             this.rwPolar.xAxis.data = res.data.data.dateList;
             this.rwPolar.series[0].data = this.changeByte(res.data.data.getFlow);
-            this.rwPolar.yAxis.axisLabel.formatter = this.changeByte(res.data.data.getFlow);
+            // this.rwPolar.yAxis.axisLabel.formatter = this.changeByte2(res.data.data.getFlow);
+            // this.rwPolar.max = this.maxs(res.data.data.getFlow);
+            // console.log(this.rwPolar);
           }
         })
       },
@@ -296,9 +299,29 @@
       changeByte(val){
         let byte = [];
         val.forEach(item=>{
-          byte.push(item / 1073741824 > 1 ? (item / 1073741824).toFixed(2)+'gb' : item / 1048576 > 1 ? ((item / 1048576).toFixed(2))+'mb'  : (item / 1024).toFixed(2))+'kb'
+          byte.push((item / 1048576).toFixed(2) )
         })
        return byte;
+      },
+      changeByte2(val){
+        let byte = [];
+        val.forEach(item=>{
+          if(item / 1073741824 >16){
+            byte.push("GB")
+          }else if(item / 1073741824<1){
+            byte.push("MB")
+          }else {
+            byte.push("Kb")
+          }
+        })
+        return byte;
+      },
+      //表格最大值
+      maxs(val){
+       val.sort((num1,num2) =>{
+         return num1 - num2 < 0
+       })
+      return val[0] / 1073741824 > 1 ? (val[0] / 1073741824 ).toFixed(0)+'GB' : val[0] / 1048576 > 1 ? ((val[0] / 1048576).toFixed(0))+'MB'  : ((val[0] / 1024).toFixed(0))+'KB';
       },
       //下载流量切换统计图
       chartClick(val){
@@ -347,10 +370,15 @@
       },
       //云储存服务开通提示框
       buy(){
+         let status = true;
+        if(!!status)
         this.$Modal.confirm({
           title: '提示',
           content: '<p style="line-height: 16px">尊敬的用户您好，您尚未开通云存储服务，对象存储服务根据使用量后付费，收费项目包括：存储空间、源站流量等，详细信息请见<span>购买须知</span></p>',
-          okText:'确认开通'
+          okText:'确认开通',
+          onOk:()=>{
+              this.$Message.success('开通成功');
+          }
         });
       },
     },

@@ -1,5 +1,21 @@
 
-var echarts = require('echarts/lib/echarts')
+var echarts = require('echarts/lib/echarts');
+
+function renderItem(params,api){
+  return{
+    type:'line',
+    shape:echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+      offset: 0,
+      color: '#2A99F2'
+    }, {
+      offset: 1,
+      color: '#ffe'
+    }]),
+    style:api.style()
+  }
+}
+
+
 export default {
     tooltip: {
         trigger: 'axis',
@@ -11,7 +27,7 @@ export default {
                 type: 'dashed'
             },
         },
-      formatter: "{a}<br>{b} : {c}GB"
+      formatter: "{a}<br>{b} : {c}MB"
     },
     grid: {
         left: '3%',
@@ -29,14 +45,10 @@ export default {
     },
     yAxis: {
         axisLabel: {
-          // formatter: '{value}MB'
-          formatter:function () {
+           formatter: "{value}MB"
+         },
 
-          }
-        },
-      max:function(value){
-        return value.max +20;
-      }
+      // max:20
     },
     series: [
         {
@@ -56,7 +68,9 @@ export default {
                 offset: 1,
                 color: '#ffe'
             }])}},
-            data: [0, 0, 0, 0, 0, 0, 0]
+            data: [0, 0, 0, 0, 0, 0, 0],
+            renderItem:renderItem
+            // renderItem:renderItem
         },
     ]
 }
