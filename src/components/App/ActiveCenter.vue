@@ -24,7 +24,7 @@
           <div class="box-wrap">
             <router-link v-for="(item,index) in active" :key="index" class="box" :to="item.url">
               <div class="box-left">
-                <img :src="item.mobileImgPathUrl"/>
+                <img :src="item.imgPath"/>
               </div>
               <div class="box-right">
                 <div class="title">
