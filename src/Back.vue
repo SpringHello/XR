@@ -324,9 +324,6 @@
       // this.$http.get('user/showUserAcessAll.do').then(response => {
       //   console.log(response)
       // })
-      axios.get('user/showUserAcessAll.do').then(response => {
-            $store.commit('setKey',response.data.data)
-      })
     },
     mounted(){
       // mounted时期根据路径修改选中的menu

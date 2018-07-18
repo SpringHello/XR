@@ -24,7 +24,7 @@
           <div class="box-wrap">
             <router-link v-for="(item,index) in active" :key="index" class="box" :to="item.url">
               <div class="box-left">
-                <img :src="item.imgPath"/>
+                <img :src="item.mobileImgPathUrl"/>
               </div>
               <div class="box-right">
                 <div class="title">
@@ -106,6 +106,14 @@
             desc: '云服务器免费使用<span style="color:#D0021B">60</span>天，带你体验飞一般的感觉',
             time: '活动时间 2018.5.3开始，数量有限、送完为止',
             url: 'active_2'
+          },
+          {
+            img: require('../../assets/img/activecenter/icon-down.png'),
+            title: '分享活动赚时长 主机一年59元',
+            iconImg: require('../../assets/img/activecenter/icon-hot.png'),
+            desc: '首月购买只需<span style="color:#D0021B">59</span>，邀请好友上云，成功一位赠送一月',
+            time: '活动长期有效',
+            url: 'groupBooking'
           },
         ],
         comingdata: [
@@ -197,7 +205,6 @@
         flex-wrap: wrap;
         justify-content: space-between;
         .box {
-          height: 160px;
           width: 590px;
           margin-bottom: 20px;
           border: solid #e6e6e6 1px;
