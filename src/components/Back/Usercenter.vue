@@ -1978,8 +1978,17 @@
           {
             title: '状态',
             render: (h, params) => {
-              let text = params.row.status == 1 ? '启动' : '禁用'
-              return h('span', {}, text)
+              const text = params.row.status == 1 ? '启动' : params.row.status == 0 ? '禁用' : '删除中'
+              if (params.row.status == 3) {
+                return h('div', {}, [h('Spin', {
+                  style: {
+                    display: 'inline-block',
+                    marginRight: '10px'
+                  }
+                }), h('span', {}, text)])
+              } else {
+                return h('span', text)
+              }
             }
           },
           {
@@ -1989,7 +1998,7 @@
           {
             title: '操作',
             render: (h, params) => {
-              let text = params.row.status == 1 ? '启动' : '禁用'
+              let text = params.row.status == 1 ? '禁用' : '启动'
               return h('div', [
                 h('span', {
                   style: {
@@ -2021,6 +2030,7 @@
                   },
                   on: {
                     click: () => {
+                      this.keyData[params.index].status = 3
                       axios.post('user/deleteUserAcess.do', {
                         accessKeyID: params.row.accesskeyid,
                         zoneId: $store.state.zone.zoneid,
@@ -2084,9 +2094,16 @@
       this.listNotice()
       this.getContacts()
       /*if (!$store.state.accessKey) {
+      // console.log('access key')
+      // setTimeout(() => {
+      //   console.log($store.state.accessKey)
+      // }, 0);
+      // console.log($store.state)
+      // console.log($store.state.accessKey)
+      if(!$store.state.accessKey){
         this.$Modal.confirm({
           title: '提示',
-          content: '<p style="line-height: 16px;">尊敬的用户您好，系统检测到您当前没有可用的Access Key,请您到<span style="color: #2A99F2;">Access Key管理</span>去创建Access Key。</p>',
+          content: '<p style="line-height: 16px;">尊敬的用户您好，系统检测到您当前没有可用的Access Key,请您到<span style="color: #2A99F2;cursor:pointer">Access Key管理</span>去创建Access Key。</p>',
         });
       }*/
     },
