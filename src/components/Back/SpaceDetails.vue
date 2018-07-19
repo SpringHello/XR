@@ -1486,11 +1486,11 @@
       },
       //上传文件之前应用的方法
       handleBeforeUpload(file) {
-        let reg = /^[\a-z\A-Z\0-9\u4e00-\u9fa5\w\d]{1,20}$/
-        if (!reg.test(file.name)) {
-          this.$Message.info('文件名不能超过20个字符');
-          return false;
-        }
+        // let reg = /^[\a-z\A-Z\0-9\u4e00-\u9fa5\w\d]{1,20}$/
+        // if (!reg.test(file.name)) {
+        //   this.$Message.info('文件名不能超过20个字符');
+        //   return false;
+        // }
       },
       //上传文件成功的方法
       handleSuccess(response,file) {
@@ -2373,6 +2373,7 @@
     margin: 10px 0 15px 20px;
   }
 
+
   .upload_list{
     display: flex;
     height: 50px;
@@ -2381,6 +2382,9 @@
       height: 25px;
       line-height: 25px;
       color: #666666;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
     div:nth-child(2) {
       width: 16%;
