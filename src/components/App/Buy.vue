@@ -2761,7 +2761,7 @@
             return
           }
           if (!regExp.hostPassword(this.PecsInfo.password)) {
-            this.PecsInfo.passwordWarning = '请输入至少6位包含大小写与数字的密码'
+            this.PecsInfo.passwordWarning = '请输入6-23位包含大小写与数字的密码'
             return
           }
         }
@@ -2807,7 +2807,7 @@
             return
           }
           if (!regExp.hostPassword(this.PecsInfo.password)) {
-            this.PecsInfo.passwordWarning = '请输入至少6位包含大小写与数字的密码'
+            this.PecsInfo.passwordWarning = '请输入6-23位包含大小写与数字的密码'
             return
           }
         }
@@ -3004,7 +3004,7 @@
           this.PdataInfo.passwordWarning = '请输入主机名称'
           return
           if (!regExp.hostPassword(this.PdataInfo.password)) {
-            this.PdataInfo.passwordWarning = '请输入至少6位包含大小写与数字的密码'
+            this.PdataInfo.passwordWarning = '请输入6-23位包含大小写与数字的密码'
             return
           }
         }
@@ -3036,7 +3036,7 @@
           this.PdataInfo.passwordWarning = '请输入主机名称'
           return
           if (!regExp.hostPassword(this.PdataInfo.password)) {
-            this.PdataInfo.passwordWarning = '请输入至少6位包含大小写与数字的密码'
+            this.PdataInfo.passwordWarning = '请输入6-23位包含大小写与数字的密码'
             return
           }
         }

@@ -134,7 +134,7 @@
         </div>
         <div class="footer-bottom">
           <ul v-for="(item,index) in Preparation " :key="index">
-            <p>{{item.time}}</p>
+            <p style="margin:0px;margin-right: 20px;">{{item.time}}</p>
             <li style="cursor: auto">{{item.title}}</li>
             <li @click="toAQ('1')">{{item.preparation}}</li>
             <li @click="toAQ('2')"><img src="./assets/img/app/record.png"
@@ -300,10 +300,10 @@
             title: '文档',
             path: '/ruicloud/document'
           },
-          /*{
+          {
            title: '资讯',
            path: '/ruicloud/article/1'
-           },*/
+           },
           {
             title: '关于我们',
             path: '/ruicloud/about'

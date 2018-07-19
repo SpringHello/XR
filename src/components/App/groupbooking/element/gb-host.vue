@@ -182,7 +182,7 @@
             font-size: 30px;
             color: rgba(0, 0, 0, 1);
             line-height: 42px;
-            padding: 30px;
+            padding: 25px;
             span {
               display: inline-block;
               font-size: 20px;

@@ -146,22 +146,26 @@
     padding: 46px 0 61px;
     .title {
       border-bottom: 1px solid #D8D8D8;
-      display: flex;
       p {
         font-family: MicrosoftYaHei;
         color: rgba(51, 51, 51, 1);
         width: 160px;
         font-size: 28px;
         line-height: 28px;
+        display: inline-block;
+        margin-bottom: 20px;
       }
       li {
+        display: inline-block;
+        vertical-align: baseline;
         font-size: 14px;
         font-family: MicrosoftYaHei;
         color: rgba(51, 51, 51, 1);
-        line-height: 14px;
         a {
-          padding: 12px 10px;
+          padding: 18px 10px;
+          color: #333;
           &.router-link-active {
+            color: #2d8cf0;
             border-bottom: 2px solid #2d8cf0;
           }
         }

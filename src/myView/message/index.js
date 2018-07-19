@@ -21,7 +21,8 @@ var namePathMap = {
   '云主机': 'host',
   '云主机快照': 'snapshot',
   '云主机镜像': 'mirror',
-  '用户中心': 'userCenter'
+  '用户中心': 'userCenter',
+  '工单': 'work'
 }
 message.error = function (options = {}) {
   options.type = 'error'
