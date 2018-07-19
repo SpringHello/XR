@@ -3,7 +3,7 @@
     <div class="center">
       <img src="../../../../assets/img/active/group-booking/gb-banner1.png"/>
       <img src="../../../../assets/img/active/group-booking/gb-banner8.png"/>
-      <p>云主机特惠计划</p>
+      <p style="width:100%;left:0px;">云主机特惠计划</p>
       <p>首月购买只需59元，邀请好友上云，</p>
       <p>每成功一位，即赠送一个月，最多可领12个月 </p>
     </div>
@@ -33,11 +33,11 @@
         display: block;
         margin: 0 auto;
       }
-      img:nth-child(2){
+      img:nth-child(2) {
         margin-top: 35px;
       }
       p {
-        font-family: "Microsoft YaHei","微软雅黑";
+        font-family: "Microsoft YaHei", "微软雅黑";
         color: rgba(255, 255, 255, 1);
       }
       p:nth-child(3) {

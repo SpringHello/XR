@@ -106,7 +106,6 @@
             warning: false
           }
         },
-
         /* 验证码地址(加上时间戳，防止缓存) */
         imgSrc: `user/getKaptchaImage.do?t=${new Date().getTime()}`
       }
@@ -198,8 +197,8 @@
               localStorage.setItem('authToken', response.data.message)
               if (this.from.indexOf('/ruicloud/smlj') == 0) {
                 this.$router.push({path: this.from})
-              }else if(this.from.indexOf('activity?companyId=') == 0){
-                this.$router.push({ name: 'activity', query: { companyId: this.from.match(/=(\S*)/)[1] }})
+              } else if (this.from.indexOf('/ruicloud/activity?companyId=') == 0) {
+                this.$router.push({name: 'activity', query: {companyId: this.from.match(/=(\S*)/)[1]}})
               } else {
                 this.$router.push({path: 'overview'})
               }

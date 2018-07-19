@@ -65,7 +65,7 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   .background {
-    background: #FFF;
+    //background: #FFF;
     .center {
       width: 1200px;
       margin: 0 auto;

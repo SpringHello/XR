@@ -16,7 +16,8 @@
         <div class="item-content">
           <div>
             <span>区域选择：</span>
-            <Select v-model="item.area" class="groupBooking-select" style="width:150px;margin-right: 42px" @on-change="getoriginalPrice(index)">
+            <Select v-model="item.area" class="groupBooking-select" style="width:150px;margin-right: 42px"
+                    @on-change="getoriginalPrice(index)">
               <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
             <span>系统选择：</span>
@@ -75,10 +76,10 @@
       <div class="modal-body">
         <img src="../../../../assets/img/active/group-booking/gb-icon13.png"/>
         <p>您已经是新睿云的常客， </p>
-        <p>可59元直接购买云主机啦！点击<span @click="$router.push('groupBooking')">立即购买</span></p>
+        <p>您已经使用过新睿云产品，成为云客重新购买并分享链接可赚取更多时长哦！<span @click="$router.push('groupBooking')">立即购买</span></p>
       </div>
       <div slot="footer" class="modal-footer">
-        <button @click="oldModal = false">知道了</button>
+        <button @click="$router.push('groupBooking')">立即购买</button>
       </div>
     </Modal>
   </div>
@@ -139,9 +140,9 @@
           label: '华中一区',
           value: '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c'
         } /*{
-          label: '华中二区',
-          value: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2'
-        }*/
+         label: '华中二区',
+         value: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2'
+         }*/
         ],
         systemGroup: [
           {
