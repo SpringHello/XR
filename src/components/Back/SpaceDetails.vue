@@ -35,14 +35,14 @@
         <p style="margin-top:20px;">当月用量 2018/04/28-2018/5/28</p>
         <div class="center_space">
           <div class="space_Two">
-            <p>存储空间容量</p>
+            <p>已用空间容量</p>
             <div class="space_text">
              {{size}}
             </div>
           </div>
           <div class="space_one">
             <div style="display: inline-block;width: 97%;margin-left:10px;">
-              <p>流量</p>
+              <p>已下载流量</p>
               <div style="font-size:36px;color:#333333;margin-top:10px;">{{flow}}</div>
             </div>
           </div>
@@ -255,7 +255,7 @@
         <!--</cunt>-->
         <Upload
           ref="upload"
-          :show-upload-list="true"
+          :show-upload-list="false"
           :on-success="handleSuccess"
           :max-size="1048576"
           :on-format-error="handleFormatError"
@@ -276,24 +276,24 @@
             <p style="margin-top:10px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>
           </div>
         </Upload>
-        <!--<div class="upload_list" v-for="(item,index) in uploadList" v-if="item.status == 'uploading'">-->
-          <!--<div>-->
-            <!--<span>{{item.name}}</span>-->
-          <!--</div>-->
-          <!--<div>-->
-            <!--<template>{{item.size/1024 < 1000 ? (item.size /1024).toFixed(2)+'kb': item.size/1048576 < 1024 ? (item.size / 1048576).toFixed(2)+'Mb' : (item.size/1073741824).toFixed(2)+'Gb'  }}</template>-->
-          <!--</div>-->
-          <!--<div>-->
-            <!--<i-progress  :percent="item.percentage"  style="width: 90%;" :stroke-width="6" hide-info></i-progress>-->
+        <div class="upload_list" v-for="(item,index) in uploadList" v-if="item.status == 'uploading'">
+          <div>
+            <span>{{item.name}}</span>
+          </div>
+          <div>
+            <template>{{item.size/1024 < 1000 ? (item.size /1024).toFixed(2)+'kb': item.size/1048576 < 1024 ? (item.size / 1048576).toFixed(2)+'Mb' : (item.size/1073741824).toFixed(2)+'Gb'  }}</template>
+          </div>
+          <div>
+            <i-progress  :percent="item.percentage"  style="width: 90%;" :stroke-width="6" hide-info></i-progress>
             <!--<div style="display: flex;height: 19px;width: 100%;">-->
               <!--<span style="width: 55px;">{{fist}}{{unText}}</span><span style="width: 125px;color: #999999;font-size:12px;">剩余时间{{listTime}}</span>-->
             <!--</div>-->
-          <!--</div>-->
+          </div>
          <!--<div>-->
            <!--<span style="margin-right: 20px;cursor: pointer;" @click="stop = 1">暂停</span>-->
            <!--<span style="cursor: pointer;" @click="deleteUpload(index)">删除</span>-->
          <!--</div>-->
-        <!--</div>-->
+        </div>
 
       </div>
 
@@ -1784,7 +1784,9 @@
       },
       //获取存储空间容量
       getAllsize() {
-        this.$http.post('object/getAllSize.do', {}).then(res => {
+        this.$http.post('object/getAllSize.do', {
+          bucketName:sessionStorage.getItem('bucketName')
+        }).then(res => {
           if (res.data.status == '1') {
             this.size = res.data.data.allsize / 1048576>1 ? (res.data.data.allsize /1048576).toFixed(0) +'GB': res.data.data.allsize > 1000 || res.data.data.allsize / 1024 > 1 ? (res.data.data.allsize / 1024).toFixed(0) + 'MB' : (res.data.data.allsize / 1024).toFixed(0) + 'KB';
           } else {

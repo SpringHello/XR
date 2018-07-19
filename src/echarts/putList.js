@@ -32,8 +32,9 @@ export default {
     },
     yAxis: {
         axisLabel: {
-            formatter: '{value} 次'
+            formatter: '{value}'
         },
+      minInterval: 1,
       max:function(value){
         console.log(value);
         return value.max -20;

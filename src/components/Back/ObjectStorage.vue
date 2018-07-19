@@ -22,12 +22,12 @@
             <p>当月用量 2018/04/28-2018/5/28</p>
             <div class="center_space">
               <div class="space_two">
-                  <p>存储空间容量</p>
+                  <p>已用空间容量</p>
                   <div style="font-size:36px;color:#333333;margin-top:10px;">{{size}}</div>
               </div>
               <div class="space_one">
                 <div style="display: inline-block;width: 97%;margin-left:10px;">
-                  <p>流量</p>
+                  <p>已下载流量</p>
                   <div style="font-size:36px;color:#333333;margin-top:10px;">{{flow}}</div>
                 </div>
               </div>
@@ -368,24 +368,25 @@
           this.flow = '0KB';
         })
       },
-      //云储存服务开通提示框
-      buy(){
-         let status = true;
-        if(!!status)
-        this.$Modal.confirm({
-          title: '提示',
-          content: '<p style="line-height: 16px">尊敬的用户您好，您尚未开通云存储服务，对象存储服务根据使用量后付费，收费项目包括：存储空间、源站流量等，详细信息请见<span>购买须知</span></p>',
-          okText:'确认开通',
-          onOk:()=>{
-              this.$Message.success('开通成功');
-          }
-        });
-      },
+      // //云储存服务开通提示框
+      // buy(){
+      //    let status = true;
+      //   if(!!status)
+      //   this.$Modal.confirm({
+      //     title: '提示',
+      //     content: '<p style="line-height: 16px">尊敬的用户您好，您尚未开通云存储服务，对象存储服务根据使用量后付费，收费项目包括：存储空间、源站流量等，详细信息请见<span>购买须知</span></p>',
+      //     okText:'确认开通',
+      //     onOk:()=>{
+      //         this.$Message.success('开通成功');
+      //
+      //     }
+      //   });
+      // },
     },
     mounted(){
       this.getAllsize();
       this.getOverview();
-      this.buy();
+      // this.buy();
 
     }
   };
