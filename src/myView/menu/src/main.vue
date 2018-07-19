@@ -1,22 +1,24 @@
 <template>
   <div style="display: flex;margin-right: 10px;">
     <div style="width:160px;position: relative;background-color: #142133" :class="{close:!opened}">
-        <div class="regionTitle">
-          <span class="act">{{opened?zoneName:""}}</span>
-        </div>
-        <ul>
-          <li class="subTitle" v-show="!opened" v-for="item in zoneList">{{item.zonename}}</li>
-        </ul>
-
       <div style="height:38px;background-color: #1B2940" @click="toggleHidden"></div>
       <ul>
+        <div>
+          <div class="regionTitle" @click="region = !region">
+            <span  >{{opened?zoneName:""}}</span>
+            <div v-show="opened" :class="{act:!region}"></div>
+          </div>
+          <ul>
+            <li class="subTitle"  v-show="!region"  v-for="item in zoneList" @click="regionSelect(item.zoneid)">{{item.zonename}}</li>
+          </ul>
+        </div>
+
         <li v-for="item in items" @mouseenter="go" class="house">
           <div class="mainTitle" @click="toggleMain(item)" >
             <span :class="{act:openedMain.includes(item.type)}">{{opened?item.mainName:''}}</span>
           </div>
-
           <ul v-if="openedMain.includes(item.type)">
-            <li v-for="sub in item.subItem" @click="jump(sub.type)" class="subTitle" @mouseenter="go(sub)" @mouseleave="leave(sub)">
+            <li v-for="sub in item.subItem" @click="jump(sub.type)"  class="subTitle" @mouseenter="go(sub)" @mouseleave="leave(sub)">
               <svg class="icon" aria-hidden="true" style="width:28px;height:28px;vertical-align: middle;">
                 <use :xlink:href="sub.icon"></use>
               </svg>
@@ -44,6 +46,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from  'axios'
   export default {
     name: 'my-menu',
     props: {
@@ -68,14 +71,13 @@
         static: false,
         // 主menu是否打开
         opened: true,
+        //区域
+        region:false,
         zoneName:this.$store.state.zone.zonename,
         zoneList:this.$store.state.zoneList
       }
     },
     mounted(){
-     // for(let i = 0;i<this.zoneList.length;i++){
-     //
-     // }
    },
     methods: {
       toggleHidden(){
@@ -124,8 +126,24 @@
         else
         this.$router.push({path:src});
       },
+      regionSelect(zoneId){
+        axios.get('user/setDefaultZone.do', {params: {zoneId: zoneId}}).then(response => {
+        })
+        for (var zone of this.zoneList) {
+          if (zone.zoneid == zoneId) {
+            this.$store.commit('setZone', zone);
+          }
+        }
+          this.region = false;
+      }
     },
-    watch: {}
+    watch: {
+      '$store.state.zone':{
+        handler:function(){
+          this.zoneName = this.$store.state.zone.zonename;
+        }
+      }
+    }
   }
 
 </script>
@@ -151,19 +169,23 @@
         background-image: url("../../../assets/img/back/zoneIcon.png");
         margin-right: 12px;
       }
-      &.after{
+    }
+    div{
+      display: inline-block;
+      &:after{
         content: '';
         display: inline-block;
         width: 8px;
         height: 8px;
         border-left: 1px solid #fff;
         border-bottom: 1px solid #fff;
-        transform: translateY(-3px) rotate(-45deg);
-        margin-right: 12px;
+        transform: translateY(2px) rotate(135deg);
+        transition: ease-in all 0.2s;
+        margin-left: 12px;
       }
       &.act {
         &:after {
-          transform: translateY(2px) rotate(135deg);
+          transform: translateY(-3px) rotate(-45deg);
         }
       }
     }
@@ -187,6 +209,7 @@
         height: 8px;
         border-left: 1px solid #fff;
         border-bottom: 1px solid #fff;
+        transition: ease-in all 0.3s;
         transform: translateY(-3px) rotate(-45deg);
         margin-right: 12px;
       }
@@ -197,9 +220,10 @@
       }
     }
   }
-    .mainTitle:hover{
+  .mainTitle:hover{
       color: #FFFFFF;
-    }
+  }
+
 
   .subTitle {
     padding: 14px 10px;
