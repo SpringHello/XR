@@ -16,7 +16,7 @@
                      :src="item.coverUrl"/>
               </div>
               <div class="item-right">
-                <p class="item-title">{{ item.title}} <span>{{ item.createtime}} </span></p>
+                <p class="item-title">{{ item.title}}</p><span>{{ item.createtime}} </span>
                 <p class="item-content" v-html="item.abstracts"></p>
                 <div class="item-label">
                   <span v-for="label in item.labels">{{ label.name}}</span>
@@ -194,12 +194,18 @@
               font-size: 18px;
               font-family: MicrosoftYaHei;
               color: rgba(51, 51, 51, 1);
-              span {
-                font-size: 12px;
-                font-family: MicrosoftYaHei;
-                color: rgba(153, 153, 153, 1);
-                float: right;
-              }
+              width: 400px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              display: inline-block;
+            }
+            span {
+              font-size: 12px;
+              font-family: MicrosoftYaHei;
+              color: rgba(153, 153, 153, 1);
+              float: right;
+              line-height: 18px;
             }
             .item-content {
               font-size: 14px;
