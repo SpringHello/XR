@@ -77,7 +77,7 @@
         if (url != null) {
           setTimeout(() => {
             sessionStorage.setItem('step','step-one')
-            this.$router.push({ name: url, query: { companyId: companyID }})
+            this.$router.push({ name: url, query: { token: companyID }})
           }, 1000)
         } else {
         }

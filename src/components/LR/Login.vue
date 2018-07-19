@@ -197,8 +197,8 @@
               localStorage.setItem('authToken', response.data.message)
               if (this.from.indexOf('/ruicloud/smlj') == 0) {
                 this.$router.push({path: this.from})
-              } else if (this.from.indexOf('/ruicloud/activity?companyId=') == 0) {
-                this.$router.push({name: 'activity', query: {companyId: this.from.match(/=(\S*)/)[1]}})
+              } else if (this.from.indexOf('/ruicloud/activity?token=') == 0) {
+                this.$router.push({name: 'activity', query: {token: this.from.match(/=(\S*)/)[1]}})
               } else {
                 this.$router.push({path: 'overview'})
               }
