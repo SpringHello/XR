@@ -2813,6 +2813,7 @@
               this.keyForm.imgCode = ''
               this.keyForm.code = ''
               this.showModal.keyPhoneVal = true
+              this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
               this.keyWeight = response.data.data.weight
             } else {
               this.$Message.info(response.data.message)
@@ -2838,6 +2839,7 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
             let countdown = 60
             this.keycodePlaceholder = '60s'
             var inter = setInterval(() => {

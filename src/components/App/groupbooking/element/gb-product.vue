@@ -4,8 +4,11 @@
     <h2 v-else>特惠产品 你我共享</h2>
     <div class="center">
       <div class="item" v-for="(item,index) in productGroups">
-        <div class="item-title">
-          特惠专享
+        <div class="item-title" v-if="isCloud">
+          云朵特惠专享
+        </div>
+        <div class="item-title" v-else>
+          云客特惠专享
         </div>
         <ul>
           <li>{{ item.cpu}}核<span>CPU</span></li>
@@ -380,7 +383,7 @@
         box-shadow: 0px 4px 9px 0px rgba(214, 84, 86, 0.3);
         .item-title {
           height: 60px;
-          background: linear-gradient(90deg, rgba(254, 79, 74, 1), rgba(252, 169, 135, 1));
+          background: linear-gradient(-90deg, rgba(254, 79, 74, 1), rgba(252, 169, 135, 1));
           font-size: 20px;
           font-family: "Microsoft YaHei", "微软雅黑";
           color: rgba(255, 255, 255, 1);
