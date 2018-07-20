@@ -195,11 +195,11 @@
                 subName: '对象存储',
                 type: 'https://oss-console.xrcloud.net/ruirados/objectStorage',
                 icon: '#icon-danxingyunfuwuqiECS',
-                thrItem:[{thrName:'概览',type:'https://oss-console.xrcloud.net/ruirados/objectStorage'},{thrName:'空间管理',type:'https://oss-console.xrcloud.net/ruirados/objectStorage'},
-                {thrName:'用量监控',type:'https://oss-console.xrcloud.net/ruirados/objectStorage'},{thrName:'操作日志',type:'https://oss-console.xrcloud.net/ruirados/objectStorage'}]
+                thrItem:[{thrName:'概览',pane:'https://oss-console.xrcloud.net/ruirados/objectStorage'},{thrName:'空间管理',pane:'https://oss-console.xrcloud.net/ruirados/objectStorage'},
+                {thrName:'用量监控',pane:'https://oss-console.xrcloud.net/ruirados/objectStorage'},{thrName:'操作日志',pane:'https://oss-console.xrcloud.net/ruirados/objectStorage'}]
               },
-              {subName: '云硬盘', type: 'disk', icon: '#icon-danxingyunfuwuqiECS'},
-              {subName: '云硬盘备份', type: 'diskBackup', icon: '#icon-danxingyunfuwuqiECS'}
+              {subName: '云硬盘', pane: 'disk', icon: '#icon-danxingyunfuwuqiECS'},
+              {subName: '云硬盘备份', pane: 'diskBackup', icon: '#icon-danxingyunfuwuqiECS'}
             ]
           },
           {

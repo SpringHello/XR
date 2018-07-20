@@ -32,7 +32,7 @@
           <div class="wrapper">
             <div class="operate">
               <ul>
-                <li v-for="(thr,sIndex) in thrMenu" :key="sIndex" style="cursor: pointer" class="house">
+                <li v-for="(thr,sIndex) in thrMenu" :key="sIndex" style="cursor: pointer" class="house" @click="jumpList(thr)">
                   {{thr.thrName}}
                 </li>
               </ul>
@@ -81,7 +81,8 @@
    },
     methods: {
       toggleHidden(){
-        this.opened = !this.opened
+        this.opened = !this.opened;
+        this.region = !this.region;
       },
       // 切换Main状态
       toggleMain(item){
@@ -125,6 +126,12 @@
           window.open(src);
         else
         this.$router.push({path:src});
+      },
+      jumpList(thr){
+        if(thr.pane.substring(0,5) === 'https')
+          window.open(thr.pane);
+        else
+          this.$router.push({path:thr.pane});
       },
       regionSelect(zoneId){
         axios.get('user/setDefaultZone.do', {params: {zoneId: zoneId}}).then(response => {
