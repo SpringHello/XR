@@ -213,7 +213,7 @@
       <Form ref="domain" :model="domain" :rules="domainValiDate" label-position="top">
         <FormItem label="自定义外网域名" prop="route" >
           <Input type="text" style="width:317px;" v-model="domain.route" placeholder=""/>
-          <p style="color: #999999;margin-top: 10px;">绑定自定义域名前，请先再域名管理平台将当前域名解析到{{zoneName}}</p>
+          <p style="color: #999999;margin-top: 10px;">绑定自定义域名前，请先在域名管理平台将当前域名解析到{{zoneName}}</p>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -240,60 +240,60 @@
         <span>操作</span>
       </div>
       <div class="upload_Box" >
-        <cunt ref="upload"
-          :onSuccess="handleSuccess"
-           :onFileProcess="handleUpload"
-            :maxSize="1048576"
-            :onError="handleError"
-          :data="fileUpdata"
-          action="http://192.168.3.95:8086/ruirados/object/uploadObject.do">
-          <div class="upload_text">
-            <Icon type="ios-upload-outline"></Icon>
-            <span>选择文件</span>
-            <p style="margin-top:5px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>
-          </div>
-        </cunt>
-        <!--<Upload-->
-          <!--ref="upload"-->
-          <!--:show-upload-list="false"-->
-          <!--:on-success="handleSuccess"-->
-          <!--:max-size="1048576"-->
-          <!--:on-format-error="handleFormatError"-->
-          <!--:on-exceeded-size="handleMaxSize"-->
-          <!--:before-upload="handleBeforeUpload"-->
-          <!--:on-error="handleError"-->
-          <!--:on-progress="handleUpload"-->
-          <!--multiple-->
-          <!--name="uploadFile"-->
+        <!--<cunt ref="upload"-->
+          <!--:onSuccess="handleSuccess"-->
+           <!--:onFileProcess="handleUpload"-->
+            <!--:maxSize="1048576"-->
+            <!--:onError="handleError"-->
           <!--:data="fileUpdata"-->
-          <!--type="drag"-->
-          <!--action="object/uploadObject.do"-->
-          <!--class="upload_model"-->
-        <!--&gt;-->
+          <!--action="http://192.168.3.95:8086/ruirados/object/uploadObject.do">-->
           <!--<div class="upload_text">-->
             <!--<Icon type="ios-upload-outline"></Icon>-->
             <!--<span>选择文件</span>-->
-            <!--<p style="margin-top:10px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>-->
+            <!--<p style="margin-top:5px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>-->
           <!--</div>-->
-        <!--</Upload>-->
-        <!--<div class="upload_list" v-for="(item,index) in uploadList" v-if="item.status == 'uploading'">-->
-          <!--<div>-->
-            <!--<span>{{item.name}}</span>-->
-          <!--</div>-->
-          <!--<div>-->
-            <!--<template>{{item.size/1024 < 1000 ? (item.size /1024).toFixed(2)+'kb': item.size/1048576 < 1024 ? (item.size / 1048576).toFixed(2)+'Mb' : (item.size/1073741824).toFixed(2)+'Gb'  }}</template>-->
-          <!--</div>-->
-          <!--<div>-->
-            <!--<i-progress  :percent="item.percentage"  style="width: 90%;" :stroke-width="6" hide-info></i-progress>-->
-            <!--<div style="display: flex;height: 19px;width: 100%;">-->
-              <!--<span style="width: 55px;">{{fist}}{{unText}}</span><span style="width: 125px;color: #999999;font-size:12px;">剩余时间{{listTime}}</span>-->
-            <!--</div>-->
-          <!--</div>-->
-         <!--<div>-->
+        <!--</cunt>-->
+        <Upload
+          ref="upload"
+          :show-upload-list="false"
+          :on-success="handleSuccess"
+          :max-size="1048576"
+          :on-format-error="handleFormatError"
+          :on-exceeded-size="handleMaxSize"
+          :before-upload="handleBeforeUpload"
+          :on-error="handleError"
+          :on-progress="handleUpload"
+          multiple
+          name="uploadFile"
+          :data="fileUpdata"
+          type="drag"
+          action="object/uploadObject.do"
+          class="upload_model"
+        >
+          <div class="upload_text">
+            <Icon type="ios-upload-outline"></Icon>
+            <span>选择文件</span>
+            <p style="margin-top:10px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>
+          </div>
+        </Upload>
+        <div class="upload_list" v-for="(item,index) in uploadList" v-if="item.status == 'uploading'">
+          <div>
+            <span>{{item.name}}</span>
+          </div>
+          <div>
+            <template>{{item.size/1024 < 1000 ? (item.size /1024).toFixed(2)+'kb': item.size/1048576 < 1024 ? (item.size / 1048576).toFixed(2)+'Mb' : (item.size/1073741824).toFixed(2)+'Gb'  }}</template>
+          </div>
+          <div>
+            <i-progress  :percent="item.percentage"  style="width: 90%;" :stroke-width="6" hide-info></i-progress>
+            <div style="display: flex;height: 19px;width: 100%;">
+              <span style="width: 55px;">{{fist}}{{unText}}</span><span style="width: 125px;color: #999999;font-size:12px;">剩余时间{{listTime}}</span>
+            </div>
+          </div>
+         <div>
            <!--<span style="margin-right: 20px;cursor: pointer;" @click="stop = 1">暂停</span>-->
            <!--<span style="cursor: pointer;" @click="deleteUpload(index)">删除</span>-->
-         <!--</div>-->
-        <!--</div>-->
+         </div>
+        </div>
 
       </div>
 
@@ -694,14 +694,14 @@
         jurisdLoading:false,
         isClass:true,
         //数字渐变动画
-        options: {
-          useEasing: true,
-          useGrouping: true,
-          separator: ',',
-          decimal: '.',
-          prefix: '',
-          suffix: ''
-        },
+        // options: {
+        //   useEasing: true,
+        //   useGrouping: true,
+        //   separator: ',',
+        //   decimal: '.',
+        //   prefix: '',
+        //   suffix: ''
+        // },
         //查看外链
         tremLoading:false,
         fliesTerm:'',
@@ -811,7 +811,12 @@
                     style: {
                       color: '#2A99F2',
                       cursor: 'pointer',
-                      marginLeft: '5px'
+                      marginLeft: '5px',
+                      maxWidth:'150px',
+                      overflow:'hidden',
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis',
+                      display:'inline-block'
                     },
                     on: {
                       click: () => {
@@ -823,7 +828,6 @@
                          this.fileObject.push(object);
                         this.filesList(params.row.id,object);//文件标识
                       }
-
                     }
                   }, params.row.filename)
                 ])
@@ -838,16 +842,18 @@
                     }
                   }),
                   h('span',{
-                  style: {
-                    color: '#66666',
-                  },
+                    class:{
+                      fileCame:true
+                    },
+
                 },params.row.filename),
                   h('span',{
                     style:{
                       color:'#2A99F2',
                       marginLeft:'5px',
                       cursor:'pointer',
-                      display:hides
+                      display:hides,
+                      verticalAlign:'top'
                     },
                     on:{
                       click:()=>{
@@ -1708,7 +1714,7 @@
           if (res.data.status == '1') {
             this.fliesTerm = res.data.data.data;
             this.tremLoading = false;
-            this.$Message.success('获取成功');
+            // this.$Message.success('获取成功');
           } else {
             this.tremLoading = false;
             this.$Message.info(res.data.msg);
@@ -1789,7 +1795,7 @@
           bucketName:sessionStorage.getItem('bucketName')
         }).then(res => {
           if (res.data.status == '1') {
-            this.size = res.data.data.allsize / 1048576>1 ? (res.data.data.allsize /1048576).toFixed(0) +'GB': res.data.data.allsize > 1000 || res.data.data.allsize / 1024 > 1 ? (res.data.data.allsize / 1024).toFixed(0) + 'MB' : (res.data.data.allsize / 1024).toFixed(0) + 'KB';
+            this.size = res.data.data.allsize / 1048576>1 ? (res.data.data.allsize /1048576).toFixed(2) +'GB': res.data.data.allsize > 1000 || res.data.data.allsize / 1024 > 1 ? (res.data.data.allsize / 1024).toFixed(2) + 'MB' : res.data.data.allsize.toFixed(2) + 'KB';
           } else {
             this.size = "0KB";
             this.$Message.info('出错了');
@@ -1994,7 +2000,7 @@
       requestClick(val){
         this.requestIndex = val;
         this.$http.post('monitor/getMonitorAllTimes.do',{
-          bucketName:'',
+          bucketName:sessionStorage.getItem("bucketName"),
           times: this.requestList[val].label
         }).then(res=>{
           if(!res.data.data.dateList){
@@ -2550,6 +2556,19 @@
     transition: border .2s ease-in-out,background .2s ease-in-out,box-shadow .2s ease-in-out;
     overflow-x:visible;overflow-y:visible;
   }
+  .ivu-table td .fileCame{
+    color: #666666;
+    max-width:150px;
+    overflow:hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display:inline-block;
+    height:15px;
+    &:hover{
+      color: #2A99F2;
+    }
+  }
+
   .red{
     border:1px solid #ed3f14;
   }

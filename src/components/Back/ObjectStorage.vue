@@ -91,6 +91,7 @@
 </template>
 
 <script>
+  import axios from 'axios';
   import diskOptions from "@/echarts/objectStroage";
   import objectNumbers from "@/echarts/numberRequests"
   import tabOne from "../../myView/objectStrorage/tabOne";
@@ -382,12 +383,27 @@
       //     }
       //   });
       // },
+      showUserAcessAll(){
+        axios.get('user/showUserAcessAll.do',{}).then(res => {
+          if(res.status === 200 && res.data.status === '18')
+              this.$Modal.confirm({
+                  title:'提示',
+                  content:'当前用户没有Access Key',
+                  onOk:()=>{
+                   window.open('https://pan.xrcloud.net/ruicloud/userCenter','_self');
+                   },
+                  onCancel:()=>{
+                    window.open('https://pan.xrcloud.net/ruicloud/userCenter','_self');
+                  }
+              })
+        })
+      }
     },
     mounted(){
       this.getAllsize();
       this.getOverview();
       // this.buy();
-
+      this.showUserAcessAll();
     }
   };
 </script>

@@ -103,103 +103,100 @@
     methods: {
       // 选择文件触发input点击事件
       upClick(){
-       this.$refs.input.click();
+          this.$refs.input.click();
       },
       // input选择文件
       checkUp(e){
-        const file = e.target.files;
-        let start = 0;
-        if(!file){
-          return;
-        }
-        let chunk = 5*1024 *1024;
-        let chunks = [];
-        for(let i=0;i<file.length;i++){
-          for(let j = 0;j<Math.ceil(file[i].size / chunk);j++){
-            let end = start + chunk;
-            chunks[i] = file[i].slice(start,end);
-            start = end;
+          const file = e.target.files;
+          let start = 0;
+          if(!file){
+            return;
           }
-        }
-        //改变文件对象为数组类型(文件对象切割出来放在数组里面)
-        let postFile = Array.prototype.slice.call(file);
-        postFile.forEach(file=>{
-          this.uploadFlie(file,chunks);
-        })
-        this.$refs.input.value = null;
+          let chunk = 5*1024 *1024;
+          let chunks = [];
+          // var reader = new FileReader();
+          // reader.readAsArrayBuffer(file);
+          for(let i=0;i<file.length;i++){
+            for(let j = 0;j<Math.ceil(file[i].size / chunk);j++){
+              let end = start + chunk;
+              chunks[i] = file[i].slice(start,end);
+              start = end;
+            }
+          }
+          //改变文件对象为数组类型(文件对象切割出来放在数组里面)
+          let postFile = Array.prototype.slice.call(file);
+          postFile.forEach(file=>{
+            this.uploadFlie(file,chunks);
+          })
+          this.$refs.input.value = null;
       },
       // 上传文件
       uploadFlie(file,chunks){
-        let formData = new FormData();
-          if(this.maxSize){
-            if(file.size > this.maxSize){
-              this.onExceededSize(file,this.fileList);
-              return false;
-            }
-          }
-          this.uploadStart(file);
-        formData.append('uploadFile',file);
-        formData.append('chunks',chunks);
-          //如果有data formData追加上传的参数
-          if (this.data) {
-            //获取对象的key
-            Object.keys(this.data).map(key => {
-              formData.append(key, this.data[key]);
-            });
-          }
-
-        let xhr = new XMLHttpRequest();
-          xhr.open('post',this.action,true);
-          xhr.onreadystatechange = function (e){
-            if (xhr.readyState === 4) {
-              if (xhr.status === 200) {
-                let res = JSON.parse(xhr.responseText);
-                  this.handleProgress(e,file);
-                  this.handleSuccess(res,file);
-                  this.handleError(e,res,file);
-                xhr.upload.onprogress = function(e) {
-                  if (e.lengthComputable) { //lengthComputable 是 progress 的一个属性，表示资源是否可计算字节流
-                    e.percent = e.loaded / e.total * 100;
-                    this.fileList.percentage = e.percent;
-                    this.oldTime = 0;
-                    // progressBar.textContent = progressBar.value; //有的浏览器不支持，这是后备选择
-                    console.log(e.percent);
-                  }
-                }
-              }else if(xhr.status == 500){
-                this.$Message.info('平台出小差了');
+          let formData = new FormData();
+            if(this.maxSize){
+              if(file.size > this.maxSize){
+                this.onExceededSize(file,this.fileList);
+                return false;
               }
             }
-          }
-          xhr.send(formData);
+            this.uploadStart(file);
+            formData.append('uploadFile',file.name);
+            formData.append('chunks',chunks);
+              //如果有data formData追加上传的参数
+              if (this.data) {
+                //获取对象的key
+                Object.keys(this.data).map(key => {
+                  formData.append(key, this.data[key]);
+                });
+              }
+
+          let xhr = new XMLHttpRequest();
+            xhr.open('post',this.action,true);
+            xhr.onreadystatechange = function (e){
+              if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                  let res = xhr.responseText;
+                    this.handleProgress(e,file);
+                    this.handleSuccess(res,file);
+                    this.handleError(e,res,file);
+                   xhr.upload.onprogress = function(e) {
+                    if (e.lengthComputable) { //lengthComputable 是 progress 的一个属性，表示资源是否可计算字节流
+                      e.percent = e.loaded / e.total * 100;
+                      this.fileList.percentage = e.percent;
+                      this.oldTime = 0;
+                      // progressBar.textContent = progressBar.value; //有的浏览器不支持，这是后备选择
+                      console.log(e.percent);
+                    }
+                  }
+                }else if(xhr.status == 500){
+                  this.$Message.info('平台出小差了');
+                }
+              }
+            }
+            xhr.send(formData);
       },
       // 拖拽上传
       onDrop(e){
-        this.dragOver = false;
-        this.uploadFlie(e.dataTransfer.files);
+          this.dragOver = false;
+          this.uploadFlie(e.dataTransfer.files);
       },
-      uploadProeegs(e){
-        // const _file = file;
-        // this.onFileProcess(e, _file, this.fileList);
-        this.fileList.percentage = e.percent || 0;
-      },
+
       //文件信息
       uploadStart(file){
-      file.Uid =  Date.now() + this.timeIndex++;
-        const _flie = {
-          status :'uploading',
-          name : file.name,
-          size : file.size,
-          percentage : 0,
-          uid: file.Uid,
-          showProgress: true
-        };
-        this.fileList.push(_flie);
-        // console.log(this.fileList);
+          file.Uid =  Date.now() + this.timeIndex++;
+            const _flie = {
+              status :'uploading',
+              name : file.name,
+              size : file.size,
+              percentage : 0,
+              uid: file.Uid,
+              showProgress: true
+            };
+           this.fileList.push(_flie);
       },
       //删除文件
       deleteUpload(index){
-        this.fileList.splice(index,1);
+         this.fileList.splice(index,1);
       },
       //上传成功
       handleSuccess(res,file){

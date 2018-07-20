@@ -1,11 +1,14 @@
 <template>
     <div>
         <p style="font-size:16px;color:#000000;margin-bottom:10px;">操作日志</p>
-        <div style="height:31px;display:flex;margin-bottom:20px;">
+        <div style="height:31px;margin-bottom:20px;">
            <ul class="objectList">
                  <li :class="indexs == index? 'objectItems':'objectItem'" v-for="(item,index) in dayList" :key="index" @click="cheoutDate(index)">{{item.value}}</li>
              </ul>
             <div class="journal_right">
+              <Select v-model="journal" style="width:200px">
+                <Option v-for="(item,index) in searchJournalList" :value="item.str" :key="item.str">{{ item.str }}</Option>
+              </Select>
                 <span>开始结束时间</span>
                  <DatePicker type="daterange" :options="options4" v-model="time"  placement="bottom-end" placeholder= "请选择时间" style="width: 200px"></DatePicker>
                 <Button type="primary"  @click="select(1)">查询</Button>
@@ -19,9 +22,37 @@
 </template>
 
 <script>
+  import axios from  'axios';
     export default {
   data() {
     return {
+      journal:'',
+      searchJournalList:[
+        // {
+        //   value:'',
+        //   label:'Object'
+        // },
+        // {
+        //   value:'',
+        //   label:'Bucket'
+        // },
+        // {
+        //   value:'',
+        //   label:'用户'
+        // },
+        // {
+        //   value:'',
+        //   label:'Cors'
+        // },
+        // {
+        //   value:'',
+        //   label:'权限'
+        // },
+        // {
+        //   value:'',
+        //   label:'请选择'
+        // }
+      ],
       //日志加载动画
       pageLoading:false,
       //总条数
@@ -31,19 +62,6 @@
         {
           key: "operatetarget",
           title: "操作对象"
-        },
-        {
-          key: "operatestatus",
-          title: "结果",
-          render : (h,params) =>{
-            return h('div',[
-              h('span',{
-                  style:{
-                    color:'#2A99F2'
-                  }
-              },params.row.operatestatus==1 ?'成功':'失败')
-            ])
-          }
         },
         {
           key:'operatetype',
@@ -166,7 +184,8 @@
             startTime: this.startDate,
             endTime: this.oneDay,
             pageSum:'10',
-            pageNum:page == undefined ? '1' : page+''
+            pageNum:page == undefined ? '1' : page+'',
+             operateTarget:this.journal
           }).then(res => {
              if(res.data.status =='1'){
                this.pageLoading = false;
@@ -201,7 +220,8 @@
           startTime:star.toString(),
           endTime:end.toString(),
           pageSum:'10',
-          pageNum:page+''
+          pageNum:page+'',
+          operateTarget:this.journal
         }).then(res => {
           if(res.data.status =='1'){
             this.pageLoading = false;
@@ -221,7 +241,8 @@
         this.pageLoading = true;
       this.$http.post('operatelog/selectLogs.do',{
         pageSum:'10',
-        pageNum:page+''
+        pageNum:page+'',
+        operateTarget:this.journal
       }).then(res =>{
         if(res.data.status == '1'){
           if(typeof(res.data.data.logs) === "string"){
@@ -234,14 +255,20 @@
           }
         }else{
           this.pageLoading = false;
-          this.$Message.info('平台出小差了');
+          this.$Message.info('获取操作日志走丢了');
         }
+      })
+    },
+    getoperateTarget(){
+      axios.get('operatelog/getoperateTarget.do',{}).then(res => {
+        if(res.status === 200 && res.data.status === '1')
+            this.searchJournalList.push(res.data.data);
       })
     }
   },
   mounted() {
    this.selectLogs(1);
-
+   this.getoperateTarget();
   }
 };
 </script>
@@ -270,13 +297,12 @@
   }
 }
 .journal_right {
-  width: 50%;
-  text-align: right;
+  float:right;
+  /*text-align: right;*/
 }
  .objectList {
-      width:50%;
       font-family: PingFangSC;
-      display: flex;
+      display: inline-block;
       li:first-child{
         border-top-left-radius: 4px;
         border-bottom-left-radius: 4px;
