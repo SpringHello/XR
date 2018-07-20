@@ -72,6 +72,7 @@ export default {
         {
           key: "name",
           title: "空间名称",
+          width:340,
           render: (h, parasm) => {
             const hide = parasm.row.hide == 1 ?'inline-block':'none';
             return h("div", [
@@ -88,7 +89,8 @@ export default {
                 {
                   style:{
                     cursor:'pointer',
-                    color:'#2A99F2'
+                    color:'#2A99F2',
+                    marginLeft:'10px'
                   },
                   on:{
                     click:()=>{
@@ -126,6 +128,7 @@ export default {
         {
           key: "operation",
           title: "操作",
+          width:100,
           render: (h, parasm) => {
             if(parasm.row.hide != 1) {
               return h("div", [

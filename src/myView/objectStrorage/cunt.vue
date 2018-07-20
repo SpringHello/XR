@@ -133,13 +133,12 @@
         let formData = new FormData();
           if(this.maxSize){
             if(file.size > this.maxSize){
-              // this.onExceededSize(file,this.fileList);
+              this.onExceededSize(file,this.fileList);
               return false;
             }
           }
           this.uploadStart(file);
         formData.append('uploadFile',file);
-
         formData.append('chunks',chunks);
           //如果有data formData追加上传的参数
           if (this.data) {
@@ -167,6 +166,8 @@
                     console.log(e.percent);
                   }
                 }
+              }else if(xhr.status == 500){
+                this.$Message.info('平台出小差了');
               }
             }
           }

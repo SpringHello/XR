@@ -113,7 +113,7 @@
             </div>
 
             <ul style="margin: 0 0 9px 20px;">
-              <li class="fileObject" >根目录</li>
+              <li class="fileObject" @click="backPage(1)">根目录</li>
               <li class="fileObject" style="margin-right: 10px;margin-left: 10px;" v-if="this.fileObject.length !=0" @click="backPage"><div class="leftArrow"></div>返回</li>
               <li class="fileObject" v-for="(item,index) in fileObject" @click="selectFileSrc(item.dirId,index)" :key="index">
                 {{item.src+'/'}}
@@ -240,60 +240,60 @@
         <span>操作</span>
       </div>
       <div class="upload_Box" >
-        <!--<cunt ref="upload"-->
-          <!--:onSuccess="handleSuccess"-->
-           <!--:onFileProcess="handleUpload"-->
-            <!--:maxSize="1048576"-->
-            <!--:onError="handleError"-->
-          <!--:data="fileUpdata"-->
-          <!--action="http://192.168.3.253:8080/ruirados/object/uploadObject.do">-->
-          <!--<div class="upload_text">-->
-            <!--<Icon type="ios-upload-outline"></Icon>-->
-            <!--<span>选择文件</span>-->
-            <!--<p style="margin-top:5px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>-->
-          <!--</div>-->
-        <!--</cunt>-->
-        <Upload
-          ref="upload"
-          :show-upload-list="false"
-          :on-success="handleSuccess"
-          :max-size="1048576"
-          :on-format-error="handleFormatError"
-          :on-exceeded-size="handleMaxSize"
-          :before-upload="handleBeforeUpload"
-          :on-error="handleError"
-          :on-progress="handleUpload"
-          multiple
-          name="uploadFile"
+        <cunt ref="upload"
+          :onSuccess="handleSuccess"
+           :onFileProcess="handleUpload"
+            :maxSize="1048576"
+            :onError="handleError"
           :data="fileUpdata"
-          type="drag"
-          action="object/uploadObject.do"
-          class="upload_model"
-        >
+          action="http://192.168.3.95:8086/ruirados/object/uploadObject.do">
           <div class="upload_text">
             <Icon type="ios-upload-outline"></Icon>
             <span>选择文件</span>
-            <p style="margin-top:10px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>
+            <p style="margin-top:5px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>
           </div>
-        </Upload>
-        <div class="upload_list" v-for="(item,index) in uploadList" v-if="item.status == 'uploading'">
-          <div>
-            <span>{{item.name}}</span>
-          </div>
-          <div>
-            <template>{{item.size/1024 < 1000 ? (item.size /1024).toFixed(2)+'kb': item.size/1048576 < 1024 ? (item.size / 1048576).toFixed(2)+'Mb' : (item.size/1073741824).toFixed(2)+'Gb'  }}</template>
-          </div>
-          <div>
-            <i-progress  :percent="item.percentage"  style="width: 90%;" :stroke-width="6" hide-info></i-progress>
+        </cunt>
+        <!--<Upload-->
+          <!--ref="upload"-->
+          <!--:show-upload-list="false"-->
+          <!--:on-success="handleSuccess"-->
+          <!--:max-size="1048576"-->
+          <!--:on-format-error="handleFormatError"-->
+          <!--:on-exceeded-size="handleMaxSize"-->
+          <!--:before-upload="handleBeforeUpload"-->
+          <!--:on-error="handleError"-->
+          <!--:on-progress="handleUpload"-->
+          <!--multiple-->
+          <!--name="uploadFile"-->
+          <!--:data="fileUpdata"-->
+          <!--type="drag"-->
+          <!--action="object/uploadObject.do"-->
+          <!--class="upload_model"-->
+        <!--&gt;-->
+          <!--<div class="upload_text">-->
+            <!--<Icon type="ios-upload-outline"></Icon>-->
+            <!--<span>选择文件</span>-->
+            <!--<p style="margin-top:10px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>-->
+          <!--</div>-->
+        <!--</Upload>-->
+        <!--<div class="upload_list" v-for="(item,index) in uploadList" v-if="item.status == 'uploading'">-->
+          <!--<div>-->
+            <!--<span>{{item.name}}</span>-->
+          <!--</div>-->
+          <!--<div>-->
+            <!--<template>{{item.size/1024 < 1000 ? (item.size /1024).toFixed(2)+'kb': item.size/1048576 < 1024 ? (item.size / 1048576).toFixed(2)+'Mb' : (item.size/1073741824).toFixed(2)+'Gb'  }}</template>-->
+          <!--</div>-->
+          <!--<div>-->
+            <!--<i-progress  :percent="item.percentage"  style="width: 90%;" :stroke-width="6" hide-info></i-progress>-->
             <!--<div style="display: flex;height: 19px;width: 100%;">-->
               <!--<span style="width: 55px;">{{fist}}{{unText}}</span><span style="width: 125px;color: #999999;font-size:12px;">剩余时间{{listTime}}</span>-->
             <!--</div>-->
-          </div>
+          <!--</div>-->
          <!--<div>-->
            <!--<span style="margin-right: 20px;cursor: pointer;" @click="stop = 1">暂停</span>-->
            <!--<span style="cursor: pointer;" @click="deleteUpload(index)">删除</span>-->
          <!--</div>-->
-        </div>
+        <!--</div>-->
 
       </div>
 
@@ -879,6 +879,7 @@
           {
             key: 'cap',
             title: '操作',
+            width:150,
             render: (h, params) => {
               if(params.row.hide != 1){
                 return h('div', [
@@ -1804,13 +1805,19 @@
         this.filesList(id)
       },
       //返回根路径
-      backPage(){
-        this.fileObject.pop();
-        if(!this.fileObject[this.fileObject.length-1]){
-          this.filesList(null);
+      backPage(val){
+        if(val == 1){
+          this.fileObject = [];
+          this.filesList();
         }else{
-          this.filesList(this.fileObject[this.fileObject.length-1].dirId);
+          this.fileObject.pop();
+          if(!this.fileObject[this.fileObject.length-1]){
+            this.filesList(null);
+          }else{
+            this.filesList(this.fileObject[this.fileObject.length-1].dirId);
+          }
         }
+
       },
       //复制文件外链路径
       copyUrl(){
