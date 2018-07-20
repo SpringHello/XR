@@ -2061,17 +2061,17 @@
           this.showModal.selectAuthType = true
         }
       }
-      axios.post('user/getPhone.do', {
-        companyId: $store.state.authInfo.companyid
-      }).then(response => {
-        if (response.status == 200 && response.data.status == 1) {
-          this.keyForm.phone = response.data.data.phone
-        } else {
-          this.$Message.error(response.data.msg)
-        }
-      })
       this.listKey()
       if($store.state.authInfo.companyid){
+        axios.post('user/getPhone.do', {
+          companyId: $store.state.authInfo.companyid
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.keyForm.phone = response.data.data.phone
+          } else {
+            this.$Message.error(response.data.msg)
+          }
+        })
         axios.post('user/getRuiRadosApiacess.do', {
           zoneId: $store.state.zone.zoneid,
           companyId: $store.state.authInfo.companyid
