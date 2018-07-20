@@ -7,7 +7,7 @@
         <div class="item-title" v-if="isCloud">
           云朵特惠专享
         </div>
-        <div class="item-title" v-else>
+        <div class="item-title yunduo" v-else>
           云客特惠专享
         </div>
         <ul>
@@ -63,10 +63,12 @@
       </div>
       <div slot="footer" class="foot">
         <button :class="{disabled:disabled}" :disabled="disabled==true" @click="submit">登录</button>
+        <p style="width:304px;text-align: center;margin:auto;font-size: 12px;color:#666;">如果您还未注册，注册后请回到此页面进行购买</p>
         <div>
           <!--span class="checkBox" :class="{agree:agree}" @click="toggle"></span>&nbsp;<span>我已阅读并同意</span><span
           style="color:#0EB4FA;cursor:pointer;" @click="showRules">《睿云用户使用协议》</span-->
-          <a href="register" target="_blank" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:left;font-size: 14px">
+          <a href="register" target="_blank"
+             style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:left;font-size: 14px">
             立即注册
           </a>
           <router-link to="reset" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:right;font-size:14px">
@@ -383,12 +385,18 @@
         box-shadow: 0px 4px 9px 0px rgba(214, 84, 86, 0.3);
         .item-title {
           height: 60px;
-          background: linear-gradient(-90deg, rgba(254, 79, 74, 1), rgba(252, 169, 135, 1));
+          background: url('../../../../assets/img/active/group-booking/yunduo.png') no-repeat center;
+          background-size: cover;
+          //background: linear-gradient(-90deg, rgba(254, 79, 74, 1), rgba(252, 169, 135, 1));
           font-size: 20px;
           font-family: "Microsoft YaHei", "微软雅黑";
           color: rgba(255, 255, 255, 1);
           line-height: 28px;
           padding: 16px 30px;
+        }
+        .yunduo {
+          background: url('../../../../assets/img/active/group-booking/yunke.png') no-repeat center;
+          background-size: cover;
         }
         > ul {
           display: flex;

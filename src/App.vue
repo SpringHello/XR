@@ -540,7 +540,7 @@
               line-height: 70px;
               display: inline-block;
               font-size: 14px;
-              &:nth-child(7) {
+              &:nth-child(6) {
                 span {
                   border-right: 1px solid #939393;
                   display: inline-block;
