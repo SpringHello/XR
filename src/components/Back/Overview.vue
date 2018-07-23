@@ -422,6 +422,8 @@
 
   #overview {
     background-color: #f5f5f5;
+    padding: 20px;
+    width: 100%;
     /*
         less 处理css计算属性calc有bug
         申明变量diff，可正常使用
@@ -429,8 +431,6 @@
     @diff: 101px;
     min-height: calc(~"100% - @{diff}");
     #wrapper {
-      width: 1200px;
-      margin: 0px auto;
       #title {
         font-size: 12px;
         color: rgba(17, 17, 17, 0.43);
