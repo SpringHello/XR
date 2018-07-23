@@ -345,3 +345,45 @@ div.modal-header-border {
 .social-share .icon-qq {
   margin-right: 50px;
 }
+
+/*  免费领取主机弹窗样式 */
+.fr-Modal .ivu-modal-header {
+  padding: 0;
+  height: 77px;
+  border-radius: 5px;
+  background: #FD5002 url("../../assets/img/active/freeToReceive/fr-banner3.png") no-repeat;
+  text-align: center;
+}
+
+.fr-Modal .ivu-modal-header p {
+  font-size: 28px;
+  font-family: "Microsoft YaHei", "微软雅黑";
+  color: rgba(255, 255, 255, 1);
+  line-height: 77px;
+  height: 77px;
+}
+
+.fr-Modal .ivu-modal-body {
+  padding: 40px;
+}
+
+.fr-Modal .ivu-modal-footer {
+  text-align: center;
+}
+
+.fr-select .ivu-select-selection {
+  border: 1px solid #FF881C;
+  box-shadow: 0 0 0 2px rgba(253, 140, 115, .2);
+}
+
+.fr-select .ivu-select-item-selected:hover {
+  background: #FF881C;
+}
+
+.fr-select .ivu-select-item-selected {
+  background: #FF881C;
+}
+
+.fr-select .ivu-select-arrow {
+  color: #FF881C;
+}
