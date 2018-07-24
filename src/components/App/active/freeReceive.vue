@@ -134,7 +134,7 @@
       </div>
     </Modal>
     <!-- 实名认证提示框 -->
-    <Modal v-model="showModal.certificationModal" width="408" class="fr-Modal">
+    <Modal v-model="showModal.certificationModal" width="408" :scrollable="true" class="fr-Modal">
       <div slot="header">
         <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
         <p>提示</p>
@@ -147,7 +147,7 @@
       </div>
     </Modal>
     <!-- 不符合条件提示框-->
-    <Modal v-model="showModal.inConformityModal" width="408" class="fr-Modal">
+    <Modal v-model="showModal.inConformityModal" width="408" :scrollable="true" class="fr-Modal">
       <div slot="header">
         <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
         <p>提示</p>
@@ -160,7 +160,7 @@
       </div>
     </Modal>
     <!-- 领取成功提示框 -->
-    <Modal v-model="showModal.getSuccessModal" width="408" class="fr-Modal">
+    <Modal v-model="showModal.getSuccessModal" width="408" :scrollable="true" class="fr-Modal">
       <div slot="header">
         <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
         <p>提示</p>
@@ -173,20 +173,33 @@
       </div>
     </Modal>
     <!-- 押金提示框 -->
-    <Modal v-model="showModal.cashPledgeModal" width="408" class="fr-Modal">
+    <Modal v-model="showModal.cashPledgeModal" width="408" :scrollable="true" class="fr-Modal">
       <div slot="header">
         <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
         <p>提示</p>
       </div>
       <div style="text-align:center">
-        <p class="modal-p">本免费活动需充值押金<span style="cursor: auto">XXX</span>元，主机到期或删除时押金自动退还到账户余额。</p>
+        <p class="modal-p">本免费活动需充值押金<span style="cursor: auto">{{cashPledge}}</span>元，主机到期或删除时押金自动退还到账户余额。</p>
       </div>
       <div slot="footer">
-        <button class="modal-button">下一步</button>
+        <button class="modal-button" @click="nextStep">下一步</button>
+      </div>
+    </Modal>
+    <!-- 确认冻结余额提示框-->
+    <Modal v-model="showModal.isFreezeModal" width="408" :scrollable="true" class="fr-Modal">
+      <div slot="header">
+        <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
+        <p>提示</p>
+      </div>
+      <div style="text-align:center">
+        <p class="modal-p">本免费活动需冻结押金<span style="cursor: auto">{{cashPledge}}</span>元，主机到期或删除时押金自动退还到账户余额。</p>
+      </div>
+      <div slot="footer">
+        <button class="modal-button" @click="freeze_ok">确认冻结</button>
       </div>
     </Modal>
     <!-- 充值提示框 -->
-    <Modal v-model="showModal.rechargeModal" width="408" class="fr-Modal">
+    <Modal v-model="showModal.rechargeModal" width="408" :scrollable="true" class="fr-Modal">
       <div slot="header">
         <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
         <p>提示</p>
@@ -217,59 +230,75 @@
         </div>
       </div>
       <div slot="footer">
-        <button class="modal-button">确认</button>
+        <button class="modal-button" @click="recharge_ok">确认</button>
       </div>
     </Modal>
     <!-- 微信充值提示框 -->
-    <Modal v-model="showModal.weChatRechargeModal" width="408" class="fr-Modal">
+    <Modal v-model="showModal.weChatRechargeModal" width="408" :scrollable="true" class="fr-Modal">
       <div slot="header">
         <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
         <p>提示</p>
       </div>
       <div class="fr-modalBody">
         <p>应付金额(元)：</p>
-        <p style="font-size:36px;margin-top:10px;color:rgba(245,107,35,1);">39.00</p>
+        <p style="font-size:36px;margin-top:10px;color:rgba(245,107,35,1);">{{ rechargeMoney}}</p>
         <div id="code">
           <vue-q-art :config="config" v-if="config.value!=''"></vue-q-art>
         </div>
         <p>请使用微信扫一扫，扫描二维码支付</p>
       </div>
       <div slot="footer">
-        <button class="modal-button" style="width: 158px">已完成支付</button>
-        <button class="modal-button" style="width: 158px;background: #F5A623;margin-left: 20px">更换支付方式</button>
-        <p style="font-size:14px;font-family: 'Microsoft YaHei', '微软雅黑';color:rgba(42,153,242,1);cursor: pointer;margin-top: 20px">支付遇到问题？</p>
+        <button class="modal-button" style="width: 158px" @click="isPay">已完成支付</button>
+        <button class="modal-button" style="width: 158px;background: #F5A623;margin-left: 20px" @click="changePayWey">更换支付方式</button>
+        <a style="font-size:14px;font-family: 'Microsoft YaHei', '微软雅黑';color:rgba(42,153,242,1);cursor: pointer;margin-top: 20px;display: block"
+           href="http://p.qiao.baidu.com/cps2/chatIndex?reqParam=%7B%22from%22%3A0%2C%22sid%22%3A%22-100%22%2C%22tid%22%3A%22-1%22%2C%22ttype%22%3A1%2C%22siteId%22%3A%2212207678%22%2C%22userId%22%3A%2224752455%22%2C%22pageId%22%3A0%7D"
+           target="_blank">支付遇到问题？</a>
       </div>
     </Modal>
     <!-- 支付成功提示框 -->
-    <Modal v-model="showModal.paySuccessModal" width="408" class="fr-Modal">
+    <Modal v-model="showModal.paySuccessModal" width="408" :scrollable="true" class="fr-Modal">
       <div slot="header">
         <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
         <p>提示</p>
       </div>
       <div style="text-align:center">
         <img src="../../../assets/img/active/freeToReceive/fr-icon17.png"/>
-        <p class="modal-p" style="margin-top: 20px">支付成功！我们即将冻结押金<span style="cursor: auto">XX</span>元…</p>
+        <p class="modal-p" style="margin-top: 20px">支付成功！我们即将冻结押金<span style="cursor: auto">{{cashPledge }}</span>元…</p>
       </div>
       <div slot="footer">
-        <button class="modal-button">确认冻结</button>
+        <button class="modal-button" @click="freeze_ok">确认冻结</button>
       </div>
     </Modal>
     <!-- 冻结成功提示框 -->
-    <Modal v-model="showModal.freezeSuccessModal" width="408" class="fr-Modal">
+    <Modal v-model="showModal.freezeSuccessModal" width="408" :scrollable="true" class="fr-Modal">
       <div slot="header">
         <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
         <p>提示</p>
       </div>
       <div style="text-align:center">
         <img src="../../../assets/img/active/freeToReceive/fr-icon17.png"/>
-        <p class="modal-p" style="margin-top: 20px">您好，押金已冻结完成，冻结时间：2018/6/25-2018/7/25</p>
+        <p class="modal-p" style="margin-top: 20px">您好，押金已冻结完成，冻结时间：{{ freezeTime }}</p>
       </div>
       <div slot="footer">
-        <button class="modal-button">查看主机</button>
+        <button class="modal-button" @click="$router.push('host')">查看主机</button>
+      </div>
+    </Modal>
+    <!-- 冻结失败提示框 -->
+    <Modal v-model="showModal.freezeDefeatedModal" width="408" :scrollable="true" class="fr-Modal">
+      <div slot="header">
+        <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
+        <p>提示</p>
+      </div>
+      <div style="text-align:center">
+        <img src="../../../assets/img/active/freeToReceive/fr-icon18.png"/>
+        <p class="modal-p" style="margin-top: 20px">抱歉，冻结失败，请再次尝试！</p>
+      </div>
+      <div slot="footer">
+        <button class="modal-button" @click="freeze_ok">再次冻结</button>
       </div>
     </Modal>
     <!-- 支付失败提示框 -->
-    <Modal v-model="showModal.payDefeatedModal" width="408" class="fr-Modal">
+    <Modal v-model="showModal.payDefeatedModal" width="408" :scrollable="true" class="fr-Modal">
       <div slot="header">
         <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
         <p>提示</p>
@@ -279,7 +308,7 @@
         <p class="modal-p" style="margin-top: 20px">抱歉，支付失败，请再次尝试！</p>
       </div>
       <div slot="footer">
-        <button class="modal-button">再次支付</button>
+        <button class="modal-button" @click="payAgain">再次支付</button>
       </div>
     </Modal>
   </div>
@@ -309,6 +338,13 @@
     },
     data() {
       return {
+        serialNum: '',
+        pageTimer: null,
+        configIndex: 0,
+        hostIndex: 0,
+        vmConfigId: '',
+        freezeTime: '',
+        time: '',
         showModal: {
           certificationModal: false,
           inConformityModal: false,
@@ -318,7 +354,9 @@
           weChatRechargeModal: false,
           paySuccessModal: false,
           freezeSuccessModal: false,
-          payDefeatedModal: false
+          freezeDefeatedModal: false,
+          payDefeatedModal: false,
+          isFreezeModal: false
         },
         loginModal: false,
         form: {
@@ -376,7 +414,7 @@
                 time: '1个月',
                 bandwidth: '1M带宽',
                 disk: '40G SSD磁盘',
-                zoneId: '1ce0d0b9-a964-432f-8078-a61100789e30',
+                zoneId: '',
                 system: 'windows',
                 cashPledge: '39',
                 originalCost: '98.72'
@@ -384,7 +422,7 @@
                 time: '3个月',
                 bandwidth: '1M带宽',
                 disk: '40G SSD磁盘',
-                zoneId: '1ce0d0b9-a964-432f-8078-a61100789e30',
+                zoneId: '',
                 system: 'windows',
                 cashPledge: '139',
                 originalCost: '296.16'
@@ -392,7 +430,7 @@
                 time: '6个月',
                 bandwidth: '1M带宽',
                 disk: '40G SSD磁盘',
-                zoneId: '1ce0d0b9-a964-432f-8078-a61100789e30',
+                zoneId: '',
                 system: 'windows',
                 cashPledge: '239',
                 originalCost: '592.32'
@@ -400,7 +438,7 @@
                 time: '12个月',
                 bandwidth: '1M带宽',
                 disk: '40G SSD磁盘',
-                zoneId: '1ce0d0b9-a964-432f-8078-a61100789e30',
+                zoneId: '',
                 system: 'windows',
                 cashPledge: '539',
                 originalCost: '1184.64'
@@ -414,7 +452,7 @@
                 time: '1个月',
                 bandwidth: '1M带宽',
                 disk: '40G SSD磁盘',
-                zoneId: '1ce0d0b9-a964-432f-8078-a61100789e30',
+                zoneId: '',
                 system: 'windows',
                 cashPledge: '69',
                 originalCost: '176.72'
@@ -422,7 +460,7 @@
                 time: '3个月',
                 bandwidth: '1M带宽',
                 disk: '40G SSD磁盘',
-                zoneId: '1ce0d0b9-a964-432f-8078-a61100789e30',
+                zoneId: '',
                 system: 'windows',
                 cashPledge: '169',
                 originalCost: '530.16'
@@ -430,7 +468,7 @@
                 time: '6个月',
                 bandwidth: '1M带宽',
                 disk: '40G SSD磁盘',
-                zoneId: '1ce0d0b9-a964-432f-8078-a61100789e30',
+                zoneId: '',
                 system: 'windows',
                 cashPledge: '269',
                 originalCost: '1060.32'
@@ -438,7 +476,7 @@
                 time: '12个月',
                 bandwidth: '1M带宽',
                 disk: '40G SSD磁盘',
-                zoneId: '1ce0d0b9-a964-432f-8078-a61100789e30',
+                zoneId: '',
                 system: 'windows',
                 cashPledge: '569',
                 originalCost: '2120.64'
@@ -476,12 +514,13 @@
         ],
         stepGroup: ['充值押金', '支付成功', '冻结押金', '领取主机'],
         config: {
-          value: '39',
+          value: '',
           imagePath: require('../../../assets/img/pay/payBackground.png'),
           filter: 'black',
           size: 500
         },
-        rechargeMoney: 39,
+        cashPledge: 0,
+        rechargeMoney: 0,
         rechargeWay: 'zfb'
       }
     },
@@ -568,37 +607,92 @@
         });
       },
       freeToReceive(index1, index2) {
+        this.configIndex = index1
+        this.hostIndex = index2
         if (this.$store.state.userInfo == null) {
           this.loginModal = true
+          return
+        }
+        if (this.$store.state.authInfo == null) {
+          this.showModal.certificationModal = true
           return
         }
         let vmConfigId = ''
         switch ('' + index1 + index2) {
           case '00':
             vmConfigId = '35'
+            this.time = '1'
             break
           case '01':
             vmConfigId = '36'
+            this.time = '3'
             break
           case '02':
             vmConfigId = '37'
+            this.time = '6'
             break
           case '03':
             vmConfigId = '38'
+            this.time = '12'
             break
           case '10':
             vmConfigId = '39'
+            this.time = '1'
             break
           case '11':
             vmConfigId = '40'
+            this.time = '3'
             break
           case '12':
             vmConfigId = '41'
+            this.time = '6'
             break
           case '13':
             vmConfigId = '42'
+            this.time = '12'
             break
         }
+        this.vmConfigId = vmConfigId
+        axios.get('activity/jdugeTeam.do', {
+          params: {sign: 'freeReceive'}
+        }).then(res => {
+          if (res.data.status == 1) {
+            if (res.data.result.flag) {
+              axios.get('activity/getFreeHost.do', {
+                params: {
+                  vmConfigId: vmConfigId,
+                  osType: this.configGroup[index1].hostGroup[index2].system,
+                  defzoneid: this.configGroup[index1].hostGroup[index2].zoneId
+                }
+              }).then(response => {
+                if (response.data.status == 1) {
+                  this.showModal.getSuccessModal = true
+                } else if (response.data.status == 2 && response.data.message == '您还未支付押金') {
+                  this.cashPledge = this.configGroup[index1].hostGroup[index2].cashPledge
+                  axios.get('activity/compareForMoney.do', {
+                    params: {freezeMoney: this.cashPledge}
+                  }).then(val => {
+                    if (val.data.status == 1) {
+                      this.showModal.isFreezeModal = true
+                    } else {
+                      this.showModal.cashPledgeModal = true
+                    }
+                  })
+                } else {
+                  this.$message.info({
+                    content: response.data.message
+                  })
+                }
+              })
+            } else {
+              this.showModal.inConformityModal = true
+            }
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
       },
       roll(val) {
         $('html, body').animate({scrollTop: val}, 300)
@@ -674,6 +768,120 @@
         }).then(res => {
           if (res.data.status == 1) {
             this.areaGroup = res.data.result.optionalArea
+            this.configGroup.forEach(config => {
+              config.hostGroup.forEach(host => {
+                host.zoneId = this.areaGroup[0].value
+              })
+            })
+          }
+        })
+      },
+      nextStep() {
+        this.showModal.cashPledgeModal = false
+        this.rechargeMoney = Number(this.cashPledge)
+        this.showModal.rechargeModal = true
+      },
+      freeze_ok() {
+        this.showModal.isFreezeModal = false
+        this.showModal.freezeDefeatedModal = false
+        this.showModal.paySuccessModal = false
+        let url = 'user/getRemainderFrozen.do'
+        let params = {
+          eachFrozenMoney: this.cashPledge,
+          describe: '领取主机',
+          operationType: '领取主机',
+        }
+        axios.post(url, params).then(res => {
+          if (res.data.status == 1) {
+            this.getFreezeTime()
+            axios.get('activity/getFreeHost.do', {
+              params: {
+                vmConfigId: this.vmConfigId,
+                osType: this.configGroup[this.configIndex].hostGroup[this.hostIndex].system,
+                defzoneid: this.configGroup[this.configIndex].hostGroup[this.hostIndex].zoneId
+              }
+            }).then(response => {
+              if (response.data.status == 1) {
+                this.showModal.freezeSuccessModal = true
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          } else {
+            this.showModal.freezeDefeatedModal = true
+          }
+        })
+      },
+      recharge_ok() {
+        switch (this.rechargeWay) {
+          case 'zfb':
+            window.open(`zfb/alipayapi.do?total_fee=${this.rechargeMoney}`)
+            this.pageTimer = setInterval(() => {
+              axios.get('activity/compareForMoney.do', {
+                params: {freezeMoney: this.cashPledge}
+              }).then(val => {
+                if (val.data.status == 1) {
+                  this.showModal.rechargeModal = false
+                  clearInterval(this.pageTimer)
+                  this.showModal.paySuccessModal = true
+                }
+              })
+            }, 2000)
+            break
+          case 'wx':
+            clearInterval(this.pageTimer)
+            axios.get('wx/wxpayapi.do', {
+              params: {
+                total_fee: this.rechargeMoney
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.serialNum = response.data.result.serialNum
+                this.config.value = response.data.result.codeUrl
+                this.showModal.rechargeModal = false
+                this.showModal.weChatRechargeModal = true
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+            break
+        }
+      },
+      isPay() {
+        axios.get('user/payStatus.do', {
+          params: {
+            serialNum: this.serialNum
+          }
+        }).then(response => {
+          this.showModal.weChatRechargeModal = false
+          if (response.status == 200 && response.data.status == 1) {
+            this.showModal.paySuccessModal = true
+          } else {
+            this.showModal.payDefeatedModal = true
+          }
+        })
+      },
+      changePayWey() {
+        this.showModal.weChatRechargeModal = false
+        this.showModal.rechargeModal = true
+      },
+      payAgain() {
+        this.showModal.payDefeatedModal = false
+        this.showModal.rechargeModal = true
+      },
+      //获取冻结时间
+      getFreezeTime() {
+        axios.get('activity/getTimeForDeposit.do', {
+          params: {
+            month: this.time
+          }
+        }).then(res => {
+          if (res.data.status == 1) {
+            this.freezeTime = res.data.result.startTime + ' ' + res.data.result.startTime
           }
         })
       }
@@ -683,6 +891,10 @@
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
       }
     },
+    beforeRouteLeave(to, from, next) {
+      clearInterval(this.pageTimer)
+      next()
+    }
   }
 </script>
 
@@ -923,19 +1135,19 @@
   }
 
   .fr-suspension {
-    height: 402px;
-    width: 142px;
-    background: #FFF url("../../../assets/img/active/freeToReceive/fr-banner2.png");
+    height: 286px;
+    width: 100px;
+    background: url("../../../assets/img/active/freeToReceive/fr-banner2.png");
     position: fixed;
-    bottom: 5%;
+    bottom: 35%;
     left: 40px;
     ul {
       list-style: none;
-      padding-top: 109px;
+      padding-top: 77px;
       li {
-        margin-top: 4px;
-        padding: 10px 30px;
-        font-size: 20px;
+        margin-top: 9px;
+        padding: 1px 14px;
+        font-size: 18px;
         font-family: "Microsoft YaHei", "微软雅黑";
         color: rgba(255, 255, 255, 1);
         cursor: pointer;

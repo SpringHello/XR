@@ -3,7 +3,14 @@
     <!-- banner 轮播图 -->
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
+        <my-carousel-item class="carousel-item">
+          <div @click="push('fractive')"
+               style="cursor: pointer;background: #F56B23;">
+            <div class="free-receive">
 
+            </div>
+          </div>
+        </my-carousel-item>
         <my-carousel-item class="carousel-item">
           <div @click="push('groupBooking')"
                style="cursor: pointer;background: #FA846E;">
@@ -1590,6 +1597,10 @@
         }
       }
     }
+  }
+  .free-receive{
+    height: 400px;
+    background: #F56B23 url("../../assets/img/active/freeToReceive/fr-banner1.png") center no-repeat;
   }
 
   // 移入移出动画

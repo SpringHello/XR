@@ -3,7 +3,6 @@
     <div class="wrapper">
       <div class="wrapper-form">
         <div class="banner" v-show="loginShow">
-          <img src="../../assets/img/login/banner-text.png" width="42%" style="margin-top:80px;"/>
         </div>
         <div class="login-form" v-show="loginShow">
           <div class="head">
@@ -612,7 +611,7 @@
       }
     }
     .banner {
-      background: url(../../assets/img/login/login-banner.jpg) no-repeat center;
+      background: url(../../assets/img/login/login-banner.png) no-repeat center;
       height: 493px;
       width: 730px;
       text-align: center;
