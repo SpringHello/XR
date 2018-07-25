@@ -11,7 +11,7 @@
           <div style="display: flex;margin-top:25px">
             <span style="margin-right:20px;">
               <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-            <use xlink:href="#icon-xinxibangding"></use>
+            <use xlink:href="#houtaiicon-xinxibangding"></use>
           </svg>
               <span v-if="userInfo.loginname" style="vertical-align: middle">{{userInfo.loginname}}</span>
               <span v-else style="vertical-align: middle;cursor:pointer;color:#2d8cf0;"
@@ -19,7 +19,7 @@
             </span>
             <span>
               <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-            <use xlink:href="#icon-shouji"></use>
+            <use xlink:href="#houtaiicon-shouji"></use>
           </svg>
               <span v-if="userInfo.phone" style="vertical-align: middle">{{userInfo.phone}}</span>
               <router-link v-else style="vertical-align: middle" to="/ruicloud/userCenter">点击绑定</router-link>
@@ -204,11 +204,11 @@
         source: [],
         // 资源icon
         sourceIcon: [
-          '#icon-yunjisuan1',
-          '#icon-yunwangluo1',
-          '#icon-yuncunchu1',
-          '#icon-yunanquan1',
-          '#icon-yunyunwei1'
+          '#houtaiicon-yunjisuan1',
+          '#houtaiicon-yunwangluo1',
+          '#houtaiicon-yuncunchu1',
+          '#houtaiicon-yunanquan1',
+          '#houtaiicon-yunyunwei1'
         ]
       }
     },

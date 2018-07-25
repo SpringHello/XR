@@ -6,7 +6,7 @@
   <router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 一键续费</span>
         <div class="content">
           <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-yijianxufei"></use>
+            <use xlink:href="#houtaiicon-yijianxufei"></use>
           </svg>
           <span style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">一键续费</span>
           <div style="margin-top:20px;position:relative">

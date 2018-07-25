@@ -4,7 +4,7 @@
       <span>个人中心 / 用户中心</span>
       <div id="content">
         <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-yonghuzhongxin"></use>
+          <use xlink:href="#houtaiicon-yonghuzhongxin"></use>
         </svg>
         <span class="title"
               style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">用户中心</span>
@@ -21,11 +21,11 @@
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-yonghu"></use>
+                    <use xlink:href="#houtaiicon-yonghu"></use>
                   </svg>
                   <span style="vertical-align: middle;margin-right: 20px;">未认证用户</span>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-shouji"></use>
+                    <use xlink:href="#houtaiicon-shouji"></use>
                   </svg>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
@@ -219,11 +219,11 @@
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-yonghu"></use>
+                    <use xlink:href="#houtaiicon-yonghu"></use>
                   </svg>
                   <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-shouji"></use>
+                    <use xlink:href="#houtaiicon-shouji"></use>
                   </svg>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
@@ -251,11 +251,11 @@
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-yonghu"></use>
+                    <use xlink:href="#houtaiicon-yonghu"></use>
                   </svg>
                   <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-shouji"></use>
+                    <use xlink:href="#houtaiicon-shouji"></use>
                   </svg>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
@@ -283,11 +283,11 @@
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-yonghu"></use>
+                    <use xlink:href="#houtaiicon-yonghu"></use>
                   </svg>
                   <span style="vertical-align: middle;margin-right:20px;">个人用户</span>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-shouji"></use>
+                    <use xlink:href="#houtaiicon-shouji"></use>
                   </svg>
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
@@ -314,11 +314,11 @@
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-yonghu"></use>
+                    <use xlink:href="#houtaiicon-yonghu"></use>
                   </svg>
                   <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-shouji"></use>
+                    <use xlink:href="#houtaiicon-shouji"></use>
                   </svg>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
@@ -346,11 +346,11 @@
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-yonghu"></use>
+                    <use xlink:href="#houtaiicon-yonghu"></use>
                   </svg>
                   <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-shouji"></use>
+                    <use xlink:href="#houtaiicon-shouji"></use>
                   </svg>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
@@ -378,11 +378,11 @@
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-yonghu"></use>
+                    <use xlink:href="#houtaiicon-yonghu"></use>
                   </svg>
                   <span style="vertical-align: middle;margin-right:20px;">企业用户</span>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-shouji"></use>
+                    <use xlink:href="#houtaiicon-shouji"></use>
                   </svg>
                   <span style="vertical-align: middle">已绑定手机{{authInfo.phone}}</span>
                 </div>
@@ -449,11 +449,11 @@
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-yonghu"></use>
+                    <use xlink:href="#houtaiicon-yonghu"></use>
                   </svg>
                   <span style="vertical-align: middle;margin-right: 20px;">未认证用户</span>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-shouji"></use>
+                    <use xlink:href="#houtaiicon-shouji"></use>
                   </svg>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
@@ -469,11 +469,11 @@
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-yonghu"></use>
+                    <use xlink:href="#houtaiicon-yonghu"></use>
                   </svg>
                   <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-shouji"></use>
+                    <use xlink:href="#houtaiicon-shouji"></use>
                   </svg>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
@@ -492,11 +492,11 @@
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-yonghu"></use>
+                    <use xlink:href="#houtaiicon-yonghu"></use>
                   </svg>
                   <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-shouji"></use>
+                    <use xlink:href="#houtaiicon-shouji"></use>
                   </svg>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
@@ -515,11 +515,11 @@
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-yonghu"></use>
+                    <use xlink:href="#houtaiicon-yonghu"></use>
                   </svg>
                   <span style="vertical-align: middle;margin-right: 20px;">企业用户</span>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-shouji"></use>
+                    <use xlink:href="#houtaiicon-shouji"></use>
                   </svg>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>
@@ -535,11 +535,11 @@
                 </div>
                 <div>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-yonghu"></use>
+                    <use xlink:href="#houtaiicon-yonghu"></use>
                   </svg>
                   <span style="vertical-align: middle;margin-right: 20px;">个人用户</span>
                   <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
-                    <use xlink:href="#icon-shouji"></use>
+                    <use xlink:href="#houtaiicon-shouji"></use>
                   </svg>
                   <span style="vertical-align: middle">已绑定手机{{userInfo.phone}}</span>
                 </div>

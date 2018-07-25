@@ -234,7 +234,8 @@
   import $store from './vuex'
   import {mapState} from 'vuex'
   import debounce from 'throttle-debounce/debounce'
-  import './assets/js/iconfont.js'
+  import '@/assets/iconfont/frontend/iconfont.css'
+  import '@/assets/iconfont/frontend/iconfont.js'
   export default {
     name: 'app',
     data () {
@@ -497,9 +498,6 @@
 </script>
 
 <style rel="stylesheet/less" lang="less">
-  @import './assets/css/frontend.css';
-  @import './assets/css/iconfont.css';
-
   #front {
     header {
       width: 100%;

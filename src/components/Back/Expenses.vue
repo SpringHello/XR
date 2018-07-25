@@ -8,7 +8,7 @@
       <span>个人中心 / 费用中心</span>
       <div class="content">
         <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-feiyongzhongxin"></use>
+          <use xlink:href="#houtaiicon-feiyongzhongxin"></use>
         </svg>
         <span class="title"
               style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">费用中心</span>

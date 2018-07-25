@@ -9,7 +9,7 @@
       <div id="content">
         <div id="header">
           <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-yunyingpan1"></use>
+            <use xlink:href="#houtaiicon-yunyingpan1"></use>
           </svg>
           <span id="title">云硬盘</span>
           <button id="refresh_button" @click="refreshPage" style="margin-top: 10px;">刷新</button>
