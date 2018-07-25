@@ -37,7 +37,7 @@
       <div class="wrapper">
         <p class="subTitle">使用场景</p>
         <div class="flex">
-          <div class="left">
+          <div class="left" style="height:550px;">
             <div  v-for="(stage,index) in stageInfo.stages"
                  :class="{active:index == stageInfo.selectIndex}"
                  @click="stageInfo.selectIndex=index" :key="index">
@@ -56,7 +56,7 @@
                   {{p}}
                 </p>
 
-                <span style="margin-top:40px;">配合使用</span>
+                <!-- <span style="margin-top:40px;">配合使用</span>
                 <div style="display: flex">
                   <div v-for="(pimg,index) in stageInfo.pImg" style="margin-right: 10px;" :key="index">
                     <div style="width: 90px;height: 90px;background-color: #ffffff;text-align: center;padding:24px">
@@ -64,7 +64,7 @@
                       <span style="font-size: 14px; color:#666666;">{{pimg.isc}}</span>
                     </div>
                   </div>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -114,69 +114,69 @@
     data(){
       return {
         logo: {
-          img: require('../../../assets/img/product/p-VPC.png'),
+          img: require('../../../assets/img/product/p-objStorage.png'),
           title: '对象存储 OSS',
           desc: '新睿云对象存储S3定位分布式海量数据存取服务。S3提供标准的对象存储服务，您可以通过网络随时随地方便地存储和获取图片/音频/视频/文本/大文件等各类数据文件。聚焦产品稳定性/安全性/存取性能，通过出色的技术优势以及规模效应有效降低用户成本；通过为开发者而生的产品理念以对用户体验的极致追求打磨产品。 ',
-          linkRouter: $store.state.userInfo ? 'vpc' : 'login'
+          linkRouter: $store.state.userInfo ? 'objectStorage' : 'login'
         },
         features: [
           {
-            img: 'icon-wangluogeli',
+            img: 'icon-chuangjianshanchucunchukongjian',
             title: '创建/删除存储空间',
             desc: '在上传任何文件到 OSS 之前，您需要首先创建存储空间来存储文件；如果您不再需要存储空间，请将其删除以免进一步产生费用。'
           },
           {
-            img: 'icon-zidingyiwangluo',
+            img: 'icon-xiugaicunchukongjianduxiequanxian',
             title: '修改存储空间读写权限',
             desc: 'OSS 提供权限控制 Bucket Policy ，在创建存储空间的时候选择相应的权限控制，也可以在创建之后，在权限设置中修改Bucket Policy。'
           },
           {
-            img: 'icon-gongwangjieru',
+            img: 'icon-shezhifangdaolian',
             title: '设置防盗链',
             desc: '为了减少您存储于 OSS 的数据被其他人盗链而产生额外费用，OSS 支持设置基于 HTTP header 中表头字段 referer 的防盗链方法。'
           },
           {
-            img: 'icon-qiangdadeNATnengli',
+            img: 'icon-kuayufangwenshezhi',
             title: '跨域访问设置',
             desc: 'OSS 提供 HTML5 协议中的跨域资源共享 CORS 设置，帮助您实现跨域访问。'
           },
           {
-            img: 'icon-VPNwangguan',
+            img: 'icon-jingtaiwangzhantuoguan',
             title: '静态网站托管',
             desc: '您将图片、视频、静态页面等资源上传到OSS的Bucket后，可以为该空间指定默认首页、错误返回页及访问发生错误后的重定向地址。通过该功能，用户就可以将某个Bucket作为一个静态网站来使用。'
           },
            {
-            img: 'icon-wangluogeli',
+            img: 'icon-shangchuanshanchuwenjia',
             title: '上传/删除文件',
             desc: '您可以上传任意类型文件到存储空间中，也可以删除单个文件'
           },
           {
-            img: 'icon-zidingyiwangluo',
+            img: 'icon-xinjianshanchuwenjian',
             title: '新建/删除文件夹',
             desc: '您可以像管理 Windows 文件夹一样管理 OSS 文件夹，也可以删除单个文件夹'
           },
           {
-            img: 'icon-gongwangjieru',
+            img: 'icon-sousuowenjian',
             title: '搜索文件',
             desc: '在存储空间或文件夹中搜索具有相同的名称前缀的文件。'
           },
           {
-            img: 'icon-qiangdadeNATnengli',
+            img: 'icon-huoquwenjianwailian',
             title: '获取文件外链',
             desc: '通过获取已上传文件的外链访问地址进行文件的分享和下载。'
           },
           {
-            img: 'icon-VPNwangguan',
+            img: 'icon-yongliangjiankong',
             title: '用量监控',
             desc: '了解OSS服务的使用情况，包括相关数据和用量监控图表。'
           },
            {
-            img: 'icon-qiangdadeNATnengli',
+            img: 'icon-API',
             title: 'API',
             desc: '提供 OSS支持的 RESTful API 操作和相关示例。'
           },
           {
-            img: 'icon-VPNwangguan',
+            img: 'icon-SDK',
             title: 'SDK',
             desc: '提供主流语言 SDK 的开发操作和相关示例。'
           }
@@ -185,54 +185,44 @@
           stages: [
             {
               title: '数据 加速 分发',
-              icon: 'icon-zhuanyouwangluo',
-              img: require('../../../assets/img/product/vpc-stage-1-icon-background.png'),
+              icon: 'icon-shujujiasufenfa',
+              img: require('../../../assets/img/product/pobjStorage-stage-1-icon-background.png'),
               desc: ['基于新睿云构建的云上私有网络环境，用户通过弹性IP访问云上私有网络环境，配置部署业务。']
             },
             {
               title: '跨区 域复 制容 灾',
-              icon: 'icon-WEBfangwen',
-              img: require('../../../assets/img/product/vpc-stage-2-icon-background.png'),
+              icon: 'icon-kuaquyufuzhirongzai',
+              img: require('../../../assets/img/product/pobjStorage-stage-2-icon-background.png'),
               desc: ['基大型网站常有上百个业务子模块，通过设置不同的转发规则/转发组，分析HTTP头部信息，有效分离业务模块，实现基于内容的路由转发。此外，用户通过自定义转发路径代替二级域名，有效减少 DNS 轮询次数，收敛 IP，提升用户访问速度，保证服务的高效运行。']
             },
             {
               title: '海量 数据 归档',
-              icon: 'icon-hunheyunbushu1',
-              img: require('../../../assets/img/product/vpc-stage-3-icon-background.png'),
+              icon: 'icon-hailiangshujuguidang',
+              // img: require('../../../assets/img/product/vpc-stage-3-icon-background.png'),
               desc: ['基于新睿云提供的VPN服务，高速连接云上VPC网络和用户自有IT设施，满足云上系统和自有设施间业务和数据的迁移，同时支持跨云业务等场景。']
             }
           ],
-          pImg: [
-            {icon: 'icon-danxingyunfuwuqiECS', isc: '云主机'},
-            {icon: 'icon-xunizhuanwangVPN', isc: 'VPN'}
-          ],
+          // pImg: [
+          //   {icon: 'icon-danxingyunfuwuqiECS', isc: '云主机'},
+          //   {icon: 'icon-xunizhuanwangVPN', isc: 'VPN'}
+          // ],
           selectIndex: 0
         },
         advantages: [
           {
-            img: 'icon-zuhujiangeli',
-            title: '租户间100%隔离',
-            desc: '利用Vlan/VxLAN协议使得VPC之间严格的逻辑隔离，实现租户间100%。'
+            img: 'icon-wendingkekao',
+            title: '稳定可靠',
+            desc: '规模自动扩展，不影响对外服务，数据自动多重冗余备份并可通过智能调度实现自动故障恢复，保证稳定、高可用的服务。'
           },
           {
-            img: 'icon-yonghuzidingyi',
-            title: '用户100%自定义',
-            desc: '可自定义子网、IP地址段或DHCP等服务，也可自由组合。'
+            img: 'icon-hailiangcunchu',
+            title: '海量存储',
+            desc: '提供PB级海量存储空间，用户理论上可以使用无限大小的空间，无需担心存储空间成为业务爆发性增长的瓶颈。'
           },
           {
-            img: 'icon-qiangdadeNATnengli',
-            title: '强大的NAT能力',
-            desc: '自定义Source NAT，Static NAT，Destination NAT，保证网络能力的灵活性。同时支持多IP共享公网带宽。'
-          },
-          {
-            img: 'icon-qiangdadesiyouwangguan',
-            title: '强大的私有网关',
-            desc: '可以使用私有IP地址实现两个VPC之间的互通。'
-          },
-          {
-            img: 'icon-hunheyunjiagou',
-            title: '支持混合云架构',
-            desc: '提供多种VPN，支持混合云和跨云能力。'
+            img: 'icon-chengbendilian',
+            title: '成本低廉',
+            desc: '无需采购、部署和运维费用，按需使用存储空间，根据用量收取费用，没有最低限制，帮助用户节约存储成本，更经济地存储和管理数据资源。'
           }
         ],
         recommendations: [

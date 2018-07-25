@@ -279,13 +279,13 @@
                 prodItem: [
                   {title: '云硬盘', desc: '性能型、超高性能型、存储型', path: '/ruicloud/Pdisk'},
                   {title: '云硬盘备份', desc: '高可用保障、敏捷易用', path: '/ruicloud/Pbackupdisk'},
-                  {title: '对象存储', desc: '高可用保障、敏捷易用', path: '/ruicloud/PobjStorage'}
+                  {title: '对象存储', desc: '安全稳定，海量便捷', path: '/ruicloud/PobjStorage'}
                 ]
               },
               {
                 prod: '云数据库',
                 prodItem: [
-                  {title: '云数据库', desc: '性能型、超高性能型、存储型', path: '/ruicloud/PdataBase'},
+                  {title: '云数据库', desc: 'MySQL、PostgreSQL、mongoDB、Redis', path: '/ruicloud/PdataBase'},
                 ]
               },
               {
