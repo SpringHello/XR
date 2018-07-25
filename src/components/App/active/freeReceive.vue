@@ -85,10 +85,10 @@
     </div>
     <div class="fr-suspension">
       <ul>
-        <li @click="roll(500)">活动流程</li>
-        <li @click="roll(1000)">活动主机</li>
-        <li @click="roll(2000)">产品优势</li>
-        <li @click="roll(2800)">活动规则</li>
+        <li :class="{select: 900>=fr_scrollTop}" @click="roll(500)">活动流程</li>
+        <li :class="{select: 2000>=fr_scrollTop&&fr_scrollTop>900}" @click="roll(1000)">活动主机</li>
+        <li :class="{select: 2700>=fr_scrollTop&&fr_scrollTop>2000}" @click="roll(2000)">产品优势</li>
+        <li :class="{select: fr_scrollTop>2700}" @click="roll(2800)">活动规则</li>
         <li @click="roll(0)">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</li>
       </ul>
     </div>
@@ -228,6 +228,7 @@
             </Radio>
           </RadioGroup>
         </div>
+        <p style="margin-top: 13px;color: #F56B23" v-show="rechargeWay=='zfb'">*充值完之后请回到此页面冻结押金</p>
       </div>
       <div slot="footer">
         <button class="modal-button" @click="recharge_ok">确认</button>
@@ -338,6 +339,7 @@
     },
     data() {
       return {
+        fr_scrollTop: 0,
         serialNum: '',
         pageTimer: null,
         configIndex: 0,
@@ -523,6 +525,9 @@
         rechargeMoney: 0,
         rechargeWay: 'zfb'
       }
+    },
+    mounted() {
+      window.addEventListener('scroll', this.getScrollTop)
     },
     created() {
       this.judgeUserFlow()
@@ -884,6 +889,9 @@
             this.freezeTime = res.data.result.startTime + ' ' + res.data.result.startTime
           }
         })
+      },
+      getScrollTop() {
+        this.fr_scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       }
     },
     computed: {
@@ -892,6 +900,7 @@
       }
     },
     beforeRouteLeave(to, from, next) {
+      window.removeEventListener('scroll', this.getScrollTop)
       clearInterval(this.pageTimer)
       next()
     }
@@ -955,7 +964,7 @@
             top: 40px;
             border-top: 2px dashed #b2b2b2;
             &.onStep {
-              border-top: 2px dashed #e6001b;
+              border-top: 2px dashed #FF392A;
             }
           }
           p {
@@ -964,7 +973,7 @@
             color: rgba(51, 51, 51, 1);
             margin-top: 32px;
             &.onStep {
-              color: #e6001b;
+              color: #FF392A;
             }
           }
         }
@@ -994,11 +1003,12 @@
       .fr-config {
         margin-bottom: 40px;
         .config-title {
-          background: linear-gradient(137.9deg, rgba(253, 90, 50, 1), rgba(252, 137, 3, 1));
-          padding: 16px 40px;
+          height: 60px;
+          background: url("../../../assets/img/active/freeToReceive/fr-banner4.png") no-repeat;
+          padding: 20px 40px;
           text-align: left;
           &.configIndex {
-            background: linear-gradient(137.9deg, rgba(252, 127, 38, 1), rgba(255, 192, 92, 1));
+            background: url("../../../assets/img/active/freeToReceive/fr-banner5.png") no-repeat;
           }
           span {
             font-size: 20px;
@@ -1151,9 +1161,12 @@
         font-family: "Microsoft YaHei", "微软雅黑";
         color: rgba(255, 255, 255, 1);
         cursor: pointer;
-      }
-      li:nth-child(2) {
-        color: #F8E71C;
+        &:hover {
+          color: #F8E71C;
+        }
+        &.select {
+          color: #F8E71C;
+        }
       }
     }
   }

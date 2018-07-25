@@ -2,7 +2,7 @@
   <div class="login-wrapper">
     <div class="wrapper">
       <div class="wrapper-form">
-        <div class="banner" v-show="loginShow">
+        <div class="banner" v-show="loginShow" @click="$router.push('fractive')">
         </div>
         <div class="login-form" v-show="loginShow">
           <div class="head">
@@ -616,6 +616,7 @@
       height: 493px;
       width: 730px;
       text-align: center;
+      cursor: pointer;
     }
     .login-form {
       width: 421px;
