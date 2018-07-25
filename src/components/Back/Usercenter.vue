@@ -592,7 +592,8 @@
                   <Input v-model="notAuth.companyAuthForm.contact" placeholder="请输入联系方式" style="width: 300px;"></Input>
                 </FormItem>
                 <FormItem label="营业执照号码" prop="businessLicenseNumber">
-                  <Input v-model="notAuth.companyAuthForm.businessLicenseNumber" :maxlength="20" placeholder="请输入营业执照号码" style="width: 300px;"></Input>
+                  <Input v-model="notAuth.companyAuthForm.businessLicenseNumber" :maxlength="20" placeholder="请输入营业执照号码"
+                         style="width: 300px;"></Input>
                 </FormItem>
                 <FormItem label="上传营业执照" prop="combine">
                   <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px">
@@ -618,18 +619,23 @@
                     </div>
                     <div style="width:130px;margin-left:20px;">
                       <img src="../../assets/img/usercenter/combine.jpg"
-                           style="width:130px;height:74px;margin-bottom: 10px;cursor: zoom-in" @click="showPicture('combine')">
+                           style="width:130px;height:74px;margin-bottom: 10px;cursor: zoom-in"
+                           @click="showPicture('combine')">
                       <p style="line-height: 32px;text-align: center">三证合一执照</p>
                     </div>
                   </div>
                 </FormItem>
                 <p style="margin: 0px 0px 20px 100px;">提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
-                <p class="info-title">企业法人信息<span style="position:absolute;width:1160px;height:2px;border:0.5px solid rgba(217,217,217,1);bottom: 60px;left: 0;"></span></p>
+                <p class="info-title">企业法人信息<span
+                  style="position:absolute;width:1160px;height:2px;border:0.5px solid rgba(217,217,217,1);bottom: 60px;left: 0;"></span>
+                </p>
                 <FormItem label="企业法人姓名" prop="linkManName">
-                  <Input v-model="notAuth.companyAuthForm.linkManName" placeholder="请输入法人姓名" style="width: 300px;"></Input>
+                  <Input v-model="notAuth.companyAuthForm.linkManName" placeholder="请输入法人姓名"
+                         style="width: 300px;"></Input>
                 </FormItem>
                 <FormItem label="身份证号码" prop="linkManNameID">
-                  <Input v-model="notAuth.companyAuthForm.linkManNameID" placeholder="请输入法人身份证号码" style="width: 300px;"></Input>
+                  <Input v-model="notAuth.companyAuthForm.linkManNameID" placeholder="请输入法人身份证号码"
+                         style="width: 300px;"></Input>
                 </FormItem>
                 <FormItem label="上传法人证件" prop="legalPersonID">
                   <div style="display: flex">
@@ -690,9 +696,12 @@
                   </div>
                 </FormItem>
                 <p style="margin: 0px 0px 20px 100px;">提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
-                <p class="info-title">经办人信息<span style="position:absolute;width:1160px;height:2px;border:0.5px solid rgba(217,217,217,1);bottom: 60px;left: 0;"></span></p>
+                <p class="info-title">经办人信息<span
+                  style="position:absolute;width:1160px;height:2px;border:0.5px solid rgba(217,217,217,1);bottom: 60px;left: 0;"></span>
+                </p>
                 <FormItem label="经办人姓名" prop="agentName">
-                  <Input v-model="notAuth.companyAuthForm.agentName" placeholder="请输入经办人姓名" style="width: 300px;"></Input>
+                  <Input v-model="notAuth.companyAuthForm.agentName" placeholder="请输入经办人姓名"
+                         style="width: 300px;"></Input>
                 </FormItem>
                 <FormItem label="图形验证码" prop="imgCode">
                   <Input v-model="notAuth.companyAuthForm.imgCode" placeholder="请输入图形验证码" style="width: 300px"></Input>
@@ -711,10 +720,12 @@
                   </button>
                 </FormItem>
                 <FormItem label="验证码" prop="verificationCode">
-                  <Input v-model="notAuth.companyAuthForm.verificationCode" placeholder="请输入收到的验证码" style="width: 300px"></Input>
+                  <Input v-model="notAuth.companyAuthForm.verificationCode" placeholder="请输入收到的验证码"
+                         style="width: 300px"></Input>
                 </FormItem>
                 <FormItem label="身份证号码" prop="agentManID">
-                  <Input v-model="notAuth.companyAuthForm.agentManID" placeholder="请输入经办人身份证号码" style="width: 300px;"></Input>
+                  <Input v-model="notAuth.companyAuthForm.agentManID" placeholder="请输入经办人身份证号码"
+                         style="width: 300px;"></Input>
                 </FormItem>
                 <FormItem label="上传经办人证件" prop="agentID">
                   <div style="display: flex;flex-wrap: wrap;">
@@ -1221,7 +1232,8 @@
                @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
         </p>
         <p> 验证码
-          <Input v-model="keyForm.code" placeholder="请输入验证码" style="width: 132px;margin-left: 48px;margin-right: 20px;"></Input>
+          <Input v-model="keyForm.code" placeholder="请输入验证码"
+                 style="width: 132px;margin-left: 48px;margin-right: 20px;"></Input>
           <Button type="primary" :class="{codeDisabled:keycodePlaceholder!='获取验证码'}" @click.prevent="keysendCode"
                   :disabled="keycodePlaceholder!='获取验证码'">{{keycodePlaceholder}}
           </Button>
@@ -2071,7 +2083,7 @@
         }
       })
       this.listKey()
-      if($store.state.authInfo.companyid){
+      if ($store.state.authInfo.companyid) {
         axios.post('user/getRuiRadosApiacess.do', {
           zoneId: $store.state.zone.zoneid,
           companyId: $store.state.authInfo.companyid
@@ -2094,18 +2106,18 @@
       this.listNotice()
       this.getContacts()
       /*if (!$store.state.accessKey) {
-      // console.log('access key')
-      // setTimeout(() => {
-      //   console.log($store.state.accessKey)
-      // }, 0);
-      // console.log($store.state)
-      // console.log($store.state.accessKey)
-      if(!$store.state.accessKey){
-        this.$Modal.confirm({
-          title: '提示',
-          content: '<p style="line-height: 16px;">尊敬的用户您好，系统检测到您当前没有可用的Access Key,请您到<span style="color: #2A99F2;cursor:pointer">Access Key管理</span>去创建Access Key。</p>',
-        });
-      }*/
+       // console.log('access key')
+       // setTimeout(() => {
+       //   console.log($store.state.accessKey)
+       // }, 0);
+       // console.log($store.state)
+       // console.log($store.state.accessKey)
+       if(!$store.state.accessKey){
+       this.$Modal.confirm({
+       title: '提示',
+       content: '<p style="line-height: 16px;">尊敬的用户您好，系统检测到您当前没有可用的Access Key,请您到<span style="color: #2A99F2;cursor:pointer">Access Key管理</span>去创建Access Key。</p>',
+       });
+       }*/
     },
     methods: {
       init() {
@@ -2210,9 +2222,7 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
-                axios.get('user/GetUserInfo.do').then(response => {
-                  this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
-                })
+                this.init()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -2242,9 +2252,7 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
-                axios.get('user/GetUserInfo.do').then(response => {
-                  this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
-                })
+                this.init()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -2279,10 +2287,8 @@
             axios.post('user/enterpriseAttest.do', params).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
-                axios.get('user/GetUserInfo.do').then(response => {
-                  this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
-                  this.currentTab = ''
-                })
+                this.init()
+                this.currentTab = ''
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -2801,7 +2807,7 @@
         })
       },
       keymodal() {
-        if(this.$store.state.authInfo){
+        if (this.$store.state.authInfo) {
           axios.post('user/createUserAcess.do', {
             zoneId: $store.state.zone.zoneid,
             token: this.token
@@ -2819,7 +2825,7 @@
               this.$Message.info(response.data.message)
             }
           })
-        } else{
+        } else {
           this.$Modal.confirm({
             title: '提示',
             content: '<p style="line-height: 16px;">尊敬的用户您好，系统检测到您当前没有认证,请您到<span style="color: #2A99F2;">用户中心</span>去进行认证</p>',
