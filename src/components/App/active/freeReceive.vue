@@ -352,7 +352,7 @@
           inConformityModal: false,
           getSuccessModal: false,
           cashPledgeModal: false,
-          rechargeModal: true,
+          rechargeModal: false,
           weChatRechargeModal: false,
           paySuccessModal: false,
           freezeSuccessModal: false,
