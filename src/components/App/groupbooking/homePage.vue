@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="background: #FFF">
     <gb-header></gb-header>
     <gb-product :isCloud="false"></gb-product>
     <div class="background">

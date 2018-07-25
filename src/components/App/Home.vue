@@ -64,41 +64,6 @@
             </div>
           </div>
         </my-carousel-item>
-        <!--  <my-carousel-item class="carousel-item">
-            <div @click="push('newNodes_1')"
-                 style="cursor: pointer;background:linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
-              <div class="newNodes_1">
-                <div style="width:1200px;margin:0px auto;padding-top: 4%;position: relative;z-index: 1">
-                  <img style="position: absolute;top: -10%;left: -20%;z-index: 2"
-                       src="../../assets/img/home/home-banner5.png">
-                  <p>北京一区盛大开服
-                    <img style="position: absolute;left: -2%;top: 15%;z-index: 1"
-                         src="../../assets/img/home/home-banner6.png"/></p>
-                  <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">布局首都，新购特惠，限时抢购</p>
-                  <button>立即体验</button>
-                  <img style="position:absolute;left: 45%; top: 12%;z-index: -2;"
-                       src="../../assets/img/home/home-banner7.png">
-                </div>
-              </div>
-            </div>
-          </my-carousel-item>
-          <my-carousel-item class="carousel-item">
-            <div @click="push('newNodes_2')"
-                 style="cursor: pointer;background:#87B6FF">
-              <div class="newNodes_2">
-                <img style="position: absolute;z-index: 1" src="../../assets/img/home/home-banner9.png">
-                <div style="width:1200px;margin:0px auto;padding-top: 2%;position: relative;z-index: 1">
-                  <p>北方二区（沈阳）盛大开服
-                    <img style="position: absolute;left: 0;top: 22%;z-index: 1"
-                         src="../../assets/img/active/newNodes/text1.png"/></p>
-                  <p style="font-size: 24px;line-height: 33px;font-family: PingFangSC-Light;">春暖花开，活动绽放</p>
-                  <p>3折优惠<span style="font-size: 24px">起</span></p>
-                  <button>立即体验</button>
-                  <img style="position:absolute;left: 58%; top: 1%;z-index: -2;"
-                       src="../../assets/img/home/home-banner8.png">
-                </div>
-              </div>
-            </my-carousel-item>-->
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->
