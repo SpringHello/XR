@@ -890,7 +890,6 @@
         })
       },
       getScrollTop() {
-        console.log(this.fr_scrollTop)
         this.fr_scrollTop = document.documentElement.scrollTop || document.body.scrollTop
       }
     },
