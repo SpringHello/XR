@@ -4,7 +4,7 @@
       <span>个人中心 / 操作日志</span>
       <div class="content">
         <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-caozuorizhi"></use>
+          <use xlink:href="#houtaiicon-caozuorizhi"></use>
         </svg>
         <span class="title"
               style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">操作日志</span>

@@ -8,7 +8,7 @@
       <span><router-link to="overview" style="color:rgba(17, 17, 17, 0.43);">总览</router-link> / 工单</span>
       <div class="content">
         <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-gongdan"></use>
+          <use xlink:href="#houtaiicon-gongdan"></use>
         </svg>
         <span style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">工单</span>
         <div style="margin-top:20px;min-height:660px;">

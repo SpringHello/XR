@@ -471,7 +471,7 @@
               {
                 title: '弹性IP',
                 desc: '绑定与解绑IP、扩容',
-                img: '#icon-danxingIP1',
+                img: '#icon-danxingIP',
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Peip',
@@ -521,7 +521,7 @@
               {
                 title: '云硬盘',
                 desc: '性能型、超高性能型、存储型',
-                img: '#icon-yunyingpan1',
+                img: '#icon-yunyingpan',
                 detailText: '查看详情',
                 useText: '立即购买',
                 detailLink: 'Pdisk',

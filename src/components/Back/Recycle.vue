@@ -11,7 +11,7 @@
         </Alert>
         <div class="content">
           <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-huishouzhan"></use>
+            <use xlink:href="#houtaiicon-huishouzhan"></use>
           </svg>
           <span style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">回收站</span>
           <div style="margin-top:20px;position:relative">

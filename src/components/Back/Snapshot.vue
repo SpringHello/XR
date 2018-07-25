@@ -14,7 +14,7 @@
       <div id="content">
         <div id="header">
           <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-ECSkuaizhao"></use>
+            <use xlink:href="#houtaiicon-ECSkuaizhao"></use>
           </svg>
           <span id="title">云主机快照</span>
           <button id="refresh_button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>

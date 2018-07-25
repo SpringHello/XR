@@ -66,7 +66,8 @@ const Pbackupdisk = () => import('@/components/App/product/CloudDiskBackup.vue')
 const Pfirewall = () => import('@/components/App/product/Firewall.vue')
 const Pddos = () => import('@/components/App/product/DDOShighIP.vue')
 const Pmonitor = () => import('@/components/App/product/CloudMonitoring.vue')
-
+const PobjStorage = () => import('@/components/App/product/PobjStorage.vue')
+const PdataBase = () => import('@/components/App/product/PdataBase.vue')
 // 登录注册页面
 // import Login from '@/components/LR/Login'
 // import Register from '@/components/LR/Register'
@@ -319,6 +320,8 @@ var router = new Router({
         {path: 'Pfirewall', component: Pfirewall},
         {path: 'Pddos', component: Pddos},
         {path: 'Pmonitor', component: Pmonitor},
+        {path: 'PobjStorage', component: PobjStorage},
+        {path: 'PdataBase', component: PdataBase},
         {
           path: 'computed', component: computed,
           children: [

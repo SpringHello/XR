@@ -6,7 +6,7 @@
                  <div class="center_top">
                      <div style="width:50%">
                           <svg class="icon" aria-hidden="true">
-                            <use xlink:href="#icon-yijianxufei"></use>
+                            <use xlink:href="#houtaiicon-yijianxufei"></use>
                         </svg>
                          <span class="title">对象存储</span>
                      </div>
