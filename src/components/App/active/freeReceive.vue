@@ -228,6 +228,7 @@
             </Radio>
           </RadioGroup>
         </div>
+        <p style="margin-top: 13px;color: #F56B23" v-show="rechargeWay=='zfb'">*充值完之后请回到此页面冻结押金</p>
       </div>
       <div slot="footer">
         <button class="modal-button" @click="recharge_ok">确认</button>
@@ -351,7 +352,7 @@
           inConformityModal: false,
           getSuccessModal: false,
           cashPledgeModal: false,
-          rechargeModal: false,
+          rechargeModal: true,
           weChatRechargeModal: false,
           paySuccessModal: false,
           freezeSuccessModal: false,
