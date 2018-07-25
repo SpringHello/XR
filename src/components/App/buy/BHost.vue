@@ -417,7 +417,7 @@
                   <p class="item-title"></p>
                 </div>
                 <div>
-                  <p><span style="color:#2A99F2;cursor:pointer" @click="pushDisk('PecsInfo')">添加数据盘</span>
+                  <p><span style="color:#2A99F2;cursor:pointer" @click="pushDisk">添加数据盘</span>
                     您还可以添加{{remainDisk}}块数据盘</p>
                 </div>
               </div>
@@ -541,8 +541,7 @@
             优惠费用：<span
             style="font-size: 14px;color: #EE6723;">{{totalCoupon.toFixed(2)}}元</span></p>-->
           <div style="text-align: right;margin-top: 20px;">
-            <Button size="large"
-                    class="btn" @click="addCart">
+            <Button size="large" class="btn" @click="addCart">
               加入预算清单
             </Button>
             <Button type="primary"
@@ -605,6 +604,8 @@
         publicList: [],
         // 自有镜像列表
         customList: [],
+        // 选中的镜像
+        customMirror: {},
         // 选中的镜像
         system: {},
         // 默认购买公网IP
@@ -1016,6 +1017,7 @@
         dataDiskList: [
           {type: 'ssd', size: 20, label: 'SSD存储'}
         ],
+        // 磁盘价格
         dataDiskCost: 0,
         // 磁盘优惠价
         coupon: 0,
@@ -1031,11 +1033,13 @@
       this.queryCustomVM()
       this.queryVpc()
       this.queryIPPrice()
+      this.queryDiskPrice()
       // this.$store.dispatch('getZoneList')
     },
     methods: {
       // 设置系统模版
       setTemplate() {
+        // 系统镜像
         axios.get('information/listTemplates.do', {
           params: {
             zoneId: this.zone.zoneid,
@@ -1044,12 +1048,27 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            this.publicList = []
             for (let system in response.data.result) {
               this.publicList.push({system, systemList: response.data.result[system], selectSystem: ''})
             }
             this.system = {}
           }
         })
+        // 自定义镜像
+        if (this.userInfo != null) {
+          axios.get('information/listTemplates.do', {
+            params: {
+              user: '1',
+              zoneId: this.zone.zoneid
+            }
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.customList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
+              this.customMirror = {}
+            }
+          })
+        }
       },
       // 重新选择系统镜像
       setOS(name) {
@@ -1127,7 +1146,7 @@
       },
       // 加入预算清单
       addCart(){
-        if (this.system.systemName == undefined) {
+        if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
           this.$message.info({
             content: '请选择一个镜像系统'
           })
@@ -1148,17 +1167,35 @@
         prod.zone = this.zone
         prod.timeForm = this.timeForm
         prod.system = this.system
+        prod.customMirror = this.customMirror
+        prod.currentType = this.currentType
         prod.publicIP = this.publicIP
         prod.count = 1
+        prod.type = 'Pecs'
+        prod.createType = this.createType
+        prod.autoRenewal = this.autoRenewal
+        prod.currentLoginType = this.currentLoginType
         if (this.createType == 'fast') {
-          prod.type = 'fast'
-          prod.currentType = this.currentType
           prod.currentSystem = this.currentSystem
           prod.cost = this.fastCoupon || this.fastCost
+        } else {
+          prod.IPConfig = this.IPConfig
+          prod.vmConfig = this.vmConfig
+          prod.dataDiskList = this.dataDiskList
+          prod.cost = this.totalCost
         }
         this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
       },
-
+      // 设置自定义镜像
+      setOwnTemplate(item) {
+        this.customMirror = item
+        var str = item.ostypename.substr(0, 1)
+        if (str === 'W' || str === 'w') {
+          this.systemUsername = 'administrator'
+        } else {
+          this.systemUsername = 'root'
+        }
+      },
       // 自定义主机的方法==========================================================================
       // 三种推荐配置切换
       changeType(type) {
@@ -1263,6 +1300,35 @@
       removeHostDisk(index) {
         this.dataDiskList.splice(index, 1)
       },
+      // 查询数据盘价格
+      queryDiskPrice: debounce(500, function () {
+        var diskSize = ''
+        var diskType = ''
+        for (var disk of this.dataDiskList) {
+          diskSize += `${disk.size},`
+          diskType += `${disk.type},`
+        }
+        var params = {
+          cpuNum: '0',
+          diskSize,
+          diskType,
+          memory: '0',
+          timeType: this.timeForm.currentTimeValue.type,
+          timeValue: this.timeForm.currentTimeValue.value,
+          zoneId: this.zone.zoneid
+        }
+        if (this.timeForm.currentTimeType === 'current') {
+          params.timeType = 'current'
+        }
+        axios.post('device/QueryBillingPrice.do', params).then(response => {
+          this.dataDiskCost = response.data.cost
+          if (response.data.coupon) {
+            this.coupon = response.data.coupon
+          } else {
+            this.coupon = 0
+          }
+        })
+      }),
     },
     computed: {
       // 剩余添加磁盘数量
@@ -1274,7 +1340,15 @@
       },
       userInfo(){
         return this.$store.state.userInfo
-      }
+      },
+      // 自定义主机总价
+      totalCost() {
+        if (this.IPConfig.publicIP) {
+          return this.vmConfig.cost + this.IPConfig.cost + this.dataDiskCost
+        } else {
+          return this.vmConfig.cost + this.dataDiskCost
+        }
+      },
     },
     watch: {
       'timeForm': {
@@ -1332,6 +1406,8 @@
               this.vmConfig.kernel = zone.kernelList[0].value
             }
           })
+          this.setTemplate()
+          this.queryVpc()
         },
         deep: true
       }

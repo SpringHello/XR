@@ -2,10 +2,10 @@
   <div id="buy">
     <div id="wrapper">
       <div id="header" style="margin-bottom: 30px">
-        <Select v-model="product.currentProduct" class="mySelect" style="width: 102px">
+        <Select @on-change="change" v-model="product.currentProduct" class="mySelect" style="width: 102px">
           <Option v-for="item in product.productList" :value="item.value" :key="item.value">{{ item.label }}</Option>
         </Select>
-        <router-link :to="`/ruicloud/${product.currentProduct}`" target="_blank">查看产品详情</router-link>
+        <router-link :to="`/ruicloud/${docPath}`" target="_blank">查看产品详情</router-link>
       </div>
       <div id="body">
         <router-view/>
@@ -23,7 +23,7 @@
                   style="cursor: pointer;font-family: Microsoft YaHei;font-size: 14px;color: #2A99F2; line-height: 25px;"
                   @click="delDetailed(index)">删除</p>
               </div>
-              <div style="padding:20px 0px;">
+              <div style="padding-top:20px">
                 <!--公共展示区-->
                 <div class="public">
                   <p class="item"><span class="hidden">$</span><span class="title">区域</span><span
@@ -37,7 +37,8 @@
                     class="hidden">#</span>{{prod.timeForm.currentTimeValue.label}}
                   </p>
                 </div>
-                <div v-if="prod.type=='fast'">
+                <!--快速创建主机-->
+                <div v-if="prod.createType=='fast'">
                   <!--公共镜像-->
                   <p class="item" v-if="prod.currentType=='public'">
                     <span class="hidden">$</span>
@@ -54,24 +55,8 @@
                     class="hidden">#</span>{{`${prod.currentSystem.kernel}核${prod.currentSystem.RAM}G、${prod.publicIP?prod.currentSystem.bandWidth:0}M带宽、${prod.currentSystem.diskSize}G系统盘`}}
                   </p>
                 </div>
-                <!--主机清单字段-->
-                <div v-if="prod.type=='Pecs'" style="border-bottom:1px solid #ccc;padding:20px 0px;">
-                  <p class="item"><span class="hidden">$</span><span class="title">区域</span><span
-                    class="hidden">#</span>{{prod.zone.zonename}}
-                  </p>
-
-                  <p class="item">
-                    <span class="hidden">$</span><span class="title">计费模式</span><span class="hidden">#</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
-                  </p>
-                  <p class="item" v-if="prod.timeForm.currentTimeType=='annual'">
-                    <span class="hidden">$</span><span class="title">购买时长</span><span
-                    class="hidden">#</span>{{prod.timeForm.currentTimeValue.label}}
-                  </p>
-                  <!--镜像+应用-->
-                  <p class="item" v-if="prod.currentType=='app'">
-                    <span class="hidden">$</span><span class="title">镜像</span><span
-                    class="hidden">#</span>{{prod.currentApp.templatename}}
-                  </p>
+                <!--自定义创建主机-->
+                <div v-if="prod.createType=='custom'">
                   <!--公共镜像-->
                   <p class="item" v-if="prod.currentType=='public'">
                     <span class="hidden">$</span>
@@ -83,125 +68,37 @@
                     <span class="hidden">$</span><span class="title">镜像</span><span
                     class="hidden">#</span>{{prod.customMirror.templatename}}
                   </p>
-                  <!--快速配置-->
-                  <div v-if="prod.createType=='fast'">
-                    <p class="item" v-if="prod.publicIP"><span class="hidden">$</span><span class="title">配置</span><span
-                      class="hidden">#</span>{{`${prod.currentSystem.kernel}核${prod.currentSystem.RAM}G、${prod.currentSystem.bandWidth}带宽、${prod.currentSystem.diskSize}G系统盘`}}
-                    </p>
-                    <p class="item" v-if="prod.publicIP==false"><span class="hidden">$</span><span
-                      class="title">配置</span><span
-                      class="hidden">#</span>{{`${prod.currentSystem.kernel}核${prod.currentSystem.RAM}G、${prod.currentSystem.diskSize}G系统盘`}}
-                    </p>
-                  </div>
-                  <!--自定义配置-->
-                  <div v-if="prod.createType=='custom'">
-                    <p class="item" v-if="prod.IPConfig.publicIP">
-                      <span class="hidden">$</span>
-                      <span class="title">配置</span><span
-                      class="hidden">#</span>{{`${prod.vmConfig.kernel}核${prod.vmConfig.RAM}G、${prod.IPConfig.bandWidth}M带宽、${prod.vmConfig.diskSize}G系统盘`}}
-                    </p>
-                    <p class="item" v-else><span class="title">配置</span><span class="hidden">#</span>{{`${prod.vmConfig.kernel}核${prod.vmConfig.RAM}G、${prod.vmConfig.diskSize}G系统盘`}}
-                    </p>
-                    <!--快速创建没有数据盘，只有自定义配置包含硬盘-->
-                    <p class="item" v-for="disk in prod.dataDiskList">
-                      <span class="hidden">$</span>
-                      <span class="title">硬盘</span><span
-                      class="hidden">#</span>{{disk.size+disk.label}}
-                    </p>
-                  </div>
 
-                  <p class="item" v-if="prod.createType=='fast'" style="margin-top: 10px">
+                  <p class="item" v-if="prod.IPConfig.publicIP">
                     <span class="hidden">$</span>
-                    <span class="title" style="vertical-align: middle">价格</span>
-                    <span class="hidden">#</span>
-                    <span style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.cost.toFixed(2)}}元</span>
-                  <ul style="float: right;font-size: 14px;user-select: none">
-                    <span class="numberAdd" v-if="prod.count == 1">-</span>
-                    <span class="numberAdd" style="cursor: pointer"
-                          @click="prod.count -= 1,prod.cost = PecsInfo.cost * prod.count" v-else>-</span>
-                    <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
-                    <span class="numberMinus" v-if="prod.count == 5">+</span>
-                    <span class="numberMinus" style="cursor: pointer"
-                          @click="prod.count += 1,prod.cost = PecsInfo.cost * prod.count" v-else>+</span></ul>
+                    <span class="title">配置</span><span
+                    class="hidden">#</span>{{`${prod.vmConfig.kernel}核${prod.vmConfig.RAM}G、${prod.IPConfig.bandWidth}M带宽、${prod.vmConfig.diskSize}G系统盘`}}
                   </p>
-                  <p class="item" v-if="prod.createType=='custom'" style="margin-top: 10px;">
+                  <p class="item" v-else><span class="title">配置</span><span class="hidden">#</span>{{`${prod.vmConfig.kernel}核${prod.vmConfig.RAM}G、${prod.vmConfig.diskSize}G系统盘`}}
+                  </p>
+                  <!--快速创建没有数据盘，只有自定义配置包含硬盘-->
+                  <p class="item" v-for="disk in prod.dataDiskList">
                     <span class="hidden">$</span>
-                    <span class="title" style="vertical-align: middle">价格</span>
-                    <span class="hidden">#</span><span
-                    style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.customCost.toFixed(2)}}元</span>
-                  <ul style="float: right;font-size: 14px;user-select: none">
-                    <span class="numberAdd" v-if="prod.count == 1">-</span>
-                    <span class="numberAdd" style="cursor: pointer"
-                          @click="prod.count -= 1,prod.customCost = totalCost * prod.count" v-else>-</span>
-                    <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
-                    <span class="numberMinus" v-if="prod.count == 5">+</span>
-                    <span class="numberMinus" style="cursor: pointer"
-                          @click="prod.count += 1,prod.customCost = totalCost * prod.count" v-else>+</span></ul>
+                    <span class="title">硬盘</span><span
+                    class="hidden">#</span>{{disk.size+disk.label}}
                   </p>
                 </div>
                 <!--磁盘清单字段-->
-                <div v-if="prod.type=='Pdisk'" style="border-bottom:1px solid #ccc;padding:20px 0px;">
-                  <p class="item"><span class="hidden">$</span><span class="title">区域</span><span
-                    class="hidden">#</span>{{prod.zone.zonename}}
-                  </p>
-                  <p class="item">
-                    <span class="hidden">$</span><span class="title">计费模式</span><span class="hidden">#</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
-                  </p>
-                  <p class="item"><span class="hidden">$</span><span class="title">购买时长</span><span
-                    class="hidden">#</span>{{prod.timeForm.currentTimeValue.label}}
-                  </p>
+                <div v-if="prod.type=='Pdisk'">
                   <p class="item" v-for="disk in prod.dataDiskList">
                     <span class="hidden">$</span>
                     <span class="title">硬盘</span><span class="hidden">#</span>{{disk.size}}G{{disk.label}}
                   </p>
-                  <p class="item" style="margin-top: 10px"><span class="hidden">$</span><span class="title"
-                                                                                              style="vertical-align: middle">价格</span>
-                    <span class="hidden">#</span>
-                    <span
-                      style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.dataDiskCost.toFixed(2)}}元</span>
-                  <ul style="float: right;font-size: 14px;user-select: none">
-                    <span class="numberAdd" v-if="prod.count == 1">-</span>
-                    <span class="numberAdd" style="cursor: pointer"
-                          @click="prod.count -= 1,prod.customCost = totalCost * prod.count" v-else>-</span>
-                    <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
-                    <span class="numberMinus" v-if="prod.count == 5">+</span>
-                    <span class="numberMinus" style="cursor: pointer"
-                          @click="prod.count += 1,prod.customCost = totalCost * prod.count" v-else>+</span></ul>
-                  </p>
                 </div>
 
                 <!--公网IP清单字段-->
-                <div v-if="prod.type=='Peip'" style="border-bottom:1px solid #ccc;padding:20px 0px;">
-                  <p class="item"><span class="hidden">$</span><span class="title">区域</span><span
-                    class="hidden">#</span>{{prod.zone.zonename}}
-                  </p>
-                  <p class="item">
-                    <span class="hidden">$</span><span class="title">计费模式</span><span class="hidden">#</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
-                  </p>
-                  <p class="item"><span class="hidden">$</span><span class="title">购买时长</span><span
-                    class="hidden">#</span>{{prod.timeForm.currentTimeValue.label}}
-                  </p>
+                <div v-if="prod.type=='Peip'">
                   <p class="item">
                     <span class="hidden">$</span>
-                    <span class="title">带宽</span><span class="hidden">#</span>{{prod.bandWidth}}
-                  </p>
-                  <p class="item" style="margin-top: 10px">
-                    <span class="hidden">$</span>
-                    <span class="title" style="vertical-align: middle">价格</span>
-                    <span class="hidden">#</span>
-                    <span style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.cost.toFixed(2)}}元</span>
-                  <ul style="float: right;font-size: 14px;user-select: none">
-                    <span class="numberAdd" v-if="prod.count == 1">-</span>
-                    <span class="numberAdd" style="cursor: pointer"
-                          @click="prod.count -= 1,prod.cost = PeipInfo.cost * prod.count" v-else>-</span>
-                    <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
-                    <span class="numberMinus" v-if="prod.count == 5">+</span>
-                    <span class="numberMinus" style="cursor: pointer"
-                          @click="prod.count += 1,prod.cost = PeipInfo.cost * prod.count" v-else>+</span></ul>
+                    <span class="title">带宽</span><span class="hidden">#</span>{{prod.bandWidth}}M
                   </p>
                 </div>
 
-                <!--磁盘清单字段-->
                 <div v-if="prod.type=='Pdata'" style="border-bottom:1px solid #ccc;padding:20px 0px;">
                   <p class="item"><span class="hidden">$</span><span class="title">区域</span><span
                     class="hidden">#</span>{{prod.zone.zonename}}
@@ -240,7 +137,7 @@
                   </p>
                 </div>
                 <!--底部价格公共区域-->
-                <div>
+                <div style="border-bottom:1px solid #ccc;padding-bottom: 20px">
                   <p class="item" style="margin-top: 10px">
                     <span class="hidden">$</span>
                     <span class="title" style="vertical-align: middle">价格</span>
@@ -259,7 +156,7 @@
               </div>
             </div>
           </div>
-          <!--<div
+          <div
             style="padding:30px 40px;box-shadow: 0 2px 14px 0 rgba(193,193,193,0.30);background-color: #ffffff;width:380px;"
             ref="buyDiv">
             <p
@@ -274,7 +171,7 @@
             <button class="buyButton" style="display:block;width:300px;" @click="exportXLSX">导出预算清单</button>
             <p style="font-size: 12px;color: #333333;margin:20px 0px 10px;">如有需要请联系客服，或者致电：010-82527988</p>
             <p style="font-size: 12px;color: #999999;line-height: 21px;">关闭该页面后系统不会保存清单内容，如您需要请及时导出清单。</p>
-          </div>-->
+          </div>
         </div>
       </div>
     </div>
@@ -346,14 +243,20 @@
       if (sessionStorage.getItem('cart')) {
         cart = JSON.parse(sessionStorage.getItem('cart'))
       }
-
+      var zone = null
+      this.$store.state.zoneList.forEach(item => {
+        if (item.isdefault === 1) {
+          zone = item
+        }
+      })
       return {
+        zone,
         // 产品类型及选中类型
         product: {
-          currentProduct: 'Pecs',
-          productList: [{label: '云主机', value: 'Pecs'}, {label: '云硬盘', value: 'Pdisk'}, {
+          currentProduct: this.$route.name,
+          productList: [{label: '云主机', value: 'bhost'}, {label: '云硬盘', value: 'bdisk'}, {
             label: '公网IP',
-            value: 'Peip'
+            value: 'bip'
           }, /*{label: '数据库', value: 'Pdata'}*/]
         },
         // 当前可以创建的剩余资源数
@@ -388,8 +291,7 @@
         // 购物车
         cart,
         scrollFun: () => {
-          if (window.innerHeight - this.$refs.list.getBoundingClientRect().bottom < 246
-          ) {
+          if (window.innerHeight - this.$refs.list.getBoundingClientRect().bottom < 246) {
             this.$refs.buyDiv.style.position = 'fixed'
             this.$refs.buyDiv.style.bottom = 0
           }
@@ -399,7 +301,12 @@
         }
       }
     },
-
+    created(){
+      scrollTo(0, 0)
+    },
+    mounted(){
+      window.addEventListener('scroll', this.scrollFun)
+    },
     methods: {
       submit() {
         this.$http.get('user/login.do', {
@@ -419,12 +326,207 @@
             }
           }
         })
-      }
+      },
+      // 立即购买
+      buyNow() {
+        if (this.cart.length == 0) {
+          this.$message.info({
+            content: '请添加商品到清单'
+          })
+          return
+        }
+        if (this.userInfo == null) {
+          this.showModal.login = true
+          return
+        }
+        var PromiseList = []
+        // 批次号
+        var countOrder = uuid.v4()
+        // 创建的主机数量  创建的磁盘数量 创建的公网IP数量
+        for (var prod of this.cart) {
+          if (prod.type == 'Pecs') {
+            var params = {
+              zoneId: prod.zone.zoneid,
+              timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
+              timeValue: prod.timeForm.currentTimeValue.value,
+              templateId: prod.currentType == 'public' ? prod.system.systemtemplateid : prod.customMirror.systemtemplateid,
+              isAutoRenew: prod.autoRenewal ? '1' : '0',
+              count: prod.count,
+              countOrder
+            }
+            // 快速创建主机
+            if (prod.createType == 'fast') {
+              params.cpuNum = prod.currentSystem.kernel
+              params.memory = prod.currentSystem.RAM
+              params.bandWidth = prod.publicIP ? prod.currentSystem.bandWidth : 0
+              params.rootDiskType = prod.currentSystem.diskType
+              params.networkId = 'no'
+              params.vpcId = 'no'
+            } else {
+              params.cpuNum = prod.vmConfig.kernel
+              params.memory = prod.vmConfig.RAM
+              params.bandWidth = prod.IPConfig.publicIP ? prod.IPConfig.bandWidth : 0
+              params.rootDiskType = prod.vmConfig.diskType
+              params.networkId = prod.network
+              params.vpcId = prod.vpc
+              var diskType = '', diskSize = ''
+
+              for (let disk of prod.dataDiskList) {
+                diskType += `${disk.type},`
+                diskSize += `${disk.size},`
+              }
+              params.diskType = diskType
+              params.diskSize = diskSize
+            }
+            if (prod.currentType === 'app') {
+              params.templateId = prod.currentApp.templateid
+            } else if (prod.currentType === 'public') {
+              params.templateId = prod.system.systemId
+            } else {
+              params.templateId = prod.customMirror.systemtemplateid
+            }
+            // 设置了主机名和密码
+            if (prod.currentLoginType == 'custom') {
+              params.VMName = prod.computerName
+              params.password = prod.password
+            }
+            PromiseList.push(axios.get('information/deployVirtualMachine.do', {params}))
+          } else if (prod.type == 'Pdisk') {
+            var diskSize = ''
+            var diskType = ''
+            var count = prod.count
+            // 多个磁盘订单
+            for (var i = 0; i < count; i++) {
+              prod.dataDiskList.forEach(item => {
+                diskSize += `${item.size},`
+                diskType += `${item.type},`
+              })
+            }
+            var params = {
+              zoneId: prod.zone.zoneid,
+              diskSize: diskSize,
+              diskName: prod.diskName,
+              diskOfferingId: diskType,
+              timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
+              timeValue: prod.timeForm.currentTimeValue.value,
+              isAutorenew: prod.autoRenewal ? '1' : '0',
+              countOrder
+            }
+            PromiseList.push(axios.get('Disk/createVolume.do', {params}))
+          } else if (prod.type == 'Peip') {
+            var params = {
+              zoneId: prod.zone.zoneid,
+              timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
+              timeValue: prod.timeForm.currentTimeValue.value,
+              count: prod.count,
+              isAutorenew: prod.autoRenewal ? '1' : '0',
+              brandWith: prod.bandWidth,
+              vpcId: prod.vpc,
+              countOrder
+            }
+            PromiseList.push(axios.get('network/createPublicIp.do', {params}))
+          } else if (prod.type == 'Pdata') {
+            for (var i = 0; i < count; i++) {
+              prod.dataDiskList.forEach(item => {
+                diskSize += `${item.size},`
+                diskType += `${item.type},`
+              })
+            }
+            var params = {
+              zoneId: prod.zone.zoneid,
+              templateId: prod.system.systemId,
+              bandWidth: prod.IPConfig.publicIP ? prod.IPConfig.bandWidth : 0,
+              timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
+              timeValue: prod.timeForm.currentTimeValue.value,
+              isAutoRenew: prod.autoRenewal ? '1' : '0',
+              count: prod.count,
+              cpuNum: prod.vmConfig.kernel,
+              memory: prod.vmConfig.RAM,
+              networkId: prod.network,
+              rootDiskType: 'ssd',
+              vpcId: prod.vpc,
+              diskSize,
+              diskType,
+              countOrder,
+            }
+            PromiseList.push(axios.get('database/createDB.do', {params}))
+          }
+        }
+        sessionStorage.removeItem('cart')
+        Promise.all(PromiseList).then(responseList => {
+          if (responseList.every(item => {
+              return item.status == 200 && item.data.status == 1
+            })) {
+            this.$router.push({
+              path: '/ruicloud/order', query: {
+                countOrder
+              }
+            })
+          } else {
+            this.$message.info({
+              content: responseList[0].data.message
+            })
+          }
+        })
+
+      },
+      change(value){
+        this.$router.push(`/ruicloud/buy/${value}`)
+      },
+      // 导出清单
+      exportXLSX() {
+        if (this.cart.length != 0) {
+          // 记录当前行数
+          let currentRow = 0
+          let data = []
+          for (let i = 0; i < this.cart.length; i++) {
+            let contentArray = this.$refs.detailed[i].innerText.replace(/[\r\n'删除']/g, ' ').split('$')
+            //第一行字段代表订单类型特殊处理
+            data[currentRow] = new Array(2)
+            data[currentRow][0] = contentArray[0].trim()
+            currentRow++
+            for (let j = 1; j < contentArray.length; j++) {
+              data[currentRow] = new Array(2)
+              data[currentRow][0] = contentArray[j].split('#')[0].trim()
+              data[currentRow][1] = contentArray[j].split('#')[1].trim()
+              currentRow++
+            }
+            data[currentRow] = new Array(2)
+            currentRow++
+          }
+          // covert json to sheet
+          const ws = XLSX.utils.aoa_to_sheet(data)
+          const wb = XLSX.utils.book_new()
+          XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
+          // save
+          const wbout = XLSX.write(wb, {type: 'binary', bookType: 'xlsx'})
+          XLSX_SAVE.saveAs(new Blob([s2ab(wbout)], {type: 'application/octet-stream'}), 'detailedList.xlsx')
+        }
+      },
     },
     computed: {
       disabled() {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
       },
+      userInfo(){
+        return this.$store.state.userInfo
+      },
+      // 商品清单总价
+      billListCost() {
+        var cost = 0
+        for (var prod of this.cart) {
+          cost += prod.cost * prod.count
+        }
+        return cost
+      },
+      docPath(){
+        let map = {
+          bhost: 'Pecs',
+          bdisk: 'Pdisk',
+          bip: 'Peip',
+        }
+        return map[this.product.currentProduct]
+      }
     },
     watch: {},
     destroyed() {

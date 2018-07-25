@@ -3117,9 +3117,6 @@
           })
           return
         }
-        for (var prod of this.cart) {
-          console.log(prod)
-        }
         if (this.userInfo == null) {
           this.showModal.login = true
           return

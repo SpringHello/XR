@@ -16,6 +16,8 @@ const Art = () => import('@/components/App/Article')
 //const Buy = () => import('@/components/App/Buy1')
 const Buy = () => import('@/components/App/buy/Buy')
 const BHost = () => import('@/components/App/buy/BHost')
+const BIP = () => import('@/components/App/buy/BIP')
+const BDisk = () => import('@/components/App/buy/BDisk')
 const Ecs = () => import('@/components/App/product/ECS')
 const Document = () => import('@/components/App/Document')
 const Document1 = () => import('@/components/App/Document1')
@@ -234,7 +236,10 @@ var router = new Router({
           name: 'buy',
           component: Buy,
           children:[
+            {path: '', name: 'bhost', component: BHost},
             {path: 'bhost', name: 'bhost', component: BHost},
+            {path: 'bip', name: 'bip', component: BIP},
+            {path: 'bdisk', name: 'bdisk', component: BDisk},
           ]
         },
         {path: 'active', name: 'active', component: Active},
