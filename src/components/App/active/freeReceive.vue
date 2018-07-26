@@ -86,8 +86,8 @@
     <div class="fr-suspension">
       <ul>
         <li :class="{select: 900>=fr_scrollTop}" @click="roll(500)">活动流程</li>
-        <li :class="{select: 2000>=fr_scrollTop&&fr_scrollTop>900}" @click="roll(1000)">活动主机</li>
-        <li :class="{select: 2700>=fr_scrollTop&&fr_scrollTop>2000}" @click="roll(2000)">产品优势</li>
+        <li :class="{select: 2000>fr_scrollTop&&fr_scrollTop>900}" @click="roll(1000)">活动主机</li>
+        <li :class="{select: 2700>=fr_scrollTop&&fr_scrollTop>=2000}" @click="roll(2000)">产品优势</li>
         <li :class="{select: fr_scrollTop>2700}" @click="roll(2800)">活动规则</li>
         <li @click="roll(0)">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</li>
       </ul>
