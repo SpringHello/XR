@@ -15,7 +15,7 @@
       <div id="content">
         <div id="header">
           <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-fuzaijunheng2"></use>
+            <use xlink:href="#houtaiicon-fuzaijunheng2"></use>
           </svg>
           <span id="title">负载均衡</span>
           <button id="refresh_button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>

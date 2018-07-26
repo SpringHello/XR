@@ -15,7 +15,7 @@
       <div id="content">
         <div id="header">
           <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-xunisiyouyunVPC"></use>
+            <use xlink:href="#houtaiicon-xunisiyouyunVPC"></use>
           </svg>
           <span id="title">网络私有云VPC</span>
           <button id="refresh_button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>

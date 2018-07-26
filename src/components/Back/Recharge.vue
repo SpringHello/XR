@@ -5,7 +5,7 @@
         to="expenses" style="color:rgba(17, 17, 17, 0.43);">费用中心</router-link> / 账户充值</span>
       <div class="content">
         <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-chongzhi"></use>
+          <use xlink:href="#houtaiicon-chongzhi"></use>
         </svg>
         <span class="title">账户充值</span>
         <div class="recharge">

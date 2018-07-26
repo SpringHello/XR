@@ -544,7 +544,7 @@
             <Button size="large" class="btn" @click="addCart">
               加入预算清单
             </Button>
-            <Button type="primary"
+            <Button type="primary" @click="buy"
                     style="border-radius: 10px;width: 128px;height: 39px;font-size: 16px;color: #FFFFFF;background-color: #377DFF;border: 1px solid #377DFF;">
               立即购买
             </Button>
@@ -1182,9 +1182,85 @@
           prod.IPConfig = this.IPConfig
           prod.vmConfig = this.vmConfig
           prod.dataDiskList = this.dataDiskList
+          prod.vpc = this.vpc
+          prod.network = this.network
           prod.cost = this.totalCost
         }
         this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
+      },
+      // 购买主机
+      buy(){
+        if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
+          this.$message.info({
+            content: '请选择一个镜像系统'
+          })
+          return
+        }
+        if (this.currentLoginType == 'custom') {
+          if (this.computerName.trim() == '') {
+            this.computerNameWarning = '请输入主机名称'
+            return
+          }
+          if (!regExp.hostPassword(this.password)) {
+            this.passwordWarning = '请输入6-23位包含大小写与数字的密码'
+            return
+          }
+        }
+        if (this.userInfo == null) {
+          this.$parent.showModal.login = true
+          return
+        }
+        var params = {
+          zoneId: this.zone.zoneid,
+          timeType: this.timeForm.currentTimeType == 'annual' ? this.timeForm.currentTimeValue.type : 'current',
+          timeValue: this.timeForm.currentTimeValue.value,
+          templateId: this.currentType == 'public' ? this.system.systemtemplateid : this.customMirror.systemtemplateid,
+          isAutoRenew: this.autoRenewal ? '1' : '0',
+          count: 1,
+        }
+        // 快速创建主机
+        if (this.createType == 'fast') {
+          params.cpuNum = this.currentSystem.kernel
+          params.memory = this.currentSystem.RAM
+          params.bandWidth = this.publicIP ? this.currentSystem.bandWidth : 0
+          params.rootDiskType = this.currentSystem.diskType
+          params.networkId = 'no'
+          params.vpcId = 'no'
+        } else {
+          params.cpuNum = this.vmConfig.kernel
+          params.memory = this.vmConfig.RAM
+          params.bandWidth = this.IPConfig.publicIP ? this.IPConfig.bandWidth : 0
+          params.rootDiskType = this.vmConfig.diskType
+          params.networkId = this.network
+          params.vpcId = this.vpc
+          var diskType = '', diskSize = ''
+
+          for (let disk of this.dataDiskList) {
+            diskType += `${disk.type},`
+            diskSize += `${disk.size},`
+          }
+          params.diskType = diskType
+          params.diskSize = diskSize
+        }
+        if (this.currentType === 'app') {
+          params.templateId = this.currentApp.templateid
+        } else if (this.currentType === 'public') {
+          params.templateId = this.system.systemId
+        } else {
+          params.templateId = this.customMirror.systemtemplateid
+        }
+        // 设置了主机名和密码
+        if (this.currentLoginType == 'custom') {
+          params.VMName = this.computerName
+          params.password = this.password
+        }
+        axios.get('information/deployVirtualMachine.do', {params}).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push({
+              path: '/ruicloud/order'
+            })
+          }
+        })
       },
       // 设置自定义镜像
       setOwnTemplate(item) {

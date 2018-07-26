@@ -470,6 +470,15 @@
         })
 
       },
+      /* 删除一条购买清单 */
+      delDetailed(index) {
+        this.cart.splice(index, 1)
+        this.store()
+      },
+      // 订单信息存入sessionStorage
+      store() {
+        sessionStorage.setItem('cart', JSON.stringify(this.cart))
+      },
       change(value){
         this.$router.push(`/ruicloud/buy/${value}`)
       },
@@ -528,7 +537,14 @@
         return map[this.product.currentProduct]
       }
     },
-    watch: {},
+    watch: {
+      'cart': {
+        handler(){
+          this.store()
+        },
+        deep: true
+      }
+    },
     destroyed() {
       window.removeEventListener('scroll', this.scrollFun)
     }

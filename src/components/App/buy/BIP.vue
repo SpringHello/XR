@@ -204,32 +204,29 @@
       },
       buyIP() {
         if (this.userInfo == null) {
-          this.showModal.login = true
+          this.$parent.showModal.login = true
           return
         }
-        var obj = JSON.parse(JSON.stringify(this.PeipInfo))
-        var prod = Object.assign({typeName: '公网IP', zone: this.PeipInfo.zone, type: 'Peip', count: 1}, obj)
-        if (this._checkCount(0, 0, 1)) {
-          var params = {
-            zoneId: prod.zone.zoneid,
-            timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
-            timeValue: prod.timeForm.currentTimeValue.value,
-            count: prod.count,
-            isAutorenew: prod.autoRenewal ? '1' : '0',
-            brandWith: prod.bandWidth,
-            vpcId: prod.vpc
-          }
-          axios.get('network/createPublicIp.do', {params}).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.$router.push('order')
-              } else {
-                this.$message.info({
-                  content: response.data.message
-                })
-              }
-            }
-          )
+        var params = {
+          zoneId: this.zone.zoneid,
+          timeType: this.timeForm.currentTimeType == 'annual' ? this.timeForm.currentTimeValue.type : 'current',
+          timeValue: this.timeForm.currentTimeValue.value,
+          count: this.count,
+          isAutorenew: this.autoRenewal ? '1' : '0',
+          brandWith: this.bandWidth,
+          vpcId: this.vpc,
+          count: 1
         }
+        axios.get('network/createPublicIp.do', {params}).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.$router.push('/ruicloud/order')
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          }
+        )
       },
       queryIPPrice: debounce(500, function () {
         var params = {

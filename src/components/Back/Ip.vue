@@ -11,7 +11,7 @@
       <div id="content">
         <div id="header">
           <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-danxingIP1"></use>
+            <use xlink:href="#houtaiicon-danxingIP1"></use>
           </svg>
           <span id="title">弹性IP</span>
           <button id="refresh_button" @click="$router.go(0)" style="margin-top: 10px;">刷新</button>

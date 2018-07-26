@@ -5,7 +5,7 @@
       <div class="content">
         <div>
           <svg class="icon" aria-hidden="true">
-            <use xlink:href="#icon-xiaoxizhongxin"></use>
+            <use xlink:href="#houtaiicon-xiaoxizhongxin"></use>
           </svg>
           <span class="title"
                 style="line-height: 40px;display: inline-block;vertical-align: top;margin-left: 5px;">消息中心</span>

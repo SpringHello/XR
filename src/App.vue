@@ -234,7 +234,8 @@
   import $store from './vuex'
   import {mapState} from 'vuex'
   import debounce from 'throttle-debounce/debounce'
-  import './assets/js/iconfont.js'
+  import '@/assets/iconfont/frontend/iconfont.css'
+  import '@/assets/iconfont/frontend/iconfont.js'
   export default {
     name: 'app',
     data () {
@@ -277,7 +278,14 @@
                 prod: '云存储',
                 prodItem: [
                   {title: '云硬盘', desc: '性能型、超高性能型、存储型', path: '/ruicloud/Pdisk'},
-                  {title: '云硬盘备份', desc: '高可用保障、敏捷易用', path: '/ruicloud/Pbackupdisk'}
+                  {title: '云硬盘备份', desc: '高可用保障、敏捷易用', path: '/ruicloud/Pbackupdisk'},
+                  {title: '对象存储', desc: '安全稳定，海量便捷', path: '/ruicloud/PobjStorage'}
+                ]
+              },
+              {
+                prod: '云数据库',
+                prodItem: [
+                  {title: '云数据库', desc: 'MySQL、PostgreSQL、mongoDB、Redis', path: '/ruicloud/PdataBase'},
                 ]
               },
               {
@@ -490,9 +498,6 @@
 </script>
 
 <style rel="stylesheet/less" lang="less">
-  @import './assets/css/frontend.css';
-  @import './assets/css/iconfont.css';
-
   #front {
     header {
       width: 100%;

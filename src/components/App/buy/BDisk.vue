@@ -227,42 +227,38 @@
         window.scrollTo(0, 170)
       },
       buyDisk() {
-        if (this.userInfo == null) {
-          this.showModal.login = true
+        if (this.diskName == '') {
+          this.$message.info({content: '请输入磁盘名称'})
           return
         }
-        var obj = JSON.parse(JSON.stringify(this.PdiskInfo))
-        var prod = Object.assign({typeName: '云硬盘', zone: this.PdiskInfo.zone, type: 'Pdisk', count: 1}, obj)
-        let diskCount = 0
-        if (prod.type == 'Pdisk') {
-          diskCount += prod.dataDiskList.length
-          if (this._checkCount(0, diskCount, 0)) {
-            var diskSize = ''
-            var diskType = ''
-            prod.dataDiskList.forEach(item => {
-              diskSize += `${item.size},`
-              diskType += `${item.type},`
-            })
-            var params = {
-              zoneId: prod.zone.zoneid,
-              diskSize,
-              diskName: prod.diskName,
-              diskOfferingId: diskType,
-              timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
-              timeValue: prod.timeForm.currentTimeValue.value,
-              isAutorenew: prod.autoRenewal ? '1' : '0',
-            }
-            axios.get('Disk/createVolume.do', {params}).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.$router.push('order')
-              } else {
-                this.$message.info({
-                  content: response.data.message
-                })
-              }
+        if (this.userInfo == null) {
+          this.$parent.showModal.login = true
+          return
+        }
+        var diskSize = ''
+        var diskType = ''
+        this.dataDiskList.forEach(item => {
+          diskSize += `${item.size},`
+          diskType += `${item.type},`
+        })
+        var params = {
+          zoneId: this.zone.zoneid,
+          diskSize,
+          diskName: this.diskName,
+          diskOfferingId: diskType,
+          timeType: this.timeForm.currentTimeType == 'annual' ? this.timeForm.currentTimeValue.type : 'current',
+          timeValue: this.timeForm.currentTimeValue.value,
+          isAutorenew: this.autoRenewal ? '1' : '0',
+        }
+        axios.get('Disk/createVolume.do', {params}).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push('/ruicloud/order')
+          } else {
+            this.$message.info({
+              content: response.data.message
             })
           }
-        }
+        })
       },
       // 磁盘页面数据盘价格
       queryDiskPrice: debounce(500, function () {

@@ -206,7 +206,7 @@
   import {mapState} from 'vuex'
   import axios from '@/util/axiosInterceptor'
   import debounce from 'throttle-debounce/debounce'
-  import './assets/js/backend.js'
+  import '@/assets/iconfont/backend/iconfont.js'
   export default {
     name: 'back',
     data(){
@@ -250,6 +250,7 @@
             type: 'storage',
             subItem: [
               {subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
+              //{subName: '对象存储', type: 'https://bjoss-console.xrcloud.net/ruirados/objectStorage'},
               {subName: '云硬盘', type: 'disk'},
               {subName: '云硬盘备份', type: 'diskBackup'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
