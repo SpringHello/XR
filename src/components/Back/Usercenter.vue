@@ -2264,7 +2264,7 @@
               linkmanName: this.notAuth.companyAuthForm.contactPerson,
               trade: this.notAuth.companyAuthForm.industry,
               phone: this.notAuth.companyAuthForm.contact,
-              idCard: this.notAuth.companyAuthForm.linkManNameID,
+              idCard: this.notAuth.companyAuthForm.agentManID,
               contectPhone: this.notAuth.companyAuthForm.linkManPhone,
               phoneCode: this.notAuth.companyAuthForm.verificationCode,
               businessLicenseNumber: this.notAuth.companyAuthForm.businessLicenseNumber,
