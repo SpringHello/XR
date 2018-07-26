@@ -1093,7 +1093,7 @@
                 padding: 7px 20px;
                 background: rgba(230, 0, 27, 1);
                 &.disabled{
-                  background: #666666;
+                  background: #999999;
                   cursor: not-allowed;
                 }
               }
