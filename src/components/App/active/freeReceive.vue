@@ -124,9 +124,9 @@
         <div>
           <!--span class="checkBox" :class="{agree:agree}" @click="toggle"></span>&nbsp;<span>我已阅读并同意</span><span
           style="color:#0EB4FA;cursor:pointer;" @click="showRules">《睿云用户使用协议》</span-->
-          <router-link to="register" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:left;font-size: 14px">
+          <a  href="register" target="_blank" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:left;font-size: 14px">
             立即注册
-          </router-link>
+          </a>
           <router-link to="reset" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:right;font-size:14px">
             忘记密码
           </router-link>
