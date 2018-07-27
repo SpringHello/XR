@@ -281,15 +281,14 @@
               <dd v-html="showNews.abstracts">
               </dd>
               <dd>
-                <router-link :to="`article/${showNews.code}.html`" target="_blank"
-                             style="width:100px;height:38px;line-height:38px;border:1px solid rgba(56,125,255,1);color:#387DFF;display:block;text-align:center;margin-top:40px;">
+                <router-link :to="`article/${showNews.code}.html`" target="_blank" class="news-btn">
                   查看详情
                 </router-link>
               </dd>
             </dl>
           </div>
           <div class="main-right">
-            <img :src="showNews.coverUrl" style="width:100%;height:100%;"/>
+            <img :src="showNews.coverUrl" class="news-img"/>
           </div>
         </div>
         <div class="link-list wrap">
@@ -854,6 +853,20 @@
             font-size: 14px;
             color: rgba(102, 102, 102, 1);
             line-height: 28px;
+            a{
+              width: 100px;
+              height: 38px;
+              line-height: 38px;
+              border: 1px solid rgb(56, 125, 255);
+              color: rgb(56, 125, 255);
+              display: block;
+              text-align: center;
+              margin-top: 40px;
+              &:hover{
+                color: #fff;
+                background: rgb(56, 125, 255);
+              }
+            }
           }
           dd:nth-of-type(1) {
             margin-top: 20px;
@@ -867,7 +880,19 @@
         .main-right {
           width: 533px;
           height: 432px;
+          overflow: hidden;
           background: rgba(231, 231, 231, 1);
+          .news-img{
+            width: 100%;
+            height: 100%;
+            transition: all .5s ease;
+            &:hover{
+              width: 110%;
+              height: 110%;
+              margin-left: -5%;
+              margin-top: -5%;
+            }
+          }
         }
       }
       .link-list {
@@ -893,6 +918,9 @@
               float: right;
               cursor: pointer;
               color: #fff;
+              &:hover{
+                color: #377DFF;
+              }
             }
           }
           dd {
