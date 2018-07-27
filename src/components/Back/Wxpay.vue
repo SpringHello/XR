@@ -39,12 +39,18 @@
     },
     name: 'app',
     data(){
+      let orders = sessionStorage.getItem('wx-orders')
+      let ticket = sessionStorage.getItem('wx-ticket')
+      sessionStorage.removeItem('wx-orders')
+      sessionStorage.removeItem('wx-ticket')
       return {
         serialNum: '',
         imgsrc: '',
         price: sessionStorage.getItem('total_fee'),
         message: '',
         mm: '',
+        orders,
+        ticket,
         config: {
           value: '',
           imagePath: require('../../assets/img/pay/payBackground.png'),
@@ -60,10 +66,15 @@
     created(){
       this.loading = true
       this.loadingMessage = '正在生成二维码，请稍后...'
+      let params = {
+        total_fee: this.price
+      }
+      if (this.orders && this.ticket) {
+        params.orders = this.orders
+        params.ticket = this.ticket
+      }
       this.$http.get('wx/wxpayapi.do', {
-        params: {
-          total_fee: this.price
-        }
+        params
       }).then(response => {
         if (response.status == 200 && response.data.status == 1) {
           this.serialNum = response.data.result.serialNum

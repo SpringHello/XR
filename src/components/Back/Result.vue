@@ -257,6 +257,8 @@
             window.open(`zfb/alipayapi.do?total_fee=${this.otherPayCount.toFixed(2)}&orders=${this.orderInfo.order}&ticket=${this.orderInfo.ticket}`)
           }
         } else if (this.otherPay == 'wx') {
+          sessionStorage.setItem('wx-orders', this.orderInfo.order)
+          sessionStorage.setItem('wx-ticket', this.orderInfo.ticket)
           if (this.orderInfo.timeType == 1) {
             sessionStorage.setItem('total_fee', this.rechargeValue.toFixed(2))
           } else {
