@@ -219,6 +219,7 @@
   import $store from '@/vuex'
   import axios from 'axios'
   import regExp from '../../util/regExp'
+  import debounce from 'throttle-debounce/debounce'
 
   export default {
     data() {
@@ -385,7 +386,7 @@
                 return h('div', {}, [h('span', {
                   style: {
                     color: '#2A99F2',
-                    marginRight: '20px',
+                    marginRight: '5px',
                     cursor: 'pointer',
                   },
                   on: {
@@ -449,6 +450,9 @@
                  }, '数据库镜像'),*/ h('DropdownItem', {
                   nativeOn: {
                     click: () => {
+                      this.dilatationForm.databaseSize = params.row.disksize
+                      this.dilatationForm.minDatabaseSize = params.row.disksize
+                      this.current = params.row
                       this.showModal.dilatation = true
                     }
                   }
@@ -535,7 +539,7 @@
               } else {
                 return h('div', {}, [h('span', {
                   style: {
-                    marginRight: '20px',
+                    marginRight: '5px',
                   },
                 }, '删除'), h('span', {}, '更多操作')])
               }
@@ -786,8 +790,40 @@
         })
       },
       dilatationok() {
-
-      }
+        axios.get('database/upDB.do', {
+          params: {
+            DBId : this.current.computerid,
+            diskSize: this.dilatationForm.databaseSize,
+            zoneId: this.current.zoneid
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push('order')
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
+      // 数据库扩容价格查询
+      queryDatabaseCost: debounce(500, function () {
+        axios.get('database/upDBCost.do', {
+          params: {
+            DBId : this.current.computerid,
+            diskSize: this.dilatationForm.databaseSize,
+            zoneId: this.current.zoneid
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.dilatationCost = response.data.result
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      }),
     },
     computed: {
       auth() {
@@ -825,6 +861,13 @@
               })
             }
           })
+        }
+      },
+      'dilatationForm.databaseSize'() {
+        if(this.current.disksize == this.dilatationForm.databaseSize){
+          this.dilatationCost = '--'
+        } else{
+          this.queryDatabaseCost()
         }
       },
     }
