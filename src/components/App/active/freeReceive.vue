@@ -1,9 +1,6 @@
 <template>
   <div style="background: #FFF">
     <div class="banner">
-      <div class="text">
-        <img src="../../../assets/img/active/freeToReceive/fr-banner6.png" />
-      </div>
     </div>
     <div class="center">
       <div class="fr-flow">
@@ -127,7 +124,7 @@
         <div>
           <!--span class="checkBox" :class="{agree:agree}" @click="toggle"></span>&nbsp;<span>我已阅读并同意</span><span
           style="color:#0EB4FA;cursor:pointer;" @click="showRules">《睿云用户使用协议》</span-->
-          <a  href="register" target="_blank" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:left;font-size: 14px">
+          <a href="register" target="_blank" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:left;font-size: 14px">
             立即注册
           </a>
           <router-link to="reset" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:right;font-size:14px">
@@ -919,13 +916,13 @@
 <style rel="stylesheet/less" lang="less" scoped>
   .banner {
     height: 400px;
-    background: #FD5002 url("../../../assets/img/active/freeToReceive/fr-banner1.png") center -320px no-repeat;
-    .text{
+    background: #FF6C4C url("../../../assets/img/active/freeToReceive/fr-banner1.png") center no-repeat;
+    .text {
       width: 1200px;
       padding-top: 54px;
       text-align: center;
       margin: 0 auto;
-      >img{
+      > img {
         height: 260px;
       }
     }
@@ -1092,7 +1089,7 @@
                 color: rgba(255, 255, 255, 1);
                 padding: 7px 20px;
                 background: rgba(230, 0, 27, 1);
-                &.disabled{
+                &.disabled {
                   background: #999999;
                   cursor: not-allowed;
                 }
