@@ -19,6 +19,7 @@ import 'echarts/lib/chart/bar'
 import 'echarts/lib/chart/line'
 import 'echarts/lib/component/tooltip'
 
+
 import md5 from 'md5'
 
 //Vue.prototype.$message = message
@@ -102,6 +103,7 @@ Vue.component('chart', ECharts)
 var vm = new Vue({
   router,
   store,
+  axios,
   render: h => h(Main)
 })
 

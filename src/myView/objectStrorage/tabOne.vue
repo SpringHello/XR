@@ -13,7 +13,8 @@
          <Modal
         v-model="modal6"
         title="新建空间"
-        :scrollable='true'>
+        :scrollable='true'
+        :mask-closable="false">
            <hr color="#D8D8D8" size=1/>
            <br/>
         <Form ref="bucketInline" :model="bucketInline" :rules="bucketRule" label-position="top">
@@ -42,12 +43,15 @@
 
 <script >
   const bucketValid = (rule,value,callback)=>{
-      let reg =  /^[a-z]{3,20}$/;
+      let reg =  /^[a-z0-9-]{3,20}$/;
+      let res =  /^[a-z0-9][a-z0-9-A-Z]{0,1000}$/;
       if(value == ''){
         return callback(new Error('请输入空间名称'));
+      }else if(!res.test(value)){
+        return callback(new Error('空间名字只能以小写字母或者数字开头'));
       }else if(!reg.test(value)){
-        return callback(new Error('空间名字只能为小写字母且长度不能小于3位大于20位'));
-      }else {
+        return callback(new Error('空间名字只能为小写字母，数字和短横线（-）且长度要在3到20位之间'));
+      }else{
         callback();
       }
   }
@@ -189,7 +193,6 @@ export default {
         .then(res => {
           if (res.status == 200 && res.data.status == "1") {
             this.spaceData = res.data.data.bucket;
-            sessionStorage.setItem('http',res.data.data.protocol);
             this.buckLoading = false;
           } else {
             this.spaceData = [];
@@ -200,7 +203,6 @@ export default {
     },
     //创建空间
     bucketClick() {
-      this.modal6 = false;
       this.$refs.bucketInline.validate(valid => {
         if (valid) {
           let obj = {name:'创建中',hide:1,createtime:'————',operation:'————',accessrights:'————'};
@@ -213,12 +215,16 @@ export default {
             .then(res => {
               if (res.data.status == "1") {
                 this.$Message.success("创建成功");
+                this.modal6 = false;
                 this.getBuckets();
               } else {
                 this.$Message.info(res.data.msg);
                 this.getBuckets();
               }
-            });
+            }).catch(error =>{
+              this.spaceData = [];
+              this.$Message.info('平台出小差了');
+          });
         }
       });
     },

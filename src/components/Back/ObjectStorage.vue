@@ -385,15 +385,15 @@
       // },
       showUserAcessAll(){
         axios.get('user/showUserAcessAll.do',{}).then(res => {
-          if(res.status === 200 && res.data.status === '18')
+          if(res.status === 200 && res.data.status == '18')
               this.$Modal.confirm({
                   title:'提示',
-                  content:'当前用户没有Access Key',
+                  content:'<p style="line-height: 16px">尊敬的用户您好，系统检测到您当前没有可用的Access Key，请您到<a href="https://bj.xrcloud.net/ruicloud/userCenter">Access Key管理</a>去创建Access Key。</p>',
                   onOk:()=>{
-                   window.open('https://pan.xrcloud.net/ruicloud/userCenter','_self');
+                   window.open('https://bj.xrcloud.net/ruicloud/userCenter','_self');
                    },
                   onCancel:()=>{
-                    window.open('https://pan.xrcloud.net/ruicloud/userCenter','_self');
+                    window.open('https://bj.xrcloud.net/ruicloud/userCenter','_self');
                   }
               })
         })

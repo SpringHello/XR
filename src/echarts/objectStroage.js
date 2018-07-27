@@ -1,19 +1,19 @@
 
 var echarts = require('echarts/lib/echarts');
 
-function renderItem(params,api){
-  return{
-    type:'line',
-    shape:echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-      offset: 0,
-      color: '#2A99F2'
-    }, {
-      offset: 1,
-      color: '#ffe'
-    }]),
-    style:api.style()
-  }
-}
+// function renderItem(params,api){
+//   return{
+//     type:'line',
+//     shape:echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+//       offset: 0,
+//       color: '#2A99F2'
+//     }, {
+//       offset: 1,
+//       color: '#ffe'
+//     }]),
+//     style:api.style()
+//   }
+// }
 
 
 export default {
@@ -44,10 +44,9 @@ export default {
         }
     },
     yAxis: {
-        axisLabel: {
+      axisLabel: {
            formatter: "{value}MB"
          },
-
       // max:20
     },
     series: [
@@ -69,7 +68,6 @@ export default {
                 color: '#ffe'
             }])}},
             data: [0, 0, 0, 0, 0, 0, 0],
-            renderItem:renderItem
             // renderItem:renderItem
         },
     ]

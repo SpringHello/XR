@@ -11,7 +11,7 @@ export default {
                 type: 'dashed'
             },
         },
-      formatter: "{a} <br/>{b} : {c}"
+      formatter: "{a} <br/>{b} : {c}次"
     },
     grid: {
         left: '3%',
@@ -32,7 +32,7 @@ export default {
     },
     yAxis: {
         axisLabel: {
-            formatter: '{value}'
+            formatter: '{value}次'
         },
       minInterval: 1,
       max:function(value){

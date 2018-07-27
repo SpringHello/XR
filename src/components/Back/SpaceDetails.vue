@@ -86,7 +86,7 @@
               </div>
               <div class="chart" >
                 <ul class="objectList">
-                  <li :class="indexs == index? 'objectItems':'objectItem'" v-for="(item,index) in dayList" :key="index" @click="dayClick(index)">{{item.value}}</li>
+                  <li :class="dayIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in dayList" :key="index" @click="dayClick(index)">{{item.value}}</li>
                 </ul>
                 <div class="chart-rig">
                    <Button type="primary" size="small" style="padding:5px 15px;" @click="dowloda('rwNumber')">导出</Button>
@@ -243,7 +243,6 @@
         <!--<cunt ref="upload"-->
           <!--:onSuccess="handleSuccess"-->
            <!--:onFileProcess="handleUpload"-->
-            <!--:maxSize="1048576"-->
             <!--:onError="handleError"-->
           <!--:data="fileUpdata"-->
           <!--action="http://192.168.3.95:8086/ruirados/object/uploadObject.do">-->
@@ -278,16 +277,16 @@
         </Upload>
         <div class="upload_list" v-for="(item,index) in uploadList" v-if="item.status == 'uploading'">
           <div>
-            <span>{{item.name}}</span>
+            <span :title='item.name'>{{item.name}}</span>
           </div>
           <div>
             <template>{{item.size/1024 < 1000 ? (item.size /1024).toFixed(2)+'kb': item.size/1048576 < 1024 ? (item.size / 1048576).toFixed(2)+'Mb' : (item.size/1073741824).toFixed(2)+'Gb'  }}</template>
           </div>
           <div>
             <i-progress  :percent="item.percentage"  style="width: 90%;" :stroke-width="6" hide-info></i-progress>
-            <div style="display: flex;height: 19px;width: 100%;">
-              <span style="width: 55px;">{{fist}}{{unText}}</span><span style="width: 125px;color: #999999;font-size:12px;">剩余时间{{listTime}}</span>
-            </div>
+            <!--<div style="display: flex;height: 19px;width: 100%;">-->
+              <!--<span style="width: 55px;">{{fist}}{{unText}}</span><span style="width: 125px;color: #999999;font-size:12px;">剩余时间{{listTime}}</span>-->
+            <!--</div>-->
           </div>
          <div>
            <!--<span style="margin-right: 20px;cursor: pointer;" @click="stop = 1">暂停</span>-->
@@ -346,7 +345,6 @@
             <i-switch @on-change="geturl" v-model="http" true-value="https" false-value="http"></i-switch>
           </div>
           <br>
-          <!--<Button type="primary" :loading="tremLoading" @click="geturl">获取外链</Button>-->
           <textarea  ref="copy" id="copy" v-model="fliesTerm"  type="textarea" rows="5"   readonly="true" wrap="hard"></textarea >
           <div class="copyClass">
             <span @click="openUrl">打开文件URL</span><span @click="copyUrl">复制文件URL</span>
@@ -386,12 +384,12 @@
         <FormItem label="密码接收渠道" prop="channel">
           <div style="width:366px;display:flex;">
             <div style="width:300px;">
-              <CheckboxGroup v-model="jurisdValidate.channel">
-                <Checkbox label="putobject">PutObject</Checkbox>
-                <Checkbox label="getobject">GetObject</Checkbox>
-                <Checkbox label="deleteobject">DeleteObject</Checkbox>
-                <Checkbox label="listbucket">ListObject</Checkbox>
-                <Checkbox label="deletebucket">DeleteBucket</Checkbox>
+              <CheckboxGroup v-model="jurisdValidate.channel" @on-change="channelAggregate">
+                <Checkbox :disabled="channelTop" label="putobject">PutObject</Checkbox>
+                <Checkbox :disabled="channelTop" label="getobject">GetObject</Checkbox>
+                <Checkbox :disabled="channelTop" label="deleteobject">DeleteObject</Checkbox>
+                <Checkbox :disabled="channelBottom" label="listbucket">ListBucket</Checkbox>
+                <Checkbox :disabled="channelBottom" label="deletebucket">DeleteBucket</Checkbox>
               </CheckboxGroup>
             </div>
           </div>
@@ -399,7 +397,6 @@
         <FormItem prop="influenceValue" label="影响资源">
           <div>
             <RadioGroup v-model="jurisdValidate.sources">
-              <Radio label='0'>不可操作</Radio>
               <Radio label='1'>可操作</Radio>
             </RadioGroup>
             <Input v-model="jurisdValidate.influenceValue" style="width:420px;" :rows="4" type="textarea"/>
@@ -407,12 +404,10 @@
             <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
               <div slot="content" class="right_tool">
                 <p>资源留空等同于“Bucket名称”
-                  资源必须以Bucket名称开始
                   资源如果只有1个斜杠，不能以斜杠结尾
                   资源可以设置多个，每行1个；每行最多1个通配符
                   （*），并且以通配符结尾。最多增加10条记录
-                  示例：myBucket,myBucket/*，
-                  　　　myBucket/myfolder/object*</p>
+                  示例:myfolder/object</p>
               </div>
             </Tooltip>
           </div>
@@ -430,7 +425,7 @@
           <Tooltip   content="用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”" placement="right">
           <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
             <div slot="content" class="right_tool">
-              <p>白名单用于添加允许访问的来源地址</p>
+              <p>1.白名单用于添加允许访问的来源地址 2.输入多个地址请用回车分隔，不需要写http://或https://</p>
             </div>
           </Tooltip>
         </FormItem>
@@ -486,12 +481,12 @@
           <div style="width:366px;display:flex;">
             <div style="width:115px;font-size:14px;color:#333333;">密码接收渠道</div>
             <div style="width:300px;">
-              <CheckboxGroup v-model="updateJurisd.updateChannel">
-                <Checkbox label="putobject">PutObject</Checkbox>
-                <Checkbox label="getobject">GetObject</Checkbox>
-                <Checkbox label="deleteobject">DeleteObject</Checkbox>
-                <Checkbox label="listbucket">ListObject</Checkbox>
-                <Checkbox label="deletebucket">DeleteBucket</Checkbox>
+              <CheckboxGroup v-model="updateJurisd.updateChannel" @on-change="updateChannelAggregate">
+                <Checkbox :disabled="UpdateChannelTop" label="putobject">PutObject</Checkbox>
+                <Checkbox :disabled="UpdateChannelTop" label="getobject">GetObject</Checkbox>
+                <Checkbox :disabled="UpdateChannelTop" label="deleteobject">DeleteObject</Checkbox>
+                <Checkbox :disabled="UpdateChannelDown" label="listbucket">ListBucket</Checkbox>
+                <Checkbox :disabled="UpdateChannelDown" label="deletebucket">DeleteBucket</Checkbox>
               </CheckboxGroup>
             </div>
           </div>
@@ -499,7 +494,6 @@
         <FormItem prop="updateInfluenceValue" label="影响资源">
           <div>
             <RadioGroup v-model="updateJurisd.updateSources">
-              <Radio label="0">不可操作</Radio>
               <Radio label="1">可操作</Radio>
             </RadioGroup>
             <Input v-model="updateJurisd.updateInfluenceValue" style="width:420px;" :rows="4" type="textarea"></Input>
@@ -507,12 +501,10 @@
               <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
               <div slot="content" class="right_tool">
                 <p>资源留空等同于“Bucket名称”
-                  资源必须以Bucket名称开始
                   资源如果只有1个斜杠，不能以斜杠结尾
                   资源可以设置多个，每行1个；每行最多1个通配符
                   （*），并且以通配符结尾。最多增加10条记录
-                  示例：myBucket,myBucket/*，
-                  　　　myBucket/myfolder/object*</p>
+                  示例:myfolder/object</p>
               </div>
             </Tooltip>
           </div>
@@ -530,7 +522,7 @@
           <Tooltip   content="用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”" placement="right">
             <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
             <div slot="content" class="right_tool">
-              <p>白名单用于添加允许访问的来源地址</p>
+              <p>1.白名单用于添加允许访问的来源地址 2.输入多个地址请用回车分隔，不需要写http://或https://</p>
             </div>
           </Tooltip>
         </FormItem>
@@ -657,15 +649,28 @@
         callback();
       }
   };
-  export default {
+  const validateUpdateField ={
+    min(rule, value, callback){
+      let ref = /^\s*$|[a-zA-Z]+(\.[a-zA-Z0-9]+)+(\.[a-zA-Z]+)$/;
+      if (value == '')
+        return callback(new Error('请输入白名单'));
+      else if(!ref.test(value))
+        callback(new Error('请输入正确的白名单地址'));
+      else
+        callback();
+    }
+  }
+    export default {
     data() {
       return {
+        //密码接受渠道是否禁用
+        channelTop:false,
+        channelBottom:false,
+        //修改密码接受渠道是否禁用
+        UpdateChannelDown:false,
+        UpdateChannelTop:false,
         //是否隐藏查看监控
         monitorHide:true,
-        //修改白名单权限验证
-        validateUpdateField:'',
-        //添加白名单验证
-        validateField:'',
         unText:'',
         // 上传时间
         time:'',
@@ -703,7 +708,6 @@
         //   suffix: ''
         // },
         //查看外链
-        tremLoading:false,
         fliesTerm:'',
         //新建文件夹table加载动画
         tabLoading:false,
@@ -750,7 +754,7 @@
         //权限文字
         ptext: "",
         //权限列表index
-        indexs: 0,
+        dayIndex: 0,
         //权限期限
         term: '',
         termList: [
@@ -818,6 +822,9 @@
                       textOverflow: 'ellipsis',
                       display:'inline-block'
                     },
+                    domProps:{
+                      title:params.row.filename
+                    },
                     on: {
                       click: () => {
                         //清空搜索文件的名称
@@ -842,10 +849,18 @@
                     }
                   }),
                   h('span',{
-                    class:{
-                      fileCame:true
+                    style:{
+                      color: '#666666',
+                      maxWidth:'150px',
+                      overflow:'hidden',
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis',
+                      display:'inline-block',
+                      height:'15px'
                     },
-
+                    domProps:{
+                      title:params.row.filename
+                    },
                 },params.row.filename),
                   h('span',{
                     style:{
@@ -902,7 +917,6 @@
                         this.outerChain = true;
                         this.flieSrc = params.row.filesrc;
                         this.term = this.termList[1].value;
-                        this.http = sessionStorage.getItem('http');
                         this.geturl(params.row.filesrc);
                       }
                     }
@@ -961,7 +975,7 @@
           //用户授权
           users: '0',
           //影响资源
-          sources: '0',
+          sources: '1',
           //密码接收渠道
           channel: [],
           //白名单
@@ -972,7 +986,7 @@
           updateWhiteListValue: '',
           updateReferer: '0',
           updateInfluenceValue: '',
-          updateSources: '',
+          updateSources: '1',
           updateChannel: [],
           updateGrantValue: '',
           updateUsers: ''
@@ -990,7 +1004,7 @@
             {required: true, message: '请输入影响资源', trigger: 'blur'},
           ],
           whiteListValue:[
-            {required:true,message:'请输入白名单', trigger: 'blur'},
+            {validator:validateUpdateField.min, trigger: 'blur'},
           ]
         },
         updateJurisdValid:{
@@ -1005,9 +1019,11 @@
             {required: true, message: '请输入影响资源', trigger: 'blur'},
           ],
           updateWhiteListValue:[
-            {required:true, message:'请输入白名单', trigger:'blur'}
+            {validator:validateUpdateField.min,trigger:'blur'}
           ]
         },
+        //删除权限表格下标
+        jurisdIndex:0,
         //权限表格表头
         rightList: [
           {
@@ -1015,6 +1031,7 @@
             title: '授权用户ID',
             render:(h,params) =>{
               const hide = params.row.hide == 1 ?'inline-block':'none';
+              this.jurisdIndex = params.row._index;
                 return h('div',[
                   h('Spin',{
                     prop:{
@@ -1024,7 +1041,7 @@
                       display:hide
                     }
                   }),
-                  h('span',{},params.row.userauthorization)
+                  h('span',{},params.row.userauthorization == '0'?'*':params.row.userauthorization )
                 ])
             }
           },
@@ -1069,7 +1086,6 @@
                       this.updateDiction = true;
                       obj.row.userauthorization == '*' ? this.updateJurisd.updateUsers = '0' : this.updateJurisd.updateUsers = '1';
                       this.updateJurisd.updateGrantValue = obj.row.userauthorization;
-                      this.inputValue = obj.row.userauthorization;
                       //允许白名单是否为空
                       this.updateJurisd.updateReferer = obj.row.iseffectrefip + '';
                       //影响资源
@@ -1083,7 +1099,7 @@
                           this.updateJurisd.updateChannel.push(name);
                         }
                       })
-                      console.log(this.updateJurisd.updateChannel);
+                      console.log(this.updateJurisd);
                       this.updateJurisd.updateWhiteListValue = obj.row.refererip;
                       this.code = obj.row.code;
                       this.usersClick();
@@ -1101,7 +1117,7 @@
                           title: '删除权限',
                           content: '<p>是否删除该权限</p>',
                           onOk: () => {
-                            this.deleteFromBucketId(obj.row.code, obj.row._index);
+                            this.deleteFromBucketId(obj.row);
                           }
                         });
                       }
@@ -1111,7 +1127,6 @@
               }
             }
           },
-
         ],
         //权限表格数据
         aclData: [],
@@ -1619,7 +1634,7 @@
           this.updateJurisd.updateGrantValue = '*';
         } else {
           this.updategrant = false;
-          this.updateJurisd.updateGrantValue = this.inputValue == "*" ?'' : this.inputValue;
+          this.updateJurisd.updateGrantValue = this.updateGrantValue == "*" ? '' : this.updateGrantValue;
         }
         if (this.jurisdValidate.users == '0') {
           this.grant = true;
@@ -1634,7 +1649,6 @@
       jurisdictionClick() {
         this.$refs.jurisdValidate.validate((valid) => {
           if(valid){
-            // console.log(this.jurisdValidate);
               this.jurisdiction = false;
               var name = sessionStorage.getItem("bucketName");
               var bucketId = sessionStorage.getItem('bucketId');
@@ -1647,7 +1661,7 @@
                 isOperation: this.jurisdValidate.sources.toString(),
                 customPermission: this.jurisdValidate.channel,
                 isReferer: this.jurisdValidate.referer,
-                refereIp: this.jurisdValidate.referer == '1' ? this.jurisdValidate.whiteListValue : this.jurisdValidate.whiteListFlaseValue,
+                refereIp: this.jurisdValidate.whiteListValue,
                 userAuths: this.jurisdValidate.grantValue
               }).then(res => {
                 if (res.data.status == '1') {
@@ -1693,6 +1707,8 @@
           bucketName: name
         }).then(res => {
           if (res.data.status == '1') {
+            sessionStorage.removeItem('accessrights');
+            this.kjaccessrights = index == 1 ? '私有读写' : index == 2 ? '公有读私有写' : index == 3 ? '公有读写' : '自定义权限';
             this.$Message.success('权限切换成功');
           } else {
             this.$Message.info('切换权限失败');
@@ -1703,34 +1719,35 @@
        *获取外链
        */
       geturl() {
-        this.tremLoading = true;
         var name = sessionStorage.getItem("bucketName");
         this.$http.post('object/geturl.do', {
           bucketName: name,
           timelimit: this.term == ''? '2': this.term,
           fileSrc: this.flieSrc,
-          protocol:this.http
+          protocol:this.http == ''?'http':this.http
         }).then(res => {
           if (res.data.status == '1') {
             this.fliesTerm = res.data.data.data;
-            this.tremLoading = false;
-            // this.$Message.success('获取成功');
           } else {
-            this.tremLoading = false;
-            this.$Message.info(res.data.msg);
+            this.$Message.info(res.data.message);
           }
+        }).catch(error =>{
+          if(error)
+            this.$Message.info('平台出小差了');
         })
       },
       /**
        * 删除权限
        */
-      deleteFromBucketId(code,index) {
+      deleteFromBucketId(objs) {
         var name = sessionStorage.getItem("bucketName");
         let obj = {userauthorization:'删除中',hide:1};
-        this.aclData.splice(index,1,obj);
+        this.aclData.splice(objs._index,1,obj);
         this.$http.post('bucketAcl/deleteFromBucketId.do', {
           bucketName: name,
-          code: code
+          code: objs.code,
+          userAuths:objs.userAuths,
+          objectNames:objs.objectNames
         }).then(res => {
           if (res.data.status == '1') {
             this.$Message.success('删除成功');
@@ -1744,12 +1761,11 @@
       //修改自定义权限
       jurisdUpdateClick() {
         this.$refs.updateJurisds.validate((valid) => {
-          console.log(valid);
           if(valid){
             this.updateDiction = false;
             var name = sessionStorage.getItem("bucketName");
             let obj = {userauthorization:'修改中',hide:1};
-            this.aclData.push(obj);
+            this.aclData.splice(this.jurisdIndex,1,obj);
             this.$http.post('bucketAcl/updateFromCode.do', {
               bucketName: name,
               code: this.code,
@@ -1804,8 +1820,7 @@
         })
       },
       //获取文件路径返回
-      selectFileSrc(id, index) {
-        console.log(id+'select');
+      selectFileSrc(id,index) {
         let number = this.fileObject.length - (index + 1);
         this.fileObject.splice(index + 1, number);
         this.filesList(id)
@@ -1814,6 +1829,7 @@
       backPage(val){
         if(val == 1){
           this.fileObject = [];
+          this.filename = '';
           this.filesList();
         }else{
           this.fileObject.pop();
@@ -1876,7 +1892,7 @@
             //用户授权
             users: '0',
             //影响资源
-            sources: '0',
+            sources: '1',
             //密码接收渠道
             channel: [],
             //白名单
@@ -1894,43 +1910,49 @@
             maxAge: 0
         }
       },
+      //添加权限弹窗白名单验证切换
       changes(){
        if(this.jurisdValidate.referer == '1'){
-         this.refererDisabled = true;
-         this.jurisdValidate.whiteListValue = '';
-         this.validateField = (rule, value, callback) => {
-           if (value == '') {
-             callback();
-           }
-         };
+           this.$refs.jurisdValidate.rules.whiteListValue[0].validator=null;
        }else{
-         this.refererDisabled = false;
-         this.validateField = (rule, value, callback) => {
-           if (value == '') {
-             return callback(new Error("请输入白名单"));
-           } else {
-             callback();
-           }
-         };
+         this.$refs.jurisdValidate.rules.whiteListValue[0].validator=validateUpdateField.min;
        }
       },
+      //修改权限弹窗白名单验证切换
       changesUpdate(){
         if(this.updateJurisd.updateReferer == '1'){
-          this.refererUpdateDisabled = true;
-          this.validateUpdateField = (rule, value, callback) => {
-            if (value == '') {
-              callback();
-            }
-          };
+          this.$refs.updateJurisds.rules.updateWhiteListValue[0].validator= null;
         }else{
-          this.refererUpdateDisabled = false;
-          this.validateUpdateField = (rule, value, callback) => {
-            if (value == '') {
-              return callback(new Error("请输入白名单"));
-            } else {
-              callback();
+          this.$refs.updateJurisds.rules.updateWhiteListValue[0].validator = validateUpdateField.min;
+        }
+      },
+      //添加权限弹窗密码渠道
+      channelAggregate(){
+        if([...this.jurisdValidate.channel].length != 0){
+          [...this.jurisdValidate.channel].findIndex((value,index,arr)=>{
+            if(value == 'deletebucket' || value == 'listbucket'){
+              this.channelTop = true;
+            }else {
+              this.channelBottom = true;
             }
-          };
+          })
+        }else{
+          this.channelTop = false;
+          this.channelBottom = false;
+        }
+      },
+      updateChannelAggregate(){
+        if([...this.updateJurisd.updateChannel].length != 0){
+          [...this.updateJurisd.updateChannel].findIndex((value,index,arr)=>{
+            if(value == 'deletebucket' || value == 'listbucket'){
+              this.UpdateChannelTop = true;
+            }else {
+              this.UpdateChannelDown = true;
+            }
+          })
+        }else{
+          this.UpdateChannelTop = false;
+          this.UpdateChannelDown = false;
         }
       },
       //获取ceph服务器域名
@@ -1982,7 +2004,7 @@
       },
       //下载流量点击切换数据
       dayClick(val){
-        this.indexs = val;
+        this.dayIndex = val;
         this.$http.post('monitor/getMonitorFlow.do',{
           bucketName:sessionStorage.getItem('bucketName'),
           times: this.dayList[val].label

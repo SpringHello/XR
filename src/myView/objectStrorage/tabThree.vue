@@ -7,7 +7,7 @@
              </ul>
             <div class="journal_right">
               <Select v-model="journal" style="width:200px">
-                <Option v-for="(item,index) in searchJournalList" :value="item.str" :key="item.str">{{ item.str }}</Option>
+                <Option v-for="(item,index) in searchJournalList" :value="item" :key="index">{{ item }}</Option>
               </Select>
                 <span>开始结束时间</span>
                  <DatePicker type="daterange" :options="options4" v-model="time"  placement="bottom-end" placeholder= "请选择时间" style="width: 200px"></DatePicker>
@@ -26,7 +26,7 @@
     export default {
   data() {
     return {
-      journal:'',
+      journal:null,
       searchJournalList:[
         // {
         //   value:'',
@@ -116,7 +116,7 @@
       this.indexs = index;
       this.dayClick(1,index);
     },
-      dayClick(page,val){
+    dayClick(page,val){
       this.pageLoading = true;
         this.dateCheck = 3;
         this.page = 1;
@@ -184,8 +184,7 @@
             startTime: this.startDate,
             endTime: this.oneDay,
             pageSum:'10',
-            pageNum:page == undefined ? '1' : page+'',
-             operateTarget:this.journal
+            pageNum:page == undefined ? '1' : page+''
           }).then(res => {
              if(res.data.status =='1'){
                this.pageLoading = false;
@@ -195,8 +194,13 @@
                 this.journalData = res.data.data.logs;
                 this.total = res.data.data.page.sumCount;
                 this.pageLoading = false;
-            }
-          })
+            }else{
+               this.$Message.info('平台出小差了');
+               this.pageLoading = false;
+             }
+          }).catch(error =>{
+             this.pageLoading = false;
+           })
       },
     select(page){
         this.dateCheck = 2;
@@ -221,7 +225,7 @@
           endTime:end.toString(),
           pageSum:'10',
           pageNum:page+'',
-          operateTarget:this.journal
+          operateTarget:this.journal == '请选择'?null:this.journal
         }).then(res => {
           if(res.data.status =='1'){
             this.pageLoading = false;
@@ -232,6 +236,8 @@
               this.total = res.data.data.page.sumCount;
               this.pageLoading = false;
           }
+        }).catch(error =>{
+          this.pageLoading = false;
         })
       },
     //获取操作日志
@@ -242,7 +248,7 @@
       this.$http.post('operatelog/selectLogs.do',{
         pageSum:'10',
         pageNum:page+'',
-        operateTarget:this.journal
+        operateTarget:this.journal == '请选择'?null:this.journal
       }).then(res =>{
         if(res.data.status == '1'){
           if(typeof(res.data.data.logs) === "string"){
@@ -257,12 +263,16 @@
           this.pageLoading = false;
           this.$Message.info('获取操作日志走丢了');
         }
+      }).catch(error =>{
+        this.pageLoading = false;
       })
     },
     getoperateTarget(){
       axios.get('operatelog/getoperateTarget.do',{}).then(res => {
-        if(res.status === 200 && res.data.status === '1')
-            this.searchJournalList.push(res.data.data);
+        if(res.status === 200 && res.data.status === '1'){
+              this.searchJournalList = res.data.data.data
+          this.searchJournalList.unshift('请选择');
+        }
       })
     }
   },

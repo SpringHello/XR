@@ -12,7 +12,7 @@
     </div>
     <div class="upload_list" v-for="(item,index) in fileList" v-if="item.status == 'uploading'">
       <div>
-        <span>{{item.name}}</span>
+        <span :title="item.name">{{item.name}}</span>
       </div>
       <div>
         <template>{{item.size/1024 < 1000 ? (item.size /1024).toFixed(2)+'kb': item.size/1048576 < 1024 ? (item.size / 1048576).toFixed(2)+'Mb' : (item.size/1073741824).toFixed(2)+'Gb'  }}</template>
@@ -24,7 +24,7 @@
         </div>
       </div>
       <div>
-        <span style="margin-right: 20px;cursor: pointer;" @click="uploadFlie">暂停</span>
+        <span style="margin-right: 20px;cursor: pointer;" @click="stop = false">暂停</span>
         <span style="cursor: pointer;" @click="deleteUpload(index)">删除</span>
       </div>
     </div>
@@ -43,7 +43,8 @@
         timeIndex:1,
         fileList:[],
         unText:'',
-        oldTime:0
+        oldTime:0,
+        stop:true
       }
     },
     props:{
@@ -123,15 +124,17 @@
               start = end;
             }
           }
+
           //改变文件对象为数组类型(文件对象切割出来放在数组里面)
           let postFile = Array.prototype.slice.call(file);
           postFile.forEach(file=>{
             this.uploadFlie(file,chunks);
           })
-          this.$refs.input.value = null;
+          // this.$refs.input.value = null;
       },
       // 上传文件
       uploadFlie(file,chunks){
+        if(this.stop){
           let formData = new FormData();
             if(this.maxSize){
               if(file.size > this.maxSize){
@@ -149,17 +152,21 @@
                   formData.append(key, this.data[key]);
                 });
               }
-
+        let _that = this;
           let xhr = new XMLHttpRequest();
             xhr.open('post',this.action,true);
-            xhr.onreadystatechange = function (e){
+             xhr.onreadystatechange = function (e){
+                //上传过程
+               // _that.handleProgress(e,file);
+
               if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
-                  let res = xhr.responseText;
-                    this.handleProgress(e,file);
-                    this.handleSuccess(res,file);
-                    this.handleError(e,res,file);
+                   let res = xhr.responseText;
+                    //上传成功
+                  // _that.handleSuccess(res,file);
+
                    xhr.upload.onprogress = function(e) {
+                     e = e || event;
                     if (e.lengthComputable) { //lengthComputable 是 progress 的一个属性，表示资源是否可计算字节流
                       e.percent = e.loaded / e.total * 100;
                       this.fileList.percentage = e.percent;
@@ -170,10 +177,14 @@
                   }
                 }else if(xhr.status == 500){
                   this.$Message.info('平台出小差了');
+                }else{
+                  //上传失败
+                  _that.handleError(e,res,file);
                 }
               }
             }
             xhr.send(formData);
+        }
       },
       // 拖拽上传
       onDrop(e){
@@ -220,7 +231,48 @@
       },
       //文件上传失败
       handleError(e,res,file){
+        alert('上传失败');
         this.onError(e,res,file);
+      },
+      //防抖
+      proess(fn,delay,mustRunDelay){
+        let timer =null;
+        let t_start;
+        return function () {
+          let context = this;
+          let args = arguments;
+          let t_curt = +new Date();
+          clearTimeout(timer);
+          if(!t_start){
+            t_start = t_curt;
+          }
+          if(t_curt - t_start >= mustRunDelay){
+            fn.apply(context,args);
+            t_start = t_curt;
+          }else {
+            timer =  setTimeout(()=>{
+              fn.apply(context,args);
+            },delay);
+          }
+        }
+      },
+      //节流
+      throttle(func,delay){
+        let timer = null;
+        let startTime = Date.now();
+        return function(){
+          let curTime = Date.now();
+          let reamining = delay - (curTime - startTime);
+          let context   = this;
+          let args = arguments;
+          clearTimeout(timer);
+          if(reamining <= 0 ){
+            func.apply(context,args);
+            startTime = Date.now();
+          }else{
+            timer = setTimeout(func,reamining);
+          }
+        }
       }
     },
     watch: {
