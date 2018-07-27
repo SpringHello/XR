@@ -400,7 +400,7 @@
                         onOk: () => {
                           this.dataBaseData.forEach(item => {
                             if (item.computerid == params.row.computerid) {
-                              item.dbStatus = 5
+                              item.dbStatus = '5'
                             }
                           })
                           this.$http.get('information/deleteVM.do', {
@@ -485,7 +485,7 @@
                       } else {
                         this.dataBaseData.forEach(item => {
                           if (item.computerid == params.row.computerid) {
-                            item.dbStatus = 2
+                            item.dbStatus = '2'
                           }
                         })
                         let url = 'database/startDB.do'
@@ -515,7 +515,7 @@
                       } else {
                         this.dataBaseData.forEach(item => {
                           if (item.computerid == params.row.computerid) {
-                            item.dbStatus = 3
+                            item.dbStatus = '3'
                           }
                         })
                         let url = 'database/stopDB.do'
@@ -634,7 +634,7 @@
         this.showModal.restart = false
         this.dataBaseData.forEach(item => {
           if (item.computerid == this.current.computerid) {
-            item.dbStatus = 4
+            item.dbStatus = '4'
           }
         })
         this.$http.get('database/rebooteDB.do', {
