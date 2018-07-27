@@ -126,7 +126,7 @@ const CloudDatabaseBackup = () => import('@/components/Back/CloudDatabaseBackup'
 const CloudDatabase = () => import('@/components/Back/CloudDatabase')
 const CloudDataManage = () => import('@/components/Back/CloudDataManage')
 const CloudDatabaseMirror = () => import('@/components/Back/CloudDatabaseMirror')
-
+const dataBaseUpgrade = () => import('@/components/Back/dataBaseUpgrade')
 // 帮助文档路由
 const computed = () => import('@/components/App/doc/computed')
 const computed1 = () => import('@/components/App/doc/computed1')
@@ -726,7 +726,8 @@ var router = new Router({
         {path: 'cloudDataManage', name: 'cloudDataManage', component: CloudDataManage},
         {path: 'cloudDatabaseBackup', name: 'cloudDatabaseBackup', component: CloudDatabaseBackup},
         {path: 'cloudDatabaseMirror', name: 'cloudDatabaseMirror', component: CloudDatabaseMirror},
-        {path: 'cloudDatabase', name: 'cloudDatabase', component: CloudDatabase}
+        {path: 'cloudDatabase', name: 'cloudDatabase', component: CloudDatabase},
+        {path: 'dataBaseUpgrade', name: 'dataBaseUpgrade', component: dataBaseUpgrade}
       ]
     },
     {
