@@ -297,14 +297,17 @@
                 case '4':
                   text = '重启中';
                   break;
+                case '5':
+                  text = '删除中'
+                  break;
               }
-              if (row.dbStatus == 2 || row.dbStatus == 3 || row.dbStatus == 4) {
+              if (row.dbStatus == 2 || row.dbStatus == 3 || row.dbStatus == 4 || row.dbStatus == 5) {
                 return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block',
                     marginRight: '10px'
                   }
-                }), h('span', text)])
+                }), h('span', {}, text)])
               } else {
                 return h('span', text)
               }
@@ -397,7 +400,7 @@
                         onOk: () => {
                           this.dataBaseData.forEach(item => {
                             if (item.computerid == params.row.computerid) {
-                              item.status = 4
+                              item.dbStatus = '5'
                             }
                           })
                           this.$http.get('information/deleteVM.do', {
@@ -482,7 +485,7 @@
                       } else {
                         this.dataBaseData.forEach(item => {
                           if (item.computerid == params.row.computerid) {
-                            item.status = 5
+                            item.dbStatus = '2'
                           }
                         })
                         let url = 'database/startDB.do'
@@ -512,7 +515,7 @@
                       } else {
                         this.dataBaseData.forEach(item => {
                           if (item.computerid == params.row.computerid) {
-                            item.status = 6
+                            item.dbStatus = '3'
                           }
                         })
                         let url = 'database/stopDB.do'
@@ -631,7 +634,7 @@
         this.showModal.restart = false
         this.dataBaseData.forEach(item => {
           if (item.computerid == this.current.computerid) {
-            item.status = 3
+            item.dbStatus = '4'
           }
         })
         this.$http.get('database/rebooteDB.do', {
@@ -792,7 +795,7 @@
       dilatationok() {
         axios.get('database/upDB.do', {
           params: {
-            DBId : this.current.computerid,
+            DBId: this.current.computerid,
             diskSize: this.dilatationForm.databaseSize,
             zoneId: this.current.zoneid
           }
@@ -810,7 +813,7 @@
       queryDatabaseCost: debounce(500, function () {
         axios.get('database/upDBCost.do', {
           params: {
-            DBId : this.current.computerid,
+            DBId: this.current.computerid,
             diskSize: this.dilatationForm.databaseSize,
             zoneId: this.current.zoneid
           }
@@ -864,9 +867,9 @@
         }
       },
       'dilatationForm.databaseSize'() {
-        if(this.current.disksize == this.dilatationForm.databaseSize){
+        if (this.current.disksize == this.dilatationForm.databaseSize) {
           this.dilatationCost = '--'
-        } else{
+        } else {
           this.queryDatabaseCost()
         }
       },
