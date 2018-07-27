@@ -41,7 +41,7 @@
                 <p>原价：<span>¥{{ host.originalCost}}</span></p>
               </div>
               <div class="but">
-                <button @click="freeToReceive(configIndex,hostIndex)">免费领取</button>
+                <button @click="freeToReceive(configIndex,hostIndex)" :disabled="flag" :class="{disabled: flag}">免费领取</button>
               </div>
             </div>
           </div>
@@ -124,7 +124,7 @@
         <div>
           <!--span class="checkBox" :class="{agree:agree}" @click="toggle"></span>&nbsp;<span>我已阅读并同意</span><span
           style="color:#0EB4FA;cursor:pointer;" @click="showRules">《睿云用户使用协议》</span-->
-          <a  href="register" target="_blank" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:left;font-size: 14px">
+          <a href="register" target="_blank" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:left;font-size: 14px">
             立即注册
           </a>
           <router-link to="reset" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:right;font-size:14px">
@@ -339,6 +339,7 @@
     },
     data() {
       return {
+        flag: false,
         fr_scrollTop: 0,
         serialNum: '',
         pageTimer: null,
@@ -618,6 +619,10 @@
           this.loginModal = true
           return
         }
+        if (this.configGroup[index1].hostGroup[index2].zoneId == '') {
+          this.$Message.info('请选择需要领取的区域')
+          return
+        }
         if (this.$store.state.authInfo == null) {
           this.showModal.certificationModal = true
           return
@@ -759,6 +764,7 @@
             this.onStep = 1
           } else {
             if (this.$store.state.authInfo.flag) {
+              this.flag = true
               this.onStep = 5
             } else {
               this.onStep = 2
@@ -910,7 +916,16 @@
 <style rel="stylesheet/less" lang="less" scoped>
   .banner {
     height: 400px;
-    background: #F56B23 url("../../../assets/img/active/freeToReceive/fr-banner1.png") center no-repeat;
+    background: #FF6C4C url("../../../assets/img/active/freeToReceive/fr-banner1.png") center no-repeat;
+    .text {
+      width: 1200px;
+      padding-top: 54px;
+      text-align: center;
+      margin: 0 auto;
+      > img {
+        height: 260px;
+      }
+    }
   }
 
   h2 {
@@ -1074,6 +1089,10 @@
                 color: rgba(255, 255, 255, 1);
                 padding: 7px 20px;
                 background: rgba(230, 0, 27, 1);
+                &.disabled {
+                  background: #999999;
+                  cursor: not-allowed;
+                }
               }
             }
           }

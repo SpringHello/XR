@@ -7,7 +7,6 @@
           <div @click="push('fractive')"
                style="cursor: pointer;background: #F56B23;">
             <div class="free-receive">
-
             </div>
           </div>
         </my-carousel-item>
@@ -1588,7 +1587,7 @@
     > div {
       width: 1200px;
       margin: 0 auto;
-      >div{
+      > div {
         width: 900px;
         margin: 0 auto;
         padding-top: 70px;
@@ -1626,9 +1625,10 @@
       }
     }
   }
-  .free-receive{
+
+  .free-receive {
     height: 400px;
-    background: #F56B23 url("../../assets/img/active/freeToReceive/fr-banner1.png") center no-repeat;
+    background: #FF6C4C url("../../assets/img/active/freeToReceive/fr-banner1.png") center  no-repeat;
   }
 
   // 移入移出动画
