@@ -965,7 +965,7 @@
       }
       .flow {
         margin-top: 60px;
-        padding: 56px 0 34px;
+        padding: 30px 0px;
         background: rgba(255, 255, 255, 1);
         box-shadow: 0px 0px 22px 0px rgba(191, 191, 191, 0.5);
         display: flex;
@@ -976,7 +976,7 @@
             width: 100px;
             position: absolute;
             left: 120px;
-            top: 40px;
+            top: 30px;
             border-top: 2px dashed #b2b2b2;
             &.onStep {
               border-top: 2px dashed #FF392A;
@@ -986,7 +986,7 @@
             font-size: 20px;
             font-family: "Microsoft YaHei", "微软雅黑";
             color: rgba(51, 51, 51, 1);
-            margin-top: 32px;
+            margin-top: 20px;
             &.onStep {
               color: #FF392A;
             }
