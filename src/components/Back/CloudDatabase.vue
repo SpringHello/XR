@@ -219,6 +219,7 @@
   import $store from '@/vuex'
   import axios from 'axios'
   import regExp from '../../util/regExp'
+  import debounce from 'throttle-debounce/debounce'
 
   export default {
     data() {
@@ -296,14 +297,17 @@
                 case '4':
                   text = '重启中';
                   break;
+                case '5':
+                  text = '删除中'
+                  break;
               }
-              if (row.dbStatus == 2 || row.dbStatus == 3 || row.dbStatus == 4) {
+              if (row.dbStatus == 2 || row.dbStatus == 3 || row.dbStatus == 4 || row.dbStatus == 5) {
                 return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block',
                     marginRight: '10px'
                   }
-                }), h('span', text)])
+                }), h('span', {}, text)])
               } else {
                 return h('span', text)
               }
@@ -385,7 +389,7 @@
                 return h('div', {}, [h('span', {
                   style: {
                     color: '#2A99F2',
-                    marginRight: '20px',
+                    marginRight: '5px',
                     cursor: 'pointer',
                   },
                   on: {
@@ -396,7 +400,7 @@
                         onOk: () => {
                           this.dataBaseData.forEach(item => {
                             if (item.computerid == params.row.computerid) {
-                              item.status = 4
+                              item.dbStatus = '5'
                             }
                           })
                           this.$http.get('information/deleteVM.do', {
@@ -449,28 +453,47 @@
                  }, '数据库镜像'),*/ h('DropdownItem', {
                   nativeOn: {
                     click: () => {
+                      this.dilatationForm.databaseSize = params.row.disksize
+                      this.dilatationForm.minDatabaseSize = params.row.disksize
+                      this.current = params.row
                       this.showModal.dilatation = true
                     }
                   }
-                }, '数据库扩容'), h('DropdownItem', {
+                }, '数据库扩容'), 
+                h('DropdownItem', {
+                  nativeOn: {
+                    click: () => {
+                      localStorage.setItem('serviceoffername', params.row.serviceoffername)
+                      localStorage.setItem('virtualMachineid', params.row.computerid)
+                      sessionStorage.setItem('databaseName', params.row.computername)
+                      sessionStorage.setItem('endtime', params.row.endtime)
+                      this.$router.push('dataBaseUpgrade')
+                    }
+                  }
+                }, '数据库升级'), 
+                h('DropdownItem', {
                   nativeOn: {
                     click: () => {
                       this.current = params.row
+                      this.dilatationForm.minDatabaseSize = params.row.diskSize
                       this.showModal.restart = true
                     }
                   }
-                }, '重启数据库'), h('DropdownItem', {
+                }, '重启数据库'),
+                 h('DropdownItem', {
                   nativeOn: {
                     click: () => {
                       this.current = params.row
                       if (params.row.caseType == 3) {
                         this.$Message.info('请选择包年包月的云数据库进行续费')
+                        this.showModal.renewal = true
                       } else {
                         this.showModal.renewal = true
                       }
                     }
                   }
-                }, '数据库续费'), h('DropdownItem', {
+                }, '数据库续费'), 
+                h('DropdownItem', {
                   nativeOn: {
                     click: () => {
                       if (params.row.dbStatus == '1') {
@@ -478,7 +501,7 @@
                       } else {
                         this.dataBaseData.forEach(item => {
                           if (item.computerid == params.row.computerid) {
-                            item.status = 5
+                            item.dbStatus = '2'
                           }
                         })
                         let url = 'database/startDB.do'
@@ -500,7 +523,8 @@
                       }
                     }
                   }
-                }, '开启数据库'), h('DropdownItem', {
+                }, '开启数据库'), 
+                h('DropdownItem', {
                   nativeOn: {
                     click: () => {
                       if (params.row.dbStatus == '0') {
@@ -508,7 +532,7 @@
                       } else {
                         this.dataBaseData.forEach(item => {
                           if (item.computerid == params.row.computerid) {
-                            item.status = 6
+                            item.dbStatus = '3'
                           }
                         })
                         let url = 'database/stopDB.do'
@@ -535,7 +559,7 @@
               } else {
                 return h('div', {}, [h('span', {
                   style: {
-                    marginRight: '20px',
+                    marginRight: '5px',
                   },
                 }, '删除'), h('span', {}, '更多操作')])
               }
@@ -627,7 +651,7 @@
         this.showModal.restart = false
         this.dataBaseData.forEach(item => {
           if (item.computerid == this.current.computerid) {
-            item.status = 3
+            item.dbStatus = '4'
           }
         })
         this.$http.get('database/rebooteDB.do', {
@@ -771,10 +795,10 @@
         })
       },
       renewalok() {
-        var database = [
+        let database = [
           {type: 5, id: this.current.id}
-        ]
-        list = JSON.stringify(database)
+        ];
+        let list = JSON.stringify(database);
         this.$http.post('continue/continueOrder.do', {
           list: list,
           timeType: this.renewalType,
@@ -782,12 +806,65 @@
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push({path: 'order'})
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
           }
         })
       },
+      queryDilatationPrice: debounce(500, function () {
+        let url = 'database/upDBCost.do'
+        this.$http.get(url, {
+          params: {
+            DBId: this.current.computerid,
+            diskSize: this.dilatationForm.databaseSize - this.dilatationForm.minDatabaseSize
+          }
+        }).then(res => {
+          if (res.data.status == 1) {
+            this.dilatationCost = res.data.result
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      }),
       dilatationok() {
-
-      }
+        axios.get('database/upDB.do', {
+          params: {
+            DBId: this.current.computerid,
+            diskSize: this.dilatationForm.databaseSize,
+            zoneId: this.current.zoneid
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$router.push('order')
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
+      // 数据库扩容价格查询
+      queryDatabaseCost: debounce(500, function () {
+        axios.get('database/upDBCost.do', {
+          params: {
+            DBId: this.current.computerid,
+            diskSize: this.dilatationForm.databaseSize,
+            zoneId: this.current.zoneid
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.dilatationCost = response.data.result
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      }),
     },
     computed: {
       auth() {
@@ -825,6 +902,13 @@
               })
             }
           })
+        }
+      },
+      'dilatationForm.databaseSize'() {
+        if (this.current.disksize == this.dilatationForm.databaseSize) {
+          this.dilatationCost = '--'
+        } else {
+          this.queryDatabaseCost()
         }
       },
     }
