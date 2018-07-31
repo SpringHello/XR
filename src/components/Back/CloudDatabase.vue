@@ -329,8 +329,14 @@
                 case 2:
                   text = '创建中';
                   break;
+                case 5:
+                  text = '扩容中';
+                  break;
+                case 6:
+                  text = '升级中';
+                  break;
               }
-              if (row.status == 2) {
+              if (row.status == 2||row.status == 5||row.status == 6) {
                 return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block',

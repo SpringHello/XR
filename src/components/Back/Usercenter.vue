@@ -596,6 +596,7 @@
                          style="width: 300px;"></Input>
                 </FormItem>
                 <FormItem label="上传营业执照" prop="combine">
+                  <div style="padding: 16px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 384px;">
                   <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px">
                     <div style="width:130px;">
                       <Upload
@@ -621,13 +622,14 @@
                       <img src="../../assets/img/usercenter/combine.jpg"
                            style="width:130px;height:74px;margin-bottom: 10px;cursor: zoom-in"
                            @click="showPicture('combine')">
-                      <p style="line-height: 32px;text-align: center">三证合一执照</p>
+                      <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">三证合一执照</p>
                     </div>
                   </div>
+                  </div>
                 </FormItem>
-                <p style="margin: 0px 0px 20px 100px;">提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
-                <p class="info-title">企业法人信息<span
-                  style="position:absolute;width:1160px;height:2px;border:0.5px solid rgba(217,217,217,1);bottom: 60px;left: 0;"></span>
+                <p style="margin: 0px 0px 20px 100px;color:rgba(0,0,0,0.43);">提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
+                <p class="info-title" style="margin-top: 70px">企业法人信息<span
+                  style="position:absolute;width:1160px;height:1px;border:0.5px solid rgb(233, 233, 233);bottom: 60px;left: 0;"></span>
                 </p>
                 <FormItem label="企业法人姓名" prop="linkManName">
                   <Input v-model="notAuth.companyAuthForm.linkManName" placeholder="请输入法人姓名"
@@ -663,7 +665,7 @@
                       <div style="width:130px;margin-left:20px;">
                         <img src="../../assets/img/usercenter/card-font.png"
                              style="width:130px;height:74px;margin-bottom: 10px;">
-                        <p style="line-height: 32px;text-align: center">身份证人面像</p>
+                        <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证人面像</p>
                       </div>
                     </div>
                     <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px">
@@ -690,14 +692,14 @@
                       <div style="width:130px;margin-left:20px;">
                         <img src="../../assets/img/usercenter/card-back.png"
                              style="width:130px;height:74px;margin-bottom: 10px;">
-                        <p style="line-height: 32px;text-align: center">示例图</p>
+                        <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证国徽面</p>
                       </div>
                     </div>
                   </div>
                 </FormItem>
-                <p style="margin: 0px 0px 20px 100px;">提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
-                <p class="info-title">经办人信息<span
-                  style="position:absolute;width:1160px;height:2px;border:0.5px solid rgba(217,217,217,1);bottom: 60px;left: 0;"></span>
+                <p style="margin: 0px 0px 20px 100px;color:rgba(0,0,0,0.43);">提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
+                <p class="info-title" style="margin-top: 70px">经办人信息<span
+                  style="position:absolute;width:1160px;height:1px;border:0.5px solid rgb(233, 233, 233);bottom: 60px;left: 0;"></span>
                 </p>
                 <FormItem label="经办人姓名" prop="agentName">
                   <Input v-model="notAuth.companyAuthForm.agentName" placeholder="请输入经办人姓名"
@@ -753,7 +755,7 @@
                       <div style="width:130px;margin-left:20px;">
                         <img src="../../assets/img/usercenter/card-font.png"
                              style="width:130px;height:74px;margin-bottom: 10px;">
-                        <p style="line-height: 32px;text-align: center">身份证人面像</p>
+                        <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证人面像</p>
                       </div>
                     </div>
                     <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px">
@@ -780,7 +782,7 @@
                       <div style="width:130px;margin-left:20px;">
                         <img src="../../assets/img/usercenter/card-back.png"
                              style="width:130px;height:74px;margin-bottom: 10px;">
-                        <p style="line-height: 32px;text-align: center">示例图</p>
+                        <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证国徽面</p>
                       </div>
                     </div>
                     <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px;margin-top: 20px">
@@ -807,12 +809,12 @@
                       <div style="width:130px;margin-left:20px;">
                         <img src="../../assets/img/usercenter/card-person.png"
                              style="width:130px;height:74px;margin-bottom: 10px;">
-                        <p style="line-height: 32px;text-align: center">手持身份证人面照片</p>
+                        <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">手持身份证人面照片</p>
                       </div>
                     </div>
                   </div>
                 </FormItem>
-                <p style="margin: 0px 0px 20px 100px;">提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
+                <p style="margin: 0px 0px 20px 100px;color:rgba(0,0,0,0.43);">提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
                 <!--<FormItem label="证件类型" prop="certificateType">
                   <Select v-model="notAuth.companyAuthForm.certificateType">
                     <Option v-for="(item,index) in notAuth.companyAuthForm.certificateTypeOptions" :key="item.key"
@@ -3023,7 +3025,8 @@
           bottom: 1px;
           left: 320px;
           cursor: pointer;
-          background: #4990E2;
+          background: #2A99F2;
+          border-radius: 4px;
           border: 1px solid rgba(15, 179, 250, 0.00);
           font-family: PingFangSC-Regular;
           font-size: 11px;
