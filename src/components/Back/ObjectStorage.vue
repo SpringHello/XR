@@ -19,7 +19,7 @@
         </div>
         <Tabs type="card" :value="name" :animated="false">
           <TabPane label="概览" name="name1">
-            <p>当月用量 2018/04/28-2018/5/28</p>
+            <p>当月用量 {{starTime}}-{{endTime}}</p>
             <div class="center_space">
               <div class="space_two">
                   <p>已用空间容量</p>
@@ -41,7 +41,7 @@
             <div class="center_chart">
             <div style="display:flex;padding-bottom:5px;">
             <div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>
-            <!--<div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>-->
+            <div style="width:50%;text-align:right;color:#666666;">{{starTime}}</div>
             </div>
             <div class="chart">
               <ul class="objectList">
@@ -59,7 +59,7 @@
             <div class="center_chart">
               <div style="display:flex;padding-bottom:5px;margin-top:50px;">
                 <div style="width:50%;font-size:16px;color:#333333;">请求次数</div>
-                <!--<div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>-->
+                <div style="width:50%;text-align:right;color:#666666;">{{starTime}}</div>
               </div>
               <div class="chart" >
                 <ul class="objectList">
@@ -215,7 +215,11 @@
         //概览统计流量
         flow:'',
         //概览统计http请求次数
-        frequency:''
+        frequency:'',
+        //统计时间开始
+        starTime:'',
+        //统计时间结束
+        endTime:''
       }
     },
     components: {
@@ -340,7 +344,7 @@
       getAllsize(){
         this.$http.post('object/getAllSize.do', {}).then(res => {
           if (res.data.status == '1') {
-            this.size = res.data.data.allsize / 1048576>1 ? (res.data.data.allsize / 1048576).toFixed(0) +'GB': res.data.data.allsize > 1000 || res.data.data.allsize / 1024 > 1 ? (res.data.data.allsize / 1024).toFixed(0) + 'MB' : (res.data.data.allsize / 1024).toFixed(0) + 'KB';
+            this.size = res.data.data.allsize / 1048576>1 ? (res.data.data.allsize / 1048576).toFixed(2) +'GB': res.data.data.allsize > 1000 || res.data.data.allsize / 1024 > 1 ? (res.data.data.allsize / 1024).toFixed(2) + 'MB' : res.data.data.allsize.toFixed(2) + 'KB';
           } else {
             this.size = "0KB";
             this.$Message.info('平台出小差了');
@@ -397,6 +401,34 @@
                   }
               })
         })
+      },
+      //获取时间
+      getTime(){
+        var daysInMonth = new Array([0],[31],[28],[31],[30],[31],[30],[31],[31],[30],[31],[30],[31]);
+        var y = date.getFullYear();
+        var m = date.getMonth()+1;
+        var d = date.getDate();
+        m = m > 9  ? m : '0'+m;
+        d = d > 9 ? d : '0'+d;
+        this.starTime = y+'/'+m+'/'+d;
+        if(y%4 == 0 && y%100 != 0){
+          daysInMonth[2] = 29;
+        }
+        if(m - 1 == 0)
+        {
+          y -= 1;
+          m = 12;
+        }
+        else
+        {
+          m -= 1;
+        }
+        d = daysInMonth[m] >= d ? d : daysInMonth[m];
+        if(m<10)
+        {
+          m='0'+m;
+        }
+        this.endTime = y+'/'+m+'/'+d;
       }
     },
     mounted(){

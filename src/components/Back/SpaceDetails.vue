@@ -32,7 +32,7 @@
           </div>
         </div>
 
-        <p style="margin-top:20px;">当月用量 2018/04/28-2018/5/28</p>
+        <p style="margin-top:20px;">当月用量 {{starTime}}-{{endTime}}</p>
         <div class="center_space">
           <div class="space_Two">
             <p>已用空间容量</p>
@@ -61,7 +61,7 @@
               <div class="center_chart">
                 <div style="display:flex;padding-bottom:5px;">
                   <div style="width:50%;font-size:16px;color:#333333;">请求次数</div>
-                  <div style="width:46%;text-align:right;color:#666666;font-size: 14px;">2017.11.25</div>
+                  <div style="width:46%;text-align:right;color:#666666;font-size: 14px;">{{starTime}}</div>
                 </div>
                 <div class="chart">
                   <ul class="objectList">
@@ -82,7 +82,7 @@
             <div class="center_chart">
               <div style="display:flex;padding-bottom:5px;">
                 <div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>
-                <div style="width:46%;text-align:right;color:#666666;font-size: 14px;">2017.11.25</div>
+                <div style="width:46%;text-align:right;color:#666666;font-size: 14px;">{{starTime}}</div>
               </div>
               <div class="chart" >
                 <ul class="objectList">
@@ -1375,7 +1375,11 @@
           }
         ],
         frequency:'',
-        flow:''
+        flow:'',
+        //统计时间开始
+        starTime:'',
+        //统计时间结束
+        endTime:''
       }
     },
     components:{
@@ -2083,6 +2087,34 @@
           this.flow = '0KB';
         })
       },
+      //获取时间
+      getTime(){
+        var daysInMonth = new Array([0],[31],[28],[31],[30],[31],[30],[31],[31],[30],[31],[30],[31]);
+        var y = date.getFullYear();
+        var m = date.getMonth()+1;
+        var d = date.getDate();
+        m = m > 9  ? m : '0'+m;
+        d = d > 9 ? d : '0'+d;
+        this.starTime = y+'/'+m+'/'+d;
+        if(y%4 == 0 && y%100 != 0){
+          daysInMonth[2] = 29;
+        }
+        if(m - 1 == 0)
+        {
+          y -= 1;
+          m = 12;
+        }
+        else
+        {
+          m -= 1;
+        }
+        d = daysInMonth[m] >= d ? d : daysInMonth[m];
+        if(m<10)
+        {
+          m='0'+m;
+        }
+        this.endTime = y+'/'+m+'/'+d;
+      }
     },
     created(){
       this.bucketName = sessionStorage.getItem('bucketName');
