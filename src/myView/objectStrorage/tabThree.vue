@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="width: 100%;margin-top: 20px;min-width: 1600px;">
         <p style="font-size:16px;color:#000000;margin-bottom:10px;">操作日志</p>
         <div style="height:31px;display:flex;margin-bottom:20px;">
            <ul class="objectList">
@@ -62,7 +62,7 @@ export default {
       }
   },
   mounted() {
-      
+
   }
 };
 </script>

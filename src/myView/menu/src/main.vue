@@ -1,7 +1,11 @@
 <template>
   <div style="display: flex;margin-right: 10px;">
     <div style="width:160px;position: relative;background-color: #142133;" :class="{close:!opened}">
-      <div style="height:38px;background-color: #1B2940" @click="toggleHidden"></div>
+      <div style="height:38px;background-color: #1B2940;text-align: center;" @click="toggleHidden">
+        <div class="sider">
+          <Icon class="rotate" :class="{rotate_icon:!opened}" type="navicon-round" size="26" color="#FFFFFF"></Icon>
+        </div>
+      </div>
       <ul>
         <div>
           <div class="regionTitle" @click="region = !region">
@@ -298,5 +302,20 @@
     font-size:0;
     border:solid 8px;
     border-color:transparent rgba(70,76,91,.9) transparent transparent;
+  }
+  .sider{
+    padding: 6px;
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+  }
+  .rotate{
+    transition: ease-in-out all 0.2s;
+  }
+  .rotate_icon{
+    transform: rotate(-90deg);
+
   }
 </style>

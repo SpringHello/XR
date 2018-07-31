@@ -200,8 +200,8 @@
                 subName: '对象存储',
                 type: 'ObjectStorage',
                 icon: '#icon-yunanquan1',
-                thrItem:[{thrName:'概览',pane:'https://oss-console.xrcloud.net/ruirados/objectStorage'},{thrName:'空间管理',pane:'https://oss-console.xrcloud.net/ruirados/objectStorage'},
-                {thrName:'用量监控',pane:'https://oss-console.xrcloud.net/ruirados/objectStorage'},{thrName:'操作日志',pane:'https://oss-console.xrcloud.net/ruirados/objectStorage'}]
+                thrItem:[{thrName:'概览',pane:'tabOne'},{thrName:'空间管理',pane:'https://oss-console.xrcloud.net/ruirados/objectStorage'},
+                {thrName:'用量监控',pane:'tabTwo'},{thrName:'操作日志',pane:'tabThree'}]
               },
               {subName: '云硬盘', type: 'disk', icon: '#icon-yunyingpan1'},
               {subName: '云硬盘备份', type: 'diskBackup', icon: '#icon-yunyingpanbeifen'}
@@ -223,7 +223,7 @@
                 subName: '虚拟专网VPN',
                 type: 'vpn',
                 icon: '#icon-xunizhuanwangVPN',
-                thrItem: [{thrName: '远程接入', pane: 'remote'}, {thrName: '隧道VPN', pane: 'VPN'}]
+                thrItem: [{thrName: '远程接入', pane: 'remoteAccess'}, {thrName: '隧道VPN', pane: 'tunnelVPN'}]
               }
             ]
           },

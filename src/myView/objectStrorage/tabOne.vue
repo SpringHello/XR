@@ -2,10 +2,10 @@
     <div class="boxs">
         <div >
             <Button type="primary" @click="modal6 = true">新建空间</Button>
-        </div> 
+        </div>
         <div style="margin-top:10px;">
              <Table :columns="spaceColumns" :data="spaceData" no-data-text="您还没有创建Bucket（存储空间）,请点击新建空间"></Table>
-        </div> 
+        </div>
         <div style="margin-top:36px;">
             <Card style="width:373px;">
                 <div>
@@ -60,7 +60,7 @@
         </div>
     </Modal>
     </div>
-   
+
 </template>
 
 <script >
@@ -206,7 +206,7 @@ export default {
                 this.$Message.error(res.data.msg);
               }
             });
-        } 
+        }
       });
     },
     //删除空间
@@ -253,7 +253,8 @@ export default {
   font-family: MicrosoftYaHei;
   width: 100%;
   height: 100%;
-
+  min-width: 1600px;
+  margin-top: 20px;
   .card-center {
     display: flex;
     margin-top: 20px;

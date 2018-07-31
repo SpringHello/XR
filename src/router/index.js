@@ -120,9 +120,12 @@ const CloudDatabase = () => import('@/components/Back/CloudDatabase')
 const CloudDataManage = () => import('@/components/Back/CloudDataManage')
 const CloudDatabaseMirror = () => import('@/components/Back/CloudDatabaseMirror')
 
-// const tabOne = () => import('@/myView/objectStrorage/tabOne')
-// const tabTwo = () => import('@/myView/objectStrorage/tabTwo')
-// const tabThree = () => import('@/myView/objectStrorage/tabThree')
+const tabOne = () => import('@/myView/objectStrorage/tabOne')
+const tabTwo = () => import('@/myView/objectStrorage/tabTwo')
+const tabThree = () => import('@/myView/objectStrorage/tabThree')
+
+const remoteAccess = () => import('@/components/Back/remoteAccess')
+const tunnelVPN = () => import('@/components/Back/tunnelVPN')
 
 // 帮助文档路由
 const computed = () => import('@/components/App/doc/computed')
@@ -713,9 +716,11 @@ var router = new Router({
         {path: 'cloudDatabaseBackup', name: 'cloudDatabaseBackup', component: CloudDatabaseBackup},
         {path: 'cloudDatabaseMirror', name: 'cloudDatabaseMirror', component: CloudDatabaseMirror},
         {path: 'cloudDatabase', name: 'cloudDatabase', component: CloudDatabase},
-        // {path: 'tabOne',name:'tabOne',component:tabOne},
-        // {path: 'tabTwo',name:'tabTwo',component:tabTwo},
-        // {path: 'tabThree',name:'tabThree',component:tabThree}
+        {path: 'tabOne',name:'tabOne',component:tabOne},
+        {path: 'tabTwo',name:'tabTwo',component:tabTwo},
+        {path: 'tabThree',name:'tabThree',component:tabThree},
+        {path: 'remoteAccess',name:'remoteAccess',component:remoteAccess},
+        {path: 'tunnelVPN',name:'tunnelVPN',component:tunnelVPN}
       ]
     },
     {
