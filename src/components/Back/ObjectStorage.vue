@@ -435,6 +435,7 @@
       this.getAllsize();
       this.getOverview();
       // this.buy();
+      this.getTime();
       this.showUserAcessAll();
     }
   };

@@ -2134,6 +2134,7 @@
     },
     mounted(){
       this.uploadList = this.$refs.upload.fileList;
+      this.getTime();
     },
     // watch: {
     //   time: function () {
