@@ -99,41 +99,18 @@
                   </p>
                 </div>
 
-                <div v-if="prod.type=='Pdata'" style="border-bottom:1px solid #ccc;padding:20px 0px;">
-                  <p class="item"><span class="hidden">$</span><span class="title">区域</span><span
-                    class="hidden">#</span>{{prod.zone.zonename}}
-                  </p>
-                  <p class="item">
-                    <span class="hidden">$</span><span class="title">计费模式</span><span class="hidden">#</span>{{prod.timeForm.currentTimeType=='annual'?`包年包月`:'实时计费'}}
-                  </p>
-                  <p class="item"><span class="hidden">$</span><span class="title">购买时长</span><span
-                    class="hidden">#</span>{{prod.timeForm.currentTimeValue.label}}
-                  </p>
+                <div v-if="prod.type=='Pdata'">
                   <p class="item">
                     <span class="hidden">$</span><span class="title">镜像</span><span
                     class="hidden">#</span>{{prod.system.systemName}}
                   </p>
                   <p class="item" v-if="prod.IPConfig.publicIP">
                     <span class="hidden">$</span>
-                    <span class="title">带宽</span><span class="hidden">#</span>{{prod.IPConfig.bandWidth}}
+                    <span class="title">带宽</span><span class="hidden">#</span>{{prod.IPConfig.bandWidth}}M
                   </p>
                   <p class="item" v-for="disk in prod.dataDiskList">
                     <span class="hidden">$</span>
                     <span class="title">硬盘</span><span class="hidden">#</span>{{disk.size}}G{{disk.label}}
-                  </p>
-                  <p class="item" style="margin-top: 10px"><span class="hidden">$</span><span class="title"
-                                                                                              style="vertical-align: middle">价格</span>
-                    <span class="hidden">#</span>
-                    <span
-                      style="font-size: 24px;color: #F85E1D;vertical-align: middle;user-select: none;">{{prod.dataDiskCost.toFixed(2)}}元</span>
-                  <ul style="float: right;font-size: 14px;user-select: none">
-                    <span class="numberAdd" v-if="prod.count == 1">-</span>
-                    <span class="numberAdd" style="cursor: pointer"
-                          @click="prod.count -= 1,prod.customCost = totalCost * prod.count" v-else>-</span>
-                    <span style="border: 1px solid #D9D9D9;padding: 4px 15px">{{prod.count}}</span>
-                    <span class="numberMinus" v-if="prod.count == 5">+</span>
-                    <span class="numberMinus" style="cursor: pointer"
-                          @click="prod.count += 1,prod.customCost = totalCost * prod.count" v-else>+</span></ul>
                   </p>
                 </div>
                 <!--底部价格公共区域-->
@@ -257,7 +234,7 @@
           productList: [{label: '云主机', value: 'bhost'}, {label: '云硬盘', value: 'bdisk'}, {
             label: '公网IP',
             value: 'bip'
-          }, /*{label: '数据库', value: 'Pdata'}*/]
+          }, {label: '数据库', value: 'bdata'}]
         },
         // 当前可以创建的剩余资源数
         remainCount: {},
@@ -533,6 +510,7 @@
           bhost: 'Pecs',
           bdisk: 'Pdisk',
           bip: 'Peip',
+          bdata: 'PdataBase',
         }
         return map[this.product.currentProduct]
       }

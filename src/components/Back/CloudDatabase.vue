@@ -459,102 +459,102 @@
                       this.showModal.dilatation = true
                     }
                   }
-                }, '数据库扩容'), 
-                h('DropdownItem', {
-                  nativeOn: {
-                    click: () => {
-                      localStorage.setItem('serviceoffername', params.row.serviceoffername)
-                      localStorage.setItem('virtualMachineid', params.row.computerid)
-                      sessionStorage.setItem('databaseName', params.row.computername)
-                      sessionStorage.setItem('endtime', params.row.endtime)
-                      this.$router.push('dataBaseUpgrade')
-                    }
-                  }
-                }, '数据库升级'), 
-                h('DropdownItem', {
-                  nativeOn: {
-                    click: () => {
-                      this.current = params.row
-                      this.dilatationForm.minDatabaseSize = params.row.diskSize
-                      this.showModal.restart = true
-                    }
-                  }
-                }, '重启数据库'),
-                 h('DropdownItem', {
-                  nativeOn: {
-                    click: () => {
-                      this.current = params.row
-                      if (params.row.caseType == 3) {
-                        this.$Message.info('请选择包年包月的云数据库进行续费')
-                        this.showModal.renewal = true
-                      } else {
-                        this.showModal.renewal = true
+                }, '数据库扩容'),
+                  h('DropdownItem', {
+                    nativeOn: {
+                      click: () => {
+                        localStorage.setItem('serviceoffername', params.row.serviceoffername)
+                        localStorage.setItem('virtualMachineid', params.row.computerid)
+                        sessionStorage.setItem('databaseName', params.row.computername)
+                        sessionStorage.setItem('endtime', params.row.endtime)
+                        this.$router.push('dataBaseUpgrade')
                       }
                     }
-                  }
-                }, '数据库续费'), 
-                h('DropdownItem', {
-                  nativeOn: {
-                    click: () => {
-                      if (params.row.dbStatus == '1') {
-                        this.$Message.info('数据库已处于开启状态')
-                      } else {
-                        this.dataBaseData.forEach(item => {
-                          if (item.computerid == params.row.computerid) {
-                            item.dbStatus = '2'
-                          }
-                        })
-                        let url = 'database/startDB.do'
-                        this.$http.get(url, {
-                          params: {
-                            DBId: params.row.computerid
-                          }
-                        }).then(res => {
-                          if (res.status == 200 && res.data.status == 1) {
-                            this.$Message.success(res.data.message)
-                            this.listDatabase()
-                          } else {
-                            this.$message.info({
-                              content: res.data.message
-                            })
-                            this.listDatabase()
-                          }
-                        })
+                  }, '数据库升级'),
+                  h('DropdownItem', {
+                    nativeOn: {
+                      click: () => {
+                        this.current = params.row
+                        this.dilatationForm.minDatabaseSize = params.row.diskSize
+                        this.showModal.restart = true
                       }
                     }
-                  }
-                }, '开启数据库'), 
-                h('DropdownItem', {
-                  nativeOn: {
-                    click: () => {
-                      if (params.row.dbStatus == '0') {
-                        this.$Message.info('数据库已处于关闭状态')
-                      } else {
-                        this.dataBaseData.forEach(item => {
-                          if (item.computerid == params.row.computerid) {
-                            item.dbStatus = '3'
-                          }
-                        })
-                        let url = 'database/stopDB.do'
-                        this.$http.get(url, {
-                          params: {
-                            DBId: params.row.computerid
-                          }
-                        }).then(res => {
-                          if (res.status == 200 && res.data.status == 1) {
-                            this.$Message.success(res.data.message)
-                            this.listDatabase()
-                          } else {
-                            this.$message.info({
-                              content: res.data.message
-                            })
-                            this.listDatabase()
-                          }
-                        })
+                  }, '重启数据库'),
+                  h('DropdownItem', {
+                    nativeOn: {
+                      click: () => {
+                        this.current = params.row
+                        if (params.row.caseType == 3) {
+                          this.$Message.info('请选择包年包月的云数据库进行续费')
+                          this.showModal.renewal = true
+                        } else {
+                          this.showModal.renewal = true
+                        }
                       }
                     }
-                  }
-                }, '关闭数据库')])
+                  }, '数据库续费'),
+                  h('DropdownItem', {
+                    nativeOn: {
+                      click: () => {
+                        if (params.row.dbStatus == '1') {
+                          this.$Message.info('数据库已处于开启状态')
+                        } else {
+                          this.dataBaseData.forEach(item => {
+                            if (item.computerid == params.row.computerid) {
+                              item.dbStatus = '2'
+                            }
+                          })
+                          let url = 'database/startDB.do'
+                          this.$http.get(url, {
+                            params: {
+                              DBId: params.row.computerid
+                            }
+                          }).then(res => {
+                            if (res.status == 200 && res.data.status == 1) {
+                              this.$Message.success(res.data.message)
+                              this.listDatabase()
+                            } else {
+                              this.$message.info({
+                                content: res.data.message
+                              })
+                              this.listDatabase()
+                            }
+                          })
+                        }
+                      }
+                    }
+                  }, '开启数据库'),
+                  h('DropdownItem', {
+                    nativeOn: {
+                      click: () => {
+                        if (params.row.dbStatus == '0') {
+                          this.$Message.info('数据库已处于关闭状态')
+                        } else {
+                          this.dataBaseData.forEach(item => {
+                            if (item.computerid == params.row.computerid) {
+                              item.dbStatus = '3'
+                            }
+                          })
+                          let url = 'database/stopDB.do'
+                          this.$http.get(url, {
+                            params: {
+                              DBId: params.row.computerid
+                            }
+                          }).then(res => {
+                            if (res.status == 200 && res.data.status == 1) {
+                              this.$Message.success(res.data.message)
+                              this.listDatabase()
+                            } else {
+                              this.$message.info({
+                                content: res.data.message
+                              })
+                              this.listDatabase()
+                            }
+                          })
+                        }
+                      }
+                    }
+                  }, '关闭数据库')])
                 ])])
               } else {
                 return h('div', {}, [h('span', {
@@ -676,8 +676,7 @@
         }
       },
       createDatabase() {
-        sessionStorage.setItem('pane', 'Pdatabase')
-        this.$router.push('buy')
+        this.$router.push('/ruicloud/buy/bdata')
       },
       listDatabase() {
         this.$http.get('database/listDB.do').then(res => {
