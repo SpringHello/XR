@@ -35,7 +35,7 @@
           </ul>
         </li>
       </ul>
-      <transition name="slide" style="z-index: 0;">
+      <transition name="slide">
         <div class="thr-header" :class="{closeThr:!opened}" ref="thr" @mouseenter="static=true" @mouseleave="_leave">
           <div class="wrapper">
             <div class="operate">
@@ -88,8 +88,9 @@
         zoneList:this.$store.state.zoneList
       }
     },
-    mounted(){
-   },
+   created(){
+    this.go();
+  },
     methods: {
       toggleHidden(){
           this.opened = !this.opened;
