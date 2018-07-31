@@ -54,7 +54,7 @@
           <div class="wrapper">
             <div class="item" v-for="(item,index) in source" :key="index">
               <p class="universal-middle">
-                <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;">
+                <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;vertical-align: middle;">
                   <use :xlink:href="sourceIcon[index]"></use>
                 </svg>
                 {{item.name}}

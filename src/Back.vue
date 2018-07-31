@@ -175,17 +175,22 @@
         },
         main: [
           {
-            mainName: '云计算',
+            mainName: '云服务器',
             type: 'server',
             subItem: [{subName: '云主机', type: 'host', icon: '#icon-danxingyunfuwuqiECS'}, {
               subName: '云主机快照',
               type: 'snapshot',
-              icon: '#icon-danxingyunfuwuqiECS'
+              icon: '#icon-ECSkuaizhao'
             }, {
               subName: '镜像',
               type: 'mirror',
-              icon: '#icon-danxingyunfuwuqiECS'
+              icon: '#icon-jingxiangfuwu'
             }]
+          },
+          {
+            mainName:'云数据库',
+            type:'dataBase',
+            subItem:[{subName:'云数据库',type:'cloudDatabase',icon:'#icon-NoSQLguanxixingshujuku'}]
           },
           {
             mainName: '云存储',
@@ -193,13 +198,13 @@
             subItem: [
               {
                 subName: '对象存储',
-                type: 'https://oss-console.xrcloud.net/ruirados/objectStorage',
-                icon: '#icon-danxingyunfuwuqiECS',
+                type: 'ObjectStorage',
+                icon: '#icon-yunanquan1',
                 thrItem:[{thrName:'概览',pane:'https://oss-console.xrcloud.net/ruirados/objectStorage'},{thrName:'空间管理',pane:'https://oss-console.xrcloud.net/ruirados/objectStorage'},
                 {thrName:'用量监控',pane:'https://oss-console.xrcloud.net/ruirados/objectStorage'},{thrName:'操作日志',pane:'https://oss-console.xrcloud.net/ruirados/objectStorage'}]
               },
-              {subName: '云硬盘', pane: 'disk', icon: '#icon-danxingyunfuwuqiECS'},
-              {subName: '云硬盘备份', pane: 'diskBackup', icon: '#icon-danxingyunfuwuqiECS'}
+              {subName: '云硬盘', type: 'disk', icon: '#icon-yunyingpan1'},
+              {subName: '云硬盘备份', type: 'diskBackup', icon: '#icon-yunyingpanbeifen'}
             ]
           },
           {
@@ -209,15 +214,15 @@
               {
                 subName: '私有网络VPC',
                 type: 'vpc',
-                icon: '#icon-danxingyunfuwuqiECS',
+                icon: '#icon-xunisiyouyunVPC',
                 thrItem: [{thrName: '私有网络VPC', pane: 'VPC'}, {thrName: 'NAT网关', pane: 'NAT'}]
               },
-              {subName: '弹性IP', type: 'ip', icon: '#icon-danxingyunfuwuqiECS'},
-              {subName: '负载均衡', type: 'balance', icon: '#icon-danxingyunfuwuqiECS'},
+              {subName: '弹性IP', type: 'ip', icon: '#icon-danxingIP1'},
+              {subName: '负载均衡', type: 'balance', icon: '#icon-fuzaijunheng2'},
               {
                 subName: '虚拟专网VPN',
                 type: 'vpn',
-                icon: '#icon-danxingyunfuwuqiECS',
+                icon: '#icon-xunizhuanwangVPN',
                 thrItem: [{thrName: '远程接入', pane: 'remote'}, {thrName: '隧道VPN', pane: 'VPN'}]
               }
             ]
@@ -226,7 +231,7 @@
             mainName: '云安全',
             type: 'security',
             subItem: [
-              {subName: '防火墙', type: 'firewall', icon: '#icon-danxingyunfuwuqiECS'}
+              {subName: '防火墙', type: 'firewall', icon: '#icon-fanghuoqiang'}
             ]
           },
           {
@@ -234,7 +239,7 @@
             type: 'recycle',
             icon: '#icon-danxingyunfuwuqiECS',
             subItem: [
-              {subName: '回收站', type: 'recycle', icon: '#icon-danxingyunfuwuqiECS'}
+              {subName: '回收站', type: 'recycle', icon: '#icon-huishouzhan'}
             ]
           }
         ],
@@ -494,7 +499,7 @@
       position: relative;
       background-color: #3f3f3f;
       .wrapper {
-        width: 1200px;
+        min-width: 1600px;
         margin: 0px auto;
         .logo {
           width: 140px;
@@ -510,6 +515,7 @@
         }
         .operate {
           margin-left: 178px;
+          width:88%;
           > ul {
             display: inline-block;
             margin: 0px auto;

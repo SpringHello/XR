@@ -532,9 +532,9 @@
     @diff: 104px;
     // min-height: calc(~"100% - @{diff}");
     width: 100%;
+    min-width: 1600px;
     .wrapper {
-      width: 1200px;
-      margin: 0px auto;
+
       & > span {
         font-family: Microsoft Yahei, 微软雅黑;
         font-size: 12px;

@@ -1,37 +1,46 @@
 <template>
   <div style="display: flex;margin-right: 10px;">
-    <div style="width:160px;position: relative;background-color: #142133" :class="{close:!opened}">
+    <div style="width:160px;position: relative;background-color: #142133;" :class="{close:!opened}">
       <div style="height:38px;background-color: #1B2940" @click="toggleHidden"></div>
       <ul>
         <div>
           <div class="regionTitle" @click="region = !region">
-            <span  >{{opened?zoneName:""}}</span>
-            <div v-show="opened" :class="{act:!region}"></div>
+            <span>{{opened?zoneName:''}}</span>
+            <div v-if="opened" :class="{act:!region}"></div>
           </div>
           <ul>
-            <li class="subTitle"  v-show="!region"  v-for="item in zoneList" @click="regionSelect(item.zoneid)">{{item.zonename}}</li>
+            <li class="subTitle" v-show="region"   v-for="item in zoneList" @click="regionSelect(item.zoneid)">{{item.zonename}}</li>
           </ul>
         </div>
 
-        <li v-for="item in items" @mouseenter="go" class="house">
+        <li v-for="item in items" class="house">
           <div class="mainTitle" @click="toggleMain(item)" >
             <span :class="{act:openedMain.includes(item.type)}">{{opened?item.mainName:''}}</span>
           </div>
           <ul v-if="openedMain.includes(item.type)">
             <li v-for="sub in item.subItem" @click="jump(sub.type)"  class="subTitle" @mouseenter="go(sub)" @mouseleave="leave(sub)">
-              <svg class="icon" aria-hidden="true" style="width:28px;height:28px;vertical-align: middle;">
-                <use :xlink:href="sub.icon"></use>
-              </svg>
-              <span v-show="opened" style="vertical-align: middle">{{sub.subName}}</span>
+              <Tooltip v-if="!opened" :content="sub.subName"  placement="right" style="z-index: 99999;">
+                <svg class="icon" aria-hidden="true" style="width:28px;height:28px;vertical-align: middle;">
+                  <use :xlink:href="sub.icon"></use>
+                </svg>
+              </Tooltip>
+
+              <div v-if="opened">
+                <svg class="icon" aria-hidden="true" style="width:28px;height:28px;vertical-align: middle;">
+                  <use :xlink:href="sub.icon"></use>
+                </svg>
+                <span v-show="opened" style="vertical-align: middle">{{sub.subName}}</span>
+              </div>
             </li>
           </ul>
         </li>
       </ul>
-      <transition name="slide">
+      <transition name="slide" style="z-index: 0;">
         <div class="thr-header" :class="{closeThr:!opened}" ref="thr" @mouseenter="static=true" @mouseleave="_leave">
           <div class="wrapper">
             <div class="operate">
               <ul>
+                <li style="font-size: 18px;color: #FFFFFF;">{{subItem}}</li>
                 <li v-for="(thr,sIndex) in thrMenu" :key="sIndex" style="cursor: pointer" class="house" @click="jumpList(thr)">
                   {{thr.thrName}}
                 </li>
@@ -66,6 +75,8 @@
       return {
         // 三级Menu列表
         thrMenu: undefined,
+        //二级
+        subItem:undefined,
         // 已打开的Main
         openedMain: [],
         static: false,
@@ -81,8 +92,7 @@
    },
     methods: {
       toggleHidden(){
-        this.opened = !this.opened;
-        this.region = !this.region;
+          this.opened = !this.opened;
       },
       // 切换Main状态
       toggleMain(item){
@@ -99,9 +109,11 @@
       go(sub){
         setTimeout(() => {
           if (sub && sub.thrItem) {
+            this.subItem = sub.subName;
             this.thrMenu = sub.thrItem
             this.$refs['thr'].style.width = '160px'
           } else {
+            this.subItem = undefined;
             this.thrMenu = undefined
             this.$refs['thr'].style.width = '0px'
           }
@@ -141,7 +153,7 @@
             this.$store.commit('setZone', zone);
           }
         }
-          this.region = false;
+        this.region = false;
       }
     },
     watch: {
@@ -160,7 +172,7 @@
       color: #FFFFFF;
   }
   .regionTitle{
-    padding: 14px 20px;
+    padding: 14px 18px;
     position: relative;
     cursor: pointer;
     background-color: #22344D;
@@ -275,5 +287,15 @@
     .subTitle {
       padding: 14px 10px;
     }
+  }
+  .arrow{
+    position:absolute;
+    top:5px;
+    left:-17px;
+    width:0;
+    height:0;
+    font-size:0;
+    border:solid 8px;
+    border-color:transparent rgba(70,76,91,.9) transparent transparent;
   }
 </style>

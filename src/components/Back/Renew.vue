@@ -1,5 +1,5 @@
 <template>
-  <div style="height:100%;">
+  <div id='background'style="height:100%;">
     <div id="renew">
       <div class="wrapper">
   <span style="background-color: #f5f5f5;">
