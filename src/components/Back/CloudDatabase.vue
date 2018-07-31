@@ -485,7 +485,7 @@
                       click: () => {
                         this.current = params.row
                         if (params.row.caseType == 3) {
-                          this.$Message.info('请选择包年包月的云数据库进行续费')
+                          //this.$Message.info('请选择包年包月的云数据库进行续费')
                           this.showModal.renewal = true
                         } else {
                           this.showModal.renewal = true
@@ -851,7 +851,7 @@
         axios.get('database/upDBCost.do', {
           params: {
             DBId: this.current.computerid,
-            diskSize: this.dilatationForm.databaseSize,
+            diskSize: this.dilatationForm.databaseSize - this.dilatationForm.minDatabaseSize,
             zoneId: this.current.zoneid
           }
         }).then(response => {
