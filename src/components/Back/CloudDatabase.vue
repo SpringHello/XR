@@ -329,8 +329,14 @@
                 case 2:
                   text = '创建中';
                   break;
+                case 5:
+                  text = '扩容中';
+                  break;
+                case 6:
+                  text = '升级中';
+                  break;
               }
-              if (row.status == 2) {
+              if (row.status == 2||row.status == 5||row.status == 6) {
                 return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block',
@@ -485,7 +491,7 @@
                       click: () => {
                         this.current = params.row
                         if (params.row.caseType == 3) {
-                          this.$Message.info('请选择包年包月的云数据库进行续费')
+                          //this.$Message.info('请选择包年包月的云数据库进行续费')
                           this.showModal.renewal = true
                         } else {
                           this.showModal.renewal = true
@@ -851,7 +857,7 @@
         axios.get('database/upDBCost.do', {
           params: {
             DBId: this.current.computerid,
-            diskSize: this.dilatationForm.databaseSize,
+            diskSize: this.dilatationForm.databaseSize - this.dilatationForm.minDatabaseSize,
             zoneId: this.current.zoneid
           }
         }).then(response => {
