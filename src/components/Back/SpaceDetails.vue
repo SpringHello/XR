@@ -32,7 +32,7 @@
           </div>
         </div>
 
-        <p style="margin-top:20px;">当月用量 {{starTime}}-{{endTime}}</p>
+        <p style="margin-top:20px;">当月用量 {{endTime}}-{{starTime}}</p>
         <div class="center_space">
           <div class="space_Two">
             <p>已用空间容量</p>
@@ -2089,6 +2089,7 @@
       },
       //获取时间
       getTime(){
+        var date  = new Date();
         var daysInMonth = new Array([0],[31],[28],[31],[30],[31],[30],[31],[31],[30],[31],[30],[31]);
         var y = date.getFullYear();
         var m = date.getMonth()+1;

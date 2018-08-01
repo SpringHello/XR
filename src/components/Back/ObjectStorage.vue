@@ -19,7 +19,7 @@
         </div>
         <Tabs type="card" :value="name" :animated="false">
           <TabPane label="概览" name="name1">
-            <p>当月用量 {{starTime}}-{{endTime}}</p>
+            <p>当月用量 {{endTime}}-{{starTime}}</p>
             <div class="center_space">
               <div class="space_two">
                   <p>已用空间容量</p>
@@ -404,6 +404,7 @@
       },
       //获取时间
       getTime(){
+        var date  = new Date();
         var daysInMonth = new Array([0],[31],[28],[31],[30],[31],[30],[31],[31],[30],[31],[30],[31]);
         var y = date.getFullYear();
         var m = date.getMonth()+1;
