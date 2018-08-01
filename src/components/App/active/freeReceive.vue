@@ -954,7 +954,7 @@
   .center {
     width: 1200px;
     margin: 0 auto;
-    padding: 100px 0 60px;
+    padding: 100px 0;
     text-align: center;
     .fr-flow {
       margin-top: 100px;
