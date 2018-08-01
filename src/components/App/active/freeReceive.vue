@@ -3,18 +3,6 @@
     <div class="banner">
     </div>
     <div class="center">
-      <div class="fr-flow">
-        <h2>活动流程</h2>
-        <p>新用户注册登录账号并且完成实名认证就可参与此活动</p>
-        <div class="flow">
-          <ul v-for="(item,index) in flowGroup">
-            <img v-if="onStep <= index" :src="item.src">
-            <img v-else :src="item.onSrc"/>
-            <p :class="{onStep: onStep > index}">{{item.text}}</p>
-            <div class="link" :class="{onStep: onStep > index +1}"></div>
-          </ul>
-        </div>
-      </div>
       <div class="fr-host">
         <h2>活动主机</h2>
         <p>本活动所有主机均免费试用，每天随时可领，押金随时可退<span @click="roll(2800)">活动规则></span></p>
@@ -47,6 +35,18 @@
           </div>
         </div>
       </div>
+      <div class="fr-flow">
+        <h2>活动流程</h2>
+        <p>新用户注册登录账号并且完成实名认证就可参与此活动</p>
+        <div class="flow">
+          <ul v-for="(item,index) in flowGroup">
+            <img v-if="onStep <= index" :src="item.src">
+            <img v-else :src="item.onSrc"/>
+            <p :class="{onStep: onStep > index}">{{item.text}}</p>
+            <div class="link" :class="{onStep: onStep > index +1}"></div>
+          </ul>
+        </div>
+      </div>
     </div>
     <div style="background:rgba(255,243,237,1);">
       <div class="fr-advantage">
@@ -65,9 +65,9 @@
         <h2>活动规则</h2>
         <dl>
           <dd>活动时间：</dd>
-          <dt>2018年7月25日开始，总量有限，先到先得！</dt>
+          <dt>2018年8月2日开始，总量有限，先到先得！</dt>
           <dd>活动对象：</dd>
-          <dt>7月25日新注册或者一直未使用过平台资源及参加过其他免费活动并已通过个人／企业认证的用户。</dt>
+          <dt>新注册或者一直未使用过平台资源及参加过其他免费活动并已通过个人／企业认证的用户。</dt>
           <dd>活动内容：</dd>
           <dt>所有符合活动要求的用户可随时领取，每天不限量，若领取不成功可联系客服。</dt>
           <dd>活动细则：</dd>
@@ -85,8 +85,8 @@
     </div>
     <div class="fr-suspension">
       <ul>
-        <li :class="{select: 900>=fr_scrollTop}" @click="roll(500)">活动流程</li>
-        <li :class="{select: 2000>fr_scrollTop&&fr_scrollTop>900}" @click="roll(1000)">活动主机</li>
+        <li :class="{select: 1500>=fr_scrollTop}" @click="roll(500)">活动主机</li>
+        <li :class="{select: 2000>fr_scrollTop&&fr_scrollTop>1500}" @click="roll(1600)">活动流程</li>
         <li :class="{select: 2700>=fr_scrollTop&&fr_scrollTop>=2000}" @click="roll(2000)">产品优势</li>
         <li :class="{select: fr_scrollTop>2700}" @click="roll(2800)">活动规则</li>
         <li @click="roll(0)">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</li>
@@ -954,9 +954,10 @@
   .center {
     width: 1200px;
     margin: 0 auto;
-    padding: 100px 0 60px;
+    padding: 100px 0;
     text-align: center;
     .fr-flow {
+      margin-top: 100px;
       > p {
         font-family: "Microsoft YaHei", "微软雅黑";
         margin-top: 30px;
@@ -1000,7 +1001,6 @@
       }
     }
     .fr-host {
-      margin-top: 100px;
       > p {
         margin-top: 30px;
         margin-bottom: 60px;
