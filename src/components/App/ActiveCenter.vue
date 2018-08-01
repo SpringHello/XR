@@ -3,7 +3,7 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
-          <div @click="push('')"
+          <div
                style="cursor: pointer;">
             <div class="obj-storage">
               <div class="wrap">
@@ -11,7 +11,6 @@
                   <p>对象存储OSS重磅上线</p>
                   <p>安全稳定、海量、便捷、低延迟、低成本的云端存储服务</p>
                   <p>免费领取<span>50G</span>存储包</p>
-                  <button>立即领取</button>
                 </div>
               </div>
             </div>
@@ -301,15 +300,6 @@ export default {
               }
               p:nth-child(3) {
                 font-weight: 700;
-              }
-              button {
-                margin-top: 20px;
-                width: 164px;
-                height: 44px;
-                border-radius: 4px;
-                border: 1px solid rgba(51, 51, 51, 1);
-                background: none;
-                outline: none;
               }
             }
           }
