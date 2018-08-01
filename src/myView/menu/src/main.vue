@@ -1,6 +1,6 @@
 <template>
   <div style="display: flex;margin-right: 10px;">
-    <div style="width:160px;position: relative;background-color: #142133;" :class="{close:!opened}">
+    <div style="width:160px;position: relative;background-color: #142133;overflow: hidden;transition: ease-in-out all 0.3s" :class="{close:!opened}">
       <div style="height:38px;background-color: #1B2940;text-align: center;" @click="toggleHidden">
         <div class="sider">
           <Icon class="rotate" :class="{rotate_icon:!opened}" type="navicon-round" size="26" color="#FFFFFF"></Icon>
@@ -184,6 +184,7 @@
     font-size: 14px;
     color: rgba(163, 186, 204, 1);
     line-height: 14px;
+    width: 160px;
     span {
       &:before {
         content: '';
@@ -225,6 +226,7 @@
     font-size: 14px;
     color: rgba(163, 186, 204, 1);
     line-height: 14px;
+    width: 160px;
     span {
       &:before {
         content: '';

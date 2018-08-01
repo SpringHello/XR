@@ -44,6 +44,7 @@
 <script>
 import axios from '@/util/axiosInterceptor'
 import regExp from '../../util/regExp'
+import $store from '@/vuex'
 const validaRegisteredName = regExp.validaRegisteredName
 const validalength = (rule, value, callback) => {
   if (!value) {

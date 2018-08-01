@@ -364,11 +364,10 @@
   .background {
     background-color: #f5f5f5;
     width: 100%;
+    min-width: 1600px;
     @diff: 101px;
     min-height: calc(~"100% - @{diff}");
     .wrapper {
-      width: 1200px;
-      margin: 0px auto;
       & > span {
         font-family: PingFangSC-Regular;
         font-size: 12px;

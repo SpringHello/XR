@@ -126,6 +126,8 @@ const tabThree = () => import('@/myView/objectStrorage/tabThree')
 
 const remoteAccess = () => import('@/components/Back/remoteAccess')
 const tunnelVPN = () => import('@/components/Back/tunnelVPN')
+const privateVPC = () => import('@/components/Back/privateVPC')
+const gatewayNAT = () => import('@/components/Back/gatewayNAT')
 
 // 帮助文档路由
 const computed = () => import('@/components/App/doc/computed')
@@ -720,7 +722,9 @@ var router = new Router({
         {path: 'tabTwo',name:'tabTwo',component:tabTwo},
         {path: 'tabThree',name:'tabThree',component:tabThree},
         {path: 'remoteAccess',name:'remoteAccess',component:remoteAccess},
-        {path: 'tunnelVPN',name:'tunnelVPN',component:tunnelVPN}
+        {path: 'tunnelVPN',name:'tunnelVPN',component:tunnelVPN},
+        {path: 'privateVPC',name:'privateVPC',component:privateVPC},
+        {path: 'gatewayNAT',name:'gatewayNAT',component:gatewayNAT}
       ]
     },
     {
