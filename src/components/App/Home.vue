@@ -26,7 +26,7 @@
             </div>
           </div>
         </my-carousel-item>
-        <my-carousel-item class="carousel-item">
+        <!--<my-carousel-item class="carousel-item">
           <div @click="push('active_2')"
                style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
@@ -53,7 +53,7 @@
               </div>
             </div>
           </router-link>
-        </my-carousel-item>
+        </my-carousel-item>-->
         <my-carousel-item class="carousel-item">
           <div @click="push('active_1')"
                style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
