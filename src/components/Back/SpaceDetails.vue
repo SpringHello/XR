@@ -373,7 +373,7 @@
               <!--<Radio label='1'>自定义用户</Radio>-->
             </RadioGroup>
             <Input :disabled='grant' v-model="jurisdValidate.grantValue" style="width:420px;" :rows="4" type="textarea"/>
-            <Tooltip   content="用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”" placement="right">
+            <Tooltip   placement="right">
              <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
               <div slot="content" class="right_tool">
                 <p>用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”</p>
@@ -400,7 +400,7 @@
               <Radio label='1'>可操作</Radio>
             </RadioGroup>
             <Input v-model="jurisdValidate.influenceValue" style="width:420px;" :rows="4" type="textarea"/>
-            <Tooltip   content="用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”" placement="right">
+            <Tooltip  placement="right">
             <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
               <div slot="content" class="right_tool">
                 <p>资源留空等同于“Bucket名称”
@@ -422,7 +422,7 @@
         </FormItem>
         <FormItem prop="whiteListValue">
           <Input :disabled="refererDisabled"  v-model="jurisdValidate.whiteListValue" style="width:420px;" :rows="4" type="textarea"/>
-          <Tooltip   content="用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”" placement="right">
+          <Tooltip   placement="right">
           <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
             <div slot="content" class="right_tool">
               <p>1.白名单用于添加允许访问的来源地址 2.输入多个地址请用回车分隔，不需要写http://或https://</p>
@@ -469,7 +469,7 @@
               <!--<Radio label="1">自定义用户</Radio>-->
             </RadioGroup>
             <Input :disabled='updategrant' v-model="updateJurisd.updateGrantValue" style="width:420px;" :rows="4" type="textarea"></Input>
-            <Tooltip   content="用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”" placement="right">
+            <Tooltip   placement="right">
               <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
               <div slot="content" class="right_tool">
                 <p>用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”</p>
@@ -497,7 +497,7 @@
               <Radio label="1">可操作</Radio>
             </RadioGroup>
             <Input v-model="updateJurisd.updateInfluenceValue" style="width:420px;" :rows="4" type="textarea"></Input>
-            <Tooltip   content="用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”" placement="right">
+            <Tooltip  placement="right">
               <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
               <div slot="content" class="right_tool">
                 <p>资源留空等同于“Bucket名称”
@@ -519,7 +519,7 @@
         </FormItem>
         <FormItem prop="updateWhiteListValue">
           <Input :disabled="refererUpdateDisabled" v-model="updateJurisd.updateWhiteListValue" style="width:420px;" :rows="4" type="textarea"></Input>
-          <Tooltip   content="用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”" placement="right">
+          <Tooltip   placement="right">
             <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
             <div slot="content" class="right_tool">
               <p>1.白名单用于添加允许访问的来源地址 2.输入多个地址请用回车分隔，不需要写http://或https://</p>
@@ -1612,7 +1612,6 @@
       },
       //删除文件
       deleteFile(params) {
-        console.log(params);
         var name = sessionStorage.getItem("bucketName");
         let obj = {filename:'删除中',filesize:'0',hide:1,hides:1,isfile:params.isfile};
         this.fileData.splice(params._index,1,obj);
