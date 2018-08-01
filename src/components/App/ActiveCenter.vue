@@ -76,6 +76,7 @@
     beforeRouteEnter(to, from, next){
       axios.get('activity/getActivitys.do').then(response => {
         next(vm => {
+          window.scrollTo(0,0)
           vm.setData(response)
         })
       })

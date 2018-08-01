@@ -509,6 +509,7 @@
           this.$Message.info('请输入正确的验证码')
           return
         }
+        this.isemail = '1'
         if (regExp.phoneVail(this.form.loginname)) {
           this.isemail = '0'
         }

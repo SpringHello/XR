@@ -21,7 +21,7 @@
               <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;margin-right: 10px;">
             <use xlink:href="#houtaiicon-shouji"></use>
           </svg>
-              <span v-if="userInfo.phone" style="vertical-align: middle">{{userInfo.phone}}</span>
+              <span v-if="userInfo.phone||authInfo.phone" style="vertical-align: middle">{{userInfo.phone||userInfo.phone}}</span>
               <router-link v-else style="vertical-align: middle" to="/ruicloud/userCenter">点击绑定</router-link>
             </span>
           </div>

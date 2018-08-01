@@ -86,7 +86,8 @@
         zf: 'zfb',
         showModal: {
           rechargeForm: false
-        }
+        },
+        isFirstCz: false
       }
     },
     created(){
@@ -101,16 +102,20 @@
           })
         }
       })
+      this.$http.get('account/isfirstCz.do').then(response => {
+        if (response.status == 200 && response.data.result == 1) {
+          this.isFirstCz = true
+        }
+      })
     },
     methods: {
       recharge(){
-        this.$http.get('account/isfirstCz.do').then(response => {
-          if (response.status == 200 && response.data.result == 1 && this.input < 100) {
-            this.showModal.rechargeForm = true
-          } else {
-            this.rechargeOk()
-          }
-        })
+        if (this.isFirstCz && this.input < 100) {
+          this.showModal.rechargeForm = true
+          return
+        } else {
+          this.rechargeOk()
+        }
       },
       rechargeOk(){
         switch (this.zf) {
@@ -124,9 +129,6 @@
             sessionStorage.setItem('total_fee', this.input)
             break
         }
-      },
-      customerService(){
-        window.open('http://192.168.3.144/im/text/4028838b5ac815e3015ac81645f90000.html')
       },
       understand() {
         this.$router.push('active')

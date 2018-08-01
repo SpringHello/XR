@@ -65,12 +65,12 @@
                   <Input v-model="notAuth.cardAuthForm.tel" style="width:380px;"></Input>
                 </FormItem>
                 <FormItem label="图形验证码" prop="imgCode">
-                  <Input v-model="notAuth.cardAuthForm.imgCode" style="width:300px;"></Input>
+                  <Input v-model="notAuth.cardAuthForm.imgCode" style="width:280px;margin-right: 10px"></Input>
                   <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`" width="80"
                        height="30" style="vertical-align:middle;cursor:pointer">
                 </FormItem>
                 <FormItem label="验证码" prop="verificationCode">
-                  <Input v-model="notAuth.cardAuthForm.verificationCode" style="width:280px;"></Input>
+                  <Input v-model="notAuth.cardAuthForm.verificationCode" style="width:280px;margin-right: 10px;"></Input>
                   <Button type="primary" @click.prevent="sendCodePersonal"
                           :disabled="notAuth.cardAuthForm.sendCodeText !='获取验证码'">{{notAuth.cardAuthForm.sendCodeText}}
                   </Button>
@@ -89,11 +89,11 @@
                           action="file/upFile.do"
                           :on-success="IDCardFront">
                           <div v-if="notAuth.cardAuthForm.IDCardFront==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                            暂无图片
+                               style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                            <img style="height: 28px;width: 28px;margin: 0 auto;" src="../../assets/img/usercenter/uc-add.png" />
                           </div>
                           <img v-else :src="notAuth.cardAuthForm.IDCardFront">
-                          <Button type="primary">上传</Button>
+                          <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">上传文件</p>
                         </Upload>
                       </div>
                       <div style="width:130px;margin-left:20px;">
@@ -114,11 +114,11 @@
                           action="file/upFile.do"
                           :on-success="IDCardBack">
                           <div v-if="notAuth.cardAuthForm.IDCardBack==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                            暂无图片
+                               style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                            <img style="height: 28px;width: 28px;margin: 0 auto;" src="../../assets/img/usercenter/uc-add.png" />
                           </div>
                           <img v-else :src="notAuth.cardAuthForm.IDCardBack">
-                          <Button type="primary">上传</Button>
+                          <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">上传文件</p>
                         </Upload>
 
                       </div>
@@ -140,11 +140,11 @@
                           action="file/upFile.do"
                           :on-success="IDCardPerson">
                           <div v-if="notAuth.cardAuthForm.IDCardPerson==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                            暂无图片
+                               style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                            <img style="height: 28px;width: 28px;margin: 0 auto;" src="../../assets/img/usercenter/uc-add.png" />
                           </div>
                           <img v-else :src="notAuth.cardAuthForm.IDCardPerson">
-                          <Button type="primary">上传</Button>
+                          <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">上传文件</p>
                         </Upload>
                       </div>
                       <div style="width:130px;margin-left:20px;">
@@ -155,7 +155,7 @@
                     </div>
                   </FormItem>
                 </div>
-                <FormItem style="text-align: right">
+                <FormItem style="text-align: right;padding-right: 90px">
                   <Button type="primary" @click="personalAttest" style="font-size: 12px;">确认提交</Button>
                 </FormItem>
               </Form>
@@ -298,7 +298,7 @@
               <p>真实姓名<span>{{userInfo.realname}}</span>升级
                 <span style="margin:0px;color: #2A99F2;cursor:pointer" @click="currentTab='companyInfo'">企业认证</span>
               </p>
-              <p>手机号码<span>{{userInfo.phone}}</span></p>
+              <p>手机号码<span>{{authInfo.phone}}</span></p>
               <p>身份证号<span>{{authInfo.personalnumber}}</span></p>
             </div>
           </TabPane>
@@ -592,74 +592,11 @@
                   <Input v-model="notAuth.companyAuthForm.contact" placeholder="请输入联系方式" style="width: 300px;"></Input>
                 </FormItem>
                 <FormItem label="营业执照号码" prop="businessLicenseNumber">
-                  <Input v-model="notAuth.companyAuthForm.businessLicenseNumber" :maxlength="20" placeholder="请输入营业执照号码" style="width: 300px;"></Input>
+                  <Input v-model="notAuth.companyAuthForm.businessLicenseNumber" :maxlength="20" placeholder="请输入营业执照号码"
+                         style="width: 300px;"></Input>
                 </FormItem>
                 <FormItem label="上传营业执照" prop="combine">
-                  <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px">
-                    <div style="width:130px;">
-                      <Upload
-                        multiple
-                        type="drag"
-                        :show-upload-list="false"
-                        :with-credentials="true"
-                        action="file/upFile.do"
-                        :format="['jpg','jpeg','png','gif']"
-                        :max-size="4096"
-                        :on-format-error="handleFormatError"
-                        :on-exceeded-size="handleMaxSize"
-                        :on-success="combine">
-                        <div v-if="notAuth.companyAuthForm.combine==''"
-                             style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                          暂无图片
-                        </div>
-                        <img style="height: 74px" v-else :src="notAuth.companyAuthForm.combine">
-                        <Button type="primary">上传</Button>
-                      </Upload>
-                    </div>
-                    <div style="width:130px;margin-left:20px;">
-                      <img src="../../assets/img/usercenter/combine.jpg"
-                           style="width:130px;height:74px;margin-bottom: 10px;cursor: zoom-in" @click="showPicture('combine')">
-                      <p style="line-height: 32px;text-align: center">三证合一执照</p>
-                    </div>
-                  </div>
-                </FormItem>
-                <p style="margin: 0px 0px 20px 100px;">提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
-                <p class="info-title">企业法人信息<span style="position:absolute;width:1160px;height:2px;border:0.5px solid rgba(217,217,217,1);bottom: 60px;left: 0;"></span></p>
-                <FormItem label="企业法人姓名" prop="linkManName">
-                  <Input v-model="notAuth.companyAuthForm.linkManName" placeholder="请输入法人姓名" style="width: 300px;"></Input>
-                </FormItem>
-                <FormItem label="身份证号码" prop="linkManNameID">
-                  <Input v-model="notAuth.companyAuthForm.linkManNameID" placeholder="请输入法人身份证号码" style="width: 300px;"></Input>
-                </FormItem>
-                <FormItem label="上传法人证件" prop="legalPersonID">
-                  <div style="display: flex">
-                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px;margin-right: 20px">
-                      <div style="width:130px;">
-                        <Upload
-                          multiple
-                          type="drag"
-                          :show-upload-list="false"
-                          :with-credentials="true"
-                          action="file/upFile.do"
-                          :format="['jpg','jpeg','png','gif']"
-                          :max-size="4096"
-                          :on-format-error="handleFormatError"
-                          :on-exceeded-size="handleMaxSize"
-                          :on-success="legalPersonIDFront">
-                          <div v-if="notAuth.companyAuthForm.legalPersonIDFront==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                            暂无图片
-                          </div>
-                          <img style="height: 74px" v-else :src="notAuth.companyAuthForm.legalPersonIDFront">
-                          <Button type="primary">上传</Button>
-                        </Upload>
-                      </div>
-                      <div style="width:130px;margin-left:20px;">
-                        <img src="../../assets/img/usercenter/card-font.png"
-                             style="width:130px;height:74px;margin-bottom: 10px;">
-                        <p style="line-height: 32px;text-align: center">身份证人面像</p>
-                      </div>
-                    </div>
+                  <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 372px;">
                     <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px">
                       <div style="width:130px;">
                         <Upload
@@ -672,27 +609,105 @@
                           :max-size="4096"
                           :on-format-error="handleFormatError"
                           :on-exceeded-size="handleMaxSize"
-                          :on-success="legalPersonIDBack">
-                          <div v-if="notAuth.companyAuthForm.legalPersonIDBack==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                            暂无图片
+                          :on-success="combine">
+                          <div v-if="notAuth.companyAuthForm.combine==''"
+                               style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;color: #999;background-color: #FFF">
+                            <img src="../../assets/img/usercenter/uc-add.png" />
                           </div>
-                          <img style="height: 74px" v-else :src="notAuth.companyAuthForm.legalPersonIDBack">
-                          <Button type="primary">上传</Button>
+                          <img style="height: 74px" v-else :src="notAuth.companyAuthForm.combine">
+                          <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">上传文件</p>
                         </Upload>
                       </div>
                       <div style="width:130px;margin-left:20px;">
-                        <img src="../../assets/img/usercenter/card-back.png"
-                             style="width:130px;height:74px;margin-bottom: 10px;">
-                        <p style="line-height: 32px;text-align: center">示例图</p>
+                        <img src="../../assets/img/usercenter/combine.jpg"
+                             style="width:130px;height:74px;margin-bottom: 10px;cursor: zoom-in"
+                             @click="showPicture('combine')">
+                        <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">三证合一执照</p>
                       </div>
                     </div>
                   </div>
                 </FormItem>
-                <p style="margin: 0px 0px 20px 100px;">提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
-                <p class="info-title">经办人信息<span style="position:absolute;width:1160px;height:2px;border:0.5px solid rgba(217,217,217,1);bottom: 60px;left: 0;"></span></p>
+                <p style="margin: 0px 0px 20px 100px;color:rgba(0,0,0,0.43);">提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
+                <p class="info-title" style="margin-top: 70px">企业法人信息<span
+                  style="position:absolute;width:1160px;height:1px;border:0.5px solid rgb(233, 233, 233);bottom: 60px;left: 0;"></span>
+                </p>
+                <FormItem label="企业法人姓名" prop="linkManName">
+                  <Input v-model="notAuth.companyAuthForm.linkManName" placeholder="请输入法人姓名"
+                         style="width: 300px;"></Input>
+                </FormItem>
+                <FormItem label="身份证号码" prop="linkManNameID">
+                  <Input v-model="notAuth.companyAuthForm.linkManNameID" placeholder="请输入法人身份证号码"
+                         style="width: 300px;"></Input>
+                </FormItem>
+                <FormItem label="上传法人证件" prop="legalPersonID">
+                  <div style="display: flex">
+                    <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 372px;margin-right: 20px">
+                      <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px;">
+                        <div style="width:130px;">
+                          <Upload
+                            multiple
+                            type="drag"
+                            :show-upload-list="false"
+                            :with-credentials="true"
+                            action="file/upFile.do"
+                            :format="['jpg','jpeg','png','gif']"
+                            :max-size="4096"
+                            :on-format-error="handleFormatError"
+                            :on-exceeded-size="handleMaxSize"
+                            :on-success="legalPersonIDFront">
+                            <div v-if="notAuth.companyAuthForm.legalPersonIDFront==''"
+                                 style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                              <img src="../../assets/img/usercenter/uc-add.png" />
+                            </div>
+                            <img style="height: 74px" v-else :src="notAuth.companyAuthForm.legalPersonIDFront">
+                            <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">上传文件</p>
+                          </Upload>
+                        </div>
+                        <div style="width:130px;margin-left:20px;">
+                          <img src="../../assets/img/usercenter/card-font.png"
+                               style="width:130px;height:74px;margin-bottom: 10px;">
+                          <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证人面像</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 372px;">
+                      <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px">
+                        <div style="width:130px;">
+                          <Upload
+                            multiple
+                            type="drag"
+                            :show-upload-list="false"
+                            :with-credentials="true"
+                            action="file/upFile.do"
+                            :format="['jpg','jpeg','png','gif']"
+                            :max-size="4096"
+                            :on-format-error="handleFormatError"
+                            :on-exceeded-size="handleMaxSize"
+                            :on-success="legalPersonIDBack">
+                            <div v-if="notAuth.companyAuthForm.legalPersonIDBack==''"
+                                 style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                              <img src="../../assets/img/usercenter/uc-add.png" />
+                            </div>
+                            <img style="height: 74px" v-else :src="notAuth.companyAuthForm.legalPersonIDBack">
+                            <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">上传文件</p>
+                          </Upload>
+                        </div>
+                        <div style="width:130px;margin-left:20px;">
+                          <img src="../../assets/img/usercenter/card-back.png"
+                               style="width:130px;height:74px;margin-bottom: 10px;">
+                          <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证国徽面</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </FormItem>
+                <p style="margin: 0px 0px 20px 100px;color:rgba(0,0,0,0.43);">提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
+                <p class="info-title" style="margin-top: 70px">经办人信息<span
+                  style="position:absolute;width:1160px;height:1px;border:0.5px solid rgb(233, 233, 233);bottom: 60px;left: 0;"></span>
+                </p>
                 <FormItem label="经办人姓名" prop="agentName">
-                  <Input v-model="notAuth.companyAuthForm.agentName" placeholder="请输入经办人姓名" style="width: 300px;"></Input>
+                  <Input v-model="notAuth.companyAuthForm.agentName" placeholder="请输入经办人姓名"
+                         style="width: 300px;"></Input>
                 </FormItem>
                 <FormItem label="图形验证码" prop="imgCode">
                   <Input v-model="notAuth.companyAuthForm.imgCode" placeholder="请输入图形验证码" style="width: 300px"></Input>
@@ -711,14 +726,17 @@
                   </button>
                 </FormItem>
                 <FormItem label="验证码" prop="verificationCode">
-                  <Input v-model="notAuth.companyAuthForm.verificationCode" placeholder="请输入收到的验证码" style="width: 300px"></Input>
+                  <Input v-model="notAuth.companyAuthForm.verificationCode" placeholder="请输入收到的验证码"
+                         style="width: 300px"></Input>
                 </FormItem>
                 <FormItem label="身份证号码" prop="agentManID">
-                  <Input v-model="notAuth.companyAuthForm.agentManID" placeholder="请输入经办人身份证号码" style="width: 300px;"></Input>
+                  <Input v-model="notAuth.companyAuthForm.agentManID" placeholder="请输入经办人身份证号码"
+                         style="width: 300px;"></Input>
                 </FormItem>
                 <FormItem label="上传经办人证件" prop="agentID">
                   <div style="display: flex;flex-wrap: wrap;">
-                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px;margin-right: 20px">
+                    <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 372px;margin-right: 20px">
+                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px;">
                       <div style="width:130px;">
                         <Upload
                           multiple
@@ -732,19 +750,21 @@
                           :on-exceeded-size="handleMaxSize"
                           :on-success="agentIDFront">
                           <div v-if="notAuth.companyAuthForm.agentIDFront==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                            暂无图片
+                               style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                            <img src="../../assets/img/usercenter/uc-add.png" />
                           </div>
                           <img style="height: 74px" v-else :src="notAuth.companyAuthForm.agentIDFront">
-                          <Button type="primary">上传</Button>
+                          <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">上传文件</p>
                         </Upload>
                       </div>
                       <div style="width:130px;margin-left:20px;">
                         <img src="../../assets/img/usercenter/card-font.png"
                              style="width:130px;height:74px;margin-bottom: 10px;">
-                        <p style="line-height: 32px;text-align: center">身份证人面像</p>
+                        <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证人面像</p>
                       </div>
                     </div>
+                    </div>
+                    <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 372px;">
                     <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px">
                       <div style="width:130px;">
                         <Upload
@@ -759,20 +779,22 @@
                           :on-exceeded-size="handleMaxSize"
                           :on-success="agentIDBack">
                           <div v-if="notAuth.companyAuthForm.agentIDBack==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                            暂无图片
+                               style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                            <img src="../../assets/img/usercenter/uc-add.png" />
                           </div>
                           <img style="height: 74px" v-else :src="notAuth.companyAuthForm.agentIDBack">
-                          <Button type="primary">上传</Button>
+                          <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">上传文件</p>
                         </Upload>
                       </div>
                       <div style="width:130px;margin-left:20px;">
                         <img src="../../assets/img/usercenter/card-back.png"
                              style="width:130px;height:74px;margin-bottom: 10px;">
-                        <p style="line-height: 32px;text-align: center">示例图</p>
+                        <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证国徽面</p>
                       </div>
                     </div>
-                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px;margin-top: 20px">
+                    </div>
+                    <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 372px;margin-top: 20px">
+                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px;">
                       <div style="width:130px;">
                         <Upload
                           multiple
@@ -786,22 +808,23 @@
                           :on-exceeded-size="handleMaxSize"
                           :on-success="agentIDInHand">
                           <div v-if="notAuth.companyAuthForm.agentIDInHand==''"
-                               style="padding: 20px 0px;margin-bottom: 20px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
-                            暂无图片
+                               style="padding: 20px 0px;margin-bottom: 32px;height: 74px;border:1px solid #ffffff;background-color: #ffffff;color: #999;">
+                            <img src="../../assets/img/usercenter/uc-add.png" />
                           </div>
                           <img style="height: 74px" v-else :src="notAuth.companyAuthForm.agentIDInHand">
-                          <Button type="primary">上传</Button>
+                          <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;">上传文件</p>
                         </Upload>
                       </div>
                       <div style="width:130px;margin-left:20px;">
                         <img src="../../assets/img/usercenter/card-person.png"
                              style="width:130px;height:74px;margin-bottom: 10px;">
-                        <p style="line-height: 32px;text-align: center">手持身份证人面照片</p>
+                        <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">手持身份证人面照片</p>
                       </div>
+                    </div>
                     </div>
                   </div>
                 </FormItem>
-                <p style="margin: 0px 0px 20px 100px;">提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
+                <p style="margin: 0px 0px 20px 100px;color:rgba(0,0,0,0.43);">提示：上传文件支持jpg、png、gif、pdf格式，单个文件最大不超过4MB。</p>
                 <!--<FormItem label="证件类型" prop="certificateType">
                   <Select v-model="notAuth.companyAuthForm.certificateType">
                     <Option v-for="(item,index) in notAuth.companyAuthForm.certificateTypeOptions" :key="item.key"
@@ -915,7 +938,7 @@
                    </div>
                  </FormItem>
                </div>-->
-              <div style="margin-left: 100px">
+              <div style="margin-left: 100px;">
                 <Button type="primary" @click="enterpriseAttest" style="font-size: 12px;color: #FFFFFF;">确认提交</Button>
               </div>
             </Form>
@@ -1221,7 +1244,8 @@
                @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
         </p>
         <p> 验证码
-          <Input v-model="keyForm.code" placeholder="请输入验证码" style="width: 132px;margin-left: 48px;margin-right: 20px;"></Input>
+          <Input v-model="keyForm.code" placeholder="请输入验证码"
+                 style="width: 132px;margin-left: 48px;margin-right: 20px;"></Input>
           <Button type="primary" :class="{codeDisabled:keycodePlaceholder!='获取验证码'}" @click.prevent="keysendCode"
                   :disabled="keycodePlaceholder!='获取验证码'">{{keycodePlaceholder}}
           </Button>
@@ -2062,7 +2086,7 @@
         }
       }
       this.listKey()
-      if($store.state.authInfo.companyid){
+      if ($store.state.authInfo.companyid) {
         axios.post('user/getPhone.do', {
           companyId: $store.state.authInfo.companyid
         }).then(response => {
@@ -2094,18 +2118,18 @@
       this.listNotice()
       this.getContacts()
       /*if (!$store.state.accessKey) {
-      // console.log('access key')
-      // setTimeout(() => {
-      //   console.log($store.state.accessKey)
-      // }, 0);
-      // console.log($store.state)
-      // console.log($store.state.accessKey)
-      if(!$store.state.accessKey){
-        this.$Modal.confirm({
-          title: '提示',
-          content: '<p style="line-height: 16px;">尊敬的用户您好，系统检测到您当前没有可用的Access Key,请您到<span style="color: #2A99F2;cursor:pointer">Access Key管理</span>去创建Access Key。</p>',
-        });
-      }*/
+       // console.log('access key')
+       // setTimeout(() => {
+       //   console.log($store.state.accessKey)
+       // }, 0);
+       // console.log($store.state)
+       // console.log($store.state.accessKey)
+       if(!$store.state.accessKey){
+       this.$Modal.confirm({
+       title: '提示',
+       content: '<p style="line-height: 16px;">尊敬的用户您好，系统检测到您当前没有可用的Access Key,请您到<span style="color: #2A99F2;cursor:pointer">Access Key管理</span>去创建Access Key。</p>',
+       });
+       }*/
     },
     methods: {
       init() {
@@ -2210,9 +2234,7 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
-                axios.get('user/GetUserInfo.do').then(response => {
-                  this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
-                })
+                this.init()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -2242,9 +2264,7 @@
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
-                axios.get('user/GetUserInfo.do').then(response => {
-                  this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
-                })
+                this.init()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -2279,10 +2299,8 @@
             axios.post('user/enterpriseAttest.do', params).then(response => {
               if (response.status == 200 && response.data.status == 1) {
                 // 获取用户信息
-                axios.get('user/GetUserInfo.do').then(response => {
-                  this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
-                  this.currentTab = ''
-                })
+                this.init()
+                this.currentTab = ''
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -2801,7 +2819,7 @@
         })
       },
       keymodal() {
-        if(this.$store.state.authInfo){
+        if (this.$store.state.authInfo) {
           axios.post('user/createUserAcess.do', {
             zoneId: $store.state.zone.zoneid,
             token: this.token
@@ -2819,7 +2837,7 @@
               this.$Message.info(response.data.message)
             }
           })
-        } else{
+        } else {
           this.$Modal.confirm({
             title: '提示',
             content: '<p style="line-height: 16px;">尊敬的用户您好，系统检测到您当前没有认证,请您到<span style="color: #2A99F2;">用户中心</span>去进行认证</p>',
@@ -3017,7 +3035,8 @@
           bottom: 1px;
           left: 320px;
           cursor: pointer;
-          background: #4990E2;
+          background: #2A99F2;
+          border-radius: 4px;
           border: 1px solid rgba(15, 179, 250, 0.00);
           font-family: PingFangSC-Regular;
           font-size: 11px;

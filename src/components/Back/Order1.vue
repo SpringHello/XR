@@ -12,7 +12,7 @@
             <span style="font-weight: 700;margin-left: 10px;">使用优惠券（该产品有{{couponInfo.couponList.length}}张优惠券）</span>
           </Checkbox>
           <div style="margin:20px 0px;border-bottom: 1px solid rgb(233,233,233);">
-            <RadioGroup v-model="couponInfo.selectTicket">
+            <RadioGroup v-model="couponInfo.selectTicket" @on-change="radioChange">
               <Radio v-for="(item,index) in couponInfo.couponList" :label="item.operatorid" :key="item.operatorid"
                      style="display:block;margin:20px 0px;">
                 <div class="ticketInfo">
@@ -155,7 +155,8 @@
           cost: 0,
           // 最后总计支付
           totalCost: 0
-        }
+        },
+        canUseTicket: true
       }
     },
     beforeRouteEnter(to, from, next){
@@ -182,14 +183,17 @@
             data.orderId = item.ordernumber
             data.originalcost = item.originalcost
             data.cost = item.cost
+            data.discountedorders = item.discountedorders
             this.couponInfo.originCost += item.originalcost
             this.couponInfo.cost += item.cost
             this.couponInfo.totalCost += item.cost
             data._checked = true
             return data
           })
+          this.canUseTicket = this.orderData.every(item => {
+            return item.discountedorders != 1
+          })
           this.showFree = JSON.parse(response.data.result.data[0].discountmessage)
-          console.log(JSON.parse(response.data.result.data[0].discountmessage))
         }
         this.$http.get('ticket/getUserTicket.do', {
           params: {
@@ -203,6 +207,9 @@
       },
       // 选中项变化
       onSelectionChange(selection){
+        this.canUseTicket = selection.every(item => {
+          return item.discountedorders != 1
+        })
         let originCost = 0, cost = 0
         selection.forEach((item) => {
           cost += item.cost
@@ -215,7 +222,7 @@
             this.couponInfo.couponList.forEach(item => {
               if (item.operatorid == this.couponInfo.selectTicket) {
                 if (item.tickettype == 1) {
-                  this.couponInfo.totalCost = (cost * item.money).toFixed(2)
+                  this.couponInfo.totalCost = (cost * item.money / 10).toFixed(2)
                 } else if (item.tickettype == 0) {
                   this.couponInfo.totalCost = (cost - item.money).toFixed(2)
                 }
@@ -241,6 +248,12 @@
       changeCheckbox(bol){
         if (!bol) {
           this.couponInfo.selectTicket = ''
+        }
+      },
+      radioChange(){
+        if (!this.canUseTicket) {
+          this.couponInfo.selectTicket = ''
+          this.$message.info('当前订单不可使用优惠券！')
         }
       },
       // 页面支付方法
@@ -284,7 +297,7 @@
             this.couponInfo.couponList.forEach(item => {
               if (item.operatorid == this.couponInfo.selectTicket) {
                 if (item.tickettype == 1) {
-                  this.couponInfo.totalCost = (this.couponInfo.cost * item.money).toFixed(2)
+                  this.couponInfo.totalCost = (this.couponInfo.cost * item.money / 10).toFixed(2)
                 } else if (item.tickettype == 0) {
                   this.couponInfo.totalCost = (this.couponInfo.cost - item.money).toFixed(2)
                 }
