@@ -155,9 +155,9 @@
                     </div>
                   </FormItem>
                 </div>
-                <FormItem style="text-align: right;padding-right: 90px">
+                <div>
                   <Button type="primary" @click="personalAttest" style="font-size: 12px;">确认提交</Button>
-                </FormItem>
+                </div>
               </Form>
             </div>
             <!--快速认证页面-->
@@ -596,8 +596,8 @@
                          style="width: 300px;"></Input>
                 </FormItem>
                 <FormItem label="上传营业执照" prop="combine">
-                  <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 372px;">
-                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px">
+                  <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;">
+                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px">
                       <div style="width:130px;">
                         <Upload
                           multiple
@@ -641,8 +641,8 @@
                 </FormItem>
                 <FormItem label="上传法人证件" prop="legalPersonID">
                   <div style="display: flex">
-                    <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 372px;margin-right: 20px">
-                      <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px;">
+                    <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;margin-right: 20px">
+                      <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px;">
                         <div style="width:130px;">
                           <Upload
                             multiple
@@ -666,12 +666,12 @@
                         <div style="width:130px;margin-left:20px;">
                           <img src="../../assets/img/usercenter/card-font.png"
                                style="width:130px;height:74px;margin-bottom: 10px;">
-                          <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证人面像</p>
+                          <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证人像面</p>
                         </div>
                       </div>
                     </div>
-                    <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 372px;">
-                      <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px">
+                    <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;">
+                      <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px">
                         <div style="width:130px;">
                           <Upload
                             multiple
@@ -735,8 +735,8 @@
                 </FormItem>
                 <FormItem label="上传经办人证件" prop="agentID">
                   <div style="display: flex;flex-wrap: wrap;">
-                    <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 372px;margin-right: 20px">
-                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px;">
+                    <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;margin-right: 20px">
+                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px;">
                       <div style="width:130px;">
                         <Upload
                           multiple
@@ -760,12 +760,12 @@
                       <div style="width:130px;margin-left:20px;">
                         <img src="../../assets/img/usercenter/card-font.png"
                              style="width:130px;height:74px;margin-bottom: 10px;">
-                        <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证人面像</p>
+                        <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">身份证人像面</p>
                       </div>
                     </div>
                     </div>
-                    <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 372px;">
-                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px">
+                    <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;margin-right: 20px;">
+                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px">
                       <div style="width:130px;">
                         <Upload
                           multiple
@@ -793,8 +793,8 @@
                       </div>
                     </div>
                     </div>
-                    <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 372px;margin-top: 20px">
-                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 350px;">
+                    <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;margin-top: 20px">
+                    <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px;">
                       <div style="width:130px;">
                         <Upload
                           multiple
@@ -818,7 +818,7 @@
                       <div style="width:130px;margin-left:20px;">
                         <img src="../../assets/img/usercenter/card-person.png"
                              style="width:130px;height:74px;margin-bottom: 10px;">
-                        <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">手持身份证人面照片</p>
+                        <p style="line-height: 32px;text-align: center;color:rgba(0,0,0,0.43);">手持身份证人像面照片</p>
                       </div>
                     </div>
                     </div>
