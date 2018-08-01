@@ -892,7 +892,7 @@
           }
         }).then(res => {
           if (res.data.status == 1) {
-            this.freezeTime = res.data.result.startTime + ' ' + res.data.result.startTime
+            this.freezeTime = res.data.result.startTime + ' ' + res.data.result.endTime
           }
         })
       },
