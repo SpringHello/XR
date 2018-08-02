@@ -231,26 +231,26 @@
     >
       <p style="font-size:14px;color:#999999;line-height: 20px;margin:10px 0;">控制台上传单个文件大小不超过1GB，如需上传更大的文件请使用新睿云对象存储提供的<span
         style="color:#2A9AF3;cursor:pointer;">API</span></p>
-      <!--<p style="font-size:14px;color:#666666;margin:10px 0;">上传路径 <span v-for="item in uploadList" :key="item.index">{{item.name}}/</span></p>-->
+      <p style="font-size:14px;color:#666666;margin:10px 0;">上传路径 {{routeName == undefined || routeName == "" ? '根目录':routeName}}/</p>
       <p style="text-align: right;color: #999999;">{{uploadList.length}}/24</p>
-      <div class="upload_div">
-        <span>待上传文件</span>
-        <span>大小</span>
-        <span>状态</span>
-        <span>操作</span>
-      </div>
-      <div class="upload_Box" >
+      <div class="upload_Box">
+        <div class="upload_div">
+          <span>待上传文件</span>
+          <span>大小</span>
+          <span>状态</span>
+          <span>操作</span>
+        </div>
         <!--<cunt ref="upload"-->
-          <!--:onSuccess="handleSuccess"-->
-           <!--:onFileProcess="handleUpload"-->
-            <!--:onError="handleError"-->
-          <!--:data="fileUpdata"-->
-          <!--action="http://192.168.3.95:8086/ruirados/object/uploadObject.do">-->
-          <!--<div class="upload_text">-->
-            <!--<Icon type="ios-upload-outline"></Icon>-->
-            <!--<span>选择文件</span>-->
-            <!--<p style="margin-top:5px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>-->
-          <!--</div>-->
+        <!--:onSuccess="handleSuccess"-->
+        <!--:onFileProcess="handleUpload"-->
+        <!--:onError="handleError"-->
+        <!--:data="fileUpdata"-->
+        <!--action="http://192.168.3.95:8086/ruirados/object/uploadObject.do">-->
+        <!--<div class="upload_text">-->
+        <!--<Icon type="ios-upload-outline"></Icon>-->
+        <!--<span>选择文件</span>-->
+        <!--<p style="margin-top:5px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>-->
+        <!--</div>-->
         <!--</cunt>-->
         <Upload
           ref="upload"
@@ -268,6 +268,7 @@
           type="drag"
           action="object/uploadObject.do"
           class="upload_model"
+          v-if="uploadList.length == 0"
         >
           <div class="upload_text">
             <Icon type="ios-upload-outline"></Icon>
@@ -275,7 +276,7 @@
             <p style="margin-top:10px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>
           </div>
         </Upload>
-        <div class="upload_list" v-for="(item,index) in uploadList" v-if="item.status == 'uploading'">
+        <div class="upload_list" v-for="(item,index) in uploadList" v-else>
           <div>
             <span :title='item.name'>{{item.name}}</span>
           </div>
@@ -285,17 +286,17 @@
           <div>
             <i-progress  :percent="item.percentage"  style="width: 90%;" :stroke-width="6" hide-info></i-progress>
             <!--<div style="display: flex;height: 19px;width: 100%;">-->
-              <!--<span style="width: 55px;">{{fist}}{{unText}}</span><span style="width: 125px;color: #999999;font-size:12px;">剩余时间{{listTime}}</span>-->
+            <!--<span style="width: 55px;">{{fist}}{{unText}}</span><span style="width: 125px;color: #999999;font-size:12px;">剩余时间{{listTime}}</span>-->
             <!--</div>-->
           </div>
-         <div>
-           <!--<span style="margin-right: 20px;cursor: pointer;" @click="stop = 1">暂停</span>-->
-           <!--<span style="cursor: pointer;" @click="deleteUpload(index)">删除</span>-->
-         </div>
+          <div>
+            <!--<span style="margin-right: 20px;cursor: pointer;" @click="stop = 1">暂停</span>-->
+            <!--<span style="cursor: pointer;" @click="deleteUpload(index)">删除</span>-->
+          </div>
         </div>
-
       </div>
-
+      <br/>
+      <hr color="#D8D8D8" size=1/>
     </Modal>
 
     <!-- 新建文件夹 -->
@@ -373,12 +374,16 @@
               <!--<Radio label='1'>自定义用户</Radio>-->
             </RadioGroup>
             <Input :disabled='grant' v-model="jurisdValidate.grantValue" style="width:420px;" :rows="4" type="textarea"/>
-            <Tooltip   placement="right">
-             <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
-              <div slot="content" class="right_tool">
-                <p>用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”</p>
+            <Icon style="color:#2A99F2;" type="ios-help-outline" @mouseover.native="toopHide(6)" @mouseout.native="toopHide(0)"></Icon>
+            <transition name="fade">
+              <div class="tooltip-popper" style="top:34px;" v-if="isToolHide == 6">
+                <div class="tooltip-center">
+                  <div class="tooltip-arrow"></div>
+                  <div class="tooltip">用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”
+                  </div>
+                </div>
               </div>
-            </Tooltip>
+            </transition>
           </div>
         </FormItem>
         <FormItem label="密码接收渠道" prop="channel">
@@ -400,16 +405,20 @@
               <Radio label='1'>可操作</Radio>
             </RadioGroup>
             <Input v-model="jurisdValidate.influenceValue" style="width:420px;" :rows="4" type="textarea"/>
-            <Tooltip  placement="right">
-            <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
-              <div slot="content" class="right_tool">
-                <p>资源留空等同于“Bucket名称”
-                  资源如果只有1个斜杠，不能以斜杠结尾
-                  资源可以设置多个，每行1个；每行最多1个通配符
-                  （*），并且以通配符结尾。最多增加10条记录
-                  示例:myfolder/object</p>
+            <Icon style="color:#2A99F2;" type="ios-help-outline" @mouseover.native="toopHide(7)" @mouseout.native="toopHide(0)"></Icon>
+            <transition name="fade">
+              <div class="tooltip-popper" style="top:16px" v-if="isToolHide == 7">
+                <div class="tooltip-center">
+                  <div class="tooltip-arrow"></div>
+                  <div class="tooltip">资源留空等同于“Bucket名称”
+                    资源如果只有1个斜杠，不能以斜杠结尾
+                    资源可以设置多个，每行1个；每行最多1个通配符
+                    （*），并且以通配符结尾。最多增加10条记录
+                    示例:myfolder/object
+                  </div>
+                </div>
               </div>
-            </Tooltip>
+            </transition>
           </div>
         </FormItem>
         <FormItem>
@@ -422,12 +431,16 @@
         </FormItem>
         <FormItem prop="whiteListValue">
           <Input :disabled="refererDisabled"  v-model="jurisdValidate.whiteListValue" style="width:420px;" :rows="4" type="textarea"/>
-          <Tooltip   placement="right">
-          <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
-            <div slot="content" class="right_tool">
-              <p>1.白名单用于添加允许访问的来源地址 2.输入多个地址请用回车分隔，不需要写http://或https://</p>
+          <Icon style="color:#2A99F2;" type="ios-help-outline" @mouseover.native="toopHide(8)" @mouseout.native="toopHide(0)"></Icon>
+          <transition name="fade">
+            <div class="tooltip-popper" style="top:10px" v-if="isToolHide == 8">
+              <div class="tooltip-center">
+                <div class="tooltip-arrow"></div>
+                <div class="tooltip">1.白名单用于添加允许访问的来源地址 2.输入多个地址请用回车分隔，不需要写http://或https://
+                </div>
+              </div>
             </div>
-          </Tooltip>
+          </transition>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -469,12 +482,16 @@
               <!--<Radio label="1">自定义用户</Radio>-->
             </RadioGroup>
             <Input :disabled='updategrant' v-model="updateJurisd.updateGrantValue" style="width:420px;" :rows="4" type="textarea"></Input>
-            <Tooltip   placement="right">
-              <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
-              <div slot="content" class="right_tool">
-                <p>用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”</p>
-              </div>
-            </Tooltip>
+              <Icon style="color:#2A99F2;" type="ios-help-outline" @mouseover.native="toopHide(6)" @mouseout.native="toopHide(0)"></Icon>
+              <transition name="fade">
+                <div class="tooltip-popper" style="top:34px;" v-if="isToolHide == 6">
+                  <div class="tooltip-center">
+                    <div class="tooltip-arrow"></div>
+                    <div class="tooltip">用户ID可以在用户中心查看：点击查看 可以设置多个用户ID，每行1个用户ID；“*”代表所有用户，最多支持1个“*”
+                    </div>
+                  </div>
+                </div>
+              </transition>
           </div>
         </FormItem>
         <FormItem prop="updateChannel">
@@ -497,16 +514,20 @@
               <Radio label="1">可操作</Radio>
             </RadioGroup>
             <Input v-model="updateJurisd.updateInfluenceValue" style="width:420px;" :rows="4" type="textarea"></Input>
-            <Tooltip  placement="right">
-              <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
-              <div slot="content" class="right_tool">
-                <p>资源留空等同于“Bucket名称”
-                  资源如果只有1个斜杠，不能以斜杠结尾
-                  资源可以设置多个，每行1个；每行最多1个通配符
-                  （*），并且以通配符结尾。最多增加10条记录
-                  示例:myfolder/object</p>
-              </div>
-            </Tooltip>
+              <Icon style="color:#2A99F2;" type="ios-help-outline" @mouseover.native="toopHide(7)" @mouseout.native="toopHide(0)"></Icon>
+              <transition name="fade">
+                <div class="tooltip-popper" style="top:16px" v-if="isToolHide == 7">
+                  <div class="tooltip-center">
+                    <div class="tooltip-arrow"></div>
+                    <div class="tooltip">资源留空等同于“Bucket名称”
+                      资源如果只有1个斜杠，不能以斜杠结尾
+                      资源可以设置多个，每行1个；每行最多1个通配符
+                      （*），并且以通配符结尾。最多增加10条记录
+                      示例:myfolder/object
+                    </div>
+                  </div>
+                </div>
+              </transition>
           </div>
         </FormItem>
         <FormItem>
@@ -519,12 +540,16 @@
         </FormItem>
         <FormItem prop="updateWhiteListValue">
           <Input :disabled="refererUpdateDisabled" v-model="updateJurisd.updateWhiteListValue" style="width:420px;" :rows="4" type="textarea"></Input>
-          <Tooltip   placement="right">
-            <Icon style="color:#2A99F2;" type="ios-help-outline"></Icon>
-            <div slot="content" class="right_tool">
-              <p>1.白名单用于添加允许访问的来源地址 2.输入多个地址请用回车分隔，不需要写http://或https://</p>
-            </div>
-          </Tooltip>
+            <Icon style="color:#2A99F2;" type="ios-help-outline" @mouseover.native="toopHide(8)" @mouseout.native="toopHide(0)"></Icon>
+            <transition name="fade">
+              <div class="tooltip-popper" style="top:10px" v-if="isToolHide == 8">
+                <div class="tooltip-center">
+                  <div class="tooltip-arrow"></div>
+                  <div class="tooltip">1.白名单用于添加允许访问的来源地址 2.输入多个地址请用回车分隔，不需要写http://或https://
+                  </div>
+                </div>
+              </div>
+            </transition>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -663,6 +688,7 @@
     export default {
     data() {
       return {
+        isToolHide:0,
         //密码接受渠道是否禁用
         channelTop:false,
         channelBottom:false,
@@ -783,6 +809,7 @@
         currentId:'',
         //后端返回的路径
         readFileObject:[],
+        routeName:'',
         //文件列表表头
         fileList: [
           {
@@ -828,6 +855,7 @@
                     on: {
                       click: () => {
                         //清空搜索文件的名称
+                        this.routeName = params.row.filename;
                         this.filename = "";
                         var object = new Object();
                         object.src = params.row.filename;
@@ -1099,9 +1127,9 @@
                           this.updateJurisd.updateChannel.push(name);
                         }
                       })
-                      console.log(this.updateJurisd);
                       this.updateJurisd.updateWhiteListValue = obj.row.refererip;
                       this.code = obj.row.code;
+                      this.updateChannelAggregate();
                       this.usersClick();
                     }
                   }
@@ -1512,6 +1540,10 @@
       },
       //上传文件之前应用的方法
       handleBeforeUpload(file) {
+        if(this.uploadList.length>24){
+          this.$Message.info('最多一次性上传24个文件');
+          return false;
+        }
         // let reg = /^[\a-z\A-Z\0-9\u4e00-\u9fa5\w\d]{1,20}$/
         // if (!reg.test(file.name)) {
         //   this.$Message.info('文件名不能超过20个字符');
@@ -1523,11 +1555,13 @@
         const files = this.$refs.upload.fileList;
         if (response.status == '1') {
           this.$Message.success('上传成功');
-          this.$refs.upload.fileList.splice(files.indexOf(file), 1);
+          this.uploadList.split(file.indexOf(file),1);
+          // this.$refs.upload.fileList.splice(files.indexOf(file), 1);
           this.filesList(this.fileUpdata.dirId);
           this.getAllsize();
         } else {
-          this.$refs.upload.fileList.splice(files.indexOf(file), 1);
+          this.uploadList.split(file.indexOf(file),1);
+          // this.$refs.upload.fileList.splice(files.indexOf(file), 1);
           this.$Message.info(response.msg);
         }
       },
@@ -1759,6 +1793,9 @@
             this.$Message.info(res.data.msg);
             this.selectAclAll();
           }
+        }).catch(error =>{
+          this.$Message.info('平台出小差了');
+          this.selectAclAll();
         })
       },
       //修改自定义权限
@@ -2114,6 +2151,9 @@
           m='0'+m;
         }
         this.endTime = y+'/'+m+'/'+d;
+      },
+      toopHide(value){
+        this.isToolHide = value;
       }
     },
     created(){
@@ -2408,11 +2448,13 @@
   }
   .upload_Box{
     height: 200px;
-    border-bottom:1px solid #E9E9E9;
     overflow: auto;
+    border-right: 1px solid #E9E9E9;
+    border-left: 1px solid #E9E9E9;
+    border-bottom: 1px solid #E9E9E9;
   }
   .upload_Box::-webkit-scrollbar {/*滚动条整体样式*/
-    width: 10px;     /*高宽分别对应横竖滚动条的尺寸*/
+    width: 6px;     /*高宽分别对应横竖滚动条的尺寸*/
     height: 1px;
   }
   .upload_Box::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
@@ -2445,6 +2487,7 @@
   .upload_list{
     display: flex;
     height: 50px;
+    padding:5px;
     div:nth-child(1){
       width: 26%;
       height: 25px;
@@ -2475,7 +2518,7 @@
   }
   .upload_div {
     display: flex;
-    background-color: #f5f5f5;
+    background-color: #E9E9E9;
     span:nth-child(1) {
       width: 26%;
       height: 25px;
@@ -2624,7 +2667,42 @@
     }
   }
 
-  .red{
-    border:1px solid #ed3f14;
+  .tooltip {
+    max-width: 250px;
+    width: 211px;
+    min-height: 34px;
+    padding: 8px 12px;
+    color: #fff;
+    text-align: left;
+    text-decoration: none;
+    background-color: rgba(70, 76, 91, 0.9);
+    border-radius: 4px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  .tooltip-popper {
+    position: absolute;
+    top: -1px;
+    left: 437px;
+    will-change: top, left;
+    display: block;
+    visibility: visible;
+    font-size: 12px;
+    line-height: 1.5;
+    z-index: 1060;
+    padding: 0 5px 0 8px;
+  }
+
+  .tooltip-arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    top: 50%;
+    margin-top: -5px;
+    left: 3px;
+    border-width: 5px 5px 5px 0;
+    border-right-color: rgba(70, 76, 91, 0.9);
   }
 </style>
