@@ -463,6 +463,7 @@
   .background {
     background-color: #f5f5f5;
     width: 100%;
+    min-width: 1600px;
     /*
         less 处理css计算属性calc有bug
         申明变量diff，可正常使用
@@ -470,8 +471,6 @@
     @diff: 101px;
     min-height: calc(~"100% - @{diff}");
     .wrapper {
-      width: 1200px;
-      margin: 0px auto;
       & > span {
         font-family: Microsoft Yahei, 微软雅黑;
         font-size: 12px;
@@ -493,7 +492,7 @@
           display: flex;
           justify-content: space-between;
           .form {
-            width: 35%;
+            width: 59%;
             .submit {
               font-family: Microsoft Yahei, 微软雅黑;
               font-size: 12px;

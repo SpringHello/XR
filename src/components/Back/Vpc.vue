@@ -25,64 +25,66 @@
         </div>
         <Tabs type="card" :animated="false" v-model="paneStatus.vpc">
           <TabPane label="虚拟私有云VPC" name="VPC">
-            <div class="operator-bar">
-              <Button type="primary" @click="openNewVpcModal">新建VPC</Button>
-              <Button type="primary" @click="showModal.addGateway = true">添加VPC互通网关</Button>
-              <!--<Button type="primary">修改VPC</Button>-->
-              <Button type="primary" @click="delVpc">删除VPC</Button>
-            </div>
-            <div class="card-wrap">
-              <div class="card" v-for="(item,index) in netData" :key="index" :class="{active:item._select}"
-                   @click="radio(item)">
-                <div class="content">
-                  <div class="item-wrap">
-                    <div class="item item1">
-                      <p>名称：<span style="float:unset">{{item.status==2?'创建中':item.status==3?'删除中':item.vpcname}}</span>
-                        <Spin size="small" v-if="item.status!=1" style="display: inline-block"></Spin>
-                      </p>
-                      <p>网段：<span>{{item.cidr}}</span></p>
-                    </div>
-                  </div>
-                  <div class="item-wrap">
-                    <div class="item" @click="manage(item)" style="cursor:pointer"><p>路由器（VPC）：<span>1</span></p></div>
-                    <span class="dotted-across"></span>
-                  </div>
-                  <div class="item-wrap">
-                    <div class="item" v-if="item.status === 2 || item.status === 3"><p>交换机（子网）：<span>{{item.networkCount}}</span>
-                    </p></div>
-                    <div class="item" @click="manage(item)" style="cursor: pointer" v-else><p>交换机（子网）：<span>{{item.networkCount}}</span>
-                    </p></div>
-                    <span class="dotted-vertical"></span>
-                    <router-link to="host">
-                      <div class="item item4"><p>弹性云主机：<span>{{item.computerCount}}</span></p></div>
-                    </router-link>
-                  </div>
-                  <div class="item-wrap">
-                    <router-link to="firewall" style="display:inline-block;width:265px;">
-                      <div class="item"><p>防火墙：<span>{{item.aclCount}}</span></p></div>
-                    </router-link>
-                  </div>
-                </div>
-                <div class="card-bottom">
-                  <div v-if="item.status!=2">
-                    <Button type="primary" class="btn-bgwhite" @click="restartVpc(item)">重启</Button>
-                    <Button type="primary" @click="manage(item)">管理</Button>
-                  </div>
-                </div>
-              </div>
-              <div class="logo" v-if="netData.length === 0">
-                <span>暂无VPC数据</span>
-              </div>
-            </div>
+            <!--<div class="operator-bar">-->
+              <!--<Button type="primary" @click="openNewVpcModal">新建VPC</Button>-->
+              <!--<Button type="primary" @click="showModal.addGateway = true">添加VPC互通网关</Button>-->
+              <!--&lt;!&ndash;<Button type="primary">修改VPC</Button>&ndash;&gt;-->
+              <!--<Button type="primary" @click="delVpc">删除VPC</Button>-->
+            <!--</div>-->
+            <!--<div class="card-wrap">-->
+              <!--<div class="card" v-for="(item,index) in netData" :key="index" :class="{active:item._select}"-->
+                   <!--@click="radio(item)">-->
+                <!--<div class="content">-->
+                  <!--<div class="item-wrap">-->
+                    <!--<div class="item item1">-->
+                      <!--<p>名称：<span style="float:unset">{{item.status==2?'创建中':item.status==3?'删除中':item.vpcname}}</span>-->
+                        <!--<Spin size="small" v-if="item.status!=1" style="display: inline-block"></Spin>-->
+                      <!--</p>-->
+                      <!--<p>网段：<span>{{item.cidr}}</span></p>-->
+                    <!--</div>-->
+                  <!--</div>-->
+                  <!--<div class="item-wrap">-->
+                    <!--<div class="item" @click="manage(item)" style="cursor:pointer"><p>路由器（VPC）：<span>1</span></p></div>-->
+                    <!--<span class="dotted-across"></span>-->
+                  <!--</div>-->
+                  <!--<div class="item-wrap">-->
+                    <!--<div class="item" v-if="item.status === 2 || item.status === 3"><p>交换机（子网）：<span>{{item.networkCount}}</span>-->
+                    <!--</p></div>-->
+                    <!--<div class="item" @click="manage(item)" style="cursor: pointer" v-else><p>交换机（子网）：<span>{{item.networkCount}}</span>-->
+                    <!--</p></div>-->
+                    <!--<span class="dotted-vertical"></span>-->
+                    <!--<router-link to="host">-->
+                      <!--<div class="item item4"><p>弹性云主机：<span>{{item.computerCount}}</span></p></div>-->
+                    <!--</router-link>-->
+                  <!--</div>-->
+                  <!--<div class="item-wrap">-->
+                    <!--<router-link to="firewall" style="display:inline-block;width:265px;">-->
+                      <!--<div class="item"><p>防火墙：<span>{{item.aclCount}}</span></p></div>-->
+                    <!--</router-link>-->
+                  <!--</div>-->
+                <!--</div>-->
+                <!--<div class="card-bottom">-->
+                  <!--<div v-if="item.status!=2">-->
+                    <!--<Button type="primary" class="btn-bgwhite" @click="restartVpc(item)">重启</Button>-->
+                    <!--<Button type="primary" @click="manage(item)">管理</Button>-->
+                  <!--</div>-->
+                <!--</div>-->
+              <!--</div>-->
+              <!--<div class="logo" v-if="netData.length === 0">-->
+                <!--<span>暂无VPC数据</span>-->
+              <!--</div>-->
+            <!--</div>-->
+            <privateVPC :index="false"></privateVPC>
           </TabPane>
           <TabPane label="NAT网关" name="NAT">
-            <div class="operator-bar">
-              <Button type="primary" @click="openAddNatModal">添加NAT网关</Button>
-              <Button type="primary" @click="openDeleteNatModal">删除NAT网关</Button>
-              <Button type="primary" @click="natbindIps">续费</Button>
-              <Button type="primary" @click="ratesChange">资费变更</Button>
-            </div>
-            <Table :columns="natColumns" :data="natData" @radio-change="selectNAT"></Table>
+            <!--<div class="operator-bar">-->
+              <!--<Button type="primary" @click="openAddNatModal">添加NAT网关</Button>-->
+              <!--<Button type="primary" @click="openDeleteNatModal">删除NAT网关</Button>-->
+              <!--<Button type="primary" @click="natbindIps">续费</Button>-->
+              <!--<Button type="primary" @click="ratesChange">资费变更</Button>-->
+            <!--</div>-->
+            <!--<Table :columns="natColumns" :data="natData" @radio-change="selectNAT"></Table>-->
+            <gatewayNAT :index="false"></gatewayNAT>
           </TabPane>
         </Tabs>
       </div>
@@ -420,7 +422,7 @@
       </div>
     </Modal>
   </div>
-  
+
 </template>
 
 <script type="text/ecmascript-6">
@@ -429,6 +431,8 @@
   import $store from '@/vuex'
   import regExp from '../../util/regExp'
   import {mapState} from 'vuex'
+  import privateVPC from '../../components/Back/privateVPC'
+  import gatewayNAT from  '../../components/Back/gatewayNAT'
   export default {
     name: 'vpc',
     data() {
@@ -856,6 +860,10 @@
         customTimeOptions
       }
     },
+    components:{
+      privateVPC,
+      gatewayNAT
+    },
     beforeRouteEnter(to, from, next) {
       var zoneId = $store.state.zone.zoneid
       // 获取vpc数据
@@ -1005,7 +1013,7 @@
          }
       },
       // 查询nat网关下的ip
-      natbindIps() { 
+      natbindIps() {
         if (this.select == null) {
           this.$Message.info('请先选择一个网关')
           return false

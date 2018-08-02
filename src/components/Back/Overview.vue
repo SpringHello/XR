@@ -2,6 +2,14 @@
   <div id="overview">
     <div id="wrapper">
       <span id="title">总览</span>
+
+      <div>
+        <Row>
+          <Col span="8">col-8</Col>
+          <Col span="8" offset="8">col-8 | offset-8</Col>
+        </Row>
+      </div>
+
       <div id="head-info">
         <div style="width:346px">
           <span class="universal-mini" style="font-size: 14px">欢迎您：</span>
@@ -54,7 +62,7 @@
           <div class="wrapper">
             <div class="item" v-for="(item,index) in source" :key="index">
               <p class="universal-middle">
-                <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;">
+                <svg class="icon" aria-hidden="true" style="width: 20px;height: 20px;vertical-align: middle;">
                   <use :xlink:href="sourceIcon[index]"></use>
                 </svg>
                 {{item.name}}
@@ -140,7 +148,6 @@
           </div>
           <div>
             <Carousel v-model="currentCarouse">
-
               <CarouselItem v-for="(item,index) in ads" :key="index">
                 <a :href="item.url" target="_blank">
                   <img :src="item.pictureurl">
@@ -429,14 +436,18 @@
         申明变量diff，可正常使用
       */
     @diff: 101px;
+    margin: 0 auto;
     min-height: calc(~"100% - @{diff}");
     #wrapper {
+
+      //width: 1200px;
+      /*margin: 0px auto;*/
       #title {
         font-size: 12px;
         color: rgba(17, 17, 17, 0.43);
         line-height: 22px;
         display: inline-block;
-        margin: 10px 0px;
+        margin: 10px 10px;
       }
       #head-info {
         display: flex;

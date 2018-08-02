@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 100%;margin-top: 20px;min-width: 1600px;">
        <div class="center_chart">
                             <div style="display:flex;border-bottom:1px solid #E9E9E9;padding-bottom:5px;">
                                 <div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>
@@ -37,7 +37,7 @@
                                 </div>
                             </div>
                             <chart class="echarts" :options="rwPolar"></chart>
-                        </div>    
+                        </div>
                         <div class="center_chart">
                             <div style="display:flex;border-bottom:1px solid #E9E9E9;padding-bottom:5px;margin-top:50px;">
                                 <div style="width:50%;font-size:16px;color:#333333;">Put请求情况</div>
@@ -57,7 +57,7 @@
                                 </div>
                             </div>
                             <chart class="echarts" :options="rwPolar"></chart>
-                        </div>      
+                        </div>
   </div>
 </template>
 

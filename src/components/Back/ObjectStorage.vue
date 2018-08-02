@@ -1,5 +1,5 @@
 <template>
-     <div class="centerBox">
+     <div id="background">
         <div class="objectBox">
              <span class="text">云存储/云硬盘</span>
              <div class="center">
@@ -266,15 +266,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.centerBox {
-  background-color: #f5f5f5;
-  width: 100%;
-  padding: 0;
-  margin: 0;
-  font-family: MicrosoftYaHei;
+
   .objectBox {
-    width: 1200px;
-    margin: 0 auto;
     .text {
       padding: 10px 0;
       display: block;
@@ -311,7 +304,7 @@ export default {
         font-size: 14px;
       }
       .center_space {
-        width: 1160px;
+        width: 100%;
         padding: 6px 0;
         border-bottom: 1px solid #d9d9d9;
         height: 90px;
@@ -357,7 +350,7 @@ export default {
       }
     }
   }
-}
+
  .objectList {
       width:165%;
       font-family: PingFangSC;

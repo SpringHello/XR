@@ -7,7 +7,7 @@
     <div id="wrapper">
       <span class="title">
         云网络 /
-         <span>VPN</span>
+         <span>虚拟专网VPN</span>
       </span>
       <Alert type="warning" show-icon style="margin-bottom:10px" v-if="!auth">您尚未进行实名认证，只有认证用户才能对外提供服务，
         <router-link to="/ruicloud/userCenter">立即认证</router-link>
@@ -26,22 +26,24 @@
 
         <Tabs type="card" :animated="false" v-model="paneStatus.vpn">
           <TabPane label="远程接入" name="remote">
-            <div class="operator-bar">
-              <Button type="primary" @click="newRemoteAccess">创建VPN接入点</Button>
-              <Button type="primary" @click="delRemoteAccess">挂断VPN接入</Button>
-              <Table :columns="remoteVpnColumns" :data="remoteVpnData" @radio-change="remoteRadio"
-                     style="margin-top:20px;"></Table>
-            </div>
+            <!--<div class="operator-bar">-->
+              <!--<Button type="primary" @click="newRemoteAccess">创建VPN接入点</Button>-->
+              <!--<Button type="primary" @click="delRemoteAccess">挂断VPN接入</Button>-->
+              <!--<Table :columns="remoteVpnColumns" :data="remoteVpnData" @radio-change="remoteRadio"-->
+                     <!--style="margin-top:20px;"></Table>-->
+            <!--</div>-->
+            <remoteAccess :index="false"></remoteAccess>
           </TabPane>
           <TabPane label="隧道VPN" name="VPN">
-            <div class="operator-bar">
-              <Button type="primary" @click="newTunnelVpn">创建隧道</Button>
-              <!--<Button type="primary">重启隧道</Button>-->
-              <Button type="primary" @click="delTunnelVpn">删除隧道</Button>
-              <Button type="primary" @click="restartVpn">重启连接</Button>
-              <Table :columns="tunnelVpnColumns" :data="tunnelVpnData" @radio-change="tunnelRadio"
-                     style="margin-top:20px;"></Table>
-            </div>
+            <!--<div class="operator-bar">-->
+              <!--<Button type="primary" @click="newTunnelVpn">创建隧道</Button>-->
+              <!--&lt;!&ndash;<Button type="primary">重启隧道</Button>&ndash;&gt;-->
+              <!--<Button type="primary" @click="delTunnelVpn">删除隧道</Button>-->
+              <!--<Button type="primary" @click="restartVpn">重启连接</Button>-->
+              <!--<Table :columns="tunnelVpnColumns" :data="tunnelVpnData" @radio-change="tunnelRadio"-->
+                     <!--style="margin-top:20px;"></Table>-->
+            <!--</div>-->
+            <tunnelVPN :index="false"></tunnelVPN>
           </TabPane>
         </Tabs>
       </div>
@@ -393,6 +395,8 @@
   import $store from '@/vuex'
   import regExp from '../../util/regExp'
   import {mapState} from 'vuex'
+  import remoteAccess from '../../components/Back/remoteAccess'
+  import tunnelVPN from '../../components/Back/tunnelVPN'
   export default{
     beforeRouteEnter(from, to, next){
       // 远程接入列表
@@ -413,6 +417,10 @@
           vm.initCustomerData(values[1])
         })
       })
+    },
+    components:{
+      remoteAccess,
+      tunnelVPN
     },
     data(){
       const validaRegisteredName = regExp.validaRegisteredName

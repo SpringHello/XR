@@ -87,7 +87,7 @@ const Firewall = () => import('@/components/Back/Firewall')
 const Disk = () => import('@/components/Back/Disk')
 const DiskBackup = () => import('@/components/Back/DiskBackup')
 const DiskParticulars = () => import('@/components/Back/DiskParticulars')
-//const ObjectStorage = () => import('@/components/Back/ObjectStorage')
+const ObjectStorage = () => import('@/components/Back/ObjectStorage')
 const Vpc = () => import('@/components/Back/Vpc')
 const VpcManage = () => import('@/components/Back/VpcManage')
 const Vpn = () => import('@/components/Back/Vpn')
@@ -119,6 +119,15 @@ const CloudDatabaseBackup = () => import('@/components/Back/CloudDatabaseBackup'
 const CloudDatabase = () => import('@/components/Back/CloudDatabase')
 const CloudDataManage = () => import('@/components/Back/CloudDataManage')
 const CloudDatabaseMirror = () => import('@/components/Back/CloudDatabaseMirror')
+
+const tabOne = () => import('@/myView/objectStrorage/tabOne')
+const tabTwo = () => import('@/myView/objectStrorage/tabTwo')
+const tabThree = () => import('@/myView/objectStrorage/tabThree')
+
+const remoteAccess = () => import('@/components/Back/remoteAccess')
+const tunnelVPN = () => import('@/components/Back/tunnelVPN')
+const privateVPC = () => import('@/components/Back/privateVPC')
+const gatewayNAT = () => import('@/components/Back/gatewayNAT')
 
 // 帮助文档路由
 const computed = () => import('@/components/App/doc/computed')
@@ -676,7 +685,7 @@ var router = new Router({
         {path: 'disk', name: 'disk', component: Disk},
         {path: 'diskBackup', name: 'diskBackup', component: DiskBackup},
         {path: 'diskParticulars', name: 'diskParticulars', component: DiskParticulars},
-        //{path:'objectStorage',name:'objectStorage',component:ObjectStorage},
+        {path:  'ObjectStorage',name:'ObjectStorage',component:ObjectStorage},
         {path: 'snapshot', name: 'snapshot', component: Snapshot},
         {path: 'firewall', name: 'firewall', component: Firewall},
         {path: 'new', name: 'new', component: New},
@@ -708,7 +717,14 @@ var router = new Router({
         {path: 'cloudDataManage', name: 'cloudDataManage', component: CloudDataManage},
         {path: 'cloudDatabaseBackup', name: 'cloudDatabaseBackup', component: CloudDatabaseBackup},
         {path: 'cloudDatabaseMirror', name: 'cloudDatabaseMirror', component: CloudDatabaseMirror},
-        {path: 'cloudDatabase', name: 'cloudDatabase', component: CloudDatabase}
+        {path: 'cloudDatabase', name: 'cloudDatabase', component: CloudDatabase},
+        {path: 'tabOne',name:'tabOne',component:tabOne},
+        {path: 'tabTwo',name:'tabTwo',component:tabTwo},
+        {path: 'tabThree',name:'tabThree',component:tabThree},
+        {path: 'remoteAccess',name:'remoteAccess',component:remoteAccess},
+        {path: 'tunnelVPN',name:'tunnelVPN',component:tunnelVPN},
+        {path: 'privateVPC',name:'privateVPC',component:privateVPC},
+        {path: 'gatewayNAT',name:'gatewayNAT',component:gatewayNAT}
       ]
     },
     {

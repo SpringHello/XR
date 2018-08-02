@@ -1,18 +1,40 @@
 <template>
-  <div style="display: flex">
-    <div style="width:160px;position: relative;background-color: #142133" :class="{close:!opened}">
-      <div style="height:38px;background-color: #1B2940" @click="toggleHidden"></div>
+  <div style="display: flex;margin-right: 10px;">
+    <div style="width:160px;position: relative;background-color: #142133;overflow: hidden;transition: ease-in-out all 0.3s" :class="{close:!opened}">
+      <div style="height:38px;background-color: #1B2940;text-align: center;" @click="toggleHidden">
+        <div class="sider">
+          <Icon class="rotate" :class="{rotate_icon:!opened}" type="navicon-round" size="26" color="#FFFFFF"></Icon>
+        </div>
+      </div>
       <ul>
-        <li v-for="item in items" @mouseenter="go">
-          <div class="mainTitle" @click="toggleMain(item)">
+        <div>
+          <div class="regionTitle" @click="region = !region">
+            <span>{{opened?zoneName:''}}</span>
+            <div v-if="opened" :class="{act:!region}"></div>
+          </div>
+          <ul>
+            <li class="subTitle" v-show="region"   v-for="item in zoneList" @click="regionSelect(item.zoneid)">{{item.zonename}}</li>
+          </ul>
+        </div>
+
+        <li v-for="item in items" class="house">
+          <div class="mainTitle" @click="toggleMain(item)" >
             <span :class="{act:openedMain.includes(item.type)}">{{opened?item.mainName:''}}</span>
           </div>
           <ul v-if="openedMain.includes(item.type)">
-            <li v-for="sub in item.subItem" class="subTitle" @mouseenter="go(sub)" @mouseleave="leave(sub)">
-              <svg class="icon" aria-hidden="true" style="width:28px;height:28px;vertical-align: middle;">
-                <use :xlink:href="sub.icon"></use>
-              </svg>
-              <span v-show="opened" style="vertical-align: middle">{{sub.subName}}</span>
+            <li v-for="sub in item.subItem" @click="jump(sub.type)"  class="subTitle" @mouseenter="go(sub)" @mouseleave="leave(sub)">
+              <Tooltip v-if="!opened" :content="sub.subName"  placement="right" style="z-index: 99999;">
+                <svg class="icon" aria-hidden="true" style="width:28px;height:28px;vertical-align: middle;">
+                  <use :xlink:href="sub.icon"></use>
+                </svg>
+              </Tooltip>
+
+              <div v-if="opened">
+                <svg class="icon" aria-hidden="true" style="width:28px;height:28px;vertical-align: middle;">
+                  <use :xlink:href="sub.icon"></use>
+                </svg>
+                <span v-show="opened" style="vertical-align: middle">{{sub.subName}}</span>
+              </div>
             </li>
           </ul>
         </li>
@@ -22,7 +44,8 @@
           <div class="wrapper">
             <div class="operate">
               <ul>
-                <li v-for="(thr,sIndex) in thrMenu" :key="sIndex">
+                <li style="font-size: 18px;color: #FFFFFF;">{{subItem}}</li>
+                <li v-for="(thr,sIndex) in thrMenu" :key="sIndex" style="cursor: pointer" class="house" @click="jumpList(thr)">
                   {{thr.thrName}}
                 </li>
               </ul>
@@ -32,12 +55,11 @@
         </div>
       </transition>
     </div>
-
-
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import axios from  'axios'
   export default {
     name: 'my-menu',
     props: {
@@ -48,25 +70,34 @@
       accordion: {
         type: Boolean,
         default: true
+      },
+      changeRgion:{
+        type:Function
       }
     },
     data(){
       return {
         // 三级Menu列表
         thrMenu: undefined,
+        //二级
+        subItem:undefined,
         // 已打开的Main
         openedMain: [],
         static: false,
         // 主menu是否打开
-        opened: true
+        opened: true,
+        //区域
+        region:false,
+        zoneName:this.$store.state.zone.zonename,
+        zoneList:this.$store.state.zoneList
       }
     },
-    mounted(){
-
-    },
+   created(){
+    this.go();
+  },
     methods: {
       toggleHidden(){
-        this.opened = !this.opened
+          this.opened = !this.opened;
       },
       // 切换Main状态
       toggleMain(item){
@@ -83,9 +114,11 @@
       go(sub){
         setTimeout(() => {
           if (sub && sub.thrItem) {
+            this.subItem = sub.subName;
             this.thrMenu = sub.thrItem
             this.$refs['thr'].style.width = '160px'
           } else {
+            this.subItem = undefined;
             this.thrMenu = undefined
             this.$refs['thr'].style.width = '0px'
           }
@@ -104,15 +137,87 @@
         setTimeout(() => {
           this.$refs['thr'].style.width = '0px'
         }, 0)
-
+      },
+      jump(src){
+        if(src.substring(0,5) === 'https')
+          window.open(src);
+        else
+        this.$router.push({path:src});
+      },
+      jumpList(thr){
+        if(thr.pane.substring(0,5) === 'https')
+          window.open(thr.pane);
+        else
+          this.$router.push({path:thr.pane});
+      },
+      regionSelect(zoneId){
+        axios.get('user/setDefaultZone.do', {params: {zoneId: zoneId}}).then(response => {
+        })
+        for (var zone of this.zoneList) {
+          if (zone.zoneid == zoneId) {
+            this.$store.commit('setZone', zone);
+          }
+        }
+        this.region = false;
       }
     },
-    watch: {}
+    watch: {
+      '$store.state.zone':{
+        handler:function(){
+          this.zoneName = this.$store.state.zone.zonename;
+        }
+      }
+    }
   }
 
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .house:hover{
+      color: #FFFFFF;
+  }
+  .regionTitle{
+    padding: 14px 18px;
+    position: relative;
+    cursor: pointer;
+    background-color: #22344D;
+    font-size: 14px;
+    color: rgba(163, 186, 204, 1);
+    line-height: 14px;
+    width: 160px;
+    span {
+      &:before {
+        content: '';
+        display: inline-block;
+        width: 14px;
+        height: 19px;
+        background-image: url("../../../assets/img/back/zoneIcon.png");
+        margin-right: 12px;
+      }
+    }
+    div{
+      display: inline-block;
+      &:after{
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-left: 1px solid #fff;
+        border-bottom: 1px solid #fff;
+        transform: translateY(2px) rotate(135deg);
+        transition: ease-in all 0.2s;
+        margin-left: 12px;
+      }
+      &.act {
+        &:after {
+          transform: translateY(-3px) rotate(-45deg);
+        }
+      }
+    }
+    &:hover{
+      color:#FFFFFF;
+    }
+  }
   .mainTitle {
     padding: 14px 20px;
     position: relative;
@@ -121,6 +226,7 @@
     font-size: 14px;
     color: rgba(163, 186, 204, 1);
     line-height: 14px;
+    width: 160px;
     span {
       &:before {
         content: '';
@@ -129,6 +235,7 @@
         height: 8px;
         border-left: 1px solid #fff;
         border-bottom: 1px solid #fff;
+        transition: ease-in all 0.3s;
         transform: translateY(-3px) rotate(-45deg);
         margin-right: 12px;
       }
@@ -139,6 +246,10 @@
       }
     }
   }
+  .mainTitle:hover{
+      color: #FFFFFF;
+  }
+
 
   .subTitle {
     padding: 14px 10px;
@@ -183,5 +294,30 @@
     .subTitle {
       padding: 14px 10px;
     }
+  }
+  .arrow{
+    position:absolute;
+    top:5px;
+    left:-17px;
+    width:0;
+    height:0;
+    font-size:0;
+    border:solid 8px;
+    border-color:transparent rgba(70,76,91,.9) transparent transparent;
+  }
+  .sider{
+    padding: 6px;
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+  }
+  .rotate{
+    transition: ease-in-out all 0.2s;
+  }
+  .rotate_icon{
+    transform: rotate(-90deg);
+
   }
 </style>

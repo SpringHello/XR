@@ -1,5 +1,5 @@
 <template>
-  <div style="height:100%;">
+  <div id='background'style="height:100%;">
     <div id="renew">
       <div class="wrapper">
   <span style="background-color: #f5f5f5;">
@@ -787,8 +787,6 @@
     min-height: calc(~"100% - @{diff}");
     width: 100%;
     .wrapper {
-      width: 1200px;
-      margin: 0px auto;
       & > span {
         font-family: Microsoft Yahei, 微软雅黑;
         font-size: 12px;
