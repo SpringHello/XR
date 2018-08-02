@@ -60,8 +60,11 @@
                 {{item.name}}
               </p>
               <div class="source-item" v-for="(subItem,sIndex) in item.items" :key="sIndex">
-                <span @click="togo(subItem.url.split('#')[0],subItem.url.split('#')[1])"
-                      :class="{disable:!subItem.url}">{{subItem.itemName}}({{subItem.total}})</span>
+                <div>
+                   <span style="display: block;" @click="togo(subItem.url.split('#')[0],subItem.url.split('#')[1])"
+                         :class="{disable:!subItem.url}">{{subItem.itemName}}({{subItem.total}})</span>
+                </div>
+
                 <Tooltip style="padding: 1px 0px;height: 18px;"
                          :content="`已创建${subItem.used}个，还能创建${subItem.total-subItem.used}个`" placement="top">
                   <div style="height:10px;width:150px;display: flex">
@@ -70,10 +73,14 @@
                          :style="{width:`${100-(subItem.used/subItem.total*100)}%`}"></div>
                   </div>
                 </Tooltip>
-                <span class="cart-icon-wrap" v-if="subItem.cartUrl"
-                      @click="togo(subItem.cartUrl.split('#')[0],subItem.cartUrl.split('#')[1])">
+
+                <div>
+                  <span style="display: block;" class="cart-icon-wrap" v-if="subItem.cartUrl"
+                        @click="togo(subItem.cartUrl.split('#')[0],subItem.cartUrl.split('#')[1])">
                   <Icon type="ios-cart" class="cart-icon"></Icon>
                 </span>
+                </div>
+
               </div>
             </div>
           </div>
@@ -426,10 +433,12 @@
         申明变量diff，可正常使用
       */
     @diff: 101px;
-    margin: 0 auto;
+    width: 100%;
+
     min-height: calc(~"100% - @{diff}");
     #wrapper {
-      width: 1200px;
+      min-width: 1600px;
+      padding-right:13px ;
       /*margin: 0px auto;*/
       #title {
         font-size: 12px;
@@ -474,7 +483,7 @@
         justify-content: space-between;
         #left {
           padding: 20px;
-          width: 834px;
+          width: 74%;
           background-color: #ffffff;
           > p {
             padding-bottom: 10px;
@@ -500,7 +509,7 @@
                 &:hover {
                   border: #2a99f2 solid 1px
                 }
-                > span {
+                >div span {
                   font-size: 14px;
                   color: #666666;
                   width: 125px;
