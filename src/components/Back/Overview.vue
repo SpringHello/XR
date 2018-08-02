@@ -4,9 +4,29 @@
       <span id="title">总览</span>
 
       <div>
-        <Row>
-          <Col span="8">col-8</Col>
-          <Col span="8" offset="8">col-8 | offset-8</Col>
+        <Row :gutter="20">
+          <Col span="16">
+          <div style="height:100px;background-color: #00c1de">
+            <Row :gutter="20">
+              <Col span="12">
+              <div style="height:100px;background-color: red">
+              </div>
+              </Col>
+              <Col span="12">
+              <div style="height:100px;background-color: red"></div>
+              </Col>
+            </Row>
+            <Row :gutter="20">
+              <Col span="24">
+              <div style="height:100px;background-color: black">
+              </div>
+              </Col>
+            </Row>
+          </div>
+          </Col>
+          <Col span="8">
+          <div style="height:100px;background-color: #00c1de"></div>
+          </Col>
         </Row>
       </div>
 
