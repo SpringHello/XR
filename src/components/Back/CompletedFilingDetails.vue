@@ -341,6 +341,49 @@
               </ul>
             </div>
           </div>
+          <!-- 幕布地址信息-->
+          <div class="info_box">
+            <div style="margin-bottom:10px;display:flex">
+              <div class="click_icon icons" :class="{hide_icon:!consigneeAddress}" @click="infoBoxShow('consigneeAddress')"></div>
+              <div style="margin-left:5px;">
+                <span>幕布邮寄信息</span>
+              </div>
+              <div style="width:91%;text-align: right;" v-show="isCompile">
+                <Button type="primary" @click="addressModal = true">修改地址信息</Button>
+              </div>
+            </div>
+            <div class="tables" v-show="consigneeAddress">
+              <ul class="nav_list">
+                <li class="nav_item">收件人</li>
+                <li class="nav_item">联系方式</li>
+              </ul>
+              <ul class="nav_list">
+                <li class="nav_item">
+                  <p>{{hostUnitList.mark3}}</p>
+                  <div v-if="mark3Hide == 'mark3'" class="text_block"><span style="color:red">信息有误</span> <span
+                    style="color:#2a99f2;cursor:pointer;" @click="addressModal = true">重新输入</span></div>
+                </li>
+                <li class="nav_item">
+                  <p>{{hostUnitList.mark4}}</p>
+                  <div v-if="mark4Hide == 'mark4'" class="text_block"><span style="color:red">信息有误</span> <span
+                    style="color:#2a99f2;cursor:pointer;" @click="addressModal = true">重新输入</span></div>
+                </li>
+              </ul>
+              <ul class="nav_list">
+                <li class="nav_item">收件地址</li>
+                <li class="nav_item"></li>
+              </ul>
+              <ul class="nav_list">
+                <li class="nav_item">
+                  <p>{{hostUnitList.mark2}}</p>
+                  <div v-if="mark2Hide =='mark2'" class="text_block"><span
+                    style="color:red">信息有误</span> <span style="color:#2a99f2;cursor:pointer;" @click="addressModal = true">重新输入</span>
+                  </div>
+                </li>
+                <li class="nav_item"></li>
+              </ul>
+            </div>
+          </div>
           <div class="info_box">
             <div>
               <div style="margin-bottom:10px;">
@@ -951,6 +994,31 @@
         <Button type="primary" @click="hostUpdate('webIsp')">确定</Button>
       </div>
     </Modal>
+    <!-- 修改邮寄地址信息 -->
+    <Modal
+      v-model="addressModal"
+      title="ISP备案网站接入信息"
+      :scrollable="true"
+    >
+      <Form ref="address" :model="updateHostUnitList" :rules="updateHostUnitListValidate" :label-width="0">
+        <FormItem prop="mark3">
+          <p style="margin:10px">收件人</p>
+          <Input type="text" v-model="updateHostUnitList.mark3"></Input>
+        </FormItem>
+        <FormItem prop="mark2">
+          <p style="margin:10px">收件地址</p>
+          <Input type="text" v-model="updateHostUnitList.mark2"></Input>
+        </FormItem>
+        <FormItem prop="mark4">
+          <p style="margin:10px">联系方式</p>
+          <Input type="text" v-model="updateHostUnitList.mark4"></Input>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button @click="addressModal = false">取消</Button>
+        <Button type="primary" @click="hostUpdate('address')">确定</Button>
+      </div>
+    </Modal>
     <!--取消接入-->
     <Modal v-model="cancel" title="取消接入" :scrollable="true" @on-ok="delMainWeb('取消接入确认')">
       <div class="cancel">
@@ -1061,6 +1129,14 @@
           callback();
         }
       };
+      const validConsigneePhoneNumber = (rule, value, callback) => {
+        let reg = /^1[3|5|8|9|6|7]\d{9}$/;
+        if (!reg.test(this.updateHostUnitList.mark4)) {
+          return callback(new Error("请输入正确的手机号码"));
+        } else {
+          callback();
+        }
+      };
       //校验不能为数字
       const validLegalPersonName = (rule, value, callback) => {
         let regNumber = /^[0-9]+$/;
@@ -1154,6 +1230,9 @@
         organizerPhotoHide: null,
         otherInfoHide: null,
         curtainInfoHide: null,
+        mark2Hide: null,
+        mark3Hide: null,
+        mark4Hide: null,
         curtainInfo: false,
         //网站核验单大图
         visibleWeb: false,
@@ -1169,6 +1248,7 @@
         websitePerson: false,
         //ISP备案网站接入信息弹窗
         webIsp: false,
+        addressModal: false,
         //备案区域
         area: "",
         //图标切换
@@ -1183,6 +1263,8 @@
         isIconWebPerson: true,
         //ISP备案网站接入详情隐藏与否
         isIconISP: true,
+        // 收件地址隐藏与否
+        consigneeAddress: true,
         //网站核验单
         checkList: false,
         //主板单位负责人照片
@@ -1336,6 +1418,16 @@
           ],
           webip: [
             {required: true, message: "请选择网站ip", trigger: "blur"}
+          ],
+          mark2: [
+            {required: true, message: "请输入收件地址", trigger: "blur"}
+          ],
+          mark3: [
+            {required: true, message: "请输入收件人姓名", trigger: "blur"}
+          ],
+          mark4: [
+            {required: true, message: "请输入收件人联系方式", trigger: "blur"},
+            {required: true, validator: validConsigneePhoneNumber, trigger: "blur"}
           ]
         },
         //获取域名证书文件
@@ -1419,7 +1511,7 @@
             ? (this.isIconInfo = !this.isIconInfo)
             : value == "webPersonInfo"
               ? (this.isIconWebPerson = !this.isIconWebPerson)
-              : value == "inforISP" ? (this.isIconISP = !this.isIconISP) : "";
+              : value == "inforISP" ? (this.isIconISP = !this.isIconISP) : value == "consigneeAddress" ? (this.consigneeAddress = !this.consigneeAddress) : "";
       },
       //查看备案详情
       details() {
@@ -1707,6 +1799,15 @@
                     case 'mark5':
                       this.curtainInfoHide = 'curtainInfo'
                       break
+                    case 'mark2':
+                      this.mark2Hide = 'mark2'
+                      break
+                    case 'mark3':
+                      this.mark3Hide = 'mark3'
+                      break
+                    case 'mark4':
+                      this.mark4Hide = 'mark4'
+                      break
                   }
                 })
               } else {
@@ -1834,7 +1935,10 @@
           companyResponsibilityUrlBack: this.updateHostUnitList.webresponsibilityurlback,
           domainCertificateUrl: this.updateHostUnitList.domaincertificateurl,
           otherDataUrl: this.updateHostUnitList.otherdataurl,
-          backgroundUrl: backgroundUrl
+          backgroundUrl: backgroundUrl,
+          backgroundAddress: this.hostUnitList.mark2,
+          backgroundName: this.hostUnitList.mark3,
+          backgroundPhone: this.hostUnitList.mark4,
         }
         let update = this.$http.post("recode/updateMainWeb.do", web);
         let main = {
@@ -1892,7 +1996,8 @@
               name == 'legalUpdate' ? this.legal = false :
                 name == 'website' ? this.website = false :
                   name == 'websitePerson' ? this.websitePerson = false :
-                    name == 'webIsp' ? this.webIsp = false : '';
+                    name == 'webIsp' ? this.webIsp = false :
+                      name == 'address' ? this.addressModal = false : '';
             this.hostUnitList = JSON.parse(JSON.stringify(this.updateHostUnitList));
             this.hostUnitList.maincompanyarea = this.province + '-' + this.city + '-' + this.district;
             this.hostUnitList.webip = this.webip.join(' ');
