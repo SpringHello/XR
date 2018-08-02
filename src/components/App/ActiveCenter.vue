@@ -10,7 +10,7 @@
             </div>
           </div>
         </my-carousel-item>
-        <my-carousel-item class="carousel-item">
+        <!--<my-carousel-item class="carousel-item">
           <div
                style="cursor: pointer;">
             <div class="obj-storage">
@@ -23,7 +23,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>
+        </my-carousel-item>-->
         <my-carousel-item class="carousel-item">
           <div @click="push('groupBooking')"
                style="cursor: pointer;background: #FA846E;">
