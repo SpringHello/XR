@@ -3,6 +3,14 @@
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
+          <div @click="push('fractive')"
+               style="cursor: pointer;background: #F56B23;">
+            <div class="free-receive">
+
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
           <div
                style="cursor: pointer;">
             <div class="obj-storage">
@@ -13,14 +21,6 @@
                   <p>免费领取<span>50G</span>存储包</p>
                 </div>
               </div>
-            </div>
-          </div>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
-          <div @click="push('fractive')"
-               style="cursor: pointer;background: #F56B23;">
-            <div class="free-receive">
-
             </div>
           </div>
         </my-carousel-item>
@@ -40,35 +40,7 @@
             </div>
           </div>
         </my-carousel-item>
-        <my-carousel-item class="carousel-item">
-          <div @click="push('active_2')"
-               style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
-            <div class="head-banner">
-              <img style="position: absolute;left: 2%;top: 5%;" src="../../assets/img/home/home-banner10.png"/>
-              <div>
-                <div>
-                  <p>
-                    <img src="../../assets/img/home/home-banner2.png"
-                         style="width:480px;height:165px;padding-top: 0px">
-                  </p>
-                  <button>立即领取</button>
-                </div>
-                <img src="../../assets/img/home/home-banner1.png">
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
-          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="display:block;width:100%;height:100%">
-            <div class="xf" style="position: relative;cursor: pointer">
-              <div style="width:1200px;margin: 0px auto">
-                <img src="../../assets/img/active/active_xf_text.png"
-                     style="position: absolute;top:50%;transform: translateY(-50%);">
-              </div>
-            </div>
-          </router-link>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
+        <!--<my-carousel-item class="carousel-item">
           <div @click="push('active_1')"
                style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
@@ -83,7 +55,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>
+        </my-carousel-item>-->
       </my-carousel>
     </div>
     <div class="center-active box-g">
@@ -110,7 +82,7 @@
                   <p>活动时间：{{item.des}}</p>
                   <p>活动对象：{{item.activeObj}}</p>
                 </div>
-                <button>立即参与 →</button>                
+                <button>立即参与 →</button>
               </div>
             </router-link>
           </div>
@@ -131,7 +103,7 @@
                   <p>活动时间：{{item.des}}</p>
                   <p>活动对象：{{item.activeObj}}</p>
                 </div>
-                <button>立即参与 →</button>                
+                <button>立即参与 →</button>
               </div>
             </router-link>
             <div class="comingstart">更多优惠活动即将开启</div>
@@ -157,16 +129,6 @@ export default {
       active: [],
       activedata: [
         {
-          imgPath: require('../../assets/img/activecenter/bg-objStorage-1.png'),
-          name: '新用户注册领现金豪礼',
-          secSpan: '注册即可领取196元现金大礼包',
-          des: '长期有效',
-          activeObj: '新注册用户',
-          url: 'active_1',
-          isStart: true,
-          weight: '1'
-        },
-        {
           imgPath: require('../../assets/img/activecenter/bg-objStorage-2.png'),
           name: '免费云主机 不限量领取',
           secSpan: '交押金最长可用一年 押金闪退',
@@ -177,10 +139,21 @@ export default {
           weight: '1'
         },
         {
+          imgPath: require('../../assets/img/activecenter/bg-objStorage-1.png'),
+          name: '新用户注册领现金豪礼',
+          secSpan: '注册即可领取196元现金大礼包',
+          des: '长期有效',
+          activeObj: '新注册用户',
+          url: 'active_1',
+          isStart: true,
+          weight: '1'
+        },
+
+        {
           imgPath: require('../../assets/img/activecenter/bg-objStorage-3.png'),
           name: '对象存储 重磅上线',
           secSpan: '安全稳定高效的云端存储服务 免费试用50G',
-          des: ' 长期有效',
+          des: ' 即将上线',
           activeObj: '对象存储 新老用户',
           url: '',
           isStart: false,
@@ -189,8 +162,8 @@ export default {
         {
           imgPath: require('../../assets/img/activecenter/bg-objStorage-4.png'),
           name: '云数据库正式发布 1元试用60天',
-          secSpan: '妙级创建 一键恢复 安全可靠',
-          des: '2018.08.09-2018.09.20',
+          secSpan: '秒级创建 一键恢复 安全可靠',
+          des: '即将上线',
           activeObj: '云数据库 新老用户',
           url: '',
           isStart: false,
@@ -202,7 +175,7 @@ export default {
           secSpan: '每成功一位即赠送一个月 最多可领12个月',
           des: '2018.07.19开始',
           activeObj: '云主机 新老用户',
-          url: 'fractive',
+          url: 'groupBooking',
           isStart: true,
           weight: '2'
         }
@@ -454,6 +427,7 @@ export default {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
+      margin-bottom:20px;
       .box {
         height: 280px;
         width: 590px;

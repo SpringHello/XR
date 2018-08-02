@@ -55,6 +55,9 @@
         next()
       }
     },
+    mounted(){
+      window.scrollBy(0, 0)
+    },
     data() {
       return {}
     },

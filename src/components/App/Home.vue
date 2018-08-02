@@ -11,6 +11,20 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
+          <div
+            style="cursor: pointer;">
+            <div class="obj-storage">
+              <div class="wrap">
+                <div>
+                  <p>对象存储OSS重磅上线</p>
+                  <p>安全稳定、海量、便捷、低延迟、低成本的云端存储服务</p>
+                  <p>免费领取<span>50G</span>存储包</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
+        <my-carousel-item class="carousel-item">
           <div @click="push('groupBooking')"
                style="cursor: pointer;background: #FA846E;">
             <div class="groupBook">
@@ -26,7 +40,7 @@
             </div>
           </div>
         </my-carousel-item>
-        <my-carousel-item class="carousel-item">
+        <!--<my-carousel-item class="carousel-item">
           <div @click="push('active_1')"
                style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
             <div class="head-banner">
@@ -41,7 +55,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>
+        </my-carousel-item>-->
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->
@@ -911,6 +925,48 @@
           .xf {
             height: 100%;
             background: url('../../assets/img/active/active_xf_bg.png') no-repeat center;
+          }
+          .obj-storage {
+            background: linear-gradient(
+              90deg,
+              rgba(255, 227, 208, 1),
+              rgba(255, 255, 255, 1)
+            );
+            height: 400px;
+            position: relative;
+            .wrap {
+              position: relative;
+              width: 1920px;
+              margin: 0 auto;
+              &:after {
+                content: url("./../../assets/img/home/banner-objStorage.png");
+                position: absolute;
+                top: 0;
+                right: 0;
+              }
+              > div {
+                width: 1200px;
+                margin: 0 auto;
+                padding-top: 70px;
+                p {
+                  font-size: 18px;
+                  font-family: "Microsoft YaHei", "微软雅黑";
+                  color: #333;
+                  margin-bottom: 20px;
+                  span {
+                    color: #ff624b;
+                  }
+                }
+                p:nth-child(1) {
+                  margin-bottom: 40px;
+                  font-size: 48px;
+                  font-weight: 600;
+                }
+                p:nth-child(3) {
+                  font-weight: 700;
+                }
+              }
+            }
           }
         }
       }
