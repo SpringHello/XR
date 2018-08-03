@@ -1,64 +1,67 @@
 <template>
-  <div style="width: 100%;margin-top: 20px;min-width: 1600px;">
-       <div class="center_chart">
-                            <div style="display:flex;border-bottom:1px solid #E9E9E9;padding-bottom:5px;">
-                                <div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>
-                                <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
-                            </div>
-                            <div class="chart" >
-                                <ul class="objectList">
-                                    <li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>
-                                </ul>
-                                <div class="chart-rig" >
-                                    <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;">导出</Button> -->
-                                    <ul class="objectList">
-                                        <li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <chart class="echarts" :options="rwPolar"></chart>
-                        </div>
-                         <div class="center_chart">
-                            <div style="display:flex;border-bottom:1px solid #E9E9E9;padding-bottom:5px;margin-top:50px;">
-                                <div style="width:50%;font-size:16px;color:#333333;">Get请求情况</div>
-                                <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
-                            </div>
-                            <div class="chart" >
-                                <div class="chart-text">
-                                    <span >今天</span>
-                                    <span >昨天</span>
-                                    <span >最近7天</span>
-                                    <span >最近30天</span>
-                                </div>
-                                <div class="chart-rig">
-                                    <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;">导出</Button>
-                                     <span style="">折线</span>
-                                    <span >柱状图</span>
-                                </div>
-                            </div>
-                            <chart class="echarts" :options="rwPolar"></chart>
-                        </div>
-                        <div class="center_chart">
-                            <div style="display:flex;border-bottom:1px solid #E9E9E9;padding-bottom:5px;margin-top:50px;">
-                                <div style="width:50%;font-size:16px;color:#333333;">Put请求情况</div>
-                                <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
-                            </div>
-                            <div style="margin-top:10px;">
-                                <div class="chart-text">
-                                    <span >今天</span>
-                                    <span >昨天</span>
-                                    <span >最近7天</span>
-                                    <span >最近30天</span>
-                                </div>
-                                <div style="float:right">
-                                    <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;">导出</Button>
-                                     <span style="">折线</span>
-                                    <span >柱状图</span>
-                                </div>
-                            </div>
-                            <chart class="echarts" :options="rwPolar"></chart>
-                        </div>
+  <div id="background">
+    <div style="width: 100%;margin-top: 20px;background: #FFFFFF;padding: 20px;">
+      <div class="center_chart">
+        <div style="display:flex;border-bottom:1px solid #E9E9E9;padding-bottom:5px;">
+          <div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>
+          <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
+        </div>
+        <div class="chart" >
+          <ul class="objectList">
+            <li :class="indexs == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="dayClick(item.label)">{{item.value}}</li>
+          </ul>
+          <div class="chart-rig" >
+            <!-- <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;">导出</Button> -->
+            <ul class="objectList">
+              <li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>
+            </ul>
+          </div>
+        </div>
+        <chart class="echarts" :options="rwPolar"></chart>
+      </div>
+      <div class="center_chart">
+        <div style="display:flex;border-bottom:1px solid #E9E9E9;padding-bottom:5px;margin-top:50px;">
+          <div style="width:50%;font-size:16px;color:#333333;">Get请求情况</div>
+          <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
+        </div>
+        <div class="chart" >
+          <div class="chart-text">
+            <span >今天</span>
+            <span >昨天</span>
+            <span >最近7天</span>
+            <span >最近30天</span>
+          </div>
+          <div class="chart-rig">
+            <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;">导出</Button>
+            <span style="">折线</span>
+            <span >柱状图</span>
+          </div>
+        </div>
+        <chart class="echarts" :options="rwPolar"></chart>
+      </div>
+      <div class="center_chart">
+        <div style="display:flex;border-bottom:1px solid #E9E9E9;padding-bottom:5px;margin-top:50px;">
+          <div style="width:50%;font-size:16px;color:#333333;">Put请求情况</div>
+          <div style="width:50%;text-align:right;color:#666666;">2017.11.25</div>
+        </div>
+        <div style="margin-top:10px;">
+          <div class="chart-text">
+            <span >今天</span>
+            <span >昨天</span>
+            <span >最近7天</span>
+            <span >最近30天</span>
+          </div>
+          <div style="float:right">
+            <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;">导出</Button>
+            <span style="">折线</span>
+            <span >柱状图</span>
+          </div>
+        </div>
+        <chart class="echarts" :options="rwPolar"></chart>
+      </div>
+    </div>
   </div>
+
 </template>
 
 <script>

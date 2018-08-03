@@ -1,6 +1,7 @@
 <template>
   <div id="background">
     <div id="wrapper">
+      <div class="content">
       <p v-if="index" style="margin: 20px 20px;color: #999999;">云网络 / 虚拟专网VPN</p>
       <div class="operator-bar">
         <Button type="primary" @click="newRemoteAccess">创建VPN接入点</Button>
@@ -38,6 +39,7 @@
         <Button type="primary" @click="newRemoteAccessOk">完成配置</Button>
       </div>
     </Modal>
+    </div>
   </div>
 </template>
 
@@ -291,5 +293,8 @@ const validalength = (rule, value, callback) => {
     -moz-border-radius: 4px;
     border-radius: 4px;
     min-height: 400px;
+  }
+  .content{
+    width: 99%;
   }
 </style>

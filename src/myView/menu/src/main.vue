@@ -1,44 +1,47 @@
 <template>
   <div style="display: flex;margin-right: 10px;">
-    <div style="width:160px;position: relative;background-color: #142133;overflow: hidden;transition: ease-in-out all 0.3s" :class="{close:!opened}">
+    <div style="width:160px;position: relative;background-color: #142133;transition: ease-in-out all 0.3s" :class="{close:!opened}">
       <div style="height:38px;background-color: #1B2940;text-align: center;" @click="toggleHidden">
         <div class="sider">
           <Icon class="rotate" :class="{rotate_icon:!opened}" type="navicon-round" size="26" color="#FFFFFF"></Icon>
         </div>
       </div>
-      <ul>
-        <div>
-          <div class="regionTitle" @click="region = !region">
-            <span>{{opened?zoneName:''}}</span>
-            <div v-if="opened" :class="{act:!region}"></div>
+      <div style="width:160px;position: relative;background-color: #142133;transition: ease-in-out all 0.3s;overflow: hidden;" :class="{close:!opened}">
+        <ul>
+          <div>
+            <div class="regionTitle" @click="region = !region">
+              <span>{{opened?zoneName:""}}</span>
+              <div v-if="opened" :class="{act:!region}"></div>
+            </div>
+            <ul>
+              <li class="subTitle1"  v-show="region"   v-for="item in zoneList" @click="regionSelect(item.zoneid)">{{item.zonename}}</li>
+            </ul>
           </div>
-          <ul>
-            <li class="subTitle" v-show="region"   v-for="item in zoneList" @click="regionSelect(item.zoneid)">{{item.zonename}}</li>
-          </ul>
-        </div>
 
-        <li v-for="item in items" class="house">
-          <div class="mainTitle" @click="toggleMain(item)" >
-            <span :class="{act:openedMain.includes(item.type)}">{{opened?item.mainName:''}}</span>
-          </div>
-          <ul v-if="openedMain.includes(item.type)">
-            <li v-for="sub in item.subItem" @click="jump(sub.type)"  class="subTitle" @mouseenter="go(sub)" @mouseleave="leave(sub)">
-              <Tooltip v-if="!opened" :content="sub.subName"  placement="right" style="z-index: 99999;">
-                <svg class="icon" aria-hidden="true" style="width:28px;height:28px;vertical-align: middle;">
-                  <use :xlink:href="sub.icon"></use>
-                </svg>
-              </Tooltip>
+          <li v-for="item in items" class="house">
+            <div class="mainTitle" @click="toggleMain(item)" >
+              <span :class="{act:openedMain.includes(item.type)}">{{opened?item.mainName:''}}</span>
+            </div>
+            <ul v-if="openedMain.includes(item.type)">
+              <li v-for="sub in item.subItem" @click="jump(sub.type)"  class="subTitle" @mouseenter="go(sub)" @mouseleave="leave(sub)">
+                <Tooltip v-if="!opened" :content="sub.subName"  placement="right" style="z-index: 99999;">
+                  <svg class="icon" aria-hidden="true" style="width:28px;height:28px;vertical-align: middle;">
+                    <use :xlink:href="sub.icon"></use>
+                  </svg>
+                </Tooltip>
 
-              <div v-if="opened">
-                <svg class="icon" aria-hidden="true" style="width:28px;height:28px;vertical-align: middle;">
-                  <use :xlink:href="sub.icon"></use>
-                </svg>
-                <span v-show="opened" style="vertical-align: middle">{{sub.subName}}</span>
-              </div>
-            </li>
-          </ul>
-        </li>
-      </ul>
+                <div v-if="opened">
+                  <svg class="icon" aria-hidden="true" style="width:28px;height:28px;vertical-align: middle;">
+                    <use :xlink:href="sub.icon"></use>
+                  </svg>
+                  <span v-show="opened" style="vertical-align: middle">{{sub.subName}}</span>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
       <transition name="slide">
         <div class="thr-header" :class="{closeThr:!opened}" ref="thr" @mouseenter="static=true" @mouseleave="_leave">
           <div class="wrapper">
@@ -258,6 +261,7 @@
     color: rgba(163, 186, 204, 1);
     line-height: 14px;
     cursor: pointer;
+    width: 160px;
     &:hover {
       background-color: #2A99F2;
       color: #fff;
@@ -266,6 +270,14 @@
       top: 0px;
       right: 0px;
     }
+  }
+  .subTitle1{
+    padding: 14px 10px;
+    background-color: #142133;
+    font-size: 14px;
+    color: rgba(163, 186, 204, 1);
+    line-height: 14px;
+    cursor: pointer;
   }
 
   .thr-header {
@@ -291,6 +303,7 @@
 
   .close {
     width: 48px !important;
+    overflow: hidden;
     .subTitle {
       padding: 14px 10px;
     }

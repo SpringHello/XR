@@ -1,5 +1,5 @@
 <template>
-     <div id="background">
+     <div class="background">
         <div class="objectBox">
              <span class="text">云存储/云硬盘</span>
              <div class="center">
@@ -266,93 +266,90 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
-  .objectBox {
-    .text {
-      padding: 10px 0;
-      display: block;
-      font-size: 12px;
-      color: rgba(17, 17, 17, 0.43);
-    }
-    .center {
-      width: inherit;
-      background-color: #ffffff;
-      min-height: 1625px;
-      padding: 20px;
-      .center_top {
-        display: flex;
-        height: 48px;
-        .title {
-          line-height: 40px;
-          display: inline-block;
-          margin-left: 5px;
-          vertical-align: top;
-          font-size: 24px;
-          color: rgba(17, 17, 17, 0.75);
-          font-weight: bold;
-        }
+  .background{
+    width: 100%;
+    .objectBox {
+      .text {
+        padding: 10px 0;
+        display: block;
+        font-size: 12px;
+        color: rgba(17, 17, 17, 0.43);
       }
-      .center_p {
-        margin-top: 20px;
-        margin-bottom: 27px;
-        width: 1160px;
-        height: 32px;
-        background-color: rgba(42, 153, 242, 0.1);
-        border: 1px solid #2a99f2;
-        border-radius: 4px;
-        padding: 7px 10px;
-        font-size: 14px;
-      }
-      .center_space {
-        width: 100%;
-        padding: 6px 0;
-        border-bottom: 1px solid #d9d9d9;
-        height: 90px;
-        margin-top: 10px;
-        display: flex;
-        p {
-          color: #666666;
-          font-size: 16px;
+      .center {
+        width: 99%;
+        background-color: #ffffff;
+        padding: 20px;
+        .center_top {
+          display: flex;
+          height: 48px;
+          .title {
+            line-height: 40px;
+            display: inline-block;
+            margin-left: 5px;
+            vertical-align: top;
+            font-size: 24px;
+            color: rgba(17, 17, 17, 0.75);
+            font-weight: bold;
+          }
         }
-        .space_one {
-          width: 40%;
-          display: inline-block;
-        }
-        .space_one:after {
-          content: "";
-          width: 2px;
-          height: 80px;
-          position: relative;
-          display: inline-block;
-          top: -82px;
-          right: 20px;
-          background-color: #dfdfdf;
-        }
-      }
-      .center_chart {
-        margin-top: 19px;
-        span {
-          padding: 5px 16px;
-          border: 1px solid #d9d9d9;
-          display: inline-block;
-          margin-right: -4px;
-          cursor: pointer;
-          border-radius: 4px  0px  0px  4px;
-        }
-        span:hover {
-          color: #2a99f2;
+        .center_p {
+          margin-top: 20px;
+          margin-bottom: 27px;
+          height: 32px;
+          background-color: rgba(42, 153, 242, 0.1);
           border: 1px solid #2a99f2;
-          cursor: pointer;
+          border-radius: 4px;
+          padding: 7px 10px;
+          font-size: 14px;
         }
-        .chart-text {
-         width: 50%;
+        .center_space {
+          padding: 6px 0;
+          border-bottom: 1px solid #d9d9d9;
+          height: 90px;
+          margin-top: 10px;
+          display: flex;
+          p {
+            color: #666666;
+            font-size: 16px;
+          }
+          .space_one {
+            width: 40%;
+            display: inline-block;
+          }
+          .space_one:after {
+            content: "";
+            width: 2px;
+            height: 80px;
+            position: relative;
+            display: inline-block;
+            top: -82px;
+            right: 20px;
+            background-color: #dfdfdf;
+          }
+        }
+        .center_chart {
+          margin-top: 19px;
+          span {
+            padding: 5px 16px;
+            border: 1px solid #d9d9d9;
+            display: inline-block;
+            margin-right: -4px;
+            cursor: pointer;
+            border-radius: 4px  0px  0px  4px;
+          }
+          span:hover {
+            color: #2a99f2;
+            border: 1px solid #2a99f2;
+            cursor: pointer;
+          }
+          .chart-text {
+            width: 50%;
+          }
         }
       }
     }
-  }
 
- .objectList {
-      width:165%;
+    .objectList {
       font-family: PingFangSC;
       display: flex;
       li:first-child{
@@ -390,8 +387,11 @@ export default {
     .chart-rig{
       width:23%;height:30px;display: flex;
     }
-.echarts {
-  width: 100%;
-  height: 240px;
-}
+    .echarts {
+      width: 100%;
+      height: 240px;
+    }
+  }
+
+
 </style>

@@ -1,66 +1,67 @@
 <template>
+  <div id="background">
     <div class="boxs">
-        <div >
-            <Button type="primary" @click="modal6 = true">新建空间</Button>
-        </div>
-        <div style="margin-top:10px;">
-             <Table :columns="spaceColumns" :data="spaceData" no-data-text="您还没有创建Bucket（存储空间）,请点击新建空间"></Table>
-        </div>
-        <div style="margin-top:36px;">
-            <Card style="width:373px;">
-                <div>
-                    <span style="font-size:18px;color:#666666;">空间名称</span>
-                    <a slot="extra" style="float:right;">
-                         <Icon type="android-close"></Icon>
-                        删除
-                    </a>
-                    <p style="margin-top:10px;font-size:12px;color:#666666;">权限:私有读写</p>
-                </div>
-                <div class="card-center">
-                    <div>
-                        <p class="p_text">存储空间容量</p>
-                        <p class="p_textf">25mb</p>
-                    </div>
-                    <div>
-                        <p class="p_text">流量</p>
-                        <p class="p_textf">25mb</p>
-                    </div>
-                    <div>
-                        <p class="p_text">HTTP请求次数</p>
-                        <p class="p_textf">5次</p>
-                    </div>
-                </div>
-                <div class="card-bottom">
-                    <div>创建时间：2017-06-06 12:00:00</div>
-                    <Button>管理</Button>
-                </div>
-            </Card>
-        </div>
-         <Modal
+      <div >
+        <Button type="primary" @click="modal6 = true">新建空间</Button>
+      </div>
+      <div style="margin-top:10px;">
+        <Table :columns="spaceColumns" :data="spaceData" no-data-text="您还没有创建Bucket（存储空间）,请点击新建空间"></Table>
+      </div>
+      <div style="margin-top:36px;">
+        <Card style="width:373px;">
+          <div>
+            <span style="font-size:18px;color:#666666;">空间名称</span>
+            <a slot="extra" style="float:right;">
+              <Icon type="android-close"></Icon>
+              删除
+            </a>
+            <p style="margin-top:10px;font-size:12px;color:#666666;">权限:私有读写</p>
+          </div>
+          <div class="card-center">
+            <div>
+              <p class="p_text">存储空间容量</p>
+              <p class="p_textf">25mb</p>
+            </div>
+            <div>
+              <p class="p_text">流量</p>
+              <p class="p_textf">25mb</p>
+            </div>
+            <div>
+              <p class="p_text">HTTP请求次数</p>
+              <p class="p_textf">5次</p>
+            </div>
+          </div>
+          <div class="card-bottom">
+            <div>创建时间：2017-06-06 12:00:00</div>
+            <Button>管理</Button>
+          </div>
+        </Card>
+      </div>
+      <Modal
         v-model="modal6"
         title="新建空间"
-         @on-ok="bucketClick('bucketInline')"
+        @on-ok="bucketClick('bucketInline')"
         :scrollable='true'>
         <Form ref="bucketInline" :model="bucketInline" :rules="bucketRule">
           <FormItem prop="bucketName">
-             <p class="modal-p" >空间名称</p>
-             <Input type="text" v-model="bucketInline.bucketName" placeholder="请输入少于20位的数字与字母名称" style="width:240px;"></Input>
+            <p class="modal-p" >空间名称</p>
+            <Input type="text" v-model="bucketInline.bucketName" placeholder="请输入少于20位的数字与字母名称" style="width:240px;"></Input>
           </FormItem>
           <FormItem prop="visit">
-             <p class="modal-p" style="margin-top:10px;">访问权限</p>
+            <p class="modal-p" style="margin-top:10px;">访问权限</p>
             <Select v-model="bucketInline.visit" style="width:240px">
-                <Option v-for="item in visitList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              <Option v-for="item in visitList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </FormItem>
         </Form>
         <div class="modal_text">
-            <p>1.私有读写：对文件的所有访问操作由文件的所有者授权的操作人完成。</p>
-            <p>2.公有读私有写：任何人都可以读取文件，对文件的写入、删除等操作仍需要由文件的所有者授权的操作人完成 </p>
-            <p>3.公有读写：所有人均可读写Bucket内的Object，无需身份验证。该权限安全风险极高，为确保您的数据安全，请谨慎选择!</p>
+          <p>1.私有读写：对文件的所有访问操作由文件的所有者授权的操作人完成。</p>
+          <p>2.公有读私有写：任何人都可以读取文件，对文件的写入、删除等操作仍需要由文件的所有者授权的操作人完成 </p>
+          <p>3.公有读写：所有人均可读写Bucket内的Object，无需身份验证。该权限安全风险极高，为确保您的数据安全，请谨慎选择!</p>
         </div>
-    </Modal>
+      </Modal>
     </div>
-
+  </div>
 </template>
 
 <script >
@@ -251,9 +252,9 @@ export default {
 }
 .boxs {
   font-family: MicrosoftYaHei;
-  width: 100%;
-  height: 100%;
-  min-width: 1600px;
+  width: 99%;
+  background: #FFFFFF;
+  padding: 20px;
   margin-top: 20px;
   .card-center {
     display: flex;

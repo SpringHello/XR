@@ -1,5 +1,4 @@
 <template>
-  <div>
     <div class="background">
       <div class="wrapper">
         <span class="title">
@@ -54,7 +53,6 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script type="text/ecmascript-6">
@@ -364,7 +362,6 @@
   .background {
     background-color: #f5f5f5;
     width: 100%;
-    min-width: 1600px;
     @diff: 101px;
     min-height: calc(~"100% - @{diff}");
     .wrapper {

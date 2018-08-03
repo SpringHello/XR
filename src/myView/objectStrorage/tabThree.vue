@@ -1,18 +1,21 @@
 <template>
-    <div style="width: 100%;margin-top: 20px;min-width: 1600px;">
-        <p style="font-size:16px;color:#000000;margin-bottom:10px;">操作日志</p>
-        <div style="height:31px;display:flex;margin-bottom:20px;">
-           <ul class="objectList">
-                 <li :class="indexs == index? 'objectItems':'objectItem'" v-for="(item,index) in dayList" :key="index" @click="dayClick(index)">{{item.value}}</li>
-             </ul>
-            <div class="journal_right">
-                <span>开始结束时间</span>
-                 <DatePicker type="date" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
-                <Button type="primary" size="small">查询</Button>
-            </div>
+  <div id="background">
+    <div style="width: 99%;margin-top: 20px;background: #FFFFFF;padding: 20px;">
+      <p style="font-size:16px;color:#000000;margin-bottom:10px;">操作日志</p>
+      <div style="height:31px;display:flex;margin-bottom:20px;">
+        <ul class="objectList">
+          <li :class="indexs == index? 'objectItems':'objectItem'" v-for="(item,index) in dayList" :key="index" @click="dayClick(index)">{{item.value}}</li>
+        </ul>
+        <div class="journal_right">
+          <span>开始结束时间</span>
+          <DatePicker type="date" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
+          <Button type="primary" size="small">查询</Button>
         </div>
-        <Table :columns="journalList" :data="journalData" ></Table>
+      </div>
+      <Table :columns="journalList" :data="journalData" ></Table>
     </div>
+  </div>
+
 </template>
 
 <script>

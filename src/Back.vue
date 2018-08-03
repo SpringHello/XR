@@ -188,9 +188,9 @@
             }]
           },
           {
-            mainName:'云数据库',
-            type:'dataBase',
-            subItem:[{subName:'云数据库',type:'cloudDatabase',icon:''}]
+            mainName: '云数据库',
+            type: 'dataBase',
+            subItem: [{subName: '云数据库', type: 'cloudDatabase', icon: ''}]
           },
           {
             mainName: '云存储',
@@ -200,8 +200,11 @@
                 subName: '对象存储',
                 type: 'ObjectStorage',
                 icon: '',
-                thrItem:[{thrName:'概览',pane:'tabOne'},{thrName:'空间管理',pane:'https://oss-console.xrcloud.net/ruirados/objectStorage'},
-                {thrName:'用量监控',pane:'tabTwo'},{thrName:'操作日志',pane:'tabThree'}]
+                thrItem: [{thrName: '概览', pane: 'tabOne'}, {
+                  thrName: '空间管理',
+                  pane: 'https://oss-console.xrcloud.net/ruirados/objectStorage'
+                },
+                  {thrName: '用量监控', pane: 'tabTwo'}, {thrName: '操作日志', pane: 'tabThree'}]
               },
               {subName: '云硬盘', type: 'disk', icon: '#houtaiicon-yunyingpan1'},
               {subName: '云硬盘备份', type: 'diskBackup', icon: ''}
@@ -494,18 +497,18 @@
   #back {
     height: 100%;
     > header {
-      width: 100%;
+      //width: 100%;
       height: 56px;
       position: relative;
-      background-color: #3f3f3f;
       .wrapper {
-        min-width: 1600px;
+        //min-width: 1600px;
         margin: 0px auto;
+        background-color: #3f3f3f;
         .logo {
           width: 140px;
           height: 55px;
           float: left;
-          margin-right: 38px;
+          margin-right: 20px;
           div {
             width: 100%;
             height: 100%;
@@ -514,8 +517,8 @@
           }
         }
         .operate {
-          margin-left: 178px;
-          width:88%;
+          margin-left: 160px;
+          //width: 88%;
           > ul {
             display: inline-block;
             margin: 0px auto;
@@ -565,7 +568,7 @@
               font-size: 16px;
               .ivu-dropdown {
                 margin-left: 0px;
-                padding-left: 12px;
+                padding: 0px 12px;
               }
               > a {
                 height: 100%;
