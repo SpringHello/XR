@@ -37,11 +37,19 @@
               </div>
               <div class="box">
                 <div class="top">开始使用新睿云对象存储</div>
-                <div class="content">
-                  <h3>50G</h3>
-                  <p>存储包风格</p>
-                  <button @click="freeReceive()">免费领取</button>
+                <div class="content" v-if="!getFulx">
+                  <p>北京一区</p>
+                  <h3><i style="color:#FF0000;font-style: normal;">{{fulxSize}}</i>G存储包风格</h3>
+                  <button @click="freeReceive()" v-if="isReceive">免费领取</button>
+                  <button style="background:rgba(255,156,149,1);" v-else>领取成功</button>
                   <span>新老用户均可领取，每人只可领取一次</span>
+                </div>
+                <div class="content" v-else>
+                  <p style="font-size:24px">{{fulxMessage}}</p>
+                  <i style="    padding-top: 40px;font-style: normal;display: block;font-size: 16px;color: rgba(255,57,42,1);line-height: 24px;">
+                      注意：使用对象存储需要您先创建AccessKey，领取完成之后请前往个人中心-AccessKey管理-创建AccessKey完成密钥创建。</i>
+                  <button @click="createdKey" v-if="!isAccessKey">立即创建</button>
+                  <button v-else>领取成功</button>
                 </div>
               </div>
             </div>
@@ -135,6 +143,7 @@
 <script type="text/ecmascript-6">
 import axios from '@/util/axiosInterceptor'
 import regExp from '../../../util/regExp'
+import $store from '@/vuex'
 var messageMap = {
   loginname: {
     placeholder: '登录邮箱/手机号',
@@ -148,15 +157,44 @@ var messageMap = {
   },
 }
 export default {
-  // beforeRouteEnter(to, from, next){
-  //   axios.get('activity/getActivitys.do').then(response => {
-  //     next(vm => {
-  //       vm.setData(response)
-  //     })
-  //   })
-  // },
+  created () {
+    // 获取token
+    axios.post('user/getRuiRadosApiacess.do', {
+      zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
+      companyId: $store.state.authInfo.companyid
+    }).then(response => {
+      if (response.status == 200 && response.data.status == 1) {
+        var radosApIaccessKey = response.data.data.data
+        axios.get('user/getRadosToken.do', {
+          params: {
+            companyId: $store.state.authInfo.companyid,
+            secret: radosApIaccessKey
+          }
+        }).then(response => {
+          if (response.status == 200) {
+            this.token = response.data.token
+            axios.post('user/getFluxs.do', { token: this.token }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.fulxSize = response.data.data.fulxList[0].size
+                // 1未领取流量包，2领取成功
+                this.isReceive = response.data.data.fulxList[0].status == '2' ? false : true
+                this.fulxId = response.data.data.fulxList[0].id
+              }
+            })
+          }
+        })
+      }
+    })
+  },
   data () {
     return {
+      isAccessKey: false,
+      getFulx: false,
+      fulxMessage: '存储包已领取成功，请前往控制台进行查看！',
+      fulxSize: '50',
+      isReceive: true,
+      fulxId: '',
+      token: '',
       loginModal: false,
       form: {
         loginname: '',
@@ -233,6 +271,22 @@ export default {
         })
         return
       }
+      axios.post('user/increaseFlux.do', {
+        flux_id: this.fulxId, zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2', token: this.token
+      }).then(response => {
+        if (response.status == 200 && response.data.status == 27 || response.status == 200 && response.data.status == 28) {
+          this.getFulx = true
+          this.fulxMessage = response.data.msg
+          this.isAccessKey = $store.state.accessKey
+        } else {
+          this.getFulx = false
+          this.$Message.error('领取失败')
+        }
+      })
+    },
+    createdKey () {
+      sessionStorage.setItem('pane', 'key')
+      this.$router.push('userCenter')
     },
     vail (field) {
       var text = this.form[field];
@@ -457,14 +511,15 @@ export default {
             no-repeat center;
         }
         .content {
-          padding-top: 40px;
+          padding: 40px 106px 0px;
           h3 {
-            font-size: 48px;
-            line-height: 68px;
+            margin-top: 20px;
+            font-size: 32px;
+            line-height: 45px;
             font-weight: 500;
           }
           p {
-            font-size: 24px;
+            font-size: 22px;
           }
           button {
             margin: 40px 0 34px;

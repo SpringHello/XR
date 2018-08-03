@@ -2,8 +2,21 @@
   <div class="login-wrapper">
     <div class="wrapper">
       <div class="wrapper-form">
-        <div class="banner" v-show="loginShow" @click="$router.push('fractive')">
-        </div>
+        <Carousel
+          v-model="bannerIndex"
+          autoplay
+          dots="outside"
+          radius-dot
+          loop
+          autoplay-speed="2000"
+          style="height: 493px;width: 730px;">
+          <CarouselItem>
+              <div class="demo-carousel " @click="$router.push('objStorageActive')"></div>
+          </CarouselItem>
+          <CarouselItem>
+              <div class="demo-carousel" @click="$router.push('fractive')"></div>
+          </CarouselItem>
+        </Carousel>
         <div class="login-form" v-show="loginShow">
           <div class="head">
             <span>注册</span>
@@ -362,6 +375,7 @@
   export default{
     data(){
       return {
+        bannerIndex: 0,
         imgSrc: 'user/getKaptchaImage.do',
         form: {
           loginname: '',
@@ -611,12 +625,17 @@
         align-items: center;
       }
     }
-    .banner {
-      background: url(../../assets/img/login/login-banner.png) no-repeat center;
+    .demo-carousel{
       height: 493px;
       width: 730px;
       text-align: center;
       cursor: pointer;
+    }
+    .ivu-carousel-item:nth-last-child(1) .demo-carousel{
+      background: url(../../assets/img/login/login-banner.png) no-repeat center;
+    }
+    .ivu-carousel-item:nth-last-child(2) .demo-carousel{
+      background: url(../../assets/img/login/login-banner-objactivity.png) no-repeat center;
     }
     .login-form {
       width: 421px;
