@@ -303,7 +303,6 @@
 
   .close {
     width: 48px !important;
-    overflow: hidden;
     .subTitle {
       padding: 14px 10px;
     }
