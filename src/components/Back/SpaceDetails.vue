@@ -124,7 +124,11 @@
           <TabPane label="空间设置" name="space">
             <div>
               <p style="font-size:18px;color:#333333;margin:0 0 20px 0;">权限设置</p>
-              <div style="border:1px solid #e9e9e9;">
+              <div style="border:1px solid #e9e9e9;position: relative;">
+                <Spin fix size="large" v-if="aclLoading">
+                  <Icon type="load-c" size=10 class="demo-spin-icon-load"></Icon>
+                  <div>Loading</div>
+                </Spin>
                 <ul class="space_list">
                   <li :class="indexs == index? 'space_items':'space_item'" v-for="(item,index) in navList" :key="index"
                       @click="navlists(index)">{{item.name}}
@@ -132,7 +136,7 @@
                 </ul>
                 <div style="padding:24px">
                   <p style="color:#666666;font-size:14px;width:950px;">{{ptext}}</p>
-                  <Button v-if="indexs != 3" type="primary" style="margin:40px 0 0 0;" @click="checkAcl">确定</Button>
+                  <Button v-if="indexs != 3"  type="primary" style="margin:40px 0 0 0;" @click="checkAcl">确定</Button>
                 </div>
                 <div class="custom" v-if="indexs == 3">
                   <Button type="primary" @click="openJurisdiction" style="margin-right: 10px;">添加自定义权限</Button>
@@ -1407,7 +1411,9 @@
         //统计时间开始
         starTime:'',
         //统计时间结束
-        endTime:''
+        endTime:'',
+        //切换权限按钮loading
+        aclLoading:false
       }
     },
     components:{
@@ -1486,7 +1492,6 @@
             })
           }
         })
-
       },
       //删除CROS规则配置
       deleteCros(id,index){
@@ -1735,6 +1740,7 @@
       },
       //切换权限
       checkAcl() {
+        this.aclLoading = true;
         var name = sessionStorage.getItem("bucketName");
         var bucketId = sessionStorage.getItem('bucketId');
         let index = this.indexs+1;
@@ -1744,11 +1750,13 @@
           bucketName: name
         }).then(res => {
           if (res.data.status == '1') {
-            sessionStorage.removeItem('accessrights');
-            this.kjaccessrights = index == 1 ? '私有读写' : index == 2 ? '公有读私有写' : index == 3 ? '公有读写' : '自定义权限';
+            sessionStorage.setItem('accessrights', index)
+            this.kjaccessrights = sessionStorage.getItem('accessrights') == 1 ? '私有读写' : sessionStorage.getItem('accessrights') == 2 ? '公有读私有写' : sessionStorage.getItem('accessrights')== 3 ? '公有读写' : '自定义权限';
             this.$Message.success('权限切换成功');
+            this.aclLoading = false;
           } else {
             this.$Message.info('切换权限失败');
+            this.aclLoading = false;
           }
         })
       },
@@ -1838,7 +1846,9 @@
         if(name == 'objects'){
           this.filesList();
         }else if(name == 'space'){
-          this.selectAclAll();
+          if(sessionStorage.getItem('accessrights')!=1&&sessionStorage.getItem('accessrights')!=2&&sessionStorage.getItem('accessrights')!=3) {
+            this.selectAclAll();
+          }
           this.selectCors();
         }
       },
@@ -2038,7 +2048,7 @@
       changeByte(val){
         let byte = [];
         val.forEach(item=>{
-          byte.push( item / 1048576 > 1 ? ((item / 1048576).toFixed(2))   : 0)
+          byte.push((item / 1048576).toFixed(2))
         })
         return byte;
       },
@@ -2160,7 +2170,9 @@
       this.bucketName = sessionStorage.getItem('bucketName');
       this.ptext = this.navList[0].city; //权限列表默认显示第一个
       this.filesList();
-      this.selectAclAll();
+      if(sessionStorage.getItem('accessrights')!=1&&sessionStorage.getItem('accessrights')!=2&&sessionStorage.getItem('accessrights')!=3){
+        this.selectAclAll();
+      }
       this.getAllsize();
       this.selectCors();
       this.getCustom();

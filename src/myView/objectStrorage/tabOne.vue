@@ -101,7 +101,7 @@ export default {
                       // eventBus.$emit('bucketName', parasm.row.name);
                       sessionStorage.setItem("bucketName", parasm.row.name);
                       sessionStorage.setItem('bucketId', parasm.row.id);
-                      sessionStorage.setItem('accessrights', parasm.row.accessrights)
+
                       sessionStorage.setItem('createtime', parasm.row.createtime);
                       this.$router.push({path: "SpaceDetails"});
                     }

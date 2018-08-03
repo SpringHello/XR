@@ -282,7 +282,7 @@ export default {
             changeByte(val){
               let byte = [];
               val.forEach(item=>{
-                byte.push(  (item / 1048576).toFixed(2) )
+                byte.push((item / 1048576).toFixed(2))
               })
               return byte;
             },
