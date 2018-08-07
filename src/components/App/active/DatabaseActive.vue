@@ -13,19 +13,6 @@
       </div>
     </div>
     <div class="center">
-      <div class="da-flow">
-        <h2>活动流程</h2>
-        <div class="flow-content">
-          <ul v-for="item in flows">
-            <li>
-              <img :src="item.src"/>
-              <span>{{ item.text}}</span>
-            </li>
-          </ul>
-          <div class="triangle" style="left: -57px"></div>
-          <div class="triangle" style="right: -57px"></div>
-        </div>
-      </div>
       <div class="da-product">
         <h2>明星产品<span>1元试用60天</span></h2>
         <p>实例创建完成后请前往控制台使用，试用期结束可正常续订 <span @click="roll(2600)">活动规则</span></p>
@@ -510,6 +497,12 @@
             this.$router.push('order')
           } else if (res.data.status == 2 && res.data.message == '抱歉，该配置主机最多只能领取1台！') {
             this.showModal.notPayModal = true
+          } else if (res.data.status == 2 && res.data.message == '今日活动名额已被抢完，请您明天提早来哟！') {
+            this.showModal.broughtOutModal = true
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
           }
         })
       },
@@ -583,60 +576,6 @@
   .center {
     width: 1200px;
     margin: 0 auto;
-    .da-flow {
-      padding: 50px 0;
-      .flow-content {
-        width: 1200px;
-        height: 80px;
-        margin-top: 40px;
-        background: linear-gradient(90deg, rgba(255, 91, 91, 1), rgba(255, 120, 93, 1));
-        display: flex;
-        position: relative;
-        .triangle {
-          position: absolute;
-          height: 80px;
-          width: 80px;
-          background: #FFF;
-          transform: rotate(45deg);
-        }
-        ul {
-          width: 20%;
-          list-style: none;
-          padding: 20px 40px;
-          position: relative;
-          &:after {
-            display: inline-block;
-            content: '';
-            height: 80px;
-            width: 80px;
-            transform: rotate(45deg);
-            border-top: 2px solid #FFF;
-            border-right: 2px solid #FFF;
-            position: absolute;
-            right: 0;
-            top: 0;
-          }
-          > li {
-            display: flex;
-            span {
-              font-size: 18px;
-              line-height: 36px;
-              font-family: "Microsoft YaHei", "微软雅黑";
-              color: rgba(255, 255, 255, 1);
-              margin-left: 20px;
-            }
-          }
-        }
-        ul:nth-child(1) {
-          padding: 20px 70px;
-        }
-        ul:nth-child(5) {
-          &:after {
-            display: none;
-          }
-        }
-      }
-    }
     .da-product {
       padding: 50px 0;
       > p {

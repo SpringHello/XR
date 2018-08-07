@@ -43,6 +43,7 @@ const GroupBooking = () => import('@/components/App/groupbooking/homePage')
 const ProductShare = () => import('@/components/App/groupbooking/sharePage')
 const Activity = () => import('@/components/App/groupbooking/activityPage')
 const FrActive = () => import('@/components/App/active/freeReceive')
+const DBActive = () => import('@/components/App/active/DatabaseActive')
 
 
 // 备案系统页面路由
@@ -254,6 +255,7 @@ var router = new Router({
         {path: 'active_2', name: 'active_2', component: active_2},
         {path: 'smlj', name: 'smlj', component: smlj},
         {path: 'frActive', name: 'frActive', component: FrActive},
+        {path: 'dbActive', name:'dbActive', component: DBActive},
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
         {path: 'Pecss', component: Pecss},
