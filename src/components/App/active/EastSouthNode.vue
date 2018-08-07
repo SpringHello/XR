@@ -104,7 +104,7 @@
                 </div>
                 <ul>
                   <li v-for="(secItem,index) in item.prodItem" :key="index">
-                    <a :href="secItem.path" :class="{gray:!secItem.path}">{{secItem.title}}</a>
+                    <a :href="secItem.path?secItem.path:'javaScript:;'" :class="{gray:!secItem.path}">{{secItem.title}}</a>
                   </li>
                 </ul>
               </div>
@@ -527,6 +527,9 @@ export default {
                 .gray {
                   cursor: not-allowed;
                   color: #999999;
+                  &:hover{
+                    color: #999999;
+                  }
                 }
               }
             }
