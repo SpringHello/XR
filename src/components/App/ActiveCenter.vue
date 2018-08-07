@@ -110,7 +110,7 @@
                   <p>活动时间：{{item.des}}</p>
                   <p>活动对象：{{item.activeObj}}</p>
                 </div>
-                <button>立即参与 →</button>                
+                <button>立即参与 →</button>
               </div>
             </router-link>
           </div>
@@ -131,7 +131,7 @@
                   <p>活动时间：{{item.des}}</p>
                   <p>活动对象：{{item.activeObj}}</p>
                 </div>
-                <button>立即参与 →</button>                
+                <button>立即参与 →</button>
               </div>
             </router-link>
             <div class="comingstart">更多优惠活动即将开启</div>
