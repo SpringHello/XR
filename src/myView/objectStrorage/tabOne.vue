@@ -34,7 +34,7 @@
         </div>
            <div slot="footer" class="modal-footer-border">
              <Button type="ghost" @click="modal6 = false">取消</Button>
-             <Button type="primary" @click="bucketClick">确定新建</Button>
+             <Button type="primary" @click="bucketClick" :loading="createLoading">确定新建</Button>
            </div>
     </Modal>
     </div>
@@ -101,7 +101,7 @@ export default {
                       // eventBus.$emit('bucketName', parasm.row.name);
                       sessionStorage.setItem("bucketName", parasm.row.name);
                       sessionStorage.setItem('bucketId', parasm.row.id);
-
+                      sessionStorage.setItem('accessr',parasm.row.accessrights);
                       sessionStorage.setItem('createtime', parasm.row.createtime);
                       this.$router.push({path: "SpaceDetails"});
                     }
@@ -181,7 +181,8 @@ export default {
           value:'3'
         }
       ],
-      buckLoading:false
+      buckLoading:false,
+      createLoading:false
     };
   },
   methods: {
@@ -205,6 +206,7 @@ export default {
     bucketClick() {
       this.$refs.bucketInline.validate(valid => {
         if (valid) {
+          this.createLoading = true;
           let obj = {name:'创建中',hide:1,createtime:'————',operation:'————',accessrights:'————'};
           this.spaceData.push(obj);
           this.$http
@@ -216,13 +218,16 @@ export default {
               if (res.data.status == "1") {
                 this.$Message.success("创建成功");
                 this.modal6 = false;
+                this.createLoading = false;
                 this.getBuckets();
               } else {
+                this.createLoading = false;
                 this.$Message.info(res.data.msg);
                 this.getBuckets();
               }
             }).catch(error =>{
               this.spaceData = [];
+              this.createLoading = false;
               this.$Message.info('平台出小差了');
           });
         }

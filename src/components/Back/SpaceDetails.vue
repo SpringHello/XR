@@ -9,7 +9,7 @@
           </div>
           <div style="width:50%;text-align:right;">
             <Button @click="$router.push({path:'objectStorage'})" style="margin-right: 10px;">返回</Button>
-            <Button @click="filesList(undefined)" type="primary">刷新</Button>
+            <Button @click="$router.history.go(0)" type="primary">刷新</Button>
           </div>
         </div>
         <p style="margin:20px 0;color:#333333;font-size:16px;">{{kjName}}</p>
@@ -53,7 +53,7 @@
             </div>
           </div>
         </div>
-        <div class="monitor" :class="{monitors:!monitorHide}" @click="monitorHide = !monitorHide"  style="color: #2A99F2;">{{monitorHide?'查看监控':'收起'}}</div>
+        <div class="monitor" :class="{monitors:!monitorHide}" @click="monitorHide = !monitorHide"  style="color: #2A99F2;">{{monitorHide?'收起':'查看监控'}}</div>
         <!--监控流量-->
         <div style="display:flex;margin-top: 10px;" v-if="monitorHide">
           <!--请求次数-->
@@ -125,7 +125,7 @@
             <div>
               <p style="font-size:18px;color:#333333;margin:0 0 20px 0;">权限设置</p>
               <div style="border:1px solid #e9e9e9;position: relative;">
-                <Spin fix size="large" v-if="aclLoading">
+                <Spin fix  v-if="aclLoading">
                   <Icon type="load-c" size=10 class="demo-spin-icon-load"></Icon>
                   <div>Loading</div>
                 </Spin>
@@ -272,7 +272,7 @@
           type="drag"
           action="object/uploadObject.do"
           class="upload_model"
-          v-if="uploadList.length == 0"
+          v-show="uploadList.length == 0"
         >
           <div class="upload_text">
             <Icon type="ios-upload-outline"></Icon>
@@ -280,7 +280,7 @@
             <p style="margin-top:10px;color:#999999;">批量上传最多上传24个文件，若上传一存在同名文件会直接覆盖，请谨慎操作</p>
           </div>
         </Upload>
-        <div class="upload_list" v-for="(item,index) in uploadList" v-else>
+        <div class="upload_list" v-for="(item,index) in uploadList" v-show="uploadList.length != 0">
           <div>
             <span :title='item.name'>{{item.name}}</span>
           </div>
@@ -713,7 +713,7 @@
         //请求间隔文件大小
         oldSize:0,
         // 上传文件列表
-        uploadList:'',
+        uploadList:[],
         //自定义域名弹窗
         mainName:false,
         domain:{
@@ -1549,24 +1549,17 @@
           this.$Message.info('最多一次性上传24个文件');
           return false;
         }
-        // let reg = /^[\a-z\A-Z\0-9\u4e00-\u9fa5\w\d]{1,20}$/
-        // if (!reg.test(file.name)) {
-        //   this.$Message.info('文件名不能超过20个字符');
-        //   return false;
-        // }
       },
       //上传文件成功的方法
       handleSuccess(response,file) {
-        const files = this.$refs.upload.fileList;
+        const fileList = this.$refs.upload.fileList;
         if (response.status == '1') {
           this.$Message.success('上传成功');
-          this.uploadList.split(file.indexOf(file),1);
-          // this.$refs.upload.fileList.splice(files.indexOf(file), 1);
+          fileList.splice(fileList.indexOf(file), 1);
           this.filesList(this.fileUpdata.dirId);
           this.getAllsize();
         } else {
-          this.uploadList.split(file.indexOf(file),1);
-          // this.$refs.upload.fileList.splice(files.indexOf(file), 1);
+          fileList.splice(fileList.indexOf(file), 1);
           this.$Message.info(response.msg);
         }
       },
@@ -1579,13 +1572,18 @@
         this.oldTime = new Date().getTime();
         this.time =  event;
         // console.log(event.total / event.timeStamp);
-        console.log(event);
-        console.log(file);
       },
       //权限切换
       navlists(val) {
         this.indexs = val;
         this.ptext = this.navList[val].city;
+        if(sessionStorage.getItem('accessrights') == 1 || sessionStorage.getItem('accessrights') == 2 ||sessionStorage.getItem('accessrights') == 3){
+
+        }else{
+          if(val == 3){
+            this.aclData = [];
+          }
+        }
       },
       //列出文件夹列表
       filesList(id,object) {
@@ -1638,6 +1636,7 @@
           .then(res => {
             if (res.data.status == "1") {
               this.$Message.success("新建成功");
+
               let id = res.data.data.currentDir.dirId == '0' ? null : res.data.data.currentDir.dirId;
               // this.floder = false;
               this.filesList(id);
@@ -1708,6 +1707,7 @@
               }).then(res => {
                 if (res.data.status == '1') {
                   this.$Message.success('添加自定义权限成功');
+                  this.kjaccessrights = '自定义权限';
                   this.selectAclAll();
                 } else {
                   this.$Message.info(res.data.msg);
@@ -1750,8 +1750,8 @@
           bucketName: name
         }).then(res => {
           if (res.data.status == '1') {
-            sessionStorage.setItem('accessrights', index)
-            this.kjaccessrights = sessionStorage.getItem('accessrights') == 1 ? '私有读写' : sessionStorage.getItem('accessrights') == 2 ? '公有读私有写' : sessionStorage.getItem('accessrights')== 3 ? '公有读写' : '自定义权限';
+            sessionStorage.setItem('accessrights', index);
+            this.kjaccessrights = sessionStorage.getItem('accessrights') == 1 ? '私有读写' : sessionStorage.getItem('accessrights') == 2 ? '公有读私有写' :sessionStorage.getItem('accessrights')== 3 ? '公有读写' : '自定义权限';
             this.$Message.success('权限切换成功');
             this.aclLoading = false;
           } else {
@@ -2170,7 +2170,7 @@
       this.bucketName = sessionStorage.getItem('bucketName');
       this.ptext = this.navList[0].city; //权限列表默认显示第一个
       this.filesList();
-      if(sessionStorage.getItem('accessrights')!=1&&sessionStorage.getItem('accessrights')!=2&&sessionStorage.getItem('accessrights')!=3){
+      if(sessionStorage.getItem('accessr')!=1&&sessionStorage.getItem('accessr')!=2&&sessionStorage.getItem('accessr')!=3){
         this.selectAclAll();
       }
       this.getAllsize();
@@ -2182,7 +2182,7 @@
       this.requestClick(0);
       this.createtime = sessionStorage.getItem('createtime');
       this.kjName = sessionStorage.getItem('bucketName');
-      this.kjaccessrights = sessionStorage.getItem('accessrights') == 1 ? '私有读写' : sessionStorage.getItem('accessrights') == 2 ? '公有读私有写' : sessionStorage.getItem('accessrights') == 3 ? '公有读写' : '自定义权限';
+      this.kjaccessrights = sessionStorage.getItem('accessr') == 1 ? '私有读写' : sessionStorage.getItem('accessr') == 2 ? '公有读私有写' : sessionStorage.getItem('accessr') == 3 ? '公有读写' : '自定义权限';
     },
     mounted(){
       this.uploadList = this.$refs.upload.fileList;
