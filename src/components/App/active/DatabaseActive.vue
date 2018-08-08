@@ -725,7 +725,7 @@
             background: url("../../../assets/img/active/dbActive/dba-banner6.png") no-repeat;
           }
           &.three {
-            background: url("../../../assets/img/active/dbActive/dba-banner7.png") no-repeat;
+            background: url("../../../assets/img/active/dbActive/dba-banner9.png") no-repeat;
           }
         }
         p:nth-child(2) {
