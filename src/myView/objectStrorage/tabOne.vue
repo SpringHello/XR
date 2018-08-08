@@ -47,10 +47,10 @@
       let res =  /^[a-z0-9][a-z0-9-A-Z]{0,1000}$/;
       if(value == ''){
         return callback(new Error('请输入空间名称'));
-      }else if(!res.test(value)){
-        return callback(new Error('空间名字只能以小写字母或者数字开头'));
       }else if(!reg.test(value)){
         return callback(new Error('空间名字只能为小写字母，数字和短横线（-）且长度要在3到20位之间'));
+      }else if(!res.test(value)){
+        return callback(new Error('空间名字只能以小写字母或者数字开头'));
       }else{
         callback();
       }

@@ -689,6 +689,16 @@
         callback();
     }
   }
+  const validatorFloder = (rule,value,callback)=>{
+    let reg = /^[a-zA-Z0-9_\u4e00-\u9fa5\.-]{1,24}$/;
+    if(value == ""){
+      return callback(new Error('请输入文件夹名称'));
+    }else if(!reg.test(value)){
+      return callback(new Error('请输入正确的文件夹名称'));
+    }else {
+      callback();
+    }
+  }
     export default {
     data() {
       return {
@@ -1314,7 +1324,7 @@
         },
         createFilesValiDate:{
           flies:[
-            {required:"true",message:"请输入文件夹名称",trigger:"blur"}
+            {required:"true",validator:validatorFloder,trigger:"blur"}
           ]
         },
         //修改CORS规则弹窗
@@ -1622,11 +1632,11 @@
       //创建文件夹
       createFlies() {
         var name = sessionStorage.getItem("bucketName");
-        this.floder = false;
-        let obj = {filename:'创建中',filesize:'0',hide:1,isfile:'1'};
-        this.fileData.push(obj);
         this.$refs.createF.validate((valid) => {
           if (valid) {
+            let obj = {filename:'创建中',filesize:'0',hide:1,isfile:'1'};
+            this.fileData.push(obj);
+            this.floder = false;
         this.$http
           .post("object/createObject.do", {
             bucketName: name,
@@ -1636,7 +1646,6 @@
           .then(res => {
             if (res.data.status == "1") {
               this.$Message.success("新建成功");
-
               let id = res.data.data.currentDir.dirId == '0' ? null : res.data.data.currentDir.dirId;
               // this.floder = false;
               this.filesList(id);
