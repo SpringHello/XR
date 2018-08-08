@@ -522,7 +522,7 @@
 <style rel="stylesheet/less" lang="less" scoped>
   .banner {
     height: 400px;
-    background: #FFF5EF url("../../../assets/img/active/dbActive/dba-banner1.png") center no-repeat;
+    background: url("../../../assets/img/active/dbActive/dba-banner1.png") center no-repeat,linear-gradient(90deg, #FFEBDE, #FFF);
     .banner-content {
       width: 1200px;
       height: 400px;

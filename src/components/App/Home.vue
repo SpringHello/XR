@@ -2,7 +2,25 @@
   <div id="home" style="background: #FFF">
     <!-- banner 轮播图 -->
     <div class="banner">
-      <my-carousel :interval=5000 class="carousel" @on-change="change">
+      <my-carousel :interval=50000 class="carousel" @on-change="change">
+        <my-carousel-item class="carousel-item">
+          <div @click="push('dbActive')"
+               style="cursor: pointer;background: #F56B23;">
+            <div class="db-active">
+              <div class="db-active-content">
+                <div class="db-active-text">
+                  <p>秒级创建 &nbsp&nbsp运维便捷 &nbsp&nbsp安全可靠</p>
+                  <p>热门云数据库产品一网打尽</p>
+                  <p><span>1元试用60天</span>每天不限量</p>
+                  <button>立即试用</button>
+                </div>
+                <div class="db-active-img">
+                  <img src="../../assets/img/active/dbActive/dba-banner8.png"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
         <my-carousel-item class="carousel-item">
           <div @click="push('fractive')"
                style="cursor: pointer;background: #F56B23;">
@@ -817,7 +835,7 @@
             font-size: 14px;
             color: rgba(102, 102, 102, 1);
             line-height: 28px;
-            a{
+            a {
               width: 100px;
               height: 38px;
               line-height: 38px;
@@ -826,7 +844,7 @@
               display: block;
               text-align: center;
               margin-top: 40px;
-              &:hover{
+              &:hover {
                 color: #fff;
                 background: rgb(56, 125, 255);
               }
@@ -846,11 +864,11 @@
           height: 432px;
           overflow: hidden;
           background: rgba(231, 231, 231, 1);
-          .news-img{
+          .news-img {
             width: 100%;
             height: 100%;
             transition: all .5s ease;
-            &:hover{
+            &:hover {
               width: 110%;
               height: 110%;
               margin-left: -5%;
@@ -882,7 +900,7 @@
               float: right;
               cursor: pointer;
               color: #fff;
-              &:hover{
+              &:hover {
                 color: #377DFF;
               }
             }
@@ -1591,9 +1609,67 @@
     }
   }
 
+  .db-active {
+    height: 400px;
+    background: url("../../assets/img/active/dbActive/dba-banner7.png") center no-repeat, linear-gradient(90deg, #FFF, #AFCAFF);
+    .db-active-content {
+      width: 1200px;
+      height: 400px;
+      margin: 0 auto;
+      display: flex;
+      .db-active-text {
+        width: 50%;
+        padding: 74px 0 0 20px;
+        > p {
+          font-size: 24px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color: rgba(51, 51, 51, 1);
+          line-height: 33px;
+        }
+        p:nth-child(2) {
+          margin-top: 20px;
+          font-size: 48px;
+          color: rgba(51, 51, 51, 1);
+          line-height: 67px;
+        }
+        p:nth-child(3) {
+          margin-top: 15px;
+          font-size: 28px;
+          color: rgba(51, 51, 51, 1);
+          line-height: 40px;
+          span {
+            color: rgba(255, 70, 43, 1);
+            margin-right: 20px;
+          }
+        }
+        button {
+          background:none;
+          outline: none;
+          cursor: pointer;
+          padding: 11px 50px;
+          margin-top: 30px;
+          border-radius:4px;
+          border:1px solid rgba(51,51,51,1);
+          font-size:16px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color:rgba(51,51,51,1);
+          &:hover{
+            background:rgba(255,70,43,1);
+            color: #FFF;
+            border: none;
+          }
+        }
+      }
+      .db-active-img {
+        padding-top: 22px;
+        width: 50%;
+      }
+    }
+  }
+
   .free-receive {
     height: 400px;
-    background: #FF6C4C url("../../assets/img/active/freeToReceive/fr-banner1.png") center  no-repeat;
+    background: #FF6C4C url("../../assets/img/active/freeToReceive/fr-banner1.png") center no-repeat;
   }
 
   // 移入移出动画
