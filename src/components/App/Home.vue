@@ -2,7 +2,7 @@
   <div id="home" style="background: #FFF">
     <!-- banner 轮播图 -->
     <div class="banner">
-      <my-carousel :interval=50000 class="carousel" @on-change="change">
+      <my-carousel :interval=5000 class="carousel" @on-change="change">
         <my-carousel-item class="carousel-item">
           <div @click="push('dbActive')"
                style="cursor: pointer;background: #F56B23;">
