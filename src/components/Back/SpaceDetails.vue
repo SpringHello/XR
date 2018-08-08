@@ -1144,6 +1144,7 @@
                       this.updateJurisd.updateWhiteListValue = obj.row.refererip;
                       this.code = obj.row.code;
                       this.updateChannelAggregate();
+                      this.changesUpdate();
                       this.usersClick();
                     }
                   }
@@ -1826,7 +1827,7 @@
             this.$http.post('bucketAcl/updateFromCode.do', {
               bucketName: name,
               code: this.code,
-              userAuths: this.updateJurisd.updateUsers,
+              userAuths: this.updateJurisd.updateGrantValue,
               customPermission: this.updateJurisd.updateChannel,
               objectNames: this.updateJurisd.updateInfluenceValue,
               isOperation: this.updateJurisd.updateSources.toString(),

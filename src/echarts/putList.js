@@ -35,10 +35,6 @@ export default {
             formatter: '{value}次'
         },
       minInterval: 1,
-      max:function(value){
-        console.log(value);
-        return value.max -20;
-      }
     },
     series: [
         {
@@ -50,13 +46,6 @@ export default {
                     color: '#2A99F2'
                 }
             },
-            areaStyle: {normal: {  color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                offset: 0,
-                color: '#2A99F2'
-            }, {
-                offset: 1,
-                color: '#ffe'
-            }])}},
             data: [0, 0, 0, 0, 0, 0, 0]
         },
     ]
