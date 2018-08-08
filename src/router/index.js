@@ -95,6 +95,7 @@ const Renew = () => import('@/components/Back/Renew')
 const New = () => import('@/components/Back/New')
 const Host = () => import('@/components/Back/Host')
 const Mirror = () => import('@/components/Back/Mirror')
+const SSHSecretKey = () => import('@/components/Back/SSHSecretKey')
 const Snapshot = () => import('@/components/Back/Snapshot')
 const Firewall = () => import('@/components/Back/Firewall')
 const Disk = () => import('@/components/Back/Disk')
@@ -297,6 +298,7 @@ var router = new Router({
         {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
         {path: 'mirror', name: 'mirror', component: Mirror},
+        {path: 'SSHSecretKey', name: 'SSHSecretKey', component: SSHSecretKey},
         {path: 'vpc', name: 'vpc', component: Vpc},
         {path: 'vpn', name: 'vpn', component: Vpn},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
