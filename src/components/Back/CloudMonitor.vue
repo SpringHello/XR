@@ -1,10 +1,6 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <Spin fix v-show="loading">
-        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-        <div>{{loadingMessage}}</div>
-      </Spin>
       <span class="title">首页
         <!-- / <span>云主机快照</span> -->
       </span>
