@@ -41,10 +41,10 @@
             </div>
             <div class="tables" v-show="isIconSon">
               <ul class="nav_list">
-                <li class="nav_item">主体单位所属区域</li>
-                <li class="nav_item">主体单位证件类型</li>
-                <li class="nav_item">主体单位性质</li>
-                <li class="nav_item">主体单位证件号码</li>
+                <li class="nav_item">地域</li>
+                <li class="nav_item">证件类型</li>
+                <li class="nav_item">主办者性质</li>
+                <li class="nav_item">证件号码</li>
               </ul>
               <ul class="nav_list">
                 <li class="nav_item">
@@ -71,9 +71,9 @@
                 </li>
               </ul>
               <ul class="nav_list">
-                <li class="nav_item">主体单位名称</li>
-                <li class="nav_item">主体单位证件住所</li>
-                <li class="nav_item">主体单位通信地址</li>
+                <li class="nav_item">单位名称/姓名</li>
+                <li class="nav_item">证件住所</li>
+                <li class="nav_item">通信地址</li>
                 <li class="nav_item">投资人或主管单位姓名</li>
               </ul>
               <ul class="nav_list">
@@ -116,9 +116,9 @@
             </div>
             <div class="tables" v-show="isIconPerson">
               <ul class="nav_list">
-                <li class="nav_item">法人姓名</li>
-                <li class="nav_item">法人证件类型</li>
-                <li class="nav_item">法人证件号码</li>
+                <li class="nav_item">负责人姓名</li>
+                <li class="nav_item">负责人证件类型</li>
+                <li class="nav_item">负责人证件号码</li>
                 <li class="nav_item">办公室电话</li>
               </ul>
               <ul class="nav_list">
