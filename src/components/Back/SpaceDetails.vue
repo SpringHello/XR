@@ -1,7 +1,7 @@
 <template>
   <div class="space_box">
     <div class="space_center">
-      <p style="margin:10px 0;"><span style="color: #999999;">云储存/</span><span>云硬盘</span></p>
+      <p style="margin:10px 0;"><span style="color: #999999;">云储存/</span><span>对象存储</span></p>
       <div class="space_block">
         <div class="space_top">
           <div style="width:50%">
@@ -140,7 +140,7 @@
                 </div>
                 <div class="custom" v-if="indexs == 3">
                   <Button type="primary" @click="openJurisdiction" style="margin-right: 10px;">添加自定义权限</Button>
-                  <Button type="primary" @click="edit = true">自定义权限编辑器</Button>
+                  <!--<Button type="primary" @click="edit = true">自定义权限编辑器</Button>-->
                   <Table :loading="jurisdLoading" style="margin-top:20px;" :columns="rightList" :data="aclData" ></Table>
                 </div>
               </div>
@@ -156,7 +156,7 @@
               <div v-if="corsHide">
                 <div style="margin:10px 0 20px 0;">
                   <Button type="primary" @click="openCros" style="margin-right: 10px;">CORS规则配置</Button>
-                  <Button type="primary" @click="corsedit = true">CORS规则编辑器</Button>
+                  <!--<Button type="primary" @click="corsedit = true">CORS规则编辑器</Button>-->
                 </div>
                 <Table :columns="corstList" :data="corsData"></Table>
               </div>

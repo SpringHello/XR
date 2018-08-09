@@ -1,7 +1,7 @@
 <template>
   <div class="centerBox">
     <div class="objectBox">
-      <span class="text">云存储/云硬盘</span>
+      <span class="text">云存储/对象存储</span>
       <div class="center">
         <div class="center_top">
           <div style="width:50%">
