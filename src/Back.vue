@@ -63,7 +63,7 @@
         </div>
       </div>
     </header>
-    <div style="display: flex">
+    <div style="display: flex;min-height: 100%;">
       <my-menu :items="main"></my-menu>
       <router-view/>
     </div>
@@ -518,6 +518,7 @@
         }
         .operate {
           margin-left: 160px;
+          margin-right: 40px;
           //width: 88%;
           > ul {
             display: inline-block;

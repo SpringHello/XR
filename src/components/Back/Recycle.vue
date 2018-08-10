@@ -374,6 +374,7 @@
         display: block;
       }
       .content {
+        width: 99%;
         background-color: white;
         padding: 20px;
         & > span {

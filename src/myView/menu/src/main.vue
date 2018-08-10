@@ -1,5 +1,5 @@
 <template>
-  <div style="display: flex;margin-right: 10px;">
+  <div style="display: flex;margin-right: 10px;min-height: 100%;">
     <div style="width:160px;position: relative;background-color: #142133;transition: ease-in-out all 0.3s" :class="{close:!opened}">
       <div style="height:38px;background-color: #1B2940;text-align: center;" @click="toggleHidden">
         <div class="sider">
