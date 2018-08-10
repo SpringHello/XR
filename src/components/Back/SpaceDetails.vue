@@ -698,6 +698,27 @@
     }else {
       callback();
     }
+  };
+  const validatorOrgins = (rule,value,callback) =>{
+    var strRegex = "/^((https|http)?://)$/"
+      + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" //ftp的user@
+      + "(([0-9]{1,3}\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184
+      + "|" // 允许IP和DOMAIN（域名）
+      + "([0-9a-z_!~*'()-]+\.)*" // 域名- www.
+      + "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\." // 二级域名
+      + "[a-z]{2,6})" // first level domain- .com or .museum
+      + "(:[0-9]{1,4})?" // 端口- :80
+      + "((/?)|" // a slash isn't required if there is no file name
+      + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
+
+    // let reg = /^(http|https|ftp)\://([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&%\$\-]+)*@)?((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.[a-zA-Z]{2,4})(\:[0-9]+)?(/[^/][a-zA-Z0-9\.\,\?\'\\/\+&%\$#\=~_\-@]*)*$/
+    if(value == ""){
+      return callback(new Error('请输入来源origin'));
+    }else if(!reg.test(value)){
+      return callback(new Error('请输入正确的origin'));
+    }else{
+      callback();
+    }
   }
     export default {
     data() {
@@ -1299,7 +1320,7 @@
         },
         addCorsFormValidateL: {
           orgins: [
-            {required: true, message: '请填写来源Origin'}
+            {required: true, validator:validatorOrgins}
           ],
           methods: [
             {required: true, message: '请选择操作Method'}
