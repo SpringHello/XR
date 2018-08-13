@@ -60,7 +60,22 @@
             </section>
           </TabPane>
           <TabPane label="自定义监控" name="customMonitoring">
-            2
+            <div class="cm-content">
+              <div class="cm-item" v-for="(item,index) in cm">
+                <div class="cm-item-title">
+                  <p>我关注的指标<span @click="deleteAttention(index)">&nbsp删除</span><span>编辑 |</span></p>
+                </div>
+              </div>
+              <div class="cm-item">
+                <div class="cm-item-title">
+                  <p>我关注的指标<span>&nbsp删除</span><span>编辑 |</span></p>
+                </div>
+                <div class="cm-item-content">
+                  <div class="cross"></div>
+                  <p>您还未添加关注的指标，点击“+”添加指标。</p>
+                </div>
+              </div>
+            </div>
           </TabPane>
           <TabPane label="告警策略" name="alarmStrategy">
             3
@@ -71,7 +86,6 @@
         </Tabs>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -107,7 +121,8 @@ export default {
       disk: {
         showType: 'line',
         timeType: 'day'
-      }
+      },
+      cm: [{}]
     }
   },
   created () {
@@ -171,7 +186,22 @@ export default {
       handler: function () {
         this.refresh()
       },
-      deep: true
+      labelSwitching(name) {
+        console.log(name)
+      },
+      // 删除关注
+      deleteAttention(index){
+        this.$Modal.confirm({
+          title: '提示',
+          content: '<p>确定删除当前关注的指标吗？</p>',
+          onOk: () => {
+            this.$Message.info('确定');
+          },
+          onCancel: () => {
+            this.$Message.info('取消');
+          }
+        });
+      }
     }
   }
 }
@@ -236,4 +266,61 @@ section {
     justify-content: space-between;
   }
 }
+
+  .cm-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    .cm-item {
+      margin-top: 20px;
+      padding: 20px;
+      float: left;
+      width: 49%;
+      height: 295px;
+      border: 1px solid rgba(216, 216, 216, 1);
+      .cm-item-title {
+        > p {
+          height: 20%;
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          color: rgba(102, 102, 102, 1);
+          line-height: 19px;
+          span {
+            color: #2A99F2;
+            cursor: pointer;
+            float: right;
+          }
+        }
+      }
+      .cm-item-content {
+        height: 80%;
+        padding-top: 12%;
+        cursor: pointer;
+        text-align: center;
+        .cross {
+          background:rgba(42,153,242,1);
+          height: 40px;
+          position: relative;
+          width: 1px;
+          margin: 0 auto;
+          &:after {
+            background: #2a99f2;
+            content: "";
+            height: 1px;
+            left: -20px;
+            position: absolute;
+            top: 20px;
+            width: 40px;
+          }
+        }
+        > p {
+          margin-top: 20px;
+          font-size: 12px;
+          font-family: MicrosoftYaHei;
+          color: rgba(153, 153, 153, 1);
+          line-height: 16px;
+        }
+      }
+    }
+  }
 </style>
