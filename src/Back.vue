@@ -235,7 +235,7 @@
             subItem: [{subName: '云主机', type: 'host'}, {subName: '云主机快照', type: 'snapshot'}, {
               subName: '镜像',
               type: 'mirror'
-            },{subName: 'SSH密钥', type: 'SSHSecretKey'},]
+            },/*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
           },
           /*{
             mainName: '云数据库',
