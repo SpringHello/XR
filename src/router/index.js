@@ -95,6 +95,7 @@ const BalanceParticulars = () => import('@/components/Back/BalanceParticulars')
 const Renew = () => import('@/components/Back/Renew')
 const New = () => import('@/components/Back/New')
 const Host = () => import('@/components/Back/Host')
+const GPU = () => import('@/components/Back/GPU')
 const Mirror = () => import('@/components/Back/Mirror')
 const SSHSecretKey = () => import('@/components/Back/SSHSecretKey')
 const Snapshot = () => import('@/components/Back/Snapshot')
@@ -294,6 +295,7 @@ var router = new Router({
         {path: 'firewall', name: 'firewall', component: Firewall},
         {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
+        {path: 'gpu', name: 'gpu', component: GPU},
         {path: 'mirror', name: 'mirror', component: Mirror},
         {path: 'SSHSecretKey', name: 'SSHSecretKey', component: SSHSecretKey},
         {path: 'vpc', name: 'vpc', component: Vpc},
@@ -343,7 +345,7 @@ var router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  document.scrollTo(0,0)
+  window.scrollTo(0,0)
   if (to.matched.some(route => {
       return route.meta.requiresAuth
     })) {

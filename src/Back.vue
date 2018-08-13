@@ -232,7 +232,7 @@
           {
             mainName: '云服务器',
             type: 'server',
-            subItem: [{subName: '云主机', type: 'host'}, {subName: '云主机快照', type: 'snapshot'}, {
+            subItem: [{subName: '云主机', type: 'host'},{subName: 'GUP云服务器', type: 'gpu'}, {subName: '云主机快照', type: 'snapshot'}, {
               subName: '镜像',
               type: 'mirror'
             },/*{subName: 'SSH密钥', type: 'SSHSecretKey'},*/]
