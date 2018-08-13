@@ -1,10 +1,6 @@
 <template>
   <div id="background">
     <div id="wrapper">
-      <Spin fix v-show="loading">
-        <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
-        <div>{{loadingMessage}}</div>
-      </Spin>
       <span class="title">首页
         <!-- / <span>云主机快照</span> -->
       </span>
@@ -33,6 +29,35 @@
                 </li>
               </ul>
             </div>
+            <!-- <div>
+              <chart :options="messageData" style="width: 400px;height:295px;margin-top: 20px; border: solid 1px #D8D8D8;padding: 20px;box-sizing: border-box"></chart>
+            </div> -->
+            <section>
+              <div class="disk">
+                 <div class="header">
+                  磁盘链接速率
+                  <span>
+                    <i>编辑</i> | <i>删除</i>
+                  </span>
+                </div>
+                <div class="switch">
+                  <RadioGroup v-model="disk.type" type="button" @on-change="timeSwitch('disk')">
+                    <Radio label="day">今日</Radio>
+                    <Radio label="week">本周</Radio>
+                    <Radio label="month">本月</Radio>
+                  </RadioGroup>
+                  <div>
+                    <Button type="primary">导出</Button>
+                    <RadioGroup v-model="disk.showType" type="button" @on-change="chartTypeSwitch('disk')">
+                      <Radio label="line">折线</Radio>
+                      <Radio label="bar">柱状</Radio>
+                    </RadioGroup>
+                  </div>
+                </div>
+                <chart :options="showChart" style="width: 714px;height:172px;margin-top: 20px;"></chart>
+              </div>
+              <chart :options="messageData" style="border: solid 1px #D8D8D8;padding: 20px;padding-right:0;box-sizing: border-box;width: 366px;height:295px;"></chart>
+            </section>
           </TabPane>
           <TabPane label="自定义监控" name="customMonitoring">
             2
@@ -51,87 +76,164 @@
 </template>
 
 <script type="text/ecmascript-6">
-  // import axios from '@/util/axiosInterceptor'
-  import $store from '@/vuex'
-  import axios from '@/util/axiosInterceptor'
-  import regExp from '../../util/regExp'
-  import echarts from 'echarts'
-
-  export default {
-    data() {
-      return {
-        monitorData: [
-          {
-            text: '云主机Ping不可达',
-            num: '0'
-          },
-          {
-            text: '未处理告警',
-            num: '0'
-          },
-          {
-            text: '已关机云主机',
-            num: '0'
-          }
-        ]
-      }
-    },
-    created() {
-
-    },
-    methods: {
-      // 区域变更，刷新数据
-      refresh() {
-
-      },
-      labelSwitching(name) {
-        console.log(name)
-      }
-    },
-    computed: {
-      auth() {
-        return this.$store.state.authInfo != null
-      }
-    },
-    watch: {
-      '$store.state.zone': {
-        handler: function () {
-          this.refresh()
+// import axios from '@/util/axiosInterceptor'
+// import $store from '@/vuex'
+// import axios from '@/util/axiosInterceptor'
+// import regExp from '../../util/regExp'
+import messageMonitor from '@/echarts/cloudMonitor/messagePie'
+import line from '@/echarts/cloudMonitor/line'
+import bar from '@/echarts/cloudMonitor/bar'
+export default {
+  data () {
+    return {
+      messageData: messageMonitor,
+      line,
+      bar,
+      showChart: line,
+      monitorData: [
+        {
+          text: '云主机Ping不可达',
+          num: '0'
         },
-        deep: true
+        {
+          text: '未处理告警',
+          num: '0'
+        },
+        {
+          text: '已关机云主机',
+          num: '0'
+        }
+      ],
+      disk: {
+        showType: 'line',
+        timeType: 'day'
       }
     }
+  },
+  created () {
+    //  短信剩余配额数据模拟
+    var mockMessageData = [
+      { value: 130, name: '剩余配额' },
+      { value: 80, name: '自定义监控告警' },
+      { value: 120, name: '基础告警' },
+      { value: 30, name: '财务与信息系统' }
+    ]
+    mockMessageData.forEach(item => {
+      if (item.name == "剩余配额") {
+        item.selected = true
+      }
+      item.name += '(' + item.value + ')'
+    })
+    var mockMessagelegend = mockMessageData.map(item => {
+      return item.name
+    })
+    this.messageData.series[0].data = mockMessageData
+    this.messageData.legend.data = mockMessagelegend
+  },
+  methods: {
+    // 区域变更，刷新数据
+    refresh () {
+
+    },
+    labelSwitching (name) {
+      console.log(name)
+    },
+    chartTypeSwitch (type) {
+      this[type].showType == 'line' ? this.showChart = this.line : this.showChart = this.bar
+      // if (type == 'cpu' || type == 'memory') {
+      //   var polar = this[type].showType == '折线' ? JSON.parse(defaultOptionstr) : JSON.parse(histogramstr)
+      //   polar.xAxis.data = this[type + 'Polar'].xAxis.data
+      //   polar.series[0].data = this[type + 'Polar'].series[0].data
+      //   this[type + 'Polar'] = polar
+      // } else if (type == 'flow') {
+      //   polar = this[type].showType == '折线' ? ipOptions : ipHistogram
+      //   polar.xAxis.data = this.ipPolar.xAxis.data
+      //   polar.series[0].data = this.ipPolar.series[0].data
+      //   polar.series[1].data = this.ipPolar.series[1].data
+      //   // console.log(polar)
+      //   this.ipPolar = polar
+      // } else {
+      //   var polar = this[type].showType == '折线' ? JSON.parse(hostDiskOptionstr) : JSON.parse(hostDiskHistogram)
+      //   polar.xAxis.data = this[type + 'Polar'].xAxis.data
+      //   polar.series[0].data = this[type + 'Polar'].series[0].data
+      //   this[type + 'Polar'] = polar
+      // }
+
+    }
+  },
+  computed: {
+    auth () {
+      return this.$store.state.authInfo != null
+    }
+  },
+  watch: {
+    '$store.state.zone': {
+      handler: function () {
+        this.refresh()
+      },
+      deep: true
+    }
   }
+}
 </script>
 <style rel="stylesheet/less" lang="less" scoped>
-  .host-monitor {
-    font-family: MicrosoftYaHei;
-    padding: 20px 0;
-    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(216, 216, 216, 1);
-    color: #666666;
-    > p {
-      font-size: 14px;
+.host-monitor {
+  font-family: MicrosoftYaHei;
+  padding: 20px 0;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(216, 216, 216, 1);
+  color: #666666;
+  > p {
+    font-size: 14px;
+    padding-left: 20px;
+  }
+  ul {
+    display: flex;
+    li {
+      flex: auto;
+      border-right: solid 1px #d8d8d8;
       padding-left: 20px;
-    }
-    ul {
-      display: flex;
-      li {
-        flex: auto;
-        border-right: solid 1px #d8d8d8;
-        padding-left: 20px;
-        &:last-of-type {
-          border-right: none;
-        }
-        p {
-          font-size: 12px;
-          padding-top: 12px;
-          span {
-            font-size: 18px;
-            padding-right: 10px;
-          }
+      &:last-of-type {
+        border-right: none;
+      }
+      p {
+        font-size: 12px;
+        padding-top: 12px;
+        span {
+          font-size: 18px;
+          padding-right: 10px;
         }
       }
     }
   }
+}
+section {
+  margin-top: 20px;
+  &:first-of-type {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+.disk {
+  width: 774px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 1);
+  border: 1px solid rgba(216, 216, 216, 1);
+  .header {
+    font-size: 14px;
+    color: #111111;
+    span {
+      float: right;
+      color: #2a99f2;
+      i {
+        font-style: normal;
+        cursor: pointer;
+      }
+    }
+  }
+  .switch {
+    display: flex;
+    justify-content: space-between;
+  }
+}
 </style>
