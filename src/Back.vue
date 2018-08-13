@@ -780,7 +780,7 @@
 
   .affix {
     position: fixed;
-    right: 50px;
+    right: 15px;
     bottom: 20px;
     z-index: 100;
     display: flex;

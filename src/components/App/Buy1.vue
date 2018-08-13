@@ -2600,7 +2600,9 @@
         }
         this.PdiskInfo.dataDiskList.splice(index, 1, params)
       },
-
+      removeHostDisk(index){
+        this.PecsInfo.dataDiskList.splice(index, 1)
+      },
       // 删除磁盘
       removeDisk(index) {
         this.PdiskInfo.dataDiskList.splice(index, 1)

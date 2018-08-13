@@ -67,11 +67,13 @@
       this.loading = true
       this.loadingMessage = '正在生成二维码，请稍后...'
       let params = {
-        total_fee: this.price
+        total_fee: this.price,
       }
-      if (this.orders && this.ticket) {
-        params.orders = this.orders
+      if (this.ticket) {
         params.ticket = this.ticket
+      }
+      if (this.orders) {
+        params.orders = this.orders
       }
       this.$http.get('wx/wxpayapi.do', {
         params

@@ -16,7 +16,8 @@
               <li>{{host.time}}</li>
               <li>{{host.bandwidth}}</li>
               <li>{{host.disk}}</li>
-              <Select v-model="host.zoneId" class="fr-select" style="width:140px;margin-left: 80px" @on-change="getOriginalPrice(configIndex,hostIndex)">
+              <Select v-model="host.zoneId" class="fr-select" style="width:140px;margin-left: 80px"
+                      @on-change="getOriginalPrice(configIndex,hostIndex)">
                 <Option v-for="item in areaGroup" :value="item.value" :key="item.value">{{ item.name }}</Option>
               </Select>
               <Select v-model="host.system" class="fr-select" style="width:250px;margin-left: 10px;margin-right: 40px">
@@ -29,7 +30,8 @@
                 <p>原价：<span>¥{{ host.originalCost}}</span></p>
               </div>
               <div class="but">
-                <button @click="freeToReceive(configIndex,hostIndex)" :disabled="flag" :class="{disabled: flag}">免费领取</button>
+                <button @click="freeToReceive(configIndex,hostIndex)" :disabled="flag" :class="{disabled: flag}">免费领取
+                </button>
               </div>
             </div>
           </div>
@@ -124,7 +126,8 @@
         <div>
           <!--span class="checkBox" :class="{agree:agree}" @click="toggle"></span>&nbsp;<span>我已阅读并同意</span><span
           style="color:#0EB4FA;cursor:pointer;" @click="showRules">《睿云用户使用协议》</span-->
-          <a href="register" target="_blank" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:left;font-size: 14px">
+          <a href="register" target="_blank"
+             style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:left;font-size: 14px">
             立即注册
           </a>
           <router-link to="reset" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:right;font-size:14px">
@@ -153,7 +156,8 @@
         <p>提示</p>
       </div>
       <div style="text-align:center">
-        <p class="modal-p">您好，您不符合本活动的参与条件，去<span @click="$router.push('ActiveCenter')">活动中心</span>看看其他活动吧！如果有其他需要可联系我们销售或者客服。</p>
+        <p class="modal-p">您好，您不符合本活动的参与条件，去<span @click="$router.push('ActiveCenter')">活动中心</span>看看其他活动吧！如果有其他需要可联系我们销售或者客服。
+        </p>
       </div>
       <div slot="footer">
         <button class="modal-button" @click="$router.push('ActiveCenter')">去活动中心</button>
@@ -219,11 +223,13 @@
         <div class="recharge-select">
           <RadioGroup v-model="rechargeWay">
             <Radio label="zfb" style="margin-right: 50px">
-              <img style="margin: 0 4px 0 8px;position: relative;top: 6px;" src="../../../assets/img/active/freeToReceive/fr-icon19.png"/>
+              <img style="margin: 0 4px 0 8px;position: relative;top: 6px;"
+                   src="../../../assets/img/active/freeToReceive/fr-icon19.png"/>
               <span style="font-size:16px;color:rgba(51,51,51,1);">支付宝</span>
             </Radio>
             <Radio label="wx">
-              <img style="margin: 0 4px 0 8px;position: relative;top: 6px;" src="../../../assets/img/active/freeToReceive/fr-icon20.png"/>
+              <img style="margin: 0 4px 0 8px;position: relative;top: 6px;"
+                   src="../../../assets/img/active/freeToReceive/fr-icon20.png"/>
               <span style="font-size:16px;color:rgba(51,51,51,1);">微信支付</span>
             </Radio>
           </RadioGroup>
@@ -250,10 +256,13 @@
       </div>
       <div slot="footer">
         <button class="modal-button" style="width: 158px" @click="isPay">已完成支付</button>
-        <button class="modal-button" style="width: 158px;background: #F5A623;margin-left: 20px" @click="changePayWey">更换支付方式</button>
-        <a style="font-size:14px;font-family: 'Microsoft YaHei', '微软雅黑';color:rgba(42,153,242,1);cursor: pointer;margin-top: 20px;display: block"
-           href="http://p.qiao.baidu.com/cps2/chatIndex?reqParam=%7B%22from%22%3A0%2C%22sid%22%3A%22-100%22%2C%22tid%22%3A%22-1%22%2C%22ttype%22%3A1%2C%22siteId%22%3A%2212207678%22%2C%22userId%22%3A%2224752455%22%2C%22pageId%22%3A0%7D"
-           target="_blank">支付遇到问题？</a>
+        <button class="modal-button" style="width: 158px;background: #F5A623;margin-left: 20px" @click="changePayWey">
+          更换支付方式
+        </button>
+        <a
+          style="font-size:14px;font-family: 'Microsoft YaHei', '微软雅黑';color:rgba(42,153,242,1);cursor: pointer;margin-top: 20px;display: block"
+          href="http://p.qiao.baidu.com/cps2/chatIndex?reqParam=%7B%22from%22%3A0%2C%22sid%22%3A%22-100%22%2C%22tid%22%3A%22-1%22%2C%22ttype%22%3A1%2C%22siteId%22%3A%2212207678%22%2C%22userId%22%3A%2224752455%22%2C%22pageId%22%3A0%7D"
+          target="_blank">支付遇到问题？</a>
       </div>
     </Modal>
     <!-- 支付成功提示框 -->
@@ -1160,6 +1169,12 @@
           margin-top: 20px;
         }
       }
+    }
+  }
+
+  @media screen and (max-width: 1600px) {
+    .fr-suspension {
+      display: none;
     }
   }
 

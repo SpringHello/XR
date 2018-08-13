@@ -22,9 +22,9 @@
             <Tabs type="card" :animated="false" v-model="tabLabel" @on-click="clear">
               <Tab-pane label="全部" name="全部" style="min-height: 600px;position: relative">
                 <div style="margin-bottom: 20px;">
-                  <Alert style="border:1px solid #2A99F2;border-radius: 4px;width:100%">
+                  <!--<Alert style="border:1px solid #2A99F2;border-radius: 4px;width:100%">
                     自2018/05/22日起，到2018/07/31。升级与续费本平台任意资源，即可享满减优惠，满20减6元，满300减120，最多可减7000元！
-                  </Alert>
+                  </Alert>-->
                   <Button type="primary" @click="selectAll" style="margin-right:10px;">全选</Button><Button type="primary" @click="renewalAll">一键续费</Button>
                   <div style="float:right">
                     <Tooltip content="当您开启关联选择，在您选择具有关联属性的产品之时，系统会默认勾选其关联资源。例如选择主机之时，会关联选择所绑定的弹性IP、云硬盘等资源。"

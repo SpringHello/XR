@@ -61,10 +61,6 @@
     <div class="center-active box-g">
       <div class="wrap">
         <div class="content">
-          <div class="head">
-            <h3>活动中心</h3>
-            <p>惊喜不间断，优惠不停歇，多种活动任你选择</p>
-          </div>
           <div class="sec-headline-g">
               <p>新手上云</p>
               <span>NOVICE TO CLOUD</span>
@@ -408,21 +404,7 @@ export default {
 // center和bottom公共样式
 .box-g {
   .content {
-    padding: 100px 0;
-    .head {
-      text-align: center;
-      margin-bottom: 50px;
-      h3 {
-        font-size: 36px;
-        line-height: 50px;
-      }
-      p {
-        margin-top: 20px;
-        font-size: 18px;
-        color: rgba(102, 102, 102, 1);
-        line-height: 25px;
-      }
-    }
+    padding: 60px 0;
     .box-wrap {
       display: flex;
       flex-wrap: wrap;

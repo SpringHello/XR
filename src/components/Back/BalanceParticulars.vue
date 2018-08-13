@@ -184,7 +184,7 @@
     methods: {
       /*  列出该负载均衡下的主机*/
       listHostByBalance () {
-        var loadbalanceType = this.balanceInfo._internal ? '' : '1'
+        var loadbalanceType = this.balanceInfo._internal ? '0' : '1'
         var roleId = this.balanceInfo.loadbalanceroleid || this.balanceInfo.lbid
         this.$http.get('loadbalance/listVmByRoleId.do', {
           params: {
@@ -203,7 +203,7 @@
       },
       // 负载均衡绑定主机
       bind(loadbalanceId){
-        var internalLoadbalance = this.balanceInfo._internal ? '1' : ''
+        var internalLoadbalance = this.balanceInfo._internal ? '1' : '0'
         this.showModal.bind = true
         this.$http.get('network/showLoadBalanceVM.do', {
           params: {

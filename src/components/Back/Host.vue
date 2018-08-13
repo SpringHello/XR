@@ -34,11 +34,11 @@
               <Dropdown-item name="ratesChange" :disabled="status=='欠费'||status=='异常'">资费变更</Dropdown-item>
               <!-- 续费 -->
               <Dropdown-item name="renewal" v-if="status=='欠费'||status=='异常'" :disabled=true>主机续费
-                <span
-                  style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>
+                <!--<span
+                  style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>-->
               </Dropdown-item>
-              <Dropdown-item name="renewal" v-else>主机续费<span
-                style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>
+              <Dropdown-item name="renewal" v-else>主机续费<!--<span
+                style="display:inline-block;background-color: #f24746;color:#fff;margin-left:20px;width: 18px;height: 18px;border-radius: 50%;text-align: center;line-height: 17px;">惠</span>-->
               </Dropdown-item>
               <!-- 备份 -->
               <Dropdown-item name="backup" v-if="status!='开启'&&status!='关机'" :disabled=true>
@@ -159,10 +159,10 @@
                                 :class="{btnnormal:auth,_hover:auth}">管理
                         </Button>
                         <Button v-if="!auth" :disabled="!auth">连接主机</Button>
-                        <Button v-else class="btnnormal _hover" @click="link(item)">连接主机
-                        </Button>
-                        <!--<a v-else :href="item.connecturl" target="_blank"
-                           style="line-height: 30px;border: 1px solid;border-radius: 4px;width: 76px;" class="_hover">连接主机</a>-->
+                        <!--<Button v-else class="btnnormal _hover" @click="link(item)">连接主机
+                        </Button>-->
+                        <a v-else :href="item.connecturl" target="_blank"
+                           style="line-height: 30px;border: 1px solid;border-radius: 4px;width: 76px;" class="_hover">连接主机</a>
                       </div>
                     </div>
                   </Card>
