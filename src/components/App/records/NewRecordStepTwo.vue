@@ -339,11 +339,11 @@
       };
       //校验网站域名
       const validWebsiteDomain = (rule, value, callback) => {
-        var reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+        var reg = /^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/;
         if (value == "") {
           return callback(new Error("请输入网站域名"));
         } else if (!reg.test(value)) {
-          return callback(new Error("域名不正确"));
+          return callback(new Error("请输入正确的域名"));
         } else {
           callback();
         }
@@ -404,7 +404,7 @@
       };
       //校验新增域名
       const validNewWebsiteDomain = (rule, value, callback) => {
-        let reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+        let reg = /^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/;
         for (let i = 0; i <= value.length; i++) {
           if (value.length == 0 || value[i] == "") {
             return callback(new Error("请输入网站域名"));
