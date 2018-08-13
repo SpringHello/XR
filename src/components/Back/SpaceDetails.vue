@@ -590,7 +590,7 @@
           </Form-item>
           <p style="color: #999999;">来源可设置多个，每行一个，以回车间隔。</p>
           <Form-item label="Allow-Expose-Headers" prop="ExposeHeaders">
-            <Input style="width:420px;" :rows="3" type="textarea"
+            <Input style="width:420px;" :rows="3" type="textarea" @on-change="exposePush"
                    v-model="addCorsForm.ExposeHeaders"></Input>
           </Form-item>
           <p style="color: #999999;">来源可设置多个，每行一个，以回车间隔，不允许通配符(*)</p>
@@ -602,7 +602,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="cors = false">取消</Button>
-        <Button type="primary" @click="_checkNewCros">确定新建</Button>
+        <Button type="primary" @click="addCors">确定新建</Button>
       </div>
     </Modal>
 
@@ -628,12 +628,12 @@
               <Checkbox label="delete">Delete</Checkbox>
             </CheckboxGroup>
           </Form-item>
-          <Form-item label="Allow-Headers" prop="allowsheaders">
+          <Form-item label="Allow-Headers">
             <Input style="width:420px;" :rows="3" type="textarea"
                    v-model="updateCorsForm.allowsheaders"></Input>
           </Form-item>
           <Form-item label="Allow-Expose-Headers" prop="exposeheaders">
-            <Input style="width:420px;" :rows="3" type="textarea"
+            <Input style="width:420px;" :rows="3" type="textarea" @on-change="updateExposePush"
                    v-model="updateCorsForm.exposeheaders"></Input>
           </Form-item>
           <Form-item label="缓存Max Age">
@@ -700,24 +700,43 @@
     }
   };
   const validatorOrgins = (rule,value,callback) =>{
-    var strRegex = "/^((https|http)?://)$/"
-      + "?(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" //ftp的user@
-      + "(([0-9]{1,3}\.){3}[0-9]{1,3}" // IP形式的URL- 199.194.52.184
-      + "|" // 允许IP和DOMAIN（域名）
-      + "([0-9a-z_!~*'()-]+\.)*" // 域名- www.
-      + "([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\." // 二级域名
-      + "[a-z]{2,6})" // first level domain- .com or .museum
-      + "(:[0-9]{1,4})?" // 端口- :80
-      + "((/?)|" // a slash isn't required if there is no file name
-      + "(/[0-9a-z_!~*'().;?:@&=+$,%#-]+)+/?)$";
+      let reg = /^(http|https)(:\/\/)((([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]{1,4}))|(([0-9a-z_!~*'()-]+\.)([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6}))$/;
+      let origins = value.split('\n');
+      for (let i = 0; i<origins.length;i++){
+        if(origins.length == 0){
+          return callback(new Error('请输入来源origin'));
+        }else if(!reg.test(origins[i]) || (/^[*]{1}$/).test(origins[i])){
+          return callback(new Error('请输入正确的origin'));
+        }else{
+          return callback();
+        }
+      }
 
-    // let reg = /^(http|https|ftp)\://([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&%\$\-]+)*@)?((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.[a-zA-Z]{2,4})(\:[0-9]+)?(/[^/][a-zA-Z0-9\.\,\?\'\\/\+&%\$#\=~_\-@]*)*$/
-    if(value == ""){
-      return callback(new Error('请输入来源origin'));
-    }else if(!reg.test(value)){
-      return callback(new Error('请输入正确的origin'));
-    }else{
-      callback();
+  }
+  const validatorExpose ={
+    expose(rule,value,callback) {
+      let reg = /[*]+/g
+      let ru = value.split('\n');
+      for (let i = 0;i<ru.length;i++){
+        if(reg.test(ru)){
+          return callback('不能输入*')
+        }else{
+          callback();
+        }
+      }
+    }
+  }
+  const validatorUpdateExpose = {
+    expose(rule,value,callback) {
+      let reg = /[*]+/g
+      let ru = value.split('\n');
+      for (let i = 0;i<ru.length;i++){
+        if(reg.test(ru)){
+          return callback('不能输入*')
+        }else{
+          callback();
+        }
+      }
     }
   }
     export default {
@@ -1320,16 +1339,13 @@
         },
         addCorsFormValidateL: {
           orgins: [
-            {required: true, validator:validatorOrgins}
+            {required: true, validator:validatorOrgins,trigger:'blur'}
           ],
           methods: [
             {required: true, message: '请选择操作Method'}
           ],
-          allowsHeaders: [
-            {required: true, message: '请填写allowsHeaders'}
-          ],
           ExposeHeaders: [
-            {required: true, message: '请填写ExposeHeaders'}
+            {validator:validatorExpose.expose,trigger:'blur'}
           ]
         },
         //修改权限需要的code
@@ -1365,11 +1381,8 @@
           methods: [
             {required: true, message: '请选择操作Method'}
           ],
-          allowsheaders: [
-            {required: true, message: '请填写allowsHeaders'}
-          ],
           exposeheaders: [
-            {required: true, message: '请填写ExposeHeaders'}
+            {validator:validatorUpdateExpose.expose,trigger:'blur'}
           ]
         },
         //获取表格当前要修改数据的index
@@ -1445,42 +1458,69 @@
         //统计时间结束
         endTime:'',
         //切换权限按钮loading
-        aclLoading:false
+        aclLoading:false,
+        originList:[],
+        exposeList:[]
       }
     },
     components:{
       cunt
     },
     methods: {
-      _checkNewCros(){
-        this.$refs.newCros.validate((valid) => {
-          if (valid) {
-            // 表单验证通过，调用创建磁盘方法
-            this.addCors()
+      exposePush(){
+        let dd = this.addCorsForm.ExposeHeaders.split('\n');
+        dd.pop();
+        for(let i = 0;i<dd.length;i++){
+          let reg =/[*]+/g
+          if(reg.test(dd[i])){
+            this.$refs.newCros.rules.ExposeHeaders[0].validator = validatorExpose.expose;
+          }else{
+            this.$refs.newCros.rules.ExposeHeaders[0].validator = null;
           }
-        })
+        }
+      },
+      updateExposePush(){
+        let expose = this.updateCorsForm.ExposeHeaders.split('\n');
+        expose.pop();
+        for(let i = 0;i<expose.length;i++){
+          let reg =/[*]+/g
+          if(reg.test(expose[i])){
+            this.$refs.oldCros.rules.ExposeHeaders[0].validator = validatorUpdateExpose.expose;
+          }else{
+            this.$refs.oldCros.rules.ExposeHeaders[0].validator = null;
+          }
+        }
       },
       // 添加Cros
       addCors(){
-        let corsObject = {orgins:'创建中',methods:'————',allowsheaders:'————',exposeheaders:'————',maxage:'————'}
-        this.corsData.push(corsObject);
-        this.$http.post('cors/addCors.do', {
-          bucketid: sessionStorage.getItem('bucketId'),
-          bucketName: sessionStorage.getItem('bucketName'),
-          orgins: this.addCorsForm.orgins,
-          methods: this.addCorsForm.methods,
-          allowsHeaders: this.addCorsForm.allowsHeaders,
-          ExposeHeaders: this.addCorsForm.ExposeHeaders,
-          maxAge: this.addCorsForm.maxAge + ''
-        }).then(response => {
-          if(response.status == 200 && response.data.status =="1"){
-            this.cors = false;
-            this.$Message.success('CROS规则配置成功');
+        this.$refs.newCros.validate((valid) => {
+          if (valid) {
+          let corsObject = {orgins:'创建中',hide:1,methods:'————',allowsheaders:'————',exposeheaders:'————',maxage:'————'}
+          this.corsData.push(corsObject);
+            let expose = this.addCorsForm.ExposeHeaders.split('\n');
+            let allows = this.addCorsForm.allowsHeaders.split('\n');
+          this.$http.post('cors/addCors.do', {
+            bucketid: sessionStorage.getItem('bucketId'),
+            bucketName: sessionStorage.getItem('bucketName'),
+            orgins: this.addCorsForm.orgins,
+            methods: this.addCorsForm.methods,
+            allowsHeaders: allows.join(','),
+            ExposeHeaders: expose.join(','),
+            maxAge: this.addCorsForm.maxAge + ''
+          }).then(response => {
+            if(response.status == 200 && response.data.status =="1"){
+              this.cors = false;
+              this.$Message.success('CROS规则配置成功');
+              this.selectCors();
+            }else{
+              this.$Message.info(response.data.msg);
+              this.selectCors();
+            }
+          }).catch(error=>{
+            this.$Message.info('CROS创建失败');
             this.selectCors();
-          }else{
-            this.$Message.info(response.data.msg);
-            this.selectCors();
-          }
+          })
+            }
         })
       },
       //获取Cros列表
@@ -1499,17 +1539,17 @@
       updateCros(){
         this.$refs.oldCros.validate((valid) =>{
           if(valid){
-            //取名有点混乱，这个是修改cros的弹窗
             this.updateCors = false;
-            let corsObject =  {orgins:'创建中',hide:1,methods:'————',allowsheaders:'————',exposeheaders:'————',maxage:'————'}
-            this.corsData[this.corsIndex] = corsObject;
-            console.log(this.corsData);
+            let expose = this.updateCorsForm.ExposeHeaders.split('\n');
+            let allows = this.updateCorsForm.allowsHeaders.split('\n');
+            let corsObject =  {orgins:'修改中',hide:1,methods:'————',allowsheaders:'————',exposeheaders:'————',maxage:'————'}
+            this.corsData.splice(index,1,corsObject);
             this.$http.post('cors/updateCors.do',{
               bucketName:sessionStorage.getItem('bucketName'),
               orgins:this.updateCorsForm.orgins,
               methods:this.updateCorsForm.methods,
-              allowsHeaders:this.updateCorsForm.allowsheaders,
-              ExposeHeaders:this.updateCorsForm.exposeheaders,
+              allowsHeaders:allows.join(','),
+              ExposeHeaders:expose.join(','),
               maxAge:this.updateCorsForm.maxage+"",
               corsid:this.corsid
               }
@@ -1527,7 +1567,7 @@
       },
       //删除CROS规则配置
       deleteCros(id,index){
-        let corsObject = {orgins:'删除中'}
+        let corsObject = {orgins:'删除中',hide:1,methods:'————',allowsheaders:'————',exposeheaders:'————',maxage:'————'}
         this.corsData.splice(index,1,corsObject);
         this.$http.post('cors/deleteCors.do',{
           corsid:id+"",
