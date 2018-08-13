@@ -128,7 +128,7 @@ export default {
           imgPath: require('../../assets/img/activecenter/bg-objStorage-2.png'),
           name: '免费云主机 不限量领取',
           secSpan: '交押金最长可用一年 押金闪退',
-          des: '2018.06.02开始',
+          des: '2018.08.03开始',
           activeObj: '云主机 新注册用户',
           url: 'fractive',
           isStart: true,

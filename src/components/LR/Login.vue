@@ -2,7 +2,13 @@
   <div class="login-wrapper">
     <div class="wrapper">
       <div class="wrapper-form">
-        <div class="banner" @click="$router.push('fractive')">
+        <div class="banner" @click="$router.push('dbActive')">
+          <div class="banner-text">
+            <p>秒级创建 &nbsp&nbsp运维便捷 &nbsp&nbsp安全可靠</p>
+            <p>热门云数据库产品一网打尽</p>
+            <p><span>1元试用60天</span>每天不限量</p>
+            <button>立即参与</button>
+          </div>
         </div>
         <div class="login-form">
           <div class="head">
@@ -272,8 +278,44 @@
       background: url(../../assets/img/login/login-banner.png) no-repeat center;
       height: 493px;
       width: 730px;
-      text-align: center;
       cursor: pointer;
+      .banner-text {
+        padding: 140px 0 0 53px;
+        > p {
+          font-size: 24px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color: rgba(51, 51, 51, 1);
+          line-height: 33px;
+        }
+        p:nth-child(2) {
+          margin-top: 9px;
+          font-size: 40px;
+          color: rgba(51, 51, 51, 1);
+          line-height: 56px;
+        }
+        p:nth-child(3) {
+          margin-top: 8px;
+          font-size: 24px;
+          color: rgba(51, 51, 51, 1);
+          line-height: 33px;
+          span {
+            color: rgba(255, 70, 43, 1);
+            margin-right: 20px;
+          }
+        }
+        button{
+          outline: none;
+          cursor: pointer;
+          border: none;
+          margin-top: 32px;
+          background:rgba(255,70,43,1);
+          border-radius:20px;
+          font-size:18px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color:rgba(255,255,255,1);
+          padding: 7px 29px;
+        }
+      }
     }
     .login-form {
       width: 421px;

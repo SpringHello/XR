@@ -387,3 +387,11 @@ div.modal-header-border {
 .fr-select .ivu-select-arrow {
   color: #FF881C;
 }
+/* 数据库活动下拉 */
+.db-select .ivu-select-selection {
+  border: 1px solid #DEDEDE;
+  height: 30px;
+}
+.db-select .ivu-select-arrow {
+  color: #DEDEDE;
+}

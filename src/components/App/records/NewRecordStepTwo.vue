@@ -186,7 +186,7 @@
                 <h3 style="margin-top: 20px">选择负责人</h3>
                 <RadioGroup v-model="site.basicInformation.personInCharge" class="records-radio-person" style="padding: 20px 0 20px 55px"
                             @on-change="changePersonInCharge(upIndex)">
-                  <Radio label="已填写主体单位负责人姓名">
+                  <Radio label="已填写单位负责人姓名">
                   </Radio>
                   <Radio label="新建负责人">
                   </Radio>
@@ -532,7 +532,7 @@
             // 备注
             remark: "",
             // 网站负责人未填写/已填写
-            personInCharge: "已填写主体单位负责人姓名",
+            personInCharge: "已填写单位负责人姓名",
             // 网站负责人姓名
             principalName: "",
             // 网站负责人证件类型

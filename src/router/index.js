@@ -10,318 +10,139 @@ import LR from '@/LR'
 // 前台页面子路由
 // import Home from '@/components/App/Home'
 // import Price from '@/components/App/Price'
-const Home = () =>
-import
-('@/components/App/Home')
-const Art = () =>
-import
-('@/components/App/Article')
+const Home = () =>import('@/components/App/Home')
+const Art = () =>import('@/components/App/Article')
 //const Price = () => import('@/components/App/Price')
-const Buy = () =>
-import
-('@/components/App/Buy1')
+const Buy = () =>import('@/components/App/Buy1')
 /*const Buy = () => import('@/components/App/buy/Buy')
  const BHost = () => import('@/components/App/buy/BHost')
  const BIP = () => import('@/components/App/buy/BIP')
  const BDisk = () => import('@/components/App/buy/BDisk')
  const BData = () => import('@/components/App/buy/BData')*/
-const Ecs = () =>
-import
-('@/components/App/product/ECS')
-const Document = () =>
-import
-('@/components/App/Document')
-const Document1 = () =>
-import
-('@/components/App/Document1')
-const Record = () =>
-import
-('@/components/App/Record')
+const Ecs = () =>import('@/components/App/product/ECS')
+const Document = () =>import('@/components/App/Document')
+const Document1 = () =>import('@/components/App/Document1')
+const Record = () =>import('@/components/App/Record')
 //const hostPrice = () => import('@/components/App/Price/Host')
 //const diskPrice = () => import('@/components/App/Price/Disk')
 //const elasticIPPrice = () => import('@/components/App/Price/ElasticIP')
-const Aboutus = () =>
-import
-('@/components/App/Aboutus')
-const ActiveCenter = () =>
-import
-('@/components/App/ActiveCenter')
-const Dynamic = () =>
-import
-('@/components/App/Dynamic')
+const Aboutus = () =>import('@/components/App/Aboutus')
+const ActiveCenter = () =>import('@/components/App/ActiveCenter')
+const Dynamic = () =>import('@/components/App/Dynamic')
 // const ProductBulletin = () => import('@/components/App/ProductBulletin')
 
 // 前台活动页面路由
-const Active = () =>
-import
-('@/components/App/active/active')
-const Vps = () =>
-import
-('@/components/App/active/vps')
+//const Active = () => import('@/components/App/active/active')
+const Vps = () => import('@/components/App/active/vps')
 /*const NewNodes_1 = () => import('@/components/App/active/newNodes_1')
- const NewNodes_2 = () => import('@/components/App/active/newNodes_2')*/
-const active_1 = () =>
-import
-('@/components/App/active/active_1')
+const NewNodes_2 = () => import('@/components/App/active/newNodes_2')*/
+//const active_1 = () => import('@/components/App/active/active_1')
 //const active_2 = () => import('@/components/App/active/active_2')
-const smlj = () =>
-import
-('@/components/App/active/smlj')
-const GroupBooking = () =>
-import
-('@/components/App/groupbooking/homePage')
-const ProductShare = () =>
-import
-('@/components/App/groupbooking/sharePage')
-const Activity = () =>
-import
-('@/components/App/groupbooking/activityPage')
-const FrActive = () =>
-import
-('@/components/App/active/freeReceive')
+const smlj = () => import('@/components/App/active/smlj')
+const GroupBooking = () => import('@/components/App/groupbooking/homePage')
+const ProductShare = () => import('@/components/App/groupbooking/sharePage')
+const Activity = () => import('@/components/App/groupbooking/activityPage')
+const FrActive = () => import('@/components/App/active/freeReceive')
+const DBActive = () => import('@/components/App/active/DatabaseActive')
 
 
 // 备案系统页面路由
-const Records = () =>
-import
-('@/components/App/Records')
-const Entrance = () =>
-import
-('@/components/App/records/Entrance')
-const NewAccess = () =>
-import
-('@/components/App/records/NewAccess')
-const NewRecordStepOne = () =>
-import
-('@/components/App/records/NewRecordStepOne')
-const NewRecordStepTwo = () =>
-import
-('@/components/App/records/NewRecordStepTwo')
-const NewRecordStepThree = () =>
-import
-('@/components/App/records/NewRecordStepThree')
-const NewRecordStepFour = () =>
-import
-('@/components/App/records/NewRecordStepFour')
-const WaitFirstTrial = () =>
-import
-('@/components/App/records/WaitFirstTrial')
-const WaitSecondTrial = () =>
-import
-('@/components/App/records/WaitSecondTrial')
-const Map = () =>
-import
-('@/components/App/records/Map')
+const Records = () =>import('@/components/App/Records')
+const Entrance = () =>import('@/components/App/records/Entrance')
+const NewAccess = () =>import('@/components/App/records/NewAccess')
+const NewRecordStepOne = () =>import('@/components/App/records/NewRecordStepOne')
+const NewRecordStepTwo = () =>import('@/components/App/records/NewRecordStepTwo')
+const NewRecordStepThree = () =>import('@/components/App/records/NewRecordStepThree')
+const NewRecordStepFour = () =>import('@/components/App/records/NewRecordStepFour')
+const WaitFirstTrial = () =>import('@/components/App/records/WaitFirstTrial')
+const WaitSecondTrial = () =>import('@/components/App/records/WaitSecondTrial')
+const Map = () =>import('@/components/App/records/Map')
 
 /* 产品页面路由 */
-const Pecs = () =>
-import
-('@/components/App/product/ECS.vue')
-const Phost = () =>
-import
-('@/components/App/product/Host.vue')
-const Pecss = () =>
-import
-('@/components/App/product/EcsSnapshot.vue')
-const Pvpc = () =>
-import
-('@/components/App/product/VPC.vue')
-const Peip = () =>
-import
-('@/components/App/product/ElasticIP.vue')
-const Pbalance = () =>
-import
-('@/components/App/product/Balance.vue')
-const Pvirvpn = () =>
-import
-('@/components/App/product/VirtualVPN.vue')
-const Pnat = () =>
-import
-('@/components/App/product/NATgateway.vue')
-const Pdisk = () =>
-import
-('@/components/App/product/CloudDisk.vue')
-const Pbackupdisk = () =>
-import
-('@/components/App/product/CloudDiskBackup.vue')
-const Pfirewall = () =>
-import
-('@/components/App/product/Firewall.vue')
-const Pddos = () =>
-import
-('@/components/App/product/DDOShighIP.vue')
-const Pmonitor = () =>
-import
-('@/components/App/product/CloudMonitoring.vue')
-const PobjStorage = () =>
-import
-('@/components/App/product/PobjStorage.vue')
-const PdataBase = () =>
-import
-('@/components/App/product/PdataBase.vue')
+const Pecs = () =>import('@/components/App/product/ECS.vue')
+const Phost = () =>import('@/components/App/product/Host.vue')
+const Pecss = () =>import('@/components/App/product/EcsSnapshot.vue')
+const Pvpc = () =>import('@/components/App/product/VPC.vue')
+const Peip = () =>import('@/components/App/product/ElasticIP.vue')
+const Pbalance = () =>import('@/components/App/product/Balance.vue')
+const Pvirvpn = () =>import('@/components/App/product/VirtualVPN.vue')
+const Pnat = () =>import('@/components/App/product/NATgateway.vue')
+const Pdisk = () =>import('@/components/App/product/CloudDisk.vue')
+const Pbackupdisk = () =>import('@/components/App/product/CloudDiskBackup.vue')
+const Pfirewall = () =>import('@/components/App/product/Firewall.vue')
+const Pddos = () =>import('@/components/App/product/DDOShighIP.vue')
+const Pmonitor = () =>import('@/components/App/product/CloudMonitoring.vue')
+const PobjStorage = () =>import('@/components/App/product/PobjStorage.vue')
+const PdataBase = () =>import('@/components/App/product/PdataBase.vue')
 // 登录注册页面
 // import Login from '@/components/LR/Login'
 // import Register from '@/components/LR/Register'
 // import Reset from '@/components/LR/Reset'
-const Login = () =>
-import
-('@/components/LR/Login')
-const Register = () =>
-import
-('@/components/LR/Register')
-const Reset = () =>
-import
-('@/components/LR/Reset')
-const RegisterSuccess = () =>
-import
-('@/components/LR/RegisterSuccess')
+const Login = () =>import('@/components/LR/Login')
+const Register = () =>import('@/components/LR/Register')
+const Reset = () =>import('@/components/LR/Reset')
+const RegisterSuccess = () =>import('@/components/LR/RegisterSuccess')
 
 // 后台页面子路由
 // import Overview from '@/components/Back/Overview'
 // import Host from '@/components/Back/Host'
-const Overview = () =>
-import
-('@/components/Back/Overview')
-const Work = () =>
-import
-('@/components/Back/Work')
-const Recharge = () =>
-import
-('@/components/Back/Recharge.vue')
-const Balance = () =>
-import
-('@/components/Back/Balance')
-const BalanceParticulars = () =>
-import
-('@/components/Back/BalanceParticulars')
-const Renew = () =>
-import
-('@/components/Back/Renew')
-const New = () =>
-import
-('@/components/Back/New')
-const Host = () =>
-import
-('@/components/Back/Host')
-const Mirror = () =>
-import
-('@/components/Back/Mirror')
-const Snapshot = () =>
-import
-('@/components/Back/Snapshot')
-const Firewall = () =>
-import
-('@/components/Back/Firewall')
-const Disk = () =>
-import
-('@/components/Back/Disk')
-const DiskBackup = () =>
-import
-('@/components/Back/DiskBackup')
-const DiskParticulars = () =>
-import
-('@/components/Back/DiskParticulars')
+
+const Overview = () => import('@/components/Back/Overview')
+const Work = () => import('@/components/Back/Work')
+const Recharge = () => import('@/components/Back/Recharge.vue')
+const Balance = () => import('@/components/Back/Balance')
+const BalanceParticulars = () => import('@/components/Back/BalanceParticulars')
+const Renew = () => import('@/components/Back/Renew')
+const New = () => import('@/components/Back/New')
+const Host = () => import('@/components/Back/Host')
+const Mirror = () => import('@/components/Back/Mirror')
+const SSHSecretKey = () => import('@/components/Back/SSHSecretKey')
+const Snapshot = () => import('@/components/Back/Snapshot')
+const Firewall = () => import('@/components/Back/Firewall')
+const Disk = () => import('@/components/Back/Disk')
+const DiskBackup = () => import('@/components/Back/DiskBackup')
+const DiskParticulars = () => import('@/components/Back/DiskParticulars')
+
 //const ObjectStorage = () => import('@/components/Back/ObjectStorage')
-const Vpc = () =>
-import
-('@/components/Back/Vpc')
-const VpcManage = () =>
-import
-('@/components/Back/VpcManage')
-const Vpn = () =>
-import
-('@/components/Back/Vpn')
-const Ip = () =>
-import
-('@/components/Back/Ip')
-const Order = () =>
-import
-('@/components/Back/Order')
-const Order1 = () =>
-import
-('@/components/Back/Order1')
-const PayResult = () =>
-import
-('@/components/Back/PayResult')
-const Result = () =>
-import
-('@/components/Back/Result')
-const Expenses = () =>
-import
-('@/components/Back/Expenses')
-const UserCenter = () =>
-import
-('@/components/Back/UserCenter')
-const MsgCenter = () =>
-import
-('@/components/Back/MsgCenter')
-const OperationLog = () =>
-import
-('@/components/Back/OperationLog')
-const Manage = () =>
-import
-('@/components/Back/Manage')
-const Upgrade = () =>
-import
-('@/components/Back/Upgrade')
-const FirewallManage = () =>
-import
-('@/components/Back/FirewallManage')
-const NATManage = () =>
-import
-('@/components/Back/NATManage')
-const Recycle = () =>
-import
-('@/components/Back/Recycle')
-const Wxpay = () =>
-import
-('@/components/Back/Wxpay')
-const WorkOrder = () =>
-import
-('@/components/Back/WorkOrder')
+const Vpc = () =>import('@/components/Back/Vpc')
+const VpcManage = () =>import('@/components/Back/VpcManage')
+const Vpn = () =>import('@/components/Back/Vpn')
+const Ip = () =>import('@/components/Back/Ip')
+const Order = () =>import('@/components/Back/Order')
+const Order1 = () =>import('@/components/Back/Order1')
+const PayResult = () =>import('@/components/Back/PayResult')
+const Result = () =>import('@/components/Back/Result')
+const Expenses = () =>import('@/components/Back/Expenses')
+const UserCenter = () =>import('@/components/Back/UserCenter')
+const MsgCenter = () =>import('@/components/Back/MsgCenter')
+const OperationLog = () =>import('@/components/Back/OperationLog')
+const Manage = () =>import('@/components/Back/Manage')
+const Upgrade = () =>import('@/components/Back/Upgrade')
+const FirewallManage = () =>import('@/components/Back/FirewallManage')
+const NATManage = () =>import('@/components/Back/NATManage')
+const Recycle = () =>import('@/components/Back/Recycle')
+const Wxpay = () =>import('@/components/Back/Wxpay')
+const WorkOrder = () =>import('@/components/Back/WorkOrder')
 
-const Link = () =>
-import
-('@/components/Link')
-const BRecords = () =>
-import
-('@/components/Back/Records')
-const RecordDetails = () =>
-import
-('@/components/Back/RecordDetails')
-const CompletedFilingDetails = () =>
-import
-('@/components/Back/CompletedFilingDetails')
-const SpaceDetails = () =>
-import
-('@/components/Back/SpaceDetails')
+const Link = () =>import('@/components/Link')
+const BRecords = () =>import('@/components/Back/Records')
+const RecordDetails = () =>import('@/components/Back/RecordDetails')
+const CompletedFilingDetails = () =>import('@/components/Back/CompletedFilingDetails')
+const SpaceDetails = () =>import('@/components/Back/SpaceDetails')
 
 
-const CloudDatabaseBackup = () =>
-import
-('@/components/Back/CloudDatabaseBackup')
-const CloudDatabase = () =>
-import
-('@/components/Back/CloudDatabase')
-const CloudDataManage = () =>
-import
-('@/components/Back/CloudDataManage')
-const CloudDatabaseMirror = () =>
-import
-('@/components/Back/CloudDatabaseMirror')
-const dataBaseUpgrade = () =>
-import
-('@/components/Back/dataBaseUpgrade')
+const CloudDatabaseBackup = () =>import('@/components/Back/CloudDatabaseBackup')
+const CloudDatabase = () =>import('@/components/Back/CloudDatabase')
+const CloudDataManage = () =>import('@/components/Back/CloudDataManage')
+const CloudDatabaseMirror = () =>import('@/components/Back/CloudDatabaseMirror')
+const dataBaseUpgrade = () =>import('@/components/Back/dataBaseUpgrade')
 // 帮助文档路由
-const documentInfo = () =>
-import
-('@/components/App/DocumentInfo')
+const documentInfo = () =>import('@/components/App/DocumentInfo')
 // 404
-const notFindPage = () =>
-import
-('@/components/404')
+const notFindPage = () =>import('@/components/404')
 
 Vue.use(Router)
+
 
 var router = new Router({
   mode: 'history',
@@ -338,7 +159,7 @@ var router = new Router({
         {path: 'ActiveCenter', name: 'ActiveCenter', component: ActiveCenter},
         {path: 'document', name: 'document', component: Document},
         {path: 'article/:typeId', name: 'art', component: Art},
-        {path: 'dynamic', name: 'dynamic', component: Dynamic},
+       // {path: 'dynamic', name: 'dynamic', component: Dynamic},
         {path: 'Record', name: 'Record', component: Record},
         //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
         {
@@ -422,27 +243,17 @@ var router = new Router({
           name: 'buy',
           component: Buy,
         },
-        /*{
-         path: 'buy',
-         name: 'buy',
-         component: Buy,
-         children:[
-         {path: '', name: 'bhost', component: BHost},
-         {path: 'bhost', name: 'bhost', component: BHost},
-         {path: 'bip', name: 'bip', component: BIP},
-         {path: 'bdisk', name: 'bdisk', component: BDisk},
-         {path: 'bdata', name: 'bdata', component: BData},
-         ]
-         },*/
-        {path: 'active', name: 'active', component: Active},
+
+        //{path: 'active', name: 'active', component: Active},
         {path: 'vps', name: 'vps', component: Vps},
         /*{path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
-         {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},*/
-        {path: 'active_1', name: 'active_1', component: active_1},
+        {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},*/
+        //{path: 'active_1', name: 'active_1', component: active_1},
         {path: 'entrance', name: 'entrance', component: Entrance},
         //{path: 'active_2', name: 'active_2', component: active_2},
         {path: 'smlj', name: 'smlj', component: smlj},
         {path: 'frActive', name: 'frActive', component: FrActive},
+        {path: 'dbActive', name:'dbActive', component: DBActive},
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
         {path: 'Pecss', component: Pecss},
@@ -484,6 +295,7 @@ var router = new Router({
         {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
         {path: 'mirror', name: 'mirror', component: Mirror},
+        {path: 'SSHSecretKey', name: 'SSHSecretKey', component: SSHSecretKey},
         {path: 'vpc', name: 'vpc', component: Vpc},
         {path: 'vpn', name: 'vpn', component: Vpn},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},
@@ -531,6 +343,7 @@ var router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  document.scrollTo(0,0)
   if (to.matched.some(route => {
       return route.meta.requiresAuth
     })) {

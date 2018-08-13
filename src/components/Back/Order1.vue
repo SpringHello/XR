@@ -184,6 +184,7 @@
             data.originalcost = item.originalcost
             data.cost = item.cost
             data.discountedorders = item.discountedorders
+            data.overTime = item.overTime
             this.couponInfo.originCost += item.originalcost
             this.couponInfo.cost += item.cost
             this.couponInfo.totalCost += item.cost
@@ -276,6 +277,7 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            sessionStorage.setItem('overtime',this.orderData[0].overTime)
             this.$router.push({
               name: 'result',
               params: response.data.result

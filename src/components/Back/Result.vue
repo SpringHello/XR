@@ -9,6 +9,7 @@
       <div class="content">
         <span>支付</span>
         <span class="title">已选择{{orderInfo.orderNum}}项 | 总计:{{orderInfo.money}}元 |</span>
+        <p>请在<span>{{ overTime }}</span>内完成支付，否则订单会自动取消！</p>
         <div class="accountInfo" v-if="currentTab=='otherPay'">
           <CheckboxGroup v-model="accountPay" @on-change="checkUseVoucher">
             <Checkbox label="account" style="margin-right:40px;user-select: none">
@@ -130,13 +131,15 @@
         // 支付宝流水号
         zfbNum: '',
         loadingMessage: '',
-        load: false
+        load: false,
+        overTime: ''
       }
     },
     beforeRouteEnter(to, from, next) {
       next()
     },
     created() {
+      this.overTime = sessionStorage.getItem('overtime')
       this.orderInfo = this.$route.params
       if (this.orderInfo.isUseVoucher == 1) {
         this.accountPay.push('voucher')
@@ -391,6 +394,16 @@
         background-color: white;
         padding: 20px;
         min-height: 700px;
+        >p{
+          font-size:20px;
+          margin-top: 20px;
+          font-family:PingFangSC-Regular;
+          color:rgba(51,51,51,1);
+          line-height:28px;
+          span{
+            color: #FD0000;
+          }
+        }
         & > span {
           font-family: Microsoft YaHei-Bold;
           font-size: 24px;

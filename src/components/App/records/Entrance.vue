@@ -99,6 +99,21 @@
         <Button type="primary" @click="newSite">确认</Button>
       </p>
     </Modal>
+    <!-- 用户没有主体提示框 -->
+    <Modal v-model="showModal.hasMainWep" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24">您未在新睿云备过案，请选择新增备案进行下一步操作
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.hasMainWep = false">取消</Button>
+        <Button type="primary" @click="newRecord">确认</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -263,7 +278,8 @@
         recordInfo: [],
         showModal: {
           recordInfo: false,
-          hint: false
+          hint: false,
+          hasMainWep: false
         },
         loginModal: false,
         form: {
@@ -327,12 +343,45 @@
         item.src = this.selectImg
       },
       newSite() {
-        this.showModal.hint = false
-        this.type = 3
-        sessionStorage.setItem('zone', this.areaText)
-        sessionStorage.setItem('zoneId', this.area)
-        sessionStorage.setItem('recordsType', this.type + '')
-        this.$router.push('newAccess')
+        let url = 'recode/existMainOrWeb.do'
+        axios.get(url, {
+          params: {
+            zoneId: this.area
+          }
+        }).then(response => {
+          this.showModal.hint = false
+          if (response.status == 200 && response.data.status == 1) {
+            if (response.data.result) {
+              sessionStorage.setItem('zone', this.areaText)
+              sessionStorage.setItem('zoneId', this.area)
+              sessionStorage.setItem('recordsType', '3')
+              this.$router.push('newAccess')
+            } else {
+              this.showModal.recordInfo = true
+            }
+          }
+        })
+
+      },
+      newRecord() {
+        let url = 'recode/existMainOrWeb.do'
+        axios.get(url, {
+          params: {
+            zoneId: this.area
+          }
+        }).then(response => {
+          this.showModal.hasMainWep = false
+          if (response.status == 200 && response.data.status == 1) {
+            if (response.data.result) {
+              sessionStorage.setItem('zone', this.areaText)
+              sessionStorage.setItem('zoneId', this.area)
+              sessionStorage.setItem('recordsType', '1')
+              this.$router.push('newRecordStepOne')
+            } else {
+              this.showModal.recordInfo = true
+            }
+          }
+        })
       },
       // 立即备案
       putOnRecord() {
@@ -346,6 +395,10 @@
         }
         if ((this.type == 1 && this.recordInfo.length !== 0) || (this.type == 2 && this.recordInfo.length !== 0)) {
           this.showModal.hint = true
+          return
+        }
+        if (this.type == 3 && this.recordInfo.length == 0) {
+          this.showModal.hasMainWep = true
           return
         }
         let url = 'recode/existMainOrWeb.do'
