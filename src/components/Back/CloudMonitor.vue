@@ -39,7 +39,7 @@
               </div>
               <div class="cm-item">
                 <div class="cm-item-title">
-                  <p>我关注的指标<span>&nbsp删除</span><span>编辑 |</span></p>
+                  <p>我关注的指标</p>
                 </div>
                 <div class="cm-item-content">
                   <div class="cross"></div>
