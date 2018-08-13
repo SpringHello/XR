@@ -2,13 +2,36 @@
   <div class="login-wrapper">
     <div class="wrapper">
       <div class="wrapper-form">
-        <div class="banner" v-show="loginShow" @click="$router.push('dbActive')">
-          <div class="banner-text">
-            <p>秒级创建 &nbsp&nbsp运维便捷 &nbsp&nbsp安全可靠</p>
-            <p>热门云数据库产品一网打尽</p>
-            <p><span>1元试用60天</span>每天不限量</p>
-            <button>立即参与</button>
-          </div>
+        <div class="banner" v-show="loginShow">
+          <my-carousel :interval=5000 class="carousel" @on-change="change">
+            <!-- <my-carousel-item class="carousel-item">
+               <div @click="push('dbActive')"
+                    style="cursor: pointer;background: #F56B23;">
+                 <div class="db-active">
+                   <div class="db-active-content">
+                     <div class="db-active-text">
+                       <p>秒级创建 &nbsp&nbsp运维便捷 &nbsp&nbsp安全可靠</p>
+                       <p>热门云数据库产品一网打尽</p>
+                       <p><span>1元试用60天</span>每天不限量</p>
+                       <button>立即试用</button>
+                     </div>
+                     <div class="db-active-img">
+                       <img src="../../assets/img/active/dbActive/dba-banner8.png"/>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </my-carousel-item>-->
+            <my-carousel-item class="carousel-item">
+              <div @click="$router.push('fractive')" class="fr-active">
+              </div>
+            </my-carousel-item>
+            <my-carousel-item class="carousel-item">
+              <div @click="$router.push('groupBooking')" class="gb-active">
+
+              </div>
+            </my-carousel-item>
+          </my-carousel>
         </div>
         <div class="login-form" v-show="loginShow">
           <div class="head">
@@ -618,7 +641,6 @@
       }
     }
     .banner {
-      background: url(../../assets/img/login/login-banner.png) no-repeat center;
       height: 493px;
       width: 730px;
       cursor: pointer;
@@ -658,6 +680,14 @@
           color:rgba(255,255,255,1);
           padding: 7px 29px;
         }
+      }
+      .fr-active{
+        height: 100%;
+        background: #FFF url("../../assets/img/login/fr-banner.png") no-repeat;
+      }
+      .gb-active{
+        height: 100%;
+        background: #FFF url("../../assets/img/login/gb-banner.png") no-repeat;
       }
     }
     .login-form {

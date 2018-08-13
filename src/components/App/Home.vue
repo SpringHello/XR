@@ -2,8 +2,8 @@
   <div id="home" style="background: #FFF">
     <!-- banner 轮播图 -->
     <div class="banner">
-      <my-carousel :interval=50000 class="carousel" @on-change="change">
-        <my-carousel-item class="carousel-item">
+      <my-carousel :interval=5000 class="carousel" @on-change="change">
+       <!-- <my-carousel-item class="carousel-item">
           <div @click="push('dbActive')"
                style="cursor: pointer;background: #F56B23;">
             <div class="db-active">
@@ -20,7 +20,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>
+        </my-carousel-item>-->
         <my-carousel-item class="carousel-item">
           <div @click="push('fractive')"
                style="cursor: pointer;background: #F56B23;">
@@ -57,50 +57,6 @@
             </div>
           </div>
         </my-carousel-item>
- <!--       <my-carousel-item class="carousel-item">
-          <div @click="push('active_2')"
-               style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
-            <div class="head-banner">
-              <img style="position: absolute;left: 2%;top: 5%;" src="../../assets/img/home/home-banner10.png"/>
-              <div>
-                <div>
-                  <p>
-                    <img src="../../assets/img/home/home-banner2.png"
-                         style="width:480px;height:165px;padding-top: 0px">
-                  </p>
-                  <button>立即领取</button>
-                </div>
-                <img src="../../assets/img/home/home-banner1.png">
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
-          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="display:block;width:100%;height:100%">
-            <div class="xf" style="position: relative;cursor: pointer">
-              <div style="width:1200px;margin: 0px auto">
-                <img src="../../assets/img/active/active_xf_text.png"
-                     style="position: absolute;top:50%;transform: translateY(-50%);">
-              </div>
-            </div>
-          </router-link>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
-          <div @click="push('active_1')"
-               style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
-            <div class="head-banner">
-              <div>
-                <div>
-                  <p>
-                    <img style="padding-top: 0" src="../../assets/img/home/home-banner3.png">
-                  </p>
-                  <button style="margin-top: 120px">立即领取</button>
-                </div>
-                <img src="../../assets/img/home/home-banner4.png">
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>-->
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->
