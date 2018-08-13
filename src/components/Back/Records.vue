@@ -519,7 +519,7 @@
     },
     computed: {
       recordFlag() {
-        return $store.state.userInfo.recordFlag
+        return this.recordProgressList.length != 0
       }
     }
   }
