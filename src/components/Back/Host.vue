@@ -526,12 +526,12 @@
               </Option>
             </Select>
           </FormItem>
-<!--          <FormItem label="是否同时变更绑定IP与磁盘" v-if="relevanceDisks||relevanceIps">
+          <FormItem label="是否同时变更绑定IP与磁盘" v-if="relevanceDisks||relevanceIps">
             <CheckboxGroup v-model="relevanceAlteration">
               <Checkbox label="ip" v-if="relevanceIps">变更绑定IP</Checkbox>
               <Checkbox label="disk" v-if="relevanceDisks">变更绑定磁盘</Checkbox>
             </CheckboxGroup>
-          </FormItem>-->
+          </FormItem>
         </Form>
         <div style="font-size:16px;">
           资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{ratesChangeCost}}/</span></span>
