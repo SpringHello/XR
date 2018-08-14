@@ -640,7 +640,11 @@
         align-items: center;
       }
     }
+<<<<<<< HEAD
     .banner {
+=======
+    .demo-carousel{
+>>>>>>> objactive
       height: 493px;
       width: 730px;
       cursor: pointer;
@@ -689,6 +693,12 @@
         height: 100%;
         background: #FFF url("../../assets/img/login/gb-banner.png") no-repeat;
       }
+    }
+    .ivu-carousel-item:nth-last-child(1) .demo-carousel{
+      background: url(../../assets/img/login/login-banner.png) no-repeat center;
+    }
+    .ivu-carousel-item:nth-last-child(2) .demo-carousel{
+      background: url(../../assets/img/login/login-banner-objactivity.png) no-repeat center;
     }
     .login-form {
       width: 421px;
