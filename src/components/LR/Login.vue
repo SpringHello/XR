@@ -2,7 +2,36 @@
   <div class="login-wrapper">
     <div class="wrapper">
       <div class="wrapper-form">
-        <div class="banner" @click="$router.push('fractive')">
+        <div class="banner">
+          <my-carousel :interval=5000 class="carousel" @on-change="change">
+            <!-- <my-carousel-item class="carousel-item">
+               <div @click="push('dbActive')"
+                    style="cursor: pointer;background: #F56B23;">
+                 <div class="db-active">
+                   <div class="db-active-content">
+                     <div class="db-active-text">
+                       <p>秒级创建 &nbsp&nbsp运维便捷 &nbsp&nbsp安全可靠</p>
+                       <p>热门云数据库产品一网打尽</p>
+                       <p><span>1元试用60天</span>每天不限量</p>
+                       <button>立即试用</button>
+                     </div>
+                     <div class="db-active-img">
+                       <img src="../../assets/img/active/dbActive/dba-banner8.png"/>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </my-carousel-item>-->
+            <my-carousel-item class="carousel-item">
+              <div @click="$router.push('fractive')" class="fr-active">
+              </div>
+            </my-carousel-item>
+            <my-carousel-item class="carousel-item">
+              <div @click="$router.push('groupBooking')" class="gb-active">
+
+              </div>
+            </my-carousel-item>
+          </my-carousel>
         </div>
         <div class="login-form">
           <div class="head">
@@ -106,7 +135,8 @@
           }
         },
         /* 验证码地址(加上时间戳，防止缓存) */
-        imgSrc: `user/getKaptchaImage.do?t=${new Date().getTime()}`
+        imgSrc: `user/getKaptchaImage.do?t=${new Date().getTime()}`,
+        activeBanner: 1,
       }
     },
     created(){
@@ -208,6 +238,10 @@
             }
           }
         })
+      },
+      /* 切换banner */
+      change(activeIndex) {
+        this.activeBanner = activeIndex + 1
       }
     },
     computed: {
@@ -269,11 +303,54 @@
       }
     }
     .banner {
-      background: url(../../assets/img/login/login-banner.png) no-repeat center;
       height: 493px;
       width: 730px;
-      text-align: center;
       cursor: pointer;
+      .banner-text {
+        padding: 140px 0 0 53px;
+        > p {
+          font-size: 24px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color: rgba(51, 51, 51, 1);
+          line-height: 33px;
+        }
+        p:nth-child(2) {
+          margin-top: 9px;
+          font-size: 40px;
+          color: rgba(51, 51, 51, 1);
+          line-height: 56px;
+        }
+        p:nth-child(3) {
+          margin-top: 8px;
+          font-size: 24px;
+          color: rgba(51, 51, 51, 1);
+          line-height: 33px;
+          span {
+            color: rgba(255, 70, 43, 1);
+            margin-right: 20px;
+          }
+        }
+        button{
+          outline: none;
+          cursor: pointer;
+          border: none;
+          margin-top: 32px;
+          background:rgba(255,70,43,1);
+          border-radius:20px;
+          font-size:18px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color:rgba(255,255,255,1);
+          padding: 7px 29px;
+        }
+      }
+      .fr-active{
+        height: 100%;
+        background: #FFF url("../../assets/img/login/fr-banner.png") no-repeat;
+      }
+      .gb-active{
+        height: 100%;
+        background: #FFF url("../../assets/img/login/gb-banner.png") no-repeat;
+      }
     }
     .login-form {
       width: 421px;

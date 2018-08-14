@@ -40,11 +40,11 @@
                 <span>消费</span>
                 <div>
                   <ul style="width: 50%">
-                    <li>本月账单金额</li>
+                    <li class="item-li" @click="getBillMonth">本月账单金额</li>
                     <li>¥{{ billmonth }}</li>
                   </ul>
                   <ul style="width: 50%">
-                    <li>累计消费金额</li>
+                    <li class="item-li" @click="getBillAll">累计消费金额</li>
                     <li>¥{{ theCumulative }}</li>
                   </ul>
                 </div>
@@ -53,11 +53,11 @@
                 <span>代金券</span>
                 <div>
                   <ul style="width: 50%">
-                    <li>现金券额度</li>
+                    <li class="item-li" @click="toMyCard">现金券额度</li>
                     <li>¥{{ voucher }}</li>
                   </ul>
                   <ul style="width: 50%">
-                    <li>优惠券数量</li>
+                    <li class="item-li" @click="toMyCard">优惠券数量</li>
                     <li>{{ couponNumber }}</li>
                   </ul>
                 </div>
@@ -898,21 +898,30 @@
           },
           {
             title: '订单状态',
-            width: 100,
+            width: 140,
+            align: 'center',
             key: 'paymentstatus',
             render: (h, params) => {
-              return h('span', params.row.paymentstatus == '1' ? '已支付' : '未支付')
+              if (params.row.paymentstatus == '1') {
+                return h('span', {}, '已支付')
+              } else {
+                if (params.row.overTimeStatus == '1') {
+                  return h('div', {}, [h('p', {}, '未支付'), h('p', {}, '（超时关闭订单）')])
+                } else {
+                  return h('span', {}, '未支付')
+                }
+              }
             }
           },
           {
             title: '订单编号',
-            width: 180,
+            width: 150,
             key: 'ordernumber'
           },
           {
             title: '操作',
             key: 'handle',
-            width: 100,
+            width: 90,
             render: (h, params) => {
               return h('div', [
                 h('span', {
@@ -1420,6 +1429,15 @@
                 }
               }).then(response => {
                 if (response.status == 200 && response.data.status == 1) {
+                  let overtime = new Date(this.orderNumber[0].overTime).getTime()
+                  this.orderNumber.forEach(item => {
+                    let overTime = new Date(item.overTime).getTime()
+                    if (overTime < overtime) {
+                      overtime = overTime
+                    }
+                  })
+                  console.log(this.toStr(overtime))
+                  sessionStorage.setItem('overtime', this.toStr(overtime))
                   this.$router.push({
                     name: 'result',
                     params: response.data.result
@@ -1431,6 +1449,32 @@
             }
           })
         }
+      },
+      toStr(date) {
+        var datetime = new Date(date)//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        var year = datetime.getFullYear()
+        var month = datetime.getMonth() + 1
+        var date = datetime.getDate()
+        var hour = datetime.getHours()
+        var minutes = datetime.getMinutes()
+        var second = datetime.getSeconds()
+        if (month < 10) {
+          month = '0' + month
+        }
+        if (date < 10) {
+          date = '0' + date
+        }
+        if (hour < 10) {
+          hour = '0' + hour
+        }
+        if (minutes < 10) {
+          minutes = '0' + minutes
+        }
+        if (second < 10) {
+          second = '0' + second
+        }
+        var time = year + '-' + month + '-' + date + ' ' + hour + ':' + minutes + ':' + second
+        return time
       },
       select(selection) {
         this.orderNumber = []
@@ -1711,6 +1755,36 @@
             })
           }
         })
+      },
+      getBillMonth() {
+        let arr = []
+        let end = new Date()
+        let start = new Date()
+        start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+        arr.push(dateToStr(start))
+        arr.push(dateToStr(end))
+        this.dateRange = arr
+
+        function dateToStr(datetime) {
+          let year = datetime.getFullYear()
+          let month = datetime.getMonth() + 1
+          let date = datetime.getDate()
+          if (month < 10) {
+            month = '0' + month
+          }
+          if (date < 10) {
+            date = '0' + date
+          }
+          var time = year + '-' + month + '-' + date
+          return time
+        }
+      },
+      getBillAll() {
+        this.dateRange = ['', '']
+      },
+      toMyCard() {
+        this.name = 'myCard'
+        this.searchCard()
       }
     },
     computed: {
@@ -1722,7 +1796,7 @@
         }
 
         function checkPaymentStatus(orderNumber) {
-          return orderNumber.paymentstatus == 1
+          return orderNumber.paymentstatus == 1 || orderNumber.overTimeStatus == 1
         }
       },
       deleteDisabled() {
@@ -1732,6 +1806,11 @@
           return false
         }
       },
+    },
+    watch: {
+      dateRange() {
+        this.search()
+      }
     }
   }
 </script>
@@ -1801,6 +1880,12 @@
                   right: 0;
                   bottom: 5px;
                 }
+              }
+            }
+            .item-li {
+              cursor: pointer;
+              &:hover {
+                color: #2A99F2;
               }
             }
           }

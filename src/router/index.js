@@ -32,17 +32,18 @@ const Dynamic = () => import('@/components/App/Dynamic')
 // const ProductBulletin = () => import('@/components/App/ProductBulletin')
 
 // 前台活动页面路由
-const Active = () => import('@/components/App/active/active')
+//const Active = () => import('@/components/App/active/active')
 const Vps = () => import('@/components/App/active/vps')
 /*const NewNodes_1 = () => import('@/components/App/active/newNodes_1')
 const NewNodes_2 = () => import('@/components/App/active/newNodes_2')*/
-const active_1 = () => import('@/components/App/active/active_1')
-const active_2 = () => import('@/components/App/active/active_2')
+//const active_1 = () => import('@/components/App/active/active_1')
+//const active_2 = () => import('@/components/App/active/active_2')
 const smlj = () => import('@/components/App/active/smlj')
 const GroupBooking = () => import('@/components/App/groupbooking/homePage')
 const ProductShare = () => import('@/components/App/groupbooking/sharePage')
 const Activity = () => import('@/components/App/groupbooking/activityPage')
 const FrActive = () => import('@/components/App/active/freeReceive')
+const DBActive = () => import('@/components/App/active/DatabaseActive')
 
 
 // 备案系统页面路由
@@ -94,6 +95,7 @@ const Renew = () => import('@/components/Back/Renew')
 const New = () => import('@/components/Back/New')
 const Host = () => import('@/components/Back/Host')
 const Mirror = () => import('@/components/Back/Mirror')
+const SSHSecretKey = () => import('@/components/Back/SSHSecretKey')
 const Snapshot = () => import('@/components/Back/Snapshot')
 const Firewall = () => import('@/components/Back/Firewall')
 const Disk = () => import('@/components/Back/Disk')
@@ -155,7 +157,7 @@ var router = new Router({
         {path: 'ActiveCenter', name: 'ActiveCenter', component: ActiveCenter},
         {path: 'document', name: 'document', component: Document},
         {path: 'article/:typeId', name: 'art', component: Art},
-        {path: 'dynamic', name: 'dynamic', component: Dynamic},
+       // {path: 'dynamic', name: 'dynamic', component: Dynamic},
         {path: 'Record', name: 'Record', component: Record},
       //  {path: 'productBulletin', name: 'productBulletin', component: ProductBulletin},
         {
@@ -246,15 +248,16 @@ var router = new Router({
             {path: 'bdata', name: 'bdata', component: BData},
           ]
         },
-        {path: 'active', name: 'active', component: Active},
+        //{path: 'active', name: 'active', component: Active},
         {path: 'vps', name: 'vps', component: Vps},
         /*{path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
         {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},*/
-        {path: 'active_1', name: 'active_1', component: active_1},
+        //{path: 'active_1', name: 'active_1', component: active_1},
         {path: 'entrance', name: 'entrance', component: Entrance},
-        {path: 'active_2', name: 'active_2', component: active_2},
+        //{path: 'active_2', name: 'active_2', component: active_2},
         {path: 'smlj', name: 'smlj', component: smlj},
         {path: 'frActive', name: 'frActive', component: FrActive},
+        {path: 'dbActive', name:'dbActive', component: DBActive},
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
         {path: 'Pecss', component: Pecss},
@@ -297,6 +300,7 @@ var router = new Router({
         {path: 'new', name: 'new', component: New},
         {path: 'host', name: 'host', component: Host},
         {path: 'mirror', name: 'mirror', component: Mirror},
+        {path: 'SSHSecretKey', name: 'SSHSecretKey', component: SSHSecretKey},
         {path: 'vpc', name: 'vpc', component: Vpc},
         {path: 'vpn', name: 'vpn', component: Vpn},
         {path: 'vpcManage', name: 'vpcManage', component: VpcManage},

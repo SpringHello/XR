@@ -3,10 +3,38 @@
     <!-- banner 轮播图 -->
     <div class="banner">
       <my-carousel :interval=5000 class="carousel" @on-change="change">
+       <!-- <my-carousel-item class="carousel-item">
+          <div @click="push('dbActive')"
+               style="cursor: pointer;background: #F56B23;">
+            <div class="db-active">
+              <div class="db-active-content">
+                <div class="db-active-text">
+                  <p>秒级创建 &nbsp&nbsp运维便捷 &nbsp&nbsp安全可靠</p>
+                  <p>热门云数据库产品一网打尽</p>
+                  <p><span>1元试用60天</span>每天不限量</p>
+                  <button>立即试用</button>
+                </div>
+                <div class="db-active-img">
+                  <img src="../../assets/img/active/dbActive/dba-banner8.png"/>
+                </div>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>-->
         <my-carousel-item class="carousel-item">
           <div @click="push('fractive')"
                style="cursor: pointer;background: #F56B23;">
             <div class="free-receive">
+              <div class="free-receive-content">
+                <div class="free-receive-text">
+                  <p>新手特惠</p>
+                  <p>爆款云主机免费使用一年</p>
+                  <button>立即领取</button>
+                </div>
+                <div class="free-receive-img">
+                  <img src="../../assets/img/active/freeToReceive/fr-banner7.png"/>
+                </div>
+              </div>
             </div>
           </div>
         </my-carousel-item>
@@ -14,58 +42,17 @@
           <div @click="push('groupBooking')"
                style="cursor: pointer;background: #FA846E;">
             <div class="groupBook">
-              <div>
-                <div>
-                  <img src="../../assets/img/active/group-booking/gb-banner7.png"/>
-                  <p>云主机特惠计划</p>
-                  <p>分享赚时长 一年只需<span>59</span>元</p>
-                  <p>59元首月开通，<span>0</span>元续费 ，便宜好用尽在新睿云</p>
-                  <button>点击了解</button>
+              <div class="groupBook-content">
+                <img src="../../assets/img/active/group-booking/gb-icon14.png" />
+                <div class="groupBook-text">
+                  <p>全民狂欢趴</p>
+                  <p>云主机低价拼团 一人成团 </p>
+                  <p>每成功邀请一位，即<span>赠送1个月免费时长</span></p>
+                  <button>立即参与</button>
                 </div>
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
-          <div @click="push('active_2')"
-               style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
-            <div class="head-banner">
-              <img style="position: absolute;left: 2%;top: 5%;" src="../../assets/img/home/home-banner10.png"/>
-              <div>
-                <div>
-                  <p>
-                    <img src="../../assets/img/home/home-banner2.png"
-                         style="width:480px;height:165px;padding-top: 0px">
-                  </p>
-                  <button>立即领取</button>
+                <div class="groupBook-img">
+                  <img src="../../assets/img/active/group-booking/gb-banner9.png"/>
                 </div>
-                <img src="../../assets/img/home/home-banner1.png">
-              </div>
-            </div>
-          </div>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
-          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="display:block;width:100%;height:100%">
-            <div class="xf" style="position: relative;cursor: pointer">
-              <div style="width:1200px;margin: 0px auto">
-                <img src="../../assets/img/active/active_xf_text.png"
-                     style="position: absolute;top:50%;transform: translateY(-50%);">
-              </div>
-            </div>
-          </router-link>
-        </my-carousel-item>
-        <my-carousel-item class="carousel-item">
-          <div @click="push('active_1')"
-               style="cursor: pointer;linear-gradient(90deg, rgba(255, 251, 250, 1), rgba(255, 248, 246, 1));">
-            <div class="head-banner">
-              <div>
-                <div>
-                  <p>
-                    <img style="padding-top: 0" src="../../assets/img/home/home-banner3.png">
-                  </p>
-                  <button style="margin-top: 120px">立即领取</button>
-                </div>
-                <img src="../../assets/img/home/home-banner4.png">
               </div>
             </div>
           </div>
@@ -397,7 +384,7 @@
                 img: '#icon-luojinshu',
                 detailText: '查看详情',
                 useText: '敬请期待',
-                detailLink: 'Phost',
+                detailLink: '',
                 useLink: '',
                 ME: false
               },
@@ -407,7 +394,7 @@
                 img: '#icon-danxingshensuo4',
                 detailText: '查看详情',
                 useText: '敬请期待',
-                detailLink: 'Pecss',
+                detailLink: '',
                 useLink: '',
                 ME: false
               }
@@ -817,7 +804,7 @@
             font-size: 14px;
             color: rgba(102, 102, 102, 1);
             line-height: 28px;
-            a{
+            a {
               width: 100px;
               height: 38px;
               line-height: 38px;
@@ -826,7 +813,7 @@
               display: block;
               text-align: center;
               margin-top: 40px;
-              &:hover{
+              &:hover {
                 color: #fff;
                 background: rgb(56, 125, 255);
               }
@@ -846,11 +833,11 @@
           height: 432px;
           overflow: hidden;
           background: rgba(231, 231, 231, 1);
-          .news-img{
+          .news-img {
             width: 100%;
             height: 100%;
             transition: all .5s ease;
-            &:hover{
+            &:hover {
               width: 110%;
               height: 110%;
               margin-left: -5%;
@@ -860,7 +847,7 @@
         }
       }
       .link-list {
-        margin-top: 100px;
+        margin-top: 60px;
         margin-bottom: 40px;
         display: flex;
         justify-content: space-between;
@@ -882,7 +869,7 @@
               float: right;
               cursor: pointer;
               color: #fff;
-              &:hover{
+              &:hover {
                 color: #377DFF;
               }
             }
@@ -1547,53 +1534,174 @@
   }
 
   .groupBook {
-    background: #FA846E url("../../assets/img/active/group-booking/gb-banner6.png") no-repeat center;
+    background:linear-gradient(90deg, rgba(255, 255, 255, 1), rgba(174, 201, 255, 1));
     height: 400px;
-    > div {
+    .groupBook-content {
       width: 1200px;
+      height: 400px;
       margin: 0 auto;
-      > div {
-        width: 900px;
-        margin: 0 auto;
-        padding-top: 70px;
-        position: relative;
-        img {
-          position: absolute;
-          right: -100px;
-          top: 15px;
-        }
-        p {
-          font-size: 24px;
+      display: flex;
+      position: relative;
+      >img{
+        position: absolute;
+        left: -110px;
+        top: 0;
+      }
+      .groupBook-text {
+        width: 50%;
+        padding: 74px 0 0 20px;
+        > p {
+          font-size:48px;
           font-family: "Microsoft YaHei", "微软雅黑";
-          color: rgba(255, 255, 255, 1);
-          margin-bottom: 20px;
-          span {
-            color: #FFE177;
-            font-size: 36px;
-          }
+          color: rgba(51, 51, 51, 1);
+          line-height: 45px;
         }
         p:nth-child(2) {
-          font-size: 36px;
+          margin-top: 20px;
+          font-size:24px;
+        }
+        p:nth-child(3) {
+          margin-top: 15px;
+          font-size:24px;
+          color: rgba(51, 51, 51, 1);
+          line-height: 40px;
+          span {
+            color: #FF624B;
+            margin-right: 20px;
+          }
         }
         button {
-          font-size: 18px;
-          font-family: "Microsoft YaHei", "微软雅黑";
-          color: rgba(254, 79, 74, 1);
-          padding: 8px 30px;
-          background: rgba(255, 255, 255, 1);
-          border-radius: 27px;
-          border: none;
+          background: none;
           outline: none;
           cursor: pointer;
-          margin-top: 40px;
+          padding: 11px 50px;
+          margin-top: 30px;
+          border-radius: 4px;
+          border: 1px solid rgba(51, 51, 51, 1);
+          font-size: 16px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color: rgba(51, 51, 51, 1);
+          &:hover {
+            background: #FF624B;
+            color: #FFF;
+            border: none;
+          }
         }
+      }
+      .groupBook-img {
+        width: 50%;
+        text-align: right;
+      }
+    }
+  }
+
+  .db-active {
+    height: 400px;
+    background: url("../../assets/img/active/dbActive/dba-banner7.png") center no-repeat, linear-gradient(90deg, #FFF, #AFCAFF);
+    .db-active-content {
+      width: 1200px;
+      height: 400px;
+      margin: 0 auto;
+      display: flex;
+      .db-active-text {
+        width: 50%;
+        padding: 74px 0 0 20px;
+        > p {
+          font-size: 24px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color: rgba(51, 51, 51, 1);
+          line-height: 33px;
+        }
+        p:nth-child(2) {
+          margin-top: 20px;
+          font-size: 48px;
+          color: rgba(51, 51, 51, 1);
+          line-height: 67px;
+        }
+        p:nth-child(3) {
+          margin-top: 15px;
+          font-size: 28px;
+          color: rgba(51, 51, 51, 1);
+          line-height: 40px;
+          span {
+            color: rgba(255, 70, 43, 1);
+            margin-right: 20px;
+          }
+        }
+        button {
+          background: none;
+          outline: none;
+          cursor: pointer;
+          padding: 11px 50px;
+          margin-top: 30px;
+          border-radius: 4px;
+          border: 1px solid rgba(51, 51, 51, 1);
+          font-size: 16px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color: rgba(51, 51, 51, 1);
+          &:hover {
+            background: rgba(255, 70, 43, 1);
+            color: #FFF;
+            border: none;
+          }
+        }
+      }
+      .db-active-img {
+        padding-top: 22px;
+        width: 50%;
       }
     }
   }
 
   .free-receive {
     height: 400px;
-    background: #FF6C4C url("../../assets/img/active/freeToReceive/fr-banner1.png") center  no-repeat;
+    background: url("../../assets/img/active/freeToReceive/fr-banner9.png") center no-repeat, linear-gradient(90deg, rgba(255, 255, 255, 1), rgba(174, 201, 255, 1));
+    .free-receive-content {
+      width: 1200px;
+      height: 400px;
+      margin: 0 auto;
+      display: flex;
+      .free-receive-text {
+        width: 50%;
+        padding: 74px 0 0 20px;
+        > p {
+          font-size: 32px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color: rgba(51, 51, 51, 1);
+          line-height: 45px;
+        }
+        p:nth-child(1) {
+          background: url("../../assets/img/active/freeToReceive/fr-banner8.png") no-repeat;
+          color: #FFFFFF;
+          padding-left: 40px;
+        }
+        p:nth-child(2) {
+          margin-top: 20px;
+          font-size: 48px;
+          line-height: 67px;
+        }
+        button {
+          background: none;
+          outline: none;
+          cursor: pointer;
+          padding: 11px 50px;
+          margin-top: 30px;
+          border-radius: 4px;
+          border: 1px solid rgba(51, 51, 51, 1);
+          font-size: 16px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color: rgba(51, 51, 51, 1);
+          &:hover {
+            background: rgba(255, 70, 43, 1);
+            color: #FFF;
+            border: none;
+          }
+        }
+      }
+      .free-receive-img {
+        width: 50%;
+      }
+    }
   }
 
   // 移入移出动画

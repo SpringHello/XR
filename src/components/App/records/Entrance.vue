@@ -99,6 +99,36 @@
         <Button type="primary" @click="newSite">确认</Button>
       </p>
     </Modal>
+    <!-- 用户没有主体提示框 -->
+    <Modal v-model="showModal.hasMainWep" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24">您未在新睿云备过案，请选择新增备案进行下一步操作
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.hasMainWep = false">取消</Button>
+        <Button type="primary" @click="newRecord">确认</Button>
+      </p>
+    </Modal>
+    <!-- 用户已有备案 -->
+    <Modal v-model="showModal.hasRecord" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24">您当前的备案尚未完成，请完成当前备案完成后再进行新的备案
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.hasRecord = false">取消</Button>
+        <Button type="primary" @click="$router.push('BRecords')">查看备案进度</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 <script type="text/ecmascript-6">
@@ -263,7 +293,9 @@
         recordInfo: [],
         showModal: {
           recordInfo: false,
-          hint: false
+          hint: false,
+          hasMainWep: false,
+          hasRecord: false
         },
         loginModal: false,
         form: {
@@ -289,11 +321,13 @@
           },
         },
         imgSrc: 'user/getKaptchaImage.do',
+        isRecords: []
       }
     },
     created() {
       this.flowList = this.flowList_1
       this.getRecordInfo()
+      this.isRecord()
       if (sessionStorage.getItem('back')) {
         $('html, body').animate({scrollTop: 550}, 300)
       }
@@ -304,6 +338,18 @@
         this.$http.get('recode/listMainWeb.do').then(res => {
           if (res.data.status == 1) {
             this.recordInfo = res.data.result
+          }
+        })
+      },
+      // 判断用户是否有过备案
+      isRecord() {
+        this.$http.get("recode/listMainWeb.do", {
+          params: {
+            overType: '0'
+          }
+        }).then(res => {
+          if (res.data.status == 1) {
+              this.isRecords = res.data.result
           }
         })
       },
@@ -327,12 +373,45 @@
         item.src = this.selectImg
       },
       newSite() {
-        this.showModal.hint = false
-        this.type = 3
-        sessionStorage.setItem('zone', this.areaText)
-        sessionStorage.setItem('zoneId', this.area)
-        sessionStorage.setItem('recordsType', this.type + '')
-        this.$router.push('newAccess')
+        let url = 'recode/existMainOrWeb.do'
+        axios.get(url, {
+          params: {
+            zoneId: this.area
+          }
+        }).then(response => {
+          this.showModal.hint = false
+          if (response.status == 200 && response.data.status == 1) {
+            if (response.data.result) {
+              sessionStorage.setItem('zone', this.areaText)
+              sessionStorage.setItem('zoneId', this.area)
+              sessionStorage.setItem('recordsType', '3')
+              this.$router.push('newAccess')
+            } else {
+              this.showModal.recordInfo = true
+            }
+          }
+        })
+
+      },
+      newRecord() {
+        let url = 'recode/existMainOrWeb.do'
+        axios.get(url, {
+          params: {
+            zoneId: this.area
+          }
+        }).then(response => {
+          this.showModal.hasMainWep = false
+          if (response.status == 200 && response.data.status == 1) {
+            if (response.data.result) {
+              sessionStorage.setItem('zone', this.areaText)
+              sessionStorage.setItem('zoneId', this.area)
+              sessionStorage.setItem('recordsType', '1')
+              this.$router.push('newRecordStepOne')
+            } else {
+              this.showModal.recordInfo = true
+            }
+          }
+        })
       },
       // 立即备案
       putOnRecord() {
@@ -344,8 +423,16 @@
           this.$router.push('BRecords')
           return
         }
+        if(this.isRecords.length !==0){
+          this.showModal.hasRecord = true
+          return
+        }
         if ((this.type == 1 && this.recordInfo.length !== 0) || (this.type == 2 && this.recordInfo.length !== 0)) {
           this.showModal.hint = true
+          return
+        }
+        if (this.type == 3 && this.recordInfo.length == 0) {
+          this.showModal.hasMainWep = true
           return
         }
         let url = 'recode/existMainOrWeb.do'

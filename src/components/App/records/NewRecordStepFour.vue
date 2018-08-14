@@ -442,6 +442,24 @@
         this.siteParams.backgroundAddress = this.receiveForm.address
         this.siteParams.backgroundName = this.receiveForm.person
         this.siteParams.backgroundPhone = this.receiveForm.phone
+        let params = {
+          mainCompanyArea: this.mainParams.mainCompanyArea,
+          mainCompanyCertificatesType: this.mainParams.mainCompanyCertificatesType,
+          mainCompanyNature: this.mainParams.mainCompanyNature,
+          mainCompanyNumber: this.mainParams.mainCompanyNumber,
+          mainCompanyName: this.mainParams.mainCompanyName,
+          mainCompanyCertificatesLoaction: this.mainParams.mainCompanyCertificatesLoaction,
+          mainCompanyCommunicatLocation: this.mainParams.mainCompanyCommunicatLocation,
+          InvestorName: this.mainParams.InvestorName,
+          legalName: this.mainParams.legalName,
+          legalCertificatesType: this.mainParams.legalCertificatesType,
+          legalCertificatesNumber: this.mainParams.legalCertificatesNumber,
+          officeNumber: this.mainParams.officeNumber,
+          phone: this.mainParams.phone,
+          email: this.mainParams.email,
+          zoneId: this.zoneId,
+          hostCompanyUrl: this.mainParams.hostCompanyUrl,
+        }
         let addMainWeb = axios.post('recode/addMainWeb.do', this.siteParams)
         // 有主体信息发送一个请求，没有发送两个请求
         if (this.isRecord == true) {
@@ -456,30 +474,19 @@
             }
           })
         } else {
-          let addMainCompany = axios.get('recode/addMainCompany.do', {
-            params: {
-              mainCompanyArea: this.mainParams.mainCompanyArea,
-              mainCompanyCertificatesType: this.mainParams.mainCompanyCertificatesType,
-              mainCompanyNature: this.mainParams.mainCompanyNature,
-              mainCompanyNumber: this.mainParams.mainCompanyNumber,
-              mainCompanyName: this.mainParams.mainCompanyName,
-              mainCompanyCertificatesLoaction: this.mainParams.mainCompanyCertificatesLoaction,
-              mainCompanyCommunicatLocation: this.mainParams.mainCompanyCommunicatLocation,
-              InvestorName: this.mainParams.InvestorName,
-              legalName: this.mainParams.legalName,
-              legalCertificatesType: this.mainParams.legalCertificatesType,
-              legalCertificatesNumber: this.mainParams.legalCertificatesNumber,
-              officeNumber: this.mainParams.officeNumber,
-              phone: this.mainParams.phone,
-              email: this.mainParams.email,
-              zoneId: this.zoneId,
-              hostCompanyUrl: this.mainParams.hostCompanyUrl,
-            }
-          })
-          Promise.all([addMainCompany, addMainWeb]).then(response => {
-            if ((response[0].status == 200 && response[0].data.status == 1) && (response[1].status == 200 && response[1].data.status == 1)) {
-              this.$router.push('waitFirstTrial')
-              sessionStorage.clear()
+          let addMainCompany = axios.post('recode/addMainCompany.do', params)
+          Promise.all([addMainCompany]).then(response => {
+            if ((response[0].status == 200)) {
+              axios.post('recode/addMainWeb.do', this.siteParams).then(res => {
+                if (res.data.status == 1) {
+                  this.$router.push('waitFirstTrial')
+                  sessionStorage.clear()
+                } else {
+                  this.$message.info({
+                    content: '平台开小差了，请稍候再试'
+                  })
+                }
+              })
             } else {
               this.$message.info({
                 content: '平台开小差了，请稍候再试'

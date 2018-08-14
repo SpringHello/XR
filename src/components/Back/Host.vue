@@ -526,6 +526,12 @@
               </Option>
             </Select>
           </FormItem>
+<!--          <FormItem label="是否同时变更绑定IP与磁盘" v-if="relevanceDisks||relevanceIps">
+            <CheckboxGroup v-model="relevanceAlteration">
+              <Checkbox label="ip" v-if="relevanceIps">变更绑定IP</Checkbox>
+              <Checkbox label="disk" v-if="relevanceDisks">变更绑定磁盘</Checkbox>
+            </CheckboxGroup>
+          </FormItem>-->
         </Form>
         <div style="font-size:16px;">
           资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{ratesChangeCost}}/</span></span>
@@ -739,7 +745,11 @@
           cost: 0,
           id: ''
         },
-        linkPassword: '111'
+        linkPassword: '111',
+        // 变更资费关联相关
+        relevanceAlteration: ['ip', 'disk'],
+        relevanceDisks: true,
+        relevanceIps: true
       }
     },
     created() {
@@ -757,7 +767,7 @@
       }, 5 * 1000)
     },
     methods: {
-      bindRenewal(){
+      bindRenewal() {
         if (this.cost != '--') {
           var selectIp = ''
           var selectDisk = ''
@@ -1007,8 +1017,8 @@
             break
           case '关机':
             if (this.closeHost.every(item => {
-                return item.select == false
-              })) {
+              return item.select == false
+            })) {
               this.$Message.warning('请选择主机')
               return
             }
@@ -1209,7 +1219,7 @@
               if (this.currentHost[0].caseType !== 3) {
                 this.renewType()
               } else {
-                this.$Message.info('请选择包年包月的云主机进行资费变更')
+                this.$Message.info('请选择包年包月的云主机进行续费')
               }
             }
             break
@@ -1474,7 +1484,7 @@
         this.$router.push('/ruicloud/usercenter')
       },
       // 连接主机动作
-      link(item){
+      link(item) {
         sessionStorage.setItem('link-companyid', item.companyid)
         sessionStorage.setItem('link-vmid', item.computerid)
         sessionStorage.setItem('link-zoneid', item.zoneid)
@@ -1565,6 +1575,32 @@
       },
       ratesChangeTime(time) {
         if (time == '') {
+          this.ratesChangeCost = '--'
+        } else {
+          let url = 'information/getYjPrice.do'
+          this.$http.get(url, {
+            params: {
+              timeValue: this.ratesChangeTime,
+              timeType: this.ratesChangeType,
+              hostIdArr: this.currentHost[0].id
+            }
+          })
+            .then((response) => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.ratesChangeCost = response.data.result.toFixed(2)
+                this.originRatesChangeCost = response.data.result
+                if (response.data.cuspon) {
+                  this.originRatesChangeCost = Number((this.originRatesChangeCost + response.data.cuspon).toFixed(2))
+                }
+                if (response.data.continueDiscount) {
+                  this.originRatesChangeCost = (this.originRatesChangeCost + response.data.continueDiscount).toFixed(2)
+                }
+              }
+            })
+        }
+      },
+      relevanceAlteration() {
+        if (this.ratesChangeTime == '') {
           this.ratesChangeCost = '--'
         } else {
           let url = 'information/getYjPrice.do'

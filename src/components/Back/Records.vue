@@ -11,7 +11,7 @@
         </div>
         <div class="operator-bar">
           <div class="universal-alert">
-            <p>为了规范互联网信息服务活动，促进互联网信息服务健康有序发展，根据《互联网信息服务管理办法》与《非经营性互联网信息服务备案管理办法》规定，开办网站必须先办理网站备案。</p>
+            <p>根据《互联网信息服务管理办法》与《非经营性互联网信息服务备案管理办法》规定，开办网站必须先办理网站备案。</p>
           </div>
           <Tabs type="card" :animated='false'>
             <TabPane :label="tabValueCom" style="min-height: 300px;">
@@ -519,7 +519,7 @@
     },
     computed: {
       recordFlag() {
-        return $store.state.userInfo.recordFlag
+        return this.recordProgressList.length != 0
       }
     }
   }

@@ -11,7 +11,7 @@
           <h3>主体单位信息</h3>
           <Form ref="mainUnitInformation" :model="mainUnitInformation" :rules="mainUnitInformationRuleValidate"
                 :label-width="143">
-            <FormItem label="主体单位所属区域" prop="district">
+            <FormItem label="地域" prop="district">
               <Select v-model="mainUnitInformation.province" style="width:157px;margin-right: 10px" placeholder="请选择省"
                       @on-change="changeProvince">
                 <Option v-for="item in mainUnitInformation.provinceList" :value="item.name" :key="item.name">{{
@@ -35,15 +35,15 @@
                 <i style="font-style:normal;color:red;cursor:pointer" @click="lookrule">管局规则</i>
               </span>
             </FormItem>
-            <FormItem label="主体单位性质" prop="unitProperties">
-              <Select v-model="mainUnitInformation.unitProperties" style="width:500px;" placeholder="请选择单位性质"
+            <FormItem label="主办者性质" prop="unitProperties">
+              <Select v-model="mainUnitInformation.unitProperties" style="width:500px;" placeholder="请选择主办者性质"
                       @on-change="changeUnitProperties">
                 <Option v-for="item in mainUnitInformation.unitPropertiesList" :value="item.name" :key="item.name">{{
                   item.name }}
                 </Option>
               </Select>
             </FormItem>
-            <FormItem label="主体单位证件类型" prop="certificateType">
+            <FormItem label="证件类型" prop="certificateType">
               <Select v-model="mainUnitInformation.certificateType" style="width:500px;" placeholder="请选择证件类型">
                 <Option v-for="item in mainUnitInformation.certificateTypeList" :value="item" :key="item">{{
                   item }}
@@ -51,13 +51,13 @@
               </Select>
             </FormItem>
 
-            <FormItem label="主体单位证件号码" prop="certificateNumber">
-              <Input v-model="mainUnitInformation.certificateNumber" :maxlength="20" placeholder="请输入主体单位证件号码"
+            <FormItem label="证件号码" prop="certificateNumber">
+              <Input v-model="mainUnitInformation.certificateNumber" :maxlength="20" placeholder="请输入证件号码"
                      style="width: 500px"></Input>
             </FormItem>
 
-            <FormItem label="主体单位名称" prop="unitName">
-              <Input @on-focus="toolShow('unitName')" @on-blur="toolHide()" v-model="mainUnitInformation.unitName" placeholder="请输入主体单位名称" style="width: 500px"></Input>
+            <FormItem label="单位名称" prop="unitName" v-if="!isPersonage">
+              <Input @on-focus="toolShow('unitName')" @on-blur="toolHide()" v-model="mainUnitInformation.unitName" placeholder="请输入单位名称" style="width: 500px"></Input>
               <transition name="fade">
                 <div class="tooltip-popper" style="top:-8px" v-if="isToolHide == 2">
                   <div class="tooltip-center">
@@ -67,8 +67,19 @@
                 </div>
               </transition>
             </FormItem>
-            <FormItem label="主体单位证件住所" prop="certificatesResidence">
-              <Input @on-focus="toolShow('certificatesResidence')" @on-blur="toolHide()" v-model="mainUnitInformation.certificatesResidence" placeholder="请输入主体单位证件住所"
+            <FormItem label="姓名" prop="unitName" v-else>
+              <Input @on-focus="toolShow('unitName')" @on-blur="toolHide()" v-model="mainUnitInformation.unitName" placeholder="请输入姓名" style="width: 500px"></Input>
+              <transition name="fade">
+                <div class="tooltip-popper" style="top:-8px" v-if="isToolHide == 2">
+                  <div class="tooltip-center">
+                    <div class="tooltip-arrow"></div>
+                    <div class="tooltip">1.必须输入与证件上完全一致的名称 2.个人用户填写本人姓名</div>
+                  </div>
+                </div>
+              </transition>
+            </FormItem>
+            <FormItem label="证件住所" prop="certificatesResidence">
+              <Input @on-focus="toolShow('certificatesResidence')" @on-blur="toolHide()" v-model="mainUnitInformation.certificatesResidence" placeholder="请输入证件住所所在地"
                      style="width: 500px"></Input>
               <transition name="fade">
                 <div class="tooltip-popper" v-if="isToolHide == 3">
@@ -79,8 +90,8 @@
                 </div>
               </transition>
             </FormItem>
-            <FormItem label="主体单位通信地址" prop="mailingAddress">
-              <Input @on-focus="toolShow('mailingAddress')" @on-blur="toolHide()" v-model="mainUnitInformation.mailingAddress" placeholder="请输入主体单位通信地址"
+            <FormItem label="通信地址" prop="mailingAddress">
+              <Input @on-focus="toolShow('mailingAddress')" @on-blur="toolHide()" v-model="mainUnitInformation.mailingAddress" placeholder="请输入单位通信地址"
                      style="width: 500px"></Input>
               <transition name="fade">
                 <div class="tooltip-popper" style="top:-46px" v-if="isToolHide == 4">
@@ -107,11 +118,11 @@
               </transition>
             </FormItem>
             <div style="height:2px;width: 100%;background: #D9D9D9;margin-top: 60px"></div>
-            <h3 style="margin-top: 40px">主体单位负责人信息</h3>
-            <FormItem label="法人姓名" prop="legalPersonName">
+            <h3 style="margin-top: 40px">负责人信息</h3>
+            <FormItem label="负责人姓名" prop="legalPersonName">
               <Input v-model="mainUnitInformation.legalPersonName" placeholder="请输入法人姓名" style="width: 500px"></Input>
             </FormItem>
-            <FormItem label="法人证件类型" prop="legalPersonCertificateType">
+            <FormItem label="证件类型" prop="legalPersonCertificateType">
               <Select v-model="mainUnitInformation.legalPersonCertificateType" style="width:500px;"
                       placeholder="请选择证件类型">
                 <Option v-for="item in mainUnitInformation.legalPersonCertificateTypeList" :value="item"
@@ -119,7 +130,7 @@
                 </Option>
               </Select>
             </FormItem>
-            <FormItem label="法人证件号码" prop="legalPersonIDNumber">
+            <FormItem label="证件号码" prop="legalPersonIDNumber">
               <Input v-model="mainUnitInformation.legalPersonIDNumber" :maxlength="20" placeholder="请输入法人证件号码" style="width: 500px"></Input>
             </FormItem>
             <FormItem label="办公室电话" prop="officePhone" v-if="!isPersonage">
@@ -494,18 +505,18 @@
             {required: true, message: "请选择证件类型", trigger: "change"}
           ],
           certificateNumber: [
-            {required: true, message: "请输入单位证件号码", trigger: "blur"},
+            {required: true, message: "请输入证件号码", trigger: "blur"},
              { validator: validUnitProperties, trigger: "blur" }
           ],
           unitName: [
-            {required: true, message: "请输入主体单位名称", trigger: "blur"},
+            {required: true, message: "请输入名称", trigger: "blur"},
             {type: "string", max: 20, message: "最多只能输入20个字"}
           ],
           certificatesResidence: [
-            {required: true, message: "请输入主体单位证件住所", trigger: "blur"}
+            {required: true, message: "请输入证件住所", trigger: "blur"}
           ],
           mailingAddress: [
-            {required: true, message: "请输入主体单位通信地址", trigger: "blur"}
+            {required: true, message: "请输入通信地址", trigger: "blur"}
           ],
           investorName: [
             {
@@ -516,14 +527,14 @@
             {validator: validInvestorNameName, trigger: "blur"}
           ],
           legalPersonName: [
-            {required: true, message: "请输入法人姓名", trigger: "blur"},
+            {required: true, message: "请输入负责人姓名", trigger: "blur"},
             {validator: validLegalPersonName, trigger: "blur"}
           ],
           legalPersonCertificateType: [
-            {required: true, message: "请选择法人证件类型", trigger: "change"}
+            {required: true, message: "请选择负责人证件类型", trigger: "change"}
           ],
           legalPersonIDNumber: [
-            {required: true, message: "请输入法人证件号码", trigger: "blur"},
+            {required: true, message: "请输入负责人证件号码", trigger: "blur"},
             {validator: validCertificateNumber, trigger: "blur"}
           ],
           officePhone: [

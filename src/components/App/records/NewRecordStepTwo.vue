@@ -186,7 +186,7 @@
                 <h3 style="margin-top: 20px">选择负责人</h3>
                 <RadioGroup v-model="site.basicInformation.personInCharge" class="records-radio-person" style="padding: 20px 0 20px 55px"
                             @on-change="changePersonInCharge(upIndex)">
-                  <Radio label="已填写主体单位负责人姓名">
+                  <Radio label="已填写单位负责人姓名">
                   </Radio>
                   <Radio label="新建负责人">
                   </Radio>
@@ -339,11 +339,11 @@
       };
       //校验网站域名
       const validWebsiteDomain = (rule, value, callback) => {
-        var reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+        var reg = /^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/;
         if (value == "") {
           return callback(new Error("请输入网站域名"));
         } else if (!reg.test(value)) {
-          return callback(new Error("域名不正确"));
+          return callback(new Error("请输入正确的域名"));
         } else {
           callback();
         }
@@ -404,7 +404,7 @@
       };
       //校验新增域名
       const validNewWebsiteDomain = (rule, value, callback) => {
-        let reg = /^[a-zA-Z0-9]+(\.[a-zA-Z]+)$/;
+        let reg = /^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/;
         for (let i = 0; i <= value.length; i++) {
           if (value.length == 0 || value[i] == "") {
             return callback(new Error("请输入网站域名"));
@@ -532,7 +532,7 @@
             // 备注
             remark: "",
             // 网站负责人未填写/已填写
-            personInCharge: "已填写主体单位负责人姓名",
+            personInCharge: "已填写单位负责人姓名",
             // 网站负责人姓名
             principalName: "",
             // 网站负责人证件类型

@@ -12,7 +12,7 @@ const hostPassword = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\
 const IDCardRegExp = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
 const idCardRegExp = /^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$/
 
-const DomainRegExp = /^(?!www\.)(?!http:\/\/)(?!https:\/\/)[a-zA-Z0-9]+(\.[a-zA-Z]+)+$/
+const DomainRegExp = /^(?=^.{3,255}$)[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+$/
 
 //var passwordRegExp = /ddd/;
 export default {
