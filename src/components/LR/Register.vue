@@ -640,11 +640,7 @@
         align-items: center;
       }
     }
-<<<<<<< HEAD
     .banner {
-=======
-    .demo-carousel{
->>>>>>> objactive
       height: 493px;
       width: 730px;
       cursor: pointer;

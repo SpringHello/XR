@@ -2,7 +2,6 @@
   <div class="login-wrapper">
     <div class="wrapper">
       <div class="wrapper-form">
-<<<<<<< HEAD
         <div class="banner">
           <my-carousel :interval=5000 class="carousel" @on-change="change">
             <!-- <my-carousel-item class="carousel-item">
@@ -359,11 +358,7 @@
         align-items: center;
       }
     }
-<<<<<<< HEAD
     .banner {
-=======
-    .demo-carousel{
->>>>>>> objactive
       height: 493px;
       width: 730px;
       cursor: pointer;

@@ -46,7 +46,11 @@ const GroupBooking = () => import('@/components/App/groupbooking/homePage')
 const ProductShare = () => import('@/components/App/groupbooking/sharePage')
 const Activity = () => import('@/components/App/groupbooking/activityPage')
 const FrActive = () => import('@/components/App/active/freeReceive')
+
 const DBActive = () => import('@/components/App/active/DatabaseActive')
+
+const EastSouthNode = () => import('@/components/App/active/EastSouthNode')
+
 
 
 // 备案系统页面路由
@@ -258,7 +262,11 @@ var router = new Router({
         {path: 'objStorageActive', name: 'objStorageActive', component: objStorageActive},
         {path: 'smlj', name: 'smlj', component: smlj},
         {path: 'frActive', name: 'frActive', component: FrActive},
+
         {path: 'dbActive', name:'dbActive', component: DBActive},
+
+        {path: 'EastSouthNode', name: 'EastSouthNode', component: EastSouthNode},
+
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
         {path: 'Pecss', component: Pecss},
