@@ -1,14 +1,17 @@
 <template>
   <div class="east-south-node">
-    <div class="banner east-banner" v-show="defaultNode=='east'">
-      <div class="wrap">
-        <div class="text">
-          <h1><span>华东一区</span>盛大开服</h1>
-          <p><span>「华东地域」</span>数据中心盛大开服，最高等级机房建设标准，极致网络体验， 助力华东企业云端发展。</p>
-          <Button>立即购买</Button>
+      <div class="banner east-banner" v-show="defaultNode=='east'">
+        <div class="wrap">
+          <div class="text">
+            <h1><span>华东一区</span>盛大开服</h1>
+            <p><span>「华东地域」</span>数据中心盛大开服，最高等级机房建设标准，极致网络体验， 助力华东企业云端发展。</p>
+            <Button>立即购买</Button>
+          </div>
+          <transition name="slide-fade-right">
+          <img v-show="defaultNode=='east'" src="../../../assets/img/active/eastsouthnode/east-banner.png"/>
+           </transition>
         </div>
       </div>
-    </div>
     <div class="banner south-banner" v-show="defaultNode=='south'">
       <div class="wrap">
         <div class="text">
@@ -16,14 +19,18 @@
           <p><span>「华南地域」</span>数据中心盛大开服，万兆光纤极速体验，助力区域企业云上发展。</p>
           <Button>立即购买</Button>
         </div>
+        <transition name="slide-fade-left">
+        <img v-show="defaultNode=='south'"  src="../../../assets/img/active/eastsouthnode/south-banner.png"/>
+        </transition>
       </div>
     </div>
+    
     <div class="container">
       <ul class="nav">
         <li @click="defaultNode='east'" :class="{active:defaultNode=='east'}">华东节点</li>
         <li @click="defaultNode='south'" :class="{active:defaultNode=='south'}">华南节点</li>
       </ul>
-      <div v-show="defaultNode=='east'">
+      <div v-show="defaultNode=='east'" class="east-box">
         <div class="base">
           <div class="wrap">
             <div class="box">
@@ -54,7 +61,7 @@
           </div>
         </div>
       </div>
-      <div v-show="defaultNode=='south'">
+      <div v-show="defaultNode=='south'" class="south-box">
         <div class="region">
           <div class="wrap">
             <div class="box">
@@ -97,7 +104,7 @@
               <span class="circle" @click="forward">></span>
             </div>
             <div class="main">
-              <div v-for="(item,index) in showProductData" :key="index" @click="productIndex=index" :class="{active:productIndex==index}">
+              <div class="card" v-for="(item,index) in showProductData" :key="index" @click="productIndex=index" :class="{active:productIndex==index}">
                 <div class="top">
                   <i class="iconfont" :class="item.icon"></i>
                   <h3>{{item.prod}}</h3>
@@ -107,6 +114,10 @@
                     <a :href="secItem.path?secItem.path:'javaScript:;'" :class="{gray:!secItem.path}">{{secItem.title}}</a>
                   </li>
                 </ul>
+              </div>
+              <div class="card-right">
+                <div class="top">
+                </div>
               </div>
             </div>
           </div>
@@ -134,7 +145,7 @@ export default {
         {
           img: require('../../../assets/img/active/eastsouthnode/east-icon-2.png'),
           title: '网络资源',
-          desc: '电信联通双运营商合建网络，总体交换能力高达320G；十台万兆级防火墙，最高防护DDOS可达100G/bps，完美拒绝SYN、ACKICMP、UDP等非法流量；双线BGP4网络，解决南北互动，降低用户托管费用。'
+          desc: '电信高速宽带建设网络，总体交换能力高达320G；十台万兆级防火墙，最高防护DDOS可达100G/bps，完美拒绝SYN、ACKICMP、UDP等非法流量；双线BGP4网络，解决南北互动，降低用户托管费用。'
         },
         {
           img: require('../../../assets/img/active/eastsouthnode/east-icon-3.png'),
@@ -216,21 +227,22 @@ export default {
             { title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/ruicloud/Pmonitor' },
             { title: '访问控制', desc: '权限管理、精准控制', path: '' }
           ]
-        },
-
+        }
+        
       ]
     }
   },
   created () {
-
   },
   mounted () {
-
   },
   methods: {
     forward () {
       if (this.showStartIndex + 4 < this.productData.length) {
         this.showStartIndex += 4
+        if (this.showStartIndex + 4 > this.productData.length) {
+          this.showStartIndex = this.productData.length - 4
+        }
       }
     },
     back () {
@@ -335,14 +347,10 @@ export default {
         width: 272px;
         height: 316px;
       }
-      &::after {
+      img{
         position: absolute;
         top: 0;
         right: -150px;
-        content: url("../../../assets/img/active/eastsouthnode/east-banner.png");
-        display: block;
-        width: 918px;
-        height: 400px;
       }
     }
   }
@@ -351,18 +359,15 @@ export default {
       no-repeat center;
     .wrap {
       position: relative;
-      &::after {
+      img{
         position: absolute;
         top: 0;
-        right: -200px;
-        content: url("../../../assets/img/active/eastsouthnode/south-banner.png");
-        display: block;
-        width: 918px;
-        height: 400px;
+        right: -100px;
       }
     }
   }
   .container {
+    background: #fff;
     .nav {
       overflow: hidden;
       li {
@@ -458,7 +463,6 @@ export default {
         text-align: center;
         .switch {
           text-align: right;
-          padding-right: 36px;
           .circle {
             display: inline-block;
             width: 20px;
@@ -483,7 +487,7 @@ export default {
           margin-top: 20px;
           display: flex;
           justify-content: flex-start;
-          > div {
+          .card {
             margin-right: 20px;
             width: 276px;
             height: 390px;
@@ -495,11 +499,8 @@ export default {
               color: #ff624b;
               height: 176px;
               padding: 46px;
-              background: linear-gradient(
-                180deg,
-                rgba(254, 237, 228, 1),
-                rgba(255, 251, 249, 1)
-              );
+              background: url("../../../assets/img/active/eastsouthnode/bg-rectangle-light.png")
+                no-repeat 0 0;
               border-radius: 4px 4px 0px 0px;
               font-size: 18px;
               line-height: 26px;
@@ -543,6 +544,28 @@ export default {
             }
           }
         }
+        .card-right{
+          width: 20px;
+          height: 390px;
+          border: 1px solid rgba(207, 207, 207, 1);
+          border-radius: 4px 0px 0px 0px;
+          border-right:none; 
+          .top {
+            height: 176px;
+            background: url("../../../assets/img/active/eastsouthnode/bg-rectangle-light.png")
+              no-repeat 0 0;
+          }
+        }
+      }
+    }
+    .east-box{
+      >div:nth-of-type(2n){
+        background: #fafafa;
+      }
+    }
+    .south-box{
+      .base{
+        background:linear-gradient(180deg,rgba(254,237,228,1),rgba(255,255,255,1));
       }
     }
   }
@@ -566,4 +589,27 @@ export default {
     }
   }
 }
+.slide-fade-right-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-right-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-right-enter, .slide-fade-right-leave-to
+/* .slide-fade-left-leave-active for below version 2.1.8 */ {
+  transform: translateX(500px);
+  opacity: 0;
+}
+.slide-fade-left-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-left-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-left-enter, .slide-fade-left-leave-to
+/* .slide-fade-left-leave-active for below version 2.1.8 */ {
+  transform: translateX(-500px);
+  opacity: 0;
+}
+
 </style>
