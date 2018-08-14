@@ -748,8 +748,8 @@
         linkPassword: '111',
         // 变更资费关联相关
         relevanceAlteration: [],
-        relevanceDisks: false,
-        relevanceIps: false
+        relevanceDisks: '',
+        relevanceIps: ''
       }
     },
     created() {
@@ -1270,26 +1270,28 @@
           params: {
             VMId: this.currentHost[0].computerid,
             zoneId: this.currentHost[0].zoneid,
-            changeCost: '1'
+            changeCost: '3'
           }
-        }).then(res => {
-          if (res.status == 200 && res.data.status == 1) {
-            if (res.data.result[0].attachDisk.length != 0) {
-              this.relevanceDisks = true
-              this.relevanceAlteration.push('disk')
-            }
-            if (res.data.result[0].attachPublicIp.length != 0) {
-              this.relevanceIps = true
-              this.relevanceAlteration.push('ip')
-            }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            var disks = response.data.result[0].attachDisk.map(item => {
+              return item.id
+            })
+            this.relevanceDisks = disks.join()
+            var ips = response.data.result[0].attachPublicIp.map(item => {
+              return item.id
+            })
+            this.relevanceIps = ips.join()
+            this.relevanceAlteration = ['ip', 'disk']
             this.ratesChangeType = ''
             this.ratesChangeTime = ''
             this.ratesChangeCost = '--'
             this.originRatesChangeCost = '--'
             this.showModal.ratesChange = true
+            console.log(this.relevanceDisks)
           } else {
             this.$message.info({
-              content: res.data.message
+              content: response.data.message
             })
           }
         })
@@ -1404,13 +1406,39 @@
       },
       // 确认变更资费
       ratesChange_ok() {
+        var selectIp = ''
+        var selectDisk = ''
+        for (var i = 0; i < this.relevanceAlteration.length; i++) {
+          if (this.relevanceAlteration[i] == 'ip') {
+            selectIp = this.relevanceIps
+          }
+          if (this.relevanceAlteration[i] == 'disk') {
+            selectDisk = this.relevanceDisks
+          }
+        }
+        var iplist = []
+        if (selectIp != '') {
+          iplist = selectIp.split(',').map(item => {
+            return {type: 2, id: parseInt(item)}
+          })
+        }
+        var disklist = []
+        if (selectDisk != '') {
+          disklist = selectDisk.split(',').map(item => {
+            return {type: 1, id: parseInt(item)}
+          })
+        }
+        var host = [
+          {type: 0, id: this.currentHost[0].id}
+        ]
+        var list = host.concat(iplist, disklist)
+        list = JSON.stringify(list)
         let url = 'continue/changeMoney.do'
         this.$http.get(url, {
           params: {
-            id: this.currentHost[0].id,
+            list: list,
             timeType: this.ratesChangeType,
-            timeValue: this.ratesChangeTime,
-            type: 0
+            timeValue: this.ratesChangeTime + '',
           }
         }).then(response => {
           if (response.data.status == 1) {
@@ -1603,12 +1631,25 @@
         if (time == '') {
           this.ratesChangeCost = '--'
         } else {
+          var selectIp = ''
+          var selectDisk = ''
+          for (var i = 0; i < this.relevanceAlteration.length; i++) {
+            if (this.relevanceAlteration[i] == 'ip') {
+              selectIp = this.relevanceIps
+            }
+            if (this.relevanceAlteration[i] == 'disk') {
+              selectDisk = this.relevanceDisks
+            }
+          }
+          console.log(this.relevanceDisks)
           let url = 'information/getYjPrice.do'
           this.$http.get(url, {
             params: {
               timeValue: this.ratesChangeTime,
               timeType: this.ratesChangeType,
-              hostIdArr: this.currentHost[0].id
+              hostIdArr: this.currentHost[0].id,
+              ipIdArr: selectIp,
+              diskArr: selectDisk
             }
           })
             .then((response) => {
@@ -1629,12 +1670,24 @@
         if (this.ratesChangeTime == '') {
           this.ratesChangeCost = '--'
         } else {
+          var selectIp = ''
+          var selectDisk = ''
+          for (var i = 0; i < this.relevanceAlteration.length; i++) {
+            if (this.relevanceAlteration[i] == 'ip') {
+              selectIp = this.relevanceIps
+            }
+            if (this.relevanceAlteration[i] == 'disk') {
+              selectDisk = this.relevanceDisks
+            }
+          }
           let url = 'information/getYjPrice.do'
           this.$http.get(url, {
             params: {
               timeValue: this.ratesChangeTime,
               timeType: this.ratesChangeType,
-              hostIdArr: this.currentHost[0].id
+              hostIdArr: this.currentHost[0].id,
+              ipIdArr: selectIp,
+              diskArr: selectDisk
             }
           })
             .then((response) => {
