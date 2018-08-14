@@ -571,7 +571,7 @@
         <!--<Form :model="addCorsForm" :rules="newRuleValidate" ref="newDisk">-->
         <Form :model="addCorsForm" :rules="addCorsFormValidateL" ref="newCros">
           <Form-item label="来源Origin" prop="orgins">
-            <Input :rows="3" type="textarea" v-model="addCorsForm.orgins"
+            <Input :rows="3" type="textarea" v-model="addCorsForm.orgins" @on-change="originPush"
                    placeholder="例如：http://10.100.100.100:8001 https://www.xrcloud.net"></Input>
           </Form-item>
           <p style="color: #999999;">来源可设置多个，每行一个，以回车间隔，每行最多能有一个通配符(*)</p>
@@ -590,7 +590,7 @@
           </Form-item>
           <p style="color: #999999;">来源可设置多个，每行一个，以回车间隔。</p>
           <Form-item label="Allow-Expose-Headers" prop="ExposeHeaders">
-            <Input style="width:420px;" :rows="3" type="textarea" @on-change="exposePush"
+            <Input style="width:420px;" :rows="3" type="textarea"
                    v-model="addCorsForm.ExposeHeaders"></Input>
           </Form-item>
           <p style="color: #999999;">来源可设置多个，每行一个，以回车间隔，不允许通配符(*)</p>
@@ -633,7 +633,7 @@
                    v-model="updateCorsForm.allowsheaders"></Input>
           </Form-item>
           <Form-item label="Allow-Expose-Headers" prop="exposeheaders">
-            <Input style="width:420px;" :rows="3" type="textarea" @on-change="updateExposePush"
+            <Input style="width:420px;" :rows="3" type="textarea"
                    v-model="updateCorsForm.exposeheaders"></Input>
           </Form-item>
           <Form-item label="缓存Max Age">
@@ -699,45 +699,55 @@
       callback();
     }
   };
-  const validatorOrgins = (rule,value,callback) =>{
-      let reg = /^(http|https)(:\/\/)((([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]{1,4}))|(([0-9a-z_!~*'()-]+\.)([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6}))$/;
-      let origins = value.split('\n');
-      for (let i = 0; i<origins.length;i++){
-        if(origins.length == 0){
-          return callback(new Error('请输入来源origin'));
-        }else if(!reg.test(origins[i]) || (/^[*]{1}$/).test(origins[i])){
-          return callback(new Error('请输入正确的origin'));
+  const validatorOrgins ={
+  origin(rule,value,callback){
+    // let reg = /^(http|https)(:\/\/)((([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]{1,4}))|(([0-9a-z_!~*'()-]+\.)([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6}))$/;
+      //
+      // let origins = value.split('\n');
+      // for (let i = 0; i<origins.length;i++) {
+      //   console.log(origins[i]);
+        if(value == ''){
+          return callback(new Error('请输入origin'))
         }else{
-          return callback();
+          return callback(new Error('请输入正确的origin'));
         }
-      }
 
+        // } else if (!(/^([*]{1})$/).test(value) && !reg.test(value)) {
+        //   console.log(value+'二');
+          // console.log(!reg.test(origins[i]) + '3333');
+          // console.log(!(/^([*]{1})$/).test(origins[i]) + '22222');
+
+        // } else {
+        //   console.log("失败00");
+          // console.log(value+'三');
+          // return callback();
+        // }
+
+    }
   }
   const validatorExpose ={
     expose(rule,value,callback) {
       let reg = /[*]+/g
-      let ru = value.split('\n');
-      for (let i = 0;i<ru.length;i++){
-        if(reg.test(ru)){
-          return callback('不能输入*')
+      if(value == ''){
+          return callback(new Error('请输入ExposeHeaders'))
+      }else if(reg.test(value)){
+         return callback(new Error('不能输入*'));
         }else{
-          callback();
-        }
+        callback();
+       }
       }
     }
-  }
   const validatorUpdateExpose = {
     expose(rule,value,callback) {
       let reg = /[*]+/g
-      let ru = value.split('\n');
-      for (let i = 0;i<ru.length;i++){
-        if(reg.test(ru)){
-          return callback('不能输入*')
+      if(value == ''){
+        return callback(new Error('请输入ExposeHeaders'))
+      }else if(reg.test(value)){
+          return callback(new  Error('不能输入*'))
         }else{
           callback();
         }
       }
-    }
   }
     export default {
     data() {
@@ -1272,6 +1282,9 @@
                     on: {
                       click: () => {
                         this.updateCorsForm = JSON.parse(JSON.stringify(params.row));
+                        this.updateCorsForm.orgins = params.row.orgins.replace('\n',',');
+                        this.updateCorsForm.allowsheaders = params.row.allowsheaders.replace(/[,，]/g,"\r\n");
+                        this.updateCorsForm.exposeheaders = params.row.exposeheaders.replace( /[,，]/g,"\r\n");
                         this.updateCorsForm.methods = params.row.methods.split(',');
                         this.updateCors = true;
                         this.corsIndex = params.row._index;
@@ -1339,13 +1352,16 @@
         },
         addCorsFormValidateL: {
           orgins: [
-            {required: true, validator:validatorOrgins,trigger:'blur'}
+            {required: true, validator:validatorOrgins.origin,trigger:'blur'}
           ],
           methods: [
             {required: true, message: '请选择操作Method'}
           ],
+          allowsHeaders:[
+            {required:true,message:'请输入allowsHeaders',trigger:'change'}
+          ],
           ExposeHeaders: [
-            {validator:validatorExpose.expose,trigger:'blur'}
+            {required:true,validator:validatorExpose.expose,trigger:'change'}
           ]
         },
         //修改权限需要的code
@@ -1381,8 +1397,11 @@
           methods: [
             {required: true, message: '请选择操作Method'}
           ],
+          allowsHeaders:[
+            {required:true,message:'请输入allowsHeaders',trigger:'change'}
+          ],
           exposeheaders: [
-            {validator:validatorUpdateExpose.expose,trigger:'blur'}
+            {required:true,validator:validatorUpdateExpose.expose,trigger:'blur'}
           ]
         },
         //获取表格当前要修改数据的index
@@ -1467,27 +1486,19 @@
       cunt
     },
     methods: {
-      exposePush(){
-        let dd = this.addCorsForm.ExposeHeaders.split('\n');
-        dd.pop();
-        for(let i = 0;i<dd.length;i++){
-          let reg =/[*]+/g
-          if(reg.test(dd[i])){
-            this.$refs.newCros.rules.ExposeHeaders[0].validator = validatorExpose.expose;
-          }else{
-            this.$refs.newCros.rules.ExposeHeaders[0].validator = null;
-          }
+      originPush(){
+        let reg = /^(http|https)(:\/\/)((([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]{1,4}))|(([0-9a-z_!~*'()-]+\.)([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6}))$/;
+        let origin = this.addCorsForm.orgins.split('\n');
+        if(origin[origin.length +1] ==""){
+          origin.pop();
         }
-      },
-      updateExposePush(){
-        let expose = this.updateCorsForm.ExposeHeaders.split('\n');
-        expose.pop();
-        for(let i = 0;i<expose.length;i++){
-          let reg =/[*]+/g
-          if(reg.test(expose[i])){
-            this.$refs.oldCros.rules.ExposeHeaders[0].validator = validatorUpdateExpose.expose;
+        for(let i = 0;i<origin.length;i++){
+          console.log(origin[i]);
+          if(!(/^([*]{1})$/).test(origin[i]) && !reg.test(origin[i])){
+            console.log(origin[i]);
+            this.$refs.newCros.rules.orgins[0].validator = validatorOrgins.origin;
           }else{
-            this.$refs.oldCros.rules.ExposeHeaders[0].validator = null;
+            this.$refs.newCros.rules.orgins[0].validator = null;
           }
         }
       },
@@ -1498,14 +1509,27 @@
           let corsObject = {orgins:'创建中',hide:1,methods:'————',allowsheaders:'————',exposeheaders:'————',maxage:'————'}
           this.corsData.push(corsObject);
             let expose = this.addCorsForm.ExposeHeaders.split('\n');
+            let exposeReal = [];
+            for(let item of expose){
+              if(item != ''){
+                exposeReal.push(item);
+              }
+            }
             let allows = this.addCorsForm.allowsHeaders.split('\n');
+            let orgins = this.addCorsForm.orgins.split('\n');
+            let orginsReal = [];
+            for (let or of orgins){
+              if(or != ""){
+                orginsReal.push(or);
+              }
+            }
           this.$http.post('cors/addCors.do', {
             bucketid: sessionStorage.getItem('bucketId'),
             bucketName: sessionStorage.getItem('bucketName'),
-            orgins: this.addCorsForm.orgins,
+            orgins:orginsReal.join(','),
             methods: this.addCorsForm.methods,
             allowsHeaders: allows.join(','),
-            ExposeHeaders: expose.join(','),
+            ExposeHeaders: exposeReal.join(','),
             maxAge: this.addCorsForm.maxAge + ''
           }).then(response => {
             if(response.status == 200 && response.data.status =="1"){
@@ -1541,15 +1565,22 @@
           if(valid){
             this.updateCors = false;
             let expose = this.updateCorsForm.ExposeHeaders.split('\n');
+            let exposeReal = [];
+            for(let item of expose){
+              if(item != ''){
+                exposeReal.push(item);
+              }
+            }
             let allows = this.updateCorsForm.allowsHeaders.split('\n');
+            let orgins = this.updateCorsForm.orgins.split('\n');
             let corsObject =  {orgins:'修改中',hide:1,methods:'————',allowsheaders:'————',exposeheaders:'————',maxage:'————'}
             this.corsData.splice(index,1,corsObject);
             this.$http.post('cors/updateCors.do',{
               bucketName:sessionStorage.getItem('bucketName'),
-              orgins:this.updateCorsForm.orgins,
+              orgins:orgins.join(','),
               methods:this.updateCorsForm.methods,
               allowsHeaders:allows.join(','),
-              ExposeHeaders:expose.join(','),
+              ExposeHeaders:exposeReal.join(','),
               maxAge:this.updateCorsForm.maxage+"",
               corsid:this.corsid
               }
