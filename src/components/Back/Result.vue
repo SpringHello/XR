@@ -247,6 +247,7 @@
               sessionStorage.setItem('payResult', 'success')
             } else {
               sessionStorage.setItem('payResult', 'fail')
+              sessionStorage.setItem('errMsg', response.data.message)
             }
             this.$router.push('payResult')
           })
@@ -394,13 +395,13 @@
         background-color: white;
         padding: 20px;
         min-height: 700px;
-        >p{
-          font-size:20px;
+        > p {
+          font-size: 20px;
           margin-top: 20px;
-          font-family:PingFangSC-Regular;
-          color:rgba(51,51,51,1);
-          line-height:28px;
-          span{
+          font-family: PingFangSC-Regular;
+          color: rgba(51, 51, 51, 1);
+          line-height: 28px;
+          span {
             color: #FD0000;
           }
         }

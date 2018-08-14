@@ -1,7 +1,8 @@
 <template>
   <div class="background">
     <div class="wrapper">
-      <span><router-link to="expenses" style="color:rgba(17, 17, 17, 0.43);margin: 0 5px;">订单确认</router-link> /  <span style="margin-left: 5px;"> 支付</span></span>
+      <span><router-link to="expenses" style="color:rgba(17, 17, 17, 0.43);margin: 0 5px;">订单确认</router-link> /  <span
+        style="margin-left: 5px;"> 支付</span></span>
       <div class="content">
         <span>支付</span>
         <div style="padding:40px 0px 140px;">
@@ -41,7 +42,7 @@
         var message = '您的订单已支付成功，我们需要一到三分钟为您分配云服务，请稍后。'
       } else {
         title = '支付失败'
-        message = '抱歉，您的订单支付失败。如未完成扣款，请重新提起支付；如已扣款仍支付失败，请联系客服。'
+        message = sessionStorage.getItem('errMsg') || '抱歉，您的订单支付失败。如未完成扣款，请重新提起支付；如已扣款仍支付失败，请联系客服。'
       }
       return {
         payResult,
@@ -71,13 +72,13 @@
       },
       back() {
         let url = sessionStorage.getItem('currentURL')
-        let companyID  = sessionStorage.getItem('companyID')? sessionStorage.getItem('companyID') : ''
+        let companyID = sessionStorage.getItem('companyID') ? sessionStorage.getItem('companyID') : ''
         sessionStorage.removeItem('currentURL')
         sessionStorage.removeItem('companyID')
         if (url != null) {
           setTimeout(() => {
-            sessionStorage.setItem('step','step-one')
-            this.$router.push({ name: url, query: { token: companyID }})
+            sessionStorage.setItem('step', 'step-one')
+            this.$router.push({name: url, query: {token: companyID}})
           }, 1000)
         } else {
         }
