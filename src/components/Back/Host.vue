@@ -747,9 +747,9 @@
         },
         linkPassword: '111',
         // 变更资费关联相关
-        relevanceAlteration: ['ip', 'disk'],
-        relevanceDisks: true,
-        relevanceIps: true
+        relevanceAlteration: [],
+        relevanceDisks: false,
+        relevanceIps: false
       }
     },
     created() {
@@ -1204,11 +1204,7 @@
           case 'ratesChange':
             if (this.checkSelect()) {
               if (this.currentHost[0].caseType == 3) {
-                this.ratesChangeType = ''
-                this.ratesChangeTime = ''
-                this.ratesChangeCost = '--'
-                this.originRatesChangeCost = '--'
-                this.showModal.ratesChange = true
+                this.ratesChange()
               } else {
                 this.$Message.info('请选择实时计费的云主机进行资费变更')
               }
@@ -1267,6 +1263,36 @@
             this.reboot()
             break
         }
+      },
+      ratesChange() {
+        let url = 'information/listVirtualMachinesById.do'
+        axios.get(url, {
+          params: {
+            VMId: this.currentHost[0].computerid,
+            zoneId: this.currentHost[0].zoneid,
+            changeCost: '1'
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            if (res.data.result[0].attachDisk.length != 0) {
+              this.relevanceDisks = true
+              this.relevanceAlteration.push('disk')
+            }
+            if (res.data.result[0].attachPublicIp.length != 0) {
+              this.relevanceIps = true
+              this.relevanceAlteration.push('ip')
+            }
+            this.ratesChangeType = ''
+            this.ratesChangeTime = ''
+            this.ratesChangeCost = '--'
+            this.originRatesChangeCost = '--'
+            this.showModal.ratesChange = true
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
       },
       checkSelect() {
         switch (this.status) {
