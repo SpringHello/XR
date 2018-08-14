@@ -32,7 +32,7 @@
           </TabPane>
           <TabPane label="自定义监控" name="customMonitoring">
             <div class="cm-content">
-              <div class="cm-item" v-for="(item,index) in cm">
+              <div class="cm-item" v-for="(item,index) in customMonitoringData">
                 <div class="cm-item-title">
                   <p>我关注的指标<span @click="deleteAttention(index)">&nbsp删除</span><span>编辑 |</span></p>
                 </div>
@@ -41,7 +41,7 @@
                 <div class="cm-item-title">
                   <p>我关注的指标</p>
                 </div>
-                <div class="cm-item-content">
+                <div class="cm-item-content" @click="addCustomMonitoring">
                   <div class="cross"></div>
                   <p>您还未添加关注的指标，点击“+”添加指标。</p>
                 </div>
@@ -57,6 +57,57 @@
         </Tabs>
       </div>
     </div>
+    <!-- 添加自定义指标弹窗 -->
+    <Modal v-model="showModal.addMonitorIndex" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">添加监控指标</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <div class="modal-top">
+          <div class="left">
+            <p>产品类型</p>
+            <Select v-model="monitoringIndexForm.product" placeholder="请选择" @on-change="changeProduct" style="width: 240px;" class="cm-select">
+              <Option v-for="item in monitoringIndexForm.productGroup" :key="item.value" :value="item.value">
+                {{item.value}}
+              </Option>
+            </Select>
+          </div>
+          <div class="right">
+            <p>指标</p>
+            <Select v-model="monitoringIndexForm.productIndex" placeholder="请选择" @on-change="getIndexResource" style="width: 240px;" class="cm-select">
+              <Option v-for="item in monitoringIndexForm.productIndexGroup" :key="item.value" :value="item.value">
+                {{item.label}}
+              </Option>
+            </Select>
+          </div>
+        </div>
+        <div class="modal-main">
+          <div class="hostlist">
+            <p>该区域下所有磁盘</p>
+            <ul>
+              <li>
+                <span></span>
+                <span></span>
+                <i class="bluetext" style="cursor: pointer">+ 添加</i></li>
+            </ul>
+          </div>
+          <div class="changelist">
+            <p>已选择磁盘</p>
+            <ul>
+              <li><span></span>
+                <i class="bluetext" style="cursor: pointer">
+                  <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
+                  删除</i>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.addMonitorIndex = false">取消</Button>
+        <Button type="primary">完成配置</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -84,7 +135,61 @@
             num: '0'
           }
         ],
-        cm: [{}]
+        customMonitoringData: [],
+        showModal: {
+          addMonitorIndex: false
+        },
+        monitoringIndexForm: {
+          productGroup: [
+            {
+              value: '云主机',
+              indexGroup: [
+                {
+                  label: 'CPU使用率',
+                  value: 'cpu'
+                }, {
+                  label: '磁盘使用率',
+                  value: 'disk'
+                }, {
+                  label: '内存使用率',
+                  value: 'memory'
+                }, {
+                  label: '网进',
+                  value: 'networkin'
+                }, {
+                  label: '网出',
+                  value: 'networkout'
+                }
+              ]
+            }, {
+              value: '对象存储',
+              indexGroup: [
+                {
+                  label: '容量',
+                  value: 'capacity'
+                }, {
+                  label: '流量',
+                  value: 'flow'
+                }, {
+                  label: 'get请求次数',
+                  value: 'gethttp'
+                }, {
+                  label: 'post请求次数',
+                  value: 'posthttp'
+                }, {
+                  label: 'put请求次数',
+                  value: 'puthttp'
+                }, {
+                  label: 'delete请求次数',
+                  value: 'deletehttp'
+                }
+              ]
+            },
+          ],
+          product: '',
+          productIndexGroup: [],
+          productIndex: ''
+        }
       }
     },
     created() {
@@ -99,7 +204,7 @@
         console.log(name)
       },
       // 删除关注
-      deleteAttention(index){
+      deleteAttention(index) {
         this.$Modal.confirm({
           title: '提示',
           content: '<p>确定删除当前关注的指标吗？</p>',
@@ -110,6 +215,31 @@
             this.$Message.info('取消');
           }
         });
+      },
+      addCustomMonitoring() {
+        this.showModal.addMonitorIndex = true
+      },
+      changeProduct(val) {
+        this.monitoringIndexForm.productIndex = ''
+        this.monitoringIndexForm.productGroup.forEach(item => {
+          if (item.value == val) {
+            this.monitoringIndexForm.productIndexGroup = item.indexGroup
+          }
+        })
+      },
+      // 获取指标资源
+      getIndexResource() {
+        let url = 'monitor/listZoneVMAndDiskAndVpcAndObject.do'
+        this.$http.get(url, {
+          params: {
+            productType: this.monitoringIndexForm.product,
+            index: this.monitoringIndexForm.productIndex
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+
+          }
+        })
       }
     },
     computed: {
@@ -190,7 +320,7 @@
         cursor: pointer;
         text-align: center;
         .cross {
-          background:rgba(42,153,242,1);
+          background: rgba(42, 153, 242, 1);
           height: 40px;
           position: relative;
           width: 1px;
@@ -212,6 +342,55 @@
           color: rgba(153, 153, 153, 1);
           line-height: 16px;
         }
+      }
+    }
+  }
+
+  .modal-top {
+    display: flex;
+    margin-bottom: 20px;
+    p {
+      font-size: 12px;
+      font-family: MicrosoftYaHei;
+      color: rgba(17, 17, 17, 0.65);
+      line-height: 16px;
+      margin-bottom: 10px;
+    }
+    .left {
+      width: 50%;
+    }
+    .right {
+      padding-left: 14px;
+      width: 50%;
+    }
+  }
+
+  .modal-main {
+    height: 146px;
+    display: flex;
+    border: 1px solid #D8D8D8;
+    border-radius: 4px;
+    div {
+      height: 146px;
+      padding: 0 10px 10px;
+      overflow: scroll;
+      width: 250px;
+      overflow-x: hidden;
+      p {
+        line-height: 36px;
+      }
+      li {
+        font-size: 12px;
+        line-height: 28px;
+        &:nth-child(odd) {
+          background: #F7F7F7;
+        }
+        > i {
+          float: right;
+          font-size: 10px;
+          font-style: normal;
+        }
+
       }
     }
   }

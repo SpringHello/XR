@@ -387,3 +387,16 @@ div.modal-header-border {
 .fr-select .ivu-select-arrow {
   color: #FF881C;
 }
+
+/* 自定义监控下拉框 */
+.cm-select.ivu-select-single .ivu-select-selection {
+  height: 28px;
+}
+
+.cm-select.ivu-select-single .ivu-select-selection .ivu-select-placeholder {
+  line-height: 24px;
+}
+
+.cm-select.ivu-select-single .ivu-select-selection .ivu-select-selected-value {
+  line-height: 24px;
+}
