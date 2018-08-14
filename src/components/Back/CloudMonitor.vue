@@ -34,7 +34,7 @@
             </div> -->
             <section>
               <div class="disk">
-                <div class="header">
+                 <div class="header">
                   磁盘链接速率
                   <span>
                     <i>编辑</i> | <i>删除</i>
@@ -47,7 +47,7 @@
                     <Radio label="month">本月</Radio>
                   </RadioGroup>
                   <div>
-                    <Button type="primary">导出</Button>
+                    <Button type="primary" class="export-btn">导出</Button>
                     <RadioGroup v-model="disk.showType" type="button" @on-change="chartTypeSwitch('disk')">
                       <Radio label="line">折线</Radio>
                       <Radio label="bar">柱状</Radio>
@@ -56,7 +56,57 @@
                 </div>
                 <chart :options="showChart" style="width: 714px;height:172px;margin-top: 20px;"></chart>
               </div>
-              <chart :options="messageData" style="border: solid 1px #D8D8D8;padding: 20px;padding-right:0;box-sizing: border-box;width: 366px;height:295px;"></chart>
+              <chart :options="messageData" style="border: solid 1px #D8D8D8;padding: 20px;padding-right:0;box-sizing: border-box;width: 366px;height:297px;"></chart>
+            </section>
+            <section>
+              <div>
+                 <div class="header">
+                  cpu利用率
+                  <span>
+                    <i>编辑</i> | <i>删除</i>
+                  </span>
+                </div>
+                <div class="switch">
+                  <RadioGroup v-model="disk.type" type="button" @on-change="timeSwitch('cpu')">
+                    <Radio label="day">今日</Radio>
+                    <Radio label="week">本周</Radio>
+                    <Radio label="month">本月</Radio>
+                  </RadioGroup>
+                  <div>
+                    <Button type="primary" class="export-btn">导出</Button>
+                    <RadioGroup v-model="disk.showType" type="button" @on-change="chartTypeSwitch('cpu')">
+                      <Radio label="line">折线</Radio>
+                      <Radio label="bar">柱状</Radio>
+                    </RadioGroup>
+                  </div>
+                </div>
+                <chart :options="showChart" style="width:1110px;height:268px;margin-top: 20px;"></chart>
+              </div>
+            </section>
+            <section>
+              <div>
+                 <div class="header">
+                  内存使用率
+                  <span>
+                    <i>编辑</i> | <i>删除</i>
+                  </span>
+                </div>
+                <div class="switch">
+                  <RadioGroup v-model="disk.type" type="button" @on-change="timeSwitch('memory')">
+                    <Radio label="day">今日</Radio>
+                    <Radio label="week">本周</Radio>
+                    <Radio label="month">本月</Radio>
+                  </RadioGroup>
+                  <div>
+                    <Button type="primary" class="export-btn">导出</Button>
+                    <RadioGroup v-model="disk.showType" type="button" @on-change="chartTypeSwitch('memory')">
+                      <Radio label="line">折线</Radio>
+                      <Radio label="bar">柱状</Radio>
+                    </RadioGroup>
+                  </div>
+                </div>
+                <chart :options="showChart" style="width:1110px;height:268px;margin-top: 20px;"></chart>
+              </div>
             </section>
           </TabPane>
           <TabPane label="自定义监控" name="customMonitoring">
@@ -86,7 +136,7 @@
         </Tabs>
       </div>
     </div>
-    <!-- 添加自定义指标弹窗 -->
+  <!-- 添加自定义指标弹窗 -->
     <Modal v-model="showModal.addMonitorIndex" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">添加监控指标</span>
@@ -141,50 +191,48 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import messageMonitor from '@/echarts/cloudMonitor/messagePie'
-  import line from '@/echarts/cloudMonitor/line'
-  import bar from '@/echarts/cloudMonitor/bar'
+import messageMonitor from '@/echarts/cloudMonitor/messagePie'
+import line from '@/echarts/cloudMonitor/line'
+import bar from '@/echarts/cloudMonitor/bar'
 
-  export default {
-    data() {
-      return {
-        messageData: messageMonitor,
-        line,
-        bar,
-        showChart: line,
-        monitorData: [
-          {
-            text: '云主机Ping不可达',
-            num: '0'
-          },
-          {
-            text: '未处理告警',
-            num: '0'
-          },
-          {
-            text: '已关机云主机',
-            num: '0'
-          }
-        ],
-        disk: {
-          showType: 'line',
-          timeType: 'day'
+export default {
+  data() {
+    return {
+      messageData: messageMonitor,
+      line,
+      bar,
+      showChart: line,
+      monitorData: [
+        {
+          text: '云主机Ping不可达',
+          num: '0'
         },
-        monitorData: [
-          {
-            text: '云主机Ping不可达',
-            num: '0'
-          },
-          {
-            text: '未处理告警',
-            num: '0'
-          },
-          {
-            text: '已关机云主机',
-            num: '0'
-          }
-        ],
-        customMonitoringData: [],
+        {
+          text: '未处理告警',
+          num: '0'
+        },
+        {
+          text: '已关机云主机',
+          num: '0'
+        }
+      ],
+      disk: {
+        timeType: 'day',
+        showType: 'line'
+      },
+      cpu: {
+        timeType: 'day',
+        showType: 'line'
+      },
+      memory: {
+        timeType: 'day',
+        showType: 'line'
+      },
+      flow: {
+        timeType: 'day',
+        showType: 'line'
+      },
+      customMonitoringData: [],
         showModal: {
           addMonitorIndex: false
         },
@@ -239,57 +287,125 @@
           productIndexGroup: [],
           productIndex: ''
         }
+    }
+  },
+  created() {
+    //  短信剩余配额数据模拟
+    var mockMessageData = [
+      {value: 130, name: '剩余配额'},
+      {value: 80, name: '自定义监控告警'},
+      {value: 120, name: '基础告警'},
+      {value: 30, name: '财务与信息系统'}
+    ]
+    mockMessageData.forEach(item => {
+      if (item.name == "剩余配额") {
+        item.selected = true
       }
-    },
-    created() {
-      //  短信剩余配额数据模拟
-      var mockMessageData = [
-        {value: 130, name: '剩余配额'},
-        {value: 80, name: '自定义监控告警'},
-        {value: 120, name: '基础告警'},
-        {value: 30, name: '财务与信息系统'}
-      ]
-      mockMessageData.forEach(item => {
-        if (item.name == "剩余配额") {
-          item.selected = true
-        }
-        item.name += '(' + item.value + ')'
-      })
-      var mockMessagelegend = mockMessageData.map(item => {
-        return item.name
-      })
-      this.messageData.series[0].data = mockMessageData
-      this.messageData.legend.data = mockMessagelegend
-    },
-    methods: {
-      // 区域变更，刷新数据
-      refresh() {
+      item.name += '(' + item.value + ')'
+    })
+    var mockMessagelegend = mockMessageData.map(item => {
+      return item.name
+    })
+    this.messageData.series[0].data = mockMessageData
+    this.messageData.legend.data = mockMessagelegend
+  },
+  methods: {
+    // 区域变更，刷新数据
+     refresh() {
       },
       labelSwitching(name) {
         console.log(name)
       },
       chartTypeSwitch(type) {
-        this[type].showType == 'line' ? this.showChart = this.line : this.showChart = this.bar
-        // if (type == 'cpu' || type == 'memory') {
-        //   var polar = this[type].showType == '折线' ? JSON.parse(defaultOptionstr) : JSON.parse(histogramstr)
-        //   polar.xAxis.data = this[type + 'Polar'].xAxis.data
-        //   polar.series[0].data = this[type + 'Polar'].series[0].data
-        //   this[type + 'Polar'] = polar
-        // } else if (type == 'flow') {
-        //   polar = this[type].showType == '折线' ? ipOptions : ipHistogram
-        //   polar.xAxis.data = this.ipPolar.xAxis.data
-        //   polar.series[0].data = this.ipPolar.series[0].data
-        //   polar.series[1].data = this.ipPolar.series[1].data
-        //   // console.log(polar)
-        //   this.ipPolar = polar
-        // } else {
-        //   var polar = this[type].showType == '折线' ? JSON.parse(hostDiskOptionstr) : JSON.parse(hostDiskHistogram)
-        //   polar.xAxis.data = this[type + 'Polar'].xAxis.data
-        //   polar.series[0].data = this[type + 'Polar'].series[0].data
-        //   this[type + 'Polar'] = polar
-        // }
-
+      this[type].showType == 'line' ? this.showChart = this.line : this.showChart = this.bar
+     
       },
+    getCurrentDate() {
+        return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
+      },
+    getNearlySevenDays() {
+      var day = new Date()
+      day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 7)
+      return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+    },
+    getNearlyThirtyDays() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 30)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+    timeSwitch(type) {
+        if (type == 'cpu') {
+          switch (this[type].type) {
+            case '今天':
+              this.CPUTime = this.getCurrentDate()
+              break
+            case '最近7天':
+              this.CPUTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
+              break
+            case '最近30天':
+              this.CPUTime = this.getNearlyThirtyDays() + '--' + this.getCurrentDate()
+              break
+          }
+        } else if (type == 'memory') {
+          switch (this[type].type) {
+            case '今天':
+              this.memoryTime = this.getCurrentDate()
+              break
+            case '最近7天':
+              this.memoryTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
+              break
+            case '最近30天':
+              this.memoryTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
+              break
+          }
+        } else if (type == 'disk') {
+          switch (this[type].type) {
+            case '今天':
+              this.diskTime = this.getCurrentDate()
+              break
+            case '最近7天':
+              this.diskTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
+              break
+            case '最近30天':
+              this.diskTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
+              break
+          }
+        } else if (type == 'flow') {
+          switch (this[type].type) {
+            case '今天':
+              this.IPTime = this.getCurrentDate()
+              break
+            case '最近7天':
+              this.IPTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
+              break
+            case '最近30天':
+              this.IPTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
+              break
+          }
+        }
+        var url = this[type].type == '今天' ? urlList.dayURL : urlList.otherURL
+        var queryType = type == 'flow' ? 'network' : 'core'
+        var dateType = this[type].type == '最近7天' ? 'week' : 'month'
+        this.$http.get(url, {
+          params: {
+            vmname: this.$route.query.instancename,
+            type: queryType,
+            datetype: dateType
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            if (type == 'flow') {
+              this.ipPolar.xAxis.data = response.data.result.xaxis
+              this.ipPolar.series[0].data = response.data.result.networkIn
+              this.ipPolar.series[1].data = response.data.result.networkOut
+            } else {
+              this[type + 'Polar'].xAxis.data = response.data.result.xaxis
+              this[type + 'Polar'].series[0].data = response.data.result[type + 'Use']
+            }
+          }
+        })
+      },
+    
       labelSwitching(name) {
         console.log(name)
       },
@@ -305,7 +421,7 @@
             this.$Message.info('取消');
           }
         });
-      },
+        },
       addCustomMonitoring() {
         this.showModal.addMonitorIndex = true
       },
@@ -349,51 +465,49 @@
   }
 </script>
 <style rel="stylesheet/less" lang="less" scoped>
-  .host-monitor {
-    font-family: MicrosoftYaHei;
-    padding: 20px 0;
-    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(216, 216, 216, 1);
-    color: #666666;
-    > p {
-      font-size: 14px;
+.host-monitor {
+  font-family: MicrosoftYaHei;
+  padding: 20px 0;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(216, 216, 216, 1);
+  color: #666666;
+  > p {
+    font-size: 14px;
+    padding-left: 20px;
+  }
+  ul {
+    display: flex;
+    li {
+      flex: auto;
+      border-right: solid 1px #d8d8d8;
       padding-left: 20px;
-    }
-    ul {
-      display: flex;
-      li {
-        flex: auto;
-        border-right: solid 1px #d8d8d8;
-        padding-left: 20px;
-        &:last-of-type {
-          border-right: none;
-        }
-        p {
-          font-size: 12px;
-          padding-top: 12px;
-          span {
-            font-size: 18px;
-            padding-right: 10px;
-          }
+      &:last-of-type {
+        border-right: none;
+      }
+      p {
+        font-size: 12px;
+        padding-top: 12px;
+        span {
+          font-size: 18px;
+          padding-right: 10px;
         }
       }
     }
   }
+}
 
-  section {
-    margin-top: 20px;
-    &:first-of-type {
-      display: flex;
-      justify-content: space-between;
-    }
+section {
+  margin-top: 20px;
+  &:first-of-type {
+    display: flex;
+    justify-content: space-between;
   }
-
-  .disk {
-    width: 774px;
+  > div{
     padding: 20px;
     background: rgba(255, 255, 255, 1);
     border: 1px solid rgba(216, 216, 216, 1);
     .header {
+      padding-bottom: 10px;
       font-size: 14px;
       color: #111111;
       span {
@@ -408,8 +522,15 @@
     .switch {
       display: flex;
       justify-content: space-between;
+      .export-btn{
+        margin-right: 10px;
+      }
     }
   }
+}
+.disk {
+  width: 774px;
+}
 
   .cm-content {
     display: flex;
