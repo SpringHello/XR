@@ -34,7 +34,7 @@
             </div> -->
             <section>
               <div class="disk">
-                 <div class="header">
+                <div class="header">
                   磁盘链接速率
                   <span>
                     <i>编辑</i> | <i>删除</i>
@@ -60,7 +60,7 @@
             </section>
             <section>
               <div>
-                 <div class="header">
+                <div class="header">
                   cpu利用率
                   <span>
                     <i>编辑</i> | <i>删除</i>
@@ -85,7 +85,7 @@
             </section>
             <section>
               <div>
-                 <div class="header">
+                <div class="header">
                   内存使用率
                   <span>
                     <i>编辑</i> | <i>删除</i>
@@ -136,7 +136,7 @@
         </Tabs>
       </div>
     </div>
-  <!-- 添加自定义指标弹窗 -->
+    <!-- 添加自定义指标弹窗 -->
     <Modal v-model="showModal.addMonitorIndex" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">添加监控指标</span>
@@ -145,8 +145,8 @@
         <div class="modal-top">
           <div class="left">
             <p>产品类型</p>
-            <Select v-model="monitoringIndexForm.product" placeholder="请选择" @on-change="changeProduct" style="width: 240px;" class="cm-select">
-              <Option v-for="item in monitoringIndexForm.productGroup" :key="item.value" :value="item.value">
+            <Select v-model="monitoringIndexForm.productType" placeholder="请选择" @on-change="changeProduct" style="width: 240px;" class="cm-select">
+              <Option v-for="item in monitoringIndexForm.productTypeGroup" :key="item.value" :value="item.value">
                 {{item.value}}
               </Option>
             </Select>
@@ -162,19 +162,19 @@
         </div>
         <div class="modal-main">
           <div class="hostlist">
-            <p>该区域下所有磁盘</p>
+            <p>该区域下所有{{ monitoringIndexForm.productType }}</p>
             <ul>
-              <li>
-                <span></span>
-                <span></span>
-                <i class="bluetext" style="cursor: pointer">+ 添加</i></li>
+              <li v-for="(item,index) in monitoringIndexForm.allProduct">
+                <span>{{ item.name}}</span>
+                <i class="bluetext" style="cursor: pointer" v-if="monitoringIndexForm.selectedProduct.length<5&&item.name !=''" @click="addProduct(item,index)">+ 添加</i></li>
             </ul>
           </div>
           <div class="changelist">
-            <p>已选择磁盘</p>
+            <p>已选择{{ monitoringIndexForm.productType}}</p>
             <ul>
-              <li><span></span>
-                <i class="bluetext" style="cursor: pointer">
+              <li v-for="(item,index) in monitoringIndexForm.selectedProduct">
+                <span>{{ item.name}}</span>
+                <i class="bluetext" style="cursor: pointer" @click="deleteProduct(item,index)">
                   <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
                   删除</i>
               </li>
@@ -191,53 +191,53 @@
 </template>
 
 <script type="text/ecmascript-6">
-import messageMonitor from '@/echarts/cloudMonitor/messagePie'
-import line from '@/echarts/cloudMonitor/line'
-import bar from '@/echarts/cloudMonitor/bar'
+  import messageMonitor from '@/echarts/cloudMonitor/messagePie'
+  import line from '@/echarts/cloudMonitor/line'
+  import bar from '@/echarts/cloudMonitor/bar'
 
-export default {
-  data() {
-    return {
-      messageData: messageMonitor,
-      line,
-      bar,
-      showChart: line,
-      monitorData: [
-        {
-          text: '云主机Ping不可达',
-          num: '0'
+  export default {
+    data() {
+      return {
+        messageData: messageMonitor,
+        line,
+        bar,
+        showChart: line,
+        monitorData: [
+          {
+            text: '云主机Ping不可达',
+            num: '0'
+          },
+          {
+            text: '未处理告警',
+            num: '0'
+          },
+          {
+            text: '已关机云主机',
+            num: '0'
+          }
+        ],
+        disk: {
+          timeType: 'day',
+          showType: 'line'
         },
-        {
-          text: '未处理告警',
-          num: '0'
+        cpu: {
+          timeType: 'day',
+          showType: 'line'
         },
-        {
-          text: '已关机云主机',
-          num: '0'
-        }
-      ],
-      disk: {
-        timeType: 'day',
-        showType: 'line'
-      },
-      cpu: {
-        timeType: 'day',
-        showType: 'line'
-      },
-      memory: {
-        timeType: 'day',
-        showType: 'line'
-      },
-      flow: {
-        timeType: 'day',
-        showType: 'line'
-      },
-      customMonitoringData: [],
+        memory: {
+          timeType: 'day',
+          showType: 'line'
+        },
+        flow: {
+          timeType: 'day',
+          showType: 'line'
+        },
+        customMonitoringData: [],
         showModal: {
           addMonitorIndex: false
         },
         monitoringIndexForm: {
-          productGroup: [
+          productTypeGroup: [
             {
               value: '云主机',
               indexGroup: [
@@ -283,57 +283,73 @@ export default {
               ]
             },
           ],
-          product: '',
+          productType: '',
           productIndexGroup: [],
-          productIndex: ''
+          productIndex: '',
+          allProduct: [
+            {
+              name: '测试1号'
+            }, {
+              name: '测试2号'
+            }, {
+              name: '测试3号'
+            }, {
+              name: '测试4号'
+            }, {
+              name: '测试5号'
+            }, {
+              name: '测试6号'
+            },
+          ],
+          selectedProduct: []
         }
-    }
-  },
-  created() {
-    //  短信剩余配额数据模拟
-    var mockMessageData = [
-      {value: 130, name: '剩余配额'},
-      {value: 80, name: '自定义监控告警'},
-      {value: 120, name: '基础告警'},
-      {value: 30, name: '财务与信息系统'}
-    ]
-    mockMessageData.forEach(item => {
-      if (item.name == "剩余配额") {
-        item.selected = true
       }
-      item.name += '(' + item.value + ')'
-    })
-    var mockMessagelegend = mockMessageData.map(item => {
-      return item.name
-    })
-    this.messageData.series[0].data = mockMessageData
-    this.messageData.legend.data = mockMessagelegend
-  },
-  methods: {
-    // 区域变更，刷新数据
-     refresh() {
+    },
+    created() {
+      //  短信剩余配额数据模拟
+      var mockMessageData = [
+        {value: 130, name: '剩余配额'},
+        {value: 80, name: '自定义监控告警'},
+        {value: 120, name: '基础告警'},
+        {value: 30, name: '财务与信息系统'}
+      ]
+      mockMessageData.forEach(item => {
+        if (item.name == "剩余配额") {
+          item.selected = true
+        }
+        item.name += '(' + item.value + ')'
+      })
+      var mockMessagelegend = mockMessageData.map(item => {
+        return item.name
+      })
+      this.messageData.series[0].data = mockMessageData
+      this.messageData.legend.data = mockMessagelegend
+    },
+    methods: {
+      // 区域变更，刷新数据
+      refresh() {
       },
       labelSwitching(name) {
         console.log(name)
       },
       chartTypeSwitch(type) {
-      this[type].showType == 'line' ? this.showChart = this.line : this.showChart = this.bar
-     
+        this[type].showType == 'line' ? this.showChart = this.line : this.showChart = this.bar
+
       },
-    getCurrentDate() {
+      getCurrentDate() {
         return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
       },
-    getNearlySevenDays() {
-      var day = new Date()
-      day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 7)
-      return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
-    },
-    getNearlyThirtyDays() {
+      getNearlySevenDays() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 7)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      getNearlyThirtyDays() {
         var day = new Date()
         day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 30)
         return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
       },
-    timeSwitch(type) {
+      timeSwitch(type) {
         if (type == 'cpu') {
           switch (this[type].type) {
             case '今天':
@@ -405,10 +421,6 @@ export default {
           }
         })
       },
-    
-      labelSwitching(name) {
-        console.log(name)
-      },
       // 删除关注
       deleteAttention(index) {
         this.$Modal.confirm({
@@ -421,12 +433,12 @@ export default {
             this.$Message.info('取消');
           }
         });
-        },
+      },
       addCustomMonitoring() {
         this.showModal.addMonitorIndex = true
       },
       changeProduct(val) {
-        this.monitoringIndexForm.productGroup.forEach(item => {
+        this.monitoringIndexForm.productTypeGroup.forEach(item => {
           if (item.value == val) {
             this.monitoringIndexForm.productIndexGroup = item.indexGroup
           }
@@ -439,7 +451,7 @@ export default {
         if (typeof (this.monitoringIndexForm.productIndex) != 'undefined') {
           this.$http.get(url, {
             params: {
-              productType: this.monitoringIndexForm.product,
+              productType: this.monitoringIndexForm.productType,
               index: this.monitoringIndexForm.productIndex
             }
           }).then(res => {
@@ -448,6 +460,16 @@ export default {
             }
           })
         }
+      },
+      // 添加产品进监控
+      addProduct(item, index) {
+        this.monitoringIndexForm.allProduct.splice(index, 1)
+        this.monitoringIndexForm.selectedProduct.push(item)
+      },
+      // 从监控中删除该产品
+      deleteProduct(item, index) {
+        this.monitoringIndexForm.selectedProduct.splice(index, 1)
+        this.monitoringIndexForm.allProduct.push(item)
       }
     },
     computed: {
@@ -465,72 +487,73 @@ export default {
   }
 </script>
 <style rel="stylesheet/less" lang="less" scoped>
-.host-monitor {
-  font-family: MicrosoftYaHei;
-  padding: 20px 0;
-  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(216, 216, 216, 1);
-  color: #666666;
-  > p {
-    font-size: 14px;
-    padding-left: 20px;
-  }
-  ul {
-    display: flex;
-    li {
-      flex: auto;
-      border-right: solid 1px #d8d8d8;
-      padding-left: 20px;
-      &:last-of-type {
-        border-right: none;
-      }
-      p {
-        font-size: 12px;
-        padding-top: 12px;
-        span {
-          font-size: 18px;
-          padding-right: 10px;
-        }
-      }
-    }
-  }
-}
-
-section {
-  margin-top: 20px;
-  &:first-of-type {
-    display: flex;
-    justify-content: space-between;
-  }
-  > div{
-    padding: 20px;
-    background: rgba(255, 255, 255, 1);
+  .host-monitor {
+    font-family: MicrosoftYaHei;
+    padding: 20px 0;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
     border: 1px solid rgba(216, 216, 216, 1);
-    .header {
-      padding-bottom: 10px;
+    color: #666666;
+    > p {
       font-size: 14px;
-      color: #111111;
-      span {
-        float: right;
-        color: #2a99f2;
-        i {
-          font-style: normal;
-          cursor: pointer;
+      padding-left: 20px;
+    }
+    ul {
+      display: flex;
+      li {
+        flex: auto;
+        border-right: solid 1px #d8d8d8;
+        padding-left: 20px;
+        &:last-of-type {
+          border-right: none;
+        }
+        p {
+          font-size: 12px;
+          padding-top: 12px;
+          span {
+            font-size: 18px;
+            padding-right: 10px;
+          }
         }
       }
     }
-    .switch {
+  }
+
+  section {
+    margin-top: 20px;
+    &:first-of-type {
       display: flex;
       justify-content: space-between;
-      .export-btn{
-        margin-right: 10px;
+    }
+    > div {
+      padding: 20px;
+      background: rgba(255, 255, 255, 1);
+      border: 1px solid rgba(216, 216, 216, 1);
+      .header {
+        padding-bottom: 10px;
+        font-size: 14px;
+        color: #111111;
+        span {
+          float: right;
+          color: #2a99f2;
+          i {
+            font-style: normal;
+            cursor: pointer;
+          }
+        }
+      }
+      .switch {
+        display: flex;
+        justify-content: space-between;
+        .export-btn {
+          margin-right: 10px;
+        }
       }
     }
   }
-}
-.disk {
-  width: 774px;
-}
+
+  .disk {
+    width: 774px;
+  }
 
   .cm-content {
     display: flex;
