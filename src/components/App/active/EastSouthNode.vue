@@ -8,7 +8,7 @@
             <Button>立即购买</Button>
           </div>
           <transition name="slide-fade-right">
-          <img v-show="defaultNode=='east'" src="../../../assets/img/active/eastsouthnode/east-banner.png"/>
+          <img v-show="bannershow=='east'" src="../../../assets/img/active/eastsouthnode/east-banner.png"/>
            </transition>
         </div>
       </div>
@@ -20,15 +20,15 @@
           <Button>立即购买</Button>
         </div>
         <transition name="slide-fade-left">
-        <img v-show="defaultNode=='south'"  src="../../../assets/img/active/eastsouthnode/south-banner.png"/>
+        <img v-show="bannershow=='south'"  src="../../../assets/img/active/eastsouthnode/south-banner.png"/>
         </transition>
       </div>
     </div>
     
     <div class="container">
       <ul class="nav">
-        <li @click="defaultNode='east'" :class="{active:defaultNode=='east'}">华东节点</li>
-        <li @click="defaultNode='south'" :class="{active:defaultNode=='south'}">华南节点</li>
+        <li @click="defaultNode='east';bannershow='east'" :class="{active:defaultNode=='east'}">华东节点</li>
+        <li @click="defaultNode='south';bannershow='south'" :class="{active:defaultNode=='south'}">华南节点</li>
       </ul>
       <div v-show="defaultNode=='east'" class="east-box">
         <div class="base">
@@ -54,7 +54,7 @@
               <div class="desc">
                 <h1>地域优势</h1>
                 <span>新睿云「华东地区」：高端服务，助力实体经济云上赋能</span>
-                <p>华东数据中心坐落于历史文化名城绍兴，位于浙江绍兴越城区城东电信大楼。将为华东地区互联网企业上云以及传统实体经济企业转型赋能提供帮助。为企业加速发展，降低IT成本，为用户提供更好的互联网服务，推动区域经济和生活水平发展，是新睿云持续建设数据中心的核心目标。</p>
+                <p>华东地区具备发展集成电路的良好基础，汇聚了丰富的网络骨干资源，同时拥有优越的商业资源优势。在华东地区部署业务，能更好、更便利地服务本地市场，获得更优质的技术支持。新睿云选择在华东地区建立数据中心，将为用户提供更优质的云计算服务，降低IT成本，加速企业发展。</p>
               </div>
               <img src="../../../assets/img/active/eastsouthnode/east-map.png" alt="">
             </div>
@@ -68,7 +68,7 @@
               <div class="desc">
                 <h1>地域优势</h1>
                 <span>新睿云「华南地区」：大规模 高质量 助力企业上云</span>
-                <p>华南一区数据中心于2017年10月投产，是新睿云建设的第X个数据中心，将为当地成千上万的企业及个人提供云服务。为企业加速发展，降低IT成本，为用户提供更好的互联网服务，推动区域经济和生活水平发展，是新睿云持续建设数据中心的核心目标。</p>
+                <p>华南地区云计算产业起步早、组建队伍早，有良好的云计算发展建设基础，同时在中科院支持下建立了“云计算产业技术创新与育成中心”，汇聚了一批批云计算领域优秀人才。新睿云在这里建设数据中心，将为用户数据存储、业务发展提供优质服务，推进企业进步。</p>
               </div>
               <img src="../../../assets/img/active/eastsouthnode/south-map.png" alt="">
             </div>
@@ -100,11 +100,11 @@
               <span>On-line product</span>
             </div>
             <div class="switch">
-              <span class="circle" @click="back"><</span>
-              <span class="circle" @click="forward">></span>
+              <span class="circle" @click="cardflow=false"><</span>
+              <span class="circle" @click="cardflow=true">></span>
             </div>
-            <div class="main">
-              <div class="card" v-for="(item,index) in showProductData" :key="index" @click="productIndex=index" :class="{active:productIndex==index}">
+            <div class="main" :style="{width:productData.length*296+'px'}" ref="cardbox" :class="{forward:cardflow,back:!cardflow,}">
+              <div class="card" v-for="(item,index) in productData" :key="index" @click="productIndex=index" :class="{active:productIndex==index}">
                 <div class="top">
                   <i class="iconfont" :class="item.icon"></i>
                   <h3>{{item.prod}}</h3>
@@ -114,10 +114,6 @@
                     <a :href="secItem.path?secItem.path:'javaScript:;'" :class="{gray:!secItem.path}">{{secItem.title}}</a>
                   </li>
                 </ul>
-              </div>
-              <div class="card-right">
-                <div class="top">
-                </div>
               </div>
             </div>
           </div>
@@ -135,6 +131,7 @@
 export default {
   data () {
     return {
+      bannershow: false,
       defaultNode: 'east',
       eastBaseData: [
         {
@@ -228,35 +225,18 @@ export default {
             { title: '访问控制', desc: '权限管理、精准控制', path: '' }
           ]
         }
-        
-      ]
+      ],
+      cardflow: false
     }
   },
   created () {
   },
   mounted () {
+    this.bannershow = 'east'
   },
   methods: {
-    forward () {
-      if (this.showStartIndex + 4 < this.productData.length) {
-        this.showStartIndex += 4
-        if (this.showStartIndex + 4 > this.productData.length) {
-          this.showStartIndex = this.productData.length - 4
-        }
-      }
-    },
-    back () {
-      if (this.showStartIndex >= 4) {
-        this.showStartIndex -= 4
-      } else {
-        this.showStartIndex = 0
-      }
-    }
   },
   computed: {
-    showProductData () {
-      return this.productData.slice(this.showStartIndex, this.showStartIndex + 4)
-    }
   },
   watch: {
 
@@ -436,6 +416,7 @@ export default {
     .region {
       .box {
         padding: 60px 40px 0;
+        margin-bottom: 60px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -461,6 +442,7 @@ export default {
       .box {
         padding: 80px 0;
         text-align: center;
+        overflow: hidden;
         .switch {
           text-align: right;
           .circle {
@@ -485,9 +467,10 @@ export default {
         }
         .main {
           margin-top: 20px;
-          display: flex;
-          justify-content: flex-start;
+          overflow: hidden;
+          transition: all .5s ease;
           .card {
+            float: left;
             margin-right: 20px;
             width: 276px;
             height: 390px;
@@ -534,27 +517,21 @@ export default {
                 }
               }
             }
-          }
-          .active {
-            border: 1px solid rgba(255, 98, 75, 1);
-            .top {
-              background: url("../../../assets/img/active/eastsouthnode/bg-rectangle.png")
-                no-repeat 0 0;
-              color: #fff;
+            &:hover,&.active {
+              border: 1px solid rgba(255, 98, 75, 1);
+              .top {
+                background: url("../../../assets/img/active/eastsouthnode/bg-rectangle.png")
+                  no-repeat 0 0;
+                color: #fff;
+              }
             }
           }
         }
-        .card-right{
-          width: 20px;
-          height: 390px;
-          border: 1px solid rgba(207, 207, 207, 1);
-          border-radius: 4px 0px 0px 0px;
-          border-right:none; 
-          .top {
-            height: 176px;
-            background: url("../../../assets/img/active/eastsouthnode/bg-rectangle-light.png")
-              no-repeat 0 0;
-          }
+         .forward{
+          transform: translateX(-1184px)
+        }
+        .back{
+          transform: translateX(0)
         }
       }
     }
