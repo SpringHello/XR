@@ -143,10 +143,32 @@
             </div>
           </TabPane>
           <TabPane label="告警策略" name="alarmStrategy">
-            3
+            <div class="as-content" v-if="!isNewAlarmStrategy">
+              <Button type="primary" style="margin-bottom: 10px" @click="isNewAlarmStrategy = true">新建告警策略</Button>
+              <Table :columns="alarmStrategyColumns" :data="alarmStrategyData"></Table>
+            </div>
+            <div class="nas-content" v-else>
+              <div class="nas-content-title">
+                <span>新建告警策略</span>
+                <button @click="isNewAlarmStrategy = false">返回</button>
+              </div>
+            </div>
           </TabPane>
           <TabPane label="告警列表" name="alarmList">
-            4
+            <div class="al-content" v-if="!isNewAlarmStrategy">
+              <div class="al-content-title">
+                <Button type="primary">标为已处理</Button>
+                <Button type="primary">标为未处理</Button>
+                <Button type="primary">删除</Button>
+                <div style="float: right">
+                  <span>接收时间</span>
+                  <DatePicker type="daterange" placement="bottom-end" placeholder="请选择日期" style="width: 230px;margin: 0 10px"></DatePicker>
+                  <Input placeholder="请输入消息名称" style="width: 230px;margin-right: 20px"></Input>
+                  <Button type="primary">查询</Button>
+                </div>
+              </div>
+              <Table :columns="alarmListColumns" :data="alarmListData"></Table>
+            </div>
           </TabPane>
         </Tabs>
       </div>
@@ -305,6 +327,95 @@
           selectedProduct: []
         },
         customMonitoringData: [{showChart: line}],
+        alarmStrategyColumns: [
+          {
+            title: '策略名称',
+            key: 'name',
+            render: (h, params) => {
+              return h('span', {
+                style: {
+                  color: '#2A99F2',
+                  cursor: 'pointer'
+                }
+              }, params.row.name)
+            }
+          }, {
+            title: '触发条件',
+            ellipsis: true
+          }, {
+            title: '策略类型'
+          }, {
+            title: '已应用'
+          }, {
+            title: '创建时间'
+          }, {
+            title: '操作',
+            width: 120,
+            render: (h, params) => {
+              return h('div', {}, [h('span', {
+                style: {
+                  color: '#2A99F2',
+                  cursor: 'pointer',
+                  marginRight: '10px'
+                },
+                on: {
+                  click: () => {
+                    alert('复制')
+                  }
+                }
+              }, '复制'), h('span', {
+                style: {
+                  color: '#2A99F2',
+                  cursor: 'pointer'
+                },
+                on: {
+                  click: () => {
+                    alert('删除')
+                  }
+                }
+              }, '删除')])
+            }
+          }
+        ],
+        alarmStrategyData: [
+          {
+            name: '测试数据'
+          }
+        ],
+        isNewAlarmStrategy: false,
+        alarmListColumns: [
+          {
+            type: 'selection',
+            width: 60,
+            align: 'center'
+          }, {
+            title: '告警策略'
+          }, {
+            title: '告警内容',
+            ellipsis: true
+          }, {
+            title: '状态'
+          }, {
+            title: '告警时间'
+          }, {
+            title: '操作',
+            width: 100,
+            render: (h, params) => {
+              return h('span', {
+                style: {
+                  color: '#2A99F2',
+                  cursor: 'pointer'
+                },
+                on: {
+                  click: () => {
+                    alert('查看')
+                  }
+                }
+              }, '查看详情')
+            }
+          }
+        ],
+        alarmListData: [{}]
       }
     },
     created() {
@@ -668,6 +779,48 @@
           font-family: MicrosoftYaHei;
           color: rgba(153, 153, 153, 1);
           line-height: 16px;
+        }
+      }
+    }
+  }
+
+  .as-content {
+  }
+
+  .nas-content {
+    .nas-content-title {
+      border-bottom: 1px solid #D8D8D8;
+      padding-bottom: 20px;
+      > span {
+        font-size: 24px;
+        font-family: MicrosoftYaHei;
+        color: rgba(51, 51, 51, 1)
+      }
+      button {
+        outline: none;
+        cursor: pointer;
+        padding: 3px 15px;
+        font-size: 12px;
+        font-family: MicrosoftYaHei;
+        color: rgba(42, 153, 242, 1);
+        border-radius: 2px;
+        background: #FFFFFF;
+        border: 1px solid rgba(42, 153, 242, 1);
+        float: right;
+      }
+    }
+  }
+
+  .al-content {
+    .al-content-title {
+      margin-bottom: 20px;
+      > button {
+        margin-right: 10px;
+      }
+      > div {
+        > span {
+          font-family: MicrosoftYaHei;
+          color: rgba(102, 102, 102, 1);
         }
       }
     }
