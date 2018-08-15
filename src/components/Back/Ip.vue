@@ -36,6 +36,7 @@
         </div>
         <div class="table-content">
           <Table :columns="ipColumns" :data="ipData" @radio-change="selectIp"></Table>
+          <Page :total="total" :current="page" @on-change="change" style="margin:20px 0px;float:right"/>
         </div>
       </div>
     </div>
@@ -694,7 +695,10 @@
         },
         customTimeOptions,
         // 当前操作弹性IP的id
-        operatingId: null
+        operatingId: null,
+        page: 1,
+        pageSize: 10,
+        total: 0
       }
     },
     methods: {
@@ -741,6 +745,7 @@
       setData(response) {
         if (response.status == 200 && response.data.status == 1) {
           this.ipData = response.data.result.data
+          this.total = response.data.result.total
         }
       },
       // 选中当前项
@@ -1218,6 +1223,19 @@
             })
           }
         })
+      },
+      change(page){
+        this.page = page
+        // 获取ip数据
+        axios.get('network/listPublicIp.do', {
+          params: {
+            page: this.page,
+            pageSize: 10,
+            zoneId: $store.state.zone.zoneid
+          }
+        }).then(response => {
+          this.setData(response)
+        })
       }
     },
     watch: {
@@ -1390,6 +1408,7 @@
   }
 
   .table-content {
+    overflow: auto;
     margin-top: 20px;
   }
 </style>

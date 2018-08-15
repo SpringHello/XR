@@ -3,10 +3,10 @@
     <div class="wrapper">
       <div class="top">
         <img src="../../assets/img/login/coupon.png"/>
-        <h3><img src="../../assets/img/login/success.png"/>恭喜您，注册成功！196元注册奖励已发至您个人账户中</h3>
+        <h3><img src="../../assets/img/login/success.png"/>恭喜您，注册成功！158元注册奖励已发至您个人账户中</h3>
         <!-- <button @click="$router.push('buy')">立即使用</button> -->
         <p class="text-s">你可以通过费用中心-我的卡券查看并使用礼券</p>
-          
+
       </div>
       <div class="bottom">
         <div v-for="(item,index) in recommendData" :key="index" class="item">
@@ -25,24 +25,24 @@
       return {
         recommendData:[
           {
-            title:'五一嗨翻天，免费主机抢不停',
+            title:'全民狂欢趴',
             img:require('../../assets/img/login/icon-fire.png'),
-            text:'多款主机最长2个月免费试用',
-            src:'/ruicloud/active_2',
+            text:'每成功邀请一位，即赠送1个月免费时长',
+            src:'/ruicloud/groupBooking',
             srctext:'立即参与'
           },
           {
-            title:'北京一区盛大开服',
-            text:'主机购买最低3折起！',
-            src:'/ruicloud/newNodes_1',
+            title:'新手特惠',
+            text:'爆款云主机免费使用一年！',
+            src:'/ruicloud/fractive',
             srctext:'立即抢购'
           },
           {
-            title:'北方二区正式上线',
-            text:'主机购买最低3折起！',
-            src:'/ruicloud/newNodes_2',
+            title:'华南、华东盛大开服',
+            text:'万兆光纤极速体验，助力区域企业云上发展！',
+            src:'/ruicloud/EastSouthNode',
             srctext:'立即抢购'
-          }
+          },
         ]
       }
     }
@@ -61,7 +61,7 @@
     background: #F4F4F4;
     width: 100%;
     padding-top: 110px;
-    padding-bottom:120px; 
+    padding-bottom:120px;
     font-family:PingFangSC-Regular;
     text-align: center;
     .wrapper {
@@ -121,9 +121,9 @@
             display:inline-block;
             margin-top: 24px;
             width:114px;
-            height:36px; 
+            height:36px;
             line-height: 36px;
-            border-radius: 4px ; 
+            border-radius: 4px ;
             border: solid 1px #387FFF;
             font-size: 14px;
           }

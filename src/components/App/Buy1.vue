@@ -2005,6 +2005,123 @@
                   ]
                 }
               ],
+            },
+            {
+              zoneId: 'a6a20cc2-f84c-409d-9c11-c88a04cce852',
+              zoneName: '华南一区',
+              kernelList: [
+                {
+                  label: '1核',
+                  value: 1,
+                  RAMList: [
+                    {label: '1G', value: 1},
+                    {label: '2G', value: 2},
+                    {label: '4G', value: 4}
+                  ]
+                },
+                {
+                  label: '2核',
+                  value: 2,
+                  RAMList: [
+                    {label: '4G', value: 4},
+                    {label: '8G', value: 8},
+                    {label: '12G', value: 12},
+                  ]
+                },
+                {
+                  label: '4核',
+                  value: 4,
+                  RAMList: [
+                    {label: '4G', value: 4},
+                    {label: '8G', value: 8},
+                    {label: '12G', value: 12},
+                    {label: '16G', value: 16},
+                    {label: '32G', value: 32}
+                  ]
+                },
+                {
+                  label: '8核',
+                  value: 8,
+                  RAMList: [
+                    {label: '16G', value: 16},
+                    {label: '24G', value: 24},
+                    {label: '32G', value: 32},
+                  ]
+                },
+                {
+                  label: '16核',
+                  value: 16,
+                  RAMList: [
+                    {label: '16G', value: 16},
+                    {label: '24G', value: 24},
+                    {label: '32G', value: 32}
+                  ]
+                },
+                {
+                  label: '32核',
+                  value: 32,
+                  RAMList: [
+                    {label: '32G', value: 32}
+                  ]
+                }
+              ],
+            },
+            {
+              zoneId: 'c6dcb310-3e37-4431-87f3-d8ada0cf3d91',
+              zoneName: '华东一区',
+              kernelList: [
+                {
+                  label: '1核',
+                  value: 1,
+                  RAMList: [
+                    {label: '1G', value: 1},
+                    {label: '2G', value: 2},
+                    {label: '4G', value: 4}
+                  ]
+                },
+                {
+                  label: '2核',
+                  value: 2,
+                  RAMList: [
+                    {label: '2G', value: 2},
+                    {label: '4G', value: 4},
+                    {label: '8G', value: 8}
+                  ]
+                },
+                {
+                  label: '4核',
+                  value: 4,
+                  RAMList: [
+                    {label: '4G', value: 4},
+                    {label: '8G', value: 8},
+                    {label: '16G', value: 16}
+                  ]
+                },
+                {
+                  label: '8核',
+                  value: 8,
+                  RAMList: [
+                    {label: '8G', value: 8},
+                    {label: '16G', value: 16},
+                    {label: '32G', value: 32}
+                  ]
+                },
+                {
+                  label: '16核',
+                  value: 16,
+                  RAMList: [
+                    {label: '16G', value: 16},
+                    {label: '32G', value: 32}
+                  ]
+                },
+                {
+                  label: '32核',
+                  value: 32,
+                  RAMList: [
+                    {label: '32G', value: 32}
+                  ]
+                }
+              ],
             }
           ],
           // 主机RAM内存配置用于ajax请求

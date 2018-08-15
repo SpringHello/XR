@@ -136,12 +136,17 @@
           <ul v-for="(item,index) in Preparation " :key="index">
             <p style="margin:0px;margin-right: 20px;">{{item.time}}</p>
             <li style="cursor: auto">{{item.title}}</li>
-            <li @click="toAQ('1')">{{item.preparation}}</li>
-            <li @click="toAQ('2')"><img src="./assets/img/app/record.png"
-                                        style="vertical-align: middle;margin-right: 5px">{{item.desc
-              }}
+            <li>
+              <router-link to="http://www.miitbeian.gov.cn/">{{item.preparation}}</router-link>
             </li>
-            <li @click="toAQ('3')">{{item.msg}}</li>
+            <li>
+              <router-link to="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922">
+                <img src="./assets/img/app/record.png" style="vertical-align: middle;margin-right: 5px">{{item.desc}}
+              </router-link>
+            </li>
+            <li>
+              <router-link to="/ruicloud/about">{{item.msg}}</router-link>
+            </li>
           </ul>
         </div>
       </div>
@@ -465,22 +470,6 @@
       QML(){
         this.$refs.qq.style.width = '0px'
       },
-      /* 点击底部京备号等 */
-      toAQ (val) {
-        switch (val) {
-          case '1':
-            window.open('http://www.miitbeian.gov.cn/')
-            break
-          case '2':
-            window.open('http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922')
-            break
-          case '3':
-            this.$router.push('about')
-            document.body.scrollTop = 0
-            document.documentElement.scrollTop = 0
-            break
-        }
-      }
     },
     computed: mapState({
       userInfo: state => state.userInfo

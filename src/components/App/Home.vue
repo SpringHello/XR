@@ -83,6 +83,7 @@
             </div>
           </div>
         </my-carousel-item>
+
       </my-carousel>
     </div>
     <!-- 功能介绍区域 -->
@@ -1562,50 +1563,63 @@
   }
 
   .groupBook {
-    background: #FA846E url("../../assets/img/active/group-booking/gb-banner6.png") no-repeat center;
+    background:linear-gradient(90deg, rgba(255, 255, 255, 1), rgba(174, 201, 255, 1));
     height: 400px;
-    > div {
+    .groupBook-content {
       width: 1200px;
+      height: 400px;
       margin: 0 auto;
-      > div {
-        width: 900px;
-        margin: 0 auto;
-        padding-top: 70px;
-        position: relative;
-        img {
-          position: absolute;
-          right: -100px;
-          top: 15px;
-        }
-        p {
-          font-size: 24px;
+      display: flex;
+      position: relative;
+      >img{
+        position: absolute;
+        left: -110px;
+        top: 0;
+      }
+      .groupBook-text {
+        width: 50%;
+        padding: 74px 0 0 20px;
+        > p {
+          font-size:48px;
           font-family: "Microsoft YaHei", "微软雅黑";
-          color: rgba(255, 255, 255, 1);
-          margin-bottom: 20px;
-          span {
-            color: #FFE177;
-            font-size: 36px;
-          }
+          color: rgba(51, 51, 51, 1);
+          line-height: 45px;
         }
         p:nth-child(2) {
-          font-size: 36px;
+          margin-top: 20px;
+          font-size:24px;
+        }
+        p:nth-child(3) {
+          margin-top: 15px;
+          font-size:24px;
+          color: rgba(51, 51, 51, 1);
+          line-height: 40px;
+          span {
+            color: #FF624B;
+            margin-right: 20px;
+          }
         }
         button {
-          font-size: 18px;
-          font-family: "Microsoft YaHei", "微软雅黑";
-          color: rgba(254, 79, 74, 1);
-          padding: 8px 30px;
-          background: rgba(255, 255, 255, 1);
-          border-radius: 27px;
-          border: none;
+          background: none;
           outline: none;
           cursor: pointer;
-          margin-top: 40px;
+          padding: 11px 50px;
+          margin-top: 30px;
+          border-radius: 4px;
+          border: 1px solid rgba(51, 51, 51, 1);
+          font-size: 16px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color: rgba(51, 51, 51, 1);
+          &:hover {
+            background: #FF624B;
+            color: #FFF;
+            border: none;
+          }
         }
-        .db-active-img {
-          padding-top: 22px;
-          width: 50%;
-        }
+      }
+      .groupBook-img {
+        width: 50%;
+        text-align: right;
       }
     }
   }
