@@ -1270,7 +1270,7 @@
           params: {
             VMId: this.currentHost[0].computerid,
             zoneId: this.currentHost[0].zoneid,
-            changeCost: '3'
+            changeCost: '1'
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
