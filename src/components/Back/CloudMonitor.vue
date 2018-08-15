@@ -199,7 +199,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.addMonitorIndex = false">取消</Button>
-        <Button type="primary">完成配置</Button>
+        <Button type="primary" @click="addCustomMonitoring_ok">完成配置</Button>
       </div>
     </Modal>
   </div>
@@ -210,7 +210,6 @@
   import line from '@/echarts/cloudMonitor/line'
   import bar from '@/echarts/cloudMonitor/bar'
 
-  var echarts = require('echarts/lib/echarts')
 
   export default {
     data() {
@@ -333,7 +332,17 @@
       refresh() {
       },
       labelSwitching(name) {
-        console.log(name)
+        switch (name) {
+          case '':
+            break
+          case 'customMonitoring':
+            this.getCustomMonitorGroup()
+            break
+          case '':
+            break
+          case '':
+            break
+        }
       },
       chartTypeSwitch(type) {
         this[type].showType == 'line' ? this.showChart = this.line : this.showChart = this.bar
@@ -477,6 +486,46 @@
       deleteProduct(item, index) {
         this.monitoringIndexForm.selectedProduct.splice(index, 1)
         this.monitoringIndexForm.allProduct.push(item)
+      },
+      addCustomMonitoring_ok() {
+        let computerId = ''
+        let vpcId = ''
+        let diskId = ''
+        let objectStorageId = ''
+        switch (this.monitoringIndexForm.productType) {
+          case '云主机':
+            computerId = this.monitoringIndexForm.selectedProduct.map(item => {
+              return item.computerid
+            })
+            break
+        }
+        let url = 'monitor/addCustomMonitorIndex.do'
+        this.$http.get(url, {
+          params: {
+            productTye: this.monitoringIndexForm.productType,
+            index: this.monitoringIndexForm.productIndex,
+            computerId: computerId + '',
+            vpcId: vpcId,
+            diskId: diskId,
+            objectStorageId: objectStorageId
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.$Message.success(res.data.message)
+            this.showModal.addMonitorIndex = false
+            this.getCustomMonitorGroup()
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      getCustomMonitorGroup() {
+        let url = 'monitor/listCustomMonitorIndexToday.do'
+        this.$http.get(url).then(res => {
+
+        })
       }
     },
     computed: {
