@@ -5,7 +5,7 @@
           <div class="text">
             <h1><span>华东一区</span>盛大开服</h1>
             <p><span>「华东地域」</span>数据中心盛大开服，最高等级机房建设标准，极致网络体验， 助力华东企业云端发展。</p>
-            <Button>立即购买</Button>
+            <Button @click="tobuy('huadong')">立即购买</Button>
           </div>
           <transition name="slide-fade-right">
           <img v-show="bannershow=='east'" src="../../../assets/img/active/eastsouthnode/east-banner.png"/>
@@ -17,7 +17,7 @@
         <div class="text">
           <h1><span>华南一区</span>盛大开服</h1>
           <p><span>「华南地域」</span>数据中心盛大开服，万兆光纤极速体验，助力区域企业云上发展。</p>
-          <Button>立即购买</Button>
+          <Button @click="tobuy('huanan')">立即购买</Button>
         </div>
         <transition name="slide-fade-left">
         <img v-show="bannershow=='south'"  src="../../../assets/img/active/eastsouthnode/south-banner.png"/>
@@ -235,6 +235,10 @@ export default {
     this.bannershow = 'east'
   },
   methods: {
+    tobuy(zone) {
+      this.$router.push('buy')
+      sessionStorage.setItem('defaultzone', zone)
+    }
   },
   computed: {
   },
