@@ -526,12 +526,12 @@
               </Option>
             </Select>
           </FormItem>
-<!--          <FormItem label="是否同时变更绑定IP与磁盘" v-if="relevanceDisks||relevanceIps">
+          <FormItem label="是否同时变更绑定IP与磁盘" v-if="relevanceDisks||relevanceIps">
             <CheckboxGroup v-model="relevanceAlteration">
               <Checkbox label="ip" v-if="relevanceIps">变更绑定IP</Checkbox>
               <Checkbox label="disk" v-if="relevanceDisks">变更绑定磁盘</Checkbox>
             </CheckboxGroup>
-          </FormItem>-->
+          </FormItem>
         </Form>
         <div style="font-size:16px;">
           资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{ratesChangeCost}}/</span></span>
@@ -747,9 +747,9 @@
         },
         linkPassword: '111',
         // 变更资费关联相关
-        relevanceAlteration: ['ip', 'disk'],
-        relevanceDisks: true,
-        relevanceIps: true
+        relevanceAlteration: [],
+        relevanceDisks: '',
+        relevanceIps: ''
       }
     },
     created() {
@@ -1204,11 +1204,7 @@
           case 'ratesChange':
             if (this.checkSelect()) {
               if (this.currentHost[0].caseType == 3) {
-                this.ratesChangeType = ''
-                this.ratesChangeTime = ''
-                this.ratesChangeCost = '--'
-                this.originRatesChangeCost = '--'
-                this.showModal.ratesChange = true
+                this.ratesChange()
               } else {
                 this.$Message.info('请选择实时计费的云主机进行资费变更')
               }
@@ -1267,6 +1263,38 @@
             this.reboot()
             break
         }
+      },
+      ratesChange() {
+        let url = 'information/listVirtualMachinesById.do'
+        axios.get(url, {
+          params: {
+            VMId: this.currentHost[0].computerid,
+            zoneId: this.currentHost[0].zoneid,
+            changeCost: '1'
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            var disks = response.data.result[0].attachDisk.map(item => {
+              return item.id
+            })
+            this.relevanceDisks = disks.join()
+            var ips = response.data.result[0].attachPublicIp.map(item => {
+              return item.id
+            })
+            this.relevanceIps = ips.join()
+            this.relevanceAlteration = ['ip', 'disk']
+            this.ratesChangeType = ''
+            this.ratesChangeTime = ''
+            this.ratesChangeCost = '--'
+            this.originRatesChangeCost = '--'
+            this.showModal.ratesChange = true
+            console.log(this.relevanceDisks)
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
       },
       checkSelect() {
         switch (this.status) {
@@ -1378,13 +1406,39 @@
       },
       // 确认变更资费
       ratesChange_ok() {
+        var selectIp = ''
+        var selectDisk = ''
+        for (var i = 0; i < this.relevanceAlteration.length; i++) {
+          if (this.relevanceAlteration[i] == 'ip') {
+            selectIp = this.relevanceIps
+          }
+          if (this.relevanceAlteration[i] == 'disk') {
+            selectDisk = this.relevanceDisks
+          }
+        }
+        var iplist = []
+        if (selectIp != '') {
+          iplist = selectIp.split(',').map(item => {
+            return {type: 2, id: parseInt(item)}
+          })
+        }
+        var disklist = []
+        if (selectDisk != '') {
+          disklist = selectDisk.split(',').map(item => {
+            return {type: 1, id: parseInt(item)}
+          })
+        }
+        var host = [
+          {type: 0, id: this.currentHost[0].id}
+        ]
+        var list = host.concat(iplist, disklist)
+        list = JSON.stringify(list)
         let url = 'continue/changeMoney.do'
         this.$http.get(url, {
           params: {
-            id: this.currentHost[0].id,
+            list: list,
             timeType: this.ratesChangeType,
-            timeValue: this.ratesChangeTime,
-            type: 0
+            timeValue: this.ratesChangeTime + '',
           }
         }).then(response => {
           if (response.data.status == 1) {
@@ -1577,12 +1631,25 @@
         if (time == '') {
           this.ratesChangeCost = '--'
         } else {
+          var selectIp = ''
+          var selectDisk = ''
+          for (var i = 0; i < this.relevanceAlteration.length; i++) {
+            if (this.relevanceAlteration[i] == 'ip') {
+              selectIp = this.relevanceIps
+            }
+            if (this.relevanceAlteration[i] == 'disk') {
+              selectDisk = this.relevanceDisks
+            }
+          }
+          console.log(this.relevanceDisks)
           let url = 'information/getYjPrice.do'
           this.$http.get(url, {
             params: {
               timeValue: this.ratesChangeTime,
               timeType: this.ratesChangeType,
-              hostIdArr: this.currentHost[0].id
+              hostIdArr: this.currentHost[0].id,
+              ipIdArr: selectIp,
+              diskArr: selectDisk
             }
           })
             .then((response) => {
@@ -1603,12 +1670,24 @@
         if (this.ratesChangeTime == '') {
           this.ratesChangeCost = '--'
         } else {
+          var selectIp = ''
+          var selectDisk = ''
+          for (var i = 0; i < this.relevanceAlteration.length; i++) {
+            if (this.relevanceAlteration[i] == 'ip') {
+              selectIp = this.relevanceIps
+            }
+            if (this.relevanceAlteration[i] == 'disk') {
+              selectDisk = this.relevanceDisks
+            }
+          }
           let url = 'information/getYjPrice.do'
           this.$http.get(url, {
             params: {
               timeValue: this.ratesChangeTime,
               timeType: this.ratesChangeType,
-              hostIdArr: this.currentHost[0].id
+              hostIdArr: this.currentHost[0].id,
+              ipIdArr: selectIp,
+              diskArr: selectDisk
             }
           })
             .then((response) => {
