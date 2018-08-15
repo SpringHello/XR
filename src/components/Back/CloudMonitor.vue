@@ -115,6 +115,21 @@
                 <div class="cm-item-title">
                   <p>我关注的指标<span @click="deleteAttention(index)">&nbsp删除</span><span>编辑 |</span></p>
                 </div>
+                <div class="cm-item-switch">
+                  <RadioGroup type="button">
+                    <Radio label="day">今日</Radio>
+                    <Radio label="week">本周</Radio>
+                    <Radio label="month">本月</Radio>
+                  </RadioGroup>
+                  <div>
+                    <Button type="primary" style="margin-right: 5px">导出</Button>
+                    <RadioGroup type="button">
+                      <Radio label="line">折线</Radio>
+                      <Radio label="bar">柱状</Radio>
+                    </RadioGroup>
+                  </div>
+                </div>
+                <chart :options="item.showChart" style="width:100%;height:70%;margin-top: 20px;"></chart>
               </div>
               <div class="cm-item">
                 <div class="cm-item-title">
@@ -195,6 +210,8 @@
   import line from '@/echarts/cloudMonitor/line'
   import bar from '@/echarts/cloudMonitor/bar'
 
+  var echarts = require('echarts/lib/echarts')
+
   export default {
     data() {
       return {
@@ -232,7 +249,6 @@
           timeType: 'day',
           showType: 'line'
         },
-        customMonitoringData: [],
         showModal: {
           addMonitorIndex: false
         },
@@ -288,7 +304,8 @@
           productIndex: '',
           allProduct: [],
           selectedProduct: []
-        }
+        },
+        customMonitoringData: [{showChart: line}],
       }
     },
     created() {
@@ -320,7 +337,6 @@
       },
       chartTypeSwitch(type) {
         this[type].showType == 'line' ? this.showChart = this.line : this.showChart = this.bar
-
       },
       getCurrentDate() {
         return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
@@ -421,6 +437,11 @@
         });
       },
       addCustomMonitoring() {
+        // 初始化弹窗
+        this.monitoringIndexForm.productType = ''
+        this.monitoringIndexForm.productIndex = ''
+        this.monitoringIndexForm.allProduct = []
+        this.monitoringIndexForm.selectedProduct = []
         this.showModal.addMonitorIndex = true
       },
       changeProduct(val) {
@@ -442,7 +463,7 @@
             }
           }).then(res => {
             if (res.status == 200 && res.data.status == 1) {
-             this.monitoringIndexForm.allProduct = res.data.list
+              this.monitoringIndexForm.allProduct = res.data.list
             }
           })
         }
@@ -565,6 +586,11 @@
             float: right;
           }
         }
+      }
+      .cm-item-switch {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
       }
       .cm-item-content {
         height: 80%;

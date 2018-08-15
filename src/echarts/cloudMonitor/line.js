@@ -10,7 +10,7 @@ export default {
   // },
   grid: {
     left: '0%',
-    right: '5%',
+    right: '3%',
     bottom: '0%',
     top: '5%',
     containLabel: true
@@ -59,7 +59,7 @@ export default {
       }
     },
   },
-  color: ['#FFE777', '#BFE0FB', '#2A99F2', '#6CC0B5'],
+  color: ['#FFE777', '#BFE0FB', '#2A99F2', '#6CC0B5','red'],
   // color: ['#3398DB'],
   series: [
     {
@@ -71,6 +71,27 @@ export default {
     },
     {
       name: 'host2',
+      type: 'line',
+      stack: '总量',
+      data: [20, 12, 11, 24, 80, 30, 30],
+      barWidth: '60%',
+    },
+    {
+      name: 'host3',
+      type: 'line',
+      stack: '总量',
+      data: [20, 12, 11, 24, 80, 30, 30],
+      barWidth: '60%',
+    },
+    {
+      name: 'host4',
+      type: 'line',
+      stack: '总量',
+      data: [20, 12, 11, 24, 80, 30, 30],
+      barWidth: '60%',
+    },
+    {
+      name: 'host5',
       type: 'line',
       stack: '总量',
       data: [20, 12, 11, 24, 80, 30, 30],
