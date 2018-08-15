@@ -165,7 +165,7 @@
             <p>该区域下所有{{ monitoringIndexForm.productType }}</p>
             <ul>
               <li v-for="(item,index) in monitoringIndexForm.allProduct">
-                <span>{{ item.name}}</span>
+                <span>{{ item.instancename}}</span>
                 <i class="bluetext" style="cursor: pointer" v-if="monitoringIndexForm.selectedProduct.length<5&&item.name !=''" @click="addProduct(item,index)">+ 添加</i></li>
             </ul>
           </div>
@@ -173,7 +173,7 @@
             <p>已选择{{ monitoringIndexForm.productType}}</p>
             <ul>
               <li v-for="(item,index) in monitoringIndexForm.selectedProduct">
-                <span>{{ item.name}}</span>
+                <span>{{ item.instancename}}</span>
                 <i class="bluetext" style="cursor: pointer" @click="deleteProduct(item,index)">
                   <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
                   删除</i>
@@ -286,21 +286,7 @@
           productType: '',
           productIndexGroup: [],
           productIndex: '',
-          allProduct: [
-            {
-              name: '测试1号'
-            }, {
-              name: '测试2号'
-            }, {
-              name: '测试3号'
-            }, {
-              name: '测试4号'
-            }, {
-              name: '测试5号'
-            }, {
-              name: '测试6号'
-            },
-          ],
+          allProduct: [],
           selectedProduct: []
         }
       }
@@ -456,7 +442,7 @@
             }
           }).then(res => {
             if (res.status == 200 && res.data.status == 1) {
-
+             this.monitoringIndexForm.allProduct = res.data.list
             }
           })
         }
