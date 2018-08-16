@@ -165,7 +165,7 @@ export default {
       ],
       //空间管理表格数据
       spaceData: [],
-      modal6: false,
+      modal6: this.spaceModel,
       //访问权限
       visitList: [
         {
@@ -183,7 +183,10 @@ export default {
       ],
       buckLoading:false,
       createLoading:false
-    };
+    }
+  },
+  props:{
+    spaceModel:false
   },
   methods: {
     //获取空间列表
@@ -257,6 +260,7 @@ export default {
   },
   mounted() {
     this.getBuckets();
+    this.modal6= this.spaceModel;
   }
 };
 </script>

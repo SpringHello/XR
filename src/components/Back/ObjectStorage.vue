@@ -17,8 +17,8 @@
         <div class="center_p">
           <p>对象存储是新睿云自主研发的大规模分布式对象存储服务，面向企业和个人开发者提供高可用、低成本、强安全的云端存储服务。</p>
         </div>
-        <Tabs type="card" :value="name" :animated="false">
-          <TabPane label="概览" name="name1">
+        <Tabs type="card" :value="name" :animated="false" ref="card" @on-click="tabpanClick">
+          <TabPane label="概览" name="name1" style="min-height: 400px">
             <p>当月用量 {{endTime}}-{{starTime}}</p>
             <div class="center_space">
               <div class="space_two">
@@ -38,45 +38,60 @@
                 </div>
               </div>
             </div>
-            <div class="center_chart">
-            <div style="display:flex;padding-bottom:5px;">
-            <div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>
-            <div style="width:50%;text-align:right;color:#666666;">{{starTime}}</div>
-            </div>
-            <div class="chart">
-              <ul class="objectList">
-                <li :class="indexs == index? 'objectItems':'objectItem'" v-for="(item,index) in dayList" :key="index" @click="dayClick(index)">{{item.value}}</li>
-              </ul>
-              <div class="chart-rig">
-              <Button type="primary" size="small" style="margin-top:-3px;padding:5px 15px;" @click="dowloda('rwPolar')">导出</Button>
-                <ul class="objectListT">
-                  <li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>
-                </ul>
-              </div>
-            </div>
-            <chart ref="rwPolar" class="echarts" :options="rwPolar" ></chart>
-            </div>
-            <div class="center_chart">
-              <div style="display:flex;padding-bottom:5px;margin-top:50px;">
-                <div style="width:50%;font-size:16px;color:#333333;">请求次数</div>
-                <div style="width:50%;text-align:right;color:#666666;">{{starTime}}</div>
-              </div>
-              <div class="chart" >
-                <ul class="objectList">
-                  <li :class="requestIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in requestList" :key="index" @click="requestClick(index)">{{item.value}}</li>
-                </ul>
-                <div class="chart-rig">
-                 <Button type="primary" size="small" style="margin-top:-3px;padding:5px 15px;" @click="dowloda('rwNumber')">导出</Button>
-                  <ul class="objectListT">
-                    <li :class="chartTwoIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartTwotList" :key="index" @click="chartTwoClick(index)">{{item.value}}</li>
-                  </ul>
+            <div v-if="spaceData.length != 0" style="width: 100%;">
+              <div class="center_chart">
+                <div style="display:flex;padding-bottom:5px;">
+                  <div style="width:50%;font-size:16px;color:#333333;">下载流量情况</div>
+                  <div style="width:50%;text-align:right;color:#666666;">{{starTime}}</div>
                 </div>
+                <div class="chart">
+                  <ul class="objectList">
+                    <li :class="indexs == index? 'objectItems':'objectItem'" v-for="(item,index) in dayList" :key="index" @click="dayClick(index)">{{item.value}}</li>
+                  </ul>
+                  <div class="chart-rig">
+                    <Button type="primary" size="small" style="margin-top:-3px;padding:5px 15px;" @click="dowloda('rwPolar')">导出</Button>
+                    <ul class="objectListT">
+                      <li :class="chartIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartClick(index)">{{item.value}}</li>
+                    </ul>
+                  </div>
+                </div>
+                <chart ref="rwPolar" class="echarts" :options="rwPolar" ></chart>
               </div>
-              <chart ref="rwNumber" class="echarts" :options="rwNumber"></chart>
+              <div class="center_chart">
+                <div style="display:flex;padding-bottom:5px;margin-top:50px;">
+                  <div style="width:50%;font-size:16px;color:#333333;">请求次数</div>
+                  <div style="width:50%;text-align:right;color:#666666;">{{starTime}}</div>
+                </div>
+                <div class="chart" >
+                  <ul class="objectList">
+                    <li :class="requestIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in requestList" :key="index" @click="requestClick(index)">{{item.value}}</li>
+                  </ul>
+                  <div class="chart-rig">
+                    <Button type="primary" size="small" style="margin-top:-3px;padding:5px 15px;" @click="dowloda('rwNumber')">导出</Button>
+                    <ul class="objectListT">
+                      <li :class="chartTwoIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartTwotList" :key="index" @click="chartTwoClick(index)">{{item.value}}</li>
+                    </ul>
+                  </div>
+                </div>
+                <chart ref="rwNumber" class="echarts" :options="rwNumber"></chart>
+              </div>
+            </div>
+            <div v-else>
+              <p style="text-align: center;margin-top: 20px">您还没有创建Bucket(存储空间)，点击<a @click="newAddSpace">新建空间</a></p>
             </div>
           </TabPane>
           <TabPane :label="bucketMange" name="name2" style="height:650px">
-            <tabOne></tabOne>
+            <div class="boxs">
+              <div >
+                <Button type="primary" @click="modal6 = true">新建空间</Button>
+              </div>
+              <div style="margin-top:10px;">
+                <Table id="table"  :columns="spaceColumns" :data="spaceData" no-data-text="您还没有创建Bucket（存储空间）,请点击"></Table>
+                <div class="table" v-if="spaceData.length == 0" @click="modal6 = true">
+                  新建空间
+                </div>
+              </div>
+            </div>
           </TabPane>
           <TabPane label="用量监控" name="name3" >
             <tabTwo></tabTwo>
@@ -87,6 +102,34 @@
         </Tabs>
       </div>
     </div>
+
+    <Modal
+      v-model="modal6"
+      title="新建空间"
+      :scrollable='true'
+      :mask-closable="false">
+      <hr color="#D8D8D8" size=1/>
+      <br/>
+      <Form ref="bucketInline" :model="bucketInline" :rules="bucketRule" label-position="top">
+        <FormItem prop="bucketName" label="空间名称">
+          <Input type="text" v-model="bucketInline.bucketName" placeholder="请输入少于20位的数字与字母名称" style="width:240px;"></Input>
+        </FormItem>
+        <FormItem prop="visit" label="访问权限">
+          <Select v-model="bucketInline.visit" style="width:240px">
+            <Option v-for="item in visitList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          </Select>
+        </FormItem>
+      </Form>
+      <div class="modal_text">
+        <p>1.私有读写：对文件的所有访问操作由文件的所有者授权的操作人完成。</p>
+        <p>2.公有读私有写：任何人都可以读取文件，对文件的写入、删除等操作仍需要由文件的所有者授权的操作人完成 </p>
+        <p>3.公有读写：所有人均可读写Bucket内的Object，无需身份验证。该权限安全风险极高，为确保您的数据安全，请谨慎选择!</p>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="modal6 = false">取消</Button>
+        <Button type="primary" @click="bucketClick" :loading="createLoading">确定新建</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -105,9 +148,23 @@
       window.setTimeout(() => resolve(component), time);
     };
   }
+  const bucketValid = (rule,value,callback)=>{
+    let reg =  /^[a-z0-9-]{3,20}$/;
+    let res =  /^[a-z0-9][a-z0-9-A-Z]{0,1000}$/;
+    if(value == ''){
+      return callback(new Error('请输入空间名称'));
+    }else if(!reg.test(value)){
+      return callback(new Error('空间名字只能为小写字母，数字和短横线（-）且长度要在3到20位之间'));
+    }else if(!res.test(value)){
+      return callback(new Error('空间名字只能以小写字母或者数字开头'));
+    }else{
+      callback();
+    }
+  }
   export default {
     data() {
       return {
+        //分割线————————————————————
         name: '',
         bucketMange: h => {
           return h('div', [
@@ -219,11 +276,137 @@
         //统计时间开始
         starTime:'',
         //统计时间结束
-        endTime:''
+        endTime:'',
+        //新建空间----------------分割线-----------------
+        //创建空间
+        bucketInline: {
+          //空间名字
+          bucketName: "",
+          //访问权限
+          visit: ""
+        },
+        bucketRule: {
+          bucketName: [
+            { required: true,validator:bucketValid, trigger: "blur" },
+          ],
+          visit: [{ required: true, message: "请选择权限", trigger: "change" }]
+        },
+        //空间管理数据表格表头
+        spaceColumns: [
+          {
+            key: "name",
+            title: "空间名称",
+            width:340,
+            render: (h, parasm) => {
+              const hide = parasm.row.hide == 1 ?'inline-block':'none';
+              return h("div", [
+                h('Spin',{
+                  prop:{
+                    size:'small'
+                  },
+                  style:{
+                    display:hide,
+                  }
+                }),
+                h(
+                  "span",
+                  {
+                    style:{
+                      cursor:'pointer',
+                      color:'#2A99F2',
+                      marginLeft:'10px'
+                    },
+                    on:{
+                      click:()=>{
+                        // eventBus.$emit('bucketName', parasm.row.name);
+                        sessionStorage.setItem("bucketName", parasm.row.name);
+                        sessionStorage.setItem('bucketId', parasm.row.id);
+                        sessionStorage.setItem('accessr',parasm.row.accessrights);
+                        sessionStorage.setItem('createtime', parasm.row.createtime);
+                        this.$router.push({path: "SpaceDetails"});
+                      }
+                    }
+                  },
+                  parasm.row.name
+                )
+              ]);
+            }
+          },
+          {
+            key: "accessrights",
+            title: "权限",
+            render: (h, parasm) => {
+              return h("div", [
+                h(
+                  "span",
+                  {},
+                  parasm.row.accessrights == 1 ? "私有读写" : parasm.row.accessrights ==2 ? "公有读私有写" : parasm.row.accessrights == 3 ?"公有读写" : parasm.row.accessrights == 4 ?'自定义权限':'————'
+                )
+              ]);
+            }
+          },
+          {
+            key: "createtime",
+            title: "创建时间"
+          },
+          {
+            key: "operation",
+            title: "操作",
+            width:100,
+            render: (h, parasm) => {
+              if(parasm.row.hide != 1) {
+                return h("div", [
+                  h(
+                    "span",
+                    {
+                      style: {
+                        color: "#2A99F2",
+                        marginRight: "20px",
+                        cursor: "pointer"
+                      },
+                      on: {
+                        click:()=> {
+                          this.$Modal.confirm({
+                            title: '删除空间',
+                            content: "<p style='line-height: 16px'>当前空间内仍有资源，请确认已做好备份，删除之后空间内资源无法找回，请谨慎操作。</p>",
+                            onOk: () => {
+                              this.bucketDelete(parasm.row.name, parasm.row._index);
+                            }
+                          });
+                        }
+                      }
+                    },
+                    "删除"
+                  )
+                ])
+              }
+            }
+          }
+        ],
+        //空间管理表格数据
+        spaceData: [],
+        modal6: false,
+        //访问权限
+        visitList: [
+          {
+            label: "私有读写",
+            value: "1"
+          },
+          {
+            label: "公有读私有写",
+            value: "2"
+          },
+          {
+            label:'公有读写',
+            value:'3'
+          }
+        ],
+        buckLoading:false,
+        createLoading:false
       }
     },
     components: {
-      tabOne: deferLoad(tabOne, 100),
+      // tabOne: deferLoad(tabOne, 100),
       tabTwo: deferLoad(tabTwo, 100),
       tabThree: deferLoad(tabThree, 100)
     },
@@ -389,17 +572,19 @@
       // },
       showUserAcessAll(){
         axios.get('user/showUserAcessAll.do',{}).then(res => {
-          if(res.status === 200 && res.data.status == '18')
-              this.$Modal.confirm({
-                  title:'提示',
-                  content:'<p style="line-height: 16px">尊敬的用户您好，系统检测到您当前没有可用的Access Key，请您到<a href="https://bj.xrcloud.net/ruicloud/userCenter">Access Key管理</a>去创建Access Key。</p>',
-                  onOk:()=>{
-                   window.open('https://bj.xrcloud.net/ruicloud/userCenter','_self');
-                   },
-                  onCancel:()=>{
-                    window.open('https://bj.xrcloud.net/ruicloud/userCenter','_self');
-                  }
-              })
+          this.status = res.data.status;
+          if(res.status === 200 && res.data.status == '18') {
+            this.$Modal.confirm({
+              title: '提示',
+              content: '<p style="line-height: 16px">尊敬的用户您好，系统检测到您当前没有可用的Access Key，请您到<a href="https://bj.xrcloud.net/ruicloud/userCenter">Access Key管理</a>去创建Access Key。</p>',
+              onOk: () => {
+                window.open('https://bj.xrcloud.net/ruicloud/userCenter', '_self');
+              },
+              onCancel: () => {
+                window.open('https://bj.xrcloud.net/ruicloud/userCenter', '_self');
+              }
+            })
+          }
         })
       },
       //获取时间
@@ -430,7 +615,83 @@
           m='0'+m;
         }
         this.endTime = y+'/'+m+'/'+d;
-      }
+      },
+      newAddSpace(){
+        this.name = 'name2';
+        this.modal6 = true;
+      },
+      tabpanClick(name){
+        this.name = name;
+      },
+     //新建空间方法
+      //获取空间列表
+      getBuckets() {
+        this.buckLoading = true;
+        this.$http
+          .post("bucket/getBuckets.do", {})
+          .then(res => {
+            if (res.status == 200 && res.data.status == "1") {
+              this.spaceData = res.data.data.bucket;
+              this.buckLoading = false;
+            } else {
+              this.spaceData = [];
+              this.buckLoading = false;
+              this.$Message.info(res.data.msg);
+            }
+          });
+      },
+      //创建空间
+      bucketClick() {
+        this.$refs.bucketInline.validate(valid => {
+          if (valid) {
+            this.createLoading = true;
+            let obj = {name:'创建中',hide:1,createtime:'————',operation:'————',accessrights:'————'};
+            this.spaceData.push(obj);
+            this.$http
+              .post("bucket/createBucket.do", {
+                bucketName: this.bucketInline.bucketName,
+                accessrights: this.bucketInline.visit
+              })
+              .then(res => {
+                if (res.data.status == "1") {
+                  this.$Message.success("创建成功");
+                  this.modal6 = false;
+                  this.createLoading = false;
+                  this.getBuckets();
+                } else {
+                  this.createLoading = false;
+                  this.$Message.info(res.data.msg);
+                  this.getBuckets();
+                }
+              }).catch(error =>{
+              this.spaceData = [];
+              this.createLoading = false;
+              this.$Message.info('平台出小差了');
+            });
+          }
+        });
+      },
+      //删除空间
+      bucketDelete(name,index) {
+        let object = {name:'删除中',hide:1,createtime:'————',operation:'————',accessrights:'————'};
+        this.spaceData.splice(index,1,object);
+        this.$http
+          .post(
+            "bucket/forceDestroyBucket.do",
+            {
+              bucketName: name
+            }
+          )
+          .then(res => {
+            if (res.data.status == "1") {
+              this.getBuckets();
+              this.$Message.success("删除成功");
+            } else {
+              this.$Message.info('平台出小差了');
+              this.getBuckets();
+            }
+          });
+      },
     },
     mounted(){
       this.getAllsize();
@@ -438,6 +699,7 @@
       // this.buy();
       this.getTime();
       this.showUserAcessAll();
+      this.getBuckets();
     }
   };
 </script>
@@ -618,7 +880,14 @@
     text-align: right;
     height: 30px;
   }
-
+  .modal_text {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #999999;
+    p {
+      line-height: 18px;
+    }
+  }
   .echarts {
     width: 100%;
     height: 240px;
