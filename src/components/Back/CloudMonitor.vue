@@ -113,7 +113,7 @@
             <div class="cm-content">
               <div class="cm-item" v-for="(item,index) in customMonitoringData">
                 <div class="cm-item-title">
-                  <p>我关注的指标<span @click="deleteAttention(index)">&nbsp删除</span><span>编辑 |</span></p>
+                  <p>我关注的指标<span @click="deleteAttention(item)">&nbsp删除</span><span @click="editAttention(item)">编辑 |</span></p>
                 </div>
                 <div class="cm-item-switch">
                   <RadioGroup type="button">
@@ -151,6 +151,14 @@
               <div class="nas-content-title">
                 <span>新建告警策略</span>
                 <button @click="isNewAlarmStrategy = false">返回</button>
+              </div>
+              <div class="nas-content-body">
+                <Form :model="newAlarmStrategyForm" :rules="newAlarmStrategyFormRuleValidate" ref="newAlarmStrategyForm">
+                  <FormItem label="策略名称" prop="strategyName">
+                    <Input v-model="newAlarmStrategyForm.strategyName" placeholder="请输入"></Input>
+                  </FormItem>
+                  <Button type="primary" @click="newAlarmStrategy_ok">完成</Button>
+                </Form>
               </div>
             </div>
           </TabPane>
@@ -221,7 +229,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.addMonitorIndex = false">取消</Button>
-        <Button type="primary" @click="addCustomMonitoring_ok">完成配置</Button>
+        <Button type="primary" @click="addCustomMonitoring_ok" :disabled="monitoringIndexForm.selectedProduct.length == 0">完成配置</Button>
       </div>
     </Modal>
   </div>
@@ -231,6 +239,7 @@
   import messageMonitor from '@/echarts/cloudMonitor/messagePie'
   import line from '@/echarts/cloudMonitor/line'
   import bar from '@/echarts/cloudMonitor/bar'
+  import regExp from '../../util/regExp'
 
 
   export default {
@@ -326,7 +335,7 @@
           allProduct: [],
           selectedProduct: []
         },
-        customMonitoringData: [{showChart: line}],
+        customMonitoringData: [],
         alarmStrategyColumns: [
           {
             title: '策略名称',
@@ -394,7 +403,21 @@
             title: '告警内容',
             ellipsis: true
           }, {
-            title: '状态'
+            title: '状态',
+            filters: [
+              {
+                label: '已处理',
+                value: '已处理'
+              },
+              {
+                label: '未处理',
+                value: '未处理'
+              }
+            ],
+            filterMultiple: false,
+            filterMethod(value, row) {
+              // return row.msgtype.indexOf(value) > -1
+            }
           }, {
             title: '告警时间'
           }, {
@@ -415,7 +438,15 @@
             }
           }
         ],
-        alarmListData: [{}]
+        alarmListData: [{}],
+        newAlarmStrategyForm: {
+          strategyName: ''
+        },
+        newAlarmStrategyFormRuleValidate: {
+          strategyName: [
+            {required: true, validator: regExp.validaRegisteredName, trigger: 'blur'}
+          ]
+        }
       }
     },
     created() {
@@ -543,18 +574,59 @@
           }
         })
       },
-      // 删除关注
-      deleteAttention(index) {
+
+      deleteAttention(item) {
         this.$Modal.confirm({
           title: '提示',
           content: '<p>确定删除当前关注的指标吗？</p>',
           onOk: () => {
-            this.$Message.info('确定');
-          },
-          onCancel: () => {
-            this.$Message.info('取消');
+            let url = 'monitor/deleteCustomMonitorIndex.do'
+            this.$http.get(url, {
+              params: {
+                id: item.customMonitorIndex.id
+              }
+            }).then(res => {
+              if (res.status == 200 && res.data.status == 1) {
+                this.getCustomMonitorGroup()
+                this.$Message.success('删除成功')
+              } else {
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })
           }
         });
+      },
+      editAttention(item) {
+        this.monitoringIndexForm.productTypeGroup.forEach(productType => {
+          if (productType.value == item.customMonitorIndex.producttype) {
+            productType.indexGroup.forEach(productIndex => {
+              if (productIndex.value == item.customMonitorIndex.indexs) {
+                this.monitoringIndexForm.productIndexGroup = productType.indexGroup
+              }
+            })
+          }
+        })
+        this.monitoringIndexForm.productType = item.customMonitorIndex.producttype
+        this.monitoringIndexForm.productIndex = item.customMonitorIndex.indexs
+        let allResource = this.$http.get('monitor/listZoneVMAndDiskAndVpcAndObject.do', {
+          params: {
+            productType: item.customMonitorIndex.producttype,
+            index: item.customMonitorIndex.indexs
+          }
+        })
+        let selectedResource = this.$http.get('monitor/listAddCustomMonitorIndex.do', {
+          params: {
+            id: item.customMonitorIndex.id
+          }
+        })
+        Promise.all([allResource, selectedResource]).then(res => {
+          if (res[0].data.status == 1 && res[1].data.status == 1) {
+
+          }
+        })
+        this.showModal.addMonitorIndex = true
       },
       addCustomMonitoring() {
         // 初始化弹窗
@@ -635,9 +707,50 @@
       getCustomMonitorGroup() {
         let url = 'monitor/listCustomMonitorIndexToday.do'
         this.$http.get(url).then(res => {
-
+          if (res.status == 200 && res.data.status == 1) {
+            this.customMonitoringData = res.data.list
+            if (this.customMonitoringData.length != 0) {
+              this.customMonitoringData.forEach(item => {
+                let name = ''
+                let brokenLine = JSON.parse(JSON.stringify(line))
+                switch (item.name) {
+                  case 'cpu':
+                    name = 'CPU使用率'
+                    break
+                  case 'disk':
+                    name = '磁盘使用率'
+                    break
+                  case 'memory':
+                    name = '内存使用率'
+                    break
+                  case 'networkin':
+                    name = '网进'
+                    break
+                  case 'networkout':
+                    name = '网出'
+                    break
+                }
+                brokenLine.xAxis.data = item.x
+                item.data.forEach(data => {
+                  brokenLine.series.push({
+                    name: data.computerName + name,
+                    type: 'line',
+                    data: data.data,
+                    barWidth: '60%'
+                  })
+                })
+                item.showChart = brokenLine
+              })
+            }
+          }
         })
-      }
+      },
+
+      newAlarmStrategy_ok() {
+        this.$refs['newAlarmStrategyForm'].validate((valid) => {
+        })
+      },
+
     },
     computed: {
       auth() {
@@ -649,7 +762,7 @@
         handler: function () {
           this.refresh()
         }
-      }
+      },
     }
   }
 </script>
@@ -808,6 +921,9 @@
         border: 1px solid rgba(42, 153, 242, 1);
         float: right;
       }
+    }
+    .nas-content-body {
+      padding: 20px 0 55px;
     }
   }
 
