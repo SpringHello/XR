@@ -59,43 +59,6 @@ export default {
       }
     },
   },
-  color: ['#FFE777', '#BFE0FB', '#2A99F2', '#6CC0B5','red'],
-  // color: ['#3398DB'],
-  series: [
-    {
-      name: 'host1',
-      type: 'line',
-      stack: '总量',
-      data: [20, 32, 1, 34, 90, 30, 10],
-      barWidth: '60%',
-    },
-    {
-      name: 'host2',
-      type: 'line',
-      stack: '总量',
-      data: [20, 12, 11, 24, 80, 30, 30],
-      barWidth: '60%',
-    },
-    {
-      name: 'host3',
-      type: 'line',
-      stack: '总量',
-      data: [20, 12, 11, 24, 80, 30, 30],
-      barWidth: '60%',
-    },
-    {
-      name: 'host4',
-      type: 'line',
-      stack: '总量',
-      data: [20, 12, 11, 24, 80, 30, 30],
-      barWidth: '60%',
-    },
-    {
-      name: 'host5',
-      type: 'line',
-      stack: '总量',
-      data: [20, 12, 11, 24, 80, 30, 30],
-      barWidth: '60%',
-    }
-  ]
+  color: ['#FFE777', '#BFE0FB', '#2A99F2', '#6CC0B5', 'red'],
+  series: []
 }

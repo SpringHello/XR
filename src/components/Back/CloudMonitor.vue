@@ -41,20 +41,20 @@
                   </span>
                 </div>
                 <div class="switch">
-                  <RadioGroup v-model="disk.type" type="button" @on-change="timeSwitch('disk')">
+                  <RadioGroup v-model="overview.disk.type" type="button" @on-change="timeSwitch('disk')">
                     <Radio label="day">今日</Radio>
                     <Radio label="week">本周</Radio>
                     <Radio label="month">本月</Radio>
                   </RadioGroup>
                   <div>
                     <Button type="primary" class="export-btn">导出</Button>
-                    <RadioGroup v-model="disk.showType" type="button" @on-change="chartTypeSwitch('disk')">
+                    <RadioGroup v-model="overview.disk.chartType" type="button" @on-change="chartTypeSwitch('disk')">
                       <Radio label="line">折线</Radio>
                       <Radio label="bar">柱状</Radio>
                     </RadioGroup>
                   </div>
                 </div>
-                <chart :options="showChart" style="width: 714px;height:172px;margin-top: 20px;"></chart>
+                <chart :options="diskPolar" style="width: 714px;height:172px;margin-top: 20px;"></chart>
               </div>
               <chart :options="messageData" style="border: solid 1px #D8D8D8;padding: 20px;padding-right:0;box-sizing: border-box;width: 366px;height:297px;"></chart>
             </section>
@@ -67,20 +67,20 @@
                   </span>
                 </div>
                 <div class="switch">
-                  <RadioGroup v-model="disk.type" type="button" @on-change="timeSwitch('cpu')">
+                  <RadioGroup v-model="overview.cpu.type" type="button" @on-change="timeSwitch('cpu')">
                     <Radio label="day">今日</Radio>
                     <Radio label="week">本周</Radio>
                     <Radio label="month">本月</Radio>
                   </RadioGroup>
                   <div>
                     <Button type="primary" class="export-btn">导出</Button>
-                    <RadioGroup v-model="disk.showType" type="button" @on-change="chartTypeSwitch('cpu')">
+                    <RadioGroup v-model="overview.cpu.chartType" type="button" @on-change="chartTypeSwitch('cpu')">
                       <Radio label="line">折线</Radio>
                       <Radio label="bar">柱状</Radio>
                     </RadioGroup>
                   </div>
                 </div>
-                <chart :options="showChart" style="width:1110px;height:268px;margin-top: 20px;"></chart>
+                <chart :options="cpuPolar" style="width:1110px;height:268px;margin-top: 20px;"></chart>
               </div>
             </section>
             <section>
@@ -92,20 +92,20 @@
                   </span>
                 </div>
                 <div class="switch">
-                  <RadioGroup v-model="disk.type" type="button" @on-change="timeSwitch('memory')">
+                  <RadioGroup v-model="overview.memory.type" type="button" @on-change="timeSwitch('memory')">
                     <Radio label="day">今日</Radio>
                     <Radio label="week">本周</Radio>
                     <Radio label="month">本月</Radio>
                   </RadioGroup>
                   <div>
                     <Button type="primary" class="export-btn">导出</Button>
-                    <RadioGroup v-model="disk.showType" type="button" @on-change="chartTypeSwitch('memory')">
+                    <RadioGroup v-model="overview.memory.chartType" type="button" @on-change="chartTypeSwitch('memory')">
                       <Radio label="line">折线</Radio>
                       <Radio label="bar">柱状</Radio>
                     </RadioGroup>
                   </div>
                 </div>
-                <chart :options="showChart" style="width:1110px;height:268px;margin-top: 20px;"></chart>
+                <chart :options="memoryPolar" style="width:1110px;height:268px;margin-top: 20px;"></chart>
               </div>
             </section>
           </TabPane>
@@ -211,14 +211,17 @@
   import bar from '@/echarts/cloudMonitor/bar'
 
   var echarts = require('echarts/lib/echarts')
-
+  var linestr = JSON.stringify(line)
+  var barstr = JSON.stringify(bar)
   export default {
     data() {
       return {
         messageData: messageMonitor,
-        line,
-        bar,
-        showChart: line,
+        barstr,
+        linestr,
+        diskPolar: null,
+        cpuPolar: null,
+        memoryPolar: null,
         monitorData: [
           {
             text: '云主机Ping不可达',
@@ -233,21 +236,23 @@
             num: '0'
           }
         ],
-        disk: {
-          timeType: 'day',
-          showType: 'line'
-        },
-        cpu: {
-          timeType: 'day',
-          showType: 'line'
-        },
-        memory: {
-          timeType: 'day',
-          showType: 'line'
-        },
-        flow: {
-          timeType: 'day',
-          showType: 'line'
+        overview: {
+          disk: {
+            timeType: 'day',
+            chartType: 'line'
+          },
+          cpu: {
+            timeType: 'day',
+            chartType: 'line'
+          },
+          memory: {
+            timeType: 'day',
+            chartType: 'line'
+          },
+          flow: {
+            timeType: 'day',
+            chartType: 'line'
+          }
         },
         showModal: {
           addMonitorIndex: false
@@ -306,6 +311,7 @@
           selectedProduct: []
         },
         customMonitoringData: [{showChart: line}],
+        responseData: null
       }
     },
     created() {
@@ -327,8 +333,66 @@
       })
       this.messageData.series[0].data = mockMessageData
       this.messageData.legend.data = mockMessagelegend
+      // mock图表数据
+     var chartData = {
+        "result": {
+          "xaxis": ["15", "16", "17", "18", "19", "20", "21", "22", "23", "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14"],
+          "disk": [{
+              name: 'host1disk',
+              data: [0, 50, 0, 10, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 10, 0, 80, 0, 0, 80, 90, 0, 0, 0],
+              type: 'line',
+              stack: 'host',
+              barWidth: '60%'
+            },
+            {
+              name: 'host2disk',
+              data: [10, 0, 0, 50, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0],
+              type: 'line',
+              stack: 'host',
+              barWidth: '60%'
+            }
+          ],
+          "cpu": [{
+              name: 'host1cpu',
+              data: [0, 50, 0, 10, 0, 0, 0, 0, 20, 0, 40, 0, 0, 0, 10, 0, 0, 0, 0, 10, 90, 0, 0, 0],
+              type: 'line',
+              stack: 'host',
+              barWidth: '60%'
+            },
+            {
+              name: 'host2cpu',
+              data: [10, 0, 0, 50, 0, 60, 0, 0, 30, 0, 0, 11, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0, 0],
+              type: 'line',
+              stack: 'host',
+              barWidth: '60%'
+            }
+          ],
+          "memory": [{
+              name: 'host1memory',
+              data: [0, 50, 0, 10, 0, 0, 50, 0, 20, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 80, 90, 0, 0, 0],
+              type: 'line',
+              stack: 'host',
+              barWidth: '60%'
+            },
+            {
+              name: 'host2memory',
+              data: [10, 0, 0, 50, 0, 68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 130, 0, 0, 0, 0, 0, 0, 0],
+              type: 'line',
+              stack: 'host',
+              barWidth: '60%'
+            }
+          ]
+        }
+      }
+      this.responseData = chartData
+      this.init()
     },
     methods: {
+      init() {
+        this.chartTypeSwitch('disk')
+        this.chartTypeSwitch('cpu')
+        this.chartTypeSwitch('memory')
+      },
       // 区域变更，刷新数据
       refresh() {
       },
@@ -336,7 +400,20 @@
         console.log(name)
       },
       chartTypeSwitch(type) {
-        this[type].showType == 'line' ? this.showChart = this.line : this.showChart = this.bar
+        var selectType = this.overview[type].chartType == 'line' ? JSON.parse(linestr) : JSON.parse(this.barstr)
+        var responseDataStr = JSON.stringify(this.responseData)
+        if (this.overview[type].chartType == 'line') {
+          selectType.xAxis.data = JSON.parse(responseDataStr).result.xaxis
+          selectType.series = JSON.parse(responseDataStr).result[type]
+          this[type + 'Polar'] = selectType
+        } else {
+          selectType.xAxis.data = JSON.parse(responseDataStr).result.xaxis
+          selectType.series = JSON.parse(responseDataStr).result[type].map(item => {
+              item.type = 'bar'
+              return item
+            })
+          this[type + 'Polar'] = selectType
+        }
       },
       getCurrentDate() {
         return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
