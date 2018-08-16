@@ -565,8 +565,8 @@
             </div>
             <!--费用、以及加入预算清单-->
             <div style="margin-top: 20px">
-              <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
-                 @click="$router.push('computed/3-1')">查看计价详情</p>
+            <!--  <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
+                 @click="$router.push('computed/3-1')">查看计价详情</p>-->
               <p v-if="PecsInfo.createType=='fast'"
                  style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">费用：<span
                 style="font-size: 24px;color: #EE6723;">{{PecsInfo.cost.toFixed(2)}}元</span><span
@@ -715,8 +715,8 @@
           </div>
           <!--数据盘价格-->
           <div style="margin-top: 20px">
-            <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
-               @click="$router.push('computed/3-1')">查看计价详情</p>
+          <!--  <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
+               @click="$router.push('computed/3-1')">查看计价详情</p>-->
             <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
               费用：<span style="font-size: 24px;color: #EE6723;">{{PdiskInfo.dataDiskCost.toFixed(2)}}元</span><span
               v-show="PdiskInfo.timeForm.currentTimeType == 'current'">/小时</span>
@@ -840,8 +840,8 @@
 
           <!--费用、以及加入预算清单-->
           <div style="margin-top: 20px">
-            <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
-               @click="$router.push('computed/3-1')">查看计价详情</p>
+        <!--    <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
+               @click="$router.push('computed/3-1')">查看计价详情</p>-->
             <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">费用：<span
               style="font-size: 24px;color: #EE6723;">{{PeipInfo.cost.toFixed(2)}}元</span><span
               v-show="PeipInfo.timeForm.currentTimeType == 'current'">/小时</span></p>
@@ -1182,8 +1182,8 @@
             </div>
             <!--费用、以及加入预算清单-->
             <div style="margin-top: 20px">
-              <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
-                 @click="$router.push('document')">查看计价详情</p>
+        <!--      <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
+                 @click="$router.push('document')">查看计价详情</p>-->
               <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
                 费用：<span
                 style="font-size: 24px;color: #EE6723;">{{totalDataCost.toFixed(2)}}元</span><span
@@ -2618,16 +2618,43 @@
             this.PecsInfo.vmConfig.diskType = 'sas'
             this.PecsInfo.vmConfig.kernel = '1'
             this.PecsInfo.vmConfig.RAM = '1'
+            this.PecsInfo.info.forEach(item => {
+              if (this.PecsInfo.zone.zoneid == item.zoneId) {
+                item.kernelList.forEach(cpu => {
+                  if (cpu.value == '1') {
+                    this['PecsInfo'].RAMList = cpu.RAMList
+                  }
+                })
+              }
+            })
             break
           case 'optimization':
             this.PecsInfo.vmConfig.diskType = 'ssd'
             this.PecsInfo.vmConfig.kernel = '4'
             this.PecsInfo.vmConfig.RAM = '4'
+            this.PecsInfo.info.forEach(item => {
+              if (this.PecsInfo.zone.zoneid == item.zoneId) {
+                item.kernelList.forEach(cpu => {
+                  if (cpu.value == '4') {
+                    this['PecsInfo'].RAMList = cpu.RAMList
+                  }
+                })
+              }
+            })
             break
           case 'IO':
             this.PecsInfo.vmConfig.diskType = 'ssd'
             this.PecsInfo.vmConfig.kernel = '16'
             this.PecsInfo.vmConfig.RAM = '16'
+            this.PecsInfo.info.forEach(item => {
+              if (this.PecsInfo.zone.zoneid == item.zoneId) {
+                item.kernelList.forEach(cpu => {
+                  if (cpu.value == '16') {
+                    this['PecsInfo'].RAMList = cpu.RAMList
+                  }
+                })
+              }
+            })
             break
         }
       },

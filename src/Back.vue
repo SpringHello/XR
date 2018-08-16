@@ -250,7 +250,7 @@
             type: 'storage',
             subItem: [
               //{subName: '对象存储', type: 'https://oss-console.xrcloud.net/ruirados/objectStorage'},
-              {subName: '对象存储', type: 'https://bjoss-console.xrcloud.net/ruirados/objectStorage'},
+              //{subName: '对象存储', type: 'https://bjoss-console.xrcloud.net/ruirados/objectStorage'},
               {subName: '云硬盘', type: 'disk'},
               {subName: '云硬盘备份', type: 'diskBackup'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */

@@ -20,7 +20,7 @@
           <Button @click="tobuy('huanan')">立即购买</Button>
         </div>
         <transition name="slide-fade-left">
-          <img v-show="bannershow=='south'" src="../../../assets/img/active/eastsouthnode/south-banner.png"/>
+          <img v-show="bannershow=='south'"  src="../../../assets/img/active/eastsouthnode/south-banner.png"/>
         </transition>
       </div>
     </div>
@@ -54,8 +54,7 @@
               <div class="desc">
                 <h1>地域优势</h1>
                 <span>新睿云「华东地区」：高端服务，助力实体经济云上赋能</span>
-                <p>
-                  华东地区具备发展集成电路的良好基础，汇聚了丰富的网络骨干资源，同时拥有优越的商业资源优势。在华东地区部署业务，能更好、更便利地服务本地市场，获得更优质的技术支持。新睿云选择在华东地区建立数据中心，将为用户提供更优质的云计算服务，降低IT成本，加速企业发展。</p>
+                <p>华东地区具备发展集成电路的良好基础，汇聚了丰富的网络骨干资源，同时拥有优越的商业资源优势。在华东地区部署业务，能更好、更便利地服务本地市场，获得更优质的技术支持。新睿云选择在华东地区建立数据中心，将为用户提供更优质的云计算服务，降低IT成本，加速企业发展。</p>
               </div>
               <img src="../../../assets/img/active/eastsouthnode/east-map.png" alt="">
             </div>
@@ -69,8 +68,7 @@
               <div class="desc">
                 <h1>地域优势</h1>
                 <span>新睿云「华南地区」：大规模 高质量 助力企业上云</span>
-                <p>
-                  华南地区云计算产业起步早、组建队伍早，有良好的云计算发展建设基础，同时在中科院支持下建立了“云计算产业技术创新与育成中心”，汇聚了一批批云计算领域优秀人才。新睿云在这里建设数据中心，将为用户数据存储、业务发展提供优质服务，推进企业进步。</p>
+                <p>华南地区云计算产业起步早、组建队伍早，有良好的云计算发展建设基础，同时在中科院支持下建立了“云计算产业技术创新与育成中心”，汇聚了一批批云计算领域优秀人才。新睿云在这里建设数据中心，将为用户数据存储、业务发展提供优质服务，推进企业进步。</p>
               </div>
               <img src="../../../assets/img/active/eastsouthnode/south-map.png" alt="">
             </div>
@@ -105,20 +103,15 @@
               <span class="circle" @click="cardflow=false"><</span>
               <span class="circle" @click="cardflow=true">></span>
             </div>
-
-            <div class="main" :style="{width:productData.length*296+'px'}" ref="cardbox"
-                 :class="{forward:cardflow,back:!cardflow,}">
-              <div class="card" v-for="(item,index) in productData" :key="index" @click="productIndex=index"
-                   :class="{active:productIndex==index}">
-
+            <div class="main" :style="{width:productData.length*296+'px'}" ref="cardbox" :class="{forward:cardflow,back:!cardflow,}">
+              <div class="card" v-for="(item,index) in productData" :key="index" @click="productIndex=index" :class="{active:productIndex==index}">
                 <div class="top">
                   <i class="iconfont" :class="item.icon"></i>
                   <h3>{{item.prod}}</h3>
                 </div>
                 <ul>
                   <li v-for="(secItem,index) in item.prodItem" :key="index">
-                    <a :href="secItem.path?secItem.path:'javaScript:;'"
-                       :class="{gray:!secItem.path}">{{secItem.title}}</a>
+                    <a :href="secItem.path?secItem.path:'javaScript:;'" :class="{gray:!secItem.path}">{{secItem.title}}</a>
                   </li>
                 </ul>
               </div>
@@ -181,55 +174,55 @@
             prod: '云计算',
             icon: 'icon-yunjisuan1',
             prodItem: [
-              {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型', path: '/ruicloud/Pecs'},
-              {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/ruicloud/Phost'},
-              {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ruicloud/Pecss'},
-              {title: '裸金属服务器', desc: '专属物理服务器', path: ''},
-              {title: '弹性伸缩', desc: '高可用、可视化、低成本', path: ''}
+              { title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型', path: '/ruicloud/Pecs' },
+              { title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/ruicloud/Phost' },
+              { title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ruicloud/Pecss' },
+              { title: '裸金属服务器', desc: '专属物理服务器', path: '' },
+              { title: '弹性伸缩', desc: '高可用、可视化、低成本', path: '' }
             ]
           },
           {
             prod: '云网络',
             icon: 'icon-yunwangluo1',
             prodItem: [
-              {title: '虚拟私有云VPC', desc: '网络隔离、分配子网', path: '/ruicloud/Pvpc'},
-              {title: '弹性IP', desc: '绑定与解绑IP、扩容', path: '/ruicloud/Peip'},
-              {title: '负载均衡', desc: '源算法、轮询、最小连接数', path: '/ruicloud/Pbalance'},
-              {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: '/ruicloud/Pnat'},
-              {title: '虚拟专网VPN', desc: '跨VPC链接', path: '/ruicloud/Pvirvpn'},
-              {title: 'CDN', desc: '节点丰富、安全易用', path: ''}
+              { title: '虚拟私有云VPC', desc: '网络隔离、分配子网', path: '/ruicloud/Pvpc' },
+              { title: '弹性IP', desc: '绑定与解绑IP、扩容', path: '/ruicloud/Peip' },
+              { title: '负载均衡', desc: '源算法、轮询、最小连接数', path: '/ruicloud/Pbalance' },
+              { title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: '/ruicloud/Pnat' },
+              { title: '虚拟专网VPN', desc: '跨VPC链接', path: '/ruicloud/Pvirvpn' },
+              { title: 'CDN', desc: '节点丰富、安全易用', path: '' }
             ]
           },
           {
             prod: '云存储',
             icon: 'icon-yuncunchu1',
             prodItem: [
-              {title: '云硬盘', path: '/ruicloud/Pdisk'},
-              {title: '云硬盘备份', path: '/ruicloud/Pbackupdisk'},
-              {title: '对象存储', path: ''}
+              { title: '云硬盘', path: '/ruicloud/Pdisk' },
+              { title: '云硬盘备份', path: '/ruicloud/Pbackupdisk' },
+              { title: '对象存储', path: '' }
             ]
           },
           {
             prod: '云数据库',
             icon: 'icon-yunjisuan1',
             prodItem: [
-              {title: '云数据库', path: ''},
+              { title: '云数据库', path: '' },
             ]
           },
           {
             prod: '云安全',
             icon: 'icon-yunanquan1',
             prodItem: [
-              {title: '防火墙', desc: '自定义规则、协议、端口', path: '/ruicloud/Pfirewall'},
-              {title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ruicloud/Pddos'}
+              { title: '防火墙', desc: '自定义规则、协议、端口', path: '/ruicloud/Pfirewall' },
+              { title: 'DDOS高防IP', desc: '硬件防护、40G超大流量', path: '/ruicloud/Pddos' }
             ]
           },
           {
             prod: '云运维',
             icon: 'icon-yunyunwei1',
             prodItem: [
-              {title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/ruicloud/Pmonitor'},
-              {title: '访问控制', desc: '权限管理、精准控制', path: ''}
+              { title: '云监控', desc: '自定义监控项、多告警推送方式', path: '/ruicloud/Pmonitor' },
+              { title: '访问控制', desc: '权限管理、精准控制', path: '' }
             ]
           }
         ],
@@ -247,8 +240,14 @@
         sessionStorage.setItem('defaultzone', zone)
       }
     },
-    computed: {},
-    watch: {}
+    computed: {
+    },
+    watch: {
+
+    },
+    components: {
+
+    }
   }
 </script>
 
@@ -289,7 +288,8 @@
             line-height: 48px;
             text-align: center;
             font-weight: normal;
-            background: url("../../../assets/img/active/eastsouthnode/bg-parallelogram.png") no-repeat;
+            background: url("../../../assets/img/active/eastsouthnode/bg-parallelogram.png")
+            no-repeat;
           }
         }
         p {
@@ -307,67 +307,68 @@
           border: 1px solid rgba(51, 51, 51, 1);
           font-size: 16px;
           background: none;
-          &:hover {
+          &:hover{
             color: #ff624b;
             border: 1px solid #ff624b;
           }
         }
       }
     }
-  }
-
-  .east-banner {
-    background: linear-gradient(
-      -133.6deg,
-      rgba(255, 220, 188, 1),
-      rgba(255, 255, 255, 1)
-    );
-    .wrap {
-      position: relative;
-      &::before {
-        position: absolute;
-        top: 60px;
-        left: -300px;
-        content: url("../../../assets/img/active/eastsouthnode/east-bg-left.png");
-        display: block;
-        width: 272px;
-        height: 316px;
-      }
-      img {
-        position: absolute;
-        top: 0;
-        right: -150px;
-      }
-    }
-  }
-
-  .south-banner {
-    background: url("../../../assets/img/active/eastsouthnode/south-bg.png") no-repeat center;
-    .wrap {
-      position: relative;
-      img {
-        position: absolute;
-        top: 0;
-        right: -100px;
+    .east-banner {
+      background: linear-gradient(
+        -133.6deg,
+        rgba(255, 220, 188, 1),
+        rgba(255, 255, 255, 1)
+      );
+      .wrap {
+        position: relative;
+        &::before {
+          position: absolute;
+          top: 60px;
+          left: -300px;
+          content: url("../../../assets/img/active/eastsouthnode/east-bg-left.png");
+          display: block;
+          width: 272px;
+          height: 316px;
+        }
+        img{
+          position: absolute;
+          top: 0;
+          right: -150px;
+        }
       }
     }
-  }
-
-  .container {
-    background: #fff;
-    .nav {
-      overflow: hidden;
-      li {
-        float: left;
-        height: 70px;
-        width: 50%;
-        line-height: 70px;
-        font-size: 18px;
-        background: rgba(253, 246, 239, 1);
-        cursor: pointer;
-        &:nth-of-type(1) {
-          text-align: right;
-          padding-right: 100px;
+    .south-banner {
+      background: url("../../../assets/img/active/eastsouthnode/south-bg.png")
+      no-repeat center;
+      .wrap {
+        position: relative;
+        img{
+          position: absolute;
+          top: 0;
+          right: -100px;
+        }
+      }
+    }
+    .container {
+      background: #fff;
+      .nav {
+        overflow: hidden;
+        li {
+          float: left;
+          height: 70px;
+          width: 50%;
+          line-height: 70px;
+          font-size: 18px;
+          background: rgba(253, 246, 239, 1);
+          cursor: pointer;
+          &:nth-of-type(1) {
+            text-align: right;
+            padding-right: 100px;
+          }
+          &:nth-of-type(2) {
+            padding-left: 100px;
+          }
         }
         .active {
           background: #fff;
@@ -419,6 +420,7 @@
       .region {
         .box {
           padding: 60px 40px 0;
+          margin-bottom: 60px;
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -440,83 +442,26 @@
           }
         }
       }
-    }
-    .region {
-      .box {
-        padding: 60px 40px 0;
-        margin-bottom: 60px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        .desc {
-          width: 550px;
-          h1 {
-            font-size: 36px;
-          }
-          span {
-            display: inline-block;
-            padding: 40px 0 20px;
-            font-size: 18px;
-            color: rgba(255, 98, 75, 1);
-          }
-          p {
-            font-size: 14px;
-            line-height: 28px;
-          }
-        }
-      }
-    }
-    .product {
-      .box {
-        padding: 80px 0;
-        text-align: center;
-        overflow: hidden;
-        .switch {
-          text-align: right;
-          .circle {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: solid 1px #999999;
-            border-radius: 50%;
-            color: #999999;
-            text-align: center;
-            font-size: 14px;
-            line-height: 18px;
-            cursor: pointer;
-            &:nth-of-type(1) {
-              margin-right: 10px;
-            }
-            &:hover {
-              color: #ff624b;
-              border: solid 1px #ff624b;
-            }
-          }
-        }
-        .main {
-          margin-top: 20px;
+      .product {
+        .box {
+          padding: 80px 0;
+          text-align: center;
           overflow: hidden;
-          transition: all .5s ease;
-          .card {
-            float: left;
-            margin-right: 20px;
-            width: 276px;
-            height: 390px;
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0px 2px 37px -14px rgba(164, 164, 164, 0.5);
-            border-radius: 4px;
-            border: 1px solid rgba(207, 207, 207, 1);
-            .top {
-              color: #ff624b;
-              height: 176px;
-              padding: 46px;
-              background: url("../../../assets/img/active/eastsouthnode/bg-rectangle-light.png") no-repeat 0 0;
-              border-radius: 4px 4px 0px 0px;
-              font-size: 18px;
-              line-height: 26px;
-              h3 {
-                font-weight: normal;
-                padding-top: 20px;
+          .switch {
+            text-align: right;
+            .circle {
+              display: inline-block;
+              width: 20px;
+              height: 20px;
+              border: solid 1px #999999;
+              border-radius: 50%;
+              color: #999999;
+              text-align: center;
+              font-size: 14px;
+              line-height: 18px;
+              cursor: pointer;
+              &:nth-of-type(1){
+                margin-right: 10px;
               }
               &:hover {
                 color: #ff624b;
@@ -526,9 +471,10 @@
           }
           .main {
             margin-top: 20px;
-            display: flex;
-            justify-content: flex-start;
-            > div {
+            overflow: hidden;
+            transition: all .5s ease;
+            .card {
+              float: left;
               margin-right: 20px;
               width: 276px;
               height: 390px;
@@ -540,11 +486,8 @@
                 color: #ff624b;
                 height: 176px;
                 padding: 46px;
-                background: linear-gradient(
-                  180deg,
-                  rgba(254, 237, 228, 1),
-                  rgba(255, 251, 249, 1)
-                );
+                background: url("../../../assets/img/active/eastsouthnode/bg-rectangle-light.png")
+                no-repeat 0 0;
                 border-radius: 4px 4px 0px 0px;
                 font-size: 18px;
                 line-height: 26px;
@@ -572,107 +515,82 @@
                   .gray {
                     cursor: not-allowed;
                     color: #999999;
-                    &:hover {
+                    &:hover{
                       color: #999999;
                     }
                   }
                 }
               }
-            }
-            &:hover, &.active {
-              border: 1px solid rgba(255, 98, 75, 1);
-              .top {
-                background: url("../../../assets/img/active/eastsouthnode/bg-rectangle.png") no-repeat 0 0;
-                color: #fff;
+              &:hover,&.active {
+                border: 1px solid rgba(255, 98, 75, 1);
+                .top {
+                  background: url("../../../assets/img/active/eastsouthnode/bg-rectangle.png")
+                  no-repeat 0 0;
+                  color: #fff;
+                }
               }
             }
           }
+          .forward{
+            transform: translateX(-1184px)
+          }
+          .back{
+            transform: translateX(0)
+          }
         }
-        .forward {
-          transform: translateX(-1184px)
+      }
+      .east-box{
+        >div:nth-of-type(2n){
+          background: #fafafa;
         }
-        .back {
-          transform: translateX(0)
+      }
+      .south-box{
+        .base{
+          background:linear-gradient(180deg,rgba(254,237,228,1),rgba(255,255,255,1));
         }
       }
     }
-    .east-box {
-      > div:nth-of-type(2n) {
-        background: #fafafa;
-      }
-    }
-    .south-box {
-      .base {
-        background: linear-gradient(180deg, rgba(254, 237, 228, 1), rgba(255, 255, 255, 1));
-      }
-    }
-    .register {
+    .register{
       padding: 40px 0;
       color: #fff;
       text-align: center;
-      background: url("../../../assets/img/active/eastsouthnode/bg-wave.png") no-repeat bottom center, linear-gradient(90deg, rgba(254, 171, 124, 1), rgba(255, 97, 75, 1));
-      p {
-        font-size: 24px;
-        padding-bottom: 40px;
+      background: url("../../../assets/img/active/eastsouthnode/bg-wave.png") no-repeat bottom center,linear-gradient(90deg,rgba(254,171,124,1),rgba(255,97,75,1));
+      p{
+        font-size:24px;
+        padding-bottom:40px;
       }
-      button {
-        width: 173px;
-        height: 46px;
-        border-radius: 4px;
-        border: 1px solid rgba(255, 255, 255, 1);
-        font-size: 18px;
+      button{
+        width:173px;
+        height:46px;
+        border-radius:4px;
+        border:1px solid rgba(255,255,255,1);
+        font-size:18px;
         color: #fff;
         background: none;
       }
     }
   }
-
-  <
-  <
-  <
-  <
-  <
-  <
-  <
-  HEAD
-
-  =
-  =
-  =
-  =
-  =
-  =
-  =
-  }
   .slide-fade-right-enter-active {
     transition: all .3s ease;
   }
-
   .slide-fade-right-leave-active {
     transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
   }
-
   .slide-fade-right-enter, .slide-fade-right-leave-to
-    /* .slide-fade-left-leave-active for below version 2.1.8 */
-  {
+    /* .slide-fade-left-leave-active for below version 2.1.8 */ {
     transform: translateX(500px);
     opacity: 0;
   }
-
   .slide-fade-left-enter-active {
     transition: all .3s ease;
   }
-
   .slide-fade-left-leave-active {
     transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
   }
-
   .slide-fade-left-enter, .slide-fade-left-leave-to
-    /* .slide-fade-left-leave-active for below version 2.1.8 */
-  {
+    /* .slide-fade-left-leave-active for below version 2.1.8 */ {
     transform: translateX(-500px);
     opacity: 0;
   }
 
-  > > > > > > > nodeactivity
 </style>

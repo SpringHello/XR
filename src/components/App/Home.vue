@@ -874,7 +874,7 @@
         }
       }
       .link-list {
-        margin-top: 100px;
+        margin-top: 60px;
         margin-bottom: 40px;
         display: flex;
         justify-content: space-between;
