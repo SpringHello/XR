@@ -41,7 +41,7 @@
                   </span>
                 </div>
                 <div class="switch">
-                  <RadioGroup v-model="overview.disk.type" type="button" @on-change="timeSwitch('disk')">
+                  <RadioGroup v-model="overview.disk.timeType" type="button" @on-change="timeSwitch('disk')">
                     <Radio label="day">今日</Radio>
                     <Radio label="week">本周</Radio>
                     <Radio label="month">本月</Radio>
@@ -67,7 +67,7 @@
                   </span>
                 </div>
                 <div class="switch">
-                  <RadioGroup v-model="overview.cpu.type" type="button" @on-change="timeSwitch('cpu')">
+                  <RadioGroup v-model="overview.cpu.timeType" type="button" @on-change="timeSwitch('cpu')">
                     <Radio label="day">今日</Radio>
                     <Radio label="week">本周</Radio>
                     <Radio label="month">本月</Radio>
@@ -92,7 +92,7 @@
                   </span>
                 </div>
                 <div class="switch">
-                  <RadioGroup v-model="overview.memory.type" type="button" @on-change="timeSwitch('memory')">
+                  <RadioGroup v-model="overview.memory.timeType" type="button" @on-change="timeSwitch('memory')">
                     <Radio label="day">今日</Radio>
                     <Radio label="week">本周</Radio>
                     <Radio label="month">本月</Radio>
@@ -106,6 +106,31 @@
                   </div>
                 </div>
                 <chart :options="memoryPolar" style="width:1110px;height:268px;margin-top: 20px;"></chart>
+              </div>
+            </section>
+            <section>
+              <div>
+                <div class="header">
+                  最近一小时外网流量统计
+                  <span>
+                    <i>编辑</i> | <i>删除</i>
+                  </span>
+                </div>
+                <div class="switch">
+                  <RadioGroup v-model="overview.flow.timeType" type="button" @on-change="timeSwitch('flow')">
+                    <Radio label="day">今日</Radio>
+                    <Radio label="week">本周</Radio>
+                    <Radio label="month">本月</Radio>
+                  </RadioGroup>
+                  <div>
+                    <Button type="primary" class="export-btn">导出</Button>
+                    <RadioGroup v-model="overview.flow.chartType" type="button" @on-change="chartTypeSwitch('flow')">
+                      <Radio label="line">折线</Radio>
+                      <Radio label="bar">柱状</Radio>
+                    </RadioGroup>
+                  </div>
+                </div>
+                <chart :options="flowPolar" style="width:1110px;height:268px;margin-top: 20px;"></chart>
               </div>
             </section>
           </TabPane>
@@ -238,12 +263,15 @@
   export default {
     data() {
       return {
+        weekdata: null,
+        monthdata: null,
         messageData: messageMonitor,
         barstr,
         linestr,
         diskPolar: null,
         cpuPolar: null,
         memoryPolar: null,
+        flowPolar: null,
         monitorData: [
           {
             text: '云主机Ping不可达',
@@ -450,14 +478,14 @@
           "xaxis": ["15", "16", "17", "18", "19", "20", "21", "22", "23", "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14"],
           "disk": [{
               name: 'host1disk',
-              data: [0, 50, 0, 10, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 10, 0, 80, 0, 0, 80, 90, 0, 0, 0],
+              data: [0, 50, 0, 10, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 10, 0, 80, 0, 0, 80, 90, 0, 0, 0, 50, 0, 10, 0, 0],
               type: 'line',
               stack: 'host',
               barWidth: '60%'
             },
             {
               name: 'host2disk',
-              data: [10, 0, 0, 50, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0],
+              data: [10, 0, 0, 50, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 10, 0, 0],
               type: 'line',
               stack: 'host',
               barWidth: '60%'
@@ -465,14 +493,7 @@
           ],
           "cpu": [{
               name: 'host1cpu',
-              data: [0, 50, 0, 10, 0, 0, 0, 0, 20, 0, 40, 0, 0, 0, 10, 0, 0, 0, 0, 10, 90, 0, 0, 0],
-              type: 'line',
-              stack: 'host',
-              barWidth: '60%'
-            },
-            {
-              name: 'host2cpu',
-              data: [10, 0, 0, 50, 0, 60, 0, 0, 30, 0, 0, 11, 0, 0, 0, 20, 0, 0, 0, 20, 0, 0, 0, 0],
+              data: [0, 50, 0, 10, 0, 0, 0, 0, 20, 0, 40, 0, 0, 0, 10, 0, 0, 0, 0, 10, 90, 0, 0, 0, 0, 0, 50, 0, 10, 0, 0],
               type: 'line',
               stack: 'host',
               barWidth: '60%'
@@ -480,14 +501,15 @@
           ],
           "memory": [{
               name: 'host1memory',
-              data: [0, 50, 0, 10, 0, 0, 50, 0, 20, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 80, 90, 0, 0, 0],
+              data: [0, 50, 0, 10, 0, 0, 50, 0, 20, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 80, 90, 0, 0, 0, 0, 0, 50, 0, 10, 0, 0],
               type: 'line',
               stack: 'host',
               barWidth: '60%'
-            },
-            {
-              name: 'host2memory',
-              data: [10, 0, 0, 50, 0, 68, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 130, 0, 0, 0, 0, 0, 0, 0],
+            }
+          ],
+          "flow": [{
+              name: 'host1flow',
+              data: [0, 50, 0, 10, 0, 0, 50, 0, 20, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 80, 90, 0, 0, 0, 0, 0, 50, 0, 10, 0, 0],
               type: 'line',
               stack: 'host',
               barWidth: '60%'
@@ -496,6 +518,71 @@
         }
       }
       this.responseData = chartData
+      // mock天，周，月数据
+     var mockweekData = {
+          "message": "请求成功",
+          "result": {
+            "xaxis": ["8-9", "8-10", "8-11", "8-12", "8-13", "8-14", "8-15"],
+            "diskUse": [{
+                'name': 'host1',
+                data: [0, 4, 0, 0, 0, 50, 0]
+              },
+              {
+                name: 'host2',
+                data: [0, 0, 0, 0, 0, 10, 0]
+              }
+            ],
+            "cpuUse": [{
+                'name': 'host1',
+                data: [0, 4, 0, 0, 0, 50, 0]
+              }
+            ],
+            "memoryUse": [{
+                'name': 'host1',
+                data: [0, 0, 0, 0, 0, 10, 0]
+              }
+            ],
+            "flowUse": [{
+                'name': 'host1',
+                data: [0, 37, 0, 30, 0, 0, 0]
+              }
+            ]
+          },
+          "status": 1
+        }
+      var mockmonthData = {
+          "message": "请求成功",
+          "result": {
+            "xaxis": ["7-17", "7-18", "7-19", "7-20", "7-21", "7-22", "7-23", "7-24", "7-25", "7-26", "7-27", "7-28", "7-29", "7-30", "7-31", "8-1", "8-2", "8-3", "8-4", "8-5", "8-6", "8-7", "8-8", "8-9", "8-10", "8-11", "8-12", "8-13", "8-14", "8-15"],
+            "diskUse": [{
+                'name': 'host1',
+                data: [0, 0, 0, 3, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 0, 0, 230, 0, 0, 0, 120, 0, 0, 4, 0, 0, 0, 10, 0]
+              },
+              {
+                name: 'host2',
+                data: [0, 0, 0, 32, 104, 103, 104, 103, 103, 102, 102, 102, 102, 102, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 0, 0, 0, 120]
+              }
+            ],
+            "cpuUse": [{
+                'name': 'host1',
+                data: [0, 0, 0, 3, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 0, 0, 230, 0, 0, 0, 120, 0, 0, 4, 0, 0, 0, 10, 0]
+              }
+            ],
+            "memoryUse": [{
+                'name': 'host1',
+                data: [0, 0, 0, 3, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 0, 0, 230, 0, 0, 0, 120, 0, 0, 4, 0, 0, 0, 10, 0]
+              }
+            ],
+            "flowUse": [{
+                'name': 'host1',
+                data: [0, 0, 0, 32, 104, 103, 104, 103, 103, 102, 102, 102, 102, 102, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 0, 0, 0, 0]
+              }
+            ]
+          },
+          "status": 1
+        }
+      this.weekdata = mockweekData
+      this.monthdata = mockmonthData
       this.init()
     },
     methods: {
@@ -503,6 +590,7 @@
         this.chartTypeSwitch('disk')
         this.chartTypeSwitch('cpu')
         this.chartTypeSwitch('memory')
+        this.chartTypeSwitch('flow')
       },
       // 区域变更，刷新数据
       refresh() {
@@ -536,90 +624,20 @@
           this[type + 'Polar'] = selectType
         }
       },
-      getCurrentDate() {
-        return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
-      },
-      getNearlySevenDays() {
-        var day = new Date()
-        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 7)
-        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
-      },
-      getNearlyThirtyDays() {
-        var day = new Date()
-        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 30)
-        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
-      },
       timeSwitch(type) {
-        if (type == 'cpu') {
-          switch (this[type].type) {
-            case '今天':
-              this.CPUTime = this.getCurrentDate()
-              break
-            case '最近7天':
-              this.CPUTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
-              break
-            case '最近30天':
-              this.CPUTime = this.getNearlyThirtyDays() + '--' + this.getCurrentDate()
-              break
-          }
-        } else if (type == 'memory') {
-          switch (this[type].type) {
-            case '今天':
-              this.memoryTime = this.getCurrentDate()
-              break
-            case '最近7天':
-              this.memoryTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
-              break
-            case '最近30天':
-              this.memoryTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
-              break
-          }
-        } else if (type == 'disk') {
-          switch (this[type].type) {
-            case '今天':
-              this.diskTime = this.getCurrentDate()
-              break
-            case '最近7天':
-              this.diskTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
-              break
-            case '最近30天':
-              this.diskTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
-              break
-          }
-        } else if (type == 'flow') {
-          switch (this[type].type) {
-            case '今天':
-              this.IPTime = this.getCurrentDate()
-              break
-            case '最近7天':
-              this.IPTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
-              break
-            case '最近30天':
-              this.IPTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
-              break
-          }
+        if (this.overview[type].timeType == 'day'){
+          this.chartTypeSwitch(type)
+        } else if (this.overview[type].timeType == 'week') {
+          this[type + 'Polar'].xAxis.data = this.weekdata.result.xaxis
+          this[type + 'Polar'].series.map((item, index) => {
+            this.weekdata.result[type + 'Use'][index] = item.data
+          })
+        } else {
+          this[type + 'Polar'].xAxis.data = this.monthdata.result.xaxis
+          this[type + 'Polar'].series.map((item, index) => {
+            this.monthdata.result[type + 'Use'][index] = item.data
+          })
         }
-        var url = this[type].type == '今天' ? urlList.dayURL : urlList.otherURL
-        var queryType = type == 'flow' ? 'network' : 'core'
-        var dateType = this[type].type == '最近7天' ? 'week' : 'month'
-        this.$http.get(url, {
-          params: {
-            vmname: this.$route.query.instancename,
-            type: queryType,
-            datetype: dateType
-          }
-        }).then(response => {
-          if (response.status == 200 && response.data.status == 1) {
-            if (type == 'flow') {
-              this.ipPolar.xAxis.data = response.data.result.xaxis
-              this.ipPolar.series[0].data = response.data.result.networkIn
-              this.ipPolar.series[1].data = response.data.result.networkOut
-            } else {
-              this[type + 'Polar'].xAxis.data = response.data.result.xaxis
-              this[type + 'Polar'].series[0].data = response.data.result[type + 'Use']
-            }
-          }
-        })
       },
       // 删除关注
       deleteAttention(index) {
