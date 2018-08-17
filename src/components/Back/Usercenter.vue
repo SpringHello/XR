@@ -605,7 +605,7 @@
                   <Input v-model="notAuth.companyAuthForm.businessLicenseNumber" :maxlength="20" placeholder="请输入营业执照号码"
                          style="width: 300px;"></Input>
                 </FormItem>
-                <FormItem label="上传营业执照" prop="combine">
+                <FormItem label="上传营业执照">
                   <div style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;">
                     <div style="display: flex;padding:20px;background-color: #f7f7f7;width: 320px">
                       <div style="width:130px;">
@@ -652,7 +652,7 @@
                   <Input v-model="notAuth.companyAuthForm.linkManNameID" placeholder="请输入法人身份证号码"
                          style="width: 300px;"></Input>
                 </FormItem>
-                <FormItem label="上传法人证件" prop="legalPersonID">
+                <FormItem label="上传法人证件">
                   <div style="display: flex">
                     <div
                       style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;margin-right: 20px">
@@ -752,7 +752,7 @@
                   <Input v-model="notAuth.companyAuthForm.agentManID" placeholder="请输入经办人身份证号码"
                          style="width: 300px;"></Input>
                 </FormItem>
-                <FormItem label="上传经办人证件" prop="agentID">
+                <FormItem label="上传经办人证件">
                   <div style="display: flex;flex-wrap: wrap;">
                     <div
                       style="padding: 10px;border:1px solid rgba(216,216,216,1);border-radius: 4px; width: 342px;margin-right: 20px">
@@ -1364,36 +1364,6 @@
           callback()
         }
       }
-      const validaRegisteredBusinessLicenseNumber = (rule, value, callback) => {
-        if (!value) {
-          return callback(new Error('营业执照号码不能为空'));
-        }
-        if (!(/^[0-9]*$/.test(value))) {
-          callback(new Error('请输入正确的营业执照号码'));
-        } else {
-          callback()
-        }
-      }
-      const validaRegisteredLegalPersonID = (rule, value, callback) => {
-        if (this.notAuth.companyAuthForm.legalPersonIDFront == '') {
-          return callback(new Error('请上传公司法人身份证正面'));
-        } else if (this.notAuth.companyAuthForm.legalPersonIDBack == '') {
-          return callback(new Error('请上传公司法人身份证反面'));
-        } else {
-          callback()
-        }
-      }
-      const validaRegisteredAgentID = (rule, value, callback) => {
-        if (this.notAuth.companyAuthForm.agentIDFront == '') {
-          return callback(new Error('请上传经办人身份证正面'));
-        } else if (this.notAuth.companyAuthForm.agentIDBack == '') {
-          return callback(new Error('请上传经办人身份证反面'));
-        } else if (this.notAuth.companyAuthForm.agentIDInHand == '') {
-          return callback(new Error('请上传经办人手持身份证照'));
-        } else {
-          callback()
-        }
-      }
       return {
         keyWeight: '',
         keycodePlaceholder: '获取验证码',
@@ -1573,17 +1543,7 @@
               {validator: validaRegisteredPhone}
             ],
             businessLicenseNumber: [
-              {required: true, message: '请输入公司营业执照号码'},
-              {validator: validaRegisteredBusinessLicenseNumber}
-            ],
-            combine: [
-              {required: true, message: '请上传公司营业执照'}
-            ],
-            legalPersonID: [
-              {validator: validaRegisteredLegalPersonID}
-            ],
-            agentID: [
-              {validator: validaRegisteredAgentID}
+              {required: true, message: '请输入公司营业执照号码'}
             ],
             contactPerson: [
               {required: true, message: '请输入联系人姓名'},
@@ -2313,6 +2273,30 @@
       enterpriseAttest() {
         this.$refs.companyAuth.validate(validate => {
           if (validate) {
+            if (this.notAuth.companyAuthForm.combine == '') {
+              this.$Message.info('请上传公司营业执照')
+              return
+            }
+            if (this.notAuth.companyAuthForm.legalPersonIDFront == '') {
+              this.$Message.info('请上传公司法人身份证正面')
+              return
+            }
+            if (this.notAuth.companyAuthForm.legalPersonIDBack == '') {
+              this.$Message.info('请上传公司法人身份证反面')
+              return
+            }
+            if (this.notAuth.companyAuthForm.agentIDFront == '') {
+              this.$Message.info('请上传经办人身份证正面')
+              return
+            }
+            if (this.notAuth.companyAuthForm.agentIDBack == '') {
+              this.$Message.info('请上传经办人身份证反面')
+              return
+            }
+            if (this.notAuth.companyAuthForm.agentIDInHand == '') {
+              this.$Message.info('请上传经办人手持身份证照')
+              return
+            }
             var params = {
               authType: this.notAuth.companyAuthForm.certificateType,
               name: this.notAuth.companyAuthForm.name,
