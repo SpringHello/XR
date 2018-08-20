@@ -254,7 +254,10 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button @click="showModal.addMonitorIndex = false">取消</Button>
-        <Button type="primary" @click="addCustomMonitoring_ok" :disabled="monitoringIndexForm.selectedProduct.length == 0 ||monitoringIndexForm.productIndex == ''">完成配置</Button>
+        <Button type="primary" @click="addCustomMonitoring_ok" :disabled="monitoringIndexForm.selectedProduct.length == 0 ||monitoringIndexForm.productIndex == ''"
+                v-if="isAddMonitorIndex">完成配置
+        </Button>
+        <Button v-else type="primary" @click="editCustomMonitoring_ok">确认修改</Button>
       </div>
     </Modal>
   </div>
@@ -367,7 +370,8 @@
           productIndexGroup: [],
           productIndex: '',
           allProduct: [],
-          selectedProduct: []
+          selectedProduct: [],
+          id: ''
         },
         customMonitoringData: [],
 
@@ -481,7 +485,8 @@
           strategyName: [
             {required: true, validator: regExp.validaRegisteredName, trigger: 'blur'}
           ]
-        }
+        },
+        isAddMonitorIndex: true
       }
     },
     created() {
@@ -732,12 +737,15 @@
               }
             })
             this.monitoringIndexForm.selectedProduct = res[1].data.list
+            this.monitoringIndexForm.id = item.customMonitorIndex.id
+            this.isAddMonitorIndex = false
             this.showModal.addMonitorIndex = true
           }
         })
       },
       addCustomMonitoring() {
         // 初始化弹窗
+        this.isAddMonitorIndex = true
         this.monitoringIndexForm.productType = ''
         this.monitoringIndexForm.productIndex = ''
         this.monitoringIndexForm.allProduct = []
@@ -847,7 +855,7 @@
                 brokenLine.series.push({
                   name: obj.computerName + name,
                   type: 'line',
-                  data: [0, 32, 104, 103, 12,44,12,12,21,45,123],
+                  data: [0, 32, 104, 103, 12, 44, 12, 12, 21, 45, 123],
                   barWidth: '15%'
                 })
               })
@@ -858,12 +866,19 @@
                 brokenLine.series.push({
                   name: obj.computerName + name,
                   type: 'bar',
-                  data: [0, 32, 104, 103, 12,44,12,12,21,45,123],
+                  data: [0, 32, 104, 103, 12, 44, 12, 12, 21, 45, 123],
                   barWidth: '15%'
                 })
               })
             }
-            this.customMonitoringData[index].showChart = brokenLine
+            let params = {
+              showChart: brokenLine,
+              mapType: item.mapType,
+              timeType: item.timeType,
+              customMonitorIndex: item.customMonitorIndex,
+              name: item.name
+            }
+            this.customMonitoringData.splice(index, 1, params)
           }
         })
       },
@@ -873,13 +888,19 @@
           item.showChart.series.forEach(item => {
             item.type = 'line'
           })
-          this.customMonitoringData[index].showChart = item.showChart
         } else {
           item.showChart.series.forEach(item => {
             item.type = 'bar'
           })
-          this.customMonitoringData[index].showChart = item.showChart
         }
+        let params = {
+          showChart: item.showChart,
+          mapType: item.mapType,
+          timeType: item.timeType,
+          customMonitorIndex: item.customMonitorIndex,
+          name: item.name
+        }
+        this.customMonitoringData.splice(index, 1, params)
       },
       // 从监控中删除该产品
       deleteProduct(item, index) {
@@ -891,18 +912,87 @@
         let vpcId = ''
         let diskId = ''
         let objectStorageId = ''
-        computerId = this.monitoringIndexForm.selectedProduct.map(item => {
-          return item.computerid
-        })
+        switch (this.monitoringIndexForm.productType) {
+          case'云主机':
+            computerId = this.monitoringIndexForm.selectedProduct.map(item => {
+              return item.computerid
+            })
+            break
+          case'对象存储':
+            objectStorageId = this.monitoringIndexForm.selectedProduct.map(item => {
+              return item.computerid
+            })
+            break
+          case'磁盘':
+            diskId = this.monitoringIndexForm.selectedProduct.map(item => {
+              return item.computerid
+            })
+            break
+          case'VPC':
+            vpcId = this.monitoringIndexForm.selectedProduct.map(item => {
+              return item.computerid
+            })
+            break
+        }
         let url = 'monitor/addCustomMonitorIndex.do'
         this.$http.get(url, {
           params: {
             productTye: this.monitoringIndexForm.productType,
             index: this.monitoringIndexForm.productIndex,
             computerId: computerId + '',
-            vpcId: vpcId,
-            diskId: diskId,
-            objectStorageId: objectStorageId
+            vpcId: vpcId + '',
+            diskId: diskId + '',
+            objectStorageId: objectStorageId + ''
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.$Message.success(res.data.message)
+            this.showModal.addMonitorIndex = false
+            this.getCustomMonitorGroup()
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      editCustomMonitoring_ok() {
+        let computerId = ''
+        let vpcId = ''
+        let diskId = ''
+        let objectStorageId = ''
+        switch (this.monitoringIndexForm.productType) {
+          case'云主机':
+            computerId = this.monitoringIndexForm.selectedProduct.map(item => {
+              return item.computerid
+            })
+            break
+          case'对象存储':
+            objectStorageId = this.monitoringIndexForm.selectedProduct.map(item => {
+              return item.computerid
+            })
+            break
+          case'磁盘':
+            diskId = this.monitoringIndexForm.selectedProduct.map(item => {
+              return item.computerid
+            })
+            break
+          case'VPC':
+            vpcId = this.monitoringIndexForm.selectedProduct.map(item => {
+              return item.computerid
+            })
+            break
+        }
+        let url = 'monitor/updateCustomMonitorIndex.do'
+        this.$http.get(url, {
+          params: {
+            productTye: this.monitoringIndexForm.productType,
+            index: this.monitoringIndexForm.productIndex,
+            id: this.monitoringIndexForm.id,
+            computerId: computerId + '',
+            vpcId: vpcId + '',
+            diskId: diskId + '',
+            objectStorageId: objectStorageId + ''
           }
         }).then(res => {
           if (res.status == 200 && res.data.status == 1) {
@@ -966,7 +1056,7 @@
                   brokenLine.series.push({
                     name: data.computerName + name,
                     type: 'line',
-                    data: [0, 32, 104, 103, 12,44,12,12,21,45,123],
+                    data: [0, 32, 104, 103, 12, 44, 12, 12, 21, 20, 1],
                     barWidth: '15%'
                   })
                 })
