@@ -141,14 +141,14 @@
                   <p>我关注的指标<span @click="deleteAttention(item)">&nbsp删除</span><span @click="editAttention(item)">编辑 |</span></p>
                 </div>
                 <div class="cm-item-switch">
-                  <RadioGroup type="button">
-                    <Radio label="day">今日</Radio>
+                  <RadioGroup type="button" v-model="item.timeType" @on-change="cutDataCustomMonitoring(item,index)">
+                    <Radio label="today">今日</Radio>
                     <Radio label="week">本周</Radio>
                     <Radio label="month">本月</Radio>
                   </RadioGroup>
                   <div>
                     <Button type="primary" style="margin-right: 5px">导出</Button>
-                    <RadioGroup type="button">
+                    <RadioGroup type="button" v-model="item.mapType" @on-change="cutMapCustomMonitoring(item,index)">
                       <Radio label="line">折线</Radio>
                       <Radio label="bar">柱状</Radio>
                     </RadioGroup>
@@ -253,8 +253,8 @@
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="ghost" @click="showModal.addMonitorIndex = false">取消</Button>
-        <Button type="primary" @click="addCustomMonitoring_ok" :disabled="monitoringIndexForm.selectedProduct.length == 0">完成配置</Button>
+        <Button @click="showModal.addMonitorIndex = false">取消</Button>
+        <Button type="primary" @click="addCustomMonitoring_ok" :disabled="monitoringIndexForm.selectedProduct.length == 0 ||monitoringIndexForm.productIndex == ''">完成配置</Button>
       </div>
     </Modal>
   </div>
@@ -504,16 +504,16 @@
       this.messageData.series[0].data = mockMessageData
       this.messageData.legend.data = mockMessagelegend
       // mock图表数据
-     var chartData = {
+      var chartData = {
         "result": {
           "xaxis": ["15", "16", "17", "18", "19", "20", "21", "22", "23", "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14"],
           "disk": [{
-              name: 'host1disk',
-              data: [0, 50, 0, 10, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 10, 0, 80, 0, 0, 80, 90, 0, 0, 0, 50, 0, 10, 0, 0],
-              type: 'line',
-              stack: 'host',
-              barWidth: '60%'
-            },
+            name: 'host1disk',
+            data: [0, 50, 0, 10, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 10, 0, 80, 0, 0, 80, 90, 0, 0, 0, 50, 0, 10, 0, 0],
+            type: 'line',
+            stack: 'host',
+            barWidth: '60%'
+          },
             {
               name: 'host2disk',
               data: [10, 0, 0, 50, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 10, 0, 0],
@@ -523,95 +523,95 @@
             }
           ],
           "cpu": [{
-              name: 'host1cpu',
-              data: [0, 50, 0, 10, 0, 0, 0, 0, 20, 0, 40, 0, 0, 0, 10, 0, 0, 0, 0, 10, 90, 0, 0, 0, 0, 0, 50, 0, 10, 0, 0],
-              type: 'line',
-              stack: 'host',
-              barWidth: '60%'
-            }
+            name: 'host1cpu',
+            data: [0, 50, 0, 10, 0, 0, 0, 0, 20, 0, 40, 0, 0, 0, 10, 0, 0, 0, 0, 10, 90, 0, 0, 0, 0, 0, 50, 0, 10, 0, 0],
+            type: 'line',
+            stack: 'host',
+            barWidth: '60%'
+          }
           ],
           "memory": [{
-              name: 'host1memory',
-              data: [0, 50, 0, 10, 0, 0, 50, 0, 20, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 80, 90, 0, 0, 0, 0, 0, 50, 0, 10, 0, 0],
-              type: 'line',
-              stack: 'host',
-              barWidth: '60%'
-            }
+            name: 'host1memory',
+            data: [0, 50, 0, 10, 0, 0, 50, 0, 20, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 80, 90, 0, 0, 0, 0, 0, 50, 0, 10, 0, 0],
+            type: 'line',
+            stack: 'host',
+            barWidth: '60%'
+          }
           ],
           "flow": [{
-              name: 'host1flow',
-              data: [0, 50, 0, 10, 0, 0, 50, 0, 20, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 80, 90, 0, 0, 0, 0, 0, 50, 0, 10, 0, 0],
-              type: 'line',
-              stack: 'host',
-              barWidth: '60%'
-            }
+            name: 'host1flow',
+            data: [0, 50, 0, 10, 0, 0, 50, 0, 20, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 80, 90, 0, 0, 0, 0, 0, 50, 0, 10, 0, 0],
+            type: 'line',
+            stack: 'host',
+            barWidth: '60%'
+          }
           ]
         }
       }
       this.responseData = chartData
       // mock天，周，月数据
-     var mockweekData = {
-          "message": "请求成功",
-          "result": {
-            "xaxis": ["8-9", "8-10", "8-11", "8-12", "8-13", "8-14", "8-15"],
-            "diskUse": [{
-                'name': 'host1',
-                data: [0, 4, 0, 0, 0, 50, 0]
-              },
-              {
-                name: 'host2',
-                data: [0, 0, 0, 0, 0, 10, 0]
-              }
-            ],
-            "cpuUse": [{
-                'name': 'host1',
-                data: [0, 4, 0, 0, 0, 50, 0]
-              }
-            ],
-            "memoryUse": [{
-                'name': 'host1',
-                data: [0, 0, 0, 0, 0, 10, 0]
-              }
-            ],
-            "flowUse": [{
-                'name': 'host1',
-                data: [0, 37, 0, 30, 0, 0, 0]
-              }
-            ]
+      var mockweekData = {
+        "message": "请求成功",
+        "result": {
+          "xaxis": ["8-9", "8-10", "8-11", "8-12", "8-13", "8-14", "8-15"],
+          "diskUse": [{
+            'name': 'host1',
+            data: [0, 4, 0, 0, 0, 50, 0]
           },
-          "status": 1
-        }
+            {
+              name: 'host2',
+              data: [0, 0, 0, 0, 0, 10, 0]
+            }
+          ],
+          "cpuUse": [{
+            'name': 'host1',
+            data: [0, 4, 0, 0, 0, 50, 0]
+          }
+          ],
+          "memoryUse": [{
+            'name': 'host1',
+            data: [0, 0, 0, 0, 0, 10, 0]
+          }
+          ],
+          "flowUse": [{
+            'name': 'host1',
+            data: [0, 37, 0, 30, 0, 0, 0]
+          }
+          ]
+        },
+        "status": 1
+      }
       var mockmonthData = {
-          "message": "请求成功",
-          "result": {
-            "xaxis": ["7-17", "7-18", "7-19", "7-20", "7-21", "7-22", "7-23", "7-24", "7-25", "7-26", "7-27", "7-28", "7-29", "7-30", "7-31", "8-1", "8-2", "8-3", "8-4", "8-5", "8-6", "8-7", "8-8", "8-9", "8-10", "8-11", "8-12", "8-13", "8-14", "8-15"],
-            "diskUse": [{
-                'name': 'host1',
-                data: [0, 0, 0, 3, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 0, 0, 230, 0, 0, 0, 120, 0, 0, 4, 0, 0, 0, 10, 0]
-              },
-              {
-                name: 'host2',
-                data: [0, 0, 0, 32, 104, 103, 104, 103, 103, 102, 102, 102, 102, 102, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 0, 0, 0, 120]
-              }
-            ],
-            "cpuUse": [{
-                'name': 'host1',
-                data: [0, 0, 0, 3, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 0, 0, 230, 0, 0, 0, 120, 0, 0, 4, 0, 0, 0, 10, 0]
-              }
-            ],
-            "memoryUse": [{
-                'name': 'host1',
-                data: [0, 0, 0, 3, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 0, 0, 230, 0, 0, 0, 120, 0, 0, 4, 0, 0, 0, 10, 0]
-              }
-            ],
-            "flowUse": [{
-                'name': 'host1',
-                data: [0, 0, 0, 32, 104, 103, 104, 103, 103, 102, 102, 102, 102, 102, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 0, 0, 0, 0]
-              }
-            ]
+        "message": "请求成功",
+        "result": {
+          "xaxis": ["7-17", "7-18", "7-19", "7-20", "7-21", "7-22", "7-23", "7-24", "7-25", "7-26", "7-27", "7-28", "7-29", "7-30", "7-31", "8-1", "8-2", "8-3", "8-4", "8-5", "8-6", "8-7", "8-8", "8-9", "8-10", "8-11", "8-12", "8-13", "8-14", "8-15"],
+          "diskUse": [{
+            'name': 'host1',
+            data: [0, 0, 0, 3, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 0, 0, 230, 0, 0, 0, 120, 0, 0, 4, 0, 0, 0, 10, 0]
           },
-          "status": 1
-        }
+            {
+              name: 'host2',
+              data: [0, 0, 0, 32, 104, 103, 104, 103, 103, 102, 102, 102, 102, 102, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 0, 0, 0, 120]
+            }
+          ],
+          "cpuUse": [{
+            'name': 'host1',
+            data: [0, 0, 0, 3, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 0, 0, 230, 0, 0, 0, 120, 0, 0, 4, 0, 0, 0, 10, 0]
+          }
+          ],
+          "memoryUse": [{
+            'name': 'host1',
+            data: [0, 0, 0, 3, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 0, 0, 230, 0, 0, 0, 120, 0, 0, 4, 0, 0, 0, 10, 0]
+          }
+          ],
+          "flowUse": [{
+            'name': 'host1',
+            data: [0, 0, 0, 32, 104, 103, 104, 103, 103, 102, 102, 102, 102, 102, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 0, 0, 0, 0]
+          }
+          ]
+        },
+        "status": 1
+      }
       this.weekdata = mockweekData
       this.monthdata = mockmonthData
       this.init()
@@ -649,14 +649,14 @@
         } else {
           selectType.xAxis.data = JSON.parse(responseDataStr).result.xaxis
           selectType.series = JSON.parse(responseDataStr).result[type].map(item => {
-              item.type = 'bar'
-              return item
-            })
+            item.type = 'bar'
+            return item
+          })
           this[type + 'Polar'] = selectType
         }
       },
       timeSwitch(type) {
-        if (this.overview[type].timeType == 'day'){
+        if (this.overview[type].timeType == 'day') {
           this.chartTypeSwitch(type)
         } else if (this.overview[type].timeType == 'week') {
           this[type + 'Polar'].xAxis.data = this.weekdata.result.xaxis
@@ -717,12 +717,24 @@
             id: item.customMonitorIndex.id
           }
         })
+        this.monitoringIndexForm.allProduct = []
         Promise.all([allResource, selectedResource]).then(res => {
           if (res[0].data.status == 1 && res[1].data.status == 1) {
-
+            res[0].data.list.forEach(item => {
+              let flag = true
+              res[1].data.list.forEach(select => {
+                if (item.computerid == select.computerid) {
+                  flag = false
+                }
+              })
+              if (flag) {
+                this.monitoringIndexForm.allProduct.push(item)
+              }
+            })
+            this.monitoringIndexForm.selectedProduct = res[1].data.list
+            this.showModal.addMonitorIndex = true
           }
         })
-        this.showModal.addMonitorIndex = true
       },
       addCustomMonitoring() {
         // 初始化弹窗
@@ -761,6 +773,114 @@
         this.monitoringIndexForm.allProduct.splice(index, 1)
         this.monitoringIndexForm.selectedProduct.push(item)
       },
+      // 切换自定义监控日周月
+      cutDataCustomMonitoring(item, index) {
+        let url = ''
+        let params = {}
+        switch (item.timeType) {
+          case'today':
+            url = 'monitor/listCustomMonitorIndexTodaySingle.do'
+            params = {
+              id: item.customMonitorIndex.id
+            }
+            break
+          case'week':
+            url = 'monitor/listCustomMonitorIndexWeek.do'
+            params = {
+              id: item.customMonitorIndex.id
+            }
+            break
+          case 'month':
+            url = 'monitor/listCustomMonitorIndexWeek.do'
+            params = {
+              id: item.customMonitorIndex.id,
+              datetype: 'month'
+            }
+            break
+        }
+        this.$http.get(url, {
+          params: params
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            let name = ''
+            switch (item.name) {
+              case 'cpu':
+                name = 'CPU使用率'
+                break
+              case 'disk':
+                name = '磁盘使用率'
+                break
+              case 'memory':
+                name = '内存使用率'
+                break
+              case 'networkin':
+                name = '网进'
+                break
+              case 'networkout':
+                name = '网出'
+                break
+              case 'capacity':
+                name = '容量'
+                break
+              case 'flow':
+                name = '流量'
+                break
+              case 'gethttp':
+                name = 'get请求次数'
+                break
+              case 'posthttp':
+                name = 'post请求次数'
+                break
+              case 'puthttp':
+                name = 'put请求次数'
+                break
+              case 'deletehttp':
+                name = 'delete请求次数'
+                break
+
+            }
+            let brokenLine = {}
+            if (item.mapType == 'line') {
+              brokenLine = JSON.parse(JSON.stringify(line))
+              brokenLine.xAxis.data = res.data.list[0].x
+              res.data.list[0].data.forEach(obj => {
+                brokenLine.series.push({
+                  name: obj.computerName + name,
+                  type: 'line',
+                  data: [0, 32, 104, 103, 12,44,12,12,21,45,123],
+                  barWidth: '15%'
+                })
+              })
+            } else {
+              brokenLine = JSON.parse(JSON.stringify(bar))
+              brokenLine.xAxis.data = res.data.list[0].x
+              res.data.list[0].data.forEach(obj => {
+                brokenLine.series.push({
+                  name: obj.computerName + name,
+                  type: 'bar',
+                  data: [0, 32, 104, 103, 12,44,12,12,21,45,123],
+                  barWidth: '15%'
+                })
+              })
+            }
+            this.customMonitoringData[index].showChart = brokenLine
+          }
+        })
+      },
+      // 切换自定义监控折线和柱状图
+      cutMapCustomMonitoring(item, index) {
+        if (item.mapType == 'line') {
+          item.showChart.series.forEach(item => {
+            item.type = 'line'
+          })
+          this.customMonitoringData[index].showChart = item.showChart
+        } else {
+          item.showChart.series.forEach(item => {
+            item.type = 'bar'
+          })
+          this.customMonitoringData[index].showChart = item.showChart
+        }
+      },
       // 从监控中删除该产品
       deleteProduct(item, index) {
         this.monitoringIndexForm.selectedProduct.splice(index, 1)
@@ -771,13 +891,9 @@
         let vpcId = ''
         let diskId = ''
         let objectStorageId = ''
-        switch (this.monitoringIndexForm.productType) {
-          case '云主机':
-            computerId = this.monitoringIndexForm.selectedProduct.map(item => {
-              return item.computerid
-            })
-            break
-        }
+        computerId = this.monitoringIndexForm.selectedProduct.map(item => {
+          return item.computerid
+        })
         let url = 'monitor/addCustomMonitorIndex.do'
         this.$http.get(url, {
           params: {
@@ -825,14 +941,33 @@
                   case 'networkout':
                     name = '网出'
                     break
+                  case 'capacity':
+                    name = '容量'
+                    break
+                  case 'flow':
+                    name = '流量'
+                    break
+                  case 'gethttp':
+                    name = 'get请求次数'
+                    break
+                  case 'posthttp':
+                    name = 'post请求次数'
+                    break
+                  case 'puthttp':
+                    name = 'put请求次数'
+                    break
+                  case 'deletehttp':
+                    name = 'delete请求次数'
+                    break
+
                 }
                 brokenLine.xAxis.data = item.x
                 item.data.forEach(data => {
                   brokenLine.series.push({
                     name: data.computerName + name,
                     type: 'line',
-                    data: data.data,
-                    barWidth: '60%'
+                    data: [0, 32, 104, 103, 12,44,12,12,21,45,123],
+                    barWidth: '15%'
                   })
                 })
                 item.showChart = brokenLine
