@@ -273,7 +273,7 @@
           </FormItem>
           <div style="font-size:16px;">
             资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{renewalTotalCost}}/</span></span>
-              <span style="text-decoration: line-through">原价{{renewalOriginalCost}}</span>
+            <span style="text-decoration: line-through">原价{{renewalOriginalCost}}</span>
           </div>
         </Form>
       </div>
@@ -304,6 +304,11 @@
               <Option v-for="(item,index) in timeOptions.renewalTime" :value="item.value" :key="index">{{ item.label }}
               </Option>
             </Select>
+          </FormItem>
+          <FormItem label="是否同时变更绑定主机:" style="width: 100%;margin-bottom: 0" v-if="ratesChangeHost">
+            <CheckboxGroup v-model="ratesChangeOther">
+              <Checkbox label="变更关联云主机" v-if="ratesChangeHost"></Checkbox>
+            </CheckboxGroup>
           </FormItem>
           <div style="font-size:16px;">
             资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{ratesChangeCost}}/</span></span>
@@ -700,6 +705,9 @@
         ratesChangeOriginalCost: '--',
         ratesChangeType: '',
         ratesChangeTime: '',
+        ratesChangeHost: false,
+        ratesChangeOther: [],
+        ratesChangeConnectionsHost: '',
         timeOptions: {
           renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
           renewalTime: [],
@@ -1061,19 +1069,50 @@
         this.diskSelection = item
         this.ratesChangeType = ''
         this.ratesChangeTime = ''
-        this.showModal.ratesChange = true
+        let url = 'Disk/listDiskById.do'
+        this.$http.get(url, {
+          params: {
+            diskId: this.diskSelection.diskid,
+            changeCost: '1'
+          }
+        }).then(response => {
+          if (response.data.status === 1) {
+            if (response.data.result[0].attachComputer.length === 0) {
+              this.ratesChangeHost = false
+            } else {
+              this.ratesChangeHost = true
+              this.ratesChangeOther = ['变更关联云主机']
+              this.ratesChangeConnectionsHost = response.data.result[0].attachComputer[0].id
+            }
+            this.showModal.ratesChange = true
+          }
+        })
       },
       // 确认变更资费
       ratesChange_ok() {
+        let list = []
+        if (this.ratesChangeOther[0] == '变更关联云主机') {
+          list = [{
+            type: 1,
+            id: this.diskSelection.id
+          }, {
+            type: 0,
+            id: this.ratesChangeConnectionsHost
+          }]
+        } else {
+          list = [{
+            type: 1,
+            id: this.diskSelection.id
+          }]
+        }
+        var params = {
+          timeType: this.ratesChangeType,
+          timeValue: this.ratesChangeTime + '',
+          list: JSON.stringify(list)
+        }
         let url = 'continue/changeMoney.do'
-        this.$http.get(url, {
-          params: {
-            id: this.diskSelection.id,
-            timeType: this.ratesChangeType,
-            timeValue: this.ratesChangeTime,
-            type: 1
-          }
-        }).then(response => {
+        this.$http.post(url, params
+        ).then(response => {
           if (response.data.status == 1) {
             this.$router.push({path: 'order'})
           } else {
@@ -1272,10 +1311,10 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.renewalTotalCost = response.data.result.toFixed(2)
                 this.renewalOriginalCost = response.data.result
-                if(response.data.cuspon) {
+                if (response.data.cuspon) {
                   this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
                 }
-                if(response.data.continueDiscount) {
+                if (response.data.continueDiscount) {
                   this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
                 }
               }
@@ -1299,10 +1338,10 @@
                 if (response.status == 200 && response.data.status == 1) {
                   this.renewalTotalCost = response.data.result.toFixed(2)
                   this.renewalOriginalCost = response.data.result
-                  if(response.data.cuspon) {
+                  if (response.data.cuspon) {
                     this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
                   }
-                  if(response.data.continueDiscount) {
+                  if (response.data.continueDiscount) {
                     this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
                   }
                 }
@@ -1320,10 +1359,10 @@
                 if (response.status == 200 && response.data.status == 1) {
                   this.renewalTotalCost = response.data.result.toFixed(2)
                   this.renewalOriginalCost = response.data.result
-                  if(response.data.cuspon) {
+                  if (response.data.cuspon) {
                     this.renewalOriginalCost = Number((this.renewalOriginalCost + response.data.cuspon).toFixed(2))
                   }
-                  if(response.data.continueDiscount) {
+                  if (response.data.continueDiscount) {
                     this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
                   }
                 }
@@ -1341,26 +1380,77 @@
           this.ratesChangeCost = '--'
           this.ratesChangeOriginalCost = '--'
         } else {
+          let hostArr = this.ratesChangeOther[0] == '变更关联云主机' ? this.ratesChangeConnectionsHost : ''
           let url = 'information/getYjPrice.do'
           this.$http.get(url, {
             params: {
               timeValue: this.ratesChangeTime,
               timeType: this.ratesChangeType,
-              diskArr: this.diskSelection.id
+              diskArr: this.diskSelection.id,
+              hostIdArr: hostArr
             }
           })
             .then((response) => {
               if (response.status == 200 && response.data.status == 1) {
                 this.ratesChangeCost = response.data.result.toFixed(2)
                 this.ratesChangeOriginalCost = response.data.result
-                if(response.data.cuspon) {
+                if (response.data.cuspon) {
                   this.ratesChangeOriginalCost = Number((this.ratesChangeOriginalCost + response.data.cuspon).toFixed(2))
                 }
-                if(response.data.continueDiscount) {
+                if (response.data.continueDiscount) {
                   this.ratesChangeOriginalCost = (this.ratesChangeOriginalCost + response.data.continueDiscount).toFixed(2)
                 }
               }
             })
+        }
+      },
+      // 变更关联主机
+      ratesChangeOther() {
+        if (this.ratesChangeTime != '') {
+          if (this.ratesChangeOther[0] == '变更关联云主机') {
+            let url = 'information/getYjPrice.do'
+            this.$http.get(url, {
+              params: {
+                timeValue: this.ratesChangeTime,
+                timeType: this.ratesChangeType,
+                diskArr: this.diskSelection.id,
+                hostIdArr: this.ratesChangeConnectionsHost
+              }
+            })
+              .then((response) => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.ratesChangeCost = response.data.result.toFixed(2)
+                  this.ratesChangeOriginalCost = response.data.result
+                  if (response.data.cuspon) {
+                    this.ratesChangeOriginalCost = Number((this.ratesChangeOriginalCost + response.data.cuspon).toFixed(2))
+                  }
+                  if (response.data.continueDiscount) {
+                    this.ratesChangeOriginalCost = (this.ratesChangeOriginalCost + response.data.continueDiscount).toFixed(2)
+                  }
+                }
+              })
+          } else {
+            let url = 'information/getYjPrice.do'
+            this.$http.get(url, {
+              params: {
+                timeValue: this.ratesChangeTime,
+                timeType: this.ratesChangeType,
+                diskArr: this.diskSelection.id
+              }
+            })
+              .then((response) => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.ratesChangeCost = response.data.result.toFixed(2)
+                  this.ratesChangeOriginalCost = response.data.result
+                  if (response.data.cuspon) {
+                    this.ratesChangeOriginalCost = Number((this.ratesChangeOriginalCost + response.data.cuspon).toFixed(2))
+                  }
+                  if (response.data.continueDiscount) {
+                    this.ratesChangeOriginalCost = (this.ratesChangeOriginalCost + response.data.continueDiscount).toFixed(2)
+                  }
+                }
+              })
+          }
         }
       },
       // 观测计算属性变化，如果不是名称的变化则必须重新计算价格

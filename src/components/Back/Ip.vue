@@ -170,15 +170,12 @@
               </Select>
             </div>
           </Form-item>
-          <!-- <Form-item label="资费" style="width: 80%">
-            <span style="font-family: Microsoft YaHei;font-size: 24px;color: #2A99F2;line-height: 43px;">￥{{chargesForm.cost}}
-              <span v-if="chargesForm.timeValue!=''">/</span>
-              <span v-if="chargesForm.timeType == 'year' && chargesForm.timeValue !=''" style="font-size: 16px;">{{chargesForm.timeValue}}年</span>
-              <span v-if="chargesForm.timeType == 'month' && chargesForm.timeValue !=''" style="font-size: 16px;">{{chargesForm.timeValue}}月</span>
-            </span>
-            <span style="font-family: Microsoft YaHei;font-size: 16px;color: #2A99F2;line-height: 43px;display: block;"
-                  v-if="chargesForm.discounts">（已优惠￥{{chargesForm.discounts}} /元）</span>
-          </Form-item> -->
+          <FormItem label="是否同时变更绑定主机与NAT网关:" style="width: 80%;margin-bottom: 0" v-if="chargesHost || chargesNAT">
+            <CheckboxGroup v-model="chargesOther">
+              <Checkbox label="变更关联云主机" v-if="chargesHost"></Checkbox>
+              <Checkbox label="变更关联NAT网关" v-if="chargesNAT"></Checkbox>
+            </CheckboxGroup>
+          </FormItem>
           <div style="font-size:16px;">
             资费 <span style="color: #2b85e4; text-indent:4px;display:inline-block;">现价<span style="font-size:24px;">￥{{chargesForm.cost}}/</span></span>
             <span style="text-decoration: line-through">原价{{chargesForm.ratesChangeOriginalCost}}</span>
@@ -304,6 +301,11 @@
         renewalTotalCost: '--',
         renewalOriginalCost: '--',
         renewalOther: [],
+        chargesHost: false,
+        chargesNAT: false,
+        chargesOther: [],
+        chargesHostID: '',
+        chargesNATID: '',
         timeOptions: {
           renewalType: [{label: '包年', value: 'year'}, {label: '包月', value: 'month'}],
           renewalTime: [],
@@ -1085,22 +1087,65 @@
           this.chargesForm.timeValue = ''
           this.chargesForm.cost = '--'
           this.chargesForm.ratesChangeOriginalCost = '--'
-          this.showModal.charges = true
+          this.chargesOther = []
+          this.chargesHost = false
+          this.chargesNAT = false
+          let url = 'network/listPublicIpById.do'
+          this.$http.get(url, {
+            params: {
+              ipId: this.select.publicipid,
+              changeCost: '1'
+            }
+          }).then(response => {
+            if (response.data.status === 1) {
+              if (response.data.result[0].attachComputer.length !== 0) {
+                this.chargesHostID = response.data.result[0].attachComputer[0].id
+                this.chargesHost = true
+                this.chargesOther = ['变更关联云主机']
+              }
+              if (response.data.result[0].attachNat.length !== 0) {
+                this.chargesNATID = response.data.result[0].attachNat[0].id
+                this.chargesNAT = true
+                this.chargesOther = ['变更关联NAT网关']
+              }
+              this.showModal.charges = true
+            }
+          })
         } else {
           this.$Message.warning('请选择1个弹性IP')
           return false
         }
       },
       chargesOK() {
-        this.showModal.charges = false
-        this.$http.get('continue/changeMoney.do', {
-          params: {
+        let list = []
+        if (this.chargesOther[0] == '变更关联云主机') {
+          list = [{
+            type: 2,
+            id: this.select.id
+          }, {
+            type: 0,
+            id: this.chargesHostID
+          }]
+        } else if (this.chargesOther[0] == '变更关联NAT网关') {
+          list = [{
+            type: 2,
             id: this.select.id,
-            timeType: this.chargesForm.timeType,
-            timeValue: this.chargesForm.timeValue,
-            type: 2
-          }
-        }).then(response => {
+          }, {
+            type: 4,
+            id: this.chargesNATID
+          }]
+        } else {
+          list = [{
+            type: 2,
+            id: this.select.id
+          }]
+        }
+        let params = {
+          timeType: this.chargesForm.timeType,
+          timeValue: this.chargesForm.timeValue,
+          list: JSON.stringify(list)
+        }
+        this.$http.post('continue/changeMoney.do', params).then(response => {
             if (response.status == 200 && response.data.status == 1) {
               this.$router.push({path: 'order'})
             } else {
@@ -1163,28 +1208,59 @@
         )
       }),
       queryChargePrice() {
-        this.$http.get('information/getYjPrice.do', {
-          params: {
+        if (this.chargesOther.length != 0) {
+          let params = {}
+          let hostArr = this.chargesOther[0] == '变更关联云主机' ? this.chargesHostID : ''
+          let natArr = this.chargesOther[0] == '变更关联NAT网关' ? this.chargesNATID : ''
+          params = {
             timeValue: this.chargesForm.timeValue,
             timeType: this.chargesForm.timeType,
             ipIdArr: this.select.id,
+            hostIdArr: hostArr,
+            natArr: natArr
           }
-        }).then(response => {
-            if (response.status == 200) {
-              this.chargesForm.cost = response.data.result
-              this.chargesForm.ratesChangeOriginalCost = response.data.result
-              if (response.data.cuspon) {
-                this.chargesForm.ratesChangeOriginalCost = Number((this.chargesForm.ratesChangeOriginalCost + response.data.cuspon).toFixed(2))
+          this.$http.get('information/getYjPrice.do', {
+            params: params
+          }).then(response => {
+              if (response.status == 200) {
+                this.chargesForm.cost = response.data.result
+                this.chargesForm.ratesChangeOriginalCost = response.data.result
+                if (response.data.cuspon) {
+                  this.chargesForm.ratesChangeOriginalCost = Number((this.chargesForm.ratesChangeOriginalCost + response.data.cuspon).toFixed(2))
+                }
+                if (response.data.continueDiscount) {
+                  this.chargesForm.ratesChangeOriginalCost = (this.chargesForm.ratesChangeOriginalCost + response.data.continueDiscount).toFixed(2)
+                }
+              } else {
+                this.chargesForm.cost = '--'
+                this.chargesForm.ratesChangeOriginalCost = '--'
               }
-              if (response.data.continueDiscount) {
-                this.chargesForm.ratesChangeOriginalCost = (this.chargesForm.ratesChangeOriginalCost + response.data.continueDiscount).toFixed(2)
-              }
-            } else {
-              this.chargesForm.cost = '--'
-              this.chargesForm.ratesChangeOriginalCost = '--'
             }
-          }
-        )
+          )
+        } else {
+          this.$http.get('information/getYjPrice.do', {
+            params: {
+              timeValue: this.chargesForm.timeValue,
+              timeType: this.chargesForm.timeType,
+              ipIdArr: this.select.id,
+            }
+          }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.chargesForm.cost = response.data.result
+                this.chargesForm.ratesChangeOriginalCost = response.data.result
+                if (response.data.cuspon) {
+                  this.chargesForm.ratesChangeOriginalCost = Number((this.chargesForm.ratesChangeOriginalCost + response.data.cuspon).toFixed(2))
+                }
+                if (response.data.continueDiscount) {
+                  this.chargesForm.ratesChangeOriginalCost = (this.chargesForm.ratesChangeOriginalCost + response.data.continueDiscount).toFixed(2)
+                }
+              } else {
+                this.chargesForm.cost = '--'
+                this.chargesForm.ratesChangeOriginalCost = '--'
+              }
+            }
+          )
+        }
       },
       renewOk() {
         let list = []
@@ -1224,7 +1300,7 @@
           }
         })
       },
-      change(page){
+      change(page) {
         this.page = page
         // 获取ip数据
         axios.get('network/listPublicIp.do', {
@@ -1339,6 +1415,76 @@
                   }
                   if (response.data.continueDiscount) {
                     this.renewalOriginalCost = (this.renewalOriginalCost + response.data.continueDiscount).toFixed(2)
+                  }
+                }
+              })
+          }
+        }
+      },
+      chargesOther() {
+        if (this.chargesForm.timeValue != '') {
+          if (this.chargesOther[0] == '变更关联云主机') {
+            let url = 'information/getYjPrice.do'
+            this.$http.get(url, {
+              params: {
+                timeValue: this.chargesForm.timeValue,
+                timeType: this.chargesForm.timeType,
+                ipIdArr: this.select.id,
+                hostIdArr: this.chargesHostID
+              }
+            })
+              .then((response) => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.chargesForm.cost = response.data.result
+                  this.chargesForm.ratesChangeOriginalCost = response.data.result
+                  if (response.data.cuspon) {
+                    this.chargesForm.ratesChangeOriginalCost = Number((this.chargesForm.ratesChangeOriginalCost + response.data.cuspon).toFixed(2))
+                  }
+                  if (response.data.continueDiscount) {
+                    this.chargesForm.ratesChangeOriginalCost = (this.chargesForm.ratesChangeOriginalCost + response.data.continueDiscount).toFixed(2)
+                  }
+                }
+              })
+          } else if (this.renewalOther[0] == '变更NAT网关') {
+            let url = 'information/getYjPrice.do'
+            this.$http.get(url, {
+              params: {
+                timeValue: this.chargesForm.timeValue,
+                timeType: this.chargesForm.timeType,
+                ipIdArr: this.select.id,
+                natArr: this.chargesNATID
+              }
+            })
+              .then((response) => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.chargesForm.cost = response.data.result
+                  this.chargesForm.ratesChangeOriginalCost = response.data.result
+                  if (response.data.cuspon) {
+                    this.chargesForm.ratesChangeOriginalCost = Number((this.chargesForm.ratesChangeOriginalCost + response.data.cuspon).toFixed(2))
+                  }
+                  if (response.data.continueDiscount) {
+                    this.chargesForm.ratesChangeOriginalCost = (this.chargesForm.ratesChangeOriginalCost + response.data.continueDiscount).toFixed(2)
+                  }
+                }
+              })
+          } else {
+            let url = 'information/getYjPrice.do'
+            this.$http.get(url, {
+              params: {
+                timeValue: this.chargesForm.timeValue,
+                timeType: this.chargesForm.timeType,
+                ipIdArr: this.select.id,
+              }
+            })
+              .then((response) => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.chargesForm.cost = response.data.result
+                  this.chargesForm.ratesChangeOriginalCost = response.data.result
+                  if (response.data.cuspon) {
+                    this.chargesForm.ratesChangeOriginalCost = Number((this.chargesForm.ratesChangeOriginalCost + response.data.cuspon).toFixed(2))
+                  }
+                  if (response.data.continueDiscount) {
+                    this.chargesForm.ratesChangeOriginalCost = (this.chargesForm.ratesChangeOriginalCost + response.data.continueDiscount).toFixed(2)
                   }
                 }
               })
