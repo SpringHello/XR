@@ -75,6 +75,7 @@
       }
     },
     beforeRouteEnter(to, from, next){
+      console.log(to)
       var first = axios.get('document/getFirstTitle.do')
       var third = axios.get('document/getThirdTitle.do', {
         params: {

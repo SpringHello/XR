@@ -1432,7 +1432,7 @@
           {type: 0, id: this.currentHost[0].id}
         ]
         var list = host.concat(iplist, disklist)
-        list = JSON.stringify(list)
+        list = encodeURI(JSON.stringify(list))
         let url = 'continue/changeMoney.do'
         this.$http.get(url, {
           params: {

@@ -169,11 +169,15 @@
           },
           {
             title: '前端口',
-            key: 'publicstartport'
+            render: (h, object) => {
+              return h('span', {}, `${object.row.publicstartport}--${object.row.publicendport}`)
+            }
           },
           {
             title: '后端口',
-            key: 'publicendport'
+            render: (h, object) => {
+              return h('span', {}, `${object.row.privatestartport}--${object.row.privateendport}`)
+            }
           },
           {
             title: '绑定主机',

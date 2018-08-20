@@ -315,7 +315,7 @@
           {
             title: '操作',
             render: (h, params) => {
-              if ( params.row.status == 1) {
+              if (params.row.status == 1) {
                 return h('span', {
                   style: {
                     color: '#2A99F2',
@@ -327,7 +327,7 @@
                     }
                   }
                 }, '以备份新建磁盘')
-              } else{
+              } else {
                 return h('span', {
                   style: {
                     color: '#495060',
@@ -422,7 +422,7 @@
           }, {
             title: '创建时间',
             key: 'createtime',
-            width:160
+            width: 160
           }, {
             title: '应用磁盘',
             render: (h, params) => {
@@ -647,7 +647,7 @@
     },
     beforeRouteEnter(to, from, next) {
       // 获取备份列表数据
-      var diskBackupsResponse = axios.get('Snapshot/listDiskSnapshots.do',{
+      var diskBackupsResponse = axios.get('Snapshot/listDiskSnapshots.do', {
         params: {
           zoneId: $store.state.zone.zoneid,
           page: 1,
@@ -910,7 +910,7 @@
         var diskParams = this.resourceDisk.map(function (item) {
           return item.resourcesId
         })
-        this.$http.get('Disk/updateDiskIntoBackUpStrategy.do',{
+        this.$http.get('Disk/updateDiskIntoBackUpStrategy.do', {
           params: {
             backUpStrategyId: this.strategyId,
             diskIds: diskParams.join(',')
@@ -1014,7 +1014,7 @@
       },
       /* 列出磁盘备份 */
       listDiskSnapshots () {
-        this.$http.get('Snapshot/listDiskSnapshots.do',{
+        this.$http.get('Snapshot/listDiskSnapshots.do', {
           params: {
             pageSize: 10,
             page: this.diskBackupPage
@@ -1055,7 +1055,7 @@
       },
       /* 确认创建磁盘备份策略 */
       createDiskBackupStrategy_ok () {
-        this.$http.get('Disk/createDiskBackUpStrategy.do',{
+        this.$http.get('Disk/createDiskBackUpStrategy.do', {
           params: {
             strategyName: this.backupsForm.backupsName,
             keepCount: this.backupsForm.keepNumber,
@@ -1098,15 +1098,17 @@
         this.diskForm.name = data.name
         this.diskForm.diskSize = data.disksize
         this.diskForm.diskSnapshotId = data.snapshotid
-        this.diskForm.diskType = data.diskOffer === 'ssd' ? '超高性能型' : data.diskOffer === 'sas' ? '性能型' : '存储型'
+        this.diskForm.diskType = data.diskoffer === 'ssd' ? '超高性能型' : data.diskOffer === 'sas' ? '性能型' : '存储型'
+        this.diskForm.dt = data.diskoffer
       },
       /* 确认以备份创建新磁盘，跳转订单*/
       createBackupsToDisk_ok () {
-        this.$http.get('Disk/createVolume.do',{
+        console.log(this.diskForm)
+        this.$http.get('Disk/createVolume.do', {
           params: {
             diskSize: this.diskForm.diskSize,
             diskName: this.diskForm.diskName,
-            diskOfferingId: diskType,
+            diskOfferingId: this.diskForm.dt,
             timeType: this.diskForm.timeType,
             timeValue: this.diskForm.timeValue || 1,
             diskSnapshotId: this.diskForm.diskSnapshotId,
@@ -1149,7 +1151,7 @@
           status: 3,
         }
         this.diskBackupsData.push(diskBackup)
-        this.$http.get('Snapshot/createDiskSnapshot.do',{
+        this.$http.get('Snapshot/createDiskSnapshot.do', {
           params: {
             diskId: this.createBackupsForm.diskId,
             name: this.createBackupsForm.backupsName
@@ -1174,7 +1176,7 @@
               item.status = 2
             }
           })
-          axios.get('Snapshot/deleteDiskSnapshot.do',{
+          axios.get('Snapshot/deleteDiskSnapshot.do', {
             params: {
               id: this.diskBackupsSelection.id,
               zoneId: this.diskBackupsSelection.zoneid
@@ -1220,7 +1222,7 @@
               item.status = 2
             }
           })
-          axios.get('Disk/deleteDiskBackUpStrategy.do',{
+          axios.get('Disk/deleteDiskBackUpStrategy.do', {
             params: {
               id: this.diskSelectionStrategy.id,
               zoneId: this.diskSelectionStrategy.zoneid
@@ -1271,7 +1273,7 @@
     watch: {
       /* 如果标签切换到备份策略，调用列出策略方法 */
       tabPane () {
-        if (this.tabPane === 'diskBackupsStrategy'){
+        if (this.tabPane === 'diskBackupsStrategy') {
           this.listDiskBackUpStrategy()
         } else {
           this.listDiskSnapshots()

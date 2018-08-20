@@ -33,7 +33,7 @@
             <li v-if="balanceInfo.publicport">外网端口：{{ balanceInfo.publicport}}</li>
             <li v-if="balanceInfo.sourceport">源端口：{{balanceInfo.sourceport}}</li>
             <li v-if="balanceInfo.instanceport">实例端口：{{balanceInfo.instanceport}}</li>
-            <li style="margin-left: 618px;color: #2A99F2;cursor: pointer" @click="bind(balanceInfo.balanceId)">添加主机</li>
+            <li style="margin-left: 618px;color: #2A99F2;cursor: pointer" @click="bind(balanceInfo)">添加主机</li>
           </ul>
           <Table :columns="hostColumns" :data="hostData"></Table>
         </div>
@@ -179,6 +179,7 @@
       if (sessionStorage.getItem('balanceInfo')) {
         this.balanceInfo = JSON.parse(sessionStorage.getItem('balanceInfo'))
       }
+      console.log(this.balanceInfo)
       this.listHostByBalance()
     },
     methods: {
@@ -202,14 +203,14 @@
         })
       },
       // 负载均衡绑定主机
-      bind(loadbalanceId){
+      bind(loadbalance){
         var internalLoadbalance = this.balanceInfo._internal ? '1' : '0'
         this.showModal.bind = true
         this.$http.get('network/showLoadBalanceVM.do', {
           params: {
             netwrokId: this.balanceInfo.networkid,
             internalLoadbalance: internalLoadbalance,
-            loadbalanceId: loadbalanceId
+            loadbalanceId: this.balanceInfo.loadbalanceroleid || this.balanceInfo.lbid
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {

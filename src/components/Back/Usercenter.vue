@@ -974,10 +974,10 @@
           </TabPane>
 
           <!--access key pane-->
-          <Tab-pane label="Access Key" name="key">
+          <!--<Tab-pane label="Access Key" name="key">
             <Button type="primary" @click="keymodal" style="margin-bottom:10px">创建Access Key</Button>
             <Table :columns="keyColumns" :data="keyData"></Table>
-          </Tab-pane>
+          </Tab-pane>-->
         </Tabs>
       </div>
     </div>
@@ -1376,9 +1376,9 @@
       }
       const validaRegisteredLegalPersonID = (rule, value, callback) => {
         if (this.notAuth.companyAuthForm.legalPersonIDFront == '') {
-          return callback(new Error('请上传公司法人身份证正面'));
+          return callback(new Error('请上传公司法人身份证正面111'));
         } else if (this.notAuth.companyAuthForm.legalPersonIDBack == '') {
-          return callback(new Error('请上传公司法人身份证反面'));
+          return callback(new Error('请上传公司法人身份证反面111'));
         } else {
           callback()
         }
@@ -1577,10 +1577,10 @@
               {validator: validaRegisteredBusinessLicenseNumber}
             ],
             combine: [
-              {required: true, message: '请上传公司营业执照'}
+              {required: true, message: '请上传公司营业执照1222', trigger: 'submit'}
             ],
             legalPersonID: [
-              {validator: validaRegisteredLegalPersonID}
+              {validator: validaRegisteredLegalPersonID, trigger: 'submit'}
             ],
             agentID: [
               {validator: validaRegisteredAgentID}

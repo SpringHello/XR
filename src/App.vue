@@ -137,15 +137,16 @@
             <p style="margin:0px;margin-right: 20px;">{{item.time}}</p>
             <li style="cursor: auto">{{item.title}}</li>
             <li>
-              <router-link to="http://www.miitbeian.gov.cn/">{{item.preparation}}</router-link>
+              <a href="http://www.miitbeian.gov.cn/" target="_blank" style="color:#fff">{{item.preparation}}</a>
             </li>
             <li>
-              <router-link to="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922">
+              <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802024922" target="_blank"
+                 style="color:#fff">
                 <img src="./assets/img/app/record.png" style="vertical-align: middle;margin-right: 5px">{{item.desc}}
-              </router-link>
+              </a>
             </li>
             <li>
-              <router-link to="/ruicloud/about">{{item.msg}}</router-link>
+              <router-link to="/ruicloud/about" style="color:#fff">{{item.msg}}</router-link>
             </li>
           </ul>
         </div>
