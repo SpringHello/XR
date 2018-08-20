@@ -182,7 +182,166 @@
                   <FormItem label="策略名称" prop="strategyName">
                     <Input v-model="newAlarmStrategyForm.strategyName" placeholder="请输入"></Input>
                   </FormItem>
-                  <Button type="primary" @click="newAlarmStrategy_ok">完成</Button>
+                  <FormItem label="策略类型" prop="strategyType">
+                    <Input v-model="newAlarmStrategyForm.strategyType" placeholder="请输入"></Input>
+                  </FormItem>
+                  <FormItem label="告警对象">
+                    <RadioGroup v-model="newAlarmStrategyForm.alarmObj">
+                        <Radio label="all">全部</Radio>
+                        <Radio label="part">选择部分对象</Radio>
+                    </RadioGroup>
+                  </FormItem>
+                  <div class="list-wrap">
+                    <div class="list">
+                      <p>该区域下所有主机</p>
+                      <ul>
+                        <li v-for="(item,index) in strategyhost.allHost" :key="index">
+                          <span>{{ item.name}}</span>
+                          <i class="icon-btn" v-if="strategyhost.selectedHost.length<5&&item.name !=''" @click="addHost(item,index)">+ 添加</i>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="center-gap">
+                      <span> →</span>
+                      <span>←</span>
+                    </div>
+                    <div class="list">
+                      <p>已选择主机</p>
+                      <ul>
+                        <li v-for="(item,index) in strategyhost.selectedHost" :key="index">
+                          <span>{{ item.name}}</span>
+                          <i class="icon-btn" @click="deleteHost(item,index)"><Icon type="ios-trash-outline" style="font-size:14px"></Icon> 删除</i>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div class="alarm-strategy">
+                    <p class="headline">告警策略</p>
+                    <div class="content">
+                      <div>
+                        <p>指标告警</p>
+                        <FormItem
+                              v-for="(item, index) in targetformDynamic.items"
+                              v-if="item.status"
+                              :key="index">
+                          <Row :gutter="16">
+                              <Col span="4">
+                                  <Select v-model="target.targetmodel" >
+                                      <Option v-for="item in target.target" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  </Select>
+                              </Col>
+                              <Col span="4">
+                                  <Select v-model="target.StatisticalCyclemodel" >
+                                      <Option v-for="item in target.StatisticalCycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  </Select>
+                              </Col>
+                              <Col span="2">
+                                  <Select v-model="target.standardmodel">
+                                      <Option v-for="item in target.standard" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  </Select>
+                              </Col>
+                              <Col span="2" class="Percentage">
+                                   <Select v-model="target.Percentagemodel">
+                                      <Option v-for="item in target.Percentage" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  </Select>
+                              </Col>
+                              <Col span="4">
+                                  <Select v-model="target.keepCyclemodel" >
+                                      <Option v-for="item in target.keepCycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  </Select>
+                              </Col>
+                              <Col span="4">
+                                  <Select v-model="target.frequencymodel" >
+                                      <Option v-for="item in target.frequency" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  </Select>
+                              </Col>
+                              <Col span="1">
+                                  <Button type="text" @click="targetHandleRemove(index)">×</Button>
+                              </Col>
+                          </Row>
+                      </FormItem>
+                      <FormItem>
+                          <Button type="text" @click="targetHandleAdd" style="color:#2A99F2">添加</Button>
+                      </FormItem>
+                      </div>
+                      <div> 
+                        <p>事件告警</p>
+                         <FormItem
+                              v-for="(item, index) in eventformDynamic.items"
+                              v-if="item.status"
+                              :key="index">
+                          <Row :gutter="16">
+                              <Col span="4">
+                                  <Select v-model="event.targetmodel" >
+                                      <Option v-for="item in event.target" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  </Select>
+                              </Col>
+                              <Col span="4">
+                                  <Select v-model="event.StatisticalCyclemodel" >
+                                      <Option v-for="item in event.StatisticalCycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  </Select>
+                              </Col>
+                              <Col span="4">
+                                  <Select v-model="event.keepCyclemodel" >
+                                      <Option v-for="item in event.keepCycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  </Select>
+                              </Col>
+                              <Col span="4">
+                                  <Select v-model="event.frequencymodel" >
+                                      <Option v-for="item in event.frequency" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  </Select>
+                              </Col>
+                              <Col span="1">
+                                  <Button type="text" @click="eventHandleRemove(index)">×</Button>
+                              </Col>
+                          </Row>
+                      </FormItem>
+                      <FormItem>
+                          <Button type="text" @click="eventHandleAdd" style="color:#2A99F2">添加</Button>
+                      </FormItem>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="alarm-channel">
+                    <FormItem label="告警渠道" prop="channel">
+                        <CheckboxGroup v-model="newAlarmStrategyForm.channel">
+                            <Checkbox label="msg">短信</Checkbox>
+                            <Checkbox label="email">邮箱</Checkbox>
+                            <Checkbox label="inner">站内信</Checkbox>
+                        </CheckboxGroup>
+                    </FormItem>
+                    <div class="contacts">
+                    <p>告警接受人</p>
+                    <div class="list-wrap">
+                      <div class="list">
+                        <p>所有联系人</p>
+                        <ul>
+                          <li v-for="(item,index) in contacts.allContacts" :key="index">
+                            <span>{{ item.name}}</span>
+                            <i class="icon-btn" v-if="contacts.selectedContacts.length<5&&item.name !=''" @click="addContacts(item,index)">+ 添加</i>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="center-gap">
+                        <span> →</span>
+                        <span>←</span>
+                      </div>
+                      <div class="list">
+                        <p>已选择联系人</p>
+                        <ul>
+                          <li v-for="(item,index) in contacts.selectedContacts" :key="index">
+                            <span>{{ item.name}}</span>
+                            <i class="icon-btn" @click="deleteContacts(item,index)"><Icon type="ios-trash-outline" style="font-size:14px"></Icon> 删除</i>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                  <p>提示：您可以在个人中心—告警中心—联系人管中添加和编辑联系人信息。</p>
+                  </div>
+                  
+                  <Button type="primary" @click="newAlarmStrategy_ok" style="margin-top:20px;">完成</Button>
                 </Form>
               </div>
             </div>
@@ -272,6 +431,264 @@
   export default {
     data() {
       return {
+      targetIndex: 1,
+      targetformDynamic: {
+        items: [
+          {
+            value: '',
+            index: 1,
+            status: 1
+          }
+        ]
+      },
+      target: {
+        targetmodel: 'cpu',
+        target: [
+          {
+            label: 'cpu利用率',
+            value: 'cpu'
+          },
+          {
+            label: '内存使用率',
+            value: 'memory'
+          },
+          {
+            label: '最近一小时外网流量统计',
+            value: 'flow'
+          },
+          {
+            label: '磁盘链接速率',
+            value: 'disk'
+          }
+        ],
+        StatisticalCyclemodel: '1',
+        StatisticalCycle: [
+          {
+            label: '统计周期：1分钟',
+            value: '1'
+          },
+          {
+            label: '统计周期：5分钟',
+            value: '5'
+          },
+          {
+            label: '统计周期：10分钟',
+            value: '10'
+          },
+          {
+            label: '统计周期：15分钟',
+            value: '15'
+          },
+        ],
+        standardmodel: '>',
+        standard: [
+          {
+            label: '>',
+            value: '>'
+          },
+          {
+            label: '<',
+            value: '<'
+          },
+          {
+            label: '=',
+            value: '='
+          },
+          {
+            label: '>=',
+            value: '>='
+          },
+          {
+            label: '<=',
+            value: '<='
+          },
+          {
+            label: '!=',
+            value: '!='
+          }
+        ],
+        Percentagemodel: '80',
+        Percentage: [
+          {
+            label: '80%',
+            value: '80'
+          },
+          {
+            label: '60%',
+            value: '60'
+          }
+        ],
+        keepCyclemodel: '1',
+        keepCycle: [
+          {
+            label: '持续1个周期',
+            value: '1'
+          },
+          {
+            label: '持续2个周期',
+            value: '2'
+          },
+          {
+            label: '持续3个周期',
+            value: '3'
+          },
+          {
+            label: '持续4个周期',
+            value: '4'
+          },
+          {
+            label: '持续5个周期',
+            value: '5'
+          }
+        ],
+        frequencymodel: '1',
+        frequency: [
+          {
+            label: '每天警告1次',
+            value: '1'
+          },
+          {
+            label: '每天警告2次',
+            value: '2'
+          }
+        ],
+      },
+      eventIndex: 1,
+      eventformDynamic: {
+        items: [
+          {
+            value: '',
+            index: 1,
+            status: 1
+          }
+        ]
+      },
+      event: {
+        targetmodel: '1',
+        target: [
+          {
+            label: 'XXX端口ping不可达',
+            value: '1'
+          },
+          {
+            label: '应用中断',
+            value: '2'
+          }
+        ],
+        StatisticalCyclemodel: '1',
+        StatisticalCycle: [
+          {
+            label: '统计周期：1分钟',
+            value: '1'
+          },
+          {
+            label: '统计周期：5分钟',
+            value: '5'
+          },
+          {
+            label: '统计周期：10分钟',
+            value: '10'
+          },
+          {
+            label: '统计周期：15分钟',
+            value: '15'
+          },
+        ],
+        standardmodel: '>',
+        standard: [
+          {
+            label: '>',
+            value: '>'
+          },
+          {
+            label: '<',
+            value: '<'
+          },
+          {
+            label: '=',
+            value: '='
+          },
+          {
+            label: '>=',
+            value: '>='
+          },
+          {
+            label: '<=',
+            value: '<='
+          },
+          {
+            label: '!=',
+            value: '!='
+          }
+        ],
+        Percentagemodel: '80',
+        Percentage: [
+          {
+            label: '80%',
+            value: '80'
+          },
+          {
+            label: '60%',
+            value: '60'
+          }
+        ],
+        keepCyclemodel: '1',
+        keepCycle: [
+          {
+            label: '持续1个周期',
+            value: '1'
+          },
+          {
+            label: '持续2个周期',
+            value: '2'
+          },
+          {
+            label: '持续3个周期',
+            value: '3'
+          },
+          {
+            label: '持续4个周期',
+            value: '4'
+          },
+          {
+            label: '持续5个周期',
+            value: '5'
+          }
+        ],
+        frequencymodel: '1',
+        frequency: [
+          {
+            label: '每天警告1次',
+            value: '1'
+          },
+          {
+            label: '每天警告2次',
+            value: '2'
+          }
+        ],
+      },
+      strategyhost: {
+        allHost: [
+          { name: 'host1' },
+          { name: 'host2' },
+          { name: 'host3' },
+          { name: 'host4' },
+          { name: 'host5' },
+          { name: 'host6' },
+        ],
+        selectedHost: []
+      },
+      contacts: {
+        allContacts: [
+          { name: 'Contacts1' },
+          { name: 'Contacts2' },
+          { name: 'Contacts3' },
+          { name: 'Contacts4' },
+          { name: 'Contacts5' },
+          { name: 'Contacts6' },
+        ],
+        selectedContacts: []
+      },
         weekdata: null,
         monthdata: null,
         messageData: messageMonitor,
@@ -475,7 +892,9 @@
         ],
         alarmListData: [{}],
         newAlarmStrategyForm: {
-          strategyName: ''
+          strategyName: '',
+          channel: 'msg'
+          
         },
         newAlarmStrategyFormRuleValidate: {
           strategyName: [
@@ -617,6 +1036,28 @@
       this.init()
     },
     methods: {
+      targetHandleAdd () {
+          this.targetIndex++;
+          this.targetformDynamic.items.push({
+              value: '',
+              index: this.index,
+              status: 1
+          })
+      },
+      targetHandleRemove (index) {
+          this.targetformDynamic.items[index].status = 0;
+      },
+      eventHandleAdd () {
+          this.eventIndex++;
+          this.eventformDynamic.items.push({
+              value: '',
+              index: this.index,
+              status: 1
+          })
+      },
+      eventHandleRemove (index) {
+          this.eventformDynamic.items[index].status = 0;
+      },
       init() {
         this.chartTypeSwitch('disk')
         this.chartTypeSwitch('cpu')
@@ -744,7 +1185,7 @@
       getIndexResource() {
         let url = 'monitor/listZoneVMAndDiskAndVpcAndObject.do'
         if (typeof (this.monitoringIndexForm.productIndex) != 'undefined') {
-          this.$http.get(url, {
+          this.$http.get(url, {   
             params: {
               productType: this.monitoringIndexForm.productType,
               index: this.monitoringIndexForm.productIndex
@@ -765,6 +1206,24 @@
       deleteProduct(item, index) {
         this.monitoringIndexForm.selectedProduct.splice(index, 1)
         this.monitoringIndexForm.allProduct.push(item)
+      },
+      addHost(item, index) {
+        this.strategyhost.allHost.splice(index, 1)
+        this.strategyhost.selectedHost.push(item)
+      },
+      // 从监控中删除该产品
+      deleteHost(item, index) {
+        this.strategyhost.selectedHost.splice(index, 1)
+        this.strategyhost.allHost.push(item)
+      },
+      addContacts(item, index) {
+        this.contacts.allContacts.splice(index, 1)
+        this.contacts.selectedContacts.push(item)
+      },
+      // 从监控中删除该产品
+      deleteContacts(item, index) {
+        this.contacts.selectedContacts.splice(index, 1)
+        this.contacts.allContacts.push(item)
       },
       addCustomMonitoring_ok() {
         let computerId = ''
@@ -1086,4 +1545,88 @@
       }
     }
   }
+  .list-wrap{
+    display: flex;
+    justify-content: flex-start;
+    padding-bottom: 20px;
+    border-bottom: solid 1px #D8D8D8; 
+    .list{
+      width:373px;
+      height:218px;
+      border-radius:2px;
+      border:1px solid rgba(216,216,216,1);
+      font-size: 12px;
+      overflow: auto;
+      p{
+        padding: 10px;
+        color: #333333;
+      }
+      ul {
+        li{
+          color: #666666;
+          padding: 0 20px 0 10px;
+          line-height: 26px;
+          .icon-btn{
+            float: right;
+            color:rgba(42,153,242,1);
+            font-style: normal;
+            font-size: 10px;
+            cursor: pointer
+          }
+        }
+        li:nth-of-type(2n+1) {
+          background:rgba(247,247,247,1);
+        }
+      }
+    }
+    .center-gap{
+      padding: 0 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      color: #999999;
+      span{
+        display: block;
+      }
+    }
+  }
+  .alarm-strategy{
+    margin-top: 20px;
+    color:rgba(17,17,17,0.65);
+    font-size: 12px;
+    .headline{
+      font-size:14px;
+      line-height:20px;
+    }
+    .content{
+      margin-top: 10px;
+      width:1100px;
+      padding: 10px;
+      background:rgba(247,247,247,1);
+      border-radius:2px;
+      border:1px solid rgba(216,216,216,1);
+      p{
+        margin-bottom: 10px;
+      }
+    }
+  }
+  .alarm-channel {
+    margin-top: 20px;
+    border-top: solid 1px #D8D8D8;
+    padding-top: 20px;
+    .contacts {
+      >p {
+        font-size:14px;
+        color:rgba(102,102,102,1);
+        line-height:36px;
+      }
+      .list-wrap{
+        border-bottom:none;
+        padding-bottom: 10px;
+      }
+    }
+    border-bottom:solid 1px #D8D8D8; 
+    padding-bottom: 20px; 
+  }
+  
 </style>
