@@ -143,8 +143,8 @@
                 <div class="cm-item-switch">
                   <RadioGroup type="button" v-model="item.timeType" @on-change="cutDataCustomMonitoring(item,index)">
                     <Radio label="today">今日</Radio>
-                    <Radio label="week">本周</Radio>
-                    <Radio label="month">本月</Radio>
+                    <Radio label="week">近一周</Radio>
+                    <Radio label="month">近30天</Radio>
                   </RadioGroup>
                   <div>
                     <Button type="primary" style="margin-right: 5px">导出</Button>
@@ -855,7 +855,7 @@
                 brokenLine.series.push({
                   name: obj.computerName + name,
                   type: 'line',
-                  data: [0, 32, 104, 103, 12, 44, 12, 12, 21, 45, 123],
+                  data: obj.data,
                   barWidth: '15%'
                 })
               })
@@ -866,7 +866,7 @@
                 brokenLine.series.push({
                   name: obj.computerName + name,
                   type: 'bar',
-                  data: [0, 32, 104, 103, 12, 44, 12, 12, 21, 45, 123],
+                  data: obj.data,
                   barWidth: '15%'
                 })
               })
@@ -876,7 +876,8 @@
               mapType: item.mapType,
               timeType: item.timeType,
               customMonitorIndex: item.customMonitorIndex,
-              name: item.name
+              name: item.name,
+              x: brokenLine.xAxis.data
             }
             this.customMonitoringData.splice(index, 1, params)
           }
@@ -884,21 +885,38 @@
       },
       // 切换自定义监控折线和柱状图
       cutMapCustomMonitoring(item, index) {
+        console.log(item)
+        let brokenLine = {}
         if (item.mapType == 'line') {
-          item.showChart.series.forEach(item => {
-            item.type = 'line'
+          brokenLine = JSON.parse(JSON.stringify(line))
+          brokenLine.xAxis.data = item.x
+          item.showChart.series.forEach(series1 => {
+            brokenLine.series.push({
+              name: series1.name,
+              type: 'line',
+              data: series1.data,
+              barWidth: '15%'
+            })
           })
         } else {
-          item.showChart.series.forEach(item => {
-            item.type = 'bar'
+          brokenLine = JSON.parse(JSON.stringify(bar))
+          brokenLine.xAxis.data = item.x
+          item.showChart.series.forEach(series2 => {
+            brokenLine.series.push({
+              name: series2.name,
+              type: 'bar',
+              data: series2.data,
+              barWidth: '15%'
+            })
           })
         }
         let params = {
-          showChart: item.showChart,
+          showChart: brokenLine,
           mapType: item.mapType,
           timeType: item.timeType,
           customMonitorIndex: item.customMonitorIndex,
-          name: item.name
+          name: item.name,
+          x: brokenLine.xAxis.data
         }
         this.customMonitoringData.splice(index, 1, params)
       },
@@ -1056,7 +1074,7 @@
                   brokenLine.series.push({
                     name: data.computerName + name,
                     type: 'line',
-                    data: [0, 32, 104, 103, 12, 44, 12, 12, 21, 20, 1],
+                    data: data.data,
                     barWidth: '15%'
                   })
                 })
