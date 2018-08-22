@@ -242,13 +242,6 @@
             }]
           },
           {
-            mainName: '云数据库',
-            type: 'Database',
-            subItem: [
-              {subName: '云数据库', href:'https://bj.xrcloud.net/ruicloud/cloudDatabase'}
-            ]
-          },
-          {
             mainName: '云存储',
             type: 'storage',
             subItem: [
