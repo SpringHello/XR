@@ -644,7 +644,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="updateCors = false">取消</Button>
-        <Button type="primary" @click="updateCros">确定新建</Button>
+        <Button type="primary" @click="updateCros">确定修改</Button>
       </div>
     </Modal>
 
@@ -1564,17 +1564,17 @@
         this.$refs.oldCros.validate((valid) =>{
           if(valid){
             this.updateCors = false;
-            let expose = this.updateCorsForm.ExposeHeaders.split('\n');
+            let expose = this.updateCorsForm.exposeheaders.split('\n');
             let exposeReal = [];
             for(let item of expose){
               if(item != ''){
                 exposeReal.push(item);
               }
             }
-            let allows = this.updateCorsForm.allowsHeaders.split('\n');
+            let allows = this.updateCorsForm.allowsheaders.split('\n');
             let orgins = this.updateCorsForm.orgins.split('\n');
             let corsObject =  {orgins:'修改中',hide:1,methods:'————',allowsheaders:'————',exposeheaders:'————',maxage:'————'}
-            this.corsData.splice(index,1,corsObject);
+            this.corsData.splice(this.corsIndex,1,corsObject);
             this.$http.post('cors/updateCors.do',{
               bucketName:sessionStorage.getItem('bucketName'),
               orgins:orgins.join(','),
