@@ -2,19 +2,19 @@
   <div id="back">
     <header>
       <div class="wrapper">
-        <a href="https://bj.xrcloud.net/ruicloud/home" class="logo">
+        <a href="https://www.xrcloud.net/ruicloud/home" class="logo">
           <div></div>
         </a>
         <div class="operate">
           <ul>
             <li>
-              <a href="https://bj.xrcloud.net/ruicloud/overview" :class="{active:pageInfo.path=='overview'}"><span>总览</span></a>
+              <a href="https://www.xrcloud.net/ruicloud/overview" :class="{active:pageInfo.path=='overview'}"><span>总览</span></a>
             </li>
             <li>
-              <a href="https://bj.xrcloud.net/ruicloud/work"  :class="{active:pageInfo.path=='work'}"><span>工单</span></a>
+              <a href="https://www.xrcloud.net/ruicloud/work"  :class="{active:pageInfo.path=='work'}"><span>工单</span></a>
             </li>
             <li>
-              <a  href="https://bj.xrcloud.net/ruicloud/renew" :class="{active:pageInfo.path=='renew'}"><span>一键续费</span></a>
+              <a  href="https://www.xrcloud.net/ruicloud/renew" :class="{active:pageInfo.path=='renew'}"><span>一键续费</span></a>
             </li>
 
           </ul>
@@ -23,13 +23,13 @@
               <router-link to="BRecords" :class="{active:pageInfo.path=='BRecords'}"><span>备案</span></router-link>
             </li>-->
             <li>
-              <a href="https://bj.xrcloud.net/ruicloud/buy" :class="{active:pageInfo.path=='buy'}"><span>创建主机</span></a>
+              <a href="https://www.xrcloud.net/ruicloud/buy" :class="{active:pageInfo.path=='buy'}"><span>创建主机</span></a>
             </li>
             <li>
-              <a href="https://bj.xrcloud.net/ruicloud/document" :class="{active:pageInfo.path=='document'}"><span>帮助文档</span></a>
+              <a href="https://www.xrcloud.net/ruicloud/document" :class="{active:pageInfo.path=='document'}"><span>帮助文档</span></a>
             </li>
             <li>
-              <a href="https://bj.xrcloud.net/ruicloud/recharge" :class="{active:pageInfo.path=='recharge'}"><span>充值</span></a>
+              <a href="https://www.xrcloud.net/ruicloud/recharge" :class="{active:pageInfo.path=='recharge'}"><span>充值</span></a>
             </li>
             <li>
                   <!--<Dropdown @on-click="go">-->
@@ -41,17 +41,17 @@
                     </a>
                     <DropdownMenu slot="list">
                       <DropdownItem name="userCenter">
-                        <a href="https://bj.xrcloud.net/ruicloud/userCenter">用户中心</a>
+                        <a href="https://www.xrcloud.net/ruicloud/userCenter">用户中心</a>
                       </DropdownItem>
                       <DropdownItem name="expenses">
-                        <a href="https://bj.xrcloud.net/ruicloud/expenses">费用中心</a>
+                        <a href="https://www.xrcloud.net/ruicloud/expenses">费用中心</a>
                       </DropdownItem>
                       <DropdownItem name="msgCenter" style="position:relative">
-                        <a href="https://bj.xrcloud.net/ruicloud/msgCenter">消息中心<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup>
+                        <a href="https://www.xrcloud.net/ruicloud/msgCenter">消息中心<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup>
                         </a>
                       </DropdownItem>
                       <DropdownItem name="operationLog">
-                        <a href="https://bj.xrcloud.net/ruicloud/operationLog">操作日志</a>
+                        <a href="https://www.xrcloud.net/ruicloud/operationLog">操作日志</a>
                       </DropdownItem>
                       <DropdownItem divided name="exit">
                       <span @click="backOut">退出</span>
@@ -235,10 +235,10 @@
           {
             mainName: '云服务器',
             type: 'server',
-            subItem: [{subName: '云主机', type: 'host',href:'https://bj.xrcloud.net/ruicloud/host'}, {subName: '云主机快照', type: 'snapshot',href:'https://bj.xrcloud.net/ruicloud/snapshot'}, {
+            subItem: [{subName: '云主机', type: 'host',href:'https://www.xrcloud.net/ruicloud/host'}, {subName: '云主机快照', type: 'snapshot',href:'https://www.xrcloud.net/ruicloud/snapshot'}, {
               subName: '镜像',
               type: 'mirror',
-              href:'https://bj.xrcloud.net/ruicloud/mirror'
+              href:'https://www.xrcloud.net/ruicloud/mirror'
             }]
           },
           {
@@ -246,8 +246,8 @@
             type: 'storage',
             subItem: [
               {subName: '对象存储', type: 'objectStorage'},
-              {subName: '云硬盘', type: 'disk',href:'https://bj.xrcloud.net/ruicloud/disk'},
-              {subName: '云硬盘备份', type: 'diskBackup',href:'https://bj.xrcloud.net/ruicloud/diskBackup'}
+              {subName: '云硬盘', type: 'disk',href:'https://www.xrcloud.net/ruicloud/disk'},
+              {subName: '云硬盘备份', type: 'diskBackup',href:'https://www.xrcloud.net/ruicloud/diskBackup'}
               /* {subName: '硬盘快照', type: 'diskSnapshot'} */
             ]
           },
@@ -258,16 +258,16 @@
               {
                 subName: '虚拟私有云VPC',
                 type: 'vpc',
-                href:'https://bj.xrcloud.net/ruicloud/vpc',
-                thrItem: [{thrName: '虚拟私有云VPC', pane: 'VPC',href:'https://bj.xrcloud.net/ruicloud/vpc'}, {thrName: 'NAT网关', pane: 'NAT',href:'https://bj.xrcloud.net/ruicloud/vpc'}]
+                href:'https://www.xrcloud.net/ruicloud/vpc',
+                thrItem: [{thrName: '虚拟私有云VPC', pane: 'VPC',href:'https://www.xrcloud.net/ruicloud/vpc'}, {thrName: 'NAT网关', pane: 'NAT',href:'https://www.xrcloud.net/ruicloud/vpc'}]
               },
-              {subName: '弹性IP', type: 'ip',href:'https://bj.xrcloud.net/ruicloud/ip'},
-              {subName: '负载均衡', type: 'balance',href:'https://bj.xrcloud.net/ruicloud/balance'},
+              {subName: '弹性IP', type: 'ip',href:'https://www.xrcloud.net/ruicloud/ip'},
+              {subName: '负载均衡', type: 'balance',href:'https://www.xrcloud.net/ruicloud/balance'},
               {
                 subName: '虚拟专网VPN',
                 type: 'vpn',
-                href:'https://bj.xrcloud.net/ruicloud/vpn',
-                thrItem: [{thrName: '远程接入', pane: 'remote',href:'https://bj.xrcloud.net/ruicloud/vpn'}, {thrName: '隧道VPN', pane: 'VPN',href:'https://bj.xrcloud.net/ruicloud/vpn'}]
+                href:'https://www.xrcloud.net/ruicloud/vpn',
+                thrItem: [{thrName: '远程接入', pane: 'remote',href:'https://www.xrcloud.net/ruicloud/vpn'}, {thrName: '隧道VPN', pane: 'VPN',href:'https://www.xrcloud.net/ruicloud/vpn'}]
               }
             ]
           },
@@ -275,14 +275,14 @@
             mainName: '云安全',
             type: 'security',
             subItem: [
-              {subName: '防火墙', type: 'firewall',href:'https://bj.xrcloud.net/ruicloud/firewall'}
+              {subName: '防火墙', type: 'firewall',href:'https://www.xrcloud.net/ruicloud/firewall'}
             ]
           },
           {
             mainName: '回收站',
             type: 'recycle',
             subItem: [
-              {subName: '回收站', type: 'recycle',href:'https://bj.xrcloud.net/ruicloud/recycle'}
+              {subName: '回收站', type: 'recycle',href:'https://www.xrcloud.net/ruicloud/recycle'}
             ]
           }
         ],
@@ -315,7 +315,7 @@
         }else{
           // next(vm =>{
             // vm.$router.push({path:'/ruirados/login'});
-            window.open('https://bj.xrcloud.net/ruicloud/login','_self');
+            window.open('https://www.xrcloud.net/ruicloud/login','_self');
           // })
         }
         next()
@@ -379,7 +379,7 @@
           }).then(res =>{
             if(res.data.status == 1){
               this.$Message.success('退出成功');
-              window.open('https://bj.xrcloud.net/ruicloud/login','_self')
+              window.open('https://www.xrcloud.net/ruicloud/login','_self')
             }else{
               this.$Message.info('平台出小差了');
             }

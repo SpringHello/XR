@@ -375,9 +375,9 @@
           <div >
             <RadioGroup v-model="jurisdValidate.users" @on-change="usersClick()">
               <Radio label='0'>全部用户</Radio>
-              <!--<Radio label='1'>自定义用户</Radio>-->
+              <Radio label='1'>自定义用户</Radio>
             </RadioGroup>
-            <Input :disabled='grant' v-model="jurisdValidate.grantValue" style="width:420px;" :rows="4" type="textarea"/>
+            <Input :disabled='grant' v-model="jurisdValidate.grantValue" style="width:420px;" :rows="4" type="textarea" @on-change="garntPush"/>
             <Icon style="color:#2A99F2;" type="ios-help-outline" @mouseover.native="toopHide(6)" @mouseout.native="toopHide(0)"></Icon>
             <transition name="fade">
               <div class="tooltip-popper" style="top:34px;" v-if="isToolHide == 6">
@@ -483,9 +483,9 @@
           <div>
             <RadioGroup v-model="updateJurisd.updateUsers" @on-change="usersClick">
               <Radio label="0">全部用户</Radio>
-              <!--<Radio label="1">自定义用户</Radio>-->
+              <Radio label="1">自定义用户</Radio>
             </RadioGroup>
-            <Input :disabled='updategrant' v-model="updateJurisd.updateGrantValue" style="width:420px;" :rows="4" type="textarea"></Input>
+            <Input :disabled='updategrant' v-model="updateJurisd.updateGrantValue" style="width:420px;" :rows="4" type="textarea" @on-change="updateGrantPush"></Input>
               <Icon style="color:#2A99F2;" type="ios-help-outline" @mouseover.native="toopHide(6)" @mouseout.native="toopHide(0)"></Icon>
               <transition name="fade">
                 <div class="tooltip-popper" style="top:34px;" v-if="isToolHide == 6">
@@ -615,7 +615,7 @@
 
         <Form :model="updateCorsForm" :rules="updateCorsFormValidateL" ref="oldCros">
           <Form-item label="来源Origin" prop="orgins">
-            <Input :rows="3" type="textarea" v-model="updateCorsForm.orgins"
+            <Input :rows="3" type="textarea" v-model="updateCorsForm.orgins" @on-change="updateOriginPush"
                    placeholder="例如：http://10.100.100.100:8001 https://www.xrcloud.net"></Input>
           </Form-item>
           <p style="color: #999999;">来源可设置多个，每行一个，以回车间隔，每行最多能有一个通配符(*)</p>
@@ -725,6 +725,32 @@
 
     }
   }
+  const validatorUpdateOrigins = {
+    origin(rule,value,callback){
+      // let reg = /^(http|https)(:\/\/)((([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]{1,4}))|(([0-9a-z_!~*'()-]+\.)([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6}))$/;
+      //
+      // let origins = value.split('\n');
+      // for (let i = 0; i<origins.length;i++) {
+      //   console.log(origins[i]);
+      if(value == ''){
+        return callback(new Error('请输入origin'))
+      }else{
+        return callback(new Error('请输入正确的origin'));
+      }
+
+      // } else if (!(/^([*]{1})$/).test(value) && !reg.test(value)) {
+      //   console.log(value+'二');
+      // console.log(!reg.test(origins[i]) + '3333');
+      // console.log(!(/^([*]{1})$/).test(origins[i]) + '22222');
+
+      // } else {
+      //   console.log("失败00");
+      // console.log(value+'三');
+      // return callback();
+      // }
+
+    }
+  }
   const validatorExpose ={
     expose(rule,value,callback) {
       let reg = /[*]+/g
@@ -748,6 +774,26 @@
           callback();
         }
       }
+  }
+  const validatorGrantValue = (rule,value,callback) =>{
+    let reg = /^[0-9]{12}$/
+    if(value == ''){
+      return callback(new Error('请输入自定义用户'));
+    }else if(!reg.test(value)){
+      return callback(new Error('自定义用户只能输入12位的数字'));
+    }else{
+      callback();
+    }
+  }
+  const validatorUpdateGrantValue = (rule,value,callback) => {
+    let reg = /^[0-9]{12}$/;
+    if (value == '') {
+      return callback(new Error('请输入自定义用户'));
+    } else if(!reg.test(value)){
+      return callback(new Error('自定义用户只能输入12位的数字'));
+    }else{
+      callback();
+    }
   }
     export default {
     data() {
@@ -1086,8 +1132,7 @@
         //添加自定义权限表单验证
         jurisdRuleValidate: {
           grantValue: [
-            {required: true, message: '请输入自定义用户', trigger: 'blur'},
-            {max: 12, message: '自定义用户的名称只能输入12位'}
+            {validator:validatorGrantValue, trigger: 'change'}
           ],
           channel: [
             {required: true, type: 'array', message: '请选择密码接受渠道', trigger: 'change'}
@@ -1101,8 +1146,7 @@
         },
         updateJurisdValid:{
           updateGrantValue: [
-            {required: true, message: '请输入自定义用户', trigger: 'blur'},
-            {max: 12, message: '自定义用户的名称只能输入12位'}
+            {validator:validatorUpdateGrantValue, trigger: 'change'},
           ],
           updateChannel: [
             {required: true, type: 'array', message: '请选择密码接受渠道', trigger: 'change'}
@@ -1195,7 +1239,6 @@
                       this.code = obj.row.code;
                       this.updateChannelAggregate();
                       this.changesUpdate();
-                      this.usersClick();
                     }
                   }
                 }, '修改'),
@@ -1392,7 +1435,7 @@
         },
         updateCorsFormValidateL:{
           orgins: [
-            {required: true, message: '请填写来源Origin'}
+            {required: true,validator:validatorUpdateOrigins.origin,trigger:'blur'}
           ],
           methods: [
             {required: true, message: '请选择操作Method'}
@@ -1493,12 +1536,24 @@
           origin.pop();
         }
         for(let i = 0;i<origin.length;i++){
-          console.log(origin[i]);
           if(!(/^([*]{1})$/).test(origin[i]) && !reg.test(origin[i])){
-            console.log(origin[i]);
             this.$refs.newCros.rules.orgins[0].validator = validatorOrgins.origin;
           }else{
             this.$refs.newCros.rules.orgins[0].validator = null;
+          }
+        }
+      },
+      updateOriginPush(){
+        let reg = /^(http|https)(:\/\/)((([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]{1,4}))|(([0-9a-z_!~*'()-]+\.)([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6}))$/;
+        let origin = this.updateCorsForm.orgins.split('\n');
+        if(origin[origin.length +1] ==""){
+          origin.pop();
+        }
+        for(let i = 0;i<origin.length;i++){
+          if(!(/^([*]{1})$/).test(origin[i]) && !reg.test(origin[i])){
+            this.$refs.oldCros.rules.orgins[0].validator = validatorOrgins.origin;
+          }else{
+            this.$refs.oldCros.rules.orgins[0].validator = null;
           }
         }
       },
@@ -1775,23 +1830,51 @@
         if (this.updateJurisd.updateUsers == '0') {
           this.updategrant = true;
           this.updateJurisd.updateGrantValue = '*';
+          this.$refs.updateJurisds.rules.updateGrantValue[0].validator = null;
         } else {
           this.updategrant = false;
           this.updateJurisd.updateGrantValue = this.updateGrantValue == "*" ? '' : this.updateGrantValue;
+          this.$refs.updateJurisds.rules.updateGrantValue[0].validator = validatorUpdateGrantValue;
         }
         if (this.jurisdValidate.users == '0') {
           this.grant = true;
           this.jurisdValidate.grantValue = '*';
+          this.$refs.jurisdValidate.rules.grantValue[0].validator = null;
         } else {
           this.grant = false;
           this.jurisdValidate.grantValue = '';
-
+          this.$refs.jurisdValidate.rules.grantValue[0].validator = validatorGrantValue;
         }
       },
       //添加自定义权限
+     garntPush(){
+       let reg = /^\d{12}$/;
+        let grant = this.jurisdValidate.grantValue.split('\n');
+        for(let i = 0;i<grant.length;i++){
+          if(!reg.test(grant[i])){
+            this.$refs.jurisdValidate.rules.grantValue[0].validator = validatorGrantValue;
+          }else{
+              this.$refs.jurisdValidate.rules.grantValue[0].validator = null;
+          }
+        }
+      },
+      updateGrantPush(){
+        let reg = /^\d{12}$/;
+        let ugrant = this.updateJurisd.updateGrantValue.split('\n');
+        for(let i = 0; i<ugrant.length;i++){
+          if(!reg.test(ugrant[i])){
+            this.$refs.updateJurisds.rules.updateGrantValue[0].validator = validatorUpdateGrantValue;
+          }else{
+            this.$refs.updateJurisds.rules.updateGrantValue[0].validator = null;
+          }
+        }
+      },
       jurisdictionClick() {
         this.$refs.jurisdValidate.validate((valid) => {
           if(valid){
+            if(this.jurisdValidate.users == '1'){
+              var grant = this.jurisdValidate.grantValue.split('\n');
+            }
               this.jurisdiction = false;
               var name = sessionStorage.getItem("bucketName");
               var bucketId = sessionStorage.getItem('bucketId');
@@ -1805,7 +1888,7 @@
                 customPermission: this.jurisdValidate.channel,
                 isReferer: this.jurisdValidate.referer,
                 refereIp: this.jurisdValidate.whiteListValue,
-                userAuths: this.jurisdValidate.grantValue
+                userAuths: this.jurisdValidate.users == '1' ? grant.join(',') : this.jurisdValidate.grantValue
               }).then(res => {
                 if (res.data.status == '1') {
                   this.$Message.success('添加自定义权限成功');
@@ -1912,6 +1995,9 @@
       jurisdUpdateClick() {
         this.$refs.updateJurisds.validate((valid) => {
           if(valid){
+            if(this.updateJurisd.updateUsers == '1'){
+              var grant = this.updateJurisd.updateGrantValue.split('\n');
+            }
             this.updateDiction = false;
             var name = sessionStorage.getItem("bucketName");
             let obj = {userauthorization:'修改中',hide:1};
@@ -1919,7 +2005,7 @@
             this.$http.post('bucketAcl/updateFromCode.do', {
               bucketName: name,
               code: this.code,
-              userAuths: this.updateJurisd.updateGrantValue,
+              userAuths: this.updateJurisd.updateUsers == '1' ? grant.join(',') : this.updateJurisd.updateGrantValue,
               customPermission: this.updateJurisd.updateChannel,
               objectNames: this.updateJurisd.updateInfluenceValue,
               isOperation: this.updateJurisd.updateSources.toString(),
@@ -2035,6 +2121,8 @@
       openJurisdiction(){
         this.jurisdiction = true;
         this.refererDisabled = false;
+        this.grant = true;
+        this.$refs.jurisdValidate.rules.grantValue[0].validator = null;
         this.jurisdValidate = {
           grantValue: '*',
             //影响资源输入框的值
