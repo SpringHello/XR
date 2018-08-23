@@ -95,7 +95,7 @@
         <span>带宽</span>
         <i-slider v-model="publicIP" :min=1 :max=100 unit="MB" :points="[10,60]"
                   style="margin-right:30px;vertical-align: middle;width:66%;margin-left: 68px;"></i-slider>
-        <InputNumber :max="100" :min="1" v-model="publicIP" size="large"></InputNumber>
+        <InputNumber :max="100" :min="1" v-model="publicIP" size="large" :precision="0"></InputNumber>
       </div>
       <div>
         <span style="margin-right: 68px">价格</span>

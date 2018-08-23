@@ -170,10 +170,10 @@
             </Select>
           </FormItem>
           <FormItem label="IKE使用期限第二阶段" prop="vpcId" v-show="newTunnelVpnForm.step==1&&newTunnelVpnForm.showDetail">
-            <InputNumber v-model="newTunnelVpnForm.ikelifetime" :min="-1" style="width: 230px;"></InputNumber>
+            <InputNumber v-model="newTunnelVpnForm.ikelifetime" :min="-1" style="width: 230px;" :precision="0"></InputNumber>
           </FormItem>
           <FormItem label="ESP使用期限第二阶段" prop="vpcId" v-show="newTunnelVpnForm.step==1&&newTunnelVpnForm.showDetail">
-            <InputNumber v-model="newTunnelVpnForm.esplifetime" :min="-1" style="width: 230px;"></InputNumber>
+            <InputNumber v-model="newTunnelVpnForm.esplifetime" :min="-1" style="width: 230px;" :precision="0"></InputNumber>
           </FormItem>
           <FormItem label="" prop="vpcId" v-show="newTunnelVpnForm.step==1&&newTunnelVpnForm.showDetail">
 
@@ -294,10 +294,10 @@
             </Select>
           </FormItem>
           <FormItem label="IKE使用期限第二阶段" prop="vpcId" v-show="modifyTunnelVpnForm.showDetail">
-            <InputNumber v-model="modifyTunnelVpnForm.ikelifetime" :min="-1" style="width: 230px;"></InputNumber>
+            <InputNumber v-model="modifyTunnelVpnForm.ikelifetime" :min="-1" style="width: 230px;" :precision="0"></InputNumber>
           </FormItem>
           <FormItem label="ESP使用期限第二阶段" prop="vpcId" v-show="modifyTunnelVpnForm.showDetail">
-            <InputNumber v-model="modifyTunnelVpnForm.esplifetime" :min="-1" style="width: 230px;"></InputNumber>
+            <InputNumber v-model="modifyTunnelVpnForm.esplifetime" :min="-1" style="width: 230px;" :precision="0"></InputNumber>
           </FormItem>
           <FormItem label="" prop="vpcId" v-show="modifyTunnelVpnForm.showDetail">
 

@@ -146,9 +146,15 @@
               </a>
             </li>
             <li>
-              <router-link to="/ruicloud/about" style="color:#fff">{{item.msg}}</router-link>
+              <a href="https://tsm.miit.gov.cn/pages/home.aspx" target="_blank" style="color:#fff">增值电信业务经营许可证
+                B1-20180455</a>
             </li>
+            <li>
+              <router-link to="/ruicloud/about" style="color:#fff;float:right">关于我们</router-link>
+            </li>
+
           </ul>
+
         </div>
       </div>
     </div>
@@ -401,7 +407,7 @@
         ],
         Preparation: [
           {
-            time: '©2014-2017',
+            time: '©2014-2018',
             title: '北京允睿讯通科技有限公司',
             preparation: '京ICP备15035854号',
             desc: '京公网安备11010802024922号',
@@ -775,10 +781,6 @@
               color: #FFF;
               margin-right: 70px;
               cursor: pointer;
-              &:last-of-type {
-                margin-left: 395px;
-                margin-right: 0;
-              }
             }
           }
         }

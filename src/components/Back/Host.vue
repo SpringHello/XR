@@ -1017,8 +1017,8 @@
             break
           case '关机':
             if (this.closeHost.every(item => {
-              return item.select == false
-            })) {
+                return item.select == false
+              })) {
               this.$Message.warning('请选择主机')
               return
             }
@@ -1432,14 +1432,12 @@
           {type: 0, id: this.currentHost[0].id}
         ]
         var list = host.concat(iplist, disklist)
-        list = encodeURI(JSON.stringify(list))
+        list = JSON.stringify(list)
         let url = 'continue/changeMoney.do'
-        this.$http.get(url, {
-          params: {
-            list: list,
-            timeType: this.ratesChangeType,
-            timeValue: this.ratesChangeTime + '',
-          }
+        this.$http.post(url, {
+          list: list,
+          timeType: this.ratesChangeType,
+          timeValue: this.ratesChangeTime + '',
         }).then(response => {
           if (response.data.status == 1) {
             this.$router.push({path: 'order'})

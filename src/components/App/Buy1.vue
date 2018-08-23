@@ -377,7 +377,7 @@
                         :points="[20,50]"
                         style="margin-right:30px;vertical-align: middle;">
                       </i-slider>
-                      <InputNumber :max="100" :min="1" v-model="PecsInfo.IPConfig.bandWidth" size="large"></InputNumber>
+                      <InputNumber :max="100" :min="1" v-model="PecsInfo.IPConfig.bandWidth" size="large" :precision="0"></InputNumber>
                     </div>
                   </div>
                 </div>
@@ -450,7 +450,7 @@
                         </i-slider>
                         <InputNumber :max="1000" :min="20" v-model="disk.size" size="large" :step=10
                                      @on-blur="changeDiskSize(index,disk.size)"
-                                     @on-focus="changeDiskSize(index,disk.size)"></InputNumber>
+                                     @on-focus="changeDiskSize(index,disk.size)" :precision="0"></InputNumber>
                       </div>
                     </div>
                   </div>
@@ -682,7 +682,7 @@
                     </i-slider>
                     <InputNumber :max="500" :min="20" v-model="disk.size" size="large" :step=10
                                  @on-blur="change_DiskSize(index,disk.size)"
-                                 @on-focus="change_DiskSize(index,disk.size)"></InputNumber>
+                                 @on-focus="change_DiskSize(index,disk.size)" :precision="0"></InputNumber>
                   </div>
                 </div>
               </div>
@@ -808,7 +808,7 @@
                     style="margin-right:30px;vertical-align: middle;">
                   </i-slider>
                   <InputNumber :max="100" :min="1" v-model="PeipInfo.bandWidth" size="large"
-                               style="position: relative;bottom: 5px"></InputNumber>
+                               style="position: relative;bottom: 5px" :precision="0"></InputNumber>
                 </div>
               </div>
             </div>
@@ -1039,7 +1039,7 @@
                         style="margin-right:30px;vertical-align: middle;">
                       </i-slider>
                       <InputNumber :max="100" :min="1" v-model="PdataInfo.IPConfig.bandWidth"
-                                   size="large"></InputNumber>
+                                   size="large" :precision="0"></InputNumber>
                     </div>
                   </div>
                 </div>
@@ -1112,7 +1112,7 @@
                         </i-slider>
                         <InputNumber :max="1000" :min="20" v-model="disk.size" size="large" :step=10
                                      @on-blur="changeDiskSize(index,disk.size)"
-                                     @on-focus="changeDiskSize(index,disk.size)"></InputNumber>
+                                     @on-focus="changeDiskSize(index,disk.size)" :precision="0"></InputNumber>
                       </div>
                     </div>
                   </div>

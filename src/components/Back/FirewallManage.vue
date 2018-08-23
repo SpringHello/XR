@@ -78,10 +78,10 @@
             <InputNumber v-model="newRuleForm.itemid" :max="10" :min="1"></InputNumber>
           </Form-item>-->
           <Form-item label="起始端口" v-show="newRuleForm.protocol != 'ICMP' && newRuleForm.protocol != 'ALL'">
-            <InputNumber v-model="newRuleForm.startPort" :max="65535" :min="0"></InputNumber>
+            <InputNumber v-model="newRuleForm.startPort" :max="65535" :min="0" :precision="0"></InputNumber>
           </Form-item>
           <Form-item label="结束端口" v-show="newRuleForm.protocol != 'ICMP' && newRuleForm.protocol != 'ALL'">
-            <InputNumber v-model="newRuleForm.endPort" :max="65535" :min="0"></InputNumber>
+            <InputNumber v-model="newRuleForm.endPort" :max="65535" :min="0" :precision="0"></InputNumber>
           </Form-item>
           <Form-item label="行为" prop="access">
             <Select v-model="newRuleForm.access" placeholder="请选择">

@@ -78,7 +78,7 @@
           </i-slider>
           <InputNumber :max="500" :min="20" v-model="item.diskSize" size="large" :step=10
                        @on-blur="changeDiskSize(index,item.diskSize)"
-                       @on-focus="changeDiskSize(index,item.diskSize)"></InputNumber>
+                       @on-focus="changeDiskSize(index,item.diskSize)" :precision="0"></InputNumber>
           GB
         </div>
       </div>

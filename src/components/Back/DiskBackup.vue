@@ -109,7 +109,7 @@
             <Input v-model="backupsForm.backupsName" placeholder="请输入"></Input>
           </Form-item>
           <Form-item label="自动备份保留个数" prop="keepNumber">
-            <InputNumber :max="8" :min="1" v-model="backupsForm.keepNumber" style="width: 229px"></InputNumber>
+            <InputNumber :max="8" :min="1" v-model="backupsForm.keepNumber" style="width: 229px" :precision="0"></InputNumber>
           </Form-item>
           <Form-item label="自动备份间隔">
             <Select v-model="backupsForm.timeType" placeholder="请选择" @on-change="changeType">

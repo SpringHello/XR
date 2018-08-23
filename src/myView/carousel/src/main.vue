@@ -82,7 +82,6 @@
         this.$emit('on-change', this.activeIndex)
       }),
       updateItem(){
-
         return this.$children.filter(item => {
           return item.$options.name == 'my-carousel-item'
         })

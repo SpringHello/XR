@@ -120,7 +120,7 @@
               <FormItem
                 v-if="creatbalancemodal.formInline.radio == 'private'&& creatbalancemodal.formInline.intranetIp == 'specify'">
                 {{ creatbalancemodal.formInline.intranetIpNum}}.
-                <InputNumber v-model="creatbalancemodal.formInline.num" :max="254" :min="2"></InputNumber>
+                <InputNumber v-model="creatbalancemodal.formInline.num" :max="254" :min="2" :precision="0"></InputNumber>
               </FormItem>
               <p style="font-size: 12px;color: #999999;"
                  v-if="creatbalancemodal.formInline.radio == 'private'&& creatbalancemodal.formInline.intranetIp == 'specify'">

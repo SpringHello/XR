@@ -174,7 +174,7 @@
             <span>带宽</span>
             <i-slider v-model="publicIP" :min=0 :max=100 unit="MB" :points="[10,60]"
                       style="margin-right:30px;vertical-align: middle;width:66%;margin-left: 68px;"></i-slider>
-            <InputNumber :max="100" :min="0" v-model="publicIP" size="large"></InputNumber>
+            <InputNumber :max="100" :min="0" v-model="publicIP" size="large" :precision="0"></InputNumber>
           </div>
           <div v-if="pitchOn=='custom'">
             <span>防火墙</span>
@@ -222,7 +222,7 @@
               </i-slider>
               <InputNumber :max="500" :min="20" v-model="item.diskSize" size="large" :step=10
                            @on-blur="changeDiskSize(index,item.diskSize)"
-                           @on-focus="changeDiskSize(index,item.diskSize)"></InputNumber>
+                           @on-focus="changeDiskSize(index,item.diskSize)" :precision="0"></InputNumber>
             </div>
           </div>
           <div :class="{addDisk:diskList.length!=0}" style="display: flex">

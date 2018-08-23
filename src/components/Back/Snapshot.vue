@@ -101,7 +101,7 @@
             <Input v-model="creatBackupsForm.name"></Input>
           </FormItem>
           <FormItem label="自动备份保留个数">
-            <InputNumber :max="8" :min="1" v-model="creatBackupsForm.num" style="width: 229px"></InputNumber>
+            <InputNumber :max="8" :min="1" v-model="creatBackupsForm.num" style="width: 229px" :precision="0"></InputNumber>
           </FormItem>
           <Form-item label="自动备份间隔">
             <Select v-model="creatBackupsForm.timeType" placeholder="请选择" @on-change="changeType">

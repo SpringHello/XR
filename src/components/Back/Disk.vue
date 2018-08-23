@@ -67,7 +67,7 @@
               style="width:300px;vertical-align: middle;">
             </i-slider>
             <InputNumber :max="1000" :min="20" v-model="diskForm.diskSize" :step=10 :editable="false"
-                         style="margin-left: 20px"></InputNumber>
+                         style="margin-left: 20px" :precision="0"></InputNumber>
             <span style="margin-left: 10px">GB</span>
           </Form-item>
           <Form-item label="购买方式" prop="timeType">
@@ -144,7 +144,7 @@
             </i-slider>
             <InputNumber :max="1000" :min="dilatationForm.minDiskSize" v-model="dilatationForm.diskSize" :step=10
                          :editable="false"
-                         style="margin-left: 20px"></InputNumber>
+                         style="margin-left: 20px" :precision="0"></InputNumber>
             <span style="margin-left: 10px">GB</span>
           </Form-item>
         </Form>

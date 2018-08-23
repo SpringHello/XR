@@ -217,7 +217,7 @@
         </div>
         <div class="recharge">
           <span>充值金额：</span>
-          <InputNumber :min="rechargeMoney" v-model="rechargeMoney" style="margin-right: 8px"></InputNumber>
+          <InputNumber :min="rechargeMoney" v-model="rechargeMoney" style="margin-right: 8px" :precision="0"></InputNumber>
           <span>元</span>
         </div>
         <div class="recharge-select">

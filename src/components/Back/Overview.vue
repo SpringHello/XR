@@ -457,7 +457,7 @@
         .wrapper {
           display: flex;
           justify-content: space-between;
-          padding: 20px 20px;
+          padding: 22px 20px;
           .universal-large {
             margin-top: 10px;
           }

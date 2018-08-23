@@ -13,12 +13,12 @@ import LR from '@/LR'
 const Home = () =>import('@/components/App/Home')
 const Art = () =>import('@/components/App/Article')
 //const Price = () => import('@/components/App/Price')
-const Buy = () =>import('@/components/App/Buy1')
-/*const Buy = () => import('@/components/App/buy/Buy')
- const BHost = () => import('@/components/App/buy/BHost')
- const BIP = () => import('@/components/App/buy/BIP')
- const BDisk = () => import('@/components/App/buy/BDisk')
- const BData = () => import('@/components/App/buy/BData')*/
+//const Buy = () =>import('@/components/App/Buy1')
+const Buy = () => import('@/components/App/buy/Buy')
+const BHost = () => import('@/components/App/buy/BHost')
+const BIP = () => import('@/components/App/buy/BIP')
+const BDisk = () => import('@/components/App/buy/BDisk')
+const BData = () => import('@/components/App/buy/BData')
 const Ecs = () =>import('@/components/App/product/ECS')
 const Document = () =>import('@/components/App/Document')
 const Document1 = () =>import('@/components/App/Document1')
@@ -250,6 +250,13 @@ var router = new Router({
           path: 'buy',
           name: 'buy',
           component: Buy,
+          children: [
+            {path: '', name: 'bhost', component: BHost},
+            {path: 'bhost', name: 'bhost', component: BHost},
+            {path: 'bdisk', name: 'bdisk', component: BDisk},
+            {path: 'bip', name: 'bip', component: BIP},
+            {path: 'bdata', name: 'bdata', component: BData},
+          ]
         },
 
         //{path: 'active', name: 'active', component: Active},

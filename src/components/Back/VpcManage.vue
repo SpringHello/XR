@@ -206,7 +206,7 @@
           <Form-item label="网关" prop="gateway">
             <span v-if="data.cidr">{{data.cidr.split('.')[0]}}.{{data.cidr.split('.')[1]}}.</span>
             <InputNumber :max="255" :min="0" v-model="newNetworkForm.gateway" size="small"
-                         style="width:55px;"></InputNumber>
+                         style="width:55px;" :precision="0"></InputNumber>
             .1
           </Form-item>
           <p class="modal-text-hint-bottom">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>

@@ -16,7 +16,7 @@
           <div class="amount">
             <span class="s3">充值金额</span>
             <InputNumber v-model="input" :min="10" :step="10" placeholder="请输入金额"
-                         style="width: 75px;height:32px;margin-left: 40px;font-size: 14px;"></InputNumber>
+                         style="width: 75px;height:32px;margin-left: 40px;font-size: 14px;" :precision="0"></InputNumber>
             <span class="s4">元</span>
             <Button type="ghost" style="margin-left: 40px;font-size: 14px;height: 32px;width: 75px;"
                     @click="input = 200">200元

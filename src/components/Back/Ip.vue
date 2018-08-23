@@ -81,7 +81,7 @@
             <i-slider v-model="newIPForm.bandWidth" :min=1 :max=100 unit="M" :points="[20,50]"
                       style="width:300px;vertical-align: middle;" @change="queryNewIPPrice"></i-slider>
             <InputNumber :max="100" :min="1" v-model="newIPForm.bandWidth" :editable="false"
-                         style="margin-left: 20px" @on-change="queryNewIPPrice"></InputNumber>
+                         style="margin-left: 20px" @on-change="queryNewIPPrice" :precision="0"></InputNumber>
             <span style="margin-left: 10px">M</span>
           </FormItem>
           <p class="modal-text-hint-bottom">VPC创建完成之后您可以在“VPC修改”的功能中对VPC名称、描述、是否绑定弹性IP进行修改</p>

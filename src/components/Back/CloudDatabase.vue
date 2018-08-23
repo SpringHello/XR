@@ -199,7 +199,7 @@
             <InputNumber :max="1000" :min="dilatationForm.minDatabaseSize" v-model="dilatationForm.databaseSize"
                          :step=10
                          :editable="false"
-                         style="margin-left: 20px"></InputNumber>
+                         style="margin-left: 20px" :precision="0"></InputNumber>
             <span style="margin-left: 10px">GB</span>
           </Form-item>
         </Form>

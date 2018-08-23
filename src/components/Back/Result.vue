@@ -49,7 +49,7 @@
             <p style="margin-bottom: 20px;color:rgba(153,153,153,1);line-height:16px;">
               为保障您的服务体验，建议您在购买实时主机之时预留足够余额，避免频繁欠费充值。</p>
             <div style="margin-bottom: 20px;">
-              <InputNumber :min="rechargeMin" v-model="rechargeValue" style="margin-right: 20px;"></InputNumber>
+              <InputNumber :min="rechargeMin" v-model="rechargeValue" style="margin-right: 20px;" :precision="0"></InputNumber>
               <div class="rechargeItem" v-for="item in rechargeArray" @click="resetRecharge(item)">{{item}}元</div>
             </div>
             <div class="payContent">

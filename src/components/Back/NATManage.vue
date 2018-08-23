@@ -67,14 +67,14 @@
             <Input v-model="createDNATForm.name" placeholder="请输入16字以内的名称"></Input>
           </FormItem>
           <FormItem label="公网端口范围">
-            <InputNumber :max="65535" :min="1" v-model="createDNATForm.frontStartPort"></InputNumber>
+            <InputNumber :max="65535" :min="1" v-model="createDNATForm.frontStartPort" :precision="0"></InputNumber>
             <span style="margin:0px 10px;">--</span>
-            <InputNumber :max="65535" :min="1" v-model="createDNATForm.frontEndPort"></InputNumber>
+            <InputNumber :max="65535" :min="1" v-model="createDNATForm.frontEndPort" :precision="0"></InputNumber>
           </FormItem>
           <FormItem label="内网后端口范围">
-            <InputNumber :max="65535" :min="1" v-model="createDNATForm.backStartPort"></InputNumber>
+            <InputNumber :max="65535" :min="1" v-model="createDNATForm.backStartPort" :precision="0"></InputNumber>
             <span style="margin:0px 10px;">--</span>
-            <InputNumber :max="65535" :min="1" v-model="createDNATForm.backEndPort"></InputNumber>
+            <InputNumber :max="65535" :min="1" v-model="createDNATForm.backEndPort" :precision="0"></InputNumber>
           </FormItem>
           <FormItem label="选择协议">
             <Select v-model="createDNATForm.protocol">
@@ -321,8 +321,10 @@
                 item.protTransList.push({
                   prottransname: this.createDNATForm.name,
                   protocol: this.createDNATForm.protocol,
-                  publicstartport: this.createDNATForm.backStartPort,
-                  publicendport: this.createDNATForm.backEndPort,
+                  publicstartport: this.createDNATForm.frontStartPort,
+                  publicendport: this.createDNATForm.frontEndPort,
+                  privatestartport: this.createDNATForm.backStartPort,
+                  privateendport: this.createDNATForm.backEndPort,
                   computername: this.createDNATForm.vm.split('#')[1],
                   status: -1 //-1代表创建中
                 })

@@ -5,7 +5,7 @@
       <div class="dotitle">
         帮助文档
         <span :class="{select:selectDoc}" @click="selectDoc = true,selectPro = false">产品文档</span>
-        <!--<span :class="{select:selectPro}" @click="selectDoc = false,selectPro = true">常见问题</span>-->
+        <span :class="{select:selectPro}" @click="selectDoc = false,selectPro = true">常见问题</span>
       </div>
       <div class="content" v-if="selectDoc">
         <div v-for="(item,index) in contentList" :key="index">
@@ -22,7 +22,7 @@
           </div>
         </div>
       </div>
-      <!--<div class="problem" v-if="selectPro">
+      <div class="problem" v-if="selectPro">
         <p class="problem-title">热门问题</p>
         <div class="problem-desc">
           <div v-for="(item,index) in problems" :key="index">
@@ -36,7 +36,7 @@
             </ul>
           </div>
         </div>
-      </div>-->
+      </div>
     </div>
 
   </div>
