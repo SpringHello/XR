@@ -81,6 +81,7 @@ const Pddos = () =>import('@/components/App/product/DDOShighIP.vue')
 const Pmonitor = () =>import('@/components/App/product/CloudMonitoring.vue')
 const PobjStorage = () =>import('@/components/App/product/PobjStorage.vue')
 const PdataBase = () =>import('@/components/App/product/PdataBase.vue')
+const PobjectStorage = () =>import('@/components/App/product/ObjectStorage.vue')
 // 登录注册页面
 // import Login from '@/components/LR/Login'
 // import Register from '@/components/LR/Register'
@@ -289,6 +290,7 @@ var router = new Router({
         {path: 'Pmonitor', component: Pmonitor},
         {path: 'PobjStorage', component: PobjStorage},
         {path: 'PdataBase', component: PdataBase},
+        {path: 'PobjectStorage', component: PobjectStorage},
         {path: 'documentInfo/:parentId/:id', component: documentInfo},
 
       ]

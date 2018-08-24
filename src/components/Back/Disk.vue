@@ -117,6 +117,10 @@
               </Option>
             </Select>
           </Form-item>
+          <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 48%;top: 42%;" @click="$router.push('buy')">
+              <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
+              购买主机
+            </span>
         </Form>
         <span>提示：如果您购买了主机但主机列表中无选项，是因为待绑定主机上存在快照，无法完成挂载。</span>
       </div>
