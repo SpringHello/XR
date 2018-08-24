@@ -1193,6 +1193,11 @@ export default {
       this.selectedTarget = this.alarmHostTarget
       this.getContacts()
       this.changeStrategyType()
+      this.$http.get('alarmControl/listAlarmControl.do').then(res => {
+        if (res.status == 200 && res.data.status == 1) {
+          this.alarmStrategyData = res.data.result
+        }
+      })
     },
     changeAlarmType() {
     if (this.newAlarmStrategyForm.alarmObj == 'all'){
@@ -1785,7 +1790,7 @@ export default {
             name: this.newAlarmStrategyForm.strategyName + '',
             type: this.newAlarmStrategyForm.strategyType + '',
             resourceIds: selectedProduct.join(),
-            Letter: channel.letter + '',
+            letter: channel.letter + '',
             email: channel.email + '',
             phone: channel.phone + '',
             linkIds: linkMan.join(),
@@ -1793,10 +1798,13 @@ export default {
             eventAlarmMessage: JSON.stringify(this.eventformDynamic.items),
           }
           this.$http.post('alarmControl/createAlarmControl.do', params).then(res => {
+            if (res.status == 200 && res.data.status == 1){
+              this.$Message.success(res.data.message)
+            } else {
+              this.$Message.success('创建失败！');  
+            }
           })
-        } else {
-          console.log('fail')
-        }
+        } 
       })
     },
 
