@@ -197,7 +197,7 @@
                     </RadioGroup>
                   </FormItem>
                   <div class="list-wrap" style="position:relative;" v-if="newAlarmStrategyForm.alarmObj=='part'">
-                    <span v-if="hostHint&&strategyhost.selectedHost.length<1" style="color:#ed3f14;font-size:12px;position:absolute;top:-20px;">请至少选择一个{{currentAlarmObj}}</span>
+                    <span v-if="hostHint&&strategyhost.selectedHost.length<1" style="color:#ed3f14;font-size:12px;position:absolute;top:-20px;">请至少选择一个主机</span>
                     <div class="list">
                       <p>该区域下所有{{currentAlarmObj}}</p>
                       <ul>
@@ -422,7 +422,7 @@
         <Button type="primary" @click="addCustomMonitoring_ok" :disabled="monitoringIndexForm.selectedProduct.length == 0 ||monitoringIndexForm.productIndex == ''"
                 v-if="isAddMonitorIndex">完成配置
         </Button>
-         <Button v-else type="primary" @click="editCustomMonitoring_ok">确认修改</Button>
+         <Button v-else type="primary" @click="editCustomMonitoring_ok" :disabled="monitoringIndexForm.selectedProduct.length == 0 ||monitoringIndexForm.productIndex == ''">确认修改</Button>
       </div>
     </Modal>
   </div>
