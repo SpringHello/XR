@@ -37,7 +37,7 @@
                 <div class="header">
                   磁盘链接速率
                   <span>
-                    <i>编辑</i> | <i>删除</i>
+                    <i @click="showModal.editMonitorIndex=true">编辑</i> | <i @click="deleteChart">删除</i>
                   </span>
                 </div>
                 <div class="switch">
@@ -63,7 +63,7 @@
                 <div class="header">
                   cpu利用率
                   <span>
-                    <i>编辑</i> | <i>删除</i>
+                    <i @click="showModal.editMonitorIndex=true">编辑</i> | <i @click="deleteChart">删除</i>
                   </span>
                 </div>
                 <div class="switch">
@@ -88,7 +88,7 @@
                 <div class="header">
                   内存使用率
                   <span>
-                    <i>编辑</i> | <i>删除</i>
+                    <i @click="showModal.editMonitorIndex=true">编辑</i> | <i @click="deleteChart">删除</i>
                   </span>
                 </div>
                 <div class="switch">
@@ -113,7 +113,7 @@
                 <div class="header">
                   最近一小时外网流量统计
                   <span>
-                    <i>编辑</i> | <i>删除</i>
+                    <i @click="showModal.editMonitorIndex=true">编辑</i> | <i @click="deleteChart">删除</i>
                   </span>
                 </div>
                 <div class="switch">
@@ -168,7 +168,7 @@
             </div>
           </TabPane>
           <TabPane label="告警策略" name="alarmStrategy">
-            <div class="as-content" v-if="isNewAlarmStrategy">
+            <div class="as-content" v-if="!isNewAlarmStrategy">
               <Button type="primary" style="margin-bottom: 10px" @click="isNewAlarmStrategy = true">新建告警策略</Button>
               <Table :columns="alarmStrategyColumns" :data="alarmStrategyData"></Table>
             </div>
@@ -423,6 +423,60 @@
                 v-if="isAddMonitorIndex">完成配置
         </Button>
          <Button v-else type="primary" @click="editCustomMonitoring_ok" :disabled="monitoringIndexForm.selectedProduct.length == 0 ||monitoringIndexForm.productIndex == ''">确认修改</Button>
+      </div>
+    </Modal>
+    <!-- 总览页面编辑指标弹窗 -->
+    <Modal v-model="showModal.editMonitorIndex" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">编辑监控指标</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <div class="modal-top">
+          <div class="left">
+            <p>产品类型</p>
+            <Select v-model="editMonitorIndexForm.productType" placeholder="请选择" @on-change="changeProduct" style="width: 240px;" class="cm-select">
+              <Option v-for="item in editMonitorIndexForm.productTypeGroup" :key="item.value" :value="item.value">
+                {{item.value}}
+              </Option>
+            </Select>
+          </div>
+          <div class="right">
+            <p>指标</p>
+            <Select v-model="editMonitorIndexForm.productIndex" placeholder="请选择" @on-change="getIndexResource" style="width: 240px;" class="cm-select">
+              <Option v-for="item in editMonitorIndexForm.productIndexGroup" :key="item.value" :value="item.value">
+                {{item.label}}
+              </Option>
+            </Select>
+          </div>
+        </div>
+        <div class="modal-main">
+          <div class="hostlist">
+            <p>该区域下所有{{ editMonitorIndexForm.productType }}</p>
+            <ul>
+              <li v-for="(item,index) in editMonitorIndexForm.allProduct">
+                <span>{{ item.instancename}}</span>
+                <i class="bluetext" style="cursor: pointer" v-if="editMonitorIndexForm.selectedProduct.length<5&&item.name !=''" @click="addProduct(item,index)">+ 添加</i></li>
+            </ul>
+          </div>
+          <div class="changelist">
+            <p>已选择{{ editMonitorIndexForm.productType}}</p>
+            <ul>
+              <li v-for="(item,index) in editMonitorIndexForm.selectedProduct">
+                <span>{{ item.instancename}}</span>
+                <i class="bluetext" style="cursor: pointer" @click="deleteProduct(item,index)">
+                  <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
+                  删除</i>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+         <Button @click="showModal.editMonitorIndex = false">取消</Button>
+        <Button type="primary" @click="addCustomMonitoring_ok" :disabled="editMonitorIndexForm.selectedProduct.length == 0 ||editMonitorIndexForm.productIndex == ''"
+                v-if="isAddMonitorIndex">完成配置
+        </Button>
+         <Button v-else type="primary" @click="editCustomMonitoring_ok" :disabled="editMonitorIndexForm.selectedProduct.length == 0 ||monitoringIndexForm.productIndex == ''">确认修改</Button>
       </div>
     </Modal>
   </div>
@@ -746,9 +800,64 @@ export default {
         }
       },
       showModal: {
-        addMonitorIndex: false
+        addMonitorIndex: false,
+        editMonitorIndex: false
       },
       monitoringIndexForm: {
+        productTypeGroup: [
+          {
+            value: '云主机',
+            indexGroup: [
+              {
+                label: 'CPU使用率',
+                value: 'cpu'
+              }, {
+                label: '磁盘使用率',
+                value: 'disk'
+              }, {
+                label: '内存使用率',
+                value: 'memory'
+              }, {
+                label: '网进',
+                value: 'networkin'
+              }, {
+                label: '网出',
+                value: 'networkout'
+              }
+            ]
+          }, {
+            value: '对象存储',
+            indexGroup: [
+              {
+                label: '容量',
+                value: 'capacity'
+              }, {
+                label: '流量',
+                value: 'flow'
+              }, {
+                label: 'get请求次数',
+                value: 'gethttp'
+              }, {
+                label: 'post请求次数',
+                value: 'posthttp'
+              }, {
+                label: 'put请求次数',
+                value: 'puthttp'
+              }, {
+                label: 'delete请求次数',
+                value: 'deletehttp'
+              }
+            ]
+          },
+        ],
+        productType: '',
+        productIndexGroup: [],
+        productIndex: '',
+        allProduct: [],
+        selectedProduct: [],
+        id: ''
+      },
+      editMonitorIndexForm: {
         productTypeGroup: [
           {
             value: '云主机',
@@ -933,7 +1042,6 @@ export default {
     }
   },
   created () {
-    
     //  短信剩余配额数据模拟
     var mockMessageData = [
       { value: 130, name: '剩余配额' },
@@ -1063,13 +1171,25 @@ export default {
     }
     this.weekdata = mockweekData
     this.monthdata = mockmonthData
+    this.overviewInit()
   },
   methods: {
-    alarmStrategyInit() {
+    deleteChart (item) {
+      this.$Modal.confirm({
+        title: '提示',
+        content: '<p>确定删除当前图表吗？</p>',
+        scrollable: true,
+        onOk: () => {
+        }
+      });
+    },
+    overviewInit() {
       this.chartTypeSwitch('disk')
       this.chartTypeSwitch('cpu')
       this.chartTypeSwitch('memory')
       this.chartTypeSwitch('flow')
+    },
+    alarmStrategyInit() {
       this.selectedTarget = this.alarmHostTarget
       this.getContacts()
       this.changeStrategyType()
@@ -1156,7 +1276,8 @@ export default {
     },
     labelSwitching (name) {
       switch (name) {
-        case '':
+        case 'overview':
+          this.overviewInit()
           break
         case 'customMonitoring':
           this.getCustomMonitorGroup()
