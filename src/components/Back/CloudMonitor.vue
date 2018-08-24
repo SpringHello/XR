@@ -168,7 +168,7 @@
             </div>
           </TabPane>
           <TabPane label="告警策略" name="alarmStrategy">
-            <div class="as-content" v-if="!isNewAlarmStrategy">
+            <div class="as-content" v-if="isNewAlarmStrategy">
               <Button type="primary" style="margin-bottom: 10px" @click="isNewAlarmStrategy = true">新建告警策略</Button>
               <Table :columns="alarmStrategyColumns" :data="alarmStrategyData"></Table>
             </div>
@@ -182,22 +182,27 @@
                   <FormItem label="策略名称" prop="strategyName" style="display:flex">
                     <Input v-model="newAlarmStrategyForm.strategyName" placeholder="请输入" style="width:318px"></Input>
                   </FormItem>
-                  <FormItem label="策略类型" prop="strategyType" style="display:flex">
-                    <Input v-model="newAlarmStrategyForm.strategyType" placeholder="请输入" style="width:318px"></Input>
+                  <FormItem label="策略类型" prop="strategyType" style="display:flex;">
+                      <Select v-model="newAlarmStrategyForm.strategyType" style="width:318px"  @on-change="changeStrategyType">
+                          <Option value="0">云主机</Option>
+                          <!-- <Option value="1">云硬盘</Option>
+                          <Option value="2">vpc</Option> -->
+                          <Option value="3">对象存储</Option>
+                      </Select>
                   </FormItem>
                   <FormItem label="告警对象">
-                    <RadioGroup v-model="newAlarmStrategyForm.alarmObj">
-                        <Radio label="all">全部</Radio>
+                    <RadioGroup v-model="newAlarmStrategyForm.alarmObj" @on-change="changeAlarmType">
+                        <Radio label="all" :disabled="allHostLegth>5">全部</Radio>
                         <Radio label="part">选择部分对象</Radio>
                     </RadioGroup>
                   </FormItem>
-                  <div class="list-wrap" style="position:relative;">
-                    <span v-if="hostHint&&strategyhost.selectedHost.length<1" style="color:#ed3f14;font-size:12px;position:absolute;top:-20px;">请至少选择一个主机</span>
+                  <div class="list-wrap" style="position:relative;" v-if="newAlarmStrategyForm.alarmObj=='part'">
+                    <span v-if="hostHint&&strategyhost.selectedHost.length<1" style="color:#ed3f14;font-size:12px;position:absolute;top:-20px;">请至少选择一个{{currentAlarmObj}}</span>
                     <div class="list">
-                      <p>该区域下所有主机</p>
+                      <p>该区域下所有{{currentAlarmObj}}</p>
                       <ul>
                         <li v-for="(item,index) in strategyhost.allHost" :key="index">
-                          <span>{{ item.name}}</span>
+                          <span>{{ item.instancename}}</span>
                           <i class="icon-btn" v-if="strategyhost.selectedHost.length<5&&item.name !=''" @click="addHost(item,index)">+ 添加</i>
                         </li>
                       </ul>
@@ -207,10 +212,10 @@
                       <span>←</span>
                     </div>
                     <div class="list" :class="{red:hostHint&&strategyhost.selectedHost.length<1}">
-                      <p>已选择主机</p>
+                      <p>已选择{{currentAlarmObj}}</p>
                       <ul>
                         <li v-for="(item,index) in strategyhost.selectedHost" :key="index">
-                          <span>{{ item.name}}</span>
+                          <span>{{ item.instancename}}</span>
                           <i class="icon-btn" @click="deleteHost(item,index)"><Icon type="ios-trash-outline" style="font-size:14px"></Icon> 删除</i>
                         </li>
                       </ul>
@@ -223,41 +228,40 @@
                         <p>指标告警</p>
                         <FormItem style="margin-bottom:10px"
                               v-for="(item, index) in targetformDynamic.items"
-                              v-if="item.status"
                               :key="index">
                           <Row :gutter="16">
                               <Col span="4">
-                                  <Select v-model="item.value.targetmodel" >
-                                      <Option v-for="item in item.value.target" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  <Select v-model="item.alarmName" >
+                                      <Option v-for="item in selectedTarget.target" :value="item.value" :key="item.value">{{ item.label }}</Option>
                                   </Select>
                               </Col>
                               <Col span="4">
-                                  <Select v-model="item.value.StatisticalCyclemodel" >
-                                      <Option v-for="item in item.value.StatisticalCycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  <Select v-model="item.countCircle" >
+                                      <Option v-for="item in publicTemp.StatisticalCycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
                                   </Select>
                               </Col>
                               <Col span="2">
-                                  <Select v-model="item.value.standardmodel" style="text-align:center">
-                                      <Option v-for="item in item.value.standard" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  <Select v-model="item.valueType" style="text-align:center">
+                                      <Option v-for="item in publicTemp.standard" :value="item.value" :key="item.value">{{ item.label }}</Option>
                                   </Select>
                               </Col>
                               <Col span="2" class="Percentage">
-                                   <Select v-model="item.value.Percentagemodel" style="text-align:center">
-                                      <Option v-for="item in item.value.Percentage" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                   <Select v-model="item.vaule" style="text-align:center">
+                                      <Option v-for="item in publicTemp.Percentage" :value="item.value" :key="item.value">{{ item.label }}</Option>
                                   </Select>
                               </Col>
                               <Col span="1">
-                                  <span v-if="item.value.targetmodel=='flow'">KB/s</span>
+                                  <span v-if="item.alarmName=='flow'">KB/s</span>
                                   <span v-else>%</span>
                               </Col>
                               <Col span="4">
-                                  <Select v-model="item.value.keepCyclemodel" >
-                                      <Option v-for="item in item.value.keepCycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  <Select v-model="item.continueCircle" >
+                                      <Option v-for="item in publicTemp.keepCycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
                                   </Select>
                               </Col>
                               <Col span="4">
-                                  <Select v-model="item.value.frequencymodel" >
-                                      <Option v-for="item in item.value.frequency" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  <Select v-model="item.alarmCount" >
+                                      <Option v-for="item in publicTemp.frequency" :value="item.value" :key="item.value">{{ item.label }}</Option>
                                   </Select>
                               </Col>
                               <Col span="1">
@@ -273,27 +277,26 @@
                         <p>事件告警</p>
                          <FormItem style="margin-bottom:10px"
                               v-for="(item, index) in eventformDynamic.items"
-                              v-if="item.status"
                               :key="index">
                           <Row :gutter="16">
                               <Col span="4">
-                                  <Select v-model="item.value.targetmodel" >
-                                      <Option v-for="item in item.value.target" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  <Select v-model="item.alarmName" >
+                                      <Option v-for="item in eventTem.target" :value="item.value" :key="item.value">{{ item.label }}</Option>
                                   </Select>
                               </Col>
                               <Col span="4">
-                                  <Select v-model="item.value.StatisticalCyclemodel" >
-                                      <Option v-for="item in item.value.StatisticalCycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  <Select v-model="item.countCircle" >
+                                      <Option v-for="item in eventTem.StatisticalCycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
                                   </Select>
                               </Col>
                               <Col span="4">
-                                  <Select v-model="item.value.keepCyclemodel" >
-                                      <Option v-for="item in item.value.keepCycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  <Select v-model="item.continueCircle" >
+                                      <Option v-for="item in eventTem.keepCycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
                                   </Select>
                               </Col>
                               <Col span="4">
-                                  <Select v-model="item.value.frequencymodel" >
-                                      <Option v-for="item in item.value.frequency" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                  <Select v-model="item.alarmCount" >
+                                      <Option v-for="item in eventTem.frequency" :value="item.value" :key="item.value">{{ item.label }}</Option>
                                   </Select>
                               </Col>
                               <Col span="1">
@@ -310,9 +313,9 @@
                   <div class="alarm-channel">
                     <FormItem label="告警渠道" prop="channel">
                         <CheckboxGroup v-model="newAlarmStrategyForm.channel">
-                            <Checkbox label="msg">短信</Checkbox>
+                            <Checkbox label="phone">短信</Checkbox>
                             <Checkbox label="email">邮箱</Checkbox>
-                            <Checkbox label="inner">站内信</Checkbox>
+                            <Checkbox label="letter">站内信</Checkbox>
                         </CheckboxGroup>
                     </FormItem>
                     <div class="contacts">
@@ -322,7 +325,7 @@
                         <p>所有联系人</p>
                         <ul>
                           <li v-for="(item,index) in contacts.allContacts" :key="index">
-                            <span>{{ item.name}}</span>
+                            <span>{{ item.name }}</span>
                             <i class="icon-btn" v-if="contacts.selectedContacts.length<5&&item.name !=''" @click="addContacts(item,index)">+ 添加</i>
                           </li>
                         </ul>
@@ -335,7 +338,7 @@
                         <p>已选择联系人</p>
                         <ul>
                           <li v-for="(item,index) in contacts.selectedContacts" :key="index">
-                            <span>{{ item.name}}</span>
+                            <span>{{ item.name }}</span>
                             <i class="icon-btn" @click="deleteContacts(item,index)"><Icon type="ios-trash-outline" style="font-size:14px"></Icon> 删除</i>
                           </li>
                         </ul>
@@ -430,14 +433,33 @@ import messageMonitor from '@/echarts/cloudMonitor/messagePie'
 import line from '@/echarts/cloudMonitor/line'
 import bar from '@/echarts/cloudMonitor/bar'
 import regExp from '../../util/regExp'
+import Axios from 'axios';
 var echarts = require('echarts/lib/echarts')
 var linestr = JSON.stringify(line)
 var barstr = JSON.stringify(bar)
-var targetTem = {
-              targetmodel: 'cpu',
+export default {
+  data () {
+    return {
+      targetformDynamic: {
+        items: [
+          {
+            alarmName: 'cpu',
+            countCircle: '1',
+            valueType: '>',
+            vaule: '80',
+            continueCircle: '1',
+            alarmCount: '1',
+            alarmType: '1'
+          }
+        ]
+      },
+    // 默认选择哪个资源的指标
+    selectedTarget: {},
+    // 云主机指标
+    alarmHostTarget: {
               target: [
                 {
-                  label: 'cpu利用率',
+                  label: 'CPU使用率',
                   value: 'cpu'
                 },
                 {
@@ -445,16 +467,72 @@ var targetTem = {
                   value: 'memory'
                 },
                 {
-                  label: '最近一小时外网流量统计',
-                  value: 'flow'
+                  label: '磁盘使用率',
+                  value: 'diskUse'
                 },
                 {
-                  label: '磁盘链接速率',
-                  value: 'disk'
+                  label: '磁盘读速率',
+                  value: 'diskRead'
+                },
+                {
+                  label: '磁盘写速率',
+                  value: 'diskWrite'
+                },
+                {
+                  label: '磁盘读操作速率',
+                  value: 'diskOperate'
+                },
+                {
+                  label: '磁盘写操作速率',
+                  value: 'diskWriteOperate'
+                },
+                 {
+                  label: '带内网络流入速率',
+                  value: 'innerNetworkInflow'
+                },
+                {
+                  label: '带内网络流出速率',
+                  value: 'innerNetworkOutflow'
+                },
+                {
+                  label: '带外网络流入速率',
+                  value: 'outNetworkInflow'
+                },
+                {
+                  label: '带外网络流出速率',
+                  value: 'outNetworkOutflow'
+                }
+              ]
+            },
+    // 对象存储指标
+    alarmObjTarget: {
+      target: [
+                {
+                  label: '云硬盘读速率',
+                  value: 'cloudDiskRead'
+                },
+                {
+                  label: '云硬盘写速率',
+                  value: 'cloudDiskWrite'
+                },
+                {
+                  label: '云硬盘读操作速率',
+                  value: 'cloudDiskOperate'
+                },
+                {
+                  label: '云硬盘写操作速率',
+                  value: 'cloudDiskWriteOperate'
                 }
               ],
-              StatisticalCyclemodel: '1',
-              StatisticalCycle: [
+    
+    },
+    // 云硬盘指标
+    alarmDiskTarget: {},
+    // vpc指标
+    alarmVpcTarget: {},
+    // 公共部分指标
+    publicTemp: {
+            StatisticalCycle: [
                 {
                   label: '统计周期：1分钟',
                   value: '1'
@@ -472,7 +550,6 @@ var targetTem = {
                   value: '15'
                 },
               ],
-              standardmodel: '>',
               standard: [
                 {
                   label: '>',
@@ -499,7 +576,6 @@ var targetTem = {
                   value: '!='
                 }
               ],
-              Percentagemodel: '80',
               Percentage: [
                 {
                   label: '80',
@@ -510,7 +586,6 @@ var targetTem = {
                   value: '60'
                 }
               ],
-              keepCyclemodel: '1',
               keepCycle: [
                 {
                   label: '持续1个周期',
@@ -533,7 +608,6 @@ var targetTem = {
                   value: '5'
                 }
               ],
-              frequencymodel: '1',
               frequency: [
                 {
                   label: '每天警告1次',
@@ -544,10 +618,19 @@ var targetTem = {
                   value: '2'
                 }
               ]
-            }
-var targetTemStr = JSON.stringify(targetTem)
-var eventTem = {
-              targetmodel: '1',
+    },
+    eventformDynamic: {
+        items: [
+          {
+            alarmName: '1',
+            countCircle: '1',
+            continueCircle: '1',
+            alarmCount: '1',
+            alarmType: '2'
+          }
+        ]
+      },
+     eventTem: {
               target: [
                 {
                   label: 'XXX端口ping不可达',
@@ -558,7 +641,6 @@ var eventTem = {
                   value: '2'
                 }
               ],
-              StatisticalCyclemodel: '1',
               StatisticalCycle: [
                 {
                   label: '统计周期：1分钟',
@@ -577,45 +659,6 @@ var eventTem = {
                   value: '15'
                 },
               ],
-              standardmodel: '>',
-              standard: [
-                {
-                  label: '>',
-                  value: '>'
-                },
-                {
-                  label: '<',
-                  value: '<'
-                },
-                {
-                  label: '=',
-                  value: '='
-                },
-                {
-                  label: '>=',
-                  value: '>='
-                },
-                {
-                  label: '<=',
-                  value: '<='
-                },
-                {
-                  label: '!=',
-                  value: '!='
-                }
-              ],
-              Percentagemodel: '80',
-              Percentage: [
-                {
-                  label: '80',
-                  value: '80'
-                },
-                {
-                  label: '60',
-                  value: '60'
-                }
-              ],
-              keepCyclemodel: '1',
               keepCycle: [
                 {
                   label: '持续1个周期',
@@ -638,7 +681,6 @@ var eventTem = {
                   value: '5'
                 }
               ],
-              frequencymodel: '1',
               frequency: [
                 {
                   label: '每天警告1次',
@@ -648,51 +690,17 @@ var eventTem = {
                   label: '每天警告2次',
                   value: '2'
                 }
-              ],
-            }
-var eventTemStr = JSON.stringify(eventTem)
-export default {
-  data () {
-    return {
-      targetIndex: 1,
-      targetformDynamic: {
-        items: [
-          {
-            value: JSON.parse(targetTemStr),
-            index: 1,
-            status: 1
-          }
-        ]
-      },
-      eventIndex: 1,
-      eventformDynamic: {
-        items: [
-          {
-            value: JSON.parse(eventTemStr),
-            index: 1,
-            status: 1
-          }
-        ]
-      },
+              ]
+            },
+     // 对应资源列表
       strategyhost: {
         allHost: [
-          { name: 'host1' },
-          { name: 'host2' },
-          { name: 'host3' },
-          { name: 'host4' },
-          { name: 'host5' },
-          { name: 'host6' },
         ],
         selectedHost: []
       },
+      // 联系人列表
       contacts: {
         allContacts: [
-          { name: 'Contacts1' },
-          { name: 'Contacts2' },
-          { name: 'Contacts3' },
-          { name: 'Contacts4' },
-          { name: 'Contacts5' },
-          { name: 'Contacts6' },
         ],
         selectedContacts: []
       },
@@ -901,16 +909,16 @@ export default {
       alarmListData: [{}],
       newAlarmStrategyForm: {
         strategyName: '',
-        strategyType: '',
-        channel: ['msg'],
-        alarmObj: 'all'
+        strategyType: '0',
+        channel: ['phone'],
+        alarmObj: 'part'
       },
       newAlarmStrategyFormRuleValidate: {
         strategyName: [
           { required: true, validator: regExp.validaRegisteredName, trigger: 'blur' }
         ],
         strategyType: [
-          { required: true, message: '请输入策略类型', trigger: 'blur' }
+          { required: true, message: '请选择策略类型', trigger: 'blur' }
         ],
         channel: [
           { required: true, type: 'array', min: 1, message: '请至少选择一个', trigger: 'change' }
@@ -918,10 +926,14 @@ export default {
       },
       isAddMonitorIndex: true,
       hostHint: false,
-      contactsHint: false
+      contactsHint: false,
+      currentAlarmObj: '',
+      allHostLegth: '',
+      allHostTem: ''
     }
   },
   created () {
+    
     //  短信剩余配额数据模拟
     var mockMessageData = [
       { value: 130, name: '剩余配额' },
@@ -1051,37 +1063,94 @@ export default {
     }
     this.weekdata = mockweekData
     this.monthdata = mockmonthData
-    this.init()
   },
   methods: {
-    targetHandleAdd () {
-      this.targetIndex++;
-      this.targetformDynamic.items.push({
-        value: JSON.parse(targetTemStr),
-        index: this.index,
-        status: 1
-      })
-    },
-    targetHandleRemove (index) {
-      this.targetformDynamic.items[index].status = 0;
-    },
-    eventHandleAdd () {
-      this.eventIndex++;
-      this.eventformDynamic.items.push({
-        value: JSON.parse(eventTemStr),
-        index: this.index,
-        status: 1
-      })
-    },
-    eventHandleRemove (index) {
-      this.eventformDynamic.items[index].status = 0;
-    },
-    init () {
+    alarmStrategyInit() {
       this.chartTypeSwitch('disk')
       this.chartTypeSwitch('cpu')
       this.chartTypeSwitch('memory')
       this.chartTypeSwitch('flow')
+      this.selectedTarget = this.alarmHostTarget
+      this.getContacts()
+      this.changeStrategyType()
     },
+    changeAlarmType() {
+    if (this.newAlarmStrategyForm.alarmObj == 'all'){
+        this.strategyhost.selectedHost = this.allHostTem
+        this.strategyhost.allHost = []
+      } else {
+       this.strategyhost.selectedHost = []
+       this.strategyhost.allHost = this.allHostTem
+      }
+    },
+    changeStrategyType() {
+      var objArray = ['云主机', '云硬盘', 'vpc', '对象存储']
+      var productType = ''
+      objArray.forEach((item, index) => {
+        if (this.newAlarmStrategyForm.strategyType == index){
+          productType = item
+        }
+      })
+      this.currentAlarmObj = productType
+      var targetArray = [this.alarmHostTarget, this.alarmDiskTarget, this.alarmVpcTarget, this.alarmObjTarget]
+      targetArray.forEach((item, index) => {
+        if (this.newAlarmStrategyForm.strategyType == index){
+          this.selectedTarget = item
+        }
+      })
+      this.targetformDynamic.items[0].alarmName = this.selectedTarget.target[0].value
+      this.targetformDynamic.items.splice(1, this.targetformDynamic.items.length - 1)
+      this.$http.get('monitor/listZoneVMAndDiskAndVpcAndObject1.do', {
+        params: {
+          productType: productType
+        }
+      }).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+            this.allHostTem = response.data.list
+            this.strategyhost.allHost = response.data.list
+            this.allHostLegth = response.data.list.length
+          } else {
+           console.log('获取资源列表报错')
+          }
+      })
+    },
+    targetHandleAdd () {
+      var targetArray = [this.alarmHostTarget, this.alarmDiskTarget, this.alarmVpcTarget, this.alarmObjTarget]
+      targetArray.forEach((item, index) => {
+        if (this.newAlarmStrategyForm.strategyType == index){
+          this.selectedTarget = item
+        }
+      })
+      var selectedAttr = this.selectedTarget.target[0].value
+      this.targetformDynamic.items.push({
+                alarmName: selectedAttr,
+                countCircle: '1',
+                valueType: '>',
+                vaule: '80',
+                continueCircle: '1',
+                alarmCount: '1',
+                alarmType: '1'
+      })
+    },
+    targetHandleRemove (index) {
+      this.targetformDynamic.items.splice(index, 1)
+    },
+    eventHandleAdd () {
+      this.eventformDynamic.items.push(
+        {
+            alarmName: '1',
+            countCircle: '1',
+            continueCircle: '1',
+            alarmCount: '1',
+            alarmType: '2'
+            
+          }
+      )
+    },
+    eventHandleRemove (index) {
+      this.eventformDynamic.items.splice(index, 1)
+    },
+    
     // 区域变更，刷新数据
     refresh () {
     },
@@ -1092,7 +1161,8 @@ export default {
         case 'customMonitoring':
           this.getCustomMonitorGroup()
           break
-        case '':
+        case 'alarmStrategy':
+        this.alarmStrategyInit()
           break
         case '':
           break
@@ -1339,7 +1409,7 @@ export default {
       },
       // 切换自定义监控折线和柱状图
       cutMapCustomMonitoring(item, index) {
-        console.log(item)
+        // console.log(item)
         let brokenLine = {}
         if (item.mapType == 'line') {
           brokenLine = JSON.parse(JSON.stringify(line))
@@ -1555,15 +1625,56 @@ export default {
         }
       })
     },
-
+    // 列出联系人
+    getContacts() {
+      var url = `user/getcontacts.do`
+      this.$http.get(url).then(response => {
+        if (response.status == 200 && response.data.status == 1) {
+          this.contacts.allContacts = response.data.result.map(item => {
+            return {name: item.username, id: item.id}
+          })
+        }
+      })
+    },
     newAlarmStrategy_ok () {
       this.hostHint = this.strategyhost.selectedHost.length < 1 ? true : false
       this.contactsHint = this.contacts.selectedContacts.length < 1 ? true : false
       this.$refs['newAlarmStrategyForm'].validate((valid) => {
         if (valid && !this.hostHint && !this.contactsHint) {
-          this.$Message.success('Success!');
+          // 告警渠道选择
+            var channel = {letter: 0, email: 0, phone: 0}
+            this.newAlarmStrategyForm.channel.forEach(item => {
+              var x = ''
+              for (x in channel){
+                if (x == item){
+                  channel[x] = 1
+                }
+              }
+            })
+          // 选中的联系人
+          var linkMan = this.contacts.selectedContacts.map(item => {
+            return item.id
+          })
+          // 选中的资源
+          var selectedProduct = []
+          selectedProduct = this.strategyhost.selectedHost.map(item => {
+            return item.id
+          })
+          let params = {
+            name: this.newAlarmStrategyForm.strategyName + '',
+            type: this.newAlarmStrategyForm.strategyType + '',
+            resourceIds: selectedProduct.join(),
+            Letter: channel.letter + '',
+            email: channel.email + '',
+            phone: channel.phone + '',
+            linkIds: linkMan.join(),
+            targetAlarmMessage: JSON.stringify(this.targetformDynamic.items),
+            eventAlarmMessage: JSON.stringify(this.eventformDynamic.items),
+          }
+          this.$http.post('alarmControl/createAlarmControl.do', params).then(res => {
+          })
         } else {
-          this.$Message.error('Fail!');
+          console.log('fail')
         }
       })
     },
