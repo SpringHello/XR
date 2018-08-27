@@ -1,5 +1,5 @@
 
-var echarts = require('echarts/lib/echarts');
+// var echarts = require('echarts/echarts.all.js');
 
 // function renderItem(params,api){
 //   return{
@@ -27,7 +27,10 @@ export default {
                 type: 'dashed'
             },
         },
-      formatter: "{a}<br>{b} : {c}MB"
+      formatter: "{a}<br>{b} : {c}MB",
+      // formatter: function (params) {
+      //    return
+      // }
     },
     grid: {
         left: '3%',
@@ -45,9 +48,21 @@ export default {
     },
     yAxis: {
       axisLabel: {
-           formatter: "{value}MB"
+           formatter: "{value}MB",
+           //  formatter:function (value){
+           //    if(value / 1024 < 1){
+           //      return value+'b';
+           //    }else if(value / 1048576 <1){
+           //      return (value/1024).toFixed(2)+'kb';
+           //    } else if(value / 1073741824<1){
+           //      return (value / 1048576).toFixed(2)+'mb';
+           //    }else {
+           //      return (value / 1073741824).toFixed(2)+'Gb';
+           //    }
+           //    return value+'b';
+           //  }
          },
-      // max:20
+      // max:1073741824
     },
     series: [
         {
@@ -60,9 +75,7 @@ export default {
                     color: '#2A99F2'
                 }
             },
-
-            data: [0, 0, 0, 0, 0, 0, 0],
-            // renderItem:renderItem
+            data: [0, 0, 0, 0, 0, 0, 0]
         },
     ]
 }

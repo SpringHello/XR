@@ -18,6 +18,8 @@ import ECharts from 'vue-echarts/components/ECharts'
 import 'echarts/lib/chart/bar'
 import 'echarts/lib/chart/line'
 import 'echarts/lib/component/tooltip'
+import 'echarts/lib/component/legend'
+import 'echarts/lib/component/title'
 
 
 import md5 from 'md5'
@@ -36,11 +38,11 @@ Vue.config.productionTip = false
 //  axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
 
 
-// axios.defaults.baseURL = 'http://192.168.3.231:8086/ruirados/'
+axios.defaults.baseURL = 'http://192.168.3.231:8086/ruirados/'
 // axios.defaults.baseURL = 'http://192.168.3.237:8080/ruirados/'
 // axios.defaults.baseURL = 'http://zhouyi.xrcloud.net:8083/ruirados/'
 //axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
-// axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true
 // window.eventBus = new Vue();
 
 // axios挂载到Vue原型
