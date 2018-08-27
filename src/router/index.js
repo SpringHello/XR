@@ -112,25 +112,26 @@ const DiskBackup = () => import('@/components/Back/DiskBackup')
 const DiskParticulars = () => import('@/components/Back/DiskParticulars')
 
 //const ObjectStorage = () => import('@/components/Back/ObjectStorage')
-const Vpc = () =>import('@/components/Back/Vpc')
-const VpcManage = () =>import('@/components/Back/VpcManage')
-const Vpn = () =>import('@/components/Back/Vpn')
-const Ip = () =>import('@/components/Back/Ip')
-const Order = () =>import('@/components/Back/Order')
-const Order1 = () =>import('@/components/Back/Order1')
-const PayResult = () =>import('@/components/Back/PayResult')
-const Result = () =>import('@/components/Back/Result')
-const Expenses = () =>import('@/components/Back/Expenses')
-const UserCenter = () =>import('@/components/Back/UserCenter')
-const MsgCenter = () =>import('@/components/Back/MsgCenter')
-const OperationLog = () =>import('@/components/Back/OperationLog')
-const Manage = () =>import('@/components/Back/Manage')
-const Upgrade = () =>import('@/components/Back/Upgrade')
-const FirewallManage = () =>import('@/components/Back/FirewallManage')
-const NATManage = () =>import('@/components/Back/NATManage')
-const Recycle = () =>import('@/components/Back/Recycle')
-const Wxpay = () =>import('@/components/Back/Wxpay')
-const WorkOrder = () =>import('@/components/Back/WorkOrder')
+const CloudMonitor = () => import('@/components/Back/CloudMonitor')
+const Vpc = () => import('@/components/Back/Vpc')
+const VpcManage = () => import('@/components/Back/VpcManage')
+const Vpn = () => import('@/components/Back/Vpn')
+const Ip = () => import('@/components/Back/Ip')
+const Order = () => import('@/components/Back/Order')
+const Order1 = () => import('@/components/Back/Order1')
+const PayResult = () => import('@/components/Back/PayResult')
+const Result = () => import('@/components/Back/Result')
+const Expenses = () => import('@/components/Back/Expenses')
+const UserCenter = () => import('@/components/Back/UserCenter')
+const MsgCenter = () => import('@/components/Back/MsgCenter')
+const OperationLog = () => import('@/components/Back/OperationLog')
+const Manage = () => import('@/components/Back/Manage')
+const Upgrade = () => import('@/components/Back/Upgrade')
+const FirewallManage = () => import('@/components/Back/FirewallManage')
+const NATManage = () => import('@/components/Back/NATManage')
+const Recycle = () => import('@/components/Back/Recycle')
+const Wxpay = () => import('@/components/Back/Wxpay')
+const WorkOrder = () => import('@/components/Back/WorkOrder')
 
 const Link = () =>import('@/components/Link')
 const BRecords = () =>import('@/components/Back/Records')
@@ -309,6 +310,7 @@ var router = new Router({
         {path: 'disk', name: 'disk', component: Disk},
         {path: 'diskBackup', name: 'diskBackup', component: DiskBackup},
         {path: 'diskParticulars', name: 'diskParticulars', component: DiskParticulars},
+        {path: 'CloudMonitor', name: 'CloudMonitor', component: CloudMonitor},
         //{path:'objectStorage',name:'objectStorage',component:ObjectStorage},
         {path: 'snapshot', name: 'snapshot', component: Snapshot},
         {path: 'firewall', name: 'firewall', component: Firewall},
