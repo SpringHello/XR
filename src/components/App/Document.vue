@@ -64,9 +64,9 @@
       })
     },
     created(){
-      /*axios.get('document/listHotQuestion.do').then(response => {
+      axios.get('document/listHotQuestion.do').then(response => {
         this.problems = response.data.result
-      })*/
+      })
     },
     methods: {
       setData(response){
