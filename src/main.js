@@ -17,9 +17,10 @@ import '@/assets/css/universal.less'
 
 import ECharts from 'vue-echarts/components/ECharts'
 // import ECharts modules manually to reduce bundle size
-import 'echarts/lib/chart/bar'
-import 'echarts/lib/chart/line'
-import 'echarts/lib/component/tooltip'
+import 'echarts'
+// import 'echarts/lib/chart/line'
+// import 'echarts/lib/chart/pie'
+// import 'echarts/lib/component/tooltip'
 // 引入轮播组件
 import carousel from './myView/carousel'
 import carouselItem from './myView/carouselItem'

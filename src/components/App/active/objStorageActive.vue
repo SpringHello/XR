@@ -10,6 +10,7 @@
                   <p>对象存储OSS重磅上线</p>
                   <p>安全稳定、海量、便捷、低延迟、低成本的云端存储服务</p>
                   <p>免费领取<span>50G</span>存储包</p>
+                  <Button>立即领取</Button>
                 </div>
               </div>
             </div>
@@ -441,6 +442,18 @@ export default {
             width: 1200px;
             margin: 0 auto;
             padding-top: 70px;
+            button {
+              background: none;
+              outline: none;
+              cursor: pointer;
+              padding: 11px 50px;
+              margin-top: 30px;
+              border-radius: 4px;
+              border: 1px solid rgba(51, 51, 51, 1);
+              font-size: 16px;
+              font-family: "Microsoft YaHei", "微软雅黑";
+              color: rgba(51, 51, 51, 1);
+            }
             p {
               font-size: 18px;
               font-family: "Microsoft YaHei", "微软雅黑";
