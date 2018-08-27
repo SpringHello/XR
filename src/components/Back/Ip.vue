@@ -116,6 +116,10 @@
               </Option>
             </Select>
           </FormItem>
+          <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 48%;top: 49%;" @click="$router.push('buy')">
+              <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
+              购买主机
+            </span>
         </Form>
         <p style="font-size: 12px;color: #999999">提示：弹性IP只能绑定一个资源，当您绑定该资源后，将不能再将该弹性IP用于其他资源绑定。</p>
       </div>
