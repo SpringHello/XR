@@ -79,7 +79,7 @@
               </FormItem>
               <span v-if="creatbalancemodal.formInline.radio=='public'"
                     style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 50%;top: 63.5%;"
-                    @click="$router.push('buy')">
+                    @click="buyIP">
               <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
               购买弹性IP
             </span>
@@ -841,6 +841,10 @@
             }
           })
         }
+      },
+      buyIP() {
+        sessionStorage.setItem('pane', 'Peip')
+        this.$router.push('buy')
       }
     },
     watch: {

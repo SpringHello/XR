@@ -22,7 +22,10 @@
           <div class="footer">
             <button @click="toMap">查看拍照地址</button>
             <button style="margin-left: 20px" @click="sendAddress">将地址发送至手机</button>
-            <p>当天拍照完成，当天提交管局，速度较快。</p>
+            <p style="border-bottom: 1px solid #999999;width: 765px;padding-bottom: 20px;">当天拍照完成，当天提交管局，速度较快。</p>
+          </div>
+          <div class="footer" style="padding-top: 0">
+            <button @click="applyCurtain" v-show="!nextStep">提交初审</button>
           </div>
         </div>
         <div v-if="photograph === 2 && nextStep === false">
@@ -460,9 +463,9 @@
           zoneId: this.zoneId,
           hostCompanyUrl: this.mainParams.hostCompanyUrl,
         }
-        let addMainWeb = axios.post('recode/addMainWeb.do', this.siteParams)
         // 有主体信息发送一个请求，没有发送两个请求
         if (this.isRecord == true) {
+          let addMainWeb = axios.post('recode/addMainWeb.do', this.siteParams)
           Promise.all([addMainWeb]).then(response => {
             if (response[0].status == 200 && response[0].data.status == 1) {
               this.$router.push('waitFirstTrial')
