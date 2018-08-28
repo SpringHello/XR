@@ -58,7 +58,7 @@
             <Input v-model="newRemoteAccessForm.vpnName" placeholder="请输入接入点名称"></Input>
           </FormItem>
           <FormItem label="VPC ID" prop="vpcId">
-            <Select v-model="newRemoteAccessForm.vpcId">
+            <Select v-model="newRemoteAccessForm.vpcId" @on-change="isHaveNat">
               <Option v-for="item in newRemoteAccessForm.vpcIdOptions" :value="item.vpcid" :key="item.vpcid">
                 {{item.vpcname}}
               </Option>
@@ -393,8 +393,9 @@
   import $store from '@/vuex'
   import regExp from '../../util/regExp'
   import {mapState} from 'vuex'
-  export default{
-    beforeRouteEnter(from, to, next){
+
+  export default {
+    beforeRouteEnter(from, to, next) {
       // 远程接入列表
       var remote = axios.get('network/listRemoteVpn.do', {
         params: {
@@ -414,7 +415,7 @@
         })
       })
     },
-    data(){
+    data() {
       const validaRegisteredName = regExp.validaRegisteredName
       var pane = sessionStorage.getItem('pane') || 'remote'
       sessionStorage.removeItem('pane')
@@ -886,7 +887,7 @@
     },
     methods: {
       // 切换地区重新获取数据
-      refresh () {
+      refresh() {
         // 远程接入列表
         var remote = axios.get('network/listRemoteVpn.do', {
           params: {
@@ -906,25 +907,35 @@
           this.currentRemote = null
         })
       },
-      initRemoteData(response){
+      initRemoteData(response) {
         if (response.status == 200 && response.data.status == 1) {
           this.remoteVpnData = response.data.result
         }
       },
-      initCustomerData(response){
+      initCustomerData(response) {
         if (response.status == 200 && response.data.status == 1) {
           this.tunnelVpnData = response.data.result
         }
       },
       // 打开远程接入modal
-      newRemoteAccess(){
+      newRemoteAccess() {
         this.showModal.newRemoteAccess = true
         this.$http.get('network/listVpc.do').then(response => {
           this.newRemoteAccessForm.vpcIdOptions = response.data.result
         })
       },
+      isHaveNat(val) {
+        let url = 'network/isNatWay.do'
+        this.$http.get(url, {
+          params: {
+            vpcId: val
+          }
+        }).then(res => {
+
+        })
+      },
       // 提交远程接入请求
-      newRemoteAccessOk(){
+      newRemoteAccessOk() {
         this.$refs.newRemoteAccessFormValidate.validate(validate => {
           if (validate) {
             this.showModal.newRemoteAccess = false
@@ -961,13 +972,13 @@
 
       },
       // 打开创建隧道VPN modal
-      newTunnelVpn(){
+      newTunnelVpn() {
         this.showModal.newTunnelVpn = true
         this.$http.get('network/listVpc.do').then(response => {
           this.newTunnelVpnForm.vpcIdOptions = response.data.result
         })
       },
-      nextStep(){
+      nextStep() {
         this.$refs[`newTunnelVpnFormValidate${this.newTunnelVpnForm.step}`].validate(validate => {
           if (validate) {
             this.newTunnelVpnForm.step++
@@ -975,7 +986,7 @@
         })
       },
       // 提交新建VPN隧道请求
-      newTunnelVpnOk(){
+      newTunnelVpnOk() {
         this.showModal.newTunnelVpn = false
         this.newTunnelVpnForm.step = 0
         this.newTunnelVpnForm.showDetail = false
@@ -1032,15 +1043,15 @@
         })
       },
       // 选中远程接入
-      remoteRadio(current){
+      remoteRadio(current) {
         this.currentRemote = current
       },
       // 选中隧道VPN
-      tunnelRadio(current){
+      tunnelRadio(current) {
         this.currentTunnel = current
       },
       // 挂断VPN接入
-      delRemoteAccess(){
+      delRemoteAccess() {
         if (this.currentRemote == null) {
           this.$Message.info({
             content: '请选择要挂断的远程VPN接入'
@@ -1077,7 +1088,7 @@
         }
       },
       // 删除隧道VPN
-      delTunnelVpn(){
+      delTunnelVpn() {
         if (this.currentTunnel == null) {
           this.$Message.info({
             content: '请选择要删除的隧道VPN'
@@ -1112,7 +1123,7 @@
         }
       },
       //vpn 删除连接
-      disconnect(sourcevpnconId){
+      disconnect(sourcevpnconId) {
         this.$http.get('network/deleteVpnConnection.do', {
           params: {
             id: sourcevpnconId
@@ -1132,7 +1143,7 @@
         })
       },
       // vpn 重新连接
-      connect(row){
+      connect(row) {
         this.tunnelVpnData.forEach(item => {
           if (item.sourcevpnId == row.sourcevpnId) {
             this.$set(item, 'sourcestatus', '-3')
@@ -1156,7 +1167,7 @@
         })
       },
       // vpn 修改配置
-      fixConfig(){
+      fixConfig() {
         this.showModal.FixVPN = false
         this.tunnelVpnData.forEach(item => {
           if (item.customerVPNid == this.modifyTunnelVpnForm.customerVPNid) {
@@ -1194,7 +1205,7 @@
         })
       },
       // 修改连接方式
-      modifyConnection(){
+      modifyConnection() {
         this.showModal.FixVPNContent = false
         this.tunnelVpnData.forEach(item => {
           if (item.sourcevpnId == this.modifyForm.sourcevpnId) {
@@ -1221,13 +1232,13 @@
         })
       },
       // 重启VPN
-      restartVpn(){
+      restartVpn() {
         if (this.currentTunnel == null) {
           this.$Message.info({
             content: '请选择要重启隧道VPN'
           })
           return
-        } else(
+        } else (
           this.$message.confirm({
             content: '确认重启连接？',
             onOk: () => {
@@ -1261,7 +1272,7 @@
         )
       },
       // 列出所有用户
-      listUser(){
+      listUser() {
         this.$http.get('network/listVpnUsers.do', {
           params: {
             remoteVpnId: this.current.id
@@ -1273,7 +1284,7 @@
         })
       },
       // 远程vpn数据
-      remoteData(){
+      remoteData() {
         axios.get('network/listRemoteVpn.do', {
           params: {
             zoneId: $store.state.zone.zoneid
@@ -1285,7 +1296,7 @@
         })
       },
       // 用户管理添加用户
-      addUser(){
+      addUser() {
         this.$refs.addUserFormValidate.validate(validate => {
           if (validate) {
             // status   1：创建中  2：删除中
@@ -1312,7 +1323,7 @@
         })
       },
       // 删除用户
-      delUser(userName, index){
+      delUser(userName, index) {
         this.userList.splice(index, 1, {
           name: userName,
           status: 2
@@ -1345,7 +1356,7 @@
     },
     computed: mapState({
       paneStatus: state => state.paneStatus,
-      auth(){
+      auth() {
         return this.$store.state.authInfo != null
       }
     })

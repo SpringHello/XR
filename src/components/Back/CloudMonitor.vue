@@ -359,9 +359,9 @@
           <TabPane label="告警列表" name="alarmList">
             <div class="al-content">
               <div class="al-content-title">
-                <Button type="primary">标为已处理</Button>
-                <Button type="primary">标为未处理</Button>
-                <Button type="primary">删除</Button>
+                <Button type="primary" @click="sign(1)">标为已处理</Button>
+                <Button type="primary" @click="sign(0)">标为未处理</Button>
+                <Button type="primary" @click="deleteMsg">删除</Button>
                 <div style="float: right">
                   <span>接收时间</span>
                   <DatePicker type="daterange" placement="bottom-end" placeholder="请选择日期" style="width: 230px;margin: 0 10px" @on-change="alarmListTimeChange"></DatePicker>
@@ -1844,6 +1844,7 @@
           if (res.status == 200 && res.data.status == 1) {
             this.alarmList.total = res.data.total
             this.alarmListData = res.data.tableData
+            this.alarmListSelected = []
           }
         })
       },
@@ -1857,6 +1858,57 @@
       alarmListCurrentChange(currentPage) {
         this.alarmList.currentPage = currentPage
         this.getAlarmList()
+      },
+      sign(val) {
+        if (this.alarmListSelected.length == 0) {
+          this.$Message.info('请选择需要标记的信息')
+          return
+        }
+        let url = 'alarmControl/updateOwnAlarmControl.do'
+        let ids = this.alarmListSelected.map(item => {
+          return item.id
+        })
+        this.$http.get(url, {
+          params: {
+            ids: ids + '',
+            isRead: val
+          }
+        }).then(res => {
+          if (res.data.status == 1) {
+            this.$Message.success('操作成功')
+            this.getAlarmList()
+          } else {
+            this.getAlarmList()
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
+      deleteMsg() {
+        if (this.alarmListSelected.length == 0) {
+          this.$Message.info('请选择需要标记的信息')
+          return
+        }
+        let url = 'alarmControl/delOwnAlarmControl.do'
+        let ids = this.alarmListSelected.map(item => {
+          return item.id
+        })
+        this.$http.get(url, {
+          params: {
+            ids: ids + ''
+          }
+        }).then(res => {
+          if (res.data.status == 1) {
+            this.$Message.success('删除成功')
+            this.getAlarmList()
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+            this.getAlarmList()
+          }
+        })
       }
     },
     computed: {
