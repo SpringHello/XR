@@ -56,7 +56,8 @@
                 </div>
                 <chart :options="diskPolar" style="width: 714px;height:172px;margin-top: 20px;"></chart>
               </div>
-              <chart :options="messageData" style="border: solid 1px #D8D8D8;padding: 20px;padding-right:0;box-sizing: border-box;width: 366px;height:297px;"></chart>
+              <chart :options="messageData"
+                     style="border: solid 1px #D8D8D8;padding: 20px;padding-right:0;box-sizing: border-box;width: 366px;height:297px;"></chart>
             </section>
             <section>
               <div>
@@ -99,7 +100,8 @@
                   </RadioGroup>
                   <div>
                     <Button type="primary" class="export-btn">导出</Button>
-                    <RadioGroup v-model="overview.memory.chartType" type="button" @on-change="chartTypeSwitch('memory')">
+                    <RadioGroup v-model="overview.memory.chartType" type="button"
+                                @on-change="chartTypeSwitch('memory')">
                       <Radio label="line">折线</Radio>
                       <Radio label="bar">柱状</Radio>
                     </RadioGroup>
@@ -138,7 +140,8 @@
             <div class="cm-content">
               <div class="cm-item" v-for="(item,index) in customMonitoringData">
                 <div class="cm-item-title">
-                  <p>我关注的指标<span @click="deleteAttention(item)">&nbsp删除</span><span @click="editAttention(item)">编辑 |</span></p>
+                  <p>我关注的指标<span @click="deleteAttention(item)">&nbsp删除</span><span
+                    @click="editAttention(item)">编辑 |</span></p>
                 </div>
                 <div class="cm-item-switch">
                   <RadioGroup type="button" v-model="item.timeType" @on-change="cutDataCustomMonitoring(item,index)">
@@ -175,15 +178,17 @@
             <div class="nas-content" v-else>
               <div class="nas-content-title">
                 <span>新建告警策略</span>
-                <button @click="isNewAlarmStrategy = false">返回</button>
+                <button @click="isNewAlarmStrategy = false;listAlarm()">返回</button>
               </div>
               <div class="nas-content-body">
-                <Form :model="newAlarmStrategyForm" :rules="newAlarmStrategyFormRuleValidate" ref="newAlarmStrategyForm">
+                <Form :model="newAlarmStrategyForm" :rules="newAlarmStrategyFormRuleValidate"
+                      ref="newAlarmStrategyForm">
                   <FormItem label="策略名称" prop="strategyName" style="display:flex">
                     <Input v-model="newAlarmStrategyForm.strategyName" placeholder="请输入" style="width:318px"></Input>
                   </FormItem>
                   <FormItem label="策略类型" prop="strategyType" style="display:flex;">
-                    <Select v-model="newAlarmStrategyForm.strategyType" style="width:318px" @on-change="changeStrategyType">
+                    <Select v-model="newAlarmStrategyForm.strategyType" style="width:318px"
+                            @on-change="changeStrategyType">
                       <Option value="0">云主机</Option>
                       <!-- <Option value="1">云硬盘</Option>
                       <Option value="2">vpc</Option> -->
@@ -197,13 +202,15 @@
                     </RadioGroup>
                   </FormItem>
                   <div class="list-wrap" style="position:relative;" v-if="newAlarmStrategyForm.alarmObj=='part'">
-                    <span v-if="hostHint&&strategyhost.selectedHost.length<1" style="color:#ed3f14;font-size:12px;position:absolute;top:-20px;">请至少选择一个主机</span>
+                    <span v-if="hostHint&&strategyhost.selectedHost.length<1"
+                          style="color:#ed3f14;font-size:12px;position:absolute;top:-20px;">请至少选择一个主机</span>
                     <div class="list">
                       <p>该区域下所有{{currentAlarmObj}}</p>
                       <ul>
                         <li v-for="(item,index) in strategyhost.allHost" :key="index">
                           <span>{{ item.instancename}}</span>
-                          <i class="icon-btn" v-if="strategyhost.selectedHost.length<5&&item.name !=''" @click="addHost(item,index)">+ 添加</i>
+                          <i class="icon-btn" v-if="strategyhost.selectedHost.length<5&&item.name !=''"
+                             @click="addHost(item,index)">+ 添加</i>
                         </li>
                       </ul>
                     </div>
@@ -224,7 +231,10 @@
                     </div>
                   </div>
                   <div class="alarm-strategy">
-                    <p class="headline">告警策略</p>
+                    <p class="headline">告警策略
+                      <span v-if="targetformDynamic.items.length+eventformDynamic.items.length<1"
+                            style="color:#ed3f14;font-size:12px;padding-left:10px;">请至少设置一个告警策略</span>
+                    </p>
                     <div class="content">
                       <div>
                         <p>指标告警</p>
@@ -233,41 +243,53 @@
                                   :key="index">
                           <Row :gutter="16">
                             <Col span="4">
-                              <Select v-model="item.alarmName">
-                                <Option v-for="item in selectedTarget.target" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                              </Select>
+                            <Select v-model="item.alarmName">
+                              <Option v-for="item in selectedTarget.target" :value="item.value" :key="item.value">
+                                {{ item.value }}
+                              </Option>
+                            </Select>
                             </Col>
                             <Col span="4">
-                              <Select v-model="item.countCircle">
-                                <Option v-for="item in publicTemp.StatisticalCycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                              </Select>
+                            <Select v-model="item.countCircle">
+                              <Option v-for="item in publicTemp.StatisticalCycle" :value="item.value" :key="item.value">
+                                {{ item.label }}
+                              </Option>
+                            </Select>
                             </Col>
                             <Col span="2">
-                              <Select v-model="item.valueType" style="text-align:center">
-                                <Option v-for="item in publicTemp.standard" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                              </Select>
+                            <Select v-model="item.valueType" style="text-align:center">
+                              <Option v-for="item in publicTemp.standard" :value="item.value" :key="item.value">
+                                {{ item.label }}
+                              </Option>
+                            </Select>
                             </Col>
                             <Col span="2" class="Percentage">
-                              <Select v-model="item.vaule" style="text-align:center">
-                                <Option v-for="item in publicTemp.Percentage" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                              </Select>
+                            <Select v-model="item.vaule" style="text-align:center">
+                              <Option v-for="item in publicTemp.Percentage" :value="item.value" :key="item.value">
+                                {{ item.label }}
+                              </Option>
+                            </Select>
                             </Col>
                             <Col span="1">
-                              <span v-if="item.alarmName=='flow'">KB/s</span>
-                              <span v-else>%</span>
+                            <span v-if="item.alarmName=='flow'">KB/s</span>
+                            <span v-else>%</span>
                             </Col>
                             <Col span="4">
-                              <Select v-model="item.continueCircle">
-                                <Option v-for="item in publicTemp.keepCycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                              </Select>
+                            <Select v-model="item.continueCircle">
+                              <Option v-for="item in publicTemp.keepCycle" :value="item.value" :key="item.value">
+                                {{ item.label }}
+                              </Option>
+                            </Select>
                             </Col>
                             <Col span="4">
-                              <Select v-model="item.alarmCount">
-                                <Option v-for="item in publicTemp.frequency" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                              </Select>
+                            <Select v-model="item.alarmCount">
+                              <Option v-for="item in publicTemp.frequency" :value="item.value" :key="item.value">
+                                {{ item.label }}
+                              </Option>
+                            </Select>
                             </Col>
                             <Col span="1">
-                              <Button type="text" @click="targetHandleRemove(index)">×</Button>
+                            <Button type="text" @click="targetHandleRemove(index)">×</Button>
                             </Col>
                           </Row>
                         </FormItem>
@@ -282,27 +304,35 @@
                                   :key="index">
                           <Row :gutter="16">
                             <Col span="4">
-                              <Select v-model="item.alarmName">
-                                <Option v-for="item in eventTem.target" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                              </Select>
+                            <Select v-model="item.alarmName">
+                              <Option v-for="item in eventTem.target" :value="item.value" :key="item.value">
+                                {{ item.value }}
+                              </Option>
+                            </Select>
                             </Col>
                             <Col span="4">
-                              <Select v-model="item.countCircle">
-                                <Option v-for="item in eventTem.StatisticalCycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                              </Select>
+                            <Select v-model="item.countCircle">
+                              <Option v-for="item in eventTem.StatisticalCycle" :value="item.value" :key="item.value">
+                                {{ item.label }}
+                              </Option>
+                            </Select>
                             </Col>
                             <Col span="4">
-                              <Select v-model="item.continueCircle">
-                                <Option v-for="item in eventTem.keepCycle" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                              </Select>
+                            <Select v-model="item.continueCircle">
+                              <Option v-for="item in eventTem.keepCycle" :value="item.value" :key="item.value">
+                                {{ item.label }}
+                              </Option>
+                            </Select>
                             </Col>
                             <Col span="4">
-                              <Select v-model="item.alarmCount">
-                                <Option v-for="item in eventTem.frequency" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                              </Select>
+                            <Select v-model="item.alarmCount">
+                              <Option v-for="item in eventTem.frequency" :value="item.value" :key="item.value">
+                                {{ item.label }}
+                              </Option>
+                            </Select>
                             </Col>
                             <Col span="1">
-                              <Button type="text" @click="eventHandleRemove(index)">×</Button>
+                            <Button type="text" @click="eventHandleRemove(index)">×</Button>
                             </Col>
                           </Row>
                         </FormItem>
@@ -321,14 +351,16 @@
                       </CheckboxGroup>
                     </FormItem>
                     <div class="contacts">
-                      <p>告警接受人<span v-if="contactsHint&&contacts.selectedContacts.length<1" style="color:#ed3f14;font-size:12px;padding-left:10px;">请至少选择一个联系人</span></p>
+                      <p>告警接受人<span v-if="contactsHint&&contacts.selectedContacts.length<1"
+                                    style="color:#ed3f14;font-size:12px;padding-left:10px;">请至少选择一个联系人</span></p>
                       <div class="list-wrap">
                         <div class="list">
                           <p>所有联系人</p>
                           <ul>
                             <li v-for="(item,index) in contacts.allContacts" :key="index">
                               <span>{{ item.name }}</span>
-                              <i class="icon-btn" v-if="contacts.selectedContacts.length<5&&item.name !=''" @click="addContacts(item,index)">+ 添加</i>
+                              <i class="icon-btn" v-if="contacts.selectedContacts.length<5&&item.name !=''"
+                                 @click="addContacts(item,index)">+ 添加</i>
                             </li>
                           </ul>
                         </div>
@@ -386,7 +418,8 @@
         <div class="modal-top">
           <div class="left">
             <p>产品类型</p>
-            <Select v-model="monitoringIndexForm.productType" placeholder="请选择" @on-change="changeProduct" style="width: 240px;" class="cm-select">
+            <Select v-model="monitoringIndexForm.productType" placeholder="请选择" @on-change="changeProduct"
+                    style="width: 240px;" class="cm-select">
               <Option v-for="item in monitoringIndexForm.productTypeGroup" :key="item.value" :value="item.value">
                 {{item.value}}
               </Option>
@@ -394,7 +427,8 @@
           </div>
           <div class="right">
             <p>指标</p>
-            <Select v-model="monitoringIndexForm.productIndex" placeholder="请选择" @on-change="getIndexResource" style="width: 240px;" class="cm-select">
+            <Select v-model="monitoringIndexForm.productIndex" placeholder="请选择" @on-change="getIndexResource"
+                    style="width: 240px;" class="cm-select">
               <Option v-for="item in monitoringIndexForm.productIndexGroup" :key="item.value" :value="item.value">
                 {{item.label}}
               </Option>
@@ -407,7 +441,9 @@
             <ul>
               <li v-for="(item,index) in monitoringIndexForm.allProduct">
                 <span>{{ item.instancename}}</span>
-                <i class="bluetext" style="cursor: pointer" v-if="monitoringIndexForm.selectedProduct.length<5&&item.name !=''" @click="addProduct(item,index)">+ 添加</i></li>
+                <i class="bluetext" style="cursor: pointer"
+                   v-if="monitoringIndexForm.selectedProduct.length<5&&item.name !=''" @click="addProduct(item,index)">+ 添加</i>
+              </li>
             </ul>
           </div>
           <div class="changelist">
@@ -425,10 +461,13 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button @click="showModal.addMonitorIndex = false">取消</Button>
-        <Button type="primary" @click="addCustomMonitoring_ok" :disabled="monitoringIndexForm.selectedProduct.length == 0 ||monitoringIndexForm.productIndex == ''"
+        <Button type="primary" @click="addCustomMonitoring_ok"
+                :disabled="monitoringIndexForm.selectedProduct.length == 0 ||monitoringIndexForm.productIndex == ''"
                 v-if="isAddMonitorIndex">完成配置
         </Button>
-        <Button v-else type="primary" @click="editCustomMonitoring_ok" :disabled="monitoringIndexForm.selectedProduct.length == 0 ||monitoringIndexForm.productIndex == ''">确认修改
+        <Button v-else type="primary" @click="editCustomMonitoring_ok"
+                :disabled="monitoringIndexForm.selectedProduct.length == 0 ||monitoringIndexForm.productIndex == ''">
+          确认修改
         </Button>
       </div>
     </Modal>
@@ -441,7 +480,8 @@
         <div class="modal-top">
           <div class="left">
             <p>产品类型</p>
-            <Select v-model="editMonitorIndexForm.productType" placeholder="请选择" @on-change="changeProduct" style="width: 240px;" class="cm-select">
+            <Select v-model="editMonitorIndexForm.productType" placeholder="请选择" @on-change="changeProduct"
+                    style="width: 240px;" class="cm-select">
               <Option v-for="item in editMonitorIndexForm.productTypeGroup" :key="item.value" :value="item.value">
                 {{item.value}}
               </Option>
@@ -449,7 +489,8 @@
           </div>
           <div class="right">
             <p>指标</p>
-            <Select v-model="editMonitorIndexForm.productIndex" placeholder="请选择" @on-change="getIndexResource" style="width: 240px;" class="cm-select">
+            <Select v-model="editMonitorIndexForm.productIndex" placeholder="请选择" @on-change="getIndexResource"
+                    style="width: 240px;" class="cm-select">
               <Option v-for="item in editMonitorIndexForm.productIndexGroup" :key="item.value" :value="item.value">
                 {{item.label}}
               </Option>
@@ -462,7 +503,9 @@
             <ul>
               <li v-for="(item,index) in editMonitorIndexForm.allProduct">
                 <span>{{ item.instancename}}</span>
-                <i class="bluetext" style="cursor: pointer" v-if="editMonitorIndexForm.selectedProduct.length<5&&item.name !=''" @click="addProduct(item,index)">+ 添加</i></li>
+                <i class="bluetext" style="cursor: pointer"
+                   v-if="editMonitorIndexForm.selectedProduct.length<5&&item.name !=''" @click="addProduct(item,index)">+ 添加</i>
+              </li>
             </ul>
           </div>
           <div class="changelist">
@@ -480,10 +523,13 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button @click="showModal.editMonitorIndex = false">取消</Button>
-        <Button type="primary" @click="addCustomMonitoring_ok" :disabled="editMonitorIndexForm.selectedProduct.length == 0 ||editMonitorIndexForm.productIndex == ''"
+        <Button type="primary" @click="addCustomMonitoring_ok"
+                :disabled="editMonitorIndexForm.selectedProduct.length == 0 ||editMonitorIndexForm.productIndex == ''"
                 v-if="isAddMonitorIndex">完成配置
         </Button>
-        <Button v-else type="primary" @click="editCustomMonitoring_ok" :disabled="editMonitorIndexForm.selectedProduct.length == 0 ||monitoringIndexForm.productIndex == ''">确认修改
+        <Button v-else type="primary" @click="editCustomMonitoring_ok"
+                :disabled="editMonitorIndexForm.selectedProduct.length == 0 ||monitoringIndexForm.productIndex == ''">
+          确认修改
         </Button>
       </div>
     </Modal>
@@ -495,9 +541,7 @@
   import line from '@/echarts/cloudMonitor/line'
   import bar from '@/echarts/cloudMonitor/bar'
   import regExp from '../../util/regExp'
-  import Axios from 'axios';
 
-  var echarts = require('echarts/lib/echarts')
   var linestr = JSON.stringify(line)
   var barstr = JSON.stringify(bar)
   export default {
@@ -506,7 +550,7 @@
         targetformDynamic: {
           items: [
             {
-              alarmName: 'cpu',
+              alarmName: 'CPU使用率',
               countCircle: '1',
               valueType: '>',
               vaule: '80',
@@ -522,48 +566,37 @@
         alarmHostTarget: {
           target: [
             {
-              label: 'CPU使用率',
-              value: 'cpu'
+              value: 'CPU使用率',
             },
             {
-              label: '内存使用率',
-              value: 'memory'
+              value: '内存使用率',
             },
             {
-              label: '磁盘使用率',
-              value: 'diskUse'
+              value: '磁盘使用率',
             },
             {
-              label: '磁盘读速率',
-              value: 'diskRead'
+              value: '磁盘读速率',
             },
             {
-              label: '磁盘写速率',
-              value: 'diskWrite'
+              value: '磁盘写速率',
             },
             {
-              label: '磁盘读操作速率',
-              value: 'diskOperate'
+              value: '磁盘读操作速率',
             },
             {
-              label: '磁盘写操作速率',
-              value: 'diskWriteOperate'
+              value: '磁盘写操作速率',
             },
             {
-              label: '带内网络流入速率',
-              value: 'innerNetworkInflow'
+              value: '带内网络流入速率',
             },
             {
-              label: '带内网络流出速率',
-              value: 'innerNetworkOutflow'
+              value: '带内网络流出速率',
             },
             {
-              label: '带外网络流入速率',
-              value: 'outNetworkInflow'
+              value: '带外网络流入速率',
             },
             {
-              label: '带外网络流出速率',
-              value: 'outNetworkOutflow'
+              value: '带外网络流出速率',
             }
           ]
         },
@@ -571,20 +604,16 @@
         alarmObjTarget: {
           target: [
             {
-              label: '云硬盘读速率',
-              value: 'cloudDiskRead'
+              value: '云硬盘读速率',
             },
             {
-              label: '云硬盘写速率',
-              value: 'cloudDiskWrite'
+              value: '云硬盘写速率',
             },
             {
-              label: '云硬盘读操作速率',
-              value: 'cloudDiskOperate'
+              value: '云硬盘读操作速率',
             },
             {
-              label: '云硬盘写操作速率',
-              value: 'cloudDiskWriteOperate'
+              value: '云硬盘写操作速率',
             }
           ],
 
@@ -685,7 +714,7 @@
         eventformDynamic: {
           items: [
             {
-              alarmName: '1',
+              alarmName: 'XXX端口ping不可达',
               countCircle: '1',
               continueCircle: '1',
               alarmCount: '1',
@@ -696,12 +725,10 @@
         eventTem: {
           target: [
             {
-              label: 'XXX端口ping不可达',
-              value: '1'
+              value: 'XXX端口ping不可达',
             },
             {
-              label: '应用中断',
-              value: '2'
+              value: '应用中断',
             }
           ],
           StatisticalCycle: [
@@ -934,13 +961,29 @@
             }
           }, {
             title: '触发条件',
-            ellipsis: true
+            ellipsis: true,
+            render: (h, params) => {
+              let alarmname = params.row.AlarmEvent.map(item => {
+                return item.alarmname
+              })
+              return h('span', {}, alarmname.join())
+            }
           }, {
-            title: '策略类型'
+            title: '策略类型',
+            render: (h, params) => {
+              // 0主机  1磁盘     2vpc  3对象存储
+              let type = params.row.strategytype
+              let strategytype = type == 0 ? '云主机' : (type == 1 ? '磁盘' : (type == 2 ? 'vpc' : (type == 3 ? '对象存储' : '')))
+              return h('span', {}, strategytype + '策略')
+            }
           }, {
-            title: '已应用'
+            title: '已应用',
+            render: (h, params) => {
+              return h('span', {}, params.row.resource.length)
+            }
           }, {
-            title: '创建时间'
+            title: '创建时间',
+            key: 'createtime'
           }, {
             title: '操作',
             width: 120,
@@ -953,7 +996,7 @@
                 },
                 on: {
                   click: () => {
-                    alert('复制')
+                    this.isNewAlarmStrategy = true
                   }
                 }
               }, '复制'), h('span', {
@@ -963,18 +1006,24 @@
                 },
                 on: {
                   click: () => {
-                    alert('删除')
+                    this.$http.get('alarmControl/deleteAlarmControl.do', {
+                      params: {
+                        id: params.row.id
+                      }
+                    }).then(response => {
+                      if (response.status == 200 && response.data.status == 1) {
+                        this.listAlarm()
+                      } else {
+                        this.$Message.info(response.data.message)
+                      }
+                    })
                   }
                 }
               }, '删除')])
             }
           }
         ],
-        alarmStrategyData: [
-          {
-            name: '测试数据'
-          }
-        ],
+        alarmStrategyData: [],
         isNewAlarmStrategy: false,
         alarmListColumns: [
           {
@@ -1049,7 +1098,7 @@
             {required: true, validator: regExp.validaRegisteredName, trigger: 'blur'}
           ],
           strategyType: [
-            {required: true, message: '请选择策略类型', trigger: 'blur'}
+            {required: true, message: '请选择策略类型', trigger: 'change'}
           ],
           channel: [
             {required: true, type: 'array', min: 1, message: '请至少选择一个', trigger: 'change'}
@@ -1215,6 +1264,9 @@
         this.selectedTarget = this.alarmHostTarget
         this.getContacts()
         this.changeStrategyType()
+        this.listAlarm()
+      },
+      listAlarm() {
         this.$http.get('alarmControl/listAlarmControl.do').then(res => {
           if (res.status == 200 && res.data.status == 1) {
             this.alarmStrategyData = res.data.result
@@ -1285,7 +1337,7 @@
       eventHandleAdd() {
         this.eventformDynamic.items.push(
           {
-            alarmName: '1',
+            alarmName: 'XXX端口ping不可达',
             countCircle: '1',
             continueCircle: '1',
             alarmCount: '1',
@@ -1786,10 +1838,11 @@
         })
       },
       newAlarmStrategy_ok() {
+        var alarmlength = this.targetformDynamic.items.length + this.eventformDynamic.items.length < 1
         this.hostHint = this.strategyhost.selectedHost.length < 1 ? true : false
         this.contactsHint = this.contacts.selectedContacts.length < 1 ? true : false
         this.$refs['newAlarmStrategyForm'].validate((valid) => {
-          if (valid && !this.hostHint && !this.contactsHint) {
+          if (valid && !this.hostHint && !this.contactsHint && !alarmlength) {
             // 告警渠道选择
             var channel = {letter: 0, email: 0, phone: 0}
             this.newAlarmStrategyForm.channel.forEach(item => {
@@ -1830,7 +1883,6 @@
           }
         })
       },
-
       getAlarmList() {
         let url = 'alarmControl/listOwnAlarmControl.do'
         this.$http.get(url, {
