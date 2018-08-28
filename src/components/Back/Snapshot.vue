@@ -50,17 +50,23 @@
     <!-- 制作快照弹窗 -->
     <Modal v-model="showModal.newSnapshot" width="550" :scrollable="true" class="create-snas-modal">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">制作快照</span>
+        <span class="universal-modal-title">创建快照</span>
       </p>
       <div class="universal-modal-content-flex">
-        <Form :model="creatSnapsForm" ref="creatSnapsForm" :rules="ruleSnaps">
+        <Form :model="creatSnapsForm" ref="creatSnapsForm" :rules="ruleSnaps" style="align-items:flex-end">
           <FormItem label="选择主机" prop="host">
             <Select v-model="creatSnapsForm.host">
               <Option v-for="item in vmList" :value="item.computerid" :key="item.computerid">{{ item.computername }}
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="快照名称" prop="name">
+          <FormItem>
+            <span style="color:#2A99F2;font-size:14px;padding-top:34px;">
+              <span style="font-weight:800;font-size:20px;">+</span>
+              <span style="cursor:pointer;" @click="$router.push('buy')">购买主机</span>
+            </span>
+          </FormItem>
+          <FormItem label="备份名称" prop="name">
             <Input v-model="creatSnapsForm.name" placeholder="请输入2-4094范围内任意数字"></Input>
           </FormItem>
           <div style="padding-top: 11px;margin-right: 100px;margin-bottom: 20px">
