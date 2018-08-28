@@ -44,7 +44,7 @@
         <span class="universal-modal-title">制作镜像</span>
       </div>
       <div class="universal-modal-content-flex">
-        <Form :model="formItem" ref="formItem" :rules="ruleMirror">
+        <Form :model="formItem" ref="formItem" :rules="ruleMirror" style="align-items:flex-end"> 
           <FormItem label="主机" prop="vmInfo">
             <Select v-model="formItem.vmInfo">
               <Option v-for="item in hostName" :value="`${item.rootdiskid}#${item.zoneid}`"
@@ -53,10 +53,16 @@
               </Option>
             </Select>
           </FormItem>
-          <FormItem label="镜像名" prop="mirrorName">
-            <Input v-model="formItem.mirrorName" placeholder="请输入" :maxlength="20"></Input>
+          <FormItem>
+            <span style="color:#2A99F2;font-size:14px;padding-top:34px;">
+              <span style="font-weight:800;font-size:20px;">+</span>
+              <span style="cursor:pointer;" @click="$router.push('buy')">购买主机</span>
+            </span>
           </FormItem>
-          <FormItem label="镜像描述">
+          <FormItem label="镜像名称" prop="mirrorName">
+            <Input v-model="formItem.mirrorName" type="textarea" placeholder="请输入" :autosize="{minRows: 2,maxRows: 5}"></Input>
+          </FormItem>
+          <FormItem label="备注">
             <Input v-model="formItem.mirrorDescription" type="textarea" :autosize="{minRows: 2,maxRows: 5}"
                    placeholder="请输入..."></Input>
           </FormItem>

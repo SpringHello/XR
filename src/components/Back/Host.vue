@@ -418,16 +418,20 @@
     <!-- 绑定静态IP -->
     <Modal v-model="showModal.bindIP" width="590" :scrollable="true">
       <div slot="header" class="modal-header-border">
-        <span class="universal-modal-title">绑定静态IP</span>
+        <span class="universal-modal-title">绑定IP</span>
       </div>
       <div class="universal-modal-content-flex">
         <Form :model="bindForm" ref="bindForm" :rules="bindFormRule">
-          <Form-item label="公网IP" prop="publicIP">
+          <Form-item label="选择弹性IP" prop="publicIP">
             <Select v-model="bindForm.publicIP" placeholder="请选择">
               <Option v-for="(item,index) in publicIPList" :key="index" :value="item.publicipid">
                 {{item.publicip}}
               </Option>
             </Select>
+            <span style="color:#2A99F2;font-size:14px;position:absolute;top:4px;right:-110px;">
+              <span style="font-weight:800;font-size:20px;">+</span>
+              <span style="cursor:pointer;" @click="publicIPHint_ok">购买弹性IP</span>
+            </span>
           </Form-item>
         </Form>
       </div>
@@ -452,6 +456,10 @@
                 <span v-if="item.lbname">{{item.lbname}}</span>
               </Option>
             </Select>
+            <span style="color:#2A99F2;font-size:14px;position:absolute;top:4px;right:-110px;">
+              <span style="font-weight:800;font-size:20px;">+</span>
+              <span style="cursor:pointer;" @click="$router.push('balance')">创建负载均衡</span>
+            </span>
           </Form-item>
         </Form>
       </div>
@@ -615,6 +623,35 @@
     <!--<Button type="primary" size="large" @click="open">登录</Button>-->
     <!--</div>-->
     <!--</Modal>-->
+
+    <!-- 绑定ip时，没有公网ip提示 -->
+    <Modal v-model="showModal.publicIPHint" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24">您还未拥有公网IP，请先创建公网IP。</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.publicIPHint = false">取消</Button>
+        <Button type="primary" @click="publicIPHint_ok">创建公网IP</Button>
+      </p>
+    </Modal>
+    <!-- 主机加入负载均衡，没有负载均衡时提示 -->
+    <Modal v-model="showModal.balanceHint" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24">您还未创建一个负载均衡，请先创建负载均衡。</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.balanceHint = false">取消</Button>
+        <Button type="primary" @click="$router.push('balance')">创建负载均衡</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -668,7 +705,9 @@
           selectAuthType: false,
           balance: false,
           linkPassword: false,
-          ratesChange: false
+          ratesChange: false,
+          publicIPHint: false,
+          balanceHint: false
         },
         ratesChangeType: '',
         ratesChangeTime: '',
@@ -767,6 +806,10 @@
       }, 5 * 1000)
     },
     methods: {
+      publicIPHint_ok() {
+        this.$router.push('buy')
+        sessionStorage.setItem('pane', 'Peip')
+      },
       bindRenewal() {
         if (this.cost != '--') {
           var selectIp = ''
@@ -819,7 +862,6 @@
           if (this.currentHost[0].loadbalance) {
             this.$Message.warning('已绑定主机无法再次绑定!')
           } else {
-            this.showModal.balance = true
             // 获取负载均衡规则
             axios.get('loadbalance/listLoadBalanceRoleVM.do', {
               params: {
@@ -833,6 +875,11 @@
                   item.type = '#public'
                 })
                 this.listLoadBalanceRole = publicLoadbalance.concat(response.data.result.internalLoadbalance)
+                if (this.listLoadBalanceRole == ''){
+                  this.showModal.balanceHint = true
+                } else {
+                  this.showModal.balance = true
+                }
               }
             })
           }
@@ -1091,7 +1138,6 @@
             this.$Message.warning('已绑定主机无法再次绑定!')
           } else {
             this.bindForm.publicIP = ''
-            this.showModal.bindIP = true
             axios.get('network/listPublicIp.do', {
               params: {
                 useType: 0,
@@ -1102,6 +1148,11 @@
               this.loading = false
               if (response.status == 200 && response.data.status == 1) {
                 this.publicIPList = response.data.result
+                if (this.publicIPList == ''){
+                  this.showModal.publicIPHint = true
+                } else {
+                  this.showModal.bindIP = true
+                }
               }
             })
           }
@@ -1288,7 +1339,7 @@
             this.ratesChangeCost = '--'
             this.originRatesChangeCost = '--'
             this.showModal.ratesChange = true
-            console.log(this.relevanceDisks)
+            // console.log(this.relevanceDisks)
           } else {
             this.$message.info({
               content: response.data.message
@@ -1639,7 +1690,7 @@
               selectDisk = this.relevanceDisks
             }
           }
-          console.log(this.relevanceDisks)
+          // console.log(this.relevanceDisks)
           let url = 'information/getYjPrice.do'
           this.$http.get(url, {
             params: {
