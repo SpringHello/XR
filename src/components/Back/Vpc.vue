@@ -906,6 +906,10 @@
     },
     created() {
       this.intervalInstance = setInterval(this.getVpcData, 10000)
+      if (sessionStorage.getItem('VPN')) {
+        this.paneStatus.vpc = 'NAT'
+        sessionStorage.removeItem('VPN')
+      }
     },
     methods: {
       // 区域切换刷新数据

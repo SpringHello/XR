@@ -385,6 +385,20 @@
         <Button type="primary" @click="addUser">确定添加</Button>
       </div>
     </Modal>
+    <!-- 只有一个vpc时创建互联-->
+    <Modal v-model="showModal.notHaveNAT" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24">VPC不存在NAT网关或者NAT网关没有绑定公网IP。</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.notHaveNAT = false">取消</Button>
+        <Button type="primary" @click="createNAT">创建NAT网关</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -450,7 +464,8 @@
           FixVPN1: false,
           FixVPNContent: false,
           // 接入点用户管理
-          userManage: false
+          userManage: false,
+          notHaveNAT: false
         },
         // 新建vpc接入点表单
         newRemoteAccessForm: {
@@ -931,8 +946,15 @@
             vpcId: val
           }
         }).then(res => {
-
+          if (res.data.status == 1 && !res.data.result) {
+            this.showModal.newRemoteAccess = false
+            this.showModal.notHaveNAT = true
+          }
         })
+      },
+      createNAT() {
+        sessionStorage.setItem('VPN','VPN')
+        this.$router.push('vpc')
       },
       // 提交远程接入请求
       newRemoteAccessOk() {
@@ -957,7 +979,7 @@
             }).then(response => {
               this.refresh()
               if (response.status == 200 && response.data.status == 1) {
-                this.$Message.success({
+                this.$message.info({
                   content: response.data.message
                 })
               } else {
