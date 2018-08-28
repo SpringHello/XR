@@ -273,7 +273,7 @@
                           <Button type="text" @click="targetHandleAdd" style="color:#2A99F2">添加</Button>
                       </FormItem>
                       </div>
-                      <div> 
+                      <div>
                         <p>事件告警</p>
                          <FormItem style="margin-bottom:10px"
                               v-for="(item, index) in eventformDynamic.items"
@@ -353,7 +353,7 @@
             </div>
           </TabPane>
           <TabPane label="告警列表" name="alarmList">
-            <div class="al-content" v-if="!isNewAlarmStrategy">
+            <div class="al-content">
               <div class="al-content-title">
                 <Button type="primary">标为已处理</Button>
                 <Button type="primary">标为未处理</Button>
@@ -578,7 +578,7 @@ export default {
                   value: 'cloudDiskWriteOperate'
                 }
               ],
-    
+
     },
     // 云硬盘指标
     alarmDiskTarget: {},
@@ -1268,14 +1268,14 @@ export default {
             continueCircle: '1',
             alarmCount: '1',
             alarmType: '2'
-            
+
           }
       )
     },
     eventHandleRemove (index) {
       this.eventformDynamic.items.splice(index, 1)
     },
-    
+
     // 区域变更，刷新数据
     refresh () {
     },
@@ -1801,10 +1801,10 @@ export default {
             if (res.status == 200 && res.data.status == 1){
               this.$Message.success(res.data.message)
             } else {
-              this.$Message.success('创建失败！');  
+              this.$Message.success('创建失败！');
             }
           })
-        } 
+        }
       })
     },
 

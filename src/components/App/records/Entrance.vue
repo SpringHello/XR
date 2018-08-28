@@ -261,31 +261,9 @@
           }
         ],
         // 区域选择列表
-        areaList: [
-          {
-            text: '北京一区',
-            src: require('../../../assets/img/records/records-icon7.png'),
-            zoneId: '39a6af0b-6624-4194-b9d5-0c552d903858'
-          }, {
-            text: '北方一区',
-            src: require('../../../assets/img/records/records-icon8.png'),
-            zoneId: 'a0a7df65-dec3-48da-82cb-cff9a55a4b6d'
-          }, {
-            text: '北方二区',
-            src: require('../../../assets/img/records/records-icon8.png'),
-            zoneId: '1ce0d0b9-a964-432f-8078-a61100789e30'
-          }, {
-            text: '华中一区',
-            src: require('../../../assets/img/records/records-icon8.png'),
-            zoneId: '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c'
-          }, {
-            text: '华中二区',
-            src: require('../../../assets/img/records/records-icon8.png'),
-            zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2'
-          }
-        ],
-        area: '39a6af0b-6624-4194-b9d5-0c552d903858',
-        areaText: '北京一区',
+        areaList: [],
+        area: '',
+        areaText: '',
         // 区域切换时icon变化
         selectImg: require('../../../assets/img/records/records-icon7.png'),
         unSelectImg: require('../../../assets/img/records/records-icon8.png'),
@@ -325,6 +303,17 @@
       }
     },
     created() {
+      this.$store.state.zoneList.forEach(item => {
+        let params = {
+          text: item.zonename,
+          zoneId: item.zoneid,
+          src: require('../../../assets/img/records/records-icon8.png')
+        }
+        this.areaList.push(params)
+      })
+      this.areaText = this.areaList[0].text
+      this.area = this.areaList[0].zoneId
+      this.areaList[0].src = require('../../../assets/img/records/records-icon7.png')
       this.flowList = this.flowList_1
       this.getRecordInfo()
       this.isRecord()
@@ -349,7 +338,7 @@
           }
         }).then(res => {
           if (res.data.status == 1) {
-              this.isRecords = res.data.result
+            this.isRecords = res.data.result
           }
         })
       },
@@ -423,7 +412,7 @@
           this.$router.push('BRecords')
           return
         }
-        if(this.isRecords.length !==0){
+        if (this.isRecords.length !== 0) {
           this.showModal.hasRecord = true
           return
         }
@@ -591,6 +580,7 @@
     font-size: 18px;
     font-family: PingFangSC-Medium;
     color: rgba(102, 102, 102, 1);
+    margin: 20px 15px 0 0;
     line-height: 25px;
     &.select {
       box-shadow: 0px 2px 19px -8px rgba(55, 125, 255, 0.67);
@@ -714,9 +704,8 @@
       }
       .area {
         display: flex;
-        justify-content: space-between;
         flex-wrap: wrap;
-        margin-top: 30px;
+        margin-top: 10px;
         button {
           .but();
           .area-but();

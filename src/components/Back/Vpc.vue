@@ -310,7 +310,11 @@
               </Option>
             </Select>
           </FormItem>
-
+          <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 48%;top: 42.5%;"
+                @click="buyIP">
+              <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
+              购买弹性IP
+            </span>
         </Form>
         <p class="modal-text-hint-bottom">当前NAT网关可绑定弹性IP剩余额度5</p>
       </div>
@@ -333,6 +337,11 @@
               </Option>
             </Select>
           </FormItem>
+          <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 48%;top: 42.5%;"
+                @click="buyIP">
+              <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
+              购买弹性IP
+            </span>
           <p class="modal-text-hint-bottom">当前NAT网关可绑定弹性IP剩余额度5（点击提升配额）</p>
         </Form>
       </div>
@@ -364,7 +373,7 @@
           </FormItem>
           <FormItem label="是否同时续费绑定IP" v-if="isIps">
             <CheckboxGroup @on-change="bindRenewal" v-model="bindRenewalIp">
-                <Checkbox label="ip">续费绑定IP</Checkbox>
+              <Checkbox label="ip">续费绑定IP</Checkbox>
             </CheckboxGroup>
           </FormItem>
         </Form>
@@ -429,6 +438,7 @@
   import $store from '@/vuex'
   import regExp from '../../util/regExp'
   import {mapState} from 'vuex'
+
   export default {
     name: 'vpc',
     data() {
@@ -486,7 +496,7 @@
               return h('span', {}, status)
             }
           },
-           {
+          {
             title: '计费类型',
             key: 'caseType',
             render: (h, params) => {
@@ -879,12 +889,12 @@
         })
       })
     },
-    created(){
+    created() {
       this.intervalInstance = setInterval(this.getVpcData, 10000)
     },
     methods: {
       // 区域切换刷新数据
-      refresh () {
+      refresh() {
         var zoneId = $store.state.zone.zoneid
         // 获取vpc数据
         var vpcResponse = axios.get('network/listVpc.do', {
@@ -902,15 +912,15 @@
 
         Promise.all([vpcResponse, NATResponse]).then((ResponseValue) => {
           this.setData(ResponseValue[0])
-        this.setNatData(ResponseValue[1])
-        this.select = null
-      })
+          this.setNatData(ResponseValue[1])
+          this.select = null
+        })
       },
       // 选中当前项
-      selectNAT(current){
+      selectNAT(current) {
         this.select = current
       },
-      getVpcData(){
+      getVpcData() {
         axios.get('network/listVpc.do', {
           params: {
             zoneId: $store.state.zone.zoneid,
@@ -974,12 +984,12 @@
         })
       },
       bindRenewal() {
-        if (this.cost != '--'){
-        var selectIp = ''
-        if (this.bindRenewalIp.indexOf('ip') > -1){
-          selectIp = this.isIps
-        }
-        this.$http.get('information/getYjPrice.do', {
+        if (this.cost != '--') {
+          var selectIp = ''
+          if (this.bindRenewalIp.indexOf('ip') > -1) {
+            selectIp = this.isIps
+          }
+          this.$http.get('information/getYjPrice.do', {
             params: {
               timeValue: this.renewalTime,
               timeType: this.renewalType,
@@ -987,22 +997,22 @@
               ipIdArr: selectIp
             }
           }).then((response) => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.cost = response.data.result.toFixed(2)
-                this.originCost = response.data.result
-                if (response.data.cuspon) {
-                  this.originCost = Number((this.originCost + response.data.cuspon).toFixed(2))
-                }
-                if (response.data.continueDiscount) {
-                  this.originCost = (this.originCost + response.data.continueDiscount).toFixed(2)
-                }
-              } else {
-                this.$message.info({
-                  content: response.data.message
-                })
+            if (response.status == 200 && response.data.status == 1) {
+              this.cost = response.data.result.toFixed(2)
+              this.originCost = response.data.result
+              if (response.data.cuspon) {
+                this.originCost = Number((this.originCost + response.data.cuspon).toFixed(2))
               }
-            })
-         }
+              if (response.data.continueDiscount) {
+                this.originCost = (this.originCost + response.data.continueDiscount).toFixed(2)
+              }
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          })
+        }
       },
       // 查询nat网关下的ip
       natbindIps() {
@@ -1015,39 +1025,39 @@
           this.$Message.info('请选择包年包月的NAT网关进行续费')
           return false
         }
-          axios.get('network/listNatGatewayById.do', {
-            params: {
-              natGatewayId: this.select.id,
-              zoneId: $store.state.zone.zoneid
-            }
-          }).then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              if (response.data.result[0].attachPublicIp){
-                var iparr = response.data.result[0].attachPublicIp.map(item => {
+        axios.get('network/listNatGatewayById.do', {
+          params: {
+            natGatewayId: this.select.id,
+            zoneId: $store.state.zone.zoneid
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            if (response.data.result[0].attachPublicIp) {
+              var iparr = response.data.result[0].attachPublicIp.map(item => {
                 return item.id
               })
               this.isIps = iparr.join()
-              } else {
-                this.isIps = ''
-              }
-              // 清空续费弹窗数据
-              this.bindRenewalIp = ['ip']
-              this.originCost = '--'
-              this.cost = '--'
-              this.renewalType = ''
-              this.renewalTime = ''
-              this.showModal.natRenewal = true
+            } else {
+              this.isIps = ''
             }
-          })
+            // 清空续费弹窗数据
+            this.bindRenewalIp = ['ip']
+            this.originCost = '--'
+            this.cost = '--'
+            this.renewalType = ''
+            this.renewalTime = ''
+            this.showModal.natRenewal = true
+          }
+        })
       },
       // nat网关确认续费
       renewalok() {
         var selectIp = ''
-        if (this.bindRenewalIp.indexOf('ip') > -1){
+        if (this.bindRenewalIp.indexOf('ip') > -1) {
           selectIp = this.isIps
         }
         var iplist = []
-        if (selectIp != ''){
+        if (selectIp != '') {
           iplist = selectIp.split(',').map(item => {
             return {type: 2, id: parseInt(item)}
           })
@@ -1068,7 +1078,7 @@
         })
       },
       // 设置查询NAT数据的值，保留原NAT选中状态
-      setNatData(response){
+      setNatData(response) {
         if (response.status == 200 && response.data.status == 1) {
           response.data.result.forEach(item => {
             item._select = false
@@ -1081,7 +1091,7 @@
           this.natData = response.data.result
         }
       },
-      radio(item){
+      radio(item) {
         this.netData.forEach(item => {
           item._select = false
         })
@@ -1092,18 +1102,18 @@
         this.$router.push('/ruicloud/vpcManage')
       },
       // 打开新建vpc modal框
-      openNewVpcModal(){
+      openNewVpcModal() {
         this.showModal.newVpc = true
         /* var url = 'network/listAclList.do?'
          axios.get() */
       },
       // 打开添加nat网关modal
-      openAddNatModal(){
+      openAddNatModal() {
         this.addNatForm.publicIp = ''
         this.showModal.addNat = true
       },
       // 当vpc id变化时，重新查询当前vpc下的弹性IP
-      listIP(){
+      listIP() {
         /*
          useType : 0 代表未使用
          status : 1 代表状态正常
@@ -1125,7 +1135,7 @@
         })
       },
       // 打开删除nat网关modal
-      openDeleteNatModal(){
+      openDeleteNatModal() {
         if (this.select != null) {
           // 单选检测通过
           var url = 'network/delNatGateway.do'
@@ -1159,7 +1169,7 @@
         }
       },
       // 删除VPC
-      delVpc(){
+      delVpc() {
         var select = this.netData.filter(item => item._select)
         if (select.length == 0) {
           this.$Message.info({
@@ -1217,7 +1227,7 @@
         })
       },
       // 新建vpc价格查询
-      queryVpcPrice(){
+      queryVpcPrice() {
         if (this.newForm.timeType == 'current' || this.newForm.timeValue != '') {
           axios.post('device/queryVpcPrice.do', {
             type: this.newForm.timeType,
@@ -1232,7 +1242,7 @@
         }
       },
       // 新建NAT网关价格查询
-      queryNatPrice(){
+      queryNatPrice() {
         if (this.addNatForm.timeType == 'current' || this.addNatForm.timeValue != '') {
           axios.post('device/queryNetPrice.do', {
             type: this.addNatForm.timeType,
@@ -1275,7 +1285,7 @@
         })
       },
       // 提交新建网关表单
-      handleNewGateSubmit(){
+      handleNewGateSubmit() {
         this.$refs.gatewayFormValidate.validate((valid) => {
           if (valid) {
             // 表单验证通过
@@ -1307,7 +1317,7 @@
         })
       },
       // 提交新建nat网关表单
-      handleAddNatSubmit(){
+      handleAddNatSubmit() {
         this.$refs.addNatFormValidate.validate((valid) => {
           if (valid) {
             // 表单验证通过
@@ -1343,7 +1353,7 @@
         })
       },
       // nat网关绑定源IP，获取所有可用的弹性IP
-      bindIP(row){
+      bindIP(row) {
         this.showModal.bindIP = true
         // 获取可以挂载的所有弹性IP
         this.$http.get('network/listPublicIp.do', {
@@ -1358,7 +1368,7 @@
         this.bindIPForm.natGatewayId = row.id
       },
       // nat网关绑定源IP提交ajax
-      handlebindIPSubmit(){
+      handlebindIPSubmit() {
         this.$refs.bindIPFormValidate.validate(validate => {
           if (validate) {
             this.showModal.bindIP = false
@@ -1388,7 +1398,7 @@
         })
       },
       // nat网关绑定目标IP，获取所有可用的弹性IP
-      bindTargetIP(row){
+      bindTargetIP(row) {
         // 获取可以挂载的所有弹性IP
         this.$http.get('network/listPublicIp.do', {
           params: {
@@ -1403,7 +1413,7 @@
         this.showModal.bindTargetIP = true
       },
       // nat网关绑定目标IP提交ajax
-      handlebindTargetIPSubmit(){
+      handlebindTargetIPSubmit() {
         this.$refs.bindTargetIPFormValidate.validate(validate => {
           if (validate) {
             this.showModal.bindTargetIP = false
@@ -1427,14 +1437,18 @@
           }
         })
       },
-      gotoVpc(vpcId){
+      gotoVpc(vpcId) {
         sessionStorage.setItem('vpcId', vpcId)
         this.$router.push('/ruicloud/vpcManage')
+      },
+      buyIP() {
+        sessionStorage.setItem('pane', 'Peip')
+        this.$router.push('buy')
       }
     },
     computed: mapState({
       paneStatus: state => state.paneStatus,
-      auth(){
+      auth() {
         return this.$store.state.authInfo != null
       }
     }),
@@ -1448,10 +1462,10 @@
           this.cost = '--'
         } else {
           var selectIp = ''
-          if (this.bindRenewalIp.indexOf('ip') > -1){
+          if (this.bindRenewalIp.indexOf('ip') > -1) {
             selectIp = this.isIps
           }
-        this.$http.get('information/getYjPrice.do', {
+          this.$http.get('information/getYjPrice.do', {
             params: {
               timeValue: this.renewalTime,
               timeType: this.renewalType,
@@ -1459,21 +1473,21 @@
               ipIdArr: selectIp,
             }
           }).then((response) => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.cost = response.data.result.toFixed(2)
-                this.originCost = response.data.result
-                if (response.data.cuspon) {
-                  this.originCost = Number((this.originCost + response.data.cuspon).toFixed(2))
-                }
-                if (response.data.continueDiscount) {
-                  this.originCost = (this.originCost + response.data.continueDiscount).toFixed(2)
-                }
-              } else {
-                this.$message.info({
-                  content: response.data.message
-                })
+            if (response.status == 200 && response.data.status == 1) {
+              this.cost = response.data.result.toFixed(2)
+              this.originCost = response.data.result
+              if (response.data.cuspon) {
+                this.originCost = Number((this.originCost + response.data.cuspon).toFixed(2))
               }
-            })
+              if (response.data.continueDiscount) {
+                this.originCost = (this.originCost + response.data.continueDiscount).toFixed(2)
+              }
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          })
         }
       },
       // 资费变更
@@ -1508,34 +1522,29 @@
         }
       },
       // 检测到新建VPC购买方式发生变化，重新查询价格
-      'newForm.timeValue'()
-      {
+      'newForm.timeValue'() {
         this.queryVpcPrice()
       }
       ,
       // 检测到新建VPC购买方式发生变化，重新查询价格
-      'newForm.timeType'()
-      {
+      'newForm.timeType'() {
         this.newForm.timeValue = ''
         this.queryVpcPrice()
       }
       ,
       // 检测到添加NAT网关购买方式发生变化，重新查询价格
-      'addNatForm.timeValue'()
-      {
+      'addNatForm.timeValue'() {
         this.queryNatPrice()
       }
       ,
       // 检测到添加NAT网关购买方式发生变化，重新查询价格
-      'addNatForm.timeType'()
-      {
+      'addNatForm.timeType'() {
         this.addNatForm.timeValue = ''
         this.queryNatPrice()
       }
       ,
       // 新建弹性IP
-      'addNatForm.publicIp'()
-      {
+      'addNatForm.publicIp'() {
         if (this.addNatForm.publicIp === '新建弹性IP') {
           this.showModal.addNat = false
           window.open('/ruicloud/ip')
@@ -1544,8 +1553,7 @@
       }
       ,
       // 查询当前源vpc下所有防火墙
-      'addGatewayForm.originVPC'()
-      {
+      'addGatewayForm.originVPC'() {
         var originPreArray = []
         this.netData.forEach(item => {
           if (item.vpcid == this.addGatewayForm.originVPC) {
@@ -1565,8 +1573,7 @@
       }
       ,
       // 查询当前目标vpc下所有防火墙
-      'addGatewayForm.targetVPC'()
-      {
+      'addGatewayForm.targetVPC'() {
         var targetPreArray = []
         this.netData.forEach(item => {
           if (item.vpcid == this.addGatewayForm.targetVPC) {
@@ -1593,7 +1600,7 @@
         deep: true
       }
     },
-    beforeRouteLeave(to, from, next){
+    beforeRouteLeave(to, from, next) {
       clearInterval(this.intervalInstance)
       next()
     }
