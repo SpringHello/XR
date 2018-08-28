@@ -175,7 +175,7 @@
             <div class="nas-content" v-else>
               <div class="nas-content-title">
                 <span>新建告警策略</span>
-                <button @click="isNewAlarmStrategy = false">返回</button>
+                <button @click="isNewAlarmStrategy = false;listAlarm()">返回</button>
               </div>
               <div class="nas-content-body">
                 <Form :model="newAlarmStrategyForm" :rules="newAlarmStrategyFormRuleValidate" ref="newAlarmStrategyForm">
@@ -222,7 +222,9 @@
                     </div>
                   </div>
                   <div class="alarm-strategy">
-                    <p class="headline">告警策略</p>
+                    <p class="headline">告警策略
+                      <span v-if="targetformDynamic.items.length+eventformDynamic.items.length<1" style="color:#ed3f14;font-size:12px;padding-left:10px;">请至少设置一个告警策略</span>
+                    </p>
                     <div class="content">
                       <div>
                         <p>指标告警</p>
@@ -232,7 +234,7 @@
                           <Row :gutter="16">
                               <Col span="4">
                                   <Select v-model="item.alarmName" >
-                                      <Option v-for="item in selectedTarget.target" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                      <Option v-for="item in selectedTarget.target" :value="item.value" :key="item.value">{{ item.value }}</Option>
                                   </Select>
                               </Col>
                               <Col span="4">
@@ -281,7 +283,7 @@
                           <Row :gutter="16">
                               <Col span="4">
                                   <Select v-model="item.alarmName" >
-                                      <Option v-for="item in eventTem.target" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                                      <Option v-for="item in eventTem.target" :value="item.value" :key="item.value">{{ item.value }}</Option>
                                   </Select>
                               </Col>
                               <Col span="4">
@@ -487,8 +489,6 @@ import messageMonitor from '@/echarts/cloudMonitor/messagePie'
 import line from '@/echarts/cloudMonitor/line'
 import bar from '@/echarts/cloudMonitor/bar'
 import regExp from '../../util/regExp'
-import Axios from 'axios';
-var echarts = require('echarts/lib/echarts')
 var linestr = JSON.stringify(line)
 var barstr = JSON.stringify(bar)
 export default {
@@ -497,7 +497,7 @@ export default {
       targetformDynamic: {
         items: [
           {
-            alarmName: 'cpu',
+            alarmName: 'CPU使用率',
             countCircle: '1',
             valueType: '>',
             vaule: '80',
@@ -513,48 +513,37 @@ export default {
     alarmHostTarget: {
               target: [
                 {
-                  label: 'CPU使用率',
-                  value: 'cpu'
+                  value: 'CPU使用率',
                 },
                 {
-                  label: '内存使用率',
-                  value: 'memory'
+                  value: '内存使用率',
                 },
                 {
-                  label: '磁盘使用率',
-                  value: 'diskUse'
+                  value: '磁盘使用率',
                 },
                 {
-                  label: '磁盘读速率',
-                  value: 'diskRead'
+                  value: '磁盘读速率',
                 },
                 {
-                  label: '磁盘写速率',
-                  value: 'diskWrite'
+                  value: '磁盘写速率',
                 },
                 {
-                  label: '磁盘读操作速率',
-                  value: 'diskOperate'
+                  value: '磁盘读操作速率',
                 },
                 {
-                  label: '磁盘写操作速率',
-                  value: 'diskWriteOperate'
+                  value: '磁盘写操作速率',
                 },
                  {
-                  label: '带内网络流入速率',
-                  value: 'innerNetworkInflow'
+                  value: '带内网络流入速率',
                 },
                 {
-                  label: '带内网络流出速率',
-                  value: 'innerNetworkOutflow'
+                  value: '带内网络流出速率',
                 },
                 {
-                  label: '带外网络流入速率',
-                  value: 'outNetworkInflow'
+                  value: '带外网络流入速率',
                 },
                 {
-                  label: '带外网络流出速率',
-                  value: 'outNetworkOutflow'
+                  value: '带外网络流出速率',
                 }
               ]
             },
@@ -562,20 +551,16 @@ export default {
     alarmObjTarget: {
       target: [
                 {
-                  label: '云硬盘读速率',
-                  value: 'cloudDiskRead'
+                  value: '云硬盘读速率',
                 },
                 {
-                  label: '云硬盘写速率',
-                  value: 'cloudDiskWrite'
+                  value: '云硬盘写速率',
                 },
                 {
-                  label: '云硬盘读操作速率',
-                  value: 'cloudDiskOperate'
+                  value: '云硬盘读操作速率',
                 },
                 {
-                  label: '云硬盘写操作速率',
-                  value: 'cloudDiskWriteOperate'
+                  value: '云硬盘写操作速率',
                 }
               ],
     
@@ -676,7 +661,7 @@ export default {
     eventformDynamic: {
         items: [
           {
-            alarmName: '1',
+            alarmName: 'XXX端口ping不可达',
             countCircle: '1',
             continueCircle: '1',
             alarmCount: '1',
@@ -687,12 +672,10 @@ export default {
      eventTem: {
               target: [
                 {
-                  label: 'XXX端口ping不可达',
-                  value: '1'
+                  value: 'XXX端口ping不可达',
                 },
                 {
-                  label: '应用中断',
-                  value: '2'
+                  value: '应用中断',
                 }
               ],
               StatisticalCycle: [
@@ -927,13 +910,32 @@ export default {
           }
         }, {
           title: '触发条件',
-          ellipsis: true
+          ellipsis: true,
+          render: (h, params) => {
+            let alarmname = params.row.AlarmEvent.map(item => {
+              return item.alarmname
+            })
+            return h('span', {
+            }, alarmname.join())
+          }
         }, {
-          title: '策略类型'
+          title: '策略类型',
+          render: (h, params) => {
+            // 0主机  1磁盘     2vpc  3对象存储
+            let type = params.row.strategytype
+            let strategytype = type == 0 ? '云主机' : (type == 1 ? '磁盘' : (type == 2 ? 'vpc' : (type == 3 ? '对象存储' : '')))
+            return h('span', {
+            }, strategytype + '策略')
+          }
         }, {
-          title: '已应用'
+          title: '已应用',
+          render: (h, params) => {
+            return h('span', {
+            }, params.row.resource.length)
+          }
         }, {
-          title: '创建时间'
+          title: '创建时间',
+          key: 'createtime'
         }, {
           title: '操作',
           width: 120,
@@ -946,7 +948,7 @@ export default {
               },
               on: {
                 click: () => {
-                  alert('复制')
+                  this.isNewAlarmStrategy = true
                 }
               }
             }, '复制'), h('span', {
@@ -956,18 +958,22 @@ export default {
               },
               on: {
                 click: () => {
-                  alert('删除')
+                  this.$http.get('alarmControl/deleteAlarmControl.do', {params: {
+                    id: params.row.id
+                  }}).then(response => {
+                    if (response.status == 200 && response.data.status == 1){
+                      this.listAlarm()
+                    } else {
+                      this.$Message.info(response.data.message)
+                    }
+                  })
                 }
               }
             }, '删除')])
           }
         }
       ],
-      alarmStrategyData: [
-        {
-          name: '测试数据'
-        }
-      ],
+      alarmStrategyData: [],
       isNewAlarmStrategy: false,
       alarmListColumns: [
         {
@@ -1027,7 +1033,7 @@ export default {
           { required: true, validator: regExp.validaRegisteredName, trigger: 'blur' }
         ],
         strategyType: [
-          { required: true, message: '请选择策略类型', trigger: 'blur' }
+          { required: true, message: '请选择策略类型', trigger: 'change' }
         ],
         channel: [
           { required: true, type: 'array', min: 1, message: '请至少选择一个', trigger: 'change' }
@@ -1193,6 +1199,9 @@ export default {
       this.selectedTarget = this.alarmHostTarget
       this.getContacts()
       this.changeStrategyType()
+      this.listAlarm()
+    },
+    listAlarm() {
       this.$http.get('alarmControl/listAlarmControl.do').then(res => {
         if (res.status == 200 && res.data.status == 1) {
           this.alarmStrategyData = res.data.result
@@ -1263,7 +1272,7 @@ export default {
     eventHandleAdd () {
       this.eventformDynamic.items.push(
         {
-            alarmName: '1',
+            alarmName: 'XXX端口ping不可达',
             countCircle: '1',
             continueCircle: '1',
             alarmCount: '1',
@@ -1763,10 +1772,11 @@ export default {
       })
     },
     newAlarmStrategy_ok () {
+      var alarmlength = this.targetformDynamic.items.length + this.eventformDynamic.items.length < 1
       this.hostHint = this.strategyhost.selectedHost.length < 1 ? true : false
       this.contactsHint = this.contacts.selectedContacts.length < 1 ? true : false
       this.$refs['newAlarmStrategyForm'].validate((valid) => {
-        if (valid && !this.hostHint && !this.contactsHint) {
+        if (valid && !this.hostHint && !this.contactsHint && !alarmlength) {
           // 告警渠道选择
             var channel = {letter: 0, email: 0, phone: 0}
             this.newAlarmStrategyForm.channel.forEach(item => {
@@ -1804,7 +1814,7 @@ export default {
               this.$Message.success('创建失败！');  
             }
           })
-        } 
+        }
       })
     },
 
