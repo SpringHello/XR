@@ -463,9 +463,9 @@
           zoneId: this.zoneId,
           hostCompanyUrl: this.mainParams.hostCompanyUrl,
         }
-        let addMainWeb = axios.post('recode/addMainWeb.do', this.siteParams)
         // 有主体信息发送一个请求，没有发送两个请求
         if (this.isRecord == true) {
+          let addMainWeb = axios.post('recode/addMainWeb.do', this.siteParams)
           Promise.all([addMainWeb]).then(response => {
             if (response[0].status == 200 && response[0].data.status == 1) {
               this.$router.push('waitFirstTrial')
