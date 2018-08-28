@@ -168,7 +168,7 @@
             </div>
           </TabPane>
           <TabPane name="interoperability" label="VPC互通网关">
-            <Button type="primary" @click="$router.push('vpc')" style="margin-bottom: 10px">新建VPC互联网关</Button>
+            <Button type="primary" @click="$router.push('vpc')" style="margin-bottom: 10px">新建VPC互通网关</Button>
             <Table :columns="vpcColumns" :data="vpcTableData"></Table>
           </TabPane>
         </Tabs>
