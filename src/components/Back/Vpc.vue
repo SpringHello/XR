@@ -27,7 +27,7 @@
           <TabPane label="虚拟私有云VPC" name="VPC">
             <div class="operator-bar">
               <Button type="primary" @click="openNewVpcModal">新建VPC</Button>
-              <Button type="primary" @click="showModal.addGateway = true">添加VPC互通网关</Button>
+              <Button type="primary" @click="createInterconnect">添加VPC互通网关</Button>
               <!--<Button type="primary">修改VPC</Button>-->
               <Button type="primary" @click="delVpc">删除VPC</Button>
             </div>
@@ -428,6 +428,20 @@
         <Button type="primary" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
       </div>
     </Modal>
+    <!-- 只有一个vpc时创建互联-->
+    <Modal v-model="showModal.createInterconnectByOne" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24">VPC互通网关旨在连接两个不同的VPC，使两个VPC通过互通网关实现互联。您当前VPC不足两个，不能创建VPC互通网关。</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.createInterconnectByOne = false">取消</Button>
+        <Button type="primary" @click="showModal.createInterconnectByOne = false,showModal.newVpc = true">新建VPC</Button>
+      </p>
+    </Modal>
   </div>
 
 </template>
@@ -733,7 +747,8 @@
           // 解绑弹性IP模态框
           unbindIP: false,
           natRenewal: false,
-          ratesChange: false
+          ratesChange: false,
+          createInterconnectByOne: false
         },
         // 新建vpc表单数据
         newForm: {
@@ -1111,6 +1126,13 @@
       openAddNatModal() {
         this.addNatForm.publicIp = ''
         this.showModal.addNat = true
+      },
+      createInterconnect() {
+        if (this.netData.length < 2) {
+          this.showModal.createInterconnectByOne = true
+        } else {
+          this.showModal.addGateway = true
+        }
       },
       // 当vpc id变化时，重新查询当前vpc下的弹性IP
       listIP() {
