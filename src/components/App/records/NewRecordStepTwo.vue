@@ -106,11 +106,9 @@
                 <CheckboxGroup v-model="site.basicInformation.serviceContent" style="width: 650px;" class="records-checkbox">
                   <Checkbox label="网络借贷信息中介"></Checkbox>
                   <Checkbox label="网上邮局"></Checkbox>
-                  <Checkbox label="网络新闻"></Checkbox>
                   <Checkbox label="综合门户"></Checkbox>
                   <Checkbox label="网络广告/信息"></Checkbox>
                   <Checkbox label="单位门户网站"></Checkbox>
-                  <Checkbox label="博客个人空间"></Checkbox>
                   <Checkbox label="网上支付"></Checkbox>
                   <Checkbox label="网上银行"></Checkbox>
                   <Checkbox label="网络购物"></Checkbox>
@@ -125,7 +123,6 @@
                   <Checkbox label="网上求职"></Checkbox>
                   <Checkbox label="网站建设"></Checkbox>
                   <Checkbox label="网上招聘"></Checkbox>
-                  <Checkbox label="网络教育"></Checkbox>
                   <Checkbox label="基础应用"></Checkbox>
                   <Checkbox label="WAP"></Checkbox>
                   <Checkbox label="电子政务、电子商务"></Checkbox>
