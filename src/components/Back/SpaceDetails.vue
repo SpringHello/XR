@@ -390,7 +390,7 @@
             </transition>
           </div>
         </FormItem>
-        <FormItem label="密码接收渠道" prop="channel">
+        <FormItem label="涉及操作" prop="channel">
           <div style="width:366px;display:flex;">
             <div style="width:300px;">
               <CheckboxGroup v-model="jurisdValidate.channel" @on-change="channelAggregate">
@@ -500,7 +500,7 @@
         </FormItem>
         <FormItem prop="updateChannel">
           <div style="width:366px;display:flex;">
-            <div style="width:115px;font-size:14px;color:#333333;">密码接收渠道</div>
+            <div style="width:115px;font-size:14px;color:#333333;">涉及操作</div>
             <div style="width:300px;">
               <CheckboxGroup v-model="updateJurisd.updateChannel" @on-change="updateChannelAggregate">
                 <Checkbox :disabled="UpdateChannelTop" label="putobject">PutObject</Checkbox>
