@@ -38,12 +38,19 @@ Vue.config.productionTip = false
 //  axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
 
 
+<<<<<<< HEAD
 // axios.defaults.baseURL = 'http://192.168.3.231:8086/ruirados/'
 // axios.defaults.baseURL = 'http://192.168.3.237:8080/ruirados/'
 // axios.defaults.baseURL = 'http://zhouyi.xrcloud.net:8083/ruirados/'
 //axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
 // axios.defaults.withCredentials = true
 // window.eventBus = new Vue();
+=======
+//axios.defaults.baseURL = 'http://192.168.3.109:8080/ruirados/'
+// axios.defaults.baseURL = 'http://192.168.3.229:8080/ruirados/'
+//axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
+//axios.defaults.withCredentials = true
+>>>>>>> a7d2d0d8519c9f67c8d2aa497060351a825cc898
 
 // axios挂载到Vue原型
 Vue.prototype.$http = axios.create({

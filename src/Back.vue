@@ -67,7 +67,7 @@
       <div class="wrapper">
         <div class="zoneList">
           <!--<Dropdown @on-click="toggleZone">-->
-            <Dropdown  @on-click="toggleZone">
+          <Dropdown>
             <div style="height:30px;min-width: 102px;">
               <div
                 style="display: inline-block;background: #2A99F2;border-radius: 4px;height: 30px;padding: 4px 0px;cursor:pointer">
@@ -101,17 +101,17 @@
           <ul :ref="`${parentItem.type}-sub`" :class="{show:parentItem.type==pageInfo.hoverItem}">
             <li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"
                 @click="push(parentItem.type,subItem.type)" :class="{hover:subItem.type==pageInfo.sType}">
-            <!--<li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"-->
-               <!--:class="{hover:subItem.type==pageInfo.sType}">-->
+              <!--<li v-for="(subItem,sIndex) in parentItem.subItem" :key="sIndex"-->
+              <!--:class="{hover:subItem.type==pageInfo.sType}">-->
               <!--<Dropdown v-if="subItem.thrItem" @on-click="pane">-->
-                <Dropdown v-if="subItem.thrItem">
+              <Dropdown v-if="subItem.thrItem">
                 <a :href="subItem.href">
                   {{subItem.subName}}
                 </a>
                 <DropdownMenu slot="list">
                   <!--<DropdownItem v-for="(thrItem,index) in subItem.thrItem" :key="index"-->
-                                <!--:name="`${thrItem.pane}#${subItem.subName}`">-->
-                    <DropdownItem v-for="(thrItem,index) in subItem.thrItem" :key="index">
+                  <!--:name="`${thrItem.pane}#${subItem.subName}`">-->
+                  <DropdownItem v-for="(thrItem,index) in subItem.thrItem" :key="index">
                     <a :href="thrItem.href">{{thrItem.thrName}}</a>
                   </DropdownItem>
                 </DropdownMenu>
@@ -338,15 +338,15 @@
     created(){
       this.getUserInfo();
       /*this.$http.get('user/getKfAdd.do').then(response => {
-        this.kfURL = response.data.result
-      })
-      // QQ客服在线情况
-      this.$http.get('network/getQQCustomerServiceStatus.do').then(response => {
-        this.QQInfo = response.data.kefu
-        this.xiaoshouInfo = response.data.xiaoshou
-        this.yunweiInfo = response.data.yunwei
-      })
-      this.notice()*/
+       this.kfURL = response.data.result
+       })
+       // QQ客服在线情况
+       this.$http.get('network/getQQCustomerServiceStatus.do').then(response => {
+       this.QQInfo = response.data.kefu
+       this.xiaoshouInfo = response.data.xiaoshou
+       this.yunweiInfo = response.data.yunwei
+       })
+       this.notice()*/
     },
     mounted(){
       // mounted时期根据路径修改选中的menu
