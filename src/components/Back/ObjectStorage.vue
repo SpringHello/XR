@@ -889,4 +889,14 @@
     width: 100%;
     height: 240px;
   }
+  .table{
+    position: relative;
+    top: -34px;
+    left: 59.6%;
+    width: 60px;
+    height: 16px;
+    font-size: 0.2rem;
+    cursor: pointer;
+    color: #2A99F2;
+  }
 </style>

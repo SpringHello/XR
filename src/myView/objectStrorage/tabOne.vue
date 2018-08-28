@@ -185,9 +185,6 @@ export default {
       createLoading:false
     }
   },
-  props:{
-    spaceModel:false
-  },
   methods: {
     //获取空间列表
     getBuckets() {
@@ -259,8 +256,7 @@ export default {
     },
   },
   mounted() {
-    this.getBuckets();
-    this.modal6= this.spaceModel;
+    // this.getBuckets();
   }
 };
 </script>

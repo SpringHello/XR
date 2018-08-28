@@ -53,9 +53,9 @@
             </div>
           </div>
         </div>
-        <div class="monitor" :class="{monitors:!monitorHide}" @click="monitorHide = !monitorHide"  style="color: #2A99F2;">{{monitorHide?'收起':'查看监控'}}</div>
+        <div class="monitor" :class="{monitors:!monitorHide}" @click="monitorHide = !monitorHide"  style="color: #2A99F2;">{{monitorHide?'查看监控':'收起'}}</div>
         <!--监控流量-->
-        <div style="display:flex;margin-top: 10px;" v-if="monitorHide">
+        <div style="display:flex;margin-top: 10px;" v-if="!monitorHide">
           <!--请求次数-->
             <div style="width: 50%;">
               <div class="center_chart">
@@ -2907,4 +2907,5 @@
     border-width: 5px 5px 5px 0;
     border-right-color: rgba(70, 76, 91, 0.9);
   }
+
 </style>
