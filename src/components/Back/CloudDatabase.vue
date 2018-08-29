@@ -683,6 +683,7 @@
       },
       createDatabase() {
         this.$router.push('/ruicloud/buy/bdata')
+        sessionStorage.setItem('pane', 'Pdatabase')
       },
       listDatabase() {
         this.$http.get('database/listDB.do').then(res => {
