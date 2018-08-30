@@ -282,10 +282,6 @@
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <div style="text-align:left">
-          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:24px;">全民普惠，3折减单，最高减免7000元！
-          </router-link>
-        </div>
         <Button type="ghost" @click="showModal.renewDisk=false">取消</Button>
         <Button type="primary" @click="renewDisk_ok" :disabled="renewalTime==''">确认续费</Button>
       </div>
@@ -321,10 +317,6 @@
         </Form>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <div style="text-align:left">
-          <router-link :to="{ path: 'dynamic', query: { id: '14' }}" style="margin-bottom:24px;">全民普惠，3折减单，最高减免7000元！
-          </router-link>
-        </div>
         <Button type="ghost" @click="showModal.ratesChange=false">取消</Button>
         <Button type="primary" @click="ratesChange_ok" :disabled="ratesChangeCost=='--'">确认变更</Button>
       </div>

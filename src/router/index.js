@@ -13,8 +13,9 @@ import LR from '@/LR'
 const Home = () =>import('@/components/App/Home')
 const Art = () =>import('@/components/App/Article')
 //const Price = () => import('@/components/App/Price')
-const Buy = () =>import('@/components/App/Buy1')
-// const Buy = () => import('@/components/App/buy/Buy')
+
+//const Buy = () =>import('@/components/App/Buy1')
+const Buy = () => import('@/components/App/buy/Buy')
 const BHost = () => import('@/components/App/buy/BHost')
 const BIP = () => import('@/components/App/buy/BIP')
 const BDisk = () => import('@/components/App/buy/BDisk')

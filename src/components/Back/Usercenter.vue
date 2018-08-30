@@ -2920,7 +2920,6 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
             let countdown = 60
             this.keycodePlaceholder = '60s'
             var inter = setInterval(() => {
@@ -2936,6 +2935,7 @@
               duration: 5
             })
           } else {
+            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
             this.keycodePlaceholder = '获取验证码'
             this.$Message.error(response.data.message)
           }

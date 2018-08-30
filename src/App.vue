@@ -272,7 +272,8 @@
                   {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/ruicloud/Phost'},
                   {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ruicloud/Pecss'},
                   {title: '裸金属服务器（敬请期待）', desc: '专属物理服务器', path: ''},
-                  {title: '弹性伸缩（敬请期待）', desc: '高可用、可视化、低成本', path: ''}
+                  {title: '弹性伸缩（敬请期待）', desc: '高可用、可视化、低成本', path: ''},
+                  {title: 'GPU服务器（敬请期待）', desc: '高可用、可视化、低成本', path: ''}
                 ]
               },
               {
@@ -291,7 +292,7 @@
                 prodItem: [
                   {title: '云硬盘', desc: '性能型、超高性能型、存储型', path: '/ruicloud/Pdisk'},
                   {title: '云硬盘备份', desc: '高可用保障、敏捷易用', path: '/ruicloud/Pbackupdisk'},
-                  {title: '对象存储（敬请期待）', desc: '安全稳定，海量便捷', path: ''/*path: '/ruicloud/PobjStorage'*/}
+                  {title: '对象存储', desc: '安全稳定，海量便捷', path: '/ruicloud/PobjStorage'}
                 ]
               },
               {

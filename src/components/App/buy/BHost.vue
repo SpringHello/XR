@@ -1037,6 +1037,7 @@
       // this.$store.dispatch('getZoneList')
     },
     methods: {
+
       // 设置系统模版
       setTemplate() {
         // 系统镜像
