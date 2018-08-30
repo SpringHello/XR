@@ -33,6 +33,10 @@
                         </Option>
                       </Select>
                     </Form-item>
+                    <Form-item label="提现金额" required v-if="formItem.product=='32'">
+                      <InputNumber :max="formItem.remainder" :min="10" v-model="formItem.cost"
+                                   style="width:300px"></InputNumber>
+                    </Form-item>
                     <Form-item label="问题描述" required>
                       <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 5,maxRows: 7}"
                              placeholder="请输入..."></Input>
@@ -115,7 +119,7 @@
               <div style="display: flex;justify-content: space-between;">
                 <div class="operating" style="width:35%">
                   <div>
-                    <div v-for="(item,index) in closingOrder" :key="item" class="item">
+                    <div v-for="(item,index) in closingOrder" :key="item.id" class="item">
                       <label>{{item.title}}</label>
                       <div style="display: flex; flex-wrap: wrap;">
                         <span style="width:38%">问题类型 : {{item.description}}</span>
@@ -228,7 +232,9 @@
           title: '',
           type: '',
           product: null,
-          description: ''
+          description: '',
+          remainder: 0,
+          cost: 10
         },
         tableName: '发起工单',
         orderList: [],
@@ -254,16 +260,18 @@
       }
     },
     created(){
-      this.$http.get('order/orderType.do')
-        .then((response) => {
-          if (response.status == 200) {
-            this.orderType = response.data.result
-          } else {
-            this.$Message.error('工单接口错误')
-          }
-        })
+      this.$http.get('order/orderType.do').then((response) => {
+        if (response.status == 200) {
+          this.orderType = response.data.result
+        } else {
+          this.$Message.error('工单接口错误')
+        }
+      })
       this.getOrders('operating')
       this.getOrders('closing')
+      this.$http.post('device/DescribeWalletsBalance.do').then(response => {
+        this.formItem.remainder = Number(response.data.data.remainder)
+      })
       if (this.$route.query.logData) {
         this.formItem.type = '产品故障'
         switch (this.$route.query.logData.operatetarget) {
@@ -309,40 +317,38 @@
       },
       ok(order, index){
         var url = 'order/closeOrder.do'
-        this.$http.get(url,{
-            params:{
-              orderid:order.id
-            }
+        this.$http.get(url, {
+          params: {
+            orderid: order.id
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.operatingOrder.splice(index, 1)
+            this.closingOrder.push(order)
+            this.$Message.success('已关闭工单')
+          }
         })
-          .then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.operatingOrder.splice(index, 1)
-              this.closingOrder.push(order)
-              this.$Message.success('已关闭工单')
-            }
-          })
       },
       del(item, index){
         var url = 'order/delOrder.do'
-        this.$http.get(url,{
-            params:{
-              orderid:item.id
-            }
+        this.$http.get(url, {
+          params: {
+            orderid: item.id
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.closingOrder.splice(index, 1)
+            this.$Message.success(response.data.msg)
+          }
         })
-          .then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.closingOrder.splice(index, 1)
-              this.$Message.success(response.data.msg)
-            }
-          })
       },
       viewDetail(item){
         var url = 'order/viewOrder.do'
         this.$Loading.start()
-        this.$http.get(url,{
-            params:{
-              orderid:item.id
-            }
+        this.$http.get(url, {
+          params: {
+            orderid: item.id
+          }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.orderDetail = response.data.msg
@@ -364,40 +370,43 @@
           })
           return
         }
-        this.loadingMessage = '创建工单中'
-        this.loading = true
         var url = 'order/createOrder.do'
-        this.$http.get(url,{
-            params:{
-              title:this.formItem.title,
-              content:this.formItem.description,
-              gid:this.orderType[this.formItem.type][0].gid,
-              cid:this.formItem.product
-            }
+        let params = {
+          title: this.formItem.title,
+          content: this.formItem.description,
+          gid: this.orderType[this.formItem.type][0].gid,
+          cid: this.formItem.product
+        }
+        // 32代表提现，需要多设置一个参数
+        if (params.cid == '32') {
+          params.userRefund = this.formItem.cost
+        }
+        this.$http.get(url, {
+          params
         }).then(response => {
-            this.loading = false
-            if (response.status == 200 && response.data.status == 1) {
-              this.getOrders('operating')
-              this.formItem.title = ''
-              this.formItem.type = ''
-              this.formItem.description = ''
-              this.formItem.product = null
-              this.$Message.success({
-                content: response.data.message,
-                top: 150,
-                duration: 2,
-                closable: true
-              })
-              this.tableName = '处理中的工单'
-            } else {
-              this.$Message.warning({
-                content: response.data.message,
-                top: 150,
-                duration: 2,
-                closable: true
-              })
-            }
-          })
+          this.loading = false
+          if (response.status == 200 && response.data.status == 1) {
+            this.getOrders('operating')
+            this.formItem.title = ''
+            this.formItem.type = ''
+            this.formItem.description = ''
+            this.formItem.product = null
+            this.$Message.success({
+              content: response.data.message,
+              top: 150,
+              duration: 2,
+              closable: true
+            })
+            this.tableName = '处理中的工单'
+          } else {
+            this.$Message.warning({
+              content: response.data.message,
+              top: 150,
+              duration: 2,
+              closable: true
+            })
+          }
+        })
       },
       reply(){
         if (this.editorValue.trim() == '') {
@@ -405,40 +414,38 @@
           return
         }
         var url = 'order/reply.do'
-        this.$http.get(url,{
-            params:{
-              orderid:this.orderDetail[2][0].id,
-              editorValue:this.editorValue
-            }
+        this.$http.get(url, {
+          params: {
+            orderid: this.orderDetail[2][0].id,
+            editorValue: this.editorValue
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.orderDetail[3].push({g_reply: response.data.msg.g_reply, uname: null, repdate: new Date().getTime()})
+            this.editorValue = ''
+          }
         })
-          .then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this.orderDetail[3].push({g_reply: response.data.msg.g_reply, uname: null, repdate: new Date().getTime()})
-              this.editorValue = ''
-            }
-          })
       },
       getOrders(type){
         var url = 'order/getOrders.do'
-        this.$http.get(url,{
-            params:{
-              type:type,
-              currentPage:this[type + 'CurrPage'],
-              pageSize:this.pageSize
-            }
+        this.$http.get(url, {
+          params: {
+            type: type,
+            currentPage: this[type + 'CurrPage'],
+            pageSize: this.pageSize
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this[type + 'Order'] = []
+            this[type + 'Total'] = Number(response.data.count)
+            response.data.result.forEach(item => {
+              item.puddate = parseInt(item.puddate)
+              item.timeago = timeago().format(item.puddate, 'zh_CN')
+              item.puddate = new Date(item.puddate).format('yyyy年MM月dd日 hh:mm:ss')
+              this[type + 'Order'].push(item)
+            })
+          }
         })
-          .then(response => {
-            if (response.status == 200 && response.data.status == 1) {
-              this[type + 'Order'] = []
-              this[type + 'Total'] = response.data.count
-              response.data.result.forEach(item => {
-                item.puddate = parseInt(item.puddate)
-                item.timeago = timeago().format(item.puddate, 'zh_CN')
-                item.puddate = new Date(item.puddate).format('yyyy年MM月dd日 hh:mm:ss')
-                this[type + 'Order'].push(item)
-              })
-            }
-          })
       },
       changeOperatingPage(page){
         this.operatingCurrPage = page

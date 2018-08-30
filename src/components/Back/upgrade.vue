@@ -30,7 +30,6 @@
             <span>主机名称 : {{hostname}}</span>
             <span>主机配置 : {{currentCPUNum}}核{{currentRAMSize}}G</span>
             <span>剩余时长 : {{endtime}}</span>
-            <router-link to="home" style="bottom:23px;position: absolute">全民普惠，3折减单，最高减免7000元！</router-link>
           </div>
           <div class="conf-wrapper">
             <h1>升级后配置</h1>

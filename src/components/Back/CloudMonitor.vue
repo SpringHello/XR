@@ -29,110 +29,64 @@
                 </li>
               </ul>
             </div>
-            <!-- <div>
-              <chart :options="messageData" style="width: 400px;height:295px;margin-top: 20px; border: solid 1px #D8D8D8;padding: 20px;box-sizing: border-box"></chart>
-            </div> -->
             <section>
               <div class="disk">
                 <div class="header">
-                  磁盘链接速率
-                  <span>
+                  我关注的指标
+                  <span v-if="firstMonitoringOverview.showChart">
                     <i @click="showModal.editMonitorIndex=true">编辑</i> | <i @click="deleteChart">删除</i>
                   </span>
                 </div>
-                <div class="switch">
-                  <RadioGroup v-model="overview.disk.timeType" type="button" @on-change="timeSwitch('disk')">
+                <div class="switch" v-if="firstMonitoringOverview.showChart">
+                  <RadioGroup type="button" v-model="firstMonitoringOverview.dateType">
                     <Radio label="day">今日</Radio>
                     <Radio label="week">本周</Radio>
                     <Radio label="month">本月</Radio>
                   </RadioGroup>
                   <div>
                     <Button type="primary" class="export-btn">导出</Button>
-                    <RadioGroup v-model="overview.disk.chartType" type="button" @on-change="chartTypeSwitch('disk')">
+                    <RadioGroup type="button" v-model="firstMonitoringOverview.mapType">
                       <Radio label="line">折线</Radio>
                       <Radio label="bar">柱状</Radio>
                     </RadioGroup>
                   </div>
                 </div>
-                <chart :options="diskPolar" style="width: 714px;height:172px;margin-top: 20px;"></chart>
+                <chart v-if="firstMonitoringOverview.showChart" :options="firstMonitoringOverview.showChart" style="width: 714px;height:172px;margin-top: 20px;"></chart>
+                <div v-else class="om-content" @click="addOverviewMonitoring(1)">
+                  <div class="cross"></div>
+                  <p>您还未添加关注的指标，点击“+”添加指标。</p>
+                </div>
               </div>
               <chart :options="messageData"
                      style="border: solid 1px #D8D8D8;padding: 20px;padding-right:0;box-sizing: border-box;width: 366px;height:297px;"></chart>
             </section>
             <section>
-              <div>
+              <div class="disk" style="width: 1160px;height: 300px">
                 <div class="header">
-                  cpu利用率
-                  <span>
+                  我关注的指标
+                  <span v-if="secondMonitoringOverview.showChart">
                     <i @click="showModal.editMonitorIndex=true">编辑</i> | <i @click="deleteChart">删除</i>
                   </span>
                 </div>
-                <div class="switch">
-                  <RadioGroup v-model="overview.cpu.timeType" type="button" @on-change="timeSwitch('cpu')">
+                <div class="switch" v-if="secondMonitoringOverview.showChart">
+                  <RadioGroup type="button" v-model="secondMonitoringOverview.dateType">
                     <Radio label="day">今日</Radio>
                     <Radio label="week">本周</Radio>
                     <Radio label="month">本月</Radio>
                   </RadioGroup>
                   <div>
                     <Button type="primary" class="export-btn">导出</Button>
-                    <RadioGroup v-model="overview.cpu.chartType" type="button" @on-change="chartTypeSwitch('cpu')">
+                    <RadioGroup type="button" v-model="secondMonitoringOverview.mapType">
                       <Radio label="line">折线</Radio>
                       <Radio label="bar">柱状</Radio>
                     </RadioGroup>
                   </div>
                 </div>
-                <chart :options="cpuPolar" style="width:1110px;height:268px;margin-top: 20px;"></chart>
-              </div>
-            </section>
-            <section>
-              <div>
-                <div class="header">
-                  内存使用率
-                  <span>
-                    <i @click="showModal.editMonitorIndex=true">编辑</i> | <i @click="deleteChart">删除</i>
-                  </span>
+                <chart v-if="secondMonitoringOverview.showChart" :options="secondMonitoringOverview.showChart" style="width:1110px;height:268px;margin-top: 20px;"></chart>
+                <div v-else class="om-content" @click="addOverviewMonitoring(2)">
+                  <div class="cross"></div>
+                  <p>您还未添加关注的指标，点击“+”添加指标。</p>
                 </div>
-                <div class="switch">
-                  <RadioGroup v-model="overview.memory.timeType" type="button" @on-change="timeSwitch('memory')">
-                    <Radio label="day">今日</Radio>
-                    <Radio label="week">本周</Radio>
-                    <Radio label="month">本月</Radio>
-                  </RadioGroup>
-                  <div>
-                    <Button type="primary" class="export-btn">导出</Button>
-                    <RadioGroup v-model="overview.memory.chartType" type="button"
-                                @on-change="chartTypeSwitch('memory')">
-                      <Radio label="line">折线</Radio>
-                      <Radio label="bar">柱状</Radio>
-                    </RadioGroup>
-                  </div>
-                </div>
-                <chart :options="memoryPolar" style="width:1110px;height:268px;margin-top: 20px;"></chart>
-              </div>
-            </section>
-            <section>
-              <div>
-                <div class="header">
-                  最近一小时外网流量统计
-                  <span>
-                    <i @click="showModal.editMonitorIndex=true">编辑</i> | <i @click="deleteChart">删除</i>
-                  </span>
-                </div>
-                <div class="switch">
-                  <RadioGroup v-model="overview.flow.timeType" type="button" @on-change="timeSwitch('flow')">
-                    <Radio label="day">今日</Radio>
-                    <Radio label="week">本周</Radio>
-                    <Radio label="month">本月</Radio>
-                  </RadioGroup>
-                  <div>
-                    <Button type="primary" class="export-btn">导出</Button>
-                    <RadioGroup v-model="overview.flow.chartType" type="button" @on-change="chartTypeSwitch('flow')">
-                      <Radio label="line">折线</Radio>
-                      <Radio label="bar">柱状</Radio>
-                    </RadioGroup>
-                  </div>
-                </div>
-                <chart :options="flowPolar" style="width:1110px;height:268px;margin-top: 20px;"></chart>
               </div>
             </section>
           </TabPane>
@@ -243,53 +197,53 @@
                                   :key="index">
                           <Row :gutter="16">
                             <Col span="4">
-                            <Select v-model="item.alarmName">
-                              <Option v-for="item in selectedTarget.target" :value="item.value" :key="item.value">
-                                {{ item.value }}
-                              </Option>
-                            </Select>
+                              <Select v-model="item.alarmName">
+                                <Option v-for="item in selectedTarget.target" :value="item.value" :key="item.value">
+                                  {{ item.value }}
+                                </Option>
+                              </Select>
                             </Col>
                             <Col span="4">
-                            <Select v-model="item.countCircle">
-                              <Option v-for="item in publicTemp.StatisticalCycle" :value="item.value" :key="item.value">
-                                {{ item.label }}
-                              </Option>
-                            </Select>
+                              <Select v-model="item.countCircle">
+                                <Option v-for="item in publicTemp.StatisticalCycle" :value="item.value" :key="item.value">
+                                  {{ item.label }}
+                                </Option>
+                              </Select>
                             </Col>
                             <Col span="2">
-                            <Select v-model="item.valueType" style="text-align:center">
-                              <Option v-for="item in publicTemp.standard" :value="item.value" :key="item.value">
-                                {{ item.label }}
-                              </Option>
-                            </Select>
+                              <Select v-model="item.valueType" style="text-align:center">
+                                <Option v-for="item in publicTemp.standard" :value="item.value" :key="item.value">
+                                  {{ item.label }}
+                                </Option>
+                              </Select>
                             </Col>
                             <Col span="2" class="Percentage">
-                            <Select v-model="item.vaule" style="text-align:center">
-                              <Option v-for="item in publicTemp.Percentage" :value="item.value" :key="item.value">
-                                {{ item.label }}
-                              </Option>
-                            </Select>
+                              <Select v-model="item.vaule" style="text-align:center">
+                                <Option v-for="item in publicTemp.Percentage" :value="item.value" :key="item.value">
+                                  {{ item.label }}
+                                </Option>
+                              </Select>
                             </Col>
                             <Col span="1">
-                            <span v-if="item.alarmName=='flow'">KB/s</span>
-                            <span v-else>%</span>
+                              <span v-if="item.alarmName=='flow'">KB/s</span>
+                              <span v-else>%</span>
                             </Col>
                             <Col span="4">
-                            <Select v-model="item.continueCircle">
-                              <Option v-for="item in publicTemp.keepCycle" :value="item.value" :key="item.value">
-                                {{ item.label }}
-                              </Option>
-                            </Select>
+                              <Select v-model="item.continueCircle">
+                                <Option v-for="item in publicTemp.keepCycle" :value="item.value" :key="item.value">
+                                  {{ item.label }}
+                                </Option>
+                              </Select>
                             </Col>
                             <Col span="4">
-                            <Select v-model="item.alarmCount">
-                              <Option v-for="item in publicTemp.frequency" :value="item.value" :key="item.value">
-                                {{ item.label }}
-                              </Option>
-                            </Select>
+                              <Select v-model="item.alarmCount">
+                                <Option v-for="item in publicTemp.frequency" :value="item.value" :key="item.value">
+                                  {{ item.label }}
+                                </Option>
+                              </Select>
                             </Col>
                             <Col span="1">
-                            <Button type="text" @click="targetHandleRemove(index)">×</Button>
+                              <Button type="text" @click="targetHandleRemove(index)">×</Button>
                             </Col>
                           </Row>
                         </FormItem>
@@ -304,35 +258,35 @@
                                   :key="index">
                           <Row :gutter="16">
                             <Col span="4">
-                            <Select v-model="item.alarmName">
-                              <Option v-for="item in eventTem.target" :value="item.value" :key="item.value">
-                                {{ item.value }}
-                              </Option>
-                            </Select>
+                              <Select v-model="item.alarmName">
+                                <Option v-for="item in eventTem.target" :value="item.value" :key="item.value">
+                                  {{ item.value }}
+                                </Option>
+                              </Select>
                             </Col>
                             <Col span="4">
-                            <Select v-model="item.countCircle">
-                              <Option v-for="item in eventTem.StatisticalCycle" :value="item.value" :key="item.value">
-                                {{ item.label }}
-                              </Option>
-                            </Select>
+                              <Select v-model="item.countCircle">
+                                <Option v-for="item in eventTem.StatisticalCycle" :value="item.value" :key="item.value">
+                                  {{ item.label }}
+                                </Option>
+                              </Select>
                             </Col>
                             <Col span="4">
-                            <Select v-model="item.continueCircle">
-                              <Option v-for="item in eventTem.keepCycle" :value="item.value" :key="item.value">
-                                {{ item.label }}
-                              </Option>
-                            </Select>
+                              <Select v-model="item.continueCircle">
+                                <Option v-for="item in eventTem.keepCycle" :value="item.value" :key="item.value">
+                                  {{ item.label }}
+                                </Option>
+                              </Select>
                             </Col>
                             <Col span="4">
-                            <Select v-model="item.alarmCount">
-                              <Option v-for="item in eventTem.frequency" :value="item.value" :key="item.value">
-                                {{ item.label }}
-                              </Option>
-                            </Select>
+                              <Select v-model="item.alarmCount">
+                                <Option v-for="item in eventTem.frequency" :value="item.value" :key="item.value">
+                                  {{ item.label }}
+                                </Option>
+                              </Select>
                             </Col>
                             <Col span="1">
-                            <Button type="text" @click="eventHandleRemove(index)">×</Button>
+                              <Button type="text" @click="eventHandleRemove(index)">×</Button>
                             </Col>
                           </Row>
                         </FormItem>
@@ -412,7 +366,8 @@
     <!-- 添加自定义指标弹窗 -->
     <Modal v-model="showModal.addMonitorIndex" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">添加监控指标</span>
+        <span class="universal-modal-title" v-if="isAddMonitorIndex">添加监控指标</span>
+        <span class="universal-modal-title" v-else>编辑监控指标</span>
       </p>
       <div class="universal-modal-content-flex">
         <div class="modal-top">
@@ -471,27 +426,28 @@
         </Button>
       </div>
     </Modal>
-    <!-- 总览页面编辑指标弹窗 -->
-    <Modal v-model="showModal.editMonitorIndex" width="550" :scrollable="true">
+    <!-- 添加总览页面指标弹窗 -->
+    <Modal v-model="showModal.addOverviewMonitorIndex" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
-        <span class="universal-modal-title">编辑监控指标</span>
+        <span class="universal-modal-title" v-if="isAddOverviewMonitorIndex">添加监控指标</span>
+        <span class="universal-modal-title" v-else>编辑监控指标</span>
       </p>
       <div class="universal-modal-content-flex">
         <div class="modal-top">
           <div class="left">
             <p>产品类型</p>
-            <Select v-model="editMonitorIndexForm.productType" placeholder="请选择" @on-change="changeProduct"
+            <Select v-model="overviewMonitorIndexForm.productType" placeholder="请选择" @on-change="changeOverviewProduct"
                     style="width: 240px;" class="cm-select">
-              <Option v-for="item in editMonitorIndexForm.productTypeGroup" :key="item.value" :value="item.value">
+              <Option v-for="item in overviewMonitorIndexForm.productTypeGroup" :key="item.value" :value="item.value">
                 {{item.value}}
               </Option>
             </Select>
           </div>
           <div class="right">
             <p>指标</p>
-            <Select v-model="editMonitorIndexForm.productIndex" placeholder="请选择" @on-change="getIndexResource"
+            <Select v-model="overviewMonitorIndexForm.productIndex" placeholder="请选择" @on-change="getIndexResource"
                     style="width: 240px;" class="cm-select">
-              <Option v-for="item in editMonitorIndexForm.productIndexGroup" :key="item.value" :value="item.value">
+              <Option v-for="item in overviewMonitorIndexForm.productIndexGroup" :key="item.value" :value="item.value">
                 {{item.label}}
               </Option>
             </Select>
@@ -499,19 +455,19 @@
         </div>
         <div class="modal-main">
           <div class="hostlist">
-            <p>该区域下所有{{ editMonitorIndexForm.productType }}</p>
+            <p>该区域下所有{{ overviewMonitorIndexForm.productType }}</p>
             <ul>
-              <li v-for="(item,index) in editMonitorIndexForm.allProduct">
+              <li v-for="(item,index) in overviewMonitorIndexForm.allProduct">
                 <span>{{ item.instancename}}</span>
                 <i class="bluetext" style="cursor: pointer"
-                   v-if="editMonitorIndexForm.selectedProduct.length<5&&item.name !=''" @click="addProduct(item,index)">+ 添加</i>
+                   v-if="overviewMonitorIndexForm.selectedProduct.length<5&&item.name !=''" @click="addProduct(item,index)">+ 添加</i>
               </li>
             </ul>
           </div>
           <div class="changelist">
-            <p>已选择{{ editMonitorIndexForm.productType}}</p>
+            <p>已选择{{ overviewMonitorIndexForm.productType}}</p>
             <ul>
-              <li v-for="(item,index) in editMonitorIndexForm.selectedProduct">
+              <li v-for="(item,index) in overviewMonitorIndexForm.selectedProduct">
                 <span>{{ item.instancename}}</span>
                 <i class="bluetext" style="cursor: pointer" @click="deleteProduct(item,index)">
                   <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
@@ -522,13 +478,13 @@
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button @click="showModal.editMonitorIndex = false">取消</Button>
+        <Button @click="showModal.addOverviewMonitorIndex = false">取消</Button>
         <Button type="primary" @click="addCustomMonitoring_ok"
-                :disabled="editMonitorIndexForm.selectedProduct.length == 0 ||editMonitorIndexForm.productIndex == ''"
-                v-if="isAddMonitorIndex">完成配置
+                :disabled="overviewMonitorIndexForm.selectedProduct.length == 0 ||overviewMonitorIndexForm.productIndex == ''"
+                v-if="isAddOverviewMonitorIndex">完成配置
         </Button>
         <Button v-else type="primary" @click="editCustomMonitoring_ok"
-                :disabled="editMonitorIndexForm.selectedProduct.length == 0 ||monitoringIndexForm.productIndex == ''">
+                :disabled="overviewMonitorIndexForm.selectedProduct.length == 0 ||overviewMonitorIndexForm.productIndex == ''">
           确认修改
         </Button>
       </div>
@@ -542,11 +498,22 @@
   import bar from '@/echarts/cloudMonitor/bar'
   import regExp from '../../util/regExp'
 
-  var linestr = JSON.stringify(line)
-  var barstr = JSON.stringify(bar)
   export default {
     data() {
       return {
+        firstMonitoringOverview: {
+          showChart: null,
+          mapType: 'line',
+          dateType: 'today'
+        },
+        secondMonitoringOverview: {
+          showChart: null,
+          mapType: 'line',
+          dateType: 'today'
+        },
+        isAddOverviewMonitorIndex: true,
+        // 标记总览监控大图小图
+        overviewMonitoring: '',
         targetformDynamic: {
           items: [
             {
@@ -792,15 +759,7 @@
           allContacts: [],
           selectedContacts: []
         },
-        weekdata: null,
-        monthdata: null,
         messageData: messageMonitor,
-        barstr,
-        linestr,
-        diskPolar: null,
-        cpuPolar: null,
-        memoryPolar: null,
-        flowPolar: null,
         monitorData: [
           {
             text: '云主机Ping不可达',
@@ -815,27 +774,9 @@
             num: '0'
           }
         ],
-        overview: {
-          disk: {
-            timeType: 'day',
-            chartType: 'line'
-          },
-          cpu: {
-            timeType: 'day',
-            chartType: 'line'
-          },
-          memory: {
-            timeType: 'day',
-            chartType: 'line'
-          },
-          flow: {
-            timeType: 'day',
-            chartType: 'line'
-          }
-        },
         showModal: {
           addMonitorIndex: false,
-          editMonitorIndex: false
+          addOverviewMonitorIndex: false
         },
         monitoringIndexForm: {
           productTypeGroup: [
@@ -891,7 +832,7 @@
           selectedProduct: [],
           id: ''
         },
-        editMonitorIndexForm: {
+        overviewMonitorIndexForm: {
           productTypeGroup: [
             {
               value: '云主机',
@@ -1131,118 +1072,6 @@
       })
       this.messageData.series[0].data = mockMessageData
       this.messageData.legend.data = mockMessagelegend
-      // mock图表数据
-      var chartData = {
-        "result": {
-          "xaxis": ["15", "16", "17", "18", "19", "20", "21", "22", "23", "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14"],
-          "disk": [{
-            name: 'host1disk',
-            data: [0, 50, 0, 10, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 10, 0, 80, 0, 0, 80, 90, 0, 0, 0, 50, 0, 10, 0, 0],
-            type: 'line',
-            stack: 'host',
-            barWidth: '60%'
-          },
-            {
-              name: 'host2disk',
-              data: [10, 0, 0, 50, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 50, 0, 10, 0, 0],
-              type: 'line',
-              stack: 'host',
-              barWidth: '60%'
-            }
-          ],
-          "cpu": [{
-            name: 'host1cpu',
-            data: [0, 50, 0, 10, 0, 0, 0, 0, 20, 0, 40, 0, 0, 0, 10, 0, 0, 0, 0, 10, 90, 0, 0, 0, 0, 0, 50, 0, 10, 0, 0],
-            type: 'line',
-            stack: 'host',
-            barWidth: '60%'
-          }
-          ],
-          "memory": [{
-            name: 'host1memory',
-            data: [0, 50, 0, 10, 0, 0, 50, 0, 20, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 80, 90, 0, 0, 0, 0, 0, 50, 0, 10, 0, 0],
-            type: 'line',
-            stack: 'host',
-            barWidth: '60%'
-          }
-          ],
-          "flow": [{
-            name: 'host1flow',
-            data: [0, 50, 0, 10, 0, 0, 50, 0, 20, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 80, 90, 0, 0, 0, 0, 0, 50, 0, 10, 0, 0],
-            type: 'line',
-            stack: 'host',
-            barWidth: '60%'
-          }
-          ]
-        }
-      }
-      this.responseData = chartData
-      // mock天，周，月数据
-      var mockweekData = {
-        "message": "请求成功",
-        "result": {
-          "xaxis": ["8-9", "8-10", "8-11", "8-12", "8-13", "8-14", "8-15"],
-          "diskUse": [{
-            'name': 'host1',
-            data: [0, 4, 0, 0, 0, 50, 0]
-          },
-            {
-              name: 'host2',
-              data: [0, 0, 0, 0, 0, 10, 0]
-            }
-          ],
-          "cpuUse": [{
-            'name': 'host1',
-            data: [0, 4, 0, 0, 0, 50, 0]
-          }
-          ],
-          "memoryUse": [{
-            'name': 'host1',
-            data: [0, 0, 0, 0, 0, 10, 0]
-          }
-          ],
-          "flowUse": [{
-            'name': 'host1',
-            data: [0, 37, 0, 30, 0, 0, 0]
-          }
-          ]
-        },
-        "status": 1
-      }
-      var mockmonthData = {
-        "message": "请求成功",
-        "result": {
-          "xaxis": ["7-17", "7-18", "7-19", "7-20", "7-21", "7-22", "7-23", "7-24", "7-25", "7-26", "7-27", "7-28", "7-29", "7-30", "7-31", "8-1", "8-2", "8-3", "8-4", "8-5", "8-6", "8-7", "8-8", "8-9", "8-10", "8-11", "8-12", "8-13", "8-14", "8-15"],
-          "diskUse": [{
-            'name': 'host1',
-            data: [0, 0, 0, 3, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 0, 0, 230, 0, 0, 0, 120, 0, 0, 4, 0, 0, 0, 10, 0]
-          },
-            {
-              name: 'host2',
-              data: [0, 0, 0, 32, 104, 103, 104, 103, 103, 102, 102, 102, 102, 102, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 0, 0, 0, 120]
-            }
-          ],
-          "cpuUse": [{
-            'name': 'host1',
-            data: [0, 0, 0, 3, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 0, 0, 230, 0, 0, 0, 120, 0, 0, 4, 0, 0, 0, 10, 0]
-          }
-          ],
-          "memoryUse": [{
-            'name': 'host1',
-            data: [0, 0, 0, 3, 9, 9, 9, 9, 9, 10, 10, 10, 10, 10, 10, 0, 0, 230, 0, 0, 0, 120, 0, 0, 4, 0, 0, 0, 10, 0]
-          }
-          ],
-          "flowUse": [{
-            'name': 'host1',
-            data: [0, 0, 0, 32, 104, 103, 104, 103, 103, 102, 102, 102, 102, 102, 102, 0, 0, 0, 0, 0, 0, 0, 0, 0, 37, 0, 0, 0, 0, 0]
-          }
-          ]
-        },
-        "status": 1
-      }
-      this.weekdata = mockweekData
-      this.monthdata = mockmonthData
-      this.overviewInit()
     },
     methods: {
       deleteChart(item) {
@@ -1253,12 +1082,6 @@
           onOk: () => {
           }
         });
-      },
-      overviewInit() {
-        this.chartTypeSwitch('disk')
-        this.chartTypeSwitch('cpu')
-        this.chartTypeSwitch('memory')
-        this.chartTypeSwitch('flow')
       },
       alarmStrategyInit() {
         this.selectedTarget = this.alarmHostTarget
@@ -1356,7 +1179,6 @@
       labelSwitching(name) {
         switch (name) {
           case 'overview':
-            this.overviewInit()
             break
           case 'customMonitoring':
             this.getCustomMonitorGroup()
@@ -1367,37 +1189,6 @@
           case 'alarmList':
             this.getAlarmList()
             break
-        }
-      },
-      chartTypeSwitch(type) {
-        var selectType = this.overview[type].chartType == 'line' ? JSON.parse(linestr) : JSON.parse(this.barstr)
-        var responseDataStr = JSON.stringify(this.responseData)
-        if (this.overview[type].chartType == 'line') {
-          selectType.xAxis.data = JSON.parse(responseDataStr).result.xaxis
-          selectType.series = JSON.parse(responseDataStr).result[type]
-          this[type + 'Polar'] = selectType
-        } else {
-          selectType.xAxis.data = JSON.parse(responseDataStr).result.xaxis
-          selectType.series = JSON.parse(responseDataStr).result[type].map(item => {
-            item.type = 'bar'
-            return item
-          })
-          this[type + 'Polar'] = selectType
-        }
-      },
-      timeSwitch(type) {
-        if (this.overview[type].timeType == 'day') {
-          this.chartTypeSwitch(type)
-        } else if (this.overview[type].timeType == 'week') {
-          this[type + 'Polar'].xAxis.data = this.weekdata.result.xaxis
-          this[type + 'Polar'].series.map((item, index) => {
-            this.weekdata.result[type + 'Use'][index] = item.data
-          })
-        } else {
-          this[type + 'Polar'].xAxis.data = this.monthdata.result.xaxis
-          this[type + 'Polar'].series.map((item, index) => {
-            this.monthdata.result[type + 'Use'][index] = item.data
-          })
         }
       },
 
@@ -1477,6 +1268,16 @@
         this.monitoringIndexForm.selectedProduct = []
         this.showModal.addMonitorIndex = true
       },
+      addOverviewMonitoring(val) {
+        // 初始化弹窗
+        this.overviewMonitoring = val
+        this.isAddOverviewMonitorIndex = true
+        this.overviewMonitorIndexForm.productType = ''
+        this.overviewMonitorIndexForm.productIndex = ''
+        this.overviewMonitorIndexForm.allProduct = []
+        this.overviewMonitorIndexForm.selectedProduct = []
+        this.showModal.addOverviewMonitorIndex = true
+      },
       changeProduct(val) {
         this.monitoringIndexForm.productTypeGroup.forEach(item => {
           if (item.value == val) {
@@ -1484,6 +1285,14 @@
           }
         })
         this.monitoringIndexForm.productIndex = ''
+      },
+      changeOverviewProduct(val){
+        this.overviewMonitorIndexForm.productTypeGroup.forEach(item => {
+          if (item.value == val) {
+            this.overviewMonitorIndexForm.productIndexGroup = item.indexGroup
+          }
+        })
+        this.overviewMonitorIndexForm.productIndex = ''
       },
       // 获取指标资源
       getIndexResource() {
@@ -2044,6 +1853,35 @@
 
   .disk {
     width: 774px;
+    .om-content {
+      height: 80%;
+      padding-top: 6%;
+      cursor: pointer;
+      text-align: center;
+      .cross {
+        background: rgba(42, 153, 242, 1);
+        height: 60px;
+        position: relative;
+        width: 1px;
+        margin: 0 auto;
+        &:after {
+          background: #2a99f2;
+          content: "";
+          height: 1px;
+          left: -30px;
+          position: absolute;
+          top: 30px;
+          width: 60px;
+        }
+      }
+      > p {
+        margin-top: 20px;
+        font-size: 12px;
+        font-family: MicrosoftYaHei;
+        color: rgba(153, 153, 153, 1);
+        line-height: 16px;
+      }
+    }
   }
 
   .cm-content {

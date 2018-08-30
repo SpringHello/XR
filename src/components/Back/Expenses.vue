@@ -68,8 +68,8 @@
               <span>按交易时间</span>
               <Row style="display: inline-block;margin-left: 10px">
                 <Col span="12">
-                  <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
-                               placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
+                <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
+                             placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
                 </Col>
               </Row>
               <span style="margin-left: 20px">按交易类型</span>
@@ -107,8 +107,8 @@
               <span style="line-height: 30px;">～</span>
               <Row>
                 <Col span="12">
-                  <Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start"
-                               placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
+                <Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start"
+                             placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
                 </Col>
               </Row>
               <Button type="primary" style="margin-left: 197px" @click="orderPay" :disabled="payDisabled">支付</Button>
@@ -498,6 +498,8 @@
           callback()
         }
       }
+      //当前打开的pane页
+      let name = sessionStorage.getItem('expenses-name')||'accountSummary'
       return {
         payLoading: false,
         cardVolumeColumns: [
@@ -697,7 +699,7 @@
           }
         ],
         billTabledata: [],
-        name: 'accountSummary',
+        name,
         ordertotal: 0,
         timeType: '',
         timeTypeList: [
