@@ -273,7 +273,7 @@
                   {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ruicloud/Pecss'},
                   {title: '裸金属服务器（敬请期待）', desc: '专属物理服务器', path: ''},
                   {title: '弹性伸缩（敬请期待）', desc: '高可用、可视化、低成本', path: ''},
-                  {title: 'GPU服务器（敬请期待）', desc: '高可用、可视化、低成本', path: ''}
+                  {title: 'GPU服务器（敬请期待）', desc: 'Tesla P100 GPU、Tesla P40 GPU', path: ''}
                 ]
               },
               {
@@ -283,7 +283,7 @@
                   {title: '弹性IP', desc: '绑定与解绑IP、扩容', path: '/ruicloud/Peip'},
                   {title: '负载均衡', desc: '源算法、轮询、最小连接数', path: '/ruicloud/Pbalance'},
                   {title: 'NAT网关', desc: 'TCP/HTTP协议、多对一支持', path: '/ruicloud/Pnat'},
-                  {title: '虚拟专网VPN', desc: '跨VPC链接', path: '/ruicloud/Pvirvpn'},
+                  {title: '虚拟专网VPN', desc: '跨VPC连接', path: '/ruicloud/Pvirvpn'},
                   {title: 'CDN（敬请期待）', desc: '节点丰富、安全易用', path: ''}
                 ]
               },
@@ -358,7 +358,8 @@
               {subTitle: '镜像服务', url: '/ruicloud/Phost'},
               {subTitle: 'ESC快照', url: '/ruicloud/Pecss'},
               {subTitle: '裸金属服务器（敬请期待）', url: ''},
-              {subTitle: '弹性伸缩（敬请期待）', url: ''}
+              {subTitle: '弹性伸缩（敬请期待）', url: ''},
+              {subTitle: 'GPU服务器（敬请期待）', url: ''}
             ]
           },
           {
@@ -376,7 +377,8 @@
             title: '云储存',
             desc: [
               {subTitle: '云硬盘', url: '/ruicloud/Pdisk'},
-              {subTitle: '云硬盘备份', url: '/ruicloud/Pbackupdisk'}
+              {subTitle: '云硬盘备份', url: '/ruicloud/Pbackupdisk'},
+              {title: '对象存储', url: '/ruicloud/PobjStorage'}
             ]
           },
           {
