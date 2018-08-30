@@ -9,7 +9,10 @@
       <div class="content">
         <span>支付</span>
         <span class="title">已选择{{orderInfo.orderNum}}项 | 总计:{{orderInfo.money}}元 |</span>
-        <p>请在<span>{{ overTime }}</span>内完成支付，否则订单会自动取消！</p>
+        <p>请在
+          <span>{{ h }} :</span>
+          <span>{{ m }} :</span>
+          <span>{{ s }} </span>秒内完成支付，否则订单会自动取消！</p>
         <div class="accountInfo" v-if="currentTab=='otherPay'">
           <CheckboxGroup v-model="accountPay" @on-change="checkUseVoucher">
             <Checkbox label="account" style="margin-right:40px;user-select: none">
@@ -131,12 +134,25 @@
         // 支付宝流水号
         zfbNum: '',
         loadingMessage: '',
-        load: false,
-        overTime: ''
+        loading: false,
+        startTime: '',
+        overTime: '',
+        h: '--',
+        m: '--',
+        s: '--',
+        intervalInstance: null
       }
     },
     beforeRouteEnter(to, from, next) {
-      next()
+      axios.get('network/getTime.do').then(res => {
+        if (res.data.status == 1) {
+          next(vm => {
+            vm.setData(res)
+          })
+        } else {
+          next()
+        }
+      })
     },
     created() {
       this.overTime = sessionStorage.getItem('overtime')
@@ -158,6 +174,10 @@
       }
     },
     methods: {
+      setData(res) {
+        this.startTime = res.data.result
+        this.setTime()
+      },
       // 判断能否使用现金券余额
       checkUseVoucher(bol) {
         // 不允许使用现金券余额，但是点击了使用
@@ -324,6 +344,42 @@
             this.$router.push('payResult')
           }
         })
+      },
+      setTime() {
+        let endTime = new Date(this.overTime).getTime()
+        let limitTime = endTime - this.startTime
+        if (limitTime > 0) {
+          this.setLimit(limitTime)
+          this.intervalInstance = setInterval(() => {
+            this.setLimit(limitTime)
+            limitTime -= 1000
+            if (limitTime <= 0) {
+              window.clearInterval(this.intervalInstance)
+            }
+          }, 1000);
+        } else {
+          //this.d = this.checkTime(0);
+          this.h = this.checkTime(0);
+          this.m = this.checkTime(0);
+          this.s = this.checkTime(0);
+        }
+
+      },
+      setLimit(time) {
+        // let days = parseInt(time / 1000 / 60 / 60 / 24, 10); //计算剩余的天数
+        let hours = parseInt(time / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
+        let minutes = parseInt(time / 1000 / 60 % 60, 10);//计算剩余的分钟
+        let seconds = parseInt(time / 1000 % 60, 10);//计算剩余的秒数
+        //this.d = this.checkTime(days);
+        this.h = this.checkTime(hours);
+        this.m = this.checkTime(minutes);
+        this.s = this.checkTime(seconds);
+      },
+      checkTime(i) { //将0-9的数字前面加上0，例1变为01
+        if (i < 10) {
+          i = '0' + i;
+        }
+        return i;
       }
     },
     computed: {
@@ -368,6 +424,10 @@
           this.rechargeValue = this.otherPayCount
         }
       }
+    },
+    beforeRouteLeave(to, from, next) {
+      clearInterval(this.intervalInstance)
+      next()
     }
   }
 </script>
