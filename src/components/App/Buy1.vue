@@ -1578,7 +1578,7 @@
           productList: [{label: '云主机', value: 'Pecs'}, {label: '云硬盘', value: 'Pdisk'}, {
             label: '公网IP',
             value: 'Peip'
-          }, /*{label: '数据库', value: 'Pdata'}*/]
+          }, {label: '数据库', value: 'Pdata'}]
         },
         // 云主机信息对象
         PecsInfo: {
@@ -2782,34 +2782,34 @@
       }),
 
       // 查询数据盘价格(数据库页面)
-      /*queryDiskPriceInData: debounce(500, function () {
-       var diskSize = ''
-       var diskType = ''
-       for (var disk of this.PdataInfo.dataDiskList) {
-       diskSize += `${disk.size},`
-       diskType += `${disk.type},`
-       }
-       var params = {
-       cpuNum: '0',
-       diskSize,
-       diskType,
-       memory: '0',
-       timeType: this.PdataInfo.timeForm.currentTimeValue.type,
-       timeValue: this.PdataInfo.timeForm.currentTimeValue.value,
-       zoneId: this.PdataInfo.zone.zoneid
-       }
-       if (this.PdataInfo.timeForm.currentTimeType === 'current') {
-       params.timeType = 'current'
-       }
-       axios.post('device/QueryBillingPrice.do', params).then(response => {
-       this.PdataInfo.dataDiskCost = response.data.cost
-       if (response.data.coupon) {
-       this.PdataInfo.coupon = response.data.coupon
-       } else {
-       this.PdataInfo.coupon = 0
-       }
-       })
-       }),*/
+      // queryDiskPriceInData: debounce(500, function () {
+      //  var diskSize = ''
+      //  var diskType = ''
+      //  for (var disk of this.PdataInfo.dataDiskList) {
+      //  diskSize += `${disk.size},`
+      //  diskType += `${disk.type},`
+      //  }
+      //  var params = {
+      //  cpuNum: '0',
+      //  diskSize,
+      //  diskType,
+      //  memory: '0',
+      //  timeType: this.PdataInfo.timeForm.currentTimeValue.type,
+      //  timeValue: this.PdataInfo.timeForm.currentTimeValue.value,
+      //  zoneId: this.PdataInfo.zone.zoneid
+      //  }
+      //  if (this.PdataInfo.timeForm.currentTimeType === 'current') {
+      //  params.timeType = 'current'
+      //  }
+      //  axios.post('device/QueryBillingPrice.do', params).then(response => {
+      //  this.PdataInfo.dataDiskCost = response.data.cost
+      //  if (response.data.coupon) {
+      //  this.PdataInfo.coupon = response.data.coupon
+      //  } else {
+      //  this.PdataInfo.coupon = 0
+      //  }
+      //  })
+      //  }),
       // 磁盘页面数据盘价格
       queryDiskPriceInDisk: debounce(500, function () {
         var diskSize = ''
@@ -3208,7 +3208,7 @@
 
         axios.get('database/createDB.do', {params}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.push('order')
+            this.$router.push('/ruicloud/order')
           } else {
             this.$message.info({
               content: response.data.message
