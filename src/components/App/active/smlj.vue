@@ -108,7 +108,7 @@
     <Modal v-model="modal2" width="550" :scrollable="true" :mask-closable="false" class="smlj-bag">
       <div style="text-align:center">
         <p style="color:#E45543;font-size: 24px;margin: 100px 0 40px 0;">抱歉</p>
-        <p style="font-size:18px;color:rgba(51,51,51,1);">{{failMsg}}</p>
+        <p style="font-size:18px;color:rgba(51,51,51,1);" v-html="failMsg"></p>
       </div>
       <div slot="footer" style="text-align: center;margin: 40px 0 110px 0;">
         <button class="check" @click="modal2=false">
@@ -310,7 +310,7 @@
             this.sucessMsg = response.data.message
             this.modal1 = true
           } else {
-            this.failMsg = response.data.message
+            this.failMsg = response.data.message.replace('<a>用户中心', '<a href="/ruicloud/userCenter">用户中心')
             this.modal2 = true
           }
         })
@@ -337,7 +337,7 @@
         if (response.status == 200 && response.data.status == 4) {
           this.ljOverded = true
         }
-      }
+      },
     },
     computed: {},
     watch: {}
@@ -650,6 +650,8 @@
   }
 
   .check {
+    outline: none;
+    border: none;
     width: 115px;
     height: 38px;
     font-size: 18px;
@@ -660,6 +662,7 @@
     display: block;
     line-height: 38px;
     margin: 0px auto;
+    cursor: pointer;
   }
 </style>
 
