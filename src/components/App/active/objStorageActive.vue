@@ -39,7 +39,7 @@
               <div class="box">
                 <div class="top">开始使用新睿云对象存储</div>
                 <div class="content" v-if="!getFulx">
-                  <p>北京一区</p>
+                  <p style="font-family:PingFangSC-Regular;">北京一区</p>
                   <h3><i style="color:#FF0000;font-style: normal;">{{fulxSize}}</i>G存储包风格</h3>
                   <button @click="freeReceive()" v-if="isReceive">免费领取</button>
                   <button style="background:rgba(255,156,149,1);" v-else>领取成功</button>
@@ -383,9 +383,10 @@ export default {
 
 <style rel="stylesheet/less" lang="less" scoped>
 .objstorage-active {
-  font-family: PingFangSC-Medium;
+  font-family: PingFangSC-Regular;
   color: #333;
   overflow: hidden;
+  background: #fff;
   // 48px:48px;
   // 公共表头样式
   .header {
@@ -478,12 +479,14 @@ export default {
   }
   .container {
     padding-bottom: 60px;
+    background: #fff;
     .wrap {
       margin: 0 auto;
       width: 1080px;
     }
     section {
       margin-top: 100px;
+      background: #fff;
     }
     .concept {
       .sec-container {
@@ -688,7 +691,6 @@ export default {
       display: block;
       width: 80%;
       margin: 0px auto;
-      font-family: PingFangSC-Regular;
       font-family: PingFangSC-Regular;
       font-size: 14px;
       color: #b6b6b6;

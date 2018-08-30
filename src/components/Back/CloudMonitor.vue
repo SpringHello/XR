@@ -178,7 +178,7 @@
             <div class="nas-content" v-else>
               <div class="nas-content-title">
                 <span>新建告警策略</span>
-                <button @click="isNewAlarmStrategy = false;listAlarm()">返回</button>
+                <button @click="newStrategy_back">返回</button>
               </div>
               <div class="nas-content-body">
                 <Form :model="newAlarmStrategyForm" :rules="newAlarmStrategyFormRuleValidate"
@@ -232,14 +232,14 @@
                   </div>
                   <div class="alarm-strategy">
                     <p class="headline">告警策略
-                      <span v-if="targetformDynamic.items.length+eventformDynamic.items.length<1"
+                      <span v-if="targetformDynamic.length+eventformDynamic.length<1"
                             style="color:#ed3f14;font-size:12px;padding-left:10px;">请至少设置一个告警策略</span>
                     </p>
                     <div class="content">
                       <div>
                         <p>指标告警</p>
                         <FormItem style="margin-bottom:10px"
-                                  v-for="(item, index) in targetformDynamic.items"
+                                  v-for="(item, index) in targetformDynamic"
                                   :key="index">
                           <Row :gutter="16">
                             <Col span="4">
@@ -300,7 +300,7 @@
                       <div>
                         <p>事件告警</p>
                         <FormItem style="margin-bottom:10px"
-                                  v-for="(item, index) in eventformDynamic.items"
+                                  v-for="(item, index) in eventformDynamic"
                                   :key="index">
                           <Row :gutter="16">
                             <Col span="4">
@@ -396,8 +396,10 @@
                 <Button type="primary" @click="deleteMsg">删除</Button>
                 <div style="float: right">
                   <span>接收时间</span>
-                  <DatePicker type="daterange" placement="bottom-end" placeholder="请选择日期" style="width: 230px;margin: 0 10px" @on-change="alarmListTimeChange"></DatePicker>
-                  <Input v-model="alarmList.msgName" placeholder="请输入消息名称" style="width: 230px;margin-right: 20px"></Input>
+                  <DatePicker type="daterange" placement="bottom-end" placeholder="请选择日期"
+                              style="width: 230px;margin: 0 10px" @on-change="alarmListTimeChange"></DatePicker>
+                  <Input v-model="alarmList.msgName" placeholder="请输入消息名称"
+                         style="width: 230px;margin-right: 20px"></Input>
                   <Button type="primary" @click="getAlarmList">查询</Button>
                 </div>
               </div>
@@ -547,19 +549,17 @@
   export default {
     data() {
       return {
-        targetformDynamic: {
-          items: [
-            {
-              alarmName: 'CPU使用率',
-              countCircle: '1',
-              valueType: '>',
-              vaule: '80',
-              continueCircle: '1',
-              alarmCount: '1',
-              alarmType: '1'
-            }
-          ]
-        },
+        targetformDynamic: [
+          {
+            alarmName: 'CPU使用率',
+            countCircle: '1',
+            valueType: '>',
+            vaule: '80',
+            continueCircle: '1',
+            alarmCount: '1',
+            alarmType: '1'
+          }
+        ],
         // 默认选择哪个资源的指标
         selectedTarget: {},
         // 云主机指标
@@ -711,17 +711,15 @@
             }
           ]
         },
-        eventformDynamic: {
-          items: [
-            {
-              alarmName: 'XXX端口ping不可达',
-              countCircle: '1',
-              continueCircle: '1',
-              alarmCount: '1',
-              alarmType: '2'
-            }
-          ]
-        },
+        eventformDynamic: [
+          {
+            alarmName: 'XXX端口ping不可达',
+            countCircle: '1',
+            continueCircle: '1',
+            alarmCount: '1',
+            alarmType: '2'
+          }
+        ],
         eventTem: {
           target: [
             {
@@ -996,6 +994,21 @@
                 },
                 on: {
                   click: () => {
+                    this.newAlarmStrategyForm.strategyName = params.row.name
+                    console.log(params.row.AlarmEvent)
+                    this.newAlarmStrategyForm.strategyType = params.row.strategytype + ''
+                    this.newAlarmStrategyForm.channel = []
+                    if (params.row.letter) {
+                      this.newAlarmStrategyForm.channel.push('letter')
+                    }
+                    if (params.row.email) {
+                      this.newAlarmStrategyForm.channel.push('email')
+                    }
+                    if (params.row.phone) {
+                      this.newAlarmStrategyForm.channel.push('phone')
+                    }
+                    this.targetformDynamic = params.row.AlarmEvent
+                    this.eventformDynamic = params.row.AlarmEvent
                     this.isNewAlarmStrategy = true
                   }
                 }
@@ -1090,7 +1103,7 @@
         newAlarmStrategyForm: {
           strategyName: '',
           strategyType: '0',
-          channel: ['phone'],
+          channel: [],
           alarmObj: 'part'
         },
         newAlarmStrategyFormRuleValidate: {
@@ -1101,7 +1114,7 @@
             {required: true, message: '请选择策略类型', trigger: 'change'}
           ],
           channel: [
-            {required: true, type: 'array', min: 1, message: '请至少选择一个', trigger: 'change'}
+            {required: true, type: 'array', min: 1, message: '请至少选择一个告警渠道', trigger: 'change'}
           ],
         },
         isAddMonitorIndex: true,
@@ -1109,7 +1122,8 @@
         contactsHint: false,
         currentAlarmObj: '',
         allHostLegth: '',
-        allHostTem: ''
+        allHostTem: '',
+        allContactsTemp: ''
       }
     },
     created() {
@@ -1245,6 +1259,44 @@
       this.overviewInit()
     },
     methods: {
+      newStrategy_back() {
+        this.isNewAlarmStrategy = false
+        this.listAlarm()
+        // 返回清空新建告警策略表单数据
+        this.newAlarmStrategyForm = {
+          strategyName: '',
+          strategyType: '0',
+          channel: [],
+          alarmObj: 'part'
+        }
+        // 清空资源选择
+        this.strategyhost.selectedHost = []
+        this.strategyhost.allHost = JSON.parse(this.allHostTem)
+        // 清空联系人选择
+        this.contacts.allContacts = JSON.parse(this.allContactsTemp)
+        this.contacts.selectedContacts = []
+        // 清空指标数据
+        this.targetformDynamic = [
+          {
+            alarmName: 'CPU使用率',
+            countCircle: '1',
+            valueType: '>',
+            vaule: '80',
+            continueCircle: '1',
+            alarmCount: '1',
+            alarmType: '1'
+          }
+        ]
+        this.eventformDynamic = [
+          {
+            alarmName: 'XXX端口ping不可达',
+            countCircle: '1',
+            continueCircle: '1',
+            alarmCount: '1',
+            alarmType: '2'
+          }
+        ]
+      },
       deleteChart(item) {
         this.$Modal.confirm({
           title: '提示',
@@ -1275,11 +1327,11 @@
       },
       changeAlarmType() {
         if (this.newAlarmStrategyForm.alarmObj == 'all') {
-          this.strategyhost.selectedHost = this.allHostTem
+          this.strategyhost.selectedHost = JSON.parse(this.allHostTem)
           this.strategyhost.allHost = []
         } else {
           this.strategyhost.selectedHost = []
-          this.strategyhost.allHost = this.allHostTem
+          this.strategyhost.allHost = JSON.parse(this.allHostTem)
         }
       },
       changeStrategyType() {
@@ -1297,16 +1349,16 @@
             this.selectedTarget = item
           }
         })
-        this.targetformDynamic.items[0].alarmName = this.selectedTarget.target[0].value
-        this.targetformDynamic.items.splice(1, this.targetformDynamic.items.length - 1)
+        this.targetformDynamic[0].alarmName = this.selectedTarget.target[0].value
+        this.targetformDynamic.splice(1, this.targetformDynamic.length - 1)
         this.$http.get('monitor/listZoneVMAndDiskAndVpcAndObject1.do', {
           params: {
             productType: productType
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.allHostTem = response.data.list
             this.strategyhost.allHost = response.data.list
+            this.allHostTem = JSON.stringify(this.strategyhost.allHost)
             this.allHostLegth = response.data.list.length
           } else {
             console.log('获取资源列表报错')
@@ -1321,7 +1373,7 @@
           }
         })
         var selectedAttr = this.selectedTarget.target[0].value
-        this.targetformDynamic.items.push({
+        this.targetformDynamic.push({
           alarmName: selectedAttr,
           countCircle: '1',
           valueType: '>',
@@ -1332,10 +1384,10 @@
         })
       },
       targetHandleRemove(index) {
-        this.targetformDynamic.items.splice(index, 1)
+        this.targetformDynamic.splice(index, 1)
       },
       eventHandleAdd() {
-        this.eventformDynamic.items.push(
+        this.eventformDynamic.push(
           {
             alarmName: 'XXX端口ping不可达',
             countCircle: '1',
@@ -1347,7 +1399,7 @@
         )
       },
       eventHandleRemove(index) {
-        this.eventformDynamic.items.splice(index, 1)
+        this.eventformDynamic.splice(index, 1)
       },
 
       // 区域变更，刷新数据
@@ -1834,11 +1886,12 @@
             this.contacts.allContacts = response.data.result.map(item => {
               return {name: item.username, id: item.id}
             })
+            this.allContactsTemp = JSON.stringify(this.contacts.allContacts)
           }
         })
       },
       newAlarmStrategy_ok() {
-        var alarmlength = this.targetformDynamic.items.length + this.eventformDynamic.items.length < 1
+        var alarmlength = this.targetformDynamic.length + this.eventformDynamic.length < 1
         this.hostHint = this.strategyhost.selectedHost.length < 1 ? true : false
         this.contactsHint = this.contacts.selectedContacts.length < 1 ? true : false
         this.$refs['newAlarmStrategyForm'].validate((valid) => {
@@ -1870,8 +1923,8 @@
               email: channel.email + '',
               phone: channel.phone + '',
               linkIds: linkMan.join(),
-              targetAlarmMessage: JSON.stringify(this.targetformDynamic.items),
-              eventAlarmMessage: JSON.stringify(this.eventformDynamic.items),
+              targetAlarmMessage: JSON.stringify(this.targetformDynamic),
+              eventAlarmMessage: JSON.stringify(this.eventformDynamic),
             }
             this.$http.post('alarmControl/createAlarmControl.do', params).then(res => {
               if (res.status == 200 && res.data.status == 1) {
