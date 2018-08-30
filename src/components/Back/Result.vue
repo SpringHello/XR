@@ -12,7 +12,7 @@
         <p>请在
           <span>{{ h }} :</span>
           <span>{{ m }} :</span>
-          <span>{{ s }} </span>秒内完成支付，否则订单会自动取消！</p>
+          <span>{{ s }} </span>秒内完成支付，否则订单会自动取消</p>
         <div class="accountInfo" v-if="currentTab=='otherPay'">
           <CheckboxGroup v-model="accountPay" @on-change="checkUseVoucher">
             <Checkbox label="account" style="margin-right:40px;user-select: none">
