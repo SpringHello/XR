@@ -251,7 +251,7 @@
           this.accountInfo = response.data.result[0].items
           // 待处理事项数据
           this.pending = response.data.result[1].items
-          var pendingUrl = ['work', 'order', 'renew']
+          var pendingUrl = ['work', 'expenses?pane=orderManage', 'renew']
           this.pending.forEach((item, index) => {
             item.url = pendingUrl[index]
           })

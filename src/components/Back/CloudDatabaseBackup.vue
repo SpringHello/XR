@@ -56,8 +56,8 @@
         <Form :model="createSnapsForm" ref="createSnapsForm" :rules="createSnapsRule">
           <FormItem label="选择数据库" prop="database">
             <Select v-model="createSnapsForm.database">
-              <!--   <Option v-for="item in vmList" :value="item.computerid" :key="item.computerid">{{ item.computername }}
-                 </Option>-->
+                <Option v-for="item in vmList" :value="item.computerid" :key="item.computerid">{{ item.computername }}
+                 </Option>
             </Select>
           </FormItem>
           <FormItem label="备份名称" prop="name">
@@ -280,7 +280,7 @@
           }
         ],
         //备份数据
-        backupData: [{}],
+        backupData: [],
         showModal: {
           rollback: false,
           newSnapshot: false,
@@ -554,9 +554,13 @@
       this.getWeekTimeData()
     },
     methods: {
-      setDataBasesBackup() {},
+      setDataBasesBackup(response) {
+        if (response.status == 200 && response.data.status == 1) {
+          this.backupData = response.data.result
+        }
+      },
       rollback_ok() {
-
+        
       },
       deleteBackup() {
         this.showModal.delete = true
@@ -568,8 +572,20 @@
         this.showModal.newSnapshot = false
       },
       NewSnaps_ok(name) {
+        console.log(this.createSnapsForm)
         this.$refs[name].validate((valid) => {
           if (valid) {
+            alert('success')
+            this.$http.get('database/DBBackup.do', {
+              params: {
+                DBId: '',
+
+              }
+            }).then(response => {
+
+            })
+          } else {
+            alert('fail')
           }
         })
       },

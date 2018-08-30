@@ -77,6 +77,12 @@
                   </Option>
                 </Select>
               </FormItem>
+              <span v-if="creatbalancemodal.formInline.radio=='public'"
+                    style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 50%;top: 63.5%;"
+                    @click="buyIP">
+              <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
+              购买弹性IP
+            </span>
               <FormItem label="所属子网" prop="subnet"
                         style="width:240px;">
                 <Select v-model="creatbalancemodal.formInline.subnet">
@@ -161,7 +167,7 @@
                 </Input>
               </FormItem>
               <p v-if="creatbalancemodal.current == 1" style="font-size: 12px;color: #666666;line-height: 16px;">
-                提示：当您完成负载均衡创建之后，您可以在负载均衡详情页面<!--修改转发规则与健康检查规则，并-->管理您的后端服务器。<!--同时您也可以在该页面选择开启或者关闭会保持功能。什么是 <span
+                提示：当您完成负载均衡创建之后，您可以在负载均衡详情页面<!--修改转发规则与健康检查规则，并--> 管理您的后端服务器。<!--同时您也可以在该页面选择开启或者关闭会保持功能。什么是 <span
                 style="color: #377DFF;">会话保持？</span>-->
               </p>
             </Form>
@@ -223,8 +229,9 @@
   import axios from '@/util/axiosInterceptor'
   import $store from '@/vuex'
   import regExp from '../../util/regExp'
+
   export default {
-    beforeRouteEnter(from, to, next){
+    beforeRouteEnter(from, to, next) {
       // 获取负载均衡的初始数据
       axios.get('loadbalance/listLoadBalanceRole.do', {
         params: {
@@ -236,7 +243,7 @@
         })
       })
     },
-    data (){
+    data() {
       const validaRegisteredName = regExp.validaRegisteredName
       const validateNumber = (rule, value, callback) => {
         if (!value) {
@@ -405,7 +412,7 @@
         balanceSelection: null
       }
     },
-    created () {
+    created() {
       this.$http.get('network/listVpc.do').then(response => {
         if (response.status == 200 && response.data.status == 1) {
           this.creatbalancemodal.formInline.VPCList = response.data.result
@@ -413,7 +420,7 @@
       })
     },
     methods: {
-      refresh () {
+      refresh() {
         // 获取负载均衡的初始数据
         axios.get('loadbalance/listLoadBalanceRole.do', {
           params: {
@@ -423,7 +430,7 @@
           this.setData(response)
         })
       },
-      setData(response){
+      setData(response) {
         if (response.status == 200 && response.data.status == 1) {
           response.data.result.internalLoadbalance.forEach(item => {
             item._internal = true
@@ -435,21 +442,21 @@
           this.balData = response.data.result.internalLoadbalance.concat(response.data.result.publicLoadbalance)
         }
       },
-      show (index) {
+      show(index) {
         this.$Modal.info({
           title: 'User Info',
           content: `balanceName：${this.data[index].balanceName}<br>status：${this.data[index].status}<br>NetworkType: ${this.data[index].NetworkType}<br>UseOrInpublic: ${this.data[index].UseOrInpublic}<br>CreationTime: ${this.data[index].CreationTime}`,
           scrollable: true
         })
       },
-      cancel () {
+      cancel() {
         this.creatbalancemodal.showBalanceName = false
         this.creatbalancemodal.current = 0
         this.$refs.form2.resetFields();
         this.$refs.form1.resetFields();
       },
       /* 关闭创建负载均衡窗口，确定创建负载均衡 */
-      removeBalance (){
+      removeBalance() {
         this.$refs.form2.validate((valid) => {
           if (valid) {
             this.creatbalancemodal.showBalanceName = false
@@ -462,7 +469,7 @@
           }
         })
       },
-      nextStep () {
+      nextStep() {
         this.$refs.form1.validate((valid) => {
           if (valid) {
             this.creatbalancemodal.current = 1
@@ -475,7 +482,7 @@
         }
       },
       /*  列出所有负载均衡*/
-      listAllBalance () {
+      listAllBalance() {
         this.$http.get('loadbalance/listLoadBalanceRole.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
             response.data.result.internalLoadbalance.forEach(item => {
@@ -489,7 +496,7 @@
           }
         })
       },
-      changeVPC(){
+      changeVPC() {
         // 获取可以挂载的所有弹性IP
         this.$http.get('network/listPublicIp.do', {
           params: {
@@ -526,7 +533,7 @@
 
       },
       /* 列出公网ip */
-      listPublicIp () {
+      listPublicIp() {
         // 获取可以挂载的所有弹性IP
         this.$http.get('network/listPublicIp.do', {
           params: {
@@ -540,7 +547,7 @@
         })
       },
       /* 选择公网ip时列出所属vpc下的子网*/
-      changePublicIp () {
+      changePublicIp() {
         if (this.creatbalancemodal.formInline.publicIp) {
           var vpc = this.creatbalancemodal.formInline.publicIp.split('#')[0]
         }
@@ -563,7 +570,7 @@
         })
       },
       /* 选择创建私网负载均衡时列出所有子网 */
-      listNetwork () {
+      listNetwork() {
         this.$http.post('network/listNetwork.do', {
           innerLoadbalance: '1'
         }).then(response => {
@@ -573,7 +580,7 @@
         })
       },
       /* 创建负载均衡切换公网和私网时给子网列表赋值 */
-      changeNet () {
+      changeNet() {
         this.creatbalancemodal.formInline.vpc = ''
         this.creatbalancemodal.formInline.PublicIpList = []
         this.creatbalancemodal.formInline.publicIp = ''
@@ -589,7 +596,7 @@
         }
       },
       /* 创建公网负载均衡 */
-      createLoadBalanceRole () {
+      createLoadBalanceRole() {
         this.loadingMessage = '正在创建公网负载均衡，请稍候'
         this.loading = true
         this.$http.get('loadbalance/createLoadBalanceRole.do', {
@@ -619,7 +626,7 @@
         })
       },
       /* 创建私网负载均衡 */
-      createInternalLB () {
+      createInternalLB() {
         let params = {
           algorithm: this.creatbalancemodal.formInline.algorithm,
           name: this.creatbalancemodal.formInline.name,
@@ -652,11 +659,11 @@
         })
       },
       /* 选择单个负载均衡 */
-      selectBalance (currentRow) {
+      selectBalance(currentRow) {
         this.balanceSelection = currentRow
       },
       // 负载均衡绑定主机
-      bind(){
+      bind() {
         if (!this.balanceSelection) {
           this.$Message.info('请选择一个负载均衡')
         } else {
@@ -681,7 +688,7 @@
         }
       },
       /* 负载均衡确定绑定虚拟机 */
-      bindHost_ok () {
+      bindHost_ok() {
         //console.log(this.bindHostForm.vm.join(','))
         this.showModal.bind = false
         this.balData.forEach(item => {
@@ -725,7 +732,7 @@
         }
       },
       /* 解绑虚拟机 */
-      unbindHost(){
+      unbindHost() {
         if (!this.balanceSelection) {
           this.$Message.info('请选择一个负载均衡')
         } else {
@@ -750,7 +757,7 @@
         }
       },
       /* 确认解绑虚拟机 */
-      unbindHost_ok () {
+      unbindHost_ok() {
         this.showModal.unbind = false
         this.balData.forEach(item => {
           if (item.lbid == this.balanceSelection.lbid || item.loadbalanceroleid == this.balanceSelection.loadbalanceroleid) {
@@ -792,7 +799,7 @@
         }
       },
       /* 删除负载均衡 */
-      delBalance () {
+      delBalance() {
         if (!this.balanceSelection) {
           this.$Message.info('请选择一个负载均衡')
         } else {
@@ -834,6 +841,10 @@
             }
           })
         }
+      },
+      buyIP() {
+        sessionStorage.setItem('pane', 'Peip')
+        this.$router.push('buy')
       }
     },
     watch: {
@@ -845,7 +856,7 @@
       }
     },
     computed: {
-      auth(){
+      auth() {
         return this.$store.state.authInfo != null
       }
     }

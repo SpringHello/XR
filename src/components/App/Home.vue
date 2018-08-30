@@ -50,8 +50,8 @@
             </div>
           </div>
         </my-carousel-item>
-        <!--<my-carousel-item class="carousel-item">
-          <div
+        <my-carousel-item class="carousel-item">
+          <div  @click="push('/ruicloud/objStorageActive')"
             style="cursor: pointer;">
             <div class="obj-storage">
               <div class="wrap">
@@ -59,11 +59,12 @@
                   <p>对象存储OSS重磅上线</p>
                   <p>安全稳定、海量、便捷、低延迟、低成本的云端存储服务</p>
                   <p>免费领取<span>50G</span>存储包</p>
+                  <Button>立即领取</Button>
                 </div>
               </div>
             </div>
           </div>
-        </my-carousel-item>-->
+        </my-carousel-item>
         <my-carousel-item class="carousel-item">
           <div @click="push('/ruicloud/groupBooking')"
                style="cursor: pointer;background: #FA846E;">
@@ -1674,7 +1675,60 @@
       }
     }
   }
-
+   .obj-storage {
+    background:linear-gradient(-90deg,rgba(175,201,254,1),rgba(255,255,255,1));
+    height: 400px;
+    position: relative;
+    .wrap {
+      position: relative;
+      width: 1920px;
+      margin: 0 auto;
+      &:after {
+        content: url("./../../assets/img/home/banner-objStorage1.png");
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+      > div {
+        width: 1200px;
+        margin: 0 auto;
+        padding-top: 70px;
+        button {
+          background: none;
+          outline: none;
+          cursor: pointer;
+          padding: 11px 50px;
+          margin-top: 30px;
+          border-radius: 4px;
+          border: 1px solid rgba(51, 51, 51, 1);
+          font-size: 16px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color: rgba(51, 51, 51, 1);
+          &:hover {
+            color: rgba(255, 70, 43, 1);
+            border: 1px solid rgba(255, 70, 43, 1);
+          }
+        }
+        p {
+          font-size: 18px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color: #333;
+          margin-bottom: 20px;
+          span {
+            color: #ff624b;
+          }
+        }
+        p:nth-child(1) {
+          margin-bottom: 40px;
+          font-size: 48px;
+          font-weight: 600;
+        }
+        p:nth-child(3) {
+          font-weight: 700;
+        }
+      }
+    }
+  }
   // 移入移出动画
   .fade-enter, .fade-leave-to {
     opacity: 0;
