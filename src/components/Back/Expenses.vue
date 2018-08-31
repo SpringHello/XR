@@ -26,7 +26,8 @@
                   <ul style="width: 30%">
                     <li>冻结押金
                       <span @click="freezeDetails">
-                      <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;margin-left: 10px;cursor: pointer;"></Icon>
+                      <Icon type="ios-help-outline"
+                            style="color:#2A99F2;font-size:16px;margin-left: 10px;cursor: pointer;"></Icon>
                     </span>
                     </li>
                     <li style="cursor: pointer" @click="freezeDetails">¥{{ freezeDeposit }}</li>
@@ -193,14 +194,17 @@
                     </div>
                   </Form-item>
                   <Form-item label="发票信息" v-show="invoiceInformationShow">
-                    <p v-if="certificateStatus" style="line-height: 2.5;">您需要通过<span style="color: dodgerblue;cursor:pointer;"
-                                                                                     @click="invoiceCertification">增票资质认证</span>才能开具增值税专用发票</p>
+                    <p v-if="certificateStatus" style="line-height: 2.5;">您需要通过<span
+                      style="color: dodgerblue;cursor:pointer;"
+                      @click="invoiceCertification">增票资质认证</span>才能开具增值税专用发票</p>
                     <Button type="primary" style="margin-left: 237px" @click="invoiceCertification"
                             v-if="certificateStatus">点击认证
                     </Button>
-                    <p v-if="underReview" style="line-height: 2.5;">您的增票资质正在<span style="color: #FF8B22;">审核中</span>，请耐心等待</p>
-                    <p v-if="failureAudit" style="line-height: 2.5;">您的增票资质<span style="color: #FF3366;">审核失败</span>，点击<span style="color: dodgerblue;cursor:pointer;"
-                                                                                                                             @click="invoiceCertification">增票资质认证</span>进行修改</p>
+                    <p v-if="underReview" style="line-height: 2.5;">您的增票资质正在<span style="color: #FF8B22;">审核中</span>，请耐心等待
+                    </p>
+                    <p v-if="failureAudit" style="line-height: 2.5;">您的增票资质<span
+                      style="color: #FF3366;">审核失败</span>，点击<span style="color: dodgerblue;cursor:pointer;"
+                                                                  @click="invoiceCertification">增票资质认证</span>进行修改</p>
                   </Form-item>
                   <Form-item label="收件人" prop="recipients">
                     <Input :maxlength="10" v-model="formInvoiceDate.recipients" placeholder="请输入收件人姓名"
@@ -499,7 +503,12 @@
         }
       }
       //当前打开的pane页
-      let name = sessionStorage.getItem('expenses-name')||'accountSummary'
+      let name = this.$route.query.pane || 'accountSummary'
+      if (name == 'orderManage') {
+        var order_type = 'notpay'
+        /*this.searchOrderByType()
+         this.init()*/
+      }
       return {
         payLoading: false,
         cardVolumeColumns: [
@@ -941,7 +950,7 @@
             }
           }
         ],
-        order_type: '',
+        order_type,
         orderData: [],
         options: {
           shortcuts: [
@@ -1180,10 +1189,15 @@
       }
     },
     created() {
-      this.getBalance()
-      this.showMoneyByMonth()
-      this.search()
-      this.getTicketNumber()
+
+      if (this.name == 'orderManage') {
+        this.changeOrder()
+      } else {
+        this.getBalance()
+        this.showMoneyByMonth()
+        this.search()
+        this.getTicketNumber()
+      }
     },
     methods: {
       selectChange(item, index) {
@@ -1332,7 +1346,7 @@
             break
           case 'pay':
             this.init()
-            this.order_type = '1'
+            //this.order_type = '1'
             this.timeTypeList = [
               {
                 label: '订单创建时间',
@@ -1348,7 +1362,7 @@
             break
           case 'notpay':
             this.init()
-            this.order_type = '0'
+            //this.order_type = '0'
             this.timeTypeList = [
               {
                 label: '订单创建时间',
@@ -1361,29 +1375,21 @@
         }
       },
       searchOrderByType() {
-        var url = ''
-        var params = {}
+        var url = 'user/searchOrderByType.do'
+        var params = {
+          pageSize: this.pageSize,
+          page: this.order_currentPage,
+          paymentStatus: this.order_type == 'pay' ? '1' : this.order_type == 'notpay' ? '0' : '',
+        }
         switch (this.timeType) {
           case '':
           case '1':
-            url = 'user/searchOrderByType.do'
-            params = {
-              pageSize: this.pageSize,
-              page: this.order_currentPage,
-              paymentStatus: this.order_type,
-              startTime: this.order_dateRange[0],
-              endTime: this.order_dateRange[1]
-            }
+            params.startTime = this.order_dateRange[0]
+            params.endTime = this.order_dateRange[1]
             break
-          case '2':
-            url = 'user/searchOrderByType.do'
-            params = {
-              pageSize: this.pageSize,
-              page: this.order_currentPage,
-              paymentStatus: this.order_type,
-              aleradyStartTime: this.order_dateRange[0],
-              alreadyEndTime: this.order_dateRange[1]
-            }
+          case'2':
+            params.aleradyStartTime = this.order_dateRange[0]
+            params.alreadyEndTime = this.order_dateRange[1]
             break
         }
         this.$http.get(url, {params}).then(response => {
@@ -1790,7 +1796,8 @@
       }
     },
     computed: {
-      payDisabled() {
+      payDisabled()
+      {
         if (this.orderNumber.some(checkPaymentStatus) || this.orderNumber.length === 0) {
           return true
         } else {
@@ -1800,17 +1807,21 @@
         function checkPaymentStatus(orderNumber) {
           return orderNumber.paymentstatus == 1 || orderNumber.overTimeStatus == 1
         }
-      },
-      deleteDisabled() {
+      }
+      ,
+      deleteDisabled()
+      {
         if (this.orderNumber.length === 0) {
           return true
         } else {
           return false
         }
-      },
+      }
+      ,
     },
     watch: {
-      dateRange() {
+      dateRange()
+      {
         this.search()
       }
     }
