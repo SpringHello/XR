@@ -33,7 +33,7 @@
               <div class="disk">
                 <div class="header">
                   我关注的指标
-                  <span v-if="firstMonitoringOverview.showChart">
+                  <span v-if="firstMonitoringOverview.showChart">  
                     <i @click="showModal.editMonitorIndex=true">编辑</i> | <i @click="deleteChart">删除</i>
                   </span>
                 </div>
@@ -150,7 +150,7 @@
                     </Select>
                   </FormItem>
                   <FormItem label="告警对象">
-                    <RadioGroup v-model="newAlarmStrategyForm.alarmObj" @on-change="changeAlarmType">
+                    <RadioGroup v-model="newAlarmStrategyForm.alarmObj" @on-change="changealarmtype">
                       <Radio label="all" :disabled="allHostLegth>5">全部</Radio>
                       <Radio label="part">选择部分对象</Radio>
                     </RadioGroup>
@@ -197,21 +197,21 @@
                                   :key="index">
                           <Row :gutter="16">
                             <Col span="4">
-                              <Select v-model="item.alarmName">
+                              <Select v-model="item.alarmname">
                                 <Option v-for="item in selectedTarget.target" :value="item.value" :key="item.value">
                                   {{ item.value }}
                                 </Option>
                               </Select>
                             </Col>
                             <Col span="4">
-                              <Select v-model="item.countCircle">
+                              <Select v-model="item.countcircle">
                                 <Option v-for="item in publicTemp.StatisticalCycle" :value="item.value" :key="item.value">
                                   {{ item.label }}
                                 </Option>
                               </Select>
                             </Col>
                             <Col span="2">
-                              <Select v-model="item.valueType" style="text-align:center">
+                              <Select v-model="item.valuetype" style="text-align:center">
                                 <Option v-for="item in publicTemp.standard" :value="item.value" :key="item.value">
                                   {{ item.label }}
                                 </Option>
@@ -225,18 +225,18 @@
                               </Select>
                             </Col>
                             <Col span="1">
-                              <span v-if="item.alarmName=='flow'">KB/s</span>
+                              <span v-if="item.alarmname=='flow'">KB/s</span>
                               <span v-else>%</span>
                             </Col>
                             <Col span="4">
-                              <Select v-model="item.continueCircle">
+                              <Select v-model="item.continuecircle">
                                 <Option v-for="item in publicTemp.keepCycle" :value="item.value" :key="item.value">
                                   {{ item.label }}
                                 </Option>
                               </Select>
                             </Col>
                             <Col span="4">
-                              <Select v-model="item.alarmCount">
+                              <Select v-model="item.alarmcount">
                                 <Option v-for="item in publicTemp.frequency" :value="item.value" :key="item.value">
                                   {{ item.label }}
                                 </Option>
@@ -258,28 +258,28 @@
                                   :key="index">
                           <Row :gutter="16">
                             <Col span="4">
-                              <Select v-model="item.alarmName">
+                              <Select v-model="item.alarmname">
                                 <Option v-for="item in eventTem.target" :value="item.value" :key="item.value">
                                   {{ item.value }}
                                 </Option>
                               </Select>
                             </Col>
                             <Col span="4">
-                              <Select v-model="item.countCircle">
+                              <Select v-model="item.countcircle">
                                 <Option v-for="item in eventTem.StatisticalCycle" :value="item.value" :key="item.value">
                                   {{ item.label }}
                                 </Option>
                               </Select>
                             </Col>
                             <Col span="4">
-                              <Select v-model="item.continueCircle">
+                              <Select v-model="item.continuecircle">
                                 <Option v-for="item in eventTem.keepCycle" :value="item.value" :key="item.value">
                                   {{ item.label }}
                                 </Option>
                               </Select>
                             </Col>
                             <Col span="4">
-                              <Select v-model="item.alarmCount">
+                              <Select v-model="item.alarmcount">
                                 <Option v-for="item in eventTem.frequency" :value="item.value" :key="item.value">
                                   {{ item.label }}
                                 </Option>
@@ -505,13 +505,13 @@
       return {
         targetformDynamic: [
           {
-            alarmName: 'CPU使用率',
-            countCircle: '1',
-            valueType: '>',
-            vaule: '80',
-            continueCircle: '1',
-            alarmCount: '1',
-            alarmType: '1'
+            alarmname: 'CPU使用率',
+            countcircle: 1,
+            valuetype: '>',
+            vaule: 80,
+            continuecircle: 1,
+            alarmcount: 1,
+            alarmtype: 1
           }
         ],
         firstMonitoringOverview: {
@@ -594,19 +594,19 @@
           StatisticalCycle: [
             {
               label: '统计周期：1分钟',
-              value: '1'
+              value: 1
             },
             {
               label: '统计周期：5分钟',
-              value: '5'
+              value: 5
             },
             {
               label: '统计周期：10分钟',
-              value: '10'
+              value: 10
             },
             {
               label: '统计周期：15分钟',
-              value: '15'
+              value: 15
             },
           ],
           standard: [
@@ -638,53 +638,53 @@
           Percentage: [
             {
               label: '80',
-              value: '80'
+              value: 80
             },
             {
               label: '60',
-              value: '60'
+              value: 60
             }
           ],
           keepCycle: [
             {
               label: '持续1个周期',
-              value: '1'
+              value: 1
             },
             {
               label: '持续2个周期',
-              value: '2'
+              value: 2
             },
             {
               label: '持续3个周期',
-              value: '3'
+              value: 3
             },
             {
               label: '持续4个周期',
-              value: '4'
+              value: 4
             },
             {
               label: '持续5个周期',
-              value: '5'
+              value: 5
             }
           ],
           frequency: [
             {
               label: '每天警告1次',
-              value: '1'
+              value: 1
             },
             {
               label: '每天警告2次',
-              value: '2'
+              value: 2
             }
           ]
         },
         eventformDynamic: [
           {
-            alarmName: 'XXX端口ping不可达',
-            countCircle: '1',
-            continueCircle: '1',
-            alarmCount: '1',
-            alarmType: '2'
+            alarmname: 'XXX端口ping不可达',
+            countcircle: 1,
+            continuecircle: 1,
+            alarmcount: 1,
+            alarmtype: 2
           }
         ],
         eventTem: {
@@ -699,51 +699,51 @@
           StatisticalCycle: [
             {
               label: '统计周期：1分钟',
-              value: '1'
+              value: 1
             },
             {
               label: '统计周期：5分钟',
-              value: '5'
+              value: 5
             },
             {
               label: '统计周期：10分钟',
-              value: '10'
+              value: 10
             },
             {
               label: '统计周期：15分钟',
-              value: '15'
+              value: 15
             },
           ],
           keepCycle: [
             {
               label: '持续1个周期',
-              value: '1'
+              value: 1
             },
             {
               label: '持续2个周期',
-              value: '2'
+              value: 2
             },
             {
               label: '持续3个周期',
-              value: '3'
+              value: 3
             },
             {
               label: '持续4个周期',
-              value: '4'
+              value: 4
             },
             {
               label: '持续5个周期',
-              value: '5'
+              value: 5
             }
           ],
           frequency: [
             {
               label: '每天警告1次',
-              value: '1'
+              value: 1
             },
             {
               label: '每天警告2次',
-              value: '2'
+              value: 2
             }
           ]
         },
@@ -895,6 +895,26 @@
                 style: {
                   color: '#2A99F2',
                   cursor: 'pointer'
+                },
+                on: {
+                  click: () => {
+                    this.newAlarmStrategyForm.strategyName = params.row.name
+                    console.log(params.row.zhibiaoAlarm)
+                    this.newAlarmStrategyForm.strategyType = params.row.strategytype + ''
+                    this.newAlarmStrategyForm.channel = []
+                    if (params.row.letter) {
+                      this.newAlarmStrategyForm.channel.push('letter')
+                    }
+                    if (params.row.email) {
+                      this.newAlarmStrategyForm.channel.push('email')
+                    }
+                    if (params.row.phone) {
+                      this.newAlarmStrategyForm.channel.push('phone')
+                    }
+                    this.targetformDynamic = params.row.zhibiaoAlarm
+                    this.eventformDynamic = params.row.shijianAlarm
+                    this.isNewAlarmStrategy = true
+                  }
                 }
               }, params.row.name)
             }
@@ -902,7 +922,8 @@
             title: '触发条件',
             ellipsis: true,
             render: (h, params) => {
-              let alarmname = params.row.AlarmEvent.map(item => {
+              let alarmArr = params.row.zhibiaoAlarm.concat(params.row.shijianAlarm)
+              let alarmname = alarmArr.map(item => {
                 return item.alarmname
               })
               return h('span', {}, alarmname.join())
@@ -936,7 +957,7 @@
                 on: {
                   click: () => {
                     this.newAlarmStrategyForm.strategyName = params.row.name
-                    console.log(params.row.AlarmEvent)
+                    console.log(params.row.zhibiaoAlarm)
                     this.newAlarmStrategyForm.strategyType = params.row.strategytype + ''
                     this.newAlarmStrategyForm.channel = []
                     if (params.row.letter) {
@@ -948,8 +969,8 @@
                     if (params.row.phone) {
                       this.newAlarmStrategyForm.channel.push('phone')
                     }
-                    this.targetformDynamic = params.row.AlarmEvent
-                    this.eventformDynamic = params.row.AlarmEvent
+                    this.targetformDynamic = params.row.zhibiaoAlarm
+                    this.eventformDynamic = params.row.shijianAlarm
                     this.isNewAlarmStrategy = true
                   }
                 }
@@ -1107,22 +1128,22 @@
         // 清空指标数据
         this.targetformDynamic = [
           {
-            alarmName: 'CPU使用率',
-            countCircle: '1',
-            valueType: '>',
-            vaule: '80',
-            continueCircle: '1',
-            alarmCount: '1',
-            alarmType: '1'
+            alarmname: 'CPU使用率',
+            countcircle: 1,
+            valuetype: '>',
+            vaule: 80,
+            continuecircle: 1,
+            alarmcount: 1,
+            alarmtype: 1
           }
         ]
         this.eventformDynamic = [
           {
-            alarmName: 'XXX端口ping不可达',
-            countCircle: '1',
-            continueCircle: '1',
-            alarmCount: '1',
-            alarmType: '2'
+            alarmname: 'XXX端口ping不可达',
+            countcircle: 1,
+            continuecircle: 1,
+            alarmcount: 1,
+            alarmtype: 2
           }
         ]
       },
@@ -1148,7 +1169,7 @@
           }
         })
       },
-      changeAlarmType() {
+      changealarmtype() {
         if (this.newAlarmStrategyForm.alarmObj == 'all') {
           this.strategyhost.selectedHost = JSON.parse(this.allHostTem)
           this.strategyhost.allHost = []
@@ -1172,7 +1193,7 @@
             this.selectedTarget = item
           }
         })
-        this.targetformDynamic[0].alarmName = this.selectedTarget.target[0].value
+        this.targetformDynamic[0].alarmname = this.selectedTarget.target[0].value
         this.targetformDynamic.splice(1, this.targetformDynamic.length - 1)
         this.$http.get('monitor/listZoneVMAndDiskAndVpcAndObject1.do', {
           params: {
@@ -1197,13 +1218,13 @@
         })
         var selectedAttr = this.selectedTarget.target[0].value
         this.targetformDynamic.push({
-          alarmName: selectedAttr,
-          countCircle: '1',
-          valueType: '>',
-          vaule: '80',
-          continueCircle: '1',
-          alarmCount: '1',
-          alarmType: '1'
+          alarmname: selectedAttr,
+          countcircle: 1,
+          valuetype: '>',
+          vaule: 80,
+          continuecircle: 1,
+          alarmcount: 1,
+          alarmtype: 1
         })
       },
       targetHandleRemove(index) {
@@ -1212,11 +1233,11 @@
       eventHandleAdd() {
         this.eventformDynamic.push(
           {
-            alarmName: 'XXX端口ping不可达',
-            countCircle: '1',
-            continueCircle: '1',
-            alarmCount: '1',
-            alarmType: '2'
+            alarmname: 'XXX端口ping不可达',
+            countcircle: 1,
+            continuecircle: 1,
+            alarmcount: 1,
+            alarmtype: 2
 
           }
         )
