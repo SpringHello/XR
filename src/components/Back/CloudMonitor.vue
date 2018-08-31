@@ -337,7 +337,7 @@
                     </div>
                     <p>提示：您可以在个人中心—告警中心—联系人管中添加和编辑联系人信息。</p>
                   </div>
-                  <Button type="primary" @click="newAlarmStrategy_ok" style="margin-top:20px;">完成</Button>
+                  <Button type="primary" @click="newAlarmStrategy_ok" style="margin-top:20px;">{{btnflag}}</Button>
                 </Form>
               </div>
             </div>
@@ -503,6 +503,8 @@
   export default {
     data() {
       return {
+        btnflag: '完成',
+        strategyId: '',
         targetformDynamic: [
           {
             alarmname: 'CPU使用率',
@@ -752,11 +754,13 @@
           allHost: [],
           selectedHost: []
         },
+        resourceId: [],
         // 联系人列表
         contacts: {
           allContacts: [],
           selectedContacts: []
         },
+        selectedContactsCopy: [],
         messageData: messageMonitor,
         monitorData: [
           {
@@ -899,9 +903,30 @@
                 on: {
                   click: () => {
                     this.newAlarmStrategyForm.strategyName = params.row.name
-                    console.log(params.row.zhibiaoAlarm)
                     this.newAlarmStrategyForm.strategyType = params.row.strategytype + ''
                     this.newAlarmStrategyForm.channel = []
+                    // this.selectedContactsCopy = params.row.AlarmContact.map(item => {
+                    //   return item.alarmcontactid
+                    // })
+                    // this.contacts.allContacts.forEach((item, index) => {
+                    //   for (var i = 0; i < this.selectedContactsCopy.length; i++){
+                    //     if (this.selectedContactsCopy[i] == item.id){
+                    //       this.contacts.selectedContacts.push(item)
+                    //       this.contacts.allContacts.splice(index, 1)
+                    //     }
+                    //   }
+                    // })
+                    // this.resourceId = params.row.resource.map(item => {
+                    //   return item.resourceid
+                    // })
+                    // this.strategyhost.allHost.forEach((item, index) => {
+                    //   for (var i = 0; i < this.resourceId.length; i++){
+                    //     if (this.resourceId[i] == item.id){
+                    //       this.strategyhost.selectedHost.push(item)
+                    //       this.strategyhost.allHost.splice(index, 1)
+                    //     }
+                    //   }
+                    // })
                     if (params.row.letter) {
                       this.newAlarmStrategyForm.channel.push('letter')
                     }
@@ -913,6 +938,8 @@
                     }
                     this.targetformDynamic = params.row.zhibiaoAlarm
                     this.eventformDynamic = params.row.shijianAlarm
+                    this.strategyId = params.row.id
+                    this.btnflag = '更新'
                     this.isNewAlarmStrategy = true
                   }
                 }
@@ -957,9 +984,30 @@
                 on: {
                   click: () => {
                     this.newAlarmStrategyForm.strategyName = params.row.name
-                    console.log(params.row.zhibiaoAlarm)
                     this.newAlarmStrategyForm.strategyType = params.row.strategytype + ''
                     this.newAlarmStrategyForm.channel = []
+                    // this.selectedContactsCopy = params.row.AlarmContact.map(item => {
+                    //   return item.alarmcontactid
+                    // })
+                    // this.contacts.allContacts.forEach((item, index) => {
+                    //   for (var i = 0; i < this.selectedContactsCopy.length; i++){
+                    //     if (this.selectedContactsCopy[i] == item.id){
+                    //       this.contacts.selectedContacts.push(item)
+                    //       this.contacts.allContacts.splice(index, 1)
+                    //     }
+                    //   }
+                    // })
+                    // this.resourceId = params.row.resource.map(item => {
+                    //   return item.resourceid
+                    // })
+                    // this.strategyhost.allHost.forEach((item, index) => {
+                    //   for (var i = 0; i < this.resourceId.length; i++){
+                    //     if (this.resourceId[i] == item.id){
+                    //       this.strategyhost.selectedHost.push(item)
+                    //       this.strategyhost.allHost.splice(index, 1)
+                    //     }
+                    //   }
+                    // })
                     if (params.row.letter) {
                       this.newAlarmStrategyForm.channel.push('letter')
                     }
@@ -971,6 +1019,7 @@
                     }
                     this.targetformDynamic = params.row.zhibiaoAlarm
                     this.eventformDynamic = params.row.shijianAlarm
+                    this.btnflag = '完成'
                     this.isNewAlarmStrategy = true
                   }
                 }
@@ -1756,13 +1805,36 @@
               targetAlarmMessage: JSON.stringify(this.targetformDynamic),
               eventAlarmMessage: JSON.stringify(this.eventformDynamic),
             }
-            this.$http.post('alarmControl/createAlarmControl.do', params).then(res => {
-              if (res.status == 200 && res.data.status == 1) {
-                this.$Message.success(res.data.message)
-              } else {
-                this.$Message.success('创建失败！');
-              }
-            })
+            let params1 = {
+              id: this.strategyId + '',
+              name: this.newAlarmStrategyForm.strategyName + '',
+              type: this.newAlarmStrategyForm.strategyType + '',
+              resourceIds: selectedProduct.join(),
+              letter: channel.letter + '',
+              email: channel.email + '',
+              phone: channel.phone + '',
+              linkIds: linkMan.join(),
+              targetAlarmMessage: JSON.stringify(this.targetformDynamic),
+              eventAlarmMessage: JSON.stringify(this.eventformDynamic),
+            }
+            if (this.btnflag == '完成') {
+              this.$http.post('alarmControl/createAlarmControl.do', params).then(res => {
+                if (res.status == 200 && res.data.status == 1) {
+                  this.$Message.success(res.data.message)
+                } else {
+                  this.$Message.success('创建失败！');
+                }
+              })
+            }
+            if (this.btnflag == '更新') {
+              this.$http.post('alarmControl/updateAlarmControl.do', params1).then(res => {
+                if (res.status == 200 && res.data.status == 1) {
+                  this.$Message.success(res.data.message)
+                } else {
+                  this.$Message.success('更新失败！');
+                }
+              })
+            }
           }
         })
       },
