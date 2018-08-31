@@ -175,6 +175,7 @@
       .problem-desc {
         margin-top: 20px;
         color: #FFF;
+        background-color: #FFFFFF;
         height: 273px;
         display: flex;
         justify-content: space-between;

@@ -23,8 +23,9 @@
               <h2>区域选择</h2>
               <div class="item-wrapper">
                 <div v-for="item in zoneList" :key="item.zoneid" class="zoneItem"
-                     :class="{zoneSelect:PecsInfo.zone.zoneid==item.zoneid}"
-                     @click="PecsInfo.zone=item">{{item.zonename}}
+                     :class="{zoneSelect:PecsInfo.zone.zoneid==item.zoneid,zoneDisabled:item.zonename=='华中一区'}"
+                     @click="item.zonename=='华中一区'?'':PecsInfo.zone=item">
+                  {{item.zonename=='华中一区'?'华中一区(售罄)':item.zonename}}
                 </div>
               </div>
               <p style="margin-top: 10px;margin-bottom: 20px;font-size: 12px;color: #999999;line-height: 25px;">
@@ -377,7 +378,8 @@
                         :points="[20,50]"
                         style="margin-right:30px;vertical-align: middle;">
                       </i-slider>
-                      <InputNumber :max="100" :min="1" v-model="PecsInfo.IPConfig.bandWidth" size="large" :precision="0"></InputNumber>
+                      <InputNumber :max="100" :min="1" v-model="PecsInfo.IPConfig.bandWidth" size="large"
+                                   :precision="0"></InputNumber>
                     </div>
                   </div>
                 </div>
@@ -565,8 +567,8 @@
             </div>
             <!--费用、以及加入预算清单-->
             <div style="margin-top: 20px">
-            <!--  <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
-                 @click="$router.push('computed/3-1')">查看计价详情</p>-->
+              <!--  <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
+                   @click="$router.push('computed/3-1')">查看计价详情</p>-->
               <p v-if="PecsInfo.createType=='fast'"
                  style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">费用：<span
                 style="font-size: 24px;color: #EE6723;">{{PecsInfo.cost.toFixed(2)}}元</span><span
@@ -606,10 +608,17 @@
             <h2>区域选择</h2>
             <div class="item-wrapper">
               <div v-for="item in zoneList" :key="item.zoneid" class="zoneItem"
+                   :class="{zoneSelect:PdiskInfo.zone.zoneid==item.zoneid,zoneDisabled:item.zonename=='华中一区'}"
+                   @click="item.zonename=='华中一区'?'':PdiskInfo.zone=item">
+                {{item.zonename=='华中一区'?'华中一区(售罄)':item.zonename}}
+              </div>
+            </div>
+            <!--<div class="item-wrapper">
+              <div v-for="item in zoneList" :key="item.zoneid" class="zoneItem"
                    :class="{zoneSelect:PdiskInfo.zone.zoneid==item.zoneid}"
                    @click="PdiskInfo.zone=item">{{item.zonename}}
               </div>
-            </div>
+            </div>-->
             <p style="margin-top: 10px;margin-bottom: 20px;font-size: 12px;color: #999999;line-height: 25px;">
               不同区域的资源内网互不相通；请选择与您相近的区域，可降低网络时延、提高您客户的访问速度。</p>
           </div>
@@ -715,8 +724,8 @@
           </div>
           <!--数据盘价格-->
           <div style="margin-top: 20px">
-          <!--  <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
-               @click="$router.push('computed/3-1')">查看计价详情</p>-->
+            <!--  <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
+                 @click="$router.push('computed/3-1')">查看计价详情</p>-->
             <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
               费用：<span style="font-size: 24px;color: #EE6723;">{{PdiskInfo.dataDiskCost.toFixed(2)}}元</span><span
               v-show="PdiskInfo.timeForm.currentTimeType == 'current'">/小时</span>
@@ -744,10 +753,17 @@
             <h2>区域选择</h2>
             <div class="item-wrapper">
               <div v-for="item in zoneList" :key="item.zoneid" class="zoneItem"
+                   :class="{zoneSelect:PeipInfo.zone.zoneid==item.zoneid,zoneDisabled:item.zonename=='华中一区'}"
+                   @click="item.zonename=='华中一区'?'':PeipInfo.zone=item">
+                {{item.zonename=='华中一区'?'华中一区(售罄)':item.zonename}}
+              </div>
+            </div>
+            <!--<div class="item-wrapper">
+              <div v-for="item in zoneList" :key="item.zoneid" class="zoneItem"
                    :class="{zoneSelect:PeipInfo.zone.zoneid==item.zoneid}"
                    @click="PeipInfo.zone=item">{{item.zonename}}
               </div>
-            </div>
+            </div>-->
             <p style="margin-top: 10px;margin-bottom: 20px;font-size: 12px;color: #999999;line-height: 25px;">
               不同区域的资源内网互不相通；请选择与您相近的区域，可降低网络时延、提高您客户的访问速度。</p>
           </div>
@@ -840,8 +856,8 @@
 
           <!--费用、以及加入预算清单-->
           <div style="margin-top: 20px">
-        <!--    <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
-               @click="$router.push('computed/3-1')">查看计价详情</p>-->
+            <!--    <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
+                   @click="$router.push('computed/3-1')">查看计价详情</p>-->
             <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">费用：<span
               style="font-size: 24px;color: #EE6723;">{{PeipInfo.cost.toFixed(2)}}元</span><span
               v-show="PeipInfo.timeForm.currentTimeType == 'current'">/小时</span></p>
@@ -1182,8 +1198,8 @@
             </div>
             <!--费用、以及加入预算清单-->
             <div style="margin-top: 20px">
-        <!--      <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
-                 @click="$router.push('document')">查看计价详情</p>-->
+              <!--      <p style="text-align: left;font-size: 14px;color: #2A99F2;cursor: pointer"
+                       @click="$router.push('document')">查看计价详情</p>-->
               <p style="text-align: right;font-size: 14px;color: #666666;margin-bottom: 10px;">
                 费用：<span
                 style="font-size: 24px;color: #EE6723;">{{totalDataCost.toFixed(2)}}元</span><span
@@ -1531,9 +1547,13 @@
     data() {
       var zone = null
       $store.state.zoneList.forEach(item => {
-        if (item.isdefault === 1
-        ) {
-          zone = item
+        if (item.isdefault === 1) {
+          if (item.zonename == '华中一区') {
+            zone = $store.state.zoneList[0]
+          } else {
+            zone = item
+          }
+
         }
       })
       var cart = []
@@ -1578,7 +1598,7 @@
           productList: [{label: '云主机', value: 'Pecs'}, {label: '云硬盘', value: 'Pdisk'}, {
             label: '公网IP',
             value: 'Peip'
-          }, {label: '数据库', value: 'Pdata'}]
+          }/*, {label: '数据库', value: 'Pdata'}*/]
         },
         // 云主机信息对象
         PecsInfo: {
@@ -3876,6 +3896,10 @@
           border-color: #377dff;
           background-color: #377dff;
           color: #ffffff;
+        }
+        .zoneDisabled {
+          background-color: #ccc;
+          width: 140px;
         }
         .item-wrapper {
           margin-top: 20px;
