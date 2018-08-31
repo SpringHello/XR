@@ -33,7 +33,7 @@
                         </Option>
                       </Select>
                     </Form-item>
-                    <Form-item label="提现金额" required v-if="formItem.product=='32'">
+                    <Form-item label="提现金额" required v-if="formItem.product=='19'">
                       <InputNumber :max="formItem.remainder" :min="10" v-model="formItem.cost"
                                    style="width:300px"></InputNumber>
                     </Form-item>
@@ -378,7 +378,7 @@
           cid: this.formItem.product
         }
         // 32代表提现，需要多设置一个参数
-        if (params.cid == '32') {
+        if (params.cid == '19') {
           params.userRefund = this.formItem.cost
         }
         this.$http.get(url, {
