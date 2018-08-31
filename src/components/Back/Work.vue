@@ -382,7 +382,7 @@
           params.userRefund = this.formItem.cost
         }
         this.$http.get(url, {
-          params 
+          params
         }).then(response => {
           this.loading = false
           if (response.status == 200 && response.data.status == 1) {
