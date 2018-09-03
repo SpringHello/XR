@@ -126,7 +126,7 @@
           </TabPane>
           <TabPane label="告警策略" name="alarmStrategy">
             <div class="as-content" v-if="!isNewAlarmStrategy">
-              <Button type="primary" style="margin-bottom: 10px" @click="isNewAlarmStrategy = true">新建告警策略</Button>
+              <Button type="primary" style="margin-bottom: 10px" @click="btnflag = '完成';isNewAlarmStrategy = true">新建告警策略</Button>
               <Table :columns="alarmStrategyColumns" :data="alarmStrategyData"></Table>
             </div>
             <div class="nas-content" v-else>
@@ -913,28 +913,47 @@
                     this.newAlarmStrategyForm.strategyName = params.row.name
                     this.newAlarmStrategyForm.strategyType = params.row.strategytype + ''
                     this.newAlarmStrategyForm.channel = []
-                    // this.selectedContactsCopy = params.row.AlarmContact.map(item => {
-                    //   return item.alarmcontactid
-                    // })
-                    // this.contacts.allContacts.forEach((item, index) => {
-                    //   for (var i = 0; i < this.selectedContactsCopy.length; i++){
-                    //     if (this.selectedContactsCopy[i] == item.id){
-                    //       this.contacts.selectedContacts.push(item)
-                    //       this.contacts.allContacts.splice(index, 1)
-                    //     }
-                    //   }
-                    // })
-                    // this.resourceId = params.row.resource.map(item => {
-                    //   return item.resourceid
-                    // })
-                    // this.strategyhost.allHost.forEach((item, index) => {
-                    //   for (var i = 0; i < this.resourceId.length; i++){
-                    //     if (this.resourceId[i] == item.id){
-                    //       this.strategyhost.selectedHost.push(item)
-                    //       this.strategyhost.allHost.splice(index, 1)
-                    //     }
-                    //   }
-                    // })
+                    // 赋值联系人
+                    var selectedIndexsman = []
+                    var allIndexsman = []
+                    this.selectedContactsCopy = params.row.AlarmContact.map(item => {
+                      return item.alarmcontactid
+                    })
+                    this.contacts.allContacts.forEach((item, index) => {
+                      allIndexsman.push(index)
+                      for (var i = 0; i < this.selectedContactsCopy.length; i++){
+                        if (this.selectedContactsCopy[i] == item.id){
+                          this.contacts.selectedContacts.push(item)
+                          selectedIndexsman.push(index)
+                        }
+                      }
+                    })
+                    var differenceman = allIndexsman.concat(selectedIndexsman).filter(v => !allIndexsman.includes(v) || !selectedIndexsman.includes(v))
+                    var newallContacts = this.contacts.allContacts.filter((item, index) => {
+                      return index == differenceman[index]
+                    })
+                    this.contacts.allContacts = newallContacts
+                    // 赋值资源选择
+                    var selectedIndexs = []
+                    var allIndexs = []
+                    this.resourceId = params.row.resource.map(item => {
+                      return item.resourceid
+                    })
+                    this.strategyhost.allHost.forEach((item, index) => {
+                      allIndexs.push(index)
+                      for (var i = 0; i < this.resourceId.length; i++){
+                        if (this.resourceId[i] == item.id){
+                          this.strategyhost.selectedHost.push(item)
+                          selectedIndexs.push(index)
+                        }
+                      }
+                    })
+                    var difference = allIndexs.concat(selectedIndexs).filter(v => !allIndexs.includes(v) || !selectedIndexs.includes(v))
+                    var newallHost = this.strategyhost.allHost.filter((item, index) => {
+                      return index == difference[index]
+                    })
+                    this.strategyhost.allHost = newallHost
+                    // 赋值告警渠道
                     if (params.row.letter) {
                       this.newAlarmStrategyForm.channel.push('letter')
                     }
@@ -994,28 +1013,47 @@
                     this.newAlarmStrategyForm.strategyName = params.row.name
                     this.newAlarmStrategyForm.strategyType = params.row.strategytype + ''
                     this.newAlarmStrategyForm.channel = []
-                    // this.selectedContactsCopy = params.row.AlarmContact.map(item => {
-                    //   return item.alarmcontactid
-                    // })
-                    // this.contacts.allContacts.forEach((item, index) => {
-                    //   for (var i = 0; i < this.selectedContactsCopy.length; i++){
-                    //     if (this.selectedContactsCopy[i] == item.id){
-                    //       this.contacts.selectedContacts.push(item)
-                    //       this.contacts.allContacts.splice(index, 1)
-                    //     }
-                    //   }
-                    // })
-                    // this.resourceId = params.row.resource.map(item => {
-                    //   return item.resourceid
-                    // })
-                    // this.strategyhost.allHost.forEach((item, index) => {
-                    //   for (var i = 0; i < this.resourceId.length; i++){
-                    //     if (this.resourceId[i] == item.id){
-                    //       this.strategyhost.selectedHost.push(item)
-                    //       this.strategyhost.allHost.splice(index, 1)
-                    //     }
-                    //   }
-                    // })
+                    // 赋值联系人
+                    var selectedIndexsman = []
+                    var allIndexsman = []
+                    this.selectedContactsCopy = params.row.AlarmContact.map(item => {
+                      return item.alarmcontactid
+                    })
+                    this.contacts.allContacts.forEach((item, index) => {
+                      allIndexsman.push(index)
+                      for (var i = 0; i < this.selectedContactsCopy.length; i++){
+                        if (this.selectedContactsCopy[i] == item.id){
+                          this.contacts.selectedContacts.push(item)
+                          selectedIndexsman.push(index)
+                        }
+                      }
+                    })
+                    var differenceman = allIndexsman.concat(selectedIndexsman).filter(v => !allIndexsman.includes(v) || !selectedIndexsman.includes(v))
+                    var newallContacts = this.contacts.allContacts.filter((item, index) => {
+                      return index == differenceman[index]
+                    })
+                    this.contacts.allContacts = newallContacts
+                    // 赋值资源选择
+                    var selectedIndexs = []
+                    var allIndexs = []
+                    this.resourceId = params.row.resource.map(item => {
+                      return item.resourceid
+                    })
+                    this.strategyhost.allHost.forEach((item, index) => {
+                      allIndexs.push(index)
+                      for (var i = 0; i < this.resourceId.length; i++){
+                        if (this.resourceId[i] == item.id){
+                          this.strategyhost.selectedHost.push(item)
+                          selectedIndexs.push(index)
+                        }
+                      }
+                    })
+                    var difference = allIndexs.concat(selectedIndexs).filter(v => !allIndexs.includes(v) || !selectedIndexs.includes(v))
+                    var newallHost = this.strategyhost.allHost.filter((item, index) => {
+                      return index == difference[index]
+                    })
+                    this.strategyhost.allHost = newallHost
+                    // 赋值告警渠道
                     if (params.row.letter) {
                       this.newAlarmStrategyForm.channel.push('letter')
                     }
