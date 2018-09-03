@@ -34,18 +34,18 @@
                 <div class="header">
                   我关注的指标
                   <span v-if="firstMonitoringOverview.showChart">
-                    <i @click="showModal.editMonitorIndex=true">编辑</i> | <i @click="deleteChart">删除</i>
+                    <i @click="editOverviewAttention(1)">编辑</i> | <i @click="deleteChart(1)">删除</i>
                   </span>
                 </div>
                 <div class="switch" v-if="firstMonitoringOverview.showChart">
-                  <RadioGroup type="button" v-model="firstMonitoringOverview.dateType">
-                    <Radio label="day">今日</Radio>
-                    <Radio label="week">本周</Radio>
-                    <Radio label="month">本月</Radio>
+                  <RadioGroup type="button" v-model="firstMonitoringOverview.dateType" @on-change="cutDataOverviewMonitoring(1)">
+                    <Radio label="today">今日</Radio>
+                    <Radio label="week">近一周</Radio>
+                    <Radio label="month">近30天</Radio>
                   </RadioGroup>
                   <div>
                     <Button type="primary" class="export-btn">导出</Button>
-                    <RadioGroup type="button" v-model="firstMonitoringOverview.mapType">
+                    <RadioGroup type="button" v-model="firstMonitoringOverview.mapType" @on-change="cutMapOverviewMonitoring(1)">
                       <Radio label="line">折线</Radio>
                       <Radio label="bar">柱状</Radio>
                     </RadioGroup>
@@ -61,29 +61,29 @@
                      style="border: solid 1px #D8D8D8;padding: 20px;padding-right:0;box-sizing: border-box;width: 366px;height:297px;"></chart>
             </section>
             <section>
-              <div class="disk" style="width: 1160px;height: 300px">
+              <div class="disk" style="width: 1160px;height: 390px">
                 <div class="header">
                   我关注的指标
                   <span v-if="secondMonitoringOverview.showChart">
-                    <i @click="showModal.editMonitorIndex=true">编辑</i> | <i @click="deleteChart">删除</i>
+                    <i @click="editOverviewAttention(2)">编辑</i> | <i @click="deleteChart(2)">删除</i>
                   </span>
                 </div>
                 <div class="switch" v-if="secondMonitoringOverview.showChart">
-                  <RadioGroup type="button" v-model="secondMonitoringOverview.dateType">
-                    <Radio label="day">今日</Radio>
-                    <Radio label="week">本周</Radio>
-                    <Radio label="month">本月</Radio>
+                  <RadioGroup type="button" v-model="secondMonitoringOverview.dateType" @on-change="cutDataOverviewMonitoring(2)">
+                    <Radio label="today">今日</Radio>
+                    <Radio label="week">近一周</Radio>
+                    <Radio label="month">近30天</Radio>
                   </RadioGroup>
                   <div>
                     <Button type="primary" class="export-btn">导出</Button>
-                    <RadioGroup type="button" v-model="secondMonitoringOverview.mapType">
+                    <RadioGroup type="button" v-model="secondMonitoringOverview.mapType" @on-change="cutMapOverviewMonitoring(2)">
                       <Radio label="line">折线</Radio>
                       <Radio label="bar">柱状</Radio>
                     </RadioGroup>
                   </div>
                 </div>
                 <chart v-if="secondMonitoringOverview.showChart" :options="secondMonitoringOverview.showChart" style="width:1110px;height:268px;margin-top: 20px;"></chart>
-                <div v-else class="om-content" @click="addOverviewMonitoring(2)">
+                <div v-else class="om-content" @click="addOverviewMonitoring(2)" style="padding-top: 10%">
                   <div class="cross"></div>
                   <p>您还未添加关注的指标，点击“+”添加指标。</p>
                 </div>
@@ -126,7 +126,7 @@
           </TabPane>
           <TabPane label="告警策略" name="alarmStrategy">
             <div class="as-content" v-if="!isNewAlarmStrategy">
-              <Button type="primary" style="margin-bottom: 10px" @click="isNewAlarmStrategy = true">新建告警策略</Button>
+              <Button type="primary" style="margin-bottom: 10px" @click="btnflag = '完成';isNewAlarmStrategy = true">新建告警策略</Button>
               <Table :columns="alarmStrategyColumns" :data="alarmStrategyData"></Table>
             </div>
             <div class="nas-content" v-else>
@@ -150,7 +150,7 @@
                     </Select>
                   </FormItem>
                   <FormItem label="告警对象">
-                    <RadioGroup v-model="newAlarmStrategyForm.alarmObj" @on-change="changeAlarmType">
+                    <RadioGroup v-model="newAlarmStrategyForm.alarmObj" @on-change="changealarmtype">
                       <Radio label="all" :disabled="allHostLegth>5">全部</Radio>
                       <Radio label="part">选择部分对象</Radio>
                     </RadioGroup>
@@ -197,21 +197,21 @@
                                   :key="index">
                           <Row :gutter="16">
                             <Col span="4">
-                              <Select v-model="item.alarmName">
+                              <Select v-model="item.alarmname">
                                 <Option v-for="item in selectedTarget.target" :value="item.value" :key="item.value">
                                   {{ item.value }}
                                 </Option>
                               </Select>
                             </Col>
                             <Col span="4">
-                              <Select v-model="item.countCircle">
+                              <Select v-model="item.countcircle">
                                 <Option v-for="item in publicTemp.StatisticalCycle" :value="item.value" :key="item.value">
                                   {{ item.label }}
                                 </Option>
                               </Select>
                             </Col>
                             <Col span="2">
-                              <Select v-model="item.valueType" style="text-align:center">
+                              <Select v-model="item.valuetype" style="text-align:center">
                                 <Option v-for="item in publicTemp.standard" :value="item.value" :key="item.value">
                                   {{ item.label }}
                                 </Option>
@@ -225,18 +225,18 @@
                               </Select>
                             </Col>
                             <Col span="1">
-                              <span v-if="item.alarmName=='flow'">KB/s</span>
+                              <span v-if="item.alarmname=='flow'">KB/s</span>
                               <span v-else>%</span>
                             </Col>
                             <Col span="4">
-                              <Select v-model="item.continueCircle">
+                              <Select v-model="item.continuecircle">
                                 <Option v-for="item in publicTemp.keepCycle" :value="item.value" :key="item.value">
                                   {{ item.label }}
                                 </Option>
                               </Select>
                             </Col>
                             <Col span="4">
-                              <Select v-model="item.alarmCount">
+                              <Select v-model="item.alarmcount">
                                 <Option v-for="item in publicTemp.frequency" :value="item.value" :key="item.value">
                                   {{ item.label }}
                                 </Option>
@@ -258,28 +258,28 @@
                                   :key="index">
                           <Row :gutter="16">
                             <Col span="4">
-                              <Select v-model="item.alarmName">
+                              <Select v-model="item.alarmname">
                                 <Option v-for="item in eventTem.target" :value="item.value" :key="item.value">
                                   {{ item.value }}
                                 </Option>
                               </Select>
                             </Col>
                             <Col span="4">
-                              <Select v-model="item.countCircle">
+                              <Select v-model="item.countcircle">
                                 <Option v-for="item in eventTem.StatisticalCycle" :value="item.value" :key="item.value">
                                   {{ item.label }}
                                 </Option>
                               </Select>
                             </Col>
                             <Col span="4">
-                              <Select v-model="item.continueCircle">
+                              <Select v-model="item.continuecircle">
                                 <Option v-for="item in eventTem.keepCycle" :value="item.value" :key="item.value">
                                   {{ item.label }}
                                 </Option>
                               </Select>
                             </Col>
                             <Col span="4">
-                              <Select v-model="item.alarmCount">
+                              <Select v-model="item.alarmcount">
                                 <Option v-for="item in eventTem.frequency" :value="item.value" :key="item.value">
                                   {{ item.label }}
                                 </Option>
@@ -337,7 +337,7 @@
                     </div>
                     <p>提示：您可以在个人中心—告警中心—联系人管中添加和编辑联系人信息。</p>
                   </div>
-                  <Button type="primary" @click="newAlarmStrategy_ok" style="margin-top:20px;">完成</Button>
+                  <Button type="primary" @click="newAlarmStrategy_ok" style="margin-top:20px;">{{btnflag}}</Button>
                 </Form>
               </div>
             </div>
@@ -447,7 +447,7 @@
           </div>
           <div class="right">
             <p>指标</p>
-            <Select v-model="overviewMonitorIndexForm.productIndex" placeholder="请选择" @on-change="getIndexResource"
+            <Select v-model="overviewMonitorIndexForm.productIndex" placeholder="请选择" @on-change="getOverviewIndexResource"
                     style="width: 240px;" class="cm-select">
               <Option v-for="item in overviewMonitorIndexForm.productIndexGroup" :key="item.value" :value="item.value">
                 {{item.label}}
@@ -462,7 +462,7 @@
               <li v-for="(item,index) in overviewMonitorIndexForm.allProduct">
                 <span>{{ item.instancename}}</span>
                 <i class="bluetext" style="cursor: pointer"
-                   v-if="overviewMonitorIndexForm.selectedProduct.length<5&&item.name !=''" @click="addProduct(item,index)">+ 添加</i>
+                   v-if="overviewMonitorIndexForm.selectedProduct.length<5&&item.name !=''" @click="addOverviewProduct(item,index)">+ 添加</i>
               </li>
             </ul>
           </div>
@@ -471,7 +471,7 @@
             <ul>
               <li v-for="(item,index) in overviewMonitorIndexForm.selectedProduct">
                 <span>{{ item.instancename}}</span>
-                <i class="bluetext" style="cursor: pointer" @click="deleteProduct(item,index)">
+                <i class="bluetext" style="cursor: pointer" @click="deleteOverviewProduct(item,index)">
                   <Icon type="ios-trash-outline" style="font-size:14px"></Icon>
                   删除</i>
               </li>
@@ -481,11 +481,11 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button @click="showModal.addOverviewMonitorIndex = false">取消</Button>
-        <Button type="primary" @click="addCustomMonitoring_ok"
+        <Button type="primary" @click="addOverviewMonitoring_ok"
                 :disabled="overviewMonitorIndexForm.selectedProduct.length == 0 ||overviewMonitorIndexForm.productIndex == ''"
                 v-if="isAddOverviewMonitorIndex">完成配置
         </Button>
-        <Button v-else type="primary" @click="editCustomMonitoring_ok"
+        <Button v-else type="primary" @click="editOverviewMonitoring_ok"
                 :disabled="overviewMonitorIndexForm.selectedProduct.length == 0 ||overviewMonitorIndexForm.productIndex == ''">
           确认修改
         </Button>
@@ -499,30 +499,42 @@
   import line from '@/echarts/cloudMonitor/line'
   import bar from '@/echarts/cloudMonitor/bar'
   import regExp from '../../util/regExp'
+  import $store from '../../vuex'
+  import axios from '../../util/axiosInterceptor'
 
   export default {
     data() {
       return {
+        btnflag: '完成',
+        strategyId: '',
         targetformDynamic: [
           {
-            alarmName: 'CPU使用率',
-            countCircle: '1',
-            valueType: '>',
-            vaule: '80',
-            continueCircle: '1',
-            alarmCount: '1',
-            alarmType: '1'
+            alarmname: 'CPU使用率',
+            countcircle: 1,
+            valuetype: '>',
+            vaule: 80,
+            continuecircle: 1,
+            alarmcount: 1,
+            alarmtype: 1
           }
         ],
         firstMonitoringOverview: {
           showChart: null,
           mapType: 'line',
-          dateType: 'today'
+          dateType: 'today',
+          id: '',
+          productType: '',
+          indexs: '',
+          x: []
         },
         secondMonitoringOverview: {
           showChart: null,
           mapType: 'line',
-          dateType: 'today'
+          dateType: 'today',
+          id: '',
+          productType: '',
+          indexs: '',
+          x: []
         },
         isAddOverviewMonitorIndex: true,
         // 标记总览监控大图小图
@@ -594,19 +606,19 @@
           StatisticalCycle: [
             {
               label: '统计周期：1分钟',
-              value: '1'
+              value: 1
             },
             {
               label: '统计周期：5分钟',
-              value: '5'
+              value: 5
             },
             {
               label: '统计周期：10分钟',
-              value: '10'
+              value: 10
             },
             {
               label: '统计周期：15分钟',
-              value: '15'
+              value: 15
             },
           ],
           standard: [
@@ -638,53 +650,53 @@
           Percentage: [
             {
               label: '80',
-              value: '80'
+              value: 80
             },
             {
               label: '60',
-              value: '60'
+              value: 60
             }
           ],
           keepCycle: [
             {
               label: '持续1个周期',
-              value: '1'
+              value: 1
             },
             {
               label: '持续2个周期',
-              value: '2'
+              value: 2
             },
             {
               label: '持续3个周期',
-              value: '3'
+              value: 3
             },
             {
               label: '持续4个周期',
-              value: '4'
+              value: 4
             },
             {
               label: '持续5个周期',
-              value: '5'
+              value: 5
             }
           ],
           frequency: [
             {
               label: '每天警告1次',
-              value: '1'
+              value: 1
             },
             {
               label: '每天警告2次',
-              value: '2'
+              value: 2
             }
           ]
         },
         eventformDynamic: [
           {
-            alarmName: 'XXX端口ping不可达',
-            countCircle: '1',
-            continueCircle: '1',
-            alarmCount: '1',
-            alarmType: '2'
+            alarmname: 'XXX端口ping不可达',
+            countcircle: 1,
+            continuecircle: 1,
+            alarmcount: 1,
+            alarmtype: 2
           }
         ],
         eventTem: {
@@ -699,51 +711,51 @@
           StatisticalCycle: [
             {
               label: '统计周期：1分钟',
-              value: '1'
+              value: 1
             },
             {
               label: '统计周期：5分钟',
-              value: '5'
+              value: 5
             },
             {
               label: '统计周期：10分钟',
-              value: '10'
+              value: 10
             },
             {
               label: '统计周期：15分钟',
-              value: '15'
+              value: 15
             },
           ],
           keepCycle: [
             {
               label: '持续1个周期',
-              value: '1'
+              value: 1
             },
             {
               label: '持续2个周期',
-              value: '2'
+              value: 2
             },
             {
               label: '持续3个周期',
-              value: '3'
+              value: 3
             },
             {
               label: '持续4个周期',
-              value: '4'
+              value: 4
             },
             {
               label: '持续5个周期',
-              value: '5'
+              value: 5
             }
           ],
           frequency: [
             {
               label: '每天警告1次',
-              value: '1'
+              value: 1
             },
             {
               label: '每天警告2次',
-              value: '2'
+              value: 2
             }
           ]
         },
@@ -752,11 +764,13 @@
           allHost: [],
           selectedHost: []
         },
+        resourceId: [],
         // 联系人列表
         contacts: {
           allContacts: [],
           selectedContacts: []
         },
+        selectedContactsCopy: [],
         messageData: messageMonitor,
         monitorData: [
           {
@@ -895,6 +909,68 @@
                 style: {
                   color: '#2A99F2',
                   cursor: 'pointer'
+                },
+                on: {
+                  click: () => {
+                    this.newAlarmStrategyForm.strategyName = params.row.name
+                    this.newAlarmStrategyForm.strategyType = params.row.strategytype + ''
+                    this.newAlarmStrategyForm.channel = []
+                    // 赋值联系人
+                    var selectedIndexsman = []
+                    var allIndexsman = []
+                    this.selectedContactsCopy = params.row.AlarmContact.map(item => {
+                      return item.alarmcontactid
+                    })
+                    this.contacts.allContacts.forEach((item, index) => {
+                      allIndexsman.push(index)
+                      for (var i = 0; i < this.selectedContactsCopy.length; i++){
+                        if (this.selectedContactsCopy[i] == item.id){
+                          this.contacts.selectedContacts.push(item)
+                          selectedIndexsman.push(index)
+                        }
+                      }
+                    })
+                    var differenceman = allIndexsman.concat(selectedIndexsman).filter(v => !allIndexsman.includes(v) || !selectedIndexsman.includes(v))
+                    var newallContacts = this.contacts.allContacts.filter((item, index) => {
+                      return index == differenceman[index]
+                    })
+                    this.contacts.allContacts = newallContacts
+                    // 赋值资源选择
+                    var selectedIndexs = []
+                    var allIndexs = []
+                    this.resourceId = params.row.resource.map(item => {
+                      return item.resourceid
+                    })
+                    this.strategyhost.allHost.forEach((item, index) => {
+                      allIndexs.push(index)
+                      for (var i = 0; i < this.resourceId.length; i++){
+                        if (this.resourceId[i] == item.id){
+                          this.strategyhost.selectedHost.push(item)
+                          selectedIndexs.push(index)
+                        }
+                      }
+                    })
+                    var difference = allIndexs.concat(selectedIndexs).filter(v => !allIndexs.includes(v) || !selectedIndexs.includes(v))
+                    var newallHost = this.strategyhost.allHost.filter((item, index) => {
+                      return index == difference[index]
+                    })
+                    this.strategyhost.allHost = newallHost
+                    // 赋值告警渠道
+                    if (params.row.letter) {
+                      this.newAlarmStrategyForm.channel.push('letter')
+                    }
+                    if (params.row.email) {
+                      this.newAlarmStrategyForm.channel.push('email')
+                    }
+                    if (params.row.phone) {
+                      this.newAlarmStrategyForm.channel.push('phone')
+                    }
+                    this.targetformDynamic = params.row.zhibiaoAlarm
+                    this.eventformDynamic = params.row.shijianAlarm
+                    this.strategyId = params.row.id
+                    this.btnflag = '更新'
+                    this.isNewAlarmStrategy = true
+                  }
                 }
               }, params.row.name)
             }
@@ -902,7 +978,8 @@
             title: '触发条件',
             ellipsis: true,
             render: (h, params) => {
-              let alarmname = params.row.AlarmEvent.map(item => {
+              let alarmArr = params.row.zhibiaoAlarm.concat(params.row.shijianAlarm)
+              let alarmname = alarmArr.map(item => {
                 return item.alarmname
               })
               return h('span', {}, alarmname.join())
@@ -936,9 +1013,49 @@
                 on: {
                   click: () => {
                     this.newAlarmStrategyForm.strategyName = params.row.name
-                    console.log(params.row.AlarmEvent)
                     this.newAlarmStrategyForm.strategyType = params.row.strategytype + ''
                     this.newAlarmStrategyForm.channel = []
+                    // 赋值联系人
+                    var selectedIndexsman = []
+                    var allIndexsman = []
+                    this.selectedContactsCopy = params.row.AlarmContact.map(item => {
+                      return item.alarmcontactid
+                    })
+                    this.contacts.allContacts.forEach((item, index) => {
+                      allIndexsman.push(index)
+                      for (var i = 0; i < this.selectedContactsCopy.length; i++){
+                        if (this.selectedContactsCopy[i] == item.id){
+                          this.contacts.selectedContacts.push(item)
+                          selectedIndexsman.push(index)
+                        }
+                      }
+                    })
+                    var differenceman = allIndexsman.concat(selectedIndexsman).filter(v => !allIndexsman.includes(v) || !selectedIndexsman.includes(v))
+                    var newallContacts = this.contacts.allContacts.filter((item, index) => {
+                      return index == differenceman[index]
+                    })
+                    this.contacts.allContacts = newallContacts
+                    // 赋值资源选择
+                    var selectedIndexs = []
+                    var allIndexs = []
+                    this.resourceId = params.row.resource.map(item => {
+                      return item.resourceid
+                    })
+                    this.strategyhost.allHost.forEach((item, index) => {
+                      allIndexs.push(index)
+                      for (var i = 0; i < this.resourceId.length; i++){
+                        if (this.resourceId[i] == item.id){
+                          this.strategyhost.selectedHost.push(item)
+                          selectedIndexs.push(index)
+                        }
+                      }
+                    })
+                    var difference = allIndexs.concat(selectedIndexs).filter(v => !allIndexs.includes(v) || !selectedIndexs.includes(v))
+                    var newallHost = this.strategyhost.allHost.filter((item, index) => {
+                      return index == difference[index]
+                    })
+                    this.strategyhost.allHost = newallHost
+                    // 赋值告警渠道
                     if (params.row.letter) {
                       this.newAlarmStrategyForm.channel.push('letter')
                     }
@@ -948,8 +1065,9 @@
                     if (params.row.phone) {
                       this.newAlarmStrategyForm.channel.push('phone')
                     }
-                    this.targetformDynamic = params.row.AlarmEvent
-                    this.eventformDynamic = params.row.AlarmEvent
+                    this.targetformDynamic = params.row.zhibiaoAlarm
+                    this.eventformDynamic = params.row.shijianAlarm
+                    this.btnflag = '完成'
                     this.isNewAlarmStrategy = true
                   }
                 }
@@ -1067,27 +1185,178 @@
         allContactsTemp: ''
       }
     },
-    created() {
-      //  短信剩余配额数据模拟
-      var mockMessageData = [
-        {value: 130, name: '剩余配额'},
-        {value: 80, name: '自定义监控告警'},
-        {value: 120, name: '基础告警'},
-        {value: 30, name: '财务与信息系统'}
-      ]
-      mockMessageData.forEach(item => {
-        if (item.name == "剩余配额") {
-          item.selected = true
+    beforeRouteEnter(from, to, next) {
+      let zoneId = $store.state.zone.zoneid
+      let data1 = axios.get('monitor/getCanNotPingAndAlarmNotHandledAndShutdownTotalCount.do', {
+        params: {
+          zoneId: zoneId
         }
-        item.name += '(' + item.value + ')'
       })
-      var mockMessagelegend = mockMessageData.map(item => {
-        return item.name
+      let data2 = axios.get('user/listShortMessageControl.do', {
+        params: {
+          zoneId: zoneId
+        }
       })
-      this.messageData.series[0].data = mockMessageData
-      this.messageData.legend.data = mockMessagelegend
+      let data3 = axios.get('monitor/listPandectCustomMonitorIndexTodaySingleById.do', {
+        params: {
+          type: 1,
+          zoneId: zoneId
+        }
+      })
+      let data4 = axios.get('monitor/listPandectCustomMonitorIndexTodaySingleById.do', {
+        params: {
+          type: 2,
+          zoneId: zoneId
+        }
+      })
+      Promise.all([data1, data2, data3, data4]).then(res => {
+        next(vm => {
+          vm.setData(res)
+        })
+      })
+    },
+    created() {
     },
     methods: {
+      setData(res) {
+        if(res[0].status == 200 && res[0].data.status == 1){
+          this.monitorData[0].num = res[0].data.cantnotPing
+          this.monitorData[1].num = res[0].data.AlarmNotHandled
+          this.monitorData[2].num = res[0].data.shutdownCount
+        }
+        if(res[1].status == 200 && res[1].data.status == 1){
+          let mockMessageData = [
+            {value: res[1].data.result.shortMessageBuy + res[1].data.result.shortMessageFree, name: '剩余配额'},
+            {value: res[1].data.result.shortMessageOwnControlUse, name: '自定义监控告警已发送'},
+            {value: res[1].data.result.shortMessageBaseUse, name: '基础告警已发送'},
+            {value: res[1].data.result.shortMessageAccountUse, name: '财务与信息系统已发送'}
+          ]
+          mockMessageData.forEach(item => {
+            item.name += '(' + item.value + ')条'
+          })
+          let mockMessagelegend = mockMessageData.map(item => {
+            return item.name
+          })
+          this.messageData.series[0].data = mockMessageData
+          this.messageData.legend.data = mockMessagelegend
+        }
+        if(res[2].status == 200 && res[2].data.status == 1){
+          if (res[2].data.list.length != 0) {
+            let name = ''
+            let brokenLine = JSON.parse(JSON.stringify(line))
+            switch (res[2].data.list[0].name) {
+              case 'cpu':
+                name = 'CPU使用率'
+                break
+              case 'disk':
+                name = '磁盘使用率'
+                break
+              case 'memory':
+                name = '内存使用率'
+                break
+              case 'networkin':
+                name = '网进'
+                break
+              case 'networkout':
+                name = '网出'
+                break
+              case 'capacity':
+                name = '容量'
+                break
+              case 'flow':
+                name = '流量'
+                break
+              case 'gethttp':
+                name = 'get请求次数'
+                break
+              case 'posthttp':
+                name = 'post请求次数'
+                break
+              case 'puthttp':
+                name = 'put请求次数'
+                break
+              case 'deletehttp':
+                name = 'delete请求次数'
+                break
+
+            }
+            brokenLine.xAxis.data = res[2].data.list[0].x
+            res[2].data.list[0].data.forEach(data => {
+              brokenLine.series.push({
+                name: data.computerName + name,
+                type: 'line',
+                data: data.data,
+                barWidth: '15%'
+              })
+            })
+            this.firstMonitoringOverview.showChart = brokenLine
+            this.firstMonitoringOverview.id = res[2].data.list[0].customMonitorIndex.id
+            this.firstMonitoringOverview.productType = res[2].data.list[0].customMonitorIndex.producttype
+            this.firstMonitoringOverview.indexs = res[2].data.list[0].customMonitorIndex.indexs
+            this.firstMonitoringOverview.x = res[2].data.list[0].x
+          } else {
+            this.firstMonitoringOverview.showChart = null
+          }
+        }
+        if(res[3].status == 200 && res[3].data.status == 1){
+          if (res[3].data.list.length != 0) {
+            let name = ''
+            let brokenLine = JSON.parse(JSON.stringify(line))
+            switch (res[3].data.list[0].name) {
+              case 'cpu':
+                name = 'CPU使用率'
+                break
+              case 'disk':
+                name = '磁盘使用率'
+                break
+              case 'memory':
+                name = '内存使用率'
+                break
+              case 'networkin':
+                name = '网进'
+                break
+              case 'networkout':
+                name = '网出'
+                break
+              case 'capacity':
+                name = '容量'
+                break
+              case 'flow':
+                name = '流量'
+                break
+              case 'gethttp':
+                name = 'get请求次数'
+                break
+              case 'posthttp':
+                name = 'post请求次数'
+                break
+              case 'puthttp':
+                name = 'put请求次数'
+                break
+              case 'deletehttp':
+                name = 'delete请求次数'
+                break
+
+            }
+            brokenLine.xAxis.data = res[3].data.list[0].x
+            res[3].data.list[0].data.forEach(data => {
+              brokenLine.series.push({
+                name: data.computerName + name,
+                type: 'line',
+                data: data.data,
+                barWidth: '15%'
+              })
+            })
+            this.secondMonitoringOverview.showChart = brokenLine
+            this.secondMonitoringOverview.id = res[3].data.list[0].customMonitorIndex.id
+            this.secondMonitoringOverview.productType = res[3].data.list[0].customMonitorIndex.producttype
+            this.secondMonitoringOverview.indexs = res[3].data.list[0].customMonitorIndex.indexs
+            this.secondMonitoringOverview.x = res[3].data.list[0].x
+          } else {
+            this.secondMonitoringOverview.showChart = null
+          }
+        }
+      },
       newStrategy_back() {
         this.isNewAlarmStrategy = false
         this.listAlarm()
@@ -1107,31 +1376,47 @@
         // 清空指标数据
         this.targetformDynamic = [
           {
-            alarmName: 'CPU使用率',
-            countCircle: '1',
-            valueType: '>',
-            vaule: '80',
-            continueCircle: '1',
-            alarmCount: '1',
-            alarmType: '1'
+            alarmname: 'CPU使用率',
+            countcircle: 1,
+            valuetype: '>',
+            vaule: 80,
+            continuecircle: 1,
+            alarmcount: 1,
+            alarmtype: 1
           }
         ]
         this.eventformDynamic = [
           {
-            alarmName: 'XXX端口ping不可达',
-            countCircle: '1',
-            continueCircle: '1',
-            alarmCount: '1',
-            alarmType: '2'
+            alarmname: 'XXX端口ping不可达',
+            countcircle: 1,
+            continuecircle: 1,
+            alarmcount: 1,
+            alarmtype: 2
           }
         ]
       },
-      deleteChart(item) {
+      deleteChart(val) {
         this.$Modal.confirm({
           title: '提示',
           content: '<p>确定删除当前图表吗？</p>',
           scrollable: true,
           onOk: () => {
+            let url = 'monitor/deletePandectCustomMonitorIndex.do'
+            this.$http.get(url, {
+              params: {
+                id: val === 1 ? this.firstMonitoringOverview.id : this.secondMonitoringOverview.id,
+                type: val
+              }
+            }).then(res => {
+              if (res.data.status == 1) {
+                this.$Message.success('删除成功')
+                val === 1 ? this.getFirstOverviewMonitor() : this.getSecondOverviewMonitor()
+              } else {
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })
           }
         });
       },
@@ -1148,7 +1433,7 @@
           }
         })
       },
-      changeAlarmType() {
+      changealarmtype() {
         if (this.newAlarmStrategyForm.alarmObj == 'all') {
           this.strategyhost.selectedHost = JSON.parse(this.allHostTem)
           this.strategyhost.allHost = []
@@ -1172,7 +1457,7 @@
             this.selectedTarget = item
           }
         })
-        this.targetformDynamic[0].alarmName = this.selectedTarget.target[0].value
+        this.targetformDynamic[0].alarmname = this.selectedTarget.target[0].value
         this.targetformDynamic.splice(1, this.targetformDynamic.length - 1)
         this.$http.get('monitor/listZoneVMAndDiskAndVpcAndObject1.do', {
           params: {
@@ -1197,13 +1482,13 @@
         })
         var selectedAttr = this.selectedTarget.target[0].value
         this.targetformDynamic.push({
-          alarmName: selectedAttr,
-          countCircle: '1',
-          valueType: '>',
-          vaule: '80',
-          continueCircle: '1',
-          alarmCount: '1',
-          alarmType: '1'
+          alarmname: selectedAttr,
+          countcircle: 1,
+          valuetype: '>',
+          vaule: 80,
+          continuecircle: 1,
+          alarmcount: 1,
+          alarmtype: 1
         })
       },
       targetHandleRemove(index) {
@@ -1212,11 +1497,11 @@
       eventHandleAdd() {
         this.eventformDynamic.push(
           {
-            alarmName: 'XXX端口ping不可达',
-            countCircle: '1',
-            continueCircle: '1',
-            alarmCount: '1',
-            alarmType: '2'
+            alarmname: 'XXX端口ping不可达',
+            countcircle: 1,
+            continuecircle: 1,
+            alarmcount: 1,
+            alarmtype: 2
 
           }
         )
@@ -1227,10 +1512,21 @@
 
       // 区域变更，刷新数据
       refresh() {
+        this.getShortMessageControl()
+        this.getCanNotPingAndAlarmNotHandledAndShutdownTotalCount()
+        this.getFirstOverviewMonitor()
+        this.getSecondOverviewMonitor()
+        this.getCustomMonitorGroup()
+        this.alarmStrategyInit()
+        this.getAlarmList()
       },
       labelSwitching(name) {
         switch (name) {
           case 'overview':
+            this.getShortMessageControl()
+            this.getCanNotPingAndAlarmNotHandledAndShutdownTotalCount()
+            this.getFirstOverviewMonitor()
+            this.getSecondOverviewMonitor()
             break
           case 'customMonitoring':
             this.getCustomMonitorGroup()
@@ -1311,6 +1607,103 @@
           }
         })
       },
+      editOverviewAttention(val) {
+        this.isAddOverviewMonitorIndex = false
+        this.overviewMonitoring = val
+        if (val === 1) {
+          this.overviewMonitorIndexForm.productTypeGroup.forEach(productType => {
+            if (productType.value == this.firstMonitoringOverview.productType) {
+              productType.indexGroup.forEach(productIndex => {
+                if (productIndex.value == this.firstMonitoringOverview.indexs) {
+                  this.overviewMonitorIndexForm.productIndexGroup = productType.indexGroup
+                }
+              })
+            }
+          })
+          this.overviewMonitorIndexForm.productType = this.firstMonitoringOverview.productType
+          this.overviewMonitorIndexForm.productIndex = this.firstMonitoringOverview.indexs
+
+          let allResource = this.$http.get('monitor/listPandectZoneVMAndDiskAndVpcAndObject.do', {
+            params: {
+              productType: this.firstMonitoringOverview.productType,
+              index: this.firstMonitoringOverview.indexs,
+              type: val
+            }
+          })
+          let selectedResource = this.$http.get('monitor/listPandectAddCustomMonitorIndex.do', {
+            params: {
+              id: this.firstMonitoringOverview.id,
+              type: val
+            }
+          })
+          this.overviewMonitorIndexForm.allProduct = []
+          Promise.all([allResource, selectedResource]).then(res => {
+            if (res[0].data.status == 1 && res[1].data.status == 1) {
+              res[0].data.list.forEach(item => {
+                let flag = true
+                res[1].data.list.forEach(select => {
+                  if (item.computerid == select.computerid) {
+                    flag = false
+                  }
+                })
+                if (flag) {
+                  this.overviewMonitorIndexForm.allProduct.push(item)
+                }
+              })
+              this.overviewMonitorIndexForm.selectedProduct = res[1].data.list
+              this.overviewMonitorIndexForm.id = this.firstMonitoringOverview.id
+              this.isAddOverviewMonitorIndex = false
+              this.showModal.addOverviewMonitorIndex = true
+            }
+          })
+        } else {
+          this.overviewMonitorIndexForm.productTypeGroup.forEach(productType => {
+            if (productType.value == this.secondMonitoringOverview.productType) {
+              productType.indexGroup.forEach(productIndex => {
+                if (productIndex.value == this.secondMonitoringOverview.indexs) {
+                  this.overviewMonitorIndexForm.productIndexGroup = productType.indexGroup
+                }
+              })
+            }
+          })
+          this.overviewMonitorIndexForm.productType = this.secondMonitoringOverview.productType
+          this.overviewMonitorIndexForm.productIndex = this.secondMonitoringOverview.indexs
+
+          let allResource = this.$http.get('monitor/listPandectZoneVMAndDiskAndVpcAndObject.do', {
+            params: {
+              productType: this.secondMonitoringOverview.productType,
+              index: this.secondMonitoringOverview.indexs,
+              type: val
+            }
+          })
+          let selectedResource = this.$http.get('monitor/listPandectAddCustomMonitorIndex.do', {
+            params: {
+              id: this.secondMonitoringOverview.id,
+              type: val
+            }
+          })
+          this.overviewMonitorIndexForm.allProduct = []
+          Promise.all([allResource, selectedResource]).then(res => {
+            if (res[0].data.status == 1 && res[1].data.status == 1) {
+              res[0].data.list.forEach(item => {
+                let flag = true
+                res[1].data.list.forEach(select => {
+                  if (item.computerid == select.computerid) {
+                    flag = false
+                  }
+                })
+                if (flag) {
+                  this.overviewMonitorIndexForm.allProduct.push(item)
+                }
+              })
+              this.overviewMonitorIndexForm.selectedProduct = res[1].data.list
+              this.overviewMonitorIndexForm.id = this.secondMonitoringOverview.id
+              this.isAddOverviewMonitorIndex = false
+              this.showModal.addOverviewMonitorIndex = true
+            }
+          })
+        }
+      },
       addCustomMonitoring() {
         // 初始化弹窗
         this.isAddMonitorIndex = true
@@ -1338,13 +1731,44 @@
         })
         this.monitoringIndexForm.productIndex = ''
       },
-      changeOverviewProduct(val){
+      changeOverviewProduct(val) {
         this.overviewMonitorIndexForm.productTypeGroup.forEach(item => {
           if (item.value == val) {
             this.overviewMonitorIndexForm.productIndexGroup = item.indexGroup
           }
         })
         this.overviewMonitorIndexForm.productIndex = ''
+      },
+      getCanNotPingAndAlarmNotHandledAndShutdownTotalCount() {
+        let url = 'monitor/getCanNotPingAndAlarmNotHandledAndShutdownTotalCount.do'
+        this.$http.get(url).then(res => {
+          if (res.data.status == 1) {
+            this.monitorData[0].num = res.data.cantnotPing
+            this.monitorData[1].num = res.data.AlarmNotHandled
+            this.monitorData[2].num = res.data.shutdownCount
+          }
+        })
+      },
+      getShortMessageControl() {
+        let url = 'user/listShortMessageControl.do'
+        this.$http.get(url).then(res => {
+          if (res.data.status == 1) {
+            let mockMessageData = [
+              {value: res.data.result.shortMessageBuy + res.data.result.shortMessageFree, name: '剩余配额'},
+              {value: res.data.result.shortMessageOwnControlUse, name: '自定义监控告警已发送'},
+              {value: res.data.result.shortMessageBaseUse, name: '基础告警已发送'},
+              {value: res.data.result.shortMessageAccountUse, name: '财务与信息系统已发送'}
+            ]
+            mockMessageData.forEach(item => {
+              item.name += '(' + item.value + ')条'
+            })
+            let mockMessagelegend = mockMessageData.map(item => {
+              return item.name
+            })
+            this.messageData.series[0].data = mockMessageData
+            this.messageData.legend.data = mockMessagelegend
+          }
+        })
       },
       // 获取指标资源
       getIndexResource() {
@@ -1362,10 +1786,30 @@
           })
         }
       },
+      getOverviewIndexResource() {
+        let url = 'monitor/listPandectZoneVMAndDiskAndVpcAndObject.do'
+        if (typeof (this.overviewMonitorIndexForm.productIndex) != 'undefined') {
+          this.$http.get(url, {
+            params: {
+              productType: this.overviewMonitorIndexForm.productType,
+              index: this.overviewMonitorIndexForm.productIndex,
+              type: this.overviewMonitoring
+            }
+          }).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              this.overviewMonitorIndexForm.allProduct = res.data.list
+            }
+          })
+        }
+      },
       // 添加产品进监控
       addProduct(item, index) {
         this.monitoringIndexForm.allProduct.splice(index, 1)
         this.monitoringIndexForm.selectedProduct.push(item)
+      },
+      addOverviewProduct(item, index) {
+        this.overviewMonitorIndexForm.allProduct.splice(index, 1)
+        this.overviewMonitorIndexForm.selectedProduct.push(item)
       },
       // 切换自定义监控日周月
       cutDataCustomMonitoring(item, index) {
@@ -1469,9 +1913,202 @@
           }
         })
       },
+      // 切换总览监控日周月
+      cutDataOverviewMonitoring(val) {
+        if (val === 1) {
+          let url = ''
+          let params = {}
+          switch (this.firstMonitoringOverview.dateType) {
+            case'today':
+              url = 'monitor/listPandectCustomMonitorIndexTodaySingleById.do'
+              params = {
+                type: val
+              }
+              break
+            case'week':
+              url = 'monitor/listPandectCustomMonitorIndexWeek.do'
+              params = {
+                id: this.firstMonitoringOverview.id,
+                type: val
+              }
+              break
+            case 'month':
+              url = 'monitor/listPandectCustomMonitorIndexWeek.do'
+              params = {
+                id: this.firstMonitoringOverview.id,
+                type: val,
+                datetype: 'month'
+              }
+              break
+          }
+          this.$http.get(url, {
+            params: params
+          }).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              let name = ''
+              switch (res.data.list[0].name) {
+                case 'cpu':
+                  name = 'CPU使用率'
+                  break
+                case 'disk':
+                  name = '磁盘使用率'
+                  break
+                case 'memory':
+                  name = '内存使用率'
+                  break
+                case 'networkin':
+                  name = '网进'
+                  break
+                case 'networkout':
+                  name = '网出'
+                  break
+                case 'capacity':
+                  name = '容量'
+                  break
+                case 'flow':
+                  name = '流量'
+                  break
+                case 'gethttp':
+                  name = 'get请求次数'
+                  break
+                case 'posthttp':
+                  name = 'post请求次数'
+                  break
+                case 'puthttp':
+                  name = 'put请求次数'
+                  break
+                case 'deletehttp':
+                  name = 'delete请求次数'
+                  break
+
+              }
+              let brokenLine = {}
+              if (this.firstMonitoringOverview.mapType == 'line') {
+                brokenLine = JSON.parse(JSON.stringify(line))
+                brokenLine.xAxis.data = res.data.list[0].x
+                res.data.list[0].data.forEach(obj => {
+                  brokenLine.series.push({
+                    name: obj.computerName + name,
+                    type: 'line',
+                    data: obj.data,
+                    barWidth: '15%'
+                  })
+                })
+              } else {
+                brokenLine = JSON.parse(JSON.stringify(bar))
+                brokenLine.xAxis.data = res.data.list[0].x
+                res.data.list[0].data.forEach(obj => {
+                  brokenLine.series.push({
+                    name: obj.computerName + name,
+                    type: 'bar',
+                    data: obj.data,
+                    barWidth: '15%'
+                  })
+                })
+              }
+              this.firstMonitoringOverview.showChart = brokenLine
+              this.firstMonitoringOverview.x = res.data.list[0].x
+            }
+          })
+        } else {
+          let url = ''
+          let params = {}
+          switch (this.secondMonitoringOverview.dateType) {
+            case'today':
+              url = 'monitor/listPandectCustomMonitorIndexTodaySingleById.do'
+              params = {
+                type: val
+              }
+              break
+            case'week':
+              url = 'monitor/listPandectCustomMonitorIndexWeek.do'
+              params = {
+                id: this.secondMonitoringOverview.id,
+                type: val
+              }
+              break
+            case 'month':
+              url = 'monitor/listPandectCustomMonitorIndexWeek.do'
+              params = {
+                id: this.secondMonitoringOverview.id,
+                type: val,
+                datetype: 'month'
+              }
+              break
+          }
+          this.$http.get(url, {
+            params: params
+          }).then(res => {
+            if (res.status == 200 && res.data.status == 1) {
+              let name = ''
+              switch (res.data.list[0].name) {
+                case 'cpu':
+                  name = 'CPU使用率'
+                  break
+                case 'disk':
+                  name = '磁盘使用率'
+                  break
+                case 'memory':
+                  name = '内存使用率'
+                  break
+                case 'networkin':
+                  name = '网进'
+                  break
+                case 'networkout':
+                  name = '网出'
+                  break
+                case 'capacity':
+                  name = '容量'
+                  break
+                case 'flow':
+                  name = '流量'
+                  break
+                case 'gethttp':
+                  name = 'get请求次数'
+                  break
+                case 'posthttp':
+                  name = 'post请求次数'
+                  break
+                case 'puthttp':
+                  name = 'put请求次数'
+                  break
+                case 'deletehttp':
+                  name = 'delete请求次数'
+                  break
+
+              }
+              let brokenLine = {}
+              if (this.secondMonitoringOverview.mapType == 'line') {
+                brokenLine = JSON.parse(JSON.stringify(line))
+                brokenLine.xAxis.data = res.data.list[0].x
+                res.data.list[0].data.forEach(obj => {
+                  brokenLine.series.push({
+                    name: obj.computerName + name,
+                    type: 'line',
+                    data: obj.data,
+                    barWidth: '15%'
+                  })
+                })
+              } else {
+                brokenLine = JSON.parse(JSON.stringify(bar))
+                brokenLine.xAxis.data = res.data.list[0].x
+                res.data.list[0].data.forEach(obj => {
+                  brokenLine.series.push({
+                    name: obj.computerName + name,
+                    type: 'bar',
+                    data: obj.data,
+                    barWidth: '15%'
+                  })
+                })
+              }
+              this.secondMonitoringOverview.showChart = brokenLine
+              this.secondMonitoringOverview.x = res.data.list[0].x
+            }
+          })
+        }
+      },
       // 切换自定义监控折线和柱状图
       cutMapCustomMonitoring(item, index) {
-        // console.log(item)
         let brokenLine = {}
         if (item.mapType == 'line') {
           brokenLine = JSON.parse(JSON.stringify(line))
@@ -1505,16 +2142,76 @@
           x: brokenLine.xAxis.data
         }
         this.customMonitoringData.splice(index, 1, params)
-      },// 从监控中删除该产品
+      },
+      // 切换总览监控折线和柱状图
+      cutMapOverviewMonitoring(val) {
+        if (val === 1) {
+          let brokenLine = {}
+          if (this.firstMonitoringOverview.mapType == 'line') {
+            brokenLine = JSON.parse(JSON.stringify(line))
+            brokenLine.xAxis.data = this.firstMonitoringOverview.x
+            this.firstMonitoringOverview.showChart.series.forEach(series1 => {
+              brokenLine.series.push({
+                name: series1.name,
+                type: 'line',
+                data: series1.data,
+                barWidth: '15%'
+              })
+            })
+          } else {
+            brokenLine = JSON.parse(JSON.stringify(bar))
+            brokenLine.xAxis.data = this.firstMonitoringOverview.x
+            this.firstMonitoringOverview.showChart.series.forEach(series2 => {
+              brokenLine.series.push({
+                name: series2.name,
+                type: 'bar',
+                data: series2.data,
+                barWidth: '15%'
+              })
+            })
+          }
+          this.firstMonitoringOverview.showChart = brokenLine
+        } else {
+          let brokenLine = {}
+          if (this.secondMonitoringOverview.mapType == 'line') {
+            brokenLine = JSON.parse(JSON.stringify(line))
+            brokenLine.xAxis.data = this.secondMonitoringOverview.x
+            this.secondMonitoringOverview.showChart.series.forEach(series1 => {
+              brokenLine.series.push({
+                name: series1.name,
+                type: 'line',
+                data: series1.data,
+                barWidth: '15%'
+              })
+            })
+          } else {
+            brokenLine = JSON.parse(JSON.stringify(bar))
+            brokenLine.xAxis.data = this.secondMonitoringOverview.x
+            this.secondMonitoringOverview.showChart.series.forEach(series2 => {
+              brokenLine.series.push({
+                name: series2.name,
+                type: 'bar',
+                data: series2.data,
+                barWidth: '15%'
+              })
+            })
+          }
+          this.secondMonitoringOverview.showChart = brokenLine
+        }
+      },
+      // 从监控中删除该产品
       deleteProduct(item, index) {
         this.monitoringIndexForm.selectedProduct.splice(index, 1)
         this.monitoringIndexForm.allProduct.push(item)
+      },
+      deleteOverviewProduct(item, index) {
+        this.overviewMonitorIndexForm.selectedProduct.splice(index, 1)
+        this.overviewMonitorIndexForm.allProduct.push(item)
       },
       addHost(item, index) {
         this.strategyhost.allHost.splice(index, 1)
         this.strategyhost.selectedHost.push(item)
       },
-      // 从监控中删除该产品
       deleteHost(item, index) {
         this.strategyhost.selectedHost.splice(index, 1)
         this.strategyhost.allHost.push(item)
@@ -1523,10 +2220,59 @@
         this.contacts.allContacts.splice(index, 1)
         this.contacts.selectedContacts.push(item)
       },
-      // 从监控中删除该产品
       deleteContacts(item, index) {
         this.contacts.selectedContacts.splice(index, 1)
         this.contacts.allContacts.push(item)
+      },
+      addOverviewMonitoring_ok() {
+        let computerId = ''
+        let vpcId = ''
+        let diskId = ''
+        let objectStorageId = ''
+        switch (this.overviewMonitorIndexForm.productType) {
+          case '云主机':
+            computerId = this.overviewMonitorIndexForm.selectedProduct.map(item => {
+              return item.computerid
+            })
+            break
+          case '对象存储':
+            objectStorageId = this.overviewMonitorIndexForm.selectedProduct.map(item => {
+              return item.instancename
+            })
+            break
+          case '磁盘':
+            diskId = this.overviewMonitorIndexForm.selectedProduct.map(item => {
+              return item.computerid
+            })
+            break
+          case 'VPC':
+            vpcId = this.overviewMonitorIndexForm.selectedProduct.map(item => {
+              return item.computerid
+            })
+            break
+        }
+        let url = 'monitor/addPandectCustomMonitorIndex.do'
+        this.$http.get(url, {
+          params: {
+            productTye: this.overviewMonitorIndexForm.productType,
+            index: this.overviewMonitorIndexForm.productIndex,
+            computerId: computerId + '',
+            vpcId: vpcId + '',
+            diskId: diskId + '',
+            objectStorageId: objectStorageId + '',
+            type: this.overviewMonitoring
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.$Message.success(res.data.message)
+            this.showModal.addOverviewMonitorIndex = false
+            this.overviewMonitoring == 1 ? this.getFirstOverviewMonitor() : this.getSecondOverviewMonitor()
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
       },
       addCustomMonitoring_ok() {
         let computerId = ''
@@ -1541,7 +2287,7 @@
             break
           case '对象存储':
             objectStorageId = this.monitoringIndexForm.selectedProduct.map(item => {
-              return item.computerid
+              return item.instancename
             })
             break
           case '磁盘':
@@ -1577,6 +2323,57 @@
           }
         })
       },
+      editOverviewMonitoring_ok() {
+        let computerId = ''
+        let vpcId = ''
+        let diskId = ''
+        let objectStorageId = ''
+        switch (this.overviewMonitorIndexForm.productType) {
+          case'云主机':
+            computerId = this.overviewMonitorIndexForm.selectedProduct.map(item => {
+              return item.computerid
+            })
+            break
+          case'对象存储':
+            objectStorageId = this.overviewMonitorIndexForm.selectedProduct.map(item => {
+              return item.instancename
+            })
+            break
+          case'磁盘':
+            diskId = this.overviewMonitorIndexForm.selectedProduct.map(item => {
+              return item.computerid
+            })
+            break
+          case'VPC':
+            vpcId = this.overviewMonitorIndexForm.selectedProduct.map(item => {
+              return item.computerid
+            })
+            break
+        }
+        let url = 'monitor/updatePandectCustomMonitorIndex.do'
+        this.$http.get(url, {
+          params: {
+            productTye: this.overviewMonitorIndexForm.productType,
+            index: this.overviewMonitorIndexForm.productIndex,
+            id: this.overviewMonitorIndexForm.id,
+            computerId: computerId + '',
+            vpcId: vpcId + '',
+            diskId: diskId + '',
+            objectStorageId: objectStorageId + '',
+            type: this.overviewMonitoring
+          }
+        }).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.$Message.success(res.data.message)
+            this.showModal.addOverviewMonitorIndex = false
+            this.overviewMonitoring == 1 ? this.getFirstOverviewMonitor() : this.getSecondOverviewMonitor()
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
       editCustomMonitoring_ok() {
         let computerId = ''
         let vpcId = ''
@@ -1590,7 +2387,7 @@
             break
           case'对象存储':
             objectStorageId = this.monitoringIndexForm.selectedProduct.map(item => {
-              return item.computerid
+              return item.instancename
             })
             break
           case'磁盘':
@@ -1624,6 +2421,142 @@
             this.$message.info({
               content: res.data.message
             })
+          }
+        })
+      },
+      // 获取总览第一个监控图
+      getFirstOverviewMonitor() {
+        let url = 'monitor/listPandectCustomMonitorIndexTodaySingleById.do'
+        this.$http.get(url, {
+          params: {
+            type: 1
+          }
+        }).then(res => {
+          if (res.data.status == 1) {
+            if (res.data.list.length != 0) {
+              let name = ''
+              let brokenLine = JSON.parse(JSON.stringify(line))
+              switch (res.data.list[0].name) {
+                case 'cpu':
+                  name = 'CPU使用率'
+                  break
+                case 'disk':
+                  name = '磁盘使用率'
+                  break
+                case 'memory':
+                  name = '内存使用率'
+                  break
+                case 'networkin':
+                  name = '网进'
+                  break
+                case 'networkout':
+                  name = '网出'
+                  break
+                case 'capacity':
+                  name = '容量'
+                  break
+                case 'flow':
+                  name = '流量'
+                  break
+                case 'gethttp':
+                  name = 'get请求次数'
+                  break
+                case 'posthttp':
+                  name = 'post请求次数'
+                  break
+                case 'puthttp':
+                  name = 'put请求次数'
+                  break
+                case 'deletehttp':
+                  name = 'delete请求次数'
+                  break
+
+              }
+              brokenLine.xAxis.data = res.data.list[0].x
+              res.data.list[0].data.forEach(data => {
+                brokenLine.series.push({
+                  name: data.computerName + name,
+                  type: 'line',
+                  data: data.data,
+                  barWidth: '15%'
+                })
+              })
+              this.firstMonitoringOverview.showChart = brokenLine
+              this.firstMonitoringOverview.id = res.data.list[0].customMonitorIndex.id
+              this.firstMonitoringOverview.productType = res.data.list[0].customMonitorIndex.producttype
+              this.firstMonitoringOverview.indexs = res.data.list[0].customMonitorIndex.indexs
+              this.firstMonitoringOverview.x = res.data.list[0].x
+            } else {
+              this.firstMonitoringOverview.showChart = null
+            }
+          }
+        })
+      },
+      // 获取总览第二个监控图
+      getSecondOverviewMonitor() {
+        let url = 'monitor/listPandectCustomMonitorIndexTodaySingleById.do'
+        this.$http.get(url, {
+          params: {
+            type: 2
+          }
+        }).then(res => {
+          if (res.data.status == 1) {
+            if (res.data.list.length != 0) {
+              let name = ''
+              let brokenLine = JSON.parse(JSON.stringify(line))
+              switch (res.data.list[0].name) {
+                case 'cpu':
+                  name = 'CPU使用率'
+                  break
+                case 'disk':
+                  name = '磁盘使用率'
+                  break
+                case 'memory':
+                  name = '内存使用率'
+                  break
+                case 'networkin':
+                  name = '网进'
+                  break
+                case 'networkout':
+                  name = '网出'
+                  break
+                case 'capacity':
+                  name = '容量'
+                  break
+                case 'flow':
+                  name = '流量'
+                  break
+                case 'gethttp':
+                  name = 'get请求次数'
+                  break
+                case 'posthttp':
+                  name = 'post请求次数'
+                  break
+                case 'puthttp':
+                  name = 'put请求次数'
+                  break
+                case 'deletehttp':
+                  name = 'delete请求次数'
+                  break
+
+              }
+              brokenLine.xAxis.data = res.data.list[0].x
+              res.data.list[0].data.forEach(data => {
+                brokenLine.series.push({
+                  name: data.computerName + name,
+                  type: 'line',
+                  data: data.data,
+                  barWidth: '15%'
+                })
+              })
+              this.secondMonitoringOverview.showChart = brokenLine
+              this.secondMonitoringOverview.id = res.data.list[0].customMonitorIndex.id
+              this.secondMonitoringOverview.productType = res.data.list[0].customMonitorIndex.producttype
+              this.secondMonitoringOverview.indexs = res.data.list[0].customMonitorIndex.indexs
+              this.secondMonitoringOverview.x = res.data.list[0].x
+            } else {
+              this.secondMonitoringOverview.showChart = null
+            }
           }
         })
       },
@@ -1735,13 +2668,36 @@
               targetAlarmMessage: JSON.stringify(this.targetformDynamic),
               eventAlarmMessage: JSON.stringify(this.eventformDynamic),
             }
-            this.$http.post('alarmControl/createAlarmControl.do', params).then(res => {
-              if (res.status == 200 && res.data.status == 1) {
-                this.$Message.success(res.data.message)
-              } else {
-                this.$Message.success('创建失败！');
-              }
-            })
+            let params1 = {
+              id: this.strategyId + '',
+              name: this.newAlarmStrategyForm.strategyName + '',
+              type: this.newAlarmStrategyForm.strategyType + '',
+              resourceIds: selectedProduct.join(),
+              letter: channel.letter + '',
+              email: channel.email + '',
+              phone: channel.phone + '',
+              linkIds: linkMan.join(),
+              targetAlarmMessage: JSON.stringify(this.targetformDynamic),
+              eventAlarmMessage: JSON.stringify(this.eventformDynamic),
+            }
+            if (this.btnflag == '完成') {
+              this.$http.post('alarmControl/createAlarmControl.do', params).then(res => {
+                if (res.status == 200 && res.data.status == 1) {
+                  this.$Message.success(res.data.message)
+                } else {
+                  this.$Message.success('创建失败！');
+                }
+              })
+            }
+            if (this.btnflag == '更新') {
+              this.$http.post('alarmControl/updateAlarmControl.do', params1).then(res => {
+                if (res.status == 200 && res.data.status == 1) {
+                  this.$Message.success(res.data.message)
+                } else {
+                  this.$Message.success('更新失败！');
+                }
+              })
+            }
           }
         })
       },
@@ -1824,18 +2780,22 @@
           }
         })
       }
-    },
+    }
+    ,
     computed: {
       auth() {
         return this.$store.state.authInfo != null
       }
-    },
+    }
+    ,
     watch: {
-      '$store.state.zone': {
-        handler: function () {
-          this.refresh()
+      '$store.state.zone':
+        {
+          handler: function () {
+            this.refresh()
+          }
         }
-      },
+      ,
     }
   }
 </script>
