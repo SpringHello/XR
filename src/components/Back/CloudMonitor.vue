@@ -499,6 +499,8 @@
   import line from '@/echarts/cloudMonitor/line'
   import bar from '@/echarts/cloudMonitor/bar'
   import regExp from '../../util/regExp'
+  import $store from '../../vuex'
+  import axios from '../../util/axiosInterceptor'
 
   export default {
     data() {
@@ -1184,15 +1186,177 @@
       }
     },
     beforeRouteEnter(from, to, next) {
-      next()
+      let zoneId = $store.state.zone.zoneid
+      let data1 = axios.get('monitor/getCanNotPingAndAlarmNotHandledAndShutdownTotalCount.do', {
+        params: {
+          zoneId: zoneId
+        }
+      })
+      let data2 = axios.get('user/listShortMessageControl.do', {
+        params: {
+          zoneId: zoneId
+        }
+      })
+      let data3 = axios.get('monitor/listPandectCustomMonitorIndexTodaySingleById.do', {
+        params: {
+          type: 1,
+          zoneId: zoneId
+        }
+      })
+      let data4 = axios.get('monitor/listPandectCustomMonitorIndexTodaySingleById.do', {
+        params: {
+          type: 2,
+          zoneId: zoneId
+        }
+      })
+      Promise.all([data1, data2, data3, data4]).then(res => {
+        next(vm => {
+          vm.setData(res)
+        })
+      })
     },
     created() {
-      this.getCanNotPingAndAlarmNotHandledAndShutdownTotalCount()
-      this.getShortMessageControl()
-      this.getFirstOverviewMonitor()
-      this.getSecondOverviewMonitor()
     },
     methods: {
+      setData(res) {
+        if(res[0].status == 200 && res[0].data.status == 1){
+          this.monitorData[0].num = res[0].data.cantnotPing
+          this.monitorData[1].num = res[0].data.AlarmNotHandled
+          this.monitorData[2].num = res[0].data.shutdownCount
+        }
+        if(res[1].status == 200 && res[1].data.status == 1){
+          let mockMessageData = [
+            {value: res[1].data.result.shortMessageBuy + res[1].data.result.shortMessageFree, name: '剩余配额'},
+            {value: res[1].data.result.shortMessageOwnControlUse, name: '自定义监控告警已发送'},
+            {value: res[1].data.result.shortMessageBaseUse, name: '基础告警已发送'},
+            {value: res[1].data.result.shortMessageAccountUse, name: '财务与信息系统已发送'}
+          ]
+          mockMessageData.forEach(item => {
+            item.name += '(' + item.value + ')条'
+          })
+          let mockMessagelegend = mockMessageData.map(item => {
+            return item.name
+          })
+          this.messageData.series[0].data = mockMessageData
+          this.messageData.legend.data = mockMessagelegend
+        }
+        if(res[2].status == 200 && res[2].data.status == 1){
+          if (res[2].data.list.length != 0) {
+            let name = ''
+            let brokenLine = JSON.parse(JSON.stringify(line))
+            switch (res[2].data.list[0].name) {
+              case 'cpu':
+                name = 'CPU使用率'
+                break
+              case 'disk':
+                name = '磁盘使用率'
+                break
+              case 'memory':
+                name = '内存使用率'
+                break
+              case 'networkin':
+                name = '网进'
+                break
+              case 'networkout':
+                name = '网出'
+                break
+              case 'capacity':
+                name = '容量'
+                break
+              case 'flow':
+                name = '流量'
+                break
+              case 'gethttp':
+                name = 'get请求次数'
+                break
+              case 'posthttp':
+                name = 'post请求次数'
+                break
+              case 'puthttp':
+                name = 'put请求次数'
+                break
+              case 'deletehttp':
+                name = 'delete请求次数'
+                break
+
+            }
+            brokenLine.xAxis.data = res[2].data.list[0].x
+            res[2].data.list[0].data.forEach(data => {
+              brokenLine.series.push({
+                name: data.computerName + name,
+                type: 'line',
+                data: data.data,
+                barWidth: '15%'
+              })
+            })
+            this.firstMonitoringOverview.showChart = brokenLine
+            this.firstMonitoringOverview.id = res[2].data.list[0].customMonitorIndex.id
+            this.firstMonitoringOverview.productType = res[2].data.list[0].customMonitorIndex.producttype
+            this.firstMonitoringOverview.indexs = res[2].data.list[0].customMonitorIndex.indexs
+            this.firstMonitoringOverview.x = res[2].data.list[0].x
+          } else {
+            this.firstMonitoringOverview.showChart = null
+          }
+        }
+        if(res[3].status == 200 && res[3].data.status == 1){
+          if (res[3].data.list.length != 0) {
+            let name = ''
+            let brokenLine = JSON.parse(JSON.stringify(line))
+            switch (res[3].data.list[0].name) {
+              case 'cpu':
+                name = 'CPU使用率'
+                break
+              case 'disk':
+                name = '磁盘使用率'
+                break
+              case 'memory':
+                name = '内存使用率'
+                break
+              case 'networkin':
+                name = '网进'
+                break
+              case 'networkout':
+                name = '网出'
+                break
+              case 'capacity':
+                name = '容量'
+                break
+              case 'flow':
+                name = '流量'
+                break
+              case 'gethttp':
+                name = 'get请求次数'
+                break
+              case 'posthttp':
+                name = 'post请求次数'
+                break
+              case 'puthttp':
+                name = 'put请求次数'
+                break
+              case 'deletehttp':
+                name = 'delete请求次数'
+                break
+
+            }
+            brokenLine.xAxis.data = res[3].data.list[0].x
+            res[3].data.list[0].data.forEach(data => {
+              brokenLine.series.push({
+                name: data.computerName + name,
+                type: 'line',
+                data: data.data,
+                barWidth: '15%'
+              })
+            })
+            this.secondMonitoringOverview.showChart = brokenLine
+            this.secondMonitoringOverview.id = res[3].data.list[0].customMonitorIndex.id
+            this.secondMonitoringOverview.productType = res[3].data.list[0].customMonitorIndex.producttype
+            this.secondMonitoringOverview.indexs = res[3].data.list[0].customMonitorIndex.indexs
+            this.secondMonitoringOverview.x = res[3].data.list[0].x
+          } else {
+            this.secondMonitoringOverview.showChart = null
+          }
+        }
+      },
       newStrategy_back() {
         this.isNewAlarmStrategy = false
         this.listAlarm()
