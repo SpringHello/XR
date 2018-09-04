@@ -16,7 +16,6 @@
             <li>
               <router-link to="renew" :class="{active:pageInfo.path=='renew'}"><span>一键续费</span></router-link>
             </li>
-
           </ul>
           <ul class="right">
             <li>
