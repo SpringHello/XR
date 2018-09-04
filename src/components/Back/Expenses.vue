@@ -69,8 +69,8 @@
               <span>按交易时间</span>
               <Row style="display: inline-block;margin-left: 10px">
                 <Col span="12">
-                <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
-                             placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
+                  <Date-picker v-model="time" type="daterange" :options="options" placement="bottom-start"
+                               placeholder="选择日期" style="width: 231px;" @on-change="dataChange"></Date-picker>
                 </Col>
               </Row>
               <span style="margin-left: 20px">按交易类型</span>
@@ -108,8 +108,8 @@
               <span style="line-height: 30px;">～</span>
               <Row>
                 <Col span="12">
-                <Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start"
-                             placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
+                  <Date-picker v-model="ordertime" type="daterange" :options="options" placement="bottom-start"
+                               placeholder="选择日期" style="width: 231px;" @on-change="order_dataChange"></Date-picker>
                 </Col>
               </Row>
               <Button type="primary" style="margin-left: 197px" @click="orderPay" :disabled="payDisabled">支付</Button>
@@ -354,7 +354,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.unfreeze = false">取消</Button>
-        <Button type="primary">确定解冻</Button>
+        <Button type="primary" @click="unfreeze_ok">确定解冻</Button>
       </p>
     </Modal>
     <Modal v-model="showModal.notUnfreeze" :scrollable="true" :closable="false" :width="390">
@@ -1160,7 +1160,7 @@
           }, {
             title: '押金状态',
             render: (h, params) => {
-              const text = params.row.type == 1 ? '已解冻' : '冻结中'
+              const text = params.row.type == 1 ? '已解冻' : params.row.type == 2 ? '解冻中' : '冻结中'
               return h('span', {}, text)
             }
           }, {
@@ -1174,8 +1174,9 @@
                   },
                   on: {
                     click: () => {
-                      //this.showModal.unfreeze = true
-                      this.showModal.notUnfreeze = true
+                      this.unfreezeId = params.row.id
+                      this.showModal.unfreeze = true
+                      //this.showModal.notUnfreeze = true
                     }
                   }
                 }, '申请解冻')
@@ -1185,7 +1186,8 @@
             }
           },
         ],
-        freezeParticularsData: []
+        freezeParticularsData: [],
+        unfreezeId: ''
       }
     },
     created() {
@@ -1793,11 +1795,27 @@
       toMyCard() {
         this.name = 'myCard'
         this.searchCard()
-      }
+      },
+      unfreeze_ok() {
+        let url = 'user/getRremainderThawing.do'
+        let params = {
+          id: this.unfreezeId
+        }
+        this.$http.post(url, params).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.$Message.success('申请成功')
+            this.showModal.unfreeze = false
+            this.freezeDetails()
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
     },
     computed: {
-      payDisabled()
-      {
+      payDisabled() {
         if (this.orderNumber.some(checkPaymentStatus) || this.orderNumber.length === 0) {
           return true
         } else {
@@ -1809,8 +1827,7 @@
         }
       }
       ,
-      deleteDisabled()
-      {
+      deleteDisabled() {
         if (this.orderNumber.length === 0) {
           return true
         } else {
@@ -1820,8 +1837,7 @@
       ,
     },
     watch: {
-      dateRange()
-      {
+      dateRange() {
         this.search()
       }
     }

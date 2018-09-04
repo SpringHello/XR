@@ -2237,7 +2237,7 @@
             break
           case '对象存储':
             objectStorageId = this.overviewMonitorIndexForm.selectedProduct.map(item => {
-              return item.computerid
+              return item.instancename
             })
             break
           case '磁盘':
@@ -2287,7 +2287,7 @@
             break
           case '对象存储':
             objectStorageId = this.monitoringIndexForm.selectedProduct.map(item => {
-              return item.computerid
+              return item.instancename
             })
             break
           case '磁盘':
@@ -2336,7 +2336,7 @@
             break
           case'对象存储':
             objectStorageId = this.overviewMonitorIndexForm.selectedProduct.map(item => {
-              return item.computerid
+              return item.instancename
             })
             break
           case'磁盘':
@@ -2387,7 +2387,7 @@
             break
           case'对象存储':
             objectStorageId = this.monitoringIndexForm.selectedProduct.map(item => {
-              return item.computerid
+              return item.instancename
             })
             break
           case'磁盘':
