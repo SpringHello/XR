@@ -117,28 +117,6 @@
         <Button type="primary" @click="backupSubmit('backupsForm')">创建备份</Button>
       </div>
     </Modal>
-    <!-- 云数据库镜像弹窗 -->
-    <Modal v-model="showModal.mirror" width="590" :scrollable="true">
-      <div slot="header" class="modal-header-border">
-        <span class="universal-modal-title">制作镜像</span>
-      </div>
-      <div class="universal-modal-content-flex">
-        <Form :model="mirrorForm" ref="mirrorForm" :rules="mirrorFormRule">
-          <Form-item label="镜像名称" prop="name">
-            <Input v-model="mirrorForm.name" placeholder="小于20位数字或字母"></Input>
-          </Form-item>
-          <Form-item label="备注">
-            <Input v-model="mirrorForm.description" type="textarea" :autosize="{minRows: 2,maxRows: 2}"
-                   placeholder="小于20个字（选填)"></Input>
-          </Form-item>
-        </Form>
-      </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button type="ghost" @click="showModal.mirror = false">取消</Button>
-        <Button type="primary" @click="mirrorSubmit('mirrorForm')">确定
-        </Button>
-      </div>
-    </Modal>
     <!-- 云数据库续费弹窗 -->
     <Modal
       v-model="showModal.renewal"
@@ -208,6 +186,46 @@
         <Button type="primary" @click="dilatationok" :disabled="dilatationCost=='--'">确认调整</Button>
       </div>
     </Modal>
+    <!-- 绑定公网IP -->
+    <Modal v-model="showModal.bindIP" width="590" :scrollable="true">
+      <div slot="header" class="modal-header-border">
+        <span class="universal-modal-title">绑定IP</span>
+      </div>
+      <div class="universal-modal-content-flex">
+        <Form :model="bindForm" ref="bindForm" :rules="bindFormRule">
+          <Form-item label="选择弹性IP" prop="publicIP">
+            <Select v-model="bindForm.publicIP" placeholder="请选择">
+              <Option v-for="(item,index) in publicIPList" :key="index" :value="item.publicipid">
+                {{item.publicip}}
+              </Option>
+            </Select>
+            <span style="color:#2A99F2;font-size:14px;position:absolute;top:4px;right:-110px;">
+              <span style="font-weight:800;font-size:20px;">+</span>
+              <span style="cursor:pointer;" @click="publicIPHint_ok">购买弹性IP</span>
+            </span>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.bindIP = false">取消</Button>
+        <Button type="primary" @click="bindipSubmit('bindForm')">确定
+        </Button>
+      </div>
+    </Modal>
+    <!-- 绑定ip时，没有公网ip提示 -->
+    <Modal v-model="showModal.publicIPHint" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24">您还未拥有剩余公网IP，请先创建公网IP。</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.publicIPHint = false">取消</Button>
+        <Button type="primary" @click="publicIPHint_ok">创建公网IP</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -263,54 +281,54 @@
             }
           },
           {
-            title: '数据库版本',
+            title: '系统',
             key: 'templatename',
             ellipsis: true,
           },
           {
-            title: '内核配置',
+            title: '配置规格',
             key: 'serviceoffername',
             ellipsis: true,
           },
+          // {
+          //   title: '主机状态',
+          //   render: (h, params) => {
+          //     const row = params.row
+          //     let text = ''
+          //     switch (row.dbStatus) {
+          //       case '0':
+          //         text = '关闭';
+          //         break;
+          //       case '1':
+          //         text = '开启';
+          //         break;
+          //       case '2':
+          //         text = '开启中';
+          //         break;
+          //       case '3':
+          //         text = '关闭中';
+          //         break;
+          //       case '4':
+          //         text = '重启中';
+          //         break;
+          //       case '5':
+          //         text = '删除中'
+          //         break;
+          //     }
+          //     if (row.dbStatus == 2 || row.dbStatus == 3 || row.dbStatus == 4 || row.dbStatus == 5) {
+          //       return h('div', {}, [h('Spin', {
+          //         style: {
+          //           display: 'inline-block',
+          //           marginRight: '10px'
+          //         }
+          //       }), h('span', {}, text)])
+          //     } else {
+          //       return h('span', text)
+          //     }
+          //   }
+          // },
           {
-            title: '主机状态',
-            render: (h, params) => {
-              const row = params.row
-              let text = ''
-              switch (row.dbStatus) {
-                case '0':
-                  text = '关闭';
-                  break;
-                case '1':
-                  text = '开启';
-                  break;
-                case '2':
-                  text = '开启中';
-                  break;
-                case '3':
-                  text = '关闭中';
-                  break;
-                case '4':
-                  text = '重启中';
-                  break;
-                case '5':
-                  text = '删除中'
-                  break;
-              }
-              if (row.dbStatus == 2 || row.dbStatus == 3 || row.dbStatus == 4 || row.dbStatus == 5) {
-                return h('div', {}, [h('Spin', {
-                  style: {
-                    display: 'inline-block',
-                    marginRight: '10px'
-                  }
-                }), h('span', {}, text)])
-              } else {
-                return h('span', text)
-              }
-            }
-          },
-          {
-            title: '费用状态',
+            title: '状态',
             key: 'status',
             render: (h, params) => {
               const row = params.row
@@ -344,15 +362,77 @@
               }
             }
           },
-          {
-            title: '内网地址',
-            key: 'privateip',
-            ellipsis: true,
-          },
+          // {
+          //   title: '内网地址',
+          //   key: 'privateip',
+          //   ellipsis: true,
+          // },
           {
             title: '公网地址',
+            width: '180px',
             render: (h, params) => {
-              return h('span', params.row.publicip ? params.row.publicip : '')
+              if (params.row.publicip){
+                return h('div', {}, [h('span', {}, params.row.publicip), h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      this.$http.get('network/disableStaticNat.do', {
+                        params: {
+                          ipId: params.row.publicip,
+                          VMId: params.row.computerid
+                        }
+                      }).then(response => {
+                        if (response.status == 200 && response.data.status == 1
+                        ) {
+                          this.$Message.success(response.data.message)
+                        }
+                        else if (response.status == 200 && response.data.status == 2) {
+                          this.$message.info({
+                            content: response.data.message
+                          })
+                        }
+                      })
+                    }
+                  }
+                }, ' × 解绑')])
+              } else {
+                return h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      console.log(params.row.vpcid)
+                      this.currentComputerId = params.row.computerid
+                      this.bindForm.publicIP = ''
+                      this.$http.get('network/listPublicIp.do', {
+                        params: {
+                          useType: 0,
+                          vpcId: params.row.vpcid
+                        }
+                      }).then(response => {
+                        this.loading = false
+                        // if (response.status == 200 && response.data.status == 1) {
+                        //   this.publicIPList = response.data.result
+                        //   this.showModal.bindIP = true
+                        // }
+                        if (response.status == 200 && response.data.status == 1) {
+                          this.publicIPList = response.data.result
+                          if (this.publicIPList == ''){
+                            this.showModal.publicIPHint = true
+                          } else {
+                            this.showModal.bindIP = true
+                          }
+                        }
+                      })
+                    }
+                  }
+                }, '绑定公网IP')
+              }
             }
           },
           {
@@ -380,8 +460,8 @@
             }
           },
           {
-            title: '到期时间',
-            key: 'endtime',
+            title: '创建时间',
+            key: 'createtime',
             ellipsis: true,
           },
           {
@@ -435,7 +515,7 @@
                   }
                 }, '更多操作'), h('DropdownMenu', {
                   slot: 'list'
-                }, [/*h('DropdownItem', {
+                }, [h('DropdownItem', {
                  nativeOn: {
                  click: () => {
                  this.backupsForm.name = ''
@@ -443,16 +523,8 @@
                  this.showModal.backups = true
                  }
                  }
-                 }, '数据库备份'),*//* h('DropdownItem', {
-                 nativeOn: {
-                 click: () => {
-                 this.mirrorForm.name = ''
-                 this.mirrorForm.description = ''
-                 this.current = params.row
-                 this.showModal.mirror = true
-                 }
-                 }
-                 }, '数据库镜像'),*/ h('DropdownItem', {
+                 }, '数据库备份'),
+                 h('DropdownItem', {
                   nativeOn: {
                     click: () => {
                       this.dilatationForm.databaseSize = params.row.disksize
@@ -576,7 +648,9 @@
           mirror: false,
           renewal: false,
           restart: false,
-          dilatation: false
+          dilatation: false,
+          bindIP: false,
+          publicIPHint: false
         },
         portModifyForm: {
           currentPorts: '',
@@ -587,6 +661,16 @@
             {validator: validateNewport, trigger: 'change'}
           ]
         },
+        bindForm: {
+          publicIP: ''
+        },
+        bindFormRule: {
+          publicIP: [
+            {required: true, message: '请选择', trigger: 'change'}
+          ]
+        },
+        publicIPList: [],
+        currentComputerId: '',
         currentHostname: '',
         backupsForm: {
           name: '',
@@ -648,6 +732,35 @@
     created() {
     },
     methods: {
+      publicIPHint_ok() {
+        this.$router.push('buy')
+        sessionStorage.setItem('pane', 'Peip')
+      },
+      // 绑定公网ip
+      bindipSubmit(name) {
+        console.log(this.currentComputerId)
+        this.$refs[name].validate((valid) => {
+            if (valid) {
+              this.showModal.bindIP = false
+              this.$http.get('network/enableStaticNat.do', {
+                params: {
+                  ipId: this.bindForm.publicIP,
+                  VMId: this.currentComputerId
+                }
+              }).then(response => {
+                this.loading = false
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success(response.data.message)
+                } else {
+                  this.$message.info({
+                    content: response.data.message
+                  })
+                }
+              })
+            }
+          }
+        )
+      },
       // 重启数据库
       restart() {
         this.showModal.restart = false
