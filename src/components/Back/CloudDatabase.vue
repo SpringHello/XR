@@ -351,8 +351,14 @@
                 case 6:
                   text = '升级中';
                   break;
+                case 7:
+                  text = '绑定中';
+                  break;
+                case 8:
+                  text = '解绑中';
+                  break;
               }
-              if (row.status == 2||row.status == 5||row.status == 6) {
+              if (row.status == 2 || row.status == 5 || row.status == 6 || row.status == 7 || row.status == 8) {
                 return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block',
@@ -385,6 +391,11 @@
                         title: '提示',
                         content: `您正在为${params.row.computername}解绑公网IP，解绑之后您将不能通过公网访问该数据库，确认解绑？`,
                         onOk: () => {
+                          this.dataBaseData.forEach(item => {
+                            if (item.computerid == params.row.computerid) {
+                              item.status = 8
+                            }
+                          })
                           this.$http.get('network/disableStaticNatByAfter.do', {
                             params: {
                               ipId: params.row.publicip,
@@ -831,6 +842,11 @@
         this.$refs[name].validate((valid) => {
             if (valid) {
               this.showModal.bindIP = false
+              this.dataBaseData.forEach(item => {
+                if (item.computerid == this.currentComputerId) {
+                  item.status = 7
+                }
+              })
               this.$http.get('network/enableStaticNatByAfter.do', {
                 params: {
                   ipId: this.bindForm.publicIP,
