@@ -385,7 +385,7 @@
                         title: '提示',
                         content: `您正在为${params.row.computername}解绑公网IP，解绑之后您将不能通过公网访问该数据库，确认解绑？`,
                         onOk: () => {
-                          this.$http.get('network/disableStaticNat.do', {
+                          this.$http.get('network/disableStaticNatByAfter.do', {
                             params: {
                               ipId: params.row.publicip,
                               VMId: params.row.computerid
@@ -394,7 +394,7 @@
                             if (response.status == 200 && response.data.status == 1
                             ) {
                               this.$Message.success(response.data.message)
-                              // this.setDataBases(response)
+                              this.listDatabase()
                             }
                             else if (response.status == 200 && response.data.status == 2) {
                               this.$message.info({
@@ -425,11 +425,6 @@
                           vpcId: params.row.vpcid
                         }
                       }).then(response => {
-                        this.loading = false
-                        // if (response.status == 200 && response.data.status == 1) {
-                        //   this.publicIPList = response.data.result
-                        //   this.showModal.bindIP = true
-                        // }
                         if (response.status == 200 && response.data.status == 1) {
                           this.publicIPList = response.data.result
                           if (this.publicIPList == ''){
@@ -833,19 +828,18 @@
       },
       // 绑定公网ip
       bindipSubmit(name) {
-        console.log(this.currentComputerId)
         this.$refs[name].validate((valid) => {
             if (valid) {
               this.showModal.bindIP = false
-              this.$http.get('network/enableStaticNat.do', {
+              this.$http.get('network/enableStaticNatByAfter.do', {
                 params: {
                   ipId: this.bindForm.publicIP,
                   VMId: this.currentComputerId
                 }
               }).then(response => {
-                this.loading = false
                 if (response.status == 200 && response.data.status == 1) {
                   this.$Message.success(response.data.message)
+                  this.listDatabase()
                 } else {
                   this.$message.info({
                     content: response.data.message
