@@ -827,12 +827,6 @@
       
     },
     methods: {
-      formatTime() {
-        var now = new Date()
-        // Date(item.deleteTime).format('yyyy年MM月dd日 hh:mm:ss')
-        console.log(new Date().format('yyyy-MM-dd hh:mm:ss'))
-        console.log(now)
-      },
       publicIPHint_ok() {
         this.$router.push('buy')
         sessionStorage.setItem('pane', 'Peip')
@@ -974,12 +968,11 @@
       },
       // 云数据库备份
       backupSubmit() {
-        console.log($store.state.zone.zoneid)
         this.showModal.backups = false
             this.$http.get('database/DBBackup.do', {
               params: {
                 DBId: this.currentDBId,
-                allDataBases: 0,
+                allDataBases: '0',
                 dbName: this.currentHostname
               }
               // 测试数据
@@ -989,7 +982,11 @@
               //   allDataBases: '0'
               // }
             }).then(response => {
-              console.log(response)
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+              } else {
+                this.$Message.error(response.data.message)
+              }
             })
       },
       // 云数据库镜像
