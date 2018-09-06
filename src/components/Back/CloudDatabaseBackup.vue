@@ -19,7 +19,7 @@
           <Tabs type="card" :animated="false" v-model="tabPane">
             <Tab-pane label="数据库备份" name="Snapshot">
               <Button type="primary" @click="showModal.newSnapshot = true">制作备份</Button>
-              <Button type="primary" @click="deleteBackup" style="margin-left: 10px">删除备份</Button>
+              <!-- <Button type="primary" @click="deleteBackup" style="margin-left: 10px">删除备份</Button> -->
               <Table style="margin-top:10px;" :columns="backupColumns" :data="backupData"></Table>
             </Tab-pane>
             <Tab-pane label="云数据库备份策略" name="Strategy">
@@ -56,34 +56,19 @@
         <Form :model="createSnapsForm" ref="createSnapsForm" :rules="createSnapsRule">
           <FormItem label="选择数据库" prop="database">
             <Select v-model="createSnapsForm.database">
-                <Option v-for="item in vmList" :value="item.computerid" :key="item.computerid">{{ item.computername }}
+                <Option v-for="item in databaseList" :value="item.computerid" :key="item.computerid">{{ item.computername }}
                  </Option>
             </Select>
+            <span style="color:#2A99F2;font-size:14px;position:absolute;top:4px;right:-110px;">
+              <span style="font-weight:800;font-size:20px;">+</span>
+              <span style="cursor:pointer;" @click="tobuy_database()">购买数据库</span>
+            </span>
           </FormItem>
-          <FormItem label="备份名称" prop="name">
+          <!-- <FormItem label="备份名称" prop="name">
             <Input v-model="createSnapsForm.name" placeholder="请输入备份名称"></Input>
-          </FormItem>
-          <div style="padding-top: 11px;margin-right: 100px;margin-bottom: 20px">
-            <div style="font-size: 14px;color:#495060;margin-bottom: 15px">是否保存内存信息
-              <Poptip trigger="hover" width="400">
-                <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
-                <div slot="content">
-                  <div>
-                    您可以选择在制作备份的时候保存您数据库的当前运行状态。当您选择“保存”之时，
-                    当前数据库的内存将被记录，在您对备份执行回滚操作的时候，也只能在开机状态下执行；当您选择“不保存”时
-                    此次备份将不记录数据库内存信息，您在通过该备份回滚的时候只能在关机状态下执行。
-                  </div>
-                </div>
-              </Poptip>
-            </div>
-            <RadioGroup v-model="createSnapsForm.radio">
-              <Radio label="1">保存</Radio>
-              <Radio label="0">不保存</Radio>
-            </RadioGroup>
-          </div>
+          </FormItem> -->
         </Form>
-        <p class="modal-text-hint-bottom">提示：云数据库备份为每个数据库提供<span>8个</span>备份额度，当某个数据库的备份数量达到额度上限，再创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点
-        </p>
+        <p class="mb20">备份时间为：{{new Date().format('yyyy-MM-dd hh:mm:ss')}}</p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="cancelSnaps('createSnapsForm')">取消</Button>
@@ -212,6 +197,7 @@
   export default {
     data() {
       return {
+        databaseList: [],
         tabPane: 'Snapshot',
         //备份表头
         backupColumns: [
@@ -221,27 +207,27 @@
             align: 'center'
           },
           {
-            key: "sss",
+            key: "dbName",
             title: "备份名称"
           },
+          // {
+          //   key: "ccc",
+          //   title: "状态"
+          // },
           {
-            key: "ccc",
-            title: "状态"
-          },
-          {
-            key: "bbb",
+            key: "computerName",
             title: "数据库名称"
           },
+          // {
+          //   key: "kkk",
+          //   title: "备份间隔"
+          // },
+          // {
+          //   key: "lll",
+          //   title: "是否保留内存状态"
+          // },
           {
-            key: "kkk",
-            title: "备份间隔"
-          },
-          {
-            key: "lll",
-            title: "是否保留内存状态"
-          },
-          {
-            key: "ooo",
+            key: "createTime",
             title: "创建时间"
           },
           {
@@ -538,9 +524,10 @@
     },
     beforeRouteEnter(to, from, next) {
       // 获取云数据库备份列表数据
-      let DbSnapshotResponse = axios.get('Snapshot/listDbSnapshot.do', {
+      let DbSnapshotResponse = axios.get('database/listDatebaseBackupFile.do', {
         params: {
-          zoneId: $store.state.zone.zoneid
+          zoneId: $store.state.zone.zoneid,
+          // companyId: $store.state.authInfo.companyid
         }
       })
       Promise.all([DbSnapshotResponse]).then((ResponseValue) => {
@@ -558,6 +545,10 @@
         if (response.status == 200 && response.data.status == 1) {
           this.backupData = response.data.result
         }
+      },
+      tobuy_database() {
+        this.$router.push('buy')
+        sessionStorage.setItem('pane', 'Pdatabase')
       },
       rollback_ok() {
         

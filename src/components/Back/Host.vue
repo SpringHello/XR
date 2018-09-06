@@ -631,7 +631,7 @@
       </p>
     </Modal>
     <!-- 主机加入负载均衡，没有负载均衡时提示 -->
-    <Modal v-model="showModal.balanceHint" :scrollable="true" :closable="false" :width="390">
+    <Modal v-model="showModal.noBalanceHint" :scrollable="true" :closable="false" :width="390">
       <div class="modal-content-s">
         <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
@@ -640,8 +640,36 @@
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.balanceHint = false">取消</Button>
+        <Button @click="showModal.noBalanceHint = false">取消</Button>
         <Button type="primary" @click="$router.push('balance')">创建负载均衡</Button>
+      </p>
+    </Modal>
+    <!-- 主机加入负载均衡，所属为普通网络提示 -->
+    <Modal v-model="showModal.balanceNetHint" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24">您选择的主机的子网的网络服务方案为普通网络，不支持负载均衡。若您需要将该主机加入负载均衡可将该主机移入子网服务方案为：公网/私网负载均衡网络的子网之后在进行加入负载均衡操作</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.balanceNetHint = false">取消</Button>
+        <Button type="primary" @click="toVpc('vpcManage',currentVpcid)">调整子网</Button>
+      </p>
+    </Modal>
+    <!-- 主机已加入负载均衡提示 -->
+    <Modal v-model="showModal.hasBalanceHint" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24">已加入负载均衡提示：该主机已加入负载均衡：{{balanceName}}，若您需要修改主机所属负载均衡请先将主机移出该负载均衡在进行操作</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.hasBalanceHint = false">取消</Button>
+        <Button type="primary" @click="$router.push('balance')">移出主机</Button>
       </p>
     </Modal>
   </div>
@@ -676,6 +704,7 @@
         sessionStorage.removeItem('pane')
       }
       return {
+        balanceName: '',
         originCost: '--',
         cost: '--',
         listLoadBalanceRole: [],
@@ -699,7 +728,9 @@
           linkPassword: false,
           ratesChange: false,
           publicIPHint: false,
-          balanceHint: false
+          noBalanceHint: false,
+          balanceNetHint: false,
+          hasBalanceHint: false
         },
         ratesChangeType: '',
         ratesChangeTime: '',
@@ -798,6 +829,10 @@
       }, 5 * 1000)
     },
     methods: {
+      toVpc(url, session) {
+        sessionStorage.setItem('vpcId', session)
+        this.$router.push(url)
+      },
       publicIPHint_ok() {
         this.$router.push('buy')
         sessionStorage.setItem('pane', 'Peip')
@@ -851,30 +886,54 @@
       //加入负载均衡
       joinBalance() {
         if (this.checkSelect()) {
-          if (this.currentHost[0].loadbalance) {
-            this.$Message.warning('已绑定主机无法再次绑定!')
-          } else {
-            // 获取负载均衡规则
-            axios.get('loadbalance/listLoadBalanceRoleVM.do', {
+          console.log(this.currentHost[0])
+          console.log(this.currentHost[0].vpcid)
+          //  console.log(this.currentHost[0].zoneid)
+          //  console.log(this.currentHost[0].computerid)
+          // 普通网络
+            // this.currentVpcid = this.currentHost[0].vpcid
+            // information/isloadbananceRoleAndServiceSchemeMatching.do    VMIds主机id   zoneId域id
+            // this.$http.get('information/isloadbananceRoleAndServiceSchemeMatching.do', {
+            //   params: {
+            //     VMIds: this.currentHost[0].computerid,
+            //   }
+            // })
+           axios.get('information/listVMByComputerId.do', {
               params: {
-                zoneId: $store.state.zone.zoneid,
-                VMId: this.currentHost[0].computerid
+                VMId: this.currentHost[0].computerid,
+                zoneId: this.currentHost[0].zoneid
               }
-            }).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                var publicLoadbalance = response.data.result.publicLoadbalance
-                publicLoadbalance.forEach(item => {
-                  item.type = '#public'
-                })
-                this.listLoadBalanceRole = publicLoadbalance.concat(response.data.result.internalLoadbalance)
-                if (this.listLoadBalanceRole == ''){
-                  this.showModal.balanceHint = true
-                } else {
-                  this.showModal.balance = true
+            }).then((response) => {
+                if (response.status == 200 && response.data.status == 1) {
+                  if (response.data.result.loadbalance != '') {
+                    this.showModal.hasBalanceHint = true
+                    this.balanceName = response.data.result.loadbalance[0]
+                    // sessionStorage.setItem('vpcId', item.vpcid)
+                    // this.$router.push('/ruicloud/vpcManage')
+                  } else {
+                    // 获取负载均衡规则
+                    axios.get('loadbalance/listLoadBalanceRoleVM.do', {
+                      params: {
+                        zoneId: $store.state.zone.zoneid,
+                        VMId: this.currentHost[0].computerid
+                      }
+                    }).then(response => {
+                      if (response.status == 200 && response.data.status == 1) {
+                        var publicLoadbalance = response.data.result.publicLoadbalance
+                        publicLoadbalance.forEach(item => {
+                          item.type = '#public'
+                        })
+                        this.listLoadBalanceRole = publicLoadbalance.concat(response.data.result.internalLoadbalance)
+                        if (this.listLoadBalanceRole == ''){
+                          this.showModal.noBalanceHint = true
+                        } else {
+                          this.showModal.balance = true
+                        }
+                      }
+                    })
+                  }
                 }
-              }
-            })
-          }
+              })
         }
       },
       // 确定加入负载均衡

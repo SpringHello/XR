@@ -50,7 +50,7 @@
         <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
           <strong>重启数据库</strong>
-          <p class="lh24">确认是否重启数据库</p>
+          <p class="lh24">您正在重启数据库，请谨慎操作</p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
@@ -86,7 +86,8 @@
       </p>
       <div class="universal-modal-content-flex">
         <p class="mb20">您正为<span class="bluetext">{{currentHostname}}</span>创建备份</p>
-        <Form ref="backupsForm" :model="backupsForm" :rules="backupsFormRule">
+        <p class="mb20">备份时间为：{{new Date().format('yyyy-MM-dd hh:mm:ss')}}</p>
+        <!-- <Form ref="backupsForm" :model="backupsForm" :rules="backupsFormRule">
           <FormItem label="备份名称" prop="name">
             <Input v-model="backupsForm.name" placeholder="请输入2-4094范围内任意数字" :maxlength="15"></Input>
           </FormItem>
@@ -108,13 +109,13 @@
               <Radio label="0">不保存</Radio>
             </RadioGroup>
           </div>
-        </Form>
-        <p class="modal-text-hint-bottom">提示：云主机快照为每块磁盘提供<span>8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点
+        </Form> -->
+        <p class="modal-text-hint-bottom">提示：云主机备份为每块磁盘提供<span>8个</span>备份额度，当某个主机的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点
         </p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.backups=false">取消</Button>
-        <Button type="primary" @click="backupSubmit('backupsForm')">创建备份</Button>
+        <Button type="primary" @click="backupSubmit()">创建备份</Button>
       </div>
     </Modal>
     <!-- 云数据库续费弹窗 -->
@@ -250,6 +251,7 @@
         }
       }
       return {
+        currentDBId: '',
         templateid: '',
         databaseColumns: [
           {
@@ -379,22 +381,30 @@
                   },
                   on: {
                     click: () => {
-                      this.$http.get('network/disableStaticNat.do', {
-                        params: {
-                          ipId: params.row.publicip,
-                          VMId: params.row.computerid
-                        }
-                      }).then(response => {
-                        if (response.status == 200 && response.data.status == 1
-                        ) {
-                          this.$Message.success(response.data.message)
-                        }
-                        else if (response.status == 200 && response.data.status == 2) {
-                          this.$message.info({
-                            content: response.data.message
+                      this.$message.confirm({
+                        title: '提示',
+                        content: `您正在为${params.row.computername}解绑公网IP，解绑之后您将不能通过公网访问该数据库，确认解绑？`,
+                        onOk: () => {
+                          this.$http.get('network/disableStaticNat.do', {
+                            params: {
+                              ipId: params.row.publicip,
+                              VMId: params.row.computerid
+                            }
+                          }).then(response => {
+                            if (response.status == 200 && response.data.status == 1
+                            ) {
+                              this.$Message.success(response.data.message)
+                              // this.setDataBases(response)
+                            }
+                            else if (response.status == 200 && response.data.status == 2) {
+                              this.$message.info({
+                                content: response.data.message
+                              })
+                            }
                           })
                         }
-                      })
+                      }
+                      )
                     }
                   }
                 }, ' × 解绑')])
@@ -468,11 +478,13 @@
             title: '操作',
             render: (h, params) => {
               if (params.row.status == 1) {
+                var isShow = params.row.caseType == 3 ? 'none' : 'inline-block'
                 return h('div', {}, [h('span', {
                   style: {
                     color: '#2A99F2',
                     marginRight: '5px',
                     cursor: 'pointer',
+                    display: isShow
                   },
                   on: {
                     click: () => {
@@ -513,14 +525,27 @@
                   attrs: {
                     href: 'javascript:void(0)'
                   }
-                }, '更多操作'), h('DropdownMenu', {
+                }, [
+                  h('span', {
+                    style: {
+                      marginRight: '5px'
+                    }
+                  }, '更多操作'),
+                   h('Icon', {
+                    props: {
+                      type: 'ios-arrow-down'
+                    }
+                  })
+                ]), h('DropdownMenu', {
                   slot: 'list'
                 }, [h('DropdownItem', {
                  nativeOn: {
                  click: () => {
-                 this.backupsForm.name = ''
-                 this.backupsForm.memory = 1
-                 this.showModal.backups = true
+                //  this.backupsForm.name = ''
+                //  this.backupsForm.memory = 1
+                  this.currentDBId = params.row.computerid
+                  this.currentHostname = params.row.computername
+                  this.showModal.backups = true
                  }
                  }
                  }, '数据库备份'),
@@ -629,13 +654,82 @@
                       }
                     }
                   }, '关闭数据库')])
+                ]),
+                h('div', [h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    marginRight: '5px',
+                  }
+                }, '日志记录'),
+                  h('i-Switch', {
+                    props: {
+                      value: true,
+                      size: 'small'
+                    },
+                    style: {
+                      verticalAlign: 'text-top'
+                    },
+                    on: {
+                      input: (event) => {
+                        // 日志开启时调用
+                        if (event) {
+                          this.$http('database/openDatabaseLog.do', {
+                            params: {
+                              DBId: params.row.computerid
+                            }
+                          }).then(response => {
+                            if (response.status == 200 && response.data.status == 1){
+                              this.$Message.success(response.data.message)
+                            } else {
+                              this.$Message.error(response.data.message)
+                            }
+                          })
+                        } else { // 关闭日志时调用
+                          this.$http('database/closeDataBaseLog.do', {
+                            params: {
+                              DBId: params.row.computerid
+                            }
+                          }).then(response => {
+                            if (response.status == 200 && response.data.status == 1){
+                              this.$Message.success(response.data.message)
+                            } else {
+                              this.$Message.error(response.data.message)
+                            }
+                          })
+                        }
+                      }
+                    }
+                  })
                 ])])
               } else {
+                var isShow1 = params.row.caseType == 3 ? 'none' : 'inline-block'
                 return h('div', {}, [h('span', {
                   style: {
                     marginRight: '5px',
+                    cursor: 'not-allowed',
+                    display: isShow1
                   },
-                }, '删除'), h('span', {}, '更多操作')])
+                }, '删除'), h('span', {
+                  style: {
+                    cursor: 'not-allowed'
+                  }
+                }, '更多操作'), h('div', [h('span', {
+                  style: {
+                    marginRight: '5px',
+                    cursor: 'not-allowed'
+                  }
+                }, '日志记录'),
+                  h('i-Switch', {
+                    props: {
+                      value: false,
+                      size: 'small',
+                      disabled: true
+                    },
+                    style: {
+                      verticalAlign: 'text-top'
+                    }
+                  })
+                ])])
               }
             }
           },
@@ -650,7 +744,7 @@
           restart: false,
           dilatation: false,
           bindIP: false,
-          publicIPHint: false
+          publicIPHint: false,
         },
         portModifyForm: {
           currentPorts: '',
@@ -672,24 +766,24 @@
         publicIPList: [],
         currentComputerId: '',
         currentHostname: '',
-        backupsForm: {
-          name: '',
-          memory: '1'
-        },
-        backupsFormRule: {
-          name: [
-            {required: true, validator: validaRegisteredName, trigger: 'blur'}
-          ]
-        },
-        mirrorForm: {
-          name: '',
-          description: ''
-        },
-        mirrorFormRule: {
-          name: [
-            {required: true, validator: validaRegisteredName, trigger: 'blur'}
-          ],
-        },
+        // backupsForm: {
+        //   name: '',
+        //   memory: '1'
+        // },
+        // backupsFormRule: {
+        //   name: [
+        //     {required: true, validator: validaRegisteredName, trigger: 'blur'}
+        //   ]
+        // },
+        // mirrorForm: {
+        //   name: '',
+        //   description: ''
+        // },
+        // mirrorFormRule: {
+        //   name: [
+        //     {required: true, validator: validaRegisteredName, trigger: 'blur'}
+        //   ],
+        // },
         originCost: '--',
         cost: '--',
         dilatationCost: '--',
@@ -730,8 +824,15 @@
       })
     },
     created() {
+      
     },
     methods: {
+      formatTime() {
+        var now = new Date()
+        // Date(item.deleteTime).format('yyyy年MM月dd日 hh:mm:ss')
+        console.log(new Date().format('yyyy-MM-dd hh:mm:ss'))
+        console.log(now)
+      },
       publicIPHint_ok() {
         this.$router.push('buy')
         sessionStorage.setItem('pane', 'Peip')
@@ -872,21 +973,24 @@
         })
       },
       // 云数据库备份
-      backupSubmit(name) {
-        this.$refs[name].validate((valid) => {
-          if (valid) {
-            this.showModal.backups = false
-            this.$http.get('Snapshot/createDbSnapshot.do', {
+      backupSubmit() {
+        console.log($store.state.zone.zoneid)
+        this.showModal.backups = false
+            this.$http.get('database/DBBackup.do', {
               params: {
-                VMId: this.current,//（数据库的uuid）,
-                snapshotName: this.backupsForm.name,//（备份名称）,
-                memoryStatus: this.backupsForm.memory//（内存状态）
+                DBId: this.currentDBId,
+                allDataBases: 0,
+                dbName: this.currentHostname
               }
+              // 测试数据
+              // params: {
+              //   DBId: '5efe9972-8032-4433-a230-6b75a405af87',
+              //   dbName: 'mysql',
+              //   allDataBases: '0'
+              // }
             }).then(response => {
               console.log(response)
             })
-          }
-        })
       },
       // 云数据库镜像
       mirrorSubmit(name) {
