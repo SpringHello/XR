@@ -105,6 +105,7 @@ const Renew = () => import('@/components/Back/Renew')
 const New = () => import('@/components/Back/New')
 const Host = () => import('@/components/Back/Host')
 const GPU = () => import('@/components/Back/GPU')
+const GpuList = () => import('@/components/Back/GpuList')
 const Mirror = () => import('@/components/Back/Mirror')
 const SSHSecretKey = () => import('@/components/Back/SSHSecretKey')
 const Snapshot = () => import('@/components/Back/Snapshot')
@@ -134,6 +135,8 @@ const NATManage = () => import('@/components/Back/NATManage')
 const Recycle = () => import('@/components/Back/Recycle')
 const Wxpay = () => import('@/components/Back/Wxpay')
 const WorkOrder = () => import('@/components/Back/WorkOrder')
+const gpuManage = () => import('@/components/Back/gpuManage')
+const gpuUpLevel = () => import('@/components/Back/gpuUpLevel')
 
 const Link = () =>import('@/components/Link')
 const BRecords = () =>import('@/components/Back/Records')
@@ -347,7 +350,10 @@ var router = new Router({
         {path: 'cloudDataManage', name: 'cloudDataManage', component: CloudDataManage},
         {path: 'cloudDatabaseBackup', name: 'cloudDatabaseBackup', component: CloudDatabaseBackup},
         {path: 'cloudDatabase', name: 'cloudDatabase', component: CloudDatabase},
-        {path: 'dataBaseUpgrade', name: 'dataBaseUpgrade', component: dataBaseUpgrade}
+        {path: 'dataBaseUpgrade', name: 'dataBaseUpgrade', component: dataBaseUpgrade},
+        {path: 'GpuList',name:'GpuList',component:GpuList},
+        {path: 'gpuManage',name:'gpuManage',component:gpuManage},
+        {path: 'gpuUpLevel',name:'gpuUpLevel',component:gpuUpLevel}
       ]
     },
     {
