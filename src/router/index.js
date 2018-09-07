@@ -135,7 +135,7 @@ const NATManage = () => import('@/components/Back/NATManage')
 const Recycle = () => import('@/components/Back/Recycle')
 const Wxpay = () => import('@/components/Back/Wxpay')
 const WorkOrder = () => import('@/components/Back/WorkOrder')
-// const gpuManage = () => import('@/components/Back/gpuManage')
+const gpuManage = () => import('@/components/Back/gpuManage')
 const gpuUpLevel = () => import('@/components/Back/gpuUpLevel')
 
 const Link = () =>import('@/components/Link')
@@ -352,7 +352,7 @@ var router = new Router({
         {path: 'cloudDatabase', name: 'cloudDatabase', component: CloudDatabase},
         {path: 'dataBaseUpgrade', name: 'dataBaseUpgrade', component: dataBaseUpgrade},
         {path: 'GpuList',name:'GpuList',component:GpuList},
-        // {path: 'gpuManage',name:'gpuManage',component:gpuManage},
+        {path: 'gpuManage',name:'gpuManage',component:gpuManage},
         {path: 'gpuUpLevel',name:'gpuUpLevel',component:gpuUpLevel}
       ]
     },
