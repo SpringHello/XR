@@ -426,6 +426,9 @@
               diskType,
               countOrder,
             }
+            if (prod.VMName.trim() != '') {
+              params.VMName = prod.VMName
+            }
             PromiseList.push(axios.get('database/createDB.do', {params}))
           }
         }

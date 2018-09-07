@@ -62,7 +62,7 @@
                       </div>
                       <Dropdown-menu slot="list">
                         <Dropdown-item v-for="system in item.systemList" :key="system.ostypeid"
-                                       :name="`${system.dbname}#${system.systemtemplateid}#${index}#${system.dbloginname}`"
+                                       :name="`${system.dbname}#${system.systemtemplateid}#${index}#${system.dbloginname}#${system.dbport}`"
                                        style="white-space: pre-wrap;display:block;">
                           <span>{{system.dbname}}</span>
                         </Dropdown-item>
@@ -132,8 +132,11 @@
               </div>
             </div>
             <p style="font-size: 14px;color: #999999;line-height: 20px;margin: 10px 0 10px 90px;">
-              如需使用其他虚拟私有云（VPC），请选择已有虚拟私有云（VPC），也可以自行到<span style="color: rgb(42, 153, 242);cursor: pointer"
-                                                           @click="$router.push('vpc')">控制台新建。</span></p>
+              如需使用其他虚拟私有云（VPC），请选择已有虚拟私有云（VPC），也可以自行到
+              <router-link style="color: rgb(42, 153, 242);cursor: pointer"
+                           to="/ruicloud/vpc">控制台新建。
+              </router-link>
+            </p>
             <!--网卡选择-->
             <div class="item-wrapper">
               <div style="display: flex">
@@ -195,10 +198,12 @@
                   </p>
                 </div>
               </div>
-              <p
-                style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-top: 10px;margin-left: 90px;line-height: 1.5;">
-                默认防火墙仅打开22、3389、443、80端口，您可以在创建之后再控制台自定义防火墙规则。<span style="color: #377DFF;cursor: pointer"
-                                                                    @click="$router.push('firewall')">如何修改</span>
+              <p v-if="port"
+                 style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(153,153,153,1);margin-top: 10px;margin-left: 90px;line-height: 1.5;">
+                默认防火墙仅打开{{port}}端口，您可以在创建之后再控制台自定义防火墙规则。
+                <router-link style="color: #377DFF;cursor: pointer"
+                             to="/ruicloud/firewall">如何修改
+                </router-link>
               </p>
             </div>
             <!--公网IP价格-->
@@ -284,6 +289,14 @@
         <!--登录设置-->
         <div style="margin-top: 20px;border-bottom: 1px solid #D9D9D9;padding-bottom: 20px">
           <h2>登录设置</h2>
+          <div class="item-wrapper">
+            <div style="display: flex">
+              <div>
+                <p class="item-title">数据库名称</p>
+              </div>
+              <Input v-model="dbName" placeholder="请输入数据库名称" style="width: 300px"></Input>
+            </div>
+          </div>
           <div class="item-wrapper">
             <div style="display: flex">
               <div>
@@ -785,7 +798,11 @@
         // 快速创建优惠价格
         fastCoupon: 0,
         // 数据库帐号
-        account: ''
+        account: '',
+        // 开放端口
+        port: '',
+        // 数据库名称
+        dbName: ''
 
       }
     },
@@ -821,7 +838,10 @@
           systemName: arg[0],
           systemId: arg[1]
         }
+        //登录名
         this.account = arg[3]
+        //开放端口
+        this.port = arg[4]
         this.publicList[arg[2]].selectSystem = arg[0]
       },
       // 切换核心数
@@ -969,6 +989,7 @@
         prod.vpc = this.vpc
         prod.network = this.network
         prod.cost = this.totalDataCost
+        prod.VMName = this.dbName
         this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
         window.scrollTo(0, 170)
       },
@@ -1007,7 +1028,11 @@
           rootDiskType: 'ssd',
           vpcId: this.vpc,
           diskSize,
-          diskType
+          diskType,
+          password: this.password
+        }
+        if (this.dbName.trim() != '') {
+          params.VMName = this.dbName.trim()
         }
         axios.get('database/createDB.do', {params}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -1063,6 +1088,7 @@
           // 查询自定义配置价格
           this.queryCustomVM()
           this.queryDiskPrice()
+          this.queryIPPrice()
         },
         deep: true
       },
