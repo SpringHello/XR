@@ -203,6 +203,17 @@
               <!--</div>-->
             <!--</div>-->
           </TabPane>
+          <TabPane label="图片处理">
+            <div class="img_font">
+              <p>图片处理域名规则<span style="color: #2A99F2;font-size: 12px;">查看规则详情</span></p>
+              <span>域名/sample.jpg?x-oss-process=style/stylename</span><span style="margin-left: 40px;">自定义域名规则：域名/sample.jpg?x-oss-process=style/stylename</span>
+            </div>
+            <div style="margin-bottom: 10px;">
+              <Button type="primary" @click="$router.push({path:'ObjectPicture'})">新建图片样式</Button>
+              <Button type="primary">原图保护设置</Button>
+            </div>
+            <Table :cloumns="imgList" :data="imgData"></Table>
+          </TabPane>
         </Tabs>
       </div>
     </div>
@@ -834,15 +845,6 @@
         //自定义权限表格加载
         jurisdLoading:false,
         isClass:true,
-        //数字渐变动画
-        // options: {
-        //   useEasing: true,
-        //   useGrouping: true,
-        //   separator: ',',
-        //   decimal: '.',
-        //   prefix: '',
-        //   suffix: ''
-        // },
         //查看外链
         fliesTerm:'',
         //新建文件夹table加载动画
@@ -1522,7 +1524,26 @@
         //切换权限按钮loading
         aclLoading:false,
         originList:[],
-        exposeList:[]
+        exposeList:[],
+        //图片处理表格
+        imgList:[
+          {
+            title:'样式名称'
+          },
+          {
+            title:'最后修改时间'
+          },
+          {
+            title:'操作',
+            render:(h,parmas)=>{
+              return h('div',[
+                h('span',{style:{cursor:'pointer',color:'#2A99F2'}},'修改'),
+                h('span',{style:{cursor:'pointer',color:'#2A99F2'}},'删除')
+              ])
+            }
+          }
+        ],
+        imgData:[]
       }
     },
     components:{
@@ -2028,7 +2049,6 @@
         this.$Message.info('暂无操作');
         this.crossDomain = {};
       },
-      //cors收起
       //切换tab请求相应的接口
       checkTab(name){
         if(name == 'objects'){
@@ -2354,6 +2374,17 @@
       },
       toopHide(value){
         this.isToolHide = value;
+      },
+
+      //获取图片列表
+      getImgList(){
+        this.$http.post('picture/listStyle.do',{
+        }).then(res => {
+          if(res.status == 200 && res.data.status == '1'){
+            console.log(res);
+
+          }
+        })
       }
     },
     created(){
@@ -2370,6 +2401,7 @@
       this.getOverview();
       this.dayClick(0);
       this.requestClick(0);
+      this.getImgList();
       this.createtime = sessionStorage.getItem('createtime');
       this.kjName = sessionStorage.getItem('bucketName');
       this.kjaccessrights = sessionStorage.getItem('accessr') == 1 ? '私有读写' : sessionStorage.getItem('accessr') == 2 ? '公有读私有写' : sessionStorage.getItem('accessr') == 3 ? '公有读写' : '自定义权限';
@@ -2907,5 +2939,17 @@
     border-width: 5px 5px 5px 0;
     border-right-color: rgba(70, 76, 91, 0.9);
   }
-
+  .img_font{
+    width: 100%;
+    height: 68px;
+    padding: 15px 10px;
+    border: 1px solid #E9E9E9;
+    border-top: none;
+    box-shadow:0 0 0 0 rgba(255,255,255,0);
+    margin-bottom: 20px;
+    p,span{
+      color: #666666;
+      font-size: 14px;
+    }
+  }
 </style>

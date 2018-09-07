@@ -10,7 +10,7 @@ import Back from '@/Back'
 // import Host from '@/components/Back/Host'
 const ObjectStorage = () => import('@/components/Back/ObjectStorage')
 const SpaceDetails = () => import('@/components/Back/SpaceDetails')
-
+const ObjectPicture = () => import('@/components/Back/ObjectPicture')
 Vue.use(Router)
 
 var router = new Router({
@@ -24,7 +24,8 @@ var router = new Router({
       // meta: {requiresAuth: true},
       children: [
         {path:'objectStorage',name:'objectStorage',component:ObjectStorage},
-        {path: 'SpaceDetails',name:'SpaceDetails',component:SpaceDetails}
+        {path: 'SpaceDetails',name:'SpaceDetails',component:SpaceDetails},
+        {path: 'ObjectPicture',name:'ObjectPicture',component:ObjectPicture}
       ]
     },
   ]

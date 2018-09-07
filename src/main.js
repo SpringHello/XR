@@ -23,11 +23,10 @@ import 'echarts/lib/component/title'
 
 
 import md5 from 'md5'
-
 //Vue.prototype.$message = message
 Vue.config.productionTip = false
 
-//axios.defaults.baseURL = '/ruicloud'
+// axios.defaults.baseURL = '/ruicloud'
 
 //axios.defaults.baseURL = 'http://192.168.3.124:8082/ruicloud'
 //axios.defaults.baseURL = 'http://192.168.3.204:8081/ruicloud'
@@ -38,11 +37,11 @@ Vue.config.productionTip = false
 //  axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
 
 
-// axios.defaults.baseURL = 'http://192.168.3.231:8086/ruirados/'
-// axios.defaults.baseURL = 'http://192.168.3.237:8080/ruirados/'
+axios.defaults.baseURL = 'http://192.168.3.234:8086/ruirados/'
+// axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
 // axios.defaults.baseURL = 'http://zhouyi.xrcloud.net:8083/ruirados/'
 //axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
-// axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true
 // window.eventBus = new Vue();
 
 

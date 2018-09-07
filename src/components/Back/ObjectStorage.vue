@@ -130,6 +130,7 @@
         <Button type="primary" @click="bucketClick" :loading="createLoading">确定新建</Button>
       </div>
     </Modal>
+
   </div>
 </template>
 
@@ -323,6 +324,7 @@
                         sessionStorage.setItem('bucketId', parasm.row.id);
                         sessionStorage.setItem('accessr',parasm.row.accessrights);
                         sessionStorage.setItem('createtime', parasm.row.createtime);
+                        sessionStorage.setItem('companyId',parasm.row.companyid)
                         this.$router.push({path: "SpaceDetails"});
                       }
                     }
@@ -436,6 +438,7 @@
           }
         })
       },
+
       //请求次数点击切换数据
       requestClick(val){
         this.requestIndex = val;
@@ -452,6 +455,7 @@
           }
         })
       },
+
       //转换base64格式
       checkImg(code){
         var parts = code.split(';base64,');
@@ -464,6 +468,7 @@
         }
         return new Blob([uInt8Array], {type: contentType});
       },
+
       //下载统计图
       dowloda(name){
         var img = new Image();
@@ -483,6 +488,7 @@
         a.click();
         document.body.removeChild(a);
       },
+
       //转换字节单位
       changeByte(val){
         let byte = [];
@@ -504,25 +510,21 @@
         })
         return byte;
       },
-      //表格最大值
-      maxs(val){
-       val.sort((num1,num2) =>{
-         return num1 - num2 < 0
-       })
-      return val[0] / 1073741824 > 1 ? (val[0] / 1073741824 ).toFixed(0)+'GB' : val[0] / 1048576 > 1 ? ((val[0] / 1048576).toFixed(0))+'MB'  : ((val[0] / 1024).toFixed(0))+'KB';
-      },
+
       //下载流量切换统计图
       chartClick(val){
         this.chartIndex = val;
         this.rwPolar.series[0].type = this.chartList[val].type;
         this.rwPolar.xAxis.boundaryGap = this.chartList[val].boundaryGap;
       },
+
       //请求次数切换统计图
       chartTwoClick(val){
         this.chartTwoIndex = val;
         this.rwNumber.series[0].type = this.chartTwotList[val].type;
         this.rwNumber.xAxis.boundaryGap = this.chartTwotList[val].boundaryGap;
       },
+
       //获取存储空间容量
       getAllsize(){
         this.$http.post('object/getAllSize.do', {}).then(res => {
@@ -538,6 +540,7 @@
           this.size = "0KB"
         })
       },
+
       //概览统计情况
       getOverview(){
         this.$http.post('monitor/allMonitorTimes.do',{
@@ -620,7 +623,6 @@
       tabpanClick(name){
         this.name = name;
       },
-     //新建空间方法
       //获取空间列表
       getBuckets() {
         this.buckLoading = true;
@@ -693,7 +695,6 @@
     mounted(){
       this.getAllsize();
       this.getOverview();
-      // this.buy();
       this.getTime();
       this.showUserAcessAll();
       this.getBuckets();
