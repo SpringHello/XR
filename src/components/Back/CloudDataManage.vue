@@ -13,52 +13,52 @@
         <div class="info">
           <header>
             <!-- <span class="arrowdown-icon"></span> -->
-            <span style="line-height: 32px;">{{this.$route.query.computername}}</span>
+            <span style="line-height: 32px;">{{databaseInfo.computername}}</span>
             <div>
               <Button class="btn" @click="$router.go(-1)" style="margin-right: 10px;">返回</Button>
             </div>
           </header>
-          <div class="pan" v-if="computerInfo!=null" style="width:28%">
+          <div class="pan" v-if="databaseInfo!=null" style="width:28%">
             <div>
-              <i v-if="computerInfo.cpuNum">{{computerInfo.cpuNum}}CPU , </i>
-              <i v-if="computerInfo.memory">{{computerInfo.memory}}G内存 , </i>
-              <i v-if="computerInfo.bandwith">{{computerInfo.bandwith}}M宽带 </i>
-              <i v-if="computerInfo.zoneName"> | {{computerInfo.zoneName}}</i>
+              <i >{{databaseInfo.serviceoffername}}CPU , </i>
+              <i v-if="databaseInfo.memory">{{databaseInfo.memory}}G内存 , </i>
+              <i v-if="databaseInfo.bandwith">{{databaseInfo.bandwith}}M宽带 </i>
+              <i v-if="databaseInfo.zoneName"> | {{databaseInfo.zoneName}}</i>
             </div>
-            <div>镜像系统：{{computerInfo.template}}</div>
-            <div>到期时间／有效期：{{computerInfo.endTime}}</div>
-            <div>内网地址：{{computerInfo.privateIp}}</div>
+            <div>镜像系统：{{databaseInfo.templatename}}</div>
+            <div>到期时间／有效期：{{databaseInfo.endtime}}</div>
+            <div>内网地址：{{databaseInfo.privateip}}</div>
             <div>登录密码：
               <span :class="[isActive ? 'send' : 'nosend']" @click="lookPassword()">{{codePlaceholder}}</span>
             </div>
           </div>
-          <div class="pan" v-if="computerInfo!=null" style="width: 20%">
-            <div>所属VPC：<span class="bluetext">{{computerInfo.vpc}}</span></div>
-            <div>绑定公网：<span class="bluetext">{{computerInfo.publicIp}}</span></div>
+          <div class="pan" v-if="databaseInfo!=null" style="width: 20%">
+            <div>所属VPC：<span class="bluetext">{{databaseInfo.vpcname}}</span></div>
+            <div>绑定公网：<span class="bluetext">{{databaseInfo.publicip}}</span></div>
             <div>所属负载均衡：
-              <Tooltip placement="top-start" v-if="computerInfo.loadbalance.length>0">
-                <span class="bluetext one-row-text" style="width:100px;">{{computerInfo.loadbalance.join('|')}}</span>
-                <div slot="content" v-for="(item,index) in computerInfo.loadbalance" :key="index">
+              <Tooltip placement="top-start" v-if="databaseInfo.loadbalance">
+                <span class="bluetext one-row-text" style="width:100px;">{{databaseInfo.loadbalance}}</span>
+                <div slot="content" v-for="(item,index) in databaseInfo.loadbalance" :key="index">
                   <p>{{item}}</p>
                 </div>
               </Tooltip>
-              <span class="bluetext" style="width:0px;" v-else>{{computerInfo.loadbalance.join('|')}}</span>
+              <span class="bluetext" style="width:0px;" v-else>{{databaseInfo.loadbalance}}</span>
             </div>
             <div>挂载磁盘：
-              <Tooltip placement="top-start" v-if="computerInfo.disk.length>0">
-                <span class="bluetext one-row-text" style="width:120px;">{{computerInfo.disk.join('|')}}</span>
-                <div slot="content" v-for="(item,index) in computerInfo.disk" :key="index">
+              <Tooltip placement="top-start" v-if="databaseInfo.disk">
+                <span class="bluetext one-row-text" style="width:120px;">{{databaseInfo.disk}}</span>
+                <div slot="content" v-for="(item,index) in databaseInfo.disk" :key="index">
                   <p>{{item}}</p>
                 </div>
               </Tooltip>
-              <span class="bluetext" style="width:0px;" v-else>{{computerInfo.disk.join('|')}}</span>
+              <span class="bluetext" style="width:0px;" v-else>{{databaseInfo.disk}}</span>
             </div>
-            <div>状态：<span class="bluetext">{{computerInfo.computerStatus ? "开机" : "关机"}}</span></div>
+            <div>状态：<span class="bluetext">{{databaseInfo.dbStatus ? "开机" : "关机"}}</span></div>
           </div>
-          <div class="pan" v-if="computerInfo!=null" style="width: 20%">
-            <div>计费类型：{{computerInfo.case_type == 1 ? '包年' : computerInfo.case_type == 2 ? '包月' : '实时'}}</div>
-            <div>创建于：{{computerInfo.createTime}}</div>
-            <div>自动续费：<span class="bluetext">{{computerInfo.isAutoRenw ? '开' : '关'}}</span></div>
+          <div class="pan" v-if="databaseInfo!=null" style="width: 20%">
+            <div>计费类型：{{databaseInfo.caseType == 1 ? '包年' : databaseInfo.caseType == 2 ? '包月' : '实时'}}</div>
+            <div>创建于：{{databaseInfo.createtime}}</div>
+            <div>自动续费：<span class="bluetext">{{databaseInfo.isautorenew ? '开' : '关'}}</span></div>
           </div>
         </div>
         <div class="charts">
@@ -397,7 +397,7 @@ export default {
       memoryTime: this.getCurrentDate(),
       IPTime: this.getCurrentDate(),
       showPassword: false,
-      computerInfo: null,
+      databaseInfo: null,
       reloadhintForm: {
         input: ''
       },
@@ -740,6 +740,10 @@ export default {
     }
   },
   created () {
+    if (sessionStorage.getItem('databaseInfo')) {
+        this.databaseInfo = JSON.parse(sessionStorage.getItem('databaseInfo'))
+      }
+    console.log(this.databaseInfo)
   },
   methods: {
     inter () {
@@ -830,7 +834,7 @@ export default {
           this.lookPasswordForm.isSmsAlarmSec = this.lookPasswordForm.issmsalarmSec == false ? 0 : 1
           this.lookPasswordForm.isEmailAlarmSec = this.lookPasswordForm.isemailalarmSec == false ? 0 : 1
           this.$http.post('log/sendVMPassword.do', {
-            VMId: this.computerInfo.computerId,
+            VMId: this.databaseInfo.computerId,
             password: this.lookPasswordForm.input,
             letter: this.lookPasswordForm.isLetterSec,
             meail: this.lookPasswordForm.isEmailAlarmSec,
@@ -878,7 +882,7 @@ export default {
       this.reloadhintForm.input = ''
       this.reloadButton = '正在重装...'
       this.$http.post('information/restoreVirtualMachine.do', {
-        VMId: this.computerInfo.computerId,
+        VMId: this.databaseInfo.computerId,
         templateId: this.reloadForm.system,
         adminPassword: this.reloadForm.password
       }).then(response => {
@@ -1078,7 +1082,7 @@ export default {
           this.resetPasswordForm.buttonMessage = '正在重置中...'
           this.$http.get('information/resetPasswordForVirtualMachine.do', {
             params: {
-              VMId: this.computerInfo.computerId,
+              VMId: this.databaseInfo.computerId,
               password: this.resetPasswordForm.newPassword,
               oldPassword: this.resetPasswordForm.oldPassword
             }

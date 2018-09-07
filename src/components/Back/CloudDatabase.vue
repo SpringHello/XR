@@ -265,18 +265,8 @@
                 },
                 on: {
                   click: () => {
-                    sessionStorage.setItem('databaseID', params.row.computerid)
-                    this.$router.push({
-                      path: 'cloudDataManage',
-                      query: {
-                        // computername: params.row.name,
-                        // zoneid: params.row.name,
-                        // vmid: params.row.name,
-                        // instancename: params.row.name,
-                        // connecturl: params.row.name,
-                        // id: params.row.name
-                      }
-                    })
+                    sessionStorage.setItem('databaseInfo', JSON.stringify(params.row))
+                    this.$router.push('CloudDataManage')
                   }
                 }
               }, params.row.computername)
@@ -484,7 +474,7 @@
             title: '操作',
             render: (h, params) => {
               if (params.row.status == 1) {
-                var isShow = params.row.caseType == 3 ? 'none' : 'inline-block'
+                var isShow = params.row.caseType == '3' ? 'inline-block' : 'none'
                 return h('div', {}, [h('span', {
                   style: {
                     color: '#2A99F2',
@@ -708,7 +698,7 @@
                   })
                 ])])
               } else {
-                var isShow1 = params.row.caseType == 3 ? 'none' : 'inline-block'
+                var isShow1 = params.row.caseType == 3 ? 'inline-block' : 'none'
                 return h('div', {}, [h('span', {
                   style: {
                     marginRight: '5px',
