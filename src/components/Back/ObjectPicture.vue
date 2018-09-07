@@ -233,7 +233,7 @@
         <hr color="#D8D8D8" size="1">
         <br>
         <Button>取消</Button>
-        <Button type="primary">保存设置</Button>
+        <Button type="primary" @click="createStyle">保存设置</Button>
       </div>
     </div>
   </div>
@@ -471,7 +471,47 @@
             })
           }
         })
-
+      },
+      createStyle(){
+        axios({
+          url:'picture/creatStyle.do',
+          method:'post',
+          transformRequest: [function (data) {
+            return Qs.stringify(data);
+          }],
+          data:{
+            cssname:this.formValidate.styleName,
+            resizertype:this.zoomType,
+            width:this.zoomType == '0' ? '' : this.imgWidth,
+            height:this.zoomType == '0' ? '' : this.imgHeight,
+            resizerpercent:this.watermarkIndex == '1'? this.waterImg.imgSize.toString() :'',
+            outformattype:this.formatValue,
+            outquality:this.outQuality.toString(),
+            waterprinttype:this.watermarkIndex,
+            waterurl:this.watermarkIndex == '1'? this.waterImg.imgUrl : '',
+            wateroffsettype:this.positionIndex,
+            horizontaloff:this.level,
+            verticaloff:this.watermarkIndex == '1'?'':this.verticaloff,
+            rotatetype:this.watermarkIndex == '1'?'':this.rotatetype,
+            rotationangle:this.angle,
+            fontsize:this.watermarkIndex == '2' ? this.waterFont.size.toString() : '',
+            text:this.watermarkIndex == '2' ?this.waterFont.font : '',
+            color:this.watermarkIndex == '2' ?this.waterFont.color : '',
+            thickness:'0',
+            watermarktransparency:this.waterImg.transparency.toString(),
+            font:this.watermarkIndex == '2' ?this.waterFont.typeface :'',
+            bucketname:sessionStorage.getItem("bucketName"),
+            companyid:sessionStorage.getItem('companyId'),
+            zoneid:this.$store.state.zone.zoneid
+          }
+        }).then(res =>{
+          if(res.status == 200 && res.data.status == '1'){
+            this.$Message.success('新建样式成功');
+            this.$router.push({path:'SpaceDetails'});
+          }else {
+            this.$Message.info('新建样式出小差了');
+          }
+        })
       }
     }
   }

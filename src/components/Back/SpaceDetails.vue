@@ -123,7 +123,11 @@
           </TabPane>
           <TabPane label="空间设置" name="space">
             <div>
-              <p style="font-size:18px;color:#333333;margin:0 0 20px 0;">权限设置</p>
+              <div style="margin:0 0 20px 0;">
+                <span style="font-size:18px;color:#333333;margin:0 0 20px 0;">权限设置</span>
+                <a  href="https://www.xrcloud.net/ruicloud/documentInfo/P0bwsNh8q/P1P57o37y" style="float: right;color:#2A99F2;font-size: 14px;">帮助文档</a>
+              </div>
+
               <div style="border:1px solid #e9e9e9;position: relative;">
                 <Spin fix  v-if="aclLoading">
                   <Icon type="load-c" size=10 class="demo-spin-icon-load"></Icon>
@@ -157,6 +161,7 @@
                 <div style="margin:10px 0 20px 0;">
                   <Button type="primary" @click="openCros" style="margin-right: 10px;">CORS规则配置</Button>
                   <!--<Button type="primary" @click="corsedit = true">CORS规则编辑器</Button>-->
+                  <a  href="https://www.xrcloud.net/ruicloud/documentInfo/P0bwsNh8q/P1YZ362qY" style="float: right;color:#2A99F2;font-size: 14px;">帮助文档</a>
                 </div>
                 <Table :columns="corstList" :data="corsData"></Table>
               </div>
@@ -244,8 +249,8 @@
       :scrollable='true'
       :mask-closable="false"
     >
-      <p style="font-size:14px;color:#999999;line-height: 20px;margin:10px 0;">控制台上传单个文件大小不超过1GB，如需上传更大的文件请使用新睿云对象存储提供的<span
-        style="color:#2A9AF3;cursor:pointer;">API</span></p>
+      <p style="font-size:14px;color:#999999;line-height: 20px;margin:10px 0;">控制台上传单个文件大小不超过1GB，如需上传更大的文件请使用新睿云对象存储提供的<a
+        style="color:#2A9AF3;cursor:pointer;" href="https://www.xrcloud.net/ruicloud/documentInfo/P0bwsNh8q/P1geKVTbr">API</a></p>
       <p style="font-size:14px;color:#666666;margin:10px 0;">上传路径 {{routeName == undefined || routeName == "" ? '根目录':routeName}}/</p>
       <p style="text-align: right;color: #999999;">{{uploadList.length}}/24</p>
       <div class="upload_Box">
@@ -674,6 +679,8 @@
 </template>
 
 <script>
+  const Qs = require('qs');
+  import  axios from  'axios'
   import diskOptions from "@/echarts/objectStroage";
   import objectNumbers from "@/echarts/numberRequests"
   import $store from "@/vuex";
@@ -712,54 +719,21 @@
   };
   const validatorOrgins ={
   origin(rule,value,callback){
-    // let reg = /^(http|https)(:\/\/)((([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]{1,4}))|(([0-9a-z_!~*'()-]+\.)([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6}))$/;
-      //
-      // let origins = value.split('\n');
-      // for (let i = 0; i<origins.length;i++) {
-      //   console.log(origins[i]);
         if(value == ''){
           return callback(new Error('请输入origin'))
         }else{
           return callback(new Error('请输入正确的origin'));
         }
-
-        // } else if (!(/^([*]{1})$/).test(value) && !reg.test(value)) {
-        //   console.log(value+'二');
-          // console.log(!reg.test(origins[i]) + '3333');
-          // console.log(!(/^([*]{1})$/).test(origins[i]) + '22222');
-
-        // } else {
-        //   console.log("失败00");
-          // console.log(value+'三');
-          // return callback();
-        // }
-
     }
   }
   const validatorUpdateOrigins = {
     origin(rule,value,callback){
-      // let reg = /^(http|https)(:\/\/)((([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]{1,4}))|(([0-9a-z_!~*'()-]+\.)([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6}))$/;
-      //
-      // let origins = value.split('\n');
-      // for (let i = 0; i<origins.length;i++) {
-      //   console.log(origins[i]);
+
       if(value == ''){
         return callback(new Error('请输入origin'))
       }else{
         return callback(new Error('请输入正确的origin'));
       }
-
-      // } else if (!(/^([*]{1})$/).test(value) && !reg.test(value)) {
-      //   console.log(value+'二');
-      // console.log(!reg.test(origins[i]) + '3333');
-      // console.log(!(/^([*]{1})$/).test(origins[i]) + '22222');
-
-      // } else {
-      //   console.log("失败00");
-      // console.log(value+'三');
-      // return callback();
-      // }
-
     }
   }
   const validatorExpose ={
@@ -1134,7 +1108,7 @@
         //添加自定义权限表单验证
         jurisdRuleValidate: {
           grantValue: [
-            {validator:validatorGrantValue, trigger: 'change'}
+            {validator:validatorGrantValue, trigger: 'blur'}
           ],
           channel: [
             {required: true, type: 'array', message: '请选择密码接受渠道', trigger: 'change'}
@@ -1148,7 +1122,7 @@
         },
         updateJurisdValid:{
           updateGrantValue: [
-            {validator:validatorUpdateGrantValue, trigger: 'change'},
+            {validator:validatorUpdateGrantValue, trigger: 'blur'},
           ],
           updateChannel: [
             {required: true, type: 'array', message: '请选择密码接受渠道', trigger: 'change'}
@@ -2378,11 +2352,22 @@
 
       //获取图片列表
       getImgList(){
-        this.$http.post('picture/listStyle.do',{
+        axios({
+         url:'picture/listStyle.do',
+          method:'post',
+          transformRequest: [function (data) {
+            return Qs.stringify(data);
+          }],
+          data:{
+            companyid:sessionStorage.getItem('companyId'),
+            bucketname:sessionStorage.getItem("bucketName"),
+            zoneid:this.$store.state.zone.zoneid
+          }
         }).then(res => {
           if(res.status == 200 && res.data.status == '1'){
-            console.log(res);
-
+            this.imgData = res.data.data.ossPictureList;
+          }else {
+            this.$Message.info('获取图片样式出小差了');
           }
         })
       }
