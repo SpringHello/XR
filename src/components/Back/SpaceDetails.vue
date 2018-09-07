@@ -1502,10 +1502,12 @@
         //图片处理表格
         imgList:[
           {
-            title:'样式名称'
+            title:'样式名称',
+            key:'cssname'
           },
           {
-            title:'最后修改时间'
+            title:'最后修改时间',
+            key:''
           },
           {
             title:'操作',
