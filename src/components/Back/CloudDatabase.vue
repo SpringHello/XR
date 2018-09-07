@@ -29,20 +29,6 @@
         </div>
       </div>
     </div>
-    <!-- 修改端口提示框 -->
-    <Modal v-model="showModal.beforePortModify" :scrollable="true" :closable="false" :width="390">
-      <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
-        <div>
-          <strong>修改端口</strong>
-          <p class="lh24">修改端口会导致数据库重启，请谨慎操作，是否确认修改端口？</p>
-        </div>
-      </div>
-      <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.beforePortModify = false">取消</Button>
-        <Button type="primary" @click="beforePortModify">确定</Button>
-      </p>
-    </Modal>
 
     <!-- 数据库重启提示框 -->
     <Modal v-model="showModal.restart" :scrollable="true" :closable="false" :width="390">
@@ -56,6 +42,21 @@
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.restart = false">取消</Button>
         <Button type="primary" @click="restart">确定</Button>
+      </p>
+    </Modal>
+
+    <!-- 修改端口提示框 -->
+    <Modal v-model="showModal.beforePortModify" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>修改端口</strong>
+          <p class="lh24">修改端口会导致数据库重启，请谨慎操作，是否确认修改端口？</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.beforePortModify = false">取消</Button>
+        <Button type="primary" @click="beforePortModify">确定</Button>
       </p>
     </Modal>
 

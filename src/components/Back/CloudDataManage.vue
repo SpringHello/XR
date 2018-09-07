@@ -20,13 +20,14 @@
           </header>
           <div class="pan" v-if="databaseInfo!=null" style="width:28%">
             <div>
-              <i >{{databaseInfo.serviceoffername}}CPU , </i>
-              <i v-if="databaseInfo.memory">{{databaseInfo.memory}}G内存 , </i>
-              <i v-if="databaseInfo.bandwith">{{databaseInfo.bandwith}}M宽带 </i>
-              <i v-if="databaseInfo.zoneName"> | {{databaseInfo.zoneName}}</i>
+              <!-- <i >{{databaseInfo.serviceoffername}}</i> -->
+              <i>{{configure[0]}} ,</i>
+              <i v-if="databaseInfo.disksize">{{databaseInfo.disksize}}G硬盘 ,</i>
+              <i>{{configure[2]}} </i>
+              <i v-if="databaseInfo.zonename"> | {{databaseInfo.zonename}}</i>
             </div>
             <div>镜像系统：{{databaseInfo.templatename}}</div>
-            <div>到期时间／有效期：{{databaseInfo.endtime}}</div>
+            <div>数据库端口：{{databaseInfo.dbPort}} <span class="bluetext" @click="portModify">修改端口</span></div>
             <div>内网地址：{{databaseInfo.privateip}}</div>
             <div>登录密码：
               <span :class="[isActive ? 'send' : 'nosend']" @click="lookPassword()">{{codePlaceholder}}</span>
@@ -35,7 +36,7 @@
           <div class="pan" v-if="databaseInfo!=null" style="width: 20%">
             <div>所属VPC：<span class="bluetext">{{databaseInfo.vpcname}}</span></div>
             <div>绑定公网：<span class="bluetext">{{databaseInfo.publicip}}</span></div>
-            <div>所属负载均衡：
+            <!-- <div>所属负载均衡：
               <Tooltip placement="top-start" v-if="databaseInfo.loadbalance">
                 <span class="bluetext one-row-text" style="width:100px;">{{databaseInfo.loadbalance}}</span>
                 <div slot="content" v-for="(item,index) in databaseInfo.loadbalance" :key="index">
@@ -43,7 +44,7 @@
                 </div>
               </Tooltip>
               <span class="bluetext" style="width:0px;" v-else>{{databaseInfo.loadbalance}}</span>
-            </div>
+            </div> -->
             <div>挂载磁盘：
               <Tooltip placement="top-start" v-if="databaseInfo.disk">
                 <span class="bluetext one-row-text" style="width:120px;">{{databaseInfo.disk}}</span>
@@ -53,11 +54,12 @@
               </Tooltip>
               <span class="bluetext" style="width:0px;" v-else>{{databaseInfo.disk}}</span>
             </div>
-            <div>状态：<span class="bluetext">{{databaseInfo.dbStatus ? "开机" : "关机"}}</span></div>
+            <!-- <div>状态：<span class="bluetext">{{databaseInfo.dbStatus ? "开机" : "关机"}}</span></div> -->
           </div>
           <div class="pan" v-if="databaseInfo!=null" style="width: 20%">
-            <div>计费类型：{{databaseInfo.caseType == 1 ? '包年' : databaseInfo.caseType == 2 ? '包月' : '实时'}}</div>
+            <div>计费类型：{{databaseInfo.caseType == 1 ? '包年' : databaseInfo.caseType == 2 ? '包月' : '实时'}}计费</div>
             <div>创建于：{{databaseInfo.createtime}}</div>
+            <div>到期时间：{{databaseInfo.endtime}}</div>
             <div>自动续费：<span class="bluetext">{{databaseInfo.isautorenew ? '开' : '关'}}</span></div>
           </div>
         </div>
@@ -145,13 +147,13 @@
                 </div>
               </div>
             </Tab-pane>
-            <TabPane label="备份管理" name="name2">
+            <!-- <TabPane label="备份管理" name="name2">
               <div class="body">
                 <Button type="primary" @click="delSnapshot" style="margin-bottom:10px">删除快照</Button>
                 <Table ref="selection" :columns="snapshotCol" :data="snapshotData"
                        @radio-change="changeSelection"></Table>
               </div>
-            </TabPane>
+            </TabPane> -->
             <Tab-pane label="修改密码">
               <div class="body">
                 <label>重置密码</label>
@@ -317,6 +319,26 @@
           <Button type="primary" @click="delsnapsSubm">确定</Button>
         </p>
       </Modal>
+      <!-- 修改端口模态框 -->
+    <Modal v-model="showModal.portModify" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">修改端口</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <Form :model="portModifyForm" :rules="portModifyRuleValidate" ref="portModifyForm">
+          <Form-item label="当前端口">
+            <Input v-model="portModifyForm.currentPorts" :readonly="true"></Input>
+          </Form-item>
+          <Form-item label="修改端口" prop="newPorts">
+            <Input v-model="portModifyForm.newPorts" :maxlength="8"></Input>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.portModify = false">取消</Button>
+        <Button type="primary" @click="portModify_ok('portModifyForm')">确认</Button>
+      </div>
+    </Modal>
     </div>
   </div>
 </template>
@@ -381,7 +403,27 @@ export default {
         callback();
       }
     }
+    const validateNewport = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入修改后的端口号'))
+        } else {
+          if (/^[\d]+$/.test(value) && value < 65536 && value > 0) {
+            callback()
+          } else {
+            callback(new Error('请输入正确的端口号'))
+          }
+        }
+      }
     return {
+      portModifyForm: {
+          currentPorts: '',
+          newPorts: ''
+        },
+      portModifyRuleValidate: {
+        newPorts: [
+          {validator: validateNewport, trigger: 'change'}
+        ]
+      },
       isActive: true,
       countdown: 60,
       codePlaceholder: '发送密码',
@@ -672,7 +714,8 @@ export default {
         rollback: false,
         delsnaps: false,
         reload: false,
-        lookPassword: false
+        lookPassword: false,
+        portModify: false
       },
       setList: [
         {
@@ -744,8 +787,44 @@ export default {
         this.databaseInfo = JSON.parse(sessionStorage.getItem('databaseInfo'))
       }
     console.log(this.databaseInfo)
+    this.queryData('cpu')
+    this.queryData('disk')
+    this.queryData('memory')
+    this.queryData('flow')
   },
   methods: {
+    portModify() {
+      this.$message.confirm({
+        title: '修改端口',
+        content: '修改端口会导致数据库重启，请谨慎操作，是否确认修改端口？',
+        onOk: () => {
+          this.portModifyForm.currentPorts = this.databaseInfo.dbPort
+          this.showModal.portModify = true
+        }
+      })
+    },
+    portModify_ok(name) {
+      this.$refs[name].validate((valid) => {
+        if (valid) {
+          this.showModal.portModify = false
+          this.$http.get('database/updateDBPort.do', {
+            params: {
+              DBId: this.databaseInfo.computerid, //(数据库的UUID),
+              port: this.portModifyForm.newPorts //(需要更改的端口)
+            }
+          }).then(res => {
+            if (res.status === 200 && res.data.status === 1) {
+              this.$Message.success(res.data.message)
+              this.databaseInfo.dbPort = this.portModifyForm.newPorts
+            } else {
+              this.$message.info({
+                content: res.data.message
+              })
+            }
+          })
+        }
+      })
+    },
     inter () {
       this.intervalSnapsList = setInterval(() => {
         axios.get('Snapshot/listVMSnapshot.do', {
@@ -834,7 +913,7 @@ export default {
           this.lookPasswordForm.isSmsAlarmSec = this.lookPasswordForm.issmsalarmSec == false ? 0 : 1
           this.lookPasswordForm.isEmailAlarmSec = this.lookPasswordForm.isemailalarmSec == false ? 0 : 1
           this.$http.post('log/sendVMPassword.do', {
-            VMId: this.databaseInfo.computerId,
+            VMId: this.databaseInfo.computerid,
             password: this.lookPasswordForm.input,
             letter: this.lookPasswordForm.isLetterSec,
             meail: this.lookPasswordForm.isEmailAlarmSec,
@@ -1078,13 +1157,14 @@ export default {
     resetConfirm (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          var password = this.resetPasswordForm.newPassword
+          // database/updateDBPassword.do   更改数据库密码 DBId (数据库的UUID),
+	        //  password(需要更改的密码), zoneId(域id)
           this.resetPasswordForm.buttonMessage = '正在重置中...'
-          this.$http.get('information/resetPasswordForVirtualMachine.do', {
+          this.$http.get('database/updateDBPassword.do', {
             params: {
-              VMId: this.databaseInfo.computerId,
+              DBId: this.databaseInfo.computerid,
               password: this.resetPasswordForm.newPassword,
-              oldPassword: this.resetPasswordForm.oldPassword
+              // oldPassword: this.resetPasswordForm.oldPassword
             }
           }).then(response => {
             if (response.status == 200 && response.data.status == 1) {
@@ -1163,6 +1243,11 @@ export default {
         }
       })
     }
+  },
+  computed: {
+    configure() {
+        return this.databaseInfo.serviceoffername.replace('Memory', '内存').replace('核', 'CPU').split('+')
+      }
   },
   beforeRouteLeave (to, from, next) {
     // 导航离开该组件的对应路由时调用
