@@ -435,6 +435,7 @@
     },
     methods:{
       imgGet(){
+        console.log(this.waterPosition[this.positionIndex].value);
         this.$refs.formValidate.validate(valid =>{
           if(valid){
             axios({
@@ -454,7 +455,7 @@
                 outquality:this.outQuality.toString(),
                 waterprinttype:this.watermarkIndex,
                 waterurl:this.watermarkIndex == '1'? this.waterImg.imgUrl : '',
-                wateroffsettype:this.positionIndex,
+                wateroffsettype:this.waterPosition[this.positionIndex].value,
                 horizontaloff:this.level,
                 verticaloff:this.vertical,
                 rotatetype:this.rotatetype,
@@ -462,7 +463,7 @@
                 fontsize:this.watermarkIndex == '2' ? this.waterFont.size.toString() : '',
                 text:this.watermarkIndex == '2' ?this.waterFont.font : '',
                 // color:this.watermarkIndex == '2' ?this.waterFont.color : '',
-                color:'0',
+                color:'10000',
                 thickness:'0',
                 watermarktransparency:this.waterImg.transparency.toString(),
                 font:this.watermarkIndex == '2' ?this.waterFont.typeface :'',
@@ -491,7 +492,7 @@
             outquality:this.outQuality.toString(),
             waterprinttype:this.watermarkIndex,
             waterurl:this.watermarkIndex == '1'? this.waterImg.imgUrl : '',
-            wateroffsettype:this.positionIndex,
+            wateroffsettype:this.waterPosition[this.positionIndex].value,
             horizontaloff:this.level,
             verticaloff:this.vertical,
             rotatetype:this.rotatetype,
@@ -499,7 +500,7 @@
             fontsize:this.watermarkIndex == '2' ? this.waterFont.size.toString() : '',
             text:this.watermarkIndex == '2' ?this.waterFont.font : '',
             // color:this.watermarkIndex == '2' ?this.waterFont.color : '',
-            color:'0',
+            color:'1000',
             thickness:'0',
             watermarktransparency:this.waterImg.transparency.toString(),
             font:this.watermarkIndex == '2' ?this.waterFont.typeface :'',
