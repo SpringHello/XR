@@ -351,8 +351,14 @@
                 case 6:
                   text = '升级中';
                   break;
+                case 7:
+                  text = '绑定中';
+                  break;
+                case 8:
+                  text = '解绑中';
+                  break;
               }
-              if (row.status == 2||row.status == 5||row.status == 6) {
+              if (row.status == 2 || row.status == 5 || row.status == 6 || row.status == 7 || row.status == 8) {
                 return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block',
@@ -385,7 +391,12 @@
                         title: '提示',
                         content: `您正在为${params.row.computername}解绑公网IP，解绑之后您将不能通过公网访问该数据库，确认解绑？`,
                         onOk: () => {
-                          this.$http.get('network/disableStaticNat.do', {
+                          this.dataBaseData.forEach(item => {
+                            if (item.computerid == params.row.computerid) {
+                              item.status = 8
+                            }
+                          })
+                          this.$http.get('network/disableStaticNatByAfter.do', {
                             params: {
                               ipId: params.row.publicip,
                               VMId: params.row.computerid
@@ -394,7 +405,7 @@
                             if (response.status == 200 && response.data.status == 1
                             ) {
                               this.$Message.success(response.data.message)
-                              // this.setDataBases(response)
+                              this.listDatabase()
                             }
                             else if (response.status == 200 && response.data.status == 2) {
                               this.$message.info({
@@ -425,11 +436,6 @@
                           vpcId: params.row.vpcid
                         }
                       }).then(response => {
-                        this.loading = false
-                        // if (response.status == 200 && response.data.status == 1) {
-                        //   this.publicIPList = response.data.result
-                        //   this.showModal.bindIP = true
-                        // }
                         if (response.status == 200 && response.data.status == 1) {
                           this.publicIPList = response.data.result
                           if (this.publicIPList == ''){
@@ -827,31 +833,29 @@
       
     },
     methods: {
-      formatTime() {
-        var now = new Date()
-        // Date(item.deleteTime).format('yyyy年MM月dd日 hh:mm:ss')
-        console.log(new Date().format('yyyy-MM-dd hh:mm:ss'))
-        console.log(now)
-      },
       publicIPHint_ok() {
         this.$router.push('buy')
         sessionStorage.setItem('pane', 'Peip')
       },
       // 绑定公网ip
       bindipSubmit(name) {
-        console.log(this.currentComputerId)
         this.$refs[name].validate((valid) => {
             if (valid) {
               this.showModal.bindIP = false
-              this.$http.get('network/enableStaticNat.do', {
+              this.dataBaseData.forEach(item => {
+                if (item.computerid == this.currentComputerId) {
+                  item.status = 7
+                }
+              })
+              this.$http.get('network/enableStaticNatByAfter.do', {
                 params: {
                   ipId: this.bindForm.publicIP,
                   VMId: this.currentComputerId
                 }
               }).then(response => {
-                this.loading = false
                 if (response.status == 200 && response.data.status == 1) {
                   this.$Message.success(response.data.message)
+                  this.listDatabase()
                 } else {
                   this.$message.info({
                     content: response.data.message
@@ -974,12 +978,11 @@
       },
       // 云数据库备份
       backupSubmit() {
-        console.log($store.state.zone.zoneid)
         this.showModal.backups = false
             this.$http.get('database/DBBackup.do', {
               params: {
                 DBId: this.currentDBId,
-                allDataBases: 0,
+                allDataBases: '0',
                 dbName: this.currentHostname
               }
               // 测试数据
@@ -989,7 +992,11 @@
               //   allDataBases: '0'
               // }
             }).then(response => {
-              console.log(response)
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+              } else {
+                this.$Message.error(response.data.message)
+              }
             })
       },
       // 云数据库镜像
