@@ -50,7 +50,7 @@
         <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
           <strong>重启数据库</strong>
-          <p class="lh24">确认是否重启数据库</p>
+          <p class="lh24">您正在重启数据库，请谨慎操作</p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
@@ -86,7 +86,8 @@
       </p>
       <div class="universal-modal-content-flex">
         <p class="mb20">您正为<span class="bluetext">{{currentHostname}}</span>创建备份</p>
-        <Form ref="backupsForm" :model="backupsForm" :rules="backupsFormRule">
+        <p class="mb20">备份时间为：{{new Date().format('yyyy-MM-dd hh:mm:ss')}}</p>
+        <!-- <Form ref="backupsForm" :model="backupsForm" :rules="backupsFormRule">
           <FormItem label="备份名称" prop="name">
             <Input v-model="backupsForm.name" placeholder="请输入2-4094范围内任意数字" :maxlength="15"></Input>
           </FormItem>
@@ -108,35 +109,13 @@
               <Radio label="0">不保存</Radio>
             </RadioGroup>
           </div>
-        </Form>
-        <p class="modal-text-hint-bottom">提示：云主机快照为每块磁盘提供<span>8个</span>快照额度，当某个主机的快照数量达到额度上限，在创建新的快照任务时，系统会删除由自动快照策略所生成的时间最早的自动快照点
+        </Form> -->
+        <p class="modal-text-hint-bottom">提示：云主机备份为每块磁盘提供<span>8个</span>备份额度，当某个主机的备份数量达到额度上限，在创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点
         </p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.backups=false">取消</Button>
-        <Button type="primary" @click="backupSubmit('backupsForm')">创建备份</Button>
-      </div>
-    </Modal>
-    <!-- 云数据库镜像弹窗 -->
-    <Modal v-model="showModal.mirror" width="590" :scrollable="true">
-      <div slot="header" class="modal-header-border">
-        <span class="universal-modal-title">制作镜像</span>
-      </div>
-      <div class="universal-modal-content-flex">
-        <Form :model="mirrorForm" ref="mirrorForm" :rules="mirrorFormRule">
-          <Form-item label="镜像名称" prop="name">
-            <Input v-model="mirrorForm.name" placeholder="小于20位数字或字母"></Input>
-          </Form-item>
-          <Form-item label="备注">
-            <Input v-model="mirrorForm.description" type="textarea" :autosize="{minRows: 2,maxRows: 2}"
-                   placeholder="小于20个字（选填)"></Input>
-          </Form-item>
-        </Form>
-      </div>
-      <div slot="footer" class="modal-footer-border">
-        <Button type="ghost" @click="showModal.mirror = false">取消</Button>
-        <Button type="primary" @click="mirrorSubmit('mirrorForm')">确定
-        </Button>
+        <Button type="primary" @click="backupSubmit()">创建备份</Button>
       </div>
     </Modal>
     <!-- 云数据库续费弹窗 -->
@@ -208,6 +187,46 @@
         <Button type="primary" @click="dilatationok" :disabled="dilatationCost=='--'">确认调整</Button>
       </div>
     </Modal>
+    <!-- 绑定公网IP -->
+    <Modal v-model="showModal.bindIP" width="590" :scrollable="true">
+      <div slot="header" class="modal-header-border">
+        <span class="universal-modal-title">绑定IP</span>
+      </div>
+      <div class="universal-modal-content-flex">
+        <Form :model="bindForm" ref="bindForm" :rules="bindFormRule">
+          <Form-item label="选择弹性IP" prop="publicIP">
+            <Select v-model="bindForm.publicIP" placeholder="请选择">
+              <Option v-for="(item,index) in publicIPList" :key="index" :value="item.publicipid">
+                {{item.publicip}}
+              </Option>
+            </Select>
+            <span style="color:#2A99F2;font-size:14px;position:absolute;top:4px;right:-110px;">
+              <span style="font-weight:800;font-size:20px;">+</span>
+              <span style="cursor:pointer;" @click="publicIPHint_ok">购买弹性IP</span>
+            </span>
+          </Form-item>
+        </Form>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="ghost" @click="showModal.bindIP = false">取消</Button>
+        <Button type="primary" @click="bindipSubmit('bindForm')">确定
+        </Button>
+      </div>
+    </Modal>
+    <!-- 绑定ip时，没有公网ip提示 -->
+    <Modal v-model="showModal.publicIPHint" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>提示</strong>
+          <p class="lh24">您还未拥有剩余公网IP，请先创建公网IP。</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.publicIPHint = false">取消</Button>
+        <Button type="primary" @click="publicIPHint_ok">创建公网IP</Button>
+      </p>
+    </Modal>
   </div>
 </template>
 
@@ -232,6 +251,7 @@
         }
       }
       return {
+        currentDBId: '',
         templateid: '',
         databaseColumns: [
           {
@@ -263,54 +283,54 @@
             }
           },
           {
-            title: '数据库版本',
+            title: '系统',
             key: 'templatename',
             ellipsis: true,
           },
           {
-            title: '内核配置',
+            title: '配置规格',
             key: 'serviceoffername',
             ellipsis: true,
           },
+          // {
+          //   title: '主机状态',
+          //   render: (h, params) => {
+          //     const row = params.row
+          //     let text = ''
+          //     switch (row.dbStatus) {
+          //       case '0':
+          //         text = '关闭';
+          //         break;
+          //       case '1':
+          //         text = '开启';
+          //         break;
+          //       case '2':
+          //         text = '开启中';
+          //         break;
+          //       case '3':
+          //         text = '关闭中';
+          //         break;
+          //       case '4':
+          //         text = '重启中';
+          //         break;
+          //       case '5':
+          //         text = '删除中'
+          //         break;
+          //     }
+          //     if (row.dbStatus == 2 || row.dbStatus == 3 || row.dbStatus == 4 || row.dbStatus == 5) {
+          //       return h('div', {}, [h('Spin', {
+          //         style: {
+          //           display: 'inline-block',
+          //           marginRight: '10px'
+          //         }
+          //       }), h('span', {}, text)])
+          //     } else {
+          //       return h('span', text)
+          //     }
+          //   }
+          // },
           {
-            title: '主机状态',
-            render: (h, params) => {
-              const row = params.row
-              let text = ''
-              switch (row.dbStatus) {
-                case '0':
-                  text = '关闭';
-                  break;
-                case '1':
-                  text = '开启';
-                  break;
-                case '2':
-                  text = '开启中';
-                  break;
-                case '3':
-                  text = '关闭中';
-                  break;
-                case '4':
-                  text = '重启中';
-                  break;
-                case '5':
-                  text = '删除中'
-                  break;
-              }
-              if (row.dbStatus == 2 || row.dbStatus == 3 || row.dbStatus == 4 || row.dbStatus == 5) {
-                return h('div', {}, [h('Spin', {
-                  style: {
-                    display: 'inline-block',
-                    marginRight: '10px'
-                  }
-                }), h('span', {}, text)])
-              } else {
-                return h('span', text)
-              }
-            }
-          },
-          {
-            title: '费用状态',
+            title: '状态',
             key: 'status',
             render: (h, params) => {
               const row = params.row
@@ -331,8 +351,14 @@
                 case 6:
                   text = '升级中';
                   break;
+                case 7:
+                  text = '绑定中';
+                  break;
+                case 8:
+                  text = '解绑中';
+                  break;
               }
-              if (row.status == 2||row.status == 5||row.status == 6) {
+              if (row.status == 2 || row.status == 5 || row.status == 6 || row.status == 7 || row.status == 8) {
                 return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block',
@@ -344,15 +370,85 @@
               }
             }
           },
-          {
-            title: '内网地址',
-            key: 'privateip',
-            ellipsis: true,
-          },
+          // {
+          //   title: '内网地址',
+          //   key: 'privateip',
+          //   ellipsis: true,
+          // },
           {
             title: '公网地址',
+            width: '180px',
             render: (h, params) => {
-              return h('span', params.row.publicip ? params.row.publicip : '')
+              if (params.row.publicip){
+                return h('div', {}, [h('span', {}, params.row.publicip), h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      this.$message.confirm({
+                        title: '提示',
+                        content: `您正在为${params.row.computername}解绑公网IP，解绑之后您将不能通过公网访问该数据库，确认解绑？`,
+                        onOk: () => {
+                          this.dataBaseData.forEach(item => {
+                            if (item.computerid == params.row.computerid) {
+                              item.status = 8
+                            }
+                          })
+                          this.$http.get('network/disableStaticNatByAfter.do', {
+                            params: {
+                              ipId: params.row.publicip,
+                              VMId: params.row.computerid
+                            }
+                          }).then(response => {
+                            if (response.status == 200 && response.data.status == 1
+                            ) {
+                              this.$Message.success(response.data.message)
+                              this.listDatabase()
+                            }
+                            else if (response.status == 200 && response.data.status == 2) {
+                              this.$message.info({
+                                content: response.data.message
+                              })
+                            }
+                          })
+                        }
+                      }
+                      )
+                    }
+                  }
+                }, ' × 解绑')])
+              } else {
+                return h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    cursor: 'pointer'
+                  },
+                  on: {
+                    click: () => {
+                      console.log(params.row.vpcid)
+                      this.currentComputerId = params.row.computerid
+                      this.bindForm.publicIP = ''
+                      this.$http.get('network/listPublicIp.do', {
+                        params: {
+                          useType: 0,
+                          vpcId: params.row.vpcid
+                        }
+                      }).then(response => {
+                        if (response.status == 200 && response.data.status == 1) {
+                          this.publicIPList = response.data.result
+                          if (this.publicIPList == ''){
+                            this.showModal.publicIPHint = true
+                          } else {
+                            this.showModal.bindIP = true
+                          }
+                        }
+                      })
+                    }
+                  }
+                }, '绑定公网IP')
+              }
             }
           },
           {
@@ -380,19 +476,21 @@
             }
           },
           {
-            title: '到期时间',
-            key: 'endtime',
+            title: '创建时间',
+            key: 'createtime',
             ellipsis: true,
           },
           {
             title: '操作',
             render: (h, params) => {
               if (params.row.status == 1) {
+                var isShow = params.row.caseType == 3 ? 'none' : 'inline-block'
                 return h('div', {}, [h('span', {
                   style: {
                     color: '#2A99F2',
                     marginRight: '5px',
                     cursor: 'pointer',
+                    display: isShow
                   },
                   on: {
                     click: () => {
@@ -433,26 +531,31 @@
                   attrs: {
                     href: 'javascript:void(0)'
                   }
-                }, '更多操作'), h('DropdownMenu', {
+                }, [
+                  h('span', {
+                    style: {
+                      marginRight: '5px'
+                    }
+                  }, '更多操作'),
+                   h('Icon', {
+                    props: {
+                      type: 'ios-arrow-down'
+                    }
+                  })
+                ]), h('DropdownMenu', {
                   slot: 'list'
-                }, [/*h('DropdownItem', {
+                }, [h('DropdownItem', {
                  nativeOn: {
                  click: () => {
-                 this.backupsForm.name = ''
-                 this.backupsForm.memory = 1
-                 this.showModal.backups = true
+                //  this.backupsForm.name = ''
+                //  this.backupsForm.memory = 1
+                  this.currentDBId = params.row.computerid
+                  this.currentHostname = params.row.computername
+                  this.showModal.backups = true
                  }
                  }
-                 }, '数据库备份'),*//* h('DropdownItem', {
-                 nativeOn: {
-                 click: () => {
-                 this.mirrorForm.name = ''
-                 this.mirrorForm.description = ''
-                 this.current = params.row
-                 this.showModal.mirror = true
-                 }
-                 }
-                 }, '数据库镜像'),*/ h('DropdownItem', {
+                 }, '数据库备份'),
+                 h('DropdownItem', {
                   nativeOn: {
                     click: () => {
                       this.dilatationForm.databaseSize = params.row.disksize
@@ -557,13 +660,82 @@
                       }
                     }
                   }, '关闭数据库')])
+                ]),
+                h('div', [h('span', {
+                  style: {
+                    color: '#2A99F2',
+                    marginRight: '5px',
+                  }
+                }, '日志记录'),
+                  h('i-Switch', {
+                    props: {
+                      value: true,
+                      size: 'small'
+                    },
+                    style: {
+                      verticalAlign: 'text-top'
+                    },
+                    on: {
+                      input: (event) => {
+                        // 日志开启时调用
+                        if (event) {
+                          this.$http('database/openDatabaseLog.do', {
+                            params: {
+                              DBId: params.row.computerid
+                            }
+                          }).then(response => {
+                            if (response.status == 200 && response.data.status == 1){
+                              this.$Message.success(response.data.message)
+                            } else {
+                              this.$Message.error(response.data.message)
+                            }
+                          })
+                        } else { // 关闭日志时调用
+                          this.$http('database/closeDataBaseLog.do', {
+                            params: {
+                              DBId: params.row.computerid
+                            }
+                          }).then(response => {
+                            if (response.status == 200 && response.data.status == 1){
+                              this.$Message.success(response.data.message)
+                            } else {
+                              this.$Message.error(response.data.message)
+                            }
+                          })
+                        }
+                      }
+                    }
+                  })
                 ])])
               } else {
+                var isShow1 = params.row.caseType == 3 ? 'none' : 'inline-block'
                 return h('div', {}, [h('span', {
                   style: {
                     marginRight: '5px',
+                    cursor: 'not-allowed',
+                    display: isShow1
                   },
-                }, '删除'), h('span', {}, '更多操作')])
+                }, '删除'), h('span', {
+                  style: {
+                    cursor: 'not-allowed'
+                  }
+                }, '更多操作'), h('div', [h('span', {
+                  style: {
+                    marginRight: '5px',
+                    cursor: 'not-allowed'
+                  }
+                }, '日志记录'),
+                  h('i-Switch', {
+                    props: {
+                      value: false,
+                      size: 'small',
+                      disabled: true
+                    },
+                    style: {
+                      verticalAlign: 'text-top'
+                    }
+                  })
+                ])])
               }
             }
           },
@@ -576,7 +748,9 @@
           mirror: false,
           renewal: false,
           restart: false,
-          dilatation: false
+          dilatation: false,
+          bindIP: false,
+          publicIPHint: false,
         },
         portModifyForm: {
           currentPorts: '',
@@ -587,25 +761,35 @@
             {validator: validateNewport, trigger: 'change'}
           ]
         },
-        currentHostname: '',
-        backupsForm: {
-          name: '',
-          memory: '1'
+        bindForm: {
+          publicIP: ''
         },
-        backupsFormRule: {
-          name: [
-            {required: true, validator: validaRegisteredName, trigger: 'blur'}
+        bindFormRule: {
+          publicIP: [
+            {required: true, message: '请选择', trigger: 'change'}
           ]
         },
-        mirrorForm: {
-          name: '',
-          description: ''
-        },
-        mirrorFormRule: {
-          name: [
-            {required: true, validator: validaRegisteredName, trigger: 'blur'}
-          ],
-        },
+        publicIPList: [],
+        currentComputerId: '',
+        currentHostname: '',
+        // backupsForm: {
+        //   name: '',
+        //   memory: '1'
+        // },
+        // backupsFormRule: {
+        //   name: [
+        //     {required: true, validator: validaRegisteredName, trigger: 'blur'}
+        //   ]
+        // },
+        // mirrorForm: {
+        //   name: '',
+        //   description: ''
+        // },
+        // mirrorFormRule: {
+        //   name: [
+        //     {required: true, validator: validaRegisteredName, trigger: 'blur'}
+        //   ],
+        // },
         originCost: '--',
         cost: '--',
         dilatationCost: '--',
@@ -646,8 +830,42 @@
       })
     },
     created() {
+      
     },
     methods: {
+      publicIPHint_ok() {
+        this.$router.push('buy')
+        sessionStorage.setItem('pane', 'Peip')
+      },
+      // 绑定公网ip
+      bindipSubmit(name) {
+        this.$refs[name].validate((valid) => {
+            if (valid) {
+              this.showModal.bindIP = false
+              this.dataBaseData.forEach(item => {
+                if (item.computerid == this.currentComputerId) {
+                  item.status = 7
+                }
+              })
+              this.$http.get('network/enableStaticNatByAfter.do', {
+                params: {
+                  ipId: this.bindForm.publicIP,
+                  VMId: this.currentComputerId
+                }
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.$Message.success(response.data.message)
+                  this.listDatabase()
+                } else {
+                  this.$message.info({
+                    content: response.data.message
+                  })
+                }
+              })
+            }
+          }
+        )
+      },
       // 重启数据库
       restart() {
         this.showModal.restart = false
@@ -759,21 +977,27 @@
         })
       },
       // 云数据库备份
-      backupSubmit(name) {
-        this.$refs[name].validate((valid) => {
-          if (valid) {
-            this.showModal.backups = false
-            this.$http.get('Snapshot/createDbSnapshot.do', {
+      backupSubmit() {
+        this.showModal.backups = false
+            this.$http.get('database/DBBackup.do', {
               params: {
-                VMId: this.current,//（数据库的uuid）,
-                snapshotName: this.backupsForm.name,//（备份名称）,
-                memoryStatus: this.backupsForm.memory//（内存状态）
+                DBId: this.currentDBId,
+                allDataBases: '0',
+                dbName: this.currentHostname
               }
+              // 测试数据
+              // params: {
+              //   DBId: '5efe9972-8032-4433-a230-6b75a405af87',
+              //   dbName: 'mysql',
+              //   allDataBases: '0'
+              // }
             }).then(response => {
-              console.log(response)
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+              } else {
+                this.$Message.error(response.data.message)
+              }
             })
-          }
-        })
       },
       // 云数据库镜像
       mirrorSubmit(name) {

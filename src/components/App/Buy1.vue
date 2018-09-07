@@ -1164,6 +1164,16 @@
               <div class="item-wrapper">
                 <div style="display: flex">
                   <div>
+                    <!-- <p class="item-title" style="margin-top: 8px">数据库名称</p>
+                  </div>
+                  <Input v-model="text" placeholder="请输入1-16位数据库名称，可包含字母与数字" style="width: 300px"
+                        @on-change="nameWarning=''"></Input>
+                  <span style="line-height: 32px;color:red;margin-left:10px">{{nameWarning}}</span>
+                </div>
+              </div>
+              <div class="item-wrapper">
+                <div style="display: flex">
+                  <div> -->
                     <p class="item-title">数据库账号</p>
                   </div>
                   <span
@@ -1598,7 +1608,7 @@
           productList: [{label: '云主机', value: 'Pecs'}, {label: '云硬盘', value: 'Pdisk'}, {
             label: '公网IP',
             value: 'Peip'
-          }/*, {label: '数据库', value: 'Pdata'}*/]
+          }, {label: '数据库', value: 'Pdata'}]
         },
         // 云主机信息对象
         PecsInfo: {

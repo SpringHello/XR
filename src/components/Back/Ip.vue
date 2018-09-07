@@ -127,7 +127,34 @@
         <Button type="primary" @click="bindHostSubmit">确认绑定</Button>
       </div>
     </Modal>
-
+    <!-- 为云数据库绑定弹性IP -->
+    <Modal v-model="showModal.bindIPForDatabase" width="550" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">绑定弹性IP</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <p style="font-size: 12px;color: #666666;margin-bottom:20px;">您正为弹性IP<span style="color: #2A99F2 ;">{{bindForDatabaseForm.row.publicip}}</span>绑定云数据库。
+        </p>
+        <!-- <Icon type="ios-help-outline"></Icon> -->
+        <Form :model="bindForDatabaseForm" :rules="bindForDatabaseRuleValidate" ref="bindForDatabaseFormValidate">
+          <FormItem label="选择云数据库" prop="database">
+            <Select v-model="bindForDatabaseForm.database" placeholder="云数据库名称">
+              <Option v-for="(item,index) in bindForDatabaseForm.databaseOptions" :key="index" :value="item.computerid">
+                {{item.computername}}
+              </Option>
+            </Select>
+          </FormItem>
+          <span style="font-size:14px;font-family:MicrosoftYaHei;color:rgba(42,153,242,1);cursor: pointer;position: absolute;left: 48%;top: 49%;" @click="tobuy('Pdatabase')">
+              <img style="transform: translate(0px,3px);" src="../../assets/img/public/icon_plussign.png"/>
+              购买云数据库
+            </span>
+        </Form>
+        <p style="font-size: 12px;color: #999999">提示：弹性IP只能绑定一个资源，当您绑定该资源后，将不能再将该弹性IP用于其他资源绑定。</p>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="bindDatabaseSubmit">确认绑定</Button>
+      </div>
+    </Modal>
     <!-- 为NAT绑定弹性IP -->
     <Modal v-model="showModal.bindIPForNAT" width="550" :scrollable="true">
       <p slot="header" class="modal-header-border">
@@ -323,6 +350,7 @@
           newIPModal: false,
           bindIPForHost: false,
           bindIPForNAT: false,
+          bindIPForDatabase: false,
           charges: false,
           adjust: false
         },
@@ -626,7 +654,12 @@
                   attrs: {
                     name: 'NAT'
                   }
-                }, 'NAT网关')])])
+                }, 'NAT网关'),
+                h('DropdownItem', {
+                  attrs: {
+                    name: 'database'
+                  }
+                }, '云数据库')])])
               } else if (object.row.usetype != 2) {
                 return h('span', {
                   style: {
@@ -691,6 +724,18 @@
             {required: true, message: '请选择NAT网关', trigger: 'change'}
           ]
         },
+        // 绑定IP到云数据库表单
+        bindForDatabaseForm: {
+          database: '',
+          databaseOptions: [],
+          row: {}
+        },
+        // 绑定IP到云数据库表单校验
+        bindForDatabaseRuleValidate: {
+          NAT: [
+            {required: true, message: '请选择云数据库', trigger: 'change'}
+          ]
+        },
         customTimeOptions,
         // 当前操作弹性IP的id
         operatingId: null,
@@ -700,6 +745,11 @@
       }
     },
     methods: {
+      // 跳转到相应的购买页面
+      tobuy(url) {
+        sessionStorage.setItem('pane', url)
+        this.$router.push('buy')
+      },
       // 释放弹性IP
       resetIP() {
         if (this.select != null) {
@@ -859,6 +909,17 @@
           }).then(response => {
             this.bindForNATForm.NATOptions = response.data.result
           })
+        } else if (type == 'database') {
+          this.bindForDatabaseForm.row = row
+          this.showModal.bindIPForDatabase = true
+          // 获取所有能绑定弹性IP的数据库
+          this.$http.get('database/listDB.do', {
+            params: {
+              vpcId: row.vpcid
+            }
+          }).then(response => {
+            this.bindForDatabaseForm.databaseOptions = response.data.result
+          })
         }
       },
       // 绑定弹性IP到云主机
@@ -893,6 +954,38 @@
           }
         })
         this.$refs.bindForHostFormValidate.resetFields();
+      },
+      bindDatabaseSubmit() {
+        this.$refs.bindForDatabaseFormValidate.validate(validate => {
+          if (validate) {
+            this.showModal.bindIPForDatabase = false
+            this.ipData.forEach(item => {
+              if (item.id === this.operatingId) {
+                // 3代表绑定中
+                item.status = 3
+              }
+            })
+            this.$http.get('network/enableStaticNat.do', {
+              params: {
+                ipId: this.bindForDatabaseForm.row.publicipid,
+                VMId: this.bindForDatabaseForm.database
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+                this.refresh()
+              } else {
+                this.$message.info({
+                  content: response.data.message,
+                  'onOk': () => {
+                    this.refresh()
+                  }
+                })
+              }
+            })
+          }
+        })
+        this.$refs.bindForDatabaseFormValidate.resetFields();
       },
       // 绑定弹性IP到NAT
       bindNATSubmit() {

@@ -14,8 +14,8 @@ const Home = () =>import('@/components/App/Home')
 const Art = () =>import('@/components/App/Article')
 //const Price = () => import('@/components/App/Price')
 
-//const Buy = () =>import('@/components/App/Buy1')
-const Buy = () => import('@/components/App/buy/Buy')
+const Buy = () =>import('@/components/App/Buy1')
+// const Buy = () => import('@/components/App/buy/Buy')
 const BHost = () => import('@/components/App/buy/BHost')
 const BIP = () => import('@/components/App/buy/BIP')
 const BDisk = () => import('@/components/App/buy/BDisk')
@@ -148,7 +148,6 @@ const SpaceDetails = () =>import('@/components/Back/SpaceDetails')
 const CloudDatabaseBackup = () =>import('@/components/Back/CloudDatabaseBackup')
 const CloudDatabase = () =>import('@/components/Back/CloudDatabase')
 const CloudDataManage = () =>import('@/components/Back/CloudDataManage')
-const CloudDatabaseMirror = () =>import('@/components/Back/CloudDatabaseMirror')
 const dataBaseUpgrade = () =>import('@/components/Back/dataBaseUpgrade')
 // 帮助文档路由
 const documentInfo = () =>import('@/components/App/DocumentInfo')
@@ -350,7 +349,6 @@ var router = new Router({
         {path: 'completedFilingDetails', name: 'completedFilingDetails', component: CompletedFilingDetails},
         {path: 'cloudDataManage', name: 'cloudDataManage', component: CloudDataManage},
         {path: 'cloudDatabaseBackup', name: 'cloudDatabaseBackup', component: CloudDatabaseBackup},
-        {path: 'cloudDatabaseMirror', name: 'cloudDatabaseMirror', component: CloudDatabaseMirror},
         {path: 'cloudDatabase', name: 'cloudDatabase', component: CloudDatabase},
         {path: 'dataBaseUpgrade', name: 'dataBaseUpgrade', component: dataBaseUpgrade},
         {path: 'GpuList',name:'GpuList',component:GpuList},
