@@ -90,7 +90,7 @@
                       </div>
                       <Dropdown-menu slot="list">
                         <Dropdown-item v-for="system in item.systemList" :key="system.ostypeid"
-                                       :name="`${system.ostypename}#${system.systemtemplateid}#${index}`"
+                                       :name="`${system.templatename}#${system.systemtemplateid}#${index}`"
                                        style="white-space: pre-wrap;display:block;">
                           <span>{{system.templatename}}</span>
                         </Dropdown-item>
@@ -665,6 +665,16 @@
         }
         this.publicList[arg[2]].selectSystem = arg[0]
       },
+      // 设置自定义镜像
+      setOwnTemplate(item) {
+        this.customMirror = item
+        var str = item.ostypename.substr(0, 1)
+        if (str === 'W' || str === 'w') {
+          this.systemUsername = 'administrator'
+        } else {
+          this.systemUsername = 'root'
+        }
+      },
       // 查询GPU价格
       // 查询自定义主机价格
       queryCustomVM() {
@@ -690,42 +700,42 @@
           }
         })
       },
-      queryGpu(){
-        let params = {
-          zoneId: this.zone.zoneid,
-          templateId: this.currentType == 'public' ? this.system.systemtemplateid : this.customMirror.systemtemplateid,
-          bandWidth: this.IPConfig.publicIP ? this.IPConfig.bandWidth : 0,
-          timeType: this.timeForm.currentTimeType == 'annual' ? this.timeForm.currentTimeValue.type : 'current',
-          timeValue: this.timeForm.currentTimeValue.value,
-          count: 1,
-          isAutoRenew: this.autoRenewal ? '1' : '0',
-          cpuNum: this.gpuSelection.cpunum,
-          memory,
-          networkId: this.network,
-          //ipAddress,
-          rootDiskType: this.DiskType,
-          vpcId: this.vpc,
-          gpusize: this.gpuSelection.gpusize,
-          serviceType: this.gpuSelection.servicetype
-        }
-        let diskType = '', diskSize = ''
-        for (let disk of this.dataDiskList) {
-          diskType += `${disk.type},`
-          diskSize += `${disk.size},`
-        }
-        // 设置了主机名和密码
-        if (this.currentLoginType == 'custom') {
-          params.VMName = this.computerName
-          params.password = this.password
-        }
-        params.diskType = diskType
-        params.diskSize = diskSize
-        axios.get('gpuserver/createGpuServer.do', {
-          params
-        }).then(response => {
+      /*queryGpu(){
+       let params = {
+       zoneId: this.zone.zoneid,
+       templateId: this.currentType == 'public' ? this.system.systemtemplateid : this.customMirror.systemtemplateid,
+       bandWidth: this.IPConfig.publicIP ? this.IPConfig.bandWidth : 0,
+       timeType: this.timeForm.currentTimeType == 'annual' ? this.timeForm.currentTimeValue.type : 'current',
+       timeValue: this.timeForm.currentTimeValue.value,
+       count: 1,
+       isAutoRenew: this.autoRenewal ? '1' : '0',
+       cpuNum: this.gpuSelection.cpunum,
+       memory,
+       networkId: this.network,
+       //ipAddress,
+       rootDiskType: this.gpuSelection.rootdisktype,
+       vpcId: this.vpc,
+       gpusize: this.gpuSelection.gpusize,
+       serviceType: this.gpuSelection.servicetype
+       }
+       let diskType = '', diskSize = ''
+       for (let disk of this.dataDiskList) {
+       diskType += `${disk.type},`
+       diskSize += `${disk.size},`
+       }
+       // 设置了主机名和密码
+       if (this.currentLoginType == 'custom') {
+       params.VMName = this.computerName
+       params.password = this.password
+       }
+       params.diskType = diskType
+       params.diskSize = diskSize
+       axios.get('gpuserver/createGpuServer.do', {
+       params
+       }).then(response => {
 
-        })
-      },
+       })
+       },*/
       /*setDataOS(name){
        var arg = name.split('#')
        for (var item of this.publicList) {
@@ -859,26 +869,35 @@
           })
           return
         }
-        if (this.system.systemName == undefined) {
+        if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
           this.$message.info({
             content: '请选择一个数据库镜像'
           })
           return
         }
 
-        if (!regExp.hostPassword(this.password)) {
-          this.passwordWarning = '请输入6-23位包含大小写与数字的密码'
-          return
+        if (this.currentLoginType == 'custom') {
+          if (this.computerName.trim() == '') {
+            this.computerNameWarning = '请输入主机名称'
+            return
+          }
+          if (!regExp.hostPassword(this.password)) {
+            this.passwordWarning = '请输入6-23位包含大小写与数字的密码'
+            return
+          }
         }
 
         let prod = {}
-        prod.typeName = '数据库'
+
+        prod.typeName = 'GPU'
         prod.zone = this.zone
         prod.timeForm = this.timeForm
         prod.system = this.system
+        prod.customMirror = this.customMirror
+        prod.currentType = this.currentType
         prod.publicIP = this.publicIP
         prod.count = 1
-        prod.type = 'Pdata'
+        prod.type = 'Pgpu'
         prod.autoRenewal = this.autoRenewal
         prod.IPConfig = this.IPConfig
         prod.vmConfig = this.vmConfig
@@ -887,6 +906,7 @@
         prod.network = this.network
         prod.cost = this.totalDataCost
         prod.VMName = this.dbName
+        prod.gpuSelection = this.gpuSelection
         this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
         window.scrollTo(0, 170)
       },
@@ -895,7 +915,7 @@
           this.$parent.showModal.login = true
           return
         }
-        if (this.system.systemName == undefined) {
+        if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
           this.$message.info({
             content: '请选择一个镜像'
           })
@@ -912,15 +932,13 @@
           }
         }
         var diskSize = '', diskType = ''
-
         this.dataDiskList.forEach(item => {
           diskSize += `${item.size},`
           diskType += `${item.type},`
         })
-
         let params = {
           zoneId: this.zone.zoneid,
-          templateId: this.currentType == 'public' ? this.system.systemtemplateid : this.customMirror.systemtemplateid,
+          templateId: this.currentType == 'public' ? this.system.systemId : this.customMirror.systemtemplateid,
           bandWidth: this.IPConfig.publicIP ? this.IPConfig.bandWidth : 0,
           timeType: this.timeForm.currentTimeType == 'annual' ? this.timeForm.currentTimeValue.type : 'current',
           timeValue: this.timeForm.currentTimeValue.value,
@@ -930,7 +948,7 @@
           memory: this.gpuSelection.memory,
           networkId: this.network,
           //ipAddress,
-          rootDiskType: this.DiskType,
+          rootDiskType: this.gpuSelection.rootdisktype,
           vpcId: this.vpc,
           gpusize: this.gpuSelection.gpusize,
           serviceType: this.gpuSelection.servicetype,

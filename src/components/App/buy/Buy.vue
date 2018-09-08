@@ -113,6 +113,25 @@
                     <span class="title">硬盘</span><span class="hidden">#</span>{{disk.size}}G{{disk.label}}
                   </p>
                 </div>
+
+                <div v-if="prod.type=='Pgpu'">
+                  <p class="item">
+                    <span class="hidden">$</span><span class="title">镜像</span><span
+                    class="hidden">#</span>{{prod.system.systemName}}
+                  </p>
+                  <p class="item">
+                    <span class="hidden">$</span><span class="title">GPU</span><span
+                    class="hidden">#</span>{{`${prod.gpuSelection.gputype}、${prod.gpuSelection.gpusize}*${prod.gpuSelection.memory}GB`}}
+                  </p>
+                  <p class="item" v-if="prod.IPConfig.publicIP">
+                    <span class="hidden">$</span>
+                    <span class="title">带宽</span><span class="hidden">#</span>{{prod.IPConfig.bandWidth}}M
+                  </p>
+                  <p class="item" v-for="disk in prod.dataDiskList">
+                    <span class="hidden">$</span>
+                    <span class="title">硬盘</span><span class="hidden">#</span>{{disk.size}}G{{disk.label}}
+                  </p>
+                </div>
                 <!--底部价格公共区域-->
                 <div style="border-bottom:1px solid #ccc;padding-bottom: 20px">
                   <p class="item" style="margin-top: 10px">
@@ -430,6 +449,40 @@
               params.VMName = prod.VMName
             }
             PromiseList.push(axios.get('database/createDB.do', {params}))
+          } else if (prod.type == 'Pgpu') {
+
+
+            var diskSize = '', diskType = ''
+            prod.dataDiskList.forEach(item => {
+              diskSize += `${item.size},`
+              diskType += `${item.type},`
+            })
+            let params = {
+              zoneId: prod.zone.zoneid,
+              templateId: prod.currentType == 'public' ? prod.system.systemId : prod.customMirror.systemtemplateid,
+              bandWidth: prod.IPConfig.publicIP ? prod.IPConfig.bandWidth : 0,
+              timeType: prod.timeForm.currentTimeType == 'annual' ? prod.timeForm.currentTimeValue.type : 'current',
+              timeValue: prod.timeForm.currentTimeValue.value,
+              count: prod.count,
+              isAutoRenew: prod.autoRenewal ? '1' : '0',
+              cpuNum: prod.gpuSelection.cpunum,
+              memory: prod.gpuSelection.memory,
+              networkId: prod.network,
+              //ipAddress,
+              rootDiskType: prod.gpuSelection.rootdisktype,
+              vpcId: prod.vpc,
+              gpusize: prod.gpuSelection.gpusize,
+              serviceType: prod.gpuSelection.servicetype,
+              diskType,
+              diskSize,
+              countOrder
+            }
+            // 设置了主机名和密码
+            if (prod.currentLoginType == 'custom') {
+              params.VMName = prod.computerName
+              params.password = prod.password
+            }
+            PromiseList.push(axios.get('gpuserver/createGpuServer.do', {params}))
           }
         }
         sessionStorage.removeItem('cart')
@@ -568,7 +621,7 @@
           border-top: 3px solid #377DFF;
         }
         .zoneItem {
-          width: 101px;
+          //width: 101px;
           background-color: white;
           border: 1px solid #d9d9d9;
           font-size: 14px;
@@ -576,7 +629,7 @@
           color: #666666;
           cursor: pointer;
           margin-right: 10px;
-          padding: 6px 0px;
+          padding: 6px 15px;
           display: inline-block;
         }
         .zoneItem:nth-child(6) {
