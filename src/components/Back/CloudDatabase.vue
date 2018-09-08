@@ -29,20 +29,6 @@
         </div>
       </div>
     </div>
-    <!-- 修改端口提示框 -->
-    <Modal v-model="showModal.beforePortModify" :scrollable="true" :closable="false" :width="390">
-      <div class="modal-content-s">
-        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
-        <div>
-          <strong>修改端口</strong>
-          <p class="lh24">修改端口会导致数据库重启，请谨慎操作，是否确认修改端口？</p>
-        </div>
-      </div>
-      <p slot="footer" class="modal-footer-s">
-        <Button @click="showModal.beforePortModify = false">取消</Button>
-        <Button type="primary" @click="beforePortModify">确定</Button>
-      </p>
-    </Modal>
 
     <!-- 数据库重启提示框 -->
     <Modal v-model="showModal.restart" :scrollable="true" :closable="false" :width="390">
@@ -56,6 +42,21 @@
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.restart = false">取消</Button>
         <Button type="primary" @click="restart">确定</Button>
+      </p>
+    </Modal>
+
+    <!-- 修改端口提示框 -->
+    <Modal v-model="showModal.beforePortModify" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s">
+        <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+        <div>
+          <strong>修改端口</strong>
+          <p class="lh24">修改端口会导致数据库重启，请谨慎操作，是否确认修改端口？</p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.beforePortModify = false">取消</Button>
+        <Button type="primary" @click="beforePortModify">确定</Button>
       </p>
     </Modal>
 
@@ -265,18 +266,8 @@
                 },
                 on: {
                   click: () => {
-                    sessionStorage.setItem('databaseID', params.row.computerid)
-                    this.$router.push({
-                      path: 'cloudDataManage',
-                      query: {
-                        // computername: params.row.name,
-                        // zoneid: params.row.name,
-                        // vmid: params.row.name,
-                        // instancename: params.row.name,
-                        // connecturl: params.row.name,
-                        // id: params.row.name
-                      }
-                    })
+                    sessionStorage.setItem('databaseInfo', JSON.stringify(params.row))
+                    this.$router.push('CloudDataManage')
                   }
                 }
               }, params.row.computername)
@@ -484,7 +475,7 @@
             title: '操作',
             render: (h, params) => {
               if (params.row.status == 1) {
-                var isShow = params.row.caseType == 3 ? 'none' : 'inline-block'
+                var isShow = params.row.caseType == '3' ? 'inline-block' : 'none'
                 return h('div', {}, [h('span', {
                   style: {
                     color: '#2A99F2',
@@ -708,7 +699,7 @@
                   })
                 ])])
               } else {
-                var isShow1 = params.row.caseType == 3 ? 'none' : 'inline-block'
+                var isShow1 = params.row.caseType == 3 ? 'inline-block' : 'none'
                 return h('div', {}, [h('span', {
                   style: {
                     marginRight: '5px',
