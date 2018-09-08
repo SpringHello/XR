@@ -410,3 +410,13 @@ div.modal-header-border {
 .db-select .ivu-select-arrow {
   color: #DEDEDE;
 }
+
+/*buy页面样式调整*/
+#buy .mySelect {
+  width: auto !important;
+}
+
+#buy .mySelect .ivu-select-arrow {
+  left: 0px;
+  right: unset;
+}

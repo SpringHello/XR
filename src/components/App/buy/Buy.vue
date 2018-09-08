@@ -567,6 +567,7 @@
           bdisk: 'Pdisk',
           bip: 'Peip',
           bdata: 'PdataBase',
+          bgpu: 'Pgpu',
         }
         return map[this.product.currentProduct]
       }
