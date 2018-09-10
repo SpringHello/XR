@@ -132,9 +132,12 @@
     </Modal>
 
     <Modal  v-model="arrears"
-            title="提示"
             :scrollable='true'
             :mask-closable="false" width="390px">
+      <div style="margin: 10px 0">
+        <Icon type="information-circled" style="font-size: 31px;color: rgb(255,102,0);vertical-align: middle;margin-right: 5px;"></Icon><span>提示</span>
+      </div>
+
         <p>尊敬的用户您好，您当前账户余额不足抵扣前日消费，目前您已欠费<span style="color: #2A99F2;">{{totalPrice}}</span>元，在您账户余额大于欠费之前，对象存储将停止服务，请尽快充值。</p>
         <p>超出部分计费详情</p>
         <p>存储用量：30gb/2.55元</p>
