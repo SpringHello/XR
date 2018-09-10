@@ -131,6 +131,21 @@
       </div>
     </Modal>
 
+    <Modal  v-model="arrears"
+            title="提示"
+            :scrollable='true'
+            :mask-closable="false" width="390px">
+        <p>尊敬的用户您好，您当前账户余额不足抵扣前日消费，目前您已欠费<span style="color: #2A99F2;">{{totalPrice}}</span>元，在您账户余额大于欠费之前，对象存储将停止服务，请尽快充值。</p>
+        <p>超出部分计费详情</p>
+        <p>存储用量：30gb/2.55元</p>
+        <p>下行流量用量：30gb/2元</p>
+        <p>请求次数用量：5000次/0.5元</p>
+      <div slot="footer" class="modal-footer-border">
+        <a href="https://www.xrcloud.net/ruicloud/recharge">
+         <Button type="primary">充值</Button>
+        </a>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -165,6 +180,8 @@
   export default {
     data() {
       return {
+        //欠费弹窗
+        arrears:false,
         //分割线————————————————————
         name: '',
         bucketMange: h => {
@@ -404,7 +421,10 @@
           }
         ],
         buckLoading:false,
-        createLoading:false
+        createLoading:false,
+
+        //欠费总价
+        totalPrice:'',
       }
     },
     components: {
@@ -691,6 +711,16 @@
             }
           });
       },
+
+      //查询欠费状态
+      selectArrears(){
+        this.$http.post('user/getArrerage.do',{}).then(res =>{
+          if(res.status == 200 && res.data.status =='31'){
+            this.totalPrice = res.data.data.totalPrice;
+            this.arrears = true;
+          }
+        })
+      }
     },
     mounted(){
       this.getAllsize();
@@ -698,6 +728,7 @@
       this.getTime();
       this.showUserAcessAll();
       this.getBuckets();
+      this.selectArrears();
     }
   };
 </script>

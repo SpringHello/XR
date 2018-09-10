@@ -208,17 +208,17 @@
               <!--</div>-->
             <!--</div>-->
           </TabPane>
-          <TabPane label="图片处理">
-            <div class="img_font">
-              <p>图片处理域名规则<span style="color: #2A99F2;font-size: 12px;">查看规则详情</span></p>
-              <span>域名/sample.jpg?x-oss-process=style/stylename</span><span style="margin-left: 40px;">自定义域名规则：域名/sample.jpg?x-oss-process=style/stylename</span>
-            </div>
-            <div style="margin-bottom: 10px;">
-              <Button type="primary" @click="$router.push({path:'ObjectPicture'})">新建图片样式</Button>
-              <Button type="primary">原图保护设置</Button>
-            </div>
-            <Table :cloumns="imgList" :data="imgData"></Table>
-          </TabPane>
+          <!--<TabPane label="图片处理">-->
+            <!--<div class="img_font">-->
+              <!--<p>图片处理域名规则<span style="color: #2A99F2;font-size: 12px;">查看规则详情</span></p>-->
+              <!--<span>域名/sample.jpg?x-oss-process=style/stylename</span><span style="margin-left: 40px;">自定义域名规则：域名/sample.jpg?x-oss-process=style/stylename</span>-->
+            <!--</div>-->
+            <!--<div style="margin-bottom: 10px;">-->
+              <!--<Button type="primary" @click="$router.push({path:'ObjectPicture'})">新建图片样式</Button>-->
+              <!--<Button type="primary">原图保护设置</Button>-->
+            <!--</div>-->
+            <!--<Table :cloumns="imgList" :data="imgData"></Table>-->
+          <!--</TabPane>-->
         </Tabs>
       </div>
     </div>
@@ -1519,7 +1519,9 @@
             }
           }
         ],
-        imgData:[]
+        imgData:[],
+
+
       }
     },
     components:{
