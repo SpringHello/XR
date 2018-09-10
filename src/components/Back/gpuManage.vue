@@ -5,7 +5,7 @@
         <div class="head">
           <div>
             <div style="display: inline-block;">
-              <span style="font-size: 18px;color: #FFFFFF;">主机名称</span>
+              <span style="font-size: 18px;color: #FFFFFF;">{{gpuDetail.instancename}}</span>
             </div>
             <div class="button_right">
               <router-link to="GpuList">
@@ -17,20 +17,20 @@
           <div style="display: flex;margin-top: 20px;">
             <div class="host_box">
                 <p>4CPU，8G内存，gl.xlarge显卡 | 天津1区</p>
-                <p>镜像系统：windows 2012</p>
-                <p>到期时间/有效期：2017-12-15 11:00:00</p>
+                <p>镜像系统：{{gpuDetail.templatename}}</p>
+                <p>到期时间/有效期：{{gpuDetail.templatename}}</p>
                 <p>内网地址：145.168.35.23</p>
-                <p>登录密码：<span>发送密码</span></p>
+              <p>登录密码：  <span :class="[isActive ? 'send' : 'nosend']" @click="lookPassword">{{codePlaceholder}}</span></p>
             </div>
             <div class="host_box">
-              <p>所属VPC：<span>默认VPC</span></p>
+              <p>所属VPC：<span>{{gpuDetail.vpcname}}</span></p>
               <p>绑定公网：<span>196.168.33.233</span></p>
               <p>所属负载均衡：<span>基础</span></p>
               <p>挂载磁盘：<span style="color: #2A99F2;">发送密码</span></p>
             </div>
             <div class="host_box">
-              <p>计费类型：包年计费</p>
-              <p>创建于：2017-2-24 08:23</p>
+              <p>计费类型：{{gpuDetail.caseType == 1 ?'包年计费':gpuDetail.caseType == 2 ? '包月计费' : gpuDetail.caseType == 3 ? '实时计费' :''}}</p>
+              <p>创建于：{{gpuDetail.createtime}}</p>
               <p>自动续费：<span>开</span></p>
             </div>
           </div>
@@ -92,7 +92,7 @@
             <TabPane label="快照管理">
               <div class="tab_box">
                 <Button type="primary">删除快照</Button>
-                <Table :columns="snapshotList" :data="snapshotData"></Table>
+                <Table ref="selection" :columns="snapshotList" :data="snapshotData"></Table>
               </div>
             </TabPane>
             <!--操作日志-->
@@ -109,7 +109,7 @@
                   <DatePicker type="date" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
                   <Button type="primary" size="small">查询</Button>
                 </div>
-                <Table :columns="journalList" :data="journalData"></Table>
+                <Table :columns="journalList" :data="journalData" style="margin-top: 10px;"></Table>
               </div>
             </TabPane>
             <!--修改密码-->
@@ -190,10 +190,47 @@
           <Button type="primary" >完成</Button>
         </div>
       </modal>
+
+      <!--发送密码-->
+      <Modal width="550" v-model="showWindow.lookPassword" :scrollable="true" class="lookPassword">
+        <div slot="header" class="modal-header-border">
+          <span class="universal-modal-title">查看登录密码</span>
+        </div>
+        <div>
+          <div class="universal-modal-content-flex">
+            <Form :model="lookPasswordForm" ref="lookPasswordForm" :rules="lookPasswordFormRule" @submit.native.prevent>
+              <FormItem label="请输入控制台登录密码" prop="input">
+                <Input v-model="lookPasswordForm.input" placeholder="请输入控制台登录密码" type="password"></Input>
+              </FormItem>
+              <!--<input type="text" hidden>-->
+            </Form>
+          </div>
+          <div style="display:flex;">
+            <p style=" font-size: 14px;line-height: 22px;">密码接收渠道</p>
+            <Checkbox v-model="lookPasswordForm.isemailalarmSec" size="large"
+                      style="margin-left: 20px;font-size: 12px;">邮箱
+            </Checkbox>
+            <Checkbox v-model="lookPasswordForm.issmsalarmSec" size="large" style="margin-left: 20px;font-size: 12px;">
+              短信
+            </Checkbox>
+          </div>
+        </div>
+        <div slot="footer" class="modal-footer-border">
+          <Button type="ghost" @click="showWindow.lookPassword=false">取消</Button>
+          <Button type="primary" @click="lookPasswordSubm('lookPasswordForm')"
+                  :disabled="!(lookPasswordForm.isemailalarmSec || lookPasswordForm.issmsalarmSec)">确定
+          </Button>
+        </div>
+      </Modal>
     </div>
 </template>
 
 <script>
+  import axios from 'axios'
+  var urlList = {
+    dayURL: 'alarm/getVmAlarmByHour.do',
+    otherURL: 'alarm/getVmAlarmByDay.do'
+  }
   import cpuOptions from "@/echarts/cpuUtilization"
   const cpu = JSON.stringify(cpuOptions);
   export default {
@@ -201,6 +238,7 @@
       return{
         indexs:0,
         cpu:JSON.parse(cpu),
+
         //cpu统计图
         dayList:[
           {
@@ -208,12 +246,6 @@
             data:[20,30,40,50,60],
             day:['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
             label:0
-          },
-          {
-            value:'昨天',
-            data:[20,30,40,50,60],
-            day:['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
-            label:1
           },
           {
             value:'最近七天',
@@ -240,27 +272,41 @@
             boundaryGap:true
           }
         ],
+        requestIndex:0,
+        chartTwoIndex:0,
+
         //快照
         snapshotList:[
           {
-            title:'',
-            width:50
+            type: 'selection',
+            width:'70'
           },
           {
-            title:'快照名称'
+            title:'快照名称',
+            key:'snapshotname'
           },
           {
-            title:'快照策略'
+            title:'快照策略',
+            render:(h,params) =>{
+              return h('span',{},params.row.createway == 'hand' ? '手动' :'')
+            }
           },
           {
-            title:'快照间隔'
+            title:'快照间隔',
+            render:(h,params) =>{
+              return h('span',{},params.row.intervals == 'hand' ? '手动' :'')
+            }
           },
           {
-            title:'创建于'
+            title:'创建于',
+            key:'addtime'
           },
           {
             title:'操作',
-            width:100
+            width:100,
+            render:(h,params) =>{
+              return h('span',{},'回滚')
+            }
           }
         ],
         snapshotData:[],
@@ -275,6 +321,7 @@
             value:'近三十天'
           }
         ],
+
         //操作日志
         journalList:[
           {
@@ -291,6 +338,7 @@
           }
         ],
         journalData:[],
+
         //修改密码
         resetPasswordForm:{
           oldPassword:'',
@@ -298,13 +346,29 @@
           confirmPassword:'',
           buttonMessage:'确认重置'
         },
+        resetRuleValidate:{},
+
+        //发送密码
+        isActive:true,
+        codePlaceholder:'发送密码',
+        lookPasswordForm:{
+          input:'',
+          isemailalarmSec:'',
+          issmsalarmSec:'',
+        },
+        lookPasswordFormRule:{},
+
+
         //Gpu服务器详情
         gpuDetail:{},
+
         //显示弹窗
         showWindow:{
           //警告设置
-          warningSetting:false
+          warningSetting:false,
+          lookPassword:false
         },
+
         //告警设置字段
         setList: [
           {
@@ -367,22 +431,133 @@
         issmsalarm: false,
       }
     },
-    methods:{
-      //获取GPU服务器详情
-      getGpuHostDetail(){
-        this.$http.get('gpuserver/listGpuServerById.do',{
+    beforeRouteEnter(to, from, next){
+      next(vm =>{
+        axios.get('information/zone.do',{
           params:{
-            id:''
+            gpuServer:'1'
           }
         }).then(res => {
-          if(res.status == 1 && res.data.status == 1){
-            // this.gpuDetail = res.data.result;
+          vm.$store.state.zone.zoneId = res.data.result[0].zoneid;
+          vm.$store.state.zone.zonename = res.data.result[0].zonename;
+        })
+      })
+    },
+    methods:{
+
+      //获取GPU服务器详情
+      getGpuHostDetail(){
+        axios.get('gpuserver/listGpuServerById.do',{
+          params:{
+            GpuId:sessionStorage.getItem('uuId'),
+            zoneId:this.$store.state.zone.zoneId,
+            changeCost:'1'
+          }
+        }).then(res => {
+          if(res.status == 200 && res.data.status == 1){
+            this.gpuDetail = res.data.result[0];
           }
         })
-      }
+      },
+
+      //列出快照
+      selectSnapshotList(){
+        axios.get('Snapshot/listVMSnapshot.do',{
+          params:{
+            zoneId:this.$store.state.zone.zoneId,
+            resourceId:sessionStorage.getItem('uuId')
+          }
+        }).then(res => {
+          if(res.status == 200 && res.data.status == 1){
+            this.snapshotData = res.data.result;
+          }
+        })
+      },
+
+      //发送密码
+      lookPasswordSubm(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.showWindow.lookPassword = false
+            this.isActive = false
+            this.codePlaceholder = '发送密码（60s）'
+            var inter = setInterval(() => {
+              this.countdown--
+              this.codePlaceholder = '发送密码（' + this.countdown + 's）'
+              if (this.countdown == 0) {
+                clearInterval(inter)
+                this.countdown = 60
+                this.codePlaceholder = '发送密码'
+                this.isActive = true
+              }
+            }, 1000)
+            this.lookPasswordForm.isLetterSec = this.lookPasswordForm.isletterSec == false ? 0 : 1
+            this.lookPasswordForm.isSmsAlarmSec = this.lookPasswordForm.issmsalarmSec == false ? 0 : 1
+            this.lookPasswordForm.isEmailAlarmSec = this.lookPasswordForm.isemailalarmSec == false ? 0 : 1
+            this.$http.post('log/sendVMPassword.do', {
+              VMId: sessionStorage.getItem('gpuId'),
+              password: this.lookPasswordForm.input,
+              letter: this.lookPasswordForm.isLetterSec,
+              meail: this.lookPasswordForm.isEmailAlarmSec,
+              phone: this.lookPasswordForm.isSmsAlarmSec
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+              this.lookPasswordForm.input = ''
+            })
+          }
+        })
+      },
+      //发送密码
+      lookPassword(){
+        if(this.isActive)
+          this.showWindow.lookPassword = true;
+      },
+
+      // 获取操作日志，近一天日期应该设置明天
+      getTomorrow() {
+        var day = new Date()
+        day.setTime(day.getTime() + 24 * 60 * 60 * 1000)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      logNearlySevenDays() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 6)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      logNearlyThirtyDays() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 29)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      getCurrentDate() {
+        return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
+      },
+      getYesterday() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+
+      getNearlySevenDays() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 7)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      getNearlyThirtyDays() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 30)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
     },
     created(){
       this.getGpuHostDetail();
+      this.selectSnapshotList();
     }
   }
 </script>
@@ -523,5 +698,13 @@
       border:1px solid #2a99f2;
       cursor: pointer;
     }
+  }
+  .send {
+    color: rgb(42, 153, 242);
+    cursor: pointer;
+  }
+  .nosend {
+    color: #666666;
+    cursor: not-allowed;
   }
 </style>
