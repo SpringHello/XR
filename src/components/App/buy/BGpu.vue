@@ -43,61 +43,90 @@
         <div>
           <!--主机规格选择-->
           <div style="padding-bottom: 20px;border-bottom: 1px solid #EDEDED;margin-top: 20px">
-            <h2>数据库版本类型</h2>
+            <h2>GPU规格选择</h2>
+            <!--类型选择-->
+            <div class="item-wrapper">
+              <div style="display: flex">
+                <div>
+                  <p class="item-title">类型</p>
+                </div>
+                <div v-for="gpu in GpuTypeList" :key="gpu.value" class="zoneItem"
+                     :class="{zoneSelect:GpuType==gpu.value}"
+                     @click="GpuType=gpu.value">{{gpu.name}}
+                </div>
+              </div>
+            </div>
             <!--镜像选择-->
             <div class="item-wrapper">
               <div style="display: flex">
                 <div>
-                  <p class="item-title">镜像系统</p>
+                  <p class="item-title">镜像类型</p>
+                  <p class="item-title" style="margin-top: 40px;">镜像系统</p>
                 </div>
                 <div>
-                  <!--自定义镜像 列表-->
-                  <div>
-                    <Dropdown v-for="(item,index) in publicList"
-                              style="margin-right:10px;margin-bottom:20px;"
-                              @on-click="setDataOS" :key="item.templateid">
+                  <div v-for="item in mirrorType" class="zoneItem"
+                       :class="{zoneSelect:currentType==item.value}"
+                       @click="currentType=item.value">{{item.label}}
+                  </div>
+                  <!--镜像+应用 列表-->
+                  <div v-if="currentType=='app'">
+                    <div v-for="item in appList" class="mirror"
+                         :class="{mirrorSelect:item==currentApp}"
+                         @click="currentApp=item">
+                      <div>
+                        <p class="appName">{{item.templatename}}</p>
+                        <p class="desc">{{item.templatedescript}}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!--公共镜像 列表-->
+                  <div v-if="currentType=='public'">
+                    <Dropdown v-for="(item,index) in publicList" style="margin-right:10px;margin-top:20px;"
+                              @on-click="setOS" :key="item.ostypeid">
                       <div
                         style="width:184px;text-align: center;height:35px;border: 1px solid #D9D9D9;line-height: 35px;">
                         {{item.selectSystem||item.system}}
                       </div>
                       <Dropdown-menu slot="list">
                         <Dropdown-item v-for="system in item.systemList" :key="system.ostypeid"
-                                       :name="`${system.dbname}#${system.systemtemplateid}#${index}#${system.dbloginname}#${system.dbport}`"
+                                       :name="`${system.templatename}#${system.systemtemplateid}#${index}`"
                                        style="white-space: pre-wrap;display:block;">
-                          <span>{{system.dbname}}</span>
+                          <span>{{system.templatename}}</span>
                         </Dropdown-item>
                       </Dropdown-menu>
                     </Dropdown>
                   </div>
-                </div>
-              </div>
-            </div>
-            <!-- 核心数选择 -->
-            <div class="item-wrapper">
-              <div style="display: flex">
-                <div>
-                  <p class="item-title">核心数</p>
-                </div>
-                <div v-for="item in info" v-if="item.zoneId === zone.zoneid">
-                  <div v-for="cpu in item.kernelList" :key="cpu.value" class="zoneItem"
-                       :class="{zoneSelect:vmConfig.kernel==cpu.value}"
-                       @click="changeKernel(cpu)">{{cpu.label}}
+                  <!--自定义镜像 列表-->
+                  <div v-if="currentType=='custom'">
+                    <div v-for="item in customList" :key="item.value" class="zoneItem"
+                         :class="{zoneSelect:customMirror.id==item.id}"
+                         @click="setOwnTemplate(item)" style="margin-top: 20px;">{{item.templatename}}
+                    </div>
+                    <div v-if="customList.length==0" class="zoneItem" style="margin-top: 20px;">
+                      暂无镜像
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- 内存选择-->
+            <!--<div class="item-wrapper">
+              <div style="display: flex">
+                <div>
+                  <p class="item-title">系统盘</p>
+                </div>
+                <div v-for="disk in DiskTypeList" :key="disk.value" class="zoneItem"
+                     :class="{zoneSelect:DiskType==disk.value}"
+                     @click="DiskType=disk.value">{{disk.name}}
+                </div>
+              </div>
+            </div>-->
             <div class="item-wrapper">
               <div style="display: flex">
                 <div>
-                  <p class="item-title">内存</p>
+                  <p class="item-title">配置类型</p>
                 </div>
-                <div>
-                  <div v-for="item in RAMList" :key="item.value" class="zoneItem"
-                       :class="{zoneSelect:vmConfig.RAM==item.value}"
-                       @click="vmConfig.RAM=item.value">{{item.label}}
-                  </div>
-                </div>
+                <Table :columns="serverOfferColumns" :data="serverOfferList" @radio-change="selectGpu"></Table>
               </div>
             </div>
             <!--自定义主机价格-->
@@ -292,29 +321,66 @@
           <div class="item-wrapper">
             <div style="display: flex">
               <div>
-                <p class="item-title">数据库名称</p>
+                <p class="item-title">主机信息</p>
               </div>
-              <Input v-model="dbName" placeholder="请输入数据库名称" style="width: 300px"></Input>
-            </div>
-          </div>
-          <div class="item-wrapper">
-            <div style="display: flex">
-              <div>
-                <p class="item-title">数据库账号</p>
+              <div v-for="item in loginType" :key="item.type" class="zoneItem"
+                   :class="{zoneSelect:currentLoginType==item.type}"
+                   @click="currentLoginType=item.type">{{item.label}}
               </div>
-              <span
-                style="padding: 10px 0px; font-size: 14px; color: rgb(102, 102, 102);">{{account}}</span>
             </div>
           </div>
 
-          <div class="item-wrapper">
-            <div style="display: flex">
-              <div>
-                <p class="item-title" style="margin-top: 8px">数据库密码</p>
+          <!--默认设置显示的设置-->
+          <div v-if="currentLoginType=='default'">
+            <!--安全组选择-->
+            <div class="item-wrapper">
+              <div style="display: flex">
+                <div>
+                  <p class="item-title" style="margin-top: 8px">系统用户名</p>
+                </div>
+                <span style="padding:10px 0;font-size: 14px;color: #666666;">{{ systemUsername }}</span>
               </div>
-              <Input v-model="password" placeholder="请输入至少6位仅包含字母大小写与数字的密码" style="width: 300px"
-                     @on-change="passwordWarning=''"></Input>
-              <span style="line-height: 32px;color:red;margin-left:10px">{{passwordWarning}}</span>
+            </div>
+            <div class="item-wrapper">
+              <div style="display: flex">
+                <div>
+                  <p class="item-title" style="margin-top: 8px">登录密码</p>
+                </div>
+                <span style="padding:10px 0;font-size: 14px;color: #666666;">默认密码 创建成功后通过短信和站内信查看</span>
+              </div>
+            </div>
+          </div>
+
+          <!--自定义设置显示的设置-->
+          <div v-if="currentLoginType=='custom'">
+            <div class="item-wrapper">
+              <div style="display: flex">
+                <div>
+                  <p class="item-title" style="margin-top: 8px">主机名称</p>
+                </div>
+                <Input v-model="computerName" placeholder="请输入主机名" style="width: 300px"
+                       @on-change="computerNameWarning=''"></Input>
+                <span style="line-height: 32px;color:red;margin-left:10px">{{computerNameWarning}}</span>
+              </div>
+              <p class="item-desc">当购买数量大于1台之时，主机命名规则为主机名称加随机数字。</p>
+            </div>
+            <div class="item-wrapper">
+              <div style="display: flex">
+                <div>
+                  <p class="item-title" style="margin-top: 8px">系统用户名</p>
+                </div>
+                <span style="padding:10px 0;font-size: 14px;color: #666666;">{{ systemUsername }}</span>
+              </div>
+            </div>
+            <div class="item-wrapper">
+              <div style="display: flex">
+                <div>
+                  <p class="item-title" style="margin-top: 8px">登录密码</p>
+                </div>
+                <Input v-model="password" placeholder="请输入至少6位包含大小写与数字的密码"
+                       style="width: 300px" @on-change="passwordWarning=''"></Input>
+                <span style="line-height: 32px;color:red;margin-left:10px">{{passwordWarning}}</span>
+              </div>
             </div>
           </div>
 
@@ -365,15 +431,22 @@
   import regExp from '@/util/regExp'
   var debounce = require('throttle-debounce/debounce')
   export default{
-    data(){
-      var zone = null
-      this.$store.state.zoneList.forEach(item => {
-        if (item.isdefault === 1) {
-          zone = item
+    beforeRouteEnter(to, from, next){
+      axios.get('information/zone.do', {
+        params: {
+          gpuServer: '1'
         }
+      }).then(response => {
+        next(vm => {
+          vm.zoneList = response.data.result
+          vm.zone = response.data.result[0]
+        })
       })
+    },
+    data(){
       return {
-        zone,
+        zone: null,
+        zoneList: [],
         // 计费方式
         timeType: [{label: '包年包月', value: 'annual'}, {label: '实时计费', value: 'current'}],
         timeValue: [
@@ -395,340 +468,50 @@
           currentTimeType: 'annual',
           currentTimeValue: {label: '1月', value: '1', type: 'month'}
         },
-        // 购买主机地区、核心数、内存关联配置，用于选择
-        info: [
+        GpuTypeList: [{name: 'GPU加速型', value: 'fast'}],
+        GpuType: 'fast',
+        // 系统磁盘类型选择
+        /*DiskTypeList: [{name: 'SSD存储', value: 'ssd'}, {name: 'SAS存储', value: 'sas'}],
+         DiskType: 'ssd',*/
+        mirrorType: [
+          /*{label: '镜像+应用', value: 'app'},*/
+          {label: '公共镜像', value: 'public'},
+          {label: '自定义镜像', value: 'custom'}
+        ],
+        currentType: 'public',
+        // 共有镜像列表
+        publicList: [],
+        // 自有镜像列表
+        customList: [],
+        serverOfferList: [],
+        serverOfferColumns: [
           {
-            zoneId: '39a6af0b-6624-4194-b9d5-0c552d903858',
-            zoneName: '北京一区（测试）',
-            kernelList: [
-              {
-                label: '1核',
-                value: 1,
-                RAMList: [
-                  {label: '1G', value: 1},
-                  {label: '2G', value: 2},
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8}
-                ]
-              },
-              {
-                label: '2核',
-                value: 2,
-                RAMList: [
-                  {label: '2G', value: 2},
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8},
-                  {label: '16G', value: 16}
-                ]
-              },
-              {
-                label: '4核',
-                value: 4,
-                RAMList: [
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8},
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32}
-                ]
-              },
-              {
-                label: '8核',
-                value: 8,
-                RAMList: [
-                  {label: '8G', value: 8},
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32},
-                  {label: '64G', value: 64}
-                ]
-              },
-              {
-                label: '16核',
-                value: 16,
-                RAMList: [
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32},
-                  {label: '64G', value: 64},
-                  {label: '128G', value: 128}
-                ]
-              },
-              {
-                label: '32核',
-                value: 32,
-                RAMList: [
-                  {label: '64G', value: 64},
-                  {label: '128G', value: 128}
-                ]
-              },
-              {
-                label: '64核',
-                value: 64,
-                RAMList: [
-                  {label: '128G', value: 128},
-                  {label: '256G', value: 256},
-                ]
-              }
-            ],
+            type: 'radio',
+            width: 60,
+            align: 'center'
           },
           {
-            zoneId: '1ce0d0b9-a964-432f-8078-a61100789e30',
-            zoneName: '北方二区(沈阳)',
-            kernelList: [
-              {
-                label: '1核',
-                value: 1,
-                RAMList: [
-                  {label: '1G', value: 1},
-                  {label: '2G', value: 2},
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8}
-                ]
-              },
-              {
-                label: '2核',
-                value: 2,
-                RAMList: [
-                  {label: '2G', value: 2},
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8},
-                  {label: '16G', value: 16}
-                ]
-              },
-              {
-                label: '4核',
-                value: 4,
-                RAMList: [
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8},
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32}
-                ]
-              },
-              {
-                label: '8核',
-                value: 8,
-                RAMList: [
-                  {label: '8G', value: 8},
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32},
-                  {label: '64G', value: 64}
-                ]
-              },
-              {
-                label: '16核',
-                value: 16,
-                RAMList: [
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32},
-                  {label: '64G', value: 64},
-                  {label: '128G', value: 128}
-                ]
-              },
-              {
-                label: '32核',
-                value: 32,
-                RAMList: [
-                  {label: '64G', value: 64},
-                  {label: '128G', value: 128}
-                ]
-              },
-              {
-                label: '64核',
-                value: 64,
-                RAMList: [
-                  {label: '128G', value: 128},
-                  {label: '256G', value: 256},
-                ]
-              }
-            ],
+            title: '型号',
+            key: 'servicetype'
           },
           {
-            zoneId: 'a0a7df65-dec3-48da-82cb-cff9a55a4b6d',
-            zoneName: '北方一区',
-            kernelList: [
-              {
-                label: '1核',
-                value: 1,
-                RAMList: [
-                  {label: '1G', value: 1},
-                  {label: '2G', value: 2},
-                  {label: '4G', value: 4}
-                ]
-              },
-              {
-                label: '2核',
-                value: 2,
-                RAMList: [
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8},
-                  {label: '12G', value: 12},
-                ]
-              },
-              {
-                label: '4核',
-                value: 4,
-                RAMList: [
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8},
-                  {label: '12G', value: 12},
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32}
-                ]
-              },
-              {
-                label: '8核',
-                value: 8,
-                RAMList: [
-                  {label: '16G', value: 16},
-                  {label: '24G', value: 24},
-                  {label: '32G', value: 32}
-                ]
-              },
-              {
-                label: '16核',
-                value: 16,
-                RAMList: [
-                  {label: '16G', value: 16},
-                  {label: '24G', value: 24},
-                  {label: '32G', value: 32}
-                ]
-              },
-              {
-                label: '32核',
-                value: 32,
-                RAMList: [
-                  {label: '32G', value: 32}
-                ]
-              }
-            ],
+            title: 'vCPU',
+            key: 'cpunum'
           },
           {
-            zoneId: '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c',
-            zoneName: '华中一区',
-            kernelList: [
-              {
-                label: '1核',
-                value: 1,
-                RAMList: [
-                  {label: '1G', value: 1},
-                  {label: '2G', value: 2},
-                  {label: '4G', value: 4}
-                ]
-              },
-              {
-                label: '2核',
-                value: 2,
-                RAMList: [
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8},
-                  {label: '12G', value: 12},
-                ]
-              },
-              {
-                label: '4核',
-                value: 4,
-                RAMList: [
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8},
-                  {label: '12G', value: 12},
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32}
-                ]
-              },
-              {
-                label: '8核',
-                value: 8,
-                RAMList: [
-                  {label: '16G', value: 16},
-                  {label: '24G', value: 24},
-                  {label: '32G', value: 32},
-                ]
-              },
-              {
-                label: '16核',
-                value: 16,
-                RAMList: [
-                  {label: '16G', value: 16},
-                  {label: '24G', value: 24},
-                  {label: '32G', value: 32}
-                ]
-              },
-              {
-                label: '32核',
-                value: 32,
-                RAMList: [
-                  {label: '32G', value: 32}
-                ]
-              }
-            ],
+            title: '内存',
+            key: 'memory'
           },
           {
-            zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
-            zoneName: '华中二区',
-            kernelList: [
-              {
-                label: '1核',
-                value: 1,
-                RAMList: [
-                  {label: '1G', value: 1},
-                  {label: '2G', value: 2},
-                  {label: '4G', value: 4}
-                ]
-              },
-              {
-                label: '2核',
-                value: 2,
-                RAMList: [
-                  {label: '2G', value: 2},
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8}
-                ]
-              },
-              {
-                label: '4核',
-                value: 4,
-                RAMList: [
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8},
-                  {label: '16G', value: 16}
-                ]
-              },
-              {
-                label: '8核',
-                value: 8,
-                RAMList: [
-                  {label: '8G', value: 8},
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32}
-                ]
-              },
-              {
-                label: '16核',
-                value: 16,
-                RAMList: [
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32}
-                ]
-              },
-              {
-                label: '32核',
-                value: 32,
-                RAMList: [
-                  {label: '32G', value: 32}
-                ]
-              }
-            ],
+            title: 'GPU/FPGA',
+            key: 'gputype'
           }
         ],
+        gpuSelection: null,
         vpcList: [],
         networkList: [],
         // 数据库镜像列表
         dataList: [],
-        vmConfig: {
-          diskType: 'sas',
-          kernel: 1,
-          RAM: 1,
-          diskSize: 40,
-        },
         vmCost: 0,
         vmCoupon: 0,
         RAMList: [
@@ -737,9 +520,6 @@
           {label: '4G', value: 4},
           {label: '8G', value: 8}
         ],
-
-        // 公共镜像 列表
-        publicList: [],
 
         // 选中的镜像
         system: {},
@@ -750,20 +530,20 @@
         // 两种登录设置  默认设置/自定义设置
         loginType: [{type: 'default', label: '默认设置'}, {type: 'custom', label: '自定义设置'}],
         currentLoginType: 'default',
+        // 系统用户名
+        systemUsername: '',
+        // 主机名称
+        computerName: '',
+        // 主机名称提示信息
+        computerNameWarning: '',
+        // 登录密码
+        password: '',
+        // 登录密码提示信息
+        passwordWarning: '',
+        // 自动续费
+        autoRenewal: true,
 
         safe: 'default',
-
-        autoRenewal: true,
-        // 主机名称
-        password: '',
-        // 主机名称提示信息
-        passwordWarning: '',
-
-        // 系统磁盘类型选择
-        diskTypeList: [
-          {label: 'SAS存储', value: 'sas'},
-          {label: 'SSD存储', value: 'ssd'}
-        ],
         // 虚拟私有云列表
         vpc: '',
         // vpc下所有子网
@@ -807,17 +587,23 @@
       }
     },
     created(){
-      this.queryVpc()
-      this.queryDiskPrice()
-      this.queryCustomVM()
-      this.queryIPPrice()
-      this.listDbTemplates()
+      setTimeout(() => {
+        this.setTemplate()
+        this.queryVpc()
+        this.queryDiskPrice()
+        //this.queryCustomVM()
+        this.queryIPPrice()
+      }, 0)
     },
     methods: {
-      listDbTemplates(){
-        axios.get('database/listDbTemplates.do', {
+      // 设置系统模版
+      setTemplate() {
+        // 系统镜像
+        axios.get('information/listTemplates.do', {
           params: {
-            zoneId: this.zone.zoneid
+            zoneId: this.zone.zoneid,
+            // 0代表系统镜像
+            user: '0'
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -828,8 +614,40 @@
             this.system = {}
           }
         })
+        // 自定义镜像
+        if (this.userInfo != null) {
+          axios.get('information/listTemplates.do', {
+            params: {
+              // 1代表自定义镜像
+              user: '1',
+              zoneId: this.zone.zoneid
+            }
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              this.customList = response.data.result.window.concat(response.data.result.centos, response.data.result.debian, response.data.result.ubuntu)
+              this.customMirror = {}
+            }
+          })
+        }
       },
-      setDataOS(name){
+      setGpuServer(){
+        axios.get('gpuserver/listGpuServerOffer.do', {
+          params: {
+            zoneId: this.zone.zoneid
+          }
+        }).then(response => {
+          response.data.result[0]._checked = true
+          this.serverOfferList = response.data.result
+          this.gpuSelection = this.serverOfferList[0]
+        })
+      },
+      // 选中表中的一项
+      selectGpu(currentRow) {
+        this.gpuSelection = currentRow
+        console.log(this.gpuSelection)
+      },
+      // 重新选择系统镜像
+      setOS(name) {
         var arg = name.split('#')
         for (var item of this.publicList) {
           item.selectSystem = ''
@@ -838,28 +656,37 @@
           systemName: arg[0],
           systemId: arg[1]
         }
-        //登录名
-        this.account = arg[3]
-        //开放端口
-        this.port = arg[4]
+        // 根据镜像名称第一个字符确定系统用户名是admin还是root
+        var str = this.system.systemName.substr(0, 1)
+        if (str === 'W' || str === 'w') {
+          this.systemUsername = 'administrator'
+        } else {
+          this.systemUsername = 'root'
+        }
         this.publicList[arg[2]].selectSystem = arg[0]
       },
-      // 切换核心数
-      changeKernel(cpu) {
-        this.vmConfig.kernel = cpu.value
-        /*this.RAMList = cpu.RAMList
-         this.vmConfig.RAM = this.RAMList[0].value*/
+      // 设置自定义镜像
+      setOwnTemplate(item) {
+        this.customMirror = item
+        var str = item.ostypename.substr(0, 1)
+        if (str === 'W' || str === 'w') {
+          this.systemUsername = 'administrator'
+        } else {
+          this.systemUsername = 'root'
+        }
       },
+      // 查询GPU价格
       // 查询自定义主机价格
       queryCustomVM() {
         var params = {
-          cpuNum: this.vmConfig.kernel.toString(),
+          cpuNum: this.gpuSelection.cpunum,
           diskSize: '40',
-          diskType: this.vmConfig.diskType,
-          memory: this.vmConfig.RAM.toString(),
+          diskType: this.gpuSelection.rootdisktype,
+          memory: this.gpuSelection.memory,
           timeType: this.timeForm.currentTimeValue.type,
           timeValue: this.timeForm.currentTimeValue.value,
-          zoneId: this.zone.zoneid
+          zoneId: this.zone.zoneid,
+          gpu: this.gpuSelection.gpu
         }
         if (this.timeForm.currentTimeType === 'current') {
           params.timeType = 'current'
@@ -873,6 +700,86 @@
           }
         })
       },
+      /*queryGpu(){
+       let params = {
+       zoneId: this.zone.zoneid,
+       templateId: this.currentType == 'public' ? this.system.systemtemplateid : this.customMirror.systemtemplateid,
+       bandWidth: this.IPConfig.publicIP ? this.IPConfig.bandWidth : 0,
+       timeType: this.timeForm.currentTimeType == 'annual' ? this.timeForm.currentTimeValue.type : 'current',
+       timeValue: this.timeForm.currentTimeValue.value,
+       count: 1,
+       isAutoRenew: this.autoRenewal ? '1' : '0',
+       cpuNum: this.gpuSelection.cpunum,
+       memory,
+       networkId: this.network,
+       //ipAddress,
+       rootDiskType: this.gpuSelection.rootdisktype,
+       vpcId: this.vpc,
+       gpusize: this.gpuSelection.gpusize,
+       serviceType: this.gpuSelection.servicetype
+       }
+       let diskType = '', diskSize = ''
+       for (let disk of this.dataDiskList) {
+       diskType += `${disk.type},`
+       diskSize += `${disk.size},`
+       }
+       // 设置了主机名和密码
+       if (this.currentLoginType == 'custom') {
+       params.VMName = this.computerName
+       params.password = this.password
+       }
+       params.diskType = diskType
+       params.diskSize = diskSize
+       axios.get('gpuserver/createGpuServer.do', {
+       params
+       }).then(response => {
+
+       })
+       },*/
+      /*setDataOS(name){
+       var arg = name.split('#')
+       for (var item of this.publicList) {
+       item.selectSystem = ''
+       }
+       this.system = {
+       systemName: arg[0],
+       systemId: arg[1]
+       }
+       //登录名
+       this.account = arg[3]
+       //开放端口
+       this.port = arg[4]
+       this.publicList[arg[2]].selectSystem = arg[0]
+       },*/
+      // 切换核心数
+      /*changeKernel(cpu) {
+       this.vmConfig.kernel = cpu.value
+       /!*this.RAMList = cpu.RAMList
+       this.vmConfig.RAM = this.RAMList[0].value*!/
+       },*/
+      // 查询自定义主机价格
+      /*queryCustomVM() {
+       var params = {
+       cpuNum: this.vmConfig.kernel.toString(),
+       diskSize: '40',
+       diskType: this.vmConfig.diskType,
+       memory: this.vmConfig.RAM.toString(),
+       timeType: this.timeForm.currentTimeValue.type,
+       timeValue: this.timeForm.currentTimeValue.value,
+       zoneId: this.zone.zoneid
+       }
+       if (this.timeForm.currentTimeType === 'current') {
+       params.timeType = 'current'
+       }
+       axios.post('device/QueryBillingPrice.do', params).then(response => {
+       this.vmCost = response.data.cost
+       if (response.data.coupon) {
+       this.vmCoupon = response.data.coupon
+       } else {
+       this.vmCoupon = 0
+       }
+       })
+       },*/
       // 添加主机数据盘
       pushDisk() {
         this.dataDiskList.push({type: 'ssd', size: 20, label: 'SSD存储'})
@@ -962,26 +869,35 @@
           })
           return
         }
-        if (this.system.systemName == undefined) {
+        if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
           this.$message.info({
             content: '请选择一个数据库镜像'
           })
           return
         }
 
-        if (!regExp.hostPassword(this.password)) {
-          this.passwordWarning = '请输入6-23位包含大小写与数字的密码'
-          return
+        if (this.currentLoginType == 'custom') {
+          if (this.computerName.trim() == '') {
+            this.computerNameWarning = '请输入主机名称'
+            return
+          }
+          if (!regExp.hostPassword(this.password)) {
+            this.passwordWarning = '请输入6-23位包含大小写与数字的密码'
+            return
+          }
         }
 
         let prod = {}
-        prod.typeName = '数据库'
+
+        prod.typeName = 'GPU'
         prod.zone = this.zone
         prod.timeForm = this.timeForm
         prod.system = this.system
+        prod.customMirror = this.customMirror
+        prod.currentType = this.currentType
         prod.publicIP = this.publicIP
         prod.count = 1
-        prod.type = 'Pdata'
+        prod.type = 'Pgpu'
         prod.autoRenewal = this.autoRenewal
         prod.IPConfig = this.IPConfig
         prod.vmConfig = this.vmConfig
@@ -990,6 +906,7 @@
         prod.network = this.network
         prod.cost = this.totalDataCost
         prod.VMName = this.dbName
+        prod.gpuSelection = this.gpuSelection
         this.$parent.cart.push(JSON.parse(JSON.stringify(prod)))
         window.scrollTo(0, 170)
       },
@@ -998,43 +915,52 @@
           this.$parent.showModal.login = true
           return
         }
-        if (this.system.systemName == undefined) {
+        if ((this.currentType == 'public' && this.system.systemName == undefined) || (this.currentType == 'custom' && this.customMirror.systemtemplateid == undefined)) {
           this.$message.info({
             content: '请选择一个镜像'
           })
           return
         }
-        if (!regExp.hostPassword(this.password)) {
-          this.passwordWarning = '请输入6-23位包含大小写与数字的密码'
-          return
+        if (this.currentLoginType == 'custom') {
+          if (this.computerName.trim() == '') {
+            this.computerNameWarning = '请输入主机名称'
+            return
+          }
+          if (!regExp.hostPassword(this.password)) {
+            this.passwordWarning = '请输入6-23位包含大小写与数字的密码'
+            return
+          }
         }
         var diskSize = '', diskType = ''
-
         this.dataDiskList.forEach(item => {
           diskSize += `${item.size},`
           diskType += `${item.type},`
         })
-
-        var params = {
+        let params = {
           zoneId: this.zone.zoneid,
-          templateId: this.system.systemId,
+          templateId: this.currentType == 'public' ? this.system.systemId : this.customMirror.systemtemplateid,
           bandWidth: this.IPConfig.publicIP ? this.IPConfig.bandWidth : 0,
           timeType: this.timeForm.currentTimeType == 'annual' ? this.timeForm.currentTimeValue.type : 'current',
           timeValue: this.timeForm.currentTimeValue.value,
+          count: 1,
           isAutoRenew: this.autoRenewal ? '1' : '0',
-          cpuNum: this.vmConfig.kernel,
-          memory: this.vmConfig.RAM,
+          cpuNum: this.gpuSelection.cpunum,
+          memory: this.gpuSelection.memory,
           networkId: this.network,
-          rootDiskType: 'ssd',
+          //ipAddress,
+          rootDiskType: this.gpuSelection.rootdisktype,
           vpcId: this.vpc,
-          diskSize,
+          gpusize: this.gpuSelection.gpusize,
+          serviceType: this.gpuSelection.servicetype,
           diskType,
-          password: this.password
+          diskSize
         }
-        if (this.dbName.trim() != '') {
-          params.VMName = this.dbName.trim()
+        // 设置了主机名和密码
+        if (this.currentLoginType == 'custom') {
+          params.VMName = this.computerName
+          params.password = this.password
         }
-        axios.get('database/createDB.do', {params}).then(response => {
+        axios.get('gpuserver/createGpuServer.do', {params}).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.$router.push('/ruicloud/order')
           } else {
@@ -1046,9 +972,6 @@
       },
     },
     computed: {
-      zoneList(){
-        return this.$store.state.zoneList
-      },
       userInfo(){
         return this.$store.state.userInfo
       },
@@ -1074,12 +997,8 @@
     watch: {
       'zone': {
         handler(){
-          this.info.forEach(zone => {
-            if (zone.zoneId == this.zone.zoneid) {
-              this.vmConfig.kernel = zone.kernelList[0].value
-            }
-          })
-          this.listDbTemplates()
+          this.setTemplate()
+          this.setGpuServer()
         },
         deep: true
       },
@@ -1092,24 +1011,9 @@
         },
         deep: true
       },
-      'vmConfig.kernel': {
+      'gpuSelection': {
         handler(){
-          this.info.forEach(zone => {
-            if (zone.zoneId == this.zone.zoneid) {
-              zone.kernelList.forEach(kernel => {
-                if (kernel.value == this.vmConfig.kernel) {
-                  this.RAMList = kernel.RAMList
-                  this.vmConfig.RAM = this.RAMList[0].value
-                }
-              })
-            }
-          })
-        },
-        deep: true
-      },
-      'vmConfig': {
-        handler(){
-          // 查询自定义配置价格
+          //this.queryGpu()
           this.queryCustomVM()
         },
         deep: true

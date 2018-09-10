@@ -18,8 +18,8 @@
         <div>
           <Tabs type="card" :animated="false" v-model="tabPane">
             <Tab-pane label="数据库备份" name="Snapshot">
-              <Button type="primary" @click="showModal.newSnapshot = true">制作备份</Button>
-              <Button type="primary" @click="deleteBackup" style="margin-left: 10px">删除备份</Button>
+              <Button type="primary" @click="createBackup_btn">制作备份</Button>
+              <!-- <Button type="primary" @click="deleteBackup" style="margin-left: 10px">删除备份</Button> -->
               <Table style="margin-top:10px;" :columns="backupColumns" :data="backupData"></Table>
             </Tab-pane>
             <Tab-pane label="云数据库备份策略" name="Strategy">
@@ -31,15 +31,15 @@
         </div>
       </div>
     </div>
-    <!-- 回滚弹窗 -->
+    <!-- 还原弹窗 -->
     <Modal v-model="showModal.rollback" :scrollable="true" :closable="false" :width="390">
       <div class="modal-content-s">
         <Icon type="android-alert" class="yellow f24 mr10"></Icon>
         <div>
-          <strong>数据库回滚</strong>
-          <p class="lh24">是否确定回滚数据库</p>
-          <p class="lh24">提示：您正使用<span class="bluetext">备份名称</span>回滚<span class="bluetext">数据库名称</span>至<span
-            class="bluetext">时间点</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的数据库内的数据将丢失。</p>
+          <strong>数据库还原</strong>
+          <p class="lh24">是否确定还原数据库</p>
+          <p class="lh24">提示：您正使用<span class="bluetext">{{rollbackData.databaseName}}</span>还原<span class="bluetext">{{rollbackData.vmName}}</span>至<span
+            class="bluetext">{{rollbackData.createTime}}</span>，当您确认操作之后，此<span class="bluetext">{{rollbackData.createTime}}</span>之后的数据库内的数据将丢失。</p>
         </div>
       </div>
       <p slot="footer" class="modal-footer-s">
@@ -56,34 +56,19 @@
         <Form :model="createSnapsForm" ref="createSnapsForm" :rules="createSnapsRule">
           <FormItem label="选择数据库" prop="database">
             <Select v-model="createSnapsForm.database">
-                <Option v-for="item in vmList" :value="item.computerid" :key="item.computerid">{{ item.computername }}
+                <Option v-for="item in databaseList" :value="`${item.computerid}#${item.computername}`" :key="item.computerid">{{ item.computername }}
                  </Option>
             </Select>
+            <span style="color:#2A99F2;font-size:14px;position:absolute;top:4px;right:-110px;">
+              <span style="font-weight:800;font-size:20px;">+</span>
+              <span style="cursor:pointer;" @click="tobuy_database()">购买数据库</span>
+            </span>
           </FormItem>
-          <FormItem label="备份名称" prop="name">
+          <!-- <FormItem label="备份名称" prop="name">
             <Input v-model="createSnapsForm.name" placeholder="请输入备份名称"></Input>
-          </FormItem>
-          <div style="padding-top: 11px;margin-right: 100px;margin-bottom: 20px">
-            <div style="font-size: 14px;color:#495060;margin-bottom: 15px">是否保存内存信息
-              <Poptip trigger="hover" width="400">
-                <Icon type="ios-help-outline" style="color:#2A99F2;font-size:16px;"></Icon>
-                <div slot="content">
-                  <div>
-                    您可以选择在制作备份的时候保存您数据库的当前运行状态。当您选择“保存”之时，
-                    当前数据库的内存将被记录，在您对备份执行回滚操作的时候，也只能在开机状态下执行；当您选择“不保存”时
-                    此次备份将不记录数据库内存信息，您在通过该备份回滚的时候只能在关机状态下执行。
-                  </div>
-                </div>
-              </Poptip>
-            </div>
-            <RadioGroup v-model="createSnapsForm.radio">
-              <Radio label="1">保存</Radio>
-              <Radio label="0">不保存</Radio>
-            </RadioGroup>
-          </div>
+          </FormItem> -->
         </Form>
-        <p class="modal-text-hint-bottom">提示：云数据库备份为每个数据库提供<span>8个</span>备份额度，当某个数据库的备份数量达到额度上限，再创建新的备份任务时，系统会删除由自动备份策略所生成的时间最早的自动备份点
-        </p>
+        <p class="mb20">备份时间为：{{new Date().format('yyyy-MM-dd hh:mm:ss')}}</p>
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="cancelSnaps('createSnapsForm')">取消</Button>
@@ -212,6 +197,7 @@
   export default {
     data() {
       return {
+        databaseList: [],
         tabPane: 'Snapshot',
         //备份表头
         backupColumns: [
@@ -221,27 +207,27 @@
             align: 'center'
           },
           {
-            key: "sss",
+            key: "dbName",
             title: "备份名称"
           },
+          // {
+          //   key: "ccc",
+          //   title: "状态"
+          // },
           {
-            key: "ccc",
-            title: "状态"
-          },
-          {
-            key: "bbb",
+            key: "computerName",
             title: "数据库名称"
           },
+          // {
+          //   key: "kkk",
+          //   title: "备份间隔"
+          // },
+          // {
+          //   key: "lll",
+          //   title: "是否保留内存状态"
+          // },
           {
-            key: "kkk",
-            title: "备份间隔"
-          },
-          {
-            key: "lll",
-            title: "是否保留内存状态"
-          },
-          {
-            key: "ooo",
+            key: "createTime",
             title: "创建时间"
           },
           {
@@ -252,7 +238,7 @@
                              style: {
                                cursor: 'not-allowed'
                              },
-                           }, '回滚')
+                           }, '还原')
                          } else {
                            return h('span', {
                              style: {
@@ -263,7 +249,7 @@
                                click: () => {
                                }
                              }
-                           }, '回滚')
+                           }, '还原')
                          }*/
               return h('span', {
                 style: {
@@ -272,13 +258,32 @@
                 },
                 on: {
                   click: () => {
+                    // this.rollbackData.vmName = params.row.computerName
+                    // this.rollbackData.databaseName = params.row.dbName
+                    // this.rollbackData.createTime = params.row.createTime
+                    // this.rollbackData.computerId,
+                    // this.rollbackData.databaseName,
+                    // this.rollbackData.fileName
+                    this.rollbackData = {
+                      vmName: params.row.computerName,
+                      databaseName: params.row.dbName,
+                      createTime: params.row.createTime,
+                      computerId: params.row.computerId,
+                      fileName: params.row.fileName
+                    }
                     this.showModal.rollback = true
                   }
                 }
-              }, '回滚')
+              }, '还原')
             }
           }
         ],
+        // 还原弹窗数据
+        rollbackData: {
+          vmName: '',
+          databaseName: '',
+          createTime: ''
+        },
         //备份数据
         backupData: [],
         showModal: {
@@ -291,13 +296,13 @@
         },
         createSnapsForm: {
           database: '',
-          name: '',
-          radio: '1'
+          // name: '',
+          // radio: '1'
         },
         createSnapsRule: {
-          name: [
-            {required: true, validator: regExp.validaRegisteredName, trigger: 'blur'}
-          ],
+          // name: [
+          //   {required: true, validator: regExp.validaRegisteredName, trigger: 'blur'}
+          // ],
           database: [
             {required: true, message: '请选择数据库', trigger: 'change'}
           ]
@@ -538,9 +543,10 @@
     },
     beforeRouteEnter(to, from, next) {
       // 获取云数据库备份列表数据
-      let DbSnapshotResponse = axios.get('Snapshot/listDbSnapshot.do', {
+      let DbSnapshotResponse = axios.get('database/listDatebaseBackupFile.do', {
         params: {
-          zoneId: $store.state.zone.zoneid
+          zoneId: $store.state.zone.zoneid,
+          // companyId: $store.state.authInfo.companyid
         }
       })
       Promise.all([DbSnapshotResponse]).then((ResponseValue) => {
@@ -559,33 +565,67 @@
           this.backupData = response.data.result
         }
       },
+      tobuy_database() {
+        this.$router.push('buy')
+        sessionStorage.setItem('pane', 'Pdatabase')
+      },
       rollback_ok() {
-        
+        this.showModal.rollback = false
+        this.$http.get('database/BDRestore.do', {
+          params: {
+            DBId: this.rollbackData.computerId,
+            dbName: this.rollbackData.databaseName,
+            fileName: this.rollbackData.fileName
+          }
+        }).then(response => {
+           if (response.status == 200 && response.data.status == 1) {
+              this.$Message.success(response.data.message)
+            } else {
+              this.$Message.error(response.data.message)
+            }
+        })
       },
       deleteBackup() {
         this.showModal.delete = true
       },
       deleteBackup_ok() {
       },
+      createBackup_btn() {
+        axios.get('database/listDB.do', {
+          params: {
+            zoneId: $store.state.zone.zoneid
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.databaseList = response.data.result
+            this.showModal.newSnapshot = true
+          }
+        })
+      },
       cancelSnaps(name) {
         this.$refs[name].resetFields()
         this.showModal.newSnapshot = false
       },
       NewSnaps_ok(name) {
-        console.log(this.createSnapsForm)
+        // console.log('aimee')
+        // console.log(this.createSnapsForm.database)
+        var paramsArry = this.createSnapsForm.database.split('#')
         this.$refs[name].validate((valid) => {
           if (valid) {
-            alert('success')
             this.$http.get('database/DBBackup.do', {
               params: {
-                DBId: '',
-
+                DBId: paramsArry[0],
+                allDataBases: '0',
+                dbName: paramsArry[1]
               }
             }).then(response => {
-
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+              } else {
+                this.$Message.error(response.data.message)
+              }
             })
           } else {
-            alert('fail')
           }
         })
       },

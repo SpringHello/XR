@@ -20,6 +20,7 @@ const BHost = () => import('@/components/App/buy/BHost')
 const BIP = () => import('@/components/App/buy/BIP')
 const BDisk = () => import('@/components/App/buy/BDisk')
 const BData = () => import('@/components/App/buy/BData')
+const BGpu = () => import('@/components/App/buy/BGpu')
 const Ecs = () =>import('@/components/App/product/ECS')
 const Document = () =>import('@/components/App/Document')
 const Document1 = () =>import('@/components/App/Document1')
@@ -83,6 +84,7 @@ const Pmonitor = () =>import('@/components/App/product/CloudMonitoring.vue')
 const PobjStorage = () =>import('@/components/App/product/PobjStorage.vue')
 const PdataBase = () =>import('@/components/App/product/PdataBase.vue')
 const PobjectStorage = () =>import('@/components/App/product/ObjectStorage.vue')
+const Pgpu = () =>import('@/components/App/product/Pgpu.vue')
 // 登录注册页面
 // import Login from '@/components/LR/Login'
 // import Register from '@/components/LR/Register'
@@ -105,6 +107,7 @@ const Renew = () => import('@/components/Back/Renew')
 const New = () => import('@/components/Back/New')
 const Host = () => import('@/components/Back/Host')
 const GPU = () => import('@/components/Back/GPU')
+const GpuList = () => import('@/components/Back/GpuList')
 const Mirror = () => import('@/components/Back/Mirror')
 const SSHSecretKey = () => import('@/components/Back/SSHSecretKey')
 const Snapshot = () => import('@/components/Back/Snapshot')
@@ -135,6 +138,8 @@ const NATManage = () => import('@/components/Back/NATManage')
 const Recycle = () => import('@/components/Back/Recycle')
 const Wxpay = () => import('@/components/Back/Wxpay')
 const WorkOrder = () => import('@/components/Back/WorkOrder')
+const gpuManage = () => import('@/components/Back/gpuManage')
+const gpuUpLevel = () => import('@/components/Back/gpuUpLevel')
 
 const Link = () =>import('@/components/Link')
 const BRecords = () =>import('@/components/Back/Records')
@@ -146,7 +151,6 @@ const SpaceDetails = () =>import('@/components/Back/SpaceDetails')
 const CloudDatabaseBackup = () =>import('@/components/Back/CloudDatabaseBackup')
 const CloudDatabase = () =>import('@/components/Back/CloudDatabase')
 const CloudDataManage = () =>import('@/components/Back/CloudDataManage')
-const CloudDatabaseMirror = () =>import('@/components/Back/CloudDatabaseMirror')
 const dataBaseUpgrade = () =>import('@/components/Back/dataBaseUpgrade')
 // 帮助文档路由
 const documentInfo = () =>import('@/components/App/DocumentInfo')
@@ -260,6 +264,7 @@ var router = new Router({
             {path: 'bdisk', name: 'bdisk', component: BDisk},
             {path: 'bip', name: 'bip', component: BIP},
             {path: 'bdata', name: 'bdata', component: BData},
+            {path: 'bgpu', name: 'bgpu', component: BGpu}
           ]
         },
 
@@ -294,6 +299,7 @@ var router = new Router({
         {path: 'PobjStorage', component: PobjStorage},
         {path: 'PdataBase', component: PdataBase},
         {path: 'PobjectStorage', component: PobjectStorage},
+        {path: 'Pgpu', component: Pgpu},
         {path: 'documentInfo/:parentId/:id', component: documentInfo},
 
       ]
@@ -349,9 +355,11 @@ var router = new Router({
         {path: 'completedFilingDetails', name: 'completedFilingDetails', component: CompletedFilingDetails},
         {path: 'cloudDataManage', name: 'cloudDataManage', component: CloudDataManage},
         {path: 'cloudDatabaseBackup', name: 'cloudDatabaseBackup', component: CloudDatabaseBackup},
-        {path: 'cloudDatabaseMirror', name: 'cloudDatabaseMirror', component: CloudDatabaseMirror},
         {path: 'cloudDatabase', name: 'cloudDatabase', component: CloudDatabase},
-        {path: 'dataBaseUpgrade', name: 'dataBaseUpgrade', component: dataBaseUpgrade}
+        {path: 'dataBaseUpgrade', name: 'dataBaseUpgrade', component: dataBaseUpgrade},
+        {path: 'GpuList',name:'GpuList',component:GpuList},
+        {path: 'gpuManage',name:'gpuManage',component:gpuManage},
+        {path: 'gpuUpLevel',name:'gpuUpLevel',component:gpuUpLevel}
       ]
     },
     {

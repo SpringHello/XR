@@ -50,7 +50,7 @@
             </div>
           </div>
         </my-carousel-item>
-        <!--<my-carousel-item class="carousel-item">
+        <my-carousel-item class="carousel-item">
           <div  @click="push('/ruicloud/objStorageActive')"
             style="cursor: pointer;">
             <div class="obj-storage">
@@ -64,7 +64,7 @@
               </div>
             </div>
           </div>
-        </my-carousel-item>-->
+        </my-carousel-item>
         <my-carousel-item class="carousel-item">
           <div @click="push('/ruicloud/groupBooking')"
                style="cursor: pointer;background: #FA846E;">
