@@ -867,7 +867,7 @@ export default {
           currentPage: this.currentPage,
           target: this.target,
           queryTime: this.logTime,
-          targetId: this.$route.query.id
+          targetId: this.databaseInfo.id
         }
       }).then(response => {
         this.total = response.data.total;
@@ -1140,7 +1140,7 @@ export default {
       var url = this[type].type == '今天' ? urlList.dayURL : urlList.otherURL
       var queryType = type == 'flow' ? 'network' : 'core'
       var dateType = this[type].type == '最近7天' ? 'week' : 'month'
-      this.$http.get(`${url}?vmname=${this.$route.query.instancename}&type=${queryType}&datetype=${dateType}`)
+      this.$http.get(`${url}?vmname=${this.databaseInfo.instancename}&type=${queryType}&datetype=${dateType}`)
         .then(response => {
           if (response.status == 200 && response.data.status == 1) {
             if (type == 'flow') {
@@ -1157,8 +1157,6 @@ export default {
     resetConfirm (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          // database/updateDBPassword.do   更改数据库密码 DBId (数据库的UUID),
-	        //  password(需要更改的密码), zoneId(域id)
           this.resetPasswordForm.buttonMessage = '正在重置中...'
           this.$http.get('database/updateDBPassword.do', {
             params: {
@@ -1195,7 +1193,7 @@ export default {
       this.showModal.setMonitoringForm = true
       this.$http.get('information/alarmConfig.do', {
         params: {
-          instancename: this.$route.query.instancename
+          instancename: this.databaseInfo.instancename
         }
       }).then(response => {
         if (response.status == 200 && response.data.status == 1) {
@@ -1221,7 +1219,7 @@ export default {
       this.isSmsAlarm = this.issmsalarm == true ? 1 : 0
       this.$http.get('information/upalarmConfig.do', {
         params: {
-          instancename: this.$route.query.instancename,
+          instancename: this.databaseInfo.instancename,
           cpuUse: this.setCPU,
           memoryUse: this.setRAM,
           diskUse: this.setDisk,

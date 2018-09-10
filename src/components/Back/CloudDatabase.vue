@@ -12,7 +12,7 @@
             <use xlink:href="#houtaiicon-danxingyunfuwuqiECS"></use>
           </svg>
           <span id="title">云数据库</span>
-          <button id="refresh_button" style="margin-top: 10px;">刷新</button>
+          <button id="refresh_button" style="margin-top: 10px;" @click="$router.go(0)">刷新</button>
         </div>
         <div class="universal-alert">
           <p>专业的云数据库服务，支持Mysql、SQL Server、PostgreSQL、MangoDB引擎，提供简易方便的Web界面管理、可靠的数据备份和恢复、完备的安全管理、完善的监控等功能。</p>
@@ -203,7 +203,7 @@
             </Select>
             <span style="color:#2A99F2;font-size:14px;position:absolute;top:4px;right:-110px;">
               <span style="font-weight:800;font-size:20px;">+</span>
-              <span style="cursor:pointer;" @click="publicIPHint_ok">购买弹性IP</span>
+              <span style="cursor:pointer;" @click="$router.push('/ruicloud/buy/bip')">购买弹性IP</span>
             </span>
           </Form-item>
         </Form>
@@ -225,7 +225,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.publicIPHint = false">取消</Button>
-        <Button type="primary" @click="publicIPHint_ok">创建公网IP</Button>
+        <Button type="primary" @click="$router.push('/ruicloud/buy/bip')">创建公网IP</Button>
       </p>
     </Modal>
   </div>
@@ -348,8 +348,11 @@
                 case 8:
                   text = '解绑中';
                   break;
+                case 9:
+                  text = '修改中';
+                  break;
               }
-              if (row.status == 2 || row.status == 5 || row.status == 6 || row.status == 7 || row.status == 8) {
+              if (row.status == 2 || row.status == 5 || row.status == 6 || row.status == 7 || row.status == 8 || row.status == 9) {
                 return h('div', {}, [h('Spin', {
                   style: {
                     display: 'inline-block',
@@ -458,6 +461,7 @@
                       this.current = params.row
                       this.showModal.beforePortModify = true
                       this.portModifyForm.currentPorts = params.row.dbPort
+                      this.currentComputerId = params.row.computerid
                     }
                   }
                 }, '修改端口')])
@@ -824,10 +828,6 @@
       
     },
     methods: {
-      publicIPHint_ok() {
-        this.$router.push('buy')
-        sessionStorage.setItem('pane', 'Peip')
-      },
       // 绑定公网ip
       bindipSubmit(name) {
         this.$refs[name].validate((valid) => {
@@ -949,10 +949,16 @@
       portModify_ok(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
+            this.showModal.portModify = false
+            this.dataBaseData.forEach(item => {
+                if (item.computerid == this.currentComputerId) {
+                  item.status = 9
+                }
+              })
             this.$http.get('database/updateDBPort.do', {
               params: {
-                DBId: this.current.computerid,//(数据库的UUID),
-                port: this.portModifyForm.newPorts//(需要更改的端口)
+                DBId: this.current.computerid, //(数据库的UUID),
+                port: this.portModifyForm.newPorts //(需要更改的端口)
               }
             }).then(res => {
               if (res.status === 200 && res.data.status === 1) {
@@ -991,26 +997,26 @@
             })
       },
       // 云数据库镜像
-      mirrorSubmit(name) {
-        this.$refs[name].validate((valid) => {
-          if (valid) {
-            this.showModal.mirror = false
-            this.$http.get('database/createTemplateDB.do', {
-              params: {
-                DBName: this.mirrorForm.name,//(数据库镜像名),
-                descript: this.mirrorForm.description,//(描述 非必传),
-                rootDiskId: this.current.rootdiskid//(系统盘id)
-              }
-            }).then(response => {
-              if (response.status == 200 && response.data.status == 1) {
-                this.$Message.success(response.data.message)
-              } else {
-                this.$Message.info(response.data.message)
-              }
-            })
-          }
-        })
-      },
+      // mirrorSubmit(name) {
+      //   this.$refs[name].validate((valid) => {
+      //     if (valid) {
+      //       this.showModal.mirror = false
+      //       this.$http.get('database/createTemplateDB.do', {
+      //         params: {
+      //           DBName: this.mirrorForm.name,//(数据库镜像名),
+      //           descript: this.mirrorForm.description,//(描述 非必传),
+      //           rootDiskId: this.current.rootdiskid//(系统盘id)
+      //         }
+      //       }).then(response => {
+      //         if (response.status == 200 && response.data.status == 1) {
+      //           this.$Message.success(response.data.message)
+      //         } else {
+      //           this.$Message.info(response.data.message)
+      //         }
+      //       })
+      //     }
+      //   })
+      // },
       renewalok() {
         let database = [
           {type: 5, id: this.current.id}

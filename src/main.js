@@ -46,6 +46,7 @@ Vue.config.productionTip = false
 //axios.defaults.withCredentials = true
 
 
+
 //axios.defaults.baseURL = 'http://zengxin.xrclouds.net/ruicloud/'
 
 
