@@ -810,6 +810,7 @@
           eachFrozenMoney: this.cashPledge,
           describe: '领取主机',
           operationType: '领取主机',
+          thawCondition: '删除主机'
         }
         axios.post(url, params).then(res => {
           if (res.data.status == 1) {
