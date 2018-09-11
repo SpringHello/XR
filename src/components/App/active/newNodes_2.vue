@@ -1014,7 +1014,7 @@
       },
       buyNow_one(item, index) {
         if (this.userInfo == null) {
-          this.loginModal = true
+          this.$LR({type:'login'})
           return
         }
         if (item.system === '') {
@@ -1041,7 +1041,7 @@
       },
       buyNow_two(item, index, val) {
         if (this.userInfo == null) {
-          this.loginModal = true
+          this.$LR({type:'login'})
           return
         }
         if (item.system === '') {

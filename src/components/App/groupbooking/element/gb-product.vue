@@ -198,7 +198,7 @@
     methods: {
       buyNow(index) {
         if (this.$store.state.userInfo == null) {
-          this.loginModal = true
+          this.$LR({type:'login'})
           return
         }
         let vmConfigId = index == 0 ? '33' : '34'
