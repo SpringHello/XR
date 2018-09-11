@@ -1151,11 +1151,7 @@
           }, {
             title: '解冻时间/事件',
             render: (h, params) => {
-              if (params.row.type == 1) {
-                return h('span', {}, params.row.updatetime)
-              } else {
-                return h('span', {}, '--')
-              }
+              return h('span', {}, params.row.thawCondition || params.row.updatetime || '--')
             }
           }, {
             title: '押金状态',
@@ -1175,8 +1171,18 @@
                   on: {
                     click: () => {
                       this.unfreezeId = params.row.id
-                      this.showModal.unfreeze = true
-                      //this.showModal.notUnfreeze = true
+                      this.$http.get('user/jdugeThawCondition.do', {
+                        params: {
+                          id: params.row.id
+                        }
+                      }).then(res => {
+                        if (res.status == 200 && res.data.status == 1) {
+                          this.showModal.unfreeze = true
+                        } else {
+                          this.showModal.unfreeze = true
+                          //this.showModal.notUnfreeze = true
+                        }
+                      })
                     }
                   }
                 }, '申请解冻')
@@ -1797,15 +1803,21 @@
         this.searchCard()
       },
       unfreeze_ok() {
-        let url = 'user/getRremainderThawing.do'
+        // 把状态变成解冻中
+        //let url = 'user/getRremainderThawing.do'
+        //  直接解冻
+        let url = 'user/getRremainderThaw.do'
         let params = {
           id: this.unfreezeId
         }
         this.$http.post(url, params).then(res => {
           if (res.status == 200 && res.data.status == 1) {
-            this.$Message.success('申请成功')
+            this.$Message.success('解冻成功')
             this.showModal.unfreeze = false
             this.freezeDetails()
+            this.getBalance()
+            this.showMoneyByMonth()
+            this.search()
           } else {
             this.$message.info({
               content: res.data.message

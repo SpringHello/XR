@@ -420,6 +420,7 @@
           eachFrozenMoney: '50',
           describe: '幕布申请',
           operationType: '幕布申请',
+          thawCondition: '幕布回收'
           //choose: '0'
         }
         axios.post(url, params).then(res => {
