@@ -27,13 +27,13 @@
         </div>
         <div class="footer">
           <ul>
-            <span>负载均衡规则</span>
+            <li>负载均衡规则</li>
             <li>算法：{{algorithm}}</li>
             <li v-if="balanceInfo.privateport">内网端口：{{ balanceInfo.privateport}}</li>
             <li v-if="balanceInfo.publicport">外网端口：{{ balanceInfo.publicport}}</li>
             <li v-if="balanceInfo.sourceport">源端口：{{balanceInfo.sourceport}}</li>
             <li v-if="balanceInfo.instanceport">实例端口：{{balanceInfo.instanceport}}</li>
-            <li style="margin-left: 618px;color: #2A99F2;cursor: pointer" @click="bind(balanceInfo)">添加主机</li>
+            <li style="color: #2A99F2;cursor: pointer" @click="bind(balanceInfo)">添加主机</li>
           </ul>
           <Table :columns="hostColumns" :data="hostData"></Table>
         </div>
@@ -179,7 +179,6 @@
       if (sessionStorage.getItem('balanceInfo')) {
         this.balanceInfo = JSON.parse(sessionStorage.getItem('balanceInfo'))
       }
-      console.log(this.balanceInfo)
       this.listHostByBalance()
     },
     methods: {
@@ -359,11 +358,16 @@
       border-radius: 4px;
       padding: 20px;
       ul {
-        display: -webkit-box;
+        overflow: hidden;
         font-size: 12px;
         margin-bottom: 20px;
         li {
-          margin-left: 40px;
+          float: left;
+          margin-right: 40px;
+          &:last-child{
+            float: right;
+            margin-right: 0;
+          }
         }
       }
     }

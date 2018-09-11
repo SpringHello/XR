@@ -1,11 +1,15 @@
 <template>
     <div id="background">
       <div id="wrapper">
+        <Spin fix v-show="loading">
+          <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+          <div>{{loadingMessage}}</div>
+        </Spin>
         <p style="margin: 10px 0 10px 0;">总览 / <span>GPU云服务器</span> / <span>管理</span></p>
         <div class="head">
           <div>
             <div style="display: inline-block;">
-              <span style="font-size: 18px;color: #FFFFFF;">主机名称</span>
+              <span style="font-size: 18px;color: #FFFFFF;">{{gpuDetail.instancename}}</span>
             </div>
             <div class="button_right">
               <router-link to="GpuList">
@@ -17,20 +21,20 @@
           <div style="display: flex;margin-top: 20px;">
             <div class="host_box">
                 <p>4CPU，8G内存，gl.xlarge显卡 | 天津1区</p>
-                <p>镜像系统：windows 2012</p>
-                <p>到期时间/有效期：2017-12-15 11:00:00</p>
+                <p>镜像系统：{{gpuDetail.templatename}}</p>
+                <p>到期时间/有效期：{{gpuDetail.templatename}}</p>
                 <p>内网地址：145.168.35.23</p>
-                <p>登录密码：<span>发送密码</span></p>
+              <p>登录密码：  <span :class="[isActive ? 'send' : 'nosend']" @click="lookPassword">{{codePlaceholder}}</span></p>
             </div>
             <div class="host_box">
-              <p>所属VPC：<span>默认VPC</span></p>
+              <p>所属VPC：<span>{{gpuDetail.vpcname}}</span></p>
               <p>绑定公网：<span>196.168.33.233</span></p>
               <p>所属负载均衡：<span>基础</span></p>
               <p>挂载磁盘：<span style="color: #2A99F2;">发送密码</span></p>
             </div>
             <div class="host_box">
-              <p>计费类型：包年计费</p>
-              <p>创建于：2017-2-24 08:23</p>
+              <p>计费类型：{{gpuDetail.caseType == 1 ?'包年计费':gpuDetail.caseType == 2 ? '包月计费' : gpuDetail.caseType == 3 ? '实时计费' :''}}</p>
+              <p>创建于：{{gpuDetail.createtime}}</p>
               <p>自动续费：<span>开</span></p>
             </div>
           </div>
@@ -40,7 +44,7 @@
             <TabPane style="background: #FFFFFF;" label="监控">
               <!--CPU利用率-->
               <div class="tab_box">
-                <Button type="primary" @click="showWindow.warningSetting = true">监控警告设置</Button>
+                <Button type="primary" @click="setMonitoring">监控警告设置</Button>
                 <div class="title-Png">
                   <span>CPU利用率</span>
                   <span style="float: right">2017.11.25</span>
@@ -48,7 +52,7 @@
                 <div style="width: 100%" class="center_chart">
                   <div class="chart" >
                     <ul class="objectList">
-                      <li :class="requestIndex == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="requestClick(item.label)">{{item.value}}</li>
+                      <li :class="cpuIndex == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="requestClick('cpu',item.label)">{{item.value}}</li>
                     </ul>
                     <div class="chart-rig">
                        <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button>
@@ -71,12 +75,12 @@
                 <div style="width: 100%" class="center_chart">
                   <div class="chart" >
                     <ul class="objectList">
-                      <li :class="requestIndex == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="requestClick(item.label)">{{item.value}}</li>
+                      <li :class="momeryIndex == item.label? 'objectItems':'objectItem'" v-for="item in momeryList" :key="item.label" @click="requestClick('momery',item.label)">{{item.value}}</li>
                     </ul>
                     <div class="chart-rig">
                       <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button>
                       <ul class="objectList">
-                        <li :class="chartTwoIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartTwoClick(index)">{{item.value}}</li>
+                        <li :class="momeryIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartTwoClick(index)">{{item.value}}</li>
                       </ul>
                     </div>
                   </div>
@@ -91,8 +95,8 @@
             <!--快照管理-->
             <TabPane label="快照管理">
               <div class="tab_box">
-                <Button type="primary">删除快照</Button>
-                <Table :columns="snapshotList" :data="snapshotData"></Table>
+                <Button type="primary" style="margin-bottom: 10px;" @click="deleteSnapshot">删除快照</Button>
+                <Table ref="selection" @on-selection-change="selectKuai" :columns="snapshotList" :data="snapshotData"></Table>
               </div>
             </TabPane>
             <!--操作日志-->
@@ -109,7 +113,7 @@
                   <DatePicker type="date" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
                   <Button type="primary" size="small">查询</Button>
                 </div>
-                <Table :columns="journalList" :data="journalData"></Table>
+                <Table :columns="journalList" :data="journalData" style="margin-top: 10px;"></Table>
               </div>
             </TabPane>
             <!--修改密码-->
@@ -186,21 +190,124 @@
           </div>
         </div>
         <div slot="footer">
-          <Button type="ghost" @click="showModal.setMonitoringForm=false">取消</Button>
-          <Button type="primary" >完成</Button>
+          <Button type="ghost" @click="showWindow.warningSetting=false">取消</Button>
+          <Button type="primary" @click="setMonitoringOk">完成</Button>
         </div>
       </modal>
+
+      <!--发送密码-->
+      <Modal width="550" v-model="showWindow.lookPassword" :scrollable="true" class="lookPassword">
+        <div slot="header" class="modal-header-border">
+          <span class="universal-modal-title">查看登录密码</span>
+        </div>
+        <div>
+          <div class="universal-modal-content-flex">
+            <Form :model="lookPasswordForm" ref="lookPasswordForm" :rules="lookPasswordFormRule" @submit.native.prevent>
+              <FormItem label="请输入控制台登录密码" prop="input">
+                <Input v-model="lookPasswordForm.input" placeholder="请输入控制台登录密码" type="password"></Input>
+              </FormItem>
+              <!--<input type="text" hidden>-->
+            </Form>
+          </div>
+          <div style="display:flex;">
+            <p style=" font-size: 14px;line-height: 22px;">密码接收渠道</p>
+            <Checkbox v-model="lookPasswordForm.isemailalarmSec" size="large"
+                      style="margin-left: 20px;font-size: 12px;">邮箱
+            </Checkbox>
+            <Checkbox v-model="lookPasswordForm.issmsalarmSec" size="large" style="margin-left: 20px;font-size: 12px;">
+              短信
+            </Checkbox>
+          </div>
+        </div>
+        <div slot="footer" class="modal-footer-border">
+          <Button type="ghost" @click="showWindow.lookPassword=false">取消</Button>
+          <Button type="primary" @click="lookPasswordSubm('lookPasswordForm')"
+                  :disabled="!(lookPasswordForm.isemailalarmSec || lookPasswordForm.issmsalarmSec)">确定
+          </Button>
+        </div>
+      </Modal>
+
+      <!-- 回滚确认弹窗 -->
+      <Modal v-model="showWindow.rollback" :scrollable="true" :closable="false" :width="390">
+        <div class="modal-content-s">
+          <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+          <div>
+            <strong>主机回滚</strong>
+            <p class="lh24">是否确定回滚主机</p>
+            <p class="lh24">提示：您正使用<span class="bluetext">{{snapsDetails.snapshotname}}</span>回滚<span
+              class="bluetext">{{snapsDetails.name}}</span>至<span
+              class="bluetext">{{snapsDetails.addtime}}</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的主机内的数据将丢失。</p>
+          </div>
+        </div>
+        <p slot="footer" class="modal-footer-s">
+          <Button @click="showWindow.rollback = false">取消</Button>
+          <Button type="primary" @click="goBackSnapshot">确定</Button>
+        </p>
+      </Modal>
     </div>
 </template>
 
 <script>
+  import axios from 'axios'
+  var urlList = {
+    dayURL: 'alarm/getVmAlarmByHour.do',
+    otherURL: 'alarm/getVmAlarmByDay.do'
+  }
   import cpuOptions from "@/echarts/cpuUtilization"
+  import momeryOptions from  "@/echarts/objectStroage"
+  const momery = JSON.stringify(momeryOptions);
   const cpu = JSON.stringify(cpuOptions);
+
   export default {
     data(){
+      var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,23}$/
+      const validateoldPassword = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('密码不能为空'));
+        } /*else if (!regExp.test(value)) {
+          callback(new Error('密码由6位以上的字母数字组成，必须包含大小写字母、数字'));
+        } */else {
+          callback();
+        }
+      }
+      const validatePassword = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('密码不能为空'));
+        } else if (!regExp.test(value)) {
+          callback(new Error('新密码由6-23位的字母数字组成，必须包含大小写字母、数字'));
+        } else {
+          if (regExp.test(value)) {
+            this.$refs.resetPasswordForm.validateField('confirmPassword');
+          }
+          callback();
+        }
+      }
+      const validatePassCheck = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('密码不能为空'));
+        } else if (this.resetPasswordForm.newPassword != value) {
+          callback(new Error('两次密码不一致'));
+        } else {
+          callback();
+        }
+      }
+      const validaSinginName = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('密码不能为空'));
+        } else if (value.length < 8) {
+          callback(new Error('长度至少为8位'));
+        } else {
+          callback();
+        }
+      }
       return{
         indexs:0,
         cpu:JSON.parse(cpu),
+        momery:JSON.parse(momery),
+
+        //快照id
+          ids:'',
+
         //cpu统计图
         dayList:[
           {
@@ -210,22 +317,16 @@
             label:0
           },
           {
-            value:'昨天',
-            data:[20,30,40,50,60],
-            day:['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
+            value:'最近7天',
+            data:[20,30,40,50,60,22,100],
+            day:['02/18','02/18','02/18','02/18','02/18','02/18','02/18'],
             label:1
           },
           {
-            value:'最近七天',
-            data:[20,30,40,50,60,22,100],
-            day:['02/18','02/18','02/18','02/18','02/18','02/18','02/18'],
-            label:2
-          },
-          {
-            value:'最近三十天',
+            value:'最近30天',
             data:[20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,100,33,28,90,55],
             day:['04/01','04/02','04/03','04/04','04/05','04/06','04/07','04/08','04/09','04/10','04/11','04/12','04/13','04/14','04/15','04/16','04/17','04/18','04/19','04/20','04/21','04/22','04/23','04/24','04/25','04/26','04/27','04/28','04/29','04/30'],
-            label:3
+            label:2
           }
         ],
         chartList:[
@@ -240,27 +341,79 @@
             boundaryGap:true
           }
         ],
+        cpuIndex:0,
+        momeryIndex:0,
+
+        //内存统计图
+        momeryList:[
+          {
+            value:'今天',
+            data:[20,30,40,50,60],
+            day:['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
+            label:0
+          },
+          {
+            value:'最近7天',
+            data:[20,30,40,50,60,22,100],
+            day:['02/18','02/18','02/18','02/18','02/18','02/18','02/18'],
+            label:1
+          },
+          {
+            value:'最近30天',
+            data:[20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,100,33,28,90,55],
+            day:['04/01','04/02','04/03','04/04','04/05','04/06','04/07','04/08','04/09','04/10','04/11','04/12','04/13','04/14','04/15','04/16','04/17','04/18','04/19','04/20','04/21','04/22','04/23','04/24','04/25','04/26','04/27','04/28','04/29','04/30'],
+            label:2
+          }
+        ],
+
+        //快照详情
+        snapsDetails:{},
+        //回滚信息
+        loadingMessage:'',
+        loading:false,
         //快照
         snapshotList:[
           {
-            title:'',
-            width:50
+            type: 'selection',
+            width:'70'
           },
           {
-            title:'快照名称'
+            title:'快照名称',
+            key:'snapshotname'
           },
           {
-            title:'快照策略'
+            title:'快照策略',
+            render:(h,params) =>{
+              return h('span',{},params.row.createway == 'hand' ? '手动' :'')
+            }
           },
           {
-            title:'快照间隔'
+            title:'快照间隔',
+            render:(h,params) =>{
+              return h('span',{},params.row.intervals == 'hand' ? '手动' :'')
+            }
           },
           {
-            title:'创建于'
+            title:'创建于',
+            key:'addtime'
           },
           {
             title:'操作',
-            width:100
+            width:100,
+            render:(h,params) =>{
+              return h('span',{
+                style:{
+                  color:'#2A99F2',
+                  cursor:'pointer'
+                },
+                on:{
+                  click: () => {
+                    this.showWindow.rollback = true;
+                    this.snapsDetails = params.row;
+                  }
+                }
+              },'回滚')
+            }
           }
         ],
         snapshotData:[],
@@ -275,6 +428,7 @@
             value:'近三十天'
           }
         ],
+
         //操作日志
         journalList:[
           {
@@ -291,6 +445,7 @@
           }
         ],
         journalData:[],
+
         //修改密码
         resetPasswordForm:{
           oldPassword:'',
@@ -298,13 +453,40 @@
           confirmPassword:'',
           buttonMessage:'确认重置'
         },
+        resetRuleValidate:{
+          oldPassword: [
+            {required: true, validator: validateoldPassword, trigger: 'blur'}
+          ],
+          newPassword: [
+            {required: true, validator: validatePassword, trigger: 'blur'}
+          ],
+          confirmPassword: [
+            {required: true, validator: validatePassCheck, trigger: 'blur'}
+          ],
+        },
+
+        //发送密码
+        isActive:true,
+        codePlaceholder:'发送密码',
+        lookPasswordForm:{
+          input:'',
+          isemailalarmSec:'',
+          issmsalarmSec:'',
+        },
+        lookPasswordFormRule:{},
+
+
         //Gpu服务器详情
         gpuDetail:{},
+
         //显示弹窗
         showWindow:{
           //警告设置
-          warningSetting:false
+          warningSetting:false,
+          lookPassword:false,
+          rollback:false
         },
+
         //告警设置字段
         setList: [
           {
@@ -367,22 +549,318 @@
         issmsalarm: false,
       }
     },
-    methods:{
-      //获取GPU服务器详情
-      getGpuHostDetail(){
-        this.$http.get('gpuserver/listGpuServerById.do',{
+    beforeRouteEnter(to, from, next){
+      next(vm =>{
+        axios.get('information/zone.do',{
           params:{
-            id:''
+            gpuServer:'1'
           }
         }).then(res => {
-          if(res.status == 1 && res.data.status == 1){
-            // this.gpuDetail = res.data.result;
+          vm.$store.state.zone.zoneId = res.data.result[0].zoneid;
+          vm.$store.state.zone.zonename = res.data.result[0].zonename;
+        })
+      })
+    },
+    // beforeRouteLeave(){
+    //   axios.get('information/zone.do',{
+    //   }).then(res => {
+    //     this.$store.state.zone.zoneId = res.data.result[0].zoneid;
+    //     this.$store.state.zone.zonename = res.data.result[0].zonename;
+    //   })
+    // },
+    methods:{
+
+      //获取GPU服务器详情
+      getGpuHostDetail(){
+        axios.get('gpuserver/listGpuServerById.do',{
+          params:{
+            GpuId:sessionStorage.getItem('uuId'),
+            zoneId:this.$store.state.zone.zoneId,
+            changeCost:'1'
+          }
+        }).then(res => {
+          if(res.status == 200 && res.data.status == 1){
+            this.gpuDetail = res.data.result[0];
+          }
+        })
+      },
+
+      //列出快照
+      selectSnapshotList(){
+        axios.get('Snapshot/listVMSnapshot.do',{
+          params:{
+            zoneId:this.$store.state.zone.zoneId,
+            resourceId:sessionStorage.getItem('uuId')
+          }
+        }).then(res => {
+          if(res.status == 200 && res.data.status == 1){
+            this.snapshotData = res.data.result;
+          }
+        })
+      },
+      selectKuai(val){
+        val.forEach(item =>{
+          this.ids = item.id
+        })
+      },
+
+      //删除快照
+      deleteSnapshot(){
+        this.$Modal.confirm({
+          title:'删除快照',
+          content:'是否删除快照',
+          onOk:()=>{
+              axios.get('Snapshot/deleteVMSnapshot.do',{
+                params:{
+                  zoneId:this.$store.state.zone.zoneId,
+                  ids:this.ids
+                }
+              }).then(res => {
+                if(res.status == 200 && res.data.status == 1){
+                 this.$Message.success('删除快照成功');
+                 this.selectSnapshotList();
+                }else {
+                  this.$Message.info('删除快照出小差了');
+                }
+              })
+          }
+        })
+
+      },
+
+      //回滚快照
+      goBackSnapshot(){
+          this.showWindow.rollback = false
+          this.loadingMessage = '正在回滚主机'
+          this.loading = true
+          axios.get('Snapshot/revertToVMSnapshot.do', {
+            params: {
+              snapshotId: this.snapsDetails.id,
+              zoneId: this.$store.state.zone.zoneId
+            }
+          })
+            .then(response => {
+              if (response.status == 200) {
+                this.loading = false
+                this.$Message.success({
+                  content: response.data.message,
+                  duration: 5
+                })
+              }
+            })
+      },
+
+      //重置密码
+      resetConfirm(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.resetPasswordForm.buttonMessage = '正在重置中...'
+            axios.get('information/resetPasswordForVirtualMachine.do', {
+              params: {
+                VMId: sessionStorage.getItem('uuId'),
+                password: this.resetPasswordForm.newPassword,
+                oldPassword: this.resetPasswordForm.oldPassword,
+                zoneId:this.$store.state.zone.zoneId
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+              this.resetPasswordForm.buttonMessage = '确认重置'
+              this.resetPasswordForm.oldPassword = ''
+              this.resetPasswordForm.newPassword = ''
+              this.resetPasswordForm.confirmPassword = ''
+            })
+          }
+        })
+      },
+
+      //发送密码
+      lookPasswordSubm(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.showWindow.lookPassword = false
+            this.isActive = false
+            this.codePlaceholder = '发送密码（60s）'
+            var inter = setInterval(() => {
+              this.countdown--
+              this.codePlaceholder = '发送密码（' + this.countdown + 's）'
+              if (this.countdown == 0) {
+                clearInterval(inter)
+                this.countdown = 60
+                this.codePlaceholder = '发送密码'
+                this.isActive = true
+              }
+            }, 1000)
+            this.lookPasswordForm.isLetterSec = this.lookPasswordForm.isletterSec == false ? 0 : 1
+            this.lookPasswordForm.isSmsAlarmSec = this.lookPasswordForm.issmsalarmSec == false ? 0 : 1
+            this.lookPasswordForm.isEmailAlarmSec = this.lookPasswordForm.isemailalarmSec == false ? 0 : 1
+            this.$http.post('log/sendVMPassword.do', {
+              VMId: sessionStorage.getItem('gpuId'),
+              password: this.lookPasswordForm.input,
+              letter: this.lookPasswordForm.isLetterSec,
+              meail: this.lookPasswordForm.isEmailAlarmSec,
+              phone: this.lookPasswordForm.isSmsAlarmSec
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+              this.lookPasswordForm.input = ''
+            })
+          }
+        })
+      },
+      //发送密码
+      lookPassword(){
+        if(this.isActive)
+          this.showWindow.lookPassword = true;
+      },
+
+      // 获取操作日志，近一天日期应该设置明天
+      getTomorrow() {
+        var day = new Date()
+        day.setTime(day.getTime() + 24 * 60 * 60 * 1000)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      logNearlySevenDays() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 6)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      logNearlyThirtyDays() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 29)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      getCurrentDate() {
+        return new Date().getFullYear().toString() + '.' + (new Date().getMonth() + 1).toString() + '.' + new Date().getDate().toString()
+      },
+      getYesterday() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+
+      getNearlySevenDays() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 7)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+      getNearlyThirtyDays() {
+        var day = new Date()
+        day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 30)
+        return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
+      },
+
+      //获取CPU利用率和内存使用率
+      getUtilization(){
+        axios.get('alarm/getVmAlarmByHour.do',{
+          params:{
+            vmname:this.gpuDetail.instancename,
+            type: 'core'
+          }
+        }).then(res => {
+          if(res.status == 200 && res.data.status == 1){
+            this.cpu.series[0].data = response.data.result.cpuUse;
+            this.cpu.xAxis.data = response.data.result.xaxis;
+
+          }
+        })
+      },
+
+      //cpu选择
+      requestClick(name,val){
+        if(name == 'cpu'){
+          this.cpuIndex = val;
+          switch (this.dayList[val].value) {
+            case '今天':
+              this.CPUTime = this.getCurrentDate()
+              break
+            case '最近7天':
+              this.CPUTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
+              break
+            case '最近30天':
+              this.CPUTime = this.getNearlyThirtyDays() + '--' + this.getCurrentDate()
+              break
+          }
+        }else if(name == 'momery'){
+          this.momeryIndex = val;
+          switch (this.momeryList[val].value) {
+            case '今天':
+              this.CPUTime = this.getCurrentDate()
+              break
+            case '最近7天':
+              this.CPUTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
+              break
+            case '最近30天':
+              this.CPUTime = this.getNearlyThirtyDays() + '--' + this.getCurrentDate()
+              break
+          }
+        }
+      },
+
+        setMonitoring() {
+        this.showWindow.warningSetting = true;
+        this.$http.get('information/alarmConfig.do', {
+          params: {
+            instancename: this.gpuDetail.instancename
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.setCPU = response.data.result.cpuuse
+            this.setRAM = response.data.result.memoryuse
+            this.setDisk = response.data.result.diskuse
+            this.setFluxIn = response.data.result.networkin
+            this.setFluxOut = response.data.result.networkout
+            this.isletter = response.data.result.isletter == 0 ? false : true
+            this.isemailalarm = response.data.result.isemailalarm == 0 ? false : true
+            this.issmsalarm = response.data.result.issmsalarm == 0 ? false : true
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
+       // 告警策略配置确定
+       setMonitoringOk() {
+        this.$http.get('information/upalarmConfig.do', {
+          params: {
+            instancename: this.$route.query.instancename,
+            cpuUse: this.setCPU,
+            memoryUse: this.setRAM,
+            diskUse: this.setDisk,
+            networkIn: this.setFluxIn,
+            networkOut: this.setFluxOut,
+            isLetter:  this.isletter == true ? '1' : '0',
+            isSmsAlarm: this.issmsalarm == true ? '1' : '0',
+            isEmailAlarm: this.isemailalarm == true ? '1' : '0'
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+            this.showWindow.warningSetting = false
+          } else {
+            this.showWindow.warningSetting = false
+            this.$message.info({
+              content: response.data.message
+            })
           }
         })
       }
     },
     created(){
       this.getGpuHostDetail();
+      this.selectSnapshotList();
+      this.getUtilization();
     }
   }
 </script>
@@ -523,5 +1001,13 @@
       border:1px solid #2a99f2;
       cursor: pointer;
     }
+  }
+  .send {
+    color: rgb(42, 153, 242);
+    cursor: pointer;
+  }
+  .nosend {
+    color: #666666;
+    cursor: not-allowed;
   }
 </style>

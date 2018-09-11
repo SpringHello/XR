@@ -14,14 +14,14 @@
               <div>
                 <p style="color: #333333;font-size: 16px;">CPU</p>
                 <ul>
-                  <li v-for="(item,index) in cpuList" class="nav_item" :class="cpuIndex == index  ?'nav_item_click':''"  @click="cpuClick(index)">{{item.numbers}}</li>
+                  <li v-for="(item,index) in cpuList" class="nav_item" :class="cpuIndex == index  ?'nav_item_click':''"  @click="cpuClick(index,'cpu')">{{item.CPU}}核</li>
                 </ul>
               </div>
               <!--内存-->
               <div>
                 <p style="color: #333333;font-size: 16px;">内存</p>
                 <ul>
-                  <li v-for="(item,index) in memoryList" class="nav_item" :class="memoryIndex == index  ?'nav_item_click':''"  @click="cpuClick(index)">{{item.value}}</li>
+                  <li v-for="(item,index) in memoryList" class="nav_item" :class="memoryIndex == index  ?'nav_item_click':''"  @click="cpuClick(index,'memory')">{{item.memory}}G</li>
                 </ul>
               </div>
             </div>
@@ -40,7 +40,7 @@
                 <p>主机配置：8核16G</p>
                 <p>GPU类型：Tesla P100 GPU</p>
                 <p>剩余时长：2018-07-09 13:17:02 </p>
-                <p>应付差价:<span style="float: right;color: #2A99F2;font-size: 24px;">170元</span></p>
+                <p>应付差价:<span style="float: right;color: #2A99F2;font-size: 24px;">{{upMoney}}元</span></p>
                 <p style="color:#2A99F2">购买和计费说明</p>
                 <Button type="primary" style="width: 100%;margin-top: 10%;">立即购买</Button>
               </div>
@@ -55,69 +55,189 @@
 </template>
 
 <script>
+import axios from  'axios'
   export default {
     data(){
       return{
       //  CPU
-      cpuList:[
-        {
-          numbers:'1核',
-          className:'',
-          css:true,
-        },
-        {
-          numbers:'2核',
-          className:'',
-          css:true,
-        },
-        {
-          numbers:'4核',
-          className:'',
-          css:true,
-        },
-        {
-          numbers:'8核',
-          className:'',
-          css:true,
-        },
-        {
-          numbers:'16核',
-          className:'',
-          css:true,
-        },
-        {
-          numbers:'64核',
-          className:'',
-          css:true,
-        }
-      ],
-        cpuIndex:-1,
-      //  内存
-        memoryList:[
+        cpuList:[
           {
-            value:'4G'
+            CPU:'1',
+            List:[
+              {
+                value:'1'
+              },
+              {
+                value:'2'
+              },
+              {
+                value:'4'
+              },
+              {
+                value:'8'
+              }
+            ],
           },
           {
-            value:'8G'
+            CPU:'2',
+            List:[
+              {
+                value:'2'
+              },
+              {
+                value:'4'
+              },
+              {
+                value:'8'
+              },
+              {
+                value:'16'
+              }
+            ],
           },
           {
-            value:'12G'
+            CPU:'4',
+            List:[
+              {
+                value:'4'
+              },
+              {
+                value:'8'
+              },
+              {
+                value:'16'
+              },
+              {
+                value:'32'
+              }
+            ],
           },
           {
-            value:'16G'
+            CPU:'8',
+            List:[
+              {
+                value:'8'
+              },
+              {
+                value:'16'
+              },
+              {
+                value:'32'
+              },
+              {
+                value:'64'
+              }
+            ],
           },
           {
-            value:'32G'
+            CPU:'16',
+            List:[
+              {
+                value:'16'
+              },
+              {
+                value:'32'
+              },
+              {
+                value:'64'
+              },
+              {
+                value:'128'
+              }
+            ],
+          },
+          {
+            CPU:'32',
+            List:[
+              {
+                value:'64'
+              },
+              {
+                value:'128'
+              }
+            ]
+          },
+          {
+            CPU:'64',
+            List:[
+              {
+                value:'128'
+              },
+              {
+                value:'256'
+              }
+            ]
           }
         ],
-        memoryIndex:-1
+        cpuIndex:0,
+      //  内存
+        memoryList:[],
+        memoryIndex:0,
+
+        //升级价格
+        upMoney:'--'
       }
     },
+    beforeRouteEnter(to, from, next){
+      next(vm =>{
+        axios.get('information/zone.do',{
+          params:{
+            gpuServer:'1'
+          }
+        }).then(res => {
+          vm.$store.state.zone.zoneId = res.data.result[0].zoneid;
+          vm.$store.state.zone.zonename = res.data.result[0].zonename;
+        })
+      })
+    },
+    // beforeRouteLeave(){
+    //   axios.get('information/zone.do',{
+    //   }).then(res => {
+    //     this.$store.state.zone.zoneId = res.data.result[0].zoneid;
+    //     this.$store.state.zone.zonename = res.data.result[0].zonename;
+    //   })
+    // },
     methods:{
-      cpuClick(val){
-        this.cpuIndex = val;
-        this.cpuList[val].css = !this.cpuList[val].css;
+      cpuClick(val,name){
+        if(name == 'cpu'){
+          this.cpuIndex = val;
+          this.memoryList = this.cpuList[val].list;
+          this.memoryIndex = 0;
+          this.upGpuConfig();
+        }else if(name == 'memory'){
+         this.memoryIndex = val;
+          this.upGpuConfig();
+        }
+      },
+      //获取cpu和内存
+      getZonesConfig(){
+        this.$http.get("information/getZonesConfig.do",{}).then(res =>{
+          if(res.status == 200 && res.data.status == 1){
+            this.cpuList = res.data.data;
+            this.memoryList = res.data.data[0].list;
+          }
+        });
+      },
+
+      //升级扣费
+      upGpuConfig(){
+       axios.get('gpuserver/UpGPUConfigCost.do',{
+          params:{
+            zoneId:this.$store.state.zone.zoneId,
+            cpunum:this.cpuList[this.cpuIndex].CPU,
+            memory:this.memoryList[this.memoryIndex].memory,
+            GPUId:sessionStorage.getItem('gouId')
+          }
+        }).then(res => {
+          if(res.status == 200 && res.data.status ==1){
+            // this.upMoney = res.data.
+          }
+        })
       }
+    },
+    created(){
+      this.getZonesConfig();
+      this.upGpuConfig();
     }
   }
 </script>

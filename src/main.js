@@ -31,8 +31,9 @@ import message from './myView/message'
 import md5 from 'md5'
 // 引入复制粘贴组件
 import VueClipboards from 'vue-clipboards'
-
+import LR from './myView/login'
 Vue.prototype.$message = message
+Vue.prototype.$LR = LR
 Vue.config.productionTip = false
 
 
@@ -49,15 +50,15 @@ axios.defaults.withCredentials = true
 //axios.defaults.baseURL = 'http://zengxin.xrclouds.net/ruicloud/'
 
 
-//axios.defaults.baseURL = 'http://zengxin.xrclouds.net/ruicloud/'
+// axios.defaults.baseURL = 'http://192.168.3.29/ruicloud/'
 
 
-// axios.defaults.baseURL = 'https://pan.xrcloud.net/ruicloud/'
+axios.defaults.baseURL = 'https://zschj.xrcloud.net/ruicloud/'
 
 // axios.defaults.baseURL = 'http://192.168.3.187:8080/ruirados/'
 
 
-//axios.defaults.withCredentials = true
+axios.defaults.withCredentials = true
 
 //axios挂载到Vue原型
 Vue.prototype.$http = axios.create({

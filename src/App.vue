@@ -33,41 +33,86 @@
                 </div>
               </div>
             </li>
-            <!-- 尚未登录 -->
-            <ul v-if="!userInfo">
-              <li @mouseenter="ME(4,$event)">
-                <div class="menu-dropdown">
-                  <div class="menu-dropdown-rel">
-                    <router-link to="/ruicloud/register"><span>注册</span></router-link>
-                  </div>
+          </ul>
+          <div class="line" :style="lineStyle"></div>
+        </div>
+        <div class="operate">
+          <!-- 尚未登录 -->
+          <ul v-if="!userInfo" @mouseleave="ME(-1)">
+            <li @mouseenter="ME(4,$event)">
+              <div class="menu-dropdown">
+                <div class="menu-dropdown-rel">
+                  <router-link to="/ruicloud/overview"><span>控制台</span></router-link>
                 </div>
-              </li>
-              <li @mouseenter="ME(5,$event)">
-                <div class="menu-dropdown">
-                  <div class="menu-dropdown-rel">
-                    <router-link to="/ruicloud/login"><span>登录</span></router-link>
-                  </div>
+              </div>
+            </li>
+            <li @mouseenter="ME(4,$event)">
+              <div class="menu-dropdown">
+                <div class="menu-dropdown-rel">
+                  <router-link to="/ruicloud/entrance"><span>备案</span></router-link>
                 </div>
-              </li>
-            </ul>
-            <!-- 已登录 -->
-            <ul v-else>
-              <li @mouseenter="ME(4,$event)">
-                <div class="menu-dropdown">
-                  <div class="menu-dropdown-rel">
-                    <router-link to="/ruicloud/overview"><span>控制台</span></router-link>
-                  </div>
+              </div>
+            </li>
+            <li @mouseenter="ME(4,$event)">
+              <div class="menu-dropdown">
+                <div class="menu-dropdown-rel">
+                  <router-link to="/ruicloud/register"><span>注册</span></router-link>
                 </div>
-              </li>
-              <li @mouseenter="ME(5,$event)">
-                <div class="menu-dropdown">
-                  <div class="menu-dropdown-rel">
-                    <router-link to="/ruicloud/userCenter"><span>{{userInfo.realname}}</span></router-link>
-                  </div>
+              </div>
+            </li>
+            <li @mouseenter="ME(5,$event)">
+              <div class="menu-dropdown">
+                <div class="menu-dropdown-rel">
+                  <router-link to="/ruicloud/login"><span>登录</span></router-link>
                 </div>
-              </li>
-            </ul>
-            <div class="line" :style="lineStyle"></div>
+              </div>
+            </li>
+          </ul>
+          <!-- 已登录 -->
+          <ul v-else @mouseleave="ME(-1)">
+            <li @mouseenter="ME(4,$event)">
+              <div class="menu-dropdown">
+                <div class="menu-dropdown-rel">
+                  <router-link to="/ruicloud/overview"><span>控制台</span></router-link>
+                </div>
+              </div>
+            </li>
+            <li @mouseenter="ME(4,$event)">
+              <div class="menu-dropdown">
+                <div class="menu-dropdown-rel">
+                  <router-link to="/ruicloud/entrance"><span>备案</span></router-link>
+                </div>
+              </div>
+            </li>
+            <li @mouseenter="ME(5,$event)">
+              <Dropdown @on-click="go">
+                <a href="javascript:void(0)" style="position:relative">
+                  {{userInfo.realname}}
+                  <!--<sup class="circle-dot" v-if="this.$store.state.Msg>0"></sup>-->
+                  <Icon type="arrow-down-b"></Icon>
+                </a>
+                <DropdownMenu slot="list">
+                  <DropdownItem name="userCenter">
+                    <router-link to="userCenter">用户中心</router-link>
+                  </DropdownItem>
+                  <DropdownItem name="expenses">
+                    <router-link to="expenses">费用中心</router-link>
+                  </DropdownItem>
+                  <DropdownItem name="msgCenter" style="position:relative">
+                    <router-link to="msgCenter">消息中心
+                      <!--<sup v-if="this.$store.state.Msg>0" class="badge">{{this.$store.state.Msg}}</sup>-->
+                    </router-link>
+                  </DropdownItem>
+                  <DropdownItem name="operationLog">
+                    <router-link to="operationLog">操作日志</router-link>
+                  </DropdownItem>
+                  <DropdownItem divided name="exit">
+                    <!-- <router-link to="">退出</router-link> -->
+                    <span style="color:#666;">退出</span>
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </li>
           </ul>
         </div>
       </div>
@@ -152,9 +197,7 @@
             <li>
               <router-link to="/ruicloud/about" style="color:#fff;float:right">关于我们</router-link>
             </li>
-
           </ul>
-
         </div>
       </div>
     </div>
@@ -332,10 +375,6 @@
           {
             title: '关于我们',
             path: '/ruicloud/about'
-          },
-          {
-            title: '备案',
-            path: '/ruicloud/entrance'
           }
         ], // banner item
         currentItem: -1, // 当前选中item  默认为-1(未选中)
@@ -460,6 +499,15 @@
          })
          }*/
       })
+      /*this.$http.get('user/getEventNum.do', {
+       params: {
+       isRead: '0'
+       }
+       }).then(response => {
+       if (response.status == 200 && response.data.status == 1) {
+       this.$store.commit('setMsg', Number.parseInt(response.data.number))
+       }
+       })*/
     },
     methods: {
       /* li mouseenter事件 重新设置line样式 */
@@ -480,6 +528,13 @@
       QML(){
         this.$refs.qq.style.width = '0px'
       },
+      go(path){
+        if (path == 'exit') {
+          this.exit()
+          return
+        }
+        this.$router.push(path)
+      }
     },
     computed: mapState({
       userInfo: state => state.userInfo
@@ -539,22 +594,28 @@
           }
         }
         .operate {
-          ul {
+          > ul {
             display: inline-block;
             margin: 0px auto;
             font-size: 0px;
             width: unset !important;
-            li {
+            > li {
               line-height: 70px;
               display: inline-block;
               font-size: 14px;
-              &:nth-child(7) {
-                span {
-                  border-right: 1px solid #939393;
-                  display: inline-block;
-                  line-height: 14px;
-                  padding-right: 40px;
+
+              .ivu-dropdown {
+                .ivu-dropdown-rel {
+                  a {
+                    color: #fff;
+                  }
                 }
+                .ivu-select-dropdown {
+                  a {
+                    color: #000
+                  }
+                }
+                padding-left: 15px;
               }
               .menu-dropdown {
                 .menu-dropdown-rel {
@@ -565,7 +626,7 @@
                     display: block;
                     line-height: 70px;
                     span {
-                      padding: 0px 30px;
+                      padding: 0px 25px;
                     }
                     &:hover {
                       color: #2d8cf0;
@@ -632,12 +693,12 @@
               }
 
             }
-            .line {
-              height: 2px;
-              background-color: #377dff;
-              position: absolute;
-              bottom: 0px;
-            }
+          }
+          .line {
+            height: 2px;
+            background-color: #377dff;
+            position: absolute;
+            bottom: 0px;
           }
         }
       }
