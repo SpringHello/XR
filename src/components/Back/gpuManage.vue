@@ -20,7 +20,7 @@
           </div>
           <div style="display: flex;margin-top: 20px;">
             <div class="host_box">
-                <p>4CPU，8G内存，gl.xlarge显卡 | 天津1区</p>
+                <p>{{gpuDetail.peizhi}} | {{gpuDetail.zonename}}</p>
                 <p>镜像系统：{{gpuDetail.templatename}}</p>
                 <p>到期时间/有效期：{{gpuDetail.templatename}}</p>
                 <p>内网地址：145.168.35.23</p>
@@ -30,7 +30,7 @@
               <p>所属VPC：<span>{{gpuDetail.vpcname}}</span></p>
               <p>绑定公网：<span>196.168.33.233</span></p>
               <p>所属负载均衡：<span>基础</span></p>
-              <p>挂载磁盘：<span style="color: #2A99F2;">发送密码</span></p>
+              <p>挂载磁盘：<span style="color: #2A99F2;">.....</span></p>
             </div>
             <div class="host_box">
               <p>计费类型：{{gpuDetail.caseType == 1 ?'包年计费':gpuDetail.caseType == 2 ? '包月计费' : gpuDetail.caseType == 3 ? '实时计费' :''}}</p>
@@ -47,7 +47,7 @@
                 <Button type="primary" @click="setMonitoring">监控警告设置</Button>
                 <div class="title-Png">
                   <span>CPU利用率</span>
-                  <span style="float: right">2017.11.25</span>
+                  <span style="float: right">{{CPUTime}}</span>
                 </div>
                 <div style="width: 100%" class="center_chart">
                   <div class="chart" >
@@ -55,14 +55,14 @@
                       <li :class="cpuIndex == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="requestClick('cpu',item.label)">{{item.value}}</li>
                     </ul>
                     <div class="chart-rig">
-                       <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button>
+                       <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda('cpu')">导出</Button>
                       <ul class="objectList">
-                        <li :class="chartTwoIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartTwoClick(index)">{{item.value}}</li>
+                        <li :class="cpuMapIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartTwoClick('cpu',index)">{{item.value}}</li>
                       </ul>
                     </div>
                   </div>
                   <div>
-                    <chart :options="cpu"></chart>
+                    <chart ref="cpu" :options="cpu"></chart>
                   </div>
                 </div>
 
@@ -70,22 +70,22 @@
               <div>
                 <div class="title-Png">
                   <span>内存使用率</span>
-                  <span style="float: right">2017.11.25</span>
+                  <span style="float: right">{{CPUTime}}</span>
                 </div>
                 <div style="width: 100%" class="center_chart">
                   <div class="chart" >
                     <ul class="objectList">
-                      <li :class="momeryIndex == item.label? 'objectItems':'objectItem'" v-for="item in momeryList" :key="item.label" @click="requestClick('momery',item.label)">{{item.value}}</li>
+                      <li :class="momeryIndex == item.label? 'objectItems':'objectItem'" v-for="item in momeryList" :key="item.label" @click="requestClick('memory',item.label)">{{item.value}}</li>
                     </ul>
                     <div class="chart-rig">
-                      <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button>
+                      <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;" @click="dowloda('momery')">导出</Button>
                       <ul class="objectList">
-                        <li :class="momeryIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartTwoClick(index)">{{item.value}}</li>
+                        <li :class="momeryMapIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in momeryMapList" :key="index" @click="chartTwoClick('memory',index)">{{item.value}}</li>
                       </ul>
                     </div>
                   </div>
                   <div style="width: 99%">
-                    <chart :options="cpu"></chart>
+                    <chart ref="momery" :options="momery"></chart>
                   </div>
                 </div>
               </div>
@@ -110,10 +110,16 @@
                 </div>
                 <div style="display: inline-block;float: right">
                   <span>开始结束时间</span>
-                  <DatePicker type="date" show-week-numbers placeholder="Select date" style="width: 200px"></DatePicker>
-                  <Button type="primary" size="small">查询</Button>
+                  <Date-picker format="yyyy-MM-dd" type="daterange" placement="bottom-end" placeholder="选择日期"
+                               style="width: 200px" :transfer="true"  @on-change="dataTimeChange"></Date-picker>
+                  <Button type="primary" size="small" @click="selectOperationLog">查询</Button>
                 </div>
                 <Table :columns="journalList" :data="journalData" style="margin-top: 10px;"></Table>
+                <div style="margin: 10px;overflow: hidden">
+                  <div style="float: right;">
+                    <Page :total="total" :current="1" @on-change="currentChange"></Page>
+                  </div>
+                </div>
               </div>
             </TabPane>
             <!--修改密码-->
@@ -342,7 +348,8 @@
           }
         ],
         cpuIndex:0,
-        momeryIndex:0,
+        cpuMapIndex:0,
+        CPUTime:'',
 
         //内存统计图
         momeryList:[
@@ -365,6 +372,20 @@
             label:2
           }
         ],
+        momeryMapList:[
+          {
+            value:'折线',
+            type:'line',
+            boundaryGap:false
+          },
+          {
+            value:'柱状图',
+            type:'bar',
+            boundaryGap:true
+          }
+        ],
+        momeryMapIndex:0,
+        momeryIndex:0,
 
         //快照详情
         snapsDetails:{},
@@ -445,6 +466,9 @@
           }
         ],
         journalData:[],
+        total:0,
+        logTime:'',
+        currentPage:1,
 
         //修改密码
         resetPasswordForm:{
@@ -561,13 +585,13 @@
         })
       })
     },
-    // beforeRouteLeave(){
-    //   axios.get('information/zone.do',{
-    //   }).then(res => {
-    //     this.$store.state.zone.zoneId = res.data.result[0].zoneid;
-    //     this.$store.state.zone.zonename = res.data.result[0].zonename;
-    //   })
-    // },
+    beforeRouteLeave(){
+      axios.get('information/zone.do',{
+      }).then(res => {
+        this.$store.state.zone.zoneId = res.data.result[0].zoneid;
+        this.$store.state.zone.zonename = res.data.result[0].zonename;
+      })
+    },
     methods:{
 
       //获取GPU服务器详情
@@ -581,6 +605,8 @@
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
             this.gpuDetail = res.data.result[0];
+             this.gpuDetail.peizhi = res.data.result[0].serviceoffername.split('+').toString();
+             this.gpuDetail.peizhi.substring(this.gpuDetail.peizhi.indexOf('[')-1,this.gpuDetail.peizhi.indexOf[']']+1)
           }
         })
       },
@@ -760,6 +786,68 @@
         return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
       },
 
+      //获取操作日志
+      selectOperationLog(){
+        axios.get('log/queryLog.do',{
+          params:{
+            zoneId:this.$store.state.zone.zoneId,
+            pageSize: 10,
+            currentPage: this.currentPage,
+            target: 'gpu',
+            queryTime: this.logTime,
+          }
+        })
+      },
+      dataTimeChange(time){
+        this.logTime = time
+      },
+      currentChange(currentPage){
+        this.currentPage = currentPage;
+        this.selectOperationLog();
+      },
+      dayClick(val){
+        this.indexs = val;
+        if(val == 0){
+          this.logTime = this.getCurrentDate() + ',' + this.getTomorrow();
+        }else if(val == 1){
+          this.logTime = this.logNearlySevenDays() + ',' + this.getTomorrow()
+        }else if(val == 2){
+          this.logTime = this.logNearlyThirtyDays() + ',' + this.getTomorrow()
+        }
+        this.selectOperationLog();
+      },
+      //导出统计图
+      checkImg(code){
+        var parts = code.split(';base64,');
+        var contentType = parts[0].split(':')[1];
+        var raw = window.atob(parts[1]);
+        var rawLength = raw.length;
+        var uInt8Array = new Uint8Array(rawLength);
+        for (var i = 0; i < rawLength; ++i) {
+          uInt8Array[i] = raw.charCodeAt(i);
+        }
+        return new Blob([uInt8Array], {type: contentType});
+      },
+      dowloda(name){
+        var img = new Image();
+        img = this.$refs[name].getConnectedDataURL({
+          pixelRatio: 2,
+          backgroundColor: '#ffffff',
+          type:'png'
+        });
+        let a = document.createElement('a');
+        document.body.appendChild(a);
+        var blob =this.checkImg(img);
+        a.style.display = 'none';
+        let url = URL.createObjectURL(blob);
+        a.href = url;
+        //添加了download属性才会是下载文件，不然就是跳转
+        a.download = 'echarts';
+        a.click();
+        document.body.removeChild(a);
+      },
+
+
       //获取CPU利用率和内存使用率
       getUtilization(){
         axios.get('alarm/getVmAlarmByHour.do',{
@@ -791,7 +879,7 @@
               this.CPUTime = this.getNearlyThirtyDays() + '--' + this.getCurrentDate()
               break
           }
-        }else if(name == 'momery'){
+        }else if(name == 'memory'){
           this.momeryIndex = val;
           switch (this.momeryList[val].value) {
             case '今天':
@@ -804,6 +892,45 @@
               this.CPUTime = this.getNearlyThirtyDays() + '--' + this.getCurrentDate()
               break
           }
+        }
+        let url='';
+        let dateType = '';
+       if(name == 'cpu'){
+         url =  this.dayList[val].value == '今天'?urlList.dayURL : urlList.otherURL;
+         dateType = this.dayList[val].label == 1 ? 'week' :'month';
+        }else if(name == 'memory'){
+          url =  this.momeryList[val].value == '今天'?urlList.dayURL : urlList.otherURL;
+         dateType = this.momeryList[val].label == 1 ? 'week' :'month';
+       }
+       axios.get(url,{
+         params:{
+           vmname:this.gpuDetail.instancename,
+           type:'core',
+           datetype:dateType,
+           zoneId:this.$store.state.zone.zoneId
+         }
+       }).then(res => {
+         if(res.status == 200 && res.data.status == 1){
+           if(name == 'cpu'){
+             this.cpu.xAxis.data = res.data.result.xaxis;
+             this.cpu.series[0].data =  res.data.result[name + 'Use'];
+           }else {
+            this.momery.xAxis.data = res.data.result.xaxis;
+             this.momery.series[0].data =  res.data.result[name + 'Use'];
+           }
+         }
+       })
+      },
+      chartTwoClick(name,val){
+        if(name == 'cpu'){
+          this.cpuMapIndex = val;
+          this.cpu.series[0].type = this.chartList[val].type;
+          this.cpu.xAxis.boundaryGap = this.chartList[val].boundaryGap;
+        }else if(name == 'memory'){
+          console.log('2222222222222');
+          this.momeryMapIndex = val;
+          this.momery.series[0].type = this.momeryMapList[val].type;
+          this.momery.xAxis.boundaryGap = this.momeryMapList[val].boundaryGap;
         }
       },
 
@@ -855,12 +982,31 @@
             })
           }
         })
-      }
+      },
+
+
     },
     created(){
       this.getGpuHostDetail();
       this.selectSnapshotList();
       this.getUtilization();
+      this.logTime = this.getCurrentDate() + ',' + this.getTomorrow();
+      this.CPUTime = this.getCurrentDate();
+      this.selectOperationLog();
+      this.$http.get('alarm/getVmAlarmByHour.do', {
+        params: {
+          vmname: this.gpuDetail.instancename,
+          type: 'core'
+        }
+      })
+        .then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.cpu.series[0].data = response.data.result.cpuUse;
+            this.momery.series[0].data = response.data.result.memoryUse;
+            this.cpu.xAxis.data = response.data.result.xaxis;
+            this.momery.xAxis.data = response.data.result.xaxis;
+          }
+        })
     }
   }
 </script>

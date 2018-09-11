@@ -190,13 +190,13 @@ import axios from  'axios'
         })
       })
     },
-    // beforeRouteLeave(){
-    //   axios.get('information/zone.do',{
-    //   }).then(res => {
-    //     this.$store.state.zone.zoneId = res.data.result[0].zoneid;
-    //     this.$store.state.zone.zonename = res.data.result[0].zonename;
-    //   })
-    // },
+    beforeRouteLeave(){
+      axios.get('information/zone.do',{
+      }).then(res => {
+        this.$store.state.zone.zoneId = res.data.result[0].zoneid;
+        this.$store.state.zone.zonename = res.data.result[0].zonename;
+      })
+    },
     methods:{
       cpuClick(val,name){
         if(name == 'cpu'){
