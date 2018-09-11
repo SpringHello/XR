@@ -1,6 +1,10 @@
 <template>
     <div id="background">
       <div id="wrapper">
+        <Spin fix v-show="loading">
+          <Icon type="load-c" size=18 class="demo-spin-icon-load"></Icon>
+          <div>{{loadingMessage}}</div>
+        </Spin>
         <p style="margin: 10px 0 10px 0;">总览 / <span>GPU云服务器</span> / <span>管理</span></p>
         <div class="head">
           <div>
@@ -40,7 +44,7 @@
             <TabPane style="background: #FFFFFF;" label="监控">
               <!--CPU利用率-->
               <div class="tab_box">
-                <Button type="primary" @click="showWindow.warningSetting = true">监控警告设置</Button>
+                <Button type="primary" @click="setMonitoring">监控警告设置</Button>
                 <div class="title-Png">
                   <span>CPU利用率</span>
                   <span style="float: right">2017.11.25</span>
@@ -48,7 +52,7 @@
                 <div style="width: 100%" class="center_chart">
                   <div class="chart" >
                     <ul class="objectList">
-                      <li :class="requestIndex == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="requestClick(item.label)">{{item.value}}</li>
+                      <li :class="cpuIndex == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="requestClick('cpu',item.label)">{{item.value}}</li>
                     </ul>
                     <div class="chart-rig">
                        <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button>
@@ -71,12 +75,12 @@
                 <div style="width: 100%" class="center_chart">
                   <div class="chart" >
                     <ul class="objectList">
-                      <li :class="requestIndex == item.label? 'objectItems':'objectItem'" v-for="item in dayList" :key="item.label" @click="requestClick(item.label)">{{item.value}}</li>
+                      <li :class="momeryIndex == item.label? 'objectItems':'objectItem'" v-for="item in momeryList" :key="item.label" @click="requestClick('momery',item.label)">{{item.value}}</li>
                     </ul>
                     <div class="chart-rig">
                       <Button type="primary" size="small" style="margin-right:30px;margin-top:-3px;padding:5px 15px;">导出</Button>
                       <ul class="objectList">
-                        <li :class="chartTwoIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartTwoClick(index)">{{item.value}}</li>
+                        <li :class="momeryIndex == index? 'objectItems':'objectItem'" v-for="(item,index) in chartList" :key="index" @click="chartTwoClick(index)">{{item.value}}</li>
                       </ul>
                     </div>
                   </div>
@@ -91,8 +95,8 @@
             <!--快照管理-->
             <TabPane label="快照管理">
               <div class="tab_box">
-                <Button type="primary">删除快照</Button>
-                <Table ref="selection" :columns="snapshotList" :data="snapshotData"></Table>
+                <Button type="primary" style="margin-bottom: 10px;" @click="deleteSnapshot">删除快照</Button>
+                <Table ref="selection" @on-selection-change="selectKuai" :columns="snapshotList" :data="snapshotData"></Table>
               </div>
             </TabPane>
             <!--操作日志-->
@@ -186,8 +190,8 @@
           </div>
         </div>
         <div slot="footer">
-          <Button type="ghost" @click="showModal.setMonitoringForm=false">取消</Button>
-          <Button type="primary" >完成</Button>
+          <Button type="ghost" @click="showWindow.warningSetting=false">取消</Button>
+          <Button type="primary" @click="setMonitoringOk">完成</Button>
         </div>
       </modal>
 
@@ -222,6 +226,24 @@
           </Button>
         </div>
       </Modal>
+
+      <!-- 回滚确认弹窗 -->
+      <Modal v-model="showWindow.rollback" :scrollable="true" :closable="false" :width="390">
+        <div class="modal-content-s">
+          <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+          <div>
+            <strong>主机回滚</strong>
+            <p class="lh24">是否确定回滚主机</p>
+            <p class="lh24">提示：您正使用<span class="bluetext">{{snapsDetails.snapshotname}}</span>回滚<span
+              class="bluetext">{{snapsDetails.name}}</span>至<span
+              class="bluetext">{{snapsDetails.addtime}}</span>，当您确认操作之后，此<span class="bluetext">时间点</span>之后的主机内的数据将丢失。</p>
+          </div>
+        </div>
+        <p slot="footer" class="modal-footer-s">
+          <Button @click="showWindow.rollback = false">取消</Button>
+          <Button type="primary" @click="goBackSnapshot">确定</Button>
+        </p>
+      </Modal>
     </div>
 </template>
 
@@ -232,12 +254,59 @@
     otherURL: 'alarm/getVmAlarmByDay.do'
   }
   import cpuOptions from "@/echarts/cpuUtilization"
+  import momeryOptions from  "@/echarts/objectStroage"
+  const momery = JSON.stringify(momeryOptions);
   const cpu = JSON.stringify(cpuOptions);
+
   export default {
     data(){
+      var regExp = /(?!(^[^a-z]+$))(?!(^[^A-Z]+$))(?!(^[^\d]+$))^[\w`~!#$%\\\\^&*|{};:\',\\/<>?@]{6,23}$/
+      const validateoldPassword = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('密码不能为空'));
+        } /*else if (!regExp.test(value)) {
+          callback(new Error('密码由6位以上的字母数字组成，必须包含大小写字母、数字'));
+        } */else {
+          callback();
+        }
+      }
+      const validatePassword = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('密码不能为空'));
+        } else if (!regExp.test(value)) {
+          callback(new Error('新密码由6-23位的字母数字组成，必须包含大小写字母、数字'));
+        } else {
+          if (regExp.test(value)) {
+            this.$refs.resetPasswordForm.validateField('confirmPassword');
+          }
+          callback();
+        }
+      }
+      const validatePassCheck = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('密码不能为空'));
+        } else if (this.resetPasswordForm.newPassword != value) {
+          callback(new Error('两次密码不一致'));
+        } else {
+          callback();
+        }
+      }
+      const validaSinginName = (rule, value, callback) => {
+        if (!value) {
+          callback(new Error('密码不能为空'));
+        } else if (value.length < 8) {
+          callback(new Error('长度至少为8位'));
+        } else {
+          callback();
+        }
+      }
       return{
         indexs:0,
         cpu:JSON.parse(cpu),
+        momery:JSON.parse(momery),
+
+        //快照id
+          ids:'',
 
         //cpu统计图
         dayList:[
@@ -248,16 +317,16 @@
             label:0
           },
           {
-            value:'最近七天',
+            value:'最近7天',
             data:[20,30,40,50,60,22,100],
             day:['02/18','02/18','02/18','02/18','02/18','02/18','02/18'],
-            label:2
+            label:1
           },
           {
-            value:'最近三十天',
+            value:'最近30天',
             data:[20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,100,33,28,90,55],
             day:['04/01','04/02','04/03','04/04','04/05','04/06','04/07','04/08','04/09','04/10','04/11','04/12','04/13','04/14','04/15','04/16','04/17','04/18','04/19','04/20','04/21','04/22','04/23','04/24','04/25','04/26','04/27','04/28','04/29','04/30'],
-            label:3
+            label:2
           }
         ],
         chartList:[
@@ -272,9 +341,36 @@
             boundaryGap:true
           }
         ],
-        requestIndex:0,
-        chartTwoIndex:0,
+        cpuIndex:0,
+        momeryIndex:0,
 
+        //内存统计图
+        momeryList:[
+          {
+            value:'今天',
+            data:[20,30,40,50,60],
+            day:['0:00','1:00','2:00','3:00','4:00','5:00','6:00','7:00','8:00','9:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00'],
+            label:0
+          },
+          {
+            value:'最近7天',
+            data:[20,30,40,50,60,22,100],
+            day:['02/18','02/18','02/18','02/18','02/18','02/18','02/18'],
+            label:1
+          },
+          {
+            value:'最近30天',
+            data:[20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,20,30,40,50,60,100,33,28,90,55],
+            day:['04/01','04/02','04/03','04/04','04/05','04/06','04/07','04/08','04/09','04/10','04/11','04/12','04/13','04/14','04/15','04/16','04/17','04/18','04/19','04/20','04/21','04/22','04/23','04/24','04/25','04/26','04/27','04/28','04/29','04/30'],
+            label:2
+          }
+        ],
+
+        //快照详情
+        snapsDetails:{},
+        //回滚信息
+        loadingMessage:'',
+        loading:false,
         //快照
         snapshotList:[
           {
@@ -305,7 +401,18 @@
             title:'操作',
             width:100,
             render:(h,params) =>{
-              return h('span',{},'回滚')
+              return h('span',{
+                style:{
+                  color:'#2A99F2',
+                  cursor:'pointer'
+                },
+                on:{
+                  click: () => {
+                    this.showWindow.rollback = true;
+                    this.snapsDetails = params.row;
+                  }
+                }
+              },'回滚')
             }
           }
         ],
@@ -346,7 +453,17 @@
           confirmPassword:'',
           buttonMessage:'确认重置'
         },
-        resetRuleValidate:{},
+        resetRuleValidate:{
+          oldPassword: [
+            {required: true, validator: validateoldPassword, trigger: 'blur'}
+          ],
+          newPassword: [
+            {required: true, validator: validatePassword, trigger: 'blur'}
+          ],
+          confirmPassword: [
+            {required: true, validator: validatePassCheck, trigger: 'blur'}
+          ],
+        },
 
         //发送密码
         isActive:true,
@@ -366,7 +483,8 @@
         showWindow:{
           //警告设置
           warningSetting:false,
-          lookPassword:false
+          lookPassword:false,
+          rollback:false
         },
 
         //告警设置字段
@@ -443,6 +561,13 @@
         })
       })
     },
+    // beforeRouteLeave(){
+    //   axios.get('information/zone.do',{
+    //   }).then(res => {
+    //     this.$store.state.zone.zoneId = res.data.result[0].zoneid;
+    //     this.$store.state.zone.zonename = res.data.result[0].zonename;
+    //   })
+    // },
     methods:{
 
       //获取GPU服务器详情
@@ -470,6 +595,86 @@
         }).then(res => {
           if(res.status == 200 && res.data.status == 1){
             this.snapshotData = res.data.result;
+          }
+        })
+      },
+      selectKuai(val){
+        val.forEach(item =>{
+          this.ids = item.id
+        })
+      },
+
+      //删除快照
+      deleteSnapshot(){
+        this.$Modal.confirm({
+          title:'删除快照',
+          content:'是否删除快照',
+          onOk:()=>{
+              axios.get('Snapshot/deleteVMSnapshot.do',{
+                params:{
+                  zoneId:this.$store.state.zone.zoneId,
+                  ids:this.ids
+                }
+              }).then(res => {
+                if(res.status == 200 && res.data.status == 1){
+                 this.$Message.success('删除快照成功');
+                 this.selectSnapshotList();
+                }else {
+                  this.$Message.info('删除快照出小差了');
+                }
+              })
+          }
+        })
+
+      },
+
+      //回滚快照
+      goBackSnapshot(){
+          this.showWindow.rollback = false
+          this.loadingMessage = '正在回滚主机'
+          this.loading = true
+          axios.get('Snapshot/revertToVMSnapshot.do', {
+            params: {
+              snapshotId: this.snapsDetails.id,
+              zoneId: this.$store.state.zone.zoneId
+            }
+          })
+            .then(response => {
+              if (response.status == 200) {
+                this.loading = false
+                this.$Message.success({
+                  content: response.data.message,
+                  duration: 5
+                })
+              }
+            })
+      },
+
+      //重置密码
+      resetConfirm(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+            this.resetPasswordForm.buttonMessage = '正在重置中...'
+            axios.get('information/resetPasswordForVirtualMachine.do', {
+              params: {
+                VMId: sessionStorage.getItem('uuId'),
+                password: this.resetPasswordForm.newPassword,
+                oldPassword: this.resetPasswordForm.oldPassword,
+                zoneId:this.$store.state.zone.zoneId
+              }
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.$Message.success(response.data.message)
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+              this.resetPasswordForm.buttonMessage = '确认重置'
+              this.resetPasswordForm.oldPassword = ''
+              this.resetPasswordForm.newPassword = ''
+              this.resetPasswordForm.confirmPassword = ''
+            })
           }
         })
       },
@@ -554,10 +759,108 @@
         day.setTime(day.getTime() - 24 * 60 * 60 * 1000 * 30)
         return day.getFullYear() + '.' + (day.getMonth() + 1) + '.' + day.getDate()
       },
+
+      //获取CPU利用率和内存使用率
+      getUtilization(){
+        axios.get('alarm/getVmAlarmByHour.do',{
+          params:{
+            vmname:this.gpuDetail.instancename,
+            type: 'core'
+          }
+        }).then(res => {
+          if(res.status == 200 && res.data.status == 1){
+            this.cpu.series[0].data = response.data.result.cpuUse;
+            this.cpu.xAxis.data = response.data.result.xaxis;
+
+          }
+        })
+      },
+
+      //cpu选择
+      requestClick(name,val){
+        if(name == 'cpu'){
+          this.cpuIndex = val;
+          switch (this.dayList[val].value) {
+            case '今天':
+              this.CPUTime = this.getCurrentDate()
+              break
+            case '最近7天':
+              this.CPUTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
+              break
+            case '最近30天':
+              this.CPUTime = this.getNearlyThirtyDays() + '--' + this.getCurrentDate()
+              break
+          }
+        }else if(name == 'momery'){
+          this.momeryIndex = val;
+          switch (this.momeryList[val].value) {
+            case '今天':
+              this.CPUTime = this.getCurrentDate()
+              break
+            case '最近7天':
+              this.CPUTime = this.getNearlySevenDays() + '--' + this.getCurrentDate()
+              break
+            case '最近30天':
+              this.CPUTime = this.getNearlyThirtyDays() + '--' + this.getCurrentDate()
+              break
+          }
+        }
+      },
+
+        setMonitoring() {
+        this.showWindow.warningSetting = true;
+        this.$http.get('information/alarmConfig.do', {
+          params: {
+            instancename: this.gpuDetail.instancename
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.setCPU = response.data.result.cpuuse
+            this.setRAM = response.data.result.memoryuse
+            this.setDisk = response.data.result.diskuse
+            this.setFluxIn = response.data.result.networkin
+            this.setFluxOut = response.data.result.networkout
+            this.isletter = response.data.result.isletter == 0 ? false : true
+            this.isemailalarm = response.data.result.isemailalarm == 0 ? false : true
+            this.issmsalarm = response.data.result.issmsalarm == 0 ? false : true
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
+       // 告警策略配置确定
+       setMonitoringOk() {
+        this.$http.get('information/upalarmConfig.do', {
+          params: {
+            instancename: this.$route.query.instancename,
+            cpuUse: this.setCPU,
+            memoryUse: this.setRAM,
+            diskUse: this.setDisk,
+            networkIn: this.setFluxIn,
+            networkOut: this.setFluxOut,
+            isLetter:  this.isletter == true ? '1' : '0',
+            isSmsAlarm: this.issmsalarm == true ? '1' : '0',
+            isEmailAlarm: this.isemailalarm == true ? '1' : '0'
+          }
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$Message.success(response.data.message)
+            this.showWindow.warningSetting = false
+          } else {
+            this.showWindow.warningSetting = false
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      }
     },
     created(){
       this.getGpuHostDetail();
       this.selectSnapshotList();
+      this.getUtilization();
     }
   }
 </script>

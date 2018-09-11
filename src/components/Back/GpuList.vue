@@ -36,10 +36,14 @@
             <Select v-model="ipValidate.ip" placeholder="请选择IP" style="width: 200px">
               <Option v-for="item in ipValidate.ipList" :value="item.value" :key="item.value">{{item.label}}</Option>
             </Select>
-            <span style="color: #2A99F2;cursor: pointer;">购买弹性IP</span>
+            <span style="color: #2A99F2;cursor: pointer;" @click="$router.push('buy')">购买弹性IP</span>
           </FormItem>
         </Form>
         <br>
+        <div slot="footer" class="modal-footer-border">
+          <Button type="ghost" @click="showModal.ipShow=false">取消</Button>
+          <Button type="primary" @click="bindIp">确定</Button>
+        </div>
       </Modal>
 
       <!--制作快照-->
@@ -124,6 +128,21 @@
         </div>
       </Modal>
 
+      <!--公网IP没购买弹窗-->
+      <Modal v-model="showModal.publicIPHint" :scrollable="true" :closable="false" :width="390">
+        <div class="modal-content-s">
+          <Icon type="android-alert" class="yellow f24 mr10"></Icon>
+          <div>
+            <strong>提示</strong>
+            <p class="lh24">您还未拥有公网IP，请先创建公网IP。</p>
+          </div>
+        </div>
+        <p slot="footer" class="modal-footer-s">
+          <Button @click="showModal.publicIPHint = false">取消</Button>
+          <Button type="primary" @click="$router.push('buy')">创建公网IP</Button>
+        </p>
+      </Modal>
+
     </div>
 </template>
 
@@ -140,8 +159,6 @@
         //   }
         // })
         return{
-          model1:'',
-          cityList:[],
           //GPUID
           VMId:'',
           uuId:'',
@@ -187,7 +204,8 @@
             ipShow:false,
             snapshot:false,
             mirror:false,
-            renew:false
+            renew:false,
+            publicIPHint:false
           },
           //弹性ip
           ipValidate:{
@@ -199,6 +217,7 @@
               {required:true,message:'请选择IP',trigger:'change'}
             ]
           },
+          vpcId:'',
 
           //制作快照
           snapshotValidate:{
@@ -303,8 +322,6 @@
               title:'用户名称/唯一名称',
               width:'109',
               render:(h,params)=>{
-                this.VMId = params.row.id;
-                this.uuId = params.row.computerid;
                 const hides = params.row.status  == 2 || params.row.status == 3 ?'inline-block' : 'none';
                 return h('div',[
                   h('Spin',{
@@ -391,6 +408,8 @@
                       nativeOn: {
                         click: () => {
                          this.showModal.ipShow = true;
+                          this.vpcId = params.row.vpcid;
+                          this.bindIp();
                         }
                       }
                     }, '绑定IP'),
@@ -398,6 +417,7 @@
                         nativeOn: {
                           click: () => {
                         this.showModal.snapshot = true;
+                            this.uuId = params.row.computerid;
                           }
                         }
                       }, '制作快照'),
@@ -426,14 +446,21 @@
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
+                            this.VMId = params.row.id;
                            this.showModal.renew = true;
+                            this.reStartGPU();
                           }
                         }
                       }, '主机续费'),
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
-
+                            this.uuId = params.row.computerid;
+                            if(params.row.computerstate == '0'){
+                              this.openHost();
+                            }else if(params.row.computerstate == '1'){
+                              this.stopHost();
+                            }
                           }
                         }
                       }, '开机/关机'),])
@@ -462,7 +489,7 @@
           })
         })
       },
-      // beforeDestroy(){
+      // beforeRouteLeave(){
       //     axios.get('information/zone.do',{
       //   }).then(res => {
       //     this.$store.state.zone.zoneId = res.data.result[0].zoneid;
@@ -502,7 +529,20 @@
         //绑定IP
         bindIp(){
          axios.get('network/listPublicIp.do',{
-
+           params: {
+             useType: 0,
+             zoneId: this.$store.state.zone.zoneId,
+             vpcId: this.vpcId
+           }
+         }).then(res => {
+           if(res.status == 200 && res.data.status == 1){
+             if(res.data.result.length == 0){
+                this.showModal.publicIPHint = true;
+             }else {
+               this.showModal.publicIPHint = false;
+               this.ipValidate.ipList = res.data.result;
+             }
+           }
          })
         },
 
@@ -510,12 +550,14 @@
        openHost(){
          this.$http.get('gpuserver/startGPU.do',{
            params:{
-             gpuId :this.VMId,
+             gpuId :this.uuId,
              zoneId:this.$store.state.zone.zoneId
            }
          }).then(res => {
            if(res.status == 200 && res.data.status == 1){
-
+              this.$Message.success('开机成功');
+           }else{
+             this.$Message.info(res.data.message);
            }
          })
         },
@@ -524,18 +566,25 @@
        stopHost(){
          this.$http.get('gpuserver/stopGPU.do',{
            params:{
-             gpuId :this.VMId,
+             gpuId :this.uuId,
              zoneId:this.$store.state.zone.zoneId
+           }
+         }).then(res => {
+           if(res.status == 200 && res.data.status == 1){
+             this.$Message.success('关机成功');
+           }else {
+             this.$Message.info(res.data.message);
            }
          })
         },
 
         //删除主机
        deleteHost(){
-         this.$http.get('information/destroyVirtualMachine.do',{
+        axios.get('information/destroyVirtualMachine.do',{
            params:{
              id:'',
-             companyId:''
+             companyId:'',
+             zoneId:this.$store.state.zone.zoneId
            }
          })
         },
@@ -570,6 +619,7 @@
 
         //创建快照
         createVMSnapshot(){
+         console.log(this.uuId);
          axios.get('Snapshot/createVMSnapshot.do',{
            params:{
              VMId:this.uuId,
@@ -638,7 +688,6 @@
       },
       created(){
         this.getGpuServerList();
-        // this.getGPUZoneId();
       }
     }
 </script>
