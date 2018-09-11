@@ -701,7 +701,6 @@
       },
       // 切换云产品
       changeProduct(item, event) {
-        this.$LR()
         this.$refs.line.style.left = `${event.currentTarget.offsetLeft}px`
         this.cloudContainer.forEach(product => {
           if (product.title === item.title) {

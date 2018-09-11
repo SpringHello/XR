@@ -3,10 +3,16 @@
  */
 import Vue from 'vue'
 import LR from './LR.vue'
-export default function login() {
+export default function login(options) {
+  console.log(options)
   const vm = new Vue({
+
     render(h){
-      return h(LR)
+      return h(LR, {
+        props: {
+          type: options.type
+        },
+      })
     }
   })
   const component = vm.$mount()
