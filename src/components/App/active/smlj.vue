@@ -298,7 +298,7 @@
       // 一键领取主机
       receive(){
         if (this.$store.state.userInfo == null) {
-          this.loginModal = true
+          this.$LR({type:'login'})
           return
         }
         axios.get('activity/takeSaleMv.do', {

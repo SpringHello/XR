@@ -286,6 +286,8 @@
         },
         // 购物车
         cart,
+        // 区域核心内存配置详细信息
+        info: [],
         scrollFun: () => {
           if (window.innerHeight - this.$refs.list.getBoundingClientRect().bottom < 246) {
             this.$refs.buyDiv.style.position = 'fixed'
@@ -298,6 +300,11 @@
       }
     },
     created(){
+      this.$http.get('information/getServiceoffers.do').then(
+        response => {
+          this.info = response.data.info
+        }
+      )
       scrollTo(0, 0)
     },
     mounted(){
@@ -632,9 +639,6 @@
           margin-right: 10px;
           padding: 6px 15px;
           display: inline-block;
-        }
-        .zoneItem:nth-child(6) {
-          margin-top: 20px;
         }
         .timeType {
           width: 55px;

@@ -405,7 +405,7 @@
       // 立即备案
       putOnRecord() {
         if (this.$store.state.userInfo == null) {
-          this.loginModal = true
+          this.$LR({type:'login'})
           return
         }
         if (this.type == 4) {

@@ -272,7 +272,7 @@
         if (this.userInfo == null) {
           this.buyButton = true
           this.addButton = false
-          this.showModal.login = true
+          this.$LR({type:'login'})
           this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
         } else {
           this.createDiskOrder()
@@ -397,7 +397,7 @@
       /* 添加磁盘 */
       addDisk () {
         if (this.userInfo == null) {
-          this.showModal.login = true
+          this.$LR({type:'login'})
           this.imgSrc = `http://localhost:8082/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`
         } else {
           var params = {

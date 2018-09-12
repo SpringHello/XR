@@ -61,7 +61,7 @@
                 <div class="cf-footer">
                   <p><span>押金：</span>{{ cfg.currentPrice}}</p>
                   <p>原价：¥{{cfg.originalPrice}}</p>
-                  <Button type="primary" :disabled="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'">立即使用</Button>
+                  <Button type="primary" :disabled="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'" @click="getHost(index1)">立即使用</Button>
                 </div>
               </div>
             </div>
@@ -133,7 +133,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '69.00',
@@ -178,7 +178,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '169.00',
@@ -222,7 +222,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '269.00',
@@ -266,7 +266,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '569.00',
@@ -278,7 +278,7 @@
             bannerImg: require('../../assets/img/sceneInfo/si-banner1.png')
           },
           {
-            currentScene: '个人建站',
+            currentScene: '自助建站',
             disc: ' 基于新睿云个人建站服务，助您轻松获得一站式的建站服务方案支持。包括配置好各类开源建站镜像模板，帮助您快速搭建网站、微博、论坛等服务内容；可无限扩容的对象存储OSS服务帮助您存储网站内容与数据；域名购买注册系统、备案系统等一套完整的服务流程。并且因所有内容部署于云端，您可以根据内容与实际需要，弹性调整您的计算规格与资源大小，合理控制预算，以极具性价比的方式完成个人网站搭建。',
             configGroup: [
               {
@@ -318,7 +318,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '69.00',
@@ -363,7 +363,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '169.00',
@@ -407,7 +407,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '269.00',
@@ -451,7 +451,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '569.00',
@@ -463,7 +463,7 @@
             bannerImg: require('../../assets/img/sceneInfo/si-banner2.png')
           },
           {
-            currentScene: '个人网盘',
+            currentScene: '存储&网盘',
             disc: ' 独立服务模式数据安全存储、多终端同步、文件在线预览，个人网盘让您的数据存储于传输有更简单可靠的选择。新睿云个人网盘服务具有使用方便、管理简单、稳定可靠等特点。具备多协议支持能力（包括FTP、FTPS、SFTP等文件传输协议）；远程文件查找能力；多标签界面管理能力；断点续传；站点管理与传输队列管理等能力。',
             configGroup: [
               {
@@ -503,7 +503,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '69.00',
@@ -548,7 +548,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '169.00',
@@ -592,7 +592,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '269.00',
@@ -636,7 +636,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '569.00',
@@ -688,7 +688,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '69.00',
@@ -733,7 +733,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '169.00',
@@ -777,7 +777,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '269.00',
@@ -821,7 +821,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '569.00',
@@ -833,7 +833,7 @@
             bannerImg: require('../../assets/img/sceneInfo/si-banner4.png')
           },
           {
-            currentScene: '云游戏服务',
+            currentScene: '游戏服务',
             disc: '新睿云游戏应用能够帮助您实现任意设备的游戏体验: 在任意 PC、Mac、平板电脑、智能手机以及电视上的高画质、低延迟的多设备游戏体验；点击即玩的便捷: 任何时候都可以在云端访问一系列游戏和保存游戏。 在任何地点、任意设备上均可开始新游戏或继续之前的游戏进度；减少麻烦: 没有新硬件、没有复杂的设置、没有游戏光盘、没有数字下载、没有游戏安装、没有游戏补丁。',
             configGroup: [
               {
@@ -873,11 +873,11 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
-                currentPrice: '329.00',
-                originalPrice: '678.00',
+                currentPrice: '69.00',
+                originalPrice: '166.72',
                 zoneId: '',
                 system: 'linux'
               },
@@ -918,11 +918,11 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
-                currentPrice: '699.00',
-                originalPrice: '1278.00',
+                currentPrice: '169.00',
+                originalPrice: '500.16',
                 zoneId: '',
                 system: 'linux'
               },
@@ -962,11 +962,11 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
-                currentPrice: '2083.00',
-                originalPrice: '3678.00',
+                currentPrice: '269.00',
+                originalPrice: '1000.32',
                 zoneId: '',
                 system: 'linux'
               },
@@ -1006,11 +1006,11 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
-                currentPrice: '2083.00',
-                originalPrice: '3678.00',
+                currentPrice: '569.00',
+                originalPrice: '2000.64',
                 zoneId: '',
                 system: 'linux'
               }
@@ -1544,16 +1544,16 @@
             this.scene = '云电脑'
             break
           case 'web':
-            this.scene = '个人建站'
+            this.scene = '自助建站'
             break
           case 'disk':
-            this.scene = '个人网盘'
+            this.scene = '存储&网盘'
             break
           case 'software':
             this.scene = '软件研发'
             break
           case 'game':
-            this.scene = '云游戏服务'
+            this.scene = '游戏服务'
             break
           case 'design':
             this.scene = '图形设计'
@@ -1584,6 +1584,13 @@
           }
         })
       },
+      getHost(index){
+        console.log(index)
+        if (!this.$store.state.userInfo) {
+          this.$LR({type:'login'})
+          return
+        }
+      }
     },
     computed: {}
   }
@@ -1597,7 +1604,7 @@
       margin: 0 auto;
       background: linear-gradient(360deg, rgba(249, 249, 249, 1) 0%, rgba(247, 247, 247, 1) 100%);
       .head {
-        padding: 35px 100px 30px;
+        padding: 35px 50px 30px;
         border-bottom: 1px solid rgba(217, 217, 217, 1);
         .title {
           display: flex;
@@ -1658,7 +1665,7 @@
         }
       }
       .body {
-        padding: 30px 100px 50px;
+        padding: 30px 50px 50px;
         h2 {
           text-align: center;
           font-size: 28px;
@@ -1671,9 +1678,11 @@
           display: flex;
           justify-content: space-around;
           .config {
-            width: 240px;
+            width: 250px;
             background: rgba(255, 255, 255, 1);
-            box-shadow: 0px 0px 20px 0px rgba(179, 179, 179, 1);
+            &:hover{
+              box-shadow: 0px 0px 20px 0px rgba(179, 179, 179, 1);
+            }
             &.gpu{
               width: 300px;
             }
@@ -1686,7 +1695,7 @@
               color: rgba(255, 255, 255, 1);
             }
             .cf-body {
-              padding: 20px 30px;
+              padding: 20px 20px;
               .cf-content {
                 border-bottom: 1px solid rgba(217, 217, 217, 1);
                 padding-bottom: 10px;
