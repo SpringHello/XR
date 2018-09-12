@@ -193,7 +193,7 @@
       <p slot="header" class="modal-header-border">
         <span class="universal-modal-title">订单确认</span>
       </p>
-      <div class="universal-modal-content-flex">
+      <div>
         <div class="modal-p">
           <Steps :current="0">
             <Step title="订单确认"></Step>
@@ -202,9 +202,70 @@
           </Steps>
         </div>
         <Table :columns="orderColumns" :data="orderData" style="margin-top: 30px"></Table>
+        <div class="pay-wap">
+          <p>选择支付方式</p>
+          <RadioGroup v-model="payWay" vertical>
+            <Radio label="balancePay">
+              <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 40px">余额支付</span>
+              <span style="color:rgba(102,102,102,1);font-size: 14px">账户余额：</span>
+              <span style="color:#D0021B;font-size: 14px">¥{{ balance }}</span>
+            </Radio>
+            <Radio label="otherPay" class="pw-img">
+              <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 25px">第三方支付</span>
+              <img src="../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="otherPayWay = 'zfb'">
+              <img src="../../assets/img/payresult/wxpay.png" :class="{selected: otherPayWay == 'wx'}" @click="otherPayWay = 'wx'">
+            </Radio>
+          </RadioGroup>
+        </div>
+        <p class="p1">注：没有实名认证的用户领取主机成功后，需要进行实名认证才可以使用。您可以点击实名认证 现在进行认证，也可以在领取主机之后点击个人中心-个人认证进行实名认证。</p>
+        <div class="attestationForm">
+          <p>实名认证</p>
+          <div class="click_icon icons" :class="{hide_icon:!attestationShow}" @click="attestationShow = !attestationShow"></div>
+        </div>
+        <div v-show="attestationShow">
+          <Form :model="quicklyAuthForm" :label-width="100" ref="quicklyAuth"
+                :rules="quicklyAuthFormValidate"
+                style="width:450px;margin-top:20px;">
+            <FormItem label="真实姓名" prop="name" style="width: 100%">
+              <Input v-model="quicklyAuthForm.name" placeholder="请输入姓名"></Input>
+            </FormItem>
+            <FormItem label="身份证号" prop="IDCard" style="width: 100%">
+              <Input v-model="quicklyAuthForm.IDCard" placeholder="请输入身份证号"></Input>
+            </FormItem>
+            <Form :model="quicklyAuthForm" :rules="quicklyAuthFormValidate" ref="sendCode"
+                  :label-width="100">
+              <FormItem label="图形验证码" prop="pictureCode">
+                <div style="display: flex">
+                  <Input v-model="quicklyAuthForm.pictureCode" placeholder="请输入图片验证码"
+                         style="width:250px;margin-right: 10px"></Input>
+                  <img :src="imgSrc" style="height:33px;"
+                       @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                </div>
+              </FormItem>
+              <FormItem label="手机号码" prop="phone" style="width: 100%">
+                <div style="display: flex;justify-content: space-between">
+                  <Input v-model="quicklyAuthForm.phone" placeholder="请输入以该身份证开户的手机号码"
+                         style="width:260px;margin-right: 10px"></Input>
+                  <Button type="primary" @click="sendCode" style="width:92px"
+                          :disabled="quicklyAuthForm.sendCodeText!='获取验证码'">
+                    {{quicklyAuthForm.sendCodeText}}
+                  </Button>
+                </div>
+              </FormItem>
+            </Form>
+            <FormItem label="验证码" prop="validateCode" style="width: 100%">
+              <Input v-model="quicklyAuthForm.validateCode" placeholder="请输入验证码"></Input>
+            </FormItem>
+            <FormItem>
+              <div style="float:right">
+                <Button type="primary" @click="quicklyAuth">确认提交</Button>
+              </div>
+            </FormItem>
+          </Form>
+        </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button>确认</Button>
+        <Button type="primary" >确认</Button>
       </div>
     </Modal>
   </div>
@@ -231,6 +292,33 @@
       })
     },
     data() {
+      const validaRegisteredPhone = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('电话号码不能为空'));
+        }
+        if (!(/^1(3|4|5|7|8|9)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
+          callback(new Error('请输入正确的电话号码'));
+        } else {
+          callback()
+        }
+      }
+      const validaRegisteredID = (rule, value, callback) => {
+        if (!reg.IDCardVail(value)) {
+          callback(new Error('请输入正确的身份证号码'));
+        } else {
+          callback()
+        }
+      }
+      const validaRegisteredName = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('联系人不能为空'));
+        }
+        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
+          callback(new Error('输入姓名不能包含特殊字符、空格或是纯数字'));
+        } else {
+          callback()
+        }
+      }
       return {
         showModal: {
           rechargeHint: false,
@@ -1720,7 +1808,42 @@
             }
           },
         ],
-        orderData: [{}]
+        orderData: [{}],
+        payWay: 'balancePay',
+        otherPayWay: 'zfb',
+        balance: '0.0',
+        attestationShow: false,
+        // 快速认证表单
+        quicklyAuthForm: {
+          name: '',
+          IDCard: '',
+          pictureCode: '',
+          phone: '',
+          validateCode: '',
+          sendCodeText: '获取验证码'
+        },
+        // 快速认证表单验证
+        quicklyAuthFormValidate: {
+          name: [
+            {required: true, message: '请输入姓名'},
+            {validator: validaRegisteredName}
+          ],
+          IDCard: [
+            {required: true, message: '请输入身份证号'},
+            {validator: validaRegisteredID}
+          ],
+          pictureCode: [
+            {required: true, message: '请输入图片验证码'}
+          ],
+          phone: [
+            {required: true, message: '请输入以该身份证开户的手机号码'},
+            {validator: validaRegisteredPhone}
+          ],
+          validateCode: [
+            {required: true, message: '请输入验证码'}
+          ]
+        },
+        imgSrc: 'user/getKaptchaImage.do'
       }
     },
     methods: {
@@ -1808,7 +1931,64 @@
       },
       nextStep() {
 
-      }
+      },
+      // 快速认证时发送验证码
+      sendCode() {
+        this.$refs.sendCode.validate(validate => {
+          if (validate) {
+            axios.get('user/code.do', {
+              params: {
+                aim: this.quicklyAuthForm.phone,
+                isemail: 0,
+                vailCode: this.quicklyAuthForm.pictureCode
+              }
+            }).then(response => {
+              // 发送成功，进入倒计时
+              if (response.status == 200 && response.data.status == 1) {
+                var countdown = 60
+                this.quicklyAuthForm.sendCodeText = `${countdown}S`
+                var Interval = setInterval(() => {
+                  countdown--
+                  this.quicklyAuthForm.sendCodeText = `${countdown}S`
+                  if (countdown == 0) {
+                    clearInterval(Interval)
+                    this.quicklyAuthForm.sendCodeText = '获取验证码'
+                  }
+                }, 1000)
+              } else {
+                this.$Message.error(response.data.message)
+              }
+            })
+          }
+        })
+      },
+      // 快速认证
+      quicklyAuth() {
+        var quicklyAuth = this.$refs.quicklyAuth.validate(validate => {
+          return Promise.resolve(validate)
+        })
+        var sendCode = this.$refs.sendCode.validate(validate => {
+          return Promise.resolve(validate)
+        })
+        Promise.all([quicklyAuth, sendCode]).then(results => {
+          if (results[0] === true && results[1] === true) {
+            axios.post('user/personalAttest.do', {
+              cardID: this.quicklyAuthForm.IDCard,
+              name: this.quicklyAuthForm.name,
+              phone: this.quicklyAuthForm.phone,
+              phoneCode: this.quicklyAuthForm.validateCode,
+              type: '0'
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+              } else {
+                this.$message.info({
+                  content: response.data.message
+                })
+              }
+            })
+          }
+        })
+      },
     },
     computed: {}
   }
@@ -2026,6 +2206,82 @@
           }
         }
       }
+    }
+  }
+
+  .pay-wap {
+    padding: 20px;
+    > p {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      font-weight: 400;
+      color: rgba(102, 102, 102, 1);
+      margin-bottom: 10px;
+    }
+    .pw-img {
+      img {
+        display: inline-block;
+        margin-right: 20px;
+        cursor: pointer;
+        position: relative;
+        top: 12px;
+        border: 1px solid #FFF;
+        &.selected {
+          border: 1px solid rgba(74, 144, 226, 1);
+        }
+      }
+    }
+  }
+
+  .p1 {
+    padding: 20px;
+    font-size: 12px;
+    font-family: MicrosoftYaHei;
+    font-weight: 400;
+    color: rgba(255, 0, 0, 1);
+    line-height: 17px;
+  }
+
+  //图标箭头向下样式
+  .click_icon.icons {
+    width: 13px !important;
+    height: 13px !important;
+    border: 1px solid #2a99f2;
+    border-radius: 50%;
+    transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    transition: all 0.5s;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+
+  .click_icon.icons::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    width: 7px !important;
+    height: 6px !important;
+    border: #2a99f2 solid 1px;
+    border-top-style: none;
+    border-right-style: none;
+  }
+
+  //图标向上样式
+  .hide_icon.icons {
+    transform: rotate(-225deg);
+    -ms-transform: rotate(-225deg);
+    -webkit-transform: rotate(-225deg);
+  }
+  .attestationForm{
+    display: flex;
+    >p{
+      padding-left: 20px;
+      font-size:14px;
+      font-family:MicrosoftYaHei;
+      font-weight:400;
+      color:rgba(102,102,102,1);
     }
   }
 </style>
