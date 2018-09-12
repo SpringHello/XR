@@ -278,7 +278,7 @@
             bannerImg: require('../../assets/img/sceneInfo/si-banner1.png')
           },
           {
-            currentScene: '个人建站',
+            currentScene: '自助建站',
             disc: ' 基于新睿云个人建站服务，助您轻松获得一站式的建站服务方案支持。包括配置好各类开源建站镜像模板，帮助您快速搭建网站、微博、论坛等服务内容；可无限扩容的对象存储OSS服务帮助您存储网站内容与数据；域名购买注册系统、备案系统等一套完整的服务流程。并且因所有内容部署于云端，您可以根据内容与实际需要，弹性调整您的计算规格与资源大小，合理控制预算，以极具性价比的方式完成个人网站搭建。',
             configGroup: [
               {
@@ -463,7 +463,7 @@
             bannerImg: require('../../assets/img/sceneInfo/si-banner2.png')
           },
           {
-            currentScene: '个人网盘',
+            currentScene: '存储&网盘',
             disc: ' 独立服务模式数据安全存储、多终端同步、文件在线预览，个人网盘让您的数据存储于传输有更简单可靠的选择。新睿云个人网盘服务具有使用方便、管理简单、稳定可靠等特点。具备多协议支持能力（包括FTP、FTPS、SFTP等文件传输协议）；远程文件查找能力；多标签界面管理能力；断点续传；站点管理与传输队列管理等能力。',
             configGroup: [
               {
@@ -833,7 +833,7 @@
             bannerImg: require('../../assets/img/sceneInfo/si-banner4.png')
           },
           {
-            currentScene: '云游戏服务',
+            currentScene: '游戏服务',
             disc: '新睿云游戏应用能够帮助您实现任意设备的游戏体验: 在任意 PC、Mac、平板电脑、智能手机以及电视上的高画质、低延迟的多设备游戏体验；点击即玩的便捷: 任何时候都可以在云端访问一系列游戏和保存游戏。 在任何地点、任意设备上均可开始新游戏或继续之前的游戏进度；减少麻烦: 没有新硬件、没有复杂的设置、没有游戏光盘、没有数字下载、没有游戏安装、没有游戏补丁。',
             configGroup: [
               {
@@ -1544,16 +1544,16 @@
             this.scene = '云电脑'
             break
           case 'web':
-            this.scene = '个人建站'
+            this.scene = '自助建站'
             break
           case 'disk':
-            this.scene = '个人网盘'
+            this.scene = '存储&网盘'
             break
           case 'software':
             this.scene = '软件研发'
             break
           case 'game':
-            this.scene = '云游戏服务'
+            this.scene = '游戏服务'
             break
           case 'design':
             this.scene = '图形设计'
