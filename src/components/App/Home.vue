@@ -218,7 +218,7 @@
       </div>
     </div>
     <!-- 图形化控制台 -->
-    <div class="console-container" ref="consoleFade">
+    <!-- <div class="console-container" ref="consoleFade">
       <div class="container">
         <transition name="consoleFade">
           <div v-show="consoleFade">
@@ -234,7 +234,7 @@
           <my-carousel :interval=10000 class="carousel" @on-change="carChange" :dots="false">
             <my-carousel-item class="carousel-item" v-for="(area,index) in areaInfo" style="padding:50px 100px"
                               :key="index">
-              <div style="color:black;display: flex;align-items: center;justify-content: space-between">
+              <div style="color:black;display:flex;align-items: center;justify-content: space-between">
                 <img :src="area.icon" style="vertical-align: middle">
                 <p style="font-size: 14px;color:#999999;line-height: 20px;width:500px;border-right: 1px solid #d8d8d8;
     padding-right: 40px;">
@@ -245,13 +245,60 @@
           </my-carousel>
         </div>
       </div>
+    </div> -->
+    <div class="require">
+      <div class="wrap">
+        <div class="header-g">
+          <p class="title">满足严苛品质要求</p>
+          <span class="desc">结合多重实时数据保护与高额度网络攻击防护，为用户交付优质云计算资源。</span>
+        </div>
+        <div class="main flex-g">
+          <div v-for="(item,index) in requireData" :key="index" >
+            <p>{{item.title}}</p>
+            <div class="img-wrap">
+              <span>
+                <img :src="item.img" alt="">
+              </span>
+            </div>
+            <span>{{item.desc}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="datacenter">
+      <div class="wrap">
+        <div class="header-g">
+          <p class="title">云计算数据中心</p>
+          <span class="desc">专业的数据中心，为您带来高水准的优质服务及流畅体验，五星级数据中心，与各骨干网络互联互通。</span>
+        </div>
+        <div class="main">
+          <span v-for="(item,index) in datacenterData" :key="index" :style="{top:item.top,left:item.left}" :class="{online: item.online}">
+            {{item.text}}
+          </span>
+          <div class="mark">
+            <span><i></i>即将上线数据中心</span>
+            <span><i></i>已有数据中心</span>
+          </div>
+        </div>
+        <div class="bottom-log">
+          <ul>
+            <li v-for="(auth,index) in authorityContainer" :key="index">
+              <span class="img-wrap">
+                <img :src="auth.img" v-if="auth.iconHover">
+                <img :src="auth.imgHover" v-else>
+              </span>
+              <span>{{auth.title}}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
     <!-- 新睿云最新动态 -->
     <div class="news">
       <div class="wrap">
-        <div class="header">
-          <p class="title-g">新睿云最新动态</p>
-          <p class="text-desc-g">为您提供行业资讯、活动公告、产品发布、以及汇聚前沿的云计算技术</p>
+        <div class="header-g">
+          <p class="title">新睿云最新动态</p>
+          <p class="desc">为您提供行业资讯、活动公告、产品发布、以及汇聚前沿的云计算技术</p>
         </div>
         <div class="main">
           <div class="main-left">
@@ -308,7 +355,7 @@
       </div>
     </div>
     <!-- 权威认证 -->
-    <div class="authority-container" ref="authorityFade">
+    <!-- <div class="authority-container" ref="authorityFade">
       <div class="container">
         <transition name="authorityFade">
           <div v-if="authorityFade">
@@ -323,7 +370,7 @@
           </div>
         </transition>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -628,11 +675,11 @@
         ],
         /* 权威认证 */
         authorityContainer: [
-          {title: '中国高新技术企业', img: require('../../assets/img/home/authority-1.png')},
-          {title: '中关村高新技术企业', img: require('../../assets/img/home/authority-2.png')},
-          {title: 'ISO27001企业认证', img: require('../../assets/img/home/authority-3.png')},
-          {title: 'ISO9001企业认证', img: require('../../assets/img/home/authority-4.png')},
-          {title: '华为云管理网络ISV', img: require('../../assets/img/home/authority-5.png')}
+          {title: '中国高新技术企业', img: require('../../assets/img/home/authority-1-1.png'), imgHover: require('../../assets/img/home/authority-1-2.png'), iconHover: true},
+          {title: '中关村高新技术企业', img: require('../../assets/img/home/authority-2-1.png'), imgHover: require('../../assets/img/home/authority-1-2.png'), iconHover: true},
+          {title: 'ISO27001企业认证', img: require('../../assets/img/home/authority-3-1.png'), imgHover: require('../../assets/img/home/authority-1-2.png'), iconHover: true},
+          {title: 'ISO9001企业认证', img: require('../../assets/img/home/authority-4-1.png'), imgHover: require('../../assets/img/home/authority-1-2.png'), iconHover: true},
+          {title: '华为云管理网络ISV', img: require('../../assets/img/home/authority-5-1.png'), imgHover: require('../../assets/img/home/authority-1-2.png'), iconHover: true}
         ],
         /* 地区信息 */
         areaInfo: [
@@ -648,7 +695,74 @@
           }
         ],
         activeBanner: 1,
-        scrollFn: null
+        scrollFn: null,
+        requireData: [
+          {
+            title: '更强大',
+            img: require('../../assets/img/home/require-svg-1.gif'),
+            desc: '新增加GPU云服务器，单精度计算能力相较于CPU服务器提升300%。从容应对深度学习与HPC超算，释放计算价值。'
+          },
+          {
+            title: '更稳定',
+            img: require('../../assets/img/home/require-svg-2.gif'),
+            desc: '五星级IDC机房标准，7X24多渠道服务于支持，百倍故障时长赔付。全方位为您的产品与资源保驾护航。'
+          },
+          {
+            title: '更便宜',
+            img: require('../../assets/img/home/require-svg-3.gif'),
+            desc: '对比自建服务器集群，使用云服务能够显著降低企业运营成本，并提升部署与响应速度，全面提升企业IT资源效率。使企业专注于创造力。'
+          }
+        ],
+        datacenterData: [
+          {
+            text: '北京',
+            top: '290px',
+            left: '330px',
+            online: true
+          },
+          {
+            text: '重庆',
+            top: '350px',
+            left: '300px',
+            online: true
+          },
+          {
+            text: '武汉',
+            top: '328px',
+            left: '334px',
+            online: true
+          },
+           {
+            text: '沈阳',
+            top: '290px',
+            left: '380px',
+            online: true
+          },
+          {
+            text: '浙江',
+            top: '320px',
+            left: '400px',
+            online: true
+          },
+          {
+            text: '广州',
+            top: '390px',
+            left: '350px',
+            online: true
+          },
+          {
+            text: '洛杉矶',
+            top: '270px',
+            left: '900px',
+            online: false
+          },
+          {
+            text: '香港',
+            top: '380px',
+            left: '400px',
+            online: false
+          }
+        ]
       }
     },
     mounted() {
@@ -685,6 +799,20 @@
       this.getlinkList()
     },
     methods: {
+      // datacenterEnter(selectedIndex) {
+      //   this.authorityContainer.forEach((item, index) => {
+      //     if (selectedIndex == index) {
+      //       item.iconHover = false
+      //     }
+      //   })
+      // },
+      // datacenterLeave(selectedIndex) {
+      //  this.authorityContainer.forEach((item, index) => {
+      //     if (selectedIndex == index) {
+      //       item.iconHover = true
+      //     }
+      //   })
+      // },
       getnews() {
         axios.get('article/getTopArticle.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -783,20 +911,136 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   #home {
+    font-family:PingFangSC-Regular;
     .wrap {
       width: 1200px;
       margin: 0 auto;
     }
-    .title-g {
+    .header-g {
       text-align: center;
-      font-size: 28px;
-      color: #333333;
-      padding-bottom: 26px;
+      margin-bottom: 40px;
+      .title {
+        font-size: 28px;
+        color: #333333;
+        padding-bottom: 26px;
+      }
+      .desc {
+        text-align: center;
+        font-size: 14px;
+        color: #999999;
+      }
     }
-    .text-desc-g {
+    .flex-g {
+      display: flex;
+      justify-content: space-between;
+    }
+    .datacenter {
+      margin-bottom: 100px;
+      height: 916px;
+      background: url('../../assets/img/home/datacenter-line.png') no-repeat 240px 20px,url('../../assets/img/home/datacenter-bg.png') no-repeat top center;
+      .header-g{
+        padding-top: 60px; 
+        margin-bottom: 10px;
+        .title {
+          color: #fff;
+        }
+        .desc {
+          color: #fff;
+        }
+      }
+      .main {
+        height: 702px;
+        background: url('../../assets/img/home/datacenter-map.png') no-repeat top center;
+        position: relative;
+        > span {
+          position: absolute;
+          padding: 0 6px;
+          border: solid #fff 1px;
+          border-radius:4px;
+          font-size:14px;
+          background: #FFD100;
+          color: #333;
+        }
+        .online {
+          background: #FF624B;
+          color: white;
+          
+        }
+        .mark {
+          position: absolute;
+          bottom: 0;
+          left: 450px;
+          width: 300px;
+          display: flex;
+          justify-content: space-between;
+          span {
+            color: #fff;
+            font-size:12px;
+            i {
+              display: inline-block;
+              width: 12px;
+              height: 12px;
+              border-radius: 50%; 
+              background: #FFD100;
+              margin-right: 5px;
+            }
+           &:nth-of-type(2) {
+             i {
+               background: #FF624B;
+             }
+            }
+          }
+        }
+      }
+      .bottom-log {
+        margin-top: 25px;
+        height:80px;
+        background: #fff;
+        box-shadow:0px 2px 37px -24px rgba(70,69,69,0.86);
+        border-radius:4px;
+        ul {
+          height: 80px;
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          li {
+            img {
+              vertical-align: middle;
+              margin-right: 8px;
+            }
+          }
+        }
+      }
+    }
+    .require {
       text-align: center;
-      font-size: 14px;
-      color: #999999;
+      margin-bottom: 80px;
+      .main { 
+        > div {
+          width: 300px;
+          p {
+            font-size:24px;
+            line-height:24px;
+            font-weight: 500;
+          }
+          .img-wrap{
+            margin: 0 auto;
+            margin-top: 20px;
+            width: 228px;
+            height: 228px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            // img {
+            //   flex-shrink: 0;
+            // }
+          }
+          span {
+            font-size:14px;
+            line-height:28px;
+          }
+        }
+      }
     }
     .news {
       margin-top: 40px;
