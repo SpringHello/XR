@@ -69,14 +69,155 @@
         </div>
       </div>
     </div>
+    <!-- 领取提示 -->
+    <Modal v-model="showModal.rechargeHint" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s" style="padding: 30px 30px 0 50px">
+        <div>
+          <div class="ivu-modal-confirm-body-icon ivu-modal-confirm-body-icon-success" style="top: 48px;left: 30px;">
+            <i class="ivu-icon ivu-icon-checkmark-circled"></i>
+          </div>
+          <strong>提示</strong>
+          <p class="lh24">本免费活动充值押金<span style="color: #D0021B ">{{ cashPledge }}</span>元，主机到期或删除时押金自动退还到账户余额。
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.rechargeHint = false">取消</Button>
+        <Button type="primary" @click="nextStep">下一步</Button>
+      </p>
+    </Modal>
+    <!-- 不满足条件-->
+    <Modal v-model="showModal.inConformityModal" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s" style="padding: 30px 30px 0 50px">
+        <div>
+          <div class="ivu-modal-confirm-body-icon ivu-modal-confirm-body-icon-warning" style="top: 48px;left: 30px;">
+            <i class="ivu-icon ivu-icon-android-alert"></i>
+          </div>
+          <p class="lh24">您好，您不符合本活动的参与条件，去<span style="color: #2A99F2;cursor: pointer" @click="$router.push('/ruicloud/ActiveCenter')">活动中心</span>看看其他活动吧！如果有其他需要可联系我们销售或者客服。
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.inConformityModal = false">取消</Button>
+        <Button type="primary">联系客服</Button>
+      </p>
+    </Modal>
+    <!-- 领取成功 -->
+    <Modal v-model="showModal.getSuccessModal" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s" style="padding: 30px 30px 0 50px">
+        <div>
+          <div class="ivu-modal-confirm-body-icon ivu-modal-confirm-body-icon-success" style="top: 48px;left: 30px;">
+            <i class="ivu-icon ivu-icon-checkmark-circled"></i>
+          </div>
+          <strong>提示</strong>
+          <p class="lh24">恭喜您押金已冻结完成，主机领取成功，主机在实名认证之前只可保留3天，请尽快使用。
+          </p>
+        </div>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.getSuccessModal = false">取消</Button>
+        <Button type="primary" @click="$router.push('host')">查看主机</Button>
+      </p>
+    </Modal>
+    <!-- 支付充值失败 -->
+    <Modal v-model="showModal.payDefeatedModal" width="640" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">支付/充值</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <div class="modal-p">
+          <Steps :current="2" status="error">
+            <Step title="订单确认"></Step>
+            <Step title="支付"></Step>
+            <Step title="支付失败"></Step>
+          </Steps>
+          <p><img src="../../assets/img/sceneInfo/si-defeated.png"/><span>抱歉，支付失败，请再次尝试！</span></p>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary">再次支付</Button>
+      </div>
+    </Modal>
+    <!-- 支付充值成功 -->
+    <Modal v-model="showModal.paySuccessModal" width="640" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">支付/充值</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <div class="modal-p">
+          <Steps :current="2">
+            <Step title="订单确认"></Step>
+            <Step title="支付"></Step>
+            <Step title="支付成功"></Step>
+          </Steps>
+          <p><img src="../../assets/img/sceneInfo/si-success.png"/><span>恭喜您支付成功！我们即将冻结押金</span><span style="color: #D0021B;margin-left: 0">{{ cashPledge }}</span><span
+            style="margin-left: 0">元</span></p>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary">确认冻结</Button>
+      </div>
+    </Modal>
+
+    <!-- 微信支付弹窗 -->
+    <Modal v-model="showModal.weChatRechargeModal" width="640" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">微信支付/充值</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <div class="modal-p">
+          <Steps :current="1">
+            <Step title="订单确认"></Step>
+            <Step title="支付"></Step>
+            <Step title="支付成功"></Step>
+          </Steps>
+          <div class="payInfo">
+            <div id="code">
+              <vue-q-art :config="config" v-if="config.value!=''"></vue-q-art>
+            </div>
+            <div class="pay-p">
+              <p>应付金额(元)：<span>{{cashPledge}}</span></p>
+              <p>请使用微信扫一扫，扫描二维码支付</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button>已完成支付</Button>
+        <Button type="primary">更换支付方式</Button>
+      </div>
+    </Modal>
+
+    <!-- 订单确认弹窗 -->
+    <Modal v-model="showModal.orderConfirmationModal" width="640" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">订单确认</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <div class="modal-p">
+          <Steps :current="0">
+            <Step title="订单确认"></Step>
+            <Step title="支付"></Step>
+            <Step title="支付成功"></Step>
+          </Steps>
+        </div>
+        <Table :columns="orderColumns" :data="orderData" style="margin-top: 30px"></Table>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button>确认</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import axios from '../../util/axiosInterceptor'
-  import $store from '../../vuex'
+  import VueQArt from 'vue-qart'
 
   export default {
+    components: {
+      VueQArt
+    },
     beforeRouteEnter(to, from, next) {
       next(vm => {
         vm.setData(to.params.type)
@@ -91,6 +232,15 @@
     },
     data() {
       return {
+        showModal: {
+          rechargeHint: false,
+          inConformityModal: false,
+          getSuccessModal: false,
+          payDefeatedModal: false,
+          paySuccessModal: false,
+          weChatRechargeModal: false,
+          orderConfirmationModal: true
+        },
         currentSceneGroup: [
           {
             currentScene: '云电脑',
@@ -1534,7 +1684,43 @@
           {
             label: 'Windows',
             value: 'windows'
-          },]
+          },],
+        cashPledge: '--',
+        config: {
+          value: '39',
+          imagePath: require('../../assets/img/pay/payBackground.png'),
+          filter: 'black',
+          size: 500
+        },
+        orderColumns: [
+          {
+            title: '产品类型',
+          },
+          {
+            title: '资源',
+          },
+          {
+            title: '计费类型',
+            render: (h, params) => {
+              return h('span', {}, '包年包月')
+            }
+          },
+          {
+            title: '购买时长',
+            key: 'getTime'
+          },
+          {
+            title: '押金金额',
+            render: (h, params) => {
+              return h('span', {
+                style: {
+                  color: '#D0021B'
+                }
+              }, params.cashPledge)
+            }
+          },
+        ],
+        orderData: [{}]
       }
     },
     methods: {
@@ -1619,6 +1805,9 @@
           this.$LR({type: 'login'})
           return
         }
+      },
+      nextStep() {
+
       }
     },
     computed: {}
@@ -1799,5 +1988,44 @@
 
   .slide-fade-enter, .slide-fade-leave-to {
     opacity: 0;
+  }
+
+  .modal-p {
+    > div {
+      margin-left: 60px;
+    }
+    > p {
+      span {
+        font-size: 16px;
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
+        color: rgba(51, 51, 51, 1);
+        line-height: 22px;
+        margin-left: 10px;
+        position: relative;
+        bottom: 18px;
+      }
+      margin: 50px 0;
+      text-align: center;
+    }
+    .payInfo {
+      margin-top: 50px;
+      display: flex;
+      .pay-p {
+        p {
+          font-size: 16px;
+          font-family: MicrosoftYaHei;
+          font-weight: 400;
+          color: rgba(51, 51, 51, 1);
+          line-height: 22px;
+          margin: 30px 40px;
+          span {
+            font-size: 36px;
+            font-weight: 600;
+            color: rgba(208, 2, 27, 1);
+          }
+        }
+      }
+    }
   }
 </style>
