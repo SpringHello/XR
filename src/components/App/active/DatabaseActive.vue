@@ -454,7 +454,7 @@
       },
       getDatabase(index) {
         if (this.$store.state.userInfo == null) {
-          this.loginModal = true
+          this.$LR({type:'login'})
           return
         }
         if (this.products[index].config.zoneId == '') {

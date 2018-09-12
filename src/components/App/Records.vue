@@ -101,7 +101,7 @@
     methods: {
       enterSystem() {
         if (this.$store.state.userInfo == null) {
-          this.loginModal = true
+          this.$LR({type:'login'})
           return
         }
         this.$router.push('BRecords')

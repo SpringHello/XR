@@ -28,6 +28,7 @@
               <p>{{feature.desc}}</p>
             </div>
           </div>
+          <div style="width:382px;height:0px;"></div>
         </div>
       </div>
 
@@ -38,7 +39,7 @@
         <p class="subTitle">使用场景</p>
         <div class="flex" ref="flex">
           <div class="left">
-            <div  v-for="(stage,index) in stageInfo.stages"
+            <div v-for="(stage,index) in stageInfo.stages"
                  :class="{active:index == stageInfo.selectIndex}"
                  @click="stageInfo.selectIndex=index" :key="index">
               <div>
@@ -51,20 +52,17 @@
             <div v-for="(stage,index) in stageInfo.stages" v-show="index == stageInfo.selectIndex" :key="index">
               <img :src="stage.img">
               <div style="padding:20px;">
-                <span>场景描述</span>
-                <p v-for="(p,i) in stage.desc" :key="i">
-                  {{p}}
-                </p>
-
-                <span style="margin-top:40px;">配合使用</span>
-                <div style="display: flex">
-                  <div v-for="(pimg,index) in stageInfo.pImg" style="margin-right: 10px;" :key="index">
-                    <div style="width: 90px;height: 90px;background-color: #ffffff;text-align: center;padding:24px">
-                      <p><i class="iconfont" :class="pimg.icon" style="font-size:40px;color:#3c7efb;"></i></p>
-                      <span style="font-size: 14px; color:#666666;">{{pimg.isc}}</span>
-                    </div>
-                  </div>
+                <div v-for="(rightItem,index) in stage.desc" :key="index">
+                  <span
+                    style="font-size:16px;color:rgba(255,255,255,1);">{{rightItem.subTitle}}</span>
+                  <p v-for="(desc,index) in rightItem.subDesc"
+                     style="font-size:14px;color:rgba(255,255,255,1);padding-bottom:8px;">
+                    {{desc}}</p>
                 </div>
+                <button
+                  style="background:rgba(255,231,119,1);outline: none;border: none;font-size:14px;color:rgba(69,132,248,1);padding: 11px 41px;margin-top: 20px">
+                  立即购买
+                </button>
               </div>
             </div>
           </div>
@@ -114,82 +112,106 @@
     data(){
       return {
         logo: {
-          img: require('../../../assets/img/product/p-balance.png'),
-          title: '负载均衡',
-          desc: '弹性负载均衡将访问流量自动分发到多台云服务器上，扩展应用系统对外的服务能力，实现更高水平的应用容错。弹性负载均衡可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器上进行处理。',
-          linkRouter: $store.state.userInfo ? 'balance' : 'login'
+          img: require('../../../assets/img/product/u-banner.png'),
+          title: 'GPU加速云服务器',
+          desc: 'GPU 云服务器（GPU Cloud Computing）是基于 GPU 应用的计算服务，具有实时高速的并行计算和浮点计算能力，适应用于 3D 图形应用程序、视频解码、深度学习、科学计算等应用场景。我们提供和标准云服务器一致的管理方式，有效解放您的计算压力，提升产品的计算处理效率与竞争力。',
+          linkRouter: $store.state.userInfo ? 'Pgpu' : 'login'
         },
         features: [
           {
-            img: 'icon-duoxieyizhichi',
-            title: '多协议支持',
-            desc: '支持互联网及内网流量的均衡服务，提供4层（TCP、UDP协议）和7层（HTTP、HTTPS协议）监听器。'
+            img: 'icon-NVIDATeslaGPU',
+            title: 'NVIDA Tesla P100 GPU',
+            desc: '单卡单精度能力9.3TFLOPS，双精度能力4.7TFLOPS。搭载16GB HBM2显存，带宽732GB/S，显存带宽较上代GPU提升2倍，位宽提升8倍。'
           },
           {
-            img: 'icon-gaokeyong1',
-            title: '高可用',
-            desc: '可用多种方法对后端服务器进行健康检查，自动屏蔽异常实例，确保业务可用性。'
+            img: 'icon-NVIDATeslaGPU',
+            title: 'NVIDIA Tesla P40 GPU',
+            desc: '提供了强大的单精度浮点运算双精度能力和整数运算能力：单机峰值计算能力突破 96 TFLOPS 单精度浮点运算及 376 TOPS 整数运算搭载16GB HBM2显存，带宽732GB/S，显存带宽较上代GPU提升2倍，位宽提升8倍。'
           },
           {
-            img: 'icon-linghuopeizhi1',
-            title: '灵活配置',
-            desc: '可用多种方法对后端服务器进行健康检查，自动屏蔽异常实例，确保业务可用性。'
+            img: 'icon-gaoxingnengcunchu',
+            title: '高性能存储',
+            desc: 'P系列全系、配置NVMe SSD本地盘能提供较普通SSD数倍的IOPS和宽带能力。在大数据量场景下，本地NVMe SSD极低的访问时延和极高的存储宽带，使得综合性能能得到进一步提升。'
           },
           {
-            img: 'icon-gongwangfangwen',
-            title: '公网访问',
-            desc: '通过绑定公网IP，可实现负载均衡的公网服务能力，也可以随时解绑公网IP，让负载均衡仅对内网流量进行均衡。'
-          }
+            img: 'icon-gaoxingnengwangluo',
+            title: '高性能网络',
+            desc: '提供最大10Gb/s的网络带宽，单个裸金属实例额外配备100GB IB网络，最大限度满足计算集群对于数据传输的要求'
+          },
+          {
+            img: 'icon-GPUDirect',
+            title: 'GPU Direct',
+            desc: '支持GPU Direct技术，实现GPU之间的直接通信；搭载NvLink技术，使GPU之间的数据传输效率提升5倍。数据传输实现高带宽、低时延，数据传输效率高，综合数据处理能力强。'
+          },
         ],
         stageInfo: {
           stages: [
             {
-              title: '大流量门户',
-              icon: 'icon-daliuliangmenhu',
-              img: require('../../../assets/img/product/balance-stage-1-background.png'),
-              desc: ['针对超多用户服务访问量高的特点，通过负载均衡将用户的访问流量均匀的分发到多个后端云主机上，确保业务快速平稳的运行。']
+              title: '人工智能',
+              icon: 'icon-rengongzhineng',
+              img: require('../../../assets/img/product/rg-banner.png'),
+              desc: [
+                {subTitle: '人工智能', subDesc: ['P100GPU包含上千个计算单元，在并行计算方面展示出强大的优势，针对深度学习特殊优化，可在短时间内完成海量计算。']},
+                {
+                  subTitle: '优势',
+                  subDesc: ['GPU Direct', ' 完美支撑大数据在神', '100GB IB网络', '支持GPU Direct over RDMA，100G超高带宽， 2us超低时延', '内置加速框架', '一键式部署，分钟级实例发放，聚焦核心业务']
+                },
+              ],
+
             },
             {
-              title: '音视频大流量',
-              icon: 'icon-yinshipindaliuliang',
-              img: require('../../../assets/img/product/balance-stage-2-background.png'),
-              desc: ['音视频应用中由于用户与主播之间需要实时大量的互动，因此，用户的流量非常大，而直播业务的波峰波谷效应明显，通过弹性负载均衡提高了系统的横向扩展能力，能够抵御海量流量，提升了业务的可用性和稳定性。']
+              title: '科学计算',
+              icon: 'icon-kexuejisuan',
+              img: require('../../../assets/img/product/kx-banner.png'),
+              desc: [
+                {subTitle: '科学计算', subDesc: ['在科学计算领域，要求极强的双精度计算能力，在模拟仿真过程中，消耗大量计算资源的同时，会产生大量临时数据，对存储带宽与时延也有极高的要求。']},
+                {
+                  subTitle: '优势',
+                  subDesc: ['NVMe SSD', '最高68万IOPS，消除存储瓶颈，提升整体性能', '双精度计算', '提供较CPU上百倍的双精度计算能力', '无缝迁移', '支持多种科学计算软件']
+                },
+              ],
             },
             {
-              title: '跨可用区同城容灾',
-              icon: 'icon-kuakeyongqutongchengrongzai',
-              img: require('../../../assets/img/product/balance-stage-3-background.png'),
-              desc: ['弹性负载均衡可将流量跨可用区进行分发，建立实时的同城容灾机制，满足银行贸易等企业对系统的高可用性要求。']
+              title: '视频编解码',
+              icon: 'icon-shipinbianjiema',
+              img: require('../../../assets/img/product/jm-banner.png'),
+              desc: [
+                {subTitle: '人工智能', subDesc: ['高清视频转码、安防视频监控、大型视频会议等。']},
+                {
+                  subTitle: '优势',
+                  subDesc: ['NVidia Tesla P40 具备独立的视频编解码硬件单元，全格式支持，单物理 GPU 理论可支持20~40路（参考值，取决于不同参数）H264 高清视频实时编解码。']
+                },
+              ],
             }
-          ],
-          pImg: [
-            {icon: 'icon-danxingyunfuwuqiECS', isc: '云主机'},
-            {icon: 'icon-danxingIP', isc: '弹性IP'},
-            {icon: 'icon-xunisiyouyunVPC', isc: 'VPC'}
           ],
           selectIndex: 0
         },
         advantages: [
           {
-            img: 'icon-linghuotiaodu',
-            title: '灵活调度',
-            desc: '支持多种调度算法，包括：轮询，源算法，最小连接数。用户可根据自身实际情况选择更适合的调度算法。'
+            img: 'icon-gaoxingjiabi',
+            title: '高性价比',
+            desc: '同步业界最新GPU技术，无缝切换最新GPU硬件；支持按需和包周期计费模式，即租即用、弹性扩展。'
           },
           {
-            img: 'icon-jiankangjiancha',
-            title: '健康检查',
-            desc: '定期检查后端运行状况，如有发现宕机，则不再将流量转发到该后端，消除单点故障提升应用系统的可用性。'
+            img: 'icon-jiandanyiyong1',
+            title: '减单易用',
+            desc: '一键式获取各类超算应用和深度学习框架、计算集群，让您真正聚焦于核心业务。'
           },
           {
-            img: 'icon-daliuliangxuqiu',
-            title: '大流量需求',
-            desc: '支持最高10万并发连接，满足用户的大流量需求；支持用户使用4层（TCP协议）或7层（HTTP协议、HTTPS协议）的负载分发。'
+            img: 'icon-dichengben',
+            title: '节约成本',
+            desc: '您无需预先采购、准备硬件资源，一次性购买，免除硬件更新带来的额外费用，有效降低基础设施建设投入。目前，GPU云服务器已全面支持包年包月计费和按量计费，您可以根据需要选择计费模式'
           },
           {
-            img: 'icon-huihuabaochi',
-            title: '会话保持',
-            desc: '基于源IP、HTTP Cookie、Application Cookie 将同一客户端发送的多个请求。分发给同一后端服务器处理，保持请求处理逻辑的可持续性。'
-          }
+            img: 'icon-gaoanquan',
+            title: '安全防护',
+            desc: '不同用户之间资源全面隔离，保障您的数据安全，完善的网络监控服务保障您的网络安全。同时，GPU 云服务器与云安全无缝对接，享有云服务器同等的基础云安全基础防护和高防服务。'
+          },
+          {
+            img: 'icon-jizhixingneng',
+            title: '极致性能',
+            desc: 'GPU云服务器突破传统GPU，发挥极致性能，具有高并行、高吞吐、低时延等特点，在科学计算表现中性能比传统架构提高 50 倍。'
+          },
         ],
         recommendations: [
           {
@@ -203,7 +225,19 @@
             title: '虚拟私有云VPC',
             desc: 'VPC（Virtual Private Cloud）是一个用户定义的虚拟网络，云主机可以放置在其中...',
             path: 'Pvpc'
-          }
+          },
+          {
+            img: 'icon-fuzaijunheng2',
+            title: '负载均衡',
+            desc: '负载均衡处理器可以通过监听负载均衡实例上的四层和七层请求，并将这些请求分发到后端服务器...',
+            path: 'Pbalance'
+          },
+          {
+            img: 'icon-xunizhuanwangVPN',
+            title: '虚拟专网VPN',
+            desc: '虚拟专用网络VPN，用于搭建用户本地数据中心与新睿云VPC之间便捷、灵活…',
+            path: 'Pvirvpn'
+          },
         ]
       }
     },

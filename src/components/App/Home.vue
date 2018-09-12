@@ -51,8 +51,8 @@
           </div>
         </my-carousel-item>
         <my-carousel-item class="carousel-item">
-          <div  @click="push('/ruicloud/objStorageActive')"
-            style="cursor: pointer;">
+          <div @click="push('/ruicloud/objStorageActive')"
+               style="cursor: pointer;">
             <div class="obj-storage">
               <div class="wrap">
                 <div>
@@ -829,7 +829,6 @@
       },
       // 切换云产品
       changeProduct(item, event) {
-        document.getElementById('')
         this.$refs.line.style.left = `${event.currentTarget.offsetLeft}px`
         this.cloudContainer.forEach(product => {
           if (product.title === item.title) {
@@ -1808,7 +1807,7 @@
   }
 
   .groupBook {
-    background:linear-gradient(90deg, rgba(255, 255, 255, 1), rgba(174, 201, 255, 1));
+    background: linear-gradient(90deg, rgba(255, 255, 255, 1), rgba(174, 201, 255, 1));
     height: 400px;
     .groupBook-content {
       width: 1200px;
@@ -1816,7 +1815,7 @@
       margin: 0 auto;
       display: flex;
       position: relative;
-      >img{
+      > img {
         position: absolute;
         left: -110px;
         top: 0;
@@ -1825,18 +1824,18 @@
         width: 50%;
         padding: 74px 0 0 20px;
         > p {
-          font-size:48px;
+          font-size: 48px;
           font-family: "Microsoft YaHei", "微软雅黑";
           color: rgba(51, 51, 51, 1);
           line-height: 45px;
         }
         p:nth-child(2) {
           margin-top: 20px;
-          font-size:24px;
+          font-size: 24px;
         }
         p:nth-child(3) {
           margin-top: 15px;
-          font-size:24px;
+          font-size: 24px;
           color: rgba(51, 51, 51, 1);
           line-height: 40px;
           span {
@@ -1919,8 +1918,9 @@
       }
     }
   }
-   .obj-storage {
-    background:linear-gradient(-90deg,rgba(175,201,254,1),rgba(255,255,255,1));
+
+  .obj-storage {
+    background: linear-gradient(-90deg, rgba(175, 201, 254, 1), rgba(255, 255, 255, 1));
     height: 400px;
     position: relative;
     .wrap {
@@ -1973,6 +1973,7 @@
       }
     }
   }
+
   // 移入移出动画
   .fade-enter, .fade-leave-to {
     opacity: 0;

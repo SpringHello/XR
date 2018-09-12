@@ -930,8 +930,7 @@
       },
       freeReceive(item) {
         if (this.$store.state.userInfo == null) {
-          // this.$router.push({path: 'login'})
-          this.loginModal = true;
+          this.$LR({type:'login'})
         } else {
           let url = 'information/getFreeMv.do'
           let params={

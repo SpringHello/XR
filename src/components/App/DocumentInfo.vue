@@ -9,8 +9,18 @@
         <div v-for="item in menuList" class="menu-item">
           <ul v-if="item.subMenu">
             <p :class="{active:item.active,open:item.open}" @click="item.open=!item.open">{{item.title}}</p>
-            <li v-for="i in item.subMenu" v-show="item.open" :class="{active:i.id == minor}" @click="getContent(i.id)">
-              <router-link :to="`/ruicloud/documentInfo/${$router.currentRoute.params.parentId}/${i.id}`">{{i.name}}
+            <li v-for="i in item.subMenu" v-show="item.open" :class="{active:i.active}">
+              <ul v-if="i.subMenu">
+                <p :class="{active:i.active,open:i.open}" @click="i.open=!i.open">{{item.title}}</p>
+                <li v-for="it in i.subMenu" v-show="i.open">
+                  <router-link
+                    :to="`/ruicloud/documentInfo/${$router.currentRoute.params.parentId}/${it.parentId}`">
+                    {{it.title}}
+                  </router-link>
+                </li>
+              </ul>
+              <router-link v-else :to="`/ruicloud/documentInfo/${$router.currentRoute.params.parentId}/${i.parentId}`">
+                {{i.title}}
               </router-link>
             </li>
           </ul>
@@ -111,12 +121,27 @@
           item.active = false
           if (item.subMenu) {
             item.open = false
-            if (item.subMenu.some((i) => {
-                return i.id == this.$router.currentRoute.params.id
-              })) {
-              item.open = true
-              item.active = true
-            }
+            item.subMenu.forEach(it => {
+              if (it.subMenu) {
+                it.open = false
+                it.active = false
+                if (it.subMenu.some((i) => {
+                    return i.parentId == this.$router.currentRoute.params.id
+                  })) {
+                  item.open = true
+                  item.active = true
+                  it.open = true
+                  it.active = true
+                }
+              } else {
+                if (item.subMenu.some((i) => {
+                    return i.parentId == this.$router.currentRoute.params.id
+                  })) {
+                  item.open = true
+                  item.active = true
+                }
+              }
+            })
           } else {
             if (item.parentId == this.$router.currentRoute.params.id) {
               item.active = true
@@ -140,19 +165,32 @@
     },
     methods: {
       setData(value){
-        console.log(this.$router.currentRoute.params.parentId)
-        console.log(this.$router.currentRoute.params.id)
         this.mainMenu = value[0].data.result
         value[1].data.result.forEach(item => {
           item.active = false
           if (item.subMenu) {
             item.open = false
-            if (item.subMenu.some((i) => {
-                return i.id == this.$router.currentRoute.params.id
-              })) {
-              item.open = true
-              item.active = true
-            }
+            item.subMenu.forEach(it => {
+              if (it.subMenu) {
+                it.open = false
+                it.active = false
+                if (it.subMenu.some((i) => {
+                    return i.parentId == this.$router.currentRoute.params.id
+                  })) {
+                  item.open = true
+                  item.active = true
+                  it.open = true
+                  it.active = true
+                }
+              } else {
+                if (item.subMenu.some((i) => {
+                    return i.parentId == this.$router.currentRoute.params.id
+                  })) {
+                  item.open = true
+                  item.active = true
+                }
+              }
+            })
           } else {
             if (item.parentId == this.$router.currentRoute.params.id) {
               item.active = true
@@ -200,6 +238,10 @@
 </script>
 
 <style rel="stylesheet/less" lang="less" scoped>
+  .router-link-exact-active {
+    color: #2d8cf0 !important;
+  }
+
   #documentInfo {
     width: 1200px;
     margin: 0px auto;
@@ -265,7 +307,7 @@
               margin-top: 10px;
               margin-left: 20px;
               &.active {
-                a {
+                > a {
                   color: #2d8cf0
                 }
               }

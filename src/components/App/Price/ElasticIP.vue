@@ -304,7 +304,7 @@
         if (this.userInfo == null) {
           this.buyButton = true
           this.addButton = false
-          this.showModal.login = true
+          this.$LR({type:'login'})
           this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
         } else {
           this.createIpOrder()
@@ -418,7 +418,7 @@
       /* 添加网卡 */
       addNetWorkCard () {
         if (this.userInfo == null) {
-          this.showModal.login = true
+          this.$LR({type:'login'})
         } else {
           var parmas = { value: 1 }
           this.netWorkCards.push(parmas)
