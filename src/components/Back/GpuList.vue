@@ -24,7 +24,7 @@
               </Select>
             </div>
           </div>
-          <Table :columns="hostList" :data="hostData" :loading="gpuListLodaing"></Table>
+          <Table :columns="hostList" :data="hostData"></Table>
         </div>
       </div>
 
@@ -156,12 +156,13 @@
           VMId:'',
           uuId:'',
 
-          //gpu
-          gpuListLodaing:false,
-
           //筛选主机
           gpuTimeValue:'',
           gpuTimeList:[
+            {
+              value:'',
+              label:'请选择'
+            },
             {
               value:'1',
               label:'包年'
@@ -177,6 +178,10 @@
           ],
           gpuStatus:'',
           gpuStatusList:[
+            {
+              value:'',
+              label:'请选择'
+            },
             {
               value:'0',
               label:'关机'
@@ -343,32 +348,46 @@
                         cursor: 'pointer'
                       },
                     }, '删除中')])
-                // }else if(params.row.computerstate == '1'){
-                //   return h('div', [
-                //     h('Spin', {
-                //       style: {
-                //         display: 'inline-block'
-                //       }
-                //     }),
-                //     h('span', {
-                //       style: {
-                //         color: '#2A99F2',
-                //         cursor: 'pointer'
-                //       },
-                //     },'开机中')])
-                // }else if(params.row.computerstate == '0'){
-                //   return h('div', [
-                //     h('Spin', {
-                //       style: {
-                //         display: 'inline-block'
-                //       }
-                //     }),
-                //     h('span', {
-                //       style: {
-                //         color: '#2A99F2',
-                //         cursor: 'pointer'
-                //       },
-                //     },'关机中')])
+                } else if (params.row.status == '12') {
+                  //删除中
+                  return h('div', [
+                    h('Spin', {
+                      style: {
+                        display: 'inline-block'
+                      }
+                    }),
+                    h('span', {
+                      style: {
+                        color: '#2A99F2',
+                        cursor: 'pointer'
+                      },
+                    }, '开机中')])
+                }else if(params.row.status == '10'){
+                  return h('div', [
+                    h('Spin', {
+                      style: {
+                        display: 'inline-block'
+                      }
+                    }),
+                    h('span', {
+                      style: {
+                        color: '#2A99F2',
+                        cursor: 'pointer'
+                      },
+                    },'重启中')])
+                }else if(params.row.status == '11'){
+                  return h('div', [
+                    h('Spin', {
+                      style: {
+                        display: 'inline-block'
+                      }
+                    }),
+                    h('span', {
+                      style: {
+                        color: '#2A99F2',
+                        cursor: 'pointer'
+                      },
+                    },'关机中')])
                 }else{
                   return h('div',[
                     h('span',{
@@ -505,6 +524,8 @@
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
+                            params.row.status = '10';
+                            params.row.computerstate = '10';
                             this.uuId = params.row.computerid;
                             this.$Modal.confirm({
                               title:'提示',
@@ -533,8 +554,12 @@
                               content:'确定要开/关机吗',
                               onOk:()=>{
                                 if(params.row.computerstate == '0'){
+                                  params.row.status = '12';
+                                  params.row.computerstate = '12';
                                   this.openHost(params.row._index);
                                 }else if(params.row.computerstate == '1'){
+                                  params.row.status = '11';
+                                  params.row.computerstate = '11';
                                   this.stopHost(params.row._index);
                                 }
                               }
@@ -570,12 +595,12 @@
           this.$store.state.zone.zoneId = res.data.result[0].zoneid;
           this.$store.state.zone.zonename = res.data.result[0].zonename;
         })
+        clearInterval(this.intervalInstance);
         next();
       },
       methods:{
         // 获取GPU主机
        getGpuServerList(){
-         this.gpuListLodaing = true;
          axios.get('gpuserver/listGpuServer.do',{
             params:{
               num:'',
@@ -587,18 +612,22 @@
           }).then(res => {
             if(res.status === 200 && res.data.status === 1){
               if(Object.keys(res.data.result).length != 0){
-                this.hostData = res.data.result.open.list;
-                this.gpuListLodaing = false;
+                let count = 0;
+                for(let key in res.data.result){
+                  let list = [];
+                  ++count;
+                  if(count !=1){
+                    list = res.data.result[key].list.concat(res.data.result[key].list);
+                  }else {
+                    list = res.data.result[key].list;
+                  }
+                  this.hostData = list;
+                }
               }else{
                 this.hostData = [];
-                this.gpuListLodaing = false;
               }
-            }else {
-              this.gpuListLodaing = false;
             }
-          }).catch(error => {
-            this.gpuListLodaing = false;
-         })
+          })
        },
 
 
@@ -698,10 +727,12 @@
           }).then(res => {
             if(res.status == 200 && res.data.status == 1){
               this.$Message.success(res.data.message);
+              this.getGpuServerList();
             }else {
               this.$message.info({
                 content: res.data.message
               })
+              this.getGpuServerList();
             }
           })
         },
@@ -791,7 +822,9 @@
         },
       },
       created(){
-
+        // this.intervalInstance = setInterval(() => {
+        //   this.getGpuServerList()
+        // }, 5 * 1000)
       },
       mounted(){
         console.log(this.$store.state.zone.zoneId+'+++++++++++++++++++++++++++++++');
