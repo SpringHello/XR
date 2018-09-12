@@ -187,60 +187,60 @@
       padding-top: 64px;
       display: flex;
       justify-content: space-between;
-      .bc-left{
+      .bc-left {
         width: 460px;
-        >p{
-          font-size:18px;
-          font-family:MicrosoftYaHei;
-          font-weight:500;
-          color:rgba(255,255,255,1);
+        > p {
+          font-size: 18px;
+          font-family: MicrosoftYaHei;
+          font-weight: 500;
+          color: rgba(255, 255, 255, 1);
           line-height: 40px;
           margin-top: 20px;
         }
-        p:nth-child(1){
+        p:nth-child(1) {
           font-size: 50px;
           padding: 20px 15px;
           font-style: italic;
         }
       }
-      .bc-right{
-        width:300px;
+      .bc-right {
+        width: 300px;
         padding: 40px;
-        background:rgba(255,255,255,1);
-        box-shadow:0px 2px 41px -15px rgba(47,124,253,0.47);
-        border-radius:4px;
-        p{
-          font-size:18px;
-          font-family:MicrosoftYaHei;
-          font-weight:400;
-          color:rgba(51,51,51,1);
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0px 2px 41px -15px rgba(47, 124, 253, 0.47);
+        border-radius: 4px;
+        p {
+          font-size: 18px;
+          font-family: MicrosoftYaHei;
+          font-weight: 400;
+          color: rgba(51, 51, 51, 1);
         }
-        p:nth-child(2){
+        p:nth-child(2) {
           margin-top: 10px;
-          >span{
-            color:rgba(51,51,51,1);
+          > span {
+            color: rgba(51, 51, 51, 1);
             text-decoration: underline;
           }
         }
-        p:nth-child(3){
-          font-size:24px;
+        p:nth-child(3) {
+          font-size: 24px;
           margin-top: 20px;
         }
-        p:nth-child(4){
-          color:rgba(74,151,238,1);
+        p:nth-child(4) {
+          color: rgba(74, 151, 238, 1);
           cursor: pointer;
           margin-top: 20px;
         }
-        button{
+        button {
           cursor: pointer;
           outline: none;
           border: none;
-          background:rgba(56,125,255,1);
-          border-radius:4px;
-          font-size:14px;
-          font-family:MicrosoftYaHei;
-          font-weight:500;
-          color:rgba(255,255,255,1);
+          background: rgba(56, 125, 255, 1);
+          border-radius: 4px;
+          font-size: 14px;
+          font-family: MicrosoftYaHei;
+          font-weight: 500;
+          color: rgba(255, 255, 255, 1);
           padding: 12px 75px;
           margin-top: 20px;
         }
@@ -269,12 +269,28 @@
         background: rgba(255, 255, 255, 1);
         border: 1px solid rgba(213, 213, 213, 1);
         cursor: pointer;
+        position: relative;
+        &:after {
+          display: inline-block;
+          content: '';
+          height: 63px;
+          width: 63px;
+          background-image: url("../../assets/img/sceneList/sl-icon26.png");
+          position: absolute;
+          top: 0;
+          right: 0;
+        }
         &:hover {
-          box-shadow: 0px 2px 39px -8px rgba(49, 49, 49, 0.5);
+          box-shadow: 0px 2px 39px -8px rgba(16, 118, 236, 1);
+          -webkit-transform: translateY(-10px);
+          -moz-transform: translateY(-10px);
+          -ms-transform: translateY(-10px);
+          -o-transform: translateY(-10px);
+          transform: translateY(-10px)
         }
         .scene-top {
           width: 285px;
-          height: 201px;
+          height: 225px;
           font-size: 24px;
           font-family: MicrosoftYaHei;
           font-weight: 500;

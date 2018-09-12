@@ -223,9 +223,12 @@
           <div class="click_icon icons" :class="{hide_icon:!attestationShow}" @click="attestationShow = !attestationShow"></div>
         </div>
         <div v-show="attestationShow">
+          <div v-if="authInfo&&authInfo.checkstatus==0" class="modal-p">
+            <p><img src="../../assets/img/sceneInfo/si-success.png"/><span>恭喜您，实名认证成功！</span></p>
+          </div>
           <Form :model="quicklyAuthForm" :label-width="100" ref="quicklyAuth"
                 :rules="quicklyAuthFormValidate"
-                style="width:450px;margin-top:20px;">
+                style="width:450px;margin-top:20px;" v-else>
             <FormItem label="真实姓名" prop="name" style="width: 100%">
               <Input v-model="quicklyAuthForm.name" placeholder="请输入姓名"></Input>
             </FormItem>
@@ -1774,6 +1777,7 @@
             value: 'windows'
           },],
         cashPledge: '--',
+        getTime: '',
         config: {
           value: '39',
           imagePath: require('../../assets/img/pay/payBackground.png'),
@@ -1847,6 +1851,13 @@
       }
     },
     methods: {
+      init() {
+        axios.get('user/GetUserInfo.do').then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
+          }
+        })
+      },
       setData(val) {
         switch (val) {
           case 'host':
@@ -1924,6 +1935,10 @@
         })
       },
       getHost(index) {
+        if (this.areaGroup.length == 0) {
+          this.$Message.info('请选择需要领取的区域')
+          return
+        }
         if (!this.$store.state.userInfo) {
           this.$LR({type: 'login'})
           return
@@ -1980,6 +1995,7 @@
               type: '0'
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
+                this.init()
               } else {
                 this.$message.info({
                   content: response.data.message
@@ -1990,7 +2006,11 @@
         })
       },
     },
-    computed: {}
+    computed: {
+      authInfo() {
+        return this.$store.state.authInfo ? this.$store.state.authInfo : null
+      },
+    }
   }
 </script>
 
