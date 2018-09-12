@@ -1,6 +1,7 @@
 <template>
   <div class="mask">
     <form onsubmit="return false" v-if="T!='protocol'">
+      <a class="ivu-modal-close" @click="close"><i class="ivu-icon ivu-icon-ios-close-empty"></i></a>
       <div class="wrapper" v-show="T=='login'">
         <h1>登录</h1>
         <i></i>
@@ -21,7 +22,8 @@
           <div class="input-box">
             <img src="./img/LR-vailcode.png">
             <input v-model="loginForm.vailCode" type="vailCode" placeHolder="请输入验证码">
-            <img class="kap-img" :src="imgSrc" @click="imgSrc=`/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img class="kap-img" :src="imgSrc"
+                 @click="imgSrc=`/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </div>
         </div>
         <button @click="login">登录</button>
@@ -56,7 +58,8 @@
           <div class="input-box">
             <img src="./img/LR-vailcode.png">
             <input v-model="registerForm.vailCode" type="vailCode" placeHolder="请输入验证码">
-            <img class="kap-img" :src="imgSrc" @click="imgSrc=`/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <img class="kap-img" :src="imgSrc"
+                 @click="imgSrc=`/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
           </div>
           <div class="input-box">
             <img src="./img/LR-vailcode.png">
@@ -481,6 +484,9 @@
       },
       hiddenProtocol(){
         this.T = 'register'
+      },
+      close(){
+        window.document.body.removeChild(this.$el)
       }
     },
     computed: {
@@ -504,7 +510,7 @@
     z-index: 1000;
     display: flex;
     form {
-      padding: 80px;
+      padding: 40px 40px 80px;
       position: relative;
       background-color: #fff;
       .wrapper {
