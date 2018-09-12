@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="scene-page" v-for="item in currentSceneGroup" v-if="item.currentScene == scene"
+    <div class="scene-page" v-for="(item,currentIndex) in currentSceneGroup" v-if="item.currentScene == scene"
          :style="{ 'background-image': 'url(' + item.bannerImg + ')','background-repeat':'no-repeat','background-size':'cover' }">
       <div class="center">
         <div class="head">
@@ -53,7 +53,7 @@
                     </Select>
                     <li style="margin-top: 10px"><span class="s1">选择区域</span></li>
                     <Select v-model="cfg.zoneId" style="width:170px;"
-                            @on-change="getOriginalPrice(index1)">
+                            @on-change="getOriginalPrice(currentIndex,index1)">
                       <Option v-for="item2 in areaGroup" :value="item2.value" :key="item2.value">{{ item2.name }}</Option>
                     </Select>
                   </ul>
@@ -1566,8 +1566,38 @@
             break
         }
       },
-      getOriginalPrice(index1) {
-        console.log(index1)
+      getOriginalPrice(currentIndex, index) {
+        let vmConfigId = ''
+        let month = ''
+        switch (index) {
+          case 0:
+            month = '1'
+            vmConfigId = '45'
+            break
+          case 1:
+            month = '3'
+            vmConfigId = '46'
+            break
+          case 2:
+            month = '6'
+            vmConfigId = '47'
+            break
+          case 3:
+            month = '12'
+            vmConfigId = '48'
+            break
+        }
+        let url = 'activity/getOriginalPrice.do'
+        let params = {
+          vmConfigId: vmConfigId,
+          month: month,
+          zoneId: this.currentSceneGroup[currentIndex].configGroup[index].zoneId
+        }
+        axios.get(url, {params: params}).then(res => {
+          if (res.data.status == 1) {
+            this.currentSceneGroup[currentIndex].configGroup[index].originalPrice = res.data.result.originalPrice
+          }
+        })
       },
       getRegion() {
         let url = 'activity/getTemActInfo.do'
@@ -1584,10 +1614,9 @@
           }
         })
       },
-      getHost(index){
-        console.log(index)
+      getHost(index) {
         if (!this.$store.state.userInfo) {
-          this.$LR({type:'login'})
+          this.$LR({type: 'login'})
           return
         }
       }
@@ -1680,10 +1709,10 @@
           .config {
             width: 250px;
             background: rgba(255, 255, 255, 1);
-            &:hover{
+            &:hover {
               box-shadow: 0px 0px 20px 0px rgba(179, 179, 179, 1);
             }
-            &.gpu{
+            &.gpu {
               width: 300px;
             }
             .cf-title {
