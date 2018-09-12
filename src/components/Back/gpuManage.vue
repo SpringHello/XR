@@ -28,14 +28,14 @@
             </div>
             <div class="host_box">
               <p>所属VPC：<span>{{gpuDetail.vpcname}}</span></p>
-              <p>绑定公网：<span>196.168.33.233</span></p>
+              <p>绑定公网：<span>{{gpuDetail.privateip}}</span></p>
               <p>所属负载均衡：<span>基础</span></p>
               <p>挂载磁盘：<span style="color: #2A99F2;">.....</span></p>
             </div>
             <div class="host_box">
               <p>计费类型：{{gpuDetail.caseType == 1 ?'包年计费':gpuDetail.caseType == 2 ? '包月计费' : gpuDetail.caseType == 3 ? '实时计费' :''}}</p>
               <p>创建于：{{gpuDetail.createtime}}</p>
-              <p>自动续费：<span>开</span></p>
+              <p>自动续费：<span>{{gpuDetail.isautorenew == 1 ? '开' : '关'}}</span></p>
             </div>
           </div>
         </div>
@@ -585,13 +585,13 @@
         })
       })
     },
-    beforeRouteLeave(){
-      axios.get('information/zone.do',{
-      }).then(res => {
-        this.$store.state.zone.zoneId = res.data.result[0].zoneid;
-        this.$store.state.zone.zonename = res.data.result[0].zonename;
-      })
-    },
+    // beforeRouteLeave(){
+    //   axios.get('information/zone.do',{
+    //   }).then(res => {
+    //     this.$store.state.zone.zoneId = res.data.result[0].zoneid;
+    //     this.$store.state.zone.zonename = res.data.result[0].zonename;
+    //   })
+    // },
     methods:{
 
       //获取GPU服务器详情
@@ -996,7 +996,8 @@
       this.$http.get('alarm/getVmAlarmByHour.do', {
         params: {
           vmname: this.gpuDetail.instancename,
-          type: 'core'
+          type: 'core',
+          zoneId:this.$store.state.zone.zoneId
         }
       })
         .then(response => {
