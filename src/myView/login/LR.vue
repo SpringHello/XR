@@ -65,12 +65,12 @@
             <img src="./img/LR-vailcode.png">
             <input v-model="registerForm.phoneVailCode" type="vailCode" placeHolder="请输入验证码">
             <div class="swap">
-              <p @click="sendRegisterCode">获取验证码</p>
+              <p @click="sendRegisterCode">{{getCode}}</p>
             </div>
           </div>
           <div class="input-box">
             <img src="./img/LR-password.png">
-            <input v-model="registerForm.password" type="password" placeHolder="密码">
+            <input v-model="registerForm.password" type="password" placeHolder="请输入至少8位包含大小写字母与数字的密码">
           </div>
           <div class="input-box">
             <img src="./img/LR-password.png">
@@ -382,7 +382,8 @@
         registerWarning: '',
         imgSrc: `/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`,
         // 是否同意注册条款
-        single: false
+        single: false,
+        getCode: '获取验证码'
       }
     },
     methods: {
@@ -408,6 +409,9 @@
       },
       // 发送注册用验证码
       sendRegisterCode(){
+        if (this.getCode != '获取验证码') {
+          return
+        }
         if (this.Q == 'phone' && !regExp.phoneVail(this.registerForm.phoneLogin)) {
           this.registerWarning = '请输入正确手机号'
           return
@@ -429,6 +433,17 @@
           }
         }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
+            let countDown = 60
+            this.getCode = countDown + 's'
+            let interval = setInterval(() => {
+              if (countDown == 0) {
+                clearInterval(interval)
+                this.getCode = '获取验证码'
+                return
+              }
+              this.getCode = countDown + 's'
+              countDown--
+            }, 1000)
             this.$Message.success({
               content: '验证码发送成功',
               duration: 5
