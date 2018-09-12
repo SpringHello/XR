@@ -61,7 +61,7 @@
                 <div class="cf-footer">
                   <p><span>押金：</span>{{ cfg.currentPrice}}</p>
                   <p>原价：¥{{cfg.originalPrice}}</p>
-                  <Button type="primary" :disabled="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'">立即使用</Button>
+                  <Button type="primary" :disabled="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'" @click="getHost(index1)">立即使用</Button>
                 </div>
               </div>
             </div>
@@ -133,7 +133,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '69.00',
@@ -178,7 +178,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '169.00',
@@ -222,7 +222,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '269.00',
@@ -266,7 +266,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '569.00',
@@ -318,7 +318,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '69.00',
@@ -363,7 +363,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '169.00',
@@ -407,7 +407,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '269.00',
@@ -451,7 +451,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '569.00',
@@ -503,7 +503,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '69.00',
@@ -548,7 +548,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '169.00',
@@ -592,7 +592,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '269.00',
@@ -636,7 +636,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '569.00',
@@ -688,7 +688,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '69.00',
@@ -733,7 +733,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '169.00',
@@ -777,7 +777,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '269.00',
@@ -821,7 +821,7 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
                 currentPrice: '569.00',
@@ -873,11 +873,11 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
-                currentPrice: '329.00',
-                originalPrice: '678.00',
+                currentPrice: '69.00',
+                originalPrice: '166.72',
                 zoneId: '',
                 system: 'linux'
               },
@@ -918,11 +918,11 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
-                currentPrice: '699.00',
-                originalPrice: '1278.00',
+                currentPrice: '169.00',
+                originalPrice: '500.16',
                 zoneId: '',
                 system: 'linux'
               },
@@ -962,11 +962,11 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
-                currentPrice: '2083.00',
-                originalPrice: '3678.00',
+                currentPrice: '269.00',
+                originalPrice: '1000.32',
                 zoneId: '',
                 system: 'linux'
               },
@@ -1006,11 +1006,11 @@
                   },
                   {
                     text: '对象存储服务OBS',
-                    value: '',
+                    value: '按需开通',
                   }
                 ],
-                currentPrice: '2083.00',
-                originalPrice: '3678.00',
+                currentPrice: '569.00',
+                originalPrice: '2000.64',
                 zoneId: '',
                 system: 'linux'
               }
@@ -1584,6 +1584,13 @@
           }
         })
       },
+      getHost(index){
+        console.log(index)
+        if (!this.$store.state.userInfo) {
+          this.$LR({type:'login'})
+          return
+        }
+      }
     },
     computed: {}
   }
@@ -1597,7 +1604,7 @@
       margin: 0 auto;
       background: linear-gradient(360deg, rgba(249, 249, 249, 1) 0%, rgba(247, 247, 247, 1) 100%);
       .head {
-        padding: 35px 100px 30px;
+        padding: 35px 50px 30px;
         border-bottom: 1px solid rgba(217, 217, 217, 1);
         .title {
           display: flex;
@@ -1658,7 +1665,7 @@
         }
       }
       .body {
-        padding: 30px 100px 50px;
+        padding: 30px 50px 50px;
         h2 {
           text-align: center;
           font-size: 28px;
@@ -1671,9 +1678,11 @@
           display: flex;
           justify-content: space-around;
           .config {
-            width: 240px;
+            width: 250px;
             background: rgba(255, 255, 255, 1);
-            box-shadow: 0px 0px 20px 0px rgba(179, 179, 179, 1);
+            &:hover{
+              box-shadow: 0px 0px 20px 0px rgba(179, 179, 179, 1);
+            }
             &.gpu{
               width: 300px;
             }
@@ -1686,7 +1695,7 @@
               color: rgba(255, 255, 255, 1);
             }
             .cf-body {
-              padding: 20px 30px;
+              padding: 20px 20px;
               .cf-content {
                 border-bottom: 1px solid rgba(217, 217, 217, 1);
                 padding-bottom: 10px;
