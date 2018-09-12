@@ -24,7 +24,6 @@
               </Select>
             </div>
           </div>
-
           <Table :columns="hostList" :data="hostData" :loading="gpuListLodaing"></Table>
         </div>
       </div>
@@ -149,15 +148,9 @@
 <script type="text/ecmascript-6">
   import axios from 'axios'
 
+
     export default{
       data(){
-        // var zone = null
-        // this.$store.state.zoneList.forEach(item => {
-        //   if (item.isdefault === 1
-        //   ) {
-        //     zone = item
-        //   }
-        // })
         return{
           //GPUID
           VMId:'',
@@ -321,29 +314,86 @@
             {
               title:'用户名称/唯一名称',
               width:'109',
-              render:(h,params)=>{
-                const hides = params.row.status  == 2 || params.row.status == 3 ?'inline-block' : 'none';
-                return h('div',[
-                  h('Spin',{
-                    style:{
-                      display:hides
-                    }
-                  }),
-                  h('span',{
-                  style:{
-                    color:'#2A99F2',
-                    cursor:'pointer'
-                  },
-                  on: {
-                    click: () => {
-                      if (params.row.status != -1) {
-                        this.$router.push({path: 'gpuManage'});
-                        sessionStorage.setItem('uuId', params.row.computerid);
-                        sessionStorage.setItem('gpuId',params.row.id);
+              render:(h,params)=> {
+                //创建中
+                if (params.row.status == 2) {
+                  return h('div', [
+                    h('Spin', {
+                      style: {
+                        display: 'inline-block'
                       }
-                    }
-                  }
-                },hides == 2 ? '创建中':hides == 3 ? '删除中' : params.row.companyname+'/'+params.row.computername)])
+                    }),
+                    h('span', {
+                      style: {
+                        color: '#2A99F2',
+                        cursor: 'pointer'
+                      },
+                    }, '创建中')])
+                } else if (params.row.status == 3) {
+                  //删除中
+                  return h('div', [
+                    h('Spin', {
+                      style: {
+                        display: 'inline-block'
+                      }
+                    }),
+                    h('span', {
+                      style: {
+                        color: '#2A99F2',
+                        cursor: 'pointer'
+                      },
+                    }, '删除中')])
+                // }else if(params.row.computerstate == '1'){
+                //   return h('div', [
+                //     h('Spin', {
+                //       style: {
+                //         display: 'inline-block'
+                //       }
+                //     }),
+                //     h('span', {
+                //       style: {
+                //         color: '#2A99F2',
+                //         cursor: 'pointer'
+                //       },
+                //     },'开机中')])
+                // }else if(params.row.computerstate == '0'){
+                //   return h('div', [
+                //     h('Spin', {
+                //       style: {
+                //         display: 'inline-block'
+                //       }
+                //     }),
+                //     h('span', {
+                //       style: {
+                //         color: '#2A99F2',
+                //         cursor: 'pointer'
+                //       },
+                //     },'关机中')])
+                }else{
+                  return h('div',[
+                    h('span',{
+                      style:{
+                        color:'#2A99F2',
+                        cursor:'pointer',
+                        overflow:'hidden',
+                        whiteSpace: 'nowrap',
+                        textOverflow: 'ellipsis',
+                        width:'100px'
+                      },
+                      domProps:{
+                        title:params.row.companyname+''+params.row.computername
+                      },
+                      on: {
+                        click: () => {
+                          if (params.row.status != -1) {
+                            this.$router.push({path: 'gpuManage'});
+                            sessionStorage.setItem('uuId', params.row.computerid);
+                            sessionStorage.setItem('gpuId',params.row.id);
+                          }
+                        }
+                      }
+                    },params.row.companyname+'/'+params.row.computername)])
+                }
               }
             },
             {
@@ -388,12 +438,28 @@
               title:'操作',
               width:'100',
               render:(h,params)=>{
+                if(params.row.status == -1){
+                  return h('div',
+                    {
+                      style:{padding:'8px 0',display:'inline-block'}
+                    },[
+                    h('p',{style:{color:'#2A99F2'}},'联系客服'),
+                    h('p',{style:{margin:'5px 0',color:'#B2B2B2'}},'删除'),
+                    h('p',{style:{color:'#B2B2B2'}},'更多操作')
+                  ])
+                }else {
                 return h('div',
                   {
                     style:{color:'#2A99F2',padding:'8px 0',display:'inline-block'}
                   },[
-                  h('p',{style:{cursor:'pointer'}},'远程链接'),
-                  h('p',{style:{cursor:'pointer',margin:'5px 0'}},'删除'),
+                  h('p',{style:{cursor:'pointer'},on:{click:()=>{this.link(params.row)}}},'远程链接'),
+                  h('p',{style:{cursor:'pointer',margin:'5px 0'},
+                    on:{
+                    click:()=> {
+                      this.deleteHost(params.row);
+                    }
+                    }
+                  },'删除'),
                     h('Dropdown', {
                       props: {
                         trigger: 'click'
@@ -439,7 +505,14 @@
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
-
+                            this.uuId = params.row.computerid;
+                            this.$Modal.confirm({
+                              title:'提示',
+                              content:'确定要重启主机吗',
+                              onOk:()=>{
+                                this.reStartGPU();
+                              }
+                            })
                           }
                         }
                       }, '重启主机'),
@@ -448,7 +521,6 @@
                           click: () => {
                             this.VMId = params.row.id;
                            this.showModal.renew = true;
-                            this.reStartGPU();
                           }
                         }
                       }, '主机续费'),
@@ -456,25 +528,28 @@
                         nativeOn: {
                           click: () => {
                             this.uuId = params.row.computerid;
-                            if(params.row.computerstate == '0'){
-                              this.openHost();
-                            }else if(params.row.computerstate == '1'){
-                              this.stopHost();
-                            }
+                            this.$Modal.confirm({
+                              title:'提示',
+                              content:'确定要开/关机吗',
+                              onOk:()=>{
+                                if(params.row.computerstate == '0'){
+                                  this.openHost(params.row._index);
+                                }else if(params.row.computerstate == '1'){
+                                  this.stopHost(params.row._index);
+                                }
+                              }
+                            })
                           }
                         }
                       }, '开机/关机'),])
                     ])
-                 ])
+               ])
+                }
               }
             }
           ],
           hostData:[],
 
-          //GPU区域ID
-          PecsInfo:{
-            zone:''
-          }
         }
       },
       beforeRouteEnter(to, from, next){
@@ -489,13 +564,14 @@
           })
         })
       },
-      // beforeRouteLeave(){
-      //     axios.get('information/zone.do',{
-      //   }).then(res => {
-      //     this.$store.state.zone.zoneId = res.data.result[0].zoneid;
-      //     this.$store.state.zone.zonename = res.data.result[0].zonename;
-      //   })
-      // },
+      beforeRouteLeave(to, from , next){
+        axios.get('information/zone.do',{
+        }).then(res => {
+          this.$store.state.zone.zoneId = res.data.result[0].zoneid;
+          this.$store.state.zone.zonename = res.data.result[0].zonename;
+        })
+        next();
+      },
       methods:{
         // 获取GPU主机
        getGpuServerList(){
@@ -572,28 +648,60 @@
          }).then(res => {
            if(res.status == 200 && res.data.status == 1){
              this.$Message.success('关机成功');
+             this.getGpuServerList();
            }else {
              this.$Message.info(res.data.message);
+             this.getGpuServerList();
            }
          })
         },
 
         //删除主机
-       deleteHost(){
-        axios.get('information/destroyVirtualMachine.do',{
-           params:{
-             id:'',
-             companyId:'',
-             zoneId:this.$store.state.zone.zoneId
+       deleteHost(info){
+         if(info.caseType != 3){
+           this.$Message.warning('只能删除实时计费主机');
+           return
+         }
+         if(info.status == 3){
+           this.$Message.warning('主机正在删除中');
+           return
+         }
+         this.$Modal.confirm({
+           content:`${info.computername}主机删除之后将进入回收站（注：资源在回收站中也将会持续扣费，请及时处理），新睿云将为您保留2小时，在2小时之内您可以恢复资源，超出保留时间之后，将彻底删除资源，无法在恢复。`,
+           onOk:()=>{
+             axios.get('information/deleteVM.do',{
+               params:{
+                 id: info.id
+               }
+             }).then(res => {
+               if(res.status == 200 && res.data.status == 1){
+                 this.$Message.success(res.data.message);
+                 this.getGpuServerList();
+               }else {
+                 this.$message.info({
+                   content: res.data.message
+                 })
+               }
+             })
            }
          })
+
         },
 
         //重启主机
         reStartGPU(){
           this.$http.get('gpuserver/reStartGPU.do',{
             params:{
-              gpuId:''
+              gpuId :this.uuId,
+              zoneId:this.$store.state.zone.zoneId
+            }
+          }).then(res => {
+            if(res.status == 200 && res.data.status == 1){
+              this.$Message.success(res.data.message);
+            }else {
+              this.$message.info({
+                content: res.data.message
+              })
             }
           })
         },
@@ -619,7 +727,6 @@
 
         //创建快照
         createVMSnapshot(){
-         console.log(this.uuId);
          axios.get('Snapshot/createVMSnapshot.do',{
            params:{
              VMId:this.uuId,
@@ -647,18 +754,6 @@
          }
         },
 
-        //获取GPU区域ID
-        getGPUZoneId(){
-          axios.get('information/zone.do',{
-            params:{
-              gpuServer:'1'
-            }
-          }).then(res => {
-            this.$store.state.zone.zoneId = res.data.result[0].zoneid;
-            this.$store.state.zone.zonename = res.data.result[0].zonename;
-          })
-        },
-
         //获取主机续费价格
         getGpuMonery(){
          axios.get('information/getYjPrice.do',{
@@ -670,8 +765,8 @@
            }
          }).then(res => {
            if(res.status == 200 && res.data.status == 1){
-             this.originCost = res.data.cuspon;
-             this.cost = res.data.continueDiscount;
+             this.originCost = res.data.result;
+             this.cost = res.data.cuspon;
            }
          })
         },
@@ -684,9 +779,22 @@
             timeValue:this.timeValue,
             list:gpuList
           })
-        }
+        },
+
+        //连接主机
+        link(item) {
+          sessionStorage.setItem('link-companyid', item.companyid)
+          sessionStorage.setItem('link-vmid', item.computerid)
+          sessionStorage.setItem('link-zoneid', item.zoneid)
+          sessionStorage.setItem('link-phone', this.$store.state.authInfo.phone)
+          this.$router.push('link')
+        },
       },
       created(){
+
+      },
+      mounted(){
+        console.log(this.$store.state.zone.zoneId+'+++++++++++++++++++++++++++++++');
         this.getGpuServerList();
       }
     }

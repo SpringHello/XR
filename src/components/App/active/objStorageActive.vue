@@ -258,7 +258,7 @@ export default {
   methods: {
     freeReceive () {
       if (!this.$store.state.userInfo) {
-        this.loginModal = true
+        this.$LR({type:'login'})
         return
       }
       if (!this.$store.state.authInfo) {

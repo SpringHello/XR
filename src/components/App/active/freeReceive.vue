@@ -625,7 +625,7 @@
         this.configIndex = index1
         this.hostIndex = index2
         if (this.$store.state.userInfo == null) {
-          this.loginModal = true
+          this.$LR({type:'login'})
           return
         }
         if (this.configGroup[index1].hostGroup[index2].zoneId == '') {
