@@ -14,7 +14,10 @@
         </div>
       </div>
     </div>
-    <div class="footer"></div>
+    <div class="footer">
+      <p>为您提供出众的上云实践机会和全面的尊贵服务</p>
+      <button @click="$LR({type:'register'})">立即注册</button>
+    </div>
   </div>
 </template>
 
@@ -210,7 +213,27 @@
   }
 
   .footer {
-    height: 188px;
+    padding: 40px 0;
+    text-align: center;
     background: linear-gradient(90deg, rgba(56, 175, 255, 1) 0%, rgba(56, 125, 255, 1) 100%);
+    p {
+      font-size: 24px;
+      font-family: MicrosoftYaHei;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 1);
+    }
+    button {
+      cursor: pointer;
+      outline: none;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 1);
+      font-size: 18px;
+      font-family: MicrosoftYaHei;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 1);
+      padding: 14px 50px;
+      background: none;
+      margin-top: 40px;
+    }
   }
 </style>
