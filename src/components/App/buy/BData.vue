@@ -78,10 +78,10 @@
                 <div>
                   <p class="item-title">核心数</p>
                 </div>
-                <div v-for="item in info" v-if="item.zoneId === zone.zoneid">
-                  <div v-for="cpu in item.kernelList" :key="cpu.value" class="zoneItem"
+                <div>
+                  <div v-for="cpu in info[0].kernelList" :key="cpu.value" class="zoneItem"
                        :class="{zoneSelect:vmConfig.kernel==cpu.value}"
-                       @click="changeKernel(cpu)">{{cpu.label}}
+                       @click="changeKernel(cpu)">{{cpu.name}}
                   </div>
                 </div>
               </div>
@@ -95,7 +95,7 @@
                 <div>
                   <div v-for="item in RAMList" :key="item.value" class="zoneItem"
                        :class="{zoneSelect:vmConfig.RAM==item.value}"
-                       @click="vmConfig.RAM=item.value">{{item.label}}
+                       @click="vmConfig.RAM=item.value">{{item.name}}
                   </div>
                 </div>
               </div>
@@ -396,329 +396,6 @@
           currentTimeValue: {label: '1月', value: '1', type: 'month'}
         },
         // 购买主机地区、核心数、内存关联配置，用于选择
-        info: [
-          {
-            zoneId: '39a6af0b-6624-4194-b9d5-0c552d903858',
-            zoneName: '北京一区（测试）',
-            kernelList: [
-              {
-                label: '1核',
-                value: 1,
-                RAMList: [
-                  {label: '1G', value: 1},
-                  {label: '2G', value: 2},
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8}
-                ]
-              },
-              {
-                label: '2核',
-                value: 2,
-                RAMList: [
-                  {label: '2G', value: 2},
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8},
-                  {label: '16G', value: 16}
-                ]
-              },
-              {
-                label: '4核',
-                value: 4,
-                RAMList: [
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8},
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32}
-                ]
-              },
-              {
-                label: '8核',
-                value: 8,
-                RAMList: [
-                  {label: '8G', value: 8},
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32},
-                  {label: '64G', value: 64}
-                ]
-              },
-              {
-                label: '16核',
-                value: 16,
-                RAMList: [
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32},
-                  {label: '64G', value: 64},
-                  {label: '128G', value: 128}
-                ]
-              },
-              {
-                label: '32核',
-                value: 32,
-                RAMList: [
-                  {label: '64G', value: 64},
-                  {label: '128G', value: 128}
-                ]
-              },
-              {
-                label: '64核',
-                value: 64,
-                RAMList: [
-                  {label: '128G', value: 128},
-                  {label: '256G', value: 256},
-                ]
-              }
-            ],
-          },
-          {
-            zoneId: '1ce0d0b9-a964-432f-8078-a61100789e30',
-            zoneName: '北方二区(沈阳)',
-            kernelList: [
-              {
-                label: '1核',
-                value: 1,
-                RAMList: [
-                  {label: '1G', value: 1},
-                  {label: '2G', value: 2},
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8}
-                ]
-              },
-              {
-                label: '2核',
-                value: 2,
-                RAMList: [
-                  {label: '2G', value: 2},
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8},
-                  {label: '16G', value: 16}
-                ]
-              },
-              {
-                label: '4核',
-                value: 4,
-                RAMList: [
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8},
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32}
-                ]
-              },
-              {
-                label: '8核',
-                value: 8,
-                RAMList: [
-                  {label: '8G', value: 8},
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32},
-                  {label: '64G', value: 64}
-                ]
-              },
-              {
-                label: '16核',
-                value: 16,
-                RAMList: [
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32},
-                  {label: '64G', value: 64},
-                  {label: '128G', value: 128}
-                ]
-              },
-              {
-                label: '32核',
-                value: 32,
-                RAMList: [
-                  {label: '64G', value: 64},
-                  {label: '128G', value: 128}
-                ]
-              },
-              {
-                label: '64核',
-                value: 64,
-                RAMList: [
-                  {label: '128G', value: 128},
-                  {label: '256G', value: 256},
-                ]
-              }
-            ],
-          },
-          {
-            zoneId: 'a0a7df65-dec3-48da-82cb-cff9a55a4b6d',
-            zoneName: '北方一区',
-            kernelList: [
-              {
-                label: '1核',
-                value: 1,
-                RAMList: [
-                  {label: '1G', value: 1},
-                  {label: '2G', value: 2},
-                  {label: '4G', value: 4}
-                ]
-              },
-              {
-                label: '2核',
-                value: 2,
-                RAMList: [
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8},
-                  {label: '12G', value: 12},
-                ]
-              },
-              {
-                label: '4核',
-                value: 4,
-                RAMList: [
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8},
-                  {label: '12G', value: 12},
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32}
-                ]
-              },
-              {
-                label: '8核',
-                value: 8,
-                RAMList: [
-                  {label: '16G', value: 16},
-                  {label: '24G', value: 24},
-                  {label: '32G', value: 32}
-                ]
-              },
-              {
-                label: '16核',
-                value: 16,
-                RAMList: [
-                  {label: '16G', value: 16},
-                  {label: '24G', value: 24},
-                  {label: '32G', value: 32}
-                ]
-              },
-              {
-                label: '32核',
-                value: 32,
-                RAMList: [
-                  {label: '32G', value: 32}
-                ]
-              }
-            ],
-          },
-          {
-            zoneId: '3205dbc5-2cba-4d16-b3f5-9229d2cfd46c',
-            zoneName: '华中一区',
-            kernelList: [
-              {
-                label: '1核',
-                value: 1,
-                RAMList: [
-                  {label: '1G', value: 1},
-                  {label: '2G', value: 2},
-                  {label: '4G', value: 4}
-                ]
-              },
-              {
-                label: '2核',
-                value: 2,
-                RAMList: [
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8},
-                  {label: '12G', value: 12},
-                ]
-              },
-              {
-                label: '4核',
-                value: 4,
-                RAMList: [
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8},
-                  {label: '12G', value: 12},
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32}
-                ]
-              },
-              {
-                label: '8核',
-                value: 8,
-                RAMList: [
-                  {label: '16G', value: 16},
-                  {label: '24G', value: 24},
-                  {label: '32G', value: 32},
-                ]
-              },
-              {
-                label: '16核',
-                value: 16,
-                RAMList: [
-                  {label: '16G', value: 16},
-                  {label: '24G', value: 24},
-                  {label: '32G', value: 32}
-                ]
-              },
-              {
-                label: '32核',
-                value: 32,
-                RAMList: [
-                  {label: '32G', value: 32}
-                ]
-              }
-            ],
-          },
-          {
-            zoneId: '75218bb2-9bfe-4c87-91d4-0b90e86a8ff2',
-            zoneName: '华中二区',
-            kernelList: [
-              {
-                label: '1核',
-                value: 1,
-                RAMList: [
-                  {label: '1G', value: 1},
-                  {label: '2G', value: 2},
-                  {label: '4G', value: 4}
-                ]
-              },
-              {
-                label: '2核',
-                value: 2,
-                RAMList: [
-                  {label: '2G', value: 2},
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8}
-                ]
-              },
-              {
-                label: '4核',
-                value: 4,
-                RAMList: [
-                  {label: '4G', value: 4},
-                  {label: '8G', value: 8},
-                  {label: '16G', value: 16}
-                ]
-              },
-              {
-                label: '8核',
-                value: 8,
-                RAMList: [
-                  {label: '8G', value: 8},
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32}
-                ]
-              },
-              {
-                label: '16核',
-                value: 16,
-                RAMList: [
-                  {label: '16G', value: 16},
-                  {label: '32G', value: 32}
-                ]
-              },
-              {
-                label: '32核',
-                value: 32,
-                RAMList: [
-                  {label: '32G', value: 32}
-                ]
-              }
-            ],
-          }
-        ],
         vpcList: [],
         networkList: [],
         // 数据库镜像列表
@@ -731,12 +408,7 @@
         },
         vmCost: 0,
         vmCoupon: 0,
-        RAMList: [
-          {label: '1G', value: 1},
-          {label: '2G', value: 2},
-          {label: '4G', value: 4},
-          {label: '8G', value: 8}
-        ],
+        RAMList: [],
 
         // 公共镜像 列表
         publicList: [],
@@ -1070,6 +742,14 @@
           return this.vmCoupon + this.coupon
         }
       },
+      info(){
+        return this.$parent.info.filter(i => {
+          if (i.zoneId == this.zone.zoneid) {
+            this.RAMList = i.kernelList[0].RAMList
+          }
+          return i.zoneId == this.zone.zoneid
+        })
+      }
     },
     watch: {
       'zone': {
