@@ -32,6 +32,7 @@ const Aboutus = () => import('@/components/App/Aboutus')
 const ActiveCenter = () => import('@/components/App/ActiveCenter')
 const Dynamic = () => import('@/components/App/Dynamic')
 const SceneInfo = () => import('@/components/App/SceneInfo')
+const SceneList = () => import('@/components/App/SceneList')
 // const ProductBulletin = () => import('@/components/App/ProductBulletin')
 
 // 前台活动页面路由
@@ -283,6 +284,7 @@ var router = new Router({
 
         {path: 'EastSouthNode', name: 'EastSouthNode', component: EastSouthNode},
         {path: 'SceneInfo/:type', name: 'SceneInfo', component: SceneInfo},
+        {path: 'SceneList', name: 'SceneList', component: SceneList},
 
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
