@@ -80,8 +80,8 @@
       return {
         linkURL: '',
         confirm: false,
-        linkPassword:false,
-        linkCode:'',
+        linkPassword: false,
+        linkCode: '',
         loginForm: {
           password: ''
         },
@@ -123,7 +123,8 @@
           'CTRL+ALT+F8',
           'CTRL+ALT+F9',
           'CTRL+ALT+F10'
-        ]
+        ],
+        baseURL: ''
       }
     },
     created(){
@@ -147,6 +148,8 @@
               if (response.status == 200 && response.data.status == 1) {
                 this.confirm = false
                 this.linkURL = response.data.url
+                this.baseURL = this.linkURL.split('#')[0]
+                window.frames[0].focus()
               } else {
                 this.loginForm.password = ''
                 this.$message.info({
@@ -225,12 +228,16 @@
         })
       },
       change(index){
+        if (index === '') {
+          return
+        }
         /*if (exec_obj === undefined) {*/
         var exec_obj = document.createElement('iframe');
         exec_obj.name = 'tmp_frame';
-        exec_obj.src = `http://116.207.129.194:8080/guacamole-0.8.3/excute${index}.html`;
+        exec_obj.src = `${this.baseURL}excute${index}.html`;
         exec_obj.style.display = 'none';
         document.body.appendChild(exec_obj);
+        this.operating = ''
         /*} else {
          exec_obj.src = 'http://116.207.129.194:8080/guacamole-0.8.3/test111.html?' + Math.random();
          }*/
@@ -266,7 +273,7 @@
         })
       },
       open(){
-        this.linkPassword = false ;
+        this.linkPassword = false;
         this.confirm = true;
       }
     }
