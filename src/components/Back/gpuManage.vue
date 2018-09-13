@@ -580,18 +580,19 @@
             gpuServer:'1'
           }
         }).then(res => {
-          vm.$store.state.zone.zoneId = res.data.result[0].zoneid;
+          vm.$store.state.zone.zoneid = res.data.result[0].zoneid;
           vm.$store.state.zone.zonename = res.data.result[0].zonename;
         })
       })
     },
-    // beforeRouteLeave(){
-    //   axios.get('information/zone.do',{
-    //   }).then(res => {
-    //     this.$store.state.zone.zoneId = res.data.result[0].zoneid;
-    //     this.$store.state.zone.zonename = res.data.result[0].zonename;
-    //   })
-    // },
+    beforeRouteLeave(to, from, next){
+      axios.get('information/zone.do',{
+      }).then(res => {
+        this.$store.state.zone.zoneid = res.data.result[0].zoneid;
+        this.$store.state.zone.zonename = res.data.result[0].zonename;
+      })
+      next();
+    },
     methods:{
 
       //获取GPU服务器详情
@@ -599,7 +600,7 @@
         axios.get('gpuserver/listGpuServerById.do',{
           params:{
             GpuId:sessionStorage.getItem('uuId'),
-            zoneId:this.$store.state.zone.zoneId,
+            zoneId:this.$store.state.zone.zoneid,
             changeCost:'1'
           }
         }).then(res => {
@@ -615,7 +616,7 @@
       selectSnapshotList(){
         axios.get('Snapshot/listVMSnapshot.do',{
           params:{
-            zoneId:this.$store.state.zone.zoneId,
+            zoneId:this.$store.state.zone.zoneid,
             resourceId:sessionStorage.getItem('uuId')
           }
         }).then(res => {
@@ -638,7 +639,7 @@
           onOk:()=>{
               axios.get('Snapshot/deleteVMSnapshot.do',{
                 params:{
-                  zoneId:this.$store.state.zone.zoneId,
+                  zoneId:this.$store.state.zone.zoneid,
                   ids:this.ids
                 }
               }).then(res => {
@@ -662,7 +663,7 @@
           axios.get('Snapshot/revertToVMSnapshot.do', {
             params: {
               snapshotId: this.snapsDetails.id,
-              zoneId: this.$store.state.zone.zoneId
+              zoneId: this.$store.state.zone.zoneid
             }
           })
             .then(response => {
@@ -686,7 +687,7 @@
                 VMId: sessionStorage.getItem('uuId'),
                 password: this.resetPasswordForm.newPassword,
                 oldPassword: this.resetPasswordForm.oldPassword,
-                zoneId:this.$store.state.zone.zoneId
+                zoneId:this.$store.state.zone.zoneid
               }
             }).then(response => {
               if (response.status == 200 && response.data.status == 1) {
@@ -790,7 +791,7 @@
       selectOperationLog(){
         axios.get('log/queryLog.do',{
           params:{
-            zoneId:this.$store.state.zone.zoneId,
+            zoneId:this.$store.state.zone.zoneid,
             pageSize: 10,
             currentPage: this.currentPage,
             target: 'gpu',
@@ -907,7 +908,7 @@
            vmname:this.gpuDetail.instancename,
            type:'core',
            datetype:dateType,
-           zoneId:this.$store.state.zone.zoneId
+           zoneId:this.$store.state.zone.zoneid
          }
        }).then(res => {
          if(res.status == 200 && res.data.status == 1){
@@ -997,7 +998,7 @@
         params: {
           vmname: this.gpuDetail.instancename,
           type: 'core',
-          zoneId:this.$store.state.zone.zoneId
+          zoneId:this.$store.state.zone.zoneid
         }
       })
         .then(response => {

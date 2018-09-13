@@ -471,11 +471,17 @@
                   {
                     style:{color:'#2A99F2',padding:'8px 0',display:'inline-block'}
                   },[
-                  h('p',{style:{cursor:'pointer'},on:{click:()=>{this.link(params.row)}}},'远程链接'),
+                  h('p',{style:{cursor:'pointer'},on:{click:()=>{ if(params.row.status == 2 || params.row.status){
+                        this.$Message.info('请等待主机完成当前操作');
+                      }else {this.link(params.row)}}}},'远程链接'),
                   h('p',{style:{cursor:'pointer',margin:'5px 0'},
                     on:{
                     click:()=> {
-                      this.deleteHost(params.row);
+                      if(params.row.status == 2 || params.row.status == 3){
+                        this.$Message.info('请等待主机完成当前操作');
+                      }else {
+                        this.deleteHost(params.row);
+                      }
                     }
                     }
                   },'删除'),
@@ -492,32 +498,48 @@
                     }, [h('DropdownItem', {
                       nativeOn: {
                         click: () => {
-                         this.showModal.ipShow = true;
-                          this.vpcId = params.row.vpcid;
-                          this.bindIp();
+                          if(params.row.status == 2 || params.row.status ==3){
+                            this.$Message.info('请等待主机完成当前操作');
+                          }else {
+                            this.showModal.ipShow = true;
+                            this.vpcId = params.row.vpcid;
+                            this.bindIp();
+                          }
                         }
                       }
                     }, '绑定IP'),
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
-                        this.showModal.snapshot = true;
-                            this.uuId = params.row.computerid;
+                            if(params.row.status == 2 || params.row.status ==3){
+                              this.$Message.info('请等待主机完成当前操作');
+                            }else {
+                              this.showModal.snapshot = true;
+                              this.uuId = params.row.computerid;
+                            }
                           }
                         }
                       }, '制作快照'),
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
-                           this.showModal.mirror  = true;
-                           this.mirrorValidate.rootdiskid = params.row.rootdiskid;
+                            if(params.row.status == 2 || params.row.status ==3){
+                              this.$Message.info('请等待主机完成当前操作');
+                            }else {
+                              this.showModal.mirror  = true;
+                              this.mirrorValidate.rootdiskid = params.row.rootdiskid;
+                            }
                           }
                         }
                       }, '制作镜像'),
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
-                            this.$router.push({path:'gpuUpLevel'})
+                            if(params.row.status == 2 || params.row.status ==3){
+                              this.$Message.info('请等待主机完成当前操作');
+                            }else {
+                              this.$router.push({path: 'gpuUpLevel'})
+                            }
                           }
                         }
                       }, '主机升级'),
@@ -540,8 +562,12 @@
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
-                            this.VMId = params.row.id;
-                           this.showModal.renew = true;
+                            if(params.row.status == 2 || params.row.status ==3){
+                              this.$Message.info('请等待主机完成当前操作');
+                            }else {
+                              this.VMId = params.row.id;
+                              this.showModal.renew = true;
+                            }
                           }
                         }
                       }, '主机续费'),
@@ -553,14 +579,20 @@
                               title:'提示',
                               content:'确定要开/关机吗',
                               onOk:()=>{
-                                if(params.row.computerstate == '0'){
-                                  params.row.status = '12';
-                                  params.row.computerstate = '12';
-                                  this.openHost(params.row._index);
-                                }else if(params.row.computerstate == '1'){
-                                  params.row.status = '11';
-                                  params.row.computerstate = '11';
-                                  this.stopHost(params.row._index);
+                                if(params.row.status == 2){
+                                  this.$Message.info('请等待主机创建完成');
+                                }else if(params.row.status == 3){
+                                  this.$Message.info('主机正在删除中');
+                                }else {
+                                  if(params.row.computerstate == '0'){
+                                    params.row.status = '12';
+                                    params.row.computerstate = '12';
+                                    this.openHost(params.row._index);
+                                  }else if(params.row.computerstate == '1'){
+                                    params.row.status = '11';
+                                    params.row.computerstate = '11';
+                                    this.stopHost(params.row._index);
+                                  }
                                 }
                               }
                             })
@@ -574,7 +606,6 @@
             }
           ],
           hostData:[],
-
         }
       },
       beforeRouteEnter(to, from, next){
@@ -584,7 +615,8 @@
               gpuServer:'1'
             }
           }).then(res => {
-            vm.$store.state.zone.zoneId = res.data.result[0].zoneid;
+            //没有渲染上->
+            vm.$store.state.zone.zoneid = res.data.result[0].zoneid;
             vm.$store.state.zone.zonename = res.data.result[0].zonename;
           })
         })
@@ -592,7 +624,7 @@
       beforeRouteLeave(to, from , next){
         axios.get('information/zone.do',{
         }).then(res => {
-          this.$store.state.zone.zoneId = res.data.result[0].zoneid;
+          this.$store.state.zone.zoneid = res.data.result[0].zoneid;
           this.$store.state.zone.zonename = res.data.result[0].zonename;
         })
         clearInterval(this.intervalInstance);
@@ -605,7 +637,7 @@
             params:{
               num:'',
               vpcId:'',
-              zoneId:this.$store.state.zone.zoneId,
+              zoneId:this.$store.state.zone.zoneid,
               status:this.gpuStatus,
               timeValue:this.gpuTimeValue
             }
@@ -636,7 +668,7 @@
          axios.get('network/listPublicIp.do',{
            params: {
              useType: 0,
-             zoneId: this.$store.state.zone.zoneId,
+             zoneId: this.$store.state.zone.zoneid,
              vpcId: this.vpcId
            }
          }).then(res => {
@@ -656,7 +688,7 @@
          this.$http.get('gpuserver/startGPU.do',{
            params:{
              gpuId :this.uuId,
-             zoneId:this.$store.state.zone.zoneId
+             zoneId:this.$store.state.zone.zoneid
            }
          }).then(res => {
            if(res.status == 200 && res.data.status == 1){
@@ -672,7 +704,7 @@
          this.$http.get('gpuserver/stopGPU.do',{
            params:{
              gpuId :this.uuId,
-             zoneId:this.$store.state.zone.zoneId
+             zoneId:this.$store.state.zone.zoneid
            }
          }).then(res => {
            if(res.status == 200 && res.data.status == 1){
@@ -722,7 +754,7 @@
           this.$http.get('gpuserver/reStartGPU.do',{
             params:{
               gpuId :this.uuId,
-              zoneId:this.$store.state.zone.zoneId
+              zoneId:this.$store.state.zone.zoneid
             }
           }).then(res => {
             if(res.status == 200 && res.data.status == 1){
@@ -744,7 +776,7 @@
              templateName:this.mirrorValidate.name,
              descript:this.mirrorValidate.descript,
              rootdiskId:this.mirrorValidate.rootdiskid,
-             zoneId:this.$store.state.zone.zoneId
+             zoneId:this.$store.state.zone.zoneid
            }
          }).then(res => {
            if(res.status == 200 && res.data.status == 1){
@@ -763,7 +795,7 @@
              VMId:this.uuId,
              snapshotName:this.snapshotValidate.name,
              memoryStatus:this.snapshotValidate.memory,
-             zoneId:this.$store.state.zone.zoneId
+             zoneId:this.$store.state.zone.zoneid
            }
          }).then(res => {
            if(res.status == 200 && res.data.status == 1){
@@ -792,7 +824,7 @@
              timeType:this.timeType,
              timeValue:this.timeValue,
              gpuArr:this.VMId,
-             zoneId:this.$store.state.zone.zoneId
+             zoneId:this.$store.state.zone.zoneid
            }
          }).then(res => {
            if(res.status == 200 && res.data.status == 1){
@@ -801,16 +833,28 @@
            }
          })
         },
+
         //主机续费提交
         setGPuMoney(){
-         let gpuList =[{type:'6',id:sessionStorage.getItem('gpuId')}];
+         let gpuList =JSON.stringify([{type:6,id:Number(sessionStorage.getItem('gpuId'))}]);
           axios.post('continue/continueOrder.do',{
-            zoneId:this.$store.state.zone.zoneId,
+            zoneId:this.$store.state.zone.zoneid,
             timeType:this.timeType,
             timeValue:this.timeValue,
             list:gpuList
+          }).then(res => {
+            if(res.status == 200 && res.data.status == 1){
+              this.$Message.success(res.data.message);
+              this.showModal.publicIPHint = false;
+            }else {
+              this.showModal.publicIPHint = false;
+              this.$Modal.warning({
+                content:res.data.message
+              })
+            }
           })
         },
+
 
         //连接主机
         link(item) {
@@ -827,8 +871,10 @@
         // }, 5 * 1000)
       },
       mounted(){
-        console.log(this.$store.state.zone.zoneId+'+++++++++++++++++++++++++++++++');
-        this.getGpuServerList();
+        setTimeout(()=>{
+          this.getGpuServerList();
+        },100)
+
       }
     }
 </script>
@@ -842,6 +888,4 @@
   -moz-border-radius: 4px;
   border-radius: 4px;
 }
-
-
 </style>
