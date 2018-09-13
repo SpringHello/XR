@@ -161,7 +161,7 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   .center {
-    padding: 20px 360px;
+    padding: 20px 360px 80px;
     background: #FFF;
     position: relative;
     > img {
