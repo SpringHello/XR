@@ -1586,7 +1586,6 @@
       border-radius: 4px;
       height: 120px;
       width: 100%;
-      margin-bottom: 10px;
       .container {
         padding: 10px 0 ;
         width: 1200px;
