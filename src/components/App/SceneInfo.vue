@@ -4,6 +4,8 @@
          :style="{ 'background-image': 'url(' + item.bannerImg + ')','background-repeat':'no-repeat','background-size':'cover' }">
       <div class="center">
         <div class="head">
+          <img src="../../assets/img/sceneInfo/free-hint.png"/>
+          <span>免费使用一年</span>
           <div class="title">
             <h3>{{ item.currentScene }}</h3>
           </div>
@@ -61,7 +63,7 @@
                 <div class="cf-footer">
                   <p><span>押金：</span>{{ cfg.currentPrice}}</p>
                   <p>原价：¥{{cfg.originalPrice}}</p>
-                  <Button type="primary" :disabled="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'" @click="getHost(currentIndex,index1)">立即使用</Button>
+                  <Button type="primary" :disabled="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'" @click="getHost(currentIndex,index1)">免费使用</Button>
                 </div>
               </div>
             </div>
@@ -116,7 +118,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.getSuccessModal = false">取消</Button>
-        <Button type="primary" @click="$router.push('host')">查看主机</Button>
+        <Button type="primary" @click="$router.push('/ruicloud/host')">查看主机</Button>
       </p>
     </Modal>
     <!-- 支付充值失败 -->
@@ -2143,12 +2145,12 @@
           vmConfig: this.vmConfig
         }
         axios.post(url, params).then(response => {
-          if(response.data.status ==1 && response.status == 200){
+          if (response.data.status == 1 && response.status == 200) {
             let url = 'activity/getFreeHost.do'
             axios.get(url, {
               params: {
                 vmConfigId: vmConfigId,
-                osType: this.currentSceneGroup[this. index1].configGroup[this.index2].system,
+                osType: this.currentSceneGroup[this.index1].configGroup[this.index2].system,
                 defzoneid: this.currentSceneGroup[this.index1].configGroup[this.index2].zoneId,
                 templateFunction: '1',
                 functionType: functionType
@@ -2162,7 +2164,7 @@
                 })
               }
             })
-          } else{
+          } else {
             this.$message.info({
               content: response.data.message
             })
@@ -2252,7 +2254,7 @@
       payWayChange() {
         if (this.payWay == 'otherPay' && this.otherPayWay == '') {
           this.otherPayWay = 'zfb'
-        } else if(this.payWay == 'balancePay'){
+        } else if (this.payWay == 'balancePay') {
           this.otherPayWay = ''
         }
       }
@@ -2261,6 +2263,10 @@
       authInfo() {
         return this.$store.state.authInfo ? this.$store.state.authInfo : null
       },
+    },
+    beforeRouteLeave(to, from, next) {
+      clearInterval(this.pageTimer)
+      next()
     }
   }
 </script>
@@ -2275,6 +2281,22 @@
       .head {
         padding: 35px 50px 30px;
         border-bottom: 1px solid rgba(217, 217, 217, 1);
+        position: relative;
+        > img {
+          position: absolute;
+          top: 0;
+          right: 0;
+        }
+        >span{
+          position: absolute;
+          top: 40px;
+          right: 0;
+          font-size:18px;
+          font-family:MicrosoftYaHei;
+          font-weight:600;
+          color:rgba(255,255,255,1);
+          transform: rotate(45deg);
+        }
         .title {
           display: flex;
           h3 {

@@ -39,7 +39,7 @@ const SceneList = () => import('@/components/App/SceneList')
 //const Active = () => import('@/components/App/active/active')
 const Vps = () => import('@/components/App/active/vps')
 /*const NewNodes_1 = () => import('@/components/App/active/newNodes_1')
-const NewNodes_2 = () => import('@/components/App/active/newNodes_2')*/
+ const NewNodes_2 = () => import('@/components/App/active/newNodes_2')*/
 //const active_1 = () => import('@/components/App/active/active_1')
 
 //const active_2 = () => import('@/components/App/active/active_2')
@@ -54,6 +54,9 @@ const FrActive = () => import('@/components/App/active/freeReceive')
 const DBActive = () => import('@/components/App/active/DatabaseActive')
 
 const EastSouthNode = () => import('@/components/App/active/EastSouthNode')
+
+//域名页面路由
+const Domainname = () => import('@/components/App/Domain/Domainname')
 
 
 // 备案系统页面路由
@@ -272,7 +275,7 @@ var router = new Router({
         //{path: 'active', name: 'active', component: Active},
         {path: 'vps', name: 'vps', component: Vps},
         /*{path: 'newNodes_1', name: 'newNodes_1', component: NewNodes_1},
-        {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},*/
+         {path: 'newNodes_2', name: 'newNodes', component: NewNodes_2},*/
         //{path: 'active_1', name: 'active_1', component: active_1},
         {path: 'entrance', name: 'entrance', component: Entrance},
         //{path: 'active_2', name: 'active_2', component: active_2},
@@ -285,6 +288,9 @@ var router = new Router({
         {path: 'EastSouthNode', name: 'EastSouthNode', component: EastSouthNode},
         {path: 'SceneInfo/:type', name: 'SceneInfo', component: SceneInfo},
         {path: 'SceneList', name: 'SceneList', component: SceneList},
+
+        {path: 'Domainname', name: 'Domainname', component: Domainname},
+
 
         {path: 'Pecs', component: Pecs},
         {path: 'Phost', component: Phost},
@@ -384,8 +390,8 @@ var router = new Router({
 router.beforeEach((to, from, next) => {
   window.scrollTo(0, 0)
   if (to.matched.some(route => {
-    return route.meta.requiresAuth
-  })) {
+      return route.meta.requiresAuth
+    })) {
     if (!localStorage.getItem('authToken')) {
       next({
         path: '/ruicloud/login'

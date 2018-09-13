@@ -312,11 +312,11 @@
                 prod: '云计算',
                 prodItem: [
                   {title: '弹性云服务器（ECS）', desc: '通用型、内存优化型、高IO型', path: '/ruicloud/Pecs'},
+                  {title: 'GPU服务器', desc: 'Tesla P100、Tesla P40 GPU', path: '/ruicloud/Pgpu'},
                   {title: '镜像服务', desc: '公共镜像、功能镜像、自定义镜像', path: '/ruicloud/Phost'},
                   {title: 'ECS快照', desc: '稳定可靠、安全保障', path: '/ruicloud/Pecss'},
                   {title: '裸金属服务器（敬请期待）', desc: '专属物理服务器', path: ''},
                   {title: '弹性伸缩（敬请期待）', desc: '高可用、可视化、低成本', path: ''},
-                  {title: 'GPU服务器', desc: 'Tesla P100 GPU、Tesla P40 GPU', path: '/ruicloud/Pgpu'}
                 ]
               },
               {
