@@ -87,7 +87,7 @@
 
       </my-carousel>
     </div>
-    <!-- 功能介绍区域 -->
+      <!-- 功能介绍区域 -->
     <div class="box-container">
       <div class="container">
         <div v-for="(item,index) in boxContainer" :key="index" class="container-item">
@@ -95,6 +95,43 @@
           <div>
             <p>{{item.title}}</p>
             <span>{{item.desc}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+     <!-- 八大场景区 -->
+    <div class="eigth-scene" :style="{background:'url('+selectedEightBg+')',backgroundRepeat:'no-repeat'}">
+      <div class="wrap">
+        <div class="box">
+          <div class="hint">
+            <span>免费使用一年</span>
+          </div>
+          <div class="container">
+            <div class="left-menu">
+              <ul>
+                <li v-for="(item,index) in eigthSceneMenu" :key="index" @click="eightsceneIndex = index" :class="{selected:eightsceneIndex == index}">{{item.name}}</li>
+              </ul>
+            </div>
+            <div class="content" v-for="(item,index) in selectedEightscene" :key="index">
+                <h3>{{item.title}}</h3>
+                <div class="scene"> 
+                  <p class="title">应用场景</p>
+                  <div>
+                    <p>{{item.scene}}</p>
+                    <Button type="primary" style="background:#377DFF;height:38px;width:124px;text-align:center;font-size:14px;" @click="$router.push(item.link)">了解更多</Button>
+                  </div>
+                </div>
+                <div class="software">
+                  <p class="title">支持软件</p>
+                  <img v-for="(item1,index) in item.software" :key="index" :src="item1" style="margin-right:28px;"/>
+                </div>
+                <div class="configure">
+                  <p class="title">推荐配置</p>
+                  <div>
+                    <span v-for="(item2,index) in item.configure" :key="index">{{item2}}</span>
+                  </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -191,7 +228,7 @@
       </div>
     </div>
     <!-- 满足严苛要求的卓越品质 -->
-    <div class="feature-container" id="fade" ref="fade">
+    <!-- <div class="feature-container" id="fade" ref="fade">
       <div class="container">
         <div class="feature-desc">
           <p class="title" @click="fade=!fade">满足严苛品质要求</p>
@@ -216,7 +253,7 @@
           </div>
         </transition>
       </div>
-    </div>
+    </div> -->
     <!-- 图形化控制台 -->
     <!-- <div class="console-container" ref="consoleFade">
       <div class="container">
@@ -258,7 +295,7 @@
             <div class="img-wrap"  @mouseenter="requireEnter(index)" @mouseleave="requireLeave(index)">
               <span>
                 <img :src="item.img" alt="1" v-if="!item.isShow">
-                <img :src="item.img" alt="2" v-else>
+                <img :src="item.imgHover" alt="2" v-else>
               </span>
             </div>
             <span>{{item.desc}}</span>
@@ -321,6 +358,7 @@
         <div class="link-list wrap">
           <dl v-for="(item,index) in linkList" :key="index">
             <dt>{{item.typename}}
+              <span>{{item.EnglishName.toUpperCase()}}</span>
               <router-link :to="`article/${item.id}`">More></router-link>
             </dt>
             <dd>
@@ -329,7 +367,8 @@
                   <router-link :to="`article/${secitem.code}.html`" target="_blank">
                     <div>
                       <span class="title">{{secitem.title}}</span>
-                      <i>HOT</i>
+                      <i v-if="secitem.isHot">HOT</i>
+                      <i v-if="secitem.isNew" style="background:#4B97EE">NEW</i>
                     </div>
                     <span>{{secitem.createtime.split(' ')[0]}}</span>
                   </router-link>
@@ -345,9 +384,9 @@
       <div>
         <transition name="partner">
           <div v-if="partnerFade">
-            <div class="container">
-              <h1>合作伙伴</h1>
-              <p>行业领先的生态合作伙伴，售前覆盖各省市地区，提供本地化咨询、销售、服务、安全等一体化企业级解决方案。</p>
+            <div class="header-g">
+              <p class="title">合作伙伴</p>
+              <p class="desc">行业领先的生态合作伙伴，售前覆盖各省市地区，提供本地化咨询、销售、服务、安全等一体化企业级解决方案。</p>
             </div>
             <div class="partner">
               <div v-for="(partner,index) in partners" :key="index">
@@ -411,6 +450,39 @@
         consoleFade: true,
         partnerFade: true,
         authorityFade: true,
+        eightsceneIndex: 0,
+        eigthSceneMenu: [
+          {name: '云电脑', link: 'host'},
+          {name: '自助建站', link: 'web'},
+          {name: '个人网盘', link: 'disk'},
+          {name: '软件研发', link: 'software'},
+          {name: '云游戏服务', link: 'game'},
+          {name: '图形设计', link: 'design'},
+          {name: '人工智能', link: 'AI'},
+          {name: '超级运算', link: 'supercomputing'}
+        ],
+        eigthSceneContent: [
+          {
+            title: '云电脑',
+            scene: '云电脑是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。云电脑可按需申请轻松使用，云电脑助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。借助新睿云，无论您使用何种终端设备，云电脑都可以让您拥有完整的高性能PC使用体验。云电脑为您提供持续、安全、稳定、高性价比的BYOD模式云端计算服务。',
+            software: [
+              require('../../assets/img/home/eightscene-host/software-1.png'),
+              require('../../assets/img/home/eightscene-host/software-2.png'),
+              require('../../assets/img/home/eightscene-host/software-3.png'),
+              require('../../assets/img/home/eightscene-host/software-4.png')
+            ],
+            configure: ['1核1G1M带宽'],
+            link: 'host',
+            bgUrl: require('../../assets/img/home/eightscene-host/bg.png')
+          },
+          {
+            title: '自助建站',
+            scene: '云电脑是由新睿云所提供的云上虚拟Windows桌面服务，为用户提供随时随地高效接入PC的便利。云电脑可按需申请轻松使用，云电脑助您打造更精简、更安全、更低维护成本、更高服务效率的个人PC使用系统。借助新睿云，无论您使用何种终端设备，云电脑都可以让您拥有完整的高性能PC使用体验。云电脑为您提供持续、安全、稳定、高性价比的BYOD模式云端计算服务。',
+            software: [],
+            configure: ['1核1G1M带宽'],
+            link: 'web'
+          }
+        ],
         bannerText: require('../../assets/img/home/active3Text.png'),
         bannerImages: [
           require('../../assets/img/active/quest-banner.png'),
@@ -707,67 +779,70 @@
         requireData: [
           {
             title: '更强大',
-            img: require('../../assets/img/home/require-svg-1.gif'),
+            img: require('../../assets/img/home/require-svg-1.png'),
+            imgHover: require('../../assets/img/home/require-svg-1-2.gif'),
             desc: '新增加GPU云服务器，单精度计算能力相较于CPU服务器提升300%。从容应对深度学习与HPC超算，释放计算价值。'
           },
           {
             title: '更稳定',
-            img: require('../../assets/img/home/require-svg-2.gif'),
+            img: require('../../assets/img/home/require-svg-2.png'),
+            imgHover: require('../../assets/img/home/require-svg-2-2.gif'),
             desc: '五星级IDC机房标准，7X24多渠道服务于支持，百倍故障时长赔付。全方位为您的产品与资源保驾护航。'
           },
           {
             title: '更便宜',
-            img: require('../../assets/img/home/require-svg-3.gif'),
+            img: require('../../assets/img/home/require-svg-3.png'),
+            imgHover: require('../../assets/img/home/require-svg-3-2.gif'),
             desc: '对比自建服务器集群，使用云服务能够显著降低企业运营成本，并提升部署与响应速度，全面提升企业IT资源效率。使企业专注于创造力。'
           }
         ],
         datacenterData: [
           {
             text: '北京',
-            top: '290px',
+            top: '286px',
+            left: '380px',
+            online: true
+          },
+          {
+            text: '重庆', 
+            top: '344px',
             left: '330px',
             online: true
           },
           {
-            text: '重庆',
-            top: '350px',
-            left: '300px',
-            online: true
-          },
-          {
             text: '武汉',
-            top: '328px',
-            left: '334px',
+            top: '318px',
+            left: '362px',
             online: true
           },
            {
             text: '沈阳',
-            top: '290px',
-            left: '380px',
+            top: '280px',
+            left: '438px',
             online: true
           },
           {
             text: '浙江',
             top: '320px',
-            left: '400px',
+            left: '436px',
             online: true
           },
           {
             text: '广州',
-            top: '390px',
-            left: '350px',
+            top: '370px',
+            left: '360px',
             online: true
           },
           {
             text: '洛杉矶',
-            top: '270px',
-            left: '900px',
+            top: '236px',
+            left: '860px',
             online: false
           },
           {
             text: '香港',
-            top: '380px',
-            left: '400px',
+            top: '368px',
+            left: '420px',
             online: false
           }
         ]
@@ -923,6 +998,14 @@
         this.activeBanner = activeIndex + 1
       }
     },
+    computed: {
+      selectedEightscene() {
+        return new Array(this.eigthSceneContent[this.eightsceneIndex])
+      },
+      selectedEightBg() {
+        return this.eigthSceneContent[this.eightsceneIndex].bgUrl
+      }
+    },
     beforeRouteLeave(to, from, next) {
       window.removeEventListener('scroll', this.scrollFn)
       next()
@@ -939,6 +1022,7 @@
     }
     .header-g {
       text-align: center;
+      margin-top: 80px;
       margin-bottom: 40px;
       .title {
         font-size: 28px;
@@ -954,6 +1038,113 @@
     .flex-g {
       display: flex;
       justify-content: space-between;
+    }
+    .eigth-scene {
+      // background: url(../../assets/img/home/eightscene-host/bg.png) no-repeat;
+      .wrap {
+        height:666px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .box {
+          position: relative;
+          height:586px;
+          width: 1120px;
+          background:rgba(255,255,255,1);
+          .container{
+            display: flex;
+          }
+          .hint {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 126px;
+            width: 126px;
+            background: url("../../assets/img/home/free-hint.png") no-repeat center;
+            span {
+              display: block;
+              font-size:18px;
+              font-family:PingFangSC-Semibold;
+              font-weight:600;
+              color:rgba(255,255,255,1);
+              transform: rotate(45deg);
+              transform-origin: 10% 300%;
+            }
+          }
+          .left-menu{
+            width: 200px;
+            border-right: solid 1px #E6E6E6; 
+            padding: 20px 0;ul {
+              li {
+                width:200px;
+                height:68px;
+                line-height: 68px;
+                font-size:22px;
+                font-family:PingFangSC-Semibold;
+                font-weight:400;
+                color: #333333;
+                cursor: pointer;
+                text-align: center;
+                &:hover,&.selected {
+                  background:linear-gradient(270deg,rgba(170,202,255,1) 0%,rgba(138,189,253,0) 100%);
+                  font-weight:600;
+                  color: #377DFF;
+                  border-right: #387DFF 6px solid; 
+                }
+              }
+            }
+          }
+          .content {
+            padding: 40px 100px 40px 80px;
+            > h3 {
+              padding-bottom: 20px; 
+              font-size:24px;
+              font-family:PingFangSC-Medium;
+              font-weight:500;
+              color:rgba(51,51,51,1);
+              line-height:24px;
+              border-bottom: dashed 1px #C2C2C2;
+            }
+            .title {
+              padding: 16px 0 18px 0;
+              font-size:18px;
+              font-family:PingFangSC-Medium;
+              font-weight:500;
+              color:rgba(74,74,74,1);
+            }
+            .scene {
+              margin-bottom: 24px;
+              div {
+                p {
+                  margin-bottom: 20px;
+                  font-size:14px;
+                  font-family:PingFangSC-Regular;
+                  font-weight:400;
+                  color:rgba(102,102,102,1);
+                  line-height:28px;
+                }
+              }
+            }
+            .software {
+              margin-bottom: 24px;
+            }
+            .configure {
+              span {
+                margin-right: 10px;
+                display: inline-block;
+                width:151px;
+                height:38px;
+                line-height: 38px;
+                text-align: center;
+                background:rgba(255,255,255,0.1);
+                border-radius:4px;
+                border:1px solid rgba(204,204,204,1);
+                color:rgba(136,136,136,1);
+              }
+            }
+          }
+        }
+      }
     }
     .register {
       height:188px;
@@ -997,7 +1188,7 @@
         position: relative;
         > span {
           position: absolute;
-          padding: 0 6px;
+          padding: 4px 8px;
           border: solid #fff 1px;
           border-radius:4px;
           font-size:14px;
@@ -1078,9 +1269,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            // img {
-            //   flex-shrink: 0;
-            // }
           }
           span {
             font-size:14px;
@@ -1095,8 +1283,8 @@
         position: relative;
         &::before {
           position: absolute;
-          top: 0;
-          left: -100px;
+          top: -20px;
+          left: -90px;
           content: url('../../assets/img/home/quotation.png');
           display: block;
         }
@@ -1105,18 +1293,19 @@
         padding-top: 60px;
       }
       .main {
-        margin-top: 60px;
+        position: relative;
+        z-index: 5;
         display: flex;
         justify-content: space-between;
-        box-shadow: 0px 13px 44px -16px rgba(216, 216, 216, 0.79);
+        // box-shadow: 0px 13px 44px -16px rgba(216, 216, 216, 0.79);
+        box-shadow:0px 2px 35px -17px rgba(0,0,0,0.19);
         .main-left {
-          margin-left: 20px; 
-          padding: 40px 60px;
+          padding: 40px 60px 40px 80px;
           position: relative;
           &::before {
             position: absolute;
             top: 30px;
-            left: -20px;
+            left: 20px;
             content: url('../../assets/img/home/bg-news.png');
             display: block;
           }
@@ -1187,7 +1376,6 @@
       }
       .link-list {
         margin-top: 60px;
-        margin-bottom: 40px;
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
@@ -1203,12 +1391,10 @@
             background: #7E7F80;
             background: url('../../assets/img/home/news-linklist-bg.png') no-repeat;
             position: relative;
-            &::before {
+            span {
               position: absolute;
-              // top: 30px;
-              // left: -20px;
-              content: 'information';
-              display: block;
+              top:24px;
+              left: 20px;
               font-size:20px;
               font-family:Arial-Black;
               font-weight:900;
@@ -1304,6 +1490,7 @@
       width: 100%;
       margin-bottom: 10px;
       .container {
+        padding: 10px 0 ;
         width: 1200px;
         margin: 0px auto;
         height: 120px;
@@ -1311,11 +1498,11 @@
         justify-content: space-between;
         .container-item {
           width: 20%;
-          padding: 40px 22px;
+          padding: 30px 22px;
           display: flex;
-          border-right: 1px solid #ffffff;
-          &:first-of-type {
-            border-left: 1px solid #ffffff;
+          border-right: 1px solid #CBCBCB;
+          &:last-of-type {
+            border-right: 1px solid #ffffff;
           }
           &:hover {
             color: #387DFF;
@@ -1400,7 +1587,7 @@
     }
     > .cloud-content {
       width: 100%;
-      height: 600px;
+      height: 540px;
       background-color: #f9f9f9;
       .container {
         position: relative;
@@ -1720,48 +1907,15 @@
         width: 1200px;
         margin: 0px auto;
         position: relative;
-        height: 600px;
+        height: 540px;
         > div {
           position: absolute;
           top: 0px;
         }
       }
-      .container {
-        background-color: #f9f9f9;
-        padding: 80px 0px 25px;
-        text-align: center;
-        > h1 {
-          font-size: 28px;
-          color: #333333;
-          font-weight: normal;
-        }
-        > p {
-          font-size: 14px;
-          color: #999999;
-          margin-top: 27px;
-        }
-        > span {
-          font-size: 14px;
-          color: #999999;
-          margin-bottom: 50px;
-          display: inline-block;
-        }
-        ul {
-          display: flex;
-          justify-content: space-between;
-          li {
-            font-size: 14px;
-            color: #999999;
-            img {
-              vertical-align: middle;
-            }
-          }
-        }
-      }
       .partner {
         width: 1200px;
         margin: 0px auto;
-        padding: 40px 0px 80px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -1776,9 +1930,10 @@
           display: flex;
           align-items: center;
           justify-content: center;
-        }
-        img {
-          // height: 100%;
+          &:hover {
+            box-shadow:0px 0px 42px -16px rgba(184,184,184,0.72);
+            border:1px solid rgba(56,125,255,1);
+          }
         }
       }
     }
