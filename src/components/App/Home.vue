@@ -5,6 +5,24 @@
       <my-carousel :interval=5000 class="carousel" @on-change="change">
 
         <my-carousel-item class="carousel-item">
+          <div class="eightscene" @click="push('/ruicloud/sceneList')">
+            <div class="wrap">
+              <div class="left">
+                <img src="../../assets/img/home/eightscene-text.png" alt="">
+                <Button @click.stop="$router.push('sceneList')">立即使用</Button>
+              </div>
+              <div class="right">
+                <p>现在注册</p>
+                <p>即可体验 <span>免费套餐</span></p>
+                <p>多款云主机</p>
+                <p @click.stop="$router.push('fractive')">免费领取</p>
+                <Button type="primary" long @click.stop="$router.push('register')">注册新账号</Button>
+              </div>
+            </div>
+          </div>
+        </my-carousel-item>
+
+        <my-carousel-item class="carousel-item">
           <div class="east-banner" @click="push('/ruicloud/EastSouthNode')">
             <div class="wrap">
               <div class="text">
@@ -2436,6 +2454,70 @@
         &:hover {
           color: #ff624b;
           border: 1px solid #ff624b;
+        }
+      }
+    }
+  }
+  .eightscene{
+    height: 400px;
+    overflow: hidden;
+    background: url("../../assets/img/home/eightscene-banner.png") no-repeat;
+    .wrap {
+      display: flex;
+      justify-content: space-between;
+      width: 1200px;
+      .left {
+        padding-top: 86px;
+        button {
+          width:164px;
+          height:44px;
+          display: block;
+          background: none;
+          outline: none;
+          cursor: pointer;
+          padding: 8px 50px;
+          margin-top: 30px;
+          border-radius: 4px;
+          border: 1px solid #fff;
+          font-size: 16px;
+          font-family: "Microsoft YaHei", "微软雅黑";
+          color: #fff;
+          &:hover {
+            color: #387DFF;
+            border: 1px solid #387DFF;
+          }
+        }
+      }
+      .right {
+        margin-top: 64px;
+        padding: 40px;
+        width:300px;
+        height:266px;
+        background:rgba(255,255,255,1);
+        box-shadow:0px 2px 41px -15px rgba(47,124,253,0.47);
+        border-radius:4px;
+        p {
+          font-size: 18px;
+          padding-bottom: 10px;
+          span {
+            text-decoration: underline;
+          }
+          &:nth-of-type(3) {
+            font-size: 24px;
+            padding: 10px 0 20px 0;
+          }
+          &:last-of-type {
+            color: #4A97EE;
+            padding-bottom: 20px; 
+            cursor: pointer;
+          }
+        }
+        button {
+          width:220px;
+          height:38px;
+          background:rgba(56,125,255,1);
+          border-radius:4px;
+          font-size:14px;
         }
       }
     }
