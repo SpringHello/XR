@@ -58,8 +58,11 @@
           <div class="input-box">
             <img src="./img/LR-vailcode.png">
             <input v-model="registerForm.vailCode" type="vailCode" placeHolder="请输入验证码">
-            <img class="kap-img" :src="imgSrc"
-                 @click="imgSrc=`/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            <div class="kap-img-right">
+              <p></p>
+              <img class="kap-img" :src="imgSrc"
+                   @click="imgSrc=`/ruicloud/user/getKaptchaImage.do?t=${new Date().getTime()}`">
+            </div>
           </div>
           <div class="input-box">
             <img src="./img/LR-vailcode.png">
@@ -70,16 +73,16 @@
           </div>
           <div class="input-box">
             <img src="./img/LR-password.png">
-            <input v-model="registerForm.password" type="password" placeHolder="请输入至少8位包含大小写字母与数字的密码">
+            <input v-model="registerForm.password" type="password" placeHolder="请输入至少8位含大小写字母与数字的密码">
           </div>
           <div class="input-box">
             <img src="./img/LR-password.png">
             <input v-model="registerForm.passwordConfirm" type="password" placeHolder="请确认密码">
           </div>
-          <Checkbox v-model="single" style="margin-right:0px;">我已阅读并同意</Checkbox>
+          <Checkbox v-model="single" style="margin-right:0px;"> 我已阅读并同意</Checkbox>
           <span style="color:#4A97EE;cursor:pointer" @click="showProtocol">《新睿云用户使用协议》</span>
         </div>
-        <button @click="register">注册</button>
+        <button @click="register">立即注册</button>
         <div class="prompt-box">
           <span @click="T='login'">立即登录</span>
         </div>
@@ -499,6 +502,7 @@
       },
       hiddenProtocol(){
         this.T = 'register'
+        this.single = true
       },
       close(){
         window.document.body.removeChild(this.$el)
@@ -527,7 +531,9 @@
     form {
       padding: 40px 40px 80px;
       position: relative;
-      background-color: #fff;
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0px 4px 18px -4px rgba(197, 197, 197, 0.5);
+      border-radius: 4px;
       .wrapper {
         h1 {
           font-size: 18px;
@@ -617,21 +623,45 @@
             height: 46px;
             display: flex;
             align-items: center;
+            box-sizing: border-box;
+            padding-right: 10px;
             img {
               margin: 0px 20px;
             }
             input {
-              width: 100%;
+              width: 70%;
               height: 100%;
               border: none;
               outline: none;
             }
-            .kap-img {
-              margin: 0px;
-              width: 80px;
+            .kap-img-right {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              p {
+                width: 1px;
+                height: 28px;
+                border: 1px solid rgba(200, 200, 200, 1);
+                margin-right: 20px;
+              }
+              .kap-img {
+                margin: 0px;
+                width: 80px;
+              }
             }
           }
           .swap {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            &:before {
+              content: '';
+              display: block;
+              width: 1px;
+              height: 28px;
+              border: 1px solid rgba(200, 200, 200, 1);
+              margin-right: 20px;
+            }
             width: 100px;
             p {
               text-align: center;

@@ -185,7 +185,7 @@ import axios from  'axios'
             gpuServer:'1'
           }
         }).then(res => {
-          vm.$store.state.zone.zoneId = res.data.result[0].zoneid;
+          vm.$store.state.zone.zoneid = res.data.result[0].zoneid;
           vm.$store.state.zone.zonename = res.data.result[0].zonename;
         })
       })
@@ -193,7 +193,7 @@ import axios from  'axios'
     beforeRouteLeave(){
       axios.get('information/zone.do',{
       }).then(res => {
-        this.$store.state.zone.zoneId = res.data.result[0].zoneid;
+        this.$store.state.zone.zoneid = res.data.result[0].zoneid;
         this.$store.state.zone.zonename = res.data.result[0].zonename;
       })
     },
@@ -223,7 +223,7 @@ import axios from  'axios'
       upGpuConfig(){
        axios.get('gpuserver/UpGPUConfigCost.do',{
           params:{
-            zoneId:this.$store.state.zone.zoneId,
+            zoneId:this.$store.state.zone.zoneid,
             cpunum:this.cpuList[this.cpuIndex].CPU,
             memory:this.memoryList[this.memoryIndex].memory,
             GPUId:sessionStorage.getItem('gouId')

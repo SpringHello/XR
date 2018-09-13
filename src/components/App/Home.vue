@@ -218,7 +218,7 @@
       </div>
     </div>
     <!-- 图形化控制台 -->
-    <div class="console-container" ref="consoleFade">
+    <!-- <div class="console-container" ref="consoleFade">
       <div class="container">
         <transition name="consoleFade">
           <div v-show="consoleFade">
@@ -234,7 +234,7 @@
           <my-carousel :interval=10000 class="carousel" @on-change="carChange" :dots="false">
             <my-carousel-item class="carousel-item" v-for="(area,index) in areaInfo" style="padding:50px 100px"
                               :key="index">
-              <div style="color:black;display: flex;align-items: center;justify-content: space-between">
+              <div style="color:black;display:flex;align-items: center;justify-content: space-between">
                 <img :src="area.icon" style="vertical-align: middle">
                 <p style="font-size: 14px;color:#999999;line-height: 20px;width:500px;border-right: 1px solid #d8d8d8;
     padding-right: 40px;">
@@ -245,13 +245,61 @@
           </my-carousel>
         </div>
       </div>
+    </div> -->
+    <div class="require">
+      <div class="wrap">
+        <div class="header-g">
+          <p class="title">满足严苛品质要求</p>
+          <span class="desc">结合多重实时数据保护与高额度网络攻击防护，为用户交付优质云计算资源。</span>
+        </div>
+        <div class="main flex-g">
+          <div v-for="(item,index) in requireData" :key="index" >
+            <p>{{item.title}}</p>
+            <div class="img-wrap"  @mouseenter="requireEnter(index)" @mouseleave="requireLeave(index)">
+              <span>
+                <img :src="item.img" alt="1" v-if="!item.isShow">
+                <img :src="item.img" alt="2" v-else>
+              </span>
+            </div>
+            <span>{{item.desc}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="datacenter">
+      <div class="wrap">
+        <div class="header-g">
+          <p class="title">云计算数据中心</p>
+          <span class="desc">专业的数据中心，为您带来高水准的优质服务及流畅体验，五星级数据中心，与各骨干网络互联互通。</span>
+        </div>
+        <div class="main">
+          <span v-for="(item,index) in datacenterData" :key="index" :style="{top:item.top,left:item.left}" :class="{online: item.online}">
+            {{item.text}}
+          </span>
+          <div class="mark">
+            <span><i></i>即将上线数据中心</span>
+            <span><i></i>已有数据中心</span>
+          </div>
+        </div>
+        <div class="bottom-log">
+          <ul>
+            <li v-for="(item,index) in authorityContainer" :key="index" @mouseenter="datacenterEnter(index)" @mouseleave="datacenterLeave(index)" :class="{bluetext: item.isShow}">
+              <span class="img-wrap">
+                <img :src="item.img" v-if="!item.isShow">
+                <img :src="item.imgHover" v-else>
+              </span>
+              <span>{{item.title}}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
     <!-- 新睿云最新动态 -->
     <div class="news">
       <div class="wrap">
-        <div class="header">
-          <p class="title-g">新睿云最新动态</p>
-          <p class="text-desc-g">为您提供行业资讯、活动公告、产品发布、以及汇聚前沿的云计算技术</p>
+        <div class="header-g">
+          <p class="title">新睿云最新动态</p>
+          <p class="desc">为您提供行业资讯、活动公告、产品发布、以及汇聚前沿的云计算技术</p>
         </div>
         <div class="main">
           <div class="main-left">
@@ -279,8 +327,11 @@
               <ul>
                 <li v-for="(secitem,i) in item.artile" :key="i">
                   <router-link :to="`article/${secitem.code}.html`" target="_blank">
-                    <span class="title">{{secitem.title}}</span>
-                    <span>{{secitem.createtime}}</span>
+                    <div>
+                      <span class="title">{{secitem.title}}</span>
+                      <i>HOT</i>
+                    </div>
+                    <span>{{secitem.createtime.split(' ')[0]}}</span>
                   </router-link>
                 </li>
               </ul>
@@ -299,8 +350,8 @@
               <p>行业领先的生态合作伙伴，售前覆盖各省市地区，提供本地化咨询、销售、服务、安全等一体化企业级解决方案。</p>
             </div>
             <div class="partner">
-              <div v-for="(partner,index) in partners" :key="index" style="width:25%;position:relative;height:100px;">
-                <img :src="partner" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)">
+              <div v-for="(partner,index) in partners" :key="index">
+                <img :src="partner">
               </div>
             </div>
           </div>
@@ -308,7 +359,7 @@
       </div>
     </div>
     <!-- 权威认证 -->
-    <div class="authority-container" ref="authorityFade">
+    <!-- <div class="authority-container" ref="authorityFade">
       <div class="container">
         <transition name="authorityFade">
           <div v-if="authorityFade">
@@ -323,6 +374,10 @@
           </div>
         </transition>
       </div>
+    </div> -->
+    <div class="register">
+      <p>为您提供出众的上云实践机会和全面的尊贵服务</p>
+      <span @click="$router.push('register')">立即注册</span>
     </div>
   </div>
 </template>
@@ -349,13 +404,13 @@
           fontSize: '62px'
         },
         // 云产品滚动效果
-        cloudContentFade: false,
+        cloudContentFade: true,
         // 严苛品质要求滚动效果
-        fade: false,
+        fade: true,
         // 地图滚动效果
-        consoleFade: false,
-        partnerFade: false,
-        authorityFade: false,
+        consoleFade: true,
+        partnerFade: true,
+        authorityFade: true,
         bannerText: require('../../assets/img/home/active3Text.png'),
         bannerImages: [
           require('../../assets/img/active/quest-banner.png'),
@@ -619,7 +674,7 @@
         partners: [
           require('../../assets/img/home/partner-dell.png'),
           require('../../assets/img/home/partner-huawei.png'),
-          require('../../assets/img/home/partner-cooce.png'),
+          require('../../assets/img/home/partner-brocade.png'),
           require('../../assets/img/home/partner-vmware.png'),
           require('../../assets/img/home/partner-sugon.png'),
           require('../../assets/img/home/partner-hitachi.png'),
@@ -628,11 +683,11 @@
         ],
         /* 权威认证 */
         authorityContainer: [
-          {title: '中国高新技术企业', img: require('../../assets/img/home/authority-1.png')},
-          {title: '中关村高新技术企业', img: require('../../assets/img/home/authority-2.png')},
-          {title: 'ISO27001企业认证', img: require('../../assets/img/home/authority-3.png')},
-          {title: 'ISO9001企业认证', img: require('../../assets/img/home/authority-4.png')},
-          {title: '华为云管理网络ISV', img: require('../../assets/img/home/authority-5.png')}
+          {title: '中国高新技术企业', img: require('../../assets/img/home/authority-1-1.png'), imgHover: require('../../assets/img/home/authority-1-2.png')},
+          {title: '中关村高新技术企业', img: require('../../assets/img/home/authority-2-1.png'), imgHover: require('../../assets/img/home/authority-2-2.png')},
+          {title: 'ISO27001企业认证', img: require('../../assets/img/home/authority-3-1.png'), imgHover: require('../../assets/img/home/authority-3-2.png')},
+          {title: 'ISO9001企业认证', img: require('../../assets/img/home/authority-4-1.png'), imgHover: require('../../assets/img/home/authority-4-2.png')},
+          {title: '华为云管理网络ISV', img: require('../../assets/img/home/authority-5-1.png'), imgHover: require('../../assets/img/home/authority-5-2.png')}
         ],
         /* 地区信息 */
         areaInfo: [
@@ -648,7 +703,74 @@
           }
         ],
         activeBanner: 1,
-        scrollFn: null
+        scrollFn: null,
+        requireData: [
+          {
+            title: '更强大',
+            img: require('../../assets/img/home/require-svg-1.gif'),
+            desc: '新增加GPU云服务器，单精度计算能力相较于CPU服务器提升300%。从容应对深度学习与HPC超算，释放计算价值。'
+          },
+          {
+            title: '更稳定',
+            img: require('../../assets/img/home/require-svg-2.gif'),
+            desc: '五星级IDC机房标准，7X24多渠道服务于支持，百倍故障时长赔付。全方位为您的产品与资源保驾护航。'
+          },
+          {
+            title: '更便宜',
+            img: require('../../assets/img/home/require-svg-3.gif'),
+            desc: '对比自建服务器集群，使用云服务能够显著降低企业运营成本，并提升部署与响应速度，全面提升企业IT资源效率。使企业专注于创造力。'
+          }
+        ],
+        datacenterData: [
+          {
+            text: '北京',
+            top: '290px',
+            left: '330px',
+            online: true
+          },
+          {
+            text: '重庆',
+            top: '350px',
+            left: '300px',
+            online: true
+          },
+          {
+            text: '武汉',
+            top: '328px',
+            left: '334px',
+            online: true
+          },
+           {
+            text: '沈阳',
+            top: '290px',
+            left: '380px',
+            online: true
+          },
+          {
+            text: '浙江',
+            top: '320px',
+            left: '400px',
+            online: true
+          },
+          {
+            text: '广州',
+            top: '390px',
+            left: '350px',
+            online: true
+          },
+          {
+            text: '洛杉矶',
+            top: '270px',
+            left: '900px',
+            online: false
+          },
+          {
+            text: '香港',
+            top: '380px',
+            left: '400px',
+            online: false
+          }
+        ]
       }
     },
     mounted() {
@@ -685,6 +807,34 @@
       this.getlinkList()
     },
     methods: {
+      datacenterEnter(selectedIndex) {
+        this.authorityContainer.forEach((item, index) => {
+          if (selectedIndex == index) {
+            this.$set(item, 'isShow', true);
+          }
+        })
+      },
+      datacenterLeave(selectedIndex) {
+        this.authorityContainer.forEach((item, index) => {
+          if (selectedIndex == index) {
+            this.$set(item, 'isShow', false);
+          }
+        })
+      },
+      requireEnter(selectedIndex) {
+        this.requireData.forEach((item, index) => {
+          if (selectedIndex == index) {
+            this.$set(item, 'isShow', true);
+          }
+        })
+      },
+      requireLeave(selectedIndex) {
+        this.requireData.forEach((item, index) => {
+          if (selectedIndex == index) {
+            this.$set(item, 'isShow', false);
+          }
+        })
+      },
       getnews() {
         axios.get('article/getTopArticle.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
@@ -782,37 +932,198 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   #home {
+    font-family:PingFangSC-Regular;
     .wrap {
       width: 1200px;
       margin: 0 auto;
     }
-    .title-g {
+    .header-g {
       text-align: center;
-      font-size: 28px;
-      color: #333333;
-      padding-bottom: 26px;
+      margin-bottom: 40px;
+      .title {
+        font-size: 28px;
+        color: #333333;
+        padding-bottom: 26px;
+      }
+      .desc {
+        text-align: center;
+        font-size: 14px;
+        color: #999999;
+      }
     }
-    .text-desc-g {
+    .flex-g {
+      display: flex;
+      justify-content: space-between;
+    }
+    .register {
+      height:188px;
+      background: url("../../assets/img/home/bg-ripple.png") no-repeat center;
       text-align: center;
-      font-size: 14px;
-      color: #999999;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-size:24px;
+      font-weight:500;
+      span {
+        margin-top: 40px;
+        display: inline-block;
+        width:173px;
+        height:46px;
+        font-size:18px;
+        line-height: 46px;
+        border-radius:4px;
+        border:1px solid rgba(255,255,255,1);
+      }
+    }
+    .datacenter {
+      margin-bottom: 100px;
+      height: 916px;
+      background: url('../../assets/img/home/datacenter-line.png') no-repeat 240px 20px,url('../../assets/img/home/datacenter-bg.png') no-repeat top center;
+      .header-g{
+        padding-top: 60px; 
+        margin-bottom: 10px;
+        .title {
+          color: #fff;
+        }
+        .desc {
+          color: #fff;
+        }
+      }
+      .main {
+        height: 702px;
+        background: url('../../assets/img/home/datacenter-map.png') no-repeat top center;
+        position: relative;
+        > span {
+          position: absolute;
+          padding: 0 6px;
+          border: solid #fff 1px;
+          border-radius:4px;
+          font-size:14px;
+          background: #FFD100;
+          color: #333;
+        }
+        .online {
+          background: #FF624B;
+          color: white;
+          
+        }
+        .mark {
+          position: absolute;
+          bottom: 0;
+          left: 450px;
+          width: 300px;
+          display: flex;
+          justify-content: space-between;
+          span {
+            color: #fff;
+            font-size:12px;
+            i {
+              display: inline-block;
+              width: 12px;
+              height: 12px;
+              border-radius: 50%; 
+              background: #FFD100;
+              margin-right: 5px;
+            }
+           &:nth-of-type(2) {
+             i {
+               background: #FF624B;
+             }
+            }
+          }
+        }
+      }
+      .bottom-log {
+        margin-top: 25px;
+        height:80px;
+        background: #fff;
+        box-shadow: 0px 13px 44px -16px rgba(216, 216, 216, 0.79);
+        border-radius:4px;
+        ul {
+          height: 80px;
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          li {
+            cursor: pointer;
+            .bluetext {
+              color: #387DFF;
+            }
+            img {
+              vertical-align: middle;
+              margin-right: 8px;
+            }
+          }
+        }
+      }
+    }
+    .require {
+      text-align: center;
+      margin-bottom: 80px;
+      .main { 
+        > div {
+          width: 300px;
+          p {
+            font-size:24px;
+            line-height:24px;
+            font-weight: 500;
+          }
+          .img-wrap{
+            margin: 0 auto;
+            margin-top: 20px;
+            width: 228px;
+            height: 228px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            // img {
+            //   flex-shrink: 0;
+            // }
+          }
+          span {
+            font-size:14px;
+            line-height:28px;
+          }
+        }
+      }
     }
     .news {
       margin-top: 40px;
+      >.wrap {
+        position: relative;
+        &::before {
+          position: absolute;
+          top: 0;
+          left: -100px;
+          content: url('../../assets/img/home/quotation.png');
+          display: block;
+        }
+      }
       .header {
         padding-top: 60px;
       }
       .main {
         margin-top: 60px;
         display: flex;
+        justify-content: space-between;
         box-shadow: 0px 13px 44px -16px rgba(216, 216, 216, 0.79);
         .main-left {
-          width: 670px;
+          margin-left: 20px; 
           padding: 40px 60px;
+          position: relative;
+          &::before {
+            position: absolute;
+            top: 30px;
+            left: -20px;
+            content: url('../../assets/img/home/bg-news.png');
+            display: block;
+          }
         }
         dl {
           dt {
-            height: 60px;;
+            height: 50px;;
             position: relative;
             color: #387DFF;
             font-size: 18px;
@@ -824,13 +1135,14 @@
               display: inline-block;
               width: 50px;
               height: 4px;
-              background: rgba(55, 125, 255, 1);
+              background: #FFD100;
             }
           }
           dd {
             font-size: 14px;
             color: rgba(102, 102, 102, 1);
             line-height: 28px;
+            width: 602px;
             a {
               width: 100px;
               height: 38px;
@@ -856,8 +1168,8 @@
           }
         }
         .main-right {
-          width: 533px;
-          height: 432px;
+          width:400px;
+          height:286px;
           overflow: hidden;
           background: rgba(231, 231, 231, 1);
           .news-img {
@@ -882,7 +1194,7 @@
         dl {
           background: rgba(255, 255, 255, 1);
           width: 386px;
-          height: 242px;
+          padding-bottom: 20px;
           overflow: hidden;
           box-shadow: 0px 13px 14px -6px rgba(216, 216, 216, 0.41);
           dt {
@@ -890,13 +1202,25 @@
             padding: 20px;
             background: #7E7F80;
             background: url('../../assets/img/home/news-linklist-bg.png') no-repeat;
+            position: relative;
+            &::before {
+              position: absolute;
+              // top: 30px;
+              // left: -20px;
+              content: 'information';
+              display: block;
+              font-size:20px;
+              font-family:Arial-Black;
+              font-weight:900;
+              color:#000;
+              opacity: .1;
+            }
             font-size: 18px;
             color: #fff;
             a {
               float: right;
               cursor: pointer;
               color: #fff;
-
               &:hover {
                 color: #377DFF;
               }
@@ -906,21 +1230,35 @@
             ul {
               li {
                 a {
-                  display: block;
-                  padding: 20px;
+                  display:flex;
+                  justify-content: space-between;
+                  height: 60px;
+                  align-items: center;
+                  padding: 0 20px;
                   font-size: 14px;
                   color: rgba(102, 102, 102, 1);
                   cursor: pointer;
+                  border-bottom: dashed 1px #CFCFCF; 
                   &:hover {
                     color: #377DFF;
                   }
                   .title {
                     display: inline-block;
-                    width: 204px;
+                    max-width: 204px;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
                   }
+                   i {
+                      display: inline-block;
+                      background: #FF624B;
+                      border-radius:10px 10px 10px 0px;
+                      padding: 2px 8px;
+                      font-style: normal;
+                      font-size: 12px;
+                      color: #fff;
+                      vertical-align: text-bottom;
+                    }
                 }
               }
             }
@@ -1382,7 +1720,7 @@
         width: 1200px;
         margin: 0px auto;
         position: relative;
-        height: 440px;
+        height: 600px;
         > div {
           position: absolute;
           top: 0px;
@@ -1428,6 +1766,17 @@
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
+        > div {
+          margin-bottom: 20px;
+          width:285px;
+          height:130px;
+          border-radius:4px;
+          border:1px solid rgba(207,207,207,1);
+          background: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
         img {
           // height: 100%;
         }
