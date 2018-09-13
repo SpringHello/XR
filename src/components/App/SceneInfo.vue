@@ -4,6 +4,8 @@
          :style="{ 'background-image': 'url(' + item.bannerImg + ')','background-repeat':'no-repeat','background-size':'cover' }">
       <div class="center">
         <div class="head">
+          <img src="../../assets/img/sceneInfo/free-hint.png"/>
+          <span>免费使用一年</span>
           <div class="title">
             <h3>{{ item.currentScene }}</h3>
           </div>
@@ -61,7 +63,7 @@
                 <div class="cf-footer">
                   <p><span>押金：</span>{{ cfg.currentPrice}}</p>
                   <p>原价：¥{{cfg.originalPrice}}</p>
-                  <Button type="primary" :disabled="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'" @click="getHost(index1)">立即使用</Button>
+                  <Button type="primary" :disabled="scene == '图形设计'|| scene == '人工智能'|| scene == '超级运算'" @click="getHost(currentIndex,index1)">免费使用</Button>
                 </div>
               </div>
             </div>
@@ -99,7 +101,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.inConformityModal = false">取消</Button>
-        <Button type="primary">联系客服</Button>
+        <Button type="primary" @click="$router.push('/ruicloud/ActiveCenter')">去活动中心</Button>
       </p>
     </Modal>
     <!-- 领取成功 -->
@@ -116,7 +118,7 @@
       </div>
       <p slot="footer" class="modal-footer-s">
         <Button @click="showModal.getSuccessModal = false">取消</Button>
-        <Button type="primary" @click="$router.push('host')">查看主机</Button>
+        <Button type="primary" @click="$router.push('/ruicloud/host')">查看主机</Button>
       </p>
     </Modal>
     <!-- 支付充值失败 -->
@@ -135,7 +137,7 @@
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary">再次支付</Button>
+        <Button type="primary" @click="showModal.payDefeatedModal = false,showModal.orderConfirmationModal = true">再次支付</Button>
       </div>
     </Modal>
     <!-- 支付充值成功 -->
@@ -155,7 +157,7 @@
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary">确认冻结</Button>
+        <Button type="primary" @click="getFreeHost">确认冻结</Button>
       </div>
     </Modal>
 
@@ -183,8 +185,8 @@
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button>已完成支付</Button>
-        <Button type="primary">更换支付方式</Button>
+        <Button @click="isPay">已完成支付</Button>
+        <Button type="primary" @click="showModal.weChatRechargeModal = false,showModal.orderConfirmationModal = true">更换支付方式</Button>
       </div>
     </Modal>
 
@@ -204,16 +206,16 @@
         <Table :columns="orderColumns" :data="orderData" style="margin-top: 30px"></Table>
         <div class="pay-wap">
           <p>选择支付方式</p>
-          <RadioGroup v-model="payWay" vertical>
+          <RadioGroup v-model="payWay" vertical @on-change="payWayChange">
             <Radio label="balancePay">
               <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 40px">余额支付</span>
               <span style="color:rgba(102,102,102,1);font-size: 14px">账户余额：</span>
               <span style="color:#D0021B;font-size: 14px">¥{{ balance }}</span>
             </Radio>
-            <Radio label="otherPay" class="pw-img">
+            <Radio label="otherPay" class="pw-img" :disabled="balance >= cashPledge">
               <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 25px">第三方支付</span>
-              <img src="../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="otherPayWay = 'zfb'">
-              <img src="../../assets/img/payresult/wxpay.png" :class="{selected: otherPayWay == 'wx'}" @click="otherPayWay = 'wx'">
+              <img src="../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="balance < cashPledge?otherPayWay = 'zfb':null">
+              <img src="../../assets/img/payresult/wxpay.png" :class="{selected: otherPayWay == 'wx'}" @click="balance < cashPledge?otherPayWay = 'wx':null">
             </Radio>
           </RadioGroup>
         </div>
@@ -268,7 +270,7 @@
         </div>
       </div>
       <div slot="footer" class="modal-footer-border">
-        <Button type="primary" >确认</Button>
+        <Button type="primary" @click="getHost_ok">确认</Button>
       </div>
     </Modal>
   </div>
@@ -276,6 +278,7 @@
 
 <script type="text/ecmascript-6">
   import axios from '../../util/axiosInterceptor'
+  import reg from '../../util/regExp'
   import VueQArt from 'vue-qart'
 
   export default {
@@ -330,7 +333,7 @@
           payDefeatedModal: false,
           paySuccessModal: false,
           weChatRechargeModal: false,
-          orderConfirmationModal: true
+          orderConfirmationModal: false
         },
         currentSceneGroup: [
           {
@@ -1754,6 +1757,10 @@
             bannerImg: require('../../assets/img/sceneInfo/si-banner8.png')
           },
         ],
+        // 标记当前场景信息
+        index1: '',
+        index2: '',
+        vmConfig: '',
         scene: '云电脑',
         sceneGroup: [
           {name: '云电脑', link: 'host'},
@@ -1777,9 +1784,9 @@
             value: 'windows'
           },],
         cashPledge: '--',
-        getTime: '',
+        time: '',
         config: {
-          value: '39',
+          value: '0',
           imagePath: require('../../assets/img/pay/payBackground.png'),
           filter: 'black',
           size: 500
@@ -1787,9 +1794,19 @@
         orderColumns: [
           {
             title: '产品类型',
+            key: 'productType'
           },
           {
             title: '资源',
+            width: 200,
+            render: (h, params) => {
+              let arr = []
+              params.row.configs.forEach(item => {
+                let params = h('li', {}, item.text + '： ' + item.value)
+                arr.push(params)
+              })
+              return h('ul', {}, arr)
+            }
           },
           {
             title: '计费类型',
@@ -1799,7 +1816,7 @@
           },
           {
             title: '购买时长',
-            key: 'getTime'
+            key: 'time'
           },
           {
             title: '押金金额',
@@ -1808,13 +1825,13 @@
                 style: {
                   color: '#D0021B'
                 }
-              }, params.cashPledge)
+              }, '¥' + params.row.cashPledge)
             }
           },
         ],
-        orderData: [{}],
+        orderData: [],
         payWay: 'balancePay',
-        otherPayWay: 'zfb',
+        otherPayWay: '',
         balance: '0.0',
         attestationShow: false,
         // 快速认证表单
@@ -1847,8 +1864,14 @@
             {required: true, message: '请输入验证码'}
           ]
         },
-        imgSrc: 'user/getKaptchaImage.do'
+        imgSrc: 'user/getKaptchaImage.do',
+        //定时器
+        pageTimer: null,
+        serialNum: ''
       }
+    },
+    created() {
+      this.getBalance()
     },
     methods: {
       init() {
@@ -1934,7 +1957,7 @@
           }
         })
       },
-      getHost(index) {
+      getHost(index1, index2) {
         if (this.areaGroup.length == 0) {
           this.$Message.info('请选择需要领取的区域')
           return
@@ -1943,9 +1966,210 @@
           this.$LR({type: 'login'})
           return
         }
+        this.index1 = index1
+        this.index2 = index2
+        this.cashPledge = this.currentSceneGroup[index1].configGroup[index2].currentPrice
+        this.time = this.currentSceneGroup[index1].configGroup[index2].title
+        this.showModal.rechargeHint = true
       },
       nextStep() {
-
+        if (!(this.scene == '图形设计' || this.scene == '人工智能' || this.scene == '超级运算')) {
+          // 判断新老用户
+          axios.get('activity/jdugeTeam.do', {
+            params: {sign: 'freeReceive'}
+          }).then(response => {
+            if (response.status == 200 && response.data.status == 1) {
+              if (response.data.result.flag) {
+                this.orderData = []
+                this.orderData.push({
+                  productType: '云服务器',
+                  configs: this.currentSceneGroup[this.index1].configGroup[this.index2].configs,
+                  time: this.time,
+                  cashPledge: Number(this.cashPledge)
+                })
+                this.showModal.rechargeHint = false
+                this.showModal.orderConfirmationModal = true
+              } else {
+                this.showModal.rechargeHint = false
+                this.showModal.inConformityModal = true
+              }
+            } else {
+              this.$message.info({
+                content: response.data.message
+              })
+            }
+          })
+        }
+      },
+      getHost_ok() {
+        if (this.payWay == 'balancePay') {
+          if (this.balance < this.cashPledge) {
+            this.$Message.info('可用余额不足')
+          } else {
+            this.showModal.orderConfirmationModal = false
+            this.getFreeHost()
+          }
+        } else {
+          switch (this.otherPayWay) {
+            case '':
+              this.$Message.info('请选择一个支付方式')
+              break
+            case 'zfb':
+              window.open(`zfb/alipayapi.do?total_fee=${this.cashPledge}`)
+              this.pageTimer = setInterval(() => {
+                axios.get('activity/compareForMoney.do', {
+                  params: {freezeMoney: this.cashPledge}
+                }).then(val => {
+                  if (val.data.status == 1) {
+                    this.showModal.orderConfirmationModal = false
+                    clearInterval(this.pageTimer)
+                    this.showModal.paySuccessModal = true
+                  }
+                })
+              }, 2000)
+              break
+            case 'wx':
+              clearInterval(this.pageTimer)
+              axios.get('wx/wxpayapi.do', {
+                params: {
+                  total_fee: this.cashPledge
+                }
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.serialNum = response.data.result.serialNum
+                  this.config.value = response.data.result.codeUrl
+                  this.showModal.orderConfirmationModal = false
+                  this.showModal.weChatRechargeModal = true
+                } else {
+                  this.$message.info({
+                    content: response.data.message
+                  })
+                }
+              })
+              break
+          }
+        }
+      },
+      getFreeHost() {
+        this.showModal.paySuccessModal = false
+        let vmConfigId = '', functionType = ''
+        switch (this.index1 + '' + this.index2) {
+          case '00':
+            functionType = '1'
+            vmConfigId = '45'
+            break
+          case '01':
+            functionType = '1'
+            vmConfigId = '46'
+            break
+          case '02':
+            functionType = '1'
+            vmConfigId = '47'
+            break
+          case '03':
+            functionType = '1'
+            vmConfigId = '48'
+            break
+          case '10':
+            functionType = '2'
+            vmConfigId = '45'
+            break
+          case '11':
+            functionType = '2'
+            vmConfigId = '46'
+            break
+          case '12':
+            functionType = '2'
+            vmConfigId = '47'
+            break
+          case '13':
+            functionType = '2'
+            vmConfigId = '48'
+            break
+          case '20':
+            functionType = '3'
+            vmConfigId = '45'
+            break
+          case '21':
+            functionType = '3'
+            vmConfigId = '46'
+            break
+          case '22':
+            functionType = '3'
+            vmConfigId = '47'
+            break
+          case '23':
+            functionType = '3'
+            vmConfigId = '48'
+            break
+          case '30':
+            functionType = '4'
+            vmConfigId = '45'
+            break
+          case '31':
+            functionType = '4'
+            vmConfigId = '46'
+            break
+          case '32':
+            functionType = '4'
+            vmConfigId = '47'
+            break
+          case '33':
+            functionType = '4'
+            vmConfigId = '48'
+            break
+          case '40':
+            functionType = '5'
+            vmConfigId = '45'
+            break
+          case '41':
+            functionType = '5'
+            vmConfigId = '46'
+            break
+          case '42':
+            functionType = '5'
+            vmConfigId = '47'
+            break
+          case '43':
+            functionType = '5'
+            vmConfigId = '48'
+            break
+        }
+        this.vmConfig = vmConfigId
+        let url = 'user/getRemainderFrozen.do'
+        let params = {
+          eachFrozenMoney: this.cashPledge,
+          describe: '领取主机',
+          operationType: '领取主机',
+          thawCondition: '删除主机',
+          vmConfig: this.vmConfig
+        }
+        axios.post(url, params).then(response => {
+          if (response.data.status == 1 && response.status == 200) {
+            let url = 'activity/getFreeHost.do'
+            axios.get(url, {
+              params: {
+                vmConfigId: vmConfigId,
+                osType: this.currentSceneGroup[this.index1].configGroup[this.index2].system,
+                defzoneid: this.currentSceneGroup[this.index1].configGroup[this.index2].zoneId,
+                templateFunction: '1',
+                functionType: functionType
+              }
+            }).then(res => {
+              if (res.status == 200 && res.data.status == 1) {
+                this.showModal.getSuccessModal = true
+              } else {
+                this.$message.info({
+                  content: res.data.message
+                })
+              }
+            })
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
       },
       // 快速认证时发送验证码
       sendCode() {
@@ -2005,11 +2229,44 @@
           }
         })
       },
+      // 获取余额
+      getBalance() {
+        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
+          if (response.status == 200 && response.data.status == '1') {
+            this.balance = Number(response.data.data.remainder)
+          }
+        })
+      },
+      isPay() {
+        axios.get('user/payStatus.do', {
+          params: {
+            serialNum: this.serialNum
+          }
+        }).then(response => {
+          this.showModal.weChatRechargeModal = false
+          if (response.status == 200 && response.data.status == 1) {
+            this.showModal.paySuccessModal = true
+          } else {
+            this.showModal.payDefeatedModal = true
+          }
+        })
+      },
+      payWayChange() {
+        if (this.payWay == 'otherPay' && this.otherPayWay == '') {
+          this.otherPayWay = 'zfb'
+        } else if (this.payWay == 'balancePay') {
+          this.otherPayWay = ''
+        }
+      }
     },
     computed: {
       authInfo() {
         return this.$store.state.authInfo ? this.$store.state.authInfo : null
       },
+    },
+    beforeRouteLeave(to, from, next) {
+      clearInterval(this.pageTimer)
+      next()
     }
   }
 </script>
@@ -2024,6 +2281,22 @@
       .head {
         padding: 35px 50px 30px;
         border-bottom: 1px solid rgba(217, 217, 217, 1);
+        position: relative;
+        > img {
+          position: absolute;
+          top: 0;
+          right: 0;
+        }
+        >span{
+          position: absolute;
+          top: 40px;
+          right: 0;
+          font-size:18px;
+          font-family:MicrosoftYaHei;
+          font-weight:600;
+          color:rgba(255,255,255,1);
+          transform: rotate(45deg);
+        }
         .title {
           display: flex;
           h3 {
@@ -2294,14 +2567,15 @@
     -ms-transform: rotate(-225deg);
     -webkit-transform: rotate(-225deg);
   }
-  .attestationForm{
+
+  .attestationForm {
     display: flex;
-    >p{
+    > p {
       padding-left: 20px;
-      font-size:14px;
-      font-family:MicrosoftYaHei;
-      font-weight:400;
-      color:rgba(102,102,102,1);
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      font-weight: 400;
+      color: rgba(102, 102, 102, 1);
     }
   }
 </style>
