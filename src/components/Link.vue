@@ -149,6 +149,7 @@
                 this.confirm = false
                 this.linkURL = response.data.url
                 this.baseURL = this.linkURL.split('#')[0]
+                window.frames[0].focus()
               } else {
                 this.loginForm.password = ''
                 this.$message.info({
@@ -227,7 +228,7 @@
         })
       },
       change(index){
-        if (index == '') {
+        if (index === '') {
           return
         }
         /*if (exec_obj === undefined) {*/
