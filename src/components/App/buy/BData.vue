@@ -95,7 +95,7 @@
                 <div>
                   <div v-for="item in RAMList" :key="item.value" class="zoneItem"
                        :class="{zoneSelect:vmConfig.RAM==item.value}"
-                       @click="vmConfig.RAM=item.value">{{item.name}}
+                       @click="changeRAM(item.value)">{{item.name}}
                   </div>
                 </div>
               </div>
@@ -510,6 +510,9 @@
           systemName: arg[0],
           systemId: arg[1]
         }
+        if (arg[0].startsWith('sqlserver') && this.vmConfig.RAM == 1) {
+          this.vmConfig.RAM = 2
+        }
         //登录名
         this.account = arg[3]
         //开放端口
@@ -521,6 +524,13 @@
         this.vmConfig.kernel = cpu.value
         /*this.RAMList = cpu.RAMList
          this.vmConfig.RAM = this.RAMList[0].value*/
+      },
+      changeRAM(ram){
+        if (this.system.systemName && this.system.systemName.startsWith('sqlserver') && ram == 1) {
+          this.$Message.info('sqlserver数据库内存不能低于2G')
+          return
+        }
+        this.vmConfig.RAM = ram
       },
       // 查询自定义主机价格
       queryCustomVM() {
@@ -779,7 +789,11 @@
               zone.kernelList.forEach(kernel => {
                 if (kernel.value == this.vmConfig.kernel) {
                   this.RAMList = kernel.RAMList
-                  this.vmConfig.RAM = this.RAMList[0].value
+                  if (this.system.systemName && this.system.systemName.startsWith('sqlserver') && this.RAMList[0].value == 1) {
+                    this.vmConfig.RAM = this.RAMList[1].value
+                  } else {
+                    this.vmConfig.RAM = this.RAMList[0].value
+                  }
                 }
               })
             }
