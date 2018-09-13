@@ -115,6 +115,7 @@
         width: 208px;
         height: 380px;
         border: 1px solid #d8d8d8;
+        margin-bottom:20px;
         &:hover {
           box-shadow:0px 0px 24px 0px rgba(0,0,0,0.2);
         }
