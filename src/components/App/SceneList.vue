@@ -16,6 +16,8 @@
       </div>
     </div>
     <div class="center">
+      <img class="img_1" src="../../assets/img/sceneList/sl-banner10.png"/>
+      <img class="img_2" src="../../assets/img/sceneList/sl-banner11.png"/>
       <h2>新睿云应用场景解决方案</h2>
       <div class="content-list">
         <div v-for="(item,index) in sceneList" class="scene" @click="$router.push('sceneInfo/' + item.link)">
@@ -251,6 +253,18 @@
   .center {
     padding: 80px 360px;
     background: #FFF;
+    position: relative;
+    > img {
+      position: absolute;
+      &.img_1 {
+        right: 0;
+        top: 0;
+      }
+      &.img_2 {
+        left: 0;
+        bottom: -350px;
+      }
+    }
     h2 {
       font-size: 36px;
       font-family: MicrosoftYaHei;
