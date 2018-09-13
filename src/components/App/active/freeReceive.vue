@@ -30,7 +30,7 @@
                 <p>原价：<span>¥{{ host.originalCost}}</span></p>
               </div>
               <div class="but">
-                <button @click="freeToReceive(configIndex,hostIndex)" :disabled="flag" :class="{disabled: flag}">免费领取
+                <button @click="getHost(configIndex,hostIndex)" :disabled="flag" :class="{disabled: flag}">免费领取
                 </button>
               </div>
             </div>
@@ -94,231 +94,207 @@
         <li @click="roll(0)">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</li>
       </ul>
     </div>
-    <!-- 登陆框 -->
-    <Modal v-model="loginModal" width="420" class="login-modal" :scrollable="true">
-      <p slot="header" style="color:#5F5F5F;text-align:center;height: 30px;padding-top: 5px;">
-        <span style="font-family: PingFangSC-Regular;font-size: 26px;">登录</span>
-      </p>
-      <div class="modal-body">
-        <form>
-          <div>
-            <span :class="{warning:vailForm.loginname.warning}">{{vailForm.loginname.message}}</span>
-            <input type="text" autocomplete="off" v-model="form.loginname" :placeholder="form.loginnamePlaceholder"
-                   @blur="vail('loginname')" @focus="focus('loginname')" @input="isCorrect('loginname')">
-          </div>
-          <div>
-            <span :class="{warning:vailForm.password.warning}">{{vailForm.password.message}}</span>
-            <input type="text" autocomplete="off" v-model="form.password" :placeholder="form.passwordPlaceholder"
-                   @blur="vail('password')" @focus="focus('password')" @input="isCorrect('password')"
-                   v-on:keyup.enter="submit" onfocus="this.type='password'">
-          </div>
-          <div style="position:relative">
-            <span>{{vailForm.vailCode.message}}</span>
-            <input type="text" autocomplete="off" v-model="form.vailCode" name="vailCode"
-                   :placeholder="form.vailCodePlaceholder" @blur="vail('vailCode')" @focus="focus('vailCode')"
-                   @input="isCorrect('vailCode')" v-on:keyup.enter="submit">
-            <img :src="imgSrc" @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
-          </div>
-        </form>
-      </div>
-      <div slot="footer" class="modal-foot">
-        <button :class="{disabled:disabled}" :disabled="disabled==true" @click="submit">登录</button>
+
+    <!-- 领取提示 -->
+    <Modal v-model="showModal.rechargeHint" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s" style="padding: 30px 30px 0 50px">
         <div>
-          <!--span class="checkBox" :class="{agree:agree}" @click="toggle"></span>&nbsp;<span>我已阅读并同意</span><span
-          style="color:#0EB4FA;cursor:pointer;" @click="showRules">《睿云用户使用协议》</span-->
-          <a href="register" target="_blank"
-             style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:left;font-size: 14px">
-            立即注册
-          </a>
-          <router-link to="reset" style="color:#0EB4FA;cursor:pointer;margin-top: 10px;float:right;font-size:14px">
-            忘记密码
-          </router-link>
+          <div class="ivu-modal-confirm-body-icon ivu-modal-confirm-body-icon-success" style="top: 48px;left: 30px;">
+            <i class="ivu-icon ivu-icon-checkmark-circled"></i>
+          </div>
+          <strong>提示</strong>
+          <p class="lh24">本免费活动充值押金<span style="color: #D0021B ">{{ cashPledge }}</span>元，主机到期或删除时押金自动退还到账户余额。
+          </p>
         </div>
       </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.rechargeHint = false">取消</Button>
+        <Button type="primary" @click="nextStep">下一步</Button>
+      </p>
     </Modal>
-    <!-- 实名认证提示框 -->
-    <Modal v-model="showModal.certificationModal" width="408" :scrollable="true" class="fr-Modal">
-      <div slot="header">
-        <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
-        <p>提示</p>
-      </div>
-      <div style="text-align:center">
-        <p class="modal-p">您好，领取新主机需要先进行<span @click="$router.push('userCenter')">实名认证</span>才可以哦！</p>
-      </div>
-      <div slot="footer">
-        <button class="modal-button" @click="$router.push('userCenter')">去实名认证</button>
-      </div>
-    </Modal>
-    <!-- 不符合条件提示框-->
-    <Modal v-model="showModal.inConformityModal" width="408" :scrollable="true" class="fr-Modal">
-      <div slot="header">
-        <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
-        <p>提示</p>
-      </div>
-      <div style="text-align:center">
-        <p class="modal-p">您好，您不符合本活动的参与条件，去<span @click="$router.push('ActiveCenter')">活动中心</span>看看其他活动吧！如果有其他需要可联系我们销售或者客服。
-        </p>
-      </div>
-      <div slot="footer">
-        <button class="modal-button" @click="$router.push('ActiveCenter')">去活动中心</button>
-      </div>
-    </Modal>
-    <!-- 领取成功提示框 -->
-    <Modal v-model="showModal.getSuccessModal" width="408" :scrollable="true" class="fr-Modal">
-      <div slot="header">
-        <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
-        <p>提示</p>
-      </div>
-      <div style="text-align:center">
-        <p class="modal-p">恭喜您领取成功，主机开始使用前只可保留<span style="cursor: auto">3</span>天，请尽快使用哦！</p>
-      </div>
-      <div slot="footer">
-        <button class="modal-button" @click="$router.push('host')">进入主机设置</button>
-      </div>
-    </Modal>
-    <!-- 押金提示框 -->
-    <Modal v-model="showModal.cashPledgeModal" width="408" :scrollable="true" class="fr-Modal">
-      <div slot="header">
-        <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
-        <p>提示</p>
-      </div>
-      <div style="text-align:center">
-        <p class="modal-p">本免费活动需充值押金<span style="cursor: auto">{{cashPledge}}</span>元，主机到期或删除时押金自动退还到账户余额。</p>
-      </div>
-      <div slot="footer">
-        <button class="modal-button" @click="nextStep">下一步</button>
-      </div>
-    </Modal>
-    <!-- 确认冻结余额提示框-->
-    <Modal v-model="showModal.isFreezeModal" width="408" :scrollable="true" class="fr-Modal">
-      <div slot="header">
-        <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
-        <p>提示</p>
-      </div>
-      <div style="text-align:center">
-        <p class="modal-p">本免费活动需冻结押金<span style="cursor: auto">{{cashPledge}}</span>元，主机到期或删除时押金自动退还到账户余额。</p>
-      </div>
-      <div slot="footer">
-        <button class="modal-button" @click="freeze_ok">确认冻结</button>
-      </div>
-    </Modal>
-    <!-- 充值提示框 -->
-    <Modal v-model="showModal.rechargeModal" width="408" :scrollable="true" class="fr-Modal">
-      <div slot="header">
-        <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
-        <p>提示</p>
-      </div>
-      <div class="fr-modalBody">
-        <div class="steps">
-          <ul v-for="(item, index) in stepGroup">
-            <li>{{index + 1}}</li>
-            <li>{{ item }}</li>
-          </ul>
+    <!-- 不满足条件-->
+    <Modal v-model="showModal.inConformityModal" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s" style="padding: 30px 30px 0 50px">
+        <div>
+          <div class="ivu-modal-confirm-body-icon ivu-modal-confirm-body-icon-warning" style="top: 48px;left: 30px;">
+            <i class="ivu-icon ivu-icon-android-alert"></i>
+          </div>
+          <p class="lh24">您好，您不符合本活动的参与条件，去<span style="color: #2A99F2;cursor: pointer" @click="$router.push('/ruicloud/ActiveCenter')">活动中心</span>看看其他活动吧！如果有其他需要可联系我们销售或者客服。
+          </p>
         </div>
-        <div class="recharge">
-          <span>充值金额：</span>
-          <InputNumber :min="rechargeMoney" v-model="rechargeMoney" style="margin-right: 8px" :precision="0"></InputNumber>
-          <span>元</span>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.inConformityModal = false">取消</Button>
+        <Button type="primary" @click="$router.push('/ruicloud/ActiveCenter')">去活动中心</Button>
+      </p>
+    </Modal>
+    <!-- 领取成功 -->
+    <Modal v-model="showModal.getSuccessModal" :scrollable="true" :closable="false" :width="390">
+      <div class="modal-content-s" style="padding: 30px 30px 0 50px">
+        <div>
+          <div class="ivu-modal-confirm-body-icon ivu-modal-confirm-body-icon-success" style="top: 48px;left: 30px;">
+            <i class="ivu-icon ivu-icon-checkmark-circled"></i>
+          </div>
+          <strong>提示</strong>
+          <p class="lh24">恭喜您押金已冻结完成，主机领取成功，主机在实名认证之前只可保留3天，请尽快使用。
+          </p>
         </div>
-        <div class="recharge-select">
-          <RadioGroup v-model="rechargeWay">
-            <Radio label="zfb" style="margin-right: 50px">
-              <img style="margin: 0 4px 0 8px;position: relative;top: 6px;"
-                   src="../../../assets/img/active/freeToReceive/fr-icon19.png"/>
-              <span style="font-size:16px;color:rgba(51,51,51,1);">支付宝</span>
+      </div>
+      <p slot="footer" class="modal-footer-s">
+        <Button @click="showModal.getSuccessModal = false">取消</Button>
+        <Button type="primary" @click="$router.push('/ruicloud/host')">查看主机</Button>
+      </p>
+    </Modal>
+    <!-- 支付充值失败 -->
+    <Modal v-model="showModal.payDefeatedModal" width="640" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">支付/充值</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <div class="modal-p">
+          <Steps :current="2" status="error">
+            <Step title="订单确认"></Step>
+            <Step title="支付"></Step>
+            <Step title="支付失败"></Step>
+          </Steps>
+          <p><img src="../../../assets/img/sceneInfo/si-defeated.png"/><span>抱歉，支付失败，请再次尝试！</span></p>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="showModal.payDefeatedModal = false,showModal.orderConfirmationModal = true">再次支付</Button>
+      </div>
+    </Modal>
+    <!-- 支付充值成功 -->
+    <Modal v-model="showModal.paySuccessModal" width="640" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">支付/充值</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <div class="modal-p">
+          <Steps :current="2">
+            <Step title="订单确认"></Step>
+            <Step title="支付"></Step>
+            <Step title="支付成功"></Step>
+          </Steps>
+          <p><img src="../../../assets/img/sceneInfo/si-success.png"/><span>恭喜您支付成功！我们即将冻结押金</span><span style="color: #D0021B;margin-left: 0">{{ cashPledge }}</span><span
+            style="margin-left: 0">元</span></p>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="getFreeHost">确认冻结</Button>
+      </div>
+    </Modal>
+
+    <!-- 微信支付弹窗 -->
+    <Modal v-model="showModal.weChatRechargeModal" width="640" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">微信支付/充值</span>
+      </p>
+      <div class="universal-modal-content-flex">
+        <div class="modal-p">
+          <Steps :current="1">
+            <Step title="订单确认"></Step>
+            <Step title="支付"></Step>
+            <Step title="支付成功"></Step>
+          </Steps>
+          <div class="payInfo">
+            <div id="code">
+              <vue-q-art :config="config" v-if="config.value!=''"></vue-q-art>
+            </div>
+            <div class="pay-p">
+              <p>应付金额(元)：<span>{{cashPledge}}</span></p>
+              <p>请使用微信扫一扫，扫描二维码支付</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div slot="footer" class="modal-footer-border">
+        <Button @click="isPay">已完成支付</Button>
+        <Button type="primary" @click="showModal.weChatRechargeModal = false,showModal.orderConfirmationModal = true">更换支付方式</Button>
+      </div>
+    </Modal>
+
+    <!-- 订单确认弹窗 -->
+    <Modal v-model="showModal.orderConfirmationModal" width="640" :scrollable="true">
+      <p slot="header" class="modal-header-border">
+        <span class="universal-modal-title">订单确认</span>
+      </p>
+      <div>
+        <div class="modal-p">
+          <Steps :current="0">
+            <Step title="订单确认"></Step>
+            <Step title="支付"></Step>
+            <Step title="支付成功"></Step>
+          </Steps>
+        </div>
+        <Table :columns="orderColumns" :data="orderData" style="margin-top: 30px"></Table>
+        <div class="pay-wap">
+          <p>选择支付方式</p>
+          <RadioGroup v-model="payWay" vertical @on-change="payWayChange">
+            <Radio label="balancePay">
+              <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 40px">余额支付</span>
+              <span style="color:rgba(102,102,102,1);font-size: 14px">账户余额：</span>
+              <span style="color:#D0021B;font-size: 14px">¥{{ balance }}</span>
             </Radio>
-            <Radio label="wx">
-              <img style="margin: 0 4px 0 8px;position: relative;top: 6px;"
-                   src="../../../assets/img/active/freeToReceive/fr-icon20.png"/>
-              <span style="font-size:16px;color:rgba(51,51,51,1);">微信支付</span>
+            <Radio label="otherPay" class="pw-img" :disabled="balance >= cashPledge">
+              <span style="color:rgba(51,51,51,1);font-size: 14px;margin-right: 25px">第三方支付</span>
+              <img src="../../../assets/img/payresult/alipay.png" :class="{selected: otherPayWay == 'zfb'}" @click="balance < cashPledge?otherPayWay = 'zfb':null">
+              <img src="../../../assets/img/payresult/wxpay.png" :class="{selected: otherPayWay == 'wx'}" @click="balance < cashPledge?otherPayWay = 'wx':null">
             </Radio>
           </RadioGroup>
         </div>
-        <p style="margin-top: 13px;color: #F56B23" v-show="rechargeWay=='zfb'">*充值完之后请回到此页面冻结押金</p>
-      </div>
-      <div slot="footer">
-        <button class="modal-button" @click="recharge_ok">确认</button>
-      </div>
-    </Modal>
-    <!-- 微信充值提示框 -->
-    <Modal v-model="showModal.weChatRechargeModal" width="408" :scrollable="true" class="fr-Modal">
-      <div slot="header">
-        <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
-        <p>提示</p>
-      </div>
-      <div class="fr-modalBody">
-        <p>应付金额(元)：</p>
-        <p style="font-size:36px;margin-top:10px;color:rgba(245,107,35,1);">{{ rechargeMoney}}</p>
-        <div id="code">
-          <vue-q-art :config="config" v-if="config.value!=''"></vue-q-art>
+        <p class="p1">注：没有实名认证的用户领取主机成功后，需要进行实名认证才可以使用。您可以点击实名认证 现在进行认证，也可以在领取主机之后点击个人中心-个人认证进行实名认证。</p>
+        <div class="attestationForm">
+          <p>实名认证</p>
+          <div class="click_icon icons" :class="{hide_icon:!attestationShow}" @click="attestationShow = !attestationShow"></div>
         </div>
-        <p>请使用微信扫一扫，扫描二维码支付</p>
+        <div v-show="attestationShow">
+          <div v-if="authInfo&&authInfo.checkstatus==0" class="modal-p">
+            <p><img src="../../../assets/img/sceneInfo/si-success.png"/><span>恭喜您，实名认证成功！</span></p>
+          </div>
+          <Form :model="quicklyAuthForm" :label-width="100" ref="quicklyAuth"
+                :rules="quicklyAuthFormValidate"
+                style="width:450px;margin-top:20px;" v-else>
+            <FormItem label="真实姓名" prop="name" style="width: 100%">
+              <Input v-model="quicklyAuthForm.name" placeholder="请输入姓名"></Input>
+            </FormItem>
+            <FormItem label="身份证号" prop="IDCard" style="width: 100%">
+              <Input v-model="quicklyAuthForm.IDCard" placeholder="请输入身份证号"></Input>
+            </FormItem>
+            <Form :model="quicklyAuthForm" :rules="quicklyAuthFormValidate" ref="sendCode"
+                  :label-width="100">
+              <FormItem label="图形验证码" prop="pictureCode">
+                <div style="display: flex">
+                  <Input v-model="quicklyAuthForm.pictureCode" placeholder="请输入图片验证码"
+                         style="width:250px;margin-right: 10px"></Input>
+                  <img :src="imgSrc" style="height:33px;"
+                       @click="imgSrc=`user/getKaptchaImage.do?t=${new Date().getTime()}`">
+                </div>
+              </FormItem>
+              <FormItem label="手机号码" prop="phone" style="width: 100%">
+                <div style="display: flex;justify-content: space-between">
+                  <Input v-model="quicklyAuthForm.phone" placeholder="请输入以该身份证开户的手机号码"
+                         style="width:260px;margin-right: 10px"></Input>
+                  <Button type="primary" @click="sendCode" style="width:92px"
+                          :disabled="quicklyAuthForm.sendCodeText!='获取验证码'">
+                    {{quicklyAuthForm.sendCodeText}}
+                  </Button>
+                </div>
+              </FormItem>
+            </Form>
+            <FormItem label="验证码" prop="validateCode" style="width: 100%">
+              <Input v-model="quicklyAuthForm.validateCode" placeholder="请输入验证码"></Input>
+            </FormItem>
+            <FormItem>
+              <div style="float:right">
+                <Button type="primary" @click="quicklyAuth">确认提交</Button>
+              </div>
+            </FormItem>
+          </Form>
+        </div>
       </div>
-      <div slot="footer">
-        <button class="modal-button" style="width: 158px" @click="isPay">已完成支付</button>
-        <button class="modal-button" style="width: 158px;background: #F5A623;margin-left: 20px" @click="changePayWey">
-          更换支付方式
-        </button>
-        <a
-          style="font-size:14px;font-family: 'Microsoft YaHei', '微软雅黑';color:rgba(42,153,242,1);cursor: pointer;margin-top: 20px;display: block"
-          href="http://p.qiao.baidu.com/cps2/chatIndex?reqParam=%7B%22from%22%3A0%2C%22sid%22%3A%22-100%22%2C%22tid%22%3A%22-1%22%2C%22ttype%22%3A1%2C%22siteId%22%3A%2212207678%22%2C%22userId%22%3A%2224752455%22%2C%22pageId%22%3A0%7D"
-          target="_blank">支付遇到问题？</a>
-      </div>
-    </Modal>
-    <!-- 支付成功提示框 -->
-    <Modal v-model="showModal.paySuccessModal" width="408" :scrollable="true" class="fr-Modal">
-      <div slot="header">
-        <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
-        <p>提示</p>
-      </div>
-      <div style="text-align:center">
-        <img src="../../../assets/img/active/freeToReceive/fr-icon17.png"/>
-        <p class="modal-p" style="margin-top: 20px">支付成功！我们即将冻结押金<span style="cursor: auto">{{cashPledge }}</span>元…</p>
-      </div>
-      <div slot="footer">
-        <button class="modal-button" @click="freeze_ok">确认冻结</button>
-      </div>
-    </Modal>
-    <!-- 冻结成功提示框 -->
-    <Modal v-model="showModal.freezeSuccessModal" width="408" :scrollable="true" class="fr-Modal">
-      <div slot="header">
-        <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
-        <p>提示</p>
-      </div>
-      <div style="text-align:center">
-        <img src="../../../assets/img/active/freeToReceive/fr-icon17.png"/>
-        <p class="modal-p" style="margin-top: 20px">您好，押金已冻结完成，冻结时间：{{ freezeTime }}</p>
-      </div>
-      <div slot="footer">
-        <button class="modal-button" @click="$router.push('host')">查看主机</button>
-      </div>
-    </Modal>
-    <!-- 冻结失败提示框 -->
-    <Modal v-model="showModal.freezeDefeatedModal" width="408" :scrollable="true" class="fr-Modal">
-      <div slot="header">
-        <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
-        <p>提示</p>
-      </div>
-      <div style="text-align:center">
-        <img src="../../../assets/img/active/freeToReceive/fr-icon18.png"/>
-        <p class="modal-p" style="margin-top: 20px">抱歉，冻结失败，请再次尝试！</p>
-      </div>
-      <div slot="footer">
-        <button class="modal-button" @click="freeze_ok">再次冻结</button>
-      </div>
-    </Modal>
-    <!-- 支付失败提示框 -->
-    <Modal v-model="showModal.payDefeatedModal" width="408" :scrollable="true" class="fr-Modal">
-      <div slot="header">
-        <img class="modal-img" src="../../../assets/img/active/freeToReceive/fr-icon16.png"/>
-        <p>提示</p>
-      </div>
-      <div style="text-align:center">
-        <img src="../../../assets/img/active/freeToReceive/fr-icon18.png"/>
-        <p class="modal-p" style="margin-top: 20px">抱歉，支付失败，请再次尝试！</p>
-      </div>
-      <div slot="footer">
-        <button class="modal-button" @click="payAgain">再次支付</button>
+      <div slot="footer" class="modal-footer-border">
+        <Button type="primary" @click="getHost_ok">确认</Button>
       </div>
     </Modal>
   </div>
@@ -326,27 +302,42 @@
 
 <script type="text/ecmascript-6">
   import axios from 'axios'
-  import regExp from '../../../util/regExp'
+  import reg from '../../../util/regExp'
   import VueQArt from 'vue-qart'
   import $ from 'jquery'
 
-  var messageMap = {
-    loginname: {
-      placeholder: '登录邮箱/手机号',
-      errorMessage: '请输入正确的邮箱/手机号'
-    },
-    password: {
-      placeholder: '密码',
-    },
-    vailCode: {
-      placeholder: '请输入验证码',
-    },
-  }
   export default {
     components: {
       VueQArt
     },
     data() {
+      const validaRegisteredPhone = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('电话号码不能为空'));
+        }
+        if (!(/^1(3|4|5|7|8|9)\d{9}$/.test(value)) && !(/^0\d{2,3}-?\d{7,8}$/.test(value))) {
+          callback(new Error('请输入正确的电话号码'));
+        } else {
+          callback()
+        }
+      }
+      const validaRegisteredID = (rule, value, callback) => {
+        if (!reg.IDCardVail(value)) {
+          callback(new Error('请输入正确的身份证号码'));
+        } else {
+          callback()
+        }
+      }
+      const validaRegisteredName = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('联系人不能为空'));
+        }
+        if ((/[`~!@#$%^&*()_+<>?:"{},.\/;'[\]]/im.test(value)) || (/[·！#￥（——）：；“”‘、，|《。》？、【】[\]]/im.test(value)) || (/\s+/.test(value)) || (/^[0-9]*$/.test(value))) {
+          callback(new Error('输入姓名不能包含特殊字符、空格或是纯数字'));
+        } else {
+          callback()
+        }
+      }
       return {
         flag: false,
         fr_scrollTop: 0,
@@ -355,45 +346,16 @@
         configIndex: 0,
         hostIndex: 0,
         vmConfigId: '',
-        freezeTime: '',
         time: '',
         showModal: {
-          certificationModal: false,
+          rechargeHint: false,
           inConformityModal: false,
           getSuccessModal: false,
-          cashPledgeModal: false,
-          rechargeModal: false,
-          weChatRechargeModal: false,
-          paySuccessModal: false,
-          freezeSuccessModal: false,
-          freezeDefeatedModal: false,
           payDefeatedModal: false,
-          isFreezeModal: false
+          paySuccessModal: false,
+          weChatRechargeModal: false,
+          orderConfirmationModal: false
         },
-        loginModal: false,
-        form: {
-          loginname: '',
-          password: '',
-          vailCode: '',
-          loginnamePlaceholder: '登录邮箱/手机号',
-          passwordPlaceholder: '密码',
-          vailCodePlaceholder: '请输入验证码',
-        },
-        vailForm: {
-          loginname: {
-            message: '',
-            warning: false
-          },
-          password: {
-            message: '',
-            warning: false
-          },
-          vailCode: {
-            message: '',
-            warning: false
-          },
-        },
-        imgSrc: 'user/getKaptchaImage.do',
         flowGroup: [
           {
             src: require('../../../assets/img/active/freeToReceive/fr-icon2.png'),
@@ -532,8 +494,86 @@
           size: 500
         },
         cashPledge: 0,
-        rechargeMoney: 0,
-        rechargeWay: 'zfb'
+        orderColumns: [
+          {
+            title: '产品类型',
+            key: 'productType'
+          },
+          {
+            title: '资源',
+            width: 200,
+            render: (h, params) => {
+              let arr = []
+              let param3 = h('li', {}, '主机： ' + params.row.title)
+              let param = h('li', {}, '带宽： ' + params.row.configs.bandwidth)
+              let param1 = h('li', {}, '磁盘： ' + params.row.configs.disk)
+              let param2 = h('li', {}, '系统： ' + params.row.configs.system)
+              arr.push(param3)
+              arr.push(param)
+              arr.push(param1)
+              arr.push(param2)
+              return h('ul', {}, arr)
+            }
+          },
+          {
+            title: '计费类型',
+            render: (h, params) => {
+              return h('span', {}, '包年包月')
+            }
+          },
+          {
+            title: '购买时长',
+            key: 'time'
+          },
+          {
+            title: '押金金额',
+            render: (h, params) => {
+              return h('span', {
+                style: {
+                  color: '#D0021B'
+                }
+              }, '¥' + params.row.cashPledge)
+            }
+          },
+        ],
+        orderData: [],
+        payWay: 'balancePay',
+        otherPayWay: '',
+        balance: '0.0',
+        attestationShow: false,
+        // 快速认证表单
+        quicklyAuthForm: {
+          name: '',
+          IDCard: '',
+          pictureCode: '',
+          phone: '',
+          validateCode: '',
+          sendCodeText: '获取验证码'
+        },
+        // 快速认证表单验证
+        quicklyAuthFormValidate: {
+          name: [
+            {required: true, message: '请输入姓名'},
+            {validator: validaRegisteredName}
+          ],
+          IDCard: [
+            {required: true, message: '请输入身份证号'},
+            {validator: validaRegisteredID}
+          ],
+          pictureCode: [
+            {required: true, message: '请输入图片验证码'}
+          ],
+          phone: [
+            {required: true, message: '请输入以该身份证开户的手机号码'},
+            {validator: validaRegisteredPhone}
+          ],
+          validateCode: [
+            {required: true, message: '请输入验证码'}
+          ]
+        },
+        imgSrc: 'user/getKaptchaImage.do',
+        index1: '',
+        index2: ''
       }
     },
     mounted() {
@@ -542,174 +582,13 @@
     created() {
       this.judgeUserFlow()
       this.getRegion()
+      this.getBalance()
     },
     methods: {
-      vail(field) {
-        var text = this.form[field];
-        if (text == '') {
-          this.vailForm[field].message = ''
-          this.form[`${field}Placeholder`] = messageMap[field].placeholder
-          this.vailForm[field].warning = false;
-          return
-        }
-
-        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
-        if (!isLegal && field == 'loginname') {
-          this.vailForm[field].message = messageMap[field].errorMessage;
-          this.vailForm[field].warning = true
-        } else {
-          this.vailForm[field].message = messageMap[field].placeholder;
-          this.vailForm[field].warning = false
-        }
-      },
-      isCorrect(field) {
-        if (field == 'vailCode') {
-          //this.vailForm.vailCode.message = messageMap.vailCode.placeholder
-          this.vailForm.vailCode.warning = false
-        } else if (field == 'loginname') {
-          if (regExp.emailVail(this.form[field])) {
-            this.vailForm.loginname.message = messageMap.loginname.placeholder
-            this.vailForm.loginname.warning = false
-          }
-        } else {
-          if (regExp.passwordVail(this.form[field])) {
-            this.vailForm.loginname.message = messageMap.loginname.placeholder
-            this.vailForm.loginname.warning = false
-          }
-        }
-
-      },
-      focus(field) {
-        if (field == 'vailCode' && this.vailForm.loginname.message == '验证码错误') {
-          this.vailForm.loginname.message = messageMap.loginname.placeholder
-          this.vailForm.loginname.warning = false
-        }
-        if ((field == 'loginname' || field == 'password') && this.vailForm.loginname.message == '用户名或密码错误') {
-          this.vailForm.loginname.message = messageMap.loginname.placeholder
-          this.vailForm.loginname.warning = false
-        }
-        var text = this.form[field];
-        this.form[`${field}Placeholder`] = ''
-        if (text == '') {
-          this.vailForm[field].message = messageMap[field].placeholder
-          return
-        }
-        var isLegal = field == 'loginname' ? regExp.emailVail(text) : field == 'password' ? regExp.passwordVail(text) : true;
-
-        if (!isLegal && field == 'loginname') {
-          this.vailForm[field].message = messageMap[field].errorMessage;
-          this.vailForm[field].warning = true
-        } else {
-          this.vailForm[field].message = messageMap[field].placeholder;
-          this.vailForm[field].warning = false
-        }
-      },
-      submit() {
-        this.$http.get('user/login.do', {
-          params: {
-            username: this.form.loginname,
-            password: this.form.password,
-            vailCode: this.form.vailCode
-          }
-        }).then((response) => {
+      init() {
+        axios.get('user/GetUserInfo.do').then(response => {
           if (response.status == 200 && response.data.status == 1) {
-            this.$router.go(0)
-          } else {
-            this.imgSrc = `user/getKaptchaImage.do?t=${new Date().getTime()}`
-            this.vailForm.loginname.message = response.data.message
-            this.vailForm.loginname.warning = true
-          }
-        });
-      },
-      freeToReceive(index1, index2) {
-        this.configIndex = index1
-        this.hostIndex = index2
-        if (this.$store.state.userInfo == null) {
-          this.$LR({type:'login'})
-          return
-        }
-        if (this.configGroup[index1].hostGroup[index2].zoneId == '') {
-          this.$Message.info('请选择需要领取的区域')
-          return
-        }
-        if (this.$store.state.authInfo == null) {
-          this.showModal.certificationModal = true
-          return
-        }
-        let vmConfigId = ''
-        switch ('' + index1 + index2) {
-          case '00':
-            vmConfigId = '35'
-            this.time = '1'
-            break
-          case '01':
-            vmConfigId = '36'
-            this.time = '3'
-            break
-          case '02':
-            vmConfigId = '37'
-            this.time = '6'
-            break
-          case '03':
-            vmConfigId = '38'
-            this.time = '12'
-            break
-          case '10':
-            vmConfigId = '39'
-            this.time = '1'
-            break
-          case '11':
-            vmConfigId = '40'
-            this.time = '3'
-            break
-          case '12':
-            vmConfigId = '41'
-            this.time = '6'
-            break
-          case '13':
-            vmConfigId = '42'
-            this.time = '12'
-            break
-        }
-        this.vmConfigId = vmConfigId
-        axios.get('activity/jdugeTeam.do', {
-          params: {sign: 'freeReceive'}
-        }).then(res => {
-          if (res.data.status == 1) {
-            if (res.data.result.flag) {
-              axios.get('activity/getFreeHost.do', {
-                params: {
-                  vmConfigId: vmConfigId,
-                  osType: this.configGroup[index1].hostGroup[index2].system,
-                  defzoneid: this.configGroup[index1].hostGroup[index2].zoneId
-                }
-              }).then(response => {
-                if (response.data.status == 1) {
-                  this.showModal.getSuccessModal = true
-                } else if (response.data.status == 2 && response.data.message == '您还未支付押金') {
-                  this.cashPledge = this.configGroup[index1].hostGroup[index2].cashPledge
-                  axios.get('activity/compareForMoney.do', {
-                    params: {freezeMoney: this.cashPledge}
-                  }).then(val => {
-                    if (val.data.status == 1) {
-                      this.showModal.isFreezeModal = true
-                    } else {
-                      this.showModal.cashPledgeModal = true
-                    }
-                  })
-                } else {
-                  this.$message.info({
-                    content: response.data.message
-                  })
-                }
-              })
-            } else {
-              this.showModal.inConformityModal = true
-            }
-          } else {
-            this.$message.info({
-              content: res.data.message
-            })
+            this.$store.commit('setAuthInfo', {authInfo: response.data.authInfo, userInfo: response.data.result})
           }
         })
       },
@@ -796,82 +675,237 @@
           }
         })
       },
-      nextStep() {
-        this.showModal.cashPledgeModal = false
-        this.rechargeMoney = Number(this.cashPledge)
-        this.showModal.rechargeModal = true
+      getHost(index1, index2) {
+        if (this.areaGroup.length == 0) {
+          this.$Message.info('请选择需要领取的区域')
+          return
+        }
+        if (!this.$store.state.userInfo) {
+          this.$LR({type: 'login'})
+          return
+        }
+        this.index1 = index1
+        this.index2 = index2
+        this.cashPledge = this.configGroup[index1].hostGroup[index2].cashPledge
+        this.time = this.configGroup[index1].hostGroup[index2].time
+        this.showModal.rechargeHint = true
       },
-      freeze_ok() {
-        this.showModal.isFreezeModal = false
-        this.showModal.freezeDefeatedModal = false
+      nextStep() {
+        // 判断新老用户
+        axios.get('activity/jdugeTeam.do', {
+          params: {sign: 'freeReceive'}
+        }).then(response => {
+          if (response.status == 200 && response.data.status == 1) {
+            if (response.data.result.flag) {
+              this.orderData = []
+              this.orderData.push({
+                productType: '云服务器',
+                configs: this.configGroup[this.index1].hostGroup[this.index2],
+                time: this.time,
+                title: this.configGroup[this.index1].headline,
+                cashPledge: Number(this.cashPledge)
+              })
+              this.showModal.rechargeHint = false
+              this.showModal.orderConfirmationModal = true
+            } else {
+              this.showModal.rechargeHint = false
+              this.showModal.inConformityModal = true
+            }
+          } else {
+            this.$message.info({
+              content: response.data.message
+            })
+          }
+        })
+      },
+      getHost_ok() {
+        if (this.payWay == 'balancePay') {
+          if (this.balance < this.cashPledge) {
+            this.$Message.info('可用余额不足')
+          } else {
+            this.showModal.orderConfirmationModal = false
+            this.getFreeHost()
+          }
+        } else {
+          switch (this.otherPayWay) {
+            case '':
+              this.$Message.info('请选择一个支付方式')
+              break
+            case 'zfb':
+              window.open(`zfb/alipayapi.do?total_fee=${this.cashPledge}`)
+              this.pageTimer = setInterval(() => {
+                axios.get('activity/compareForMoney.do', {
+                  params: {freezeMoney: this.cashPledge}
+                }).then(val => {
+                  if (val.data.status == 1) {
+                    this.showModal.orderConfirmationModal = false
+                    clearInterval(this.pageTimer)
+                    this.showModal.paySuccessModal = true
+                  }
+                })
+              }, 2000)
+              break
+            case 'wx':
+              clearInterval(this.pageTimer)
+              axios.get('wx/wxpayapi.do', {
+                params: {
+                  total_fee: this.cashPledge
+                }
+              }).then(response => {
+                if (response.status == 200 && response.data.status == 1) {
+                  this.serialNum = response.data.result.serialNum
+                  this.config.value = response.data.result.codeUrl
+                  this.showModal.orderConfirmationModal = false
+                  this.showModal.weChatRechargeModal = true
+                } else {
+                  this.$message.info({
+                    content: response.data.message
+                  })
+                }
+              })
+              break
+          }
+        }
+      },
+      getFreeHost() {
         this.showModal.paySuccessModal = false
+        let vmConfigId = ''
+        switch ('' + this.index1 + this.index2) {
+          case '00':
+            vmConfigId = '35'
+            this.time = '1'
+            break
+          case '01':
+            vmConfigId = '36'
+            this.time = '3'
+            break
+          case '02':
+            vmConfigId = '37'
+            this.time = '6'
+            break
+          case '03':
+            vmConfigId = '38'
+            this.time = '12'
+            break
+          case '10':
+            vmConfigId = '39'
+            this.time = '1'
+            break
+          case '11':
+            vmConfigId = '40'
+            this.time = '3'
+            break
+          case '12':
+            vmConfigId = '41'
+            this.time = '6'
+            break
+          case '13':
+            vmConfigId = '42'
+            this.time = '12'
+            break
+        }
+        this.vmConfig = vmConfigId
         let url = 'user/getRemainderFrozen.do'
         let params = {
           eachFrozenMoney: this.cashPledge,
           describe: '领取主机',
           operationType: '领取主机',
           thawCondition: '删除主机',
-          vmConfig: this.vmConfigId
+          vmConfig: this.vmConfig
         }
-        axios.post(url, params).then(res => {
-          if (res.data.status == 1) {
-            this.getFreezeTime()
-            axios.get('activity/getFreeHost.do', {
+        axios.post(url, params).then(response => {
+          if (response.data.status == 1 && response.status == 200) {
+            let url = 'activity/getFreeHost.do'
+            axios.get(url, {
               params: {
-                vmConfigId: this.vmConfigId,
-                osType: this.configGroup[this.configIndex].hostGroup[this.hostIndex].system,
-                defzoneid: this.configGroup[this.configIndex].hostGroup[this.hostIndex].zoneId
+                vmConfigId: vmConfigId,
+                osType: this.configGroup[this.index1].hostGroup[this.index2].system,
+                defzoneid: this.configGroup[this.index1].hostGroup[this.index2].zoneId
               }
-            }).then(response => {
-              if (response.data.status == 1) {
-                this.showModal.freezeSuccessModal = true
+            }).then(res => {
+              if (res.status == 200 && res.data.status == 1) {
+                this.showModal.getSuccessModal = true
               } else {
                 this.$message.info({
-                  content: response.data.message
+                  content: res.data.message
                 })
               }
             })
           } else {
-            this.showModal.freezeDefeatedModal = true
+            this.$message.info({
+              content: response.data.message
+            })
           }
         })
       },
-      recharge_ok() {
-        switch (this.rechargeWay) {
-          case 'zfb':
-            window.open(`zfb/alipayapi.do?total_fee=${this.rechargeMoney}`)
-            this.pageTimer = setInterval(() => {
-              axios.get('activity/compareForMoney.do', {
-                params: {freezeMoney: this.cashPledge}
-              }).then(val => {
-                if (val.data.status == 1) {
-                  this.showModal.rechargeModal = false
-                  clearInterval(this.pageTimer)
-                  this.showModal.paySuccessModal = true
-                }
-              })
-            }, 2000)
-            break
-          case 'wx':
-            clearInterval(this.pageTimer)
-            axios.get('wx/wxpayapi.do', {
+      getScrollTop() {
+        this.fr_scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      },
+      // 快速认证时发送验证码
+      sendCode() {
+        this.$refs.sendCode.validate(validate => {
+          if (validate) {
+            axios.get('user/code.do', {
               params: {
-                total_fee: this.rechargeMoney
+                aim: this.quicklyAuthForm.phone,
+                isemail: 0,
+                vailCode: this.quicklyAuthForm.pictureCode
               }
             }).then(response => {
+              // 发送成功，进入倒计时
               if (response.status == 200 && response.data.status == 1) {
-                this.serialNum = response.data.result.serialNum
-                this.config.value = response.data.result.codeUrl
-                this.showModal.rechargeModal = false
-                this.showModal.weChatRechargeModal = true
+                var countdown = 60
+                this.quicklyAuthForm.sendCodeText = `${countdown}S`
+                var Interval = setInterval(() => {
+                  countdown--
+                  this.quicklyAuthForm.sendCodeText = `${countdown}S`
+                  if (countdown == 0) {
+                    clearInterval(Interval)
+                    this.quicklyAuthForm.sendCodeText = '获取验证码'
+                  }
+                }, 1000)
+              } else {
+                this.$Message.error(response.data.message)
+              }
+            })
+          }
+        })
+      },
+      // 快速认证
+      quicklyAuth() {
+        var quicklyAuth = this.$refs.quicklyAuth.validate(validate => {
+          return Promise.resolve(validate)
+        })
+        var sendCode = this.$refs.sendCode.validate(validate => {
+          return Promise.resolve(validate)
+        })
+        Promise.all([quicklyAuth, sendCode]).then(results => {
+          if (results[0] === true && results[1] === true) {
+            axios.post('user/personalAttest.do', {
+              cardID: this.quicklyAuthForm.IDCard,
+              name: this.quicklyAuthForm.name,
+              phone: this.quicklyAuthForm.phone,
+              phoneCode: this.quicklyAuthForm.validateCode,
+              type: '0'
+            }).then(response => {
+              if (response.status == 200 && response.data.status == 1) {
+                this.init()
               } else {
                 this.$message.info({
                   content: response.data.message
                 })
               }
             })
-            break
-        }
+          }
+        })
+      },
+      // 获取余额
+      getBalance() {
+        this.$http.post('device/DescribeWalletsBalance.do').then(response => {
+          if (response.status == 200 && response.data.status == '1') {
+            this.balance = Number(response.data.data.remainder)
+          }
+        })
       },
       isPay() {
         axios.get('user/payStatus.do', {
@@ -887,34 +921,21 @@
           }
         })
       },
-      changePayWey() {
-        this.showModal.weChatRechargeModal = false
-        this.showModal.rechargeModal = true
-      },
-      payAgain() {
-        this.showModal.payDefeatedModal = false
-        this.showModal.rechargeModal = true
-      },
-      //获取冻结时间
-      getFreezeTime() {
-        axios.get('activity/getTimeForDeposit.do', {
-          params: {
-            month: this.time
-          }
-        }).then(res => {
-          if (res.data.status == 1) {
-            this.freezeTime = res.data.result.startTime + ' ' + res.data.result.endTime
-          }
-        })
-      },
-      getScrollTop() {
-        this.fr_scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      payWayChange() {
+        if (this.payWay == 'otherPay' && this.otherPayWay == '') {
+          this.otherPayWay = 'zfb'
+        } else if (this.payWay == 'balancePay') {
+          this.otherPayWay = ''
+        }
       }
     },
     computed: {
       disabled() {
         return !(this.form.loginname && this.form.password && this.form.vailCode && this.vailForm.loginname.warning == false)
-      }
+      },
+      authInfo() {
+        return this.$store.state.authInfo ? this.$store.state.authInfo : null
+      },
     },
     beforeRouteLeave(to, from, next) {
       window.removeEventListener('scroll', this.getScrollTop)
@@ -1207,230 +1228,119 @@
     }
   }
 
-  .modal-body {
-    height: 55%;
-    form {
-      margin-top: 15px;
-    }
-    input {
-      border: none;
-      border-bottom: 1px solid #ccc;
-      outline: none;
-      background: rgba(0, 0, 0, 0);
-      height: 50px;
-      font-size: 14px;
-      width: 80%;
-      margin: 0px auto;
-      display: block;
-      margin-bottom: 20px;
-      &:-webkit-autofill {
-        -webkit-box-shadow: 0 0 0px 1000px white inset;
-      }
-      &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-        font-family: "Microsoft YaHei", "微软雅黑";
-        font-size: 14px;
-        color: #B6B6B6;
-      }
-      &::-moz-placeholder { /* Firefox 19+ */
-        font-family: "Microsoft YaHei", "微软雅黑";
-        font-size: 14px;
-        color: #B6B6B6;
-      }
-      &:-ms-input-placeholder { /* IE 10+ */
-        font-family: "Microsoft YaHei", "微软雅黑";
-        font-size: 14px;
-        color: #B6B6B6;
-      }
-      &:-moz-placeholder { /* Firefox 18- */
-        font-family: "Microsoft YaHei", "微软雅黑";
-        font-size: 14px;
-        color: #B6B6B6;
-      }
-    }
-    span {
-      display: block;
-      width: 80%;
-      margin: 0px auto;
-      font-family: "Microsoft YaHei", "微软雅黑";
-      font-size: 14px;
-      color: #B6B6B6;
-      line-height: 14px;
-      height: 14px;
-      transition: all .5s;
-      &.warning {
-        color: #F24747;
-      }
-    }
-    img {
-      width: 80px;
-      height: 30px;
-      position: absolute;
-      display: block;
-      bottom: 12px;
-      right: 43px;
-      cursor: pointer;
-      //background: #4990E2;
-      //border: 1px solid white;
-      border-radius: 3px;
-      font-family: "Microsoft YaHei", "微软雅黑";
-      font-size: 11px;
-      color: #FFFFFF;
-      letter-spacing: 0.71px;
-      outline: none;
-    }
-  }
-
-  .modal-foot {
-    padding-top: 10px;
-    height: 32.1%;
-    button {
-      width: 80%;
-      margin: 0px auto;
-      display: block;
-      height: 45px;
-      background-color: #4990E2;
-      border: none;
-      font-family: PingFangSC-Medium;
-      font-size: 14px;
-      color: #FFFFFF;
-      letter-spacing: 0.83px;
-      cursor: pointer;
-      margin-bottom: 15px;
-      &.disabled {
-        cursor: not-allowed;
-      }
-    }
-    .checkBox {
-      width: 12px;
-      height: 12px;
-      border-radius: 2px;
-      display: inline-block;
-      border: 1px solid #ccc;
-      cursor: pointer;
-    }
-    .agree {
-      background-color: #2d8cf0;
-      border-color: #2d8cf0;
-      position: relative;
-      &::after {
-        content: "";
-        display: table;
-        width: 4px;
-        height: 8px;
-        position: absolute;
-        top: 0px;
-        left: 3px;
-        border: 2px solid #fff;
-        border-top: 0;
-        border-left: 0;
-        transform: rotate(45deg) scale(1);
-      }
-    }
-    div {
-      width: 80%;
-      height: 35px;
-      margin: 0px auto;
-    }
-    span {
-      vertical-align: middle;
-      font-family: PingFangSC-Regular;
-      font-size: 14px;
-      letter-spacing: 0.83px;
-    }
-  }
-
   .modal-p {
-    width: 281px;
-    margin: 0 auto;
-    font-size: 16px;
-    font-family: "Microsoft YaHei", "微软雅黑";
-    color: rgba(51, 51, 51, 1);
-    line-height: 22px;
-    span {
-      color: #F56B23;
-      cursor: pointer;
+    > div {
+      margin-left: 60px;
     }
-  }
-
-  .modal-button {
-    border: none;
-    outline: none;
-    cursor: pointer;
-    background: rgba(253, 80, 2, 1);
-    width: 343px;
-    height: 52px;
-    font-size: 20px;
-    line-height: 52px;
-    font-family: "Microsoft YaHei", "微软雅黑";
-    color: rgba(255, 255, 255, 1);
-    border-radius: 4px;
-  }
-
-  .modal-img {
-    position: absolute;
-    right: 60px;
-    top: -15px;
-  }
-
-  .fr-modalBody {
-    text-align: center;
     > p {
-      font-size: 16px;
-      font-family: "Microsoft YaHei", "微软雅黑";
-      color: rgba(51, 51, 51, 1);
-    }
-    .steps {
-      display: flex;
-      > ul {
-        width: 25%;
-        list-style: none;
-        position: relative;
-        &:after {
-          display: inline-block;
-          content: '';
-          width: 50px;
-          position: absolute;
-          left: 57px;
-          top: 10px;
-          border-top: 2px solid #f56b23;
-        }
-        li {
-          font-family: "Microsoft YaHei", "微软雅黑";
-        }
-        li:nth-child(1) {
-          height: 20px;
-          width: 20px;
-          background: rgba(245, 107, 35, 1);
-          opacity: 0.9;
-          margin: 0 auto;
-          border-radius: 10px;
-          font-size: 14px;
-          color: rgba(255, 255, 255, 1);
-        }
-        li:nth-child(2) {
-          margin-top: 16px;
-          font-size: 16px;
-          color: rgba(51, 51, 51, 1);
-        }
-      }
-      ul:nth-child(4) {
-        &:after {
-          display: none;
-        }
-      }
-    }
-    .recharge {
-      margin-top: 24px;
       span {
         font-size: 16px;
-        font-family: "Microsoft YaHei", "微软雅黑";
+        font-family: MicrosoftYaHei;
+        font-weight: 400;
         color: rgba(51, 51, 51, 1);
+        line-height: 22px;
+        margin-left: 10px;
         position: relative;
-        top: 2px;
+        bottom: 18px;
+      }
+      margin: 50px 0;
+      text-align: center;
+    }
+    .payInfo {
+      margin-top: 50px;
+      display: flex;
+      .pay-p {
+        p {
+          font-size: 16px;
+          font-family: MicrosoftYaHei;
+          font-weight: 400;
+          color: rgba(51, 51, 51, 1);
+          line-height: 22px;
+          margin: 30px 40px;
+          span {
+            font-size: 36px;
+            font-weight: 600;
+            color: rgba(208, 2, 27, 1);
+          }
+        }
       }
     }
-    .recharge-select {
-      margin-top: 20px;
+  }
+
+  .pay-wap {
+    padding: 20px;
+    > p {
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      font-weight: 400;
+      color: rgba(102, 102, 102, 1);
+      margin-bottom: 10px;
+    }
+    .pw-img {
+      img {
+        display: inline-block;
+        margin-right: 20px;
+        cursor: pointer;
+        position: relative;
+        top: 12px;
+        border: 1px solid #FFF;
+        &.selected {
+          border: 1px solid rgba(74, 144, 226, 1);
+        }
+      }
+    }
+  }
+
+  .p1 {
+    padding: 20px;
+    font-size: 12px;
+    font-family: MicrosoftYaHei;
+    font-weight: 400;
+    color: rgba(255, 0, 0, 1);
+    line-height: 17px;
+  }
+
+  //图标箭头向下样式
+  .click_icon.icons {
+    width: 13px !important;
+    height: 13px !important;
+    border: 1px solid #2a99f2;
+    border-radius: 50%;
+    transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    transition: all 0.5s;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+
+  .click_icon.icons::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    width: 7px !important;
+    height: 6px !important;
+    border: #2a99f2 solid 1px;
+    border-top-style: none;
+    border-right-style: none;
+  }
+
+  //图标向上样式
+  .hide_icon.icons {
+    transform: rotate(-225deg);
+    -ms-transform: rotate(-225deg);
+    -webkit-transform: rotate(-225deg);
+  }
+
+  .attestationForm {
+    display: flex;
+    > p {
+      padding-left: 20px;
+      font-size: 14px;
+      font-family: MicrosoftYaHei;
+      font-weight: 400;
+      color: rgba(102, 102, 102, 1);
     }
   }
 </style>
