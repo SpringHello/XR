@@ -534,6 +534,11 @@
           return
         }
         this.$router.push(path)
+      },
+      exit(){
+        axios.get('user/logout.do').then(response => {
+          window.location.reload()
+        })
       }
     },
     computed: mapState({
