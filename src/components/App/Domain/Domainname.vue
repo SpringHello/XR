@@ -1,5 +1,5 @@
 <template>
-  <div style="background: #FFF;">
+  <div style="background: #FFF; font-family:PingFangSC-Regular;" id="domain">
     <div class="top">
       <p>域名注册全新上线</p>
       <span>帮助建立您的网上业务，从这里开始…</span>
@@ -15,10 +15,10 @@
           <Option value="zdy">.自定义添加</Option>
         </Select>
         </Input>
-        <button>搜索</button>
+        <button @click="textSearch">搜索</button>
       </div>
     </div>
-    <div class="content">
+    <div class="content" v-show="show==1">
       <div class="content-steps">
         <p><span><<<<<<<<<<</span>域名申请流程<span>>>>>>>>>>></span></p>
         <ul>
@@ -31,7 +31,7 @@
       <div class="content-price">
         <p><span><<<<<<<<<<</span>域名价格<span>>>>>>>>>>></span></p>
         <div class="table">
-          <Table border :columns="columns" :data="data" stripe :row-class-name="rowClassName"></Table>
+          <Table border :columns="columns" :data="data" stripe></Table>
         </div>
       </div>
       <div class="content-advantage">
@@ -63,6 +63,89 @@
         </ul>
       </div>
     </div>
+    <div v-show="show==2" class="searchResult">
+      <div class="result-left">
+        <div class="left-top">
+          <p>域名查询结果</p>
+          <button>筛选
+            <Icon type="ios-arrow-down"/>
+          </button>
+        </div>
+        <li>
+          <p>such.net
+            <button>未注册</button>
+          </p>
+          <div>
+            <span>¥1541<span>/年</span></span>
+            <button>加入清单</button>
+          </div>
+        </li>
+        <li>
+          <p>such.net
+            <button>未注册</button>
+          </p>
+          <div>
+            <span>¥154<span>/年</span></span>
+            <button>加入清单</button>
+          </div>
+        </li>
+        <li>
+          <p>such.net
+            <button>未注册</button>
+          </p>
+          <div>
+            <span>¥1541<span>/年</span></span>
+            <button>加入清单</button>
+          </div>
+        </li>
+        <li>
+          <p>such.net
+            <button>未注册</button>
+          </p>
+          <div>
+            <span>¥1541<span>/年</span></span>
+            <button>加入清单</button>
+          </div>
+        </li>
+        <li>
+          <p>.com
+            <button>未注册</button>
+          </p>
+          <div>
+            <span>¥15<span>/年</span></span>
+            <button>加入清单</button>
+          </div>
+        </li>
+        <li>
+          <p>.cn
+            <button>未注册</button>
+          </p>
+          <div>
+            <span>¥141<span>/年</span></span>
+            <button>加入清单</button>
+          </div>
+        </li>
+      </div>
+      <div class="result-right">
+        <div class="all">
+          <p>域名清单 <span>全部移除</span></p>
+          <ul class="all-data">
+            <li>
+              <h2>such.net</h2>
+              <button>移除</button>
+            </li>
+          </ul>
+        </div>
+        <div class="statistical">
+          <p>
+            <span>已加入域名 3 个</span>
+            <span>优惠金额：¥372.00</span>
+          </p>
+          <h1>应付金额：¥4772.00</h1>
+          <button>立即购买</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -70,6 +153,7 @@
   export default{
     data(){
       return {
+        show: 1,
         searchText: '',
         select: 'com',
         domainList: [
@@ -175,6 +259,15 @@
           },
         ],
       }
+    },
+    methods: {
+      textSearch(){
+        if (this.searchText && this.select) {
+          this.show = 2
+        } else {
+          this.show = 1
+        }
+      },
     }
   }
 </script>
@@ -300,6 +393,7 @@
       > .table {
         width: 1100px;
         margin: 0 auto;
+        border: 1px solid #53A0FD;
       }
     }
     .content-advantage {
@@ -397,6 +491,176 @@
       }
     }
 
+  }
+
+  .searchResult {
+    width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    padding: 50px 0 100px 0;
+
+    > .result-left {
+      width: 800px;
+      border: 1px solid rgba(233, 233, 233, 1);
+      border-bottom: none;
+      .left-top {
+        background: rgba(247, 247, 247, 1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 50px;
+        p {
+          font-size: 20px;
+          color: rgba(51, 51, 51, 1);
+          line-height: 28px;
+        }
+        button {
+          font-size: 20px;
+          color: rgba(51, 51, 51, 1);
+          line-height: 28px;
+          outline: none;
+          border: none;
+          cursor: pointer;
+          padding: 16px 99px;
+          background: rgba(247, 247, 247, 1);
+          border-left: 1px solid rgba(233, 233, 233, 1);
+
+        }
+      }
+      li {
+        list-style: none;
+        display: flex;
+        padding: 12px 29px 12px 50px;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid rgba(233, 233, 233, 1);
+        P {
+          font-size: 16px;
+          color: rgba(51, 51, 51, 1);
+          line-height: 22px;
+          button {
+            outline: none;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 1);
+            line-height: 17px;
+            background: rgba(102, 195, 0, 1);
+            padding: 2px 7px;
+            margin-left: 20px;
+          }
+        }
+        div {
+          span {
+            font-size: 20px;
+            color: rgba(248, 94, 29, 1);
+            line-height: 28px;
+            span {
+              font-size: 14px;
+              color: rgba(248, 94, 29, 1);
+              line-height: 20px;
+            }
+          }
+          button {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 1);
+            background: rgba(78, 157, 255, 1);
+            padding: 7px 27px;
+            line-height: 22px;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 20px;
+
+          }
+        }
+      }
+    }
+    > .result-right {
+      width: 380px;
+      padding-bottom: 40px;
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0px 0px 5px 5px rgba(0, 0, 0, 0.05);
+      .all {
+        margin: 23px 28px 40px 30px;
+        p {
+          font-size: 20px;
+          color: rgba(51, 51, 51, 1);
+          line-height: 28px;
+          padding: 0 14px 19px 14px;
+          border-bottom: 2px solid rgba(204, 204, 204, 1);
+          span {
+            float: right;
+            font-size: 16px;
+            color: rgba(42, 153, 242, 1);
+            line-height: 28px;
+            cursor: pointer;
+          }
+        }
+
+        .all-data {
+          padding: 30px 0 9px 0;
+          border-bottom: 2px solid rgba(204, 204, 204, 1);
+          li {
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 22px;
+            h2 {
+              font-size: 16px;
+              color: rgba(51, 51, 51, 1);
+              line-height: 22px;
+              font-weight: normal;
+
+            }
+            button {
+              font-size: 16px;
+              color: rgba(42, 153, 242, 1);
+              line-height: 22px;
+              border: 1px solid rgba(42, 153, 242, 1);
+              padding: 7px 43px;
+              background: #FFF;
+              cursor: pointer;
+              outline: none;
+            }
+          }
+        }
+      }
+      .statistical {
+        text-align: center;
+        p {
+          span {
+            font-size: 14px;
+            color: rgba(102, 102, 102, 1);
+            line-height: 20px;
+            display: inline-block;
+            &:first-of-type {
+              margin-right: 28px;
+            }
+          }
+        }
+        h1 {
+          font-weight: normal;
+          font-size: 16px;
+          color: rgba(51, 51, 51, 1);
+          line-height: 22px;
+          margin: 9px 0 30px 0;
+        }
+        button {
+          background: rgba(55, 125, 255, 1);
+          border-radius: 10px;
+          font-size: 16px;
+          color: rgba(255, 255, 255, 1);
+          line-height: 22px;
+          padding: 13px 114px;
+          outline: none;
+          border: none;
+          cursor: pointer;
+        }
+      }
+    }
   }
 
 </style>
