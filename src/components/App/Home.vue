@@ -100,7 +100,7 @@
       </div>
     </div>
      <!-- 八大场景区 -->
-    <div class="eigth-scene" :style="{background:'url('+selectedEightBg+')',backgroundRepeat:'no-repeat'}">
+    <!--<div class="eigth-scene" :style="{background:'url('+selectedEightBg+')',backgroundRepeat:'no-repeat'}">
       <div class="wrap">
         <div class="box">
           <div class="hint">
@@ -135,7 +135,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
     <!-- 云产品介绍区域 -->
     <div class="cloud-container">
       <div class="container">
@@ -424,9 +424,9 @@
 
 <script type="text/ecmascript-6">
   import $store from '@/vuex'
-  import polar from '@/echarts/home'
+  /*import polar from '@/echarts/home'
   import echarts from 'echarts'
-  import china from '@/echarts/china.json'
+  import china from '@/echarts/china.json'*/
   import throttle from 'throttle-debounce/throttle'
   import axios from 'axios';
 
@@ -927,17 +927,17 @@
       }
     },
     mounted() {
-      echarts.registerMap('china', china)
+      /*echarts.registerMap('china', china)
       this.myChart = echarts.init(document.getElementById('echarts'))
-      this.myChart.setOption(polar)
+      this.myChart.setOption(polar)*/
       // 待优化
-      this.scrollFn = throttle(200, () => {
+      /*this.scrollFn = throttle(200, () => {
         if ((document.body.clientHeight - this.$refs.cloudContentFade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.cloudContentFade) {
           this.cloudContentFade = true
         }
-        if ((document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.fade) {
+        /!*if ((document.body.clientHeight - this.$refs.fade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.fade) {
           this.fade = true
-        }
+        }*!/
         if ((document.body.clientHeight - this.$refs.consoleFade.offsetTop + window.scrollY || window.pageYOffset) > 300 && !this.consoleFade) {
           this.consoleFade = true
         }
@@ -953,7 +953,7 @@
         }
       })
       this.scrollFn()
-      window.addEventListener('scroll', this.scrollFn)
+      window.addEventListener('scroll', this.scrollFn)*/
     },
     created() {
       this.getnews()
