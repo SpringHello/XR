@@ -539,7 +539,7 @@
                   })
                 ]), h('DropdownMenu', {
                   slot: 'list'
-                }, [h('DropdownItem', {
+                }, [/*h('DropdownItem', {
                  nativeOn: {
                  click: () => {
                 //  this.backupsForm.name = ''
@@ -549,7 +549,7 @@
                   this.showModal.backups = true
                  }
                  }
-                 }, '数据库备份'),
+                 }, '数据库备份'),*/
                  h('DropdownItem', {
                   nativeOn: {
                     click: () => {
@@ -831,7 +831,7 @@
       })
     },
     created() {
-      
+
     },
     methods: {
       // 绑定公网ip

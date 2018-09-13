@@ -191,7 +191,7 @@
       </div>
     </div>
     <!-- 满足严苛要求的卓越品质 -->
-    <div class="feature-container" id="fade" ref="fade">
+    <!--<div class="feature-container" id="fade" ref="fade">
       <div class="container">
         <div class="feature-desc">
           <p class="title" @click="fade=!fade">满足严苛品质要求</p>
@@ -216,7 +216,7 @@
           </div>
         </transition>
       </div>
-    </div>
+    </div>-->
     <!-- 图形化控制台 -->
     <!-- <div class="console-container" ref="consoleFade">
       <div class="container">
@@ -982,7 +982,7 @@
       height: 916px;
       background: url('../../assets/img/home/datacenter-line.png') no-repeat 240px 20px,url('../../assets/img/home/datacenter-bg.png') no-repeat top center;
       .header-g{
-        padding-top: 60px; 
+        padding-top: 60px;
         margin-bottom: 10px;
         .title {
           color: #fff;
@@ -1007,7 +1007,7 @@
         .online {
           background: #FF624B;
           color: white;
-          
+
         }
         .mark {
           position: absolute;
@@ -1023,7 +1023,7 @@
               display: inline-block;
               width: 12px;
               height: 12px;
-              border-radius: 50%; 
+              border-radius: 50%;
               background: #FFD100;
               margin-right: 5px;
             }
@@ -1062,7 +1062,7 @@
     .require {
       text-align: center;
       margin-bottom: 80px;
-      .main { 
+      .main {
         > div {
           width: 300px;
           p {
@@ -1110,7 +1110,7 @@
         justify-content: space-between;
         box-shadow: 0px 13px 44px -16px rgba(216, 216, 216, 0.79);
         .main-left {
-          margin-left: 20px; 
+          margin-left: 20px;
           padding: 40px 60px;
           position: relative;
           &::before {
@@ -1238,7 +1238,7 @@
                   font-size: 14px;
                   color: rgba(102, 102, 102, 1);
                   cursor: pointer;
-                  border-bottom: dashed 1px #CFCFCF; 
+                  border-bottom: dashed 1px #CFCFCF;
                   &:hover {
                     color: #377DFF;
                   }
