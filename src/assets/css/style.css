@@ -1,0 +1,315 @@
+header {
+  width: 100%;
+  height: 70px;
+  position: relative;
+}
+header::before {
+  content: '';
+  height: 70px;
+  width: 100%;
+  display: block;
+  position: absolute;
+  background-color: #333333;
+  transition: height .2s;
+  z-index: -1;
+}
+header:hover::before {
+  height: 70px;
+}
+header .wrapper {
+  width: 1200px;
+  height: 70px;
+  margin: 0px auto;
+  display: flex;
+  justify-content: space-between;
+}
+header .wrapper .logo {
+  width: 140px;
+  height: 70px;
+}
+header .wrapper .logo div {
+  width: 100%;
+  height: 100%;
+  background: url(/ruicloud/resource/img/logo.gif) no-repeat 50%;
+  background-size: cover;
+}
+header .wrapper .operate ul {
+  display: inline-block;
+  margin: 0px auto;
+  font-size: 0px;
+  width: unset !important;
+}
+header .wrapper .operate ul li {
+  line-height: 70px;
+  display: inline-block;
+  font-size: 14px;
+}
+header .wrapper .operate ul li:nth-child(7) span {
+  border-right: 1px solid #939393;
+  display: inline-block;
+  line-height: 14px;
+  padding-right: 40px;
+}
+header .wrapper .operate ul li .menu-dropdown .menu-dropdown-rel a {
+  color: #fff;
+  transition: all .3s;
+  cursor: pointer;
+  display: block;
+  line-height: 70px;
+}
+header .wrapper .operate ul li .menu-dropdown .menu-dropdown-rel a span {
+  padding: 0px 30px;
+}
+header .wrapper .operate ul li .menu-dropdown .menu-dropdown-rel a:hover {
+  color: #2d8cf0;
+}
+header .wrapper .operate ul li .menu-dropdown .menu-dropdown-list {
+  position: absolute;
+  width: 100%;
+  opacity: 0.96;
+  background: #333333;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+}
+header .wrapper .operate ul li .menu-dropdown .menu-dropdown-list .content-dropdown {
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  opacity: 0.96;
+  background: #333333;
+  color: #ffffff;
+}
+header .wrapper .operate ul li .menu-dropdown .menu-dropdown-list .content-dropdown .content {
+  width: 1200px;
+  margin: 0px auto;
+  transition: height .3s;
+  overflow: hidden;
+}
+header .wrapper .operate ul li .menu-dropdown .menu-dropdown-list .content-dropdown .content .column {
+  display: flex;
+  padding: 26px 0px;
+  justify-content: space-between;
+  text-align: left;
+}
+header .wrapper .operate ul li .menu-dropdown .menu-dropdown-list .content-dropdown .content .column > div {
+  width: 15%;
+}
+header .wrapper .operate ul li .menu-dropdown .menu-dropdown-list .content-dropdown .content .column h2 {
+  font-size: 18px;
+  color: #FFFFFF;
+  line-height: 32px;
+  font-weight: normal;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  padding-bottom: 10px;
+  margin:0px;
+}
+header .wrapper .operate ul li .menu-dropdown .menu-dropdown-list .content-dropdown .content .column a {
+  margin-top: 10px;
+  display: inline-block;
+  font-size: 14px;
+  color: #FFFFFF;
+  line-height: 25px;
+}
+header .wrapper .operate ul li .menu-dropdown .menu-dropdown-list .content-dropdown .content .column a:hover {
+  color: #377dff;
+}
+header .wrapper .operate ul li .menu-dropdown .menu-dropdown-list .content-dropdown .content .column p {
+  font-size: 12px;
+  color: #999999;
+  line-height: 21px;
+  margin:0px;
+}
+header .wrapper .operate ul .line {
+  height: 2px;
+  background-color: #377dff;
+  position: absolute;
+  bottom: 0px;
+}
+
+
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+p, span {
+  font-family: "pingfang sc medium", Microsoft YaHei;
+  line-height: 100%;
+}
+
+html {
+  overflow-y: scroll;
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  background-color: #f5f5f5;
+  margin: 0px !important;
+}
+
+ul {
+  font-size: 0px;
+  padding:0px;
+}
+
+ul li {
+  font-size: 12px;
+}
+
+a{
+  text-decoration:none
+}
+
+li{
+  list-style:none;
+  display:inline-block;
+}
+
+
+#app-foot #foot-free {
+  padding: 54px 0px 50px;
+  background-color: #377dff;
+  text-align: center;
+}
+#app-foot #foot-free > p {
+  font-size: 28px;
+  color: #ffffff;
+}
+#app-foot #foot-free > span {
+  text-align: center;
+  font-size: 14px;
+  display: block;
+  color: #ffffff;
+  margin-top: 26px;
+}
+#app-foot #foot-free > a {
+  margin: 28px auto 0px;
+  outline: none;
+  border: none;
+  display: inline-block;
+  padding: 13px 60px;
+  background-color: #ffe777;
+  font-size: 14px;
+  color: #377dff;
+  width: max-content;
+  line-height: 100%;
+}
+#app-foot #foot-support {
+  padding: 30px 0px;
+}
+#app-foot #foot-support #wrapper {
+  width: 1100px;
+  margin: 0px auto;
+  display: flex;
+  justify-content: space-between;
+}
+#app-foot #foot-support #wrapper .flex-item i {
+  vertical-align: middle;
+  font-size: 40px;
+  color: #cccccc;
+}
+#app-foot #foot-support #wrapper .flex-item span {
+  font-size: 14px;
+  color: #999999;
+  line-height: 18px;
+}
+#app-foot #foot-footer .footer-top {
+  height: 300px;
+  background-color: #434343;
+  padding-top: 46px;
+}
+#app-foot #foot-footer .footer-top .description {
+  width: 1200px;
+  margin: 0px auto;
+  display: flex;
+}
+#app-foot #foot-footer .footer-top .description .product {
+  width: 55%;
+}
+#app-foot #foot-footer .footer-top .description .product > p {
+  color: #ffffff;
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+#app-foot #foot-footer .footer-top .description .product > div {
+  margin-right: 20px;
+  display: inline-block;
+  height: 149px;
+  vertical-align: bottom;
+}
+#app-foot #foot-footer .footer-top .description .product > div ul span {
+  color: #ffffff;
+  margin-bottom: 15px;
+  display: table;
+  font-size: 12px;
+}
+#app-foot #foot-footer .footer-top .description .product > div ul li {
+  font-size: 12px;
+  margin-bottom: 15px;
+  line-height: 100%;
+  display:block
+}
+#app-foot #foot-footer .footer-top .description .product > div ul li a {
+  color: #999999;
+}
+#app-foot #foot-footer .footer-top .description .product > div ul li a:hover {
+  color: #377dff;
+}
+#app-foot #foot-footer .footer-top .description .document {
+  width: 12%;
+}
+#app-foot #foot-footer .footer-top .description .document > p {
+  color: #ffffff;
+  font-size: 14px;
+  margin-bottom: 26px;
+}
+#app-foot #foot-footer .footer-top .description .document > a {
+  color: #ffffff;
+  display: table;
+  margin-bottom: 15px;
+}
+#app-foot #foot-footer .footer-top .description .document > a:hover {
+  color: #377dff;
+}
+#app-foot #foot-footer .footer-top .description .contact {
+  width: 30%;
+}
+#app-foot #foot-footer .footer-top .description .contact > span {
+  color: #ffffff;
+  display: table;
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+#app-foot #foot-footer .footer-top .description .contact > span:first-of-type {
+  margin-bottom: 30px;
+}
+#app-foot #foot-footer .footer-bottom {
+  background-color: #1B1B1B;
+}
+#app-foot #foot-footer .footer-bottom ul {
+  width: 1200px;
+  margin: 0 auto;
+  padding: 31px 0px;
+  display: flex;
+  justify-content: flex-start;
+}
+#app-foot #foot-footer .footer-bottom ul > p {
+  margin-right: 20px;
+  line-height: 20px;
+  font-size: 12px;
+}
+#app-foot #foot-footer .footer-bottom ul li {
+  line-height: 20px;
+  font-size: 12px;
+  color: #FFF;
+  margin-right: 70px;
+  cursor: pointer;
+}
+#app-foot #foot-footer .footer-bottom ul li:last-of-type {
+  margin-left: 395px;
+  margin-right: 0;
+}
+
+

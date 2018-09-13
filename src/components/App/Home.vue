@@ -132,7 +132,7 @@
             </div>
             <div class="content" v-for="(item,index) in selectedEightscene" :key="index">
                 <h3>{{item.title}}</h3>
-                <div class="scene"> 
+                <div class="scene">
                   <p class="title">应用场景</p>
                   <div>
                     <p>{{item.scene}}</p>
@@ -246,6 +246,7 @@
       </div>
     </div>
     <!-- 满足严苛要求的卓越品质 -->
+
     <!-- <div class="feature-container" id="fade" ref="fade">
       <div class="container">
         <div class="feature-desc">
@@ -271,7 +272,7 @@
           </div>
         </transition>
       </div>
-    </div> -->
+    </div>-->
     <!-- 图形化控制台 -->
     <!-- <div class="console-container" ref="consoleFade">
       <div class="container">
@@ -899,7 +900,7 @@
             online: true
           },
           {
-            text: '重庆', 
+            text: '重庆',
             top: '344px',
             left: '330px',
             online: true
@@ -1168,7 +1169,7 @@
           }
           .left-menu{
             width: 200px;
-            border-right: solid 1px #E6E6E6; 
+            border-right: solid 1px #E6E6E6;
             padding: 20px 0;ul {
               li {
                 width:200px;
@@ -1184,7 +1185,7 @@
                   background:linear-gradient(270deg,rgba(170,202,255,1) 0%,rgba(138,189,253,0) 100%);
                   font-weight:600;
                   color: #377DFF;
-                  border-right: #387DFF 6px solid; 
+                  border-right: #387DFF 6px solid;
                 }
               }
             }
@@ -1192,7 +1193,7 @@
           .content {
             padding: 40px 100px 40px 80px;
             > h3 {
-              padding-bottom: 20px; 
+              padding-bottom: 20px;
               font-size:24px;
               font-family:PingFangSC-Medium;
               font-weight:500;
@@ -1270,7 +1271,7 @@
       height: 916px;
       background: url('../../assets/img/home/datacenter-line.png') no-repeat 240px 20px,url('../../assets/img/home/datacenter-bg.png') no-repeat top center;
       .header-g{
-        padding-top: 60px; 
+        padding-top: 60px;
         margin-bottom: 10px;
         .title {
           color: #fff;
@@ -1295,7 +1296,7 @@
         .online {
           background: #FF624B;
           color: white;
-          
+
         }
         .mark {
           position: absolute;
@@ -1311,7 +1312,7 @@
               display: inline-block;
               width: 12px;
               height: 12px;
-              border-radius: 50%; 
+              border-radius: 50%;
               background: #FFD100;
               margin-right: 5px;
             }
@@ -1350,7 +1351,7 @@
     .require {
       text-align: center;
       margin-bottom: 80px;
-      .main { 
+      .main {
         > div {
           width: 300px;
           p {
@@ -1521,7 +1522,7 @@
                   font-size: 14px;
                   color: rgba(102, 102, 102, 1);
                   cursor: pointer;
-                  border-bottom: dashed 1px #CFCFCF; 
+                  border-bottom: dashed 1px #CFCFCF;
                   &:hover {
                     color: #377DFF;
                   }
