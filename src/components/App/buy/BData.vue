@@ -510,8 +510,8 @@
           systemName: arg[0],
           systemId: arg[1]
         }
-        if (arg[0].startsWith('sqlserver') && this.vmConfig.RAM == 1) {
-          this.vmConfig.RAM = 2
+        if (arg[0].startsWith('sqlserver') && this.vmConfig.RAM < 4) {
+          this.vmConfig.RAM = 4
         }
         //登录名
         this.account = arg[3]
@@ -526,8 +526,8 @@
          this.vmConfig.RAM = this.RAMList[0].value*/
       },
       changeRAM(ram){
-        if (this.system.systemName && this.system.systemName.startsWith('sqlserver') && ram == 1) {
-          this.$Message.info('sqlserver数据库内存不能低于2G')
+        if (this.system.systemName && this.system.systemName.startsWith('sqlserver') && ram < 4) {
+          this.$Message.info('sqlserver数据库内存不能低于4G')
           return
         }
         this.vmConfig.RAM = ram
@@ -789,8 +789,12 @@
               zone.kernelList.forEach(kernel => {
                 if (kernel.value == this.vmConfig.kernel) {
                   this.RAMList = kernel.RAMList
-                  if (this.system.systemName && this.system.systemName.startsWith('sqlserver') && this.RAMList[0].value == 1) {
-                    this.vmConfig.RAM = this.RAMList[1].value
+                  if (this.system.systemName && this.system.systemName.startsWith('sqlserver') && this.RAMList[0].value < 4) {
+                    if (this.RAMList[1].value < 4) {
+                      this.vmConfig.RAM = this.RAMList[2].value
+                    } else {
+                      this.vmConfig.RAM = this.RAMList[1].value
+                    }
                   } else {
                     this.vmConfig.RAM = this.RAMList[0].value
                   }
