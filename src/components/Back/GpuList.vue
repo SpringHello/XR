@@ -51,7 +51,7 @@
           <span class="universal-modal-title">制作快照</span>
         </p>
         <div class="universal-modal-content-flex">
-          <p class="mb20">您正为<span class="bluetext">11111</span>制作快照</p>
+          <p class="mb20">您正为<span class="bluetext">{{companyname}}</span>制作快照</p>
           <Form ref="snapshotValidate" :model="snapshotValidate" :rules="snapshotRuleValidate">
             <FormItem label="快照名称" prop="name">
               <Input v-model="snapshotValidate.name" placeholder="请输入2-4094范围内任意数字" :maxlength="15"></Input>
@@ -79,7 +79,7 @@
           </p>
         </div>
         <div slot="footer" class="modal-footer-border">
-          <Button type="ghost" @click="showModal.snapshot=false">取消</Button>
+          <Button type="ghost" @click="showModal.snapshot = false">取消</Button>
           <Button type="primary" @click="createVMSnapshot">确定</Button>
         </div>
       </Modal>
@@ -147,7 +147,26 @@
 
 <script type="text/ecmascript-6">
   import axios from 'axios'
-
+  const snoapshotName = (rule,value,callback)=>{
+    let reg = /^[0-9]{2,4094}$/
+    if(value == ''){
+      return callback(new Error('请输入快照名称'));
+    }else if(!reg.test(value)){
+      return callback(new Error('快照名称格式不正确'));
+    }else{
+      callback();
+    }
+  }
+  const mirrorName = (rule, value, callback) => {
+    let reg = /^[0-9a-zA-Z]{1,20}$/;
+    if(value == ''){
+      return callback(new Error('请输入镜像名称'));
+    }else if(!reg.test(value)){
+      return callback(new Error('镜像名称格式不正确'));
+    }else {
+      callback();
+    }
+  }
 
     export default{
       data(){
@@ -155,6 +174,8 @@
           //GPUID
           VMId:'',
           uuId:'',
+          //主机名称
+          companyname:'',
 
           //筛选主机
           gpuTimeValue:'',
@@ -224,7 +245,7 @@
           },
           snapshotRuleValidate:{
             name:[
-              {required:true,message:'请输入快照名称',trigger:'blur'}
+              {required:true,validator:snoapshotName,trigger:'blur'}
             ]
           },
 
@@ -236,7 +257,7 @@
           },
           mirrorRuleValidate:{
             name:[
-              {required:true,message:'请输入镜像名称',trigger:'blur'}
+              {required:true,validator:mirrorName,trigger:'blur'}
             ]
           },
 
@@ -348,7 +369,7 @@
                         cursor: 'pointer'
                       },
                     }, '删除中')])
-                } else if (params.row.status == '12') {
+                } else if (params.row.status == 2 && params.row.computerstate == 0) {
                   //删除中
                   return h('div', [
                     h('Spin', {
@@ -362,20 +383,7 @@
                         cursor: 'pointer'
                       },
                     }, '开机中')])
-                }else if(params.row.status == '10'){
-                  return h('div', [
-                    h('Spin', {
-                      style: {
-                        display: 'inline-block'
-                      }
-                    }),
-                    h('span', {
-                      style: {
-                        color: '#2A99F2',
-                        cursor: 'pointer'
-                      },
-                    },'重启中')])
-                }else if(params.row.status == '11'){
+                }else if(params.row.status == 2 && params.row.computerstate == 1){
                   return h('div', [
                     h('Spin', {
                       style: {
@@ -471,7 +479,7 @@
                   {
                     style:{color:'#2A99F2',padding:'8px 0',display:'inline-block'}
                   },[
-                  h('p',{style:{cursor:'pointer'},on:{click:()=>{ if(params.row.status == 2 || params.row.status){
+                  h('p',{style:{cursor:'pointer'},on:{click:()=>{ if(params.row.status == 2 || params.row.status == 3){
                         this.$Message.info('请等待主机完成当前操作');
                       }else {this.link(params.row)}}}},'远程链接'),
                   h('p',{style:{cursor:'pointer',margin:'5px 0'},
@@ -511,6 +519,7 @@
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
+                            this.companyname = params.row.companyname;
                             if(params.row.status == 2 || params.row.status ==3){
                               this.$Message.info('请等待主机完成当前操作');
                             }else {
@@ -546,8 +555,6 @@
                       h('DropdownItem', {
                         nativeOn: {
                           click: () => {
-                            params.row.status = '10';
-                            params.row.computerstate = '10';
                             this.uuId = params.row.computerid;
                             this.$Modal.confirm({
                               title:'提示',
@@ -585,12 +592,8 @@
                                   this.$Message.info('主机正在删除中');
                                 }else {
                                   if(params.row.computerstate == '0'){
-                                    params.row.status = '12';
-                                    params.row.computerstate = '12';
                                     this.openHost(params.row._index);
                                   }else if(params.row.computerstate == '1'){
-                                    params.row.status = '11';
-                                    params.row.computerstate = '11';
                                     this.stopHost(params.row._index);
                                   }
                                 }
@@ -615,7 +618,7 @@
               gpuServer:'1'
             }
           }).then(res => {
-            //没有渲染上->
+            sessionStorage.setItem('zonid',res.data.result[0].zoneid);
             vm.$store.state.zone.zoneid = res.data.result[0].zoneid;
             vm.$store.state.zone.zonename = res.data.result[0].zonename;
           })
@@ -639,16 +642,14 @@
               vpcId:'',
               zoneId:this.$store.state.zone.zoneid,
               status:this.gpuStatus,
-              timeValue:this.gpuTimeValue
+              timeType:this.gpuTimeValue
             }
           }).then(res => {
             if(res.status === 200 && res.data.status === 1){
               if(Object.keys(res.data.result).length != 0){
-                let count = 0;
                 for(let key in res.data.result){
                   let list = [];
-                  ++count;
-                  if(count !=1){
+                  if(key !='open'){
                     list = res.data.result[key].list.concat(res.data.result[key].list);
                   }else {
                     list = res.data.result[key].list;
@@ -692,7 +693,8 @@
            }
          }).then(res => {
            if(res.status == 200 && res.data.status == 1){
-              this.$Message.success('开机成功');
+              this.$Message.success(res.data.message);
+             this.getGpuServerList();
            }else{
              this.$Message.info(res.data.message);
            }
@@ -708,7 +710,7 @@
            }
          }).then(res => {
            if(res.status == 200 && res.data.status == 1){
-             this.$Message.success('关机成功');
+             this.$Message.success(res.data.message);
              this.getGpuServerList();
            }else {
              this.$Message.info(res.data.message);
