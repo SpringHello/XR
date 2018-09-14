@@ -1259,8 +1259,7 @@
       }
     }
     .register {
-      height:188px;
-      background: red;
+      height:180px;
       background: url("../../assets/img/home/bg-ripple.png") no-repeat center;
       text-align: center;
       color: #fff;
