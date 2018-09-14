@@ -18,7 +18,7 @@
               <h2>基本信息</h2>
               <div class="pi-base">
                 <div class="pi-base-portrait">
-                  <img src="../../assets/img/usercenter/uc-headphoto1.png" @click="showModal.setHeadPhoto = true">
+                  <img :src="userInfo.headportrait" @click="showModal.setHeadPhoto = true">
                   <p @click="showModal.setHeadPhoto = true">更换头像</p>
                 </div>
                 <div class="pi-base-info">
@@ -725,16 +725,18 @@
                        style="padding: 172px 0px;margin-bottom: 32px;height: 374px;color: #999;">
                     <img src="../../assets/img/usercenter/uc-add.png"/>
                   </div>
-                  <img style="height: 74px" v-else :src="uploadHeadPhoto">
+                  <div style="height: 374px;display: flex;justify-content: center;align-items: center" v-else>
+                    <img :src="uploadHeadPhoto">
+                  </div>
                   <p style="font-size:14px;font-family: MicrosoftYaHei;color:rgba(74,144,226,1);text-decoration: underline;padding-top: 20px;background: #FFF;text-align: left">
                     上传文件</p>
                 </Upload>
                 <p style="margin-top: 20px">请上传jpg、jpeg、png格式图片，大小控制在2M以内</p>
               </div>
               <div v-show="headPhotoType == 'system'" style="display: flex;flex-wrap: wrap;justify-content: space-between">
-                <div class="system-img" :class="{selected: selectedSystemPhoto == item.src}" v-for="item in systemPhotoGroup"
-                     @click="selectedSystemPhoto = item.src">
-                  <img :src="item.src"/>
+                <div class="system-img" :class="{selected: selectedSystemPhoto == item.photourl}" v-for="item in systemPhotoGroup"
+                     @click="selectedSystemPhoto = item.photourl">
+                  <img :src="item.photourl"/>
                 </div>
               </div>
             </div>
@@ -754,7 +756,7 @@
       </div>
       <div slot="footer" class="modal-footer-border">
         <Button type="ghost" @click="showModal.setHeadPhoto = false">取消</Button>
-        <Button type="primary">确定</Button>
+        <Button type="primary" @click="userUpdateSystemHead">确定</Button>
       </div>
     </Modal>
 
@@ -1202,50 +1204,8 @@
           setHeadPhoto: false
         },
         headPhotoType: 'system',
-        systemPhotoGroup: [
-          {
-            src: require('../../assets/img/usercenter/uc-headphoto1.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto2.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto3.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto4.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto5.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto6.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto7.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto8.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto9.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto10.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto11.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto12.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto13.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto14.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto15.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto16.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto17.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto18.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto19.png')
-          }, {
-            src: require('../../assets/img/usercenter/uc-headphoto20.png')
-          }
-        ],
-        selectedSystemPhoto: require('../../assets/img/usercenter/uc-headphoto1.png'),
+        systemPhotoGroup: [],
+        selectedSystemPhoto: '',
         uploadHeadPhoto: '',
         // 职业信息表单
         occupationalInfoForm: {
@@ -2044,6 +2004,7 @@
             }*/
       this.listNotice()
       this.getContacts()
+      this.getSystemHead()
     },
     methods: {
       init() {
@@ -2101,7 +2062,34 @@
             break
         }
       },
-
+      // 获取系统头像列表
+      getSystemHead() {
+        let url = 'user/getSystemHead.do'
+        this.$http.get(url).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.systemPhotoGroup = res.data.result
+            this.selectedSystemPhoto = res.data.result[0].photourl
+          }
+        })
+      },
+      // 更新头像
+      userUpdateSystemHead() {
+        let params = {
+          photoUrl: this.selectedSystemPhoto
+        }
+        let url = 'user/userUpdateSystemHead.do'
+        this.$http.post(url, params).then(res => {
+          if (res.status == 200 && res.data.status == 1) {
+            this.showModal.setHeadPhoto = false
+            this.$Message.success(res.data.message)
+            this.init()
+          } else {
+            this.$message.info({
+              content: res.data.message
+            })
+          }
+        })
+      },
       // 绑定手机
       bindMobilePhone() {
         var url = 'user/updatePhone.do'

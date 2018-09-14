@@ -15,14 +15,14 @@
               <router-link to="GpuList">
                 <Button>返回</Button>
               </router-link>
-              <Button>连接主机</Button>
+              <Button @click="$router.push({path:'link'})">连接主机</Button>
             </div>
           </div>
           <div style="display: flex;margin-top: 20px;">
             <div class="host_box">
                 <p>{{gpuDetail.peizhi}} | {{gpuDetail.zonename}}</p>
                 <p>镜像系统：{{gpuDetail.templatename}}</p>
-                <p>到期时间/有效期：{{gpuDetail.templatename}}</p>
+                <p>到期时间/有效期：{{gpuDetail.endtime}}</p>
                 <p>内网地址：145.168.35.23</p>
               <p>登录密码：  <span :class="[isActive ? 'send' : 'nosend']" @click="lookPassword">{{codePlaceholder}}</span></p>
             </div>
@@ -40,7 +40,7 @@
           </div>
         </div>
         <div class="tabs">
-          <Tabs type="card" :animated="false" >
+          <Tabs type="card" :animated="false">
             <TabPane style="background: #FFFFFF;" label="监控">
               <!--CPU利用率-->
               <div class="tab_box">
@@ -255,6 +255,7 @@
 
 <script>
   import axios from 'axios'
+  import $store from '@/vuex'
   var urlList = {
     dayURL: 'alarm/getVmAlarmByHour.do',
     otherURL: 'alarm/getVmAlarmByDay.do'
@@ -422,6 +423,13 @@
             title:'操作',
             width:100,
             render:(h,params) =>{
+              if (params.row.status == 2 || params.row.status == 3) {
+                return h('span', {
+                  style: {
+                    cursor: 'not-allowed'
+                  },
+                }, '回滚')
+              } else {
               return h('span',{
                 style:{
                   color:'#2A99F2',
@@ -435,6 +443,7 @@
                 }
               },'回滚')
             }
+           }
           }
         ],
         snapshotData:[],
@@ -497,7 +506,11 @@
           isemailalarmSec:'',
           issmsalarmSec:'',
         },
-        lookPasswordFormRule:{},
+        lookPasswordFormRule:{
+          input:[
+            {required:true,message:'请输入密码',trigger:'blur'}
+          ]
+        },
 
 
         //Gpu服务器详情
@@ -573,23 +586,23 @@
         issmsalarm: false,
       }
     },
-    beforeRouteEnter(to, from, next){
-      next(vm =>{
-        axios.get('information/zone.do',{
-          params:{
-            gpuServer:'1'
-          }
-        }).then(res => {
-          vm.$store.state.zone.zoneid = res.data.result[0].zoneid;
-          vm.$store.state.zone.zonename = res.data.result[0].zonename;
-        })
-      })
-    },
+    // beforeRouteEnter(to, from, next){
+    //   next(vm =>{
+    //     axios.get('information/zone.do',{
+    //       params:{
+    //         gpuServer:'1'
+    //       }
+    //     }).then(res => {
+    //       vm.$store.state.zone.zoneid = res.data.result[0].zoneid;
+    //       vm.$store.state.zone.zonename = res.data.result[0].zonename;
+    //     })
+    //   })
+    // },
     beforeRouteLeave(to, from, next){
       axios.get('information/zone.do',{
       }).then(res => {
-        this.$store.state.zone.zoneid = res.data.result[0].zoneid;
-        this.$store.state.zone.zonename = res.data.result[0].zonename;
+       $store.state.zone.zoneid = res.data.result[0].zoneid;
+        $store.state.zone.zonename = res.data.result[0].zonename;
       })
       next();
     },
@@ -600,7 +613,7 @@
         axios.get('gpuserver/listGpuServerById.do',{
           params:{
             GpuId:sessionStorage.getItem('uuId'),
-            zoneId:this.$store.state.zone.zoneid,
+            zoneId:sessionStorage.getItem('zonid'),
             changeCost:'1'
           }
         }).then(res => {
@@ -616,7 +629,7 @@
       selectSnapshotList(){
         axios.get('Snapshot/listVMSnapshot.do',{
           params:{
-            zoneId:this.$store.state.zone.zoneid,
+            zoneId:sessionStorage.getItem('zonid'),
             resourceId:sessionStorage.getItem('uuId')
           }
         }).then(res => {
@@ -633,6 +646,10 @@
 
       //删除快照
       deleteSnapshot(){
+        if(this.ids == ''){
+          this.$Message.info('请先选择一个快照');
+          return;
+        }
         this.$Modal.confirm({
           title:'删除快照',
           content:'是否删除快照',
@@ -817,6 +834,7 @@
         }
         this.selectOperationLog();
       },
+
       //导出统计图
       checkImg(code){
         var parts = code.split(';base64,');
@@ -985,9 +1003,31 @@
         })
       },
 
-
+      //连接主机
+      link(item) {
+        sessionStorage.setItem('link-companyid', item.companyid);
+        sessionStorage.setItem('link-vmid', item.computerid);
+        sessionStorage.setItem('link-zoneid', item.zoneid);
+        sessionStorage.setItem('link-phone', this.$store.state.authInfo.phone);
+        this.$router.push('link');
+      },
     },
+    computed:{
+      '$store.state.zone'(){
+        console.log(this.$store.state.zone.zoneid + '计算属性');
+        return $store.commit('setZone');
+    }
+  },
     created(){
+      axios.get('information/zone.do',{
+        params:{
+          gpuServer:'1'
+        }
+      }).then(res => {
+        console.log($store.state.zone.zoneid);
+        $store.state.zone= res.data.result[0];
+        // $store.commit('setZone');
+      })
       this.getGpuHostDetail();
       this.selectSnapshotList();
       this.getUtilization();
@@ -1000,8 +1040,7 @@
           type: 'core',
           zoneId:this.$store.state.zone.zoneid
         }
-      })
-        .then(response => {
+      }).then(response => {
           if (response.status == 200 && response.data.status == 1) {
             this.cpu.series[0].data = response.data.result.cpuUse;
             this.momery.series[0].data = response.data.result.memoryUse;
@@ -1009,7 +1048,8 @@
             this.momery.xAxis.data = response.data.result.xaxis;
           }
         })
-    }
+    },
+
   }
 </script>
 

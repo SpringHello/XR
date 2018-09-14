@@ -527,12 +527,22 @@
           },
           {
             title: '押金金额',
+            width: 130,
             render: (h, params) => {
-              return h('span', {
+              let arr = []
+              let param1 = h('li', {
+                style: {
+                  textDecoration: 'line-through'
+                }
+              }, '原价：¥' + params.row.originalPrice)
+              let param2 = h('li', {
                 style: {
                   color: '#D0021B'
                 }
               }, '¥' + params.row.cashPledge)
+              arr.push(param1)
+              arr.push(param2)
+              return h('ul', {}, arr)
             }
           },
         ],
@@ -701,6 +711,7 @@
               this.orderData.push({
                 productType: '云服务器',
                 configs: this.configGroup[this.index1].hostGroup[this.index2],
+                originalPrice: this.configGroup[this.index1].hostGroup[this.index2].originalCost,
                 time: this.time,
                 title: this.configGroup[this.index1].headline,
                 cashPledge: Number(this.cashPledge)
