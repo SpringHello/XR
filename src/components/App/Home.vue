@@ -121,9 +121,6 @@
     <div class="eigth-scene" :style="{background:'url('+selectedEightBg+')',backgroundRepeat:'no-repeat',backgroundPosition:'center'}">
       <div class="wrap">
         <div class="box">
-          <div class="hint">
-            <span>免费使用一年</span>
-          </div>
           <div class="container">
             <div class="left-menu">
               <ul>
@@ -131,6 +128,9 @@
               </ul>
             </div>
             <div class="content" v-for="(item,index) in selectedEightscene" :key="index">
+                <div class="hint">
+                  <span>{{item.hint}}</span>
+                </div>
                 <h3>{{item.title}}</h3>
                 <div class="scene">
                   <p class="title">应用场景</p>
@@ -179,11 +179,11 @@
       </div>
     </div>
     <!-- 云产品展示区域 -->
-    <div class="cloud-content" ref="cloudContentFade">
+    <div class="cloud-content">
       <div class="container">
         <transition name="cloudContentFade">
           <div v-show="cloudContentFade">
-            <p v-for="(item,index) in cloudContainer" :key="index" v-if="item.select">{{item.desc}}</p>
+            <!-- <p v-for="(item,index) in cloudContainer" :key="index" v-if="item.select">{{item.desc}}</p> -->
             <div class="content-carousel">
               <div v-for="(item,index) in cloudContainer" :key="index">
                 <transition name="fade">
@@ -302,7 +302,7 @@
         </div>
       </div>
     </div> -->
-    <div class="require">
+    <div class="require" ref="require">
       <div class="wrap">
         <div class="header-g">
           <p class="title">满足严苛品质要求</p>
@@ -313,8 +313,8 @@
             <p>{{item.title}}</p>
             <div class="img-wrap"  @mouseenter="requireEnter(index)" @mouseleave="requireLeave(index)">
               <span>
-                <img :src="item.img" alt="1" v-if="!item.isShow">
-                <img :src="item.imgHover" alt="2" v-else>
+                <img :src="item.img" alt="" v-if="!item.isShow">
+                <img :src="item.imgHover" alt="" v-else>
               </span>
             </div>
             <span>{{item.desc}}</span>
@@ -376,8 +376,8 @@
         </div>
         <div class="link-list wrap">
           <dl v-for="(item,index) in linkList" :key="index">
-            <dt>{{item.typename}}
-              <span>{{item.EnglishName.toUpperCase()}}</span>
+            <dt :style="{background:'url('+item.bgPictureUrl+')',backgroundRepeat:'no-repeat'}">
+              <span>{{item.typename}}</span>
               <router-link :to="`article/${item.id}`">More></router-link>
             </dt>
             <dd>
@@ -492,7 +492,8 @@
             ],
             configure: ['1核1G1M带宽'],
             link: 'host',
-            bgUrl: require('../../assets/img/home/eightscene-bg-1.png')
+            bgUrl: require('../../assets/img/home/eightscene-bg-1.png'),
+            hint: '免费使用一年'
           },
           {
             title: '自助建站',
@@ -505,7 +506,8 @@
             ],
             configure: ['1核1G1M带宽'],
             link: 'web',
-            bgUrl: require('../../assets/img/home/eightscene-bg-2.png')
+            bgUrl: require('../../assets/img/home/eightscene-bg-2.png'),
+            hint: '免费使用一年'
           },
           {
             title: '存储&网盘',
@@ -516,7 +518,8 @@
             ],
             configure: ['1核1G1M带宽'],
             link: 'disk',
-            bgUrl: require('../../assets/img/home/eightscene-bg-3.png')
+            bgUrl: require('../../assets/img/home/eightscene-bg-3.png'),
+            hint: '免费使用一年'
           },
           {
             title: '软件研发',
@@ -529,7 +532,8 @@
             ],
             configure: ['1核1G1M带宽'],
             link: 'software',
-            bgUrl: require('../../assets/img/home/eightscene-bg-4.png')
+            bgUrl: require('../../assets/img/home/eightscene-bg-4.png'),
+            hint: '免费使用一年'
           },
           {
             title: '游戏服务',
@@ -540,7 +544,8 @@
             ],
             configure: ['1核1G1M带宽'],
             link: 'game',
-            bgUrl: require('../../assets/img/home/eightscene-bg-5.png')
+            bgUrl: require('../../assets/img/home/eightscene-bg-5.png'),
+            hint: '免费使用一年'
           },
           {
             title: '图形设计',
@@ -553,7 +558,8 @@
             ],
             configure: ['1核1G1M带宽'],
             link: 'design',
-            bgUrl: require('../../assets/img/home/eightscene-bg-6.png')
+            bgUrl: require('../../assets/img/home/eightscene-bg-6.png'),
+            hint: '免费适用'
           },
           {
             title: '人工智能',
@@ -562,11 +568,12 @@
               require('../../assets/img/sceneList/sl-icon21.png'),
               require('../../assets/img/sceneList/sl-icon22.png'),
               require('../../assets/img/sceneList/sl-icon23.png'),
-              require('../../assets/img/sceneList/sl-icon24.png')
+              require('../../assets/img/sceneList/sl-icon24.png'),
             ],
             configure: ['1核1G1M带宽'],
             link: 'AI',
-            bgUrl: require('../../assets/img/home/eightscene-bg-7.png')
+            bgUrl: require('../../assets/img/home/eightscene-bg-7.png'),
+            hint: '免费适用'
           },
           {
             title: '超级运算',
@@ -576,7 +583,8 @@
             ],
             configure: ['1核1G1M带宽'],
             link: 'supercomputing',
-            bgUrl: require('../../assets/img/home/eightscene-bg-8.png')
+            bgUrl: require('../../assets/img/home/eightscene-bg-8.png'),
+            hint: '免费适用'
           },
         ],
         bannerText: require('../../assets/img/home/active3Text.png'),
@@ -895,56 +903,57 @@
         datacenterData: [
           {
             text: '北京',
-            top: '286px',
+            top: '206px',
             left: '380px',
             online: true
           },
           {
             text: '重庆',
-            top: '344px',
-            left: '330px',
+            top: '264px',
+            left: '380px',
             online: true
           },
           {
             text: '武汉',
-            top: '318px',
-            left: '362px',
+            top: '238px',
+            left: '352px',
             online: true
           },
            {
             text: '沈阳',
-            top: '280px',
-            left: '438px',
+            top: '194px',
+            left: '428px',
             online: true
           },
           {
             text: '浙江',
-            top: '320px',
+            top: '240px',
             left: '436px',
             online: true
           },
           {
             text: '广州',
-            top: '370px',
+            top: '290px',
             left: '360px',
             online: true
           },
           {
             text: '洛杉矶',
-            top: '236px',
-            left: '860px',
+            top: '158px',
+            left: '770px',
             online: false
           },
           {
             text: '香港',
-            top: '368px',
-            left: '420px',
+            top: '288px',
+            left: '430px',
             online: false
           }
         ]
       }
     },
     mounted() {
+      // console.log(this.$refs.require.offsetTop)
       echarts.registerMap('china', china)
       this.myChart = echarts.init(document.getElementById('echarts'))
       this.myChart.setOption(polar)
@@ -1150,23 +1159,6 @@
           .container{
             display: flex;
           }
-          .hint {
-            position: absolute;
-            top: 0;
-            right: 0;
-            height: 126px;
-            width: 126px;
-            background: url("../../assets/img/home/free-hint.png") no-repeat center;
-            span {
-              display: block;
-              font-size:18px;
-              font-family:PingFangSC-Semibold;
-              font-weight:600;
-              color:rgba(255,255,255,1);
-              transform: rotate(45deg);
-              transform-origin: 10% 300%;
-            }
-          }
           .left-menu{
             width: 200px;
             border-right: solid 1px #E6E6E6;
@@ -1191,7 +1183,29 @@
             }
           }
           .content {
+            position: relative;
             padding: 40px 100px 40px 80px;
+            .hint {
+              position: absolute;
+              top: 0;
+              right: 0;
+              height: 126px;
+              width: 126px;
+              background: url("../../assets/img/home/free-hint.png") no-repeat center;
+              span {
+                display: block;
+                height: 126px;
+                line-height: 90px;
+                width: 126px;
+                text-align: center;
+                font-size:18px;
+                font-family:PingFangSC-Semibold;
+                font-weight:600;
+                color:rgba(255,255,255,1);
+                transform: rotate(45deg);
+                // transform-origin: 10% 300%;
+              }
+            }
             > h3 {
               padding-bottom: 20px;
               font-size:24px;
@@ -1209,11 +1223,11 @@
               color:rgba(74,74,74,1);
             }
             .scene {
-              max-height: 132px;
-              overflow: hidden;
               margin-bottom: 24px;
               div {
                 p {
+                  max-height: 112px;
+                  overflow: hidden;
                   margin-bottom: 20px;
                   font-size:14px;
                   font-family:PingFangSC-Regular;
@@ -1246,6 +1260,7 @@
     }
     .register {
       height:188px;
+      background: red;
       background: url("../../assets/img/home/bg-ripple.png") no-repeat center;
       text-align: center;
       color: #fff;
@@ -1264,25 +1279,31 @@
         line-height: 46px;
         border-radius:4px;
         border:1px solid rgba(255,255,255,1);
+        cursor: pointer;
+        &:hover {
+          background: #fff;
+          color: #377DFF;
+        }
       }
     }
     .datacenter {
       margin-bottom: 100px;
-      height: 916px;
-      background: url('../../assets/img/home/datacenter-line.png') no-repeat 240px 20px,url('../../assets/img/home/datacenter-bg.png') no-repeat top center;
+      height: 688px;
+      background: url('../../assets/img/home/datacenter-bg.png') no-repeat top center;
       .header-g{
-        padding-top: 60px;
+        padding-top: 50px;
         margin-bottom: 10px;
         .title {
           color: #fff;
+          padding-bottom: 20px;
         }
         .desc {
           color: #fff;
         }
       }
       .main {
-        height: 702px;
-        background: url('../../assets/img/home/datacenter-map.png') no-repeat top center;
+        height: 496px;
+        // background: url('../../assets/img/home/datacenter-map.png') no-repeat top center;
         position: relative;
         > span {
           position: absolute;
@@ -1485,20 +1506,10 @@
           box-shadow: 0px 13px 14px -6px rgba(216, 216, 216, 0.41);
           dt {
             height: 58px;
-            padding: 20px;
-            background: #7E7F80;
-            background: url('../../assets/img/home/news-linklist-bg.png') no-repeat;
-            position: relative;
-            span {
-              position: absolute;
-              top:24px;
-              left: 20px;
-              font-size:20px;
-              font-family:Arial-Black;
-              font-weight:900;
-              color:#000;
-              opacity: .1;
-            }
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
             font-size: 18px;
             color: #fff;
             a {
@@ -1535,9 +1546,12 @@
                   }
                    i {
                       display: inline-block;
+                      width: 40px;
+                      height: 20px;
+                      line-height: 20px;
+                      text-align: center;
                       background: #FF624B;
                       border-radius:10px 10px 10px 0px;
-                      padding: 2px 8px;
                       font-style: normal;
                       font-size: 12px;
                       color: #fff;
@@ -1548,7 +1562,6 @@
             }
           }
         }
-
       }
     }
     .icon {
@@ -1684,7 +1697,7 @@
     }
     > .cloud-content {
       width: 100%;
-      height: 540px;
+      height: 400px;
       background-color: #f9f9f9;
       .container {
         position: relative;
@@ -1701,6 +1714,7 @@
             padding: 76px 0px 80px;
           }
           .content-carousel {
+            margin-top: 40px; 
             margin-bottom: 70px;
             overflow-x: hidden;
             .fade-enter-active, .fade-leave-active {
@@ -2483,8 +2497,9 @@
           font-family: "Microsoft YaHei", "微软雅黑";
           color: #fff;
           &:hover {
-            color: #387DFF;
-            border: 1px solid #387DFF;
+            color: #fff;
+            border: 1px solid rgba(56,125,255,1);
+            background: rgba(56,125,255,1);
           }
         }
       }
