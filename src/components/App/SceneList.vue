@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div style="background: #FFF;    position: relative;">
     <div class="center">
       <img class="img_1" src="../../assets/img/sceneList/sl-banner10.png"/>
       <img class="img_2" src="../../assets/img/sceneList/sl-banner11.png"/>
       <div class="content-list">
-        <div v-for="(item,index) in sceneList" class="scene" @click="$router.push('sceneInfo/' + item.link)">
+        <div v-for="(item,index) in sceneList" class="scene" :class="{last: index == 5 || index == 6 ||index == 7 }" @click="$router.push('sceneInfo/' + item.link)">
           <div class="scene-top" :style="{'background-image': 'url(' + item.bannerSrc + ')'}">
             {{ item.text}}
           </div>
@@ -161,9 +161,9 @@
 
 <style rel="stylesheet/less" lang="less" scoped>
   .center {
-    padding: 20px 360px 80px;
-    background: #FFF;
-    position: relative;
+    width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0 80px;
     > img {
       position: absolute;
       &.img_1 {
@@ -199,12 +199,24 @@
           right: 0;
         }
         &:hover {
-          box-shadow: 0px 2px 39px -8px rgba(49,49,49,0.5);
+          box-shadow: 0px 2px 39px -8px rgba(49, 49, 49, 0.5);
           -webkit-transform: translateY(-10px);
           -moz-transform: translateY(-10px);
           -ms-transform: translateY(-10px);
           -o-transform: translateY(-10px);
           transform: translateY(-10px)
+        }
+        &.last {
+          &:after {
+            display: inline-block;
+            content: '';
+            height: 63px;
+            width: 63px;
+            background-image: url("../../assets/img/sceneList/sl-icon27.png");
+            position: absolute;
+            top: 0;
+            right: 0;
+          }
         }
         .scene-top {
           width: 285px;
