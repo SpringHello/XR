@@ -128,6 +128,7 @@
               </ul>
             </div>
             <div class="content" v-for="(item,index) in selectedEightscene" :key="index">
+                <!-- <div :style="{background:'url('+selectedEightBg+')',backgroundRepeat:'no-repeat',backgroundPosition:'center',width:'100px',height:'100px'}" :class="{fadein:index==}"></div> -->
                 <div class="hint">
                   <span>{{item.hint}}</span>
                 </div>
@@ -1146,6 +1147,8 @@
     }
     .eigth-scene {
       // background: url(../../assets/img/home/eightscene-host/bg.png) no-repeat;
+      // opacity: 0.5;
+      // transition: opacity 2s;
       .wrap {
         height:666px;
         display: flex;
@@ -1416,7 +1419,7 @@
         display: flex;
         justify-content: space-between;
         // box-shadow: 0px 13px 44px -16px rgba(216, 216, 216, 0.79);
-        box-shadow:0px 2px 35px -17px rgba(0,0,0,0.19);
+        box-shadow:0px 2px 35px -17px rgba(69,69,69,0.86);
         .main-left {
           padding: 40px 60px 40px 80px;
           position: relative;
@@ -1523,12 +1526,12 @@
           dd {
             ul {
               li {
+                padding: 0 20px;
                 a {
                   display:flex;
                   justify-content: space-between;
                   height: 60px;
                   align-items: center;
-                  padding: 0 20px;
                   font-size: 14px;
                   color: rgba(102, 102, 102, 1);
                   cursor: pointer;
@@ -1696,7 +1699,7 @@
     }
     > .cloud-content {
       width: 100%;
-      height: 400px;
+      height: 440px;
       background-color: #f9f9f9;
       .container {
         position: relative;
@@ -1714,7 +1717,6 @@
           }
           .content-carousel {
             margin-top: 40px; 
-            margin-bottom: 70px;
             overflow-x: hidden;
             .fade-enter-active, .fade-leave-active {
               transition: opacity .2s
