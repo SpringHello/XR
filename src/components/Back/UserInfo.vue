@@ -3181,6 +3181,7 @@
       .left {
         margin-right: 20px;
         width: 374px;
+        overflow: scroll;
         .system-img {
           margin-top: 5px;
           cursor: pointer;
