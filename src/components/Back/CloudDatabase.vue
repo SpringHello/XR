@@ -260,7 +260,7 @@
             ellipsis: true,
             render: (h, params) => {
               return h('div', {
-                /*style: {
+                style: {
                   color: '#2A99F2',
                   cursor: 'pointer'
                 },
@@ -269,7 +269,7 @@
                     sessionStorage.setItem('databaseInfo', JSON.stringify(params.row))
                     this.$router.push('CloudDataManage')
                   }
-                }*/
+                }
               }, params.row.computername)
             }
           },

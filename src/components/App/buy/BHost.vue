@@ -882,7 +882,7 @@
           }
         }
         if (this.userInfo == null) {
-          this.$parent.showModal.login = true
+          this.$LR({type:'login'})
           return
         }
         var params = {
